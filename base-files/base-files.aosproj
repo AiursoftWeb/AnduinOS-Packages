@@ -2,9 +2,9 @@
   <PropertyGroup>
     <PackageName>base-files</PackageName>
     <PackageVersion>14ubuntu6anduinos1</PackageVersion>
-    <Maintainer>AnduinOS Team &lt;dev@anduinos.com&gt;</Maintainer>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS base files (derived from Ubuntu base-files)</PackageDescription>
-    <PackageHomepage>https://anduinos.com</PackageHomepage>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <LicenseType>GPL-2.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>noble questing resolute</TargetSuites>
@@ -31,7 +31,7 @@
                  Condition="'$(Suite)' == 'questing'" />
     <IncludeFile Include="deploy/questing/ubuntu-logo-text-dark.png" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.png"
                  Condition="'$(Suite)' == 'questing'" />
-                 
+
     <IncludeFile Include="deploy/resolute/ubuntu-logo-text.svg" Target="/usr/share/pixmaps/ubuntu-logo-text.svg"
                  Condition="'$(Suite)' == 'resolute'" />
     <IncludeFile Include="deploy/resolute/ubuntu-logo-text-dark.svg" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.svg"
