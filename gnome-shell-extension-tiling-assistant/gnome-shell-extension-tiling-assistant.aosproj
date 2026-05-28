@@ -12,8 +12,15 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
-    <IncludeFolder Include="deploy/tiling-assistant@leleat-on-github"
-                   Target="/usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github" />
+    <IncludeFolder Include="deploy/noble/tiling-assistant@leleat-on-github"
+                   Target="/usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github"
+                   Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFolder Include="deploy/questing/tiling-assistant@leleat-on-github"
+                   Target="/usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github"
+                   Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFolder Include="deploy/resolute/tiling-assistant@leleat-on-github"
+                   Target="/usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github"
+                   Condition="'$(Suite)' == 'resolute-addon'" />
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />

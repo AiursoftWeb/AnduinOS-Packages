@@ -13,7 +13,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <IncludeFolder Include="deploy/switcher@anduinos"
-                   Target="/usr/share/gnome-shell/extensions/switcher@anduinos" />
+    <IncludeFolder Include="deploy/noble/switcher@anduinos"
+                   Target="/usr/share/gnome-shell/extensions/switcher@anduinos"
+                   Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFolder Include="deploy/questing/switcher@anduinos"
+                   Target="/usr/share/gnome-shell/extensions/switcher@anduinos"
+                   Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFolder Include="deploy/resolute/switcher@anduinos"
+                   Target="/usr/share/gnome-shell/extensions/switcher@anduinos"
+                   Condition="'$(Suite)' == 'resolute-addon'" />
   </ItemGroup>
 </Project>

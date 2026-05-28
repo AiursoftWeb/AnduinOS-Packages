@@ -12,8 +12,15 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
-    <IncludeFolder Include="deploy/lockkeys@vaina.lt"
-                   Target="/usr/share/gnome-shell/extensions/lockkeys@vaina.lt" />
+    <IncludeFolder Include="deploy/noble/lockkeys@vaina.lt"
+                   Target="/usr/share/gnome-shell/extensions/lockkeys@vaina.lt"
+                   Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFolder Include="deploy/questing/lockkeys@vaina.lt"
+                   Target="/usr/share/gnome-shell/extensions/lockkeys@vaina.lt"
+                   Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFolder Include="deploy/resolute/lockkeys@vaina.lt"
+                   Target="/usr/share/gnome-shell/extensions/lockkeys@vaina.lt"
+                   Condition="'$(Suite)' == 'resolute-addon'" />
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />

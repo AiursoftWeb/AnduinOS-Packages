@@ -12,8 +12,15 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
-    <IncludeFolder Include="deploy/simple-weather@romanlefler.com"
-                   Target="/usr/share/gnome-shell/extensions/simple-weather@romanlefler.com" />
+    <IncludeFolder Include="deploy/noble/simple-weather@romanlefler.com"
+                   Target="/usr/share/gnome-shell/extensions/simple-weather@romanlefler.com"
+                   Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFolder Include="deploy/questing/simple-weather@romanlefler.com"
+                   Target="/usr/share/gnome-shell/extensions/simple-weather@romanlefler.com"
+                   Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFolder Include="deploy/resolute/simple-weather@romanlefler.com"
+                   Target="/usr/share/gnome-shell/extensions/simple-weather@romanlefler.com"
+                   Condition="'$(Suite)' == 'resolute-addon'" />
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />

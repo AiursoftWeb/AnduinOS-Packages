@@ -15,8 +15,15 @@
     <Provides>gnome-shell-extension-dash-to-panel</Provides>
   </PropertyGroup>
   <ItemGroup>
-    <IncludeFolder Include="deploy/dash-to-panel@jderose9.github.com"
-                   Target="/usr/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com" />
+    <IncludeFolder Include="deploy/noble/dash-to-panel@jderose9.github.com"
+                   Target="/usr/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com"
+                   Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFolder Include="deploy/questing/dash-to-panel@jderose9.github.com"
+                   Target="/usr/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com"
+                   Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFolder Include="deploy/resolute/dash-to-panel@jderose9.github.com"
+                   Target="/usr/share/gnome-shell/extensions/dash-to-panel@jderose9.github.com"
+                   Condition="'$(Suite)' == 'resolute-addon'" />
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />

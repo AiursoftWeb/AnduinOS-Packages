@@ -12,8 +12,15 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
-    <IncludeFolder Include="deploy/customize-ibus@hollowman.ml"
-                   Target="/usr/share/gnome-shell/extensions/customize-ibus@hollowman.ml" />
+    <IncludeFolder Include="deploy/noble/customize-ibus@hollowman.ml"
+                   Target="/usr/share/gnome-shell/extensions/customize-ibus@hollowman.ml"
+                   Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFolder Include="deploy/questing/customize-ibus@hollowman.ml"
+                   Target="/usr/share/gnome-shell/extensions/customize-ibus@hollowman.ml"
+                   Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFolder Include="deploy/resolute/customize-ibus@hollowman.ml"
+                   Target="/usr/share/gnome-shell/extensions/customize-ibus@hollowman.ml"
+                   Condition="'$(Suite)' == 'resolute-addon'" />
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />

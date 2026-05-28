@@ -1,15 +1,27 @@
 #!/usr/bin/env bash
-# Pre-build: downloads extension at build time. No third-party source in repo.
+# Pre-build: downloads extension for each supported suite/GNOME version.
 set -euo pipefail
 
-UUID="simple-weather@romanlefler.com"
-TARGET_GNOME=50
-DEPLOY_DIR="deploy/$UUID"
-
-rm -rf "$DEPLOY_DIR"
-mkdir -p "$DEPLOY_DIR"
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-python3 "$SCRIPT_DIR/../lib/resolve-gnome-ext.py" \
-    "$UUID" --target "$TARGET_GNOME" --download --out "$DEPLOY_DIR"
+RESOLVER="$SCRIPT_DIR/../lib/resolve-gnome-ext.py"
+
+UUID="simple-weather@romanlefler.com"
+
+declare -A GNOME_TARGETS=(
+    [noble]=46
+    [questing]=49
+    [resolute]=50
+)
+
+for SUITE in noble questing resolute; do
+    TARGET=${GNOME_TARGETS[$SUITE]}
+    DEPLOY_DIR="deploy/$SUITE/$UUID"
+
+    rm -rf "$DEPLOY_DIR"
+    mkdir -p "$DEPLOY_DIR"
+
+    echo "[$SUITE] Resolving $UUID for GNOME $TARGET..."
+    python3 "$RESOLVER" "$UUID" --target "$TARGET" --download --out "$DEPLOY_DIR"
+done
+
 echo "Done."

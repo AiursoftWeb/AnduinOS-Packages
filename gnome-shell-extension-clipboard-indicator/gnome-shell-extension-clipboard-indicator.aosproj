@@ -12,8 +12,15 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
-    <IncludeFolder Include="deploy/clipboard-indicator@tudmotu.com"
-                   Target="/usr/share/gnome-shell/extensions/clipboard-indicator@tudmotu.com" />
+    <IncludeFolder Include="deploy/noble/clipboard-indicator@tudmotu.com"
+                   Target="/usr/share/gnome-shell/extensions/clipboard-indicator@tudmotu.com"
+                   Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFolder Include="deploy/questing/clipboard-indicator@tudmotu.com"
+                   Target="/usr/share/gnome-shell/extensions/clipboard-indicator@tudmotu.com"
+                   Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFolder Include="deploy/resolute/clipboard-indicator@tudmotu.com"
+                   Target="/usr/share/gnome-shell/extensions/clipboard-indicator@tudmotu.com"
+                   Condition="'$(Suite)' == 'resolute-addon'" />
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />

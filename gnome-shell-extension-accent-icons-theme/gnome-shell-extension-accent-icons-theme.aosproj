@@ -12,8 +12,15 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
-    <IncludeFolder Include="deploy/accent-icons-theme@brgvos"
-                   Target="/usr/share/gnome-shell/extensions/accent-icons-theme@brgvos" />
+    <IncludeFolder Include="deploy/noble/accent-icons-theme@brgvos"
+                   Target="/usr/share/gnome-shell/extensions/accent-icons-theme@brgvos"
+                   Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFolder Include="deploy/questing/accent-icons-theme@brgvos"
+                   Target="/usr/share/gnome-shell/extensions/accent-icons-theme@brgvos"
+                   Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFolder Include="deploy/resolute/accent-icons-theme@brgvos"
+                   Target="/usr/share/gnome-shell/extensions/accent-icons-theme@brgvos"
+                   Condition="'$(Suite)' == 'resolute-addon'" />
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />
