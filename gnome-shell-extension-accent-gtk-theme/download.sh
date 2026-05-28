@@ -3,17 +3,11 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-RESOLVER="$SCRIPT_DIR/../lib/resolve-gnome-ext.py"
+source "$SCRIPT_DIR/../lib/gnome-versions.sh"
 
 UUID="accent-gtk-theme@brgvos"
 
-declare -A GNOME_TARGETS=(
-    [noble]=46
-    [questing]=49
-    [resolute]=50
-)
-
-for SUITE in noble questing resolute; do
+for SUITE in "${!GNOME_TARGETS[@]}"; do
     TARGET=${GNOME_TARGETS[$SUITE]}
     DEPLOY_DIR="deploy/$SUITE/$UUID"
 
@@ -21,7 +15,7 @@ for SUITE in noble questing resolute; do
     mkdir -p "$DEPLOY_DIR"
 
     echo "[$SUITE] Resolving $UUID for GNOME $TARGET..."
-    python3 "$RESOLVER" "$UUID" --target "$TARGET" --download --out "$DEPLOY_DIR"
+    python3 "$SCRIPT_DIR/../lib/resolve-gnome-ext.py" "$UUID" --target "$TARGET" --download --out "$DEPLOY_DIR"
 done
 
 echo "Done."
