@@ -26,7 +26,9 @@
 
   <ItemGroup>
     <IncludeFile Include="deploy/anduinos_text.png" Target="/usr/share/plymouth/ubuntu-logo.png" />
-    <IncludeFile Include="deploy/anduinos_text.png" Target="/usr/share/plymouth/themes/spinner/watermark.png" />
+    <!-- watermark.png is in plymouth main package on resolute, not in theme-spinner -->
+    <IncludeFile Include="deploy/anduinos_text.png" Target="/usr/share/plymouth/themes/spinner/watermark.png"
+                 Condition="'$(Suite)' != 'resolute-addon'" />
     <IncludeFile Include="deploy/logo_96.png"      Target="/usr/share/plymouth/themes/spinner/bgrt-fallback.png" />
   </ItemGroup>
 </Project>
