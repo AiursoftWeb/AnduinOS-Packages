@@ -82,7 +82,58 @@ Before writing an `.aosproj`:
 </Project>
 ```
 
-## APT Preferences
+## Suite-specific package versions
+
+When a package's content differs between Ubuntu suites (e.g. a GNOME Shell extension
+that ships a different zip per GNOME Shell version), using a plain `arch=all` label
+with the same version number across all suites is **incorrect** — APT's pool assumes
+identical content for every `arch=all` package with the same name and version.
+
+The correct approach is to embed the suite name into the version number so each suite
+produces a genuinely distinct `.deb`. The SDK supports two build-time variables for this:
+
+| Variable | Value | Example result |
+|---|---|---|
+| `$(Suite)` | The raw target suite (e.g. `questing-addon`) | `1.0.56+questing-addon1` |
+| `$(SuiteShortName)` | The mapped short name from `DependencyCheckSuiteMap`; falls back to `$(Suite)` if not mapped | `1.0.56+questing1` |
+
+`$(SuiteShortName)` is preferred because it produces cleaner version strings.
+
+### Example
+
+```xml
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>gnome-shell-extension-tiling-assistant</PackageName>
+    <PackageVersion>1.0.56+$(SuiteShortName)1</PackageVersion>
+    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <DependencyCheckSuiteMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</DependencyCheckSuiteMap>
+    ...
+  </PropertyGroup>
+  <ItemGroup>
+    <IncludeFolder Include="deploy/questing/tiling-assistant@leleat-on-github"
+                   Target="/usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github"
+                   Condition="'$(Suite)' == 'questing-addon'" />
+    ...
+  </ItemGroup>
+</Project>
+```
+
+This produces:
+- `gnome-shell-extension-tiling-assistant_1.0.56+noble1_all.deb` for noble-addon
+- `gnome-shell-extension-tiling-assistant_1.0.56+questing1_all.deb` for questing-addon
+- `gnome-shell-extension-tiling-assistant_1.0.56+resolute1_all.deb` for resolute-addon
+
+Each suite's Packages index points to its own pool file, so APT hash verification
+always succeeds.
+
+### Rule of thumb
+
+Use `+$(SuiteShortName)1` whenever the `.aosproj` contains any `IncludeFolder` (or
+`IncludeFile`) with a `Condition="'$(Suite)' == '...'"`. If all suites share the same
+content, a plain version number is fine.
+
+
 
 Users of AnduinOS should add an APT pin to ensure AnduinOS packages take
 precedence:

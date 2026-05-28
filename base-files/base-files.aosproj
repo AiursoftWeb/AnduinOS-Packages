@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>base-files</PackageName>
-    <PackageVersion>1:$(UpstreamVersion)-anduinos</PackageVersion>
+    <PackageVersion>1:$(UpstreamVersion)+$(SuiteShortName)1-anduinos</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS base files (derived from Ubuntu base-files)</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
