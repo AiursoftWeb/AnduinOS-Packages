@@ -136,6 +136,11 @@ gnome-shell-extension-tiling-assistant:
   variables:
     PACKAGE_DIR: gnome-shell-extension-tiling-assistant
 
+anduinos-templates:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-templates
+
 anduinos-gnome-extensions:
   extends: .publish
   variables:
