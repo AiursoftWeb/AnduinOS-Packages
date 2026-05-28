@@ -10,7 +10,27 @@
     <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <!-- Custom AnduinOS extensions -->
-    <Recommends>gnome-shell-extension-anduinos-loc, gnome-shell-extension-anduinos-switcher, gnome-shell-extension-noti-bottom-right, gnome-shell-extension-accent-gtk-theme, gnome-shell-extension-accent-user-theme, gnome-shell-extension-accent-icons-theme, gnome-shell-extension-arcmenu, gnome-shell-extension-blur-my-shell, gnome-shell-extension-clipboard-indicator, gnome-shell-extension-customize-ibus, gnome-shell-extension-dash-to-panel-anduinos, gnome-shell-extension-lockkeys, gnome-shell-extension-mediacontrols, gnome-shell-extension-network-stats, gnome-shell-extension-proxy-switcher, gnome-shell-extension-simple-weather, gnome-shell-extension-tiling-assistant</Recommends>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Custom AnduinOS extensions -->
+    <Recommend Include="gnome-shell-extension-anduinos-loc" />
+    <Recommend Include="gnome-shell-extension-anduinos-switcher" />
+    <Recommend Include="gnome-shell-extension-noti-bottom-right" />
+    <!-- Third-party extensions shipped by AnduinOS -->
+    <Recommend Include="gnome-shell-extension-accent-gtk-theme" />
+    <Recommend Include="gnome-shell-extension-accent-user-theme" />
+    <Recommend Include="gnome-shell-extension-accent-icons-theme" />
+    <Recommend Include="gnome-shell-extension-arcmenu" />
+    <Recommend Include="gnome-shell-extension-blur-my-shell" />
+    <Recommend Include="gnome-shell-extension-clipboard-indicator" />
+    <Recommend Include="gnome-shell-extension-customize-ibus" />
+    <Recommend Include="gnome-shell-extension-dash-to-panel-anduinos" />
+    <Recommend Include="gnome-shell-extension-lockkeys" />
+    <Recommend Include="gnome-shell-extension-mediacontrols" />
+    <Recommend Include="gnome-shell-extension-network-stats" />
+    <Recommend Include="gnome-shell-extension-proxy-switcher" />
+    <Recommend Include="gnome-shell-extension-simple-weather" />
+    <Recommend Include="gnome-shell-extension-tiling-assistant" />
+  </ItemGroup>
 </Project>
