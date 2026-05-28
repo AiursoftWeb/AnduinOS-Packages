@@ -36,10 +36,10 @@ base-files:
   variables:
     PACKAGE_DIR: base-files
 
-plymouth:
+plymouth-theme-spinner:
   extends: .publish
   variables:
-    PACKAGE_DIR: plymouth
+    PACKAGE_DIR: plymouth-theme-spinner
 
 anduinos-apt-config:
   extends: .publish

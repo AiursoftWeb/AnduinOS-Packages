@@ -1,0 +1,32 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>plymouth-theme-spinner</PackageName>
+    <PackageVersion>$(UpstreamVersion)-anduinos</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS plymouth spinner theme (derived from Ubuntu plymouth-theme-spinner)</PackageDescription>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <LicenseType>GPL-2.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon questing-addon</TargetSuites>
+    <TargetArchitectures>amd64</TargetArchitectures>
+    <Component>main</Component>
+
+    <!-- Derive from Ubuntu plymouth-theme-spinner -->
+    <UpstreamUrl>http://archive.ubuntu.com/ubuntu</UpstreamUrl>
+    <UpstreamDistro>ubuntu</UpstreamDistro>
+    <UpstreamPackage>plymouth-theme-spinner</UpstreamPackage>
+    <UpstreamSuite>$(Suite)</UpstreamSuite>
+    <UpstreamSuiteMapping>noble-addon=noble, questing-addon=questing</UpstreamSuiteMapping>
+    <UpstreamComponent>$(Component)</UpstreamComponent>
+    <UpstreamArch>amd64</UpstreamArch>
+
+    <!-- Our branded files replace ubuntu's; also covers duplicate files in plymouth main package -->
+    <Replaces>plymouth</Replaces>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <IncludeFile Include="deploy/anduinos_text.png" Target="/usr/share/plymouth/ubuntu-logo.png" />
+    <IncludeFile Include="deploy/anduinos_text.png" Target="/usr/share/plymouth/themes/spinner/watermark.png" />
+    <IncludeFile Include="deploy/logo_96.png"      Target="/usr/share/plymouth/themes/spinner/bgrt-fallback.png" />
+  </ItemGroup>
+</Project>
