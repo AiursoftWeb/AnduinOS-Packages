@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-anduinos-switcher</PackageName>
-    <PackageVersion>2.0.1</PackageVersion>
+    <PackageVersion>2.0.2</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Light/Dark Theme Switcher GNOME Shell extension (switcher@anduinos)</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -13,6 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Dependency Include="gnome-shell" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+    <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
     <IncludeFolder Include="deploy/switcher@anduinos"
                    Target="/usr/share/gnome-shell/extensions/switcher@anduinos" />
   </ItemGroup>

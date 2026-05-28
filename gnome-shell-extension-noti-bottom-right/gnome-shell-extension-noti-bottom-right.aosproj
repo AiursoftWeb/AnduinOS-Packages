@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-noti-bottom-right</PackageName>
-    <PackageVersion>2.0.1</PackageVersion>
+    <PackageVersion>2.0.2</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Notification Bottom Right GNOME Shell extension (noti-bottom-right@anduinos)</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -13,6 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Dependency Include="gnome-shell" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+    <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
     <IncludeFolder Include="deploy/noti-bottom-right@anduinos"
                    Target="/usr/share/gnome-shell/extensions/noti-bottom-right@anduinos" />
   </ItemGroup>

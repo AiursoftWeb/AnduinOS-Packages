@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-network-stats</PackageName>
-    <PackageVersion>1.0.35</PackageVersion>
+    <PackageVersion>1.0.36</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Displays internet upload speed, download speed, bandwidth, data usage. visit github page for instructions, suggestions and feature requests. ERROR while updating extension ? restart your system or reload gnome shell. — packaged for AnduinOS</PackageDescription>
     <PackageHomepage>https://extensions.gnome.org/extension/4308/</PackageHomepage>
@@ -12,6 +12,12 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
+    <Dependency Include="gnome-shell" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+    <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="gir1.2-gtk-4.0" />
+    <Dependency Include="gir1.2-nm-1.0" />
+    <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
     <IncludeFolder Include="deploy/noble/network-stats@gnome.noroadsleft.xyz"
                    Target="/usr/share/gnome-shell/extensions/network-stats@gnome.noroadsleft.xyz"
                    Condition="'$(Suite)' == 'noble-addon'" />
@@ -21,6 +27,10 @@
     <IncludeFolder Include="deploy/resolute/network-stats@gnome.noroadsleft.xyz"
                    Target="/usr/share/gnome-shell/extensions/network-stats@gnome.noroadsleft.xyz"
                    Condition="'$(Suite)' == 'resolute-addon'" />
+  </ItemGroup>
+  <ItemGroup>
+    <IncludeFile Include="toggle_network_stats"
+                   Target="/usr/local/bin/toggle_network_stats" />
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />

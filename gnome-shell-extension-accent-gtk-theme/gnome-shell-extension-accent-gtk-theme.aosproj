@@ -12,6 +12,11 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
+    <Dependency Include="gnome-shell" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+    <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="gir1.2-gtk-4.0" />
+    <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
     <IncludeFolder Include="deploy/noble/accent-gtk-theme@brgvos"
                    Target="/usr/share/gnome-shell/extensions/accent-gtk-theme@brgvos"
                    Condition="'$(Suite)' == 'noble-addon'" />

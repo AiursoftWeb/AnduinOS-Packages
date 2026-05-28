@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-simple-weather</PackageName>
-    <PackageVersion>50.0.1</PackageVersion>
+    <PackageVersion>50.0.2</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>A highly configurable weather indicator. Doesn't use GNOME Weather. — packaged for AnduinOS</PackageDescription>
     <PackageHomepage>https://extensions.gnome.org/extension/8261/</PackageHomepage>
@@ -12,6 +12,13 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
+    <Dependency Include="gnome-shell" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+    <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="gir1.2-gtk-4.0" />
+    <Dependency Include="gir1.2-soup-3.0" />
+    <Dependency Include="gir1.2-geoclue-2.0" />
+    <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
     <IncludeFolder Include="deploy/noble/simple-weather@romanlefler.com"
                    Target="/usr/share/gnome-shell/extensions/simple-weather@romanlefler.com"
                    Condition="'$(Suite)' == 'noble-addon'" />

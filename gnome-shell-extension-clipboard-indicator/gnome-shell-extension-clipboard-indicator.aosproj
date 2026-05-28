@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-clipboard-indicator</PackageName>
-    <PackageVersion>1.0.72</PackageVersion>
+    <PackageVersion>1.0.73</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>The most popular clipboard manager for GNOME, with over 1M downloads — packaged for AnduinOS</PackageDescription>
     <PackageHomepage>https://extensions.gnome.org/extension/779/</PackageHomepage>
@@ -12,6 +12,11 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
+    <Dependency Include="gnome-shell" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+    <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="gir1.2-gtk-4.0" />
+    <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
     <IncludeFolder Include="deploy/noble/clipboard-indicator@tudmotu.com"
                    Target="/usr/share/gnome-shell/extensions/clipboard-indicator@tudmotu.com"
                    Condition="'$(Suite)' == 'noble-addon'" />

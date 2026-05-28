@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-proxy-switcher</PackageName>
-    <PackageVersion>1.0.26</PackageVersion>
+    <PackageVersion>1.0.27</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Switches between the system proxy settings profiles defined in Network Settings. — packaged for AnduinOS</PackageDescription>
     <PackageHomepage>https://extensions.gnome.org/extension/771/</PackageHomepage>
@@ -12,6 +12,9 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
+    <Dependency Include="gnome-shell" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+    <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
     <IncludeFolder Include="deploy/noble/ProxySwitcher@flannaghan.com"
                    Target="/usr/share/gnome-shell/extensions/ProxySwitcher@flannaghan.com"
                    Condition="'$(Suite)' == 'noble-addon'" />

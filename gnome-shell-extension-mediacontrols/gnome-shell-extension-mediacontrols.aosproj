@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-mediacontrols</PackageName>
-    <PackageVersion>2.4.5</PackageVersion>
+    <PackageVersion>2.4.6</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Show controls and information of the currently playing media in the panel. — packaged for AnduinOS</PackageDescription>
     <PackageHomepage>https://extensions.gnome.org/extension/4470/</PackageHomepage>
@@ -12,6 +12,12 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
+    <Dependency Include="gnome-shell" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+    <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="gir1.2-gtk-4.0" />
+    <Dependency Include="gir1.2-soup-3.0" />
+    <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
     <IncludeFolder Include="deploy/noble/mediacontrols@cliffniff.github.com"
                    Target="/usr/share/gnome-shell/extensions/mediacontrols@cliffniff.github.com"
                    Condition="'$(Suite)' == 'noble-addon'" />

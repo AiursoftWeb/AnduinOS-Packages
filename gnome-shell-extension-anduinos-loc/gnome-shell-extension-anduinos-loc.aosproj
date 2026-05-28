@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-anduinos-loc</PackageName>
-    <PackageVersion>2.0.3</PackageVersion>
+    <PackageVersion>2.0.4</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Location Controls GNOME Shell extension (loc@anduinos.com)</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -13,6 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Dependency Include="gnome-shell" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+    <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
     <!-- Install the extension to the system-wide extensions directory so all users benefit -->
     <IncludeFolder Include="deploy/loc@anduinos.com"
                    Target="/usr/share/gnome-shell/extensions/loc@anduinos.com" />

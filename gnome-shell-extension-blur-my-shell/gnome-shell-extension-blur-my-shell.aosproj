@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-blur-my-shell</PackageName>
-    <PackageVersion>1.0.73</PackageVersion>
+    <PackageVersion>1.0.74</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Adds a blur look to different parts of the GNOME Shell, including the top panel, dash and overview. You can support my work by sponsoring me on: - github: https://github.com/sponsors/aunetx - ko-fi: https://ko-fi.com/aunetx If you use Ubuntu, you may want to change the radius of the corner effect for Dash-to-Dock in preferences, else you may see unpleasantly mixed radii in your dock. Note: if the extension shows an error after updating, please make sure to restart your session to see if it persists. This is due to a bug in gnome shell, which I can't fix by myself. — packaged for AnduinOS</PackageDescription>
     <PackageHomepage>https://extensions.gnome.org/extension/3193/</PackageHomepage>
@@ -12,6 +12,11 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
+    <Dependency Include="gnome-shell" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+    <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="gir1.2-gtk-4.0" />
+    <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
     <IncludeFolder Include="deploy/noble/blur-my-shell@aunetx"
                    Target="/usr/share/gnome-shell/extensions/blur-my-shell@aunetx"
                    Condition="'$(Suite)' == 'noble-addon'" />

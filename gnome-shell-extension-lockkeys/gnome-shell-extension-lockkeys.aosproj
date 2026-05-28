@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-lockkeys</PackageName>
-    <PackageVersion>1.0.70</PackageVersion>
+    <PackageVersion>1.0.71</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Numlock &amp; Capslock status on the panel. — packaged for AnduinOS</PackageDescription>
     <PackageHomepage>https://extensions.gnome.org/extension/36/</PackageHomepage>
@@ -12,6 +12,11 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
+    <Dependency Include="gnome-shell" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+    <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="gir1.2-gtk-4.0" />
+    <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
     <IncludeFolder Include="deploy/noble/lockkeys@vaina.lt"
                    Target="/usr/share/gnome-shell/extensions/lockkeys@vaina.lt"
                    Condition="'$(Suite)' == 'noble-addon'" />

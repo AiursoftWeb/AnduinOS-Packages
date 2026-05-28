@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-tiling-assistant</PackageName>
-    <PackageVersion>1.0.55</PackageVersion>
+    <PackageVersion>1.0.56</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Expand GNOME's 2 column tiling and add a Windows-snap-assist-inspired popup... — packaged for AnduinOS</PackageDescription>
     <PackageHomepage>https://extensions.gnome.org/extension/3733/</PackageHomepage>
@@ -12,6 +12,11 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
+    <Dependency Include="gnome-shell" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+    <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="gir1.2-gtk-4.0" />
+    <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
     <IncludeFolder Include="deploy/noble/tiling-assistant@leleat-on-github"
                    Target="/usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github"
                    Condition="'$(Suite)' == 'noble-addon'" />

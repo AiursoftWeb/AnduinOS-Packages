@@ -12,6 +12,13 @@
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
+    <Dependency Include="gnome-shell" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+    <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="gir1.2-gtk-4.0" />
+    <Dependency Include="gir1.2-gmenu-3.0" />
+    <Dependency Include="gir1.2-accountsservice-1.0" />
+    <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
     <IncludeFolder Include="deploy/noble/arcmenu@arcmenu.com"
                    Target="/usr/share/gnome-shell/extensions/arcmenu@arcmenu.com"
                    Condition="'$(Suite)' == 'noble-addon'" />
