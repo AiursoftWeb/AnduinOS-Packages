@@ -1,0 +1,29 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>plymouth</PackageName>
+    <PackageVersion>$(UpstreamVersion)-anduinos</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS boot animation (derived from Ubuntu plymouth)</PackageDescription>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <LicenseType>GPL-2.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <TargetArchitectures>amd64</TargetArchitectures>
+    <Component>main</Component>
+
+    <!-- Derive from Ubuntu plymouth -->
+    <UpstreamUrl>http://archive.ubuntu.com/ubuntu</UpstreamUrl>
+    <UpstreamDistro>ubuntu</UpstreamDistro>
+    <UpstreamPackage>plymouth</UpstreamPackage>
+    <UpstreamSuite>$(Suite)</UpstreamSuite>
+    <UpstreamSuiteMapping>noble-addon=noble, questing-addon=questing, resolute-addon=resolute</UpstreamSuiteMapping>
+    <UpstreamComponent>main</UpstreamComponent>
+    <UpstreamArch>amd64</UpstreamArch>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Branding: replace Ubuntu logo with AnduinOS logo -->
+    <IncludeFile Include="deploy/anduinos_text.png" Target="/usr/share/plymouth/ubuntu-logo.png" />
+    <IncludeFile Include="deploy/anduinos_text.png" Target="/usr/share/plymouth/themes/spinner/watermark.png" />
+  </ItemGroup>
+</Project>

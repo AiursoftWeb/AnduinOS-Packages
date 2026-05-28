@@ -1,13 +1,13 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>base-files</PackageName>
-    <PackageVersion>14ubuntu6anduinos1</PackageVersion>
+    <PackageVersion>$(UpstreamVersion)-anduinos</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS base files (derived from Ubuntu base-files)</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <LicenseType>GPL-2.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble questing resolute</TargetSuites>
+    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
 
@@ -16,6 +16,7 @@
     <UpstreamDistro>ubuntu</UpstreamDistro>
     <UpstreamPackage>base-files</UpstreamPackage>
     <UpstreamSuite>$(Suite)</UpstreamSuite>
+    <UpstreamSuiteMapping>noble-addon=noble, questing-addon=questing, resolute-addon=resolute</UpstreamSuiteMapping>
     <UpstreamComponent>main</UpstreamComponent>
     <UpstreamArch>amd64</UpstreamArch>
   </PropertyGroup>
@@ -23,48 +24,48 @@
   <ItemGroup>
     <!-- Branding: replace Ubuntu logos with AnduinOS logos -->
     <IncludeFile Include="deploy/noble/ubuntu-logo-text.png" Target="/usr/share/pixmaps/ubuntu-logo-text.png"
-                 Condition="'$(Suite)' == 'noble'" />
+                 Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/noble/ubuntu-logo-text-dark.png" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.png"
-                 Condition="'$(Suite)' == 'noble'" />
+                 Condition="'$(Suite)' == 'noble-addon'" />
 
     <IncludeFile Include="deploy/questing/ubuntu-logo-text.png" Target="/usr/share/pixmaps/ubuntu-logo-text.png"
-                 Condition="'$(Suite)' == 'questing'" />
+                 Condition="'$(Suite)' == 'questing-addon'" />
     <IncludeFile Include="deploy/questing/ubuntu-logo-text-dark.png" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.png"
-                 Condition="'$(Suite)' == 'questing'" />
+                 Condition="'$(Suite)' == 'questing-addon'" />
 
     <IncludeFile Include="deploy/resolute/ubuntu-logo-text.svg" Target="/usr/share/pixmaps/ubuntu-logo-text.svg"
-                 Condition="'$(Suite)' == 'resolute'" />
+                 Condition="'$(Suite)' == 'resolute-addon'" />
     <IncludeFile Include="deploy/resolute/ubuntu-logo-text-dark.svg" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.svg"
-                 Condition="'$(Suite)' == 'resolute'" />
+                 Condition="'$(Suite)' == 'resolute-addon'" />
 
     <!-- System identity files (suite-specific) -->
     <IncludeFile Include="deploy/noble/os-release" Target="/etc/os-release"
-                 Condition="'$(Suite)' == 'noble'" />
+                 Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/questing/os-release" Target="/etc/os-release"
-                 Condition="'$(Suite)' == 'questing'" />
+                 Condition="'$(Suite)' == 'questing-addon'" />
     <IncludeFile Include="deploy/resolute/os-release" Target="/etc/os-release"
-                 Condition="'$(Suite)' == 'resolute'" />
+                 Condition="'$(Suite)' == 'resolute-addon'" />
 
     <IncludeFile Include="deploy/noble/lsb-release" Target="/etc/lsb-release"
-                 Condition="'$(Suite)' == 'noble'" />
+                 Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/questing/lsb-release" Target="/etc/lsb-release"
-                 Condition="'$(Suite)' == 'questing'" />
+                 Condition="'$(Suite)' == 'questing-addon'" />
     <IncludeFile Include="deploy/resolute/lsb-release" Target="/etc/lsb-release"
-                 Condition="'$(Suite)' == 'resolute'" />
+                 Condition="'$(Suite)' == 'resolute-addon'" />
 
     <IncludeFile Include="deploy/noble/issue" Target="/etc/issue"
-                 Condition="'$(Suite)' == 'noble'" />
+                 Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/questing/issue" Target="/etc/issue"
-                 Condition="'$(Suite)' == 'questing'" />
+                 Condition="'$(Suite)' == 'questing-addon'" />
     <IncludeFile Include="deploy/resolute/issue" Target="/etc/issue"
-                 Condition="'$(Suite)' == 'resolute'" />
+                 Condition="'$(Suite)' == 'resolute-addon'" />
                  
     <IncludeFile Include="deploy/noble/issue.net" Target="/etc/issue.net"
-                 Condition="'$(Suite)' == 'noble'" />
+                 Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/questing/issue.net" Target="/etc/issue.net"
-                 Condition="'$(Suite)' == 'questing'" />
+                 Condition="'$(Suite)' == 'questing-addon'" />
     <IncludeFile Include="deploy/resolute/issue.net" Target="/etc/issue.net"
-                 Condition="'$(Suite)' == 'resolute'" />
+                 Condition="'$(Suite)' == 'resolute-addon'" />
 
     <!-- legal: same across all suites -->
     <IncludeFile Include="deploy/legal" Target="/etc/legal" />
