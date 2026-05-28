@@ -1,0 +1,35 @@
+stages:
+  - publish
+
+variables:
+  APKG_SERVER: "https://apkg-dev.aiursoft.com"
+  APKG_API_KEY: "GWZb2Z5K9KXPAWfjJ8QB1jF2lC7kmHHzUMjzHCkpeYE"
+
+.publish:
+  stage: publish
+  image: mcr.microsoft.com/dotnet/sdk:10.0
+  before_script:
+    - dotnet tool install -g aiursoft.apkg.client
+    - export PATH="$PATH:$HOME/.dotnet/tools"
+  script:
+    - cd $PACKAGE_DIR
+    - apkg publish
+    - APKG_FILE=$(ls bin/*.apkg 2>/dev/null | head -1)
+    - '[ -n "$APKG_FILE" ] && apkg push -f "$APKG_FILE" -s "$APKG_SERVER" -k "$APKG_API_KEY" --skip-duplicate'
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+
+base-files:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: base-files
+
+plymouth:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: plymouth
+
+anduinos-apt-config:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-apt-config
