@@ -9,7 +9,7 @@ variables:
 .lint:
   stage: lint
   before_script:
-    - dotnet tool install -g aiursoft.apkg.client
+    - dotnet tool update -g aiursoft.apkg.client || dotnet tool install -g aiursoft.apkg.client
     - export PATH="$PATH:$HOME/.dotnet/tools"
   script:
     - cd $PACKAGE_DIR
@@ -21,7 +21,7 @@ variables:
 .publish:
   stage: publish
   before_script:
-    - dotnet tool install -g aiursoft.apkg.client
+    - dotnet tool update -g aiursoft.apkg.client || dotnet tool install -g aiursoft.apkg.client
     - export PATH="$PATH:$HOME/.dotnet/tools"
   script:
     - cd $PACKAGE_DIR
