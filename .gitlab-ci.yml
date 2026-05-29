@@ -9,7 +9,7 @@ variables:
 .lint:
   stage: lint
   before_script:
-    - dotnet tool update -g aiursoft.apkg.client --add-source https://nuget.aiursoft.com/v3/index.json || dotnet tool install -g aiursoft.apkg.client --add-source https://nuget.aiursoft.com/v3/index.json
+    - dotnet tool update -g aiursoft.apkg.client --configfile ./nuget.config || dotnet tool install -g aiursoft.apkg.client --configfile ./nuget.config
     - export PATH="$PATH:$HOME/.dotnet/tools"
     - apkg --version
   script:
@@ -22,7 +22,7 @@ variables:
 .publish:
   stage: publish
   before_script:
-    - dotnet tool update -g aiursoft.apkg.client --add-source https://nuget.aiursoft.com/v3/index.json || dotnet tool install -g aiursoft.apkg.client --add-source https://nuget.aiursoft.com/v3/index.json
+    - dotnet tool update -g aiursoft.apkg.client --configfile ./nuget.config || dotnet tool install -g aiursoft.apkg.client --configfile ./nuget.config
     - export PATH="$PATH:$HOME/.dotnet/tools"
     - apkg --version
   script:
