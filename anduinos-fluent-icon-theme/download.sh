@@ -2,8 +2,11 @@
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+FLUENT_ICON_COMMIT="8a99a6d"   # pinned for supply-chain safety
+
 rm -rf "$SCRIPT_DIR/deploy" /tmp/Fluent-icon-theme
-git clone --depth 1 https://github.com/vinceliuice/Fluent-icon-theme.git /tmp/Fluent-icon-theme
+git clone https://github.com/vinceliuice/Fluent-icon-theme.git /tmp/Fluent-icon-theme
+git -C /tmp/Fluent-icon-theme checkout "$FLUENT_ICON_COMMIT"
 
 echo "Installing icon theme to staging..."
 cd /tmp/Fluent-icon-theme
