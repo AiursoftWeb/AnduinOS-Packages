@@ -1,0 +1,111 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-gnome-shell-locale</PackageName>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS GNOME Shell locale overrides — renames Pin to Dash/Dock → Taskbar</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <LicenseType>GPL-2.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="bash download.sh" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      Per-language GNOME Shell locale overrides.
+      /usr/share/locale/ has higher gettext priority than
+      /usr/share/locale-langpack/, so our patched .mo files
+      take precedence without conflicting any Ubuntu package.
+    -->
+    <IncludeFile Include="deploy/noble/en/LC_MESSAGES/gnome-shell.mo"     Target="/usr/share/locale/en/LC_MESSAGES/gnome-shell.mo"     Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/en/LC_MESSAGES/gnome-shell.mo"  Target="/usr/share/locale/en/LC_MESSAGES/gnome-shell.mo"     Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/en/LC_MESSAGES/gnome-shell.mo"  Target="/usr/share/locale/en/LC_MESSAGES/gnome-shell.mo"     Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/zh_CN/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/zh_CN/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/zh_CN/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/zh_CN/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/zh_CN/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/zh_CN/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/zh_TW/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/zh_TW/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/zh_TW/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/zh_TW/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/zh_TW/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/zh_TW/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/zh_HK/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/zh_HK/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/zh_HK/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/zh_HK/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/zh_HK/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/zh_HK/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/ja/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/ja/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/ja/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ja/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/ja/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ja/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/ko/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/ko/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/ko/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ko/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/ko/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ko/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/vi/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/vi/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/vi/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/vi/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/vi/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/vi/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/th/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/th/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/th/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/th/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/th/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/th/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/de/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/de/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/de/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/de/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/de/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/de/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/fr/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/fr/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/fr/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/fr/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/fr/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/fr/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/es/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/es/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/es/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/es/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/es/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/es/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/ru/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/ru/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/ru/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ru/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/ru/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ru/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/it/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/it/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/it/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/it/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/it/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/it/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/pt/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/pt/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/pt/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/pt/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/pt/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/pt/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/pt_BR/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/pt_BR/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/pt_BR/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/pt_BR/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/pt_BR/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/pt_BR/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/nl/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/nl/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/nl/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/nl/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/nl/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/nl/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/sv/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/sv/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/sv/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/sv/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/sv/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/sv/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/pl/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/pl/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/pl/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/pl/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/pl/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/pl/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/tr/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/tr/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/tr/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/tr/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/tr/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/tr/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/ar/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/ar/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/ar/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ar/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/ar/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ar/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/ro/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/ro/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/ro/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ro/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/ro/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ro/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+  </ItemGroup>
+</Project>

@@ -148,6 +148,11 @@ anduinos-templates:
   variables:
     PACKAGE_DIR: anduinos-templates
 
+anduinos-gnome-shell-locale:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-gnome-shell-locale
+
 anduinos-gnome-extensions:
   extends: .publish
   variables:
