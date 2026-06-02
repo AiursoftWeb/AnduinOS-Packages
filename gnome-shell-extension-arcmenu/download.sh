@@ -108,21 +108,20 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
     sed -i 's/Unpin from ArcMenu/Unpin from Start menu/g' "$DEPLOY_DIR/appMenu.js"
     sed -i 's/Pin to ArcMenu/Pin to Start menu/g' "$DEPLOY_DIR/appMenu.js"
 
-    # 3. Patch localization (requires gettext; skipped if msgunfmt/msgfmt unavailable)
+    # 3. Patch localization
     locale_dir="$DEPLOY_DIR/locale"
     found=0
 
-    if command -v msgunfmt &>/dev/null && command -v msgfmt &>/dev/null; then
-        if [[ -d "$locale_dir" ]]; then
-            for lang_dir in "$locale_dir"/*/; do
-                lang=$(basename "$lang_dir")
-                mo_file="$lang_dir/LC_MESSAGES/arcmenu.mo"
+    if [[ -d "$locale_dir" ]]; then
+        for lang_dir in "$locale_dir"/*/; do
+            lang=$(basename "$lang_dir")
+            mo_file="$lang_dir/LC_MESSAGES/arcmenu.mo"
 
-                if [[ -f "$mo_file" ]] && [[ -n "${PIN[$lang]+isset}" ]]; then
-                    echo "[$SUITE] Patching arcmenu locale: $lang"
-                    msgunfmt "$mo_file" -o /tmp/arcmenu.po
+            if [[ -f "$mo_file" ]] && [[ -n "${PIN[$lang]+isset}" ]]; then
+                echo "[$SUITE] Patching arcmenu locale: $lang"
+                msgunfmt "$mo_file" -o /tmp/arcmenu.po
 
-                    cat << EOF >> /tmp/arcmenu.po
+                cat << EOF >> /tmp/arcmenu.po
 msgid "Pin to Start menu"
 msgstr "${PIN[$lang]}"
 
@@ -130,15 +129,12 @@ msgid "Unpin from Start menu"
 msgstr "${UNPIN[$lang]}"
 
 EOF
-                    msgfmt /tmp/arcmenu.po -o "$mo_file"
-                    rm -f /tmp/arcmenu.po
-                    found=$((found + 1))
-                fi
-            done
-            echo "[$SUITE] Patched arcmenu.mo for $found languages"
-        fi
-    else
-        echo "[$SUITE] Skipping locale patches (msgunfmt/msgfmt not found — install gettext)"
+                msgfmt /tmp/arcmenu.po -o "$mo_file"
+                rm -f /tmp/arcmenu.po
+                found=$((found + 1))
+            fi
+        done
+        echo "[$SUITE] Patched arcmenu.mo for $found languages"
     fi
 done
 
