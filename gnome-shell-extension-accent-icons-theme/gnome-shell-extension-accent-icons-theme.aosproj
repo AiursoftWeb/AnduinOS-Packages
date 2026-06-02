@@ -1,9 +1,10 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-accent-icons-theme</PackageName>
-    <PackageVersion>5+$(SuiteShortName)1</PackageVersion>
+    <PackageVersion>5+$(SuiteShortName)2</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Makes icons follow system accent color and color scheme Light or Dark, a fork from https://github.com/taiwbi/gnome-accent-directories This extension is included by default in BRGV-OS and AnduinOS — packaged for AnduinOS</PackageDescription>
+    <Section>gnome</Section>
     <PackageHomepage>https://extensions.gnome.org/extension/8499/</PackageHomepage>
     <LicenseType>GPL-2.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
