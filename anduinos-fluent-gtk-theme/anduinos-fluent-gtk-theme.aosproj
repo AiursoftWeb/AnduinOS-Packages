@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-fluent-gtk-theme</PackageName>
-    <PackageVersion>1.0.1</PackageVersion>
+    <PackageVersion>2.0.0</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>Fluent GTK theme by vinceliuice (noborder round tweaks) — packaged for AnduinOS</PackageDescription>
+    <PackageDescription>Fluent GTK theme by vinceliuice — runs author's install.sh at install time</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://github.com/vinceliuice/Fluent-gtk-theme</PackageHomepage>
     <LicenseType>GPL-3.0</LicenseType>
@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <IncludeFolder Include="deploy/themes/" Target="/usr/share/themes" />
+    <IncludeFolder Include="deploy/src/" Target="/usr/share/anduinos-fluent-gtk-theme/src" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PostInstallScript Include="scripts/postinst.sh" />
   </ItemGroup>
 </Project>

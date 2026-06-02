@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-fluent-icon-theme</PackageName>
-    <PackageVersion>1.0.3</PackageVersion>
+    <PackageVersion>2.0.0</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>Fluent icon theme by vinceliuice — packaged for AnduinOS</PackageDescription>
+    <PackageDescription>Fluent icon theme by vinceliuice — runs author's install.sh at install time</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://github.com/vinceliuice/Fluent-icon-theme</PackageHomepage>
     <LicenseType>GPL-3.0</LicenseType>
@@ -18,9 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <IncludeFolder Include="deploy/icons/" Target="/usr/share/icons" />
-    <!-- symlink manifest — postinst restores symlinks, then deletes this -->
-    <IncludeFile Include="deploy/symlinks.txt" Target="/usr/share/icons/Fluent-symlinks.txt" />
+    <!-- Ship source → postinst runs install.sh to generate icons on target -->
+    <IncludeFolder Include="deploy/src/" Target="/usr/share/anduinos-fluent-icon-theme/src" />
   </ItemGroup>
 
   <ItemGroup>
