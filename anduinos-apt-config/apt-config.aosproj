@@ -9,7 +9,7 @@
     <LicenseType>GPL-2.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
-    <TargetArchitectures>all</TargetArchitectures>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
   </PropertyGroup>
 
@@ -21,14 +21,19 @@
     <!-- APT pinning: prefer AnduinOS packages over upstream Ubuntu -->
     <IncludeFile Include="deploy/anduinos" Target="/etc/apt/preferences.d/anduinos" />
 
-    <!-- Per-suite APT sources: addon (amd64 only — no arm64 packages yet) -->
-    <IncludeFile Include="deploy/noble/anduinos.sources"    Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFile Include="deploy/questing/anduinos.sources" Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'questing-addon'" />
-    <IncludeFile Include="deploy/resolute/anduinos.sources" Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'resolute-addon'" />
+    <!-- Per-arch per-suite APT sources — architectures match the target -->
+    <IncludeFile Include="deploy/amd64/noble/anduinos.sources"      Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'noble-addon' and '$(Arch)' == 'amd64'" />
+    <IncludeFile Include="deploy/amd64/questing/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'questing-addon' and '$(Arch)' == 'amd64'" />
+    <IncludeFile Include="deploy/amd64/resolute/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'amd64'" />
+    <IncludeFile Include="deploy/arm64/noble/anduinos.sources"      Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'noble-addon' and '$(Arch)' == 'arm64'" />
+    <IncludeFile Include="deploy/arm64/questing/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'questing-addon' and '$(Arch)' == 'arm64'" />
+    <IncludeFile Include="deploy/arm64/resolute/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'arm64'" />
 
-    <!-- Per-suite APT sources: webapps (amd64 arm64) -->
-    <IncludeFile Include="deploy/noble/anduinos-webapps.sources"    Target="/etc/apt/sources.list.d/anduinos-webapps.sources" Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFile Include="deploy/questing/anduinos-webapps.sources" Target="/etc/apt/sources.list.d/anduinos-webapps.sources" Condition="'$(Suite)' == 'questing-addon'" />
-    <IncludeFile Include="deploy/resolute/anduinos-webapps.sources" Target="/etc/apt/sources.list.d/anduinos-webapps.sources" Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/amd64/noble/anduinos-webapps.sources"      Target="/etc/apt/sources.list.d/anduinos-webapps.sources" Condition="'$(Suite)' == 'noble-addon' and '$(Arch)' == 'amd64'" />
+    <IncludeFile Include="deploy/amd64/questing/anduinos-webapps.sources"   Target="/etc/apt/sources.list.d/anduinos-webapps.sources" Condition="'$(Suite)' == 'questing-addon' and '$(Arch)' == 'amd64'" />
+    <IncludeFile Include="deploy/amd64/resolute/anduinos-webapps.sources"   Target="/etc/apt/sources.list.d/anduinos-webapps.sources" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'amd64'" />
+    <IncludeFile Include="deploy/arm64/noble/anduinos-webapps.sources"      Target="/etc/apt/sources.list.d/anduinos-webapps.sources" Condition="'$(Suite)' == 'noble-addon' and '$(Arch)' == 'arm64'" />
+    <IncludeFile Include="deploy/arm64/questing/anduinos-webapps.sources"   Target="/etc/apt/sources.list.d/anduinos-webapps.sources" Condition="'$(Suite)' == 'questing-addon' and '$(Arch)' == 'arm64'" />
+    <IncludeFile Include="deploy/arm64/resolute/anduinos-webapps.sources"   Target="/etc/apt/sources.list.d/anduinos-webapps.sources" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'arm64'" />
   </ItemGroup>
 </Project>
