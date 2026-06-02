@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-network-stats</PackageName>
-    <PackageVersion>1.0.36+$(SuiteShortName)2</PackageVersion>
+    <PackageVersion>1.0.36+$(SuiteShortName)3</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Displays internet upload speed, download speed, bandwidth, data usage. visit github page for instructions, suggestions and feature requests. ERROR while updating extension ? restart your system or reload gnome shell. — packaged for AnduinOS</PackageDescription>
     <Section>gnome</Section>
@@ -37,5 +37,8 @@
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <IncludeFile Include="dconf/17-network-stats.conf" Target="/etc/dconf/db/anduinos.d/17-network-stats.conf" />
   </ItemGroup>
 </Project>

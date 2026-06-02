@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-simple-weather</PackageName>
-    <PackageVersion>50.0.2+$(SuiteShortName)2</PackageVersion>
+    <PackageVersion>50.0.2+$(SuiteShortName)3</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>A highly configurable weather indicator. Doesn't use GNOME Weather. — packaged for AnduinOS</PackageDescription>
     <Section>gnome</Section>
@@ -34,5 +34,8 @@
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <IncludeFile Include="dconf/18-simple-weather.conf" Target="/etc/dconf/db/anduinos.d/18-simple-weather.conf" />
   </ItemGroup>
 </Project>

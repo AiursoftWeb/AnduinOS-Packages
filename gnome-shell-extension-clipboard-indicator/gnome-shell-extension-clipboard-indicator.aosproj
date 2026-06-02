@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-clipboard-indicator</PackageName>
-    <PackageVersion>1.0.73+$(SuiteShortName)2</PackageVersion>
+    <PackageVersion>1.0.73+$(SuiteShortName)3</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>The most popular clipboard manager for GNOME, with over 1M downloads — packaged for AnduinOS</PackageDescription>
     <Section>gnome</Section>
@@ -32,5 +32,8 @@
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <IncludeFile Include="dconf/12-clipboard-indicator.conf" Target="/etc/dconf/db/anduinos.d/12-clipboard-indicator.conf" />
   </ItemGroup>
 </Project>

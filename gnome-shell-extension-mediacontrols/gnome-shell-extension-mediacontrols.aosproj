@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-mediacontrols</PackageName>
-    <PackageVersion>2.4.6+$(SuiteShortName)2</PackageVersion>
+    <PackageVersion>2.4.6+$(SuiteShortName)3</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Show controls and information of the currently playing media in the panel. — packaged for AnduinOS</PackageDescription>
     <Section>gnome</Section>
@@ -33,5 +33,8 @@
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <IncludeFile Include="dconf/16-mediacontrols.conf" Target="/etc/dconf/db/anduinos.d/16-mediacontrols.conf" />
   </ItemGroup>
 </Project>
