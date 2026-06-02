@@ -35,7 +35,7 @@ export const defaults = [\
         "$DEPLOY_DIR/panelPositions.js"
 
     # Patch Chinese locale: rename "Dash to Panel 设置" → "任务栏设置"
-    local zh_mo="$DEPLOY_DIR/locale/zh_CN/LC_MESSAGES/dash-to-panel.mo"
+    zh_mo="$DEPLOY_DIR/locale/zh_CN/LC_MESSAGES/dash-to-panel.mo"
     if [[ -f "$zh_mo" ]]; then
         echo "[$SUITE] Patching zh_CN locale..."
         msgunfmt "$zh_mo" -o /tmp/dash-to-panel.po

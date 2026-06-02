@@ -109,14 +109,13 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
     sed -i 's/Pin to ArcMenu/Pin to Start menu/g' "$DEPLOY_DIR/appMenu.js"
 
     # 3. Patch localization
-    local locale_dir="$DEPLOY_DIR/locale"
-    local found=0
+    locale_dir="$DEPLOY_DIR/locale"
+    found=0
 
     if [[ -d "$locale_dir" ]]; then
         for lang_dir in "$locale_dir"/*/; do
-            local lang
             lang=$(basename "$lang_dir")
-            local mo_file="$lang_dir/LC_MESSAGES/arcmenu.mo"
+            mo_file="$lang_dir/LC_MESSAGES/arcmenu.mo"
 
             if [[ -f "$mo_file" ]] && [[ -n "${PIN[$lang]+isset}" ]]; then
                 echo "[$SUITE] Patching arcmenu locale: $lang"
