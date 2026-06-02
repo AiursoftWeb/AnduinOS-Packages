@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-gnome-shell-locale</PackageName>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.0.1</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GNOME Shell locale overrides — renames Pin to Dash/Dock → Taskbar</PackageDescription>
     <Section>admin</Section>
@@ -35,10 +35,6 @@
     <IncludeFile Include="deploy/noble/zh_TW/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/zh_TW/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/questing/zh_TW/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/zh_TW/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'questing-addon'" />
     <IncludeFile Include="deploy/resolute/zh_TW/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/zh_TW/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'resolute-addon'" />
-
-    <IncludeFile Include="deploy/noble/zh_HK/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/zh_HK/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFile Include="deploy/questing/zh_HK/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/zh_HK/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'questing-addon'" />
-    <IncludeFile Include="deploy/resolute/zh_HK/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/zh_HK/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'resolute-addon'" />
 
     <IncludeFile Include="deploy/noble/ja/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/ja/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/questing/ja/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ja/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
@@ -75,10 +71,6 @@
     <IncludeFile Include="deploy/noble/it/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/it/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/questing/it/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/it/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
     <IncludeFile Include="deploy/resolute/it/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/it/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
-
-    <IncludeFile Include="deploy/noble/pt/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/pt/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFile Include="deploy/questing/pt/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/pt/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'questing-addon'" />
-    <IncludeFile Include="deploy/resolute/pt/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/pt/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
 
     <IncludeFile Include="deploy/noble/pt_BR/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/pt_BR/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/questing/pt_BR/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/pt_BR/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'questing-addon'" />

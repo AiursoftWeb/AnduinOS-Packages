@@ -137,10 +137,12 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
 
         # Map Ubuntu lang code to our translation key
         # Ubuntu uses zh_CN (from zh-hans), zh_TW (from zh-hant), etc.
+        # Skip English variants — English is created from scratch below
+        [[ "$lang" =~ ^en ]] && continue
+
         case "$lang" in
             zh_CN) key="zh_CN" ;;
             zh_TW) key="zh_TW" ;;
-            zh_HK) key="zh_HK" ;;
             ja)    key="ja" ;;
             ko)    key="ko" ;;
             vi)    key="vi" ;;
