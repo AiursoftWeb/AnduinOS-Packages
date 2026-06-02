@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-apt-config</PackageName>
-    <PackageVersion>1.0.7</PackageVersion>
+    <PackageVersion>1.0.8</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>APT pinning: ensures AnduinOS packages always take precedence over Ubuntu</PackageDescription>
     <Section>admin</Section>
@@ -21,9 +21,13 @@
     <!-- APT pinning: prefer AnduinOS packages over upstream Ubuntu -->
     <IncludeFile Include="deploy/anduinos" Target="/etc/apt/preferences.d/anduinos" />
 
-    <!-- Per-suite APT sources (addon + webapps merged into one file) -->
+    <!-- Per-suite APT sources: addon (amd64 only) + webapps (amd64 arm64) -->
     <IncludeFile Include="deploy/noble/anduinos.sources"    Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/questing/anduinos.sources" Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'questing-addon'" />
     <IncludeFile Include="deploy/resolute/anduinos.sources" Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'resolute-addon'" />
+
+    <IncludeFile Include="deploy/noble/anduinos-webapps.sources"    Target="/etc/apt/sources.list.d/anduinos-webapps.sources" Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/questing/anduinos-webapps.sources" Target="/etc/apt/sources.list.d/anduinos-webapps.sources" Condition="'$(Suite)' == 'questing-addon'" />
+    <IncludeFile Include="deploy/resolute/anduinos-webapps.sources" Target="/etc/apt/sources.list.d/anduinos-webapps.sources" Condition="'$(Suite)' == 'resolute-addon'" />
   </ItemGroup>
 </Project>
