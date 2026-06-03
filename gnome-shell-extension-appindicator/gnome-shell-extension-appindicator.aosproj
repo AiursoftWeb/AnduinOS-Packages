@@ -16,8 +16,8 @@
     <!-- Provides virtual package so anduinos-theme dep is satisfied -->
     <Provides>gnome-shell-extension-appindicator</Provides>
     <!-- Evicts Ubuntu's version which ships ubuntu-appindicators@ubuntu.com -->
-    <Conflicts>gnome-shell-extension-appindicator (&lt;&lt; 1:)</Conflicts>
-    <Replaces>gnome-shell-extension-appindicator (&lt;&lt; 1:)</Replaces>
+    <Conflicts>gnome-shell-extension-appindicator</Conflicts>
+    <Replaces>gnome-shell-extension-appindicator</Replaces>
   </PropertyGroup>
   <ItemGroup>
     <Dependency Include="gnome-shell (>= 45~)" />
