@@ -1,6 +1,7 @@
 stages:
   - lint
   - publish
+  - meta
 
 variables:
   APKG_SERVER: "https://apkg-dev.aiursoft.com"
@@ -170,6 +171,16 @@ gnome-shell-extensions:
 
 anduinos-theme:
   extends: .publish
+  stage: meta
+  needs:
+    - anduinos-fluent-icon-theme
+    - anduinos-fluent-gtk-theme
+    - anduinos-gnome-extensions
+    - anduinos-dconf-defaults
+    - gnome-shell-extensions
+    - gnome-shell-extension-ubuntu-dock
+    - anduinos-wallpapers
+    - anduinos-gnome-shell-locale
   variables:
     PACKAGE_DIR: anduinos-theme
 
@@ -183,7 +194,28 @@ anduinos-gnome-shell-locale:
   variables:
     PACKAGE_DIR: anduinos-gnome-shell-locale
 
+# ── Meta-packages: must wait for their dependencies ──────────────────────
+
 anduinos-gnome-extensions:
   extends: .publish
+  stage: meta
+  needs:
+    - gnome-shell-extension-anduinos-loc
+    - gnome-shell-extension-anduinos-switcher
+    - gnome-shell-extension-noti-bottom-right
+    - gnome-shell-extension-accent-gtk-theme
+    - gnome-shell-extension-accent-user-theme
+    - gnome-shell-extension-accent-icons-theme
+    - gnome-shell-extension-arcmenu
+    - gnome-shell-extension-blur-my-shell
+    - gnome-shell-extension-clipboard-indicator
+    - gnome-shell-extension-customize-ibus
+    - gnome-shell-extension-dash-to-panel-anduinos
+    - gnome-shell-extension-lockkeys
+    - gnome-shell-extension-mediacontrols
+    - gnome-shell-extension-network-stats
+    - gnome-shell-extension-proxy-switcher
+    - gnome-shell-extension-simple-weather
+    - gnome-shell-extension-tiling-assistant
   variables:
     PACKAGE_DIR: anduinos-gnome-extensions
