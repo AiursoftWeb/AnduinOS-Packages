@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>firmware-sof-anduinos</PackageName>
-    <PackageVersion>2025.12-1</PackageVersion>
+    <PackageVersion>2025.12-2</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Intel SOF (Sound Open Firmware) — firmware binaries for Intel audio DSPs</PackageDescription>
     <Section>admin</Section>
@@ -15,6 +15,10 @@
     <Conflicts>firmware-sof-signed</Conflicts>
     <Provides>firmware-sof-signed</Provides>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Dependency Include="rsync" />
+  </ItemGroup>
 
   <ItemGroup>
     <Recommend Include="alsa-ucm-conf-anduinos" />
