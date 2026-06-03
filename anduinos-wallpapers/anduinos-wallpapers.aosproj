@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-wallpapers</PackageName>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.0.1</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default wallpapers (Fluent Building)</PackageDescription>
     <Section>admin</Section>
@@ -20,5 +20,8 @@
     <IncludeFile Include="deploy/fluent.dark.xml" Target="/usr/share/gnome-background-properties/fluent.dark.xml" />
     <!-- Wallpaper dconf — ships with wallpapers so they're always in sync -->
     <IncludeFile Include="dconf/20-wallpapers.conf" Target="/etc/dconf/db/anduinos.d/20-wallpapers.conf" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostInstallScript Include="scripts/postinst.sh" />
   </ItemGroup>
 </Project>
