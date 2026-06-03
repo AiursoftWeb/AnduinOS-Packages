@@ -11,12 +11,16 @@ tar -xzf "$ARCHIVE" -C "$WORKDIR"
 SRC="$WORKDIR/Fluent-icon-theme"
 
 echo "Installing Fluent icon theme..."
-cd "$SRC"
-./install.sh --all -d /usr/share/icons
+(
+    cd "$SRC" && \
+    ./install.sh --all -d /usr/share/icons
+)
 
 echo "Installing Fluent cursor theme..."
-cd "$SRC/cursors"
-./install.sh
+(
+    cd "$SRC/cursors" && \
+    ./install.sh
+)
 
 echo "Rebuilding icon caches..."
 for theme in /usr/share/icons/*; do
