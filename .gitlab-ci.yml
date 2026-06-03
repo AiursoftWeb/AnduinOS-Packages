@@ -158,6 +158,11 @@ anduinos-wallpapers:
   variables:
     PACKAGE_DIR: anduinos-wallpapers
 
+anduinos-theme:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-theme
+
 anduinos-templates:
   extends: .publish
   variables:
