@@ -99,6 +99,11 @@ gnome-shell-extension-accent-icons-theme:
   variables:
     PACKAGE_DIR: gnome-shell-extension-accent-icons-theme
 
+gnome-shell-extension-appindicator:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: gnome-shell-extension-appindicator
+
 gnome-shell-extension-arcmenu:
   extends: .publish
   variables:
@@ -123,6 +128,11 @@ gnome-shell-extension-dash-to-panel-anduinos:
   extends: .publish
   variables:
     PACKAGE_DIR: gnome-shell-extension-dash-to-panel-anduinos
+
+gnome-shell-extension-gtk4-desktop-icons-ng:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: gnome-shell-extension-gtk4-desktop-icons-ng
 
 gnome-shell-extension-lockkeys:
   extends: .publish
@@ -204,11 +214,13 @@ anduinos-gnome-extensions:
     - gnome-shell-extension-accent-gtk-theme
     - gnome-shell-extension-accent-user-theme
     - gnome-shell-extension-accent-icons-theme
+    - gnome-shell-extension-appindicator
     - gnome-shell-extension-arcmenu
     - gnome-shell-extension-blur-my-shell
     - gnome-shell-extension-clipboard-indicator
     - gnome-shell-extension-customize-ibus
     - gnome-shell-extension-dash-to-panel-anduinos
+    - gnome-shell-extension-gtk4-desktop-icons-ng
     - gnome-shell-extension-lockkeys
     - gnome-shell-extension-mediacontrols
     - gnome-shell-extension-network-stats
