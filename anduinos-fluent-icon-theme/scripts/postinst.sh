@@ -11,7 +11,13 @@ echo "Installing Fluent cursor theme..."
 cd "$SRC/cursors"
 ./install.sh
 
-# install.sh already runs gtk-update-icon-cache per variant.
-# Running it again with -f -t across all Fluent* dirs (including
-# cursors without index.theme) can corrupt the cache.
+# Rebuild icon caches — install.sh runs gtk-update-icon-cache
+# internally but suppresses errors (> /dev/null 2>&1 || true).
+# We rebuild explicitly for every icon theme with an index.theme.
+echo "Rebuilding icon caches..."
+for theme in /usr/share/icons/Fluent*; do
+    if [ -f "$theme/index.theme" ]; then
+        gtk-update-icon-cache -f "$theme"
+    fi
+done
 echo "Fluent icon theme installed."
