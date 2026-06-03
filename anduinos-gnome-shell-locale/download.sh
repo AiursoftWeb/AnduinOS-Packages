@@ -61,9 +61,9 @@ declare -A REMOVE=(
 
 # ── Ubuntu archive URL per suite ────────────────────────────────────────
 declare -A UBUNTU_MIRROR=(
-    ["noble"]="http://archive.ubuntu.com/ubuntu"
-    ["questing"]="http://archive.ubuntu.com/ubuntu"
-    ["resolute"]="http://archive.ubuntu.com/ubuntu"
+    ["noble"]="https://mirror.aiursoft.com/ubuntu"
+    ["questing"]="https://mirror.aiursoft.com/ubuntu"
+    ["resolute"]="https://mirror.aiursoft.com/ubuntu"
 )
 
 for SUITE in "${!GNOME_TARGETS[@]}"; do
