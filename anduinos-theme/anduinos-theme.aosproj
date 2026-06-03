@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-theme</PackageName>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.0.1</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS complete visual theme — icons, GTK theme, wallpapers, and extensions</PackageDescription>
     <Section>metapackages</Section>
@@ -11,14 +11,18 @@
     <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
+    <!-- Replace Ubuntu's default extensions -->
+    <Conflicts>gnome-shell-extensions, gnome-shell-extension-ubuntu-dock, gnome-shell-extension-tiling-assistant</Conflicts>
   </PropertyGroup>
 
   <ItemGroup>
-    <Recommend Include="anduinos-fluent-icon-theme" />
-    <Recommend Include="anduinos-fluent-gtk-theme" />
+    <!-- Core: must be present for AnduinOS look -->
+    <Dependency Include="anduinos-fluent-icon-theme" />
+    <Dependency Include="anduinos-fluent-gtk-theme" />
+    <Dependency Include="anduinos-gnome-extensions" />
+    <Dependency Include="anduinos-dconf-defaults" />
+    <!-- Nice-to-have: can remove individually -->
     <Recommend Include="anduinos-wallpapers" />
-    <Recommend Include="anduinos-gnome-extensions" />
-    <Recommend Include="anduinos-dconf-defaults" />
     <Recommend Include="anduinos-gnome-shell-locale" />
   </ItemGroup>
 </Project>
