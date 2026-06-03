@@ -39,10 +39,10 @@ base-files:
   variables:
     PACKAGE_DIR: base-files
 
-plymouth-theme-spinner:
+plymouth-anduinos:
   extends: .publish
   variables:
-    PACKAGE_DIR: plymouth-theme-spinner
+    PACKAGE_DIR: plymouth-anduinos
 
 anduinos-apt-config:
   extends: .publish
@@ -187,7 +187,7 @@ anduinos-theme:
     - anduinos-fluent-gtk-theme
     - anduinos-gnome-extensions
     - anduinos-dconf-defaults
-    - plymouth-theme-spinner
+    - plymouth-anduinos
     - anduinos-wallpapers
     - anduinos-gnome-shell-locale
   variables:
