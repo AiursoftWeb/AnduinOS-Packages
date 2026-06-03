@@ -1,0 +1,25 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-wallpapers</PackageName>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS default wallpapers (Fluent Building)</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Wallpaper images -->
+    <IncludeFile Include="deploy/Fluent-building-light.png" Target="/usr/share/backgrounds/Fluent-building-light.png" />
+    <IncludeFile Include="deploy/Fluent-building-night.png" Target="/usr/share/backgrounds/Fluent-building-night.png" />
+
+    <!-- GNOME background XML definitions -->
+    <IncludeFile Include="deploy/fluent.light.xml" Target="/usr/share/gnome-background-properties/fluent.light.xml" />
+    <IncludeFile Include="deploy/fluent.dark.xml" Target="/usr/share/gnome-background-properties/fluent.dark.xml" />
+  </ItemGroup>
+</Project>
