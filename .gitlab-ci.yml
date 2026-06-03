@@ -174,10 +174,10 @@ alsa-ucm-conf-anduinos:
   variables:
     PACKAGE_DIR: alsa-ucm-conf-anduinos
 
-anduinos-sof-firmware:
+firmware-sof-anduinos:
   extends: .publish
   variables:
-    PACKAGE_DIR: anduinos-sof-firmware
+    PACKAGE_DIR: firmware-sof-anduinos
 
 anduinos-theme:
   extends: .publish

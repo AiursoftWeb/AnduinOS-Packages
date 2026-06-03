@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
-    <PackageName>anduinos-sof-firmware</PackageName>
-    <PackageVersion>2025.12.0</PackageVersion>
+    <PackageName>firmware-sof-anduinos</PackageName>
+    <PackageVersion>2025.12-1</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Intel SOF (Sound Open Firmware) — firmware binaries for Intel audio DSPs</PackageDescription>
     <Section>admin</Section>
@@ -11,14 +11,21 @@
     <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
     <TargetArchitectures>amd64</TargetArchitectures>
     <Component>main</Component>
+    <Replaces>firmware-sof-signed</Replaces>
+    <Conflicts>firmware-sof-signed</Conflicts>
+    <Provides>firmware-sof-signed</Provides>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Recommend Include="alsa-ucm-conf-anduinos" />
+  </ItemGroup>
 
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />
   </ItemGroup>
 
   <ItemGroup>
-    <IncludeFile Include="deploy/sof-firmware.tar.gz" Target="/usr/share/anduinos-sof-firmware/sof-firmware.tar.gz" />
+    <IncludeFile Include="deploy/sof-firmware.tar.gz" Target="/usr/share/firmware-sof-anduinos/sof-firmware.tar.gz" />
   </ItemGroup>
 
   <ItemGroup>

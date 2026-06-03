@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-SRC="/usr/share/anduinos-sof-firmware"
+SRC="/usr/share/firmware-sof-anduinos"
 TMP="$(mktemp -d /tmp/anduinos-sof.XXXXXX)"
 trap 'rm -rf "$TMP"' EXIT
 
