@@ -8,12 +8,9 @@ rm -rf "$SCRIPT_DIR/deploy" /tmp/Fluent-icon-theme
 git clone https://github.com/vinceliuice/Fluent-icon-theme.git /tmp/Fluent-icon-theme
 git -C /tmp/Fluent-icon-theme checkout "$FLUENT_ICON_COMMIT"
 
-echo "Copying source to deploy/src/..."
-# Remove links/ — symlinks that C# File.Copy can't handle.
-# install.sh regenerates all symlinks via shared base directories.
-rm -rf /tmp/Fluent-icon-theme/links
-mkdir -p "$SCRIPT_DIR/deploy/src"
-cp -r /tmp/Fluent-icon-theme/* "$SCRIPT_DIR/deploy/src/"
+echo "Packing full upstream repo to deploy/fluent-icon-theme.tar.gz..."
+mkdir -p "$SCRIPT_DIR/deploy"
+tar -czf "$SCRIPT_DIR/deploy/fluent-icon-theme.tar.gz" -C /tmp Fluent-icon-theme
 
 rm -rf /tmp/Fluent-icon-theme
 echo "Done."

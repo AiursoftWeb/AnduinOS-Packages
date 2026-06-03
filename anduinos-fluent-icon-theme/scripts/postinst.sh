@@ -1,11 +1,18 @@
 #!/bin/sh
 set -e
 
-SRC="/usr/share/anduinos-fluent-icon-theme/src"
+ARCHIVE="/usr/share/anduinos-fluent-icon-theme/fluent-icon-theme.tar.gz"
+WORKDIR="$(mktemp -d /tmp/anduinos-fluent-icon-theme.XXXXXX)"
+trap 'rm -rf "$WORKDIR"' EXIT
+
+echo "Extracting Fluent icon theme sources..."
+tar -xzf "$ARCHIVE" -C "$WORKDIR"
+
+SRC="$WORKDIR/Fluent-icon-theme"
 
 echo "Installing Fluent icon theme..."
 cd "$SRC"
-./install.sh --all -d /usr/share/icons
+./install.sh -d /usr/share/icons
 
 echo "Installing Fluent cursor theme..."
 cd "$SRC/cursors"
