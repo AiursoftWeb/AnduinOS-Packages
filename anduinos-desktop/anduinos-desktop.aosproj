@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop</PackageName>
-    <PackageVersion>1.0.3</PackageVersion>
+    <PackageVersion>1.0.4</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS complete desktop — metapackage that pulls in all AnduinOS components</PackageDescription>
     <Section>metapackages</Section>
@@ -30,6 +30,7 @@
     <Dependency Include="yaru-theme-sound" />
 
     <!-- AnduinOS desktop components -->
+    <Dependency Include="anduinos-deskmon" />
     <Dependency Include="anduinos-theme" />
     <Dependency Include="anduinos-templates" />
     <Dependency Include="plymouth-anduinos" />

@@ -69,6 +69,11 @@ anduinos-dconf-defaults:
   variables:
     PACKAGE_DIR: anduinos-dconf-defaults
 
+anduinos-deskmon:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-deskmon
+
 gnome-shell-extension-anduinos-loc:
   extends: .publish
   variables:
@@ -256,6 +261,7 @@ anduinos-desktop:
   stage: meta
   needs:
     - anduinos-apt-config
+    - anduinos-deskmon
     - base-files
     - anduinos-theme
     - anduinos-templates
