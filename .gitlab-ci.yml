@@ -215,6 +215,16 @@ anduinos-software-properties-gtk:
   variables:
     PACKAGE_DIR: anduinos-software-properties-gtk
 
+anduinos-system-tweaks:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-system-tweaks
+
+anduinos-system-tweaks-server:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-system-tweaks-server
+
 anduinos-templates:
   extends: .publish
   variables:
@@ -270,5 +280,6 @@ anduinos-desktop:
     - alsa-ucm-conf-anduinos
     - anduinos-software-properties-common
     - anduinos-software-properties-gtk
+    - anduinos-system-tweaks
   variables:
     PACKAGE_DIR: anduinos-desktop
