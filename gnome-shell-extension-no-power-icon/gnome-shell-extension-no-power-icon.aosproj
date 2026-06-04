@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
-    <PackageName>gnome-shell-extension-anduinos-switcher</PackageName>
-    <PackageVersion>2.0.4</PackageVersion>
+    <PackageName>gnome-shell-extension-no-power-icon</PackageName>
+    <PackageVersion>3.0.0</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>AnduinOS Light/Dark Theme Switcher GNOME Shell extension (switcher@anduinos)</PackageDescription>
+    <PackageDescription>AnduinOS No Power Icon GNOME Shell extension (no-power-icon@anduinos)</PackageDescription>
     <Section>gnome</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <LicenseType>GPL-2.0</LicenseType>
@@ -19,7 +19,7 @@
     <Dependency Include="gnome-shell" />
     <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
     <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
-    <IncludeFolder Include="deploy/switcher@anduinos"
-                   Target="/usr/share/gnome-shell/extensions/switcher@anduinos" />
+    <IncludeFolder Include="deploy/no-power-icon@anduinos"
+                   Target="/usr/share/gnome-shell/extensions/no-power-icon@anduinos" />
   </ItemGroup>
 </Project>

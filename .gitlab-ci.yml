@@ -79,10 +79,10 @@ gnome-shell-extension-anduinos-loc:
   variables:
     PACKAGE_DIR: gnome-shell-extension-anduinos-loc
 
-gnome-shell-extension-anduinos-switcher:
+gnome-shell-extension-no-power-icon:
   extends: .publish
   variables:
-    PACKAGE_DIR: gnome-shell-extension-anduinos-switcher
+    PACKAGE_DIR: gnome-shell-extension-no-power-icon
 
 gnome-shell-extension-noti-bottom-right:
   extends: .publish
@@ -232,7 +232,7 @@ anduinos-gnome-extensions:
   stage: meta
   needs:
     - gnome-shell-extension-anduinos-loc
-    - gnome-shell-extension-anduinos-switcher
+    - gnome-shell-extension-no-power-icon
     - gnome-shell-extension-noti-bottom-right
     - gnome-shell-extension-accent-gtk-theme
     - gnome-shell-extension-accent-user-theme

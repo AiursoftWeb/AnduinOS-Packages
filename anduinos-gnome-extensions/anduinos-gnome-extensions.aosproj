@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-gnome-extensions</PackageName>
-    <PackageVersion>1.0.10</PackageVersion>
+    <PackageVersion>1.0.11</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Meta-package that installs all AnduinOS GNOME Shell extensions. Installing this package pulls in the complete set of extensions used by AnduinOS desktop. Individual extensions can be removed separately.</PackageDescription>
     <Section>metapackages</Section>
@@ -20,7 +20,7 @@
   <ItemGroup>
     <!-- AnduinOS original extensions: source code lives in AnduinOS repos -->
     <Dependency Include="gnome-shell-extension-anduinos-loc" />
-    <Dependency Include="gnome-shell-extension-anduinos-switcher" />
+    <Dependency Include="gnome-shell-extension-no-power-icon" />
     <Dependency Include="gnome-shell-extension-noti-bottom-right" />
 
     <!-- Third-party extensions packaged by AnduinOS (downloaded from GNOME Extensions at build time) -->

@@ -20,7 +20,7 @@ function hasBattery() {
     return false;
 }
 
-export default class LightDarkSwitcherExtension extends Extension {
+export default class NoPowerIconExtension extends Extension {
     enable() {
         if (!hasBattery()) {
             let systemIndicator = Main.panel.statusArea.quickSettings._system;
