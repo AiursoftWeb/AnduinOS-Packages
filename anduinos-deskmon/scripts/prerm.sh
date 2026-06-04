@@ -1,9 +1,7 @@
 #!/bin/sh
 set -e
-
 if [ "$1" = "remove" ]; then
-    rm -f /etc/systemd/user/graphical-session.target.wants/deskmon.service
+    systemctl --global disable deskmon.service || true
 fi
-
 #DEBHELPER#
 exit 0

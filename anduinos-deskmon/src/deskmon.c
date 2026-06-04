@@ -2,7 +2,7 @@
 // File: deskmon.c
 // Daemon: watch ~/Desktop for new .desktop files, chmod +x and mark as trusted
 // Compile: gcc `pkg-config --cflags --libs gio-2.0 glib-2.0` -O2 -o deskmon deskmon.c
-// Install to /usr/local/bin/deskmon and run via systemd user service
+// Install to /usr/bin/deskmon and run via systemd user service
 
 #define _GNU_SOURCE
 #include <stdio.h>
@@ -34,24 +34,47 @@ static void trust_file(const char *path) {
         return;
     }
 
-    if (chmod(path, st.st_mode | S_IXUSR | S_IXGRP | S_IXOTH) < 0) {
-        g_warning("chmod(%s) failed: %s", path, strerror(errno));
-    }
+    gboolean needs_chmod = ((st.st_mode & S_IXUSR) == 0);
 
-    GError *error = NULL;
     GFile *file = g_file_new_for_path(path);
-    if (!g_file_set_attribute_string(
-            file,
-            "metadata::trusted",
-            "true",
-            G_FILE_QUERY_INFO_NONE,
-            NULL,
-            &error)) {
-        g_warning("Failed to set trusted on %s: %s", path, error->message);
+    GError *error = NULL;
+
+    gboolean needs_trust = TRUE;
+    GFileInfo *info = g_file_query_info(file, "metadata::trusted", G_FILE_QUERY_INFO_NONE, NULL, &error);
+    if (info) {
+        const char *trusted = g_file_info_get_attribute_string(info, "metadata::trusted");
+        if (trusted && g_strcmp0(trusted, "true") == 0) {
+            needs_trust = FALSE;
+        }
+        g_object_unref(info);
+    } else {
         g_clear_error(&error);
     }
-    g_object_unref(file);
 
+    if (!needs_chmod && !needs_trust) {
+        g_object_unref(file);
+        return;
+    }
+
+    if (needs_chmod) {
+        if (chmod(path, st.st_mode | S_IXUSR | S_IXGRP | S_IXOTH) < 0) {
+            g_warning("chmod(%s) failed: %s", path, strerror(errno));
+        }
+    }
+    if (needs_trust) {
+        if (!g_file_set_attribute_string(
+                file,
+                "metadata::trusted",
+                "true",
+                G_FILE_QUERY_INFO_NONE,
+                NULL,
+                &error)) {
+            g_warning("Failed to set trusted on %s: %s", path, error->message);
+            g_clear_error(&error);
+        }
+    }
+
+    g_object_unref(file);
     g_message("Trusted and marked executable: %s", path);
 }
 
@@ -103,7 +126,7 @@ int main(void) {
         return EXIT_FAILURE;
     }
 
-    int wd = inotify_add_watch(fd, watch_dir, IN_CREATE | IN_MOVED_TO);
+    int wd = inotify_add_watch(fd, watch_dir, IN_CREATE | IN_MOVED_TO | IN_CLOSE_WRITE);
     if (wd < 0) {
         g_error("inotify_add_watch(%s) failed: %s", watch_dir, strerror(errno));
         close(fd);
@@ -125,7 +148,7 @@ int main(void) {
         int offset = 0;
         while (offset < length) {
             struct inotify_event *ev = (struct inotify_event *)(buf + offset);
-            if (!(ev->mask & IN_ISDIR) && (ev->mask & (IN_CREATE | IN_MOVED_TO))) {
+            if (!(ev->mask & IN_ISDIR) && (ev->mask & (IN_CREATE | IN_MOVED_TO | IN_CLOSE_WRITE))) {
                 size_t name_len = strlen(ev->name);
                 if (name_len > 8) {
                     char *suffix = g_utf8_casefold(ev->name + name_len - 8, -1);

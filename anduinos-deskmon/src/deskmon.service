@@ -5,7 +5,8 @@ After=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/bin/sh -c "sleep 5 && /usr/bin/deskmon"
+ExecStartPre=/bin/sleep 5
+ExecStart=/usr/bin/deskmon
 Restart=on-failure
 RestartSec=5s
 
