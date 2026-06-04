@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>plymouth-anduinos</PackageName>
-    <PackageVersion>$(UpstreamVersion)+$(SuiteShortName)1-anduinos</PackageVersion>
+    <PackageVersion>2.0.0</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>AnduinOS plymouth spinner theme</PackageDescription>
+    <PackageDescription>AnduinOS boot splash theme</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <LicenseType>GPL-2.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
@@ -11,7 +11,7 @@
     <TargetArchitectures>amd64</TargetArchitectures>
     <Component>main</Component>
 
-    <!-- Derive from Ubuntu plymouth-theme-spinner to inherit all animation frames and scripts -->
+    <!-- Derive from upstream to inherit all animation frames, throbbers, and the two-step module -->
     <UpstreamUrl>https://mirror.aiursoft.com/ubuntu</UpstreamUrl>
     <UpstreamDistro>ubuntu</UpstreamDistro>
     <UpstreamPackage>plymouth-theme-spinner</UpstreamPackage>
@@ -20,18 +20,37 @@
     <UpstreamComponent>$(Component)</UpstreamComponent>
     <UpstreamArch>amd64</UpstreamArch>
 
-    <!-- Provides satisfies any remaining Recommends on plymouth-theme-spinner -->
+    <!-- Provides satisfies any Depends/Recommends on plymouth-theme-spinner -->
     <Provides>plymouth-theme-spinner</Provides>
-    <!-- Conflicts prevents the Ubuntu plymouth-theme-spinner from being installed alongside us -->
+    <!-- Conflicts + Replaces: clean upgrade from the old swap package or Ubuntu's version -->
     <Conflicts>plymouth-theme-spinner</Conflicts>
-    <!-- Replaces covers file ownership from both plymouth-theme-spinner and plymouth main package -->
-    <Replaces>plymouth-theme-spinner, plymouth</Replaces>
+    <Replaces>plymouth-theme-spinner</Replaces>
+    <!-- No Replaces: plymouth — we no longer touch any file owned by the plymouth main package -->
+    <SuppressUpstreamScripts>true</SuppressUpstreamScripts>
   </PropertyGroup>
 
   <ItemGroup>
-    <IncludeFile Include="deploy/anduinos_text.png" Target="/usr/share/plymouth/ubuntu-logo.png" />
-    <IncludeFile Include="deploy/anduinos_text.png" Target="/usr/share/plymouth/themes/spinner/watermark.png"
-                 Condition="'$(Suite)' != 'resolute-addon'" />
-    <IncludeFile Include="deploy/logo_96.png"       Target="/usr/share/plymouth/themes/spinner/bgrt-fallback.png" />
+    <!--
+      Relocate the entire spinner theme into our own namespace:
+        1. Copy themes/spinner → themes/anduinos
+        2. Rename spinner.plymouth → anduinos.plymouth and fix the ImageDir path inside it
+        3. Drop the now-redundant ubuntu-logo.png (belongs to plymouth main; we don't need it)
+        4. Drop themes/spinner (we own themes/anduinos now)
+    -->
+    <PrebuildCommand Run="for src in obj/*/usr/share/plymouth/themes/spinner; do cp -r &quot;$src&quot; &quot;$(dirname &quot;$src&quot;)/anduinos&quot;; done" />
+    <PrebuildCommand Run="for f in obj/*/usr/share/plymouth/themes/anduinos/spinner.plymouth; do mv &quot;$f&quot; &quot;$(dirname &quot;$f&quot;)/anduinos.plymouth&quot;; done" />
+    <PrebuildCommand Run="sed -i 's|themes//spinner|themes/anduinos|g; s|themes/spinner|themes/anduinos|g; s|Name=Spinner|Name=AnduinOS|g' obj/*/usr/share/plymouth/themes/anduinos/anduinos.plymouth" />
+    <PrebuildCommand Run="rm -f  obj/*/usr/share/plymouth/ubuntu-logo.png" />
+    <PrebuildCommand Run="rm -rf obj/*/usr/share/plymouth/themes/spinner" />
+    <!-- resolute: watermark.png is a dangling symlink after copy; remove it so IncludeFile can write a real file -->
+    <PrebuildCommand Run="find obj/*/usr/share/plymouth/themes/anduinos -name 'watermark.png' -type l -delete" />
+
+    <!-- Override the two brand images with AnduinOS artwork; all other files come from upstream -->
+    <IncludeFile Include="deploy/anduinos_text.png" Target="/usr/share/plymouth/themes/anduinos/watermark.png" />
+    <IncludeFile Include="deploy/logo_96.png"       Target="/usr/share/plymouth/themes/anduinos/bgrt-fallback.png" />
+
+    <!-- Register theme with update-alternatives and rebuild initramfs on install/remove -->
+    <PostInstallScript Include="scripts/postinst.sh" />
+    <PreRemoveScript  Include="scripts/prerm.sh" />
   </ItemGroup>
 </Project>
