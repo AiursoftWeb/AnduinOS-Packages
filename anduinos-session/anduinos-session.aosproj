@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-session</PackageName>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.0.1</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS session configuration and login entry</PackageDescription>
     <Section>gnome</Section>
@@ -21,6 +21,7 @@
   <ItemGroup>
     <Dependency Include="gnome-session" />
     <Dependency Include="gnome-shell" />
+    <Dependency Include="anduinos-mimeapps" />
   </ItemGroup>
 
   <ItemGroup>

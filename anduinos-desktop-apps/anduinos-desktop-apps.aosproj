@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-apps</PackageName>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.0.2</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default applications — pulls in recommended apps for AnduinOS</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -14,14 +14,52 @@
 
   <ItemGroup>
     <Dependency Include="anduinos-mimeapps" />
+
+    <!-- Web & Connectivity -->
+    <Recommend Include="gnome-browser-connector" />
+    <Recommend Include="gnome-online-accounts" />
+    <Recommend Include="remmina" />
+    <Recommend Include="remmina-plugin-rdp" />
+    <Recommend Include="transmission-gtk" />
+    <Recommend Include="transmission-common" />
+
+    <!-- Productivity & Utilities -->
     <Recommend Include="gnome-calendar" />
+    <Recommend Include="gnome-clocks" />
+    <Recommend Include="gnome-weather" />
+    <Recommend Include="gnome-text-editor" />
+    <Recommend Include="papers" />
+    <Recommend Include="qalculate-gtk" />
+    <Recommend Include="seahorse" />
+    <Recommend Include="gnome-characters" />
+    <Recommend Include="gnome-font-viewer" />
+
+    <!-- Media & Graphics -->
     <Recommend Include="loupe" />
     <Recommend Include="showtime" />
     <Recommend Include="rhythmbox" />
-    <Recommend Include="papers" />
-    <Recommend Include="file-roller" />
-    <Recommend Include="gnome-text-editor" />
-    <Recommend Include="transmission-gtk" />
+    <Recommend Include="rhythmbox-plugins" />
+    <Recommend Include="gnome-snapshot" />
+    <Recommend Include="gnome-sound-recorder" />
+    <Recommend Include="ffmpegthumbnailer" />
+    <Recommend Include="libgdk-pixbuf2.0-bin" />
+
+    <!-- System & Maintenance -->
     <Recommend Include="gnome-software" />
+    <Recommend Include="baobab" />
+    <Recommend Include="file-roller" />
+    <Recommend Include="gnome-sushi" />
+    <Recommend Include="gparted" />
+    <Recommend Include="gnome-disk-utility" />
+    <Recommend Include="gnome-logs" />
+    <Recommend Include="resources" />
+    <Recommend Include="gnome-power-manager" />
+    <Recommend Include="usb-creator-gtk" />
+
+    <!-- Documentation & Entertainment -->
+    <Recommend Include="yelp" />
+    <Recommend Include="gnome-user-docs" />
+    <Recommend Include="gnome-control-center-faces" />
+    <Recommend Include="gnome-chess" />
   </ItemGroup>
 </Project>

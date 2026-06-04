@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop</PackageName>
-    <PackageVersion>1.0.9</PackageVersion>
+    <PackageVersion>1.1.0</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS complete desktop — metapackage that pulls in all AnduinOS components</PackageDescription>
     <Section>metapackages</Section>
@@ -21,12 +21,12 @@
     <Dependency Include="anduinos-apt-config" />
     <Dependency Include="base-files" />
 
-    <!-- Essential AnduinOS infrastructure: anduinos-session defines the 
-         identity and replaces ubuntu-session. -->
+    <!-- Essential AnduinOS infrastructure -->
     <Dependency Include="anduinos-session" />
     <Dependency Include="gdm3" />
     <Dependency Include="xwayland" />
     <Dependency Include="yaru-theme-sound" />
+    <Dependency Include="policykit-desktop-privileges" />
 
     <!-- AnduinOS desktop components -->
     <Dependency Include="anduinos-deskmon" />

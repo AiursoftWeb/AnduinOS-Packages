@@ -277,6 +277,8 @@ anduinos-gnome-extensions:
 
 anduinos-session:
   extends: .publish
+  needs:
+    - anduinos-mimeapps
   variables:
     PACKAGE_DIR: anduinos-session
 
