@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-software-properties-common</PackageName>
-    <PackageVersion>$(UpstreamVersion)+anduinos1</PackageVersion>
+    <PackageVersion>$(UpstreamVersion)2+anduinos1</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS fork of software-properties-common — manage APT repositories and PPAs</PackageDescription>
     <Section>admin</Section>
@@ -38,12 +38,15 @@
     <PrebuildCommand Run="for f in obj/*/usr/bin/add-apt-repository; do sed -i '/self.distro = get_distro()/a \        self.distro.id = '\''ubuntu'\'' # Patched by AnduinOS' &quot;$f&quot;; done" />
 
     <!--
-      python-apt looks for /usr/share/python-apt/templates/<distro>.info
-      to resolve mirror URIs.  Provide an anduinos.info (copy of ubuntu.info)
-      so add-apt-repository can resolve Ubuntu mirrors for AnduinOS packages.
+      Symlink anduinos.info → ubuntu.info (python-apt-common) and
+      anduinos.csv → ubuntu.csv (distro-info-data).  dpkg packages
+      relative symlinks natively; they resolve at install time against
+      the system's Ubuntu data files — always up-to-date, zero maintenance.
     -->
-    <PrebuildCommand Run="for d in obj/*; do mkdir -p &quot;$d/usr/share/python-apt/templates&quot; &amp;&amp; cp /usr/share/python-apt/templates/ubuntu.info &quot;$d/usr/share/python-apt/templates/anduinos.info&quot;; done" />
+    <PrebuildCommand Run="for d in obj/*; do mkdir -p &quot;$d/usr/share/python-apt/templates&quot; &quot;$d/usr/share/distro-info&quot; &amp;&amp; ln -sf ubuntu.info &quot;$d/usr/share/python-apt/templates/anduinos.info&quot; &amp;&amp; ln -sf ubuntu.csv &quot;$d/usr/share/distro-info/anduinos.csv&quot;; done" />
 
-    <PrebuildCommand Run="for d in obj/*; do mkdir -p &quot;$d/usr/share/distro-info&quot; &amp;&amp; cp /usr/share/distro-info/ubuntu.csv &quot;$d/usr/share/distro-info/anduinos.csv&quot;; done" />
+    <!-- Guarantee symlink targets exist at runtime -->
+    <Dependency Include="python-apt-common" />
+    <Dependency Include="distro-info-data" />
   </ItemGroup>
 </Project>
