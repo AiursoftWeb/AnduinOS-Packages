@@ -1,0 +1,49 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-software-properties-common</PackageName>
+    <PackageVersion>$(UpstreamVersion)+anduinos1</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS fork of software-properties-common — manage APT repositories and PPAs</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <LicenseType>GPL-2.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+
+    <!-- Derive from Ubuntu's software-properties-common, then patch -->
+    <UpstreamUrl>https://mirror.aiursoft.com/ubuntu</UpstreamUrl>
+    <UpstreamDistro>ubuntu</UpstreamDistro>
+    <UpstreamPackage>software-properties-common</UpstreamPackage>
+    <UpstreamSuite>$(Suite)</UpstreamSuite>
+    <UpstreamSuiteMapping>noble-addon=noble, questing-addon=questing, resolute-addon=resolute</UpstreamSuiteMapping>
+    <UpstreamComponent>$(Component)</UpstreamComponent>
+    <UpstreamArch>amd64</UpstreamArch>
+
+    <!-- Fork identity: replaces Ubuntu's package -->
+    <Provides>software-properties-common</Provides>
+    <Conflicts>software-properties-common</Conflicts>
+    <Replaces>software-properties-common</Replaces>
+    <SuppressUpstreamScripts>true</SuppressUpstreamScripts>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Patch add-apt-repository: PPA detection uses get_distro().id to look up
+      mirror templates.  Our distro id is "anduinos" which python-apt doesn't
+      know about.  Inject self.distro.id = 'ubuntu' so PPA add/remove works
+      without having to maintain a fork of python-apt itself.
+    -->
+    <PrebuildCommand Run="for f in obj/*/usr/bin/add-apt-repository; do sed -i '/self.distro = get_distro()/a \        self.distro.id = '\''ubuntu'\'' # Patched by AnduinOS' &quot;$f&quot;; done" />
+
+    <!--
+      python-apt looks for /usr/share/python-apt/templates/<distro>.info
+      to resolve mirror URIs.  Provide an anduinos.info (copy of ubuntu.info)
+      so add-apt-repository can resolve Ubuntu mirrors for AnduinOS packages.
+    -->
+    <PrebuildCommand Run="for d in obj/*; do mkdir -p &quot;$d/usr/share/python-apt/templates&quot; &amp;&amp; cp /usr/share/python-apt/templates/ubuntu.info &quot;$d/usr/share/python-apt/templates/anduinos.info&quot;; done" />
+
+    <PrebuildCommand Run="for d in obj/*; do mkdir -p &quot;$d/usr/share/distro-info&quot; &amp;&amp; cp /usr/share/distro-info/ubuntu.csv &quot;$d/usr/share/distro-info/anduinos.csv&quot;; done" />
+  </ItemGroup>
+</Project>

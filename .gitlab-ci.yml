@@ -193,6 +193,18 @@ anduinos-theme:
   variables:
     PACKAGE_DIR: anduinos-theme
 
+anduinos-software-properties-common:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-software-properties-common
+
+anduinos-software-properties-gtk:
+  extends: .publish
+  needs:
+    - anduinos-software-properties-common
+  variables:
+    PACKAGE_DIR: anduinos-software-properties-gtk
+
 anduinos-templates:
   extends: .publish
   variables:
@@ -244,5 +256,7 @@ anduinos-desktop:
     - plymouth-anduinos
     - firmware-sof-anduinos
     - alsa-ucm-conf-anduinos
+    - anduinos-software-properties-common
+    - anduinos-software-properties-gtk
   variables:
     PACKAGE_DIR: anduinos-desktop

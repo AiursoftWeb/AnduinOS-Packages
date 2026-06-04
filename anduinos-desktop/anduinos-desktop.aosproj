@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop</PackageName>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.0.1</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS complete desktop — metapackage that pulls in all AnduinOS components</PackageDescription>
     <Section>metapackages</Section>
@@ -22,6 +22,10 @@
     <Dependency Include="anduinos-theme" />
     <Dependency Include="anduinos-templates" />
     <Dependency Include="plymouth-anduinos" />
+
+    <!-- APT / PPA support -->
+    <Dependency Include="anduinos-software-properties-common" />
+    <Dependency Include="anduinos-software-properties-gtk" Condition="'$(Suite)' == 'resolute-addon'" />
 
     <!-- Hardware support -->
     <Dependency Include="firmware-sof-anduinos" />

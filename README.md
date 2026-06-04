@@ -29,6 +29,8 @@ The following AnduinOS packages explicitly replace or conflict with Ubuntu's off
 |---|---|---|---|
 | `base-files` | `base-files` | -- (epoch `1:` outranks) | AnduinOS branding -- epoch `1:` ensures our version wins |
 | `plymouth-anduinos` | `plymouth-theme-spinner` | `plymouth-theme-spinner` | AnduinOS boot splash -- derives upstream spinner assets into clean `themes/anduinos/` namespace, immune to upstream updates |
+| `anduinos-software-properties-common` | `software-properties-common` | `software-properties-common` | AnduinOS fork -- patches `add-apt-repository` for PPA compatibility, ships `anduinos.info`/`anduinos.csv` distro templates |
+| `anduinos-software-properties-gtk` | `software-properties-gtk` | `software-properties-gtk` | AnduinOS fork -- strips Ubuntu Pro advertisement from Software & Updates GUI (resolute only) |
 
 ## Build
 
