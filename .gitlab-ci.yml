@@ -149,6 +149,11 @@ gnome-shell-extension-network-stats:
   variables:
     PACKAGE_DIR: gnome-shell-extension-network-stats
 
+gnome-shell-extension-no-overview:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: gnome-shell-extension-no-overview
+
 gnome-shell-extension-proxy-switcher:
   extends: .publish
   variables:
@@ -237,6 +242,7 @@ anduinos-gnome-extensions:
     - gnome-shell-extension-lockkeys
     - gnome-shell-extension-mediacontrols
     - gnome-shell-extension-network-stats
+    - gnome-shell-extension-no-overview
     - gnome-shell-extension-proxy-switcher
     - gnome-shell-extension-simple-weather
     - gnome-shell-extension-tiling-assistant

@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-gnome-extensions</PackageName>
-    <PackageVersion>1.0.9</PackageVersion>
+    <PackageVersion>1.0.10</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Meta-package that installs all AnduinOS GNOME Shell extensions. Installing this package pulls in the complete set of extensions used by AnduinOS desktop. Individual extensions can be removed separately.</PackageDescription>
     <Section>metapackages</Section>
@@ -37,6 +37,7 @@
     <Dependency Include="gnome-shell-extension-lockkeys" />
     <Dependency Include="gnome-shell-extension-mediacontrols" />
     <Dependency Include="gnome-shell-extension-network-stats" />
+    <Dependency Include="gnome-shell-extension-no-overview" />
     <Dependency Include="gnome-shell-extension-proxy-switcher" />
     <Dependency Include="gnome-shell-extension-simple-weather" />
     <Dependency Include="gnome-shell-extension-tiling-assistant" />
