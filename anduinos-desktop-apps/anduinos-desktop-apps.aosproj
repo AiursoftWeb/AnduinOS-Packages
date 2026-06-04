@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-apps</PackageName>
-    <PackageVersion>1.0.2</PackageVersion>
+    <PackageVersion>1.0.3</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default applications — pulls in recommended apps for AnduinOS</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -59,6 +59,9 @@
     <!-- Documentation & Entertainment -->
     <Recommend Include="yelp" />
     <Recommend Include="gnome-user-docs" />
+
+    <Recommend Include="nautilus" />
+    <Recommend Include="gnome-control-center" />
     <Recommend Include="gnome-control-center-faces" />
     <Recommend Include="gnome-chess" />
   </ItemGroup>
