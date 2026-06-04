@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-appindicator-anduinos</PackageName>
-    <PackageVersion>64+$(SuiteShortName)1</PackageVersion>
+    <PackageVersion>64+$(SuiteShortName)2</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AppIndicator and KStatusNotifierItem Support extension (3v1n0) — packaged for AnduinOS</PackageDescription>
     <Section>gnome</Section>
@@ -14,6 +14,7 @@
     <DependencyCheckUrl>https://mirror.aiursoft.com/ubuntu</DependencyCheckUrl>
     <DependencyCheckSuiteMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</DependencyCheckSuiteMap>
     <!-- Evicts Ubuntu's gnome-shell-extension-appindicator which ships ubuntu-appindicators@ubuntu.com -->
+    <Provides>gnome-shell-extension-appindicator</Provides>
     <Conflicts>gnome-shell-extension-appindicator</Conflicts>
     <Replaces>gnome-shell-extension-appindicator</Replaces>
   </PropertyGroup>

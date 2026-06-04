@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-gtk4-desktop-icons-ng</PackageName>
-    <PackageVersion>1.0.0+$(SuiteShortName)3</PackageVersion>
+    <PackageVersion>1.0.0+$(SuiteShortName)4</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>GTK4/Libadwaita port of Desktop Icons NG — packaged for AnduinOS (GNOME 50)</PackageDescription>
     <Section>gnome</Section>
@@ -15,6 +15,7 @@
     <DependencyCheckSuiteMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</DependencyCheckSuiteMap>
     <!-- On resolute (GNOME 50), provides virtual packages to replace gnome-shell-ubuntu-extensions -->
     <Provides>gnome-shell-extension-desktop-icons-ng</Provides>
+    <Conflicts>gnome-shell-extension-desktop-icons-ng</Conflicts>
     <Replaces>gnome-shell-extension-desktop-icons-ng</Replaces>
   </PropertyGroup>
   <ItemGroup>

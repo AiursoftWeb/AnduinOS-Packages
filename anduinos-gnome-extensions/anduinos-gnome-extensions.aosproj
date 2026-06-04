@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-gnome-extensions</PackageName>
-    <PackageVersion>1.0.8</PackageVersion>
+    <PackageVersion>1.0.9</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Meta-package that installs all AnduinOS GNOME Shell extensions. Installing this package pulls in the complete set of extensions used by AnduinOS desktop. Individual extensions can be removed separately.</PackageDescription>
     <Section>metapackages</Section>
@@ -12,6 +12,7 @@
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
     <!-- Replace Ubuntu's gnome-shell-ubuntu-extensions meta-package -->
+    <Provides>gnome-shell-ubuntu-extensions</Provides>
     <Conflicts>gnome-shell-ubuntu-extensions</Conflicts>
     <Replaces>gnome-shell-ubuntu-extensions</Replaces>
   </PropertyGroup>
