@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-software-properties-gtk</PackageName>
-    <PackageVersion>$(UpstreamVersion)+anduinos1</PackageVersion>
+    <PackageVersion>$(UpstreamVersion)2+anduinos1</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS fork of software-properties-gtk — Software &amp; Updates GUI without Ubuntu Pro ads</PackageDescription>
     <Section>admin</Section>
@@ -25,16 +25,14 @@
     <Conflicts>software-properties-gtk</Conflicts>
     <Replaces>software-properties-gtk</Replaces>
     <SuppressUpstreamScripts>true</SuppressUpstreamScripts>
+    <SuppressUpstreamDependencies>ubuntu-pro-client ubuntu-advantage-desktop-daemon</SuppressUpstreamDependencies>
   </PropertyGroup>
 
   <ItemGroup>
     <!--
-      Ubuntu Pro code removal: strip the import, the method, and the call site.
-      After patching, ubuntu-pro-client (inherited from upstream Depends) is
-      a harmless no-op since the GUI no longer references it.
-
-      Three passes: remove the import, the init_ubuntu_pro method definition,
-      and the call site guarded by is_current_distro_lts().
+      Ubuntu Pro code removal: strip the Python imports/methods/call-sites,
+      and suppress ubuntu-pro-client and ubuntu-advantage-desktop-daemon
+      from the inherited upstream Depends.
     -->
     <PrebuildCommand Run="for f in obj/*/usr/lib/python3/dist-packages/softwareproperties/gtk/SoftwarePropertiesGtk.py; do sed -i '/^from \.UbuntuProPage import UbuntuProPage$/d' &quot;$f&quot;; done" />
     <PrebuildCommand Run="for f in obj/*/usr/lib/python3/dist-packages/softwareproperties/gtk/SoftwarePropertiesGtk.py; do sed -i '/^[[:space:]]*def init_ubuntu_pro/,/^[[:space:]]*$/d' &quot;$f&quot;; done" />
