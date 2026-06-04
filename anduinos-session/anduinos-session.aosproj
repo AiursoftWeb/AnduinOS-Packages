@@ -1,0 +1,34 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-session</PackageName>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS session configuration and login entry</PackageDescription>
+    <Section>gnome</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <LicenseType>GPL-3.0</LicenseType>
+    
+    <Provides>ubuntu-session</Provides>
+    <Conflicts>ubuntu-session</Conflicts>
+    <Replaces>ubuntu-session</Replaces>
+    
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Dependency Include="gnome-session" />
+    <Dependency Include="gnome-shell" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IncludeFile Include="assets/anduinos.desktop" Target="/usr/share/wayland-sessions/anduinos.desktop" />
+    <IncludeFile Include="assets/anduinos.desktop" Target="/usr/share/xsessions/anduinos.desktop" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PostInstallScript Include="scripts/postinst.sh" />
+  </ItemGroup>
+</Project>

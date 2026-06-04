@@ -275,6 +275,24 @@ anduinos-gnome-extensions:
   variables:
     PACKAGE_DIR: anduinos-gnome-extensions
 
+anduinos-session:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-session
+
+anduinos-mimeapps:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-mimeapps
+
+anduinos-desktop-apps:
+  extends: .publish
+  stage: meta
+  needs:
+    - anduinos-mimeapps
+  variables:
+    PACKAGE_DIR: anduinos-desktop-apps
+
 # ── Ultimate meta-package ──────────────────────────────────────────────────
 
 anduinos-desktop:
@@ -293,5 +311,7 @@ anduinos-desktop:
     - anduinos-software-properties-gtk
     - anduinos-system-tweaks
     - anduinos-no-snapd
+    - anduinos-desktop-apps
+    - anduinos-session
   variables:
     PACKAGE_DIR: anduinos-desktop

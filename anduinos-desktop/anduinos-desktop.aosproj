@@ -1,15 +1,15 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop</PackageName>
-    <PackageVersion>1.0.7</PackageVersion>
+    <PackageVersion>1.0.9</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS complete desktop — metapackage that pulls in all AnduinOS components</PackageDescription>
     <Section>metapackages</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <LicenseType>GPL-3.0</LicenseType>
-    <Provides>ubuntu-session, yaru-theme-gnome-shell</Provides>
-    <Conflicts>ubuntu-session, yaru-theme-gnome-shell, update-notifier, update-notifier-common, update-manager, update-manager-core, ubuntu-release-upgrader-core, ubuntu-release-upgrader-gtk</Conflicts>
-    <Replaces>ubuntu-session, yaru-theme-gnome-shell, update-notifier, update-notifier-common, update-manager, update-manager-core, ubuntu-release-upgrader-core, ubuntu-release-upgrader-gtk</Replaces>
+    <Provides>yaru-theme-gnome-shell</Provides>
+    <Conflicts>yaru-theme-gnome-shell, update-notifier, update-notifier-common, update-manager, update-manager-core, ubuntu-release-upgrader-core, ubuntu-release-upgrader-gtk</Conflicts>
+    <Replaces>yaru-theme-gnome-shell, update-notifier, update-notifier-common, update-manager, update-manager-core, ubuntu-release-upgrader-core, ubuntu-release-upgrader-gtk</Replaces>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
@@ -21,10 +21,9 @@
     <Dependency Include="anduinos-apt-config" />
     <Dependency Include="base-files" />
 
-    <!-- Essential GNOME infrastructure: we replace ubuntu-session with
-         native gnome-session, and explicitly own gdm3 + xwayland so
-         autoremove never sweeps them away -->
-    <Dependency Include="gnome-session" />
+    <!-- Essential AnduinOS infrastructure: anduinos-session defines the 
+         identity and replaces ubuntu-session. -->
+    <Dependency Include="anduinos-session" />
     <Dependency Include="gdm3" />
     <Dependency Include="xwayland" />
     <Dependency Include="yaru-theme-sound" />
@@ -45,6 +44,9 @@
     <!-- Hardware support -->
     <Dependency Include="firmware-sof-anduinos" />
     <Dependency Include="alsa-ucm-conf-anduinos" />
+
+    <!-- Default Applications -->
+    <Recommend Include="anduinos-desktop-apps" />
 
   </ItemGroup>
 </Project>
