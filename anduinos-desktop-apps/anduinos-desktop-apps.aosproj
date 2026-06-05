@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-apps</PackageName>
-    <PackageVersion>1.0.5</PackageVersion>
+    <PackageVersion>1.0.6</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default applications — pulls in recommended apps for AnduinOS</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -14,6 +14,9 @@
 
   <ItemGroup>
     <Dependency Include="anduinos-mimeapps" />
+
+    <!-- Terminal Emulators -->
+    <Dependency Include="ptyxis" />
 
     <!-- Web & Connectivity -->
     <Recommend Include="gnome-browser-connector" />
@@ -62,6 +65,5 @@
 
     <Recommend Include="gnome-control-center-faces" />
     <Recommend Include="gnome-chess" />
-    <Recommend Include="ptyxis" />
   </ItemGroup>
 </Project>
