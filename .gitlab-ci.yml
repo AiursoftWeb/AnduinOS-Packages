@@ -64,6 +64,11 @@ anduinos-archive-keyring:
   variables:
     PACKAGE_DIR: anduinos-archive-keyring
 
+anduinos-bwrap-hack:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-bwrap-hack
+
 anduinos-fluent-gtk-theme:
   extends: .publish
   variables:
@@ -245,6 +250,13 @@ anduinos-gnome-shell-locale:
   extends: .publish
   variables:
     PACKAGE_DIR: anduinos-gnome-shell-locale
+
+anduinos-installer-config:
+  extends: .publish
+  needs:
+    - anduinos-bwrap-hack
+  variables:
+    PACKAGE_DIR: anduinos-installer-config
 
 # ── Meta-packages: must wait for their dependencies ──────────────────────
 
