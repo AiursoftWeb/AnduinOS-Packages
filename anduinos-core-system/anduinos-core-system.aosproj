@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-core-system</PackageName>
-    <PackageVersion>1.0.6</PackageVersion>
+    <PackageVersion>1.0.7</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS core system foundation metapackage — essential system services, networking, hardware support, and administration tools. This is the base layer for all AnduinOS variants (Desktop, Server, IoT).</PackageDescription>
     <Section>metapackages</Section>
@@ -61,6 +61,7 @@
     <Dependency Include="libpam-modules" />
     <Dependency Include="libpam-modules-bin" />
     <Dependency Include="dbus" />
+    <Dependency Include="dbus-bin" />
     <Dependency Include="dbus-user-session" />
 
     <!-- ============================================================
