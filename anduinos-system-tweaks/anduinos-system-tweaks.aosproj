@@ -13,9 +13,12 @@
     <Component>main</Component>
     <Conflicts>anduinos-system-tweaks-server</Conflicts>
     <Replaces>anduinos-system-tweaks-server</Replaces>
-    <DependencyCheckUrl>https://mirror.aiursoft.com/ubuntu</DependencyCheckUrl>
-    <DependencyCheckSuiteMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</DependencyCheckSuiteMap>
+    <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
   </PropertyGroup>
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble questing-addon=questing resolute-addon=resolute" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <IncludeFile Include="assets/20-anduinos-tweaks.conf" Target="/etc/sysctl.d/20-anduinos-tweaks.conf" />

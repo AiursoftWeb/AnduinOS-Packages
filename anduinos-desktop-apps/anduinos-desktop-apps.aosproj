@@ -16,6 +16,7 @@
     <Dependency Include="anduinos-mimeapps" />
 
     <!-- Web & Connectivity -->
+    <Recommend Include="firefox-anduinos" />
     <Recommend Include="gnome-browser-connector" />
     <Recommend Include="gnome-online-accounts" />
     <Recommend Include="remmina" />
@@ -27,7 +28,7 @@
     <Recommend Include="gnome-clocks" />
     <Recommend Include="gnome-weather" />
     <Recommend Include="gnome-text-editor" />
-    <Recommend Include="papers" />
+    <Recommend Include="evince" />
     <Recommend Include="qalculate-gtk" />
     <Recommend Include="seahorse" />
     <Recommend Include="gnome-characters" />
@@ -35,7 +36,7 @@
 
     <!-- Media & Graphics -->
     <Recommend Include="loupe" />
-    <Recommend Include="showtime" />
+    <Recommend Include="totem" />
     <Recommend Include="rhythmbox" />
     <Recommend Include="rhythmbox-plugins" />
     <Recommend Include="gnome-snapshot" />
@@ -49,7 +50,7 @@
     <Recommend Include="gnome-sushi" />
     <Recommend Include="gnome-disk-utility" />
     <Recommend Include="gnome-logs" />
-    <Recommend Include="resources" Condition="'$(Suite)' == 'resolute-addon'" />
+    <Recommend Include="gnome-system-monitor" Condition="'$(Suite)' == 'resolute-addon'" />
     <Recommend Include="gnome-power-manager" />
     <Recommend Include="usb-creator-gtk" />
 
@@ -60,5 +61,14 @@
     <!-- Games and fun -->
     <Recommend Include="gnome-control-center-faces" />
     <Recommend Include="gnome-chess" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource
+        Url="https://mirror.aiursoft.com/ubuntu"
+        SuiteMap="noble-addon=noble questing-addon=questing resolute-addon=resolute" />
+    <DependencyCheckSource
+        Url="https://apkg-dev.aiursoft.com/artifacts/anduinos"
+        SuiteMap="noble-addon=noble-addon questing-addon=questing-addon resolute-addon=resolute-addon" />
   </ItemGroup>
 </Project>

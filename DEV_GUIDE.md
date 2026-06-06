@@ -95,7 +95,7 @@ produces a genuinely distinct `.deb`. The SDK supports two build-time variables 
 | Variable | Value | Example result |
 |---|---|---|
 | `$(Suite)` | The raw target suite (e.g. `questing-addon`) | `1.0.56+questing-addon1` |
-| `$(SuiteShortName)` | The mapped short name from `DependencyCheckSuiteMap`; falls back to `$(Suite)` if not mapped | `1.0.56+questing1` |
+| `$(SuiteShortName)` | The mapped short name from `SuiteShortNameMap`; falls back to `$(Suite)` if not mapped | `1.0.56+questing1` |
 
 `$(SuiteShortName)` is preferred because it produces cleaner version strings.
 
@@ -107,7 +107,7 @@ produces a genuinely distinct `.deb`. The SDK supports two build-time variables 
     <PackageName>gnome-shell-extension-tiling-assistant</PackageName>
     <PackageVersion>1.0.56+$(SuiteShortName)1</PackageVersion>
     <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
-    <DependencyCheckSuiteMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</DependencyCheckSuiteMap>
+    <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
     ...
   </PropertyGroup>
   <ItemGroup>

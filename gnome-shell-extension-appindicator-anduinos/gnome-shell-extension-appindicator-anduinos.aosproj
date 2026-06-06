@@ -11,13 +11,16 @@
     <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <DependencyCheckUrl>https://mirror.aiursoft.com/ubuntu</DependencyCheckUrl>
-    <DependencyCheckSuiteMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</DependencyCheckSuiteMap>
+    <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
     <!-- Evicts Ubuntu's gnome-shell-extension-appindicator which ships ubuntu-appindicators@ubuntu.com -->
     <Provides>gnome-shell-extension-appindicator</Provides>
     <Conflicts>gnome-shell-extension-appindicator</Conflicts>
     <Replaces>gnome-shell-extension-appindicator</Replaces>
   </PropertyGroup>
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble questing-addon=questing resolute-addon=resolute" />
+  </ItemGroup>
+
   <ItemGroup>
     <Dependency Include="gnome-shell (>= 45~)" />
     <Dependency Include="gjs" />

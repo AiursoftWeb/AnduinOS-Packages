@@ -11,11 +11,14 @@
     <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <DependencyCheckUrl>https://mirror.aiursoft.com/ubuntu</DependencyCheckUrl>
-    <DependencyCheckSuiteMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</DependencyCheckSuiteMap>
+    <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
     <Conflicts>anduinos-system-tweaks</Conflicts>
     <Replaces>anduinos-system-tweaks</Replaces>
   </PropertyGroup>
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble questing-addon=questing resolute-addon=resolute" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <IncludeFile Include="assets/20-anduinos-tweaks-server.conf" Target="/etc/sysctl.d/20-anduinos-tweaks-server.conf" />
