@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-apps</PackageName>
-    <PackageVersion>1.0.10</PackageVersion>
+    <PackageVersion>1.0.12</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default applications — pulls in recommended apps for AnduinOS</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Dependency Include="anduinos-mimeapps" />
+    <Recommend Include="anduinos-mimeapps" />
 
     <!-- Web & Connectivity -->
     <Recommend Include="firefox-anduinos" />
@@ -28,7 +28,10 @@
     <Recommend Include="gnome-clocks" />
     <Recommend Include="gnome-weather" />
     <Recommend Include="gnome-text-editor" />
-    <Recommend Include="evince" />
+    <!-- Document Viewer: evince (noble), papers (questing+) -->
+    <Recommend Include="evince" Condition="'$(Suite)' == 'noble-addon'" />
+    <Recommend Include="papers" Condition="'$(Suite)' == 'questing-addon'" />
+    <Recommend Include="papers" Condition="'$(Suite)' == 'resolute-addon'" />
     <Recommend Include="qalculate-gtk" />
     <Recommend Include="seahorse" />
     <Recommend Include="gnome-characters" />
@@ -36,7 +39,10 @@
 
     <!-- Media & Graphics -->
     <Recommend Include="loupe" />
-    <Recommend Include="totem" />
+    <!-- Video Player: totem (noble), showtime (questing+) -->
+    <Recommend Include="totem" Condition="'$(Suite)' == 'noble-addon'" />
+    <Recommend Include="showtime" Condition="'$(Suite)' == 'questing-addon'" />
+    <Recommend Include="showtime" Condition="'$(Suite)' == 'resolute-addon'" />
     <Recommend Include="rhythmbox" />
     <Recommend Include="rhythmbox-plugins" />
     <Recommend Include="gnome-snapshot" />
@@ -50,7 +56,10 @@
     <Recommend Include="gnome-sushi" />
     <Recommend Include="gnome-disk-utility" />
     <Recommend Include="gnome-logs" />
-    <Recommend Include="gnome-system-monitor" Condition="'$(Suite)' == 'resolute-addon'" />
+    <!-- System Monitor: gnome-system-monitor (noble+questing), resources (resolute+) -->
+    <Recommend Include="gnome-system-monitor" Condition="'$(Suite)' == 'noble-addon'" />
+    <Recommend Include="gnome-system-monitor" Condition="'$(Suite)' == 'questing-addon'" />
+    <Recommend Include="resources" Condition="'$(Suite)' == 'resolute-addon'" />
     <Recommend Include="gnome-power-manager" />
     <Recommend Include="usb-creator-gtk" />
 

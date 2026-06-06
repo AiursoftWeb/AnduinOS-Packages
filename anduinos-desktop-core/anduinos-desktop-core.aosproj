@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-core</PackageName>
-    <PackageVersion>1.0.6</PackageVersion>
+    <PackageVersion>1.0.7</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS desktop core metapackage — pure upstream GNOME desktop environment with multimedia, printing, and input method support. No AnduinOS branding.</PackageDescription>
     <Section>metapackages</Section>
@@ -26,8 +26,6 @@
     <Dependency Include="gdm3" />
     <Dependency Include="gnome-shell" />
     <Dependency Include="gnome-session" />
-    <Dependency Include="gnome-menus" />
-    <Dependency Include="gir1.2-gmenu-3.0" />
     <Dependency Include="xwayland" />
     <Dependency Include="wayland-protocols" />
 
@@ -46,22 +44,12 @@
          These are the backbone of the GNOME desktop.
          ============================================================ -->
     <Dependency Include="gnome-control-center" />
-    <Dependency Include="ptyxis" />
     <Dependency Include="nautilus" />
     <Dependency Include="gnome-keyring" />
     <Dependency Include="gnome-keyring-pkcs11" />
     <Dependency Include="libpam-gnome-keyring" />
     <Dependency Include="policykit-desktop-privileges" />
     <Dependency Include="anduinos-session | ubuntu-session | gnome-session" />
-    <Recommend Include="anduinos-session" />
-
-    <!-- ============================================================
-         Session & Sound
-         ============================================================ -->
-    <Dependency Include="yaru-theme-sound" />
-    <Dependency Include="libcanberra-pulse" />
-    <Dependency Include="libcanberra-gtk3-module" />
-    <Dependency Include="libcanberra0" />
 
     <!-- ============================================================
          PipeWire Multimedia Stack
@@ -71,20 +59,11 @@
     <Dependency Include="wireplumber" />
 
     <!-- ============================================================
-         GStreamer Codecs & Plugins
-         Core multimedia playback / encoding.
+         GStreamer Core (required for system sound events & media keys)
          ============================================================ -->
     <Dependency Include="gstreamer1.0-plugins-base" />
     <Dependency Include="gstreamer1.0-plugins-good" />
-    <Dependency Include="gstreamer1.0-plugins-bad" />
-    <Dependency Include="gstreamer1.0-plugins-ugly" />
-    <Dependency Include="gstreamer1.0-libav" />
     <Dependency Include="gstreamer1.0-pipewire" />
-    <Dependency Include="gstreamer1.0-alsa" />
-    <Dependency Include="gstreamer1.0-gl" />
-    <Dependency Include="gstreamer1.0-gtk3" />
-    <Dependency Include="gstreamer1.0-x" />
-    <Dependency Include="libavcodec-extra" />
 
     <!-- ============================================================
          Graphics & GPU
@@ -92,77 +71,133 @@
     <Dependency Include="mesa-vulkan-drivers" />
 
     <!-- ============================================================
-         Input Method (IBus)
+         Input Method (IBus core framework)
          ============================================================ -->
     <Dependency Include="ibus" />
-    <Dependency Include="ibus-gtk" />
-    <Dependency Include="ibus-gtk3" />
-    <Dependency Include="ibus-gtk4" />
-    <Dependency Include="im-config" />
 
     <!-- ============================================================
          Firmware sof and alsa-ucm-conf: for audio on Intel devices
          ============================================================ -->
     <Dependency Include="firmware-sof-anduinos | firmware-sof-signed" />
     <Dependency Include="alsa-ucm-conf-anduinos | alsa-ucm-conf" />
-    <Recommend Include="firmware-sof-anduinos" />
-    <Recommend Include="alsa-ucm-conf-anduinos" />
 
     <!-- ============================================================
-         ALSA Sound System
-         ============================================================ -->
-    <Dependency Include="alsa-utils" />
-    <Dependency Include="alsa-base" />
-    <Dependency Include="alsa-topology-conf" />
-
-    <!-- ============================================================
-         Power Management & Firmware
+         Power Management
          ============================================================ -->
     <Dependency Include="upower" />
-    <Dependency Include="power-profiles-daemon" />
-    <Dependency Include="fwupd" />
-    <Dependency Include="fwupd-signed" />
 
     <!-- ============================================================
-         Python (required by GNOME extensions)
+         Python (required by GNOME extensions & system tools)
          ============================================================ -->
     <Dependency Include="python3" />
-    <Dependency Include="python3-pip" />
-    <Dependency Include="python-is-python3" />
     <Dependency Include="python3-minimal" />
 
     <!-- ============================================================
-         System Utilities (desktop-adjacent)
+         System Essentials
          ============================================================ -->
-    <Dependency Include="xdg-utils" />
-    <Dependency Include="xdg-user-dirs" />
-    <Dependency Include="xdg-user-dirs-gtk" />
-    <Dependency Include="zenity" />
-    <Dependency Include="ubuntu-drivers-common" />
-    <Dependency Include="gvfs-fuse" />
-    <Dependency Include="gvfs-backends" />
-    <Dependency Include="libsass1" />
-    <Dependency Include="sassc" />
-    <Dependency Include="appstream" />
-    <Dependency Include="python3-babel" />
-    <Dependency Include="systemd-timesyncd" />
-    <Dependency Include="gnupg" />
     <Dependency Include="apt-transport-https" />
-    <Dependency Include="lsb-release" />
-    <Dependency Include="whiptail" />
-    <Dependency Include="gdisk" />
-    <Dependency Include="eatmydata" />
-    <Dependency Include="patch" />
-    <Dependency Include="less" />
-    <Dependency Include="xxd" />
-    <Dependency Include="exfatprogs" />
-    <Dependency Include="iw" />
-    <Dependency Include="sysstat" />
+    <Dependency Include="systemd-timesyncd" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- ============================================================
-         Recommends: Desktop Extras (safe to remove)
+         Recommends: Brand session (preferred, removable)
+         ============================================================ -->
+    <Recommend Include="anduinos-session" />
+
+    <!-- ============================================================
+         Recommends: Brand firmware & audio config
+         ============================================================ -->
+    <Recommend Include="firmware-sof-anduinos" />
+    <Recommend Include="alsa-ucm-conf-anduinos" />
+
+    <!-- ============================================================
+         Recommends: GNOME menus & terminal
+         ============================================================ -->
+    <Recommend Include="gnome-menus" />
+    <Recommend Include="gir1.2-gmenu-3.0" />
+    <Recommend Include="ptyxis" />
+
+    <!-- ============================================================
+         Recommends: Sound theme & event sounds
+         ============================================================ -->
+    <Recommend Include="yaru-theme-sound" />
+    <Recommend Include="libcanberra-pulse" />
+    <Recommend Include="libcanberra-gtk3-module" />
+    <Recommend Include="libcanberra0" />
+
+    <!-- ============================================================
+         Recommends: GStreamer extras (non-core plugins & codecs)
+         ============================================================ -->
+    <Recommend Include="gstreamer1.0-plugins-bad" />
+    <Recommend Include="gstreamer1.0-plugins-ugly" />
+    <Recommend Include="gstreamer1.0-libav" />
+    <Recommend Include="gstreamer1.0-alsa" />
+    <Recommend Include="gstreamer1.0-gl" />
+    <Recommend Include="gstreamer1.0-gtk3" />
+    <Recommend Include="gstreamer1.0-x" />
+    <Recommend Include="libavcodec-extra" />
+
+    <!-- ============================================================
+         Recommends: ALSA legacy tools (PipeWire handles audio now)
+         ============================================================ -->
+    <Recommend Include="alsa-utils" />
+    <Recommend Include="alsa-base" />
+    <Recommend Include="alsa-topology-conf" />
+
+    <!-- ============================================================
+         Recommends: Power & firmware (non-essential)
+         ============================================================ -->
+    <Recommend Include="power-profiles-daemon" />
+    <Recommend Include="fwupd" />
+    <Recommend Include="fwupd-signed" />
+
+    <!-- ============================================================
+         Recommends: IBus input method addons
+         ============================================================ -->
+    <Recommend Include="ibus-gtk" />
+    <Recommend Include="ibus-gtk3" />
+    <Recommend Include="ibus-gtk4" />
+    <Recommend Include="im-config" />
+
+    <!-- ============================================================
+         Recommends: Python extras
+         ============================================================ -->
+    <Recommend Include="python3-pip" />
+    <Recommend Include="python-is-python3" />
+    <Recommend Include="python3-babel" />
+
+    <!-- ============================================================
+         Recommends: Desktop utilities
+         ============================================================ -->
+    <Recommend Include="xdg-utils" />
+    <Recommend Include="xdg-user-dirs" />
+    <Recommend Include="xdg-user-dirs-gtk" />
+    <Recommend Include="zenity" />
+    <Recommend Include="ubuntu-drivers-common" />
+    <Recommend Include="gvfs-fuse" />
+    <Recommend Include="gvfs-backends" />
+    <Recommend Include="appstream" />
+    <Recommend Include="gnupg" />
+    <Recommend Include="lsb-release" />
+
+    <!-- ============================================================
+         Recommends: Dev & admin CLI tools
+         ============================================================ -->
+    <Recommend Include="libsass1" />
+    <Recommend Include="sassc" />
+    <Recommend Include="whiptail" />
+    <Recommend Include="gdisk" />
+    <Recommend Include="eatmydata" />
+    <Recommend Include="patch" />
+    <Recommend Include="less" />
+    <Recommend Include="xxd" />
+    <Recommend Include="exfatprogs" />
+    <Recommend Include="iw" />
+    <Recommend Include="sysstat" />
+
+    <!-- ============================================================
+         Recommends: Desktop extras (safe to remove)
          ============================================================ -->
     <Recommend Include="gnome-remote-desktop" />
     <Recommend Include="spice-vdagent" />

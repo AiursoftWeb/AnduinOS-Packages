@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-core-system</PackageName>
-    <PackageVersion>1.0.8</PackageVersion>
+    <PackageVersion>1.0.9</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS core system foundation metapackage — essential system services, networking, hardware support, and administration tools. This is the base layer for all AnduinOS variants (Desktop, Server, IoT).</PackageDescription>
     <Section>metapackages</Section>
@@ -18,7 +18,6 @@
          Layer 1 — Core System (boot, init, kernel, firmware)
          Removing these = unbootable system.
          ============================================================ -->
-    <Dependency Include="apparmor" />
     <Dependency Include="coreutils" />
     <Dependency Include="grub-common" />
     <Dependency Include="grub-efi-amd64 | grub-pc" />
@@ -35,23 +34,22 @@
     <Dependency Include="kmod" />
 
     <!-- ============================================================
-         Networking
+         Networking (core — system won't have connectivity without these)
          ============================================================ -->
     <Dependency Include="libnss-systemd" />
     <Dependency Include="network-manager" />
-    <Dependency Include="dhcpcd-base" />
-    <Dependency Include="dnsmasq-base" />
     <Dependency Include="wpasupplicant" />
     <Dependency Include="iproute2" />
+
+    <!-- ============================================================
+         Firewall — one of these three is required; ufw is preferred
+         ============================================================ -->
+    <Dependency Include="ufw | iptables | nftables" />
 
     <!-- ============================================================
          Security
          ============================================================ -->
     <Dependency Include="sudo" />
-    <Dependency Include="sudo-rs" />
-    <Dependency Include="nftables" />
-    <Dependency Include="iptables" />
-    <Dependency Include="ufw" />
     <Dependency Include="openssh-client" />
 
     <!-- ============================================================
@@ -65,15 +63,10 @@
     <Dependency Include="dbus-user-session" />
 
     <!-- ============================================================
-         Filesystem & Storage
+         Filesystem & Storage (core — FUSE is required)
          ============================================================ -->
     <Dependency Include="libfuse2t64" />
     <Dependency Include="libfuse3-4" />
-    <Dependency Include="dosfstools" />
-    <Dependency Include="cifs-utils" />
-    <Dependency Include="parted" />
-    <Dependency Include="fdisk" />
-    <Dependency Include="hdparm" />
 
     <!-- ============================================================
          Locale & Timezone
@@ -82,43 +75,67 @@
     <Dependency Include="resolvconf" />
 
     <!-- ============================================================
-         System Services & Maintenance
+         Essential CLI / Networking Tools
          ============================================================ -->
-    <Dependency Include="cron" />
-    <Dependency Include="logrotate" />
-    <Dependency Include="rsync" />
-
-    <!-- ============================================================
-         Essential CLI Tools
-         ============================================================ -->
-    <Dependency Include="bash-completion" />
     <Dependency Include="curl" />
     <Dependency Include="wget" />
-    <Dependency Include="git" />
-    <Dependency Include="iputils-ping" />
-    <Dependency Include="file" />
-    <Dependency Include="unzip" />
-    <Dependency Include="zip" />
-    <Dependency Include="xz-utils" />
-    <Dependency Include="zstd" />
     <Dependency Include="uuid-runtime" />
-    <Dependency Include="man-db" />
-
-    <!-- ============================================================
-         Hardware Introspection
-         ============================================================ -->
-    <Dependency Include="pciutils" />
-    <Dependency Include="usbutils" />
-    <Dependency Include="lshw" />
-    <Dependency Include="lsof" />
-    <Dependency Include="psmisc" />
-    <Dependency Include="ethtool" />
-    <Dependency Include="hwdata" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- ============================================================
-         Recommends: power-user / admin tools (safe to remove)
+         Recommends: security & networking supplements
+         ============================================================ -->
+    <Recommend Include="ufw" />
+    <Recommend Include="nftables" />
+    <Recommend Include="iptables" />
+    <Recommend Include="sudo-rs" />
+    <Recommend Include="apparmor" />
+    <Recommend Include="dhcpcd-base" />
+    <Recommend Include="dnsmasq-base" />
+
+    <!-- ============================================================
+         Recommends: filesystem & storage tools
+         ============================================================ -->
+    <Recommend Include="dosfstools" />
+    <Recommend Include="cifs-utils" />
+    <Recommend Include="parted" />
+    <Recommend Include="fdisk" />
+    <Recommend Include="hdparm" />
+
+    <!-- ============================================================
+         Recommends: system maintenance
+         ============================================================ -->
+    <Recommend Include="cron" />
+    <Recommend Include="logrotate" />
+    <Recommend Include="rsync" />
+
+    <!-- ============================================================
+         Recommends: CLI tools & utilities
+         ============================================================ -->
+    <Recommend Include="bash-completion" />
+    <Recommend Include="git" />
+    <Recommend Include="iputils-ping" />
+    <Recommend Include="file" />
+    <Recommend Include="unzip" />
+    <Recommend Include="zip" />
+    <Recommend Include="xz-utils" />
+    <Recommend Include="zstd" />
+    <Recommend Include="man-db" />
+
+    <!-- ============================================================
+         Recommends: hardware introspection
+         ============================================================ -->
+    <Recommend Include="pciutils" />
+    <Recommend Include="usbutils" />
+    <Recommend Include="lshw" />
+    <Recommend Include="lsof" />
+    <Recommend Include="psmisc" />
+    <Recommend Include="ethtool" />
+    <Recommend Include="hwdata" />
+
+    <!-- ============================================================
+         Recommends: power-user / admin tools
          ============================================================ -->
     <Recommend Include="vim-tiny" />
     <Recommend Include="nano" />

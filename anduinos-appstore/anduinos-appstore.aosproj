@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-appstore</PackageName>
-    <PackageVersion>1.0.3</PackageVersion>
+    <PackageVersion>1.0.4</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS app store metapackage — GNOME Software with Flatpak support. Install this if you want a graphical app store and Flatpak sandboxed applications.</PackageDescription>
     <Section>metapackages</Section>
@@ -14,9 +14,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Dependency Include="flatpak" />
-    <Dependency Include="gnome-software" />
-    <Dependency Include="gnome-software-plugin-flatpak" />
+    <Recommend Include="flatpak" />
+    <Recommend Include="gnome-software" />
+    <Recommend Include="gnome-software-plugin-flatpak" />
   </ItemGroup>
 
   <ItemGroup>
