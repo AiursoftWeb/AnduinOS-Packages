@@ -6,82 +6,98 @@ AnduinOS APKG package sources.
 
 ## Package conflicts
 
-The following AnduinOS packages explicitly replace or conflict with Ubuntu's official packages.
+The following AnduinOS packages explicitly replace or conflict with
+Ubuntu's official packages.  Every Ubuntu package name appears exactly
+once — there is no overlap.
 
-### 🔴 Hard Replace — Conflicts + Replaces + Provides
+---
 
-These packages remove the Ubuntu equivalent at install time. The user **cannot** install both.
+### 🔴 Hard Replace — dpkg `Conflicts` + `Replaces` + `Provides`
 
-| AnduinOS Package | Replaces (Ubuntu) | Also Provides | Notes |
+User **cannot** install both.  Dpkg removes the Ubuntu package at install time.
+
+| # | AnduinOS Package | Ubuntu Package Removed | Provides? | Notes |
+|---|---|---|---|---|
+| 1 | `anduinos-no-snapd` | `snapd` | — | APT pin (-10); postinst unmounts & purges `/snap`, `/var/snap` |
+| 2 | `anduinos-desktop` | `ubuntu-desktop` | `yaru-theme-gnome-shell` | Metapackage — also kills the 7 packages below |
+| 3 | 〃 | `yaru-theme-gnome-shell` | 〃 | 〃 |
+| 4 | 〃 | `update-notifier` | 〃 | 〃 |
+| 5 | 〃 | `update-notifier-common` | 〃 | 〃 |
+| 6 | 〃 | `update-manager` | 〃 | 〃 |
+| 7 | 〃 | `update-manager-core` | 〃 | 〃 |
+| 8 | 〃 | `ubuntu-release-upgrader-core` | 〃 | 〃 |
+| 9 | 〃 | `ubuntu-release-upgrader-gtk` | 〃 | 〃 |
+| 10 | `anduinos-session` | `ubuntu-session` | yes | + postinst purges `10_ubuntu-session.gschema.override` |
+| 11 | `anduinos-gnome-extensions` | `gnome-shell-ubuntu-extensions` | yes | Metapackage — AnduinOS-curated extension set |
+| 12 | `anduinos-installer-config` | `ubiquity-slideshow-ubuntu` | yes | + postinst `dpkg-divert` of Ubiquity languagelist |
+| 13 | `anduinos-fonts` | `fonts-noto-color-emoji` | yes | CascadiaCode, NerdFonts, Noto Sans/Serif, TwitterColorEmoji |
+| 14 | `anduinos-software-properties-common` | `software-properties-common` | yes | Patches `add-apt-repository` → `--distro=ubuntu` |
+| 15 | `anduinos-software-properties-gtk` | `software-properties-gtk` | yes | Strips Ubuntu Pro ads; suppresses `ubuntu-pro-client` dep |
+| 16 | `firefox-anduinos` | `firefox` | — | Mozilla Apt `.deb`, not the snap wrapper |
+| 17 | `firmware-sof-anduinos` | `firmware-sof-signed` | yes | Newer Intel SOF from `thesofproject/sof-bin` |
+| 18 | `alsa-ucm-conf-anduinos` | `alsa-ucm-conf` | yes | `1.2.16` vs Ubuntu `1.2.15.3` |
+| 19 | `plymouth-anduinos` | `plymouth-theme-spinner` | yes | Boot splash in `themes/anduinos/` namespace |
+| 20 | `gnome-shell-extension-appindicator-anduinos` | `gnome-shell-extension-appindicator` | yes | Same UUID: `appindicatorsupport@rgcjonas.gmail.com` |
+| 21 | `gnome-shell-extension-dash-to-panel-anduinos` | `gnome-shell-extension-dash-to-panel` | yes | Same UUID: `dash-to-panel@jderose9.github.com` |
+| 22 | `gnome-shell-extension-desktop-icons-ng-anduinos` | `gnome-shell-extension-desktop-icons-ng` | yes | Same UUID: `ding@rastersoft.com` (original DING) |
+| 23 | `gnome-shell-extension-desktop-icons-ng-anduinos` | `gnome-shell-extension-gtk4-desktop-icons-ng` | yes | 〃 also replaces the GTK4 port |
+| 24 | `gnome-shell-extension-gtk4-desktop-icons-ng` | `gnome-shell-extension-desktop-icons-ng` | yes | GTK4 port → same UUID. Also Conflicts `desktop-icons-ng-anduinos` |
+
+> **Desktop icons**: two mutually-exclusive AnduinOS packages (#22-24) both replace the same Ubuntu package.  Users pick one — `desktop-icons-ng-anduinos` (original DING) or `gtk4-desktop-icons-ng` (GTK4 port).
+
+---
+
+### 🟡 Dual Recommend — `anduinos-X | ubuntu-X`
+
+Defined in `anduinos-desktop-core` as alternative `Depends`.  The AnduinOS
+version is listed first (preferred), but the user can `apt install ubuntu-X`
+to switch back.
+
+| Preferred (AnduinOS) | Fallback options | Line | Notes |
 |---|---|---|---|
-| `anduinos-no-snapd` | `snapd` | — | APT pin (-10) + unmounts & purges /snap, /var/snap |
-| `anduinos-desktop` | `ubuntu-desktop`, `yaru-theme-gnome-shell`, `update-notifier`, `update-notifier-common`, `update-manager`, `update-manager-core`, `ubuntu-release-upgrader-core`, `ubuntu-release-upgrader-gtk` | `yaru-theme-gnome-shell` | Metapackage — 8 packages blocked, depends on `anduinos-no-snapd` |
-| `anduinos-session` | `ubuntu-session` | `ubuntu-session` | + postinst purges `10_ubuntu-session.gschema.override` |
-| `anduinos-gnome-extensions` | `gnome-shell-ubuntu-extensions` | `gnome-shell-ubuntu-extensions` | Metapackage — AnduinOS-curated extension set |
-| `anduinos-installer-config` | `ubiquity-slideshow-ubuntu` | `ubiquity-slideshow-ubuntu` | + postinst `dpkg-divert` of languagelist |
-| `anduinos-fonts` | `fonts-noto-color-emoji` | `fonts-noto-color-emoji` | Ships CascadiaCode, NerdFonts, Noto Sans/Serif, TwitterColorEmoji |
-| `anduinos-software-properties-common` | `software-properties-common` | `software-properties-common` | Patches `add-apt-repository` → forces `--distro=ubuntu` for PPA compat |
-| `anduinos-software-properties-gtk` | `software-properties-gtk` | `software-properties-gtk` | Strips Ubuntu Pro ads from source; suppresses dep on `ubuntu-pro-client` |
-| `firefox-anduinos` | `firefox` | — | Mozilla .deb, not the snap wrapper |
-| `firmware-sof-anduinos` | `firmware-sof-signed` | `firmware-sof-signed` | Newer Intel SOF snapshot from `thesofproject/sof-bin` |
-| `alsa-ucm-conf-anduinos` | `alsa-ucm-conf` | `alsa-ucm-conf` | Newer snapshot (`1.2.16` vs `1.2.15.3`) |
-| `plymouth-anduinos` | `plymouth-theme-spinner` | `plymouth-theme-spinner` | Boot splash — derives upstream spinner into `themes/anduinos/` namespace |
-
-#### GNOME Shell Extensions (same UUID = dpkg file conflict)
-
-| AnduinOS Package | Replaces (Ubuntu) | Also Provides |
-|---|---|---|
-| `gnome-shell-extension-dash-to-panel-anduinos` | `gnome-shell-extension-dash-to-panel` | `gnome-shell-extension-dash-to-panel` |
-| `gnome-shell-extension-desktop-icons-ng-anduinos` | `gnome-shell-extension-desktop-icons-ng`, `gnome-shell-extension-gtk4-desktop-icons-ng` | both |
-| `gnome-shell-extension-appindicator-anduinos` | `gnome-shell-extension-appindicator` | `gnome-shell-extension-appindicator` |
-| `gnome-shell-extension-gtk4-desktop-icons-ng` | `gnome-shell-extension-desktop-icons-ng`, `gnome-shell-extension-desktop-icons-ng-anduinos` | `gnome-shell-extension-desktop-icons-ng` |
+| `anduinos-session` | `ubuntu-session` \| `gnome-session` | 52 | |
+| `firmware-sof-anduinos` | `firmware-sof-signed` | 81 | |
+| `alsa-ucm-conf-anduinos` | `alsa-ucm-conf` | 82 | |
+| `anduinos-wallpapers` | `ubuntu-wallpapers` | — | `Provides` only — `gnome-shell` hard-depends on `ubuntu-wallpapers`, satisfied without pulling the real package |
 
 ---
 
-### 🟡 Dual Recommend — user can switch back to Ubuntu version
+### 🟢 Soft Override — files only, package stays
 
-These packages use `anduinos-X | ubuntu-X` in `Depends` or `Recommends`. The AnduinOS version is preferred (listed first), but the user can `apt install ubuntu-X` to swap.
+These replace Ubuntu **files** without removing the Ubuntu **package**.
 
-| Preferred (AnduinOS) | Fallback (Ubuntu) | Where defined |
+| AnduinOS Package | Files overridden | Mechanism |
 |---|---|---|
-| `anduinos-session` | `ubuntu-session` \| `gnome-session` | `anduinos-desktop-core` → `Dependency` |
-| `firmware-sof-anduinos` | `firmware-sof-signed` | `anduinos-desktop-core` → `Dependency` |
-| `alsa-ucm-conf-anduinos` | `alsa-ucm-conf` | `anduinos-desktop-core` → `Dependency` |
+| `base-files` | `os-release`, `lsb-release`, `issue`, `issue.net`, `ubuntu-logo-*.png`, `legal` | Epoch `1:` outranks Ubuntu |
+| `anduinos-apt-config` | APT sources + preferences | Pin priority 1001 for AnduinOS origin |
+| `anduinos-mimeapps` | `gnome-mimeapps.list` | `dpkg-divert` (original → `.ubuntu-original`) |
+| `anduinos-bwrap-hack` | `bwrap` → `bwrap.real` + shim | Swallows `bwrap` failures on Live squashfs |
 
 ---
 
-### 🟢 Soft Override — file shadow, no package blocks
+### Cascading removal
 
-These packages replace Ubuntu **files** without removing the Ubuntu **package**.
-
-| AnduinOS Package | What it overrides | Mechanism |
-|---|---|---|
-| `base-files` | `/etc/os-release`, `/etc/lsb-release`, `/etc/issue`, `/etc/issue.net`, `/usr/share/pixmaps/ubuntu-logo-*.png`, `/etc/legal` | File deployment (epoch `1:` outranks) |
-| `anduinos-apt-config` | APT repo configuration | Pin priority 1001 for AnduinOS origin; `.sources` + `.pref` files |
-| `anduinos-mimeapps` | `/usr/share/applications/gnome-mimeapps.list` | `dpkg-divert` in preinst, restored on postrm |
-| `anduinos-bwrap-hack` | `/usr/bin/bwrap` → `/usr/bin/bwrap.real` + wrapper | Shim renames the real binary, wrapper swallows failures |
-
----
-
-### Chains of removal
-
-Installing `anduinos-desktop` triggers a cascade:
+`anduinos-desktop` → `anduinos-desktop-core` → `anduinos-no-snapd` triggers:
 
 ```
-anduinos-desktop
-├── Conflicts → ubuntu-desktop, ubuntu-release-upgrader*, update-notifier*, update-manager*, yaru-theme-gnome-shell
-├── Depends → anduinos-desktop-core
-│   ├── Conflicts → (none directly)
-│   └── Depends → anduinos-session | ubuntu-session | gnome-session
-│               → firmware-sof-anduinos | firmware-sof-signed
-│               → alsa-ucm-conf-anduinos | alsa-ucm-conf
-├── Depends → anduinos-no-snapd
-│   └── Conflicts → snapd
-└── Recommends → anduinos-software-properties-common
-               → anduinos-software-properties-gtk (resolute only)
+anduinos-desktop  ──Conflicts──→  ubuntu-desktop
+                              →  yaru-theme-gnome-shell
+                              →  update-notifier, update-notifier-common
+                              →  update-manager, update-manager-core
+                              →  ubuntu-release-upgrader-core, ubuntu-release-upgrader-gtk
+      │
+      ├─Depends──→ anduinos-desktop-core
+      │            └─Depends──→ anduinos-session | ubuntu-session | gnome-session
+      │                       → firmware-sof-anduinos | firmware-sof-signed
+      │                       → alsa-ucm-conf-anduinos | alsa-ucm-conf
+      │
+      ├─Depends──→ anduinos-no-snapd  ──Conflicts──→ snapd
+      │
+      └─Recommends─→ anduinos-software-properties-common
+                   → anduinos-software-properties-gtk  (resolute only)
 ```
 
-**14 Ubuntu packages** are removed or pinned out when the full AnduinOS desktop is installed.
+**Total: 14 Ubuntu packages removed or pinned out.**
 
 ## Build
 
