@@ -17,7 +17,7 @@ if [ "$1" = "configure" ]; then
     cp /usr/share/anduinos-installer-config/languagelist \
        /usr/lib/ubiquity/localechooser/languagelist
 
-    gzip -c /usr/share/anduinos-installer-config/languagelist.data \
+    gzip -nc /usr/share/anduinos-installer-config/languagelist.data \
         > /usr/lib/ubiquity/localechooser/languagelist.data.gz
 
     sed "s%^Exec=.*%Exec=/usr/bin/anduinos-installer%" \
