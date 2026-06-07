@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-apps</PackageName>
-    <PackageVersion>1.0.12</PackageVersion>
+    <PackageVersion>1.0.13</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default applications — pulls in recommended apps for AnduinOS</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -32,7 +32,7 @@
     <Recommend Include="evince" Condition="'$(Suite)' == 'noble-addon'" />
     <Recommend Include="papers" Condition="'$(Suite)' == 'questing-addon'" />
     <Recommend Include="papers" Condition="'$(Suite)' == 'resolute-addon'" />
-    <Recommend Include="qalculate-gtk" />
+    <Recommend Include="gnome-calculator" />
     <Recommend Include="seahorse" />
     <Recommend Include="gnome-characters" />
     <Recommend Include="gnome-font-viewer" />
