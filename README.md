@@ -1,5 +1,7 @@
 # AnduinOS Packages
 
+[![GPL licensed](https://img.shields.io/badge/license-GPL-blue.svg)](https://github.com/AiursoftWeb/AnduinOS-Packages/blob/master/LICENSE)
+
 AnduinOS APKG package sources.
 
 ## Package conflicts
