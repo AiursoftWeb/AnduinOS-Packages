@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-wallpapers</PackageName>
-    <PackageVersion>1.0.6</PackageVersion>
+    <PackageVersion>1.0.7</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <Provides>ubuntu-wallpapers</Provides>
     <PackageDescription>AnduinOS default wallpapers (Fluent Building)</PackageDescription>
@@ -18,6 +18,8 @@
   <ItemGroup>
     <IncludeFile Include="deploy/Fluent-building-light.png" Target="/usr/share/backgrounds/Fluent-building-light.png" />
     <IncludeFile Include="deploy/Fluent-building-night.png" Target="/usr/share/backgrounds/Fluent-building-night.png" />
+    <IncludeFile Include="deploy/Floating-objects-light.jpg" Target="/usr/share/backgrounds/Floating-objects-light.jpg" />
+    <IncludeFile Include="deploy/Floating-objects-dark.png" Target="/usr/share/backgrounds/Floating-objects-dark.png" />
     <IncludeFile Include="deploy/fluent.xml" Target="/usr/share/gnome-background-properties/fluent.xml" />
     <!-- Wallpaper dconf — ships with wallpapers so they're always in sync -->
     <IncludeFile Include="dconf/20-wallpapers.conf" Target="/etc/dconf/db/anduinos.d/20-wallpapers.conf" />
