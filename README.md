@@ -30,7 +30,7 @@ User **cannot** install both.  Dpkg removes the Ubuntu package at install time.
 | 10 | `anduinos-session` | `ubuntu-session` | yes | + postinst purges `10_ubuntu-session.gschema.override` |
 | 11 | `anduinos-gnome-extensions` | `gnome-shell-ubuntu-extensions` | yes | Metapackage — AnduinOS-curated extension set |
 | 12 | `anduinos-installer-config` | `ubiquity-slideshow-ubuntu` | yes | + postinst `dpkg-divert` of Ubiquity languagelist |
-| 13 | `anduinos-fonts` | `fonts-noto-color-emoji` | yes | CascadiaCode, NerdFonts, Noto Sans/Serif, TwitterColorEmoji |
+| 13 | `anduinos-fonts` | (none — co-installs with `fonts-noto-color-emoji`) | — | CascadiaCode, NerdFonts, Noto Sans/Serif, Twitter & Noto Color Emoji |
 | 14 | `anduinos-software-properties-common` | `software-properties-common` | yes | Patches `add-apt-repository` → `--distro=ubuntu` |
 | 15 | `anduinos-software-properties-gtk` | `software-properties-gtk` | yes | Strips Ubuntu Pro ads; suppresses `ubuntu-pro-client` dep |
 | 16 | `firefox-anduinos` | `firefox` | — | Mozilla Apt `.deb`, not the snap wrapper |
