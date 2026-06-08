@@ -37,17 +37,18 @@ Default rules put Latin/Cyrillic fonts before CJK SC, so punctuation stays Latin
 
 Chrome dropped SVG-in-OpenType support. Twitter Color Emoji is SVG-in-OT — Chrome can't render it.
 
-**Our solution**: ship both Twitter Color Emoji (pretty, SVG-in-OT) and Noto Color Emoji (compatible, CBDT/CBLC bitmap). Default to Twitter for most apps; use fontconfig `prgname` rules to flip priority for Chrome-family browsers:
+**Our solution**: ship both Twitter Color Emoji (pretty, SVG-in-OT) and Noto Color Emoji (compatible, CBDT/CBLC bitmap). Default to Twitter for most apps. For Chromium-based browsers, use `mode="assign"` to **replace Twitter in-place** in the font list — never `mode="prepend"` which would push an emoji font to position 1 and blow up line-height metrics across all web pages.
 
 ```
 Default (Firefox, GNOME, terminal):
-  Twitter Color Emoji → Noto Color Emoji → ...
+  Noto Sans → ... → Twitter Color Emoji → Noto Color Emoji → ...
 
-Chrome / Chromium / google-chrome:
-  Noto Color Emoji → Twitter Color Emoji → ...
+Chromium-based (chrome, chromium, edge, etc.):
+  Noto Sans → ... → Noto Color Emoji → Noto Color Emoji → ...
+  (Twitter replaced in-place, metrics baseline preserved)
 ```
 
-If you add a new Chromium-based app (Edge, Electron, etc.), add its `prgname` to the override blocks.
+The `prgname` filter uses `contains` on `chrom` to catch all Blink-based browsers in one rule. Edge gets its own `contains "edge"` rule.
 
 ## Adding a new language
 
