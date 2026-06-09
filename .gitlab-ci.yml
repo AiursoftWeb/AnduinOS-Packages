@@ -3,10 +3,6 @@ stages:
   - publish
   - meta
 
-variables:
-  APKG_SERVER: "https://apkg-dev.aiursoft.com"
-  APKG_API_KEY: $APKG_DEV_API_KEY
-
 .lint:
   stage: lint
   before_script:
@@ -30,9 +26,15 @@ variables:
     - cd $PACKAGE_DIR
     - apkg publish
     - APKG_FILE=$(ls bin/*.apkg 2>/dev/null | head -1)
-    - '[ -n "$APKG_FILE" ] && apkg push -f "$APKG_FILE" -s "$APKG_SERVER" -k "$APKG_API_KEY" --skip-duplicate'
+    - |-
+      if [ "$CI_COMMIT_BRANCH" = "prod" ]; then
+        apkg push -f "$APKG_FILE" -s "https://apkg.aiursoft.com" -k "$APKG_PROD_API_KEY" --skip-duplicate
+      else
+        apkg push -f "$APKG_FILE" -s "https://apkg-dev.aiursoft.com" -k "$APKG_DEV_API_KEY" --skip-duplicate
+      fi
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
+    - if: $CI_COMMIT_BRANCH == "prod"
 
 base-files:
   extends: .publish
