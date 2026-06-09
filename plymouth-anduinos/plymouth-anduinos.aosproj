@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>plymouth-anduinos</PackageName>
-    <PackageVersion>2.0.0~beta1+$(UpstreamVersion)-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~beta1+$(UpstreamVersion)-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS boot splash theme</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -41,6 +41,9 @@
     <PrebuildCommand Run="for src in obj/*/usr/share/plymouth/themes/spinner; do cp -r &quot;$src&quot; &quot;$(dirname &quot;$src&quot;)/anduinos&quot;; done" />
     <PrebuildCommand Run="for f in obj/*/usr/share/plymouth/themes/anduinos/spinner.plymouth; do mv &quot;$f&quot; &quot;$(dirname &quot;$f&quot;)/anduinos.plymouth&quot;; done" />
     <PrebuildCommand Run="sed -i 's|themes//spinner|themes/anduinos|g; s|themes/spinner|themes/anduinos|g; s|Name=Spinner|Name=AnduinOS|g' obj/*/usr/share/plymouth/themes/anduinos/anduinos.plymouth" />
+    <!-- Inject BGRT firmware-background support (same as Ubuntu's bgrt theme) -->
+    <PrebuildCommand Run="sed -i '/^MessageBelowAnimation=true$/a DialogClearsFirmwareBackground=false' obj/*/usr/share/plymouth/themes/anduinos/anduinos.plymouth" />
+    <PrebuildCommand Run="sed -i '/^UseEndAnimation=false$/a UseFirmwareBackground=true' obj/*/usr/share/plymouth/themes/anduinos/anduinos.plymouth" />
     <PrebuildCommand Run="rm -f  obj/*/usr/share/plymouth/ubuntu-logo.png" />
     <PrebuildCommand Run="rm -rf obj/*/usr/share/plymouth/themes/spinner" />
     <!-- resolute: watermark.png is a dangling symlink after copy; remove it so IncludeFile can write a real file -->
@@ -49,6 +52,7 @@
     <!-- Override the two brand images with AnduinOS artwork; all other files come from upstream -->
     <IncludeFile Include="deploy/anduinos_text.png" Target="/usr/share/plymouth/themes/anduinos/watermark.png" />
     <IncludeFile Include="deploy/logo_96.png"       Target="/usr/share/plymouth/themes/anduinos/bgrt-fallback.png" />
+    <IncludeFile Include="deploy/anduinos-text.plymouth" Target="/usr/share/plymouth/themes/anduinos-text/anduinos-text.plymouth" />
 
     <!-- Register theme with update-alternatives and rebuild initramfs on install/remove -->
     <PostInstallScript Include="scripts/postinst.sh" />

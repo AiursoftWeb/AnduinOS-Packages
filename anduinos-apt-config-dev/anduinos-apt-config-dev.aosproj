@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-apt-config-dev</PackageName>
-    <PackageVersion>2.0.0~beta1-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~beta1-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>APT pinning: AnduinOS packages always take precedence over Ubuntu</PackageDescription>
     <Section>admin</Section>
@@ -12,6 +12,8 @@
     <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
+    <Conflicts>anduinos-apt-config</Conflicts>
+    <Replaces>anduinos-apt-config</Replaces>
     <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
   </PropertyGroup>
 
