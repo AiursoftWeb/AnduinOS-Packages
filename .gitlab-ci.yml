@@ -41,6 +41,8 @@ lint-all:
         apkg push -f "$APKG_FILE" -s "https://apkg-dev.aiursoft.com" -k "$APKG_DEV_API_KEY" --skip-duplicate
       fi
   rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
     - if: $CI_COMMIT_BRANCH == "master"
     - if: $CI_COMMIT_BRANCH == "prod"
 
