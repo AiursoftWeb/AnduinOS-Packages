@@ -29,7 +29,8 @@
          AnduinOS Brand Packages
          These define what makes AnduinOS AnduinOS.
          ============================================================ -->
-    <Dependency Include="anduinos-apt-config" />
+    <Dependency Include="anduinos-apt-config | anduinos-apt-config-dev" />
+    <Recommend Include="anduinos-apt-config" />
     <Dependency Include="base-files" />
     <Dependency Include="anduinos-no-snapd" />
 

@@ -27,6 +27,7 @@ User **cannot** install both.  Dpkg removes the Ubuntu package at install time.
 | 7 | 〃 | `update-manager-core` | 〃 | 〃 |
 | 8 | 〃 | `ubuntu-release-upgrader-core` | 〃 | 〃 |
 | 9 | 〃 | `ubuntu-release-upgrader-gtk` | 〃 | 〃 |
+| 9a | 〃 | `whoopsie` | 〃 | Error reporting → Ubuntu servers |
 | 10 | `anduinos-session` | `ubuntu-session` | yes | + postinst purges `10_ubuntu-session.gschema.override` |
 | 11 | `anduinos-gnome-extensions` | `gnome-shell-ubuntu-extensions` | yes | Metapackage — AnduinOS-curated extension set |
 | 12 | `anduinos-installer-config` | `ubiquity-slideshow-ubuntu` | yes | + postinst `dpkg-divert` of Ubiquity languagelist |
@@ -69,7 +70,7 @@ These replace Ubuntu **files** without removing the Ubuntu **package**.
 | AnduinOS Package | Files overridden | Mechanism |
 |---|---|---|
 | `base-files` | `os-release`, `lsb-release`, `issue`, `issue.net`, `ubuntu-logo-*.png`, `legal` | Epoch `1:` outranks Ubuntu |
-| `anduinos-apt-config` | APT sources + preferences | Pin priority 1001 for AnduinOS origin |
+| `anduinos-apt-config` | APT sources (`apkg.aiursoft.com`) + preferences | Pin priority 1001 for AnduinOS origin; also shipped as `anduinos-apt-config-dev` (→ `apkg-dev.aiursoft.com`) |
 | `anduinos-mimeapps` | `gnome-mimeapps.list` | `dpkg-divert` (original → `.ubuntu-original`) |
 | `anduinos-bwrap-hack` | `bwrap` → `bwrap.real` + shim | Swallows `bwrap` failures on Live squashfs |
 
@@ -300,9 +301,11 @@ These URLs are not on a monthly schedule, but should be reviewed whenever infras
 
 | Reference | File | Purpose |
 |---|---|---|
-| `https://apkg-dev.aiursoft.com` | `.gitlab-ci.yml:7` | APKG build server |
+| `https://apkg-dev.aiursoft.com` | `.gitlab-ci.yml` (dev CI target) | APKG build server (dev) |
+| `https://apkg.aiursoft.com` | `.gitlab-ci.yml` (prod CI target) | APKG build server (production) |
 | `https://apkg-dev.aiursoft.com/artifacts/certs/anduinos` | `anduinos-archive-keyring.aosproj:17` | GPG signing key |
-| `https://apkg-dev.aiursoft.com/artifacts/anduinos/` | `anduinos-apt-config/deploy/**/*.sources` | APT repo (shipped to users!) |
+| `https://apkg-dev.aiursoft.com/artifacts/anduinos/` | `anduinos-apt-config-dev/deploy/**/*.sources` | APT repo (dev channel) |
+| `https://apkg.aiursoft.com/artifacts/anduinos/` | `anduinos-apt-config/deploy/**/*.sources` | APT repo (production channel) |
 | `https://nuget.aiursoft.com/v3/index.json` | `nuget.config:5` | NuGet source for build tools |
 | `https://dl.flathub.org/repo/flathub.flatpakrepo` | `anduinos-appstore/scripts/postinst.sh:4` | Flathub remote |
 | `https://mirror.aiursoft.com/ubuntu` | Multiple `.aosproj` files | Ubuntu mirror |
