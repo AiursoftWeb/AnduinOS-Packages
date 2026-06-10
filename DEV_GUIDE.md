@@ -141,7 +141,7 @@ precedence:
 ```text
 # /etc/apt/preferences.d/anduinos
 Package: *
-Pin: origin apkg.aiursoft.com
+Pin: origin "Aiursoft Apkg"
 Pin-Priority: 1001
 ```
 

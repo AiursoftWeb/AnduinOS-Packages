@@ -70,7 +70,7 @@ These replace Ubuntu **files** without removing the Ubuntu **package**.
 | AnduinOS Package | Files overridden | Mechanism |
 |---|---|---|
 | `base-files` | `os-release`, `lsb-release`, `issue`, `issue.net`, `ubuntu-logo-*.png`, `legal` | Epoch `1:` outranks Ubuntu |
-| `anduinos-apt-config` | APT sources (`packages.anduinos.com`) + preferences | Pin priority 1001 for AnduinOS origin; also shipped as `anduinos-apt-config-dev` (→ `apkg-dev.aiursoft.com`) |
+| `anduinos-apt-config` | APT sources (`packages.anduinos.com`) + preferences | Dual pin: `origin` (domain) + `release o=` (Origin field), both at priority 1001; also shipped as `anduinos-apt-config-dev` (→ `apkg-dev.aiursoft.com`) |
 | `anduinos-mimeapps` | `gnome-mimeapps.list` | `dpkg-divert` (original → `.ubuntu-original`) |
 | `anduinos-bwrap-hack` | `bwrap` → `bwrap.real` + shim | Swallows `bwrap` failures on Live squashfs |
 

@@ -1,3 +1,9 @@
+# Guard 1: match the Origin field in the Release file (logical — survives domain changes)
+Package: *
+Pin: release o=Aiursoft Apkg
+Pin-Priority: 1001
+
+# Guard 2: match the domain name (physical — survives metadata changes)
 Package: *
 Pin: origin "apkg-dev.aiursoft.com"
 Pin-Priority: 1001
