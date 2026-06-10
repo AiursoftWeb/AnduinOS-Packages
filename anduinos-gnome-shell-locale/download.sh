@@ -79,7 +79,9 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
     trap "rm -rf $APT_DIR" EXIT
 
     mkdir -p "$APT_DIR/lists" "$APT_DIR/cache"
-    echo "deb $MIRROR $SUITE main universe" > "$APT_DIR/sources.list"
+    # [arch=amd64] prevents multi-arch pollution — the CI host has arm64
+    # registered as a foreign architecture, but the mirror doesn't carry arm64.
+    echo "deb [arch=amd64] $MIRROR $SUITE main universe" > "$APT_DIR/sources.list"
 
     apt-get update -qq \
         -o "Dir::Etc::SourceList=$APT_DIR/sources.list" \
