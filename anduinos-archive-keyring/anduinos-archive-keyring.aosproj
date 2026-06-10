@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-archive-keyring</PackageName>
-    <PackageVersion>2.0.0~beta1-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~beta1-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>GPG keyring for AnduinOS APT repository</PackageDescription>
     <Section>misc</Section>
@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="mkdir -p deploy &amp;&amp; curl -sL https://apkg.aiursoft.com/artifacts/certs/anduinos | sed '1s/^\xEF\xBB\xBF//' | gpg --dearmor > deploy/anduinos-archive-keyring.gpg" />
+    <PrebuildCommand Run="mkdir -p deploy &amp;&amp; curl -sL https://packages.anduinos.com/artifacts/certs/anduinos | sed '1s/^\xEF\xBB\xBF//' | gpg --dearmor > deploy/anduinos-archive-keyring.gpg" />
   </ItemGroup>
 
   <ItemGroup>
