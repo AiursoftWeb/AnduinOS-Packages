@@ -305,7 +305,7 @@ These URLs are not on a monthly schedule, but should be reviewed whenever infras
 | `https://apkg.aiursoft.com` | `.gitlab-ci.yml` (prod CI target) | APKG build server (production) |
 | `https://apkg-dev.aiursoft.com/artifacts/certs/anduinos` | `anduinos-archive-keyring.aosproj:17` | GPG signing key |
 | `https://apkg-dev.aiursoft.com/artifacts/anduinos/` | `anduinos-apt-config-dev/deploy/**/*.sources` | APT repo (dev channel) |
-| `https://apkg.aiursoft.com/artifacts/anduinos/` | `anduinos-apt-config/deploy/**/*.sources` | APT repo (production channel) |
+| `https://packages.anduinos.com/artifacts/anduinos/` | `anduinos-apt-config/deploy/**/*.sources` | APT repo (production channel) |
 | `https://nuget.aiursoft.com/v3/index.json` | `nuget.config:5` | NuGet source for build tools |
 | `https://dl.flathub.org/repo/flathub.flatpakrepo` | `anduinos-appstore/scripts/postinst.sh:4` | Flathub remote |
 | `https://mirror.aiursoft.com/ubuntu` | Multiple `.aosproj` files | Ubuntu mirror |
