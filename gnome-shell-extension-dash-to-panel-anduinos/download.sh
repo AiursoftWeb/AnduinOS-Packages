@@ -34,8 +34,12 @@ export const defaults = [\
 ];' \
         "$DEPLOY_DIR/panelPositions.js"
 
+    # ── Source patch: rename msgid in JavaScript ──
+    echo "[$SUITE] Patching appIcons.js: Dash to Panel Settings → Taskbar Settings"
+    sed -i "s/_('Dash to Panel Settings')/_('Taskbar Settings')/g" "$DEPLOY_DIR/appIcons.js"
+
     # ── Locale patch: rename "Dash to Panel Settings" → "Taskbar Settings" ──
-    # Uses msgid-based substitution (robust across all translations).
+    # Updates both msgid (to match patched JS source) and msgstr (translated).
     declare -A TASKBAR_SETTINGS=(
         ["cs"]="Nastavení panelu úloh"
         ["de"]="Taskleisteneinstellungen"
@@ -72,7 +76,8 @@ export const defaults = [\
             if [[ -f "$mo_file" ]] && [[ -n "${TASKBAR_SETTINGS[$lang]+isset}" ]]; then
                 echo "[$SUITE] Patching dash-to-panel locale: $lang"
                 msgunfmt "$mo_file" -o /tmp/dash-to-panel.po
-                sed -i '/msgid "Dash to Panel Settings"/{n;s/.*/msgstr "'"${TASKBAR_SETTINGS[$lang]}"'"/}' /tmp/dash-to-panel.po
+                sed -i 's/msgid "Dash to Panel Settings"/msgid "Taskbar Settings"/' /tmp/dash-to-panel.po
+                sed -i '/msgid "Taskbar Settings"/{n;s/.*/msgstr "'"${TASKBAR_SETTINGS[$lang]}"'"/}' /tmp/dash-to-panel.po
                 msgfmt /tmp/dash-to-panel.po -o "$mo_file"
                 rm -f /tmp/dash-to-panel.po
                 patched=$((patched + 1))
