@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>firefox-anduinos</PackageName>
-    <PackageVersion>1:2.0.0~beta1+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>1:2.0.0~beta1+$(UpstreamVersion)-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Firefox browser from Mozilla (repackaged for AnduinOS, without snapd)</PackageDescription>
     <Section>web</Section>
@@ -10,7 +10,7 @@
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
-    <TargetArchitectures>amd64</TargetArchitectures>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
     <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
 
@@ -20,7 +20,7 @@
     <UpstreamPackage>firefox</UpstreamPackage>
     <UpstreamSuite>mozilla</UpstreamSuite>
     <UpstreamComponent>main</UpstreamComponent>
-    <UpstreamArch>amd64</UpstreamArch>
+    <UpstreamArch>$(Arch)</UpstreamArch>
     <UpstreamSignedBy>assets/mozilla-keyring.asc</UpstreamSignedBy>
 
     <!-- Block Ubuntu's transitional snap firefox package -->
