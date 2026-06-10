@@ -70,7 +70,7 @@ These replace Ubuntu **files** without removing the Ubuntu **package**.
 | AnduinOS Package | Files overridden | Mechanism |
 |---|---|---|
 | `base-files` | `os-release`, `lsb-release`, `issue`, `issue.net`, `ubuntu-logo-*.png`, `legal` | Epoch `1:` outranks Ubuntu |
-| `anduinos-apt-config` | APT sources (`apkg.aiursoft.com`) + preferences | Pin priority 1001 for AnduinOS origin; also shipped as `anduinos-apt-config-dev` (→ `apkg-dev.aiursoft.com`) |
+| `anduinos-apt-config` | APT sources (`packages.anduinos.com`) + preferences | Pin priority 1001 for AnduinOS origin; also shipped as `anduinos-apt-config-dev` (→ `apkg-dev.aiursoft.com`) |
 | `anduinos-mimeapps` | `gnome-mimeapps.list` | `dpkg-divert` (original → `.ubuntu-original`) |
 | `anduinos-bwrap-hack` | `bwrap` → `bwrap.real` + shim | Swallows `bwrap` failures on Live squashfs |
 
@@ -100,6 +100,25 @@ anduinos-desktop  ──Conflicts──→  ubuntu-desktop
 
 **Total: 14 Ubuntu packages removed or pinned out.**
 
+---
+
+### 🟦 Brand Packages — AnduinOS only, no Ubuntu conflict
+
+These ship files or declare dependencies without replacing any Ubuntu package.
+
+| Package | Type | Description |
+|---|---|---|
+| `anduinos-core-system` | Metapackage | Core system foundation (kernel, networking, boot, firmware, APT, security) |
+| `anduinos-desktop-apps` | Metapackage | Default application selection (browser, office, media, utilities) |
+| `anduinos-theme` | Metapackage | AnduinOS theme stack (Fluent GTK + Fluent icons + fonts + wallpapers) |
+| `anduinos-appstore` | App | Flatpak-based app store with Flathub remote |
+| `anduinos-deskmon` | Service | Desktop monitoring / hardware info agent |
+| `anduinos-system-tweaks` | Config | System tuning (swappiness, I/O scheduler, sysctl) |
+| `anduinos-system-tweaks-server` | Service | Background service for system tweaks |
+| `anduinos-templates` | Data | Default file templates (`~/Templates`) |
+| `anduinos-dconf-defaults` | Config | dconf / gsettings defaults for GNOME |
+| `anduinos-gnome-shell-locale` | Locale | GNOME Shell locale / text overrides |
+
 ## Build
 
 Each package is built via the GitLab CI pipeline (`.gitlab-ci.yml`). Packages use the `Aiursoft.Apkg.Sdk` and can be built locally with:
@@ -120,16 +139,17 @@ Run through this table each month. If anything has changed upstream, follow the 
 
 | # | What | Where to check | Update action |
 |---|---|---|---|
-| 1 | **Fluent GTK theme** | `anduinos-fluent-gtk-theme/download.sh:5` (commit) + upstream [releases] | Update commit → section B |
-| 2 | **Fluent icon theme** | `anduinos-fluent-icon-theme/download.sh:5` (commit) + upstream [releases] | Update commit → section B |
+| 1 | **Fluent GTK theme** | `anduinos-fluent-gtk-theme/download.sh:5` (commit) + [gitlab mirror] | Update commit → section B |
+| 2 | **Fluent icon theme** | `anduinos-fluent-icon-theme/download.sh:5` (commit) + [gitlab mirror] | Update commit → section B |
 | 3 | **ALSA UCM Conf** | `alsa-ucm-conf-anduinos/download.sh:5` (commit) + upstream [repo] | Update commit → section B |
 | 4 | **SOF firmware** | `firmware-sof-anduinos/download.sh:5` (`SOF_VERSION`) + upstream [releases] | Update version → section C |
 | 5 | **GNOME Shell version map** | `lib/gnome-versions.sh:3-7` — compare with Ubuntu's `gnome-shell` package for each supported suite | Update map → section D |
-| 6 | **Fluent upstream versions** | [Fluent-gtk-theme] and [Fluent-icon-theme] upstream — compare with `*.aosproj` PackageVersion | Update version → section B |
+| 6 | **Fluent upstream versions** | [Fluent-gtk-theme] and [Fluent-icon-theme] GitHub releases — determine latest upstream version | Update version → section B |
 | 7 | **GNOME Shell extensions** | Run a CI build — the resolver fetches the latest compatible version dynamically | Update version → section D |
 
 [releases]: https://github.com/vinceliuice/Fluent-gtk-theme
 [repo]: https://github.com/alsa-project/alsa-ucm-conf
+[gitlab mirror]: https://gitlab.aiursoft.com/mirror/fluent-gtk-theme/
 
 ---
 
@@ -140,11 +160,11 @@ Three packages clone a git repo and pin to a specific commit hash. Both the **co
 #### B.1 Check for updates
 
 ```bash
-# Fluent GTK theme (upstream: vinceliuice/Fluent-gtk-theme)
-git ls-remote https://github.com/vinceliuice/Fluent-gtk-theme.git HEAD
+# Fluent GTK theme (mirrored on gitlab.aiursoft.com)
+git ls-remote https://gitlab.aiursoft.com/mirror/fluent-gtk-theme.git HEAD
 
-# Fluent icon theme (upstream: vinceliuice/Fluent-icon-theme)
-git ls-remote https://github.com/vinceliuice/Fluent-icon-theme.git HEAD
+# Fluent icon theme (mirrored on gitlab.aiursoft.com)
+git ls-remote https://gitlab.aiursoft.com/mirror/fluent-icon-theme.git HEAD
 
 # ALSA UCM Conf (upstream: alsa-project/alsa-ucm-conf)
 git ls-remote https://github.com/alsa-project/alsa-ucm-conf.git HEAD
@@ -152,14 +172,14 @@ git ls-remote https://github.com/alsa-project/alsa-ucm-conf.git HEAD
 
 Compare the returned HEAD hash against the pinned commit in each `download.sh`. If different, an update is available.
 
-For **Fluent** packages, also check the upstream tag/release to determine the new version number. For **ALSA UCM Conf**, check the upstream `configure.ac` for the version.
+For **ALSA UCM Conf**, check the upstream `configure.ac` for the version. For **Fluent** packages, check [GitHub releases](https://github.com/vinceliuice/Fluent-gtk-theme/releases) for the current upstream version (informational — not encoded in PackageVersion).
 
 #### B.2 Apply the update
 
 For each outdated package, update **two files**:
 
 1. **`download.sh`** — update the `*_COMMIT` variable to the new HEAD hash
-2. **`*.aosproj`** — bump `<PackageVersion>` to match the new upstream version, reset the Debian revision suffix (e.g. `2.0.2` → `2.0.3-1`)
+2. **`*.aosproj`** — bump the Debian revision suffix in `<PackageVersion>` (e.g. `-1` → `-2`)
 
 Example diff for Fluent GTK theme:
 
@@ -169,8 +189,8 @@ Example diff for Fluent GTK theme:
 +FLUENT_GTK_COMMIT="a1b2c3d"
 
 # anduinos-fluent-gtk-theme.aosproj
--<PackageVersion>2.0.2</PackageVersion>
-+<PackageVersion>2.0.3-1</PackageVersion>
+-<PackageVersion>2.0.0~beta1-1+$(SuiteShortName)</PackageVersion>
++<PackageVersion>2.0.0~beta1-2+$(SuiteShortName)</PackageVersion>
 ```
 
 #### B.3 Rebuild and verify
@@ -200,8 +220,8 @@ Update **two files**:
 +SOF_VERSION="2026.03"   # update to new release tag
 
 # firmware-sof-anduinos.aosproj
--<PackageVersion>2025.12+ubuntu$(UpstreamVersion)-1</PackageVersion>
-+<PackageVersion>2026.03+ubuntu$(UpstreamVersion)-1</PackageVersion>   # update the leading SOF version, reset suffix if packaging changed
+-<PackageVersion>2.0.0~beta1+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
++<PackageVersion>2.0.0~beta1+$(UpstreamVersion)-2+$(SuiteShortName)</PackageVersion>   # bump the Debian revision
 ```
 
 The downloaded Intel tarball and extracted cache under `deploy/` are **not** committed — the CI regenerates them at build time via `download.sh`.
@@ -215,7 +235,7 @@ apkg publish
 
 ---
 
-### D. GNOME Shell Extensions (19 packages)
+### D. GNOME Shell Extensions (21 packages)
 
 These are resolved **dynamically at build time**: the resolver (`lib/resolve-gnome-ext.py`) queries `extensions.gnome.org` for the best compatible version for each target GNOME Shell version. This means extension code is always up-to-date on every build — no monthly check needed for the extension code itself.
 
@@ -246,29 +266,16 @@ declare -A GNOME_TARGETS=(
 )
 ```
 
-Then **CI rebuilds all 19 extension packages automatically** — the new GNOME version will be picked up by the resolver on the next build.
+Then **CI rebuilds all 21 extension packages automatically** — the new GNOME version will be picked up by the resolver on the next build.
 
 #### D.2 Extension `.aosproj` version numbers
 
-Each extension's `.aosproj` has a `<PackageVersion>` like `69.2+$(SuiteShortName)8`. The prefix (e.g. `69.2`) represents the upstream extension version at the time of packaging. While the resolver always fetches the latest code, it's good practice to keep the version prefix in sync with the actual upstream version.
-
-To audit:
-
-```bash
-# For one extension, check the version being resolved:
-python3 lib/resolve-gnome-ext.py "arcmenu@arcmenu.com" --target 50 --download --out /tmp/test-ext
-# The downloaded metadata.json will contain the resolved version.
-# Compare against the prefix in the .aosproj PackageVersion.
-```
-
-If the upstream extension version has bumped significantly, update the prefix in the `.aosproj`:
+Each extension's `.aosproj` uses a unified `<PackageVersion>` of `2.0.0~beta1-1+$(SuiteShortName)`. Bump the Debian revision suffix (e.g. `-1` → `-2`) when packaging changes. The resolver fetches the latest extension code at build time, so the extension code itself is always up-to-date regardless of the package version.
 
 ```diff
--<PackageVersion>69.2+$(SuiteShortName)8</PackageVersion>
-+<PackageVersion>72.0+$(SuiteShortName)1</PackageVersion>
+-<PackageVersion>2.0.0~beta1-1+$(SuiteShortName)</PackageVersion>
++<PackageVersion>2.0.0~beta1-2+$(SuiteShortName)</PackageVersion>
 ```
-
-Note: the `+$(SuiteShortName)8` suffix is a packaging revision — increment it when the packaging changes but the upstream version stays the same.
 
 #### D.3 Special-cased extension: desktop-icons-ng-anduinos
 
