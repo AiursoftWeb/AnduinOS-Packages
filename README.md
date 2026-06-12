@@ -73,6 +73,7 @@ These replace Ubuntu **files** without removing the Ubuntu **package**.
 | `anduinos-apt-config` | APT sources (`packages.anduinos.com`) + preferences | Dual pin: `origin` (domain) + `release o=` (Origin field), both at priority 1001; also shipped as `anduinos-apt-config-dev` (→ `apkg-dev.aiursoft.com`) |
 | `anduinos-mimeapps` | `gnome-mimeapps.list` | `dpkg-divert` (original → `.ubuntu-original`) |
 | `anduinos-bwrap-hack` | `bwrap` → `bwrap.real` + shim | Swallows `bwrap` failures on Live squashfs |
+| `anduinos-rime` | `rime-prelude`'s `default.yaml` → `default.yaml.prelude` | `dpkg-divert`; ships rime-ice config to `/usr/share/rime-data/` |
 
 ---
 

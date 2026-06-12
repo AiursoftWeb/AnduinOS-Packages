@@ -277,6 +277,11 @@ anduinos-gnome-shell-locale:
   variables:
     PACKAGE_DIR: anduinos-gnome-shell-locale
 
+anduinos-rime:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-rime
+
 anduinos-live-settings:
   extends: .publish
   variables:
