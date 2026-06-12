@@ -1,6 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
+# Lock absolute project root before any cd
+BASE_DIR=$(pwd)
+DEST="$BASE_DIR/assets/pkg_depends"
+
 MIRROR="http://archive.ubuntu.com/ubuntu"
 RELEASE="noble"
 
@@ -29,7 +33,6 @@ echo "[anduinos-rime] Extracting pkg_depends..."
 dpkg-deb -x "$TMPDIR/language-selector-common.deb" "$TMPDIR/extracted"
 
 SRC="$TMPDIR/extracted/usr/share/language-selector/data/pkg_depends"
-DEST="$OLDPWD/assets/pkg_depends"
 mkdir -p "$(dirname "$DEST")"
 
 echo "[anduinos-rime] Patching pkg_depends: removing im:zh entries, adding anduinos-rime..."
