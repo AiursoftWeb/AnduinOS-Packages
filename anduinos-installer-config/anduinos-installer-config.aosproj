@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-config</PackageName>
-    <PackageVersion>2.0.0~beta1-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~beta1-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS wrapper, theme, and slides for Ubiquity installer</PackageDescription>
     <Section>admin</Section>
@@ -33,6 +33,9 @@
     <!-- Live-environment bwrap compat (glycin SVG loader needs it) -->
     <Dependency Include="anduinos-bwrap-hack" />
 
+    <!-- Rime input method (rime-ice config for ibus-rime) for live ISO -->
+    <Dependency Include="anduinos-rime" />
+
     <!-- Installer runtime tools (disk crypto, fs, hardware probing) -->
     <Dependency Include="cryptsetup-initramfs" />
     <Dependency Include="secureboot-db" />
@@ -60,6 +63,10 @@
     <!-- Cleanup hook: removes wrapper from installed system -->
     <IncludeFile Include="assets/anduinos-clean-wrapper"
                  Target="/usr/lib/ubiquity/target-config.d/anduinos-clean-wrapper" Mode="755" />
+
+    <!-- Target-config hook: sets Rime as default input method for zh_* locales -->
+    <IncludeFile Include="assets/99anduinos-rime-setup"
+                 Target="/usr/lib/ubiquity/target-config/99anduinos-rime-setup" Mode="755" />
 
     <!-- Slideshow: replaces ubiquity-slideshow-ubuntu -->
     <IncludeFolder Include="assets/slides/"

@@ -1,0 +1,40 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-language-selector-common</PackageName>
+    <PackageVersion>2.0.0~beta1+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS fork of language-selector-common — language-to-input-method mapping</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+
+    <!-- Derive from Ubuntu's language-selector-common, then patch -->
+    <UpstreamUrl>https://mirror.aiursoft.com/ubuntu</UpstreamUrl>
+    <UpstreamDistro>ubuntu</UpstreamDistro>
+    <UpstreamPackage>language-selector-common</UpstreamPackage>
+    <UpstreamSuite>$(Suite)</UpstreamSuite>
+    <UpstreamSuiteMapping>noble-addon=noble, questing-addon=questing, resolute-addon=resolute</UpstreamSuiteMapping>
+    <UpstreamComponent>$(Component)</UpstreamComponent>
+    <UpstreamArch>all</UpstreamArch>
+
+    <!-- Fork identity: replaces Ubuntu's package -->
+    <Provides>language-selector-common</Provides>
+    <Conflicts>language-selector-common</Conflicts>
+    <Replaces>language-selector-common</Replaces>
+    <SuppressUpstreamScripts>true</SuppressUpstreamScripts>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Delete all Ubuntu im:zh lines (fcitx5/libpinyin/chewing/cangjie),
+      then inject anduinos-rime for both simplified and traditional Chinese.
+      Condition on ibus so language-selector only pulls rime when IBus is present.
+    -->
+    <PrebuildCommand Run="for f in obj/*/usr/share/language-selector/data/pkg_depends; do sed -i '/^im:zh/d' &quot;$f&quot; &amp;&amp; echo 'im:zh-hans:ibus:anduinos-rime' &gt;&gt; &quot;$f&quot; &amp;&amp; echo 'im:zh-hant:ibus:anduinos-rime' &gt;&gt; &quot;$f&quot;; done" />
+  </ItemGroup>
+</Project>

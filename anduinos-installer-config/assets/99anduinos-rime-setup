@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+TARGET="/target"
+LOCALE_FILE="$TARGET/etc/default/locale"
+
+if grep -E -q '^LANG="?zh_' "$LOCALE_FILE" 2>/dev/null; then
+    echo "AnduinOS: Chinese locale detected. Setting Rime as default input method."
+
+    cat << 'EOF' > "$TARGET/usr/share/glib-2.0/schemas/99_anduinos_default_input.gschema.override"
+[org.gnome.desktop.input-sources]
+sources=[('xkb', 'us'), ('ibus', 'rime')]
+EOF
+
+    chroot "$TARGET" glib-compile-schemas /usr/share/glib-2.0/schemas/
+else
+    echo "AnduinOS: Non-Chinese locale. Skipping Rime default setup."
+fi
+
+exit 0
