@@ -4,7 +4,7 @@ set -euo pipefail
 TMPDIR=$(mktemp -d)
 trap 'rm -rf "$TMPDIR"' EXIT
 
-apt-get update -qq
+apt-get update -qq 2>/dev/null || true
 cd "$TMPDIR"
 apt download language-selector-common
 dpkg-deb -x language-selector-common_*.deb extracted
