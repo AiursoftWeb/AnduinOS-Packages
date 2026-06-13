@@ -87,6 +87,7 @@ anduinos-desktop  ──Conflicts──→  ubuntu-desktop
                               →  update-notifier, update-notifier-common
                               →  update-manager, update-manager-core
                               →  ubuntu-release-upgrader-core, ubuntu-release-upgrader-gtk
+                              →  whoopsie
       │
       ├─Depends──→ anduinos-desktop-core
       │            └─Depends──→ anduinos-session | ubuntu-session | gnome-session
@@ -100,7 +101,7 @@ anduinos-desktop  ──Conflicts──→  ubuntu-desktop
                    → anduinos-software-properties-gtk  (resolute only)
 ```
 
-**Total: 14 Ubuntu packages removed or pinned out.**
+**Total: 23 Ubuntu packages removed or pinned out.**
 
 ---
 
@@ -142,17 +143,18 @@ Run through this table each month. If anything has changed upstream, follow the 
 
 | # | What | Where to check | Update action |
 |---|---|---|---|
-| 1 | **Fluent GTK theme** | `anduinos-fluent-gtk-theme/download.sh:5` (commit) + [gitlab mirror] | Update commit → section B |
-| 2 | **Fluent icon theme** | `anduinos-fluent-icon-theme/download.sh:5` (commit) + [gitlab mirror] | Update commit → section B |
-| 3 | **ALSA UCM Conf** | `alsa-ucm-conf-anduinos/download.sh:5` (commit) + upstream [repo] | Update commit → section B |
-| 4 | **SOF firmware** | `firmware-sof-anduinos/download.sh:5` (`SOF_VERSION`) + upstream [releases] | Update version → section C |
+| 1 | **Fluent GTK theme** | `anduinos-fluent-gtk-theme/download.sh:5` (commit) + [gtk-mirror] | Update commit → section B |
+| 2 | **Fluent icon theme** | `anduinos-fluent-icon-theme/download.sh:5` (commit) + [icon-mirror] | Update commit → section B |
+| 3 | **ALSA UCM Conf** | `alsa-ucm-conf-anduinos/download.sh:5` (commit) + upstream [alsa-repo] | Update commit → section B |
+| 4 | **SOF firmware** | `firmware-sof-anduinos/download.sh:5` (`SOF_VERSION`) + upstream [sof-releases] | Update version → section C |
 | 5 | **GNOME Shell version map** | `lib/gnome-versions.sh:3-7` — compare with Ubuntu's `gnome-shell` package for each supported suite | Update map → section D |
 | 6 | **Fluent upstream versions** | [Fluent-gtk-theme] and [Fluent-icon-theme] GitHub releases — determine latest upstream version | Update version → section B |
 | 7 | **GNOME Shell extensions** | Run a CI build — the resolver fetches the latest compatible version dynamically | Update version → section D |
 
-[releases]: https://github.com/vinceliuice/Fluent-gtk-theme
-[repo]: https://github.com/alsa-project/alsa-ucm-conf
-[gitlab mirror]: https://gitlab.aiursoft.com/mirror/fluent-gtk-theme/
+[sof-releases]: https://github.com/thesofproject/sof-bin/releases
+[alsa-repo]: https://github.com/alsa-project/alsa-ucm-conf
+[gtk-mirror]: https://gitlab.aiursoft.com/mirror/fluent-gtk-theme/
+[icon-mirror]: https://gitlab.aiursoft.com/mirror/fluent-icon-theme/
 
 ---
 
@@ -273,11 +275,11 @@ Then **CI rebuilds all 21 extension packages automatically** — the new GNOME v
 
 #### D.2 Extension `.aosproj` version numbers
 
-Each extension's `.aosproj` uses a unified `<PackageVersion>` of `2.0.0~beta1-1+$(SuiteShortName)`. Bump the Debian revision suffix (e.g. `-1` → `-2`) when packaging changes. The resolver fetches the latest extension code at build time, so the extension code itself is always up-to-date regardless of the package version.
+Each extension's `.aosproj` uses a unified `<PackageVersion>` of `2.0.0~beta2-1+$(SuiteShortName)`. Bump the Debian revision suffix (e.g. `-1` → `-2`) when packaging changes. The resolver fetches the latest extension code at build time, so the extension code itself is always up-to-date regardless of the package version.
 
 ```diff
--<PackageVersion>2.0.0~beta1-1+$(SuiteShortName)</PackageVersion>
-+<PackageVersion>2.0.0~beta1-2+$(SuiteShortName)</PackageVersion>
+-<PackageVersion>2.0.0~beta2-1+$(SuiteShortName)</PackageVersion>
++<PackageVersion>2.0.0~beta2-2+$(SuiteShortName)</PackageVersion>
 ```
 
 #### D.3 Special-cased extension: desktop-icons-ng-anduinos
@@ -288,7 +290,7 @@ Each extension's `.aosproj` uses a unified `<PackageVersion>` of `2.0.0~beta1-1+
 
 ### E. Upstream-Derived Packages
 
-Seven packages derive from upstream `.deb` packages at build time via `UpstreamUrl`:
+Six packages derive from upstream `.deb` packages at build time via `UpstreamUrl`:
 
 | Package | Upstream source | Repository |
 |---|---|---|
