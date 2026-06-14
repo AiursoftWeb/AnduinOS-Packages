@@ -65,6 +65,8 @@ anduinos-apt-config:
 
 anduinos-gdm3-wallpaper:
   extends: .publish
+  needs:
+    - anduinos-wallpapers
   variables:
     PACKAGE_DIR: anduinos-gdm3-wallpaper
 
@@ -235,6 +237,7 @@ anduinos-theme:
     - anduinos-dconf-defaults
     - plymouth-anduinos
     - anduinos-wallpapers
+    - anduinos-gdm3-wallpaper
     - anduinos-gnome-shell-locale
     - anduinos-fonts
   variables:
