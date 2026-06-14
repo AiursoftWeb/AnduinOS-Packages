@@ -195,11 +195,6 @@ gnome-shell-extension-network-stats:
   variables:
     PACKAGE_DIR: gnome-shell-extension-network-stats
 
-gnome-shell-extension-no-overview:
-  extends: .publish
-  variables:
-    PACKAGE_DIR: gnome-shell-extension-no-overview
-
 gnome-shell-extension-proxy-switcher:
   extends: .publish
   variables:
