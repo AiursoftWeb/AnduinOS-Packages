@@ -197,7 +197,22 @@ do_generate() {
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
-}"
+}
+
+/* Make user list and login prompt sleek dark semi-transparent */
+.login-dialog-user-list-item,
+.login-dialog-prompt-layout,
+.login-dialog-auth-list-item,
+.unlock-dialog-prompt-layout {
+  background-color: rgba(0, 0, 0, 0.35) !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+.login-dialog-user-list-item:hover,
+.login-dialog-user-list-item:focus {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+"
   while IFS= read -r css_file; do
     echo "$css_patch" >> "$css_file"
   done < <(find "$tmpdir" -type f -name "*.css")
