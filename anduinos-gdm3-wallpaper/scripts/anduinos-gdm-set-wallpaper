@@ -76,9 +76,12 @@ find_gr_file() {
   # or at least a valid system default to extract from.
   # We should ignore our own alternative if it's currently active.
   local candidates=(
-    # System base defaults
-    "/usr/share/gnome-shell/gnome-shell-theme.gresource"
+    # 1. Modern GNOME/Ubuntu default theme path
+    "/usr/share/gnome-shell/theme/gnome-shell-theme.gresource"
+    # 2. Yaru fallback
     "/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
+    # 3. Standard Debian or old path
+    "/usr/share/gnome-shell/gnome-shell-theme.gresource"
   )
 
   for f in "${candidates[@]}"; do

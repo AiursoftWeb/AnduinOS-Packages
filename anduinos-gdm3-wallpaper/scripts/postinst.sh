@@ -11,7 +11,7 @@ if [ "$1" = "configure" ]; then
         # We only generate if the default wallpaper exists (from anduinos-wallpapers)
         if [ -f "$DEFAULT_WALLPAPER" ]; then
             echo "Generating default AnduinOS GDM theme..."
-            anduinos-gdm-set-wallpaper --wallpaper "$DEFAULT_WALLPAPER" --output "$OUT_FILE" || { echo "Warning: Failed to generate custom GDM theme" >&2; }
+            /usr/bin/anduinos-gdm-set-wallpaper --wallpaper "$DEFAULT_WALLPAPER" --output "$OUT_FILE"
         else
             echo "Warning: Default wallpaper $DEFAULT_WALLPAPER not found. Skipping theme generation."
         fi
