@@ -188,7 +188,19 @@ do_generate() {
     warn "background.png didn't exist in the original theme; added it."
     warn "The CSS may not reference it, so the wallpaper may not show."
   fi
-
+  # ── Step 2.5: Inject background CSS into all stylesheets ──
+  prompt "Injecting background CSS to force wallpaper visibility..."
+  local css_patch="
+#lockDialogGroup, .login-dialog {
+  background-color: transparent !important;
+  background-image: url('resource:///org/gnome/shell/theme/background.png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}"
+  while IFS= read -r css_file; do
+    echo "$css_patch" >> "$css_file"
+  done < <(find "$tmpdir" -type f -name "*.css")
   # ── Step 3: Generate the XML manifest dynamically ──
   generate_xml "$tmpdir" > "$tmpdir/theme.gresource.xml"
   prompt "Generated resource manifest"
