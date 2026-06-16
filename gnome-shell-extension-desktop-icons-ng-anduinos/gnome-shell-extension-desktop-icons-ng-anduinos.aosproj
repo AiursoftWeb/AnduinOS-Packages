@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-desktop-icons-ng-anduinos</PackageName>
-    <PackageVersion>2.0.0~beta2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~beta3-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Desktop Icons NG (DING) by rastersoft — adds icons to the desktop, packaged for AnduinOS</PackageDescription>
     <Section>gnome</Section>
@@ -13,9 +13,9 @@
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
     <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
-    <Provides>gnome-shell-extension-desktop-icons-ng, gnome-shell-extension-gtk4-desktop-icons-ng</Provides>
-    <Conflicts>gnome-shell-extension-desktop-icons-ng, gnome-shell-extension-gtk4-desktop-icons-ng</Conflicts>
-    <Replaces>gnome-shell-extension-desktop-icons-ng, gnome-shell-extension-gtk4-desktop-icons-ng</Replaces>
+    <Provides>gnome-shell-extension-desktop-icons-ng</Provides>
+    <Conflicts>gnome-shell-extension-desktop-icons-ng</Conflicts>
+    <Replaces>gnome-shell-extension-desktop-icons-ng</Replaces>
   </PropertyGroup>
   <ItemGroup>
     <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble questing-addon=questing resolute-addon=resolute" />

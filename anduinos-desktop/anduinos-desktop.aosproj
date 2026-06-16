@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop</PackageName>
-    <PackageVersion>2.0.0~beta2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~beta3-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS complete desktop — metapackage that pulls in all AnduinOS components</PackageDescription>
     <Section>metapackages</Section>
@@ -39,7 +39,6 @@
     <Recommend Include="anduinos-system-tweaks" />
     <Recommend Include="anduinos-templates" />
     <!-- Brand packages the user may want to swap or remove -->
-    <Recommend Include="plymouth-anduinos" />
     <Recommend Include="anduinos-software-properties-common" />
     <Recommend Include="anduinos-software-properties-gtk" Condition="'$(Suite)' == 'resolute-addon'" />
 

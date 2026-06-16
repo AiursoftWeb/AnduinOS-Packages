@@ -31,20 +31,15 @@ User **cannot** install both.  Dpkg removes the Ubuntu package at install time.
 | 10 | `anduinos-session` | `ubuntu-session` | yes | + postinst purges `10_ubuntu-session.gschema.override` |
 | 11 | `anduinos-gnome-extensions` | `gnome-shell-ubuntu-extensions` | yes | Metapackage — AnduinOS-curated extension set |
 | 12 | `anduinos-installer-config` | `ubiquity-slideshow-ubuntu` | yes | + postinst `dpkg-divert` of Ubiquity languagelist |
-| 13 | `anduinos-fonts` | (none — co-installs with `fonts-noto-color-emoji`) | — | CascadiaCode, NerdFonts, Noto Sans/Serif, Twitter & Noto Color Emoji |
-| 14 | `anduinos-software-properties-common` | `software-properties-common` | yes | Patches `add-apt-repository` → `--distro=ubuntu` |
-| 15 | `anduinos-software-properties-gtk` | `software-properties-gtk` | yes | Strips Ubuntu Pro ads; suppresses `ubuntu-pro-client` dep |
-| 16 | `firefox-anduinos` | `firefox` | — | Mozilla Apt `.deb`, not the snap wrapper |
-| 17 | `firmware-sof-anduinos` | `firmware-sof-signed` | yes | Newer Intel SOF from `thesofproject/sof-bin` |
-| 18 | `alsa-ucm-conf-anduinos` | `alsa-ucm-conf` | yes | `1.2.16` vs Ubuntu `1.2.15.3` |
-| 19 | `plymouth-anduinos` | `plymouth-theme-spinner` | yes | Boot splash in `themes/anduinos/` namespace |
-| 20 | `gnome-shell-extension-appindicator-anduinos` | `gnome-shell-extension-appindicator` | yes | Same UUID: `appindicatorsupport@rgcjonas.gmail.com` |
-| 21 | `gnome-shell-extension-dash-to-panel-anduinos` | `gnome-shell-extension-dash-to-panel` | yes | Same UUID: `dash-to-panel@jderose9.github.com` |
-| 22 | `gnome-shell-extension-desktop-icons-ng-anduinos` | `gnome-shell-extension-desktop-icons-ng` | yes | Same UUID: `ding@rastersoft.com` (original DING) |
-| 23 | `gnome-shell-extension-desktop-icons-ng-anduinos` | `gnome-shell-extension-gtk4-desktop-icons-ng` | yes | 〃 also replaces the GTK4 port |
-| 24 | `gnome-shell-extension-gtk4-desktop-icons-ng` | `gnome-shell-extension-desktop-icons-ng` | yes | GTK4 port → same UUID. Also Conflicts `desktop-icons-ng-anduinos` |
-
-> **Desktop icons**: two mutually-exclusive AnduinOS packages (#22-24) both replace the same Ubuntu package.  Users pick one — `desktop-icons-ng-anduinos` (original DING) or `gtk4-desktop-icons-ng` (GTK4 port).
+| 13 | `anduinos-software-properties-common` | `software-properties-common` | yes | Patches `add-apt-repository` → `--distro=ubuntu` |
+| 14 | `anduinos-software-properties-gtk` | `software-properties-gtk` | yes | Strips Ubuntu Pro ads; suppresses `ubuntu-pro-client` dep |
+| 15 | `firefox-anduinos` | `firefox` | — | Mozilla Apt `.deb`, not the snap wrapper |
+| 16 | `firmware-sof-anduinos` | `firmware-sof-signed` | yes | Newer Intel SOF from `thesofproject/sof-bin` |
+| 17 | `alsa-ucm-conf-anduinos` | `alsa-ucm-conf` | yes | `1.2.16` vs Ubuntu `1.2.15.3` |
+| 18 | `plymouth-anduinos` | `plymouth-theme-spinner` | yes | Boot splash in `themes/anduinos/` namespace |
+| 19 | `gnome-shell-extension-appindicator-anduinos` | `gnome-shell-extension-appindicator` | yes | Same UUID: `appindicatorsupport@rgcjonas.gmail.com` |
+| 20 | `gnome-shell-extension-dash-to-panel-anduinos` | `gnome-shell-extension-dash-to-panel` | yes | Same UUID: `dash-to-panel@jderose9.github.com` |
+| 21 | `gnome-shell-extension-desktop-icons-ng-anduinos` | `gnome-shell-extension-desktop-icons-ng` | yes | Same UUID: `ding@rastersoft.com` (original DING) |
 
 ---
 
@@ -113,7 +108,12 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 |---|---|---|
 | `anduinos-core-system` | Metapackage | Core system foundation (kernel, networking, boot, firmware, APT, security) |
 | `anduinos-desktop-apps` | Metapackage | Default application selection (browser, office, media, utilities) |
+| `anduinos-archive-keyring` | Core | GPG keys for AnduinOS APT repositories |
+| `anduinos-fonts` | Fonts | CascadiaCode, NerdFonts, Noto Sans/Serif, Twemoji |
 | `anduinos-theme` | Metapackage | AnduinOS theme stack (Fluent GTK + Fluent icons + fonts + wallpapers) |
+| `anduinos-fluent-gtk-theme` | Theme | Fluent UI GTK theme |
+| `anduinos-fluent-icon-theme` | Theme | Fluent UI Icon theme |
+| `anduinos-gdm3-wallpaper` | Theme | GDM3 dynamic wallpaper engine |
 | `anduinos-appstore` | App | Flatpak-based app store with Flathub remote |
 | `anduinos-deskmon` | Service | Desktop monitoring / hardware info agent |
 | `anduinos-system-tweaks` | Config | System tuning (swappiness, I/O scheduler, sysctl) |
@@ -240,7 +240,7 @@ apkg publish
 
 ---
 
-### D. GNOME Shell Extensions (21 packages)
+### D. GNOME Shell Extensions (19 packages)
 
 These are resolved **dynamically at build time**: the resolver (`lib/resolve-gnome-ext.py`) queries `extensions.gnome.org` for the best compatible version for each target GNOME Shell version. This means extension code is always up-to-date on every build — no monthly check needed for the extension code itself.
 
@@ -271,15 +271,15 @@ declare -A GNOME_TARGETS=(
 )
 ```
 
-Then **CI rebuilds all 21 extension packages automatically** — the new GNOME version will be picked up by the resolver on the next build.
+Then **CI rebuilds all 19 extension packages automatically** — the new GNOME version will be picked up by the resolver on the next build.
 
 #### D.2 Extension `.aosproj` version numbers
 
-Each extension's `.aosproj` uses a unified `<PackageVersion>` of `2.0.0~beta2-1+$(SuiteShortName)`. Bump the Debian revision suffix (e.g. `-1` → `-2`) when packaging changes. The resolver fetches the latest extension code at build time, so the extension code itself is always up-to-date regardless of the package version.
+Each extension's `.aosproj` uses a unified `<PackageVersion>` of `2.0.0~beta3-1+$(SuiteShortName)`. Bump the Debian revision suffix (e.g. `-1` → `-2`) when packaging changes. The resolver fetches the latest extension code at build time, so the extension code itself is always up-to-date regardless of the package version.
 
 ```diff
--<PackageVersion>2.0.0~beta2-1+$(SuiteShortName)</PackageVersion>
-+<PackageVersion>2.0.0~beta2-2+$(SuiteShortName)</PackageVersion>
+-<PackageVersion>2.0.0~beta3-1+$(SuiteShortName)</PackageVersion>
++<PackageVersion>2.0.0~beta3-2+$(SuiteShortName)</PackageVersion>
 ```
 
 #### D.3 Special-cased extension: desktop-icons-ng-anduinos

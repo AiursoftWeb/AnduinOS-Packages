@@ -1,0 +1,283 @@
+#!/usr/bin/env bash
+#
+# anduinos-gdm-set-wallpaper - A tool to dynamically generate a GDM3 theme with a custom wallpaper
+#
+# Usage: anduinos-gdm-set-wallpaper --wallpaper <path> --output <path> [--blur] [--darken]
+#
+
+set -e
+
+# ── Output helpers ───────────────────────────────────────────────────────────
+
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
+prompt()  { echo -e "${GREEN}==>${NC} $1"; }
+warn()    { echo -e "${YELLOW}==>${NC} $1"; }
+error()   { echo -e "${RED}==>${NC} $1"; }
+
+# ── Usage ────────────────────────────────────────────────────────────────────
+
+usage() {
+  cat << EOF
+anduinos-gdm-set-wallpaper — Generate a custom GDM3 theme with your wallpaper
+
+USAGE
+  $0 --wallpaper <PATH> --output <PATH> [--blur] [--darken]
+  $0 --help
+
+OPTIONS
+  -w, --wallpaper PATH   Path to the wallpaper image
+  -o, --output PATH      Path to write the compiled .gresource
+  -b, --blur             Apply blur effect to the wallpaper
+  -d, --darken           Apply darken overlay to the wallpaper
+  -h, --help             Show this help message
+EOF
+  exit 0
+}
+
+# ── Permission check ─────────────────────────────────────────────────────────
+
+require_root() {
+  if [[ "$EUID" != 0 ]]; then
+    error "This script must be run as root (use sudo)."
+    exit 1
+  fi
+}
+
+# ── Dependency check ─────────────────────────────────────────────────────────
+
+has_command() { command -v "$1" &>/dev/null; }
+
+check_deps() {
+  local missing=()
+
+  if ! has_command glib-compile-resources; then
+    missing+=("glib-compile-resources (apt: libglib2.0-dev-bin)")
+  fi
+  if ! has_command gresource; then
+    missing+=("gresource (apt: libglib2.0-bin)")
+  fi
+  if [[ "$NEED_CONVERT" == "true" ]] && ! has_command convert; then
+    missing+=("convert / ImageMagick (apt: imagemagick)")
+  fi
+
+  if [[ ${#missing[@]} -gt 0 ]]; then
+    error "Missing dependencies:"
+    for m in "${missing[@]}"; do
+      echo "  - $m"
+    done
+    exit 1
+  fi
+}
+
+# ── Distro detection: find the right gresource file ──────────────────────────
+
+find_gr_file() {
+  # Because we use alternatives, we want to find the real physical file,
+  # or at least a valid system default to extract from.
+  # We should ignore our own alternative if it's currently active.
+  local candidates=(
+    # 1. Modern GNOME/Ubuntu default theme path
+    "/usr/share/gnome-shell/theme/gnome-shell-theme.gresource"
+    # 2. Yaru fallback
+    "/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
+    # 3. Standard Debian or old path
+    "/usr/share/gnome-shell/gnome-shell-theme.gresource"
+  )
+
+  for f in "${candidates[@]}"; do
+    if [[ -f "$f" ]]; then
+      echo "$f"
+      return 0
+    fi
+  done
+
+  error "Could not find a base gresource file to extract from."
+  exit 1
+}
+
+# ── Wallpaper processing ─────────────────────────────────────────────────────
+
+process_wallpaper() {
+  local src="$1"
+  local dst="$2"
+  local convert_opts=""
+
+  if [[ "$BLUR" == "true" ]]; then
+    convert_opts+=" -scale 1280x -blur 0x50 "
+    prompt "Applying blur effect..."
+  fi
+
+  if [[ "$DARKEN" == "true" ]]; then
+    convert_opts+=" -fill black -colorize 45% "
+    prompt "Applying darken effect..."
+  fi
+
+  if [[ -n "$convert_opts" ]]; then
+    convert "$src" $convert_opts "$dst"
+  else
+    cp "$src" "$dst"
+  fi
+}
+
+# ── Generate gresource XML from extracted files ──────────────────────────────
+
+generate_xml() {
+  local dir="$1"
+  local prefix="${2:-/org/gnome/shell/theme}"
+
+  echo '<?xml version="1.0" encoding="UTF-8"?>'
+  echo '<gresources>'
+  echo "  <gresource prefix=\"${prefix}\">"
+
+  # List all files relative to $dir, sorted
+  find "$dir" -type f -printf '%P\n' | sort | while IFS= read -r f; do
+    [[ -z "$f" ]] && continue
+    printf '    <file>%s</file>\n' "$f"
+  done
+
+  echo '  </gresource>'
+  echo '</gresources>'
+}
+
+# ── Install ──────────────────────────────────────────────────────────────────
+
+do_generate() {
+  local wallpaper="$1"
+  local output="$2"
+  local source_file tmpdir
+
+  if [[ ! -f "$wallpaper" ]]; then
+    error "Wallpaper not found: $wallpaper"
+    exit 1
+  fi
+
+  if [[ -z "$output" ]]; then
+    error "Output path not specified."
+    exit 1
+  fi
+
+  require_root
+  check_deps
+
+  source_file="$(find_gr_file)"
+  prompt "Extracting base theme files from: $source_file"
+
+  # Work in a temp directory
+  tmpdir="$(mktemp -d)"
+  trap "rm -rf $tmpdir" EXIT
+
+  # ── Step 1: Extract ALL resources from the source gresource ──
+  prompt "Extracting resources..."
+  local count=0
+  while IFS= read -r resource; do
+    [[ -z "$resource" ]] && continue
+    # Strip the prefix to get the relative path
+    local rel="${resource#/org/gnome/shell/theme/}"
+    [[ -z "$rel" ]] && continue
+    # Create parent directories and extract
+    mkdir -p "$(dirname "$tmpdir/$rel")"
+    gresource extract "$source_file" "$resource" > "$tmpdir/$rel" 2>/dev/null || true
+    count=$((count + 1))
+  done < <(gresource list "$source_file")
+  prompt "Extracted $count resources"
+
+  # ── Step 2: Replace ONLY background.png ──
+  if [[ -f "$tmpdir/background.png" ]]; then
+    process_wallpaper "$wallpaper" "$tmpdir/background.png"
+    prompt "Replaced background.png with your wallpaper"
+  else
+    # Edge case: the original theme has no background.png — add one
+    process_wallpaper "$wallpaper" "$tmpdir/background.png"
+    warn "background.png didn't exist in the original theme; added it."
+    warn "The CSS may not reference it, so the wallpaper may not show."
+  fi
+  # ── Step 2.5: Inject background CSS into all stylesheets ──
+  prompt "Injecting background CSS to force wallpaper visibility..."
+  local css_patch="
+#lockDialogGroup, .login-dialog {
+  background-color: transparent !important;
+  background-image: url('resource:///org/gnome/shell/theme/background.png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Make user list and login prompt sleek dark semi-transparent */
+.login-dialog-user-list-item,
+.login-dialog-auth-list-item,
+.login-dialog-prompt-entry,
+.unlock-dialog-prompt-entry,
+.login-dialog-not-listed-button,
+.login-dialog-button {
+  background-color: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+.login-dialog-user-list-item:hover,
+.login-dialog-user-list-item:focus,
+.login-dialog-prompt-entry:focus,
+.unlock-dialog-prompt-entry:focus,
+.login-dialog-not-listed-button:hover,
+.login-dialog-not-listed-button:focus,
+.login-dialog-button:hover,
+.login-dialog-button:focus {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+"
+  while IFS= read -r css_file; do
+    echo "$css_patch" >> "$css_file"
+  done < <(find "$tmpdir" -type f -name "*.css")
+  # ── Step 3: Generate the XML manifest dynamically ──
+  generate_xml "$tmpdir" > "$tmpdir/theme.gresource.xml"
+  prompt "Generated resource manifest"
+
+  # ── Step 4: Compile ──
+  prompt "Compiling new gresource to $output..."
+  mkdir -p "$(dirname "$output")"
+  glib-compile-resources \
+    --sourcedir="$tmpdir" \
+    --target="$output" \
+    "$tmpdir/theme.gresource.xml"
+
+  prompt "Successfully generated theme at $output"
+}
+
+# ── Argument parsing ─────────────────────────────────────────────────────────
+
+WALLPAPER=""
+OUTPUT=""
+BLUR="false"
+DARKEN="false"
+NEED_CONVERT="false"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -w|--wallpaper)
+      WALLPAPER="$2"; shift 2 ;;
+    --wallpaper=*)
+      WALLPAPER="${1#*=}"; shift ;;
+    -o|--output)
+      OUTPUT="$2"; shift 2 ;;
+    --output=*)
+      OUTPUT="${1#*=}"; shift ;;
+    -b|--blur)
+      BLUR="true"; NEED_CONVERT="true"; shift ;;
+    -d|--darken)
+      DARKEN="true"; NEED_CONVERT="true"; shift ;;
+    -h|--help)
+      usage ;;
+    *)
+      error "Unknown option: $1"
+      echo "  Run '$0 --help' for usage."
+      exit 1 ;;
+  esac
+done
+
+# ── Dispatch ─────────────────────────────────────────────────────────────────
+
+if [[ -n "$WALLPAPER" && -n "$OUTPUT" ]]; then
+  do_generate "$WALLPAPER" "$OUTPUT"
+else
+  error "Missing required arguments (--wallpaper and --output)."
+  echo "  Run '$0 --help' for usage."
+  exit 1
+fi

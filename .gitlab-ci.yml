@@ -63,6 +63,13 @@ anduinos-apt-config:
   variables:
     PACKAGE_DIR: anduinos-apt-config
 
+anduinos-gdm3-wallpaper:
+  extends: .publish
+  needs:
+    - anduinos-wallpapers
+  variables:
+    PACKAGE_DIR: anduinos-gdm3-wallpaper
+
 anduinos-apt-config-dev:
   extends: .publish
   needs:
@@ -170,11 +177,6 @@ gnome-shell-extension-dash-to-panel-anduinos:
   variables:
     PACKAGE_DIR: gnome-shell-extension-dash-to-panel-anduinos
 
-gnome-shell-extension-gtk4-desktop-icons-ng:
-  extends: .publish
-  variables:
-    PACKAGE_DIR: gnome-shell-extension-gtk4-desktop-icons-ng
-
 gnome-shell-extension-desktop-icons-ng-anduinos:
   extends: .publish
   variables:
@@ -194,11 +196,6 @@ gnome-shell-extension-network-stats:
   extends: .publish
   variables:
     PACKAGE_DIR: gnome-shell-extension-network-stats
-
-gnome-shell-extension-no-overview:
-  extends: .publish
-  variables:
-    PACKAGE_DIR: gnome-shell-extension-no-overview
 
 gnome-shell-extension-proxy-switcher:
   extends: .publish
@@ -240,6 +237,7 @@ anduinos-theme:
     - anduinos-dconf-defaults
     - plymouth-anduinos
     - anduinos-wallpapers
+    - anduinos-gdm3-wallpaper
     - anduinos-gnome-shell-locale
     - anduinos-fonts
   variables:
