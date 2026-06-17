@@ -7,6 +7,7 @@ trap 'rm -rf "$WORKDIR"' EXIT
 
 echo "Extracting Fluent icon theme sources..."
 tar -xzf "$ARCHIVE" -C "$WORKDIR"
+rm -f "$ARCHIVE"
 
 SRC="$WORKDIR/Fluent-icon-theme"
 

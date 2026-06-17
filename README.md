@@ -114,6 +114,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-fluent-gtk-theme` | Theme | Fluent UI GTK theme |
 | `anduinos-fluent-icon-theme` | Theme | Fluent UI Icon theme |
 | `anduinos-gdm3-wallpaper` | Theme | GDM3 dynamic wallpaper engine |
+| `anduinos-appearance` | App | Taskbar layout switcher (Windows 11 / Classic) |
 | `anduinos-appstore` | App | Flatpak-based app store with Flathub remote |
 | `anduinos-deskmon` | Service | Desktop monitoring / hardware info agent |
 | `anduinos-system-tweaks` | Config | System tuning (swappiness, I/O scheduler, sysctl) |

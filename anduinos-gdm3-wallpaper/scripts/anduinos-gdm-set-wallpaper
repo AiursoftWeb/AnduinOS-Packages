@@ -181,6 +181,31 @@ do_generate() {
   done < <(gresource list "$source_file")
   prompt "Extracted $count resources"
 
+  # ── Step 1.5: Inject Fluent Theme ──
+  local fluent_dir="/usr/share/themes/Fluent-round-Dark/gnome-shell"
+  if [[ -d "$fluent_dir" ]]; then
+    prompt "Injecting Fluent theme CSS and assets..."
+    # Use dark variant if available
+    local fluent_css="$fluent_dir/gnome-shell.css"
+    if [[ -f "$fluent_dir/gnome-shell-dark.css" ]]; then
+      fluent_css="$fluent_dir/gnome-shell-dark.css"
+    fi
+    
+    # Overwrite EVERY css file in the extracted base theme with the Fluent CSS
+    # This guarantees GDM loads the Fluent theme regardless of whether it looks for
+    # gdm3.css, gdm.css, Yaru/gnome-shell.css, etc.
+    while IFS= read -r css_file; do
+      cp "$fluent_css" "$css_file"
+    done < <(find "$tmpdir" -type f -name "*.css")
+
+    # Copy assets
+    if [[ -d "$fluent_dir/assets" ]]; then
+      cp -r "$fluent_dir/assets" "$tmpdir/"
+    fi
+  else
+    warn "Fluent theme not found at $fluent_dir. Falling back to base theme."
+  fi
+
   # ── Step 2: Replace ONLY background.png ──
   if [[ -f "$tmpdir/background.png" ]]; then
     process_wallpaper "$wallpaper" "$tmpdir/background.png"
@@ -189,38 +214,54 @@ do_generate() {
     # Edge case: the original theme has no background.png — add one
     process_wallpaper "$wallpaper" "$tmpdir/background.png"
     warn "background.png didn't exist in the original theme; added it."
-    warn "The CSS may not reference it, so the wallpaper may not show."
   fi
+
   # ── Step 2.5: Inject background CSS into all stylesheets ──
   prompt "Injecting background CSS to force wallpaper visibility..."
   local css_patch="
-#lockDialogGroup, .login-dialog {
+/* ── GDM Lock Screen Wallpaper Override ───────────────────── */
+#lockDialogGroup {
   background-color: transparent !important;
   background-image: url('resource:///org/gnome/shell/theme/background.png') !important;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
 }
-
-/* Make user list and login prompt sleek dark semi-transparent */
-.login-dialog-user-list-item,
-.login-dialog-auth-list-item,
-.login-dialog-prompt-entry,
-.unlock-dialog-prompt-entry,
-.login-dialog-not-listed-button,
-.login-dialog-button {
-  background-color: rgba(0, 0, 0, 0.35) !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+/* Ensure the lock screen panel is transparent over the wallpaper */
+#panel.lock-screen, #panel.unlock-screen, #panel.login-screen {
+  background-color: transparent !important;
 }
-.login-dialog-user-list-item:hover,
-.login-dialog-user-list-item:focus,
-.login-dialog-prompt-entry:focus,
-.unlock-dialog-prompt-entry:focus,
-.login-dialog-not-listed-button:hover,
-.login-dialog-not-listed-button:focus,
-.login-dialog-button:hover,
-.login-dialog-button:focus {
-  background-color: rgba(0, 0, 0, 0.6) !important;
+
+/* ── Ubuntu Customizations Override ───────────────────────── */
+/* Ubuntu adds a custom .a11y-button to the login dialog which isn't in upstream Fluent */
+.login-dialog .login-dialog-button.a11y-button,
+.unlock-dialog .login-dialog-button.a11y-button {
+  padding: 0.818em !important;
+  margin: 0 !important;
+  border-radius: 999px !important;
+  min-height: 1.091em !important;
+  border: none !important;
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  box-shadow: none !important;
+}
+.login-dialog .login-dialog-button.a11y-button:hover,
+.login-dialog .login-dialog-button.a11y-button:focus,
+.unlock-dialog .login-dialog-button.a11y-button:hover,
+.unlock-dialog .login-dialog-button.a11y-button:focus {
+  color: rgba(255, 255, 255, 1.0) !important;
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: none !important;
+}
+.login-dialog .login-dialog-button.a11y-button:active,
+.unlock-dialog .login-dialog-button.a11y-button:active {
+  color: rgba(255, 255, 255, 1.0) !important;
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: none !important;
+}
+.login-dialog .login-dialog-button.a11y-button StIcon,
+.unlock-dialog .login-dialog-button.a11y-button StIcon {
+  icon-size: 16px !important;
 }
 "
   while IFS= read -r css_file; do

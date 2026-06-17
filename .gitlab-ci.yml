@@ -66,7 +66,7 @@ anduinos-apt-config:
 anduinos-gdm3-wallpaper:
   extends: .publish
   needs:
-    - anduinos-wallpapers
+    - anduinos-fluent-gtk-theme
   variables:
     PACKAGE_DIR: anduinos-gdm3-wallpaper
 
@@ -76,6 +76,13 @@ anduinos-apt-config-dev:
     - anduinos-archive-keyring
   variables:
     PACKAGE_DIR: anduinos-apt-config-dev
+
+anduinos-appearance:
+  extends: .publish
+  needs:
+    - anduinos-gdm3-wallpaper
+  variables:
+    PACKAGE_DIR: anduinos-appearance
 
 anduinos-no-snapd:
   extends: .publish
@@ -174,11 +181,15 @@ gnome-shell-extension-customize-ibus:
 
 gnome-shell-extension-dash-to-panel-anduinos:
   extends: .publish
+  needs:
+    - anduinos-appearance
   variables:
     PACKAGE_DIR: gnome-shell-extension-dash-to-panel-anduinos
 
 gnome-shell-extension-desktop-icons-ng-anduinos:
   extends: .publish
+  needs:
+    - anduinos-appearance
   variables:
     PACKAGE_DIR: gnome-shell-extension-desktop-icons-ng-anduinos
 
@@ -224,6 +235,8 @@ alsa-ucm-conf-anduinos:
 
 firmware-sof-anduinos:
   extends: .publish
+  needs:
+    - alsa-ucm-conf-anduinos
   variables:
     PACKAGE_DIR: firmware-sof-anduinos
 
@@ -240,6 +253,7 @@ anduinos-theme:
     - anduinos-gdm3-wallpaper
     - anduinos-gnome-shell-locale
     - anduinos-fonts
+    - anduinos-appearance
   variables:
     PACKAGE_DIR: anduinos-theme
 

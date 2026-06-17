@@ -1,3 +1,5 @@
+-- 辅码，https://github.com/mirtlecn/rime-radical-pinyin/blob/master/search.lua.md
+--
 -- Copyright (C) [Mirtle](https://github.com/mirtlecn)
 -- License: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
 -- 使用说明：<https://github.com/mirtlecn/rime-radical-pinyin/blob/master/search.lua.md>
@@ -19,7 +21,6 @@ local function get_pos( text, char )
             local first_char = tmp:sub( 1, utf8.offset( tmp, 2 ) - 1 )
             if first_char == char then pos[i] = true end
             tmp = tmp:gsub( '^' .. first_char, '' )
-            i = i + 1
         end
     end
     return pos
@@ -44,9 +45,7 @@ local function update_dict_entry( s, code, mem, proj )
         local code_convert = code:sub( i, i + 1 )
         local p = proj:apply( code_convert, true )
         if p and #p > 0 then code_convert = p end
-        if code_convert == 'dian' and pos[loop] then
-            -- Ignored
-        else
+        if code_convert ~= 'dian' or not pos[loop] then
             table.insert( custom_code, code_convert )
         end
         loop = loop + 1
@@ -81,7 +80,7 @@ end
 
 -- 通过 reverse db 查询（以字查码，然后比对辅码是否相同，快，但只能匹配未经算法转换的码）
 local function reverse_lookup( code_projection, db_table, wildcard, text, s, global_match )
-    if wildcard then s = s:gsub( wildcard, '.+' ) end
+    if wildcard then s = s:gsub( wildcard, '.*' ) end
     if code_projection then
         -- old librime do not return original string when apply failed
         local p = code_projection:apply( s, true )
@@ -121,13 +120,13 @@ function f.init( env )
     env.if_reverse_lookup = false
 
     -- 配置：仅限 script_translator 引擎
-    local engine = config:get_list( 'engine/translators' )
-    local engine_table = {}
-    for i = 0, engine.size - 1 do engine_table[engine:get_value_at( i ).value] = true end
-    if not engine_table['script_translator'] then
-        log.error( '[search.lua]: script_translator not found in engine/translators, search.lua will not work' )
-        return
-    end
+    -- local engine = config:get_list( 'engine/translators' )
+    -- local engine_table = {}
+    -- for i = 0, engine.size - 1 do engine_table[engine:get_value_at( i ).value] = true end
+    -- if not engine_table['script_translator'] then
+    --     log.error( '[search.lua]: script_translator not found in engine/translators, search.lua will not work' )
+    --     return
+    -- end
 
     -- 配置：辅码查字方法
     -- --
@@ -282,12 +281,12 @@ function f.func( input, env )
     end
 
     -- 上屏其余的候选
-    for i, cand in ipairs( long_word_cands ) do yield( cand ) end
-    if env.show_other_cands then for i, cand in ipairs( other_cand ) do yield( cand ) end end
+    for _, cand in ipairs( long_word_cands ) do yield( cand ) end
+    if env.show_other_cands then for _, cand in ipairs( other_cand ) do yield( cand ) end end
 end
 
 function f.tags_match( seg, env )
-    for i, v in ipairs( env.tag ) do if seg.tags[v] then return true end end
+    for _, v in ipairs( env.tag ) do if seg.tags[v] then return true end end
     return false
 end
 

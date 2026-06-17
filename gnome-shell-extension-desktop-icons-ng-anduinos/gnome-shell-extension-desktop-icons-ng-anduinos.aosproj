@@ -1,11 +1,11 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-desktop-icons-ng-anduinos</PackageName>
-    <PackageVersion>2.0.0~beta3-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~beta3-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>Desktop Icons NG (DING) by rastersoft — adds icons to the desktop, packaged for AnduinOS</PackageDescription>
     <Section>gnome</Section>
-    <PackageHomepage>https://extensions.gnome.org/extension/2087/desktop-icons-ng-ding/</PackageHomepage>
+    <PackageDescription>Desktop Icons NG (DING) — adds icons to the desktop. Patched for AnduinOS: the right-click "Desktop Icons Settings" entry is renamed to "AnduinOS Appearance Settings" and launches the AnduinOS Appearance configuration tool. For the best support, please report any issues on Github.</PackageDescription>
+    <PackageHomepage>https://gitlab.com/rastersoft/desktop-icons-ng</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
@@ -22,7 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Dependency Include="gnome-shell (>= 45~)" />
+    <Dependency Include="gnome-shell" />
+    <Dependency Include="anduinos-appearance" />
     <Dependency Include="gir1.2-gnomedesktop-3.0" />
     <Dependency Include="gjs" />
     <Dependency Include="dconf-gsettings-backend | gsettings-backend" />

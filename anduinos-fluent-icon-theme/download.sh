@@ -10,7 +10,7 @@ git -C /tmp/Fluent-icon-theme checkout "$FLUENT_ICON_COMMIT"
 
 echo "Packing full upstream repo to deploy/fluent-icon-theme.tar.gz..."
 mkdir -p "$SCRIPT_DIR/deploy"
-tar -czf "$SCRIPT_DIR/deploy/fluent-icon-theme.tar.gz" -C /tmp Fluent-icon-theme
+tar -czf "$SCRIPT_DIR/deploy/fluent-icon-theme.tar.gz" --exclude='.git' -C /tmp Fluent-icon-theme
 
 rm -rf /tmp/Fluent-icon-theme
 echo "Done."

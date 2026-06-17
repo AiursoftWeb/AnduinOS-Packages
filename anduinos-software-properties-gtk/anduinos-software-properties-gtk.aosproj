@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-software-properties-gtk</PackageName>
-    <PackageVersion>2.0.0~beta3+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~beta3+$(UpstreamVersion)-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS fork of software-properties-gtk — Software &amp; Updates GUI without Ubuntu Pro ads</PackageDescription>
     <Section>admin</Section>
@@ -28,6 +28,10 @@
     <SuppressUpstreamScripts>true</SuppressUpstreamScripts>
     <SuppressUpstreamDependencies>ubuntu-pro-client ubuntu-advantage-desktop-daemon</SuppressUpstreamDependencies>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Dependency Include="anduinos-software-properties-common" />
+  </ItemGroup>
 
   <ItemGroup>
     <!--

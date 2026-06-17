@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-theme</PackageName>
-    <PackageVersion>2.0.0~beta3-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~beta3-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS complete visual theme — icons, GTK theme, wallpapers, and extensions</PackageDescription>
     <Section>metapackages</Section>
@@ -25,6 +25,7 @@
     <Recommend Include="anduinos-gnome-shell-locale" />
 
     <!-- User-swappable brand packages -->
+    <Recommend Include="anduinos-appearance" />
     <Recommend Include="anduinos-gnome-extensions" />
     <Recommend Include="plymouth-anduinos" />
     <Recommend Include="anduinos-wallpapers" />
