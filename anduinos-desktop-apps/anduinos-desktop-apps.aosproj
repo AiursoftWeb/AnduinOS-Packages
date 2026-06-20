@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-apps</PackageName>
-    <PackageVersion>2.0.0~rc1-4+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~rc1-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default applications — pulls in recommended apps for AnduinOS</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -48,7 +48,7 @@
     <Recommend Include="totem" Condition="'$(Suite)' == 'noble-addon'" />
     <Recommend Include="showtime" Condition="'$(Suite)' == 'questing-addon'" />
     <Recommend Include="celluloid" Condition="'$(Suite)' == 'resolute-addon'" />
-    <Recommend Include="gnome-music" />
+    <Recommend Include="amberol" />
     <Recommend Include="gnome-snapshot" />
     <Recommend Include="gnome-sound-recorder" />
     <Recommend Include="ffmpegthumbnailer" />
@@ -88,6 +88,11 @@
          look for in their launcher. -->
     <IncludeFile Include="assets/org.gnome.Geary.desktop"
                  Target="/usr/share/applications/org.gnome.Geary.desktop" />
+
+    <!-- Replace Amberol desktop Name with local "Music Player" — "Amberol"
+         means nothing to an end user; "Music Player" in their language does. -->
+    <IncludeFile Include="assets/io.bassi.Amberol.desktop"
+                 Target="/usr/share/applications/io.bassi.Amberol.desktop" />
   </ItemGroup>
 
   <ItemGroup>

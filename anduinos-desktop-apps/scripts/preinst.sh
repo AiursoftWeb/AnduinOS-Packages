@@ -23,3 +23,13 @@ if [ install = "$1" ] || [ upgrade = "$1" ]; then
         --divert "$GEARY_DIVERTED" \
         "$GEARY_ORIGINAL"
 fi
+
+# Replace Amberol desktop Name with localized "Music Player"
+AMBEROL_ORIGINAL="/usr/share/applications/io.bassi.Amberol.desktop"
+AMBEROL_DIVERTED="/usr/share/applications/io.bassi.Amberol.desktop.ubuntu-original"
+
+if [ install = "$1" ] || [ upgrade = "$1" ]; then
+    dpkg-divert --add --package anduinos-desktop-apps --rename \
+        --divert "$AMBEROL_DIVERTED" \
+        "$AMBEROL_ORIGINAL"
+fi

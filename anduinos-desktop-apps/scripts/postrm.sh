@@ -18,3 +18,12 @@ if [ remove = "$1" ] || [ purge = "$1" ]; then
         --divert "$GEARY_DIVERTED" \
         "$GEARY_ORIGINAL" 2>/dev/null || true
 fi
+
+AMBEROL_ORIGINAL="/usr/share/applications/io.bassi.Amberol.desktop"
+AMBEROL_DIVERTED="/usr/share/applications/io.bassi.Amberol.desktop.ubuntu-original"
+
+if [ remove = "$1" ] || [ purge = "$1" ]; then
+    dpkg-divert --remove --package anduinos-desktop-apps --rename \
+        --divert "$AMBEROL_DIVERTED" \
+        "$AMBEROL_ORIGINAL" 2>/dev/null || true
+fi
