@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-appindicator-anduinos</PackageName>
-    <PackageVersion>2.0.0~beta3-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~rc1-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AppIndicator and KStatusNotifierItem Support extension (3v1n0) — packaged for AnduinOS</PackageDescription>
     <Section>gnome</Section>
@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Dependency Include="anduinos-dconf-runtime" />
     <Dependency Include="gnome-shell (>= 45~)" />
     <Dependency Include="gjs" />
     <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
@@ -47,6 +48,5 @@
     <IncludeFile Include="dconf/09-appindicator.conf" Target="/etc/dconf/db/anduinos.d/09-appindicator.conf" />
   </ItemGroup>
   <ItemGroup>
-    <PostInstallScript Include="scripts/postinst.sh" />
   </ItemGroup>
 </Project>

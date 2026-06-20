@@ -1,0 +1,56 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-container</PackageName>
+    <PackageVersion>2.0.0~rc1-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS container base — minimal shell, networking, and admin tools. This is the absolute minimum layer for AnduinOS container images.</PackageDescription>
+    <Section>metapackages</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Shell & core utils -->
+    <Dependency Include="coreutils" />
+    <Dependency Include="bash-completion" />
+
+    <!-- Networking essentials -->
+    <Dependency Include="iproute2" />
+    <Dependency Include="iputils-ping" />
+    <Dependency Include="curl" />
+    <Dependency Include="ca-certificates" />
+
+    <!-- Archive / file tools -->
+    <Dependency Include="tar" />
+    <Dependency Include="unzip" />
+    <Dependency Include="zip" />
+    <Dependency Include="xz-utils" />
+    <Dependency Include="zstd" />
+
+    <!-- Security -->
+    <Dependency Include="sudo" />
+
+    <!-- Locale -->
+    <Dependency Include="locales" />
+
+    <!-- Editors -->
+    <Dependency Include="vim-tiny" />
+    <Dependency Include="nano" />
+
+    <!-- Process / introspection -->
+    <Dependency Include="lsof" />
+    <Dependency Include="psmisc" />
+
+    <!-- Essentials -->
+    <Recommend Include="sudo-rs" />
+    <Recommend Include="wget" />
+    <Recommend Include="file" />
+    <Recommend Include="procps" />
+  </ItemGroup>
+</Project>

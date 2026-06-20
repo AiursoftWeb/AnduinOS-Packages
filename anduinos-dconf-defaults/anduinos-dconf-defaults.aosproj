@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-dconf-defaults</PackageName>
-    <PackageVersion>2.0.0~beta3-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~rc1-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS system-wide dconf/gschema/GDM defaults</PackageDescription>
     <Section>admin</Section>
@@ -16,16 +16,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Dependency Include="dconf-cli" />
+    <Dependency Include="anduinos-dconf-runtime" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- gsettings schema override -->
     <IncludeFile Include="deploy/99-anduinos-defaults.gschema.override"
                  Target="/usr/share/glib-2.0/schemas/99-anduinos-defaults.gschema.override" />
-
-    <!-- dconf profile -->
-    <IncludeFile Include="deploy/user" Target="/etc/dconf/profile/user" />
 
     <!-- dconf database fragments (sorted by priority) -->
     <IncludeFile Include="deploy/01-custom-keybindings.conf"
@@ -45,6 +42,5 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PostInstallScript Include="deploy/postinst.sh" />
   </ItemGroup>
 </Project>

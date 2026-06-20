@@ -151,7 +151,8 @@ monolithic config package:
 ```
 
 This way, when the user removes the component package, its dconf defaults
-are cleaned up automatically by dpkg.
+source files are cleaned up automatically by dpkg, and the binary database
+is automatically recompiled by the dpkg trigger in `anduinos-dconf-runtime`.
 
 ## GNOME Shell Extensions
 

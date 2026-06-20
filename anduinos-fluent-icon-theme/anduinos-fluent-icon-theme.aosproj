@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-fluent-icon-theme</PackageName>
-    <PackageVersion>2.0.0~beta3-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~rc1-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>Fluent icon theme by vinceliuice — runs author's install.sh at install time</PackageDescription>
+    <PackageDescription>Fluent icon theme by vinceliuice — pre-built at package build time</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://github.com/vinceliuice/Fluent-icon-theme</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
@@ -20,10 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <IncludeFile Include="deploy/fluent-icon-theme.tar.gz" Target="/usr/share/anduinos-fluent-icon-theme/fluent-icon-theme.tar.gz" />
+    <IncludeFolder Include="deploy/icons/" Target="/usr/share/icons/" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PostInstallScript Include="scripts/postinst.sh" />
-  </ItemGroup>
 </Project>

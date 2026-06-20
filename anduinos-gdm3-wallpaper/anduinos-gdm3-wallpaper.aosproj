@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-gdm3-wallpaper</PackageName>
-    <PackageVersion>2.0.0~beta3-4+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~rc1-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GDM3 dynamic wallpaper engine</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -18,18 +18,23 @@
     <!-- Dependencies -->
     <Dependency Include="libglib2.0-bin" />
     <Dependency Include="libglib2.0-dev-bin" />
-    <Dependency Include="anduinos-fluent-gtk-theme" />
     <Dependency Include="gnome-shell-common" />
-    
+
     <!-- imagemagick intentionally NOT listed as a dependency.
          anduinos-gdm-set-wallpaper prompts users to apt install
          it at runtime only if they pass -b / -d (blur / darken). -->
+
+    <!-- Build Fluent gnome-shell CSS + assets at build time -->
+    <PrebuildCommand Run="bash download.sh" />
 
     <!-- Engine script for setting wallpaper -->
     <IncludeFile Include="scripts/anduinos-gdm-set-wallpaper" Target="/usr/bin/anduinos-gdm-set-wallpaper" Mode="755" />
 
     <!-- Default GDM wallpaper -->
     <IncludeFile Include="assets/Floating-objects-dark.png" Target="/usr/share/anduinos-gdm3-wallpaper/Floating-objects-dark.png" Mode="644" />
+
+    <!-- Pre-compiled Fluent gnome-shell CSS + assets -->
+    <IncludeFolder Include="deploy/fluent-gnome-shell/" Target="/usr/share/anduinos-gdm3-wallpaper/fluent-gnome-shell/" />
     
     <!-- Debian maintainer scripts -->
     <PostInstallScript Include="scripts/postinst.sh" />

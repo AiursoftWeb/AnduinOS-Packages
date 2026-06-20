@@ -182,14 +182,10 @@ do_generate() {
   prompt "Extracted $count resources"
 
   # ── Step 1.5: Inject Fluent Theme ──
-  local fluent_dir="/usr/share/themes/Fluent-round-Dark/gnome-shell"
+  local fluent_dir="/usr/share/anduinos-gdm3-wallpaper/fluent-gnome-shell"
   if [[ -d "$fluent_dir" ]]; then
     prompt "Injecting Fluent theme CSS and assets..."
-    # Use dark variant if available
     local fluent_css="$fluent_dir/gnome-shell.css"
-    if [[ -f "$fluent_dir/gnome-shell-dark.css" ]]; then
-      fluent_css="$fluent_dir/gnome-shell-dark.css"
-    fi
     
     # Overwrite EVERY css file in the extracted base theme with the Fluent CSS
     # This guarantees GDM loads the Fluent theme regardless of whether it looks for

@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-ALSA_COMMIT="9cbe982"   # pinned for supply-chain safety
+# ── Build-time dependency guards ──
+source "$SCRIPT_DIR/../lib/build-guards.sh"
+need_cmd git
+
+ALSA_COMMIT="c68dcb174f432234dd224a3dc5270fa1f4856afd"   # pinned for supply-chain safety
 
 rm -rf "$SCRIPT_DIR/deploy" /tmp/alsa-ucm-conf
 mkdir -p "$SCRIPT_DIR/deploy"

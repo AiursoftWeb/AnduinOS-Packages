@@ -149,3 +149,48 @@ Pin 1001 ensures AnduinOS packages are always preferred even if Ubuntu ships a
 higher version number. This is safe because the AnduinOS addon repository only
 contains packages that are intentionally built and pushed — it is not a full
 mirror.
+
+## Postinst Best Practices: Never Run `dconf update` or `glib-compile-schemas`
+
+**Do not** put `dconf update` or `glib-compile-schemas` in `postinst.sh` scripts.
+These are handled automatically by Debian's **dpkg triggers**.
+
+### How triggers work
+
+Two core system packages declare interest in file-system changes:
+
+- **`anduinos-dconf-runtime`** declares `interest-noawait /etc/dconf/db/anduinos.d`
+- **`libglib2.0-0`** declares interest for `/usr/share/glib-2.0/schemas/`
+
+When any package drops a file under these monitored directories, dpkg records
+the trigger. At the end of the entire apt transaction, the trigger owner's
+script runs **once** — no matter how many packages were installed or upgraded.
+
+### What this means for packaging
+
+| Instead of putting this in postinst… | …the system does it for you: |
+|---|---|
+| `dconf update` | Triggered once by `anduinos-dconf-runtime` when files land in `/etc/dconf/db/anduinos.d/` |
+| `glib-compile-schemas /usr/share/glib-2.0/schemas/` | Triggered once by `libglib2.0-0` when files land in schemas dir |
+| `glib-compile-schemas <extension>/schemas/` | **Pre-compile at build time** in `download.sh` — ship `gschemas.compiled` in the `.deb` |
+
+### Why this matters
+
+1. **Performance**: A single apt transaction installing 16 extensions runs the
+   trigger once, not 16 times.
+2. **Chroot safety**: `dconf update` broadcasts D-Bus "Settings Changed" signals.
+   During chroot OS builds with bind-mounted `/run`, these leak into the host
+   and can crash the host's GNOME Shell. `anduinos-dconf-runtime` avoids this
+   by using `dconf compile /etc/dconf/db/anduinos /etc/dconf/db/anduinos.d`
+   instead when it detects a chroot.
+3. **Correctness**: The trigger always runs at the right moment (after all
+   packages are unpacked), regardless of install order.
+
+### Exception
+
+The maintainer script exception for dconf is the centralized
+`anduinos-dconf-runtime` trigger owner, which runs `dconf update` on live
+systems and `dconf compile` in chroots. Separately, `anduinos-session` removes
+a Ubuntu gschema override file (`10_ubuntu-session.gschema.override`). This
+`rm -f` operation is idempotent, emits no D-Bus signals, and must happen at
+install time. It does not call `dconf update` or `glib-compile-schemas`.

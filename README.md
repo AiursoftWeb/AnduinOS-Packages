@@ -106,6 +106,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 
 | Package | Type | Description |
 |---|---|---|
+| `anduinos-container` | Metapackage | Minimal container base (shell, networking, sudo, editor) |
 | `anduinos-core-system` | Metapackage | Core system foundation (kernel, networking, boot, firmware, APT, security) |
 | `anduinos-desktop-apps` | Metapackage | Default application selection (browser, office, media, utilities) |
 | `anduinos-archive-keyring` | Core | GPG keys for AnduinOS APT repositories |
@@ -120,6 +121,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-system-tweaks` | Config | System tuning (swappiness, I/O scheduler, sysctl) |
 | `anduinos-system-tweaks-server` | Service | Background service for system tweaks |
 | `anduinos-templates` | Data | Default file templates (`~/Templates`) |
+| `anduinos-dconf-runtime` | Core | dconf profile and dpkg trigger runtime for GNOME system defaults |
 | `anduinos-dconf-defaults` | Config | dconf / gsettings defaults for GNOME |
 | `anduinos-gnome-shell-locale` | Locale | GNOME Shell locale / text overrides |
 | `anduinos-live-settings` | Config | Live CD timezone hook (casper-bottom); removed after install |
@@ -131,6 +133,19 @@ Each package is built via the GitLab CI pipeline (`.gitlab-ci.yml`). Packages us
 ```
 apkg publish
 ```
+
+### TL;DR: What needs manual effort vs what auto-builds
+
+| Category | Packages | Monthly action |
+|---|---|---|
+| 🔧 **Manual — update commit/version** | Fluent GTK theme, Fluent icon theme, ALSA UCM Conf, Firmware SOF | Edit `download.sh` + bump `.aosproj` |
+| 🤖 **Auto — CI resolves at build time** | 19 GNOME Shell extensions | Trigger CI; resolver pulls latest from extensions.gnome.org |
+| 🤖 **Auto — pulls latest upstream .deb** | base-files, plymouth, software-properties-common, software-properties-gtk, firefox | Trigger CI; pulls latest from Ubuntu/Mozilla mirrors |
+| 🤖 **Auto — metapackages** | anduinos-desktop, theme, desktop-core, etc. | Trigger CI only if dependency list changed |
+
+**Bottom line:** 4 packages need manual edits each month. Everything else = run CI.
+
+---
 
 ## Monthly Update Manual
 
@@ -195,8 +210,8 @@ Example diff for Fluent GTK theme:
 +FLUENT_GTK_COMMIT="a1b2c3d"
 
 # anduinos-fluent-gtk-theme.aosproj
--<PackageVersion>2.0.0~beta1-1+$(SuiteShortName)</PackageVersion>
-+<PackageVersion>2.0.0~beta1-2+$(SuiteShortName)</PackageVersion>
+-<PackageVersion>2.0.0~rc1-1+$(SuiteShortName)</PackageVersion>
++<PackageVersion>2.0.0~rc1-2+$(SuiteShortName)</PackageVersion>
 ```
 
 #### B.3 Rebuild and verify
@@ -210,7 +225,9 @@ apkg publish
 
 ### C. Firmware SOF (Version-Pinned Tarball)
 
-`firmware-sof-anduinos` now derives from Ubuntu's `firmware-sof-signed` package at build time, then replaces the unpacked SOF payload with a newer Intel `sof-bin` release tarball. This keeps file ownership, upgrades, and removals under dpkg instead of a post-install `rsync`.
+`firmware-sof-anduinos` replaces Ubuntu's SOF firmware with a newer Intel `sof-bin` release tarball.
+
+> **⚠️ Version sync trap:** The SOF version now appears in **two places** — `download.sh` (`SOF_VERSION`) **and** `.aosproj` (`PackageVersion`). When upgrading SOF, update **both** together or the package version won't reflect reality.
 
 #### C.1 Check for updates
 
@@ -218,16 +235,16 @@ Visit [sof-bin releases](https://github.com/thesofproject/sof-bin/releases) and 
 
 #### C.2 Apply the update
 
-Update **two files**:
+Update **both files**:
 
 ```diff
 # download.sh
--SOF_VERSION="2025.12"
+-SOF_VERSION="2025.12.2"
 +SOF_VERSION="2026.03"   # update to new release tag
 
 # firmware-sof-anduinos.aosproj
--<PackageVersion>2.0.0~beta1+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
-+<PackageVersion>2.0.0~beta1+$(UpstreamVersion)-2+$(SuiteShortName)</PackageVersion>   # bump the Debian revision
+-<PackageVersion>2.0.0~rc1-2025.12.2+$(SuiteShortName)</PackageVersion>
++<PackageVersion>2.0.0~rc1-2026.03+$(SuiteShortName)</PackageVersion>   # sync SOF version
 ```
 
 The downloaded Intel tarball and extracted cache under `deploy/` are **not** committed — the CI regenerates them at build time via `download.sh`.
@@ -276,11 +293,11 @@ Then **CI rebuilds all 19 extension packages automatically** — the new GNOME v
 
 #### D.2 Extension `.aosproj` version numbers
 
-Each extension's `.aosproj` uses a unified `<PackageVersion>` of `2.0.0~beta3-1+$(SuiteShortName)`. Bump the Debian revision suffix (e.g. `-1` → `-2`) when packaging changes. The resolver fetches the latest extension code at build time, so the extension code itself is always up-to-date regardless of the package version.
+Each extension's `.aosproj` uses a unified `<PackageVersion>` of `2.0.0~rc1-1+$(SuiteShortName)`. Bump the Debian revision suffix (e.g. `-1` → `-2`) when packaging changes. The resolver fetches the latest extension code at build time, so the extension code itself is always up-to-date regardless of the package version.
 
 ```diff
--<PackageVersion>2.0.0~beta3-1+$(SuiteShortName)</PackageVersion>
-+<PackageVersion>2.0.0~beta3-2+$(SuiteShortName)</PackageVersion>
+-<PackageVersion>2.0.0~rc1-1+$(SuiteShortName)</PackageVersion>
++<PackageVersion>2.0.0~rc1-2+$(SuiteShortName)</PackageVersion>
 ```
 
 #### D.3 Special-cased extension: desktop-icons-ng-anduinos

@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-wallpapers</PackageName>
-    <PackageVersion>2.0.0~beta3-4+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~rc1-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <Provides>ubuntu-wallpapers</Provides>
     <PackageDescription>AnduinOS default wallpapers (Fluent Building)</PackageDescription>
@@ -15,6 +15,10 @@
     <Component>main</Component>
     <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Dependency Include="anduinos-dconf-runtime" />
+  </ItemGroup>
 
   <ItemGroup>
     <IncludeFile Include="deploy/Fluent-building-light.png" Target="/usr/share/backgrounds/Fluent-building-light.png" />
@@ -34,6 +38,5 @@
     <IncludeFile Include="dconf/20-wallpapers.conf" Target="/etc/dconf/db/anduinos.d/20-wallpapers.conf" />
   </ItemGroup>
   <ItemGroup>
-    <PostInstallScript Include="scripts/postinst.sh" />
   </ItemGroup>
 </Project>

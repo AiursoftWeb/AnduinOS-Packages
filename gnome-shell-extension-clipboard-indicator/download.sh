@@ -19,3 +19,9 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
 done
 
 echo "Done."
+
+# Pre-compile GSettings schemas at build time so postinst is unnecessary
+for suite_dir in deploy/*/; do
+    schema_dir="${suite_dir}clipboard-indicator@tudmotu.com/schemas"
+    [ -d "$schema_dir" ] && glib-compile-schemas "$schema_dir" || true
+done

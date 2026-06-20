@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-core-system</PackageName>
-    <PackageVersion>2.0.0~beta3-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~rc1-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS core system foundation metapackage — essential system services, networking, hardware support, and administration tools. This is the base layer for all AnduinOS variants (Desktop, Server, IoT).</PackageDescription>
     <Section>metapackages</Section>
@@ -17,10 +17,14 @@
 
   <ItemGroup>
     <!-- ============================================================
+         Layer 0 — Container base (minimal shell + networking)
+         ============================================================ -->
+    <Dependency Include="anduinos-container" />
+
+    <!-- ============================================================
          Layer 1 — Core System (boot, init, kernel, firmware)
          Removing these = unbootable system.
          ============================================================ -->
-    <Dependency Include="coreutils" />
     <Dependency Include="grub-common" />
     <Dependency Include="grub-efi-amd64 | grub-pc" Condition="'$(Arch)' == 'amd64'" />
     <Dependency Include="grub-efi-arm64" Condition="'$(Arch)' == 'arm64'" />
@@ -53,7 +57,6 @@
     <!-- ============================================================
          Security
          ============================================================ -->
-    <Dependency Include="sudo" />
     <Dependency Include="openssh-client" />
 
     <!-- ============================================================
@@ -75,13 +78,11 @@
     <!-- ============================================================
          Locale & Timezone
          ============================================================ -->
-    <Dependency Include="locales" />
     <Dependency Include="resolvconf" />
 
     <!-- ============================================================
          Essential CLI / Networking Tools
          ============================================================ -->
-    <Dependency Include="curl" />
     <Dependency Include="wget" />
     <Dependency Include="uuid-runtime" />
   </ItemGroup>
@@ -115,16 +116,14 @@
     <Recommend Include="rsync" />
 
     <!-- ============================================================
+         Recommends: AnduinOS system tuning
+         ============================================================ -->
+    <Recommend Include="anduinos-system-tweaks" />
+
+    <!-- ============================================================
          Recommends: CLI tools & utilities
          ============================================================ -->
-    <Recommend Include="bash-completion" />
 
-    <Recommend Include="iputils-ping" />
-    <Recommend Include="file" />
-    <Recommend Include="unzip" />
-    <Recommend Include="zip" />
-    <Recommend Include="xz-utils" />
-    <Recommend Include="zstd" />
     <Recommend Include="man-db" />
 
     <!-- ============================================================
@@ -133,16 +132,12 @@
     <Recommend Include="pciutils" />
     <Recommend Include="usbutils" />
     <Recommend Include="lshw" />
-    <Recommend Include="lsof" />
-    <Recommend Include="psmisc" />
     <Recommend Include="ethtool" />
     <Recommend Include="hwdata" />
 
     <!-- ============================================================
          Recommends: power-user / admin tools
          ============================================================ -->
-    <Recommend Include="vim-tiny" />
-    <Recommend Include="nano" />
     <Recommend Include="htop" />
     <Recommend Include="fastfetch" />
     <Recommend Include="net-tools" />

@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-fluent-gtk-theme</PackageName>
-    <PackageVersion>2.0.0~beta3-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~rc1-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>Fluent GTK theme by vinceliuice — runs author's install.sh at install time</PackageDescription>
+    <PackageDescription>Fluent GTK theme by vinceliuice — pre-built at package build time</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://github.com/vinceliuice/Fluent-gtk-theme</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
@@ -16,18 +16,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Dependency Include="sassc" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />
   </ItemGroup>
 
   <ItemGroup>
-    <IncludeFolder Include="deploy/src/" Target="/usr/share/anduinos-fluent-gtk-theme/src" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PostInstallScript Include="scripts/postinst.sh" />
+    <IncludeFolder Include="deploy/themes/" Target="/usr/share/themes/" />
   </ItemGroup>
 </Project>

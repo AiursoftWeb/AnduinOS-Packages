@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop</PackageName>
-    <PackageVersion>2.0.0~beta3-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~rc1-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS complete desktop — metapackage that pulls in all AnduinOS components</PackageDescription>
     <Section>metapackages</Section>
@@ -36,7 +36,6 @@
 
     <!-- These are the "core" brand packages that are essential to the AnduinOS experience. -->
     <Recommend Include="anduinos-deskmon" />
-    <Recommend Include="anduinos-system-tweaks" />
     <Recommend Include="anduinos-templates" />
     <!-- Brand packages the user may want to swap or remove -->
     <Recommend Include="anduinos-software-properties-common" />
@@ -48,10 +47,7 @@
     <!-- App Store -->
     <Recommend Include="anduinos-appstore" />
 
-    <!-- Theme -->
+    <!-- Theme (plymouth comes transitively via-anduinos-theme) -->
     <Recommend Include="anduinos-theme" />
-
-    <!-- Boot splash -->
-    <Recommend Include="plymouth-anduinos" />
   </ItemGroup>
 </Project>
