@@ -1,0 +1,305 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ufwall-gtk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: src/widgets/rule_row.rs:80
+msgid "Delete Rule"
+msgstr "Poista sääntö"
+
+#: src/widgets/rule_row.rs:81
+msgid "Delete rule"
+msgstr "Poista sääntö"
+
+#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
+#: src/views/rules_view.rs:123
+msgid "Cancel"
+msgstr "Peruuta"
+
+#: src/widgets/rule_row.rs:85
+msgid "Delete"
+msgstr "Poista"
+
+#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
+#: src/window.rs:245
+msgid "Error"
+msgstr "Virhe"
+
+#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
+msgid "Add Rule"
+msgstr "Lisää sääntö"
+
+#: src/widgets/add_rule_dialog.rs:70
+msgid "Service"
+msgstr "Palvelu"
+
+#: src/widgets/add_rule_dialog.rs:72
+msgid "Custom"
+msgstr "Mukautettu"
+
+#: src/widgets/add_rule_dialog.rs:89
+msgid "Port / Service Name"
+msgstr "Portti / Palvelun nimi"
+
+#: src/widgets/add_rule_dialog.rs:93
+msgid "Action"
+msgstr "Toiminto"
+
+#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
+#: src/views/status_view.rs:113
+msgid "Deny"
+msgstr "Estä"
+
+#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
+#: src/views/status_view.rs:105 src/views/status_view.rs:114
+msgid "Allow"
+msgstr "Salli"
+
+#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
+#: src/views/status_view.rs:115
+msgid "Reject"
+msgstr "Hylkää"
+
+#: src/widgets/add_rule_dialog.rs:98
+msgid "Limit"
+msgstr "Rajoitus"
+
+#: src/widgets/add_rule_dialog.rs:110
+msgid "Advanced"
+msgstr "Tarkemmat asetukset"
+
+#: src/widgets/add_rule_dialog.rs:114
+msgid "Direction"
+msgstr "Suunta"
+
+#: src/widgets/add_rule_dialog.rs:116
+msgid "In"
+msgstr "Sisään"
+
+#: src/widgets/add_rule_dialog.rs:117
+msgid "Out"
+msgstr "Ulos"
+
+#: src/widgets/add_rule_dialog.rs:122
+msgid "Protocol"
+msgstr "Protokolla"
+
+#: src/widgets/add_rule_dialog.rs:124
+msgid "Both"
+msgstr "Molemmat"
+
+#: src/widgets/add_rule_dialog.rs:125
+msgid "TCP"
+msgstr "TCP"
+
+#: src/widgets/add_rule_dialog.rs:126
+msgid "UDP"
+msgstr "UDP"
+
+#: src/widgets/add_rule_dialog.rs:131
+msgid "Source IP"
+msgstr "Lähde-IP"
+
+#: src/widgets/add_rule_dialog.rs:135
+msgid "Destination IP"
+msgstr "Kohde-IP"
+
+#: src/widgets/add_rule_dialog.rs:144
+msgid "Interface"
+msgstr "Liitäntä"
+
+#: src/widgets/add_rule_dialog.rs:149
+msgid "Comment"
+msgstr "Kommentti"
+
+#: src/widgets/add_rule_dialog.rs:154
+msgid "Insert Before Rule"
+msgstr "Lisää ennen sääntöä"
+
+#: src/widgets/add_rule_dialog.rs:155
+msgid "0 = append at end"
+msgstr "0 = lisää loppuun"
+
+#: src/widgets/add_rule_dialog.rs:170
+msgid "Add"
+msgstr "Lisää"
+
+#: src/widgets/add_rule_dialog.rs:254
+msgid "Save"
+msgstr "Tallenna"
+
+#: src/views/dashboard_view.rs:56 src/window.rs:89
+msgid "Dashboard"
+msgstr "Kojelauta"
+
+#: src/views/dashboard_view.rs:78
+msgid "Recent Events Parsed"
+msgstr "Viimeisimmät tapahtumat analysoidut"
+
+#: src/views/dashboard_view.rs:96
+msgid "Blocked Events"
+msgstr "Estetyt tapahtumat"
+
+#: src/views/dashboard_view.rs:117
+msgid "Top Blocked Connections"
+msgstr "Estetyt yhteydet"
+
+#: src/views/dashboard_view.rs:123
+msgid "Top Blocked Ports"
+msgstr "Estetyt portit"
+
+#: src/views/dashboard_view.rs:129
+msgid "Listening Ports"
+msgstr "Kuuntelevat portit"
+
+#: src/views/dashboard_view.rs:135
+msgid "Recent Blocked Events"
+msgstr "Viimeisimmät estetyt tapahtumat"
+
+#: src/views/dashboard_view.rs:139
+msgid "Show"
+msgstr "Näytä"
+
+#: src/views/dashboard_view.rs:154
+msgid "Refresh"
+msgstr "Päivitä"
+
+#: src/views/dashboard_view.rs:247
+msgid "No blocked connections in recent events"
+msgstr "Estettyjä yhteyksiä ei ole viimeisimmissä tapahtumissa"
+
+#: src/views/dashboard_view.rs:296
+msgid "No blocked ports in recent events"
+msgstr "Äskettäisissä tapahtumissa ei ole estettyjä portteja"
+
+#: src/views/dashboard_view.rs:344
+msgid "No listening ports detected"
+msgstr "Kuuntelevia portteja ei havaittu"
+
+#: src/views/profiles_view.rs:76
+msgid "Application Profiles"
+msgstr "Sovellusprofiilit"
+
+#: src/views/profiles_view.rs:77
+msgid "Allow applications with predefined rules."
+msgstr "Salli sovellukset, joilla on ennalta määritellyt säännöt."
+
+#: src/views/profiles_view.rs:82
+msgid "Quick Allow Port"
+msgstr "Salli portti nopeasti"
+
+#: src/views/profiles_view.rs:83
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "esim. 80,443/tcp tai 8080"
+
+#: src/views/profiles_view.rs:87
+msgid "Port / Protocol"
+msgstr "Portti / Protokolla"
+
+#: src/views/profiles_view.rs:119
+msgid "No Profiles"
+msgstr "Ei profiileja"
+
+#: src/views/profiles_view.rs:120
+msgid "No application profiles found"
+msgstr "Sovellusprofiileja ei löytynyt"
+
+#: src/views/rules_view.rs:62
+msgid "Search rules..."
+msgstr "Hae sääntöjä..."
+
+#: src/views/rules_view.rs:70
+msgid "Firewall Rules"
+msgstr "Palomuurisäännöt"
+
+#: src/views/rules_view.rs:75
+msgid "No Rules"
+msgstr "Ei sääntöjä"
+
+#: src/views/rules_view.rs:76
+msgid "There are no rules configured yet."
+msgstr "Sääntöjä ei ole vielä määritetty."
+
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
+msgid "Delete All"
+msgstr "Poista kaikki"
+
+#: src/views/rules_view.rs:119
+msgid "Delete All Rules?"
+msgstr "Haluatko poistaa kaikki säännöt?"
+
+#: src/views/rules_view.rs:120
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr "Tämä poistaa kaikki mukautetut säännöt. Tätä toimintoa ei voi peruuttaa."
+
+#: src/views/status_view.rs:78 src/window.rs:90
+msgid "Status"
+msgstr "Tila"
+
+#: src/views/status_view.rs:89 src/window.rs:63
+msgid "Firewall"
+msgstr "Palomuuri"
+
+#: src/views/status_view.rs:90 src/views/status_view.rs:282
+msgid "Inactive"
+msgstr "Epäaktiivinen"
+
+#: src/views/status_view.rs:97
+msgid "Default Policies"
+msgstr "Oletuspolitiikat"
+
+#: src/views/status_view.rs:102
+msgid "Incoming"
+msgstr "Saapuva"
+
+#: src/views/status_view.rs:111
+msgid "Outgoing"
+msgstr "Menevä"
+
+#: src/views/status_view.rs:124
+msgid "Logging"
+msgstr "Lokitus"
+
+#: src/views/status_view.rs:128
+msgid "Log Level"
+msgstr "Lokitaso"
+
+#: src/views/status_view.rs:130
+msgid "Off"
+msgstr "Pois päältä"
+
+#: src/views/status_view.rs:131
+msgid "Low"
+msgstr "Matala"
+
+#: src/views/status_view.rs:132
+msgid "Medium"
+msgstr "Keskitaso"
+
+#: src/views/status_view.rs:133
+msgid "High"
+msgstr "Korkea"
+
+#: src/views/status_view.rs:134
+msgid "Full"
+msgstr "Täysi"
+
+#: src/views/status_view.rs:282
+msgid "Active"
+msgstr "Aktiivinen"
+
+#: src/window.rs:80
+msgid "About"
+msgstr "Tietoja"
+
+#: src/window.rs:91
+msgid "Rules"
+msgstr "Säännöt"
+
+#: src/window.rs:92
+msgid "Profiles"
+msgstr "Profiilit"

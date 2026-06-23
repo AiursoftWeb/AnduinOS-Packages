@@ -1,0 +1,305 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ufwall-gtk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: src/widgets/rule_row.rs:80
+msgid "Delete Rule"
+msgstr "Elimina regola"
+
+#: src/widgets/rule_row.rs:81
+msgid "Delete rule"
+msgstr "Elimina regola"
+
+#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
+#: src/views/rules_view.rs:123
+msgid "Cancel"
+msgstr "Annulla"
+
+#: src/widgets/rule_row.rs:85
+msgid "Delete"
+msgstr "Elimina"
+
+#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
+#: src/window.rs:245
+msgid "Error"
+msgstr "Errore"
+
+#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
+msgid "Add Rule"
+msgstr "Aggiungi regola"
+
+#: src/widgets/add_rule_dialog.rs:70
+msgid "Service"
+msgstr "Servizio"
+
+#: src/widgets/add_rule_dialog.rs:72
+msgid "Custom"
+msgstr "Personalizzato"
+
+#: src/widgets/add_rule_dialog.rs:89
+msgid "Port / Service Name"
+msgstr "Porta / Nome del servizio"
+
+#: src/widgets/add_rule_dialog.rs:93
+msgid "Action"
+msgstr "Azione"
+
+#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
+#: src/views/status_view.rs:113
+msgid "Deny"
+msgstr "Nega"
+
+#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
+#: src/views/status_view.rs:105 src/views/status_view.rs:114
+msgid "Allow"
+msgstr "Consenti"
+
+#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
+#: src/views/status_view.rs:115
+msgid "Reject"
+msgstr "Rifiuta"
+
+#: src/widgets/add_rule_dialog.rs:98
+msgid "Limit"
+msgstr "Limite"
+
+#: src/widgets/add_rule_dialog.rs:110
+msgid "Advanced"
+msgstr "Avanzate"
+
+#: src/widgets/add_rule_dialog.rs:114
+msgid "Direction"
+msgstr "Direzione"
+
+#: src/widgets/add_rule_dialog.rs:116
+msgid "In"
+msgstr "In"
+
+#: src/widgets/add_rule_dialog.rs:117
+msgid "Out"
+msgstr "Uscita"
+
+#: src/widgets/add_rule_dialog.rs:122
+msgid "Protocol"
+msgstr "Protocollo"
+
+#: src/widgets/add_rule_dialog.rs:124
+msgid "Both"
+msgstr "Entrambi"
+
+#: src/widgets/add_rule_dialog.rs:125
+msgid "TCP"
+msgstr "TCP"
+
+#: src/widgets/add_rule_dialog.rs:126
+msgid "UDP"
+msgstr "UDP"
+
+#: src/widgets/add_rule_dialog.rs:131
+msgid "Source IP"
+msgstr "IP sorgente"
+
+#: src/widgets/add_rule_dialog.rs:135
+msgid "Destination IP"
+msgstr "IP di destinazione"
+
+#: src/widgets/add_rule_dialog.rs:144
+msgid "Interface"
+msgstr "Interfaccia"
+
+#: src/widgets/add_rule_dialog.rs:149
+msgid "Comment"
+msgstr "Commento"
+
+#: src/widgets/add_rule_dialog.rs:154
+msgid "Insert Before Rule"
+msgstr "Inserisci prima della regola"
+
+#: src/widgets/add_rule_dialog.rs:155
+msgid "0 = append at end"
+msgstr "0 = aggiungi alla fine"
+
+#: src/widgets/add_rule_dialog.rs:170
+msgid "Add"
+msgstr "Aggiungi"
+
+#: src/widgets/add_rule_dialog.rs:254
+msgid "Save"
+msgstr "Salva"
+
+#: src/views/dashboard_view.rs:56 src/window.rs:89
+msgid "Dashboard"
+msgstr "Pannello di controllo"
+
+#: src/views/dashboard_view.rs:78
+msgid "Recent Events Parsed"
+msgstr "Eventi recenti analizzati"
+
+#: src/views/dashboard_view.rs:96
+msgid "Blocked Events"
+msgstr "Eventi bloccati"
+
+#: src/views/dashboard_view.rs:117
+msgid "Top Blocked Connections"
+msgstr "Connessioni bloccate principali"
+
+#: src/views/dashboard_view.rs:123
+msgid "Top Blocked Ports"
+msgstr "Porte bloccate principali"
+
+#: src/views/dashboard_view.rs:129
+msgid "Listening Ports"
+msgstr "Porte in ascolto"
+
+#: src/views/dashboard_view.rs:135
+msgid "Recent Blocked Events"
+msgstr "Eventi bloccati recenti"
+
+#: src/views/dashboard_view.rs:139
+msgid "Show"
+msgstr "Mostra"
+
+#: src/views/dashboard_view.rs:154
+msgid "Refresh"
+msgstr "Aggiorna"
+
+#: src/views/dashboard_view.rs:247
+msgid "No blocked connections in recent events"
+msgstr "Nessuna connessione bloccata negli eventi recenti"
+
+#: src/views/dashboard_view.rs:296
+msgid "No blocked ports in recent events"
+msgstr "Nessuna porta bloccata negli eventi recenti"
+
+#: src/views/dashboard_view.rs:344
+msgid "No listening ports detected"
+msgstr "Nessuna porta in ascolto rilevata"
+
+#: src/views/profiles_view.rs:76
+msgid "Application Profiles"
+msgstr "Profili delle applicazioni"
+
+#: src/views/profiles_view.rs:77
+msgid "Allow applications with predefined rules."
+msgstr "Consenti le applicazioni con regole predefinite."
+
+#: src/views/profiles_view.rs:82
+msgid "Quick Allow Port"
+msgstr "Consenti rapidamente porta"
+
+#: src/views/profiles_view.rs:83
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "es. 80,443/tcp o 8080"
+
+#: src/views/profiles_view.rs:87
+msgid "Port / Protocol"
+msgstr "Porta / Protocollo"
+
+#: src/views/profiles_view.rs:119
+msgid "No Profiles"
+msgstr "Nessun profilo"
+
+#: src/views/profiles_view.rs:120
+msgid "No application profiles found"
+msgstr "Nessun profilo di applicazione trovato"
+
+#: src/views/rules_view.rs:62
+msgid "Search rules..."
+msgstr "Cerca regole..."
+
+#: src/views/rules_view.rs:70
+msgid "Firewall Rules"
+msgstr "Regole del firewall"
+
+#: src/views/rules_view.rs:75
+msgid "No Rules"
+msgstr "Nessuna regola"
+
+#: src/views/rules_view.rs:76
+msgid "There are no rules configured yet."
+msgstr "Non sono ancora state configurate regole."
+
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
+msgid "Delete All"
+msgstr "Elimina tutto"
+
+#: src/views/rules_view.rs:119
+msgid "Delete All Rules?"
+msgstr "Eliminare tutte le regole?"
+
+#: src/views/rules_view.rs:120
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr "Questa azione cancellerà tutte le regole personalizzate. L'operazione non può essere annullata."
+
+#: src/views/status_view.rs:78 src/window.rs:90
+msgid "Status"
+msgstr "Stato"
+
+#: src/views/status_view.rs:89 src/window.rs:63
+msgid "Firewall"
+msgstr "Firewall"
+
+#: src/views/status_view.rs:90 src/views/status_view.rs:282
+msgid "Inactive"
+msgstr "Inattivo"
+
+#: src/views/status_view.rs:97
+msgid "Default Policies"
+msgstr "Politiche predefinite"
+
+#: src/views/status_view.rs:102
+msgid "Incoming"
+msgstr "In entrata"
+
+#: src/views/status_view.rs:111
+msgid "Outgoing"
+msgstr "In uscita"
+
+#: src/views/status_view.rs:124
+msgid "Logging"
+msgstr "Registrazione"
+
+#: src/views/status_view.rs:128
+msgid "Log Level"
+msgstr "Livello di registro"
+
+#: src/views/status_view.rs:130
+msgid "Off"
+msgstr "Off"
+
+#: src/views/status_view.rs:131
+msgid "Low"
+msgstr "Basso"
+
+#: src/views/status_view.rs:132
+msgid "Medium"
+msgstr "Medio"
+
+#: src/views/status_view.rs:133
+msgid "High"
+msgstr "Alto"
+
+#: src/views/status_view.rs:134
+msgid "Full"
+msgstr "Completo"
+
+#: src/views/status_view.rs:282
+msgid "Active"
+msgstr "Attivo"
+
+#: src/window.rs:80
+msgid "About"
+msgstr "Informazioni"
+
+#: src/window.rs:91
+msgid "Rules"
+msgstr "Regole"
+
+#: src/window.rs:92
+msgid "Profiles"
+msgstr "Profili"

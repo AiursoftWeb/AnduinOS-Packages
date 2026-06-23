@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-deskmon</PackageName>
-    <PackageVersion>2.0.0~rc1-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0~rc2-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Desktop Monitor — automatically trust and mark .desktop files as executable</PackageDescription>
     <Section>utils</Section>
@@ -24,11 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="mkdir -p obj/usr/bin obj/usr/lib/systemd/user" />
-
-    <PrebuildCommand Run="gcc -O2 $(pkg-config --cflags glib-2.0 gio-2.0) src/deskmon.c -o obj/usr/bin/deskmon $(pkg-config --libs glib-2.0 gio-2.0)" Condition="'$(Arch)' == 'amd64'" />
-
-    <PrebuildCommand Run="aarch64-linux-gnu-gcc -O2 $(aarch64-linux-gnu-pkg-config --cflags glib-2.0 gio-2.0) src/deskmon.c -o obj/usr/bin/deskmon $(aarch64-linux-gnu-pkg-config --libs glib-2.0 gio-2.0)" Condition="'$(Arch)' == 'arm64'" />
+    <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
   </ItemGroup>
 
   <ItemGroup>

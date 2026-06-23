@@ -1,0 +1,305 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ufwall-gtk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: src/widgets/rule_row.rs:80
+msgid "Delete Rule"
+msgstr "ルールを削除"
+
+#: src/widgets/rule_row.rs:81
+msgid "Delete rule"
+msgstr "ルールを削除"
+
+#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
+#: src/views/rules_view.rs:123
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: src/widgets/rule_row.rs:85
+msgid "Delete"
+msgstr "削除"
+
+#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
+#: src/window.rs:245
+msgid "Error"
+msgstr "エラー"
+
+#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
+msgid "Add Rule"
+msgstr "ルールを追加"
+
+#: src/widgets/add_rule_dialog.rs:70
+msgid "Service"
+msgstr "サービス"
+
+#: src/widgets/add_rule_dialog.rs:72
+msgid "Custom"
+msgstr "カスタム"
+
+#: src/widgets/add_rule_dialog.rs:89
+msgid "Port / Service Name"
+msgstr "ポート / サービス名"
+
+#: src/widgets/add_rule_dialog.rs:93
+msgid "Action"
+msgstr "アクション"
+
+#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
+#: src/views/status_view.rs:113
+msgid "Deny"
+msgstr "拒否"
+
+#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
+#: src/views/status_view.rs:105 src/views/status_view.rs:114
+msgid "Allow"
+msgstr "許可"
+
+#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
+#: src/views/status_view.rs:115
+msgid "Reject"
+msgstr "拒否"
+
+#: src/widgets/add_rule_dialog.rs:98
+msgid "Limit"
+msgstr "制限"
+
+#: src/widgets/add_rule_dialog.rs:110
+msgid "Advanced"
+msgstr "詳細設定"
+
+#: src/widgets/add_rule_dialog.rs:114
+msgid "Direction"
+msgstr "方向"
+
+#: src/widgets/add_rule_dialog.rs:116
+msgid "In"
+msgstr "入力"
+
+#: src/widgets/add_rule_dialog.rs:117
+msgid "Out"
+msgstr "アウト"
+
+#: src/widgets/add_rule_dialog.rs:122
+msgid "Protocol"
+msgstr "プロトコル"
+
+#: src/widgets/add_rule_dialog.rs:124
+msgid "Both"
+msgstr "両方"
+
+#: src/widgets/add_rule_dialog.rs:125
+msgid "TCP"
+msgstr "TCP"
+
+#: src/widgets/add_rule_dialog.rs:126
+msgid "UDP"
+msgstr "UDP"
+
+#: src/widgets/add_rule_dialog.rs:131
+msgid "Source IP"
+msgstr "送信元 IP"
+
+#: src/widgets/add_rule_dialog.rs:135
+msgid "Destination IP"
+msgstr "宛先 IP"
+
+#: src/widgets/add_rule_dialog.rs:144
+msgid "Interface"
+msgstr "インターフェース"
+
+#: src/widgets/add_rule_dialog.rs:149
+msgid "Comment"
+msgstr "コメント"
+
+#: src/widgets/add_rule_dialog.rs:154
+msgid "Insert Before Rule"
+msgstr "ルール前に挿入"
+
+#: src/widgets/add_rule_dialog.rs:155
+msgid "0 = append at end"
+msgstr "0 = 末尾に追加"
+
+#: src/widgets/add_rule_dialog.rs:170
+msgid "Add"
+msgstr "追加"
+
+#: src/widgets/add_rule_dialog.rs:254
+msgid "Save"
+msgstr "保存"
+
+#: src/views/dashboard_view.rs:56 src/window.rs:89
+msgid "Dashboard"
+msgstr "ダッシュボード"
+
+#: src/views/dashboard_view.rs:78
+msgid "Recent Events Parsed"
+msgstr "解析された最近のイベント"
+
+#: src/views/dashboard_view.rs:96
+msgid "Blocked Events"
+msgstr "ブロックされたイベント"
+
+#: src/views/dashboard_view.rs:117
+msgid "Top Blocked Connections"
+msgstr "ブロックされた接続上位"
+
+#: src/views/dashboard_view.rs:123
+msgid "Top Blocked Ports"
+msgstr "ブロックされた上位ポート"
+
+#: src/views/dashboard_view.rs:129
+msgid "Listening Ports"
+msgstr "リスニングポート"
+
+#: src/views/dashboard_view.rs:135
+msgid "Recent Blocked Events"
+msgstr "最近のブロックされたイベント"
+
+#: src/views/dashboard_view.rs:139
+msgid "Show"
+msgstr "表示"
+
+#: src/views/dashboard_view.rs:154
+msgid "Refresh"
+msgstr "更新"
+
+#: src/views/dashboard_view.rs:247
+msgid "No blocked connections in recent events"
+msgstr "最近のイベントにブロックされた接続はありません"
+
+#: src/views/dashboard_view.rs:296
+msgid "No blocked ports in recent events"
+msgstr "最近のイベントにブロックされたポートはありません"
+
+#: src/views/dashboard_view.rs:344
+msgid "No listening ports detected"
+msgstr "リスニングポートが検出されませんでした"
+
+#: src/views/profiles_view.rs:76
+msgid "Application Profiles"
+msgstr "アプリケーションプロファイル"
+
+#: src/views/profiles_view.rs:77
+msgid "Allow applications with predefined rules."
+msgstr "事前定義されたルールを持つアプリケーションを許可します。"
+
+#: src/views/profiles_view.rs:82
+msgid "Quick Allow Port"
+msgstr "ポートのクイック許可"
+
+#: src/views/profiles_view.rs:83
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "例: 80,443/tcp または 8080"
+
+#: src/views/profiles_view.rs:87
+msgid "Port / Protocol"
+msgstr "ポート / プロトコル"
+
+#: src/views/profiles_view.rs:119
+msgid "No Profiles"
+msgstr "プロファイルがありません"
+
+#: src/views/profiles_view.rs:120
+msgid "No application profiles found"
+msgstr "アプリケーションプロファイルが見つかりません"
+
+#: src/views/rules_view.rs:62
+msgid "Search rules..."
+msgstr "ルールを検索..."
+
+#: src/views/rules_view.rs:70
+msgid "Firewall Rules"
+msgstr "ファイアウォールルール"
+
+#: src/views/rules_view.rs:75
+msgid "No Rules"
+msgstr "ルールがありません"
+
+#: src/views/rules_view.rs:76
+msgid "There are no rules configured yet."
+msgstr "まだルールが設定されていません。"
+
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
+msgid "Delete All"
+msgstr "すべて削除"
+
+#: src/views/rules_view.rs:119
+msgid "Delete All Rules?"
+msgstr "すべてのルールを削除しますか？"
+
+#: src/views/rules_view.rs:120
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr "これにより、すべてのカスタムルールが削除されます。この操作は元に戻すことができません。"
+
+#: src/views/status_view.rs:78 src/window.rs:90
+msgid "Status"
+msgstr "ステータス"
+
+#: src/views/status_view.rs:89 src/window.rs:63
+msgid "Firewall"
+msgstr "ファイアウォール"
+
+#: src/views/status_view.rs:90 src/views/status_view.rs:282
+msgid "Inactive"
+msgstr "無効"
+
+#: src/views/status_view.rs:97
+msgid "Default Policies"
+msgstr "デフォルトポリシー"
+
+#: src/views/status_view.rs:102
+msgid "Incoming"
+msgstr "受信"
+
+#: src/views/status_view.rs:111
+msgid "Outgoing"
+msgstr "送信"
+
+#: src/views/status_view.rs:124
+msgid "Logging"
+msgstr "ログ記録"
+
+#: src/views/status_view.rs:128
+msgid "Log Level"
+msgstr "ログレベル"
+
+#: src/views/status_view.rs:130
+msgid "Off"
+msgstr "オフ"
+
+#: src/views/status_view.rs:131
+msgid "Low"
+msgstr "低"
+
+#: src/views/status_view.rs:132
+msgid "Medium"
+msgstr "中"
+
+#: src/views/status_view.rs:133
+msgid "High"
+msgstr "高"
+
+#: src/views/status_view.rs:134
+msgid "Full"
+msgstr "フル"
+
+#: src/views/status_view.rs:282
+msgid "Active"
+msgstr "有効"
+
+#: src/window.rs:80
+msgid "About"
+msgstr "情報"
+
+#: src/window.rs:91
+msgid "Rules"
+msgstr "ルール"
+
+#: src/window.rs:92
+msgid "Profiles"
+msgstr "プロファイル"

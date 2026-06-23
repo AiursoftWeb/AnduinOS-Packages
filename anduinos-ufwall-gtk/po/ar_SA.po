@@ -1,0 +1,341 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ufwall-gtk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: src/widgets/rule_row.rs:80
+msgid "Delete Rule"
+msgstr "حذف القاعدة"
+
+#: src/widgets/rule_row.rs:81
+msgid "Delete rule"
+msgstr "حذف القاعدة"
+
+#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
+#: src/views/rules_view.rs:123
+msgid "Cancel"
+msgstr "إلغاء"
+
+#: src/widgets/rule_row.rs:85
+msgid "Delete"
+msgstr "حذف"
+
+#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
+#: src/window.rs:245
+msgid "Error"
+msgstr "خطأ"
+
+#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
+msgid "Add Rule"
+msgstr "إضافة قاعدة"
+
+#: src/widgets/add_rule_dialog.rs:70
+msgid "Service"
+msgstr "الخدمة"
+
+#: src/widgets/add_rule_dialog.rs:72
+msgid "Custom"
+msgstr "مخصص"
+
+#: src/widgets/add_rule_dialog.rs:89
+msgid "Port / Service Name"
+msgstr "المنفذ / اسم الخدمة"
+
+#: src/widgets/add_rule_dialog.rs:93
+msgid "Action"
+msgstr "الإجراء"
+
+#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
+#: src/views/status_view.rs:113
+msgid "Deny"
+msgstr "رفض"
+
+#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
+#: src/views/status_view.rs:105 src/views/status_view.rs:114
+msgid "Allow"
+msgstr "السماح"
+
+#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
+#: src/views/status_view.rs:115
+msgid "Reject"
+msgstr "رفض"
+
+#: src/widgets/add_rule_dialog.rs:98
+msgid "Limit"
+msgstr "الحد"
+
+#: src/widgets/add_rule_dialog.rs:110
+msgid "Advanced"
+msgstr "متقدم"
+
+#: src/widgets/add_rule_dialog.rs:114
+msgid "Direction"
+msgstr "الاتجاه"
+
+#: src/widgets/add_rule_dialog.rs:116
+msgid "In"
+msgstr "دخول"
+
+#: src/widgets/add_rule_dialog.rs:117
+msgid "Out"
+msgstr "خارجي"
+
+#: src/widgets/add_rule_dialog.rs:122
+msgid "Protocol"
+msgstr "البروتوكول"
+
+#: src/widgets/add_rule_dialog.rs:124
+msgid "Both"
+msgstr "كلاهما"
+
+#: src/widgets/add_rule_dialog.rs:125
+msgid "TCP"
+msgstr "TCP"
+
+#: src/widgets/add_rule_dialog.rs:126
+msgid "UDP"
+msgstr "UDP"
+
+#: src/widgets/add_rule_dialog.rs:131
+msgid "Source IP"
+msgstr "عنوان IP المصدر"
+
+#: src/widgets/add_rule_dialog.rs:135
+msgid "Destination IP"
+msgstr "عنوان IP الوجهة"
+
+#: src/widgets/add_rule_dialog.rs:144
+msgid "Interface"
+msgstr "الواجهة"
+
+#: src/widgets/add_rule_dialog.rs:149
+msgid "Comment"
+msgstr "تعليق"
+
+#: src/widgets/add_rule_dialog.rs:154
+msgid "Insert Before Rule"
+msgstr "إدراج قبل القاعدة"
+
+#: src/widgets/add_rule_dialog.rs:155
+msgid "0 = append at end"
+msgstr "0 = إرفاق في النهاية"
+
+#: src/widgets/add_rule_dialog.rs:170
+msgid "Add"
+msgstr "إضافة"
+
+#: src/widgets/add_rule_dialog.rs:254
+msgid "Save"
+msgstr "حفظ"
+
+#: src/views/dashboard_view.rs:56 src/window.rs:89
+msgid "Dashboard"
+msgstr "لوحة القيادة"
+
+#: src/views/dashboard_view.rs:78
+msgid "Recent Events Parsed"
+msgstr "الأحداث الأخيرة التي تم تحليلها"
+
+#: src/views/dashboard_view.rs:96
+msgid "Blocked Events"
+msgstr "الأحداث المحظورة"
+
+#: src/views/dashboard_view.rs:117
+msgid "Top Blocked Connections"
+msgstr "أعلى الاتصالات المحظورة"
+
+#: src/views/dashboard_view.rs:123
+msgid "Top Blocked Ports"
+msgstr ""
+
+#: src/views/dashboard_view.rs:129
+msgid "Listening Ports"
+msgstr "المنافذ المستمعة"
+
+#: src/views/dashboard_view.rs:135
+msgid "Recent Blocked Events"
+msgstr "الأحداث المحظورة الأخيرة"
+
+#: src/views/dashboard_view.rs:139
+msgid "Show"
+msgstr "إظهار"
+
+#: src/views/dashboard_view.rs:154
+msgid "Refresh"
+msgstr "تحديث"
+
+#: src/views/dashboard_view.rs:247
+msgid "No blocked connections in recent events"
+msgstr "لا توجد اتصالات محظورة في الأحداث الأخيرة"
+
+#: src/views/dashboard_view.rs:296
+msgid "No blocked ports in recent events"
+msgstr ""
+
+#: src/views/dashboard_view.rs:344
+msgid "No listening ports detected"
+msgstr "لم يتم اكتشاف أي منافذ استماع"
+
+#: src/views/profiles_view.rs:76
+msgid "Application Profiles"
+msgstr "ملفات تعريف التطبيقات"
+
+#: src/views/profiles_view.rs:77
+msgid "Allow applications with predefined rules."
+msgstr "السماح للتطبيقات ذات القواعد المحددة مسبقاً."
+
+#: src/views/profiles_view.rs:82
+msgid "Quick Allow Port"
+msgstr "السماح السريع بالمنفذ"
+
+#: src/views/profiles_view.rs:83
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "مثال: 80,443/tcp أو 8080"
+
+#: src/views/profiles_view.rs:87
+msgid "Port / Protocol"
+msgstr "المنفذ / البروتوكول"
+
+#: src/views/profiles_view.rs:119
+msgid "No Profiles"
+msgstr "لا توجد ملفات تعريف"
+
+#: src/views/profiles_view.rs:120
+msgid "No application profiles found"
+msgstr "لم يتم العثور على ملفات تعريف للتطبيقات"
+
+#: src/views/rules_view.rs:62
+msgid "Search rules..."
+msgstr "البحث في القواعد..."
+
+#: src/views/rules_view.rs:70
+msgid "Firewall Rules"
+msgstr "قواعد جدار الحماية"
+
+#: src/views/rules_view.rs:75
+msgid "No Rules"
+msgstr "لا توجد قواعد"
+
+#: src/views/rules_view.rs:76
+msgid "There are no rules configured yet."
+msgstr "لم يتم تكوين أي قواعد بعد."
+
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
+msgid "Delete All"
+msgstr "حذف الكل"
+
+#: src/views/rules_view.rs:119
+msgid "Delete All Rules?"
+msgstr ""
+
+#: src/views/rules_view.rs:120
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr "سيؤدي هذا إلى حذف جميع القواعد المخصصة. لا يمكن التراجع عن هذا الإجراء."
+
+#: src/views/status_view.rs:78 src/window.rs:90
+msgid "Status"
+msgstr "الحالة"
+
+#: src/views/status_view.rs:89 src/window.rs:63
+msgid "Firewall"
+msgstr "جدار الحماية"
+
+#: src/views/status_view.rs:90 src/views/status_view.rs:282
+msgid "Inactive"
+msgstr "غير نشط"
+
+#: src/views/status_view.rs:97
+msgid "Default Policies"
+msgstr "السياسات الافتراضية"
+
+#: src/views/status_view.rs:102
+msgid "Incoming"
+msgstr "وارد"
+
+#: src/views/status_view.rs:111
+msgid "Outgoing"
+msgstr "الخارج"
+
+#: src/views/status_view.rs:124
+msgid "Logging"
+msgstr "تسجيل"
+
+#: src/views/status_view.rs:128
+msgid "Log Level"
+msgstr "مستوى السجل"
+
+#: src/views/status_view.rs:130
+msgid "Off"
+msgstr "إيقاف"
+
+#: src/views/status_view.rs:131
+msgid "Low"
+msgstr "منخفض"
+
+#: src/views/status_view.rs:132
+msgid "Medium"
+msgstr "متوسط"
+
+#: src/views/status_view.rs:133
+msgid "High"
+msgstr "مرتفع"
+
+#: src/views/status_view.rs:134
+msgid "Full"
+msgstr "كامل"
+
+#: src/views/status_view.rs:282
+msgid "Active"
+msgstr "نشط"
+
+#: src/window.rs:80
+msgid "About"
+msgstr "حول"
+
+#: src/window.rs:91
+msgid "Rules"
+msgstr "القواعد"
+
+#: src/window.rs:92
+msgid "Profiles"
+msgstr "الملفات الشخصية"
+
+#~ msgid "Blocked"
+#~ msgstr "محظور"
+
+#~ msgid "Blocked times"
+#~ msgstr "الأوقات المحظورة"
+
+#~ msgid "Firewall Active"
+#~ msgstr "جدار الحماية نشط"
+
+#~ msgid "Loading..."
+#~ msgstr "جارٍ التحميل..."
+
+#~ msgid "Loading blocked events..."
+#~ msgstr "جارٍ تحميل الأحداث المحظورة..."
+
+#~ msgid "No targeted ports in recent events"
+#~ msgstr "لا توجد منافذ مستهدفة في الأحداث الأخيرة"
+
+#~ msgid "recent blocked events"
+#~ msgstr "الأحداث المحظورة الأخيرة"
+
+#~ msgid "Summary"
+#~ msgstr "ملخص"
+
+#~ msgid "Top Targeted Ports"
+#~ msgstr "أعلى المنافذ المستهدفة"
+
+#~ msgid "No rules configured yet."
+#~ msgstr "لم يتم تكوين أي قواعد بعد."
+
+#~ msgid "Click Add Rule to allow a service or port."
+#~ msgstr "انقر على إضافة قاعدة للسماح بخدمة أو منفذ."
+
+#~ msgid "Authentication is required to modify firewall settings"
+#~ msgstr "المصادقة مطلوبة لتعديل إعدادات جدار الحماية"

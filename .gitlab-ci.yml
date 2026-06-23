@@ -313,6 +313,11 @@ anduinos-templates:
   variables:
     PACKAGE_DIR: anduinos-templates
 
+anduinos-ufwall-gtk:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-ufwall-gtk
+
 anduinos-gnome-shell-locale:
   extends: .publish
   variables:
@@ -392,7 +397,6 @@ anduinos-gnome-extensions:
     - gnome-shell-extension-dash-to-panel-anduinos
     - gnome-shell-extension-desktop-icons-ng-anduinos
     - gnome-shell-extension-lockkeys
-    - gnome-shell-extension-mediacontrols
     - gnome-shell-extension-network-stats
     - gnome-shell-extension-proxy-switcher
     - gnome-shell-extension-simple-weather
@@ -423,6 +427,7 @@ anduinos-desktop-apps:
   needs:
     - anduinos-mimeapps
     - firefox-anduinos
+    - anduinos-ufwall-gtk
   variables:
     PACKAGE_DIR: anduinos-desktop-apps
 

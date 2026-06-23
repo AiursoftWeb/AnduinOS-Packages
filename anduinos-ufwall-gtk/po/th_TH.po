@@ -1,0 +1,305 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ufwall-gtk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: src/widgets/rule_row.rs:80
+msgid "Delete Rule"
+msgstr "ลบกฎ"
+
+#: src/widgets/rule_row.rs:81
+msgid "Delete rule"
+msgstr "ลบกฎ"
+
+#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
+#: src/views/rules_view.rs:123
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#: src/widgets/rule_row.rs:85
+msgid "Delete"
+msgstr "ลบ"
+
+#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
+#: src/window.rs:245
+msgid "Error"
+msgstr "ข้อผิดพลาด"
+
+#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
+msgid "Add Rule"
+msgstr "เพิ่มกฎ"
+
+#: src/widgets/add_rule_dialog.rs:70
+msgid "Service"
+msgstr "บริการ"
+
+#: src/widgets/add_rule_dialog.rs:72
+msgid "Custom"
+msgstr "กำหนดเอง"
+
+#: src/widgets/add_rule_dialog.rs:89
+msgid "Port / Service Name"
+msgstr "พอร์ต / ชื่อบริการ"
+
+#: src/widgets/add_rule_dialog.rs:93
+msgid "Action"
+msgstr "การกระทำ"
+
+#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
+#: src/views/status_view.rs:113
+msgid "Deny"
+msgstr "ปฏิเสธ"
+
+#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
+#: src/views/status_view.rs:105 src/views/status_view.rs:114
+msgid "Allow"
+msgstr "อนุญาต"
+
+#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
+#: src/views/status_view.rs:115
+msgid "Reject"
+msgstr "ปฏิเสธ"
+
+#: src/widgets/add_rule_dialog.rs:98
+msgid "Limit"
+msgstr "จำกัด"
+
+#: src/widgets/add_rule_dialog.rs:110
+msgid "Advanced"
+msgstr "ขั้นสูง"
+
+#: src/widgets/add_rule_dialog.rs:114
+msgid "Direction"
+msgstr "ทิศทาง"
+
+#: src/widgets/add_rule_dialog.rs:116
+msgid "In"
+msgstr "เข้า"
+
+#: src/widgets/add_rule_dialog.rs:117
+msgid "Out"
+msgstr "ออก"
+
+#: src/widgets/add_rule_dialog.rs:122
+msgid "Protocol"
+msgstr "โปรโตคอล"
+
+#: src/widgets/add_rule_dialog.rs:124
+msgid "Both"
+msgstr "ทั้งสอง"
+
+#: src/widgets/add_rule_dialog.rs:125
+msgid "TCP"
+msgstr "TCP"
+
+#: src/widgets/add_rule_dialog.rs:126
+msgid "UDP"
+msgstr "UDP"
+
+#: src/widgets/add_rule_dialog.rs:131
+msgid "Source IP"
+msgstr "ที่อยู่ IP ต้นทาง"
+
+#: src/widgets/add_rule_dialog.rs:135
+msgid "Destination IP"
+msgstr "ไอพีปลายทาง"
+
+#: src/widgets/add_rule_dialog.rs:144
+msgid "Interface"
+msgstr "อินเทอร์เฟซ"
+
+#: src/widgets/add_rule_dialog.rs:149
+msgid "Comment"
+msgstr "หมายเหตุ"
+
+#: src/widgets/add_rule_dialog.rs:154
+msgid "Insert Before Rule"
+msgstr "แทรกก่อนกฎ"
+
+#: src/widgets/add_rule_dialog.rs:155
+msgid "0 = append at end"
+msgstr "0 = เพิ่มที่ท้าย"
+
+#: src/widgets/add_rule_dialog.rs:170
+msgid "Add"
+msgstr "เพิ่ม"
+
+#: src/widgets/add_rule_dialog.rs:254
+msgid "Save"
+msgstr "บันทึก"
+
+#: src/views/dashboard_view.rs:56 src/window.rs:89
+msgid "Dashboard"
+msgstr "แดชบอร์ด"
+
+#: src/views/dashboard_view.rs:78
+msgid "Recent Events Parsed"
+msgstr "เหตุการณ์ล่าสุดที่วิเคราะห์แล้ว"
+
+#: src/views/dashboard_view.rs:96
+msgid "Blocked Events"
+msgstr "เหตุการณ์ที่ถูกบล็อก"
+
+#: src/views/dashboard_view.rs:117
+msgid "Top Blocked Connections"
+msgstr "การเชื่อมต่อที่ถูกบล็อกสูงสุด"
+
+#: src/views/dashboard_view.rs:123
+msgid "Top Blocked Ports"
+msgstr "พอร์ตที่ถูกบล็อกมากที่สุด"
+
+#: src/views/dashboard_view.rs:129
+msgid "Listening Ports"
+msgstr "พอร์ตที่รับฟัง"
+
+#: src/views/dashboard_view.rs:135
+msgid "Recent Blocked Events"
+msgstr "เหตุการณ์ที่ถูกบล็อกเมื่อเร็วๆ นี้"
+
+#: src/views/dashboard_view.rs:139
+msgid "Show"
+msgstr "แสดง"
+
+#: src/views/dashboard_view.rs:154
+msgid "Refresh"
+msgstr "รีเฟรช"
+
+#: src/views/dashboard_view.rs:247
+msgid "No blocked connections in recent events"
+msgstr "ไม่มีการเชื่อมต่อที่ถูกบล็อกในเหตุการณ์ล่าสุด"
+
+#: src/views/dashboard_view.rs:296
+msgid "No blocked ports in recent events"
+msgstr "ไม่มีการปิดกั้นพอร์ตในเหตุการณ์ล่าสุด"
+
+#: src/views/dashboard_view.rs:344
+msgid "No listening ports detected"
+msgstr "ไม่พบพอร์ตที่รับฟัง"
+
+#: src/views/profiles_view.rs:76
+msgid "Application Profiles"
+msgstr "โปรไฟล์แอปพลิเคชัน"
+
+#: src/views/profiles_view.rs:77
+msgid "Allow applications with predefined rules."
+msgstr "อนุญาตแอปพลิเคชันที่มีกฎที่กำหนดไว้ล่วงหน้า"
+
+#: src/views/profiles_view.rs:82
+msgid "Quick Allow Port"
+msgstr "อนุญาตพอร์ตอย่างรวดเร็ว"
+
+#: src/views/profiles_view.rs:83
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "เช่น 80,443/tcp หรือ 8080"
+
+#: src/views/profiles_view.rs:87
+msgid "Port / Protocol"
+msgstr "พอร์ต / โปรโตคอล"
+
+#: src/views/profiles_view.rs:119
+msgid "No Profiles"
+msgstr "ไม่มีโปรไฟล์"
+
+#: src/views/profiles_view.rs:120
+msgid "No application profiles found"
+msgstr "ไม่พบโปรไฟล์แอปพลิเคชัน"
+
+#: src/views/rules_view.rs:62
+msgid "Search rules..."
+msgstr "ค้นหากฎ..."
+
+#: src/views/rules_view.rs:70
+msgid "Firewall Rules"
+msgstr "กฎของไฟร์วอลล์"
+
+#: src/views/rules_view.rs:75
+msgid "No Rules"
+msgstr "ไม่มีกฎ"
+
+#: src/views/rules_view.rs:76
+msgid "There are no rules configured yet."
+msgstr "ยังไม่ได้กำหนดกฎใดๆ"
+
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
+msgid "Delete All"
+msgstr "ลบทั้งหมด"
+
+#: src/views/rules_view.rs:119
+msgid "Delete All Rules?"
+msgstr "ลบกฎทั้งหมดหรือไม่"
+
+#: src/views/rules_view.rs:120
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr "การดำเนินการนี้จะลบกฎที่กำหนดเองทั้งหมด การดำเนินการนี้ไม่สามารถย้อนกลับได้"
+
+#: src/views/status_view.rs:78 src/window.rs:90
+msgid "Status"
+msgstr "สถานะ"
+
+#: src/views/status_view.rs:89 src/window.rs:63
+msgid "Firewall"
+msgstr "ไฟร์วอลล์"
+
+#: src/views/status_view.rs:90 src/views/status_view.rs:282
+msgid "Inactive"
+msgstr "ไม่ใช้งาน"
+
+#: src/views/status_view.rs:97
+msgid "Default Policies"
+msgstr "นโยบายเริ่มต้น"
+
+#: src/views/status_view.rs:102
+msgid "Incoming"
+msgstr "ขาเข้า"
+
+#: src/views/status_view.rs:111
+msgid "Outgoing"
+msgstr "ขาออก"
+
+#: src/views/status_view.rs:124
+msgid "Logging"
+msgstr "การบันทึก"
+
+#: src/views/status_view.rs:128
+msgid "Log Level"
+msgstr "ระดับการบันทึก"
+
+#: src/views/status_view.rs:130
+msgid "Off"
+msgstr "ปิด"
+
+#: src/views/status_view.rs:131
+msgid "Low"
+msgstr "ต่ำ"
+
+#: src/views/status_view.rs:132
+msgid "Medium"
+msgstr "ปานกลาง"
+
+#: src/views/status_view.rs:133
+msgid "High"
+msgstr "สูง"
+
+#: src/views/status_view.rs:134
+msgid "Full"
+msgstr "เต็ม"
+
+#: src/views/status_view.rs:282
+msgid "Active"
+msgstr "ใช้งานอยู่"
+
+#: src/window.rs:80
+msgid "About"
+msgstr "เกี่ยวกับ"
+
+#: src/window.rs:91
+msgid "Rules"
+msgstr "กฎ"
+
+#: src/window.rs:92
+msgid "Profiles"
+msgstr "โปรไฟล์"

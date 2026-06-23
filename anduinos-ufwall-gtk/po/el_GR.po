@@ -1,0 +1,344 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ufwall-gtk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: src/widgets/rule_row.rs:80
+msgid "Delete Rule"
+msgstr "Διαγραφή κανόνα"
+
+#: src/widgets/rule_row.rs:81
+msgid "Delete rule"
+msgstr "Διαγραφή κανόνα"
+
+#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
+#: src/views/rules_view.rs:123
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: src/widgets/rule_row.rs:85
+msgid "Delete"
+msgstr "Διαγραφή"
+
+#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
+#: src/window.rs:245
+msgid "Error"
+msgstr "Σφάλμα"
+
+#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
+msgid "Add Rule"
+msgstr "Προσθήκη κανόνα"
+
+#: src/widgets/add_rule_dialog.rs:70
+msgid "Service"
+msgstr "Υπηρεσία"
+
+#: src/widgets/add_rule_dialog.rs:72
+msgid "Custom"
+msgstr "Προσαρμοσμένο"
+
+#: src/widgets/add_rule_dialog.rs:89
+msgid "Port / Service Name"
+msgstr "Θύρα / Όνομα Υπηρεσίας"
+
+#: src/widgets/add_rule_dialog.rs:93
+msgid "Action"
+msgstr "Ενέργεια"
+
+#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
+#: src/views/status_view.rs:113
+msgid "Deny"
+msgstr "Απόρριψη"
+
+#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
+#: src/views/status_view.rs:105 src/views/status_view.rs:114
+msgid "Allow"
+msgstr "Επιτρέπεται"
+
+#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
+#: src/views/status_view.rs:115
+msgid "Reject"
+msgstr "Απόρριψη"
+
+#: src/widgets/add_rule_dialog.rs:98
+msgid "Limit"
+msgstr "Όριο"
+
+#: src/widgets/add_rule_dialog.rs:110
+msgid "Advanced"
+msgstr "Προχωρημένες"
+
+#: src/widgets/add_rule_dialog.rs:114
+msgid "Direction"
+msgstr "Κατεύθυνση"
+
+#: src/widgets/add_rule_dialog.rs:116
+msgid "In"
+msgstr "Εισερχόμενα"
+
+#: src/widgets/add_rule_dialog.rs:117
+msgid "Out"
+msgstr "Έξοδος"
+
+#: src/widgets/add_rule_dialog.rs:122
+msgid "Protocol"
+msgstr "Πρωτόκολλο"
+
+#: src/widgets/add_rule_dialog.rs:124
+msgid "Both"
+msgstr "Και τα δύο"
+
+#: src/widgets/add_rule_dialog.rs:125
+msgid "TCP"
+msgstr "TCP"
+
+#: src/widgets/add_rule_dialog.rs:126
+msgid "UDP"
+msgstr "UDP"
+
+#: src/widgets/add_rule_dialog.rs:131
+msgid "Source IP"
+msgstr "Πηγή IP"
+
+#: src/widgets/add_rule_dialog.rs:135
+msgid "Destination IP"
+msgstr "Προορισμός IP"
+
+#: src/widgets/add_rule_dialog.rs:144
+msgid "Interface"
+msgstr "Διεπαφή"
+
+#: src/widgets/add_rule_dialog.rs:149
+msgid "Comment"
+msgstr "Σχόλιο"
+
+#: src/widgets/add_rule_dialog.rs:154
+msgid "Insert Before Rule"
+msgstr "Εισαγωγή πριν τον κανόνα"
+
+#: src/widgets/add_rule_dialog.rs:155
+msgid "0 = append at end"
+msgstr "0 = προσθήκη στο τέλος"
+
+#: src/widgets/add_rule_dialog.rs:170
+msgid "Add"
+msgstr "Προσθήκη"
+
+#: src/widgets/add_rule_dialog.rs:254
+msgid "Save"
+msgstr "Αποθήκευση"
+
+#: src/views/dashboard_view.rs:56 src/window.rs:89
+msgid "Dashboard"
+msgstr "Πίνακας ελέγχου"
+
+#: src/views/dashboard_view.rs:78
+msgid "Recent Events Parsed"
+msgstr "Πρόσφατα συμβάντα που αναλύθηκαν"
+
+#: src/views/dashboard_view.rs:96
+msgid "Blocked Events"
+msgstr "Αποκλεισμένα Συμβάντα"
+
+#: src/views/dashboard_view.rs:117
+msgid "Top Blocked Connections"
+msgstr "Κορυφαίες Αποκλεισμένες Συνδέσεις"
+
+#: src/views/dashboard_view.rs:123
+msgid "Top Blocked Ports"
+msgstr ""
+
+#: src/views/dashboard_view.rs:129
+msgid "Listening Ports"
+msgstr "Λίμενες Ακρόασης"
+
+#: src/views/dashboard_view.rs:135
+msgid "Recent Blocked Events"
+msgstr "Πρόσφατα Αποκλεισμένα Συμβάντα"
+
+#: src/views/dashboard_view.rs:139
+msgid "Show"
+msgstr "Εμφάνιση"
+
+#: src/views/dashboard_view.rs:154
+msgid "Refresh"
+msgstr "Ανανέωση"
+
+#: src/views/dashboard_view.rs:247
+msgid "No blocked connections in recent events"
+msgstr "Δεν υπάρχουν αποκλεισμένες συνδέσεις στα πρόσφατα συμβάντα"
+
+#: src/views/dashboard_view.rs:296
+msgid "No blocked ports in recent events"
+msgstr ""
+
+#: src/views/dashboard_view.rs:344
+msgid "No listening ports detected"
+msgstr "Δεν εντοπίστηκαν θύρες ακρόασης"
+
+#: src/views/profiles_view.rs:76
+msgid "Application Profiles"
+msgstr "Προφίλ Εφαρμογών"
+
+#: src/views/profiles_view.rs:77
+msgid "Allow applications with predefined rules."
+msgstr "Επιτρέψτε εφαρμογές με προκαθορισμένους κανόνες."
+
+#: src/views/profiles_view.rs:82
+msgid "Quick Allow Port"
+msgstr "Γρήγορη Εξουσιοδότηση Θύρας"
+
+#: src/views/profiles_view.rs:83
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "π.χ. 80,443/tcp ή 8080"
+
+#: src/views/profiles_view.rs:87
+msgid "Port / Protocol"
+msgstr "Θύρα / Πρωτόκολλο"
+
+#: src/views/profiles_view.rs:119
+msgid "No Profiles"
+msgstr "Δεν υπάρχουν προφίλ"
+
+#: src/views/profiles_view.rs:120
+msgid "No application profiles found"
+msgstr "Δεν βρέθηκαν προφίλ εφαρμογών"
+
+#: src/views/rules_view.rs:62
+msgid "Search rules..."
+msgstr "Αναζήτηση κανόνων..."
+
+#: src/views/rules_view.rs:70
+msgid "Firewall Rules"
+msgstr "Κανόνες Φωτιάς"
+
+#: src/views/rules_view.rs:75
+msgid "No Rules"
+msgstr "Κανένας κανόνας"
+
+#: src/views/rules_view.rs:76
+msgid "There are no rules configured yet."
+msgstr "Δεν έχουν οριστεί κανόνες ακόμη."
+
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
+msgid "Delete All"
+msgstr "Διαγραφή Όλων"
+
+#: src/views/rules_view.rs:119
+msgid "Delete All Rules?"
+msgstr ""
+
+#: src/views/rules_view.rs:120
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr "Αυτό θα διαγράψει όλους τους προσαρμοσμένους κανόνες. Η ενέργεια αυτή δεν μπορεί να αναιρεθεί."
+
+#: src/views/status_view.rs:78 src/window.rs:90
+msgid "Status"
+msgstr "Κατάσταση"
+
+#: src/views/status_view.rs:89 src/window.rs:63
+msgid "Firewall"
+msgstr "Τείχος προστασίας"
+
+#: src/views/status_view.rs:90 src/views/status_view.rs:282
+msgid "Inactive"
+msgstr "Ανενεργό"
+
+#: src/views/status_view.rs:97
+msgid "Default Policies"
+msgstr "Προεπιλεγμένες Πολιτικές"
+
+#: src/views/status_view.rs:102
+msgid "Incoming"
+msgstr "Εισερχόμενα"
+
+#: src/views/status_view.rs:111
+msgid "Outgoing"
+msgstr "Εξερχόμενα"
+
+#: src/views/status_view.rs:124
+msgid "Logging"
+msgstr "Καταγραφή"
+
+#: src/views/status_view.rs:128
+msgid "Log Level"
+msgstr "Επίπεδο καταγραφής"
+
+#: src/views/status_view.rs:130
+msgid "Off"
+msgstr "Απενεργοποιημένο"
+
+#: src/views/status_view.rs:131
+msgid "Low"
+msgstr "Χαμηλή"
+
+#: src/views/status_view.rs:132
+msgid "Medium"
+msgstr "Μέσο"
+
+#: src/views/status_view.rs:133
+msgid "High"
+msgstr "Υψηλή"
+
+#: src/views/status_view.rs:134
+msgid "Full"
+msgstr "Πλήρης"
+
+#: src/views/status_view.rs:282
+msgid "Active"
+msgstr "Ενεργό"
+
+#: src/window.rs:80
+msgid "About"
+msgstr "Περί"
+
+#: src/window.rs:91
+msgid "Rules"
+msgstr "Κανόνες"
+
+#: src/window.rs:92
+msgid "Profiles"
+msgstr "Προφίλ"
+
+#~ msgid "Blocked"
+#~ msgstr "Μπλοκαρισμένο"
+
+#~ msgid "Blocked times"
+#~ msgstr "Μηδενισμένες ώρες"
+
+#~ msgid "Firewall Active"
+#~ msgstr "Το τείχος προστασίας είναι ενεργό"
+
+#~ msgid "Loading..."
+#~ msgstr "Φόρτωση..."
+
+#~ msgid "Loading blocked events..."
+#~ msgstr "Φόρτωση αποκλεισμένων συμβάντων..."
+
+#~ msgid "No targeted ports in recent events"
+#~ msgstr "Δεν υπάρχουν στοχευμένες θύρες στα πρόσφατα συμβάντα"
+
+#~ msgid "recent blocked events"
+#~ msgstr "πρόσφατα μπλοκαρισμένα συμβάντα"
+
+#~ msgid "Summary"
+#~ msgstr "Σύνοψη"
+
+#~ msgid "Top Targeted Ports"
+#~ msgstr "Κορυφαίες Στοχευμένες Θύρες"
+
+#~ msgid "No rules configured yet."
+#~ msgstr "Δεν έχουν οριστεί κανόνες ακόμα."
+
+#~ msgid "Click Add Rule to allow a service or port."
+#~ msgstr ""
+#~ "Κάντε κλικ στο Προσθήκη κανόνα για να επιτρέψετε μια υπηρεσία ή μια θύρα."
+
+#~ msgid "Authentication is required to modify firewall settings"
+#~ msgstr ""
+#~ "Απαιτείται έλεγχος ταυτότητας για την τροποποίηση των ρυθμίσεων του "
+#~ "τείχους προστασίας"

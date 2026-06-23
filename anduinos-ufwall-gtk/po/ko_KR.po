@@ -1,0 +1,305 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ufwall-gtk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: src/widgets/rule_row.rs:80
+msgid "Delete Rule"
+msgstr "규칙 삭제"
+
+#: src/widgets/rule_row.rs:81
+msgid "Delete rule"
+msgstr "규칙 삭제"
+
+#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
+#: src/views/rules_view.rs:123
+msgid "Cancel"
+msgstr "취소"
+
+#: src/widgets/rule_row.rs:85
+msgid "Delete"
+msgstr "삭제"
+
+#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
+#: src/window.rs:245
+msgid "Error"
+msgstr "오류"
+
+#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
+msgid "Add Rule"
+msgstr "규칙 추가"
+
+#: src/widgets/add_rule_dialog.rs:70
+msgid "Service"
+msgstr "서비스"
+
+#: src/widgets/add_rule_dialog.rs:72
+msgid "Custom"
+msgstr "사용자 정의"
+
+#: src/widgets/add_rule_dialog.rs:89
+msgid "Port / Service Name"
+msgstr "포트/서비스 이름"
+
+#: src/widgets/add_rule_dialog.rs:93
+msgid "Action"
+msgstr "동작"
+
+#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
+#: src/views/status_view.rs:113
+msgid "Deny"
+msgstr "거부"
+
+#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
+#: src/views/status_view.rs:105 src/views/status_view.rs:114
+msgid "Allow"
+msgstr "허용"
+
+#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
+#: src/views/status_view.rs:115
+msgid "Reject"
+msgstr "거부"
+
+#: src/widgets/add_rule_dialog.rs:98
+msgid "Limit"
+msgstr "제한"
+
+#: src/widgets/add_rule_dialog.rs:110
+msgid "Advanced"
+msgstr "고급"
+
+#: src/widgets/add_rule_dialog.rs:114
+msgid "Direction"
+msgstr "방향"
+
+#: src/widgets/add_rule_dialog.rs:116
+msgid "In"
+msgstr "입력"
+
+#: src/widgets/add_rule_dialog.rs:117
+msgid "Out"
+msgstr "출력"
+
+#: src/widgets/add_rule_dialog.rs:122
+msgid "Protocol"
+msgstr "프로토콜"
+
+#: src/widgets/add_rule_dialog.rs:124
+msgid "Both"
+msgstr "양방향"
+
+#: src/widgets/add_rule_dialog.rs:125
+msgid "TCP"
+msgstr "TCP"
+
+#: src/widgets/add_rule_dialog.rs:126
+msgid "UDP"
+msgstr "UDP"
+
+#: src/widgets/add_rule_dialog.rs:131
+msgid "Source IP"
+msgstr "출처 IP"
+
+#: src/widgets/add_rule_dialog.rs:135
+msgid "Destination IP"
+msgstr "대상 IP"
+
+#: src/widgets/add_rule_dialog.rs:144
+msgid "Interface"
+msgstr "인터페이스"
+
+#: src/widgets/add_rule_dialog.rs:149
+msgid "Comment"
+msgstr "설명"
+
+#: src/widgets/add_rule_dialog.rs:154
+msgid "Insert Before Rule"
+msgstr "규칙 앞에 삽입"
+
+#: src/widgets/add_rule_dialog.rs:155
+msgid "0 = append at end"
+msgstr "0 = 끝에 추가"
+
+#: src/widgets/add_rule_dialog.rs:170
+msgid "Add"
+msgstr "추가"
+
+#: src/widgets/add_rule_dialog.rs:254
+msgid "Save"
+msgstr "저장"
+
+#: src/views/dashboard_view.rs:56 src/window.rs:89
+msgid "Dashboard"
+msgstr "대시보드"
+
+#: src/views/dashboard_view.rs:78
+msgid "Recent Events Parsed"
+msgstr "최근 이벤트 구문 분석"
+
+#: src/views/dashboard_view.rs:96
+msgid "Blocked Events"
+msgstr "차단된 이벤트"
+
+#: src/views/dashboard_view.rs:117
+msgid "Top Blocked Connections"
+msgstr "상위 차단된 연결"
+
+#: src/views/dashboard_view.rs:123
+msgid "Top Blocked Ports"
+msgstr "차단된 상위 포트"
+
+#: src/views/dashboard_view.rs:129
+msgid "Listening Ports"
+msgstr "리스닝 포트"
+
+#: src/views/dashboard_view.rs:135
+msgid "Recent Blocked Events"
+msgstr "최근 차단된 이벤트"
+
+#: src/views/dashboard_view.rs:139
+msgid "Show"
+msgstr "표시"
+
+#: src/views/dashboard_view.rs:154
+msgid "Refresh"
+msgstr "새로고침"
+
+#: src/views/dashboard_view.rs:247
+msgid "No blocked connections in recent events"
+msgstr "최근 이벤트에서 차단된 연결이 없습니다"
+
+#: src/views/dashboard_view.rs:296
+msgid "No blocked ports in recent events"
+msgstr "최근 이벤트에서 차단된 포트가 없습니다"
+
+#: src/views/dashboard_view.rs:344
+msgid "No listening ports detected"
+msgstr "리스닝 포트가 감지되지 않았습니다"
+
+#: src/views/profiles_view.rs:76
+msgid "Application Profiles"
+msgstr "애플리케이션 프로필"
+
+#: src/views/profiles_view.rs:77
+msgid "Allow applications with predefined rules."
+msgstr "미리 정의된 규칙을 사용하여 애플리케이션을 허용합니다."
+
+#: src/views/profiles_view.rs:82
+msgid "Quick Allow Port"
+msgstr "포트 빠른 허용"
+
+#: src/views/profiles_view.rs:83
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "예: 80,443/tcp 또는 8080"
+
+#: src/views/profiles_view.rs:87
+msgid "Port / Protocol"
+msgstr "포트 / 프로토콜"
+
+#: src/views/profiles_view.rs:119
+msgid "No Profiles"
+msgstr "프로필 없음"
+
+#: src/views/profiles_view.rs:120
+msgid "No application profiles found"
+msgstr "애플리케이션 프로파일을 찾을 수 없습니다"
+
+#: src/views/rules_view.rs:62
+msgid "Search rules..."
+msgstr "규칙 검색..."
+
+#: src/views/rules_view.rs:70
+msgid "Firewall Rules"
+msgstr "방화벽 규칙"
+
+#: src/views/rules_view.rs:75
+msgid "No Rules"
+msgstr "규칙 없음"
+
+#: src/views/rules_view.rs:76
+msgid "There are no rules configured yet."
+msgstr "아직 규칙이 구성되지 않았습니다."
+
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
+msgid "Delete All"
+msgstr "모두 삭제"
+
+#: src/views/rules_view.rs:119
+msgid "Delete All Rules?"
+msgstr "모든 규칙을 삭제하시겠습니까?"
+
+#: src/views/rules_view.rs:120
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr "이 작업은 모든 사용자 정의 규칙을 삭제합니다. 이 작업은 되돌릴 수 없습니다."
+
+#: src/views/status_view.rs:78 src/window.rs:90
+msgid "Status"
+msgstr "상태"
+
+#: src/views/status_view.rs:89 src/window.rs:63
+msgid "Firewall"
+msgstr "방화벽"
+
+#: src/views/status_view.rs:90 src/views/status_view.rs:282
+msgid "Inactive"
+msgstr "비활성"
+
+#: src/views/status_view.rs:97
+msgid "Default Policies"
+msgstr "기본 정책"
+
+#: src/views/status_view.rs:102
+msgid "Incoming"
+msgstr "들어오는"
+
+#: src/views/status_view.rs:111
+msgid "Outgoing"
+msgstr "출력"
+
+#: src/views/status_view.rs:124
+msgid "Logging"
+msgstr "로깅"
+
+#: src/views/status_view.rs:128
+msgid "Log Level"
+msgstr "로그 레벨"
+
+#: src/views/status_view.rs:130
+msgid "Off"
+msgstr "끄기"
+
+#: src/views/status_view.rs:131
+msgid "Low"
+msgstr "낮음"
+
+#: src/views/status_view.rs:132
+msgid "Medium"
+msgstr "중간"
+
+#: src/views/status_view.rs:133
+msgid "High"
+msgstr "높음"
+
+#: src/views/status_view.rs:134
+msgid "Full"
+msgstr "전체"
+
+#: src/views/status_view.rs:282
+msgid "Active"
+msgstr "활성"
+
+#: src/window.rs:80
+msgid "About"
+msgstr "정보"
+
+#: src/window.rs:91
+msgid "Rules"
+msgstr "규칙"
+
+#: src/window.rs:92
+msgid "Profiles"
+msgstr "프로필"

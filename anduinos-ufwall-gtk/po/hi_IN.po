@@ -1,0 +1,305 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ufwall-gtk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: src/widgets/rule_row.rs:80
+msgid "Delete Rule"
+msgstr "नियम हटाएँ"
+
+#: src/widgets/rule_row.rs:81
+msgid "Delete rule"
+msgstr "नियम हटाएँ"
+
+#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
+#: src/views/rules_view.rs:123
+msgid "Cancel"
+msgstr "रद्द करें"
+
+#: src/widgets/rule_row.rs:85
+msgid "Delete"
+msgstr "हटाएँ"
+
+#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
+#: src/window.rs:245
+msgid "Error"
+msgstr "त्रुटि"
+
+#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
+msgid "Add Rule"
+msgstr "नियम जोड़ें"
+
+#: src/widgets/add_rule_dialog.rs:70
+msgid "Service"
+msgstr "सेवा"
+
+#: src/widgets/add_rule_dialog.rs:72
+msgid "Custom"
+msgstr "कस्टम"
+
+#: src/widgets/add_rule_dialog.rs:89
+msgid "Port / Service Name"
+msgstr "पोर्ट / सेवा का नाम"
+
+#: src/widgets/add_rule_dialog.rs:93
+msgid "Action"
+msgstr "कार्रवाई"
+
+#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
+#: src/views/status_view.rs:113
+msgid "Deny"
+msgstr "अस्वीकार करें"
+
+#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
+#: src/views/status_view.rs:105 src/views/status_view.rs:114
+msgid "Allow"
+msgstr "अनुमति दें"
+
+#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
+#: src/views/status_view.rs:115
+msgid "Reject"
+msgstr "अस्वीकार करें"
+
+#: src/widgets/add_rule_dialog.rs:98
+msgid "Limit"
+msgstr "सीमा"
+
+#: src/widgets/add_rule_dialog.rs:110
+msgid "Advanced"
+msgstr "उन्नत"
+
+#: src/widgets/add_rule_dialog.rs:114
+msgid "Direction"
+msgstr "दिशा"
+
+#: src/widgets/add_rule_dialog.rs:116
+msgid "In"
+msgstr "अंदर"
+
+#: src/widgets/add_rule_dialog.rs:117
+msgid "Out"
+msgstr "बाहर"
+
+#: src/widgets/add_rule_dialog.rs:122
+msgid "Protocol"
+msgstr "प्रोटोकॉल"
+
+#: src/widgets/add_rule_dialog.rs:124
+msgid "Both"
+msgstr "दोनों"
+
+#: src/widgets/add_rule_dialog.rs:125
+msgid "TCP"
+msgstr "TCP"
+
+#: src/widgets/add_rule_dialog.rs:126
+msgid "UDP"
+msgstr "यूडीपी"
+
+#: src/widgets/add_rule_dialog.rs:131
+msgid "Source IP"
+msgstr "स्रोत IP"
+
+#: src/widgets/add_rule_dialog.rs:135
+msgid "Destination IP"
+msgstr "गंतव्य आईपी"
+
+#: src/widgets/add_rule_dialog.rs:144
+msgid "Interface"
+msgstr "इंटरफ़ेस"
+
+#: src/widgets/add_rule_dialog.rs:149
+msgid "Comment"
+msgstr "टिप्पणी"
+
+#: src/widgets/add_rule_dialog.rs:154
+msgid "Insert Before Rule"
+msgstr "नियम से पहले सम्मिलित करें"
+
+#: src/widgets/add_rule_dialog.rs:155
+msgid "0 = append at end"
+msgstr "0 = अंत में जोड़ें"
+
+#: src/widgets/add_rule_dialog.rs:170
+msgid "Add"
+msgstr "जोड़ें"
+
+#: src/widgets/add_rule_dialog.rs:254
+msgid "Save"
+msgstr "सहेजें"
+
+#: src/views/dashboard_view.rs:56 src/window.rs:89
+msgid "Dashboard"
+msgstr "डैशबोर्ड"
+
+#: src/views/dashboard_view.rs:78
+msgid "Recent Events Parsed"
+msgstr "हाल के घटनाओं का विश्लेषण"
+
+#: src/views/dashboard_view.rs:96
+msgid "Blocked Events"
+msgstr "अवरुद्ध घटनाएँ"
+
+#: src/views/dashboard_view.rs:117
+msgid "Top Blocked Connections"
+msgstr "शीर्ष अवरुद्ध कनेक्शन"
+
+#: src/views/dashboard_view.rs:123
+msgid "Top Blocked Ports"
+msgstr "शीर्ष अवरुद्ध पोर्ट"
+
+#: src/views/dashboard_view.rs:129
+msgid "Listening Ports"
+msgstr "सुन रहे पोर्ट"
+
+#: src/views/dashboard_view.rs:135
+msgid "Recent Blocked Events"
+msgstr "हाल ही में अवरुद्ध घटनाएँ"
+
+#: src/views/dashboard_view.rs:139
+msgid "Show"
+msgstr "दिखाएँ"
+
+#: src/views/dashboard_view.rs:154
+msgid "Refresh"
+msgstr "रिफ़्रेश"
+
+#: src/views/dashboard_view.rs:247
+msgid "No blocked connections in recent events"
+msgstr "हाल की घटनाओं में कोई अवरुद्ध कनेक्शन नहीं"
+
+#: src/views/dashboard_view.rs:296
+msgid "No blocked ports in recent events"
+msgstr "हाल की घटनाओं में कोई अवरुद्ध पोर्ट नहीं"
+
+#: src/views/dashboard_view.rs:344
+msgid "No listening ports detected"
+msgstr "कोई सुन रहे पोर्ट नहीं मिले"
+
+#: src/views/profiles_view.rs:76
+msgid "Application Profiles"
+msgstr "एप्लिकेशन प्रोफ़ाइलें"
+
+#: src/views/profiles_view.rs:77
+msgid "Allow applications with predefined rules."
+msgstr "पूर्वनिर्धारित नियमों वाले अनुप्रयोगों की अनुमति दें।"
+
+#: src/views/profiles_view.rs:82
+msgid "Quick Allow Port"
+msgstr "पोर्ट को जल्दी अनुमति दें"
+
+#: src/views/profiles_view.rs:83
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "जैसे 80,443/tcp या 8080"
+
+#: src/views/profiles_view.rs:87
+msgid "Port / Protocol"
+msgstr "पोर्ट / प्रोटोकॉल"
+
+#: src/views/profiles_view.rs:119
+msgid "No Profiles"
+msgstr "कोई प्रोफ़ाइल नहीं"
+
+#: src/views/profiles_view.rs:120
+msgid "No application profiles found"
+msgstr "कोई एप्लिकेशन प्रोफ़ाइल नहीं मिली"
+
+#: src/views/rules_view.rs:62
+msgid "Search rules..."
+msgstr "नियम खोजें..."
+
+#: src/views/rules_view.rs:70
+msgid "Firewall Rules"
+msgstr "फ़ायरवॉल नियम"
+
+#: src/views/rules_view.rs:75
+msgid "No Rules"
+msgstr "कोई नियम नहीं"
+
+#: src/views/rules_view.rs:76
+msgid "There are no rules configured yet."
+msgstr "अभी तक कोई नियम कॉन्फ़िगर नहीं किए गए हैं।"
+
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
+msgid "Delete All"
+msgstr "सभी हटाएँ"
+
+#: src/views/rules_view.rs:119
+msgid "Delete All Rules?"
+msgstr "क्या सभी नियम हटाएँ?"
+
+#: src/views/rules_view.rs:120
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr "यह सभी कस्टम नियमों को हटा देगा। इस कार्रवाई को पूर्ववत नहीं किया जा सकता।"
+
+#: src/views/status_view.rs:78 src/window.rs:90
+msgid "Status"
+msgstr "स्थिति"
+
+#: src/views/status_view.rs:89 src/window.rs:63
+msgid "Firewall"
+msgstr "फ़ायरवॉल"
+
+#: src/views/status_view.rs:90 src/views/status_view.rs:282
+msgid "Inactive"
+msgstr "असक्रिय"
+
+#: src/views/status_view.rs:97
+msgid "Default Policies"
+msgstr "डिफ़ॉल्ट नीतियाँ"
+
+#: src/views/status_view.rs:102
+msgid "Incoming"
+msgstr "आने वाला"
+
+#: src/views/status_view.rs:111
+msgid "Outgoing"
+msgstr "आउटगोइंग"
+
+#: src/views/status_view.rs:124
+msgid "Logging"
+msgstr "लॉगिंग"
+
+#: src/views/status_view.rs:128
+msgid "Log Level"
+msgstr "लॉग स्तर"
+
+#: src/views/status_view.rs:130
+msgid "Off"
+msgstr "बंद"
+
+#: src/views/status_view.rs:131
+msgid "Low"
+msgstr "कम"
+
+#: src/views/status_view.rs:132
+msgid "Medium"
+msgstr "मध्यम"
+
+#: src/views/status_view.rs:133
+msgid "High"
+msgstr "उच्च"
+
+#: src/views/status_view.rs:134
+msgid "Full"
+msgstr "पूर्ण"
+
+#: src/views/status_view.rs:282
+msgid "Active"
+msgstr "सक्रिय"
+
+#: src/window.rs:80
+msgid "About"
+msgstr "के बारे में"
+
+#: src/window.rs:91
+msgid "Rules"
+msgstr "नियम"
+
+#: src/window.rs:92
+msgid "Profiles"
+msgstr "प्रोफ़ाइलें"

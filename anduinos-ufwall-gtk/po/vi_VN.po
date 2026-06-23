@@ -1,0 +1,305 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ufwall-gtk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: src/widgets/rule_row.rs:80
+msgid "Delete Rule"
+msgstr "Xoá quy tắc"
+
+#: src/widgets/rule_row.rs:81
+msgid "Delete rule"
+msgstr "Xóa quy tắc"
+
+#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
+#: src/views/rules_view.rs:123
+msgid "Cancel"
+msgstr "Hủy"
+
+#: src/widgets/rule_row.rs:85
+msgid "Delete"
+msgstr "Xóa"
+
+#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
+#: src/window.rs:245
+msgid "Error"
+msgstr "Lỗi"
+
+#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
+msgid "Add Rule"
+msgstr "Thêm Quy Tắc"
+
+#: src/widgets/add_rule_dialog.rs:70
+msgid "Service"
+msgstr "Dịch vụ"
+
+#: src/widgets/add_rule_dialog.rs:72
+msgid "Custom"
+msgstr "Tùy chỉnh"
+
+#: src/widgets/add_rule_dialog.rs:89
+msgid "Port / Service Name"
+msgstr "Cổng / Tên dịch vụ"
+
+#: src/widgets/add_rule_dialog.rs:93
+msgid "Action"
+msgstr "Hành động"
+
+#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
+#: src/views/status_view.rs:113
+msgid "Deny"
+msgstr "Từ chối"
+
+#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
+#: src/views/status_view.rs:105 src/views/status_view.rs:114
+msgid "Allow"
+msgstr "Cho phép"
+
+#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
+#: src/views/status_view.rs:115
+msgid "Reject"
+msgstr "Từ chối"
+
+#: src/widgets/add_rule_dialog.rs:98
+msgid "Limit"
+msgstr "Giới hạn"
+
+#: src/widgets/add_rule_dialog.rs:110
+msgid "Advanced"
+msgstr "Nâng cao"
+
+#: src/widgets/add_rule_dialog.rs:114
+msgid "Direction"
+msgstr "Hướng"
+
+#: src/widgets/add_rule_dialog.rs:116
+msgid "In"
+msgstr "Vào"
+
+#: src/widgets/add_rule_dialog.rs:117
+msgid "Out"
+msgstr "Ra"
+
+#: src/widgets/add_rule_dialog.rs:122
+msgid "Protocol"
+msgstr "Giao thức"
+
+#: src/widgets/add_rule_dialog.rs:124
+msgid "Both"
+msgstr "Cả hai"
+
+#: src/widgets/add_rule_dialog.rs:125
+msgid "TCP"
+msgstr "TCP"
+
+#: src/widgets/add_rule_dialog.rs:126
+msgid "UDP"
+msgstr "UDP"
+
+#: src/widgets/add_rule_dialog.rs:131
+msgid "Source IP"
+msgstr "Địa chỉ IP nguồn"
+
+#: src/widgets/add_rule_dialog.rs:135
+msgid "Destination IP"
+msgstr "Địa chỉ IP đích"
+
+#: src/widgets/add_rule_dialog.rs:144
+msgid "Interface"
+msgstr "Giao diện"
+
+#: src/widgets/add_rule_dialog.rs:149
+msgid "Comment"
+msgstr "Ghi chú"
+
+#: src/widgets/add_rule_dialog.rs:154
+msgid "Insert Before Rule"
+msgstr "Chèn trước quy tắc"
+
+#: src/widgets/add_rule_dialog.rs:155
+msgid "0 = append at end"
+msgstr "0 = nối vào cuối"
+
+#: src/widgets/add_rule_dialog.rs:170
+msgid "Add"
+msgstr "Thêm"
+
+#: src/widgets/add_rule_dialog.rs:254
+msgid "Save"
+msgstr "Lưu"
+
+#: src/views/dashboard_view.rs:56 src/window.rs:89
+msgid "Dashboard"
+msgstr "Bảng điều khiển"
+
+#: src/views/dashboard_view.rs:78
+msgid "Recent Events Parsed"
+msgstr "Các sự kiện gần đây đã được phân tích"
+
+#: src/views/dashboard_view.rs:96
+msgid "Blocked Events"
+msgstr "Sự kiện bị chặn"
+
+#: src/views/dashboard_view.rs:117
+msgid "Top Blocked Connections"
+msgstr "Các kết nối bị chặn hàng đầu"
+
+#: src/views/dashboard_view.rs:123
+msgid "Top Blocked Ports"
+msgstr "Các Cổng Bị Chặn Hàng Đầu"
+
+#: src/views/dashboard_view.rs:129
+msgid "Listening Ports"
+msgstr "Cổng đang lắng nghe"
+
+#: src/views/dashboard_view.rs:135
+msgid "Recent Blocked Events"
+msgstr "Các sự kiện bị chặn gần đây"
+
+#: src/views/dashboard_view.rs:139
+msgid "Show"
+msgstr "Hiển thị"
+
+#: src/views/dashboard_view.rs:154
+msgid "Refresh"
+msgstr "Làm mới"
+
+#: src/views/dashboard_view.rs:247
+msgid "No blocked connections in recent events"
+msgstr "Không có kết nối bị chặn trong các sự kiện gần đây"
+
+#: src/views/dashboard_view.rs:296
+msgid "No blocked ports in recent events"
+msgstr "Không có cổng bị chặn trong các sự kiện gần đây"
+
+#: src/views/dashboard_view.rs:344
+msgid "No listening ports detected"
+msgstr "Không phát hiện cổng lắng nghe nào"
+
+#: src/views/profiles_view.rs:76
+msgid "Application Profiles"
+msgstr "Hồ sơ ứng dụng"
+
+#: src/views/profiles_view.rs:77
+msgid "Allow applications with predefined rules."
+msgstr "Cho phép các ứng dụng với các quy tắc được xác định trước."
+
+#: src/views/profiles_view.rs:82
+msgid "Quick Allow Port"
+msgstr "Cho phép nhanh cổng"
+
+#: src/views/profiles_view.rs:83
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "vd. 80,443/tcp hoặc 8080"
+
+#: src/views/profiles_view.rs:87
+msgid "Port / Protocol"
+msgstr "Cổng / Giao thức"
+
+#: src/views/profiles_view.rs:119
+msgid "No Profiles"
+msgstr "Không có Hồ sơ"
+
+#: src/views/profiles_view.rs:120
+msgid "No application profiles found"
+msgstr "Không tìm thấy hồ sơ ứng dụng nào"
+
+#: src/views/rules_view.rs:62
+msgid "Search rules..."
+msgstr "Tìm kiếm quy tắc..."
+
+#: src/views/rules_view.rs:70
+msgid "Firewall Rules"
+msgstr "Quy tắc tường lửa"
+
+#: src/views/rules_view.rs:75
+msgid "No Rules"
+msgstr "Không có quy tắc"
+
+#: src/views/rules_view.rs:76
+msgid "There are no rules configured yet."
+msgstr "Chưa có quy tắc nào được cấu hình."
+
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
+msgid "Delete All"
+msgstr "Xóa tất cả"
+
+#: src/views/rules_view.rs:119
+msgid "Delete All Rules?"
+msgstr "Xóa tất cả quy tắc?"
+
+#: src/views/rules_view.rs:120
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr "Điều này sẽ xóa tất cả các quy tắc tùy chỉnh. Hành động này không thể hoàn tác."
+
+#: src/views/status_view.rs:78 src/window.rs:90
+msgid "Status"
+msgstr "Trạng thái"
+
+#: src/views/status_view.rs:89 src/window.rs:63
+msgid "Firewall"
+msgstr "Tường lửa"
+
+#: src/views/status_view.rs:90 src/views/status_view.rs:282
+msgid "Inactive"
+msgstr "Không hoạt động"
+
+#: src/views/status_view.rs:97
+msgid "Default Policies"
+msgstr "Chính sách mặc định"
+
+#: src/views/status_view.rs:102
+msgid "Incoming"
+msgstr "Đến"
+
+#: src/views/status_view.rs:111
+msgid "Outgoing"
+msgstr "Đi ra"
+
+#: src/views/status_view.rs:124
+msgid "Logging"
+msgstr "Ghi nhật ký"
+
+#: src/views/status_view.rs:128
+msgid "Log Level"
+msgstr "Mức độ nhật ký"
+
+#: src/views/status_view.rs:130
+msgid "Off"
+msgstr "Tắt"
+
+#: src/views/status_view.rs:131
+msgid "Low"
+msgstr "Thấp"
+
+#: src/views/status_view.rs:132
+msgid "Medium"
+msgstr "Trung bình"
+
+#: src/views/status_view.rs:133
+msgid "High"
+msgstr "Cao"
+
+#: src/views/status_view.rs:134
+msgid "Full"
+msgstr "Toàn bộ"
+
+#: src/views/status_view.rs:282
+msgid "Active"
+msgstr "Hoạt động"
+
+#: src/window.rs:80
+msgid "About"
+msgstr "Giới thiệu"
+
+#: src/window.rs:91
+msgid "Rules"
+msgstr "Quy tắc"
+
+#: src/window.rs:92
+msgid "Profiles"
+msgstr "Hồ sơ"

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>UFWall</vendor>
+  <vendor_url>https://github.com/anduin/ufwall-gtk</vendor_url>
+
+  <action id="com.anduinos.ufwall.manage-firewall">
+    <description>Manage UFW firewall settings</description>
+    <description xml:lang="zh_CN">管理 UFW 防火墙设置</description>
+    <message>Authentication is required to modify firewall settings</message>
+    <message xml:lang="zh_CN">修改防火墙设置需要管理员权限</message>
+    <icon_name>security-high-symbolic</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/sbin/ufw</annotate>
+    <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
+  </action>
+</policyconfig>

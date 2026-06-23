@@ -210,8 +210,8 @@ Example diff for Fluent GTK theme:
 +FLUENT_GTK_COMMIT="a1b2c3d"
 
 # anduinos-fluent-gtk-theme.aosproj
--<PackageVersion>2.0.0~rc1-1+$(SuiteShortName)</PackageVersion>
-+<PackageVersion>2.0.0~rc1-2+$(SuiteShortName)</PackageVersion>
+-<PackageVersion>2.0.0~rc2-1+$(SuiteShortName)</PackageVersion>
++<PackageVersion>2.0.0~rc2-2+$(SuiteShortName)</PackageVersion>
 ```
 
 #### B.3 Rebuild and verify
@@ -243,8 +243,8 @@ Update **both files**:
 +SOF_VERSION="2026.03"   # update to new release tag
 
 # firmware-sof-anduinos.aosproj
--<PackageVersion>2.0.0~rc1-2025.12.2+$(SuiteShortName)</PackageVersion>
-+<PackageVersion>2.0.0~rc1-2026.03+$(SuiteShortName)</PackageVersion>   # sync SOF version
+-<PackageVersion>2.0.0~rc2-2025.12.2+$(SuiteShortName)</PackageVersion>
++<PackageVersion>2.0.0~rc2-2026.03+$(SuiteShortName)</PackageVersion>   # sync SOF version
 ```
 
 The downloaded Intel tarball and extracted cache under `deploy/` are **not** committed — the CI regenerates them at build time via `download.sh`.
@@ -293,11 +293,11 @@ Then **CI rebuilds all 19 extension packages automatically** — the new GNOME v
 
 #### D.2 Extension `.aosproj` version numbers
 
-Each extension's `.aosproj` uses a unified `<PackageVersion>` of `2.0.0~rc1-1+$(SuiteShortName)`. Bump the Debian revision suffix (e.g. `-1` → `-2`) when packaging changes. The resolver fetches the latest extension code at build time, so the extension code itself is always up-to-date regardless of the package version.
+Each extension's `.aosproj` uses a unified `<PackageVersion>` of `2.0.0~rc2-1+$(SuiteShortName)`. Bump the Debian revision suffix (e.g. `-1` → `-2`) when packaging changes. The resolver fetches the latest extension code at build time, so the extension code itself is always up-to-date regardless of the package version.
 
 ```diff
--<PackageVersion>2.0.0~rc1-1+$(SuiteShortName)</PackageVersion>
-+<PackageVersion>2.0.0~rc1-2+$(SuiteShortName)</PackageVersion>
+-<PackageVersion>2.0.0~rc2-1+$(SuiteShortName)</PackageVersion>
++<PackageVersion>2.0.0~rc2-2+$(SuiteShortName)</PackageVersion>
 ```
 
 #### D.3 Special-cased extension: desktop-icons-ng-anduinos
@@ -354,3 +354,100 @@ When doing a full monthly triage, follow this order — earlier packages are dep
 6. **Meta-packages** — rebuild last (`anduinos-desktop`, `anduinos-desktop-core`, `anduinos-gnome-extensions`, `anduinos-theme`)
 
 For each updated package, push to `master` — CI runs `apkg publish && apkg push` automatically.
+
+### H. One-command conversion script
+
+One-command conversion from a standard Ubuntu installation to AnduinOS.
+
+```bash
+sudo -v
+
+# Variables for APT repository and GPG key
+APKG_SERVER="https://packages.anduinos.com"
+CERT_NAME="anduinos"
+KEYRING_PATH="/usr/share/keyrings/anduinos-archive-keyring.gpg"
+SUITE="$(lsb_release -sc)-addon"
+
+# Make sure is Ubuntu 26.04 Resolute:
+if [[ "$(lsb_release -rs)" != "26.04" ]]; then
+    echo "This script is designed for Ubuntu 26.04 Resolute. Exiting."
+    exit 1
+fi
+
+# Update package lists and install prerequisites for adding the AnduinOS repository
+sudo apt update
+sudo apt install -y curl gnupg2 ca-certificates
+
+# Create the keyring directory and download the AnduinOS GPG key
+sudo mkdir -p /usr/share/keyrings
+curl -sL "${APKG_SERVER}/artifacts/certs/${CERT_NAME}" \
+    | sed '1s/^\xEF\xBB\xBF//' \
+    | gpg --dearmor \
+    | sudo tee "${KEYRING_PATH}" > /dev/null
+
+# Add the AnduinOS repository to the sources list
+sudo tee /etc/apt/sources.list.d/anduinos.sources > /dev/null <<EOF
+Types: deb
+URIs: ${APKG_SERVER}/artifacts/anduinos/
+Suites: ${SUITE}
+Components: main
+Architectures: amd64
+Signed-By: ${KEYRING_PATH}
+EOF
+
+# Update the package lists and install AnduinOS packages while removing conflicting Ubuntu packages
+sudo apt update
+sudo apt install -y \
+    anduinos-desktop \
+    anduinos-desktop-apps \
+    anduinos-gnome-extensions \
+    anduinos-appstore \
+    anduinos-theme \
+    anduinos-wallpapers \
+    anduinos-fonts \
+    anduinos-no-snapd \
+    anduinos-session \
+    anduinos-software-properties-common \
+    anduinos-software-properties-gtk \
+    anduinos-system-tweaks \
+    firefox-anduinos \
+    gnome-shell-extension-appindicator-anduinos \
+    gnome-shell-extension-dash-to-panel-anduinos \
+    gnome-shell-extension-desktop-icons-ng-anduinos \
+    plymouth-anduinos \
+    alsa-ucm-conf-anduinos \
+    firmware-sof-anduinos \
+    initramfs-tools \
+    snapd- \
+    firefox- \
+    ubuntu-session- \
+    ubuntu-desktop- \
+    ubiquity-slideshow-ubuntu- \
+    yaru-theme-gnome-shell- \
+    gnome-shell-ubuntu-extensions- \
+    update-notifier- \
+    update-notifier-common- \
+    update-manager- \
+    update-manager-core- \
+    ubuntu-release-upgrader-core- \
+    ubuntu-release-upgrader-gtk- \
+    whoopsie- \
+    software-properties-gtk- \
+    software-properties-common- \
+    firmware-sof-signed- \
+    alsa-ucm-conf- \
+    plymouth-theme-spinner- \
+    gnome-shell-extension-appindicator- \
+    gnome-shell-extension-dash-to-panel- \
+    gnome-shell-extension-desktop-icons-ng- \
+    ubuntu-wallpapers- \
+    ubuntu-advantage-desktop-daemon- \
+    ubuntu-wallpapers-resolute- \
+    --install-recommends
+
+sudo apt reinstall -y base-files
+
+# Update dconf settings to apply AnduinOS defaults
+sudo dconf update
+dconf reset -f /org/gnome/
+```

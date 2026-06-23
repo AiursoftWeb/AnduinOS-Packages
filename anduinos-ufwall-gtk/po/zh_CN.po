@@ -1,0 +1,341 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ufwall-gtk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: src/widgets/rule_row.rs:80
+msgid "Delete Rule"
+msgstr "删除规则"
+
+#: src/widgets/rule_row.rs:81
+msgid "Delete rule"
+msgstr "删除规则"
+
+#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
+#: src/views/rules_view.rs:123
+msgid "Cancel"
+msgstr "取消"
+
+#: src/widgets/rule_row.rs:85
+msgid "Delete"
+msgstr "删除"
+
+#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
+#: src/window.rs:245
+msgid "Error"
+msgstr "错误"
+
+#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
+msgid "Add Rule"
+msgstr "添加规则"
+
+#: src/widgets/add_rule_dialog.rs:70
+msgid "Service"
+msgstr "服务"
+
+#: src/widgets/add_rule_dialog.rs:72
+msgid "Custom"
+msgstr "自定义"
+
+#: src/widgets/add_rule_dialog.rs:89
+msgid "Port / Service Name"
+msgstr "端口 / 服务名称"
+
+#: src/widgets/add_rule_dialog.rs:93
+msgid "Action"
+msgstr "动作"
+
+#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
+#: src/views/status_view.rs:113
+msgid "Deny"
+msgstr "拒绝"
+
+#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
+#: src/views/status_view.rs:105 src/views/status_view.rs:114
+msgid "Allow"
+msgstr "允许"
+
+#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
+#: src/views/status_view.rs:115
+msgid "Reject"
+msgstr "驳回"
+
+#: src/widgets/add_rule_dialog.rs:98
+msgid "Limit"
+msgstr "限制"
+
+#: src/widgets/add_rule_dialog.rs:110
+msgid "Advanced"
+msgstr "高级"
+
+#: src/widgets/add_rule_dialog.rs:114
+msgid "Direction"
+msgstr "方向"
+
+#: src/widgets/add_rule_dialog.rs:116
+msgid "In"
+msgstr "入站"
+
+#: src/widgets/add_rule_dialog.rs:117
+msgid "Out"
+msgstr "出站"
+
+#: src/widgets/add_rule_dialog.rs:122
+msgid "Protocol"
+msgstr "协议"
+
+#: src/widgets/add_rule_dialog.rs:124
+msgid "Both"
+msgstr "两者"
+
+#: src/widgets/add_rule_dialog.rs:125
+msgid "TCP"
+msgstr "TCP"
+
+#: src/widgets/add_rule_dialog.rs:126
+msgid "UDP"
+msgstr "UDP"
+
+#: src/widgets/add_rule_dialog.rs:131
+msgid "Source IP"
+msgstr "来源 IP"
+
+#: src/widgets/add_rule_dialog.rs:135
+msgid "Destination IP"
+msgstr "目标 IP"
+
+#: src/widgets/add_rule_dialog.rs:144
+msgid "Interface"
+msgstr "网络接口"
+
+#: src/widgets/add_rule_dialog.rs:149
+msgid "Comment"
+msgstr "备注"
+
+#: src/widgets/add_rule_dialog.rs:154
+msgid "Insert Before Rule"
+msgstr "插入到规则前"
+
+#: src/widgets/add_rule_dialog.rs:155
+msgid "0 = append at end"
+msgstr "0 = 追加到末尾"
+
+#: src/widgets/add_rule_dialog.rs:170
+msgid "Add"
+msgstr "添加"
+
+#: src/widgets/add_rule_dialog.rs:254
+msgid "Save"
+msgstr "保存"
+
+#: src/views/dashboard_view.rs:56 src/window.rs:89
+msgid "Dashboard"
+msgstr "仪表盘"
+
+#: src/views/dashboard_view.rs:78
+msgid "Recent Events Parsed"
+msgstr "已解析近期事件"
+
+#: src/views/dashboard_view.rs:96
+msgid "Blocked Events"
+msgstr "已拦截事件"
+
+#: src/views/dashboard_view.rs:117
+msgid "Top Blocked Connections"
+msgstr "被拦截最多的连接"
+
+#: src/views/dashboard_view.rs:123
+msgid "Top Blocked Ports"
+msgstr "被拦截最多的端口"
+
+#: src/views/dashboard_view.rs:129
+msgid "Listening Ports"
+msgstr "监听端口"
+
+#: src/views/dashboard_view.rs:135
+msgid "Recent Blocked Events"
+msgstr "近期拦截事件"
+
+#: src/views/dashboard_view.rs:139
+msgid "Show"
+msgstr "显示"
+
+#: src/views/dashboard_view.rs:154
+msgid "Refresh"
+msgstr "刷新"
+
+#: src/views/dashboard_view.rs:247
+msgid "No blocked connections in recent events"
+msgstr "近期无被拦截的连接"
+
+#: src/views/dashboard_view.rs:296
+msgid "No blocked ports in recent events"
+msgstr "近期无被拦截的端口"
+
+#: src/views/dashboard_view.rs:344
+msgid "No listening ports detected"
+msgstr "未检测到监听端口"
+
+#: src/views/profiles_view.rs:76
+msgid "Application Profiles"
+msgstr "应用程序预设"
+
+#: src/views/profiles_view.rs:77
+msgid "Allow applications with predefined rules."
+msgstr "使用预定义规则允许应用程序。"
+
+#: src/views/profiles_view.rs:82
+msgid "Quick Allow Port"
+msgstr "快速开放端口"
+
+#: src/views/profiles_view.rs:83
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "例如 80,443/tcp 或 8080"
+
+#: src/views/profiles_view.rs:87
+msgid "Port / Protocol"
+msgstr "端口 / 协议"
+
+#: src/views/profiles_view.rs:119
+msgid "No Profiles"
+msgstr "无预设"
+
+#: src/views/profiles_view.rs:120
+msgid "No application profiles found"
+msgstr "未找到应用程序预设"
+
+#: src/views/rules_view.rs:62
+msgid "Search rules..."
+msgstr "搜索规则..."
+
+#: src/views/rules_view.rs:70
+msgid "Firewall Rules"
+msgstr "防火墙规则"
+
+#: src/views/rules_view.rs:75
+msgid "No Rules"
+msgstr "无规则"
+
+#: src/views/rules_view.rs:76
+msgid "There are no rules configured yet."
+msgstr "尚未配置任何规则。"
+
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
+msgid "Delete All"
+msgstr "删除全部"
+
+#: src/views/rules_view.rs:119
+msgid "Delete All Rules?"
+msgstr "删除所有规则？"
+
+#: src/views/rules_view.rs:120
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr "这将删除所有自定义规则。此操作无法撤销。"
+
+#: src/views/status_view.rs:78 src/window.rs:90
+msgid "Status"
+msgstr "状态"
+
+#: src/views/status_view.rs:89 src/window.rs:63
+msgid "Firewall"
+msgstr "防火墙"
+
+#: src/views/status_view.rs:90 src/views/status_view.rs:282
+msgid "Inactive"
+msgstr "未启用"
+
+#: src/views/status_view.rs:97
+msgid "Default Policies"
+msgstr "默认策略"
+
+#: src/views/status_view.rs:102
+msgid "Incoming"
+msgstr "入站"
+
+#: src/views/status_view.rs:111
+msgid "Outgoing"
+msgstr "出站"
+
+#: src/views/status_view.rs:124
+msgid "Logging"
+msgstr "日志"
+
+#: src/views/status_view.rs:128
+msgid "Log Level"
+msgstr "日志级别"
+
+#: src/views/status_view.rs:130
+msgid "Off"
+msgstr "关闭"
+
+#: src/views/status_view.rs:131
+msgid "Low"
+msgstr "低"
+
+#: src/views/status_view.rs:132
+msgid "Medium"
+msgstr "中"
+
+#: src/views/status_view.rs:133
+msgid "High"
+msgstr "高"
+
+#: src/views/status_view.rs:134
+msgid "Full"
+msgstr "全部"
+
+#: src/views/status_view.rs:282
+msgid "Active"
+msgstr "已启用"
+
+#: src/window.rs:80
+msgid "About"
+msgstr "关于"
+
+#: src/window.rs:91
+msgid "Rules"
+msgstr "规则"
+
+#: src/window.rs:92
+msgid "Profiles"
+msgstr "预设"
+
+#~ msgid "Blocked"
+#~ msgstr "已拦截"
+
+#~ msgid "Blocked times"
+#~ msgstr "拦截次数"
+
+#~ msgid "Firewall Active"
+#~ msgstr "防火墙已启用"
+
+#~ msgid "Loading..."
+#~ msgstr "加载中..."
+
+#~ msgid "Loading blocked events..."
+#~ msgstr "正在加载拦截事件..."
+
+#~ msgid "No targeted ports in recent events"
+#~ msgstr "近期无被攻击端口"
+
+#~ msgid "recent blocked events"
+#~ msgstr "条近期拦截事件"
+
+#~ msgid "Summary"
+#~ msgstr "摘要"
+
+#~ msgid "Top Targeted Ports"
+#~ msgstr "被攻击 Top 端口"
+
+#~ msgid "No rules configured yet."
+#~ msgstr "尚未配置规则。"
+
+#~ msgid "Click Add Rule to allow a service or port."
+#~ msgstr "点击“添加规则”以放行服务或端口。"
+
+#~ msgid "Authentication is required to modify firewall settings"
+#~ msgstr "修改防火墙设置需要管理员权限"
