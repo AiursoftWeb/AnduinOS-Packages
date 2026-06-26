@@ -229,13 +229,15 @@ do_generate() {
 }
 
 /* ── Ubuntu Customizations Override ───────────────────────── */
-/* Ubuntu adds a custom .a11y-button to the login dialog which isn't in upstream Fluent */
+/* Ubuntu adds a custom .a11y-button to the login dialog which isn't in upstream Fluent.
+   Force full-circle shape and give it breathing room from screen edges. */
 .login-dialog .login-dialog-button.a11y-button,
 .unlock-dialog .login-dialog-button.a11y-button {
-  padding: 0.818em !important;
-  margin: 0 !important;
+  padding: 10px !important;
+  margin: 8px !important;
   border-radius: 999px !important;
-  min-height: 1.091em !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
   border: none !important;
   background-color: rgba(255, 255, 255, 0.15) !important;
   color: rgba(255, 255, 255, 0.7) !important;
@@ -258,6 +260,11 @@ do_generate() {
 .login-dialog .login-dialog-button.a11y-button StIcon,
 .unlock-dialog .login-dialog-button.a11y-button StIcon {
   icon-size: 16px !important;
+}
+/* Push the button bar itself away from the screen edges */
+.login-dialog-button-box,
+.unlock-dialog-button-box {
+  padding: 8px !important;
 }
 "
   while IFS= read -r css_file; do
