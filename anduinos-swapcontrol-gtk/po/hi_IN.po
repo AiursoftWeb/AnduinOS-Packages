@@ -1,15 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 
 msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
 msgstr "<i>अनुशंसित स्विपनेस: {0} ({1} GiB RAM के लिए)</i>"
 
 msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>अनुशंसित: {0} GiB वर्चुअल मेमोरी, स्विपनेस {1} ({2} GiB RAM के लिए)</i>"
-
-#, fuzzy
-msgid ""
-"<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
 msgstr "<i>अनुशंसित: {0} GiB वर्चुअल मेमोरी, स्विपनेस {1} ({2} GiB RAM के लिए)</i>"
 
 msgid "About"
@@ -66,11 +62,6 @@ msgstr "चैनल"
 msgid "Completed successfully — memory pressure test passed."
 msgstr "सफलतापूर्वक पूर्ण — मेमोरी दबाव परीक्षण उत्तर्ण हुआ।"
 
-msgid ""
-"Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
-"Zswap, not both."
-msgstr ""
-
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "संपीड़ित RAM ब्लॉक डिवाइस — मेमोरी में तेज स्वैप"
 
@@ -82,11 +73,6 @@ msgstr "बनाएँ"
 
 msgid "Create Zram Device"
 msgstr "Zram डिवाइस बनाएँ"
-
-#, fuzzy
-msgid ""
-"Create a compressed RAM swap device for faster memory pressure handling."
-msgstr "संपीड़ित RAM ब्लॉक डिवाइस — मेमोरी में तेज स्वैप"
 
 msgid "Creating Zram device…"
 msgstr "Zram डिवाइस बनाया जा रहा है…"
@@ -121,23 +107,11 @@ msgstr "डिस्क वर्चुअल मेमोरी"
 msgid "Disk Swap Configuration"
 msgstr "डिस्क वर्चुअल मेमोरी विन्यास"
 
-msgid ""
-"Disk swap is active with memory compression — your system is well-protected "
-"against memory pressure."
-msgstr ""
-"डिस्क वर्चुअल मेमोरी मेमोरी संपीड़न के साथ सक्रिय है—आपका प्रणाली मेमोरी दबाव के विरुद्ध "
-"अच्छी तरह से सुरक्षित है।"
-
 msgid "Disk-based swap file — the last line of defense when RAM is full"
 msgstr "डिस्क-आधारित स्विप फ़ाइल — जब RAM भरी हो तो रक्षा की अंतिम कड़ी"
 
 msgid "Duration:"
 msgstr "अवधि:"
-
-msgid ""
-"Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
-"swap and dramatically reduces I/O under memory pressure."
-msgstr ""
 
 msgid "Enabling Zswap..."
 msgstr "स्वाप को सक्षम कर रहे हैं..."
@@ -161,23 +135,13 @@ msgid "Hello {0}, you have {1} messages"
 msgstr "हैलो {0}, आपके पास {1} संदेश हैं"
 
 msgid "Hibernation"
-msgstr "हाइबरनेशन चेतावनी"
+msgstr "शीतनिद्रा"
 
 msgid "Hibernation Warning"
 msgstr "हाइबरनेशन चेतावनी"
 
-#, fuzzy
-msgid ""
-"Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-msgstr "हाइबरनेशन का पता नहीं चला — अनुशंसित: {0} GiB"
-
 msgid "Hibernation not detected — recommended: {0} GiB"
 msgstr "हाइबरनेशन का पता नहीं चला — अनुशंसित: {0} GiB"
-
-msgid ""
-"How aggressively the kernel swaps — lower = stay in RAM longer (recommended: "
-"{0})"
-msgstr ""
 
 msgid "Idle ({0} GiB available)"
 msgstr "निष्क्रिय ({0} GiB उपलब्ध)"
@@ -220,11 +184,6 @@ msgstr "बंद"
 
 msgid "On"
 msgstr "चालू"
-
-msgid ""
-"Only store pages that compress to ≤ this % of original. Higher = more pages "
-"cached. Recommended: 90%"
-msgstr ""
 
 msgid "Optimal memory configuration"
 msgstr "आदर्श मेमोरी कॉन्फ़िगरेशन"
@@ -301,11 +260,6 @@ msgstr "उपयोग किया गया"
 msgid "Warning: This will consume system memory and may cause instability"
 msgstr "चेतावनी: इससे सिस्टम मेमोरी का उपयोग होगा और अस्थिरता पैदा हो सकती है"
 
-msgid ""
-"When RAM is full the kernel may kill applications. Enable disk swap for a "
-"reliable safety net."
-msgstr ""
-
 msgid "Zram"
 msgstr "ज़्रैम"
 
@@ -315,25 +269,11 @@ msgstr "Zram डिवाइस"
 msgid "Zram and Zswap are both active"
 msgstr "ज़्राम और ज़स्वैप दोनों सक्रिय हैं"
 
-msgid ""
-"Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
-msgstr ""
-"Zram और Zswap परस्पर विरोधी हैं—प्रत्येक अपने स्वयं के संपीड़ित RAM पूल बनाता है। दोनों को "
-"एक साथ चलाना CPU की बर्बादी करता है और गंभीर मेमोरी थ्रेशिंग का कारण बन सकता है। उनमें "
-"से एक को अक्षम करें।"
-
 msgid "Zswap"
 msgstr "ज़्सवाप"
 
 msgid "default"
 msgstr "डिफ़ॉल्ट"
-
-msgid ""
-"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires "
-"zswap restart."
-msgstr ""
 
 msgid "range"
 msgstr "रेंज"
@@ -376,3 +316,36 @@ msgstr "{0} · सहेजा गया {1}%"
 
 #~ msgid "lzo-rle is fastest, zstd saves more space"
 #~ msgstr "lzo-rle सबसे तेज़ है, zstd अधिक जगह बचाता है"
+
+msgid "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
+msgstr "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
+
+msgid "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or Zswap, not both."
+msgstr "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or Zswap, not both."
+
+msgid "Create a compressed RAM swap device for faster memory pressure handling."
+msgstr "Create a compressed RAM swap device for faster memory pressure handling."
+
+msgid "Disk swap is active with memory compression — your system is well-protected against memory pressure."
+msgstr "Disk swap is active with memory compression — your system is well-protected against memory pressure."
+
+msgid "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk swap and dramatically reduces I/O under memory pressure."
+msgstr "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk swap and dramatically reduces I/O under memory pressure."
+
+msgid "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
+msgstr "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
+
+msgid "How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})"
+msgstr "How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})"
+
+msgid "Only store pages that compress to ≤ this % of original. Higher = more pages cached. Recommended: 90%"
+msgstr "Only store pages that compress to ≤ this % of original. Higher = more pages cached. Recommended: 90%"
+
+msgid "When RAM is full the kernel may kill applications. Enable disk swap for a reliable safety net."
+msgstr "When RAM is full the kernel may kill applications. Enable disk swap for a reliable safety net."
+
+msgid "Zram and Zswap are mutually exclusive — each creates its own compressed RAM pool. Running both wastes CPU and can cause severe memory thrashing. Disable one of them."
+msgstr "Zram and Zswap are mutually exclusive — each creates its own compressed RAM pool. Running both wastes CPU and can cause severe memory thrashing. Disable one of them."
+
+msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
+msgstr "lz4 = तेज़ (सिफारिश की गई), zstd = सर्वोत्तम अनुपात, lzo = पुराना। बदलने के लिए zswap पुनः आरंभ करना आवश्यक है।"

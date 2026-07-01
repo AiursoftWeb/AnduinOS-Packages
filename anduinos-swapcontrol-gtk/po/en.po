@@ -1,5 +1,6 @@
 msgid ""
 msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: swapcontrol-gtk 2.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/AiursoftWeb/AnduinOS-Packages/"
 "issues\n"
@@ -16,10 +17,6 @@ msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
 msgstr ""
 
 msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr ""
-
-msgid ""
-"<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
 msgstr ""
 
 msgid "About"
@@ -78,11 +75,6 @@ msgstr ""
 msgid "Completed successfully — memory pressure test passed."
 msgstr ""
 
-msgid ""
-"Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
-"Zswap, not both."
-msgstr ""
-
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr ""
 
@@ -96,10 +88,6 @@ msgstr ""
 #, fuzzy
 msgid "Create Zram Device"
 msgstr "Zram Devices"
-
-msgid ""
-"Create a compressed RAM swap device for faster memory pressure handling."
-msgstr ""
 
 msgid "Creating Zram device…"
 msgstr ""
@@ -135,22 +123,12 @@ msgstr "Disk Swap"
 msgid "Disk Swap Configuration"
 msgstr "Disk Swap Configuration"
 
-msgid ""
-"Disk swap is active with memory compression — your system is well-protected "
-"against memory pressure."
-msgstr ""
-
 msgid "Disk-based swap file — the last line of defense when RAM is full"
 msgstr ""
 
 #, fuzzy
 msgid "Duration:"
 msgstr "Hibernation"
-
-msgid ""
-"Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
-"swap and dramatically reduces I/O under memory pressure."
-msgstr ""
 
 msgid "Enabling Zswap..."
 msgstr ""
@@ -181,16 +159,7 @@ msgstr "Hibernation"
 msgid "Hibernation Warning"
 msgstr "Hibernation"
 
-msgid ""
-"Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-msgstr ""
-
 msgid "Hibernation not detected — recommended: {0} GiB"
-msgstr ""
-
-msgid ""
-"How aggressively the kernel swaps — lower = stay in RAM longer (recommended: "
-"{0})"
 msgstr ""
 
 msgid "Idle ({0} GiB available)"
@@ -237,11 +206,6 @@ msgid "Off"
 msgstr ""
 
 msgid "On"
-msgstr ""
-
-msgid ""
-"Only store pages that compress to ≤ this % of original. Higher = more pages "
-"cached. Recommended: 90%"
 msgstr ""
 
 msgid "Optimal memory configuration"
@@ -321,11 +285,6 @@ msgstr ""
 msgid "Warning: This will consume system memory and may cause instability"
 msgstr ""
 
-msgid ""
-"When RAM is full the kernel may kill applications. Enable disk swap for a "
-"reliable safety net."
-msgstr ""
-
 msgid "Zram"
 msgstr "Zram"
 
@@ -335,21 +294,10 @@ msgstr "Zram Devices"
 msgid "Zram and Zswap are both active"
 msgstr ""
 
-msgid ""
-"Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
-msgstr ""
-
 msgid "Zswap"
 msgstr "Zswap"
 
 msgid "default"
-msgstr ""
-
-msgid ""
-"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires "
-"zswap restart."
 msgstr ""
 
 msgid "range"

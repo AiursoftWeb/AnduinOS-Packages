@@ -1,14 +1,12 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 
 msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
 msgstr "<i>Swappiness recomendada: {0} (para {1} GiB de RAM)</i>"
 
 msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
 msgstr "<i>Recomendado: {0} GiB de memoria virtual, valor de swappiness {1} (para {2} GiB de RAM)</i>"
-
-msgid ""
-msgstr "<i>Swappiness recomendada: {0} (para {1} GiB de RAM)</i>"
 
 msgid "About"
 msgstr "Acerca de"
@@ -64,9 +62,6 @@ msgstr "Canales"
 msgid "Completed successfully — memory pressure test passed."
 msgstr "Completado con éxito: la prueba de presión de memoria aprobada."
 
-msgid ""
-msgstr ""
-
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "Dispositivo de bloques de RAM comprimida: memoria virtual en memoria rápida"
 
@@ -78,9 +73,6 @@ msgstr "Crear"
 
 msgid "Create Zram Device"
 msgstr "Crear dispositivo Zram"
-
-msgid ""
-msgstr ""
 
 msgid "Creating Zram device…"
 msgstr "Creando dispositivo Zram…"
@@ -115,17 +107,11 @@ msgstr "Memoria virtual"
 msgid "Disk Swap Configuration"
 msgstr "Configuración de memoria virtual"
 
-msgid ""
-msgstr ""
-
 msgid "Disk-based swap file — the last line of defense when RAM is full"
 msgstr "Archivo de memoria virtual basado en disco: última línea de defensa cuando la RAM está llena"
 
 msgid "Duration:"
 msgstr "Duración:"
-
-msgid ""
-msgstr ""
 
 msgid "Enabling Zswap..."
 msgstr "Activando memoria de intercambio…"
@@ -149,19 +135,13 @@ msgid "Hello {0}, you have {1} messages"
 msgstr "Hola {0}, tienes {1} mensajes"
 
 msgid "Hibernation"
-msgstr "Advertencia de hibernación"
+msgstr "Hibernación"
 
 msgid "Hibernation Warning"
 msgstr "Advertencia de hibernación"
 
-msgid ""
-msgstr "Hibernación no detectada — recomendado: {0} GiB"
-
 msgid "Hibernation not detected — recommended: {0} GiB"
 msgstr "Hibernación no detectada — recomendado: {0} GiB"
-
-msgid ""
-msgstr ""
 
 msgid "Idle ({0} GiB available)"
 msgstr "Inactivo ({0} GiB disponibles)"
@@ -200,13 +180,10 @@ msgid "None"
 msgstr "Ninguno"
 
 msgid "Off"
-msgstr "Desactivado"
+msgstr "Apagado"
 
 msgid "On"
-msgstr "Activado"
-
-msgid ""
-msgstr ""
+msgstr "Encendido"
 
 msgid "Optimal memory configuration"
 msgstr "Configuración óptima de memoria"
@@ -283,9 +260,6 @@ msgstr "Usado"
 msgid "Warning: This will consume system memory and may cause instability"
 msgstr "Advertencia: esto consumirá la memoria del sistema y puede causar inestabilidad"
 
-msgid ""
-msgstr ""
-
 msgid "Zram"
 msgstr "Zram"
 
@@ -295,17 +269,11 @@ msgstr "Dispositivos Zram"
 msgid "Zram and Zswap are both active"
 msgstr "Zram y Zswap están ambos activos"
 
-msgid ""
-msgstr ""
-
 msgid "Zswap"
 msgstr "Zswap"
 
 msgid "default"
 msgstr "predeterminado"
-
-msgid ""
-msgstr ""
 
 msgid "range"
 msgstr "rango"
@@ -342,3 +310,36 @@ msgstr "Configuración de Zswap"
 
 msgid "lzo-rle is fastest, zstd saves more space"
 msgstr "lzo-rle es el más rápido, zstd ahorra más espacio"
+
+msgid "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
+msgstr "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
+
+msgid "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or Zswap, not both."
+msgstr "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or Zswap, not both."
+
+msgid "Create a compressed RAM swap device for faster memory pressure handling."
+msgstr "Create a compressed RAM swap device for faster memory pressure handling."
+
+msgid "Disk swap is active with memory compression — your system is well-protected against memory pressure."
+msgstr "Disk swap is active with memory compression — your system is well-protected against memory pressure."
+
+msgid "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk swap and dramatically reduces I/O under memory pressure."
+msgstr "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk swap and dramatically reduces I/O under memory pressure."
+
+msgid "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
+msgstr "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
+
+msgid "How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})"
+msgstr "How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})"
+
+msgid "Only store pages that compress to ≤ this % of original. Higher = more pages cached. Recommended: 90%"
+msgstr "Only store pages that compress to ≤ this % of original. Higher = more pages cached. Recommended: 90%"
+
+msgid "When RAM is full the kernel may kill applications. Enable disk swap for a reliable safety net."
+msgstr "When RAM is full the kernel may kill applications. Enable disk swap for a reliable safety net."
+
+msgid "Zram and Zswap are mutually exclusive — each creates its own compressed RAM pool. Running both wastes CPU and can cause severe memory thrashing. Disable one of them."
+msgstr "Zram and Zswap are mutually exclusive — each creates its own compressed RAM pool. Running both wastes CPU and can cause severe memory thrashing. Disable one of them."
+
+msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
+msgstr "lz4 = rápido (recomendado), zstd = mejor relación de compresión, lzo = legado. El cambio requiere reiniciar zswap."

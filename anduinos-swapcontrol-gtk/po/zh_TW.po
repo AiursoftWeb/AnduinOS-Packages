@@ -1,15 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 
 msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
 msgstr "<i>建議的 swappiness：{0}（針對 {1} GiB 記憶體）</i>"
 
 msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>建議：{0} GiB 虛擬記憶體，swappiness {1}（針對 {2} GiB 記憶體）</i>"
-
-#, fuzzy
-msgid ""
-"<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
 msgstr "<i>建議：{0} GiB 虛擬記憶體，swappiness {1}（針對 {2} GiB 記憶體）</i>"
 
 msgid "About"
@@ -66,11 +62,6 @@ msgstr "管道"
 msgid "Completed successfully — memory pressure test passed."
 msgstr "已完成，記憶體壓力測試通過。"
 
-msgid ""
-"Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
-"Zswap, not both."
-msgstr ""
-
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "壓縮式 RAM 區塊裝置 — 高速記憶體交換"
 
@@ -82,11 +73,6 @@ msgstr "建立"
 
 msgid "Create Zram Device"
 msgstr "建立 Zram 裝置"
-
-#, fuzzy
-msgid ""
-"Create a compressed RAM swap device for faster memory pressure handling."
-msgstr "壓縮式 RAM 區塊裝置 — 高速記憶體交換"
 
 msgid "Creating Zram device…"
 msgstr "正在建立 Zram 裝置…"
@@ -121,23 +107,11 @@ msgstr "磁碟虛擬記憶體"
 msgid "Disk Swap Configuration"
 msgstr "虛擬記憶體磁碟配置"
 
-msgid ""
-"Disk swap is active with memory compression — your system is well-protected "
-"against memory pressure."
-msgstr ""
-"磁碟虛擬記憶體已啟用，並搭配壓縮記憶體技術——您的系統對記憶體壓力具備充分的防"
-"護機制。"
-
 msgid "Disk-based swap file — the last line of defense when RAM is full"
 msgstr "基於磁碟的虛擬記憶體檔案——當 RAM 耗盡時的最後防線"
 
 msgid "Duration:"
 msgstr "持續時間："
-
-msgid ""
-"Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
-"swap and dramatically reduces I/O under memory pressure."
-msgstr ""
 
 msgid "Enabling Zswap..."
 msgstr "正在啟用交換空間…"
@@ -161,23 +135,13 @@ msgid "Hello {0}, you have {1} messages"
 msgstr "您好 {0}，您有 {1} 則訊息"
 
 msgid "Hibernation"
-msgstr "休眠警告"
+msgstr "休眠"
 
 msgid "Hibernation Warning"
 msgstr "休眠警告"
 
-#, fuzzy
-msgid ""
-"Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-msgstr "未偵測到休眠 — 建議：{0} GiB"
-
 msgid "Hibernation not detected — recommended: {0} GiB"
 msgstr "未偵測到休眠 — 建議：{0} GiB"
-
-msgid ""
-"How aggressively the kernel swaps — lower = stay in RAM longer (recommended: "
-"{0})"
-msgstr ""
 
 msgid "Idle ({0} GiB available)"
 msgstr "閒置（可用 {0} GiB）"
@@ -216,15 +180,10 @@ msgid "None"
 msgstr "無"
 
 msgid "Off"
-msgstr "關"
+msgstr "關閉"
 
 msgid "On"
 msgstr "開"
-
-msgid ""
-"Only store pages that compress to ≤ this % of original. Higher = more pages "
-"cached. Recommended: 90%"
-msgstr ""
 
 msgid "Optimal memory configuration"
 msgstr "最佳記憶體配置"
@@ -301,11 +260,6 @@ msgstr "已使用"
 msgid "Warning: This will consume system memory and may cause instability"
 msgstr "警告：這將消耗系統記憶體並可能導致不穩定"
 
-msgid ""
-"When RAM is full the kernel may kill applications. Enable disk swap for a "
-"reliable safety net."
-msgstr ""
-
 msgid "Zram"
 msgstr "Zram"
 
@@ -315,25 +269,11 @@ msgstr "Zram 裝置"
 msgid "Zram and Zswap are both active"
 msgstr "Zram 和 Zswap 皆已啟用"
 
-msgid ""
-"Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
-msgstr ""
-"Zram 與 Zswap 無法同時使用，因為兩者會各自建立獨立的壓縮隨機存取記憶體（RAM）"
-"資源池。同時啟用這兩者會浪費 CPU 資源，並可能導致嚴重的記憶體顛換問題。請停用"
-"其中一項。"
-
 msgid "Zswap"
 msgstr "壓縮交換緩存"
 
 msgid "default"
 msgstr "預設值"
-
-msgid ""
-"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires "
-"zswap restart."
-msgstr ""
 
 msgid "range"
 msgstr "範圍"
@@ -376,3 +316,36 @@ msgstr "{0} · 節省 {1}%"
 
 #~ msgid "lzo-rle is fastest, zstd saves more space"
 #~ msgstr "lzo-rle 速度最快，zstd 節省更多空間"
+
+msgid "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
+msgstr "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
+
+msgid "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or Zswap, not both."
+msgstr "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or Zswap, not both."
+
+msgid "Create a compressed RAM swap device for faster memory pressure handling."
+msgstr "Create a compressed RAM swap device for faster memory pressure handling."
+
+msgid "Disk swap is active with memory compression — your system is well-protected against memory pressure."
+msgstr "Disk swap is active with memory compression — your system is well-protected against memory pressure."
+
+msgid "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk swap and dramatically reduces I/O under memory pressure."
+msgstr "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk swap and dramatically reduces I/O under memory pressure."
+
+msgid "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
+msgstr "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
+
+msgid "How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})"
+msgstr "How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})"
+
+msgid "Only store pages that compress to ≤ this % of original. Higher = more pages cached. Recommended: 90%"
+msgstr "Only store pages that compress to ≤ this % of original. Higher = more pages cached. Recommended: 90%"
+
+msgid "When RAM is full the kernel may kill applications. Enable disk swap for a reliable safety net."
+msgstr "When RAM is full the kernel may kill applications. Enable disk swap for a reliable safety net."
+
+msgid "Zram and Zswap are mutually exclusive — each creates its own compressed RAM pool. Running both wastes CPU and can cause severe memory thrashing. Disable one of them."
+msgstr "Zram and Zswap are mutually exclusive — each creates its own compressed RAM pool. Running both wastes CPU and can cause severe memory thrashing. Disable one of them."
+
+msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
+msgstr "lz4 = 快速（推薦），zstd = 最佳壓縮率，lzo = 傳統。變更需要重新啟動 zswap。"

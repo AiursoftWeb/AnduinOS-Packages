@@ -1,13 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 
 msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
 msgstr "<i>建议的交换倾向值：{0}（适用于 {1} GiB 内存）</i>"
 
 msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>建议：{0} GiB 虚拟内存，交换倾向值 {1}（适用于 {2} GiB 内存）</i>"
-
-msgid ""
 msgstr "<i>建议：{0} GiB 虚拟内存，交换倾向值 {1}（适用于 {2} GiB 内存）</i>"
 
 msgid "About"
@@ -64,9 +62,6 @@ msgstr "通道"
 msgid "Completed successfully — memory pressure test passed."
 msgstr "成功完成——内存压力测试通过。"
 
-msgid ""
-msgstr ""
-
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "压缩 RAM 块设备——快速内存虚拟化"
 
@@ -78,9 +73,6 @@ msgstr "创建"
 
 msgid "Create Zram Device"
 msgstr "创建 Zram 设备"
-
-msgid ""
-msgstr "压缩 RAM 块设备——快速内存虚拟化"
 
 msgid "Creating Zram device…"
 msgstr "正在创建 Zram 设备…"
@@ -115,17 +107,11 @@ msgstr "磁盘虚拟内存"
 msgid "Disk Swap Configuration"
 msgstr "虚拟内存配置"
 
-msgid ""
-msgstr "磁盘虚拟内存与内存压缩功能均已启用——您的系统能有效抵御内存压力。"
-
 msgid "Disk-based swap file — the last line of defense when RAM is full"
 msgstr "基于磁盘的虚拟内存——当内存满时最后的防线"
 
 msgid "Duration:"
 msgstr "持续时间："
-
-msgid ""
-msgstr ""
 
 msgid "Enabling Zswap..."
 msgstr "正在启用虚拟内存…"
@@ -149,19 +135,13 @@ msgid "Hello {0}, you have {1} messages"
 msgstr "你好 {0}，你有 {1} 条消息"
 
 msgid "Hibernation"
-msgstr "休眠警告"
+msgstr "休眠"
 
 msgid "Hibernation Warning"
 msgstr "休眠警告"
 
-msgid ""
-msgstr "未检测到休眠 — 建议：{0} GiB"
-
 msgid "Hibernation not detected — recommended: {0} GiB"
 msgstr "未检测到休眠 — 建议：{0} GiB"
-
-msgid ""
-msgstr ""
 
 msgid "Idle ({0} GiB available)"
 msgstr "空闲（可用 {0} GiB）"
@@ -200,13 +180,10 @@ msgid "None"
 msgstr "无"
 
 msgid "Off"
-msgstr "关"
+msgstr "关闭"
 
 msgid "On"
-msgstr "开"
-
-msgid ""
-msgstr ""
+msgstr "已启用"
 
 msgid "Optimal memory configuration"
 msgstr "最佳内存配置"
@@ -283,9 +260,6 @@ msgstr "已用"
 msgid "Warning: This will consume system memory and may cause instability"
 msgstr "警告：这将消耗系统内存并可能导致不稳定"
 
-msgid ""
-msgstr ""
-
 msgid "Zram"
 msgstr "压缩内存段"
 
@@ -295,17 +269,11 @@ msgstr "Zram 设备"
 msgid "Zram and Zswap are both active"
 msgstr "Zram 和 Zswap 均已激活"
 
-msgid ""
-msgstr ""
-
 msgid "Zswap"
 msgstr "压缩交换缓存"
 
 msgid "default"
 msgstr "默认"
-
-msgid ""
-msgstr ""
 
 msgid "range"
 msgstr "范围"
@@ -348,3 +316,36 @@ msgstr "Zswap 配置"
 
 msgid "lzo-rle is fastest, zstd saves more space"
 msgstr "lzo-rle 速度最快，zstd 节省更多空间"
+
+msgid "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
+msgstr "<i>推荐：{0}–{1} MiB，lzo-rle，优先级 100（适用于 {2} GiB 内存）</i>"
+
+msgid "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or Zswap, not both."
+msgstr "在内存池中压缩交换页——比磁盘交换更快。请使用 Zram 或 Zswap，切勿同时使用两者。"
+
+msgid "Create a compressed RAM swap device for faster memory pressure handling."
+msgstr "创建压缩内存交换设备，以更快处理内存压力。"
+
+msgid "Disk swap is active with memory compression — your system is well-protected against memory pressure."
+msgstr "磁盘交换已激活并启用了内存压缩——您的系统能有效抵御内存压力。"
+
+msgid "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk swap and dramatically reduces I/O under memory pressure."
+msgstr "启用 Zram 以获得位于内存中的极速压缩交换——它比磁盘交换快 10 倍，并能显著降低内存压力下的 I/O。"
+
+msgid "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
+msgstr "休眠已激活——最小 {0} GiB（内存 + 1 GiB）。推荐：{1} GiB"
+
+msgid "How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})"
+msgstr "内核执行交换的积极程度——值越低，数据在内存中保留时间越长（推荐：{0}）"
+
+msgid "Only store pages that compress to ≤ this % of original. Higher = more pages cached. Recommended: 90%"
+msgstr "仅存储压缩后大小小于或等于原始大小此百分比的页面。值越高，缓存的页面越多。推荐：90%"
+
+msgid "When RAM is full the kernel may kill applications. Enable disk swap for a reliable safety net."
+msgstr "当内存已满时，内核可能会终止应用程序。启用磁盘交换以提供可靠的安全网。"
+
+msgid "Zram and Zswap are mutually exclusive — each creates its own compressed RAM pool. Running both wastes CPU and can cause severe memory thrashing. Disable one of them."
+msgstr "Zram 和 Zswap 互斥——各自创建独立的压缩内存池。同时运行两者会浪费 CPU 资源并可能导致严重的内存抖动。请禁用其中一个。"
+
+msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
+msgstr "lz4 = 快速（推荐），zstd = 最佳压缩率，lzo = 旧版。更改需要重启 zswap。"

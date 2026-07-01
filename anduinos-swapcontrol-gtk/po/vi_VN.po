@@ -1,17 +1,12 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 
 msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
 msgstr "<i>Swappiness khuyến nghị: {0} (cho {1} GiB RAM)</i>"
 
 msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
 msgstr "<i>Đề xuất: {0} GiB bộ nhớ ảo, độ ưu tiên phân chia bộ nhớ {1} (với {2} GiB RAM)</i>"
-
-#, fuzzy
-msgid ""
-"<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
-msgstr ""
-"<i>Khuyến nghị: {0} GiB bộ nhớ ảo, swappiness {1} (cho {2} GiB RAM)</i>"
 
 msgid "About"
 msgstr "Giới thiệu"
@@ -67,11 +62,6 @@ msgstr "Channels"
 msgid "Completed successfully — memory pressure test passed."
 msgstr "Hoàn tất thành công — kiểm tra áp lực bộ nhớ đã vượt qua."
 
-msgid ""
-"Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
-"Zswap, not both."
-msgstr ""
-
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "Thiết bị bộ nhớ RAM đã nén — trao đổi trong bộ nhớ tốc độ cao"
 
@@ -83,11 +73,6 @@ msgstr "Tạo"
 
 msgid "Create Zram Device"
 msgstr "Tạo thiết bị Zram"
-
-#, fuzzy
-msgid ""
-"Create a compressed RAM swap device for faster memory pressure handling."
-msgstr "Thiết bị bộ nhớ RAM đã nén — trao đổi trong bộ nhớ tốc độ cao"
 
 msgid "Creating Zram device…"
 msgstr "Đang tạo thiết bị Zram…"
@@ -122,23 +107,11 @@ msgstr "Bộ nhớ ảo ổ đĩa"
 msgid "Disk Swap Configuration"
 msgstr "Cấu hình bộ nhớ ảo"
 
-msgid ""
-"Disk swap is active with memory compression — your system is well-protected "
-"against memory pressure."
-msgstr ""
-"Bộ nhớ ảo trên ổ đĩa đang hoạt động cùng với tính năng nén bộ nhớ — hệ thống "
-"của bạn được bảo vệ tốt trước tình trạng quá tải bộ nhớ."
-
 msgid "Disk-based swap file — the last line of defense when RAM is full"
 msgstr "Tệp đổi chỗ dựa trên đĩa — đường phòng thủ cuối cùng khi RAM đã đầy"
 
 msgid "Duration:"
 msgstr "Thời gian:"
-
-msgid ""
-"Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
-"swap and dramatically reduces I/O under memory pressure."
-msgstr ""
 
 msgid "Enabling Zswap..."
 msgstr "Đang bật swap…"
@@ -162,23 +135,13 @@ msgid "Hello {0}, you have {1} messages"
 msgstr "Xin chào {0}, bạn có {1} tin nhắn"
 
 msgid "Hibernation"
-msgstr "Cảnh báo ngủ đông"
+msgstr "Ngủ đông"
 
 msgid "Hibernation Warning"
-msgstr "Cảnh báo ngủ đông"
-
-#, fuzzy
-msgid ""
-"Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-msgstr "Không phát hiện được hibernation — khuyến nghị: {0} GiB"
+msgstr "Cảnh báo chế độ ngủ đông"
 
 msgid "Hibernation not detected — recommended: {0} GiB"
 msgstr "Không phát hiện được hibernation — khuyến nghị: {0} GiB"
-
-msgid ""
-"How aggressively the kernel swaps — lower = stay in RAM longer (recommended: "
-"{0})"
-msgstr ""
 
 msgid "Idle ({0} GiB available)"
 msgstr "Đang chờ ({0} GiB khả dụng)"
@@ -221,11 +184,6 @@ msgstr "Tắt"
 
 msgid "On"
 msgstr "Bật"
-
-msgid ""
-"Only store pages that compress to ≤ this % of original. Higher = more pages "
-"cached. Recommended: 90%"
-msgstr ""
 
 msgid "Optimal memory configuration"
 msgstr "Cấu hình bộ nhớ tối ưu"
@@ -302,11 +260,6 @@ msgstr "Đã sử dụng"
 msgid "Warning: This will consume system memory and may cause instability"
 msgstr "Cảnh báo: Thao tác này sẽ sử dụng bộ nhớ hệ thống và có thể gây mất ổn định"
 
-msgid ""
-"When RAM is full the kernel may kill applications. Enable disk swap for a "
-"reliable safety net."
-msgstr ""
-
 msgid "Zram"
 msgstr "Zram"
 
@@ -316,25 +269,11 @@ msgstr "Thiết bị Zram"
 msgid "Zram and Zswap are both active"
 msgstr "Zram và Zswap đều đang hoạt động"
 
-msgid ""
-"Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
-msgstr ""
-"Zram và Zswap loại trừ lẫn nhau — mỗi cái tạo ra một bộ nhớ RAM nén riêng. "
-"Chạy cả hai sẽ lãng phí CPU và có thể gây ra tình trạng thiếu bộ nhớ nghiêm "
-"trọng. Hãy tắt một trong hai."
-
 msgid "Zswap"
 msgstr "Zswap"
 
 msgid "default"
 msgstr "mặc định"
-
-msgid ""
-"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires "
-"zswap restart."
-msgstr ""
 
 msgid "range"
 msgstr "phạm vi"
@@ -377,3 +316,36 @@ msgstr "Không tìm thấy thiết bị ZRAM. Hãy tạo một thiết bị đ�
 
 #~ msgid "lzo-rle is fastest, zstd saves more space"
 #~ msgstr "lzo-rle là nhanh nhất, zstd tiết kiệm nhiều dung lượng hơn"
+
+msgid "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
+msgstr "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
+
+msgid "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or Zswap, not both."
+msgstr "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or Zswap, not both."
+
+msgid "Create a compressed RAM swap device for faster memory pressure handling."
+msgstr "Create a compressed RAM swap device for faster memory pressure handling."
+
+msgid "Disk swap is active with memory compression — your system is well-protected against memory pressure."
+msgstr "Disk swap is active with memory compression — your system is well-protected against memory pressure."
+
+msgid "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk swap and dramatically reduces I/O under memory pressure."
+msgstr "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk swap and dramatically reduces I/O under memory pressure."
+
+msgid "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
+msgstr "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
+
+msgid "How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})"
+msgstr "How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})"
+
+msgid "Only store pages that compress to ≤ this % of original. Higher = more pages cached. Recommended: 90%"
+msgstr "Only store pages that compress to ≤ this % of original. Higher = more pages cached. Recommended: 90%"
+
+msgid "When RAM is full the kernel may kill applications. Enable disk swap for a reliable safety net."
+msgstr "When RAM is full the kernel may kill applications. Enable disk swap for a reliable safety net."
+
+msgid "Zram and Zswap are mutually exclusive — each creates its own compressed RAM pool. Running both wastes CPU and can cause severe memory thrashing. Disable one of them."
+msgstr "Zram and Zswap are mutually exclusive — each creates its own compressed RAM pool. Running both wastes CPU and can cause severe memory thrashing. Disable one of them."
+
+msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
+msgstr "lz4 = nhanh (được khuyến nghị), zstd = tỷ lệ tốt nhất, lzo = cũ. Việc thay đổi yêu cầu khởi động lại zswap."

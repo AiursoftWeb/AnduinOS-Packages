@@ -1,15 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 
 msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
 msgstr "<i>推奨スワップネス: {0}（{1} GiB RAM 用）</i>"
 
 msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>推奨: {0} GiB の仮想メモリ、スワップネス {1}（{2} GiB RAM 用）</i>"
-
-#, fuzzy
-msgid ""
-"<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
 msgstr "<i>推奨: {0} GiB の仮想メモリ、スワップネス {1}（{2} GiB RAM 用）</i>"
 
 msgid "About"
@@ -66,11 +62,6 @@ msgstr "チャネル"
 msgid "Completed successfully — memory pressure test passed."
 msgstr "正常に完了しました—メモリープレッシャーテストに合格しました。"
 
-msgid ""
-"Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
-"Zswap, not both."
-msgstr ""
-
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "圧縮 RAM ブロックデバイス — インメモリで高速なスワップ"
 
@@ -82,11 +73,6 @@ msgstr "作成"
 
 msgid "Create Zram Device"
 msgstr "Zramデバイスの作成"
-
-#, fuzzy
-msgid ""
-"Create a compressed RAM swap device for faster memory pressure handling."
-msgstr "圧縮 RAM ブロックデバイス — インメモリで高速なスワップ"
 
 msgid "Creating Zram device…"
 msgstr "Zramデバイスを作成しています..."
@@ -121,23 +107,11 @@ msgstr "ディスク仮想メモリ"
 msgid "Disk Swap Configuration"
 msgstr "仮想メモリのディスク構成"
 
-msgid ""
-"Disk swap is active with memory compression — your system is well-protected "
-"against memory pressure."
-msgstr ""
-"ディスク仮想メモリとメモリ圧縮が有効です。システムはメモリ不足からしっかりと"
-"保護されています。"
-
 msgid "Disk-based swap file — the last line of defense when RAM is full"
 msgstr "ディスクベースの仮想メモリファイル — RAMが一杯になった際の最後の砦"
 
 msgid "Duration:"
 msgstr "期間："
-
-msgid ""
-"Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
-"swap and dramatically reduces I/O under memory pressure."
-msgstr ""
 
 msgid "Enabling Zswap..."
 msgstr "スワップを有効にしています..."
@@ -161,23 +135,13 @@ msgid "Hello {0}, you have {1} messages"
 msgstr "こんにちは {0}、{1} メッセージあります"
 
 msgid "Hibernation"
-msgstr "ハイバーネーションの警告"
+msgstr "冬眠"
 
 msgid "Hibernation Warning"
-msgstr "ハイバーネーションの警告"
-
-#, fuzzy
-msgid ""
-"Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-msgstr "ハイバネーションが検出されませんでした — 推奨: {0} GiB"
+msgstr "休止状態警告"
 
 msgid "Hibernation not detected — recommended: {0} GiB"
 msgstr "ハイバネーションが検出されませんでした — 推奨: {0} GiB"
-
-msgid ""
-"How aggressively the kernel swaps — lower = stay in RAM longer (recommended: "
-"{0})"
-msgstr ""
 
 msgid "Idle ({0} GiB available)"
 msgstr "アイドル中（{0} GiB 使用可能）"
@@ -220,11 +184,6 @@ msgstr "オフ"
 
 msgid "On"
 msgstr "オン"
-
-msgid ""
-"Only store pages that compress to ≤ this % of original. Higher = more pages "
-"cached. Recommended: 90%"
-msgstr ""
 
 msgid "Optimal memory configuration"
 msgstr "最適なメモリ構成"
@@ -301,11 +260,6 @@ msgstr "使用中"
 msgid "Warning: This will consume system memory and may cause instability"
 msgstr "警告: システムメモリを消費し、システムが不安定になる可能性があります"
 
-msgid ""
-"When RAM is full the kernel may kill applications. Enable disk swap for a "
-"reliable safety net."
-msgstr ""
-
 msgid "Zram"
 msgstr "Zram"
 
@@ -315,26 +269,11 @@ msgstr "Zram デバイス"
 msgid "Zram and Zswap are both active"
 msgstr "ZramとZswapが両方とも有効です"
 
-msgid ""
-"Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
-msgstr ""
-"ZramとZswapは同時に有効にすることはできません。それぞれが独自の圧縮RAMプール"
-"を作成するため、両方を有効にするとCPUリソースが浪費され、メモリスラッシングに"
-"よる深刻なパフォーマンス低下を引き起こす可能性があります。どちらか一方は無効"
-"にしてください。"
-
 msgid "Zswap"
 msgstr "Zswap"
 
 msgid "default"
 msgstr "デフォルト"
-
-msgid ""
-"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires "
-"zswap restart."
-msgstr ""
 
 msgid "range"
 msgstr "範囲"
@@ -377,3 +316,36 @@ msgstr "Zramデバイスがありません。圧縮RAMを使用する仮想メ�
 
 #~ msgid "lzo-rle is fastest, zstd saves more space"
 #~ msgstr "lzo-rle が最も高速で、zstd の方がスペース節約効果が高い"
+
+msgid "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
+msgstr "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
+
+msgid "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or Zswap, not both."
+msgstr "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or Zswap, not both."
+
+msgid "Create a compressed RAM swap device for faster memory pressure handling."
+msgstr "Create a compressed RAM swap device for faster memory pressure handling."
+
+msgid "Disk swap is active with memory compression — your system is well-protected against memory pressure."
+msgstr "Disk swap is active with memory compression — your system is well-protected against memory pressure."
+
+msgid "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk swap and dramatically reduces I/O under memory pressure."
+msgstr "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk swap and dramatically reduces I/O under memory pressure."
+
+msgid "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
+msgstr "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
+
+msgid "How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})"
+msgstr "How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})"
+
+msgid "Only store pages that compress to ≤ this % of original. Higher = more pages cached. Recommended: 90%"
+msgstr "Only store pages that compress to ≤ this % of original. Higher = more pages cached. Recommended: 90%"
+
+msgid "When RAM is full the kernel may kill applications. Enable disk swap for a reliable safety net."
+msgstr "When RAM is full the kernel may kill applications. Enable disk swap for a reliable safety net."
+
+msgid "Zram and Zswap are mutually exclusive — each creates its own compressed RAM pool. Running both wastes CPU and can cause severe memory thrashing. Disable one of them."
+msgstr "Zram and Zswap are mutually exclusive — each creates its own compressed RAM pool. Running both wastes CPU and can cause severe memory thrashing. Disable one of them."
+
+msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
+msgstr "lz4 = 高速（推奨）、zstd = 最高の圧縮率、lzo = 旧規格。変更には zswap の再起動が必要です。"
