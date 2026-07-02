@@ -3,12 +3,13 @@
 //! Key design decisions:
 //! - llama.cpp stderr chatter is **fully suppressed** unless `verbose` is set.
 //!   This keeps stdout pure for Unix pipelines (`why | grep ...`).
-//! - Every user query is wrapped in a system prompt that enforces terse,
-//!   CLI-friendly output — no markdown, no pleasantries.
+//! - Prompts are formatted in the native Gemma 4 control-token schema
+//!   (`<|turn>user`, `<turn|>`, `<|turn>model`).  No Jinja template engine,
+//!   no system prompt — Gemma only supports `user` / `model` roles.
 //! - When input exceeds the context window, the **head** of the input is
-//!   truncated (keeping the system prompt and the tail), not a hard error.
-//!   Logs and diffs have their key info at the end; the user never sees a
-//!   "Prompt too long" bail-out.
+//!   truncated (keeping the tail), not a hard error.  Logs and diffs have
+//!   their key info at the end; the user never sees a "Prompt too long"
+//!   bail-out.
 //! - GPU offload is attempted first; if model loading fails (missing / broken
 //!   Vulkan driver), the engine automatically retries with CPU-only.
 
@@ -59,9 +60,10 @@ pub fn list_devices() -> anyhow::Result<()> {
 
 /// Run a single-turn chat completion, streaming tokens to stdout.
 ///
-/// The model is loaded from `model_path`, wrapped in a strict system prompt,
-/// and generated tokens are printed to stdout as they arrive. llama.cpp
-/// internal logs are suppressed unless `verbose` is true.
+/// The model is loaded from `model_path` and prompted with the native Gemma 4
+/// control-token format.  Generated tokens are printed to stdout as they
+/// arrive (with special-token suppression).  llama.cpp internal logs are
+/// suppressed unless `verbose` is true.
 ///
 /// If GPU offload fails (missing / broken driver), the function automatically
 /// retries with CPU-only.

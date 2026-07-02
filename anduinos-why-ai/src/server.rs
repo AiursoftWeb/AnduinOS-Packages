@@ -6,8 +6,8 @@
 //! - `POST /v1/chat/completions` — chat completions (streaming via SSE + non-streaming)
 //!
 //! The model is shared via `Arc<Mutex<LlamaModel>>`. Each request creates a
-//! fresh `LlamaContext` (cheap — ~1 ms for a 0.8B model with 8K window) and
-//! runs inference inside `spawn_blocking` so the tokio runtime stays responsive.
+//! fresh `LlamaContext` and runs inference inside `spawn_blocking` so the
+//! tokio runtime stays responsive.
 //!
 //! Streaming responses use proper SSE framing: multiple `data:` chunks
 //! separated by blank lines, terminated with `data: [DONE]\n\n`.
