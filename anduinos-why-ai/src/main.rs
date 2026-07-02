@@ -15,7 +15,6 @@
 //! Override with the `WHY_MODEL_PATH` environment variable.
 
 mod engine;
-mod server;
 
 use std::io::{self, IsTerminal, Read};
 use std::process;
@@ -95,7 +94,22 @@ fn main() -> anyhow::Result<()> {
 
     // --- serve mode ---------------------------------------------------------
     if cli.serve {
-        return server::serve(cli.port, cli.model.as_deref(), cli.cpu_only);
+        let model = cli.model.unwrap_or_else(|| {
+            "/usr/share/anduinos-why-ai/models/gemma-4-e2b-it-q4_k_m.gguf".into()
+        });
+
+        let mut cmd = std::process::Command::new("llama-server");
+        cmd.arg("-m").arg(&model)
+           .arg("--host").arg("127.0.0.1")
+           .arg("--port").arg(cli.port.to_string())
+           .arg("--no-webui");
+
+        if cli.cpu_only {
+            cmd.env("GGML_VULKAN", "0");
+        }
+
+        let status = cmd.status()?;
+        std::process::exit(status.code().unwrap_or(1));
     }
 
     // --- chat mode ----------------------------------------------------------
