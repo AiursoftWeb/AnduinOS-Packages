@@ -15,6 +15,7 @@
 use std::num::NonZeroU32;
 use std::pin::pin;
 use std::sync::{Arc, Mutex};
+use std::time::Instant;
 
 use anyhow::Context;
 use axum::{
@@ -97,6 +98,16 @@ pub fn serve(port: u16, model_path: Option<&str>, cpu_only: bool) -> anyhow::Res
     eprintln!("[why]   GET  /health");
     eprintln!("[why]   GET  /v1/models");
     eprintln!("[why]   POST /v1/chat/completions");
+    eprintln!("[why]");
+    eprintln!("[why] Try it:");
+    eprintln!("[why]   curl http://{}:{}/v1/chat/completions \\", "127.0.0.1", port);
+    eprintln!("[why]     -H \"Content-Type: application/json\" \\");
+    eprintln!("[why]     -d '{{");
+    eprintln!("[why]       \"model\": \"gemma-4-e2b\",");
+    eprintln!("[why]       \"messages\": [");
+    eprintln!("[why]         {{\"role\": \"user\", \"content\": \"why is the sky blue?\"}}");
+    eprintln!("[why]       ]");
+    eprintln!("[why]     }}'");
 
     let rt = tokio::runtime::Builder::new_multi_thread()
         .worker_threads(2)
@@ -134,7 +145,15 @@ async fn chat_handler(
     State(state): State<Arc<Mutex<AppState>>>,
     Json(req): Json<ChatCompletionRequest>,
 ) -> Result<Json<ChatCompletionResponse>, (StatusCode, Json<ErrorPayload>)> {
-    let _stream = req.stream.unwrap_or(false);
+    let started = Instant::now();
+    let stream = req.stream.unwrap_or(false);
+    let msg_count = req.messages.len();
+    let prompt_len: usize = req.messages.iter().map(|m| m.content.len()).sum();
+
+    eprintln!(
+        "[why] → chat | {} messages, {} chars total, stream={}",
+        msg_count, prompt_len, stream
+    );
 
     let result = tokio::task::spawn_blocking(move || {
         let guard = state
@@ -152,6 +171,13 @@ async fn chat_handler(
     .map_err(|e| internal_error(format!("spawn_blocking failed: {}", e)))?;
 
     let content = result.map_err(|e| internal_error(e))?;
+    let elapsed = started.elapsed();
+
+    eprintln!(
+        "[why] ← chat | {} chars response, {:.1}s",
+        content.len(),
+        elapsed.as_secs_f64()
+    );
 
     Ok(Json(ChatCompletionResponse {
         id: "chatcmpl-why-local".into(),
@@ -319,7 +345,42 @@ struct ChatCompletionRequest {
 #[derive(Debug, Deserialize)]
 struct IncomingMessage {
     role: String,
+    #[serde(deserialize_with = "deserialize_content")]
     content: String,
+}
+
+/// Accept `content` as either a plain string or an array of content parts
+/// (`[{"type":"text","text":"hello"}]`), as newer OpenAI clients emit.
+fn deserialize_content<'de, D>(d: D) -> Result<String, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    use serde::de;
+
+    struct ContentVisitor;
+    impl<'de> de::Visitor<'de> for ContentVisitor {
+        type Value = String;
+
+        fn expecting(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            f.write_str("a string or an array of content parts")
+        }
+
+        fn visit_str<E: de::Error>(self, s: &str) -> Result<String, E> {
+            Ok(s.to_owned())
+        }
+
+        fn visit_seq<A: de::SeqAccess<'de>>(self, mut seq: A) -> Result<String, A::Error> {
+            let mut text = String::new();
+            while let Some(part) = seq.next_element::<serde_json::Value>()? {
+                if let Some(t) = part.get("text").and_then(|v| v.as_str()) {
+                    text.push_str(t);
+                }
+            }
+            Ok(text)
+        }
+    }
+
+    d.deserialize_any(ContentVisitor)
 }
 
 #[derive(Debug, Serialize)]
