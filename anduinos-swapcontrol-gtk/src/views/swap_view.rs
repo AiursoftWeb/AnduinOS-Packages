@@ -4,7 +4,7 @@ use gtk::glib;
 use std::cell::RefCell;
 
 use crate::i18n::{i18n, i18n_fmt};
-use crate::swap::{swapfile, sysctl, hibernation, zswap};
+use crate::swap::{swapfile, sysctl, hibernation, zswap, persist};
 use crate::utils;
 use crate::widgets::usage_bar::UsageBar;
 
@@ -328,7 +328,24 @@ impl SwapView {
     fn toggle_zswap(&self, enable: bool) {
         let weak = self.downgrade();
         let msg = if enable { i18n("Enabling Zswap...") } else { i18n("Disabling Zswap...") };
-        let do_it = move || { if let Some(v) = weak.upgrade() { v.run_op(msg, move || { if enable { zswap::enable_zswap().map(|_| ()) } else { zswap::disable_zswap().map(|_| ()) } }); } };
+        let do_it = move || {
+            if let Some(v) = weak.upgrade() {
+                v.run_op(msg, move || {
+                    if enable {
+                        zswap::enable_zswap()?;
+                        // Persist with sensible defaults
+                        persist::persist_zswap(true, "lzo", 20, 90, true)
+                            .map(|_| ())
+                            .map_err(|e| e.to_string())
+                    } else {
+                        zswap::disable_zswap()?;
+                        persist::persist_zswap(false, "", 0, 0, false)
+                            .map(|_| ())
+                            .map_err(|e| e.to_string())
+                    }
+                });
+            }
+        };
         do_it();
     }
     fn toggle_swap(&self, enable: bool) {
@@ -395,6 +412,16 @@ impl SwapView {
                     }
                     if shrinker != orig_shrinker {
                         if let Err(e) = zswap::set_shrinker(shrinker) { errs.push(format!("Shrinker: {}", e)); }
+                    }
+                    // Persist zswap config so it survives reboot
+                    if let Ok(cfg) = zswap::read_zswap_config() {
+                        let _ = persist::persist_zswap(
+                            cfg.enabled,
+                            &cfg.compressor,
+                            cfg.max_pool_percent,
+                            cfg.accept_threshold_percent,
+                            cfg.shrinker_enabled,
+                        );
                     }
                     if errs.is_empty() { Ok(()) } else { Err(errs.join("\n")) }
                 });
