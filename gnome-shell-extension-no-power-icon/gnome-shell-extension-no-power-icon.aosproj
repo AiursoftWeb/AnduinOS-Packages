@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-no-power-icon</PackageName>
-    <PackageVersion>2.0.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS No Power Icon GNOME Shell extension (no-power-icon@anduinos)</PackageDescription>
     <Section>gnome</Section>
@@ -23,7 +23,7 @@
     <Dependency Include="gnome-shell" />
     <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
     <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
-    <IncludeFolder Include="deploy/no-power-icon@anduinos"
+    <IncludeFolder Include="assets/no-power-icon@anduinos"
                    Target="/usr/share/gnome-shell/extensions/no-power-icon@anduinos" />
   </ItemGroup>
 </Project>

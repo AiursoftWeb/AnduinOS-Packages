@@ -57,7 +57,7 @@ Before writing an `.aosproj`:
   </PropertyGroup>
   <ItemGroup>
     <Replaces>original-package-name</Replaces>
-    <IncludeFile Include="deploy/my-file.png" Target="/usr/share/.../original-file.png" />
+    <IncludeFile Include="assets/my-file.png" Target="/usr/share/.../original-file.png" />
   </ItemGroup>
 </Project>
 ```
@@ -75,7 +75,7 @@ Before writing an `.aosproj`:
     <UpstreamSuiteMapping>noble-addon=noble, ...</UpstreamSuiteMapping>
   </PropertyGroup>
   <ItemGroup>
-    <IncludeFile Include="deploy/noble/os-release" Target="/etc/os-release"
+    <IncludeFile Include="assets/noble/os-release" Target="/etc/os-release"
                  Condition="'$(Suite)' == 'noble-addon'" />
     ...
   </ItemGroup>
@@ -111,7 +111,7 @@ produces a genuinely distinct `.deb`. The SDK supports two build-time variables 
     ...
   </PropertyGroup>
   <ItemGroup>
-    <IncludeFolder Include="deploy/questing/tiling-assistant@leleat-on-github"
+    <IncludeFolder Include="assets/questing/tiling-assistant@leleat-on-github"
                    Target="/usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github"
                    Condition="'$(Suite)' == 'questing-addon'" />
     ...

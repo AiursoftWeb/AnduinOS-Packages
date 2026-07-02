@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>base-files</PackageName>
-    <PackageVersion>1:2.0.0+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>1:2.0.0+$(UpstreamVersion)-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS base files (derived from Ubuntu base-files)</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -24,56 +24,62 @@
 
   <ItemGroup>
     <!-- Branding: replace Ubuntu logos with AnduinOS logos -->
-    <IncludeFile Include="deploy/noble/ubuntu-logo-text.png" Target="/usr/share/pixmaps/ubuntu-logo-text.png"
+    <IncludeFile Include="assets/noble/ubuntu-logo-text.png" Target="/usr/share/pixmaps/ubuntu-logo-text.png"
                  Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFile Include="deploy/noble/ubuntu-logo-text-dark.png" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.png"
+    <IncludeFile Include="assets/noble/ubuntu-logo-text-dark.png" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.png"
                  Condition="'$(Suite)' == 'noble-addon'" />
 
-    <IncludeFile Include="deploy/questing/ubuntu-logo-text.png" Target="/usr/share/pixmaps/ubuntu-logo-text.png"
+    <IncludeFile Include="assets/questing/ubuntu-logo-text.png" Target="/usr/share/pixmaps/ubuntu-logo-text.png"
                  Condition="'$(Suite)' == 'questing-addon'" />
-    <IncludeFile Include="deploy/questing/ubuntu-logo-text-dark.png" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.png"
+    <IncludeFile Include="assets/questing/ubuntu-logo-text-dark.png" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.png"
                  Condition="'$(Suite)' == 'questing-addon'" />
 
-    <IncludeFile Include="deploy/resolute/ubuntu-logo-text.svg" Target="/usr/share/pixmaps/ubuntu-logo-text.svg"
+    <IncludeFile Include="assets/resolute/ubuntu-logo-text.svg" Target="/usr/share/pixmaps/ubuntu-logo-text.svg"
                  Condition="'$(Suite)' == 'resolute-addon'" />
-    <IncludeFile Include="deploy/resolute/ubuntu-logo-text-dark.svg" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.svg"
+    <IncludeFile Include="assets/resolute/ubuntu-logo-text-dark.svg" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.svg"
                  Condition="'$(Suite)' == 'resolute-addon'" />
     <!-- PNG versions needed for Plymouth watermark (watermark.png symlinks to ubuntu-logo-text-dark.png) -->
-    <IncludeFile Include="deploy/resolute/ubuntu-logo-text.png" Target="/usr/share/pixmaps/ubuntu-logo-text.png"
+    <IncludeFile Include="assets/resolute/ubuntu-logo-text.png" Target="/usr/share/pixmaps/ubuntu-logo-text.png"
                  Condition="'$(Suite)' == 'resolute-addon'" />
-    <IncludeFile Include="deploy/resolute/ubuntu-logo-text-dark.png" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.png"
+    <IncludeFile Include="assets/resolute/ubuntu-logo-text-dark.png" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.png"
                  Condition="'$(Suite)' == 'resolute-addon'" />
 
     <!-- System identity files (suite-specific) -->
-    <IncludeFile Include="deploy/noble/os-release" Target="/etc/os-release"
+    <IncludeFile Include="assets/noble/os-release" Target="/etc/os-release"
                  Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFile Include="deploy/questing/os-release" Target="/etc/os-release"
+    <IncludeFile Include="assets/questing/os-release" Target="/etc/os-release"
                  Condition="'$(Suite)' == 'questing-addon'" />
-    <IncludeFile Include="deploy/resolute/os-release" Target="/etc/os-release"
+    <IncludeFile Include="assets/resolute/os-release" Target="/etc/os-release"
                  Condition="'$(Suite)' == 'resolute-addon'" />
 
-    <IncludeFile Include="deploy/noble/lsb-release" Target="/etc/lsb-release"
+    <IncludeFile Include="assets/noble/lsb-release" Target="/etc/lsb-release"
                  Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFile Include="deploy/questing/lsb-release" Target="/etc/lsb-release"
+    <IncludeFile Include="assets/questing/lsb-release" Target="/etc/lsb-release"
                  Condition="'$(Suite)' == 'questing-addon'" />
-    <IncludeFile Include="deploy/resolute/lsb-release" Target="/etc/lsb-release"
+    <IncludeFile Include="assets/resolute/lsb-release" Target="/etc/lsb-release"
                  Condition="'$(Suite)' == 'resolute-addon'" />
 
-    <IncludeFile Include="deploy/noble/issue" Target="/etc/issue"
+    <IncludeFile Include="assets/noble/issue" Target="/etc/issue"
                  Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFile Include="deploy/questing/issue" Target="/etc/issue"
+    <IncludeFile Include="assets/questing/issue" Target="/etc/issue"
                  Condition="'$(Suite)' == 'questing-addon'" />
-    <IncludeFile Include="deploy/resolute/issue" Target="/etc/issue"
+    <IncludeFile Include="assets/resolute/issue" Target="/etc/issue"
                  Condition="'$(Suite)' == 'resolute-addon'" />
                  
-    <IncludeFile Include="deploy/noble/issue.net" Target="/etc/issue.net"
+    <IncludeFile Include="assets/noble/issue.net" Target="/etc/issue.net"
                  Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFile Include="deploy/questing/issue.net" Target="/etc/issue.net"
+    <IncludeFile Include="assets/questing/issue.net" Target="/etc/issue.net"
                  Condition="'$(Suite)' == 'questing-addon'" />
-    <IncludeFile Include="deploy/resolute/issue.net" Target="/etc/issue.net"
+    <IncludeFile Include="assets/resolute/issue.net" Target="/etc/issue.net"
                  Condition="'$(Suite)' == 'resolute-addon'" />
 
     <!-- legal: same across all suites -->
-    <IncludeFile Include="deploy/legal" Target="/etc/legal" />
+    <IncludeFile Include="assets/legal" Target="/etc/legal" />
+
+    <!-- MOTD: replace Ubuntu-branded / phone-home scripts with AnduinOS versions -->
+    <IncludeFile Include="assets/00-header" Target="/etc/update-motd.d/00-header" />
+    <IncludeFile Include="assets/10-help-text" Target="/etc/update-motd.d/10-help-text" />
+    <!-- No-op stub: disables Canonical's motd.ubuntu.com telemetry -->
+    <IncludeFile Include="assets/50-motd-news" Target="/etc/update-motd.d/50-motd-news" />
   </ItemGroup>
 </Project>

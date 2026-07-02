@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-templates</PackageName>
-    <PackageVersion>2.0.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Default file templates for new AnduinOS users (Text, Markdown)</PackageDescription>
     <Section>misc</Section>
@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <IncludeFile Include="deploy/Text.txt"    Target="/etc/skel/Templates/Text.txt" />
-    <IncludeFile Include="deploy/Markdown.md" Target="/etc/skel/Templates/Markdown.md" />
+    <IncludeFile Include="assets/Text.txt"    Target="/etc/skel/Templates/Text.txt" />
+    <IncludeFile Include="assets/Markdown.md" Target="/etc/skel/Templates/Markdown.md" />
   </ItemGroup>
 </Project>
