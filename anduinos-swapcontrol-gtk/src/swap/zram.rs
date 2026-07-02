@@ -91,12 +91,13 @@ pub fn get_available_algorithms() -> Vec<String> {
     }
 
     // Fallback: known algorithms from kernel config
+    // lz4 is the AnduinOS recommended default — fastest decompression for desktop workloads
     vec![
-        "lzo-rle".to_string(),
-        "lzo".to_string(),
         "lz4".to_string(),
         "lz4hc".to_string(),
         "zstd".to_string(),
+        "lzo-rle".to_string(),
+        "lzo".to_string(),
         "deflate".to_string(),
         "842".to_string(),
     ]

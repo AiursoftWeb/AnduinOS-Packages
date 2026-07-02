@@ -72,10 +72,10 @@ impl ZramView {
         {
             let total_ram = crate::swap::sysctl::read_total_ram().unwrap_or(32 * 1024 * 1024 * 1024);
             let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
-            let rec_mb = (total_ram / 4 / (1024 * 1024)) as u64; // 25%
+            let rec_mb = (total_ram / 2 / (1024 * 1024)) as u64; // 50%
             self.append(&gtk::Label::builder()
                 .use_markup(true)
-                .label(&i18n_fmt("<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>", &[&rec_mb.to_string(), &(rec_mb * 2).to_string(), &format!("{:.0}", ram_gb)]))
+                .label(&i18n_fmt("<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>", &[&rec_mb.to_string(), &format!("{:.0}", ram_gb)]))
                 .css_classes(["caption"]).halign(gtk::Align::Start).margin_start(2).build());
         }
 
@@ -185,14 +185,14 @@ impl ZramView {
 
         let total_ram = crate::swap::sysctl::read_total_ram().unwrap_or(32 * 1024 * 1024 * 1024);
         let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
-        let default_mb = (total_ram * 6 / 16 / (1024 * 1024)) as u64; // 37.5% of RAM
+        let default_mb = (total_ram / 2 / (1024 * 1024)) as u64; // 50% of RAM
         let max_mb = (total_ram / (1024 * 1024)) as u64;
 
         // ─── Simple view: hint + slider ────────────────────────────
         let hint = gtk::Label::builder()
             .label(&format!(
-                "{} MiB ({:.0}% of {:.0} GiB RAM — recommended)",
-                default_mb, (default_mb as f64 / (ram_gb * 1024.0) * 100.0).round(), ram_gb
+                "{} MiB (50% of {:.0} GiB RAM — recommended)",
+                default_mb, ram_gb
             ))
             .css_classes(["caption"]).halign(gtk::Align::Start)
             .margin_start(12).margin_end(12).build();
@@ -250,13 +250,13 @@ impl ZramView {
         algo_combo.connect_selected_item_notify(move |c| {
             let idx = c.selected() as usize;
             if let Some(n) = algos_cb.get(idx) {
-                at.set_text(if n == "lzo-rle" { "(Recommended)" } else { "" });
+                at.set_text(if n == "lz4" { "(Recommended)" } else { "" });
                 ai.set_text(algo_info_for(&n));
             }
         });
         // Init
         { let n = algos.get(0).map(|s| s.to_string()).unwrap_or_default();
-          algo_tag.set_text(if n == "lzo-rle" { "(Recommended)" } else { "" });
+          algo_tag.set_text(if n == "lz4" { "(Recommended)" } else { "" });
           algo_info.set_text(algo_info_for(&n)); }
 
         let algo_row = gtk::Box::builder().orientation(gtk::Orientation::Vertical).spacing(4).build();
