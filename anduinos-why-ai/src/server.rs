@@ -52,15 +52,37 @@ pub fn serve(port: u16, model_path: Option<&str>, cpu_only: bool) -> anyhow::Res
         "/usr/share/anduinos-why-ai/models/gemma-4-e2b-it-q4_k_m.gguf",
     );
 
+    // In CPU-only mode, skip Vulkan entirely — touching a broken Intel GPU
+    // after a DeviceLost crash will abort the process.
+    if cpu_only {
+        std::env::set_var("GGML_VULKAN", "0");
+    }
+
     let backend = LlamaBackend::init()?;
     let backend: &'static LlamaBackend = Box::leak(Box::new(backend));
 
-    let n_gpu_layers = if cpu_only { 0 } else { 1000 };
-    let model_params = LlamaModelParams::default().with_n_gpu_layers(n_gpu_layers);
-    let model_params = pin!(model_params);
-
-    let model = LlamaModel::load_from_file(backend, model_path, &model_params)
-        .with_context(|| format!("Failed to load model from {}", model_path))?;
+    let model = if cpu_only {
+        let params = LlamaModelParams::default().with_n_gpu_layers(0);
+        let params = pin!(params);
+        LlamaModel::load_from_file(backend, model_path, &params)
+            .with_context(|| format!("Failed to load model from {}", model_path))?
+    } else {
+        let gpu_params = LlamaModelParams::default().with_n_gpu_layers(1000);
+        let gpu_params = pin!(gpu_params);
+        match LlamaModel::load_from_file(backend, model_path, &gpu_params) {
+            Ok(m) => m,
+            Err(gpu_err) => {
+                eprintln!(
+                    "[why] GPU offload failed: {}. Retrying with CPU-only.",
+                    gpu_err
+                );
+                let params = LlamaModelParams::default().with_n_gpu_layers(0);
+                let params = pin!(params);
+                LlamaModel::load_from_file(backend, model_path, &params)
+                    .with_context(|| format!("Failed to load model from {}", model_path))?
+            }
+        }
+    };
 
     let app_state = Arc::new(Mutex::new(AppState { model, backend }));
 
