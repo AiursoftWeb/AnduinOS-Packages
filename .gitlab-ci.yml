@@ -323,6 +323,11 @@ anduinos-swapcontrol-gtk:
   variables:
     PACKAGE_DIR: anduinos-swapcontrol-gtk
 
+anduinos-why-ai:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-why-ai
+
 anduinos-gnome-shell-locale:
   extends: .publish
   variables:
