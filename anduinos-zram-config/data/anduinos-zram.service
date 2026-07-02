@@ -1,0 +1,19 @@
+# Managed by anduinos-zram-config. Do not edit manually.
+# This file provides the system default. User customizations made by
+# anduinos-swapcontrol-gtk are written to /etc/systemd/system/
+# which takes priority over this /usr/lib/systemd/system/ location.
+[Unit]
+Description=AnduinOS Zram Devices
+DefaultDependencies=no
+After=systemd-journald.socket
+Before=swap.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# Default: 50% of total RAM, lz4 compression, priority 100
+ExecStart=/usr/sbin/modprobe zram
+ExecStart=/bin/bash -c 'MEM=$(awk "/MemTotal/{printf \"%.0f\",$2/2048}" /proc/meminfo); DEV=$(/usr/sbin/zramctl -f -s ${MEM}M -a lz4) && /usr/sbin/mkswap $DEV && /usr/sbin/swapon -p 100 $DEV'
+
+[Install]
+WantedBy=multi-user.target
