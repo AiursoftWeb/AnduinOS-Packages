@@ -54,7 +54,6 @@ pub fn persist_zram(devices: &[(u64, String, i32)]) -> Result<String, String> {
          [Unit]\n\
          Description=AnduinOS Zram Devices\n\
          DefaultDependencies=no\n\
-         After=sysinit.target local-fs.target\n\
          Before=swap.target\n\n\
          [Service]\n\
          Type=oneshot\n\
@@ -95,7 +94,6 @@ pub fn persist_zswap(enabled: bool, compressor: &str, max_pool_percent: u8,
          [Unit]\n\
          Description=AnduinOS Zswap Configuration\n\
          DefaultDependencies=no\n\
-         After=sysinit.target local-fs.target systemd-journald.socket\n\
          Before=swap.target\n\n\
          [Service]\n\
          Type=oneshot\n\
