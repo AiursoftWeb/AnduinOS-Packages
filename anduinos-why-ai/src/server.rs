@@ -150,13 +150,13 @@ async fn chat_handler(
 
 // ── inference helper ─────────────────────────────────────────────────────────
 
-/// Build a Gemma-format prompt string from incoming chat messages.
+/// Build a Gemma 4-format prompt string from incoming chat messages.
 ///
-/// Gemma IT models use a fixed control-token schema with only two roles
+/// Gemma 4 IT models use pipe-style control tokens with only two roles
 /// (`user` and `model`).  System instructions are folded into the user turn.
 ///
-/// Format (from official Gemma docs):
-///   <start_of_turn>user\n{content}<end_of_turn>\n<start_of_turn>model\n
+/// Format (from official Gemma 4 docs):
+///   <|turn>user\n{content}<turn|>\n<|turn>model\n
 fn build_gemma_prompt(messages: &[IncomingMessage]) -> String {
     let mut result = String::new();
     let mut pending_system = String::new();
@@ -170,19 +170,19 @@ fn build_gemma_prompt(messages: &[IncomingMessage]) -> String {
                 pending_system.push_str(&msg.content);
             }
             "user" => {
-                result.push_str("<start_of_turn>user\n");
+                result.push_str("<|turn>user\n");
                 if !pending_system.is_empty() {
                     result.push_str(&pending_system);
                     result.push_str("\n\n");
                     pending_system.clear();
                 }
                 result.push_str(&msg.content);
-                result.push_str("<end_of_turn>\n");
+                result.push_str("<turn|>\n");
             }
             "assistant" | "model" => {
-                result.push_str("<start_of_turn>model\n");
+                result.push_str("<|turn>model\n");
                 result.push_str(&msg.content);
-                result.push_str("<end_of_turn>\n");
+                result.push_str("<turn|>\n");
             }
             _ => {} // ignore unknown roles
         }
@@ -195,7 +195,7 @@ fn build_gemma_prompt(messages: &[IncomingMessage]) -> String {
         .map(|m| m.role == "assistant" || m.role == "model")
         .unwrap_or(false);
     if !last_is_assistant {
-        result.push_str("<start_of_turn>model\n");
+        result.push_str("<|turn>model\n");
     }
 
     result

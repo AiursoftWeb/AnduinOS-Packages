@@ -112,16 +112,14 @@ pub fn chat(
         }
     };
 
-    // --- build Gemma prompt (exact format from official docs) --------------
-    // Gemma IT models use a fixed control-token schema:
-    //   <start_of_turn>user\n{message}<end_of_turn>\n<start_of_turn>model\n
+    // --- build Gemma 4 prompt (exact format from official docs) -------------
+    // Gemma 4 IT models use pipe-style control tokens:
+    //   <|turn>user\n{message}<turn|>\n<|turn>model\n
     //
-    // There is no "system" role — system-level instructions go inside the
-    // user turn.  We construct this string directly instead of relying on
-    // llama.cpp's Jinja template engine, which may produce subtly different
-    // whitespace that confuses the checkpoint.
+    // The model may emit a <|channel>thought … <channel|> reasoning block
+    // before the actual response; we strip that block in the output filter.
     let formatted_prompt = format!(
-        "<start_of_turn>user\n{}<end_of_turn>\n<start_of_turn>model\n",
+        "<|turn>user\n{}<turn|>\n<|turn>model\n",
         prompt
     );
 
@@ -237,20 +235,22 @@ pub fn chat(
     Ok(())
 }
 
-/// Known special tags (or prefixes thereof) that should never leak into
-/// stdout.  The list must be kept in sync with `strip_special_tokens`.
-/// Known suppressible tags.  Must be kept in sync with `strip_special_tokens`.
-///
-/// Gemma's only real control tokens are `<start_of_turn>` and `<end_of_turn>`.
-/// The `</…>` variants are **model hallucinations** (the checkpoint treats them
-/// like XML closing tags).  We suppress them so they never leak to stdout.
+/// Known suppressible control tokens.  Must be kept in sync with
+/// `strip_special_tokens`.
 const SUPPRESSIBLE_TAGS: &[&[u8]] = &[
+    // Legacy Gemma 2 / Qwen
     b"<think>",
     b"</think>",
     b"<end_of_turn>",
-    b"</end_of_turn>",      // hallucinated XML closing variant
+    b"</end_of_turn>",
     b"<start_of_turn>",
-    b"</start_of_turn>",    // hallucinated XML closing variant
+    b"</start_of_turn>",
+    // Gemma 4
+    b"<|channel>thought",
+    b"<channel|>",
+    b"<turn|>",
+    b"<|turn>",
+    b"<|think|>",
 ];
 
 /// Return the length of the prefix of `buf` that is "safe" to emit
@@ -265,16 +265,22 @@ fn safe_prefix_len(buf: &[u8]) -> usize {
         if buf[i] == b'<' {
             let rest = &buf[i..];
 
-            // --- <think>...</think> reasoning blocks ---------------------------
-            // When we see a full <think> we skip inline (so large reasoning
-            // blocks don't pile up in the buffer); when the closing </think> is
-            // absent we stop and wait for more tokens.
+            // --- <think>...</think> reasoning blocks (legacy / Qwen) ----------
             if rest.starts_with(b"<think>") {
                 if let Some(end) = find_subslice(rest, b"</think>") {
                     i += end + 8; // skip past </think>
                     continue;
                 }
-                return i; // incomplete <think> block — wait
+                return i; // incomplete block — wait
+            }
+
+            // --- <|channel>thought … <channel|> reasoning blocks (Gemma 4) ----
+            if rest.starts_with(b"<|channel>thought") {
+                if let Some(end) = find_subslice(rest, b"<channel|>") {
+                    i += end + b"<channel|>".len();
+                    continue;
+                }
+                return i; // incomplete block — wait
             }
 
             // --- any other known suppressible tag (or a partial match) --------
@@ -312,72 +318,89 @@ fn find_subslice(haystack: &[u8], needle: &[u8]) -> Option<usize> {
     haystack.windows(needle.len()).position(|w| w == needle)
 }
 
-/// Strip model-specific special tokens from output.
+/// Strip model-specific control tokens from output.
 ///
-/// Handles:
-/// - `<think>...</think>` blocks (Qwen3.5 reasoning)
-/// - `<end_of_turn>`, `<start_of_turn>user/model` (Gemma)
-/// - Orphaned `</think>` without a matching opener
-/// - Any `<...>` XML-like special-token artifacts at line boundaries.
+/// Handles legacy Gemma 2 (`<start_of_turn>`, `<end_of_turn>`), Qwen
+/// (`<think>…</think>`), and Gemma 4 (`<|turn>`, `<turn|>`,
+/// `<|channel>thought…<channel|>`).
 pub fn strip_special_tokens(bytes: &[u8]) -> Vec<u8> {
     let mut result = Vec::with_capacity(bytes.len());
-    let mut depth: u32 = 0;
+    let mut depth: u32 = 0; // suppress-depth for paired blocks
     let mut i = 0;
     while i < bytes.len() {
-        // Paired blocks: <think>...</think>
+        // --- <think>…</think> blocks (legacy / Qwen) --------------------------
         if bytes[i..].starts_with(b"<think>") {
             depth += 1;
-            i += 7;
+            i += b"<think>".len();
             continue;
         }
         if bytes[i..].starts_with(b"</think>") {
-            if depth > 0 {
-                depth -= 1;
-            }
-            // Always skip the tag — an orphaned </think> is still junk.
-            i += 8;
+            if depth > 0 { depth -= 1; }
+            i += b"</think>".len();
             continue;
         }
-        // Gemma turn markers (including hallucinated XML-style closing variants)
+
+        // --- <|channel>thought … <channel|> blocks (Gemma 4) ------------------
+        if bytes[i..].starts_with(b"<|channel>thought") {
+            depth += 1;
+            i += b"<|channel>thought".len();
+            continue;
+        }
+        if bytes[i..].starts_with(b"<channel|>") {
+            if depth > 0 { depth -= 1; }
+            i += b"<channel|>".len();
+            continue;
+        }
+
+        // --- Gemma 4 turn markers ---------------------------------------------
+        if bytes[i..].starts_with(b"<|turn>") {
+            // skip entire line (turn-start tags like <|turn>user, <|turn>model)
+            while i < bytes.len() && bytes[i] != b'\n' { i += 1; }
+            if i < bytes.len() { i += 1; }
+            continue;
+        }
+        if bytes[i..].starts_with(b"<turn|>") {
+            i += b"<turn|>".len();
+            continue;
+        }
+        if bytes[i..].starts_with(b"<|think|>") {
+            i += b"<|think|>".len();
+            continue;
+        }
+
+        // --- Legacy Gemma 2 turn markers --------------------------------------
         if bytes[i..].starts_with(b"<end_of_turn>") {
-            i += 13;
+            i += b"<end_of_turn>".len();
             continue;
         }
         if bytes[i..].starts_with(b"</end_of_turn>") {
-            i += 14;
+            i += b"</end_of_turn>".len();
             continue;
         }
         if bytes[i..].starts_with(b"<start_of_turn>") {
-            // skip until newline after the role
-            while i < bytes.len() && bytes[i] != b'\n' {
-                i += 1;
-            }
-            if i < bytes.len() { i += 1; } // skip the newline
+            while i < bytes.len() && bytes[i] != b'\n' { i += 1; }
+            if i < bytes.len() { i += 1; }
             continue;
         }
         if bytes[i..].starts_with(b"</start_of_turn>") {
-            i += 16;
+            i += b"</start_of_turn>".len();
             continue;
         }
-        // Generic: standalone <...> tag at line start (common for special tokens)
+
+        // --- Generic: standalone <...> tag at line start ----------------------
         if bytes[i] == b'<' && (i == 0 || bytes[i.saturating_sub(1)] == b'\n') {
             let start = i;
-            while i < bytes.len() && bytes[i] != b'>' {
-                i += 1;
-            }
+            while i < bytes.len() && bytes[i] != b'>' { i += 1; }
             if i < bytes.len() {
-                i += 1; // skip '>'
-                // If followed by newline, consume it too
+                i += 1;
                 if i < bytes.len() && bytes[i] == b'\n' { i += 1; }
-                // Only strip if it was a short tag (not actual content with < >)
                 if i - start <= 30 { continue; }
-                // Too long to be a special token; put back
                 result.extend_from_slice(&bytes[start..i]);
                 continue;
             }
-            // No closing '>' found — truncated tag at end of output; drop it.
-            break;
+            break; // truncated tag at end — drop
         }
+
         if depth == 0 {
             result.push(bytes[i]);
         }
