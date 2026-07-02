@@ -43,7 +43,11 @@ download_model() {
 
     echo "Downloading Gemma 4 E2B GGUF model (~3.1 GB)..."
     echo "URL: $MODEL_URL"
-    wget -q --show-progress "$MODEL_URL" -O "$MODEL_FILE.tmp"
+    if [[ -n "${CI:-}" ]]; then
+        wget -q "$MODEL_URL" -O "$MODEL_FILE.tmp"
+    else
+        wget -q --show-progress "$MODEL_URL" -O "$MODEL_FILE.tmp"
+    fi
 
     if [[ -n "$KNOWN_SHA256" ]]; then
         local actual
