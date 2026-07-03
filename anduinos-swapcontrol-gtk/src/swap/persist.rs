@@ -29,9 +29,10 @@ pub fn persist_zram(devices: &[(u64, String, i32)]) -> Result<String, String> {
 
     if devices.is_empty() {
         // Remove persistence
+        // Use mask to prevent the vendor default (/usr/lib) from resurrecting zram
         let _ = exec::run_helper("swapoff", &["/dev/zram0"]);
         let _ = exec::run_helper("zramctl", &["-r", "/dev/zram0"]);
-        let _ = exec::run_helper("systemctl", &["disable", "--now", "anduinos-zram.service"]);
+        let _ = exec::run_helper("systemctl", &["mask", "--now", "anduinos-zram.service"]);
         let _ = exec::run_helper("rm", &["-f", ZRAM_SERVICE]);
         let _ = exec::run_helper("systemctl", &["daemon-reload"]);
         return Ok("Zram persistence removed".to_string());
@@ -68,7 +69,8 @@ pub fn persist_zram(devices: &[(u64, String, i32)]) -> Result<String, String> {
     exec::write_sysfs(ZRAM_SERVICE, &unit)?;
 
     let _ = exec::run_helper("systemctl", &["daemon-reload"]);
-    let _ = exec::run_helper("systemctl", &["enable", "anduinos-zram.service"]);
+    let _ = exec::run_helper("systemctl", &["unmask", "anduinos-zram.service"]);
+    let _ = exec::run_helper("systemctl", &["enable", "--now", "anduinos-zram.service"]);
 
     Ok("Zram persistence enabled".to_string())
 }
@@ -82,7 +84,8 @@ pub fn persist_zswap(enabled: bool, compressor: &str, max_pool_percent: u8,
                      accept_threshold: u8, shrinker: bool) -> Result<String, String> {
     if !enabled {
         // Remove persistence
-        let _ = exec::run_helper("systemctl", &["disable", "--now", "anduinos-zswap.service"]);
+        // Use mask so it can't be started via any path
+        let _ = exec::run_helper("systemctl", &["mask", "--now", "anduinos-zswap.service"]);
         let _ = exec::run_helper("rm", &["-f", ZSWAP_SERVICE]);
         let _ = exec::run_helper("systemctl", &["daemon-reload"]);
         return Ok("Zswap persistence removed".to_string());
@@ -100,11 +103,11 @@ pub fn persist_zswap(enabled: bool, compressor: &str, max_pool_percent: u8,
          [Service]\n\
          Type=oneshot\n\
          RemainAfterExit=yes\n\
-         ExecStart=/usr/lib/anduinos-swapcontrol/helper tee /sys/module/zswap/parameters/enabled <<< \"1\"\n\
-         ExecStart=/usr/lib/anduinos-swapcontrol/helper tee /sys/module/zswap/parameters/compressor <<< \"{}\"\n\
-         ExecStart=/usr/lib/anduinos-swapcontrol/helper tee /sys/module/zswap/parameters/max_pool_percent <<< \"{}\"\n\
-         ExecStart=/usr/lib/anduinos-swapcontrol/helper tee /sys/module/zswap/parameters/accept_threshold_percent <<< \"{}\"\n\
-         ExecStart=/usr/lib/anduinos-swapcontrol/helper tee /sys/module/zswap/parameters/shrinker_enabled <<< \"{}\"\n\
+         ExecStart=/usr/lib/anduinos-swapcontrol/helper bash -c 'echo 1 > /sys/module/zswap/parameters/enabled'\n\
+         ExecStart=/usr/lib/anduinos-swapcontrol/helper bash -c 'echo \"{}\" > /sys/module/zswap/parameters/compressor'\n\
+         ExecStart=/usr/lib/anduinos-swapcontrol/helper bash -c 'echo \"{}\" > /sys/module/zswap/parameters/max_pool_percent'\n\
+         ExecStart=/usr/lib/anduinos-swapcontrol/helper bash -c 'echo \"{}\" > /sys/module/zswap/parameters/accept_threshold_percent'\n\
+         ExecStart=/usr/lib/anduinos-swapcontrol/helper bash -c 'echo \"{}\" > /sys/module/zswap/parameters/shrinker_enabled'\n\
          [Install]\n\
          WantedBy=multi-user.target\n",
         compressor, max_pool_percent, accept_threshold, shrinker_val
@@ -113,7 +116,8 @@ pub fn persist_zswap(enabled: bool, compressor: &str, max_pool_percent: u8,
     exec::write_sysfs(ZSWAP_SERVICE, &unit)?;
 
     let _ = exec::run_helper("systemctl", &["daemon-reload"]);
-    let _ = exec::run_helper("systemctl", &["enable", "anduinos-zswap.service"]);
+    let _ = exec::run_helper("systemctl", &["unmask", "anduinos-zswap.service"]);
+    let _ = exec::run_helper("systemctl", &["enable", "--now", "anduinos-zswap.service"]);
 
     Ok("Zswap persistence enabled".to_string())
 }
