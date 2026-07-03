@@ -333,6 +333,11 @@ anduinos-why-ai:
   variables:
     PACKAGE_DIR: anduinos-why-ai
 
+anduinos-why-placeholder:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-why-placeholder
+
 anduinos-gnome-shell-locale:
   extends: .publish
   variables:
