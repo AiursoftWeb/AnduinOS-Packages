@@ -28,12 +28,14 @@ pub fn persist_zram(devices: &[(u64, String, i32)]) -> Result<String, String> {
     // devices: Vec<(size_mb, algorithm, priority)>
 
     if devices.is_empty() {
-        // Remove persistence
-        // Use mask to prevent the vendor default (/usr/lib) from resurrecting zram
+        // Remove persistence.
+        // Order matters: rm first (remove the custom unit), then mask
+        // (create /dev/null symlink) so the vendor default in /usr/lib/
+        // doesn't resurrect on next boot.
         let _ = exec::run_helper("swapoff", &["/dev/zram0"]);
         let _ = exec::run_helper("zramctl", &["-r", "/dev/zram0"]);
-        let _ = exec::run_helper("systemctl", &["mask", "--now", "anduinos-zram.service"]);
         let _ = exec::run_helper("rm", &["-f", ZRAM_SERVICE]);
+        let _ = exec::run_helper("systemctl", &["mask", "--now", "anduinos-zram.service"]);
         let _ = exec::run_helper("systemctl", &["daemon-reload"]);
         return Ok("Zram persistence removed".to_string());
     }
@@ -83,10 +85,12 @@ pub fn persist_zram(devices: &[(u64, String, i32)]) -> Result<String, String> {
 pub fn persist_zswap(enabled: bool, compressor: &str, max_pool_percent: u8,
                      accept_threshold: u8, shrinker: bool) -> Result<String, String> {
     if !enabled {
-        // Remove persistence
-        // Use mask so it can't be started via any path
-        let _ = exec::run_helper("systemctl", &["mask", "--now", "anduinos-zswap.service"]);
+        // Remove persistence.
+        // Order matters: rm first (remove the custom unit), then mask
+        // (create /dev/null symlink) so zswap stays off regardless of
+        // any future vendor default.
         let _ = exec::run_helper("rm", &["-f", ZSWAP_SERVICE]);
+        let _ = exec::run_helper("systemctl", &["mask", "--now", "anduinos-zswap.service"]);
         let _ = exec::run_helper("systemctl", &["daemon-reload"]);
         return Ok("Zswap persistence removed".to_string());
     }
