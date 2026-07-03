@@ -157,8 +157,13 @@ fn main() -> anyhow::Result<()> {
            .arg("--ctx-size").arg(cli.context.to_string())
            .arg("--threads").arg(threads.to_string())
            .arg("--threads-batch").arg(threads_batch.to_string())
+           .arg("--temp").arg(cli.temperature.to_string())
+           .arg("--n-predict").arg(cli.max_tokens.to_string())
            .arg("--no-webui");
 
+        if cli.verbose {
+            cmd.arg("--verbose");
+        }
         if cli.cpu_only {
             cmd.env("GGML_VULKAN", "0");
         }
