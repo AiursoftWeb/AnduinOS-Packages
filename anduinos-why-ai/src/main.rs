@@ -54,13 +54,23 @@ struct Cli {
     #[arg(short = 't', long = "temp", default_value = "0.1")]
     temperature: f32,
 
-    /// Number of tokens to generate. Default: 1024.
-    #[arg(long, default_value = "1024")]
+    /// Context window size in tokens. Default: 32768.
+    #[arg(short = 'c', long, default_value = "32768")]
+    context: u32,
+
+    /// Number of tokens to generate. Default: 8192.
+    #[arg(long, default_value = "8192")]
     max_tokens: i32,
 
-    /// Number of CPU threads for inference. Default: auto-detect.
+    /// Number of CPU threads for token generation.
+    /// Default: (CPU cores - 1), minimum 1.
     #[arg(short = 'j', long)]
     threads: Option<i32>,
+
+    /// Number of CPU threads for prompt / batch processing.
+    /// Default: (CPU cores - 1), minimum 1.
+    #[arg(short = 'b', long)]
+    threads_batch: Option<i32>,
 
     /// List all compute devices detected by llama.cpp (GPU, CPU, …).
     #[arg(long)]
@@ -84,6 +94,13 @@ struct Cli {
 fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
+    // ── resolve thread defaults ─────────────────────────────────────────
+    let cpu_count = std::thread::available_parallelism()
+        .map(|n| n.get() as i32)
+        .unwrap_or(4);
+    let threads = cli.threads.unwrap_or((cpu_count - 1).max(1));
+    let threads_batch = cli.threads_batch.unwrap_or((cpu_count - 1).max(1));
+
     // Resolve prompt: --respond takes precedence over positional
     let prompt_text = cli.respond.unwrap_or(cli.prompt);
 
@@ -98,10 +115,48 @@ fn main() -> anyhow::Result<()> {
             "/usr/share/anduinos-why-ai/models/gemma-4-e2b-it-q4_k_m.gguf".into()
         });
 
+        let model_name = std::path::Path::new(&model)
+            .file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or("gemma-4-e2b-it-q4_k_m.gguf");
+
+        // ── startup banner ──────────────────────────────────────────────
+        let c = "\x1b[36m"; // cyan
+        let r = "\x1b[0m";  // reset
+        eprintln!(
+            "\n\
+             {c}┌──────────────────────────────────────────────────────────┐{r}\n\
+             {c}│{r}  🦙 llama-server starting on http://127.0.0.1:{}     {c}│{r}\n\
+             {c}│{r}  Model: {:<46} {c}│{r}\n\
+             {c}│{r}  Context: {:<5} tokens  Threads: gen={} batch={}       {c}│{r}\n\
+             {c}└──────────────────────────────────────────────────────────┘{r}\n\
+             \n\
+             {c}💡 Try it with Copilot CLI:{r}\n\
+             \n\
+               export COPILOT_PROVIDER_BASE_URL=\"http://127.0.0.1:{}/v1\"\n\
+               export COPILOT_MODEL=\"{}\"\n\
+               export COPILOT_PROVIDER_MAX_PROMPT_TOKENS={}\n\
+               export COPILOT_PROVIDER_MAX_OUTPUT_TOKENS={}\n\
+               copilot\n\
+             ",
+            cli.port,
+            model_name,
+            cli.context,
+            threads,
+            threads_batch,
+            cli.port,
+            model_name,
+            cli.context,
+            cli.max_tokens,
+        );
+
         let mut cmd = std::process::Command::new("llama-server");
         cmd.arg("-m").arg(&model)
            .arg("--host").arg("127.0.0.1")
            .arg("--port").arg(cli.port.to_string())
+           .arg("--ctx-size").arg(cli.context.to_string())
+           .arg("--threads").arg(threads.to_string())
+           .arg("--threads-batch").arg(threads_batch.to_string())
            .arg("--no-webui");
 
         if cli.cpu_only {
@@ -158,8 +213,10 @@ fn main() -> anyhow::Result<()> {
     engine::chat(
         &model_path,
         &prompt,
+        cli.context,
         cli.max_tokens,
-        cli.threads,
+        threads,
+        threads_batch,
         cli.temperature,
         cli.cpu_only,
         cli.verbose,

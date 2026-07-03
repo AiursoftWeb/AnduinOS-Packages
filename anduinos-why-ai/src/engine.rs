@@ -27,8 +27,6 @@ use llama_cpp_2::model::{AddBos, LlamaModel};
 use llama_cpp_2::sampling::LlamaSampler;
 use llama_cpp_2::{send_logs_to_tracing, LogOptions};
 
-const DEFAULT_N_CTX: u32 = 8192;
-
 // ── device listing ───────────────────────────────────────────────────────────
 
 /// Print all compute devices detected by llama.cpp.
@@ -70,8 +68,10 @@ pub fn list_devices() -> anyhow::Result<()> {
 pub fn chat(
     model_path: &str,
     prompt: &str,
+    n_ctx: u32,
     max_tokens: i32,
-    threads: Option<i32>,
+    threads: i32,
+    threads_batch: i32,
     temperature: f32,
     cpu_only: bool,
     verbose: bool,
@@ -138,7 +138,7 @@ pub fn chat(
         .str_to_token(&formatted_prompt, AddBos::Always)
         .with_context(|| "Failed to tokenize prompt")?;
 
-    let n_ctx = DEFAULT_N_CTX as i32;
+    let n_ctx = n_ctx as i32;
 
     // -- truncation instead of bail-out (logs/diffs have key info at tail) --
     let max_input_tokens = n_ctx as usize - max_tokens as usize - 10;
@@ -157,13 +157,12 @@ pub fn chat(
     // --- create context -----------------------------------------------------
     // n_batch / n_ubatch must be >= the largest single decode we'll ever issue.
     let batch_size = (tokens_list.len().max(512) as u32).min(n_ctx as u32);
-    let mut ctx_params = LlamaContextParams::default()
+    let ctx_params = LlamaContextParams::default()
         .with_n_ctx(Some(NonZeroU32::new(n_ctx as u32).unwrap()))
         .with_n_batch(batch_size)
-        .with_n_ubatch(batch_size);
-    if let Some(t) = threads {
-        ctx_params = ctx_params.with_n_threads(t).with_n_threads_batch(t);
-    }
+        .with_n_ubatch(batch_size)
+        .with_n_threads(threads)
+        .with_n_threads_batch(threads_batch);
 
     let mut ctx = model
         .new_context(&backend, ctx_params)
