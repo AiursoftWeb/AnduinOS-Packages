@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-zram-config</PackageName>
-    <PackageVersion>2.0.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Zram default configuration — enables compressed RAM swap (50% of RAM, lz4) on boot. The service file is installed to /usr/lib/systemd/system/ so user customizations made by anduinos-swapcontrol-gtk (written to /etc/systemd/system/) take priority without dpkg conflicts.</PackageDescription>
     <Section>admin</Section>
@@ -28,7 +28,8 @@
     <!-- Service file goes to /usr/lib (vendor default), not /etc (user/admin space).
          anduinos-swapcontrol-gtk writes its customizations to /etc/systemd/system/
          which overrides this file — no dpkg conffile conflicts. -->
-    <IncludeFile Include="data/anduinos-zram.service" Target="/usr/lib/systemd/system/anduinos-zram.service" />
+    <!-- SystemdUnit: auto-generates postinst (systemctl preset → enable) + prerm (stop) + postrm (disable) -->
+    <SystemdUnit Include="data/anduinos-zram.service" AutoEnable="true" UsePreset="true" />
     <!-- Preset enables the service on first boot / package install -->
     <IncludeFile Include="data/90-anduinos-zram.preset" Target="/usr/lib/systemd/system-preset/90-anduinos-zram.preset" />
   </ItemGroup>
