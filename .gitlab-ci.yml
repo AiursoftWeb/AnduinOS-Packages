@@ -332,6 +332,11 @@ anduinos-why-ai:
   extends: .publish
   variables:
     PACKAGE_DIR: anduinos-why-ai
+  cache:
+    key: anduinos-why-ai-model
+    paths:
+      - anduinos-why-ai/deploy/cache/
+    policy: pull-push
 
 anduinos-why-placeholder:
   extends: .publish
