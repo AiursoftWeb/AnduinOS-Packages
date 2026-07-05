@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-zram-config</PackageName>
-    <PackageVersion>2.0.0-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Zram default configuration — enables compressed RAM swap (50% of RAM, lz4) on boot. The service file is installed to /usr/lib/systemd/system/ so user customizations made by anduinos-swapcontrol-gtk (written to /etc/systemd/system/) take priority without dpkg conflicts.</PackageDescription>
     <Section>admin</Section>
