@@ -21,43 +21,22 @@ pub fn read_zswap_config() -> Result<ZswapConfig, String> {
     })
 }
 
-/// Check which compression algorithms are available in the running kernel.
-/// Reads /proc/crypto for loaded crypto modules.
+/// Known zswap-supported compression algorithms.
+/// These are crypto compression API names — they differ from kernel module names
+/// (e.g. module `lz4_compress` registers as `lz4`).
+/// /proc/crypto only lists async transforms, so we can't reliably probe
+/// availability.  `set_compressor()` handles modprobe + error reporting
+/// at selection time.
 pub fn get_available_compressors() -> Vec<String> {
-    let content = match fs::read_to_string(config::PROC_CRYPTO) {
-        Ok(c) => c,
-        Err(_) => return vec!["lz4".to_string()], // fallback: lz4 is the modern default
-    };
-
-    let mut compressors = Vec::new();
-
-    // zswap-supported algorithms and their /proc/crypto names
-    let candidates = [
-        ("lz4", "lz4"),
-        ("zstd", "zstd"),
-        ("lz4hc", "lz4hc"),
-        ("lzo", "lzo"),
-        ("deflate", "deflate"),
-        ("842", "842"),
-    ];
-
-    for (algo, crypto_name) in &candidates {
-        if content.contains(&format!("name         : {crypto_name}"))
-            || content.contains(&format!("driver       : {crypto_name}-"))
-        {
-            if !compressors.contains(&algo.to_string()) {
-                compressors.push(algo.to_string());
-            }
-        }
-    }
-
-    if compressors.is_empty() {
-        compressors.push("lz4".to_string()); // safe fallback: lz4 is the modern default
-    }
-
-    compressors.sort();
-    compressors.dedup();
-    compressors
+    vec![
+        "lz4".to_string(),
+        "zstd".to_string(),
+        "lz4hc".to_string(),
+        "lzo".to_string(),
+        "lzo-rle".to_string(),
+        "deflate".to_string(),
+        "842".to_string(),
+    ]
 }
 
 // ─── Internal sysfs helpers ──────────────────────────────────────────────────
@@ -92,21 +71,12 @@ pub fn disable_zswap() -> Result<String, String> {
 }
 
 /// Set the zswap compressor algorithm.
-/// Checks /proc/crypto first to warn if the module needs loading.
+/// Tries modprobe first in case the compression module isn't loaded yet
+/// (e.g. module `lz4_compress` registers as algorithm `lz4`).
+/// The kernel will reject the write if the algorithm is truly unsupported.
 pub fn set_compressor(algo: &str) -> Result<String, String> {
-    let available = get_available_compressors();
-    if !available.iter().any(|a| a == algo) {
-        // Try loading the compression module first
-        let _ = exec::run_modprobe(algo);
-        // Re-check
-        let available2 = get_available_compressors();
-        if !available2.iter().any(|a| a == algo) {
-            return Err(format!(
-                "Compressor '{}' is not available. Available: {}.",
-                algo, available2.join(", ")
-            ));
-        }
-    }
+    // Best-effort modprobe: the module name usually matches the algo name
+    let _ = exec::run_modprobe(algo);
     exec::write_sysfs(config::ZSWAP_COMPRESSOR, algo)
 }
 

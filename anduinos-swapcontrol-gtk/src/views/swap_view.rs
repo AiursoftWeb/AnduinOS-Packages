@@ -326,15 +326,26 @@ impl SwapView {
     }
 
     fn toggle_zswap(&self, enable: bool) {
+        let imp = self.imp();
         let weak = self.downgrade();
         let msg = if enable { i18n("Enabling Zswap...") } else { i18n("Disabling Zswap...") };
+
+        // Read current UI selections so we persist what the user sees
+        let comp = imp.compressor_dropdown.borrow().as_ref().and_then(|d| {
+            let idx = d.selected() as usize;
+            COMPRESSORS.get(idx).map(|s| s.to_string())
+        }).unwrap_or_else(|| "lz4".to_string());
+        let pool = imp.pool_scale.borrow().as_ref().map(|s| s.value() as u8).unwrap_or(20);
+        let thresh = imp.threshold_scale.borrow().as_ref().map(|s| s.value() as u8).unwrap_or(90);
+        let shrinker = imp.shrinker_switch.borrow().as_ref().map(|s| s.is_active()).unwrap_or(true);
+
         let do_it = move || {
             if let Some(v) = weak.upgrade() {
+                let comp = comp.clone();
                 v.run_op(msg, move || {
                     if enable {
                         zswap::enable_zswap()?;
-                        // Persist with sensible defaults
-                        persist::persist_zswap(true, "lzo", 20, 90, true)
+                        persist::persist_zswap(true, &comp, pool, thresh, shrinker)
                             .map(|_| ())
                             .map_err(|e| e.to_string())
                     } else {

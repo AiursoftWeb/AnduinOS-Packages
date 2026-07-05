@@ -14,7 +14,7 @@ case "$cmd" in
     modprobe)  /usr/sbin/modprobe "$@" ;;
     tee)       /usr/bin/tee "$@" ;;
     systemctl) /usr/bin/systemctl "$@" ;;
-    bash)      /bin/bash "$@" ;;
+    bash)      exec /bin/bash "$@" ;;
     dmidecode) /usr/sbin/dmidecode "$@" ;;
     *)         echo "Unknown command: $cmd" >&2; exit 1 ;;
 esac
