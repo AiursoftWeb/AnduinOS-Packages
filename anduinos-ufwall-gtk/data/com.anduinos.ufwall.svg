@@ -1,1 +1,31 @@
-<svg width="64" height="64" viewBox="0 0 16.933 16.933" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -280.07)"><path d="M8.45 281.654a17.984 16.236 0 0 0-6.333 1.048v4.17c.03 1.967.157 3.596 1.069 4.799 1.099 1.443 2.925 2.715 5.28 3.742 2.35-1.024 4.19-2.299 5.287-3.742.911-1.203 1.033-2.832 1.064-4.8v-4.145a17.984 16.236 0 0 0-6.366-1.072z" fill="#67d388" paint-order="markers stroke fill"/><path d="M8.467 281.655v13.758c2.35-1.024 4.188-2.299 5.286-3.742.912-1.203 1.033-2.832 1.064-4.8v-4.146a17.984 16.236 0 0 0-6.35-1.07z" opacity=".1"/><rect transform="rotate(45)" x="207.09" y="198.97" width="4.233" height=".794" ry="0" fill="#fff" paint-order="markers stroke fill"/><rect transform="rotate(-45)" x="-199.77" y="210.53" width="6.35" height=".794" ry="0" fill="#fff" paint-order="markers stroke fill"/></g></svg>
+<svg width="64" height="64" viewBox="0 0 16.933 16.933" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Brick wall pattern -->
+    <pattern id="brick" x="3.7" y="0.46" width="9.525" height="4.761" patternUnits="userSpaceOnUse">
+      <!-- Mortar background -->
+      <rect x="0" y="0" width="9.525" height="4.761" fill="#8b3a3a"/>
+      <!-- Full brick -->
+      <rect x="0.15" y="0.15" width="9.225" height="2.082" rx="0.24" fill="#c44d4d"/>
+      <rect x="0.15" y="0.15" width="9.225" height="2.082" rx="0.24" fill="#d45c5c" opacity=".6"/>
+      <!-- Half bricks (offset row) -->
+      <rect x="0.15" y="2.532" width="4.461" height="2.082" rx="0.24" fill="#b33e3e"/>
+      <rect x="0.15" y="2.532" width="4.461" height="2.082" rx="0.24" fill="#c44d4d" opacity=".6"/>
+      <rect x="4.911" y="2.532" width="4.461" height="2.082" rx="0.24" fill="#c44d4d"/>
+      <rect x="4.911" y="2.532" width="4.461" height="2.082" rx="0.24" fill="#d45c5c" opacity=".6"/>
+    </pattern>
+  </defs>
+
+  <g transform="translate(0 -280.07)">
+    <!-- Shield shape filled with brick pattern -->
+    <path d="M8.45 281.654a17.984 16.236 0 0 0-6.333 1.048v4.17c.03 1.967.157 3.596 1.069 4.799 1.099 1.443 2.925 2.715 5.28 3.742 2.35-1.024 4.19-2.299 5.287-3.742.911-1.203 1.033-2.832 1.064-4.8v-4.145a17.984 16.236 0 0 0-6.366-1.072z" fill="url(#brick)" paint-order="markers stroke fill"/>
+    <!-- Flame icon - scaled 70%, positioned lower-left -->
+    <g transform="translate(5.5, 291.5) scale(0.7)">
+      <!-- Outer flame (orange) -->
+      <path d="M0 -5.5 C3 -4.5 4.5 -1 4 3.5 C2.5 5 1 5.5 0 5.5 C-1 5.5 -2.5 5 -4 3.5 C-4.5 -1 -3 -4.5 0 -5.5 Z" fill="#ff6d00"/>
+      <!-- Inner flame (yellow) -->
+      <path d="M0 -3.5 C2 -2.5 3 -0.5 2.5 2 C1.5 3.5 0.5 4 0 4 C-0.5 4 -1.5 3.5 -2.5 2 C-3 -0.5 -2 -2.5 0 -3.5 Z" fill="#ffc107"/>
+      <!-- Flame core (white) -->
+      <path d="M0 -1.5 C1 -1 1.5 0 1.3 1.5 C0.8 2.3 0.3 2.5 0 2.5 C-0.3 2.5 -0.8 2.3 -1.3 1.5 C-1.5 0 -1 -1 0 -1.5 Z" fill="#fff" opacity=".8"/>
+    </g>
+  </g>
+</svg>

@@ -1,10 +1,47 @@
-<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
-  <rect width="128" height="128" rx="24" fill="#3584e4"/>
-  <!-- Chip/RAM-style icon: horizontal bars -->
-  <rect x="24" y="24" width="80" height="12" rx="3" fill="#ffffff" opacity="0.9"/>
-  <rect x="24" y="42" width="80" height="12" rx="3" fill="#ffffff" opacity="0.7"/>
-  <rect x="24" y="60" width="60" height="12" rx="3" fill="#ffffff" opacity="0.5"/>
-  <rect x="24" y="78" width="40" height="12" rx="3" fill="#62ffbc" opacity="0.8"/>
-  <!-- Arrow swap indicator -->
-  <path d="M98 64 L110 64 L104 56 M110 64 L104 72" stroke="#ffffff" stroke-width="2.5" fill="none" opacity="0.8"/>
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Chip body base - dark blue, like hwinfo's #388e3c -->
+  <rect x="6" y="6" width="52" height="52" rx="6" ry="6" fill="#1565c0"/>
+
+  <!-- Chip body highlight - lighter blue, like hwinfo's #43a047 -->
+  <path d="M12 6c-1.542 0-2.94.582-4 1.531v10.47l-2 2v2l3 3h38l7-8h4v-1h-4v-4l-8 9h-3l8-9V6H12zm4 31L6 45v3l6-4v2l-6 4h4v7.652c.626.22 1.297.348 2 .348h4V47l6-5h3l-6 5v11h33c3.324 0 6-2.676 6-6v-4.092L51 39h-2l-2-2H16z" fill="#1976d2"/>
+
+  <!-- Gold contact pins - same as hwinfo's gold bars -->
+  <path d="M21 20h2v24h-2zm4 0h2v24h-2zm4 0h2v24h-2zm4 0h2v24h-2zm4 0h2v24h-2zm4 0h2v24h-2z" fill="#fbc02d" fill-rule="evenodd"/>
+
+  <!-- Corner contact pads - gold -->
+  <g transform="translate(-5 3)">
+    <circle cx="58.5" cy="50.5" r="1.5" fill="#fbc02d"/>
+    <circle cx="58.5" cy="50.5" r=".5" fill="#1565c0"/>
+  </g>
+  <g transform="translate(-5 -1)">
+    <circle cx="58.5" cy="11.5" r="1.5" fill="#fbc02d"/>
+    <circle cx="58.5" cy="11.5" r=".5" fill="#1565c0"/>
+  </g>
+  <g transform="translate(5 3)">
+    <circle cx="5.5" cy="50.5" r="1.5" fill="#fbc02d"/>
+    <circle cx="5.5" cy="50.5" r=".5" fill="#1565c0"/>
+  </g>
+  <g transform="translate(.318 .049)">
+    <circle cx="10.182" cy="10.451" r="1.5" fill="#fbc02d"/>
+    <circle cx="10.182" cy="10.451" r=".5" fill="#1565c0"/>
+  </g>
+
+  <!-- Central chip die area -->
+  <rect x="17" y="22" width="30" height="20" rx="3" ry="3" fill="#0d47a1"/>
+
+  <!-- Small detail marks on the die -->
+  <rect x="19" y="24" width="3" height="1" rx=".3" fill="#fff" opacity=".3"/>
+  <rect x="23" y="24" width="5" height="1" rx=".3" fill="#fff" opacity=".2"/>
+  <rect x="35" y="24" width="5" height="1" rx=".3" fill="#fff" opacity=".2"/>
+  <rect x="41" y="24" width="3" height="1" rx=".3" fill="#fff" opacity=".3"/>
+
+  <!-- Label area - left side -->
+  <rect x="8" y="30" width="5" height="1" rx=".4" fill="#fff" opacity=".4"/>
+  <rect x="8" y="33" width="8" height="1" rx=".4" fill="#fff" opacity=".3"/>
+  <rect x="8" y="36" width="6" height="1" rx=".4" fill="#fff" opacity=".3"/>
+
+  <!-- Label area - right side -->
+  <rect x="51" y="30" width="5" height="1" rx=".4" fill="#fff" opacity=".4"/>
+  <rect x="48" y="33" width="8" height="1" rx=".4" fill="#fff" opacity=".3"/>
+  <rect x="50" y="36" width="6" height="1" rx=".4" fill="#fff" opacity=".3"/>
 </svg>
