@@ -13,7 +13,7 @@ Type=oneshot
 RemainAfterExit=yes
 # Default: 50% of total RAM, lz4 compression, priority 100
 ExecStart=/usr/sbin/modprobe zram
-ExecStart=/bin/bash -c 'MEM=$(awk "/MemTotal/{printf \"%.0f\",$2/2048}" /proc/meminfo); DEV=$(/usr/sbin/zramctl -f -s ${MEM}M -a lz4) && /usr/sbin/mkswap $DEV && /usr/sbin/swapon -p 100 $DEV'
+ExecStart=/usr/lib/anduinos-zram-config/setup-zram.sh
 
 [Install]
 WantedBy=multi-user.target
