@@ -77,7 +77,7 @@ def _make_pep(panel_pos: str, style: str, monitors: "list[str]") -> str:
             {"element": "centerBox",        "visible": True,  "position": "stackedTL"},
             {"element": "taskbar",          "visible": True,  "position": "centerMonitor"},
             {"element": "showAppsButton",   "visible": False, "position": "stackedTL"},
-            {"element": "activitiesButton", "visible": False, "position": "stackedBR"},
+            {"element": "activitiesButton", "visible": True, "position": "stackedBR"},
             {"element": "leftBox",          "visible": True,  "position": "stackedBR"},
             {"element": "rightBox",         "visible": True,  "position": "stackedBR"},
             {"element": "systemMenu",       "visible": True,  "position": "stackedBR"},
@@ -87,7 +87,7 @@ def _make_pep(panel_pos: str, style: str, monitors: "list[str]") -> str:
     elif style == 'eleven':
         # Centered: everything around centerMonitor, start button centered.
         elements = [
-            {"element": "activitiesButton", "visible": False, "position": "stackedTL"},
+            {"element": "activitiesButton", "visible": True, "position": "stackedTL"},
             {"element": "showAppsButton",   "visible": False, "position": "stackedTL"},
             {"element": "leftBox",          "visible": True,  "position": "stackedTL"},
             {"element": "centerBox",        "visible": True,  "position": "stackedBR"},
@@ -103,7 +103,7 @@ def _make_pep(panel_pos: str, style: str, monitors: "list[str]") -> str:
             {"element": "centerBox",        "visible": True,  "position": "stackedTL"},
             {"element": "taskbar",          "visible": True,  "position": "stackedTL"},
             {"element": "showAppsButton",   "visible": False, "position": "stackedTL"},
-            {"element": "activitiesButton", "visible": False, "position": "stackedBR"},
+            {"element": "activitiesButton", "visible": True, "position": "stackedBR"},
             {"element": "leftBox",          "visible": True,  "position": "stackedBR"},
             {"element": "rightBox",         "visible": True,  "position": "stackedBR"},
             {"element": "systemMenu",       "visible": True,  "position": "stackedBR"},
@@ -574,6 +574,34 @@ class PanelWidgetsPage(Adw.PreferencesPage):
             group.add(row)
 
         self.add(group)
+
+        # ── Activities button toggle ──
+        tb_group = Adw.PreferencesGroup()
+        tb_group.set_title(_('Taskbar Elements'))
+        tb_group.set_description(_('Show or hide built-in panel elements.'))
+
+        self.activities_row = Adw.SwitchRow()
+        self.activities_row.set_title(_('Show Activities Button'))
+        self.activities_row.set_subtitle(_('Display the Activities button on the taskbar'))
+        self.activities_row.set_active(_dconf_read(f'{ARC}/show-activities-button') != 'false')
+        self.activities_row.connect('notify::active', self._on_activities_toggle)
+        tb_group.add(self.activities_row)
+
+        self.add(tb_group)
+
+    def _on_activities_toggle(self, switch_row, pspec):
+        if self._busy:
+            return
+        visible = switch_row.get_active()
+        v = 'true' if visible else 'false'
+        try:
+            subprocess.run(['dconf', 'write', f'{ARC}/show-activities-button', v], check=True)
+            self.win._toast(_('✓ Activities button — {action}n').format(action=('shown' if visible else 'hidden')))
+        except subprocess.CalledProcessError:
+            self.win._toast(_('✗ Failed to toggle activities button'))
+            self._busy = True
+            switch_row.set_active(not visible)
+            self._busy = False
 
     def _on_toggle(self, switch_row, pspec, uuid, label):
         if self._busy:
