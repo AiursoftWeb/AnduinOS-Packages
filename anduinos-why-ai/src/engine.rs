@@ -181,14 +181,19 @@ pub fn chat(
     // --- generation loop ----------------------------------------------------
     let mut n_cur = batch.n_tokens();
 
+    let seed = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_nanos() as u32)
+        .unwrap_or(42);
+
     let mut sampler = if temperature <= 0.0 {
-        LlamaSampler::chain_simple([LlamaSampler::dist(1234), LlamaSampler::greedy()])
+        LlamaSampler::chain_simple([LlamaSampler::dist(seed), LlamaSampler::greedy()])
     } else {
         // NOTE: top_k/top_p/min_p trigger GGML_ASSERT failures in this
         // llama.cpp version across multiple architectures.
         // Use temperature-only until llama.cpp is updated.
         LlamaSampler::chain_simple([
-            LlamaSampler::dist(1234),
+            LlamaSampler::dist(seed),
             LlamaSampler::temp(temperature),
         ])
     };
