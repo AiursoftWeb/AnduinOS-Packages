@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-zram-config</PackageName>
-    <PackageVersion>2.0.0-4+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Zram default configuration — enables compressed RAM swap (50% of RAM, lz4) on boot. The service file is installed to /usr/lib/systemd/system/ so user customizations made by anduinos-swapcontrol-gtk (written to /etc/systemd/system/) take priority without dpkg conflicts.</PackageDescription>
     <Section>admin</Section>
@@ -33,5 +33,14 @@
     <!-- Preset enables the service on first boot / package install -->
     <IncludeFile Include="data/90-anduinos-zram.preset" Target="/usr/lib/systemd/system-preset/90-anduinos-zram.preset" />
     <IncludeFile Include="data/setup-zram.sh" Target="/usr/lib/anduinos-zram-config/setup-zram.sh" Mode="755" />
+    <!-- Zram-optimized sysctl: swappiness=100 prefers fast LZ4-compressed RAM over
+         dropping file cache; page-cluster=0 disables swap readahead (useless for RAM).
+         Installed as 30- so it overrides 20-anduinos-tweaks.conf from system-tweaks. -->
+    <IncludeFile Include="data/30-anduinos-zram.conf" Target="/etc/sysctl.d/30-anduinos-zram.conf" />
+    <!-- Reload sysctl after install so swappiness=100 takes effect immediately -->
+    <PostInstallScript Include="scripts/postinst.sh" />
+    <!-- Reload sysctl after removal: falls back to system-tweaks (swappiness=10)
+         or kernel default (60) if system-tweaks is also removed -->
+    <PostRemoveScript Include="scripts/postrm.sh" />
   </ItemGroup>
 </Project>
