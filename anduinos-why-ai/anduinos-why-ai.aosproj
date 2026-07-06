@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-why-ai</PackageName>
-    <PackageVersion>0.1.4+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.1.5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>why — a fully offline, zero-daemon LLM CLI backed by a bundled Qwen3.5 0.8B model. Ask questions in plain text, pipe in context from stdin, or run --serve for an OpenAI-compatible HTTP API.</PackageDescription>
     <Section>utils</Section>
@@ -15,6 +15,7 @@
     <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
     <Conflicts>anduinos-why-placeholder</Conflicts>
     <Replaces>anduinos-why-placeholder</Replaces>
+    <Provides>anduinos-why-placeholder</Provides>
   </PropertyGroup>
 
   <ItemGroup>
