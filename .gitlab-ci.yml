@@ -323,10 +323,10 @@ anduinos-swapcontrol-gtk:
   variables:
     PACKAGE_DIR: anduinos-swapcontrol-gtk
 
-anduinos-zram-config:
+anduinos-swap-config:
   extends: .publish
   variables:
-    PACKAGE_DIR: anduinos-zram-config
+    PACKAGE_DIR: anduinos-swap-config
 
 anduinos-why-ai:
   extends: .publish
@@ -475,7 +475,7 @@ anduinos-desktop:
     - anduinos-software-properties-common
     - anduinos-software-properties-gtk
     - anduinos-no-snapd
-    - anduinos-zram-config
+    - anduinos-swap-config
     - anduinos-desktop-apps
   variables:
     PACKAGE_DIR: anduinos-desktop

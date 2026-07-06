@@ -1,7 +1,7 @@
 use adw::prelude::*;
 use adw::subclass::prelude::*;
-use gtk::glib;
 use gtk::gio;
+use gtk::glib;
 
 use crate::config;
 use crate::window::SwapcontrolWindow;

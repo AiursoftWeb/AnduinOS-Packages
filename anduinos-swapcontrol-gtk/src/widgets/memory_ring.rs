@@ -1,7 +1,7 @@
 use adw::subclass::prelude::*;
-use gtk::prelude::*;
-use gtk::glib;
 use gtk::cairo;
+use gtk::glib;
+use gtk::prelude::*;
 use std::cell::RefCell;
 
 #[derive(Clone, Default)]

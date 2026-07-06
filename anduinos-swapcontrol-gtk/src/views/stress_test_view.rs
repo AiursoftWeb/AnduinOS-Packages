@@ -2,12 +2,12 @@ use adw::prelude::*;
 use adw::subclass::prelude::*;
 use gtk::glib;
 use std::cell::RefCell;
-use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 use std::time::Duration;
 
 use crate::i18n::i18n;
-use crate::swap::{sysctl, stress};
+use crate::swap::{stress, sysctl};
 
 mod imp {
     use super::*;
@@ -103,7 +103,9 @@ impl StressTestView {
         );
         inner.append(
             &gtk::Label::builder()
-                .label(&i18n("Simulate memory pressure to test swap and OOM behavior"))
+                .label(&i18n(
+                    "Simulate memory pressure to test swap and OOM behavior",
+                ))
                 .css_classes(["caption"])
                 .halign(gtk::Align::Start)
                 .margin_start(2)
@@ -154,7 +156,9 @@ impl StressTestView {
             .build();
         banner_text.append(
             &gtk::Label::builder()
-                .label(&i18n("Warning: This will consume system memory and may cause instability"))
+                .label(&i18n(
+                    "Warning: This will consume system memory and may cause instability",
+                ))
                 .css_classes(["heading"])
                 .halign(gtk::Align::Start)
                 .wrap(true)
@@ -162,7 +166,9 @@ impl StressTestView {
         );
         banner_text.append(
             &gtk::Label::builder()
-                .label(&i18n("Ensure important work is saved before running this test."))
+                .label(&i18n(
+                    "Ensure important work is saved before running this test.",
+                ))
                 .css_classes(["caption"])
                 .halign(gtk::Align::Start)
                 .build(),
@@ -509,7 +515,13 @@ impl StressTestView {
         let tx_thread = tx.clone();
         let cancel_thread = cancel.clone();
         std::thread::spawn(move || {
-            stress::run_stress_test(target_bytes, hold_secs, growth_rate, cancel_thread, tx_thread);
+            stress::run_stress_test(
+                target_bytes,
+                hold_secs,
+                growth_rate,
+                cancel_thread,
+                tx_thread,
+            );
         });
         drop(tx); // only the spawned thread holds a sender now
 

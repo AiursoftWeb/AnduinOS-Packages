@@ -46,7 +46,12 @@ pub fn read_ram_info_full() -> RamInfo {
 
     let output = std::process::Command::new("pkexec")
         .env("LC_ALL", "C")
-        .args(["/usr/lib/anduinos-swapcontrol/helper", "dmidecode", "-t", "memory"])
+        .args([
+            "/usr/lib/anduinos-swapcontrol/helper",
+            "dmidecode",
+            "-t",
+            "memory",
+        ])
         .output();
 
     let text = match output {
@@ -70,10 +75,14 @@ fn parse_dmidecode(info: &mut RamInfo, text: &str) {
 
         if line.starts_with("Memory Device") || line.starts_with("Physical Memory Array") {
             if let Some(dimm) = current_dimm.take() {
-                if dimm.size_gb > 0 { info.dimms.push(dimm); }
+                if dimm.size_gb > 0 {
+                    info.dimms.push(dimm);
+                }
             }
             in_memory_device = line.starts_with("Memory Device");
-            if in_memory_device { current_dimm = Some(DimmInfo::default()); }
+            if in_memory_device {
+                current_dimm = Some(DimmInfo::default());
+            }
             continue;
         }
 
@@ -85,42 +94,78 @@ fn parse_dmidecode(info: &mut RamInfo, text: &str) {
         }
 
         if let Some(dimm) = current_dimm.as_mut() {
-            if let Some(val) = parse_kv(line, "Locator:") { dimm.locator = val.to_string(); }
+            if let Some(val) = parse_kv(line, "Locator:") {
+                dimm.locator = val.to_string();
+            }
             if let Some(val) = parse_kv(line, "Size:") {
                 if val != "No Module Installed" && val != "None" {
                     dimm.size_gb = parse_size_to_gb(val);
                 }
             }
             if let Some(val) = parse_kv(line, "Type:") {
-                if val != "Unknown" && info.ram_type.is_empty() { info.ram_type = val.to_string(); }
+                if val != "Unknown" && info.ram_type.is_empty() {
+                    info.ram_type = val.to_string();
+                }
             }
             if let Some(val) = parse_kv(line, "Speed:") {
-                dimm.speed_mts = val.split_whitespace().next().unwrap_or("0").parse().unwrap_or(0);
-                if info.speed_mts == 0 { info.speed_mts = dimm.speed_mts; }
+                dimm.speed_mts = val
+                    .split_whitespace()
+                    .next()
+                    .unwrap_or("0")
+                    .parse()
+                    .unwrap_or(0);
+                if info.speed_mts == 0 {
+                    info.speed_mts = dimm.speed_mts;
+                }
             }
             if let Some(val) = parse_kv(line, "Manufacturer:") {
-                if dimm.manufacturer.is_empty() { dimm.manufacturer = val.to_string(); }
-                if info.manufacturer.is_empty() { info.manufacturer = dimm.manufacturer.clone(); }
+                if dimm.manufacturer.is_empty() {
+                    dimm.manufacturer = val.to_string();
+                }
+                if info.manufacturer.is_empty() {
+                    info.manufacturer = dimm.manufacturer.clone();
+                }
             }
-            if let Some(val) = parse_kv(line, "Form Factor:") { dimm.form_factor = val.to_string(); }
-            if let Some(val) = parse_kv(line, "Part Number:") { dimm.part_number = val.to_string(); }
+            if let Some(val) = parse_kv(line, "Form Factor:") {
+                dimm.form_factor = val.to_string();
+            }
+            if let Some(val) = parse_kv(line, "Part Number:") {
+                dimm.part_number = val.to_string();
+            }
             if let Some(val) = parse_kv(line, "Type Detail:") {
-                if info.ram_type.is_empty() { info.ram_type = val.to_string(); }
+                if info.ram_type.is_empty() {
+                    info.ram_type = val.to_string();
+                }
             }
         }
     }
     if let Some(dimm) = current_dimm.take() {
-        if dimm.size_gb > 0 { info.dimms.push(dimm); }
+        if dimm.size_gb > 0 {
+            info.dimms.push(dimm);
+        }
     }
 }
 
 fn parse_kv<'a>(line: &'a str, key: &str) -> Option<&'a str> {
     let rest = line.strip_prefix(key)?;
     let val = rest.trim();
-    if val.is_empty() || val == "None" || val == "Unknown" || val == "<OUT OF SPEC>" { None } else { Some(val) }
+    if val.is_empty() || val == "None" || val == "Unknown" || val == "<OUT OF SPEC>" {
+        None
+    } else {
+        Some(val)
+    }
 }
 
 fn parse_size_to_gb(s: &str) -> u32 {
-    let num: u32 = s.split_whitespace().next().unwrap_or("0").parse().unwrap_or(0);
-    if s.contains("MB") { num / 1024 } else { num }
+    let num: u32 = s
+        .split_whitespace()
+        .next()
+        .unwrap_or("0")
+        .parse()
+        .unwrap_or(0);
+    if s.contains("MB") {
+        num / 1024
+    } else {
+        num
+    }
 }

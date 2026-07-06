@@ -4,8 +4,8 @@
 //! memory pressure.  Every page is touched during initialisation so the
 //! kernel is forced to back it with physical RAM (or swap).
 
-use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 /// Progress event sent from the allocation thread to the UI.

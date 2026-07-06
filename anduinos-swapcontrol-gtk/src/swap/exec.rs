@@ -23,7 +23,11 @@ pub fn run_helper(subcmd: &str, args: &[&str]) -> Result<String, String> {
         if output.status.code() == Some(126) {
             Err("Authentication cancelled".to_string())
         } else {
-            let msg = if stderr.is_empty() { stdout.to_string() } else { stderr.to_string() };
+            let msg = if stderr.is_empty() {
+                stdout.to_string()
+            } else {
+                stderr.to_string()
+            };
             Err(msg.trim().to_string())
         }
     }
@@ -31,8 +35,8 @@ pub fn run_helper(subcmd: &str, args: &[&str]) -> Result<String, String> {
 
 /// Write a value to a file via the helper's `tee` subcommand.
 pub fn write_sysfs(path: &str, value: &str) -> Result<String, String> {
-    use std::process::Stdio;
     use std::io::Write;
+    use std::process::Stdio;
 
     let mut child = Command::new("pkexec")
         .env("LC_ALL", "C")
@@ -50,7 +54,8 @@ pub fn write_sysfs(path: &str, value: &str) -> Result<String, String> {
         let _ = stdin.write_all(b"\n");
     }
 
-    let output = child.wait_with_output()
+    let output = child
+        .wait_with_output()
         .map_err(|e| format!("Failed to wait on pkexec: {e}"))?;
 
     if output.status.success() {
@@ -63,9 +68,4 @@ pub fn write_sysfs(path: &str, value: &str) -> Result<String, String> {
             Err(stderr.trim().to_string())
         }
     }
-}
-
-/// Load a kernel module.
-pub fn run_modprobe(module: &str) -> Result<String, String> {
-    run_helper("modprobe", &[module])
 }

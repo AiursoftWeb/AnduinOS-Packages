@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 use std::fs;
 
-use crate::config;
 use super::exec;
+use crate::config;
 
 /// Read our sysctl config file, returning key-value pairs.
 /// Returns an empty map if the file doesn't exist yet.

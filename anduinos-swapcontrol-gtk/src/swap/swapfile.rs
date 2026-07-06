@@ -24,24 +24,22 @@ pub fn read_swap_status() -> Result<SwapStatus, String> {
             let is_swapfile = path == crate::config::SWAPFILE_PATH;
             if is_swapfile || (status.path.is_empty() && !path.contains("zram")) {
                 status.path = path.clone();
-                status.size_bytes = parts[2]
-                    .parse::<u64>()
-                    .map(|kb| kb * 1024)
-                    .unwrap_or(0);
-                status.used_bytes = parts[3]
-                    .parse::<u64>()
-                    .map(|kb| kb * 1024)
-                    .unwrap_or(0);
+                status.size_bytes = parts[2].parse::<u64>().map(|kb| kb * 1024).unwrap_or(0);
+                status.used_bytes = parts[3].parse::<u64>().map(|kb| kb * 1024).unwrap_or(0);
                 status.priority = parts[4].parse::<i32>().unwrap_or(0);
                 status.active = true;
-                if is_swapfile { break; }
+                if is_swapfile {
+                    break;
+                }
             }
         }
     }
 
     // Double-check: is the swapfile still a valid file?
     if !status.path.is_empty() {
-        if !Path::new(crate::config::SWAPFILE_PATH).exists() && status.path == crate::config::SWAPFILE_PATH {
+        if !Path::new(crate::config::SWAPFILE_PATH).exists()
+            && status.path == crate::config::SWAPFILE_PATH
+        {
             status.active = false;
         }
     }
@@ -72,10 +70,16 @@ pub fn resize_swapfile(new_size_gb: u64) -> Result<String, String> {
     let count = (new_size_gb * 1024).to_string();
 
     let _ = exec::run_helper("swapoff", &[path]);
-    exec::run_helper("dd", &[
-        "if=/dev/zero", &format!("of={path}"), "bs=1M",
-        &format!("count={count}"), "status=none"
-    ])?;
+    exec::run_helper(
+        "dd",
+        &[
+            "if=/dev/zero",
+            &format!("of={path}"),
+            "bs=1M",
+            &format!("count={count}"),
+            "status=none",
+        ],
+    )?;
     exec::run_helper("chmod", &["600", path])?;
     exec::run_helper("mkswap", &[path])?;
     exec::run_helper("swapon", &[path])

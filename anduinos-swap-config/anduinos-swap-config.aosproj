@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
-    <PackageName>anduinos-zram-config</PackageName>
-    <PackageVersion>2.0.0-5+$(SuiteShortName)</PackageVersion>
+    <PackageName>anduinos-swap-config</PackageName>
+    <PackageVersion>2.0.0-7+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>AnduinOS Zram default configuration — enables compressed RAM swap (50% of RAM, lz4) on boot. The service file is installed to /usr/lib/systemd/system/ so user customizations made by anduinos-swapcontrol-gtk (written to /etc/systemd/system/) take priority without dpkg conflicts.</PackageDescription>
+    <PackageDescription>AnduinOS Swap default configuration — enables 50%-of-RAM lz4 zram and swappiness=100 on boot. Zswap support is installed but remains opt-in via the GUI. Services are installed to /usr/lib/systemd/system/ so anduinos-swapcontrol-gtk controls them via declarative config files without dpkg conflicts.</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
@@ -13,6 +13,9 @@
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
     <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
+    <Provides>anduinos-zram-config</Provides>
+    <Replaces>anduinos-zram-config</Replaces>
+    <Conflicts>anduinos-zram-config</Conflicts>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,18 +28,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Service file goes to /usr/lib (vendor default), not /etc (user/admin space).
-         anduinos-swapcontrol-gtk writes its customizations to /etc/systemd/system/
-         which overrides this file — no dpkg conffile conflicts. -->
+    <!-- Zram service: creates compressed RAM swap devices at boot.
+         Installed to /usr/lib (vendor default) — the GUI controls behavior
+         by writing /etc/default/anduinos-zram, never by overriding this unit. -->
     <!-- SystemdUnit: auto-generates postinst (systemctl preset → enable) + prerm (stop) + postrm (disable) -->
     <SystemdUnit Include="data/anduinos-zram.service" AutoEnable="true" UsePreset="true" />
-    <!-- Preset enables the service on first boot / package install -->
-    <IncludeFile Include="data/90-anduinos-zram.preset" Target="/usr/lib/systemd/system-preset/90-anduinos-zram.preset" />
-    <IncludeFile Include="data/setup-zram.sh" Target="/usr/lib/anduinos-zram-config/setup-zram.sh" Mode="755" />
-    <!-- Zram-optimized sysctl: swappiness=100 prefers fast LZ4-compressed RAM over
+    <!-- Zswap service: configures kernel zswap parameters when the user enables it.
+         Same config-driven pattern: GUI writes /etc/default/anduinos-zswap. -->
+    <SystemdUnit Include="data/anduinos-zswap.service" AutoEnable="true" UsePreset="true" />
+    <!-- Preset enables zram by default; zswap stays opt-in -->
+    <IncludeFile Include="data/90-anduinos-swap.preset" Target="/usr/lib/systemd/system-preset/90-anduinos-swap.preset" />
+    <IncludeFile Include="data/setup-zram.sh" Target="/usr/lib/anduinos-swap-config/setup-zram.sh" Mode="755" />
+    <IncludeFile Include="data/setup-zswap.sh" Target="/usr/lib/anduinos-swap-config/setup-zswap.sh" Mode="755" />
+    <!-- Sysctl optimized for zram: swappiness=100 prefers fast LZ4-compressed RAM over
          dropping file cache; page-cluster=0 disables swap readahead (useless for RAM).
          Installed as 30- so it overrides 20-anduinos-tweaks.conf from system-tweaks. -->
-    <IncludeFile Include="data/30-anduinos-zram.conf" Target="/etc/sysctl.d/30-anduinos-zram.conf" />
+    <IncludeFile Include="data/30-anduinos-swap.conf" Target="/etc/sysctl.d/30-anduinos-swap.conf" />
     <!-- Reload sysctl after install so swappiness=100 takes effect immediately -->
     <PostInstallScript Include="scripts/postinst.sh" />
     <!-- Reload sysctl after removal: falls back to system-tweaks (swappiness=10)

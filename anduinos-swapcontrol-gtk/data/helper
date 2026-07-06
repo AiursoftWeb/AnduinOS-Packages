@@ -10,11 +10,9 @@ case "$cmd" in
     chmod)     /usr/bin/chmod "$@" ;;
     rm)        /usr/bin/rm "$@" ;;
     sysctl)    /usr/sbin/sysctl "$@" ;;
-    zramctl)   /usr/sbin/zramctl "$@" ;;
     modprobe)  /usr/sbin/modprobe "$@" ;;
     tee)       /usr/bin/tee "$@" ;;
     systemctl) /usr/bin/systemctl "$@" ;;
-    bash)      exec /bin/bash "$@" ;;
     dmidecode) /usr/sbin/dmidecode "$@" ;;
     *)         echo "Unknown command: $cmd" >&2; exit 1 ;;
 esac

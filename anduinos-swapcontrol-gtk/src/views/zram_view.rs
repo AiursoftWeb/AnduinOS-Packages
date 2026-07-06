@@ -3,7 +3,7 @@ use adw::subclass::prelude::*;
 use gtk::glib;
 
 use crate::i18n::{i18n, i18n_fmt};
-use crate::swap::{zram, persist};
+use crate::swap::{persist, zram};
 use crate::utils;
 use crate::widgets::usage_bar::UsageBar;
 
@@ -61,22 +61,40 @@ impl ZramView {
         self.set_vexpand(true);
 
         // Title
-        self.append(&gtk::Label::builder()
-            .label(&i18n("Zram Devices"))
-            .css_classes(["title-1"]).halign(gtk::Align::Start).build());
-        self.append(&gtk::Label::builder()
-            .label(&i18n("Compressed RAM block device — fast in-memory swap"))
-            .css_classes(["caption"]).halign(gtk::Align::Start).margin_start(2).build());
+        self.append(
+            &gtk::Label::builder()
+                .label(&i18n("Zram Devices"))
+                .css_classes(["title-1"])
+                .halign(gtk::Align::Start)
+                .build(),
+        );
+        self.append(
+            &gtk::Label::builder()
+                .label(&i18n("Compressed RAM block device — fast in-memory swap"))
+                .css_classes(["caption"])
+                .halign(gtk::Align::Start)
+                .margin_start(2)
+                .build(),
+        );
 
         // Recommendation
         {
-            let total_ram = crate::swap::sysctl::read_total_ram().unwrap_or(32 * 1024 * 1024 * 1024);
+            let total_ram =
+                crate::swap::sysctl::read_total_ram().unwrap_or(32 * 1024 * 1024 * 1024);
             let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
             let rec_mb = (total_ram / 2 / (1024 * 1024)) as u64; // 50%
-            self.append(&gtk::Label::builder()
-                .use_markup(true)
-                .label(&i18n_fmt("<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>", &[&rec_mb.to_string(), &format!("{:.0}", ram_gb)]))
-                .css_classes(["caption"]).halign(gtk::Align::Start).margin_start(2).build());
+            self.append(
+                &gtk::Label::builder()
+                    .use_markup(true)
+                    .label(&i18n_fmt(
+                        "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>",
+                        &[&rec_mb.to_string(), &format!("{:.0}", ram_gb)],
+                    ))
+                    .css_classes(["caption"])
+                    .halign(gtk::Align::Start)
+                    .margin_start(2)
+                    .build(),
+            );
         }
 
         // Spinner
@@ -92,15 +110,19 @@ impl ZramView {
             .label(&i18n("Create Zram Device"))
             .halign(gtk::Align::Center)
             .css_classes(["suggested-action", "pill"])
-            .margin_top(12).margin_bottom(6)
+            .margin_top(12)
+            .margin_bottom(6)
             .build();
 
         // Stack: empty state ↔ device list (ufwall Profiles pattern)
         let empty_page = adw::StatusPage::builder()
             .title(&i18n("No Zram Devices"))
-            .description(&i18n("Create a compressed RAM swap device for faster memory pressure handling."))
+            .description(&i18n(
+                "Create a compressed RAM swap device for faster memory pressure handling.",
+            ))
             .icon_name("media-flash")
-            .hexpand(true).vexpand(true)
+            .hexpand(true)
+            .vexpand(true)
             .build();
 
         let scroll = gtk::ScrolledWindow::builder().vexpand(true).build();
@@ -112,7 +134,8 @@ impl ZramView {
 
         let stack = gtk::Stack::builder()
             .transition_type(gtk::StackTransitionType::Crossfade)
-            .hexpand(true).vexpand(true)
+            .hexpand(true)
+            .vexpand(true)
             .build();
         stack.add_named(&empty_page, Some("empty"));
         stack.add_named(&scroll, Some("devices"));
@@ -194,59 +217,110 @@ impl ZramView {
                 "{} MiB (50% of {:.0} GiB RAM — recommended)",
                 default_mb, ram_gb
             ))
-            .css_classes(["caption"]).halign(gtk::Align::Start)
-            .margin_start(12).margin_end(12).build();
+            .css_classes(["caption"])
+            .halign(gtk::Align::Start)
+            .margin_start(12)
+            .margin_end(12)
+            .build();
         content.append(&hint);
 
         let scale = gtk::Scale::builder()
             .orientation(gtk::Orientation::Horizontal)
-            .adjustment(&gtk::Adjustment::new(default_mb as f64, 512.0, max_mb as f64 + 512.0, 256.0, 1024.0, 0.0))
-            .draw_value(true).value_pos(gtk::PositionType::Right)
-            .margin_start(12).margin_end(12).margin_top(6).build();
+            .adjustment(&gtk::Adjustment::new(
+                default_mb as f64,
+                512.0,
+                max_mb as f64 + 512.0,
+                256.0,
+                1024.0,
+                0.0,
+            ))
+            .draw_value(true)
+            .value_pos(gtk::PositionType::Right)
+            .margin_start(12)
+            .margin_end(12)
+            .margin_top(6)
+            .build();
         content.append(&scale);
 
         // ─── Advanced expander ──────────────────────────────────────
         let expander = gtk::Expander::builder()
             .label(&i18n("Advanced options"))
-            .margin_start(12).margin_end(12).margin_top(12).build();
+            .margin_start(12)
+            .margin_end(12)
+            .margin_top(12)
+            .build();
 
-        let adv_grid = gtk::Grid::builder().row_spacing(12).column_spacing(12)
-            .margin_start(12).margin_top(8).build();
+        let adv_grid = gtk::Grid::builder()
+            .row_spacing(12)
+            .column_spacing(12)
+            .margin_start(12)
+            .margin_top(8)
+            .build();
 
         // Manual size input
         let size_spin = gtk::SpinButton::with_range(512.0, max_mb as f64 + 512.0, 64.0);
         size_spin.set_value(default_mb as f64);
-        let spin_row = gtk::Box::builder().orientation(gtk::Orientation::Horizontal).spacing(8).build();
-        spin_row.append(&gtk::Label::builder().label(&i18n("Size (MiB)")).halign(gtk::Align::Start).build());
+        let spin_row = gtk::Box::builder()
+            .orientation(gtk::Orientation::Horizontal)
+            .spacing(8)
+            .build();
+        spin_row.append(
+            &gtk::Label::builder()
+                .label(&i18n("Size (MiB)"))
+                .halign(gtk::Align::Start)
+                .build(),
+        );
         spin_row.append(&size_spin);
         adv_grid.attach(&spin_row, 0, 0, 1, 1);
 
         // Sync slider ↔ spin
-        scale.connect_value_changed({ let s = size_spin.clone(); move |sc| { s.set_value(sc.value()); } });
-        size_spin.connect_value_changed({ let sc = scale.clone(); move |s| { sc.set_value(s.value()); } });
+        scale.connect_value_changed({
+            let s = size_spin.clone();
+            move |sc| {
+                s.set_value(sc.value());
+            }
+        });
+        size_spin.connect_value_changed({
+            let sc = scale.clone();
+            move |s| {
+                sc.set_value(s.value());
+            }
+        });
 
         // Algorithm
         let algos = zram::get_available_algorithms();
         let algo_list = gtk::StringList::new(&algos.iter().map(|s| s.as_str()).collect::<Vec<_>>());
         let algo_combo = gtk::DropDown::builder().model(&algo_list).build();
-        if !algos.is_empty() { algo_combo.set_selected(0); }
-        let algo_tag = gtk::Label::builder().css_classes(["caption"]).halign(gtk::Align::Start).build();
-        let algo_info = gtk::Label::builder().css_classes(["caption"]).halign(gtk::Align::Start).wrap(true).margin_start(4).build();
+        if !algos.is_empty() {
+            algo_combo.set_selected(0);
+        }
+        let algo_tag = gtk::Label::builder()
+            .css_classes(["caption"])
+            .halign(gtk::Align::Start)
+            .build();
+        let algo_info = gtk::Label::builder()
+            .css_classes(["caption"])
+            .halign(gtk::Align::Start)
+            .wrap(true)
+            .margin_start(4)
+            .build();
 
         fn algo_info_for(name: &str) -> &'static str {
             match name {
-                "lz4"     => "⚡⚡ Fastest · ⭐⭐ Good  —  Recommended",
+                "lz4" => "⚡⚡ Fastest · ⭐⭐ Good  —  Recommended",
                 "lzo-rle" => "⚡ Fast · ⭐⭐ Good  —  Desktop alternative",
-                "zstd"    => "⚡ Moderate · ⭐⭐⭐ Best  —  Best for small RAM",
-                "lz4hc"   => "⚡ Slow · ⭐⭐⭐ High  —  Server workloads",
-                "lzo"     => "⚡ Fast · ⭐ Moderate  —  Legacy (avoid)",
+                "zstd" => "⚡ Moderate · ⭐⭐⭐ Best  —  Best for small RAM",
+                "lz4hc" => "⚡ Slow · ⭐⭐⭐ High  —  Server workloads",
+                "lzo" => "⚡ Fast · ⭐ Moderate  —  Legacy (avoid)",
                 "deflate" => "🐢 Slowest · ⭐⭐⭐ High  —  Avoid on desktops",
-                "842"     => "— · —  —  IBM POWER only",
+                "842" => "— · —  —  IBM POWER only",
                 _ => "",
             }
         }
 
-        let algos_cb = algos.clone(); let ai = algo_info.clone(); let at = algo_tag.clone();
+        let algos_cb = algos.clone();
+        let ai = algo_info.clone();
+        let at = algo_tag.clone();
         algo_combo.connect_selected_item_notify(move |c| {
             let idx = c.selected() as usize;
             if let Some(n) = algos_cb.get(idx) {
@@ -255,22 +329,45 @@ impl ZramView {
             }
         });
         // Init
-        { let n = algos.get(0).map(|s| s.to_string()).unwrap_or_default();
-          algo_tag.set_text(if n == "lz4" { "(Recommended)" } else { "" });
-          algo_info.set_text(algo_info_for(&n)); }
+        {
+            let n = algos.get(0).map(|s| s.to_string()).unwrap_or_default();
+            algo_tag.set_text(if n == "lz4" { "(Recommended)" } else { "" });
+            algo_info.set_text(algo_info_for(&n));
+        }
 
-        let algo_row = gtk::Box::builder().orientation(gtk::Orientation::Vertical).spacing(4).build();
-        let algo_hdr = gtk::Box::builder().orientation(gtk::Orientation::Horizontal).spacing(8).build();
-        algo_hdr.append(&gtk::Label::builder().label(&i18n("Algorithm")).halign(gtk::Align::Start).build());
-        algo_hdr.append(&algo_combo); algo_hdr.append(&algo_tag);
-        algo_row.append(&algo_hdr); algo_row.append(&algo_info);
+        let algo_row = gtk::Box::builder()
+            .orientation(gtk::Orientation::Vertical)
+            .spacing(4)
+            .build();
+        let algo_hdr = gtk::Box::builder()
+            .orientation(gtk::Orientation::Horizontal)
+            .spacing(8)
+            .build();
+        algo_hdr.append(
+            &gtk::Label::builder()
+                .label(&i18n("Algorithm"))
+                .halign(gtk::Align::Start)
+                .build(),
+        );
+        algo_hdr.append(&algo_combo);
+        algo_hdr.append(&algo_tag);
+        algo_row.append(&algo_hdr);
+        algo_row.append(&algo_info);
         adv_grid.attach(&algo_row, 0, 1, 1, 1);
 
         // Priority
         let prio_spin = gtk::SpinButton::with_range(-10.0, 32767.0, 1.0);
         prio_spin.set_value(100.0);
-        let prio_row = gtk::Box::builder().orientation(gtk::Orientation::Horizontal).spacing(8).build();
-        prio_row.append(&gtk::Label::builder().label(&i18n("Priority")).halign(gtk::Align::Start).build());
+        let prio_row = gtk::Box::builder()
+            .orientation(gtk::Orientation::Horizontal)
+            .spacing(8)
+            .build();
+        prio_row.append(
+            &gtk::Label::builder()
+                .label(&i18n("Priority"))
+                .halign(gtk::Align::Start)
+                .build(),
+        );
         prio_row.append(&prio_spin);
         adv_grid.attach(&prio_row, 0, 2, 1, 1);
 
@@ -290,7 +387,10 @@ impl ZramView {
                 }
                 let size_mb = size_spin.value() as u64;
                 let algo_idx = algo_combo.selected() as usize;
-                let algo = algos.get(algo_idx).cloned().unwrap_or_else(|| "lzo-rle".to_string());
+                let algo = algos
+                    .get(algo_idx)
+                    .cloned()
+                    .unwrap_or_else(|| "lzo-rle".to_string());
                 let priority = prio_spin.value() as i32;
 
                 dialog.close();
@@ -310,36 +410,40 @@ impl ZramView {
         let algo_owned = algo.to_string();
 
         glib::spawn_future_local(async move {
-            let result = {
-                let weak = weak_self.clone();
-                let algo = algo_owned.clone();
-                let win = weak.upgrade().and_then(|v| v.root().and_then(|r| r.downcast::<gtk::Window>().ok()));
-                if let Some(p) = win {
-                    crate::progress_dialog::run_with_progress(&p, &i18n("Creating Zram device…"), move || {
-                        zram::create_zram_device(size_mb, &algo, priority)
-                    }).await
-                } else {
-                    zram::create_zram_device(size_mb, &algo_owned, priority)
-                }
-            };
+            // Build config list including the new device
+            let current = zram::read_zram_devices();
+            let mut configs: Vec<(u64, String, i32)> = current
+                .iter()
+                .map(|d| {
+                    (
+                        d.size_bytes / (1024 * 1024),
+                        d.comp_algorithm.clone(),
+                        d.swap_priority,
+                    )
+                })
+                .collect();
+            configs.push((size_mb, algo_owned, priority));
+
+            // Write config + restart vendor service
+            let result = persist::persist_zram(&configs);
 
             if let Some(view) = weak_self.upgrade() {
                 view.set_busy(false);
-                let current = zram::read_zram_devices();
-                let configs: Vec<(u64, String, i32)> = current.iter().map(|d| {
-                    (d.size_bytes / (1024 * 1024), d.comp_algorithm.clone(), d.swap_priority)
-                }).collect();
-                let _ = persist::persist_zram(&configs);
                 view.refresh_all();
                 match &result {
-                    Ok(dev) => {
+                    Ok(_) => {
                         let win = view.root().and_then(|r| r.downcast::<gtk::Window>().ok());
                         if let Some(parent) = win {
-                            utils::show_info(&parent, &i18n("Device Created"),
-                                &format!("{} is now active.", dev));
+                            utils::show_info(
+                                &parent,
+                                &i18n("Device Created"),
+                                &i18n(
+                                    "Zram configuration saved. The device will be created shortly.",
+                                ),
+                            );
                         }
                     }
-                    Err(e) => view.show_error(e),
+                    Err(e) => view.show_error(&e),
                 }
             }
         });
@@ -350,29 +454,28 @@ impl ZramView {
         self.set_busy(true);
 
         glib::spawn_future_local(async move {
-            let path = dev_path.clone();
-            let result = {
-                let weak = weak_self.clone();
-                let p = path.clone();
-                let win = weak.upgrade().and_then(|v| v.root().and_then(|r| r.downcast::<gtk::Window>().ok()));
-                if let Some(parent) = win {
-                    crate::progress_dialog::run_with_progress(&parent, &i18n("Destroying Zram device…"), move || {
-                        zram::destroy_zram_device(&p)
-                    }).await
-                } else {
-                    zram::destroy_zram_device(&path)
-                }
-            };
+            // Build config list excluding the destroyed device
+            let current = zram::read_zram_devices();
+            let configs: Vec<(u64, String, i32)> = current
+                .iter()
+                .filter(|d| format!("/dev/{}", d.name) != dev_path)
+                .map(|d| {
+                    (
+                        d.size_bytes / (1024 * 1024),
+                        d.comp_algorithm.clone(),
+                        d.swap_priority,
+                    )
+                })
+                .collect();
+
+            let result = persist::persist_zram(&configs);
 
             if let Some(view) = weak_self.upgrade() {
                 view.set_busy(false);
-                let current = zram::read_zram_devices();
-                let configs: Vec<(u64, String, i32)> = current.iter().map(|d| {
-                    (d.size_bytes / (1024 * 1024), d.comp_algorithm.clone(), d.swap_priority)
-                }).collect();
-                let _ = persist::persist_zram(&configs);
                 view.refresh_all();
-                if let Err(e) = result { view.show_error(&e); }
+                if let Err(e) = result {
+                    view.show_error(&e);
+                }
             }
         });
     }
@@ -421,9 +524,13 @@ impl ZramView {
                         format!("Idle — {:.0} MiB available", size_mb)
                     };
 
-                    let frac = if dev.size_bytes > 0 { dev.used_bytes as f64 / dev.size_bytes as f64 } else { 0.0 };
-                    let used_gb = dev.used_bytes as f64 / (1024.0*1024.0*1024.0);
-                    let total_gb = dev.size_bytes as f64 / (1024.0*1024.0*1024.0);
+                    let frac = if dev.size_bytes > 0 {
+                        dev.used_bytes as f64 / dev.size_bytes as f64
+                    } else {
+                        0.0
+                    };
+                    let used_gb = dev.used_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
+                    let total_gb = dev.size_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
                     let bar = UsageBar::new("", (1.0, 0.47, 0.0));
                     bar.set_fraction(frac, &format!("{:.2} / {:.1} GiB", used_gb, total_gb));
 

@@ -19,6 +19,13 @@ pub const ZRAM_SYSFS_DIR: &str = "/sys/block";
 
 // zram config file (written by GUI, read by vendor service)
 pub const ZRAM_CONFIG: &str = "/etc/default/anduinos-zram";
+// vendor zram service (provided by anduinos-swap-config package)
+pub const VENDOR_ZRAM_SERVICE: &str = "/usr/lib/systemd/system/anduinos-zram.service";
+
+// zswap config file (written by GUI, read by vendor service)
+pub const ZSWAP_CONFIG: &str = "/etc/default/anduinos-zswap";
+// vendor zswap service (provided by anduinos-swap-config package)
+pub const VENDOR_ZSWAP_SERVICE: &str = "/usr/lib/systemd/system/anduinos-zswap.service";
 
 // Proc / sys files
 pub const PROC_SWAPS: &str = "/proc/swaps";
@@ -30,4 +37,3 @@ pub const PROC_CMDLINE: &str = "/proc/cmdline";
 pub const SYS_POWER_STATE: &str = "/sys/power/state";
 pub const SYS_POWER_DISK: &str = "/sys/power/disk";
 pub const INITRAMFS_RESUME: &str = "/etc/initramfs-tools/conf.d/resume";
-

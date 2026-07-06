@@ -21,12 +21,12 @@ pub struct ZswapConfig {
 /// Represents a zram block device.
 #[derive(Debug, Clone, Default)]
 pub struct ZramDevice {
-    pub name: String,            // e.g. "zram0"
+    pub name: String, // e.g. "zram0"
     pub size_bytes: u64,
     pub used_bytes: u64,
-    pub compr_data_size: u64,    // compressed size in RAM
-    pub orig_data_size: u64,     // original uncompressed size
-    pub mem_used_total: u64,     // total memory used (metadata + compressed)
+    pub compr_data_size: u64, // compressed size in RAM
+    pub orig_data_size: u64,  // original uncompressed size
+    pub mem_used_total: u64,  // total memory used (metadata + compressed)
     pub comp_algorithm: String,
     pub swap_priority: i32,
 }
@@ -45,4 +45,3 @@ pub struct HibernationStatus {
     /// RESUME= from /etc/initramfs-tools/conf.d/resume
     pub initramfs_resume: Option<String>,
 }
-

@@ -1,15 +1,15 @@
 use adw::prelude::*;
 use adw::subclass::prelude::*;
-use gtk::glib;
 use gtk::gio;
+use gtk::glib;
 
 use std::cell::RefCell;
 
 use crate::application::SwapcontrolApplication;
 use crate::i18n::i18n;
 use crate::views::{
-    dashboard_view::DashboardView, stress_test_view::StressTestView,
-    swap_view::SwapView, zram_view::ZramView,
+    dashboard_view::DashboardView, stress_test_view::StressTestView, swap_view::SwapView,
+    zram_view::ZramView,
 };
 
 mod imp {
@@ -92,9 +92,7 @@ impl SwapcontrolWindow {
                 .margin_bottom(10)
                 .build();
 
-            let icon = gtk::Image::builder()
-                .icon_name(icon_name)
-                .build();
+            let icon = gtk::Image::builder().icon_name(icon_name).build();
 
             let label = gtk::Label::builder()
                 .label(title)
@@ -108,10 +106,12 @@ impl SwapcontrolWindow {
             gtk::ListBoxRow::builder().child(&box_).build()
         };
 
-        let dashboard_row = create_sidebar_row("utilities-system-monitor-symbolic", &i18n("Dashboard"));
+        let dashboard_row =
+            create_sidebar_row("utilities-system-monitor-symbolic", &i18n("Dashboard"));
         let zram_row = create_sidebar_row("media-flash-symbolic", &i18n("Zram"));
         let swap_row = create_sidebar_row("drive-harddisk-symbolic", &i18n("Swap"));
-        let stress_row = create_sidebar_row("applications-engineering-symbolic", &i18n("Stress Test"));
+        let stress_row =
+            create_sidebar_row("applications-engineering-symbolic", &i18n("Stress Test"));
 
         sidebar_list.append(&dashboard_row);
         sidebar_list.append(&zram_row);
@@ -124,9 +124,7 @@ impl SwapcontrolWindow {
             .show_start_title_buttons(true)
             .build();
 
-        let sidebar_toolbar = adw::ToolbarView::builder()
-            .content(&sidebar_list)
-            .build();
+        let sidebar_toolbar = adw::ToolbarView::builder().content(&sidebar_list).build();
         sidebar_toolbar.add_top_bar(&sidebar_header);
 
         // Content Setup
@@ -150,9 +148,7 @@ impl SwapcontrolWindow {
             .build();
         content_header.pack_end(&menu_button);
 
-        let content_toolbar = adw::ToolbarView::builder()
-            .content(&stack)
-            .build();
+        let content_toolbar = adw::ToolbarView::builder().content(&stack).build();
         content_toolbar.add_top_bar(&content_header);
 
         // Split view
@@ -169,16 +165,19 @@ impl SwapcontrolWindow {
             .build();
         content_header.pack_start(&toggle_button);
 
-        split_view.bind_property("show-sidebar", &toggle_button, "active")
+        split_view
+            .bind_property("show-sidebar", &toggle_button, "active")
             .sync_create()
             .bidirectional()
             .build();
 
-        split_view.bind_property("collapsed", &toggle_button, "visible")
+        split_view
+            .bind_property("collapsed", &toggle_button, "visible")
             .sync_create()
             .build();
 
-        split_view.bind_property("collapsed", &sidebar_header, "show-start-title-buttons")
+        split_view
+            .bind_property("collapsed", &sidebar_header, "show-start-title-buttons")
             .sync_create()
             .invert_boolean()
             .build();
@@ -225,14 +224,34 @@ impl SwapcontrolWindow {
     pub fn refresh_views(&self) {
         let imp = self.imp();
 
-        let visible = imp.stack.borrow().as_ref()
+        let visible = imp
+            .stack
+            .borrow()
+            .as_ref()
             .and_then(|s| s.visible_child_name())
-            .map(|n| n.as_str().to_string()).unwrap_or_default();
+            .map(|n| n.as_str().to_string())
+            .unwrap_or_default();
         match visible.as_str() {
-            "dashboard" => { if let Some(v) = imp.dashboard_view.borrow().as_ref() { v.refresh_data(); } }
-            "zram" => { if let Some(v) = imp.zram_view.borrow().as_ref() { v.refresh_data(); } }
-            "swap" => { if let Some(v) = imp.swap_view.borrow().as_ref() { v.refresh_data(); } }
-            "stress" => { if let Some(v) = imp.stress_test_view.borrow().as_ref() { v.refresh_data(); } }
+            "dashboard" => {
+                if let Some(v) = imp.dashboard_view.borrow().as_ref() {
+                    v.refresh_data();
+                }
+            }
+            "zram" => {
+                if let Some(v) = imp.zram_view.borrow().as_ref() {
+                    v.refresh_data();
+                }
+            }
+            "swap" => {
+                if let Some(v) = imp.swap_view.borrow().as_ref() {
+                    v.refresh_data();
+                }
+            }
+            "stress" => {
+                if let Some(v) = imp.stress_test_view.borrow().as_ref() {
+                    v.refresh_data();
+                }
+            }
             _ => {}
         }
     }

@@ -1,7 +1,7 @@
 use adw::subclass::prelude::*;
-use gtk::prelude::*;
-use gtk::glib;
 use gtk::cairo;
+use gtk::glib;
+use gtk::prelude::*;
 use std::cell::RefCell;
 
 mod imp {
@@ -106,9 +106,21 @@ impl UsageBar {
 
 fn rounded_rect(cr: &cairo::Context, x: f64, y: f64, w: f64, h: f64, r: f64) {
     cr.new_sub_path();
-    cr.arc(x + w - r, y + r, r, -std::f64::consts::PI/2., 0.);
-    cr.arc(x + w - r, y + h - r, r, 0., std::f64::consts::PI/2.);
-    cr.arc(x + r, y + h - r, r, std::f64::consts::PI/2., std::f64::consts::PI);
-    cr.arc(x + r, y + r, r, std::f64::consts::PI, 3.*std::f64::consts::PI/2.);
+    cr.arc(x + w - r, y + r, r, -std::f64::consts::PI / 2., 0.);
+    cr.arc(x + w - r, y + h - r, r, 0., std::f64::consts::PI / 2.);
+    cr.arc(
+        x + r,
+        y + h - r,
+        r,
+        std::f64::consts::PI / 2.,
+        std::f64::consts::PI,
+    );
+    cr.arc(
+        x + r,
+        y + r,
+        r,
+        std::f64::consts::PI,
+        3. * std::f64::consts::PI / 2.,
+    );
     cr.close_path();
 }

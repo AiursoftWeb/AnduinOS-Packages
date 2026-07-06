@@ -12,11 +12,13 @@
 #   50% of total RAM, lz4, swap priority 100.
 set -e
 
-# Idempotent: skip if any zram swap device already exists
-if grep -q zram /proc/swaps; then
-    echo "Zram swap already exists, skipping."
-    exit 0
-fi
+# Teardown: remove all existing zram devices so we can rebuild from scratch.
+# This makes systemctl restart anduinos-zram.service work correctly.
+for dev in /dev/zram*; do
+    [ -b "$dev" ] || continue
+    swapoff "$dev" 2>/dev/null || true
+    zramctl -r "$dev" 2>/dev/null || true
+done
 
 CONF="/etc/default/anduinos-zram"
 ALGO="lz4"

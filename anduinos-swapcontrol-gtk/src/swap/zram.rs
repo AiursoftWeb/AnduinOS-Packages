@@ -2,8 +2,6 @@ use crate::swap::types::ZramDevice;
 use std::fs;
 use std::path::Path;
 
-use super::exec;
-
 /// List all active zram block devices.
 pub fn read_zram_devices() -> Vec<ZramDevice> {
     let mut devices = Vec::new();
@@ -108,34 +106,6 @@ pub fn get_available_algorithms() -> Vec<String> {
 fn read_sysfs_u64(path: &Path) -> Result<u64, ()> {
     let content = fs::read_to_string(path).map_err(|_| ())?;
     content.trim().parse::<u64>().map_err(|_| ())
-}
-
-// ─── Write operations (require pkexec) ─────────────────────────────────────
-
-/// Create a new zram device.
-pub fn create_zram_device(size_mb: u64, algo: &str, priority: i32) -> Result<String, String> {
-    let _ = exec::run_modprobe("zram");
-
-    let output = exec::run_helper(
-        "zramctl",
-        &["-f", "-s", &format!("{}M", size_mb), "-a", algo],
-    )?;
-
-    let dev_path = output.trim().to_string();
-    if dev_path.is_empty() {
-        return Err("zramctl did not return a device path".to_string());
-    }
-
-    exec::run_helper("mkswap", &[&dev_path])?;
-    exec::run_helper("swapon", &["-p", &priority.to_string(), &dev_path])?;
-
-    Ok(dev_path)
-}
-
-/// Destroy a zram device.
-pub fn destroy_zram_device(dev_path: &str) -> Result<String, String> {
-    let _ = exec::run_helper("swapoff", &[dev_path]);
-    exec::run_helper("zramctl", &["-r", dev_path])
 }
 
 #[cfg(test)]
