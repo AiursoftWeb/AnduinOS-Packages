@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-swap-config</PackageName>
-    <PackageVersion>2.0.0-7+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0-8+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Swap default configuration — enables 50%-of-RAM lz4 zram and swappiness=100 on boot. Zswap support is installed but remains opt-in via the GUI. Services are installed to /usr/lib/systemd/system/ so anduinos-swapcontrol-gtk controls them via declarative config files without dpkg conflicts.</PackageDescription>
     <Section>admin</Section>
@@ -35,7 +35,7 @@
     <SystemdUnit Include="data/anduinos-zram.service" AutoEnable="true" UsePreset="true" />
     <!-- Zswap service: configures kernel zswap parameters when the user enables it.
          Same config-driven pattern: GUI writes /etc/default/anduinos-zswap. -->
-    <SystemdUnit Include="data/anduinos-zswap.service" AutoEnable="true" UsePreset="true" />
+    <SystemdUnit Include="data/anduinos-zswap.service" AutoEnable="false" />
     <!-- Preset enables zram by default; zswap stays opt-in -->
     <IncludeFile Include="data/90-anduinos-swap.preset" Target="/usr/lib/systemd/system-preset/90-anduinos-swap.preset" />
     <IncludeFile Include="data/setup-zram.sh" Target="/usr/lib/anduinos-swap-config/setup-zram.sh" Mode="755" />

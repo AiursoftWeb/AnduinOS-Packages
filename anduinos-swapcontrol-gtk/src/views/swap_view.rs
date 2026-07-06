@@ -641,6 +641,10 @@ impl SwapView {
             .as_ref()
             .map(|s| s.is_active())
             .unwrap_or(true);
+        let zswap_changed = comp != *imp.orig_compressor.borrow()
+            || pool != *imp.orig_pool.borrow()
+            || thresh != *imp.orig_threshold.borrow()
+            || shrinker != *imp.orig_shrinker.borrow();
         let weak_self = self.downgrade();
         let weak_self2 = weak_self.clone();
 
@@ -659,11 +663,15 @@ impl SwapView {
                     if let Err(e) = swapfile::resize_swapfile(sz) {
                         errs.push(format!("Resize: {}", e));
                     }
-                    // Persist zswap config — writes config file + restarts vendor service
-                    if let Err(e) =
-                        persist::persist_zswap(zswap_enabled, &comp, pool, thresh, shrinker)
-                    {
-                        errs.push(format!("Zswap: {}", e));
+                    // Only touch zswap persistence when the user actually changed
+                    // zswap-specific parameters. Plain swapfile/swappiness changes
+                    // must not opt the system into zswap management.
+                    if zswap_changed {
+                        if let Err(e) =
+                            persist::persist_zswap(zswap_enabled, &comp, pool, thresh, shrinker)
+                        {
+                            errs.push(format!("Zswap: {}", e));
+                        }
                     }
                     if errs.is_empty() {
                         Ok(())
