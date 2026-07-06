@@ -4,7 +4,7 @@ use gtk::glib;
 use std::cell::RefCell;
 
 use crate::i18n::{i18n, i18n_fmt};
-use crate::swap::{swapfile, sysctl, hibernation, zswap, persist};
+use crate::swap::{swapfile, sysctl, hibernation, zram, zswap, persist};
 use crate::utils;
 use crate::widgets::usage_bar::UsageBar;
 
@@ -89,9 +89,15 @@ impl SwapView {
             let total_ram = sysctl::read_total_ram().unwrap_or(32 * 1024 * 1024 * 1024);
             let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
             let rec_size = (total_ram / (1024*1024*1024)).max(1);
-            let sw = if ram_gb >= 16.0 { 10 } else if ram_gb >= 8.0 { 30 } else { 60 };
+            let sw = sysctl::recommended_swappiness();
+            let has_zram = !zram::read_zram_devices().is_empty();
+            let sw_reason = if has_zram {
+                i18n("with Zram")
+            } else {
+                i18n_fmt("for {0} GiB RAM", &[&format!("{:.0}", ram_gb)])
+            };
             inner.append(&gtk::Label::builder().use_markup(true)
-                .label(&i18n_fmt("<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>", &[&rec_size.to_string(), &sw.to_string(), &format!("{:.0}", ram_gb)]))
+                .label(&i18n_fmt("<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>", &[&rec_size.to_string(), &sw.to_string(), &sw_reason]))
                 .css_classes(["caption"]).halign(gtk::Align::Start).margin_start(2).build());
         }
 
@@ -162,8 +168,13 @@ impl SwapView {
             .title(&i18n("Advanced settings"))
             .build();
 
-        let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
-        let rec_sw = if ram_gb >= 16.0 { 10 } else if ram_gb >= 8.0 { 30 } else { 60 };
+        let rec_sw = sysctl::recommended_swappiness();
+        let has_zram_for_sw = !zram::read_zram_devices().is_empty();
+        let sw_subtitle = if has_zram_for_sw {
+            i18n_fmt("How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})", &[&rec_sw.to_string()])
+        } else {
+            i18n_fmt("How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})", &[&rec_sw.to_string()])
+        };
 
         // Swappiness
         let swappiness_scale = gtk::Scale::builder().orientation(gtk::Orientation::Horizontal)
@@ -172,7 +183,7 @@ impl SwapView {
             .valign(gtk::Align::Center).build();
         let sw_row = adw::ActionRow::builder()
             .title(&i18n("Swappiness"))
-            .subtitle(&i18n_fmt("How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})", &[&rec_sw.to_string()]))
+            .subtitle(&sw_subtitle)
             .build();
         sw_row.add_suffix(&swappiness_scale);
         expander.add_row(&sw_row);

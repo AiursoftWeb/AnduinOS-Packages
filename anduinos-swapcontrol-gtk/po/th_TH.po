@@ -1,12 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr "<i>ค่า swappiness ที่แนะนำ: {0} (สำหรับ RAM {1} GiB)</i>"
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>ค่า swappiness ที่แนะนำ: {0} ({1})</i>"
 
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "แนะนำ: {0} GiB สำหรับหน่วยความจำเสมือน, swappiness {1} (สำหรับแรม {2} GiB)"
+msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+msgstr "<i>แนะนำ: สลับ {0} GiB, swappiness {1} ({2})</i>"
 
 msgid "About"
 msgstr "เกี่ยวกับ"
@@ -287,35 +286,35 @@ msgstr "{0} · สระ {1}%"
 msgid "{0} · saved {1}%"
 msgstr "{0} · ประหยัด {1}%"
 
-#~ msgid "Active"
-#~ msgstr "ใช้งาน"
+msgid "Active"
+msgstr "ใช้งาน"
 
-#~ msgid "Compressed write-back cache for swap"
-#~ msgstr "แคชแบบเขียนกลับแบบบีบอัดสำหรับสวอป"
+msgid "Compressed write-back cache for swap"
+msgstr "แคชแบบเขียนกลับแบบบีบอัดสำหรับสวอป"
 
-#~ msgid "Compressed write-back cache — intercepts pages before disk swap"
-#~ msgstr "แคชแบบคอมเพรส write-back — ตัดหน้าเพจก่อนสลับเข้าหน่วยความจำเสมือน"
+msgid "Compressed write-back cache — intercepts pages before disk swap"
+msgstr "แคชแบบคอมเพรส write-back — ตัดหน้าเพจก่อนสลับเข้าหน่วยความจำเสมือน"
 
-#~ msgid "How much RAM zswap can use for compressed pages"
-#~ msgstr "ขนาดของ RAM ที่ zswap สามารถใช้สำหรับหน้าที่ย่อได้"
+msgid "How much RAM zswap can use for compressed pages"
+msgstr "ขนาดของ RAM ที่ zswap สามารถใช้สำหรับหน้าที่ย่อได้"
 
-#~ msgid "Max pool (% of RAM)"
-#~ msgstr "พูลสูงสุด (% ของ RAM)"
+msgid "Max pool (% of RAM)"
+msgstr "พูลสูงสุด (% ของ RAM)"
 
-#~ msgid "No zram devices. Create one to enable compressed RAM swap."
-#~ msgstr "ไม่มีอุปกรณ์ zram โปรดสร้างเพื่อเปิดใช้งานสวอปหน่วยความจำแบบบีบอัด"
+msgid "No zram devices. Create one to enable compressed RAM swap."
+msgstr "ไม่มีอุปกรณ์ zram โปรดสร้างเพื่อเปิดใช้งานสวอปหน่วยความจำแบบบีบอัด"
 
-#~ msgid "Reclaim pool memory when system is under pressure"
-#~ msgstr "เรียกคืนหน่วยความจำพูลเมื่อระบบอยู่ภายใต้แรงกดดัน"
+msgid "Reclaim pool memory when system is under pressure"
+msgstr "เรียกคืนหน่วยความจำพูลเมื่อระบบอยู่ภายใต้แรงกดดัน"
 
-#~ msgid "Resizing swap file…"
-#~ msgstr "กำลังปรับขนาดไฟล์หน่วยความจำเสมือน..."
+msgid "Resizing swap file…"
+msgstr "กำลังปรับขนาดไฟล์หน่วยความจำเสมือน..."
 
-#~ msgid "Zswap Configuration"
-#~ msgstr "การกำหนดค่า Zswap"
+msgid "Zswap Configuration"
+msgstr "การกำหนดค่า Zswap"
 
-#~ msgid "lzo-rle is fastest, zstd saves more space"
-#~ msgstr "lzo-rle มีความเร็วสูงสุด ส่วน zstd ประหยัดพื้นที่มากกว่า"
+msgid "lzo-rle is fastest, zstd saves more space"
+msgstr "lzo-rle มีความเร็วสูงสุด ส่วน zstd ประหยัดพื้นที่มากกว่า"
 
 msgid "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
 msgstr "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
@@ -349,3 +348,18 @@ msgstr "Zram and Zswap are mutually exclusive — each creates its own compresse
 
 msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
 msgstr "lz4 = เร็ว (แนะนำ), zstd = อัตราส่วนดีที่สุด, lzo = แบบเดิม การเปลี่ยนจำเป็นต้องรีสตาร์ท zswap"
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr "พร้อม Zram เปิดใช้งาน — รังแต่หน่วยความจำแบบบีบอัดที่เร็วเหนือดิสก์แคช"
+
+msgid "Swappiness not optimized for Zram"
+msgstr "Swappiness ไม่ได้ถูกปรับให้เหมาะสมกับ Zram"
+
+msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
+msgstr "Zram กำลังใช้งาน แต่ค่า swappiness ตั้งอยู่ที่ {0} แทนที่จะเป็น {1} ตั้งค่าเป็น {1} เพื่อเลือกใช้งานสลับหน่วยความจำแบบบีบอัดที่รวดเร็ว — การลดแคชไฟล์เมื่อมี zram ว่างเปล่าเป็นการสูญเสียประสิทธิภาพ I/O"
+
+msgid "with Zram"
+msgstr "พร้อม Zram"
+
+msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+msgstr "ความก้าวร้าวที่เคอร์เนลใช้งานสลับ — เมื่อ Zram เปิดใช้งาน ให้ตั้งค่าเป็น {0} เพื่อเลือกใช้งานหน่วยความจำแบบบีบอัดที่รวดเร็วเหนือดิสก์แคช (แนะนำ: {0})"

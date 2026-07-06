@@ -1,12 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr "<i>Swappiness recomendada: {0} (para {1} GiB de RAM)</i>"
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Swappiness recomendado: {0} ({1})</i>"
 
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>Recomendado: {0} GiB de memória virtual, swappiness {1} (para {2} GiB de RAM)</i>"
+msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+msgstr "<i>Recomendado: {0} GiB de Memória Virtual, swappiness {1} ({2})</i>"
 
 msgid "About"
 msgstr "Sobre"
@@ -349,3 +348,18 @@ msgstr "Zram and Zswap are mutually exclusive — each creates its own compresse
 
 msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
 msgstr "lz4 = rápido (recomendado), zstd = melhor taxa de compressão, lzo = legado. A alteração requer reinício do zswap."
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr "com Zram ativo — prefira a RAM comprimida rápida em vez do cache do disco"
+
+msgid "Swappiness not optimized for Zram"
+msgstr "Swappiness não otimizado para Zram"
+
+msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
+msgstr "O Zram está ativo, mas o swappiness é {0} em vez de {1}. Defina-o como {1} para preferir a Memória Virtual de RAM comprimida rápida — descartar o cache de ficheiros quando o zram está disponível desperdiça desempenho de I/O."
+
+msgid "with Zram"
+msgstr "com Zram"
+
+msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+msgstr "Com que agressividade o kernel utiliza a Memória Virtual — com Zram ativo, defina para {0} para preferir a RAM comprimida rápida em vez do cache do disco (recomendado: {0})"

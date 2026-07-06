@@ -1,12 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr "<i>推奨スワップネス: {0}（{1} GiB RAM 用）</i>"
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>推奨スワップネス: {0} ({1})</i>"
 
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>推奨: {0} GiB の仮想メモリ、スワップネス {1}（{2} GiB RAM 用）</i>"
+msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+msgstr "<i>推奨: {0} GiB の仮想メモリ, スワップネス {1} ({2})</i>"
 
 msgid "About"
 msgstr "概要"
@@ -287,35 +286,35 @@ msgstr "{0} · プール {1}%"
 msgid "{0} · saved {1}%"
 msgstr "{0} · 節約 {1}%"
 
-#~ msgid "Active"
-#~ msgstr "有効"
+msgid "Active"
+msgstr "有効"
 
-#~ msgid "Compressed write-back cache for swap"
-#~ msgstr "スワップ用コンプレストライトバックキャッシュ"
+msgid "Compressed write-back cache for swap"
+msgstr "スワップ用コンプレストライトバックキャッシュ"
 
-#~ msgid "Compressed write-back cache — intercepts pages before disk swap"
-#~ msgstr "圧縮ライトバックキャッシュ — ディスク仮想メモリのページをブロック"
+msgid "Compressed write-back cache — intercepts pages before disk swap"
+msgstr "圧縮ライトバックキャッシュ — ディスク仮想メモリのページをブロック"
 
-#~ msgid "How much RAM zswap can use for compressed pages"
-#~ msgstr "zswapが圧縮ページのために使用できるRAM量"
+msgid "How much RAM zswap can use for compressed pages"
+msgstr "zswapが圧縮ページのために使用できるRAM量"
 
-#~ msgid "Max pool (% of RAM)"
-#~ msgstr "最大プール（RAM 使用率）"
+msgid "Max pool (% of RAM)"
+msgstr "最大プール（RAM 使用率）"
 
 msgid "No zram devices. Create one to enable compressed RAM swap."
 msgstr "Zramデバイスがありません。圧縮RAMを使用する仮想メモリを有効にするには、新しいZramデバイスを作成してください。"
 
-#~ msgid "Reclaim pool memory when system is under pressure"
-#~ msgstr "システムに負担がかかった場合にプールメモリを回収する"
+msgid "Reclaim pool memory when system is under pressure"
+msgstr "システムに負担がかかった場合にプールメモリを回収する"
 
-#~ msgid "Resizing swap file…"
-#~ msgstr "スワップ ファイルのリサイズ中…"
+msgid "Resizing swap file…"
+msgstr "スワップ ファイルのリサイズ中…"
 
-#~ msgid "Zswap Configuration"
-#~ msgstr "Zswap の設定"
+msgid "Zswap Configuration"
+msgstr "Zswap の設定"
 
-#~ msgid "lzo-rle is fastest, zstd saves more space"
-#~ msgstr "lzo-rle が最も高速で、zstd の方がスペース節約効果が高い"
+msgid "lzo-rle is fastest, zstd saves more space"
+msgstr "lzo-rle が最も高速で、zstd の方がスペース節約効果が高い"
 
 msgid "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
 msgstr "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
@@ -349,3 +348,18 @@ msgstr "Zram and Zswap are mutually exclusive — each creates its own compresse
 
 msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
 msgstr "lz4 = 高速（推奨）、zstd = 最高の圧縮率、lzo = 旧規格。変更には zswap の再起動が必要です。"
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr "Zram がアクティブの場合 — ディスクキャッシュよりも高速な圧縮 RAM を優先します"
+
+msgid "Swappiness not optimized for Zram"
+msgstr "Zram 用にスワップネスが最適化されていません"
+
+msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
+msgstr "Zram がアクティブですが、スワップネスが {0} ではなく {1} です。高速な圧縮 RAM スワップを優先するには {1} に設定してください。zram が利用可能な場合にファイルキャッシュを破棄すると、I/O パフォーマンスが無駄になります。"
+
+msgid "with Zram"
+msgstr "Zram 有効時"
+
+msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+msgstr "カーネルがどの程度積極的にスワップを行うか — Zram がアクティブの場合、ディスクキャッシュよりも高速な圧縮 RAM を優先するには {0} に設定してください（推奨: {0}）"

@@ -1,12 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr "<i>권장 스와프니성: {0} ({1} GiB RAM 기준)</i>"
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>권장 swappiness: {0} ({1})</i>"
 
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>권장: {0} GiB 가상 메모리, 스와프니성 {1} ({2} GiB RAM 기준)</i>"
+msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+msgstr "<i>권장: {0} GiB 가상 메모리, swappiness {1} ({2})</i>"
 
 msgid "About"
 msgstr "정보"
@@ -349,3 +348,18 @@ msgstr "Zram and Zswap are mutually exclusive — each creates its own compresse
 
 msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
 msgstr "lz4 = 빠름 (권장), zstd = 최고 압축률, lzo = 레거시. 변경 시 Zswap 재시작이 필요합니다."
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr "Zram 활성화 — 디스크 캐시보다 빠른 압축된 RAM 우선 사용"
+
+msgid "Swappiness not optimized for Zram"
+msgstr "Zram에 대한 swappiness 최적화 안 됨"
+
+msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
+msgstr "Zram이 활성화되어 있지만 swappiness가 {1}이 아닌 {0}(으)로 설정됨. {1}(으)로 설정하여 빠른 압축된 RAM 스왑을 우선 사용하세요. Zram 사용 가능 시 파일 캐시 버림은 I/O 성능을 낭비합니다."
+
+msgid "with Zram"
+msgstr "Zram 사용"
+
+msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+msgstr "커널의 스왑 강도 — Zram 활성화 시 디스크 캐시보다 빠른 압축된 RAM을 우선 사용하도록 {0}(으)로 설정 (권장: {0})"

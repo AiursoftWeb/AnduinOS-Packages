@@ -42,6 +42,27 @@ pub fn read_swappiness() -> Result<u8, String> {
         .map_err(|e| format!("Cannot parse swappiness: {e}"))
 }
 
+/// Get the recommended swappiness value based on system configuration.
+/// If zram is active: 100 — prefer fast LZ4-compressed RAM swap over dropping
+/// file cache (decompression is nanoseconds vs milliseconds for disk reads).
+/// Otherwise uses a RAM-based heuristic (lower swappiness for large-RAM desktops).
+pub fn recommended_swappiness() -> u8 {
+    let has_zram = !super::zram::read_zram_devices().is_empty();
+    if has_zram {
+        return 100;
+    }
+
+    let total_ram = read_total_ram().unwrap_or(32 * 1024 * 1024 * 1024);
+    let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
+    if ram_gb >= 16.0 {
+        10
+    } else if ram_gb >= 8.0 {
+        30
+    } else {
+        60
+    }
+}
+
 /// Get total RAM from /proc/meminfo (in bytes).
 pub fn read_total_ram() -> Result<u64, String> {
     let content = fs::read_to_string(config::PROC_MEMINFO)

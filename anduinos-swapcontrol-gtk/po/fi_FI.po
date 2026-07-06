@@ -1,12 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr "<i>Suositeltu swappiness-arvo: {0} ({1} GiB RAM-muistille)</i>"
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Suositeltu suvappisuus: {0} ({1})</i>"
 
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>Suositus: {0} GiB virtuaali muistia, swappiness {1} (järjestelmässä on {2} GiB RAM-muistia)</i>"
+msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+msgstr "<i>Suositus: {0} GiB virtuaalimuistia, suvappisuus {1} ({2})</i>"
 
 msgid "About"
 msgstr "Tietoja"
@@ -349,3 +348,18 @@ msgstr "Zram and Zswap are mutually exclusive — each creates its own compresse
 
 msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
 msgstr "lz4 = nopea (suositus), zstd = paras pakkaussuhde, lzo = perinteinen. Muutos vaatii zswapin uudelleenkäynnistyksen."
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr "kun Zram on aktiivinen — suosikaan nopeaa pakattua RAM-muistia levyvälimuistin sijaan"
+
+msgid "Swappiness not optimized for Zram"
+msgstr "Suvappisuutta ei ole optimoitu Zramia varten"
+
+msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
+msgstr "Zram on aktiivinen, mutta suvappisuus on {0} sen sijaan että olisi {1}. Aseta se arvoon {1}, jotta nopeaa pakattua RAM-virtuaalimuistia käytetään mieluummin — tiedostovälimuistin hylkääminen zramin ollessa käytettävissä heikentää I/O-suorituskykyä."
+
+msgid "with Zram"
+msgstr "Zramin kanssa"
+
+msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+msgstr "Mitä aggressiivisesti ydin vaihtaa muistia — kun Zram on aktiivinen, aseta arvoon {0}, jotta nopeaa pakattua RAM-muistia käytetään mieluummin kuin levyvälimuistia (suositus: {0})"

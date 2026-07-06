@@ -1,12 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr "<i>建議的 swappiness：{0}（針對 {1} GiB 記憶體）</i>"
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>建議的交換傾向值：{0}（{1}）</i>"
 
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>建議：{0} GiB 虛擬記憶體，swappiness {1}（針對 {2} GiB 記憶體）</i>"
+msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+msgstr "<i>建議：{0} GiB 虛擬記憶體，交換傾向值 {1}（{2}）</i>"
 
 msgid "About"
 msgstr "關於"
@@ -287,35 +286,35 @@ msgstr "{0} · 池 {1}%"
 msgid "{0} · saved {1}%"
 msgstr "{0} · 節省 {1}%"
 
-#~ msgid "Active"
-#~ msgstr "已啟用"
+msgid "Active"
+msgstr "已啟用"
 
-#~ msgid "Compressed write-back cache for swap"
-#~ msgstr "交換分區的壓縮式寫回快取"
+msgid "Compressed write-back cache for swap"
+msgstr "交換分區的壓縮式寫回快取"
 
-#~ msgid "Compressed write-back cache — intercepts pages before disk swap"
-#~ msgstr "壓縮寫回式快取——在進行虛擬記憶體交換前攔截頁面"
+msgid "Compressed write-back cache — intercepts pages before disk swap"
+msgstr "壓縮寫回式快取——在進行虛擬記憶體交換前攔截頁面"
 
-#~ msgid "How much RAM zswap can use for compressed pages"
-#~ msgstr "zswap 可用以壓縮頁面的 RAM 用量"
+msgid "How much RAM zswap can use for compressed pages"
+msgstr "zswap 可用以壓縮頁面的 RAM 用量"
 
-#~ msgid "Max pool (% of RAM)"
-#~ msgstr "最大記憶體池（RAM 百分比）"
+msgid "Max pool (% of RAM)"
+msgstr "最大記憶體池（RAM 百分比）"
 
-#~ msgid "No zram devices. Create one to enable compressed RAM swap."
-#~ msgstr "沒有 zram 裝置。請建立一個以啟用壓縮 RAM 交換功能。"
+msgid "No zram devices. Create one to enable compressed RAM swap."
+msgstr "沒有 zram 裝置。請建立一個以啟用壓縮 RAM 交換功能。"
 
-#~ msgid "Reclaim pool memory when system is under pressure"
-#~ msgstr "系統資源緊絀時回收記憶體池"
+msgid "Reclaim pool memory when system is under pressure"
+msgstr "系統資源緊絀時回收記憶體池"
 
-#~ msgid "Resizing swap file…"
-#~ msgstr "正在調整虛擬記憶體大小…"
+msgid "Resizing swap file…"
+msgstr "正在調整虛擬記憶體大小…"
 
-#~ msgid "Zswap Configuration"
-#~ msgstr "Zswap 設定"
+msgid "Zswap Configuration"
+msgstr "Zswap 設定"
 
-#~ msgid "lzo-rle is fastest, zstd saves more space"
-#~ msgstr "lzo-rle 速度最快，zstd 節省更多空間"
+msgid "lzo-rle is fastest, zstd saves more space"
+msgstr "lzo-rle 速度最快，zstd 節省更多空間"
 
 msgid "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
 msgstr "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
@@ -349,3 +348,18 @@ msgstr "Zram and Zswap are mutually exclusive — each creates its own compresse
 
 msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
 msgstr "lz4 = 快速（推薦），zstd = 最佳壓縮率，lzo = 傳統。變更需要重新啟動 zswap。"
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr "啟用 Zram — 優先使用快速壓縮 RAM 而非磁碟緩存"
+
+msgid "Swappiness not optimized for Zram"
+msgstr "Zram 的交換傾向值未優化"
+
+msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
+msgstr "Zram 已啟用，但交換傾向值為 {0} 而非 {1}。請設為 {1} 以優先使用快速壓縮 RAM 虛擬記憶體——在有 zram 可用時丟棄檔案緩存會浪費 I/O 效能。"
+
+msgid "with Zram"
+msgstr "啟用 Zram"
+
+msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+msgstr "核心交換的積極程度 — 啟用 Zram 時，設為 {0} 以優先使用快速壓縮 RAM 而非磁碟緩存（建議值：{0}）"

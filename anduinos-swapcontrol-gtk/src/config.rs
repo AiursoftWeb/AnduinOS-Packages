@@ -17,6 +17,9 @@ pub const ZSWAP_SHRINKER: &str = "/sys/module/zswap/parameters/shrinker_enabled"
 // zram sysfs base
 pub const ZRAM_SYSFS_DIR: &str = "/sys/block";
 
+// zram config file (written by GUI, read by vendor service)
+pub const ZRAM_CONFIG: &str = "/etc/default/anduinos-zram";
+
 // Proc / sys files
 pub const PROC_SWAPS: &str = "/proc/swaps";
 pub const PROC_MEMINFO: &str = "/proc/meminfo";

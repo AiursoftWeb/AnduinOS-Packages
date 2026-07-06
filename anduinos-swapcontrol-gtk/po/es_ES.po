@@ -1,12 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr "<i>Swappiness recomendada: {0} (para {1} GiB de RAM)</i>"
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Valor de swappiness recomendado: {0} ({1})</i>"
 
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>Recomendado: {0} GiB de memoria virtual, valor de swappiness {1} (para {2} GiB de RAM)</i>"
+msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+msgstr "<i>Recomendado: {0} GiB de memoria virtual, valor de swappiness {1} ({2})</i>"
 
 msgid "About"
 msgstr "Acerca de"
@@ -343,3 +342,18 @@ msgstr "Zram and Zswap are mutually exclusive — each creates its own compresse
 
 msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
 msgstr "lz4 = rápido (recomendado), zstd = mejor relación de compresión, lzo = legado. El cambio requiere reiniciar zswap."
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr "con Zram activo: prefiera la memoria RAM comprimida rápida sobre la caché en disco"
+
+msgid "Swappiness not optimized for Zram"
+msgstr "Swappiness no optimizado para Zram"
+
+msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
+msgstr "Zram está activo, pero el valor de swappiness es {0} en lugar de {1}. Establézcalo en {1} para preferir la memoria virtual en RAM comprimida rápida; soltar la caché de archivos cuando Zram está disponible desperdicia el rendimiento de E/S."
+
+msgid "with Zram"
+msgstr "con Zram"
+
+msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+msgstr "Con qué agresividad el núcleo intercambia memoria: con Zram activo, establézcalo en {0} para preferir la memoria RAM comprimida rápida sobre la caché en disco (recomendado: {0})"

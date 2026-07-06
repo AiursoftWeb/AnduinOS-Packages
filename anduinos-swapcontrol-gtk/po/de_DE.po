@@ -1,12 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr "<i>Empfohlener Swappiness-Wert: {0} (für {1} GiB RAM)</i>"
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Empfohlene swappiness: {0} ({1})</i>"
 
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>Empfohlen: {0} GiB virtueller Arbeitsspeicher, swappiness {1} (für {2} GiB RAM)</i>"
+msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+msgstr "<i>Empfohlen: {0} GiB virtueller Arbeitsspeicher, Swappiness {1} ({2})</i>"
 
 msgid "About"
 msgstr "Über"
@@ -349,3 +348,18 @@ msgstr "Zram and Zswap are mutually exclusive — each creates its own compresse
 
 msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
 msgstr "lz4 = schnell (empfohlen), zstd = bestes Verhältnis, lzo = legacy. Eine Änderung erfordert einen Neustart von Zswap."
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr "bei aktivem Zram – bevorzugen Sie schnellen komprimierten RAM gegenüber dem Disk-Cache"
+
+msgid "Swappiness not optimized for Zram"
+msgstr "Swappiness nicht für Zram optimiert"
+
+msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
+msgstr "Zram ist aktiv, aber Swappiness ist {0} statt {1}. Stellen Sie es auf {1} ein, um schnellen komprimierten RAM für den Swap zu bevorzugen – das Ablegen des Dateicaches, wenn Zram verfügbar ist, verschwendet I/O-Leistung."
+
+msgid "with Zram"
+msgstr "mit Zram"
+
+msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+msgstr "Wie aggressiv der Kernel swappt – bei aktivem Zram auf {0} setzen, um schnellen komprimierten RAM gegenüber dem Disk-Cache zu bevorzugen (empfohlen: {0})"

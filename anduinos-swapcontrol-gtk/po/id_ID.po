@@ -1,12 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr "<i>Swappiness yang direkomendasikan: {0} (untuk {1} GiB RAM)</i>"
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Swappiness yang direkomendasikan: {0} ({1})</i>"
 
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "Dianjurkan: {0} GiB memori virtual, swappiness {1} (untuk RAM {2} GiB)"
+msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+msgstr "<i>Direkomendasikan: Virtual Memory {0} GiB, swappiness {1} ({2})</i>"
 
 msgid "About"
 msgstr "Tentang"
@@ -287,11 +286,11 @@ msgstr "{0} · kumpulan {1}%"
 msgid "{0} · saved {1}%"
 msgstr "{0} · disimpan {1}%"
 
-#~ msgid "Active"
-#~ msgstr "Aktif"
+msgid "Active"
+msgstr "Aktif"
 
-#~ msgid "Compressed write-back cache for swap"
-#~ msgstr "Cache penulisan balik terkompresi untuk swap"
+msgid "Compressed write-back cache for swap"
+msgstr "Cache penulisan balik terkompresi untuk swap"
 
 msgid "Compressed write-back cache — intercepts pages before disk swap"
 msgstr "Cache write-back terkompresi — menyadap halaman sebelum memori virtual"
@@ -299,23 +298,23 @@ msgstr "Cache write-back terkompresi — menyadap halaman sebelum memori virtual
 msgid "How much RAM zswap can use for compressed pages"
 msgstr "Berapa banyak memori virtual yang dapat digunakan zswap untuk halaman kompresi"
 
-#~ msgid "Max pool (% of RAM)"
-#~ msgstr "Kolam maksimum (% dari RAM)"
+msgid "Max pool (% of RAM)"
+msgstr "Kolam maksimum (% dari RAM)"
 
 msgid "No zram devices. Create one to enable compressed RAM swap."
 msgstr "Tidak ada perangkat zram. Buat satu untuk mengaktifkan Virtual Memory RAM terkompresi."
 
-#~ msgid "Reclaim pool memory when system is under pressure"
-#~ msgstr "Mengambil kembali memori pool ketika sistem berada di bawah tekanan"
+msgid "Reclaim pool memory when system is under pressure"
+msgstr "Mengambil kembali memori pool ketika sistem berada di bawah tekanan"
 
-#~ msgid "Resizing swap file…"
-#~ msgstr "Mengubah ukuran Berkas Memori Virtual…"
+msgid "Resizing swap file…"
+msgstr "Mengubah ukuran Berkas Memori Virtual…"
 
-#~ msgid "Zswap Configuration"
-#~ msgstr "Konfigurasi Zswap"
+msgid "Zswap Configuration"
+msgstr "Konfigurasi Zswap"
 
-#~ msgid "lzo-rle is fastest, zstd saves more space"
-#~ msgstr "lzo-rle adalah yang tercepat, zstd menghemat lebih banyak ruang"
+msgid "lzo-rle is fastest, zstd saves more space"
+msgstr "lzo-rle adalah yang tercepat, zstd menghemat lebih banyak ruang"
 
 msgid "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
 msgstr "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
@@ -349,3 +348,18 @@ msgstr "Zram and Zswap are mutually exclusive — each creates its own compresse
 
 msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
 msgstr "lz4 = cepat (direkomendasikan), zstd = rasio terbaik, lzo = warisan. Mengubahnya memerlukan Virtual Memory restart."
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr "dengan Zram aktif — utamakan RAM terkompresi yang cepat daripada cache disk"
+
+msgid "Swappiness not optimized for Zram"
+msgstr "Swappiness tidak dioptimalkan untuk Zram"
+
+msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
+msgstr "Zram aktif tetapi swappiness adalah {0} bukan {1}. Atur ke {1} untuk lebih menyukai pertukaran RAM terkompresi cepat — membuang cache file saat zram tersedia akan membuang kinerja I/O."
+
+msgid "with Zram"
+msgstr "dengan Zram"
+
+msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+msgstr "Seberapa agresif kernel melakukan pertukaran — dengan Zram aktif, atur ke {0} untuk lebih menyukai RAM terkompresi cepat daripada cache disk (direkomendasikan: {0})"

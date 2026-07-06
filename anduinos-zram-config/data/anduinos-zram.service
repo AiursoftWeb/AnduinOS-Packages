@@ -1,7 +1,13 @@
-# Managed by anduinos-zram-config. Do not edit manually.
-# This file provides the system default. User customizations made by
-# anduinos-swapcontrol-gtk are written to /etc/systemd/system/
-# which takes priority over this /usr/lib/systemd/system/ location.
+# AnduinOS Zram vendor default.
+#
+# This unit runs setup-zram.sh, which reads the optional config file
+# /etc/default/anduinos-zram (written by anduinos-swapcontrol-gtk).
+# If no config exists, it creates a single zram device at 50% RAM with
+# lz4 compression and swap priority 100.
+#
+# The service is installed to /usr/lib/systemd/system/ so the GUI
+# never overrides it — the GUI writes the declarative config instead.
+# systemd unit precedence (/etc > /run > /usr/lib) is not involved.
 [Unit]
 Description=AnduinOS Zram Devices
 DefaultDependencies=no

@@ -1,12 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr "<i>Swappiness recomendada: {0} (para {1} GiB de RAM)</i>"
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>swappiness recomendada: {0} ({1})</i>"
 
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>Recomendado: {0} GiB de memória virtual, swappiness {1} (para {2} GiB de RAM)</i>"
+msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+msgstr "<i>Recomendado: {0} GiB de memória virtual, swappiness {1} ({2})</i>"
 
 msgid "About"
 msgstr "Sobre"
@@ -287,35 +286,35 @@ msgstr "{0} · piscina {1}%"
 msgid "{0} · saved {1}%"
 msgstr "{0} · economizado {1}%"
 
-#~ msgid "Active"
-#~ msgstr "Ativo"
+msgid "Active"
+msgstr "Ativo"
 
-#~ msgid "Compressed write-back cache for swap"
-#~ msgstr "Cache de gravação comprimido para swap"
+msgid "Compressed write-back cache for swap"
+msgstr "Cache de gravação comprimido para swap"
 
 msgid "Compressed write-back cache — intercepts pages before disk swap"
 msgstr "Cache de gravação em retorno comprimido — intercepta páginas antes da memória virtual"
 
-#~ msgid "How much RAM zswap can use for compressed pages"
-#~ msgstr "Quanta RAM o zswap pode usar para páginas compactadas"
+msgid "How much RAM zswap can use for compressed pages"
+msgstr "Quanta RAM o zswap pode usar para páginas compactadas"
 
-#~ msgid "Max pool (% of RAM)"
-#~ msgstr "Banco máximo (% da RAM)"
+msgid "Max pool (% of RAM)"
+msgstr "Banco máximo (% da RAM)"
 
 msgid "No zram devices. Create one to enable compressed RAM swap."
 msgstr "Sem dispositivos ZRAM. Crie um para ativar a memória virtual comprimida."
 
-#~ msgid "Reclaim pool memory when system is under pressure"
-#~ msgstr "Recuperar memória do banco quando o sistema estiver sob pressão"
+msgid "Reclaim pool memory when system is under pressure"
+msgstr "Recuperar memória do banco quando o sistema estiver sob pressão"
 
-#~ msgid "Resizing swap file…"
-#~ msgstr "Redimensionando o arquivo de memória virtual…"
+msgid "Resizing swap file…"
+msgstr "Redimensionando o arquivo de memória virtual…"
 
-#~ msgid "Zswap Configuration"
-#~ msgstr "Configuração do Zswap"
+msgid "Zswap Configuration"
+msgstr "Configuração do Zswap"
 
-#~ msgid "lzo-rle is fastest, zstd saves more space"
-#~ msgstr "lzo-rle é o mais rápido, zstd economiza mais espaço"
+msgid "lzo-rle is fastest, zstd saves more space"
+msgstr "lzo-rle é o mais rápido, zstd economiza mais espaço"
 
 msgid "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
 msgstr "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
@@ -349,3 +348,18 @@ msgstr "Zram and Zswap are mutually exclusive — each creates its own compresse
 
 msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
 msgstr "lz4 = rápido (recomendado), zstd = melhor relação de compressão, lzo = legado. Alterações exigem reinício do Zswap."
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr "com Zram ativo — prefira a RAM comprimida rápida ao cache de disco"
+
+msgid "Swappiness not optimized for Zram"
+msgstr "Swappiness não otimizada para Zram"
+
+msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
+msgstr "O Zram está ativo, mas a swappiness está configurada como {0} em vez de {1}. Defina-a como {1} para preferir a memória virtual de RAM comprimida rápida — descartar o cache de arquivos quando o zram estiver disponível desperdiça desempenho de E/S."
+
+msgid "with Zram"
+msgstr "com Zram"
+
+msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+msgstr "O quão agressivamente o kernel usa a memória virtual — com Zram ativo, defina como {0} para preferir a RAM comprimida rápida ao cache de disco (recomendado: {0})"

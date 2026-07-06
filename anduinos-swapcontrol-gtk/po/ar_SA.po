@@ -1,12 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr "<i>مقترح: {0} (لـ {1} جيجابايت من الذاكرة العشوائية)</i>"
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>درجة الاستبدال الموصى بها: {0} ({1})</i>"
 
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>موصى به: {0} جيجابايت من الذاكرة الافتراضية، قيمة قابلية التبادل {1} (لـ {2} جيجابايت من ذاكرة الوصول العشوائي)</i>"
+msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+msgstr "<i>موصى به: ذاكرة افتراضية بحجم {0} غيغابايت، درجة استبدال {1} ({2})</i>"
 
 msgid "About"
 msgstr "حول"
@@ -349,3 +348,18 @@ msgstr "Zram and Zswap are mutually exclusive — each creates its own compresse
 
 msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
 msgstr "lz4 = سريع (موصى به)، zstd = أفضل نسبة ضغط، lzo = قديم. يتطلب التغيير إعادة تشغيل zswap."
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr "مع تفعيل Zram — تفضيل ذاكرة RAM المضغوطة السريعة على ذاكرة التخزين المؤقت للقرص"
+
+msgid "Swappiness not optimized for Zram"
+msgstr "درجة الاستبدال غير محسّنة لـ Zram"
+
+msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
+msgstr "Zram نشط لكن درجة الاستبدال هي {0} بدلاً من {1}. اضبطها على {1} لتفضيل ذاكرة الاستبدال المضغوطة السريعة — فإن إسقاط ذاكرة التخزين المؤقت للملفات عند توفر zram يُهدر أداء I/O."
+
+msgid "with Zram"
+msgstr "مع Zram"
+
+msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+msgstr "مدى عدوانية نواة النظام في عملية الاستبدال — مع تفعيل Zram، اضبط على {0} لتفضيل ذاكرة RAM المضغوطة السريعة على ذاكرة التخزين المؤقت للقرص (موصى به: {0})"

@@ -1,12 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr "<i>Swappiness recomandat: {0} (pentru {1} GiB RAM)</i>"
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Valoarea recomandată pentru swappiness: {0} ({1})</i>"
 
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>Recomandat: {0} GiB memorie virtuală, swappiness {1} (pentru {2} GiB RAM)</i>"
+msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+msgstr "<i>Recomandat: {0} GiB memorie virtuală, swappiness {1} ({2})</i>"
 
 msgid "About"
 msgstr "Despre"
@@ -349,3 +348,18 @@ msgstr "Zram and Zswap are mutually exclusive — each creates its own compresse
 
 msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
 msgstr "lz4 = rapid (recomandat), zstd = cea mai bună rată, lzo = vechi. Schimbarea necesită restartarea zswap."
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr "cu Zram activ — preferă RAM-ul rapid comprimat în detrimentul cache-ului de pe disc"
+
+msgid "Swappiness not optimized for Zram"
+msgstr "Swappiness nu este optimizat pentru Zram"
+
+msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
+msgstr "Zram este activ, dar swappiness este {0} în loc de {1}. Setează-l la {1} pentru a prefera memoria virtuală RAM rapid comprimat — pierderea cache-ului de fișiere când zram este disponibil reduce performanța I/O."
+
+msgid "with Zram"
+msgstr "cu Zram"
+
+msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+msgstr "Cât de agresiv face swap kernel-ul — cu Zram activ, setează la {0} pentru a prefera RAM-ul rapid comprimat în detrimentul cache-ului de pe disc (recomandat: {0})"

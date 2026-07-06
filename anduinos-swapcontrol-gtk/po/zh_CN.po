@@ -1,12 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr "<i>建议的交换倾向值：{0}（适用于 {1} GiB 内存）</i>"
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>推荐的交换倾向值：{0} ({1})</i>"
 
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>建议：{0} GiB 虚拟内存，交换倾向值 {1}（适用于 {2} GiB 内存）</i>"
+msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+msgstr "<i>推荐：{0} GiB 虚拟内存，交换倾向值 {1} ({2})</i>"
 
 msgid "About"
 msgstr "关于"
@@ -349,3 +348,18 @@ msgstr "Zram 和 Zswap 互斥——各自创建独立的压缩内存池。同时
 
 msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
 msgstr "lz4 = 快速（推荐），zstd = 最佳压缩率，lzo = 旧版。更改需要重启 zswap。"
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr "已启用 Zram — 优先使用快速压缩的 RAM 而非磁盘缓存"
+
+msgid "Swappiness not optimized for Zram"
+msgstr "针对 Zram 未优化交换倾向值"
+
+msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
+msgstr "Zram 已启用，但交换倾向值为 {0} 而非 {1}。请将其设置为 {1} 以优先使用快速压缩的 RAM 虚拟内存——在 Zram 可用时丢弃文件缓存会浪费 I/O 性能。"
+
+msgid "with Zram"
+msgstr "已启用 Zram"
+
+msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+msgstr "内核交换的激进程度——在 Zram 启用时，设置为 {0} 以优先使用快速压缩的 RAM 而非磁盘缓存（推荐值：{0}）"

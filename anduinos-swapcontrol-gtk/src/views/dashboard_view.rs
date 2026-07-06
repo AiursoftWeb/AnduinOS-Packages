@@ -111,11 +111,17 @@ impl DashboardView {
             .css_classes(["caption"]).halign(gtk::Align::Start).margin_start(2).build());
         // Swappiness recommendation
         {
-            let total_ram = crate::swap::sysctl::read_total_ram().unwrap_or(32 * 1024 * 1024 * 1024);
-            let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
-            let sw = if ram_gb >= 16.0 { 10 } else if ram_gb >= 8.0 { 30 } else { 60 };
+            let sw = crate::swap::sysctl::recommended_swappiness();
+            let has_zram = !crate::swap::zram::read_zram_devices().is_empty();
+            let reason = if has_zram {
+                i18n("with Zram active — prefer fast compressed RAM over disk cache")
+            } else {
+                let total_ram = crate::swap::sysctl::read_total_ram().unwrap_or(32 * 1024 * 1024 * 1024);
+                let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
+                i18n_fmt("for {0} GiB RAM", &[&format!("{:.0}", ram_gb)])
+            };
             self.append(&gtk::Label::builder().use_markup(true)
-                .label(&i18n_fmt("<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>", &[&sw.to_string(), &format!("{:.0}", ram_gb)]))
+                .label(&i18n_fmt("<i>Recommended swappiness: {0} ({1})</i>", &[&sw.to_string(), &reason]))
                 .css_classes(["caption"]).halign(gtk::Align::Start).margin_start(2).build());
         }
 
@@ -394,6 +400,8 @@ impl DashboardView {
             let has_zram = !zram::read_zram_devices().is_empty();
             let zswap_on = zswap::read_zswap_config().map(|c| c.enabled).unwrap_or(false);
 
+            let swappiness = sysctl::read_swappiness().unwrap_or(10);
+
             if !swap_active {
                 let card = build_rec_card((0.93, 0.55, 0.0),
                     &i18n("No disk swap detected"),
@@ -403,6 +411,12 @@ impl DashboardView {
                 let card = build_rec_card((0.93, 0.20, 0.20),
                     &i18n("Zram and Zswap are both active"),
                     &i18n("Zram and Zswap are mutually exclusive — each creates its own compressed RAM pool. Running both wastes CPU and can cause severe memory thrashing. Disable one of them."));
+                rec_box.append(&card);
+            } else if has_zram && swappiness != 100 {
+                let rec = sysctl::recommended_swappiness();
+                let card = build_rec_card((0.93, 0.73, 0.0),
+                    &i18n("Swappiness not optimized for Zram"),
+                    &i18n_fmt("Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance.", &[&swappiness.to_string(), &rec.to_string()]));
                 rec_box.append(&card);
             } else if !has_zram && !zswap_on {
                 let card = build_rec_card((0.93, 0.55, 0.0),

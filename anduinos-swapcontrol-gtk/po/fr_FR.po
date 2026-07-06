@@ -1,12 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr "<i>Swappiness recommandée : {0} (pour {1} Go de RAM)</i>"
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Swappiness recommandée : {0} ({1})</i>"
 
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>Recommandé : {0} GiB de mémoire virtuelle, swappiness {1} (pour {2} GiB de RAM)</i>"
+msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+msgstr "<i>Recommandé : {0} Go de mémoire virtuelle, swappiness {1} ({2})</i>"
 
 msgid "About"
 msgstr "À propos"
@@ -349,3 +348,18 @@ msgstr "Zram and Zswap are mutually exclusive — each creates its own compresse
 
 msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
 msgstr "lz4 = rapide (recommandé), zstd = meilleur taux de compression, lzo = ancienne méthode. Un changement nécessite un redémarrage de zswap."
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr "avec Zram actif — privilégier la RAM compressée rapide plutôt que le cache disque"
+
+msgid "Swappiness not optimized for Zram"
+msgstr "Swappiness non optimisée pour Zram"
+
+msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
+msgstr "Zram est actif mais la swappiness est à {0} au lieu de {1}. Réglez-la sur {1} pour privilégier la mémoire virtuelle RAM compressée rapide — abandonner le cache de fichiers lorsque zram est disponible gaspille les performances E/S."
+
+msgid "with Zram"
+msgstr "avec Zram"
+
+msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+msgstr "Aggressivité d'échange du noyau — avec Zram actif, réglez sur {0} pour privilégier la RAM compressée rapide plutôt que le cache disque (recommandé : {0})"

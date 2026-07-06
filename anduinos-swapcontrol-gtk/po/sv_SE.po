@@ -1,12 +1,11 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr "<i>Rekommenderad swappiness: {0} (för {1} GiB RAM)</i>"
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Rekommenderad swappiness: {0} ({1})</i>"
 
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr "<i>Rekommenderat: {0} GiB virtuellt minne, swappiness {1} (för {2} GiB RAM)</i>"
+msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+msgstr "<i>Rekommenderat: {0} GiB virtuellt minne, swappiness {1} ({2})</i>"
 
 msgid "About"
 msgstr "Om"
@@ -349,3 +348,18 @@ msgstr "Zram and Zswap are mutually exclusive — each creates its own compresse
 
 msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
 msgstr "lz4 = snabb (rekommenderas), zstd = bäst kompressionsgrad, lzo = äldre standard. Ändring kräver omstart av zswap."
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr "med aktiv Zram — föredra snabb komprimerad RAM framför diskenhetens cache"
+
+msgid "Swappiness not optimized for Zram"
+msgstr "Swappiness är inte optimerad för Zram"
+
+msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
+msgstr "Zram är aktivt men swappiness är {0} istället för {1}. Ställ in den på {1} för att föredra snabbt komprimerat RAM-virtuellt minne — att kasta filcachen när Zram finns tillgängligt slöser med I/O-prestanda."
+
+msgid "with Zram"
+msgstr "med Zram"
+
+msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+msgstr "Hur aggressivt kärnan använder virtuellt minne — med aktiv Zram, ställ in på {0} för att föredra snabb komprimerad RAM framför diskenhetens cache (rekommenderat: {0})"
