@@ -320,6 +320,8 @@ anduinos-ufwall-gtk:
 
 anduinos-swapcontrol-gtk:
   extends: .publish
+  needs:
+    - anduinos-swap-config
   variables:
     PACKAGE_DIR: anduinos-swapcontrol-gtk
 
