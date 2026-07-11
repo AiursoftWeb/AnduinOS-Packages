@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-software-properties-gtk</PackageName>
-    <PackageVersion>2.0.0+$(UpstreamVersion)-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0+$(UpstreamVersion)-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS fork of software-properties-gtk — Software &amp; Updates GUI without Ubuntu Pro ads</PackageDescription>
     <Section>admin</Section>
@@ -35,12 +35,25 @@
 
   <ItemGroup>
     <!--
-      Ubuntu Pro code removal: strip the Python imports/methods/call-sites,
-      and suppress ubuntu-pro-client and ubuntu-advantage-desktop-daemon
-      from the inherited upstream Depends.
+      Python 3.14 changed multiprocessing default start method from "fork"
+      to "forkserver".  The latter requires objects to be picklable, but
+      GTK objects and Pipe connections aren't.  Force "fork" mode early.
     -->
-    <PrebuildCommand Run="for f in obj/*/usr/lib/python3/dist-packages/softwareproperties/gtk/SoftwarePropertiesGtk.py; do sed -i '/^from \.UbuntuProPage import UbuntuProPage$/d' &quot;$f&quot;; done" />
-    <PrebuildCommand Run="for f in obj/*/usr/lib/python3/dist-packages/softwareproperties/gtk/SoftwarePropertiesGtk.py; do sed -i '/^[[:space:]]*def init_ubuntu_pro/,/^[[:space:]]*$/d' &quot;$f&quot;; done" />
-    <PrebuildCommand Run="for f in obj/*/usr/lib/python3/dist-packages/softwareproperties/gtk/SoftwarePropertiesGtk.py; do sed -i '/^[[:space:]]*if is_current_distro_lts()/,/self.init_ubuntu_pro()/d' &quot;$f&quot;; done" />
+    <PrebuildCommand Run="for f in obj/*/usr/bin/software-properties-gtk; do sed -i '/^import locale$/a import multiprocessing\ntry:\n    multiprocessing.set_start_method(&quot;fork&quot;)\nexcept RuntimeError:\n    pass' &quot;$f&quot;; done" />
+
+    <!--
+      Strip every trace of Ubuntu Pro: code references in
+      SoftwarePropertiesGtk.py, then delete all .py / .ui / .svg / .desktop
+      files that only exist to advertise Canonical's Pro service.
+    -->
+    <PrebuildCommand Run="for d in obj/*/; do
+      sed -i -e '/^from \.UbuntuProPage import UbuntuProPage$/d' \
+             -e '/^[[:space:]]*def init_ubuntu_pro/,/^[[:space:]]*$/d' \
+             -e '/^[[:space:]]*if is_current_distro_lts()/,/self.init_ubuntu_pro()/d' \
+             &quot;$d/usr/lib/python3/dist-packages/softwareproperties/gtk/SoftwarePropertiesGtk.py&quot;;
+      find &quot;$d&quot; \( -name 'DialogUaAttach.py' -o -name 'DialogUaDetach.py' -o -name 'DialogUaFipsEnable.py' -o -name 'UbuntuProPage.py' \) -delete;
+      find &quot;$d&quot; \( -name 'dialog-ua-attach.ui' -o -name 'dialog-ua-detach.ui' -o -name 'dialog-ua-fips-enable.ui' \) -delete;
+      find &quot;$d&quot; \( -name 'livepatch.svg' -o -name 'ubuntu-pro-logo.svg' -o -name 'ubuntu-pro-logo-dark.svg' -o -name 'software-properties-livepatch.desktop' \) -delete;
+    done" />
   </ItemGroup>
 </Project>
