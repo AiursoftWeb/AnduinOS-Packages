@@ -894,7 +894,7 @@ class AppearanceApp(Adw.Application):
         dialog.set_website('https://www.anduinos.com')
         dialog.set_issue_url('https://github.com/AiursoftWeb/AnduinOS-Packages/issues')
         dialog.set_license_type(Gtk.License.GPL_3_0)
-        dialog.set_version('2.0.0 rc 1')
+        dialog.set_version('2.0.0')
         dialog.present(self.get_active_window())
 
     def _on_win_destroyed(self, win):
