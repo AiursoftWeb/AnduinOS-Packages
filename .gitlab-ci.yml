@@ -360,6 +360,11 @@ anduinos-live-settings:
   variables:
     PACKAGE_DIR: anduinos-live-settings
 
+anduinos-installer-beta:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-installer-beta
+
 anduinos-installer-config:
   extends: .publish
   needs:
