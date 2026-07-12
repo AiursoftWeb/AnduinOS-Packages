@@ -176,6 +176,7 @@ impl DashboardView {
         let rec_box = gtk::Box::builder()
             .orientation(gtk::Orientation::Vertical)
             .spacing(6)
+            .valign(gtk::Align::Start)
             .build();
         self.append(&rec_box);
         *imp.recommendation_box.borrow_mut() = Some(rec_box);
@@ -604,6 +605,7 @@ fn build_rec_card(accent: (f64, f64, f64), title: &str, subtitle: &str) -> gtk::
         .orientation(gtk::Orientation::Horizontal)
         .css_classes(["card"])
         .spacing(12)
+        .valign(gtk::Align::Start)
         .build();
     let bar = gtk::DrawingArea::builder()
         .content_width(4)

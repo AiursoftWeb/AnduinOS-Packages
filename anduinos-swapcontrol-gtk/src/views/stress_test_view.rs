@@ -90,6 +90,7 @@ impl StressTestView {
             .margin_end(24)
             .margin_top(24)
             .margin_bottom(24)
+            .valign(gtk::Align::Start)
             .build();
         scroll.set_child(Some(&inner));
 
@@ -117,6 +118,7 @@ impl StressTestView {
             .orientation(gtk::Orientation::Horizontal)
             .css_classes(["card"])
             .spacing(0)
+            .valign(gtk::Align::Start)
             .build();
 
         let accent = gtk::DrawingArea::builder()

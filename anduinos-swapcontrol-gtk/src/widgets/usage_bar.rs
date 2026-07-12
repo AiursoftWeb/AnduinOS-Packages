@@ -85,21 +85,24 @@ impl UsageBar {
         // Label text (left side, over the bar) — use PangoCairo for Unicode support
         let label_layout = pangocairo::functions::create_layout(cr);
         label_layout.set_text(&label);
-        let mut font_desc = pango::FontDescription::from_string("Sans Bold 11");
+        let mut font_desc = pango::FontDescription::from_string("Sans Bold 10");
         label_layout.set_font_description(Some(&font_desc));
+        let (_, logical) = label_layout.extents();
+        let label_h = logical.height() as f64 / pango::SCALE as f64;
         cr.set_source_rgba(1.0, 1.0, 1.0, 0.9);
-        cr.move_to(8.0, (h - 11.0) / 2.0);
+        cr.move_to(8.0, (h - label_h) / 2.0);
         pangocairo::functions::show_layout(cr, &label_layout);
 
         // Sub text (right side) — use PangoCairo for Unicode support
         let sub_layout = pangocairo::functions::create_layout(cr);
         sub_layout.set_text(&sub);
-        font_desc = pango::FontDescription::from_string("Sans 11");
+        font_desc = pango::FontDescription::from_string("Sans 10");
         sub_layout.set_font_description(Some(&font_desc));
         let (_, logical) = sub_layout.extents();
         let sub_w = logical.width() as f64 / pango::SCALE as f64;
+        let sub_h = logical.height() as f64 / pango::SCALE as f64;
         cr.set_source_rgba(1.0, 1.0, 1.0, 0.7);
-        cr.move_to(w - sub_w - 10.0, (h - 11.0) / 2.0);
+        cr.move_to(w - sub_w - 10.0, (h - sub_h) / 2.0);
         pangocairo::functions::show_layout(cr, &sub_layout);
     }
 }
