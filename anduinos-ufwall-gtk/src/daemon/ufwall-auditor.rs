@@ -238,16 +238,37 @@ fn enrich_with_process_info(traffic_map: &mut HashMap<(u16, u16, String, String)
         }
     }
 
+    // Linux default ephemeral port range: 32768–60999.
+    // Well-known service ports live below this range.
+    const EPHEMERAL_LOW: u16 = 32768;
+
     for stat in traffic_map.values_mut() {
-        // Fix TCP direction: if we captured mid-stream, the first packet
-        // may be a download data packet (looks inbound). Use the definitive
-        // listen-state signal instead. UDP is left to first-packet direction.
+        // Fix direction: first-packet direction is unreliable when the
+        // auditor starts mid-connection (e.g. during a download).
+        //
+        // TCP: definitive — only servers listen. A port in TcpState::Listen
+        //      means an external client connected to us (Inbound). An
+        //      ephemeral port means we initiated (Outbound).
+        // UDP: heuristic — port range. Ephemeral → well-known = client
+        //      (Outbound). Well-known → ephemeral = server (Inbound).
+        //      Fall back to first-packet direction if ambiguous.
         if stat.protocol == "TCP" {
             stat.direction = if listening_ports.contains(&stat.local_port) {
-                "Inbound".to_string()   // server port → external client connected to us
+                "Inbound".to_string()
             } else {
-                "Outbound".to_string()  // ephemeral port → we initiated
+                "Outbound".to_string()
             };
+        } else if stat.protocol == "UDP" {
+            let local_is_ephemeral = stat.local_port >= EPHEMERAL_LOW;
+            let remote_is_ephemeral = stat.remote_port >= EPHEMERAL_LOW;
+            if local_is_ephemeral && !remote_is_ephemeral {
+                // We used an ephemeral port to reach a well-known port → client
+                stat.direction = "Outbound".to_string();
+            } else if !local_is_ephemeral && remote_is_ephemeral {
+                // External client used ephemeral port to reach our well-known port → server
+                stat.direction = "Inbound".to_string();
+            }
+            // else: ambiguous (both ephemeral or both well-known) → keep first-packet
         }
 
         if stat.pid.is_none() {
