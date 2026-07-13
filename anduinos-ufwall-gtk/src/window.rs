@@ -8,7 +8,7 @@ use std::cell::RefCell;
 use crate::application::UfwallApplication;
 use crate::i18n::i18n;
 use crate::views::{dashboard_view::DashboardView, network_audit_view::NetworkAuditView, profiles_view::ProfilesView, rules_view::RulesView, status_view::StatusView};
-use crate::ufw::monitor;
+
 use crate::ufw::show_error;
 use crate::ufw::backend;
 
@@ -87,7 +87,7 @@ impl UfwallWindow {
             .selection_mode(gtk::SelectionMode::Single)
             .build();
         
-        let create_sidebar_row = |icon_name: &str, title: &str| -> gtk::ListBoxRow {
+        let create_sidebar_row = |icon_name: &str, title: &str, name: &str| -> gtk::ListBoxRow {
             let box_ = gtk::Box::builder()
                 .orientation(gtk::Orientation::Horizontal)
                 .spacing(12)
@@ -110,14 +110,14 @@ impl UfwallWindow {
             box_.append(&icon);
             box_.append(&label);
             
-            gtk::ListBoxRow::builder().child(&box_).build()
+            gtk::ListBoxRow::builder().child(&box_).name(name).build()
         };
 
-        let dashboard_row = create_sidebar_row("utilities-system-monitor-symbolic", &i18n("Dashboard"));
-        let audit_row = create_sidebar_row("network-transmit-receive-symbolic", &i18n("Audit"));
-        let status_row = create_sidebar_row("security-high-symbolic", &i18n("Status"));
-        let rules_row = create_sidebar_row("view-list-symbolic", &i18n("Rules"));
-        let profiles_row = create_sidebar_row("emblem-system-symbolic", &i18n("Profiles"));
+        let dashboard_row = create_sidebar_row("utilities-system-monitor-symbolic", &i18n("Dashboard"), "dashboard");
+        let audit_row = create_sidebar_row("network-transmit-receive-symbolic", &i18n("Audit"), "audit");
+        let status_row = create_sidebar_row("security-high-symbolic", &i18n("Status"), "status");
+        let rules_row = create_sidebar_row("view-list-symbolic", &i18n("Rules"), "rules");
+        let profiles_row = create_sidebar_row("emblem-system-symbolic", &i18n("Profiles"), "profiles");
 
         sidebar_list.append(&dashboard_row);
         sidebar_list.append(&audit_row);
@@ -198,16 +198,8 @@ impl UfwallWindow {
         let stack_clone = stack.clone();
         sidebar_list.connect_row_selected(move |_, row| {
             if let Some(row) = row {
-                let index = row.index();
-                let name = match index {
-                    0 => "dashboard",
-                    1 => "audit",
-                    2 => "status",
-                    3 => "rules",
-                    4 => "profiles",
-                    _ => return,
-                };
-                stack_clone.set_visible_child_name(name);
+                let name = row.widget_name();
+                stack_clone.set_visible_child_name(&name);
             }
         });
 

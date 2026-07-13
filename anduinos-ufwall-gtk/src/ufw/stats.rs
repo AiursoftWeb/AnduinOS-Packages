@@ -10,10 +10,8 @@ pub struct BlockedEvent {
     pub timestamp: String,
     pub src_ip: String,
     pub dst_ip: String,
-    pub src_port: String,
     pub dst_port: String,
     pub protocol: String,
-    pub interface: String,
     pub action: String, // BLOCK, ALLOW
 }
 
@@ -26,14 +24,6 @@ pub struct ListeningPort {
     pub process: String,
 }
 
-/// Per-rule packet/byte counters from iptables.
-#[derive(Debug, Clone)]
-pub struct RuleCounter {
-    pub packets: u64,
-    pub bytes: u64,
-    pub target: String,
-    pub description: String,
-}
 
 /// Read recent blocked/allowed events from the kernel log.
 pub fn read_blocked_events(limit: usize) -> Result<Vec<BlockedEvent>, UfwError> {
@@ -91,19 +81,15 @@ fn parse_kernel_log_line(line: &str) -> Option<BlockedEvent> {
 
     let src_ip = extract_field(line, "SRC=");
     let dst_ip = extract_field(line, "DST=");
-    let src_port = extract_field(line, "SPT=");
     let dst_port = extract_field(line, "DPT=");
     let protocol = extract_field(line, "PROTO=");
-    let interface = extract_field(line, "IN=");
 
     Some(BlockedEvent {
         timestamp,
         src_ip,
         dst_ip,
-        src_port,
         dst_port,
         protocol,
-        interface,
         action,
     })
 }
@@ -229,46 +215,3 @@ fn extract_process_name(proc_str: &str) -> String {
     proc_str.trim_matches(&['(', ')', '"'][..]).to_string()
 }
 
-/// Read per-rule packet/byte counters from iptables.
-pub fn read_rule_counters() -> Result<Vec<RuleCounter>, UfwError> {
-    let output = Command::new("iptables")
-        .env("LC_ALL", "C")
-        .env("LANGUAGE", "C")
-        .args(["-L", "ufw-user-input", "-v", "-x", "-n"])
-        .output()
-        .map_err(|e| UfwError {
-            message: format!("Failed to run iptables: {e}"),
-        })?;
-
-    let text = String::from_utf8_lossy(&output.stdout);
-    let mut counters = Vec::new();
-
-    for line in text.lines().skip(2) {
-        // iptables -v -x output: pkts bytes target prot opt in out source destination
-        let fields: Vec<&str> = line.split_whitespace().collect();
-        if fields.len() < 9 {
-            continue;
-        }
-        // Skip header lines starting with "Chain"
-        if fields[0] == "Chain" {
-            continue;
-        }
-
-        let packets: u64 = fields[0].parse().unwrap_or(0);
-        let bytes: u64 = fields[1].parse().unwrap_or(0);
-        let target = fields[2].to_string();
-        let description = format!("{} {} -> {}", fields[3], fields[7], fields[8]);
-
-        // Only include rules with non-zero packets
-        if packets > 0 {
-            counters.push(RuleCounter {
-                packets,
-                bytes,
-                target,
-                description,
-            });
-        }
-    }
-
-    Ok(counters)
-}

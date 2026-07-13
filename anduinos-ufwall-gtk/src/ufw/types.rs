@@ -163,14 +163,7 @@ pub enum Protocol {
 }
 
 impl Protocol {
-    pub fn from_str(s: &str) -> Option<Self> {
-        match s.to_lowercase().as_str() {
-            "tcp" => Some(Self::Tcp),
-            "udp" => Some(Self::Udp),
-            "any" | "both" | "" => Some(Self::Both),
-            _ => None,
-        }
-    }
+
 
     pub fn as_ufw_arg(&self) -> Option<&'static str> {
         match self {
@@ -180,13 +173,7 @@ impl Protocol {
         }
     }
 
-    pub fn index(&self) -> u32 {
-        match self {
-            Self::Both => 0,
-            Self::Tcp => 1,
-            Self::Udp => 2,
-        }
-    }
+
 
     pub fn from_index(idx: u32) -> Self {
         match idx {

@@ -82,10 +82,9 @@ impl RuleRow {
 
     fn confirm_delete(&self, btn: &gtk::Button) {
         let num = *self.imp().rule_number.borrow();
-        let dialog = adw::MessageDialog::builder()
+        let dialog = adw::AlertDialog::builder()
             .heading(i18n("Delete Rule"))
             .body(format!("{}: {}", i18n("Delete rule"), num))
-            .modal(true)
             .build();
         dialog.add_response("cancel", &i18n("Cancel"));
         dialog.add_response("delete", &i18n("Delete"));
@@ -95,7 +94,9 @@ impl RuleRow {
 
         let weak_btn = btn.downgrade();
         let weak_row = self.downgrade();
-        dialog.connect_response(None, move |dialog, response| {
+        let parent_window = self.root().and_then(|r| r.downcast::<gtk::Window>().ok());
+        let parent_window = parent_window.as_ref();
+        dialog.choose(parent_window, gtk::gio::Cancellable::NONE, move |response| {
             if response == "delete" {
                 if let Some(btn) = weak_btn.upgrade() {
                     btn.set_sensitive(false);
@@ -121,14 +122,6 @@ impl RuleRow {
                     }
                 });
             }
-            dialog.close();
         });
-
-        if let Some(root) = self.root() {
-            if let Some(window) = root.downcast_ref::<gtk::Window>() {
-                dialog.set_transient_for(Some(window));
-            }
-        }
-        dialog.present();
     }
 }

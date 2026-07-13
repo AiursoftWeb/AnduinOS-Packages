@@ -369,7 +369,7 @@ impl NetworkAuditView {
                 }
 
                 for stat in sorted_stats.iter().take(20) {
-                    let total_speed = stat.upload_speed + stat.download_speed;
+                    
                     
                     let format_compact = |speed: u64| -> String {
                         let speed_kb = speed as f64 / 1024.0;
@@ -476,18 +476,17 @@ impl NetworkAuditView {
                         };
 
                         let parent = btn.root().and_then(|r| r.downcast::<gtk::Window>().ok());
-                        let dialog = adw::MessageDialog::new(
-                            parent.as_ref(),
-                            Some(&i18n("Block Connection?")),
-                            Some(&dialog_body),
-                        );
+                        let dialog = adw::AlertDialog::builder()
+                            .heading(i18n("Block Connection?"))
+                            .body(dialog_body)
+                            .build();
                         dialog.add_response("cancel", &i18n("Cancel"));
                         dialog.add_response("block", &i18n("Block"));
                         dialog.set_response_appearance("block", adw::ResponseAppearance::Destructive);
                         dialog.set_default_response(Some("cancel"));
                         dialog.set_close_response("cancel");
 
-                        dialog.connect_response(None, move |d, response| {
+                        dialog.choose(parent.as_ref(), gtk::gio::Cancellable::NONE, move |response| {
                             if response == "block" {
                                 let ip = ip.clone();
                                 let proc_name = proc_name.clone();
@@ -529,7 +528,7 @@ impl NetworkAuditView {
                                 });
                             }
                         });
-                        dialog.present();
+
                     });
                     
                     row.add_suffix(&block_btn);
