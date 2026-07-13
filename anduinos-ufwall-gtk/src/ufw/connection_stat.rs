@@ -16,5 +16,6 @@ pub struct ConnectionStat {
     pub total_uploaded: u64,
     pub total_downloaded: u64,
     #[serde(skip, default)]
+    #[allow(dead_code)]
     pub inactivity_ticks: u32,
 }
