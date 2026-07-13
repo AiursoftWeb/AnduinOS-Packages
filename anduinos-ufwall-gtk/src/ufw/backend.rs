@@ -11,6 +11,7 @@
 
 use std::collections::HashMap;
 use std::fs;
+use std::net;
 use std::path::Path;
 use std::process::Command;
 
@@ -106,25 +107,48 @@ fn parse_ufw_status_verbose(output: &str) -> Result<UfwStatus, UfwError> {
             continue;
         } else {
             // Rule line format (action-anchored to handle ports with spaces):
-            //   22                         ALLOW IN    Anywhere
-            //   Nginx Full                ALLOW IN    Anywhere
-            //   22 (v6)                    ALLOW IN    Anywhere (v6)
-            let (port, rest) = split_at_action(line);
+            //   Port-based:    22                     ALLOW IN    Anywhere
+            //   Address-based: 1.2.3.4                DENY OUT    Anywhere
+            //   Inbound addr:  Anywhere               DENY IN     5.6.7.8
+            //
+            // Strip trailing comment (e.g. "# Audit Block: wechat") so it
+            // doesn't leak into the from/to fields.
+            let clean_line = match line.find(" # ") {
+                Some(pos) => &line[..pos],
+                None => line,
+            };
+            let (first_col, rest) = split_at_action(clean_line);
             if let Some((action_str, remainder)) = rest.split_once(' ') {
                 let (direction_str, from_str) = remainder.split_once(' ').unwrap_or((remainder, "Anywhere"));
-                let is_v6 = line.contains("(v6)");
+                let is_v6 = clean_line.contains("(v6)");
 
                 let action = Action::from_str(action_str).unwrap_or(Action::Allow);
                 let direction = Direction::from_str(direction_str).unwrap_or(Direction::In);
 
+                // Strip "(v6)" suffix from first column and source for clean display
+                let first_col_clean = first_col.trim_end_matches(" (v6)");
+                let from_clean = from_str.trim().trim_end_matches(" (v6)");
+
+                // Detect address-based rules (vs port-based):
+                //   Outbound: first column is the destination IP
+                //   Inbound:  first column is "Anywhere", source column is the IP
+                let to_is_ip = is_ip_or_cidr(first_col_clean);
+                let from_is_ip = is_ip_or_cidr(&from_clean);
+                let is_address_rule = to_is_ip
+                    || (from_is_ip && (first_col_clean == "Anywhere" || first_col_clean.is_empty()));
+
                 let rule_num = (rules.len() + 1) as u32;
                 rules.push(UfwRule {
                     number: rule_num,
-                    port,
+                    port: if is_address_rule { String::new() } else {
+                        first_col.to_string()
+                    },
                     action,
                     direction,
-                    from: from_str.to_string(),
-                    to: "Anywhere".to_string(),
+                    from: from_clean.to_string(),
+                    to: if to_is_ip { first_col_clean.to_string() } else {
+                        "Anywhere".to_string()
+                    },
                     v6: is_v6,
                 });
             }
@@ -138,6 +162,23 @@ fn parse_ufw_status_verbose(output: &str) -> Result<UfwStatus, UfwError> {
         rules,
         logging,
     })
+}
+
+/// Check if a string looks like an IP address or CIDR notation.
+/// e.g. "1.2.3.4", "2001:db8::1", "192.168.1.0/24"
+fn is_ip_or_cidr(s: &str) -> bool {
+    // Try IPv4
+    if let Some(addr_part) = s.split('/').next() {
+        if addr_part.parse::<net::Ipv4Addr>().is_ok() {
+            return true;
+        }
+    }
+    // Try IPv6
+    if s.parse::<net::Ipv6Addr>().is_ok() {
+        return true;
+    }
+    // Also match IPv4-ish patterns that might fail parse (old format)
+    s.contains('.') && !s.chars().any(|c| c.is_alphabetic())
 }
 
 /// Split a rule line at the action keyword to handle ports with spaces.
@@ -462,8 +503,11 @@ pub fn add_rule(params: &RuleParams) -> Result<String, UfwError> {
     // Action
     args.push(params.action.as_ufw_arg().to_string());
 
-    // Direction (optional) — used for on-interface binding
+    // Direction (optional) — used for on-interface binding and rule direction
     let has_dir = params.direction.is_some();
+    if let Some(dir) = &params.direction {
+        args.push(dir.as_ufw_arg().to_string());
+    }
 
     // From clause
     if let Some(from) = &params.from {
@@ -740,15 +784,175 @@ Nginx Full                 ALLOW IN    Anywhere
 53/tcp                     ALLOW IN    Anywhere
 22 (v6)                    ALLOW IN    Anywhere (v6)
 53/udp (v6)                ALLOW IN    Anywhere (v6)
+1.2.3.4                    DENY OUT    Anywhere                   # Audit Block: wechat
 ";
         let result = parse_ufw_status_verbose(output).unwrap();
         assert!(result.active);
         assert_eq!(result.logging, "low");
-        assert_eq!(result.rules.len(), 7);
+        assert_eq!(result.rules.len(), 8);
+        // Port-based rules unchanged
         assert_eq!(result.rules[0].port, "22");
         assert_eq!(result.rules[1].port, "80/tcp");
         assert_eq!(result.rules[2].port, "Nginx Full");
         assert_eq!(result.rules[3].port, "53/udp");
         assert_eq!(result.rules[5].v6, true);
+        // Address-based outbound rule: IP goes to `to`, port is empty, comment stripped
+        let addr_rule = &result.rules[7];
+        assert_eq!(addr_rule.port, "");
+        assert_eq!(addr_rule.to, "1.2.3.4");
+        assert_eq!(addr_rule.from, "Anywhere");
+        assert_eq!(addr_rule.direction, Direction::Out);
+        assert_eq!(addr_rule.action, Action::Deny);
+    }
+
+    #[test]
+    fn test_parse_address_rule_inbound() {
+        // ufw deny in from 5.6.7.8 → "Anywhere  DENY IN  5.6.7.8"
+        let output = r"Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), deny (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+Anywhere                   DENY IN     5.6.7.8
+";
+        let result = parse_ufw_status_verbose(output).unwrap();
+        assert_eq!(result.rules.len(), 1);
+        let rule = &result.rules[0];
+        assert_eq!(rule.port, ""); // address rule: no port
+        assert_eq!(rule.to, "Anywhere");
+        assert_eq!(rule.from, "5.6.7.8");
+        assert_eq!(rule.direction, Direction::In);
+        assert_eq!(rule.action, Action::Deny);
+    }
+
+    #[test]
+    fn test_parse_address_rule_comment_stripped() {
+        // Comment after " # " must not leak into from/to
+        let output = r"Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), deny (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+1.2.3.4                    DENY OUT    Anywhere                   # Audit Block: wechat
+";
+        let result = parse_ufw_status_verbose(output).unwrap();
+        assert_eq!(result.rules.len(), 1);
+        let rule = &result.rules[0];
+        assert_eq!(rule.port, "");
+        assert_eq!(rule.to, "1.2.3.4");
+        // Comment must not leak:
+        assert_eq!(rule.from, "Anywhere");
+        assert!(!rule.from.contains('#'));
+        assert!(!rule.from.contains("wechat"));
+    }
+
+    #[test]
+    fn test_is_ip_or_cidr() {
+        // IPv4
+        assert!(is_ip_or_cidr("1.2.3.4"));
+        assert!(is_ip_or_cidr("192.168.1.1"));
+        // CIDR
+        assert!(is_ip_or_cidr("192.168.1.0/24"));
+        // IPv6
+        assert!(is_ip_or_cidr("2001:db8::1"));
+        assert!(is_ip_or_cidr("::1"));
+        // Not IPs
+        assert!(!is_ip_or_cidr("22"));
+        assert!(!is_ip_or_cidr("80/tcp"));
+        assert!(!is_ip_or_cidr("Nginx Full"));
+        assert!(!is_ip_or_cidr("Anywhere"));
+        assert!(!is_ip_or_cidr(""));
+    }
+
+    #[test]
+    fn test_ufw_rule_title_subtitle_address() {
+        // Outbound deny to IP
+        let rule = UfwRule {
+            number: 1, port: "".into(), action: Action::Deny,
+            direction: Direction::Out, from: "Anywhere".into(),
+            to: "1.2.3.4".into(), v6: false,
+        };
+        assert_eq!(rule.title(), "1.2.3.4");
+        assert_eq!(rule.subtitle(), "DENY OUT to 1.2.3.4");
+
+        // Inbound deny from IP
+        let rule = UfwRule {
+            number: 2, port: "".into(), action: Action::Deny,
+            direction: Direction::In, from: "5.6.7.8".into(),
+            to: "Anywhere".into(), v6: false,
+        };
+        assert_eq!(rule.title(), "5.6.7.8");
+        assert_eq!(rule.subtitle(), "DENY IN from 5.6.7.8");
+
+        // Port-based rule (unchanged behavior)
+        let rule = UfwRule {
+            number: 3, port: "22".into(), action: Action::Allow,
+            direction: Direction::In, from: "Anywhere".into(),
+            to: "Anywhere".into(), v6: false,
+        };
+        assert_eq!(rule.title(), "22");
+        assert_eq!(rule.subtitle(), "ALLOW IN");
+
+        // Port-based with from restriction
+        let rule = UfwRule {
+            number: 4, port: "22".into(), action: Action::Allow,
+            direction: Direction::In, from: "192.168.1.0/24".into(),
+            to: "Anywhere".into(), v6: false,
+        };
+        assert_eq!(rule.title(), "22");
+        assert_eq!(rule.subtitle(), "ALLOW IN from 192.168.1.0/24");
+
+        // v6 rule
+        let rule = UfwRule {
+            number: 5, port: "".into(), action: Action::Deny,
+            direction: Direction::Out, from: "Anywhere".into(),
+            to: "::1".into(), v6: true,
+        };
+        assert_eq!(rule.title(), "::1 (v6)");
+    }
+
+    #[test]
+    fn test_parse_ufw_status_mixed_rules() {
+        // Verify existing port rules still work alongside address rules
+        let output = r"Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), deny (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22                         ALLOW IN    Anywhere
+1.2.3.4                    DENY OUT    Anywhere                   # Audit Block: app
+Anywhere                   DENY IN     5.6.7.8
+80/tcp                     ALLOW IN    192.168.1.0/24
+";
+        let result = parse_ufw_status_verbose(output).unwrap();
+        assert_eq!(result.rules.len(), 4);
+
+        // Rule 0: port-based allow SSH
+        assert_eq!(result.rules[0].port, "22");
+        assert_eq!(result.rules[0].to, "Anywhere");
+        assert_eq!(result.rules[0].from, "Anywhere");
+
+        // Rule 1: outbound deny to IP
+        assert_eq!(result.rules[1].port, "");
+        assert_eq!(result.rules[1].to, "1.2.3.4");
+        assert_eq!(result.rules[1].from, "Anywhere");
+        assert_eq!(result.rules[1].action, Action::Deny);
+        assert_eq!(result.rules[1].direction, Direction::Out);
+
+        // Rule 2: inbound deny from IP
+        assert_eq!(result.rules[2].port, "");
+        assert_eq!(result.rules[2].to, "Anywhere");
+        assert_eq!(result.rules[2].from, "5.6.7.8");
+        assert_eq!(result.rules[2].direction, Direction::In);
+
+        // Rule 3: port-based with source restriction
+        assert_eq!(result.rules[3].port, "80/tcp");
+        assert_eq!(result.rules[3].from, "192.168.1.0/24");
     }
 }

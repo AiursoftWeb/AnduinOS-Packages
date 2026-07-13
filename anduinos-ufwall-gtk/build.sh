@@ -29,9 +29,11 @@ if [ "$ARCH" == "arm64" ]; then
 
     cargo build --release --target aarch64-unknown-linux-gnu
     cp target/aarch64-unknown-linux-gnu/release/ufwall-gtk obj/ufwall-gtk
+    cp target/aarch64-unknown-linux-gnu/release/ufwall-auditor obj/ufwall-auditor
 else
     need_cmd cargo
 
     cargo build --release
     cp target/release/ufwall-gtk obj/ufwall-gtk
+    cp target/release/ufwall-auditor obj/ufwall-auditor
 fi

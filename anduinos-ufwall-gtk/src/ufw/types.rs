@@ -218,23 +218,53 @@ pub struct UfwRule {
 }
 
 impl UfwRule {
+    /// Display title: port number, service name, or IP address.
+    pub fn title(&self) -> String {
+        if !self.port.is_empty() {
+            // Port-based rule
+            if self.v6 {
+                format!("{} (v6)", self.port)
+            } else {
+                self.port.clone()
+            }
+        } else if self.to != "Anywhere" && !self.to.is_empty() {
+            // Address-based: outbound deny/allow to <IP>
+            if self.v6 {
+                format!("{} (v6)", self.to)
+            } else {
+                self.to.clone()
+            }
+        } else if self.from != "Anywhere" {
+            // Address-based: inbound deny/allow from <IP>
+            if self.v6 {
+                format!("{} (v6)", self.from)
+            } else {
+                self.from.clone()
+            }
+        } else {
+            String::new()
+        }
+    }
+
     /// Human-readable subtitle for display in the rule list.
     pub fn subtitle(&self) -> String {
         let dir = &self.direction;
         let action = &self.action;
-        if self.from == "Anywhere" || self.from == "Anywhere (v6)" {
-            format!("{action} {dir}")
-        } else {
+        if !self.port.is_empty() {
+            // Port-based
+            if self.from == "Anywhere" || self.from == "Anywhere (v6)" {
+                format!("{action} {dir}")
+            } else {
+                format!("{action} {dir} from {}", self.from)
+            }
+        } else if self.to != "Anywhere" && !self.to.is_empty() {
+            // Address-based: deny out to <IP>
+            format!("{action} {dir} to {}", self.to)
+        } else if self.from != "Anywhere" {
+            // Address-based: deny in from <IP>
             format!("{action} {dir} from {}", self.from)
-        }
-    }
-
-    /// Display title (port + v6 indicator).
-    pub fn title(&self) -> String {
-        if self.v6 {
-            format!("{} (v6)", self.port)
         } else {
-            self.port.clone()
+            format!("{action} {dir}")
         }
     }
 }

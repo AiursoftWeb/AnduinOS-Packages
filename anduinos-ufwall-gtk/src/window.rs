@@ -7,7 +7,7 @@ use std::cell::RefCell;
 
 use crate::application::UfwallApplication;
 use crate::i18n::i18n;
-use crate::views::{dashboard_view::DashboardView, profiles_view::ProfilesView, rules_view::RulesView, status_view::StatusView};
+use crate::views::{dashboard_view::DashboardView, network_audit_view::NetworkAuditView, profiles_view::ProfilesView, rules_view::RulesView, status_view::StatusView};
 use crate::ufw::monitor;
 use crate::ufw::show_error;
 use crate::ufw::backend;
@@ -20,6 +20,7 @@ mod imp {
         pub split_view: RefCell<Option<adw::OverlaySplitView>>,
         pub stack: RefCell<Option<gtk::Stack>>,
         pub dashboard_view: RefCell<Option<DashboardView>>,
+        pub network_audit_view: RefCell<Option<NetworkAuditView>>,
         pub status_view: RefCell<Option<StatusView>>,
         pub rules_view: RefCell<Option<RulesView>>,
         pub profiles_view: RefCell<Option<ProfilesView>>,
@@ -113,11 +114,13 @@ impl UfwallWindow {
         };
 
         let dashboard_row = create_sidebar_row("utilities-system-monitor-symbolic", &i18n("Dashboard"));
+        let audit_row = create_sidebar_row("network-transmit-receive-symbolic", &i18n("Audit"));
         let status_row = create_sidebar_row("security-high-symbolic", &i18n("Status"));
         let rules_row = create_sidebar_row("view-list-symbolic", &i18n("Rules"));
         let profiles_row = create_sidebar_row("emblem-system-symbolic", &i18n("Profiles"));
 
         sidebar_list.append(&dashboard_row);
+        sidebar_list.append(&audit_row);
         sidebar_list.append(&status_row);
         sidebar_list.append(&rules_row);
         sidebar_list.append(&profiles_row);
@@ -139,11 +142,13 @@ impl UfwallWindow {
             .build();
         
         let dashboard_view = DashboardView::new();
+        let audit_view = NetworkAuditView::new();
         let status_view = StatusView::new();
         let rules_view = RulesView::new();
         let profiles_view = ProfilesView::new();
 
         stack.add_named(&dashboard_view, Some("dashboard"));
+        stack.add_named(&audit_view, Some("audit"));
         stack.add_named(&status_view, Some("status"));
         stack.add_named(&rules_view, Some("rules"));
         stack.add_named(&profiles_view, Some("profiles"));
@@ -196,9 +201,10 @@ impl UfwallWindow {
                 let index = row.index();
                 let name = match index {
                     0 => "dashboard",
-                    1 => "status",
-                    2 => "rules",
-                    3 => "profiles",
+                    1 => "audit",
+                    2 => "status",
+                    3 => "rules",
+                    4 => "profiles",
                     _ => return,
                 };
                 stack_clone.set_visible_child_name(name);
@@ -211,6 +217,7 @@ impl UfwallWindow {
         *imp.split_view.borrow_mut() = Some(split_view);
         *imp.stack.borrow_mut() = Some(stack);
         *imp.dashboard_view.borrow_mut() = Some(dashboard_view);
+        *imp.network_audit_view.borrow_mut() = Some(audit_view);
         *imp.status_view.borrow_mut() = Some(status_view);
         *imp.rules_view.borrow_mut() = Some(rules_view);
         *imp.profiles_view.borrow_mut() = Some(profiles_view);
