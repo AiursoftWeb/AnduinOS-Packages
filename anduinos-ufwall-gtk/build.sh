@@ -14,6 +14,12 @@ bash "$SCRIPT_DIR/compile-locales.sh"
 
 echo "Building ufwall-gtk for architecture: $ARCH"
 
+# Build-time dependencies (Cargo crates link against these system libs)
+if ! pkg-config --exists libpcap; then
+    echo "BUILD ERROR: libpcap-dev is required. Install with: sudo apt install -y libpcap-dev" >&2
+    exit 1
+fi
+
 mkdir -p obj
 
 if [ "$ARCH" == "arm64" ]; then
