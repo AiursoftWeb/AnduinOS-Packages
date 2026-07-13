@@ -1,14 +1,7 @@
 #!/bin/bash
 # anduinos-installer-beta — GTK4 native installer for AnduinOS (beta)
 #
-# The installer needs root to partition disks, format filesystems,
-# and install GRUB.  On the Live ISO the "live" user has NOPASSWD
-# sudo, so we re-exec via sudo with the minimal environment needed
-# for GTK4 to connect to the Wayland/X11 display.
-
-if [ "$(id -u)" -ne 0 ]; then
-    exec sudo --preserve-env=XDG_RUNTIME_DIR,WAYLAND_DISPLAY,DISPLAY,DBUS_SESSION_BUS_ADDRESS \
-         /usr/bin/python3 /usr/lib/anduinos-installer-beta/main.py "$@"
-else
-    exec /usr/bin/python3 /usr/lib/anduinos-installer-beta/main.py "$@"
-fi
+# The UI runs as the current user to preserve the desktop session
+# (theme, fonts, input methods, portals).  Privileged operations in
+# the backend use sudo individually — the live user has NOPASSWD.
+exec /usr/bin/python3 /usr/lib/anduinos-installer-beta/main.py "$@"

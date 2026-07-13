@@ -30,9 +30,17 @@ from languages import is_chinese, CHINESE_MIRRORS
 
 # ── helpers ──────────────────────────────────────────────────────────────
 
+# When the UI runs as a normal user (not root), privileged commands need sudo.
+_HAS_ROOT = os.geteuid() == 0
+
+
 def _run(cmd: list[str], log: Callable[[str], None],
-         check: bool = True, timeout: int | None = None) -> subprocess.CompletedProcess:
-    """Run a command, logging it. Raises RuntimeError on failure when check=True."""
+         check: bool = True, timeout: int | None = None,
+         privileged: bool = True) -> subprocess.CompletedProcess:
+    """Run a command, logging it.  Prefixes with sudo when privileged=True
+    and we're not already root."""
+    if privileged and not _HAS_ROOT:
+        cmd = ["sudo"] + cmd
     log(f"  $ {shlex.join(cmd)}")
     try:
         r = subprocess.run(cmd, capture_output=True, text=True,
