@@ -368,7 +368,8 @@ impl NetworkAuditView {
                     continue;
                 }
 
-                for stat in sorted_stats.iter().take(20) {
+                for stat in sorted_stats.iter() {
+
                     
                     
                     let format_compact = |speed: u64| -> String {
