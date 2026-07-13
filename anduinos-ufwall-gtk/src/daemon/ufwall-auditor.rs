@@ -27,9 +27,26 @@ fn main() {
     };
     
     let all_devices = pcap::Device::list().unwrap_or_default();
-    let local_ips: Vec<String> = all_devices.into_iter()
+    let mut local_ips: Vec<String> = all_devices.into_iter()
         .flat_map(|d| d.addresses.into_iter().map(|a| a.addr.to_string()))
         .collect();
+
+    // Supplement with IPv6 temporary addresses from /proc/net/if_inet6.
+    // pcap::Device::list() may miss privacy-extension temporary addresses,
+    // causing outbound IPv6 traffic to be misclassified as inbound.
+    if let Ok(inet6) = std::fs::read_to_string("/proc/net/if_inet6") {
+        for line in inet6.lines().skip(1) {
+            let addr_hex = line.split_whitespace().next().unwrap_or("");
+            if addr_hex.len() == 32 {
+                if let Some(ipv6) = parse_ipv6_from_hex(addr_hex) {
+                    let ip_str = ipv6.to_string();
+                    if !local_ips.contains(&ip_str) {
+                        local_ips.push(ip_str);
+                    }
+                }
+            }
+        }
+    }
 
     let mut cap = match Capture::from_device(device).unwrap().promisc(false).timeout(100).open() {
         Ok(c) => c,
@@ -158,19 +175,43 @@ fn main() {
     }
 }
 
+/// Parse a 32-char hex string from /proc/net/if_inet6 into an Ipv6Addr.
+fn parse_ipv6_from_hex(hex: &str) -> Option<std::net::Ipv6Addr> {
+    let mut addr = [0u16; 8];
+    for (i, chunk) in hex.as_bytes().chunks(4).enumerate() {
+        if i >= 8 { break; }
+        let s = std::str::from_utf8(chunk).ok()?;
+        addr[i] = u16::from_str_radix(s, 16).ok()?;
+    }
+    Some(std::net::Ipv6Addr::from(addr))
+}
+
 fn enrich_with_process_info(traffic_map: &mut HashMap<(u16, u16, String, String), ConnectionStat>) {
     let mut port_to_inode: HashMap<u16, u64> = HashMap::new();
+    let mut listening_ports: std::collections::HashSet<u16> = std::collections::HashSet::new();
 
+    // TCP: listening ports are definitive — only servers listen.
+    // Used to fix direction for connections captured mid-stream where
+    // the first packet may not be the initiator's SYN.
     if let Ok(tcp) = procfs::net::tcp() {
         for entry in tcp {
             port_to_inode.insert(entry.local_address.port(), entry.inode);
+            if entry.state == procfs::net::TcpState::Listen {
+                listening_ports.insert(entry.local_address.port());
+            }
         }
     }
     if let Ok(tcp6) = procfs::net::tcp6() {
         for entry in tcp6 {
             port_to_inode.insert(entry.local_address.port(), entry.inode);
+            if entry.state == procfs::net::TcpState::Listen {
+                listening_ports.insert(entry.local_address.port());
+            }
         }
     }
+    // UDP: do NOT override direction. UDP has no reliable listen-state
+    // indicator (unspecified remote ≠ server), so we keep the first-packet
+    // direction from the capture loop.
     if let Ok(udp) = procfs::net::udp() {
         for entry in udp {
             port_to_inode.insert(entry.local_address.port(), entry.inode);
@@ -198,6 +239,17 @@ fn enrich_with_process_info(traffic_map: &mut HashMap<(u16, u16, String, String)
     }
 
     for stat in traffic_map.values_mut() {
+        // Fix TCP direction: if we captured mid-stream, the first packet
+        // may be a download data packet (looks inbound). Use the definitive
+        // listen-state signal instead. UDP is left to first-packet direction.
+        if stat.protocol == "TCP" {
+            stat.direction = if listening_ports.contains(&stat.local_port) {
+                "Inbound".to_string()   // server port → external client connected to us
+            } else {
+                "Outbound".to_string()  // ephemeral port → we initiated
+            };
+        }
+
         if stat.pid.is_none() {
             if let Some(inode) = port_to_inode.get(&stat.local_port) {
                 if let Some(pid) = inode_to_process.get(inode) {
