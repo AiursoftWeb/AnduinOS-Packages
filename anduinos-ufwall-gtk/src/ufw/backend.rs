@@ -26,12 +26,12 @@ const UFW_APPS_DIR: &str = "/etc/ufw/applications.d";
 // ─── Reading state (no root needed) ──────────────────────────────────────────
 
 /// Read the complete firewall status via `pkexec ufw status verbose`.
-/// Authenticates once at startup; polkit caches the authorization for subsequent calls.
+/// ufw itself checks for root even if the config files are world-readable.
 pub fn read_status() -> Result<UfwStatus, UfwError> {
     let output = Command::new("pkexec")
         .env("LC_ALL", "C")
         .env("LANGUAGE", "C")
-        .args(["/usr/sbin/ufw", "status", "verbose"])
+        .args(["/usr/sbin/ufw", "status", "numbered"])
         .output()
         .map_err(|e| UfwError {
             message: format!("Failed to run pkexec ufw status: {e}"),
@@ -50,7 +50,7 @@ pub fn read_status() -> Result<UfwStatus, UfwError> {
     }
 
     let text = String::from_utf8_lossy(&output.stdout);
-    let status = parse_ufw_status_verbose(&text)?;
+    let status = parse_ufw_status_numbered(&text)?;
     if status.rules.is_empty() && status.active {
         eprintln!(
             "Warning: firewall is active but parsed 0 rules. Raw output:\n{}",
@@ -60,8 +60,9 @@ pub fn read_status() -> Result<UfwStatus, UfwError> {
     Ok(status)
 }
 
-/// Parse the output of `ufw status verbose`.
-fn parse_ufw_status_verbose(output: &str) -> Result<UfwStatus, UfwError> {
+/// Parse the output of `ufw status numbered`.
+/// Uses UFW's own numbering so rule numbers match `ufw delete <N>`.
+fn parse_ufw_status_numbered(output: &str) -> Result<UfwStatus, UfwError> {
     let mut active = false;
     let mut default_incoming = Policy::Deny;
     let mut default_outgoing = Policy::Allow;
@@ -99,49 +100,58 @@ fn parse_ufw_status_verbose(output: &str) -> Result<UfwStatus, UfwError> {
                     default_outgoing = p;
                 }
             }
-        } else if line.starts_with("--") || (line.contains("---") && line.contains("Action")) {
-            // Separator line (e.g. "--  ------  ----") or old-style header
+        } else if line.contains("--") && line.contains("----") {
+            // Separator line: "     --                         ------      ----"
             in_rules = true;
             continue;
         } else if !in_rules {
             continue;
         } else {
-            // Rule line format (action-anchored to handle ports with spaces):
-            //   Port-based:    22                     ALLOW IN    Anywhere
-            //   Address-based: 1.2.3.4                DENY OUT    Anywhere
-            //   Inbound addr:  Anywhere               DENY IN     5.6.7.8
+            // Rule line format (with UFW's own numbering):
+            //   [ 1] 22                     ALLOW IN    Anywhere
+            //   [ 5] 1.2.3.4                DENY OUT    Anywhere                   (out)
+            //   [ 8] Anywhere               DENY IN     5.6.7.8                    (out)
             //
-            // Strip trailing comment (e.g. "# Audit Block: wechat") so it
-            // doesn't leak into the from/to fields.
+            // Strip trailing comment and UFW direction hint "(in)/(out)".
             let clean_line = match line.find(" # ") {
                 Some(pos) => &line[..pos],
                 None => line,
             };
-            let (first_col, rest) = split_at_action(clean_line);
+            // Extract UFW rule number from "[ N]" prefix
+            let (ufw_number, rule_line) = match clean_line.strip_prefix('[') {
+                Some(rest) => match rest.find(']') {
+                    Some(end) => {
+                        let num = rest[..end].trim().parse::<u32>().unwrap_or(0);
+                        (num, rest[end + 1..].trim())
+                    }
+                    None => (0, clean_line),
+                },
+                None => (0, clean_line),
+            };
+            if ufw_number == 0 { continue; }
+
+            let (first_col, rest) = split_at_action(rule_line);
             if let Some((action_str, remainder)) = rest.split_once(' ') {
                 let (direction_str, from_str) = remainder.split_once(' ').unwrap_or((remainder, "Anywhere"));
-                let is_v6 = clean_line.contains("(v6)");
+                let is_v6 = rule_line.contains("(v6)");
 
                 let action = Action::from_str(action_str).unwrap_or(Action::Allow);
                 let direction = Direction::from_str(direction_str).unwrap_or(Direction::In);
 
-                // Strip "(v6)" suffix from first column and source for clean display
-                let first_col_clean = first_col.trim_end_matches(" (v6)");
-                let from_clean = from_str.trim().trim_end_matches(" (v6)");
+                // Strip trailing display suffixes from first column
+                let first_col_clean = strip_ufw_suffixes(&first_col);
+                let from_clean = strip_ufw_suffixes(from_str.trim());
 
                 // Detect address-based rules (vs port-based):
-                //   Outbound: first column is the destination IP
-                //   Inbound:  first column is "Anywhere", source column is the IP
-                let to_is_ip = is_ip_or_cidr(first_col_clean);
+                let to_is_ip = is_ip_or_cidr(&first_col_clean);
                 let from_is_ip = is_ip_or_cidr(&from_clean);
                 let is_address_rule = to_is_ip
                     || (from_is_ip && (first_col_clean == "Anywhere" || first_col_clean.is_empty()));
 
-                let rule_num = (rules.len() + 1) as u32;
                 rules.push(UfwRule {
-                    number: rule_num,
+                    number: ufw_number,
                     port: if is_address_rule { String::new() } else {
-                        first_col.to_string()
+                        first_col_clean.to_string()
                     },
                     action,
                     direction,
@@ -162,6 +172,17 @@ fn parse_ufw_status_verbose(output: &str) -> Result<UfwStatus, UfwError> {
         rules,
         logging,
     })
+}
+
+/// Clean UFW display suffixes: "(v6)", "(out)", "(in)" and trailing whitespace.
+fn strip_ufw_suffixes(s: &str) -> String {
+    let mut s = s.to_string();
+    for suffix in &[" (v6)", " (out)", " (in)"] {
+        if let Some(pos) = s.rfind(suffix) {
+            s.truncate(pos);
+        }
+    }
+    s.trim().to_string()
 }
 
 /// Check if a string looks like an IP address or CIDR notation.
@@ -769,27 +790,30 @@ ports=22/tcp
         assert_eq!(Policy::from_str("invalid"), None);
     }
     #[test]
-    fn test_parse_ufw_status_verbose() {
+    fn test_parse_ufw_status_numbered() {
         let output = r"Status: active
 Logging: on (low)
 Default: deny (incoming), allow (outgoing), deny (routed)
 New profiles: skip
 
-To                         Action      From
---                         ------      ----
-22                         ALLOW IN    Anywhere
-80/tcp                     ALLOW IN    Anywhere
-Nginx Full                 ALLOW IN    Anywhere
-53/udp                     ALLOW IN    Anywhere
-53/tcp                     ALLOW IN    Anywhere
-22 (v6)                    ALLOW IN    Anywhere (v6)
-53/udp (v6)                ALLOW IN    Anywhere (v6)
-1.2.3.4                    DENY OUT    Anywhere                   # Audit Block: wechat
+     To                         Action      From
+     --                         ------      ----
+[ 1] 22                         ALLOW IN    Anywhere
+[ 2] 80/tcp                     ALLOW IN    Anywhere
+[ 3] Nginx Full                 ALLOW IN    Anywhere
+[ 4] 53/udp                     ALLOW IN    Anywhere
+[ 5] 53/tcp                     ALLOW IN    Anywhere
+[ 6] 22 (v6)                    ALLOW IN    Anywhere (v6)
+[ 7] 53/udp (v6)                ALLOW IN    Anywhere (v6)
+[ 8] 1.2.3.4                    DENY OUT    Anywhere                   # Audit Block: wechat
 ";
-        let result = parse_ufw_status_verbose(output).unwrap();
+        let result = parse_ufw_status_numbered(output).unwrap();
         assert!(result.active);
         assert_eq!(result.logging, "low");
         assert_eq!(result.rules.len(), 8);
+        // Rule numbers match UFW's actual numbering
+        assert_eq!(result.rules[0].number, 1);
+        assert_eq!(result.rules[7].number, 8);
         // Port-based rules unchanged
         assert_eq!(result.rules[0].port, "22");
         assert_eq!(result.rules[1].port, "80/tcp");
@@ -807,20 +831,21 @@ Nginx Full                 ALLOW IN    Anywhere
 
     #[test]
     fn test_parse_address_rule_inbound() {
-        // ufw deny in from 5.6.7.8 → "Anywhere  DENY IN  5.6.7.8"
+        // ufw deny in from 5.6.7.8
         let output = r"Status: active
 Logging: on (low)
 Default: deny (incoming), allow (outgoing), deny (routed)
 New profiles: skip
 
-To                         Action      From
---                         ------      ----
-Anywhere                   DENY IN     5.6.7.8
+     To                         Action      From
+     --                         ------      ----
+[ 1] Anywhere                   DENY IN     5.6.7.8                    (out)
 ";
-        let result = parse_ufw_status_verbose(output).unwrap();
+        let result = parse_ufw_status_numbered(output).unwrap();
         assert_eq!(result.rules.len(), 1);
         let rule = &result.rules[0];
-        assert_eq!(rule.port, ""); // address rule: no port
+        assert_eq!(rule.number, 1);
+        assert_eq!(rule.port, "");
         assert_eq!(rule.to, "Anywhere");
         assert_eq!(rule.from, "5.6.7.8");
         assert_eq!(rule.direction, Direction::In);
@@ -835,19 +860,21 @@ Logging: on (low)
 Default: deny (incoming), allow (outgoing), deny (routed)
 New profiles: skip
 
-To                         Action      From
---                         ------      ----
-1.2.3.4                    DENY OUT    Anywhere                   # Audit Block: wechat
+     To                         Action      From
+     --                         ------      ----
+[ 5] 1.2.3.4                    DENY OUT    Anywhere                   (out) # Audit Block: wechat
 ";
-        let result = parse_ufw_status_verbose(output).unwrap();
+        let result = parse_ufw_status_numbered(output).unwrap();
         assert_eq!(result.rules.len(), 1);
         let rule = &result.rules[0];
+        assert_eq!(rule.number, 5); // uses UFW's number, not 1
         assert_eq!(rule.port, "");
         assert_eq!(rule.to, "1.2.3.4");
-        // Comment must not leak:
+        // Comment and (out) must not leak:
         assert_eq!(rule.from, "Anywhere");
         assert!(!rule.from.contains('#'));
         assert!(!rule.from.contains("wechat"));
+        assert!(!rule.from.contains("(out)"));
     }
 
     #[test]
@@ -917,42 +944,106 @@ To                         Action      From
 
     #[test]
     fn test_parse_ufw_status_mixed_rules() {
-        // Verify existing port rules still work alongside address rules
         let output = r"Status: active
 Logging: on (low)
 Default: deny (incoming), allow (outgoing), deny (routed)
 New profiles: skip
 
-To                         Action      From
---                         ------      ----
-22                         ALLOW IN    Anywhere
-1.2.3.4                    DENY OUT    Anywhere                   # Audit Block: app
-Anywhere                   DENY IN     5.6.7.8
-80/tcp                     ALLOW IN    192.168.1.0/24
+     To                         Action      From
+     --                         ------      ----
+[ 1] 22                         ALLOW IN    Anywhere
+[ 3] 1.2.3.4                    DENY OUT    Anywhere                   (out) # Audit Block: app
+[ 5] Anywhere                   DENY IN     5.6.7.8                    (out)
+[ 7] 80/tcp                     ALLOW IN    192.168.1.0/24
 ";
-        let result = parse_ufw_status_verbose(output).unwrap();
+        let result = parse_ufw_status_numbered(output).unwrap();
         assert_eq!(result.rules.len(), 4);
 
-        // Rule 0: port-based allow SSH
+        // Rule 0: port-based allow SSH, UFW number 1
+        assert_eq!(result.rules[0].number, 1);
         assert_eq!(result.rules[0].port, "22");
         assert_eq!(result.rules[0].to, "Anywhere");
         assert_eq!(result.rules[0].from, "Anywhere");
 
-        // Rule 1: outbound deny to IP
+        // Rule 1: outbound deny to IP, UFW number 3
+        assert_eq!(result.rules[1].number, 3);
         assert_eq!(result.rules[1].port, "");
         assert_eq!(result.rules[1].to, "1.2.3.4");
         assert_eq!(result.rules[1].from, "Anywhere");
         assert_eq!(result.rules[1].action, Action::Deny);
         assert_eq!(result.rules[1].direction, Direction::Out);
 
-        // Rule 2: inbound deny from IP
+        // Rule 2: inbound deny from IP, UFW number 5
+        assert_eq!(result.rules[2].number, 5);
         assert_eq!(result.rules[2].port, "");
         assert_eq!(result.rules[2].to, "Anywhere");
         assert_eq!(result.rules[2].from, "5.6.7.8");
         assert_eq!(result.rules[2].direction, Direction::In);
 
-        // Rule 3: port-based with source restriction
+        // Rule 3: port-based with source restriction, UFW number 7
+        assert_eq!(result.rules[3].number, 7);
         assert_eq!(result.rules[3].port, "80/tcp");
         assert_eq!(result.rules[3].from, "192.168.1.0/24");
+    }
+
+    /// Regression: v4/v6 interleaved numbering must match UFW's [N].
+    /// `ufw status verbose` groups v4 before v6, but `ufw status numbered`
+    /// uses UFW's internal numbering which interleaves them.
+    /// Deleting rule N via GUI must delete the same rule that `ufw delete N` would.
+    #[test]
+    fn test_ufw_numbered_ordering_matches_delete() {
+        // Simulate real-world scenario: v6 ALLOW rules, v4 DENY OUT rules,
+        // v6 DENY OUT rules — interleaved in UFW's actual numbering.
+        let output = r"Status: active
+
+     To                         Action      From
+     --                         ------      ----
+[ 1] 3390 (v6)                  ALLOW IN    Anywhere (v6)
+[ 2] 3389/tcp (v6)              ALLOW IN    Anywhere (v6)
+[ 3] 35.190.46.17               DENY OUT    Anywhere                   (out) # Audit Block: claude
+[ 4] 151.101.129.91             DENY OUT    Anywhere                   (out) # Audit Block: gnome-software
+[ 5] 2a04:4e42:200::347         DENY OUT    Anywhere (v6)              (out) # Audit Block: gnome-software
+";
+        let result = parse_ufw_status_numbered(output).unwrap();
+        assert_eq!(result.rules.len(), 5);
+
+        // Rule index 0 = UFW number [1] = 3390 (v6) ALLOW IN
+        assert_eq!(result.rules[0].number, 1);
+        assert_eq!(result.rules[0].port, "3390");
+        assert_eq!(result.rules[0].v6, true);
+
+        // Rule index 1 = UFW number [2] = 3389/tcp (v6) ALLOW IN
+        assert_eq!(result.rules[1].number, 2);
+        assert_eq!(result.rules[1].port, "3389/tcp");
+        assert_eq!(result.rules[1].v6, true);
+
+        // Rule index 2 = UFW number [3] = 35.190.46.17 DENY OUT (v4)
+        // This is the critical case: in `status verbose` ordering this
+        // would be position 1, but UFW's actual number is 3.
+        assert_eq!(result.rules[2].number, 3);
+        assert_eq!(result.rules[2].port, "");
+        assert_eq!(result.rules[2].to, "35.190.46.17");
+        assert_eq!(result.rules[2].action, Action::Deny);
+        assert_eq!(result.rules[2].direction, Direction::Out);
+        assert!(!result.rules[2].v6);
+        // These fields must be clean from the numbered format artifacts:
+        assert_eq!(result.rules[2].from, "Anywhere");
+        assert!(!result.rules[2].from.contains("(out)"));
+        assert!(!result.rules[2].from.contains('#'));
+
+        // Rule index 3 = UFW number [4]
+        assert_eq!(result.rules[3].number, 4);
+        assert_eq!(result.rules[3].to, "151.101.129.91");
+
+        // Rule index 4 = UFW number [5] = v6 DENY OUT
+        assert_eq!(result.rules[4].number, 5);
+        assert_eq!(result.rules[4].to, "2a04:4e42:200::347");
+        assert!(result.rules[4].v6);
+
+        // Verify we can find rules by their UFW number for deletion:
+        let to_delete_num = 3u32;
+        let rule = result.rules.iter().find(|r| r.number == to_delete_num).unwrap();
+        assert_eq!(rule.to, "35.190.46.17");
+        assert_eq!(rule.action, Action::Deny);
     }
 }

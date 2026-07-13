@@ -214,12 +214,35 @@ impl RulesView {
                             view.on_edit_rule(num);
                         }
                     });
-                    let row = RuleRow::new(rule, on_edit);
+                    let weak_self_clone2 = weak_self.clone();
+                    let on_deleted = Box::new(move || {
+                        if let Some(view) = weak_self_clone2.upgrade() {
+                            view.refresh_rules();
+                        }
+                    });
+                    let row = RuleRow::new(rule, on_edit, on_deleted);
                     group.add(&row);
                     added.push(row.upcast::<gtk::Widget>());
                 }
             }
         }
+    }
+
+    fn refresh_rules(&self) {
+        let weak_self = self.downgrade();
+        glib::spawn_future_local(async move {
+            let result = tokio::task::spawn_blocking(|| {
+                backend::read_status()
+            }).await.unwrap();
+            if let Some(view) = weak_self.upgrade() {
+                match result {
+                    Ok(status) => view.update(&status),
+                    Err(e) => {
+                        eprintln!("refresh_rules: failed to read status: {}", e);
+                    }
+                }
+            }
+        });
     }
 
     fn on_edit_rule(&self, num: u32) {
@@ -278,7 +301,13 @@ impl RulesView {
                         view.on_edit_rule(num);
                     }
                 });
-                let row = RuleRow::new(rule, on_edit);
+                let weak_self_clone2 = weak_self.clone();
+                let on_deleted = Box::new(move || {
+                    if let Some(view) = weak_self_clone2.upgrade() {
+                        view.refresh_rules();
+                    }
+                });
+                let row = RuleRow::new(rule, on_edit, on_deleted);
                 group.add(&row);
                 added.push(row.upcast::<gtk::Widget>());
             }

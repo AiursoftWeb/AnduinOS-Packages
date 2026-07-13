@@ -14,6 +14,7 @@ mod imp {
     #[derive(Default)]
     pub struct RuleRow {
         pub rule_number: RefCell<u32>,
+        pub on_deleted: RefCell<Option<Box<dyn Fn() + 'static>>>,
     }
 
     #[glib::object_subclass]
@@ -37,13 +38,18 @@ glib::wrapper! {
 }
 
 impl RuleRow {
-    pub fn new(rule: &UfwRule, on_edit: Box<dyn Fn(u32) + 'static>) -> Self {
+    pub fn new(
+        rule: &UfwRule,
+        on_edit: Box<dyn Fn(u32) + 'static>,
+        on_deleted: Box<dyn Fn() + 'static>,
+    ) -> Self {
         let obj: Self = glib::Object::builder()
             .property("title", &rule.title())
             .property("subtitle", &rule.subtitle())
             .build();
 
         *obj.imp().rule_number.borrow_mut() = rule.number;
+        *obj.imp().on_deleted.borrow_mut() = Some(on_deleted);
 
         // Edit button
         let edit_btn = gtk::Button::builder()
@@ -88,19 +94,27 @@ impl RuleRow {
         dialog.set_close_response("cancel");
 
         let weak_btn = btn.downgrade();
-        let weak_btn2 = weak_btn.clone();
+        let weak_row = self.downgrade();
         dialog.connect_response(None, move |dialog, response| {
             if response == "delete" {
-                if let Some(btn) = weak_btn2.upgrade() {
+                if let Some(btn) = weak_btn.upgrade() {
                     btn.set_sensitive(false);
                 }
-                let weak_btn3 = weak_btn2.clone();
+                let weak_btn2 = weak_btn.clone();
+                let weak_row2 = weak_row.clone();
                 glib::spawn_future_local(async move {
                     let result = tokio::task::spawn_blocking(move || {
                         backend::delete_rule(num)
                     }).await.unwrap();
-                    if let Err(e) = result {
-                        if let Some(btn) = weak_btn3.upgrade() {
+                    if result.is_ok() {
+                        // Success: refresh UI so numbering stays in sync
+                        if let Some(row) = weak_row2.upgrade() {
+                            if let Some(cb) = row.imp().on_deleted.borrow().as_ref() {
+                                cb();
+                            }
+                        }
+                    } else if let Err(e) = result {
+                        if let Some(btn) = weak_btn2.upgrade() {
                             show_error(&btn, &i18n("Error"), &e.to_string());
                             btn.set_sensitive(true);
                         }
