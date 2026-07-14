@@ -218,7 +218,18 @@ def build_welcome_page(shared, nav_view):
     _update_welcome("en")
 
     def on_next():
-        nav_view.push(build_keyboard_page(shared, nav_view))
+        try:
+            nav_view.push(build_keyboard_page(shared, nav_view))
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            dlg = Adw.MessageDialog(
+                transient_for=nav_view.get_root(),
+                heading="Navigation error",
+                body=str(e),
+            )
+            dlg.add_response("ok", "OK")
+            dlg.present()
 
     content.append(_nav_box(lang,
                             on_back=lambda: None,
@@ -261,14 +272,14 @@ def build_keyboard_page(shared, nav_view):
     # Find the index of the current keyboard variant
     variant_names = [v[0] for v in XKB_VARIANTS]
     default_idx = 0
-    for i, (code, _) in enumerate(XKB_VARIANTS):
+    for i, (code, _name) in enumerate(XKB_VARIANTS):
         if code == keyboard:
             default_idx = i
             break
 
     # Dropdown
     kbd_store = Gtk.StringList()
-    for _, name in XKB_VARIANTS:
+    for _code, name in XKB_VARIANTS:
         kbd_store.append(name)
 
     kbd_dropdown = Gtk.DropDown(model=kbd_store,
