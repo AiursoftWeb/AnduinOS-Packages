@@ -236,7 +236,7 @@ class RunnerApp(Adw.Application):
     def prompt_install(self):
         def _update():
             self.action_box.set_visible(True)
-            self.set_status(_("Windows Compatibility Environment Required"), _("The system is not configured with the Bottles compatibility layer.\nWould you like to automatically download and install it? This may take a few minutes."), show_progress=False)
+            self.set_status(_("Windows Compatibility Environment Required"), _("The system is not configured with the Bottles compatibility layer.") + "\n" + _("Would you like to automatically download and install it? This may take a few minutes."), show_progress=False)
         GLib.idle_add(_update)
 
     def on_confirm_install(self, btn):

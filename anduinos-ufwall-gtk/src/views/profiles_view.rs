@@ -205,7 +205,7 @@ impl ProfilesView {
                     
                     let switch = adw::SwitchRow::builder()
                         .title(&profile.title)
-                        .subtitle(&format!("{} ({})", profile.description, profile.ports))
+                        .subtitle(&format!("{} ({})", i18n(&profile.description), profile.ports))
                         .active(is_allowed)
                         .build();
 
