@@ -7,9 +7,65 @@
 
   <action id="com.anduinos.swapcontrol.manage-memory">
     <description>Manage virtual memory settings</description>
+    <description xml:lang="ar">إدارة إعدادات الذاكرة الافتراضية</description>
+    <description xml:lang="da">Administrer indstillinger for virtuel hukommelse</description>
+    <description xml:lang="de">Einstellungen für virtuellen Speicher verwalten</description>
+    <description xml:lang="el">Διαχείριση ρυθμίσεων εικονικής μνήμης</description>
+    <description xml:lang="en_GB">Manage virtual memory settings</description>
+    <description xml:lang="en_US">Manage virtual memory settings</description>
+    <description xml:lang="es">Administrar configuración de memoria virtual</description>
+    <description xml:lang="fi">Hallinnoi virtuaalimuistin asetuksia</description>
+    <description xml:lang="fr">Gérer les paramètres de mémoire virtuelle</description>
+    <description xml:lang="hi">वर्चुअल मेमोरी सेटिंग्स प्रबंधित करें</description>
+    <description xml:lang="id">Kelola pengaturan memori virtual</description>
+    <description xml:lang="it">Gestisci impostazioni memoria virtuale</description>
+    <description xml:lang="ja">仮想メモリ設定を管理</description>
+    <description xml:lang="ko">가상 메모리 설정 관리</description>
+    <description xml:lang="nl">Instellingen voor virtueel geheugen beheren</description>
+    <description xml:lang="pl">Zarządzaj ustawieniami pamięci wirtualnej</description>
+    <description xml:lang="pt">Gerir definições de memória virtual</description>
+    <description xml:lang="pt_BR">Gerenciar configurações de memória virtual</description>
+    <description xml:lang="ro">Gestionați setările memoriei virtuale</description>
+    <description xml:lang="ru">Управление настройками виртуальной памяти</description>
+    <description xml:lang="sv">Hantera inställningar för virtuellt minne</description>
+    <description xml:lang="th">จัดการการตั้งค่าหน่วยความจำเสมือน</description>
+    <description xml:lang="tr">Sanal bellek ayarlarını yönet</description>
+    <description xml:lang="uk">Керування налаштуваннями віртуальної пам'яті</description>
+    <description xml:lang="vi">Quản lý cài đặt bộ nhớ ảo</description>
     <description xml:lang="zh_CN">管理虚拟内存设置</description>
+    <description xml:lang="zh_HK">管理虛擬記憶體設定</description>
+    <description xml:lang="zh_TW">管理虛擬記憶體設定</description>
+
     <message>Authentication is required to modify swap, zswap, and zram settings</message>
-    <message xml:lang="zh_CN">修改虚拟内存设置需要管理员权限</message>
+    <message xml:lang="ar">يلزم التوثيق لتعديل إعدادات swap وzswap وzram</message>
+    <message xml:lang="da">Godkendelse kræves for at ændre swap-, zswap- og zram-indstillinger</message>
+    <message xml:lang="de">Zur Änderung der Swap-, Zswap- und Zram-Einstellungen ist Authentifizierung erforderlich</message>
+    <message xml:lang="el">Απαιτείται έγκριση για την τροποποίηση ρυθμίσεων swap, zswap και zram</message>
+    <message xml:lang="en_GB">Authentication is required to modify swap, zswap, and zram settings</message>
+    <message xml:lang="en_US">Authentication is required to modify swap, zswap, and zram settings</message>
+    <message xml:lang="es">Se requiere autenticación para modificar la configuración de swap, zswap y zram</message>
+    <message xml:lang="fi">Swap-, zswap- ja zram-asetusten muuttaminen vaatii todennuksen</message>
+    <message xml:lang="fr">L'authentification est requise pour modifier les paramètres de swap, zswap et zram</message>
+    <message xml:lang="hi">स्वैप, zswap और zram सेटिंग्स को संशोधित करने के लिए प्रमाणीकरण आवश्यक है</message>
+    <message xml:lang="id">Otentikasi diperlukan untuk mengubah pengaturan swap, zswap, dan zram</message>
+    <message xml:lang="it">È richiesta l'autenticazione per modificare le impostazioni di swap, zswap e zram</message>
+    <message xml:lang="ja">スワップ、zswap、zram の設定を変更するには認証が必要です</message>
+    <message xml:lang="ko">스왑, zswap 및 zram 설정을 수정하려면 인증이 필요합니다</message>
+    <message xml:lang="nl">Authenticatie is vereist om swap-, zswap- en zram-instellingen te wijzigen</message>
+    <message xml:lang="pl">Wymagane uwierzytelnienie, aby zmodyfikować ustawienia swap, zswap i zram</message>
+    <message xml:lang="pt">É necessária autenticação para modificar definições de swap, zswap e zram</message>
+    <message xml:lang="pt_BR">É necessária autenticação para modificar configurações de swap, zswap e zram</message>
+    <message xml:lang="ro">Este necesară autentificarea pentru a modifica setările swap, zswap și zram</message>
+    <message xml:lang="ru">Требуется аутентификация для изменения параметров swap, zswap и zram</message>
+    <message xml:lang="sv">Autentisering krävs för att ändra inställningar för swap, zswap och zram</message>
+    <message xml:lang="th">จำเป็นต้องมีการตรวจสอบสิทธิ์เพื่อแก้ไขการตั้งค่า swap, zswap และ zram</message>
+    <message xml:lang="tr">Swap, zswap ve zram ayarlarını değiştirmek için kimlik doğrulaması gereklidir</message>
+    <message xml:lang="uk">Потрібна автентифікація для зміни налаштувань swap, zswap та zram</message>
+    <message xml:lang="vi">Yêu cầu xác thực để sửa đổi cài đặt swap, zswap và zram</message>
+    <message xml:lang="zh_CN">修改交换空间、zswap 和 zram 设置需要身份验证</message>
+    <message xml:lang="zh_HK">修改 swap、zswap 及 zram 設定需要驗證</message>
+    <message xml:lang="zh_TW">修改 swap、zswap 和 zram 設定需要驗證</message>
+
     <icon_name>com.anduinos.swapcontrol</icon_name>
     <defaults>
       <allow_any>auth_admin</allow_any>

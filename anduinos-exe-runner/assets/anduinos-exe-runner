@@ -40,7 +40,7 @@ def has_default_bottle():
 
 class RunnerApp(Adw.Application):
     def __init__(self, exe_path):
-        super().__init__(application_id='com.anduinos.ExeRunner')
+        super().__init__(application_id='com.anduinos.ExeRunner', flags=Gio.ApplicationFlags.NON_UNIQUE)
         self.exe_path = exe_path
         self.window = None
         self.progress_running = False
@@ -368,9 +368,11 @@ run_manager()
         ]
         self.log("==> " + " ".join(cmd))
         
-        self.log_file_path = "/tmp/anduinos-exe-runner.log"
+        log_dir = os.path.expanduser("~/.cache/anduinos/exe-runner/")
+        os.makedirs(log_dir, exist_ok=True)
+        self.log_file_path = os.path.join(log_dir, f"anduinos-exe-runner-{os.getpid()}.log")
         self.log_file = open(self.log_file_path, "w")
-        
+
         try:
             self.run_process = subprocess.Popen(cmd, stdout=self.log_file, stderr=subprocess.STDOUT, start_new_session=True)
             self.log(_("Process successfully started in the background, listening to logs..."))

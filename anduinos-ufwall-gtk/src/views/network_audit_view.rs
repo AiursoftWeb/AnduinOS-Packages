@@ -497,7 +497,6 @@ impl NetworkAuditView {
                                 glib::spawn_future_local(async move {
                                     let result = tokio::task::spawn_blocking(move || {
                                         let is_in = dir2 == "Inbound";
-                                        let is_ipv6 = ip.contains(':');
                                         let (rule_dir, from, to) = if is_in {
                                             (crate::ufw::types::Direction::In, Some(ip.clone()), None)
                                         } else {
@@ -512,8 +511,14 @@ impl NetworkAuditView {
                                             to,
                                             interface: None,
                                             comment: Some(format!("Audit Block: {}", proc_name)),
-                                            // IPv6 rules have separate numbering; insert 1 fails on empty v6 chain
-                                            insert_position: if is_ipv6 { None } else { Some(1) },
+                                            // Never use insert_position here: on a fresh system
+                                            // with zero existing rules, `ufw insert 1` fails with
+                                            // "ERROR: Invalid position 1" because there is no
+                                            // position 1 to insert before (applies to both v4
+                                            // and v6 chains when empty). Appending is safe:
+                                            // the deny rule is more specific than the default
+                                            // policy and will take effect correctly.
+                                            insert_position: None,
                                         };
                                         crate::ufw::backend::add_rule(&params)
                                     }).await.unwrap();
