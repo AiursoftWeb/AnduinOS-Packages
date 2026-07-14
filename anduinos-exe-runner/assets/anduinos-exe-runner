@@ -363,8 +363,8 @@ run_manager()
         self.log(_("Preparing to launch EXE: {}").format(self.exe_path))
         
         cmd = [
-            "flatpak", "run", "--branch=stable", "--file-forwarding", "--command=bottles-cli", "com.usebottles.bottles",
-            "run", "-b", DEFAULT_BOTTLE_NAME, "-e", "@@", self.exe_path, "@@"
+            "flatpak", "run", "--branch=stable", "--filesystem=host", "--command=bottles-cli", "com.usebottles.bottles",
+            "run", "-b", DEFAULT_BOTTLE_NAME, "-e", self.exe_path
         ]
         self.log("==> " + " ".join(cmd))
         
