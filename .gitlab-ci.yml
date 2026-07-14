@@ -454,6 +454,11 @@ firefox-anduinos:
   variables:
     PACKAGE_DIR: firefox-anduinos
 
+anduinos-exe-runner:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-exe-runner
+
 anduinos-desktop-apps:
   extends: .publish
   stage: meta
@@ -462,6 +467,7 @@ anduinos-desktop-apps:
     - firefox-anduinos
     - anduinos-ufwall-gtk
     - anduinos-swapcontrol-gtk
+    - anduinos-exe-runner
   variables:
     PACKAGE_DIR: anduinos-desktop-apps
 

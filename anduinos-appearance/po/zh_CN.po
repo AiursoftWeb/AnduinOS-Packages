@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-appearance 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-17 06:17+0000\n"
+"POT-Creation-Date: 2026-07-14 09:43+0000\n"
 "Language-Team: Chinese (China Mainland)\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -12,172 +12,196 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/anduinos-appearance:308
+#: src/anduinos-appearance:376
 msgid "Bottom"
 msgstr "靠下"
 
-#: src/anduinos-appearance:308
+#: src/anduinos-appearance:376
 msgid "Top"
 msgstr "靠上"
 
-#: src/anduinos-appearance:308
+#: src/anduinos-appearance:376
 msgid "Left"
 msgstr "靠左"
 
-#: src/anduinos-appearance:308
+#: src/anduinos-appearance:376
 msgid "Right"
 msgstr "靠右"
 
-#: src/anduinos-appearance:317
+#: src/anduinos-appearance:385
 msgid "Taskbar Style"
 msgstr "任务栏风格"
 
-#: src/anduinos-appearance:322
+#: src/anduinos-appearance:390
 msgid "Preview"
 msgstr "预览"
 
-#: src/anduinos-appearance:323
+#: src/anduinos-appearance:391
 msgid "Choose the visual style of your taskbar."
 msgstr "选择任务栏的视觉风格。"
 
-#: src/anduinos-appearance:336
+#: src/anduinos-appearance:404
 msgid "Layout"
 msgstr "布局"
 
-#: src/anduinos-appearance:367
+#: src/anduinos-appearance:409 src/anduinos-appearance:545
+msgid "Classic"
+msgstr "经典"
+
+#: src/anduinos-appearance:411 src/anduinos-appearance:544
+msgid "Seperated"
+msgstr "分离"
+
+#: src/anduinos-appearance:438
 msgid "Group apps"
 msgstr "应用分组"
 
-#: src/anduinos-appearance:368
+#: src/anduinos-appearance:439
 msgid "Combine multiple windows of one app into a single icon"
 msgstr "将同一应用的多个窗口合并为一个图标"
 
-#: src/anduinos-appearance:370
+#: src/anduinos-appearance:441
 msgid "Enable grouping"
 msgstr "启用分组"
 
-#: src/anduinos-appearance:377
+#: src/anduinos-appearance:448
 msgid "Use Vista taskbar behavior"
 msgstr "使用 Vista 任务栏行为"
 
-#: src/anduinos-appearance:378
+#: src/anduinos-appearance:449
 msgid "Keep launchers separate from running apps"
 msgstr "将启动器与运行中的应用分开显示"
 
-#: src/anduinos-appearance:402 src/anduinos-appearance:439
+#: src/anduinos-appearance:473 src/anduinos-appearance:508
 #, python-brace-format
 msgid "✓ Applied — {style} | {pos}"
 msgstr "✓ 已应用 — {style} | {pos}"
 
-#: src/anduinos-appearance:404
+#: src/anduinos-appearance:475
 msgid "✗ Failed to apply style"
 msgstr "✗ 应用风格失败"
 
-#: src/anduinos-appearance:441
+#: src/anduinos-appearance:510
 msgid "✗ Failed to apply position"
 msgstr "✗ 应用位置失败"
 
-#: src/anduinos-appearance:472
+#: src/anduinos-appearance:542
 msgid "Windows 11"
 msgstr ""
 
-#: src/anduinos-appearance:472
-msgid "Classic"
-msgstr "经典"
-
-#: src/anduinos-appearance:472
-msgid "Seperated"
-msgstr "分离"
-
-
-#: src/anduinos-appearance:478
+#: src/anduinos-appearance:551
 msgid "Show Weather"
 msgstr "显示天气"
 
-#: src/anduinos-appearance:479
+#: src/anduinos-appearance:552
 msgid "Show Network"
 msgstr "显示网络"
 
-#: src/anduinos-appearance:488
+#: src/anduinos-appearance:561
 msgid "Panel Widgets"
 msgstr "面板小部件"
 
-#: src/anduinos-appearance:492
+#: src/anduinos-appearance:565
 msgid "Panel Indicators"
 msgstr "面板指示器"
 
-#: src/anduinos-appearance:493
+#: src/anduinos-appearance:566
 msgid "Toggle panel indicator widgets on or off."
 msgstr "开启或关闭面板指示器小部件。"
 
-#: src/anduinos-appearance:512
+#: src/anduinos-appearance:580
+msgid "Taskbar Elements"
+msgstr "任务栏元素"
+
+#: src/anduinos-appearance:581
+msgid "Show or hide built-in panel elements."
+msgstr "显示或隐藏内置面板元素。"
+
+#: src/anduinos-appearance:584
+msgid "Show Activities Button"
+msgstr "显示 Activities 按钮"
+
+#: src/anduinos-appearance:585
+msgid "Display the Activities button on the taskbar"
+msgstr "在任务栏上显示 Activities 按钮"
+
+#: src/anduinos-appearance:599
+#, python-brace-format
+msgid "✓ Activities button — {action}n"
+msgstr "✓ Activities 按钮 — {action}n"
+
+#: src/anduinos-appearance:601
+msgid "✗ Failed to toggle activities button"
+msgstr "✗ 切换 Activities 按钮失败"
+
+#: src/anduinos-appearance:613
 #, python-brace-format
 msgid "✓ {label} — {action}d"
 msgstr "✓ {label} — 已{action}"
 
-#: src/anduinos-appearance:514
+#: src/anduinos-appearance:615
 #, python-brace-format
 msgid "✗ Failed to {action} {label}"
 msgstr "✗ {action} {label} 失败"
 
-#: src/anduinos-appearance:527
+#: src/anduinos-appearance:628
 msgid "Advanced"
 msgstr "高级"
 
-#: src/anduinos-appearance:532
+#: src/anduinos-appearance:633
 msgid "Appearance"
 msgstr "外观"
 
-#: src/anduinos-appearance:535
+#: src/anduinos-appearance:636
 msgid "Wallpaper"
 msgstr "壁纸"
 
-#: src/anduinos-appearance:536 src/anduinos-appearance:546
-#: src/anduinos-appearance:569
+#: src/anduinos-appearance:637 src/anduinos-appearance:647
+#: src/anduinos-appearance:670
 msgid "Open"
 msgstr "打开"
 
-#: src/anduinos-appearance:545
+#: src/anduinos-appearance:646
 msgid "Tweaks"
 msgstr "高级调整"
 
-#: src/anduinos-appearance:556
+#: src/anduinos-appearance:657
 msgid "Extension Settings"
 msgstr "扩展设置"
 
-#: src/anduinos-appearance:557
+#: src/anduinos-appearance:658
 msgid "Open the preference windows of the panel extensions."
 msgstr "打开面板扩展的偏好设置窗口。"
 
-#: src/anduinos-appearance:582
+#: src/anduinos-appearance:683
 msgid "Danger Zone"
 msgstr "危险区域"
 
-#: src/anduinos-appearance:585
+#: src/anduinos-appearance:686
 msgid "Reset desktop settings"
 msgstr "重置桌面设置"
 
-#: src/anduinos-appearance:586
+#: src/anduinos-appearance:687
 msgid "Restore all GNOME Shell settings to factory defaults"
 msgstr "将所有 GNOME Shell 设置恢复为出厂默认值"
 
-#: src/anduinos-appearance:587 src/anduinos-appearance:615
+#: src/anduinos-appearance:688 src/anduinos-appearance:717
 msgid "Reset"
 msgstr "重置"
 
-#: src/anduinos-appearance:604
+#: src/anduinos-appearance:706
 msgid "✓ Desktop settings reset. Restart Shell to apply."
 msgstr "✓ 桌面设置已重置。重启 Shell 后生效。"
 
-#: src/anduinos-appearance:606
+#: src/anduinos-appearance:708
 msgid "✗ Failed to reset"
 msgstr "✗ 重置失败"
 
-#: src/anduinos-appearance:610
+#: src/anduinos-appearance:712
 msgid "Reset desktop settings?"
 msgstr "重置桌面设置？"
 
-#: src/anduinos-appearance:611
+#: src/anduinos-appearance:713
 msgid ""
 "This will reset all GNOME Shell settings to factory defaults.\n"
 "Your extensions, panel layout, and preferences will be lost."
@@ -185,59 +209,59 @@ msgstr ""
 "这将重置所有 GNOME Shell 设置到出厂默认值。\n"
 "您的扩展、面板布局和偏好设置将丢失。"
 
-#: src/anduinos-appearance:614
+#: src/anduinos-appearance:716
 msgid "Cancel"
 msgstr "取消"
 
-#: src/anduinos-appearance:645
+#: src/anduinos-appearance:747
 msgid "GDM Wallpaper"
 msgstr "GDM 壁纸"
 
-#: src/anduinos-appearance:650
+#: src/anduinos-appearance:752
 msgid "Login Screen Wallpaper"
 msgstr "登录界面壁纸"
 
-#: src/anduinos-appearance:651
+#: src/anduinos-appearance:753
 msgid "Choose an image for the GDM login screen background."
 msgstr "选择一张图片作为 GDM 登录界面的背景。"
 
-#: src/anduinos-appearance:660
+#: src/anduinos-appearance:763
 msgid "Select image"
 msgstr "选择图片"
 
-#: src/anduinos-appearance:661
+#: src/anduinos-appearance:764
 msgid "Choose…"
 msgstr "选择…"
 
-#: src/anduinos-appearance:670
+#: src/anduinos-appearance:773
 msgid "Apply to Login Screen"
 msgstr "应用到登录屏幕"
 
-#: src/anduinos-appearance:682
+#: src/anduinos-appearance:785
 msgid "Images"
 msgstr "图片"
 
-#: src/anduinos-appearance:701
+#: src/anduinos-appearance:806
 msgid "✗ Please select an image first"
 msgstr "✗ 请先选择一张图片"
 
-#: src/anduinos-appearance:708
+#: src/anduinos-appearance:821
 msgid "✓ GDM wallpaper applied"
 msgstr "✓ GDM 壁纸已应用"
 
-#: src/anduinos-appearance:710
+#: src/anduinos-appearance:823
 msgid "✗ Failed to set GDM wallpaper"
 msgstr "✗ 设置 GDM 壁纸失败"
 
-#: src/anduinos-appearance:718 src/anduinos-appearance:778
+#: src/anduinos-appearance:831 src/anduinos-appearance:891
 msgid "AnduinOS Appearance"
 msgstr "AnduinOS 外观"
 
-#: src/anduinos-appearance:741
+#: src/anduinos-appearance:854
 msgid "About AnduinOS Appearance"
 msgstr "关于 AnduinOS 外观"
 
-#: src/anduinos-appearance:780
+#: src/anduinos-appearance:893
 msgid "AnduinOS Team"
 msgstr "AnduinOS 团队"
 
