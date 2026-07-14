@@ -1,20 +1,14 @@
 msgid ""
-msgstr "Content-Type: text/plain; charset=UTF-8\n"
-
-msgid "<i>Recommended swappiness: {0} ({1})</i>"
-msgstr "<i>Valoarea recomandată pentru swappiness: {0} ({1})</i>"
-
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
-msgstr "<i>Recomandat: {0} GiB memorie virtuală, swappiness {1} ({2})</i>"
+msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-14 09:51+0000\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 
 msgid "About"
 msgstr "Despre"
 
 msgid "Accept threshold percent"
 msgstr "Prag de acceptare (%)"
-
-msgid "Active — {0} GiB used / {1} GiB total"
-msgstr "Activă — {0} GiB utilizate / {1} GiB total"
 
 msgid "Advanced options"
 msgstr "Opțiuni avansate"
@@ -61,6 +55,13 @@ msgstr "Caneli"
 msgid "Completed successfully — memory pressure test passed."
 msgstr "Finalizat cu succes — testul de presiune a memoriei a fost trecut."
 
+msgid ""
+"Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
+"Zswap, not both."
+msgstr ""
+"Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
+"Zswap, not both."
+
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "Dispozitiv bloc RAM comprimat — swap în memorie, rapid"
 
@@ -73,17 +74,11 @@ msgstr "Creare"
 msgid "Create Zram Device"
 msgstr "Creare dispozitiv Zram"
 
-msgid "Creating Zram device…"
-msgstr "Se creează dispozitivul Zram…"
-
 msgid "Dashboard"
 msgstr "Panou de control"
 
 msgid "Destroy Zram Device"
 msgstr "Distrugere dispozitiv Zram"
-
-msgid "Destroying Zram device…"
-msgstr "Se distruge dispozitivul Zram…"
 
 msgid "Device Created"
 msgstr "Dispozitiv creat"
@@ -106,20 +101,28 @@ msgstr "Memorie virtuală"
 msgid "Disk Swap Configuration"
 msgstr "Configurare memorie virtuală"
 
-msgid "Disk-based swap file — the last line of defense when RAM is full"
-msgstr "Fișier de memorie virtuală pe disc — ultima linie de apărare când RAM-ul este plin"
+msgid ""
+"Disk swap is active with memory compression — your system is well-protected "
+"against memory pressure."
+msgstr ""
+"Disk swap is active with memory compression — your system is well-protected "
+"against memory pressure."
 
 msgid "Duration:"
 msgstr "Durata:"
+
+msgid ""
+"Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
+"swap and dramatically reduces I/O under memory pressure."
+msgstr ""
+"Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
+"swap and dramatically reduces I/O under memory pressure."
 
 msgid "Enabling Zswap..."
 msgstr "Se activează swap…"
 
 msgid "Enabling swap…"
 msgstr "Se activează swap…"
-
-msgid "Ensure important work is saved before running this test."
-msgstr "Asigurați-vă că munca importantă este salvată înainte de a rula acest test."
 
 msgid "Error"
 msgstr "Eroare"
@@ -130,29 +133,17 @@ msgstr "Liber"
 msgid "Growth speed"
 msgstr "Viteza de creștere"
 
-msgid "Hello {0}, you have {1} messages"
-msgstr "Salut {0}, ai {1} mesaje"
-
 msgid "Hibernation"
 msgstr "Hibernare"
 
 msgid "Hibernation Warning"
 msgstr "Avertisment privind hibernarea"
 
-msgid "Hibernation not detected — recommended: {0} GiB"
-msgstr "Hibernarea nu a fost detectată — recomandat: {0} GiB"
-
-msgid "Idle ({0} GiB available)"
-msgstr "Neactiv ({0} GiB disponibile)"
-
 msgid "Inactive"
 msgstr "Inactiv"
 
 msgid "Loading..."
 msgstr "Se încarcă..."
-
-msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
-msgstr "% maxim din RAM pe care îl poate ocupa zona comprimată. Recomandat: 20%"
 
 msgid "Maximum hold time"
 msgstr "Timp maxim de așteptare"
@@ -184,6 +175,13 @@ msgstr "Oprit"
 msgid "On"
 msgstr "Pornit"
 
+msgid ""
+"Only store pages that compress to ≤ this % of original. Higher = more pages "
+"cached. Recommended: 90%"
+msgstr ""
+"Only store pages that compress to ≤ this % of original. Higher = more pages "
+"cached. Recommended: 90%"
+
 msgid "Optimal memory configuration"
 msgstr "Configurație optimă a memoriei"
 
@@ -196,12 +194,6 @@ msgstr "Prioritate"
 msgid "RAM"
 msgstr "RAM"
 
-msgid "Real-time RAM, swap, and compression subsystem status"
-msgstr "Status în timp real al subsistemelor RAM, mem. virtuală și compresie"
-
-msgid "Reclaim pool pages under memory pressure. Recommended: ON"
-msgstr "Recuperează paginile zonei sub presiune de memorie. Recomandat: ACTIVAT"
-
 msgid "Remove"
 msgstr "Ștergere"
 
@@ -213,9 +205,6 @@ msgstr "Rulează testul de stres"
 
 msgid "Shrinker"
 msgstr "Comprimare memorie"
-
-msgid "Simulate memory pressure to test swap and OOM behavior"
-msgstr "Simulare presiune memorie pentru a testa comportamentul swap și OOM"
 
 msgid "Size (MiB)"
 msgstr "Dimensiune (MiB)"
@@ -241,6 +230,9 @@ msgstr "Utilizare memorie virtuală"
 msgid "Swappiness"
 msgstr "Swappiness"
 
+msgid "Swappiness not optimized for Zram"
+msgstr "Swappiness nu este optimizat pentru Zram"
+
 msgid "Target Pressure"
 msgstr "Presiunea țintă"
 
@@ -256,8 +248,12 @@ msgstr "Tip"
 msgid "Used"
 msgstr "Utilizat"
 
-msgid "Warning: This will consume system memory and may cause instability"
-msgstr "Avertisment: Aceasta va consuma memoria sistemului și poate cauza instabilitate"
+msgid ""
+"When RAM is full the kernel may kill applications. Enable disk swap for a "
+"reliable safety net."
+msgstr ""
+"When RAM is full the kernel may kill applications. Enable disk swap for a "
+"reliable safety net."
 
 msgid "Zram"
 msgstr "Zram"
@@ -268,11 +264,27 @@ msgstr "Dispozitive Zram"
 msgid "Zram and Zswap are both active"
 msgstr "Zram și Zswap sunt ambele active"
 
+msgid ""
+"Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
+"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
+"one of them."
+msgstr ""
+"Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
+"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
+"one of them."
+
 msgid "Zswap"
 msgstr "Zswap"
 
 msgid "default"
 msgstr "implicit"
+
+msgid ""
+"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires "
+"zswap restart."
+msgstr ""
+"lz4 = rapid (recomandat), zstd = cea mai bună rată, lzo = vechi. Schimbarea "
+"necesită restartarea zswap."
 
 msgid "range"
 msgstr "interval"
@@ -280,86 +292,143 @@ msgstr "interval"
 msgid "seconds"
 msgstr "secunde"
 
-msgid "{0} · pool {1}%"
-msgstr "{0} · pool {1}%"
-
-msgid "{0} · saved {1}%"
-msgstr "{0} · salvat {1}%"
-
-msgid "Active"
-msgstr "Activ"
-
-msgid "Compressed write-back cache for swap"
-msgstr "Memorie cache comprimată de scriere la returnare pentru swap"
-
-msgid "Compressed write-back cache — intercepts pages before disk swap"
-msgstr "Cache comprimat de scriere inversă — interceptează paginile înainte de memoria virtuală pe disc"
-
-msgid "How much RAM zswap can use for compressed pages"
-msgstr "Câtă memorie RAM poate folosi zswap pentru paginile compresate"
-
-msgid "Max pool (% of RAM)"
-msgstr "Memorie maximă rezervă (% din RAM)"
-
-msgid "No zram devices. Create one to enable compressed RAM swap."
-msgstr "Niciun dispozitiv zram. Creați unul pentru a activa memoria virtuală RAM comprimată."
-
-msgid "Reclaim pool memory when system is under pressure"
-msgstr "Recuperare memorie rezervă atunci când sistemul este suprasolicitat"
-
-msgid "Resizing swap file…"
-msgstr "Redimensionarea fișierului de memorie virtuală…"
-
-msgid "Zswap Configuration"
-msgstr "Configurare Zswap"
-
-msgid "lzo-rle is fastest, zstd saves more space"
-msgstr "lzo-rle este cel mai rapid, zstd ocupă mai puțin spațiu"
-
-msgid "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
-msgstr "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
-
-msgid "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or Zswap, not both."
-msgstr "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or Zswap, not both."
-
-msgid "Create a compressed RAM swap device for faster memory pressure handling."
-msgstr "Create a compressed RAM swap device for faster memory pressure handling."
-
-msgid "Disk swap is active with memory compression — your system is well-protected against memory pressure."
-msgstr "Disk swap is active with memory compression — your system is well-protected against memory pressure."
-
-msgid "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk swap and dramatically reduces I/O under memory pressure."
-msgstr "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk swap and dramatically reduces I/O under memory pressure."
-
-msgid "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-msgstr "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-
-msgid "How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})"
-msgstr "How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})"
-
-msgid "Only store pages that compress to ≤ this % of original. Higher = more pages cached. Recommended: 90%"
-msgstr "Only store pages that compress to ≤ this % of original. Higher = more pages cached. Recommended: 90%"
-
-msgid "When RAM is full the kernel may kill applications. Enable disk swap for a reliable safety net."
-msgstr "When RAM is full the kernel may kill applications. Enable disk swap for a reliable safety net."
-
-msgid "Zram and Zswap are mutually exclusive — each creates its own compressed RAM pool. Running both wastes CPU and can cause severe memory thrashing. Disable one of them."
-msgstr "Zram and Zswap are mutually exclusive — each creates its own compressed RAM pool. Running both wastes CPU and can cause severe memory thrashing. Disable one of them."
-
-msgid "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires zswap restart."
-msgstr "lz4 = rapid (recomandat), zstd = cea mai bună rată, lzo = vechi. Schimbarea necesită restartarea zswap."
-
-msgid "with Zram active — prefer fast compressed RAM over disk cache"
-msgstr "cu Zram activ — preferă RAM-ul rapid comprimat în detrimentul cache-ului de pe disc"
-
-msgid "Swappiness not optimized for Zram"
-msgstr "Swappiness nu este optimizat pentru Zram"
-
-msgid "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."
-msgstr "Zram este activ, dar swappiness este {0} în loc de {1}. Setează-l la {1} pentru a prefera memoria virtuală RAM rapid comprimat — pierderea cache-ului de fișiere când zram este disponibil reduce performanța I/O."
-
 msgid "with Zram"
 msgstr "cu Zram"
 
-msgid "How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"
-msgstr "Cât de agresiv face swap kernel-ul — cu Zram activ, setează la {0} pentru a prefera RAM-ul rapid comprimat în detrimentul cache-ului de pe disc (recomandat: {0})"
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr ""
+"cu Zram activ — preferă RAM-ul rapid comprimat în detrimentul cache-ului de "
+"pe disc"
+
+#~ msgid "<i>Recommended swappiness: {0} ({1})</i>"
+#~ msgstr "<i>Valoarea recomandată pentru swappiness: {0} ({1})</i>"
+
+#~ msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
+#~ msgstr "<i>Recomandat: {0} GiB memorie virtuală, swappiness {1} ({2})</i>"
+
+#~ msgid "Active — {0} GiB used / {1} GiB total"
+#~ msgstr "Activă — {0} GiB utilizate / {1} GiB total"
+
+#~ msgid "Creating Zram device…"
+#~ msgstr "Se creează dispozitivul Zram…"
+
+#~ msgid "Destroying Zram device…"
+#~ msgstr "Se distruge dispozitivul Zram…"
+
+#~ msgid "Disk-based swap file — the last line of defense when RAM is full"
+#~ msgstr ""
+#~ "Fișier de memorie virtuală pe disc — ultima linie de apărare când RAM-ul "
+#~ "este plin"
+
+#~ msgid "Ensure important work is saved before running this test."
+#~ msgstr ""
+#~ "Asigurați-vă că munca importantă este salvată înainte de a rula acest "
+#~ "test."
+
+#~ msgid "Hello {0}, you have {1} messages"
+#~ msgstr "Salut {0}, ai {1} mesaje"
+
+#~ msgid "Hibernation not detected — recommended: {0} GiB"
+#~ msgstr "Hibernarea nu a fost detectată — recomandat: {0} GiB"
+
+#~ msgid "Idle ({0} GiB available)"
+#~ msgstr "Neactiv ({0} GiB disponibile)"
+
+#~ msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
+#~ msgstr ""
+#~ "% maxim din RAM pe care îl poate ocupa zona comprimată. Recomandat: 20%"
+
+#~ msgid "Real-time RAM, swap, and compression subsystem status"
+#~ msgstr ""
+#~ "Status în timp real al subsistemelor RAM, mem. virtuală și compresie"
+
+#~ msgid "Reclaim pool pages under memory pressure. Recommended: ON"
+#~ msgstr ""
+#~ "Recuperează paginile zonei sub presiune de memorie. Recomandat: ACTIVAT"
+
+#~ msgid "Simulate memory pressure to test swap and OOM behavior"
+#~ msgstr "Simulare presiune memorie pentru a testa comportamentul swap și OOM"
+
+#~ msgid "Warning: This will consume system memory and may cause instability"
+#~ msgstr ""
+#~ "Avertisment: Aceasta va consuma memoria sistemului și poate cauza "
+#~ "instabilitate"
+
+#~ msgid "{0} · pool {1}%"
+#~ msgstr "{0} · pool {1}%"
+
+#~ msgid "{0} · saved {1}%"
+#~ msgstr "{0} · salvat {1}%"
+
+#~ msgid "Active"
+#~ msgstr "Activ"
+
+#~ msgid "Compressed write-back cache for swap"
+#~ msgstr "Memorie cache comprimată de scriere la returnare pentru swap"
+
+#~ msgid "Compressed write-back cache — intercepts pages before disk swap"
+#~ msgstr ""
+#~ "Cache comprimat de scriere inversă — interceptează paginile înainte de "
+#~ "memoria virtuală pe disc"
+
+#~ msgid "How much RAM zswap can use for compressed pages"
+#~ msgstr "Câtă memorie RAM poate folosi zswap pentru paginile compresate"
+
+#~ msgid "Max pool (% of RAM)"
+#~ msgstr "Memorie maximă rezervă (% din RAM)"
+
+#~ msgid "No zram devices. Create one to enable compressed RAM swap."
+#~ msgstr ""
+#~ "Niciun dispozitiv zram. Creați unul pentru a activa memoria virtuală RAM "
+#~ "comprimată."
+
+#~ msgid "Reclaim pool memory when system is under pressure"
+#~ msgstr "Recuperare memorie rezervă atunci când sistemul este suprasolicitat"
+
+#~ msgid "Resizing swap file…"
+#~ msgstr "Redimensionarea fișierului de memorie virtuală…"
+
+#~ msgid "Zswap Configuration"
+#~ msgstr "Configurare Zswap"
+
+#~ msgid "lzo-rle is fastest, zstd saves more space"
+#~ msgstr "lzo-rle este cel mai rapid, zstd ocupă mai puțin spațiu"
+
+#~ msgid ""
+#~ "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
+#~ msgstr ""
+#~ "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
+
+#~ msgid ""
+#~ "Create a compressed RAM swap device for faster memory pressure handling."
+#~ msgstr ""
+#~ "Create a compressed RAM swap device for faster memory pressure handling."
+
+#~ msgid ""
+#~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
+#~ msgstr ""
+#~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
+
+#~ msgid ""
+#~ "How aggressively the kernel swaps — lower = stay in RAM longer "
+#~ "(recommended: {0})"
+#~ msgstr ""
+#~ "How aggressively the kernel swaps — lower = stay in RAM longer "
+#~ "(recommended: {0})"
+
+#~ msgid ""
+#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to "
+#~ "prefer fast compressed RAM swap — dropping file cache when zram is "
+#~ "available wastes I/O performance."
+#~ msgstr ""
+#~ "Zram este activ, dar swappiness este {0} în loc de {1}. Setează-l la {1} "
+#~ "pentru a prefera memoria virtuală RAM rapid comprimat — pierderea cache-"
+#~ "ului de fișiere când zram este disponibil reduce performanța I/O."
+
+#~ msgid ""
+#~ "How aggressively the kernel swaps — with Zram active, set to {0} to "
+#~ "prefer fast compressed RAM over disk cache (recommended: {0})"
+#~ msgstr ""
+#~ "Cât de agresiv face swap kernel-ul — cu Zram activ, setează la {0} pentru "
+#~ "a prefera RAM-ul rapid comprimat în detrimentul cache-ului de pe disc "
+#~ "(recomandat: {0})"

@@ -6,312 +6,286 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: anduinos-ufwall-gtk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/widgets/rule_row.rs:80
-msgid "Delete Rule"
-msgstr ""
-
-#: src/widgets/rule_row.rs:81
-msgid "Delete rule"
-msgstr ""
-
-#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
-#: src/views/rules_view.rs:123
-msgid "Cancel"
-msgstr ""
-
-#: src/widgets/rule_row.rs:85
-msgid "Delete"
-msgstr ""
-
-#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
-#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
-#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
-#: src/window.rs:245
-msgid "Error"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
-msgid "Add Rule"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:70
-msgid "Service"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:72
-msgid "Custom"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:89
-msgid "Port / Service Name"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:93
-msgid "Action"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
-#: src/views/status_view.rs:113
-msgid "Deny"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
-#: src/views/status_view.rs:105 src/views/status_view.rs:114
-msgid "Allow"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
-#: src/views/status_view.rs:115
-msgid "Reject"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:98
-msgid "Limit"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:110
-msgid "Advanced"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:114
-msgid "Direction"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:116
-msgid "In"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:117
-msgid "Out"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:122
-msgid "Protocol"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:124
-msgid "Both"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:125
-msgid "TCP"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:126
-msgid "UDP"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:131
-msgid "Source IP"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:135
-msgid "Destination IP"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:144
-msgid "Interface"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:149
-msgid "Comment"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:154
-msgid "Insert Before Rule"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:155
 msgid "0 = append at end"
 msgstr ""
 
-#: src/widgets/add_rule_dialog.rs:170
-msgid "Add"
-msgstr ""
-
-#: src/widgets/add_rule_dialog.rs:254
-msgid "Save"
-msgstr ""
-
-#: src/views/dashboard_view.rs:56 src/window.rs:89
-msgid "Dashboard"
-msgstr ""
-
-#: src/views/dashboard_view.rs:78
-msgid "Recent Events Parsed"
-msgstr ""
-
-#: src/views/dashboard_view.rs:96
-msgid "Blocked Events"
-msgstr ""
-
-#: src/views/dashboard_view.rs:117
-msgid "Top Blocked Connections"
-msgstr ""
-
-#: src/views/dashboard_view.rs:123
-msgid "Top Blocked Ports"
-msgstr ""
-
-#: src/views/dashboard_view.rs:129
-msgid "Listening Ports"
-msgstr ""
-
-#: src/views/dashboard_view.rs:135
-msgid "Recent Blocked Events"
-msgstr ""
-
-#: src/views/dashboard_view.rs:139
-msgid "Show"
-msgstr ""
-
-#: src/views/dashboard_view.rs:154
-msgid "Refresh"
-msgstr ""
-
-#: src/views/dashboard_view.rs:247
-msgid "No blocked connections in recent events"
-msgstr ""
-
-#: src/views/dashboard_view.rs:296
-msgid "No blocked ports in recent events"
-msgstr ""
-
-#: src/views/dashboard_view.rs:344
-msgid "No listening ports detected"
-msgstr ""
-
-#: src/views/profiles_view.rs:76
-msgid "Application Profiles"
-msgstr ""
-
-#: src/views/profiles_view.rs:77
-msgid "Allow applications with predefined rules."
-msgstr ""
-
-#: src/views/profiles_view.rs:82
-msgid "Quick Allow Port"
-msgstr ""
-
-#: src/views/profiles_view.rs:83
-msgid "e.g. 80,443/tcp or 8080"
-msgstr ""
-
-#: src/views/profiles_view.rs:87
-msgid "Port / Protocol"
-msgstr ""
-
-#: src/views/profiles_view.rs:119
-msgid "No Profiles"
-msgstr ""
-
-#: src/views/profiles_view.rs:120
-msgid "No application profiles found"
-msgstr ""
-
-#: src/views/rules_view.rs:62
-msgid "Search rules..."
-msgstr ""
-
-#: src/views/rules_view.rs:70
-msgid "Firewall Rules"
-msgstr ""
-
-#: src/views/rules_view.rs:75
-msgid "No Rules"
-msgstr ""
-
-#: src/views/rules_view.rs:76
-msgid "There are no rules configured yet."
-msgstr ""
-
-#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
-msgid "Delete All"
-msgstr ""
-
-#: src/views/rules_view.rs:119
-msgid "Delete All Rules?"
-msgstr ""
-
-#: src/views/rules_view.rs:120
-msgid "This will delete all custom rules. This action cannot be undone."
-msgstr ""
-
-#: src/views/status_view.rs:78 src/window.rs:90
-msgid "Status"
-msgstr ""
-
-#: src/views/status_view.rs:89 src/window.rs:63
-msgid "Firewall"
-msgstr ""
-
-#: src/views/status_view.rs:90 src/views/status_view.rs:282
-msgid "Inactive"
-msgstr ""
-
-#: src/views/status_view.rs:97
-msgid "Default Policies"
-msgstr ""
-
-#: src/views/status_view.rs:102
-msgid "Incoming"
-msgstr ""
-
-#: src/views/status_view.rs:111
-msgid "Outgoing"
-msgstr ""
-
-#: src/views/status_view.rs:124
-msgid "Logging"
-msgstr ""
-
-#: src/views/status_view.rs:128
-msgid "Log Level"
-msgstr ""
-
-#: src/views/status_view.rs:130
-msgid "Off"
-msgstr ""
-
-#: src/views/status_view.rs:131
-msgid "Low"
-msgstr ""
-
-#: src/views/status_view.rs:132
-msgid "Medium"
-msgstr ""
-
-#: src/views/status_view.rs:133
-msgid "High"
-msgstr ""
-
-#: src/views/status_view.rs:134
-msgid "Full"
-msgstr ""
-
-#: src/views/status_view.rs:282
-msgid "Active"
-msgstr ""
-
-#: src/window.rs:80
 msgid "About"
 msgstr ""
 
-#: src/window.rs:91
+msgid "Action"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Add Rule"
+msgstr ""
+
+msgid "Advanced"
+msgstr ""
+
+msgid "All"
+msgstr ""
+
+msgid "Allow"
+msgstr ""
+
+msgid "Allow applications with predefined rules."
+msgstr ""
+
+msgid "Application Profiles"
+msgstr ""
+
+msgid "Audit"
+msgstr ""
+
+msgid "Auditor Error"
+msgstr ""
+
+msgid "Block"
+msgstr ""
+
+msgid "Block Connection?"
+msgstr ""
+
+msgid "Block inbound traffic from"
+msgstr ""
+
+msgid "Block outbound traffic to"
+msgstr ""
+
+msgid "Blocked Events"
+msgstr ""
+
+msgid "Blocked Successfully"
+msgstr ""
+
+msgid "Both"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Comment"
+msgstr ""
+
+msgid "Custom"
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Default Policies"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Delete All"
+msgstr ""
+
+msgid "Delete All Rules?"
+msgstr ""
+
+msgid "Delete Rule"
+msgstr ""
+
+msgid "Delete rule"
+msgstr ""
+
+msgid "Deny"
+msgstr ""
+
+msgid "Destination IP"
+msgstr ""
+
+msgid "Direction"
+msgstr ""
+
+msgid "Error"
+msgstr ""
+
+msgid "Failed to Block"
+msgstr ""
+
+msgid "Firewall"
+msgstr ""
+
+msgid "Firewall Rules"
+msgstr ""
+
+msgid "Full"
+msgstr ""
+
+msgid "High"
+msgstr ""
+
+msgid "In"
+msgstr ""
+
+msgid "Inactive"
+msgstr ""
+
+msgid "Inbound"
+msgstr ""
+
+msgid "Incoming"
+msgstr ""
+
+msgid "Insert Before Rule"
+msgstr ""
+
+msgid "Interface"
+msgstr ""
+
+msgid "Limit"
+msgstr ""
+
+msgid "Listening Ports"
+msgstr ""
+
+msgid "Log Level"
+msgstr ""
+
+msgid "Logging"
+msgstr ""
+
+msgid "Low"
+msgstr ""
+
+msgid "Medium"
+msgstr ""
+
+msgid "Monitoring Network Activity"
+msgstr ""
+
+msgid "No Profiles"
+msgstr ""
+
+msgid "No Rules"
+msgstr ""
+
+msgid "No application profiles found"
+msgstr ""
+
+msgid "No blocked connections in recent events"
+msgstr ""
+
+msgid "No blocked ports in recent events"
+msgstr ""
+
+msgid "No listening ports detected"
+msgstr ""
+
+msgid "Off"
+msgstr ""
+
+msgid "Out"
+msgstr ""
+
+msgid "Outbound"
+msgstr ""
+
+msgid "Outgoing"
+msgstr ""
+
+msgid "Pause list updates"
+msgstr ""
+
+msgid "Port / Protocol"
+msgstr ""
+
+msgid "Port / Service Name"
+msgstr ""
+
+msgid "Profiles"
+msgstr ""
+
+msgid "Protocol"
+msgstr ""
+
+msgid "Quick Allow Port"
+msgstr ""
+
+msgid "Recent Blocked Events"
+msgstr ""
+
+msgid "Recent Events Parsed"
+msgstr ""
+
+msgid "Refresh"
+msgstr ""
+
+msgid "Reject"
+msgstr ""
+
+msgid "Resolve Domains"
+msgstr ""
+
+msgid "Rule added to block"
+msgstr ""
+
 msgid "Rules"
 msgstr ""
 
-#: src/window.rs:92
-msgid "Profiles"
+msgid "Save"
+msgstr ""
+
+msgid "Search Process or IP..."
+msgstr ""
+
+msgid "Search rules..."
+msgstr ""
+
+msgid "Service"
+msgstr ""
+
+msgid "Show"
+msgstr ""
+
+msgid "Source IP"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "TCP"
+msgstr ""
+
+msgid "There are no rules configured yet."
+msgstr ""
+
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr ""
+
+msgid "This will prevent the remote host from sending any packets to your machine."
+msgstr ""
+
+msgid "This will prevent your machine from sending any packets to the remote host."
+msgstr ""
+
+msgid "Top Blocked Connections"
+msgstr ""
+
+msgid "Top Blocked Ports"
+msgstr ""
+
+msgid "UDP"
+msgstr ""
+
+msgid "e.g. 80,443/tcp or 8080"
 msgstr ""

@@ -1,24 +1,26 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: swapcontrol-gtk 2.0.1\n"
+"Project-Id-Version: anduinos-swapcontrol-gtk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-14 09:51+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-
-msgid "<i>Recommended swappiness: {0} (for {1} GiB RAM)</i>"
-msgstr ""
-
-msgid "<i>Recommended: {0} GiB swap, swappiness {1} (for {2} GiB RAM)</i>"
-msgstr ""
-
-msgid "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
-msgstr ""
+"Content-Transfer-Encoding: 8bit\n"
 
 msgid "About"
 msgstr ""
 
 msgid "Accept threshold percent"
-msgstr ""
-
-msgid "Active — {0} GiB used / {1} GiB total"
 msgstr ""
 
 msgid "Advanced options"
@@ -81,19 +83,10 @@ msgstr ""
 msgid "Create Zram Device"
 msgstr ""
 
-msgid "Create a compressed RAM swap device for faster memory pressure handling."
-msgstr ""
-
-msgid "Creating Zram device…"
-msgstr ""
-
 msgid "Dashboard"
 msgstr ""
 
 msgid "Destroy Zram Device"
-msgstr ""
-
-msgid "Destroying Zram device…"
 msgstr ""
 
 msgid "Device Created"
@@ -120,9 +113,6 @@ msgstr ""
 msgid "Disk swap is active with memory compression — your system is well-protected against memory pressure."
 msgstr ""
 
-msgid "Disk-based swap file — the last line of defense when RAM is full"
-msgstr ""
-
 msgid "Duration:"
 msgstr ""
 
@@ -135,9 +125,6 @@ msgstr ""
 msgid "Enabling swap…"
 msgstr ""
 
-msgid "Ensure important work is saved before running this test."
-msgstr ""
-
 msgid "Error"
 msgstr ""
 
@@ -147,34 +134,16 @@ msgstr ""
 msgid "Growth speed"
 msgstr ""
 
-msgid "Hello {0}, you have {1} messages"
-msgstr ""
-
 msgid "Hibernation"
 msgstr ""
 
 msgid "Hibernation Warning"
 msgstr ""
 
-msgid "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-msgstr ""
-
-msgid "Hibernation not detected — recommended: {0} GiB"
-msgstr ""
-
-msgid "How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})"
-msgstr ""
-
-msgid "Idle ({0} GiB available)"
-msgstr ""
-
 msgid "Inactive"
 msgstr ""
 
 msgid "Loading..."
-msgstr ""
-
-msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
 msgstr ""
 
 msgid "Maximum hold time"
@@ -222,12 +191,6 @@ msgstr ""
 msgid "RAM"
 msgstr ""
 
-msgid "Real-time RAM, swap, and compression subsystem status"
-msgstr ""
-
-msgid "Reclaim pool pages under memory pressure. Recommended: ON"
-msgstr ""
-
 msgid "Remove"
 msgstr ""
 
@@ -238,9 +201,6 @@ msgid "Run Stress Test"
 msgstr ""
 
 msgid "Shrinker"
-msgstr ""
-
-msgid "Simulate memory pressure to test swap and OOM behavior"
 msgstr ""
 
 msgid "Size (MiB)"
@@ -267,6 +227,9 @@ msgstr ""
 msgid "Swappiness"
 msgstr ""
 
+msgid "Swappiness not optimized for Zram"
+msgstr ""
+
 msgid "Target Pressure"
 msgstr ""
 
@@ -280,9 +243,6 @@ msgid "Type"
 msgstr ""
 
 msgid "Used"
-msgstr ""
-
-msgid "Warning: This will consume system memory and may cause instability"
 msgstr ""
 
 msgid "When RAM is full the kernel may kill applications. Enable disk swap for a reliable safety net."
@@ -315,9 +275,8 @@ msgstr ""
 msgid "seconds"
 msgstr ""
 
-msgid "{0} · pool {1}%"
+msgid "with Zram"
 msgstr ""
 
-msgid "{0} · saved {1}%"
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr ""
-

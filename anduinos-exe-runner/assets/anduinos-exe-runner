@@ -159,7 +159,8 @@ class RunnerApp(Adw.Application):
 
                 def on_dialog_response(dlg, response):
                     if response == "install":
-                        subprocess.Popen(["gnome-software", "--details", matched_rec["app_id"]])
+                        import subprocess
+                        subprocess.run(["gnome-software", f"--details={matched_rec['app_id']}.desktop"])
                         self.quit()
                     elif response == "continue":
                         _start_normal_flow()
