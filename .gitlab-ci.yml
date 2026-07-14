@@ -459,6 +459,11 @@ anduinos-exe-runner:
   variables:
     PACKAGE_DIR: anduinos-exe-runner
 
+anduinos-oobe:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-oobe
+
 anduinos-desktop-apps:
   extends: .publish
   stage: meta
@@ -468,6 +473,7 @@ anduinos-desktop-apps:
     - anduinos-ufwall-gtk
     - anduinos-swapcontrol-gtk
     - anduinos-exe-runner
+    - anduinos-oobe
   variables:
     PACKAGE_DIR: anduinos-desktop-apps
 

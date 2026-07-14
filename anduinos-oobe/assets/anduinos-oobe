@@ -1,0 +1,2246 @@
+#!/usr/bin/env python3
+"""AnduinOS OOBE — First-run wizard and Welcome Center.
+   Named "AnduinOS 欢迎中心" (Welcome to AnduinOS)."""
+
+import gi
+gi.require_version('Gtk', '4.0')
+gi.require_version('Adw', '1')
+gi.require_version('Gio', '2.0')
+from gi.repository import Gtk, Adw, Gio, GLib, Gdk
+import subprocess
+import os
+import sys
+import threading
+import threading
+import importlib.util
+from importlib.machinery import SourceFileLoader
+
+def _get_appearance_module():
+    paths = [
+        '/home/anduin/Source/Repos/Aiursoft/bash-app/AnduinOS-Packages/anduinos-appearance/src/anduinos-appearance',
+        '/usr/share/anduinos-appearance/src/anduinos-appearance'
+    ]
+    for p in paths:
+        if os.path.exists(p):
+            try:
+                app_mod = SourceFileLoader("anduinos_appearance", p).load_module()
+                return app_mod
+            except Exception:
+                pass
+    return None
+import re
+import json
+import gettext
+import warnings
+
+warnings.filterwarnings('ignore', category=DeprecationWarning, module='gi')
+
+# ── i18n ───────────────────────────────────────────────────────────
+_LOCALE_DIR = '/usr/share/locale'
+try:
+    _ = gettext.translation('anduinos-oobe', _LOCALE_DIR, fallback=True).gettext
+except Exception:
+    _ = lambda s: s
+
+MARKER_FILE = os.path.expanduser("~/.config/anduinos-oobe-done")
+
+# ── Icon helper ────────────────────────────────────────────────────
+_ICON_BASES = [
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 '..', 'resources', 'icons'),      # dev path
+    '/usr/share/anduinos-oobe/icons',               # installed path
+]
+
+def _icon(name):
+    """Return path to a bundled Fluent icon, or fall back to a system icon name."""
+    for base in _ICON_BASES:
+        path = os.path.join(base, name)
+        if os.path.isfile(path):
+            return path
+    # Fallback: try system icon name
+    fallbacks = {
+        'theme': 'preferences-desktop-theme-global',
+        'layout': 'preferences-desktop-display',
+        'firewall': 'preferences-security-firewall',
+        'nvidia': 'nvidia',
+        'wine': 'wine',
+        'keyboard': 'input-keyboard',
+        'appstore': 'gnome-software',
+        'privacy': 'preferences-system-privacy',
+        'nas': 'network-server',
+        'disk': 'drive-harddisk',
+        'chrome': 'google-chrome',
+        'steam': 'steam',
+        'discord': 'discord',
+        'blender': 'blender',
+        'vlc': 'vlc',
+        'wechat': 'wechat',
+        'qq': 'qq',
+        'wps-office': 'wps-office-wpsmain',
+        'onlyoffice': 'libreoffice-writer',
+        'spark-store': 'spark-store',
+        'github': 'github',
+    }
+    return fallbacks.get(name.split('.')[0], name)
+
+def _create_image(name):
+    """Creates a Gtk.Image handling either a bundled file or a fallback icon name."""
+    icon_path = _icon(name)
+    img = Gtk.Image()
+    if os.path.isfile(icon_path):
+        img.set_from_file(icon_path)
+    else:
+        img.set_from_icon_name(icon_path)
+    return img
+
+# ═══════════════════════════════════════════════════════════════════
+# HELPERS
+# ═══════════════════════════════════════════════════════════════════
+
+def has_nvidia_gpu():
+    if os.environ.get('NVIDIA_PAGE') == 'true':
+        return True
+    try:
+        r = subprocess.run(['lspci'], capture_output=True, text=True, timeout=10)
+        if 'NVIDIA' in r.stdout or 'nvidia' in r.stdout.lower():
+            return True
+    except Exception:
+        pass
+    return False
+
+
+def has_second_disk():
+    try:
+        r = subprocess.run(['lsblk', '-ndo', 'NAME,TYPE'], capture_output=True, text=True, timeout=10)
+        count = 0
+        for line in r.stdout.strip().split('\n'):
+            parts = line.split()
+            if len(parts) >= 2 and parts[1] == 'disk' and not parts[0].startswith('loop'):
+                count += 1
+        return count > 1
+    except Exception:
+        return False
+
+
+def is_bottles_installed():
+    sys_path = "/var/lib/flatpak/app/com.usebottles.bottles"
+    user_path = os.path.expanduser("~/.local/share/flatpak/app/com.usebottles.bottles")
+    return os.path.isdir(sys_path) or os.path.isdir(user_path)
+
+
+def is_chinese_locale():
+    lang = os.environ.get('LANGUAGE', os.environ.get('LANG', ''))
+    return lang.startswith('zh_CN')
+
+
+def _apply_theme(dark):
+    scheme = 'prefer-dark' if dark else 'prefer-light'
+    subprocess.run(
+        ['gsettings', 'set', 'org.gnome.desktop.interface', 'color-scheme', scheme],
+        check=False
+    )
+
+
+def _apply_layout(style):
+    """Apply taskbar layout via dconf. style in ('modern', 'classic')."""
+    ARC = '/org/gnome/shell/extensions/arcmenu'
+    DTP = '/org/gnome/shell/extensions/dash-to-panel'
+
+    # Map to internal style names used by the appearance code
+    internal = 'eleven' if style == 'modern' else 'classic'
+    pos = 'bottom'
+
+    MENU_CONFIG = {
+        ('classic', 'bottom'): ('arcmenu', 'BottomLeft'),
+        ('eleven', 'bottom'): ('11', 'BottomCentered'),
+    }
+
+    POSITIONS = {'bottom': 'BOTTOM'}
+
+    if internal == 'eleven':
+        elements = [
+            {"element": "activitiesButton", "visible": True, "position": "stackedTL"},
+            {"element": "showAppsButton", "visible": False, "position": "stackedTL"},
+            {"element": "leftBox", "visible": True, "position": "stackedTL"},
+            {"element": "centerBox", "visible": True, "position": "stackedBR"},
+            {"element": "taskbar", "visible": True, "position": "centerMonitor"},
+            {"element": "rightBox", "visible": True, "position": "stackedBR"},
+            {"element": "systemMenu", "visible": True, "position": "stackedBR"},
+            {"element": "dateMenu", "visible": True, "position": "stackedBR"},
+            {"element": "desktopButton", "visible": True, "position": "stackedBR"},
+        ]
+    else:
+        elements = [
+            {"element": "centerBox", "visible": True, "position": "stackedTL"},
+            {"element": "taskbar", "visible": True, "position": "stackedTL"},
+            {"element": "showAppsButton", "visible": False, "position": "stackedTL"},
+            {"element": "activitiesButton", "visible": True, "position": "stackedBR"},
+            {"element": "leftBox", "visible": True, "position": "stackedBR"},
+            {"element": "rightBox", "visible": True, "position": "stackedBR"},
+            {"element": "systemMenu", "visible": True, "position": "stackedBR"},
+            {"element": "dateMenu", "visible": True, "position": "stackedBR"},
+            {"element": "desktopButton", "visible": True, "position": "stackedBR"},
+        ]
+
+    monitors = ["0", "1", "2"]
+    pep = json.dumps({m: elements for m in monitors})
+    pp = json.dumps({m: 'BOTTOM' for m in monitors})
+    ps = json.dumps({m: 48 for m in monitors})
+    menu_layout, force_menu = MENU_CONFIG[(internal, pos)]
+
+    try:
+        subprocess.run(['dconf', 'write', f'{DTP}/dot-position', "'BOTTOM'"], check=True)
+        subprocess.run(['dconf', 'write', f'{DTP}/panel-positions', f"'{pp}'"], check=True)
+        subprocess.run(['dconf', 'write', f'{DTP}/panel-sizes', f"'{ps}'"], check=True)
+        subprocess.run(['dconf', 'write', f'{DTP}/panel-element-positions', f"'{pep}'"], check=True)
+        subprocess.run(['dconf', 'write', f'{ARC}/force-menu-location', f"'{force_menu}'"], check=True)
+        subprocess.run(['dconf', 'write', f'{ARC}/menu-layout', f"'{menu_layout}'"], check=True)
+        if internal == 'eleven':
+            subprocess.run(['dconf', 'write', f'{DTP}/group-apps', 'true'], check=True)
+            subprocess.run(['dconf', 'write', f'{DTP}/group-apps-use-launchers', 'true'], check=True)
+    except subprocess.CalledProcessError:
+        pass
+    subprocess.run(['dconf', 'update'], check=False)
+
+
+# ═══════════════════════════════════════════════════════════════════
+# BREATHING LOGO WIDGET
+# ═══════════════════════════════════════════════════════════════════
+
+class BreathingLogo(Gtk.Box):
+    """The official AnduinOS logo with a breathing pulse animation."""
+
+    def __init__(self, size=128):
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
+        self.set_halign(Gtk.Align.CENTER)
+        self.set_valign(Gtk.Align.CENTER)
+        self._opacity = 1.0
+        self._direction = -1
+        self._tick = 0
+
+        # Try to load the official logo from the installed path first,
+        # then fall back to the resources directory
+        logo_paths = [
+            '/usr/share/icons/hicolor/scalable/apps/anduinos-oobe.svg',
+            os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                         '..', 'resources', 'anduinos-oobe.svg'),
+        ]
+        logo_path = None
+        for p in logo_paths:
+            if os.path.isfile(p):
+                logo_path = p
+                break
+
+        self._picture = Gtk.Picture()
+        self._picture.set_size_request(size, size)
+        self._picture.set_content_fit(Gtk.ContentFit.CONTAIN)
+        self._picture.set_can_shrink(True)
+        if logo_path:
+            self._picture.set_filename(logo_path)
+        else:
+            # Fallback: show the app icon
+            self._picture.set_icon_name('anduinos-oobe')
+
+        # CSS for opacity animation — use display-level provider (non-deprecated)
+        self._css_provider = Gtk.CssProvider()
+        self._opacity_class = f'breathing-logo-{id(self)}'
+        self._css_provider.load_from_data(
+            f'.{self._opacity_class} {{ opacity: {self._opacity}; }}'.encode()
+        )
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(),
+            self._css_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+        self._picture.add_css_class(self._opacity_class)
+
+        self.append(self._picture)
+        GLib.timeout_add(40, self._pulse)
+
+    def _pulse(self):
+        self._tick += 1
+        speed = 0.012
+        self._opacity += speed * self._direction
+        if self._opacity <= 0.55:
+            self._direction = 1
+            self._opacity = 0.55
+        elif self._opacity >= 1.0:
+            self._direction = -1
+            self._opacity = 1.0
+        # Update CSS
+        self._css_provider.load_from_data(
+            f'.{self._opacity_class} {{ opacity: {self._opacity}; }}'.encode()
+        )
+        return True
+
+
+# ═══════════════════════════════════════════════════════════════════
+# PAGE 1: WELCOME — 启航
+# ═══════════════════════════════════════════════════════════════════
+
+def create_welcome_page(navigate_next):
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_valign(Gtk.Align.FILL)
+    page.set_halign(Gtk.Align.FILL)
+
+    # Center content
+    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+    center.set_valign(Gtk.Align.CENTER)
+    center.set_halign(Gtk.Align.CENTER)
+    center.set_vexpand(True)
+    center.set_margin_start(48)
+    center.set_margin_end(48)
+    center.set_margin_bottom(24)
+
+    # Breathing logo
+    logo = BreathingLogo(96)
+    logo.set_halign(Gtk.Align.CENTER)
+    logo.set_margin_bottom(32)
+    center.append(logo)
+
+    # Main title
+    title = Gtk.Label(label=_('Welcome Home.'))
+    title.add_css_class('title-1')
+    title.set_halign(Gtk.Align.CENTER)
+    title.set_justify(Gtk.Justification.CENTER)
+    title.set_wrap(True)
+    title.set_margin_bottom(12)
+    center.append(title)
+
+    # Subtitle
+    subtitle = Gtk.Label(
+        label=_('AnduinOS is ready. Just a few steps to shape it\n'
+                'into the perfect system tailored to your habits.')
+    )
+    subtitle.add_css_class('title-4')
+    subtitle.set_halign(Gtk.Align.CENTER)
+    subtitle.set_justify(Gtk.Justification.CENTER)
+    subtitle.set_wrap(True)
+    subtitle.set_margin_bottom(36)
+    center.append(subtitle)
+
+    # Start button (only useful in OOBE mode, harmless in Welcome Center)
+    start_btn = Gtk.Button(label=_('  Start Setup  '))
+    start_btn.add_css_class('suggested-action')
+    start_btn.add_css_class('pill')
+    start_btn.set_halign(Gtk.Align.CENTER)
+    start_btn.set_size_request(200, 48)
+    if navigate_next:
+        start_btn.connect('clicked', lambda b: navigate_next())
+    else:
+        # In Welcome Center mode, the button is decorative
+        start_btn.set_sensitive(False)
+    center.append(start_btn)
+
+    # Version info
+    version = Gtk.Label(label='AnduinOS 2.0')
+    version.add_css_class('dim-label')
+    version.add_css_class('caption')
+    version.set_halign(Gtk.Align.CENTER)
+    version.set_margin_top(24)
+    center.append(version)
+
+    page.append(center)
+    return page
+
+
+# ═══════════════════════════════════════════════════════════════════
+# PAGE 2: APPEARANCE — 外观与秩序
+# ═══════════════════════════════════════════════════════════════════
+
+def create_appearance_page():
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_valign(Gtk.Align.FILL)
+    page.set_halign(Gtk.Align.FILL)
+    page.set_margin_start(48)
+    page.set_margin_end(48)
+    page.set_margin_top(24)
+    page.set_margin_bottom(24)
+    page.set_spacing(0)
+
+    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    center.set_valign(Gtk.Align.CENTER)
+    center.set_vexpand(True)
+    page.append(center)
+
+    # Title
+    title = Gtk.Label(label=_('Define Your Visual Order'))
+    title.add_css_class('title-1')
+    title.set_halign(Gtk.Align.CENTER)
+    title.set_wrap(True)
+    title.set_justify(Gtk.Justification.CENTER)
+    title.set_margin_bottom(48)
+    center.append(title)
+
+    # ── Theme Section ──
+    theme_group = Adw.PreferencesGroup()
+    theme_group.set_title(_('Light & Shadow'))
+    theme_group.set_description(_('Choose a crisp light theme, or an immersive dark experience.'))
+    theme_group.set_margin_bottom(36)
+    theme_group.set_margin_start(24)
+    theme_group.set_margin_end(24)
+
+    # Detect current
+    try:
+        r = subprocess.run(['gsettings', 'get', 'org.gnome.desktop.interface', 'color-scheme'],
+                           capture_output=True, text=True, timeout=5)
+        is_dark = 'dark' in r.stdout.lower()
+    except Exception:
+        is_dark = False
+
+    # Big Radio Cards for Theme
+    theme_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24)
+    theme_box.set_halign(Gtk.Align.CENTER)
+    theme_box.set_margin_top(12)
+
+    btn_light = Gtk.ToggleButton()
+    btn_light.set_active(not is_dark)
+    light_content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+    light_icon = _create_image('preferences-desktop-display-randr.svg')
+    light_icon.set_pixel_size(48)
+    light_content.append(light_icon)
+    light_content.append(Gtk.Label(label=_('Light')))
+    light_content.set_margin_top(24)
+    light_content.set_margin_bottom(24)
+    light_content.set_margin_start(48)
+    light_content.set_margin_end(48)
+    btn_light.set_child(light_content)
+
+    btn_dark = Gtk.ToggleButton()
+    btn_dark.set_active(is_dark)
+    dark_content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+    dark_icon = _create_image('preferences-desktop-display-nightcolor.svg')
+    dark_icon.set_pixel_size(48)
+    dark_content.append(dark_icon)
+    dark_content.append(Gtk.Label(label=_('Dark')))
+    dark_content.set_margin_top(24)
+    dark_content.set_margin_bottom(24)
+    dark_content.set_margin_start(48)
+    dark_content.set_margin_end(48)
+    btn_dark.set_child(dark_content)
+
+    def _on_theme_click(btn, dark):
+        if btn.get_active():
+            if dark:
+                btn_light.set_active(False)
+            else:
+                btn_dark.set_active(False)
+            _apply_theme(dark)
+        # Ensure at least one is active
+        elif not btn_light.get_active() and not btn_dark.get_active():
+            btn.set_active(True)
+
+    btn_light.connect('toggled', _on_theme_click, False)
+    btn_dark.connect('toggled', _on_theme_click, True)
+    
+    theme_box.append(btn_light)
+    theme_box.append(btn_dark)
+    theme_group.add(theme_box)
+    center.append(theme_group)
+
+    # ── Layout Section ──
+    layout_title_group = Adw.PreferencesGroup()
+    layout_title_group.set_title(_('Workflow Layout'))
+    layout_title_group.set_description(_('Prefer modern centered alignment, or classic left-docked?'))
+    layout_title_group.set_margin_start(24)
+    layout_title_group.set_margin_end(24)
+    layout_title_group.set_margin_bottom(12)
+    center.append(layout_title_group)
+
+    # Detect current layout
+    try:
+        r = subprocess.run(['dconf', 'read', '/org/gnome/shell/extensions/arcmenu/menu-layout'],
+                           capture_output=True, text=True, timeout=5)
+        ml = r.stdout.strip()
+        current_style = 'modern'
+        if 'arcmenu' in ml:
+            r2 = subprocess.run(
+                ['dconf', 'read',
+                 '/org/gnome/shell/extensions/dash-to-panel/panel-element-positions'],
+                capture_output=True, text=True, timeout=5)
+            current_style = 'classic' if 'centerMonitor' not in r2.stdout else 'modern'
+    except Exception:
+        current_style = 'modern'
+
+    state = {'style': current_style}
+
+    # Optional Preview from anduinos-appearance
+    app_mod = _get_appearance_module()
+    preview = None
+    if app_mod and hasattr(app_mod, 'draw_preview'):
+        preview_card = Gtk.Frame()
+        preview_card.add_css_class('card')
+        preview_card.set_margin_bottom(24)
+        preview_card.set_margin_start(24)
+        preview_card.set_margin_end(24)
+        preview = Gtk.DrawingArea()
+        preview.set_size_request(340, 110)
+        
+        def _do_draw(area, cr, w, h):
+            style_str = 'eleven' if state['style'] == 'modern' else 'classic'
+            app_mod.draw_preview(area, cr, w, h, style_str, 'bottom')
+            
+        preview.set_draw_func(_do_draw)
+        preview_card.set_child(preview)
+        center.append(preview_card)
+
+    layout_group = Adw.PreferencesGroup()
+    layout_group.set_margin_start(24)
+    layout_group.set_margin_end(24)
+
+    layout_row = Adw.ActionRow()
+    layout_row.set_title(_('Taskbar Layout'))
+    layout_row.set_subtitle(_('Choose your workflow.'))
+    layout_icon = _create_image('dock.svg')
+    layout_icon.set_pixel_size(32)
+    layout_row.add_prefix(layout_icon)
+
+    layout_btns = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
+    layout_btns.add_css_class('linked')
+    layout_btns.set_valign(Gtk.Align.CENTER)
+    
+    btn_modern = Gtk.ToggleButton(label=_(' Modern '))
+    btn_classic = Gtk.ToggleButton(label=_(' Classic '))
+    btn_modern.set_active(current_style == 'modern')
+    btn_classic.set_active(current_style == 'classic')
+    
+    layout_btns.append(btn_classic)
+    layout_btns.append(btn_modern)
+    layout_row.add_suffix(layout_btns)
+    layout_row.set_activatable_widget(btn_modern)
+
+    def _on_layout_click(btn, style):
+        if btn.get_active():
+            if style == 'modern':
+                btn_classic.set_active(False)
+            else:
+                btn_modern.set_active(False)
+            state['style'] = style
+            if preview:
+                preview.queue_draw()
+            _apply_layout(style)
+        elif not btn_modern.get_active() and not btn_classic.get_active():
+            btn.set_active(True)
+
+    btn_modern.connect('toggled', _on_layout_click, 'modern')
+    btn_classic.connect('toggled', _on_layout_click, 'classic')
+
+    layout_group.add(layout_row)
+
+    activities_row = Adw.SwitchRow()
+    activities_row.set_title(_('Show Virtual Desktop Switch Button'))
+    activities_row.set_subtitle(_('Display the Activities button on the taskbar'))
+    
+    act_icon = _create_image('window-duplicate.svg')
+    act_icon.set_pixel_size(32)
+    activities_row.add_prefix(act_icon)
+    
+    try:
+        r_act = subprocess.run(['dconf', 'read', '/org/gnome/shell/extensions/arcmenu/show-activities-button'],
+                               capture_output=True, text=True, timeout=5)
+        is_activities_shown = 'false' not in r_act.stdout.lower()
+    except Exception:
+        is_activities_shown = True
+        
+    activities_row.set_active(is_activities_shown)
+    
+    def _on_activities_toggle(switch, pspec):
+        v = 'true' if switch.get_active() else 'false'
+        subprocess.run(['dconf', 'write', '/org/gnome/shell/extensions/arcmenu/show-activities-button', v])
+        
+    activities_row.connect('notify::active', _on_activities_toggle)
+    layout_group.add(activities_row)
+
+    center.append(layout_group)
+
+    return page
+
+
+# ═══════════════════════════════════════════════════════════════════
+# PAGE 3: SECURITY — 边界与隐私
+# ═══════════════════════════════════════════════════════════════════
+
+def create_security_page():
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_valign(Gtk.Align.FILL)
+    page.set_halign(Gtk.Align.FILL)
+    page.set_margin_start(48)
+    page.set_margin_end(48)
+    page.set_margin_top(24)
+    page.set_margin_bottom(24)
+    page.set_spacing(0)
+
+    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    center.set_valign(Gtk.Align.CENTER)
+    center.set_vexpand(True)
+    page.append(center)
+
+    title = Gtk.Label(label=_('Digital Sovereignty, Under Your Control'))
+    title.add_css_class('title-1')
+    title.set_halign(Gtk.Align.CENTER)
+    title.set_wrap(True)
+    title.set_justify(Gtk.Justification.CENTER)
+    title.set_margin_bottom(8)
+    center.append(title)
+
+    sub = Gtk.Label(label=_('We deeply value privacy. Here, you hold absolute authority.'))
+    sub.add_css_class('dim-label')
+    sub.set_halign(Gtk.Align.CENTER)
+    sub.set_wrap(True)
+    sub.set_justify(Gtk.Justification.CENTER)
+    sub.set_margin_bottom(48)
+    center.append(sub)
+
+    # ── Firewall Card ──
+    fw_card = Adw.PreferencesGroup()
+    fw_card.set_title(_('Firewall'))
+    fw_card.set_description(
+        _('Enable low-level network protection — silently blocks all unauthorized inbound connections.')
+    )
+    fw_card.set_margin_bottom(24)
+
+    fw_row = Adw.SwitchRow()
+    fw_row.set_title(_('Network Firewall (UFW)'))
+
+    # Shield icon that glows green
+    shield_icon = _create_image('preferences-security-firewall.svg')
+    shield_icon.set_pixel_size(32)
+    fw_row.add_prefix(shield_icon)
+
+    # Read UFW status from world-readable config file — no root needed
+    try:
+        with open('/etc/ufw/ufw.conf', 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith('ENABLED='):
+                    fw_active = line.split('=', 1)[1].strip().lower() == 'yes'
+                    break
+            else:
+                fw_active = False
+    except Exception:
+        fw_active = False
+    fw_row.set_active(fw_active)
+
+    def _on_fw_toggle(switch, pspec):
+        enable = switch.get_active()
+        arg = 'enable' if enable else 'disable'
+
+        def _done(returncode, stdout, stderr, sw, expected):
+            if returncode != 0:
+                GLib.idle_add(lambda: sw.set_active(not expected))
+            else:
+                if enable:
+                    GLib.idle_add(lambda: shield_icon.set_from_file('/home/anduin/Desktop/Fluent-icon-theme/src/scalable/apps/preferences-security-firewall.svg'))
+                else:
+                    GLib.idle_add(lambda: shield_icon.set_from_file('/home/anduin/Desktop/Fluent-icon-theme/src/scalable/apps/preferences-security.svg'))
+
+        def _run_fw():
+            try:
+                proc = subprocess.run(['pkexec', 'ufw', '--force', arg],
+                                      capture_output=True, text=True, timeout=30)
+                GLib.idle_add(lambda: _done(proc.returncode, proc.stdout, proc.stderr,
+                                            switch, enable))
+            except Exception as e:
+                GLib.idle_add(lambda: _done(-1, '', str(e), switch, enable))
+
+        threading.Thread(target=_run_fw, daemon=True).start()
+
+    fw_row.connect('notify::active', _on_fw_toggle)
+    fw_card.add(fw_row)
+    center.append(fw_card)
+
+    # ── Location Card ──
+    loc_card = Adw.PreferencesGroup()
+    loc_card.set_title(_('Location Services'))
+    loc_card.set_description(
+        _('Allow apps like weather and clock to access your approximate geographic location.')
+    )
+
+    loc_row = Adw.SwitchRow()
+    loc_row.set_title(_('Location Access'))
+
+    loc_icon = _create_image('gnome-maps.svg')
+    loc_icon.set_pixel_size(32)
+    loc_row.add_prefix(loc_icon)
+
+    try:
+        r = subprocess.run(
+            ['gsettings', 'get', 'org.gnome.system.location', 'enabled'],
+            capture_output=True, text=True, timeout=5
+        )
+        loc_row.set_active('true' in r.stdout.lower())
+    except Exception:
+        loc_row.set_active(False)
+
+    def _on_loc_toggle(switch, pspec):
+        val = 'true' if switch.get_active() else 'false'
+        subprocess.run(
+            ['gsettings', 'set', 'org.gnome.system.location', 'enabled', val],
+            check=False
+        )
+
+    loc_row.connect('notify::active', _on_loc_toggle)
+    loc_card.add(loc_row)
+    center.append(loc_card)
+
+    # ── Power Card ──
+    power_card = Adw.PreferencesGroup()
+    power_card.set_title(_('Power Settings'))
+    power_card.set_description(_('Manage idle behavior to balance energy saving and convenience.'))
+    power_card.set_margin_top(24)
+
+    power_row = Adw.SwitchRow()
+    power_row.set_title(_('Auto Sleep'))
+
+    power_icon = _create_image('gnome-power-manager.svg')
+    power_icon.set_pixel_size(32)
+    power_row.add_prefix(power_icon)
+
+    try:
+        r_ac_type = subprocess.run(
+            ['gsettings', 'get', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-ac-type'],
+            capture_output=True, text=True, timeout=5
+        )
+        r_bat_type = subprocess.run(
+            ['gsettings', 'get', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-battery-type'],
+            capture_output=True, text=True, timeout=5
+        )
+        sleep_active = 'suspend' in r_ac_type.stdout or 'suspend' in r_bat_type.stdout
+    except Exception:
+        sleep_active = True
+
+    power_row.set_active(sleep_active)
+
+    def _on_power_toggle(switch, pspec):
+        if switch.get_active():
+            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-ac-timeout', '1800'], check=False)
+            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-battery-timeout', '1200'], check=False)
+            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-ac-type', "'suspend'"], check=False)
+            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-battery-type', "'suspend'"], check=False)
+        else:
+            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-ac-timeout', '0'], check=False)
+            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-battery-timeout', '0'], check=False)
+            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-ac-type', "'nothing'"], check=False)
+            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-battery-type', "'nothing'"], check=False)
+
+    power_row.connect('notify::active', _on_power_toggle)
+    power_card.add(power_row)
+    center.append(power_card)
+
+    return page
+
+
+# ═══════════════════════════════════════════════════════════════════
+# PAGE 3.5: UPDATE SYSTEM
+# ═══════════════════════════════════════════════════════════════════
+
+def create_update_page(navigate_next, update_nav=None):
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_valign(Gtk.Align.FILL)
+    page.set_halign(Gtk.Align.FILL)
+    page.set_margin_start(48)
+    page.set_margin_end(48)
+    page.set_margin_top(24)
+    page.set_margin_bottom(24)
+    page.set_spacing(0)
+    
+    page._suggest_next = False
+
+    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    center.set_valign(Gtk.Align.CENTER)
+    center.set_vexpand(True)
+    page.append(center)
+
+    icon = _create_image('yast-upgrade.svg')
+    icon.set_pixel_size(72)
+    icon.set_halign(Gtk.Align.CENTER)
+    center.append(icon)
+
+    title = Gtk.Label(label=_('Keep Your System Up to Date'))
+    title.add_css_class('title-1')
+    title.set_halign(Gtk.Align.CENTER)
+    title.set_wrap(True)
+    title.set_justify(Gtk.Justification.CENTER)
+    title.set_margin_top(12)
+    center.append(title)
+
+    sub = Gtk.Label(
+        label=_('Security patches and the latest features are just a click away.')
+    )
+    sub.add_css_class('dim-label')
+    sub.set_halign(Gtk.Align.CENTER)
+    sub.set_wrap(True)
+    sub.set_justify(Gtk.Justification.CENTER)
+    sub.set_margin_top(12)
+    center.append(sub)
+
+    # Advanced Output Expander (Terminal)
+    expander = Gtk.Expander(label=_('Terminal Output'))
+    expander.set_margin_top(24)
+    expander.set_halign(Gtk.Align.FILL)
+    
+    scroll = Gtk.ScrolledWindow()
+    scroll.set_min_content_height(150)
+    scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+    
+    textview = Gtk.TextView()
+    textview.set_editable(False)
+    textview.set_cursor_visible(False)
+    textview.add_css_class('card')
+    textview.set_monospace(True)
+    textview.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
+    buffer = textview.get_buffer()
+    
+    scroll.set_child(textview)
+    expander.set_child(scroll)
+    center.append(expander)
+
+    status_label = Gtk.Label()
+    status_label.add_css_class('dim-label')
+    status_label.set_halign(Gtk.Align.CENTER)
+    status_label.set_wrap(True)
+    status_label.set_margin_top(12)
+    status_label.set_margin_bottom(12)
+    center.append(status_label)
+
+    progress_bar = Gtk.ProgressBar()
+    progress_bar.set_visible(False)
+    center.append(progress_bar)
+
+    btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+    btn_box.set_halign(Gtk.Align.CENTER)
+    btn_box.set_margin_top(12)
+
+    skip_btn = Gtk.Button(label=_('  Do It Later  '))
+    skip_btn.connect('clicked', lambda b: navigate_next())
+
+    action_btn = Gtk.Button(label=_('  Check for Updates  '))
+    action_btn.add_css_class('suggested-action')
+
+    page._state = 0 
+
+    def _on_action(btn):
+        btn.set_sensitive(False)
+        skip_btn.set_sensitive(False)
+        progress_bar.set_visible(True)
+        progress_bar.pulse()
+        expander.set_expanded(True)
+
+        def _pulse():
+            if progress_bar.is_visible():
+                progress_bar.pulse()
+                return True
+            return False
+        GLib.timeout_add(100, _pulse)
+
+        def _do_work():
+            def __append_text(t):
+                end_iter = buffer.get_end_iter()
+                buffer.insert(end_iter, t)
+                mark = buffer.create_mark(None, buffer.get_end_iter(), False)
+                textview.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
+
+            def __cleanup():
+                progress_bar.set_visible(False)
+                action_btn.set_sensitive(True)
+                skip_btn.set_sensitive(True)
+
+            if page._state == 0:
+                try:
+                    GLib.idle_add(lambda: status_label.set_label(_('Checking for updates…')))
+                    proc1 = subprocess.Popen(
+                        ['pkexec', 'apt-get', 'update'],
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT,
+                        text=True,
+                        bufsize=1
+                    )
+                    for line in iter(proc1.stdout.readline, ''):
+                        GLib.idle_add(lambda l=line: __append_text(l))
+                    proc1.wait()
+
+                    if proc1.returncode != 0:
+                        raise Exception("apt-get update failed")
+                    
+                    proc2 = subprocess.run(
+                        ['apt-get', '-s', 'upgrade'],
+                        capture_output=True, text=True
+                    )
+                    
+                    has_updates = False
+                    for line in proc2.stdout.split('\n'):
+                        if 'upgraded, ' in line:
+                            parts = line.split()
+                            if parts[0] != '0':
+                                has_updates = True
+                                GLib.idle_add(lambda l=line: __append_text(l + '\n'))
+                            break
+                    
+                    if has_updates:
+                        GLib.idle_add(lambda: (
+                            status_label.set_label(_('Updates are available.')),
+                            action_btn.set_label(_('  Install Updates  ')),
+                            page.__setattr__('_state', 1),
+                            __cleanup()
+                        ))
+                    else:
+                        def _set_ready():
+                            status_label.set_label(_('✓ System is up to date.'))
+                            action_btn.set_visible(False)
+                            skip_btn.set_label(_('  Continue  '))
+                            page._suggest_next = True
+                            if update_nav: update_nav()
+                            __cleanup()
+                        GLib.idle_add(_set_ready)
+                except Exception as e:
+                    GLib.idle_add(lambda e=e: (
+                        status_label.set_label(_('✗ Check failed: ') + str(e)),
+                        __cleanup()
+                    ))
+            
+            elif page._state == 1:
+                try:
+                    GLib.idle_add(lambda: status_label.set_label(_('Installing updates…')))
+                    proc = subprocess.Popen(
+                        ['pkexec', 'sh', '-c', 'DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y'],
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT,
+                        text=True,
+                        bufsize=1
+                    )
+                    for line in iter(proc.stdout.readline, ''):
+                        GLib.idle_add(lambda l=line: __append_text(l))
+                    proc.wait()
+
+                    if proc.returncode == 0:
+                        def _set_done():
+                            status_label.set_label(_('✓ Updates installed successfully!'))
+                            action_btn.set_visible(False)
+                            skip_btn.set_label(_('  Continue  '))
+                            page._suggest_next = True
+                            if update_nav: update_nav()
+                            __cleanup()
+                        GLib.idle_add(_set_done)
+                    else:
+                        raise Exception("apt-get dist-upgrade failed")
+                except Exception as e:
+                    GLib.idle_add(lambda e=e: (
+                        status_label.set_label(_('✗ Installation failed: ') + str(e)),
+                        __cleanup()
+                    ))
+
+        threading.Thread(target=_do_work, daemon=True).start()
+
+    action_btn.connect('clicked', _on_action)
+    btn_box.append(skip_btn)
+    btn_box.append(action_btn)
+    center.append(btn_box)
+
+    return page
+
+
+# ═══════════════════════════════════════════════════════════════════
+# PAGE 4: NVIDIA — 性能释放 (conditional)
+# ═══════════════════════════════════════════════════════════════════
+
+def create_nvidia_page(navigate_next, update_nav=None):
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_valign(Gtk.Align.FILL)
+    page.set_halign(Gtk.Align.FILL)
+    page.set_margin_start(48)
+    page.set_margin_end(48)
+    page.set_margin_top(24)
+    page.set_margin_bottom(24)
+    page.set_spacing(0)
+    
+    page._suggest_next = False
+
+    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    center.set_valign(Gtk.Align.CENTER)
+    center.set_vexpand(True)
+    page.append(center)
+
+    # Green-tinted icon
+    icon = _create_image('nvidia.svg')
+    icon.set_pixel_size(72)
+    icon.set_halign(Gtk.Align.CENTER)
+    center.append(icon)
+
+    title = Gtk.Label(label=_('Unleash Your Graphics Hardware'))
+    title.add_css_class('title-1')
+    title.set_halign(Gtk.Align.CENTER)
+    title.set_wrap(True)
+    title.set_justify(Gtk.Justification.CENTER)
+    title.set_margin_top(12)
+    center.append(title)
+
+    driver_version = None
+    try:
+        r = subprocess.run(['nvidia-smi', '--query-gpu=driver_version', '--format=csv,noheader'],
+                           capture_output=True, text=True, timeout=5)
+        if r.returncode == 0:
+            driver_version = r.stdout.strip().split('\n')[0]
+    except Exception:
+        pass
+
+    if driver_version:
+        sub = Gtk.Label(
+            label=_('NVIDIA proprietary driver is already installed. (Version: {})').format(driver_version)
+        )
+    else:
+        sub = Gtk.Label(
+            label=_('An NVIDIA dedicated graphics card was detected in your system.')
+        )
+    sub.add_css_class('dim-label')
+    sub.set_halign(Gtk.Align.CENTER)
+    sub.set_wrap(True)
+    sub.set_justify(Gtk.Justification.CENTER)
+    sub.set_margin_top(12)
+    center.append(sub)
+
+    body = Gtk.Label(
+        label=_('For ultimate smoothness in gaming, 3D rendering, and high-framerate desktop\n'
+                'experiences, we recommend installing the proprietary driver.')
+    )
+    body.set_halign(Gtk.Align.CENTER)
+    body.set_wrap(True)
+    body.set_justify(Gtk.Justification.CENTER)
+    body.set_margin_top(24)
+    body.set_margin_bottom(24)
+    center.append(body)
+
+    # Status
+    status_label = Gtk.Label()
+    status_label.add_css_class('dim-label')
+    status_label.set_halign(Gtk.Align.CENTER)
+    status_label.set_wrap(True)
+    status_label.set_margin_bottom(12)
+    center.append(status_label)
+
+    progress_bar = Gtk.ProgressBar()
+    progress_bar.set_visible(False)
+    progress_bar.set_margin_start(48)
+    progress_bar.set_margin_end(48)
+    center.append(progress_bar)
+
+    # Buttons
+    btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+    btn_box.set_halign(Gtk.Align.CENTER)
+    btn_box.set_margin_top(24)
+
+    skip_btn = Gtk.Button(label=_('  Do It Later  '))
+    skip_btn.connect('clicked', lambda b: navigate_next())
+
+    if driver_version:
+        install_btn = Gtk.Button(label=_('  Check for Driver Updates  '))
+    else:
+        install_btn = Gtk.Button(label=_('  One-Click NVIDIA Driver Install  '))
+    install_btn.add_css_class('suggested-action')
+
+    # Advanced Output Expander
+    expander = Gtk.Expander(label=_('Advanced Output'))
+    expander.set_margin_top(12)
+    expander.set_margin_start(48)
+    expander.set_margin_end(48)
+    expander.set_halign(Gtk.Align.FILL)
+    
+    scroll = Gtk.ScrolledWindow()
+    scroll.set_min_content_height(150)
+    scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+    
+    textview = Gtk.TextView()
+    textview.set_editable(False)
+    textview.set_cursor_visible(False)
+    textview.add_css_class('card')
+    textview.set_monospace(True)
+    textview.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
+    buffer = textview.get_buffer()
+    
+    scroll.set_child(textview)
+    expander.set_child(scroll)
+    center.append(expander)
+
+    def _on_install(btn):
+        btn.set_sensitive(False)
+        skip_btn.set_sensitive(False)
+        progress_bar.set_visible(True)
+        progress_bar.pulse()
+        status_label.set_label(_('Installing NVIDIA driver…\nThis may take several minutes.'))
+
+        def _pulse():
+            if progress_bar.is_visible():
+                progress_bar.pulse()
+                return True
+            return False
+
+        GLib.timeout_add(100, _pulse)
+
+        def _do_install():
+            try:
+                proc = subprocess.Popen(
+                    ['pkexec', 'ubuntu-drivers', 'install'],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    bufsize=1
+                )
+                
+                def _append_text(t):
+                    end_iter = buffer.get_end_iter()
+                    buffer.insert(end_iter, t)
+                    mark = buffer.create_mark(None, buffer.get_end_iter(), False)
+                    textview.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
+                    
+                for line in iter(proc.stdout.readline, ''):
+                    GLib.idle_add(lambda l=line: _append_text(l))
+                proc.stdout.close()
+                proc.wait()
+                
+                if proc.returncode == 0:
+                    def _set_success():
+                        status_label.set_label(
+                            _('✓ Driver installed successfully!\n'
+                              'A reboot is recommended to apply changes.'))
+                        progress_bar.set_visible(False)
+                        btn.set_visible(False)
+                        skip_btn.set_label(_('  Continue  '))
+                        skip_btn.set_sensitive(True)
+                        page._suggest_next = True
+                        if update_nav: update_nav()
+                    GLib.idle_add(_set_success)
+                else:
+                    def _set_fail():
+                        status_label.set_label(
+                            _('✗ Installation encountered an issue.\n'
+                              'You can install drivers later from Settings.'))
+                        progress_bar.set_visible(False)
+                        btn.set_sensitive(True)
+                        skip_btn.set_sensitive(True)
+                        page._suggest_next = True
+                        if update_nav: update_nav()
+                    GLib.idle_add(_set_fail)
+            except Exception as e:
+                def _set_ex():
+                    status_label.set_label(_('✗ Installation failed: ') + str(e))
+                    progress_bar.set_visible(False)
+                    btn.set_sensitive(True)
+                    skip_btn.set_sensitive(True)
+                    page._suggest_next = True
+                    if update_nav: update_nav()
+                GLib.idle_add(_set_ex)
+
+        threading.Thread(target=_do_install, daemon=True).start()
+
+    install_btn.connect('clicked', _on_install)
+    btn_box.append(skip_btn)
+    btn_box.append(install_btn)
+    center.append(btn_box)
+
+    return page
+
+
+# ═══════════════════════════════════════════════════════════════════
+# PAGE 5: EXE SANDBOX — 无缝兼容
+# ═══════════════════════════════════════════════════════════════════
+
+def create_exe_sandbox_page(navigate_next):
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_valign(Gtk.Align.FILL)
+    page.set_halign(Gtk.Align.FILL)
+    page.set_margin_start(48)
+    page.set_margin_end(48)
+    page.set_margin_top(24)
+    page.set_margin_bottom(24)
+    page.set_spacing(0)
+    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    center.set_valign(Gtk.Align.CENTER)
+    center.set_vexpand(True)
+    page.append(center)
+
+    # Windows/Wine icon from Fluent theme
+    wine_icon_path = _icon('wine.svg')
+    icon = Gtk.Image()
+    icon.set_pixel_size(72)
+    icon.set_halign(Gtk.Align.CENTER)
+    if os.path.isfile(wine_icon_path):
+        icon.set_from_file(wine_icon_path)
+    else:
+        icon.set_from_icon_name('wine')
+    center.append(icon)
+
+    title = Gtk.Label(label=_('Run Windows Apps, with ease'))
+    title.add_css_class('title-1')
+    title.set_halign(Gtk.Align.CENTER)
+    title.set_wrap(True)
+    title.set_justify(Gtk.Justification.CENTER)
+    title.set_margin_top(12)
+    center.append(title)
+
+    body = Gtk.Label(
+        label=_('Powered by Wine and Bottles technology, running classic Windows applications\n'
+                'is now easier than ever.')
+    )
+    body.set_halign(Gtk.Align.CENTER)
+    body.set_wrap(True)
+    body.set_justify(Gtk.Justification.CENTER)
+    body.set_margin_top(24)
+    body.set_margin_bottom(12)
+    center.append(body)
+
+    # Status
+    status_label = Gtk.Label()
+    status_label.add_css_class('dim-label')
+    status_label.set_halign(Gtk.Align.CENTER)
+    status_label.set_wrap(True)
+    status_label.set_margin_bottom(12)
+    if is_bottles_installed():
+        status_label.set_label(_('✓ Windows compatibility sandbox is already installed.'))
+    center.append(status_label)
+
+    progress_bar = Gtk.ProgressBar()
+    progress_bar.set_visible(False)
+    progress_bar.set_margin_start(48)
+    progress_bar.set_margin_end(48)
+    center.append(progress_bar)
+
+    # Buttons — REVERSE PSYCHOLOGY:
+    # Blue "Skip" = suggested-action (users who mindlessly click Next will skip)
+    # Gray "Enable" = plain button (only users who actually want it will click)
+    btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+    btn_box.set_halign(Gtk.Align.CENTER)
+    btn_box.set_margin_top(24)
+
+    skip_btn = Gtk.Button(label=_('  Skip  '))
+    skip_btn.add_css_class('suggested-action')
+    skip_btn.connect('clicked', lambda b: navigate_next())
+
+    install_btn = Gtk.Button(label=_('  Enable Windows Compatibility Sandbox  '))
+
+    # Config button (Configure Bottles)
+    config_btn = Gtk.Button()
+    config_btn.add_css_class('suggested-action')
+    config_btn.add_css_class('pill')
+    
+    config_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+    config_icon = _create_image('com.usebottles.bottles.svg')
+    config_icon.set_pixel_size(24)
+    config_label = Gtk.Label(label=_('Configure Bottles'))
+    config_box.append(config_icon)
+    config_box.append(config_label)
+    config_btn.set_child(config_box)
+    
+    config_btn.connect('clicked', lambda b: subprocess.Popen(['flatpak', 'run', 'com.usebottles.bottles']))
+
+    if is_bottles_installed():
+        install_btn.set_visible(False)
+        skip_btn.set_visible(False)
+        config_btn.set_visible(True)
+    else:
+        config_btn.set_visible(False)
+
+    # Advanced Output Expander
+    expander = Gtk.Expander(label=_('Advanced Output'))
+    expander.set_margin_top(12)
+    expander.set_margin_start(48)
+    expander.set_margin_end(48)
+    expander.set_halign(Gtk.Align.FILL)
+    
+    scroll = Gtk.ScrolledWindow()
+    scroll.set_min_content_height(150)
+    scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+    
+    textview = Gtk.TextView()
+    textview.set_editable(False)
+    textview.set_cursor_visible(False)
+    textview.add_css_class('card')
+    textview.set_monospace(True)
+    textview.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
+    buffer = textview.get_buffer()
+    
+    scroll.set_child(textview)
+    expander.set_child(scroll)
+    center.append(expander)
+
+    def _on_install(btn):
+        btn.set_sensitive(False)
+        skip_btn.set_sensitive(False)
+        progress_bar.set_visible(True)
+        progress_bar.pulse()
+        status_label.set_label(
+            _('Deploying compatibility sandbox via Flatpak…\nThis may take a few minutes.')
+        )
+
+        def _pulse():
+            if progress_bar.is_visible():
+                progress_bar.pulse()
+                return True
+            return False
+
+        GLib.timeout_add(100, _pulse)
+
+        def _do_install():
+            try:
+                proc = subprocess.Popen(
+                    ['flatpak', 'install', '--system', '-y', 'flathub', 'com.usebottles.bottles'],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    bufsize=1
+                )
+                
+                def _append_text(t):
+                    end_iter = buffer.get_end_iter()
+                    buffer.insert(end_iter, t)
+                    mark = buffer.create_mark(None, buffer.get_end_iter(), False)
+                    textview.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
+                    
+                for line in iter(proc.stdout.readline, ''):
+                    GLib.idle_add(lambda l=line: _append_text(l))
+                proc.stdout.close()
+                proc.wait()
+                
+                if proc.returncode == 0:
+                    GLib.idle_add(lambda: (
+                        status_label.set_label(
+                            _('✓ Sandbox deployed successfully!\n'
+                              'You can now double-click .exe files to run them.')),
+                        progress_bar.set_visible(False),
+                        btn.set_visible(False),
+                        config_btn.set_visible(True),
+                        skip_btn.set_visible(False)
+                    ))
+                else:
+                    GLib.idle_add(lambda: (
+                        status_label.set_label(
+                            _('✗ Deployment failed.\n'
+                              'You can install Bottles later from the App Store.')),
+                        progress_bar.set_visible(False),
+                        btn.set_sensitive(True),
+                        skip_btn.set_sensitive(True),
+                        expander.set_expanded(True)
+                    ))
+            except Exception as e:
+                GLib.idle_add(lambda e=e: (
+                    status_label.set_label(_('✗ Error: ') + str(e)),
+                    progress_bar.set_visible(False),
+                    btn.set_sensitive(True),
+                    skip_btn.set_sensitive(True)
+                ))
+
+        threading.Thread(target=_do_install, daemon=True).start()
+
+    install_btn.connect('clicked', _on_install)
+    btn_box.append(skip_btn)
+    btn_box.append(install_btn)
+    btn_box.append(config_btn)
+    center.append(btn_box)
+
+    return page
+
+
+# ═══════════════════════════════════════════════════════════════════
+# PAGE 6: SHORTCUTS — 指尖魔法
+# ═══════════════════════════════════════════════════════════════════
+
+def create_shortcuts_page():
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_valign(Gtk.Align.FILL)
+    page.set_halign(Gtk.Align.FILL)
+    page.set_margin_start(48)
+    page.set_margin_end(48)
+    page.set_margin_top(24)
+    page.set_margin_bottom(24)
+    page.set_spacing(0)
+
+    title = Gtk.Label(label=_('The Magic at Your Fingertips'))
+    title.add_css_class('title-1')
+    title.set_halign(Gtk.Align.CENTER)
+    title.set_wrap(True)
+    title.set_justify(Gtk.Justification.CENTER)
+    title.set_margin_bottom(8)
+    page.append(title)
+
+    sub = Gtk.Label(label=_('Skip tedious clicking. Capture inspiration with elegance.'))
+    sub.add_css_class('dim-label')
+    sub.set_halign(Gtk.Align.CENTER)
+    sub.set_wrap(True)
+    sub.set_justify(Gtk.Justification.CENTER)
+    sub.set_margin_bottom(36)
+    page.append(sub)
+
+    # Featured Shortcuts
+    featured_group = Adw.PreferencesGroup()
+    featured_group.set_margin_bottom(24)
+
+    # 1. Screenshot
+    row1 = Adw.ActionRow()
+    row1.set_title(_('Screenshot'))
+    row1.set_subtitle(_('Select, annotate, copy — all in one motion'))
+    kbd1 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+    kbd1.set_valign(Gtk.Align.CENTER)
+    for key_text, color in [('Super', '#3584e4'), ('Shift', '#9141ac'), ('S', '#e5a50a')]:
+        keycap = Gtk.Label()
+        keycap.set_markup(f'<b><span foreground="{color}"> {key_text} </span></b>')
+        keycap.add_css_class('heading')
+        kbd1.append(keycap)
+        plus = Gtk.Label(label='+')
+        plus.add_css_class('dim-label')
+        kbd1.append(plus)
+    last = kbd1.get_last_child()
+    if last: kbd1.remove(last)
+    row1.add_suffix(kbd1)
+    featured_group.add(row1)
+
+    # 2. Screen Recording
+    row2 = Adw.ActionRow()
+    row2.set_title(_('Screen Recording'))
+    row2.set_subtitle(_('Seamless start, instant capture'))
+    kbd2 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+    kbd2.set_valign(Gtk.Align.CENTER)
+    for key_text, color in [('Super', '#3584e4'), ('G', '#33d17a')]:
+        keycap = Gtk.Label()
+        keycap.set_markup(f'<b><span foreground="{color}"> {key_text} </span></b>')
+        keycap.add_css_class('heading')
+        kbd2.append(keycap)
+        plus = Gtk.Label(label='+')
+        plus.add_css_class('dim-label')
+        kbd2.append(plus)
+    last = kbd2.get_last_child()
+    if last: kbd2.remove(last)
+    row2.add_suffix(kbd2)
+    featured_group.add(row2)
+
+    page.append(featured_group)
+
+    # More shortcuts in a compact list
+    more_group = Adw.PreferencesGroup()
+    more_group.set_title(_('More Essential Shortcuts'))
+
+    more_shortcuts = [
+        ('Super + E', _('Open File Manager')),
+        ('Ctrl + Alt + T', _('Open Terminal')),
+        ('Ctrl + Shift + Esc', _('Task Manager')),
+        ('Super + V', _('View Clipboard History')),
+        ('Super + L', _('Lock Screen')),
+        ('Super + A', _('Action Center')),
+        ('Super + N', _('Notification Center')),
+        ('Super + Tab', _('Switch Between Windows')),
+        ('Alt + F4', _('Close Current Window')),
+        ('Super + ↑/↓/←/→', _('Snap Windows')),
+    ]
+
+    for key_text, desc_text in more_shortcuts:
+        row = Adw.ActionRow()
+        row.set_title(desc_text)
+        lbl = Gtk.Label(label=key_text)
+        lbl.add_css_class('dim-label')
+        row.add_suffix(lbl)
+        more_group.add(row)
+
+    page.append(more_group)
+
+    # Tip
+    tip = Gtk.Label(
+        label=_('You can view and customize all shortcuts anytime in Settings → Keyboard.')
+    )
+    tip.add_css_class('dim-label')
+    tip.add_css_class('caption')
+    tip.set_halign(Gtk.Align.CENTER)
+    tip.set_wrap(True)
+    tip.set_margin_top(18)
+    page.append(tip)
+
+    return page
+
+
+# ═══════════════════════════════════════════════════════════════════
+# PAGE 7: APPS — 第一天的高效
+# ═══════════════════════════════════════════════════════════════════
+
+def create_apps_page():
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_valign(Gtk.Align.FILL)
+    page.set_halign(Gtk.Align.FILL)
+    page.set_margin_start(48)
+    page.set_margin_end(48)
+    page.set_margin_top(24)
+    page.set_margin_bottom(24)
+    page.set_spacing(0)
+
+    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    center.set_valign(Gtk.Align.CENTER)
+    center.set_vexpand(True)
+    page.append(center)
+
+    title = Gtk.Label(label=_('Productive From Day One'))
+    title.add_css_class('title-1')
+    title.set_halign(Gtk.Align.CENTER)
+    title.set_wrap(True)
+    title.set_justify(Gtk.Justification.CENTER)
+    title.set_margin_bottom(8)
+    center.append(title)
+
+    sub = Gtk.Label(
+        label=_('Essential productivity and entertainment tools, hand-picked for you.\n'
+               'Click any app to open its details in the App Store.')
+    )
+    sub.add_css_class('dim-label')
+    sub.set_halign(Gtk.Align.CENTER)
+    sub.set_wrap(True)
+    sub.set_justify(Gtk.Justification.CENTER)
+    sub.set_margin_bottom(24)
+    center.append(sub)
+
+    is_cn = is_chinese_locale()
+
+    if is_cn:
+        banner = Gtk.Label(
+            label=_('⚡ The following apps are provided by the Spark Store community.\n'
+                    'Great for connecting to local services.')
+        )
+        banner.add_css_class('caption')
+        banner.set_halign(Gtk.Align.CENTER)
+        banner.set_wrap(True)
+        banner.set_margin_bottom(12)
+        center.append(banner)
+
+        apps = [
+            (_('Spark Store'), 'spark-store',
+             _('Community app store for Chinese Linux users'), 'spark-store.svg',
+             'https://www.spark-app.store/'),
+            (_('WeChat'), 'wechat',
+             _('Most popular messaging app in China'), 'wechat.svg',
+             'https://linux.weixin.qq.com/'),
+            (_('QQ'), 'qq',
+             _('Tencent QQ instant messenger'), 'qq.svg',
+             'https://im.qq.com/linuxqq/'),
+            (_('WPS Office'), 'wps-office',
+             _('Best office suite for Chinese documents'), 'wps-office.svg',
+             'https://linux.wps.cn/'),
+        ]
+        app_urls = {a[1]: a[4] for a in apps}
+        is_cn_mode = True
+    else:
+        apps = [
+            (_('Google Chrome'), 'com.google.Chrome',
+             _('The world\'s most popular web browser'), 'chrome.svg'),
+            (_('Visual Studio Code'), 'com.visualstudio.code',
+             _('Code editing. Redefined.'), 'visualstudiocode.svg'),
+            (_('Steam'), 'com.valvesoftware.Steam',
+             _('Your portal to the gaming universe'), 'steam.svg'),
+            (_('Discord'), 'com.discordapp.Discord',
+             _('Chat, voice, and video for communities'), 'discord.svg'),
+            (_('Spotify'), 'com.spotify.Client',
+             _('Music for everyone'), 'spotify-client.svg'),
+            (_('OnlyOffice'), 'org.onlyoffice.desktopeditors',
+             _('Best Microsoft Office-compatible suite'), 'asc-de.svg'),
+            (_('Thunderbird'), 'org.mozilla.Thunderbird',
+             _('Secure, fast, and easy email client'), 'thunderbird.svg'),
+            (_('Blender'), 'org.blender.Blender',
+             _('Professional 3D creation suite'), 'blender.svg'),
+            (_('GNOME Boxes'), 'org.gnome.Boxes',
+             _('Virtualization made simple'), 'gnome-boxes.svg'),
+            (_('VLC'), 'org.videolan.VLC',
+             _('The versatile media player that plays everything'), 'vlc.svg'),
+        ]
+        app_urls = None
+        is_cn_mode = False
+
+    installed_apps = set()
+    if not is_cn_mode:
+        try:
+            proc = subprocess.run(['flatpak', 'list', '--app', '--columns=application'], capture_output=True, text=True)
+            if proc.returncode == 0:
+                installed_apps = set(proc.stdout.splitlines())
+        except Exception:
+            pass
+
+    # App grid
+    flow = Gtk.FlowBox()
+    flow.set_selection_mode(Gtk.SelectionMode.NONE)
+    flow.set_max_children_per_line(3)
+    flow.set_row_spacing(12)
+    flow.set_column_spacing(12)
+    flow.set_margin_top(12)
+    flow.set_margin_bottom(12)
+    flow.set_margin_start(12)
+    flow.set_margin_end(12)
+    flow.set_homogeneous(True)
+
+    for name, app_id, desc_text, icon_name, *rest in apps:
+        card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        card.set_margin_start(10)
+        card.set_margin_end(10)
+        card.set_margin_top(14)
+        card.set_margin_bottom(14)
+        card.set_size_request(180, 130)
+
+        # App icon from Fluent theme
+        app_icon = _create_image(icon_name)
+        app_icon.set_pixel_size(48)
+        app_icon.set_halign(Gtk.Align.CENTER)
+        card.append(app_icon)
+
+        name_label = Gtk.Label(label=name)
+        name_label.add_css_class('heading')
+        name_label.set_halign(Gtk.Align.CENTER)
+        name_label.set_wrap(True)
+        name_label.set_justify(Gtk.Justification.CENTER)
+        card.append(name_label)
+
+        desc_label = Gtk.Label(label=desc_text)
+        desc_label.add_css_class('dim-label')
+        desc_label.add_css_class('caption')
+        desc_label.set_halign(Gtk.Align.CENTER)
+        desc_label.set_wrap(True)
+        desc_label.set_justify(Gtk.Justification.CENTER)
+        desc_label.set_max_width_chars(20)
+        card.append(desc_label)
+
+        # Install status
+        if not is_cn_mode and app_id in installed_apps:
+            status = Gtk.Label(label='✓ ' + _('Installed'))
+        else:
+            status = Gtk.Label(label=_('Click to open in App Store'))
+        status.add_css_class('caption-heading')
+        status.set_halign(Gtk.Align.CENTER)
+        card.append(status)
+
+        click = Gtk.GestureClick()
+        if is_cn_mode:
+            url = app_urls.get(app_id, '')
+            click.connect('released', lambda g, n, x, y, u=url, s=status, name=name:
+                          (_open_url(u), s.set_label('✓ ' + _('Opening…'))))
+        else:
+            click.connect('released',
+                          lambda g, n, x, y, fid=app_id, s=status:
+                          (_open_software_center(fid), s.set_label('✓ ' + _('Opening…'))))
+        card.add_controller(click)
+
+        child = Gtk.FlowBoxChild()
+        child.add_css_class('card')
+        child.set_child(card)
+        flow.append(child)
+
+    scroll = Gtk.ScrolledWindow()
+    scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+    scroll.set_min_content_height(440)
+    scroll.set_max_content_height(440)
+    scroll.set_propagate_natural_height(True)
+    scroll.set_child(flow)
+    center.append(scroll)
+
+    # Queue hint
+    queue_hint = Gtk.Label(
+        label=_('Pro tip: You can explore these apps in the App Store,\n'
+                'and continue with the system setup while they download.')
+    )
+    queue_hint.add_css_class('dim-label')
+    queue_hint.add_css_class('caption')
+    queue_hint.set_halign(Gtk.Align.CENTER)
+    queue_hint.set_wrap(True)
+    queue_hint.set_margin_top(12)
+    center.append(queue_hint)
+
+    if is_cn:
+        disclaimer = Gtk.Label(
+            label=_('Note: These apps link to their official or community download pages.'
+                    ' AnduinOS is not affiliated with these vendors.')
+        )
+        disclaimer.add_css_class('dim-label')
+        disclaimer.add_css_class('caption')
+        disclaimer.set_halign(Gtk.Align.CENTER)
+        disclaimer.set_wrap(True)
+        disclaimer.set_margin_top(6)
+        center.append(disclaimer)
+
+    return page
+
+
+def _open_url(url):
+    subprocess.Popen(['xdg-open', url])
+
+
+def _open_software_center(app_id):
+    try:
+        subprocess.Popen(['gnome-software', f'--details={app_id}'])
+    except Exception as e:
+        print(f"Failed to open software center: {e}")
+
+
+# ═══════════════════════════════════════════════════════════════════
+# PAGE 7.5: SYNC — Connect & Protect Your Data
+# ═══════════════════════════════════════════════════════════════════
+
+def create_sync_page():
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_valign(Gtk.Align.FILL)
+    page.set_halign(Gtk.Align.FILL)
+    page.set_margin_start(48)
+    page.set_margin_end(48)
+    page.set_margin_top(24)
+    page.set_margin_bottom(24)
+    page.set_spacing(0)
+
+    title = Gtk.Label(label=_('Connect & Protect Your Data'))
+    title.add_css_class('title-1')
+    title.set_halign(Gtk.Align.CENTER)
+    title.set_wrap(True)
+    title.set_justify(Gtk.Justification.CENTER)
+    title.set_margin_bottom(24)
+    page.append(title)
+
+    # Horizontal split
+    hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24)
+    hbox.set_homogeneous(True)
+    hbox.set_vexpand(True)
+    hbox.set_valign(Gtk.Align.CENTER)
+
+    # ── Left: Online Accounts ──
+    cloud_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+    cloud_card.add_css_class('card')
+
+    cloud_icon = _create_image('online-account.svg')
+    cloud_icon.set_pixel_size(48)
+    cloud_icon.set_halign(Gtk.Align.CENTER)
+    cloud_icon.set_margin_top(16)
+    cloud_card.append(cloud_icon)
+
+    cloud_title = Gtk.Label(label=_('Online Accounts'))
+    cloud_title.add_css_class('title-3')
+    cloud_title.set_halign(Gtk.Align.CENTER)
+    cloud_card.append(cloud_title)
+
+    cloud_desc = Gtk.Label(
+        label=_('Connect your Google, Microsoft,\n'
+                'or Nextcloud accounts to sync\n'
+                'files, contacts, and calendar.')
+    )
+    cloud_desc.set_halign(Gtk.Align.CENTER)
+    cloud_desc.set_wrap(True)
+    cloud_desc.set_justify(Gtk.Justification.CENTER)
+    cloud_desc.set_margin_start(12)
+    cloud_desc.set_margin_end(12)
+    cloud_desc.set_margin_bottom(12)
+    cloud_card.append(cloud_desc)
+
+    cloud_btn = Gtk.Button(label=_('Connect Accounts'))
+    cloud_btn.set_halign(Gtk.Align.CENTER)
+    cloud_btn.set_margin_bottom(16)
+    cloud_btn.connect('clicked', lambda b: subprocess.Popen(['gnome-control-center', 'online-accounts']))
+    cloud_card.append(cloud_btn)
+
+    hbox.append(cloud_card)
+
+    # ── Right: Local Backups ──
+    backup_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+    backup_card.add_css_class('card')
+
+    backup_icon = _create_image('deja-dup.svg')
+    backup_icon.set_pixel_size(48)
+    backup_icon.set_halign(Gtk.Align.CENTER)
+    backup_icon.set_margin_top(16)
+    backup_card.append(backup_icon)
+
+    backup_title = Gtk.Label(label=_('System Backup'))
+    backup_title.add_css_class('title-3')
+    backup_title.set_halign(Gtk.Align.CENTER)
+    backup_card.append(backup_title)
+
+    backup_desc = Gtk.Label(
+        label=_('Use Deja Dup to protect your\n'
+                'important files with automated,\n'
+                'secure local or remote backups.')
+    )
+    backup_desc.set_halign(Gtk.Align.CENTER)
+    backup_desc.set_wrap(True)
+    backup_desc.set_justify(Gtk.Justification.CENTER)
+    backup_desc.set_margin_start(12)
+    backup_desc.set_margin_end(12)
+    backup_desc.set_margin_bottom(12)
+    backup_card.append(backup_desc)
+
+    backup_btn = Gtk.Button(label=_('Get Deja Dup'))
+    backup_btn.set_halign(Gtk.Align.CENTER)
+    backup_btn.set_margin_bottom(16)
+    backup_btn.connect('clicked', lambda b: subprocess.Popen(['gnome-software', '--details=org.gnome.DejaDup.desktop']))
+    backup_card.append(backup_btn)
+
+    hbox.append(backup_card)
+    page.append(hbox)
+
+    return page
+
+
+# ═══════════════════════════════════════════════════════════════════
+# PAGE 8: PRIVACY — 绝不妥协的承诺
+# ═══════════════════════════════════════════════════════════════════
+
+def create_privacy_page():
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_valign(Gtk.Align.FILL)
+    page.set_halign(Gtk.Align.FILL)
+    page.set_margin_start(60)
+    page.set_margin_end(60)
+    page.set_margin_top(36)
+    page.set_margin_bottom(36)
+    page.set_spacing(0)
+
+    # Shield icon
+    icon = _create_image('privacy.svg')
+    icon.set_pixel_size(72)
+    icon.set_halign(Gtk.Align.CENTER)
+    icon.set_margin_bottom(24)
+    page.append(icon)
+
+    # Bold manifesto — typography-driven
+    headline = Gtk.Label(label=_('Your Data. Your Rules. Period.'))
+    headline.add_css_class('title-1')
+    headline.set_halign(Gtk.Align.CENTER)
+    headline.set_wrap(True)
+    headline.set_justify(Gtk.Justification.CENTER)
+    headline.set_margin_bottom(24)
+    page.append(headline)
+
+    body = Gtk.Label(
+        label=_('AnduinOS disables all system-level telemetry by default.\n'
+                'We do not collect your usage habits.\n'
+                'We do not upload your search history.\n'
+                'There are no pervasive advertisements.')
+    )
+    body.add_css_class('title-4')
+    body.set_halign(Gtk.Align.CENTER)
+    body.set_wrap(True)
+    body.set_justify(Gtk.Justification.CENTER)
+    body.set_margin_bottom(36)
+    page.append(body)
+
+    # Signature
+    sig = Gtk.Label(
+        label=_('In an era ruled by algorithms and surveillance,\n'
+                'this is our firmest commitment to you.')
+    )
+    sig.add_css_class('body')
+    sig.set_halign(Gtk.Align.CENTER)
+    sig.set_wrap(True)
+    sig.set_justify(Gtk.Justification.CENTER)
+    sig.set_margin_bottom(24)
+    page.append(sig)
+
+    # Divider
+    divider = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
+    divider.set_margin_start(48)
+    divider.set_margin_end(48)
+    divider.set_margin_bottom(24)
+    page.append(divider)
+
+    # Pledge items
+    pledges = [
+        _('✓ Zero telemetry — your activity is yours alone'),
+        _('✓ No data collection — your files stay on your device'),
+        _('✓ No ads in your operating system'),
+        _('✓ Full root access — you truly own your machine'),
+        _('✓ UFW firewall — your digital perimeter, defended'),
+        _('✓ Open source — the code is yours to inspect and modify'),
+    ]
+
+    for pledge in pledges:
+        row = Gtk.Label(label=pledge)
+        row.set_halign(Gtk.Align.START)
+        row.set_margin_start(24)
+        row.set_margin_top(4)
+        row.set_margin_bottom(4)
+        page.append(row)
+
+    return page
+
+
+
+
+# ═══════════════════════════════════════════════════════════════════
+# PAGE 10: SUPPORT — 你不是孤岛
+# ═══════════════════════════════════════════════════════════════════
+
+def create_support_page():
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_valign(Gtk.Align.FILL)
+    page.set_halign(Gtk.Align.FILL)
+    page.set_margin_start(48)
+    page.set_margin_end(48)
+    page.set_margin_top(24)
+    page.set_margin_bottom(24)
+    page.set_spacing(0)
+
+    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    center.set_valign(Gtk.Align.CENTER)
+    center.set_vexpand(True)
+    page.append(center)
+
+    icon = _create_image('anduinos-oobe.svg')
+    icon.set_pixel_size(72)
+    icon.set_halign(Gtk.Align.CENTER)
+    icon.set_margin_bottom(12)
+    center.append(icon)
+
+    title = Gtk.Label(label=_('Welcome to the AnduinOS Community'))
+    title.add_css_class('title-1')
+    title.set_halign(Gtk.Align.CENTER)
+    title.set_wrap(True)
+    title.set_justify(Gtk.Justification.CENTER)
+    title.set_margin_bottom(12)
+    center.append(title)
+
+    body = Gtk.Label(
+        label=_('Whether you\'re a Windows refugee seeking shelter,\n'
+                'or a hardcore geek developer — you\'ll find your tribe here.\n'
+                'Found a bug? Want a feature? Tell us anytime.')
+    )
+    body.set_halign(Gtk.Align.CENTER)
+    body.set_wrap(True)
+    body.set_justify(Gtk.Justification.CENTER)
+    body.set_margin_bottom(36)
+    center.append(body)
+
+    # Link cards
+    links_group = Adw.PreferencesGroup()
+
+    links = [
+        (_('Official Documentation'), 'https://docs.anduinos.com/',
+         _('Comprehensive guides and troubleshooting — covers everything you need'),
+         'open-book-symbolic.svg'),
+        (_('Community Forums'), 'https://github.com/Anduin2017/AnduinOS/discussions',
+         _('Discuss with other AnduinOS users and developers'),
+         'system-users-symbolic.svg'),
+        (_('Discord Server'), 'https://discord.gg/YGBzvmyBrR',
+         _('Join our official Discord server for real-time chat and support'),
+         'discord.svg'),
+        (_('Report an Issue'), 'https://github.com/AiursoftWeb/AnduinOS-Packages/issues',
+         _('Found a bug or have a feature request? Let us know!'),
+         'bug-symbolic.svg'),
+        (_('Buy AnduinOS Enterprise Edition'), 'https://www.aiursoft.com/anduinos',
+         _('Get enterprise-grade support and advanced features for your organization'),
+         'anduinos-oobe.svg'),
+        (_('Ask Ubuntu'), 'https://askubuntu.com/',
+         _('Almost all Ubuntu solutions apply directly to AnduinOS'),
+         'help-about-symbolic.svg'),
+        (_('Source Code'), 'https://github.com/aiursoftweb/anduinos-2',
+         _('AnduinOS is open-source. Explore the code and contribute!'),
+         'github.svg'),
+    ]
+
+    for name, url, desc_text, link_icon in links:
+        row = Adw.ActionRow()
+        row.set_title(name)
+        row.set_subtitle(desc_text)
+        icon = _create_image(link_icon)
+        icon.set_pixel_size(24)
+        row.add_prefix(icon)
+
+        open_btn = Gtk.Button(label=_('Open'))
+        open_btn.set_valign(Gtk.Align.CENTER)
+        open_btn.connect('clicked', lambda b, u=url: subprocess.Popen(['xdg-open', u]))
+        row.add_suffix(open_btn)
+        links_group.add(row)
+
+    center.append(links_group)
+
+    # Footer note
+    note = Gtk.Label(
+        label=_('💡 AnduinOS is compatible with Ubuntu\'s entire ecosystem.\n'
+                'You can rely on Ubuntu\'s vast documentation and expertise.')
+    )
+    note.add_css_class('dim-label')
+    note.set_halign(Gtk.Align.CENTER)
+    note.set_wrap(True)
+    note.set_justify(Gtk.Justification.CENTER)
+    note.set_margin_top(18)
+    center.append(note)
+
+    return page
+
+
+# ═══════════════════════════════════════════════════════════════════
+# PAGE 11: FINISH — 旅程开始
+# ═══════════════════════════════════════════════════════════════════
+
+def create_finish_page(on_finish):
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_valign(Gtk.Align.FILL)
+    page.set_halign(Gtk.Align.FILL)
+    page.set_margin_start(48)
+    page.set_margin_end(48)
+    page.set_margin_top(36)
+    page.set_margin_bottom(36)
+    page.set_spacing(0)
+
+    # Big green checkmark
+    check = Gtk.Label()
+    check.set_markup('<span foreground="#33d17a" font="96"><b>✓</b></span>')
+    check.set_halign(Gtk.Align.CENTER)
+    check.set_margin_bottom(12)
+    page.append(check)
+
+    title = Gtk.Label(label=_('All Set.'))
+    title.add_css_class('title-1')
+    title.set_halign(Gtk.Align.CENTER)
+    title.set_wrap(True)
+    title.set_justify(Gtk.Justification.CENTER)
+    title.set_margin_bottom(48)
+    page.append(title)
+
+    # Start button
+    start_btn = Gtk.Button(label=_('  Start Your AnduinOS Journey  '))
+    start_btn.add_css_class('suggested-action')
+    start_btn.add_css_class('pill')
+    start_btn.set_halign(Gtk.Align.CENTER)
+    start_btn.set_size_request(280, 48)
+
+    def _on_start(btn):
+        # Fade out animation
+        window = btn.get_root()
+        if window and hasattr(window, 'oobe_finish'):
+            window.oobe_finish()
+
+    start_btn.connect('clicked', lambda b: _on_start(b))
+    page.append(start_btn)
+
+    return page
+
+
+# ═══════════════════════════════════════════════════════════════════
+# MAIN WINDOW
+# ═══════════════════════════════════════════════════════════════════
+
+class OobeWindow(Adw.ApplicationWindow):
+    def __init__(self, app, is_oobe):
+        super().__init__(application=app)
+        self.app = app
+        self.is_oobe = is_oobe
+
+        if is_oobe:
+            self.set_title(_('AnduinOS Setup'))
+            self.set_default_size(780, 580)
+        else:
+            self.set_title(_('AnduinOS Welcome Center'))
+            self.set_default_size(780, 580)
+
+        self.set_icon_name('anduinos-oobe')
+
+        # ── ToolbarView ──
+        toolbar = Adw.ToolbarView()
+        self.set_content(toolbar)
+
+        # Header
+        header = Adw.HeaderBar()
+        if not is_oobe:
+            header.set_show_title(True)
+        toolbar.add_top_bar(header)
+
+        if False:
+            # Welcome Center: vertical scroll of all pages
+            scroll = Gtk.ScrolledWindow()
+            scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+            
+            vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=48)
+            vbox.set_margin_top(64)
+            vbox.set_margin_bottom(64)
+
+            for factory in self._get_page_factories():
+                p = factory()
+                vbox.append(p)
+
+            clamp = Adw.Clamp()
+            clamp.set_maximum_size(650)
+            clamp.set_child(vbox)
+            scroll.set_child(clamp)
+            toolbar.set_content(scroll)
+        else:
+            # OOBE wizard: carousel with dots and nav
+            self.carousel = Adw.Carousel()
+            self.carousel.set_interactive(True)
+            self.carousel.set_allow_long_swipes(True)
+            self.carousel.set_allow_mouse_drag(True)
+            self.carousel.set_allow_scroll_wheel(False)
+
+            nav = self  # navigation context
+            nav._pages = []
+
+            def _nav_next():
+                idx = int(self.carousel.get_position())
+                if idx < self.carousel.get_n_pages() - 1:
+                    self.carousel.scroll_to(
+                        self.carousel.get_nth_page(idx + 1), True
+                    )
+                else:
+                    self._finish_oobe()
+
+            for factory in self._get_page_factories(navigate_next=_nav_next):
+                p = factory()
+                clamp = Adw.Clamp()
+                clamp.set_maximum_size(650)
+                clamp.set_child(p)
+                nav._pages.append(clamp)
+                self.carousel.append(clamp)
+
+            toolbar.set_content(self.carousel)
+
+            # ── Bottom bar ──
+            bottom = Gtk.CenterBox()
+            bottom.set_margin_start(36)
+            bottom.set_margin_end(36)
+            bottom.set_margin_top(12)
+            bottom.set_margin_bottom(24)
+
+            self.back_btn = Gtk.Button(label=_('← Back'))
+            self.back_btn.set_visible(False)
+            self.back_btn.connect('clicked', lambda b: self._nav_back())
+            bottom.set_start_widget(self.back_btn)
+
+            self.dots = Adw.CarouselIndicatorDots()
+            self.dots.set_carousel(self.carousel)
+            bottom.set_center_widget(self.dots)
+
+            self.next_btn = Gtk.Button(label=_('Next →'))
+            self.next_btn.add_css_class('suggested-action')
+            self.next_btn.connect('clicked', lambda b: _nav_next())
+            bottom.set_end_widget(self.next_btn)
+
+            self.carousel.connect('page-changed', self._on_page_changed)
+            toolbar.add_bottom_bar(bottom)
+
+            self._update_nav_buttons()
+
+    def _get_page_factories(self, navigate_next=None):
+        """Return list of page factory functions in order.
+        If navigate_next is None, pages are for Welcome Center (no nav)."""
+
+        def _nav():
+            if navigate_next:
+                navigate_next()
+
+        def _update_nav():
+            self._update_nav_buttons()
+
+        factories = [
+            lambda: create_welcome_page(_nav),
+            lambda: create_appearance_page(),
+            lambda: create_security_page(),
+            lambda: create_update_page(_nav, _update_nav),
+        ]
+
+        if has_nvidia_gpu():
+            factories.append(lambda: create_nvidia_page(_nav, _update_nav))
+
+        factories.extend([
+            lambda: create_exe_sandbox_page(_nav),
+            lambda: create_shortcuts_page(),
+            lambda: create_apps_page(),
+            lambda: create_sync_page(),
+            lambda: create_privacy_page(),
+
+            lambda: create_support_page(),
+            lambda: create_finish_page(lambda: self._finish_oobe()),
+        ])
+
+        return factories
+
+    def _on_page_changed(self, carousel, index):
+        self._update_nav_buttons()
+
+    def _update_nav_buttons(self):
+        idx = int(self.carousel.get_position())
+        n_pages = self.carousel.get_n_pages()
+
+        self.back_btn.set_visible(idx > 0)
+        self.next_btn.set_visible(idx > 0)
+        
+        if idx >= n_pages - 1:
+            self.next_btn.set_label(_('Finish'))
+            if self.is_oobe:
+                os.makedirs(os.path.dirname(MARKER_FILE), exist_ok=True)
+                open(MARKER_FILE, 'a').close()
+        else:
+            self.next_btn.set_label(_('Next →'))
+
+        clamp = self.carousel.get_nth_page(idx)
+        if clamp:
+            page = clamp.get_child()
+            if getattr(page, '_suggest_next', True):
+                self.next_btn.add_css_class('suggested-action')
+            else:
+                self.next_btn.remove_css_class('suggested-action')
+
+    def _nav_back(self):
+        idx = int(self.carousel.get_position())
+        if idx > 0:
+            self.carousel.scroll_to(self.carousel.get_nth_page(idx - 1), True)
+
+    def _finish_oobe(self):
+        """Mark OOBE done and close."""
+        os.makedirs(os.path.dirname(MARKER_FILE), exist_ok=True)
+        open(MARKER_FILE, 'a').close()
+        self.destroy()
+
+    def oobe_finish(self):
+        self._finish_oobe()
+
+
+# ═══════════════════════════════════════════════════════════════════
+# APPLICATION
+# ═══════════════════════════════════════════════════════════════════
+
+class OobeApp(Adw.Application):
+    def __init__(self):
+        super().__init__(application_id='com.anduinos.Oobe')
+        self.is_oobe = False
+
+    def do_startup(self):
+        Adw.Application.do_startup(self)
+
+        about_action = Gio.SimpleAction.new('about', None)
+        about_action.connect('activate', self._on_about)
+        self.add_action(about_action)
+
+    def _on_about(self, action, param):
+        dialog = Adw.AboutDialog()
+        dialog.set_application_name(_('AnduinOS Welcome'))
+        dialog.set_application_icon('anduinos-oobe')
+        dialog.set_developer_name(_('AnduinOS Team'))
+        dialog.set_website('https://www.anduinos.com')
+        dialog.set_issue_url('https://github.com/AiursoftWeb/AnduinOS-Packages/issues')
+        dialog.set_license_type(Gtk.License.GPL_3_0)
+        dialog.set_version('1.0.0')
+        dialog.present(self.get_active_window())
+
+    def do_activate(self):
+        if hasattr(self, '_win'):
+            self._win.present()
+            return
+        self._win = OobeWindow(self, self.is_oobe)
+        self._win.connect('destroy', lambda w: self.quit())
+        self._win.present()
+
+
+def main():
+    is_oobe = '--oobe' in sys.argv
+
+    if is_oobe:
+        # Do not run on Live CD / Installation Media
+        if os.path.exists('/rofs') or os.path.exists('/run/casper') or os.path.isdir('/cdrom'):
+            sys.exit(0)
+
+        # Do not run if already completed
+        if os.path.exists(MARKER_FILE):
+            sys.exit(0)
+
+    # Remove --oobe from argv before passing to GTK
+    clean_argv = [a for a in sys.argv if a != '--oobe']
+    sys.argv = clean_argv
+
+    app = OobeApp()
+    app.is_oobe = is_oobe
+    return app.run(None)
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())
