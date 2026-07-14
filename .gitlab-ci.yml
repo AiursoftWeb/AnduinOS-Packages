@@ -461,6 +461,8 @@ anduinos-exe-runner:
 
 anduinos-oobe:
   extends: .publish
+  needs:
+    - anduinos-appearance
   variables:
     PACKAGE_DIR: anduinos-oobe
 

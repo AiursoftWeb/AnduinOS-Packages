@@ -11,14 +11,18 @@ import subprocess
 import os
 import sys
 import threading
-import threading
 import importlib.util
+import urllib.request
+import time
+import shlex
+import tempfile
 from importlib.machinery import SourceFileLoader
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def _get_appearance_module():
     paths = [
-        '/home/anduin/Source/Repos/Aiursoft/bash-app/AnduinOS-Packages/anduinos-appearance/src/anduinos-appearance',
-        '/usr/share/anduinos-appearance/src/anduinos-appearance'
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../anduinos-appearance/src/anduinos-appearance'),
+        '/usr/bin/anduinos-appearance'
     ]
     for p in paths:
         if os.path.exists(p):
@@ -97,6 +101,23 @@ def _create_image(name):
 # HELPERS
 # ═══════════════════════════════════════════════════════════════════
 
+def _read_os_pretty_name():
+    """Read PRETTY_NAME from /etc/os-release, fallback to NAME=."""
+    try:
+        with open('/etc/os-release', 'r') as f:
+            pretty = None
+            name = None
+            for line in f:
+                line = line.strip()
+                if line.startswith('PRETTY_NAME='):
+                    pretty = line.split('=', 1)[1].strip().strip('"').strip("'")
+                elif line.startswith('NAME='):
+                    name = line.split('=', 1)[1].strip().strip('"').strip("'")
+            return pretty or name or 'AnduinOS'
+    except Exception:
+        return 'AnduinOS'
+
+
 def has_nvidia_gpu():
     if os.environ.get('NVIDIA_PAGE') == 'true':
         return True
@@ -135,10 +156,8 @@ def is_chinese_locale():
 
 def _apply_theme(dark):
     scheme = 'prefer-dark' if dark else 'prefer-light'
-    subprocess.run(
-        ['gsettings', 'set', 'org.gnome.desktop.interface', 'color-scheme', scheme],
-        check=False
-    )
+    settings = Gio.Settings.new('org.gnome.desktop.interface')
+    settings.set_string('color-scheme', scheme)
 
 
 def _apply_layout(style):
@@ -214,10 +233,6 @@ class BreathingLogo(Gtk.Box):
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.set_halign(Gtk.Align.CENTER)
         self.set_valign(Gtk.Align.CENTER)
-        self._opacity = 1.0
-        self._direction = -1
-        self._tick = 0
-
         # Try to load the official logo from the installed path first,
         # then fall back to the resources directory
         logo_paths = [
@@ -241,36 +256,37 @@ class BreathingLogo(Gtk.Box):
             # Fallback: show the app icon
             self._picture.set_icon_name('anduinos-oobe')
 
-        # CSS for opacity animation — use display-level provider (non-deprecated)
+        # CSS for opacity animation
         self._css_provider = Gtk.CssProvider()
-        self._opacity_class = f'breathing-logo-{id(self)}'
-        self._css_provider.load_from_data(
-            f'.{self._opacity_class} {{ opacity: {self._opacity}; }}'.encode()
-        )
+        css = b"""
+        .breathing-logo {
+            transition: opacity 2s ease-in-out;
+            opacity: 1.0;
+        }
+        .breathing-logo.dimmed {
+            opacity: 0.55;
+        }
+        """
+        self._css_provider.load_from_data(css)
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(),
             self._css_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
-        self._picture.add_css_class(self._opacity_class)
+        self._picture.add_css_class('breathing-logo')
 
         self.append(self._picture)
-        GLib.timeout_add(40, self._pulse)
+        
+        self._dimmed = False
+        self._pulse()
+        GLib.timeout_add(2000, self._pulse)
 
     def _pulse(self):
-        self._tick += 1
-        speed = 0.012
-        self._opacity += speed * self._direction
-        if self._opacity <= 0.55:
-            self._direction = 1
-            self._opacity = 0.55
-        elif self._opacity >= 1.0:
-            self._direction = -1
-            self._opacity = 1.0
-        # Update CSS
-        self._css_provider.load_from_data(
-            f'.{self._opacity_class} {{ opacity: {self._opacity}; }}'.encode()
-        )
+        self._dimmed = not self._dimmed
+        if self._dimmed:
+            self._picture.add_css_class('dimmed')
+        else:
+            self._picture.remove_css_class('dimmed')
         return True
 
 
@@ -333,7 +349,7 @@ def create_welcome_page(navigate_next):
     center.append(start_btn)
 
     # Version info
-    version = Gtk.Label(label='AnduinOS 2.0')
+    version = Gtk.Label(label=_read_os_pretty_name())
     version.add_css_class('dim-label')
     version.add_css_class('caption')
     version.set_halign(Gtk.Align.CENTER)
@@ -374,19 +390,15 @@ def create_appearance_page():
 
     # ── Theme Section ──
     theme_group = Adw.PreferencesGroup()
-    theme_group.set_title(_('Light & Shadow'))
+    theme_group.set_title(_('Light and Shadow'))
     theme_group.set_description(_('Choose a crisp light theme, or an immersive dark experience.'))
     theme_group.set_margin_bottom(36)
     theme_group.set_margin_start(24)
     theme_group.set_margin_end(24)
 
     # Detect current
-    try:
-        r = subprocess.run(['gsettings', 'get', 'org.gnome.desktop.interface', 'color-scheme'],
-                           capture_output=True, text=True, timeout=5)
-        is_dark = 'dark' in r.stdout.lower()
-    except Exception:
-        is_dark = False
+    settings = Gio.Settings.new('org.gnome.desktop.interface')
+    is_dark = 'dark' in settings.get_string('color-scheme').lower()
 
     # Big Radio Cards for Theme
     theme_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24)
@@ -629,10 +641,14 @@ def create_security_page():
             if returncode != 0:
                 GLib.idle_add(lambda: sw.set_active(not expected))
             else:
-                if enable:
-                    GLib.idle_add(lambda: shield_icon.set_from_file('/home/anduin/Desktop/Fluent-icon-theme/src/scalable/apps/preferences-security-firewall.svg'))
-                else:
-                    GLib.idle_add(lambda: shield_icon.set_from_file('/home/anduin/Desktop/Fluent-icon-theme/src/scalable/apps/preferences-security.svg'))
+                icon_name = 'preferences-security-firewall.svg' if enable else 'preferences-security.svg'
+                path = _icon(icon_name)
+                def _update_icon():
+                    if os.path.isfile(path):
+                        shield_icon.set_from_file(path)
+                    else:
+                        shield_icon.set_from_icon_name(path)
+                GLib.idle_add(_update_icon)
 
         def _run_fw():
             try:
@@ -641,7 +657,7 @@ def create_security_page():
                 GLib.idle_add(lambda: _done(proc.returncode, proc.stdout, proc.stderr,
                                             switch, enable))
             except Exception as e:
-                GLib.idle_add(lambda: _done(-1, '', str(e), switch, enable))
+                GLib.idle_add(lambda e=e: _done(-1, '', str(e), switch, enable))
 
         threading.Thread(target=_run_fw, daemon=True).start()
 
@@ -663,21 +679,11 @@ def create_security_page():
     loc_icon.set_pixel_size(32)
     loc_row.add_prefix(loc_icon)
 
-    try:
-        r = subprocess.run(
-            ['gsettings', 'get', 'org.gnome.system.location', 'enabled'],
-            capture_output=True, text=True, timeout=5
-        )
-        loc_row.set_active('true' in r.stdout.lower())
-    except Exception:
-        loc_row.set_active(False)
+    settings_loc = Gio.Settings.new('org.gnome.system.location')
+    loc_row.set_active(settings_loc.get_boolean('enabled'))
 
     def _on_loc_toggle(switch, pspec):
-        val = 'true' if switch.get_active() else 'false'
-        subprocess.run(
-            ['gsettings', 'set', 'org.gnome.system.location', 'enabled', val],
-            check=False
-        )
+        settings_loc.set_boolean('enabled', switch.get_active())
 
     loc_row.connect('notify::active', _on_loc_toggle)
     loc_card.add(loc_row)
@@ -696,32 +702,22 @@ def create_security_page():
     power_icon.set_pixel_size(32)
     power_row.add_prefix(power_icon)
 
-    try:
-        r_ac_type = subprocess.run(
-            ['gsettings', 'get', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-ac-type'],
-            capture_output=True, text=True, timeout=5
-        )
-        r_bat_type = subprocess.run(
-            ['gsettings', 'get', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-battery-type'],
-            capture_output=True, text=True, timeout=5
-        )
-        sleep_active = 'suspend' in r_ac_type.stdout or 'suspend' in r_bat_type.stdout
-    except Exception:
-        sleep_active = True
+    settings_power = Gio.Settings.new('org.gnome.settings-daemon.plugins.power')
+    sleep_active = settings_power.get_string('sleep-inactive-ac-type') == 'suspend' or settings_power.get_string('sleep-inactive-battery-type') == 'suspend'
 
     power_row.set_active(sleep_active)
 
     def _on_power_toggle(switch, pspec):
         if switch.get_active():
-            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-ac-timeout', '1800'], check=False)
-            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-battery-timeout', '1200'], check=False)
-            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-ac-type', "'suspend'"], check=False)
-            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-battery-type', "'suspend'"], check=False)
+            settings_power.set_int('sleep-inactive-ac-timeout', 1800)
+            settings_power.set_int('sleep-inactive-battery-timeout', 1200)
+            settings_power.set_string('sleep-inactive-ac-type', 'suspend')
+            settings_power.set_string('sleep-inactive-battery-type', 'suspend')
         else:
-            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-ac-timeout', '0'], check=False)
-            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-battery-timeout', '0'], check=False)
-            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-ac-type', "'nothing'"], check=False)
-            subprocess.run(['gsettings', 'set', 'org.gnome.settings-daemon.plugins.power', 'sleep-inactive-battery-type', "'nothing'"], check=False)
+            settings_power.set_int('sleep-inactive-ac-timeout', 0)
+            settings_power.set_int('sleep-inactive-battery-timeout', 0)
+            settings_power.set_string('sleep-inactive-ac-type', 'nothing')
+            settings_power.set_string('sleep-inactive-battery-type', 'nothing')
 
     power_row.connect('notify::active', _on_power_toggle)
     power_card.add(power_row)
@@ -814,14 +810,17 @@ def create_update_page(navigate_next, update_nav=None):
     skip_btn = Gtk.Button(label=_('  Do It Later  '))
     skip_btn.connect('clicked', lambda b: navigate_next())
 
+    mirror_btn = Gtk.Button(label=_('  Find Fastest Mirror  '))
+    mirror_btn.add_css_class('suggested-action')
+
     action_btn = Gtk.Button(label=_('  Check for Updates  '))
-    action_btn.add_css_class('suggested-action')
 
     page._state = 0 
 
     def _on_action(btn):
         btn.set_sensitive(False)
         skip_btn.set_sensitive(False)
+        mirror_btn.set_sensitive(False)
         progress_bar.set_visible(True)
         progress_bar.pulse()
         expander.set_expanded(True)
@@ -844,12 +843,14 @@ def create_update_page(navigate_next, update_nav=None):
                 progress_bar.set_visible(False)
                 action_btn.set_sensitive(True)
                 skip_btn.set_sensitive(True)
+                mirror_btn.set_sensitive(True)
 
             if page._state == 0:
                 try:
                     GLib.idle_add(lambda: status_label.set_label(_('Checking for updates…')))
+                    bash_cmd = 'while fuser /var/lib/dpkg/lock >/dev/null 2>&1 || fuser /var/lib/apt/lists/lock >/dev/null 2>&1 || fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do echo "Waiting for other package managers to finish..."; sleep 3; done; apt-get update'
                     proc1 = subprocess.Popen(
-                        ['pkexec', 'apt-get', 'update'],
+                        ['pkexec', 'sh', '-c', bash_cmd],
                         stdout=subprocess.PIPE,
                         stderr=subprocess.STDOUT,
                         text=True,
@@ -880,6 +881,7 @@ def create_update_page(navigate_next, update_nav=None):
                         GLib.idle_add(lambda: (
                             status_label.set_label(_('Updates are available.')),
                             action_btn.set_label(_('  Install Updates  ')),
+                            action_btn.add_css_class('suggested-action'),
                             page.__setattr__('_state', 1),
                             __cleanup()
                         ))
@@ -901,8 +903,9 @@ def create_update_page(navigate_next, update_nav=None):
             elif page._state == 1:
                 try:
                     GLib.idle_add(lambda: status_label.set_label(_('Installing updates…')))
+                    bash_cmd = 'while fuser /var/lib/dpkg/lock >/dev/null 2>&1 || fuser /var/lib/apt/lists/lock >/dev/null 2>&1 || fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do echo "Waiting for other package managers to finish..."; sleep 3; done; DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y'
                     proc = subprocess.Popen(
-                        ['pkexec', 'sh', '-c', 'DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y'],
+                        ['pkexec', 'sh', '-c', bash_cmd],
                         stdout=subprocess.PIPE,
                         stderr=subprocess.STDOUT,
                         text=True,
@@ -932,7 +935,410 @@ def create_update_page(navigate_next, update_nav=None):
         threading.Thread(target=_do_work, daemon=True).start()
 
     action_btn.connect('clicked', _on_action)
+
+    # ── Mirror speed-test handler ─────────────────────────────────
+    def _on_mirror(btn):
+        btn.set_sensitive(False)
+        skip_btn.set_sensitive(False)
+        action_btn.set_sensitive(False)
+        progress_bar.set_visible(True)
+        progress_bar.pulse()
+        expander.set_expanded(True)
+
+        def _pulse():
+            if progress_bar.is_visible():
+                progress_bar.pulse()
+                return True
+            return False
+        GLib.timeout_add(100, _pulse)
+
+        def _append_text(t):
+            end_iter = buffer.get_end_iter()
+            buffer.insert(end_iter, t)
+            mark = buffer.create_mark(None, buffer.get_end_iter(), False)
+            textview.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
+
+        def _mirror_cleanup():
+            progress_bar.set_visible(False)
+            action_btn.set_sensitive(True)
+            skip_btn.set_sensitive(True)
+            mirror_btn.set_sensitive(True)
+
+        def _mirror_work():
+            try:
+                GLib.idle_add(lambda: (
+                    status_label.set_label(_('Testing mirrors…')),
+                    _append_text(_('=== Testing mirror speeds ===\n'))
+                ))
+
+                codename = subprocess.run(
+                    ['lsb_release', '-cs'],
+                    capture_output=True, text=True
+                ).stdout.strip()
+
+                mirrors = [
+                    # ── Default ─────────────────────────────────
+                    "https://archive.ubuntu.com/ubuntu/",
+                    # ── Oceania ──────────────────────────────────
+                    "https://mirror.aarnet.edu.au/pub/ubuntu/archive/",
+                    "https://mirror.fsmg.org.nz/ubuntu/",
+                    "https://mirror.2degrees.nz/ubuntu/",
+                    "https://ubuntu.lagoon.nc/ubuntu/",
+                    # ── East Asia ────────────────────────────────
+                    "https://mirror.xtom.com.hk/ubuntu/",
+                    "https://mirror.01link.hk/ubuntu/",
+                    "https://ftp.udx.icscoe.jp/Linux/ubuntu/",
+                    "https://ftp.kaist.ac.kr/ubuntu/",
+                    "http://jp.archive.ubuntu.com/ubuntu/",
+                    "http://kr.archive.ubuntu.com/ubuntu/",
+                    "http://tw.archive.ubuntu.com/ubuntu/",
+                    "https://mirror.twds.com.tw/ubuntu/",
+                    # ── China ────────────────────────────────────
+                    "http://mirrors.ustc.edu.cn/ubuntu/",
+                    "http://ftp.sjtu.edu.cn/ubuntu/",
+                    "http://mirrors.tuna.tsinghua.edu.cn/ubuntu/",
+                    "http://mirrors.aliyun.com/ubuntu/",
+                    "http://mirrors.cloud.tencent.com/ubuntu/",
+                    "http://mirrors.huaweicloud.com/ubuntu/",
+                    "http://mirrors.zju.edu.cn/ubuntu/",
+                    "http://mirrors.cn99.com/ubuntu/",
+                    "https://mirror.nju.edu.cn/ubuntu/",
+                    "https://mirrors.bfsu.edu.cn/ubuntu/",
+                    # ── Southeast Asia ───────────────────────────
+                    "http://sg.archive.ubuntu.com/ubuntu/",
+                    "http://ossmirror.mycloud.services/os/linux/ubuntu/",
+                    "https://mirror.sg.gs/ubuntu/",
+                    "https://mirror.kku.ac.th/ubuntu/",
+                    "https://mirror.bizflycloud.vn/ubuntu/",
+                    # ── South Asia ───────────────────────────────
+                    "https://mirrors.nxtgen.com/ubuntu-mirror/ubuntu/",
+                    # ── Middle East ──────────────────────────────
+                    "https://ubuntu.mobinhost.com/ubuntu/",
+                    "https://mirror.iranserver.com/ubuntu/",
+                    "https://mirror.maeen.sa/apt-mirror/",
+                    # ── Europe: North ────────────────────────────
+                    "https://mirrors.dotsrc.org/ubuntu/",
+                    "https://mirrors.nic.funet.fi/ubuntu/",
+                    "https://ftp.acc.umu.se/ubuntu/",
+                    "https://mirrors.xtom.ee/ubuntu/",
+                    # ── Europe: West ─────────────────────────────
+                    "https://mirror.ubuntu.ikoula.com/",
+                    "https://ftp.uni-stuttgart.de/ubuntu/",
+                    "https://mirror.i3d.net/pub/ubuntu/",
+                    "https://mirrors.xtom.nl/ubuntu/",
+                    "https://mirror.init7.net/ubuntu/",
+                    "https://mirror.cov.ukservers.com/ubuntu/",
+                    "https://mirrors.ukfast.co.uk/sites/archive.ubuntu.com/",
+                    # ── Europe: South ────────────────────────────
+                    "https://ubuntu.mirror.garr.it/ubuntu/",
+                    "https://mirror.raiolanetworks.com/ubuntu/",
+                    "https://mirrors.up.pt/ubuntu/",
+                    "https://mirror.alastyr.com/ubuntu/ubuntu-archive/",
+                    # ── Europe: East ─────────────────────────────
+                    "https://mirrors.neterra.net/ubuntu/archive/",
+                    "https://ftp.icm.edu.pl/pub/Linux/ubuntu/",
+                    "https://ftp.psnc.pl/linux/ubuntu/",
+                    "https://ubuntu.anexia.at/ubuntu/",
+                    "https://mirror.team-host.ru/ubuntu/",
+                    # ── Americas ─────────────────────────────────
+                    # Canada
+                    "https://mirror.csclub.uwaterloo.ca/ubuntu/",
+                    # USA — high bandwidth
+                    "https://mirrors.iu13.net/ubuntu/",
+                    "https://mirror.tzulo.com/ubuntu/",
+                    "https://mirror.pilotfiber.com/ubuntu/",
+                    "https://mirror.us.mirhosting.net/ubuntu/",
+                    "http://mirror.math.princeton.edu/pub/ubuntu/",
+                    "http://mirror.pit.teraswitch.com/ubuntu/",
+                    # USA — academic
+                    "https://mirror.fcix.net/ubuntu/",
+                    "https://mirror.its.umich.edu/ubuntu/",
+                    "http://mirrors.mit.edu/ubuntu/",
+                    "http://www.gtlib.gatech.edu/pub/ubuntu/",
+                    "http://ubuntu.osuosl.org/ubuntu/",
+                    # USA — official / cloud
+                    "http://us.archive.ubuntu.com/ubuntu/",
+                    "http://azure.archive.ubuntu.com/ubuntu/",
+                    # Brazil
+                    "https://mirror.uepg.br/ubuntu/",
+                ]
+
+                results = []
+
+                def test_mirror(mirror):
+                    url = f"{mirror}dists/{codename}/Release"
+                    try:
+                        start = time.monotonic()
+                        req = urllib.request.Request(url, method='HEAD')
+                        resp = urllib.request.urlopen(req, timeout=3)
+                        elapsed_ms = (time.monotonic() - start) * 1000
+                        if resp.status == 200:
+                            return (mirror, elapsed_ms)
+                    except Exception:
+                        pass
+                    return (mirror, None)
+
+                total_mirrors = len(mirrors)
+                tested_count = 0
+
+                with ThreadPoolExecutor(max_workers=12) as executor:
+                    futures = {executor.submit(test_mirror, m): m for m in mirrors}
+                    for future in as_completed(futures):
+                        mirror, elapsed = future.result()
+                        tested_count += 1
+                        if elapsed is not None:
+                            results.append((mirror, elapsed))
+                            GLib.idle_add(
+                                lambda m=mirror, e=elapsed, c=tested_count: (
+                                _append_text(
+                                    f"  ✓ {m} — {e:.0f} ms\n"),
+                                status_label.set_label(
+                                    _('Testing mirrors… ({c}/{t})').format(
+                                        c=c, t=total_mirrors))
+                            ))
+                        else:
+                            GLib.idle_add(
+                                lambda m=mirror, c=tested_count: (
+                                _append_text(f"  ✗ {m}\n"),
+                                status_label.set_label(
+                                    _('Testing mirrors… ({c}/{t})').format(
+                                        c=c, t=total_mirrors))
+                            ))
+
+                results.sort(key=lambda x: x[1])
+
+                if not results:
+                    GLib.idle_add(lambda: (
+                        _append_text(_('\nNo mirrors reachable.\n')),
+                        status_label.set_label(
+                            _('✗ No mirrors reachable. Check your connection.')),
+                        _mirror_cleanup()
+                    ))
+                    return
+
+                # ── Phase 2: bandwidth test top 5 by latency ──────────
+                top5 = results[:5]
+                GLib.idle_add(lambda: _append_text(
+                    _('\n=== Testing bandwidth of top 5 mirrors '
+                      '(3 s each) ===\n')
+                ))
+
+                def _test_bandwidth(mirror):
+                    url = f"{mirror}dists/{codename}/Contents-amd64.gz"
+                    try:
+                        start = time.monotonic()
+                        req = urllib.request.Request(url)
+                        resp = urllib.request.urlopen(req, timeout=5)
+                        if resp.status != 200:
+                            resp.close()
+                            return (mirror, 0.0)
+                        bytes_read = 0
+                        while True:
+                            elapsed = time.monotonic() - start
+                            if elapsed >= 3.0:
+                                break
+                            chunk = resp.read(65536)
+                            if not chunk:
+                                break
+                            bytes_read += len(chunk)
+                        resp.close()
+                        elapsed = time.monotonic() - start
+                        if elapsed > 0 and bytes_read > 0:
+                            speed_mbps = ((bytes_read * 8)
+                                          / (elapsed * 1024 * 1024))
+                            return (mirror, speed_mbps)
+                    except Exception:
+                        pass
+                    return (mirror, 0.0)
+
+                bw_map = {}
+                with ThreadPoolExecutor(max_workers=5) as executor:
+                    futures = {
+                        executor.submit(_test_bandwidth, m): m
+                        for m, _ in top5
+                    }
+                    for future in as_completed(futures):
+                        mirror, speed = future.result()
+                        bw_map[mirror] = speed
+                        GLib.idle_add(lambda m=mirror, s=speed: (
+                            _append_text(
+                                f"  {m} — {s:.1f} Mbps\n"
+                            )
+                        ))
+
+                # Pick best by bandwidth (fall back to latency winner)
+                best_mirror = max(bw_map, key=bw_map.get)
+                best_speed = bw_map[best_mirror]
+                best_latency = next(
+                    t for m, t in top5 if m == best_mirror
+                )
+
+                GLib.idle_add(lambda: _append_text(
+                    f"\n>>> {_('Best mirror by bandwidth')}: "
+                    f"{best_mirror}\n"
+                    f"    {_('Latency')}: {best_latency:.0f} ms | "
+                    f"{_('Bandwidth')}: {best_speed:.1f} Mbps\n"
+                ))
+
+                # Read current mirror for comparison
+                current_mirror = ''
+                try:
+                    with open(
+                        '/etc/apt/sources.list.d/ubuntu.sources'
+                    ) as f:
+                        for line in f:
+                            if line.startswith('URIs:'):
+                                current_mirror = line.split(':', 1)[1].strip()
+                                break
+                except Exception:
+                    pass
+
+                def _show_dialog():
+                    if current_mirror and current_mirror == best_mirror:
+                        body = (
+                            f"{best_mirror}\n"
+                            f"{_('Latency')}: {best_latency:.0f} ms | "
+                            f"{_('Bandwidth')}: {best_speed:.1f} Mbps\n\n"
+                            f"{_('This is already your current mirror.')}"
+                        )
+                    else:
+                        body = (
+                            f"{best_mirror}\n"
+                            f"{_('Latency')}: {best_latency:.0f} ms | "
+                            f"{_('Bandwidth')}: {best_speed:.1f} Mbps"
+                        )
+                        if current_mirror:
+                            body += (
+                                f"\n\n{_('Current mirror')}: {current_mirror}"
+                            )
+                        body += (
+                            "\n\n" +
+                            _('Switch to this mirror and run apt update?')
+                        )
+
+                    dialog = Adw.MessageDialog.new(
+                        page.get_root(),
+                        _('Fastest Mirror Found'),
+                        body
+                    )
+                    dialog.add_response('keep', _('Keep Current'))
+                    dialog.add_response('switch', _('Switch'))
+                    dialog.set_response_appearance(
+                        'switch', Adw.ResponseAppearance.SUGGESTED)
+                    dialog.set_default_response('switch')
+                    dialog.set_close_response('keep')
+
+                    def _on_dialog_response(d, response):
+                        if response == 'switch':
+                            _do_switch(best_mirror, codename)
+                        else:
+                            _mirror_cleanup()
+                        d.destroy()
+
+                    dialog.connect('response', _on_dialog_response)
+                    dialog.present()
+
+                GLib.idle_add(_show_dialog)
+
+            except Exception as e:
+                err_msg = str(e)
+                GLib.idle_add(lambda msg=err_msg: (
+                    status_label.set_label(
+                        _('✗ Mirror test failed: ') + msg),
+                    _mirror_cleanup()
+                ))
+
+        def _do_switch(mirror, codename):
+            GLib.idle_add(lambda: (
+                status_label.set_label(_('Switching mirror…')),
+                _append_text(_('\n=== Applying mirror switch ===\n'))
+            ))
+
+            sources = (
+                f"Types: deb\n"
+                f"URIs: {mirror}\n"
+                f"Suites: {codename}\n"
+                f"Components: main restricted universe multiverse\n"
+                f"Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg\n"
+                f"\n"
+                f"Types: deb\n"
+                f"URIs: {mirror}\n"
+                f"Suites: {codename}-updates\n"
+                f"Components: main restricted universe multiverse\n"
+                f"Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg\n"
+                f"\n"
+                f"Types: deb\n"
+                f"URIs: {mirror}\n"
+                f"Suites: {codename}-backports\n"
+                f"Components: main restricted universe multiverse\n"
+                f"Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg\n"
+                f"\n"
+                f"Types: deb\n"
+                f"URIs: {mirror}\n"
+                f"Suites: {codename}-security\n"
+                f"Components: main restricted universe multiverse\n"
+                f"Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg\n"
+            )
+
+            with tempfile.NamedTemporaryFile(
+                mode='w', delete=False, suffix='.sources'
+            ) as f:
+                f.write(sources)
+                temp_path = f.name
+
+            def _apply():
+                try:
+                    bash_cmd = (
+                        f"set -e\n"
+                        f"truncate -s 0 /etc/apt/sources.list "
+                        f"2>/dev/null || true\n"
+                        f"cat {shlex.quote(temp_path)}"
+                        f" > /etc/apt/sources.list.d/ubuntu.sources\n"
+                        f"rm {shlex.quote(temp_path)}\n"
+                        f"apt-get update"
+                    )
+                    proc = subprocess.Popen(
+                        ['pkexec', 'sh', '-c', bash_cmd],
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT,
+                        text=True,
+                        bufsize=1
+                    )
+                    for line in iter(proc.stdout.readline, ''):
+                        GLib.idle_add(lambda l=line: _append_text(l))
+                    proc.wait()
+
+                    if proc.returncode == 0:
+                        GLib.idle_add(lambda: (
+                            _append_text(
+                                _('\n✓ Mirror switched and system updated.\n')
+                            ),
+                            status_label.set_label(
+                                _('✓ Switched to ') + mirror),
+                            mirror_btn.remove_css_class('suggested-action'),
+                            action_btn.add_css_class('suggested-action'),
+                            _mirror_cleanup()
+                        ))
+                    else:
+                        raise Exception(
+                            f"pkexec exited with code {proc.returncode}"
+                        )
+                except Exception as e:
+                    err_msg = str(e)
+                    GLib.idle_add(lambda msg=err_msg: (
+                        status_label.set_label(
+                            _('✗ Switch failed: ') + msg),
+                        _mirror_cleanup()
+                    ))
+
+            threading.Thread(target=_apply, daemon=True).start()
+
+        threading.Thread(target=_mirror_work, daemon=True).start()
+
+    mirror_btn.connect('clicked', _on_mirror)
+
     btn_box.append(skip_btn)
+    btn_box.append(mirror_btn)
     btn_box.append(action_btn)
     center.append(btn_box)
 
@@ -1654,6 +2060,14 @@ def create_apps_page():
         disclaimer.set_margin_top(6)
         center.append(disclaimer)
 
+    # Browse Store button
+    store_btn = Gtk.Button(label=_('  Browse Store  '))
+    store_btn.set_halign(Gtk.Align.CENTER)
+    store_btn.set_margin_top(18)
+    store_btn.connect('clicked',
+        lambda b: subprocess.Popen(['gnome-software']))
+    center.append(store_btn)
+
     return page
 
 
@@ -2082,7 +2496,12 @@ class OobeWindow(Adw.ApplicationWindow):
                 nav._pages.append(clamp)
                 self.carousel.append(clamp)
 
-            toolbar.set_content(self.carousel)
+            # Wrap carousel in a clamp so adjacent pages don't peek
+            # through on ultrawide screens
+            carousel_clamp = Adw.Clamp()
+            carousel_clamp.set_maximum_size(680)
+            carousel_clamp.set_child(self.carousel)
+            toolbar.set_content(carousel_clamp)
 
             # ── Bottom bar ──
             bottom = Gtk.CenterBox()

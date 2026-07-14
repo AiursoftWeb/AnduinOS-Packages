@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-exe-runner</PackageName>
-    <PackageVersion>2.0.0-9+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0-10+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Windows Executable Runner - Seamlessly run Windows .exe files via Bottles</PackageDescription>
     <Section>utils</Section>
@@ -21,6 +21,10 @@
     <Dependency Include="gir1.2-gtk-4.0" />
     <Dependency Include="gir1.2-adw-1" />
     <Dependency Include="flatpak" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="bash compile-locales.sh" />
   </ItemGroup>
 
   <ItemGroup>
