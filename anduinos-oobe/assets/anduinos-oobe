@@ -1392,6 +1392,257 @@ def create_update_page(navigate_next, update_nav=None):
 
 
 # ═══════════════════════════════════════════════════════════════════
+# PAGE 3.8: SECURE BOOT — 信任链条 (conditional)
+# ═══════════════════════════════════════════════════════════════════
+
+def create_secureboot_page(navigate_next, update_nav=None):
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_valign(Gtk.Align.FILL)
+    page.set_halign(Gtk.Align.FILL)
+    page.set_margin_start(48)
+    page.set_margin_end(48)
+    page.set_margin_top(24)
+    page.set_margin_bottom(24)
+    page.set_spacing(0)
+
+    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    center.set_valign(Gtk.Align.CENTER)
+    center.set_vexpand(True)
+    page.append(center)
+
+    chip_icon = _create_image('secureboot-chip.svg')
+    chip_icon.set_pixel_size(72)
+    chip_icon.set_halign(Gtk.Align.CENTER)
+    chip_icon.set_margin_bottom(12)
+    center.append(chip_icon)
+
+    title = Gtk.Label(label=_('Secure Boot Configuration'))
+    title.add_css_class('title-1')
+    title.set_halign(Gtk.Align.CENTER)
+    title.set_margin_bottom(8)
+    center.append(title)
+    
+    desc = Gtk.Label(label=_('Secure Boot is a motherboard security standard that ensures only trusted software loads at startup.\nIt protects your system from low-level malware and rootkits.'))
+    desc.add_css_class('dim-label')
+    desc.set_halign(Gtk.Align.CENTER)
+    desc.set_justify(Gtk.Justification.CENTER)
+    desc.set_margin_bottom(24)
+    center.append(desc)
+    
+    # State verification
+    key_path = '/var/lib/shim-signed/mok/MOK.der'
+    has_cert = os.path.exists(key_path)
+    is_trusted = False
+    
+    if has_cert:
+        try:
+            r = subprocess.run(['mokutil', '--test-key', key_path], capture_output=True, text=True, timeout=5)
+            if 'is already enrolled' in r.stdout or 'is already enrolled' in r.stderr:
+                is_trusted = True
+        except Exception:
+            pass
+
+    list_group = Adw.PreferencesGroup()
+    list_group.set_title(_("System Trust Status"))
+    list_group.set_margin_bottom(24)
+    center.append(list_group)
+
+    r1 = Adw.ActionRow(title=_("Secure Boot Enabled"))
+    r1.set_subtitle(_("Motherboard hardware protection is active"))
+    icon1 = _create_image('emblem-ok-symbolic')
+    icon1.add_css_class('success')
+    icon1.set_pixel_size(16)
+    r1.add_suffix(icon1)
+    list_group.add(r1)
+
+    r2 = Adw.ActionRow(title=_("Local MOK Certificate"))
+    icon2 = _create_image('emblem-ok-symbolic' if has_cert else 'dialog-warning-symbolic')
+    if has_cert:
+        r2.set_subtitle(_("Certificate generated locally"))
+        icon2.add_css_class('success')
+    else:
+        r2.set_subtitle(_("Missing local certificate"))
+        icon2.add_css_class('warning')
+    icon2.set_pixel_size(16)
+    r2.add_suffix(icon2)
+    list_group.add(r2)
+
+    r3 = Adw.ActionRow(title=_("UEFI Firmware Trust"))
+    icon3 = _create_image('emblem-ok-symbolic' if is_trusted else 'dialog-error-symbolic')
+    if is_trusted:
+        r3.set_subtitle(_("Certificate is trusted by motherboard"))
+        icon3.add_css_class('success')
+    else:
+        r3.set_subtitle(_("Pending enrollment in blue screen (MOKManager)"))
+        icon3.add_css_class('error')
+    icon3.set_pixel_size(16)
+    r3.add_suffix(icon3)
+    list_group.add(r3)
+
+    r4 = Adw.ActionRow(title=_("Third-party Drivers"))
+    r4.set_subtitle(_("Scanning for installed drivers..."))
+    r4_icon = Gtk.Spinner()
+    r4_icon.start()
+    r4_icon.set_margin_top(8)
+    r4_icon.set_margin_bottom(8)
+    r4.add_suffix(r4_icon)
+    list_group.add(r4)
+
+    def _check_drivers():
+        found = False
+        try:
+            cert_serial = subprocess.check_output(
+                ['openssl', 'x509', '-in', key_path, '-inform', 'DER', '-noout', '-serial'],
+                text=True, timeout=5
+            ).strip().split('=')[1]
+            formatted_serial = ':'.join(cert_serial[i:i+2] for i in range(0, len(cert_serial), 2)).lower()
+
+            dkms_dir = f"/lib/modules/{os.uname().release}/updates/dkms"
+            if os.path.isdir(dkms_dir):
+                for f in os.listdir(dkms_dir):
+                    if f.endswith('.ko') or f.endswith('.ko.zst') or f.endswith('.ko.xz'):
+                        mod_path = os.path.join(dkms_dir, f)
+                        modinfo_out = subprocess.check_output(['modinfo', mod_path], text=True, timeout=5).lower()
+                        if formatted_serial in modinfo_out:
+                            found = True
+                            break
+        except Exception:
+            pass
+
+        def _update_ui():
+            r4.remove(r4_icon)
+            if found:
+                icon4 = _create_image('emblem-ok-symbolic')
+                r4.set_subtitle(_("Drivers are signed and ready to load"))
+                icon4.add_css_class('success')
+                icon4.set_pixel_size(16)
+                r4.add_suffix(icon4)
+            else:
+                r4.set_subtitle(_("No signed third-party drivers detected"))
+
+        GLib.idle_add(_update_ui)
+
+    if has_cert:
+        threading.Thread(target=_check_drivers, daemon=True).start()
+    else:
+        r4.remove(r4_icon)
+        icon4 = _create_image('dialog-error-symbolic')
+        icon4.add_css_class('error')
+        icon4.set_pixel_size(16)
+        r4.add_suffix(icon4)
+        r4.set_subtitle(_("Cannot sign drivers without a certificate"))
+
+    if is_trusted:
+        status = Gtk.Label(label=_('System Trust Established. Third-party drivers will load securely.'))
+        status.set_margin_top(12)
+        status.set_halign(Gtk.Align.CENTER)
+        status.add_css_class('title-4')
+        center.append(status)
+    else:
+        status = Gtk.Label(label=_('The local trust certificate is missing or not yet enrolled.\nYou must configure this to use third-party drivers like NVIDIA.'))
+        status.set_justify(Gtk.Justification.CENTER)
+        status.set_halign(Gtk.Align.CENTER)
+        status.set_margin_bottom(24)
+        center.append(status)
+        
+        btn = Gtk.Button()
+        btn.set_halign(Gtk.Align.CENTER)
+        btn.add_css_class('suggested-action')
+        btn.add_css_class('pill')
+        btn.set_size_request(240, 48)
+        btn.set_margin_top(16)
+        
+        spinner = Gtk.Spinner()
+        btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        btn_box.set_halign(Gtk.Align.CENTER)
+        btn_lbl = Gtk.Label(label=_('Create & Enroll Certificate'))
+        btn_box.append(spinner)
+        btn_box.append(btn_lbl)
+        btn.set_child(btn_box)
+
+        def _on_enroll_clicked(button):
+            pwd = "123456"
+            button.set_sensitive(False)
+            spinner.start()
+            btn_lbl.set_label(_("Generating & Signing..."))
+            
+            def _worker():
+                import shlex
+                p = shlex.quote(pwd)
+                cmd = f"update-secureboot-policy --new-key && printf '%s\\n%s\\n' {p} {p} | mokutil --import /var/lib/shim-signed/mok/MOK.der && dkms autoinstall"
+                proc = subprocess.run(['pkexec', 'bash', '-c', cmd])
+                
+                def _update_ui():
+                    spinner.stop()
+                    if proc.returncode == 0:
+                        dialog = Adw.MessageDialog.new(
+                            page.get_root(),
+                            _("Certificate Created"),
+                            _("Success! When you reboot, a blue screen will appear.\nSelect 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456")
+                        )
+                        dialog.add_response("ok", _("OK"))
+                        dialog.set_default_response("ok")
+                        
+                        def _on_dialog_response(dlg, response):
+                            page._hide_next = True
+                            if update_nav:
+                                update_nav()
+                            
+                            status.set_visible(False)
+                            btn.set_visible(False)
+                            
+                            rb_lbl = Gtk.Label(label=_("Note: Use password <b>123456</b> after rebooting."))
+                            rb_lbl.set_use_markup(True)
+                            rb_lbl.set_margin_bottom(12)
+                            center.append(rb_lbl)
+                            
+                            rb_btn = Gtk.Button(label=_("Reboot & Configure Secure Boot"))
+                            rb_btn.add_css_class('suggested-action')
+                            rb_btn.add_css_class('pill')
+                            rb_btn.set_size_request(280, 48)
+                            rb_btn.set_halign(Gtk.Align.CENTER)
+                            center.append(rb_btn)
+                            
+                            def _on_reboot_clicked(b):
+                                r_dlg = Adw.MessageDialog.new(
+                                    page.get_root(),
+                                    _("Reboot Required"),
+                                    _("Please trust the certificate upon reboot using password 123456.")
+                                )
+                                r_dlg.add_response("cancel", _("Cancel"))
+                                r_dlg.add_response("reboot", _("Reboot"))
+                                r_dlg.set_response_appearance("reboot", Adw.ResponseAppearance.DESTRUCTIVE)
+                                
+                                def _on_reboot_response(d, resp):
+                                    if resp == "reboot":
+                                        subprocess.run(['gnome-session-quit', '--reboot', '--no-prompt'])
+                                r_dlg.connect('response', _on_reboot_response)
+                                r_dlg.present()
+                                
+                            rb_btn.connect('clicked', _on_reboot_clicked)
+                            
+                            icon2.set_from_icon_name('emblem-ok-symbolic')
+                            icon2.remove_css_class('warning')
+                            icon2.add_css_class('success')
+                            r2.set_subtitle(_("Certificate generated locally"))
+                            
+                        dialog.connect('response', _on_dialog_response)
+                        dialog.present()
+                    else:
+                        status.set_label(_("Configuration failed. Please try again."))
+                        button.set_sensitive(True)
+                        btn_lbl.set_label(_('Create & Enroll Certificate'))
+                GLib.idle_add(_update_ui)
+                
+            threading.Thread(target=_worker, daemon=True).start()
+            
+        btn.connect('clicked', _on_enroll_clicked)
+        center.append(btn)
+
+    return page
+
+
+# ═══════════════════════════════════════════════════════════════════
 # PAGE 4: NVIDIA — 性能释放 (conditional)
 # ═══════════════════════════════════════════════════════════════════
 
@@ -2001,7 +2252,7 @@ def create_apps_page():
             (_('VLC'), 'org.videolan.VLC',
              _('The versatile media player that plays everything'), 'vlc.svg'),
             (_('Krita'), 'org.kde.krita',
-             _('Professional free and open source painting program'), 'krita.svg'),
+             _('Professional free and open source painting program'), 'gnome-paint.svg'),
             (_('OBS Studio'), 'com.obsproject.Studio',
              _('Free and open source software for video recording and live streaming'), 'obs.svg'),
         ]
@@ -2584,6 +2835,13 @@ class OobeWindow(Adw.ApplicationWindow):
             lambda: create_update_page(_nav, _update_nav),
         ]
 
+        try:
+            r = subprocess.run(['mokutil', '--sb-state'], capture_output=True, text=True, timeout=5)
+            if 'SecureBoot enabled' in r.stdout:
+                factories.append(lambda: create_secureboot_page(_nav, _update_nav))
+        except Exception:
+            pass
+
         if has_nvidia_gpu():
             factories.append(lambda: create_nvidia_page(_nav, _update_nav))
 
@@ -2607,8 +2865,13 @@ class OobeWindow(Adw.ApplicationWindow):
         idx = int(self.carousel.get_position())
         n_pages = self.carousel.get_n_pages()
 
+        clamp = self.carousel.get_nth_page(idx)
+        page = clamp.get_child() if clamp else None
+
+        hide_next = getattr(page, '_hide_next', False) if page else False
+
         self.back_btn.set_visible(idx > 0)
-        self.next_btn.set_visible(idx > 0)
+        self.next_btn.set_visible((idx > 0) and not hide_next)
         
         if idx >= n_pages - 1:
             self.next_btn.set_label(_('Finish'))
@@ -2618,9 +2881,7 @@ class OobeWindow(Adw.ApplicationWindow):
         else:
             self.next_btn.set_label(_('Next →'))
 
-        clamp = self.carousel.get_nth_page(idx)
-        if clamp:
-            page = clamp.get_child()
+        if page:
             if getattr(page, '_suggest_next', True):
                 self.next_btn.add_css_class('suggested-action')
             else:
