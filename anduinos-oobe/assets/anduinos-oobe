@@ -1780,8 +1780,16 @@ def create_shortcuts_page():
     sub.set_halign(Gtk.Align.CENTER)
     sub.set_wrap(True)
     sub.set_justify(Gtk.Justification.CENTER)
-    sub.set_margin_bottom(36)
+    sub.set_margin_bottom(24)
     page.append(sub)
+
+    # Scrollable content area — allows window to shrink while content remains accessible
+    scroll = Gtk.ScrolledWindow()
+    scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+    scroll.set_vexpand(True)
+    scroll.set_propagate_natural_height(True)
+
+    scroll_content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
 
     # Featured Shortcuts
     featured_group = Adw.PreferencesGroup()
@@ -1825,7 +1833,7 @@ def create_shortcuts_page():
     row2.add_suffix(kbd2)
     featured_group.add(row2)
 
-    page.append(featured_group)
+    scroll_content.append(featured_group)
 
     # More shortcuts in a compact list
     more_group = Adw.PreferencesGroup()
@@ -1852,7 +1860,10 @@ def create_shortcuts_page():
         row.add_suffix(lbl)
         more_group.add(row)
 
-    page.append(more_group)
+    scroll_content.append(more_group)
+
+    scroll.set_child(scroll_content)
+    page.append(scroll)
 
     # Tip
     tip = Gtk.Label(
@@ -1862,7 +1873,7 @@ def create_shortcuts_page():
     tip.add_css_class('caption')
     tip.set_halign(Gtk.Align.CENTER)
     tip.set_wrap(True)
-    tip.set_margin_top(18)
+    tip.set_margin_top(12)
     page.append(tip)
 
     return page
@@ -2442,10 +2453,10 @@ class OobeWindow(Adw.ApplicationWindow):
 
         if is_oobe:
             self.set_title(_('AnduinOS Setup'))
-            self.set_default_size(780, 580)
+            self.set_default_size(780, 460)
         else:
             self.set_title(_('AnduinOS Welcome Center'))
-            self.set_default_size(780, 580)
+            self.set_default_size(780, 460)
 
         self.set_icon_name('anduinos-oobe')
 
