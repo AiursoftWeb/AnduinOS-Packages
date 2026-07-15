@@ -17,15 +17,29 @@ import gettext
 _LOCALE_DIR = '/usr/share/locale'
 _ = gettext.translation('anduinos-exe-runner', _LOCALE_DIR, fallback=True).gettext
 
-SMART_RECOMMENDATIONS = [
-    {
-        "pattern": re.compile(r"^rufus.*\.exe$", re.IGNORECASE),
-        "title": _("Looking for a bootable USB tool?"),
-        "app_name": "Impression",
-        "app_id": "io.gitlab.adhami3310.Impression",
-        "reason": _("Rufus attempts direct hardware access, which is impossible in a Windows compatibility layer and will crash.\n\nIn AnduinOS, we recommend the native, beautiful, and highly stable Impression for creating bootable drives.")
-    }
-]
+import json
+
+def _open_url(url):
+    subprocess.Popen(['xdg-open', url])
+
+def load_recommendations():
+    paths = [
+        "/usr/share/anduinos-exe-runner/recommendations.json",
+        os.path.join(os.path.dirname(__file__), "recommendations.json")
+    ]
+    for path in paths:
+        if os.path.isfile(path):
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    recs = json.load(f)
+                    for r in recs:
+                        r["pattern"] = re.compile(r["pattern"], re.IGNORECASE)
+                    return recs
+            except Exception as e:
+                print(f"Error loading recommendations from {path}: {e}")
+    return []
+
+SMART_RECOMMENDATIONS = load_recommendations()
 
 DEFAULT_BOTTLE_NAME = "Default"
 
@@ -162,20 +176,29 @@ class RunnerApp(Adw.Application):
                 self.window.present()
                 dialog = Adw.MessageDialog(
                     transient_for=self.window,
-                    heading=matched_rec["title"],
-                    body=matched_rec["reason"]
+                    heading=matched_rec.get("title", _("Notice")),
+                    body=matched_rec.get("reason", "")
                 )
                 dialog.add_response("cancel", _("Cancel"))
-                dialog.add_response("continue", _("Attempt Run"))
-                dialog.add_response("install", _("Get {}").format(matched_rec["app_name"]))
-                dialog.set_response_appearance("install", Adw.ResponseAppearance.SUGGESTED)
+                dialog.add_response("continue", _("Force Run Anyway"))
+
+                if "app_id" in matched_rec:
+                    btn_label = _("Get {}").format(matched_rec.get('app_name', 'App'))
+                    dialog.add_response("install", btn_label)
+                    dialog.set_response_appearance("install", Adw.ResponseAppearance.SUGGESTED)
+                elif "docs_url" in matched_rec:
+                    dialog.add_response("docs", _("View Documentation"))
+                    dialog.set_response_appearance("docs", Adw.ResponseAppearance.SUGGESTED)
+
                 dialog.set_response_appearance("cancel", Adw.ResponseAppearance.DEFAULT)
                 dialog.set_response_appearance("continue", Adw.ResponseAppearance.DESTRUCTIVE)
 
                 def on_dialog_response(dlg, response):
                     if response == "install":
-                        import subprocess
-                        subprocess.run(["gnome-software", f"--details={matched_rec['app_id']}.desktop"])
+                        Gio.AppInfo.launch_default_for_uri(f"appstream://{matched_rec['app_id']}", None)
+                        self.quit()
+                    elif response == "docs":
+                        _open_url(matched_rec["docs_url"])
                         self.quit()
                     elif response == "continue":
                         _start_normal_flow()
