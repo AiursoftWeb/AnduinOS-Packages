@@ -154,6 +154,38 @@ def is_chinese_locale():
     return lang.startswith('zh_CN')
 
 
+def _is_package_installed(pkg):
+    """Return True if the given dpkg package is installed."""
+    try:
+        r = subprocess.run(['dpkg', '-s', pkg], capture_output=True, timeout=5)
+        return r.returncode == 0
+    except Exception:
+        return False
+
+
+def is_live_environment():
+    """Return True only if all four conditions are met:
+    1. casper package is installed
+    2. ubiquity package is installed
+    3. /cdrom directory exists
+    4. Kernel cmdline contains boot=casper
+    """
+    if not _is_package_installed('casper'):
+        return False
+    if not _is_package_installed('ubiquity'):
+        return False
+    if not os.path.isdir('/cdrom'):
+        return False
+    try:
+        with open('/proc/cmdline', 'r') as f:
+            cmdline = f.read()
+        if 'boot=casper' not in cmdline:
+            return False
+    except Exception:
+        return False
+    return True
+
+
 def _apply_theme(dark):
     scheme = 'prefer-dark' if dark else 'prefer-light'
     settings = Gio.Settings.new('org.gnome.desktop.interface')
@@ -2634,8 +2666,13 @@ def main():
     is_oobe = '--oobe' in sys.argv
 
     if is_oobe:
-        # Do not run on Live CD / Installation Media
-        if os.path.exists('/rofs') or os.path.exists('/run/casper') or os.path.isdir('/cdrom'):
+        # Do not run on Live CD / Installation Media.
+        # All four conditions must be satisfied to consider the system as live:
+        # - casper package installed
+        # - ubiquity package installed
+        # - /cdrom directory exists
+        # - kernel boot parameter includes boot=casper
+        if is_live_environment():
             sys.exit(0)
 
         # Do not run if already completed
