@@ -298,13 +298,6 @@
         "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of FileZilla."
     },
     {
-        "pattern": "^(blender|obs-studio|vlc|davinci|bdcamsetup|handbrake).*(\\.exe|\\.msi)$",
-        "title": "Media & Creative Tools",
-        "app_name": "App Store",
-        "app_id": "org.gnome.Software",
-        "reason": "Media tools like OBS, Blender, and VLC require low-level NVENC/NVDEC hardware encoders, Vulkan API, or ALSA audio routing. Running their Windows versions adds a massive overhead.\n\nAll of these applications provide flawless, GPU-accelerated native Linux versions. Please fetch them from the App Store."
-    },
-    {
         "pattern": "^adobe.*\\.zip$",
         "title": "Installing Adobe Creative Cloud?",
         "reason": "The Adobe CC installer utilizes complex anti-piracy DRM and proprietary MSVCP libraries that frequently deadlock the compatibility layer.\n\nWe recommend maintaining a Windows dual-boot or virtual machine for heavy Adobe workflows, or migrating to Linux-native tools like DaVinci Resolve and Krita."
@@ -469,13 +462,6 @@
         "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Bitwig Studio."
     },
     {
-        "pattern": "^(steamsetup|battle\\.net|epicgames).*(\\.exe)$",
-        "title": "Installing Game Launchers?",
-        "app_name": "Steam / Heroic / Lutris",
-        "app_id": "com.valvesoftware.Steam",
-        "reason": "Please install the native Linux Steam client, which includes Valve's Proton technology for Windows games.\n\nFor Battle.net or Epic Games, we recommend using Heroic Games Launcher or Lutris, rather than running the raw installer here."
-    },
-    {
         "pattern": "^gog_galaxy.*\\.exe$",
         "title": "Looking for GOG Galaxy?",
         "app_name": "Heroic Games Launcher",
@@ -552,25 +538,11 @@
         "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of QJoypad."
     },
     {
-        "pattern": "^(retroarch-.*-setup|pcsx2|yuzu|dolphin|ppsspp|rpcs3|citra-setup-windows|duckstation-qt|mame|snes9x|xemu).*\\.exe$",
-        "title": "Looking for Emulators?",
-        "app_name": "App Store",
-        "app_id": "org.gnome.Software",
-        "reason": "Running emulators through Wine severely bottlenecks Vulkan and OpenGL performance.\n\nAll major emulators have highly optimized native Linux builds. Please install them from the App Store."
-    },
-    {
         "pattern": "^Setup Project64.*\\.exe$",
         "title": "Looking for Project64?",
         "app_name": "Simple64",
         "app_id": "io.github.simple64.simple64",
         "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Simple64."
-    },
-    {
-        "pattern": "^(chrome_installer|firefox_setup|msedge_setup|bravebrowsersetup|opera(.*setup)?|operagxsetup|vivaldi|librewolf|zen\\.installer|arcinstaller|.*samsungbrowsersetup|comet_installer_latest|waterfox.*setup|ungoogled-chromium.*installer|floorp.*installer|mullvad-browser-windows).*\\.(exe|msi)$",
-        "title": "Installing a Web Browser?",
-        "app_name": "App Store",
-        "app_id": "org.gnome.Software",
-        "reason": "Running a Windows browser means losing hardware acceleration, native sandbox security, and Wayland display support.\n\nPlease install the native Linux version of your preferred browser from the App Store."
     },
     {
         "pattern": "^(eie11|ie11).*\\.(exe|msi)$",
@@ -584,13 +556,6 @@
         "title": "Installing Microsoft Office?",
         "docs_url": "https://www.office.com",
         "reason": "Newer versions of Microsoft Office have deep DRM and Windows integrations that perform poorly in compatibility layers.\n\nYou can use Microsoft Office/365 on the web, or install native Linux suites like ONLYOFFICE."
-    },
-    {
-        "pattern": "^(apache_openoffice|libreoffice.*win|desktopeditors|wps_office_inst).*\\.(exe|msi)$",
-        "title": "Installing Office Suites?",
-        "app_name": "App Store",
-        "app_id": "org.gnome.Software",
-        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux releases of these Office suites."
     },
     {
         "pattern": "^microsoft.*365.*copilot.*installer.*\\.exe$",
@@ -625,13 +590,6 @@
         "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Apostrophe."
     },
     {
-        "pattern": "^(todoist|standard-notes|simplenote.*(win|installer)|xmind-for-windows|obsidian|joplin-setup).*\\.exe$",
-        "title": "Looking for Note & Task Apps?",
-        "app_name": "App Store",
-        "app_id": "org.gnome.Software",
-        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux releases of these productivity apps."
-    },
-    {
         "pattern": "^anytype.*setup.*\\.exe$",
         "title": "Looking for Anytype?",
         "app_name": "Anytype",
@@ -651,11 +609,72 @@
         "reason": "These services provide fully functional web applications that work perfectly in native Linux browsers."
     },
     {
-        "pattern": "^(discordsetup|discord_setup|zoom|slacksetup|msteamssetup|teams.*windows|element.*setup|tsetup|telegram|signalsetup|wechat|oicq|vibersetup).*\\.(exe|msi)$",
-        "title": "Installing Communication Apps?",
-        "app_name": "App Store",
-        "app_id": "org.gnome.Software",
-        "reason": "Chat and video conferencing apps require native access to your microphone, camera, and Wayland screen sharing APIs, which are sandboxed here.\n\nPlease install the native Linux versions of these apps."
+        "pattern": "^(discordsetup|discord_setup).*\\.(exe|msi)$",
+        "title": "Installing Discord?",
+        "app_name": "Discord (Native)",
+        "app_id": "com.discordapp.Discord",
+        "reason": "Chat and voice apps require native access to your microphone and screen sharing APIs which are sandboxed here. Please install the native Linux version of Discord."
+    },
+    {
+        "pattern": "^zoom.*\\.(exe|msi)$",
+        "title": "Installing Zoom?",
+        "app_name": "Zoom (Native)",
+        "app_id": "us.zoom.Zoom",
+        "reason": "Video conferencing apps require native access to your camera and screen sharing APIs which are sandboxed here. Please install the native Linux version of Zoom."
+    },
+    {
+        "pattern": "^slacksetup.*\\.(exe|msi)$",
+        "title": "Installing Slack?",
+        "app_name": "Slack (Native)",
+        "app_id": "com.slack.Slack",
+        "reason": "Communication apps perform best natively. Please install the native Linux version of Slack."
+    },
+    {
+        "pattern": "^(msteamssetup|teams.*windows).*\\.(exe|msi)$",
+        "title": "Installing Microsoft Teams?",
+        "reason": "Video conferencing apps require native access to your camera and screen sharing APIs which are sandboxed here. Please use the web version of Teams or find a Linux client in the App Store."
+    },
+    {
+        "pattern": "^element.*setup.*\\.(exe|msi)$",
+        "title": "Installing Element?",
+        "app_name": "Element (Native)",
+        "app_id": "im.riot.Riot",
+        "reason": "Communication apps perform best natively. Please install the native Linux version of Element."
+    },
+    {
+        "pattern": "^(tsetup|telegram).*\\.(exe|msi)$",
+        "title": "Installing Telegram?",
+        "app_name": "Telegram Desktop",
+        "app_id": "org.telegram.desktop",
+        "reason": "Please install the native Linux version of Telegram for optimal performance."
+    },
+    {
+        "pattern": "^signalsetup.*\\.(exe|msi)$",
+        "title": "Installing Signal?",
+        "app_name": "Signal Desktop",
+        "app_id": "org.signal.Signal",
+        "reason": "Please install the native Linux version of Signal for optimal performance and secure enclave integration."
+    },
+    {
+        "pattern": "^wechat.*\\.(exe|msi)$",
+        "title": "Installing WeChat?",
+        "app_name": "WeChat (Native)",
+        "app_id": "com.tencent.WeChat",
+        "reason": "Communication apps perform best with native system integrations. Please install the Linux version of WeChat from the App Store."
+    },
+    {
+        "pattern": "^oicq.*\\.(exe|msi)$",
+        "title": "Installing QQ?",
+        "app_name": "Linux QQ",
+        "app_id": "com.qq.QQ",
+        "reason": "Tencent now officially maintains a natively built Linux QQ based on the NT architecture. It provides an identical experience to the Windows version without the overhead of Wine."
+    },
+    {
+        "pattern": "^vibersetup.*\\.(exe|msi)$",
+        "title": "Installing Viber?",
+        "app_name": "Viber (Native)",
+        "app_id": "com.viber.Viber",
+        "reason": "Please install the native Linux version of Viber."
     },
     {
         "pattern": "^whatsapp.*\\.exe$",
@@ -674,12 +693,6 @@
         "title": "Looking for Cisco Webex?",
         "docs_url": "https://www.webex.com/downloads.html",
         "reason": "You can install Cisco Webex (Linux .deb package) for AnduinOS from the web."
-    },
-    {
-        "pattern": "^(dropbox|onedrivesetup|googledrivesync|googledrivesetup|nextcloud.*).*\\.(exe|msi)$",
-        "title": "Configuring Cloud Storage?",
-        "app_name": "Online Accounts",
-        "reason": "Windows cloud sync clients cannot correctly mount or sync files with your native Linux filesystem from inside the sandbox.\n\nPlease use 'Online Accounts' in System Settings or install native Linux sync clients."
     },
     {
         "pattern": "^syncthing-windows-setup.*\\.exe$",
@@ -717,30 +730,9 @@
         "reason": "In a compatibility layer, download managers struggle with file path mappings and system integrations.\n\nWe highly recommend Motrix, a beautiful, native, and ad-free all-in-one download tool."
     },
     {
-        "pattern": "^(utorrent|utweb|bittorrent|btweb|qbittorrent.*setup|jdownloader2setup).*\\.exe$",
-        "title": "Looking for Torrent Clients?",
-        "app_name": "App Store",
-        "app_id": "org.gnome.Software",
-        "reason": "For the best stability and system integration on AnduinOS, we recommend using native Linux releases of torrent clients (e.g., Transmission, qBittorrent)."
-    },
-    {
-        "pattern": "^(foobar2000|winamp|spotifysetup|spotify.*installer|picard-setup|mpc-hc).*\\.exe$",
-        "title": "Looking for Media Players?",
-        "app_name": "App Store",
-        "app_id": "org.gnome.Software",
-        "reason": "For the best stability and system integration on AnduinOS, we recommend using native Linux releases of media players."
-    },
-    {
         "pattern": "^(apple.*music.*installer|itunes.*setup|itunes.*installer|amazonmusicinstaller).*\\.exe$",
         "title": "Looking for Music Services?",
         "reason": "You can access these music services directly via their web applications."
-    },
-    {
-        "pattern": "^(plexmediaserver|plex.*media.*server.*installer|plex|plex.*for.*windows.*installer|jellyfin-desktop|jellyfin.*windows|kodi|stremiosetup).*\\.exe$",
-        "title": "Looking for Media Centers?",
-        "app_name": "App Store",
-        "app_id": "org.gnome.Software",
-        "reason": "For the best stability and system integration on AnduinOS, we recommend using native Linux releases of media centers."
     },
     {
         "pattern": "^calibre.*\\.msi$",
@@ -761,27 +753,6 @@
         "app_name": "Archive Manager (File Roller)",
         "reason": "AnduinOS supports archives directly in the file manager. If you prefer a dedicated standalone application like 7-Zip, we highly recommend installing the native Archive Manager.",
         "app_id": "org.gnome.FileRoller"
-    },
-    {
-        "pattern": "^(thunderbird\\s+setup|outlook.*for.*windows.*installer|mailspringsetup).*\\.(exe|msi)$",
-        "title": "Looking for Mail Clients?",
-        "app_name": "App Store",
-        "app_id": "org.gnome.Software",
-        "reason": "For the best stability and system integration on AnduinOS, we recommend using native Linux mail clients."
-    },
-    {
-        "pattern": "^(1passwordsetup|lastpassinstaller|bitwarden|keepassxc|keepass.*setup).*\\.(exe|msi)$",
-        "title": "Looking for Password Managers?",
-        "app_name": "App Store",
-        "app_id": "org.gnome.Software",
-        "reason": "For the best stability and system integration on AnduinOS, we recommend using native Linux password managers."
-    },
-    {
-        "pattern": "^(protonmail|protonvpn|protonpass.*setup).*\\.exe$",
-        "title": "Looking for Proton Services?",
-        "app_name": "App Store",
-        "app_id": "org.gnome.Software",
-        "reason": "For the best stability and system integration on AnduinOS, we recommend using native Linux releases of Proton services."
     },
     {
         "pattern": "^proton.*drive.*setup.*\\.exe$",
@@ -2524,5 +2495,243 @@
         "app_name": "HandBrake",
         "app_id": "fr.handbrake.ghb",
         "reason": "Video transcoding requires direct access to hardware encoding (like NVENC or QuickSync) and massive multi-core CPU performance. The native Linux version provides vastly superior speeds."
+    },
+    {
+        "pattern": "^chrome.*installer.*\\.(exe|msi|zip)$",
+        "title": "Installing Chrome?",
+        "app_name": "Google Chrome",
+        "app_id": "com.google.Chrome",
+        "reason": "Please install the native Linux version of Chrome."
+    },
+    {
+        "pattern": "^firefox.*setup.*\\.(exe|msi|zip)$",
+        "title": "Installing Firefox?",
+        "app_name": "Firefox",
+        "app_id": "org.mozilla.firefox",
+        "reason": "Please install the native Linux version of Firefox."
+    },
+    {
+        "pattern": "^msedge.*setup.*\\.(exe|msi|zip)$",
+        "title": "Installing Edge?",
+        "app_name": "Microsoft Edge",
+        "app_id": "com.microsoft.Edge",
+        "reason": "Please install the native Linux version of Edge."
+    },
+    {
+        "pattern": "^bravebrowser.*setup.*\\.(exe|msi|zip)$",
+        "title": "Installing Brave?",
+        "app_name": "Brave Browser",
+        "app_id": "com.brave.Browser",
+        "reason": "Please install the native Linux version of Brave."
+    },
+    {
+        "pattern": "^vivaldi.*\\.(exe|msi|zip)$",
+        "title": "Installing Vivaldi?",
+        "app_name": "Vivaldi",
+        "app_id": "com.vivaldi.Vivaldi",
+        "reason": "Please install the native Linux version of Vivaldi."
+    },
+    {
+        "pattern": "^librewolf.*\\.(exe|msi|zip)$",
+        "title": "Installing LibreWolf?",
+        "app_name": "LibreWolf",
+        "app_id": "io.gitlab.librewolf-community",
+        "reason": "Please install the native Linux version of LibreWolf."
+    },
+    {
+        "pattern": "^steamsetup.*\\.(exe|msi|zip)$",
+        "title": "Installing Steam?",
+        "app_name": "Steam (Native)",
+        "app_id": "com.valvesoftware.Steam",
+        "reason": "Please install the native Linux Steam client, which includes Valve's Proton technology for Windows games."
+    },
+    {
+        "pattern": "^(epicgames|gog.*galaxy).*\\.(exe|msi|zip)$",
+        "title": "Installing Epic Games or GOG?",
+        "app_name": "Heroic Games Launcher",
+        "app_id": "com.heroicgameslauncher.hgl",
+        "reason": "We highly recommend using Heroic Games Launcher on Linux to manage Epic and GOG libraries seamlessly."
+    },
+    {
+        "pattern": "^(battle\\.net|eaapp|ubisoftconnect).*\\.(exe|msi|zip)$",
+        "title": "Installing a Game Launcher?",
+        "app_name": "Bottles",
+        "app_id": "com.usebottles.bottles",
+        "reason": "For launchers like Battle.net, EA App, or Ubisoft Connect, we recommend configuring a dedicated gaming environment using Bottles."
+    },
+    {
+        "pattern": "^lutris.*\\.(exe|msi|zip)$",
+        "title": "Installing Lutris?",
+        "app_name": "Lutris (Native)",
+        "app_id": "net.lutris.Lutris",
+        "reason": "Please install the native Linux version of Lutris."
+    },
+    {
+        "pattern": "^heroic.*\\.(exe|msi|zip)$",
+        "title": "Installing Heroic?",
+        "app_name": "Heroic Games Launcher",
+        "app_id": "com.heroicgameslauncher.hgl",
+        "reason": "Please install the native Linux version of Heroic Games Launcher."
+    },
+    {
+        "pattern": "^bottles.*\\.(exe|msi|zip)$",
+        "title": "Installing Bottles?",
+        "app_name": "Bottles (Native)",
+        "app_id": "com.usebottles.bottles",
+        "reason": "Please install the native Linux version of Bottles."
+    },
+    {
+        "pattern": "^libreoffice.*win.*\\.(exe|msi|zip)$",
+        "title": "Installing LibreOffice?",
+        "app_name": "LibreOffice",
+        "app_id": "org.libreoffice.LibreOffice",
+        "reason": "Please install the native Linux version of LibreOffice."
+    },
+    {
+        "pattern": "^wps_office_inst.*\\.(exe|msi|zip)$",
+        "title": "Installing WPS Office?",
+        "app_name": "WPS Office",
+        "app_id": "com.wps.Office",
+        "reason": "Please install the native Linux version of WPS Office."
+    },
+    {
+        "pattern": "^desktopeditors.*\\.(exe|msi|zip)$",
+        "title": "Installing ONLYOFFICE?",
+        "app_name": "ONLYOFFICE",
+        "app_id": "org.onlyoffice.desktopeditors",
+        "reason": "Please install the native Linux version of ONLYOFFICE."
+    },
+    {
+        "pattern": "^nextcloud.*.*\\.(exe|msi|zip)$",
+        "title": "Installing Nextcloud?",
+        "app_name": "Nextcloud Client",
+        "app_id": "com.nextcloud.desktopclient.nextcloud",
+        "reason": "Please install the native Linux Nextcloud client for filesystem integration."
+    },
+    {
+        "pattern": "^blender.*\\.(exe|msi|zip)$",
+        "title": "Installing Blender?",
+        "app_name": "Blender",
+        "app_id": "org.blender.Blender",
+        "reason": "3D rendering requires low-level GPU acceleration. Please install the native Linux version of Blender."
+    },
+    {
+        "pattern": "^obs-studio.*\\.(exe|msi|zip)$",
+        "title": "Installing OBS Studio?",
+        "app_name": "OBS Studio",
+        "app_id": "com.obsproject.Studio",
+        "reason": "Screen recording requires low-level NVENC/NVDEC hardware encoders and PipeWire integration. Please install the native Linux version of OBS."
+    },
+    {
+        "pattern": "^vlc.*\\.(exe|msi|zip)$",
+        "title": "Installing VLC?",
+        "app_name": "VLC",
+        "app_id": "org.videolan.VLC",
+        "reason": "Please install the native Linux version of VLC."
+    },
+    {
+        "pattern": "^handbrake.*\\.(exe|msi|zip)$",
+        "title": "Installing Handbrake?",
+        "app_name": "Handbrake",
+        "app_id": "fr.handbrake.ghb",
+        "reason": "Video transcoding requires direct access to hardware encoders. Please install the native Linux version of Handbrake."
+    },
+    {
+        "pattern": "^retroarch.*\\.(exe|msi|zip)$",
+        "title": "Installing RetroArch?",
+        "app_name": "RetroArch",
+        "app_id": "org.libretro.RetroArch",
+        "reason": "Running emulators through a sandbox severely bottlenecks Vulkan/OpenGL performance. Please install the native Linux version."
+    },
+    {
+        "pattern": "^pcsx2.*\\.(exe|msi|zip)$",
+        "title": "Installing PCSX2?",
+        "app_name": "PCSX2",
+        "app_id": "net.pcsx2.PCSX2",
+        "reason": "Please install the highly optimized native Linux build of PCSX2."
+    },
+    {
+        "pattern": "^dolphin.*\\.(exe|msi|zip)$",
+        "title": "Installing Dolphin?",
+        "app_name": "Dolphin Emulator",
+        "app_id": "org.DolphinEmu.dolphin-emu",
+        "reason": "Please install the highly optimized native Linux build of Dolphin."
+    },
+    {
+        "pattern": "^ppsspp.*\\.(exe|msi|zip)$",
+        "title": "Installing PPSSPP?",
+        "app_name": "PPSSPP",
+        "app_id": "org.ppsspp.PPSSPP",
+        "reason": "Please install the highly optimized native Linux build of PPSSPP."
+    },
+    {
+        "pattern": "^rpcs3.*\\.(exe|msi|zip)$",
+        "title": "Installing RPCS3?",
+        "app_name": "RPCS3",
+        "app_id": "net.rpcs3.RPCS3",
+        "reason": "Please install the highly optimized native Linux build of RPCS3."
+    },
+    {
+        "pattern": "^obsidian.*\\.(exe|msi|zip)$",
+        "title": "Installing Obsidian?",
+        "app_name": "Obsidian",
+        "app_id": "md.obsidian.Obsidian",
+        "reason": "Please install the native Linux version of Obsidian for the best performance."
+    },
+    {
+        "pattern": "^joplin-setup.*\\.(exe|msi|zip)$",
+        "title": "Installing Joplin?",
+        "app_name": "Joplin",
+        "app_id": "net.cozic.joplin_desktop",
+        "reason": "Please install the native Linux version of Joplin."
+    },
+    {
+        "pattern": "^todoist.*\\.(exe|msi|zip)$",
+        "title": "Installing Todoist?",
+        "app_name": "Todoist",
+        "app_id": "com.todoist.Todoist",
+        "reason": "Please install the native Linux version of Todoist."
+    },
+    {
+        "pattern": "^spotify.*\\.(exe|msi|zip)$",
+        "title": "Installing Spotify?",
+        "app_name": "Spotify",
+        "app_id": "com.spotify.Client",
+        "reason": "Please install the native Linux version of Spotify."
+    },
+    {
+        "pattern": "^plex.*\\.(exe|msi|zip)$",
+        "title": "Installing Plex?",
+        "app_name": "Plex Desktop",
+        "app_id": "tv.plex.PlexDesktop",
+        "reason": "Please install the native Linux version of Plex."
+    },
+    {
+        "pattern": "^jellyfin.*\\.(exe|msi|zip)$",
+        "title": "Installing Jellyfin?",
+        "app_name": "Jellyfin Media Player",
+        "app_id": "com.github.iwalton3.jellyfin-media-player",
+        "reason": "Please install the native Linux version of Jellyfin."
+    },
+    {
+        "pattern": "^kodi.*\\.(exe|msi|zip)$",
+        "title": "Installing Kodi?",
+        "app_name": "Kodi",
+        "app_id": "tv.kodi.Kodi",
+        "reason": "Please install the native Linux version of Kodi."
+    },
+    {
+        "pattern": "^thunderbird.*\\.(exe|msi|zip)$",
+        "title": "Installing Thunderbird?",
+        "app_name": "Thunderbird",
+        "app_id": "org.mozilla.Thunderbird",
+        "reason": "Please install the native Linux version of Thunderbird."
+    },
+    {
+        "pattern": "^mailspring.*\\.(exe|msi|zip)$",
+        "title": "Installing Mailspring?",
+        "app_name": "Mailspring",
+        "app_id": "com.getmailspring.Mailspring",
+        "reason": "Please install the native Linux version of Mailspring."
     }
 ]

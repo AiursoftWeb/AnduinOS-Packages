@@ -393,6 +393,66 @@ run_manager()
             self.set_status(_("Configuration Failed"), _("An error occurred while initializing the bottle. Please expand advanced status to view logs."), show_progress=False)
             return
             
+        self.set_status(_("Configuring Fonts"), _("Installing core fonts to prevent text rendering issues..."), show_progress=True)
+        fonts_script = """import sys
+pkgdatadir = "/app/share/bottles"
+sys.path.insert(1, pkgdatadir)
+import gi
+gi.require_version('Gtk', '4.0')
+gi.require_version('Adw', '1')
+from gi.repository import GLib, Gio
+data_resource = Gio.Resource.load(f"{pkgdatadir}/data.gresource")
+bottles_resource = Gio.Resource.load(f"{pkgdatadir}/bottles.gresource")
+data_resource._register()
+bottles_resource._register()
+
+from bottles.backend.managers.manager import Manager
+from bottles.backend.utils.threading import RunAsync
+
+m = Manager(False, check_connection=True)
+loop = GLib.MainLoop()
+
+def my_progress(*args, **kwargs):
+    pass
+
+def on_checks_done(res, error=None):
+    b = m.local_bottles.get("Default")
+    if not b:
+        loop.quit()
+        return
+
+    deps_to_install = ["cjkfonts", "allfonts"]
+    for dep in deps_to_install:
+        manifest = m.dependency_manager.get_dependency(dep)
+        if manifest:
+            print(f"Installing {dep}...")
+            m.dependency_manager.install(b, [dep, manifest])
+            
+    loop.quit()
+
+def start_run():
+    RunAsync(
+        task_func=m.checks,
+        callback=on_checks_done,
+        install_latest=True,
+        first_run=False,
+        progress_callback=my_progress
+    )
+    return False
+
+GLib.timeout_add_seconds(1, start_run)
+loop.run()
+"""
+        script_path2 = os.path.join(sandbox_dir, f"install_fonts_{uuid.uuid4().hex}.py")
+        with open(script_path2, "w") as f:
+            f.write(fonts_script)
+            
+        code = self.run_subprocess(["flatpak", "run", "--command=python3", "com.usebottles.bottles", script_path2])
+        try:
+            os.remove(script_path2)
+        except:
+            pass
+
         self.log(_("Installation and configuration complete!"))
         self.set_status(_("Starting program"), _("Bottle is ready, about to launch application..."), show_progress=True)
         self.start_exe()

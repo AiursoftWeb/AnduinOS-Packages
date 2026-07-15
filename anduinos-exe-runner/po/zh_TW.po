@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-exe-runner\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 15:51+0000\n"
+"POT-Creation-Date: 2026-07-15 08:58+0000\n"
 "PO-Revision-Date: 2026-07-14 12:02+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,152 +16,210 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "==> Executing command: {}"
-msgstr "正在執行指令：{}"
+#: assets/anduinos-exe-runner:77
+msgid "Windows Application Runner"
+msgstr "Windows 應用程式執行器"
 
-msgid "About to start downloading Bottles..."
-msgstr "即將開始下載 Bottles..."
+#: assets/anduinos-exe-runner:101
+msgid "Preparing environment..."
+msgstr "正在準備環境..."
 
+#: assets/anduinos-exe-runner:108
+msgid "Checking system compatibility layer..."
+msgstr "檢查系統相容性層..."
+
+#: assets/anduinos-exe-runner:126 assets/anduinos-exe-runner:182
+msgid "Cancel"
+msgstr "取消"
+
+#: assets/anduinos-exe-runner:129
+msgid "Install and Configure"
+msgstr "安裝與設定"
+
+#: assets/anduinos-exe-runner:138
 msgid "Advanced Status and Logs"
 msgstr "進階狀態與日誌"
 
-msgid ""
-"An error occurred while initializing the bottle. Please expand advanced "
-"status to view logs."
+#: assets/anduinos-exe-runner:179
+msgid "Notice"
 msgstr ""
 
+#: assets/anduinos-exe-runner:183
+msgid "Force Run Anyway"
+msgstr ""
+
+#: assets/anduinos-exe-runner:186
+msgid "Get {}"
+msgstr "取得 {}"
+
+#: assets/anduinos-exe-runner:190
+msgid "View Documentation"
+msgstr ""
+
+#: assets/anduinos-exe-runner:273
+msgid "Windows Compatibility Environment Required"
+msgstr "需要 Windows 相容環境"
+
+#: assets/anduinos-exe-runner:273
+msgid "The system is not configured with the Bottles compatibility layer."
+msgstr "系統未配置與容器的相容層。"
+
+#: assets/anduinos-exe-runner:273
+msgid ""
+"Would you like to automatically download and install it? This may take a few "
+"minutes."
+msgstr ""
+
+#: assets/anduinos-exe-runner:278
+msgid "Preparing..."
+msgstr "正在準備..."
+
+#: assets/anduinos-exe-runner:278
+msgid "About to start downloading Bottles..."
+msgstr "即將開始下載 Bottles..."
+
+#: assets/anduinos-exe-runner:282
+msgid "==> Executing command: {}"
+msgstr "正在執行指令：{}"
+
+#: assets/anduinos-exe-runner:290
+msgid "Checking Bottles installation status via filesystem..."
+msgstr "透過檔案系統檢查 Bottles 安裝狀態..."
+
+#: assets/anduinos-exe-runner:292
+msgid "Bottles installation not found."
+msgstr "找不到 Bottles 安裝。"
+
+#: assets/anduinos-exe-runner:296
+msgid "Checking if Default bottle exists via filesystem..."
+msgstr "透過檔案系統檢查預設 Bottle 是否存在..."
+
+#: assets/anduinos-exe-runner:298
+msgid "Default bottle not found."
+msgstr "找不到預設 Bottle。"
+
+#: assets/anduinos-exe-runner:302
+msgid "Compatibility layer is ready, preparing to start program..."
+msgstr "相容性層已就緒，準備啟動程式..."
+
+#: assets/anduinos-exe-runner:303
+msgid "Starting program..."
+msgstr "正在啟動程式..."
+
+#: assets/anduinos-exe-runner:303
+msgid "Configuring runtime environment, please wait..."
+msgstr "正在設定執行環境，請稍候..."
+
+#: assets/anduinos-exe-runner:307
+msgid "Installing Environment"
+msgstr "正在安裝環境"
+
+#: assets/anduinos-exe-runner:307
+msgid "Downloading and installing Bottles via Flatpak..."
+msgstr "透過 Flatpak 下載並安裝 Bottles..."
+
+#: assets/anduinos-exe-runner:314
+msgid "Installation Failed"
+msgstr "安裝失敗"
+
+#: assets/anduinos-exe-runner:314
 msgid ""
 "An error occurred while installing Bottles. Please expand advanced status to "
 "view logs."
 msgstr ""
 
-msgid "Attempt Run"
-msgstr "嘗試執行"
-
-msgid "Automatically hiding launcher window, enjoy!"
-msgstr "自動隱藏啟動器視窗，請享受！"
-
-msgid "Bottle is ready, about to launch application..."
-msgstr "Bottle 已就緒，即將啟動應用程式..."
-
-msgid "Bottles installation not found."
-msgstr "找不到 Bottles 安裝。"
-
-msgid "Cancel"
-msgstr "取消"
-
-msgid "Checking Bottles installation status via filesystem..."
-msgstr "透過檔案系統檢查 Bottles 安裝狀態..."
-
-msgid "Checking if Default bottle exists via filesystem..."
-msgstr "透過檔案系統檢查預設 Bottle 是否存在..."
-
-msgid "Checking system compatibility layer..."
-msgstr "檢查系統相容性層..."
-
-msgid "Compatibility layer is ready, preparing to start program..."
-msgstr "相容性層已就緒，準備啟動程式..."
-
-msgid "Configuration Failed"
-msgstr "設定失敗"
-
-msgid "Configuring Bottle"
-msgstr "正在設定 Bottle"
-
-msgid "Configuring runtime environment, please wait..."
-msgstr "正在設定執行環境，請稍候..."
-
-msgid "Default bottle not found."
-msgstr "找不到預設 Bottle。"
-
+#: assets/anduinos-exe-runner:317
 msgid "Downloading Components"
 msgstr "下載元件"
 
-msgid "Downloading and installing Bottles via Flatpak..."
-msgstr "透過 Flatpak 下載並安裝 Bottles..."
-
-msgid "Get {}"
-msgstr "取得 {}"
-
-msgid "Initializing Windows virtual bottle (Default)..."
-msgstr "初始化 Windows 虛擬 Bottle (預設)..."
-
+#: assets/anduinos-exe-runner:317
 msgid "Initializing core gaming components (DXVK, VKD3D, Runner, etc.)..."
 msgstr "初始化核心遊戲元件 (DXVK、VKD3D、Runner 等)..."
 
-msgid "Install and Configure"
-msgstr "安裝與設定"
+#: assets/anduinos-exe-runner:389
+msgid "Configuring Bottle"
+msgstr "正在設定 Bottle"
 
-msgid "Installation Failed"
-msgstr "安裝失敗"
+#: assets/anduinos-exe-runner:389
+msgid "Initializing Windows virtual bottle (Default)..."
+msgstr "初始化 Windows 虛擬 Bottle (預設)..."
 
+#: assets/anduinos-exe-runner:393
+msgid "Configuration Failed"
+msgstr "設定失敗"
+
+#: assets/anduinos-exe-runner:393
+msgid ""
+"An error occurred while initializing the bottle. Please expand advanced "
+"status to view logs."
+msgstr ""
+
+#: assets/anduinos-exe-runner:396
+msgid "Configuring Fonts"
+msgstr "正在設定字型"
+
+#: assets/anduinos-exe-runner:396
+msgid "Installing core fonts to prevent text rendering issues..."
+msgstr "正在安裝核心字型以防止文字渲染異常..."
+
+#: assets/anduinos-exe-runner:456
 msgid "Installation and configuration complete!"
 msgstr "安裝與設定完成！"
 
-msgid "Installing Environment"
-msgstr "正在安裝環境"
-
-msgid "Launch Exception"
-msgstr "啟動例外"
-
-msgid "Launch Failed"
-msgstr "啟動失敗"
-
-msgid "Launch failed: {}"
-msgstr "啟動失敗：{}"
-
-msgid "Launch or configuration failed, please check advanced logs."
-msgstr "啟動或設定失敗，請檢查進階日誌。"
-
-msgid "Launcher mission complete, program is running in the background."
-msgstr "啟動器任務完成，程式已在背景執行。"
-
-msgid "Looking for a bootable USB tool?"
-msgstr "在尋找可開機的 USB 工具嗎？"
-
-msgid "Preparing environment..."
-msgstr "正在準備環境..."
-
-msgid "Preparing to launch EXE: {}"
-msgstr "準備啟動 EXE：{}"
-
-msgid "Preparing..."
-msgstr "正在準備..."
-
-msgid "Process finished normally."
-msgstr "程序正常結束。"
-
-msgid "Process successfully started in the background, listening to logs..."
-msgstr "程序已成功在背景啟動，正在監聽日誌..."
-
-msgid "Process terminated abnormally (exit code {})."
-msgstr "程序異常終止 (退出代碼 {})。"
-
-msgid ""
-"Rufus attempts direct hardware access, which is impossible in a Windows "
-"compatibility layer and will crash.\\n\\nIn AnduinOS, we recommend the "
-"native, beautiful, and highly stable Impression for creating bootable drives."
-msgstr ""
-
+#: assets/anduinos-exe-runner:457
 msgid "Starting program"
 msgstr "啟動程式"
 
-msgid "Starting program..."
-msgstr "正在啟動程式..."
+#: assets/anduinos-exe-runner:457
+msgid "Bottle is ready, about to launch application..."
+msgstr "Bottle 已就緒，即將啟動應用程式..."
 
-msgid "The system is not configured with the Bottles compatibility layer."
-msgstr "系統未配置與容器的相容層。"
+#: assets/anduinos-exe-runner:461
+msgid "Preparing to launch EXE: {}"
+msgstr "準備啟動 EXE：{}"
 
+#: assets/anduinos-exe-runner:476
+msgid "Process successfully started in the background, listening to logs..."
+msgstr "程序已成功在背景啟動，正在監聽日誌..."
+
+#: assets/anduinos-exe-runner:478
+msgid "Launch failed: {}"
+msgstr "啟動失敗：{}"
+
+#: assets/anduinos-exe-runner:479
+msgid "Launch Failed"
+msgstr "啟動失敗"
+
+#: assets/anduinos-exe-runner:479
 msgid "Unable to start program, please check advanced logs."
 msgstr "無法啟動程式，請檢查進階日誌。"
 
-msgid "Windows Application Runner"
-msgstr "Windows 應用程式執行器"
+#: assets/anduinos-exe-runner:499
+msgid "Launcher mission complete, program is running in the background."
+msgstr "啟動器任務完成，程式已在背景執行。"
 
-msgid "Windows Compatibility Environment Required"
-msgstr "需要 Windows 相容環境"
+#: assets/anduinos-exe-runner:500
+msgid "Automatically hiding launcher window, enjoy!"
+msgstr "自動隱藏啟動器視窗，請享受！"
 
-msgid ""
-"Would you like to automatically download and install it? This may take a few "
-"minutes."
-msgstr ""
+#: assets/anduinos-exe-runner:513
+msgid "Process terminated abnormally (exit code {})."
+msgstr "程序異常終止 (退出代碼 {})。"
+
+#: assets/anduinos-exe-runner:514
+msgid "Launch Exception"
+msgstr "啟動例外"
+
+#: assets/anduinos-exe-runner:514
+msgid "Launch or configuration failed, please check advanced logs."
+msgstr "啟動或設定失敗，請檢查進階日誌。"
+
+#: assets/anduinos-exe-runner:516
+msgid "Process finished normally."
+msgstr "程序正常結束。"
+
+#~ msgid "Attempt Run"
+#~ msgstr "嘗試執行"
+
+#~ msgid "Looking for a bootable USB tool?"
+#~ msgstr "在尋找可開機的 USB 工具嗎？"

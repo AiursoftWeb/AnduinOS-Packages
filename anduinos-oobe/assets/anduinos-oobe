@@ -2000,6 +2000,10 @@ def create_apps_page():
              _('Virtualization made simple'), 'gnome-boxes.svg'),
             (_('VLC'), 'org.videolan.VLC',
              _('The versatile media player that plays everything'), 'vlc.svg'),
+            (_('Krita'), 'org.kde.krita',
+             _('Professional free and open source painting program'), 'krita.svg'),
+            (_('OBS Studio'), 'com.obsproject.Studio',
+             _('Free and open source software for video recording and live streaming'), 'obs.svg'),
         ]
         app_urls = None
         is_cn_mode = False
