@@ -357,8 +357,8 @@ def create_welcome_page(navigate_next):
 
     # Subtitle
     subtitle = Gtk.Label(
-        label=_('AnduinOS is ready. Just a few steps to shape it\n'
-                'into the perfect system tailored to your habits.')
+        label=_('AnduinOS is ready. Just a few steps to shape it\n') + \
+                _('into the perfect system tailored to your habits.')
     )
     subtitle.add_css_class('title-4')
     subtitle.set_halign(Gtk.Align.CENTER)
@@ -1151,8 +1151,8 @@ def create_update_page(navigate_next, update_nav=None):
                 # ── Phase 2: bandwidth test top 5 by latency ──────────
                 top5 = results[:5]
                 GLib.idle_add(lambda: _append_text(
-                    _('\n=== Testing bandwidth of top 5 mirrors '
-                      '(3 s each) ===\n')
+                    _('\n=== Testing bandwidth of top 5 mirrors ') + \
+                      _('(3 s each) ===\n')
                 ))
 
                 def _test_bandwidth(mirror):
@@ -1702,8 +1702,8 @@ def create_nvidia_page(navigate_next, update_nav=None):
     center.append(sub)
 
     body = Gtk.Label(
-        label=_('For ultimate smoothness in gaming, 3D rendering, and high-framerate desktop\n'
-                'experiences, we recommend installing the proprietary driver.')
+        label=_('For ultimate smoothness in gaming, 3D rendering, and high-framerate desktop\n') + \
+                _('experiences, we recommend installing the proprietary driver.')
     )
     body.set_halign(Gtk.Align.CENTER)
     body.set_wrap(True)
@@ -1802,20 +1802,19 @@ def create_nvidia_page(navigate_next, update_nav=None):
                 if proc.returncode == 0:
                     def _set_success():
                         status_label.set_label(
-                            _('✓ Driver installed successfully!\n'
-                              'A reboot is recommended to apply changes.'))
+                            _('✓ Driver installed successfully!\n') + \
+                              _('A reboot is recommended to apply changes.'))
                         progress_bar.set_visible(False)
                         btn.set_visible(False)
-                        skip_btn.set_label(_('  Continue  '))
-                        skip_btn.set_sensitive(True)
+                        skip_btn.set_visible(False)
                         page._suggest_next = True
                         if update_nav: update_nav()
                     GLib.idle_add(_set_success)
                 else:
                     def _set_fail():
                         status_label.set_label(
-                            _('✗ Installation encountered an issue.\n'
-                              'You can install drivers later from Settings.'))
+                            _('✗ Installation encountered an issue.\n') + \
+                              _('You can install drivers later from Settings.'))
                         progress_bar.set_visible(False)
                         btn.set_sensitive(True)
                         skip_btn.set_sensitive(True)
@@ -1875,8 +1874,8 @@ def create_exe_sandbox_page(navigate_next):
     center.append(title)
 
     body = Gtk.Label(
-        label=_('Powered by Wine and Bottles technology, running classic Windows applications\n'
-                'is now easier than ever.')
+        label=_('Powered by Wine and Bottles technology, running classic Windows applications\n') + \
+                _('is now easier than ever.')
     )
     body.set_halign(Gtk.Align.CENTER)
     body.set_wrap(True)
@@ -2000,8 +1999,8 @@ def create_exe_sandbox_page(navigate_next):
                 if proc.returncode == 0:
                     GLib.idle_add(lambda: (
                         status_label.set_label(
-                            _('✓ Sandbox deployed successfully!\n'
-                              'You can now double-click .exe files to run them.')),
+                            _('✓ Sandbox deployed successfully!\n') + \
+                              _('You can now double-click .exe files to run them.')),
                         progress_bar.set_visible(False),
                         btn.set_visible(False),
                         config_btn.set_visible(True),
@@ -2010,8 +2009,8 @@ def create_exe_sandbox_page(navigate_next):
                 else:
                     GLib.idle_add(lambda: (
                         status_label.set_label(
-                            _('✗ Deployment failed.\n'
-                              'You can install Bottles later from the App Store.')),
+                            _('✗ Deployment failed.\n') + \
+                              _('You can install Bottles later from the App Store.')),
                         progress_bar.set_visible(False),
                         btn.set_sensitive(True),
                         skip_btn.set_sensitive(True),
@@ -2190,8 +2189,8 @@ def create_apps_page():
     center.append(title)
 
     sub = Gtk.Label(
-        label=_('Essential productivity and entertainment tools, hand-picked for you.\n'
-               'Click any app to open its details in the App Store.')
+        label=_('Essential productivity and entertainment tools, hand-picked for you.\n') + \
+               _('Click any app to open its details in the App Store.')
     )
     sub.add_css_class('dim-label')
     sub.set_halign(Gtk.Align.CENTER)
@@ -2204,8 +2203,8 @@ def create_apps_page():
 
     if is_cn:
         banner = Gtk.Label(
-            label=_('⚡ The following apps are provided by the Spark Store community.\n'
-                    'Great for connecting to local services.')
+            label=_('⚡ The following apps are provided by the Spark Store community.\n') + \
+                    _('Great for connecting to local services.')
         )
         banner.add_css_class('caption')
         banner.set_halign(Gtk.Align.CENTER)
@@ -2345,8 +2344,8 @@ def create_apps_page():
 
     # Queue hint
     queue_hint = Gtk.Label(
-        label=_('Pro tip: You can explore these apps in the App Store,\n'
-                'and continue with the system setup while they download.')
+        label=_('Pro tip: You can explore these apps in the App Store,\n') + \
+                _('and continue with the system setup while they download.')
     )
     queue_hint.add_css_class('dim-label')
     queue_hint.add_css_class('caption')
@@ -2357,8 +2356,8 @@ def create_apps_page():
 
     if is_cn:
         disclaimer = Gtk.Label(
-            label=_('Note: These apps link to their official or community download pages.'
-                    ' AnduinOS is not affiliated with these vendors.')
+            label=_('Note: These apps link to their official or community download pages.') + \
+                    _(' AnduinOS is not affiliated with these vendors.')
         )
         disclaimer.add_css_class('dim-label')
         disclaimer.add_css_class('caption')
@@ -2433,9 +2432,9 @@ def create_sync_page():
     cloud_card.append(cloud_title)
 
     cloud_desc = Gtk.Label(
-        label=_('Connect your Google, Microsoft,\n'
-                'or Nextcloud accounts to sync\n'
-                'files, contacts, and calendar.')
+        label=_('Connect your Google, Microsoft,\n') + \
+                _('or Nextcloud accounts to sync\n') + \
+                _('files, contacts, and calendar.')
     )
     cloud_desc.set_halign(Gtk.Align.CENTER)
     cloud_desc.set_wrap(True)
@@ -2469,9 +2468,9 @@ def create_sync_page():
     backup_card.append(backup_title)
 
     backup_desc = Gtk.Label(
-        label=_('Use Deja Dup to protect your\n'
-                'important files with automated,\n'
-                'secure local or remote backups.')
+        label=_('Use Deja Dup to protect your\n') + \
+                _('important files with automated,\n') + \
+                _('secure local or remote backups.')
     )
     backup_desc.set_halign(Gtk.Align.CENTER)
     backup_desc.set_wrap(True)
@@ -2524,10 +2523,10 @@ def create_privacy_page():
     page.append(headline)
 
     body = Gtk.Label(
-        label=_('AnduinOS disables all system-level telemetry by default.\n'
-                'We do not collect your usage habits.\n'
-                'We do not upload your search history.\n'
-                'There are no pervasive advertisements.')
+        label=_('AnduinOS disables all system-level telemetry by default.\n') + \
+                _('We do not collect your usage habits.\n') + \
+                _('We do not upload your search history.\n') + \
+                _('There are no pervasive advertisements.')
     )
     body.add_css_class('title-4')
     body.set_halign(Gtk.Align.CENTER)
@@ -2538,8 +2537,8 @@ def create_privacy_page():
 
     # Signature
     sig = Gtk.Label(
-        label=_('In an era ruled by algorithms and surveillance,\n'
-                'this is our firmest commitment to you.')
+        label=_('In an era ruled by algorithms and surveillance,\n') + \
+                _('this is our firmest commitment to you.')
     )
     sig.add_css_class('body')
     sig.set_halign(Gtk.Align.CENTER)
@@ -2612,9 +2611,9 @@ def create_support_page():
     center.append(title)
 
     body = Gtk.Label(
-        label=_('Whether you\'re a Windows refugee seeking shelter,\n'
-                'or a hardcore geek developer — you\'ll find your tribe here.\n'
-                'Found a bug? Want a feature? Tell us anytime.')
+        label=_('Whether you\'re a Windows refugee seeking shelter,\n') + \
+                _('or a hardcore geek developer — you\'ll find your tribe here.\n') + \
+                _('Found a bug? Want a feature? Tell us anytime.')
     )
     body.set_halign(Gtk.Align.CENTER)
     body.set_wrap(True)
@@ -2667,8 +2666,8 @@ def create_support_page():
 
     # Footer note
     note = Gtk.Label(
-        label=_('💡 AnduinOS is compatible with Ubuntu\'s entire ecosystem.\n'
-                'You can rely on Ubuntu\'s vast documentation and expertise.')
+        label=_('💡 AnduinOS is compatible with Ubuntu\'s entire ecosystem.\n') + \
+                _('You can rely on Ubuntu\'s vast documentation and expertise.')
     )
     note.add_css_class('dim-label')
     note.set_halign(Gtk.Align.CENTER)

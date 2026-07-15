@@ -345,6 +345,11 @@ anduinos-why-placeholder:
   variables:
     PACKAGE_DIR: anduinos-why-placeholder
 
+anduinos-xbox-controller-driver:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-xbox-controller-driver
+
 anduinos-gnome-shell-locale:
   extends: .publish
   variables:
