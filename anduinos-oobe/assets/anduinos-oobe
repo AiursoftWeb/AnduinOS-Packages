@@ -2053,8 +2053,34 @@ def create_xbox_page(navigate_next, update_nav=None):
     btn_box.set_halign(Gtk.Align.CENTER)
     btn_box.set_margin_top(24)
 
-    skip_btn = Gtk.Button(label=_('  Do It Later  '))
-    skip_btn.connect('clicked', lambda b: navigate_next())
+    tools_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+    tools_box.set_halign(Gtk.Align.CENTER)
+    tools_box.set_margin_top(12)
+    
+    pair_btn = Gtk.Button(label=_('Pair your controller'))
+    pair_btn.connect('clicked', lambda b: subprocess.Popen(['gnome-control-center', 'bluetooth']))
+    test_btn = Gtk.Button(label=_('Test your controller'))
+    def _open_tester(b):
+        import shutil
+        if shutil.which('firefox'):
+            subprocess.Popen(['firefox', 'https://hardwaretester.com/gamepad'])
+        else:
+            subprocess.Popen(['xdg-open', 'https://hardwaretester.com/gamepad'])
+    test_btn.connect('clicked', _open_tester)
+    
+    tools_box.append(pair_btn)
+    tools_box.append(test_btn)
+    
+    is_ready_to_play = False
+    if is_installed:
+        if sb_enabled:
+            if is_trusted and modinfo_sig_key == current_cert_serial:
+                is_ready_to_play = True
+        else:
+            is_ready_to_play = True
+    tools_box.set_visible(is_ready_to_play)
+
+
 
     install_btn = Gtk.Button(label=_('  Install Xbox Driver  '))
     install_btn.add_css_class('suggested-action')
@@ -2066,7 +2092,6 @@ def create_xbox_page(navigate_next, update_nav=None):
         status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ Secure Boot is enabled but the custom certificate is not yet enrolled.') + '\n' + _('Please reboot to enroll the certificate before installing this driver.') + '</span>')
     elif is_installed:
         install_btn.set_visible(False)
-        skip_btn.set_label(_('  Continue  '))
         page._suggest_next = True
 
     expander = Gtk.Expander(label=_('Advanced Output'))
@@ -2093,7 +2118,6 @@ def create_xbox_page(navigate_next, update_nav=None):
 
     def _on_install(btn):
         btn.set_sensitive(False)
-        skip_btn.set_sensitive(False)
         progress_bar.set_visible(True)
         progress_bar.pulse()
         status_label.set_label(_('Installing Xbox controller driver…') + "\n" + _('This may take a minute.'))
@@ -2161,8 +2185,7 @@ apt install -y anduinos-xbox-controller-driver
 
                         progress_bar.set_visible(False)
                         btn.set_visible(False)
-                        skip_btn.set_label(_('  Continue  '))
-                        skip_btn.set_sensitive(True)
+                        tools_box.set_visible(True)
                         page._suggest_next = True
                         if update_nav: update_nav()
                     GLib.idle_add(_set_success)
@@ -2171,7 +2194,6 @@ apt install -y anduinos-xbox-controller-driver
                         status_label.set_label(_('✗ Installation encountered an issue.') + "\n" + _('Please check the advanced output.'))
                         progress_bar.set_visible(False)
                         btn.set_sensitive(True)
-                        skip_btn.set_sensitive(True)
                         page._suggest_next = True
                         if update_nav: update_nav()
                     GLib.idle_add(_set_fail)
@@ -2180,7 +2202,6 @@ apt install -y anduinos-xbox-controller-driver
                     status_label.set_label(_('✗ Installation failed: ') + str(e))
                     progress_bar.set_visible(False)
                     btn.set_sensitive(True)
-                    skip_btn.set_sensitive(True)
                     page._suggest_next = True
                     if update_nav: update_nav()
                 GLib.idle_add(_set_ex)
@@ -2188,9 +2209,9 @@ apt install -y anduinos-xbox-controller-driver
         threading.Thread(target=_do_install, daemon=True).start()
 
     install_btn.connect('clicked', _on_install)
-    btn_box.append(skip_btn)
     btn_box.append(install_btn)
     center.append(btn_box)
+    center.append(tools_box)
 
     return page
 
@@ -2475,9 +2496,15 @@ def create_shortcuts_page():
         ('Super + L', _('Lock Screen')),
         ('Super + A', _('Action Center')),
         ('Super + N', _('Notification Center')),
+        ('Super + U', _('Toggle Network Stats Display')),
         ('Super + Tab', _('Switch Between Windows')),
         ('Alt + F4', _('Close Current Window')),
         ('Super + ↑/↓/←/→', _('Snap Windows')),
+        ('Ctrl + Super + ←/→', _('Switch Virtual Desktop')),
+        ('Super + D', _('Show Desktop')),
+        ('Super + I', _('System Settings')),
+        ('Super + ;', _('Emoji and Characters')),
+        ('Super + M', _('Minimize Window')),
     ]
 
     for key_text, desc_text in more_shortcuts:
