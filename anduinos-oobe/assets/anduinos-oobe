@@ -366,7 +366,7 @@ def create_welcome_page(navigate_next):
     subtitle.set_margin_bottom(36)
     center.append(subtitle)
 
-    # Start button (only useful in OOBE mode, harmless in Welcome Center)
+    # Start button (only useful in OOBE mode)
     start_btn = Gtk.Button(label=_('  Start Setup  '))
     start_btn.add_css_class('suggested-action')
     start_btn.add_css_class('pill')
@@ -375,8 +375,8 @@ def create_welcome_page(navigate_next):
     if navigate_next:
         start_btn.connect('clicked', lambda b: navigate_next())
     else:
-        # In Welcome Center mode, the button is decorative
-        start_btn.set_sensitive(False)
+        start_btn.set_visible(False)
+    
     center.append(start_btn)
 
     # Version info
@@ -1941,10 +1941,10 @@ def create_xbox_page(navigate_next, update_nav=None):
     center.append(sub)
 
     if is_installed:
-        body_text = _('AnduinOS provides native support for Xbox controllers via Bluetooth.') + '\\n' + \
+        body_text = _('AnduinOS provides native support for Xbox controllers via Bluetooth.') + '\n' + \
                     _('The advanced xpadneo driver is already set up and ready for gaming.')
     else:
-        body_text = _('AnduinOS provides native support for Xbox controllers via Bluetooth.') + '\\n' + \
+        body_text = _('AnduinOS provides native support for Xbox controllers via Bluetooth.') + '\n' + \
                     _('For advanced features like rumble and accurate mapping, we recommend installing the xpadneo driver.')
 
     body = Gtk.Label(label=body_text)
@@ -2063,7 +2063,7 @@ def create_xbox_page(navigate_next, update_nav=None):
     if sb_enabled and not is_trusted:
         can_install = False
         install_btn.set_sensitive(False)
-        status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ Secure Boot is enabled but the custom certificate is not yet enrolled.') + '\\n' + _('Please reboot to enroll the certificate before installing this driver.') + '</span>')
+        status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ Secure Boot is enabled but the custom certificate is not yet enrolled.') + '\n' + _('Please reboot to enroll the certificate before installing this driver.') + '</span>')
     elif is_installed:
         install_btn.set_visible(False)
         skip_btn.set_label(_('  Continue  '))
@@ -2096,7 +2096,7 @@ def create_xbox_page(navigate_next, update_nav=None):
         skip_btn.set_sensitive(False)
         progress_bar.set_visible(True)
         progress_bar.pulse()
-        status_label.set_label(_('Installing Xbox controller driver…') + "\\n" + _('This may take a minute.'))
+        status_label.set_label(_('Installing Xbox controller driver…') + "\n" + _('This may take a minute.'))
 
         def _pulse():
             if progress_bar.is_visible():
@@ -2140,6 +2140,25 @@ apt install -y anduinos-xbox-controller-driver
                 if proc.returncode == 0:
                     def _set_success():
                         status_label.set_label(_('✓ Xbox controller driver installed successfully!'))
+                        r1.set_subtitle(_("The xpadneo driver is currently installed"))
+                        icon1.set_from_icon_name('emblem-ok-symbolic')
+                        icon1.remove_css_class('error')
+                        icon1.add_css_class('success')
+                        
+                        if sb_enabled:
+                            r2.set_subtitle(_("Signed with current trusted certificate"))
+                            icon2.set_from_icon_name('emblem-ok-symbolic')
+                            icon2.remove_css_class('error')
+                            icon2.add_css_class('success')
+
+                        new_r3 = Adw.ActionRow(title=_("Controller Status"))
+                        new_icon3 = _create_image('emblem-ok-symbolic')
+                        new_icon3.set_pixel_size(16)
+                        new_icon3.add_css_class('success')
+                        new_r3.set_subtitle(_("Driver standing by. Waiting for controller connection...") + "\n" + _("(Reboot recommended)"))
+                        new_r3.add_suffix(new_icon3)
+                        list_group.add(new_r3)
+
                         progress_bar.set_visible(False)
                         btn.set_visible(False)
                         skip_btn.set_label(_('  Continue  '))
@@ -2149,7 +2168,7 @@ apt install -y anduinos-xbox-controller-driver
                     GLib.idle_add(_set_success)
                 else:
                     def _set_fail():
-                        status_label.set_label(_('✗ Installation encountered an issue.') + "\\n" + _('Please check the advanced output.'))
+                        status_label.set_label(_('✗ Installation encountered an issue.') + "\n" + _('Please check the advanced output.'))
                         progress_bar.set_visible(False)
                         btn.set_sensitive(True)
                         skip_btn.set_sensitive(True)
@@ -3147,7 +3166,7 @@ class OobeWindow(Adw.ApplicationWindow):
             self._update_nav_buttons()
 
         factories = [
-            lambda: create_welcome_page(_nav),
+            lambda: create_welcome_page(_nav if self.is_oobe else None),
             lambda: create_appearance_page(),
             lambda: create_security_page(),
             lambda: create_update_page(_nav, _update_nav),
@@ -3191,7 +3210,10 @@ class OobeWindow(Adw.ApplicationWindow):
         hide_next = getattr(page, '_hide_next', False) if page else False
 
         self.back_btn.set_visible(idx > 0)
-        self.next_btn.set_visible((idx > 0) and not hide_next)
+        if idx == 0 and self.is_oobe:
+            self.next_btn.set_visible(False)
+        else:
+            self.next_btn.set_visible(not hide_next)
         
         if idx >= n_pages - 1:
             self.next_btn.set_label(_('Finish'))
