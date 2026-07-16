@@ -130,6 +130,17 @@ def has_nvidia_gpu():
     return False
 
 
+def is_virtual_machine():
+    if os.environ.get('XBOX_PAGE') == 'true':
+        return False
+    try:
+        r = subprocess.run(['systemd-detect-virt'], capture_output=True, text=True, timeout=5)
+        output = r.stdout.strip().lower()
+        return output != 'none' and output != ''
+    except Exception:
+        return False
+
+
 def has_second_disk():
     try:
         r = subprocess.run(['lsblk', '-ndo', 'NAME,TYPE'], capture_output=True, text=True, timeout=10)
@@ -2602,7 +2613,7 @@ def create_apps_page():
     else:
         apps = [
             (_('Google Chrome'), 'com.google.Chrome',
-             _('The world\'s most popular web browser'), 'chrome.svg'),
+             _("The world's most popular web browser"), 'chrome.svg'),
             (_('Visual Studio Code'), 'com.visualstudio.code',
              _('Code editing. Redefined.'), 'visualstudiocode.svg'),
             (_('Steam'), 'com.valvesoftware.Steam',
@@ -2976,8 +2987,8 @@ def create_support_page():
     center.append(title)
 
     body = Gtk.Label(
-        label=_('Whether you\'re a Windows refugee seeking shelter,') + '\n' + \
-                _('or a hardcore geek developer — you\'ll find your tribe here.') + '\n' + \
+        label=_("Whether you're a Windows refugee seeking shelter,") + '\n' + \
+                _("or a hardcore geek developer — you'll find your tribe here.") + '\n' + \
                 _('Found a bug? Want a feature? Tell us anytime.')
     )
     body.set_halign(Gtk.Align.CENTER)
@@ -3031,8 +3042,8 @@ def create_support_page():
 
     # Footer note
     note = Gtk.Label(
-        label=_('💡 AnduinOS is compatible with Ubuntu\'s entire ecosystem.') + '\n' + \
-                _('You can rely on Ubuntu\'s vast documentation and expertise.')
+        label=_("💡 AnduinOS is compatible with Ubuntu's entire ecosystem.") + '\n' + \
+                _("You can rely on Ubuntu's vast documentation and expertise.")
     )
     note.add_css_class('dim-label')
     note.set_halign(Gtk.Align.CENTER)
@@ -3208,8 +3219,8 @@ class OobeWindow(Adw.ApplicationWindow):
 
         if has_nvidia_gpu():
             factories.append(lambda: create_nvidia_page(_nav, _update_nav))
-
-        factories.append(lambda: create_xbox_page(_nav, _update_nav))
+        if not is_virtual_machine():
+            factories.append(lambda: create_xbox_page(_nav, _update_nav))
 
         factories.extend([
             lambda: create_exe_sandbox_page(_nav),
