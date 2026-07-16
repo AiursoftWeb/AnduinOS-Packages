@@ -14,7 +14,7 @@
 
     <!-- Derive from upstream to inherit all animation frames, throbbers, and the two-step module -->
     <UpstreamUrl Condition="'$(Arch)' == 'amd64'">https://mirror.aiursoft.com/ubuntu</UpstreamUrl>
-    <UpstreamUrl Condition="'$(Arch)' == 'arm64'">http://ports.ubuntu.com</UpstreamUrl>
+    <UpstreamUrl Condition="'$(Arch)' == 'arm64'">http://ports.ubuntu.com/ubuntu-ports</UpstreamUrl>
     <UpstreamDistro>ubuntu</UpstreamDistro>
     <UpstreamPackage>plymouth-theme-spinner</UpstreamPackage>
     <UpstreamSuite>$(Suite)</UpstreamSuite>
