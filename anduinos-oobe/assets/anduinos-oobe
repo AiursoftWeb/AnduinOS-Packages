@@ -357,8 +357,7 @@ def create_welcome_page(navigate_next):
 
     # Subtitle
     subtitle = Gtk.Label(
-        label=_('AnduinOS is ready. Just a few steps to shape it\n') + \
-                _('into the perfect system tailored to your habits.')
+        label=_('AnduinOS is ready. Just a few steps to shape it') + '\n' + _('into the perfect system tailored to your habits.')
     )
     subtitle.add_css_class('title-4')
     subtitle.set_halign(Gtk.Align.CENTER)
@@ -1000,7 +999,7 @@ def create_update_page(navigate_next, update_nav=None):
             try:
                 GLib.idle_add(lambda: (
                     status_label.set_label(_('Testing mirrors…')),
-                    _append_text(_('=== Testing mirror speeds ===\n'))
+                    _append_text(_('=== Testing mirror speeds ===') + '\n')
                 ))
 
                 codename = subprocess.run(
@@ -1141,7 +1140,7 @@ def create_update_page(navigate_next, update_nav=None):
 
                 if not results:
                     GLib.idle_add(lambda: (
-                        _append_text(_('\nNo mirrors reachable.\n')),
+                        _append_text('\n' + _('No mirrors reachable.') + '\n'),
                         status_label.set_label(
                             _('✗ No mirrors reachable. Check your connection.')),
                         _mirror_cleanup()
@@ -1151,8 +1150,8 @@ def create_update_page(navigate_next, update_nav=None):
                 # ── Phase 2: bandwidth test top 5 by latency ──────────
                 top5 = results[:5]
                 GLib.idle_add(lambda: _append_text(
-                    _('\n=== Testing bandwidth of top 5 mirrors ') + \
-                      _('(3 s each) ===\n')
+                    '\n' + _('=== Testing bandwidth of top 5 mirrors ') + \
+                      _('(3 s each) ===') + '\n'
                 ))
 
                 def _test_bandwidth(mirror):
@@ -1283,7 +1282,7 @@ def create_update_page(navigate_next, update_nav=None):
         def _do_switch(mirror, codename):
             GLib.idle_add(lambda: (
                 status_label.set_label(_('Switching mirror…')),
-                _append_text(_('\n=== Applying mirror switch ===\n'))
+                _append_text('\n' + _('=== Applying mirror switch ===') + '\n')
             ))
 
             sources = (
@@ -1357,7 +1356,7 @@ def create_update_page(navigate_next, update_nav=None):
                     if proc.returncode == 0:
                         GLib.idle_add(lambda: (
                             _append_text(
-                                _('\n✓ Mirror switched and system updated.\n')
+                                '\n' + _('✓ Mirror switched and system updated.') + '\n'
                             ),
                             status_label.set_label(
                                 _('✓ Switched to ') + mirror),
@@ -1422,7 +1421,7 @@ def create_secureboot_page(navigate_next, update_nav=None):
     title.set_margin_bottom(8)
     center.append(title)
     
-    desc = Gtk.Label(label=_('Secure Boot is a motherboard security standard that ensures only trusted software loads at startup.\nIt protects your system from low-level malware and rootkits.'))
+    desc = Gtk.Label(label=_('Secure Boot is a motherboard security standard that ensures only trusted software loads at startup.') + '\n' + _('It protects your system from low-level malware and rootkits.'))
     desc.add_css_class('dim-label')
     desc.set_halign(Gtk.Align.CENTER)
     desc.set_justify(Gtk.Justification.CENTER)
@@ -1539,7 +1538,7 @@ def create_secureboot_page(navigate_next, update_nav=None):
         status.add_css_class('title-4')
         center.append(status)
     else:
-        status = Gtk.Label(label=_('The local trust certificate is missing or not yet enrolled.\nYou must configure this to use third-party drivers like NVIDIA.'))
+        status = Gtk.Label(label=_('The local trust certificate is missing or not yet enrolled.') + '\n' + _('You must configure this to use third-party drivers like NVIDIA.'))
         status.set_justify(Gtk.Justification.CENTER)
         status.set_halign(Gtk.Align.CENTER)
         status.set_margin_bottom(24)
@@ -1578,7 +1577,7 @@ def create_secureboot_page(navigate_next, update_nav=None):
                         dialog = Adw.MessageDialog.new(
                             page.get_root(),
                             _("Certificate Created"),
-                            _("Success! When you reboot, a blue screen will appear.\nSelect 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456")
+                            _("Success! When you reboot, a blue screen will appear.") + '\n' + _("Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456")
                         )
                         dialog.add_response("ok", _("OK"))
                         dialog.set_default_response("ok")
@@ -1702,8 +1701,7 @@ def create_nvidia_page(navigate_next, update_nav=None):
     center.append(sub)
 
     body = Gtk.Label(
-        label=_('For ultimate smoothness in gaming, 3D rendering, and high-framerate desktop\n') + \
-                _('experiences, we recommend installing the proprietary driver.')
+        label=_('For ultimate smoothness in gaming, 3D rendering, and high-framerate desktop') + '\n' + _('experiences, we recommend installing the proprietary driver.')
     )
     body.set_halign(Gtk.Align.CENTER)
     body.set_wrap(True)
@@ -1768,7 +1766,7 @@ def create_nvidia_page(navigate_next, update_nav=None):
         skip_btn.set_sensitive(False)
         progress_bar.set_visible(True)
         progress_bar.pulse()
-        status_label.set_label(_('Installing NVIDIA driver…\nThis may take several minutes.'))
+        status_label.set_label(_('Installing NVIDIA driver…') + '\n' + _('This may take several minutes.'))
 
         def _pulse():
             if progress_bar.is_visible():
@@ -1802,8 +1800,7 @@ def create_nvidia_page(navigate_next, update_nav=None):
                 if proc.returncode == 0:
                     def _set_success():
                         status_label.set_label(
-                            _('✓ Driver installed successfully!\n') + \
-                              _('A reboot is recommended to apply changes.'))
+                            _('✓ Driver installed successfully!') + '\n' + _('A reboot is recommended to apply changes.'))
                         progress_bar.set_visible(False)
                         btn.set_visible(False)
                         skip_btn.set_visible(False)
@@ -1813,8 +1810,7 @@ def create_nvidia_page(navigate_next, update_nav=None):
                 else:
                     def _set_fail():
                         status_label.set_label(
-                            _('✗ Installation encountered an issue.\n') + \
-                              _('You can install drivers later from Settings.'))
+                            _('✗ Installation encountered an issue.') + '\n' + _('You can install drivers later from Settings.'))
                         progress_bar.set_visible(False)
                         btn.set_sensitive(True)
                         skip_btn.set_sensitive(True)
@@ -1845,6 +1841,184 @@ def create_nvidia_page(navigate_next, update_nav=None):
 # PAGE 5: EXE SANDBOX — 无缝兼容
 # ═══════════════════════════════════════════════════════════════════
 
+def create_xbox_page(navigate_next, update_nav=None):
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_valign(Gtk.Align.FILL)
+    page.set_halign(Gtk.Align.FILL)
+    page.set_margin_start(48)
+    page.set_margin_end(48)
+    page.set_margin_top(24)
+    page.set_margin_bottom(24)
+    page.set_spacing(0)
+    
+    page._suggest_next = False
+
+    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    center.set_valign(Gtk.Align.CENTER)
+    center.set_vexpand(True)
+    page.append(center)
+
+    icon = _create_image('input-gaming.svg')
+    icon.set_pixel_size(72)
+    icon.set_halign(Gtk.Align.CENTER)
+    center.append(icon)
+
+    title = Gtk.Label(label=_('Xbox Controller Support'))
+    title.add_css_class('title-1')
+    title.set_halign(Gtk.Align.CENTER)
+    title.set_wrap(True)
+    title.set_justify(Gtk.Justification.CENTER)
+    title.set_margin_top(12)
+    center.append(title)
+
+    sub = Gtk.Label(
+        label=_('Enjoy seamless Xbox controller support with rumble and accurate inputs.')
+    )
+    sub.add_css_class('dim-label')
+    sub.set_halign(Gtk.Align.CENTER)
+    sub.set_wrap(True)
+    sub.set_justify(Gtk.Justification.CENTER)
+    sub.set_margin_top(12)
+    center.append(sub)
+
+    body = Gtk.Label(
+        label=_('AnduinOS provides native support for Xbox controllers via Bluetooth.')
+    )
+    body.set_halign(Gtk.Align.CENTER)
+    body.set_wrap(True)
+    body.set_justify(Gtk.Justification.CENTER)
+    body.set_margin_top(24)
+    body.set_margin_bottom(24)
+    center.append(body)
+
+    status_label = Gtk.Label()
+    status_label.add_css_class('dim-label')
+    status_label.set_halign(Gtk.Align.CENTER)
+    status_label.set_wrap(True)
+    status_label.set_margin_bottom(12)
+    center.append(status_label)
+
+    progress_bar = Gtk.ProgressBar()
+    progress_bar.set_visible(False)
+    progress_bar.set_margin_start(48)
+    progress_bar.set_margin_end(48)
+    center.append(progress_bar)
+
+    btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+    btn_box.set_halign(Gtk.Align.CENTER)
+    btn_box.set_margin_top(24)
+
+    skip_btn = Gtk.Button(label=_('  Do It Later  '))
+    skip_btn.connect('clicked', lambda b: navigate_next())
+
+    installed = False
+    try:
+        if subprocess.run(['dpkg', '-l', 'anduinos-xbox-controller-driver'], capture_output=True).returncode == 0:
+            installed = True
+    except:
+        pass
+
+    mok_priv = '/var/lib/shim-signed/mok/MOK.priv'
+    mok_der = '/var/lib/shim-signed/mok/MOK.der'
+    cert_valid = False
+    if os.path.exists(mok_priv) and os.path.exists(mok_der):
+        try:
+            r = subprocess.run(['openssl', 'x509', '-in', mok_der, '-inform', 'DER', '-serial', '-noout'], capture_output=True, text=True)
+            if r.returncode == 0 and 'serial=' in r.stdout.lower():
+                cert_valid = True
+        except:
+            pass
+
+    if installed:
+        status_label.set_label(_('Xbox controller driver (xpadneo) is already installed.'))
+        btn_box.append(skip_btn)
+        page._suggest_next = True
+    elif not cert_valid:
+        status_label.set_label(_('The local trust certificate is missing or not yet enrolled.') + '\n' + _('You must configure this to use third-party drivers like NVIDIA.'))
+        btn_box.append(skip_btn)
+        page._suggest_next = True
+    else:
+        install_btn = Gtk.Button(label=_('  Install Xbox Driver  '))
+        install_btn.add_css_class('suggested-action')
+        btn_box.append(skip_btn)
+        btn_box.append(install_btn)
+
+        def _on_install(btn):
+            btn.set_sensitive(False)
+            skip_btn.set_sensitive(False)
+            progress_bar.set_visible(True)
+            progress_bar.pulse()
+            status_label.set_label(_('Installing Xbox controller driver…') + '\n' + _('This may take a minute.'))
+
+            def _pulse():
+                if progress_bar.is_visible():
+                    progress_bar.pulse()
+                    return True
+                return False
+            GLib.timeout_add(100, _pulse)
+
+            def _do_install():
+                try:
+                    conf_script = f"""
+mkdir -p /etc/dkms/framework.conf.d
+cat << 'EOF' > /etc/dkms/framework.conf.d/mok.conf
+sign_tool="/etc/dkms/sign_helper.sh"
+mok_signing_key="{mok_priv}"
+mok_certificate="{mok_der}"
+EOF
+apt update
+apt install -y anduinos-xbox-controller-driver
+"""
+                    proc = subprocess.Popen(
+                        ['pkexec', 'bash', '-c', conf_script],
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT,
+                        text=True,
+                        bufsize=1
+                    )
+                    
+                    for line in iter(proc.stdout.readline, ''):
+                        pass
+                        
+                    proc.stdout.close()
+                    proc.wait()
+                    
+                    if proc.returncode == 0:
+                        def _set_success():
+                            status_label.set_label(_('✓ Xbox controller driver installed successfully!'))
+                            progress_bar.set_visible(False)
+                            btn.set_visible(False)
+                            skip_btn.set_visible(False)
+                            page._suggest_next = True
+                            if update_nav: update_nav()
+                        GLib.idle_add(_set_success)
+                    else:
+                        def _set_fail():
+                            status_label.set_label(_('✗ Installation encountered an issue.') + '\n' + _('You can install drivers later from Settings.'))
+                            progress_bar.set_visible(False)
+                            btn.set_sensitive(True)
+                            skip_btn.set_sensitive(True)
+                            page._suggest_next = True
+                            if update_nav: update_nav()
+                        GLib.idle_add(_set_fail)
+                except Exception as e:
+                    def _set_ex():
+                        status_label.set_label(_('✗ Installation failed: ') + str(e))
+                        progress_bar.set_visible(False)
+                        btn.set_sensitive(True)
+                        skip_btn.set_sensitive(True)
+                        page._suggest_next = True
+                        if update_nav: update_nav()
+                    GLib.idle_add(_set_ex)
+
+            threading.Thread(target=_do_install, daemon=True).start()
+
+        install_btn.connect('clicked', _on_install)
+
+    center.append(btn_box)
+
+    return page
+
 def create_exe_sandbox_page(navigate_next):
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     page.set_valign(Gtk.Align.FILL)
@@ -1874,8 +2048,7 @@ def create_exe_sandbox_page(navigate_next):
     center.append(title)
 
     body = Gtk.Label(
-        label=_('Powered by Wine and Bottles technology, running classic Windows applications\n') + \
-                _('is now easier than ever.')
+        label=_('Powered by Wine and Bottles technology, running classic Windows applications') + '\n' + _('is now easier than ever.')
     )
     body.set_halign(Gtk.Align.CENTER)
     body.set_wrap(True)
@@ -1964,7 +2137,7 @@ def create_exe_sandbox_page(navigate_next):
         progress_bar.set_visible(True)
         progress_bar.pulse()
         status_label.set_label(
-            _('Deploying compatibility sandbox via Flatpak…\nThis may take a few minutes.')
+            _('Deploying compatibility sandbox via Flatpak…') + '\n' + _('This may take a few minutes.')
         )
 
         def _pulse():
@@ -1999,8 +2172,7 @@ def create_exe_sandbox_page(navigate_next):
                 if proc.returncode == 0:
                     GLib.idle_add(lambda: (
                         status_label.set_label(
-                            _('✓ Sandbox deployed successfully!\n') + \
-                              _('You can now double-click .exe files to run them.')),
+                            _('✓ Sandbox deployed successfully!') + '\n' + _('You can now double-click .exe files to run them.')),
                         progress_bar.set_visible(False),
                         btn.set_visible(False),
                         config_btn.set_visible(True),
@@ -2009,8 +2181,7 @@ def create_exe_sandbox_page(navigate_next):
                 else:
                     GLib.idle_add(lambda: (
                         status_label.set_label(
-                            _('✗ Deployment failed.\n') + \
-                              _('You can install Bottles later from the App Store.')),
+                            _('✗ Deployment failed.') + '\n' + _('You can install Bottles later from the App Store.')),
                         progress_bar.set_visible(False),
                         btn.set_sensitive(True),
                         skip_btn.set_sensitive(True),
@@ -2189,8 +2360,7 @@ def create_apps_page():
     center.append(title)
 
     sub = Gtk.Label(
-        label=_('Essential productivity and entertainment tools, hand-picked for you.\n') + \
-               _('Click any app to open its details in the App Store.')
+        label=_('Essential productivity and entertainment tools, hand-picked for you.') + '\n' + _('Click any app to open its details in the App Store.')
     )
     sub.add_css_class('dim-label')
     sub.set_halign(Gtk.Align.CENTER)
@@ -2203,8 +2373,7 @@ def create_apps_page():
 
     if is_cn:
         banner = Gtk.Label(
-            label=_('⚡ The following apps are provided by the Spark Store community.\n') + \
-                    _('Great for connecting to local services.')
+            label=_('⚡ The following apps are provided by the Spark Store community.') + '\n' + _('Great for connecting to local services.')
         )
         banner.add_css_class('caption')
         banner.set_halign(Gtk.Align.CENTER)
@@ -2344,8 +2513,7 @@ def create_apps_page():
 
     # Queue hint
     queue_hint = Gtk.Label(
-        label=_('Pro tip: You can explore these apps in the App Store,\n') + \
-                _('and continue with the system setup while they download.')
+        label=_('Pro tip: You can explore these apps in the App Store,') + '\n' + _('and continue with the system setup while they download.')
     )
     queue_hint.add_css_class('dim-label')
     queue_hint.add_css_class('caption')
@@ -2432,8 +2600,7 @@ def create_sync_page():
     cloud_card.append(cloud_title)
 
     cloud_desc = Gtk.Label(
-        label=_('Connect your Google, Microsoft,\n') + \
-                _('or Nextcloud accounts to sync\n') + \
+        label=_('Connect your Google, Microsoft,') + '\n' + _('or Nextcloud accounts to sync') + '\n' + \
                 _('files, contacts, and calendar.')
     )
     cloud_desc.set_halign(Gtk.Align.CENTER)
@@ -2468,8 +2635,7 @@ def create_sync_page():
     backup_card.append(backup_title)
 
     backup_desc = Gtk.Label(
-        label=_('Use Deja Dup to protect your\n') + \
-                _('important files with automated,\n') + \
+        label=_('Use Deja Dup to protect your') + '\n' + _('important files with automated,') + '\n' + \
                 _('secure local or remote backups.')
     )
     backup_desc.set_halign(Gtk.Align.CENTER)
@@ -2523,10 +2689,8 @@ def create_privacy_page():
     page.append(headline)
 
     body = Gtk.Label(
-        label=_('AnduinOS disables all system-level telemetry by default.\n') + \
-                _('We do not collect your usage habits.\n') + \
-                _('We do not upload your search history.\n') + \
-                _('There are no pervasive advertisements.')
+        label=_('AnduinOS disables all system-level telemetry by default.') + '\n' + _('We do not collect your usage habits.') + '\n' + \
+                _('We do not upload your search history.') + '\n' + _('There are no pervasive advertisements.')
     )
     body.add_css_class('title-4')
     body.set_halign(Gtk.Align.CENTER)
@@ -2537,8 +2701,7 @@ def create_privacy_page():
 
     # Signature
     sig = Gtk.Label(
-        label=_('In an era ruled by algorithms and surveillance,\n') + \
-                _('this is our firmest commitment to you.')
+        label=_('In an era ruled by algorithms and surveillance,') + '\n' + _('this is our firmest commitment to you.')
     )
     sig.add_css_class('body')
     sig.set_halign(Gtk.Align.CENTER)
@@ -2611,8 +2774,8 @@ def create_support_page():
     center.append(title)
 
     body = Gtk.Label(
-        label=_('Whether you\'re a Windows refugee seeking shelter,\n') + \
-                _('or a hardcore geek developer — you\'ll find your tribe here.\n') + \
+        label=_('Whether you\'re a Windows refugee seeking shelter,') + '\n' + \
+                _('or a hardcore geek developer — you\'ll find your tribe here.') + '\n' + \
                 _('Found a bug? Want a feature? Tell us anytime.')
     )
     body.set_halign(Gtk.Align.CENTER)
@@ -2666,7 +2829,7 @@ def create_support_page():
 
     # Footer note
     note = Gtk.Label(
-        label=_('💡 AnduinOS is compatible with Ubuntu\'s entire ecosystem.\n') + \
+        label=_('💡 AnduinOS is compatible with Ubuntu\'s entire ecosystem.') + '\n' + \
                 _('You can rely on Ubuntu\'s vast documentation and expertise.')
     )
     note.add_css_class('dim-label')
@@ -2843,6 +3006,8 @@ class OobeWindow(Adw.ApplicationWindow):
 
         if has_nvidia_gpu():
             factories.append(lambda: create_nvidia_page(_nav, _update_nav))
+
+        factories.append(lambda: create_xbox_page(_nav, _update_nav))
 
         factories.extend([
             lambda: create_exe_sandbox_page(_nav),
