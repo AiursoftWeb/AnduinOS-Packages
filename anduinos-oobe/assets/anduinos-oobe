@@ -2144,12 +2144,6 @@ def create_xbox_page(navigate_next, update_nav=None):
         def _do_install():
             try:
                 conf_script = f"""
-mkdir -p /etc/dkms/framework.conf.d
-cat << 'EOF' > /etc/dkms/framework.conf.d/mok.conf
-sign_tool="/etc/dkms/sign_helper.sh"
-mok_signing_key="{mok_priv}"
-mok_certificate="{mok_der}"
-EOF
 apt update
 apt install -y anduinos-xbox-controller-driver
 """
