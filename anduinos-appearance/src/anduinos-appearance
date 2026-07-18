@@ -596,6 +596,8 @@ class PanelWidgetsPage(Adw.PreferencesPage):
         v = 'true' if visible else 'false'
         try:
             subprocess.run(['dconf', 'write', f'{ARC}/show-activities-button', v], check=True)
+            # Force refresh Dash-to-Panel to override legacy 2.0.0 invisible state
+            apply_style_and_position(self.win.current_style, self.win.current_position)
             self.win._toast(_('✓ Activities button — {action}n').format(action=('shown' if visible else 'hidden')))
         except subprocess.CalledProcessError:
             self.win._toast(_('✗ Failed to toggle activities button'))
