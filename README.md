@@ -169,12 +169,12 @@ apkg publish
 
 | Category | Packages | Monthly action |
 |---|---|---|
-| 🔧 **Manual — update commit/version** | Fluent GTK theme, Fluent icon theme, ALSA UCM Conf, Firmware SOF | Edit `download.sh` + bump `.aosproj` |
+| 🔧 **Manual — update commit/version** | Fluent GTK theme, Fluent icon theme, ALSA UCM Conf, Firmware SOF, Xbox Driver | Edit `download.sh` + bump `.aosproj` |
 | 🤖 **Auto — CI resolves at build time** | 19 GNOME Shell extensions | Trigger CI; resolver pulls latest from extensions.gnome.org |
 | 🤖 **Auto — pulls latest upstream .deb** | base-files, plymouth, software-properties-common, software-properties-gtk, firefox | Trigger CI; pulls latest from Ubuntu/Mozilla mirrors |
 | 🤖 **Auto — metapackages** | anduinos-desktop, theme, desktop-core, etc. | Trigger CI only if dependency list changed |
 
-**Bottom line:** 4 packages need manual edits each month. Everything else = run CI.
+**Bottom line:** 5 packages need manual edits each month. Everything else = run CI.
 
 ---
 
@@ -194,18 +194,20 @@ Run through this table each month. If anything has changed upstream, follow the 
 | 2 | **Fluent icon theme** | `anduinos-fluent-icon-theme/download.sh:5` (commit) + [icon-mirror] | Update commit → section B |
 | 3 | **ALSA UCM Conf** | `alsa-ucm-conf-anduinos/download.sh:5` (commit) + upstream [alsa-repo] | Update commit → section B |
 | 4 | **SOF firmware** | `firmware-sof-anduinos/download.sh:5` (`SOF_VERSION`) + upstream [sof-releases] | Update version → section C |
-| 5 | **GNOME Shell version map** | `lib/gnome-versions.sh:3-7` — compare with Ubuntu's `gnome-shell` package for each supported suite | Update map → section D |
-| 6 | **Fluent upstream versions** | [Fluent-gtk-theme] and [Fluent-icon-theme] GitHub releases — determine latest upstream version | Update version → section B |
-| 7 | **GNOME Shell extensions** | Run a CI build — the resolver fetches the latest compatible version dynamically | Update version → section D |
+| 5 | **Xbox Controller Driver** | `anduinos-xbox-controller-driver/download.sh` (`COMMIT_ID`) + [xpadneo-mirror] | Update commit → section B |
+| 6 | **GNOME Shell version map** | `lib/gnome-versions.sh:3-7` — compare with Ubuntu's `gnome-shell` package for each supported suite | Update map → section D |
+| 7 | **Fluent upstream versions** | [Fluent-gtk-theme] and [Fluent-icon-theme] GitHub releases — determine latest upstream version | Update version → section B |
+| 8 | **GNOME Shell extensions** | Run a CI build — the resolver fetches the latest compatible version dynamically | Update version → section D |
 
 [sof-releases]: https://github.com/thesofproject/sof-bin/releases
 [alsa-repo]: https://github.com/alsa-project/alsa-ucm-conf
 [gtk-mirror]: https://gitlab.aiursoft.com/mirror/fluent-gtk-theme/
 [icon-mirror]: https://gitlab.aiursoft.com/mirror/fluent-icon-theme/
+[xpadneo-mirror]: https://gitlab.aiursoft.com/mirror/xpadneo/
 
 ---
 
-### B. Git-Pinned Packages (Fluent GTK, Fluent Icon, ALSA UCM Conf)
+### B. Git-Pinned Packages (Fluent GTK, Fluent Icon, ALSA UCM Conf, Xbox Driver)
 
 Three packages clone a git repo and pin to a specific commit hash. Both the **commit hash** and the **`.aosproj` PackageVersion** must be updated together.
 
@@ -220,6 +222,9 @@ git ls-remote https://gitlab.aiursoft.com/mirror/fluent-icon-theme.git HEAD
 
 # ALSA UCM Conf (upstream: alsa-project/alsa-ucm-conf)
 git ls-remote https://github.com/alsa-project/alsa-ucm-conf.git HEAD
+
+# Xbox Controller Driver (mirrored on gitlab.aiursoft.com)
+git ls-remote https://gitlab.aiursoft.com/mirror/xpadneo.git HEAD
 ```
 
 Compare the returned HEAD hash against the pinned commit in each `download.sh`. If different, an update is available.
