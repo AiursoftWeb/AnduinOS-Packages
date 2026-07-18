@@ -448,7 +448,6 @@ def create_appearance_page():
     theme_box.set_margin_top(12)
 
     btn_light = Gtk.ToggleButton()
-    btn_light.set_active(not is_dark)
     light_content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
     light_icon = _create_image('preferences-desktop-display-randr.svg')
     light_icon.set_pixel_size(48)
@@ -461,7 +460,6 @@ def create_appearance_page():
     btn_light.set_child(light_content)
 
     btn_dark = Gtk.ToggleButton()
-    btn_dark.set_active(is_dark)
     dark_content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
     dark_icon = _create_image('preferences-desktop-display-nightcolor.svg')
     dark_icon.set_pixel_size(48)
@@ -472,6 +470,9 @@ def create_appearance_page():
     dark_content.set_margin_start(48)
     dark_content.set_margin_end(48)
     btn_dark.set_child(dark_content)
+
+    btn_light.set_active(not is_dark)
+    btn_dark.set_active(is_dark)
 
     def _on_theme_click(btn, dark):
         if btn.get_active():
@@ -486,7 +487,7 @@ def create_appearance_page():
 
     btn_light.connect('toggled', _on_theme_click, False)
     btn_dark.connect('toggled', _on_theme_click, True)
-    
+
     theme_box.append(btn_light)
     theme_box.append(btn_dark)
     theme_group.add(theme_box)
@@ -1441,16 +1442,22 @@ def create_secureboot_page(navigate_next, update_nav=None):
     
     # State verification
     key_path = '/var/lib/shim-signed/mok/MOK.der'
-    has_cert = os.path.exists(key_path)
+    has_cert = False
     is_trusted = False
-    
-    if has_cert:
-        try:
-            r = subprocess.run(['mokutil', '--test-key', key_path], capture_output=True, text=True, timeout=5)
-            if 'is already enrolled' in r.stdout or 'is already enrolled' in r.stderr:
-                is_trusted = True
-        except Exception:
-            pass
+
+    def _refresh_sb_checks():
+        nonlocal has_cert, is_trusted
+        has_cert = os.path.exists(key_path)
+        is_trusted = False
+        if has_cert:
+            try:
+                r = subprocess.run(['mokutil', '--test-key', key_path], capture_output=True, text=True, timeout=5)
+                if 'is already enrolled' in r.stdout or 'is already enrolled' in r.stderr:
+                    is_trusted = True
+            except Exception:
+                pass
+
+    _refresh_sb_checks()
 
     list_group = Adw.PreferencesGroup()
     list_group.set_title(_("System Trust Status"))
@@ -1542,112 +1549,185 @@ def create_secureboot_page(navigate_next, update_nav=None):
         r4.add_suffix(icon4)
         r4.set_subtitle(_("Cannot sign drivers without a certificate"))
 
-    if is_trusted:
-        status = Gtk.Label(label=_('System Trust Established. Third-party drivers will load securely.'))
-        status.set_margin_top(12)
-        status.set_halign(Gtk.Align.CENTER)
-        status.add_css_class('title-4')
-        center.append(status)
-    else:
-        status = Gtk.Label(label=_('The local trust certificate is missing or not yet enrolled.') + '\n' + _('You must configure this to use third-party drivers like NVIDIA.'))
-        status.set_justify(Gtk.Justification.CENTER)
-        status.set_halign(Gtk.Align.CENTER)
-        status.set_margin_bottom(24)
-        center.append(status)
-        
-        btn = Gtk.Button()
-        btn.set_halign(Gtk.Align.CENTER)
-        btn.add_css_class('suggested-action')
-        btn.add_css_class('pill')
-        btn.set_size_request(240, 48)
-        btn.set_margin_top(16)
-        
-        spinner = Gtk.Spinner()
-        btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
-        btn_box.set_halign(Gtk.Align.CENTER)
-        btn_lbl = Gtk.Label(label=_('Create & Enroll Certificate'))
-        btn_box.append(spinner)
-        btn_box.append(btn_lbl)
-        btn.set_child(btn_box)
+    # Status message + action area (always present, toggled on refresh)
+    sb_status = Gtk.Label()
+    sb_status.set_justify(Gtk.Justification.CENTER)
+    sb_status.set_halign(Gtk.Align.CENTER)
 
-        def _on_enroll_clicked(button):
-            pwd = "123456"
-            button.set_sensitive(False)
-            spinner.start()
-            btn_lbl.set_label(_("Generating & Signing..."))
-            
-            def _worker():
-                import shlex
-                p = shlex.quote(pwd)
-                cmd = f"update-secureboot-policy --new-key && printf '%s\\n%s\\n' {p} {p} | mokutil --import /var/lib/shim-signed/mok/MOK.der && dkms autoinstall"
-                proc = subprocess.run(['pkexec', 'bash', '-c', cmd])
-                
-                def _update_ui():
-                    spinner.stop()
-                    if proc.returncode == 0:
-                        dialog = Adw.MessageDialog.new(
-                            page.get_root(),
-                            _("Certificate Created"),
-                            _("Success! When you reboot, a blue screen will appear.") + '\n' + _("Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456")
-                        )
-                        dialog.add_response("ok", _("OK"))
-                        dialog.set_default_response("ok")
-                        
-                        def _on_dialog_response(dlg, response):
-                            page._hide_next = True
-                            if update_nav:
-                                update_nav()
-                            
-                            status.set_visible(False)
-                            btn.set_visible(False)
-                            
-                            rb_lbl = Gtk.Label(label=_("Note: Use password <b>123456</b> after rebooting."))
-                            rb_lbl.set_use_markup(True)
-                            rb_lbl.set_margin_bottom(12)
-                            center.append(rb_lbl)
-                            
-                            rb_btn = Gtk.Button(label=_("Reboot & Configure Secure Boot"))
-                            rb_btn.add_css_class('suggested-action')
-                            rb_btn.add_css_class('pill')
-                            rb_btn.set_size_request(280, 48)
-                            rb_btn.set_halign(Gtk.Align.CENTER)
-                            center.append(rb_btn)
-                            
-                            def _on_reboot_clicked(b):
-                                r_dlg = Adw.MessageDialog.new(
-                                    page.get_root(),
-                                    _("Reboot Required"),
-                                    _("Please trust the certificate upon reboot using password 123456.")
-                                )
-                                r_dlg.add_response("cancel", _("Cancel"))
-                                r_dlg.add_response("reboot", _("Reboot"))
-                                r_dlg.set_response_appearance("reboot", Adw.ResponseAppearance.DESTRUCTIVE)
-                                
-                                def _on_reboot_response(d, resp):
-                                    if resp == "reboot":
-                                        subprocess.run(['gnome-session-quit', '--reboot', '--no-prompt'])
-                                r_dlg.connect('response', _on_reboot_response)
-                                r_dlg.present()
-                                
-                            rb_btn.connect('clicked', _on_reboot_clicked)
-                            
-                            icon2.set_from_icon_name('emblem-ok-symbolic')
-                            icon2.remove_css_class('warning')
-                            icon2.add_css_class('success')
-                            r2.set_subtitle(_("Certificate generated locally"))
-                            
-                        dialog.connect('response', _on_dialog_response)
-                        dialog.present()
-                    else:
-                        status.set_label(_("Configuration failed. Please try again."))
-                        button.set_sensitive(True)
-                        btn_lbl.set_label(_('Create & Enroll Certificate'))
-                GLib.idle_add(_update_ui)
-                
-            threading.Thread(target=_worker, daemon=True).start()
-            
-        btn.connect('clicked', _on_enroll_clicked)
-        center.append(btn)
+    # Enroll button container (visibility toggled based on is_trusted)
+    sb_action_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+    sb_action_box.set_halign(Gtk.Align.CENTER)
+
+    if is_trusted:
+        sb_status.set_label(_('System Trust Established. Third-party drivers will load securely.'))
+        sb_status.set_margin_top(12)
+        sb_status.set_margin_bottom(0)
+        sb_status.add_css_class('title-4')
+        sb_action_box.set_visible(False)
+    else:
+        sb_status.set_label(_('The local trust certificate is missing or not yet enrolled.') + '\n' + _('You must configure this to use third-party drivers like NVIDIA.'))
+        sb_status.set_margin_top(0)
+        sb_status.set_margin_bottom(24)
+        sb_action_box.set_visible(True)
+
+    center.append(sb_status)
+
+    btn = Gtk.Button()
+    btn.set_halign(Gtk.Align.CENTER)
+    btn.add_css_class('suggested-action')
+    btn.add_css_class('pill')
+    btn.set_size_request(240, 48)
+    btn.set_margin_top(16)
+
+    spinner = Gtk.Spinner()
+    enroll_btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+    enroll_btn_box.set_halign(Gtk.Align.CENTER)
+    btn_lbl = Gtk.Label(label=_('Create & Enroll Certificate'))
+    enroll_btn_box.append(spinner)
+    enroll_btn_box.append(btn_lbl)
+    btn.set_child(enroll_btn_box)
+    sb_action_box.append(btn)
+
+    def _on_enroll_clicked(button):
+        pwd = "123456"
+        button.set_sensitive(False)
+        spinner.start()
+        btn_lbl.set_label(_("Generating & Signing..."))
+
+        def _worker():
+            import shlex
+            p = shlex.quote(pwd)
+            cmd = f"update-secureboot-policy --new-key && printf '%s\\n%s\\n' {p} {p} | mokutil --import /var/lib/shim-signed/mok/MOK.der && dkms autoinstall"
+            proc = subprocess.run(['pkexec', 'bash', '-c', cmd])
+
+            def _update_ui():
+                spinner.stop()
+                if proc.returncode == 0:
+                    dialog = Adw.MessageDialog.new(
+                        page.get_root(),
+                        _("Certificate Created"),
+                        _("Success! When you reboot, a blue screen will appear.") + '\n' + _("Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456")
+                    )
+                    dialog.add_response("ok", _("OK"))
+                    dialog.set_default_response("ok")
+
+                    def _on_dialog_response(dlg, response):
+                        page._hide_next = True
+                        if update_nav:
+                            update_nav()
+
+                        _refresh_sb_checks()
+                        icon2.set_from_icon_name('emblem-ok-symbolic')
+                        icon2.remove_css_class('warning')
+                        icon2.add_css_class('success')
+                        r2.set_subtitle(_("Certificate generated locally"))
+                        icon3.set_from_icon_name('emblem-ok-symbolic' if is_trusted else 'dialog-error-symbolic')
+                        icon3.remove_css_class('error')
+                        icon3.remove_css_class('success')
+                        icon3.add_css_class('success' if is_trusted else 'error')
+                        r3.set_subtitle(_("Certificate is trusted by motherboard") if is_trusted else _("Pending enrollment in blue screen (MOKManager)"))
+                        if is_trusted:
+                            sb_status.set_label(_('System Trust Established. Third-party drivers will load securely.'))
+                            sb_status.set_margin_top(12)
+                            sb_status.set_margin_bottom(0)
+                            sb_status.add_css_class('title-4')
+                            sb_action_box.set_visible(False)
+                        else:
+                            sb_status.set_label(_('The local trust certificate is missing or not yet enrolled.') + '\n' + _('You must configure this to use third-party drivers like NVIDIA.'))
+                            sb_status.set_margin_top(0)
+                            sb_status.set_margin_bottom(24)
+                            sb_status.remove_css_class('title-4')
+                            sb_action_box.set_visible(True)
+                        sb_refresh_btn.set_visible(not (has_cert and is_trusted))
+
+                        sb_status.set_visible(False)
+                        btn.set_visible(False)
+
+                        rb_lbl = Gtk.Label(label=_("Note: Use password <b>123456</b> after rebooting."))
+                        rb_lbl.set_use_markup(True)
+                        rb_lbl.set_margin_bottom(12)
+                        center.append(rb_lbl)
+
+                        rb_btn = Gtk.Button(label=_("Reboot & Configure Secure Boot"))
+                        rb_btn.add_css_class('suggested-action')
+                        rb_btn.add_css_class('pill')
+                        rb_btn.set_size_request(280, 48)
+                        rb_btn.set_halign(Gtk.Align.CENTER)
+                        center.append(rb_btn)
+
+                        def _on_reboot_clicked(b):
+                            r_dlg = Adw.MessageDialog.new(
+                                page.get_root(),
+                                _("Reboot Required"),
+                                _("Please trust the certificate upon reboot using password 123456.")
+                            )
+                            r_dlg.add_response("cancel", _("Cancel"))
+                            r_dlg.add_response("reboot", _("Reboot"))
+                            r_dlg.set_response_appearance("reboot", Adw.ResponseAppearance.DESTRUCTIVE)
+
+                            def _on_reboot_response(d, resp):
+                                if resp == "reboot":
+                                    subprocess.run(['gnome-session-quit', '--reboot', '--no-prompt'])
+                            r_dlg.connect('response', _on_reboot_response)
+                            r_dlg.present()
+
+                        rb_btn.connect('clicked', _on_reboot_clicked)
+
+                    dialog.connect('response', _on_dialog_response)
+                    dialog.present()
+                else:
+                    sb_status.set_label(_("Configuration failed. Please try again."))
+                    button.set_sensitive(True)
+                    btn_lbl.set_label(_('Create & Enroll Certificate'))
+            GLib.idle_add(_update_ui)
+
+        threading.Thread(target=_worker, daemon=True).start()
+
+    btn.connect('clicked', _on_enroll_clicked)
+    center.append(sb_action_box)
+
+    # ── "Check Again" refresh button ──
+    sb_refresh_btn = Gtk.Button(label=_('  Check Again  '))
+    sb_refresh_btn.set_halign(Gtk.Align.CENTER)
+    sb_refresh_btn.set_margin_top(8)
+
+    def _on_sb_refresh(button):
+        button.set_sensitive(False)
+        button.set_label(_('  Checking...  '))
+        def _worker():
+            _refresh_sb_checks()
+            def _apply():
+                icon2.set_from_icon_name('emblem-ok-symbolic' if has_cert else 'dialog-warning-symbolic')
+                icon2.remove_css_class('success')
+                icon2.remove_css_class('warning')
+                icon2.add_css_class('success' if has_cert else 'warning')
+                r2.set_subtitle(_("Certificate generated locally") if has_cert else _("Missing local certificate"))
+                icon3.set_from_icon_name('emblem-ok-symbolic' if is_trusted else 'dialog-error-symbolic')
+                icon3.remove_css_class('success')
+                icon3.remove_css_class('error')
+                icon3.add_css_class('success' if is_trusted else 'error')
+                r3.set_subtitle(_("Certificate is trusted by motherboard") if is_trusted else _("Pending enrollment in blue screen (MOKManager)"))
+                if is_trusted:
+                    sb_status.set_label(_('System Trust Established. Third-party drivers will load securely.'))
+                    sb_status.set_margin_top(12)
+                    sb_status.set_margin_bottom(0)
+                    sb_status.add_css_class('title-4')
+                    sb_action_box.set_visible(False)
+                else:
+                    sb_status.set_label(_('The local trust certificate is missing or not yet enrolled.') + '\n' + _('You must configure this to use third-party drivers like NVIDIA.'))
+                    sb_status.set_margin_top(0)
+                    sb_status.set_margin_bottom(24)
+                    sb_status.remove_css_class('title-4')
+                    sb_action_box.set_visible(True)
+                sb_refresh_btn.set_visible(not (has_cert and is_trusted))
+                button.set_sensitive(True)
+                button.set_label(_('  Check Again  '))
+            GLib.idle_add(_apply)
+        threading.Thread(target=_worker, daemon=True).start()
+
+    sb_refresh_btn.connect('clicked', _on_sb_refresh)
+    sb_refresh_btn.set_visible(not (has_cert and is_trusted))
+    center.append(sb_refresh_btn)
 
     return page
 
@@ -1883,58 +1963,83 @@ def create_xbox_page(navigate_next, update_nav=None):
     center.append(title)
 
     is_installed = False
-    try:
-        r = subprocess.run(['dpkg', '-l', 'anduinos-xbox-controller-driver'],
-                           capture_output=True, text=True, timeout=5)
-        is_installed = (r.returncode == 0 and 'ii  anduinos-xbox-controller-driver' in r.stdout)
-    except Exception:
-        pass
-
     sb_enabled = False
-    mok_trusted = True
-    try:
-        r = subprocess.run(['mokutil', '--sb-state'], capture_output=True, text=True, timeout=5)
-        if 'SecureBoot enabled' in r.stdout:
-            sb_enabled = True
-    except Exception:
-        pass
+    has_cert = False
+    is_trusted = False
+    current_cert_serial = None
+    modinfo_sig_key = None
+    is_loaded = False
 
     mok_priv = '/var/lib/shim-signed/mok/MOK.priv'
     mok_der = '/var/lib/shim-signed/mok/MOK.der'
-    has_cert = os.path.isfile(mok_priv)
-    is_trusted = False
-    if has_cert:
-        try:
-            res = subprocess.run(['mokutil', '--test-key', mok_der],
-                                 capture_output=True, text=True, timeout=5)
-            if 'is already enrolled' in res.stdout:
-                is_trusted = True
-        except Exception:
-            pass
-    else:
-        is_trusted = not sb_enabled
 
-    current_cert_serial = None
-    if has_cert:
+    def _refresh_xbox_checks():
+        nonlocal is_installed, sb_enabled, has_cert, is_trusted, current_cert_serial, modinfo_sig_key, is_loaded
+
+        is_installed = False
         try:
-            cert_serial = subprocess.check_output(
-                ['openssl', 'x509', '-in', mok_der, '-inform', 'DER', '-noout', '-serial'],
-                text=True, timeout=5
-            ).strip().split('=')[1]
-            current_cert_serial = ':'.join(cert_serial[i:i+2] for i in range(0, len(cert_serial), 2)).lower()
+            r = subprocess.run(['dpkg', '-l', 'anduinos-xbox-controller-driver'],
+                               capture_output=True, text=True, timeout=5)
+            is_installed = (r.returncode == 0 and 'ii  anduinos-xbox-controller-driver' in r.stdout)
         except Exception:
             pass
 
-    modinfo_sig_key = None
-    if is_installed:
+        sb_enabled = False
         try:
-            out = subprocess.check_output(['modinfo', 'hid-xpadneo'], text=True, timeout=5)
-            for line in out.splitlines():
-                if line.startswith('sig_key:'):
-                    modinfo_sig_key = line.split(':', 1)[1].strip().lower()
-                    break
+            r = subprocess.run(['mokutil', '--sb-state'], capture_output=True, text=True, timeout=5)
+            if 'SecureBoot enabled' in r.stdout:
+                sb_enabled = True
         except Exception:
             pass
+
+        has_cert = os.path.isfile(mok_priv)
+        is_trusted = False
+        if has_cert:
+            try:
+                res = subprocess.run(['mokutil', '--test-key', mok_der],
+                                     capture_output=True, text=True, timeout=5)
+                if 'is already enrolled' in res.stdout:
+                    is_trusted = True
+            except Exception:
+                pass
+        else:
+            is_trusted = not sb_enabled
+
+        current_cert_serial = None
+        if has_cert:
+            try:
+                cert_serial = subprocess.check_output(
+                    ['openssl', 'x509', '-in', mok_der, '-inform', 'DER', '-noout', '-serial'],
+                    text=True, timeout=5
+                ).strip().split('=')[1]
+                current_cert_serial = ':'.join(cert_serial[i:i+2] for i in range(0, len(cert_serial), 2)).lower()
+            except Exception:
+                pass
+
+        modinfo_sig_key = None
+        if is_installed:
+            try:
+                out = subprocess.check_output(['modinfo', 'hid-xpadneo'], text=True, timeout=5)
+                for line in out.splitlines():
+                    if line.startswith('sig_key:'):
+                        modinfo_sig_key = line.split(':', 1)[1].strip().lower()
+                        break
+            except Exception:
+                pass
+
+        is_loaded = False
+        if is_installed:
+            try:
+                r = subprocess.run(['lsmod'], capture_output=True, text=True, timeout=5)
+                if 'xpadneo' in r.stdout:
+                    is_loaded = True
+            except Exception:
+                pass
+
+    _refresh_xbox_checks()
+
+    r3 = None
+    icon3 = None
 
     if is_installed:
         sub = Gtk.Label(
@@ -2017,13 +2122,6 @@ def create_xbox_page(navigate_next, update_nav=None):
 
     if is_installed:
         r3 = Adw.ActionRow(title=_("Controller Status"))
-        is_loaded = False
-        try:
-            r = subprocess.run(['lsmod'], capture_output=True, text=True, timeout=5)
-            if 'xpadneo' in r.stdout:
-                is_loaded = True
-        except Exception:
-            pass
 
         icon3 = _create_image('emblem-ok-symbolic')
         icon3.set_pixel_size(16)
@@ -2168,30 +2266,36 @@ apt install -y anduinos-xbox-controller-driver
                 
                 if proc.returncode == 0:
                     def _set_success():
+                        nonlocal r3, icon3, is_installed
+                        is_installed = True
                         status_label.set_label(_('✓ Xbox controller driver installed successfully!'))
                         r1.set_subtitle(_("The xpadneo driver is currently installed"))
                         icon1.set_from_icon_name('emblem-ok-symbolic')
                         icon1.remove_css_class('error')
                         icon1.add_css_class('success')
-                        
+
                         if sb_enabled:
                             r2.set_subtitle(_("Signed with current trusted certificate"))
                             icon2.set_from_icon_name('emblem-ok-symbolic')
                             icon2.remove_css_class('error')
                             icon2.add_css_class('success')
 
-                        new_r3 = Adw.ActionRow(title=_("Controller Status"))
-                        new_icon3 = _create_image('emblem-ok-symbolic')
-                        new_icon3.set_pixel_size(16)
-                        new_icon3.add_css_class('success')
-                        new_r3.set_subtitle(_("Driver standing by. Waiting for controller connection...") + "\n" + _("(Reboot recommended)"))
-                        new_r3.add_suffix(new_icon3)
-                        list_group.add(new_r3)
+                        if r3 is None:
+                            r3 = Adw.ActionRow(title=_("Controller Status"))
+                            icon3 = _create_image('emblem-ok-symbolic')
+                            icon3.set_pixel_size(16)
+                            r3.add_suffix(icon3)
+                            list_group.add(r3)
+                        icon3.remove_css_class('error')
+                        icon3.add_css_class('success')
+                        icon3.set_from_icon_name('emblem-ok-symbolic')
+                        r3.set_subtitle(_("Driver standing by. Waiting for controller connection...") + "\n" + _("(Reboot recommended)"))
 
                         progress_bar.set_visible(False)
                         btn.set_visible(False)
                         tools_box.set_visible(True)
                         page._suggest_next = True
+                        xb_refresh_btn.set_visible(False)
                         if update_nav: update_nav()
                     GLib.idle_add(_set_success)
                 else:
@@ -2217,6 +2321,132 @@ apt install -y anduinos-xbox-controller-driver
     btn_box.append(install_btn)
     center.append(btn_box)
     center.append(tools_box)
+
+    # ── "Check Again" refresh button ──
+    xb_refresh_btn = Gtk.Button(label=_('  Check Again  '))
+    xb_refresh_btn.set_halign(Gtk.Align.CENTER)
+    xb_refresh_btn.set_margin_top(12)
+
+    def _on_xb_refresh(button):
+        button.set_sensitive(False)
+        button.set_label(_('  Checking...  '))
+        def _worker():
+            _refresh_xbox_checks()
+            def _apply():
+                nonlocal r3, icon3
+
+                # sub label
+                if is_installed:
+                    sub.set_label(_('Xbox controller driver (xpadneo) is already installed.'))
+                else:
+                    sub.set_label(_('Enjoy seamless Xbox controller support with rumble and accurate inputs.'))
+
+                # body label
+                if is_installed:
+                    body.set_label(_('AnduinOS provides native support for Xbox controllers via Bluetooth.') + '\n' +
+                                   _('The advanced xpadneo driver is already set up and ready for gaming.'))
+                else:
+                    body.set_label(_('AnduinOS provides native support for Xbox controllers via Bluetooth.') + '\n' +
+                                   _('For advanced features like rumble and accurate mapping, we recommend installing the xpadneo driver.'))
+
+                # r1 — Driver Installed
+                icon1.set_from_icon_name('emblem-ok-symbolic' if is_installed else 'dialog-error-symbolic')
+                icon1.remove_css_class('success')
+                icon1.remove_css_class('error')
+                if is_installed:
+                    r1.set_subtitle(_("The xpadneo driver is currently installed"))
+                    icon1.add_css_class('success')
+                else:
+                    r1.set_subtitle(_("The driver is not installed"))
+                    icon1.add_css_class('error')
+
+                # r2 — Signature Trusted (only if sb_enabled)
+                if sb_enabled:
+                    icon2.remove_css_class('success')
+                    icon2.remove_css_class('error')
+                    icon2.remove_css_class('warning')
+                    if not is_installed:
+                        r2.set_subtitle(_("Driver not installed, signature missing"))
+                        icon2.set_from_icon_name('dialog-error-symbolic')
+                        icon2.add_css_class('error')
+                    elif not modinfo_sig_key:
+                        r2.set_subtitle(_("Driver is NOT signed"))
+                        icon2.set_from_icon_name('dialog-error-symbolic')
+                        icon2.add_css_class('error')
+                    elif modinfo_sig_key == current_cert_serial:
+                        if is_trusted:
+                            r2.set_subtitle(_("Signed with current trusted certificate"))
+                            icon2.set_from_icon_name('emblem-ok-symbolic')
+                            icon2.add_css_class('success')
+                        else:
+                            r2.set_subtitle(_("Signed with current certificate, but not enrolled"))
+                            icon2.set_from_icon_name('dialog-warning-symbolic')
+                            icon2.add_css_class('warning')
+                    else:
+                        r2.set_subtitle(_("Signed with an unknown or outdated certificate"))
+                        icon2.set_from_icon_name('dialog-warning-symbolic')
+                        icon2.add_css_class('warning')
+
+                # r3 — Controller Status (lazy-create if first install after page load)
+                if is_installed:
+                    if r3 is None:
+                        r3 = Adw.ActionRow(title=_("Controller Status"))
+                        icon3 = _create_image('emblem-ok-symbolic')
+                        icon3.set_pixel_size(16)
+                        r3.add_suffix(icon3)
+                        list_group.add(r3)
+                    icon3.remove_css_class('success')
+                    icon3.remove_css_class('error')
+                    if is_loaded:
+                        r3.set_subtitle(_("Driver loaded and active. Ready to play!"))
+                        icon3.set_from_icon_name('emblem-ok-symbolic')
+                        icon3.add_css_class('success')
+                    else:
+                        is_blocked = False
+                        if sb_enabled and (not is_trusted or modinfo_sig_key != current_cert_serial):
+                            is_blocked = True
+                        if is_blocked:
+                            r3.set_subtitle(_("Driver cannot load due to missing signature trust"))
+                            icon3.set_from_icon_name('dialog-error-symbolic')
+                            icon3.add_css_class('error')
+                        else:
+                            r3.set_subtitle(_("Driver standing by. Waiting for controller connection..."))
+                            icon3.set_from_icon_name('emblem-ok-symbolic')
+                            icon3.add_css_class('success')
+
+                # is_ready_to_play
+                _ready = False
+                if is_installed:
+                    if sb_enabled:
+                        if is_trusted and modinfo_sig_key == current_cert_serial:
+                            _ready = True
+                    else:
+                        _ready = True
+                tools_box.set_visible(_ready)
+
+                # install button
+                if is_installed:
+                    install_btn.set_visible(False)
+                    page._suggest_next = True
+                    status_label.set_label('')
+                elif sb_enabled and not is_trusted:
+                    install_btn.set_visible(True)
+                    install_btn.set_sensitive(False)
+                    status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ Secure Boot is enabled but the custom certificate is not yet enrolled.') + '\n' + _('Please reboot to enroll the certificate before installing this driver.') + '</span>')
+                else:
+                    install_btn.set_visible(True)
+                    install_btn.set_sensitive(True)
+                    status_label.set_label('')
+
+                xb_refresh_btn.set_visible(not _ready)
+                button.set_sensitive(True)
+                button.set_label(_('  Check Again  '))
+            GLib.idle_add(_apply)
+        threading.Thread(target=_worker, daemon=True).start()
+
+    xb_refresh_btn.connect('clicked', _on_xb_refresh)
+    xb_refresh_btn.set_visible(not is_ready_to_play)
+    center.append(xb_refresh_btn)
 
     return page
 
