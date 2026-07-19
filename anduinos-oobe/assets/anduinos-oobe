@@ -1602,7 +1602,19 @@ def create_secureboot_page(navigate_next, update_nav=None):
         def _worker():
             import shlex
             p = shlex.quote(pwd)
-            cmd = f"update-secureboot-policy --new-key && printf '%s\\n%s\\n' {p} {p} | mokutil --import /var/lib/shim-signed/mok/MOK.der && dkms autoinstall"
+            # 强行接管 DKMS 签名配置，只用 Key 路径，不写 sign_file —
+            # DKMS 会自动找当前内核的 scripts/sign-file
+            conf_script = """
+mkdir -p /etc/dkms/framework.conf.d
+cat << 'EOF' > /etc/dkms/framework.conf.d/anduinos-sb-sign.conf
+mok_signing_key="/var/lib/shim-signed/mok/MOK.priv"
+mok_certificate="/var/lib/shim-signed/mok/MOK.der"
+EOF
+"""
+            cmd = (f"update-secureboot-policy --new-key && "
+                   f"printf '%s\\n%s\\n' {p} {p} | mokutil --import /var/lib/shim-signed/mok/MOK.der && "
+                   f"{conf_script} && "
+                   f"dkms autoinstall")
             proc = subprocess.run(['pkexec', 'bash', '-c', cmd])
 
             def _update_ui():
@@ -2200,14 +2212,31 @@ def create_xbox_page(navigate_next, update_nav=None):
     install_btn = Gtk.Button(label=_('  Install Xbox Driver  '))
     install_btn.add_css_class('suggested-action')
 
-    can_install = True
-    if sb_enabled and not is_trusted:
-        can_install = False
-        install_btn.set_sensitive(False)
-        status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ Secure Boot is enabled but the custom certificate is not yet enrolled.') + '\n' + _('Please reboot to enroll the certificate before installing this driver.') + '</span>')
-    elif is_installed:
-        install_btn.set_visible(False)
-        page._suggest_next = True
+    reinstall_btn = Gtk.Button(label=_('  Fix & Reinstall Driver  '))
+    reinstall_btn.add_css_class('suggested-action')
+    reinstall_btn.set_visible(False)
+
+    # ── Smart button visibility ──
+    install_btn.set_visible(False)
+    reinstall_btn.set_visible(False)
+    page._suggest_next = True
+    status_label.set_label('')
+
+    if not is_installed:
+        if sb_enabled and not is_trusted:
+            install_btn.set_visible(True)
+            install_btn.set_sensitive(False)
+            status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ Secure Boot is enabled but the custom certificate is not yet enrolled.') + '\n' + _('Please configure Secure Boot in the previous step before installing this driver.') + '</span>')
+            page._suggest_next = False
+        else:
+            install_btn.set_visible(True)
+            install_btn.set_sensitive(True)
+            page._suggest_next = False
+    else:
+        if sb_enabled and is_trusted and modinfo_sig_key != current_cert_serial:
+            reinstall_btn.set_visible(True)
+            status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ The driver signature does not match your system certificate. Click Fix & Reinstall to repair the driver.') + '</span>')
+            page._suggest_next = False
 
     expander = Gtk.Expander(label=_('Advanced Output'))
     expander.set_margin_top(12)
@@ -2325,7 +2354,76 @@ apt install -y anduinos-xbox-controller-driver
         threading.Thread(target=_do_install, daemon=True).start()
 
     install_btn.connect('clicked', _on_install)
+
+    def _on_reinstall(btn):
+        btn.set_sensitive(False)
+        progress_bar.set_visible(True)
+        progress_bar.pulse()
+        status_label.set_label(_('Repairing driver signature…') + "\n" + _('This may take a minute.'))
+
+        def _pulse():
+            if progress_bar.is_visible():
+                progress_bar.pulse()
+                return True
+            return False
+
+        GLib.timeout_add(100, _pulse)
+
+        def _do_reinstall():
+            try:
+                # 先补 DKMS 签名配置，再重装驱动
+                conf_script = """
+if [ ! -f /etc/dkms/framework.conf.d/anduinos-sb-sign.conf ] && [ -f /var/lib/shim-signed/mok/MOK.priv ]; then
+    mkdir -p /etc/dkms/framework.conf.d
+    cat << 'EOF' > /etc/dkms/framework.conf.d/anduinos-sb-sign.conf
+mok_signing_key="/var/lib/shim-signed/mok/MOK.priv"
+mok_certificate="/var/lib/shim-signed/mok/MOK.der"
+EOF
+fi
+apt update && apt reinstall -y anduinos-xbox-controller-driver
+"""
+                proc = subprocess.Popen(
+                    ['pkexec', 'bash', '-c', conf_script],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    bufsize=1
+                )
+
+                def _append_text(t):
+                    end_iter = buffer.get_end_iter()
+                    buffer.insert(end_iter, t)
+                    mark = buffer.create_mark(None, buffer.get_end_iter(), False)
+                    textview.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
+
+                for line in iter(proc.stdout.readline, ''):
+                    GLib.idle_add(lambda l=line: _append_text(l))
+                proc.stdout.close()
+                proc.wait()
+
+                if proc.returncode == 0:
+                    GLib.idle_add(lambda: (
+                        progress_bar.set_visible(False),
+                        _on_xb_refresh(xb_refresh_btn)
+                    ))
+                else:
+                    GLib.idle_add(lambda: (
+                        status_label.set_label(_('✗ Repair failed.') + "\n" + _('Please check the advanced output.')),
+                        progress_bar.set_visible(False),
+                        btn.set_sensitive(True)
+                    ))
+            except Exception as e:
+                GLib.idle_add(lambda e=e: (
+                    status_label.set_label(_('✗ Error: ') + str(e)),
+                    progress_bar.set_visible(False),
+                    btn.set_sensitive(True)
+                ))
+
+        threading.Thread(target=_do_reinstall, daemon=True).start()
+
+    reinstall_btn.connect('clicked', _on_reinstall)
     btn_box.append(install_btn)
+    btn_box.append(reinstall_btn)
     center.append(btn_box)
     center.append(tools_box)
 
@@ -2431,19 +2529,26 @@ apt install -y anduinos-xbox-controller-driver
                         _ready = True
                 tools_box.set_visible(_ready)
 
-                # install button
-                if is_installed:
-                    install_btn.set_visible(False)
-                    page._suggest_next = True
-                    status_label.set_label('')
-                elif sb_enabled and not is_trusted:
-                    install_btn.set_visible(True)
-                    install_btn.set_sensitive(False)
-                    status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ Secure Boot is enabled but the custom certificate is not yet enrolled.') + '\n' + _('Please reboot to enroll the certificate before installing this driver.') + '</span>')
-                else:
-                    install_btn.set_visible(True)
-                    install_btn.set_sensitive(True)
-                    status_label.set_label('')
+                # install / reinstall button visibility
+                install_btn.set_visible(False)
+                reinstall_btn.set_visible(False)
+                page._suggest_next = True
+                status_label.set_label('')
+
+                if not is_installed:
+                    if sb_enabled and not is_trusted:
+                        install_btn.set_visible(True)
+                        install_btn.set_sensitive(False)
+                        status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ Secure Boot is enabled but the custom certificate is not yet enrolled.') + '\n' + _('Please reboot to enroll the certificate before installing this driver.') + '</span>')
+                        page._suggest_next = False
+                    else:
+                        install_btn.set_visible(True)
+                        install_btn.set_sensitive(True)
+                        page._suggest_next = False
+                elif sb_enabled and is_trusted and modinfo_sig_key != current_cert_serial:
+                    reinstall_btn.set_visible(True)
+                    status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ The driver signature does not match your system certificate. Click Fix & Reinstall to repair the driver.') + '</span>')
+                    page._suggest_next = False
 
                 xb_refresh_btn.set_visible(not _ready)
                 button.set_sensitive(True)
