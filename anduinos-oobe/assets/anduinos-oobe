@@ -891,7 +891,7 @@ def create_update_page(navigate_next, update_nav=None):
             if page._state == 0:
                 try:
                     GLib.idle_add(lambda: status_label.set_label(_('Checking for updates…')))
-                    bash_cmd = 'while fuser /var/lib/dpkg/lock >/dev/null 2>&1 || fuser /var/lib/apt/lists/lock >/dev/null 2>&1 || fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do echo "Waiting for other package managers to finish..."; sleep 3; done; apt-get update'
+                    bash_cmd = 'while fuser /var/lib/dpkg/lock >/dev/null 2>&1 || fuser /var/lib/apt/lists/lock >/dev/null 2>&1 || fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do echo "Waiting for other package managers to finish..."; sleep 3; done; rm -f /var/lib/apt/lists/*_InRelease /var/lib/apt/lists/*_Release /var/lib/apt/lists/*_Packages /var/lib/apt/lists/*_Sources /var/lib/apt/lists/*_Translation*; apt-get update'
                     proc1 = subprocess.Popen(
                         ['pkexec', 'sh', '-c', bash_cmd],
                         stdout=subprocess.PIPE,
@@ -1352,6 +1352,7 @@ def create_update_page(navigate_next, update_nav=None):
                         f"EOF\n"
                         f"fi\n"
                         f"rm {shlex.quote(temp_path)}\n"
+                        f"rm -f /var/lib/apt/lists/*_InRelease /var/lib/apt/lists/*_Release /var/lib/apt/lists/*_Packages /var/lib/apt/lists/*_Sources /var/lib/apt/lists/*_Translation*\n"
                         f"apt-get update"
                     )
                     proc = subprocess.Popen(
@@ -1869,8 +1870,9 @@ def create_nvidia_page(navigate_next, update_nav=None):
 
         def _do_install():
             try:
+                bash_cmd = 'rm -f /var/lib/apt/lists/*_InRelease /var/lib/apt/lists/*_Release /var/lib/apt/lists/*_Packages /var/lib/apt/lists/*_Sources /var/lib/apt/lists/*_Translation*; ubuntu-drivers install'
                 proc = subprocess.Popen(
-                    ['pkexec', 'ubuntu-drivers', 'install'],
+                    ['pkexec', 'sh', '-c', bash_cmd],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     text=True,
@@ -2242,6 +2244,7 @@ def create_xbox_page(navigate_next, update_nav=None):
         def _do_install():
             try:
                 conf_script = f"""
+rm -f /var/lib/apt/lists/*_InRelease /var/lib/apt/lists/*_Release /var/lib/apt/lists/*_Packages /var/lib/apt/lists/*_Sources /var/lib/apt/lists/*_Translation*
 apt update
 apt install -y anduinos-xbox-controller-driver
 """
