@@ -48,7 +48,7 @@ Understanding *why* a button-click in user-space convinces the motherboard hardw
                          ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  shimx64.efi (Shim)                                             │
-│  Signed by: Microsoft → trustwed by UEFI firmware              │
+│  Signed by: Microsoft → trusted by UEFI firmware              │
 │  Role: Chain-loads GRUB, maintains the MOK List                │
 │  "I trust binaries signed by Ubuntu AND keys the owner added." │
 └────────────────────────┬────────────────────────────────────────┘
@@ -254,33 +254,51 @@ If Secure Boot is off, the entire signing chain is irrelevant — the kernel loa
 
 ---
 
-## Why We Forged Our Own Path
+## What AnduinOS Adds on Top of Ubuntu
 
-### The Upstream Situation
+### The Gap: Ubuntu Does Everything Right — When Nothing Goes Wrong
 
-For years, the Linux desktop community (Debian, Ubuntu, Fedora) has treated Secure Boot module signing as a "system administrator problem." The official response to a user whose NVIDIA driver fails to load under Secure Boot is a multi-page Wiki article involving `openssl`, `kmodsign`, `mokutil`, and `dkms` command-line invocations.
+Ubuntu's Secure Boot flow works perfectly in the ideal case: user checks "third-party software" during install, Ubiquity generates the MOK, user enrolls it on first reboot, DKMS builds modules, everything is signed and trusted.
 
-Ubuntu's `update-secureboot-policy` and the pink-screen debconf prompt were attempts to improve this, but they still assume the user:
+But Ubuntu has no graceful recovery when the ideal case fails:
 
-- Understands what a MOK is
-- Is comfortable in a terminal-like TUI
-- Will not panic at a full-screen blue/pink firmware interface demanding a password
+- User unchecks "third-party software" → no MOK generated → NVIDIA driver installs but modules won't load. Ubuntu's response: pink-screen debconf prompt demanding a password the user never set.
+- User generates MOK but misses the MOKManager 10-second timeout → MOK exists but is not enrolled → modules signed with correct key but kernel doesn't trust it. Ubuntu's response: a Wiki page.
+- DKMS builds a module before the signing config is in place → module signed with wrong key → kernel rejects it. Ubuntu's response: another Wiki page.
 
-For a distribution targeting Windows refugees, this is unacceptable.
+All three failures are invisible to Ubuntu's tooling. The user just sees "NVIDIA driver installed successfully" followed by "nouveau loaded on next boot" (because the proprietary module wouldn't load), and has no idea why.
 
-### Why DKMS Built-in Fallback Is Not Enough
+### What AnduinOS OOBE Does Differently
 
-DKMS 3.2.2 added an auto-detection fallback: if `mok_signing_key` is not configured, try `/var/lib/shim-signed/mok/MOK.priv`. In production testing on real hardware, this fallback **silently failed** — modules were signed with a different, auto-generated key. Explicit configuration in `framework.conf.d/` removes this ambiguity entirely. We do not rely on DKMS heuristics.
+AnduinOS OOBE is a **graphical state inspector and recovery panel.** It does not replace Ubuntu's signing infrastructure. It surfaces it.
 
-### The AnduinOS Product Philosophy
+**1. Five-layer health check**
 
-AnduinOS is the first distribution to **surface the invisible as visible.** We do not expect users to know what a MOK is. Instead, we:
+Instead of assuming everything worked, OOBE verifies every link in the chain:
 
-1. **Detect** the exact failure point in the trust chain (five-layer check)
-2. **Display** it as colored indicators (green/yellow/red)
-3. **Offer** a one-click repair that does everything needed (generate key → configure DKMS → enroll → rebuild)
+```
+mokutil --sb-state          → Is Secure Boot on?
+mokutil --test-key          → Is MOK enrolled in firmware?
+openssl x509 -serial        → What is the MOK certificate serial?
+modinfo | grep sig_key      → What key actually signed the module?
+String comparison           → Do they match?
+```
 
-The user sees: "Something is yellow. There is a button. Click. Reboot. Type 123456. Green." That is the entire user experience. The architecture document you are reading describes everything that happens underneath.
+**2. Explicit DKMS signing configuration**
+
+Ubuntu's DKMS (3.2.2+) has a fallback that auto-detects MOK keys at `/var/lib/shim-signed/mok/MOK.priv`. In production testing, this fallback **silently failed** on real hardware — modules were signed with a different, auto-generated key despite the MOK key existing. We write `/etc/dkms/framework.conf.d/anduinos-sb-sign.conf` to remove this ambiguity. This is the one piece of *configuration* that AnduinOS adds that Ubuntu does not create by default.
+
+**3. One-click repair buttons**
+
+"Create & Enroll Certificate" and "Fix & Reinstall Driver" are GUI wrappers around Ubuntu's existing CLI tools (`update-secureboot-policy`, `mokutil --import`, `dkms autoinstall`, `apt reinstall`). The user sees a button, not a terminal.
+
+### The User Experience
+
+**Ubuntu ideal path:** Install with checkbox → reboot → blue screen → type password → done. (If anything fails: Wiki page.)
+
+**AnduinOS path:** OOBE shows green/yellow/red for each row → if yellow, click the button → reboot → type 123456 → OOBE shows all green.
+
+The underlying machinery is the same. The difference is that AnduinOS **knows when something is wrong, tells the user in a language they understand, and offers a button to fix it.**
 
 ---
 
