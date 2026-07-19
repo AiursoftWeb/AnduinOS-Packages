@@ -602,7 +602,11 @@ def create_appearance_page():
     def _on_activities_toggle(switch, pspec):
         v = 'true' if switch.get_active() else 'false'
         subprocess.run(['dconf', 'write', '/org/gnome/shell/extensions/arcmenu/show-activities-button', v])
-        
+        # Force Dash-to-Panel to refresh so the change takes effect immediately
+        if app_mod and hasattr(app_mod, 'apply_style_and_position'):
+            style = 'eleven' if state['style'] == 'modern' else state['style']
+            app_mod.apply_style_and_position(style, 'bottom')
+
     activities_row.connect('notify::active', _on_activities_toggle)
     layout_group.add(activities_row)
 
@@ -1870,7 +1874,7 @@ def create_nvidia_page(navigate_next, update_nav=None):
 
         def _do_install():
             try:
-                bash_cmd = 'rm -f /var/lib/apt/lists/*_InRelease /var/lib/apt/lists/*_Release /var/lib/apt/lists/*_Packages /var/lib/apt/lists/*_Sources /var/lib/apt/lists/*_Translation*; ubuntu-drivers install'
+                bash_cmd = 'rm -f /var/lib/apt/lists/*_InRelease /var/lib/apt/lists/*_Release /var/lib/apt/lists/*_Packages /var/lib/apt/lists/*_Sources /var/lib/apt/lists/*_Translation*; apt-get update; ubuntu-drivers install || true; NVIDIA_PKGS=$(dpkg-query -f '"'"'${Package}\n'"'"' -W 2>/dev/null | grep -E "nvidia|linux-modules-nvidia"); if [ -n "$NVIDIA_PKGS" ]; then DEBIAN_FRONTEND=noninteractive apt-get install --only-upgrade -y $NVIDIA_PKGS; fi'
                 proc = subprocess.Popen(
                     ['pkexec', 'sh', '-c', bash_cmd],
                     stdout=subprocess.PIPE,
@@ -3342,10 +3346,10 @@ class OobeWindow(Adw.ApplicationWindow):
 
         if is_oobe:
             self.set_title(_('AnduinOS Setup'))
-            self.set_default_size(780, 460)
+            self.set_default_size(780, 910)
         else:
             self.set_title(_('AnduinOS Welcome Center'))
-            self.set_default_size(780, 460)
+            self.set_default_size(780, 910)
 
         self.set_icon_name('anduinos-oobe')
 
@@ -3380,9 +3384,12 @@ class OobeWindow(Adw.ApplicationWindow):
 
         for factory in self._get_page_factories(navigate_next=_nav_next):
             p = factory()
+            scroll = Gtk.ScrolledWindow()
+            scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+            scroll.set_child(p)
             clamp = Adw.Clamp()
             clamp.set_maximum_size(650)
-            clamp.set_child(p)
+            clamp.set_child(scroll)
             nav._pages.append(clamp)
             self.carousel.append(clamp)
 
