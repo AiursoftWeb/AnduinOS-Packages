@@ -130,6 +130,11 @@ def has_nvidia_gpu():
     return False
 
 
+def is_arm64():
+    """True on aarch64 platforms (Snapdragon, Apple Silicon, etc.)."""
+    return os.uname().machine == 'aarch64'
+
+
 def is_virtual_machine():
     if os.environ.get('XBOX_PAGE') == 'true':
         return False
@@ -163,6 +168,26 @@ def is_bottles_installed():
 def is_chinese_locale():
     lang = os.environ.get('LANGUAGE', os.environ.get('LANG', ''))
     return lang.startswith('zh_CN')
+
+
+def _get_flathub_url():
+    """Return the current Flathub remote URL, or empty string on failure."""
+    try:
+        r = subprocess.run(['flatpak', 'remotes', '--system', '--show-details'],
+                           capture_output=True, text=True, timeout=10)
+        for line in r.stdout.splitlines():
+            cols = line.split('\t')
+            if len(cols) >= 2 and cols[0] == 'flathub':
+                return cols[2] if len(cols) > 2 else ''
+    except Exception:
+        pass
+    return ''
+
+
+def _is_flathub_china_mirror():
+    """True if Flathub is already pointing at a Chinese mirror."""
+    url = _get_flathub_url()
+    return 'ustc.edu.cn' in url or 'tuna.tsinghua.edu.cn' in url
 
 
 def _is_package_installed(pkg):
@@ -1611,9 +1636,12 @@ mok_signing_key="/var/lib/shim-signed/mok/MOK.priv"
 mok_certificate="/var/lib/shim-signed/mok/MOK.der"
 EOF
 """
-            cmd = (f"update-secureboot-policy --new-key && "
-                   f"printf '%s\\n%s\\n' {p} {p} | mokutil --import /var/lib/shim-signed/mok/MOK.der && "
-                   f"{conf_script} && "
+            # Use set -e instead of && chaining — bash 5.3+ rejects
+            # a bare && at the start of a new line after a heredoc.
+            cmd = (f"set -e\n"
+                   f"update-secureboot-policy --new-key\n"
+                   f"printf '%s\\n%s\\n' {p} {p} | mokutil --import /var/lib/shim-signed/mok/MOK.der\n"
+                   f"{conf_script}\n"
                    f"dkms autoinstall")
             proc = subprocess.run(['pkexec', 'bash', '-c', cmd])
 
@@ -2882,7 +2910,179 @@ def create_shortcuts_page():
 
 
 # ═══════════════════════════════════════════════════════════════════
-# PAGE 7: APPS — 第一天的高效
+# PAGE 7: FLATHUB MIRROR — 中国源加速
+# ═══════════════════════════════════════════════════════════════════
+
+def create_flathub_mirror_page():
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_valign(Gtk.Align.FILL)
+    page.set_halign(Gtk.Align.FILL)
+    page.set_margin_start(48)
+    page.set_margin_end(48)
+    page.set_margin_top(24)
+    page.set_margin_bottom(24)
+
+    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    center.set_valign(Gtk.Align.CENTER)
+    center.set_vexpand(True)
+    page.append(center)
+
+    title = Gtk.Label(label=_('In China? Use USTC mirror for App Store!'))
+    title.add_css_class('title-1')
+    title.set_halign(Gtk.Align.CENTER)
+    title.set_margin_bottom(8)
+    center.append(title)
+
+    sub = Gtk.Label(label=_('Flathub access can be slow from China. Switch to the USTC mirror for faster downloads.'))
+    sub.set_halign(Gtk.Align.CENTER)
+    sub.set_wrap(True)
+    sub.set_max_width_chars(60)
+    sub.set_margin_bottom(24)
+    center.append(sub)
+
+    status_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    status_box.set_halign(Gtk.Align.CENTER)
+    status_box.set_spacing(8)
+    center.append(status_box)
+
+    status_label = Gtk.Label()
+    status_label.set_halign(Gtk.Align.CENTER)
+    status_label.set_wrap(True)
+    status_box.append(status_label)
+
+    btn_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    btn_box.set_halign(Gtk.Align.CENTER)
+    btn_box.set_spacing(8)
+    btn_box.set_margin_top(16)
+    center.append(btn_box)
+
+    spinner = Gtk.Spinner()
+
+    def _run_btn(label, css_class, callback):
+        btn = Gtk.Button(label=label)
+        if css_class:
+            btn.add_css_class(css_class)
+        btn.add_css_class('pill')
+        btn.set_size_request(320, 48)
+        btn.set_halign(Gtk.Align.CENTER)
+        btn.connect('clicked', lambda b: callback())
+        return btn
+
+    def _update_ustc_state():
+        # Clear previous
+        while True:
+            c = btn_box.get_first_child()
+            if c is None:
+                break
+            btn_box.remove(c)
+        while True:
+            c = status_box.get_first_child()
+            if c is None:
+                break
+            status_box.remove(c)
+        status_box.append(status_label)
+
+        on_china = _is_flathub_china_mirror()
+
+        if on_china:
+            status_label.set_label(_('✓ Already using Chinese mirror — downloads are fast.'))
+            status_label.add_css_class('success')
+            btn_box.append(_run_btn(
+                _('Switch Back to International'), None,
+                lambda: _switch_back()))
+        else:
+            status_label.set_label(_('Flathub is using the international server.'))
+            status_label.remove_css_class('success')
+            btn_box.append(_run_btn(
+                _('🚀 Switch to USTC Mirror'), 'suggested-action',
+                lambda: _switch_to_ustc()))
+
+    def _switch_to_ustc():
+        # Show spinner
+        while True:
+            c = btn_box.get_first_child()
+            if c is None:
+                break
+            btn_box.remove(c)
+        spin_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        spin_box.set_halign(Gtk.Align.CENTER)
+        spin_box.append(spinner)
+        spin_lbl = Gtk.Label(label=_('Testing USTC mirror...'))
+        spin_box.append(spin_lbl)
+        btn_box.append(spin_box)
+        spinner.start()
+
+        def _worker():
+            try:
+                # Test connectivity
+                test = subprocess.run(
+                    ['curl', '-sI', '--connect-timeout', '5', '--max-time', '10',
+                     'https://mirrors.ustc.edu.cn/flathub/'],
+                    capture_output=True, timeout=15)
+                if test.returncode != 0:
+                    raise Exception('USTC mirror unreachable')
+
+                # Switch
+                subprocess.run(
+                    ['sudo', 'flatpak', 'remote-modify', 'flathub',
+                     '--url=https://mirrors.ustc.edu.cn/flathub'],
+                    capture_output=True, check=True, timeout=30)
+
+                # Refresh app list
+                subprocess.run(
+                    ['flatpak', 'update', '--appstream'],
+                    capture_output=True, timeout=60)
+            except Exception as e:
+                GLib.idle_add(_on_error, str(e))
+            else:
+                GLib.idle_add(_update_ustc_state)
+
+        threading.Thread(target=_worker, daemon=True).start()
+
+    def _switch_back():
+        while True:
+            c = btn_box.get_first_child()
+            if c is None:
+                break
+            btn_box.remove(c)
+        spin_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        spin_box.set_halign(Gtk.Align.CENTER)
+        spin_box.append(spinner)
+        spin_lbl = Gtk.Label(label=_('Switching back...'))
+        spin_box.append(spin_lbl)
+        btn_box.append(spin_box)
+        spinner.start()
+
+        def _worker():
+            try:
+                subprocess.run(
+                    ['sudo', 'flatpak', 'remote-modify', 'flathub',
+                     '--url=https://dl.flathub.org/repo'],
+                    capture_output=True, check=True, timeout=30)
+            except Exception as e:
+                GLib.idle_add(_on_error, str(e))
+            else:
+                GLib.idle_add(_update_ustc_state)
+
+        threading.Thread(target=_worker, daemon=True).start()
+
+    def _on_error(msg):
+        spinner.stop()
+        while True:
+            c = btn_box.get_first_child()
+            if c is None:
+                break
+            btn_box.remove(c)
+        status_label.set_label(_('✗ Failed: ') + msg)
+        status_label.remove_css_class('success')
+        btn_box.append(_run_btn(_('Retry'), 'suggested-action', lambda: _switch_to_ustc()))
+
+    _update_ustc_state()
+    return page
+
+
+# ═══════════════════════════════════════════════════════════════════
+# PAGE 8: APPS — 第一天的高效
 # ═══════════════════════════════════════════════════════════════════
 
 def create_apps_page():
@@ -2918,72 +3118,59 @@ def create_apps_page():
     sub.set_margin_bottom(24)
     center.append(sub)
 
-    is_cn = is_chinese_locale()
+    # Extra (name, app_id, description, icon) to prepend for specific locales.
+    REGIONAL_APPS = {
+        'zh_CN': [
+            (_('WeChat'), 'com.tencent.WeChat',
+             _('Most popular messaging app in China'), 'wechat.svg'),
+            (_('QQ'), 'com.qq.QQ',
+             _('Tencent QQ instant messenger'), 'qq.svg'),
+            (_('WPS Office'), 'com.wps.Office',
+             _('Best office suite for Chinese documents'), 'wps-office.svg'),
+        ],
+    }
 
-    if is_cn:
-        banner = Gtk.Label(
-            label=_('⚡ The following apps are provided by the Spark Store community.') + '\n' + _('Great for connecting to local services.')
-        )
-        banner.add_css_class('caption')
-        banner.set_halign(Gtk.Align.CENTER)
-        banner.set_wrap(True)
-        banner.set_margin_bottom(12)
-        center.append(banner)
+    apps = [
+        (_('Google Chrome'), 'com.google.Chrome',
+         _("The world's most popular web browser"), 'chrome.svg'),
+        (_('Visual Studio Code'), 'com.visualstudio.code',
+         _('Code editing. Redefined.'), 'visualstudiocode.svg'),
+        (_('Steam'), 'com.valvesoftware.Steam',
+         _('Your portal to the gaming universe'), 'steam.svg'),
+        (_('Discord'), 'com.discordapp.Discord',
+         _('Chat, voice, and video for communities'), 'discord.svg'),
+        (_('Spotify'), 'com.spotify.Client',
+         _('Music for everyone'), 'spotify-client.svg'),
+        (_('OnlyOffice'), 'org.onlyoffice.desktopeditors',
+         _('Best Microsoft Office-compatible suite'), 'asc-de.svg'),
+        (_('Thunderbird'), 'org.mozilla.thunderbird',
+         _('Secure, fast, and easy email client'), 'thunderbird.svg'),
+        (_('Blender'), 'org.blender.Blender',
+         _('Professional 3D creation suite'), 'blender.svg'),
+        (_('GNOME Boxes'), 'org.gnome.Boxes',
+         _('Virtualization made simple'), 'gnome-boxes.svg'),
+        (_('VLC'), 'org.videolan.VLC',
+         _('The versatile media player that plays everything'), 'vlc.svg'),
+        (_('Krita'), 'org.kde.krita',
+         _('Professional free and open source painting program'), 'gnome-paint.svg'),
+        (_('OBS Studio'), 'com.obsproject.Studio',
+         _('Free and open source software for video recording and live streaming'), 'obs.svg'),
+    ]
 
-        apps = [
-            (_('Spark Store'), 'spark-store',
-             _('Community app store for Chinese Linux users'), 'spark-store.svg',
-             'https://www.spark-app.store/'),
-            (_('WeChat'), 'wechat',
-             _('Most popular messaging app in China'), 'wechat.svg',
-             'https://linux.weixin.qq.com/'),
-            (_('QQ'), 'qq',
-             _('Tencent QQ instant messenger'), 'qq.svg',
-             'https://im.qq.com/linuxqq/'),
-            (_('WPS Office'), 'wps-office',
-             _('Best office suite for Chinese documents'), 'wps-office.svg',
-             'https://linux.wps.cn/'),
-        ]
-        app_urls = {a[1]: a[4] for a in apps}
-        is_cn_mode = True
-    else:
-        apps = [
-            (_('Google Chrome'), 'com.google.Chrome',
-             _("The world's most popular web browser"), 'chrome.svg'),
-            (_('Visual Studio Code'), 'com.visualstudio.code',
-             _('Code editing. Redefined.'), 'visualstudiocode.svg'),
-            (_('Steam'), 'com.valvesoftware.Steam',
-             _('Your portal to the gaming universe'), 'steam.svg'),
-            (_('Discord'), 'com.discordapp.Discord',
-             _('Chat, voice, and video for communities'), 'discord.svg'),
-            (_('Spotify'), 'com.spotify.Client',
-             _('Music for everyone'), 'spotify-client.svg'),
-            (_('OnlyOffice'), 'org.onlyoffice.desktopeditors',
-             _('Best Microsoft Office-compatible suite'), 'asc-de.svg'),
-            (_('Thunderbird'), 'org.mozilla.thunderbird',
-             _('Secure, fast, and easy email client'), 'thunderbird.svg'),
-            (_('Blender'), 'org.blender.Blender',
-             _('Professional 3D creation suite'), 'blender.svg'),
-            (_('GNOME Boxes'), 'org.gnome.Boxes',
-             _('Virtualization made simple'), 'gnome-boxes.svg'),
-            (_('VLC'), 'org.videolan.VLC',
-             _('The versatile media player that plays everything'), 'vlc.svg'),
-            (_('Krita'), 'org.kde.krita',
-             _('Professional free and open source painting program'), 'gnome-paint.svg'),
-            (_('OBS Studio'), 'com.obsproject.Studio',
-             _('Free and open source software for video recording and live streaming'), 'obs.svg'),
-        ]
-        app_urls = None
-        is_cn_mode = False
+    # Prepend regional apps for the current locale.
+    lang = os.environ.get('LANGUAGE', os.environ.get('LANG', ''))
+    for locale_prefix, extras in REGIONAL_APPS.items():
+        if lang.startswith(locale_prefix):
+            apps = extras + apps
+            break
 
     installed_apps = set()
-    if not is_cn_mode:
-        try:
-            proc = subprocess.run(['flatpak', 'list', '--app', '--columns=application'], capture_output=True, text=True)
-            if proc.returncode == 0:
-                installed_apps = set(proc.stdout.splitlines())
-        except Exception:
-            pass
+    try:
+        proc = subprocess.run(['flatpak', 'list', '--app', '--columns=application'], capture_output=True, text=True)
+        if proc.returncode == 0:
+            installed_apps = set(proc.stdout.splitlines())
+    except Exception:
+        pass
 
     # App grid
     flow = Gtk.FlowBox()
@@ -3028,7 +3215,7 @@ def create_apps_page():
         card.append(desc_label)
 
         # Install status
-        if not is_cn_mode and app_id in installed_apps:
+        if app_id in installed_apps:
             status = Gtk.Label(label='✓ ' + _('Installed'))
         else:
             status = Gtk.Label(label=_('Click to open in App Store'))
@@ -3037,14 +3224,9 @@ def create_apps_page():
         card.append(status)
 
         click = Gtk.GestureClick()
-        if is_cn_mode:
-            url = app_urls.get(app_id, '')
-            click.connect('released', lambda g, n, x, y, u=url, s=status, name=name:
-                          (_open_url(u), s.set_label('✓ ' + _('Opening…'))))
-        else:
-            click.connect('released',
-                          lambda g, n, x, y, fid=app_id, s=status:
-                          (_open_software_center(fid), s.set_label('✓ ' + _('Opening…'))))
+        click.connect('released',
+                      lambda g, n, x, y, fid=app_id, s=status:
+                      (_open_software_center(fid), s.set_label('✓ ' + _('Opening…'))))
         card.add_controller(click)
 
         child = Gtk.FlowBoxChild()
@@ -3071,18 +3253,6 @@ def create_apps_page():
     queue_hint.set_margin_top(12)
     center.append(queue_hint)
 
-    if is_cn:
-        disclaimer = Gtk.Label(
-            label=_('Note: These apps link to their official or community download pages.') + \
-                    _(' AnduinOS is not affiliated with these vendors.')
-        )
-        disclaimer.add_css_class('dim-label')
-        disclaimer.add_css_class('caption')
-        disclaimer.set_halign(Gtk.Align.CENTER)
-        disclaimer.set_wrap(True)
-        disclaimer.set_margin_top(6)
-        center.append(disclaimer)
-
     # Browse Store button
     store_btn = Gtk.Button(label=_('  Browse Store  '))
     store_btn.set_halign(Gtk.Align.CENTER)
@@ -3092,10 +3262,6 @@ def create_apps_page():
     center.append(store_btn)
 
     return page
-
-
-def _open_url(url):
-    subprocess.Popen(['xdg-open', url])
 
 
 def _open_software_center(app_id):
@@ -3560,9 +3726,14 @@ class OobeWindow(Adw.ApplicationWindow):
             factories.append(lambda: create_nvidia_page(_nav, _update_nav))
         if not is_virtual_machine():
             factories.append(lambda: create_xbox_page(_nav, _update_nav))
+        # Bottles (Wine) is x86-only — no Flatpak on aarch64 and emulation
+        # of x86 Windows apps on ARM is not "with ease".
+        if not is_arm64():
+            factories.append(lambda: create_exe_sandbox_page(_nav))
+        if is_chinese_locale():
+            factories.append(lambda: create_flathub_mirror_page())
 
         factories.extend([
-            lambda: create_exe_sandbox_page(_nav),
             lambda: create_shortcuts_page(),
             lambda: create_apps_page(),
             lambda: create_sync_page(),
