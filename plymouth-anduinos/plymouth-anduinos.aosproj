@@ -59,5 +59,8 @@
     <!-- Register theme with update-alternatives and rebuild initramfs on install/remove -->
     <PostInstallScript Include="scripts/postinst.sh" />
     <PreRemoveScript  Include="scripts/prerm.sh" />
+
+    <!-- ubuntu-text.so module, needed by anduinos-text.plymouth fallback theme -->
+    <Recommend Include="plymouth-theme-ubuntu-text" />
   </ItemGroup>
 </Project>
