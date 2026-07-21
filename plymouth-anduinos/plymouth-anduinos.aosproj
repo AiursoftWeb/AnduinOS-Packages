@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>plymouth-anduinos</PackageName>
-    <PackageVersion>2.0.0+$(UpstreamVersion)-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0+$(UpstreamVersion)-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS boot splash theme</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -13,8 +13,7 @@
     <Component>main</Component>
 
     <!-- Derive from upstream to inherit all animation frames, throbbers, and the two-step module -->
-    <UpstreamUrl Condition="'$(Arch)' == 'amd64'">https://mirror.aiursoft.com/ubuntu</UpstreamUrl>
-    <UpstreamUrl Condition="'$(Arch)' == 'arm64'">https://ports.ubuntu.com/ubuntu-ports</UpstreamUrl>
+    <UpstreamUrl>https://mirror.aiursoft.com/ubuntu</UpstreamUrl>
     <UpstreamDistro>ubuntu</UpstreamDistro>
     <UpstreamPackage>plymouth-theme-spinner</UpstreamPackage>
     <UpstreamSuite>$(Suite)</UpstreamSuite>
