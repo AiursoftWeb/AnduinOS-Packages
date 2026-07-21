@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>plymouth-anduinos</PackageName>
-    <PackageVersion>2.0.0+$(UpstreamVersion)-4+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0+$(UpstreamVersion)-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS boot splash theme</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -26,6 +26,8 @@
     <!-- Conflicts + Replaces: clean upgrade from the old swap package or Ubuntu's version -->
     <Conflicts>plymouth-theme-spinner</Conflicts>
     <Replaces>plymouth-theme-spinner</Replaces>
+    <!-- Ubuntu text module (ubuntu-text.so) — needed by anduinos-text.plymouth fallback theme -->
+    <Recommend Include="plymouth-theme-ubuntu-text" />
     <!-- No Replaces: plymouth — we no longer touch any file owned by the plymouth main package -->
     <SuppressUpstreamScripts>true</SuppressUpstreamScripts>
   </PropertyGroup>
