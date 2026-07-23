@@ -8,7 +8,7 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>questing-addon resolute-addon</TargetSuites>
+    <TargetSuites>resolute-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
 
@@ -17,7 +17,7 @@
     <UpstreamDistro>ubuntu</UpstreamDistro>
     <UpstreamPackage>base-files</UpstreamPackage>
     <UpstreamSuite>$(Suite)</UpstreamSuite>
-    <UpstreamSuiteMapping>questing-addon=questing, resolute-addon=resolute</UpstreamSuiteMapping>
+    <UpstreamSuiteMapping>resolute-addon=resolute</UpstreamSuiteMapping>
     <UpstreamComponent>$(Component)</UpstreamComponent>
     <UpstreamArch>$(Arch)</UpstreamArch>
   </PropertyGroup>
