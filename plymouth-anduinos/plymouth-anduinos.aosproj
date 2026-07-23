@@ -1,24 +1,23 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>plymouth-anduinos</PackageName>
-    <PackageVersion>2.0.0+$(UpstreamVersion)-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0+$(UpstreamVersion)-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS boot splash theme</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <TargetSuites>questing-addon resolute-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
 
     <!-- Derive from upstream to inherit all animation frames, throbbers, and the two-step module -->
-    <UpstreamUrl Condition="'$(Arch)' == 'amd64'">https://mirror.aiursoft.com/ubuntu</UpstreamUrl>
-    <UpstreamUrl Condition="'$(Arch)' == 'arm64'">http://ports.ubuntu.com</UpstreamUrl>
+    <UpstreamUrl>https://mirror.aiursoft.com/ubuntu</UpstreamUrl>
     <UpstreamDistro>ubuntu</UpstreamDistro>
     <UpstreamPackage>plymouth-theme-spinner</UpstreamPackage>
     <UpstreamSuite>$(Suite)</UpstreamSuite>
-    <UpstreamSuiteMapping>noble-addon=noble, questing-addon=questing, resolute-addon=resolute</UpstreamSuiteMapping>
+    <UpstreamSuiteMapping>questing-addon=questing, resolute-addon=resolute</UpstreamSuiteMapping>
     <UpstreamComponent>$(Component)</UpstreamComponent>
     <UpstreamArch>$(Arch)</UpstreamArch>
 
@@ -51,12 +50,15 @@
     <PrebuildCommand Run="find obj/*/usr/share/plymouth/themes/anduinos -name 'watermark.png' -type l -delete" />
 
     <!-- Override the two brand images with AnduinOS artwork; all other files come from upstream -->
-    <IncludeFile Include="deploy/anduinos_text.png" Target="/usr/share/plymouth/themes/anduinos/watermark.png" />
-    <IncludeFile Include="deploy/logo_96.png"       Target="/usr/share/plymouth/themes/anduinos/bgrt-fallback.png" />
-    <IncludeFile Include="deploy/anduinos-text.plymouth" Target="/usr/share/plymouth/themes/anduinos-text/anduinos-text.plymouth" />
+    <IncludeFile Include="assets/anduinos_text.png" Target="/usr/share/plymouth/themes/anduinos/watermark.png" />
+    <IncludeFile Include="assets/logo_96.png"       Target="/usr/share/plymouth/themes/anduinos/bgrt-fallback.png" />
+    <IncludeFile Include="assets/anduinos-text.plymouth" Target="/usr/share/plymouth/themes/anduinos-text/anduinos-text.plymouth" />
 
     <!-- Register theme with update-alternatives and rebuild initramfs on install/remove -->
     <PostInstallScript Include="scripts/postinst.sh" />
     <PreRemoveScript  Include="scripts/prerm.sh" />
+
+    <!-- ubuntu-text.so module, needed by anduinos-text.plymouth fallback theme -->
+    <Recommend Include="plymouth-theme-ubuntu-text" />
   </ItemGroup>
 </Project>

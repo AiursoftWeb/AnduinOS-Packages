@@ -1,0 +1,36 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-exe-runner</PackageName>
+    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS Windows Executable Runner - Seamlessly run Windows .exe files via Bottles</PackageDescription>
+    <Section>utils</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Dependency Include="python3" />
+    <Dependency Include="python3-gi" />
+    <Dependency Include="gir1.2-gtk-4.0" />
+    <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="flatpak" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="bash compile-locales.sh" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IncludeFile Include="assets/anduinos-exe-runner" Target="/usr/bin/anduinos-exe-runner" Mode="755" />
+    <IncludeFile Include="assets/anduinos-exe-runner.desktop" Target="/usr/share/applications/anduinos-exe-runner.desktop" />
+    <IncludeFile Include="assets/recommendations.json" Target="/usr/share/anduinos-exe-runner/recommendations.json" />
+    <IncludeFolder Include="locale" Target="/usr/share/locale" />
+  </ItemGroup>
+</Project>

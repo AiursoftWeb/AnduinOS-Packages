@@ -1,0 +1,541 @@
+#!/usr/bin/env python3
+import sys
+import subprocess
+import os
+import threading
+
+import gi
+gi.require_version('Gtk', '4.0')
+gi.require_version('Adw', '1')
+from gi.repository import Gtk, Adw, GLib, Gio, Pango
+
+import math
+import time
+import re
+import gettext
+
+_LOCALE_DIR = '/usr/share/locale'
+_ = gettext.translation('anduinos-exe-runner', _LOCALE_DIR, fallback=True).gettext
+
+import json
+
+def _open_url(url):
+    subprocess.Popen(['xdg-open', url])
+
+def load_recommendations():
+    paths = [
+        "/usr/share/anduinos-exe-runner/recommendations.json",
+        os.path.join(os.path.dirname(__file__), "recommendations.json")
+    ]
+    for path in paths:
+        if os.path.isfile(path):
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    recs = json.load(f)
+                    for r in recs:
+                        r["pattern"] = re.compile(r["pattern"], re.IGNORECASE)
+                    return recs
+            except Exception as e:
+                print(f"Error loading recommendations from {path}: {e}")
+    return []
+
+SMART_RECOMMENDATIONS = load_recommendations()
+
+DEFAULT_BOTTLE_NAME = "Default"
+
+def is_bottles_installed():
+    sys_path = "/var/lib/flatpak/app/com.usebottles.bottles"
+    user_path = os.path.expanduser("~/.local/share/flatpak/app/com.usebottles.bottles")
+    if os.path.isdir(sys_path) or os.path.isdir(user_path):
+        return True
+    
+    # Fallback to checking via flatpak CLI if custom installation path is used
+    try:
+        return subprocess.run(
+            ["flatpak", "info", "com.usebottles.bottles"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        ).returncode == 0
+    except Exception:
+        return False
+
+def has_default_bottle():
+    bottle_path = os.path.expanduser("~/.var/app/com.usebottles.bottles/data/bottles/bottles/" + DEFAULT_BOTTLE_NAME)
+    return os.path.isdir(bottle_path)
+
+class RunnerApp(Adw.Application):
+    def __init__(self, exe_path):
+        super().__init__(application_id='com.anduinos.ExeRunner', flags=Gio.ApplicationFlags.NON_UNIQUE)
+        self.exe_path = exe_path
+        self.window = None
+        self.progress_running = False
+        self.start_time = 0
+
+    def do_activate(self):
+        if not self.window:
+            self.window = Adw.ApplicationWindow(application=self)
+            self.window.set_title(_("Windows Application Runner"))
+            self.window.set_default_size(500, 210)
+            
+            # Use a box for main layout
+            main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            self.window.set_content(main_box)
+
+            # Add header bar
+            header = Adw.HeaderBar()
+            main_box.append(header)
+            
+            def _start_normal_flow():
+                box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+                box.set_margin_top(24)
+                box.set_margin_bottom(24)
+                box.set_margin_start(24)
+                box.set_margin_end(24)
+                
+                main_box.append(box)
+
+                # Title
+                header_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+                header_box.set_halign(Gtk.Align.CENTER)
+                
+                self.title_label = Gtk.Label(label=_("Preparing environment..."))
+                self.title_label.add_css_class("title-2")
+                
+                header_box.append(self.title_label)
+                box.append(header_box)
+
+                # Status Label
+                self.status_label = Gtk.Label(label=_("Checking system compatibility layer..."))
+                self.status_label.set_halign(Gtk.Align.CENTER)
+                self.status_label.set_justify(Gtk.Justification.CENTER)
+                self.status_label.set_wrap(True)
+                self.status_label.add_css_class("dim-label")
+                box.append(self.status_label)
+
+                # Progress Bar
+                self.progress_bar = Gtk.ProgressBar()
+                self.progress_bar.set_visible(False)
+                self.progress_bar.set_show_text(True)
+                box.append(self.progress_bar)
+
+                # Action Buttons Box (Hidden initially)
+                self.action_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+                self.action_box.set_halign(Gtk.Align.CENTER)
+                self.action_box.set_visible(False)
+                
+                self.cancel_btn = Gtk.Button(label=_("Cancel"))
+                self.cancel_btn.connect("clicked", lambda x: self.quit())
+                
+                self.confirm_btn = Gtk.Button(label=_("Install and Configure"))
+                self.confirm_btn.add_css_class("suggested-action")
+                self.confirm_btn.connect("clicked", self.on_confirm_install)
+                
+                self.action_box.append(self.cancel_btn)
+                self.action_box.append(self.confirm_btn)
+                box.append(self.action_box)
+
+                # Expander for advanced logs
+                expander = Gtk.Expander(label=_("Advanced Status and Logs"))
+                expander.set_vexpand(True)
+                
+                def on_expander_changed(exp, param):
+                    if not exp.get_expanded():
+                        self.window.set_default_size(450, 200)
+                expander.connect("notify::expanded", on_expander_changed)
+                
+                scrolled = Gtk.ScrolledWindow()
+                scrolled.set_min_content_height(150)
+                scrolled.set_vexpand(True)
+                scrolled.add_css_class("card")
+                
+                self.log_view = Gtk.TextView()
+                self.log_view.set_editable(False)
+                self.log_view.set_cursor_visible(False)
+                self.log_view.set_monospace(True)
+                self.log_view.set_margin_start(8)
+                self.log_view.set_margin_end(8)
+                self.log_view.set_margin_top(8)
+                self.log_view.set_margin_bottom(8)
+                self.log_buffer = self.log_view.get_buffer()
+                
+                scrolled.set_child(self.log_view)
+                expander.set_child(scrolled)
+                
+                box.append(expander)
+                
+                threading.Thread(target=self.check_environment, daemon=True).start()
+
+            filename = os.path.basename(self.exe_path)
+            matched_rec = None
+            for rec in SMART_RECOMMENDATIONS:
+                if rec["pattern"].match(filename):
+                    matched_rec = rec
+                    break
+
+            if matched_rec:
+                self.window.present()
+                dialog = Adw.MessageDialog(
+                    transient_for=self.window,
+                    heading=matched_rec.get("title", _("Notice")),
+                    body=matched_rec.get("reason", "")
+                )
+                dialog.add_response("cancel", _("Cancel"))
+                dialog.add_response("continue", _("Force Run Anyway"))
+
+                if "app_id" in matched_rec:
+                    btn_label = _("Get {}").format(matched_rec.get('app_name', 'App'))
+                    dialog.add_response("install", btn_label)
+                    dialog.set_response_appearance("install", Adw.ResponseAppearance.SUGGESTED)
+                elif "docs_url" in matched_rec:
+                    dialog.add_response("docs", _("View Documentation"))
+                    dialog.set_response_appearance("docs", Adw.ResponseAppearance.SUGGESTED)
+
+                dialog.set_response_appearance("cancel", Adw.ResponseAppearance.DEFAULT)
+                dialog.set_response_appearance("continue", Adw.ResponseAppearance.DESTRUCTIVE)
+
+                def on_dialog_response(dlg, response):
+                    if response == "install":
+                        Gio.AppInfo.launch_default_for_uri(f"appstream://{matched_rec['app_id']}", None)
+                        self.quit()
+                    elif response == "docs":
+                        _open_url(matched_rec["docs_url"])
+                        self.quit()
+                    elif response == "continue":
+                        _start_normal_flow()
+                    else:
+                        self.quit()
+                
+                dialog.connect("response", on_dialog_response)
+                dialog.present()
+            else:
+                _start_normal_flow()
+                self.window.present()
+
+    def log(self, text):
+        def _append():
+            end_iter = self.log_buffer.get_end_iter()
+            self.log_buffer.insert(end_iter, text + "\n")
+            # scroll to bottom
+            mark = self.log_buffer.create_mark(None, self.log_buffer.get_end_iter(), False)
+            self.log_view.scroll_to_mark(mark, 0.0, False, 0.0, 1.0)
+        GLib.idle_add(_append)
+
+    def set_status(self, title, subtitle, show_progress=False, restart_progress=False):
+        def _update():
+            self.title_label.set_label(title)
+            self.status_label.set_label(subtitle)
+            if show_progress:
+                self.progress_bar.set_visible(True)
+                if restart_progress:
+                    self.start_fake_progress()
+            else:
+                self.progress_bar.set_visible(False)
+                self.stop_fake_progress()
+        GLib.idle_add(_update)
+
+    def start_fake_progress(self):
+        self.start_time = time.time()
+        if not self.progress_running:
+            self.progress_running = True
+            threading.Thread(target=self._fake_progress_thread, daemon=True).start()
+
+    def stop_fake_progress(self):
+        self.progress_running = False
+
+    def _fake_progress_thread(self):
+        while self.progress_running:
+            time.sleep(0.03)  # ~30fps smooth update
+            if not self.progress_running:
+                break
+            
+            x = time.time() - self.start_time
+            if x <= 0: continue
+            
+            k = 5.0
+            denom = x - k * k
+            if abs(denom) < 0.001:
+                denom = 0.001 if denom >= 0 else -0.001
+                
+            y = 100.0 * (x - k * math.sqrt(x)) / denom
+            if y < 0: y = 0
+            if y > 99.99: y = 99.99
+            
+            GLib.idle_add(self._update_progress_ui, y)
+
+    def _update_progress_ui(self, y):
+        self.progress_bar.set_fraction(y / 100.0)
+        self.progress_bar.set_text(f"{y:.2f}%")
+        return False
+
+    def prompt_install(self):
+        def _update():
+            self.action_box.set_visible(True)
+            self.set_status(_("Windows Compatibility Environment Required"), _("The system is not configured with the Bottles compatibility layer.") + "\n" + _("Would you like to automatically download and install it? This may take a few minutes."), show_progress=False)
+        GLib.idle_add(_update)
+
+    def on_confirm_install(self, btn):
+        self.action_box.set_visible(False)
+        self.set_status(_("Preparing..."), _("About to start downloading Bottles..."), show_progress=True, restart_progress=True)
+        threading.Thread(target=self.do_install, daemon=True).start()
+
+    def run_subprocess(self, cmd_list):
+        self.log(_("==> Executing command: {}").format(' '.join(cmd_list)))
+        process = subprocess.Popen(cmd_list, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+        for line in process.stdout:
+            self.log(line.strip())
+        process.wait()
+        return process.returncode
+
+    def check_environment(self):
+        self.log(_("Checking Bottles installation status via filesystem..."))
+        if not is_bottles_installed():
+            self.log(_("Bottles installation not found."))
+            self.prompt_install()
+            return
+            
+        self.log(_("Checking if Default bottle exists via filesystem..."))
+        if not has_default_bottle():
+            self.log(_("Default bottle not found."))
+            self.prompt_install()
+            return
+            
+        self.log(_("Compatibility layer is ready, preparing to start program..."))
+        self.set_status(_("Starting program..."), _("Configuring runtime environment, please wait..."), show_progress=True, restart_progress=True)
+        self.start_exe()
+
+    def do_install(self):
+        self.set_status(_("Installing Environment"), _("Downloading and installing Bottles via Flatpak..."), show_progress=True)
+        
+        # Ensure Flathub remote exists before installing
+        self.run_subprocess(["flatpak", "remote-add", "--if-not-exists", "--system", "flathub", "https://dl.flathub.org/repo/flathub.flatpakrepo"])
+        
+        code = self.run_subprocess(["flatpak", "install", "--system", "-y", "flathub", "com.usebottles.bottles"])
+        if code != 0:
+            self.set_status(_("Installation Failed"), _("An error occurred while installing Bottles. Please expand advanced status to view logs."), show_progress=False)
+            return
+            
+        self.set_status(_("Downloading Components"), _("Initializing core gaming components (DXVK, VKD3D, Runner, etc.)..."), show_progress=True)
+        init_script = """import sys
+import gi
+gi.require_version('Gtk', '4.0')
+gi.require_version('Adw', '1')
+from gi.repository import GLib, Gio
+
+pkgdatadir = "/app/share/bottles"
+sys.path.insert(1, pkgdatadir)
+
+data_resource = Gio.Resource.load(f"{pkgdatadir}/data.gresource")
+bottles_resource = Gio.Resource.load(f"{pkgdatadir}/bottles.gresource")
+data_resource._register()
+bottles_resource._register()
+
+from bottles.backend.managers.manager import Manager
+from bottles.backend.utils.threading import RunAsync
+
+def run_manager():
+    m = Manager(False, check_connection=True)
+    loop = GLib.MainLoop()
+
+    def my_progress(*args, **kwargs):
+        pass
+
+    retries = 3
+    def on_done(res, error=None):
+        nonlocal retries
+        if not res.status and retries > 0:
+            retries -= 1
+            print(f"Checks failed, retrying... ({retries} left)", flush=True)
+            RunAsync(
+                task_func=m.checks,
+                callback=on_done,
+                install_latest=True,
+                first_run=True,
+                progress_callback=my_progress
+            )
+        else:
+            print(f"Result: {res.status}", flush=True)
+            loop.quit()
+
+    def start_run():
+        print("Starting checks in background...", flush=True)
+        RunAsync(
+            task_func=m.checks,
+            callback=on_done,
+            install_latest=True,
+            first_run=True,
+            progress_callback=my_progress
+        )
+        return False
+        
+    GLib.timeout_add_seconds(2, start_run)
+    loop.run()
+
+run_manager()
+"""
+        import os
+        import uuid
+        sandbox_dir = os.path.expanduser("~/.var/app/com.usebottles.bottles")
+        os.makedirs(sandbox_dir, exist_ok=True)
+        script_path = os.path.join(sandbox_dir, f"init_bottles_{uuid.uuid4().hex}.py")
+        with open(script_path, "w") as f:
+            f.write(init_script)
+            
+        code = self.run_subprocess(["flatpak", "run", "--command=python3", "com.usebottles.bottles", script_path])
+        try:
+            os.remove(script_path)
+        except:
+            pass
+        
+        self.set_status(_("Configuring Bottle"), _("Initializing Windows virtual bottle (Default)..."), show_progress=True)
+        code = self.run_subprocess(["flatpak", "run", "--branch=stable", "--command=bottles-cli", "com.usebottles.bottles", "new", "--bottle-name", DEFAULT_BOTTLE_NAME, "--environment", "application"])
+        
+        if code != 0:
+            self.set_status(_("Configuration Failed"), _("An error occurred while initializing the bottle. Please expand advanced status to view logs."), show_progress=False)
+            return
+            
+        self.set_status(_("Configuring Fonts"), _("Installing core fonts to prevent text rendering issues..."), show_progress=True)
+        fonts_script = """import sys
+pkgdatadir = "/app/share/bottles"
+sys.path.insert(1, pkgdatadir)
+import gi
+gi.require_version('Gtk', '4.0')
+gi.require_version('Adw', '1')
+from gi.repository import GLib, Gio
+data_resource = Gio.Resource.load(f"{pkgdatadir}/data.gresource")
+bottles_resource = Gio.Resource.load(f"{pkgdatadir}/bottles.gresource")
+data_resource._register()
+bottles_resource._register()
+
+from bottles.backend.managers.manager import Manager
+from bottles.backend.utils.threading import RunAsync
+
+m = Manager(False, check_connection=True)
+loop = GLib.MainLoop()
+
+def my_progress(*args, **kwargs):
+    pass
+
+def on_checks_done(res, error=None):
+    b = m.local_bottles.get("Default")
+    if not b:
+        loop.quit()
+        return
+
+    deps_to_install = ["cjkfonts", "allfonts"]
+    for dep in deps_to_install:
+        manifest = m.dependency_manager.get_dependency(dep)
+        if manifest:
+            print(f"Installing {dep}...")
+            m.dependency_manager.install(b, [dep, manifest])
+            
+    loop.quit()
+
+def start_run():
+    RunAsync(
+        task_func=m.checks,
+        callback=on_checks_done,
+        install_latest=True,
+        first_run=False,
+        progress_callback=my_progress
+    )
+    return False
+
+GLib.timeout_add_seconds(1, start_run)
+loop.run()
+"""
+        script_path2 = os.path.join(sandbox_dir, f"install_fonts_{uuid.uuid4().hex}.py")
+        with open(script_path2, "w") as f:
+            f.write(fonts_script)
+            
+        code = self.run_subprocess(["flatpak", "run", "--command=python3", "com.usebottles.bottles", script_path2])
+        try:
+            os.remove(script_path2)
+        except:
+            pass
+
+        self.log(_("Installation and configuration complete!"))
+        self.set_status(_("Starting program"), _("Bottle is ready, about to launch application..."), show_progress=True)
+        self.start_exe()
+
+    def start_exe(self):
+        self.log(_("Preparing to launch EXE: {}").format(self.exe_path))
+        
+        cmd = [
+            "flatpak", "run", "--branch=stable", "--filesystem=host", "--command=bottles-cli", "com.usebottles.bottles",
+            "run", "-b", DEFAULT_BOTTLE_NAME, "-e", self.exe_path
+        ]
+        self.log("==> " + " ".join(cmd))
+        
+        log_dir = os.path.expanduser("~/.cache/anduinos/exe-runner/")
+        os.makedirs(log_dir, exist_ok=True)
+        self.log_file_path = os.path.join(log_dir, f"anduinos-exe-runner-{os.getpid()}.log")
+        self.log_file = open(self.log_file_path, "w")
+
+        try:
+            self.run_process = subprocess.Popen(cmd, stdout=self.log_file, stderr=subprocess.STDOUT, start_new_session=True)
+            self.log(_("Process successfully started in the background, listening to logs..."))
+        except Exception as e:
+            self.log(_("Launch failed: {}").format(e))
+            self.set_status(_("Launch Failed"), _("Unable to start program, please check advanced logs."), show_progress=False)
+            return
+
+        def _monitor():
+            with open(self.log_file_path, "r") as f:
+                elapsed_time = 0
+                while True:
+                    line = f.readline()
+                    if line:
+                        self.log(line.strip())
+                    else:
+                        ret = self.run_process.poll()
+                        if ret is not None:
+                            break
+                        time.sleep(0.1)
+                        elapsed_time += 0.1
+                        
+                        # 如果程序稳定运行超过 5 秒且没有闪退，我们认为启动成功，关闭启动器窗口
+                        if elapsed_time >= 5.0:
+                            self.log("=========================================")
+                            self.log(_("Launcher mission complete, program is running in the background."))
+                            self.log(_("Automatically hiding launcher window, enjoy!"))
+                            time.sleep(1.0)
+                            def _close():
+                                if self.window: self.window.close()
+                                self.quit()
+                                return False
+                            GLib.idle_add(_close)
+                            # 窗口虽然关闭，主进程依然会随着 bottles-cli 的结束而自然退出（如果想彻底脱离可以不做限制，但这里我们可以直接 return）
+                            return
+
+            ret = self.run_process.returncode
+            if ret != 0:
+                self.log("=========================================")
+                self.log(_("Process terminated abnormally (exit code {}).").format(ret))
+                self.set_status(_("Launch Exception"), _("Launch or configuration failed, please check advanced logs."), show_progress=False)
+            else:
+                self.log(_("Process finished normally."))
+                time.sleep(2)
+                def _close2():
+                    if self.window: self.window.close()
+                    self.quit()
+                    return False
+                GLib.idle_add(_close2)
+
+        threading.Thread(target=_monitor, daemon=True).start()
+
+def main():
+    if len(sys.argv) < 2:
+        if is_bottles_installed():
+            subprocess.Popen(["flatpak", "run", "com.usebottles.bottles"])
+        sys.exit(0)
+        
+    exe_path = os.path.abspath(sys.argv[1])
+    if not os.path.isfile(exe_path):
+        print(f"File not found: {exe_path}")
+        sys.exit(1)
+
+    app = RunnerApp(exe_path)
+    app.run(None)
+
+if __name__ == "__main__":
+    main()

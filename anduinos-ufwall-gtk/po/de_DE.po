@@ -2,313 +2,372 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ufwall-gtk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
-#: src/widgets/rule_row.rs:80
-msgid "Delete Rule"
-msgstr "Regel löschen"
-
-#: src/widgets/rule_row.rs:81
-msgid "Delete rule"
-msgstr "Regel löschen"
-
-#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
-#: src/views/rules_view.rs:123
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: src/widgets/rule_row.rs:85
-msgid "Delete"
-msgstr "Löschen"
-
-#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
-#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
-#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
-#: src/window.rs:245
-msgid "Error"
-msgstr "Fehler"
-
-#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
-msgid "Add Rule"
-msgstr "Regel hinzufügen"
-
-#: src/widgets/add_rule_dialog.rs:70
-msgid "Service"
-msgstr "Dienst"
-
-#: src/widgets/add_rule_dialog.rs:72
-msgid "Custom"
-msgstr "Benutzerdefiniert"
-
-#: src/widgets/add_rule_dialog.rs:89
-msgid "Port / Service Name"
-msgstr "Port / Dienstname"
-
-#: src/widgets/add_rule_dialog.rs:93
-msgid "Action"
-msgstr "Aktion"
-
-#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
-#: src/views/status_view.rs:113
-msgid "Deny"
-msgstr "Verweigern"
-
-#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
-#: src/views/status_view.rs:105 src/views/status_view.rs:114
-msgid "Allow"
-msgstr "Zulassen"
-
-#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
-#: src/views/status_view.rs:115
-msgid "Reject"
-msgstr "Ablehnen"
-
-#: src/widgets/add_rule_dialog.rs:98
-msgid "Limit"
-msgstr "Begrenzen"
-
-#: src/widgets/add_rule_dialog.rs:110
-msgid "Advanced"
-msgstr "Erweitert"
-
-#: src/widgets/add_rule_dialog.rs:114
-msgid "Direction"
-msgstr "Richtung"
-
-#: src/widgets/add_rule_dialog.rs:116
-msgid "In"
-msgstr "Eingehend"
-
-#: src/widgets/add_rule_dialog.rs:117
-msgid "Out"
-msgstr "Ausgehend"
-
-#: src/widgets/add_rule_dialog.rs:122
-msgid "Protocol"
-msgstr "Protokoll"
-
-#: src/widgets/add_rule_dialog.rs:124
-msgid "Both"
-msgstr "Beide"
-
-#: src/widgets/add_rule_dialog.rs:125
-msgid "TCP"
-msgstr "TCP"
-
-#: src/widgets/add_rule_dialog.rs:126
-msgid "UDP"
-msgstr "UDP"
-
-#: src/widgets/add_rule_dialog.rs:131
-msgid "Source IP"
-msgstr "Quell-IP"
-
-#: src/widgets/add_rule_dialog.rs:135
-msgid "Destination IP"
-msgstr "Ziel-IP"
-
-#: src/widgets/add_rule_dialog.rs:144
-msgid "Interface"
-msgstr "Schnittstelle"
-
-#: src/widgets/add_rule_dialog.rs:149
-msgid "Comment"
-msgstr "Kommentar"
-
-#: src/widgets/add_rule_dialog.rs:154
-msgid "Insert Before Rule"
-msgstr "Vor Regel einfügen"
-
-#: src/widgets/add_rule_dialog.rs:155
 msgid "0 = append at end"
 msgstr "0 = am Ende anhängen"
 
-#: src/widgets/add_rule_dialog.rs:170
-msgid "Add"
-msgstr "Hinzufügen"
-
-#: src/widgets/add_rule_dialog.rs:254
-msgid "Save"
-msgstr "Speichern"
-
-#: src/views/dashboard_view.rs:56 src/window.rs:89
-msgid "Dashboard"
-msgstr "Dashboard"
-
-#: src/views/dashboard_view.rs:78
-msgid "Recent Events Parsed"
-msgstr "Zuletzt analysierte Ereignisse"
-
-#: src/views/dashboard_view.rs:96
-msgid "Blocked Events"
-msgstr "Blockierte Ereignisse"
-
-#: src/views/dashboard_view.rs:117
-msgid "Top Blocked Connections"
-msgstr "Top blockierte Verbindungen"
-
-#: src/views/dashboard_view.rs:123
-msgid "Top Blocked Ports"
-msgstr ""
-
-#: src/views/dashboard_view.rs:129
-msgid "Listening Ports"
-msgstr "Lauschende Ports"
-
-#: src/views/dashboard_view.rs:135
-msgid "Recent Blocked Events"
-msgstr "Zuletzt blockierte Ereignisse"
-
-#: src/views/dashboard_view.rs:139
-msgid "Show"
-msgstr "Anzeigen"
-
-#: src/views/dashboard_view.rs:154
-msgid "Refresh"
-msgstr "Aktualisieren"
-
-#: src/views/dashboard_view.rs:247
-msgid "No blocked connections in recent events"
-msgstr "Keine blockierten Verbindungen in den letzten Ereignissen"
-
-#: src/views/dashboard_view.rs:296
-msgid "No blocked ports in recent events"
-msgstr ""
-
-#: src/views/dashboard_view.rs:344
-msgid "No listening ports detected"
-msgstr "Keine lauschenden Ports erkannt"
-
-#: src/views/profiles_view.rs:76
-msgid "Application Profiles"
-msgstr "Anwendungsprofile"
-
-#: src/views/profiles_view.rs:77
-msgid "Allow applications with predefined rules."
-msgstr "Anwendungen mit vordefinierten Regeln zulassen."
-
-#: src/views/profiles_view.rs:82
-msgid "Quick Allow Port"
-msgstr "Port schnell zulassen"
-
-#: src/views/profiles_view.rs:83
-msgid "e.g. 80,443/tcp or 8080"
-msgstr "z. B. 80,443/tcp oder 8080"
-
-#: src/views/profiles_view.rs:87
-msgid "Port / Protocol"
-msgstr "Port / Protokoll"
-
-#: src/views/profiles_view.rs:119
-msgid "No Profiles"
-msgstr "Keine Profile"
-
-#: src/views/profiles_view.rs:120
-msgid "No application profiles found"
-msgstr "Keine Anwendungsprofile gefunden"
-
-#: src/views/rules_view.rs:62
-msgid "Search rules..."
-msgstr "Regeln suchen..."
-
-#: src/views/rules_view.rs:70
-msgid "Firewall Rules"
-msgstr "Firewall-Regeln"
-
-#: src/views/rules_view.rs:75
-msgid "No Rules"
-msgstr "Keine Regeln"
-
-#: src/views/rules_view.rs:76
-msgid "There are no rules configured yet."
-msgstr "Es sind noch keine Regeln konfiguriert."
-
-#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
-msgid "Delete All"
-msgstr "Alle löschen"
-
-#: src/views/rules_view.rs:119
-msgid "Delete All Rules?"
-msgstr ""
-
-#: src/views/rules_view.rs:120
-msgid "This will delete all custom rules. This action cannot be undone."
-msgstr "Dadurch werden alle benutzerdefinierten Regeln gelöscht. Diese Aktion kann nicht rückgängig gemacht werden."
-
-#: src/views/status_view.rs:78 src/window.rs:90
-msgid "Status"
-msgstr "Status"
-
-#: src/views/status_view.rs:89 src/window.rs:63
-msgid "Firewall"
-msgstr "Firewall"
-
-#: src/views/status_view.rs:90 src/views/status_view.rs:282
-msgid "Inactive"
-msgstr "Inaktiv"
-
-#: src/views/status_view.rs:97
-msgid "Default Policies"
-msgstr "Standardrichtlinien"
-
-#: src/views/status_view.rs:102
-msgid "Incoming"
-msgstr "Eingehend"
-
-#: src/views/status_view.rs:111
-msgid "Outgoing"
-msgstr "Ausgehend"
-
-#: src/views/status_view.rs:124
-msgid "Logging"
-msgstr "Protokollierung"
-
-#: src/views/status_view.rs:128
-msgid "Log Level"
-msgstr "Protokollierungsstufe"
-
-#: src/views/status_view.rs:130
-msgid "Off"
-msgstr "Aus"
-
-#: src/views/status_view.rs:131
-msgid "Low"
-msgstr "Niedrig"
-
-#: src/views/status_view.rs:132
-msgid "Medium"
-msgstr "Mittel"
-
-#: src/views/status_view.rs:133
-msgid "High"
-msgstr "Hoch"
-
-#: src/views/status_view.rs:134
-msgid "Full"
-msgstr "Voll"
-
-#: src/views/status_view.rs:282
-msgid "Active"
-msgstr "Aktiv"
-
-#: src/window.rs:80
 msgid "About"
 msgstr "Über"
 
-#: src/window.rs:91
-msgid "Rules"
-msgstr "Regeln"
+msgid "Action"
+msgstr "Aktion"
 
-#: src/window.rs:92
+msgid "Active"
+msgstr "Aktiv"
+
+msgid "Add"
+msgstr "Hinzufügen"
+
+msgid "Add Rule"
+msgstr "Regel hinzufügen"
+
+msgid "Advanced"
+msgstr "Erweitert"
+
+msgid "All"
+msgstr "Alle"
+
+msgid "Allow"
+msgstr "Zulassen"
+
+msgid "Allow applications with predefined rules."
+msgstr "Anwendungen mit vordefinierten Regeln zulassen."
+
+msgid "Application Profiles"
+msgstr "Anwendungsprofile"
+
+msgid "Audit"
+msgstr "Audit"
+
+msgid "Auditor Error"
+msgstr "Prüferfehler"
+
+msgid "Block"
+msgstr "Blockieren"
+
+msgid "Block Connection?"
+msgstr "Verbindung blockieren?"
+
+msgid "Block inbound traffic from"
+msgstr "Eingehenden Verkehr von blockieren"
+
+msgid "Block outbound traffic to"
+msgstr "Ausgehenden Verkehr zu blockieren"
+
+msgid "Blocked Events"
+msgstr "Blockierte Ereignisse"
+
+msgid "Blocked Successfully"
+msgstr "Blockierte Zeiten"
+
+msgid "Both"
+msgstr "Beide"
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+msgid "Comment"
+msgstr "Kommentar"
+
+msgid "Custom"
+msgstr "Benutzerdefiniert"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Default Policies"
+msgstr "Standardrichtlinien"
+
+msgid "Delete"
+msgstr "Löschen"
+
+msgid "Delete All"
+msgstr "Alle löschen"
+
+msgid "Delete All Rules?"
+msgstr "Alle Regeln löschen?"
+
+msgid "Delete Rule"
+msgstr "Regel löschen"
+
+msgid "Delete rule"
+msgstr "Regel löschen"
+
+msgid "Deny"
+msgstr "Verweigern"
+
+msgid "Destination IP"
+msgstr "Ziel-IP"
+
+msgid "Direction"
+msgstr "Richtung"
+
+msgid "Error"
+msgstr "Fehler"
+
+msgid "Failed to Block"
+msgstr "Blockierung fehlgeschlagen"
+
+msgid "Firewall"
+msgstr "Firewall"
+
+msgid "Firewall Rules"
+msgstr "Firewall-Regeln"
+
+msgid "Full"
+msgstr "Voll"
+
+msgid "High"
+msgstr "Hoch"
+
+msgid "In"
+msgstr "Eingehend"
+
+msgid "Inactive"
+msgstr "Inaktiv"
+
+msgid "Inbound"
+msgstr "Eingehend"
+
+msgid "Incoming"
+msgstr "Eingehend"
+
+msgid "Insert Before Rule"
+msgstr "Vor Regel einfügen"
+
+msgid "Interface"
+msgstr "Schnittstelle"
+
+msgid "Limit"
+msgstr "Begrenzen"
+
+msgid "Listening Ports"
+msgstr "Lauschende Ports"
+
+msgid "Log Level"
+msgstr "Protokollierungsstufe"
+
+msgid "Logging"
+msgstr "Protokollierung"
+
+msgid "Low"
+msgstr "Niedrig"
+
+msgid "Medium"
+msgstr "Mittel"
+
+msgid "Monitoring Network Activity"
+msgstr "Netzwerkaktivität überwachen"
+
+msgid "No Profiles"
+msgstr "Keine Profile"
+
+msgid "No Rules"
+msgstr "Keine Regeln"
+
+msgid "No application profiles found"
+msgstr "Keine Anwendungsprofile gefunden"
+
+msgid "No blocked connections in recent events"
+msgstr "Keine blockierten Verbindungen in den letzten Ereignissen"
+
+msgid "No blocked ports in recent events"
+msgstr "Keine blockierten Ports in den letzten Ereignissen"
+
+msgid "No listening ports detected"
+msgstr "Keine lauschenden Ports erkannt"
+
+msgid "Off"
+msgstr "Aus"
+
+msgid "Out"
+msgstr "Ausgehend"
+
+msgid "Outbound"
+msgstr "Ausgehend"
+
+msgid "Outgoing"
+msgstr "Ausgehend"
+
+msgid "Pause list updates"
+msgstr "Listenaktualisierungen pausieren"
+
+msgid "Port / Protocol"
+msgstr "Port / Protokoll"
+
+msgid "Port / Service Name"
+msgstr "Port / Dienstname"
+
 msgid "Profiles"
 msgstr "Profile"
 
-#~ msgid "Blocked"
-#~ msgstr "Blockiert"
+msgid "Protocol"
+msgstr "Protokoll"
 
-#~ msgid "Blocked times"
-#~ msgstr "Blockierte Zeiten"
+msgid "Quick Allow Port"
+msgstr "Port schnell zulassen"
+
+msgid "Recent Blocked Events"
+msgstr "Zuletzt blockierte Ereignisse"
+
+msgid "Recent Events Parsed"
+msgstr "Zuletzt analysierte Ereignisse"
+
+msgid "Refresh"
+msgstr "Aktualisieren"
+
+msgid "Reject"
+msgstr "Ablehnen"
+
+msgid "Resolve Domains"
+msgstr "Domains auflösen"
+
+msgid "Rule added to block"
+msgstr "Regel zur Blockliste hinzugefügt"
+
+msgid "Rules"
+msgstr "Regeln"
+
+msgid "Save"
+msgstr "Speichern"
+
+msgid "Search Process or IP..."
+msgstr "Prozess oder IP suchen..."
+
+msgid "Search rules..."
+msgstr "Regeln suchen..."
+
+msgid "Service"
+msgstr "Dienst"
+
+msgid "Show"
+msgstr "Anzeigen"
+
+msgid "Source IP"
+msgstr "Quell-IP"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "TCP"
+msgstr "TCP"
+
+msgid "There are no rules configured yet."
+msgstr "Es sind noch keine Regeln konfiguriert."
+
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr ""
+"Dadurch werden alle benutzerdefinierten Regeln gelöscht. Diese Aktion kann "
+"nicht rückgängig gemacht werden."
+
+msgid ""
+"This will prevent the remote host from sending any packets to your machine."
+msgstr "Dies verhindert, dass der Remote-Host Pakete an Ihren Computer sendet."
+
+msgid ""
+"This will prevent your machine from sending any packets to the remote host."
+msgstr "Dies verhindert, dass Ihr Rechner Pakete an den Remote-Host sendet."
+
+msgid "Top Blocked Connections"
+msgstr "Meist blockierte Verbindungen"
+
+msgid "Top Blocked Ports"
+msgstr "Häufigste blockierte Ports"
+
+msgid "UDP"
+msgstr "UDP"
+
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "z. B. 80,443/tcp oder 8080"
+
+msgid "BitTorrent client"
+msgstr "BitTorrent-Client"
+
+msgid "Common UNIX Printing System server"
+msgstr "Common UNIX Printing System-Server"
+
+msgid "Continuous file synchronization"
+msgstr "Kontinuierliche Dateisynchronisation"
+
+msgid "Docker container runtime API"
+msgstr "Docker-Container-Laufzeit-API"
+
+msgid "Domain Name System server"
+msgstr "Domain Name System-Server"
+
+msgid "Extensible Messaging and Presence Protocol"
+msgstr "Extensible Messaging and Presence Protocol"
+
+msgid "File Transfer Protocol"
+msgstr "File Transfer Protocol"
+
+msgid "File synchronization service"
+msgstr "Dateisynchronisierungsdienst"
+
+msgid "Hypertext Transfer Protocol for web servers"
+msgstr "Hypertext Transfer Protocol für Webserver"
+
+msgid "In-memory data structure store"
+msgstr "In-Memory-Datenstruktur-Speicher"
+
+msgid "Internet Message Access Protocol for email"
+msgstr "Internet Message Access Protocol für E-Mails"
+
+msgid "Lightweight Directory Access Protocol"
+msgstr "Lightweight Directory Access Protocol"
+
+msgid "Media streaming server"
+msgstr "Medien-Streaming-Server"
+
+msgid "Modern VPN tunnel"
+msgstr "Modernes VPN-Tunnel"
+
+msgid "Multicast DNS for local network discovery"
+msgstr "Multicast DNS zur lokalen Netzwerkerkennung"
+
+msgid "MySQL database server"
+msgstr "MySQL-Datenbankserver"
+
+msgid "Network File System"
+msgstr "Network File System"
+
+msgid "Network Time Protocol"
+msgstr "Port / Protokoll"
+
+msgid "NoSQL document database"
+msgstr "NoSQL-Dokumenten-Datenbank"
+
+msgid "Phone and desktop integration"
+msgstr "Telefon- und Desktop-Integration"
+
+msgid "Plex media streaming server"
+msgstr "Plex-Medien-Streaming-Server"
+
+msgid "Post Office Protocol for email retrieval"
+msgstr "Post Office Protocol zum Abrufen von E-Mails"
+
+msgid "PostgreSQL database server"
+msgstr "PostgreSQL-Datenbankserver"
+
+msgid "Remote Desktop Protocol"
+msgstr "Port / Protokoll"
+
+msgid "Secure HTTP for web servers"
+msgstr "Secure HTTP für Webserver"
+
+msgid "Secure shell remote access"
+msgstr "Secure Shell Fernzugriff"
+
+msgid "Simple Mail Transfer Protocol"
+msgstr "Simple Mail Transfer Protocol"
+
+msgid "Virtual Network Computing remote desktop"
+msgstr "Virtual Network Computing Ferndesktop"
+
+msgid "Windows file and printer sharing"
+msgstr "Windows-Datei- und Druckerfreigabe"
 
 #~ msgid "Firewall Active"
 #~ msgstr "Firewall aktiv"

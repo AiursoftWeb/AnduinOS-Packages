@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-dconf-defaults</PackageName>
-    <PackageVersion>2.0.0-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS system-wide dconf/gschema/GDM defaults</PackageDescription>
     <Section>admin</Section>
@@ -21,23 +21,23 @@
 
   <ItemGroup>
     <!-- gsettings schema override -->
-    <IncludeFile Include="deploy/99-anduinos-defaults.gschema.override"
+    <IncludeFile Include="assets/99-anduinos-defaults.gschema.override"
                  Target="/usr/share/glib-2.0/schemas/99-anduinos-defaults.gschema.override" />
 
     <!-- dconf database fragments (sorted by priority) -->
-    <IncludeFile Include="deploy/01-custom-keybindings.conf"
+    <IncludeFile Include="assets/01-custom-keybindings.conf"
                  Target="/etc/dconf/db/anduinos.d/01-custom-keybindings.conf" />
-    <IncludeFile Include="deploy/02-ptyxis-terminal.conf"
+    <IncludeFile Include="assets/02-ptyxis-terminal.conf"
                  Target="/etc/dconf/db/anduinos.d/02-ptyxis-terminal.conf" />
-    <IncludeFile Include="deploy/03-system-extensions.conf"
+    <IncludeFile Include="assets/03-system-extensions.conf"
                  Target="/etc/dconf/db/anduinos.d/03-system-extensions.conf" />
     <!-- 04 is reserved for dynamic build-time configs (mod 52) -->
     <!-- 10-19 are per-extension dconf fragments shipped by Apkg packages -->
 
     <!-- GDM greeter -->
-    <IncludeFile Include="deploy/greeter.dconf-defaults.ini"
+    <IncludeFile Include="assets/greeter.dconf-defaults.ini"
                  Target="/etc/gdm3/greeter.dconf-defaults" />
-    <IncludeFile Include="deploy/anduinos_text_smaller.png"
+    <IncludeFile Include="assets/anduinos_text_smaller.png"
                  Target="/usr/share/pixmaps/anduinos_text_smaller.png" />
   </ItemGroup>
 

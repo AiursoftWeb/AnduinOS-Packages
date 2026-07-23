@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-ufwall-gtk</PackageName>
-    <PackageVersion>2.0.0-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Firewall Configuration — modern GTK4/Libadwaita frontend for UFW</PackageDescription>
     <Section>admin</Section>
@@ -22,6 +22,7 @@
   <ItemGroup>
     <Dependency Include="ufw" />
     <Dependency Include="polkitd" />
+    <Dependency Include="libpcap0.8t64" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,11 +32,16 @@
 
   <ItemGroup>
     <IncludeScript Include="obj/ufwall-gtk" Target="/usr/bin/ufwall-gtk" />
+    <IncludeScript Include="obj/ufwall-auditor" Target="/usr/libexec/ufwall-gtk/ufwall-auditor" />
     <IncludeFile Include="data/com.anduinos.ufwall.desktop" Target="/usr/share/applications/com.anduinos.ufwall.desktop" />
     <IncludeFile Include="data/com.anduinos.ufwall.policy" Target="/usr/share/polkit-1/actions/com.anduinos.ufwall.policy" />
     <IncludeFile Include="data/com.anduinos.ufwall.svg" Target="/usr/share/icons/hicolor/scalable/apps/com.anduinos.ufwall.svg" />
     <IncludeFolder Include="data/app_profiles" Target="/usr/share/ufwall-gtk/app_profiles" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PostInstallScript Include="scripts/postinst.sh" />
   </ItemGroup>
 
 </Project>

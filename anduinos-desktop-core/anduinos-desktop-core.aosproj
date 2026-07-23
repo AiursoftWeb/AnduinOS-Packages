@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-core</PackageName>
-   <PackageVersion>2.0.0-1+$(SuiteShortName)</PackageVersion>
+   <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS desktop core metapackage — pure upstream GNOME desktop environment with multimedia, printing, and input method support. No AnduinOS branding.</PackageDescription>
     <Section>metapackages</Section>
@@ -198,6 +198,12 @@
     <Recommend Include="sysstat" />
 
     <!-- ============================================================
+         AnduinOS why command placeholder
+         Prompts user to install anduinos-why-ai for full AI assistant.
+         ============================================================ -->
+    <Recommend Include="anduinos-why-placeholder" />
+
+    <!-- ============================================================
          Recommends: Desktop extras (safe to remove)
          ============================================================ -->
     <Recommend Include="gnome-remote-desktop" />
@@ -221,7 +227,7 @@
     <Recommend Include="ipp-usb" />
     <Recommend Include="sane-airscan" />
     <Recommend Include="sane-utils" />
-    <Recommend Include="simple-scan" />
+    <!-- simple-scan moved to anduinos-desktop-apps -->
 
     <!-- ============================================================
          Accessibility

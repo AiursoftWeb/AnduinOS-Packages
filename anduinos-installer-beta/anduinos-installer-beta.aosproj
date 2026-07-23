@@ -1,0 +1,51 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-installer-beta</PackageName>
+    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS GTK4 native installer (beta) — ground-up rewrite replacing Ubiquity</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+
+    <!-- Beta: NO Conflicts, NO Replaces. This is an orphan package.
+         After 3-4 months of stable testing, rename to anduinos-installer
+         and add Conflicts/Replaces against anduinos-installer-config + ubiquity. -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Minimal dependencies: only what the Python code actually calls -->
+    <Dependency Include="python3" />
+    <Dependency Include="python3-gi" />
+    <Dependency Include="gir1.2-gtk-4.0" />
+    <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="parted" />
+    <Dependency Include="btrfs-progs" />
+    <Dependency Include="dosfstools" />
+    <Dependency Include="grub-efi-amd64-bin" />
+    <Dependency Include="squashfs-tools" />
+    <Dependency Include="util-linux" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Shell launcher (sudo re-exec if not root) -->
+    <IncludeFile Include="assets/anduinos-installer-beta"
+                 Target="/usr/bin/anduinos-installer-beta" Mode="755" />
+    <!-- Desktop entry for app drawer -->
+    <IncludeFile Include="assets/anduinos-installer-beta.desktop"
+                 Target="/usr/share/applications/anduinos-installer-beta.desktop" Mode="644" />
+    <!-- Python source tree -->
+    <IncludeFolder Include="src/"
+                   Target="/usr/lib/anduinos-installer-beta/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PostInstallScript Include="scripts/postinst.sh" />
+    <PostRemoveScript Include="scripts/postrm.sh" />
+  </ItemGroup>
+</Project>

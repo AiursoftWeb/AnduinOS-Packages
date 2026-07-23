@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-rime</PackageName>
-    <PackageVersion>2.0.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default Chinese input method (rime-ice configuration for ibus-rime)</PackageDescription>
     <Section>utils</Section>
@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <IncludeFolder Include="deploy/" Target="/usr/share/rime-data/" />
+    <IncludeFolder Include="assets/" Target="/usr/share/rime-data/" />
     <IncludeFile Include="assets/pkg_depends" Target="/usr/share/language-selector/data/pkg_depends" Mode="644" />
   </ItemGroup>
 

@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+#    50-motd-news - no-op stub
+#
+#    Ubuntu's 50-motd-news phones home to motd.ubuntu.com on every login,
+#    sending distro version, kernel version, CPU model, and cloud provider
+#    info as a wget User-Agent header.  Canonical returns arbitrary text
+#    that is rendered to the user's terminal.
+#
+#    AnduinOS disables this.  No telemetry.  No remote ads.
+#
+exit 0

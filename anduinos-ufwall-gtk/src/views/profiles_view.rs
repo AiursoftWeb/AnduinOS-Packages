@@ -118,7 +118,7 @@ impl ProfilesView {
         let empty_state = adw::StatusPage::builder()
             .title(i18n("No Profiles"))
             .description(i18n("No application profiles found"))
-            .icon_name("applications-system-symbolic")
+            .icon_name("applications-system")
             .build();
 
         let stack = gtk::Stack::builder()
@@ -205,7 +205,7 @@ impl ProfilesView {
                     
                     let switch = adw::SwitchRow::builder()
                         .title(&profile.title)
-                        .subtitle(&format!("{} ({})", profile.description, profile.ports))
+                        .subtitle(&format!("{} ({})", i18n(&profile.description), profile.ports))
                         .active(is_allowed)
                         .build();
 

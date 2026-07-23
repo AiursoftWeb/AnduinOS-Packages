@@ -47,11 +47,16 @@ MENU_CONFIG = {
     ('classic', 'top'):    ('arcmenu', 'TopLeft'),
     ('classic', 'left'):   ('arcmenu', 'TopLeft'),
     ('classic', 'right'):  ('arcmenu', 'TopRight'),
-    # Eleven — centered on horizontal panels; vertical panels keep default
+    # Eleven — start centered, taskbar centered on horizontal panels
     ('eleven',  'bottom'): ('11', 'BottomCentered'),
     ('eleven',  'top'):    ('11', 'TopCentered'),
     ('eleven',  'left'):   ('11', 'Off'),
     ('eleven',  'right'):  ('11', 'Off'),
+    # Seperated — start button left (like Classic), taskbar centered (like 11)
+    ('seperated', 'bottom'): ('arcmenu', 'BottomLeft'),
+    ('seperated', 'top'):    ('arcmenu', 'TopLeft'),
+    ('seperated', 'left'):   ('arcmenu', 'TopLeft'),
+    ('seperated', 'right'):  ('arcmenu', 'TopRight'),
 }
 
 POSITIONS = {
@@ -63,11 +68,26 @@ POSITIONS = {
 
 # ── panel-element-positions generators ───────────────────────────
 
-def _make_pep(panel_pos: str, centered: bool, monitors: "list[str]") -> str:
+def _make_pep(panel_pos: str, style: str, monitors: "list[str]") -> str:
     """Build the JSON for dash-to-panel panel-element-positions."""
-    if centered:
+    if style == 'seperated':
+        # Hybrid: centerBox on left (ArcMenu button stays left),
+        # taskbar centered (app icons in the middle like 11).
         elements = [
-            {"element": "activitiesButton", "visible": False, "position": "stackedTL"},
+            {"element": "centerBox",        "visible": True,  "position": "stackedTL"},
+            {"element": "taskbar",          "visible": True,  "position": "centerMonitor"},
+            {"element": "showAppsButton",   "visible": False, "position": "stackedTL"},
+            {"element": "activitiesButton", "visible": True, "position": "stackedBR"},
+            {"element": "leftBox",          "visible": True,  "position": "stackedBR"},
+            {"element": "rightBox",         "visible": True,  "position": "stackedBR"},
+            {"element": "systemMenu",       "visible": True,  "position": "stackedBR"},
+            {"element": "dateMenu",         "visible": True,  "position": "stackedBR"},
+            {"element": "desktopButton",    "visible": True,  "position": "stackedBR"},
+        ]
+    elif style == 'eleven':
+        # Centered: everything around centerMonitor, start button centered.
+        elements = [
+            {"element": "activitiesButton", "visible": True, "position": "stackedTL"},
             {"element": "showAppsButton",   "visible": False, "position": "stackedTL"},
             {"element": "leftBox",          "visible": True,  "position": "stackedTL"},
             {"element": "centerBox",        "visible": True,  "position": "stackedBR"},
@@ -78,11 +98,12 @@ def _make_pep(panel_pos: str, centered: bool, monitors: "list[str]") -> str:
             {"element": "desktopButton",    "visible": True,  "position": "stackedBR"},
         ]
     else:
+        # Classic: taskbar and centerBox stacked on the left.
         elements = [
             {"element": "centerBox",        "visible": True,  "position": "stackedTL"},
             {"element": "taskbar",          "visible": True,  "position": "stackedTL"},
             {"element": "showAppsButton",   "visible": False, "position": "stackedTL"},
-            {"element": "activitiesButton", "visible": False, "position": "stackedBR"},
+            {"element": "activitiesButton", "visible": True, "position": "stackedBR"},
             {"element": "leftBox",          "visible": True,  "position": "stackedBR"},
             {"element": "rightBox",         "visible": True,  "position": "stackedBR"},
             {"element": "systemMenu",       "visible": True,  "position": "stackedBR"},
@@ -108,7 +129,12 @@ def _ext_is_enabled(uuid: str) -> bool:
 def detect_current():
     """Detect current (style, position) from dconf. Returns ('eleven', 'bottom') as fallback."""
     ml = _dconf_read(f'{ARC}/menu-layout')
-    style = 'classic' if (ml and 'arcmenu' in ml) else 'eleven'
+    if ml and 'arcmenu' in ml:
+        # Classic or Seperated — check whether taskbar is centered
+        pep = _dconf_read(f'{DTP}/panel-element-positions')
+        style = 'seperated' if (pep and 'centerMonitor' in pep) else 'classic'
+    else:
+        style = 'eleven'
 
     pp = _dconf_read(f'{DTP}/panel-positions')
     pos = 'bottom'
@@ -142,7 +168,6 @@ def _write_use_launchers(enabled: bool):
 
 def apply_style_and_position(style: str, position: str) -> bool:
     """Apply the combination of *style* and *position* via dconf."""
-    centered = (style == 'eleven')
     menu_layout, force_menu = MENU_CONFIG[(style, position)]
 
     panel_pos = POSITIONS[position]
@@ -164,7 +189,7 @@ def apply_style_and_position(style: str, position: str) -> bool:
     except Exception:
         pass
 
-    pep = _make_pep(panel_pos, centered, monitors)
+    pep = _make_pep(panel_pos, style, monitors)
 
     # panel-positions: one entry per monitor
     pp = json.dumps({m: panel_pos for m in monitors})
@@ -244,7 +269,8 @@ def _draw_sys_tray(cr, x, y):
 
 def draw_preview(area, cr, w, h, style: str, position: str):
     """Full desktop preview with taskbar on *position* edge."""
-    centered = (style == 'eleven')
+    start_centered = (style == 'eleven')
+    icons_centered = (style in ('eleven', 'seperated'))
     bar_thick = 18
     icon_w, icon_h = 14, 14
     icon_r = 3
@@ -289,18 +315,27 @@ def draw_preview(area, cr, w, h, style: str, position: str):
     if is_horiz:
         # ── horizontal bar: top/bottom ──
         pad = 6
-        start_x = bx + pad
         start_y = by + 3
-        _draw_start_button(cr, start_x, start_y, start_w, start_h)
-
-        total_w = n_icons * icon_w + (n_icons - 1) * icon_gap
-        if centered:
-            icons_x = bx + (bw - total_w) / 2
-        else:
-            icons_x = start_x + start_w + 12
         icons_y = by + 2
+        icons_total_w = n_icons * icon_w + (n_icons - 1) * icon_gap
 
-        _draw_icons(cr, icons_x, icons_y, icon_w, icon_h, icon_r, icon_gap, n_icons)
+        if start_centered:
+            # 11: start button + icons as one centered group
+            group_w = start_w + 12 + icons_total_w
+            group_x = bx + (bw - group_w) / 2
+            _draw_start_button(cr, group_x, start_y, start_w, start_h)
+            _draw_icons(cr, group_x + start_w + 12, icons_y,
+                        icon_w, icon_h, icon_r, icon_gap, n_icons)
+        elif icons_centered:
+            # Seperated: start button left, icons centered
+            _draw_start_button(cr, bx + pad, start_y, start_w, start_h)
+            _draw_icons(cr, bx + (bw - icons_total_w) / 2, icons_y,
+                        icon_w, icon_h, icon_r, icon_gap, n_icons)
+        else:
+            # Classic: start button left, icons left
+            _draw_start_button(cr, bx + pad, start_y, start_w, start_h)
+            _draw_icons(cr, bx + pad + start_w + 12, icons_y,
+                        icon_w, icon_h, icon_r, icon_gap, n_icons)
 
         tray_x = bx + bw - 52
         tray_y = by + 5
@@ -320,7 +355,7 @@ def draw_preview(area, cr, w, h, style: str, position: str):
 
         icon_w_v, icon_h_v = bar_thick - 6, bar_thick - 6
         total_h = n_icons * icon_h_v + (n_icons - 1) * icon_gap
-        icons_y_v = by + 30 if not centered else by + (bh - total_h) / 2
+        icons_y_v = by + 30 if not icons_centered else by + (bh - total_h) / 2
         icons_x_v = bx + 3
 
         for i in range(n_icons):
@@ -373,7 +408,10 @@ class StylePage(Adw.PreferencesPage):
         self.btn11.connect('clicked', self._on_click, 'eleven')
         self.btn10 = Gtk.Button(label='  ' + _('Classic') + '  ')
         self.btn10.connect('clicked', self._on_click, 'classic')
+        self.btn_sep = Gtk.Button(label='  ' + _('Seperated') + '  ')
+        self.btn_sep.connect('clicked', self._on_click, 'seperated')
         box.append(self.btn10)
+        box.append(self.btn_sep)
         box.append(self.btn11)
         layout_group.add(box)
 
@@ -437,21 +475,19 @@ class StylePage(Adw.PreferencesPage):
             self.win._toast(_('✗ Failed to apply style'))
 
     def _on_group_toggled(self, switch_row, pspec):
-        if self.win.current_style == 'classic':
+        if self.win.current_style in ('classic', 'seperated'):
             _write_group_apps(switch_row.get_active())
             self._sync_vista_visibility()
 
     def _on_vista_toggled(self, switch_row, pspec):
-        if self.win.current_style == 'classic':
+        if self.win.current_style in ('classic', 'seperated'):
             _write_use_launchers(switch_row.get_active())
 
     def _highlight_btn(self):
-        if self.win.current_style == 'eleven':
-            self.btn11.add_css_class('suggested-action')
-            self.btn10.remove_css_class('suggested-action')
-        else:
-            self.btn10.add_css_class('suggested-action')
-            self.btn11.remove_css_class('suggested-action')
+        s = self.win.current_style
+        self.btn10.add_css_class('suggested-action') if s == 'classic' else self.btn10.remove_css_class('suggested-action')
+        self.btn_sep.add_css_class('suggested-action') if s == 'seperated' else self.btn_sep.remove_css_class('suggested-action')
+        self.btn11.add_css_class('suggested-action') if s == 'eleven' else self.btn11.remove_css_class('suggested-action')
 
     def _on_pos_toggled(self, btn, pos):
         if not btn.get_active():
@@ -485,7 +521,7 @@ class StylePage(Adw.PreferencesPage):
             btn.handler_unblock_by_func(self._on_pos_toggled)
 
     def _sync_group_visibility(self):
-        if self.win.current_style == 'classic':
+        if self.win.current_style in ('classic', 'seperated'):
             self.group_group.set_visible(True)
             self.group_expander.set_enable_expansion(True)
             self.group_row.set_active(_read_group_apps())
@@ -502,7 +538,11 @@ class StylePage(Adw.PreferencesPage):
 
     @staticmethod
     def _label(s):
-        return _('Windows 11') if s == 'eleven' else _('Classic')
+        if s == 'eleven':
+            return _('Windows 11')
+        if s == 'seperated':
+            return _('Seperated')
+        return _('Classic')
 
 
 # ── panel widgets page ───────────────────────────────────────────
@@ -534,6 +574,36 @@ class PanelWidgetsPage(Adw.PreferencesPage):
             group.add(row)
 
         self.add(group)
+
+        # ── Activities button toggle ──
+        tb_group = Adw.PreferencesGroup()
+        tb_group.set_title(_('Taskbar Elements'))
+        tb_group.set_description(_('Show or hide built-in panel elements.'))
+
+        self.activities_row = Adw.SwitchRow()
+        self.activities_row.set_title(_('Show Activities Button'))
+        self.activities_row.set_subtitle(_('Display the Activities button on the taskbar'))
+        self.activities_row.set_active(_dconf_read(f'{ARC}/show-activities-button') != 'false')
+        self.activities_row.connect('notify::active', self._on_activities_toggle)
+        tb_group.add(self.activities_row)
+
+        self.add(tb_group)
+
+    def _on_activities_toggle(self, switch_row, pspec):
+        if self._busy:
+            return
+        visible = switch_row.get_active()
+        v = 'true' if visible else 'false'
+        try:
+            subprocess.run(['dconf', 'write', f'{ARC}/show-activities-button', v], check=True)
+            # Force refresh Dash-to-Panel to override legacy 2.0.0 invisible state
+            apply_style_and_position(self.win.current_style, self.win.current_position)
+            self.win._toast(_('✓ Activities button — {action}n').format(action=('shown' if visible else 'hidden')))
+        except subprocess.CalledProcessError:
+            self.win._toast(_('✗ Failed to toggle activities button'))
+            self._busy = True
+            switch_row.set_active(not visible)
+            self._busy = False
 
     def _on_toggle(self, switch_row, pspec, uuid, label):
         if self._busy:
@@ -826,7 +896,7 @@ class AppearanceApp(Adw.Application):
         dialog.set_website('https://www.anduinos.com')
         dialog.set_issue_url('https://github.com/AiursoftWeb/AnduinOS-Packages/issues')
         dialog.set_license_type(Gtk.License.GPL_3_0)
-        dialog.set_version('2.0.0 rc 1')
+        dialog.set_version('2.0.0')
         dialog.present(self.get_active_window())
 
     def _on_win_destroyed(self, win):

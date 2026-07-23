@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-wallpapers</PackageName>
-    <PackageVersion>2.0.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <Provides>ubuntu-wallpapers</Provides>
     <PackageDescription>AnduinOS default wallpapers (Fluent Building)</PackageDescription>
@@ -21,19 +21,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <IncludeFile Include="deploy/Fluent-building-light.png" Target="/usr/share/backgrounds/Fluent-building-light.png" />
-    <IncludeFile Include="deploy/Fluent-building-night.png" Target="/usr/share/backgrounds/Fluent-building-night.png" />
-    <IncludeFile Include="deploy/Floating-objects-light.jpg" Target="/usr/share/backgrounds/Floating-objects-light.jpg" />
-    <IncludeFile Include="deploy/Floating-objects-dark.png" Target="/usr/share/backgrounds/Floating-objects-dark.png" />
-    <IncludeFile Include="deploy/new_mountain-light.png" Target="/usr/share/backgrounds/new_mountain-light.png" />
-    <IncludeFile Include="deploy/new_mountain-dark.png" Target="/usr/share/backgrounds/new_mountain-dark.png" />
-    <IncludeFile Include="deploy/new_bubbles-light.jpg" Target="/usr/share/backgrounds/new_bubbles-light.jpg" />
-    <IncludeFile Include="deploy/new_bubbles-dark.jpg" Target="/usr/share/backgrounds/new_bubbles-dark.jpg" />
-    <IncludeFile Include="deploy/11-light.jpg" Target="/usr/share/backgrounds/11-light.jpg" />
-    <IncludeFile Include="deploy/11-dark.jpg" Target="/usr/share/backgrounds/11-dark.jpg" />
-    <IncludeFile Include="deploy/aos-light.jpg" Target="/usr/share/backgrounds/aos-light.jpg" />
-    <IncludeFile Include="deploy/aos-dark.jpg" Target="/usr/share/backgrounds/aos-dark.jpg" />
-    <IncludeFile Include="deploy/fluent.xml" Target="/usr/share/gnome-background-properties/fluent.xml" />
+    <IncludeFile Include="assets/Fluent-building-light.png" Target="/usr/share/backgrounds/Fluent-building-light.png" />
+    <IncludeFile Include="assets/Fluent-building-night.png" Target="/usr/share/backgrounds/Fluent-building-night.png" />
+    <IncludeFile Include="assets/Floating-objects-light.jpg" Target="/usr/share/backgrounds/Floating-objects-light.jpg" />
+    <IncludeFile Include="assets/Floating-objects-dark.png" Target="/usr/share/backgrounds/Floating-objects-dark.png" />
+    <IncludeFile Include="assets/new_mountain-light.png" Target="/usr/share/backgrounds/new_mountain-light.png" />
+    <IncludeFile Include="assets/new_mountain-dark.png" Target="/usr/share/backgrounds/new_mountain-dark.png" />
+    <IncludeFile Include="assets/new_bubbles-light.jpg" Target="/usr/share/backgrounds/new_bubbles-light.jpg" />
+    <IncludeFile Include="assets/new_bubbles-dark.jpg" Target="/usr/share/backgrounds/new_bubbles-dark.jpg" />
+    <IncludeFile Include="assets/11-light.jpg" Target="/usr/share/backgrounds/11-light.jpg" />
+    <IncludeFile Include="assets/11-dark.jpg" Target="/usr/share/backgrounds/11-dark.jpg" />
+    <IncludeFile Include="assets/aos-light.jpg" Target="/usr/share/backgrounds/aos-light.jpg" />
+    <IncludeFile Include="assets/aos-dark.jpg" Target="/usr/share/backgrounds/aos-dark.jpg" />
+    <IncludeFile Include="assets/fluent.xml" Target="/usr/share/gnome-background-properties/fluent.xml" />
     <!-- Wallpaper dconf — ships with wallpapers so they're always in sync -->
     <IncludeFile Include="dconf/20-wallpapers.conf" Target="/etc/dconf/db/anduinos.d/20-wallpapers.conf" />
   </ItemGroup>

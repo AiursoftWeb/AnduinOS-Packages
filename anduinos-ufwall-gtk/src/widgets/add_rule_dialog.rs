@@ -250,6 +250,17 @@ impl AddRuleDialog {
         if let Some(combo) = imp.dir_combo.borrow().as_ref() {
             combo.set_selected(rule.direction.index());
         }
+        // Address-based rules: populate source/destination IP fields
+        if let Some(entry) = imp.source_entry.borrow().as_ref() {
+            if rule.from != "Anywhere" && !rule.from.is_empty() {
+                entry.set_text(&rule.from);
+            }
+        }
+        if let Some(entry) = imp.dest_entry.borrow().as_ref() {
+            if rule.to != "Anywhere" && !rule.to.is_empty() {
+                entry.set_text(&rule.to);
+            }
+        }
         if let Some(btn) = imp.add_btn.borrow().as_ref() {
             btn.set_label(&i18n("Save"));
         }
@@ -258,9 +269,17 @@ impl AddRuleDialog {
     fn on_add_clicked(&self, btn: &gtk::Button) {
         let imp = self.imp();
         let edit_num = *imp.edit_rule_number.borrow();
-        
+
         let port = imp.port_entry.borrow().as_ref().unwrap().text().to_string();
-        if port.trim().is_empty() {
+
+        let from_text = imp.source_entry.borrow().as_ref().unwrap().text().to_string();
+        let from = if from_text.trim().is_empty() { None } else { Some(from_text) };
+
+        let to_text = imp.dest_entry.borrow().as_ref().unwrap().text().to_string();
+        let to = if to_text.trim().is_empty() { None } else { Some(to_text) };
+
+        // Require at least one of: port, source IP, or destination IP
+        if port.trim().is_empty() && from.is_none() && to.is_none() {
             return;
         }
 
@@ -274,12 +293,6 @@ impl AddRuleDialog {
 
         let proto_combo = imp.proto_combo.borrow();
         let protocol = Some(Protocol::from_index(proto_combo.as_ref().unwrap().selected()));
-
-        let from_text = imp.source_entry.borrow().as_ref().unwrap().text().to_string();
-        let from = if from_text.trim().is_empty() { None } else { Some(from_text) };
-
-        let to_text = imp.dest_entry.borrow().as_ref().unwrap().text().to_string();
-        let to = if to_text.trim().is_empty() { None } else { Some(to_text) };
 
         let iface_text = imp.interface_entry.borrow().as_ref().unwrap().text().to_string();
         let interface = if iface_text.trim().is_empty() { None } else { Some(iface_text) };

@@ -2,313 +2,372 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ufwall-gtk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
-#: src/widgets/rule_row.rs:80
-msgid "Delete Rule"
-msgstr "Slet regel"
-
-#: src/widgets/rule_row.rs:81
-msgid "Delete rule"
-msgstr "Slet regel"
-
-#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
-#: src/views/rules_view.rs:123
-msgid "Cancel"
-msgstr "Annullér"
-
-#: src/widgets/rule_row.rs:85
-msgid "Delete"
-msgstr "Slet"
-
-#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
-#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
-#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
-#: src/window.rs:245
-msgid "Error"
-msgstr "Fejl"
-
-#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
-msgid "Add Rule"
-msgstr "Tilføj regel"
-
-#: src/widgets/add_rule_dialog.rs:70
-msgid "Service"
-msgstr "Tjeneste"
-
-#: src/widgets/add_rule_dialog.rs:72
-msgid "Custom"
-msgstr "Brugerdefineret"
-
-#: src/widgets/add_rule_dialog.rs:89
-msgid "Port / Service Name"
-msgstr "Port / tjenestenavn"
-
-#: src/widgets/add_rule_dialog.rs:93
-msgid "Action"
-msgstr "Handling"
-
-#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
-#: src/views/status_view.rs:113
-msgid "Deny"
-msgstr "Nægt"
-
-#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
-#: src/views/status_view.rs:105 src/views/status_view.rs:114
-msgid "Allow"
-msgstr "Tillad"
-
-#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
-#: src/views/status_view.rs:115
-msgid "Reject"
-msgstr "Afvist"
-
-#: src/widgets/add_rule_dialog.rs:98
-msgid "Limit"
-msgstr "Begræns"
-
-#: src/widgets/add_rule_dialog.rs:110
-msgid "Advanced"
-msgstr "Avanceret"
-
-#: src/widgets/add_rule_dialog.rs:114
-msgid "Direction"
-msgstr "Retning"
-
-#: src/widgets/add_rule_dialog.rs:116
-msgid "In"
-msgstr "Ind"
-
-#: src/widgets/add_rule_dialog.rs:117
-msgid "Out"
-msgstr "Ud"
-
-#: src/widgets/add_rule_dialog.rs:122
-msgid "Protocol"
-msgstr "Protokol"
-
-#: src/widgets/add_rule_dialog.rs:124
-msgid "Both"
-msgstr "Begge"
-
-#: src/widgets/add_rule_dialog.rs:125
-msgid "TCP"
-msgstr "TCP"
-
-#: src/widgets/add_rule_dialog.rs:126
-msgid "UDP"
-msgstr "UDP"
-
-#: src/widgets/add_rule_dialog.rs:131
-msgid "Source IP"
-msgstr "Kilde-IP"
-
-#: src/widgets/add_rule_dialog.rs:135
-msgid "Destination IP"
-msgstr "Destinations-IP"
-
-#: src/widgets/add_rule_dialog.rs:144
-msgid "Interface"
-msgstr "Grænseflade"
-
-#: src/widgets/add_rule_dialog.rs:149
-msgid "Comment"
-msgstr "Kommentar"
-
-#: src/widgets/add_rule_dialog.rs:154
-msgid "Insert Before Rule"
-msgstr "Indsæt før regel"
-
-#: src/widgets/add_rule_dialog.rs:155
 msgid "0 = append at end"
 msgstr "0 = tilføj til slutningen"
 
-#: src/widgets/add_rule_dialog.rs:170
-msgid "Add"
-msgstr "Tilføj"
-
-#: src/widgets/add_rule_dialog.rs:254
-msgid "Save"
-msgstr "Gem"
-
-#: src/views/dashboard_view.rs:56 src/window.rs:89
-msgid "Dashboard"
-msgstr "Instrumentbræt"
-
-#: src/views/dashboard_view.rs:78
-msgid "Recent Events Parsed"
-msgstr "Nylige begivenheder analyseret"
-
-#: src/views/dashboard_view.rs:96
-msgid "Blocked Events"
-msgstr "Blokerede hændelser"
-
-#: src/views/dashboard_view.rs:117
-msgid "Top Blocked Connections"
-msgstr "Top blokerede forbindelser"
-
-#: src/views/dashboard_view.rs:123
-msgid "Top Blocked Ports"
-msgstr ""
-
-#: src/views/dashboard_view.rs:129
-msgid "Listening Ports"
-msgstr "Lytteporte"
-
-#: src/views/dashboard_view.rs:135
-msgid "Recent Blocked Events"
-msgstr "Seneste blokerede hændelser"
-
-#: src/views/dashboard_view.rs:139
-msgid "Show"
-msgstr "Vis"
-
-#: src/views/dashboard_view.rs:154
-msgid "Refresh"
-msgstr "Opdater"
-
-#: src/views/dashboard_view.rs:247
-msgid "No blocked connections in recent events"
-msgstr "Ingen blokerede forbindelser i de seneste begivenheder"
-
-#: src/views/dashboard_view.rs:296
-msgid "No blocked ports in recent events"
-msgstr ""
-
-#: src/views/dashboard_view.rs:344
-msgid "No listening ports detected"
-msgstr "Ingen lyttende porte registreret"
-
-#: src/views/profiles_view.rs:76
-msgid "Application Profiles"
-msgstr "Applikationsprofiler"
-
-#: src/views/profiles_view.rs:77
-msgid "Allow applications with predefined rules."
-msgstr "Tillad programmer med foruddefinerede regler."
-
-#: src/views/profiles_view.rs:82
-msgid "Quick Allow Port"
-msgstr "Tillad port hurtigt"
-
-#: src/views/profiles_view.rs:83
-msgid "e.g. 80,443/tcp or 8080"
-msgstr "f.eks. 80,443/tcp eller 8080"
-
-#: src/views/profiles_view.rs:87
-msgid "Port / Protocol"
-msgstr "Port / Protokol"
-
-#: src/views/profiles_view.rs:119
-msgid "No Profiles"
-msgstr "Ingen profiler"
-
-#: src/views/profiles_view.rs:120
-msgid "No application profiles found"
-msgstr "Ingen applikationsprofiler fundet"
-
-#: src/views/rules_view.rs:62
-msgid "Search rules..."
-msgstr "Søg i regler..."
-
-#: src/views/rules_view.rs:70
-msgid "Firewall Rules"
-msgstr "Firewallregler"
-
-#: src/views/rules_view.rs:75
-msgid "No Rules"
-msgstr "Ingen regler"
-
-#: src/views/rules_view.rs:76
-msgid "There are no rules configured yet."
-msgstr "Der er ingen regler konfigureret endnu."
-
-#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
-msgid "Delete All"
-msgstr "Slet alle"
-
-#: src/views/rules_view.rs:119
-msgid "Delete All Rules?"
-msgstr ""
-
-#: src/views/rules_view.rs:120
-msgid "This will delete all custom rules. This action cannot be undone."
-msgstr "Dette vil slette alle brugerdefinerede regler. Denne handling kan ikke fortrydes."
-
-#: src/views/status_view.rs:78 src/window.rs:90
-msgid "Status"
-msgstr "Status"
-
-#: src/views/status_view.rs:89 src/window.rs:63
-msgid "Firewall"
-msgstr "Brandmur"
-
-#: src/views/status_view.rs:90 src/views/status_view.rs:282
-msgid "Inactive"
-msgstr "Inaktiv"
-
-#: src/views/status_view.rs:97
-msgid "Default Policies"
-msgstr "Standardpolitikker"
-
-#: src/views/status_view.rs:102
-msgid "Incoming"
-msgstr "Indgående"
-
-#: src/views/status_view.rs:111
-msgid "Outgoing"
-msgstr "Udgående"
-
-#: src/views/status_view.rs:124
-msgid "Logging"
-msgstr "Logning"
-
-#: src/views/status_view.rs:128
-msgid "Log Level"
-msgstr "Logningsniveau"
-
-#: src/views/status_view.rs:130
-msgid "Off"
-msgstr "Fra"
-
-#: src/views/status_view.rs:131
-msgid "Low"
-msgstr "Lav"
-
-#: src/views/status_view.rs:132
-msgid "Medium"
-msgstr "Mellem"
-
-#: src/views/status_view.rs:133
-msgid "High"
-msgstr "Høj"
-
-#: src/views/status_view.rs:134
-msgid "Full"
-msgstr "Fuld"
-
-#: src/views/status_view.rs:282
-msgid "Active"
-msgstr "Aktiv"
-
-#: src/window.rs:80
 msgid "About"
 msgstr "Om"
 
-#: src/window.rs:91
-msgid "Rules"
-msgstr "Regler"
+msgid "Action"
+msgstr "Handling"
 
-#: src/window.rs:92
+msgid "Active"
+msgstr "Aktiv"
+
+msgid "Add"
+msgstr "Tilføj"
+
+msgid "Add Rule"
+msgstr "Tilføj regel"
+
+msgid "Advanced"
+msgstr "Avanceret"
+
+msgid "All"
+msgstr "Alle"
+
+msgid "Allow"
+msgstr "Tillad"
+
+msgid "Allow applications with predefined rules."
+msgstr "Tillad programmer med foruddefinerede regler."
+
+msgid "Application Profiles"
+msgstr "Applikationsprofiler"
+
+msgid "Audit"
+msgstr "Revisionslæse"
+
+msgid "Auditor Error"
+msgstr "Revisorfejl"
+
+msgid "Block"
+msgstr "Bloker"
+
+msgid "Block Connection?"
+msgstr "Bloker forbindelse?"
+
+msgid "Block inbound traffic from"
+msgstr "Bloker indgående trafik fra"
+
+msgid "Block outbound traffic to"
+msgstr "Bloker udgående trafik til"
+
+msgid "Blocked Events"
+msgstr "Blokerede hændelser"
+
+msgid "Blocked Successfully"
+msgstr "Blokerede tider"
+
+msgid "Both"
+msgstr "Begge"
+
+msgid "Cancel"
+msgstr "Annullér"
+
+msgid "Comment"
+msgstr "Kommentar"
+
+msgid "Custom"
+msgstr "Brugerdefineret"
+
+msgid "Dashboard"
+msgstr "Instrumentbræt"
+
+msgid "Default Policies"
+msgstr "Standardpolitikker"
+
+msgid "Delete"
+msgstr "Slet"
+
+msgid "Delete All"
+msgstr "Slet alle"
+
+msgid "Delete All Rules?"
+msgstr "Slet alle regler?"
+
+msgid "Delete Rule"
+msgstr "Slet regel"
+
+msgid "Delete rule"
+msgstr "Slet regel"
+
+msgid "Deny"
+msgstr "Nægt"
+
+msgid "Destination IP"
+msgstr "Destinations-IP"
+
+msgid "Direction"
+msgstr "Retning"
+
+msgid "Error"
+msgstr "Fejl"
+
+msgid "Failed to Block"
+msgstr "Kunne ikke blokere"
+
+msgid "Firewall"
+msgstr "Brandmur"
+
+msgid "Firewall Rules"
+msgstr "Firewallregler"
+
+msgid "Full"
+msgstr "Fuld"
+
+msgid "High"
+msgstr "Høj"
+
+msgid "In"
+msgstr "Ind"
+
+msgid "Inactive"
+msgstr "Inaktiv"
+
+msgid "Inbound"
+msgstr "Indgående"
+
+msgid "Incoming"
+msgstr "Indgående"
+
+msgid "Insert Before Rule"
+msgstr "Indsæt før regel"
+
+msgid "Interface"
+msgstr "Grænseflade"
+
+msgid "Limit"
+msgstr "Begræns"
+
+msgid "Listening Ports"
+msgstr "Lytteporte"
+
+msgid "Log Level"
+msgstr "Logningsniveau"
+
+msgid "Logging"
+msgstr "Logning"
+
+msgid "Low"
+msgstr "Lav"
+
+msgid "Medium"
+msgstr "Mellem"
+
+msgid "Monitoring Network Activity"
+msgstr "Overvågning af netværksaktivitet"
+
+msgid "No Profiles"
+msgstr "Ingen profiler"
+
+msgid "No Rules"
+msgstr "Ingen regler"
+
+msgid "No application profiles found"
+msgstr "Ingen applikationsprofiler fundet"
+
+msgid "No blocked connections in recent events"
+msgstr "Ingen blokerede forbindelser i de seneste begivenheder"
+
+msgid "No blocked ports in recent events"
+msgstr "Ingen blokerede porte i seneste hændelser"
+
+msgid "No listening ports detected"
+msgstr "Ingen lyttende porte registreret"
+
+msgid "Off"
+msgstr "Fra"
+
+msgid "Out"
+msgstr "Ud"
+
+msgid "Outbound"
+msgstr "Udgående"
+
+msgid "Outgoing"
+msgstr "Udgående"
+
+msgid "Pause list updates"
+msgstr "Sænk listeopdateringer"
+
+msgid "Port / Protocol"
+msgstr "Port / Protokol"
+
+msgid "Port / Service Name"
+msgstr "Port / tjenestenavn"
+
 msgid "Profiles"
 msgstr "Profiler"
 
-#~ msgid "Blocked"
-#~ msgstr "Blokeret"
+msgid "Protocol"
+msgstr "Protokol"
 
-#~ msgid "Blocked times"
-#~ msgstr "Blokerede tider"
+msgid "Quick Allow Port"
+msgstr "Tillad port hurtigt"
+
+msgid "Recent Blocked Events"
+msgstr "Seneste blokerede hændelser"
+
+msgid "Recent Events Parsed"
+msgstr "Nylige begivenheder analyseret"
+
+msgid "Refresh"
+msgstr "Opdater"
+
+msgid "Reject"
+msgstr "Afvist"
+
+msgid "Resolve Domains"
+msgstr "Opløs domæner"
+
+msgid "Rule added to block"
+msgstr "Regel tilføjet til blokering"
+
+msgid "Rules"
+msgstr "Regler"
+
+msgid "Save"
+msgstr "Gem"
+
+msgid "Search Process or IP..."
+msgstr "Søg efter proces eller IP..."
+
+msgid "Search rules..."
+msgstr "Søg i regler..."
+
+msgid "Service"
+msgstr "Tjeneste"
+
+msgid "Show"
+msgstr "Vis"
+
+msgid "Source IP"
+msgstr "Kilde-IP"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "TCP"
+msgstr "TCP"
+
+msgid "There are no rules configured yet."
+msgstr "Der er ingen regler konfigureret endnu."
+
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr ""
+"Dette vil slette alle brugerdefinerede regler. Denne handling kan ikke "
+"fortrydes."
+
+msgid ""
+"This will prevent the remote host from sending any packets to your machine."
+msgstr "Dette forhindrer den eksterne vært i at sende pakker til din maskine."
+
+msgid ""
+"This will prevent your machine from sending any packets to the remote host."
+msgstr "Dette forhindrer din maskine i at sende pakker til den eksterne vært."
+
+msgid "Top Blocked Connections"
+msgstr "Mest blokerede forbindelser"
+
+msgid "Top Blocked Ports"
+msgstr "Top blokerede porte"
+
+msgid "UDP"
+msgstr "UDP"
+
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "f.eks. 80,443/tcp eller 8080"
+
+msgid "BitTorrent client"
+msgstr "BitTorrent-klient"
+
+msgid "Common UNIX Printing System server"
+msgstr "Common UNIX Printing System-server"
+
+msgid "Continuous file synchronization"
+msgstr "Kontinuerlig filsynkronisering"
+
+msgid "Docker container runtime API"
+msgstr "Docker-containerkørsels-API"
+
+msgid "Domain Name System server"
+msgstr "Domain Name System-server"
+
+msgid "Extensible Messaging and Presence Protocol"
+msgstr "Extensible Messaging and Presence Protocol"
+
+msgid "File Transfer Protocol"
+msgstr "File Transfer Protocol"
+
+msgid "File synchronization service"
+msgstr "Filsynkroniseringstjeneste"
+
+msgid "Hypertext Transfer Protocol for web servers"
+msgstr "Hypertext Transfer Protocol for webservere"
+
+msgid "In-memory data structure store"
+msgstr "In-memory datastruktur lager"
+
+msgid "Internet Message Access Protocol for email"
+msgstr "Internet Message Access Protocol til e-mail"
+
+msgid "Lightweight Directory Access Protocol"
+msgstr "Lightweight Directory Access Protocol"
+
+msgid "Media streaming server"
+msgstr "Mediestrømnings-server"
+
+msgid "Modern VPN tunnel"
+msgstr "Moderne VPN-tunnel"
+
+msgid "Multicast DNS for local network discovery"
+msgstr "Multicast DNS til lokal netværksopdagelse"
+
+msgid "MySQL database server"
+msgstr "MySQL-databaseserver"
+
+msgid "Network File System"
+msgstr "Network File System"
+
+msgid "Network Time Protocol"
+msgstr "Port / Protokol"
+
+msgid "NoSQL document database"
+msgstr "NoSQL-dokumentdatabase"
+
+msgid "Phone and desktop integration"
+msgstr "Integration af telefon og skrivebord"
+
+msgid "Plex media streaming server"
+msgstr "Plex mediestrømnings-server"
+
+msgid "Post Office Protocol for email retrieval"
+msgstr "Post Office Protocol til henting af e-mail"
+
+msgid "PostgreSQL database server"
+msgstr "PostgreSQL-databaseserver"
+
+msgid "Remote Desktop Protocol"
+msgstr "Port / Protokol"
+
+msgid "Secure HTTP for web servers"
+msgstr "Secure HTTP for webservere"
+
+msgid "Secure shell remote access"
+msgstr "Secure Shell-remoteadgang"
+
+msgid "Simple Mail Transfer Protocol"
+msgstr "Simple Mail Transfer Protocol"
+
+msgid "Virtual Network Computing remote desktop"
+msgstr "Virtual Network Computing-fjernskrivebord"
+
+msgid "Windows file and printer sharing"
+msgstr "Windows-fil- og udskriftsdeling"
 
 #~ msgid "Firewall Active"
 #~ msgstr "Brandvæggens aktiv"

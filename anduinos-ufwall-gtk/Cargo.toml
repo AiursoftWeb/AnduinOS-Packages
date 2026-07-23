@@ -11,8 +11,24 @@ gtk = { package = "gtk4", version = "0.11" }
 adw = { package = "libadwaita", version = "0.9", features = ["v1_6"] }
 gettext-rs = { version = "0.7", features = ["gettext-system"] }
 notify = "7"
-tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }
 async-channel = "2.3.1"
+pcap = "2.1"
+procfs = "0.16"
+etherparse = "0.14"
+dns-lookup = "2.0"
+lazy_static = "1.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+threadpool = "1.8.1"
+
+[[bin]]
+name = "ufwall-gtk"
+path = "src/main.rs"
+
+[[bin]]
+name = "ufwall-auditor"
+path = "src/daemon/ufwall-auditor.rs"
 
 [profile.release]
 strip = true

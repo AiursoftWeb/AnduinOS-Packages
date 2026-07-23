@@ -2,304 +2,367 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ufwall-gtk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
-#: src/widgets/rule_row.rs:80
-msgid "Delete Rule"
-msgstr "刪除規則"
-
-#: src/widgets/rule_row.rs:81
-msgid "Delete rule"
-msgstr "刪除規則"
-
-#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
-#: src/views/rules_view.rs:123
-msgid "Cancel"
-msgstr "取消"
-
-#: src/widgets/rule_row.rs:85
-msgid "Delete"
-msgstr "刪除"
-
-#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
-#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
-#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
-#: src/window.rs:245
-msgid "Error"
-msgstr "錯誤"
-
-#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
-msgid "Add Rule"
-msgstr "新增規則"
-
-#: src/widgets/add_rule_dialog.rs:70
-msgid "Service"
-msgstr "服務"
-
-#: src/widgets/add_rule_dialog.rs:72
-msgid "Custom"
-msgstr "自訂"
-
-#: src/widgets/add_rule_dialog.rs:89
-msgid "Port / Service Name"
-msgstr "通訊埠 / 服務名稱"
-
-#: src/widgets/add_rule_dialog.rs:93
-msgid "Action"
-msgstr "動作"
-
-#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
-#: src/views/status_view.rs:113
-msgid "Deny"
-msgstr "拒絕"
-
-#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
-#: src/views/status_view.rs:105 src/views/status_view.rs:114
-msgid "Allow"
-msgstr "允許"
-
-#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
-#: src/views/status_view.rs:115
-msgid "Reject"
-msgstr "拒絕"
-
-#: src/widgets/add_rule_dialog.rs:98
-msgid "Limit"
-msgstr "限制"
-
-#: src/widgets/add_rule_dialog.rs:110
-msgid "Advanced"
-msgstr "進階"
-
-#: src/widgets/add_rule_dialog.rs:114
-msgid "Direction"
-msgstr "方向"
-
-#: src/widgets/add_rule_dialog.rs:116
-msgid "In"
-msgstr "入"
-
-#: src/widgets/add_rule_dialog.rs:117
-msgid "Out"
-msgstr "輸出"
-
-#: src/widgets/add_rule_dialog.rs:122
-msgid "Protocol"
-msgstr "通訊協定"
-
-#: src/widgets/add_rule_dialog.rs:124
-msgid "Both"
-msgstr "兩者"
-
-#: src/widgets/add_rule_dialog.rs:125
-msgid "TCP"
-msgstr "TCP"
-
-#: src/widgets/add_rule_dialog.rs:126
-msgid "UDP"
-msgstr "UDP"
-
-#: src/widgets/add_rule_dialog.rs:131
-msgid "Source IP"
-msgstr "來源 IP"
-
-#: src/widgets/add_rule_dialog.rs:135
-msgid "Destination IP"
-msgstr "目標 IP"
-
-#: src/widgets/add_rule_dialog.rs:144
-msgid "Interface"
-msgstr "介面"
-
-#: src/widgets/add_rule_dialog.rs:149
-msgid "Comment"
-msgstr "註解"
-
-#: src/widgets/add_rule_dialog.rs:154
-msgid "Insert Before Rule"
-msgstr "插入至規則之前"
-
-#: src/widgets/add_rule_dialog.rs:155
 msgid "0 = append at end"
 msgstr "0 = 附加至結尾"
 
-#: src/widgets/add_rule_dialog.rs:170
-msgid "Add"
-msgstr "新增"
-
-#: src/widgets/add_rule_dialog.rs:254
-msgid "Save"
-msgstr "儲存"
-
-#: src/views/dashboard_view.rs:56 src/window.rs:89
-msgid "Dashboard"
-msgstr "儀表板"
-
-#: src/views/dashboard_view.rs:78
-msgid "Recent Events Parsed"
-msgstr "已解析的最近事件"
-
-#: src/views/dashboard_view.rs:96
-msgid "Blocked Events"
-msgstr "已封鎖的事件"
-
-#: src/views/dashboard_view.rs:117
-msgid "Top Blocked Connections"
-msgstr "封鎖連線排行"
-
-#: src/views/dashboard_view.rs:123
-msgid "Top Blocked Ports"
-msgstr "封鎖最多的埠號"
-
-#: src/views/dashboard_view.rs:129
-msgid "Listening Ports"
-msgstr "監聽連接埠"
-
-#: src/views/dashboard_view.rs:135
-msgid "Recent Blocked Events"
-msgstr "最近封鎖事件"
-
-#: src/views/dashboard_view.rs:139
-msgid "Show"
-msgstr "顯示"
-
-#: src/views/dashboard_view.rs:154
-msgid "Refresh"
-msgstr "重新整理"
-
-#: src/views/dashboard_view.rs:247
-msgid "No blocked connections in recent events"
-msgstr "近期事件中沒有被封鎖的連線"
-
-#: src/views/dashboard_view.rs:296
-msgid "No blocked ports in recent events"
-msgstr "近期事件中沒有被封鎖的連接埠"
-
-#: src/views/dashboard_view.rs:344
-msgid "No listening ports detected"
-msgstr "未偵測到任何監聽連接埠"
-
-#: src/views/profiles_view.rs:76
-msgid "Application Profiles"
-msgstr "應用程式設定檔"
-
-#: src/views/profiles_view.rs:77
-msgid "Allow applications with predefined rules."
-msgstr "允許具有預先定義規則的應用程式。"
-
-#: src/views/profiles_view.rs:82
-msgid "Quick Allow Port"
-msgstr "快速允許連接埠"
-
-#: src/views/profiles_view.rs:83
-msgid "e.g. 80,443/tcp or 8080"
-msgstr "例如：80,443/tcp 或 8080"
-
-#: src/views/profiles_view.rs:87
-msgid "Port / Protocol"
-msgstr "通訊埠 / 通訊協定"
-
-#: src/views/profiles_view.rs:119
-msgid "No Profiles"
-msgstr "沒有設定檔"
-
-#: src/views/profiles_view.rs:120
-msgid "No application profiles found"
-msgstr "找不到應用程式設定檔"
-
-#: src/views/rules_view.rs:62
-msgid "Search rules..."
-msgstr "搜尋規則..."
-
-#: src/views/rules_view.rs:70
-msgid "Firewall Rules"
-msgstr "防火牆規則"
-
-#: src/views/rules_view.rs:75
-msgid "No Rules"
-msgstr "沒有規則"
-
-#: src/views/rules_view.rs:76
-msgid "There are no rules configured yet."
-msgstr "目前尚未設定任何規則。"
-
-#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
-msgid "Delete All"
-msgstr "全部刪除"
-
-#: src/views/rules_view.rs:119
-msgid "Delete All Rules?"
-msgstr "刪除所有規則？"
-
-#: src/views/rules_view.rs:120
-msgid "This will delete all custom rules. This action cannot be undone."
-msgstr "此操作將刪除所有自訂規則，且無法復原。"
-
-#: src/views/status_view.rs:78 src/window.rs:90
-msgid "Status"
-msgstr "狀態"
-
-#: src/views/status_view.rs:89 src/window.rs:63
-msgid "Firewall"
-msgstr "防火牆"
-
-#: src/views/status_view.rs:90 src/views/status_view.rs:282
-msgid "Inactive"
-msgstr "未啟用"
-
-#: src/views/status_view.rs:97
-msgid "Default Policies"
-msgstr "預設政策"
-
-#: src/views/status_view.rs:102
-msgid "Incoming"
-msgstr "傳入"
-
-#: src/views/status_view.rs:111
-msgid "Outgoing"
-msgstr "傳出"
-
-#: src/views/status_view.rs:124
-msgid "Logging"
-msgstr "記錄"
-
-#: src/views/status_view.rs:128
-msgid "Log Level"
-msgstr "記錄層級"
-
-#: src/views/status_view.rs:130
-msgid "Off"
-msgstr "關閉"
-
-#: src/views/status_view.rs:131
-msgid "Low"
-msgstr "低"
-
-#: src/views/status_view.rs:132
-msgid "Medium"
-msgstr "中等"
-
-#: src/views/status_view.rs:133
-msgid "High"
-msgstr "高"
-
-#: src/views/status_view.rs:134
-msgid "Full"
-msgstr "完整"
-
-#: src/views/status_view.rs:282
-msgid "Active"
-msgstr "已啟用"
-
-#: src/window.rs:80
 msgid "About"
 msgstr "關於"
 
-#: src/window.rs:91
+msgid "Action"
+msgstr "動作"
+
+msgid "Active"
+msgstr "已啟用"
+
+msgid "Add"
+msgstr "新增"
+
+msgid "Add Rule"
+msgstr "新增規則"
+
+msgid "Advanced"
+msgstr "進階"
+
+msgid "All"
+msgstr "全部"
+
+msgid "Allow"
+msgstr "允許"
+
+msgid "Allow applications with predefined rules."
+msgstr "允許具有預先定義規則的應用程式。"
+
+msgid "Application Profiles"
+msgstr "應用程式設定檔"
+
+msgid "Audit"
+msgstr "審計"
+
+msgid "Auditor Error"
+msgstr "審計員錯誤"
+
+msgid "Block"
+msgstr "封鎖"
+
+msgid "Block Connection?"
+msgstr "封鎖連線？"
+
+msgid "Block inbound traffic from"
+msgstr "封鎖來自的進站流量"
+
+msgid "Block outbound traffic to"
+msgstr "封鎖傳送到遠端主機的出站流量"
+
+msgid "Blocked Events"
+msgstr "已封鎖的事件"
+
+msgid "Blocked Successfully"
+msgstr "\\\\t成功封鎖"
+
+msgid "Both"
+msgstr "兩者"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Comment"
+msgstr "註解"
+
+msgid "Custom"
+msgstr "自訂"
+
+msgid "Dashboard"
+msgstr "儀表板"
+
+msgid "Default Policies"
+msgstr "預設政策"
+
+msgid "Delete"
+msgstr "刪除"
+
+msgid "Delete All"
+msgstr "全部刪除"
+
+msgid "Delete All Rules?"
+msgstr "刪除所有規則？"
+
+msgid "Delete Rule"
+msgstr "刪除規則"
+
+msgid "Delete rule"
+msgstr "刪除規則"
+
+msgid "Deny"
+msgstr "拒絕"
+
+msgid "Destination IP"
+msgstr "目標 IP"
+
+msgid "Direction"
+msgstr "方向"
+
+msgid "Error"
+msgstr "錯誤"
+
+msgid "Failed to Block"
+msgstr "封鎖失敗"
+
+msgid "Firewall"
+msgstr "防火牆"
+
+msgid "Firewall Rules"
+msgstr "防火牆規則"
+
+msgid "Full"
+msgstr "完整"
+
+msgid "High"
+msgstr "高"
+
+msgid "In"
+msgstr "入"
+
+msgid "Inactive"
+msgstr "未啟用"
+
+msgid "Inbound"
+msgstr "進站"
+
+msgid "Incoming"
+msgstr "傳入"
+
+msgid "Insert Before Rule"
+msgstr "插入至規則之前"
+
+msgid "Interface"
+msgstr "介面"
+
+msgid "Limit"
+msgstr "限制"
+
+msgid "Listening Ports"
+msgstr "監聽連接埠"
+
+msgid "Log Level"
+msgstr "記錄層級"
+
+msgid "Logging"
+msgstr "記錄"
+
+msgid "Low"
+msgstr "低"
+
+msgid "Medium"
+msgstr "中等"
+
+msgid "Monitoring Network Activity"
+msgstr "監控網路活動"
+
+msgid "No Profiles"
+msgstr "沒有設定檔"
+
+msgid "No Rules"
+msgstr "沒有規則"
+
+msgid "No application profiles found"
+msgstr "找不到應用程式設定檔"
+
+msgid "No blocked connections in recent events"
+msgstr "近期事件中沒有被封鎖的連線"
+
+msgid "No blocked ports in recent events"
+msgstr "近期事件中沒有被封鎖的連接埠"
+
+msgid "No listening ports detected"
+msgstr "未偵測到任何監聽連接埠"
+
+msgid "Off"
+msgstr "關閉"
+
+msgid "Out"
+msgstr "輸出"
+
+msgid "Outbound"
+msgstr "出站"
+
+msgid "Outgoing"
+msgstr "傳出"
+
+msgid "Pause list updates"
+msgstr "暫停清單更新"
+
+msgid "Port / Protocol"
+msgstr "通訊埠 / 通訊協定"
+
+msgid "Port / Service Name"
+msgstr "通訊埠 / 服務名稱"
+
+msgid "Profiles"
+msgstr "設定檔"
+
+msgid "Protocol"
+msgstr "通訊協定"
+
+msgid "Quick Allow Port"
+msgstr "快速允許連接埠"
+
+msgid "Recent Blocked Events"
+msgstr "最近封鎖事件"
+
+msgid "Recent Events Parsed"
+msgstr "已解析的最近事件"
+
+msgid "Refresh"
+msgstr "重新整理"
+
+msgid "Reject"
+msgstr "拒絕"
+
+msgid "Resolve Domains"
+msgstr "解析網域"
+
+msgid "Rule added to block"
+msgstr "規則已新增至封鎖清單"
+
 msgid "Rules"
 msgstr "規則"
 
-#: src/window.rs:92
-msgid "Profiles"
-msgstr "設定檔"
+msgid "Save"
+msgstr "儲存"
+
+msgid "Search Process or IP..."
+msgstr "搜尋程序或 IP..."
+
+msgid "Search rules..."
+msgstr "搜尋規則..."
+
+msgid "Service"
+msgstr "服務"
+
+msgid "Show"
+msgstr "顯示"
+
+msgid "Source IP"
+msgstr "來源 IP"
+
+msgid "Status"
+msgstr "狀態"
+
+msgid "TCP"
+msgstr "TCP"
+
+msgid "There are no rules configured yet."
+msgstr "目前尚未設定任何規則。"
+
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr "此操作將刪除所有自訂規則，且無法復原。"
+
+msgid ""
+"This will prevent the remote host from sending any packets to your machine."
+msgstr "這將防止遠端主機向您的機器傳送封包。"
+
+msgid ""
+"This will prevent your machine from sending any packets to the remote host."
+msgstr "這將防止您的機器向遠端主機傳送封包。"
+
+msgid "Top Blocked Connections"
+msgstr "封鎖次數最多的連線"
+
+msgid "Top Blocked Ports"
+msgstr "封鎖最多的埠號"
+
+msgid "UDP"
+msgstr "UDP"
+
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "例如：80,443/tcp 或 8080"
+
+msgid "BitTorrent client"
+msgstr "BitTorrent 客戶端"
+
+msgid "Common UNIX Printing System server"
+msgstr "Common UNIX Printing System 伺服器"
+
+msgid "Continuous file synchronization"
+msgstr "持續檔案同步"
+
+msgid "Docker container runtime API"
+msgstr "Docker 容器執行階段 API"
+
+msgid "Domain Name System server"
+msgstr "域名系統伺服器"
+
+msgid "Extensible Messaging and Presence Protocol"
+msgstr "Extensible Messaging and Presence Protocol"
+
+msgid "File Transfer Protocol"
+msgstr "檔案傳輸協定"
+
+msgid "File synchronization service"
+msgstr "檔案同步服務"
+
+msgid "Hypertext Transfer Protocol for web servers"
+msgstr "用於網頁伺服器的超文本傳輸協定"
+
+msgid "In-memory data structure store"
+msgstr "記憶體資料結構儲存"
+
+msgid "Internet Message Access Protocol for email"
+msgstr "用於電子郵件的網際網路訊息存取協定"
+
+msgid "Lightweight Directory Access Protocol"
+msgstr "輕量級目錄存取協定"
+
+msgid "Media streaming server"
+msgstr "媒體串流伺服器"
+
+msgid "Modern VPN tunnel"
+msgstr "現代 VPN 隧道"
+
+msgid "Multicast DNS for local network discovery"
+msgstr "用於區域網路發現的多點傳送 DNS"
+
+msgid "MySQL database server"
+msgstr "MySQL 資料庫伺服器"
+
+msgid "Network File System"
+msgstr "網路檔案系統"
+
+msgid "Network Time Protocol"
+msgstr "通訊埠 / 通訊協定"
+
+msgid "NoSQL document database"
+msgstr "NoSQL 文件資料庫"
+
+msgid "Phone and desktop integration"
+msgstr "電話與桌面整合"
+
+msgid "Plex media streaming server"
+msgstr "Plex 媒體串流伺服器"
+
+msgid "Post Office Protocol for email retrieval"
+msgstr "用於電子郵件檢取的郵局協定"
+
+msgid "PostgreSQL database server"
+msgstr "PostgreSQL 資料庫伺服器"
+
+msgid "Remote Desktop Protocol"
+msgstr "通訊埠 / 通訊協定"
+
+msgid "Secure HTTP for web servers"
+msgstr "用於網頁伺服器的安全 HTTP"
+
+msgid "Secure shell remote access"
+msgstr "安全殼層遠端存取"
+
+msgid "Simple Mail Transfer Protocol"
+msgstr "簡單郵件傳輸協定"
+
+msgid "Virtual Network Computing remote desktop"
+msgstr "Virtual Network Computing 遠端桌面"
+
+msgid "Windows file and printer sharing"
+msgstr "Windows 檔案與印表機共用"

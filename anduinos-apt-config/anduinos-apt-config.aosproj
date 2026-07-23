@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-apt-config</PackageName>
-    <PackageVersion>2.0.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>APT pinning: AnduinOS packages always take precedence over Ubuntu</PackageDescription>
     <Section>admin</Section>
@@ -23,14 +23,14 @@
 
   <ItemGroup>
     <!-- APT pinning: prefer AnduinOS packages over upstream Ubuntu -->
-    <IncludeFile Include="deploy/anduinos" Target="/etc/apt/preferences.d/anduinos" />
+    <IncludeFile Include="assets/anduinos" Target="/etc/apt/preferences.d/anduinos" />
 
     <!-- Per-arch per-suite APT sources — architectures match the target -->
-    <IncludeFile Include="deploy/amd64/noble/anduinos.sources"      Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'noble-addon' and '$(Arch)' == 'amd64'" />
-    <IncludeFile Include="deploy/amd64/questing/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'questing-addon' and '$(Arch)' == 'amd64'" />
-    <IncludeFile Include="deploy/amd64/resolute/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'amd64'" />
-    <IncludeFile Include="deploy/arm64/noble/anduinos.sources"      Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'noble-addon' and '$(Arch)' == 'arm64'" />
-    <IncludeFile Include="deploy/arm64/questing/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'questing-addon' and '$(Arch)' == 'arm64'" />
-    <IncludeFile Include="deploy/arm64/resolute/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'arm64'" />
+    <IncludeFile Include="assets/amd64/noble/anduinos.sources"      Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'noble-addon' and '$(Arch)' == 'amd64'" />
+    <IncludeFile Include="assets/amd64/questing/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'questing-addon' and '$(Arch)' == 'amd64'" />
+    <IncludeFile Include="assets/amd64/resolute/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'amd64'" />
+    <IncludeFile Include="assets/arm64/noble/anduinos.sources"      Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'noble-addon' and '$(Arch)' == 'arm64'" />
+    <IncludeFile Include="assets/arm64/questing/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'questing-addon' and '$(Arch)' == 'arm64'" />
+    <IncludeFile Include="assets/arm64/resolute/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'arm64'" />
   </ItemGroup>
 </Project>

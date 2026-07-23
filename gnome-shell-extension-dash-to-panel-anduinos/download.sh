@@ -29,6 +29,7 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
     sed -i '/export const defaults = \[/,/^\]$/c\
 // AnduinOS custom default panel layout\
 export const defaults = [\
+  { element: ACTIVITIES_BTN, visible: true, position: STACKED_TL },\
   { element: LEFT_BOX, visible: true, position: STACKED_TL },\
   { element: CENTER_BOX, visible: true, position: CENTERED_MONITOR },\
   { element: TASKBAR, visible: true, position: CENTERED_MONITOR },\
