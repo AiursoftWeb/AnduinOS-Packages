@@ -332,6 +332,7 @@ anduinos-swap-config:
 
 anduinos-why-ai:
   extends: .publish
+  timeout: 3h
   variables:
     PACKAGE_DIR: anduinos-why-ai
   cache:
