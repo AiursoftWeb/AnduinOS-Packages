@@ -2,304 +2,373 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ufwall-gtk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
-#: src/widgets/rule_row.rs:80
-msgid "Delete Rule"
-msgstr "Șterge regula"
-
-#: src/widgets/rule_row.rs:81
-msgid "Delete rule"
-msgstr "Șterge regula"
-
-#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
-#: src/views/rules_view.rs:123
-msgid "Cancel"
-msgstr "Anulează"
-
-#: src/widgets/rule_row.rs:85
-msgid "Delete"
-msgstr "Șterge"
-
-#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
-#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
-#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
-#: src/window.rs:245
-msgid "Error"
-msgstr "Eroare"
-
-#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
-msgid "Add Rule"
-msgstr "Adaugă regulă"
-
-#: src/widgets/add_rule_dialog.rs:70
-msgid "Service"
-msgstr "Serviciu"
-
-#: src/widgets/add_rule_dialog.rs:72
-msgid "Custom"
-msgstr "Personalizat"
-
-#: src/widgets/add_rule_dialog.rs:89
-msgid "Port / Service Name"
-msgstr "Port / Nume serviciu"
-
-#: src/widgets/add_rule_dialog.rs:93
-msgid "Action"
-msgstr "Acțiune"
-
-#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
-#: src/views/status_view.rs:113
-msgid "Deny"
-msgstr "Refuză"
-
-#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
-#: src/views/status_view.rs:105 src/views/status_view.rs:114
-msgid "Allow"
-msgstr "Permite"
-
-#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
-#: src/views/status_view.rs:115
-msgid "Reject"
-msgstr "Respinge"
-
-#: src/widgets/add_rule_dialog.rs:98
-msgid "Limit"
-msgstr "Limită"
-
-#: src/widgets/add_rule_dialog.rs:110
-msgid "Advanced"
-msgstr "Avansat"
-
-#: src/widgets/add_rule_dialog.rs:114
-msgid "Direction"
-msgstr "Direcție"
-
-#: src/widgets/add_rule_dialog.rs:116
-msgid "In"
-msgstr "Intrare"
-
-#: src/widgets/add_rule_dialog.rs:117
-msgid "Out"
-msgstr "Ieșire"
-
-#: src/widgets/add_rule_dialog.rs:122
-msgid "Protocol"
-msgstr "Protocol"
-
-#: src/widgets/add_rule_dialog.rs:124
-msgid "Both"
-msgstr "Ambele"
-
-#: src/widgets/add_rule_dialog.rs:125
-msgid "TCP"
-msgstr "TCP"
-
-#: src/widgets/add_rule_dialog.rs:126
-msgid "UDP"
-msgstr "UDP"
-
-#: src/widgets/add_rule_dialog.rs:131
-msgid "Source IP"
-msgstr "IP sursă"
-
-#: src/widgets/add_rule_dialog.rs:135
-msgid "Destination IP"
-msgstr "IP destinație"
-
-#: src/widgets/add_rule_dialog.rs:144
-msgid "Interface"
-msgstr "Interfață"
-
-#: src/widgets/add_rule_dialog.rs:149
-msgid "Comment"
-msgstr "Comentariu"
-
-#: src/widgets/add_rule_dialog.rs:154
-msgid "Insert Before Rule"
-msgstr "Inserează înainte de regulă"
-
-#: src/widgets/add_rule_dialog.rs:155
 msgid "0 = append at end"
 msgstr "0 = adaugă la final"
 
-#: src/widgets/add_rule_dialog.rs:170
-msgid "Add"
-msgstr "Adaugă"
-
-#: src/widgets/add_rule_dialog.rs:254
-msgid "Save"
-msgstr "Salvează"
-
-#: src/views/dashboard_view.rs:56 src/window.rs:89
-msgid "Dashboard"
-msgstr "Panou de control"
-
-#: src/views/dashboard_view.rs:78
-msgid "Recent Events Parsed"
-msgstr "Evenimente recente analizate"
-
-#: src/views/dashboard_view.rs:96
-msgid "Blocked Events"
-msgstr "Evenimente blocate"
-
-#: src/views/dashboard_view.rs:117
-msgid "Top Blocked Connections"
-msgstr "Conexiunile blocate principale"
-
-#: src/views/dashboard_view.rs:123
-msgid "Top Blocked Ports"
-msgstr "Porturile cele mai blocate"
-
-#: src/views/dashboard_view.rs:129
-msgid "Listening Ports"
-msgstr "Porturi ascultate"
-
-#: src/views/dashboard_view.rs:135
-msgid "Recent Blocked Events"
-msgstr "Evenimente recente blocate"
-
-#: src/views/dashboard_view.rs:139
-msgid "Show"
-msgstr "Afișare"
-
-#: src/views/dashboard_view.rs:154
-msgid "Refresh"
-msgstr "Reîmprospătare"
-
-#: src/views/dashboard_view.rs:247
-msgid "No blocked connections in recent events"
-msgstr "Nicio conexiune blocată în evenimentele recente"
-
-#: src/views/dashboard_view.rs:296
-msgid "No blocked ports in recent events"
-msgstr "Nicio port blocat în evenimentele recente"
-
-#: src/views/dashboard_view.rs:344
-msgid "No listening ports detected"
-msgstr "Nu s-au detectat porturi ascultătoare"
-
-#: src/views/profiles_view.rs:76
-msgid "Application Profiles"
-msgstr "Profile de aplicații"
-
-#: src/views/profiles_view.rs:77
-msgid "Allow applications with predefined rules."
-msgstr "Permiteți aplicațiilor cu reguli predefinite."
-
-#: src/views/profiles_view.rs:82
-msgid "Quick Allow Port"
-msgstr "Permite rapid portul"
-
-#: src/views/profiles_view.rs:83
-msgid "e.g. 80,443/tcp or 8080"
-msgstr "ex. 80,443/tcp sau 8080"
-
-#: src/views/profiles_view.rs:87
-msgid "Port / Protocol"
-msgstr "Port / Protocol"
-
-#: src/views/profiles_view.rs:119
-msgid "No Profiles"
-msgstr "Niciun profil"
-
-#: src/views/profiles_view.rs:120
-msgid "No application profiles found"
-msgstr "Nu s-au găsit profiluri de aplicație"
-
-#: src/views/rules_view.rs:62
-msgid "Search rules..."
-msgstr "Caută reguli..."
-
-#: src/views/rules_view.rs:70
-msgid "Firewall Rules"
-msgstr "Reguli firewall"
-
-#: src/views/rules_view.rs:75
-msgid "No Rules"
-msgstr "Nicio regulă"
-
-#: src/views/rules_view.rs:76
-msgid "There are no rules configured yet."
-msgstr "Nu există reguli configurate încă."
-
-#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
-msgid "Delete All"
-msgstr "Șterge tot"
-
-#: src/views/rules_view.rs:119
-msgid "Delete All Rules?"
-msgstr "Ștergeți toate regulile?"
-
-#: src/views/rules_view.rs:120
-msgid "This will delete all custom rules. This action cannot be undone."
-msgstr "Aceasta va șterge toate regulile personalizate. Această acțiune nu poate fi anulată."
-
-#: src/views/status_view.rs:78 src/window.rs:90
-msgid "Status"
-msgstr "Stare"
-
-#: src/views/status_view.rs:89 src/window.rs:63
-msgid "Firewall"
-msgstr "Zid de protecție"
-
-#: src/views/status_view.rs:90 src/views/status_view.rs:282
-msgid "Inactive"
-msgstr "Inactiv"
-
-#: src/views/status_view.rs:97
-msgid "Default Policies"
-msgstr "Politici implicite"
-
-#: src/views/status_view.rs:102
-msgid "Incoming"
-msgstr "Intrare"
-
-#: src/views/status_view.rs:111
-msgid "Outgoing"
-msgstr "Ieșire"
-
-#: src/views/status_view.rs:124
-msgid "Logging"
-msgstr "Înregistrare"
-
-#: src/views/status_view.rs:128
-msgid "Log Level"
-msgstr "Nivel jurnal"
-
-#: src/views/status_view.rs:130
-msgid "Off"
-msgstr "Oprit"
-
-#: src/views/status_view.rs:131
-msgid "Low"
-msgstr "Scăzut"
-
-#: src/views/status_view.rs:132
-msgid "Medium"
-msgstr "Mediu"
-
-#: src/views/status_view.rs:133
-msgid "High"
-msgstr "Ridicat"
-
-#: src/views/status_view.rs:134
-msgid "Full"
-msgstr "Complet"
-
-#: src/views/status_view.rs:282
-msgid "Active"
-msgstr "Activ"
-
-#: src/window.rs:80
 msgid "About"
 msgstr "Despre"
 
-#: src/window.rs:91
+msgid "Action"
+msgstr "Acțiune"
+
+msgid "Active"
+msgstr "Activ"
+
+msgid "Add"
+msgstr "Adaugă"
+
+msgid "Add Rule"
+msgstr "Adaugă regulă"
+
+msgid "Advanced"
+msgstr "Avansat"
+
+msgid "All"
+msgstr "Toate"
+
+msgid "Allow"
+msgstr "Permite"
+
+msgid "Allow applications with predefined rules."
+msgstr "Permiteți aplicațiilor cu reguli predefinite."
+
+msgid "Application Profiles"
+msgstr "Profile de aplicații"
+
+msgid "Audit"
+msgstr "Audit"
+
+msgid "Auditor Error"
+msgstr "Eroare auditor"
+
+msgid "Block"
+msgstr "Blochează"
+
+msgid "Block Connection?"
+msgstr "Blochezi conexiunea?"
+
+msgid "Block inbound traffic from"
+msgstr "Blochează traficul intrin de la"
+
+msgid "Block outbound traffic to"
+msgstr "Blochează traficul ieșit către"
+
+msgid "Blocked Events"
+msgstr "Evenimente blocate"
+
+msgid "Blocked Successfully"
+msgstr "Blocat cu succes"
+
+msgid "Both"
+msgstr "Ambele"
+
+msgid "Cancel"
+msgstr "Anulează"
+
+msgid "Comment"
+msgstr "Comentariu"
+
+msgid "Custom"
+msgstr "Personalizat"
+
+msgid "Dashboard"
+msgstr "Panou de control"
+
+msgid "Default Policies"
+msgstr "Politici implicite"
+
+msgid "Delete"
+msgstr "Șterge"
+
+msgid "Delete All"
+msgstr "Șterge tot"
+
+msgid "Delete All Rules?"
+msgstr "Ștergeți toate regulile?"
+
+msgid "Delete Rule"
+msgstr "Șterge regula"
+
+msgid "Delete rule"
+msgstr "Șterge regula"
+
+msgid "Deny"
+msgstr "Refuză"
+
+msgid "Destination IP"
+msgstr "IP destinație"
+
+msgid "Direction"
+msgstr "Direcție"
+
+msgid "Error"
+msgstr "Eroare"
+
+msgid "Failed to Block"
+msgstr "Blocarea a eșuat"
+
+msgid "Firewall"
+msgstr "Zid de protecție"
+
+msgid "Firewall Rules"
+msgstr "Reguli firewall"
+
+msgid "Full"
+msgstr "Complet"
+
+msgid "High"
+msgstr "Ridicat"
+
+msgid "In"
+msgstr "Intrare"
+
+msgid "Inactive"
+msgstr "Inactiv"
+
+msgid "Inbound"
+msgstr "Intrin"
+
+msgid "Incoming"
+msgstr "Intrare"
+
+msgid "Insert Before Rule"
+msgstr "Inserează înainte de regulă"
+
+msgid "Interface"
+msgstr "Interfață"
+
+msgid "Limit"
+msgstr "Limită"
+
+msgid "Listening Ports"
+msgstr "Porturi ascultate"
+
+msgid "Log Level"
+msgstr "Nivel jurnal"
+
+msgid "Logging"
+msgstr "Înregistrare"
+
+msgid "Low"
+msgstr "Scăzut"
+
+msgid "Medium"
+msgstr "Mediu"
+
+msgid "Monitoring Network Activity"
+msgstr "Monitorizarea activității rețelei"
+
+msgid "No Profiles"
+msgstr "Niciun profil"
+
+msgid "No Rules"
+msgstr "Nicio regulă"
+
+msgid "No application profiles found"
+msgstr "Nu s-au găsit profiluri de aplicație"
+
+msgid "No blocked connections in recent events"
+msgstr "Nicio conexiune blocată în evenimentele recente"
+
+msgid "No blocked ports in recent events"
+msgstr "Nicio port blocat în evenimentele recente"
+
+msgid "No listening ports detected"
+msgstr "Nu s-au detectat porturi ascultătoare"
+
+msgid "Off"
+msgstr "Oprit"
+
+msgid "Out"
+msgstr "Ieșire"
+
+msgid "Outbound"
+msgstr "Ieșit"
+
+msgid "Outgoing"
+msgstr "Ieșire"
+
+msgid "Pause list updates"
+msgstr "Întrerupe actualizările listei"
+
+msgid "Port / Protocol"
+msgstr "Port / Protocol"
+
+msgid "Port / Service Name"
+msgstr "Port / Nume serviciu"
+
+msgid "Profiles"
+msgstr "Profiluri"
+
+msgid "Protocol"
+msgstr "Protocol"
+
+msgid "Quick Allow Port"
+msgstr "Permite rapid portul"
+
+msgid "Recent Blocked Events"
+msgstr "Evenimente recente blocate"
+
+msgid "Recent Events Parsed"
+msgstr "Evenimente recente analizate"
+
+msgid "Refresh"
+msgstr "Reîmprospătare"
+
+msgid "Reject"
+msgstr "Respinge"
+
+msgid "Resolve Domains"
+msgstr "Rezolvă domenii"
+
+msgid "Rule added to block"
+msgstr "Regulă adăugată la blocare"
+
 msgid "Rules"
 msgstr "Reguli"
 
-#: src/window.rs:92
-msgid "Profiles"
-msgstr "Profiluri"
+msgid "Save"
+msgstr "Salvează"
+
+msgid "Search Process or IP..."
+msgstr "Caută proces sau IP..."
+
+msgid "Search rules..."
+msgstr "Caută reguli..."
+
+msgid "Service"
+msgstr "Serviciu"
+
+msgid "Show"
+msgstr "Afișare"
+
+msgid "Source IP"
+msgstr "IP sursă"
+
+msgid "Status"
+msgstr "Stare"
+
+msgid "TCP"
+msgstr "TCP"
+
+msgid "There are no rules configured yet."
+msgstr "Nu există reguli configurate încă."
+
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr ""
+"Aceasta va șterge toate regulile personalizate. Această acțiune nu poate fi "
+"anulată."
+
+msgid ""
+"This will prevent the remote host from sending any packets to your machine."
+msgstr ""
+"Acest lucru va împiedica gazda la distanță să trimită pachete către "
+"calculatorul dumneavoastră."
+
+msgid ""
+"This will prevent your machine from sending any packets to the remote host."
+msgstr ""
+"Acest lucru va împiedica calculatorul dumneavoastră să trimită pachete către "
+"gazda la distanță."
+
+msgid "Top Blocked Connections"
+msgstr "Cele mai blocate conexiuni"
+
+msgid "Top Blocked Ports"
+msgstr "Porturile cele mai blocate"
+
+msgid "UDP"
+msgstr "UDP"
+
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "ex. 80,443/tcp sau 8080"
+
+msgid "BitTorrent client"
+msgstr ""
+
+msgid "Common UNIX Printing System server"
+msgstr ""
+
+msgid "Continuous file synchronization"
+msgstr ""
+
+msgid "Docker container runtime API"
+msgstr ""
+
+msgid "Domain Name System server"
+msgstr ""
+
+msgid "Extensible Messaging and Presence Protocol"
+msgstr ""
+
+msgid "File Transfer Protocol"
+msgstr ""
+
+msgid "File synchronization service"
+msgstr "Serviciu de sincronizare a fișierelor"
+
+msgid "Hypertext Transfer Protocol for web servers"
+msgstr ""
+
+msgid "In-memory data structure store"
+msgstr ""
+
+msgid "Internet Message Access Protocol for email"
+msgstr ""
+
+msgid "Lightweight Directory Access Protocol"
+msgstr ""
+
+msgid "Media streaming server"
+msgstr "Server de streaming media"
+
+msgid "Modern VPN tunnel"
+msgstr "Tunel VPN modern"
+
+msgid "Multicast DNS for local network discovery"
+msgstr "Multicast DNS pentru descoperirea rețelei locale"
+
+msgid "MySQL database server"
+msgstr "Server de baze de date MySQL"
+
+msgid "Network File System"
+msgstr "Sistemul de Fișiere de Rețea"
+
+msgid "Network Time Protocol"
+msgstr "Port / Protocol"
+
+msgid "NoSQL document database"
+msgstr "Bază de date documentară NoSQL"
+
+msgid "Phone and desktop integration"
+msgstr "Integrare între telefon și calculator"
+
+msgid "Plex media streaming server"
+msgstr "Server de streaming media Plex"
+
+msgid "Post Office Protocol for email retrieval"
+msgstr "Post Office Protocol pentru preluarea emailurilor"
+
+msgid "PostgreSQL database server"
+msgstr "Server de baze de date PostgreSQL"
+
+msgid "Remote Desktop Protocol"
+msgstr "Port / Protocol"
+
+msgid "Secure HTTP for web servers"
+msgstr "HTTP securizat pentru servere web"
+
+msgid "Secure shell remote access"
+msgstr "Acces remote prin Secure Shell"
+
+msgid "Simple Mail Transfer Protocol"
+msgstr "Simple Mail Transfer Protocol"
+
+msgid "Virtual Network Computing remote desktop"
+msgstr "Desktop la distanță prin Virtual Network Computing"
+
+msgid "Windows file and printer sharing"
+msgstr "Partajare de fișiere și imprimante Windows"

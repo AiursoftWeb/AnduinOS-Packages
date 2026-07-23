@@ -1,0 +1,321 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: swapcontrol-gtk 2.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-14 09:51+0000\n"
+"PO-Revision-Date: 2026-06-30 23:00+0800\n"
+"Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
+"Language-Team: en <anduin@aiursoft.com>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "About"
+msgstr "About"
+
+msgid "Accept threshold percent"
+msgstr "Accept Threshold"
+
+msgid "Advanced options"
+msgstr "Actions"
+
+msgid "Advanced settings"
+msgstr ""
+
+msgid "Algorithm"
+msgstr ""
+
+msgid "Apply Settings"
+msgstr ""
+
+msgid "Applying settings…"
+msgstr ""
+
+msgid "Auth needed"
+msgstr ""
+
+msgid "Buf"
+msgstr ""
+
+msgid "Buffers"
+msgstr ""
+
+msgid "Cache"
+msgstr ""
+
+msgid "Cached"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Cancel Test"
+msgstr ""
+
+msgid "Cancelled by user."
+msgstr ""
+
+msgid "Channels"
+msgstr ""
+
+msgid "Completed successfully — memory pressure test passed."
+msgstr ""
+
+msgid ""
+"Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
+"Zswap, not both."
+msgstr ""
+
+msgid "Compressed RAM block device — fast in-memory swap"
+msgstr ""
+
+msgid "Compression algorithm"
+msgstr "Compressor"
+
+msgid "Create"
+msgstr ""
+
+msgid "Create Zram Device"
+msgstr "Zram Devices"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Destroy Zram Device"
+msgstr "Zram Devices"
+
+msgid "Device Created"
+msgstr ""
+
+msgid "Disabled"
+msgstr "Disabled"
+
+msgid "Disabling Zswap..."
+msgstr ""
+
+msgid "Disabling swap will break hibernation. Continue?"
+msgstr ""
+
+msgid "Disabling swap…"
+msgstr ""
+
+msgid "Disk Swap"
+msgstr "Disk Swap"
+
+msgid "Disk Swap Configuration"
+msgstr "Disk Swap Configuration"
+
+msgid ""
+"Disk swap is active with memory compression — your system is well-protected "
+"against memory pressure."
+msgstr ""
+
+msgid "Duration:"
+msgstr "Hibernation"
+
+msgid ""
+"Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
+"swap and dramatically reduces I/O under memory pressure."
+msgstr ""
+
+msgid "Enabling Zswap..."
+msgstr ""
+
+msgid "Enabling swap…"
+msgstr ""
+
+msgid "Error"
+msgstr ""
+
+msgid "Free"
+msgstr ""
+
+msgid "Growth speed"
+msgstr ""
+
+msgid "Hibernation"
+msgstr "Hibernation"
+
+msgid "Hibernation Warning"
+msgstr "Hibernation"
+
+msgid "Inactive"
+msgstr "Not active"
+
+msgid "Loading..."
+msgstr "Loading..."
+
+msgid "Maximum hold time"
+msgstr ""
+
+msgid "Maximum pool percent"
+msgstr "Max Pool Percent"
+
+msgid "Memory Overview"
+msgstr "Memory Overview"
+
+msgid "No Zram Devices"
+msgstr "Zram Devices"
+
+msgid "No device"
+msgstr "No devices"
+
+msgid "No disk swap detected"
+msgstr ""
+
+msgid "No memory acceleration enabled"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Off"
+msgstr ""
+
+msgid "On"
+msgstr ""
+
+msgid ""
+"Only store pages that compress to ≤ this % of original. Higher = more pages "
+"cached. Recommended: 90%"
+msgstr ""
+
+msgid "Optimal memory configuration"
+msgstr ""
+
+msgid "Peak allocated:"
+msgstr ""
+
+msgid "Priority"
+msgstr ""
+
+msgid "RAM"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Run Again"
+msgstr ""
+
+msgid "Run Stress Test"
+msgstr ""
+
+msgid "Shrinker"
+msgstr "Shrinker"
+
+msgid "Size (MiB)"
+msgstr "Swap Size (GiB)"
+
+msgid "Speed"
+msgstr ""
+
+msgid "Stress Test"
+msgstr ""
+
+msgid "Swap"
+msgstr "Swap"
+
+msgid "Swap Control"
+msgstr "Swap Control"
+
+msgid "Swap file size"
+msgstr "Swapfile Status"
+
+msgid "Swap usage"
+msgstr ""
+
+msgid "Swappiness"
+msgstr "Swappiness"
+
+msgid "Swappiness not optimized for Zram"
+msgstr ""
+
+msgid "Target Pressure"
+msgstr ""
+
+msgid "Test Complete"
+msgstr ""
+
+msgid "Total RAM"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Used"
+msgstr ""
+
+msgid ""
+"When RAM is full the kernel may kill applications. Enable disk swap for a "
+"reliable safety net."
+msgstr ""
+
+msgid "Zram"
+msgstr "Zram"
+
+msgid "Zram Devices"
+msgstr "Zram Devices"
+
+msgid "Zram and Zswap are both active"
+msgstr ""
+
+msgid ""
+"Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
+"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
+"one of them."
+msgstr ""
+
+msgid "Zswap"
+msgstr "Zswap"
+
+msgid "default"
+msgstr ""
+
+msgid ""
+"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires "
+"zswap restart."
+msgstr ""
+
+msgid "range"
+msgstr ""
+
+msgid "seconds"
+msgstr ""
+
+msgid "with Zram"
+msgstr ""
+
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr ""
+
+#~ msgid "Physical RAM"
+#~ msgstr "Physical RAM"
+
+#~ msgid "Checking..."
+#~ msgstr "Checking..."
+
+#~ msgid "Enabled"
+#~ msgstr "Enabled"
+
+#~ msgid "Enabled — changing swap may affect hibernation"
+#~ msgstr "Enabled — changing swap may affect hibernation"
+
+#~ msgid "Resize Swapfile"
+#~ msgstr "Resize Swapfile"
+
+#~ msgid "Toggle Swap"
+#~ msgstr "Toggle Swap"
+
+#~ msgid "Inactive — no swapfile is enabled"
+#~ msgstr "Inactive — no swapfile is enabled"
+
+#~ msgid "Zswap Configuration"
+#~ msgstr "Zswap Configuration"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "No zram devices. Create one to enable compressed RAM swap."
+#~ msgstr "No zram devices. Create one to enable compressed RAM swap."

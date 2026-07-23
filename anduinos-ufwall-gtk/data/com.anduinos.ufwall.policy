@@ -7,9 +7,65 @@
 
   <action id="com.anduinos.ufwall.manage-firewall">
     <description>Manage UFW firewall settings</description>
+    <description xml:lang="ar">إدارة إعدادات جدار الحماية UFW</description>
+    <description xml:lang="da">Administrer UFW-firewallindstillinger</description>
+    <description xml:lang="de">UFW-Firewall-Einstellungen verwalten</description>
+    <description xml:lang="el">Διαχείριση ρυθμίσεων τείχους προστασίας UFW</description>
+    <description xml:lang="en_GB">Manage UFW firewall settings</description>
+    <description xml:lang="en_US">Manage UFW firewall settings</description>
+    <description xml:lang="es">Administrar configuración del cortafuegos UFW</description>
+    <description xml:lang="fi">Hallinnoi UFW-palomuurin asetuksia</description>
+    <description xml:lang="fr">Gérer les paramètres du pare-feu UFW</description>
+    <description xml:lang="hi">UFW फ़ायरवॉल सेटिंग्स प्रबंधित करें</description>
+    <description xml:lang="id">Kelola pengaturan firewall UFW</description>
+    <description xml:lang="it">Gestisci impostazioni firewall UFW</description>
+    <description xml:lang="ja">UFW ファイアウォール設定を管理</description>
+    <description xml:lang="ko">UFW 방화벽 설정 관리</description>
+    <description xml:lang="nl">UFW-firewallinstellingen beheren</description>
+    <description xml:lang="pl">Zarządzaj ustawieniami zapory UFW</description>
+    <description xml:lang="pt">Gerir definições da firewall UFW</description>
+    <description xml:lang="pt_BR">Gerenciar configurações do firewall UFW</description>
+    <description xml:lang="ro">Gestionați setările firewall-ului UFW</description>
+    <description xml:lang="ru">Управление настройками брандмауэра UFW</description>
+    <description xml:lang="sv">Hantera UFW-brandväggsinställningar</description>
+    <description xml:lang="th">จัดการการตั้งค่าไฟร์วอลล์ UFW</description>
+    <description xml:lang="tr">UFW güvenlik duvarı ayarlarını yönet</description>
+    <description xml:lang="uk">Керування налаштуваннями файрволу UFW</description>
+    <description xml:lang="vi">Quản lý cài đặt tường lửa UFW</description>
     <description xml:lang="zh_CN">管理 UFW 防火墙设置</description>
+    <description xml:lang="zh_HK">管理 UFW 防火牆設定</description>
+    <description xml:lang="zh_TW">管理 UFW 防火牆設定</description>
+
     <message>Authentication is required to modify firewall settings</message>
-    <message xml:lang="zh_CN">修改防火墙设置需要管理员权限</message>
+    <message xml:lang="ar">يلزم التوثيق لتعديل إعدادات جدار الحماية</message>
+    <message xml:lang="da">Godkendelse kræves for at ændre firewallindstillinger</message>
+    <message xml:lang="de">Zur Änderung der Firewall-Einstellungen ist Authentifizierung erforderlich</message>
+    <message xml:lang="el">Απαιτείται έγκριση για την τροποποίηση των ρυθμίσεων τείχους προστασίας</message>
+    <message xml:lang="en_GB">Authentication is required to modify firewall settings</message>
+    <message xml:lang="en_US">Authentication is required to modify firewall settings</message>
+    <message xml:lang="es">Se requiere autenticación para modificar la configuración del cortafuegos</message>
+    <message xml:lang="fi">Palomuurin asetusten muuttaminen vaatii todennuksen</message>
+    <message xml:lang="fr">L'authentification est requise pour modifier les paramètres du pare-feu</message>
+    <message xml:lang="hi">फ़ायरवॉल सेटिंग्स को संशोधित करने के लिए प्रमाणीकरण आवश्यक है</message>
+    <message xml:lang="id">Otentikasi diperlukan untuk mengubah pengaturan firewall</message>
+    <message xml:lang="it">È richiesta l'autenticazione per modificare le impostazioni del firewall</message>
+    <message xml:lang="ja">ファイアウォール設定を変更するには認証が必要です</message>
+    <message xml:lang="ko">방화벽 설정을 수정하려면 인증이 필요합니다</message>
+    <message xml:lang="nl">Authenticatie is vereist om firewallinstellingen te wijzigen</message>
+    <message xml:lang="pl">Wymagane jest uwierzytelnienie, aby zmodyfikować ustawienia zapory sieciowej</message>
+    <message xml:lang="pt">É necessária autenticação para modificar as definições da firewall</message>
+    <message xml:lang="pt_BR">É necessária autenticação para modificar as configurações do firewall</message>
+    <message xml:lang="ro">Este necesară autentificarea pentru a modifica setările firewall-ului</message>
+    <message xml:lang="ru">Требуется аутентификация для изменения настроек брандмауэра</message>
+    <message xml:lang="sv">Autentisering krävs för att ändra brandväggsinställningar</message>
+    <message xml:lang="th">จำเป็นต้องมีการตรวจสอบสิทธิ์เพื่อแก้ไขการตั้งค่าไฟร์วอลล์</message>
+    <message xml:lang="tr">Güvenlik duvarı ayarlarını değiştirmek için kimlik doğrulaması gereklidir</message>
+    <message xml:lang="uk">Потрібна автентифікація для зміни налаштувань брандмауера</message>
+    <message xml:lang="vi">Yêu cầu xác thực để thay đổi cài đặt tường lửa</message>
+    <message xml:lang="zh_CN">修改防火墙设置需要身份验证</message>
+    <message xml:lang="zh_HK">修改防火牆設定需要認證</message>
+    <message xml:lang="zh_TW">修改防火牆設定需要驗證</message>
+
     <icon_name>security-high-symbolic</icon_name>
     <defaults>
       <allow_any>auth_admin</allow_any>

@@ -318,6 +318,38 @@ anduinos-ufwall-gtk:
   variables:
     PACKAGE_DIR: anduinos-ufwall-gtk
 
+anduinos-swapcontrol-gtk:
+  extends: .publish
+  needs:
+    - anduinos-swap-config
+  variables:
+    PACKAGE_DIR: anduinos-swapcontrol-gtk
+
+anduinos-swap-config:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-swap-config
+
+anduinos-why-ai:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-why-ai
+  cache:
+    key: anduinos-why-ai-model
+    paths:
+      - anduinos-why-ai/deploy/cache/
+    policy: pull-push
+
+anduinos-why-placeholder:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-why-placeholder
+
+anduinos-xbox-controller-driver:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-xbox-controller-driver
+
 anduinos-gnome-shell-locale:
   extends: .publish
   variables:
@@ -332,6 +364,11 @@ anduinos-live-settings:
   extends: .publish
   variables:
     PACKAGE_DIR: anduinos-live-settings
+
+anduinos-installer-beta:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-installer-beta
 
 anduinos-installer-config:
   extends: .publish
@@ -369,6 +406,7 @@ anduinos-desktop-core:
     - firmware-sof-anduinos
     - alsa-ucm-conf-anduinos
     - anduinos-rime
+    - anduinos-why-placeholder
   variables:
     PACKAGE_DIR: anduinos-desktop-core
 
@@ -421,6 +459,18 @@ firefox-anduinos:
   variables:
     PACKAGE_DIR: firefox-anduinos
 
+anduinos-exe-runner:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-exe-runner
+
+anduinos-oobe:
+  extends: .publish
+  needs:
+    - anduinos-appearance
+  variables:
+    PACKAGE_DIR: anduinos-oobe
+
 anduinos-desktop-apps:
   extends: .publish
   stage: meta
@@ -428,6 +478,9 @@ anduinos-desktop-apps:
     - anduinos-mimeapps
     - firefox-anduinos
     - anduinos-ufwall-gtk
+    - anduinos-swapcontrol-gtk
+    - anduinos-exe-runner
+    - anduinos-oobe
   variables:
     PACKAGE_DIR: anduinos-desktop-apps
 
@@ -448,6 +501,7 @@ anduinos-desktop:
     - anduinos-software-properties-common
     - anduinos-software-properties-gtk
     - anduinos-no-snapd
+    - anduinos-swap-config
     - anduinos-desktop-apps
   variables:
     PACKAGE_DIR: anduinos-desktop

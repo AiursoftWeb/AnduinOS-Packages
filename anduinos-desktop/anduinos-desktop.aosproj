@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop</PackageName>
-    <PackageVersion>2.0.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS complete desktop — metapackage that pulls in all AnduinOS components</PackageDescription>
     <Section>metapackages</Section>
@@ -33,6 +33,9 @@
     <Recommend Include="anduinos-apt-config" />
     <Dependency Include="base-files" />
     <Dependency Include="anduinos-no-snapd" />
+
+    <!-- Zram swap (compressed RAM) — 50% RAM, lz4. User can override via swapcontrol-gtk. -->
+    <Recommend Include="anduinos-swap-config" />
 
     <!-- These are the "core" brand packages that are essential to the AnduinOS experience. -->
     <Recommend Include="anduinos-deskmon" />

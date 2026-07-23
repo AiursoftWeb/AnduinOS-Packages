@@ -1,0 +1,2737 @@
+[
+    {
+        "pattern": "^(rufus|universal-usb-installer|balenaetcher.*setup).*\\.exe$",
+        "title": "Creating a Bootable USB?",
+        "app_name": "Impression",
+        "app_id": "io.gitlab.adhami3310.Impression",
+        "reason": "Tools like Rufus require raw block device access (e.g., /dev/sda). The Windows compatibility sandbox strictly isolates hardware access to prevent system corruption, causing these apps to crash.\n\nFor AnduinOS, we highly recommend Impression \u2014 a native, beautifully designed, and rock-solid tool for flashing disk images."
+    },
+    {
+        "pattern": "^(cpu-z|gpu-z|aida64|openhardwaremonitor|hdtunepro|crystaldisk.*|spsetup|hwmonitor).*\\.(exe|zip)$",
+        "title": "Checking Hardware & Benchmarks?",
+        "app_name": "Mission Center",
+        "app_id": "io.missioncenter.MissionCenter",
+        "reason": "Windows hardware monitors require ring-0 access to read motherboard and NVMe sensors. The sandbox intentionally blocks these API calls.\n\nFor deep hardware inspection and real-time telemetry, please use Mission Center, the native system monitor for AnduinOS."
+    },
+    {
+        "pattern": "^(windirstat|fastcopy|treesize.*setup).*\\.(exe|msi)$",
+        "title": "Managing Disk Space or File Transfers?",
+        "app_name": "Baobab (Disk Usage Analyzer)",
+        "app_id": "org.gnome.baobab",
+        "reason": "Running disk analyzers inside a Windows sandbox yields inaccurate results because it can only see the virtual 'C: Drive' mapped by Bottles, not your actual Ext4/Btrfs root filesystem.\n\nPlease use the native Disk Usage Analyzer for accurate storage telemetry."
+    },
+    {
+        "pattern": "^(visualstudiosetup|vs_.*).*\\.exe$",
+        "title": "Installing Visual Studio?",
+        "app_name": "JetBrains Rider",
+        "app_id": "com.jetbrains.Rider",
+        "reason": "The full Visual Studio IDE relies heavily on deep Windows GUI frameworks (WPF/WPF) and MSBuild ecosystems that perform poorly under Wine.\n\nFor C# and .NET development on Linux, JetBrains Rider is the industry standard, offering native performance, a superior ReSharper engine, and perfect .NET SDK integration."
+    },
+    {
+        "pattern": "^(vscodesetup|vscodeusersetup).*\\.exe$",
+        "title": "Installing Visual Studio Code?",
+        "app_name": "VS Code (Native Linux)",
+        "app_id": "com.visualstudio.code",
+        "reason": "Running the Windows build of VS Code means you lose access to the Linux native terminal, Docker socket, and Git ecosystem.\n\nVS Code provides an excellent native Linux build. Please install it directly via the App Store."
+    },
+    {
+        "pattern": "^(vscodiumsetup|vscodiumusersetup).*\\.exe$",
+        "title": "Installing VSCodium?",
+        "app_name": "VSCodium",
+        "app_id": "com.vscodium.codium",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of VSCodium."
+    },
+    {
+        "pattern": "^(cursorusersetup).*\\.exe$",
+        "title": "Looking for Cursor?",
+        "app_name": "Cursor Download Page",
+        "docs_url": "https://cursor.com/",
+        "reason": "You can download Cursor (Linux AppImage) for AnduinOS directly from the web."
+    },
+    {
+        "pattern": "^(windsurfusersetup).*\\.exe$",
+        "title": "Looking for Windsurf?",
+        "app_name": "Windsurf Installation Instructions",
+        "docs_url": "https://windsurf.com/download/editor",
+        "reason": "Learn how to install Windsurf natively for Ubuntu/AnduinOS."
+    },
+    {
+        "pattern": "^idea-20.*\\.exe$",
+        "title": "Installing JetBrains IntelliJ IDEA?",
+        "app_name": "JetBrains IntelliJ IDEA",
+        "app_id": "com.jetbrains.IntelliJ-IDEA-Ultimate",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains IntelliJ IDEA."
+    },
+    {
+        "pattern": "^pycharm-20.*\\.exe$",
+        "title": "Installing JetBrains PyCharm?",
+        "app_name": "JetBrains PyCharm",
+        "app_id": "com.jetbrains.PyCharm-Professional",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains PyCharm."
+    },
+    {
+        "pattern": "^phpstorm-20.*\\.exe$",
+        "title": "Installing JetBrains PhpStorm?",
+        "app_name": "JetBrains PhpStorm",
+        "app_id": "com.jetbrains.PhpStorm",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains PhpStorm."
+    },
+    {
+        "pattern": "^goland-20.*\\.exe$",
+        "title": "Installing JetBrains GoLand?",
+        "app_name": "JetBrains GoLand",
+        "app_id": "com.jetbrains.GoLand",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains GoLand."
+    },
+    {
+        "pattern": "^(jetbrains\\.)?rider-20.*\\.exe$",
+        "title": "Installing JetBrains Rider?",
+        "app_name": "JetBrains Rider",
+        "app_id": "com.jetbrains.Rider",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains Rider."
+    },
+    {
+        "pattern": "^clion-20.*\\.exe$",
+        "title": "Installing JetBrains CLion?",
+        "app_name": "JetBrains CLion",
+        "app_id": "com.jetbrains.CLion",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains CLion."
+    },
+    {
+        "pattern": "^rustrover-20.*\\.exe$",
+        "title": "Installing JetBrains RustRover?",
+        "app_name": "JetBrains RustRover",
+        "app_id": "com.jetbrains.RustRover",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains RustRover."
+    },
+    {
+        "pattern": "^webstorm-20.*\\.exe$",
+        "title": "Installing JetBrains WebStorm?",
+        "app_name": "JetBrains WebStorm",
+        "app_id": "com.jetbrains.WebStorm",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains WebStorm."
+    },
+    {
+        "pattern": "^rubymine-20.*\\.exe$",
+        "title": "Installing JetBrains RubyMine?",
+        "app_name": "JetBrains RubyMine",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains RubyMine."
+    },
+    {
+        "pattern": "^datagrip-20.*\\.exe$",
+        "title": "Installing JetBrains DataGrip?",
+        "app_name": "JetBrains DataGrip",
+        "app_id": "com.jetbrains.DataGrip",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains DataGrip."
+    },
+    {
+        "pattern": "^dataspell-20.*\\.exe$",
+        "title": "Installing JetBrains DataSpell?",
+        "app_name": "JetBrains DataSpell",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains DataSpell."
+    },
+    {
+        "pattern": "^eclipse.*\\.exe$",
+        "title": "Installing Eclipse IDE?",
+        "app_name": "Eclipse IDE",
+        "app_id": "org.eclipse.Java",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Eclipse IDE."
+    },
+    {
+        "pattern": "^jgrasp.*\\.exe$",
+        "title": "Looking for jGRASP?",
+        "app_name": "jGRASP website",
+        "docs_url": "https://spider.eng.auburn.edu/user-cgi/grasp/grasp.pl?;dl=download_jgrasp.html",
+        "reason": "You can download jGRASP (.zip package for Linux) for AnduinOS from the web."
+    },
+    {
+        "pattern": "^sublime_text.*setup.*\\.exe$",
+        "title": "Installing Sublime Text?",
+        "app_name": "Sublime Text",
+        "app_id": "com.sublimetext.three",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Sublime Text."
+    },
+    {
+        "pattern": "^brackets.*\\.exe$",
+        "title": "Installing Brackets?",
+        "app_name": "Brackets",
+        "app_id": "io.brackets.Brackets",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Brackets."
+    },
+    {
+        "pattern": "^npp.*\\.(exe|msi)$",
+        "title": "Installing Notepad++?",
+        "app_name": "Notepad Next",
+        "app_id": "com.github.dail8859.NotepadNext",
+        "reason": "Notepad Next is a high-quality, native Linux reimplementation of Notepad++ with full plugin support."
+    },
+    {
+        "pattern": "^geany.*setup.*\\.exe$",
+        "title": "Installing Geany?",
+        "app_name": "Geany",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Geany."
+    },
+    {
+        "pattern": "^gvim.*\\.exe$",
+        "title": "Installing VIM?",
+        "app_name": "VIM",
+        "app_id": "org.vim.Vim",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of VIM."
+    },
+    {
+        "pattern": "^emacs.*installer.*\\.exe$",
+        "title": "Installing GNU Emacs?",
+        "app_name": "GNU Emacs",
+        "app_id": "org.gnu.emacs",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of GNU Emacs."
+    },
+    {
+        "pattern": "^git-.*\\.exe$",
+        "title": "Installing Git?",
+        "app_name": "Terminal",
+        "reason": "Git is an integral part of the Linux ecosystem. Please install it natively via the terminal: `sudo apt install git`."
+    },
+    {
+        "pattern": "^githubdesktopsetup.*\\.(exe|msi)$",
+        "title": "Installing GitHub Desktop?",
+        "app_name": "GitHub Desktop",
+        "app_id": "io.github.shiftey.Desktop",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of GitHub Desktop."
+    },
+    {
+        "pattern": "^postman.*\\.exe$",
+        "title": "Installing Postman?",
+        "app_name": "Postman",
+        "app_id": "com.getpostman.Postman",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Postman."
+    },
+    {
+        "pattern": "^insomnia\\.core.*\\.exe$",
+        "title": "Installing Insomnia?",
+        "app_name": "Insomnia",
+        "app_id": "rest.insomnia.Insomnia",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Insomnia."
+    },
+    {
+        "pattern": "^arduino-ide.*\\.(exe|msi)$",
+        "title": "Installing Arduino IDE?",
+        "app_name": "Arduino IDE",
+        "app_id": "cc.arduino.IDE2",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Arduino IDE."
+    },
+    {
+        "pattern": "^android-studio-.*\\.exe$",
+        "title": "Installing Android Studio?",
+        "app_name": "Android Studio",
+        "app_id": "com.google.AndroidStudio",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Android Studio."
+    },
+    {
+        "pattern": "^ssms-setup.*\\.exe$",
+        "title": "Looking for SQL Server Management Studio?",
+        "app_name": "Azure Data Studio",
+        "app_id": "com.microsoft.AzureDataStudio",
+        "reason": "SSMS is a legacy Windows-only tool. Microsoft has officially replaced it for cross-platform workflows with Azure Data Studio.\n\nAzure Data Studio provides a modern, native Linux experience for managing SQL Server and PostgreSQL."
+    },
+    {
+        "pattern": "^.*sql_server.*\\.exe$",
+        "title": "Deploying Microsoft SQL Server?",
+        "docs_url": "https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-setup",
+        "reason": "Microsoft SQL Server has native, highly optimized binaries for Linux! Running the Windows installer through Wine is completely unnecessary and unsupported.\n\nClick 'View Documentation' to learn how to deploy SQL Server natively on Linux or via Docker."
+    },
+    {
+        "pattern": "^(powershell|dotnet-sdk|dotnet-hosting|go.*|node-v.*)\\.(exe|msi)$",
+        "title": "Installing Runtimes or SDKs?",
+        "docs_url": "https://learn.microsoft.com/en-us/dotnet/core/install/linux",
+        "reason": "Installing developer SDKs (like .NET, Go, Node.js, or PowerShell) inside the Windows sandbox will trap them there \u2014 your native Linux terminal and IDEs won't be able to find them.\n\nThese runtimes are natively supported on AnduinOS. Please install them via apt, Snap, or native tarballs."
+    },
+    {
+        "pattern": "^(rewrite|requestrouter|iiscrypto).*\\.(exe|msi)$",
+        "title": "Configuring IIS Web Server?",
+        "docs_url": "https://caddyserver.com/docs/getting-started",
+        "reason": "Internet Information Services (IIS) is deeply embedded into the Windows NT kernel and cannot run on Linux.\n\nFor modern, high-performance web routing and automatic HTTPS, we highly recommend migrating to Caddy or NGINX."
+    },
+    {
+        "pattern": "^docker.*desktop.*installer.*\\.exe$",
+        "title": "Installing Docker Desktop?",
+        "docs_url": "https://docs.docker.com/desktop/setup/install/linux/ubuntu/",
+        "reason": "Container engines require low-level kernel modules which are inaccessible from the sandbox.\n\nPlease use native Podman or Docker Engine directly on your Linux host."
+    },
+    {
+        "pattern": "^(virtualbox|vmware).*\\.exe$",
+        "title": "Installing Virtual Machines?",
+        "app_name": "GNOME Boxes",
+        "app_id": "org.gnome.Boxes",
+        "reason": "Hypervisors require hardware virtualization (VT-x/AMD-V) which is inaccessible from the sandbox.\n\nFor virtual machines, we highly recommend GNOME Boxes."
+    },
+    {
+        "pattern": "^xampp-windows(.*installer|).*\\.(exe|msi)$",
+        "title": "Looking for XAMPP?",
+        "docs_url": "https://www.apachefriends.org/download.html",
+        "reason": "You can download XAMPP (Linux .run package) for AnduinOS from the web."
+    },
+    {
+        "pattern": "^ollamasetup.*\\.exe$",
+        "title": "Looking for Ollama?",
+        "docs_url": "https://ollama.com/download/linux",
+        "reason": "Learn how to install Ollama for Linux natively in AnduinOS."
+    },
+    {
+        "pattern": "^(putty(.*installer|)?|bvsshclient-inst).*\\.(exe|msi)$",
+        "title": "Need SSH or Remote Access?",
+        "app_name": "Remmina",
+        "app_id": "org.remmina.Remmina",
+        "reason": "Linux natively excels at terminal and SSH management. Windows terminal emulators are redundant and may have integration issues.\n\nFor SSH, use your native Terminal. For comprehensive remote desktop management (RDP/VNC/SSH), we recommend Remmina."
+    },
+    {
+        "pattern": "^winscp.*setup.*\\.exe$",
+        "title": "Looking for WinSCP?",
+        "app_name": "FileZilla",
+        "app_id": "org.filezillaproject.Filezilla",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of FileZilla."
+    },
+    {
+        "pattern": "^filezilla.*\\.exe$",
+        "title": "Installing FileZilla?",
+        "app_name": "FileZilla",
+        "app_id": "org.filezillaproject.Filezilla",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of FileZilla."
+    },
+    {
+        "pattern": "^adobe.*\\.zip$",
+        "title": "Installing Adobe Creative Cloud?",
+        "reason": "The Adobe CC installer utilizes complex anti-piracy DRM and proprietary MSVCP libraries that frequently deadlock the compatibility layer.\n\nWe recommend maintaining a Windows dual-boot or virtual machine for heavy Adobe workflows, or migrating to Linux-native tools like DaVinci Resolve and Krita."
+    },
+    {
+        "pattern": "^(creative.*cloud.*set-up|adobe.*creative.*cloud.*installer).*\\.(exe|msi)$",
+        "title": "Looking for Adobe Creative Cloud?",
+        "docs_url": "https://www.adobe.com/apps/all/web",
+        "reason": "You can use some Adobe apps directly on the web."
+    },
+    {
+        "pattern": "^adobe.*photoshop.*installer.*\\.exe$",
+        "title": "Looking for Adobe Photoshop?",
+        "docs_url": "https://www.adobe.com/apps/all/web",
+        "reason": "You can use Adobe Photoshop directly on the web."
+    },
+    {
+        "pattern": "^adobe.*lightroom.*installer.*\\.exe$",
+        "title": "Looking for Adobe Lightroom?",
+        "docs_url": "https://www.adobe.com/apps/all/web",
+        "reason": "You can use Adobe Lightroom directly on the web."
+    },
+    {
+        "pattern": "^adobe.*illustrator.*installer.*\\.exe$",
+        "title": "Looking for Adobe Illustrator?",
+        "docs_url": "https://www.adobe.com/apps/all/web",
+        "reason": "You can use Adobe Illustrator directly on the web."
+    },
+    {
+        "pattern": "^adobe.*premiere.*installer.*\\.exe$",
+        "title": "Looking for Adobe Premiere?",
+        "app_name": "Kdenlive",
+        "app_id": "org.kde.kdenlive",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Kdenlive as a Premiere alternative."
+    },
+    {
+        "pattern": "^(photoshop|illustrator).*cs6.*\\.exe$",
+        "title": "Installing Adobe CS6?",
+        "app_name": "PlayOnLinux",
+        "app_id": "com.playonlinux.PlayOnLinux4",
+        "reason": "Adobe CS6 applications often require highly specific Wine configurations. PlayOnLinux provides tested installation scripts for these legacy apps."
+    },
+    {
+        "pattern": "^vegas.*pro.*\\.exe$",
+        "title": "Looking for VEGAS Pro?",
+        "app_name": "Kdenlive",
+        "app_id": "org.kde.kdenlive",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Kdenlive."
+    },
+    {
+        "pattern": "^capcut.*installer.*\\.exe$",
+        "title": "Looking for CapCut?",
+        "docs_url": "https://www.capcut.com/login",
+        "reason": "You can use CapCut natively in your web browser."
+    },
+    {
+        "pattern": "^lightworks_windows.*\\.exe$",
+        "title": "Looking for Lightworks?",
+        "docs_url": "https://lwks.com/pricing",
+        "reason": "You can download Lightworks (Linux .deb package) for AnduinOS from the web."
+    },
+    {
+        "pattern": "^davinci.*resolve.*windows.*\\.exe$",
+        "title": "Looking for DaVinci Resolve?",
+        "docs_url": "https://help.zorin.com/docs/apps-games/install-davinci-resolve/",
+        "reason": "Learn how to install DaVinci Resolve natively for Linux."
+    },
+    {
+        "pattern": "^photoscape.*\\.exe$",
+        "title": "Looking for Photoscape?",
+        "app_name": "GNU Image Manipulation Program (GIMP)",
+        "app_id": "org.gimp.GIMP",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of GIMP."
+    },
+    {
+        "pattern": "^gimp.*setup.*\\.(exe|msi)$",
+        "title": "Looking for GIMP?",
+        "app_name": "GNU Image Manipulation Program",
+        "app_id": "org.gimp.GIMP",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of GIMP."
+    },
+    {
+        "pattern": "^inkscape.*\\.(exe|msi)$",
+        "title": "Looking for Inkscape?",
+        "app_name": "Inkscape",
+        "app_id": "org.inkscape.Inkscape",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Inkscape."
+    },
+    {
+        "pattern": "^affinity.*\\.(msix|exe)$",
+        "title": "Looking for Affinity?",
+        "docs_url": "https://github.com/ryzendew/Linux-Affinity-Installer/releases",
+        "reason": "You can download the unofficial Linux Affinity Installer (AppImage) for AnduinOS from GitHub."
+    },
+    {
+        "pattern": "^figmasetup.*\\.exe$",
+        "title": "Looking for Figma?",
+        "docs_url": "https://www.figma.com/login",
+        "reason": "You can use Figma smoothly in your web browser."
+    },
+    {
+        "pattern": "^iview.*setup.*\\.exe$",
+        "title": "Looking for IrfanView?",
+        "app_name": "XnView MP",
+        "app_id": "com.xnview.XnViewMP",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of XnView MP."
+    },
+    {
+        "pattern": "^xnview(mp)?-win.*\\.exe$",
+        "title": "Looking for XnView MP?",
+        "app_name": "XnView MP",
+        "app_id": "com.xnview.XnViewMP",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of XnView MP."
+    },
+    {
+        "pattern": "^cinema4d.*\\.exe$",
+        "title": "Looking for Cinema 4D?",
+        "app_name": "Blender",
+        "app_id": "org.blender.Blender",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Blender."
+    },
+    {
+        "pattern": "^paint\\.net.*\\.exe$",
+        "title": "Looking for Paint.NET?",
+        "app_name": "Pinta",
+        "app_id": "com.github.PintaProject.Pinta",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Pinta."
+    },
+    {
+        "pattern": "^krita.*setup.*\\.exe$",
+        "title": "Looking for Krita?",
+        "app_name": "Krita",
+        "app_id": "org.kde.krita",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Krita."
+    },
+    {
+        "pattern": "^sketchbook.*\\.exe$",
+        "title": "Looking for Autodesk SketchBook?",
+        "app_name": "Krita",
+        "app_id": "org.kde.krita",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Krita."
+    },
+    {
+        "pattern": "^flstudio.*\\.exe$",
+        "title": "Looking for FL Studio?",
+        "app_name": "Ardour",
+        "app_id": "org.ardour.Ardour",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Ardour."
+    },
+    {
+        "pattern": "^ableton\\s+live.*\\.exe$",
+        "title": "Looking for Ableton Live?",
+        "app_name": "Bitwig Studio",
+        "app_id": "com.bitwig.BitwigStudio",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Bitwig Studio."
+    },
+    {
+        "pattern": "^bitwig\\s+studio.*\\.(exe|msi)$",
+        "title": "Looking for Bitwig Studio?",
+        "app_name": "Bitwig Studio",
+        "app_id": "com.bitwig.BitwigStudio",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Bitwig Studio."
+    },
+    {
+        "pattern": "^gog_galaxy.*\\.exe$",
+        "title": "Looking for GOG Galaxy?",
+        "app_name": "Heroic Games Launcher",
+        "app_id": "com.heroicgameslauncher.hgl",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Heroic Games Launcher."
+    },
+    {
+        "pattern": "^(bethesdanetlauncher_setup|originthinsetup|ubisoftconnectinstaller).*\\.exe$",
+        "title": "Looking for Game Launchers?",
+        "app_name": "Lutris",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using Lutris to manage these launchers."
+    },
+    {
+        "pattern": "^itch-setup.*\\.exe$",
+        "title": "Looking for Itch?",
+        "docs_url": "https://itch.io/app/",
+        "reason": "You can download Itch (Linux package) for AnduinOS from the web."
+    },
+    {
+        "pattern": "^geforcenow-release.*\\.exe$",
+        "title": "Looking for GeForce NOW?",
+        "docs_url": "https://www.nvidia.com/en-us/geforce-now/download/",
+        "reason": "You can download NVIDIA GeForce NOW (Linux installer) for AnduinOS from the web."
+    },
+    {
+        "pattern": "^minecraft.*\\.(exe|msi)$",
+        "title": "Looking for Minecraft?",
+        "app_name": "Minecraft",
+        "app_id": "com.mojang.Minecraft",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Minecraft."
+    },
+    {
+        "pattern": "^robloxplayerlauncher.*\\.exe$",
+        "title": "Looking for Roblox Player Launcher?",
+        "app_name": "Sober",
+        "app_id": "org.vinegarhq.Sober",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Roblox Player Launcher via Sober."
+    },
+    {
+        "pattern": "^robloxstudiolauncher.*\\.exe$",
+        "title": "Looking for Roblox Studio Launcher?",
+        "app_name": "Vinegar",
+        "app_id": "org.vinegarhq.Vinegar",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Roblox Studio Launcher via Vinegar."
+    },
+    {
+        "pattern": "^razersynapseinstaller.*\\.exe$",
+        "title": "Looking for Razer Synapse?",
+        "app_name": "RazerGenie",
+        "app_id": "xyz.z3ntu.razergenie",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of RazerGenie."
+    },
+    {
+        "pattern": "^.*distance.*windows_setup.*\\.exe$",
+        "title": "Looking for Distance?",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend installing Distance via native Linux Steam."
+    },
+    {
+        "pattern": "^.*league\\s+of\\s+legends.*\\.exe$",
+        "title": "Looking for the League of Legends installer?",
+        "app_name": "Lutris",
+        "reason": "League of Legends is available to install on Linux via Lutris."
+    },
+    {
+        "pattern": "^(overwatch|warframe.*\\.msi|world-of-warcraft).*\\.exe$",
+        "title": "Looking for Windows Game installers?",
+        "app_name": "Lutris",
+        "reason": "Major Windows titles are best installed on Linux via Lutris or Steam Proton."
+    },
+    {
+        "pattern": "^(antimicro.*\\.win64.*\\.msi|xpadder.*\\.exe)$",
+        "title": "Looking for Gamepad Mappers?",
+        "app_name": "QJoypad",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of QJoypad."
+    },
+    {
+        "pattern": "^Setup Project64.*\\.exe$",
+        "title": "Looking for Project64?",
+        "app_name": "Simple64",
+        "app_id": "io.github.simple64.simple64",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Simple64."
+    },
+    {
+        "pattern": "^(eie11|ie11).*\\.(exe|msi)$",
+        "title": "Looking for Internet Explorer?",
+        "app_name": "Microsoft Edge",
+        "app_id": "com.microsoft.Edge",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Microsoft Edge."
+    },
+    {
+        "pattern": "^(office365_setup|visio|project|officesetup).*\\.(exe|msi|iso)$",
+        "title": "Installing Microsoft Office?",
+        "docs_url": "https://www.office.com",
+        "reason": "Newer versions of Microsoft Office have deep DRM and Windows integrations that perform poorly in compatibility layers.\n\nYou can use Microsoft Office/365 on the web, or install native Linux suites like ONLYOFFICE."
+    },
+    {
+        "pattern": "^microsoft.*365.*copilot.*installer.*\\.exe$",
+        "title": "Looking for Microsoft 365 Copilot?",
+        "docs_url": "https://www.office.com",
+        "reason": "You can sign into Microsoft Office/365 Copilot on the web."
+    },
+    {
+        "pattern": "^(reader|acrordr|sumatrapdf.*install|foxit-pdf-reader|nitro_pro).*\\.(exe|msi)$",
+        "title": "Looking for PDF Readers?",
+        "app_name": "Document Viewer",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux Document Viewer."
+    },
+    {
+        "pattern": "^abbyy_finereader_pdf.*\\.(exe|msi)$",
+        "title": "Looking for ABBYY FineReader PDF?",
+        "docs_url": "https://www.naps2.com/download",
+        "reason": "You can download NAPS2 (Linux .deb installer) for AnduinOS from the web."
+    },
+    {
+        "pattern": "^(finaldraftsetup|scrivener.*installer).*\\.(exe|msi)$",
+        "title": "Looking for Writing Tools?",
+        "app_name": "Trelby",
+        "app_id": "org.trelby.Trelby",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Trelby."
+    },
+    {
+        "pattern": "^iawriter.*\\.(exe|msi)$",
+        "title": "Looking for iA Writer?",
+        "app_name": "Apostrophe",
+        "app_id": "org.gnome.gitlab.somas.Apostrophe",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Apostrophe."
+    },
+    {
+        "pattern": "^anytype.*setup.*\\.exe$",
+        "title": "Looking for Anytype?",
+        "app_name": "Anytype",
+        "app_id": "io.anytype.anytype",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Anytype."
+    },
+    {
+        "pattern": "^draw\\.io.*windows-installer.*\\.exe$",
+        "title": "Looking for draw.io?",
+        "app_name": "draw.io",
+        "app_id": "com.jgraph.drawio.desktop",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of draw.io."
+    },
+    {
+        "pattern": "^(notion.*setup|grammarlyinstaller|trello.*installer|evernote-latest|canva.*setup).*\\.exe$",
+        "title": "Looking for Web Apps?",
+        "reason": "These services provide fully functional web applications that work perfectly in native Linux browsers."
+    },
+    {
+        "pattern": "^(discordsetup|discord_setup).*\\.(exe|msi)$",
+        "title": "Installing Discord?",
+        "app_name": "Discord (Native)",
+        "app_id": "com.discordapp.Discord",
+        "reason": "Chat and voice apps require native access to your microphone and screen sharing APIs which are sandboxed here. Please install the native Linux version of Discord."
+    },
+    {
+        "pattern": "^zoom.*\\.(exe|msi)$",
+        "title": "Installing Zoom?",
+        "app_name": "Zoom (Native)",
+        "app_id": "us.zoom.Zoom",
+        "reason": "Video conferencing apps require native access to your camera and screen sharing APIs which are sandboxed here. Please install the native Linux version of Zoom."
+    },
+    {
+        "pattern": "^slacksetup.*\\.(exe|msi)$",
+        "title": "Installing Slack?",
+        "app_name": "Slack (Native)",
+        "app_id": "com.slack.Slack",
+        "reason": "Communication apps perform best natively. Please install the native Linux version of Slack."
+    },
+    {
+        "pattern": "^(msteamssetup|teams.*windows).*\\.(exe|msi)$",
+        "title": "Installing Microsoft Teams?",
+        "reason": "Video conferencing apps require native access to your camera and screen sharing APIs which are sandboxed here. Please use the web version of Teams or find a Linux client in the App Store."
+    },
+    {
+        "pattern": "^element.*setup.*\\.(exe|msi)$",
+        "title": "Installing Element?",
+        "app_name": "Element (Native)",
+        "app_id": "im.riot.Riot",
+        "reason": "Communication apps perform best natively. Please install the native Linux version of Element."
+    },
+    {
+        "pattern": "^(tsetup|telegram).*\\.(exe|msi)$",
+        "title": "Installing Telegram?",
+        "app_name": "Telegram Desktop",
+        "app_id": "org.telegram.desktop",
+        "reason": "Please install the native Linux version of Telegram for optimal performance."
+    },
+    {
+        "pattern": "^signalsetup.*\\.(exe|msi)$",
+        "title": "Installing Signal?",
+        "app_name": "Signal Desktop",
+        "app_id": "org.signal.Signal",
+        "reason": "Please install the native Linux version of Signal for optimal performance and secure enclave integration."
+    },
+    {
+        "pattern": "^wechat.*\\.(exe|msi)$",
+        "title": "Installing WeChat?",
+        "app_name": "WeChat (Native)",
+        "app_id": "com.tencent.WeChat",
+        "reason": "Communication apps perform best with native system integrations. Please install the Linux version of WeChat from the App Store."
+    },
+    {
+        "pattern": "^oicq.*\\.(exe|msi)$",
+        "title": "Installing QQ?",
+        "app_name": "Linux QQ",
+        "app_id": "com.qq.QQ",
+        "reason": "Tencent now officially maintains a natively built Linux QQ based on the NT architecture. It provides an identical experience to the Windows version without the overhead of Wine."
+    },
+    {
+        "pattern": "^vibersetup.*\\.(exe|msi)$",
+        "title": "Installing Viber?",
+        "app_name": "Viber (Native)",
+        "app_id": "com.viber.Viber",
+        "reason": "Please install the native Linux version of Viber."
+    },
+    {
+        "pattern": "^whatsapp.*\\.exe$",
+        "title": "Looking for WhatsApp?",
+        "docs_url": "https://web.whatsapp.com/",
+        "reason": "You can use WhatsApp smoothly on the web."
+    },
+    {
+        "pattern": "^lineinst.*\\.exe$",
+        "title": "Looking for LINE?",
+        "docs_url": "https://chrome.google.com/webstore/detail/line/ophjlpahpchlmihnnnihgmmeilfjmjjc",
+        "reason": "You can use LINE as a web browser extension."
+    },
+    {
+        "pattern": "^webex.*\\.(exe|msi)$",
+        "title": "Looking for Cisco Webex?",
+        "docs_url": "https://www.webex.com/downloads.html",
+        "reason": "You can install Cisco Webex (Linux .deb package) for AnduinOS from the web."
+    },
+    {
+        "pattern": "^syncthing-windows-setup.*\\.exe$",
+        "title": "Looking for Syncthing?",
+        "docs_url": "https://apt.syncthing.net/",
+        "reason": "Learn how to install Syncthing natively for Ubuntu/AnduinOS."
+    },
+    {
+        "pattern": "^(openvpn|tailscale-setup|wireguard|clash|surfsharksetup|purevpn_setup|nordinstaller).*\\.exe$",
+        "title": "Installing VPN or Proxy Clients?",
+        "app_name": "Settings (Network)",
+        "app_id": "org.gnome.Settings",
+        "reason": "VPN clients need to create virtual network interfaces (TUN/TAP) and modify system routes, which is impossible from within the isolated compatibility layer.\n\nPlease configure VPNs directly via System Settings or install native Linux clients."
+    },
+    {
+        "pattern": "^(expressvpn.*windows.*release|mullvadvpn|tunnelbear-installer|pia-windows|ipvanish-setup|cyberghostvpnsetup).*\\.exe$",
+        "title": "Installing VPN Clients?",
+        "reason": "You can install native Linux VPN clients for AnduinOS directly from their official websites."
+    },
+    {
+        "pattern": "^(v2rayn).*\\.zip$",
+        "title": "Installing V2rayN?",
+        "reason": "Proxy clients modifying system network routes do not work well in the sandbox. We recommend using native Linux proxy clients."
+    },
+    {
+        "pattern": "^(anydesk|teamviewer_setup|citrixworkspace).*\\.(exe|msi)$",
+        "title": "Looking for Remote Desktop Apps?",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using native Linux releases of remote desktop applications."
+    },
+    {
+        "pattern": "^(idman|idmsetup|thunder|xunlei|bitcomet|fdm_x64_setup).*\\.exe$",
+        "title": "Looking for Download Managers?",
+        "app_name": "Motrix",
+        "app_id": "net.agalwood.Motrix",
+        "reason": "In a compatibility layer, download managers struggle with file path mappings and system integrations.\n\nWe highly recommend Motrix, a beautiful, native, and ad-free all-in-one download tool."
+    },
+    {
+        "pattern": "^(apple.*music.*installer|itunes.*setup|itunes.*installer|amazonmusicinstaller).*\\.exe$",
+        "title": "Looking for Music Services?",
+        "reason": "You can access these music services directly via their web applications."
+    },
+    {
+        "pattern": "^calibre.*\\.msi$",
+        "title": "Looking for Calibre?",
+        "app_name": "Calibre",
+        "app_id": "com.calibre_ebook.calibre",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Calibre."
+    },
+    {
+        "pattern": "^kindleforpc.*\\.exe$",
+        "title": "Looking for Amazon Kindle?",
+        "docs_url": "https://read.amazon.com/",
+        "reason": "You can use Amazon Kindle on the web."
+    },
+    {
+        "pattern": "^(winrar|winzip|7z.*).*\\.(exe|msi)$",
+        "title": "Looking for Archive Managers?",
+        "app_name": "Archive Manager (File Roller)",
+        "reason": "AnduinOS supports archives directly in the file manager. If you prefer a dedicated standalone application like 7-Zip, we highly recommend installing the native Archive Manager.",
+        "app_id": "org.gnome.FileRoller"
+    },
+    {
+        "pattern": "^proton.*drive.*setup.*\\.exe$",
+        "title": "Looking for Proton Drive?",
+        "docs_url": "https://account.proton.me/drive",
+        "reason": "You can use Proton Drive on the web."
+    },
+    {
+        "pattern": "^(bcompare|winmerge.*setup).*\\.(exe|msi)$",
+        "title": "Looking for Diff Tools?",
+        "app_name": "Meld",
+        "app_id": "org.gnome.meld",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Meld."
+    },
+    {
+        "pattern": "^.*\\b(avast|avg|avira|kaspersky|mcaffe|malwarebytes|norton|sophos).*\\.(exe|msi)$",
+        "title": "Looking for Antivirus Software?",
+        "reason": "Linux architectures (like AnduinOS) are inherently immune to Windows viruses and malware. Third-party Windows antivirus software is unnecessary and will crash in the sandbox."
+    },
+    {
+        "pattern": "^(bleachbit.*setup|ccsetup).*\\.exe$",
+        "title": "Looking for System Cleaners?",
+        "app_name": "BleachBit",
+        "app_id": "org.bleachbit.BleachBit",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of BleachBit."
+    },
+    {
+        "pattern": "^(sharex|greenshot-installer.*release).*\\.exe$",
+        "title": "Looking for Screenshot Tools?",
+        "app_name": "Flameshot",
+        "app_id": "org.flameshot.Flameshot",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Flameshot."
+    },
+    {
+        "pattern": "^wireshark.*\\.(exe|msi)$",
+        "title": "Looking for Wireshark?",
+        "app_name": "Wireshark",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Wireshark."
+    },
+    {
+        "pattern": "^nmap.*setup.*\\.(exe|msi)$",
+        "title": "Looking for Nmap?",
+        "app_name": "Nmap",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Nmap."
+    },
+    {
+        "pattern": "^.*flash.*player.*\\.exe$",
+        "title": "Looking for Adobe Flash Player?",
+        "app_name": "Ruffle",
+        "app_id": "rs.ruffle.Ruffle",
+        "reason": "Adobe Flash Player is obsolete. For the best stability on AnduinOS, we recommend using the native Linux release of Ruffle."
+    },
+    {
+        "pattern": "^(claude.*setup|chatgpt.*installer|microsoft.*copilot.*installer|perplexity.*setup).*\\.exe$",
+        "title": "Looking for AI Assistants?",
+        "reason": "You can access these AI assistants directly via their web applications."
+    },
+    {
+        "pattern": "^(windows.*(setup|install)|mediacreationtool).*\\.exe$",
+        "title": "Looking for Microsoft Windows?",
+        "app_name": "GNOME Boxes",
+        "app_id": "org.gnome.Boxes",
+        "reason": "Install GNOME Boxes to run Microsoft Windows inside a Virtual Machine in AnduinOS."
+    },
+    {
+        "pattern": "firefox\\s+setup.*.(exe|msi)",
+        "title": "Looking for Mozilla Firefox?",
+        "app_name": "Mozilla Firefox",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Mozilla Firefox.",
+        "app_id": "org.mozilla.firefox"
+    },
+    {
+        "pattern": "(eie11|ie11).*.(exe|msi)",
+        "title": "Looking for Internet Explorer?",
+        "app_name": "Microsoft Edge",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Internet Explorer.",
+        "app_id": "com.microsoft.Edge"
+    },
+    {
+        "pattern": "chrome.*.exe",
+        "title": "Looking for Google Chrome website?",
+        "app_name": "Google Chrome website",
+        "reason": "You can download Google Chrome (.deb package) for AnduinOS from the web",
+        "docs_url": "https://www.google.com/chrome/"
+    },
+    {
+        "pattern": "googleearthprowin.*.exe",
+        "title": "Looking for Google Earth website?",
+        "app_name": "Google Earth website",
+        "reason": "You can download Google Earth Pro (.deb package) for AnduinOS from the web",
+        "docs_url": "https://www.google.com/earth/about/versions/#download-pro"
+    },
+    {
+        "pattern": "bravebrowsersetup.*.exe",
+        "title": "Looking for Brave Browser?",
+        "app_name": "Brave Browser",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Brave Browser.",
+        "app_id": "com.brave.Browser"
+    },
+    {
+        "pattern": "microsoftedgesetup.*.(exe|msi)",
+        "title": "Looking for Microsoft Edge?",
+        "app_name": "Microsoft Edge",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Microsoft Edge.",
+        "app_id": "com.microsoft.Edge"
+    },
+    {
+        "pattern": "operagxsetup.*.exe",
+        "title": "Looking for Opera GX?",
+        "app_name": "Opera GX",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Opera GX.",
+        "app_id": "com.opera.opera-gx"
+    },
+    {
+        "pattern": "opera(.*.|)setup.*.(exe|msi)",
+        "title": "Looking for Opera?",
+        "app_name": "Opera",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Opera.",
+        "app_id": "com.opera.Opera"
+    },
+    {
+        "pattern": "vivaldi.*.exe",
+        "title": "Looking for Vivaldi Browser?",
+        "app_name": "Vivaldi Browser",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Vivaldi Browser.",
+        "app_id": "com.vivaldi.Vivaldi"
+    },
+    {
+        "pattern": "librewolf.*.exe",
+        "title": "Looking for LibreWolf?",
+        "app_name": "LibreWolf",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of LibreWolf.",
+        "app_id": "io.gitlab.librewolf-community"
+    },
+    {
+        "pattern": "zen.installer.*.exe",
+        "title": "Looking for Zen Browser?",
+        "app_name": "Zen Browser",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Zen Browser.",
+        "app_id": "app.zen_browser.zen"
+    },
+    {
+        "pattern": "arcinstaller.*.exe",
+        "title": "Looking for Arc Browser?",
+        "app_name": "Zen Browser",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Arc Browser.",
+        "app_id": "app.zen_browser.zen"
+    },
+    {
+        "pattern": ".*.samsungbrowsersetup.*.exe",
+        "title": "Looking for Samsung Browser?",
+        "app_name": "Brave Browser",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Samsung Browser.",
+        "app_id": "com.brave.Browser"
+    },
+    {
+        "pattern": "comet_installer_latest.*.exe",
+        "title": "Looking for Comet Browser?",
+        "app_name": "Brave Browser",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Comet Browser.",
+        "app_id": "com.brave.Browser"
+    },
+    {
+        "pattern": "waterfox.*.setup.*.exe",
+        "title": "Looking for Waterfox?",
+        "app_name": "Waterfox",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Waterfox.",
+        "app_id": "net.waterfox.waterfox"
+    },
+    {
+        "pattern": "ungoogled-chromium.*.installer.*.exe",
+        "title": "Looking for Ungoogled Chromium?",
+        "app_name": "Ungoogled Chromium",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Ungoogled Chromium.",
+        "app_id": "io.github.ungoogled_software.ungoogled_chromium"
+    },
+    {
+        "pattern": "floorp.*.installer.*.exe",
+        "title": "Looking for Floorp?",
+        "app_name": "Floorp",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Floorp.",
+        "app_id": "one.ablaze.floorp"
+    },
+    {
+        "pattern": "mullvad-browser-windows.*.exe",
+        "title": "Looking for Mullvad Browser?",
+        "app_name": "Mullvad Browser",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Mullvad Browser.",
+        "app_id": "net.mullvad.MullvadBrowser"
+    },
+    {
+        "pattern": "thunderbird\\s+setup.*.(exe|msi)",
+        "title": "Looking for Thunderbird Mail?",
+        "app_name": "Thunderbird Mail",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Thunderbird Mail."
+    },
+    {
+        "pattern": "outlook.*.for.*.windows.*.installer.*.exe",
+        "title": "Looking for Outlook for Windows?",
+        "app_name": "Evolution",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Outlook for Windows."
+    },
+    {
+        "pattern": "mailspringsetup.*.exe",
+        "title": "Looking for Mailspring?",
+        "app_name": "Mailspring",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Mailspring.",
+        "app_id": "com.getmailspring.Mailspring"
+    },
+    {
+        "pattern": "nextcloud.*.msi",
+        "title": "Looking for Nextcloud?",
+        "app_name": "Nextcloud",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Nextcloud.",
+        "app_id": "com.nextcloud.desktopclient.nextcloud"
+    },
+    {
+        "pattern": "dropbox.*.exe",
+        "title": "Looking for Dropbox website?",
+        "app_name": "Dropbox website",
+        "reason": "You can download Dropbox (Ubuntu package) for AnduinOS from the web",
+        "docs_url": "https://www.dropbox.com/install?os=lnx"
+    },
+    {
+        "pattern": "skype.*.exe",
+        "title": "Looking for Skype?",
+        "app_name": "Skype",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Skype.",
+        "app_id": "com.skype.Client"
+    },
+    {
+        "pattern": "googledrivesetup.*.exe",
+        "title": "Looking for Google Drive?",
+        "app_name": "Online Accounts",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Google Drive."
+    },
+    {
+        "pattern": "flux-setup.*.exe",
+        "title": "Looking for f.lux?",
+        "app_name": "Night Light",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of f.lux."
+    },
+    {
+        "pattern": "mpc-hc.*.exe",
+        "title": "Looking for MPC-HC?",
+        "app_name": "Videos",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of MPC-HC."
+    },
+    {
+        "pattern": "reader.*.exe",
+        "title": "Looking for Adobe Reader?",
+        "app_name": "Document Viewer",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Adobe Reader."
+    },
+    {
+        "pattern": "acrordr.*.exe",
+        "title": "Looking for Adobe Acrobat Reader?",
+        "app_name": "Document Viewer",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Adobe Acrobat Reader."
+    },
+    {
+        "pattern": "sumatrapdf.*.install.*.exe",
+        "title": "Looking for Sumatra PDF?",
+        "app_name": "Document Viewer",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Sumatra PDF."
+    },
+    {
+        "pattern": "foxit-pdf-reader.*.exe",
+        "title": "Looking for Foxit PDF Reader?",
+        "app_name": "Document Viewer",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Foxit PDF Reader."
+    },
+    {
+        "pattern": "nitro_pro.*.(exe|msi)",
+        "title": "Looking for Nitro PDF?",
+        "app_name": "LibreOffice Draw",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Nitro PDF."
+    },
+    {
+        "pattern": "abbyy_finereader_pdf.*.(exe|msi)",
+        "title": "Looking for ABBYY FineReader PDF?",
+        "app_name": "NAPS2",
+        "reason": "You can download NAPS2 (Linux .deb installer) for AnduinOS from the web",
+        "docs_url": "https://www.naps2.com/download"
+    },
+    {
+        "pattern": "foobar2000.*.exe",
+        "title": "Looking for foobar2000?",
+        "app_name": "Strawberry Music Player",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of foobar2000.",
+        "app_id": "org.strawberrymusicplayer.strawberry"
+    },
+    {
+        "pattern": "winamp.*.exe",
+        "title": "Looking for Winamp?",
+        "app_name": "Audacious",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Winamp.",
+        "app_id": "org.atheme.audacious"
+    },
+    {
+        "pattern": "(spotifysetup|spotify.*.installer).*.exe",
+        "title": "Looking for Spotify?",
+        "app_name": "Spotify",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Spotify.",
+        "app_id": "com.spotify.Client"
+    },
+    {
+        "pattern": "apple.*.music.*.installer.*.exe",
+        "title": "Looking for Apple Music?",
+        "app_name": "Apple Music",
+        "reason": "You can use Apple Music on the web",
+        "docs_url": "https://music.apple.com/"
+    },
+    {
+        "pattern": "(itunes.*setup|itunes.*.installer).*.exe",
+        "title": "Looking for Apple iTunes?",
+        "app_name": "Apple Music",
+        "reason": "You can use Apple Music on the web",
+        "docs_url": "https://music.apple.com/"
+    },
+    {
+        "pattern": "amazonmusicinstaller.*.exe",
+        "title": "Looking for Amazon Music?",
+        "app_name": "Amazon Music",
+        "reason": "You can use Amazon Music on the web",
+        "docs_url": "https://music.amazon.com/"
+    },
+    {
+        "pattern": "picard-setup.*.exe",
+        "title": "Looking for  MusicBrainz Picard?",
+        "app_name": " MusicBrainz Picard",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of  MusicBrainz Picard.",
+        "app_id": "org.musicbrainz.Picard"
+    },
+    {
+        "pattern": "(plexmediaserver|plex.*.media.*.server.*.installer).*.exe",
+        "title": "Looking for Plex Media Server download page?",
+        "app_name": "Plex Media Server download page",
+        "reason": "You can download Pled Media Server (Ubuntu .deb package) for AnduinOS from the web",
+        "docs_url": "https://www.plex.tv/media-server-downloads/?cat=computer&plat=linux#plex-media-server"
+    },
+    {
+        "pattern": "(plex|plex.*.for.*.windows.*.installer).*.exe",
+        "title": "Looking for Plex?",
+        "app_name": "Plex",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Plex.",
+        "app_id": "tv.plex.PlexDesktop"
+    },
+    {
+        "pattern": "jellyfin-desktop.*.exe",
+        "title": "Looking for Jellyfin Desktop?",
+        "app_name": "Jellyfin Desktop",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Jellyfin Desktop.",
+        "app_id": "org.jellyfin.JellyfinDesktop"
+    },
+    {
+        "pattern": "jellyfin.*.windows.*.exe",
+        "title": "Looking for Jellyfin Server?",
+        "app_name": "Jellyfin Server",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Jellyfin Server.",
+        "app_id": "org.jellyfin.JellyfinServer"
+    },
+    {
+        "pattern": "paint.net.*.exe",
+        "title": "Looking for Paint.NET?",
+        "app_name": "Pinta",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Paint.NET.",
+        "app_id": "com.github.PintaProject.Pinta"
+    },
+    {
+        "pattern": "krita.*.setup.*.exe",
+        "title": "Looking for Krita?",
+        "app_name": "Krita",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Krita.",
+        "app_id": "org.kde.krita"
+    },
+    {
+        "pattern": "sketchbook.*.exe",
+        "title": "Looking for Autodesk SketchBook?",
+        "app_name": "Krita",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Autodesk SketchBook.",
+        "app_id": "org.kde.krita"
+    },
+    {
+        "pattern": "flstudio.*.exe",
+        "title": "Looking for FL Studio?",
+        "app_name": "Ardour",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of FL Studio.",
+        "app_id": "org.ardour.Ardour"
+    },
+    {
+        "pattern": "ableton\\s+live.*.exe",
+        "title": "Looking for Ableton Live?",
+        "app_name": "Bitwig Studio",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Ableton Live.",
+        "app_id": "com.bitwig.BitwigStudio"
+    },
+    {
+        "pattern": "bitwig\\s+studio.*.(exe|msi)",
+        "title": "Looking for Bitwig Studio?",
+        "app_name": "Bitwig Studio",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Bitwig Studio.",
+        "app_id": "com.bitwig.BitwigStudio"
+    },
+    {
+        "pattern": "epicinstaller.*.msi",
+        "title": "Looking for Epic Games Store?",
+        "app_name": "Heroic Games Launcher",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Epic Games Store.",
+        "app_id": "com.heroicgameslauncher.hgl"
+    },
+    {
+        "pattern": "gog_galaxy.*.exe",
+        "title": "Looking for GOG Galaxy?",
+        "app_name": "Heroic Games Launcher",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of GOG Galaxy.",
+        "app_id": "com.heroicgameslauncher.hgl"
+    },
+    {
+        "pattern": "battle.net.*.exe",
+        "title": "Looking for Battle.net?",
+        "app_name": "Lutris",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Battle.net."
+    },
+    {
+        "pattern": "bethesdanetlauncher_setup.*.exe",
+        "title": "Looking for Bethesda Launcher?",
+        "app_name": "Lutris",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Bethesda Launcher."
+    },
+    {
+        "pattern": "originthinsetup.*.exe",
+        "title": "Looking for Origin?",
+        "app_name": "Lutris",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Origin."
+    },
+    {
+        "pattern": "ubisoftconnectinstaller.*.exe",
+        "title": "Looking for Ubisoft Connect?",
+        "app_name": "Lutris",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Ubisoft Connect."
+    },
+    {
+        "pattern": "itch-setup.*.exe",
+        "title": "Looking for Itch website?",
+        "app_name": "Itch website",
+        "reason": "You can download Itch (Linux package) for AnduinOS from the web",
+        "docs_url": "https://itch.io/app/"
+    },
+    {
+        "pattern": "geforcenow-release.*.exe",
+        "title": "Looking for GeForce NOW website?",
+        "app_name": "GeForce NOW website",
+        "reason": "You can download NVIDIA GeForce NOW (Linux installer) for AnduinOS from the web",
+        "docs_url": "https://www.nvidia.com/en-us/geforce-now/download/"
+    },
+    {
+        "pattern": "antimicro.*.win64.*.msi",
+        "title": "Looking for AntiMicro?",
+        "app_name": "QJoypad",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of AntiMicro."
+    },
+    {
+        "pattern": "xpadder.*.exe",
+        "title": "Looking for Xpadder?",
+        "app_name": "QJoypad",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Xpadder."
+    },
+    {
+        "pattern": "gimp.*.setup.*.(exe|msi)",
+        "title": "Looking for GNU Image Manipulation Program?",
+        "app_name": "GNU Image Manipulation Program",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of GNU Image Manipulation Program.",
+        "app_id": "org.gimp.GIMP"
+    },
+    {
+        "pattern": "(creative.*.cloud.*.set-up|adobe.*.creative.*.cloud.*.installer).*.(exe|msi)",
+        "title": "Looking for Adobe Creative Cloud?",
+        "app_name": "Adobe Creative Cloud on the web",
+        "reason": "You can use some Adobe apps on the web",
+        "docs_url": "https://www.adobe.com/apps/all/web"
+    },
+    {
+        "pattern": "adobe.*.photoshop.*.installer.*.exe",
+        "title": "Looking for Adobe Photoshop?",
+        "app_name": "Adobe Creative Cloud on the web",
+        "reason": "You can use Adobe Photoshop on the web",
+        "docs_url": "https://www.adobe.com/apps/all/web"
+    },
+    {
+        "pattern": "adobe.*.lightroom.*.installer.*.exe",
+        "title": "Looking for Adobe Lightroom?",
+        "app_name": "Adobe Creative Cloud on the web",
+        "reason": "You can use Adobe Lightroom on the web",
+        "docs_url": "https://www.adobe.com/apps/all/web"
+    },
+    {
+        "pattern": "adobe.*.illustrator.*.installer.*.exe",
+        "title": "Looking for Adobe Illustrator?",
+        "app_name": "Adobe Creative Cloud on the web",
+        "reason": "You can use Adobe Illustrator on the web",
+        "docs_url": "https://www.adobe.com/apps/all/web"
+    },
+    {
+        "pattern": "adobe.*.premiere.*.installer.*.exe",
+        "title": "Looking for Adobe Premiere?",
+        "app_name": "Kdenlive",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Adobe Premiere.",
+        "app_id": "org.kde.kdenlive"
+    },
+    {
+        "pattern": "vegas.*.pro.*.exe",
+        "title": "Looking for VEGAS Pro?",
+        "app_name": "Kdenlive",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of VEGAS Pro.",
+        "app_id": "org.kde.kdenlive"
+    },
+    {
+        "pattern": "capcut.*.installer.*.exe",
+        "title": "Looking for CapCut?",
+        "app_name": "CapCut",
+        "reason": "You can use CapCut on the web",
+        "docs_url": "https://www.capcut.com/login"
+    },
+    {
+        "pattern": "lightworks_windows.*.exe",
+        "title": "Looking for Lightworks?",
+        "app_name": "Lightworks website",
+        "reason": "You can download Lightworks (Linux .deb package) for AnduinOS from the web",
+        "docs_url": "https://lwks.com/pricing"
+    },
+    {
+        "pattern": "davinci.*.resolve.*.windows.*.exe",
+        "title": "Looking for DaVinci Resolve?",
+        "app_name": "DaVinci Resolve installation instructions",
+        "reason": "Learn how to install DaVinci Resolve for Linux in AnduinOS",
+        "docs_url": "https://help.zorin.com/docs/apps-games/install-davinci-resolve/"
+    },
+    {
+        "pattern": "photoscape.*.exe",
+        "title": "Looking for Photoscape?",
+        "app_name": "GNU Image Manipulation Program",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Photoscape.",
+        "app_id": "org.gimp.GIMP"
+    },
+    {
+        "pattern": "inkscape.*.(exe|msi)",
+        "title": "Looking for Inkscape?",
+        "app_name": "Inkscape",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Inkscape.",
+        "app_id": "org.inkscape.Inkscape"
+    },
+    {
+        "pattern": "affinity.*.(msix|exe)",
+        "title": "Looking for Affinity?",
+        "app_name": "Linux Affinity Installer",
+        "reason": "You can download the unofficial Linux Affinity Installer (AppImage package) for AnduinOS from the web",
+        "docs_url": "https://github.com/ryzendew/Linux-Affinity-Installer/releases"
+    },
+    {
+        "pattern": "figmasetup.*.exe",
+        "title": "Looking for Figma?",
+        "app_name": "Figma",
+        "reason": "You can use Figma on the web",
+        "docs_url": "https://www.figma.com/login"
+    },
+    {
+        "pattern": "iview.*.setup.*.exe",
+        "title": "Looking for IrfanView?",
+        "app_name": "XnView MP",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of IrfanView.",
+        "app_id": "com.xnview.XnViewMP"
+    },
+    {
+        "pattern": "xnviewmp-win.*.exe",
+        "title": "Looking for XnView MP?",
+        "app_name": "XnView MP",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of XnView MP.",
+        "app_id": "com.xnview.XnViewMP"
+    },
+    {
+        "pattern": "xnview-win.*.exe",
+        "title": "Looking for XnView MP?",
+        "app_name": "XnView MP",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of XnView MP.",
+        "app_id": "com.xnview.XnViewMP"
+    },
+    {
+        "pattern": "cinema4d.*.exe",
+        "title": "Looking for Cinema 4D?",
+        "app_name": "Blender",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Cinema 4D.",
+        "app_id": "org.blender.Blender"
+    },
+    {
+        "pattern": "steamsetup.*.exe",
+        "title": "Looking for Steam?",
+        "app_name": "Steam",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Steam."
+    },
+    {
+        "pattern": "whatsapp.*.exe",
+        "title": "Looking for WhatsApp?",
+        "app_name": "WhatsApp",
+        "reason": "You can use WhatsApp on the web",
+        "docs_url": "https://web.whatsapp.com/"
+    },
+    {
+        "pattern": "vibersetup.*.exe",
+        "title": "Looking for Viber?",
+        "app_name": "Viber",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Viber.",
+        "app_id": "com.viber.Viber"
+    },
+    {
+        "pattern": "lineinst.*.exe",
+        "title": "Looking for LINE?",
+        "app_name": "LINE",
+        "reason": "You can use LINE as a web browser extension",
+        "docs_url": "https://chrome.google.com/webstore/detail/line/ophjlpahpchlmihnnnihgmmeilfjmjjc"
+    },
+    {
+        "pattern": "notion.*.setup.*.exe",
+        "title": "Looking for Notion?",
+        "app_name": "Notion",
+        "reason": "You can use Notion on the web",
+        "docs_url": "https://www.notion.so/login"
+    },
+    {
+        "pattern": "grammarlyinstaller.*.exe",
+        "title": "Looking for Grammarly?",
+        "app_name": "Grammarly",
+        "reason": "You can use Grammarly on the web",
+        "docs_url": "https://www.grammarly.com/"
+    },
+    {
+        "pattern": "trello.*.installer.*.exe",
+        "title": "Looking for Trello?",
+        "app_name": "Trello",
+        "reason": "You can use Trello on the web",
+        "docs_url": "https://trello.com/"
+    },
+    {
+        "pattern": "evernote-latest.*.exe",
+        "title": "Looking for Evernote?",
+        "app_name": "Evernote",
+        "reason": "You can use Evernote on the web",
+        "docs_url": "https://accounts.evernote.com/login"
+    },
+    {
+        "pattern": "standard-notes.*.exe",
+        "title": "Looking for Standard Notes?",
+        "app_name": "Standard Notes",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Standard Notes.",
+        "app_id": "org.standardnotes.standardnotes"
+    },
+    {
+        "pattern": "simplenote.*.(win|installer).*.exe",
+        "title": "Looking for Simplenote?",
+        "app_name": "Simplenote",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Simplenote.",
+        "app_id": "com.simplenote.Simplenote"
+    },
+    {
+        "pattern": "xmind-for-windows.*.exe",
+        "title": "Looking for Xmind?",
+        "app_name": "Xmind",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Xmind.",
+        "app_id": "net.xmind.XMind"
+    },
+    {
+        "pattern": "canva.*.setup.*.exe",
+        "title": "Looking for Canva?",
+        "app_name": "Canva",
+        "reason": "You can use Canva on the web",
+        "docs_url": "https://www.canva.com/"
+    },
+    {
+        "pattern": "kindleforpc.*.exe",
+        "title": "Looking for Amazon Kindle?",
+        "app_name": "Amazon Kindle",
+        "reason": "You can use Amazon Kindle on the web",
+        "docs_url": "https://read.amazon.com/"
+    },
+    {
+        "pattern": "vlc.*.(exe|msi)",
+        "title": "Looking for VLC?",
+        "app_name": "VLC",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of VLC.",
+        "app_id": "org.videolan.VLC"
+    },
+    {
+        "pattern": "1passwordsetup.*.exe",
+        "title": "Looking for 1Password website?",
+        "app_name": "1Password website",
+        "reason": "You can download 1Password (.deb package) for AnduinOS from the web",
+        "docs_url": "https://1password.com/downloads/linux/"
+    },
+    {
+        "pattern": "lastpassinstaller.*.exe",
+        "title": "Looking for LastPass website?",
+        "app_name": "LastPass website",
+        "reason": "You can install LastPass (Linux installer) for AnduinOS from the web",
+        "docs_url": "https://lastpass.com/lplinux.php"
+    },
+    {
+        "pattern": "bitwarden.*.exe",
+        "title": "Looking for Bitwarden?",
+        "app_name": "Bitwarden",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Bitwarden.",
+        "app_id": "com.bitwarden.desktop"
+    },
+    {
+        "pattern": "keepassxc.*.msi",
+        "title": "Looking for KeePassXC?",
+        "app_name": "KeePassXC",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of KeePassXC.",
+        "app_id": "org.keepassxc.KeePassXC"
+    },
+    {
+        "pattern": "keepass.*.setup.*.exe",
+        "title": "Looking for KeePass?",
+        "app_name": "KeePassXC",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of KeePass.",
+        "app_id": "org.keepassxc.KeePassXC"
+    },
+    {
+        "pattern": "anytype.*.setup.*.exe",
+        "title": "Looking for Anytype?",
+        "app_name": "Anytype",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Anytype.",
+        "app_id": "io.anytype.anytype"
+    },
+    {
+        "pattern": "filezilla.*.exe",
+        "title": "Looking for FileZilla?",
+        "app_name": "FileZilla",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of FileZilla.",
+        "app_id": "org.filezillaproject.Filezilla"
+    },
+    {
+        "pattern": "winscp.*.setup.*.exe",
+        "title": "Looking for WinSCP?",
+        "app_name": "FileZilla",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of WinSCP.",
+        "app_id": "org.filezillaproject.Filezilla"
+    },
+    {
+        "pattern": "bcompare.*.(exe|msi)",
+        "title": "Looking for Beyond Compare website?",
+        "app_name": "Beyond Compare website",
+        "reason": "You can download Beyond Compare (Linux Debian installer) for AnduinOS from the web",
+        "docs_url": "https://www.scootersoftware.com/download"
+    },
+    {
+        "pattern": "winmerge.*.setup.*.exe",
+        "title": "Looking for WinMerge?",
+        "app_name": "Meld",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of WinMerge.",
+        "app_id": "org.gnome.meld"
+    },
+    {
+        "pattern": "kodi.*.exe",
+        "title": "Looking for Kodi?",
+        "app_name": "Kodi",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Kodi.",
+        "app_id": "tv.kodi.Kodi"
+    },
+    {
+        "pattern": "stremiosetup.*.exe",
+        "title": "Looking for Stremio?",
+        "app_name": "Stremio",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Stremio.",
+        "app_id": "com.stremio.Stremio"
+    },
+    {
+        "pattern": "draw.io.*.windows-installer.*.exe",
+        "title": "Looking for draw.io?",
+        "app_name": "draw.io",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of draw.io.",
+        "app_id": "com.jgraph.drawio.desktop"
+    },
+    {
+        "pattern": "(utorrent|utweb).*.exe",
+        "title": "Looking for \u00b5Torrent?",
+        "app_name": "Transmission",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of \u00b5Torrent.",
+        "app_id": "com.transmissionbt.Transmission"
+    },
+    {
+        "pattern": "(bittorrent|btweb).*.exe",
+        "title": "Looking for BitTorrent?",
+        "app_name": "Transmission",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of BitTorrent.",
+        "app_id": "com.transmissionbt.Transmission"
+    },
+    {
+        "pattern": "qbittorrent.*.setup.*.exe",
+        "title": "Looking for qBittorrent?",
+        "app_name": "qBittorrent",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of qBittorrent.",
+        "app_id": "org.qbittorrent.qBittorrent"
+    },
+    {
+        "pattern": "calibre.*.msi",
+        "title": "Looking for Calibre?",
+        "app_name": "Calibre",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Calibre.",
+        "app_id": "com.calibre_ebook.calibre"
+    },
+    {
+        "pattern": "obsidian.*.exe",
+        "title": "Looking for Obsidian?",
+        "app_name": "Obsidian",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Obsidian.",
+        "app_id": "md.obsidian.Obsidian"
+    },
+    {
+        "pattern": "joplin-setup.*.exe",
+        "title": "Looking for Joplin?",
+        "app_name": "Joplin",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Joplin.",
+        "app_id": "net.cozic.joplin_desktop"
+    },
+    {
+        "pattern": "(tsetup|telegram).*.exe",
+        "title": "Looking for Telegram?",
+        "app_name": "Telegram",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Telegram.",
+        "app_id": "org.telegram.desktop"
+    },
+    {
+        "pattern": "signalsetup.*.exe",
+        "title": "Looking for Signal?",
+        "app_name": "Signal",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Signal.",
+        "app_id": "org.signal.Signal"
+    },
+    {
+        "pattern": "discordsetup.*.exe",
+        "title": "Looking for Discord?",
+        "app_name": "Discord",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Discord.",
+        "app_id": "com.discordapp.Discord"
+    },
+    {
+        "pattern": "element.*.setup.*.exe",
+        "title": "Looking for Element?",
+        "app_name": "Element",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Element.",
+        "app_id": "im.riot.Riot"
+    },
+    {
+        "pattern": "teamviewer_setup.*.exe",
+        "title": "Looking for TeamViewer website?",
+        "app_name": "TeamViewer website",
+        "reason": "You can download TeamViewer (.deb package) for AnduinOS from the web",
+        "docs_url": "https://www.teamviewer.com/download/linux/"
+    },
+    {
+        "pattern": "zoom.*.(exe|msi)",
+        "title": "Looking for Zoom?",
+        "app_name": "Zoom",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Zoom.",
+        "app_id": "us.zoom.Zoom"
+    },
+    {
+        "pattern": "slacksetup.*.exe",
+        "title": "Looking for Slack?",
+        "app_name": "Slack",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Slack.",
+        "app_id": "com.slack.Slack"
+    },
+    {
+        "pattern": "anydesk.*.(exe|msi)",
+        "title": "Looking for AnyDesk?",
+        "app_name": "AnyDesk",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of AnyDesk.",
+        "app_id": "com.anydesk.Anydesk"
+    },
+    {
+        "pattern": "npp.*.(exe|msi)",
+        "title": "Looking for Notepad++?",
+        "app_name": "Notepad Next",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Notepad++.",
+        "app_id": "com.github.dail8859.NotepadNext"
+    },
+    {
+        "pattern": "geany.*.setup.*.exe",
+        "title": "Looking for Geany?",
+        "app_name": "Geany",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Geany."
+    },
+    {
+        "pattern": "winrar.*.exe",
+        "title": "Looking for WinRAR?",
+        "app_name": "Archive Manager (File Roller)",
+        "reason": "AnduinOS supports archives directly in the file manager. If you prefer a dedicated standalone application like 7-Zip, we highly recommend installing the native Archive Manager.",
+        "app_id": "org.gnome.FileRoller"
+    },
+    {
+        "pattern": "winzip.*.(exe|msi)",
+        "title": "Looking for WinZip?",
+        "app_name": "Archive Manager (File Roller)",
+        "reason": "AnduinOS supports archives directly in the file manager. If you prefer a dedicated standalone application like 7-Zip, we highly recommend installing the native Archive Manager.",
+        "app_id": "org.gnome.FileRoller"
+    },
+    {
+        "pattern": "7z.*.(exe|msi)",
+        "title": "Looking for 7-Zip?",
+        "app_name": "Archive Manager (File Roller)",
+        "reason": "AnduinOS supports archives directly in the file manager. If you prefer a dedicated standalone application like 7-Zip, we highly recommend installing the native Archive Manager.",
+        "app_id": "org.gnome.FileRoller"
+    },
+    {
+        "pattern": "putty(.*.installer|).*.(exe|msi)",
+        "title": "Looking for PuTTY?",
+        "app_name": "PuTTY",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of PuTTY.",
+        "app_id": "uk.org.greenend.chiark.sgtatham.putty"
+    },
+    {
+        "pattern": "bvsshclient-inst.*.(exe|msi)",
+        "title": "Looking for Bitvise?",
+        "app_name": "PuTTY",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Bitvise.",
+        "app_id": "uk.org.greenend.chiark.sgtatham.putty"
+    },
+    {
+        "pattern": "xampp-windows(.*.installer|).*.(exe|msi)",
+        "title": "Looking for XAMPP website?",
+        "app_name": "XAMPP website",
+        "reason": "You can download XAMPP (Linux .run package) for AnduinOS from the web",
+        "docs_url": "https://www.apachefriends.org/download.html"
+    },
+    {
+        "pattern": "wireshark.*.(exe|msi)",
+        "title": "Looking for Wireshark?",
+        "app_name": "Wireshark",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Wireshark."
+    },
+    {
+        "pattern": "nmap.*.setup.*.(exe|msi)",
+        "title": "Looking for Nmap?",
+        "app_name": "Nmap",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Nmap."
+    },
+    {
+        "pattern": "minecraft.*.(exe|msi)",
+        "title": "Looking for Minecraft?",
+        "app_name": "Minecraft",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Minecraft.",
+        "app_id": "com.mojang.Minecraft"
+    },
+    {
+        "pattern": "bleachbit.*.setup.*.exe",
+        "title": "Looking for BleachBit?",
+        "app_name": "BleachBit",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of BleachBit.",
+        "app_id": "org.bleachbit.BleachBit"
+    },
+    {
+        "pattern": "ccsetup.*.exe",
+        "title": "Looking for CCleaner?",
+        "app_name": "BleachBit",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of CCleaner.",
+        "app_id": "org.bleachbit.BleachBit"
+    },
+    {
+        "pattern": "gpu-z.*.exe",
+        "title": "Looking for GPU-Z?",
+        "app_name": "CPU-X",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of GPU-Z.",
+        "app_id": "io.github.thetumultuousunicornofdarkness.cpu-x"
+    },
+    {
+        "pattern": "spsetup.*.exe",
+        "title": "Looking for Speccy?",
+        "app_name": "CPU-X",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Speccy.",
+        "app_id": "io.github.thetumultuousunicornofdarkness.cpu-x"
+    },
+    {
+        "pattern": "windirstat.*.msi",
+        "title": "Looking for WinDirStat?",
+        "app_name": "Disk Usage Analyzer",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of WinDirStat."
+    },
+    {
+        "pattern": "treesize.*.setup.*.exe",
+        "title": "Looking for TreeSize?",
+        "app_name": "Disk Usage Analyzer",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of TreeSize."
+    },
+    {
+        "pattern": "sharex.*.exe",
+        "title": "Looking for ShareX?",
+        "app_name": "Flameshot",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of ShareX.",
+        "app_id": "org.flameshot.Flameshot"
+    },
+    {
+        "pattern": "greenshot-installer.*.release.*.exe",
+        "title": "Looking for Greenshot?",
+        "app_name": "Flameshot",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Greenshot.",
+        "app_id": "org.flameshot.Flameshot"
+    },
+    {
+        "pattern": "bluestacks.*.exe",
+        "title": "Looking for BlueStacks?",
+        "app_name": "Genymotion Desktop",
+        "reason": "You can download Genymotion (Ubuntu package) for AnduinOS from the web",
+        "docs_url": "https://www.genymotion.com/product-desktop/download/"
+    },
+    {
+        "pattern": "scratch.*.setup.*.(exe|msi)",
+        "title": "Looking for Scratch?",
+        "app_name": "TurboWarp",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Scratch.",
+        "app_id": "org.turbowarp.TurboWarp"
+    },
+    {
+        "pattern": ".*distance.*windows_setup.*.exe",
+        "title": "Looking for Distance?",
+        "app_name": "on Steam",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Distance."
+    },
+    {
+        "pattern": ".*league\\s+of\\s+legends.*.exe",
+        "title": "Looking for the League of Legends installer?",
+        "app_name": "Lutris",
+        "reason": "League of Legends is available on Lutris"
+    },
+    {
+        "pattern": "overwatch.*.exe",
+        "title": "Looking for the Overwatch installer?",
+        "app_name": "Lutris",
+        "reason": "Overwatch is available on Lutris"
+    },
+    {
+        "pattern": "warframe.*.msi",
+        "title": "Looking for the Warframe installer?",
+        "app_name": "Lutris",
+        "reason": "Warframe is available on Lutris"
+    },
+    {
+        "pattern": "world-of-warcraft.*.exe",
+        "title": "Looking for the World of Warcraft installer?",
+        "app_name": "Lutris",
+        "reason": "World of Warcraft is available on Lutris"
+    },
+    {
+        "pattern": "robloxplayerlauncher.*.exe",
+        "title": "Looking for Roblox Player Launcher?",
+        "app_name": "Sober",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Roblox Player Launcher.",
+        "app_id": "org.vinegarhq.Sober"
+    },
+    {
+        "pattern": "robloxstudiolauncher.*.exe",
+        "title": "Looking for Roblox Studio Launcher?",
+        "app_name": "Vinegar",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Roblox Studio Launcher.",
+        "app_id": "org.vinegarhq.Vinegar"
+    },
+    {
+        "pattern": "razersynapseinstaller.*.exe",
+        "title": "Looking for Razer Synapse?",
+        "app_name": "RazerGenie",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Razer Synapse.",
+        "app_id": "xyz.z3ntu.razergenie"
+    },
+    {
+        "pattern": "todoist.*.exe",
+        "title": "Looking for Todoist?",
+        "app_name": "Todoist",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Todoist.",
+        "app_id": "com.todoist.Todoist"
+    },
+    {
+        "pattern": "brackets.*.exe",
+        "title": "Looking for Brackets?",
+        "app_name": "Brackets",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Brackets.",
+        "app_id": "io.brackets.Brackets"
+    },
+    {
+        "pattern": "visualstudiosetup.*.exe",
+        "title": "Looking for Visual Studio?",
+        "app_name": "JetBrains Rider",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Visual Studio.",
+        "app_id": "com.jetbrains.Rider"
+    },
+    {
+        "pattern": "idea-20.*.exe",
+        "title": "Looking for JetBrains IntelliJ IDEA?",
+        "app_name": "JetBrains IntelliJ IDEA",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains IntelliJ IDEA.",
+        "app_id": "com.jetbrains.IntelliJ-IDEA-Ultimate"
+    },
+    {
+        "pattern": "pycharm-20.*.exe",
+        "title": "Looking for JetBrains PyCharm?",
+        "app_name": "JetBrains PyCharm",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains PyCharm.",
+        "app_id": "com.jetbrains.PyCharm-Professional"
+    },
+    {
+        "pattern": "phpstorm-20.*.exe",
+        "title": "Looking for JetBrains PhpStorm?",
+        "app_name": "JetBrains PhpStorm",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains PhpStorm.",
+        "app_id": "com.jetbrains.PhpStorm"
+    },
+    {
+        "pattern": "goland-20.*.exe",
+        "title": "Looking for JetBrains GoLand?",
+        "app_name": "JetBrains GoLand",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains GoLand.",
+        "app_id": "com.jetbrains.GoLand"
+    },
+    {
+        "pattern": "jetbrains.rider-20.*.exe",
+        "title": "Looking for JetBrains Rider?",
+        "app_name": "JetBrains Rider",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains Rider.",
+        "app_id": "com.jetbrains.Rider"
+    },
+    {
+        "pattern": "clion-20.*.exe",
+        "title": "Looking for JetBrains CLion?",
+        "app_name": "JetBrains CLion",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains CLion.",
+        "app_id": "com.jetbrains.CLion"
+    },
+    {
+        "pattern": "rustrover-20.*.exe",
+        "title": "Looking for JetBrains RustRover?",
+        "app_name": "JetBrains RustRover",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains RustRover.",
+        "app_id": "com.jetbrains.RustRover"
+    },
+    {
+        "pattern": "webstorm-20.*.exe",
+        "title": "Looking for JetBrains WebStorm?",
+        "app_name": "JetBrains WebStorm",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains WebStorm.",
+        "app_id": "com.jetbrains.WebStorm"
+    },
+    {
+        "pattern": "rubymine-20.*.exe",
+        "title": "Looking for JetBrains RubyMine?",
+        "app_name": "JetBrains RubyMine",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains RubyMine."
+    },
+    {
+        "pattern": "datagrip-20.*.exe",
+        "title": "Looking for JetBrains DataGrip?",
+        "app_name": "JetBrains DataGrip",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains DataGrip.",
+        "app_id": "com.jetbrains.DataGrip"
+    },
+    {
+        "pattern": "dataspell-20.*.exe",
+        "title": "Looking for JetBrains DataSpell?",
+        "app_name": "JetBrains DataSpell",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JetBrains DataSpell."
+    },
+    {
+        "pattern": "insomnia.core.*.exe",
+        "title": "Looking for Insomnia?",
+        "app_name": "Insomnia",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Insomnia.",
+        "app_id": "rest.insomnia.Insomnia"
+    },
+    {
+        "pattern": "docker.*.desktop.*.installer.*.exe",
+        "title": "Looking for Docker Desktop?",
+        "app_name": "Docker Desktop website",
+        "reason": "You can download Docker Desktop (Ubuntu package) for AnduinOS from the web",
+        "docs_url": "https://docs.docker.com/desktop/setup/install/linux/ubuntu/"
+    },
+    {
+        "pattern": "cursorusersetup.*.exe",
+        "title": "Looking for Cursor?",
+        "app_name": "Cursor website",
+        "reason": "You can download Cursor (Linux .deb package) for AnduinOS from the web",
+        "docs_url": "https://cursor.com/"
+    },
+    {
+        "pattern": "windsurfusersetup.*.exe",
+        "title": "Looking for Windsurf?",
+        "app_name": "Windsurf installation instructions",
+        "reason": "Learn how to install Windsurf for Ubuntu in AnduinOS",
+        "docs_url": "https://windsurf.com/download/editor"
+    },
+    {
+        "pattern": "antigravity.*.exe",
+        "title": "Looking for Google Antigravity?",
+        "app_name": "Antigravity installation instructions",
+        "reason": "Learn how to install Google Antigravity for Ubuntu in AnduinOS",
+        "docs_url": "https://antigravity.google/download/linux"
+    },
+    {
+        "pattern": "ollamasetup.*.exe",
+        "title": "Looking for Ollama?",
+        "app_name": "Ollama installation instructions",
+        "reason": "Learn how to install Ollama for Linux in AnduinOS",
+        "docs_url": "https://ollama.com/download/linux"
+    },
+    {
+        "pattern": "syncthing-windows-setup.*.exe",
+        "title": "Looking for Syncthing?",
+        "app_name": "Syncthing installation instructions",
+        "reason": "Learn how to install Syncthing for Ubuntu in AnduinOS",
+        "docs_url": "https://apt.syncthing.net/"
+    },
+    {
+        "pattern": "obs-studio-.*.exe",
+        "title": "Looking for OBS Studio?",
+        "app_name": "OBS Studio",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of OBS Studio.",
+        "app_id": "com.obsproject.Studio"
+    },
+    {
+        "pattern": "bdcamsetup.*.exe",
+        "title": "Looking for Bandicam?",
+        "app_name": "OBS Studio",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Bandicam.",
+        "app_id": "com.obsproject.Studio"
+    },
+    {
+        "pattern": "android-studio-.*.exe",
+        "title": "Looking for Android Studio?",
+        "app_name": "Android Studio",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Android Studio.",
+        "app_id": "com.google.AndroidStudio"
+    },
+    {
+        "pattern": "arduino-ide.*.(exe|msi)",
+        "title": "Looking for Arduino IDE?",
+        "app_name": "Arduino IDE",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Arduino IDE.",
+        "app_id": "cc.arduino.IDE2"
+    },
+    {
+        "pattern": "blender-.*.msi",
+        "title": "Looking for Blender?",
+        "app_name": "Blender",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Blender.",
+        "app_id": "org.blender.Blender"
+    },
+    {
+        "pattern": "handbrake.*.exe",
+        "title": "Looking for HandBrake?",
+        "app_name": "HandBrake",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of HandBrake.",
+        "app_id": "fr.handbrake.ghb"
+    },
+    {
+        "pattern": "bitcoin-.*.-setup.*.exe",
+        "title": "Looking for Bitcoin Core?",
+        "app_name": "Bitcoin Core",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Bitcoin Core.",
+        "app_id": "org.bitcoincore.bitcoin-qt"
+    },
+    {
+        "pattern": "audacity-win-.*.exe",
+        "title": "Looking for Audacity?",
+        "app_name": "Audacity",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Audacity.",
+        "app_id": "org.audacityteam.Audacity"
+    },
+    {
+        "pattern": ".*\\b(avast|avg|avira|kaspersky|mcaffe|malwarebytes|norton|sophos).*.(exe|msi)",
+        "title": "Looking for Unknown App?",
+        "app_name": "Unknown App",
+        "reason": "AnduinOS is already resistant to Windows viruses and malware"
+    },
+    {
+        "pattern": ".*flash.*player.*.exe",
+        "title": "Looking for Adobe Flash Player?",
+        "app_name": "Ruffle",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Adobe Flash Player.",
+        "app_id": "rs.ruffle.Ruffle"
+    },
+    {
+        "pattern": "retroarch-.*.-setup.*.exe",
+        "title": "Looking for RetroArch?",
+        "app_name": "RetroArch",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of RetroArch.",
+        "app_id": "org.libretro.RetroArch"
+    },
+    {
+        "pattern": "pcsx2.*.exe",
+        "title": "Looking for PCSX2?",
+        "app_name": "PCSX2",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of PCSX2.",
+        "app_id": "net.pcsx2.PCSX2"
+    },
+    {
+        "pattern": "yuzu.*.exe",
+        "title": "Looking for yuzu?",
+        "app_name": "yuzu",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of yuzu.",
+        "app_id": "org.yuzu_emu.yuzu"
+    },
+    {
+        "pattern": "dolphin.*.exe",
+        "title": "Looking for Dolphin Emulator?",
+        "app_name": "Dolphin Emulator",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Dolphin Emulator.",
+        "app_id": "org.DolphinEmu.dolphin-emu"
+    },
+    {
+        "pattern": "ppsspp.*.exe",
+        "title": "Looking for PPSSPP?",
+        "app_name": "PPSSPP",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of PPSSPP.",
+        "app_id": "org.ppsspp.PPSSPP"
+    },
+    {
+        "pattern": "rpcs3.*.exe",
+        "title": "Looking for RPCS3?",
+        "app_name": "RPCS3",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of RPCS3.",
+        "app_id": "net.rpcs3.RPCS3"
+    },
+    {
+        "pattern": "citra-setup-windows.*.exe",
+        "title": "Looking for Citra?",
+        "app_name": "Citra",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Citra.",
+        "app_id": "org.citra_emu.citra"
+    },
+    {
+        "pattern": "duckstation-qt.*.exe",
+        "title": "Looking for DuckStation?",
+        "app_name": "DuckStation",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of DuckStation.",
+        "app_id": "org.duckstation.DuckStation"
+    },
+    {
+        "pattern": "mame.*.exe",
+        "title": "Looking for MAME?",
+        "app_name": "MAME",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of MAME.",
+        "app_id": "org.mamedev.MAME"
+    },
+    {
+        "pattern": "snes9x.*.exe",
+        "title": "Looking for Snes9x?",
+        "app_name": "Snes9x",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Snes9x.",
+        "app_id": "com.snes9x.Snes9x"
+    },
+    {
+        "pattern": "xemu.*.exe",
+        "title": "Looking for Xemu?",
+        "app_name": "Xemu",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Xemu.",
+        "app_id": "app.xemu.xemu"
+    },
+    {
+        "pattern": "Setup Project64.*.exe",
+        "title": "Looking for Project64?",
+        "app_name": "Simple64",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Project64.",
+        "app_id": "io.github.simple64.simple64"
+    },
+    {
+        "pattern": "(vscodesetup|vscodeusersetup).*.exe",
+        "title": "Looking for Visual Studio Code?",
+        "app_name": "Visual Studio Code",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Visual Studio Code.",
+        "app_id": "com.visualstudio.code."
+    },
+    {
+        "pattern": "(vscodiumsetup|vscodiumusersetup).*.exe",
+        "title": "Looking for VSCodium?",
+        "app_name": "VSCodium",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of VSCodium.",
+        "app_id": "com.vscodium.codium."
+    },
+    {
+        "pattern": "sublime_text.*.setup.*.exe",
+        "title": "Looking for Sublime Text?",
+        "app_name": "Sublime Text",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Sublime Text.",
+        "app_id": "com.sublimetext.three"
+    },
+    {
+        "pattern": "eclipse.*.exe",
+        "title": "Looking for Eclipse IDE?",
+        "app_name": "Eclipse IDE",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Eclipse IDE.",
+        "app_id": "org.eclipse.Java"
+    },
+    {
+        "pattern": "jgrasp.*.exe",
+        "title": "Looking for jGRASP website?",
+        "app_name": "jGRASP website",
+        "reason": "You can download jGRASP (.zip package for Linux) for AnduinOS from the web",
+        "docs_url": "https://spider.eng.auburn.edu/user-cgi/grasp/grasp.pl?;dl=download_jgrasp.html"
+    },
+    {
+        "pattern": "gvim.*.exe",
+        "title": "Looking for VIM?",
+        "app_name": "VIM",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of VIM.",
+        "app_id": "org.vim.Vim"
+    },
+    {
+        "pattern": "emacs.*.installer.*.exe",
+        "title": "Looking for GNU Emacs?",
+        "app_name": "GNU Emacs",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of GNU Emacs.",
+        "app_id": "org.gnu.emacs"
+    },
+    {
+        "pattern": "git-.*.exe",
+        "title": "Looking for Git?",
+        "app_name": "Git",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Git."
+    },
+    {
+        "pattern": "githubdesktopsetup.*.(exe|msi)",
+        "title": "Looking for GitHub Desktop?",
+        "app_name": "GitHub Desktop",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of GitHub Desktop.",
+        "app_id": "io.github.shiftey.Desktop"
+    },
+    {
+        "pattern": "jdownloader2setup.*.exe",
+        "title": "Looking for JDownloader?",
+        "app_name": "JDownloader",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of JDownloader.",
+        "app_id": "org.jdownloader.JDownloader"
+    },
+    {
+        "pattern": "tor-browser.*.(exe|msi)",
+        "title": "Looking for Tor Browser?",
+        "app_name": "Tor Browser",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Tor Browser.",
+        "app_id": "org.torproject.torbrowser-launcher"
+    },
+    {
+        "pattern": "ultimaker-cura.*.exe",
+        "title": "Looking for UltiMaker Cura?",
+        "app_name": "UltiMaker Cura",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of UltiMaker Cura.",
+        "app_id": "com.ultimaker.cura"
+    },
+    {
+        "pattern": "musescore.*.(exe|msi)",
+        "title": "Looking for MuseScore?",
+        "app_name": "MuseScore",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of MuseScore.",
+        "app_id": "org.musescore.MuseScore"
+    },
+    {
+        "pattern": "protonmail.*.exe",
+        "title": "Looking for Proton Mail?",
+        "app_name": "Proton Mail",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Proton Mail.",
+        "app_id": "me.proton.Mail"
+    },
+    {
+        "pattern": "protonvpn.*.exe",
+        "title": "Looking for Proton VPN?",
+        "app_name": "Proton VPN",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Proton VPN.",
+        "app_id": "com.protonvpn.www"
+    },
+    {
+        "pattern": "protonpass.*.setup.*.exe",
+        "title": "Looking for Proton Pass?",
+        "app_name": "Proton Pass",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Proton Pass.",
+        "app_id": "me.proton.Pass"
+    },
+    {
+        "pattern": "proton.*.drive.*.setup.*.exe",
+        "title": "Looking for Proton Drive?",
+        "app_name": "Proton Drive",
+        "reason": "You can use Proton Drive on the web",
+        "docs_url": "https://account.proton.me/drive"
+    },
+    {
+        "pattern": "surfsharksetup.*.exe",
+        "title": "Looking for Surfshark VPN?",
+        "app_name": "Surfshark VPN",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Surfshark VPN.",
+        "app_id": "com.surfshark.Surfshark"
+    },
+    {
+        "pattern": "purevpn_setup.*.exe",
+        "title": "Looking for PureVPN?",
+        "app_name": "PureVPN",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of PureVPN."
+    },
+    {
+        "pattern": "nordinstaller.*.exe",
+        "title": "Looking for NordVPN?",
+        "app_name": "NordVPN",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of NordVPN."
+    },
+    {
+        "pattern": "expressvpn.*.windows.*.release.*.exe",
+        "title": "Looking for ExpressVPN website?",
+        "app_name": "ExpressVPN website",
+        "reason": "You can install ExpressVPN (Universal Installer) for AnduinOS from the web",
+        "docs_url": "https://www.expressvpn.com/support/vpn-setup/app-for-linux/"
+    },
+    {
+        "pattern": "mullvadvpn.*.exe",
+        "title": "Looking for Mullvad VPN website?",
+        "app_name": "Mullvad VPN website",
+        "reason": "You can install Mullvad VPN (Ubuntu/Debian repository) for AnduinOS from the web",
+        "docs_url": "https://mullvad.net/download/vpn/linux"
+    },
+    {
+        "pattern": "tunnelbear-installer.*.exe",
+        "title": "Looking for TunnelBear VPN website?",
+        "app_name": "TunnelBear VPN website",
+        "reason": "You can install TunnelBear VPN (Linux instructions) for AnduinOS from the web",
+        "docs_url": "https://www.tunnelbear.com/blog/setting-up-tunnelbear-on-linux/"
+    },
+    {
+        "pattern": "pia-windows.*.exe",
+        "title": "Looking for Private Internet Access website?",
+        "app_name": "Private Internet Access website",
+        "reason": "You can install Private Internet Access VPN (Linux app) for AnduinOS from the web",
+        "docs_url": "https://www.privateinternetaccess.com/download/linux-vpn"
+    },
+    {
+        "pattern": "ipvanish-setup.*.exe",
+        "title": "Looking for IPVanish VPN website?",
+        "app_name": "IPVanish VPN website",
+        "reason": "You can install IPVanish VPN (Ubuntu instructions) for AnduinOS from the web",
+        "docs_url": "https://support.ipvanish.com/hc/en-us/articles/31805500046235-OpenVPN-setup-in-Ubuntu"
+    },
+    {
+        "pattern": "cyberghostvpnsetup.*.exe",
+        "title": "Looking for CyberGhost VPN website?",
+        "app_name": "CyberGhost VPN website",
+        "reason": "You can install CyberGhost VPN (Linux/Ubuntu installer) for AnduinOS from the web",
+        "docs_url": "https://www.cyberghostvpn.com/download/linux-vpn"
+    },
+    {
+        "pattern": "photoshop.*.cs6.*.exe",
+        "title": "Looking for Adobe Photoshop CS6 installer?",
+        "app_name": "PlayOnLinux",
+        "reason": "Adobe Photoshop CS6 is available to install on PlayOnLinux",
+        "app_id": "com.playonlinux.PlayOnLinux4"
+    },
+    {
+        "pattern": "illustrator.*.cs6.*.exe",
+        "title": "Looking for Adobe Illustrator CS6 installer?",
+        "app_name": "PlayOnLinux",
+        "reason": "Adobe Illustrator CS6 is available to install on PlayOnLinux",
+        "app_id": "com.playonlinux.PlayOnLinux4"
+    },
+    {
+        "pattern": "apache_openoffice.*.exe",
+        "title": "Looking for Apache OpenOffice?",
+        "app_name": "LibreOffice",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Apache OpenOffice."
+    },
+    {
+        "pattern": "libreoffice.*.win.*.msi",
+        "title": "Looking for LibreOffice?",
+        "app_name": "LibreOffice",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of LibreOffice."
+    },
+    {
+        "pattern": "desktopeditors.*.(exe|msi)",
+        "title": "Looking for ONLYOFFICE?",
+        "app_name": "ONLYOFFICE",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of ONLYOFFICE.",
+        "app_id": "org.onlyoffice.desktopeditors"
+    },
+    {
+        "pattern": "wps_office_inst.*.(exe|msi)",
+        "title": "Looking for WPS Office?",
+        "app_name": "WPS Office",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of WPS Office.",
+        "app_id": "com.wps.Office"
+    },
+    {
+        "pattern": "officesetup.*.(exe|msi)",
+        "title": "Looking for Microsoft Office?",
+        "app_name": "Microsoft Office/365 on the web",
+        "reason": "You can use either LibreOffice (pre-installed in AnduinOS) or sign into Microsoft Office/365 on the web",
+        "docs_url": "https://www.office.com"
+    },
+    {
+        "pattern": "microsoft.*.365.*.copilot.*.installer.*.exe",
+        "title": "Looking for Microsoft 365 Copilot?",
+        "app_name": "Microsoft Office/365 Copilot on the web",
+        "reason": "You can use either LibreOffice (pre-installed in AnduinOS) or sign into Microsoft Office/365 Copilot on the web",
+        "docs_url": "https://www.office.com"
+    },
+    {
+        "pattern": "(msteamssetup|teams.*.windows).*.(exe|msi)",
+        "title": "Looking for Microsoft Teams?",
+        "app_name": "Microsoft Teams",
+        "reason": "You can use Microsoft Teams on the web",
+        "docs_url": "https://teams.microsoft.com/"
+    },
+    {
+        "pattern": "webex.*.(exe|msi)",
+        "title": "Looking for Cisco Webex website?",
+        "app_name": "Cisco Webex website",
+        "reason": "You can install Cisco Webex (Linux .deb package) for AnduinOS from the web",
+        "docs_url": "https://www.webex.com/downloads.html"
+    },
+    {
+        "pattern": "finaldraftsetup.*.(exe|msi)",
+        "title": "Looking for FinalDraft?",
+        "app_name": "Trelby",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of FinalDraft.",
+        "app_id": "org.trelby.Trelby"
+    },
+    {
+        "pattern": "scrivener.*.installer.*.(exe|msi)",
+        "title": "Looking for Scrivener?",
+        "app_name": "Trelby",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of Scrivener.",
+        "app_id": "org.trelby.Trelby"
+    },
+    {
+        "pattern": "iawriter.*.(exe|msi)",
+        "title": "Looking for iA Writer?",
+        "app_name": "Apostrophe",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of iA Writer.",
+        "app_id": "org.gnome.gitlab.somas.Apostrophe"
+    },
+    {
+        "pattern": "virtualbox.*.win.*.exe",
+        "title": "Looking for VirtualBox?",
+        "app_name": "VirtualBox",
+        "reason": "For the best stability and system integration on AnduinOS, we recommend using the native Linux release of VirtualBox."
+    },
+    {
+        "pattern": "claude.*.setup.*.exe",
+        "title": "Looking for Claude?",
+        "app_name": "Claude",
+        "reason": "You can use Claude on the web",
+        "docs_url": "https://claude.ai"
+    },
+    {
+        "pattern": "chatgpt.*.installer.*.exe",
+        "title": "Looking for ChatGPT?",
+        "app_name": "ChatGPT",
+        "reason": "You can use ChatGPT on the web",
+        "docs_url": "https://chatgpt.com/"
+    },
+    {
+        "pattern": "microsoft.*.copilot.*.installer.*.exe",
+        "title": "Looking for Microsoft Copilot?",
+        "app_name": "Microsoft Copilot",
+        "reason": "You can use Microsoft Copilot on the web",
+        "docs_url": "https://copilot.microsoft.com/"
+    },
+    {
+        "pattern": "perplexity.*.setup.*.exe",
+        "title": "Looking for Perplexity?",
+        "app_name": "Perplexity",
+        "reason": "You can use Perplexity on the web",
+        "docs_url": "https://www.perplexity.ai/"
+    },
+    {
+        "pattern": "balenaetcher.*.setup.*.exe",
+        "title": "Looking for balenaEtcher website?",
+        "app_name": "balenaEtcher website",
+        "reason": "You can download balenaEtcher (.zip 64-bit package for Linux) for AnduinOS from the web",
+        "docs_url": "https://etcher.balena.io/#download-etcher"
+    },
+    {
+        "pattern": "citrixworkspace.*.exe",
+        "title": "Looking for Citrix Workspace?",
+        "app_name": "Citrix Workspace installation instructions",
+        "reason": "Learn how to install Citrix Workspace in AnduinOS",
+        "docs_url": "https://help.zorin.com/docs/apps-games/install-citrix-workspace/"
+    },
+    {
+        "pattern": "(windows.*(setup|install)|mediacreationtool).*.exe",
+        "title": "Looking for Microsoft Windows?",
+        "app_name": "GNOME Boxes",
+        "reason": "Install GNOME Boxes to run Microsoft Windows inside a Virtual Machine in AnduinOS",
+        "app_id": "org.gnome.Boxes"
+    },
+    {
+        "pattern": "^cpu[-_]?z.*\\.exe$",
+        "title": "Installing CPU-Z?",
+        "app_name": "CPU-X",
+        "app_id": "io.github.thetumultuousunicornofdarkness.cpu-x",
+        "reason": "CPU-X is a native Linux application that perfectly mirrors CPU-Z in functionality and interface, without the need for Windows sandboxing."
+    },
+    {
+        "pattern": "^(xunlei|thunder|idman|idm_).*\\.exe$",
+        "title": "Looking for a Download Manager?",
+        "app_name": "Motrix",
+        "app_id": "net.agalwood.Motrix",
+        "reason": "Windows downloaders often encounter network routing issues inside the sandbox. We recommend Motrix, a beautiful, full-featured native Linux download manager."
+    },
+    {
+        "pattern": "^(utorrent|bittorrent).*\\.exe$",
+        "title": "Looking for a Torrent Client?",
+        "app_name": "qBittorrent",
+        "app_id": "org.qbittorrent.qBittorrent",
+        "reason": "Windows torrent clients can't properly optimize network connections inside a sandbox. We highly recommend qBittorrent, a powerful native Linux client."
+    },
+    {
+        "pattern": "^(pcqq|qq|tim).*\\.exe$",
+        "title": "Installing QQ or TIM?",
+        "app_name": "Linux QQ",
+        "app_id": "com.qq.QQ",
+        "reason": "Tencent now officially maintains a natively built Linux QQ based on the NT architecture. It provides an identical experience to the Windows version without the overhead of Wine."
+    },
+    {
+        "pattern": "^(1password|bitwarden|enpass).*\\.exe$",
+        "title": "Installing a Password Manager?",
+        "app_name": "Bitwarden",
+        "app_id": "com.bitwarden.desktop",
+        "reason": "Password managers require deep system integrations (like clipboard access and browser extensions) that are intentionally blocked by the Windows sandbox for security reasons. Please use the native Linux version."
+    },
+    {
+        "pattern": "^githubdesktop.*\\.exe$",
+        "title": "Installing GitHub Desktop?",
+        "app_name": "GitHub Desktop",
+        "app_id": "io.github.shiftey.Desktop",
+        "reason": "A highly stable, community-maintained native Linux build of GitHub Desktop is available. It integrates flawlessly with your native Git ecosystem."
+    },
+    {
+        "pattern": "^handbrake.*\\.exe$",
+        "title": "Installing HandBrake?",
+        "app_name": "HandBrake",
+        "app_id": "fr.handbrake.ghb",
+        "reason": "Video transcoding requires direct access to hardware encoding (like NVENC or QuickSync) and massive multi-core CPU performance. The native Linux version provides vastly superior speeds."
+    },
+    {
+        "pattern": "^chrome.*installer.*\\.(exe|msi|zip)$",
+        "title": "Installing Chrome?",
+        "app_name": "Google Chrome",
+        "app_id": "com.google.Chrome",
+        "reason": "Please install the native Linux version of Chrome."
+    },
+    {
+        "pattern": "^firefox.*setup.*\\.(exe|msi|zip)$",
+        "title": "Installing Firefox?",
+        "app_name": "Firefox",
+        "app_id": "org.mozilla.firefox",
+        "reason": "Please install the native Linux version of Firefox."
+    },
+    {
+        "pattern": "^msedge.*setup.*\\.(exe|msi|zip)$",
+        "title": "Installing Edge?",
+        "app_name": "Microsoft Edge",
+        "app_id": "com.microsoft.Edge",
+        "reason": "Please install the native Linux version of Edge."
+    },
+    {
+        "pattern": "^bravebrowser.*setup.*\\.(exe|msi|zip)$",
+        "title": "Installing Brave?",
+        "app_name": "Brave Browser",
+        "app_id": "com.brave.Browser",
+        "reason": "Please install the native Linux version of Brave."
+    },
+    {
+        "pattern": "^vivaldi.*\\.(exe|msi|zip)$",
+        "title": "Installing Vivaldi?",
+        "app_name": "Vivaldi",
+        "app_id": "com.vivaldi.Vivaldi",
+        "reason": "Please install the native Linux version of Vivaldi."
+    },
+    {
+        "pattern": "^librewolf.*\\.(exe|msi|zip)$",
+        "title": "Installing LibreWolf?",
+        "app_name": "LibreWolf",
+        "app_id": "io.gitlab.librewolf-community",
+        "reason": "Please install the native Linux version of LibreWolf."
+    },
+    {
+        "pattern": "^steamsetup.*\\.(exe|msi|zip)$",
+        "title": "Installing Steam?",
+        "app_name": "Steam (Native)",
+        "app_id": "com.valvesoftware.Steam",
+        "reason": "Please install the native Linux Steam client, which includes Valve's Proton technology for Windows games."
+    },
+    {
+        "pattern": "^(epicgames|gog.*galaxy).*\\.(exe|msi|zip)$",
+        "title": "Installing Epic Games or GOG?",
+        "app_name": "Heroic Games Launcher",
+        "app_id": "com.heroicgameslauncher.hgl",
+        "reason": "We highly recommend using Heroic Games Launcher on Linux to manage Epic and GOG libraries seamlessly."
+    },
+    {
+        "pattern": "^(battle\\.net|eaapp|ubisoftconnect).*\\.(exe|msi|zip)$",
+        "title": "Installing a Game Launcher?",
+        "app_name": "Bottles",
+        "app_id": "com.usebottles.bottles",
+        "reason": "For launchers like Battle.net, EA App, or Ubisoft Connect, we recommend configuring a dedicated gaming environment using Bottles."
+    },
+    {
+        "pattern": "^lutris.*\\.(exe|msi|zip)$",
+        "title": "Installing Lutris?",
+        "app_name": "Lutris (Native)",
+        "app_id": "net.lutris.Lutris",
+        "reason": "Please install the native Linux version of Lutris."
+    },
+    {
+        "pattern": "^heroic.*\\.(exe|msi|zip)$",
+        "title": "Installing Heroic?",
+        "app_name": "Heroic Games Launcher",
+        "app_id": "com.heroicgameslauncher.hgl",
+        "reason": "Please install the native Linux version of Heroic Games Launcher."
+    },
+    {
+        "pattern": "^bottles.*\\.(exe|msi|zip)$",
+        "title": "Installing Bottles?",
+        "app_name": "Bottles (Native)",
+        "app_id": "com.usebottles.bottles",
+        "reason": "Please install the native Linux version of Bottles."
+    },
+    {
+        "pattern": "^libreoffice.*win.*\\.(exe|msi|zip)$",
+        "title": "Installing LibreOffice?",
+        "app_name": "LibreOffice",
+        "app_id": "org.libreoffice.LibreOffice",
+        "reason": "Please install the native Linux version of LibreOffice."
+    },
+    {
+        "pattern": "^wps_office_inst.*\\.(exe|msi|zip)$",
+        "title": "Installing WPS Office?",
+        "app_name": "WPS Office",
+        "app_id": "com.wps.Office",
+        "reason": "Please install the native Linux version of WPS Office."
+    },
+    {
+        "pattern": "^desktopeditors.*\\.(exe|msi|zip)$",
+        "title": "Installing ONLYOFFICE?",
+        "app_name": "ONLYOFFICE",
+        "app_id": "org.onlyoffice.desktopeditors",
+        "reason": "Please install the native Linux version of ONLYOFFICE."
+    },
+    {
+        "pattern": "^nextcloud.*.*\\.(exe|msi|zip)$",
+        "title": "Installing Nextcloud?",
+        "app_name": "Nextcloud Client",
+        "app_id": "com.nextcloud.desktopclient.nextcloud",
+        "reason": "Please install the native Linux Nextcloud client for filesystem integration."
+    },
+    {
+        "pattern": "^blender.*\\.(exe|msi|zip)$",
+        "title": "Installing Blender?",
+        "app_name": "Blender",
+        "app_id": "org.blender.Blender",
+        "reason": "3D rendering requires low-level GPU acceleration. Please install the native Linux version of Blender."
+    },
+    {
+        "pattern": "^obs-studio.*\\.(exe|msi|zip)$",
+        "title": "Installing OBS Studio?",
+        "app_name": "OBS Studio",
+        "app_id": "com.obsproject.Studio",
+        "reason": "Screen recording requires low-level NVENC/NVDEC hardware encoders and PipeWire integration. Please install the native Linux version of OBS."
+    },
+    {
+        "pattern": "^vlc.*\\.(exe|msi|zip)$",
+        "title": "Installing VLC?",
+        "app_name": "VLC",
+        "app_id": "org.videolan.VLC",
+        "reason": "Please install the native Linux version of VLC."
+    },
+    {
+        "pattern": "^handbrake.*\\.(exe|msi|zip)$",
+        "title": "Installing Handbrake?",
+        "app_name": "Handbrake",
+        "app_id": "fr.handbrake.ghb",
+        "reason": "Video transcoding requires direct access to hardware encoders. Please install the native Linux version of Handbrake."
+    },
+    {
+        "pattern": "^retroarch.*\\.(exe|msi|zip)$",
+        "title": "Installing RetroArch?",
+        "app_name": "RetroArch",
+        "app_id": "org.libretro.RetroArch",
+        "reason": "Running emulators through a sandbox severely bottlenecks Vulkan/OpenGL performance. Please install the native Linux version."
+    },
+    {
+        "pattern": "^pcsx2.*\\.(exe|msi|zip)$",
+        "title": "Installing PCSX2?",
+        "app_name": "PCSX2",
+        "app_id": "net.pcsx2.PCSX2",
+        "reason": "Please install the highly optimized native Linux build of PCSX2."
+    },
+    {
+        "pattern": "^dolphin.*\\.(exe|msi|zip)$",
+        "title": "Installing Dolphin?",
+        "app_name": "Dolphin Emulator",
+        "app_id": "org.DolphinEmu.dolphin-emu",
+        "reason": "Please install the highly optimized native Linux build of Dolphin."
+    },
+    {
+        "pattern": "^ppsspp.*\\.(exe|msi|zip)$",
+        "title": "Installing PPSSPP?",
+        "app_name": "PPSSPP",
+        "app_id": "org.ppsspp.PPSSPP",
+        "reason": "Please install the highly optimized native Linux build of PPSSPP."
+    },
+    {
+        "pattern": "^rpcs3.*\\.(exe|msi|zip)$",
+        "title": "Installing RPCS3?",
+        "app_name": "RPCS3",
+        "app_id": "net.rpcs3.RPCS3",
+        "reason": "Please install the highly optimized native Linux build of RPCS3."
+    },
+    {
+        "pattern": "^obsidian.*\\.(exe|msi|zip)$",
+        "title": "Installing Obsidian?",
+        "app_name": "Obsidian",
+        "app_id": "md.obsidian.Obsidian",
+        "reason": "Please install the native Linux version of Obsidian for the best performance."
+    },
+    {
+        "pattern": "^joplin-setup.*\\.(exe|msi|zip)$",
+        "title": "Installing Joplin?",
+        "app_name": "Joplin",
+        "app_id": "net.cozic.joplin_desktop",
+        "reason": "Please install the native Linux version of Joplin."
+    },
+    {
+        "pattern": "^todoist.*\\.(exe|msi|zip)$",
+        "title": "Installing Todoist?",
+        "app_name": "Todoist",
+        "app_id": "com.todoist.Todoist",
+        "reason": "Please install the native Linux version of Todoist."
+    },
+    {
+        "pattern": "^spotify.*\\.(exe|msi|zip)$",
+        "title": "Installing Spotify?",
+        "app_name": "Spotify",
+        "app_id": "com.spotify.Client",
+        "reason": "Please install the native Linux version of Spotify."
+    },
+    {
+        "pattern": "^plex.*\\.(exe|msi|zip)$",
+        "title": "Installing Plex?",
+        "app_name": "Plex Desktop",
+        "app_id": "tv.plex.PlexDesktop",
+        "reason": "Please install the native Linux version of Plex."
+    },
+    {
+        "pattern": "^jellyfin.*\\.(exe|msi|zip)$",
+        "title": "Installing Jellyfin?",
+        "app_name": "Jellyfin Media Player",
+        "app_id": "com.github.iwalton3.jellyfin-media-player",
+        "reason": "Please install the native Linux version of Jellyfin."
+    },
+    {
+        "pattern": "^kodi.*\\.(exe|msi|zip)$",
+        "title": "Installing Kodi?",
+        "app_name": "Kodi",
+        "app_id": "tv.kodi.Kodi",
+        "reason": "Please install the native Linux version of Kodi."
+    },
+    {
+        "pattern": "^thunderbird.*\\.(exe|msi|zip)$",
+        "title": "Installing Thunderbird?",
+        "app_name": "Thunderbird",
+        "app_id": "org.mozilla.Thunderbird",
+        "reason": "Please install the native Linux version of Thunderbird."
+    },
+    {
+        "pattern": "^mailspring.*\\.(exe|msi|zip)$",
+        "title": "Installing Mailspring?",
+        "app_name": "Mailspring",
+        "app_id": "com.getmailspring.Mailspring",
+        "reason": "Please install the native Linux version of Mailspring."
+    }
+]

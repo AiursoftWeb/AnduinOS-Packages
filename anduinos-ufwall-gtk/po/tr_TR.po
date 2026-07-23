@@ -2,304 +2,368 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ufwall-gtk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
-#: src/widgets/rule_row.rs:80
-msgid "Delete Rule"
-msgstr "Kuralı Sil"
-
-#: src/widgets/rule_row.rs:81
-msgid "Delete rule"
-msgstr "Kuralı sil"
-
-#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
-#: src/views/rules_view.rs:123
-msgid "Cancel"
-msgstr "İptal"
-
-#: src/widgets/rule_row.rs:85
-msgid "Delete"
-msgstr "Sil"
-
-#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
-#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
-#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
-#: src/window.rs:245
-msgid "Error"
-msgstr "Hata"
-
-#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
-msgid "Add Rule"
-msgstr "Kural Ekle"
-
-#: src/widgets/add_rule_dialog.rs:70
-msgid "Service"
-msgstr "Hizmet"
-
-#: src/widgets/add_rule_dialog.rs:72
-msgid "Custom"
-msgstr "Özel"
-
-#: src/widgets/add_rule_dialog.rs:89
-msgid "Port / Service Name"
-msgstr "Port / Hizmet Adı"
-
-#: src/widgets/add_rule_dialog.rs:93
-msgid "Action"
-msgstr "Eylem"
-
-#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
-#: src/views/status_view.rs:113
-msgid "Deny"
-msgstr "Engelle"
-
-#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
-#: src/views/status_view.rs:105 src/views/status_view.rs:114
-msgid "Allow"
-msgstr "İzin Ver"
-
-#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
-#: src/views/status_view.rs:115
-msgid "Reject"
-msgstr "Reddet"
-
-#: src/widgets/add_rule_dialog.rs:98
-msgid "Limit"
-msgstr "Sınır"
-
-#: src/widgets/add_rule_dialog.rs:110
-msgid "Advanced"
-msgstr "Gelişmiş"
-
-#: src/widgets/add_rule_dialog.rs:114
-msgid "Direction"
-msgstr "Yön"
-
-#: src/widgets/add_rule_dialog.rs:116
-msgid "In"
-msgstr "Gelen"
-
-#: src/widgets/add_rule_dialog.rs:117
-msgid "Out"
-msgstr "Dış"
-
-#: src/widgets/add_rule_dialog.rs:122
-msgid "Protocol"
-msgstr "Protokol"
-
-#: src/widgets/add_rule_dialog.rs:124
-msgid "Both"
-msgstr "Her ikisi"
-
-#: src/widgets/add_rule_dialog.rs:125
-msgid "TCP"
-msgstr "TCP"
-
-#: src/widgets/add_rule_dialog.rs:126
-msgid "UDP"
-msgstr "UDP"
-
-#: src/widgets/add_rule_dialog.rs:131
-msgid "Source IP"
-msgstr "Kaynak IP"
-
-#: src/widgets/add_rule_dialog.rs:135
-msgid "Destination IP"
-msgstr "Hedef IP"
-
-#: src/widgets/add_rule_dialog.rs:144
-msgid "Interface"
-msgstr "Arayüz"
-
-#: src/widgets/add_rule_dialog.rs:149
-msgid "Comment"
-msgstr "Yorum"
-
-#: src/widgets/add_rule_dialog.rs:154
-msgid "Insert Before Rule"
-msgstr "Kuraldan Önce Ekle"
-
-#: src/widgets/add_rule_dialog.rs:155
 msgid "0 = append at end"
 msgstr "0 = sona ekle"
 
-#: src/widgets/add_rule_dialog.rs:170
-msgid "Add"
-msgstr "Ekle"
-
-#: src/widgets/add_rule_dialog.rs:254
-msgid "Save"
-msgstr "Kaydet"
-
-#: src/views/dashboard_view.rs:56 src/window.rs:89
-msgid "Dashboard"
-msgstr "Gösterge Paneli"
-
-#: src/views/dashboard_view.rs:78
-msgid "Recent Events Parsed"
-msgstr "Son Olaylar Ayrıştırıldı"
-
-#: src/views/dashboard_view.rs:96
-msgid "Blocked Events"
-msgstr "Engellenen Olaylar"
-
-#: src/views/dashboard_view.rs:117
-msgid "Top Blocked Connections"
-msgstr "En Çok Engellenen Bağlantılar"
-
-#: src/views/dashboard_view.rs:123
-msgid "Top Blocked Ports"
-msgstr "En Çok Engellenen Bağlantı Noktaları"
-
-#: src/views/dashboard_view.rs:129
-msgid "Listening Ports"
-msgstr "Dinleme Portları"
-
-#: src/views/dashboard_view.rs:135
-msgid "Recent Blocked Events"
-msgstr "Son Engellenen Olaylar"
-
-#: src/views/dashboard_view.rs:139
-msgid "Show"
-msgstr "Göster"
-
-#: src/views/dashboard_view.rs:154
-msgid "Refresh"
-msgstr "Yenile"
-
-#: src/views/dashboard_view.rs:247
-msgid "No blocked connections in recent events"
-msgstr "Son olaylarda engellenen bağlantı yok"
-
-#: src/views/dashboard_view.rs:296
-msgid "No blocked ports in recent events"
-msgstr "Son olaylarda engellenen port yok"
-
-#: src/views/dashboard_view.rs:344
-msgid "No listening ports detected"
-msgstr "Dinleme portu algılanamadı"
-
-#: src/views/profiles_view.rs:76
-msgid "Application Profiles"
-msgstr "Uygulama Profilleri"
-
-#: src/views/profiles_view.rs:77
-msgid "Allow applications with predefined rules."
-msgstr "Önceden tanımlanmış kurallara sahip uygulamalara izin verin."
-
-#: src/views/profiles_view.rs:82
-msgid "Quick Allow Port"
-msgstr "Hızlı Port İzin Ver"
-
-#: src/views/profiles_view.rs:83
-msgid "e.g. 80,443/tcp or 8080"
-msgstr "ör. 80,443/tcp veya 8080"
-
-#: src/views/profiles_view.rs:87
-msgid "Port / Protocol"
-msgstr "Bağlantı Noktası / Protokol"
-
-#: src/views/profiles_view.rs:119
-msgid "No Profiles"
-msgstr "Profil Yok"
-
-#: src/views/profiles_view.rs:120
-msgid "No application profiles found"
-msgstr "Hiç uygulama profili bulunamadı"
-
-#: src/views/rules_view.rs:62
-msgid "Search rules..."
-msgstr "Kuralları ara..."
-
-#: src/views/rules_view.rs:70
-msgid "Firewall Rules"
-msgstr "Güvenlik Duvarı Kuralları"
-
-#: src/views/rules_view.rs:75
-msgid "No Rules"
-msgstr "Kural Yok"
-
-#: src/views/rules_view.rs:76
-msgid "There are no rules configured yet."
-msgstr "Henüz yapılandırılmış kural yok."
-
-#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
-msgid "Delete All"
-msgstr "Tümünü Sil"
-
-#: src/views/rules_view.rs:119
-msgid "Delete All Rules?"
-msgstr "Tüm Kurallar Silinsin mi?"
-
-#: src/views/rules_view.rs:120
-msgid "This will delete all custom rules. This action cannot be undone."
-msgstr "Bu işlem tüm özel kuralları silecektir. Bu işlem geri alınamaz."
-
-#: src/views/status_view.rs:78 src/window.rs:90
-msgid "Status"
-msgstr "Durum"
-
-#: src/views/status_view.rs:89 src/window.rs:63
-msgid "Firewall"
-msgstr "Güvenlik Duvarı"
-
-#: src/views/status_view.rs:90 src/views/status_view.rs:282
-msgid "Inactive"
-msgstr "Etkin değil"
-
-#: src/views/status_view.rs:97
-msgid "Default Policies"
-msgstr "Varsayılan İlkeler"
-
-#: src/views/status_view.rs:102
-msgid "Incoming"
-msgstr "Gelen"
-
-#: src/views/status_view.rs:111
-msgid "Outgoing"
-msgstr "Giden"
-
-#: src/views/status_view.rs:124
-msgid "Logging"
-msgstr "Kayıt"
-
-#: src/views/status_view.rs:128
-msgid "Log Level"
-msgstr "Günlük Düzeyi"
-
-#: src/views/status_view.rs:130
-msgid "Off"
-msgstr "Kapalı"
-
-#: src/views/status_view.rs:131
-msgid "Low"
-msgstr "Düşük"
-
-#: src/views/status_view.rs:132
-msgid "Medium"
-msgstr "Orta"
-
-#: src/views/status_view.rs:133
-msgid "High"
-msgstr "Yüksek"
-
-#: src/views/status_view.rs:134
-msgid "Full"
-msgstr "Tam"
-
-#: src/views/status_view.rs:282
-msgid "Active"
-msgstr "Etkin"
-
-#: src/window.rs:80
 msgid "About"
 msgstr "Hakkında"
 
-#: src/window.rs:91
+msgid "Action"
+msgstr "Eylem"
+
+msgid "Active"
+msgstr "Etkin"
+
+msgid "Add"
+msgstr "Ekle"
+
+msgid "Add Rule"
+msgstr "Kural Ekle"
+
+msgid "Advanced"
+msgstr "Gelişmiş"
+
+msgid "All"
+msgstr "Tümü"
+
+msgid "Allow"
+msgstr "İzin Ver"
+
+msgid "Allow applications with predefined rules."
+msgstr "Önceden tanımlanmış kurallara sahip uygulamalara izin verin."
+
+msgid "Application Profiles"
+msgstr "Uygulama Profilleri"
+
+msgid "Audit"
+msgstr "Denetim"
+
+msgid "Auditor Error"
+msgstr "Denetleyici Hatası"
+
+msgid "Block"
+msgstr "Engelle"
+
+msgid "Block Connection?"
+msgstr "Bağlantı engellensin mi?"
+
+msgid "Block inbound traffic from"
+msgstr "Bu kaynaktan gelen giriş trafiğini engelle"
+
+msgid "Block outbound traffic to"
+msgstr "Hedefe giden çıkış trafiğini engelle"
+
+msgid "Blocked Events"
+msgstr "Engellenen Olaylar"
+
+msgid "Blocked Successfully"
+msgstr "Başarıyla Engellendi"
+
+msgid "Both"
+msgstr "Her ikisi"
+
+msgid "Cancel"
+msgstr "İptal"
+
+msgid "Comment"
+msgstr "Yorum"
+
+msgid "Custom"
+msgstr "Özel"
+
+msgid "Dashboard"
+msgstr "Gösterge Paneli"
+
+msgid "Default Policies"
+msgstr "Varsayılan İlkeler"
+
+msgid "Delete"
+msgstr "Sil"
+
+msgid "Delete All"
+msgstr "Tümünü Sil"
+
+msgid "Delete All Rules?"
+msgstr "Tüm Kurallar Silinsin mi?"
+
+msgid "Delete Rule"
+msgstr "Kuralı Sil"
+
+msgid "Delete rule"
+msgstr "Kuralı sil"
+
+msgid "Deny"
+msgstr "Engelle"
+
+msgid "Destination IP"
+msgstr "Hedef IP"
+
+msgid "Direction"
+msgstr "Yön"
+
+msgid "Error"
+msgstr "Hata"
+
+msgid "Failed to Block"
+msgstr "Engellenemedi"
+
+msgid "Firewall"
+msgstr "Güvenlik Duvarı"
+
+msgid "Firewall Rules"
+msgstr "Güvenlik Duvarı Kuralları"
+
+msgid "Full"
+msgstr "Tam"
+
+msgid "High"
+msgstr "Yüksek"
+
+msgid "In"
+msgstr "Gelen"
+
+msgid "Inactive"
+msgstr "Etkin değil"
+
+msgid "Inbound"
+msgstr "Giriş"
+
+msgid "Incoming"
+msgstr "Gelen"
+
+msgid "Insert Before Rule"
+msgstr "Kuraldan Önce Ekle"
+
+msgid "Interface"
+msgstr "Arayüz"
+
+msgid "Limit"
+msgstr "Sınır"
+
+msgid "Listening Ports"
+msgstr "Dinleme Portları"
+
+msgid "Log Level"
+msgstr "Günlük Düzeyi"
+
+msgid "Logging"
+msgstr "Kayıt"
+
+msgid "Low"
+msgstr "Düşük"
+
+msgid "Medium"
+msgstr "Orta"
+
+msgid "Monitoring Network Activity"
+msgstr "Ağ Etkinliğini İzleme"
+
+msgid "No Profiles"
+msgstr "Profil Yok"
+
+msgid "No Rules"
+msgstr "Kural Yok"
+
+msgid "No application profiles found"
+msgstr "Hiç uygulama profili bulunamadı"
+
+msgid "No blocked connections in recent events"
+msgstr "Son olaylarda engellenen bağlantı yok"
+
+msgid "No blocked ports in recent events"
+msgstr "Son olaylarda engellenen port yok"
+
+msgid "No listening ports detected"
+msgstr "Dinleme portu algılanamadı"
+
+msgid "Off"
+msgstr "Kapalı"
+
+msgid "Out"
+msgstr "Dış"
+
+msgid "Outbound"
+msgstr "Çıkış"
+
+msgid "Outgoing"
+msgstr "Giden"
+
+msgid "Pause list updates"
+msgstr "Liste güncellemelerini duraklat"
+
+msgid "Port / Protocol"
+msgstr "Bağlantı Noktası / Protokol"
+
+msgid "Port / Service Name"
+msgstr "Port / Hizmet Adı"
+
+msgid "Profiles"
+msgstr "Profiller"
+
+msgid "Protocol"
+msgstr "Protokol"
+
+msgid "Quick Allow Port"
+msgstr "Hızlı Port İzin Ver"
+
+msgid "Recent Blocked Events"
+msgstr "Son Engellenen Olaylar"
+
+msgid "Recent Events Parsed"
+msgstr "Son Olaylar Ayrıştırıldı"
+
+msgid "Refresh"
+msgstr "Yenile"
+
+msgid "Reject"
+msgstr "Reddet"
+
+msgid "Resolve Domains"
+msgstr "Etki Alanlarını Çözümle"
+
+msgid "Rule added to block"
+msgstr "Blok listeye kural eklendi"
+
 msgid "Rules"
 msgstr "Kurallar"
 
-#: src/window.rs:92
-msgid "Profiles"
-msgstr "Profiller"
+msgid "Save"
+msgstr "Kaydet"
+
+msgid "Search Process or IP..."
+msgstr "İşlem veya IP ara..."
+
+msgid "Search rules..."
+msgstr "Kuralları ara..."
+
+msgid "Service"
+msgstr "Hizmet"
+
+msgid "Show"
+msgstr "Göster"
+
+msgid "Source IP"
+msgstr "Kaynak IP"
+
+msgid "Status"
+msgstr "Durum"
+
+msgid "TCP"
+msgstr "TCP"
+
+msgid "There are no rules configured yet."
+msgstr "Henüz yapılandırılmış kural yok."
+
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr "Bu işlem tüm özel kuralları silecektir. Bu işlem geri alınamaz."
+
+msgid ""
+"This will prevent the remote host from sending any packets to your machine."
+msgstr ""
+"Bu, uzaktaki ana makinenin bilgisayarınıza paket göndermesini engeller."
+
+msgid ""
+"This will prevent your machine from sending any packets to the remote host."
+msgstr "Bu, bilgisayarınızın uzak sunucuya paket göndermesini engeller."
+
+msgid "Top Blocked Connections"
+msgstr "En çok engellenen bağlantılar"
+
+msgid "Top Blocked Ports"
+msgstr "En Çok Engellenen Bağlantı Noktaları"
+
+msgid "UDP"
+msgstr "UDP"
+
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "ör. 80,443/tcp veya 8080"
+
+msgid "BitTorrent client"
+msgstr ""
+
+msgid "Common UNIX Printing System server"
+msgstr ""
+
+msgid "Continuous file synchronization"
+msgstr ""
+
+msgid "Docker container runtime API"
+msgstr ""
+
+msgid "Domain Name System server"
+msgstr ""
+
+msgid "Extensible Messaging and Presence Protocol"
+msgstr ""
+
+msgid "File Transfer Protocol"
+msgstr ""
+
+msgid "File synchronization service"
+msgstr "Dosya senkronizasyon hizmeti"
+
+msgid "Hypertext Transfer Protocol for web servers"
+msgstr ""
+
+msgid "In-memory data structure store"
+msgstr ""
+
+msgid "Internet Message Access Protocol for email"
+msgstr "E-posta için İnternet Mesaj Erişim Protokolü"
+
+msgid "Lightweight Directory Access Protocol"
+msgstr "Ağır Olmayan Dizin Erişim Protokolü"
+
+msgid "Media streaming server"
+msgstr "Mediya akış sunucusu"
+
+msgid "Modern VPN tunnel"
+msgstr "Modern VPN tüneli"
+
+msgid "Multicast DNS for local network discovery"
+msgstr "Yerel ağ keşfi için Çoklu Yayın DNS'i"
+
+msgid "MySQL database server"
+msgstr "MySQL veritabanı sunucusu"
+
+msgid "Network File System"
+msgstr "Ağ Dosya Sistemi"
+
+msgid "Network Time Protocol"
+msgstr "Bağlantı Noktası / Protokol"
+
+msgid "NoSQL document database"
+msgstr "NoSQL belge veritabanı"
+
+msgid "Phone and desktop integration"
+msgstr "Telefon ve masaüstü entegrasyonu"
+
+msgid "Plex media streaming server"
+msgstr "Plex medya akış sunucusu"
+
+msgid "Post Office Protocol for email retrieval"
+msgstr "E-posta almak için Post Office Protokolü"
+
+msgid "PostgreSQL database server"
+msgstr "PostgreSQL veritabanı sunucusu"
+
+msgid "Remote Desktop Protocol"
+msgstr "Bağlantı Noktası / Protokol"
+
+msgid "Secure HTTP for web servers"
+msgstr "Web sunucuları için Güvenli HTTP"
+
+msgid "Secure shell remote access"
+msgstr "Güvenli kabuk uzaktan erişimi"
+
+msgid "Simple Mail Transfer Protocol"
+msgstr "YBasit Posta Aktarım Protokolü"
+
+msgid "Virtual Network Computing remote desktop"
+msgstr "Virtual Network Computing uzaktan masaüstü"
+
+msgid "Windows file and printer sharing"
+msgstr "Windows dosya ve yazıcı paylaşımı"

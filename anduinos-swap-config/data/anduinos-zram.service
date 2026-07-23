@@ -1,0 +1,25 @@
+# AnduinOS Zram vendor default.
+#
+# This unit runs setup-zram.sh, which reads the optional config file
+# /etc/default/anduinos-zram (written by anduinos-swapcontrol-gtk).
+# If no config exists, it creates a single zram device at 50% RAM with
+# lz4 compression and swap priority 100.
+#
+# The service is installed to /usr/lib/systemd/system/ so the GUI
+# never overrides it — the GUI writes the declarative config instead.
+# systemd unit precedence (/etc > /run > /usr/lib) is not involved.
+[Unit]
+Description=AnduinOS Zram Devices
+DefaultDependencies=no
+After=systemd-journald.socket
+Before=swap.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# Default: 50% of total RAM, lz4 compression, priority 100
+ExecStart=/usr/sbin/modprobe zram
+ExecStart=/usr/lib/anduinos-swap-config/setup-zram.sh
+
+[Install]
+WantedBy=multi-user.target

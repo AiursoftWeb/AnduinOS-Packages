@@ -1,0 +1,17 @@
+# AnduinOS Zswap vendor default.
+# Reads /etc/default/anduinos-zswap (written by anduinos-swapcontrol-gtk).
+# If no config exists, zswap remains disabled until the user opts in.
+[Unit]
+Description=AnduinOS Zswap Configuration
+DefaultDependencies=no
+After=systemd-journald.socket
+Before=swap.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=-/usr/sbin/modprobe zswap
+ExecStart=/usr/lib/anduinos-swap-config/setup-zswap.sh
+
+[Install]
+WantedBy=multi-user.target

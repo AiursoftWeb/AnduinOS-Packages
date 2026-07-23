@@ -2,304 +2,373 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ufwall-gtk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
-#: src/widgets/rule_row.rs:80
-msgid "Delete Rule"
-msgstr "Видалити правило"
-
-#: src/widgets/rule_row.rs:81
-msgid "Delete rule"
-msgstr "Видалити правило"
-
-#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
-#: src/views/rules_view.rs:123
-msgid "Cancel"
-msgstr "Скасувати"
-
-#: src/widgets/rule_row.rs:85
-msgid "Delete"
-msgstr "Видалити"
-
-#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
-#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
-#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
-#: src/window.rs:245
-msgid "Error"
-msgstr "Помилка"
-
-#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
-msgid "Add Rule"
-msgstr "Додати правило"
-
-#: src/widgets/add_rule_dialog.rs:70
-msgid "Service"
-msgstr "Служба"
-
-#: src/widgets/add_rule_dialog.rs:72
-msgid "Custom"
-msgstr "Користувацький"
-
-#: src/widgets/add_rule_dialog.rs:89
-msgid "Port / Service Name"
-msgstr "Порт / Назва служби"
-
-#: src/widgets/add_rule_dialog.rs:93
-msgid "Action"
-msgstr "Дія"
-
-#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
-#: src/views/status_view.rs:113
-msgid "Deny"
-msgstr "Заборонити"
-
-#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
-#: src/views/status_view.rs:105 src/views/status_view.rs:114
-msgid "Allow"
-msgstr "Дозволити"
-
-#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
-#: src/views/status_view.rs:115
-msgid "Reject"
-msgstr "Відхилити"
-
-#: src/widgets/add_rule_dialog.rs:98
-msgid "Limit"
-msgstr "Обмеження"
-
-#: src/widgets/add_rule_dialog.rs:110
-msgid "Advanced"
-msgstr "Додатково"
-
-#: src/widgets/add_rule_dialog.rs:114
-msgid "Direction"
-msgstr "Напрямок"
-
-#: src/widgets/add_rule_dialog.rs:116
-msgid "In"
-msgstr "Вхід"
-
-#: src/widgets/add_rule_dialog.rs:117
-msgid "Out"
-msgstr "Назовні"
-
-#: src/widgets/add_rule_dialog.rs:122
-msgid "Protocol"
-msgstr "Протокол"
-
-#: src/widgets/add_rule_dialog.rs:124
-msgid "Both"
-msgstr "Обидва"
-
-#: src/widgets/add_rule_dialog.rs:125
-msgid "TCP"
-msgstr "TCP"
-
-#: src/widgets/add_rule_dialog.rs:126
-msgid "UDP"
-msgstr "UDP"
-
-#: src/widgets/add_rule_dialog.rs:131
-msgid "Source IP"
-msgstr "Вихідна IP-адреса"
-
-#: src/widgets/add_rule_dialog.rs:135
-msgid "Destination IP"
-msgstr "IP-адреса призначення"
-
-#: src/widgets/add_rule_dialog.rs:144
-msgid "Interface"
-msgstr "Інтерфейс"
-
-#: src/widgets/add_rule_dialog.rs:149
-msgid "Comment"
-msgstr "Коментар"
-
-#: src/widgets/add_rule_dialog.rs:154
-msgid "Insert Before Rule"
-msgstr "Вставити перед правилом"
-
-#: src/widgets/add_rule_dialog.rs:155
 msgid "0 = append at end"
 msgstr "0 = додати в кінець"
 
-#: src/widgets/add_rule_dialog.rs:170
-msgid "Add"
-msgstr "Додати"
-
-#: src/widgets/add_rule_dialog.rs:254
-msgid "Save"
-msgstr "Зберегти"
-
-#: src/views/dashboard_view.rs:56 src/window.rs:89
-msgid "Dashboard"
-msgstr "Головна"
-
-#: src/views/dashboard_view.rs:78
-msgid "Recent Events Parsed"
-msgstr "Нещодавні події розібрано"
-
-#: src/views/dashboard_view.rs:96
-msgid "Blocked Events"
-msgstr "Заблоковані події"
-
-#: src/views/dashboard_view.rs:117
-msgid "Top Blocked Connections"
-msgstr "Найбільш заблоковані з’єднання"
-
-#: src/views/dashboard_view.rs:123
-msgid "Top Blocked Ports"
-msgstr "Найбільш заблоковані порти"
-
-#: src/views/dashboard_view.rs:129
-msgid "Listening Ports"
-msgstr "Порти прослуховування"
-
-#: src/views/dashboard_view.rs:135
-msgid "Recent Blocked Events"
-msgstr "Нещодавні заблоковані події"
-
-#: src/views/dashboard_view.rs:139
-msgid "Show"
-msgstr "Показати"
-
-#: src/views/dashboard_view.rs:154
-msgid "Refresh"
-msgstr "Оновити"
-
-#: src/views/dashboard_view.rs:247
-msgid "No blocked connections in recent events"
-msgstr "Немає заблокованих з’єднань у недавніх подіях"
-
-#: src/views/dashboard_view.rs:296
-msgid "No blocked ports in recent events"
-msgstr "Немає заблокованих портів у недавніх подіях"
-
-#: src/views/dashboard_view.rs:344
-msgid "No listening ports detected"
-msgstr "Не виявлено жодного порту, що слухає"
-
-#: src/views/profiles_view.rs:76
-msgid "Application Profiles"
-msgstr "Профілі застосунків"
-
-#: src/views/profiles_view.rs:77
-msgid "Allow applications with predefined rules."
-msgstr "Дозволити програмам з попередньо визначеними правилами."
-
-#: src/views/profiles_view.rs:82
-msgid "Quick Allow Port"
-msgstr "Швидко дозволити порт"
-
-#: src/views/profiles_view.rs:83
-msgid "e.g. 80,443/tcp or 8080"
-msgstr "напр. 80,443/tcp або 8080"
-
-#: src/views/profiles_view.rs:87
-msgid "Port / Protocol"
-msgstr "Порт / Протокол"
-
-#: src/views/profiles_view.rs:119
-msgid "No Profiles"
-msgstr "Немає профілів"
-
-#: src/views/profiles_view.rs:120
-msgid "No application profiles found"
-msgstr "Профілі застосунків не знайдено"
-
-#: src/views/rules_view.rs:62
-msgid "Search rules..."
-msgstr "Пошук правил..."
-
-#: src/views/rules_view.rs:70
-msgid "Firewall Rules"
-msgstr "Правила брандмауера"
-
-#: src/views/rules_view.rs:75
-msgid "No Rules"
-msgstr "Немає правил"
-
-#: src/views/rules_view.rs:76
-msgid "There are no rules configured yet."
-msgstr "Правила ще не налаштовано."
-
-#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
-msgid "Delete All"
-msgstr "Видалити все"
-
-#: src/views/rules_view.rs:119
-msgid "Delete All Rules?"
-msgstr "Видалити всі правила?"
-
-#: src/views/rules_view.rs:120
-msgid "This will delete all custom rules. This action cannot be undone."
-msgstr "Це призведе до видалення всіх користувацьких правил. Цю дію не можна скасувати."
-
-#: src/views/status_view.rs:78 src/window.rs:90
-msgid "Status"
-msgstr "Стан"
-
-#: src/views/status_view.rs:89 src/window.rs:63
-msgid "Firewall"
-msgstr "Файрвол"
-
-#: src/views/status_view.rs:90 src/views/status_view.rs:282
-msgid "Inactive"
-msgstr "Неактивний"
-
-#: src/views/status_view.rs:97
-msgid "Default Policies"
-msgstr "Типові політики"
-
-#: src/views/status_view.rs:102
-msgid "Incoming"
-msgstr "Вхідні"
-
-#: src/views/status_view.rs:111
-msgid "Outgoing"
-msgstr "Вихідні"
-
-#: src/views/status_view.rs:124
-msgid "Logging"
-msgstr "Журналювання"
-
-#: src/views/status_view.rs:128
-msgid "Log Level"
-msgstr "Рівень журналу"
-
-#: src/views/status_view.rs:130
-msgid "Off"
-msgstr "Вимкнено"
-
-#: src/views/status_view.rs:131
-msgid "Low"
-msgstr "Низький"
-
-#: src/views/status_view.rs:132
-msgid "Medium"
-msgstr "Середній"
-
-#: src/views/status_view.rs:133
-msgid "High"
-msgstr "Високий"
-
-#: src/views/status_view.rs:134
-msgid "Full"
-msgstr "Повний"
-
-#: src/views/status_view.rs:282
-msgid "Active"
-msgstr "Активний"
-
-#: src/window.rs:80
 msgid "About"
 msgstr "Про програму"
 
-#: src/window.rs:91
+msgid "Action"
+msgstr "Дія"
+
+msgid "Active"
+msgstr "Активний"
+
+msgid "Add"
+msgstr "Додати"
+
+msgid "Add Rule"
+msgstr "Додати правило"
+
+msgid "Advanced"
+msgstr "Додатково"
+
+msgid "All"
+msgstr "Усі"
+
+msgid "Allow"
+msgstr "Дозволити"
+
+msgid "Allow applications with predefined rules."
+msgstr "Дозволити програмам з попередньо визначеними правилами."
+
+msgid "Application Profiles"
+msgstr "Профілі застосунків"
+
+msgid "Audit"
+msgstr "Аудит"
+
+msgid "Auditor Error"
+msgstr "Помилка аудитора"
+
+msgid "Block"
+msgstr "Блокувати"
+
+msgid "Block Connection?"
+msgstr "Блокувати з'єднання?"
+
+msgid "Block inbound traffic from"
+msgstr "Заблокувати вхідний трафік від"
+
+msgid "Block outbound traffic to"
+msgstr "Заблокувати вихідний трафік до"
+
+msgid "Blocked Events"
+msgstr "Заблоковані події"
+
+msgid "Blocked Successfully"
+msgstr "Успішно заблоковано"
+
+msgid "Both"
+msgstr "Обидва"
+
+msgid "Cancel"
+msgstr "Скасувати"
+
+msgid "Comment"
+msgstr "Коментар"
+
+msgid "Custom"
+msgstr "Користувацький"
+
+msgid "Dashboard"
+msgstr "Головна"
+
+msgid "Default Policies"
+msgstr "Типові політики"
+
+msgid "Delete"
+msgstr "Видалити"
+
+msgid "Delete All"
+msgstr "Видалити все"
+
+msgid "Delete All Rules?"
+msgstr "Видалити всі правила?"
+
+msgid "Delete Rule"
+msgstr "Видалити правило"
+
+msgid "Delete rule"
+msgstr "Видалити правило"
+
+msgid "Deny"
+msgstr "Заборонити"
+
+msgid "Destination IP"
+msgstr "IP-адреса призначення"
+
+msgid "Direction"
+msgstr "Напрямок"
+
+msgid "Error"
+msgstr "Помилка"
+
+msgid "Failed to Block"
+msgstr "Не вдалося заблокувати"
+
+msgid "Firewall"
+msgstr "Файрвол"
+
+msgid "Firewall Rules"
+msgstr "Правила брандмауера"
+
+msgid "Full"
+msgstr "Повний"
+
+msgid "High"
+msgstr "Високий"
+
+msgid "In"
+msgstr "Вхід"
+
+msgid "Inactive"
+msgstr "Неактивний"
+
+msgid "Inbound"
+msgstr "Вхідний"
+
+msgid "Incoming"
+msgstr "Вхідні"
+
+msgid "Insert Before Rule"
+msgstr "Вставити перед правилом"
+
+msgid "Interface"
+msgstr "Інтерфейс"
+
+msgid "Limit"
+msgstr "Обмеження"
+
+msgid "Listening Ports"
+msgstr "Порти прослуховування"
+
+msgid "Log Level"
+msgstr "Рівень журналу"
+
+msgid "Logging"
+msgstr "Журналювання"
+
+msgid "Low"
+msgstr "Низький"
+
+msgid "Medium"
+msgstr "Середній"
+
+msgid "Monitoring Network Activity"
+msgstr "Моніторинг мережевої активності"
+
+msgid "No Profiles"
+msgstr "Немає профілів"
+
+msgid "No Rules"
+msgstr "Немає правил"
+
+msgid "No application profiles found"
+msgstr "Профілі застосунків не знайдено"
+
+msgid "No blocked connections in recent events"
+msgstr "Немає заблокованих з’єднань у недавніх подіях"
+
+msgid "No blocked ports in recent events"
+msgstr "Немає заблокованих портів у недавніх подіях"
+
+msgid "No listening ports detected"
+msgstr "Не виявлено жодного порту, що слухає"
+
+msgid "Off"
+msgstr "Вимкнено"
+
+msgid "Out"
+msgstr "Назовні"
+
+msgid "Outbound"
+msgstr "Вихідний"
+
+msgid "Outgoing"
+msgstr "Вихідні"
+
+msgid "Pause list updates"
+msgstr "Призупинити оновлення списків"
+
+msgid "Port / Protocol"
+msgstr "Порт / Протокол"
+
+msgid "Port / Service Name"
+msgstr "Порт / Назва служби"
+
+msgid "Profiles"
+msgstr "Профілі"
+
+msgid "Protocol"
+msgstr "Протокол"
+
+msgid "Quick Allow Port"
+msgstr "Швидко дозволити порт"
+
+msgid "Recent Blocked Events"
+msgstr "Нещодавні заблоковані події"
+
+msgid "Recent Events Parsed"
+msgstr "Нещодавні події розібрано"
+
+msgid "Refresh"
+msgstr "Оновити"
+
+msgid "Reject"
+msgstr "Відхилити"
+
+msgid "Resolve Domains"
+msgstr "Розв'язати домени"
+
+msgid "Rule added to block"
+msgstr "Правило додано до блокування"
+
 msgid "Rules"
 msgstr "Правила"
 
-#: src/window.rs:92
-msgid "Profiles"
-msgstr "Профілі"
+msgid "Save"
+msgstr "Зберегти"
+
+msgid "Search Process or IP..."
+msgstr "Пошук процесу або IP..."
+
+msgid "Search rules..."
+msgstr "Пошук правил..."
+
+msgid "Service"
+msgstr "Служба"
+
+msgid "Show"
+msgstr "Показати"
+
+msgid "Source IP"
+msgstr "Вихідна IP-адреса"
+
+msgid "Status"
+msgstr "Стан"
+
+msgid "TCP"
+msgstr "TCP"
+
+msgid "There are no rules configured yet."
+msgstr "Правила ще не налаштовано."
+
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr ""
+"Це призведе до видалення всіх користувацьких правил. Цю дію не можна "
+"скасувати."
+
+msgid ""
+"This will prevent the remote host from sending any packets to your machine."
+msgstr ""
+"Це запобігатиме надсиланню пакетів від віддаленого хоста на ваш комп'ютер."
+
+msgid ""
+"This will prevent your machine from sending any packets to the remote host."
+msgstr ""
+"Це запобігатиме надсиланню пакетів з вашого комп'ютера на віддалений хост."
+
+msgid "Top Blocked Connections"
+msgstr "Найбільш блоковані з'єднання"
+
+msgid "Top Blocked Ports"
+msgstr "Найбільш заблоковані порти"
+
+msgid "UDP"
+msgstr "UDP"
+
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "напр. 80,443/tcp або 8080"
+
+msgid "BitTorrent client"
+msgstr "Клієнт BitTorrent"
+
+msgid "Common UNIX Printing System server"
+msgstr "Сервер Common UNIX Printing System"
+
+msgid "Continuous file synchronization"
+msgstr "Безперервна синхронізація файлів"
+
+msgid "Docker container runtime API"
+msgstr "Runtime API контейнера Docker"
+
+msgid "Domain Name System server"
+msgstr "Сервер системи імен доменів (DNS)"
+
+msgid "Extensible Messaging and Presence Protocol"
+msgstr ""
+"Протокол розширюваного обміну повідомленнями та відстеження присутності "
+"(XMPP)"
+
+msgid "File Transfer Protocol"
+msgstr "Протокол передачі файлів (FTP)"
+
+msgid "File synchronization service"
+msgstr "Сервіс синхронізації файлів"
+
+msgid "Hypertext Transfer Protocol for web servers"
+msgstr "Протокол передачі гіпертексту (HTTP) для веб-серверів"
+
+msgid "In-memory data structure store"
+msgstr "Сховище структур даних в оперативній пам'яті"
+
+msgid "Internet Message Access Protocol for email"
+msgstr "Протокол доступу до поштових повідомлень (IMAP) для електронної пошти"
+
+msgid "Lightweight Directory Access Protocol"
+msgstr "Легковажний протокол доступу до каталогів (LDAP)"
+
+msgid "Media streaming server"
+msgstr "Сервер потокової передачі медіа"
+
+msgid "Modern VPN tunnel"
+msgstr "Сучасний тунель VPN"
+
+msgid "Multicast DNS for local network discovery"
+msgstr "Multicast DNS для виявлення в локальній мережі"
+
+msgid "MySQL database server"
+msgstr "Сервер бази даних MySQL"
+
+msgid "Network File System"
+msgstr "Мережева файловая система (NFS)"
+
+msgid "Network Time Protocol"
+msgstr "Порт / Протокол"
+
+msgid "NoSQL document database"
+msgstr "Документна база даних NoSQL"
+
+msgid "Phone and desktop integration"
+msgstr "Інтеграція телефону та комп'ютера"
+
+msgid "Plex media streaming server"
+msgstr "Сервер потокової передачі медіа Plex"
+
+msgid "Post Office Protocol for email retrieval"
+msgstr "Протокол поштового відділення (POP) для отримання електронної пошти"
+
+msgid "PostgreSQL database server"
+msgstr "Сервер бази даних PostgreSQL"
+
+msgid "Remote Desktop Protocol"
+msgstr "Порт / Протокол"
+
+msgid "Secure HTTP for web servers"
+msgstr "Безпечний HTTP (HTTPS) для веб-серверів"
+
+msgid "Secure shell remote access"
+msgstr "Безпечний доступ до оболонки (SSH)"
+
+msgid "Simple Mail Transfer Protocol"
+msgstr "Протокол передачі пошти (SMTP)"
+
+msgid "Virtual Network Computing remote desktop"
+msgstr "Віддалений робочий стіл VNC"
+
+msgid "Windows file and printer sharing"
+msgstr "Спільний доступ до файлів і принтерів Windows"

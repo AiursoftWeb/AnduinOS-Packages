@@ -2,304 +2,369 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ufwall-gtk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 17:33+0000\n"
+"POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
-#: src/widgets/rule_row.rs:80
-msgid "Delete Rule"
-msgstr "Xoá quy tắc"
-
-#: src/widgets/rule_row.rs:81
-msgid "Delete rule"
-msgstr "Xóa quy tắc"
-
-#: src/widgets/rule_row.rs:84 src/widgets/add_rule_dialog.rs:168
-#: src/views/rules_view.rs:123
-msgid "Cancel"
-msgstr "Hủy"
-
-#: src/widgets/rule_row.rs:85
-msgid "Delete"
-msgstr "Xóa"
-
-#: src/widgets/rule_row.rs:104 src/widgets/add_rule_dialog.rs:325
-#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
-#: src/views/rules_view.rs:138 src/views/status_view.rs:163 src/window.rs:233
-#: src/window.rs:245
-msgid "Error"
-msgstr "Lỗi"
-
-#: src/widgets/add_rule_dialog.rs:57 src/views/rules_view.rs:93
-msgid "Add Rule"
-msgstr "Thêm Quy Tắc"
-
-#: src/widgets/add_rule_dialog.rs:70
-msgid "Service"
-msgstr "Dịch vụ"
-
-#: src/widgets/add_rule_dialog.rs:72
-msgid "Custom"
-msgstr "Tùy chỉnh"
-
-#: src/widgets/add_rule_dialog.rs:89
-msgid "Port / Service Name"
-msgstr "Cổng / Tên dịch vụ"
-
-#: src/widgets/add_rule_dialog.rs:93
-msgid "Action"
-msgstr "Hành động"
-
-#: src/widgets/add_rule_dialog.rs:95 src/views/status_view.rs:104
-#: src/views/status_view.rs:113
-msgid "Deny"
-msgstr "Từ chối"
-
-#: src/widgets/add_rule_dialog.rs:96 src/views/profiles_view.rs:92
-#: src/views/status_view.rs:105 src/views/status_view.rs:114
-msgid "Allow"
-msgstr "Cho phép"
-
-#: src/widgets/add_rule_dialog.rs:97 src/views/status_view.rs:106
-#: src/views/status_view.rs:115
-msgid "Reject"
-msgstr "Từ chối"
-
-#: src/widgets/add_rule_dialog.rs:98
-msgid "Limit"
-msgstr "Giới hạn"
-
-#: src/widgets/add_rule_dialog.rs:110
-msgid "Advanced"
-msgstr "Nâng cao"
-
-#: src/widgets/add_rule_dialog.rs:114
-msgid "Direction"
-msgstr "Hướng"
-
-#: src/widgets/add_rule_dialog.rs:116
-msgid "In"
-msgstr "Vào"
-
-#: src/widgets/add_rule_dialog.rs:117
-msgid "Out"
-msgstr "Ra"
-
-#: src/widgets/add_rule_dialog.rs:122
-msgid "Protocol"
-msgstr "Giao thức"
-
-#: src/widgets/add_rule_dialog.rs:124
-msgid "Both"
-msgstr "Cả hai"
-
-#: src/widgets/add_rule_dialog.rs:125
-msgid "TCP"
-msgstr "TCP"
-
-#: src/widgets/add_rule_dialog.rs:126
-msgid "UDP"
-msgstr "UDP"
-
-#: src/widgets/add_rule_dialog.rs:131
-msgid "Source IP"
-msgstr "Địa chỉ IP nguồn"
-
-#: src/widgets/add_rule_dialog.rs:135
-msgid "Destination IP"
-msgstr "Địa chỉ IP đích"
-
-#: src/widgets/add_rule_dialog.rs:144
-msgid "Interface"
-msgstr "Giao diện"
-
-#: src/widgets/add_rule_dialog.rs:149
-msgid "Comment"
-msgstr "Ghi chú"
-
-#: src/widgets/add_rule_dialog.rs:154
-msgid "Insert Before Rule"
-msgstr "Chèn trước quy tắc"
-
-#: src/widgets/add_rule_dialog.rs:155
 msgid "0 = append at end"
 msgstr "0 = nối vào cuối"
 
-#: src/widgets/add_rule_dialog.rs:170
-msgid "Add"
-msgstr "Thêm"
-
-#: src/widgets/add_rule_dialog.rs:254
-msgid "Save"
-msgstr "Lưu"
-
-#: src/views/dashboard_view.rs:56 src/window.rs:89
-msgid "Dashboard"
-msgstr "Bảng điều khiển"
-
-#: src/views/dashboard_view.rs:78
-msgid "Recent Events Parsed"
-msgstr "Các sự kiện gần đây đã được phân tích"
-
-#: src/views/dashboard_view.rs:96
-msgid "Blocked Events"
-msgstr "Sự kiện bị chặn"
-
-#: src/views/dashboard_view.rs:117
-msgid "Top Blocked Connections"
-msgstr "Các kết nối bị chặn hàng đầu"
-
-#: src/views/dashboard_view.rs:123
-msgid "Top Blocked Ports"
-msgstr "Các Cổng Bị Chặn Hàng Đầu"
-
-#: src/views/dashboard_view.rs:129
-msgid "Listening Ports"
-msgstr "Cổng đang lắng nghe"
-
-#: src/views/dashboard_view.rs:135
-msgid "Recent Blocked Events"
-msgstr "Các sự kiện bị chặn gần đây"
-
-#: src/views/dashboard_view.rs:139
-msgid "Show"
-msgstr "Hiển thị"
-
-#: src/views/dashboard_view.rs:154
-msgid "Refresh"
-msgstr "Làm mới"
-
-#: src/views/dashboard_view.rs:247
-msgid "No blocked connections in recent events"
-msgstr "Không có kết nối bị chặn trong các sự kiện gần đây"
-
-#: src/views/dashboard_view.rs:296
-msgid "No blocked ports in recent events"
-msgstr "Không có cổng bị chặn trong các sự kiện gần đây"
-
-#: src/views/dashboard_view.rs:344
-msgid "No listening ports detected"
-msgstr "Không phát hiện cổng lắng nghe nào"
-
-#: src/views/profiles_view.rs:76
-msgid "Application Profiles"
-msgstr "Hồ sơ ứng dụng"
-
-#: src/views/profiles_view.rs:77
-msgid "Allow applications with predefined rules."
-msgstr "Cho phép các ứng dụng với các quy tắc được xác định trước."
-
-#: src/views/profiles_view.rs:82
-msgid "Quick Allow Port"
-msgstr "Cho phép nhanh cổng"
-
-#: src/views/profiles_view.rs:83
-msgid "e.g. 80,443/tcp or 8080"
-msgstr "vd. 80,443/tcp hoặc 8080"
-
-#: src/views/profiles_view.rs:87
-msgid "Port / Protocol"
-msgstr "Cổng / Giao thức"
-
-#: src/views/profiles_view.rs:119
-msgid "No Profiles"
-msgstr "Không có Hồ sơ"
-
-#: src/views/profiles_view.rs:120
-msgid "No application profiles found"
-msgstr "Không tìm thấy hồ sơ ứng dụng nào"
-
-#: src/views/rules_view.rs:62
-msgid "Search rules..."
-msgstr "Tìm kiếm quy tắc..."
-
-#: src/views/rules_view.rs:70
-msgid "Firewall Rules"
-msgstr "Quy tắc tường lửa"
-
-#: src/views/rules_view.rs:75
-msgid "No Rules"
-msgstr "Không có quy tắc"
-
-#: src/views/rules_view.rs:76
-msgid "There are no rules configured yet."
-msgstr "Chưa có quy tắc nào được cấu hình."
-
-#: src/views/rules_view.rs:109 src/views/rules_view.rs:124
-msgid "Delete All"
-msgstr "Xóa tất cả"
-
-#: src/views/rules_view.rs:119
-msgid "Delete All Rules?"
-msgstr "Xóa tất cả quy tắc?"
-
-#: src/views/rules_view.rs:120
-msgid "This will delete all custom rules. This action cannot be undone."
-msgstr "Điều này sẽ xóa tất cả các quy tắc tùy chỉnh. Hành động này không thể hoàn tác."
-
-#: src/views/status_view.rs:78 src/window.rs:90
-msgid "Status"
-msgstr "Trạng thái"
-
-#: src/views/status_view.rs:89 src/window.rs:63
-msgid "Firewall"
-msgstr "Tường lửa"
-
-#: src/views/status_view.rs:90 src/views/status_view.rs:282
-msgid "Inactive"
-msgstr "Không hoạt động"
-
-#: src/views/status_view.rs:97
-msgid "Default Policies"
-msgstr "Chính sách mặc định"
-
-#: src/views/status_view.rs:102
-msgid "Incoming"
-msgstr "Đến"
-
-#: src/views/status_view.rs:111
-msgid "Outgoing"
-msgstr "Đi ra"
-
-#: src/views/status_view.rs:124
-msgid "Logging"
-msgstr "Ghi nhật ký"
-
-#: src/views/status_view.rs:128
-msgid "Log Level"
-msgstr "Mức độ nhật ký"
-
-#: src/views/status_view.rs:130
-msgid "Off"
-msgstr "Tắt"
-
-#: src/views/status_view.rs:131
-msgid "Low"
-msgstr "Thấp"
-
-#: src/views/status_view.rs:132
-msgid "Medium"
-msgstr "Trung bình"
-
-#: src/views/status_view.rs:133
-msgid "High"
-msgstr "Cao"
-
-#: src/views/status_view.rs:134
-msgid "Full"
-msgstr "Toàn bộ"
-
-#: src/views/status_view.rs:282
-msgid "Active"
-msgstr "Hoạt động"
-
-#: src/window.rs:80
 msgid "About"
 msgstr "Giới thiệu"
 
-#: src/window.rs:91
+msgid "Action"
+msgstr "Hành động"
+
+msgid "Active"
+msgstr "Hoạt động"
+
+msgid "Add"
+msgstr "Thêm"
+
+msgid "Add Rule"
+msgstr "Thêm Quy Tắc"
+
+msgid "Advanced"
+msgstr "Nâng cao"
+
+msgid "All"
+msgstr "Tất cả"
+
+msgid "Allow"
+msgstr "Cho phép"
+
+msgid "Allow applications with predefined rules."
+msgstr "Cho phép các ứng dụng với các quy tắc được xác định trước."
+
+msgid "Application Profiles"
+msgstr "Hồ sơ ứng dụng"
+
+msgid "Audit"
+msgstr "Kiểm toán"
+
+msgid "Auditor Error"
+msgstr "Lỗi của Kiểm toán viên"
+
+msgid "Block"
+msgstr "Chặn"
+
+msgid "Block Connection?"
+msgstr "Chặn kết nối?"
+
+msgid "Block inbound traffic from"
+msgstr "Chặn lưu lượng truy cập đến từ"
+
+msgid "Block outbound traffic to"
+msgstr "Chặn lưu lượng truy cập đi đến"
+
+msgid "Blocked Events"
+msgstr "Sự kiện bị chặn"
+
+msgid "Blocked Successfully"
+msgstr "Đã chặn thành công"
+
+msgid "Both"
+msgstr "Cả hai"
+
+msgid "Cancel"
+msgstr "Hủy"
+
+msgid "Comment"
+msgstr "Ghi chú"
+
+msgid "Custom"
+msgstr "Tùy chỉnh"
+
+msgid "Dashboard"
+msgstr "Bảng điều khiển"
+
+msgid "Default Policies"
+msgstr "Chính sách mặc định"
+
+msgid "Delete"
+msgstr "Xóa"
+
+msgid "Delete All"
+msgstr "Xóa tất cả"
+
+msgid "Delete All Rules?"
+msgstr "Xóa tất cả quy tắc?"
+
+msgid "Delete Rule"
+msgstr "Xoá quy tắc"
+
+msgid "Delete rule"
+msgstr "Xóa quy tắc"
+
+msgid "Deny"
+msgstr "Từ chối"
+
+msgid "Destination IP"
+msgstr "Địa chỉ IP đích"
+
+msgid "Direction"
+msgstr "Hướng"
+
+msgid "Error"
+msgstr "Lỗi"
+
+msgid "Failed to Block"
+msgstr "Không thể Chặn"
+
+msgid "Firewall"
+msgstr "Tường lửa"
+
+msgid "Firewall Rules"
+msgstr "Quy tắc tường lửa"
+
+msgid "Full"
+msgstr "Toàn bộ"
+
+msgid "High"
+msgstr "Cao"
+
+msgid "In"
+msgstr "Vào"
+
+msgid "Inactive"
+msgstr "Không hoạt động"
+
+msgid "Inbound"
+msgstr "Lưu lượng đến"
+
+msgid "Incoming"
+msgstr "Đến"
+
+msgid "Insert Before Rule"
+msgstr "Chèn trước quy tắc"
+
+msgid "Interface"
+msgstr "Giao diện"
+
+msgid "Limit"
+msgstr "Giới hạn"
+
+msgid "Listening Ports"
+msgstr "Cổng đang lắng nghe"
+
+msgid "Log Level"
+msgstr "Mức độ nhật ký"
+
+msgid "Logging"
+msgstr "Ghi nhật ký"
+
+msgid "Low"
+msgstr "Thấp"
+
+msgid "Medium"
+msgstr "Trung bình"
+
+msgid "Monitoring Network Activity"
+msgstr "Giám sát hoạt động mạng"
+
+msgid "No Profiles"
+msgstr "Không có Hồ sơ"
+
+msgid "No Rules"
+msgstr "Không có quy tắc"
+
+msgid "No application profiles found"
+msgstr "Không tìm thấy hồ sơ ứng dụng nào"
+
+msgid "No blocked connections in recent events"
+msgstr "Không có kết nối bị chặn trong các sự kiện gần đây"
+
+msgid "No blocked ports in recent events"
+msgstr "Không có cổng bị chặn trong các sự kiện gần đây"
+
+msgid "No listening ports detected"
+msgstr "Không phát hiện cổng lắng nghe nào"
+
+msgid "Off"
+msgstr "Tắt"
+
+msgid "Out"
+msgstr "Ra"
+
+msgid "Outbound"
+msgstr "Lưu lượng đi"
+
+msgid "Outgoing"
+msgstr "Đi ra"
+
+msgid "Pause list updates"
+msgstr "Tạm dừng cập nhật danh sách"
+
+msgid "Port / Protocol"
+msgstr "Cổng / Giao thức"
+
+msgid "Port / Service Name"
+msgstr "Cổng / Tên dịch vụ"
+
+msgid "Profiles"
+msgstr "Hồ sơ"
+
+msgid "Protocol"
+msgstr "Giao thức"
+
+msgid "Quick Allow Port"
+msgstr "Cho phép nhanh cổng"
+
+msgid "Recent Blocked Events"
+msgstr "Các sự kiện bị chặn gần đây"
+
+msgid "Recent Events Parsed"
+msgstr "Các sự kiện gần đây đã được phân tích"
+
+msgid "Refresh"
+msgstr "Làm mới"
+
+msgid "Reject"
+msgstr "Từ chối"
+
+msgid "Resolve Domains"
+msgstr "Phân giải tên miền"
+
+msgid "Rule added to block"
+msgstr "Quy tắc đã được thêm vào danh sách chặn"
+
 msgid "Rules"
 msgstr "Quy tắc"
 
-#: src/window.rs:92
-msgid "Profiles"
-msgstr "Hồ sơ"
+msgid "Save"
+msgstr "Lưu"
+
+msgid "Search Process or IP..."
+msgstr "Tìm kiếm Tiến trình hoặc IP..."
+
+msgid "Search rules..."
+msgstr "Tìm kiếm quy tắc..."
+
+msgid "Service"
+msgstr "Dịch vụ"
+
+msgid "Show"
+msgstr "Hiển thị"
+
+msgid "Source IP"
+msgstr "Địa chỉ IP nguồn"
+
+msgid "Status"
+msgstr "Trạng thái"
+
+msgid "TCP"
+msgstr "TCP"
+
+msgid "There are no rules configured yet."
+msgstr "Chưa có quy tắc nào được cấu hình."
+
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr ""
+"Điều này sẽ xóa tất cả các quy tắc tùy chỉnh. Hành động này không thể hoàn "
+"tác."
+
+msgid ""
+"This will prevent the remote host from sending any packets to your machine."
+msgstr "Thao tác này sẽ ngăn máy chủ từ xa gửi gói tin đến máy của bạn."
+
+msgid ""
+"This will prevent your machine from sending any packets to the remote host."
+msgstr "Thao tác này sẽ ngăn máy của bạn gửi gói tin đến máy chủ từ xa."
+
+msgid "Top Blocked Connections"
+msgstr "Kết nối bị chặn nhiều nhất"
+
+msgid "Top Blocked Ports"
+msgstr "Các Cổng Bị Chặn Hàng Đầu"
+
+msgid "UDP"
+msgstr "UDP"
+
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "vd. 80,443/tcp hoặc 8080"
+
+msgid "BitTorrent client"
+msgstr "Client BitTorrent"
+
+msgid "Common UNIX Printing System server"
+msgstr "Máy chủ Common UNIX Printing System"
+
+msgid "Continuous file synchronization"
+msgstr "Đồng bộ hóa tệp liên tục"
+
+msgid "Docker container runtime API"
+msgstr "Giao diện lập trình ứng dụng thời gian chạy container Docker"
+
+msgid "Domain Name System server"
+msgstr "Máy chủ Hệ thống Tên miền"
+
+msgid "Extensible Messaging and Presence Protocol"
+msgstr "Giao thức Tin nhắn và Hiện diện Mở rộng"
+
+msgid "File Transfer Protocol"
+msgstr "Giao thức Truyền tải Tệp"
+
+msgid "File synchronization service"
+msgstr "Dịch vụ đồng bộ hóa tệp"
+
+msgid "Hypertext Transfer Protocol for web servers"
+msgstr "Giao thức Truyền tải Siêu văn bản cho máy chủ web"
+
+msgid "In-memory data structure store"
+msgstr "Cửa hàng cấu trúc dữ liệu trong bộ nhớ"
+
+msgid "Internet Message Access Protocol for email"
+msgstr "Giao thức Truy cập Tin nhắn Internet cho email"
+
+msgid "Lightweight Directory Access Protocol"
+msgstr "Giao thức Truy cập Thư mục Nhẹ"
+
+msgid "Media streaming server"
+msgstr "Máy chủ phát trực tiếp phương tiện"
+
+msgid "Modern VPN tunnel"
+msgstr "Khung VPN hiện đại"
+
+msgid "Multicast DNS for local network discovery"
+msgstr "DNS đa phát để khám phá mạng cục bộ"
+
+msgid "MySQL database server"
+msgstr "Máy chủ cơ sở dữ liệu MySQL"
+
+msgid "Network File System"
+msgstr "Hệ thống Tệp Mạng"
+
+msgid "Network Time Protocol"
+msgstr "Cổng / Giao thức"
+
+msgid "NoSQL document database"
+msgstr "Cơ sở dữ liệu tài liệu NoSQL"
+
+msgid "Phone and desktop integration"
+msgstr "Tích hợp điện thoại và máy tính để bàn"
+
+msgid "Plex media streaming server"
+msgstr "Máy chủ phát trực tiếp phương tiện Plex"
+
+msgid "Post Office Protocol for email retrieval"
+msgstr "Giao thức Bưu điện để truy xuất email"
+
+msgid "PostgreSQL database server"
+msgstr "Máy chủ cơ sở dữ liệu PostgreSQL"
+
+msgid "Remote Desktop Protocol"
+msgstr "Cổng / Giao thức"
+
+msgid "Secure HTTP for web servers"
+msgstr "HTTP an toàn cho máy chủ web"
+
+msgid "Secure shell remote access"
+msgstr "Truy cập từ xa qua shell bảo mật"
+
+msgid "Simple Mail Transfer Protocol"
+msgstr "Giao thức Truyền tải Thư đơn giản"
+
+msgid "Virtual Network Computing remote desktop"
+msgstr "Máy tính để bàn từ xa Virtual Network Computing"
+
+msgid "Windows file and printer sharing"
+msgstr "Chia sẻ tệp và máy in Windows"

@@ -1,0 +1,18 @@
+#!/bin/bash
+# AnduinOS Swap Control helper — single polkit entry point
+# All privileged operations route through this script so polkit caches one auth.
+cmd="$1"; shift
+case "$cmd" in
+    swapon)    /usr/sbin/swapon "$@" ;;
+    swapoff)   /usr/sbin/swapoff "$@" ;;
+    mkswap)    /usr/sbin/mkswap "$@" ;;
+    dd)        /usr/bin/dd "$@" ;;
+    chmod)     /usr/bin/chmod "$@" ;;
+    rm)        /usr/bin/rm "$@" ;;
+    sysctl)    /usr/sbin/sysctl "$@" ;;
+    modprobe)  /usr/sbin/modprobe "$@" ;;
+    tee)       /usr/bin/tee "$@" ;;
+    systemctl) /usr/bin/systemctl "$@" ;;
+    dmidecode) /usr/sbin/dmidecode "$@" ;;
+    *)         echo "Unknown command: $cmd" >&2; exit 1 ;;
+esac

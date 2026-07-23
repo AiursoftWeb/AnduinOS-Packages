@@ -74,7 +74,7 @@ impl RulesView {
         let empty_state = adw::StatusPage::builder()
             .title(i18n("No Rules"))
             .description(i18n("There are no rules configured yet."))
-            .icon_name("network-firewall-symbolic")
+            .icon_name("network-firewall")
             .build();
         rules_group.add(&empty_state);
 
@@ -114,11 +114,9 @@ impl RulesView {
         let weak_self2 = self.downgrade();
         reset_btn.connect_clicked(move |_| {
             if let Some(view) = weak_self2.upgrade() {
-                if let Some(root) = view.root() {
-                    let dialog = adw::MessageDialog::builder()
+                    let dialog = adw::AlertDialog::builder()
                         .heading(i18n("Delete All Rules?"))
                         .body(i18n("This will delete all custom rules. This action cannot be undone."))
-                        .modal(true)
                         .build();
                     dialog.add_response("cancel", &i18n("Cancel"));
                     dialog.add_response("delete_all", &i18n("Delete All"));
@@ -127,7 +125,8 @@ impl RulesView {
                     dialog.set_close_response("cancel");
 
                     let v = view.downgrade();
-                    dialog.connect_response(None, move |_, response| {
+                    let parent_window = view.root().and_then(|r| r.downcast::<gtk::Window>().ok());
+                    dialog.choose(parent_window.as_ref(), gtk::gio::Cancellable::NONE, move |response| {
                         if response == "delete_all" {
                             if let Some(view) = v.upgrade() {
                                 glib::spawn_future_local(async move {
@@ -141,12 +140,6 @@ impl RulesView {
                             }
                         }
                     });
-                    
-                    if let Ok(window) = root.downcast::<gtk::Window>() {
-                        dialog.set_transient_for(Some(&window));
-                        dialog.present();
-                    }
-                }
             }
         });
 
@@ -207,19 +200,42 @@ impl RulesView {
                         }
                     }
 
-                    let rule_num = rule.number;
+                    
                     let weak_self_clone = weak_self.clone();
                     let on_edit = Box::new(move |num: u32| {
                         if let Some(view) = weak_self_clone.upgrade() {
                             view.on_edit_rule(num);
                         }
                     });
-                    let row = RuleRow::new(rule, on_edit);
+                    let weak_self_clone2 = weak_self.clone();
+                    let on_deleted = Box::new(move || {
+                        if let Some(view) = weak_self_clone2.upgrade() {
+                            view.refresh_rules();
+                        }
+                    });
+                    let row = RuleRow::new(rule, on_edit, on_deleted);
                     group.add(&row);
                     added.push(row.upcast::<gtk::Widget>());
                 }
             }
         }
+    }
+
+    fn refresh_rules(&self) {
+        let weak_self = self.downgrade();
+        glib::spawn_future_local(async move {
+            let result = tokio::task::spawn_blocking(|| {
+                backend::read_status()
+            }).await.unwrap();
+            if let Some(view) = weak_self.upgrade() {
+                match result {
+                    Ok(status) => view.update(&status),
+                    Err(e) => {
+                        eprintln!("refresh_rules: failed to read status: {}", e);
+                    }
+                }
+            }
+        });
     }
 
     fn on_edit_rule(&self, num: u32) {
@@ -237,11 +253,8 @@ impl RulesView {
     fn apply_filter(&self, _filter: String) {
         // Re-render with current rules and filter
         let imp = self.imp();
-        let rules = imp.current_rules.borrow().clone();
-        let status = UfwStatus {
-            rules,
-            ..Default::default()
-        };
+        
+        
         // Only re-render rules, don't call backend again
         if let Some(group) = imp.rules_group.borrow().as_ref() {
             for row in imp.added_rows.borrow().iter() {
@@ -278,7 +291,13 @@ impl RulesView {
                         view.on_edit_rule(num);
                     }
                 });
-                let row = RuleRow::new(rule, on_edit);
+                let weak_self_clone2 = weak_self.clone();
+                let on_deleted = Box::new(move || {
+                    if let Some(view) = weak_self_clone2.upgrade() {
+                        view.refresh_rules();
+                    }
+                });
+                let row = RuleRow::new(rule, on_edit, on_deleted);
                 group.add(&row);
                 added.push(row.upcast::<gtk::Widget>());
             }
