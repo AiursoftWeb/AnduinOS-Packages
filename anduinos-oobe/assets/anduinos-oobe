@@ -3769,11 +3769,14 @@ class OobeWindow(Adw.ApplicationWindow):
         else:
             self.next_btn.set_visible(not hide_next)
         
+        if idx == 1 and self.is_oobe:
+            # Mark OOBE as seen once user reaches the Appearance page.
+            # No need to nag them again even if they close the window here.
+            os.makedirs(os.path.dirname(MARKER_FILE), exist_ok=True)
+            open(MARKER_FILE, 'a').close()
+
         if idx >= n_pages - 1:
             self.next_btn.set_label(_('Finish'))
-            if self.is_oobe:
-                os.makedirs(os.path.dirname(MARKER_FILE), exist_ok=True)
-                open(MARKER_FILE, 'a').close()
         else:
             self.next_btn.set_label(_('Next →'))
 
