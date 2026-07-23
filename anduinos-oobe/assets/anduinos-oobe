@@ -2927,6 +2927,12 @@ def create_flathub_mirror_page():
     center.set_vexpand(True)
     page.append(center)
 
+    flag = Gtk.Label(label='<span size="48000">🇨🇳</span>')
+    flag.set_use_markup(True)
+    flag.set_halign(Gtk.Align.CENTER)
+    flag.set_margin_bottom(12)
+    center.append(flag)
+
     title = Gtk.Label(label=_('In China? Use USTC mirror for App Store!'))
     title.add_css_class('title-1')
     title.set_halign(Gtk.Align.CENTER)

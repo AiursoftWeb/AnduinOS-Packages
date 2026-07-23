@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-swap-config</PackageName>
-    <PackageVersion>2.0.0-8+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Swap default configuration — enables 50%-of-RAM lz4 zram and swappiness=100 on boot. Zswap support is installed but remains opt-in via the GUI. Services are installed to /usr/lib/systemd/system/ so anduinos-swapcontrol-gtk controls them via declarative config files without dpkg conflicts.</PackageDescription>
     <Section>admin</Section>
