@@ -67,7 +67,6 @@ declare -A REMOVE=(
 # ── Ubuntu archive URL per suite ────────────────────────────────────────
 declare -A UBUNTU_MIRROR=(
     ["noble"]="https://mirror.aiursoft.com/ubuntu"
-    ["questing"]="https://mirror.aiursoft.com/ubuntu"
     ["resolute"]="https://mirror.aiursoft.com/ubuntu"
     ["stonking"]="https://mirror.aiursoft.com/ubuntu"
 )
@@ -85,8 +84,8 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
     trap "rm -rf $APT_DIR" EXIT
 
     mkdir -p "$APT_DIR/lists" "$APT_DIR/cache"
-    # [arch=amd64] prevents multi-arch pollution — the CI host has arm64
-    # registered as a foreign architecture, but the mirror doesn't carry arm64.
+    # [arch=amd64] keeps apt index downloads lean — the CI host runs amd64
+    # and .mo files are architecture-independent data pulled from any arch.
     echo "deb [arch=amd64] $MIRROR $SUITE main universe" > "$APT_DIR/sources.list"
 
     apt-get update -qq \

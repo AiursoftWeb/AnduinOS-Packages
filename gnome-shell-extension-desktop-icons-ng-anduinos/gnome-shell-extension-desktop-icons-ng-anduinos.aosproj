@@ -9,16 +9,16 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
     <Provides>gnome-shell-extension-desktop-icons-ng</Provides>
     <Conflicts>gnome-shell-extension-desktop-icons-ng</Conflicts>
     <Replaces>gnome-shell-extension-desktop-icons-ng</Replaces>
   </PropertyGroup>
   <ItemGroup>
-    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble questing-addon=questing resolute-addon=resolute" />
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble resolute-addon=resolute" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,9 +34,7 @@
     <IncludeFolder Include="deploy/noble/ding@rastersoft.com"
                    Target="/usr/share/gnome-shell/extensions/ding@rastersoft.com"
                    Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFolder Include="deploy/questing/ding@rastersoft.com"
                    Target="/usr/share/gnome-shell/extensions/ding@rastersoft.com"
-                   Condition="'$(Suite)' == 'questing-addon'" />
     <IncludeFolder Include="deploy/resolute/ding@rastersoft.com"
                    Target="/usr/share/gnome-shell/extensions/ding@rastersoft.com"
                    Condition="'$(Suite)' == 'resolute-addon'" />
