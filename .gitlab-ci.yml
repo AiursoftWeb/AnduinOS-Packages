@@ -129,6 +129,11 @@ anduinos-deskmon:
   variables:
     PACKAGE_DIR: anduinos-deskmon
 
+anduinos-theme-sync:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-theme-sync
+
 gnome-shell-extension-anduinos-loc:
   extends: .publish
   variables:
@@ -496,6 +501,7 @@ anduinos-desktop:
     - anduinos-apt-config
     - anduinos-apt-config-dev
     - anduinos-deskmon
+    - anduinos-theme-sync
     - base-files
     - anduinos-theme
     - anduinos-templates
