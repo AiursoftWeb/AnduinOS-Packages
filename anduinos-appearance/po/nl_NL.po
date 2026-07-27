@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-appearance 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 09:43+0000\n"
+"POT-Creation-Date: 2026-07-27 05:08+0000\n"
 "Language-Team: Dutch\n"
 "Language: nl_NL\n"
 "MIME-Version: 1.0\n"
@@ -12,259 +12,195 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/anduinos-appearance:376
-msgid "Bottom"
-msgstr "Onder"
-
-#: src/anduinos-appearance:376
-msgid "Top"
-msgstr "Boven"
-
-#: src/anduinos-appearance:376
-msgid "Left"
-msgstr "Links"
-
-#: src/anduinos-appearance:376
-msgid "Right"
-msgstr "Rechts"
-
-#: src/anduinos-appearance:385
-msgid "Taskbar Style"
-msgstr "Taakbalkstijl"
-
-#: src/anduinos-appearance:390
-msgid "Preview"
-msgstr "Voorbeeld"
-
-#: src/anduinos-appearance:391
-msgid "Choose the visual style of your taskbar."
-msgstr "Kies de visuele stijl van je taakbalk."
-
-#: src/anduinos-appearance:404
-msgid "Layout"
-msgstr "Indeling"
-
-#: src/anduinos-appearance:409 src/anduinos-appearance:545
-msgid "Classic"
-msgstr "Klassiek"
-
-#: src/anduinos-appearance:411 src/anduinos-appearance:544
-msgid "Seperated"
-msgstr "Gescheiden"
-
-#: src/anduinos-appearance:438
-msgid "Group apps"
-msgstr "Apps groeperen"
-
-#: src/anduinos-appearance:439
-msgid "Combine multiple windows of one app into a single icon"
-msgstr "Meerdere vensters van één app combineren in één pictogram"
-
-#: src/anduinos-appearance:441
-msgid "Enable grouping"
-msgstr "Groepering inschakelen"
-
-#: src/anduinos-appearance:448
-msgid "Use Vista taskbar behavior"
-msgstr "Vista-taakbalkgedrag"
-
-#: src/anduinos-appearance:449
-msgid "Keep launchers separate from running apps"
-msgstr "Starters scheiden van actieve apps"
-
-#: src/anduinos-appearance:473 src/anduinos-appearance:508
-#, python-brace-format
-msgid "✓ Applied — {style} | {pos}"
-msgstr "✓ Toegepast — {style} | {pos}"
-
-#: src/anduinos-appearance:475
-msgid "✗ Failed to apply style"
-msgstr "✗ Stijl kan niet worden toegepast"
-
-#: src/anduinos-appearance:510
-msgid "✗ Failed to apply position"
-msgstr "✗ Positie kan niet worden toegepast"
-
-#: src/anduinos-appearance:542
-msgid "Windows 11"
-msgstr ""
-
-#: src/anduinos-appearance:551
-msgid "Show Weather"
-msgstr "Toon weer"
-
-#: src/anduinos-appearance:552
-msgid "Show Network"
-msgstr "Toon netwerk"
-
-#: src/anduinos-appearance:561
-msgid "Panel Widgets"
-msgstr "Paneelwidgets"
-
-#: src/anduinos-appearance:565
-msgid "Panel Indicators"
-msgstr "Paneelindicatoren"
-
-#: src/anduinos-appearance:566
-msgid "Toggle panel indicator widgets on or off."
-msgstr "Schakel paneelindicatoren widgets in of uit."
-
-#: src/anduinos-appearance:580
-msgid "Taskbar Elements"
-msgstr "Taakbalkelementen"
-
-#: src/anduinos-appearance:581
-msgid "Show or hide built-in panel elements."
-msgstr "Ingebouwde panelelementen weergeven of verbergen."
-
-#: src/anduinos-appearance:584
-msgid "Show Activities Button"
-msgstr "Activiteitenknop weergeven"
-
-#: src/anduinos-appearance:585
-msgid "Display the Activities button on the taskbar"
-msgstr "De Activiteitenknop op de taakbalk weergeven"
-
-#: src/anduinos-appearance:599
-#, python-brace-format
-msgid "✓ Activities button — {action}n"
-msgstr "✓ Activiteitenknop — {action}n"
-
-#: src/anduinos-appearance:601
-msgid "✗ Failed to toggle activities button"
-msgstr "✗ Kon activiteitenknop niet schakelen"
-
-#: src/anduinos-appearance:613
-#, python-brace-format
-msgid "✓ {label} — {action}d"
-msgstr "✓ {label} — {action}"
-
-#: src/anduinos-appearance:615
-#, python-brace-format
-msgid "✗ Failed to {action} {label}"
-msgstr "✗ Kan {label} niet {action}"
-
-#: src/anduinos-appearance:628
-msgid "Advanced"
-msgstr "Geavanceerd"
-
-#: src/anduinos-appearance:633
-msgid "Appearance"
-msgstr "Uiterlijk"
-
-#: src/anduinos-appearance:636
-msgid "Wallpaper"
-msgstr "Achtergrondafbeelding"
-
-#: src/anduinos-appearance:637 src/anduinos-appearance:647
-#: src/anduinos-appearance:670
-msgid "Open"
-msgstr "Openen"
-
-#: src/anduinos-appearance:646
-msgid "Tweaks"
-msgstr "Aanpassingen"
-
-#: src/anduinos-appearance:657
-msgid "Extension Settings"
-msgstr "Extensie-instellingen"
-
-#: src/anduinos-appearance:658
-msgid "Open the preference windows of the panel extensions."
-msgstr "Open de voorkeursvensters van de panelextensies."
-
-#: src/anduinos-appearance:683
-msgid "Danger Zone"
-msgstr "Gevarenzone"
-
-#: src/anduinos-appearance:686
-msgid "Reset desktop settings"
-msgstr "Bureaubladinstellingen resetten"
-
-#: src/anduinos-appearance:687
-msgid "Restore all GNOME Shell settings to factory defaults"
-msgstr "Herstel alle GNOME Shell-instellingen naar fabrieksinstellingen"
-
-#: src/anduinos-appearance:688 src/anduinos-appearance:717
-msgid "Reset"
-msgstr "Resetten"
-
-#: src/anduinos-appearance:706
-msgid "✓ Desktop settings reset. Restart Shell to apply."
-msgstr "✓ Bureaubladinstellingen gereset. Herstart Shell om toe te passen."
-
-#: src/anduinos-appearance:708
-msgid "✗ Failed to reset"
-msgstr "✗ Kan niet resetten"
-
-#: src/anduinos-appearance:712
-msgid "Reset desktop settings?"
-msgstr "Bureaubladinstellingen resetten?"
-
-#: src/anduinos-appearance:713
-msgid ""
-"This will reset all GNOME Shell settings to factory defaults.\n"
-"Your extensions, panel layout, and preferences will be lost."
-msgstr ""
-"Hiermee worden alle GNOME Shell-instellingen teruggezet naar de "
-"fabrieksinstellingen.\n"
-"Uw extensies, paneelindeling en voorkeuren gaan verloren."
-
-#: src/anduinos-appearance:716
-msgid "Cancel"
-msgstr "Annuleren"
-
-#: src/anduinos-appearance:747
-msgid "GDM Wallpaper"
-msgstr "GDM-achtergrond"
-
-#: src/anduinos-appearance:752
-msgid "Login Screen Wallpaper"
-msgstr "Achtergrond inlogscherm"
-
-#: src/anduinos-appearance:753
-msgid "Choose an image for the GDM login screen background."
-msgstr "Kies een afbeelding voor de achtergrond van het GDM-inlogscherm."
-
-#: src/anduinos-appearance:763
-msgid "Select image"
-msgstr "Afbeelding selecteren"
-
-#: src/anduinos-appearance:764
-msgid "Choose…"
-msgstr "Kiezen…"
-
-#: src/anduinos-appearance:773
-msgid "Apply to Login Screen"
-msgstr "Toepassen op inlogscherm"
-
-#: src/anduinos-appearance:785
-msgid "Images"
-msgstr "Afbeeldingen"
-
-#: src/anduinos-appearance:806
-msgid "✗ Please select an image first"
-msgstr "✗ Selecteer eerst een afbeelding"
-
-#: src/anduinos-appearance:821
-msgid "✓ GDM wallpaper applied"
-msgstr "✓ GDM-achtergrond toegepast"
-
-#: src/anduinos-appearance:823
-msgid "✗ Failed to set GDM wallpaper"
-msgstr "✗ Instellen GDM-achtergrond mislukt"
-
-#: src/anduinos-appearance:831 src/anduinos-appearance:891
-msgid "AnduinOS Appearance"
-msgstr "AnduinOS Uiterlijk"
-
-#: src/anduinos-appearance:854
 msgid "About AnduinOS Appearance"
 msgstr "Over AnduinOS Uiterlijk"
 
-#: src/anduinos-appearance:893
+msgid "Advanced"
+msgstr "Geavanceerd"
+
+msgid "AnduinOS Appearance"
+msgstr "AnduinOS Uiterlijk"
+
 msgid "AnduinOS Team"
 msgstr "AnduinOS-team"
+
+msgid "Appearance"
+msgstr "Uiterlijk"
+
+msgid "Apply to Login Screen"
+msgstr "Toepassen op inlogscherm"
+
+msgid "Bottom"
+msgstr "Onder"
+
+msgid "Cancel"
+msgstr "Annuleren"
+
+msgid "Choose an image for the GDM login screen background."
+msgstr "Kies een afbeelding voor de achtergrond van het GDM-inlogscherm."
+
+msgid "Choose the visual style of your taskbar."
+msgstr "Kies de visuele stijl van je taakbalk."
+
+msgid "Choose…"
+msgstr "Kiezen…"
+
+msgid "Classic"
+msgstr "Klassiek"
+
+msgid "Combine multiple windows of one app into a single icon"
+msgstr "Meerdere vensters van één app combineren in één pictogram"
+
+msgid "Danger Zone"
+msgstr "Gevarenzone"
+
+msgid "Display the Activities button on the taskbar"
+msgstr "De Activiteitenknop op de taakbalk weergeven"
+
+msgid "Enable grouping"
+msgstr "Groepering inschakelen"
+
+msgid "Extension Settings"
+msgstr "Extensie-instellingen"
+
+msgid "GDM Wallpaper"
+msgstr "GDM-achtergrond"
+
+msgid "Group apps"
+msgstr "Apps groeperen"
+
+msgid "Images"
+msgstr "Afbeeldingen"
+
+msgid "Keep launchers separate from running apps"
+msgstr "Starters scheiden van actieve apps"
+
+msgid "Layout"
+msgstr "Indeling"
+
+msgid "Left"
+msgstr "Links"
+
+msgid "Login Screen Wallpaper"
+msgstr "Achtergrond inlogscherm"
+
+msgid "Open"
+msgstr "Openen"
+
+msgid "Open the preference windows of the panel extensions."
+msgstr "Open de voorkeursvensters van de panelextensies."
+
+msgid "Panel Indicators"
+msgstr "Paneelindicatoren"
+
+msgid "Panel Widgets"
+msgstr "Paneelwidgets"
+
+msgid "Preview"
+msgstr "Voorbeeld"
+
+msgid "Reset"
+msgstr "Resetten"
+
+msgid "Reset desktop settings"
+msgstr "Bureaubladinstellingen resetten"
+
+msgid "Reset desktop settings?"
+msgstr "Bureaubladinstellingen resetten?"
+
+msgid "Restore all GNOME Shell settings to factory defaults"
+msgstr "Herstel alle GNOME Shell-instellingen naar fabrieksinstellingen"
+
+msgid "Right"
+msgstr "Rechts"
+
+msgid "Select image"
+msgstr "Afbeelding selecteren"
+
+msgid "Seperated"
+msgstr "Gescheiden"
+
+msgid "Show Activities Button"
+msgstr "Activiteitenknop weergeven"
+
+msgid "Show Desktop Icons"
+msgstr "Show Desktop Icons"
+
+msgid "Show Network"
+msgstr "Toon netwerk"
+
+msgid "Show Weather"
+msgstr "Toon weer"
+
+msgid "Show or hide built-in panel elements."
+msgstr "Ingebouwde panelelementen weergeven of verbergen."
+
+msgid "Taskbar Elements"
+msgstr "Taakbalkelementen"
+
+msgid "Taskbar Style"
+msgstr "Taakbalkstijl"
+
+msgid "Toggle panel indicator widgets on or off."
+msgstr "Schakel paneelindicatoren widgets in of uit."
+
+msgid "Top"
+msgstr "Boven"
+
+msgid "Tweaks"
+msgstr "Aanpassingen"
+
+msgid "Use Vista taskbar behavior"
+msgstr "Vista-taakbalkgedrag"
+
+msgid "Wallpaper"
+msgstr "Achtergrondafbeelding"
+
+msgid "Windows 11"
+msgstr "Show Desktop Icons"
+
+msgid "✓ Activities button — {action}n"
+msgstr "✓ Activiteitenknop — {action}n"
+
+msgid "✓ Applied — {style} | {pos}"
+msgstr "✓ Toegepast — {style} | {pos}"
+
+msgid "✓ Desktop settings reset. Restart Shell to apply."
+msgstr "✓ Bureaubladinstellingen gereset. Herstart Shell om toe te passen."
+
+msgid "✓ GDM wallpaper applied"
+msgstr "✓ GDM-achtergrond toegepast"
+
+msgid "✓ {label} — {action}d"
+msgstr "✓ {label} — {action}"
+
+msgid "✗ Failed to apply position"
+msgstr "✗ Positie kan niet worden toegepast"
+
+msgid "✗ Failed to apply style"
+msgstr "✗ Stijl kan niet worden toegepast"
+
+msgid "✗ Failed to reset"
+msgstr "✗ Kan niet resetten"
+
+msgid "✗ Failed to set GDM wallpaper"
+msgstr "✗ Instellen GDM-achtergrond mislukt"
+
+msgid "✗ Failed to toggle activities button"
+msgstr "✗ Kon activiteitenknop niet schakelen"
+
+msgid "✗ Failed to {action} {label}"
+msgstr "✗ Kan {label} niet {action}"
+
+msgid "✗ Please select an image first"
+msgstr "✗ Selecteer eerst een afbeelding"
+
+#~ msgid ""
+#~ "This will reset all GNOME Shell settings to factory defaults.\n"
+#~ "Your extensions, panel layout, and preferences will be lost."
+#~ msgstr ""
+#~ "Hiermee worden alle GNOME Shell-instellingen teruggezet naar de fabrieksinstellingen.\n"
+#~ "Uw extensies, paneelindeling en voorkeuren gaan verloren."
 
 #~ msgid "Effects"
 #~ msgstr "Effects"

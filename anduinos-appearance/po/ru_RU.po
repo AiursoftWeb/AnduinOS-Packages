@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-appearance 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 09:43+0000\n"
+"POT-Creation-Date: 2026-07-27 05:08+0000\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
@@ -12,262 +12,195 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/anduinos-appearance:376
-msgid "Bottom"
-msgstr "Внизу"
-
-#: src/anduinos-appearance:376
-msgid "Top"
-msgstr "Вверху"
-
-#: src/anduinos-appearance:376
-msgid "Left"
-msgstr "Слева"
-
-#: src/anduinos-appearance:376
-msgid "Right"
-msgstr "Справа"
-
-#: src/anduinos-appearance:385
-msgid "Taskbar Style"
-msgstr "Стиль панели задач"
-
-#: src/anduinos-appearance:390
-msgid "Preview"
-msgstr "Предпросмотр"
-
-#: src/anduinos-appearance:391
-msgid "Choose the visual style of your taskbar."
-msgstr "Выберите визуальный стиль вашей панели задач."
-
-#: src/anduinos-appearance:404
-msgid "Layout"
-msgstr "Макет"
-
-#: src/anduinos-appearance:409 src/anduinos-appearance:545
-msgid "Classic"
-msgstr "Классический"
-
-#: src/anduinos-appearance:411 src/anduinos-appearance:544
-msgid "Seperated"
-msgstr "Раздельный"
-
-#: src/anduinos-appearance:438
-msgid "Group apps"
-msgstr "Группировка приложений"
-
-#: src/anduinos-appearance:439
-msgid "Combine multiple windows of one app into a single icon"
-msgstr "Объединение нескольких окон одного приложения в один значок"
-
-#: src/anduinos-appearance:441
-msgid "Enable grouping"
-msgstr "Включить группировку"
-
-#: src/anduinos-appearance:448
-msgid "Use Vista taskbar behavior"
-msgstr "Поведение панели задач Vista"
-
-#: src/anduinos-appearance:449
-msgid "Keep launchers separate from running apps"
-msgstr "Отделить ярлыки от запущенных приложений"
-
-#: src/anduinos-appearance:473 src/anduinos-appearance:508
-#, python-brace-format
-msgid "✓ Applied — {style} | {pos}"
-msgstr "✓ Применено — {style} | {pos}"
-
-#: src/anduinos-appearance:475
-msgid "✗ Failed to apply style"
-msgstr "✗ Не удалось применить стиль"
-
-#: src/anduinos-appearance:510
-msgid "✗ Failed to apply position"
-msgstr "✗ Не удалось применить положение"
-
-#: src/anduinos-appearance:542
-msgid "Windows 11"
-msgstr ""
-
-#: src/anduinos-appearance:551
-msgid "Show Weather"
-msgstr "Показать погоду"
-
-#: src/anduinos-appearance:552
-msgid "Show Network"
-msgstr "Показать сеть"
-
-#: src/anduinos-appearance:561
-msgid "Panel Widgets"
-msgstr "Виджеты панели"
-
-#: src/anduinos-appearance:565
-msgid "Panel Indicators"
-msgstr "Индикаторы панели"
-
-#: src/anduinos-appearance:566
-msgid "Toggle panel indicator widgets on or off."
-msgstr "Включите или отключите виджеты индикаторов панели."
-
-#: src/anduinos-appearance:580
-msgid "Taskbar Elements"
-msgstr "Элементы панели задач"
-
-#: src/anduinos-appearance:581
-msgid "Show or hide built-in panel elements."
-msgstr "Показать или скрыть встроенные элементы панели."
-
-#: src/anduinos-appearance:584
-msgid "Show Activities Button"
-msgstr "Показать кнопку «Обзор»"
-
-#: src/anduinos-appearance:585
-msgid "Display the Activities button on the taskbar"
-msgstr "Отображать кнопку «Обзор» на панели задач"
-
-#: src/anduinos-appearance:599
-#, python-brace-format
-msgid "✓ Activities button — {action}n"
-msgstr "✓ Кнопка «Обзор» — {action}n"
-
-#: src/anduinos-appearance:601
-msgid "✗ Failed to toggle activities button"
-msgstr "✗ Не удалось переключить кнопку «Обзор»"
-
-#: src/anduinos-appearance:613
-#, python-brace-format
-msgid "✓ {label} — {action}d"
-msgstr "✓ {label} — {action}"
-
-#: src/anduinos-appearance:615
-#, python-brace-format
-msgid "✗ Failed to {action} {label}"
-msgstr "✗ Не удалось {action} {label}"
-
-#: src/anduinos-appearance:628
-msgid "Advanced"
-msgstr "Дополнительно"
-
-#: src/anduinos-appearance:633
-msgid "Appearance"
-msgstr "Внешний вид"
-
-#: src/anduinos-appearance:636
-msgid "Wallpaper"
-msgstr "Обои"
-
-#: src/anduinos-appearance:637 src/anduinos-appearance:647
-#: src/anduinos-appearance:670
-msgid "Open"
-msgstr "Открыть"
-
-#: src/anduinos-appearance:646
-msgid "Tweaks"
-msgstr "Настройки"
-
-#: src/anduinos-appearance:657
-msgid "Extension Settings"
-msgstr "Настройки расширений"
-
-#: src/anduinos-appearance:658
-msgid "Open the preference windows of the panel extensions."
-msgstr "Откройте окна настроек расширений панели."
-
-#: src/anduinos-appearance:683
-msgid "Danger Zone"
-msgstr "Опасная зона"
-
-#: src/anduinos-appearance:686
-msgid "Reset desktop settings"
-msgstr "Сбросить настройки рабочего стола"
-
-#: src/anduinos-appearance:687
-msgid "Restore all GNOME Shell settings to factory defaults"
-msgstr ""
-"Восстановить все настройки GNOME Shell до заводских значенийВосстановить все "
-"настройки GNOME Shell до заводских значений по умолчанию"
-
-#: src/anduinos-appearance:688 src/anduinos-appearance:717
-msgid "Reset"
-msgstr "Сброс"
-
-#: src/anduinos-appearance:706
-msgid "✓ Desktop settings reset. Restart Shell to apply."
-msgstr ""
-"✓ Настройки рабочего стола сброшены. Перезапустите Shell для применения.✓ "
-"Настройки рабочего стола сброшены. Перезапустите Shell для применения."
-
-#: src/anduinos-appearance:708
-msgid "✗ Failed to reset"
-msgstr "✗ Не удалось сбросить"
-
-#: src/anduinos-appearance:712
-msgid "Reset desktop settings?"
-msgstr "Сбросить настройки рабочего стола?"
-
-#: src/anduinos-appearance:713
-msgid ""
-"This will reset all GNOME Shell settings to factory defaults.\n"
-"Your extensions, panel layout, and preferences will be lost."
-msgstr ""
-"Это сбросит все настройки GNOME Shell до заводских значений по умолчанию.\n"
-"Ваши расширения, макет панели и настройки будут потеряны."
-
-#: src/anduinos-appearance:716
-msgid "Cancel"
-msgstr "Отмена"
-
-#: src/anduinos-appearance:747
-msgid "GDM Wallpaper"
-msgstr "Фон GDM"
-
-#: src/anduinos-appearance:752
-msgid "Login Screen Wallpaper"
-msgstr "Экран входа"
-
-#: src/anduinos-appearance:753
-msgid "Choose an image for the GDM login screen background."
-msgstr "Выберите изображение для фона экрана входа GDM."
-
-#: src/anduinos-appearance:763
-msgid "Select image"
-msgstr "Выбрать изображение"
-
-#: src/anduinos-appearance:764
-msgid "Choose…"
-msgstr "Выбрать…"
-
-#: src/anduinos-appearance:773
-msgid "Apply to Login Screen"
-msgstr "Применить к экрану входа"
-
-#: src/anduinos-appearance:785
-msgid "Images"
-msgstr "Изображения"
-
-#: src/anduinos-appearance:806
-msgid "✗ Please select an image first"
-msgstr "✗ Сначала выберите изображение"
-
-#: src/anduinos-appearance:821
-msgid "✓ GDM wallpaper applied"
-msgstr "✓ Фон GDM применён"
-
-#: src/anduinos-appearance:823
-msgid "✗ Failed to set GDM wallpaper"
-msgstr "✗ Не удалось установить фон GDM"
-
-#: src/anduinos-appearance:831 src/anduinos-appearance:891
-msgid "AnduinOS Appearance"
-msgstr "Внешний вид AnduinOS"
-
-#: src/anduinos-appearance:854
 msgid "About AnduinOS Appearance"
 msgstr "О внешнем виде AnduinOS"
 
-#: src/anduinos-appearance:893
+msgid "Advanced"
+msgstr "Дополнительно"
+
+msgid "AnduinOS Appearance"
+msgstr "Внешний вид AnduinOS"
+
 msgid "AnduinOS Team"
 msgstr "Команда AnduinOS"
+
+msgid "Appearance"
+msgstr "Внешний вид"
+
+msgid "Apply to Login Screen"
+msgstr "Применить к экрану входа"
+
+msgid "Bottom"
+msgstr "Внизу"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Choose an image for the GDM login screen background."
+msgstr "Выберите изображение для фона экрана входа GDM."
+
+msgid "Choose the visual style of your taskbar."
+msgstr "Выберите визуальный стиль вашей панели задач."
+
+msgid "Choose…"
+msgstr "Выбрать…"
+
+msgid "Classic"
+msgstr "Классический"
+
+msgid "Combine multiple windows of one app into a single icon"
+msgstr "Объединение нескольких окон одного приложения в один значок"
+
+msgid "Danger Zone"
+msgstr "Опасная зона"
+
+msgid "Display the Activities button on the taskbar"
+msgstr "Отображать кнопку «Обзор» на панели задач"
+
+msgid "Enable grouping"
+msgstr "Включить группировку"
+
+msgid "Extension Settings"
+msgstr "Настройки расширений"
+
+msgid "GDM Wallpaper"
+msgstr "Фон GDM"
+
+msgid "Group apps"
+msgstr "Группировка приложений"
+
+msgid "Images"
+msgstr "Изображения"
+
+msgid "Keep launchers separate from running apps"
+msgstr "Отделить ярлыки от запущенных приложений"
+
+msgid "Layout"
+msgstr "Макет"
+
+msgid "Left"
+msgstr "Слева"
+
+msgid "Login Screen Wallpaper"
+msgstr "Экран входа"
+
+msgid "Open"
+msgstr "Открыть"
+
+msgid "Open the preference windows of the panel extensions."
+msgstr "Откройте окна настроек расширений панели."
+
+msgid "Panel Indicators"
+msgstr "Индикаторы панели"
+
+msgid "Panel Widgets"
+msgstr "Виджеты панели"
+
+msgid "Preview"
+msgstr "Предпросмотр"
+
+msgid "Reset"
+msgstr "Сброс"
+
+msgid "Reset desktop settings"
+msgstr "Сбросить настройки рабочего стола"
+
+msgid "Reset desktop settings?"
+msgstr "Сбросить настройки рабочего стола?"
+
+msgid "Restore all GNOME Shell settings to factory defaults"
+msgstr "Восстановить все настройки GNOME Shell до заводских значенийВосстановить все настройки GNOME Shell до заводских значений по умолчанию"
+
+msgid "Right"
+msgstr "Справа"
+
+msgid "Select image"
+msgstr "Выбрать изображение"
+
+msgid "Seperated"
+msgstr "Раздельный"
+
+msgid "Show Activities Button"
+msgstr "Показать кнопку «Обзор»"
+
+msgid "Show Desktop Icons"
+msgstr "Show Desktop Icons"
+
+msgid "Show Network"
+msgstr "Показать сеть"
+
+msgid "Show Weather"
+msgstr "Показать погоду"
+
+msgid "Show or hide built-in panel elements."
+msgstr "Показать или скрыть встроенные элементы панели."
+
+msgid "Taskbar Elements"
+msgstr "Элементы панели задач"
+
+msgid "Taskbar Style"
+msgstr "Стиль панели задач"
+
+msgid "Toggle panel indicator widgets on or off."
+msgstr "Включите или отключите виджеты индикаторов панели."
+
+msgid "Top"
+msgstr "Вверху"
+
+msgid "Tweaks"
+msgstr "Настройки"
+
+msgid "Use Vista taskbar behavior"
+msgstr "Поведение панели задач Vista"
+
+msgid "Wallpaper"
+msgstr "Обои"
+
+msgid "Windows 11"
+msgstr "Show Desktop Icons"
+
+msgid "✓ Activities button — {action}n"
+msgstr "✓ Кнопка «Обзор» — {action}n"
+
+msgid "✓ Applied — {style} | {pos}"
+msgstr "✓ Применено — {style} | {pos}"
+
+msgid "✓ Desktop settings reset. Restart Shell to apply."
+msgstr "✓ Настройки рабочего стола сброшены. Перезапустите Shell для применения.✓ Настройки рабочего стола сброшены. Перезапустите Shell для применения."
+
+msgid "✓ GDM wallpaper applied"
+msgstr "✓ Фон GDM применён"
+
+msgid "✓ {label} — {action}d"
+msgstr "✓ {label} — {action}"
+
+msgid "✗ Failed to apply position"
+msgstr "✗ Не удалось применить положение"
+
+msgid "✗ Failed to apply style"
+msgstr "✗ Не удалось применить стиль"
+
+msgid "✗ Failed to reset"
+msgstr "✗ Не удалось сбросить"
+
+msgid "✗ Failed to set GDM wallpaper"
+msgstr "✗ Не удалось установить фон GDM"
+
+msgid "✗ Failed to toggle activities button"
+msgstr "✗ Не удалось переключить кнопку «Обзор»"
+
+msgid "✗ Failed to {action} {label}"
+msgstr "✗ Не удалось {action} {label}"
+
+msgid "✗ Please select an image first"
+msgstr "✗ Сначала выберите изображение"
+
+#~ msgid ""
+#~ "This will reset all GNOME Shell settings to factory defaults.\n"
+#~ "Your extensions, panel layout, and preferences will be lost."
+#~ msgstr ""
+#~ "Это сбросит все настройки GNOME Shell до заводских значений по умолчанию.\n"
+#~ "Ваши расширения, макет панели и настройки будут потеряны."
 
 #~ msgid "Effects"
 #~ msgstr "Effects"
