@@ -23,11 +23,22 @@ gi.require_version("Adw", "1")
 
 from gi.repository import Gtk, Adw, GLib, Gio, Pango, GObject
 
-from languages import LANGUAGES, _, is_chinese, Language as LangData
-from frontend import ExecutorClient, create_install_plan
+from languages import (
+    LANGUAGES,
+    _,
+    default_timezone,
+    is_chinese,
+    Language as LangData,
+)
+from frontend import (
+    DevelopmentExecutorClient,
+    ExecutorClient,
+    create_install_plan,
+)
 from installer_core.btrfs import BTRFS_SUBVOLUMES
 from installer_core.model import InstallPlan, SecureBoot
 from installer_core.probe import ProbeError, probe_disks, probe_platform
+from slideshow import load_slides
 
 
 # ── thin GObject wrapper for language list items ─────────────────────────
@@ -215,7 +226,7 @@ def build_welcome_page(shared, nav_view):
             shared["lang"] = l.code
             shared["locale"] = l.locale
             shared["keyboard"] = l.keyboard
-            shared["timezone"] = _guess_timezone(l.code)
+            shared["timezone"] = default_timezone(l.code)
             _update_welcome(l.code)
 
     sel.connect("selection-changed", lambda _s, _p, _n: _on_lang_selected())
@@ -261,8 +272,8 @@ XKB_VARIANTS = [
     ("ro", "Romanian"),
     # Cyrillic / Greek
     ("ru", "Russian"), ("ua", "Ukrainian"), ("gr", "Greek"),
-    # CJK / Indic / Other
-    ("cn", "Chinese"), ("tw", "Chinese (Taiwan)"), ("hk", "Chinese (Hong Kong)"),
+    # CJK / Indic / Other physical layouts. Chinese input is an input method
+    # layered over the US layout, not a separate physical keyboard layout.
     ("jp", "Japanese"), ("kr", "Korean"),
     ("in", "Hindi (India)"), ("th", "Thai"), ("vn", "Vietnamese"),
     ("ara", "Arabic"), ("tr", "Turkish"), ("id", "Indonesian"),
@@ -312,7 +323,7 @@ def build_keyboard_page(shared, nav_view):
     content.append(test_entry)
 
     def on_next():
-        nav_view.push(build_disk_page(shared, nav_view))
+        nav_view.push(build_software_page(shared, nav_view))
 
     def on_back():
         nav_view.pop()
@@ -322,7 +333,74 @@ def build_keyboard_page(shared, nav_view):
     return page
 
 
-# ── page 3: Disk selection ───────────────────────────────────────────────
+# ── page 3: Updates and drivers ─────────────────────────────────────────
+
+def build_software_page(shared, nav_view):
+    lang = shared.get("lang", "en")
+    page = Adw.NavigationPage(title=_("software.title", lang))
+    page.set_tag("software")
+
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    content.append(_page_title("software.title", lang))
+    content.append(_page_subtitle("software.subtitle", lang))
+
+    options = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=18,
+        margin_start=48,
+        margin_end=48,
+        margin_top=32,
+        vexpand=True,
+    )
+
+    updates = Gtk.CheckButton(label=_("software.updates", lang))
+    updates.set_active(bool(shared.get("install_updates", True)))
+    updates_detail = Gtk.Label(
+        label=_("software.updates_detail", lang),
+        halign=Gtk.Align.START,
+        wrap=True,
+        margin_start=28,
+    )
+    updates_detail.add_css_class("dim-label")
+    options.append(updates)
+    options.append(updates_detail)
+
+    drivers = Gtk.CheckButton(label=_("software.drivers", lang))
+    drivers.set_active(
+        bool(shared.get("install_third_party_drivers", False))
+    )
+    drivers_detail = Gtk.Label(
+        label=_("software.drivers_detail", lang),
+        halign=Gtk.Align.START,
+        wrap=True,
+        margin_start=28,
+    )
+    drivers_detail.add_css_class("dim-label")
+    options.append(drivers)
+    options.append(drivers_detail)
+    content.append(options)
+
+    def _save():
+        shared["install_updates"] = updates.get_active()
+        shared["install_third_party_drivers"] = drivers.get_active()
+
+    updates.connect("toggled", lambda _button: _save())
+    drivers.connect("toggled", lambda _button: _save())
+
+    def on_next():
+        _save()
+        nav_view.push(build_disk_page(shared, nav_view))
+
+    def on_back():
+        _save()
+        nav_view.pop()
+
+    content.append(_nav_box(lang, on_back=on_back, on_next=on_next))
+    page.set_child(content)
+    return page
+
+
+# ── page 4: Disk selection ───────────────────────────────────────────────
 
 def build_disk_page(shared, nav_view):
     lang = shared.get("lang", "en")
@@ -453,6 +531,10 @@ def build_disk_page(shared, nav_view):
         lang, on_back=on_back, on_next=on_next, next_sensitive=nxt_enabled
     )
     next_button = nav.get_last_child()
+    # Gtk.SingleSelection selects the first row while the model is populated,
+    # before our selection-changed handler is connected. Synchronize that
+    # initial selection explicitly so a one-disk machine can continue.
+    _on_disk_selected()
     content.append(nav)
     page.set_child(content)
     return page
@@ -528,16 +610,52 @@ def build_user_page(shared, nav_view):
     pass_entry = Gtk.Entry(placeholder_text=_("user.password", lang),
                            visibility=False)
     pass_entry.set_input_purpose(Gtk.InputPurpose.PASSWORD)
+    confirm_entry = Gtk.Entry(
+        placeholder_text=_("user.confirm_password", lang),
+        visibility=False,
+    )
+    confirm_entry.set_input_purpose(Gtk.InputPurpose.PASSWORD)
     pass_warn = Gtk.Label(visible=False)
     pass_warn.add_css_class("warning")
 
     show_toggle = Gtk.CheckButton(label=_("user.show_password", lang))
-    show_toggle.connect("toggled",
-                        lambda b: pass_entry.set_visibility(b.get_active()))
+    def _toggle_visibility(button):
+        visible = button.get_active()
+        pass_entry.set_visibility(visible)
+        confirm_entry.set_visibility(visible)
+
+    show_toggle.connect("toggled", _toggle_visibility)
 
     box.append(_labeled(_("user.password", lang), pass_entry))
+    box.append(_labeled(_("user.confirm_password", lang), confirm_entry))
     box.append(show_toggle)
     box.append(pass_warn)
+
+    passwordless_toggle = Gtk.CheckButton(
+        label=_("user.passwordless", lang)
+    )
+    passwordless_warning = Gtk.Label(
+        label=_("user.passwordless_warning", lang),
+        visible=False,
+        wrap=True,
+        halign=Gtk.Align.START,
+    )
+    passwordless_warning.add_css_class("warning")
+    box.append(passwordless_toggle)
+    box.append(passwordless_warning)
+
+    sudo_without_password = Gtk.CheckButton(
+        label=_("user.sudo_without_password", lang)
+    )
+    sudo_warning = Gtk.Label(
+        label=_("user.sudo_warning", lang),
+        visible=False,
+        wrap=True,
+        halign=Gtk.Align.START,
+    )
+    sudo_warning.add_css_class("warning")
+    box.append(sudo_without_password)
+    box.append(sudo_warning)
 
     # Hostname
     host_entry = Gtk.Entry(
@@ -568,6 +686,8 @@ def build_user_page(shared, nav_view):
     def _validate():
         uname = user_entry.get_text()
         pword = pass_entry.get_text()
+        confirmation = confirm_entry.get_text()
+        passwordless = passwordless_toggle.get_active()
         host = host_entry.get_text()
 
         if uname and not NAME_RE.match(uname):
@@ -578,7 +698,14 @@ def build_user_page(shared, nav_view):
             name_warn.set_visible(False)
             valid["name"] = bool(uname)
 
-        if pword and len(pword) < 6:
+        if passwordless:
+            pass_warn.set_visible(False)
+            valid["pass"] = True
+        elif pword != confirmation:
+            pass_warn.set_label(_("user.pass_mismatch", lang))
+            pass_warn.set_visible(True)
+            valid["pass"] = False
+        elif pword and len(pword) < 6:
             pass_warn.set_label(_("user.pass_too_short", lang))
             pass_warn.set_visible(True)
             valid["pass"] = False
@@ -599,7 +726,36 @@ def build_user_page(shared, nav_view):
 
     user_entry.connect("changed", lambda _e: _validate())
     pass_entry.connect("changed", lambda _e: _validate())
-    shared["_clear_password_ui"] = lambda: pass_entry.set_text("")
+    confirm_entry.connect("changed", lambda _e: _validate())
+
+    def _set_passwordless(button):
+        enabled = button.get_active()
+        if enabled:
+            pass_entry.set_text("")
+            confirm_entry.set_text("")
+            sudo_without_password.set_active(True)
+        pass_entry.set_sensitive(not enabled)
+        confirm_entry.set_sensitive(not enabled)
+        show_toggle.set_sensitive(not enabled)
+        sudo_without_password.set_sensitive(not enabled)
+        passwordless_warning.set_visible(enabled)
+        shared["passwordless_shared"] = enabled
+        _validate()
+
+    passwordless_toggle.connect("toggled", _set_passwordless)
+
+    def _set_sudo_without_password(button):
+        enabled = button.get_active()
+        sudo_warning.set_visible(enabled)
+        shared["sudo_without_password"] = enabled
+
+    sudo_without_password.connect("toggled", _set_sudo_without_password)
+
+    def _clear_password_ui():
+        pass_entry.set_text("")
+        confirm_entry.set_text("")
+
+    shared["_clear_password_ui"] = _clear_password_ui
     host_entry.connect("changed", lambda _e: _validate())
 
     content.append(box)
@@ -607,6 +763,9 @@ def build_user_page(shared, nav_view):
     def on_next():
         shared["username"] = user_entry.get_text()
         shared["password"] = pass_entry.get_text()
+        shared["password_confirmation"] = confirm_entry.get_text()
+        shared["passwordless_shared"] = passwordless_toggle.get_active()
+        shared["sudo_without_password"] = sudo_without_password.get_active()
         shared["hostname"] = host_entry.get_text()
         nav_view.push(build_timezone_page(shared, nav_view))
 
@@ -667,9 +826,7 @@ def build_timezone_page(shared, nav_view):
     # Load timezone list
     zones = _load_timezones()
 
-    list_store = Gio.ListStore()
-    for z in zones:
-        list_store.append(z)
+    list_store = Gtk.StringList.new(zones)
 
     # Search entry
     search = Gtk.SearchEntry(placeholder_text=_("tz.search", lang),
@@ -677,14 +834,15 @@ def build_timezone_page(shared, nav_view):
 
     # Filter model
     filter_model = Gtk.FilterListModel(model=list_store)
-    def _filter(item, _user_data):
+    def _filter(item):
         query = search.get_text().lower()
         if not query:
             return True
-        tz = item.get_item()
+        tz = item.get_string()
         return query in tz.lower()
 
-    filter_model.set_filter(Gtk.CustomFilter.new(_filter))
+    timezone_filter = Gtk.CustomFilter.new(_filter)
+    filter_model.set_filter(timezone_filter)
 
     factory = Gtk.SignalListItemFactory()
     def _tz_setup(_f, item):
@@ -692,7 +850,7 @@ def build_timezone_page(shared, nav_view):
         item.set_child(row)
     def _tz_bind(_f, item):
         row = item.get_child()
-        row.set_title(item.get_item())
+        row.set_title(item.get_item().get_string())
     factory.connect("setup", _tz_setup)
     factory.connect("bind", _tz_bind)
 
@@ -703,25 +861,52 @@ def build_timezone_page(shared, nav_view):
                                    vexpand=True)
     tz_scroll.set_child(tz_list)
 
-    search.connect("search-changed", lambda _s: filter_model.changed(
+    search.connect("search-changed", lambda _s: timezone_filter.changed(
         Gtk.FilterChange.DIFFERENT))
 
-    # Default selection
-    current_tz = shared.get("timezone", "America/New_York")
-    for i, z in enumerate(zones):
-        if z == current_tz:
-            tz_list.get_model().select_item(i, True)
-            break
-
     sel = tz_list.get_model()
+    # Filtering must not silently replace the user's timezone with the first
+    # search result.
+    sel.set_autoselect(False)
+    selected_label = Gtk.Label(
+        halign=Gtk.Align.START,
+        margin_start=48,
+        margin_end=48,
+    )
+    selected_label.add_css_class("heading")
+
     def _on_tz_selected():
         pos = sel.get_selected()
         if pos != Gtk.INVALID_LIST_POSITION:
-            shared["timezone"] = filter_model.get_item(pos)
+            timezone = filter_model.get_item(pos).get_string()
+            shared["timezone"] = timezone
+            selected_label.set_label(f"{_('tz.selected', lang)}: {timezone}")
 
     sel.connect("selection-changed", lambda _s, _p, _n: _on_tz_selected())
 
+    # Select and reveal the maintained language default. Gtk.ListView is
+    # virtualized, so selecting an off-screen row alone does not make it
+    # visible.
+    current_tz = str(shared.get("timezone") or "America/New_York")
+    try:
+        selected_position = zones.index(current_tz)
+    except ValueError:
+        selected_position = zones.index("America/New_York")
+    sel.select_item(selected_position, True)
+    _on_tz_selected()
+    GLib.idle_add(
+        lambda: (
+            tz_list.scroll_to(
+                selected_position,
+                Gtk.ListScrollFlags.SELECT | Gtk.ListScrollFlags.FOCUS,
+                None,
+            ),
+            False,
+        )[1]
+    )
+
     content.append(search)
+    content.append(selected_label)
     content.append(tz_scroll)
 
     def on_next():
@@ -756,27 +941,6 @@ def _load_timezones():
     return sorted(zones)
 
 
-def _guess_timezone(code: str) -> str:
-    """Guess a default timezone from the language code."""
-    guesses = {
-        "zh_CN": "Asia/Shanghai",
-        "zh_HK": "Asia/Hong_Kong",
-        "zh_TW": "Asia/Taipei",
-        "ja": "Asia/Tokyo",
-        "ko": "Asia/Seoul",
-        "en_GB": "Europe/London",
-        "de": "Europe/Berlin",
-        "fr": "Europe/Paris",
-        "it": "Europe/Rome",
-        "es": "Europe/Madrid",
-        "pt": "Europe/Lisbon",
-        "pt_BR": "America/Sao_Paulo",
-        "ru": "Europe/Moscow",
-        "en": "America/New_York",
-    }
-    return guesses.get(code, "America/New_York")
-
-
 # ── page 6: Summary ──────────────────────────────────────────────────────
 
 def build_summary_page(shared, nav_view):
@@ -787,6 +951,20 @@ def build_summary_page(shared, nav_view):
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
     content.append(_page_title("summary.title", lang))
     content.append(_page_subtitle("summary.subtitle", lang))
+    development_mode = bool(shared.get("development_mode"))
+    if development_mode:
+        development_banner = Gtk.Label(
+            label=(
+                "DEVELOPMENT MODE — the plan will be validated and simulated. "
+                "No privileged executor or disk command can run."
+            ),
+            margin_start=48,
+            margin_end=48,
+            margin_top=12,
+            wrap=True,
+        )
+        development_banner.add_css_class("warning")
+        content.append(development_banner)
 
     # Build summary text
     lang_name = "English"
@@ -795,8 +973,10 @@ def build_summary_page(shared, nav_view):
             lang_name = f"{l.english_name} ({l.native_name})"
             break
 
+    secure_boot_enabled = False
     try:
         platform = probe_platform()
+        secure_boot_enabled = platform.secure_boot is SecureBoot.ENABLED
         platform_text = (
             f"{platform.architecture.value} / {platform.firmware.value} / "
             f"Secure Boot: {platform.secure_boot.value}"
@@ -830,9 +1010,38 @@ def build_summary_page(shared, nav_view):
         f"<b>Subvolumes:</b> {escape(storage_detail)}",
         "<b>Swap:</b> 4 GiB disk swap (priority 10) + "
         "50% RAM LZ4 zram (priority 100)",
+        "<b>System updates:</b> "
+        + (
+            "download and install"
+            if shared.get("install_updates", True)
+            else "do not install"
+        ),
+        "<b>Third-party drivers:</b> "
+        + (
+            "detect and install (may include non-free software)"
+            if shared.get("install_third_party_drivers", False)
+            else "do not install"
+        ),
+        "<b>Secure Boot enrollment:</b> "
+        + (
+            "create a machine-local MOK; enroll after reboot with password 123456"
+            if secure_boot_enabled
+            else "not required"
+        ),
         f"<b>{_('summary.user', lang)}:</b> "
         f"{escape(shared.get('full_name', '?'))} "
         f"({escape(shared.get('username', '?'))})",
+        "<b>Account security:</b> "
+        + (
+            "automatic login"
+            if shared.get("passwordless_shared", False)
+            else "password required for login"
+        )
+        + (
+            "; sudo does not require a password"
+            if shared.get("sudo_without_password", False)
+            else "; sudo requires the account password"
+        ),
         f"<b>{_('summary.hostname', lang)}:</b> "
         f"{escape(shared.get('hostname', '?'))}",
         f"<b>{_('summary.timezone', lang)}:</b> "
@@ -863,18 +1072,37 @@ def build_summary_page(shared, nav_view):
         stable_id = str(shared.get("disk_stable_id", "?"))
         dialog = Adw.MessageDialog(
             transient_for=nav_view.get_root(),
-            heading="Erase the entire selected disk?",
+            heading=(
+                "Validate this installation plan?"
+                if development_mode
+                else "Erase the entire selected disk?"
+            ),
             body=(
-                f"All partitions and data on {disk} will be destroyed.\n\n"
-                f"Stable identity: {stable_id}\n\n"
-                "This installer does not shrink or preserve other systems."
+                (
+                    f"Development mode will simulate installation to {disk}. "
+                    "No disk data will be changed.\n\n"
+                    if development_mode
+                    else f"All partitions and data on {disk} will be destroyed.\n\n"
+                )
+                + f"Stable identity: {stable_id}\n\n"
+                + (
+                    "The privileged executor is disabled."
+                    if development_mode
+                    else "This installer does not shrink or preserve other systems."
+                )
             ),
         )
         dialog.add_response("cancel", _("nav.back", lang))
-        dialog.add_response("erase", "Erase Disk and Install")
-        dialog.set_response_appearance(
-            "erase", Adw.ResponseAppearance.DESTRUCTIVE
+        dialog.add_response(
+            "erase",
+            "Validate Plan (No Installation)"
+            if development_mode
+            else "Erase Disk and Install",
         )
+        if not development_mode:
+            dialog.set_response_appearance(
+                "erase", Adw.ResponseAppearance.DESTRUCTIVE
+            )
         dialog.set_default_response("cancel")
         dialog.set_close_response("cancel")
 
@@ -928,10 +1156,94 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     content.append(_page_title("progress.title", lang))
     content.append(_page_subtitle("progress.subtitle", lang))
 
-    # Progress bar
-    progress = Gtk.ProgressBar(margin_start=48, margin_end=48, margin_top=24)
-    progress.set_show_text(True)
-    content.append(progress)
+    css = Gtk.CssProvider()
+    css.load_from_data(
+        ".step-light { font-size: 18px; font-weight: 700; }"
+        ".step-pending { color: alpha(@window_fg_color, 0.28); }"
+        ".step-running { color: #3584e4; }"
+        ".step-succeeded { color: #2ec27e; }"
+        ".step-warning { color: #e5a50a; }"
+        ".step-failed { color: #e01b24; }"
+        ".step-skipped { color: alpha(@window_fg_color, 0.45); }"
+        ".step-active { font-weight: 700; }"
+    )
+    Gtk.StyleContext.add_provider_for_display(
+        content.get_display(),
+        css,
+        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+    )
+
+    step_titles = {
+        "verify-environment": "Check installation environment",
+        "prepare-storage": "Prepare installation disk",
+        "mount-target": "Mount target filesystems",
+        "copy-system": "Copy AnduinOS system",
+        "configure-storage": "Configure storage and swap",
+        "enter-chroot": "Prepare target environment",
+        "cleanup-live-system": "Remove live-session components",
+        "configure-system": "Configure account and region",
+        "select-fastest-apt-mirror": "Select fastest package mirror",
+        "refresh-package-indexes": "Refresh package indexes",
+        "upgrade-system": "Install system updates",
+        "prepare-secure-boot": "Prepare Secure Boot",
+        "install-third-party-drivers": "Install hardware drivers",
+        "verify-dkms-signatures": "Verify kernel module signatures",
+        "install-bootloader": "Install bootloader",
+        "enroll-secure-boot": "Schedule MOK enrollment",
+        "leave-chroot": "Finalize target environment",
+        "unmount-target": "Unmount installed system",
+    }
+    step_rows = {}
+    step_list = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=3,
+        margin_top=12,
+        margin_bottom=12,
+        margin_start=12,
+        margin_end=12,
+    )
+    for step_id, title in step_titles.items():
+        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        light = Gtk.Label(label="○", width_chars=2)
+        light.add_css_class("step-light")
+        light.add_css_class("step-pending")
+        label = Gtk.Label(label=title, halign=Gtk.Align.START, hexpand=True)
+        label.set_ellipsize(Pango.EllipsizeMode.END)
+        row.set_tooltip_text(title)
+        row.append(light)
+        row.append(label)
+        step_list.append(row)
+        step_rows[step_id] = (row, light, label)
+
+    omitted_steps = set()
+    if not plan.software.install_updates:
+        omitted_steps.update(("refresh-package-indexes", "upgrade-system"))
+    if not plan.software.install_third_party_drivers:
+        omitted_steps.add("install-third-party-drivers")
+    for step_id in omitted_steps:
+        _row, light, _label = step_rows[step_id]
+        light.remove_css_class("step-pending")
+        light.add_css_class("step-skipped")
+        light.set_label("–")
+
+    left_title = Gtk.Label(
+        label="Installation Steps",
+        halign=Gtk.Align.START,
+        margin_top=12,
+        margin_start=12,
+    )
+    left_title.add_css_class("heading")
+    left_scroll = Gtk.ScrolledWindow(
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+        vexpand=True,
+        min_content_width=285,
+    )
+    left_scroll.set_child(step_list)
+    left_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    left_box.append(left_title)
+    left_box.append(left_scroll)
+    left_frame = Gtk.Frame()
+    left_frame.set_child(left_box)
 
     # Log view
     log_buf = Gtk.TextBuffer()
@@ -942,34 +1254,216 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     log_scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER,
                                     vexpand=True)
     log_scroll.set_child(log_view)
-    content.append(log_scroll)
+    output_notice = Gtk.Label(
+        visible=False,
+        wrap=True,
+        margin_start=12,
+        margin_end=12,
+        margin_top=8,
+    )
+    output_notice.add_css_class("error")
+    copy_log_button = Gtk.Button(label="Copy Log")
+    copy_log_button.connect(
+        "clicked", lambda _button: _copy_log(log_buf, content)
+    )
+    save_log_button = Gtk.Button(label="Save Log")
+    save_log_button.connect(
+        "clicked", lambda _button: _save_log(log_buf)
+    )
+    output_actions = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=8,
+        halign=Gtk.Align.END,
+        margin_end=12,
+        margin_top=8,
+    )
+    output_actions.append(copy_log_button)
+    output_actions.append(save_log_button)
+    output_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    output_box.append(output_actions)
+    output_box.append(output_notice)
+    output_box.append(log_scroll)
 
-    # Result widgets (hidden until done)
-    result_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL,
-                         spacing=12, margin_top=24, halign=Gtk.Align.CENTER,
-                         visible=False)
-    result_icon = Gtk.Image()
-    result_label = Gtk.Label()
-    result_label.add_css_class("title-2")
-    result_sub = Gtk.Label()
+    slides = load_slides(lang)
+    slide_stack = Gtk.Stack(
+        transition_type=Gtk.StackTransitionType.CROSSFADE,
+        transition_duration=500,
+        vexpand=True,
+    )
+    for slide in slides:
+        slide_box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=10,
+            margin_top=16,
+            margin_bottom=8,
+            margin_start=18,
+            margin_end=18,
+        )
+        title = Gtk.Label(
+            label=slide.title,
+            wrap=True,
+            justify=Gtk.Justification.CENTER,
+        )
+        title.add_css_class("title-2")
+        picture = Gtk.Picture.new_for_filename(str(slide.image))
+        picture.set_content_fit(Gtk.ContentFit.CONTAIN)
+        picture.set_can_shrink(True)
+        picture.set_vexpand(True)
+        picture.set_size_request(-1, 190)
+        body = Gtk.Label(
+            label=slide.body,
+            wrap=True,
+            justify=Gtk.Justification.CENTER,
+            max_width_chars=72,
+        )
+        body.add_css_class("dim-label")
+        slide_box.append(title)
+        slide_box.append(picture)
+        slide_box.append(body)
+        slide_stack.add_named(slide_box, slide.key)
+
+    slide_position = {"value": 0}
+    dots = Gtk.Label()
+
+    def _show_slide(position):
+        position %= len(slides)
+        slide_position["value"] = position
+        slide_stack.set_visible_child_name(slides[position].key)
+        dots.set_label(
+            "  ".join(
+                "●" if index == position else "○"
+                for index in range(len(slides))
+            )
+        )
+
+    previous = Gtk.Button.new_from_icon_name("go-previous-symbolic")
+    previous.set_tooltip_text("Previous slide")
+    previous.connect(
+        "clicked",
+        lambda _button: _show_slide(slide_position["value"] - 1),
+    )
+    following = Gtk.Button.new_from_icon_name("go-next-symbolic")
+    following.set_tooltip_text("Next slide")
+    following.connect(
+        "clicked",
+        lambda _button: _show_slide(slide_position["value"] + 1),
+    )
+    slide_controls = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=12,
+        halign=Gtk.Align.CENTER,
+        margin_bottom=10,
+    )
+    slide_controls.append(previous)
+    slide_controls.append(dots)
+    slide_controls.append(following)
+    slideshow_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    slideshow_box.append(slide_stack)
+    slideshow_box.append(slide_controls)
+    _show_slide(0)
+
+    def _advance_slide():
+        _show_slide(slide_position["value"] + 1)
+        return True
+
+    slide_timer = {"id": GLib.timeout_add_seconds(9, _advance_slide)}
+
+    result_box = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=16,
+        valign=Gtk.Align.CENTER,
+        halign=Gtk.Align.CENTER,
+        vexpand=True,
+        margin_start=32,
+        margin_end=32,
+    )
+    result_icon = Gtk.Image(pixel_size=72)
+    result_label = Gtk.Label(wrap=True, justify=Gtk.Justification.CENTER)
+    result_label.add_css_class("title-1")
+    result_sub = Gtk.Label(
+        wrap=True,
+        justify=Gtk.Justification.CENTER,
+        max_width_chars=72,
+    )
     result_sub.add_css_class("dim-label")
+    secure_boot_notice = Gtk.Label(
+        label=_("done.mok_notice", lang),
+        visible=False,
+        wrap=True,
+        justify=Gtk.Justification.CENTER,
+        max_width_chars=64,
+    )
+    secure_boot_notice.add_css_class("warning")
+    reboot_btn = _nav_btn(
+        (
+            "nav.reboot_secure_boot"
+            if plan.platform.secure_boot is SecureBoot.ENABLED
+            else "nav.reboot"
+        ),
+        lang,
+        lambda: _do_reboot(),
+        css_classes=["suggested-action"],
+    )
+    reboot_btn.set_visible(False)
     result_box.append(result_icon)
     result_box.append(result_label)
     result_box.append(result_sub)
-    content.append(result_box)
+    result_box.append(secure_boot_notice)
+    result_box.append(reboot_btn)
 
-    reboot_btn = _nav_btn("nav.reboot", lang, lambda: _do_reboot(),
-                          css_classes=["suggested-action"])
-    reboot_btn.set_visible(False)
-    reboot_btn.set_margin_bottom(24)
-    reboot_btn.set_halign(Gtk.Align.CENTER)
-    content.append(reboot_btn)
+    mode_stack = Gtk.Stack(
+        transition_type=Gtk.StackTransitionType.CROSSFADE,
+        transition_duration=250,
+        vexpand=True,
+    )
+    mode_stack.add_titled(slideshow_box, "discover", "Discover AnduinOS")
+    output_page = mode_stack.add_titled(output_box, "output", "Output")
+    complete_page = mode_stack.add_titled(result_box, "complete", "Complete")
+    complete_page.set_visible(False)
+    mode_stack.set_visible_child_name("discover")
+    mode_switcher = Gtk.StackSwitcher(
+        stack=mode_stack,
+        halign=Gtk.Align.CENTER,
+        margin_top=8,
+        margin_bottom=4,
+    )
+    right_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    right_box.append(mode_switcher)
+    right_box.append(mode_stack)
+    output_frame = Gtk.Frame()
+    output_frame.set_child(right_box)
 
-    error_btn = _nav_btn("nav.save_log", lang, lambda: _save_log(log_buf))
-    error_btn.set_visible(False)
-    error_btn.set_margin_bottom(24)
-    error_btn.set_halign(Gtk.Align.CENTER)
-    content.append(error_btn)
+    workspace = Gtk.Paned(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        position=330,
+        wide_handle=True,
+        vexpand=True,
+        margin_start=24,
+        margin_end=24,
+        margin_top=12,
+    )
+    workspace.set_start_child(left_frame)
+    workspace.set_end_child(output_frame)
+    workspace.set_resize_start_child(False)
+    workspace.set_shrink_start_child(False)
+    content.append(workspace)
+
+    progress_status = Gtk.Label(
+        label="Preparing installation…",
+        halign=Gtk.Align.START,
+        margin_start=48,
+        margin_end=48,
+        margin_top=12,
+    )
+    progress = Gtk.ProgressBar(
+        margin_start=48,
+        margin_end=48,
+        margin_top=6,
+        margin_bottom=12,
+    )
+    progress.set_show_text(True)
+    content.append(progress_status)
+    content.append(progress)
 
     # Log callback (thread-safe via GLib.idle_add)
     def log(msg: str):
@@ -985,26 +1479,58 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     def on_done(success: bool, error: str = ""):
         def _done():
             shared["installation_running"] = False
-            progress.set_visible(False)
-            result_box.set_visible(True)
+            timer_id = slide_timer.pop("id", 0)
+            if timer_id:
+                GLib.source_remove(timer_id)
             if success:
+                progress.set_fraction(1.0)
+                progress.set_text("100%")
+                progress_status.set_label("Installation complete")
                 result_icon.set_from_icon_name("emblem-ok-symbolic")
-                result_label.set_label(_("done.title", lang))
-                if plan.platform.secure_boot is SecureBoot.ENABLED:
+                if shared.get("development_mode"):
+                    result_label.set_label("Development simulation completed")
+                    detail = (
+                        "The installation plan is valid. No disk, filesystem, "
+                        "bootloader, Secure Boot state, or installed system "
+                        "was changed."
+                    )
+                    if plan.platform.secure_boot is SecureBoot.ENABLED:
+                        detail += (
+                            "\n\nA real installation will create a machine-local "
+                            "MOK. After reboot, choose Enroll MOK → Continue → "
+                            "Yes in MOKManager and enter password 123456."
+                        )
+                    result_sub.set_label(detail)
+                elif plan.platform.secure_boot is SecureBoot.ENABLED:
+                    result_label.set_label(_("done.title", lang))
                     result_sub.set_label(
                         _("done.subtitle", lang)
                         + "\nOn the blue MOKManager screen choose "
                         "Enroll MOK → Continue → Yes, password: 123456"
                     )
                 else:
+                    result_label.set_label(_("done.title", lang))
                     result_sub.set_label(_("done.subtitle", lang))
+                secure_boot_notice.set_visible(
+                    plan.platform.secure_boot is SecureBoot.ENABLED
+                )
                 reboot_btn.set_visible(True)
+                reboot_btn.set_sensitive(not shared.get("development_mode"))
+                if shared.get("development_mode"):
+                    reboot_btn.set_tooltip_text(
+                        "Restart is disabled in development protection mode"
+                    )
+                complete_page.set_visible(True)
+                mode_stack.set_visible_child_name("complete")
             else:
-                result_icon.set_from_icon_name("dialog-error-symbolic")
-                result_label.set_label(_("done.error_title", lang))
-                result_sub.set_label(_("done.error_subtitle", lang))
+                progress_status.set_label("Installation failed")
+                output_notice.set_label(
+                    f"{_('done.error_title', lang)}\n{error}"
+                )
+                output_notice.set_visible(True)
+                output_page.set_title("Output • Error")
+                mode_stack.set_visible_child_name("output")
                 log(f"ERROR: {error}")
-                error_btn.set_visible(True)
             return False
         GLib.idle_add(_done)
 
@@ -1012,12 +1538,68 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         def _update():
             fraction = 0.0 if total <= 0 else min(1.0, done / total)
             progress.set_fraction(fraction)
-            progress.set_text(step.replace("-", " ").title())
+            progress.set_text(f"{fraction * 100:.0f}%")
+            if step == "complete":
+                progress_status.set_label("Installation complete")
+            else:
+                progress_status.set_label(
+                    step_titles.get(step, step.replace("-", " ").title())
+                )
+            return False
+        GLib.idle_add(_update)
+
+    status_symbols = {
+        "pending": "○",
+        "running": "●",
+        "succeeded": "✓",
+        "warning": "!",
+        "failed": "×",
+        "skipped": "–",
+    }
+    warning_count = {"value": 0}
+
+    def update_step_status(step: str, status: str, message: str):
+        def _update():
+            widgets = step_rows.get(step)
+            if widgets is None:
+                return False
+            row, light, label = widgets
+            for name in status_symbols:
+                light.remove_css_class(f"step-{name}")
+            light.add_css_class(
+                f"step-{status}" if status in status_symbols else "step-pending"
+            )
+            light.set_label(status_symbols.get(status, "○"))
+            if status == "running":
+                label.add_css_class("step-active")
+            else:
+                label.remove_css_class("step-active")
+            row.set_tooltip_text(message or step_titles.get(step, step))
+            if status == "warning":
+                warning_count["value"] += 1
+                output_page.set_title(
+                    f"Output • {warning_count['value']} warning"
+                    + ("s" if warning_count["value"] != 1 else "")
+                )
+            elif status == "failed":
+                output_page.set_title("Output • Error")
+                output_notice.set_label(
+                    message or f"{step_titles.get(step, step)} failed"
+                )
+                output_notice.set_visible(True)
+                mode_stack.set_visible_child_name("output")
             return False
         GLib.idle_add(_update)
 
     def execute():
-        success, error = ExecutorClient().run(plan, log, update_progress)
+        client = (
+            DevelopmentExecutorClient()
+            if shared.get("development_mode")
+            else ExecutorClient()
+        )
+        success, error = client.run(
+            plan, log, update_progress, update_step_status
+        )
         on_done(success, error)
 
     # Run the privileged helper in a background thread.
@@ -1038,17 +1620,23 @@ def _do_reboot():
 
 
 def _save_log(log_buf):
-    """Save the install log to the live user's home directory."""
-    import subprocess
+    """Save the install log to the current live user's home directory."""
     try:
         text = log_buf.get_text(
             log_buf.get_start_iter(), log_buf.get_end_iter(), False)
-        dest = "/home/live/anduinos-install.log"
-        with open(dest, "w") as f:
+        dest = os.path.join(os.path.expanduser("~"), "anduinos-install.log")
+        with open(dest, "w", encoding="utf-8") as f:
             f.write(text)
-        subprocess.run(["chown", "live:live", dest], timeout=5)
     except Exception:
         pass
+
+
+def _copy_log(log_buf, widget):
+    """Copy the complete installer output to the desktop clipboard."""
+    text = log_buf.get_text(
+        log_buf.get_start_iter(), log_buf.get_end_iter(), False
+    )
+    widget.get_clipboard().set(text)
 
 
 # ── page 8: Done (standalone, for future use) ────────────────────────────

@@ -1,0 +1,28 @@
+#!/bin/sh
+# Create the installer launcher only in the current Casper user's overlay.
+
+set -eu
+
+[ "$(id -u)" -ne 0 ] || exit 0
+[ -d /cdrom ] || exit 0
+grep -qw 'boot=casper' /proc/cmdline || exit 0
+
+desktop_dir="$(xdg-user-dir DESKTOP 2>/dev/null || true)"
+[ -n "$desktop_dir" ] || desktop_dir="$HOME/Desktop"
+
+# Never let a malformed XDG setting write outside the Live user's home.
+case "$desktop_dir" in
+    "$HOME"/*) ;;
+    *) exit 0 ;;
+esac
+
+source=/usr/share/applications/com.anduinos.InstallerBeta.desktop
+destination="$desktop_dir/anduinos-installer-beta.desktop"
+[ -f "$source" ] || exit 0
+
+mkdir -p "$desktop_dir"
+install -m 0755 "$source" "$destination"
+
+# GNOME/DING uses this metadata to avoid presenting a misleading
+# "Untrusted application launcher" file on the Live desktop.
+gio set "$destination" metadata::trusted true >/dev/null 2>&1 || true

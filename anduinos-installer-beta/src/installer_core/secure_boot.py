@@ -82,11 +82,6 @@ class PrepareSecureBootStep:
         certificate.chmod(0o644)
         _verify_key_pair(self.runner, target)
         _write_dkms_configuration(target)
-        if (target / "usr/sbin/dkms").is_file():
-            self.runner.run(
-                ("chroot", str(target), "dkms", "autoinstall"),
-                timeout=1800,
-            )
         context.values["secure_boot_certificate_sha1"] = _sha1(certificate)
         context.values["secure_boot_prepared"] = True
 
@@ -101,6 +96,86 @@ class PrepareSecureBootStep:
         if private_key.stat().st_mode & 0o077:
             raise RuntimeError("MOK private key permissions are too broad")
         _verify_key_pair(self.runner, target)
+
+    def cleanup(self, context: InstallContext) -> None:
+        return None
+
+
+@dataclass
+class VerifyDkmsSignaturesStep:
+    """Build DKMS modules after upgrades/drivers and verify their MOK signer."""
+
+    runner: CommandRunner
+    id: str = "verify-dkms-signatures"
+    title: str = "Build and verify kernel modules"
+    failure_policy: FailurePolicy = FailurePolicy.FATAL
+    progress_weight: int = 3
+    destructive: bool = False
+
+    def preflight(self, context: InstallContext) -> None:
+        validate_plan(context.plan)
+        self.runner.require_commands(("chroot",))
+
+    def execute(self, context: InstallContext) -> None:
+        target = _target(context)
+        if (target / "usr/sbin/dkms").is_file():
+            self.runner.run(
+                ("chroot", str(target), "dkms", "autoinstall"),
+                timeout=3600,
+            )
+
+    def verify(self, context: InstallContext) -> None:
+        if not _enabled(context.plan):
+            return
+        target = _target(context)
+        certificate = target / MOK_CERTIFICATE
+        if not certificate.is_file():
+            raise RuntimeError("MOK certificate is missing before DKMS verification")
+        serial_result = self.runner.run(
+            (
+                "chroot",
+                str(target),
+                "openssl",
+                "x509",
+                "-inform",
+                "DER",
+                "-in",
+                f"/{MOK_CERTIFICATE}",
+                "-serial",
+                "-noout",
+            ),
+            timeout=30,
+        )
+        certificate_serial = _hex_identifier(serial_result.stdout)
+        if not certificate_serial:
+            raise RuntimeError("Could not determine MOK certificate serial")
+
+        module_root = target / "lib/modules"
+        modules = (
+            sorted(module_root.glob("*/updates/dkms/*.ko*"))
+            if module_root.is_dir()
+            else []
+        )
+        for module in modules:
+            relative = "/" + str(module.relative_to(target))
+            result = self.runner.run(
+                (
+                    "chroot",
+                    str(target),
+                    "modinfo",
+                    "-F",
+                    "sig_key",
+                    relative,
+                ),
+                check=False,
+                timeout=30,
+            )
+            module_key = _hex_identifier(result.stdout)
+            if result.returncode != 0 or module_key != certificate_serial:
+                raise RuntimeError(
+                    "DKMS module is not signed by the installation MOK: "
+                    f"{relative}"
+                )
 
     def cleanup(self, context: InstallContext) -> None:
         return None
@@ -295,6 +370,16 @@ def _sha1(path: Path) -> str:
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _hex_identifier(value: str) -> str:
+    # openssl emits "serial=ABCD"; modinfo commonly separates bytes with ':'.
+    value = value.strip().splitlines()[0] if value.strip() else ""
+    if "=" in value:
+        value = value.split("=", 1)[1]
+    return "".join(
+        character for character in value.lower() if character in "0123456789abcdef"
+    ).lstrip("0") or "0"
 
 
 def _target(context: InstallContext) -> Path:

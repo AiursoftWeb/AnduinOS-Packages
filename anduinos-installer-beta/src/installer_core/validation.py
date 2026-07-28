@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 
 from .model import (
+    AuthenticationMode,
     Architecture,
     Firmware,
     InstallMode,
@@ -98,13 +99,26 @@ def validate_plan(plan: InstallPlan) -> None:
         or any(character in identity.full_name for character in ":\r\n")
     ):
         errors.append("Invalid full name")
+    if identity.authentication is AuthenticationMode.PASSWORD:
+        if (
+            not identity.password_hash.startswith(("$y$", "$6$"))
+            or len(identity.password_hash) > 512
+            or not re.fullmatch(r"[!-~]+", identity.password_hash)
+            or ":" in identity.password_hash
+        ):
+            errors.append("Password must be a yescrypt or SHA-512 crypt hash")
+    elif identity.authentication is AuthenticationMode.PASSWORDLESS_SHARED:
+        if identity.password_hash:
+            errors.append("Passwordless shared account must not carry a password")
+    else:
+        errors.append("Invalid account authentication mode")
+    if type(identity.sudo_without_password) is not bool:
+        errors.append("Passwordless sudo policy must be boolean")
     if (
-        not identity.password_hash.startswith(("$y$", "$6$"))
-        or len(identity.password_hash) > 512
-        or not re.fullmatch(r"[!-~]+", identity.password_hash)
-        or ":" in identity.password_hash
+        identity.authentication is AuthenticationMode.PASSWORDLESS_SHARED
+        and identity.sudo_without_password is not True
     ):
-        errors.append("Password must be a yescrypt or SHA-512 crypt hash")
+        errors.append("Passwordless shared account requires passwordless sudo")
 
     regional = plan.regional
     if not LOCALE_RE.fullmatch(regional.locale):
@@ -123,6 +137,11 @@ def validate_plan(plan: InstallPlan) -> None:
         errors.append("Release plan requires lz4 zram")
     if swap.disk_priority >= swap.zram_priority:
         errors.append("Disk swap priority must be lower than zram priority")
+
+    if type(plan.software.install_updates) is not bool:
+        errors.append("Install-updates policy must be boolean")
+    if type(plan.software.install_third_party_drivers) is not bool:
+        errors.append("Third-party-driver policy must be boolean")
 
     if errors:
         raise PlanValidationError(errors)

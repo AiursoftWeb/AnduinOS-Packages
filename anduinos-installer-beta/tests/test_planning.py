@@ -17,12 +17,15 @@ class PlanningTests(unittest.TestCase):
         choices = {
             "lang": "zh_CN",
             "locale": "zh_CN.UTF-8",
-            "keyboard": "cn",
+            "keyboard": "us",
             "filesystem": "btrfs",
             "hostname": original.identity.hostname,
             "username": original.identity.username,
             "full_name": original.identity.full_name,
             "timezone": "Asia/Shanghai",
+            "install_updates": False,
+            "install_third_party_drivers": True,
+            "sudo_without_password": True,
         }
         disk = DiskIdentity("/dev/sda", "serial:test", 64 * 1024**3)
         platform = PlatformProbe(
@@ -30,5 +33,8 @@ class PlanningTests(unittest.TestCase):
         )
         plan = build_plan(choices, disk, platform, "$y$j9T$example$example")
         self.assertEqual(plan.regional.input_method, "rime")
+        self.assertEqual(plan.regional.keyboard.layout, "us")
         self.assertEqual(plan.boot.mok_password_policy.value, "anduinos-default")
-
+        self.assertFalse(plan.software.install_updates)
+        self.assertTrue(plan.software.install_third_party_drivers)
+        self.assertTrue(plan.identity.sudo_without_password)

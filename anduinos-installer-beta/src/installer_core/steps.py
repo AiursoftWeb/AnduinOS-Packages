@@ -73,9 +73,13 @@ class StepRunner:
         self,
         steps: list[InstallStep],
         progress: Callable[[str, int, int], None] | None = None,
+        status: Callable[[str, StepStatus, str], None] | None = None,
     ):
         self.steps = tuple(steps)
         self.progress = progress or (lambda _step, _done, _total: None)
+        self.status = status or (
+            lambda _step, _status, _message: None
+        )
 
     def run(self, context: InstallContext) -> InstallResult:
         total = sum(max(1, step.progress_weight) for step in self.steps)
@@ -88,6 +92,7 @@ class StepRunner:
             try:
                 step.preflight(context)
             except Exception as error:
+                self.status(step.id, StepStatus.FAILED, str(error))
                 results.append(
                     StepResult(step.id, StepStatus.FAILED, str(error))
                 )
@@ -96,6 +101,7 @@ class StepRunner:
         for step in self.steps:
             weight = max(1, step.progress_weight)
             self.progress(step.id, completed, total)
+            self.status(step.id, StepStatus.RUNNING, "")
             context.log(f"[{step.id}] {step.title}")
             if step.destructive:
                 context.destructive_started = True
@@ -103,12 +109,14 @@ class StepRunner:
                 step.execute(context)
                 step.verify(context)
                 executed.append(step)
+                self.status(step.id, StepStatus.SUCCEEDED, "")
                 results.append(StepResult(step.id, StepStatus.SUCCEEDED))
             except Exception as error:
                 message = str(error)
                 context.log(f"[{step.id}] failed: {message}")
                 self._cleanup(context, [step])
                 if step.failure_policy is FailurePolicy.FATAL:
+                    self.status(step.id, StepStatus.FAILED, message)
                     results.append(
                         StepResult(step.id, StepStatus.FAILED, message)
                     )
@@ -117,10 +125,12 @@ class StepRunner:
                         False, tuple(results), context.destructive_started
                     )
                 if step.failure_policy is FailurePolicy.WARNING:
+                    self.status(step.id, StepStatus.WARNING, message)
                     results.append(
                         StepResult(step.id, StepStatus.WARNING, message)
                     )
                 else:
+                    self.status(step.id, StepStatus.SKIPPED, message)
                     results.append(
                         StepResult(step.id, StepStatus.SKIPPED, message)
                     )

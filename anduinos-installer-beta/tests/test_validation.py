@@ -2,6 +2,7 @@ import dataclasses
 import unittest
 
 from installer_core.model import (
+    AuthenticationMode,
     Architecture,
     Firmware,
     MokPasswordPolicy,
@@ -62,6 +63,39 @@ class ValidationTests(unittest.TestCase):
             ),
         )
         with self.assertRaisesRegex(PlanValidationError, "MOK password"):
+            validate_plan(plan)
+
+    def test_rejects_non_boolean_software_choice(self):
+        plan = valid_plan()
+        plan = dataclasses.replace(
+            plan,
+            software=dataclasses.replace(
+                plan.software, install_updates="yes"
+            ),
+        )
+        with self.assertRaisesRegex(PlanValidationError, "boolean"):
+            validate_plan(plan)
+
+    def test_rejects_password_in_passwordless_plan(self):
+        plan = valid_plan(authentication=AuthenticationMode.PASSWORDLESS_SHARED)
+        plan = dataclasses.replace(
+            plan,
+            identity=dataclasses.replace(
+                plan.identity, password_hash="$6$unexpected"
+            ),
+        )
+        with self.assertRaisesRegex(PlanValidationError, "must not carry"):
+            validate_plan(plan)
+
+    def test_passwordless_shared_plan_requires_nopasswd_sudo(self):
+        plan = valid_plan(authentication=AuthenticationMode.PASSWORDLESS_SHARED)
+        plan = dataclasses.replace(
+            plan,
+            identity=dataclasses.replace(
+                plan.identity, sudo_without_password=False
+            ),
+        )
+        with self.assertRaisesRegex(PlanValidationError, "requires"):
             validate_plan(plan)
 
 

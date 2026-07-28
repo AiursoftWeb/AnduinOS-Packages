@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.1-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer (beta) — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -12,6 +12,7 @@
     <TargetSuites>resolute-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
 
     <!-- Beta: NO Conflicts, NO Replaces. This is an orphan package.
          After 3-4 months of stable testing, rename to anduinos-installer
@@ -40,6 +41,7 @@
     <Dependency Include="sbsigntool" />
     <Dependency Include="squashfs-tools" />
     <Dependency Include="util-linux" />
+    <Dependency Include="ubuntu-drivers-common" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,12 +50,22 @@
                  Target="/usr/bin/anduinos-installer-beta" Mode="755" />
     <!-- Desktop entry for app drawer -->
     <IncludeFile Include="assets/anduinos-installer-beta.desktop"
-                 Target="/usr/share/applications/anduinos-installer-beta.desktop" Mode="644" />
+                 Target="/usr/share/applications/com.anduinos.InstallerBeta.desktop" Mode="644" />
+    <!-- Independent copy of the box-and-AnduinOS-logo artwork. -->
+    <IncludeFile Include="assets/anduinos-installer-beta.svg"
+                 Target="/usr/share/icons/hicolor/scalable/apps/anduinos-installer-beta.svg" Mode="644" />
     <IncludeFile Include="assets/anduinos-installer-executor"
                  Target="/usr/bin/anduinos-installer-executor" Mode="755" />
+    <IncludeFile Include="assets/anduinos-installer-beta-live-shortcut"
+                 Target="/usr/lib/anduinos-installer-beta/create-live-shortcut" Mode="755" />
+    <IncludeFile Include="assets/anduinos-installer-beta-live-shortcut.desktop"
+                 Target="/etc/xdg/autostart/anduinos-installer-beta-live-shortcut.desktop" Mode="644" />
     <!-- Python source tree -->
     <IncludeFolder Include="src/"
                    Target="/usr/lib/anduinos-installer-beta/" />
+    <!-- Independent, native-GTK reuse of the historical localized slideshow. -->
+    <IncludeFolder Include="assets/slideshow/"
+                   Target="/usr/share/anduinos-installer-beta/slideshow/" />
   </ItemGroup>
 
   <ItemGroup>

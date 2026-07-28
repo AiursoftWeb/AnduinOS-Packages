@@ -98,6 +98,36 @@ class StepRunnerTests(unittest.TestCase):
         self.assertTrue(result.succeeded)
         self.assertEqual(result.results[0].status, StepStatus.WARNING)
 
+    def test_emits_running_and_terminal_status_for_each_step(self):
+        events = []
+        statuses = []
+        steps = [
+            FakeStep("ok", events),
+            FakeStep(
+                "optional",
+                events,
+                policy=FailurePolicy.WARNING,
+                fail_at="execute",
+            ),
+        ]
+        result = StepRunner(
+            steps,
+            status=lambda step, status, message: statuses.append(
+                (step, status, message)
+            ),
+        ).run(self.context())
+        self.assertTrue(result.succeeded)
+        self.assertEqual(
+            [(step, status) for step, status, _message in statuses],
+            [
+                ("ok", StepStatus.RUNNING),
+                ("ok", StepStatus.SUCCEEDED),
+                ("optional", StepStatus.RUNNING),
+                ("optional", StepStatus.WARNING),
+            ],
+        )
+        self.assertIn("failed", statuses[-1][2])
+
 
 if __name__ == "__main__":
     unittest.main()

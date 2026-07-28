@@ -36,6 +36,14 @@ def main() -> int:
                     "total": total,
                 }
             ),
+            lambda step, status, message: emit(
+                {
+                    "event": "step-status",
+                    "step": step,
+                    "status": status.value,
+                    "message": message,
+                }
+            ),
         )
         result = executor.run(plan)
         if not result.succeeded:
@@ -58,4 +66,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

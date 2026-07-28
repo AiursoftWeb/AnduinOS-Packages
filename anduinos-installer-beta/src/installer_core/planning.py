@@ -6,6 +6,7 @@ from collections.abc import Mapping
 
 from .model import (
     BootSpec,
+    AuthenticationMode,
     Filesystem,
     IdentitySpec,
     InstallMode,
@@ -15,6 +16,7 @@ from .model import (
     PlatformSpec,
     RegionalSpec,
     SCHEMA_VERSION,
+    SoftwareSpec,
     SourceSpec,
     StorageSpec,
 )
@@ -48,6 +50,14 @@ def build_plan(
             hostname=str(choices.get("hostname") or ""),
             username=str(choices.get("username") or ""),
             full_name=str(choices.get("full_name") or ""),
+            authentication=(
+                AuthenticationMode.PASSWORDLESS_SHARED
+                if choices.get("passwordless_shared")
+                else AuthenticationMode.PASSWORD
+            ),
+            sudo_without_password=bool(
+                choices.get("sudo_without_password", False)
+            ),
             password_hash=password_hash,
         ),
         regional=RegionalSpec(
@@ -55,6 +65,12 @@ def build_plan(
             timezone=str(choices.get("timezone") or ""),
             keyboard=KeyboardSpec(str(choices.get("keyboard") or "")),
             input_method="rime" if language.startswith("zh_") else None,
+        ),
+        software=SoftwareSpec(
+            install_updates=bool(choices.get("install_updates", True)),
+            install_third_party_drivers=bool(
+                choices.get("install_third_party_drivers", False)
+            ),
         ),
         boot=BootSpec(
             mok_password_policy=(
@@ -66,4 +82,3 @@ def build_plan(
     )
     validate_plan(plan)
     return plan
-

@@ -19,6 +19,29 @@ commands, step policies, mount paths, or arbitrary hooks.
   50%-of-RAM LZ4 zram policy. zram has the higher priority.
 - Live system: Casper remains the image/boot transport for release one. Its
   live-session state must not leak into the installed target.
+- Software: refreshing package indexes and installing available updates is
+  enabled by default. An offline index-refresh failure is a warning and skips
+  the upgrade; after an upgrade transaction starts, any APT/dpkg failure is
+  fatal. Recommended third-party drivers are an explicit opt-in and use
+  `ubuntu-drivers install --no-oem`.
+- Mirrors: before refreshing APT, a warning-policy step concurrently probes a
+  maintained HTTP+HTTPS Ubuntu mirror list, bandwidth-tests the five lowest
+  latency candidates, and atomically replaces only `URIs:` fields in the
+  target's Ubuntu Deb822 source. Current-architecture package indexes are used
+  first, with OOBE's `Contents-amd64.gz` probe as fallback. A failed update
+  restores the exact original source bytes and mode, retries once, and never
+  weakens APT signature or `Valid-Until` verification.
+- Accounts: password authentication requires matching password entries. A
+  separate visible control chooses whether sudo requires that password.
+  Explicit passwordless shared-computer mode configures GDM automatic login
+  and necessarily locks that sudo control on. Every enabled passwordless-sudo
+  policy uses a mode-0440, `visudo`-validated `NOPASSWD` rule. The UI warns
+  that anyone or any program with session access can obtain root; root itself
+  remains locked.
+- Regional defaults: every officially supported language/region has an
+  installer-owned representative timezone. The timezone page preselects it
+  (for example US English → New York) while retaining the complete searchable
+  system timezone list and allowing the user to override the guess.
 
 ## Safety boundary
 
@@ -57,6 +80,13 @@ published but are not installed automatically. During the beta period a user
 may explicitly install `anduinos-installer-config` to obtain the complete
 legacy fallback stack.
 
+The package owns both its application-menu entry and a GNOME autostart helper.
+The helper creates a trusted desktop launcher only in a non-root Casper
+session, inside that Live user's runtime home. It never writes to `/etc/skel`,
+so no dead installer shortcut can enter the installed user's home. The
+launcher package carries its own independent copy of the OOBE box-and-logo
+artwork and does not depend on the OOBE package.
+
 ## Implementation milestones
 
 - Milestone 1 — complete: plan schema, validation, hardware discovery,
@@ -93,7 +123,41 @@ legacy fallback stack.
   `anduinos-installer-beta`, excludes it from the installed target manifest,
   and rejects accidental inclusion of the retired Ubiquity/bwrap stack. Casper
   remains the live boot transport.
-- Milestone 6: release gate review and only then removal of Ubiquity and
+- Milestone 6A — complete: schema v2 carries immutable update and third-party
+  driver choices; GTK defaults to updates on and non-free drivers off; summary
+  and development simulation expose the resulting fixed pipeline.
+- Milestone 6B — complete: the isolated target refreshes APT indexes, tolerates
+  an offline refresh, applies upgrades only after a successful refresh, and
+  treats an interrupted/invalid upgrade transaction as fatal.
+- Milestone 6C — complete: opt-in recommended drivers use Ubuntu's supported
+  discovery/install frontend without OEM archives. Secure Boot preparation
+  precedes driver installation; DKMS then rebuilds once, and every resulting
+  DKMS module must match the new machine-local MOK before boot artifacts and
+  MOK enrollment are finalized.
+- Milestone 6D — implementation complete: MOK enrollment is visible in both
+  the destructive summary and non-destructive development simulation, with
+  the documented one-time password `123456`. Unit, lint, package-build and
+  installed-GUI checks form the local gate; destructive VM rows remain
+  mandatory before release.
+- Milestone 7A — complete: the executor emits explicit running, succeeded,
+  warning, failed and skipped events for every applicable Step. The GTK4
+  execution dashboard renders the exact backend pipeline as an accessible
+  five-state light board beside live output, with a fixed overall progress
+  area. Unselected optional update/driver steps are visibly skipped rather
+  than falsely reported as successful.
+- Milestone 7B — complete: the historical seven-page AnduinOS presentation,
+  including all 28 supported localizations and six screenshots, is copied as
+  installer-owned data and rendered by native GTK4. No WebKit, JavaScript,
+  Ubiquity or installer-config dependency is introduced. The dashboard opens
+  on an automatically advancing presentation with manual navigation and can
+  switch instantly to the live Output view.
+- Milestone 7C — complete: warning events accumulate on the Output switcher
+  without interrupting the presentation; fatal errors reveal and focus the
+  live log with an error banner; successful completion stops the carousel and
+  opens a dedicated completion/MOK/reboot card. Output can be copied or saved
+  to the live user's home directory, while the presentation and log remain
+  available after completion.
+- Final release gate: complete the VM matrix and only then remove Ubiquity and
   `anduinos-installer-config`.
 
 Disk encryption, TPM2 unlocking and FIDO2 unlocking are explicitly outside

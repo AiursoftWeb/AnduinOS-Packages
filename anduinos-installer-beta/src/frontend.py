@@ -5,12 +5,14 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import time
 from collections.abc import Callable
 
 from installer_core.model import InstallPlan
 from installer_core.passwords import hash_password
 from installer_core.planning import build_plan
 from installer_core.probe import probe_disks, probe_platform
+from installer_core.validation import validate_plan
 
 
 class FrontendPlanError(RuntimeError):
@@ -19,11 +21,23 @@ class FrontendPlanError(RuntimeError):
 
 def create_install_plan(state: dict[str, object]) -> InstallPlan:
     password = str(state.get("password") or "")
+    confirmation = str(state.get("password_confirmation") or "")
+    passwordless = bool(state.get("passwordless_shared"))
     try:
-        password_hash = hash_password(password)
+        if passwordless:
+            if password or confirmation:
+                raise FrontendPlanError(
+                    "Passwordless mode requires both password fields to be empty"
+                )
+            password_hash = ""
+        else:
+            if password != confirmation:
+                raise FrontendPlanError("The two passwords do not match")
+            password_hash = hash_password(password)
     finally:
         # Plaintext exists only while the account page and this call need it.
         state["password"] = ""
+        state["password_confirmation"] = ""
         clear_ui = state.pop("_clear_password_ui", None)
         if callable(clear_ui):
             clear_ui()
@@ -59,7 +73,11 @@ class ExecutorClient:
         plan: InstallPlan,
         log: Callable[[str], None],
         progress: Callable[[str, int, int], None],
+        step_status: Callable[[str, str, str], None] | None = None,
     ) -> tuple[bool, str]:
+        step_status = step_status or (
+            lambda _step, _status, _message: None
+        )
         helper_command = [self.helper]
         if os.geteuid() != 0:
             helper_command = ["sudo", "--non-interactive", *helper_command]
@@ -99,6 +117,12 @@ class ExecutorClient:
                         int(event.get("done", 0)),
                         int(event.get("total", 1)),
                     )
+                elif kind == "step-status":
+                    step_status(
+                        str(event.get("step", "")),
+                        str(event.get("status", "")),
+                        str(event.get("message", "")),
+                    )
                 elif kind == "complete":
                     final_error = str(event.get("error", ""))
             stderr = process.stderr.read() if process.stderr else ""
@@ -108,3 +132,66 @@ class ExecutorClient:
             return True, ""
         except OSError as error:
             return False, f"Could not start privileged executor: {error}"
+
+
+class DevelopmentExecutorClient:
+    """Exercise the frontend contract without starting privileged code."""
+
+    BASE_PIPELINE = (
+        ("verify-environment", 1),
+        ("prepare-storage", 10),
+        ("mount-target", 3),
+        ("copy-system", 60),
+        ("configure-storage", 3),
+        ("enter-chroot", 2),
+        ("cleanup-live-system", 4),
+        ("configure-system", 5),
+        ("select-fastest-apt-mirror", 3),
+    )
+
+    def run(
+        self,
+        plan: InstallPlan,
+        log: Callable[[str], None],
+        progress: Callable[[str, int, int], None],
+        step_status: Callable[[str, str, str], None] | None = None,
+    ) -> tuple[bool, str]:
+        step_status = step_status or (
+            lambda _step, _status, _message: None
+        )
+        try:
+            validate_plan(plan)
+        except Exception as error:
+            return False, str(error)
+
+        pipeline = list(self.BASE_PIPELINE)
+        if plan.software.install_updates:
+            pipeline.extend(
+                (("refresh-package-indexes", 2), ("upgrade-system", 8))
+            )
+        pipeline.append(("prepare-secure-boot", 4))
+        if plan.software.install_third_party_drivers:
+            pipeline.append(("install-third-party-drivers", 8))
+        pipeline.extend(
+            (
+                ("verify-dkms-signatures", 3),
+                ("install-bootloader", 5),
+                ("enroll-secure-boot", 2),
+                ("leave-chroot", 1),
+                ("unmount-target", 1),
+            )
+        )
+        total = sum(weight for _step, weight in pipeline)
+        completed = 0
+        log("DEVELOPMENT MODE: the privileged executor is disabled.")
+        log("The immutable installation plan passed schema validation.")
+        for step, weight in pipeline:
+            progress(step, completed, total)
+            step_status(step, "running", "")
+            log(f"[{step}] simulated; no command was executed")
+            completed += weight
+            time.sleep(0.03)
+            step_status(step, "succeeded", "")
+        progress("complete", total, total)
+        log("Simulation complete. No disk, mount, firmware, or target changed.")
+        return True, ""

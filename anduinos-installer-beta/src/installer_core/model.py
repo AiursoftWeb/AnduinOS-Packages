@@ -12,7 +12,7 @@ from enum import Enum
 from typing import Any
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 4
 
 
 class Architecture(str, Enum):
@@ -44,6 +44,11 @@ class Filesystem(str, Enum):
 class MokPasswordPolicy(str, Enum):
     ANDUINOS_DEFAULT = "anduinos-default"
     NOT_APPLICABLE = "not-applicable"
+
+
+class AuthenticationMode(str, Enum):
+    PASSWORD = "password"
+    PASSWORDLESS_SHARED = "passwordless-shared"
 
 
 @dataclass(frozen=True)
@@ -83,8 +88,10 @@ class IdentitySpec:
     hostname: str
     username: str
     full_name: str
+    authentication: AuthenticationMode = AuthenticationMode.PASSWORD
+    sudo_without_password: bool = False
     # A crypt-compatible hash, never a plaintext password.
-    password_hash: str = field(repr=False)
+    password_hash: str = field(default="", repr=False)
 
 
 @dataclass(frozen=True)
@@ -117,6 +124,12 @@ class BootSpec:
 
 
 @dataclass(frozen=True)
+class SoftwareSpec:
+    install_updates: bool = True
+    install_third_party_drivers: bool = False
+
+
+@dataclass(frozen=True)
 class InstallPlan:
     schema_version: int
     source: SourceSpec
@@ -124,6 +137,7 @@ class InstallPlan:
     platform: PlatformSpec
     identity: IdentitySpec
     regional: RegionalSpec
+    software: SoftwareSpec = field(default_factory=SoftwareSpec)
     swap: SwapSpec = field(default_factory=SwapSpec)
     boot: BootSpec = field(default_factory=BootSpec)
 
@@ -149,11 +163,22 @@ class InstallPlan:
             firmware=Firmware(value["platform"]["firmware"]),
             secure_boot=SecureBoot(value["platform"]["secure_boot"]),
         )
-        identity = IdentitySpec(**value["identity"])
+        identity_data = value["identity"]
+        identity = IdentitySpec(
+            **{
+                **identity_data,
+                "authentication": AuthenticationMode(
+                    identity_data.get(
+                        "authentication", AuthenticationMode.PASSWORD.value
+                    )
+                ),
+            }
+        )
         keyboard = KeyboardSpec(**value["regional"]["keyboard"])
         regional = RegionalSpec(
             **{**value["regional"], "keyboard": keyboard}
         )
+        software = SoftwareSpec(**value.get("software", {}))
         swap = SwapSpec(**value.get("swap", {}))
         boot_data = value.get("boot", {})
         boot = BootSpec(
@@ -174,6 +199,7 @@ class InstallPlan:
             platform=platform,
             identity=identity,
             regional=regional,
+            software=software,
             swap=swap,
             boot=boot,
         )

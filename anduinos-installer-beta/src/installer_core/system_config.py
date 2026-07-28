@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .command import CommandRunner
+from .model import AuthenticationMode
 from .steps import FailurePolicy, InstallContext
 from .validation import validate_plan
 
@@ -83,12 +84,36 @@ class ConfigureSystemStep:
             ),
             timeout=30,
         )
-        # The hash is carried over stdin: it is absent from argv and logs.
-        self.runner.run(
-            ("chroot", str(target), "chpasswd", "--encrypted"),
-            input_text=f"{identity.username}:{identity.password_hash}\n",
-            timeout=30,
-        )
+        if identity.authentication is AuthenticationMode.PASSWORD:
+            # The hash is carried over stdin: it is absent from argv and logs.
+            self.runner.run(
+                ("chroot", str(target), "chpasswd", "--encrypted"),
+                input_text=f"{identity.username}:{identity.password_hash}\n",
+                timeout=30,
+            )
+            _write_gdm_autologin(target, identity.username, enabled=False)
+        else:
+            self.runner.run(
+                ("chroot", str(target), "passwd", "--delete", identity.username),
+                timeout=30,
+            )
+            _write_gdm_autologin(target, identity.username, enabled=True)
+
+        if identity.sudo_without_password:
+            sudoers = _write_passwordless_sudo(target, identity.username)
+            self.runner.run(
+                (
+                    "chroot",
+                    str(target),
+                    "visudo",
+                    "--check",
+                    "--file",
+                    f"/{sudoers.relative_to(target)}",
+                ),
+                timeout=30,
+            )
+        else:
+            _remove_passwordless_sudo(target)
         self.runner.run(
             ("chroot", str(target), "passwd", "--lock", "root"),
             timeout=30,
@@ -166,6 +191,24 @@ class ConfigureSystemStep:
         ).stdout.split()
         if "sudo" not in group:
             raise RuntimeError("User is not a member of sudo")
+        sudoers = _passwordless_sudo_path(target)
+        gdm = target / "etc/gdm3/custom.conf"
+        gdm_text = gdm.read_text(encoding="utf-8") if gdm.is_file() else ""
+        if plan.identity.sudo_without_password:
+            if not sudoers.is_file() or sudoers.stat().st_mode & 0o777 != 0o440:
+                raise RuntimeError("Passwordless sudo policy is missing or unsafe")
+            expected = (
+                f"{plan.identity.username} ALL=(ALL:ALL) NOPASSWD: ALL\n"
+            )
+            if sudoers.read_text(encoding="utf-8") != expected:
+                raise RuntimeError("Passwordless sudo policy verification failed")
+            if (
+                "AutomaticLoginEnable=true" not in gdm_text
+                or f"AutomaticLogin={plan.identity.username}" not in gdm_text
+            ):
+                raise RuntimeError("Passwordless automatic login is not configured")
+        elif sudoers.exists():
+            raise RuntimeError("Unexpected passwordless sudo policy")
 
     def cleanup(self, context: InstallContext) -> None:
         return None
@@ -184,6 +227,54 @@ def _write_hostname(target: Path, hostname: str) -> None:
         "ff02::2 ip6-allrouters\n",
         encoding="utf-8",
     )
+
+
+def _passwordless_sudo_path(target: Path) -> Path:
+    return target / "etc/sudoers.d/90-anduinos-passwordless-admin"
+
+
+def _write_passwordless_sudo(target: Path, username: str) -> Path:
+    path = _passwordless_sudo_path(target)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        f"{username} ALL=(ALL:ALL) NOPASSWD: ALL\n", encoding="utf-8"
+    )
+    path.chmod(0o440)
+    return path
+
+
+def _remove_passwordless_sudo(target: Path) -> None:
+    path = _passwordless_sudo_path(target)
+    if path.exists() or path.is_symlink():
+        path.unlink()
+
+
+def _write_gdm_autologin(
+    target: Path, username: str, *, enabled: bool
+) -> None:
+    path = target / "etc/gdm3/custom.conf"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    content = path.read_text(encoding="utf-8") if path.is_file() else ""
+    section = re.search(
+        r"(?ms)^(\[daemon\]\s*\n)(.*?)(?=^\[|\Z)", content
+    )
+    settings = (
+        "AutomaticLoginEnable=true\n"
+        f"AutomaticLogin={username}\n"
+        if enabled
+        else "AutomaticLoginEnable=false\n"
+    )
+    if section:
+        body = re.sub(
+            r"(?mi)^\s*#?\s*AutomaticLogin(?:Enable)?\s*=.*\n?",
+            "",
+            section.group(2),
+        )
+        replacement = section.group(1) + settings + body
+        content = content[: section.start()] + replacement + content[section.end() :]
+    else:
+        content = content.rstrip() + "\n\n[daemon]\n" + settings
+    path.write_text(content, encoding="utf-8")
 
 
 def _write_locale(target: Path, locale: str) -> None:

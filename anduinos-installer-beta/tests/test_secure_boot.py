@@ -18,6 +18,7 @@ from installer_core.secure_boot import (
     MOK_PRIVATE_KEY,
     EnrollSecureBootStep,
     PrepareSecureBootStep,
+    VerifyDkmsSignaturesStep,
 )
 from installer_core.steps import InstallContext
 
@@ -244,6 +245,93 @@ class EnrollSecureBootTests(unittest.TestCase):
         self.assertFalse(
             any("--import" in command for command, _kwargs in runner.commands)
         )
+
+
+class VerifyDkmsSignaturesTests(unittest.TestCase):
+    def test_builds_dkms_and_accepts_matching_mok_serial(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            (target / MOK_CERTIFICATE).parent.mkdir(parents=True)
+            (target / MOK_CERTIFICATE).write_bytes(b"certificate")
+            dkms = target / "usr/sbin/dkms"
+            dkms.parent.mkdir(parents=True)
+            dkms.touch()
+            module = target / "lib/modules/1.0/updates/dkms/example.ko"
+            module.parent.mkdir(parents=True)
+            module.touch()
+            runner = FakeRunner()
+            serial_command = (
+                "chroot",
+                str(target),
+                "openssl",
+                "x509",
+                "-inform",
+                "DER",
+                "-in",
+                f"/{MOK_CERTIFICATE}",
+                "-serial",
+                "-noout",
+            )
+            module_command = (
+                "chroot",
+                str(target),
+                "modinfo",
+                "-F",
+                "sig_key",
+                "/lib/modules/1.0/updates/dkms/example.ko",
+            )
+            runner.outputs[serial_command] = ("serial=00ABCD\n", "", 0)
+            runner.outputs[module_command] = ("AB:CD\n", "", 0)
+            context = InstallContext(
+                valid_plan(), lambda _message: None, {"target": target}
+            )
+            step = VerifyDkmsSignaturesStep(runner)
+            step.execute(context)
+            step.verify(context)
+
+        self.assertIn(
+            ("chroot", str(target), "dkms", "autoinstall"),
+            [item[0] for item in runner.commands],
+        )
+
+    def test_rejects_dkms_module_signed_by_another_key(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            (target / MOK_CERTIFICATE).parent.mkdir(parents=True)
+            (target / MOK_CERTIFICATE).write_bytes(b"certificate")
+            module = target / "lib/modules/1.0/updates/dkms/example.ko"
+            module.parent.mkdir(parents=True)
+            module.touch()
+            runner = FakeRunner()
+            runner.outputs[
+                (
+                    "chroot",
+                    str(target),
+                    "openssl",
+                    "x509",
+                    "-inform",
+                    "DER",
+                    "-in",
+                    f"/{MOK_CERTIFICATE}",
+                    "-serial",
+                    "-noout",
+                )
+            ] = ("serial=ABCD\n", "", 0)
+            runner.outputs[
+                (
+                    "chroot",
+                    str(target),
+                    "modinfo",
+                    "-F",
+                    "sig_key",
+                    "/lib/modules/1.0/updates/dkms/example.ko",
+                )
+            ] = ("DEAD:BEEF\n", "", 0)
+            context = InstallContext(
+                valid_plan(), lambda _message: None, {"target": target}
+            )
+            with self.assertRaisesRegex(RuntimeError, "not signed"):
+                VerifyDkmsSignaturesStep(runner).verify(context)
 
     def test_unsigned_chain_fails_before_mok_import(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -19,7 +19,7 @@ class Language:
     english_name: str   # "Chinese (Simplified)"
     native_name: str    # "中文(简体)"
     locale: str         # "zh_CN.UTF-8"
-    keyboard: str       # default XKB variant, e.g. "cn"
+    keyboard: str       # default physical XKB layout, e.g. "us"
 
 
 # Sorted alphabetically by English name (matching the existing .data file order).
@@ -27,9 +27,12 @@ class Language:
 # and generate-languagelist-data.py.
 LANGUAGES = [
     Language("ar",    "Arabic",                "العربية",              "ar_SA.UTF-8", "ara"),
-    Language("zh_CN", "Chinese (Simplified)",  "中文(简体)",           "zh_CN.UTF-8", "cn"),
-    Language("zh_HK", "Chinese (Hong Kong)",   "中文 (香港)",          "zh_HK.UTF-8", "hk"),
-    Language("zh_TW", "Chinese (Traditional)", "中文(繁體)",           "zh_TW.UTF-8", "tw"),
+    # Chinese text input is provided by IBus/Rime. Chinese locales normally
+    # use a standard US physical keyboard and must not be mapped from country
+    # codes to unrelated XKB layout identifiers.
+    Language("zh_CN", "Chinese (Simplified)",  "中文(简体)",           "zh_CN.UTF-8", "us"),
+    Language("zh_HK", "Chinese (Hong Kong)",   "中文 (香港)",          "zh_HK.UTF-8", "us"),
+    Language("zh_TW", "Chinese (Traditional)", "中文(繁體)",           "zh_TW.UTF-8", "us"),
     Language("da",    "Danish",                "Dansk",                "da_DK.UTF-8", "dk"),
     Language("nl",    "Dutch",                 "Nederlands",           "nl_NL.UTF-8", "nl"),
     Language("en",    "English",               "English",              "en_US.UTF-8", "us"),
@@ -55,6 +58,44 @@ LANGUAGES = [
     Language("uk",    "Ukrainian",             "Українська",           "uk_UA.UTF-8", "ua"),
     Language("vi",    "Vietnamese",            "Tiếng Việt",           "vi_VN.UTF-8", "vn"),
 ]
+
+# Installer-owned defaults. These are intentionally keyed by supported
+# language/region rather than inferred from the live machine's network.
+DEFAULT_TIMEZONES = {
+    "ar": "Asia/Riyadh",
+    "zh_CN": "Asia/Shanghai",
+    "zh_HK": "Asia/Hong_Kong",
+    "zh_TW": "Asia/Taipei",
+    "da": "Europe/Copenhagen",
+    "nl": "Europe/Amsterdam",
+    "en": "America/New_York",
+    "en_GB": "Europe/London",
+    "fi": "Europe/Helsinki",
+    "fr": "Europe/Paris",
+    "de": "Europe/Berlin",
+    "el": "Europe/Athens",
+    "hi": "Asia/Kolkata",
+    "id": "Asia/Jakarta",
+    "it": "Europe/Rome",
+    "ja": "Asia/Tokyo",
+    "ko": "Asia/Seoul",
+    "pl": "Europe/Warsaw",
+    "pt": "Europe/Lisbon",
+    "pt_BR": "America/Sao_Paulo",
+    "ro": "Europe/Bucharest",
+    "ru": "Europe/Moscow",
+    "es": "Europe/Madrid",
+    "sv": "Europe/Stockholm",
+    "th": "Asia/Bangkok",
+    "tr": "Europe/Istanbul",
+    "uk": "Europe/Kyiv",
+    "vi": "Asia/Ho_Chi_Minh",
+}
+
+
+def default_timezone(code: str) -> str:
+    """Return the maintained representative timezone for a language."""
+    return DEFAULT_TIMEZONES.get(code, "America/New_York")
 
 
 def is_chinese(code: str) -> bool:
@@ -101,6 +142,7 @@ _t("en", {
     "nav.back":         "Back",
     "nav.install":      "Install",
     "nav.reboot":       "Reboot Now",
+    "nav.reboot_secure_boot": "Restart and Enroll Secure Boot Key",
     "nav.save_log":     "Save Log",
     "nav.close":        "Close",
 
@@ -112,6 +154,14 @@ _t("en", {
     "keyboard.title":   "Keyboard Layout",
     "keyboard.subtitle":"Confirm your keyboard layout",
     "keyboard.test":    "Test your keyboard here…",
+
+    # Updates and drivers page
+    "software.title":   "Updates and Drivers",
+    "software.subtitle":"Choose optional software to install",
+    "software.updates": "Download and install system updates during installation",
+    "software.updates_detail": "Requires an Internet connection. The base installation remains available when offline.",
+    "software.drivers": "Install third-party drivers for this device",
+    "software.drivers_detail": "Some drivers are proprietary or otherwise non-free software.",
 
     # Disk page
     "disk.title":       "Select Installation Disk",
@@ -129,9 +179,15 @@ _t("en", {
     "user.full_name":   "Full Name",
     "user.username":    "Username",
     "user.password":    "Password",
+    "user.confirm_password": "Confirm Password",
     "user.hostname":    "Computer Name",
     "user.show_password": "Show Password",
     "user.pass_too_short": "Password must be at least 6 characters.",
+    "user.pass_mismatch": "The two passwords do not match.",
+    "user.passwordless": "Use this computer without a password",
+    "user.passwordless_warning": "Anyone who can access this session can sign in automatically and obtain administrator (root) privileges without a password.",
+    "user.sudo_without_password": "Do not require a password for sudo commands",
+    "user.sudo_warning": "Unsafe: any program running in this user session can obtain administrator (root) privileges without asking for a password.",
     "user.name_invalid": "Username may only contain lowercase letters, digits, underscores and hyphens.",
     "user.host_invalid": "Computer name contains invalid characters.",
 
@@ -139,6 +195,7 @@ _t("en", {
     "tz.title":         "Select Timezone",
     "tz.subtitle":      "Choose your location to set the system clock",
     "tz.search":        "Search timezones…",
+    "tz.selected":      "Selected timezone",
 
     # Summary page
     "summary.title":    "Ready to Install",
@@ -174,6 +231,7 @@ _t("en", {
     # Done page
     "done.title":       "Installation Complete",
     "done.subtitle":    "Remove the installation media and restart your computer",
+    "done.mok_notice":  "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456.",
     "done.error_title": "Installation Failed",
     "done.error_subtitle": "Something went wrong during the installation",
 })
@@ -186,6 +244,7 @@ _t("zh_CN", {
     "nav.back":         "上一步",
     "nav.install":      "安装",
     "nav.reboot":       "立即重启",
+    "nav.reboot_secure_boot": "立即重启并注册 Secure Boot 密钥",
     "nav.save_log":     "保存日志",
     "nav.close":        "关闭",
 
@@ -195,6 +254,13 @@ _t("zh_CN", {
     "keyboard.title":   "键盘布局",
     "keyboard.subtitle":"确认您的键盘布局",
     "keyboard.test":    "在此测试键盘…",
+
+    "software.title":   "更新与驱动",
+    "software.subtitle":"选择安装期间需要的可选软件",
+    "software.updates": "在安装过程中下载并安装系统更新",
+    "software.updates_detail": "需要互联网连接；离线时仍可完成基础系统安装。",
+    "software.drivers": "安装此设备需要的第三方驱动",
+    "software.drivers_detail": "部分驱动是专有软件或其他非自由软件。",
 
     "disk.title":       "选择安装磁盘",
     "disk.subtitle":    "选择要安装 AnduinOS 的磁盘",
@@ -210,15 +276,22 @@ _t("zh_CN", {
     "user.full_name":   "全名",
     "user.username":    "用户名",
     "user.password":    "密码",
+    "user.confirm_password": "确认密码",
     "user.hostname":    "计算机名",
     "user.show_password": "显示密码",
     "user.pass_too_short": "密码至少需要 6 个字符。",
+    "user.pass_mismatch": "两次输入的密码不一致。",
+    "user.passwordless": "无需密码即可使用这台电脑",
+    "user.passwordless_warning": "任何能够接触此会话的人都可以自动登录，并且无需密码即可获得管理员（root）权限。",
+    "user.sudo_without_password": "sudo 命令免密码",
+    "user.sudo_warning": "不安全：此用户会话中运行的任何程序都可以无需密码获得管理员（root）权限。",
     "user.name_invalid": "用户名只能包含小写字母、数字、下划线和连字符。",
     "user.host_invalid": "计算机名包含无效字符。",
 
     "tz.title":         "选择时区",
     "tz.subtitle":      "选择您的位置以设置系统时钟",
     "tz.search":        "搜索时区…",
+    "tz.selected":      "已选择的时区",
 
     "summary.title":    "准备安装",
     "summary.subtitle": "请在继续前确认您的选择",
@@ -251,6 +324,7 @@ _t("zh_CN", {
 
     "done.title":       "安装完成",
     "done.subtitle":    "请移除安装介质并重新启动计算机",
+    "done.mok_notice":  "重启后将进入 MOKManager。请选择 Enroll MOK → Continue → Yes，然后输入密码 123456。",
     "done.error_title": "安装失败",
     "done.error_subtitle": "安装过程中出现了问题",
 })

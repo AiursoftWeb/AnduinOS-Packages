@@ -5,7 +5,11 @@ from pathlib import Path
 
 from fakes import FakeRunner
 from helpers import valid_plan
-from installer_core.model import KeyboardSpec, RegionalSpec
+from installer_core.model import (
+    AuthenticationMode,
+    KeyboardSpec,
+    RegionalSpec,
+)
 from installer_core.steps import InstallContext
 from installer_core.system_config import ConfigureSystemStep
 from installer_core.validation import PlanValidationError, validate_plan
@@ -136,6 +140,116 @@ class ConfigureSystemTests(unittest.TestCase):
             ),
             [item[0] for item in runner.commands],
         )
+
+    def test_passwordless_shared_account_autologs_in_and_has_nopasswd_sudo(self):
+        plan = valid_plan(
+            authentication=AuthenticationMode.PASSWORDLESS_SHARED
+        )
+        runner = FakeRunner()
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_target(target, plan.regional.timezone)
+            (target / "etc/gdm3").mkdir(parents=True)
+            (target / "etc/gdm3/custom.conf").write_text(
+                "[daemon]\n# AutomaticLoginEnable=false\n\n[security]\n"
+            )
+            getent = (
+                "chroot",
+                str(target),
+                "getent",
+                "passwd",
+                plan.identity.username,
+            )
+            runner.outputs[getent] = ("", "", 1)
+            runner.outputs[
+                (
+                    "systemd-machine-id-setup",
+                    f"--root={target}",
+                    "--print",
+                )
+            ] = (MACHINE_ID, "", 0)
+            context = InstallContext(
+                plan, lambda _message: None, {"target": target}
+            )
+            step = ConfigureSystemStep(runner)
+            step.execute(context)
+
+            sudoers = (
+                target / "etc/sudoers.d/90-anduinos-passwordless-admin"
+            )
+            self.assertEqual(
+                sudoers.read_text(),
+                "alice ALL=(ALL:ALL) NOPASSWD: ALL\n",
+            )
+            self.assertEqual(sudoers.stat().st_mode & 0o777, 0o440)
+            gdm = (target / "etc/gdm3/custom.conf").read_text()
+            self.assertIn("AutomaticLoginEnable=true", gdm)
+            self.assertIn("AutomaticLogin=alice", gdm)
+            self.assertIn("[security]", gdm)
+
+            runner.outputs[getent] = (
+                "alice:x:1000:1000:Alice Example:/home/alice:/bin/bash\n",
+                "",
+                0,
+            )
+            runner.outputs[
+                ("chroot", str(target), "id", "-nG", "alice")
+            ] = ("alice sudo\n", "", 0)
+            step.verify(context)
+
+        commands = [item[0] for item in runner.commands]
+        self.assertIn(
+            ("chroot", str(target), "passwd", "--delete", "alice"),
+            commands,
+        )
+        self.assertIn(
+            (
+                "chroot",
+                str(target),
+                "visudo",
+                "--check",
+                "--file",
+                "/etc/sudoers.d/90-anduinos-passwordless-admin",
+            ),
+            commands,
+        )
+        self.assertFalse(any(command[2] == "chpasswd" for command in commands))
+
+    def test_password_account_can_explicitly_enable_nopasswd_sudo(self):
+        plan = valid_plan(sudo_without_password=True)
+        runner = FakeRunner()
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_target(target, plan.regional.timezone)
+            runner.outputs[
+                (
+                    "chroot",
+                    str(target),
+                    "getent",
+                    "passwd",
+                    plan.identity.username,
+                )
+            ] = ("", "", 1)
+            runner.outputs[
+                (
+                    "systemd-machine-id-setup",
+                    f"--root={target}",
+                    "--print",
+                )
+            ] = (MACHINE_ID, "", 0)
+            ConfigureSystemStep(runner).execute(
+                InstallContext(plan, lambda _message: None, {"target": target})
+            )
+            sudoers = (
+                target / "etc/sudoers.d/90-anduinos-passwordless-admin"
+            )
+            self.assertEqual(
+                sudoers.read_text(),
+                "alice ALL=(ALL:ALL) NOPASSWD: ALL\n",
+            )
+            gdm = (target / "etc/gdm3/custom.conf").read_text()
+            self.assertIn("AutomaticLoginEnable=false", gdm)
+            self.assertNotIn("AutomaticLogin=alice", gdm)
 
     def test_rejects_gecos_control_characters(self):
         base = valid_plan()

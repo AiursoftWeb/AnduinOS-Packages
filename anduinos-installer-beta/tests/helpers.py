@@ -1,5 +1,6 @@
 from installer_core.model import (
     Architecture,
+    AuthenticationMode,
     BootSpec,
     DiskIdentity,
     Filesystem,
@@ -13,6 +14,7 @@ from installer_core.model import (
     RegionalSpec,
     SCHEMA_VERSION,
     SecureBoot,
+    SoftwareSpec,
     SourceSpec,
     StorageSpec,
     SwapSpec,
@@ -25,6 +27,10 @@ def valid_plan(
     firmware: Firmware = Firmware.UEFI,
     secure_boot: SecureBoot = SecureBoot.ENABLED,
     filesystem: Filesystem = Filesystem.BTRFS,
+    install_updates: bool = True,
+    install_third_party_drivers: bool = False,
+    authentication: AuthenticationMode = AuthenticationMode.PASSWORD,
+    sudo_without_password: bool | None = None,
 ) -> InstallPlan:
     mok_policy = (
         MokPasswordPolicy.ANDUINOS_DEFAULT
@@ -54,12 +60,26 @@ def valid_plan(
             hostname="anduinos",
             username="alice",
             full_name="Alice Example",
-            password_hash="$y$j9T$example$example",
+            authentication=authentication,
+            sudo_without_password=(
+                authentication is AuthenticationMode.PASSWORDLESS_SHARED
+                if sudo_without_password is None
+                else sudo_without_password
+            ),
+            password_hash=(
+                ""
+                if authentication is AuthenticationMode.PASSWORDLESS_SHARED
+                else "$y$j9T$example$example"
+            ),
         ),
         regional=RegionalSpec(
             locale="en_US.UTF-8",
             timezone="Asia/Singapore",
             keyboard=KeyboardSpec(layout="us"),
+        ),
+        software=SoftwareSpec(
+            install_updates=install_updates,
+            install_third_party_drivers=install_third_party_drivers,
         ),
         swap=SwapSpec(),
         boot=BootSpec(mok_password_policy=mok_policy),

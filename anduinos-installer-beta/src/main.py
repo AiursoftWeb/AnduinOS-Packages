@@ -24,12 +24,13 @@ from pages import build_all_pages
 
 
 APP_ID = "com.anduinos.InstallerBeta"
+ICON_NAME = "anduinos-installer-beta"
 
 
 class InstallerApplication(Adw.Application):
     """GTK4 application for the AnduinOS installer."""
 
-    def __init__(self):
+    def __init__(self, development_mode: bool = False):
         super().__init__(application_id=APP_ID)
         # Shared state — every page reads/writes this dict.
         self.shared_state: dict[str, object] = {
@@ -44,27 +45,37 @@ class InstallerApplication(Adw.Application):
             "username": "",
             "full_name": "",
             "password": "",
+            "password_confirmation": "",
+            "passwordless_shared": False,
+            "sudo_without_password": False,
             "hostname": "anduinos",
             "timezone": "America/New_York",
             "locale": "en_US.UTF-8",
             "installation_running": False,
+            "development_mode": development_mode,
+            "install_updates": True,
+            "install_third_party_drivers": False,
         }
 
     def do_startup(self):
         Adw.Application.do_startup(self)
+        Gtk.Window.set_default_icon_name(ICON_NAME)
 
     def do_activate(self):
         """Build and present the main window."""
         try:
+            title = "AnduinOS Installer (Development)" if self.shared_state[
+                "development_mode"
+            ] else "AnduinOS Installer (Beta)"
             win = Adw.ApplicationWindow(application=self,
-                                        title="AnduinOS Installer (Beta)",
+                                        title=title,
                                         default_width=960,
                                         default_height=640)
 
             # ToolbarView: header bar (draggable, close button) + content
             toolbar = Adw.ToolbarView()
             header = Adw.HeaderBar()
-            win_title = Adw.WindowTitle(title="AnduinOS Installer (Beta)")
+            win_title = Adw.WindowTitle(title=title)
             header.set_title_widget(win_title)
             toolbar.add_top_bar(header)
 
@@ -101,8 +112,13 @@ class InstallerApplication(Adw.Application):
 
 def main():
     """Application entry point called by the shell launcher."""
-    app = InstallerApplication()
-    return app.run(sys.argv)
+    development_mode = (
+        "--development" in sys.argv
+        or os.environ.get("ANDUINOS_INSTALLER_DEVELOPMENT") == "1"
+    )
+    argv = [argument for argument in sys.argv if argument != "--development"]
+    app = InstallerApplication(development_mode)
+    return app.run(argv)
 
 
 if __name__ == "__main__":
