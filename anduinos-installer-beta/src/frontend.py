@@ -22,18 +22,19 @@ class FrontendPlanError(RuntimeError):
 def create_install_plan(state: dict[str, object]) -> InstallPlan:
     password = str(state.get("password") or "")
     confirmation = str(state.get("password_confirmation") or "")
-    passwordless = bool(state.get("passwordless_shared"))
+    passwordless = not password and not confirmation
     try:
         if passwordless:
-            if password or confirmation:
+            if not bool(state.get("sudo_without_password")):
                 raise FrontendPlanError(
-                    "Passwordless mode requires both password fields to be empty"
+                    "An account without a password requires passwordless sudo"
                 )
             password_hash = ""
         else:
             if password != confirmation:
                 raise FrontendPlanError("The two passwords do not match")
             password_hash = hash_password(password)
+        state["passwordless_shared"] = passwordless
     finally:
         # Plaintext exists only while the account page and this call need it.
         state["password"] = ""

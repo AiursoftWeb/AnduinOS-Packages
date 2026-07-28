@@ -48,6 +48,17 @@ class LiveShortcutAssetTests(unittest.TestCase):
             main,
         )
 
+    def test_welcome_page_uses_the_packaged_box_icon(self):
+        pages = (PACKAGE / "src/pages.py").read_text()
+        self.assertIn(
+            'Gtk.Image.new_from_icon_name("anduinos-installer-beta")',
+            pages,
+        )
+        self.assertNotIn(
+            'Gtk.Image.new_from_icon_name("computer-symbolic")',
+            pages,
+        )
+
     def test_autostart_is_hidden_and_gnome_only(self):
         autostart = (
             PACKAGE

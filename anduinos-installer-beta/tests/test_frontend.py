@@ -107,6 +107,19 @@ class FrontendPlanTests(unittest.TestCase):
         self.assertEqual(plan.identity.password_hash, "")
         self.assertTrue(plan.identity.sudo_without_password)
 
+    def test_empty_password_without_passwordless_sudo_is_rejected(self):
+        values = state()
+        values["password"] = ""
+        values["password_confirmation"] = ""
+        values["passwordless_shared"] = False
+        values["sudo_without_password"] = False
+        with self.assertRaisesRegex(
+            FrontendPlanError, "requires passwordless sudo"
+        ):
+            create_install_plan(values)
+        self.assertEqual(values["password"], "")
+        self.assertEqual(values["password_confirmation"], "")
+
     def test_executor_client_sends_one_plan_and_maps_json_events(self):
         class CapturingInput:
             def __init__(self):

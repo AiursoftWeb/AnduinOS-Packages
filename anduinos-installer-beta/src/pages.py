@@ -36,6 +36,7 @@ from frontend import (
     create_install_plan,
 )
 from installer_core.btrfs import BTRFS_SUBVOLUMES
+from installer_core.account_security import AccountNextAction, account_next_action
 from installer_core.model import InstallPlan, SecureBoot
 from installer_core.probe import ProbeError, probe_disks, probe_platform
 from slideshow import load_slides
@@ -179,9 +180,8 @@ def build_welcome_page(shared, nav_view):
                         valign=Gtk.Align.CENTER)
 
     # AnduinOS logo / icon
-    welcome_icon = Gtk.Image.new_from_icon_name("computer-symbolic")
+    welcome_icon = Gtk.Image.new_from_icon_name("anduinos-installer-beta")
     welcome_icon.set_pixel_size(128)
-    welcome_icon.add_css_class("dim-label")
     right_box.append(welcome_icon)
 
     # Welcome text (changes with language selection)
@@ -618,44 +618,14 @@ def build_user_page(shared, nav_view):
     pass_warn = Gtk.Label(visible=False)
     pass_warn.add_css_class("warning")
 
-    show_toggle = Gtk.CheckButton(label=_("user.show_password", lang))
-    def _toggle_visibility(button):
-        visible = button.get_active()
-        pass_entry.set_visibility(visible)
-        confirm_entry.set_visibility(visible)
-
-    show_toggle.connect("toggled", _toggle_visibility)
-
     box.append(_labeled(_("user.password", lang), pass_entry))
     box.append(_labeled(_("user.confirm_password", lang), confirm_entry))
-    box.append(show_toggle)
     box.append(pass_warn)
-
-    passwordless_toggle = Gtk.CheckButton(
-        label=_("user.passwordless", lang)
-    )
-    passwordless_warning = Gtk.Label(
-        label=_("user.passwordless_warning", lang),
-        visible=False,
-        wrap=True,
-        halign=Gtk.Align.START,
-    )
-    passwordless_warning.add_css_class("warning")
-    box.append(passwordless_toggle)
-    box.append(passwordless_warning)
 
     sudo_without_password = Gtk.CheckButton(
         label=_("user.sudo_without_password", lang)
     )
-    sudo_warning = Gtk.Label(
-        label=_("user.sudo_warning", lang),
-        visible=False,
-        wrap=True,
-        halign=Gtk.Align.START,
-    )
-    sudo_warning.add_css_class("warning")
     box.append(sudo_without_password)
-    box.append(sudo_warning)
 
     # Hostname
     host_entry = Gtk.Entry(
@@ -687,7 +657,6 @@ def build_user_page(shared, nav_view):
         uname = user_entry.get_text()
         pword = pass_entry.get_text()
         confirmation = confirm_entry.get_text()
-        passwordless = passwordless_toggle.get_active()
         host = host_entry.get_text()
 
         if uname and not NAME_RE.match(uname):
@@ -698,7 +667,7 @@ def build_user_page(shared, nav_view):
             name_warn.set_visible(False)
             valid["name"] = bool(uname)
 
-        if passwordless:
+        if not pword and not confirmation:
             pass_warn.set_visible(False)
             valid["pass"] = True
         elif pword != confirmation:
@@ -711,7 +680,7 @@ def build_user_page(shared, nav_view):
             valid["pass"] = False
         else:
             pass_warn.set_visible(False)
-            valid["pass"] = bool(pword) and len(pword) >= 6
+            valid["pass"] = len(pword) >= 6
 
         if host and not HOST_RE.match(host):
             host_warn.set_label(_("user.host_invalid", lang))
@@ -728,26 +697,10 @@ def build_user_page(shared, nav_view):
     pass_entry.connect("changed", lambda _e: _validate())
     confirm_entry.connect("changed", lambda _e: _validate())
 
-    def _set_passwordless(button):
-        enabled = button.get_active()
-        if enabled:
-            pass_entry.set_text("")
-            confirm_entry.set_text("")
-            sudo_without_password.set_active(True)
-        pass_entry.set_sensitive(not enabled)
-        confirm_entry.set_sensitive(not enabled)
-        show_toggle.set_sensitive(not enabled)
-        sudo_without_password.set_sensitive(not enabled)
-        passwordless_warning.set_visible(enabled)
-        shared["passwordless_shared"] = enabled
-        _validate()
-
-    passwordless_toggle.connect("toggled", _set_passwordless)
-
     def _set_sudo_without_password(button):
         enabled = button.get_active()
-        sudo_warning.set_visible(enabled)
         shared["sudo_without_password"] = enabled
+        _validate()
 
     sudo_without_password.connect("toggled", _set_sudo_without_password)
 
@@ -760,14 +713,91 @@ def build_user_page(shared, nav_view):
 
     content.append(box)
 
-    def on_next():
+    def _save_account_state():
         shared["username"] = user_entry.get_text()
         shared["password"] = pass_entry.get_text()
         shared["password_confirmation"] = confirm_entry.get_text()
-        shared["passwordless_shared"] = passwordless_toggle.get_active()
+        shared["passwordless_shared"] = not pass_entry.get_text()
         shared["sudo_without_password"] = sudo_without_password.get_active()
         shared["hostname"] = host_entry.get_text()
+
+    def _continue_to_timezone():
+        _save_account_state()
         nav_view.push(build_timezone_page(shared, nav_view))
+
+    def _show_message(heading_key, body_key):
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_(heading_key, lang),
+            body=_(body_key, lang),
+        )
+        dialog.add_response("back", _("user.return_modify", lang))
+        dialog.set_default_response("back")
+        dialog.set_close_response("back")
+        dialog.present()
+
+    def _confirm_unsafe_sudo(passwordless):
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_(
+                "user.passwordless_sudo_heading"
+                if passwordless
+                else "user.sudo_confirm_heading",
+                lang,
+            ),
+            body=_(
+                "user.passwordless_sudo_body"
+                if passwordless
+                else "user.sudo_confirm_body",
+                lang,
+            ),
+        )
+        dialog.add_response(
+            "back",
+            _(
+                "user.return_set_password"
+                if passwordless
+                else "user.return_modify",
+                lang,
+            ),
+        )
+        dialog.add_response("continue", _("user.continue_unsafe", lang))
+        dialog.set_response_appearance(
+            "continue", Adw.ResponseAppearance.DESTRUCTIVE
+        )
+        dialog.set_default_response("back")
+        dialog.set_close_response("back")
+        dialog.connect(
+            "response",
+            lambda _dialog, response: (
+                _continue_to_timezone()
+                if response == "continue"
+                else None
+            ),
+        )
+        dialog.present()
+
+    def on_next():
+        action = account_next_action(
+            pass_entry.get_text(),
+            confirm_entry.get_text(),
+            sudo_without_password.get_active(),
+        )
+        if action is AccountNextAction.BLOCK_LOCKOUT:
+            _show_message(
+                "user.lockout_heading",
+                "user.lockout_body",
+            )
+            return
+        if action in {
+            AccountNextAction.CONFIRM_PASSWORDLESS_SUDO,
+            AccountNextAction.CONFIRM_SUDO,
+        }:
+            _confirm_unsafe_sudo(
+                action is AccountNextAction.CONFIRM_PASSWORDLESS_SUDO
+            )
+            return
+        _continue_to_timezone()
 
     def on_back():
         nav_view.pop()
