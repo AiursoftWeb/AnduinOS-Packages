@@ -37,12 +37,17 @@ class InstallerApplication(Adw.Application):
             "keyboard": "us",
             "disk": "",
             "disk_size": "",
+            "disk_size_bytes": 0,
             "disk_model": "",
+            "disk_stable_id": "",
+            "filesystem": "btrfs",
             "username": "",
             "full_name": "",
             "password": "",
             "hostname": "anduinos",
             "timezone": "America/New_York",
+            "locale": "en_US.UTF-8",
+            "installation_running": False,
         }
 
     def do_startup(self):
@@ -66,6 +71,23 @@ class InstallerApplication(Adw.Application):
             self._nav = Adw.NavigationView()
             toolbar.set_content(self._nav)
             win.set_content(toolbar)
+
+            def _protect_install(_window):
+                if not self.shared_state.get("installation_running"):
+                    return False
+                dialog = Adw.MessageDialog(
+                    transient_for=win,
+                    heading="Installation in progress",
+                    body=(
+                        "The installer cannot be closed while it is modifying "
+                        "the target disk."
+                    ),
+                )
+                dialog.add_response("ok", "Continue Installation")
+                dialog.present()
+                return True
+
+            win.connect("close-request", _protect_install)
 
             pages = build_all_pages(self.shared_state, self._nav)
             self._nav.push(pages[0])

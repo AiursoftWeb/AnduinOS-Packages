@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer (beta) — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -10,7 +10,7 @@
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>resolute-addon</TargetSuites>
-    <TargetArchitectures>all</TargetArchitectures>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
 
     <!-- Beta: NO Conflicts, NO Replaces. This is an orphan package.
@@ -27,7 +27,17 @@
     <Dependency Include="parted" />
     <Dependency Include="btrfs-progs" />
     <Dependency Include="dosfstools" />
-    <Dependency Include="grub-efi-amd64-bin" />
+    <Dependency Include="grub-pc-bin" Condition="'$(Arch)' == 'amd64'" />
+    <Dependency Include="grub-efi-amd64-bin" Condition="'$(Arch)' == 'amd64'" />
+    <Dependency Include="grub-efi-amd64-signed" Condition="'$(Arch)' == 'amd64'" />
+    <Dependency Include="grub-efi-arm64-bin" Condition="'$(Arch)' == 'arm64'" />
+    <Dependency Include="grub-efi-arm64-signed" Condition="'$(Arch)' == 'arm64'" />
+    <Dependency Include="grub2-common" />
+    <Dependency Include="initramfs-tools" />
+    <Dependency Include="shim-signed" />
+    <Dependency Include="mokutil" />
+    <Dependency Include="openssl" />
+    <Dependency Include="sbsigntool" />
     <Dependency Include="squashfs-tools" />
     <Dependency Include="util-linux" />
   </ItemGroup>
@@ -39,6 +49,8 @@
     <!-- Desktop entry for app drawer -->
     <IncludeFile Include="assets/anduinos-installer-beta.desktop"
                  Target="/usr/share/applications/anduinos-installer-beta.desktop" Mode="644" />
+    <IncludeFile Include="assets/anduinos-installer-executor"
+                 Target="/usr/bin/anduinos-installer-executor" Mode="755" />
     <!-- Python source tree -->
     <IncludeFolder Include="src/"
                    Target="/usr/lib/anduinos-installer-beta/" />

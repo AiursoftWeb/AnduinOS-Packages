@@ -9,6 +9,7 @@ can push the next page when the user clicks "Next" / "Install".
 
 import threading
 import re
+import html
 
 # Allow absolute imports when run directly (not as a package).
 import sys, os
@@ -23,7 +24,10 @@ gi.require_version("Adw", "1")
 from gi.repository import Gtk, Adw, GLib, Gio, Pango, GObject
 
 from languages import LANGUAGES, _, is_chinese, Language as LangData
-from backend import Installer
+from frontend import ExecutorClient, create_install_plan
+from installer_core.btrfs import BTRFS_SUBVOLUMES
+from installer_core.model import InstallPlan, SecureBoot
+from installer_core.probe import ProbeError, probe_disks, probe_platform
 
 
 # ── thin GObject wrapper for language list items ─────────────────────────
@@ -53,15 +57,20 @@ class DiskItem(GObject.Object):
     model = GObject.Property(type=str)
     sensitive = GObject.Property(type=bool, default=True)
     subtitle = GObject.Property(type=str)
+    size_bytes = GObject.Property(type=str)
+    stable_id = GObject.Property(type=str)
 
     def __init__(self, devname: str, size: str, model: str,
-                 sensitive: bool = True, subtitle: str = ""):
+                 sensitive: bool = True, subtitle: str = "",
+                 size_bytes: int = 0, stable_id: str = ""):
         super().__init__()
         self.devname = devname
         self.size = size
         self.model = model
         self.sensitive = sensitive
         self.subtitle = subtitle
+        self.size_bytes = str(size_bytes)
+        self.stable_id = stable_id
 
 
 # ── helpers ──────────────────────────────────────────────────────────────
@@ -204,6 +213,7 @@ def build_welcome_page(shared, nav_view):
         if pos != Gtk.INVALID_LIST_POSITION:
             l = lang_items[pos]
             shared["lang"] = l.code
+            shared["locale"] = l.locale
             shared["keyboard"] = l.keyboard
             shared["timezone"] = _guess_timezone(l.code)
             _update_welcome(l.code)
@@ -352,6 +362,28 @@ def build_disk_page(shared, nav_view):
                                      vexpand=True)
     disk_scroll.set_child(disk_list)
 
+    filesystem_box = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=12,
+        halign=Gtk.Align.CENTER,
+        margin_top=12,
+    )
+    filesystem_box.append(Gtk.Label(label="Filesystem"))
+    filesystem_names = Gtk.StringList.new(
+        ["Btrfs (recommended)", "ext4"]
+    )
+    filesystem = Gtk.DropDown(model=filesystem_names)
+    filesystem.set_selected(
+        1 if shared.get("filesystem") == "ext4" else 0
+    )
+    filesystem.connect(
+        "notify::selected",
+        lambda widget, _pspec: shared.__setitem__(
+            "filesystem", "ext4" if widget.get_selected() == 1 else "btrfs"
+        ),
+    )
+    filesystem_box.append(filesystem)
+
     # Warning labels
     warn_label = Gtk.Label(label=_("disk.warning_erase", lang))
     warn_label.add_css_class("warning")
@@ -359,35 +391,25 @@ def build_disk_page(shared, nav_view):
     warn_label.set_halign(Gtk.Align.CENTER)
 
     content.append(disk_scroll)
+    content.append(filesystem_box)
     content.append(warn_label)
 
     # Populate disks
-    import subprocess
     try:
-        out = subprocess.check_output(
-            ["lsblk", "-dno", "NAME,SIZE,MODEL,TYPE,TRAN"],
-            text=True, timeout=5,
-        )
         live_dev = _find_live_device()
-
-        for line in out.strip().split("\n"):
-            parts = line.split(maxsplit=4)
-            if len(parts) < 3:
-                continue
-            name, size, model = parts[0], parts[1], parts[2]
-            dev_type = parts[3] if len(parts) > 3 else ""
-            if dev_type != "disk":
-                continue
-            devname = f"/dev/{name}"
-            is_live = devname == live_dev
-            sub = f'{size} — {model}'
+        for disk in probe_disks():
+            size = _human_size(disk.expected_size_bytes)
+            is_live = disk.path == live_dev
+            sub = f"{size} — {disk.model}"
             if is_live:
                 sub += f" {_('disk.live_usb', lang)}"
             list_store.append(DiskItem(
-                devname=devname, size=size, model=model,
+                devname=disk.path, size=size, model=disk.model,
                 sensitive=not is_live, subtitle=sub,
+                size_bytes=disk.expected_size_bytes,
+                stable_id=disk.stable_id,
             ))
-    except Exception:
+    except ProbeError:
         list_store.append(DiskItem(
             devname="", size="", model="",
             sensitive=False, subtitle=_("disk.no_disks", lang),
@@ -395,6 +417,7 @@ def build_disk_page(shared, nav_view):
 
     sel = disk_list.get_model()
     nxt_enabled = False
+    next_button = None
 
     def _on_disk_selected():
         nonlocal nxt_enabled
@@ -404,10 +427,16 @@ def build_disk_page(shared, nav_view):
             if d.sensitive and d.devname:
                 shared["disk"] = d.devname
                 shared["disk_size"] = d.size
+                shared["disk_size_bytes"] = int(d.size_bytes)
                 shared["disk_model"] = d.model
+                shared["disk_stable_id"] = d.stable_id
                 nxt_enabled = True
+                if next_button is not None:
+                    next_button.set_sensitive(True)
                 return
         nxt_enabled = False
+        if next_button is not None:
+            next_button.set_sensitive(False)
 
     sel.connect("selection-changed", lambda _s, _p, _n: _on_disk_selected())
 
@@ -420,8 +449,11 @@ def build_disk_page(shared, nav_view):
     def on_back():
         nav_view.pop()
 
-    content.append(_nav_box(lang, on_back=on_back, on_next=on_next,
-                            next_sensitive=nxt_enabled))
+    nav = _nav_box(
+        lang, on_back=on_back, on_next=on_next, next_sensitive=nxt_enabled
+    )
+    next_button = nav.get_last_child()
+    content.append(nav)
     page.set_child(content)
     return page
 
@@ -442,6 +474,15 @@ def _find_live_device():
     except Exception:
         pass
     return ""
+
+
+def _human_size(size_bytes: int) -> str:
+    size = float(size_bytes)
+    for unit in ("B", "KiB", "MiB", "GiB", "TiB"):
+        if size < 1024 or unit == "TiB":
+            return f"{size:.1f} {unit}"
+        size /= 1024
+    return f"{size_bytes} B"
 
 
 def _base_device(dev_path: str) -> str:
@@ -558,6 +599,7 @@ def build_user_page(shared, nav_view):
 
     user_entry.connect("changed", lambda _e: _validate())
     pass_entry.connect("changed", lambda _e: _validate())
+    shared["_clear_password_ui"] = lambda: pass_entry.set_text("")
     host_entry.connect("changed", lambda _e: _validate())
 
     content.append(box)
@@ -753,15 +795,48 @@ def build_summary_page(shared, nav_view):
             lang_name = f"{l.english_name} ({l.native_name})"
             break
 
+    try:
+        platform = probe_platform()
+        platform_text = (
+            f"{platform.architecture.value} / {platform.firmware.value} / "
+            f"Secure Boot: {platform.secure_boot.value}"
+        )
+        platform_error = ""
+    except ProbeError as error:
+        platform_text = f"Unavailable: {error}"
+        platform_error = str(error)
+
+    escape = lambda value: html.escape(str(value))
+    filesystem = str(shared.get("filesystem", "btrfs"))
+    storage_detail = (
+        ", ".join(
+            f"{item.name}→{item.mount_point}" for item in BTRFS_SUBVOLUMES
+        )
+        if filesystem == "btrfs"
+        else "single ext4 root filesystem"
+    )
     lines = [
         f"<b>{_('summary.lang', lang)}:</b> {lang_name}",
-        f"<b>{_('summary.keyboard', lang)}:</b> {shared.get('keyboard', 'us')}",
-        f"<b>{_('summary.disk', lang)}:</b> {shared.get('disk', '?')} "
-        f"({shared.get('disk_size', '?')} — {shared.get('disk_model', '?')})",
-        f"<b>{_('summary.user', lang)}:</b> {shared.get('full_name', '?')} "
-        f"({shared.get('username', '?')})",
-        f"<b>{_('summary.hostname', lang)}:</b> {shared.get('hostname', '?')}",
-        f"<b>{_('summary.timezone', lang)}:</b> {shared.get('timezone', '?')}",
+        f"<b>{_('summary.keyboard', lang)}:</b> "
+        f"{escape(shared.get('keyboard', 'us'))}",
+        f"<b>{_('summary.disk', lang)}:</b> "
+        f"{escape(shared.get('disk', '?'))} "
+        f"({escape(shared.get('disk_size', '?'))} — "
+        f"{escape(shared.get('disk_model', '?'))})",
+        f"<b>Stable disk identity:</b> "
+        f"{escape(shared.get('disk_stable_id', '?'))}",
+        f"<b>Platform:</b> {escape(platform_text)}",
+        f"<b>Filesystem:</b> {escape(filesystem)}",
+        f"<b>Subvolumes:</b> {escape(storage_detail)}",
+        "<b>Swap:</b> 4 GiB disk swap (priority 10) + "
+        "50% RAM LZ4 zram (priority 100)",
+        f"<b>{_('summary.user', lang)}:</b> "
+        f"{escape(shared.get('full_name', '?'))} "
+        f"({escape(shared.get('username', '?'))})",
+        f"<b>{_('summary.hostname', lang)}:</b> "
+        f"{escape(shared.get('hostname', '?'))}",
+        f"<b>{_('summary.timezone', lang)}:</b> "
+        f"{escape(shared.get('timezone', '?'))}",
     ]
 
     summary_label = Gtk.Label(
@@ -777,22 +852,74 @@ def build_summary_page(shared, nav_view):
     warn.set_margin_top(24)
     content.append(warn)
 
+    install_button = None
+
     def on_install():
-        nav_view.push(build_progress_page(shared, nav_view))
+        if platform_error or shared.get("installation_running"):
+            return
+        assert install_button is not None
+        install_button.set_sensitive(False)
+        disk = str(shared.get("disk", "?"))
+        stable_id = str(shared.get("disk_stable_id", "?"))
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading="Erase the entire selected disk?",
+            body=(
+                f"All partitions and data on {disk} will be destroyed.\n\n"
+                f"Stable identity: {stable_id}\n\n"
+                "This installer does not shrink or preserve other systems."
+            ),
+        )
+        dialog.add_response("cancel", _("nav.back", lang))
+        dialog.add_response("erase", "Erase Disk and Install")
+        dialog.set_response_appearance(
+            "erase", Adw.ResponseAppearance.DESTRUCTIVE
+        )
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+
+        def _confirmed(_dialog, response):
+            if response != "erase":
+                install_button.set_sensitive(True)
+                return
+            try:
+                plan = create_install_plan(shared)
+            except Exception as error:
+                install_button.set_sensitive(True)
+                failure = Adw.MessageDialog(
+                    transient_for=nav_view.get_root(),
+                    heading="Cannot create installation plan",
+                    body=str(error),
+                )
+                failure.add_response("ok", "OK")
+                failure.present()
+                return
+            shared["installation_running"] = True
+            nav_view.push(build_progress_page(plan, shared, nav_view))
+
+        dialog.connect("response", _confirmed)
+        dialog.present()
 
     def on_back():
         nav_view.pop()
 
-    content.append(_nav_box(lang, on_back=on_back, on_next=on_install,
-                            next_label="nav.install",
-                            next_destructive=True))
+    nav = _nav_box(
+        lang,
+        on_back=on_back,
+        on_next=on_install,
+        next_label="nav.install",
+        next_destructive=True,
+    )
+    install_button = nav.get_last_child()
+    install_button.set_sensitive(not bool(platform_error))
+    content.append(nav)
     page.set_child(content)
     return page
 
 
 # ── page 7: Progress / Installation ──────────────────────────────────────
 
-def build_progress_page(shared, nav_view):
+def build_progress_page(plan: InstallPlan, shared, nav_view):
     lang = shared.get("lang", "en")
     page = Adw.NavigationPage(title=_("progress.title", lang))
     page.set_tag("progress")
@@ -857,12 +984,20 @@ def build_progress_page(shared, nav_view):
 
     def on_done(success: bool, error: str = ""):
         def _done():
+            shared["installation_running"] = False
             progress.set_visible(False)
             result_box.set_visible(True)
             if success:
                 result_icon.set_from_icon_name("emblem-ok-symbolic")
                 result_label.set_label(_("done.title", lang))
-                result_sub.set_label(_("done.subtitle", lang))
+                if plan.platform.secure_boot is SecureBoot.ENABLED:
+                    result_sub.set_label(
+                        _("done.subtitle", lang)
+                        + "\nOn the blue MOKManager screen choose "
+                        "Enroll MOK → Continue → Yes, password: 123456"
+                    )
+                else:
+                    result_sub.set_label(_("done.subtitle", lang))
                 reboot_btn.set_visible(True)
             else:
                 result_icon.set_from_icon_name("dialog-error-symbolic")
@@ -873,19 +1008,21 @@ def build_progress_page(shared, nav_view):
             return False
         GLib.idle_add(_done)
 
-    # Run installer in background thread
-    installer = Installer(dict(shared), log)
-    thread = threading.Thread(target=installer.run, args=(on_done,),
-                              daemon=True)
-    thread.start()
+    def update_progress(step: str, done: int, total: int):
+        def _update():
+            fraction = 0.0 if total <= 0 else min(1.0, done / total)
+            progress.set_fraction(fraction)
+            progress.set_text(step.replace("-", " ").title())
+            return False
+        GLib.idle_add(_update)
 
-    # Pulse bar while waiting
-    def _pulse():
-        if thread.is_alive():
-            progress.pulse()
-            return True
-        return False
-    GLib.timeout_add(150, _pulse)
+    def execute():
+        success, error = ExecutorClient().run(plan, log, update_progress)
+        on_done(success, error)
+
+    # Run the privileged helper in a background thread.
+    thread = threading.Thread(target=execute, daemon=True)
+    thread.start()
 
     page.set_child(content)
     return page

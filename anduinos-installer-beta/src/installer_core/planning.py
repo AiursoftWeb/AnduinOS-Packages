@@ -1,0 +1,69 @@
+"""Convert unprivileged wizard choices into a validated installation plan."""
+
+from __future__ import annotations
+
+from collections.abc import Mapping
+
+from .model import (
+    BootSpec,
+    Filesystem,
+    IdentitySpec,
+    InstallMode,
+    InstallPlan,
+    KeyboardSpec,
+    MokPasswordPolicy,
+    PlatformSpec,
+    RegionalSpec,
+    SCHEMA_VERSION,
+    SourceSpec,
+    StorageSpec,
+)
+from .probe import PlatformProbe
+from .validation import validate_plan
+from .model import DiskIdentity, SecureBoot
+
+
+def build_plan(
+    choices: Mapping[str, object],
+    disk: DiskIdentity,
+    platform: PlatformProbe,
+    password_hash: str,
+) -> InstallPlan:
+    locale = str(choices.get("locale") or "en_US.UTF-8")
+    language = str(choices.get("lang") or "en")
+    plan = InstallPlan(
+        schema_version=SCHEMA_VERSION,
+        source=SourceSpec(),
+        storage=StorageSpec(
+            mode=InstallMode.ERASE_DISK,
+            disk=disk,
+            filesystem=Filesystem(str(choices.get("filesystem") or "btrfs")),
+        ),
+        platform=PlatformSpec(
+            architecture=platform.architecture,
+            firmware=platform.firmware,
+            secure_boot=platform.secure_boot,
+        ),
+        identity=IdentitySpec(
+            hostname=str(choices.get("hostname") or ""),
+            username=str(choices.get("username") or ""),
+            full_name=str(choices.get("full_name") or ""),
+            password_hash=password_hash,
+        ),
+        regional=RegionalSpec(
+            locale=locale,
+            timezone=str(choices.get("timezone") or ""),
+            keyboard=KeyboardSpec(str(choices.get("keyboard") or "")),
+            input_method="rime" if language.startswith("zh_") else None,
+        ),
+        boot=BootSpec(
+            mok_password_policy=(
+                MokPasswordPolicy.ANDUINOS_DEFAULT
+                if platform.secure_boot is SecureBoot.ENABLED
+                else MokPasswordPolicy.NOT_APPLICABLE
+            )
+        ),
+    )
+    validate_plan(plan)
+    return plan
+

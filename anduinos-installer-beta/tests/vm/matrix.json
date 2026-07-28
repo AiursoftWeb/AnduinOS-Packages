@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "disk_gib": 32,
+  "memory_mib": 4096,
+  "cases": [
+    {"id": "amd64-bios-btrfs", "architecture": "amd64", "firmware": "bios", "secure_boot": false, "filesystem": "btrfs"},
+    {"id": "amd64-bios-ext4", "architecture": "amd64", "firmware": "bios", "secure_boot": false, "filesystem": "ext4"},
+    {"id": "amd64-uefi-btrfs", "architecture": "amd64", "firmware": "uefi", "secure_boot": false, "filesystem": "btrfs"},
+    {"id": "amd64-uefi-ext4", "architecture": "amd64", "firmware": "uefi", "secure_boot": false, "filesystem": "ext4"},
+    {"id": "amd64-secureboot-btrfs", "architecture": "amd64", "firmware": "uefi", "secure_boot": true, "filesystem": "btrfs"},
+    {"id": "amd64-secureboot-ext4", "architecture": "amd64", "firmware": "uefi", "secure_boot": true, "filesystem": "ext4"},
+    {"id": "arm64-uefi-btrfs", "architecture": "arm64", "firmware": "uefi", "secure_boot": false, "filesystem": "btrfs"},
+    {"id": "arm64-uefi-ext4", "architecture": "arm64", "firmware": "uefi", "secure_boot": false, "filesystem": "ext4"},
+    {"id": "arm64-secureboot-btrfs", "architecture": "arm64", "firmware": "uefi", "secure_boot": true, "filesystem": "btrfs"},
+    {"id": "arm64-secureboot-ext4", "architecture": "arm64", "firmware": "uefi", "secure_boot": true, "filesystem": "ext4"}
+  ]
+}
