@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.1-5+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-6+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer (beta) — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -12,8 +12,6 @@
     <TargetSuites>resolute-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
-
     <!-- Beta: NO Conflicts, NO Replaces. This is an orphan package.
          After 3-4 months of stable testing, rename to anduinos-installer
          and add Conflicts/Replaces against anduinos-installer-config + ubiquity. -->
