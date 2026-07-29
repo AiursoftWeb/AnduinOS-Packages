@@ -23,9 +23,9 @@ class ExecutorPipelineTests(unittest.TestCase):
         expected = (
             "configure-system",
             "select-fastest-apt-mirror",
+            "prepare-secure-boot",
             "refresh-package-indexes",
             "upgrade-system",
-            "prepare-secure-boot",
             "verify-dkms-signatures",
             "install-bootloader",
             "enroll-secure-boot",
@@ -40,4 +40,13 @@ class ExecutorPipelineTests(unittest.TestCase):
             InstallerExecutor(lambda _message: None).run(plan)
         self.assertIn(
             "install-third-party-drivers", CapturingStepRunner.captured
+        )
+        pipeline = CapturingStepRunner.captured
+        self.assertLess(
+            pipeline.index("prepare-secure-boot"),
+            pipeline.index("install-third-party-drivers"),
+        )
+        self.assertLess(
+            pipeline.index("install-third-party-drivers"),
+            pipeline.index("verify-dkms-signatures"),
         )

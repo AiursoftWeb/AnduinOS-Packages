@@ -62,6 +62,10 @@ class InstallerExecutor:
             CleanupLiveSystemStep(self.runner),
             ConfigureSystemStep(self.runner),
             SelectFastestAptMirrorStep(),
+            # Establish the target-owned DKMS key before any package operation
+            # can build kernel modules. Never let an upgrade inherit the
+            # copied Live image's signing identity.
+            PrepareSecureBootStep(self.runner),
         ]
         if plan.software.install_updates:
             steps.extend(
@@ -70,7 +74,6 @@ class InstallerExecutor:
                     UpgradeSystemStep(self.runner),
                 )
             )
-        steps.append(PrepareSecureBootStep(self.runner))
         if plan.software.install_third_party_drivers:
             steps.append(InstallThirdPartyDriversStep(self.runner))
         steps.extend(

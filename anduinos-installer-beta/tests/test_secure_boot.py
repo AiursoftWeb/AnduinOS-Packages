@@ -7,6 +7,7 @@ from pathlib import Path
 from fakes import FakeRunner
 from helpers import valid_plan
 from installer_core.model import (
+    Architecture,
     BootSpec,
     MokPasswordPolicy,
     SecureBoot,
@@ -42,13 +43,25 @@ class KeyGeneratingRunner(FakeRunner):
         return result
 
 
-def prepare_secure_boot_target(target: Path) -> None:
+def prepare_secure_boot_target(
+    target: Path, architecture: Architecture = Architecture.AMD64
+) -> None:
+    signed = (
+        (
+            "usr/lib/shim/shimx64.efi.signed.latest",
+            "usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed",
+        )
+        if architecture is Architecture.AMD64
+        else (
+            "usr/lib/shim/shimaa64.efi.signed.latest",
+            "usr/lib/grub/arm64-efi-signed/grubaa64.efi.signed",
+        )
+    )
     for relative in (
         "usr/sbin/update-secureboot-policy",
         "usr/bin/mokutil",
         "usr/bin/openssl",
-        "usr/lib/shim/shimx64.efi.signed.latest",
-        "usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed",
+        *signed,
     ):
         path = target / relative
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -152,6 +165,43 @@ class PrepareSecureBootTests(unittest.TestCase):
         self.assertFalse(context.values["secure_boot_prepared"])
         self.assertEqual(runner.commands, [])
 
+    def test_arm64_requires_and_accepts_arm64_signed_payloads(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_secure_boot_target(target, Architecture.ARM64)
+            runner = KeyGeneratingRunner(target)
+            configure_key_outputs(runner, target)
+            context = InstallContext(
+                valid_plan(architecture=Architecture.ARM64),
+                lambda _message: None,
+                {"target": target},
+            )
+            step = PrepareSecureBootStep(runner)
+            step.execute(context)
+            step.verify(context)
+        self.assertTrue(context.values["secure_boot_prepared"])
+
+    def test_missing_signed_payload_fails_before_key_generation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_secure_boot_target(target)
+            (
+                target
+                / "usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed"
+            ).unlink()
+            runner = KeyGeneratingRunner(target)
+            context = InstallContext(
+                valid_plan(), lambda _message: None, {"target": target}
+            )
+            with self.assertRaisesRegex(RuntimeError, "Signed.*missing"):
+                PrepareSecureBootStep(runner).execute(context)
+        self.assertFalse(
+            any(
+                command[-2:] == ("update-secureboot-policy", "--new-key")
+                for command, _kwargs in runner.commands
+            )
+        )
+
 
 class EnrollSecureBootTests(unittest.TestCase):
     def test_password_is_only_sent_on_stdin(self):
@@ -245,6 +295,52 @@ class EnrollSecureBootTests(unittest.TestCase):
         self.assertFalse(
             any("--import" in command for command, _kwargs in runner.commands)
         )
+
+    def test_already_enrolled_key_never_creates_pending_request(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            certificate = target / MOK_CERTIFICATE
+            certificate.parent.mkdir(parents=True)
+            certificate.write_bytes(b"certificate")
+            prepare_signed_efi_chain(target)
+            runner = FakeRunner()
+            runner.outputs[
+                (
+                    "chroot",
+                    str(target),
+                    "mokutil",
+                    "--test-key",
+                    f"/{MOK_CERTIFICATE}",
+                )
+            ] = ("already enrolled", "", 0)
+            context = InstallContext(
+                valid_plan(),
+                lambda _message: None,
+                {"target": target, "secure_boot_prepared": True},
+            )
+            EnrollSecureBootStep(runner).execute(context)
+        self.assertFalse(context.values["mok_enrollment_pending"])
+        self.assertFalse(
+            any(
+                "--import" in command or "--timeout" in command
+                for command, _kwargs in runner.commands
+            )
+        )
+
+    def test_disabled_secure_boot_never_touches_efi_variables(self):
+        base = valid_plan()
+        plan = replace(
+            base,
+            platform=replace(base.platform, secure_boot=SecureBoot.DISABLED),
+            boot=BootSpec(
+                mok_password_policy=MokPasswordPolicy.NOT_APPLICABLE
+            ),
+        )
+        runner = FakeRunner()
+        context = InstallContext(plan, lambda _message: None)
+        EnrollSecureBootStep(runner).execute(context)
+        self.assertFalse(context.values["mok_enrollment_pending"])
+        self.assertEqual(runner.commands, [])
 
 
 class VerifyDkmsSignaturesTests(unittest.TestCase):

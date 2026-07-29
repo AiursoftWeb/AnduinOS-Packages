@@ -11,7 +11,11 @@ from .steps import FailurePolicy, InstallContext
 
 
 PACKAGE_RE = re.compile(r"^[a-z0-9][a-z0-9+.-]*(?::[a-z0-9]+)?$")
+VERSION_RE = re.compile(r"^[A-Za-z0-9.+:~\-]+$")
 ALWAYS_REMOVE = frozenset({"anduinos-installer-beta"})
+RIME_REQUIRED_PACKAGES = frozenset(
+    {"anduinos-rime", "ibus-rime", "libglib2.0-bin"}
+)
 
 
 @dataclass
@@ -25,16 +29,55 @@ class CleanupLiveSystemStep:
 
     def preflight(self, context: InstallContext) -> None:
         self.runner.require_commands(("chroot",))
-        for path in _manifest_paths(context):
+        full_path, desktop_path = _manifest_paths(context)
+        for path in (full_path, desktop_path):
             if not path.is_file():
                 raise RuntimeError(f"Casper manifest is missing: {path}")
+        full = _read_manifest(full_path)
+        desktop = _read_manifest(desktop_path)
+        unexpected = sorted(desktop.keys() - full.keys())
+        if unexpected:
+            raise RuntimeError(
+                "Desktop manifest contains packages absent from the full "
+                f"manifest: {', '.join(unexpected)}"
+            )
+        changed_versions = sorted(
+            package
+            for package in desktop.keys() & full.keys()
+            if desktop[package] != full[package]
+        )
+        if changed_versions:
+            raise RuntimeError(
+                "Casper manifests disagree on package versions: "
+                + ", ".join(changed_versions)
+            )
+        leaked = sorted(ALWAYS_REMOVE & desktop.keys())
+        if leaked:
+            raise RuntimeError(
+                "Live-only packages leaked into the desktop manifest: "
+                + ", ".join(leaked)
+            )
+        if context.plan.regional.input_method == "rime":
+            missing = sorted(RIME_REQUIRED_PACKAGES - desktop.keys())
+            if missing:
+                raise RuntimeError(
+                    "Chinese input payload is missing from the installed "
+                    f"system manifest: {', '.join(missing)}"
+                )
+        context.values["casper_full_manifest"] = full
+        context.values["casper_desktop_manifest"] = desktop
 
     def execute(self, context: InstallContext) -> None:
         target = _target(context)
-        full_path, desktop_path = _manifest_paths(context)
-        full = _read_manifest(full_path)
-        desktop = _read_manifest(desktop_path)
-        candidates = sorted((full - desktop) | ALWAYS_REMOVE)
+        full = context.values.get("casper_full_manifest")
+        desktop = context.values.get("casper_desktop_manifest")
+        if not isinstance(full, dict) or not isinstance(desktop, dict):
+            # Preserve direct step use in diagnostics while keeping production
+            # execution tied to the manifests validated before disk changes.
+            full_path, desktop_path = _manifest_paths(context)
+            full = _read_manifest(full_path)
+            desktop = _read_manifest(desktop_path)
+        candidates = sorted((full.keys() - desktop.keys()) | ALWAYS_REMOVE)
 
         installed: list[str] = []
         for package in candidates:
@@ -94,15 +137,30 @@ class CleanupLiveSystemStep:
         return None
 
 
-def _read_manifest(path: Path) -> set[str]:
-    packages: set[str] = set()
-    for line in path.read_text(encoding="utf-8").splitlines():
+def _read_manifest(path: Path) -> dict[str, str]:
+    packages: dict[str, str] = {}
+    for line_number, line in enumerate(
+        path.read_text(encoding="utf-8").splitlines(), start=1
+    ):
         if not line.strip():
             continue
-        package = line.split(maxsplit=1)[0]
+        fields = line.split()
+        if len(fields) != 2:
+            raise RuntimeError(
+                f"Invalid Casper manifest line {path}:{line_number}"
+            )
+        package, version = fields
         if not PACKAGE_RE.fullmatch(package):
             raise RuntimeError(f"Invalid package in Casper manifest: {package!r}")
-        packages.add(package)
+        if not VERSION_RE.fullmatch(version):
+            raise RuntimeError(
+                f"Invalid version in Casper manifest: {version!r}"
+            )
+        if package in packages:
+            raise RuntimeError(
+                f"Duplicate package in Casper manifest: {package!r}"
+            )
+        packages[package] = version
     return packages
 
 
@@ -118,4 +176,3 @@ def _target(context: InstallContext) -> Path:
     if not isinstance(target, Path):
         raise RuntimeError("Target filesystem is not mounted")
     return target
-

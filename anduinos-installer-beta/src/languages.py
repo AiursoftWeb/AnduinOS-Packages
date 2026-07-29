@@ -5,7 +5,11 @@ replacing the ubiquity-languagelist / generate-languagelist-data.py
 pipeline.  No external files, no compilation step — just import it.
 """
 
+from collections.abc import Mapping
 from dataclasses import dataclass
+import os
+from pathlib import Path
+import re
 
 
 # ---------------------------------------------------------------------------
@@ -101,6 +105,81 @@ def default_timezone(code: str) -> str:
 def is_chinese(code: str) -> bool:
     """Return True if the language code is a Chinese variant."""
     return code.startswith("zh_")
+
+
+_LANGUAGE_BY_CODE = {language.code: language for language in LANGUAGES}
+_LANGUAGE_BY_LOCALE = {
+    language.locale.removesuffix(".UTF-8"): language for language in LANGUAGES
+}
+_LOCALE_ASSIGNMENT_RE = re.compile(
+    r"""^\s*(?:export\s+)?(?P<key>LC_ALL|LC_MESSAGES|LANG)\s*=\s*
+        (?P<quote>["']?)(?P<value>[^"'#\s]+)(?P=quote)\s*(?:\#.*)?$""",
+    re.VERBOSE,
+)
+
+
+def language_for_locale(locale_name: str | None) -> Language | None:
+    """Map a locale spelling to one of the installer-supported languages."""
+    if not locale_name:
+        return None
+    normalized = locale_name.strip().replace("-", "_")
+    normalized = normalized.split("@", 1)[0].split(".", 1)[0]
+    if not normalized or normalized.upper() in {"C", "POSIX"}:
+        return None
+
+    # Preserve the explicitly supported regional variants first.
+    exact = _LANGUAGE_BY_LOCALE.get(normalized)
+    if exact is not None:
+        return exact
+    exact = _LANGUAGE_BY_CODE.get(normalized)
+    if exact is not None:
+        return exact
+
+    language, _, territory = normalized.partition("_")
+    language = language.lower()
+    territory = territory.upper()
+    if language == "zh":
+        if territory == "HK":
+            return _LANGUAGE_BY_CODE["zh_HK"]
+        if territory in {"TW", "MO"}:
+            return _LANGUAGE_BY_CODE["zh_TW"]
+        return _LANGUAGE_BY_CODE["zh_CN"]
+    if language == "pt" and territory == "BR":
+        return _LANGUAGE_BY_CODE["pt_BR"]
+    if language == "en" and territory == "GB":
+        return _LANGUAGE_BY_CODE["en_GB"]
+    return _LANGUAGE_BY_CODE.get(language)
+
+
+def detect_system_language(
+    environ: Mapping[str, str] | None = None,
+    locale_file: Path = Path("/etc/default/locale"),
+) -> Language:
+    """Detect the Live session language, with a deterministic English fallback."""
+    environment = os.environ if environ is None else environ
+    for key in ("LC_ALL", "LC_MESSAGES", "LANG"):
+        language = language_for_locale(environment.get(key))
+        if language is not None:
+            return language
+
+    try:
+        assignments = _read_locale_assignments(locale_file)
+    except OSError:
+        assignments = {}
+    for key in ("LC_ALL", "LC_MESSAGES", "LANG"):
+        language = language_for_locale(assignments.get(key))
+        if language is not None:
+            return language
+    return _LANGUAGE_BY_CODE["en"]
+
+
+def _read_locale_assignments(path: Path) -> dict[str, str]:
+    assignments: dict[str, str] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        match = _LOCALE_ASSIGNMENT_RE.fullmatch(line)
+        if match:
+            assignments[match.group("key")] = match.group("value")
+    return assignments
 
 
 # Chinese mirror URLs (tried in order; first is the default).

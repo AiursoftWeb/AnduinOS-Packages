@@ -5,7 +5,12 @@ import unittest
 from pathlib import Path
 
 from installer_core.model import Architecture, Firmware, SecureBoot
-from installer_core.probe import ProbeError, probe_disks, probe_platform
+from installer_core.probe import (
+    ProbeError,
+    _stable_disk_id,
+    probe_disks,
+    probe_platform,
+)
 
 
 def completed(stdout="", stderr="", returncode=0):
@@ -51,6 +56,7 @@ class DiskProbeTests(unittest.TestCase):
                     "wwn": None,
                     "type": "disk",
                     "rm": False,
+                    "maj:min": "8:0",
                 },
                 {
                     "path": "/dev/sdb",
@@ -60,6 +66,7 @@ class DiskProbeTests(unittest.TestCase):
                     "wwn": None,
                     "type": "disk",
                     "rm": True,
+                    "maj:min": "8:16",
                 },
                 {
                     "path": "/dev/sda1",
@@ -69,6 +76,7 @@ class DiskProbeTests(unittest.TestCase):
                     "wwn": "",
                     "type": "part",
                     "rm": False,
+                    "maj:min": "8:1",
                 },
             ]
         }
@@ -78,3 +86,72 @@ class DiskProbeTests(unittest.TestCase):
         self.assertEqual(len(disks), 1)
         self.assertEqual(disks[0].stable_id, "serial:ABC")
 
+    def test_serialless_virtio_disk_gets_live_session_identity(self):
+        payload = {
+            "blockdevices": [
+                {
+                    "path": "/dev/vda",
+                    "size": 25 * 1024**3,
+                    "model": "",
+                    "serial": "",
+                    "wwn": "",
+                    "type": "disk",
+                    "rm": False,
+                    "maj:min": "253:0",
+                },
+                {
+                    "path": "/dev/zram0",
+                    "size": 3 * 1024**3,
+                    "model": "",
+                    "serial": "",
+                    "wwn": "",
+                    "type": "disk",
+                    "rm": False,
+                    "maj:min": "251:0",
+                }
+            ]
+        }
+        disks = probe_disks(
+            run=lambda *args, **kwargs: completed(json.dumps(payload))
+        )
+        self.assertEqual(len(disks), 1)
+        self.assertEqual(disks[0].path, "/dev/vda")
+        self.assertEqual(disks[0].expected_size_bytes, 25 * 1024**3)
+        self.assertTrue(
+            disks[0].stable_id.startswith(("sysfs:", "kernel:/dev/vda|"))
+        )
+        self.assertIn("253:0", disks[0].stable_id)
+
+    def test_by_path_precedes_session_only_kernel_fallback(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            disk = root / "dev/vda"
+            disk.parent.mkdir()
+            disk.touch()
+            by_path = root / "dev/disk/by-path"
+            by_path.mkdir(parents=True)
+            (by_path / "pci-test-virtio-pci").symlink_to(disk)
+            identity = _stable_disk_id(
+                str(disk),
+                "",
+                "",
+                "253:0",
+                by_id=root / "missing-by-id",
+                by_path=by_path,
+                sys_class_block=root / "missing-sysfs",
+            )
+        self.assertEqual(identity, "by-path:pci-test-virtio-pci")
+
+    def test_kernel_fallback_requires_device_number(self):
+        with tempfile.TemporaryDirectory() as directory:
+            missing = Path(directory) / "missing"
+            identity = _stable_disk_id(
+                "/dev/vda",
+                "",
+                "",
+                "",
+                by_id=missing,
+                by_path=missing,
+                sys_class_block=missing,
+            )
+        self.assertEqual(identity, "")

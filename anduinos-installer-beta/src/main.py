@@ -20,6 +20,7 @@ gi.require_version("Adw", "1")
 
 from gi.repository import Gtk, Adw, Gio, GLib
 
+from languages import default_timezone, detect_system_language
 from pages import build_all_pages
 
 
@@ -32,10 +33,11 @@ class InstallerApplication(Adw.Application):
 
     def __init__(self, development_mode: bool = False):
         super().__init__(application_id=APP_ID)
+        detected_language = detect_system_language()
         # Shared state — every page reads/writes this dict.
         self.shared_state: dict[str, object] = {
-            "lang": "en",
-            "keyboard": "us",
+            "lang": detected_language.code,
+            "keyboard": detected_language.keyboard,
             "disk": "",
             "disk_size": "",
             "disk_size_bytes": 0,
@@ -49,8 +51,8 @@ class InstallerApplication(Adw.Application):
             "passwordless_shared": False,
             "sudo_without_password": False,
             "hostname": "anduinos",
-            "timezone": "America/New_York",
-            "locale": "en_US.UTF-8",
+            "timezone": default_timezone(detected_language.code),
+            "locale": detected_language.locale,
             "installation_running": False,
             "development_mode": development_mode,
             "install_updates": True,

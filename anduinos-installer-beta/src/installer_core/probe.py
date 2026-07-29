@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import platform
+import re
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -15,6 +16,11 @@ from .model import Architecture, DiskIdentity, Firmware, SecureBoot
 
 class ProbeError(RuntimeError):
     pass
+
+
+SUPPORTED_WHOLE_DISK_RE = re.compile(
+    r"^/dev/(?:sd[a-z]+|vd[a-z]+|xvd[a-z]+|nvme\d+n\d+|mmcblk\d+)$"
+)
 
 
 @dataclass(frozen=True)
@@ -74,7 +80,14 @@ def probe_disks(
     *,
     run: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
 ) -> tuple[DiskIdentity, ...]:
-    """Return whole, non-removable disks with an identity stable across boots."""
+    """Return fixed whole disks with the strongest identity the system exposes.
+
+    Physical disks normally provide a WWN, serial, or /dev/disk/by-id link.
+    Serial-less virtual disks fall back to their attachment path and kernel
+    device number, which is deliberately scoped to this Live boot. Install
+    plans are never resumed across boots, and the executor re-probes this
+    identity and the exact size immediately before destructive work.
+    """
     try:
         result = run(
             [
@@ -83,7 +96,7 @@ def probe_disks(
                 "--bytes",
                 "--nodeps",
                 "--output",
-                "PATH,SIZE,MODEL,SERIAL,WWN,TYPE,RM",
+                "PATH,SIZE,MODEL,SERIAL,WWN,TYPE,RM,MAJ:MIN",
             ],
             capture_output=True,
             text=True,
@@ -105,8 +118,13 @@ def probe_disks(
         if item.get("type") != "disk" or bool(item.get("rm")):
             continue
         path = str(item.get("path", ""))
+        if not SUPPORTED_WHOLE_DISK_RE.fullmatch(path):
+            continue
         stable_id = _stable_disk_id(
-            path, str(item.get("wwn") or ""), str(item.get("serial") or "")
+            path,
+            str(item.get("wwn") or ""),
+            str(item.get("serial") or ""),
+            str(item.get("maj:min") or ""),
         )
         if not path or not stable_id:
             continue
@@ -122,24 +140,55 @@ def probe_disks(
     return tuple(disks)
 
 
-def _stable_disk_id(path: str, wwn: str, serial: str) -> str:
+def _stable_disk_id(
+    path: str,
+    wwn: str,
+    serial: str,
+    major_minor: str = "",
+    *,
+    by_id: Path = Path("/dev/disk/by-id"),
+    by_path: Path = Path("/dev/disk/by-path"),
+    sys_class_block: Path = Path("/sys/class/block"),
+) -> str:
     if wwn.strip():
         return f"wwn:{wwn.strip()}"
     if serial.strip():
         return f"serial:{serial.strip()}"
 
-    by_id = Path("/dev/disk/by-id")
-    if not by_id.is_dir():
+    persistent = _matching_device_link(path, by_id)
+    if persistent:
+        return f"by-id:{persistent}"
+    attachment = _matching_device_link(path, by_path)
+    if attachment:
+        return f"by-path:{attachment}"
+
+    # Ubiquity/partman accepts the kernel whole-disk path directly. Keep that
+    # compatibility for common serial-less QEMU/virtio disks, while binding
+    # our immutable plan more tightly to the current Live session.
+    device_name = Path(path).name
+    sysfs_device = sys_class_block / device_name
+    try:
+        if sysfs_device.exists():
+            resolved = sysfs_device.resolve(strict=True)
+            return f"sysfs:{resolved}|dev:{major_minor.strip()}"
+    except OSError:
+        pass
+    if path.startswith("/dev/") and major_minor.strip():
+        return f"kernel:{path}|dev:{major_minor.strip()}"
+    return ""
+
+
+def _matching_device_link(path: str, directory: Path) -> str:
+    if not directory.is_dir():
         return ""
     try:
         real_path = os.path.realpath(path)
         candidates = sorted(
             entry.name
-            for entry in by_id.iterdir()
+            for entry in directory.iterdir()
             if "-part" not in entry.name
             and os.path.realpath(entry) == real_path
         )
     except OSError:
         return ""
-    return f"by-id:{candidates[0]}" if candidates else ""
-
+    return candidates[0] if candidates else ""

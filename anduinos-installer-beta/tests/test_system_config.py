@@ -11,7 +11,10 @@ from installer_core.model import (
     RegionalSpec,
 )
 from installer_core.steps import InstallContext
-from installer_core.system_config import ConfigureSystemStep
+from installer_core.system_config import (
+    RIME_REQUIRED_PATHS,
+    ConfigureSystemStep,
+)
 from installer_core.validation import PlanValidationError, validate_plan
 
 
@@ -24,6 +27,13 @@ def prepare_target(root: Path, timezone: str) -> None:
     zone = root / "usr/share/zoneinfo" / timezone
     zone.parent.mkdir(parents=True)
     zone.touch()
+
+
+def prepare_rime_payload(root: Path) -> None:
+    for relative in RIME_REQUIRED_PATHS:
+        path = root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.touch()
 
 
 class ConfigureSystemTests(unittest.TestCase):
@@ -104,7 +114,7 @@ class ConfigureSystemTests(unittest.TestCase):
             regional=RegionalSpec(
                 locale="zh_CN.UTF-8",
                 timezone="Asia/Shanghai",
-                keyboard=KeyboardSpec("cn"),
+                keyboard=KeyboardSpec("us"),
                 input_method="rime",
             ),
         )
@@ -112,6 +122,7 @@ class ConfigureSystemTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             prepare_target(target, "Asia/Shanghai")
+            prepare_rime_payload(target)
             runner.outputs[
                 ("chroot", str(target), "getent", "passwd", "alice")
             ] = ("", "", 1)
@@ -140,6 +151,31 @@ class ConfigureSystemTests(unittest.TestCase):
             ),
             [item[0] for item in runner.commands],
         )
+
+    def test_chinese_configuration_rejects_incomplete_rime_payload(self):
+        base = valid_plan()
+        plan = replace(
+            base,
+            regional=replace(
+                base.regional,
+                locale="zh_CN.UTF-8",
+                timezone="Asia/Shanghai",
+                input_method="rime",
+            ),
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_target(target, "Asia/Shanghai")
+            with self.assertRaisesRegex(
+                RuntimeError, "Rime input payload is incomplete"
+            ):
+                ConfigureSystemStep(FakeRunner()).execute(
+                    InstallContext(
+                        plan,
+                        lambda _message: None,
+                        {"target": target},
+                    )
+                )
 
     def test_passwordless_shared_account_autologs_in_and_has_nopasswd_sudo(self):
         plan = valid_plan(

@@ -231,12 +231,14 @@ def build_welcome_page(shared, nav_view):
 
     sel.connect("selection-changed", lambda _s, _p, _n: _on_lang_selected())
 
-    # Default selection: find English
+    # Select the language detected from the Live session. The shared state is
+    # initialized before this page is built, so regional defaults stay atomic.
+    initial_language = str(shared.get("lang", "en"))
     for i, l in enumerate(lang_items):
-        if l.code == "en":
+        if l.code == initial_language:
             lang_list.get_model().select_item(i, True)
             break
-    _update_welcome("en")
+    _update_welcome(initial_language)
 
     def on_next():
         try:
@@ -486,6 +488,11 @@ def build_disk_page(shared, nav_view):
                 sensitive=not is_live, subtitle=sub,
                 size_bytes=disk.expected_size_bytes,
                 stable_id=disk.stable_id,
+            ))
+        if list_store.get_n_items() == 0:
+            list_store.append(DiskItem(
+                devname="", size="", model="",
+                sensitive=False, subtitle=_("disk.no_disks", lang),
             ))
     except ProbeError:
         list_store.append(DiskItem(

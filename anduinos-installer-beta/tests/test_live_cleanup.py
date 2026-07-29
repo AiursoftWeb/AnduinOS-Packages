@@ -86,5 +86,95 @@ class LiveCleanupTests(unittest.TestCase):
                 values={"target": root / "target"},
             )
             with self.assertRaisesRegex(RuntimeError, "Invalid package"):
-                CleanupLiveSystemStep(FakeRunner()).execute(context)
+                CleanupLiveSystemStep(FakeRunner()).preflight(context)
 
+    def test_rejects_desktop_package_absent_from_full_manifest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            full = root / "full"
+            desktop = root / "desktop"
+            full.write_text("bash 1\n", encoding="utf-8")
+            desktop.write_text("bash 1\ninvented 2\n", encoding="utf-8")
+            plan = replace(
+                valid_plan(),
+                source=SourceSpec(
+                    image_path="/unused",
+                    manifest_path=str(full),
+                    desktop_manifest_path=str(desktop),
+                ),
+            )
+            context = InstallContext(plan, lambda _message: None)
+            with self.assertRaisesRegex(RuntimeError, "absent from the full"):
+                CleanupLiveSystemStep(FakeRunner()).preflight(context)
+
+    def test_rejects_live_installer_in_desktop_manifest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            full = root / "full"
+            desktop = root / "desktop"
+            manifest = "bash 1\nanduinos-installer-beta 2\n"
+            full.write_text(manifest, encoding="utf-8")
+            desktop.write_text(manifest, encoding="utf-8")
+            plan = replace(
+                valid_plan(),
+                source=SourceSpec(
+                    image_path="/unused",
+                    manifest_path=str(full),
+                    desktop_manifest_path=str(desktop),
+                ),
+            )
+            with self.assertRaisesRegex(RuntimeError, "Live-only packages"):
+                CleanupLiveSystemStep(FakeRunner()).preflight(
+                    InstallContext(plan, lambda _message: None)
+                )
+
+    def test_chinese_plan_requires_rime_payload_in_desktop_manifest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            full = root / "full"
+            desktop = root / "desktop"
+            full.write_text("bash 1\nibus-rime 2\n", encoding="utf-8")
+            desktop.write_text("bash 1\nibus-rime 2\n", encoding="utf-8")
+            base = valid_plan()
+            plan = replace(
+                base,
+                source=SourceSpec(
+                    image_path="/unused",
+                    manifest_path=str(full),
+                    desktop_manifest_path=str(desktop),
+                ),
+                regional=replace(base.regional, input_method="rime"),
+            )
+            with self.assertRaisesRegex(
+                RuntimeError, "anduinos-rime, libglib2.0-bin"
+            ):
+                CleanupLiveSystemStep(FakeRunner()).preflight(
+                    InstallContext(plan, lambda _message: None)
+                )
+
+    def test_chinese_plan_accepts_complete_retained_rime_payload(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            full = root / "full"
+            desktop = root / "desktop"
+            manifest = (
+                "bash 1\nanduinos-rime 2\nibus-rime 3\nlibglib2.0-bin 4\n"
+            )
+            full.write_text(manifest, encoding="utf-8")
+            desktop.write_text(manifest, encoding="utf-8")
+            base = valid_plan()
+            plan = replace(
+                base,
+                source=SourceSpec(
+                    image_path="/unused",
+                    manifest_path=str(full),
+                    desktop_manifest_path=str(desktop),
+                ),
+                regional=replace(base.regional, input_method="rime"),
+            )
+            context = InstallContext(plan, lambda _message: None)
+            CleanupLiveSystemStep(FakeRunner()).preflight(context)
+            self.assertIn(
+                "anduinos-rime",
+                context.values["casper_desktop_manifest"],
+            )

@@ -13,6 +13,12 @@ from .validation import validate_plan
 
 
 MACHINE_ID_RE = re.compile(r"^[0-9a-f]{32}$")
+RIME_REQUIRED_PATHS = (
+    Path("usr/lib/ibus-rime/ibus-engine-rime"),
+    Path("usr/share/ibus/component/rime.xml"),
+    Path("usr/share/rime-data/default.yaml"),
+    Path("usr/bin/glib-compile-schemas"),
+)
 
 
 @dataclass
@@ -31,6 +37,7 @@ class ConfigureSystemStep:
     def execute(self, context: InstallContext) -> None:
         target = _target(context)
         plan = context.plan
+        _verify_input_method_payload(target, plan.regional.input_method)
         _write_hostname(target, plan.identity.hostname)
         _write_locale(target, plan.regional.locale)
         _write_timezone(target, plan.regional.timezone)
@@ -175,6 +182,7 @@ class ConfigureSystemStep:
             raise RuntimeError("Rime input configuration is missing")
         if plan.regional.input_method != "rime" and rime_override.exists():
             raise RuntimeError("Unexpected Rime input configuration")
+        _verify_input_method_payload(target, plan.regional.input_method)
         if not MACHINE_ID_RE.fullmatch(
             (target / "etc/machine-id").read_text().strip()
         ):
@@ -334,6 +342,20 @@ def _write_input_method(target: Path, input_method: str | None) -> None:
         )
     elif override.exists():
         override.unlink()
+
+
+def _verify_input_method_payload(target: Path, input_method: str | None) -> None:
+    if input_method != "rime":
+        return
+    missing = [
+        str(path)
+        for relative in RIME_REQUIRED_PATHS
+        if not (path := target / relative).is_file()
+    ]
+    if missing:
+        raise RuntimeError(
+            "Rime input payload is incomplete: " + ", ".join(missing)
+        )
 
 
 def _target(context: InstallContext) -> Path:
