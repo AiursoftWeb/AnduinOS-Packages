@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -151,16 +152,39 @@ class MountTargetStep:
         context.values["target"] = self.target
 
     def verify(self, context: InstallContext) -> None:
-        paths = [self.target, self.target / "boot/efi"]
-        paths.extend(context.values.get("target_btrfs_mounts", [])[1:])
-        for path in paths:
+        devices = context.values["partition_devices"]
+        expected_sources = {
+            self.target: devices["root"],
+            self.target / "boot/efi": devices["efi-system"],
+        }
+        for path in context.values.get("target_btrfs_mounts", [])[1:]:
+            expected_sources[path] = devices["root"]
+        for path, expected_source in expected_sources.items():
             result = self.runner.run(
-                ("findmnt", "--noheadings", "--mountpoint", str(path)),
+                (
+                    "findmnt",
+                    "--noheadings",
+                    "--output",
+                    "SOURCE",
+                    "--mountpoint",
+                    str(path),
+                ),
                 check=False,
                 timeout=10,
             )
             if result.returncode != 0:
                 raise RuntimeError(f"Mount verification failed: {path}")
+            actual_source = result.stdout.strip().split("[", 1)[0]
+            if not actual_source or os.path.realpath(
+                actual_source
+            ) != os.path.realpath(expected_source):
+                raise RuntimeError(
+                    f"Mount source mismatch for {path}: expected "
+                    f"{expected_source}, found {actual_source or 'nothing'}"
+                )
+            context.log(
+                f"Verified mount source: {path} <- {expected_source}"
+            )
 
     def cleanup(self, context: InstallContext) -> None:
         if context.values.get("target_efi_mounted"):

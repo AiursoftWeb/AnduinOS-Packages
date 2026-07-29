@@ -20,6 +20,10 @@ class ExecutorPipelineTests(unittest.TestCase):
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
             InstallerExecutor(lambda _message: None).run(valid_plan())
         pipeline = CapturingStepRunner.captured
+        self.assertEqual(
+            pipeline[:2],
+            ("detect-boot-environment", "verify-target-disk"),
+        )
         expected = (
             "configure-system",
             "select-fastest-apt-mirror",

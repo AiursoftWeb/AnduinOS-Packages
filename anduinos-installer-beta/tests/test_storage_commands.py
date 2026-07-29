@@ -3,7 +3,8 @@ from dataclasses import replace
 
 from helpers import valid_plan
 from installer_core.layout import build_erase_disk_layout
-from installer_core.model import Architecture, Filesystem
+from installer_core.boot_commands import build_boot_commands
+from installer_core.model import Architecture, DiskIdentity, Filesystem
 from installer_core.storage_commands import (
     build_storage_commands,
     partition_path,
@@ -74,4 +75,37 @@ class StorageCommandTests(unittest.TestCase):
                 "/dev/nvme0n1p3",
             ),
             commands.format,
+        )
+
+    def test_windows_disk_is_absent_from_selected_disk_write_plan(self):
+        base = valid_plan()
+        plan = replace(
+            base,
+            storage=replace(
+                base.storage,
+                disk=DiskIdentity(
+                    path="/dev/sdb",
+                    stable_id="serial:anduinos-target",
+                    expected_size_bytes=128 * 1024**3,
+                ),
+            ),
+        )
+        storage = build_storage_commands(
+            plan, build_erase_disk_layout(plan)
+        )
+        boot = build_boot_commands(plan, "/target")
+        commands = (
+            *storage.partition,
+            *storage.format,
+            *boot.installs,
+        )
+        flattened = "\n".join(" ".join(command) for command in commands)
+
+        self.assertNotIn("/dev/sda", flattened)
+        self.assertIn("/dev/sdb", flattened)
+        self.assertIn("/dev/sdb2", flattened)
+        self.assertIn(
+            ("chroot", "/target", "grub-install", "--target=i386-pc",
+             "--recheck", "/dev/sdb"),
+            boot.installs,
         )

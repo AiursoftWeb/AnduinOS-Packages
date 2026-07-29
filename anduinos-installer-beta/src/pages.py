@@ -1211,7 +1211,8 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     )
 
     step_titles = {
-        "verify-environment": "Check installation environment",
+        "detect-boot-environment": "Detect firmware and Secure Boot",
+        "verify-target-disk": "Verify target disk isolation",
         "prepare-storage": "Prepare installation disk",
         "mount-target": "Mount target filesystems",
         "copy-system": "Copy AnduinOS system",

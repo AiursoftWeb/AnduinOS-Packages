@@ -6,32 +6,105 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .command import CommandRunner
-from .preflight import verify_execution_environment
+from .preflight import (
+    verify_platform_environment,
+    verify_target_disk_environment,
+)
 from .probe import probe_disks, probe_platform
+from .model import Architecture, Firmware, SecureBoot
 from .steps import FailurePolicy, InstallContext
 
 
 @dataclass
-class VerifyEnvironmentStep:
+class DetectBootEnvironmentStep:
     runner: CommandRunner
     platform_probe: object = probe_platform
-    disk_probe: object = probe_disks
-    id: str = "verify-environment"
-    title: str = "Verify platform and target disk"
+    id: str = "detect-boot-environment"
+    title: str = "Detect firmware and Secure Boot"
     failure_policy: FailurePolicy = FailurePolicy.FATAL
     progress_weight: int = 1
     destructive: bool = False
 
     def preflight(self, context: InstallContext) -> None:
-        verify_execution_environment(
+        verify_platform_environment(
             context.plan,
             self.runner,
             platform_probe=self.platform_probe,
+        )
+
+    def execute(self, context: InstallContext) -> None:
+        platform = context.plan.platform
+        firmware = (
+            "UEFI"
+            if platform.firmware is Firmware.UEFI
+            else "Legacy BIOS"
+        )
+        secure_boot = {
+            SecureBoot.ENABLED: "enabled",
+            SecureBoot.DISABLED: "disabled",
+            SecureBoot.NOT_APPLICABLE: "not applicable in Legacy BIOS mode",
+        }[platform.secure_boot]
+        context.log(f"Architecture: {platform.architecture.value}")
+        context.log(f"Firmware mode: {firmware}")
+        context.log(f"Secure Boot: {secure_boot}")
+        if platform.firmware is Firmware.BIOS:
+            context.log(
+                "Firmware detection: /sys/firmware/efi is absent"
+            )
+        else:
+            context.log(
+                "Firmware detection: /sys/firmware/efi is present"
+            )
+        context.log(
+            "Legacy BIOS GRUB: "
+            + (
+                "enabled"
+                if platform.architecture is Architecture.AMD64
+                else "not supported on arm64"
+            )
+        )
+        context.log("UEFI fallback bootloader: enabled on the selected disk")
+        context.log("UEFI Boot#### entries: will not be modified")
+
+    def verify(self, context: InstallContext) -> None:
+        return None
+
+    def cleanup(self, context: InstallContext) -> None:
+        return None
+
+
+@dataclass
+class VerifyTargetDiskStep:
+    runner: CommandRunner
+    disk_probe: object = probe_disks
+    id: str = "verify-target-disk"
+    title: str = "Verify target disk isolation"
+    failure_policy: FailurePolicy = FailurePolicy.FATAL
+    progress_weight: int = 1
+    destructive: bool = False
+
+    def preflight(self, context: InstallContext) -> None:
+        verify_target_disk_environment(
+            context.plan,
+            self.runner,
             disk_probe=self.disk_probe,
         )
 
     def execute(self, context: InstallContext) -> None:
-        return None
+        disk = context.plan.storage.disk
+        context.log(f"Selected target disk: {disk.path}")
+        context.log(f"Target disk identity: {disk.stable_id}")
+        context.log(f"Target disk size: {disk.expected_size_bytes} bytes")
+        context.log(
+            "Only the selected disk will be partitioned and formatted"
+        )
+        context.log(
+            "Other disks and their EFI System Partitions will not be modified"
+        )
+        context.log(
+            "Operating systems on other disks will not be added to the "
+            "AnduinOS GRUB menu"
+        )
 
     def verify(self, context: InstallContext) -> None:
         return None

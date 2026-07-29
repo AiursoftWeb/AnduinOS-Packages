@@ -20,8 +20,9 @@ from .software import (
 )
 from .execution_steps import (
     CopySystemStep,
+    DetectBootEnvironmentStep,
     UnmountTargetStep,
-    VerifyEnvironmentStep,
+    VerifyTargetDiskStep,
 )
 from .live_cleanup import CleanupLiveSystemStep
 from .mirrors import SelectFastestAptMirrorStep
@@ -53,7 +54,8 @@ class InstallerExecutor:
     def run(self, plan: InstallPlan) -> InstallResult:
         context = InstallContext(plan, self.log)
         steps = [
-            VerifyEnvironmentStep(self.runner),
+            DetectBootEnvironmentStep(self.runner),
+            VerifyTargetDiskStep(self.runner),
             PrepareStorageStep(self.runner),
             MountTargetStep(self.runner, target=self.target),
             CopySystemStep(self.runner),

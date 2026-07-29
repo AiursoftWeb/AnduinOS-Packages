@@ -45,6 +45,25 @@ class InstallBootloaderStep:
         commands = build_boot_commands(context.plan, str(target))
         context.values["boot_command_plan"] = commands
         _verify_grub_install_options(self.runner, target, commands.installs)
+        devices = context.values.get("partition_devices", {})
+        context.log(
+            "Bootloader target disk: "
+            f"{context.plan.storage.disk.path} (selected disk only)"
+        )
+        if commands.bios_required:
+            context.log(
+                "Installing Legacy BIOS GRUB to "
+                f"{context.plan.storage.disk.path}"
+            )
+        context.log(
+            "Installing UEFI bootloader to "
+            f"{devices.get('efi-system', 'the selected disk ESP')} "
+            "mounted at /boot/efi"
+        )
+        context.log("UEFI Boot#### entries will not be modified")
+        context.log(
+            "Other disks and Windows EFI boot files will not be modified"
+        )
         self.runner.run(commands.initramfs, timeout=1200)
         for command in commands.installs:
             self.runner.run(command, timeout=300)

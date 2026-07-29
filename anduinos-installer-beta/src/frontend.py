@@ -139,7 +139,8 @@ class DevelopmentExecutorClient:
     """Exercise the frontend contract without starting privileged code."""
 
     BASE_PIPELINE = (
-        ("verify-environment", 1),
+        ("detect-boot-environment", 1),
+        ("verify-target-disk", 1),
         ("prepare-storage", 10),
         ("mount-target", 3),
         ("copy-system", 60),
@@ -189,6 +190,21 @@ class DevelopmentExecutorClient:
         completed = 0
         log("DEVELOPMENT MODE: the privileged executor is disabled.")
         log("The immutable installation plan passed schema validation.")
+        log(f"Architecture: {plan.platform.architecture.value}")
+        log(
+            "Firmware mode: "
+            + (
+                "UEFI"
+                if plan.platform.firmware.value == "uefi"
+                else "Legacy BIOS"
+            )
+        )
+        log(
+            "Secure Boot: "
+            + plan.platform.secure_boot.value.replace("-", " ")
+        )
+        log(f"Selected target disk: {plan.storage.disk.path}")
+        log("Other disks and EFI System Partitions are excluded")
         for step, weight in pipeline:
             progress(step, completed, total)
             step_status(step, "running", "")

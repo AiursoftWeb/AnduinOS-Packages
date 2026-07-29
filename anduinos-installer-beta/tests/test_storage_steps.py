@@ -91,6 +91,91 @@ class MountTargetStepTests(unittest.TestCase):
             commands,
         )
 
+    def test_verifies_every_mount_comes_from_selected_disk(self):
+        runner = FakeRunner()
+        target = Path("/target-test")
+        mounts = [
+            target,
+            target / "home",
+            target / "var/log",
+        ]
+        expected = {
+            target: "/dev/sdb4[/@root]\n",
+            target / "boot/efi": "/dev/sdb2\n",
+            target / "home": "/dev/sdb4[/@home]\n",
+            target / "var/log": "/dev/sdb4[/@log]\n",
+        }
+        for path, source in expected.items():
+            runner.outputs[
+                (
+                    "findmnt",
+                    "--noheadings",
+                    "--output",
+                    "SOURCE",
+                    "--mountpoint",
+                    str(path),
+                )
+            ] = (source, "", 0)
+        logs = []
+        context = InstallContext(
+            valid_plan(),
+            logs.append,
+            values={
+                "partition_devices": {
+                    "root": "/dev/sdb4",
+                    "efi-system": "/dev/sdb2",
+                },
+                "target_btrfs_mounts": mounts,
+            },
+        )
+
+        MountTargetStep(runner, target=target).verify(context)
+
+        self.assertEqual(
+            sum("Verified mount source" in item for item in logs),
+            len(expected),
+        )
+
+    def test_rejects_efi_mounted_from_another_windows_disk(self):
+        runner = FakeRunner()
+        target = Path("/target-test")
+        runner.outputs[
+            (
+                "findmnt",
+                "--noheadings",
+                "--output",
+                "SOURCE",
+                "--mountpoint",
+                str(target),
+            )
+        ] = ("/dev/sdb4\n", "", 0)
+        runner.outputs[
+            (
+                "findmnt",
+                "--noheadings",
+                "--output",
+                "SOURCE",
+                "--mountpoint",
+                str(target / "boot/efi"),
+            )
+        ] = ("/dev/sda1\n", "", 0)
+        context = InstallContext(
+            valid_plan(),
+            lambda _message: None,
+            values={
+                "partition_devices": {
+                    "root": "/dev/sdb4",
+                    "efi-system": "/dev/sdb2",
+                },
+                "target_btrfs_mounts": [target],
+            },
+        )
+
+        with self.assertRaisesRegex(
+            RuntimeError, "expected /dev/sdb2, found /dev/sda1"
+        ):
+            MountTargetStep(runner, target=target).verify(context)
+
     def test_btrfs_cleanup_unmounts_deepest_mounts_before_root(self):
         runner = FakeRunner()
         target = Path("/target-test")
