@@ -217,6 +217,14 @@ class FrontendPlanTests(unittest.TestCase):
         self.assertIn("[refresh-package-indexes]", simulated)
         self.assertIn("[upgrade-system]", simulated)
         self.assertNotIn("[install-third-party-drivers]", simulated)
+        step_order = [
+            step for step, status, _message in statuses
+            if status == "running"
+        ]
+        self.assertLess(
+            step_order.index("prepare-secure-boot"),
+            step_order.index("refresh-package-indexes"),
+        )
 
     def test_development_pipeline_honors_software_choices(self):
         values = state()

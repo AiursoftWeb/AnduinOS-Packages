@@ -166,11 +166,14 @@ class DevelopmentExecutorClient:
             return False, str(error)
 
         pipeline = list(self.BASE_PIPELINE)
+        # Match InstallerExecutor exactly: Secure Boot key preparation must
+        # precede upgrades and third-party drivers so any DKMS modules created
+        # by those operations can be signed immediately.
+        pipeline.append(("prepare-secure-boot", 4))
         if plan.software.install_updates:
             pipeline.extend(
                 (("refresh-package-indexes", 2), ("upgrade-system", 8))
             )
-        pipeline.append(("prepare-secure-boot", 4))
         if plan.software.install_third_party_drivers:
             pipeline.append(("install-third-party-drivers", 8))
         pipeline.extend(

@@ -10,6 +10,45 @@ from installer_core.steps import InstallContext
 
 
 class ChrootEnvironmentTests(unittest.TestCase):
+    def test_preflight_uses_configured_target_before_mount_step_runs(self):
+        runner = FakeRunner()
+        target = Path("/target-not-mounted-yet")
+        for relative in ("dev", "proc", "sys", "run"):
+            runner.outputs[
+                (
+                    "findmnt",
+                    "--noheadings",
+                    "--mountpoint",
+                    str(target / relative),
+                )
+            ] = ("", "", 1)
+        context = InstallContext(valid_plan(), lambda _message: None)
+
+        EnterChrootStep(runner, target=target).preflight(context)
+
+        self.assertNotIn("target", context.values)
+        self.assertEqual(
+            [command for command, _kwargs in runner.commands],
+            [
+                (
+                    "findmnt",
+                    "--noheadings",
+                    "--mountpoint",
+                    str(target / relative),
+                )
+                for relative in ("dev", "proc", "sys", "run")
+            ],
+        )
+
+    def test_preflight_rejects_existing_target_runtime_mount(self):
+        runner = FakeRunner()
+        target = Path("/target-already-mounted")
+        context = InstallContext(valid_plan(), lambda _message: None)
+        with self.assertRaisesRegex(
+            RuntimeError, "Unexpected existing target mount"
+        ):
+            EnterChrootStep(runner, target=target).preflight(context)
+
     def test_run_is_private_and_temporary_files_are_restored(self):
         runner = FakeRunner()
         with tempfile.TemporaryDirectory() as directory:

@@ -89,12 +89,15 @@ class StepRunner:
 
         # All preflight checks run before the first destructive operation.
         for step in self.steps:
+            context.log(f"[preflight:{step.id}] {step.title}")
             try:
                 step.preflight(context)
             except Exception as error:
-                self.status(step.id, StepStatus.FAILED, str(error))
+                message = f"Preflight failed for {step.id}: {error}"
+                context.log(message)
+                self.status(step.id, StepStatus.FAILED, message)
                 results.append(
-                    StepResult(step.id, StepStatus.FAILED, str(error))
+                    StepResult(step.id, StepStatus.FAILED, message)
                 )
                 return InstallResult(False, tuple(results), False)
 

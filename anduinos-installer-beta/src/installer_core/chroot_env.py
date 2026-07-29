@@ -22,6 +22,7 @@ class FileBackup:
 @dataclass
 class EnterChrootStep:
     runner: CommandRunner
+    target: Path = Path("/target")
     id: str = "enter-chroot"
     title: str = "Prepare isolated target environment"
     failure_policy: FailurePolicy = FailurePolicy.FATAL
@@ -30,9 +31,11 @@ class EnterChrootStep:
 
     def preflight(self, context: InstallContext) -> None:
         self.runner.require_commands(("mount", "umount", "findmnt"))
-        target = _target(context)
         for relative in ("dev", "proc", "sys", "run"):
-            path = target / relative
+            # Global preflight runs before MountTargetStep.execute(), so the
+            # target cannot yet exist in context.values. Inspect the executor's
+            # configured mountpoint directly.
+            path = self.target / relative
             result = self.runner.run(
                 ("findmnt", "--noheadings", "--mountpoint", str(path)),
                 check=False,

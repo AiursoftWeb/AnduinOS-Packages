@@ -58,7 +58,7 @@ class InstallerExecutor:
             MountTargetStep(self.runner, target=self.target),
             CopySystemStep(self.runner),
             ConfigureStorageStep(self.runner),
-            EnterChrootStep(self.runner),
+            EnterChrootStep(self.runner, target=self.target),
             CleanupLiveSystemStep(self.runner),
             ConfigureSystemStep(self.runner),
             SelectFastestAptMirrorStep(),

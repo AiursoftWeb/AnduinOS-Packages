@@ -61,14 +61,33 @@ class StepRunnerTests(unittest.TestCase):
 
     def test_preflight_failure_never_starts_destructive_work(self):
         events = []
+        logs = []
+        statuses = []
         steps = [
             FakeStep("erase", events, destructive=True),
             FakeStep("check", events, fail_at="preflight"),
         ]
-        result = StepRunner(steps).run(self.context())
+        context = InstallContext(valid_plan(), logs.append)
+        result = StepRunner(
+            steps,
+            status=lambda step, status, message: statuses.append(
+                (step, status, message)
+            ),
+        ).run(context)
         self.assertFalse(result.succeeded)
         self.assertFalse(result.destructive_started)
         self.assertNotIn("erase:execute", events)
+        self.assertIn("[preflight:erase] erase", logs)
+        self.assertIn("[preflight:check] check", logs)
+        self.assertEqual(
+            result.results[0].message,
+            "Preflight failed for check: check preflight failed",
+        )
+        self.assertEqual(statuses[-1], (
+            "check",
+            StepStatus.FAILED,
+            "Preflight failed for check: check preflight failed",
+        ))
 
     def test_fatal_failure_cleans_completed_steps_in_reverse(self):
         events = []
