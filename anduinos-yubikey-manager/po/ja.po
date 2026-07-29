@@ -1,0 +1,593 @@
+# Japanese translations for anduinos-yubikey-manager package.
+# Copyright (C) 2026 THE anduinos-yubikey-manager'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-yubikey-manager package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-yubikey-manager\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-29 16:14+0000\n"
+"PO-Revision-Date: 2026-07-29 16:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "A key must be connected before it can be enrolled."
+msgstr "登録する前にキーを接続する必要があります。"
+
+msgid "About"
+msgstr "概要"
+
+msgid "Account password is required for sudo"
+msgstr "sudoにはアカウントパスワードが必要です"
+
+msgid "Advanced options"
+msgstr "高度なオプション"
+
+msgid "Algorithm"
+msgstr "アルゴリズム"
+
+msgid "All inspected resident credentials from this key are already in the agent"
+msgstr "このキーから検査されたすべての常駐資格情報は、すでにエージェントに登録されています"
+
+msgid "Allow sudo without authentication"
+msgstr "認証なしでsudoを許可する"
+
+msgid "Allowed for sudo · not currently connected"
+msgstr "sudoが許可されている · 現在接続されていません"
+
+msgid "Allowed to authorize sudo"
+msgstr "sudoの承認が許可されています"
+
+msgid "Allowed to unlock this user"
+msgstr "このユーザーのロック解除が許可されています"
+
+msgid "Allowed to unlock this user · not currently connected"
+msgstr "このユーザーのロック解除が許可されている · 現在接続されていません"
+
+msgid "Already loaded"
+msgstr "すでに読み込まれています"
+
+msgid "An enrolled YubiKey or the account password can authorize sudo."
+msgstr "登録済みのYubiKeyまたはアカウントパスワードでsudoを承認できます。"
+
+msgid "AnduinOS Team"
+msgstr "AnduinOSチーム"
+
+msgid "AnduinOS sign-in"
+msgstr "AnduinOSサインイン"
+
+msgid "Application"
+msgstr "アプリケーション"
+
+msgid "Application must begin with ssh:, contain no whitespace, and be at most 253 bytes."
+msgstr "アプリケーションはssh:で始まり、空白を含めず、最大253バイトである必要があります。"
+
+msgid "Cancel"
+msgstr "キャンセル"
+
+msgid "Choose a local key-handle file"
+msgstr "ローカルのキーハンドルファイルを選択してください"
+
+msgid "Choose a supported OpenSSH security-key algorithm."
+msgstr "サポートされているOpenSSHセキュリティキーアルゴリズムを選択してください。"
+
+msgid "Choose a valid /dev/hidrawN FIDO device."
+msgstr "有効な/dev/hidrawN FIDOデバイスを選択してください。"
+
+msgid "Choose a valid output folder."
+msgstr "有効な出力フォルダを選択してください。"
+
+msgid "Choose local SSH key-handle path"
+msgstr "ローカルSSHキーハンドルのパスを選択"
+
+msgid "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
+msgstr "{0}のロック解除を許可するYubiKeyを選択してください。パスワードでのサインインも引き続き利用可能です。"
+
+msgid "Close"
+msgstr "閉じる"
+
+msgid "Command exited with"
+msgstr "コマンドが終了しました"
+
+msgid "Command exited with {0}"
+msgstr "コマンドが {0} で終了しました"
+
+msgid "Configured features"
+msgstr "設定された機能"
+
+msgid "Connect a FIDO security key first"
+msgstr "まずFIDOセキュリティキーを接続してください"
+
+msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+msgstr "明確なソースを選択するには、正確に1つのFIDOセキュリティキーを接続してください"
+
+msgid "Continue"
+msgstr "続ける"
+
+msgid "Copy public key"
+msgstr "公開鍵をコピー"
+
+msgid "Could not create a temporary public-key file: {0}"
+msgstr "一時的な公開鍵ファイルを作成できませんでした: {0}"
+
+msgid "Could not create {0}: {1}"
+msgstr "{0} を作成できませんでした: {1}"
+
+msgid "Could not export the public key: {0}"
+msgstr "公開キーのエクスポートに失敗しました: {0}"
+
+msgid "Could not flush the temporary public key: {0}"
+msgstr "一時公開鍵のフラッシュに失敗しました: {0}"
+
+msgid "Could not inspect USB devices: {0}"
+msgstr "USBデバイスの検査に失敗しました: {0}"
+
+msgid "Could not inspect this YubiKey"
+msgstr "このYubiKeyの検査に失敗しました"
+
+msgid "Could not list YubiKeys"
+msgstr "YubiKeyの一覧表示に失敗しました"
+
+msgid "Could not locate the secure PIN helper: {0}"
+msgstr "セキュアPINヘルパーの検索に失敗しました: {0}"
+
+msgid "Could not protect {0}: {1}"
+msgstr "{0} の保護に失敗しました: {1}"
+
+msgid "Could not provide the FIDO PIN: {0}"
+msgstr "FIDO PINの提供に失敗しました: {0}"
+
+msgid "Could not request administrator access: {0}"
+msgstr "管理者アクセスのリクエストに失敗しました: {0}"
+
+msgid "Could not run {0}: {1}"
+msgstr "{0} の実行に失敗しました: {1}"
+
+msgid "Could not start {0}: {1}"
+msgstr "{0} の開始に失敗しました: {1}"
+
+msgid "Could not write the temporary public key: {0}"
+msgstr "一時公開鍵の書き込みに失敗しました: {0}"
+
+msgid "Create"
+msgstr "作成"
+
+msgid "Create a resident SSH credential on a selected device"
+msgstr "選択したデバイス上に常駐SSHクレデンシャルを作成します"
+
+msgid "Create a resident SSH key"
+msgstr "常駐SSHキーを作成する"
+
+msgid "Create…"
+msgstr "作成…"
+
+msgid "Current user: {0}"
+msgstr "現在のユーザー: {0}"
+
+msgid "Disabled · sudo must authenticate with a YubiKey or account password"
+msgstr "無効 · sudoはYubiKeyまたはアカウントパスワードで認証する必要があります"
+
+msgid "Display label must be at most 200 bytes and contain no control characters."
+msgstr "表示ラベルは最大200バイトで、制御文字を含まない必要があります。"
+
+msgid "During enrollment, disconnect all other security keys. The selected key will blink; touch it to continue. Multiple keys can be enrolled one at a time."
+msgstr "登録中は、他のすべてのセキュリティキーを切断してください。選択したキーが点滅します。続行するにはタッチしてください。複数のキーを1つずつ登録できます。"
+
+msgid "ECDSA-SK (recommended compatibility)"
+msgstr "ECDSA-SK (推奨される互換性)"
+
+msgid "ECDSA-SK works with the widest range of YubiKeys"
+msgstr "ECDSA-SKは最も幅広いYubiKeyと動作します"
+
+msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
+msgstr "ECDSA-SK · 常駐 · タッチ必須 · セーフな互換性デフォルト"
+
+msgid "Ed25519-SK (newer YubiKeys)"
+msgstr "Ed25519-SK (新しいYubiKey)"
+
+msgid "Enabled · programs can obtain administrator privileges without confirmation"
+msgstr "有効 · プログラムは確認なしで管理者権限を取得できます"
+
+msgid "Enabling passwordless sudo…"
+msgstr "パスワードレスsudoを有効にしています…"
+
+msgid "Enabling sudo authentication…"
+msgstr "sudo 認証を有効化しています…"
+
+msgid "Enrolled · inactive while sudo authentication is bypassed"
+msgstr "登録済み · sudo 認証がバイパスされている間は非アクティブ"
+
+msgid "Enrollment safety"
+msgstr "登録の安全性"
+
+msgid "Enter the YubiKey FIDO PIN"
+msgstr "YubiKey FIDO PIN を入力してください"
+
+msgid "Enter the selected YubiKey FIDO PIN"
+msgstr "選択した YubiKey FIDO PIN を入力してください"
+
+msgid "Export .pub"
+msgstr ".pub をエクスポート"
+
+msgid "Export SSH public key"
+msgstr "SSH 公開鍵をエクスポート"
+
+msgid "FIDO PIN"
+msgstr "FIDO PIN"
+
+msgid "FIDO device discovery is unavailable"
+msgstr "FIDO デバイスの検出が利用できません"
+
+msgid "FIDO security key"
+msgstr "FIDO セキュリティキー"
+
+msgid "Firmware {0}"
+msgstr "ファームウェア {0}"
+
+msgid "For safe enrollment, disconnect every other security key and leave only the selected YubiKey connected."
+msgstr "安全な登録のために、選択した YubiKey 以外のすべてのセキュリティキーを接続解除し、選択した YubiKey のみを接続した状態にしてください。"
+
+msgid "Home"
+msgstr "ホーム"
+
+msgid "Insert a YubiKey"
+msgstr "YubiKey を挿入してください"
+
+msgid "Insert a YubiKey, then press Refresh."
+msgstr "YubiKey を挿入してから、更新を押してください。"
+
+msgid "Inspect"
+msgstr "検査"
+
+msgid "Inspect, load, export, test, or remove resident SSH credentials."
+msgstr "レジデント SSH 資格情報を検査、読み込み、エクスポート、テスト、または削除します。"
+
+msgid "Inspecting resident SSH credentials…"
+msgstr "レジデント SSH 資格情報を検査しています…"
+
+msgid "Invalid FIDO device path."
+msgstr "FIDO デバイスのパスが無効です。"
+
+msgid "Load"
+msgstr "読み込み"
+
+msgid "Load into agent"
+msgstr "エージェントに読み込む"
+
+msgid "Load resident SSH keys"
+msgstr "レジデント SSH キーを読み込む"
+
+msgid "Local key handle path"
+msgstr "ローカルキーハンドルパス"
+
+msgid "Local key label"
+msgstr "ローカルキーラベル"
+
+msgid "New hardware-backed SSH key"
+msgstr "新しいハードウェア保護 SSH キー"
+
+msgid "No FIDO security key detected"
+msgstr "FIDO セキュリティキーが検出されませんでした"
+
+msgid "No SSH agent was detected"
+msgstr "SSH エージェントが検出されませんでした"
+
+msgid "No YubiKey detected"
+msgstr "YubiKey が検出されませんでした"
+
+msgid "No hardware serial · {0}"
+msgstr "ハードウェアシリアル番号なし · {0}"
+
+msgid "No resident SSH credentials"
+msgstr "レジデント SSH 資格情報はありません"
+
+msgid "No ssh:* discoverable credentials were found on this key."
+msgstr "このキーには検出可能な ssh:* 認証情報が含まれていません。"
+
+msgid "Not currently connected"
+msgstr "現在接続されていません"
+
+msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
+msgstr "OpenSSH はレジデントキーを読み込めませんでした。SSH エージェントには新たに読み込まれたアイデンティティがありません。"
+
+msgid ""
+"OpenSSH could not load resident keys:\n"
+"{0}"
+msgstr "OpenSSH がレジデントキーを読み込めませんでした:\n{0}"
+
+msgid ""
+"OpenSSH did not create a resident key:\n"
+"{0}"
+msgstr "OpenSSH がレジデントキーを作成しませんでした:\n{0}"
+
+msgid ""
+"OpenSSH finished creating the key, but the YubiKey could not be verified afterward: {0}\n"
+"Do not immediately retry; inspect the key first to avoid creating a duplicate."
+msgstr "OpenSSH はキーの作成を完了しましたが、その後の YubiKey の検証に失敗しました: {0}\nすぐに再試行しないでください。重複したキーが作成されないよう、まずキーを確認してください。"
+
+msgid "OpenSSH reported success, but no new resident credential was detected. Do not retry until you inspect the YubiKey."
+msgstr "OpenSSH は成功を報告しましたが、新しいレジデント認証情報は検出されませんでした。YubiKey を確認するまで再試行しないでください。"
+
+msgid "OpenSSH/FIDO credential metadata and local file location"
+msgstr "OpenSSH/FIDO 認証情報のメタデータとローカルファイルの場所"
+
+msgid "Password sign-in only"
+msgstr "パスワードでのサインインのみ"
+
+msgid "Refresh connected YubiKeys"
+msgstr "接続された YubiKey を更新"
+
+msgid "Remove from agent"
+msgstr "エージェントから削除"
+
+msgid "Removing this key from the SSH agent…"
+msgstr "SSH エージェント从这个キーを削除しています…"
+
+msgid "Require verification for every signature"
+msgstr "すべての署名に対して検証を要求する"
+
+msgid "Requires the FIDO PIN each time this key signs"
+msgstr "このキーが署名するたびに FIDO PIN が必要になります"
+
+msgid "Resident SSH credentials"
+msgstr "レジデント SSH 認証情報"
+
+msgid "Resident SSH key created"
+msgstr "レジデント SSH キーが作成されました"
+
+msgid "Resident keys loaded"
+msgstr "レジデントキーが読み込まれました"
+
+msgid "Resident username"
+msgstr "レジデントユーザー名"
+
+msgid "Resident username must contain 1–64 bytes and no control characters."
+msgstr "レジデントユーザー名は 1〜64 バイトで構成され、制御文字を含んではなりません。"
+
+msgid "Run ssh-add -K for this connected security key"
+msgstr "接続されたセキュリティキーに対して ssh-add -K を実行します"
+
+msgid "SSH Keys"
+msgstr "SSH キー"
+
+msgid "SSH agent"
+msgstr "SSH エージェント"
+
+msgid "SSH agent connected"
+msgstr "SSH エージェントが接続されました"
+
+msgid "SSH agent unavailable"
+msgstr "SSH エージェントが利用できません"
+
+msgid "SSH key actions"
+msgstr "SSH キーの操作"
+
+msgid "SSH_AUTH_SOCK is not set"
+msgstr "SSH_AUTH_SOCK が設定されていません"
+
+msgid "Safe defaults use ECDSA-SK, require touch, and store a discoverable credential on the selected YubiKey."
+msgstr "安全なデフォルトでは ECDSA-SK を使用し、タッチを要求し、選択された YubiKey に検出可能な認証情報を保存します。"
+
+msgid "Security keys"
+msgstr "セキュリティキー"
+
+msgid "Serial {0}"
+msgstr "シリアル番号 {0}"
+
+msgid "Signing test passed"
+msgstr "署名テストに合格しました"
+
+msgid "Temporary public-key path is invalid."
+msgstr "一時的な公開鍵のパスが無効です。"
+
+msgid "Test signing"
+msgstr "テスト署名"
+
+msgid "The FIDO enrollment tool is not installed. Install the libpam-u2f package, then try again."
+msgstr "FIDO登録ツールがインストールされていません。libpam-u2fパッケージをインストールしてから、もう一度お試しください。"
+
+msgid "The PIN is sent directly to ssh-add and is never stored."
+msgstr "PINはssh-addに直接送信され、保存されることはありません。"
+
+msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
+msgstr "PINはOpenSSHへのプライベートパイプを通じて送信されます。保存されたり、コマンド引数に含まれたりすることはありません。"
+
+msgid "The PIN is used only for this read-only inspection and is never stored."
+msgstr "PINはこの読み取り専用のインスペクションでのみ使用され、保存されることはありません。"
+
+msgid "The SSH agent successfully signed and verified data with this key."
+msgstr "SSHエージェントがこの鍵を使用してデータの署名と検証に成功しました。"
+
+msgid "The YubiKey operation stopped unexpectedly."
+msgstr "YubiKeyの操作が予期せず停止しました。"
+
+msgid "The credential will be created only on this exact device"
+msgstr "クレデンシャルはこのデバイス上のみに作成されます"
+
+msgid "The enrollment task failed."
+msgstr "登録タスクが失敗しました。"
+
+msgid "The inspected resident SSH credentials are already available in this agent."
+msgstr "インスペクションされたレジデントSSHクレデンシャルは、すでにこのエージェントで利用可能です。"
+
+msgid "The local key path must be absolute."
+msgstr "ローカルキーのパスは絶対パスである必要があります。"
+
+msgid ""
+"The non-exportable private key remains protected by the selected YubiKey.\n"
+"\n"
+"Algorithm: {0}\n"
+"Application: {1}\n"
+"Resident username: {2}\n"
+"Fingerprint: {3}\n"
+"\n"
+"Local key handle: {4}\n"
+"Public key: {5}\n"
+"\n"
+"The key is not automatically loaded into the SSH agent."
+msgstr "エクスポートできない秘密鍵は、選択された YubiKey によって保護されたままです。\n\nアルゴリズム: {0}\nアプリケーション: {1}\nレジデントユーザー名: {2}\nフィンガープリント: {3}\n\nローカルキーハンドル: {4}\n公開鍵: {5}\n\nこのキーは自動的に SSH エージェントに読み込まれません。"
+
+msgid "The operation was cancelled or denied."
+msgstr "操作がキャンセルまたは拒否されました。"
+
+msgid "The output folder does not exist: {0}"
+msgstr "出力フォルダが存在しません: {0}"
+
+msgid "The resident credential did not return a public key."
+msgstr "レジデントクレデンシャルが公開キーを返していません。"
+
+msgid "The resident credential returned an incomplete public key."
+msgstr "レジデントクレデンシャルが不完全な公開キーを返しました。"
+
+msgid "The resident credential returned malformed PEM data."
+msgstr "レジデントクレデンシャルが不正な形式のPEMデータを返しました。"
+
+msgid "The resident credential {0} exists on the YubiKey, but its local handle files are incomplete. Do not retry creation."
+msgstr "レジデントクレデンシャル {0} はYubiKey上に存在しますが、そのローカルハンドルファイルは不完全です。作成を再試行しないでください。"
+
+msgid ""
+"The resident credential {0} was created on the YubiKey, but OpenSSH did not complete successfully:\n"
+"{1}\n"
+"Do not retry creation. Inspect the key and preserve any local files that were written."
+msgstr "レジデントクレデンシャル {0} は YubiKey 上に作成されましたが、OpenSSH の処理は正常に完了しませんでした:\n{1}\n作成を再試行しないでください。キーを確認し、書き出されたローカルファイルを保存してください。"
+
+msgid "The security key returned an invalid PAM credential."
+msgstr "セキュリティキーが無効なPAMクレデンシャルを返しました。"
+
+msgid "The selected FIDO device is no longer connected. Refresh and try again."
+msgstr "選択したFIDOデバイスがもう接続されていません。更新してからもう一度お試しください。"
+
+msgid "The selected private-key or .pub file already exists. Choose another name."
+msgstr "選択した秘密鍵または.pubファイルはすでに存在します。別の名前を選択してください。"
+
+msgid "The sudo policy task failed."
+msgstr "sudoポリシータスクが失敗しました。"
+
+msgid "This setting applies only to the current user."
+msgstr "この設定は現在のユーザーにのみ適用されます。"
+
+msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
+msgstr "Promptが表示されたらYubiKeyに触れてください。レジデントキーをSSHエージェントに読み込んでいます…"
+
+msgid "Touch the YubiKey. Testing SSH signing and verification…"
+msgstr "YubiKeyに触れてください。SSH署名と検証をテストしています…"
+
+msgid "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not remove the key."
+msgstr "選択したYubiKeyに触れてください。{0}上にSSHレジデントキーを作成しています… キーを取り外さないでください。"
+
+msgid "Touch this key when prompted to enroll it"
+msgstr "登録のためにプロンプトが表示されたら、このキーに触れてください"
+
+msgid "Touch this key when prompted to enroll it for sudo"
+msgstr "sudoの登録のためにプロンプトが表示されたら、このキーに触れてください"
+
+msgid "Touch your security key to continue."
+msgstr "続行するにはセキュリティキーに触れます。"
+
+msgid "Unknown authentication purpose."
+msgstr "認証目的が不明です。"
+
+msgid "Unlock GDM"
+msgstr "GDM のロックを解除"
+
+msgid "Unlock sudo"
+msgstr "sudo のロックを解除"
+
+msgid "Unlock the current user"
+msgstr "現在のユーザーのロックを解除"
+
+msgid "Unnamed SSH credential"
+msgstr "名前のない SSH 資格情報"
+
+msgid "Unsupported resident SSH public-key algorithm."
+msgstr "サポートされていないレジデント SSH 公開鍵アルゴリズムです。"
+
+msgid "Updating sign-in settings…"
+msgstr "サインイン設定を更新しています…"
+
+msgid "Updating sudo settings…"
+msgstr "sudo 設定を更新しています…"
+
+msgid "Use YubiKey to unlock sudo"
+msgstr "YubiKey を使用して sudo のロックを解除します"
+
+msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
+msgstr "今すぐキーを登録できますが、パスワードレスアクセスが有効な場合、sudo は PAM をバイパスします。"
+
+msgid "YubiKey"
+msgstr "YubiKey"
+
+msgid "YubiKey Manager"
+msgstr "YubiKey Manager"
+
+msgid "YubiKey Manager is unavailable"
+msgstr "YubiKey Manager は利用できません"
+
+msgid "YubiKey configuration failed"
+msgstr "YubiKey の構成に失敗しました"
+
+msgid "YubiKey configured, but sudo currently bypasses authentication"
+msgstr "YubiKey が構成されていますが、現在 sudo は認証をバイパスしています"
+
+msgid "YubiKey touch or account password can authorize sudo"
+msgstr "sudo の承認には YubiKey のタッチまたはアカウントパスワードを使用できます"
+
+msgid "YubiKey touch or password can unlock this user"
+msgstr "このユーザーのロック解除には YubiKey のタッチまたはパスワードを使用できます"
+
+msgid "agent"
+msgstr "エージェント"
+
+msgid "sudo authentication"
+msgstr "sudo 認証"
+
+msgid "sudo authentication policy"
+msgstr "sudo 認証ポリシー"
+
+msgid "sudo currently allows administrator access without authentication"
+msgstr "現在、sudo は認証なしで管理者アクセスを許可しています"
+
+msgid "unknown"
+msgstr "不明"
+
+msgid "unknown socket"
+msgstr "不明なソケット"
+
+msgid "user"
+msgstr "ユーザー"
+
+msgid "{0} exited with {1}"
+msgstr "{0} が {1} で終了しました"
+
+msgid "{0} failed: {1}"
+msgstr "{0} に失敗しました: {1}"
+
+msgid "{0} identities · {1}"
+msgstr "{0} のアイデンティティ · {1}"
+
+msgid "{0} is configured, but another policy currently bypasses it"
+msgstr "{0} は構成されていますが、現在別のポリシーがそれをバイパスしています"
+
+msgid "{0} is enabled for this YubiKey"
+msgstr "この YubiKey で {0} が有効になっています"
+
+msgid "{0} is not configured for this YubiKey"
+msgstr "{0} はこの YubiKey で構成されていません"
+
+msgid "{0} new SSH identities were added to the agent."
+msgstr "{0} 個の新しい SSH アイデンティティがエージェントに追加されました。"
+
+msgid "{0} new SSH identity was added to the agent."
+msgstr "{0} 個の新しい SSH アイデンティティがエージェントに追加されました。"
+
+msgid "{0} · no hardware serial"
+msgstr "{0} · ハードウェアシリアルなし"
+
+msgid "{0} · {1}"
+msgstr "{0} · {1}"

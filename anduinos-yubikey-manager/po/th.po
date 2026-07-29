@@ -1,0 +1,592 @@
+# Thai translations for anduinos-yubikey-manager package.
+# Copyright (C) 2026 THE anduinos-yubikey-manager'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-yubikey-manager package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-yubikey-manager\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-29 16:14+0000\n"
+"PO-Revision-Date: 2026-07-29 16:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "A key must be connected before it can be enrolled."
+msgstr "จำเป็นต้องเชื่อมต่อคีย์ก่อนจึงจะลงทะเบียนได้"
+
+msgid "About"
+msgstr "เกี่ยวกับ"
+
+msgid "Account password is required for sudo"
+msgstr "sudo จำเป็นต้องใช้รหัสผ่านบัญชี"
+
+msgid "Advanced options"
+msgstr "ตัวเลือกขั้นสูง"
+
+msgid "Algorithm"
+msgstr "อัลกอริทึม"
+
+msgid "All inspected resident credentials from this key are already in the agent"
+msgstr "ข้อมูลประจำตัวที่ตรวจสอบแล้วทั้งหมดจากคีย์นี้ได้อยู่ในเอเจนต์แล้ว"
+
+msgid "Allow sudo without authentication"
+msgstr "อนุญาตให้ใช้ sudo โดยไม่ต้องตรวจสอบสิทธิ์"
+
+msgid "Allowed for sudo · not currently connected"
+msgstr "อนุญาตสำหรับ sudo · ไม่ได้เชื่อมต่ออยู่ในขณะนี้"
+
+msgid "Allowed to authorize sudo"
+msgstr "ได้รับอนุญาตให้รับรองความถูกต้องของ sudo"
+
+msgid "Allowed to unlock this user"
+msgstr "ได้รับอนุญาตให้ปลดล็อกผู้ใช้รายนี้"
+
+msgid "Allowed to unlock this user · not currently connected"
+msgstr "ได้รับอนุญาตให้ปลดล็อกผู้ใช้รายนี้ · ไม่ได้เชื่อมต่ออยู่ในขณะนี้"
+
+msgid "Already loaded"
+msgstr "โหลดแล้ว"
+
+msgid "An enrolled YubiKey or the account password can authorize sudo."
+msgstr "YubiKey ที่ลงทะเบียนไว้หรือรหัสผ่านบัญชีสามารถใช้เพื่อรับรองความถูกต้องของ sudo ได้"
+
+msgid "AnduinOS Team"
+msgstr "ทีม AnduinOS"
+
+msgid "AnduinOS sign-in"
+msgstr "เข้าสู่ระบบ AnduinOS"
+
+msgid "Application"
+msgstr "แอปพลิเคชัน"
+
+msgid "Application must begin with ssh:, contain no whitespace, and be at most 253 bytes."
+msgstr "แอปพลิเคชันต้องเริ่มต้นด้วย ssh:, ห้ามมีช่องว่าง และต้องมีขนาดไม่เกิน 253 ไบต์"
+
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+msgid "Choose a local key-handle file"
+msgstr "เลือกไฟล์ handle คีย์ท้องถิ่น"
+
+msgid "Choose a supported OpenSSH security-key algorithm."
+msgstr "เลือกอัลกอริทึมคีย์ความปลอดภัย OpenSSH ที่รองรับ"
+
+msgid "Choose a valid /dev/hidrawN FIDO device."
+msgstr "เลือกอุปกรณ์ FIDO /dev/hidrawN ที่ถูกต้อง"
+
+msgid "Choose a valid output folder."
+msgstr "เลือกโฟลเดอร์เอาต์พุตที่ถูกต้อง"
+
+msgid "Choose local SSH key-handle path"
+msgstr "เลือกเส้นทาง handle คีย์ SSH ท้องถิ่น"
+
+msgid "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
+msgstr "เลือก YubiKey ใดบ้างที่สามารถปลดล็อก {0} ได้ การเข้าสู่ระบบด้วยรหัสผ่านยังคงใช้ได้"
+
+msgid "Close"
+msgstr "ปิด"
+
+msgid "Command exited with"
+msgstr "คำสั่งสิ้นสุดด้วย"
+
+msgid "Command exited with {0}"
+msgstr "คำสั่งสิ้นสุดด้วย {0}"
+
+msgid "Configured features"
+msgstr "ฟีเจอร์ที่กำหนดค่าแล้ว"
+
+msgid "Connect a FIDO security key first"
+msgstr "เชื่อมต่อคีย์ความปลอดภัย FIDO ก่อน"
+
+msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+msgstr "เชื่อมต่อคีย์ความปลอดภัย FIDO เพียงตัวเดียวเพื่อเลือกแหล่งที่มาที่ชัดเจน"
+
+msgid "Continue"
+msgstr "ดำเนินการต่อ"
+
+msgid "Copy public key"
+msgstr "คัดลอกกุญแจสาธารณะ"
+
+msgid "Could not create a temporary public-key file: {0}"
+msgstr "ไม่สามารถสร้างไฟล์กุญแจสาธารณะชั่วคราว: {0}"
+
+msgid "Could not create {0}: {1}"
+msgstr "ไม่สามารถสร้าง {0}: {1}"
+
+msgid "Could not export the public key: {0}"
+msgstr "ไม่สามารถส่งออกกุญแจสาธารณะ: {0}"
+
+msgid "Could not flush the temporary public key: {0}"
+msgstr "ไม่สามารถล้างข้อมูลกุญแจสาธารณะชั่วคราว: {0}"
+
+msgid "Could not inspect USB devices: {0}"
+msgstr "ไม่สามารถตรวจสอบอุปกรณ์ USB: {0}"
+
+msgid "Could not inspect this YubiKey"
+msgstr "ไม่สามารถตรวจสอบ YubiKey นี้ได้"
+
+msgid "Could not list YubiKeys"
+msgstr "ไม่สามารถแสดงรายการ YubiKeys ได้"
+
+msgid "Could not locate the secure PIN helper: {0}"
+msgstr "ไม่สามารถค้นหาผู้ช่วย PIN ความปลอดภัย: {0}"
+
+msgid "Could not protect {0}: {1}"
+msgstr "ไม่สามารถป้องกัน {0}: {1}"
+
+msgid "Could not provide the FIDO PIN: {0}"
+msgstr "ไม่สามารถให้รหัส FIDO PIN: {0}"
+
+msgid "Could not request administrator access: {0}"
+msgstr "ไม่สามารถขอสิทธิ์ผู้ดูแลระบบ: {0}"
+
+msgid "Could not run {0}: {1}"
+msgstr "ไม่สามารถรัน {0}: {1}"
+
+msgid "Could not start {0}: {1}"
+msgstr "ไม่สามารถเริ่มต้น {0}: {1}"
+
+msgid "Could not write the temporary public key: {0}"
+msgstr "ไม่สามารถเขียนกุญแจสาธารณะชั่วคราว: {0}"
+
+msgid "Create"
+msgstr "สร้าง"
+
+msgid "Create a resident SSH credential on a selected device"
+msgstr "สร้างข้อมูลประจำตัว SSH แบบ resident บนอุปกรณ์ที่เลือก"
+
+msgid "Create a resident SSH key"
+msgstr "สร้างคีย์ SSH แบบ resident"
+
+msgid "Create…"
+msgstr "สร้าง…"
+
+msgid "Current user: {0}"
+msgstr "ผู้ใช้ปัจจุบัน: {0}"
+
+msgid "Disabled · sudo must authenticate with a YubiKey or account password"
+msgstr "ปิดใช้งาน · sudo ต้องยืนยันตัวตนด้วย YubiKey หรือรหัสผ่านบัญชี"
+
+msgid "Display label must be at most 200 bytes and contain no control characters."
+msgstr "ป้ายชื่อแสดงต้องมีความยาวไม่เกิน 200 ไบต์และไม่มีการควบคุมตัวอักษร"
+
+msgid "During enrollment, disconnect all other security keys. The selected key will blink; touch it to continue. Multiple keys can be enrolled one at a time."
+msgstr "ระหว่างลงทะเบียน ให้ถอดอุปกรณ์ความปลอดภัยอื่นๆ ทั้งหมดออก คีย์ที่เลือกจะกระพริบ; สัมผัสเพื่อดำเนินการต่อ สามารถลงทะเบียนคีย์ได้ทีละหนึ่งตัว"
+
+msgid "ECDSA-SK (recommended compatibility)"
+msgstr "ECDSA-SK (ความเข้ากันได้แนะนำ)"
+
+msgid "ECDSA-SK works with the widest range of YubiKeys"
+msgstr "ECDSA-SK ทำงานกับ YubiKeys ที่หลากหลายที่สุด"
+
+msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
+msgstr "ECDSA-SK · resident · ต้องสัมผัส · ค่าเริ่มต้นความเข้ากันได้อย่างปลอดภัย"
+
+msgid "Ed25519-SK (newer YubiKeys)"
+msgstr "Ed25519-SK (YubiKeys รุ่นใหม่)"
+
+msgid "Enabled · programs can obtain administrator privileges without confirmation"
+msgstr "เปิดใช้งาน · โปรแกรมสามารถรับสิทธิ์ผู้ดูแลระบบโดยไม่ต้องยืนยัน"
+
+msgid "Enabling passwordless sudo…"
+msgstr "กำลังเปิดใช้งาน sudo แบบไม่มีรหัสผ่าน…"
+
+msgid "Enabling sudo authentication…"
+msgstr "กำลังเปิดใช้งานการตรวจสอบสิทธิ์ sudo…"
+
+msgid "Enrolled · inactive while sudo authentication is bypassed"
+msgstr "ลงทะเบียนแล้ว · ไม่ใช้งานขณะข้ามการตรวจสอบสิทธิ์ sudo"
+
+msgid "Enrollment safety"
+msgstr "ความปลอดภัยในการลงทะเบียน"
+
+msgid "Enter the YubiKey FIDO PIN"
+msgstr "ใส่ PIN ของ YubiKey FIDO"
+
+msgid "Enter the selected YubiKey FIDO PIN"
+msgstr "ใส่ PIN ของ YubiKey FIDO ที่เลือก"
+
+msgid "Export .pub"
+msgstr "ส่งออก .pub"
+
+msgid "Export SSH public key"
+msgstr "ส่งออกคีย์สาธารณะ SSH"
+
+msgid "FIDO PIN"
+msgstr "PIN ของ FIDO"
+
+msgid "FIDO device discovery is unavailable"
+msgstr "การค้นพบอุปกรณ์ FIDO ไม่พร้อมใช้งาน"
+
+msgid "FIDO security key"
+msgstr "คีย์ความปลอดภัย FIDO"
+
+msgid "Firmware {0}"
+msgstr "เฟิร์มแวร์ {0}"
+
+msgid "For safe enrollment, disconnect every other security key and leave only the selected YubiKey connected."
+msgstr "เพื่อความปลอดภัยในการลงทะเบียน โปรดถอดคีย์ความปลอดภัยอื่นๆ ทั้งหมดออก และเหลือเพียง YubiKey ที่เลือกไว้เชื่อมต่อกับเครื่อง"
+
+msgid "Home"
+msgstr "หน้าแรก"
+
+msgid "Insert a YubiKey"
+msgstr "เสียบ YubiKey"
+
+msgid "Insert a YubiKey, then press Refresh."
+msgstr "เสียบ YubiKey แล้วกดปุ่มรีเฟรช"
+
+msgid "Inspect"
+msgstr "ตรวจสอบ"
+
+msgid "Inspect, load, export, test, or remove resident SSH credentials."
+msgstr "ตรวจสอบ โหลด ส่งออก ทดสอบ หรือลบข้อมูลประจำตัว SSH แบบถาวร"
+
+msgid "Inspecting resident SSH credentials…"
+msgstr "กำลังตรวจสอบข้อมูลประจำตัว SSH แบบถาวร…"
+
+msgid "Invalid FIDO device path."
+msgstr "เส้นทางอุปกรณ์ FIDO ไม่ถูกต้อง"
+
+msgid "Load"
+msgstr "โหลด"
+
+msgid "Load into agent"
+msgstr "โหลดเข้าเอเจนต์"
+
+msgid "Load resident SSH keys"
+msgstr "โหลดคีย์ SSH แบบถาวร"
+
+msgid "Local key handle path"
+msgstr "เส้นทางที่จัดการคีย์ในเครื่อง"
+
+msgid "Local key label"
+msgstr "ป้ายกำกับคีย์ในเครื่อง"
+
+msgid "New hardware-backed SSH key"
+msgstr "คีย์ SSH แบบฮาร์ดแวร์ใหม่"
+
+msgid "No FIDO security key detected"
+msgstr "ไม่พบคีย์ความปลอดภัย FIDO"
+
+msgid "No SSH agent was detected"
+msgstr "ไม่พบเอเจนต์ SSH"
+
+msgid "No YubiKey detected"
+msgstr "ไม่พบ YubiKey"
+
+msgid "No hardware serial · {0}"
+msgstr "ไม่มีหมายเลขซีเรียลของฮาร์ดแวร์ · {0}"
+
+msgid "No resident SSH credentials"
+msgstr "ไม่มีข้อมูลประจำตัว SSH แบบถาวร"
+
+msgid "No ssh:* discoverable credentials were found on this key."
+msgstr "ไม่พบข้อมูลรับรองที่ค้นพบได้ ssh:* บนคีย์นี้"
+
+msgid "Not currently connected"
+msgstr "ไม่ได้เชื่อมต่อในขณะนี้"
+
+msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
+msgstr "OpenSSH ไม่สามารถโหลดคีย์ที่อยู่ประจำได้ ตัวจัดการ SSH ไม่มีตัวตนใหม่ที่เพิ่งโหลด"
+
+msgid ""
+"OpenSSH could not load resident keys:\n"
+"{0}"
+msgstr "OpenSSH ไม่สามารถโหลดคีย์ที่อยู่ประจำได้:\n{0}"
+
+msgid ""
+"OpenSSH did not create a resident key:\n"
+"{0}"
+msgstr "OpenSSH ไม่ได้สร้างคีย์ที่อยู่ประจำ:\n{0}"
+
+msgid ""
+"OpenSSH finished creating the key, but the YubiKey could not be verified afterward: {0}\n"
+"Do not immediately retry; inspect the key first to avoid creating a duplicate."
+msgstr "OpenSSH สร้างคีย์เสร็จสมบูรณ์แล้ว แต่ไม่สามารถตรวจสอบ YubiKey ได้หลังจากนั้น: {0}\nอย่าลองใหม่ทันที; ตรวจสอบคีย์ก่อนเพื่อหลีกเลี่ยงการสร้างคีย์ซ้ำ"
+
+msgid "OpenSSH reported success, but no new resident credential was detected. Do not retry until you inspect the YubiKey."
+msgstr "OpenSSH รายงานความสำเร็จ แต่ไม่พบข้อมูลรับรองที่อยู่ประจำใหม่ อย่าลองทำซ้ำจนกว่าคุณจะตรวจสอบ YubiKey"
+
+msgid "OpenSSH/FIDO credential metadata and local file location"
+msgstr "เมตาเดต้าของข้อมูลรับรอง OpenSSH/FIDO และตำแหน่งไฟล์ท้องถิ่น"
+
+msgid "Password sign-in only"
+msgstr "เข้าสู่ระบบด้วยรหัสผ่านเท่านั้น"
+
+msgid "Refresh connected YubiKeys"
+msgstr "รีเฟรช YubiKeys ที่เชื่อมต่อ"
+
+msgid "Remove from agent"
+msgstr "ลบออกจากตัวจัดการ"
+
+msgid "Removing this key from the SSH agent…"
+msgstr "กำลังลบคีย์นี้จากตัวจัดการ SSH…"
+
+msgid "Require verification for every signature"
+msgstr "ต้องการการตรวจสอบสำหรับทุกลายเซ็น"
+
+msgid "Requires the FIDO PIN each time this key signs"
+msgstr "ต้องใช้ PIN ของ FIDO ทุกครั้งที่คีย์นี้ลงนาม"
+
+msgid "Resident SSH credentials"
+msgstr "ข้อมูลรับรอง SSH ที่อยู่ประจำ"
+
+msgid "Resident SSH key created"
+msgstr "สร้างคีย์ SSH ที่อยู่ประจำเสร็จสิ้น"
+
+msgid "Resident keys loaded"
+msgstr "โหลดคีย์ที่อยู่ประจำแล้ว"
+
+msgid "Resident username"
+msgstr "ชื่อผู้ใช้ที่อยู่ประจำ"
+
+msgid "Resident username must contain 1–64 bytes and no control characters."
+msgstr "ชื่อผู้ใช้ที่อยู่ประจำต้องมีขนาด 1–64 ไบต์และไม่มีตัวควบคุม"
+
+msgid "Run ssh-add -K for this connected security key"
+msgstr "เรียกใช้ ssh-add -K สำหรับคีย์ความปลอดภัยที่เชื่อมต่อนี้"
+
+msgid "SSH Keys"
+msgstr "คีย์ SSH"
+
+msgid "SSH agent"
+msgstr "ตัวจัดการ SSH"
+
+msgid "SSH agent connected"
+msgstr "ตัวจัดการ SSH เชื่อมต่อแล้ว"
+
+msgid "SSH agent unavailable"
+msgstr "ตัวจัดการ SSH ไม่พร้อมใช้งาน"
+
+msgid "SSH key actions"
+msgstr "การดำเนินการของคีย์ SSH"
+
+msgid "SSH_AUTH_SOCK is not set"
+msgstr "SSH_AUTH_SOCK ไม่ได้ตั้งค่า"
+
+msgid "Safe defaults use ECDSA-SK, require touch, and store a discoverable credential on the selected YubiKey."
+msgstr "ค่าเริ่มต้นที่ปลอดภัยใช้ ECDSA-SK ต้องการการสัมผัส และเก็บข้อมูลรับรองที่ค้นพบได้บน YubiKey ที่เลือก"
+
+msgid "Security keys"
+msgstr "คีย์ความปลอดภัย"
+
+msgid "Serial {0}"
+msgstr "หมายเลขซีเรียล {0}"
+
+msgid "Signing test passed"
+msgstr "การทดสอบการลงนามผ่าน"
+
+msgid "Temporary public-key path is invalid."
+msgstr "เส้นทางคีย์สาธารณะชั่วคราวไม่ถูกต้อง"
+
+msgid "Test signing"
+msgstr "การทดสอบลายเซ็น"
+
+msgid "The FIDO enrollment tool is not installed. Install the libpam-u2f package, then try again."
+msgstr "เครื่องมือลงทะเบียน FIDO ยังไม่ได้ติดตั้ง กรุณาติดตั้งแพ็กเกจ libpam-u2f แล้วลองอีกครั้ง"
+
+msgid "The PIN is sent directly to ssh-add and is never stored."
+msgstr "PIN จะถูกส่งไปยัง ssh-add โดยตรงและจะไม่ถูกเก็บไว้"
+
+msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
+msgstr "PIN จะถูกส่งผ่านท่อส่วนตัวไปยัง OpenSSH โดยไม่มีการเก็บรักษาหรือใส่ในอาร์กิวเมนต์ของคำสั่ง"
+
+msgid "The PIN is used only for this read-only inspection and is never stored."
+msgstr "PIN ถูกใช้สำหรับการตรวจสอบแบบอ่านอย่างเดียว仅此ครั้งและไม่ถูกเก็บไว้"
+
+msgid "The SSH agent successfully signed and verified data with this key."
+msgstr "เอเจนต์ SSH ได้ลงนามและยืนยันข้อมูลด้วยคีย์นี้สำเร็จแล้ว"
+
+msgid "The YubiKey operation stopped unexpectedly."
+msgstr "การดำเนินการ YubiKey หยุดทำงานอย่างกะทันหัน"
+
+msgid "The credential will be created only on this exact device"
+msgstr "ข้อมูลประจำตัวจะถูกสร้างขึ้นเฉพาะบนอุปกรณ์นี้เท่านั้น"
+
+msgid "The enrollment task failed."
+msgstr "งานลงทะเบียนล้มเหลว"
+
+msgid "The inspected resident SSH credentials are already available in this agent."
+msgstr "ข้อมูลประจำตัว SSH แบบเรซิดেন্টที่ตรวจสอบแล้วมีอยู่ในเอเจนต์นี้แล้ว"
+
+msgid "The local key path must be absolute."
+msgstr "เส้นทางคีย์ท้องถิ่นต้องเป็นแบบสมบูรณ์ (absolute)"
+
+msgid ""
+"The non-exportable private key remains protected by the selected YubiKey.\n"
+"\n"
+"Algorithm: {0}\n"
+"Application: {1}\n"
+"Resident username: {2}\n"
+"Fingerprint: {3}\n"
+"\n"
+"Local key handle: {4}\n"
+"Public key: {5}\n"
+"\n"
+"The key is not automatically loaded into the SSH agent."
+msgstr "คีย์ส่วนตัวที่ไม่สามารถส่งออกได้ยังคงได้รับการปกป้องโดย YubiKey ที่เลือกไว้\n\nอัลกอริทึม: {0}\nแอปพลิเคชัน: {1}\nชื่อผู้ใช้ที่อยู่ประจำ: {2}\nลายนิ้วมือคีย์: {3}\n\nที่จัดการคีย์ท้องถิ่น: {4}\nคีย์สาธารณะ: {5}\n\nคีย์จะไม่ถูกโหลดอัตโนมัติเข้าสู่ SSH agent"
+
+msgid "The operation was cancelled or denied."
+msgstr "การดำเนินการถูกยกเลิกหรือปฏิเสธ"
+
+msgid "The output folder does not exist: {0}"
+msgstr "โฟลเดอร์เอาพุตไม่ tồn tại: {0}"
+
+msgid "The resident credential did not return a public key."
+msgstr "ข้อมูลประจำตัวเรซิดেন্টไม่ได้คืนค่าคีย์สาธารณะ"
+
+msgid "The resident credential returned an incomplete public key."
+msgstr "ข้อมูลประจำตัวเรซิดেন্টคืนค่าคีย์สาธารณะที่ไม่สมบูรณ์"
+
+msgid "The resident credential returned malformed PEM data."
+msgstr "ข้อมูลประจำตัวเรซิดেন্টคืนค่าข้อมูล PEM ที่ผิดปกติ"
+
+msgid "The resident credential {0} exists on the YubiKey, but its local handle files are incomplete. Do not retry creation."
+msgstr "ข้อมูลประจำตัวเรซิดেন্ট {0} มีอยู่บน YubiKey แต่ไฟล์แฮนเดิลท้องถิ่นไม่สมบูรณ์ กรุณาอย่าลองสร้างใหม่"
+
+msgid ""
+"The resident credential {0} was created on the YubiKey, but OpenSSH did not complete successfully:\n"
+"{1}\n"
+"Do not retry creation. Inspect the key and preserve any local files that were written."
+msgstr "สร้างข้อมูลประจำตัวที่อยู่ประจำ {0} บน YubiKey แล้ว แต่ OpenSSH ไม่เสร็จสมบูรณ์:\n{1}\nอย่าลองสร้างใหม่ ตรวจสอบคีย์และเก็บไฟล์ท้องถิ่นที่เขียนไว้"
+
+msgid "The security key returned an invalid PAM credential."
+msgstr "คีย์ความปลอดภัยคืนค่าข้อมูลประจำตัว PAM ที่ไม่ถูกต้อง"
+
+msgid "The selected FIDO device is no longer connected. Refresh and try again."
+msgstr "อุปกรณ์ FIDO ที่เลือกไม่ได้เชื่อมต่อแล้ว กรุณารีเฟรชและลองอีกครั้ง"
+
+msgid "The selected private-key or .pub file already exists. Choose another name."
+msgstr "ไฟล์คีย์ส่วนตัวหรือ .pub ที่เลือกมีอยู่แล้ว กรุณาเลือกชื่ออื่น"
+
+msgid "The sudo policy task failed."
+msgstr "งานนโยบาย sudo ล้มเหลว"
+
+msgid "This setting applies only to the current user."
+msgstr "การตั้งค่านี้ใช้กับผู้ใช้ปัจจุบันเท่านั้น"
+
+msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
+msgstr "แตะ YubiKey เมื่อได้รับการร้องขอ กำลังโหลดคีย์เรซิดেন্টเข้าเอเจนต์ SSH…"
+
+msgid "Touch the YubiKey. Testing SSH signing and verification…"
+msgstr "แตะ YubiKey กำลังทดสอบการลงนามและยืนยัน SSH…"
+
+msgid "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not remove the key."
+msgstr "แตะ YubiKey ที่เลือก กำลังสร้างคีย์เรซิดेंट SSH บน {0}… กรุณาอย่าถอดคีย์ออก"
+
+msgid "Touch this key when prompted to enroll it"
+msgstr "แตะคีย์นี้เมื่อได้รับการร้องขอเพื่อลงทะเบียน"
+
+msgid "Touch this key when prompted to enroll it for sudo"
+msgstr "แตะคีย์นี้เมื่อได้รับการร้องขอเพื่อลงทะเบียนสำหรับ sudo"
+
+msgid "Touch your security key to continue."
+msgstr "แตะกุญแจความปลอดภัยของคุณเพื่อดำเนินการต่อ"
+
+msgid "Unknown authentication purpose."
+msgstr "วัตถุประสงค์ในการยืนยันตัวตนไม่ทราบแน่ชัด"
+
+msgid "Unlock GDM"
+msgstr "ปลดล็อก GDM"
+
+msgid "Unlock sudo"
+msgstr "ปลดล็อก sudo"
+
+msgid "Unlock the current user"
+msgstr "ปลดล็อกผู้ใช้ปัจจุบัน"
+
+msgid "Unnamed SSH credential"
+msgstr "ข้อมูลประจำตัว SSH ที่ไม่มีชื่อ"
+
+msgid "Unsupported resident SSH public-key algorithm."
+msgstr "ไม่รองรับอัลกอริทึมคีย์สาธารณะ SSH แบบเรสซิเดนต์"
+
+msgid "Updating sign-in settings…"
+msgstr "กำลังอัปเดตการตั้งค่าการเข้าสู่ระบบ…"
+
+msgid "Updating sudo settings…"
+msgstr "กำลังอัปเดตการตั้งค่า sudo…"
+
+msgid "Use YubiKey to unlock sudo"
+msgstr "ใช้ YubiKey เพื่อปลดล็อก sudo"
+
+msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
+msgstr "คุณสามารถลงทะเบียนคีย์ได้ตอนนี้ แต่ sudo จะข้าม PAM เมื่อเปิดใช้งานการเข้าถึงแบบไม่ต้องใช้รหัสผ่าน"
+
+msgid "YubiKey"
+msgstr "YubiKey"
+
+msgid "YubiKey Manager"
+msgstr "YubiKey Manager"
+
+msgid "YubiKey Manager is unavailable"
+msgstr "YubiKey Manager ใช้งานไม่ได้"
+
+msgid "YubiKey configuration failed"
+msgstr "การกำหนดค่า YubiKey ล้มเหลว"
+
+msgid "YubiKey configured, but sudo currently bypasses authentication"
+msgstr "กำหนดค่า YubiKey แล้ว แต่ sudo ข้ามการยืนยันตัวตนในปัจจุบัน"
+
+msgid "YubiKey touch or account password can authorize sudo"
+msgstr "การแตะ YubiKey หรือรหัสผ่านบัญชีสามารถอนุญาตให้ใช้ sudo ได้"
+
+msgid "YubiKey touch or password can unlock this user"
+msgstr "การแตะ YubiKey หรือรหัสผ่านสามารถปลดล็อกผู้ใช้รายนี้"
+
+msgid "agent"
+msgstr "เอเจนต์"
+
+msgid "sudo authentication"
+msgstr "การยืนยันตัวตน sudo"
+
+msgid "sudo authentication policy"
+msgstr "นโยบายการยืนยันตัวตน sudo"
+
+msgid "sudo currently allows administrator access without authentication"
+msgstr "sudo อนุญาตให้เข้าถึงในฐานะผู้ดูแลระบบโดยไม่ต้องยืนยันตัวตนในปัจจุบัน"
+
+msgid "unknown"
+msgstr "ไม่ทราบแน่ชัด"
+
+msgid "unknown socket"
+msgstr "ซ็อกเก็ตที่ไม่รู้จัก"
+
+msgid "user"
+msgstr "ผู้ใช้"
+
+msgid "{0} exited with {1}"
+msgstr "{0} สิ้นสุดด้วย {1}"
+
+msgid "{0} failed: {1}"
+msgstr "{0} ล้มเหลว: {1}"
+
+msgid "{0} identities · {1}"
+msgstr "ข้อมูลประจำตัว {0} · {1}"
+
+msgid "{0} is configured, but another policy currently bypasses it"
+msgstr "กำหนดค่า {0} แล้ว แต่มีนโยบายอื่นที่ข้ามมันอยู่ในปัจจุบัน"
+
+msgid "{0} is enabled for this YubiKey"
+msgstr "เปิดใช้งาน {0} สำหรับ YubiKey นี้"
+
+msgid "{0} is not configured for this YubiKey"
+msgstr "{0} ยังไม่ได้กำหนดค่าสำหรับ YubiKey นี้"
+
+msgid "{0} new SSH identities were added to the agent."
+msgstr "เพิ่มอัตลักษณ์ SSH ใหม่ {0} รายการลงในเอเจนต์แล้ว"
+
+msgid "{0} new SSH identity was added to the agent."
+msgstr "เพิ่มอัตลักษณ์ SSH ใหม่ {0} รายการลงในเอเจนต์แล้ว"
+
+msgid "{0} · no hardware serial"
+msgstr "{0} · ไม่มีหมายเลขซีเรียลของฮาร์ดแวร์"
+
+msgid "{0} · {1}"
+msgstr "{0} · {1}"

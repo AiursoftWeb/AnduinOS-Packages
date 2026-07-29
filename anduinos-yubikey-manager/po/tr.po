@@ -1,0 +1,593 @@
+# Turkish translations for anduinos-yubikey-manager package.
+# Copyright (C) 2026 THE anduinos-yubikey-manager'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-yubikey-manager package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-yubikey-manager\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-29 16:14+0000\n"
+"PO-Revision-Date: 2026-07-29 16:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "A key must be connected before it can be enrolled."
+msgstr "Kayıt oluşturulmadan önce bir anahtar bağlanmalıdır."
+
+msgid "About"
+msgstr "Hakkında"
+
+msgid "Account password is required for sudo"
+msgstr "Sudo için hesap şifresi gereklidir"
+
+msgid "Advanced options"
+msgstr "Gelişmiş seçenekler"
+
+msgid "Algorithm"
+msgstr "Algoritma"
+
+msgid "All inspected resident credentials from this key are already in the agent"
+msgstr "Bu anahtardan tüm denetlenen yerel kimlik bilgileri zaten aracıda bulunuyor"
+
+msgid "Allow sudo without authentication"
+msgstr "Yetkilendirme olmadan sudo'ya izin ver"
+
+msgid "Allowed for sudo · not currently connected"
+msgstr "Sudo için izinli · şu anda bağlı değil"
+
+msgid "Allowed to authorize sudo"
+msgstr "Sudo'yu yetkilendirmeye izinli"
+
+msgid "Allowed to unlock this user"
+msgstr "Bu kullanıcıyı kilidini açmaya izinli"
+
+msgid "Allowed to unlock this user · not currently connected"
+msgstr "Bu kullanıcının kilidini açmaya izinli · şu anda bağlı değil"
+
+msgid "Already loaded"
+msgstr "Zaten yüklü"
+
+msgid "An enrolled YubiKey or the account password can authorize sudo."
+msgstr "Kayıtlı bir YubiKey veya hesap şifresi sudo'yu yetkilendirebilir."
+
+msgid "AnduinOS Team"
+msgstr "AnduinOS Ekibi"
+
+msgid "AnduinOS sign-in"
+msgstr "AnduinOS oturum açma"
+
+msgid "Application"
+msgstr "Uygulama"
+
+msgid "Application must begin with ssh:, contain no whitespace, and be at most 253 bytes."
+msgstr "Uygulama ssh: ile başlamalı, boşluk içermemeli ve en fazla 253 bayt olmalıdır."
+
+msgid "Cancel"
+msgstr "İptal"
+
+msgid "Choose a local key-handle file"
+msgstr "Yerel bir anahtar tutucu dosyası seçin"
+
+msgid "Choose a supported OpenSSH security-key algorithm."
+msgstr "Desteklenen bir OpenSSH güvenlik anahtarı algoritması seçin."
+
+msgid "Choose a valid /dev/hidrawN FIDO device."
+msgstr "Geçerli bir /dev/hidrawN FIDO cihazı seçin."
+
+msgid "Choose a valid output folder."
+msgstr "Geçerli bir çıkış klasörü seçin."
+
+msgid "Choose local SSH key-handle path"
+msgstr "Yerel SSH anahtar tutucu yolunu seçin"
+
+msgid "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
+msgstr "Hangi YubiKey'lerin {0} kilidini açabileceğini seçin. Şifre ile oturum açma kullanılabilir durumda kalır."
+
+msgid "Close"
+msgstr "Kapat"
+
+msgid "Command exited with"
+msgstr "Komut şu kodla çıktı:"
+
+msgid "Command exited with {0}"
+msgstr "Komut {0} koduyla çıktı"
+
+msgid "Configured features"
+msgstr "Yapılandırılmış özellikler"
+
+msgid "Connect a FIDO security key first"
+msgstr "Önce bir FIDO güvenlik anahtarı bağlayın"
+
+msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+msgstr "Açık bir kaynak seçmek için tam olarak bir FIDO güvenlik anahtarı bağlayın"
+
+msgid "Continue"
+msgstr "Devam et"
+
+msgid "Copy public key"
+msgstr "Açık anahtarı kopyala"
+
+msgid "Could not create a temporary public-key file: {0}"
+msgstr "Geçici açık anahtar dosyası oluşturulamadı: {0}"
+
+msgid "Could not create {0}: {1}"
+msgstr "{0} oluşturulamadı: {1}"
+
+msgid "Could not export the public key: {0}"
+msgstr "Açık anahtar dışa aktarılamadı: {0}"
+
+msgid "Could not flush the temporary public key: {0}"
+msgstr "Geçici açık anahtar temizlenemedi: {0}"
+
+msgid "Could not inspect USB devices: {0}"
+msgstr "USB cihazları incelene medi: {0}"
+
+msgid "Could not inspect this YubiKey"
+msgstr "Bu YubiKey incelene medi"
+
+msgid "Could not list YubiKeys"
+msgstr "YubiKey'ler listelenemedi"
+
+msgid "Could not locate the secure PIN helper: {0}"
+msgstr "Güvenli PIN yardımcısı bulunamadı: {0}"
+
+msgid "Could not protect {0}: {1}"
+msgstr "{0} korunamadı: {1}"
+
+msgid "Could not provide the FIDO PIN: {0}"
+msgstr "FIDO PIN'i sağlanamadı: {0}"
+
+msgid "Could not request administrator access: {0}"
+msgstr "Yönetici erişimi istenemedi: {0}"
+
+msgid "Could not run {0}: {1}"
+msgstr "{0} çalıştırılamadı: {1}"
+
+msgid "Could not start {0}: {1}"
+msgstr "{0} başlatılamadı: {1}"
+
+msgid "Could not write the temporary public key: {0}"
+msgstr "Geçici açık anahtar yazılamadı: {0}"
+
+msgid "Create"
+msgstr "Oluştur"
+
+msgid "Create a resident SSH credential on a selected device"
+msgstr "Seçili cihazda yerel bir SSH kimliği oluştur"
+
+msgid "Create a resident SSH key"
+msgstr "Yerel bir SSH anahtarı oluştur"
+
+msgid "Create…"
+msgstr "Oluştur…"
+
+msgid "Current user: {0}"
+msgstr "Mevcut kullanıcı: {0}"
+
+msgid "Disabled · sudo must authenticate with a YubiKey or account password"
+msgstr "Devre dışı · sudo'nun kimlik doğrulaması YubiKey veya hesap şifresi ile yapması gerekir"
+
+msgid "Display label must be at most 200 bytes and contain no control characters."
+msgstr "Gösterim etiketi en fazla 200 bayt olmalı ve kontrol karakteri içermemelidir."
+
+msgid "During enrollment, disconnect all other security keys. The selected key will blink; touch it to continue. Multiple keys can be enrolled one at a time."
+msgstr "Kayıt sırasında diğer tüm güvenlik anahtarlarını çıkarın. Seçilen anahtar yanıp sönecek; devam etmek için dokunun. Birden fazla anahtar tek tek kaydedilebilir."
+
+msgid "ECDSA-SK (recommended compatibility)"
+msgstr "ECDSA-SK (önerilen uyumluluk)"
+
+msgid "ECDSA-SK works with the widest range of YubiKeys"
+msgstr "ECDSA-SK en geniş YubiKey yelpazesiyle çalışır"
+
+msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
+msgstr "ECDSA-SK · yerel · dokunma gerekli · güvenli uyumluluk varsayılanları"
+
+msgid "Ed25519-SK (newer YubiKeys)"
+msgstr "Ed25519-SK (yeni nesil YubiKey'ler)"
+
+msgid "Enabled · programs can obtain administrator privileges without confirmation"
+msgstr "Etkinleştirildi · programlar onay olmadan yönetici ayrıcalıkları elde edebilir"
+
+msgid "Enabling passwordless sudo…"
+msgstr "Şifresiz sudo etkinleştiriliyor…"
+
+msgid "Enabling sudo authentication…"
+msgstr "Sudo kimlik doğrulaması etkinleştiriliyor…"
+
+msgid "Enrolled · inactive while sudo authentication is bypassed"
+msgstr "Kayıtlı · sudo kimlik doğrulaması atlandığı için devre dışı"
+
+msgid "Enrollment safety"
+msgstr "Kayıt güvenliği"
+
+msgid "Enter the YubiKey FIDO PIN"
+msgstr "YubiKey FIDO PIN kodunu girin"
+
+msgid "Enter the selected YubiKey FIDO PIN"
+msgstr "Seçilen YubiKey FIDO PIN kodunu girin"
+
+msgid "Export .pub"
+msgstr ".pub dışa aktar"
+
+msgid "Export SSH public key"
+msgstr "SSH genel anahtarını dışa aktar"
+
+msgid "FIDO PIN"
+msgstr "FIDO PIN kodu"
+
+msgid "FIDO device discovery is unavailable"
+msgstr "FIDO cihaz keşfi kullanılamıyor"
+
+msgid "FIDO security key"
+msgstr "FIDO güvenlik anahtarı"
+
+msgid "Firmware {0}"
+msgstr "Gömülü yazılım {0}"
+
+msgid "For safe enrollment, disconnect every other security key and leave only the selected YubiKey connected."
+msgstr "Güvenli kayıt için, diğer tüm güvenlik anahtarlarını çıkarın ve yalnızca seçilen YubiKey'in takılı olduğundan emin olun."
+
+msgid "Home"
+msgstr "Ana Sayfa"
+
+msgid "Insert a YubiKey"
+msgstr "Bir YubiKey takın"
+
+msgid "Insert a YubiKey, then press Refresh."
+msgstr "Bir YubiKey takın, ardından Yenile'ye basın."
+
+msgid "Inspect"
+msgstr "İncele"
+
+msgid "Inspect, load, export, test, or remove resident SSH credentials."
+msgstr "Yerel SSH kimlik bilgilerini inceleyin, yükleyin, dışa aktarın, test edin veya kaldırın."
+
+msgid "Inspecting resident SSH credentials…"
+msgstr "Yerel SSH kimlik bilgileri inceleniyor…"
+
+msgid "Invalid FIDO device path."
+msgstr "Geçersiz FIDO cihaz yolu."
+
+msgid "Load"
+msgstr "Yükle"
+
+msgid "Load into agent"
+msgstr "Akene yükleyin"
+
+msgid "Load resident SSH keys"
+msgstr "Yerel SSH anahtarlarını yükle"
+
+msgid "Local key handle path"
+msgstr "Yerel anahtar tutucu yolu"
+
+msgid "Local key label"
+msgstr "Yerel anahtar etiketi"
+
+msgid "New hardware-backed SSH key"
+msgstr "Yeni donanım destekli SSH anahtarı"
+
+msgid "No FIDO security key detected"
+msgstr "Hiçbir FIDO güvenlik anahtarı algılanamadı"
+
+msgid "No SSH agent was detected"
+msgstr "Hiçbir SSH aracı algılanamadı"
+
+msgid "No YubiKey detected"
+msgstr "Hiçbir YubiKey algılanamadı"
+
+msgid "No hardware serial · {0}"
+msgstr "Seri numarası yok · {0}"
+
+msgid "No resident SSH credentials"
+msgstr "Yerel SSH kimlik bilgisi yok"
+
+msgid "No ssh:* discoverable credentials were found on this key."
+msgstr "Bu anahtar üzerinde ssh:* keşfedilebilir kimlik bilgisi bulunamadı."
+
+msgid "Not currently connected"
+msgstr "Şu anda bağlı değil"
+
+msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
+msgstr "OpenSSH, yerleşik anahtarları yükleyemedi. SSH aracı yeni yüklü bir kimlik içermiyor."
+
+msgid ""
+"OpenSSH could not load resident keys:\n"
+"{0}"
+msgstr "OpenSSH yerel anahtarları yükleyemedi:\n{0}"
+
+msgid ""
+"OpenSSH did not create a resident key:\n"
+"{0}"
+msgstr "OpenSSH bir yerel anahtar oluşturamadı:\n{0}"
+
+msgid ""
+"OpenSSH finished creating the key, but the YubiKey could not be verified afterward: {0}\n"
+"Do not immediately retry; inspect the key first to avoid creating a duplicate."
+msgstr "OpenSSH anahtarı oluşturmaya devam etti, ancak YubiKey daha sonra doğrulanamadı: {0}\nHemen yeniden denemeyin; tekrar oluşumunu önlemek için önce anahtarı kontrol edin."
+
+msgid "OpenSSH reported success, but no new resident credential was detected. Do not retry until you inspect the YubiKey."
+msgstr "OpenSSH başarı bildirdi, ancak yeni bir yerleşik kimlik bilgisi algılanmadı. YubiKey'i incelerken yeniden deneme yapmayın."
+
+msgid "OpenSSH/FIDO credential metadata and local file location"
+msgstr "OpenSSH/FIDO kimlik bilgisi meta verileri ve yerel dosya konumu"
+
+msgid "Password sign-in only"
+msgstr "Sadece şifre ile oturum açma"
+
+msgid "Refresh connected YubiKeys"
+msgstr "Bağlı YubiKey'leri yenile"
+
+msgid "Remove from agent"
+msgstr "Aracıdan kaldır"
+
+msgid "Removing this key from the SSH agent…"
+msgstr "Bu anahtar SSH aracısından kaldırılıyor…"
+
+msgid "Require verification for every signature"
+msgstr "Her imza için doğrulama gerektir"
+
+msgid "Requires the FIDO PIN each time this key signs"
+msgstr "Bu anahtar her imzaladığında FIDO PIN kodu gerekir"
+
+msgid "Resident SSH credentials"
+msgstr "Yerleşik SSH kimlik bilgileri"
+
+msgid "Resident SSH key created"
+msgstr "Yerleşik SSH anahtarı oluşturuldu"
+
+msgid "Resident keys loaded"
+msgstr "Yerleşik anahtarlar yüklendi"
+
+msgid "Resident username"
+msgstr "Yerleşik kullanıcı adı"
+
+msgid "Resident username must contain 1–64 bytes and no control characters."
+msgstr "Yerleşik kullanıcı adı 1-64 bayt arasında olmalı ve kontrol karakteri içermemelidir."
+
+msgid "Run ssh-add -K for this connected security key"
+msgstr "Bu bağlı güvenlik anahtarı için ssh-add -K çalıştırın"
+
+msgid "SSH Keys"
+msgstr "SSH Anahtarları"
+
+msgid "SSH agent"
+msgstr "SSH aracı"
+
+msgid "SSH agent connected"
+msgstr "SSH aracı bağlandı"
+
+msgid "SSH agent unavailable"
+msgstr "SSH aracı kullanılamıyor"
+
+msgid "SSH key actions"
+msgstr "SSH anahtar eylemleri"
+
+msgid "SSH_AUTH_SOCK is not set"
+msgstr "SSH_AUTH_SOCK ayarlanmadı"
+
+msgid "Safe defaults use ECDSA-SK, require touch, and store a discoverable credential on the selected YubiKey."
+msgstr "Güvenli varsayılanlar ECDSA-SK kullanır, dokunmayı gerektirir ve seçilen YubiKey üzerinde keşfedilebilir bir kimlik bilgisi saklar."
+
+msgid "Security keys"
+msgstr "Güvenlik anahtarları"
+
+msgid "Serial {0}"
+msgstr "Seri {0}"
+
+msgid "Signing test passed"
+msgstr "İmzalama testi geçti"
+
+msgid "Temporary public-key path is invalid."
+msgstr "Gecici genel anahtar yolu geçersiz."
+
+msgid "Test signing"
+msgstr "İmza test etme"
+
+msgid "The FIDO enrollment tool is not installed. Install the libpam-u2f package, then try again."
+msgstr "FIDO kayıt aracı yüklü değil. libpam-u2f paketini yükleyin ve tekrar deneyin."
+
+msgid "The PIN is sent directly to ssh-add and is never stored."
+msgstr "PIN doğrudan ssh-add'ye gönderilir ve hiçbir zaman saklanmaz."
+
+msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
+msgstr "PIN, OpenSSH'ye özel bir kanal üzerinden gönderilir. Hiçbir zaman saklanmaz veya komut argümanlarına yerleştirilmez."
+
+msgid "The PIN is used only for this read-only inspection and is never stored."
+msgstr "PIN yalnızca bu salt okunur denetim için kullanılır ve hiçbir zaman saklanmaz."
+
+msgid "The SSH agent successfully signed and verified data with this key."
+msgstr "SSH aracı, bu anahtarla verileri başarıyla imzaladı ve doğruladı."
+
+msgid "The YubiKey operation stopped unexpectedly."
+msgstr "YubiKey işlemi beklenmedik şekilde durdu."
+
+msgid "The credential will be created only on this exact device"
+msgstr "Güvenlik bilgisi yalnızca bu tam cihazda oluşturulacaktır"
+
+msgid "The enrollment task failed."
+msgstr "Kayıt görevi başarısız oldu."
+
+msgid "The inspected resident SSH credentials are already available in this agent."
+msgstr "İnceleme yapılan yerel SSH güvenlik bilgileri bu aracıda zaten mevcut."
+
+msgid "The local key path must be absolute."
+msgstr "Yerel anahtar yolu mutlak olmalıdır."
+
+msgid ""
+"The non-exportable private key remains protected by the selected YubiKey.\n"
+"\n"
+"Algorithm: {0}\n"
+"Application: {1}\n"
+"Resident username: {2}\n"
+"Fingerprint: {3}\n"
+"\n"
+"Local key handle: {4}\n"
+"Public key: {5}\n"
+"\n"
+"The key is not automatically loaded into the SSH agent."
+msgstr "Dışa aktarılamayan özel anahtar seçilen YubiKey tarafından korunmaktadır.\n\nAlgoritma: {0}\nUygulama: {1}\nYerel kullanıcı adı: {2}\nParmak izi: {3}\n\nYerel anahtar tutamacı: {4}\nGenel anahtar: {5}\n\nAnahtar SSH aracısına otomatik olarak yüklenmez."
+
+msgid "The operation was cancelled or denied."
+msgstr "İşlem iptal edildi veya reddedildi."
+
+msgid "The output folder does not exist: {0}"
+msgstr "Çıktı klasörü mevcut değil: {0}"
+
+msgid "The resident credential did not return a public key."
+msgstr "Yerel güvenlik bilgisi bir genel anahtar döndürmedi."
+
+msgid "The resident credential returned an incomplete public key."
+msgstr "Yerel güvenlik bilgisi eksik bir genel anahtar döndürdü."
+
+msgid "The resident credential returned malformed PEM data."
+msgstr "Yerel güvenlik bilgisi bozuk PEM verisi döndürdü."
+
+msgid "The resident credential {0} exists on the YubiKey, but its local handle files are incomplete. Do not retry creation."
+msgstr "Yerel güvenlik bilgisi {0} YubiKey üzerinde mevcut, ancak yerel işleyici dosyaları eksik. Oluşturmayı tekrar denemeyin."
+
+msgid ""
+"The resident credential {0} was created on the YubiKey, but OpenSSH did not complete successfully:\n"
+"{1}\n"
+"Do not retry creation. Inspect the key and preserve any local files that were written."
+msgstr "Yerel kimlik bilgisi {0} YubiKey üzerinde oluşturuldu, ancak OpenSSH başarıyla tamamlanamadı:\n{1}\nOluşturma işlemini yeniden denemeyin. Anahtarı kontrol edin ve yazılan yerel dosyaları koruyun."
+
+msgid "The security key returned an invalid PAM credential."
+msgstr "Güvenlik anahtarı geçersiz bir PAM güvenlik bilgisi döndürdü."
+
+msgid "The selected FIDO device is no longer connected. Refresh and try again."
+msgstr "Seçilen FIDO cihazı artık bağlı değil. Yenileyin ve tekrar deneyin."
+
+msgid "The selected private-key or .pub file already exists. Choose another name."
+msgstr "Seçilen özel-anahtar veya .pub dosyası zaten mevcut. Başka bir ad seçin."
+
+msgid "The sudo policy task failed."
+msgstr "Sudo ilkesi görevi başarısız oldu."
+
+msgid "This setting applies only to the current user."
+msgstr "Bu ayar yalnızca geçerli kullanıcıya uygulanır."
+
+msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
+msgstr "İstenildiğinde YubiKey'e dokunun. Yerel anahtarlar SSH aracisine yükleniyor…"
+
+msgid "Touch the YubiKey. Testing SSH signing and verification…"
+msgstr "YubiKey'e dokunun. SSH imzalama ve doğrulama test ediliyor…"
+
+msgid "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not remove the key."
+msgstr "Seçili YubiKey'e dokunun. {0} üzerinde bir SSH yerel anahtarı oluşturuluyor… Anahtarı çıkarmayın."
+
+msgid "Touch this key when prompted to enroll it"
+msgstr "Kayıt için istendiğinde bu anahtara dokunun"
+
+msgid "Touch this key when prompted to enroll it for sudo"
+msgstr "Sudo için kayıt yapılması istendiğinde bu anahtara dokunun"
+
+msgid "Touch your security key to continue."
+msgstr "Tamamlamak için güvenlik anahtarınıza dokunun."
+
+msgid "Unknown authentication purpose."
+msgstr "Bilinmeyen kimlik doğrulama amacı."
+
+msgid "Unlock GDM"
+msgstr "GDM kilidini aç"
+
+msgid "Unlock sudo"
+msgstr "sudo kilidini aç"
+
+msgid "Unlock the current user"
+msgstr "Mevcut kullanıcının kilidini aç"
+
+msgid "Unnamed SSH credential"
+msgstr "İsimsiz SSH kimlik bilgisi"
+
+msgid "Unsupported resident SSH public-key algorithm."
+msgstr "Desteklenmeyen yerel SSH açık anahtar algoritması."
+
+msgid "Updating sign-in settings…"
+msgstr "Oturum açma ayarları güncelleniyor…"
+
+msgid "Updating sudo settings…"
+msgstr "sudo ayarları güncelleniyor…"
+
+msgid "Use YubiKey to unlock sudo"
+msgstr "sudo kilidini açmak için YubiKey kullanın"
+
+msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
+msgstr "Anahtarları şimdi kaydedebilirsiniz, ancak şifresiz erişim etkinleştirildiğinde sudo PAM'ı atlar."
+
+msgid "YubiKey"
+msgstr "YubiKey"
+
+msgid "YubiKey Manager"
+msgstr "YubiKey Yöneticisi"
+
+msgid "YubiKey Manager is unavailable"
+msgstr "YubiKey Yöneticisi kullanılamıyor"
+
+msgid "YubiKey configuration failed"
+msgstr "YubiKey yapılandırması başarısız oldu"
+
+msgid "YubiKey configured, but sudo currently bypasses authentication"
+msgstr "YubiKey yapılandırıldı, ancak sudo şu anda kimlik doğrulamayı atlıyor"
+
+msgid "YubiKey touch or account password can authorize sudo"
+msgstr "sudo yetkilendirmesi için YubiKey dokunması veya hesap şifresi kullanılabilir"
+
+msgid "YubiKey touch or password can unlock this user"
+msgstr "Bu kullanıcının kilidini açmak için YubiKey dokunması veya şifre kullanılabilir"
+
+msgid "agent"
+msgstr "aracı"
+
+msgid "sudo authentication"
+msgstr "sudo kimlik doğrulaması"
+
+msgid "sudo authentication policy"
+msgstr "sudo kimlik doğrulama ilkesi"
+
+msgid "sudo currently allows administrator access without authentication"
+msgstr "sudo şu anda kimlik doğrulama olmadan yönetici erişimine izin veriyor"
+
+msgid "unknown"
+msgstr "bilinmeyen"
+
+msgid "unknown socket"
+msgstr "bilinmez soket"
+
+msgid "user"
+msgstr "kullanıcı"
+
+msgid "{0} exited with {1}"
+msgstr "{0}, {1} ile çıktı"
+
+msgid "{0} failed: {1}"
+msgstr "{0} başarısız oldu: {1}"
+
+msgid "{0} identities · {1}"
+msgstr "{0} kimlik · {1}"
+
+msgid "{0} is configured, but another policy currently bypasses it"
+msgstr "{0} yapılandırıldı, ancak başka bir ilke şu anda bunu atlıyor"
+
+msgid "{0} is enabled for this YubiKey"
+msgstr "Bu YubiKey için {0} etkinleştirildi"
+
+msgid "{0} is not configured for this YubiKey"
+msgstr "{0}, bu YubiKey için yapılandırılmadı"
+
+msgid "{0} new SSH identities were added to the agent."
+msgstr "Ajanta {0} yeni SSH kimliği eklendi."
+
+msgid "{0} new SSH identity was added to the agent."
+msgstr "Ajanta {0} yeni SSH kimliği eklendi."
+
+msgid "{0} · no hardware serial"
+msgstr "{0} · donanım seri numarası yok"
+
+msgid "{0} · {1}"
+msgstr "{0} · {1}"

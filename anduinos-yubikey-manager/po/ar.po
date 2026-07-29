@@ -1,0 +1,592 @@
+# Arabic translations for anduinos-yubikey-manager package.
+# Copyright (C) 2026 THE anduinos-yubikey-manager'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-yubikey-manager package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-yubikey-manager\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-29 16:14+0000\n"
+"PO-Revision-Date: 2026-07-29 16:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "A key must be connected before it can be enrolled."
+msgstr "يجب توصيل المفتاح قبل أن يمكن تسجيله."
+
+msgid "About"
+msgstr "حول"
+
+msgid "Account password is required for sudo"
+msgstr "كلمة مرور الحساب مطلوبة لـ sudo"
+
+msgid "Advanced options"
+msgstr "خيارات متقدمة"
+
+msgid "Algorithm"
+msgstr "تخوارزمية"
+
+msgid "All inspected resident credentials from this key are already in the agent"
+msgstr "جميع بيانات الاعتماد المقيمة التي تم فحصها من هذا المفتاح موجودة بالفعل في الوكيل"
+
+msgid "Allow sudo without authentication"
+msgstr "السماح بـ sudo دون مصادقة"
+
+msgid "Allowed for sudo · not currently connected"
+msgstr "مسموح به لـ sudo · غير متصل حالياً"
+
+msgid "Allowed to authorize sudo"
+msgstr "مسموح بتفويض sudo"
+
+msgid "Allowed to unlock this user"
+msgstr "مسموح بإلغاء قفل هذا المستخدم"
+
+msgid "Allowed to unlock this user · not currently connected"
+msgstr "مسموح بإلغاء قفل هذا المستخدم · غير متصل حالياً"
+
+msgid "Already loaded"
+msgstr "تم تحميله بالفعل"
+
+msgid "An enrolled YubiKey or the account password can authorize sudo."
+msgstr "يمكن لمفتاح YubiKey مسجل أو كلمة مرور الحساب تفويض sudo."
+
+msgid "AnduinOS Team"
+msgstr "فريق AnduinOS"
+
+msgid "AnduinOS sign-in"
+msgstr "تسجيل الدخول إلى AnduinOS"
+
+msgid "Application"
+msgstr "تطبيق"
+
+msgid "Application must begin with ssh:, contain no whitespace, and be at most 253 bytes."
+msgstr "يجب أن يبدأ التطبيق بـ ssh:، ولا يحتوي على مسافات بيضاء، وأن يكون طوله 253 بايت كحد أقصى."
+
+msgid "Cancel"
+msgstr "إلغاء"
+
+msgid "Choose a local key-handle file"
+msgstr "اختر ملف معرّف مفتاح محلي"
+
+msgid "Choose a supported OpenSSH security-key algorithm."
+msgstr "اختر خوارزمية مفتاح أمان OpenSSH مدعومة."
+
+msgid "Choose a valid /dev/hidrawN FIDO device."
+msgstr "اختر جهاز FIDO صالح من نوع /dev/hidrawN."
+
+msgid "Choose a valid output folder."
+msgstr "اختر مجلد إخراج صالحاً."
+
+msgid "Choose local SSH key-handle path"
+msgstr "اختر مسار معرّف مفتاح SSH محلي"
+
+msgid "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
+msgstr "اختر أي مفاتيح YubiKey يمكنها إلغاء قفل {0}. يظل تسجيل الدخول بكلمة المرور متاحاً."
+
+msgid "Close"
+msgstr "إغلاق"
+
+msgid "Command exited with"
+msgstr "انتهت الأوامر بـ"
+
+msgid "Command exited with {0}"
+msgstr "انتهت الأوامر بـ {0}"
+
+msgid "Configured features"
+msgstr "الميزات المُعدّة"
+
+msgid "Connect a FIDO security key first"
+msgstr "قم بتوصيل مفتاح أمان FIDO أولاً"
+
+msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+msgstr "قم بتوصيل مفتاح أمان FIDO واحد بالضبط لاختيار مصدر غير غامض"
+
+msgid "Continue"
+msgstr "متابعة"
+
+msgid "Copy public key"
+msgstr "نسخ المفتاح العام"
+
+msgid "Could not create a temporary public-key file: {0}"
+msgstr "تعذر إنشاء ملف مفتاح عام مؤقت: {0}"
+
+msgid "Could not create {0}: {1}"
+msgstr "تعذر إنشاء {0}: {1}"
+
+msgid "Could not export the public key: {0}"
+msgstr "تعذر تصدير المفتاح العام: {0}"
+
+msgid "Could not flush the temporary public key: {0}"
+msgstr "تعذر تفريغ المفتاح العام المؤقت: {0}"
+
+msgid "Could not inspect USB devices: {0}"
+msgstr "تعذر فحص أجهزة USB: {0}"
+
+msgid "Could not inspect this YubiKey"
+msgstr "تعذر فحص هذا YubiKey"
+
+msgid "Could not list YubiKeys"
+msgstr "تعذر إدراج مفاتيح YubiKey"
+
+msgid "Could not locate the secure PIN helper: {0}"
+msgstr "تعذر العثور على مساعد PIN الآمن: {0}"
+
+msgid "Could not protect {0}: {1}"
+msgstr "تعذر حماية {0}: {1}"
+
+msgid "Could not provide the FIDO PIN: {0}"
+msgstr "تعذر توفير PIN لـ FIDO: {0}"
+
+msgid "Could not request administrator access: {0}"
+msgstr "تعذر طلب صلاحية المسؤول: {0}"
+
+msgid "Could not run {0}: {1}"
+msgstr "تعذر تشغيل {0}: {1}"
+
+msgid "Could not start {0}: {1}"
+msgstr "تعذر بدء {0}: {1}"
+
+msgid "Could not write the temporary public key: {0}"
+msgstr "تعذر كتابة المفتاح العام المؤقت: {0}"
+
+msgid "Create"
+msgstr "إنشاء"
+
+msgid "Create a resident SSH credential on a selected device"
+msgstr "إنشاء بيانات اعتماد SSH مقيمة على جهاز محدد"
+
+msgid "Create a resident SSH key"
+msgstr "إنشاء مفتاح SSH مقيم"
+
+msgid "Create…"
+msgstr "إنشاء…"
+
+msgid "Current user: {0}"
+msgstr "المستخدم الحالي: {0}"
+
+msgid "Disabled · sudo must authenticate with a YubiKey or account password"
+msgstr "معطل · يجب أن يقوم sudo بالمصادقة باستخدام YubiKey أو كلمة مرور الحساب"
+
+msgid "Display label must be at most 200 bytes and contain no control characters."
+msgstr "يجب ألا يتجاوز تسمية العرض 200 بايت وأن لا يحتوي على أحرف تحكم."
+
+msgid "During enrollment, disconnect all other security keys. The selected key will blink; touch it to continue. Multiple keys can be enrolled one at a time."
+msgstr "أثناء التسجيل، افصل جميع مفاتيح الأمان الأخرى. سيومض المفتاح المحدد؛ لمسه للمتابعة. يمكن تسجيل مفاتيح متعددة واحدة تلو الأخرى."
+
+msgid "ECDSA-SK (recommended compatibility)"
+msgstr "ECDSA-SK (توافق موصى به)"
+
+msgid "ECDSA-SK works with the widest range of YubiKeys"
+msgstr "يعمل ECDSA-SK مع أوسع نطاق من مفاتيح YubiKey"
+
+msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
+msgstr "ECDSA-SK · مقيم · يتطلب اللمس · إعدادات توافق آمنة افتراضية"
+
+msgid "Ed25519-SK (newer YubiKeys)"
+msgstr "Ed25519-SK (مفاتيح YubiKey الأحدث)"
+
+msgid "Enabled · programs can obtain administrator privileges without confirmation"
+msgstr "مفعّل · يمكن للبرامج الحصول على صلاحيات المسؤول دون تأكيد"
+
+msgid "Enabling passwordless sudo…"
+msgstr "تمكين sudo بدون كلمة مرور…"
+
+msgid "Enabling sudo authentication…"
+msgstr "تمكين مصادقة sudo…"
+
+msgid "Enrolled · inactive while sudo authentication is bypassed"
+msgstr "مسجل · غير نشط أثناء تجاوز مصادقة sudo"
+
+msgid "Enrollment safety"
+msgstr "تسجيل الأمان"
+
+msgid "Enter the YubiKey FIDO PIN"
+msgstr "أدخل PIN لـ YubiKey FIDO"
+
+msgid "Enter the selected YubiKey FIDO PIN"
+msgstr "أدخل PIN لـ YubiKey المحدد FIDO"
+
+msgid "Export .pub"
+msgstr "تصدير .pub"
+
+msgid "Export SSH public key"
+msgstr "تصدير مفتاح SSH العام"
+
+msgid "FIDO PIN"
+msgstr "PIN لـ FIDO"
+
+msgid "FIDO device discovery is unavailable"
+msgstr "اكتشاف جهاز FIDO غير متاح"
+
+msgid "FIDO security key"
+msgstr "مفتاح أمان FIDO"
+
+msgid "Firmware {0}"
+msgstr "البرنامج الثابت {0}"
+
+msgid "For safe enrollment, disconnect every other security key and leave only the selected YubiKey connected."
+msgstr "للتسجيل الآمن، افصل كل مفاتيح الأمان الأخرى واترك فقط YubiKey المحدد متصلاً."
+
+msgid "Home"
+msgstr "الرئيسية"
+
+msgid "Insert a YubiKey"
+msgstr "أدخل YubiKey"
+
+msgid "Insert a YubiKey, then press Refresh."
+msgstr "أدخل YubiKey، ثم اضغط على تحديث."
+
+msgid "Inspect"
+msgstr "fحص"
+
+msgid "Inspect, load, export, test, or remove resident SSH credentials."
+msgstr "fحص أو تحميل أو تصدير أو اختبار أو إزالة بيانات اعتماد SSH المقيمة."
+
+msgid "Inspecting resident SSH credentials…"
+msgstr "فحص بيانات اعتماد SSH المقيمة…"
+
+msgid "Invalid FIDO device path."
+msgstr "مسار جهاز FIDO غير صالح."
+
+msgid "Load"
+msgstr "تحميل"
+
+msgid "Load into agent"
+msgstr "تحميل إلى الوكيل"
+
+msgid "Load resident SSH keys"
+msgstr "تحميل مفاتيح SSH المقيمة"
+
+msgid "Local key handle path"
+msgstr "مسار معرّف المفتاح المحلي"
+
+msgid "Local key label"
+msgstr "تسمية المفتاح المحلي"
+
+msgid "New hardware-backed SSH key"
+msgstr "مفتاح SSH جديد مدعوم من العتاد"
+
+msgid "No FIDO security key detected"
+msgstr "لم يتم اكتشاف أي مفتاح أمان FIDO"
+
+msgid "No SSH agent was detected"
+msgstr "لم يتم اكتشاف أي وكيل SSH"
+
+msgid "No YubiKey detected"
+msgstr "لم يتم اكتشاف أي YubiKey"
+
+msgid "No hardware serial · {0}"
+msgstr "لا يوجد رقم تسلسلي للعتاد · {0}"
+
+msgid "No resident SSH credentials"
+msgstr "لا توجد بيانات اعتماد SSH مقيمة"
+
+msgid "No ssh:* discoverable credentials were found on this key."
+msgstr "لم يتم العثور على أي بيانات اعتماد قابلة للاكتشاف من نوع ssh:* على هذا المفتاح."
+
+msgid "Not currently connected"
+msgstr "غير متصل حالياً"
+
+msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
+msgstr "تعذر على OpenSSH تحميل المفاتيح المقيمة. لا يحتوي وكيل SSH على هوية جديدة تم تحميلها."
+
+msgid ""
+"OpenSSH could not load resident keys:\n"
+"{0}"
+msgstr "لم يتمكن OpenSSH من تحميل المفاتيح المقيمة:\n{0}"
+
+msgid ""
+"OpenSSH did not create a resident key:\n"
+"{0}"
+msgstr "لم ينشئ OpenSSH مفتاحًا مقيمًا:\n{0}"
+
+msgid ""
+"OpenSSH finished creating the key, but the YubiKey could not be verified afterward: {0}\n"
+"Do not immediately retry; inspect the key first to avoid creating a duplicate."
+msgstr "أنهى OpenSSH إنشاء المفتاح، لكن لم يكن بالإمكان التحقق من YubiKey afterward: {0}\nلا تحاول الإعادة فورًا؛ افحص المفتاح أولاً لتجنب إنشاء نسخة مكررة."
+
+msgid "OpenSSH reported success, but no new resident credential was detected. Do not retry until you inspect the YubiKey."
+msgstr "أبلغ OpenSSH عن النجاح، لكن لم يتم اكتشاف أي بيانات اعتماد مقيمة جديدة. لا تعيد المحاولة حتى تفحص YubiKey."
+
+msgid "OpenSSH/FIDO credential metadata and local file location"
+msgstr "بيانات وصفية لبيانات الاعتماد OpenSSH/FIDO وموقع الملف المحلي"
+
+msgid "Password sign-in only"
+msgstr "تسجيل الدخول بكلمة المرور فقط"
+
+msgid "Refresh connected YubiKeys"
+msgstr "تحديث مفاتيح YubiKey المتصلة"
+
+msgid "Remove from agent"
+msgstr "إزالة من الوكيل"
+
+msgid "Removing this key from the SSH agent…"
+msgstr "إزالة هذا المفتاح من وكيل SSH…"
+
+msgid "Require verification for every signature"
+msgstr "تطلب التحقق لكل توقيع"
+
+msgid "Requires the FIDO PIN each time this key signs"
+msgstr "يتطلب PIN لـ FIDO في كل مرة يوقع فيها هذا المفتاح"
+
+msgid "Resident SSH credentials"
+msgstr "بيانات اعتماد SSH المقيمة"
+
+msgid "Resident SSH key created"
+msgstr "تم إنشاء مفتاح SSH مقيم"
+
+msgid "Resident keys loaded"
+msgstr "تم تحميل المفاتيح المقيمة"
+
+msgid "Resident username"
+msgstr "اسم المستخدم المقيم"
+
+msgid "Resident username must contain 1–64 bytes and no control characters."
+msgstr "يجب أن يحتوي اسم المستخدم المقيم على 1-64 بايت ولا يحتوي على أحرف تحكم."
+
+msgid "Run ssh-add -K for this connected security key"
+msgstr "تشغيل ssh-add -K لهذا مفتاح الأمان المتصل"
+
+msgid "SSH Keys"
+msgstr "مفاتيح SSH"
+
+msgid "SSH agent"
+msgstr "وكيل SSH"
+
+msgid "SSH agent connected"
+msgstr "تم الاتصال بـ وكيل SSH"
+
+msgid "SSH agent unavailable"
+msgstr "وكيل SSH غير متاح"
+
+msgid "SSH key actions"
+msgstr "تجراءات مفتاح SSH"
+
+msgid "SSH_AUTH_SOCK is not set"
+msgstr "لم يتم تعيين SSH_AUTH_SOCK"
+
+msgid "Safe defaults use ECDSA-SK, require touch, and store a discoverable credential on the selected YubiKey."
+msgstr "تستخدم الإعدادات الافتراضية الآمنة ECDSA-SK، وتتطلب اللمس، وتخزن بيانات اعتماد قابلة للاكتشاف على YubiKey المحدد."
+
+msgid "Security keys"
+msgstr "مفاتيح الأمان"
+
+msgid "Serial {0}"
+msgstr "التسلسلي {0}"
+
+msgid "Signing test passed"
+msgstr "نجحت تجربة التوقيع"
+
+msgid "Temporary public-key path is invalid."
+msgstr "مسار المفتاح العام المؤقت غير صالح."
+
+msgid "Test signing"
+msgstr "اختبار التوقيع"
+
+msgid "The FIDO enrollment tool is not installed. Install the libpam-u2f package, then try again."
+msgstr "أداة تسجيل FIDO غير مثبتة. قم بتثبيت حزمة libpam-u2f، ثم حاول مرة أخرى."
+
+msgid "The PIN is sent directly to ssh-add and is never stored."
+msgstr "يتم إرسال PIN مباشرة إلى ssh-add ولا يتم تخزينه أبداً."
+
+msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
+msgstr "يتم إرسال PIN عبر أنبوب خاص إلى OpenSSH. لا يتم تخزينه أو وضعه في حجج الأوامر أبداً."
+
+msgid "The PIN is used only for this read-only inspection and is never stored."
+msgstr "يتم استخدام PIN لهذا الفحص للقراءة فقط ولا يتم تخزينه أبداً."
+
+msgid "The SSH agent successfully signed and verified data with this key."
+msgstr "قام وكيل SSH بالتوقيع والتحقق من البيانات بنجاح باستخدام هذا المفتاح."
+
+msgid "The YubiKey operation stopped unexpectedly."
+msgstr "توقفت عملية YubiKey بشكل غير متوقع."
+
+msgid "The credential will be created only on this exact device"
+msgstr "سيتم إنشاء بيانات الاعتماد على هذا الجهاز الدقيق فقط"
+
+msgid "The enrollment task failed."
+msgstr "فشلت مهمة التسجيل."
+
+msgid "The inspected resident SSH credentials are already available in this agent."
+msgstr "بيانات اعتماد SSH المقيمة التي تم فحصها متوفرة بالفعل في هذا الوكيل."
+
+msgid "The local key path must be absolute."
+msgstr "يجب أن يكون مسار المفتاح المحلي مطلقاً."
+
+msgid ""
+"The non-exportable private key remains protected by the selected YubiKey.\n"
+"\n"
+"Algorithm: {0}\n"
+"Application: {1}\n"
+"Resident username: {2}\n"
+"Fingerprint: {3}\n"
+"\n"
+"Local key handle: {4}\n"
+"Public key: {5}\n"
+"\n"
+"The key is not automatically loaded into the SSH agent."
+msgstr "يظل المفتاح الخاص غير القابل للتصدير محميًا بواسطة YubiKey المحدد.\n\nالخوارزمية: {0}\nالتطبيق: {1}\nاسم المستخدم المقيم: {2}\nالبصمة: {3}\n\nمعرف المفتاح المحلي: {4}\nالمفتاح العام: {5}\n\nلا يتم تحميل المفتاح تلقائيًا إلى وكيل SSH."
+
+msgid "The operation was cancelled or denied."
+msgstr "تم إلغاء العملية أو رفضها."
+
+msgid "The output folder does not exist: {0}"
+msgstr "مجلد الإخراج غير موجود: {0}"
+
+msgid "The resident credential did not return a public key."
+msgstr "لم تعد بيانات الاعتماد المقيمة مفتاحاً عاماً."
+
+msgid "The resident credential returned an incomplete public key."
+msgstr "أرجعت بيانات الاعتماد المقيمة مفتاحاً عاماً غير مكتمل."
+
+msgid "The resident credential returned malformed PEM data."
+msgstr "أرجعت بيانات الاعتماد المقيمة بيانات PEM غير صالحة الشكل."
+
+msgid "The resident credential {0} exists on the YubiKey, but its local handle files are incomplete. Do not retry creation."
+msgstr "توجد بيانات الاعتماد المقيمة {0} على YubiKey، لكن ملفات المعرّف المحلية الخاصة بها غير مكتملة. لا تعيد محاولة الإنشاء."
+
+msgid ""
+"The resident credential {0} was created on the YubiKey, but OpenSSH did not complete successfully:\n"
+"{1}\n"
+"Do not retry creation. Inspect the key and preserve any local files that were written."
+msgstr "تم إنشاء الاعتماد المقيم {0} على YubiKey، لكن OpenSSH لم يكمل بنجاح:\n{1}\nلا تحاول إعادة الإنشاء. افحص المفتاح واحتفظ بأي ملفات محلية تم كتابتها."
+
+msgid "The security key returned an invalid PAM credential."
+msgstr "أرجع مفتاح الأمان بيانات اعتماد PAM غير صالحة."
+
+msgid "The selected FIDO device is no longer connected. Refresh and try again."
+msgstr "لم يعد جهاز FIDO المحدد متصلاً. قم بالتحديث وحاول مرة أخرى."
+
+msgid "The selected private-key or .pub file already exists. Choose another name."
+msgstr "الملف الخاص بالمفتاح أو ملف .pub موجود بالفعل. اختر اسماً آخر."
+
+msgid "The sudo policy task failed."
+msgstr "فشلت مهمة سياسة sudo."
+
+msgid "This setting applies only to the current user."
+msgstr "تطبق هذه الإعدادات على المستخدم الحالي فقط."
+
+msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
+msgstr "لمس YubiKey عند الطلب. تحميل المفاتيح المقيمة إلى وكيل SSH…"
+
+msgid "Touch the YubiKey. Testing SSH signing and verification…"
+msgstr "لمس YubiKey. اختبار التوقيع والتحقق من SSH…"
+
+msgid "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not remove the key."
+msgstr "لمس YubiKey المحدد. إنشاء مفتاح SSH مقيم على {0}… لا تزيل المفتاح."
+
+msgid "Touch this key when prompted to enroll it"
+msgstr "لمس هذا المفتاح عند الطلب لتسجيله"
+
+msgid "Touch this key when prompted to enroll it for sudo"
+msgstr "لمس هذا المفتاح عند الطلب لتسجيله لـ sudo"
+
+msgid "Touch your security key to continue."
+msgstr "لمس مفتاح الأمان للمتابعة."
+
+msgid "Unknown authentication purpose."
+msgstr "غرض المصادقة غير معروف."
+
+msgid "Unlock GDM"
+msgstr "إلغاء قفل GDM"
+
+msgid "Unlock sudo"
+msgstr "إلغاء قفل sudo"
+
+msgid "Unlock the current user"
+msgstr "إلغاء قفل المستخدم الحالي"
+
+msgid "Unnamed SSH credential"
+msgstr "بيانات اعتماد SSH بدون اسم"
+
+msgid "Unsupported resident SSH public-key algorithm."
+msgstr "خوارزمية المفتاح العام لـ SSH المقيم غير مدعومة."
+
+msgid "Updating sign-in settings…"
+msgstr "ت تحديث إعدادات تسجيل الدخول…"
+
+msgid "Updating sudo settings…"
+msgstr "تحديث إعدادات sudo…"
+
+msgid "Use YubiKey to unlock sudo"
+msgstr "استخدم YubiKey لإلغاء قفل sudo"
+
+msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
+msgstr "يمكنك تسجيل المفاتيح الآن، لكن sudo يتجاوز PAM أثناء تمكين الوصول بدون كلمة مرور."
+
+msgid "YubiKey"
+msgstr "YubiKey"
+
+msgid "YubiKey Manager"
+msgstr "مدير YubiKey"
+
+msgid "YubiKey Manager is unavailable"
+msgstr "مدير YubiKey غير متاح"
+
+msgid "YubiKey configuration failed"
+msgstr "فشل تكوين YubiKey"
+
+msgid "YubiKey configured, but sudo currently bypasses authentication"
+msgstr "تم تكوين YubiKey، لكن sudo يتجاوز المصادقة حالياً"
+
+msgid "YubiKey touch or account password can authorize sudo"
+msgstr "يمكن لـ YubiKey اللمس أو كلمة مرور الحساب تفويض sudo"
+
+msgid "YubiKey touch or password can unlock this user"
+msgstr "يمكن لـ YubiKey اللمس أو كلمة المرور إلغاء قفل هذا المستخدم"
+
+msgid "agent"
+msgstr "وكيل"
+
+msgid "sudo authentication"
+msgstr "ت مصادقة sudo"
+
+msgid "sudo authentication policy"
+msgstr "ت سياسة مصادقة sudo"
+
+msgid "sudo currently allows administrator access without authentication"
+msgstr "يسمح sudo حالياً بالوصول إلى المسؤول دون مصادقة"
+
+msgid "unknown"
+msgstr "غير معروف"
+
+msgid "unknown socket"
+msgstr "مقبس غير معروف"
+
+msgid "user"
+msgstr "المستخدم"
+
+msgid "{0} exited with {1}"
+msgstr "{0} انتهى بـ {1}"
+
+msgid "{0} failed: {1}"
+msgstr "{0} فشل: {1}"
+
+msgid "{0} identities · {1}"
+msgstr "{0} هويات · {1}"
+
+msgid "{0} is configured, but another policy currently bypasses it"
+msgstr "{0} مُعدّ، لكن سياسة أخرى تتجاوزه حالياً"
+
+msgid "{0} is enabled for this YubiKey"
+msgstr "{0} مفعّل لهذا YubiKey"
+
+msgid "{0} is not configured for this YubiKey"
+msgstr "{0} غير مُعدّ لهذا YubiKey"
+
+msgid "{0} new SSH identities were added to the agent."
+msgstr "تمت إضافة {0} هويات SSH جديدة إلى الوكيل."
+
+msgid "{0} new SSH identity was added to the agent."
+msgstr "تمت إضافة هوية SSH جديدة واحدة {0} إلى الوكيل."
+
+msgid "{0} · no hardware serial"
+msgstr "{0} · لا يوجد رقم تسلسلي للعتاد"
+
+msgid "{0} · {1}"
+msgstr "{0} · {1}"

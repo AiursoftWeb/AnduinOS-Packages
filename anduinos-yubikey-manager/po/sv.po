@@ -1,0 +1,593 @@
+# Swedish translations for anduinos-yubikey-manager package.
+# Copyright (C) 2026 THE anduinos-yubikey-manager'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-yubikey-manager package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-yubikey-manager\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-29 16:14+0000\n"
+"PO-Revision-Date: 2026-07-29 16:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "A key must be connected before it can be enrolled."
+msgstr "En nyckel måste vara ansluten innan den kan registreras."
+
+msgid "About"
+msgstr "Om"
+
+msgid "Account password is required for sudo"
+msgstr "Kontolösenord krävs för sudo"
+
+msgid "Advanced options"
+msgstr "Avancerade alternativ"
+
+msgid "Algorithm"
+msgstr "Algoritm"
+
+msgid "All inspected resident credentials from this key are already in the agent"
+msgstr "Alla inspekterade inhemska legitimationer från denna nyckel finns redan i agenter"
+
+msgid "Allow sudo without authentication"
+msgstr "Tillåt sudo utan autentisering"
+
+msgid "Allowed for sudo · not currently connected"
+msgstr "Tillåten för sudo · för närvarande inte ansluten"
+
+msgid "Allowed to authorize sudo"
+msgstr "Får godkänna sudo"
+
+msgid "Allowed to unlock this user"
+msgstr "Får låsa upp den här användaren"
+
+msgid "Allowed to unlock this user · not currently connected"
+msgstr "Får låsa upp den här användaren · för närvarande inte ansluten"
+
+msgid "Already loaded"
+msgstr "Redan inläst"
+
+msgid "An enrolled YubiKey or the account password can authorize sudo."
+msgstr "Ett registrerat YubiKey eller kontolösenordet kan godkänna sudo."
+
+msgid "AnduinOS Team"
+msgstr "AnduinOS-teamet"
+
+msgid "AnduinOS sign-in"
+msgstr "Inloggning i AnduinOS"
+
+msgid "Application"
+msgstr "Program"
+
+msgid "Application must begin with ssh:, contain no whitespace, and be at most 253 bytes."
+msgstr "Programnamnet måste börja med ssh:, innehålla inga mellanslag och vara högst 253 byte."
+
+msgid "Cancel"
+msgstr "Avbryt"
+
+msgid "Choose a local key-handle file"
+msgstr "Välj en lokal fil för nyckelhandtag"
+
+msgid "Choose a supported OpenSSH security-key algorithm."
+msgstr "Välj ett stödd OpenSSH-algoritm för säkerhetsnycklar."
+
+msgid "Choose a valid /dev/hidrawN FIDO device."
+msgstr "Välj en giltig FIDO-enhet på /dev/hidrawN."
+
+msgid "Choose a valid output folder."
+msgstr "Välj en giltig utdatakatalog."
+
+msgid "Choose local SSH key-handle path"
+msgstr "Välj sökväg till lokalt SSH-nyckelhandtag"
+
+msgid "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
+msgstr "Välj vilka YubiKeys som får låsa upp {0}. Inloggning med lösenord finns fortfarande tillgängligt."
+
+msgid "Close"
+msgstr "Stäng"
+
+msgid "Command exited with"
+msgstr "Kommandot avslutades med"
+
+msgid "Command exited with {0}"
+msgstr "Kommandot avslutades med {0}"
+
+msgid "Configured features"
+msgstr "Konfigurerade funktioner"
+
+msgid "Connect a FIDO security key first"
+msgstr ">Anslut en FIDO-säkerhetsnyckel först"
+
+msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+msgstr "Anslut exakt en FIDO-säkerhetsnyckel för att välja en entydig källa"
+
+msgid "Continue"
+msgstr "Fortsätt"
+
+msgid "Copy public key"
+msgstr "Kopiera publik nyckel"
+
+msgid "Could not create a temporary public-key file: {0}"
+msgstr "Kunde inte skapa en tillfällig fil för offentlig nyckel: {0}"
+
+msgid "Could not create {0}: {1}"
+msgstr "Kunde inte skapa {0}: {1}"
+
+msgid "Could not export the public key: {0}"
+msgstr "Kunde inte exportera den offentliga nyckeln: {0}"
+
+msgid "Could not flush the temporary public key: {0}"
+msgstr "Kunde inte tömma den tillfälliga publika nyckeln: {0}"
+
+msgid "Could not inspect USB devices: {0}"
+msgstr "Kunde inte inspektera USB-enheter: {0}"
+
+msgid "Could not inspect this YubiKey"
+msgstr "Kunde inte inspektera denna YubiKey"
+
+msgid "Could not list YubiKeys"
+msgstr "Kunde inte lista YubiKeys"
+
+msgid "Could not locate the secure PIN helper: {0}"
+msgstr "Kunde inte hitta hjälpprogrammet för säker PIN-kod: {0}"
+
+msgid "Could not protect {0}: {1}"
+msgstr "Kunde inte skydda {0}: {1}"
+
+msgid "Could not provide the FIDO PIN: {0}"
+msgstr "Kunde inte tillhandahålla FIDO-PIN-koden: {0}"
+
+msgid "Could not request administrator access: {0}"
+msgstr "Kunde inte begära administratörsåtkomst: {0}"
+
+msgid "Could not run {0}: {1}"
+msgstr "Kunde inte köra {0}: {1}"
+
+msgid "Could not start {0}: {1}"
+msgstr "Kunde inte starta {0}: {1}"
+
+msgid "Could not write the temporary public key: {0}"
+msgstr "Kunde inte skriva den tillfälliga publika nyckeln: {0}"
+
+msgid "Create"
+msgstr "Skapa"
+
+msgid "Create a resident SSH credential on a selected device"
+msgstr "Skapa ett resident SSH-legitimationsuppgift på en vald enhet"
+
+msgid "Create a resident SSH key"
+msgstr "Skapa en resident SSH-nyckel"
+
+msgid "Create…"
+msgstr "Skapa…"
+
+msgid "Current user: {0}"
+msgstr "Aktuell användare: {0}"
+
+msgid "Disabled · sudo must authenticate with a YubiKey or account password"
+msgstr "Inaktiverad · sudo måste autentisera med en YubiKey eller kontolösenord"
+
+msgid "Display label must be at most 200 bytes and contain no control characters."
+msgstr "Visningsetikett får vara högst 200 byte och innehåller inga kontrollkaraktärer."
+
+msgid "During enrollment, disconnect all other security keys. The selected key will blink; touch it to continue. Multiple keys can be enrolled one at a time."
+msgstr "Under registreringen, koppla bort alla andra säkerhetsnycklar. Den valda nyckeln kommer att blinka; tryck på den för att fortsätta. Flera nycklar kan registreras en efter en."
+
+msgid "ECDSA-SK (recommended compatibility)"
+msgstr "ECDSA-SK (rekommenderad kompatibilitet)"
+
+msgid "ECDSA-SK works with the widest range of YubiKeys"
+msgstr "ECDSA-SK fungerar med det bredaste utbudet av YubiKeys"
+
+msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
+msgstr "ECDSA-SK · resident · kräver tryckning · säkra standardalternativ för kompatibilitet"
+
+msgid "Ed25519-SK (newer YubiKeys)"
+msgstr "Ed25519-SK (nyare YubiKeys)"
+
+msgid "Enabled · programs can obtain administrator privileges without confirmation"
+msgstr "Aktiverad · program kan erhålla administratörsrättigheter utan bekräftelse"
+
+msgid "Enabling passwordless sudo…"
+msgstr "Aktiverar lösenordsfri sudo…"
+
+msgid "Enabling sudo authentication…"
+msgstr "Aktiverar sudo-autentisering…"
+
+msgid "Enrolled · inactive while sudo authentication is bypassed"
+msgstr "Registrerad · inaktiv medan sudo-autentisering kringgås"
+
+msgid "Enrollment safety"
+msgstr "Säkerhet vid registrering"
+
+msgid "Enter the YubiKey FIDO PIN"
+msgstr "Ange FIDO-PIN-koden för YubiKey"
+
+msgid "Enter the selected YubiKey FIDO PIN"
+msgstr "Ange FIDO-PIN-koden för den valda YubiKey"
+
+msgid "Export .pub"
+msgstr "Exportera .pub"
+
+msgid "Export SSH public key"
+msgstr "Exportera SSH-offentlig nyckel"
+
+msgid "FIDO PIN"
+msgstr "FIDO-PIN-kod"
+
+msgid "FIDO device discovery is unavailable"
+msgstr "Uppdagande av FIDO-enhet är inte tillgängligt"
+
+msgid "FIDO security key"
+msgstr "FIDO-säkerhetsnyckel"
+
+msgid "Firmware {0}"
+msgstr "Mjukvara {0}"
+
+msgid "For safe enrollment, disconnect every other security key and leave only the selected YubiKey connected."
+msgstr "För säker registrering, koppla från alla andra säkerhetsnycklar och låt endast den valda YubiKey vara ansluten."
+
+msgid "Home"
+msgstr "Hem"
+
+msgid "Insert a YubiKey"
+msgstr "Infoga en YubiKey"
+
+msgid "Insert a YubiKey, then press Refresh."
+msgstr "Infoga en YubiKey och tryck sedan på Uppdatera."
+
+msgid "Inspect"
+msgstr "Inspektera"
+
+msgid "Inspect, load, export, test, or remove resident SSH credentials."
+msgstr "Inspektera, ladda, exportera, testa eller ta bort boende SSH-identiteter."
+
+msgid "Inspecting resident SSH credentials…"
+msgstr "Inspekterar boende SSH-identiteter…"
+
+msgid "Invalid FIDO device path."
+msgstr "Ogiltig sökväg för FIDO-enhet."
+
+msgid "Load"
+msgstr "Ladda"
+
+msgid "Load into agent"
+msgstr "Ladda in i agenten"
+
+msgid "Load resident SSH keys"
+msgstr "Ladda boende SSH-nycklar"
+
+msgid "Local key handle path"
+msgstr "Sökväg för lokal nyckelhanterare"
+
+msgid "Local key label"
+msgstr "Etikett för lokal nyckel"
+
+msgid "New hardware-backed SSH key"
+msgstr "Ny hårdvarubaserad SSH-nyckel"
+
+msgid "No FIDO security key detected"
+msgstr "Ingen FIDO-säkerhetsnyckel upptäcktes"
+
+msgid "No SSH agent was detected"
+msgstr "Ingen SSH-agent upptäcktes"
+
+msgid "No YubiKey detected"
+msgstr "Ingen YubiKey upptäcktes"
+
+msgid "No hardware serial · {0}"
+msgstr "Inget hårdvaruserienummer · {0}"
+
+msgid "No resident SSH credentials"
+msgstr "Inga boende SSH-identiteter"
+
+msgid "No ssh:* discoverable credentials were found on this key."
+msgstr "Inga upptäckningsbara ssh:-uppgifter hittades på denna nyckel."
+
+msgid "Not currently connected"
+msgstr "Inte ansluten för närvarande"
+
+msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
+msgstr "OpenSSH kunde inte ladda boende nycklar. SSH-agenten innehåller inga nyligen laddade identiteter."
+
+msgid ""
+"OpenSSH could not load resident keys:\n"
+"{0}"
+msgstr "OpenSSH kunde inte läsa in inhemska nycklar:\n{0}"
+
+msgid ""
+"OpenSSH did not create a resident key:\n"
+"{0}"
+msgstr "OpenSSH skapade ingen inhemsk nyckel:\n{0}"
+
+msgid ""
+"OpenSSH finished creating the key, but the YubiKey could not be verified afterward: {0}\n"
+"Do not immediately retry; inspect the key first to avoid creating a duplicate."
+msgstr "OpenSSH slutförde att skapa nyckeln, men YubiKey kunde inte verifieras efteråt: {0}\nFörsök inte omedelbart igen; inspektera nyckeln först för att undvika att skapa en dublett."
+
+msgid "OpenSSH reported success, but no new resident credential was detected. Do not retry until you inspect the YubiKey."
+msgstr "OpenSSH rapporterade framgång, men ingen ny boende uppgift detekterades. Försök inte igen förrän du har inspekterat YubiKey."
+
+msgid "OpenSSH/FIDO credential metadata and local file location"
+msgstr "Metadata för OpenSSH/FIDO-uppgifter och plats för lokal fil"
+
+msgid "Password sign-in only"
+msgstr "Enbart inloggning med lösenord"
+
+msgid "Refresh connected YubiKeys"
+msgstr "Uppdatera anslutna YubiKeys"
+
+msgid "Remove from agent"
+msgstr "Ta bort från agenten"
+
+msgid "Removing this key from the SSH agent…"
+msgstr "Tar bort denna nyckel från SSH-agenten…"
+
+msgid "Require verification for every signature"
+msgstr "Krav på verifiering för varje signatur"
+
+msgid "Requires the FIDO PIN each time this key signs"
+msgstr "Kräver FIDO-PIN varje gång denna nyckel signerar"
+
+msgid "Resident SSH credentials"
+msgstr "Boende SSH-uppgifter"
+
+msgid "Resident SSH key created"
+msgstr "Boende SSH-nyckel skapad"
+
+msgid "Resident keys loaded"
+msgstr "Boende nycklar laddade"
+
+msgid "Resident username"
+msgstr "Boende användarnamn"
+
+msgid "Resident username must contain 1–64 bytes and no control characters."
+msgstr "Boende användarnamn måste innehålla 1–64 byte och inga kontrolltecken."
+
+msgid "Run ssh-add -K for this connected security key"
+msgstr "Kör ssh-add -K för denna anslutna säkerhetsnyckel"
+
+msgid "SSH Keys"
+msgstr "SSH-nycklar"
+
+msgid "SSH agent"
+msgstr "SSH-agent"
+
+msgid "SSH agent connected"
+msgstr "SSH-agent ansluten"
+
+msgid "SSH agent unavailable"
+msgstr "SSH-agent otillgänglig"
+
+msgid "SSH key actions"
+msgstr "SSH-nyckelåtgärder"
+
+msgid "SSH_AUTH_SOCK is not set"
+msgstr "SSH_AUTH_SOCK är inte inställt"
+
+msgid "Safe defaults use ECDSA-SK, require touch, and store a discoverable credential on the selected YubiKey."
+msgstr "Säkra standardvärden använder ECDSA-SK, kräver beröring och lagrar en upptäckningsbar uppgift på det valda YubiKey."
+
+msgid "Security keys"
+msgstr "Säkerhetsnycklar"
+
+msgid "Serial {0}"
+msgstr "Serienummer {0}"
+
+msgid "Signing test passed"
+msgstr "Signeringstestet lyckades"
+
+msgid "Temporary public-key path is invalid."
+msgstr "Tillfällig sökväg för nyckel är ogiltig."
+
+msgid "Test signing"
+msgstr "Testsignering"
+
+msgid "The FIDO enrollment tool is not installed. Install the libpam-u2f package, then try again."
+msgstr "FIDO-registreringsverktyget är inte installerat. Installera paketet libpam-u2f och försök igen."
+
+msgid "The PIN is sent directly to ssh-add and is never stored."
+msgstr "PIN-koden skickas direkt till ssh-add och lagras aldrig."
+
+msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
+msgstr "PIN-koden skickas genom ett privat rör till OpenSSH. Den lagras aldrig eller placeras i kommandoradsargument."
+
+msgid "The PIN is used only for this read-only inspection and is never stored."
+msgstr "PIN-koden används endast för denna skrivskyddade inspektion och lagras aldrig."
+
+msgid "The SSH agent successfully signed and verified data with this key."
+msgstr "SSH-agenten signerade och verifierade data med denna nyckel."
+
+msgid "The YubiKey operation stopped unexpectedly."
+msgstr "YubiKey-operationen stoppades oväntat."
+
+msgid "The credential will be created only on this exact device"
+msgstr "Credentialen skapas endast på just den här enheten"
+
+msgid "The enrollment task failed."
+msgstr "Registreringsuppgiften misslyckades."
+
+msgid "The inspected resident SSH credentials are already available in this agent."
+msgstr "Den inspicerade resident-SSH-credentialen finns redan tillgänglig i denna agent."
+
+msgid "The local key path must be absolute."
+msgstr "Sökvägen för den lokala nyckeln måste vara absolut."
+
+msgid ""
+"The non-exportable private key remains protected by the selected YubiKey.\n"
+"\n"
+"Algorithm: {0}\n"
+"Application: {1}\n"
+"Resident username: {2}\n"
+"Fingerprint: {3}\n"
+"\n"
+"Local key handle: {4}\n"
+"Public key: {5}\n"
+"\n"
+"The key is not automatically loaded into the SSH agent."
+msgstr "Den icke-exporterbara privata nyckeln skyddas fortfarande av den valda YubiKey.\n\nAlgorithm: {0}\nApplication: {1}\nResident username: {2}\nFingerprint: {3}\n\nLocal key handle: {4}\nPublic key: {5}\n\nNyckeln läses inte automatiskt in i SSH-agenten."
+
+msgid "The operation was cancelled or denied."
+msgstr "Operationen avbröts eller nekades."
+
+msgid "The output folder does not exist: {0}"
+msgstr "Utmappningen finns inte: {0}"
+
+msgid "The resident credential did not return a public key."
+msgstr "Den resident-credentialen returnerade ingen offentlig nyckel."
+
+msgid "The resident credential returned an incomplete public key."
+msgstr "Den resident-credentialen returnerade en ofullständig offentlig nyckel."
+
+msgid "The resident credential returned malformed PEM data."
+msgstr "Den resident-credentialen returnerade felaktig PEM-data."
+
+msgid "The resident credential {0} exists on the YubiKey, but its local handle files are incomplete. Do not retry creation."
+msgstr "Den resident-credentialen {0} finns på YubiKey, men dess lokala hanteringsfiler är ofullständiga. Försök inte skapa igen."
+
+msgid ""
+"The resident credential {0} was created on the YubiKey, but OpenSSH did not complete successfully:\n"
+"{1}\n"
+"Do not retry creation. Inspect the key and preserve any local files that were written."
+msgstr "De inhemska uppgifterna {0} skapades på YubiKey, men OpenSSH slutförde inte framgångsrikt:\n{1}\nFörsök inte skapa igen. Inspektera nyckeln och bevara eventuella lokala filer som skrivits."
+
+msgid "The security key returned an invalid PAM credential."
+msgstr "Säkerhetsnyckeln returnerade en ogiltig PAM-credential."
+
+msgid "The selected FIDO device is no longer connected. Refresh and try again."
+msgstr "Den valda FIDO-enheten är inte längre ansluten. Uppdatera och försök igen."
+
+msgid "The selected private-key or .pub file already exists. Choose another name."
+msgstr "Vald privat nyckel eller .pub-fil finns redan. Välj ett annat namn."
+
+msgid "The sudo policy task failed."
+msgstr "Sudo-policyuppgiften misslyckades."
+
+msgid "This setting applies only to the current user."
+msgstr "Denna inställning gäller endast för den aktuella användaren."
+
+msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
+msgstr "Berör YubiKey när du uppmanas att göra det. Laddar in resident-nycklar till SSH-agenten…"
+
+msgid "Touch the YubiKey. Testing SSH signing and verification…"
+msgstr "Berör YubiKey. Testar SSH-signering och verifiering…"
+
+msgid "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not remove the key."
+msgstr "Berör den valda YubiKey. Skapar en SSH-resident-nyckel på {0}… Ta inte bort nyckeln."
+
+msgid "Touch this key when prompted to enroll it"
+msgstr "Berör denna nyckel när du uppmanas att registrera den"
+
+msgid "Touch this key when prompted to enroll it for sudo"
+msgstr "Berör denna nyckel när du uppmanas att registrera den för sudo"
+
+msgid "Touch your security key to continue."
+msgstr "Tryck på säkerhetsnyckeln för att fortsätta."
+
+msgid "Unknown authentication purpose."
+msgstr "Okänt autenticeringsändamål."
+
+msgid "Unlock GDM"
+msgstr "Lås upp GDM"
+
+msgid "Unlock sudo"
+msgstr "Lås upp sudo"
+
+msgid "Unlock the current user"
+msgstr "Lås upp den aktuella användaren"
+
+msgid "Unnamed SSH credential"
+msgstr "Namnlös SSH-legitimeringsuppgift"
+
+msgid "Unsupported resident SSH public-key algorithm."
+msgstr "Icke-stödd algoritm för lokal SSH-offentlig nyckel."
+
+msgid "Updating sign-in settings…"
+msgstr "Uppdaterar inloggningsinställningar…"
+
+msgid "Updating sudo settings…"
+msgstr "Uppdaterar sudo-inställningar…"
+
+msgid "Use YubiKey to unlock sudo"
+msgstr "Använd YubiKey för att låsa upp sudo"
+
+msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
+msgstr "Du kan registrera nycklar nu, men sudo kringgår PAM när lösenordslös åtkomst är aktiverat."
+
+msgid "YubiKey"
+msgstr "YubiKey"
+
+msgid "YubiKey Manager"
+msgstr "YubiKey Manager"
+
+msgid "YubiKey Manager is unavailable"
+msgstr "YubiKey Manager är inte tillgänglig"
+
+msgid "YubiKey configuration failed"
+msgstr "Konfigurationen av YubiKey misslyckades"
+
+msgid "YubiKey configured, but sudo currently bypasses authentication"
+msgstr "YubiKey är konfigurerad, men sudo kringgår för närvarande autenticeringen"
+
+msgid "YubiKey touch or account password can authorize sudo"
+msgstr "En tryckning på YubiKey eller kontolösenord kan godkänna sudo"
+
+msgid "YubiKey touch or password can unlock this user"
+msgstr "En tryckning på YubiKey eller lösenord kan låsa upp den här användaren"
+
+msgid "agent"
+msgstr "agent"
+
+msgid "sudo authentication"
+msgstr "sudo-autenticering"
+
+msgid "sudo authentication policy"
+msgstr "sudo-autenticeringspolicy"
+
+msgid "sudo currently allows administrator access without authentication"
+msgstr "sudo tillåter för närvarande administratörsåtkomst utan autenticering"
+
+msgid "unknown"
+msgstr "okänd"
+
+msgid "unknown socket"
+msgstr "okänt socket"
+
+msgid "user"
+msgstr "användare"
+
+msgid "{0} exited with {1}"
+msgstr "{0} avslutades med {1}"
+
+msgid "{0} failed: {1}"
+msgstr "{0} misslyckades: {1}"
+
+msgid "{0} identities · {1}"
+msgstr "{0} identiteter · {1}"
+
+msgid "{0} is configured, but another policy currently bypasses it"
+msgstr "{0} är konfigurerad, men en annan policy kringgår den för närvarande"
+
+msgid "{0} is enabled for this YubiKey"
+msgstr "{0} är aktiverat för denna YubiKey"
+
+msgid "{0} is not configured for this YubiKey"
+msgstr "{0} är inte konfigurerat för denna YubiKey"
+
+msgid "{0} new SSH identities were added to the agent."
+msgstr "{0} nya SSH-identiteter har lagts till i agenten."
+
+msgid "{0} new SSH identity was added to the agent."
+msgstr "{0} En ny SSH-identitet har lagts till i agenter."
+
+msgid "{0} · no hardware serial"
+msgstr "{0} · ingen hårdvaruserienummer"
+
+msgid "{0} · {1}"
+msgstr "{0} · {1}"

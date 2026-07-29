@@ -1,0 +1,593 @@
+# Chinese translations for anduinos-yubikey-manager package
+# anduinos-yubikey-manager ļķ.
+# Copyright (C) 2026 THE anduinos-yubikey-manager'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-yubikey-manager package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-yubikey-manager\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-29 16:14+0000\n"
+"PO-Revision-Date: 2026-07-29 16:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "A key must be connected before it can be enrolled."
+msgstr "必须先连接密钥，然后才能注册。"
+
+msgid "About"
+msgstr "关于"
+
+msgid "Account password is required for sudo"
+msgstr "sudo 需要账户密码"
+
+msgid "Advanced options"
+msgstr "高级选项"
+
+msgid "Algorithm"
+msgstr "算法"
+
+msgid "All inspected resident credentials from this key are already in the agent"
+msgstr "此密钥的所有已检查的驻留凭据均已存在于代理中"
+
+msgid "Allow sudo without authentication"
+msgstr "允许无需身份验证即可使用 sudo"
+
+msgid "Allowed for sudo · not currently connected"
+msgstr "允许用于 sudo · 当前未连接"
+
+msgid "Allowed to authorize sudo"
+msgstr "允许授权 sudo"
+
+msgid "Allowed to unlock this user"
+msgstr "允许解锁此用户"
+
+msgid "Allowed to unlock this user · not currently connected"
+msgstr "允许解锁此用户 · 当前未连接"
+
+msgid "Already loaded"
+msgstr "已加载"
+
+msgid "An enrolled YubiKey or the account password can authorize sudo."
+msgstr "已注册的 YubiKey 或账户密码均可授权 sudo。"
+
+msgid "AnduinOS Team"
+msgstr "AnduinOS 团队"
+
+msgid "AnduinOS sign-in"
+msgstr "AnduinOS 登录"
+
+msgid "Application"
+msgstr "应用程序"
+
+msgid "Application must begin with ssh:, contain no whitespace, and be at most 253 bytes."
+msgstr "应用程序必须以 ssh: 开头，不包含空白字符，且最多为 253 字节。"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Choose a local key-handle file"
+msgstr "选择本地密钥句柄文件"
+
+msgid "Choose a supported OpenSSH security-key algorithm."
+msgstr "选择支持的 OpenSSH 安全密钥算法。"
+
+msgid "Choose a valid /dev/hidrawN FIDO device."
+msgstr "选择有效的 /dev/hidrawN FIDO 设备。"
+
+msgid "Choose a valid output folder."
+msgstr "选择有效的输出文件夹。"
+
+msgid "Choose local SSH key-handle path"
+msgstr "选择本地 SSH 密钥句柄路径"
+
+msgid "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
+msgstr "选择允许哪些 YubiKey 解锁 {0}。密码登录仍然可用。"
+
+msgid "Close"
+msgstr "关闭"
+
+msgid "Command exited with"
+msgstr "命令退出状态为"
+
+msgid "Command exited with {0}"
+msgstr "命令退出状态为 {0}"
+
+msgid "Configured features"
+msgstr "已配置的功能"
+
+msgid "Connect a FIDO security key first"
+msgstr "请先连接 FIDO 安全密钥"
+
+msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+msgstr "请精确连接一个 FIDO 安全密钥以选择明确的来源"
+
+msgid "Continue"
+msgstr "继续"
+
+msgid "Copy public key"
+msgstr "复制公钥"
+
+msgid "Could not create a temporary public-key file: {0}"
+msgstr "无法创建临时公钥文件：{0}"
+
+msgid "Could not create {0}: {1}"
+msgstr "无法创建 {0}：{1}"
+
+msgid "Could not export the public key: {0}"
+msgstr "无法导出公钥：{0}"
+
+msgid "Could not flush the temporary public key: {0}"
+msgstr "无法刷新临时公钥：{0}"
+
+msgid "Could not inspect USB devices: {0}"
+msgstr "无法检查 USB 设备：{0}"
+
+msgid "Could not inspect this YubiKey"
+msgstr "无法检查此 YubiKey"
+
+msgid "Could not list YubiKeys"
+msgstr "无法列出 YubiKey"
+
+msgid "Could not locate the secure PIN helper: {0}"
+msgstr "无法定位安全 PIN 码助手：{0}"
+
+msgid "Could not protect {0}: {1}"
+msgstr "无法保护 {0}：{1}"
+
+msgid "Could not provide the FIDO PIN: {0}"
+msgstr "无法提供 FIDO PIN 码：{0}"
+
+msgid "Could not request administrator access: {0}"
+msgstr "无法请求管理员权限：{0}"
+
+msgid "Could not run {0}: {1}"
+msgstr "无法运行 {0}：{1}"
+
+msgid "Could not start {0}: {1}"
+msgstr "无法启动 {0}：{1}"
+
+msgid "Could not write the temporary public key: {0}"
+msgstr "无法写入临时公钥：{0}"
+
+msgid "Create"
+msgstr "创建"
+
+msgid "Create a resident SSH credential on a selected device"
+msgstr "在选定设备上创建驻留 SSH 凭据"
+
+msgid "Create a resident SSH key"
+msgstr "创建驻留 SSH 密钥"
+
+msgid "Create…"
+msgstr "创建…"
+
+msgid "Current user: {0}"
+msgstr "当前用户：{0}"
+
+msgid "Disabled · sudo must authenticate with a YubiKey or account password"
+msgstr "已禁用 · sudo 必须通过 YubiKey 或账户密码进行身份验证"
+
+msgid "Display label must be at most 200 bytes and contain no control characters."
+msgstr "显示标签最多为 200 字节，且不得包含控制字符。"
+
+msgid "During enrollment, disconnect all other security keys. The selected key will blink; touch it to continue. Multiple keys can be enrolled one at a time."
+msgstr "在注册期间，断开所有其他安全密钥的连接。选定的密钥将闪烁；触摸它以继续。可以一次注册一个多个密钥。"
+
+msgid "ECDSA-SK (recommended compatibility)"
+msgstr "ECDSA-SK（推荐兼容性）"
+
+msgid "ECDSA-SK works with the widest range of YubiKeys"
+msgstr "ECDSA-SK 适用于最广泛的 YubiKey 范围"
+
+msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
+msgstr "ECDSA-SK · 驻留 · 需要触摸 · 安全兼容性默认设置"
+
+msgid "Ed25519-SK (newer YubiKeys)"
+msgstr "Ed25519-SK（较新的 YubiKey）"
+
+msgid "Enabled · programs can obtain administrator privileges without confirmation"
+msgstr "已启用 · 程序可以在无需确认的情况下获取管理员权限"
+
+msgid "Enabling passwordless sudo…"
+msgstr "正在启用无密码 sudo…"
+
+msgid "Enabling sudo authentication…"
+msgstr "正在启用 sudo 身份验证…"
+
+msgid "Enrolled · inactive while sudo authentication is bypassed"
+msgstr "已注册 · 在绕过 sudo 身份验证时无效"
+
+msgid "Enrollment safety"
+msgstr "注册安全性"
+
+msgid "Enter the YubiKey FIDO PIN"
+msgstr "输入 YubiKey FIDO PIN"
+
+msgid "Enter the selected YubiKey FIDO PIN"
+msgstr "输入所选 YubiKey 的 FIDO PIN"
+
+msgid "Export .pub"
+msgstr "导出 .pub"
+
+msgid "Export SSH public key"
+msgstr "导出 SSH 公钥"
+
+msgid "FIDO PIN"
+msgstr "FIDO PIN"
+
+msgid "FIDO device discovery is unavailable"
+msgstr "FIDO 设备发现不可用"
+
+msgid "FIDO security key"
+msgstr "FIDO 安全密钥"
+
+msgid "Firmware {0}"
+msgstr "固件 {0}"
+
+msgid "For safe enrollment, disconnect every other security key and leave only the selected YubiKey connected."
+msgstr "为确保注册安全，请断开所有其他安全密钥的连接，仅保留所选的 YubiKey 连接。"
+
+msgid "Home"
+msgstr "主页"
+
+msgid "Insert a YubiKey"
+msgstr "插入 YubiKey"
+
+msgid "Insert a YubiKey, then press Refresh."
+msgstr "插入 YubiKey，然后按刷新。"
+
+msgid "Inspect"
+msgstr "检查"
+
+msgid "Inspect, load, export, test, or remove resident SSH credentials."
+msgstr "检查、加载、导出、测试或删除驻留 SSH 凭据。"
+
+msgid "Inspecting resident SSH credentials…"
+msgstr "正在检查驻留 SSH 凭据…"
+
+msgid "Invalid FIDO device path."
+msgstr "FIDO 设备路径无效。"
+
+msgid "Load"
+msgstr "加载"
+
+msgid "Load into agent"
+msgstr "加载到代理"
+
+msgid "Load resident SSH keys"
+msgstr "加载驻留 SSH 密钥"
+
+msgid "Local key handle path"
+msgstr "本地密钥句柄路径"
+
+msgid "Local key label"
+msgstr "本地密钥标签"
+
+msgid "New hardware-backed SSH key"
+msgstr "新的硬件支持 SSH 密钥"
+
+msgid "No FIDO security key detected"
+msgstr "未检测到 FIDO 安全密钥"
+
+msgid "No SSH agent was detected"
+msgstr "未检测到 SSH 代理"
+
+msgid "No YubiKey detected"
+msgstr "未检测到 YubiKey"
+
+msgid "No hardware serial · {0}"
+msgstr "无硬件序列号 · {0}"
+
+msgid "No resident SSH credentials"
+msgstr "无驻留 SSH 凭据"
+
+msgid "No ssh:* discoverable credentials were found on this key."
+msgstr "在此密钥上未找到可发现的 ssh:* 凭据。"
+
+msgid "Not currently connected"
+msgstr "当前未连接"
+
+msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
+msgstr "OpenSSH 无法加载驻留密钥。SSH agent 不包含新加载的身份。"
+
+msgid ""
+"OpenSSH could not load resident keys:\n"
+"{0}"
+msgstr "OpenSSH 无法加载驻留密钥：\n{0}"
+
+msgid ""
+"OpenSSH did not create a resident key:\n"
+"{0}"
+msgstr "OpenSSH 未创建驻留密钥：\n{0}"
+
+msgid ""
+"OpenSSH finished creating the key, but the YubiKey could not be verified afterward: {0}\n"
+"Do not immediately retry; inspect the key first to avoid creating a duplicate."
+msgstr "OpenSSH 已完成密钥创建，但之后无法验证 YubiKey：{0}\n请勿立即重试；请先检查密钥，以避免创建重复项。"
+
+msgid "OpenSSH reported success, but no new resident credential was detected. Do not retry until you inspect the YubiKey."
+msgstr "OpenSSH 报告成功，但未检测到新的驻留凭据。在检查 YubiKey 之前请勿重试。"
+
+msgid "OpenSSH/FIDO credential metadata and local file location"
+msgstr "OpenSSH/FIDO 凭据元数据和本地文件位置"
+
+msgid "Password sign-in only"
+msgstr "仅密码登录"
+
+msgid "Refresh connected YubiKeys"
+msgstr "刷新已连接的 YubiKey"
+
+msgid "Remove from agent"
+msgstr "从 agent 中移除"
+
+msgid "Removing this key from the SSH agent…"
+msgstr "正在从 SSH agent 中移除此密钥…"
+
+msgid "Require verification for every signature"
+msgstr "要求对每次签名进行验证"
+
+msgid "Requires the FIDO PIN each time this key signs"
+msgstr "此密钥每次签名时都需要 FIDO PIN"
+
+msgid "Resident SSH credentials"
+msgstr "驻留 SSH 凭据"
+
+msgid "Resident SSH key created"
+msgstr "已创建驻留 SSH 密钥"
+
+msgid "Resident keys loaded"
+msgstr "已加载驻留密钥"
+
+msgid "Resident username"
+msgstr "驻留用户名"
+
+msgid "Resident username must contain 1–64 bytes and no control characters."
+msgstr "驻留用户名必须包含 1–64 字节且不含控制字符。"
+
+msgid "Run ssh-add -K for this connected security key"
+msgstr "为此连接的安全密钥运行 ssh-add -K"
+
+msgid "SSH Keys"
+msgstr "SSH 密钥"
+
+msgid "SSH agent"
+msgstr "SSH agent"
+
+msgid "SSH agent connected"
+msgstr "SSH agent 已连接"
+
+msgid "SSH agent unavailable"
+msgstr "SSH agent 不可用"
+
+msgid "SSH key actions"
+msgstr "SSH 密钥操作"
+
+msgid "SSH_AUTH_SOCK is not set"
+msgstr "未设置 SSH_AUTH_SOCK"
+
+msgid "Safe defaults use ECDSA-SK, require touch, and store a discoverable credential on the selected YubiKey."
+msgstr "安全默认值使用 ECDSA-SK，要求触摸验证，并在所选 YubiKey 上存储可发现的凭据。"
+
+msgid "Security keys"
+msgstr "安全密钥"
+
+msgid "Serial {0}"
+msgstr "序列号 {0}"
+
+msgid "Signing test passed"
+msgstr "签名测试通过"
+
+msgid "Temporary public-key path is invalid."
+msgstr "临时公钥路径无效。"
+
+msgid "Test signing"
+msgstr "测试签名"
+
+msgid "The FIDO enrollment tool is not installed. Install the libpam-u2f package, then try again."
+msgstr "FIDO 注册工具未安装。请安装 libpam-u2f 软件包，然后重试。"
+
+msgid "The PIN is sent directly to ssh-add and is never stored."
+msgstr "PIN 码直接发送给 ssh-add，且绝不会存储。"
+
+msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
+msgstr "PIN 码通过私有管道发送至 OpenSSH。它绝不会存储或置于命令参数中。"
+
+msgid "The PIN is used only for this read-only inspection and is never stored."
+msgstr "PIN 码仅用于此次只读检查，且绝不会存储。"
+
+msgid "The SSH agent successfully signed and verified data with this key."
+msgstr "SSH agent 已成功使用此密钥对数据进行签名和验证。"
+
+msgid "The YubiKey operation stopped unexpectedly."
+msgstr "YubiKey 操作意外停止。"
+
+msgid "The credential will be created only on this exact device"
+msgstr "凭据将仅在此特定设备上创建"
+
+msgid "The enrollment task failed."
+msgstr "注册任务失败。"
+
+msgid "The inspected resident SSH credentials are already available in this agent."
+msgstr "已检查的驻留 SSH 凭据已在当前 agent 中可用。"
+
+msgid "The local key path must be absolute."
+msgstr "本地密钥路径必须是绝对路径。"
+
+msgid ""
+"The non-exportable private key remains protected by the selected YubiKey.\n"
+"\n"
+"Algorithm: {0}\n"
+"Application: {1}\n"
+"Resident username: {2}\n"
+"Fingerprint: {3}\n"
+"\n"
+"Local key handle: {4}\n"
+"Public key: {5}\n"
+"\n"
+"The key is not automatically loaded into the SSH agent."
+msgstr "不可导出的私钥仍受所选 YubiKey 保护。\n\n算法：{0}\n应用程序：{1}\n驻留用户名：{2}\n指纹：{3}\n\n本地密钥句柄：{4}\n公钥：{5}\n\n该密钥不会自动加载到 SSH agent 中。"
+
+msgid "The operation was cancelled or denied."
+msgstr "操作已取消或被拒绝。"
+
+msgid "The output folder does not exist: {0}"
+msgstr "输出文件夹不存在: {0}"
+
+msgid "The resident credential did not return a public key."
+msgstr "驻留凭据未返回公钥。"
+
+msgid "The resident credential returned an incomplete public key."
+msgstr "驻留凭据返回的公钥不完整。"
+
+msgid "The resident credential returned malformed PEM data."
+msgstr "驻留凭据返回了格式错误的 PEM 数据。"
+
+msgid "The resident credential {0} exists on the YubiKey, but its local handle files are incomplete. Do not retry creation."
+msgstr "驻留凭据 {0} 存在于 YubiKey 上，但其本地句柄文件不完整。请勿重试创建。"
+
+msgid ""
+"The resident credential {0} was created on the YubiKey, but OpenSSH did not complete successfully:\n"
+"{1}\n"
+"Do not retry creation. Inspect the key and preserve any local files that were written."
+msgstr "驻留凭据 {0} 已在 YubiKey 上创建，但 OpenSSH 未能成功完成：\n{1}\n请勿重试创建。请检查密钥并保留已写入的任何本地文件。"
+
+msgid "The security key returned an invalid PAM credential."
+msgstr "安全密钥返回了无效的 PAM 凭据。"
+
+msgid "The selected FIDO device is no longer connected. Refresh and try again."
+msgstr "所选 FIDO 设备已断开连接。刷新后重试。"
+
+msgid "The selected private-key or .pub file already exists. Choose another name."
+msgstr "所选私钥或 .pub 文件已存在。请选择其他名称。"
+
+msgid "The sudo policy task failed."
+msgstr "sudo 策略任务失败。"
+
+msgid "This setting applies only to the current user."
+msgstr "此设置仅适用于当前用户。"
+
+msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
+msgstr "提示时触摸 YubiKey。正在将驻留密钥加载到 SSH agent…"
+
+msgid "Touch the YubiKey. Testing SSH signing and verification…"
+msgstr "触摸 YubiKey。正在测试 SSH 签名和验证…"
+
+msgid "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not remove the key."
+msgstr "触摸所选 YubiKey。正在 {0} 上创建 SSH 驻留密钥… 请勿移除密钥。"
+
+msgid "Touch this key when prompted to enroll it"
+msgstr "提示时触摸此密钥以进行注册"
+
+msgid "Touch this key when prompted to enroll it for sudo"
+msgstr "提示时触摸此密钥以注册 sudo"
+
+msgid "Touch your security key to continue."
+msgstr "触摸您的安全密钥以继续。"
+
+msgid "Unknown authentication purpose."
+msgstr "未知的身份验证目的。"
+
+msgid "Unlock GDM"
+msgstr "解锁 GDM"
+
+msgid "Unlock sudo"
+msgstr "解锁 sudo"
+
+msgid "Unlock the current user"
+msgstr "解锁当前用户"
+
+msgid "Unnamed SSH credential"
+msgstr "未命名的 SSH 凭据"
+
+msgid "Unsupported resident SSH public-key algorithm."
+msgstr "不支持的驻留 SSH 公钥算法。"
+
+msgid "Updating sign-in settings…"
+msgstr "正在更新登录设置…"
+
+msgid "Updating sudo settings…"
+msgstr "正在更新 sudo 设置…"
+
+msgid "Use YubiKey to unlock sudo"
+msgstr "使用 YubiKey 解锁 sudo"
+
+msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
+msgstr "您现在可以注册密钥，但在启用无密码访问时，sudo 会绕过 PAM。"
+
+msgid "YubiKey"
+msgstr "YubiKey"
+
+msgid "YubiKey Manager"
+msgstr "YubiKey 管理器"
+
+msgid "YubiKey Manager is unavailable"
+msgstr "YubiKey 管理器不可用"
+
+msgid "YubiKey configuration failed"
+msgstr "YubiKey 配置失败"
+
+msgid "YubiKey configured, but sudo currently bypasses authentication"
+msgstr "YubiKey 已配置，但 sudo 当前绕过身份验证"
+
+msgid "YubiKey touch or account password can authorize sudo"
+msgstr "YubiKey 触摸或账户密码可授权 sudo"
+
+msgid "YubiKey touch or password can unlock this user"
+msgstr "YubiKey 触摸或密码可解锁此用户"
+
+msgid "agent"
+msgstr "代理"
+
+msgid "sudo authentication"
+msgstr "sudo 身份验证"
+
+msgid "sudo authentication policy"
+msgstr "sudo 身份验证策略"
+
+msgid "sudo currently allows administrator access without authentication"
+msgstr "sudo 当前允许无需身份验证的管理员访问"
+
+msgid "unknown"
+msgstr "未知"
+
+msgid "unknown socket"
+msgstr "未知套接字"
+
+msgid "user"
+msgstr "用户"
+
+msgid "{0} exited with {1}"
+msgstr "{0} 退出，状态码为 {1}"
+
+msgid "{0} failed: {1}"
+msgstr "{0} 失败：{1}"
+
+msgid "{0} identities · {1}"
+msgstr "{0} 个身份 · {1}"
+
+msgid "{0} is configured, but another policy currently bypasses it"
+msgstr "{0} 已配置，但另一策略当前绕过了它"
+
+msgid "{0} is enabled for this YubiKey"
+msgstr "此 YubiKey 已启用 {0}"
+
+msgid "{0} is not configured for this YubiKey"
+msgstr "此 YubiKey 未配置 {0}"
+
+msgid "{0} new SSH identities were added to the agent."
+msgstr "已向代理添加 {0} 个新的 SSH 身份。"
+
+msgid "{0} new SSH identity was added to the agent."
+msgstr "已向代理添加 {0} 个新的 SSH 身份。"
+
+msgid "{0} · no hardware serial"
+msgstr "{0} · 无硬件序列号"
+
+msgid "{0} · {1}"
+msgstr "{0} · {1}"

@@ -1,0 +1,593 @@
+# Dutch translations for anduinos-yubikey-manager package.
+# Copyright (C) 2026 THE anduinos-yubikey-manager'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-yubikey-manager package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-yubikey-manager\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-29 16:14+0000\n"
+"PO-Revision-Date: 2026-07-29 16:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "A key must be connected before it can be enrolled."
+msgstr "Een sleutel moet worden verbonden voordat deze kan worden geregistreerd."
+
+msgid "About"
+msgstr "Over"
+
+msgid "Account password is required for sudo"
+msgstr "Voor sudo is een accountwachtwoord vereist"
+
+msgid "Advanced options"
+msgstr "Uitgebreide opties"
+
+msgid "Algorithm"
+msgstr "Algoritme"
+
+msgid "All inspected resident credentials from this key are already in the agent"
+msgstr "Alle geïnspecteerde bewonersreferenties van deze sleutel zijn al in de agent"
+
+msgid "Allow sudo without authentication"
+msgstr "Sta sudo toe zonder authenticatie"
+
+msgid "Allowed for sudo · not currently connected"
+msgstr "Toegestaan voor sudo · momenteel niet verbonden"
+
+msgid "Allowed to authorize sudo"
+msgstr "Mag sudo autoriseren"
+
+msgid "Allowed to unlock this user"
+msgstr "Mag deze gebruiker ontgrendelen"
+
+msgid "Allowed to unlock this user · not currently connected"
+msgstr "Mag deze gebruiker ontgrendelen · momenteel niet verbonden"
+
+msgid "Already loaded"
+msgstr "Al geladen"
+
+msgid "An enrolled YubiKey or the account password can authorize sudo."
+msgstr "Een geregistreerde YubiKey of het accountwachtwoord kan sudo autoriseren."
+
+msgid "AnduinOS Team"
+msgstr "AnduinOS Team"
+
+msgid "AnduinOS sign-in"
+msgstr "AnduinOS aanmelden"
+
+msgid "Application"
+msgstr "Applicatie"
+
+msgid "Application must begin with ssh:, contain no whitespace, and be at most 253 bytes."
+msgstr "De applicatiernaam moet beginnen met ssh:, geen spaties bevatten en maximaal 253 bytes lang zijn."
+
+msgid "Cancel"
+msgstr "Annuleren"
+
+msgid "Choose a local key-handle file"
+msgstr "Kies een lokaal sleutelhandelsbestand"
+
+msgid "Choose a supported OpenSSH security-key algorithm."
+msgstr "Kies een ondersteund OpenSSH-beveiligingssleutelalgoritme."
+
+msgid "Choose a valid /dev/hidrawN FIDO device."
+msgstr "Kies een geldig /dev/hidrawN FIDO-apparaat."
+
+msgid "Choose a valid output folder."
+msgstr "Kies een geldige uitvoermap."
+
+msgid "Choose local SSH key-handle path"
+msgstr "Kies lokaal pad voor SSH-sleutelhandel"
+
+msgid "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
+msgstr "Kies welke YubiKeys {0} mogen ontgrendelen. Aanmelden met wachtwoord blijft beschikbaar."
+
+msgid "Close"
+msgstr "Sluiten"
+
+msgid "Command exited with"
+msgstr "Opdracht afgesloten met"
+
+msgid "Command exited with {0}"
+msgstr "Opdracht afgesloten met {0}"
+
+msgid "Configured features"
+msgstr "Geconfigureerde functies"
+
+msgid "Connect a FIDO security key first"
+msgstr "Verbind eerst een FIDO-beveiligingssleutel"
+
+msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+msgstr "Verbind precies één FIDO-beveiligingssleutel om een eenduidige bron te kiezen"
+
+msgid "Continue"
+msgstr "Doorgaan"
+
+msgid "Copy public key"
+msgstr "Copieer openbare sleutel"
+
+msgid "Could not create a temporary public-key file: {0}"
+msgstr "Kon geen tijdelijk bestand voor de openbare sleutel maken: {0}"
+
+msgid "Could not create {0}: {1}"
+msgstr "Kon {0} niet maken: {1}"
+
+msgid "Could not export the public key: {0}"
+msgstr "Kon de openbare sleutel niet exporteren: {0}"
+
+msgid "Could not flush the temporary public key: {0}"
+msgstr "Kon de tijdelijke openbare sleutel niet wissen: {0}"
+
+msgid "Could not inspect USB devices: {0}"
+msgstr "Kon USB-apparaten niet inspecteren: {0}"
+
+msgid "Could not inspect this YubiKey"
+msgstr "Kon deze YubiKey niet inspecteren"
+
+msgid "Could not list YubiKeys"
+msgstr "Kon YubiKeys niet tonen"
+
+msgid "Could not locate the secure PIN helper: {0}"
+msgstr "Kon de hulpprogramma voor beveiligde PIN niet vinden: {0}"
+
+msgid "Could not protect {0}: {1}"
+msgstr "Kon {0} niet beveiligen: {1}"
+
+msgid "Could not provide the FIDO PIN: {0}"
+msgstr "Kon de FIDO-PIN niet verstrekken: {0}"
+
+msgid "Could not request administrator access: {0}"
+msgstr "Kon geen toegang als beheerder aanvragen: {0}"
+
+msgid "Could not run {0}: {1}"
+msgstr "Kon {0} niet uitvoeren: {1}"
+
+msgid "Could not start {0}: {1}"
+msgstr "Kon {0} niet starten: {1}"
+
+msgid "Could not write the temporary public key: {0}"
+msgstr "Kon de tijdelijke openbare sleutel niet schrijven: {0}"
+
+msgid "Create"
+msgstr "Maken"
+
+msgid "Create a resident SSH credential on a selected device"
+msgstr "Een bewoonde SSH-identiteit maken op een geselecteerd apparaat"
+
+msgid "Create a resident SSH key"
+msgstr "Een bewoonde SSH-sleutel maken"
+
+msgid "Create…"
+msgstr "Maken…"
+
+msgid "Current user: {0}"
+msgstr "Huidige gebruiker: {0}"
+
+msgid "Disabled · sudo must authenticate with a YubiKey or account password"
+msgstr "uitgeschakeld · sudo moet authenticeren met een YubiKey of accountwachtwoord"
+
+msgid "Display label must be at most 200 bytes and contain no control characters."
+msgstr "De weergavelabel mag maximaal 200 bytes bevatten en geen controletekens."
+
+msgid "During enrollment, disconnect all other security keys. The selected key will blink; touch it to continue. Multiple keys can be enrolled one at a time."
+msgstr "Tijdens inschrijving, koppel alle andere beveiligingssleutels los. De geselecteerde sleutel zal knipperen; raak deze aan om door te gaan. Meerdere sleutels kunnen één voor één worden ingeschreven."
+
+msgid "ECDSA-SK (recommended compatibility)"
+msgstr "ECDSA-SK (aanbevolen compatibiliteit)"
+
+msgid "ECDSA-SK works with the widest range of YubiKeys"
+msgstr "ECDSA-SK werkt met de breedste reeks YubiKeys"
+
+msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
+msgstr "ECDSA-SK · bewonend · aanraking vereist · veilige compatibiliteitsstandaarden"
+
+msgid "Ed25519-SK (newer YubiKeys)"
+msgstr "Ed25519-SK (nieuwere YubiKeys)"
+
+msgid "Enabled · programs can obtain administrator privileges without confirmation"
+msgstr "Ingeschakeld · programma's kunnen beheerdersrechten verkrijgen zonder bevestiging"
+
+msgid "Enabling passwordless sudo…"
+msgstr "Wachtwoordloze sudo inschakelen…"
+
+msgid "Enabling sudo authentication…"
+msgstr "Sudo-authenticatie inschakelen…"
+
+msgid "Enrolled · inactive while sudo authentication is bypassed"
+msgstr "Geregistreerd · inactief terwijl sudo-authenticatie wordt omzeild"
+
+msgid "Enrollment safety"
+msgstr "Registratiewaarschuwing"
+
+msgid "Enter the YubiKey FIDO PIN"
+msgstr "Voer de YubiKey FIDO-PIN in"
+
+msgid "Enter the selected YubiKey FIDO PIN"
+msgstr "Voer de geselecteerde YubiKey FIDO-PIN in"
+
+msgid "Export .pub"
+msgstr ".pub exporteren"
+
+msgid "Export SSH public key"
+msgstr "SHA-publieke sleutel exporteren"
+
+msgid "FIDO PIN"
+msgstr "FIDO-PIN"
+
+msgid "FIDO device discovery is unavailable"
+msgstr "FIDO-apparaatdetectie is niet beschikbaar"
+
+msgid "FIDO security key"
+msgstr "FIDO-beveiligingssleutel"
+
+msgid "Firmware {0}"
+msgstr "Firmware {0}"
+
+msgid "For safe enrollment, disconnect every other security key and leave only the selected YubiKey connected."
+msgstr "Voor een veilige registratie, alle andere beveiligingssleutels loskoppelen en alleen de geselecteerde YubiKey aangesloten laten."
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Insert a YubiKey"
+msgstr "Een YubiKey invoegen"
+
+msgid "Insert a YubiKey, then press Refresh."
+msgstr "Een YubiKey invoegen en daarna Vernieuwen drukken."
+
+msgid "Inspect"
+msgstr "Inspecteren"
+
+msgid "Inspect, load, export, test, or remove resident SSH credentials."
+msgstr "Inwonen SSH-gegevens inspecteren, laden, exporteren, testen of verwijderen."
+
+msgid "Inspecting resident SSH credentials…"
+msgstr "Inwonen SSH-gegevens inspecteren…"
+
+msgid "Invalid FIDO device path."
+msgstr "Ongeldig FIDO-apparaatpad."
+
+msgid "Load"
+msgstr "Laden"
+
+msgid "Load into agent"
+msgstr "Laden in agent"
+
+msgid "Load resident SSH keys"
+msgstr "Inwonen SSH-sleutels laden"
+
+msgid "Local key handle path"
+msgstr "Lokaal sleutelhandelpad"
+
+msgid "Local key label"
+msgstr "Lokaal sleutellabel"
+
+msgid "New hardware-backed SSH key"
+msgstr "Nieuwe hardware-ondersteunde SSH-sleutel"
+
+msgid "No FIDO security key detected"
+msgstr "Geen FIDO-beveiligingssleutel gedetecteerd"
+
+msgid "No SSH agent was detected"
+msgstr "Geen SSH-agent gedetecteerd"
+
+msgid "No YubiKey detected"
+msgstr "Geen YubiKey gedetecteerd"
+
+msgid "No hardware serial · {0}"
+msgstr "Geen hardwareserial · {0}"
+
+msgid "No resident SSH credentials"
+msgstr "Geen inwonende SSH-gegevens"
+
+msgid "No ssh:* discoverable credentials were found on this key."
+msgstr "Er zijn geen ontdekbare ssh:*-referenties gevonden op deze sleutel."
+
+msgid "Not currently connected"
+msgstr "Moment niet verbonden"
+
+msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
+msgstr "OpenSSH kon de resident-sleutels niet laden. De SSH-agent bevat geen nieuw geladen identiteit."
+
+msgid ""
+"OpenSSH could not load resident keys:\n"
+"{0}"
+msgstr "OpenSSH kon de residente sleutels niet laden: {0}"
+
+msgid ""
+"OpenSSH did not create a resident key:\n"
+"{0}"
+msgstr "OpenSSH heeft geen residente sleutel aangemaakt: {0}"
+
+msgid ""
+"OpenSSH finished creating the key, but the YubiKey could not be verified afterward: {0}\n"
+"Do not immediately retry; inspect the key first to avoid creating a duplicate."
+msgstr "OpenSSH heeft het aanmaken van de sleutel voltooid, maar de YubiKey kon nadien niet worden geverifieerd: {0}\nProbeer het niet direct opnieuw; inspecteer eerst de sleutel om het maken van een duplicaat te voorkomen."
+
+msgid "OpenSSH reported success, but no new resident credential was detected. Do not retry until you inspect the YubiKey."
+msgstr "OpenSSH meldde succes, maar er is geen nieuwe resident-referentie gedetecteerd. Probeer het niet opnieuw totdat u de YubiKey heeft geïnspecteerd."
+
+msgid "OpenSSH/FIDO credential metadata and local file location"
+msgstr "Metadata van OpenSSH/FIDO-referenties en lokale bestandslocatie"
+
+msgid "Password sign-in only"
+msgstr "Alleen inloggen met wachtwoord"
+
+msgid "Refresh connected YubiKeys"
+msgstr "Verbonden YubiKeys vernieuwen"
+
+msgid "Remove from agent"
+msgstr "Uit agent verwijderen"
+
+msgid "Removing this key from the SSH agent…"
+msgstr "Deze sleutel wordt uit de SSH-agent verwijderd…"
+
+msgid "Require verification for every signature"
+msgstr "Verificatie vereisen voor elke handtekening"
+
+msgid "Requires the FIDO PIN each time this key signs"
+msgstr "Vereist de FIDO-PIN telkens wanneer deze sleutel ondertekent"
+
+msgid "Resident SSH credentials"
+msgstr "Resident SSH-referenties"
+
+msgid "Resident SSH key created"
+msgstr "Resident SSH-sleutel aangemaakt"
+
+msgid "Resident keys loaded"
+msgstr "Resident-sleutels geladen"
+
+msgid "Resident username"
+msgstr "Resident gebruikersnaam"
+
+msgid "Resident username must contain 1–64 bytes and no control characters."
+msgstr "De resident gebruikersnaam moet 1–64 bytes bevatten en geen besturingskarakters."
+
+msgid "Run ssh-add -K for this connected security key"
+msgstr "Voer ssh-add -K uit voor deze verbonden beveiligingssleutel"
+
+msgid "SSH Keys"
+msgstr "SSH-sleutels"
+
+msgid "SSH agent"
+msgstr "SSH-agent"
+
+msgid "SSH agent connected"
+msgstr "SSH-agent verbonden"
+
+msgid "SSH agent unavailable"
+msgstr "SSH-agent niet beschikbaar"
+
+msgid "SSH key actions"
+msgstr "SSH-sleutelacties"
+
+msgid "SSH_AUTH_SOCK is not set"
+msgstr "SSH_AUTH_SOCK is niet ingesteld"
+
+msgid "Safe defaults use ECDSA-SK, require touch, and store a discoverable credential on the selected YubiKey."
+msgstr "Veilige standaardinstellingen gebruiken ECDSA-SK, vereisen een aanraking en slaan een ontdekbare referentie op de geselecteerde YubiKey op."
+
+msgid "Security keys"
+msgstr "Beveiligingssleutels"
+
+msgid "Serial {0}"
+msgstr "Serienummer {0}"
+
+msgid "Signing test passed"
+msgstr "Ondertekenningstest geslaagd"
+
+msgid "Temporary public-key path is invalid."
+msgstr "Tijdelijke openbare-sleutel pad is ongeldig."
+
+msgid "Test signing"
+msgstr "Testtekenen"
+
+msgid "The FIDO enrollment tool is not installed. Install the libpam-u2f package, then try again."
+msgstr "Het FIDO-registratietool is niet geïnstalleerd. Installeer het libpam-u2f-pakket en probeer het opnieuw."
+
+msgid "The PIN is sent directly to ssh-add and is never stored."
+msgstr "Het PIN-nummer wordt direct naar ssh-add gestuurd en nooit opgeslagen."
+
+msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
+msgstr "Het PIN-nummer wordt via een privé-kanaal naar OpenSSH gestuurd. Het wordt nooit opgeslagen of in opdrachtargumenten geplaatst."
+
+msgid "The PIN is used only for this read-only inspection and is never stored."
+msgstr "Het PIN-nummer wordt alleen gebruikt voor deze inspectie met alleen-lezen-toegang en wordt nooit opgeslagen."
+
+msgid "The SSH agent successfully signed and verified data with this key."
+msgstr "De SSH-agent heeft de gegevens succesvol getekend en geverifieerd met deze sleutel."
+
+msgid "The YubiKey operation stopped unexpectedly."
+msgstr "De YubiKey-bewerking stopte onverwachts."
+
+msgid "The credential will be created only on this exact device"
+msgstr "Het bewijsmiddel wordt alleen aangemaakt op dit exacte apparaat"
+
+msgid "The enrollment task failed."
+msgstr "De registratie taak is mislukt."
+
+msgid "The inspected resident SSH credentials are already available in this agent."
+msgstr "De geïnspecteerde resident SSH-credentials zijn al beschikbaar in deze agent."
+
+msgid "The local key path must be absolute."
+msgstr "Het lokale sleutelpad moet absoluut zijn."
+
+msgid ""
+"The non-exportable private key remains protected by the selected YubiKey.\n"
+"\n"
+"Algorithm: {0}\n"
+"Application: {1}\n"
+"Resident username: {2}\n"
+"Fingerprint: {3}\n"
+"\n"
+"Local key handle: {4}\n"
+"Public key: {5}\n"
+"\n"
+"The key is not automatically loaded into the SSH agent."
+msgstr "De niet-exporteerbare privésleutel blijft beschermd door de geselecteerde YubiKey.\n\nAlgoritme: {0}\nToepassing: {1}\nResident gebruikersnaam: {2}\nVingerafdruk: {3}\n\nLokaal sleutelhandvat: {4}\nPublieke sleutel: {5}\n\nDe sleutel wordt niet automatisch geladen in de SSH-agent."
+
+msgid "The operation was cancelled or denied."
+msgstr "De bewerking is geannuleerd of geweigerd."
+
+msgid "The output folder does not exist: {0}"
+msgstr "De uitvoermap bestaat niet: {0}"
+
+msgid "The resident credential did not return a public key."
+msgstr "Het resident bewijsmiddel gaf geen openbare sleutel terug."
+
+msgid "The resident credential returned an incomplete public key."
+msgstr "Het resident bewijsmiddel gaf een onvolledige openbare sleutel terug."
+
+msgid "The resident credential returned malformed PEM data."
+msgstr "Het resident bewijsmiddel gaf misvormde PEM-gegevens terug."
+
+msgid "The resident credential {0} exists on the YubiKey, but its local handle files are incomplete. Do not retry creation."
+msgstr "Het resident bewijsmiddel {0} bestaat op de YubiKey, maar de lokale handvatsbestanden zijn onvolledig. Probeer niet opnieuw te maken."
+
+msgid ""
+"The resident credential {0} was created on the YubiKey, but OpenSSH did not complete successfully:\n"
+"{1}\n"
+"Do not retry creation. Inspect the key and preserve any local files that were written."
+msgstr "De residente referentie {0} is op de YubiKey aangemaakt, maar OpenSSH is niet succesvol afgerond:\n{1}\nProbeer het aanmaken niet opnieuw. Inspecteer de sleutel en bewaar alle lokale bestanden die zijn geschreven."
+
+msgid "The security key returned an invalid PAM credential."
+msgstr "De beveiligingssleutel gaf een ongeldig PAM-bewijsmiddel terug."
+
+msgid "The selected FIDO device is no longer connected. Refresh and try again."
+msgstr "Het geselecteerde FIDO-apparaat is niet langer verbonden. Vernieuw en probeer het opnieuw."
+
+msgid "The selected private-key or .pub file already exists. Choose another name."
+msgstr "Het geselecteerde privésleutel- of .pub-bestand bestaat al. Kies een andere naam."
+
+msgid "The sudo policy task failed."
+msgstr "De sudo-beleidstaak is mislukt."
+
+msgid "This setting applies only to the current user."
+msgstr "Deze instelling geldt alleen voor de huidige gebruiker."
+
+msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
+msgstr "Raak de YubiKey aan wanneer daarom wordt gevraagd. Laden van resident sleutels in de SSH-agent…"
+
+msgid "Touch the YubiKey. Testing SSH signing and verification…"
+msgstr "Raak de YubiKey aan. SSH-tekenen en verifiëren testen…"
+
+msgid "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not remove the key."
+msgstr "Raak de geselecteerde YubiKey aan. Aanmaken van een SSH-residentsleutel op {0}… Verwijder de sleutel niet."
+
+msgid "Touch this key when prompted to enroll it"
+msgstr "Raak deze sleutel aan wanneer daarom wordt gevraagd om hem te registreren"
+
+msgid "Touch this key when prompted to enroll it for sudo"
+msgstr "Raak deze sleutel aan wanneer daarom wordt gevraagd om hem voor sudo te registreren"
+
+msgid "Touch your security key to continue."
+msgstr "Raak uw beveiligingssleutel aan om door te gaan."
+
+msgid "Unknown authentication purpose."
+msgstr "Onbekend authenticatiedoeleind."
+
+msgid "Unlock GDM"
+msgstr "GDM ontgrendelen"
+
+msgid "Unlock sudo"
+msgstr "sudo ontgrendelen"
+
+msgid "Unlock the current user"
+msgstr "Huidige gebruiker ontgrendelen"
+
+msgid "Unnamed SSH credential"
+msgstr "Niet-genoemde SSH-referentie"
+
+msgid "Unsupported resident SSH public-key algorithm."
+msgstr "Ongesteund resident SSH-openbare-sleutelalgoritme."
+
+msgid "Updating sign-in settings…"
+msgstr "Inloginstellingen worden bijgewerkt…"
+
+msgid "Updating sudo settings…"
+msgstr "sudo-instellingen worden bijgewerkt…"
+
+msgid "Use YubiKey to unlock sudo"
+msgstr "YubiKey gebruiken om sudo te ontgrendelen"
+
+msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
+msgstr "U kunt nu sleutels registreren, maar sudo omzeilt PAM terwijl wachtelloze toegang is ingeschakeld."
+
+msgid "YubiKey"
+msgstr "YubiKey"
+
+msgid "YubiKey Manager"
+msgstr "YubiKey Manager"
+
+msgid "YubiKey Manager is unavailable"
+msgstr "YubiKey Manager is niet beschikbaar"
+
+msgid "YubiKey configuration failed"
+msgstr "YubiKey-configuratie mislukt"
+
+msgid "YubiKey configured, but sudo currently bypasses authentication"
+msgstr "YubiKey geconfigureerd, maar sudo omzeilt momenteel authenticatie"
+
+msgid "YubiKey touch or account password can authorize sudo"
+msgstr "YubiKey-aanraking of accountwachtwoord kan sudo autoriseren"
+
+msgid "YubiKey touch or password can unlock this user"
+msgstr "YubiKey-aanraking of wachtwoord kan deze gebruiker ontgrendelen"
+
+msgid "agent"
+msgstr "agent"
+
+msgid "sudo authentication"
+msgstr "sudo-authenticatie"
+
+msgid "sudo authentication policy"
+msgstr "sudo-authenticatiebeleid"
+
+msgid "sudo currently allows administrator access without authentication"
+msgstr "sudo staat momenteel administrator-toegang toe zonder authenticatie"
+
+msgid "unknown"
+msgstr "onbekend"
+
+msgid "unknown socket"
+msgstr "onbekende socket"
+
+msgid "user"
+msgstr "gebruiker"
+
+msgid "{0} exited with {1}"
+msgstr "{0} is afgesloten met {1}"
+
+msgid "{0} failed: {1}"
+msgstr "{0} mislukt: {1}"
+
+msgid "{0} identities · {1}"
+msgstr "{0} identiteiten · {1}"
+
+msgid "{0} is configured, but another policy currently bypasses it"
+msgstr "{0} is geconfigureerd, maar een ander beleid omzeilt dit momenteel"
+
+msgid "{0} is enabled for this YubiKey"
+msgstr "{0} is ingeschakeld voor deze YubiKey"
+
+msgid "{0} is not configured for this YubiKey"
+msgstr "{0} is niet geconfigureerd voor deze YubiKey"
+
+msgid "{0} new SSH identities were added to the agent."
+msgstr "Er zijn {0} nieuwe SSH-identiteiten aan de agent toegevoegd."
+
+msgid "{0} new SSH identity was added to the agent."
+msgstr "Er is {0} nieuwe SSH-identiteit aan de agent toegevoegd."
+
+msgid "{0} · no hardware serial"
+msgstr "{0} · geen hardware-serienummer"
+
+msgid "{0} · {1}"
+msgstr "{0} · {1}"

@@ -1,0 +1,593 @@
+# Korean translations for anduinos-yubikey-manager package.
+# Copyright (C) 2026 THE anduinos-yubikey-manager'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-yubikey-manager package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-yubikey-manager\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-29 16:14+0000\n"
+"PO-Revision-Date: 2026-07-29 16:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "A key must be connected before it can be enrolled."
+msgstr "등록하려면 먼저 키를 연결해야 합니다."
+
+msgid "About"
+msgstr "정보"
+
+msgid "Account password is required for sudo"
+msgstr "sudo에 계정 비밀번호가 필요합니다"
+
+msgid "Advanced options"
+msgstr "고급 옵션"
+
+msgid "Algorithm"
+msgstr "알고리즘"
+
+msgid "All inspected resident credentials from this key are already in the agent"
+msgstr "이 키에서 검사된 모든 거주 자격 증명은 이미 에이전트에 있습니다"
+
+msgid "Allow sudo without authentication"
+msgstr "인증 없이 sudo 허용"
+
+msgid "Allowed for sudo · not currently connected"
+msgstr "sudo 허용 · 현재 연결되지 않음"
+
+msgid "Allowed to authorize sudo"
+msgstr "sudo 권한 부여 허용"
+
+msgid "Allowed to unlock this user"
+msgstr "이 사용자 잠금 해제 허용"
+
+msgid "Allowed to unlock this user · not currently connected"
+msgstr "이 사용자 잠금 해제 허용 · 현재 연결되지 않음"
+
+msgid "Already loaded"
+msgstr "이미 로드됨"
+
+msgid "An enrolled YubiKey or the account password can authorize sudo."
+msgstr "등록된 YubiKey 또는 계정 비밀번호로 sudo를 승인할 수 있습니다."
+
+msgid "AnduinOS Team"
+msgstr "AnduinOS 팀"
+
+msgid "AnduinOS sign-in"
+msgstr "AnduinOS 로그인"
+
+msgid "Application"
+msgstr "애플리케이션"
+
+msgid "Application must begin with ssh:, contain no whitespace, and be at most 253 bytes."
+msgstr "애플리케이션은 ssh:로 시작해야 하며, 공백을 포함하지 않아야 하고, 최대 253바이트여야 합니다."
+
+msgid "Cancel"
+msgstr "취소"
+
+msgid "Choose a local key-handle file"
+msgstr "로컬 키 핸들 파일 선택"
+
+msgid "Choose a supported OpenSSH security-key algorithm."
+msgstr "지원되는 OpenSSH 보안 키 알고리즘을 선택하세요."
+
+msgid "Choose a valid /dev/hidrawN FIDO device."
+msgstr "유효한 /dev/hidrawN FIDO 장치를 선택하세요."
+
+msgid "Choose a valid output folder."
+msgstr "유효한 출력 폴더를 선택하세요."
+
+msgid "Choose local SSH key-handle path"
+msgstr "로컬 SSH 키 핸들 경로 선택"
+
+msgid "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
+msgstr "{0}의 잠금을 해제할 수 있는 YubiKey를 선택하세요. 비밀번호 로그인은 계속 사용할 수 있습니다."
+
+msgid "Close"
+msgstr "닫기"
+
+msgid "Command exited with"
+msgstr "명령이 종료되었습니다 (종료 코드:"
+
+msgid "Command exited with {0}"
+msgstr "명령이 {0}로 종료되었습니다"
+
+msgid "Configured features"
+msgstr "구성된 기능"
+
+msgid "Connect a FIDO security key first"
+msgstr "먼저 FIDO 보안 키를 연결하세요"
+
+msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+msgstr "모호하지 않은 소스를 선택하려면 정확히 하나의 FIDO 보안 키를 연결하세요"
+
+msgid "Continue"
+msgstr "계속하기"
+
+msgid "Copy public key"
+msgstr "공개 키 복사"
+
+msgid "Could not create a temporary public-key file: {0}"
+msgstr "임시 공개 키 파일을 생성할 수 없습니다: {0}"
+
+msgid "Could not create {0}: {1}"
+msgstr "{0}을(를) 생성할 수 없습니다: {1}"
+
+msgid "Could not export the public key: {0}"
+msgstr "공개 키를 내보낼 수 없습니다: {0}"
+
+msgid "Could not flush the temporary public key: {0}"
+msgstr "임시 공개 키를 플러시할 수 없습니다: {0}"
+
+msgid "Could not inspect USB devices: {0}"
+msgstr "USB 장치를 검사할 수 없습니다: {0}"
+
+msgid "Could not inspect this YubiKey"
+msgstr "이 YubiKey를 검사할 수 없습니다"
+
+msgid "Could not list YubiKeys"
+msgstr "YubiKey 목록을 가져올 수 없습니다"
+
+msgid "Could not locate the secure PIN helper: {0}"
+msgstr "보안 PIN 도우미를 찾을 수 없습니다: {0}"
+
+msgid "Could not protect {0}: {1}"
+msgstr "{0}을(를) 보호할 수 없습니다: {1}"
+
+msgid "Could not provide the FIDO PIN: {0}"
+msgstr "FIDO PIN을 제공할 수 없습니다: {0}"
+
+msgid "Could not request administrator access: {0}"
+msgstr "관리자 접근 권한을 요청할 수 없습니다: {0}"
+
+msgid "Could not run {0}: {1}"
+msgstr "{0}을(를) 실행할 수 없습니다: {1}"
+
+msgid "Could not start {0}: {1}"
+msgstr "{0}을(를) 시작할 수 없습니다: {1}"
+
+msgid "Could not write the temporary public key: {0}"
+msgstr "임시 공개 키를 쓸 수 없습니다: {0}"
+
+msgid "Create"
+msgstr "생성"
+
+msgid "Create a resident SSH credential on a selected device"
+msgstr "선택된 장치에 거주형 SSH 자격 증명 생성"
+
+msgid "Create a resident SSH key"
+msgstr "거주형 SSH 키 생성"
+
+msgid "Create…"
+msgstr "생성…"
+
+msgid "Current user: {0}"
+msgstr "현재 사용자: {0}"
+
+msgid "Disabled · sudo must authenticate with a YubiKey or account password"
+msgstr "비활성화됨 · sudo는 YubiKey 또는 계정 비밀번호로 인증해야 합니다"
+
+msgid "Display label must be at most 200 bytes and contain no control characters."
+msgstr "표시 라벨은 최대 200바이트여야 하며 제어 문자를 포함해서는 안 됩니다."
+
+msgid "During enrollment, disconnect all other security keys. The selected key will blink; touch it to continue. Multiple keys can be enrolled one at a time."
+msgstr "등록 중에는 다른 모든 보안 키를 연결 해제하세요. 선택한 키가 깜박입니다. 계속하려면 해당 키를 터치하세요. 여러 키는 한 번에 하나씩 등록할 수 있습니다."
+
+msgid "ECDSA-SK (recommended compatibility)"
+msgstr "ECDSA-SK (권장되는 호환성)"
+
+msgid "ECDSA-SK works with the widest range of YubiKeys"
+msgstr "ECDSA-SK는 가장 넓은 범위의 YubiKey와 함께 작동합니다"
+
+msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
+msgstr "ECDSA-SK · 거주형 · 터치 필요 · 안전한 호환성 기본값"
+
+msgid "Ed25519-SK (newer YubiKeys)"
+msgstr "Ed25519-SK (신규 YubiKey)"
+
+msgid "Enabled · programs can obtain administrator privileges without confirmation"
+msgstr "활성화됨 · 프로그램이 확인 없이 관리자 권한을 얻을 수 있습니다"
+
+msgid "Enabling passwordless sudo…"
+msgstr "비밀번호 없는 sudo 활성화 중…"
+
+msgid "Enabling sudo authentication…"
+msgstr "sudo 인증을 활성화하는 중…"
+
+msgid "Enrolled · inactive while sudo authentication is bypassed"
+msgstr "등록됨 · sudo 인증이 우회된 동안 비활성화"
+
+msgid "Enrollment safety"
+msgstr "등록 안전성"
+
+msgid "Enter the YubiKey FIDO PIN"
+msgstr "YubiKey FIDO PIN 입력"
+
+msgid "Enter the selected YubiKey FIDO PIN"
+msgstr "선택한 YubiKey FIDO PIN 입력"
+
+msgid "Export .pub"
+msgstr ".pub 내보내기"
+
+msgid "Export SSH public key"
+msgstr "SSH 공개 키 내보내기"
+
+msgid "FIDO PIN"
+msgstr "FIDO PIN"
+
+msgid "FIDO device discovery is unavailable"
+msgstr "FIDO 장치 탐색을 사용할 수 없습니다"
+
+msgid "FIDO security key"
+msgstr "FIDO 보안 키"
+
+msgid "Firmware {0}"
+msgstr "펌웨어 {0}"
+
+msgid "For safe enrollment, disconnect every other security key and leave only the selected YubiKey connected."
+msgstr "안전한 등록을 위해 선택한 YubiKey만 연결된 상태로 유지하고 다른 모든 보안 키를 분리하십시오."
+
+msgid "Home"
+msgstr "홈"
+
+msgid "Insert a YubiKey"
+msgstr "YubiKey 삽입"
+
+msgid "Insert a YubiKey, then press Refresh."
+msgstr "YubiKey를 삽입한 다음 새로 고침을 누릅니다."
+
+msgid "Inspect"
+msgstr "검사"
+
+msgid "Inspect, load, export, test, or remove resident SSH credentials."
+msgstr "거주 SSH 자격 증명을 검사, 로드, 내보내기, 테스트 또는 제거합니다."
+
+msgid "Inspecting resident SSH credentials…"
+msgstr "거주 SSH 자격 증명 검사 중…"
+
+msgid "Invalid FIDO device path."
+msgstr "잘못된 FIDO 장치 경로입니다."
+
+msgid "Load"
+msgstr "로드"
+
+msgid "Load into agent"
+msgstr "에이전트에 로드"
+
+msgid "Load resident SSH keys"
+msgstr "거주 SSH 키 로드"
+
+msgid "Local key handle path"
+msgstr "로컬 키 핸들 경로"
+
+msgid "Local key label"
+msgstr "로컬 키 라벨"
+
+msgid "New hardware-backed SSH key"
+msgstr "새 하드웨어 기반 SSH 키"
+
+msgid "No FIDO security key detected"
+msgstr "FIDO 보안 키가 감지되지 않았습니다"
+
+msgid "No SSH agent was detected"
+msgstr "SSH 에이전트가 감지되지 않았습니다"
+
+msgid "No YubiKey detected"
+msgstr "YubiKey가 감지되지 않았습니다"
+
+msgid "No hardware serial · {0}"
+msgstr "하드웨어 시리얼 없음 · {0}"
+
+msgid "No resident SSH credentials"
+msgstr "거주 SSH 자격 증명이 없습니다"
+
+msgid "No ssh:* discoverable credentials were found on this key."
+msgstr "이 키에서 발견 가능한 ssh:* 자격 증명이 없습니다."
+
+msgid "Not currently connected"
+msgstr "현재 연결되지 않음"
+
+msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
+msgstr "OpenSSH가 거주 키를 로드하지 못했습니다. SSH 에이전트에 새로 로드된 신원이 없습니다."
+
+msgid ""
+"OpenSSH could not load resident keys:\n"
+"{0}"
+msgstr "OpenSSH가 거주 키를 로드하지 못했습니다:\n{0}"
+
+msgid ""
+"OpenSSH did not create a resident key:\n"
+"{0}"
+msgstr "OpenSSH가 거주 키를 생성하지 않았습니다:\n{0}"
+
+msgid ""
+"OpenSSH finished creating the key, but the YubiKey could not be verified afterward: {0}\n"
+"Do not immediately retry; inspect the key first to avoid creating a duplicate."
+msgstr "OpenSSH가 키 생성을 완료했지만, 이후 YubiKey를 확인할 수 없습니다: {0}\n중복 생성을 피하기 위해 즉시 재시도하지 말고 먼저 키를 확인하십시오."
+
+msgid "OpenSSH reported success, but no new resident credential was detected. Do not retry until you inspect the YubiKey."
+msgstr "OpenSSH가 성공을 보고했지만 새로운 거주 자격 증명이 감지되지 않았습니다. YubiKey를 확인하기 전까지 재시도하지 마십시오."
+
+msgid "OpenSSH/FIDO credential metadata and local file location"
+msgstr "OpenSSH/FIDO 자격 증명 메타데이터 및 로컬 파일 위치"
+
+msgid "Password sign-in only"
+msgstr "비밀번호 로그인만 사용"
+
+msgid "Refresh connected YubiKeys"
+msgstr "연결된 YubiKey 새로 고침"
+
+msgid "Remove from agent"
+msgstr "에이전트에서 제거"
+
+msgid "Removing this key from the SSH agent…"
+msgstr "SSH 에이전트에서 이 키를 제거하는 중…"
+
+msgid "Require verification for every signature"
+msgstr "모든 서명마다 확인 필요"
+
+msgid "Requires the FIDO PIN each time this key signs"
+msgstr "이 키가 서명할 때마다 FIDO PIN 필요"
+
+msgid "Resident SSH credentials"
+msgstr "거주 SSH 자격 증명"
+
+msgid "Resident SSH key created"
+msgstr "거주 SSH 키 생성됨"
+
+msgid "Resident keys loaded"
+msgstr "거주 키 로드됨"
+
+msgid "Resident username"
+msgstr "거주 사용자 이름"
+
+msgid "Resident username must contain 1–64 bytes and no control characters."
+msgstr "거주 사용자 이름에는 1~64바이트가 포함되어야 하며 제어 문자는 포함할 수 없습니다."
+
+msgid "Run ssh-add -K for this connected security key"
+msgstr "연결된 이 보안 키에 대해 ssh-add -K 실행"
+
+msgid "SSH Keys"
+msgstr "SSH 키"
+
+msgid "SSH agent"
+msgstr "SSH 에이전트"
+
+msgid "SSH agent connected"
+msgstr "SSH 에이전트 연결됨"
+
+msgid "SSH agent unavailable"
+msgstr "SSH 에이전트 사용 불가"
+
+msgid "SSH key actions"
+msgstr "SSH 키 작업"
+
+msgid "SSH_AUTH_SOCK is not set"
+msgstr "SSH_AUTH_SOCK이(가) 설정되지 않음"
+
+msgid "Safe defaults use ECDSA-SK, require touch, and store a discoverable credential on the selected YubiKey."
+msgstr "안전한 기본값은 ECDSA-SK를 사용하고, 터치 확인을 필요로 하며, 선택된 YubiKey에 발견 가능한 자격 증명을 저장합니다."
+
+msgid "Security keys"
+msgstr "보안 키"
+
+msgid "Serial {0}"
+msgstr "시리얼 {0}"
+
+msgid "Signing test passed"
+msgstr "서명 테스트 통과"
+
+msgid "Temporary public-key path is invalid."
+msgstr "임시 공개 키 경로가 잘못되었습니다."
+
+msgid "Test signing"
+msgstr "테스트 서명"
+
+msgid "The FIDO enrollment tool is not installed. Install the libpam-u2f package, then try again."
+msgstr "FIDO 등록 도구가 설치되어 있지 않습니다. libpam-u2f 패키지를 설치한 후 다시 시도하십시오."
+
+msgid "The PIN is sent directly to ssh-add and is never stored."
+msgstr "PIN은 ssh-add로 직접 전송되며 저장되지 않습니다."
+
+msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
+msgstr "PIN은 OpenSSH로 전용 파이프를 통해 전송됩니다. PIN은 저장되거나 명령줄 인자에 포함되지 않습니다."
+
+msgid "The PIN is used only for this read-only inspection and is never stored."
+msgstr "PIN은 읽기 전용 검사에만 사용되며 저장되지 않습니다."
+
+msgid "The SSH agent successfully signed and verified data with this key."
+msgstr "SSH 에이전트가 이 키로 데이터를 성공적으로 서명하고 확인했습니다."
+
+msgid "The YubiKey operation stopped unexpectedly."
+msgstr "YubiKey 작업이 예기치 않게 중지되었습니다."
+
+msgid "The credential will be created only on this exact device"
+msgstr "자격 증명은 이 정확한 장치에서만 생성됩니다."
+
+msgid "The enrollment task failed."
+msgstr "등록 작업이 실패했습니다."
+
+msgid "The inspected resident SSH credentials are already available in this agent."
+msgstr "검사된 거주 SSH 자격 증명은 이미 이 에이전트에 사용 가능합니다."
+
+msgid "The local key path must be absolute."
+msgstr "로컬 키 경로는 절대 경로여야 합니다."
+
+msgid ""
+"The non-exportable private key remains protected by the selected YubiKey.\n"
+"\n"
+"Algorithm: {0}\n"
+"Application: {1}\n"
+"Resident username: {2}\n"
+"Fingerprint: {3}\n"
+"\n"
+"Local key handle: {4}\n"
+"Public key: {5}\n"
+"\n"
+"The key is not automatically loaded into the SSH agent."
+msgstr "내보내기 불가능한 개인 키는 선택된 YubiKey에 의해 보호됩니다.\n\n알고리즘: {0}\n애플리케이션: {1}\n거주 사용자 이름: {2}\n지문: {3}\n\n로컬 키 핸들: {4}\n공개 키: {5}\n\n키는 SSH 에이전트에 자동으로 로드되지 않습니다."
+
+msgid "The operation was cancelled or denied."
+msgstr "작업이 취소되거나 거부되었습니다."
+
+msgid "The output folder does not exist: {0}"
+msgstr "출력 폴더가 존재하지 않습니다: {0}"
+
+msgid "The resident credential did not return a public key."
+msgstr "거주 자격 증명에서 공개 키를 반환하지 않았습니다."
+
+msgid "The resident credential returned an incomplete public key."
+msgstr "거주 자격 증명에서 불완전한 공개 키를 반환했습니다."
+
+msgid "The resident credential returned malformed PEM data."
+msgstr "거주 자격 증명에서 잘못 형성된 PEM 데이터를 반환했습니다."
+
+msgid "The resident credential {0} exists on the YubiKey, but its local handle files are incomplete. Do not retry creation."
+msgstr "거주 자격 증명 {0}은(는) YubiKey에 존재하지만 로컬 핸들 파일이 불완전합니다. 생성을 다시 시도하지 마십시오."
+
+msgid ""
+"The resident credential {0} was created on the YubiKey, but OpenSSH did not complete successfully:\n"
+"{1}\n"
+"Do not retry creation. Inspect the key and preserve any local files that were written."
+msgstr "거주 자격 증명 {0}이(가) YubiKey에 생성되었지만, OpenSSH가 성공적으로 완료되지 않았습니다:\n{1}\n생성을 재시도하지 마십시오. 키를 확인하고 작성된 로컬 파일을 보존하십시오."
+
+msgid "The security key returned an invalid PAM credential."
+msgstr "보안 키에서 잘못된 PAM 자격 증명을 반환했습니다."
+
+msgid "The selected FIDO device is no longer connected. Refresh and try again."
+msgstr "선택한 FIDO 장치가 더 이상 연결되어 있지 않습니다. 새로 고침 후 다시 시도하십시오."
+
+msgid "The selected private-key or .pub file already exists. Choose another name."
+msgstr "선택한 개인 키 또는 .pub 파일이 이미 존재합니다. 다른 이름을 선택하십시오."
+
+msgid "The sudo policy task failed."
+msgstr "sudo 정책 작업이 실패했습니다."
+
+msgid "This setting applies only to the current user."
+msgstr "이 설정은 현재 사용자에만 적용됩니다."
+
+msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
+msgstr "요청 시 YubiKey를 터치하십시오. SSH 에이전트에 거주 키를 로드하는 중…"
+
+msgid "Touch the YubiKey. Testing SSH signing and verification…"
+msgstr "YubiKey를 터치하십시오. SSH 서명 및 확인을 테스트하는 중…"
+
+msgid "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not remove the key."
+msgstr "선택한 YubiKey를 터치하십시오. {0}에 SSH 거주 키를 생성하는 중… 키를 제거하지 마십시오."
+
+msgid "Touch this key when prompted to enroll it"
+msgstr "등록을 위해 요청 시 이 키를 터치하십시오"
+
+msgid "Touch this key when prompted to enroll it for sudo"
+msgstr "sudo 등록을 위해 요청 시 이 키를 터치하십시오"
+
+msgid "Touch your security key to continue."
+msgstr "계속하려면 보안 키를 터치하세요."
+
+msgid "Unknown authentication purpose."
+msgstr "인증 목적이 알려지지 않았습니다."
+
+msgid "Unlock GDM"
+msgstr "GDM 잠금 해제"
+
+msgid "Unlock sudo"
+msgstr "sudo 잠금 해제"
+
+msgid "Unlock the current user"
+msgstr "현재 사용자 잠금 해제"
+
+msgid "Unnamed SSH credential"
+msgstr "이름 없는 SSH 자격 증명"
+
+msgid "Unsupported resident SSH public-key algorithm."
+msgstr "지원되지 않는常驻 SSH 공개 키 알고리즘입니다."
+
+msgid "Updating sign-in settings…"
+msgstr "로그인 설정 업데이트 중…"
+
+msgid "Updating sudo settings…"
+msgstr "sudo 설정 업데이트 중…"
+
+msgid "Use YubiKey to unlock sudo"
+msgstr "YubiKey를 사용하여 sudo 잠금 해제"
+
+msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
+msgstr "지금 키를 등록할 수 있지만, 비밀번호 없는 액세스가 활성화되어 있으면 sudo는 PAM을 우회합니다."
+
+msgid "YubiKey"
+msgstr "YubiKey"
+
+msgid "YubiKey Manager"
+msgstr "YubiKey 관리자"
+
+msgid "YubiKey Manager is unavailable"
+msgstr "YubiKey 관리자를 사용할 수 없습니다"
+
+msgid "YubiKey configuration failed"
+msgstr "YubiKey 구성에 실패했습니다"
+
+msgid "YubiKey configured, but sudo currently bypasses authentication"
+msgstr "YubiKey가 구성되었지만, 현재 sudo는 인증을 우회하고 있습니다"
+
+msgid "YubiKey touch or account password can authorize sudo"
+msgstr "YubiKey 터치 또는 계정 비밀번호로 sudo를 승인할 수 있습니다"
+
+msgid "YubiKey touch or password can unlock this user"
+msgstr "YubiKey 터치 또는 비밀번호로 이 사용자의 잠금을 해제할 수 있습니다"
+
+msgid "agent"
+msgstr "에이전트"
+
+msgid "sudo authentication"
+msgstr "sudo 인증"
+
+msgid "sudo authentication policy"
+msgstr "sudo 인증 정책"
+
+msgid "sudo currently allows administrator access without authentication"
+msgstr "현재 sudo는 인증 없이 관리자 액세스를 허용합니다"
+
+msgid "unknown"
+msgstr "알 수 없음"
+
+msgid "unknown socket"
+msgstr "알 수 없는 소켓"
+
+msgid "user"
+msgstr "사용자"
+
+msgid "{0} exited with {1}"
+msgstr "{0}(이)가 {1}으로 종료되었습니다"
+
+msgid "{0} failed: {1}"
+msgstr "{0} 실패: {1}"
+
+msgid "{0} identities · {1}"
+msgstr "{0}개 신원 · {1}"
+
+msgid "{0} is configured, but another policy currently bypasses it"
+msgstr "{0}(이)가 구성되었지만, 현재 다른 정책이 이를 우회하고 있습니다"
+
+msgid "{0} is enabled for this YubiKey"
+msgstr "이 YubiKey에 대해 {0}(이)가 활성화되었습니다"
+
+msgid "{0} is not configured for this YubiKey"
+msgstr "{0}(이)가 이 YubiKey에 대해 구성되지 않았습니다"
+
+msgid "{0} new SSH identities were added to the agent."
+msgstr "에이전트에 {0}개의 새 SSH 신원이 추가되었습니다."
+
+msgid "{0} new SSH identity was added to the agent."
+msgstr "에이전트에 {0}개의 새 SSH 신원이 추가되었습니다."
+
+msgid "{0} · no hardware serial"
+msgstr "{0} · 시리얼 번호 없음"
+
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
