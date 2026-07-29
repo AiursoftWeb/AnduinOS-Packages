@@ -42,14 +42,16 @@ def build_boot_commands(plan: InstallPlan, target: str) -> BootCommandPlan:
 
     efi_install = [
         *chroot,
-            "grub-install",
-            f"--target={efi_target}",
-            "--efi-directory=/boot/efi",
-            "--bootloader-id=AnduinOS",
-            "--recheck",
-            "--no-nvram",
-            "--force-extra-removable",
+        "grub-install",
+        f"--target={efi_target}",
+        "--efi-directory=/boot/efi",
+        "--bootloader-id=AnduinOS",
+        "--recheck",
+        "--no-nvram",
     ]
+    # Ubuntu GRUB 2.14 installs the EFI/BOOT fallback path by default and
+    # exposes only --no-extra-removable to opt out.  The older
+    # --force-extra-removable option no longer exists in Resolute.
     if plan.platform.secure_boot is SecureBoot.ENABLED:
         efi_install.append("--uefi-secure-boot")
     installs.append(tuple(efi_install))

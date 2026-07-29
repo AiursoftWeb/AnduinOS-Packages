@@ -44,6 +44,7 @@ class InstallBootloaderStep:
             raise RuntimeError("EFI mount state is not active")
         commands = build_boot_commands(context.plan, str(target))
         context.values["boot_command_plan"] = commands
+        _verify_grub_install_options(self.runner, target, commands.installs)
         self.runner.run(commands.initramfs, timeout=1200)
         for command in commands.installs:
             self.runner.run(command, timeout=300)
@@ -115,6 +116,33 @@ def _target(context: InstallContext) -> Path:
     if not isinstance(target, Path):
         raise RuntimeError("Target filesystem is not mounted")
     return target
+
+
+def _verify_grub_install_options(
+    runner: CommandRunner,
+    target: Path,
+    installs: tuple[tuple[str, ...], ...],
+) -> None:
+    result = runner.run(
+        ("chroot", str(target), "grub-install", "--help"),
+        timeout=30,
+        log_output=False,
+    )
+    help_text = f"{result.stdout}\n{result.stderr}"
+    planned_options = {
+        argument.split("=", 1)[0]
+        for command in installs
+        for argument in command
+        if argument.startswith("--")
+    }
+    unsupported = sorted(
+        option for option in planned_options if option not in help_text
+    )
+    if unsupported:
+        raise RuntimeError(
+            "Target grub-install does not support planned option(s): "
+            + ", ".join(unsupported)
+        )
 
 
 def _read_pe_machine(path: Path) -> int:

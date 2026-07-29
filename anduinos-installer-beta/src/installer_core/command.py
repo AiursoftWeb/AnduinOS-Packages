@@ -35,6 +35,7 @@ class CommandRunner:
         input_text: str | None = None,
         timeout: int | None = None,
         check: bool = True,
+        log_output: bool = True,
     ) -> subprocess.CompletedProcess[str]:
         argv = [str(value) for value in command]
         self.log(f"$ {shlex.join(argv)}")
@@ -49,13 +50,12 @@ class CommandRunner:
             )
         except (OSError, subprocess.TimeoutExpired) as error:
             raise CommandError(f"Could not run {shlex.join(argv)}: {error}") from error
-        if result.stdout:
+        if log_output and result.stdout:
             self.log(result.stdout.rstrip())
-        if result.stderr:
+        if log_output and result.stderr:
             self.log(result.stderr.rstrip())
         if check and result.returncode != 0:
             raise CommandError(
                 f"Command exited with {result.returncode}: {shlex.join(argv)}"
             )
         return result
-

@@ -29,11 +29,28 @@ def write_pe(path: Path, machine: int) -> None:
     path.write_bytes(data)
 
 
+GRUB_INSTALL_HELP = """
+--target=TARGET
+--recheck
+--efi-directory=DIR
+--bootloader-id=ID
+--no-nvram
+--uefi-secure-boot
+"""
+
+
 class InstallBootloaderTests(unittest.TestCase):
-    def test_runs_initramfs_before_grub_install_and_update_grub_last(self):
+    def compatible_runner(self, target: Path) -> FakeRunner:
         runner = FakeRunner()
+        runner.outputs[
+            ("chroot", str(target), "grub-install", "--help")
+        ] = (GRUB_INSTALL_HELP, "", 0)
+        return runner
+
+    def test_runs_initramfs_before_grub_install_and_update_grub_last(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
+            runner = self.compatible_runner(target)
             prepare_target(target)
             context = InstallContext(
                 valid_plan(),
@@ -45,17 +62,24 @@ class InstallBootloaderTests(unittest.TestCase):
             step.execute(context)
 
         commands = [item[0] for item in runner.commands]
-        self.assertEqual(commands[0][2], "update-initramfs")
+        self.assertEqual(commands[0][2:], ("grub-install", "--help"))
+        self.assertFalse(runner.commands[0][1]["log_output"])
+        self.assertEqual(commands[1][2], "update-initramfs")
         self.assertEqual(commands[-1][2], "update-grub")
         self.assertEqual(
-            [command[3] for command in commands if command[2] == "grub-install"],
+            [
+                command[3]
+                for command in commands
+                if command[2] == "grub-install"
+                and command[3].startswith("--target=")
+            ],
             ["--target=i386-pc", "--target=x86_64-efi"],
         )
 
     def test_verifies_matching_kernel_grub_bios_and_efi_artifacts(self):
-        runner = FakeRunner()
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
+            runner = self.compatible_runner(target)
             prepare_target(target)
             context = InstallContext(
                 valid_plan(),
@@ -83,9 +107,9 @@ class InstallBootloaderTests(unittest.TestCase):
             step.verify(context)
 
     def test_rejects_kernel_without_matching_initramfs(self):
-        runner = FakeRunner()
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
+            runner = self.compatible_runner(target)
             prepare_target(target)
             context = InstallContext(
                 valid_plan(),
@@ -99,9 +123,9 @@ class InstallBootloaderTests(unittest.TestCase):
                 step.verify(context)
 
     def test_rejects_wrong_efi_machine(self):
-        runner = FakeRunner()
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
+            runner = self.compatible_runner(target)
             prepare_target(target)
             context = InstallContext(
                 valid_plan(),
@@ -124,3 +148,27 @@ class InstallBootloaderTests(unittest.TestCase):
             write_pe(fallback, 0xAA64)
             with self.assertRaisesRegex(RuntimeError, "does not match"):
                 step.verify(context)
+
+    def test_rejects_unsupported_option_before_bootloader_mutation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_target(target)
+            runner = FakeRunner()
+            runner.outputs[
+                ("chroot", str(target), "grub-install", "--help")
+            ] = ("--target --recheck\n", "", 0)
+            context = InstallContext(
+                valid_plan(),
+                lambda _message: None,
+                {"target": target, "target_efi_mounted": True},
+            )
+
+            with self.assertRaisesRegex(
+                RuntimeError, "does not support planned option"
+            ):
+                InstallBootloaderStep(runner).execute(context)
+
+            self.assertEqual(
+                [command for command, _kwargs in runner.commands],
+                [("chroot", str(target), "grub-install", "--help")],
+            )
