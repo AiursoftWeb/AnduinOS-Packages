@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.1-6+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-7+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer (beta) — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -16,6 +16,12 @@
          After 3-4 months of stable testing, rename to anduinos-installer
          and add Conflicts/Replaces against anduinos-installer-config + ubiquity. -->
   </PropertyGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource
+        Url="https://mirror.aiursoft.com/ubuntu"
+        SuiteMap="resolute-addon=resolute" />
+  </ItemGroup>
 
   <ItemGroup>
     <!-- Minimal dependencies: only what the Python code actually calls -->
