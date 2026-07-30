@@ -8,6 +8,7 @@ from collections.abc import Callable
 from .command import CommandRunner
 from .model import DiskIdentity, InstallPlan, PlatformSpec
 from .probe import PlatformProbe, probe_disks, probe_platform
+from .storage_commands import partition_path
 from .validation import validate_plan
 
 
@@ -114,6 +115,16 @@ def _reject_active_target_disk(runner: CommandRunner, disk: str) -> None:
             for item in (device.get("mountpoints") or ())
             if item
         )
+        retry_swap = partition_path(disk, 3)
+        if (
+            mountpoints == ("[SWAP]",)
+            and path == retry_swap
+            and str(device.get("type") or "") == "part"
+        ):
+            # The whole-disk layout always owns partition 3 as swap.  A failed
+            # earlier attempt may leave it active; PrepareStorageStep safely
+            # disables this exact partition before changing the table.
+            continue
         if mountpoints:
             raise PreflightError(
                 f"Target disk is in use: {path} is mounted at "

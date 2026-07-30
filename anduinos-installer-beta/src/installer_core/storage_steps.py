@@ -11,7 +11,7 @@ from .command import CommandRunner
 from .layout import build_erase_disk_layout
 from .model import Filesystem
 from .steps import FailurePolicy, InstallContext
-from .storage_commands import build_storage_commands
+from .storage_commands import build_storage_commands, partition_path
 from .validation import validate_plan
 
 
@@ -26,7 +26,15 @@ class PrepareStorageStep:
 
     def preflight(self, context: InstallContext) -> None:
         validate_plan(context.plan)
-        commands = ["parted", "partprobe", "udevadm", "mkfs.vfat", "mkswap"]
+        commands = [
+            "parted",
+            "partprobe",
+            "udevadm",
+            "mkfs.vfat",
+            "mkswap",
+            "swapon",
+            "swapoff",
+        ]
         commands.append(
             "mkfs.btrfs"
             if context.plan.storage.filesystem is Filesystem.BTRFS
@@ -39,8 +47,30 @@ class PrepareStorageStep:
         commands = build_storage_commands(context.plan, layout)
         context.values["layout"] = layout
         context.values["partition_devices"] = commands.devices
-        for command in commands.partition:
-            self.runner.run(command, timeout=60)
+        # A previous failed attempt can leave the newly-created swap partition
+        # active in the Live session.  That open block device prevents the
+        # kernel from accepting a replacement partition table.  Disable only
+        # the selected disk's expected swap partition; never use swapoff -a.
+        deactivate_target_swap(context, self.runner)
+        self._settle_existing_partition_table(context, strict=False)
+
+        for index, command in enumerate(commands.partition):
+            if index == 0:
+                result = self.runner.run(
+                    command, check=False, timeout=60
+                )
+                if result.returncode != 0:
+                    context.log(
+                        "Partition table update was not accepted; "
+                        "settling the selected disk and retrying once"
+                    )
+                    deactivate_target_swap(context, self.runner)
+                    self._settle_existing_partition_table(
+                        context, strict=False
+                    )
+                    self.runner.run(command, timeout=60)
+            else:
+                self.runner.run(command, timeout=60)
         self.runner.run(
             ("partprobe", context.plan.storage.disk.path), timeout=30
         )
@@ -70,8 +100,29 @@ class PrepareStorageStep:
                 )
 
     def cleanup(self, context: InstallContext) -> None:
-        # Partitioning cannot be rolled back. Later mount steps own unmounting.
-        return None
+        # Partitioning cannot be rolled back. Later mount steps own unmounting,
+        # while this step owns any swap area created on the selected disk.
+        deactivate_target_swap(context, self.runner, strict=False)
+        self._settle_existing_partition_table(context, strict=False)
+
+    def _settle_existing_partition_table(
+        self, context: InstallContext, *, strict: bool = True
+    ) -> None:
+        disk = context.plan.storage.disk.path
+        result = self.runner.run(
+            ("partprobe", disk),
+            check=False,
+            timeout=30,
+        )
+        if strict and result.returncode != 0:
+            raise RuntimeError(
+                f"Could not refresh the selected disk partition table: {disk}"
+            )
+        self.runner.run(
+            ("udevadm", "settle", "--timeout=30"),
+            check=strict,
+            timeout=35,
+        )
 
 
 @dataclass
@@ -209,3 +260,53 @@ class MountTargetStep:
                 ("umount", str(self.target)), check=False, timeout=30
             )
             context.values["target_top_level_mounted"] = False
+
+
+def deactivate_target_swap(
+    context: InstallContext,
+    runner: CommandRunner,
+    *,
+    strict: bool = True,
+) -> bool:
+    """Disable only this plan's target swap partition when it is active."""
+    devices = context.values.get("partition_devices")
+    if isinstance(devices, dict) and devices.get("swap"):
+        swap_device = str(devices["swap"])
+    else:
+        swap_device = partition_path(context.plan.storage.disk.path, 3)
+
+    result = runner.run(
+        ("swapon", "--show=NAME", "--noheadings", "--raw"),
+        check=False,
+        timeout=10,
+        log_output=False,
+    )
+    if result.returncode != 0:
+        if strict:
+            raise RuntimeError("Could not inspect active swap devices")
+        return False
+
+    expected = os.path.realpath(swap_device)
+    active = {
+        os.path.realpath(line.strip())
+        for line in result.stdout.splitlines()
+        if line.strip()
+    }
+    if expected not in active:
+        return False
+
+    context.log(
+        f"Deactivating target swap from an earlier attempt: {swap_device}"
+    )
+    disabled = runner.run(
+        ("swapoff", swap_device),
+        check=False,
+        timeout=60,
+    )
+    if disabled.returncode != 0:
+        if strict:
+            raise RuntimeError(
+                f"Could not deactivate target swap: {swap_device}"
+            )
+        return False
+    return True

@@ -143,5 +143,27 @@ class UnmountTargetTests(unittest.TestCase):
             [
                 ("umount", "/target-test/boot/efi"),
                 ("umount", "/target-test"),
+                ("swapon", "--show=NAME", "--noheadings", "--raw"),
             ],
+        )
+
+    def test_successful_unmount_deactivates_target_swap(self):
+        runner = FakeRunner()
+        runner.outputs[
+            ("swapon", "--show=NAME", "--noheadings", "--raw")
+        ] = ("/dev/nvme0n1p3\n", "", 0)
+        context = InstallContext(
+            valid_plan(),
+            lambda _message: None,
+            values={
+                "target": Path("/target-test"),
+                "partition_devices": {"swap": "/dev/nvme0n1p3"},
+            },
+        )
+
+        UnmountTargetStep(runner).execute(context)
+
+        self.assertIn(
+            ("swapoff", "/dev/nvme0n1p3"),
+            [item[0] for item in runner.commands],
         )

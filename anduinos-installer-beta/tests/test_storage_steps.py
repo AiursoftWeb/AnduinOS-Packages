@@ -1,3 +1,4 @@
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -37,6 +38,103 @@ class PrepareStorageStepTests(unittest.TestCase):
         )
         self.assertIn("mkfs.btrfs", runner.required)
         self.assertIn("mkswap", runner.required)
+        self.assertIn("swapon", runner.required)
+        self.assertIn("swapoff", runner.required)
+
+    def test_retry_deactivates_only_selected_disk_swap_before_parted(self):
+        plan = valid_plan()
+        runner = FakeRunner()
+        runner.outputs[
+            ("swapon", "--show=NAME", "--noheadings", "--raw")
+        ] = (
+            "/dev/nvme0n1p3\n/swapfile\n/dev/sdb3\n",
+            "",
+            0,
+        )
+        logs = []
+        context = InstallContext(plan, logs.append)
+
+        with patch("installer_core.storage_steps.Path.exists", return_value=True):
+            PrepareStorageStep(runner).execute(context)
+
+        commands = [item[0] for item in runner.commands]
+        swapoff = ("swapoff", "/dev/nvme0n1p3")
+        first_parted = next(
+            command for command in commands if command[0] == "parted"
+        )
+        self.assertIn(swapoff, commands)
+        self.assertLess(commands.index(swapoff), commands.index(first_parted))
+        self.assertNotIn(("swapoff", "/swapfile"), commands)
+        self.assertNotIn(("swapoff", "/dev/sdb3"), commands)
+        self.assertIn("earlier attempt", "\n".join(logs))
+
+    def test_cleanup_deactivates_target_swap_and_refreshes_kernel(self):
+        plan = valid_plan()
+        runner = FakeRunner()
+        runner.outputs[
+            ("swapon", "--show=NAME", "--noheadings", "--raw")
+        ] = ("/dev/nvme0n1p3\n", "", 0)
+        context = InstallContext(
+            plan,
+            lambda _message: None,
+            values={
+                "partition_devices": {
+                    "swap": "/dev/nvme0n1p3",
+                }
+            },
+        )
+
+        PrepareStorageStep(runner).cleanup(context)
+
+        commands = [item[0] for item in runner.commands]
+        self.assertEqual(commands[1], ("swapoff", "/dev/nvme0n1p3"))
+        self.assertIn(("partprobe", "/dev/nvme0n1"), commands)
+        self.assertIn(("udevadm", "settle", "--timeout=30"), commands)
+
+    def test_retries_partition_table_once_after_kernel_rejects_update(self):
+        plan = valid_plan()
+        runner = FakeRunner()
+        first_partition_command = (
+            "parted",
+            "--script",
+            "/dev/nvme0n1",
+            "mklabel",
+            "gpt",
+        )
+        calls = 0
+        original_run = runner.run
+
+        def run(command, **kwargs):
+            nonlocal calls
+            if tuple(command) == first_partition_command:
+                calls += 1
+                if calls == 1:
+                    runner.commands.append((tuple(command), kwargs))
+                    return subprocess.CompletedProcess(
+                        command,
+                        1,
+                        "",
+                        "unable to inform the kernel of the change",
+                    )
+            if tuple(command) == ("partprobe", "/dev/nvme0n1"):
+                runner.commands.append((tuple(command), kwargs))
+                return subprocess.CompletedProcess(
+                    command,
+                    1,
+                    "",
+                    "partition table is still in use",
+                )
+            return original_run(command, **kwargs)
+
+        runner.run = run
+        logs = []
+        context = InstallContext(plan, logs.append)
+
+        with patch("installer_core.storage_steps.Path.exists", return_value=True):
+            PrepareStorageStep(runner).execute(context)
+
+        self.assertEqual(calls, 2)
+        self.assertIn("retrying once", "\n".join(logs))
 
 
 class MountTargetStepTests(unittest.TestCase):

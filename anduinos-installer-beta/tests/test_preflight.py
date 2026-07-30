@@ -123,3 +123,40 @@ class ExecutionPreflightTests(unittest.TestCase):
                 runner,
                 disk_probe=lambda: (plan.storage.disk,),
             )
+
+    def test_allows_expected_swap_partition_from_previous_attempt(self):
+        plan = valid_plan()
+        runner = self.idle_target_runner()
+        key = next(iter(runner.outputs))
+        runner.outputs[key] = (
+            '{"blockdevices":[{"path":"/dev/nvme0n1","type":"disk",'
+            '"mountpoints":[null],"children":[{"path":"/dev/nvme0n1p3",'
+            '"type":"part","mountpoints":["[SWAP]"]}]}]}',
+            "",
+            0,
+        )
+
+        verify_target_disk_environment(
+            plan,
+            runner,
+            disk_probe=lambda: (plan.storage.disk,),
+        )
+
+    def test_rejects_unexpected_swap_partition_on_selected_disk(self):
+        plan = valid_plan()
+        runner = self.idle_target_runner()
+        key = next(iter(runner.outputs))
+        runner.outputs[key] = (
+            '{"blockdevices":[{"path":"/dev/nvme0n1","type":"disk",'
+            '"mountpoints":[null],"children":[{"path":"/dev/nvme0n1p2",'
+            '"type":"part","mountpoints":["[SWAP]"]}]}]}',
+            "",
+            0,
+        )
+
+        with self.assertRaisesRegex(PreflightError, "mounted at \\[SWAP\\]"):
+            verify_target_disk_environment(
+                plan,
+                runner,
+                disk_probe=lambda: (plan.storage.disk,),
+            )

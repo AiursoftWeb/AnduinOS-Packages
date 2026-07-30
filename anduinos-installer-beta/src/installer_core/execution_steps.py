@@ -13,6 +13,7 @@ from .preflight import (
 from .probe import probe_disks, probe_platform
 from .model import Architecture, Firmware, SecureBoot
 from .steps import FailurePolicy, InstallContext
+from .storage_steps import deactivate_target_swap
 
 
 @dataclass
@@ -164,7 +165,7 @@ class UnmountTargetStep:
     destructive: bool = False
 
     def preflight(self, context: InstallContext) -> None:
-        self.runner.require_commands(("umount",))
+        self.runner.require_commands(("umount", "swapon", "swapoff"))
 
     def execute(self, context: InstallContext) -> None:
         target = _target(context)
@@ -177,6 +178,7 @@ class UnmountTargetStep:
         if context.values.get("target_root_mounted"):
             self.runner.run(("umount", str(target)), timeout=30)
             context.values["target_root_mounted"] = False
+        deactivate_target_swap(context, self.runner)
 
     def verify(self, context: InstallContext) -> None:
         if context.values.get("target_efi_mounted") or context.values.get(
