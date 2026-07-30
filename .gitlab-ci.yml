@@ -344,11 +344,6 @@ anduinos-why-ai:
   timeout: 3h
   variables:
     PACKAGE_DIR: anduinos-why-ai
-  cache:
-    key: anduinos-why-ai-model
-    paths:
-      - anduinos-why-ai/deploy/cache/
-    policy: pull-push
 
 anduinos-yubikey-manager:
   extends: .publish
