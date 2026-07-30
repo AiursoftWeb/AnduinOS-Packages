@@ -1,9 +1,9 @@
 [package]
 name = "anduinos-yubikey-manager"
-version = "0.1.0"
+version = "0.3.0"
 edition = "2021"
 license = "GPL-3.0-or-later"
-description = "A GTK4/Libadwaita YubiKey manager for AnduinOS"
+description = "A GTK4/Libadwaita YubiKey security center for AnduinOS"
 authors = ["AnduinOS Team <anduin@aiursoft.com>"]
 
 [dependencies]
@@ -16,6 +16,7 @@ sha2 = "0.10"
 zeroize = "1"
 tempfile = "3"
 gettext-rs = { version = "0.7", features = ["gettext-system"] }
+libc = "0.2"
 
 [profile.release]
 strip = true

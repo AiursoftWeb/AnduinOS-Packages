@@ -22,6 +22,7 @@ class HelperTests(unittest.TestCase):
         self.helper.MANAGED_SUDOERS = str(
             self.root / "sudoers.d" / "90-anduinos-yubikey-manager"
         )
+        self.helper.METADATA = str(self.root / "enrollments.json")
         Path(self.helper.SUDOERS_DIR).mkdir()
         self.helper.validate_sudoers = lambda: None
         self.helper.validate_user = lambda _username: None
@@ -38,7 +39,7 @@ class HelperTests(unittest.TestCase):
             "bob ALL=(ALL:ALL) NOPASSWD: ALL\n",
             encoding="utf-8",
         )
-        metadata = {"enrollments": []}
+        metadata = {"enrollments": [], "passwordless_sudo_users": ["alice"]}
 
         self.helper.set_passwordless_sudo("alice", False, metadata)
 
@@ -47,15 +48,81 @@ class HelperTests(unittest.TestCase):
             "alice ALL=(ALL:ALL) NOPASSWD: /usr/bin/apt\n"
             "bob ALL=(ALL:ALL) NOPASSWD: ALL\n",
         )
+        self.assertEqual(metadata["passwordless_sudo_users"], [])
 
     def test_enable_writes_a_visudo_compatible_dropin_shape(self):
-        self.helper.set_passwordless_sudo("alice", True, {"enrollments": []})
+        metadata = {"enrollments": []}
+        self.helper.set_passwordless_sudo("alice", True, metadata)
         managed = Path(self.helper.MANAGED_SUDOERS)
         self.assertEqual(
             managed.read_text(encoding="utf-8"),
             "alice ALL=(ALL:ALL) NOPASSWD: ALL\n",
         )
         self.assertEqual(managed.stat().st_mode & 0o777, 0o440)
+        self.assertEqual(metadata["passwordless_sudo_users"], ["alice"])
+
+    def test_enable_preserves_another_managed_user(self):
+        managed = Path(self.helper.MANAGED_SUDOERS)
+        managed.write_text(
+            "bob ALL=(ALL:ALL) NOPASSWD: ALL\n",
+            encoding="utf-8",
+        )
+        metadata = {"enrollments": [], "passwordless_sudo_users": ["bob"]}
+
+        self.helper.set_passwordless_sudo("alice", True, metadata)
+
+        self.assertEqual(
+            managed.read_text(encoding="utf-8"),
+            "alice ALL=(ALL:ALL) NOPASSWD: ALL\n"
+            "bob ALL=(ALL:ALL) NOPASSWD: ALL\n",
+        )
+        self.assertEqual(
+            metadata["passwordless_sudo_users"],
+            ["alice", "bob"],
+        )
+
+    def test_repair_rebuilds_mappings_and_pam_from_metadata(self):
+        gdm_pam = self.root / "gdm-password"
+        sudo_pam = self.root / "sudo"
+        gdm_mapping = self.root / "gdm-mappings"
+        sudo_mapping = self.root / "sudo-mappings"
+        gdm_pam.write_text("@include common-auth\n", encoding="utf-8")
+        sudo_pam.write_text("@include common-auth\n", encoding="utf-8")
+        self.helper.PAM_CONFIG = {
+            "gdm": (str(gdm_pam), str(gdm_mapping)),
+            "sudo": (str(sudo_pam), str(sudo_mapping)),
+        }
+        self.helper.validate_common = lambda _username, _serial: None
+        credential = "A" * 40 + ",B"
+        metadata = {
+            "enrollments": [
+                {
+                    "username": "alice",
+                    "serial": "1234",
+                    "purpose": "gdm",
+                    "credential": credential,
+                },
+                {
+                    "username": "alice",
+                    "serial": "1234",
+                    "purpose": "sudo",
+                    "credential": credential,
+                },
+            ]
+        }
+
+        self.helper.repair_integrations(metadata)
+
+        self.assertEqual(gdm_mapping.read_text(), f"alice:{credential}\n")
+        self.assertEqual(sudo_mapping.read_text(), f"alice:{credential}\n")
+        self.assertIn(
+            "# Managed by anduinos-yubikey-manager (gdm)",
+            gdm_pam.read_text(),
+        )
+        self.assertIn(
+            "# Managed by anduinos-yubikey-manager (sudo)",
+            sudo_pam.read_text(),
+        )
 
 
 if __name__ == "__main__":

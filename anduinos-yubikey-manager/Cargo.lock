@@ -13,12 +13,13 @@ dependencies = [
 
 [[package]]
 name = "anduinos-yubikey-manager"
-version = "0.1.0"
+version = "0.3.0"
 dependencies = [
  "base64",
  "gettext-rs",
  "gtk4",
  "libadwaita",
+ "libc",
  "serde",
  "serde_json",
  "sha2",

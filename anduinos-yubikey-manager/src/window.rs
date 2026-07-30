@@ -1,8 +1,10 @@
 use crate::application::YubiKeyManagerApplication;
 use crate::backend;
+use crate::device_monitor;
 use crate::git_signing;
+use crate::home::{HomePage, HomeSnapshot};
 use crate::i18n::{i18n, i18n_fmt};
-use crate::model::YubiKey;
+use crate::model::{Enrollment, YubiKey};
 use crate::progress_dialog;
 use crate::ssh;
 use adw::prelude::*;
@@ -11,6 +13,7 @@ use gtk::{gio, glib};
 use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
 use std::rc::Rc;
+use std::time::Duration;
 use zeroize::Zeroizing;
 
 mod imp {
@@ -19,22 +22,28 @@ mod imp {
     #[derive(Default)]
     pub struct YubiKeyManagerWindow {
         pub stack: RefCell<Option<gtk::Stack>>,
-        pub home: RefCell<Option<adw::PreferencesPage>>,
+        pub sidebar: RefCell<Option<gtk::ListBox>>,
+        pub home: RefCell<Option<HomePage>>,
         pub login: RefCell<Option<adw::PreferencesPage>>,
         pub sudo: RefCell<Option<adw::PreferencesPage>>,
         pub ssh: RefCell<Option<adw::PreferencesPage>>,
         pub git: RefCell<Option<adw::PreferencesPage>>,
-        pub home_groups: RefCell<Vec<adw::PreferencesGroup>>,
         pub login_groups: RefCell<Vec<adw::PreferencesGroup>>,
         pub sudo_groups: RefCell<Vec<adw::PreferencesGroup>>,
         pub ssh_groups: RefCell<Vec<adw::PreferencesGroup>>,
         pub git_groups: RefCell<Vec<adw::PreferencesGroup>>,
+        pub home_snapshot: RefCell<Option<HomeSnapshot>>,
+        pub home_refreshing: Cell<bool>,
+        pub home_device_refreshing: Cell<bool>,
+        pub home_device_refresh_pending: Cell<bool>,
+        pub home_debounce_source: RefCell<Option<glib::SourceId>>,
+        pub home_poll_source: RefCell<Option<glib::SourceId>>,
+        pub device_monitor: RefCell<Option<gio::Subprocess>>,
+        pub login_refreshing: Cell<bool>,
+        pub sudo_refreshing: Cell<bool>,
+        pub ssh_refreshing: Cell<bool>,
         pub ssh_results:
             RefCell<HashMap<String, Result<Vec<ssh::ResidentSshCredential>, String>>>,
-        pub git_selected_fingerprint: RefCell<Option<String>>,
-        pub git_separate_key: Cell<bool>,
-        pub git_sign_commits: Cell<bool>,
-        pub git_sign_tags: Cell<bool>,
     }
 
     #[glib::object_subclass]
@@ -48,6 +57,18 @@ mod imp {
         fn constructed(&self) {
             self.parent_constructed();
             self.obj().setup_ui();
+        }
+
+        fn dispose(&self) {
+            if let Some(source) = self.home_debounce_source.borrow_mut().take() {
+                source.remove();
+            }
+            if let Some(source) = self.home_poll_source.borrow_mut().take() {
+                source.remove();
+            }
+            if let Some(process) = self.device_monitor.borrow_mut().take() {
+                process.force_exit();
+            }
         }
     }
     impl WidgetImpl for YubiKeyManagerWindow {}
@@ -67,7 +88,7 @@ impl YubiKeyManagerWindow {
     pub fn new(app: &YubiKeyManagerApplication) -> Self {
         glib::Object::builder()
             .property("application", app)
-            .property("title", i18n("YubiKey Manager"))
+            .property("title", i18n("AnduinOS YubiKey Security Center"))
             .property("default-width", 900)
             .property("default-height", 650)
             .property("icon-name", "com.anduinos.yubikeymanager")
@@ -82,8 +103,8 @@ impl YubiKeyManagerWindow {
         let home_row = nav_row("go-home-symbolic", &i18n("Home"));
         let login_row = nav_row("system-lock-screen-symbolic", &i18n("Unlock GDM"));
         let sudo_row = nav_row("security-high-symbolic", &i18n("Unlock sudo"));
-        let ssh_row = nav_row("network-server-symbolic", &i18n("SSH Keys"));
-        let git_row = nav_row("application-x-generic-symbolic", &i18n("Git Signing"));
+        let ssh_row = nav_row("network-server-symbolic", &i18n("SSH keys"));
+        let git_row = nav_row("document-edit-symbolic", &i18n("Git signing"));
         sidebar.append(&home_row);
         sidebar.append(&login_row);
         sidebar.append(&sudo_row);
@@ -94,16 +115,29 @@ impl YubiKeyManagerWindow {
         let sidebar_header = adw::HeaderBar::builder()
             .show_end_title_buttons(false)
             .build();
+        sidebar_header.set_title_widget(Some(&adw::WindowTitle::new(
+            &i18n("Security Center"),
+            "AnduinOS",
+        )));
         let sidebar_toolbar = adw::ToolbarView::builder().content(&sidebar).build();
         sidebar_toolbar.add_top_bar(&sidebar_header);
 
         let stack = gtk::Stack::builder()
             .transition_type(gtk::StackTransitionType::Crossfade)
             .build();
-        let home = adw::PreferencesPage::builder()
-            .title(i18n("Home"))
-            .icon_name("go-home-symbolic")
-            .build();
+        let weak = self.downgrade();
+        let navigate: Rc<dyn Fn(&str)> = Rc::new(move |target| {
+            if let Some(window) = weak.upgrade() {
+                window.navigate_to(target);
+            }
+        });
+        let weak = self.downgrade();
+        let retry: Rc<dyn Fn()> = Rc::new(move || {
+            if let Some(window) = weak.upgrade() {
+                window.refresh_home_full();
+            }
+        });
+        let home = HomePage::new(navigate, retry);
         let login = adw::PreferencesPage::builder()
             .title(i18n("Unlock GDM"))
             .icon_name("system-lock-screen-symbolic")
@@ -113,14 +147,14 @@ impl YubiKeyManagerWindow {
             .icon_name("security-high-symbolic")
             .build();
         let ssh = adw::PreferencesPage::builder()
-            .title(i18n("SSH Keys"))
+            .title(i18n("SSH keys"))
             .icon_name("network-server-symbolic")
             .build();
         let git = adw::PreferencesPage::builder()
-            .title(i18n("Git Signing"))
-            .icon_name("application-x-generic-symbolic")
+            .title(i18n("Git signing"))
+            .icon_name("document-edit-symbolic")
             .build();
-        stack.add_named(&home, Some("home"));
+        stack.add_named(home.widget(), Some("home"));
         stack.add_named(&login, Some("login"));
         stack.add_named(&sudo, Some("sudo"));
         stack.add_named(&ssh, Some("ssh"));
@@ -133,6 +167,8 @@ impl YubiKeyManagerWindow {
             .menu_model(&menu)
             .build();
         let header = adw::HeaderBar::new();
+        let page_title = adw::WindowTitle::new(&i18n("Home"), "");
+        header.set_title_widget(Some(&page_title));
         header.pack_end(&menu_button);
         let refresh_button = gtk::Button::builder()
             .icon_name("view-refresh-symbolic")
@@ -169,9 +205,18 @@ impl YubiKeyManagerWindow {
             .build();
 
         let stack_clone = stack.clone();
+        let page_title_clone = page_title.clone();
         let weak = self.downgrade();
         sidebar.connect_row_selected(move |_, row| {
             if let Some(row) = row {
+                let title = match row.index() {
+                    0 => i18n("Home"),
+                    1 => i18n("Unlock GDM"),
+                    2 => i18n("Unlock sudo"),
+                    3 => i18n("SSH keys"),
+                    _ => i18n("Git signing"),
+                };
+                page_title_clone.set_title(&title);
                 stack_clone.set_visible_child_name(match row.index() {
                     0 => "home",
                     1 => "login",
@@ -187,11 +232,14 @@ impl YubiKeyManagerWindow {
 
         AdwApplicationWindowExt::set_content(self, Some(&split));
         *self.imp().stack.borrow_mut() = Some(stack);
+        *self.imp().sidebar.borrow_mut() = Some(sidebar);
         *self.imp().home.borrow_mut() = Some(home);
         *self.imp().login.borrow_mut() = Some(login);
         *self.imp().sudo.borrow_mut() = Some(sudo);
         *self.imp().ssh.borrow_mut() = Some(ssh);
         *self.imp().git.borrow_mut() = Some(git);
+
+        self.start_device_monitor();
 
         let weak = self.downgrade();
         glib::idle_add_local_once(move || {
@@ -209,35 +257,327 @@ impl YubiKeyManagerWindow {
             .as_ref()
             .and_then(|stack| stack.visible_child_name())
             .unwrap_or_default();
-        let username = backend::current_user().unwrap_or_else(|_| i18n("unknown"));
-        let devices = backend::list_yubikeys();
-        if visible.as_str() == "git" {
+        if visible.as_str() == "home" {
+            self.refresh_home_full();
+        } else if visible.as_str() == "git" {
             if let Some(page) = self.imp().git.borrow().as_ref() {
                 clear_groups(page, &self.imp().git_groups);
                 *self.imp().git_groups.borrow_mut() = rebuild_git(self, page);
             }
         } else if visible.as_str() == "ssh" {
-            if let Some(page) = self.imp().ssh.borrow().as_ref() {
-                clear_groups(page, &self.imp().ssh_groups);
-                *self.imp().ssh_groups.borrow_mut() = rebuild_ssh(self, page);
-            }
-        } else if visible.as_str() == "sudo" {
-            if let Some(page) = self.imp().sudo.borrow().as_ref() {
-                clear_groups(page, &self.imp().sudo_groups);
-                *self.imp().sudo_groups.borrow_mut() =
-                    rebuild_sudo(self, page, &username, devices);
-            }
-        } else if visible.as_str() == "login" {
-            if let Some(page) = self.imp().login.borrow().as_ref() {
-                clear_groups(page, &self.imp().login_groups);
-                *self.imp().login_groups.borrow_mut() =
-                    rebuild_login(self, page, &username, devices);
-            }
-        } else if let Some(page) = self.imp().home.borrow().as_ref() {
-            clear_groups(page, &self.imp().home_groups);
-            *self.imp().home_groups.borrow_mut() = rebuild_home(page, &username, devices);
+            self.refresh_ssh();
+        } else if matches!(visible.as_str(), "login" | "sudo") {
+            self.refresh_security_page(visible.as_str());
         }
     }
+
+    fn navigate_to(&self, target: &str) {
+        let index = match target {
+            "home" => 0,
+            "login" => 1,
+            "sudo" => 2,
+            "ssh" => 3,
+            "git" => 4,
+            _ => return,
+        };
+        if let Some(sidebar) = self.imp().sidebar.borrow().as_ref() {
+            if let Some(row) = sidebar.row_at_index(index) {
+                sidebar.select_row(Some(&row));
+            }
+        }
+    }
+
+    fn refresh_home_full(&self) {
+        if self.imp().home_refreshing.replace(true) {
+            return;
+        }
+        if self.imp().home_snapshot.borrow().is_none() {
+            if let Some(home) = self.imp().home.borrow().as_ref() {
+                home.show_loading();
+            }
+        }
+        let weak = self.downgrade();
+        glib::spawn_future_local(async move {
+            let result = gio::spawn_blocking(|| {
+                let username = backend::current_user().unwrap_or_else(|_| i18n("unknown"));
+                let state = backend::security_state();
+                HomeSnapshot {
+                    devices: backend::list_yubikeys_fast(),
+                    passwordless_sudo: state.passwordless_sudo_for(&username),
+                    enrollments: state.enrollments,
+                    git_status: git_signing::status(),
+                    username,
+                }
+            })
+            .await;
+            let Some(window) = weak.upgrade() else {
+                return;
+            };
+            window.imp().home_refreshing.set(false);
+            if let Ok(snapshot) = result {
+                *window.imp().home_snapshot.borrow_mut() = Some(snapshot);
+                window.render_home();
+            }
+        });
+    }
+
+    fn refresh_home_devices(&self) {
+        if self.imp().home_device_refreshing.replace(true) {
+            self.imp().home_device_refresh_pending.set(true);
+            return;
+        }
+        if self.imp().home_snapshot.borrow().is_none() {
+            self.imp().home_device_refreshing.set(false);
+            self.refresh_home_full();
+            return;
+        }
+        let weak = self.downgrade();
+        glib::spawn_future_local(async move {
+            let devices = gio::spawn_blocking(backend::list_yubikeys_fast).await;
+            let Some(window) = weak.upgrade() else {
+                return;
+            };
+            window.imp().home_device_refreshing.set(false);
+            if let Ok(devices) = devices {
+                let changed = {
+                    let mut stored = window.imp().home_snapshot.borrow_mut();
+                    let Some(snapshot) = stored.as_mut() else {
+                        return;
+                    };
+                    if snapshot.devices.as_ref().ok() != devices.as_ref().ok()
+                        || snapshot.devices.as_ref().err() != devices.as_ref().err()
+                    {
+                        snapshot.devices = devices;
+                        true
+                    } else {
+                        false
+                    }
+                };
+                if changed {
+                    window.render_home();
+                }
+            }
+            if window.imp().home_device_refresh_pending.replace(false) {
+                window.refresh_home_devices();
+            }
+        });
+    }
+
+    fn render_home(&self) {
+        let snapshot = self.imp().home_snapshot.borrow().clone();
+        let Some(snapshot) = snapshot else {
+            return;
+        };
+        let inspected = self
+            .imp()
+            .ssh_results
+            .borrow()
+            .values()
+            .filter_map(|result| result.as_ref().ok())
+            .map(Vec::len)
+            .reduce(|left, right| left + right);
+        if let Some(home) = self.imp().home.borrow().as_ref() {
+            home.render(&snapshot, inspected);
+        }
+    }
+
+    fn schedule_home_device_refresh(&self) {
+        if let Some(source) = self.imp().home_debounce_source.borrow_mut().take() {
+            source.remove();
+        }
+        let weak = self.downgrade();
+        let source = glib::timeout_add_local_once(Duration::from_millis(350), move || {
+            if let Some(window) = weak.upgrade() {
+                window.imp().home_debounce_source.borrow_mut().take();
+                window.refresh_home_devices();
+            }
+        });
+        *self.imp().home_debounce_source.borrow_mut() = Some(source);
+    }
+
+    fn start_device_monitor(&self) {
+        let weak = self.downgrade();
+        if let Ok(process) = device_monitor::start(move || {
+            if let Some(window) = weak.upgrade() {
+                window.schedule_home_device_refresh();
+            }
+        }) {
+            *self.imp().device_monitor.borrow_mut() = Some(process);
+        }
+        let weak = self.downgrade();
+        let source = glib::timeout_add_local(Duration::from_secs(5), move || {
+            let Some(window) = weak.upgrade() else {
+                return glib::ControlFlow::Break;
+            };
+            let on_home = window
+                .imp()
+                .stack
+                .borrow()
+                .as_ref()
+                .and_then(|stack| stack.visible_child_name())
+                .is_some_and(|name| name.as_str() == "home");
+            if on_home && window.is_active() {
+                window.refresh_home_devices();
+            }
+            glib::ControlFlow::Continue
+        });
+        *self.imp().home_poll_source.borrow_mut() = Some(source);
+    }
+
+    fn refresh_security_page(&self, visible: &str) {
+        let (page, groups) = match visible {
+            "login" if !self.imp().login_refreshing.replace(true) => (
+                self.imp().login.borrow().as_ref().cloned(),
+                &self.imp().login_groups,
+            ),
+            "sudo" if !self.imp().sudo_refreshing.replace(true) => (
+                self.imp().sudo.borrow().as_ref().cloned(),
+                &self.imp().sudo_groups,
+            ),
+            _ => return,
+        };
+        let Some(page) = page else {
+            match visible {
+                "login" => self.imp().login_refreshing.set(false),
+                "sudo" => self.imp().sudo_refreshing.set(false),
+                _ => {}
+            }
+            return;
+        };
+        clear_groups(&page, groups);
+        let loading = adw::PreferencesGroup::new();
+        loading.add(&action_row_with_icon(
+            &i18n("Checking connected YubiKeys"),
+            &i18n("Reading account security settings…"),
+            "view-refresh-symbolic",
+        ));
+        page.add(&loading);
+        *groups.borrow_mut() = vec![loading];
+
+        let selected_page = visible.to_string();
+        let weak = self.downgrade();
+        glib::spawn_future_local(async move {
+            let needs_sudo_policy = selected_page == "sudo";
+            let result = gio::spawn_blocking(move || {
+                let username =
+                    backend::current_user().unwrap_or_else(|_| i18n("unknown"));
+                let state = backend::security_state();
+                SecurityPageSnapshot {
+                    devices: backend::list_yubikeys_for_security(),
+                    passwordless_sudo: needs_sudo_policy
+                        .then(|| state.passwordless_sudo_for(&username)),
+                    enrollments: state.enrollments,
+                    username,
+                }
+            })
+            .await;
+            let Some(window) = weak.upgrade() else {
+                return;
+            };
+            match selected_page.as_str() {
+                "login" => window.imp().login_refreshing.set(false),
+                "sudo" => window.imp().sudo_refreshing.set(false),
+                _ => {}
+            }
+            let groups = match selected_page.as_str() {
+                "login" => &window.imp().login_groups,
+                "sudo" => &window.imp().sudo_groups,
+                _ => return,
+            };
+            clear_groups(&page, groups);
+            match result {
+                Ok(snapshot) => {
+                    let rebuilt = match selected_page.as_str() {
+                        "login" => rebuild_login(
+                            &window,
+                            &page,
+                            &snapshot.username,
+                            snapshot.devices,
+                            &snapshot.enrollments,
+                        ),
+                        "sudo" => rebuild_sudo(
+                            &window,
+                            &page,
+                            &snapshot.username,
+                            snapshot.devices,
+                            &snapshot.enrollments,
+                            snapshot.passwordless_sudo.unwrap_or(false),
+                        ),
+                        _ => Vec::new(),
+                    };
+                    *groups.borrow_mut() = rebuilt;
+                }
+                Err(_) => {
+                    let group = adw::PreferencesGroup::new();
+                    group.add(&action_row_with_icon(
+                        &i18n("Could not list YubiKeys"),
+                        &i18n("The enrollment task failed."),
+                        "dialog-warning-symbolic",
+                    ));
+                    page.add(&group);
+                    *groups.borrow_mut() = vec![group];
+                }
+            }
+        });
+    }
+
+    fn refresh_ssh(&self) {
+        if self.imp().ssh_refreshing.replace(true) {
+            return;
+        }
+        let Some(page) = self.imp().ssh.borrow().as_ref().cloned() else {
+            self.imp().ssh_refreshing.set(false);
+            return;
+        };
+        clear_groups(&page, &self.imp().ssh_groups);
+        let loading = adw::PreferencesGroup::new();
+        loading.add(&action_row_with_icon(
+            &i18n("Checking SSH keys…"),
+            &i18n("Touch the YubiKey if it flashes."),
+            "view-refresh-symbolic",
+        ));
+        page.add(&loading);
+        *self.imp().ssh_groups.borrow_mut() = vec![loading];
+
+        let parent: gtk::Window = self.clone().upcast();
+        let weak = self.downgrade();
+        glib::spawn_future_local(async move {
+            let result = progress_dialog::run_with_progress(
+                &parent,
+                &i18n("Checking SSH keys… Touch the YubiKey if it flashes."),
+                || Ok((ssh::agent_status(), ssh::list_fido_devices())),
+            )
+            .await;
+            let Some(window) = weak.upgrade() else {
+                return;
+            };
+            window.imp().ssh_refreshing.set(false);
+            clear_groups(&page, &window.imp().ssh_groups);
+            match result {
+                Ok((agent, devices)) => {
+                    *window.imp().ssh_groups.borrow_mut() =
+                        rebuild_ssh(&window, &page, agent, devices);
+                }
+                Err(error) => {
+                    let group = adw::PreferencesGroup::new();
+                    group.add(&action_row_with_icon(
+                        &i18n("Could not check SSH keys"),
+                        &error,
+                        "dialog-warning-symbolic",
+                    ));
+                    page.add(&group);
+                    *window.imp().ssh_groups.borrow_mut() = vec![group];
+                }
+            }
+        });
+    }
+}
+
+struct SecurityPageSnapshot {
+    username: String,
+    devices: Result<Vec<YubiKey>, String>,
+    enrollments: Vec<Enrollment>,
+    passwordless_sudo: Option<bool>,
 }
 
 fn nav_row(icon: &str, title: &str) -> gtk::ListBoxRow {
@@ -269,183 +609,9 @@ fn clear_groups(
     }
 }
 
-fn rebuild_home(
-    page: &adw::PreferencesPage,
-    username: &str,
-    devices: Result<Vec<YubiKey>, String>,
-) -> Vec<adw::PreferencesGroup> {
-    let enrollments = backend::enrollments();
-    let passwordless_sudo = backend::passwordless_sudo();
-    let summary = adw::PreferencesGroup::builder()
-        .title(i18n("Security keys"))
-        .description(i18n_fmt(&i18n("Current user: {0}"), &[username]))
-        .build();
-    match devices {
-        Ok(keys)
-            if keys.is_empty()
-                && enrollments
-                    .iter()
-                    .all(|item| item.username != username) =>
-        {
-            summary.add(&action_row_with_icon(
-                &i18n("No YubiKey detected"),
-                &i18n("Insert a YubiKey, then press Refresh."),
-                "dialog-information-symbolic",
-            ));
-        }
-        Ok(mut keys) => {
-            add_disconnected_enrollments(&mut keys, username, "gdm");
-            add_disconnected_enrollments(&mut keys, username, "sudo");
-            for key in keys {
-                let gdm_enabled = enrollments.iter().any(|item| {
-                    item.username == username
-                        && item.serial == key.serial
-                        && item.purpose == "gdm"
-                });
-                let sudo_enabled = enrollments.iter().any(|item| {
-                    item.username == username
-                        && item.serial == key.serial
-                        && item.purpose == "sudo"
-                });
-                let identity = if key.serial.starts_with("usb-") {
-                    i18n_fmt(&i18n("No hardware serial · {0}"), &[&key.serial])
-                } else {
-                    i18n_fmt(&i18n("Serial {0}"), &[&key.serial])
-                };
-                let subtitle = format!(
-                    "{} · {}{}",
-                    identity,
-                    if key.firmware.is_empty() {
-                        i18n("Not currently connected")
-                    } else {
-                        i18n_fmt(&i18n("Firmware {0}"), &[&key.firmware])
-                    },
-                    if key.interfaces.is_empty() {
-                        String::new()
-                    } else {
-                        format!(" · {}", key.interfaces)
-                    }
-                );
-                let row = action_row_with_icon(
-                    &key.name,
-                    &subtitle,
-                    "dialog-password-symbolic",
-                );
-                let badges = gtk::Box::builder()
-                    .orientation(gtk::Orientation::Horizontal)
-                    .spacing(8)
-                    .valign(gtk::Align::Center)
-                    .build();
-                badges.append(&capability_badge(
-                    "GDM",
-                    if gdm_enabled {
-                        CapabilityState::Enabled
-                    } else {
-                        CapabilityState::Disabled
-                    },
-                ));
-                badges.append(&capability_badge(
-                    "sudo",
-                    if sudo_enabled && passwordless_sudo {
-                        CapabilityState::Bypassed
-                    } else if sudo_enabled {
-                        CapabilityState::Enabled
-                    } else {
-                        CapabilityState::Disabled
-                    },
-                ));
-                row.add_suffix(&badges);
-                summary.add(&row);
-            }
-        }
-        Err(error) => {
-            summary.add(&action_row_with_icon(
-                &i18n("YubiKey Manager is unavailable"),
-                &error,
-                "dialog-warning-symbolic",
-            ));
-        }
-    }
-    page.add(&summary);
-
-    let features = adw::PreferencesGroup::builder()
-        .title(i18n("Configured features"))
-        .build();
-    let gdm_count = enrollments
-        .iter()
-        .filter(|item| item.username == username && item.purpose == "gdm")
-        .count();
-    let gdm_subtitle = if gdm_count == 0 {
-        i18n("Password sign-in only")
-    } else {
-        i18n("YubiKey touch or password can unlock this user")
-    };
-    features.add(&action_row_with_icon(
-        &i18n("AnduinOS sign-in"),
-        &gdm_subtitle,
-        if gdm_count == 0 {
-            "changes-prevent-symbolic"
-        } else {
-            "emblem-ok-symbolic"
-        },
-    ));
-    let sudo_count = enrollments
-        .iter()
-        .filter(|item| item.username == username && item.purpose == "sudo")
-        .count();
-    let sudo_subtitle = if passwordless_sudo && sudo_count > 0 {
-        i18n("YubiKey configured, but sudo currently bypasses authentication")
-    } else if passwordless_sudo {
-        i18n("sudo currently allows administrator access without authentication")
-    } else if sudo_count > 0 {
-        i18n("YubiKey touch or account password can authorize sudo")
-    } else {
-        i18n("Account password is required for sudo")
-    };
-    features.add(&action_row_with_icon(
-        &i18n("sudo authentication"),
-        &sudo_subtitle,
-        if passwordless_sudo {
-            "dialog-warning-symbolic"
-        } else if sudo_count > 0 {
-            "emblem-ok-symbolic"
-        } else {
-            "changes-prevent-symbolic"
-        },
-    ));
-    let git_status = git_signing::status();
-    let git_enabled = git_status.values.format.as_deref() == Some("ssh")
-        && git_status.values.signing_key.is_some();
-    let git_subtitle = if git_enabled
-        && git_status
-            .values
-            .sign_commits
-            .as_deref()
-            .is_some_and(|value| value.eq_ignore_ascii_case("true"))
-    {
-        i18n("YubiKey-backed SSH signatures are enabled for every commit")
-    } else if git_enabled {
-        i18n("An SSH signing key is selected; automatic commit signing is disabled")
-    } else {
-        i18n("Commit signing is not configured")
-    };
-    features.add(&action_row_with_icon(
-        &i18n("Git commit signing"),
-        &git_subtitle,
-        if git_enabled {
-            "emblem-ok-symbolic"
-        } else {
-            "changes-prevent-symbolic"
-        },
-    ));
-    page.add(&features);
-    vec![summary, features]
-}
-
 #[derive(Clone, Copy)]
 enum CapabilityState {
     Enabled,
-    Bypassed,
     Disabled,
 }
 
@@ -455,14 +621,6 @@ fn capability_badge(name: &str, state: CapabilityState) -> gtk::Label {
             "✓",
             "success",
             i18n_fmt(&i18n("{0} is enabled for this YubiKey"), &[name]),
-        ),
-        CapabilityState::Bypassed => (
-            "!",
-            "warning",
-            i18n_fmt(
-                &i18n("{0} is configured, but another policy currently bypasses it"),
-                &[name],
-            ),
         ),
         CapabilityState::Disabled => (
             "—",
@@ -486,73 +644,94 @@ fn rebuild_git(
     page: &adw::PreferencesPage,
 ) -> Vec<adw::PreferencesGroup> {
     let status = git_signing::status();
-    let status_group = adw::PreferencesGroup::builder()
-        .title(i18n("Git signing"))
-        .description(i18n("Use a YubiKey-backed SSH credential to sign commits and tags. SSH authentication and Git signing remain independently configurable."))
+    let devices_group = adw::PreferencesGroup::builder()
+        .title(i18n("YubiKeys"))
         .build();
-    let configured = status.values.format.as_deref() == Some("ssh")
-        && status.values.signing_key.is_some();
-    status_group.add(&action_row_with_icon(
-        &if configured {
-            i18n("SSH commit signing is configured")
-        } else {
-            i18n("Git signing is not configured")
-        },
-        &status.version,
-        if configured {
-            "emblem-ok-symbolic"
-        } else if status.available {
-            "dialog-information-symbolic"
-        } else {
-            "dialog-warning-symbolic"
-        },
-    ));
-    page.add(&status_group);
-
-    let strategy_group = adw::PreferencesGroup::builder()
-        .title(i18n("Choose how you use your keys"))
-        .description(i18n("Both choices use one physical YubiKey. Choose whether one SSH credential does both jobs or a separate credential signs Git history."))
-        .build();
-    let shared = adw::ActionRow::builder()
-        .title(i18n("One credential for SSH and Git"))
-        .subtitle(i18n("Simple · select the same credential you use to authenticate Git pushes"))
-        .activatable(true)
-        .build();
-    let shared_check = gtk::CheckButton::new();
-    shared_check.set_active(!window.imp().git_separate_key.get());
-    shared.add_prefix(&shared_check);
-    shared.set_activatable_widget(Some(&shared_check));
-    strategy_group.add(&shared);
-    let separate = adw::ActionRow::builder()
-        .title(i18n("Dedicated Git signing credential"))
-        .subtitle(i18n("Separated duties · keep SSH authentication and Git signing identities distinct"))
-        .activatable(true)
-        .build();
-    let separate_check = gtk::CheckButton::new();
-    separate_check.set_group(Some(&shared_check));
-    separate_check.set_active(window.imp().git_separate_key.get());
-    separate.add_prefix(&separate_check);
-    separate.set_activatable_widget(Some(&separate_check));
-    strategy_group.add(&separate);
-    let weak = window.downgrade();
-    shared_check.connect_toggled(move |check| {
-        if check.is_active() {
-            if let Some(window) = weak.upgrade() {
-                window.imp().git_separate_key.set(false);
-                window.refresh();
+    match ssh::list_fido_devices() {
+        Ok(devices) if devices.is_empty() => devices_group.add(&action_row_with_icon(
+            &i18n("No FIDO security key detected"),
+            &i18n("Insert a YubiKey, then press Refresh."),
+            "dialog-information-symbolic",
+        )),
+        Ok(devices) => {
+            for device in devices {
+                let inspected_count = window
+                    .imp()
+                    .ssh_results
+                    .borrow()
+                    .get(&device.path)
+                    .and_then(|result| result.as_ref().ok())
+                    .map(Vec::len);
+                let row = adw::ActionRow::builder()
+                    .title(&device.description)
+                    .subtitle(match inspected_count {
+                        Some(0) => i18n("No resident SSH keys found"),
+                        Some(count) => i18n_fmt(
+                            &i18n("{0} SSH keys loaded"),
+                            &[&count.to_string()],
+                        ),
+                        None => device.path.clone(),
+                    })
+                    .build();
+                row.add_prefix(
+                    &gtk::Image::builder()
+                        .icon_name("dialog-password-symbolic")
+                        .build(),
+                );
+                let load = gtk::Button::builder()
+                    .label(i18n("Load keys"))
+                    .valign(gtk::Align::Center)
+                    .build();
+                let path = device.path.clone();
+                let weak = window.downgrade();
+                load.connect_clicked(move |button| {
+                    let Some(parent) = button.root().and_downcast::<gtk::Window>() else {
+                        return;
+                    };
+                    let path = path.clone();
+                    let weak = weak.clone();
+                    glib::spawn_future_local(async move {
+                        let Some(pin) = request_fido_pin_for(
+                            &parent,
+                            &i18n("Load SSH keys"),
+                            &i18n("Enter the FIDO PIN. Touch the YubiKey if it flashes."),
+                            &i18n("Load"),
+                        )
+                        .await
+                        else {
+                            return;
+                        };
+                        let task_path = path.clone();
+                        let result = progress_dialog::run_with_progress(
+                            &parent,
+                            &i18n("Loading SSH keys… Touch the YubiKey if it flashes."),
+                            move || ssh::inspect_resident_ssh(&task_path, pin.as_str()),
+                        )
+                        .await;
+                        if let Err(error) = &result {
+                            show_error(&parent, error);
+                        }
+                        if let Some(window) = weak.upgrade() {
+                            window
+                                .imp()
+                                .ssh_results
+                                .borrow_mut()
+                                .insert(path, result);
+                            window.refresh();
+                        }
+                    });
+                });
+                row.add_suffix(&load);
+                devices_group.add(&row);
             }
         }
-    });
-    let weak = window.downgrade();
-    separate_check.connect_toggled(move |check| {
-        if check.is_active() {
-            if let Some(window) = weak.upgrade() {
-                window.imp().git_separate_key.set(true);
-                window.refresh();
-            }
-        }
-    });
-    page.add(&strategy_group);
+        Err(error) => devices_group.add(&action_row_with_icon(
+            &i18n("FIDO device discovery is unavailable"),
+            &error,
+            "dialog-warning-symbolic",
+        )),
+    }
+    page.add(&devices_group);
 
     let credentials = window
         .imp()
@@ -563,11 +742,125 @@ fn rebuild_git(
         .flatten()
         .cloned()
         .collect::<Vec<_>>();
-    if window.imp().git_selected_fingerprint.borrow().is_none() {
-        let configured_key = status.values.signing_key.as_deref();
-        let selected = credentials
-            .iter()
-            .find(|credential| {
+    let key_group = adw::PreferencesGroup::builder()
+        .title(i18n("Commit signing"))
+        .description(i18n("Choose one SSH key. The selection takes effect immediately for this user's Git commits."))
+        .build();
+    let no_signing = adw::ActionRow::builder()
+        .title(i18n("No signing"))
+        .subtitle(i18n("Do not sign new commits by default"))
+        .activatable(status.available)
+        .sensitive(status.available)
+        .build();
+    let first_check = gtk::CheckButton::new();
+    first_check.set_active(!status.enabled());
+    no_signing.add_prefix(&first_check);
+    no_signing.set_activatable_widget(Some(&first_check));
+    key_group.add(&no_signing);
+    let weak = window.downgrade();
+    first_check.connect_toggled(move |check| {
+        if check.is_active() {
+            if let Some(window) = weak.upgrade() {
+                window.set_git_signing(None, check);
+            }
+        }
+    });
+
+    for credential in &credentials {
+        let selector = git_signing::signing_selector(
+            &credential.public_key,
+            credential.local_handle_path.as_deref(),
+            credential.loaded_in_agent,
+        );
+        let title = credential
+            .local_label
+            .clone()
+            .filter(|label| !label.is_empty())
+            .or_else(|| (!credential.username.is_empty()).then(|| credential.username.clone()))
+            .unwrap_or_else(|| i18n("Unnamed SSH credential"));
+        let availability = if credential.local_handle_path.is_some() {
+            i18n("Available through local key handle")
+        } else if credential.loaded_in_agent {
+            i18n("Available through SSH agent")
+        } else {
+            i18n("Load this resident key into the SSH agent before signing")
+        };
+        let row = adw::ActionRow::builder()
+            .title(title)
+            .subtitle(format!(
+                "{} · {} · {}",
+                credential.algorithm, credential.fingerprint, availability
+            ))
+            .activatable(selector.is_ok() && status.available)
+            .sensitive(selector.is_ok() && status.available)
+            .build();
+        let check = gtk::CheckButton::new();
+        check.set_group(Some(&first_check));
+        check.set_active(
+            status.enabled()
+                && selector.as_ref().ok().map(String::as_str)
+                    == status.values.signing_key.as_deref(),
+        );
+        row.add_prefix(&check);
+        row.set_activatable_widget(Some(&check));
+        let credential = credential.clone();
+        let weak = window.downgrade();
+        check.connect_toggled(move |check| {
+            if check.is_active() {
+                if let Some(window) = weak.upgrade() {
+                    window.set_git_signing(Some(credential.clone()), check);
+                }
+            }
+        });
+        key_group.add(&row);
+    }
+    page.add(&key_group);
+
+    let mut groups = vec![devices_group, key_group];
+    if status.enabled() {
+        let configured_public_key = git_signing::configured_public_key(&status.values)
+            .or_else(|| {
+                credentials
+                    .iter()
+                    .find(|credential| {
+                        git_signing::signing_selector(
+                            &credential.public_key,
+                            credential.local_handle_path.as_deref(),
+                            credential.loaded_in_agent,
+                        )
+                        .ok()
+                        .as_deref()
+                            == status.values.signing_key.as_deref()
+                    })
+                    .map(|credential| credential.public_key.clone())
+            });
+        if let Some(public_key) = configured_public_key {
+            let ready_group = adw::PreferencesGroup::new();
+            let ready = adw::ActionRow::builder()
+                .title(i18n("Git signing is enabled"))
+                .subtitle(format!(
+                    "{}\n{}",
+                    i18n("Add this public key to GitHub as a Signing Key."),
+                    public_key
+                ))
+                .css_classes(["success"])
+                .build();
+            ready.add_prefix(
+                &gtk::Image::builder()
+                    .icon_name("emblem-ok-symbolic")
+                    .css_classes(["success"])
+                    .build(),
+            );
+            let copy = gtk::Button::builder()
+                .label(i18n("Copy public key"))
+                .valign(gtk::Align::Center)
+                .build();
+            let copy_key = public_key.clone();
+            copy.connect_clicked(move |button| {
+                button.clipboard().set_text(&copy_key);
+            });
+            ready.add_suffix(&copy);
+            if let Some(credential) = credentials.iter().find(|credential| {
                 git_signing::signing_selector(
                     &credential.public_key,
                     credential.local_handle_path.as_deref(),
@@ -575,284 +868,80 @@ fn rebuild_git(
                 )
                 .ok()
                 .as_deref()
-                    == configured_key
-            })
-            .or_else(|| {
-                credentials.iter().find(|credential| {
-                    git_signing::signing_selector(
-                        &credential.public_key,
-                        credential.local_handle_path.as_deref(),
-                        credential.loaded_in_agent,
-                    )
-                    .is_ok()
-                })
-            })
-            .map(|credential| credential.fingerprint.clone());
-        *window.imp().git_selected_fingerprint.borrow_mut() = selected;
-        window.imp().git_sign_commits.set(
-            status
-                .values
-                .sign_commits
-                .as_deref()
-                .map(|value| value.eq_ignore_ascii_case("true"))
-                .unwrap_or(true),
-        );
-        window.imp().git_sign_tags.set(
-            status
-                .values
-                .sign_tags
-                .as_deref()
-                .is_some_and(|value| value.eq_ignore_ascii_case("true")),
-        );
-    }
-
-    let key_group = adw::PreferencesGroup::builder()
-        .title(i18n("Signing credential"))
-        .description(if window.imp().git_separate_key.get() {
-            i18n("Choose the credential reserved for signatures. Your SSH authentication credential is left unchanged.")
-        } else {
-            i18n("Choose the credential already used for SSH authentication. Git will reuse it for signatures.")
-        })
-        .build();
-    if credentials.is_empty() {
-        key_group.add(&action_row_with_icon(
-            &i18n("Inspect a YubiKey first"),
-            &i18n("Open SSH Keys, inspect the desired YubiKey, then return here."),
-            "dialog-information-symbolic",
-        ));
-    } else {
-        let selected_fingerprint = window.imp().git_selected_fingerprint.borrow().clone();
-        let mut first_check: Option<gtk::CheckButton> = None;
-        for credential in &credentials {
-            let usable = git_signing::signing_selector(
-                &credential.public_key,
-                credential.local_handle_path.as_deref(),
-                credential.loaded_in_agent,
-            )
-            .is_ok();
-            let title = credential
-                .local_label
-                .clone()
-                .filter(|label| !label.is_empty())
-                .or_else(|| (!credential.username.is_empty()).then(|| credential.username.clone()))
-                .unwrap_or_else(|| i18n("Unnamed SSH credential"));
-            let access = if credential.local_handle_path.is_some() {
-                i18n("Local key handle")
-            } else if credential.loaded_in_agent {
-                i18n("Available through SSH agent")
-            } else {
-                i18n("Load into the SSH agent or restore its local key handle")
-            };
-            let row = adw::ActionRow::builder()
-                .title(title)
-                .subtitle(format!(
-                    "{} · {} · {}",
-                    credential.algorithm, credential.fingerprint, access
-                ))
-                .activatable(usable)
-                .sensitive(usable)
-                .build();
-            let check = gtk::CheckButton::new();
-            if let Some(first) = &first_check {
-                check.set_group(Some(first));
-            } else {
-                first_check = Some(check.clone());
-            }
-            check.set_active(
-                selected_fingerprint.as_deref() == Some(credential.fingerprint.as_str()),
-            );
-            row.add_prefix(&check);
-            row.set_activatable_widget(Some(&check));
-            let fingerprint = credential.fingerprint.clone();
-            let weak = window.downgrade();
-            check.connect_toggled(move |check| {
-                if check.is_active() {
+                    == status.values.signing_key.as_deref()
+            }) {
+                let test = gtk::Button::builder()
+                    .label(i18n("Test signing"))
+                    .valign(gtk::Align::Center)
+                    .build();
+                let credential = credential.clone();
+                let weak = window.downgrade();
+                test.connect_clicked(move |button| {
                     if let Some(window) = weak.upgrade() {
-                        *window.imp().git_selected_fingerprint.borrow_mut() =
-                            Some(fingerprint.clone());
+                        window.test_git_credential(button, credential.clone());
                     }
-                }
-            });
-            key_group.add(&row);
+                });
+                ready.add_suffix(&test);
+            }
+            ready_group.add(&ready);
+            page.add(&ready_group);
+            groups.push(ready_group);
         }
     }
-    page.add(&key_group);
-
-    let behavior_group = adw::PreferencesGroup::builder()
-        .title(i18n("Signing behavior"))
-        .description(i18n("Settings apply to the current user's global Git configuration. Repository settings may override them."))
-        .build();
-    let commits = adw::SwitchRow::builder()
-        .title(i18n("Sign every commit"))
-        .subtitle(i18n("Recommended · Git asks the selected YubiKey to sign each new commit"))
-        .active(window.imp().git_sign_commits.get())
-        .build();
-    let weak = window.downgrade();
-    commits.connect_active_notify(move |row| {
-        if let Some(window) = weak.upgrade() {
-            window.imp().git_sign_commits.set(row.is_active());
-        }
-    });
-    behavior_group.add(&commits);
-    let tags = adw::SwitchRow::builder()
-        .title(i18n("Sign annotated tags"))
-        .subtitle(i18n("Optional · lightweight tags are unaffected"))
-        .active(window.imp().git_sign_tags.get())
-        .build();
-    let weak = window.downgrade();
-    tags.connect_active_notify(move |row| {
-        if let Some(window) = weak.upgrade() {
-            window.imp().git_sign_tags.set(row.is_active());
-        }
-    });
-    behavior_group.add(&tags);
-    page.add(&behavior_group);
-
-    let actions_group = adw::PreferencesGroup::builder()
-        .title(i18n("Review and apply"))
-        .description(i18n("The first change saves your previous Git signing values. Disabling restores them unless another program changed the managed settings."))
-        .build();
-    let action_row = adw::ActionRow::builder()
-        .title(i18n("Global Git configuration"))
-        .subtitle(if status.managed {
-            i18n("Managed by YubiKey Manager · previous values can be restored")
-        } else {
-            i18n("No changes have been made by YubiKey Manager")
-        })
-        .build();
-    let test = gtk::Button::builder()
-        .label(i18n("Test signing"))
-        .valign(gtk::Align::Center)
-        .sensitive(!credentials.is_empty())
-        .build();
-    let weak = window.downgrade();
-    test.connect_clicked(move |button| {
-        let Some(window) = weak.upgrade() else {
-            return;
-        };
-        window.test_selected_git_key(button);
-    });
-    action_row.add_suffix(&test);
-    let apply = gtk::Button::builder()
-        .label(i18n("Apply"))
-        .css_classes(["suggested-action"])
-        .valign(gtk::Align::Center)
-        .sensitive(status.available && !credentials.is_empty())
-        .build();
-    let weak = window.downgrade();
-    apply.connect_clicked(move |button| {
-        let Some(window) = weak.upgrade() else {
-            return;
-        };
-        window.apply_git_signing(button);
-    });
-    action_row.add_suffix(&apply);
-    if status.managed {
-        let restore = gtk::Button::builder()
-            .label(i18n("Disable and restore"))
-            .valign(gtk::Align::Center)
-            .build();
-        let weak = window.downgrade();
-        restore.connect_clicked(move |button| {
-            let Some(parent) = button.root().and_downcast::<gtk::Window>() else {
-                return;
-            };
-            let weak = weak.clone();
-            glib::spawn_future_local(async move {
-                let result = progress_dialog::run_with_progress(
-                    &parent,
-                    &i18n("Restoring previous Git signing settings…"),
-                    git_signing::restore,
-                )
-                .await;
-                match result {
-                    Ok(()) => {
-                        if let Some(window) = weak.upgrade() {
-                            *window.imp().git_selected_fingerprint.borrow_mut() = None;
-                            window.refresh();
-                        }
-                    }
-                    Err(error) => show_error(&parent, &error),
-                }
-            });
-        });
-        action_row.add_suffix(&restore);
-    }
-    actions_group.add(&action_row);
-    page.add(&actions_group);
-    vec![
-        status_group,
-        strategy_group,
-        key_group,
-        behavior_group,
-        actions_group,
-    ]
+    groups
 }
 
 impl YubiKeyManagerWindow {
-    fn selected_git_credential(&self) -> Option<ssh::ResidentSshCredential> {
-        let fingerprint = self.imp().git_selected_fingerprint.borrow().clone()?;
-        self.imp()
-            .ssh_results
-            .borrow()
-            .values()
-            .filter_map(|result| result.as_ref().ok())
-            .flatten()
-            .find(|credential| credential.fingerprint == fingerprint)
-            .cloned()
-    }
-
-    fn apply_git_signing(&self, button: &gtk::Button) {
-        let Some(parent) = button.root().and_downcast::<gtk::Window>() else {
+    fn set_git_signing(
+        &self,
+        credential: Option<ssh::ResidentSshCredential>,
+        check: &gtk::CheckButton,
+    ) {
+        let Some(parent) = check.root().and_downcast::<gtk::Window>() else {
             return;
         };
-        let Some(credential) = self.selected_git_credential() else {
-            show_error(&parent, &i18n("Choose an SSH key for Git signing."));
-            return;
-        };
-        let selector = match git_signing::signing_selector(
-            &credential.public_key,
-            credential.local_handle_path.as_deref(),
-            credential.loaded_in_agent,
-        ) {
-            Ok(selector) => selector,
-            Err(error) => {
-                show_error(&parent, &error);
-                return;
+        let task = match credential {
+            Some(credential) => {
+                let selector = match git_signing::signing_selector(
+                    &credential.public_key,
+                    credential.local_handle_path.as_deref(),
+                    credential.loaded_in_agent,
+                ) {
+                    Ok(selector) => selector,
+                    Err(error) => {
+                        show_error(&parent, &error);
+                        self.refresh();
+                        return;
+                    }
+                };
+                Box::new(move || git_signing::select_key(&selector))
+                    as Box<dyn FnOnce() -> Result<(), String> + Send>
             }
+            None => Box::new(git_signing::disable),
         };
-        let sign_commits = self.imp().git_sign_commits.get();
-        let sign_tags = self.imp().git_sign_tags.get();
         let weak = self.downgrade();
         glib::spawn_future_local(async move {
             let result = progress_dialog::run_with_progress(
                 &parent,
-                &i18n("Applying Git SSH signing settings…"),
-                move || git_signing::apply(&selector, sign_commits, sign_tags),
+                &i18n("Updating Git commit signing…"),
+                task,
             )
             .await;
-            match result {
-                Ok(()) => {
-                    if let Some(window) = weak.upgrade() {
-                        window.refresh();
-                        show_message(
-                            &window,
-                            &i18n("Git signing configured"),
-                            &i18n("Git will use the selected YubiKey-backed SSH credential. Your SSH authentication configuration was not changed."),
-                        );
-                    }
+            if let Some(window) = weak.upgrade() {
+                window.refresh();
+                if let Err(error) = result {
+                    show_error(&window, &error);
                 }
-                Err(error) => show_error(&parent, &error),
             }
         });
     }
 
-    fn test_selected_git_key(&self, button: &gtk::Button) {
+    fn test_git_credential(
+        &self,
+        button: &gtk::Button,
+        credential: ssh::ResidentSshCredential,
+    ) {
         let Some(parent) = button.root().and_downcast::<gtk::Window>() else {
-            return;
-        };
-        let Some(credential) = self.selected_git_credential() else {
-            show_error(&parent, &i18n("Choose an SSH key for Git signing."));
             return;
         };
         glib::spawn_future_local(async move {
@@ -901,6 +990,7 @@ fn rebuild_login(
     page: &adw::PreferencesPage,
     username: &str,
     devices: Result<Vec<YubiKey>, String>,
+    enrollments: &[Enrollment],
 ) -> Vec<adw::PreferencesGroup> {
     let group = adw::PreferencesGroup::builder()
         .title(i18n("Unlock the current user"))
@@ -910,16 +1000,20 @@ fn rebuild_login(
         ))
         .build();
     match devices {
-        Ok(keys) if keys.is_empty() && backend::enrollments().iter().all(|item| item.username != username) => group.add(
+        Ok(keys) if keys.is_empty() && enrollments.iter().all(|item| item.username != username) => group.add(
             &adw::ActionRow::builder()
                 .title(i18n("Insert a YubiKey"))
                 .subtitle(i18n("A key must be connected before it can be enrolled."))
                 .build(),
         ),
         Ok(mut keys) => {
-            add_disconnected_enrollments(&mut keys, username, "gdm");
+            add_disconnected_enrollments(&mut keys, username, "gdm", enrollments);
             for key in keys {
-                let active = backend::is_enrolled(username, &key.serial);
+                let active = enrollments.iter().any(|item| {
+                    item.username == username
+                        && item.serial == key.serial
+                        && item.purpose == "gdm"
+                });
                 let connected = !key.firmware.is_empty();
                 let row = adw::SwitchRow::builder()
                     .title(if key.serial.starts_with("usb-") {
@@ -1014,8 +1108,9 @@ fn rebuild_sudo(
     page: &adw::PreferencesPage,
     username: &str,
     devices: Result<Vec<YubiKey>, String>,
+    enrollments: &[Enrollment],
+    passwordless: bool,
 ) -> Vec<adw::PreferencesGroup> {
-    let passwordless = backend::passwordless_sudo();
     let policy_group = adw::PreferencesGroup::builder()
         .title(i18n("sudo authentication policy"))
         .description(i18n("This setting applies only to the current user."))
@@ -1089,7 +1184,7 @@ fn rebuild_sudo(
     match devices {
         Ok(keys)
             if keys.is_empty()
-                && backend::enrollments()
+                && enrollments
                     .iter()
                     .all(|item| item.username != username || item.purpose != "sudo") =>
         {
@@ -1101,9 +1196,13 @@ fn rebuild_sudo(
             );
         }
         Ok(mut keys) => {
-            add_disconnected_enrollments(&mut keys, username, "sudo");
+            add_disconnected_enrollments(&mut keys, username, "sudo", enrollments);
             for key in keys {
-                let active = backend::is_enrolled_for("sudo", username, &key.serial);
+                let active = enrollments.iter().any(|item| {
+                    item.username == username
+                        && item.serial == key.serial
+                        && item.purpose == "sudo"
+                });
                 let connected = !key.firmware.is_empty();
                 let row = adw::SwitchRow::builder()
                     .title(if key.serial.starts_with("usb-") {
@@ -1193,15 +1292,16 @@ fn add_disconnected_enrollments(
     keys: &mut Vec<YubiKey>,
     username: &str,
     purpose: &str,
+    enrollments: &[Enrollment],
 ) {
-    for enrollment in backend::enrollments()
-        .into_iter()
+    for enrollment in enrollments
+        .iter()
         .filter(|item| item.username == username && item.purpose == purpose)
     {
         if !keys.iter().any(|key| key.serial == enrollment.serial) {
             keys.push(YubiKey {
                 name: i18n("YubiKey"),
-                serial: enrollment.serial,
+                serial: enrollment.serial.clone(),
                 firmware: String::new(),
                 interfaces: String::new(),
             });
@@ -1212,8 +1312,9 @@ fn add_disconnected_enrollments(
 fn rebuild_ssh(
     window: &YubiKeyManagerWindow,
     page: &adw::PreferencesPage,
+    agent: ssh::AgentStatus,
+    fido_devices: Result<Vec<ssh::FidoDevice>, String>,
 ) -> Vec<adw::PreferencesGroup> {
-    let agent = ssh::agent_status();
     let agent_group = adw::PreferencesGroup::builder()
         .title(i18n("SSH agent"))
         .build();
@@ -1250,7 +1351,6 @@ fn rebuild_ssh(
     ));
     page.add(&agent_group);
 
-    let fido_devices = ssh::list_fido_devices();
     let create_group = rebuild_ssh_create(window, &fido_devices);
     page.add(&create_group);
 
@@ -1455,7 +1555,8 @@ fn rebuild_ssh(
                                     },
                                 ));
                                 let git_status = git_signing::status();
-                                let used_for_git = git_status
+                                let used_for_git = git_status.enabled()
+                                    && git_status
                                     .values
                                     .signing_key
                                     .as_deref()
@@ -1468,8 +1569,7 @@ fn rebuild_ssh(
                                         .ok()
                                         .as_deref()
                                             == Some(configured)
-                                    })
-                                    && git_status.values.format.as_deref() == Some("ssh");
+                                    });
                                 if used_for_git {
                                     credential_row.add_suffix(&capability_badge(
                                         "Git",

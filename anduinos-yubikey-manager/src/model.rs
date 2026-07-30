@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct YubiKey {
     pub name: String,
     pub serial: String,
@@ -8,7 +8,7 @@ pub struct YubiKey {
     pub interfaces: String,
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Eq)]
 pub struct Enrollment {
     pub username: String,
     pub serial: String,
@@ -22,8 +22,18 @@ fn default_purpose() -> String {
     "gdm".into()
 }
 
-#[derive(Default, Deserialize)]
+#[derive(Clone, Debug, Default, Deserialize)]
 pub struct EnrollmentFile {
     #[serde(default)]
     pub enrollments: Vec<Enrollment>,
+    #[serde(default)]
+    pub passwordless_sudo_users: Vec<String>,
+}
+
+impl EnrollmentFile {
+    pub fn passwordless_sudo_for(&self, username: &str) -> bool {
+        self.passwordless_sudo_users
+            .iter()
+            .any(|item| item == username)
+    }
 }

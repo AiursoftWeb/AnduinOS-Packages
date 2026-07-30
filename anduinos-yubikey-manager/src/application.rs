@@ -63,7 +63,7 @@ impl YubiKeyManagerApplication {
 
     fn show_about(&self) {
         let dialog = adw::AboutDialog::builder()
-            .application_name(i18n("YubiKey Manager"))
+            .application_name(i18n("AnduinOS YubiKey Security Center"))
             .application_icon(config::APP_ID)
             .developer_name(i18n("AnduinOS Team"))
             .version(config::VERSION)

@@ -1,6 +1,7 @@
-# anduinos-yubikey-manager
+# AnduinOS YubiKey Security Center
 
-GTK4/Libadwaita frontend for enrolling YubiKey FIDO credentials for GDM.
+GTK4/Libadwaita security center for using YubiKeys with AnduinOS sign-in,
+administrator access, SSH authentication, and Git commit signing.
 
 ## Security model
 
@@ -29,6 +30,14 @@ preserves scoped and other-user rules, and validates the complete configuration 
 `visudo` before and after every change. A passwordless account cannot disable NOPASSWD
 until at least one sudo credential is enrolled.
 
+Package upgrades preserve all authentication state. The pre-removal script exits before
+cleanup for `upgrade` and `failed-upgrade`, and detaches managed PAM and sudoers entries
+only for an actual removal or deconfiguration. The restricted helper's `repair` action
+can reconstruct PAM mapping files, passwordless-sudo ownership, and integration lines
+from validated enrollment metadata without requiring users to touch or re-enroll their
+YubiKeys. The package post-install script invokes that repair path after upgrades so
+older installations gain the current metadata model automatically.
+
 `pamu2fcfg` cannot select a device by serial number. The GUI therefore enrolls a selected
 key only when it is the sole connected YubiKey. Keys may be reconnected together after
 enrollment.
@@ -36,6 +45,38 @@ enrollment.
 Some FIDO-only YubiKeys intentionally expose no hardware serial number. They are still
 detected through vendor ID `1050` and shown with a temporary `usb-*` locator. The PAM
 credential, rather than that locator, is the cryptographic identity used at login.
+
+## Home and live device state
+
+Home is a persistent, responsive component rather than a reconstructed preferences
+list. It presents distinct first-use, connected, multi-key, and
+configured-but-disconnected states. Capability cards summarize sign-in, sudo, SSH, and
+Git and navigate directly to the relevant page.
+
+Automatic Home and hotplug discovery is deliberately passive. It reads USB sysfs only
+and never invokes `ykman`, `pamu2fcfg`, `fido2-token`, SSH agent commands, PAM, or sudo.
+Consequently opening Home and plugging or removing a key cannot make a YubiKey flash or
+wait for touch/PIN input.
+
+Some FIDO-only models omit their stable serial from the USB descriptor even though it is
+available through YubiKey management. Home and the hotplug path keep the anonymous sysfs
+identity to remain fully passive. When a GDM or sudo page explicitly opens, an anonymous
+device triggers one bounded, non-interactive `ykman list` summary probe. Its result is
+accepted only when it accounts for every sysfs YubiKey. This joins enrollment metadata
+to the correct connected key without guessing by position or running per-device
+inspection.
+
+An asynchronous `udevadm monitor` stream schedules a 350 ms debounced sysfs snapshot for
+USB changes. A five-second poll runs only while Home is visible and the window is active,
+covering environments where udev monitoring is unavailable. The monitor receives a
+parent-death signal and is also stopped during normal window disposal, so it cannot
+outlive the application.
+
+Full Home refreshes read enrollment metadata and Git configuration on GLib's blocking
+pool, merge any cached SSH inspection results, and update the existing page in place.
+GDM and sudo use the same fast device snapshot and metadata-backed passwordless-sudo
+state. Slow or touch-requiring operations remain explicit actions on their respective
+pages and use progress UI before work begins.
 
 ## SSH resident credentials
 
@@ -49,6 +90,13 @@ Only relying parties beginning with `ssh:` are displayed. Their P-256 or Ed25519
 keys are converted to the corresponding OpenSSH `sk-*` public blob, fingerprinted using
 OpenSSH's SHA-256 format, and compared with `ssh-add -L` output from the current desktop
 SSH agent.
+
+Entering the SSH page never runs YubiKey or agent commands on GTK's main thread.
+`ykman`, `ssh-add`, and `fido2-token` discovery runs on GLib's blocking pool while a
+modal spinner tells the user to touch the YubiKey if it flashes. A refresh-in-progress
+guard prevents duplicate probes. The general USB/YubiKey discovery used by other pages
+is skipped entirely for the SSH route, so it cannot block the page before the progress
+dialog is rendered.
 
 Agent loading uses `ssh-add -K` only when one FIDO device is connected. Exact public-key
 fingerprints are checked before and after the command, making an already-loaded identity
@@ -73,23 +121,26 @@ values, terminal transcripts, logs, or temporary files.
 
 ## Git SSH commit signing
 
-The Git Signing page consumes credentials already inspected on the SSH page; it does not
-create, delete, or silently load credentials. Users can explicitly choose either a shared
-SSH/Git credential or a dedicated signing credential on the same physical YubiKey. The
-choice describes intended separation of duties while leaving existing SSH host
-authentication configuration untouched.
+The Git Signing page is self-contained. It lists connected authenticators and can inspect
+their resident SSH credentials without requiring a visit to the SSH page. The resulting
+credential cache is shared by both pages.
 
 Git is configured for the current user with `gpg.format=ssh`, an exact
-`user.signingKey`, and independent commit/tag signing switches. A local OpenSSH FIDO
-key-handle path is preferred because it remains usable without a preloaded agent. An
-inline `key::` public key is accepted only when the matching identity is currently loaded
-in the SSH agent.
+`user.signingKey`, and `commit.gpgSign=true`. The page presents one radio group containing
+`No signing` and every inspected SSH credential. Selecting an option applies it
+immediately; there is no separate strategy, Apply, or Restore workflow. Users create a
+shared authentication/signing setup by selecting their authentication credential, or a
+separated setup by selecting another credential.
 
-Before the first application-managed change, the prior values of every managed Git key
-are stored in a mode-0600 recovery record under the user's XDG configuration directory.
-Apply failures roll back to the values read immediately before the operation. Restore is
-refused if any managed value changed outside the application, preventing silent
-overwrites of a user's newer Git or OpenPGP configuration.
+A local OpenSSH FIDO key-handle path is preferred because it remains usable without a
+preloaded agent. Otherwise Git receives an inline `key::` public key and the UI explains
+that the matching resident credential must be available through the SSH agent. Every
+write is transactional at the application level: a partial command failure restores the
+values read immediately before the selection.
+
+Selecting `No signing` disables automatic commit and tag signing without deleting the
+remembered signing-key choice. Enabling a key shows a success row with the exact public
+key, a copy action, and GitHub Signing Key guidance.
 
 The signing test creates temporary data and an SSH signature in a private temporary
 directory, verifies it with OpenSSH's `git` namespace, and removes it automatically. It

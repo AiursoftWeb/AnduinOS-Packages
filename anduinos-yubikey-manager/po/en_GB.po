@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 14:32+0000\n"
+"POT-Creation-Date: 2026-07-30 17:16+0000\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -24,8 +24,14 @@ msgstr "A key must be connected before it can be enrolled."
 msgid "About"
 msgstr "About"
 
-msgid "Account password is required for sudo"
-msgstr "Account password is required for sudo"
+msgid "Account password"
+msgstr "Account password"
+
+msgid "Add this public key to GitHub as a Signing Key."
+msgstr "Add this public key to GitHub as a Signing Key."
+
+msgid "Administrator access"
+msgstr "Administrator access"
 
 msgid "Advanced options"
 msgstr "Advanced options"
@@ -54,17 +60,17 @@ msgstr "Allowed to unlock this user · not currently connected"
 msgid "Already loaded"
 msgstr "Already loaded"
 
-msgid "An SSH signing key is selected; automatic commit signing is disabled"
-msgstr "An SSH signing key is selected; automatic commit signing is disabled"
-
 msgid "An enrolled YubiKey or the account password can authorize sudo."
 msgstr "An enrolled YubiKey or the account password can authorize sudo."
 
 msgid "AnduinOS Team"
 msgstr "AnduinOS Team"
 
-msgid "AnduinOS sign-in"
-msgstr "AnduinOS sign-in"
+msgid "AnduinOS YubiKey Security Center"
+msgstr "AnduinOS YubiKey Security Center"
+
+msgid "AnduinOS is safer with a YubiKey"
+msgstr "AnduinOS is safer with a YubiKey"
 
 msgid "Application"
 msgstr "Application"
@@ -72,20 +78,29 @@ msgstr "Application"
 msgid "Application must begin with ssh:, contain no whitespace, and be at most 253 bytes."
 msgstr "Application must begin with ssh:, contain no whitespace, and be at most 253 bytes."
 
-msgid "Apply"
-msgstr "Apply"
-
-msgid "Applying Git SSH signing settings…"
-msgstr "Applying Git SSH signing settings…"
+msgid "Available"
+msgstr "Available"
 
 msgid "Available through SSH agent"
 msgstr "Available through SSH agent"
 
-msgid "Both choices use one physical YubiKey. Choose whether one SSH credential does both jobs or a separate credential signs Git history."
-msgstr "Both choices use one physical YubiKey. Choose whether one SSH credential does both jobs or a separate credential signs Git history."
+msgid "Available through local key handle"
+msgstr "Available through local key handle"
 
 msgid "Cancel"
 msgstr "Cancel"
+
+msgid "Checking SSH keys…"
+msgstr "Checking SSH keys…"
+
+msgid "Checking SSH keys… Touch the YubiKey if it flashes."
+msgstr "Checking SSH keys… Touch the YubiKey if it flashes."
+
+msgid "Checking connected YubiKeys"
+msgstr "Checking connected YubiKeys"
+
+msgid "Choose a YubiKey-backed SSH key"
+msgstr "Choose a YubiKey-backed SSH key"
 
 msgid "Choose a local key-handle file"
 msgstr "Choose a local key-handle file"
@@ -102,17 +117,11 @@ msgstr "Choose a valid output folder."
 msgid "Choose an SSH key for Git signing."
 msgstr "Choose an SSH key for Git signing."
 
-msgid "Choose how you use your keys"
-msgstr "Choose how you use your keys"
-
 msgid "Choose local SSH key-handle path"
 msgstr "Choose local SSH key-handle path"
 
-msgid "Choose the credential already used for SSH authentication. Git will reuse it for signatures."
-msgstr "Choose the credential already used for SSH authentication. Git will reuse it for signatures."
-
-msgid "Choose the credential reserved for signatures. Your SSH authentication credential is left unchanged."
-msgstr "Choose the credential reserved for signatures. Your SSH authentication credential is left unchanged."
+msgid "Choose one SSH key. The selection takes effect immediately for this user's Git commits."
+msgstr "Choose one SSH key. The selection takes effect immediately for this user's Git commits."
 
 msgid "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
 msgstr "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
@@ -126,17 +135,32 @@ msgstr "Command exited with"
 msgid "Command exited with {0}"
 msgstr "Command exited with {0}"
 
-msgid "Commit signing is not configured"
-msgstr "Commit signing is not configured"
+msgid "Commit signing"
+msgstr "Commit signing"
 
-msgid "Configured features"
-msgstr "Configured features"
+msgid "Configured YubiKeys"
+msgstr "Configured YubiKeys"
+
+msgid "Configured for {0} · Not connected"
+msgstr "Configured for {0} · Not connected"
 
 msgid "Connect a FIDO security key first"
 msgstr "Connect a FIDO security key first"
 
+msgid "Connect a YubiKey to get started"
+msgstr "Connect a YubiKey to get started"
+
 msgid "Connect exactly one FIDO security key to choose an unambiguous source"
 msgstr "Connect exactly one FIDO security key to choose an unambiguous source"
+
+msgid "Connect your YubiKey"
+msgstr "Connect your YubiKey"
+
+msgid "Connected"
+msgstr "Connected"
+
+msgid "Connected YubiKeys"
+msgstr "Connected YubiKeys"
 
 msgid "Continue"
 msgstr "Continue"
@@ -147,23 +171,17 @@ msgstr "Continue to PIN"
 msgid "Copy public key"
 msgstr "Copy public key"
 
+msgid "Could not check SSH keys"
+msgstr "Could not check SSH keys"
+
 msgid "Could not create a temporary public-key file: {0}"
 msgstr "Could not create a temporary public-key file: {0}"
 
 msgid "Could not create temporary Git signing data: {0}"
 msgstr "Could not create temporary Git signing data: {0}"
 
-msgid "Could not create the Git signing recovery record: {0}"
-msgstr "Could not create the Git signing recovery record: {0}"
-
-msgid "Could not create the application configuration folder: {0}"
-msgstr "Could not create the application configuration folder: {0}"
-
 msgid "Could not create {0}: {1}"
 msgstr "Could not create {0}: {1}"
-
-msgid "Could not encode the Git signing recovery record: {0}"
-msgstr "Could not encode the Git signing recovery record: {0}"
 
 msgid "Could not export the public key: {0}"
 msgstr "Could not export the public key: {0}"
@@ -186,17 +204,11 @@ msgstr "Could not locate the secure PIN helper: {0}"
 msgid "Could not prepare the Git signing test: {0}"
 msgstr "Could not prepare the Git signing test: {0}"
 
-msgid "Could not protect the application configuration folder: {0}"
-msgstr "Could not protect the application configuration folder: {0}"
-
 msgid "Could not protect {0}: {1}"
 msgstr "Could not protect {0}: {1}"
 
 msgid "Could not provide the FIDO PIN: {0}"
 msgstr "Could not provide the FIDO PIN: {0}"
-
-msgid "Could not read the Git signing recovery record: {0}"
-msgstr "Could not read the Git signing recovery record: {0}"
 
 msgid "Could not request administrator access: {0}"
 msgstr "Could not request administrator access: {0}"
@@ -204,11 +216,11 @@ msgstr "Could not request administrator access: {0}"
 msgid "Could not run {0}: {1}"
 msgstr "Could not run {0}: {1}"
 
-msgid "Could not save the Git signing recovery record: {0}"
-msgstr "Could not save the Git signing recovery record: {0}"
-
 msgid "Could not start {0}: {1}"
 msgstr "Could not start {0}: {1}"
+
+msgid "Could not update security keys"
+msgstr "Could not update security keys"
 
 msgid "Could not write the temporary public key: {0}"
 msgstr "Could not write the temporary public key: {0}"
@@ -225,23 +237,17 @@ msgstr "Create a resident SSH key"
 msgid "Create…"
 msgstr "Create…"
 
-msgid "Current user: {0}"
-msgstr "Current user: {0}"
-
-msgid "Dedicated Git signing credential"
-msgstr "Dedicated Git signing credential"
-
 msgid "Deletion result is unknown"
 msgstr "Deletion result is unknown"
-
-msgid "Disable and restore"
-msgstr "Disable and restore"
 
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr "Disabled · sudo must authenticate with a YubiKey or account password"
 
 msgid "Display label must be at most 200 bytes and contain no control characters."
 msgstr "Display label must be at most 200 bytes and contain no control characters."
+
+msgid "Do not sign new commits by default"
+msgstr "Do not sign new commits by default"
 
 msgid "During enrollment, disconnect all other security keys. The selected key will blink; touch it to continue. Multiple keys can be enrolled one at a time."
 msgstr "During enrollment, disconnect all other security keys. The selected key will blink; touch it to continue. Multiple keys can be enrolled one at a time."
@@ -257,6 +263,9 @@ msgstr "ECDSA-SK · resident · touch required · safe compatibility defaults"
 
 msgid "Ed25519-SK (newer YubiKeys)"
 msgstr "Ed25519-SK (newer YubiKeys)"
+
+msgid "Enabled"
+msgstr "Enabled"
 
 msgid "Enabled · programs can obtain administrator privileges without confirmation"
 msgstr "Enabled · programs can obtain administrator privileges without confirmation"
@@ -275,6 +284,9 @@ msgstr "Enrollment safety"
 
 msgid "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 msgstr "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
+
+msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
+msgstr "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 
 msgid "Enter the YubiKey FIDO PIN"
 msgstr "Enter the YubiKey FIDO PIN"
@@ -306,43 +318,21 @@ msgstr "Firmware {0}"
 msgid "For safe enrollment, disconnect every other security key and leave only the selected YubiKey connected."
 msgstr "For safe enrollment, disconnect every other security key and leave only the selected YubiKey connected."
 
-msgid "Git Signing"
-msgstr "Git Signing"
-
-msgid "Git commit signing"
-msgstr "Git commit signing"
-
-msgid "Git is not installed"
-msgstr "Git is not installed"
-
-msgid "Git settings were restored, but the recovery record could not be removed: {0}"
-msgstr "Git settings were restored, but the recovery record could not be removed: {0}"
-
 msgid "Git signing"
 msgstr "Git signing"
 
-msgid "Git signing configured"
-msgstr "Git signing configured"
-
-msgid "Git signing is not configured"
-msgstr "Git signing is not configured"
-
-msgid "Git signing settings changed outside this application. Review the current Git configuration before replacing or restoring it."
-msgstr "Git signing settings changed outside this application. Review the current Git configuration before replacing or restoring it."
+msgid "Git signing is enabled"
+msgstr "Git signing is enabled"
 
 msgid ""
 "Git signing test failed:\n"
 "{0}"
-msgstr "Git signing test failed:\n{0}"
+msgstr ""
+"Git signing test failed:\n"
+"{0}"
 
 msgid "Git signing test passed"
 msgstr "Git signing test passed"
-
-msgid "Git will use the selected YubiKey-backed SSH credential. Your SSH authentication configuration was not changed."
-msgstr "Git will use the selected YubiKey-backed SSH credential. Your SSH authentication configuration was not changed."
-
-msgid "Global Git configuration"
-msgstr "Global Git configuration"
 
 msgid "Home"
 msgstr "Home"
@@ -356,9 +346,6 @@ msgstr "Insert a YubiKey, then press Refresh."
 msgid "Inspect"
 msgstr "Inspect"
 
-msgid "Inspect a YubiKey first"
-msgstr "Inspect a YubiKey first"
-
 msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
 msgstr "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
 
@@ -371,17 +358,23 @@ msgstr "Invalid FIDO device path."
 msgid "Load"
 msgstr "Load"
 
+msgid "Load SSH keys"
+msgstr "Load SSH keys"
+
 msgid "Load into agent"
 msgstr "Load into agent"
 
-msgid "Load into the SSH agent or restore its local key handle"
-msgstr "Load into the SSH agent or restore its local key handle"
+msgid "Load keys"
+msgstr "Load keys"
 
 msgid "Load resident SSH keys"
 msgstr "Load resident SSH keys"
 
-msgid "Local key handle"
-msgstr "Local key handle"
+msgid "Load this resident key into the SSH agent before signing"
+msgstr "Load this resident key into the SSH agent before signing"
+
+msgid "Loading SSH keys… Touch the YubiKey if it flashes."
+msgstr "Loading SSH keys… Touch the YubiKey if it flashes."
 
 msgid "Local key handle path"
 msgstr "Local key handle path"
@@ -389,44 +382,32 @@ msgstr "Local key handle path"
 msgid "Local key label"
 msgstr "Local key label"
 
-msgid "Managed by YubiKey Manager · previous values can be restored"
-msgstr "Managed by YubiKey Manager · previous values can be restored"
-
 msgid "New hardware-backed SSH key"
 msgstr "New hardware-backed SSH key"
 
 msgid "No FIDO security key detected"
 msgstr "No FIDO security key detected"
 
-msgid "No Git signing configuration managed by this application was found."
-msgstr "No Git signing configuration managed by this application was found."
-
 msgid "No SSH agent was detected"
 msgstr "No SSH agent was detected"
 
-msgid "No YubiKey detected"
-msgstr "No YubiKey detected"
-
-msgid "No changes have been made by YubiKey Manager"
-msgstr "No changes have been made by YubiKey Manager"
-
-msgid "No hardware serial · {0}"
-msgstr "No hardware serial · {0}"
+msgid "No hardware serial"
+msgstr "No hardware serial"
 
 msgid "No resident SSH credentials"
 msgstr "No resident SSH credentials"
 
+msgid "No resident SSH keys found"
+msgstr "No resident SSH keys found"
+
+msgid "No signing"
+msgstr "No signing"
+
 msgid "No ssh:* discoverable credentials were found on this key."
 msgstr "No ssh:* discoverable credentials were found on this key."
 
-msgid "Not currently connected"
-msgstr "Not currently connected"
-
-msgid "One credential for SSH and Git"
-msgstr "One credential for SSH and Git"
-
-msgid "Open SSH Keys, inspect the desired YubiKey, then return here."
-msgstr "Open SSH Keys, inspect the desired YubiKey, then return here."
+msgid "Not configured"
+msgstr "Not configured"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
@@ -458,11 +439,8 @@ msgstr "OpenSSH reported success, but no new resident credential was detected. D
 msgid "OpenSSH/FIDO credential metadata and local file location"
 msgstr "OpenSSH/FIDO credential metadata and local file location"
 
-msgid "Optional · lightweight tags are unaffected"
-msgstr "Optional · lightweight tags are unaffected"
-
-msgid "Password sign-in only"
-msgstr "Password sign-in only"
+msgid "Passwordless"
+msgstr "Passwordless"
 
 msgid "Permanently delete"
 msgstr "Permanently delete"
@@ -473,8 +451,20 @@ msgstr "Permanently delete from YubiKey…"
 msgid "Permanently delete this resident SSH credential?"
 msgstr "Permanently delete this resident SSH credential?"
 
-msgid "Recommended · Git asks the selected YubiKey to sign each new commit"
-msgstr "Recommended · Git asks the selected YubiKey to sign each new commit"
+msgid "Protect authentication and commit signing"
+msgstr "Protect authentication and commit signing"
+
+msgid "Protection for {0}"
+msgstr "Protection for {0}"
+
+msgid "Reading account security settings…"
+msgstr "Reading account security settings…"
+
+msgid "Ready to inspect"
+msgstr "Ready to inspect"
+
+msgid "Ready to protect {0}"
+msgstr "Ready to protect {0}"
 
 msgid "Refresh connected YubiKeys"
 msgstr "Refresh connected YubiKeys"
@@ -509,17 +499,11 @@ msgstr "Resident username"
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr "Resident username must contain 1–64 bytes and no control characters."
 
-msgid "Restoring previous Git signing settings…"
-msgstr "Restoring previous Git signing settings…"
-
-msgid "Review and apply"
-msgstr "Review and apply"
-
 msgid "Run ssh-add -K for this connected security key"
 msgstr "Run ssh-add -K for this connected security key"
 
-msgid "SSH Keys"
-msgstr "SSH Keys"
+msgid "SSH & Git"
+msgstr "SSH & Git"
 
 msgid "SSH agent"
 msgstr "SSH agent"
@@ -530,11 +514,14 @@ msgstr "SSH agent connected"
 msgid "SSH agent unavailable"
 msgstr "SSH agent unavailable"
 
-msgid "SSH commit signing is configured"
-msgstr "SSH commit signing is configured"
+msgid "SSH commit signing"
+msgstr "SSH commit signing"
 
 msgid "SSH key actions"
 msgstr "SSH key actions"
+
+msgid "SSH keys"
+msgstr "SSH keys"
 
 msgid "SSH_AUTH_SOCK is not set"
 msgstr "SSH_AUTH_SOCK is not set"
@@ -542,35 +529,23 @@ msgstr "SSH_AUTH_SOCK is not set"
 msgid "Safe defaults use ECDSA-SK, require touch, and store a discoverable credential on the selected YubiKey."
 msgstr "Safe defaults use ECDSA-SK, require touch, and store a discoverable credential on the selected YubiKey."
 
-msgid "Security keys"
-msgstr "Security keys"
+msgid "Secure sudo authorization"
+msgstr "Secure sudo authorization"
 
-msgid "Separated duties · keep SSH authentication and Git signing identities distinct"
-msgstr "Separated duties · keep SSH authentication and Git signing identities distinct"
+msgid "Security Center"
+msgstr "Security Center"
 
 msgid "Serial {0}"
 msgstr "Serial {0}"
 
-msgid "Settings apply to the current user's global Git configuration. Repository settings may override them."
-msgstr "Settings apply to the current user's global Git configuration. Repository settings may override them."
+msgid "Sign in, authorize sudo, and protect SSH and Git identities with a physical touch."
+msgstr "Sign in, authorize sudo, and protect SSH and Git identities with a physical touch."
 
-msgid "Sign annotated tags"
-msgstr "Sign annotated tags"
-
-msgid "Sign every commit"
-msgstr "Sign every commit"
-
-msgid "Signing behavior"
-msgstr "Signing behavior"
-
-msgid "Signing credential"
-msgstr "Signing credential"
+msgid "Sign-in"
+msgstr "Sign-in"
 
 msgid "Signing test passed"
 msgstr "Signing test passed"
-
-msgid "Simple · select the same credential you use to authenticate Git pushes"
-msgstr "Simple · select the same credential you use to authenticate Git pushes"
 
 msgid "Temporary public-key path is invalid."
 msgstr "Temporary public-key path is invalid."
@@ -586,9 +561,6 @@ msgstr "Test signing"
 
 msgid "The FIDO enrollment tool is not installed. Install the libpam-u2f package, then try again."
 msgstr "The FIDO enrollment tool is not installed. Install the libpam-u2f package, then try again."
-
-msgid "The Git signing recovery record is invalid: {0}"
-msgstr "The Git signing recovery record is invalid: {0}"
 
 msgid "The PIN is sent directly to ssh-add and is never stored."
 msgstr "The PIN is sent directly to ssh-add and is never stored."
@@ -620,9 +592,6 @@ msgstr "The enrollment task failed."
 
 msgid "The exact resident credential is no longer present on the selected YubiKey. Local .pub or key-handle files and any SSH-agent entry were not removed."
 msgstr "The exact resident credential is no longer present on the selected YubiKey. Local .pub or key-handle files and any SSH-agent entry were not removed."
-
-msgid "The first change saves your previous Git signing values. Disabling restores them unless another program changed the managed settings."
-msgstr "The first change saves your previous Git signing values. Disabling restores them unless another program changed the managed settings."
 
 msgid "The inspected resident SSH credentials are already available in this agent."
 msgstr "The inspected resident SSH credentials are already available in this agent."
@@ -727,20 +696,26 @@ msgstr "The temporary Git signature path is invalid."
 msgid "The temporary Git signing path is invalid."
 msgstr "The temporary Git signing path is invalid."
 
-msgid "The user configuration folder is unavailable."
-msgstr "The user configuration folder is unavailable."
+msgid "These keys are trusted by this account but are not currently connected."
+msgstr "These keys are trusted by this account but are not currently connected."
 
 msgid "This PIN authorizes permanent deletion of the exact credential shown in the previous step. It is never stored."
 msgstr "This PIN authorizes permanent deletion of the exact credential shown in the previous step. It is never stored."
 
-msgid "This credential needs a local key-handle file or must be loaded into the SSH agent before Git can use it."
-msgstr "This credential needs a local key-handle file or must be loaded into the SSH agent before Git can use it."
+msgid "This is not a supported OpenSSH security-key public key."
+msgstr "This is not a supported OpenSSH security-key public key."
 
 msgid "This removes the private credential from the selected YubiKey and cannot be undone. It does not remove local files or an identity already loaded in the SSH agent."
 msgstr "This removes the private credential from the selected YubiKey and cannot be undone. It does not remove local files or an identity already loaded in the SSH agent."
 
 msgid "This setting applies only to the current user."
 msgstr "This setting applies only to the current user."
+
+msgid "This will only take a moment."
+msgstr "This will only take a moment."
+
+msgid "Touch the YubiKey if it flashes."
+msgstr "Touch the YubiKey if it flashes."
 
 msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
@@ -763,6 +738,9 @@ msgstr "Touch this key when prompted to enroll it for sudo"
 msgid "Touch your security key to continue."
 msgstr "Touch your security key to continue."
 
+msgid "Try Again"
+msgstr "Try Again"
+
 msgid "Type {0} to confirm"
 msgstr "Type {0} to confirm"
 
@@ -778,11 +756,17 @@ msgstr "Unlock sudo"
 msgid "Unlock the current user"
 msgstr "Unlock the current user"
 
+msgid "Unlock your account with a touch"
+msgstr "Unlock your account with a touch"
+
 msgid "Unnamed SSH credential"
 msgstr "Unnamed SSH credential"
 
 msgid "Unsupported resident SSH public-key algorithm."
 msgstr "Unsupported resident SSH public-key algorithm."
+
+msgid "Updating Git commit signing…"
+msgstr "Updating Git commit signing…"
 
 msgid "Updating sign-in settings…"
 msgstr "Updating sign-in settings…"
@@ -793,38 +777,35 @@ msgstr "Updating sudo settings…"
 msgid "Use YubiKey to unlock sudo"
 msgstr "Use YubiKey to unlock sudo"
 
-msgid "Use a YubiKey-backed SSH credential to sign commits and tags. SSH authentication and Git signing remain independently configurable."
-msgstr "Use a YubiKey-backed SSH credential to sign commits and tags. SSH authentication and Git signing remain independently configurable."
-
 msgid "Verifying and permanently deleting the selected resident credential. Do not unplug the YubiKey…"
 msgstr "Verifying and permanently deleting the selected resident credential. Do not unplug the YubiKey…"
+
+msgid "Waiting for a configured YubiKey"
+msgstr "Waiting for a configured YubiKey"
 
 msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
 msgstr "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
 
+msgid "Your security settings are ready. Connect a configured YubiKey when you need it."
+msgstr "Your security settings are ready. Connect a configured YubiKey when you need it."
+
 msgid "YubiKey"
 msgstr "YubiKey"
-
-msgid "YubiKey Manager"
-msgstr "YubiKey Manager"
-
-msgid "YubiKey Manager is unavailable"
-msgstr "YubiKey Manager is unavailable"
 
 msgid "YubiKey configuration failed"
 msgstr "YubiKey configuration failed"
 
-msgid "YubiKey configured, but sudo currently bypasses authentication"
-msgstr "YubiKey configured, but sudo currently bypasses authentication"
+msgid "YubiKey connected"
+msgstr "YubiKey connected"
 
-msgid "YubiKey touch or account password can authorize sudo"
-msgstr "YubiKey touch or account password can authorize sudo"
+msgid "YubiKey or account password"
+msgstr "YubiKey or account password"
 
-msgid "YubiKey touch or password can unlock this user"
-msgstr "YubiKey touch or password can unlock this user"
+msgid "YubiKey without hardware serial"
+msgstr "YubiKey without hardware serial"
 
-msgid "YubiKey-backed SSH signatures are enabled for every commit"
-msgstr "YubiKey-backed SSH signatures are enabled for every commit"
+msgid "YubiKey · Serial {0}"
+msgstr "YubiKey · Serial {0}"
 
 msgid ""
 "YubiKey: {0}\n"
@@ -841,20 +822,20 @@ msgstr ""
 "Algorithm: {4}\n"
 "Fingerprint: {5}"
 
+msgid "YubiKeys"
+msgstr "YubiKeys"
+
 msgid "agent"
 msgstr "agent"
 
 msgid "fido2-token reported success, but the resident credential is still present. Do not retry until you refresh and inspect the YubiKey."
 msgstr "fido2-token reported success, but the resident credential is still present. Do not retry until you refresh and inspect the YubiKey."
 
-msgid "sudo authentication"
-msgstr "sudo authentication"
+msgid "sudo authentication is bypassed"
+msgstr "sudo authentication is bypassed"
 
 msgid "sudo authentication policy"
 msgstr "sudo authentication policy"
-
-msgid "sudo currently allows administrator access without authentication"
-msgstr "sudo currently allows administrator access without authentication"
 
 msgid "unknown"
 msgstr "unknown"
@@ -865,6 +846,12 @@ msgstr "unknown socket"
 msgid "user"
 msgstr "user"
 
+msgid "{0} SSH keys loaded"
+msgstr "{0} SSH keys loaded"
+
+msgid "{0} YubiKeys connected"
+msgstr "{0} YubiKeys connected"
+
 msgid "{0} exited with {1}"
 msgstr "{0} exited with {1}"
 
@@ -873,9 +860,6 @@ msgstr "{0} failed: {1}"
 
 msgid "{0} identities · {1}"
 msgstr "{0} identities · {1}"
-
-msgid "{0} is configured, but another policy currently bypasses it"
-msgstr "{0} is configured, but another policy currently bypasses it"
 
 msgid "{0} is enabled for this YubiKey"
 msgstr "{0} is enabled for this YubiKey"
@@ -889,8 +873,218 @@ msgstr "{0} new SSH identities were added to the agent."
 msgid "{0} new SSH identity was added to the agent."
 msgstr "{0} new SSH identity was added to the agent."
 
+msgid "{0} resident credentials inspected"
+msgstr "{0} resident credentials inspected"
+
 msgid "{0} · no hardware serial"
 msgstr "{0} · no hardware serial"
 
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
+
+#~ msgid "Git Signing"
+#~ msgstr "Git Signing"
+
+#~ msgid "SSH Keys"
+#~ msgstr "SSH Keys"
+
+#~ msgid "Account password is required for sudo"
+#~ msgstr "Account password is required for sudo"
+
+#~ msgid "An SSH signing key is selected; automatic commit signing is disabled"
+#~ msgstr "An SSH signing key is selected; automatic commit signing is disabled"
+
+#~ msgid "AnduinOS sign-in"
+#~ msgstr "AnduinOS sign-in"
+
+#~ msgid "Commit signing is not configured"
+#~ msgstr "Commit signing is not configured"
+
+#~ msgid "Configured features"
+#~ msgstr "Configured features"
+
+#~ msgid "Current user: {0}"
+#~ msgstr "Current user: {0}"
+
+#~ msgid "Git commit signing"
+#~ msgstr "Git commit signing"
+
+#~ msgid "No YubiKey detected"
+#~ msgstr "No YubiKey detected"
+
+#~ msgid "No hardware serial · {0}"
+#~ msgstr "No hardware serial · {0}"
+
+#~ msgid "Not currently connected"
+#~ msgstr "Not currently connected"
+
+#~ msgid "Password sign-in only"
+#~ msgstr "Password sign-in only"
+
+#~ msgid "Security keys"
+#~ msgstr "Security keys"
+
+#~ msgid "YubiKey Manager"
+#~ msgstr "YubiKey Manager"
+
+#~ msgid "YubiKey Manager is unavailable"
+#~ msgstr "YubiKey Manager is unavailable"
+
+#~ msgid "YubiKey configured, but sudo currently bypasses authentication"
+#~ msgstr "YubiKey configured, but sudo currently bypasses authentication"
+
+#~ msgid "YubiKey touch or account password can authorize sudo"
+#~ msgstr "YubiKey touch or account password can authorize sudo"
+
+#~ msgid "YubiKey touch or password can unlock this user"
+#~ msgstr "YubiKey touch or password can unlock this user"
+
+#~ msgid "YubiKey-backed SSH signatures are enabled for every commit"
+#~ msgstr "YubiKey-backed SSH signatures are enabled for every commit"
+
+#~ msgid "sudo authentication"
+#~ msgstr "sudo authentication"
+
+#~ msgid "sudo currently allows administrator access without authentication"
+#~ msgstr "sudo currently allows administrator access without authentication"
+
+#~ msgid "{0} is configured, but another policy currently bypasses it"
+#~ msgstr "{0} is configured, but another policy currently bypasses it"
+
+#~ msgid "Apply"
+#~ msgstr "Apply"
+
+#~ msgid "Applying Git SSH signing settings…"
+#~ msgstr "Applying Git SSH signing settings…"
+
+#~ msgid "Both choices use one physical YubiKey. Choose whether one SSH credential does both jobs or a separate credential signs Git history."
+#~ msgstr "Both choices use one physical YubiKey. Choose whether one SSH credential does both jobs or a separate credential signs Git history."
+
+#~ msgid "Choose how you use your keys"
+#~ msgstr "Choose how you use your keys"
+
+#~ msgid "Choose the credential already used for SSH authentication. Git will reuse it for signatures."
+#~ msgstr "Choose the credential already used for SSH authentication. Git will reuse it for signatures."
+
+#~ msgid "Choose the credential reserved for signatures. Your SSH authentication credential is left unchanged."
+#~ msgstr "Choose the credential reserved for signatures. Your SSH authentication credential is left unchanged."
+
+#~ msgid "Could not create the Git signing recovery record: {0}"
+#~ msgstr "Could not create the Git signing recovery record: {0}"
+
+#~ msgid "Could not create the application configuration folder: {0}"
+#~ msgstr "Could not create the application configuration folder: {0}"
+
+#~ msgid "Could not encode the Git signing recovery record: {0}"
+#~ msgstr "Could not encode the Git signing recovery record: {0}"
+
+#~ msgid "Could not protect the application configuration folder: {0}"
+#~ msgstr "Could not protect the application configuration folder: {0}"
+
+#~ msgid "Could not read the Git signing recovery record: {0}"
+#~ msgstr "Could not read the Git signing recovery record: {0}"
+
+#~ msgid "Could not save the Git signing recovery record: {0}"
+#~ msgstr "Could not save the Git signing recovery record: {0}"
+
+#~ msgid "Dedicated Git signing credential"
+#~ msgstr "Dedicated Git signing credential"
+
+#~ msgid "Disable and restore"
+#~ msgstr "Disable and restore"
+
+#~ msgid "Git is not installed"
+#~ msgstr "Git is not installed"
+
+#~ msgid "Git settings were restored, but the recovery record could not be removed: {0}"
+#~ msgstr "Git settings were restored, but the recovery record could not be removed: {0}"
+
+#~ msgid "Git signing configured"
+#~ msgstr "Git signing configured"
+
+#~ msgid "Git signing is not configured"
+#~ msgstr "Git signing is not configured"
+
+#~ msgid "Git signing settings changed outside this application. Review the current Git configuration before replacing or restoring it."
+#~ msgstr "Git signing settings changed outside this application. Review the current Git configuration before replacing or restoring it."
+
+#~ msgid "Git will use the selected YubiKey-backed SSH credential. Your SSH authentication configuration was not changed."
+#~ msgstr "Git will use the selected YubiKey-backed SSH credential. Your SSH authentication configuration was not changed."
+
+#~ msgid "Global Git configuration"
+#~ msgstr "Global Git configuration"
+
+#~ msgid "Inspect a YubiKey first"
+#~ msgstr "Inspect a YubiKey first"
+
+#~ msgid "Load into the SSH agent or restore its local key handle"
+#~ msgstr "Load into the SSH agent or restore its local key handle"
+
+#~ msgid "Local key handle"
+#~ msgstr "Local key handle"
+
+#~ msgid "Managed by YubiKey Manager · previous values can be restored"
+#~ msgstr "Managed by YubiKey Manager · previous values can be restored"
+
+#~ msgid "No Git signing configuration managed by this application was found."
+#~ msgstr "No Git signing configuration managed by this application was found."
+
+#~ msgid "No changes have been made by YubiKey Manager"
+#~ msgstr "No changes have been made by YubiKey Manager"
+
+#~ msgid "One credential for SSH and Git"
+#~ msgstr "One credential for SSH and Git"
+
+#~ msgid "Open SSH Keys, inspect the desired YubiKey, then return here."
+#~ msgstr "Open SSH Keys, inspect the desired YubiKey, then return here."
+
+#~ msgid "Optional · lightweight tags are unaffected"
+#~ msgstr "Optional · lightweight tags are unaffected"
+
+#~ msgid "Recommended · Git asks the selected YubiKey to sign each new commit"
+#~ msgstr "Recommended · Git asks the selected YubiKey to sign each new commit"
+
+#~ msgid "Restoring previous Git signing settings…"
+#~ msgstr "Restoring previous Git signing settings…"
+
+#~ msgid "Review and apply"
+#~ msgstr "Review and apply"
+
+#~ msgid "SSH commit signing is configured"
+#~ msgstr "SSH commit signing is configured"
+
+#~ msgid "Separated duties · keep SSH authentication and Git signing identities distinct"
+#~ msgstr "Separated duties · keep SSH authentication and Git signing identities distinct"
+
+#~ msgid "Settings apply to the current user's global Git configuration. Repository settings may override them."
+#~ msgstr "Settings apply to the current user's global Git configuration. Repository settings may override them."
+
+#~ msgid "Sign annotated tags"
+#~ msgstr "Sign annotated tags"
+
+#~ msgid "Sign every commit"
+#~ msgstr "Sign every commit"
+
+#~ msgid "Signing behavior"
+#~ msgstr "Signing behavior"
+
+#~ msgid "Signing credential"
+#~ msgstr "Signing credential"
+
+#~ msgid "Simple · select the same credential you use to authenticate Git pushes"
+#~ msgstr "Simple · select the same credential you use to authenticate Git pushes"
+
+#~ msgid "The Git signing recovery record is invalid: {0}"
+#~ msgstr "The Git signing recovery record is invalid: {0}"
+
+#~ msgid "The first change saves your previous Git signing values. Disabling restores them unless another program changed the managed settings."
+#~ msgstr "The first change saves your previous Git signing values. Disabling restores them unless another program changed the managed settings."
+
+#~ msgid "The user configuration folder is unavailable."
+#~ msgstr "The user configuration folder is unavailable."
+
+#~ msgid "This credential needs a local key-handle file or must be loaded into the SSH agent before Git can use it."
+#~ msgstr "This credential needs a local key-handle file or must be loaded into the SSH agent before Git can use it."
+
+#~ msgid "Use a YubiKey-backed SSH credential to sign commits and tags. SSH authentication and Git signing remain independently configurable."
+#~ msgstr "Use a YubiKey-backed SSH credential to sign commits and tags. SSH authentication and Git signing remain independently configurable."

@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Restricted privileged helper for AnduinOS YubiKey Manager."""
+"""Restricted privileged helper for AnduinOS YubiKey Security Center."""
 
 import fcntl
 import json
@@ -159,6 +159,59 @@ def sudo_enrolled(metadata, username):
     )
 
 
+def read_managed_passwordless_users():
+    try:
+        with open(MANAGED_SUDOERS, encoding="utf-8") as source:
+            lines = source.read().splitlines()
+    except FileNotFoundError:
+        return []
+    rule = re.compile(
+        r"^\s*([a-z_][a-z0-9_-]{0,31})\s+ALL\s*=\s*"
+        r"\(ALL(?::ALL)?\)\s+NOPASSWD\s*:\s*ALL\s*$"
+    )
+    users = []
+    for line in lines:
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        match = rule.fullmatch(line)
+        if not match:
+            fail("The managed sudo policy contains an unexpected rule.")
+        if match.group(1) not in users:
+            users.append(match.group(1))
+    return users
+
+
+def repair_integrations(metadata):
+    entries = metadata["enrollments"]
+    for purpose, (_, mapping_path) in PAM_CONFIG.items():
+        mappings = {}
+        for item in entries:
+            if item.get("purpose", "gdm") != purpose:
+                continue
+            username = item.get("username", "")
+            serial = item.get("serial", "")
+            credential = item.get("credential", "")
+            validate_common(username, serial)
+            if not CREDENTIAL_RE.fullmatch(credential):
+                fail("The enrollment metadata contains an invalid PAM credential.")
+            user_credentials = mappings.setdefault(username, [])
+            if credential not in user_credentials:
+                user_credentials.append(credential)
+        mapping_text = "".join(
+            username + ":" + ":".join(credentials) + "\n"
+            for username, credentials in sorted(mappings.items())
+            if credentials
+        )
+        atomic_write(mapping_path, mapping_text, 0o600)
+        ensure_pam(purpose, bool(mappings))
+    metadata["passwordless_sudo_users"] = read_managed_passwordless_users()
+    atomic_write(
+        METADATA,
+        json.dumps(metadata, indent=2, sort_keys=True) + "\n",
+        0o644,
+    )
+
+
 def validate_sudoers():
     result = subprocess.run(
         ["/usr/sbin/visudo", "-cf", "/etc/sudoers"],
@@ -181,7 +234,18 @@ def set_passwordless_sudo(username, enabled, metadata):
     validate_sudoers()
     backups = {}
     try:
+        if os.path.exists(METADATA):
+            with open(METADATA, encoding="utf-8") as source:
+                backups[METADATA] = (
+                    source.read(),
+                    os.stat(METADATA).st_mode & 0o777,
+                )
+        else:
+            backups[METADATA] = None
+        passwordless_users = set(metadata.get("passwordless_sudo_users", []))
+        passwordless_users.update(read_managed_passwordless_users())
         if enabled:
+            passwordless_users.add(username)
             if os.path.exists(MANAGED_SUDOERS):
                 with open(MANAGED_SUDOERS, encoding="utf-8") as source:
                     backups[MANAGED_SUDOERS] = (
@@ -192,10 +256,14 @@ def set_passwordless_sudo(username, enabled, metadata):
                 backups[MANAGED_SUDOERS] = None
             atomic_write(
                 MANAGED_SUDOERS,
-                f"{username} ALL=(ALL:ALL) NOPASSWD: ALL\n",
+                "".join(
+                    f"{item} ALL=(ALL:ALL) NOPASSWD: ALL\n"
+                    for item in sorted(passwordless_users)
+                ),
                 0o440,
             )
         else:
+            passwordless_users.discard(username)
             escaped = re.escape(username)
             rule = re.compile(
                 rf"^\s*{escaped}\s+ALL\s*=\s*\(ALL(?::ALL)?\)\s+"
@@ -218,6 +286,12 @@ def set_passwordless_sudo(username, enabled, metadata):
                     backups[path][1],
                 )
         validate_sudoers()
+        metadata["passwordless_sudo_users"] = sorted(passwordless_users)
+        atomic_write(
+            METADATA,
+            json.dumps(metadata, indent=2, sort_keys=True) + "\n",
+            0o644,
+        )
     except BaseException:
         for path, backup in backups.items():
             if backup is None:
@@ -231,6 +305,12 @@ def set_passwordless_sudo(username, enabled, metadata):
 def main():
     if os.geteuid() != 0:
         fail("This helper must run as root.")
+    if len(sys.argv) == 2 and sys.argv[1] == "repair":
+        os.makedirs(CONFIG_DIR, mode=0o755, exist_ok=True)
+        with open(CONFIG_DIR + "/.lock", "w", encoding="utf-8") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            repair_integrations(read_metadata())
+        return
     if len(sys.argv) == 4 and sys.argv[1] == "passwordless-sudo":
         username, mode = sys.argv[2:4]
         if mode not in ("enable", "disable"):
@@ -242,7 +322,8 @@ def main():
         return
     if len(sys.argv) not in (5, 6):
         fail(
-            "Usage: helper enroll PURPOSE USER SERIAL CREDENTIAL | "
+            "Usage: helper repair | "
+            "helper enroll PURPOSE USER SERIAL CREDENTIAL | "
             "helper remove PURPOSE USER SERIAL"
         )
     action, purpose, username, serial = sys.argv[1:5]

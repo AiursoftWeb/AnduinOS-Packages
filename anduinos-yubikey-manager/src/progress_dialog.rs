@@ -20,7 +20,7 @@ where
         .resizable(false)
         .default_width(380)
         .default_height(140)
-        .title(i18n("YubiKey Manager"))
+        .title(i18n("AnduinOS YubiKey Security Center"))
         .build();
 
     let content = gtk::Box::builder()

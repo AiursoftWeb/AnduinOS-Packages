@@ -1,6 +1,17 @@
 #!/bin/bash
 set -e
 
+# dpkg runs prerm before unpacking an upgrade. User authentication policy is
+# persistent state, so it must only be detached when the package is actually
+# removed or deconfigured.
+case "${1:-}" in
+    remove|deconfigure)
+        ;;
+    upgrade|failed-upgrade|*)
+        exit 0
+        ;;
+esac
+
 python3 <<'PY'
 import os
 import tempfile

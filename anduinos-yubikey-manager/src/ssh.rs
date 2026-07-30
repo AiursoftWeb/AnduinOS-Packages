@@ -600,7 +600,7 @@ pub fn test_git_signing(
         )
     })?;
     let message = directory.path().join("git-signing-test");
-    fs::write(&message, b"AnduinOS YubiKey Manager Git signing test\n").map_err(|error| {
+    fs::write(&message, b"AnduinOS YubiKey Security Center Git signing test\n").map_err(|error| {
         i18n_fmt(
             &i18n("Could not prepare the Git signing test: {0}"),
             &[&error.to_string()],
@@ -659,7 +659,7 @@ pub fn test_git_signing(
             "-s",
             signature_text,
         ],
-        Some("AnduinOS YubiKey Manager Git signing test\n"),
+        Some("AnduinOS YubiKey Security Center Git signing test\n"),
     )
     .map(|_| ())
     .map_err(|error| {

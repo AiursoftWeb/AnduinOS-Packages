@@ -1,6 +1,6 @@
 use crate::config;
 use crate::i18n::{i18n, i18n_fmt};
-use crate::model::{Enrollment, EnrollmentFile, YubiKey};
+use crate::model::{EnrollmentFile, YubiKey};
 use std::fs;
 use std::path::Path;
 use std::process::{Command, Stdio};
@@ -40,6 +40,33 @@ pub fn list_yubikeys() -> Result<Vec<YubiKey>, String> {
     list_from_sysfs()
 }
 
+/// Fast, non-interactive device inventory for the home page and hotplug path.
+/// This reads sysfs only and must never trigger a PIN, PAM, or touch request.
+pub fn list_yubikeys_fast() -> Result<Vec<YubiKey>, String> {
+    list_from_sysfs()
+}
+
+/// Device inventory for explicit GDM and sudo pages.
+///
+/// USB sysfs intentionally remains the hotplug source, but FIDO-only YubiKeys
+/// may omit their serial from USB descriptors. In that case a short,
+/// non-interactive `ykman list` probe supplies the stable serial used by
+/// enrollment metadata. The summary probe is bounded and accepted only when
+/// it accounts for every sysfs YubiKey, so multi-key identities are never
+/// guessed by position.
+pub fn list_yubikeys_for_security() -> Result<Vec<YubiKey>, String> {
+    let sysfs = list_from_sysfs()?;
+    if sysfs.iter().all(|key| !key.serial.starts_with("usb-")) {
+        return Ok(sysfs);
+    }
+    match list_with_ykman_summary() {
+        Ok(identified) if !identified.is_empty() && identified.len() == sysfs.len() => {
+            Ok(identified)
+        }
+        _ => Ok(sysfs),
+    }
+}
+
 fn command_exists(program: &str) -> bool {
     Command::new(program)
         .arg("--version")
@@ -59,6 +86,54 @@ fn list_with_ykman() -> Result<Vec<YubiKey>, String> {
         devices.push(parse_info(serial, &info));
     }
     Ok(devices)
+}
+
+fn list_with_ykman_summary() -> Result<Vec<YubiKey>, String> {
+    let output = Command::new("timeout")
+        .args([
+            "--signal=TERM",
+            "--kill-after=1s",
+            "2s",
+            "ykman",
+            "list",
+        ])
+        .stdin(Stdio::null())
+        .output()
+        .map_err(|error| error.to_string())?;
+    if !output.status.success() {
+        return Err(String::from_utf8_lossy(&output.stderr).trim().to_string());
+    }
+    let mut devices = String::from_utf8_lossy(&output.stdout)
+        .lines()
+        .filter_map(parse_ykman_list_summary)
+        .collect::<Vec<_>>();
+    devices.sort_by(|left, right| left.serial.cmp(&right.serial));
+    devices.dedup_by(|left, right| left.serial == right.serial);
+    Ok(devices)
+}
+
+fn parse_ykman_list_summary(line: &str) -> Option<YubiKey> {
+    let (identity, serial) = line.rsplit_once(" Serial: ")?;
+    let serial = serial.trim();
+    if serial.is_empty() || !serial.chars().all(|character| character.is_ascii_digit()) {
+        return None;
+    }
+    let (model_and_version, interfaces) = identity.rsplit_once(" [")?;
+    let interfaces = interfaces.strip_suffix(']')?.trim();
+    let version_start = model_and_version.rfind(" (")?;
+    let name = model_and_version[..version_start].trim();
+    let firmware = model_and_version[version_start + 2..]
+        .strip_suffix(')')?
+        .trim();
+    if name.is_empty() || firmware.is_empty() {
+        return None;
+    }
+    Some(YubiKey {
+        name: name.to_string(),
+        serial: serial.to_string(),
+        firmware: firmware.to_string(),
+        interfaces: interfaces.to_string(),
+    })
 }
 
 fn list_from_sysfs() -> Result<Vec<YubiKey>, String> {
@@ -84,7 +159,9 @@ fn list_from_sysfs() -> Result<Vec<YubiKey>, String> {
             hardware_serial
         };
         let product = read_trimmed(path.join("product")).unwrap_or_else(|| i18n("YubiKey"));
-        let firmware = read_trimmed(path.join("bcdDevice")).unwrap_or_default();
+        let firmware = read_trimmed(path.join("bcdDevice"))
+            .map(|value| format_bcd_firmware(&value))
+            .unwrap_or_default();
         devices.push(YubiKey {
             name: product,
             serial,
@@ -101,6 +178,17 @@ fn read_trimmed(path: impl AsRef<Path>) -> Option<String> {
     fs::read_to_string(path)
         .ok()
         .map(|value| value.trim().to_string())
+}
+
+fn format_bcd_firmware(value: &str) -> String {
+    let digits = value.trim_start_matches('0');
+    if digits.len() >= 3 && digits.chars().all(|character| character.is_ascii_digit()) {
+        let (major, remainder) = digits.split_at(digits.len() - 2);
+        let (minor, patch) = remainder.split_at(1);
+        format!("{major}.{minor}.{patch}")
+    } else {
+        value.to_string()
+    }
 }
 
 fn parse_info(serial: &str, info: &str) -> YubiKey {
@@ -127,24 +215,11 @@ fn parse_info(serial: &str, info: &str) -> YubiKey {
     }
 }
 
-pub fn enrollments() -> Vec<Enrollment> {
+pub fn security_state() -> EnrollmentFile {
     fs::read_to_string(config::METADATA)
         .ok()
         .and_then(|data| serde_json::from_str::<EnrollmentFile>(&data).ok())
         .unwrap_or_default()
-        .enrollments
-}
-
-pub fn is_enrolled(username: &str, serial: &str) -> bool {
-    is_enrolled_for("gdm", username, serial)
-}
-
-pub fn is_enrolled_for(purpose: &str, username: &str, serial: &str) -> bool {
-    enrollments()
-        .iter()
-        .any(|item| {
-            item.purpose == purpose && item.username == username && item.serial == serial
-        })
 }
 
 pub fn register_credential(purpose: &str, username: &str, serial: &str) -> Result<(), String> {
@@ -178,18 +253,6 @@ pub fn register_credential(purpose: &str, username: &str, serial: &str) -> Resul
 
 pub fn remove_credential(purpose: &str, username: &str, serial: &str) -> Result<(), String> {
     run_helper(&["remove", purpose, username, serial])
-}
-
-pub fn passwordless_sudo() -> bool {
-    let output = Command::new("sudo")
-        .args(["-n", "-l"])
-        .stdin(Stdio::null())
-        .output();
-    output
-        .ok()
-        .filter(|result| result.status.success())
-        .map(|result| String::from_utf8_lossy(&result.stdout).contains("NOPASSWD: ALL"))
-        .unwrap_or(false)
 }
 
 pub fn set_passwordless_sudo(username: &str, enabled: bool) -> Result<(), String> {
@@ -276,5 +339,28 @@ mod tests {
         let credential = normalize_credential(&output).unwrap();
         assert!(!credential.starts_with(':'));
         assert!(validate_credential(&credential).is_ok());
+    }
+
+    #[test]
+    fn formats_usb_bcd_as_a_firmware_version() {
+        assert_eq!(format_bcd_firmware("0574"), "5.7.4");
+        assert_eq!(format_bcd_firmware("1234"), "12.3.4");
+        assert_eq!(format_bcd_firmware(""), "");
+    }
+
+    #[test]
+    fn parses_noninteractive_ykman_list_summary() {
+        let key = parse_ykman_list_summary(
+            "YubiKey C Bio - FIDO Edition (5.7.4) [FIDO] Serial: 35411498",
+        )
+        .unwrap();
+        assert_eq!(key.name, "YubiKey C Bio - FIDO Edition");
+        assert_eq!(key.serial, "35411498");
+        assert_eq!(key.firmware, "5.7.4");
+        assert_eq!(key.interfaces, "FIDO");
+        assert!(parse_ykman_list_summary(
+            "YubiKey C Bio - FIDO Edition (5.7.4) [FIDO]"
+        )
+        .is_none());
     }
 }

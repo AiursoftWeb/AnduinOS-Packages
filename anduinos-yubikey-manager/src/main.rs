@@ -1,7 +1,9 @@
 mod application;
 mod backend;
 mod config;
+mod device_monitor;
 mod git_signing;
+mod home;
 mod i18n;
 mod model;
 mod progress_dialog;

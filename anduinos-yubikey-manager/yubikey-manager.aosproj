@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-yubikey-manager</PackageName>
-    <PackageVersion>0.1.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.3.0-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>AnduinOS YubiKey Manager — configure security keys for desktop sign-in</PackageDescription>
+    <PackageDescription>AnduinOS YubiKey Security Center — protect sign-in, sudo, SSH, and Git with security keys</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
@@ -33,6 +33,7 @@
   <ItemGroup>
     <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
     <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
+    <PostInstallScript Include="scripts/postinst.sh" />
     <PreRemoveScript Include="scripts/prerm.sh" />
   </ItemGroup>
 
@@ -42,6 +43,9 @@
     <IncludeFile Include="data/com.anduinos.yubikeymanager.desktop" Target="/usr/share/applications/com.anduinos.yubikeymanager.desktop" />
     <IncludeFile Include="data/com.anduinos.yubikeymanager.policy" Target="/usr/share/polkit-1/actions/com.anduinos.yubikeymanager.policy" />
     <IncludeFile Include="data/com.anduinos.yubikeymanager.svg" Target="/usr/share/icons/hicolor/scalable/apps/com.anduinos.yubikeymanager.svg" />
+    <IncludeFile Include="data/security-key-symbolic.svg" Target="/usr/share/icons/hicolor/symbolic/apps/com.anduinos.yubikeymanager-security-key-symbolic.svg" />
+    <IncludeFile Include="data/security-key-onboarding.svg" Target="/usr/share/anduinos-yubikey-manager/illustrations/security-key-onboarding.svg" />
+    <IncludeFile Include="data/security-key-connected.svg" Target="/usr/share/anduinos-yubikey-manager/illustrations/security-key-connected.svg" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
   </ItemGroup>
 </Project>

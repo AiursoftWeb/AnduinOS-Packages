@@ -1,4 +1,4 @@
-# YubiKey Manager Roadmap
+# AnduinOS YubiKey Security Center Roadmap
 
 ## Current status
 
@@ -25,20 +25,20 @@ from agent remains a separate, non-destructive action.** Labels, agent
 lifecycle, destination constraints, SSH config integration, and automatic
 loading remain future work.
 
-Git SSH signing now has an initial safe implementation:
+Git SSH signing now has a self-contained implementation:
 
-- A dedicated Git Signing page offers both a shared SSH/Git credential workflow
-  and a dedicated signing-credential workflow on the same physical YubiKey.
-- Existing inspected credentials are reused; local FIDO key handles are
-  preferred, with a loaded-agent fallback.
-- Global commit and annotated-tag signing can be configured independently.
-- Previous Git signing values are recoverable, external configuration conflicts
-  block overwrite/restore, and the signing test creates no repository or commit.
+- Connected YubiKeys and their SSH credentials can be loaded directly on the
+  Git page.
+- One radio group contains `No signing` and every SSH credential. Selection is
+  applied immediately, so shared and dedicated-key setups need no separate mode.
+- Local FIDO key handles are preferred, with an inline public-key/agent fallback.
+- Enabling a key displays GitHub Signing Key guidance and a copy-public-key action.
+- Failed configuration writes roll back to the immediately preceding values, and
+  the signing test creates no repository or commit.
 - Home and SSH credential rows expose Git signing status.
 
 Future Git work includes repository-local scope, an allowed-signers trust-file
-assistant, hosted-provider signing-key guidance, and a structured preview of
-every configuration change before Apply.
+assistant, and guidance for additional hosted providers.
 
 ## Phase 4: permanent deletion and advanced SSH management
 
