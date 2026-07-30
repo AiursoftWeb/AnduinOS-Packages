@@ -33,6 +33,18 @@ class LiveShortcutAssetTests(unittest.TestCase):
         )
         self.assertIn("metadata::trusted true", script)
 
+    def test_live_login_starts_the_installer_after_creating_the_shortcut(self):
+        script = (
+            PACKAGE / "assets/anduinos-installer-beta-live-shortcut"
+        ).read_text()
+        shortcut = script.index('install -m 0755 "$source" "$destination"')
+        launch = script.index("exec /usr/bin/anduinos-installer-beta")
+        self.assertLess(shortcut, launch)
+        self.assertIn(
+            "[ -x /usr/bin/anduinos-installer-beta ] || exit 0",
+            script,
+        )
+
     def test_desktop_file_target_matches_gtk_application_id(self):
         project = (
             PACKAGE / "anduinos-installer-beta.aosproj"
@@ -108,3 +120,8 @@ class LiveShortcutAssetTests(unittest.TestCase):
         ).read_text()
         self.assertIn("OnlyShowIn=GNOME;", autostart)
         self.assertIn("NoDisplay=true", autostart)
+        self.assertIn("X-GNOME-Autostart-enabled=true", autostart)
+        self.assertIn(
+            "Exec=/usr/lib/anduinos-installer-beta/create-live-shortcut",
+            autostart,
+        )

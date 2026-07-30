@@ -26,3 +26,10 @@ install -m 0755 "$source" "$destination"
 # GNOME/DING uses this metadata to avoid presenting a misleading
 # "Untrusted application launcher" file on the Live desktop.
 gio set "$destination" metadata::trusted true >/dev/null 2>&1 || true
+
+# The Live session is an installation environment: present the installer
+# immediately after GNOME finishes logging in.  The application ID keeps
+# repeated activations single-instance, while the Casper guards above ensure
+# this never runs on an installed system.
+[ -x /usr/bin/anduinos-installer-beta ] || exit 0
+exec /usr/bin/anduinos-installer-beta
