@@ -273,9 +273,12 @@ class ConfigureSystemTests(unittest.TestCase):
                     "--print",
                 )
             ] = (MACHINE_ID, "", 0)
-            ConfigureSystemStep(runner).execute(
-                InstallContext(plan, lambda _message: None, {"target": target})
+            messages = []
+            context = InstallContext(
+                plan, messages.append, {"target": target}
             )
+            step = ConfigureSystemStep(runner)
+            step.execute(context)
             sudoers = (
                 target / "etc/sudoers.d/90-anduinos-passwordless-admin"
             )
@@ -286,6 +289,28 @@ class ConfigureSystemTests(unittest.TestCase):
             gdm = (target / "etc/gdm3/custom.conf").read_text()
             self.assertIn("AutomaticLoginEnable=false", gdm)
             self.assertNotIn("AutomaticLogin=alice", gdm)
+            runner.outputs[
+                (
+                    "chroot",
+                    str(target),
+                    "getent",
+                    "passwd",
+                    plan.identity.username,
+                )
+            ] = (
+                "alice:x:1000:1000:Alice Example:/home/alice:/bin/bash\n",
+                "",
+                0,
+            )
+            runner.outputs[
+                ("chroot", str(target), "id", "-nG", "alice")
+            ] = ("alice sudo\n", "", 0)
+            step.verify(context)
+            self.assertIn("Account login: password authentication", messages)
+            self.assertIn("GDM automatic login: disabled", messages)
+            self.assertIn(
+                "Sudo authentication: password not required", messages
+            )
 
     def test_rejects_gecos_control_characters(self):
         base = valid_plan()

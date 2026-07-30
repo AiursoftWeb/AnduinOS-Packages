@@ -99,12 +99,18 @@ class ConfigureSystemStep:
                 timeout=30,
             )
             _write_gdm_autologin(target, identity.username, enabled=False)
+            context.log("Account login: password authentication")
+            context.log("GDM automatic login: disabled")
         else:
             self.runner.run(
                 ("chroot", str(target), "passwd", "--delete", identity.username),
                 timeout=30,
             )
             _write_gdm_autologin(target, identity.username, enabled=True)
+            context.log("Account login: passwordless shared account")
+            context.log(
+                f"GDM automatic login: enabled for {identity.username}"
+            )
 
         if identity.sudo_without_password:
             sudoers = _write_passwordless_sudo(target, identity.username)
@@ -119,8 +125,10 @@ class ConfigureSystemStep:
                 ),
                 timeout=30,
             )
+            context.log("Sudo authentication: password not required")
         else:
             _remove_passwordless_sudo(target)
+            context.log("Sudo authentication: account password required")
         self.runner.run(
             ("chroot", str(target), "passwd", "--lock", "root"),
             timeout=30,
@@ -210,13 +218,26 @@ class ConfigureSystemStep:
             )
             if sudoers.read_text(encoding="utf-8") != expected:
                 raise RuntimeError("Passwordless sudo policy verification failed")
+        elif sudoers.exists():
+            raise RuntimeError("Unexpected passwordless sudo policy")
+
+        expects_autologin = (
+            plan.identity.authentication
+            is AuthenticationMode.PASSWORDLESS_SHARED
+        )
+        if expects_autologin:
             if (
                 "AutomaticLoginEnable=true" not in gdm_text
                 or f"AutomaticLogin={plan.identity.username}" not in gdm_text
             ):
                 raise RuntimeError("Passwordless automatic login is not configured")
-        elif sudoers.exists():
-            raise RuntimeError("Unexpected passwordless sudo policy")
+        elif (
+            "AutomaticLoginEnable=false" not in gdm_text
+            or f"AutomaticLogin={plan.identity.username}" in gdm_text
+        ):
+            raise RuntimeError(
+                "Automatic login was not disabled for password authentication"
+            )
 
     def cleanup(self, context: InstallContext) -> None:
         return None
