@@ -31,15 +31,19 @@ lint-all:
     - export PATH="$PATH:$HOME/.dotnet/tools"
     - apkg --version
   script:
-    - cd $PACKAGE_DIR
-    - apkg publish
-    - APKG_FILE=$(ls bin/*.apkg 2>/dev/null | head -1)
-    - |-
+    - cd "$PACKAGE_DIR"
+    - |
       if [ "$CI_COMMIT_BRANCH" = "prod" ]; then
-        apkg push -f "$APKG_FILE" -s "https://apkg.aiursoft.com" -k "$APKG_PROD_API_KEY" --skip-duplicate
-      elif [ "$CI_COMMIT_BRANCH" = "master" ]; then
-        apkg push -f "$APKG_FILE" -s "https://apkg-dev.aiursoft.com" -k "$APKG_DEV_API_KEY" --skip-duplicate
+        APKG_SOURCE="https://apkg.aiursoft.com"
+        APKG_KEY="$APKG_PROD_API_KEY"
+      else
+        APKG_SOURCE="https://apkg-dev.aiursoft.com"
+        APKG_KEY="$APKG_DEV_API_KEY"
       fi
+      apkg deploy \
+        --source "$APKG_SOURCE" \
+        --api-key "$APKG_KEY" \
+        --skip-existing
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: never
