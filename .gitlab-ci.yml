@@ -346,6 +346,11 @@ anduinos-why-ai:
       - anduinos-why-ai/deploy/cache/
     policy: pull-push
 
+anduinos-yubikey-manager:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-yubikey-manager
+
 anduinos-why-placeholder:
   extends: .publish
   variables:

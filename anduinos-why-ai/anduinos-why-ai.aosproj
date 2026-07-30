@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-why-ai</PackageName>
-    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>why — a fully offline, zero-daemon LLM CLI backed by a bundled Qwen3.5 0.8B model. Ask questions in plain text, pipe in context from stdin, or run --serve for an OpenAI-compatible HTTP API.</PackageDescription>
+    <PackageDescription>why — a fully offline, zero-daemon LLM CLI backed by a bundled Gemma 4 E2B model. Ask questions in plain text, pipe in context from stdin, or run --serve for an OpenAI-compatible HTTP API.</PackageDescription>
     <Section>utils</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
@@ -24,8 +24,10 @@
 
   <ItemGroup>
     <Dependency Include="libvulkan1" />
-    <Dependency Include="llama.cpp" />
-    <Dependency Include="libggml0-backend-vulkan" />
+    <Dependency Include="libgomp1" />
+    <Dependency Include="libstdc++6" />
+    <Dependency Include="libgcc-s1" />
+    <Dependency Include="libc6" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,5 +39,7 @@
   <ItemGroup>
     <IncludeScript Include="obj/why" Target="/usr/bin/why" />
     <IncludeFolder Include="obj/usr/share/anduinos-why-ai" Target="/usr/share/anduinos-why-ai" />
+    <IncludeFile Include="MODEL-NOTICE" Target="/usr/share/doc/anduinos-why-ai/MODEL-NOTICE" />
+    <IncludeFile Include="MODEL-LICENSE" Target="/usr/share/doc/anduinos-why-ai/MODEL-LICENSE" />
   </ItemGroup>
 </Project>
