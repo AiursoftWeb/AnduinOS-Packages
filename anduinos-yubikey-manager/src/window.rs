@@ -1,5 +1,6 @@
 use crate::application::YubiKeyManagerApplication;
 use crate::backend;
+use crate::git_signing;
 use crate::i18n::{i18n, i18n_fmt};
 use crate::model::YubiKey;
 use crate::progress_dialog;
@@ -22,12 +23,18 @@ mod imp {
         pub login: RefCell<Option<adw::PreferencesPage>>,
         pub sudo: RefCell<Option<adw::PreferencesPage>>,
         pub ssh: RefCell<Option<adw::PreferencesPage>>,
+        pub git: RefCell<Option<adw::PreferencesPage>>,
         pub home_groups: RefCell<Vec<adw::PreferencesGroup>>,
         pub login_groups: RefCell<Vec<adw::PreferencesGroup>>,
         pub sudo_groups: RefCell<Vec<adw::PreferencesGroup>>,
         pub ssh_groups: RefCell<Vec<adw::PreferencesGroup>>,
+        pub git_groups: RefCell<Vec<adw::PreferencesGroup>>,
         pub ssh_results:
             RefCell<HashMap<String, Result<Vec<ssh::ResidentSshCredential>, String>>>,
+        pub git_selected_fingerprint: RefCell<Option<String>>,
+        pub git_separate_key: Cell<bool>,
+        pub git_sign_commits: Cell<bool>,
+        pub git_sign_tags: Cell<bool>,
     }
 
     #[glib::object_subclass]
@@ -76,10 +83,12 @@ impl YubiKeyManagerWindow {
         let login_row = nav_row("system-lock-screen-symbolic", &i18n("Unlock GDM"));
         let sudo_row = nav_row("security-high-symbolic", &i18n("Unlock sudo"));
         let ssh_row = nav_row("network-server-symbolic", &i18n("SSH Keys"));
+        let git_row = nav_row("application-x-generic-symbolic", &i18n("Git Signing"));
         sidebar.append(&home_row);
         sidebar.append(&login_row);
         sidebar.append(&sudo_row);
         sidebar.append(&ssh_row);
+        sidebar.append(&git_row);
         sidebar.select_row(Some(&home_row));
 
         let sidebar_header = adw::HeaderBar::builder()
@@ -107,10 +116,15 @@ impl YubiKeyManagerWindow {
             .title(i18n("SSH Keys"))
             .icon_name("network-server-symbolic")
             .build();
+        let git = adw::PreferencesPage::builder()
+            .title(i18n("Git Signing"))
+            .icon_name("application-x-generic-symbolic")
+            .build();
         stack.add_named(&home, Some("home"));
         stack.add_named(&login, Some("login"));
         stack.add_named(&sudo, Some("sudo"));
         stack.add_named(&ssh, Some("ssh"));
+        stack.add_named(&git, Some("git"));
 
         let menu = gio::Menu::new();
         menu.append(Some(&i18n("About")), Some("app.about"));
@@ -162,7 +176,8 @@ impl YubiKeyManagerWindow {
                     0 => "home",
                     1 => "login",
                     2 => "sudo",
-                    _ => "ssh",
+                    3 => "ssh",
+                    _ => "git",
                 });
                 if let Some(window) = weak.upgrade() {
                     window.refresh();
@@ -176,6 +191,7 @@ impl YubiKeyManagerWindow {
         *self.imp().login.borrow_mut() = Some(login);
         *self.imp().sudo.borrow_mut() = Some(sudo);
         *self.imp().ssh.borrow_mut() = Some(ssh);
+        *self.imp().git.borrow_mut() = Some(git);
 
         let weak = self.downgrade();
         glib::idle_add_local_once(move || {
@@ -195,7 +211,12 @@ impl YubiKeyManagerWindow {
             .unwrap_or_default();
         let username = backend::current_user().unwrap_or_else(|_| i18n("unknown"));
         let devices = backend::list_yubikeys();
-        if visible.as_str() == "ssh" {
+        if visible.as_str() == "git" {
+            if let Some(page) = self.imp().git.borrow().as_ref() {
+                clear_groups(page, &self.imp().git_groups);
+                *self.imp().git_groups.borrow_mut() = rebuild_git(self, page);
+            }
+        } else if visible.as_str() == "ssh" {
             if let Some(page) = self.imp().ssh.borrow().as_ref() {
                 clear_groups(page, &self.imp().ssh_groups);
                 *self.imp().ssh_groups.borrow_mut() = rebuild_ssh(self, page);
@@ -392,6 +413,31 @@ fn rebuild_home(
             "changes-prevent-symbolic"
         },
     ));
+    let git_status = git_signing::status();
+    let git_enabled = git_status.values.format.as_deref() == Some("ssh")
+        && git_status.values.signing_key.is_some();
+    let git_subtitle = if git_enabled
+        && git_status
+            .values
+            .sign_commits
+            .as_deref()
+            .is_some_and(|value| value.eq_ignore_ascii_case("true"))
+    {
+        i18n("YubiKey-backed SSH signatures are enabled for every commit")
+    } else if git_enabled {
+        i18n("An SSH signing key is selected; automatic commit signing is disabled")
+    } else {
+        i18n("Commit signing is not configured")
+    };
+    features.add(&action_row_with_icon(
+        &i18n("Git commit signing"),
+        &git_subtitle,
+        if git_enabled {
+            "emblem-ok-symbolic"
+        } else {
+            "changes-prevent-symbolic"
+        },
+    ));
     page.add(&features);
     vec![summary, features]
 }
@@ -433,6 +479,421 @@ fn capability_badge(name: &str, state: CapabilityState) -> gtk::Label {
         .css_classes(["caption", "pill", css_class])
         .accessible_role(gtk::AccessibleRole::Status)
         .build()
+}
+
+fn rebuild_git(
+    window: &YubiKeyManagerWindow,
+    page: &adw::PreferencesPage,
+) -> Vec<adw::PreferencesGroup> {
+    let status = git_signing::status();
+    let status_group = adw::PreferencesGroup::builder()
+        .title(i18n("Git signing"))
+        .description(i18n("Use a YubiKey-backed SSH credential to sign commits and tags. SSH authentication and Git signing remain independently configurable."))
+        .build();
+    let configured = status.values.format.as_deref() == Some("ssh")
+        && status.values.signing_key.is_some();
+    status_group.add(&action_row_with_icon(
+        &if configured {
+            i18n("SSH commit signing is configured")
+        } else {
+            i18n("Git signing is not configured")
+        },
+        &status.version,
+        if configured {
+            "emblem-ok-symbolic"
+        } else if status.available {
+            "dialog-information-symbolic"
+        } else {
+            "dialog-warning-symbolic"
+        },
+    ));
+    page.add(&status_group);
+
+    let strategy_group = adw::PreferencesGroup::builder()
+        .title(i18n("Choose how you use your keys"))
+        .description(i18n("Both choices use one physical YubiKey. Choose whether one SSH credential does both jobs or a separate credential signs Git history."))
+        .build();
+    let shared = adw::ActionRow::builder()
+        .title(i18n("One credential for SSH and Git"))
+        .subtitle(i18n("Simple · select the same credential you use to authenticate Git pushes"))
+        .activatable(true)
+        .build();
+    let shared_check = gtk::CheckButton::new();
+    shared_check.set_active(!window.imp().git_separate_key.get());
+    shared.add_prefix(&shared_check);
+    shared.set_activatable_widget(Some(&shared_check));
+    strategy_group.add(&shared);
+    let separate = adw::ActionRow::builder()
+        .title(i18n("Dedicated Git signing credential"))
+        .subtitle(i18n("Separated duties · keep SSH authentication and Git signing identities distinct"))
+        .activatable(true)
+        .build();
+    let separate_check = gtk::CheckButton::new();
+    separate_check.set_group(Some(&shared_check));
+    separate_check.set_active(window.imp().git_separate_key.get());
+    separate.add_prefix(&separate_check);
+    separate.set_activatable_widget(Some(&separate_check));
+    strategy_group.add(&separate);
+    let weak = window.downgrade();
+    shared_check.connect_toggled(move |check| {
+        if check.is_active() {
+            if let Some(window) = weak.upgrade() {
+                window.imp().git_separate_key.set(false);
+                window.refresh();
+            }
+        }
+    });
+    let weak = window.downgrade();
+    separate_check.connect_toggled(move |check| {
+        if check.is_active() {
+            if let Some(window) = weak.upgrade() {
+                window.imp().git_separate_key.set(true);
+                window.refresh();
+            }
+        }
+    });
+    page.add(&strategy_group);
+
+    let credentials = window
+        .imp()
+        .ssh_results
+        .borrow()
+        .values()
+        .filter_map(|result| result.as_ref().ok())
+        .flatten()
+        .cloned()
+        .collect::<Vec<_>>();
+    if window.imp().git_selected_fingerprint.borrow().is_none() {
+        let configured_key = status.values.signing_key.as_deref();
+        let selected = credentials
+            .iter()
+            .find(|credential| {
+                git_signing::signing_selector(
+                    &credential.public_key,
+                    credential.local_handle_path.as_deref(),
+                    credential.loaded_in_agent,
+                )
+                .ok()
+                .as_deref()
+                    == configured_key
+            })
+            .or_else(|| {
+                credentials.iter().find(|credential| {
+                    git_signing::signing_selector(
+                        &credential.public_key,
+                        credential.local_handle_path.as_deref(),
+                        credential.loaded_in_agent,
+                    )
+                    .is_ok()
+                })
+            })
+            .map(|credential| credential.fingerprint.clone());
+        *window.imp().git_selected_fingerprint.borrow_mut() = selected;
+        window.imp().git_sign_commits.set(
+            status
+                .values
+                .sign_commits
+                .as_deref()
+                .map(|value| value.eq_ignore_ascii_case("true"))
+                .unwrap_or(true),
+        );
+        window.imp().git_sign_tags.set(
+            status
+                .values
+                .sign_tags
+                .as_deref()
+                .is_some_and(|value| value.eq_ignore_ascii_case("true")),
+        );
+    }
+
+    let key_group = adw::PreferencesGroup::builder()
+        .title(i18n("Signing credential"))
+        .description(if window.imp().git_separate_key.get() {
+            i18n("Choose the credential reserved for signatures. Your SSH authentication credential is left unchanged.")
+        } else {
+            i18n("Choose the credential already used for SSH authentication. Git will reuse it for signatures.")
+        })
+        .build();
+    if credentials.is_empty() {
+        key_group.add(&action_row_with_icon(
+            &i18n("Inspect a YubiKey first"),
+            &i18n("Open SSH Keys, inspect the desired YubiKey, then return here."),
+            "dialog-information-symbolic",
+        ));
+    } else {
+        let selected_fingerprint = window.imp().git_selected_fingerprint.borrow().clone();
+        let mut first_check: Option<gtk::CheckButton> = None;
+        for credential in &credentials {
+            let usable = git_signing::signing_selector(
+                &credential.public_key,
+                credential.local_handle_path.as_deref(),
+                credential.loaded_in_agent,
+            )
+            .is_ok();
+            let title = credential
+                .local_label
+                .clone()
+                .filter(|label| !label.is_empty())
+                .or_else(|| (!credential.username.is_empty()).then(|| credential.username.clone()))
+                .unwrap_or_else(|| i18n("Unnamed SSH credential"));
+            let access = if credential.local_handle_path.is_some() {
+                i18n("Local key handle")
+            } else if credential.loaded_in_agent {
+                i18n("Available through SSH agent")
+            } else {
+                i18n("Load into the SSH agent or restore its local key handle")
+            };
+            let row = adw::ActionRow::builder()
+                .title(title)
+                .subtitle(format!(
+                    "{} · {} · {}",
+                    credential.algorithm, credential.fingerprint, access
+                ))
+                .activatable(usable)
+                .sensitive(usable)
+                .build();
+            let check = gtk::CheckButton::new();
+            if let Some(first) = &first_check {
+                check.set_group(Some(first));
+            } else {
+                first_check = Some(check.clone());
+            }
+            check.set_active(
+                selected_fingerprint.as_deref() == Some(credential.fingerprint.as_str()),
+            );
+            row.add_prefix(&check);
+            row.set_activatable_widget(Some(&check));
+            let fingerprint = credential.fingerprint.clone();
+            let weak = window.downgrade();
+            check.connect_toggled(move |check| {
+                if check.is_active() {
+                    if let Some(window) = weak.upgrade() {
+                        *window.imp().git_selected_fingerprint.borrow_mut() =
+                            Some(fingerprint.clone());
+                    }
+                }
+            });
+            key_group.add(&row);
+        }
+    }
+    page.add(&key_group);
+
+    let behavior_group = adw::PreferencesGroup::builder()
+        .title(i18n("Signing behavior"))
+        .description(i18n("Settings apply to the current user's global Git configuration. Repository settings may override them."))
+        .build();
+    let commits = adw::SwitchRow::builder()
+        .title(i18n("Sign every commit"))
+        .subtitle(i18n("Recommended · Git asks the selected YubiKey to sign each new commit"))
+        .active(window.imp().git_sign_commits.get())
+        .build();
+    let weak = window.downgrade();
+    commits.connect_active_notify(move |row| {
+        if let Some(window) = weak.upgrade() {
+            window.imp().git_sign_commits.set(row.is_active());
+        }
+    });
+    behavior_group.add(&commits);
+    let tags = adw::SwitchRow::builder()
+        .title(i18n("Sign annotated tags"))
+        .subtitle(i18n("Optional · lightweight tags are unaffected"))
+        .active(window.imp().git_sign_tags.get())
+        .build();
+    let weak = window.downgrade();
+    tags.connect_active_notify(move |row| {
+        if let Some(window) = weak.upgrade() {
+            window.imp().git_sign_tags.set(row.is_active());
+        }
+    });
+    behavior_group.add(&tags);
+    page.add(&behavior_group);
+
+    let actions_group = adw::PreferencesGroup::builder()
+        .title(i18n("Review and apply"))
+        .description(i18n("The first change saves your previous Git signing values. Disabling restores them unless another program changed the managed settings."))
+        .build();
+    let action_row = adw::ActionRow::builder()
+        .title(i18n("Global Git configuration"))
+        .subtitle(if status.managed {
+            i18n("Managed by YubiKey Manager · previous values can be restored")
+        } else {
+            i18n("No changes have been made by YubiKey Manager")
+        })
+        .build();
+    let test = gtk::Button::builder()
+        .label(i18n("Test signing"))
+        .valign(gtk::Align::Center)
+        .sensitive(!credentials.is_empty())
+        .build();
+    let weak = window.downgrade();
+    test.connect_clicked(move |button| {
+        let Some(window) = weak.upgrade() else {
+            return;
+        };
+        window.test_selected_git_key(button);
+    });
+    action_row.add_suffix(&test);
+    let apply = gtk::Button::builder()
+        .label(i18n("Apply"))
+        .css_classes(["suggested-action"])
+        .valign(gtk::Align::Center)
+        .sensitive(status.available && !credentials.is_empty())
+        .build();
+    let weak = window.downgrade();
+    apply.connect_clicked(move |button| {
+        let Some(window) = weak.upgrade() else {
+            return;
+        };
+        window.apply_git_signing(button);
+    });
+    action_row.add_suffix(&apply);
+    if status.managed {
+        let restore = gtk::Button::builder()
+            .label(i18n("Disable and restore"))
+            .valign(gtk::Align::Center)
+            .build();
+        let weak = window.downgrade();
+        restore.connect_clicked(move |button| {
+            let Some(parent) = button.root().and_downcast::<gtk::Window>() else {
+                return;
+            };
+            let weak = weak.clone();
+            glib::spawn_future_local(async move {
+                let result = progress_dialog::run_with_progress(
+                    &parent,
+                    &i18n("Restoring previous Git signing settings…"),
+                    git_signing::restore,
+                )
+                .await;
+                match result {
+                    Ok(()) => {
+                        if let Some(window) = weak.upgrade() {
+                            *window.imp().git_selected_fingerprint.borrow_mut() = None;
+                            window.refresh();
+                        }
+                    }
+                    Err(error) => show_error(&parent, &error),
+                }
+            });
+        });
+        action_row.add_suffix(&restore);
+    }
+    actions_group.add(&action_row);
+    page.add(&actions_group);
+    vec![
+        status_group,
+        strategy_group,
+        key_group,
+        behavior_group,
+        actions_group,
+    ]
+}
+
+impl YubiKeyManagerWindow {
+    fn selected_git_credential(&self) -> Option<ssh::ResidentSshCredential> {
+        let fingerprint = self.imp().git_selected_fingerprint.borrow().clone()?;
+        self.imp()
+            .ssh_results
+            .borrow()
+            .values()
+            .filter_map(|result| result.as_ref().ok())
+            .flatten()
+            .find(|credential| credential.fingerprint == fingerprint)
+            .cloned()
+    }
+
+    fn apply_git_signing(&self, button: &gtk::Button) {
+        let Some(parent) = button.root().and_downcast::<gtk::Window>() else {
+            return;
+        };
+        let Some(credential) = self.selected_git_credential() else {
+            show_error(&parent, &i18n("Choose an SSH key for Git signing."));
+            return;
+        };
+        let selector = match git_signing::signing_selector(
+            &credential.public_key,
+            credential.local_handle_path.as_deref(),
+            credential.loaded_in_agent,
+        ) {
+            Ok(selector) => selector,
+            Err(error) => {
+                show_error(&parent, &error);
+                return;
+            }
+        };
+        let sign_commits = self.imp().git_sign_commits.get();
+        let sign_tags = self.imp().git_sign_tags.get();
+        let weak = self.downgrade();
+        glib::spawn_future_local(async move {
+            let result = progress_dialog::run_with_progress(
+                &parent,
+                &i18n("Applying Git SSH signing settings…"),
+                move || git_signing::apply(&selector, sign_commits, sign_tags),
+            )
+            .await;
+            match result {
+                Ok(()) => {
+                    if let Some(window) = weak.upgrade() {
+                        window.refresh();
+                        show_message(
+                            &window,
+                            &i18n("Git signing configured"),
+                            &i18n("Git will use the selected YubiKey-backed SSH credential. Your SSH authentication configuration was not changed."),
+                        );
+                    }
+                }
+                Err(error) => show_error(&parent, &error),
+            }
+        });
+    }
+
+    fn test_selected_git_key(&self, button: &gtk::Button) {
+        let Some(parent) = button.root().and_downcast::<gtk::Window>() else {
+            return;
+        };
+        let Some(credential) = self.selected_git_credential() else {
+            show_error(&parent, &i18n("Choose an SSH key for Git signing."));
+            return;
+        };
+        glib::spawn_future_local(async move {
+            let pin = if credential.local_handle_path.is_some() {
+                request_fido_pin_for(
+                    &parent,
+                    &i18n("Test Git signing"),
+                    &i18n("Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."),
+                    &i18n("Test"),
+                )
+                .await
+            } else {
+                Some(Zeroizing::new(String::new()))
+            };
+            let Some(pin) = pin else {
+                return;
+            };
+            let public_key = credential.public_key.clone();
+            let handle = credential.local_handle_path.clone();
+            let result = progress_dialog::run_with_progress(
+                &parent,
+                &i18n("Touch the YubiKey. Creating and verifying a temporary Git-format SSH signature…"),
+                move || {
+                    ssh::test_git_signing(
+                        &public_key,
+                        handle.as_deref(),
+                        (!pin.is_empty()).then_some(pin.as_str()),
+                    )
+                },
+            )
+            .await;
+            match result {
+                Ok(()) => show_message(
+                    &parent,
+                    &i18n("Git signing test passed"),
+                    &i18n("The selected credential created a valid Git-format SSH signature. No repository or commit was changed."),
+                ),
+                Err(error) => show_error(&parent, &error),
+            }
+        });
+    }
 }
 
 fn rebuild_login(
@@ -795,7 +1256,7 @@ fn rebuild_ssh(
 
     let devices_group = adw::PreferencesGroup::builder()
         .title(i18n("Resident SSH credentials"))
-        .description(i18n("Inspect, load, export, test, or remove resident SSH credentials."))
+        .description(i18n("Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."))
         .build();
     match fido_devices {
         Ok(devices) if devices.is_empty() => devices_group.add(
@@ -854,7 +1315,7 @@ fn rebuild_ssh(
                         let task_path = path.clone();
                         let result = progress_dialog::run_with_progress(
                             &parent,
-                            &i18n("Inspecting resident SSH credentials…"),
+                            &i18n("Inspecting resident SSH credentials… Touch the YubiKey if it flashes."),
                             move || ssh::inspect_resident_ssh(&task_path, pin.as_str()),
                         )
                         .await;
@@ -951,19 +1412,34 @@ fn rebuild_ssh(
                         ),
                         Ok(credentials) => {
                             for credential in credentials {
-                                let credential_title = if credential.username.is_empty() {
+                                let resident_name = if credential.username.is_empty() {
                                     i18n("Unnamed SSH credential")
                                 } else {
                                     credential.username.clone()
                                 };
-                                let credential_row = adw::ActionRow::builder()
-                                    .title(credential_title)
-                                    .subtitle(format!(
+                                let credential_title = credential
+                                    .local_label
+                                    .clone()
+                                    .unwrap_or_else(|| resident_name.clone());
+                                let credential_subtitle = if credential.local_label.is_some() {
+                                    format!(
+                                        "{} · {} · {} · {}",
+                                        resident_name,
+                                        credential.algorithm,
+                                        credential.application,
+                                        credential.fingerprint
+                                    )
+                                } else {
+                                    format!(
                                         "{} · {} · {}",
                                         credential.algorithm,
                                         credential.application,
                                         credential.fingerprint
-                                    ))
+                                    )
+                                };
+                                let credential_row = adw::ActionRow::builder()
+                                    .title(credential_title)
+                                    .subtitle(credential_subtitle)
                                     .build();
                                 credential_row.add_prefix(
                                     &gtk::Image::builder()
@@ -978,8 +1454,31 @@ fn rebuild_ssh(
                                         CapabilityState::Disabled
                                     },
                                 ));
+                                let git_status = git_signing::status();
+                                let used_for_git = git_status
+                                    .values
+                                    .signing_key
+                                    .as_deref()
+                                    .is_some_and(|configured| {
+                                        git_signing::signing_selector(
+                                            &credential.public_key,
+                                            credential.local_handle_path.as_deref(),
+                                            credential.loaded_in_agent,
+                                        )
+                                        .ok()
+                                        .as_deref()
+                                            == Some(configured)
+                                    })
+                                    && git_status.values.format.as_deref() == Some("ssh");
+                                if used_for_git {
+                                    credential_row.add_suffix(&capability_badge(
+                                        "Git",
+                                        CapabilityState::Enabled,
+                                    ));
+                                }
                                 credential_row.add_suffix(&credential_actions(
                                     window,
+                                    &device,
                                     &credential,
                                 ));
                                 devices_group.add(&credential_row);
@@ -1254,6 +1753,23 @@ async fn request_fido_pin_for(
     body: &str,
     accept_label: &str,
 ) -> Option<Zeroizing<String>> {
+    request_fido_pin_with_appearance(
+        parent,
+        heading,
+        body,
+        accept_label,
+        adw::ResponseAppearance::Suggested,
+    )
+    .await
+}
+
+async fn request_fido_pin_with_appearance(
+    parent: &gtk::Window,
+    heading: &str,
+    body: &str,
+    accept_label: &str,
+    appearance: adw::ResponseAppearance,
+) -> Option<Zeroizing<String>> {
     let entry = gtk::PasswordEntry::builder()
         .show_peek_icon(true)
         .placeholder_text(i18n("FIDO PIN"))
@@ -1268,7 +1784,7 @@ async fn request_fido_pin_for(
         .build();
     dialog.add_response("cancel", &i18n("Cancel"));
     dialog.add_response("accept", accept_label);
-    dialog.set_response_appearance("accept", adw::ResponseAppearance::Suggested);
+    dialog.set_response_appearance("accept", appearance);
     let response = dialog.clone().choose_future(Some(parent)).await;
     if response.as_str() != "accept" || entry.text().is_empty() {
         return None;
@@ -1278,6 +1794,7 @@ async fn request_fido_pin_for(
 
 fn credential_actions(
     window: &YubiKeyManagerWindow,
+    device: &ssh::FidoDevice,
     credential: &ssh::ResidentSshCredential,
 ) -> gtk::MenuButton {
     let content = gtk::Box::builder()
@@ -1292,11 +1809,16 @@ fn credential_actions(
     let export = gtk::Button::with_label(&i18n("Export .pub"));
     let test = gtk::Button::with_label(&i18n("Test signing"));
     let remove = gtk::Button::with_label(&i18n("Remove from agent"));
+    let delete = gtk::Button::with_label(&i18n("Permanently delete from YubiKey…"));
     remove.set_sensitive(credential.loaded_in_agent);
     for button in [&copy, &export, &test, &remove] {
         button.set_halign(gtk::Align::Fill);
         content.append(button);
     }
+    content.append(&gtk::Separator::new(gtk::Orientation::Horizontal));
+    delete.set_halign(gtk::Align::Fill);
+    delete.add_css_class("destructive-action");
+    content.append(&delete);
     let popover = gtk::Popover::builder().child(&content).build();
     let menu = gtk::MenuButton::builder()
         .icon_name("view-more-symbolic")
@@ -1399,7 +1921,150 @@ fn credential_actions(
             }
         });
     });
+
+    let device = device.clone();
+    let credential = credential.clone();
+    let weak = window.downgrade();
+    delete.connect_clicked(move |button| {
+        let Some(parent) = button.root().and_downcast::<gtk::Window>() else {
+            return;
+        };
+        if let Some(popover) = button
+            .ancestor(gtk::Popover::static_type())
+            .and_downcast::<gtk::Popover>()
+        {
+            popover.popdown();
+        }
+        let device = device.clone();
+        let credential = credential.clone();
+        let weak = weak.clone();
+        glib::spawn_future_local(async move {
+            if !confirm_resident_deletion(&parent, &device, &credential).await {
+                return;
+            }
+            let Some(pin) = request_fido_pin_with_appearance(
+                &parent,
+                &i18n("Enter the selected YubiKey FIDO PIN"),
+                &i18n("This PIN authorizes permanent deletion of the exact credential shown in the previous step. It is never stored."),
+                &i18n("Permanently delete"),
+                adw::ResponseAppearance::Destructive,
+            )
+            .await
+            else {
+                return;
+            };
+            let device_path = device.path.clone();
+            let task_device = device.path.clone();
+            let task_credential = credential.clone();
+            let result = progress_dialog::run_with_progress(
+                &parent,
+                &i18n("Verifying and permanently deleting the selected resident credential. Do not unplug the YubiKey…"),
+                move || {
+                    ssh::delete_resident_credential(
+                        &task_device,
+                        &task_credential,
+                        pin.as_str(),
+                    )
+                },
+            )
+            .await;
+            match result {
+                Ok(ssh::DeleteOutcome::Deleted { credentials }) => {
+                    if let Some(window) = weak.upgrade() {
+                        window
+                            .imp()
+                            .ssh_results
+                            .borrow_mut()
+                            .insert(device_path, Ok(credentials));
+                        window.refresh();
+                        show_message(
+                            &window,
+                            &i18n("Resident credential permanently deleted"),
+                            &i18n("The exact resident credential is no longer present on the selected YubiKey. Local .pub or key-handle files and any SSH-agent entry were not removed."),
+                        );
+                    }
+                }
+                Ok(ssh::DeleteOutcome::Unknown { message }) => show_error_with_heading(
+                    &parent,
+                    &i18n("Deletion result is unknown"),
+                    &message,
+                ),
+                Err(error) => show_error(&parent, &error),
+            }
+        });
+    });
     menu
+}
+
+async fn confirm_resident_deletion(
+    parent: &gtk::Window,
+    device: &ssh::FidoDevice,
+    credential: &ssh::ResidentSshCredential,
+) -> bool {
+    let suffix = credential
+        .fingerprint
+        .chars()
+        .rev()
+        .take(8)
+        .collect::<String>()
+        .chars()
+        .rev()
+        .collect::<String>();
+    let username = if credential.username.is_empty() {
+        i18n("Unnamed SSH credential")
+    } else {
+        credential.username.clone()
+    };
+    let details = gtk::Label::builder()
+        .label(i18n_fmt(
+            &i18n("YubiKey: {0}\nDevice: {1}\nApplication: {2}\nResident username: {3}\nAlgorithm: {4}\nFingerprint: {5}"),
+            &[
+                &device.description,
+                &device.path,
+                &credential.application,
+                &username,
+                &credential.algorithm,
+                &credential.fingerprint,
+            ],
+        ))
+        .selectable(true)
+        .xalign(0.0)
+        .wrap(true)
+        .build();
+    let confirmation = adw::EntryRow::builder()
+        .title(i18n_fmt(
+            &i18n("Type {0} to confirm"),
+            &[&suffix],
+        ))
+        .activates_default(true)
+        .build();
+    let group = adw::PreferencesGroup::new();
+    group.add(&details);
+    group.add(&confirmation);
+    let content = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(12)
+        .width_request(580)
+        .build();
+    content.append(&group);
+    let dialog = adw::AlertDialog::builder()
+        .heading(i18n("Permanently delete this resident SSH credential?"))
+        .body(i18n("This removes the private credential from the selected YubiKey and cannot be undone. It does not remove local files or an identity already loaded in the SSH agent."))
+        .extra_child(&content)
+        .close_response("cancel")
+        .default_response("delete")
+        .build();
+    dialog.add_response("cancel", &i18n("Cancel"));
+    dialog.add_response("delete", &i18n("Continue to PIN"));
+    dialog.set_response_appearance("delete", adw::ResponseAppearance::Destructive);
+    dialog.set_response_enabled("delete", false);
+    let weak_dialog = dialog.downgrade();
+    confirmation.connect_changed(move |entry| {
+        if let Some(dialog) = weak_dialog.upgrade() {
+            dialog.set_response_enabled("delete", entry.text().as_str() == suffix);
+        }
+    });
+    dialog.choose_future(Some(parent)).await.as_str() == "delete"
 }
 
 fn refresh_cached_agent_matches(window: &YubiKeyManagerWindow) {
@@ -1443,8 +2108,16 @@ fn action_row_with_icon(title: &str, subtitle: &str, icon: &str) -> adw::ActionR
 }
 
 fn show_error<W: IsA<gtk::Widget>>(widget: &W, message: &str) {
+    show_error_with_heading(widget, &i18n("YubiKey configuration failed"), message);
+}
+
+fn show_error_with_heading<W: IsA<gtk::Widget>>(
+    widget: &W,
+    heading: &str,
+    message: &str,
+) {
     let dialog = adw::AlertDialog::builder()
-        .heading(i18n("YubiKey configuration failed"))
+        .heading(heading)
         .body(message)
         .build();
     dialog.add_response("close", &i18n("Close"));

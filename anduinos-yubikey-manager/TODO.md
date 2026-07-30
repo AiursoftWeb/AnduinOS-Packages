@@ -18,12 +18,31 @@ The first three SSH milestones are implemented:
   verification-required. PIN entry uses the private askpass pipe and is never
   placed in argv, the environment, logs, or a temporary file.
 
-Phase 4 is not implemented. In particular, **Remove from agent does not delete
-anything from a YubiKey**.
+Phase 4 is partially implemented. Permanent resident-credential deletion now
+uses an explicitly selected device and credential ID, destructive
+confirmation, protected PIN entry, and post-delete re-enumeration. **Remove
+from agent remains a separate, non-destructive action.** Labels, agent
+lifecycle, destination constraints, SSH config integration, and automatic
+loading remain future work.
+
+Git SSH signing now has an initial safe implementation:
+
+- A dedicated Git Signing page offers both a shared SSH/Git credential workflow
+  and a dedicated signing-credential workflow on the same physical YubiKey.
+- Existing inspected credentials are reused; local FIDO key handles are
+  preferred, with a loaded-agent fallback.
+- Global commit and annotated-tag signing can be configured independently.
+- Previous Git signing values are recoverable, external configuration conflicts
+  block overwrite/restore, and the signing test creates no repository or commit.
+- Home and SSH credential rows expose Git signing status.
+
+Future Git work includes repository-local scope, an allowed-signers trust-file
+assistant, hosted-provider signing-key guidance, and a structured preview of
+every configuration change before Apply.
 
 ## Phase 4: permanent deletion and advanced SSH management
 
-### 1. Permanent resident-credential deletion
+### 1. Permanent resident-credential deletion — implemented
 
 - Add a backend capability probe for CTAP2 credential management before
   showing destructive controls. Unsupported devices remain read-only.

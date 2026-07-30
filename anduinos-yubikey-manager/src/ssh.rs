@@ -2,7 +2,7 @@ use base64::engine::general_purpose::{STANDARD, STANDARD_NO_PAD};
 use base64::Engine;
 use crate::i18n::{i18n, i18n_fmt};
 use sha2::{Digest, Sha256};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
@@ -16,8 +16,11 @@ pub struct FidoDevice {
 
 #[derive(Clone, Debug)]
 pub struct ResidentSshCredential {
+    pub credential_id: String,
     pub application: String,
     pub username: String,
+    pub local_label: Option<String>,
+    pub local_handle_path: Option<PathBuf>,
     pub algorithm: String,
     pub fingerprint: String,
     pub public_key: String,
@@ -49,6 +52,16 @@ pub struct CreateOutcome {
     pub credentials: Vec<ResidentSshCredential>,
     pub private_path: PathBuf,
     pub public_path: PathBuf,
+}
+
+#[derive(Clone, Debug)]
+pub enum DeleteOutcome {
+    Deleted {
+        credentials: Vec<ResidentSshCredential>,
+    },
+    Unknown {
+        message: String,
+    },
 }
 
 pub fn list_fido_devices() -> Result<Vec<FidoDevice>, String> {
@@ -110,14 +123,11 @@ pub fn inspect_resident_ssh(
     device: &str,
     pin: &str,
 ) -> Result<Vec<ResidentSshCredential>, String> {
-    if !device.starts_with("/dev/hidraw")
-        || !device["/dev/hidraw".len()..]
-            .chars()
-            .all(|character| character.is_ascii_digit())
-    {
+    if !valid_device_path(device) {
         return Err(i18n("Invalid FIDO device path."));
     }
     let agent_fingerprints = agent_fingerprints();
+    let local_keys = local_key_handles();
     let relying_parties = run("fido2-token", &["-L", "-r", device], Some(pin))?;
     let mut credentials = Vec::new();
     for application in parse_relying_parties(&relying_parties)
@@ -145,8 +155,13 @@ pub fn inspect_resident_ssh(
             };
             let public_key = format!("{algorithm} {} {comment}", STANDARD.encode(&blob));
             credentials.push(ResidentSshCredential {
+                credential_id,
                 application: application.clone(),
                 username,
+                local_label: local_keys.get(&fingerprint).map(|key| key.label.clone()),
+                local_handle_path: local_keys
+                    .get(&fingerprint)
+                    .map(|key| key.handle_path.clone()),
                 algorithm,
                 loaded_in_agent: agent_fingerprints.contains(&fingerprint),
                 fingerprint,
@@ -288,6 +303,83 @@ pub fn create_resident_key(options: &CreateOptions, pin: &str) -> Result<CreateO
     })
 }
 
+pub fn delete_resident_credential(
+    device: &str,
+    expected: &ResidentSshCredential,
+    pin: &str,
+) -> Result<DeleteOutcome, String> {
+    if !valid_device_path(device) {
+        return Err(i18n("Choose a valid /dev/hidrawN FIDO device."));
+    }
+    if !valid_credential_id(&expected.credential_id) {
+        return Err(i18n("The resident credential ID is invalid. Refresh before deleting."));
+    }
+    let devices = list_fido_devices()?;
+    if !devices.iter().any(|candidate| candidate.path == device) {
+        return Err(i18n("The selected FIDO device is no longer connected. Refresh and inspect it again."));
+    }
+
+    // This preflight both verifies the PIN and proves that the exact
+    // credential still belongs to the explicitly selected device.
+    let before = inspect_resident_ssh(device, pin)?;
+    let Some(current) = before
+        .iter()
+        .find(|credential| credential.credential_id == expected.credential_id)
+    else {
+        return Err(i18n("The selected resident credential is no longer present on this YubiKey. Nothing was deleted."));
+    };
+    if current.application != expected.application || current.fingerprint != expected.fingerprint {
+        return Err(i18n("The selected resident credential changed since it was inspected. Nothing was deleted; refresh and verify the key."));
+    }
+
+    let command = run_output(
+        "fido2-token",
+        &["-D", "-i", &expected.credential_id, device],
+        Some(pin),
+    );
+    let command_error = match &command {
+        Ok(output) if output.status.success() => None,
+        Ok(output) => Some(command_error_detail(output)),
+        Err(error) => Some(error.clone()),
+    };
+
+    // Never trust the deletion command's status by itself. A lost response
+    // after the authenticator committed the operation is possible.
+    let verification = inspect_resident_ssh(device, pin);
+    finish_delete(&expected.credential_id, command_error, verification)
+}
+
+fn finish_delete(
+    credential_id: &str,
+    command_error: Option<String>,
+    verification: Result<Vec<ResidentSshCredential>, String>,
+) -> Result<DeleteOutcome, String> {
+    let credentials = match verification {
+        Ok(credentials) => credentials,
+        Err(error) => {
+            return Ok(DeleteOutcome::Unknown {
+                message: i18n_fmt(
+                    &i18n("The deletion command finished, but the selected YubiKey could not be inspected afterward: {0}\nThe credential may or may not have been deleted. Do not retry. Reconnect and inspect the YubiKey first."),
+                    &[&error],
+                ),
+            });
+        }
+    };
+    if !credentials
+        .iter()
+        .any(|credential| credential.credential_id == credential_id)
+    {
+        return Ok(DeleteOutcome::Deleted { credentials });
+    }
+    if let Some(error) = command_error {
+        return Err(i18n_fmt(
+            &i18n("The resident credential is still present. Deletion was not completed: {0}"),
+            &[&error],
+        ));
+    }
+    Err(i18n("fido2-token reported success, but the resident credential is still present. Do not retry until you refresh and inspect the YubiKey."))
+}
+
 fn create_keygen_args(options: &CreateOptions) -> Vec<String> {
     let mut args = vec![
         "-q".into(),
@@ -374,6 +466,19 @@ fn valid_device_path(device: &str) -> bool {
             .all(|character| character.is_ascii_digit())
 }
 
+fn valid_credential_id(credential_id: &str) -> bool {
+    if credential_id.is_empty()
+        || credential_id.len() > 2048
+        || credential_id.chars().any(char::is_whitespace)
+    {
+        return false;
+    }
+    STANDARD
+        .decode(credential_id)
+        .or_else(|_| STANDARD_NO_PAD.decode(credential_id))
+        .is_ok_and(|decoded| !decoded.is_empty() && decoded.len() <= 1024)
+}
+
 fn run_with_askpass(
     program: &str,
     args: &[String],
@@ -404,13 +509,19 @@ fn run_with_askpass(
         })?;
     if let Some(mut stdin) = child.stdin.take() {
         stdin
-            .write_all(format!("{pin}\n").as_bytes())
+            .write_all(pin.as_bytes())
             .map_err(|error| {
                 i18n_fmt(
                     &i18n("Could not provide the FIDO PIN: {0}"),
                     &[&error.to_string()],
                 )
             })?;
+        stdin.write_all(b"\n").map_err(|error| {
+            i18n_fmt(
+                &i18n("Could not provide the FIDO PIN: {0}"),
+                &[&error.to_string()],
+            )
+        })?;
     }
     child
         .wait_with_output()
@@ -474,6 +585,88 @@ pub fn test_signing(public_key: &str) -> Result<(), String> {
             .to_str()
             .ok_or_else(|| i18n("Temporary public-key path is invalid."))?;
         run("ssh-add", &["-T", path], None).map(|_| ())
+    })
+}
+
+pub fn test_git_signing(
+    public_key: &str,
+    local_handle_path: Option<&std::path::Path>,
+    pin: Option<&str>,
+) -> Result<(), String> {
+    let directory = tempfile::tempdir().map_err(|error| {
+        i18n_fmt(
+            &i18n("Could not create temporary Git signing data: {0}"),
+            &[&error.to_string()],
+        )
+    })?;
+    let message = directory.path().join("git-signing-test");
+    fs::write(&message, b"AnduinOS YubiKey Manager Git signing test\n").map_err(|error| {
+        i18n_fmt(
+            &i18n("Could not prepare the Git signing test: {0}"),
+            &[&error.to_string()],
+        )
+    })?;
+    let message_text = message
+        .to_str()
+        .ok_or_else(|| i18n("The temporary Git signing path is invalid."))?;
+
+    if let Some(handle) = local_handle_path.filter(|path| path.is_file()) {
+        let handle = handle
+            .to_str()
+            .ok_or_else(|| i18n("The local SSH key-handle path is invalid."))?;
+        let pin = pin.ok_or_else(|| i18n("Enter the YubiKey FIDO PIN to test this local key handle."))?;
+        let args = vec![
+            "-Y".into(),
+            "sign".into(),
+            "-f".into(),
+            handle.into(),
+            "-n".into(),
+            "git".into(),
+            message_text.into(),
+        ];
+        let output = run_with_askpass("/usr/bin/ssh-keygen", &args, pin)?;
+        if !output.status.success() {
+            return Err(i18n_fmt(
+                &i18n("Git signing test failed:\n{0}"),
+                &[&command_error_detail(&output)],
+            ));
+        }
+    } else {
+        with_public_key_file(public_key, |public_path| {
+            let public_path = public_path
+                .to_str()
+                .ok_or_else(|| i18n("Temporary public-key path is invalid."))?;
+            run(
+                "ssh-keygen",
+                &["-Y", "sign", "-f", public_path, "-n", "git", message_text],
+                None,
+            )
+            .map(|_| ())
+        })?;
+    }
+
+    let signature = PathBuf::from(format!("{message_text}.sig"));
+    let signature_text = signature
+        .to_str()
+        .ok_or_else(|| i18n("The temporary Git signature path is invalid."))?;
+    run(
+        "ssh-keygen",
+        &[
+            "-Y",
+            "check-novalidate",
+            "-n",
+            "git",
+            "-s",
+            signature_text,
+        ],
+        Some("AnduinOS YubiKey Manager Git signing test\n"),
+    )
+    .map(|_| ())
+    .map_err(|error| {
+        i18n_fmt(
+            &i18n("The signature was created but could not be verified: {0}"),
+            &[&error],
+        )
     })
 }
 
@@ -604,7 +797,101 @@ fn agent_fingerprints() -> HashSet<String> {
         .collect()
 }
 
+#[derive(Clone, Debug)]
+struct LocalKeyHandle {
+    label: String,
+    handle_path: PathBuf,
+}
+
+fn local_key_handles() -> HashMap<String, LocalKeyHandle> {
+    let Some(ssh_dir) = std::env::var_os("HOME")
+        .map(PathBuf::from)
+        .map(|home| home.join(".ssh"))
+    else {
+        return HashMap::new();
+    };
+    let Ok(entries) = fs::read_dir(ssh_dir) else {
+        return HashMap::new();
+    };
+    let mut public_paths = entries
+        .filter_map(Result::ok)
+        .filter_map(|entry| {
+            let file_type = entry.file_type().ok()?;
+            let path = entry.path();
+            (file_type.is_file() && path.extension().is_some_and(|ext| ext == "pub"))
+                .then_some(path)
+        })
+        .collect::<Vec<_>>();
+    public_paths.sort();
+
+    let mut keys = HashMap::new();
+    for public_path in public_paths {
+        // Only correlate OpenSSH key-handle pairs created by ssh-keygen.
+        // Arbitrary exported .pub files must not override a real local label.
+        let Some(public_text) = public_path.to_str() else {
+            continue;
+        };
+        let Some(handle_text) = public_text.strip_suffix(".pub") else {
+            continue;
+        };
+        if !PathBuf::from(handle_text).is_file() {
+            continue;
+        }
+        let Ok(metadata) = fs::metadata(&public_path) else {
+            continue;
+        };
+        if metadata.len() > 64 * 1024 {
+            continue;
+        }
+        let Ok(content) = fs::read_to_string(&public_path) else {
+            continue;
+        };
+        let Some(line) = content.lines().find(|line| !line.trim().is_empty()) else {
+            continue;
+        };
+        if let Some((key_fingerprint, label)) = local_label_from_public_line(line) {
+            keys.entry(key_fingerprint).or_insert(LocalKeyHandle {
+                label,
+                handle_path: PathBuf::from(handle_text),
+            });
+        }
+    }
+    keys
+}
+
+fn local_label_from_public_line(line: &str) -> Option<(String, String)> {
+    let mut fields = line.splitn(3, char::is_whitespace);
+    let algorithm = fields.next()?;
+    let encoded = fields.next()?;
+    let label = fields.next().map(str::trim).unwrap_or_default();
+    if !algorithm.starts_with("sk-") || label.is_empty() {
+        return None;
+    }
+    let blob = STANDARD.decode(encoded).ok()?;
+    Some((fingerprint(&blob), label.into()))
+}
+
 fn run(program: &str, args: &[&str], input: Option<&str>) -> Result<String, String> {
+    let output = run_output(program, args, input)?;
+    if output.status.success() {
+        return Ok(String::from_utf8_lossy(&output.stdout).trim().to_string());
+    }
+    let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+    Err(if stderr.is_empty() {
+        i18n_fmt(
+            &i18n("{0} exited with {1}"),
+            &[program, &output.status.to_string()],
+        )
+    } else {
+        stderr
+    })
+}
+
+fn run_output(
+    program: &str,
+    args: &[&str],
+    input: Option<&str>,
+) -> Result<std::process::Output, String> {
     let mut child = Command::new(program)
         .args(args)
         .stdin(if input.is_some() {
@@ -624,40 +911,48 @@ fn run(program: &str, args: &[&str], input: Option<&str>) -> Result<String, Stri
     if let Some(input) = input {
         if let Some(mut stdin) = child.stdin.take() {
             stdin
-                .write_all(format!("{input}\n").as_bytes())
+                .write_all(input.as_bytes())
                 .map_err(|error| {
                     i18n_fmt(
                         &i18n("Could not provide the FIDO PIN: {0}"),
                         &[&error.to_string()],
                     )
                 })?;
+            stdin.write_all(b"\n").map_err(|error| {
+                i18n_fmt(
+                    &i18n("Could not provide the FIDO PIN: {0}"),
+                    &[&error.to_string()],
+                )
+            })?;
         }
     }
-    let output = child
+    child
         .wait_with_output()
         .map_err(|error| {
             i18n_fmt(
                 &i18n("{0} failed: {1}"),
                 &[program, &error.to_string()],
             )
-        })?;
-    if output.status.success() {
-        return Ok(String::from_utf8_lossy(&output.stdout).trim().to_string());
-    }
-    let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
-    Err(if stderr.is_empty() {
-        i18n_fmt(
-            &i18n("{0} exited with {1}"),
-            &[program, &output.status.to_string()],
-        )
-    } else {
-        stderr
-    })
+        })
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn resident(credential_id: &str) -> ResidentSshCredential {
+        ResidentSshCredential {
+            credential_id: credential_id.into(),
+            application: "ssh:anduinos".into(),
+            username: "anduin".into(),
+            local_label: None,
+            local_handle_path: None,
+            algorithm: "sk-ecdsa-sha2-nistp256@openssh.com".into(),
+            fingerprint: "SHA256:test".into(),
+            public_key: "public".into(),
+            loaded_in_agent: false,
+        }
+    }
 
     #[test]
     fn parses_ssh_relying_parties_only() {
@@ -676,6 +971,67 @@ mod tests {
         let (algorithm, blob) = ssh_public_blob("ssh:ultra", &der).unwrap();
         assert_eq!(algorithm, "sk-ecdsa-sha2-nistp256@openssh.com");
         assert!(fingerprint(&blob).starts_with("SHA256:"));
+    }
+
+    #[test]
+    fn parses_and_preserves_resident_credential_id() {
+        let output = "00: AQID user-id anduin\n";
+        assert_eq!(
+            parse_credentials(output),
+            vec![("AQID".to_string(), "anduin".to_string())]
+        );
+    }
+
+    #[test]
+    fn reads_local_label_from_matching_security_key_public_line() {
+        let blob = b"test security key blob";
+        let line = format!(
+            "sk-ecdsa-sha2-nistp256@openssh.com {} test label",
+            STANDARD.encode(blob)
+        );
+        let (key_fingerprint, label) = local_label_from_public_line(&line).unwrap();
+        assert_eq!(key_fingerprint, fingerprint(blob));
+        assert_eq!(label, "test label");
+        assert!(local_label_from_public_line("ssh-ed25519 AAAA ignored").is_none());
+    }
+
+    #[test]
+    fn validates_base64_credential_ids_without_accepting_argument_injection() {
+        assert!(valid_credential_id("AQIDBA=="));
+        assert!(valid_credential_id("AQIDBA"));
+        assert!(!valid_credential_id(""));
+        assert!(!valid_credential_id("AQID\n/dev/hidraw9"));
+        assert!(!valid_credential_id("--help"));
+    }
+
+    #[test]
+    fn deletion_is_successful_only_after_the_exact_id_disappears() {
+        let outcome = finish_delete(
+            "AQID",
+            Some("command response was lost".into()),
+            Ok(vec![resident("BAUG")]),
+        )
+        .unwrap();
+        assert!(matches!(outcome, DeleteOutcome::Deleted { .. }));
+
+        let error = finish_delete(
+            "AQID",
+            Some("PIN rejected".into()),
+            Ok(vec![resident("AQID")]),
+        )
+        .unwrap_err();
+        assert!(error.contains("still present"));
+    }
+
+    #[test]
+    fn failed_post_delete_inspection_is_an_unknown_outcome() {
+        let outcome = finish_delete(
+            "AQID",
+            None,
+            Err("device disconnected".into()),
+        )
+        .unwrap();
+        assert!(matches!(outcome, DeleteOutcome::Unknown { .. }));
     }
 
     #[test]

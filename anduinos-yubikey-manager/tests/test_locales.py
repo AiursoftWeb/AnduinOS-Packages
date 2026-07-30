@@ -13,6 +13,7 @@ LOCALES = {
 }
 PLACEHOLDER = re.compile(r"\{\d+\}")
 DESKTOP_LOCALES = LOCALES - {"en_GB", "en_US"}
+RUST_I18N = re.compile(r'i18n\("((?:[^"\\]|\\.)*)"\)')
 
 
 def po_entries(path: Path):
@@ -43,12 +44,34 @@ def po_entries(path: Path):
 
 
 class LocaleCatalogTests(unittest.TestCase):
+    def test_pot_exactly_matches_rust_i18n_literals(self):
+        source_messages = set()
+        for source in (ROOT / "src").glob("**/*.rs"):
+            content = source.read_text(encoding="utf-8")
+            for match in RUST_I18N.finditer(content):
+                source_messages.add(ast.literal_eval(f'"{match.group(1)}"'))
+        pot_messages = {
+            msgid
+            for msgid, _ in po_entries(
+                PO_DIR / "anduinos-yubikey-manager.pot"
+            )
+            if msgid
+        }
+        self.assertEqual(source_messages, pot_messages)
+
     def test_all_catalogs_exist_and_are_complete(self):
         self.assertEqual(LOCALES, {path.stem for path in PO_DIR.glob("*.po")})
+        expected = {
+            msgid
+            for msgid, _ in po_entries(
+                PO_DIR / "anduinos-yubikey-manager.pot"
+            )
+            if msgid
+        }
         for locale in sorted(LOCALES):
             entries = po_entries(PO_DIR / f"{locale}.po")
             messages = [(msgid, msgstr) for msgid, msgstr in entries if msgid]
-            self.assertEqual(185, len(messages), locale)
+            self.assertEqual(expected, {msgid for msgid, _ in messages}, locale)
             self.assertFalse(
                 [msgid for msgid, msgstr in messages if not msgstr],
                 f"{locale} contains untranslated messages",

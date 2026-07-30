@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-29 16:14+0000\n"
+"POT-Creation-Date: 2026-07-30 14:32+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -52,6 +52,9 @@ msgstr "ได้รับอนุญาตให้ปลดล็อกผู
 msgid "Already loaded"
 msgstr "โหลดแล้ว"
 
+msgid "An SSH signing key is selected; automatic commit signing is disabled"
+msgstr "An SSH signing key is selected; automatic commit signing is disabled"
+
 msgid "An enrolled YubiKey or the account password can authorize sudo."
 msgstr "YubiKey ที่ลงทะเบียนไว้หรือรหัสผ่านบัญชีสามารถใช้เพื่อรับรองความถูกต้องของ sudo ได้"
 
@@ -66,6 +69,18 @@ msgstr "แอปพลิเคชัน"
 
 msgid "Application must begin with ssh:, contain no whitespace, and be at most 253 bytes."
 msgstr "แอปพลิเคชันต้องเริ่มต้นด้วย ssh:, ห้ามมีช่องว่าง และต้องมีขนาดไม่เกิน 253 ไบต์"
+
+msgid "Apply"
+msgstr "Apply"
+
+msgid "Applying Git SSH signing settings…"
+msgstr "Applying Git SSH signing settings…"
+
+msgid "Available through SSH agent"
+msgstr "Available through SSH agent"
+
+msgid "Both choices use one physical YubiKey. Choose whether one SSH credential does both jobs or a separate credential signs Git history."
+msgstr "Both choices use one physical YubiKey. Choose whether one SSH credential does both jobs or a separate credential signs Git history."
 
 msgid "Cancel"
 msgstr "ยกเลิก"
@@ -82,8 +97,20 @@ msgstr "เลือกอุปกรณ์ FIDO /dev/hidrawN ที่ถู�
 msgid "Choose a valid output folder."
 msgstr "เลือกโฟลเดอร์เอาต์พุตที่ถูกต้อง"
 
+msgid "Choose an SSH key for Git signing."
+msgstr "Choose an SSH key for Git signing."
+
+msgid "Choose how you use your keys"
+msgstr "Choose how you use your keys"
+
 msgid "Choose local SSH key-handle path"
 msgstr "เลือกเส้นทาง handle คีย์ SSH ท้องถิ่น"
+
+msgid "Choose the credential already used for SSH authentication. Git will reuse it for signatures."
+msgstr "Choose the credential already used for SSH authentication. Git will reuse it for signatures."
+
+msgid "Choose the credential reserved for signatures. Your SSH authentication credential is left unchanged."
+msgstr "Choose the credential reserved for signatures. Your SSH authentication credential is left unchanged."
 
 msgid "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
 msgstr "เลือก YubiKey ใดบ้างที่สามารถปลดล็อก {0} ได้ การเข้าสู่ระบบด้วยรหัสผ่านยังคงใช้ได้"
@@ -97,6 +124,9 @@ msgstr "คำสั่งสิ้นสุดด้วย"
 msgid "Command exited with {0}"
 msgstr "คำสั่งสิ้นสุดด้วย {0}"
 
+msgid "Commit signing is not configured"
+msgstr "Commit signing is not configured"
+
 msgid "Configured features"
 msgstr "ฟีเจอร์ที่กำหนดค่าแล้ว"
 
@@ -109,14 +139,29 @@ msgstr "เชื่อมต่อคีย์ความปลอดภัย
 msgid "Continue"
 msgstr "ดำเนินการต่อ"
 
+msgid "Continue to PIN"
+msgstr "ดำเนินการต่อเพื่อใช้ PIN"
+
 msgid "Copy public key"
 msgstr "คัดลอกกุญแจสาธารณะ"
 
 msgid "Could not create a temporary public-key file: {0}"
 msgstr "ไม่สามารถสร้างไฟล์กุญแจสาธารณะชั่วคราว: {0}"
 
+msgid "Could not create temporary Git signing data: {0}"
+msgstr "Could not create temporary Git signing data: {0}"
+
+msgid "Could not create the Git signing recovery record: {0}"
+msgstr "Could not create the Git signing recovery record: {0}"
+
+msgid "Could not create the application configuration folder: {0}"
+msgstr "Could not create the application configuration folder: {0}"
+
 msgid "Could not create {0}: {1}"
 msgstr "ไม่สามารถสร้าง {0}: {1}"
+
+msgid "Could not encode the Git signing recovery record: {0}"
+msgstr "Could not encode the Git signing recovery record: {0}"
 
 msgid "Could not export the public key: {0}"
 msgstr "ไม่สามารถส่งออกกุญแจสาธารณะ: {0}"
@@ -136,17 +181,29 @@ msgstr "ไม่สามารถแสดงรายการ YubiKeys ไ�
 msgid "Could not locate the secure PIN helper: {0}"
 msgstr "ไม่สามารถค้นหาผู้ช่วย PIN ความปลอดภัย: {0}"
 
+msgid "Could not prepare the Git signing test: {0}"
+msgstr "Could not prepare the Git signing test: {0}"
+
+msgid "Could not protect the application configuration folder: {0}"
+msgstr "Could not protect the application configuration folder: {0}"
+
 msgid "Could not protect {0}: {1}"
 msgstr "ไม่สามารถป้องกัน {0}: {1}"
 
 msgid "Could not provide the FIDO PIN: {0}"
 msgstr "ไม่สามารถให้รหัส FIDO PIN: {0}"
 
+msgid "Could not read the Git signing recovery record: {0}"
+msgstr "Could not read the Git signing recovery record: {0}"
+
 msgid "Could not request administrator access: {0}"
 msgstr "ไม่สามารถขอสิทธิ์ผู้ดูแลระบบ: {0}"
 
 msgid "Could not run {0}: {1}"
 msgstr "ไม่สามารถรัน {0}: {1}"
+
+msgid "Could not save the Git signing recovery record: {0}"
+msgstr "Could not save the Git signing recovery record: {0}"
 
 msgid "Could not start {0}: {1}"
 msgstr "ไม่สามารถเริ่มต้น {0}: {1}"
@@ -168,6 +225,15 @@ msgstr "สร้าง…"
 
 msgid "Current user: {0}"
 msgstr "ผู้ใช้ปัจจุบัน: {0}"
+
+msgid "Dedicated Git signing credential"
+msgstr "Dedicated Git signing credential"
+
+msgid "Deletion result is unknown"
+msgstr "ผลลัพธ์การลบไม่ทราบสถานะ"
+
+msgid "Disable and restore"
+msgstr "Disable and restore"
 
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr "ปิดใช้งาน · sudo ต้องยืนยันตัวตนด้วย YubiKey หรือรหัสผ่านบัญชี"
@@ -205,8 +271,14 @@ msgstr "ลงทะเบียนแล้ว · ไม่ใช้งาน�
 msgid "Enrollment safety"
 msgstr "ความปลอดภัยในการลงทะเบียน"
 
+msgid "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
+msgstr "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
+
 msgid "Enter the YubiKey FIDO PIN"
 msgstr "ใส่ PIN ของ YubiKey FIDO"
+
+msgid "Enter the YubiKey FIDO PIN to test this local key handle."
+msgstr "Enter the YubiKey FIDO PIN to test this local key handle."
 
 msgid "Enter the selected YubiKey FIDO PIN"
 msgstr "ใส่ PIN ของ YubiKey FIDO ที่เลือก"
@@ -232,6 +304,44 @@ msgstr "เฟิร์มแวร์ {0}"
 msgid "For safe enrollment, disconnect every other security key and leave only the selected YubiKey connected."
 msgstr "เพื่อความปลอดภัยในการลงทะเบียน โปรดถอดคีย์ความปลอดภัยอื่นๆ ทั้งหมดออก และเหลือเพียง YubiKey ที่เลือกไว้เชื่อมต่อกับเครื่อง"
 
+msgid "Git Signing"
+msgstr "Git Signing"
+
+msgid "Git commit signing"
+msgstr "Git commit signing"
+
+msgid "Git is not installed"
+msgstr "Git is not installed"
+
+msgid "Git settings were restored, but the recovery record could not be removed: {0}"
+msgstr "Git settings were restored, but the recovery record could not be removed: {0}"
+
+msgid "Git signing"
+msgstr "Git signing"
+
+msgid "Git signing configured"
+msgstr "Git signing configured"
+
+msgid "Git signing is not configured"
+msgstr "Git signing is not configured"
+
+msgid "Git signing settings changed outside this application. Review the current Git configuration before replacing or restoring it."
+msgstr "Git signing settings changed outside this application. Review the current Git configuration before replacing or restoring it."
+
+msgid ""
+"Git signing test failed:\n"
+"{0}"
+msgstr "Git signing test failed:\n{0}"
+
+msgid "Git signing test passed"
+msgstr "Git signing test passed"
+
+msgid "Git will use the selected YubiKey-backed SSH credential. Your SSH authentication configuration was not changed."
+msgstr "Git will use the selected YubiKey-backed SSH credential. Your SSH authentication configuration was not changed."
+
+msgid "Global Git configuration"
+msgstr "Global Git configuration"
+
 msgid "Home"
 msgstr "หน้าแรก"
 
@@ -244,11 +354,14 @@ msgstr "เสียบ YubiKey แล้วกดปุ่มรีเฟรช
 msgid "Inspect"
 msgstr "ตรวจสอบ"
 
-msgid "Inspect, load, export, test, or remove resident SSH credentials."
-msgstr "ตรวจสอบ โหลด ส่งออก ทดสอบ หรือลบข้อมูลประจำตัว SSH แบบถาวร"
+msgid "Inspect a YubiKey first"
+msgstr "Inspect a YubiKey first"
 
-msgid "Inspecting resident SSH credentials…"
-msgstr "กำลังตรวจสอบข้อมูลประจำตัว SSH แบบถาวร…"
+msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
+msgstr "ตรวจสอบ โหลด ส่งออก ลบออกจากเอเจนต์ หรือลบข้อมูลประจำตัว SSH แบบเรสิดেন্টอย่างถาวร"
+
+msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
+msgstr "กำลังตรวจสอบข้อมูลประจำตัว SSH ของผู้พักอาศัย... แตะ YubiKey หากไฟกระพริบ"
 
 msgid "Invalid FIDO device path."
 msgstr "เส้นทางอุปกรณ์ FIDO ไม่ถูกต้อง"
@@ -259,8 +372,14 @@ msgstr "โหลด"
 msgid "Load into agent"
 msgstr "โหลดเข้าเอเจนต์"
 
+msgid "Load into the SSH agent or restore its local key handle"
+msgstr "Load into the SSH agent or restore its local key handle"
+
 msgid "Load resident SSH keys"
 msgstr "โหลดคีย์ SSH แบบถาวร"
+
+msgid "Local key handle"
+msgstr "Local key handle"
 
 msgid "Local key handle path"
 msgstr "เส้นทางที่จัดการคีย์ในเครื่อง"
@@ -268,17 +387,26 @@ msgstr "เส้นทางที่จัดการคีย์ในเค
 msgid "Local key label"
 msgstr "ป้ายกำกับคีย์ในเครื่อง"
 
+msgid "Managed by YubiKey Manager · previous values can be restored"
+msgstr "Managed by YubiKey Manager · previous values can be restored"
+
 msgid "New hardware-backed SSH key"
 msgstr "คีย์ SSH แบบฮาร์ดแวร์ใหม่"
 
 msgid "No FIDO security key detected"
 msgstr "ไม่พบคีย์ความปลอดภัย FIDO"
 
+msgid "No Git signing configuration managed by this application was found."
+msgstr "No Git signing configuration managed by this application was found."
+
 msgid "No SSH agent was detected"
 msgstr "ไม่พบเอเจนต์ SSH"
 
 msgid "No YubiKey detected"
 msgstr "ไม่พบ YubiKey"
+
+msgid "No changes have been made by YubiKey Manager"
+msgstr "No changes have been made by YubiKey Manager"
 
 msgid "No hardware serial · {0}"
 msgstr "ไม่มีหมายเลขซีเรียลของฮาร์ดแวร์ · {0}"
@@ -292,23 +420,35 @@ msgstr "ไม่พบข้อมูลรับรองที่ค้นพ
 msgid "Not currently connected"
 msgstr "ไม่ได้เชื่อมต่อในขณะนี้"
 
+msgid "One credential for SSH and Git"
+msgstr "One credential for SSH and Git"
+
+msgid "Open SSH Keys, inspect the desired YubiKey, then return here."
+msgstr "Open SSH Keys, inspect the desired YubiKey, then return here."
+
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH ไม่สามารถโหลดคีย์ที่อยู่ประจำได้ ตัวจัดการ SSH ไม่มีตัวตนใหม่ที่เพิ่งโหลด"
 
 msgid ""
 "OpenSSH could not load resident keys:\n"
 "{0}"
-msgstr "OpenSSH ไม่สามารถโหลดคีย์ที่อยู่ประจำได้:\n{0}"
+msgstr ""
+"OpenSSH ไม่สามารถโหลดคีย์ที่อยู่ประจำได้:\n"
+"{0}"
 
 msgid ""
 "OpenSSH did not create a resident key:\n"
 "{0}"
-msgstr "OpenSSH ไม่ได้สร้างคีย์ที่อยู่ประจำ:\n{0}"
+msgstr ""
+"OpenSSH ไม่ได้สร้างคีย์ที่อยู่ประจำ:\n"
+"{0}"
 
 msgid ""
 "OpenSSH finished creating the key, but the YubiKey could not be verified afterward: {0}\n"
 "Do not immediately retry; inspect the key first to avoid creating a duplicate."
-msgstr "OpenSSH สร้างคีย์เสร็จสมบูรณ์แล้ว แต่ไม่สามารถตรวจสอบ YubiKey ได้หลังจากนั้น: {0}\nอย่าลองใหม่ทันที; ตรวจสอบคีย์ก่อนเพื่อหลีกเลี่ยงการสร้างคีย์ซ้ำ"
+msgstr ""
+"OpenSSH สร้างคีย์เสร็จสมบูรณ์แล้ว แต่ไม่สามารถตรวจสอบ YubiKey ได้หลังจากนั้น: {0}\n"
+"อย่าลองใหม่ทันที; ตรวจสอบคีย์ก่อนเพื่อหลีกเลี่ยงการสร้างคีย์ซ้ำ"
 
 msgid "OpenSSH reported success, but no new resident credential was detected. Do not retry until you inspect the YubiKey."
 msgstr "OpenSSH รายงานความสำเร็จ แต่ไม่พบข้อมูลรับรองที่อยู่ประจำใหม่ อย่าลองทำซ้ำจนกว่าคุณจะตรวจสอบ YubiKey"
@@ -316,8 +456,23 @@ msgstr "OpenSSH รายงานความสำเร็จ แต่ไม
 msgid "OpenSSH/FIDO credential metadata and local file location"
 msgstr "เมตาเดต้าของข้อมูลรับรอง OpenSSH/FIDO และตำแหน่งไฟล์ท้องถิ่น"
 
+msgid "Optional · lightweight tags are unaffected"
+msgstr "Optional · lightweight tags are unaffected"
+
 msgid "Password sign-in only"
 msgstr "เข้าสู่ระบบด้วยรหัสผ่านเท่านั้น"
+
+msgid "Permanently delete"
+msgstr "ลบอย่างถาวร"
+
+msgid "Permanently delete from YubiKey…"
+msgstr "ลบอย่างถาวรจาก YubiKey…"
+
+msgid "Permanently delete this resident SSH credential?"
+msgstr "ต้องการลบข้อมูลประจำตัว SSH แบบเรสิดেন্টนี้ถาวรหรือไม่?"
+
+msgid "Recommended · Git asks the selected YubiKey to sign each new commit"
+msgstr "Recommended · Git asks the selected YubiKey to sign each new commit"
 
 msgid "Refresh connected YubiKeys"
 msgstr "รีเฟรช YubiKeys ที่เชื่อมต่อ"
@@ -340,6 +495,9 @@ msgstr "ข้อมูลรับรอง SSH ที่อยู่ประ�
 msgid "Resident SSH key created"
 msgstr "สร้างคีย์ SSH ที่อยู่ประจำเสร็จสิ้น"
 
+msgid "Resident credential permanently deleted"
+msgstr "ได้ลบข้อมูลประจำตัวแบบเรสิดेंटอย่างถาวรแล้ว"
+
 msgid "Resident keys loaded"
 msgstr "โหลดคีย์ที่อยู่ประจำแล้ว"
 
@@ -348,6 +506,12 @@ msgstr "ชื่อผู้ใช้ที่อยู่ประจำ"
 
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr "ชื่อผู้ใช้ที่อยู่ประจำต้องมีขนาด 1–64 ไบต์และไม่มีตัวควบคุม"
+
+msgid "Restoring previous Git signing settings…"
+msgstr "Restoring previous Git signing settings…"
+
+msgid "Review and apply"
+msgstr "Review and apply"
 
 msgid "Run ssh-add -K for this connected security key"
 msgstr "เรียกใช้ ssh-add -K สำหรับคีย์ความปลอดภัยที่เชื่อมต่อนี้"
@@ -364,6 +528,9 @@ msgstr "ตัวจัดการ SSH เชื่อมต่อแล้ว"
 msgid "SSH agent unavailable"
 msgstr "ตัวจัดการ SSH ไม่พร้อมใช้งาน"
 
+msgid "SSH commit signing is configured"
+msgstr "SSH commit signing is configured"
+
 msgid "SSH key actions"
 msgstr "การดำเนินการของคีย์ SSH"
 
@@ -376,20 +543,50 @@ msgstr "ค่าเริ่มต้นที่ปลอดภัยใช้
 msgid "Security keys"
 msgstr "คีย์ความปลอดภัย"
 
+msgid "Separated duties · keep SSH authentication and Git signing identities distinct"
+msgstr "Separated duties · keep SSH authentication and Git signing identities distinct"
+
 msgid "Serial {0}"
 msgstr "หมายเลขซีเรียล {0}"
+
+msgid "Settings apply to the current user's global Git configuration. Repository settings may override them."
+msgstr "Settings apply to the current user's global Git configuration. Repository settings may override them."
+
+msgid "Sign annotated tags"
+msgstr "Sign annotated tags"
+
+msgid "Sign every commit"
+msgstr "Sign every commit"
+
+msgid "Signing behavior"
+msgstr "Signing behavior"
+
+msgid "Signing credential"
+msgstr "Signing credential"
 
 msgid "Signing test passed"
 msgstr "การทดสอบการลงนามผ่าน"
 
+msgid "Simple · select the same credential you use to authenticate Git pushes"
+msgstr "Simple · select the same credential you use to authenticate Git pushes"
+
 msgid "Temporary public-key path is invalid."
 msgstr "เส้นทางคีย์สาธารณะชั่วคราวไม่ถูกต้อง"
+
+msgid "Test"
+msgstr "Test"
+
+msgid "Test Git signing"
+msgstr "Test Git signing"
 
 msgid "Test signing"
 msgstr "การทดสอบลายเซ็น"
 
 msgid "The FIDO enrollment tool is not installed. Install the libpam-u2f package, then try again."
 msgstr "เครื่องมือลงทะเบียน FIDO ยังไม่ได้ติดตั้ง กรุณาติดตั้งแพ็กเกจ libpam-u2f แล้วลองอีกครั้ง"
+
+msgid "The Git signing recovery record is invalid: {0}"
+msgstr "The Git signing recovery record is invalid: {0}"
 
 msgid "The PIN is sent directly to ssh-add and is never stored."
 msgstr "PIN จะถูกส่งไปยัง ssh-add โดยตรงและจะไม่ถูกเก็บไว้"
@@ -409,11 +606,30 @@ msgstr "การดำเนินการ YubiKey หยุดทำงาน
 msgid "The credential will be created only on this exact device"
 msgstr "ข้อมูลประจำตัวจะถูกสร้างขึ้นเฉพาะบนอุปกรณ์นี้เท่านั้น"
 
+msgid ""
+"The deletion command finished, but the selected YubiKey could not be inspected afterward: {0}\n"
+"The credential may or may not have been deleted. Do not retry. Reconnect and inspect the YubiKey first."
+msgstr ""
+"คำสั่งลบเสร็จสิ้น แต่ไม่สามารถตรวจสอบ YubiKey ที่เลือกได้ในภายหลัง: {0}\n"
+"ข้อมูลประจำตัวอาจถูกลบหรือไม่ก็ได้ กรุณาลองใหม่ ให้เชื่อมต่อและตรวจสอบ YubiKey ก่อน"
+
 msgid "The enrollment task failed."
 msgstr "งานลงทะเบียนล้มเหลว"
 
+msgid "The exact resident credential is no longer present on the selected YubiKey. Local .pub or key-handle files and any SSH-agent entry were not removed."
+msgstr "ข้อมูลประจำตัวแบบเรสидентที่ระบุไม่ได้อยู่ใน YubiKey ที่เลือกอีกต่อไป ไฟล์ .pub หรือไฟล์ key-handle ในเครื่อง และรายการใน SSH agent ยังไม่ได้ถูกลบออก"
+
+msgid "The first change saves your previous Git signing values. Disabling restores them unless another program changed the managed settings."
+msgstr "The first change saves your previous Git signing values. Disabling restores them unless another program changed the managed settings."
+
 msgid "The inspected resident SSH credentials are already available in this agent."
 msgstr "ข้อมูลประจำตัว SSH แบบเรซิดেন্টที่ตรวจสอบแล้วมีอยู่ในเอเจนต์นี้แล้ว"
+
+msgid "The local SSH key-handle path is invalid."
+msgstr "The local SSH key-handle path is invalid."
+
+msgid "The local SSH key-handle path is not valid UTF-8."
+msgstr "The local SSH key-handle path is not valid UTF-8."
 
 msgid "The local key path must be absolute."
 msgstr "เส้นทางคีย์ท้องถิ่นต้องเป็นแบบสมบูรณ์ (absolute)"
@@ -430,7 +646,18 @@ msgid ""
 "Public key: {5}\n"
 "\n"
 "The key is not automatically loaded into the SSH agent."
-msgstr "คีย์ส่วนตัวที่ไม่สามารถส่งออกได้ยังคงได้รับการปกป้องโดย YubiKey ที่เลือกไว้\n\nอัลกอริทึม: {0}\nแอปพลิเคชัน: {1}\nชื่อผู้ใช้ที่อยู่ประจำ: {2}\nลายนิ้วมือคีย์: {3}\n\nที่จัดการคีย์ท้องถิ่น: {4}\nคีย์สาธารณะ: {5}\n\nคีย์จะไม่ถูกโหลดอัตโนมัติเข้าสู่ SSH agent"
+msgstr ""
+"คีย์ส่วนตัวที่ไม่สามารถส่งออกได้ยังคงได้รับการปกป้องโดย YubiKey ที่เลือกไว้\n"
+"\n"
+"อัลกอริทึม: {0}\n"
+"แอปพลิเคชัน: {1}\n"
+"ชื่อผู้ใช้ที่อยู่ประจำ: {2}\n"
+"ลายนิ้วมือคีย์: {3}\n"
+"\n"
+"ที่จัดการคีย์ท้องถิ่น: {4}\n"
+"คีย์สาธารณะ: {5}\n"
+"\n"
+"คีย์จะไม่ถูกโหลดอัตโนมัติเข้าสู่ SSH agent"
 
 msgid "The operation was cancelled or denied."
 msgstr "การดำเนินการถูกยกเลิกหรือปฏิเสธ"
@@ -438,8 +665,14 @@ msgstr "การดำเนินการถูกยกเลิกหรื
 msgid "The output folder does not exist: {0}"
 msgstr "โฟลเดอร์เอาพุตไม่ tồn tại: {0}"
 
+msgid "The resident credential ID is invalid. Refresh before deleting."
+msgstr "รหัสข้อมูลประจำตัวแบบเรสидентไม่ถูกต้อง กรุณารีเฟรชก่อนลบ"
+
 msgid "The resident credential did not return a public key."
 msgstr "ข้อมูลประจำตัวเรซิดেন্টไม่ได้คืนค่าคีย์สาธารณะ"
+
+msgid "The resident credential is still present. Deletion was not completed: {0}"
+msgstr "ข้อมูลประจำตัวแบบเรสидентยังคงอยู่ การลบไม่เสร็จสมบูรณ์: {0}"
 
 msgid "The resident credential returned an incomplete public key."
 msgstr "ข้อมูลประจำตัวเรซิดেন্টคืนค่าคีย์สาธารณะที่ไม่สมบูรณ์"
@@ -454,25 +687,64 @@ msgid ""
 "The resident credential {0} was created on the YubiKey, but OpenSSH did not complete successfully:\n"
 "{1}\n"
 "Do not retry creation. Inspect the key and preserve any local files that were written."
-msgstr "สร้างข้อมูลประจำตัวที่อยู่ประจำ {0} บน YubiKey แล้ว แต่ OpenSSH ไม่เสร็จสมบูรณ์:\n{1}\nอย่าลองสร้างใหม่ ตรวจสอบคีย์และเก็บไฟล์ท้องถิ่นที่เขียนไว้"
+msgstr ""
+"สร้างข้อมูลประจำตัวที่อยู่ประจำ {0} บน YubiKey แล้ว แต่ OpenSSH ไม่เสร็จสมบูรณ์:\n"
+"{1}\n"
+"อย่าลองสร้างใหม่ ตรวจสอบคีย์และเก็บไฟล์ท้องถิ่นที่เขียนไว้"
 
 msgid "The security key returned an invalid PAM credential."
 msgstr "คีย์ความปลอดภัยคืนค่าข้อมูลประจำตัว PAM ที่ไม่ถูกต้อง"
 
+msgid "The selected FIDO device is no longer connected. Refresh and inspect it again."
+msgstr "อุปกรณ์ FIDO ที่เลือกไม่ได้เชื่อมต่ออีกต่อไป กรุณารีเฟรชและตรวจสอบอีกครั้ง"
+
 msgid "The selected FIDO device is no longer connected. Refresh and try again."
 msgstr "อุปกรณ์ FIDO ที่เลือกไม่ได้เชื่อมต่อแล้ว กรุณารีเฟรชและลองอีกครั้ง"
+
+msgid "The selected credential created a valid Git-format SSH signature. No repository or commit was changed."
+msgstr "The selected credential created a valid Git-format SSH signature. No repository or commit was changed."
 
 msgid "The selected private-key or .pub file already exists. Choose another name."
 msgstr "ไฟล์คีย์ส่วนตัวหรือ .pub ที่เลือกมีอยู่แล้ว กรุณาเลือกชื่ออื่น"
 
+msgid "The selected resident credential changed since it was inspected. Nothing was deleted; refresh and verify the key."
+msgstr "ข้อมูลประจำตัวแบบเรสидентที่เลือกมีการเปลี่ยนแปลงตั้งแต่ถูกตรวจสอบ ไม่มีการลบใด ๆ กรุณารีเฟรชและตรวจสอบคีย์"
+
+msgid "The selected resident credential is no longer present on this YubiKey. Nothing was deleted."
+msgstr "ข้อมูลประจำตัวแบบเรสидентที่เลือกไม่ได้อยู่ใน YubiKey นี้อีกต่อไป ไม่มีการลบใด ๆ"
+
+msgid "The signature was created but could not be verified: {0}"
+msgstr "The signature was created but could not be verified: {0}"
+
 msgid "The sudo policy task failed."
 msgstr "งานนโยบาย sudo ล้มเหลว"
+
+msgid "The temporary Git signature path is invalid."
+msgstr "The temporary Git signature path is invalid."
+
+msgid "The temporary Git signing path is invalid."
+msgstr "The temporary Git signing path is invalid."
+
+msgid "The user configuration folder is unavailable."
+msgstr "The user configuration folder is unavailable."
+
+msgid "This PIN authorizes permanent deletion of the exact credential shown in the previous step. It is never stored."
+msgstr "PIN นี้อนุญาตให้ลบข้อมูลประจำตัวที่แสดงในขั้นตอนก่อนหน้าอย่างถาวร จะไม่มีการเก็บ PIN ไว้"
+
+msgid "This credential needs a local key-handle file or must be loaded into the SSH agent before Git can use it."
+msgstr "This credential needs a local key-handle file or must be loaded into the SSH agent before Git can use it."
+
+msgid "This removes the private credential from the selected YubiKey and cannot be undone. It does not remove local files or an identity already loaded in the SSH agent."
+msgstr "การดำเนินการนี้จะลบข้อมูลประจำตัวส่วนตัวจาก YubiKey ที่เลือก และไม่สามารถย้อนกลับได้ ไม่มีการลบไฟล์ในเครื่องหรือตัวตนที่โหลดอยู่ใน SSH agent แล้ว"
 
 msgid "This setting applies only to the current user."
 msgstr "การตั้งค่านี้ใช้กับผู้ใช้ปัจจุบันเท่านั้น"
 
 msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr "แตะ YubiKey เมื่อได้รับการร้องขอ กำลังโหลดคีย์เรซิดেন্টเข้าเอเจนต์ SSH…"
+
+msgid "Touch the YubiKey. Creating and verifying a temporary Git-format SSH signature…"
+msgstr "Touch the YubiKey. Creating and verifying a temporary Git-format SSH signature…"
 
 msgid "Touch the YubiKey. Testing SSH signing and verification…"
 msgstr "แตะ YubiKey กำลังทดสอบการลงนามและยืนยัน SSH…"
@@ -488,6 +760,9 @@ msgstr "แตะคีย์นี้เมื่อได้รับการ
 
 msgid "Touch your security key to continue."
 msgstr "แตะกุญแจความปลอดภัยของคุณเพื่อดำเนินการต่อ"
+
+msgid "Type {0} to confirm"
+msgstr "พิมพ์ {0} เพื่อยืนยัน"
 
 msgid "Unknown authentication purpose."
 msgstr "วัตถุประสงค์ในการยืนยันตัวตนไม่ทราบแน่ชัด"
@@ -516,6 +791,12 @@ msgstr "กำลังอัปเดตการตั้งค่า sudo…"
 msgid "Use YubiKey to unlock sudo"
 msgstr "ใช้ YubiKey เพื่อปลดล็อก sudo"
 
+msgid "Use a YubiKey-backed SSH credential to sign commits and tags. SSH authentication and Git signing remain independently configurable."
+msgstr "Use a YubiKey-backed SSH credential to sign commits and tags. SSH authentication and Git signing remain independently configurable."
+
+msgid "Verifying and permanently deleting the selected resident credential. Do not unplug the YubiKey…"
+msgstr "กำลังตรวจสอบและลบข้อมูลประจำตัวแบบเรสидентที่เลือกอย่างถาวร อย่าถอดสาย YubiKey…"
+
 msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
 msgstr "คุณสามารถลงทะเบียนคีย์ได้ตอนนี้ แต่ sudo จะข้าม PAM เมื่อเปิดใช้งานการเข้าถึงแบบไม่ต้องใช้รหัสผ่าน"
 
@@ -540,8 +821,29 @@ msgstr "การแตะ YubiKey หรือรหัสผ่านบัญ
 msgid "YubiKey touch or password can unlock this user"
 msgstr "การแตะ YubiKey หรือรหัสผ่านสามารถปลดล็อกผู้ใช้รายนี้"
 
+msgid "YubiKey-backed SSH signatures are enabled for every commit"
+msgstr "YubiKey-backed SSH signatures are enabled for every commit"
+
+msgid ""
+"YubiKey: {0}\n"
+"Device: {1}\n"
+"Application: {2}\n"
+"Resident username: {3}\n"
+"Algorithm: {4}\n"
+"Fingerprint: {5}"
+msgstr ""
+"YubiKey: {0}\n"
+"อุปกรณ์: {1}\n"
+"แอปพลิเคชัน: {2}\n"
+"ชื่อผู้ใช้แบบเรสидент: {3}\n"
+"อัลกอริทึม: {4}\n"
+"ลายนิ้วมือ: {5}"
+
 msgid "agent"
 msgstr "เอเจนต์"
+
+msgid "fido2-token reported success, but the resident credential is still present. Do not retry until you refresh and inspect the YubiKey."
+msgstr "fido2-token รายงานความสำเร็จ แต่ข้อมูลประจำตัวแบบเรสидентยังคงอยู่ อย่าลองใหม่จนกว่าจะรีเฟรชและตรวจสอบ YubiKey"
 
 msgid "sudo authentication"
 msgstr "การยืนยันตัวตน sudo"
@@ -590,3 +892,9 @@ msgstr "{0} · ไม่มีหมายเลขซีเรียลขอ�
 
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
+
+#~ msgid "Inspecting resident SSH credentials…"
+#~ msgstr "กำลังตรวจสอบข้อมูลประจำตัว SSH แบบถาวร…"
+
+#~ msgid "Inspect, load, export, test, or remove resident SSH credentials."
+#~ msgstr "ตรวจสอบ โหลด ส่งออก ทดสอบ หรือลบข้อมูลประจำตัว SSH แบบถาวร"

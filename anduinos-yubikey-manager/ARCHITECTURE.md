@@ -70,3 +70,27 @@ they inspect the key, preventing accidental duplicate resident credentials.
 OpenSSH PIN prompts use the application binary as a private askpass helper. The PIN travels
 through an inherited pipe and zeroizing memory; it is never placed in argv, environment
 values, terminal transcripts, logs, or temporary files.
+
+## Git SSH commit signing
+
+The Git Signing page consumes credentials already inspected on the SSH page; it does not
+create, delete, or silently load credentials. Users can explicitly choose either a shared
+SSH/Git credential or a dedicated signing credential on the same physical YubiKey. The
+choice describes intended separation of duties while leaving existing SSH host
+authentication configuration untouched.
+
+Git is configured for the current user with `gpg.format=ssh`, an exact
+`user.signingKey`, and independent commit/tag signing switches. A local OpenSSH FIDO
+key-handle path is preferred because it remains usable without a preloaded agent. An
+inline `key::` public key is accepted only when the matching identity is currently loaded
+in the SSH agent.
+
+Before the first application-managed change, the prior values of every managed Git key
+are stored in a mode-0600 recovery record under the user's XDG configuration directory.
+Apply failures roll back to the values read immediately before the operation. Restore is
+refused if any managed value changed outside the application, preventing silent
+overwrites of a user's newer Git or OpenPGP configuration.
+
+The signing test creates temporary data and an SSH signature in a private temporary
+directory, verifies it with OpenSSH's `git` namespace, and removes it automatically. It
+does not create a repository, commit, tag, or branch.

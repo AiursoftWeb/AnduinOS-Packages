@@ -1,6 +1,7 @@
 mod application;
 mod backend;
 mod config;
+mod git_signing;
 mod i18n;
 mod model;
 mod progress_dialog;
