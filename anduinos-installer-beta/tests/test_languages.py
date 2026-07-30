@@ -12,6 +12,41 @@ from languages import (
 
 
 class LanguageDefaultsTests(unittest.TestCase):
+    def test_official_language_matrix_has_exactly_28_entries(self):
+        self.assertEqual(
+            [language.code for language in LANGUAGES],
+            [
+                "ar",
+                "zh_CN",
+                "zh_HK",
+                "zh_TW",
+                "da",
+                "nl",
+                "en_US",
+                "en_GB",
+                "fi",
+                "fr",
+                "de",
+                "el",
+                "hi",
+                "id",
+                "it",
+                "ja",
+                "ko",
+                "pl",
+                "pt",
+                "pt_BR",
+                "ro",
+                "ru",
+                "es",
+                "sv",
+                "th",
+                "tr",
+                "uk",
+                "vi",
+            ],
+        )
+
     def test_chinese_locales_use_us_physical_keyboard(self):
         chinese = {
             language.code: language.keyboard
@@ -33,7 +68,7 @@ class LanguageDefaultsTests(unittest.TestCase):
         )
 
     def test_representative_timezone_examples(self):
-        self.assertEqual(default_timezone("en"), "America/New_York")
+        self.assertEqual(default_timezone("en_US"), "America/New_York")
         self.assertEqual(default_timezone("zh_CN"), "Asia/Shanghai")
         self.assertEqual(default_timezone("en_GB"), "Europe/London")
         self.assertEqual(default_timezone("unknown"), "America/New_York")
@@ -46,7 +81,7 @@ class LanguageDefaultsTests(unittest.TestCase):
             "de_DE.UTF-8": ("de", "de", "Europe/Berlin"),
             "fr_FR@euro": ("fr", "fr", "Europe/Paris"),
             "en_GB.UTF-8": ("en_GB", "gb", "Europe/London"),
-            "en_AU.UTF-8": ("en", "us", "America/New_York"),
+            "en_AU.UTF-8": ("en_US", "us", "America/New_York"),
             "pt_BR.UTF-8": ("pt_BR", "br", "America/Sao_Paulo"),
         }
         for locale_name, expected in cases.items():
@@ -89,4 +124,4 @@ class LanguageDefaultsTests(unittest.TestCase):
                 language = detect_system_language(
                     {"LANG": locale_name}, Path("/does/not/exist")
                 )
-                self.assertEqual(language.code, "en")
+                self.assertEqual(language.code, "en_US")

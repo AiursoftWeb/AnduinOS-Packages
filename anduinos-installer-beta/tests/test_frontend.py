@@ -14,7 +14,7 @@ from installer_core.probe import PlatformProbe
 
 def state():
     return {
-        "lang": "en",
+        "lang": "en_US",
         "locale": "en_US.UTF-8",
         "keyboard": "us",
         "disk": "/dev/sda",

@@ -32,7 +32,7 @@ def build_plan(
     password_hash: str,
 ) -> InstallPlan:
     locale = str(choices.get("locale") or "en_US.UTF-8")
-    language = str(choices.get("lang") or "en")
+    language = str(choices.get("lang") or "en_US")
     plan = InstallPlan(
         schema_version=SCHEMA_VERSION,
         source=SourceSpec(),

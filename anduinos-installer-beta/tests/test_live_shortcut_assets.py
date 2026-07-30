@@ -48,6 +48,48 @@ class LiveShortcutAssetTests(unittest.TestCase):
             main,
         )
 
+    def test_desktop_launcher_has_all_28_official_localizations(self):
+        launcher = (
+            PACKAGE / "assets/anduinos-installer-beta.desktop"
+        ).read_text()
+        expected = {
+            "ar",
+            "da",
+            "de",
+            "el",
+            "en_GB",
+            "en_US",
+            "es",
+            "fi",
+            "fr",
+            "hi",
+            "id",
+            "it",
+            "ja",
+            "ko",
+            "nl",
+            "pl",
+            "pt",
+            "pt_BR",
+            "ro",
+            "ru",
+            "sv",
+            "th",
+            "tr",
+            "uk",
+            "vi",
+            "zh_CN",
+            "zh_HK",
+            "zh_TW",
+        }
+        for key in ("Name", "Comment"):
+            actual = {
+                line.removeprefix(f"{key}[").split("]", 1)[0]
+                for line in launcher.splitlines()
+                if line.startswith(f"{key}[")
+            }
+            self.assertEqual(actual, expected)
+
     def test_welcome_page_uses_the_packaged_box_icon(self):
         pages = (PACKAGE / "src/pages.py").read_text()
         self.assertIn(

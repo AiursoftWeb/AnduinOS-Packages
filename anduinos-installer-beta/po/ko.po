@@ -1,0 +1,538 @@
+# Korean translations for anduinos-installer-beta package.
+# Copyright (C) 2026 THE anduinos-installer-beta'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-installer-beta package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-installer-beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-30 14:59+0000\n"
+"PO-Revision-Date: 2026-07-30 14:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"실제 설치를 수행하면 머신 로컬 MOK가 생성됩니다. 재부팅 후 MOKManager에서 MOK 등록 → 계속 → 예(Y)를 선택하고 비밀번호 123456을 입력하세요."
+
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
+msgstr ""
+"\n"
+"파란색 MOKManager 화면에서 MOK 등록 → 계속 → 예(Y)를 선택하세요. 비밀번호: 123456"
+
+msgid "(Live USB — excluded)"
+msgstr "(라이브 USB — 제외됨)"
+
+msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
+msgstr "4 GiB 디스크 스왑(우선순위 10) + RAM의 50% LZ4 zram(우선순위 100)"
+
+msgid "; sudo does not require a password"
+msgstr "; sudo에는 비밀번호가 필요하지 않습니다"
+
+msgid "; sudo requires the account password"
+msgstr "; sudo에는 계정 비밀번호가 필요합니다"
+
+msgid "ALL DATA on the selected disk will be permanently erased."
+msgstr "선택한 디스크의 모든 데이터는 영구적으로 삭제됩니다."
+
+msgid "Account security"
+msgstr "계정 보안"
+
+msgid "Administrator access would be locked"
+msgstr "관리자 접근이 잠깁니다"
+
+msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
+msgstr "재시작 후 MOKManager가 실행됩니다. MOK 등록 → 계속 → 예(Y)를 선택한 다음 비밀번호 123456을 입력하세요."
+
+msgid ""
+"All partitions and data on {disk} will be destroyed.\n"
+"\n"
+msgstr ""
+"{disk}의 모든 파티션과 데이터가 파괴됩니다.\n"
+"\n"
+
+msgid "AnduinOS Installer"
+msgstr "AnduinOS 설치 관리자"
+
+msgid "AnduinOS Installer (Beta)"
+msgstr "AnduinOS 설치 관리자(베타)"
+
+msgid "AnduinOS Installer (Development)"
+msgstr "AnduinOS 설치 관리자(개발)"
+
+msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
+msgstr "사용자 권한으로 실행 중인 모든 프로그램은 인증 없이 전체 관리자 권한을 획득할 수 있습니다. 로그인 비밀번호는 여전히 로그인 시 보호를 제공하지만 sudo는 보호하지 않습니다. 계속하시겠습니까?"
+
+msgid "Arabic"
+msgstr "아랍어"
+
+msgid "Back"
+msgstr "뒤로"
+
+msgid "Btrfs (recommended)"
+msgstr "Btrfs(권장)"
+
+msgid "Cannot create installation plan"
+msgstr "설치 계획을 생성할 수 없습니다"
+
+msgid "Choose optional software to install"
+msgstr "선택적 소프트웨어를 선택하여 설치합니다"
+
+msgid "Choose the disk where AnduinOS will be installed"
+msgstr "AnduinOS가 설치될 디스크를 선택하세요"
+
+msgid "Choose your language to begin installation"
+msgstr "설치를 시작하려면 언어를 선택하세요"
+
+msgid "Choose your location to set the system clock"
+msgstr "시스템 시계를 설정하려면 지역을 선택하세요"
+
+msgid "Complete"
+msgstr "완료"
+
+msgid "Computer Name"
+msgstr "컴퓨터 이름"
+
+msgid "Computer name contains invalid characters."
+msgstr "컴퓨터 이름에 유효하지 않은 문자가 포함되어 있습니다."
+
+msgid "Configure account and region"
+msgstr "계정 및 지역 구성"
+
+msgid "Configure storage and swap"
+msgstr "저장소 및 스왑 구성"
+
+msgid "Confirm Password"
+msgstr "비밀번호 확인"
+
+msgid "Confirm your keyboard layout"
+msgstr "키보드 레이아웃을 확인하세요"
+
+msgid "Continue Installation"
+msgstr "설치 계속하기"
+
+msgid "Copy AnduinOS system"
+msgstr "AnduinOS 시스템 복사"
+
+msgid "Copy Log"
+msgstr "로그 복사"
+
+msgid "Create your user account"
+msgstr "사용자 계정 만들기"
+
+msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
+msgstr "개발 모드 — 계획이 유효성 검사되고 시뮬레이션됩니다. 특권 실행자 또는 디스크 명령어는 실행되지 않습니다."
+
+msgid "Danish"
+msgstr "덴마크어"
+
+msgid "Detect firmware and Secure Boot"
+msgstr "펌웨어 및 보안 부팅 감지"
+
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
+"\n"
+msgstr ""
+"개발 모드는 {disk}에 대한 설치를 시뮬레이션합니다. 디스크 데이터는 변경되지 않습니다.\n"
+"\n"
+
+msgid "Development simulation completed"
+msgstr "개발 시뮬레이션 완료"
+
+msgid "Discover AnduinOS"
+msgstr "AnduinOS 알아보기"
+
+msgid "Do not require a password for sudo commands"
+msgstr "sudo 명령어에 비밀번호 요구 안 함"
+
+msgid "Download and install system updates during installation"
+msgstr "설치 중 시스템 업데이트 다운로드 및 설치"
+
+msgid "Dutch"
+msgstr "네덜란드어"
+
+msgid "English (UK)"
+msgstr "영어(영국)"
+
+msgid "English (US)"
+msgstr "영어(미국)"
+
+msgid "Erase Disk and Install"
+msgstr "디스크 삭제 및 설치"
+
+msgid "Erase the entire selected disk?"
+msgstr "선택한 디스크 전체를 삭제하시겠습니까?"
+
+msgid "Filesystem"
+msgstr "파일 시스템"
+
+msgid "Finalize target environment"
+msgstr "대상 환경 최종화"
+
+msgid "Finnish"
+msgstr "핀란드어"
+
+msgid "French"
+msgstr "프랑스어"
+
+msgid "Full Name"
+msgstr "성명"
+
+msgid "German"
+msgstr "독일어"
+
+msgid "Greek"
+msgstr "그리스어"
+
+msgid "Hindi (India)"
+msgstr "힌디어(인도)"
+
+msgid "I Understand the Risk, Continue"
+msgstr "위험을 인지하고 계속하기"
+
+msgid "Indonesian"
+msgstr "인도네시아어"
+
+msgid "Install"
+msgstr "설치"
+
+msgid "Install bootloader"
+msgstr "부트 로더 설치"
+
+msgid "Install hardware drivers"
+msgstr "하드웨어 드라이버 설치"
+
+msgid "Install system updates"
+msgstr "시스템 업데이트 설치"
+
+msgid "Install third-party drivers for this device"
+msgstr "이 장치용 타사 드라이버 설치"
+
+msgid "Installation Complete"
+msgstr "설치 완료"
+
+msgid "Installation Failed"
+msgstr "설치 실패"
+
+msgid "Installation Steps"
+msgstr "설치 단계"
+
+msgid "Installation complete"
+msgstr "설치가 완료되었습니다"
+
+msgid "Installation failed"
+msgstr "설치에 실패했습니다"
+
+msgid "Installation in progress"
+msgstr "설치 진행 중"
+
+msgid "Installing AnduinOS"
+msgstr "AnduinOS 설치 중"
+
+msgid "Italian"
+msgstr "이탈리아어"
+
+msgid "Japanese"
+msgstr "일본어"
+
+msgid "Keyboard"
+msgstr "키보드"
+
+msgid "Keyboard Layout"
+msgstr "키보드 레이아웃"
+
+msgid "Korean"
+msgstr "한국어"
+
+msgid "Language"
+msgstr "언어"
+
+msgid "Mount target filesystems"
+msgstr "대상 파일 시스템 마운트"
+
+msgid "Navigation error"
+msgstr "네비게이션 오류"
+
+msgid "Next"
+msgstr "다음"
+
+msgid "Next slide"
+msgstr "다음 슬라이드"
+
+msgid "No suitable disks found."
+msgstr "적합한 디스크를 찾을 수 없습니다."
+
+msgid "Norwegian"
+msgstr "노르웨이어"
+
+msgid "OK"
+msgstr "확인"
+
+msgid "Output"
+msgstr "출력"
+
+msgid "Output • Error"
+msgstr "출력 • 오류"
+
+msgid "Output • {count} warning(s)"
+msgstr "출력 • {count}개의 경고"
+
+msgid "Password"
+msgstr "비밀번호"
+
+msgid "Password must be at least 6 characters."
+msgstr "비밀번호는 최소 6자 이상이어야 합니다."
+
+msgid "Passwordless sudo is unsafe"
+msgstr "비밀번호 없는 sudo는 안전하지 않습니다"
+
+msgid "Platform"
+msgstr "플랫폼"
+
+msgid "Please do not turn off your computer"
+msgstr "컴퓨터를 끄지 마세요"
+
+msgid "Please review your choices before proceeding"
+msgstr "계속하기 전에 선택 사항을 검토하세요"
+
+msgid "Polish"
+msgstr "폴란드어"
+
+msgid "Portuguese"
+msgstr "포르투갈어"
+
+msgid "Portuguese (Brazil)"
+msgstr "포르투갈어(브라질)"
+
+msgid "Prepare Secure Boot"
+msgstr "보안 부팅 준비"
+
+msgid "Prepare installation disk"
+msgstr "설치 디스크 준비"
+
+msgid "Prepare target environment"
+msgstr "대상 환경 준비"
+
+msgid "Preparing installation…"
+msgstr "설치 준비 중…"
+
+msgid "Previous slide"
+msgstr "이전 슬라이드"
+
+msgid "Ready to Install"
+msgstr "설치 준비 완료"
+
+msgid "Reboot Now"
+msgstr "지금 재부팅"
+
+msgid "Refresh package indexes"
+msgstr "패키지 인덱스 새로 고침"
+
+msgid "Remove live-session components"
+msgstr "라이브 세션 구성 요소 제거"
+
+msgid "Remove the installation media and restart your computer"
+msgstr "설치 매체를 제거하고 컴퓨터를 재시작하세요"
+
+msgid "Requires an Internet connection. The base installation remains available when offline."
+msgstr "인터넷 연결이 필요합니다. 기본 설치는 오프라인 상태에서도 사용 가능합니다."
+
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "재시작 및 보안 부팅 키 등록"
+
+msgid "Restart is disabled in development protection mode"
+msgstr "개발 보호 모드에서는 재부팅이 비활성화되어 있습니다"
+
+msgid "Return and Set a Password"
+msgstr "돌아가서 비밀번호 설정하기"
+
+msgid "Return to Make Changes"
+msgstr "변경 사항을 위해 돌아가기"
+
+msgid "Romanian"
+msgstr "루마니아어"
+
+msgid "Russian"
+msgstr "러시아어"
+
+msgid "Save Log"
+msgstr "로그 저장"
+
+msgid "Schedule MOK enrollment"
+msgstr "MOK 등록 예약"
+
+msgid "Search timezones…"
+msgstr "시간대 검색…"
+
+msgid "Secure Boot enrollment"
+msgstr "보안 부팅 등록"
+
+msgid "Select Installation Disk"
+msgstr "설치 디스크 선택"
+
+msgid "Select Timezone"
+msgstr "시간대 선택"
+
+msgid "Select fastest package mirror"
+msgstr "가장 빠른 패키지 미러 선택"
+
+msgid "Selected timezone"
+msgstr "선택된 시간대"
+
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr "일부 드라이버는 독점적이거나 기타 비자유 소프트웨어입니다."
+
+msgid "Spanish"
+msgstr "스페인어"
+
+msgid "Stable disk identity"
+msgstr "안정적인 디스크 ID"
+
+msgid ""
+"Stable identity: {stable_id}\n"
+"\n"
+msgstr ""
+"안정적 ID: {stable_id}\n"
+"\n"
+
+msgid "Subvolumes"
+msgstr "서브볼륨"
+
+msgid "Swap"
+msgstr "스왑"
+
+msgid "Swedish"
+msgstr "스웨덴어"
+
+msgid "System updates"
+msgstr "시스템 업데이트"
+
+msgid "Target Disk"
+msgstr "대상 디스크"
+
+msgid "Test your keyboard here…"
+msgstr "여기에서 키보드를 테스트하세요…"
+
+msgid "Thai"
+msgstr "타이어"
+
+msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
+msgstr "설치 계획이 유효합니다. 디스크, 파일 시스템, 부트 로더, 보안 부팅 상태 또는 설치된 시스템은 변경되지 않았습니다."
+
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "대상 디스크를 수정하는 동안 설치 관리자를 닫을 수 없습니다."
+
+msgid "The privileged executor is disabled."
+msgstr "특권 실행자가 비활성화되어 있습니다."
+
+msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
+msgstr "시스템이 이 계정으로 자동으로 로그인하고 비밀번호 없이 전체 관리자 권한을 획득할 수 있도록 허용합니다. 물리적 접근 권한이 있는 사람과 이 사용자로 실행되는 모든 프로그램은 시스템을 완전히 제어할 수 있습니다. 이 기능은 키오스크, 임시 가상 머신 또는 기타 통제된 환경에서만 사용하세요."
+
+msgid "The two passwords do not match."
+msgstr "두 비밀번호가 일치하지 않습니다."
+
+msgid "Third-party drivers"
+msgstr "타사 드라이버"
+
+msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
+msgstr "이 계정에는 로그인 비밀번호가 없습니다. 그러나 sudo는 여전히 비밀번호를 필요로 합니다. 루트 계정은 기본적으로 잠겨 있으므로 관리자 작업을 수행할 수 없습니다. 계정 비밀번호를 설정하거나 비밀번호 없는 sudo를 활성화하세요."
+
+msgid "This configuration is very unsafe"
+msgstr "이 구성은 매우 안전하지 않습니다"
+
+msgid "This installer does not shrink or preserve other systems."
+msgstr "이 설치 관리자는 다른 시스템을 축소하거나 보존하지 않습니다."
+
+msgid "Timezone"
+msgstr "시간대"
+
+msgid "Turkish"
+msgstr "터키어"
+
+msgid "Ukrainian"
+msgstr "우크라이나어"
+
+msgid "Unavailable: {error}"
+msgstr "사용 불가: {error}"
+
+msgid "Unmount installed system"
+msgstr "설치된 시스템 언마운트"
+
+msgid "Updates and Drivers"
+msgstr "업데이트 및 드라이버"
+
+msgid "User"
+msgstr "사용자"
+
+msgid "User Account"
+msgstr "사용자 계정"
+
+msgid "Username"
+msgstr "사용자 이름"
+
+msgid "Username may only contain lowercase letters, digits, underscores and hyphens."
+msgstr "사용자 이름에는 소문자, 숫자, 밑줄 및 하이픈만 포함할 수 있습니다."
+
+msgid "Validate Plan (No Installation)"
+msgstr "계획 유효성 검사(설치 안 함)"
+
+msgid "Validate this installation plan?"
+msgstr "이 설치 계획의 유효성을 검사하시겠습니까?"
+
+msgid "Verify kernel module signatures"
+msgstr "커널 모듈 서명 확인"
+
+msgid "Verify target disk isolation"
+msgstr "대상 디스크 격리 확인"
+
+msgid "Vietnamese"
+msgstr "베트남어"
+
+msgid "Welcome to AnduinOS"
+msgstr "AnduinOS에 오신 것을 환영합니다"
+
+msgid "automatic login"
+msgstr "자동 로그인"
+
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr "머신 로컬 MOK 생성; 재부팅 후 비밀번호 123456로 등록"
+
+msgid "detect and install (may include non-free software)"
+msgstr "감지 및 설치(비자유 소프트웨어 포함 가능)"
+
+msgid "do not install"
+msgstr "설치 안 함"
+
+msgid "download and install"
+msgstr "다운로드 및 설치"
+
+msgid "not required"
+msgstr "필요 없음"
+
+msgid "password required for login"
+msgstr "로그인에 비밀번호 필요"
+
+msgid "single ext4 root filesystem"
+msgstr "단일 ext4 루트 파일 시스템"
+
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / 보안 부팅: {secure_boot}"
+
+msgid "{step} failed"
+msgstr "{step} 실패"
+
+msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
+msgstr "⚠ 이 작업은 선택한 디스크의 모든 데이터를 삭제합니다. 이 작업은 되돌릴 수 없습니다."

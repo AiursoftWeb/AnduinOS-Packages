@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.1-13+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-14+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer (beta) — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -26,6 +26,7 @@
   <ItemGroup>
     <!-- Package-local release gate. APKG runs this from the project directory
          and aborts the build immediately when syntax, UT, or hygiene fails. -->
+    <PrebuildCommand Run="bash compile-locales.sh" />
     <PrebuildCommand Run="bash scripts/prebuild-check.sh" />
   </ItemGroup>
 
@@ -73,6 +74,8 @@
     <!-- Python source tree -->
     <IncludeFolder Include="src/"
                    Target="/usr/lib/anduinos-installer-beta/" />
+    <IncludeFolder Include="locale/"
+                   Target="/usr/share/locale/" />
     <!-- Independent, native-GTK reuse of the historical localized slideshow. -->
     <IncludeFolder Include="assets/slideshow/"
                    Target="/usr/share/anduinos-installer-beta/slideshow/" />

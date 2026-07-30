@@ -1,0 +1,538 @@
+# Japanese translations for anduinos-installer-beta package.
+# Copyright (C) 2026 THE anduinos-installer-beta'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-installer-beta package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-installer-beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-30 14:59+0000\n"
+"PO-Revision-Date: 2026-07-30 14:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"実際のインストールでは、マシン固有の MOK が作成されます。再起動後、MOKManager で [MOK の登録] → [続行] → [はい] を選択し、パスワードとして 123456 を入力してください。"
+
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
+msgstr ""
+"\n"
+"青い MOKManager画面で [MOK の登録] → [続行] → [はい] を選択し、パスワードは 123456 です"
+
+msgid "(Live USB — excluded)"
+msgstr "(Live USB — 除外)"
+
+msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
+msgstr "4 GiB ディスクスワップ (優先度 10) + RAMの50%を占める LZ4 zram (優先度 100)"
+
+msgid "; sudo does not require a password"
+msgstr "; sudo はパスワードを要求しません"
+
+msgid "; sudo requires the account password"
+msgstr "; sudo はアカウントパスワードを要求します"
+
+msgid "ALL DATA on the selected disk will be permanently erased."
+msgstr "選択したディスク上のすべてのデータは永久に消去されます。"
+
+msgid "Account security"
+msgstr "アカウントセキュリティ"
+
+msgid "Administrator access would be locked"
+msgstr "管理者アクセスがロックされます"
+
+msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
+msgstr "再起動後、MOKManager が起動します。[MOK の登録] → [続行] → [はい] を選択し、パスワード 123456 を入力してください。"
+
+msgid ""
+"All partitions and data on {disk} will be destroyed.\n"
+"\n"
+msgstr ""
+"{disk} 上のすべてのパーティションとデータは破壊されます。\n"
+"\n"
+
+msgid "AnduinOS Installer"
+msgstr "AnduinOS インストーラー"
+
+msgid "AnduinOS Installer (Beta)"
+msgstr "AnduinOS インストーラー (ベータ版)"
+
+msgid "AnduinOS Installer (Development)"
+msgstr "AnduinOS インストーラー (開発版)"
+
+msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
+msgstr "ユーザーとして実行されている任意のプログラムは、認証なしで完全な管理者権限を取得できます。ログインパスワードはまだサインインを保護しますが、sudo は保護されません。続行してもよろしいですか？"
+
+msgid "Arabic"
+msgstr "アラビア語"
+
+msgid "Back"
+msgstr "戻る"
+
+msgid "Btrfs (recommended)"
+msgstr "Btrfs (推奨)"
+
+msgid "Cannot create installation plan"
+msgstr "インストールプランを作成できません"
+
+msgid "Choose optional software to install"
+msgstr "オプションのソフトウェアを選択してインストール"
+
+msgid "Choose the disk where AnduinOS will be installed"
+msgstr "AnduinOS をインストールするディスクを選択してください"
+
+msgid "Choose your language to begin installation"
+msgstr "インストールを開始するには言語を選択してください"
+
+msgid "Choose your location to set the system clock"
+msgstr "システムクロックを設定するためにロケーションを選択してください"
+
+msgid "Complete"
+msgstr "完了"
+
+msgid "Computer Name"
+msgstr "コンピュータ名"
+
+msgid "Computer name contains invalid characters."
+msgstr "コンピュータ名に無効な文字が含まれています。"
+
+msgid "Configure account and region"
+msgstr "アカウントと地域を設定"
+
+msgid "Configure storage and swap"
+msgstr "ストレージとスワップを設定"
+
+msgid "Confirm Password"
+msgstr "パスワードの確認"
+
+msgid "Confirm your keyboard layout"
+msgstr "キーボードレイアウトを確認してください"
+
+msgid "Continue Installation"
+msgstr "インストールを続行"
+
+msgid "Copy AnduinOS system"
+msgstr "AnduinOS システムのコピー"
+
+msgid "Copy Log"
+msgstr "ログのコピー"
+
+msgid "Create your user account"
+msgstr "ユーザーアカウントを作成"
+
+msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
+msgstr "開発モード — プランが検証およびシミュレートされます。特権実行プログラムやディスクコマンドは実行されません。"
+
+msgid "Danish"
+msgstr "デンマーク語"
+
+msgid "Detect firmware and Secure Boot"
+msgstr "ファームウェアとセキュアブートを検出"
+
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
+"\n"
+msgstr ""
+"開発モードでは {disk} へのインストールをシミュレートします。ディスクデータは一切変更されません。\n"
+"\n"
+
+msgid "Development simulation completed"
+msgstr "開発シミュレーションが完了しました"
+
+msgid "Discover AnduinOS"
+msgstr "AnduinOS を発見する"
+
+msgid "Do not require a password for sudo commands"
+msgstr "sudo コマンドにパスワードを要求しない"
+
+msgid "Download and install system updates during installation"
+msgstr "インストール中にシステムアップデートのダウンロードとインストールを行う"
+
+msgid "Dutch"
+msgstr "オランダ語"
+
+msgid "English (UK)"
+msgstr "英語 (UK)"
+
+msgid "English (US)"
+msgstr "英語 (US)"
+
+msgid "Erase Disk and Install"
+msgstr "ディスクを消去してインストール"
+
+msgid "Erase the entire selected disk?"
+msgstr "選択したディスク全体を消去しますか？"
+
+msgid "Filesystem"
+msgstr "ファイルシステム"
+
+msgid "Finalize target environment"
+msgstr "ターゲット環境の最終化"
+
+msgid "Finnish"
+msgstr "フィンランド語"
+
+msgid "French"
+msgstr "フランス語"
+
+msgid "Full Name"
+msgstr "氏名"
+
+msgid "German"
+msgstr "ドイツ語"
+
+msgid "Greek"
+msgstr "ギリシャ語"
+
+msgid "Hindi (India)"
+msgstr "ヒンディー語 (インド)"
+
+msgid "I Understand the Risk, Continue"
+msgstr "リスクを理解します、続行する"
+
+msgid "Indonesian"
+msgstr "インドネシア語"
+
+msgid "Install"
+msgstr "インストール"
+
+msgid "Install bootloader"
+msgstr "ブートローダーをインストール"
+
+msgid "Install hardware drivers"
+msgstr "ハードウェアドライバーをインストール"
+
+msgid "Install system updates"
+msgstr "システムアップデートをインストール"
+
+msgid "Install third-party drivers for this device"
+msgstr "このデバイスのサードパーティ製ドライバーをインストール"
+
+msgid "Installation Complete"
+msgstr "インストールが完了しました"
+
+msgid "Installation Failed"
+msgstr "インストールに失敗しました"
+
+msgid "Installation Steps"
+msgstr "インストール手順"
+
+msgid "Installation complete"
+msgstr "インストールが完了しました"
+
+msgid "Installation failed"
+msgstr "インストールに失敗しました"
+
+msgid "Installation in progress"
+msgstr "インストール中"
+
+msgid "Installing AnduinOS"
+msgstr "AnduinOS をインストールしています"
+
+msgid "Italian"
+msgstr "イタリア語"
+
+msgid "Japanese"
+msgstr "日本語"
+
+msgid "Keyboard"
+msgstr "キーボード"
+
+msgid "Keyboard Layout"
+msgstr "キーボードレイアウト"
+
+msgid "Korean"
+msgstr "韓国語"
+
+msgid "Language"
+msgstr "言語"
+
+msgid "Mount target filesystems"
+msgstr "ターゲットファイルシステムのマウント"
+
+msgid "Navigation error"
+msgstr "ナビゲーションエラー"
+
+msgid "Next"
+msgstr "次へ"
+
+msgid "Next slide"
+msgstr "次のスライド"
+
+msgid "No suitable disks found."
+msgstr "適切なディスクが見つかりませんでした。"
+
+msgid "Norwegian"
+msgstr "ノルウェー語"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Output"
+msgstr "出力"
+
+msgid "Output • Error"
+msgstr "出力 • エラー"
+
+msgid "Output • {count} warning(s)"
+msgstr "出力 • {count} 件の警告"
+
+msgid "Password"
+msgstr "パスワード"
+
+msgid "Password must be at least 6 characters."
+msgstr "パスワードは6文字以上である必要があります。"
+
+msgid "Passwordless sudo is unsafe"
+msgstr "パスワードなしの sudo は安全ではありません"
+
+msgid "Platform"
+msgstr "プラットフォーム"
+
+msgid "Please do not turn off your computer"
+msgstr "コンピューターを電源オフにしないでください"
+
+msgid "Please review your choices before proceeding"
+msgstr "続行する前に選択内容をご確認ください"
+
+msgid "Polish"
+msgstr "ポーランド語"
+
+msgid "Portuguese"
+msgstr "ポルトガル語"
+
+msgid "Portuguese (Brazil)"
+msgstr "ポルトガル語 (ブラジル)"
+
+msgid "Prepare Secure Boot"
+msgstr "セキュアブートの準備"
+
+msgid "Prepare installation disk"
+msgstr "インストールディスクの準備"
+
+msgid "Prepare target environment"
+msgstr "ターゲット環境の準備"
+
+msgid "Preparing installation…"
+msgstr "インストールの準備中…"
+
+msgid "Previous slide"
+msgstr "前のスライド"
+
+msgid "Ready to Install"
+msgstr "インストールの準備ができました"
+
+msgid "Reboot Now"
+msgstr "今すぐ再起動"
+
+msgid "Refresh package indexes"
+msgstr "パッケージインデックスを更新"
+
+msgid "Remove live-session components"
+msgstr "Liveセッションコンポーネントを削除"
+
+msgid "Remove the installation media and restart your computer"
+msgstr "インストールメディアを取り出し、コンピューターを再起動してください"
+
+msgid "Requires an Internet connection. The base installation remains available when offline."
+msgstr "インターネット接続が必要です。基本インストールはオフラインでも利用可能です。"
+
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "再起動してセキュアブートキーを登録"
+
+msgid "Restart is disabled in development protection mode"
+msgstr "開発保護モードでは再起動が無効化されています"
+
+msgid "Return and Set a Password"
+msgstr "パスワードを設定に戻って設定する"
+
+msgid "Return to Make Changes"
+msgstr "変更を加えるために戻る"
+
+msgid "Romanian"
+msgstr "ルーマニア語"
+
+msgid "Russian"
+msgstr "ロシア語"
+
+msgid "Save Log"
+msgstr "ログを保存"
+
+msgid "Schedule MOK enrollment"
+msgstr "MOK登録のスケジュール設定"
+
+msgid "Search timezones…"
+msgstr "タイムゾーンを検索…"
+
+msgid "Secure Boot enrollment"
+msgstr "セキュアブートの登録"
+
+msgid "Select Installation Disk"
+msgstr "インストールディスクを選択"
+
+msgid "Select Timezone"
+msgstr "タイムゾーンを選択"
+
+msgid "Select fastest package mirror"
+msgstr "最速のパッケージミラーを選択"
+
+msgid "Selected timezone"
+msgstr "選択されたタイムゾーン"
+
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr "一部のドライバーはプロプライエタリまたはその他の非フリーソフトウェアです。"
+
+msgid "Spanish"
+msgstr "スペイン語"
+
+msgid "Stable disk identity"
+msgstr "安定したディスクID"
+
+msgid ""
+"Stable identity: {stable_id}\n"
+"\n"
+msgstr ""
+"安定したID: {stable_id}\n"
+"\n"
+
+msgid "Subvolumes"
+msgstr "サブボリューム"
+
+msgid "Swap"
+msgstr "スワップ"
+
+msgid "Swedish"
+msgstr "スウェーデン語"
+
+msgid "System updates"
+msgstr "システムアップデート"
+
+msgid "Target Disk"
+msgstr "ターゲットディスク"
+
+msgid "Test your keyboard here…"
+msgstr "ここでキーボードを試してください…"
+
+msgid "Thai"
+msgstr "タイ語"
+
+msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
+msgstr "インストールプランは有効です。ディスク、ファイルシステム、ブートローダー、セキュアブートの状態、またはインストールされたシステムは一切変更されませんでした。"
+
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "ターゲットディスクを変更している間は、インストーラーを閉じることはできません。"
+
+msgid "The privileged executor is disabled."
+msgstr "特権実行プログラムは無効化されています。"
+
+msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
+msgstr "システムはこのアカウントに自動的にサインインし、パスワードなしで完全な管理者権限を取得することを許可します。物理的にアクセスできる誰でも、およびこのユーザーとして実行されている任意のプログラムは、システムを完全に制御できます。これはキオスク、一時的な仮想マシン、またはその他の管理された環境でのみ使用してください。"
+
+msgid "The two passwords do not match."
+msgstr "2つのパスワードが一致しません。"
+
+msgid "Third-party drivers"
+msgstr "サードパーティ製ドライバー"
+
+msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
+msgstr "このアカウントにはログインパスワードがありませんが、sudo は依然としてパスワードを要求します。root アカウントはデフォルトでロックされているため、管理者タスクを実行できません。アカウントのパスワードを設定するか、パスワードなしの sudo を有効にしてください。"
+
+msgid "This configuration is very unsafe"
+msgstr "この設定は非常に安全ではありません"
+
+msgid "This installer does not shrink or preserve other systems."
+msgstr "このインストーラーは他のシステムを縮小したり保存したりしません。"
+
+msgid "Timezone"
+msgstr "タイムゾーン"
+
+msgid "Turkish"
+msgstr "トルコ語"
+
+msgid "Ukrainian"
+msgstr "ウクライナ語"
+
+msgid "Unavailable: {error}"
+msgstr "利用不可: {error}"
+
+msgid "Unmount installed system"
+msgstr "インストールされたシステムのアンマウント"
+
+msgid "Updates and Drivers"
+msgstr "アップデートとドライバー"
+
+msgid "User"
+msgstr "ユーザー"
+
+msgid "User Account"
+msgstr "ユーザーアカウント"
+
+msgid "Username"
+msgstr "ユーザー名"
+
+msgid "Username may only contain lowercase letters, digits, underscores and hyphens."
+msgstr "ユーザー名には小文字、数字、アンダースコア、ハイフンのみを使用できます。"
+
+msgid "Validate Plan (No Installation)"
+msgstr "プランを検証する (インストールなし)"
+
+msgid "Validate this installation plan?"
+msgstr "このインストールプランを検証しますか？"
+
+msgid "Verify kernel module signatures"
+msgstr "カーネルモジュールの署名を確認"
+
+msgid "Verify target disk isolation"
+msgstr "ターゲットディスクの分離を確認"
+
+msgid "Vietnamese"
+msgstr "ベトナム語"
+
+msgid "Welcome to AnduinOS"
+msgstr "AnduinOS へようこそ"
+
+msgid "automatic login"
+msgstr "自動ログイン"
+
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr "マシン固有の MOK を作成; 再起動後にパスワード 123456 で登録"
+
+msgid "detect and install (may include non-free software)"
+msgstr "検出してインストール (非フリーソフトウェアが含まれる場合があります)"
+
+msgid "do not install"
+msgstr "インストールしない"
+
+msgid "download and install"
+msgstr "ダウンロードしてインストール"
+
+msgid "not required"
+msgstr "不要"
+
+msgid "password required for login"
+msgstr "ログインにパスワードが必要"
+
+msgid "single ext4 root filesystem"
+msgstr "ext4 ルートファイルシステムのみ"
+
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / セキュアブート: {secure_boot}"
+
+msgid "{step} failed"
+msgstr "{step} に失敗しました"
+
+msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
+msgstr "⚠ これにより選択したディスク上のすべてのデータが消去されます。この操作は元に戻せません。"

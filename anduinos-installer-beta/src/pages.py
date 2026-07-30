@@ -25,11 +25,11 @@ from gi.repository import Gtk, Adw, GLib, Gio, Pango, GObject
 
 from languages import (
     LANGUAGES,
-    _,
     default_timezone,
     is_chinese,
     Language as LangData,
 )
+from i18n import _, N_
 from frontend import (
     DevelopmentExecutorClient,
     ExecutorClient,
@@ -116,14 +116,14 @@ def _page_subtitle(key: str, lang: str) -> Gtk.Label:
     return lbl
 
 
-def _nav_box(lang, on_back, on_next, next_label="nav.next",
+def _nav_box(lang, on_back, on_next, next_label=N_("Next"),
              next_sensitive=True, next_destructive=False):
     """Standard bottom navigation bar with Back / Next buttons."""
     box = Gtk.Box(spacing=12, homogeneous=False, margin_top=24,
                   margin_bottom=12, margin_start=24, margin_end=24)
     box.set_halign(Gtk.Align.CENTER)
 
-    back = _nav_btn("nav.back", lang, on_back)
+    back = _nav_btn("Back", lang, on_back)
     box.append(back)
 
     css = ["destructive-action"] if next_destructive else ["suggested-action"]
@@ -137,8 +137,8 @@ def _nav_box(lang, on_back, on_next, next_label="nav.next",
 
 def build_welcome_page(shared, nav_view):
     """Language list on the left, native GTK4 welcome panel on the right."""
-    lang = shared.get("lang", "en")
-    page = Adw.NavigationPage(title="AnduinOS Installer")
+    lang = shared.get("lang", "en_US")
+    page = Adw.NavigationPage(title=_("AnduinOS Installer", lang))
     page.set_tag("welcome")
 
     # ── left: language list ──
@@ -208,16 +208,31 @@ def build_welcome_page(shared, nav_view):
     hpaned.set_end_child(right_frame)
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    content.append(_page_title("welcome.title", lang))
-    content.append(_page_subtitle("welcome.subtitle", lang))
+    page_title = _page_title("Welcome to AnduinOS", lang)
+    page_subtitle = _page_subtitle(
+        "Choose your language to begin installation", lang
+    )
+    content.append(page_title)
+    content.append(page_subtitle)
     content.append(hpaned)
 
     # ── handlers ──
     sel = lang_list.get_model()
+    navigation_widgets = {}
 
     def _update_welcome(lang_code: str):
-        welcome_title.set_label(_("welcome.title", lang_code))
-        welcome_desc.set_label(_("welcome.subtitle", lang_code))
+        welcome_title.set_label(_("Welcome to AnduinOS", lang_code))
+        welcome_desc.set_label(
+            _("Choose your language to begin installation", lang_code)
+        )
+        page_title.set_label(_("Welcome to AnduinOS", lang_code))
+        page_subtitle.set_label(
+            _("Choose your language to begin installation", lang_code)
+        )
+        page.set_title(_("AnduinOS Installer", lang_code))
+        if navigation_widgets:
+            navigation_widgets["back"].set_label(_("Back", lang_code))
+            navigation_widgets["next"].set_label(_("Next", lang_code))
 
     def _on_lang_selected():
         pos = sel.get_selected()
@@ -227,18 +242,17 @@ def build_welcome_page(shared, nav_view):
             shared["locale"] = l.locale
             shared["keyboard"] = l.keyboard
             shared["timezone"] = default_timezone(l.code)
+            Gtk.Widget.set_default_direction(
+                Gtk.TextDirection.RTL
+                if l.code == "ar"
+                else Gtk.TextDirection.LTR
+            )
             _update_welcome(l.code)
+            set_window_language = shared.get("_set_window_language")
+            if callable(set_window_language):
+                set_window_language(l.code)
 
     sel.connect("selection-changed", lambda _s, _p, _n: _on_lang_selected())
-
-    # Select the language detected from the Live session. The shared state is
-    # initialized before this page is built, so regional defaults stay atomic.
-    initial_language = str(shared.get("lang", "en"))
-    for i, l in enumerate(lang_items):
-        if l.code == initial_language:
-            lang_list.get_model().select_item(i, True)
-            break
-    _update_welcome(initial_language)
 
     def on_next():
         try:
@@ -246,17 +260,33 @@ def build_welcome_page(shared, nav_view):
         except Exception as e:
             import traceback
             traceback.print_exc()
+            selected_lang = str(shared.get("lang", "en_US"))
             dlg = Adw.MessageDialog(
                 transient_for=nav_view.get_root(),
-                heading="Navigation error",
+                heading=_("Navigation error", selected_lang),
                 body=str(e),
             )
-            dlg.add_response("ok", "OK")
+            dlg.add_response("ok", _("OK", selected_lang))
             dlg.present()
 
-    content.append(_nav_box(lang,
-                            on_back=lambda: None,
-                            on_next=on_next))
+    navigation = _nav_box(
+        lang,
+        on_back=lambda: None,
+        on_next=on_next,
+    )
+    navigation_widgets["back"] = navigation.get_first_child()
+    navigation_widgets["next"] = navigation.get_last_child()
+    content.append(navigation)
+
+    # Select the language detected from the Live session. The shared state is
+    # initialized before this page is built, so regional defaults stay atomic.
+    initial_language = str(shared.get("lang", "en_US"))
+    for i, l in enumerate(lang_items):
+        if l.code == initial_language:
+            lang_list.get_model().select_item(i, True)
+            break
+    _update_welcome(initial_language)
+
     page.set_child(content)
     return page
 
@@ -266,31 +296,33 @@ def build_welcome_page(shared, nav_view):
 # Common XKB variants, grouped by region
 XKB_VARIANTS = [
     # Latin
-    ("us", "English (US)"), ("gb", "English (UK)"), ("de", "German"),
-    ("fr", "French"), ("it", "Italian"), ("es", "Spanish"),
-    ("pt", "Portuguese"), ("br", "Portuguese (Brazil)"),
-    ("dk", "Danish"), ("se", "Swedish"), ("no", "Norwegian"),
-    ("fi", "Finnish"), ("nl", "Dutch"), ("pl", "Polish"),
-    ("ro", "Romanian"),
+    ("us", N_("English (US)")), ("gb", N_("English (UK)")),
+    ("de", N_("German")), ("fr", N_("French")), ("it", N_("Italian")),
+    ("es", N_("Spanish")), ("pt", N_("Portuguese")),
+    ("br", N_("Portuguese (Brazil)")), ("dk", N_("Danish")),
+    ("se", N_("Swedish")), ("no", N_("Norwegian")),
+    ("fi", N_("Finnish")), ("nl", N_("Dutch")), ("pl", N_("Polish")),
+    ("ro", N_("Romanian")),
     # Cyrillic / Greek
-    ("ru", "Russian"), ("ua", "Ukrainian"), ("gr", "Greek"),
+    ("ru", N_("Russian")), ("ua", N_("Ukrainian")), ("gr", N_("Greek")),
     # CJK / Indic / Other physical layouts. Chinese input is an input method
     # layered over the US layout, not a separate physical keyboard layout.
-    ("jp", "Japanese"), ("kr", "Korean"),
-    ("in", "Hindi (India)"), ("th", "Thai"), ("vn", "Vietnamese"),
-    ("ara", "Arabic"), ("tr", "Turkish"), ("id", "Indonesian"),
+    ("jp", N_("Japanese")), ("kr", N_("Korean")),
+    ("in", N_("Hindi (India)")), ("th", N_("Thai")),
+    ("vn", N_("Vietnamese")), ("ara", N_("Arabic")),
+    ("tr", N_("Turkish")), ("id", N_("Indonesian")),
 ]
 
 
 def build_keyboard_page(shared, nav_view):
-    lang = shared.get("lang", "en")
+    lang = shared.get("lang", "en_US")
     keyboard = shared.get("keyboard", "us")
-    page = Adw.NavigationPage(title=_("keyboard.title", lang))
+    page = Adw.NavigationPage(title=_("Keyboard Layout", lang))
     page.set_tag("keyboard")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(_page_title("keyboard.title", lang))
-    content.append(_page_subtitle("keyboard.subtitle", lang))
+    content.append(_page_title("Keyboard Layout", lang))
+    content.append(_page_subtitle("Confirm your keyboard layout", lang))
 
     # Find the index of the current keyboard variant
     variant_names = [v[0] for v in XKB_VARIANTS]
@@ -303,7 +335,7 @@ def build_keyboard_page(shared, nav_view):
     # Dropdown
     kbd_store = Gtk.StringList()
     for _code, name in XKB_VARIANTS:
-        kbd_store.append(name)
+        kbd_store.append(_(name, lang))
 
     kbd_dropdown = Gtk.DropDown(model=kbd_store,
                                 margin_start=48, margin_end=48,
@@ -318,7 +350,7 @@ def build_keyboard_page(shared, nav_view):
     kbd_dropdown.connect("notify::selected", _on_kbd_changed)
 
     # Test entry
-    test_entry = Gtk.Entry(placeholder_text=_("keyboard.test", lang),
+    test_entry = Gtk.Entry(placeholder_text=_("Test your keyboard here…", lang),
                            margin_top=24, margin_start=48, margin_end=48)
 
     content.append(kbd_dropdown)
@@ -338,13 +370,13 @@ def build_keyboard_page(shared, nav_view):
 # ── page 3: Updates and drivers ─────────────────────────────────────────
 
 def build_software_page(shared, nav_view):
-    lang = shared.get("lang", "en")
-    page = Adw.NavigationPage(title=_("software.title", lang))
+    lang = shared.get("lang", "en_US")
+    page = Adw.NavigationPage(title=_("Updates and Drivers", lang))
     page.set_tag("software")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(_page_title("software.title", lang))
-    content.append(_page_subtitle("software.subtitle", lang))
+    content.append(_page_title("Updates and Drivers", lang))
+    content.append(_page_subtitle("Choose optional software to install", lang))
 
     options = Gtk.Box(
         orientation=Gtk.Orientation.VERTICAL,
@@ -355,10 +387,10 @@ def build_software_page(shared, nav_view):
         vexpand=True,
     )
 
-    updates = Gtk.CheckButton(label=_("software.updates", lang))
+    updates = Gtk.CheckButton(label=_("Download and install system updates during installation", lang))
     updates.set_active(bool(shared.get("install_updates", True)))
     updates_detail = Gtk.Label(
-        label=_("software.updates_detail", lang),
+        label=_("Requires an Internet connection. The base installation remains available when offline.", lang),
         halign=Gtk.Align.START,
         wrap=True,
         margin_start=28,
@@ -367,12 +399,12 @@ def build_software_page(shared, nav_view):
     options.append(updates)
     options.append(updates_detail)
 
-    drivers = Gtk.CheckButton(label=_("software.drivers", lang))
+    drivers = Gtk.CheckButton(label=_("Install third-party drivers for this device", lang))
     drivers.set_active(
         bool(shared.get("install_third_party_drivers", False))
     )
     drivers_detail = Gtk.Label(
-        label=_("software.drivers_detail", lang),
+        label=_("Some drivers are proprietary or otherwise non-free software.", lang),
         halign=Gtk.Align.START,
         wrap=True,
         margin_start=28,
@@ -405,13 +437,13 @@ def build_software_page(shared, nav_view):
 # ── page 4: Disk selection ───────────────────────────────────────────────
 
 def build_disk_page(shared, nav_view):
-    lang = shared.get("lang", "en")
-    page = Adw.NavigationPage(title=_("disk.title", lang))
+    lang = shared.get("lang", "en_US")
+    page = Adw.NavigationPage(title=_("Select Installation Disk", lang))
     page.set_tag("disk")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(_page_title("disk.title", lang))
-    content.append(_page_subtitle("disk.subtitle", lang))
+    content.append(_page_title("Select Installation Disk", lang))
+    content.append(_page_subtitle("Choose the disk where AnduinOS will be installed", lang))
 
     # Disk list
     list_store = Gio.ListStore(item_type=DiskItem)
@@ -448,9 +480,9 @@ def build_disk_page(shared, nav_view):
         halign=Gtk.Align.CENTER,
         margin_top=12,
     )
-    filesystem_box.append(Gtk.Label(label="Filesystem"))
+    filesystem_box.append(Gtk.Label(label=_("Filesystem", lang)))
     filesystem_names = Gtk.StringList.new(
-        ["Btrfs (recommended)", "ext4"]
+        [_("Btrfs (recommended)", lang), "ext4"]
     )
     filesystem = Gtk.DropDown(model=filesystem_names)
     filesystem.set_selected(
@@ -465,7 +497,7 @@ def build_disk_page(shared, nav_view):
     filesystem_box.append(filesystem)
 
     # Warning labels
-    warn_label = Gtk.Label(label=_("disk.warning_erase", lang))
+    warn_label = Gtk.Label(label=_("ALL DATA on the selected disk will be permanently erased.", lang))
     warn_label.add_css_class("warning")
     warn_label.set_margin_top(12)
     warn_label.set_halign(Gtk.Align.CENTER)
@@ -482,7 +514,7 @@ def build_disk_page(shared, nav_view):
             is_live = disk.path == live_dev
             sub = f"{size} — {disk.model}"
             if is_live:
-                sub += f" {_('disk.live_usb', lang)}"
+                sub += f" {_('(Live USB — excluded)', lang)}"
             list_store.append(DiskItem(
                 devname=disk.path, size=size, model=disk.model,
                 sensitive=not is_live, subtitle=sub,
@@ -492,12 +524,12 @@ def build_disk_page(shared, nav_view):
         if list_store.get_n_items() == 0:
             list_store.append(DiskItem(
                 devname="", size="", model="",
-                sensitive=False, subtitle=_("disk.no_disks", lang),
+                sensitive=False, subtitle=_("No suitable disks found.", lang),
             ))
     except ProbeError:
         list_store.append(DiskItem(
             devname="", size="", model="",
-            sensitive=False, subtitle=_("disk.no_disks", lang),
+            sensitive=False, subtitle=_("No suitable disks found.", lang),
         ))
 
     sel = disk_list.get_model()
@@ -587,13 +619,13 @@ def _base_device(dev_path: str) -> str:
 # ── page 4: User account ─────────────────────────────────────────────────
 
 def build_user_page(shared, nav_view):
-    lang = shared.get("lang", "en")
-    page = Adw.NavigationPage(title=_("user.title", lang))
+    lang = shared.get("lang", "en_US")
+    page = Adw.NavigationPage(title=_("User Account", lang))
     page.set_tag("user")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(_page_title("user.title", lang))
-    content.append(_page_subtitle("user.subtitle", lang))
+    content.append(_page_title("User Account", lang))
+    content.append(_page_subtitle("Create your user account", lang))
 
     # Validation state
     valid = {"name": True, "pass": True, "host": True}
@@ -603,45 +635,45 @@ def build_user_page(shared, nav_view):
                   margin_top=24, vexpand=True)
 
     # Full name
-    full_entry = Gtk.Entry(placeholder_text=_("user.full_name", lang))
-    box.append(_labeled(_("user.full_name", lang), full_entry))
+    full_entry = Gtk.Entry(placeholder_text=_("Full Name", lang))
+    box.append(_labeled(_("Full Name", lang), full_entry))
 
     # Username
-    user_entry = Gtk.Entry(placeholder_text=_("user.username", lang))
+    user_entry = Gtk.Entry(placeholder_text=_("Username", lang))
     name_warn = Gtk.Label(visible=False)
     name_warn.add_css_class("warning")
-    box.append(_labeled(_("user.username", lang), user_entry))
+    box.append(_labeled(_("Username", lang), user_entry))
     box.append(name_warn)
 
     # Password
-    pass_entry = Gtk.Entry(placeholder_text=_("user.password", lang),
+    pass_entry = Gtk.Entry(placeholder_text=_("Password", lang),
                            visibility=False)
     pass_entry.set_input_purpose(Gtk.InputPurpose.PASSWORD)
     confirm_entry = Gtk.Entry(
-        placeholder_text=_("user.confirm_password", lang),
+        placeholder_text=_("Confirm Password", lang),
         visibility=False,
     )
     confirm_entry.set_input_purpose(Gtk.InputPurpose.PASSWORD)
     pass_warn = Gtk.Label(visible=False)
     pass_warn.add_css_class("warning")
 
-    box.append(_labeled(_("user.password", lang), pass_entry))
-    box.append(_labeled(_("user.confirm_password", lang), confirm_entry))
+    box.append(_labeled(_("Password", lang), pass_entry))
+    box.append(_labeled(_("Confirm Password", lang), confirm_entry))
     box.append(pass_warn)
 
     sudo_without_password = Gtk.CheckButton(
-        label=_("user.sudo_without_password", lang)
+        label=_("Do not require a password for sudo commands", lang)
     )
     box.append(sudo_without_password)
 
     # Hostname
     host_entry = Gtk.Entry(
-        placeholder_text=_("user.hostname", lang),
+        placeholder_text=_("Computer Name", lang),
         text=shared.get("hostname", "anduinos"),
     )
     host_warn = Gtk.Label(visible=False)
     host_warn.add_css_class("warning")
-    box.append(_labeled(_("user.hostname", lang), host_entry))
+    box.append(_labeled(_("Computer Name", lang), host_entry))
     box.append(host_warn)
 
     # Auto-transliterate full name → username
@@ -667,7 +699,7 @@ def build_user_page(shared, nav_view):
         host = host_entry.get_text()
 
         if uname and not NAME_RE.match(uname):
-            name_warn.set_label(_("user.name_invalid", lang))
+            name_warn.set_label(_("Username may only contain lowercase letters, digits, underscores and hyphens.", lang))
             name_warn.set_visible(True)
             valid["name"] = False
         else:
@@ -678,11 +710,11 @@ def build_user_page(shared, nav_view):
             pass_warn.set_visible(False)
             valid["pass"] = True
         elif pword != confirmation:
-            pass_warn.set_label(_("user.pass_mismatch", lang))
+            pass_warn.set_label(_("The two passwords do not match.", lang))
             pass_warn.set_visible(True)
             valid["pass"] = False
         elif pword and len(pword) < 6:
-            pass_warn.set_label(_("user.pass_too_short", lang))
+            pass_warn.set_label(_("Password must be at least 6 characters.", lang))
             pass_warn.set_visible(True)
             valid["pass"] = False
         else:
@@ -690,7 +722,7 @@ def build_user_page(shared, nav_view):
             valid["pass"] = len(pword) >= 6
 
         if host and not HOST_RE.match(host):
-            host_warn.set_label(_("user.host_invalid", lang))
+            host_warn.set_label(_("Computer name contains invalid characters.", lang))
             host_warn.set_visible(True)
             valid["host"] = False
         else:
@@ -738,7 +770,7 @@ def build_user_page(shared, nav_view):
             heading=_(heading_key, lang),
             body=_(body_key, lang),
         )
-        dialog.add_response("back", _("user.return_modify", lang))
+        dialog.add_response("back", _("Return to Make Changes", lang))
         dialog.set_default_response("back")
         dialog.set_close_response("back")
         dialog.present()
@@ -747,28 +779,28 @@ def build_user_page(shared, nav_view):
         dialog = Adw.MessageDialog(
             transient_for=nav_view.get_root(),
             heading=_(
-                "user.passwordless_sudo_heading"
+                "This configuration is very unsafe"
                 if passwordless
-                else "user.sudo_confirm_heading",
+                else "Passwordless sudo is unsafe",
                 lang,
             ),
             body=_(
-                "user.passwordless_sudo_body"
+                "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
                 if passwordless
-                else "user.sudo_confirm_body",
+                else "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?",
                 lang,
             ),
         )
         dialog.add_response(
             "back",
             _(
-                "user.return_set_password"
+                "Return and Set a Password"
                 if passwordless
-                else "user.return_modify",
+                else "Return to Make Changes",
                 lang,
             ),
         )
-        dialog.add_response("continue", _("user.continue_unsafe", lang))
+        dialog.add_response("continue", _("I Understand the Risk, Continue", lang))
         dialog.set_response_appearance(
             "continue", Adw.ResponseAppearance.DESTRUCTIVE
         )
@@ -792,8 +824,14 @@ def build_user_page(shared, nav_view):
         )
         if action is AccountNextAction.BLOCK_LOCKOUT:
             _show_message(
-                "user.lockout_heading",
-                "user.lockout_body",
+                N_("Administrator access would be locked"),
+                N_(
+                    "This account has no login password, but sudo would still "
+                    "require one. Because the root account is locked by "
+                    "default, you would be unable to perform administrator "
+                    "tasks. Set an account password or enable passwordless "
+                    "sudo."
+                ),
             )
             return
         if action in {
@@ -852,13 +890,13 @@ def _transliterate(full_name: str) -> str:
 # ── page 5: Timezone ─────────────────────────────────────────────────────
 
 def build_timezone_page(shared, nav_view):
-    lang = shared.get("lang", "en")
-    page = Adw.NavigationPage(title=_("tz.title", lang))
+    lang = shared.get("lang", "en_US")
+    page = Adw.NavigationPage(title=_("Select Timezone", lang))
     page.set_tag("timezone")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(_page_title("tz.title", lang))
-    content.append(_page_subtitle("tz.subtitle", lang))
+    content.append(_page_title("Select Timezone", lang))
+    content.append(_page_subtitle("Choose your location to set the system clock", lang))
 
     # Load timezone list
     zones = _load_timezones()
@@ -866,7 +904,7 @@ def build_timezone_page(shared, nav_view):
     list_store = Gtk.StringList.new(zones)
 
     # Search entry
-    search = Gtk.SearchEntry(placeholder_text=_("tz.search", lang),
+    search = Gtk.SearchEntry(placeholder_text=_("Search timezones…", lang),
                              margin_start=48, margin_end=48)
 
     # Filter model
@@ -917,7 +955,9 @@ def build_timezone_page(shared, nav_view):
         if pos != Gtk.INVALID_LIST_POSITION:
             timezone = filter_model.get_item(pos).get_string()
             shared["timezone"] = timezone
-            selected_label.set_label(f"{_('tz.selected', lang)}: {timezone}")
+            selected_label.set_label(
+                f"{_('Selected timezone', lang)}: {timezone}"
+            )
 
     sel.connect("selection-changed", lambda _s, _p, _n: _on_tz_selected())
 
@@ -981,19 +1021,20 @@ def _load_timezones():
 # ── page 6: Summary ──────────────────────────────────────────────────────
 
 def build_summary_page(shared, nav_view):
-    lang = shared.get("lang", "en")
-    page = Adw.NavigationPage(title=_("summary.title", lang))
+    lang = shared.get("lang", "en_US")
+    page = Adw.NavigationPage(title=_("Ready to Install", lang))
     page.set_tag("summary")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(_page_title("summary.title", lang))
-    content.append(_page_subtitle("summary.subtitle", lang))
+    content.append(_page_title("Ready to Install", lang))
+    content.append(_page_subtitle("Please review your choices before proceeding", lang))
     development_mode = bool(shared.get("development_mode"))
     if development_mode:
         development_banner = Gtk.Label(
-            label=(
+            label=_(
                 "DEVELOPMENT MODE — the plan will be validated and simulated. "
-                "No privileged executor or disk command can run."
+                "No privileged executor or disk command can run.",
+                lang,
             ),
             margin_start=48,
             margin_end=48,
@@ -1014,13 +1055,17 @@ def build_summary_page(shared, nav_view):
     try:
         platform = probe_platform()
         secure_boot_enabled = platform.secure_boot is SecureBoot.ENABLED
-        platform_text = (
-            f"{platform.architecture.value} / {platform.firmware.value} / "
-            f"Secure Boot: {platform.secure_boot.value}"
+        platform_text = _(
+            "{architecture} / {firmware} / Secure Boot: {secure_boot}",
+            lang,
+        ).format(
+            architecture=platform.architecture.value,
+            firmware=platform.firmware.value,
+            secure_boot=platform.secure_boot.value,
         )
         platform_error = ""
     except ProbeError as error:
-        platform_text = f"Unavailable: {error}"
+        platform_text = _("Unavailable: {error}", lang).format(error=error)
         platform_error = str(error)
 
     escape = lambda value: html.escape(str(value))
@@ -1030,58 +1075,66 @@ def build_summary_page(shared, nav_view):
             f"{item.name}→{item.mount_point}" for item in BTRFS_SUBVOLUMES
         )
         if filesystem == "btrfs"
-        else "single ext4 root filesystem"
+        else _("single ext4 root filesystem", lang)
     )
     lines = [
-        f"<b>{_('summary.lang', lang)}:</b> {lang_name}",
-        f"<b>{_('summary.keyboard', lang)}:</b> "
+        f"<b>{_('Language', lang)}:</b> {lang_name}",
+        f"<b>{_('Keyboard', lang)}:</b> "
         f"{escape(shared.get('keyboard', 'us'))}",
-        f"<b>{_('summary.disk', lang)}:</b> "
+        f"<b>{_('Target Disk', lang)}:</b> "
         f"{escape(shared.get('disk', '?'))} "
         f"({escape(shared.get('disk_size', '?'))} — "
         f"{escape(shared.get('disk_model', '?'))})",
-        f"<b>Stable disk identity:</b> "
+        f"<b>{_('Stable disk identity', lang)}:</b> "
         f"{escape(shared.get('disk_stable_id', '?'))}",
-        f"<b>Platform:</b> {escape(platform_text)}",
-        f"<b>Filesystem:</b> {escape(filesystem)}",
-        f"<b>Subvolumes:</b> {escape(storage_detail)}",
-        "<b>Swap:</b> 4 GiB disk swap (priority 10) + "
-        "50% RAM LZ4 zram (priority 100)",
-        "<b>System updates:</b> "
+        f"<b>{_('Platform', lang)}:</b> {escape(platform_text)}",
+        f"<b>{_('Filesystem', lang)}:</b> {escape(filesystem)}",
+        f"<b>{_('Subvolumes', lang)}:</b> {escape(storage_detail)}",
+        f"<b>{_('Swap', lang)}:</b> "
+        + _(
+            "4 GiB disk swap (priority 10) + "
+            "50% RAM LZ4 zram (priority 100)",
+            lang,
+        ),
+        f"<b>{_('System updates', lang)}:</b> "
         + (
-            "download and install"
+            _("download and install", lang)
             if shared.get("install_updates", True)
-            else "do not install"
+            else _("do not install", lang)
         ),
-        "<b>Third-party drivers:</b> "
+        f"<b>{_('Third-party drivers', lang)}:</b> "
         + (
-            "detect and install (may include non-free software)"
+            _("detect and install (may include non-free software)", lang)
             if shared.get("install_third_party_drivers", False)
-            else "do not install"
+            else _("do not install", lang)
         ),
-        "<b>Secure Boot enrollment:</b> "
+        f"<b>{_('Secure Boot enrollment', lang)}:</b> "
         + (
-            "create a machine-local MOK; enroll after reboot with password 123456"
+            _(
+                "create a machine-local MOK; enroll after reboot with "
+                "password 123456",
+                lang,
+            )
             if secure_boot_enabled
-            else "not required"
+            else _("not required", lang)
         ),
-        f"<b>{_('summary.user', lang)}:</b> "
+        f"<b>{_('User', lang)}:</b> "
         f"{escape(shared.get('full_name', '?'))} "
         f"({escape(shared.get('username', '?'))})",
-        "<b>Account security:</b> "
+        f"<b>{_('Account security', lang)}:</b> "
         + (
-            "automatic login"
+            _("automatic login", lang)
             if shared.get("passwordless_shared", False)
-            else "password required for login"
+            else _("password required for login", lang)
         )
         + (
-            "; sudo does not require a password"
+            _("; sudo does not require a password", lang)
             if shared.get("sudo_without_password", False)
-            else "; sudo requires the account password"
+            else _("; sudo requires the account password", lang)
         ),
-        f"<b>{_('summary.hostname', lang)}:</b> "
+        f"<b>{_('Computer Name', lang)}:</b> "
         f"{escape(shared.get('hostname', '?'))}",
-        f"<b>{_('summary.timezone', lang)}:</b> "
+        f"<b>{_('Timezone', lang)}:</b> "
         f"{escape(shared.get('timezone', '?'))}",
     ]
 
@@ -1092,7 +1145,7 @@ def build_summary_page(shared, nav_view):
     content.append(summary_label)
 
     # Warning
-    warn = Gtk.Label(label=_("summary.warning", lang))
+    warn = Gtk.Label(label=_("⚠ This will erase ALL data on the selected disk. This action cannot be undone.", lang))
     warn.add_css_class("warning")
     warn.set_halign(Gtk.Align.CENTER)
     warn.set_margin_top(24)
@@ -1109,32 +1162,53 @@ def build_summary_page(shared, nav_view):
         stable_id = str(shared.get("disk_stable_id", "?"))
         dialog = Adw.MessageDialog(
             transient_for=nav_view.get_root(),
-            heading=(
-                "Validate this installation plan?"
-                if development_mode
-                else "Erase the entire selected disk?"
+            heading=_(
+                (
+                    "Validate this installation plan?"
+                    if development_mode
+                    else "Erase the entire selected disk?"
+                ),
+                lang,
             ),
             body=(
                 (
-                    f"Development mode will simulate installation to {disk}. "
-                    "No disk data will be changed.\n\n"
+                    _(
+                        "Development mode will simulate installation to "
+                        "{disk}. No disk data will be changed.\n\n",
+                        lang,
+                    ).format(disk=disk)
                     if development_mode
-                    else f"All partitions and data on {disk} will be destroyed.\n\n"
+                    else _(
+                        "All partitions and data on {disk} will be "
+                        "destroyed.\n\n",
+                        lang,
+                    ).format(disk=disk)
                 )
-                + f"Stable identity: {stable_id}\n\n"
+                + _("Stable identity: {stable_id}\n\n", lang).format(
+                    stable_id=stable_id
+                )
                 + (
-                    "The privileged executor is disabled."
+                    _("The privileged executor is disabled.", lang)
                     if development_mode
-                    else "This installer does not shrink or preserve other systems."
+                    else _(
+                        "This installer does not shrink or preserve other "
+                        "systems.",
+                        lang,
+                    )
                 )
             ),
         )
-        dialog.add_response("cancel", _("nav.back", lang))
+        dialog.add_response("cancel", _("Back", lang))
         dialog.add_response(
             "erase",
-            "Validate Plan (No Installation)"
-            if development_mode
-            else "Erase Disk and Install",
+            _(
+                (
+                    "Validate Plan (No Installation)"
+                    if development_mode
+                    else "Erase Disk and Install"
+                ),
+                lang,
+            ),
         )
         if not development_mode:
             dialog.set_response_appearance(
@@ -1153,10 +1227,10 @@ def build_summary_page(shared, nav_view):
                 install_button.set_sensitive(True)
                 failure = Adw.MessageDialog(
                     transient_for=nav_view.get_root(),
-                    heading="Cannot create installation plan",
+                    heading=_("Cannot create installation plan", lang),
                     body=str(error),
                 )
-                failure.add_response("ok", "OK")
+                failure.add_response("ok", _("OK", lang))
                 failure.present()
                 return
             shared["installation_running"] = True
@@ -1172,7 +1246,7 @@ def build_summary_page(shared, nav_view):
         lang,
         on_back=on_back,
         on_next=on_install,
-        next_label="nav.install",
+        next_label=_("Install", lang),
         next_destructive=True,
     )
     install_button = nav.get_last_child()
@@ -1185,13 +1259,13 @@ def build_summary_page(shared, nav_view):
 # ── page 7: Progress / Installation ──────────────────────────────────────
 
 def build_progress_page(plan: InstallPlan, shared, nav_view):
-    lang = shared.get("lang", "en")
-    page = Adw.NavigationPage(title=_("progress.title", lang))
+    lang = shared.get("lang", "en_US")
+    page = Adw.NavigationPage(title=_("Installing AnduinOS", lang))
     page.set_tag("progress")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(_page_title("progress.title", lang))
-    content.append(_page_subtitle("progress.subtitle", lang))
+    content.append(_page_title("Installing AnduinOS", lang))
+    content.append(_page_subtitle("Please do not turn off your computer", lang))
 
     css = Gtk.CssProvider()
     css.load_from_data(
@@ -1211,25 +1285,31 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     )
 
     step_titles = {
-        "detect-boot-environment": "Detect firmware and Secure Boot",
-        "verify-target-disk": "Verify target disk isolation",
-        "prepare-storage": "Prepare installation disk",
-        "mount-target": "Mount target filesystems",
-        "copy-system": "Copy AnduinOS system",
-        "configure-storage": "Configure storage and swap",
-        "enter-chroot": "Prepare target environment",
-        "cleanup-live-system": "Remove live-session components",
-        "configure-system": "Configure account and region",
-        "select-fastest-apt-mirror": "Select fastest package mirror",
-        "prepare-secure-boot": "Prepare Secure Boot",
-        "refresh-package-indexes": "Refresh package indexes",
-        "upgrade-system": "Install system updates",
-        "install-third-party-drivers": "Install hardware drivers",
-        "verify-dkms-signatures": "Verify kernel module signatures",
-        "install-bootloader": "Install bootloader",
-        "enroll-secure-boot": "Schedule MOK enrollment",
-        "leave-chroot": "Finalize target environment",
-        "unmount-target": "Unmount installed system",
+        "detect-boot-environment": _(
+            "Detect firmware and Secure Boot", lang
+        ),
+        "verify-target-disk": _("Verify target disk isolation", lang),
+        "prepare-storage": _("Prepare installation disk", lang),
+        "mount-target": _("Mount target filesystems", lang),
+        "copy-system": _("Copy AnduinOS system", lang),
+        "configure-storage": _("Configure storage and swap", lang),
+        "enter-chroot": _("Prepare target environment", lang),
+        "cleanup-live-system": _("Remove live-session components", lang),
+        "configure-system": _("Configure account and region", lang),
+        "select-fastest-apt-mirror": _(
+            "Select fastest package mirror", lang
+        ),
+        "prepare-secure-boot": _("Prepare Secure Boot", lang),
+        "refresh-package-indexes": _("Refresh package indexes", lang),
+        "upgrade-system": _("Install system updates", lang),
+        "install-third-party-drivers": _("Install hardware drivers", lang),
+        "verify-dkms-signatures": _(
+            "Verify kernel module signatures", lang
+        ),
+        "install-bootloader": _("Install bootloader", lang),
+        "enroll-secure-boot": _("Schedule MOK enrollment", lang),
+        "leave-chroot": _("Finalize target environment", lang),
+        "unmount-target": _("Unmount installed system", lang),
     }
     step_rows = {}
     step_list = Gtk.Box(
@@ -1265,7 +1345,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         light.set_label("–")
 
     left_title = Gtk.Label(
-        label="Installation Steps",
+        label=_("Installation Steps", lang),
         halign=Gtk.Align.START,
         margin_top=12,
         margin_start=12,
@@ -1300,11 +1380,11 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         margin_top=8,
     )
     output_notice.add_css_class("error")
-    copy_log_button = Gtk.Button(label="Copy Log")
+    copy_log_button = Gtk.Button(label=_("Copy Log", lang))
     copy_log_button.connect(
         "clicked", lambda _button: _copy_log(log_buf, content)
     )
-    save_log_button = Gtk.Button(label="Save Log")
+    save_log_button = Gtk.Button(label=_("Save Log", lang))
     save_log_button.connect(
         "clicked", lambda _button: _save_log(log_buf)
     )
@@ -1375,13 +1455,13 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         )
 
     previous = Gtk.Button.new_from_icon_name("go-previous-symbolic")
-    previous.set_tooltip_text("Previous slide")
+    previous.set_tooltip_text(_("Previous slide", lang))
     previous.connect(
         "clicked",
         lambda _button: _show_slide(slide_position["value"] - 1),
     )
     following = Gtk.Button.new_from_icon_name("go-next-symbolic")
-    following.set_tooltip_text("Next slide")
+    following.set_tooltip_text(_("Next slide", lang))
     following.connect(
         "clicked",
         lambda _button: _show_slide(slide_position["value"] + 1),
@@ -1425,7 +1505,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     )
     result_sub.add_css_class("dim-label")
     secure_boot_notice = Gtk.Label(
-        label=_("done.mok_notice", lang),
+        label=_("After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456.", lang),
         visible=False,
         wrap=True,
         justify=Gtk.Justification.CENTER,
@@ -1433,10 +1513,13 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     )
     secure_boot_notice.add_css_class("warning")
     reboot_btn = _nav_btn(
-        (
-            "nav.reboot_secure_boot"
-            if plan.platform.secure_boot is SecureBoot.ENABLED
-            else "nav.reboot"
+        _(
+            (
+                "Restart and Enroll Secure Boot Key"
+                if plan.platform.secure_boot is SecureBoot.ENABLED
+                else "Reboot Now"
+            ),
+            lang,
         ),
         lang,
         lambda: _do_reboot(),
@@ -1454,9 +1537,15 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         transition_duration=250,
         vexpand=True,
     )
-    mode_stack.add_titled(slideshow_box, "discover", "Discover AnduinOS")
-    output_page = mode_stack.add_titled(output_box, "output", "Output")
-    complete_page = mode_stack.add_titled(result_box, "complete", "Complete")
+    mode_stack.add_titled(
+        slideshow_box, "discover", _("Discover AnduinOS", lang)
+    )
+    output_page = mode_stack.add_titled(
+        output_box, "output", _("Output", lang)
+    )
+    complete_page = mode_stack.add_titled(
+        result_box, "complete", _("Complete", lang)
+    )
     complete_page.set_visible(False)
     mode_stack.set_visible_child_name("discover")
     mode_switcher = Gtk.StackSwitcher(
@@ -1487,7 +1576,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     content.append(workspace)
 
     progress_status = Gtk.Label(
-        label="Preparing installation…",
+        label=_("Preparing installation…", lang),
         halign=Gtk.Align.START,
         margin_start=48,
         margin_end=48,
@@ -1523,32 +1612,39 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             if success:
                 progress.set_fraction(1.0)
                 progress.set_text("100%")
-                progress_status.set_label("Installation complete")
+                progress_status.set_label(_("Installation complete", lang))
                 result_icon.set_from_icon_name("emblem-ok-symbolic")
                 if shared.get("development_mode"):
-                    result_label.set_label("Development simulation completed")
-                    detail = (
+                    result_label.set_label(
+                        _("Development simulation completed", lang)
+                    )
+                    detail = _(
                         "The installation plan is valid. No disk, filesystem, "
                         "bootloader, Secure Boot state, or installed system "
-                        "was changed."
+                        "was changed.",
+                        lang,
                     )
                     if plan.platform.secure_boot is SecureBoot.ENABLED:
-                        detail += (
+                        detail += _(
                             "\n\nA real installation will create a machine-local "
                             "MOK. After reboot, choose Enroll MOK → Continue → "
-                            "Yes in MOKManager and enter password 123456."
+                            "Yes in MOKManager and enter password 123456.",
+                            lang,
                         )
                     result_sub.set_label(detail)
                 elif plan.platform.secure_boot is SecureBoot.ENABLED:
-                    result_label.set_label(_("done.title", lang))
+                    result_label.set_label(_("Installation Complete", lang))
                     result_sub.set_label(
-                        _("done.subtitle", lang)
-                        + "\nOn the blue MOKManager screen choose "
-                        "Enroll MOK → Continue → Yes, password: 123456"
+                        _("Remove the installation media and restart your computer", lang)
+                        + _(
+                            "\nOn the blue MOKManager screen choose Enroll "
+                            "MOK → Continue → Yes, password: 123456",
+                            lang,
+                        )
                     )
                 else:
-                    result_label.set_label(_("done.title", lang))
-                    result_sub.set_label(_("done.subtitle", lang))
+                    result_label.set_label(_("Installation Complete", lang))
+                    result_sub.set_label(_("Remove the installation media and restart your computer", lang))
                 secure_boot_notice.set_visible(
                     plan.platform.secure_boot is SecureBoot.ENABLED
                 )
@@ -1556,17 +1652,21 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                 reboot_btn.set_sensitive(not shared.get("development_mode"))
                 if shared.get("development_mode"):
                     reboot_btn.set_tooltip_text(
-                        "Restart is disabled in development protection mode"
+                        _(
+                            "Restart is disabled in development protection "
+                            "mode",
+                            lang,
+                        )
                     )
                 complete_page.set_visible(True)
                 mode_stack.set_visible_child_name("complete")
             else:
-                progress_status.set_label("Installation failed")
+                progress_status.set_label(_("Installation failed", lang))
                 output_notice.set_label(
-                    f"{_('done.error_title', lang)}\n{error}"
+                    f"{_('Installation Failed', lang)}\n{error}"
                 )
                 output_notice.set_visible(True)
-                output_page.set_title("Output • Error")
+                output_page.set_title(_("Output • Error", lang))
                 mode_stack.set_visible_child_name("output")
                 log(f"ERROR: {error}")
             return False
@@ -1578,7 +1678,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             progress.set_fraction(fraction)
             progress.set_text(f"{fraction * 100:.0f}%")
             if step == "complete":
-                progress_status.set_label("Installation complete")
+                progress_status.set_label(_("Installation complete", lang))
             else:
                 progress_status.set_label(
                     step_titles.get(step, step.replace("-", " ").title())
@@ -1616,13 +1716,17 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             if status == "warning":
                 warning_count["value"] += 1
                 output_page.set_title(
-                    f"Output • {warning_count['value']} warning"
-                    + ("s" if warning_count["value"] != 1 else "")
+                    _("Output • {count} warning(s)", lang).format(
+                        count=warning_count["value"]
+                    )
                 )
             elif status == "failed":
-                output_page.set_title("Output • Error")
+                output_page.set_title(_("Output • Error", lang))
                 output_notice.set_label(
-                    message or f"{step_titles.get(step, step)} failed"
+                    message
+                    or _("{step} failed", lang).format(
+                        step=step_titles.get(step, step)
+                    )
                 )
                 output_notice.set_visible(True)
                 mode_stack.set_visible_child_name("output")
@@ -1681,10 +1785,10 @@ def _copy_log(log_buf, widget):
 
 def build_done_page(shared, nav_view):
     """Simple post-install page. Currently unused — progress page handles both states."""
-    lang = shared.get("lang", "en")
-    page = Adw.NavigationPage(title=_("done.title", lang))
+    lang = shared.get("lang", "en_US")
+    page = Adw.NavigationPage(title=_("Installation Complete", lang))
     page.set_tag("done")
-    page.set_child(Gtk.Label(label=_("done.title", lang)))
+    page.set_child(Gtk.Label(label=_("Installation Complete", lang)))
     return page
 
 

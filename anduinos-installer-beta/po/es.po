@@ -1,0 +1,538 @@
+# Spanish translations for anduinos-installer-beta package.
+# Copyright (C) 2026 THE anduinos-installer-beta'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-installer-beta package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-installer-beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-30 14:59+0000\n"
+"PO-Revision-Date: 2026-07-30 14:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"Una instalación real creará un MOK local de la máquina. Después del reinicio, seleccione Inscribir MOK → Continuar → Sí en MOKManager e introduzca la contraseña 123456."
+
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
+msgstr ""
+"\n"
+"En la pantalla azul de MOKManager, elija Inscribir MOK → Continuar → Sí, contraseña: 123456"
+
+msgid "(Live USB — excluded)"
+msgstr "(USB Live — excluido)"
+
+msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
+msgstr "Intercambio en disco de 4 GiB (prioridad 10) + zram LZ4 del 50 % de RAM (prioridad 100)"
+
+msgid "; sudo does not require a password"
+msgstr "; sudo no requiere contraseña"
+
+msgid "; sudo requires the account password"
+msgstr "; sudo requiere la contraseña de la cuenta"
+
+msgid "ALL DATA on the selected disk will be permanently erased."
+msgstr "TODOS LOS DATOS del disco seleccionado se borrarán permanentemente."
+
+msgid "Account security"
+msgstr "Seguridad de la cuenta"
+
+msgid "Administrator access would be locked"
+msgstr "El acceso de administrador quedaría bloqueado"
+
+msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
+msgstr "Después del reinicio, se abrirá MOKManager. Seleccione Inscribir MOK → Continuar → Sí e introduzca la contraseña 123456."
+
+msgid ""
+"All partitions and data on {disk} will be destroyed.\n"
+"\n"
+msgstr ""
+"Todas las particiones y datos en {disk} serán destruidos.\n"
+"\n"
+
+msgid "AnduinOS Installer"
+msgstr "Instalador de AnduinOS"
+
+msgid "AnduinOS Installer (Beta)"
+msgstr "Instalador de AnduinOS (Beta)"
+
+msgid "AnduinOS Installer (Development)"
+msgstr "Instalador de AnduinOS (Desarrollo)"
+
+msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
+msgstr "Cualquier programa que se ejecute como su usuario puede obtener privilegios completos de administrador sin autenticación. Su contraseña de inicio de sesión sigue protegiendo el acceso, pero no protegerá sudo. ¿Está seguro de que desea continuar?"
+
+msgid "Arabic"
+msgstr "Árabe"
+
+msgid "Back"
+msgstr "Atrás"
+
+msgid "Btrfs (recommended)"
+msgstr "Btrfs (recomendado)"
+
+msgid "Cannot create installation plan"
+msgstr "No se puede crear el plan de instalación"
+
+msgid "Choose optional software to install"
+msgstr "Elija el software opcional para instalar"
+
+msgid "Choose the disk where AnduinOS will be installed"
+msgstr "Elija el disco donde se instalará AnduinOS"
+
+msgid "Choose your language to begin installation"
+msgstr "Elija su idioma para comenzar la instalación"
+
+msgid "Choose your location to set the system clock"
+msgstr "Elija su ubicación para configurar el reloj del sistema"
+
+msgid "Complete"
+msgstr "Completo"
+
+msgid "Computer Name"
+msgstr "Nombre del equipo"
+
+msgid "Computer name contains invalid characters."
+msgstr "El nombre del equipo contiene caracteres no válidos."
+
+msgid "Configure account and region"
+msgstr "Configurar cuenta y región"
+
+msgid "Configure storage and swap"
+msgstr "Configurar almacenamiento e intercambio"
+
+msgid "Confirm Password"
+msgstr "Confirmar contraseña"
+
+msgid "Confirm your keyboard layout"
+msgstr "Confirme su distribución de teclado"
+
+msgid "Continue Installation"
+msgstr "Continuar instalación"
+
+msgid "Copy AnduinOS system"
+msgstr "Copiar sistema AnduinOS"
+
+msgid "Copy Log"
+msgstr "Copiar registro"
+
+msgid "Create your user account"
+msgstr "Cree su cuenta de usuario"
+
+msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
+msgstr "MODO DE DESARROLLO: el plan se validará y simulará. No se podrá ejecutar ningún ejecutor con privilegios ni comando de disco."
+
+msgid "Danish"
+msgstr "Danés"
+
+msgid "Detect firmware and Secure Boot"
+msgstr "Detectar firmware e Inicio seguro"
+
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
+"\n"
+msgstr ""
+"El modo de desarrollo simulará la instalación en {disk}. No se modificarán los datos del disco.\n"
+"\n"
+
+msgid "Development simulation completed"
+msgstr "Simulación de desarrollo completada"
+
+msgid "Discover AnduinOS"
+msgstr "Explore AnduinOS"
+
+msgid "Do not require a password for sudo commands"
+msgstr "No requerir contraseña para comandos sudo"
+
+msgid "Download and install system updates during installation"
+msgstr "Descargar e instalar actualizaciones del sistema durante la instalación"
+
+msgid "Dutch"
+msgstr "Alemán"
+
+msgid "English (UK)"
+msgstr "Inglés (Reino Unido)"
+
+msgid "English (US)"
+msgstr "Inglés (EE. UU.)"
+
+msgid "Erase Disk and Install"
+msgstr "Borrar disco e instalar"
+
+msgid "Erase the entire selected disk?"
+msgstr "¿Borrar todo el disco seleccionado?"
+
+msgid "Filesystem"
+msgstr "Sistema de archivos"
+
+msgid "Finalize target environment"
+msgstr "Finalizar entorno objetivo"
+
+msgid "Finnish"
+msgstr "Finés"
+
+msgid "French"
+msgstr "Francés"
+
+msgid "Full Name"
+msgstr "Nombre completo"
+
+msgid "German"
+msgstr "Alemán"
+
+msgid "Greek"
+msgstr "Griego"
+
+msgid "Hindi (India)"
+msgstr "Hindi (India)"
+
+msgid "I Understand the Risk, Continue"
+msgstr "Entiendo el riesgo, continuar"
+
+msgid "Indonesian"
+msgstr "Indonesio"
+
+msgid "Install"
+msgstr "Instalar"
+
+msgid "Install bootloader"
+msgstr "Instalar cargador de arranque"
+
+msgid "Install hardware drivers"
+msgstr "Instalar controladores de hardware"
+
+msgid "Install system updates"
+msgstr "Instalar actualizaciones del sistema"
+
+msgid "Install third-party drivers for this device"
+msgstr "Instalar controladores de terceros para este dispositivo"
+
+msgid "Installation Complete"
+msgstr "Instalación completada"
+
+msgid "Installation Failed"
+msgstr "Fallo en la instalación"
+
+msgid "Installation Steps"
+msgstr "Pasos de la instalación"
+
+msgid "Installation complete"
+msgstr "Instalación completada"
+
+msgid "Installation failed"
+msgstr "La instalación ha fallado"
+
+msgid "Installation in progress"
+msgstr "Instalación en curso"
+
+msgid "Installing AnduinOS"
+msgstr "Instalando AnduinOS"
+
+msgid "Italian"
+msgstr "Italiano"
+
+msgid "Japanese"
+msgstr "Japonés"
+
+msgid "Keyboard"
+msgstr "Teclado"
+
+msgid "Keyboard Layout"
+msgstr "Distribución del teclado"
+
+msgid "Korean"
+msgstr "Coreano"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "Mount target filesystems"
+msgstr "Montar sistemas de archivos objetivo"
+
+msgid "Navigation error"
+msgstr "Error de navegación"
+
+msgid "Next"
+msgstr "Siguiente"
+
+msgid "Next slide"
+msgstr "Diapositiva siguiente"
+
+msgid "No suitable disks found."
+msgstr "No se encontraron discos adecuados."
+
+msgid "Norwegian"
+msgstr "Noruego"
+
+msgid "OK"
+msgstr "Aceptar"
+
+msgid "Output"
+msgstr "Salida"
+
+msgid "Output • Error"
+msgstr "Salida • Error"
+
+msgid "Output • {count} warning(s)"
+msgstr "Salida • {count} advertencia(s)"
+
+msgid "Password"
+msgstr "Contraseña"
+
+msgid "Password must be at least 6 characters."
+msgstr "La contraseña debe tener al menos 6 caracteres."
+
+msgid "Passwordless sudo is unsafe"
+msgstr "sudo sin contraseña es inseguro"
+
+msgid "Platform"
+msgstr "Plataforma"
+
+msgid "Please do not turn off your computer"
+msgstr "Por favor, no apague su computadora"
+
+msgid "Please review your choices before proceeding"
+msgstr "Revise sus elecciones antes de continuar"
+
+msgid "Polish"
+msgstr "Polaco"
+
+msgid "Portuguese"
+msgstr "Portugués"
+
+msgid "Portuguese (Brazil)"
+msgstr "Portugués (Brasil)"
+
+msgid "Prepare Secure Boot"
+msgstr "Preparar Inicio seguro"
+
+msgid "Prepare installation disk"
+msgstr "Preparar disco de instalación"
+
+msgid "Prepare target environment"
+msgstr "Preparar entorno objetivo"
+
+msgid "Preparing installation…"
+msgstr "Preparando la instalación…"
+
+msgid "Previous slide"
+msgstr "Diapositiva anterior"
+
+msgid "Ready to Install"
+msgstr "Listo para instalar"
+
+msgid "Reboot Now"
+msgstr "Reiniciar ahora"
+
+msgid "Refresh package indexes"
+msgstr "Actualizar índices de paquetes"
+
+msgid "Remove live-session components"
+msgstr "Quitar componentes de sesión en vivo"
+
+msgid "Remove the installation media and restart your computer"
+msgstr "Extraiga el medio de instalación y reinicie su computadora"
+
+msgid "Requires an Internet connection. The base installation remains available when offline."
+msgstr "Requiere conexión a Internet. La instalación base permanece disponible sin conexión."
+
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "Reiniciar e inscribir clave de Inicio seguro"
+
+msgid "Restart is disabled in development protection mode"
+msgstr "El reinicio está deshabilitado en el modo de protección de desarrollo"
+
+msgid "Return and Set a Password"
+msgstr "Volver y establecer una contraseña"
+
+msgid "Return to Make Changes"
+msgstr "Volver para realizar cambios"
+
+msgid "Romanian"
+msgstr "Rumano"
+
+msgid "Russian"
+msgstr "Ruso"
+
+msgid "Save Log"
+msgstr "Guardar registro"
+
+msgid "Schedule MOK enrollment"
+msgstr "Programar inscripción de MOK"
+
+msgid "Search timezones…"
+msgstr "Buscar zonas horarias…"
+
+msgid "Secure Boot enrollment"
+msgstr "Inscripción de Inicio seguro"
+
+msgid "Select Installation Disk"
+msgstr "Seleccionar disco de instalación"
+
+msgid "Select Timezone"
+msgstr "Seleccionar zona horaria"
+
+msgid "Select fastest package mirror"
+msgstr "Seleccionar espejo de paquetes más rápido"
+
+msgid "Selected timezone"
+msgstr "Zona horaria seleccionada"
+
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr "Algunos controladores son propietarios o software no libre."
+
+msgid "Spanish"
+msgstr "Español"
+
+msgid "Stable disk identity"
+msgstr "Identidad de disco estable"
+
+msgid ""
+"Stable identity: {stable_id}\n"
+"\n"
+msgstr ""
+"Identidad estable: {stable_id}\n"
+"\n"
+
+msgid "Subvolumes"
+msgstr "Sovolúmenes"
+
+msgid "Swap"
+msgstr "Intercambio (Swap)"
+
+msgid "Swedish"
+msgstr "Sueco"
+
+msgid "System updates"
+msgstr "Actualizaciones del sistema"
+
+msgid "Target Disk"
+msgstr "Disco objetivo"
+
+msgid "Test your keyboard here…"
+msgstr "Pruébe su teclado aquí…"
+
+msgid "Thai"
+msgstr "Tailandés"
+
+msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
+msgstr "El plan de instalación es válido. No se modificó ningún disco, sistema de archivos, cargador de arranque, estado de Inicio seguro ni sistema instalado."
+
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "El instalador no se puede cerrar mientras está modificando el disco objetivo."
+
+msgid "The privileged executor is disabled."
+msgstr "El ejecutor con privilegios está deshabilitado."
+
+msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
+msgstr "El sistema iniciará sesión en esta cuenta automáticamente y le permitirá obtener privilegios completos de administrador sin contraseña. Cualquier persona con acceso físico y cualquier programa que se ejecute como este usuario puede controlar completamente el sistema. Úselo solo para un quiosco, una máquina virtual temporal u otro entorno controlado."
+
+msgid "The two passwords do not match."
+msgstr "Las dos contraseñas no coinciden."
+
+msgid "Third-party drivers"
+msgstr "Controladores de terceros"
+
+msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
+msgstr "Esta cuenta no tiene contraseña de inicio de sesión, pero sudo aún requeriría una. Dado que la cuenta root está bloqueada por defecto, no podrá realizar tareas de administrador. Establezca una contraseña de cuenta o habilite sudo sin contraseña."
+
+msgid "This configuration is very unsafe"
+msgstr "Esta configuración es muy insegura"
+
+msgid "This installer does not shrink or preserve other systems."
+msgstr "Este instalador no reduce ni conserva otros sistemas."
+
+msgid "Timezone"
+msgstr "Zona horaria"
+
+msgid "Turkish"
+msgstr "Turco"
+
+msgid "Ukrainian"
+msgstr "Ucraniano"
+
+msgid "Unavailable: {error}"
+msgstr "No disponible: {error}"
+
+msgid "Unmount installed system"
+msgstr "Desmatar sistema instalado"
+
+msgid "Updates and Drivers"
+msgstr "Actualizaciones y controladores"
+
+msgid "User"
+msgstr "Usuario"
+
+msgid "User Account"
+msgstr "Cuenta de usuario"
+
+msgid "Username"
+msgstr "Nombre de usuario"
+
+msgid "Username may only contain lowercase letters, digits, underscores and hyphens."
+msgstr "El nombre de usuario solo puede contener letras minúsculas, dígitos, guiones bajos y guiones."
+
+msgid "Validate Plan (No Installation)"
+msgstr "Validar plan (sin instalación)"
+
+msgid "Validate this installation plan?"
+msgstr "¿Validar este plan de instalación?"
+
+msgid "Verify kernel module signatures"
+msgstr "Verificar firmas de módulos del kernel"
+
+msgid "Verify target disk isolation"
+msgstr "Verificar aislamiento del disco objetivo"
+
+msgid "Vietnamese"
+msgstr "Vietnamita"
+
+msgid "Welcome to AnduinOS"
+msgstr "Bienvenido a AnduinOS"
+
+msgid "automatic login"
+msgstr "inicio de sesión automático"
+
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr "crear un MOK local de la máquina; inscribir después del reinicio con la contraseña 123456"
+
+msgid "detect and install (may include non-free software)"
+msgstr "detectar e instalar (puede incluir software no libre)"
+
+msgid "do not install"
+msgstr "no instalar"
+
+msgid "download and install"
+msgstr "descargar e instalar"
+
+msgid "not required"
+msgstr "no requerido"
+
+msgid "password required for login"
+msgstr "contraseña requerida para iniciar sesión"
+
+msgid "single ext4 root filesystem"
+msgstr "sistema de archivos raíz ext4 único"
+
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / Inicio seguro: {secure_boot}"
+
+msgid "{step} failed"
+msgstr "fallo en {step}"
+
+msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
+msgstr "⚠ Esto borrará TODOS los datos del disco seleccionado. Esta acción no se puede deshacer."

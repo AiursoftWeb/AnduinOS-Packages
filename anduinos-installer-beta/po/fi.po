@@ -1,0 +1,538 @@
+# Finnish translations for anduinos-installer-beta package.
+# Copyright (C) 2026 THE anduinos-installer-beta'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-installer-beta package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-installer-beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-30 14:59+0000\n"
+"PO-Revision-Date: 2026-07-30 14:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"Oikea asennus luo konekohtaisen MOK-avaimen. Käynnistämisen jälkeen valitse Enroll MOK → Continue → Yes ohjelmasta MOKManager ja syötä salasana 123456."
+
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
+msgstr ""
+"\n"
+"Valitse siniseltä MOKManager-näkymältä Enroll MOK → Continue → Yes, salasana: 123456"
+
+msgid "(Live USB — excluded)"
+msgstr "(Live USB — ei sisällytetty)"
+
+msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
+msgstr "4 GiB levyvaihtotila (prioriteetti 10) + 50 % RAM LZ4 zram (prioriteetti 100)"
+
+msgid "; sudo does not require a password"
+msgstr "; sudo ei vaadi salasanaa"
+
+msgid "; sudo requires the account password"
+msgstr "; sudo vaatii tilin salasanan"
+
+msgid "ALL DATA on the selected disk will be permanently erased."
+msgstr "KAIKKI VALITTUNEN LEVYN TIEDOT POISTETAAN VAKAVUUTTA."
+
+msgid "Account security"
+msgstr "Tilin turvallisuus"
+
+msgid "Administrator access would be locked"
+msgstr "Ylläpitäjän pääsy lukittuisi"
+
+msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
+msgstr "Käynnistyksen jälkeen MOKManager avautuu. Valitse Enroll MOK → Continue → Yes ja syötä sitten salasana 123456."
+
+msgid ""
+"All partitions and data on {disk} will be destroyed.\n"
+"\n"
+msgstr ""
+"Kaikki osiot ja tiedot levyllä {disk} tuhoutuvat.\n"
+"\n"
+
+msgid "AnduinOS Installer"
+msgstr "AnduinOS-asentaja"
+
+msgid "AnduinOS Installer (Beta)"
+msgstr "AnduinOS-asentaja (Beta)"
+
+msgid "AnduinOS Installer (Development)"
+msgstr "AnduinOS-asentaja (Kehitysversio)"
+
+msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
+msgstr "Mikä tahansa käyttäjänäsi suorittava ohjelma voi saada täydet järjestelmänvalvojan oikeudet ilman todennusta. Kirjautumissalasana suojaa edelleen sisäänkirjautumista, mutta se ei suojaa sudoa. Haluatko varmasti jatkaa?"
+
+msgid "Arabic"
+msgstr "Arabia"
+
+msgid "Back"
+msgstr "Takaisin"
+
+msgid "Btrfs (recommended)"
+msgstr "Btrfs (suositeltu)"
+
+msgid "Cannot create installation plan"
+msgstr "Ei voi luoda asennussuunnitelmaa"
+
+msgid "Choose optional software to install"
+msgstr "Valitse valinnainen ohjelmisto asennettavaksi"
+
+msgid "Choose the disk where AnduinOS will be installed"
+msgstr "Valitse levy, johon AnduinOS asennetaan"
+
+msgid "Choose your language to begin installation"
+msgstr "Valitse kieli aloittaaksesi asennuksen"
+
+msgid "Choose your location to set the system clock"
+msgstr "Valitse sijaintisi järjestelmä kellon asettamiseksi"
+
+msgid "Complete"
+msgstr "Valmis"
+
+msgid "Computer Name"
+msgstr "Tietokoneen nimi"
+
+msgid "Computer name contains invalid characters."
+msgstr "Tietokoneen nimi sisältää kiellettyjä merkkejä."
+
+msgid "Configure account and region"
+msgstr "Määritä tili ja alue"
+
+msgid "Configure storage and swap"
+msgstr "Määritä tallennustila ja vaihtotila"
+
+msgid "Confirm Password"
+msgstr "Vahvista salasana"
+
+msgid "Confirm your keyboard layout"
+msgstr "Vahvista näppäimistön asettelu"
+
+msgid "Continue Installation"
+msgstr "Jatka asennusta"
+
+msgid "Copy AnduinOS system"
+msgstr "Kopioi AnduinOS-järjestelmä"
+
+msgid "Copy Log"
+msgstr "Kopioi loki"
+
+msgid "Create your user account"
+msgstr "Luo käyttäjätilisi"
+
+msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
+msgstr "KEHITYSTILA — suunnitelma validoidaan ja simuloitaan. Etuoikeutettua suorittajaa tai levykomentoa ei voi suorittaa."
+
+msgid "Danish"
+msgstr "Tanska"
+
+msgid "Detect firmware and Secure Boot"
+msgstr "Tunnista laiteohjelmisto ja Secure Boot"
+
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
+"\n"
+msgstr ""
+"Kehitystila simuloi asennusta levylle {disk}. Levydataa ei muuteta.\n"
+"\n"
+
+msgid "Development simulation completed"
+msgstr "Kehityssimulaatio suoritettu"
+
+msgid "Discover AnduinOS"
+msgstr "Tutustu AnduinOS:aan"
+
+msgid "Do not require a password for sudo commands"
+msgstr "Älä vaadi salasanaa sudo-komentoihin"
+
+msgid "Download and install system updates during installation"
+msgstr "Lataa ja asenna järjestelmäpäivitykset asennuksen aikana"
+
+msgid "Dutch"
+msgstr "Hollanti"
+
+msgid "English (UK)"
+msgstr "Englanti (UK)"
+
+msgid "English (US)"
+msgstr "Englanti (US)"
+
+msgid "Erase Disk and Install"
+msgstr "Poista levy ja asenna"
+
+msgid "Erase the entire selected disk?"
+msgstr "Poistetaanko koko valittu levy?"
+
+msgid "Filesystem"
+msgstr "Tiedostojärjestelmä"
+
+msgid "Finalize target environment"
+msgstr "Lopeta kohdeympäristö"
+
+msgid "Finnish"
+msgstr "Suomi"
+
+msgid "French"
+msgstr "Ranska"
+
+msgid "Full Name"
+msgstr "Koko nimi"
+
+msgid "German"
+msgstr "Saksa"
+
+msgid "Greek"
+msgstr "Kreikka"
+
+msgid "Hindi (India)"
+msgstr "Hindi (Intia)"
+
+msgid "I Understand the Risk, Continue"
+msgstr "Ymmärrän riskin, jatka"
+
+msgid "Indonesian"
+msgstr "Indonesia"
+
+msgid "Install"
+msgstr "Asenna"
+
+msgid "Install bootloader"
+msgstr "Asenna käynnistyslataaja"
+
+msgid "Install hardware drivers"
+msgstr "Asenna laiteohjaimet"
+
+msgid "Install system updates"
+msgstr "Asenna järjestelmäpäivitykset"
+
+msgid "Install third-party drivers for this device"
+msgstr "Asenna kolmannen osapuolen ohjaimet tälle laitteelle"
+
+msgid "Installation Complete"
+msgstr "Asennus valmis"
+
+msgid "Installation Failed"
+msgstr "Asennus epäonnistui"
+
+msgid "Installation Steps"
+msgstr "Asennuksen vaiheet"
+
+msgid "Installation complete"
+msgstr "Asennus suoritettu"
+
+msgid "Installation failed"
+msgstr "Asennus epäonnistui"
+
+msgid "Installation in progress"
+msgstr "Asennus käynnissä"
+
+msgid "Installing AnduinOS"
+msgstr "Asennetaan AnduinOS:aa"
+
+msgid "Italian"
+msgstr "Itävalta"
+
+msgid "Japanese"
+msgstr "Japani"
+
+msgid "Keyboard"
+msgstr "Näppäimistö"
+
+msgid "Keyboard Layout"
+msgstr "Näppäimistön asettelu"
+
+msgid "Korean"
+msgstr "Korea"
+
+msgid "Language"
+msgstr "Kieli"
+
+msgid "Mount target filesystems"
+msgstr "Mountaa kohde tiedostojärjestelmät"
+
+msgid "Navigation error"
+msgstr "Navigointivirhe"
+
+msgid "Next"
+msgstr "Seuraava"
+
+msgid "Next slide"
+msgstr "Seuraava dia"
+
+msgid "No suitable disks found."
+msgstr "Sopivia levyjä ei löydetty."
+
+msgid "Norwegian"
+msgstr "Norja"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Output"
+msgstr "Tulos"
+
+msgid "Output • Error"
+msgstr "Tulos • Virhe"
+
+msgid "Output • {count} warning(s)"
+msgstr "Tulos • {count} varoitus(ta)"
+
+msgid "Password"
+msgstr "Salasana"
+
+msgid "Password must be at least 6 characters."
+msgstr "Salasanan on oltava vähintään 6 merkkiä pitkä."
+
+msgid "Passwordless sudo is unsafe"
+msgstr "Salasanasoton sudo on epäturvallinen"
+
+msgid "Platform"
+msgstr "Alusta"
+
+msgid "Please do not turn off your computer"
+msgstr "Älä sammuta tietokonettasi"
+
+msgid "Please review your choices before proceeding"
+msgstr "Tarkista valintasi ennen jatkamista"
+
+msgid "Polish"
+msgstr "Puola"
+
+msgid "Portuguese"
+msgstr "Portugali"
+
+msgid "Portuguese (Brazil)"
+msgstr "Portugali (Brasilia)"
+
+msgid "Prepare Secure Boot"
+msgstr "Valmistele Secure Boot"
+
+msgid "Prepare installation disk"
+msgstr "Valmistele asennuslevy"
+
+msgid "Prepare target environment"
+msgstr "Valmistele kohdeympäristö"
+
+msgid "Preparing installation…"
+msgstr "Valmistellaan asennusta…"
+
+msgid "Previous slide"
+msgstr "Eellinen dia"
+
+msgid "Ready to Install"
+msgstr "Valmis asennettavaksi"
+
+msgid "Reboot Now"
+msgstr "Käynnistä uudelleen nyt"
+
+msgid "Refresh package indexes"
+msgstr "Päivitä paketti-indeksejä"
+
+msgid "Remove live-session components"
+msgstr "Poista live-istunnon komponentit"
+
+msgid "Remove the installation media and restart your computer"
+msgstr "Poista asennusmedia ja käynnistä tietokoneesi uudelleen"
+
+msgid "Requires an Internet connection. The base installation remains available when offline."
+msgstr "Vaatii internet-yhteyden. Perusasennus pysyy saatavilla ilman verkkoyhteyttä."
+
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "Käynnistä uudelleen ja rekisteröi Secure Boot -avain"
+
+msgid "Restart is disabled in development protection mode"
+msgstr "Uudelleenkäynnistys on poistettu käytöstä kehityssuojaustilassa"
+
+msgid "Return and Set a Password"
+msgstr "Palaa ja aseta salasana"
+
+msgid "Return to Make Changes"
+msgstr "Palaa tekemään muutoksia"
+
+msgid "Romanian"
+msgstr "Romania"
+
+msgid "Russian"
+msgstr "Venäjä"
+
+msgid "Save Log"
+msgstr "Tallenna loki"
+
+msgid "Schedule MOK enrollment"
+msgstr "Aikatauluta MOK-rekisteröinti"
+
+msgid "Search timezones…"
+msgstr "Hae aikavyöhykkeitä…"
+
+msgid "Secure Boot enrollment"
+msgstr "Secure Boot -rekisteröinti"
+
+msgid "Select Installation Disk"
+msgstr "Valitse asennuslevy"
+
+msgid "Select Timezone"
+msgstr "Valitse aikavyöhyke"
+
+msgid "Select fastest package mirror"
+msgstr "Valitse nopein pakettipeili"
+
+msgid "Selected timezone"
+msgstr "Valittu aikavyöhyke"
+
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr "Jotkut ohjaimet ovat omistusoikeudellisia tai muuten ei-vapaata ohjelmistoa."
+
+msgid "Spanish"
+msgstr "Espanja"
+
+msgid "Stable disk identity"
+msgstr "Vakaa levytunnus"
+
+msgid ""
+"Stable identity: {stable_id}\n"
+"\n"
+msgstr ""
+"Vakaa tunnus: {stable_id}\n"
+"\n"
+
+msgid "Subvolumes"
+msgstr "Alueet (Subvolumes)"
+
+msgid "Swap"
+msgstr "Vaihtotila"
+
+msgid "Swedish"
+msgstr "Ruotsi"
+
+msgid "System updates"
+msgstr "Järjestelmäpäivitykset"
+
+msgid "Target Disk"
+msgstr "Kohdelevy"
+
+msgid "Test your keyboard here…"
+msgstr "Testaa näppäimistösi täällä…"
+
+msgid "Thai"
+msgstr "Thai"
+
+msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
+msgstr "Asennussuunnitelma on kelvollinen. Levyä, tiedostojärjestelmää, käynnistyslataajaa, Secure Boot -tilaa tai asennettua järjestelmää ei muutettu."
+
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "Asentajaa ei voi sulkea, kun se muuttaa kohdelevyä."
+
+msgid "The privileged executor is disabled."
+msgstr "Etuvoikeuksilla varustettu suoritin on poistettu käytöstä."
+
+msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
+msgstr "Järjestelmä kirjautuu tähän tiliin automaattisesti ja sallii sen saavan täydet järjestelmänvalvojan oikeudet ilman salasanaa. Kuka tahansa, jolla on fyysinen pääsy, ja mikä tahansa tämän käyttäjänä suorittava ohjelma voi hallita järjestelmää täysin. Käytä tätä vain kioskissa, tilapäisessä virtuaalikoneessa tai toisessa kontrolloidussa ympäristössä."
+
+msgid "The two passwords do not match."
+msgstr "Kaksi salasanaa eivät täsmää."
+
+msgid "Third-party drivers"
+msgstr "Kolmannen osapuolen ohjaimet"
+
+msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
+msgstr "Tässä tilissä ei ole kirjautumis salasanaa, mutta sudo vaatii silti yhden. Koska root-tili on oletuksena lukittu, et voi suorittaa ylläpitotehtäviä. Aseta tiliin salasana tai ota käyttöön salasanaton sudo."
+
+msgid "This configuration is very unsafe"
+msgstr "Tämä konfiguraatio on erittäin epäturvallinen"
+
+msgid "This installer does not shrink or preserve other systems."
+msgstr "Tämä asentaja ei pienennä tai säilytä muita järjestelmiä."
+
+msgid "Timezone"
+msgstr "Aikavyöhyke"
+
+msgid "Turkish"
+msgstr "Turkki"
+
+msgid "Ukrainian"
+msgstr "Ukraina"
+
+msgid "Unavailable: {error}"
+msgstr "Ei saatavilla: {error}"
+
+msgid "Unmount installed system"
+msgstr "Unmountaa asennettu järjestelmä"
+
+msgid "Updates and Drivers"
+msgstr "Päivitykset ja ohjaimet"
+
+msgid "User"
+msgstr "Käyttäjä"
+
+msgid "User Account"
+msgstr "Käyttäjätili"
+
+msgid "Username"
+msgstr "Käyttäjänimi"
+
+msgid "Username may only contain lowercase letters, digits, underscores and hyphens."
+msgstr "Käyttäjänimi voi sisältää vain pienet kirjaimet, numerot, alaviivat ja väliviivat."
+
+msgid "Validate Plan (No Installation)"
+msgstr "Validoi suunnitelma (ei asennusta)"
+
+msgid "Validate this installation plan?"
+msgstr "Validoidaanko tämä asennussuunnitelma?"
+
+msgid "Verify kernel module signatures"
+msgstr "Tarkista ytimen moduulien allekirjoitukset"
+
+msgid "Verify target disk isolation"
+msgstr "Varmista kohdelevyn eristys"
+
+msgid "Vietnamese"
+msgstr "Vietnam"
+
+msgid "Welcome to AnduinOS"
+msgstr "Tervetuloa AnduinOS:aan"
+
+msgid "automatic login"
+msgstr "automaattinen kirjautuminen"
+
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr "luo konekohtainen MOK; rekisteröi uudelleenkäynnistyksen jälkeen salasanalla 123456"
+
+msgid "detect and install (may include non-free software)"
+msgstr "tunnista ja asenna (voi sisältää ei-vapaata ohjelmistoa)"
+
+msgid "do not install"
+msgstr "älä asenna"
+
+msgid "download and install"
+msgstr "lataa ja asenna"
+
+msgid "not required"
+msgstr "ei vaadita"
+
+msgid "password required for login"
+msgstr "salasana vaaditaan kirjautumiseen"
+
+msgid "single ext4 root filesystem"
+msgstr "yksi ext4-juuritiedostojärjestelmä"
+
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+
+msgid "{step} failed"
+msgstr "{step} epäonnistui"
+
+msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
+msgstr "⚠ Tämä poistaa KAIKKI valitun levyn tiedot. Tätä toimintoa ei voi peruuttaa."

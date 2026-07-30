@@ -20,6 +20,7 @@ gi.require_version("Adw", "1")
 
 from gi.repository import Gtk, Adw, Gio, GLib
 
+from i18n import _, N_
 from languages import default_timezone, detect_system_language
 from pages import build_all_pages
 
@@ -66,9 +67,13 @@ class InstallerApplication(Adw.Application):
     def do_activate(self):
         """Build and present the main window."""
         try:
-            title = "AnduinOS Installer (Development)" if self.shared_state[
-                "development_mode"
-            ] else "AnduinOS Installer (Beta)"
+            lang = str(self.shared_state["lang"])
+            title_message = (
+                N_("AnduinOS Installer (Development)")
+                if self.shared_state["development_mode"]
+                else N_("AnduinOS Installer (Beta)")
+            )
+            title = _(title_message, lang)
             win = Adw.ApplicationWindow(application=self,
                                         title=title,
                                         default_width=960,
@@ -81,6 +86,13 @@ class InstallerApplication(Adw.Application):
             header.set_title_widget(win_title)
             toolbar.add_top_bar(header)
 
+            def _set_window_language(language: str):
+                localized_title = _(title_message, language)
+                win.set_title(localized_title)
+                win_title.set_title(localized_title)
+
+            self.shared_state["_set_window_language"] = _set_window_language
+
             self._nav = Adw.NavigationView()
             toolbar.set_content(self._nav)
             win.set_content(toolbar)
@@ -90,13 +102,16 @@ class InstallerApplication(Adw.Application):
                     return False
                 dialog = Adw.MessageDialog(
                     transient_for=win,
-                    heading="Installation in progress",
-                    body=(
+                    heading=_("Installation in progress", lang),
+                    body=_(
                         "The installer cannot be closed while it is modifying "
-                        "the target disk."
+                        "the target disk.",
+                        lang,
                     ),
                 )
-                dialog.add_response("ok", "Continue Installation")
+                dialog.add_response(
+                    "ok", _("Continue Installation", lang)
+                )
                 dialog.present()
                 return True
 

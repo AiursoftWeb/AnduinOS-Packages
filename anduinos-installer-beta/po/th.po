@@ -1,0 +1,537 @@
+# Thai translations for anduinos-installer-beta package.
+# Copyright (C) 2026 THE anduinos-installer-beta'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-installer-beta package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-installer-beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-30 14:59+0000\n"
+"PO-Revision-Date: 2026-07-30 14:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"การติดตั้งจริงจะสร้าง MOK เฉพาะเครื่อง หลังจากเริ่มต้นระบบใหม่ ให้เลือก Enroll MOK → Continue → Yes ใน MOKManager และป้อนรหัสผ่าน 123456"
+
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
+msgstr ""
+"\n"
+"บนหน้าจอ MOKManager สีน้ำเงิน ให้เลือก Enroll MOK → Continue → Yes รหัสผ่าน: 123456"
+
+msgid "(Live USB — excluded)"
+msgstr "(Live USB — ไม่รวม)"
+
+msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
+msgstr "Swap ขนาด 4 GiB (ลำดับความสำคัญ 10) + zram LZ4 ขนาด 50% ของ RAM (ลำดับความสำคัญ 100)"
+
+msgid "; sudo does not require a password"
+msgstr "; sudo ไม่จำเป็นต้องใช้รหัสผ่าน"
+
+msgid "; sudo requires the account password"
+msgstr "; sudo จำเป็นต้องใช้รหัสผ่านของบัญชี"
+
+msgid "ALL DATA on the selected disk will be permanently erased."
+msgstr "ข้อมูลทั้งหมดบนดิสก์ที่เลือกจะถูกลบออกอย่างถาวร"
+
+msgid "Account security"
+msgstr "ความปลอดภัยของบัญชี"
+
+msgid "Administrator access would be locked"
+msgstr "การเข้าถึงของผู้ดูแลระบบจะถูกปิดใช้งาน"
+
+msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
+msgstr "หลังจากเริ่มระบบใหม่ MOKManager จะเปิดขึ้น ให้เลือก Enroll MOK → Continue → Yes จากนั้นป้อนรหัสผ่าน 123456"
+
+msgid ""
+"All partitions and data on {disk} will be destroyed.\n"
+"\n"
+msgstr ""
+"พาร์ติชันและข้อมูลทั้งหมดบน {disk} จะถูกทำลาย\n"
+"\n"
+
+msgid "AnduinOS Installer"
+msgstr "โปรแกรมติดตั้ง AnduinOS"
+
+msgid "AnduinOS Installer (Beta)"
+msgstr "โปรแกรมติดตั้ง AnduinOS (Beta)"
+
+msgid "AnduinOS Installer (Development)"
+msgstr "โปรแกรมติดตั้ง AnduinOS (Development)"
+
+msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
+msgstr "โปรแกรมใดๆ ที่ทำงานในฐานะผู้ใช้ของคุณสามารถรับสิทธิ์ผู้ดูแลระบบเต็มรูปแบบได้โดยไม่ต้องยืนยันตัวตน รหัสผ่านเข้าสู่ระบบของคุณยังคงป้องกันขั้นตอนการเข้าสู่ระบบ แต่จะไม่ป้องกัน sudo คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?"
+
+msgid "Arabic"
+msgstr "ภาษาอาหรับ"
+
+msgid "Back"
+msgstr "ย้อนกลับ"
+
+msgid "Btrfs (recommended)"
+msgstr "Btrfs (แนะนำ)"
+
+msgid "Cannot create installation plan"
+msgstr "ไม่สามารถสร้างแผนการติดตั้งได้"
+
+msgid "Choose optional software to install"
+msgstr "เลือกซอฟต์แวร์เสริมที่จะติดตั้ง"
+
+msgid "Choose the disk where AnduinOS will be installed"
+msgstr "เลือกดิสก์ที่จะติดตั้ง AnduinOS"
+
+msgid "Choose your language to begin installation"
+msgstr "เลือกภาษาของคุณเพื่อเริ่มต้นการติดตั้ง"
+
+msgid "Choose your location to set the system clock"
+msgstr "เลือกสถานที่ของคุณเพื่อกำหนดเวลาของระบบ"
+
+msgid "Complete"
+msgstr "เสร็จสิ้น"
+
+msgid "Computer Name"
+msgstr "ชื่อคอมพิวเตอร์"
+
+msgid "Computer name contains invalid characters."
+msgstr "ชื่อคอมพิวเตอร์มีอักขระที่ไม่ถูกต้อง"
+
+msgid "Configure account and region"
+msgstr "กำหนดค่าบัญชีและภูมิภาค"
+
+msgid "Configure storage and swap"
+msgstr "กำหนดการจัดเก็บข้อมูลและ swap"
+
+msgid "Confirm Password"
+msgstr "ยืนยันรหัสผ่าน"
+
+msgid "Confirm your keyboard layout"
+msgstr "ยืนยันเลย์เอาต์คีย์บอร์ดของคุณ"
+
+msgid "Continue Installation"
+msgstr "ดำเนินการติดตั้งต่อ"
+
+msgid "Copy AnduinOS system"
+msgstr "คัดลอกระบบ AnduinOS"
+
+msgid "Copy Log"
+msgstr "คัดลอกรายการบันทึก"
+
+msgid "Create your user account"
+msgstr "สร้างบัญชีผู้ใช้ของคุณ"
+
+msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
+msgstr "โหมดการพัฒนา — แผนจะถูกตรวจสอบและจำลองการทำงาน ไม่สามารถเรียกใช้โปรแกรมที่มีสิทธิ์พิเศษหรือคำสั่งดิสก์ได้"
+
+msgid "Danish"
+msgstr "ภาษาเดนมาร์ก"
+
+msgid "Detect firmware and Secure Boot"
+msgstr "ตรวจจับเฟิร์มแวร์และ Secure Boot"
+
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
+"\n"
+msgstr ""
+"โหมดพัฒนาจะจำลองการติดตั้งไปยัง {disk} ข้อมูลบนดิสก์จะไม่มีการเปลี่ยนแปลง\n"
+"\n"
+
+msgid "Development simulation completed"
+msgstr "การจำลองการพัฒนาเสร็จสิ้น"
+
+msgid "Discover AnduinOS"
+msgstr "สำรวจ AnduinOS"
+
+msgid "Do not require a password for sudo commands"
+msgstr "ไม่ต้องใช้รหัสผ่านสำหรับคำสั่ง sudo"
+
+msgid "Download and install system updates during installation"
+msgstr "ดาวน์โหลดและติดตั้งอัปเดตระบบระหว่างการติดตั้ง"
+
+msgid "Dutch"
+msgstr "ภาษาดัตช์"
+
+msgid "English (UK)"
+msgstr "ภาษาอังกฤษ (สหราชอาณาจักร)"
+
+msgid "English (US)"
+msgstr "ภาษาอังกฤษ (สหรัฐอเมริกา)"
+
+msgid "Erase Disk and Install"
+msgstr "ลบดิสก์และติดตั้ง"
+
+msgid "Erase the entire selected disk?"
+msgstr "ต้องการลบดิสก์ที่เลือกทั้งหมดหรือไม่?"
+
+msgid "Filesystem"
+msgstr "ระบบไฟล์"
+
+msgid "Finalize target environment"
+msgstr "สรุปสภาพแวดล้อมเป้าหมาย"
+
+msgid "Finnish"
+msgstr "ภาษาฟินแลนด์"
+
+msgid "French"
+msgstr "ภาษาฝรั่งเศส"
+
+msgid "Full Name"
+msgstr "ชื่อเต็ม"
+
+msgid "German"
+msgstr "ภาษาเยอรมัน"
+
+msgid "Greek"
+msgstr "ภาษากรีก"
+
+msgid "Hindi (India)"
+msgstr "ภาษาฮินดี (อินเดีย)"
+
+msgid "I Understand the Risk, Continue"
+msgstr "ฉันเข้าใจความเสี่ยงแล้ว ดำเนินการต่อ"
+
+msgid "Indonesian"
+msgstr "ภาษาอินโดนีเซีย"
+
+msgid "Install"
+msgstr "ติดตั้ง"
+
+msgid "Install bootloader"
+msgstr "ติดตั้ง bootloader"
+
+msgid "Install hardware drivers"
+msgstr "ติดตั้งไดรเวอร์ฮาร์ดแวร์"
+
+msgid "Install system updates"
+msgstr "ติดตั้งอัปเดตระบบ"
+
+msgid "Install third-party drivers for this device"
+msgstr "ติดตั้งไดรเวอร์บุคคลที่สามสำหรับอุปกรณ์นี้"
+
+msgid "Installation Complete"
+msgstr "การติดตั้งเสร็จสมบูรณ์"
+
+msgid "Installation Failed"
+msgstr "การติดตั้งล้มเหลว"
+
+msgid "Installation Steps"
+msgstr "ขั้นตอนการติดตั้ง"
+
+msgid "Installation complete"
+msgstr "การติดตั้งเสร็จสมบูรณ์"
+
+msgid "Installation failed"
+msgstr "การติดตั้งล้มเหลว"
+
+msgid "Installation in progress"
+msgstr "กำลังดำเนินการติดตั้ง"
+
+msgid "Installing AnduinOS"
+msgstr "กำลังติดตั้ง AnduinOS"
+
+msgid "Italian"
+msgstr "ภาษาอิตาลี"
+
+msgid "Japanese"
+msgstr "ภาษาญี่ปุ่น"
+
+msgid "Keyboard"
+msgstr "คีย์บอร์ด"
+
+msgid "Keyboard Layout"
+msgstr "เลย์เอาต์คีย์บอร์ด"
+
+msgid "Korean"
+msgstr "ภาษากาหลี"
+
+msgid "Language"
+msgstr "ภาษา"
+
+msgid "Mount target filesystems"
+msgstr "Mount ระบบไฟล์เป้าหมาย"
+
+msgid "Navigation error"
+msgstr "ข้อผิดพลาดในการนำทาง"
+
+msgid "Next"
+msgstr "ถัดไป"
+
+msgid "Next slide"
+msgstr "สไลด์ถัดไป"
+
+msgid "No suitable disks found."
+msgstr "ไม่พบดิสก์ที่เหมาะสม"
+
+msgid "Norwegian"
+msgstr "ภาษาโนルเวย์"
+
+msgid "OK"
+msgstr "ตกลง"
+
+msgid "Output"
+msgstr "ผลลัพธ์"
+
+msgid "Output • Error"
+msgstr "ผลลัพธ์ • ข้อผิดพลาด"
+
+msgid "Output • {count} warning(s)"
+msgstr "ผลลัพธ์ • คำเตือน {count} รายการ"
+
+msgid "Password"
+msgstr "รหัสผ่าน"
+
+msgid "Password must be at least 6 characters."
+msgstr "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
+
+msgid "Passwordless sudo is unsafe"
+msgstr "sudo โดยไม่ต้องใช้รหัสผ่านนั้นไม่ปลอดภัย"
+
+msgid "Platform"
+msgstr "แพลตฟอร์ม"
+
+msgid "Please do not turn off your computer"
+msgstr "กรุณาอย่าปิดเครื่องคอมพิวเตอร์ของคุณ"
+
+msgid "Please review your choices before proceeding"
+msgstr "กรุณาทบทวนการเลือกของคุณก่อนดำเนินการต่อ"
+
+msgid "Polish"
+msgstr "ภาษาโปแลนด์"
+
+msgid "Portuguese"
+msgstr "ภาษาโปรตุเกส"
+
+msgid "Portuguese (Brazil)"
+msgstr "ภาษาโปรตุเกส (บราซิล)"
+
+msgid "Prepare Secure Boot"
+msgstr "เตรียม Secure Boot"
+
+msgid "Prepare installation disk"
+msgstr "เตรียมดิสก์ติดตั้ง"
+
+msgid "Prepare target environment"
+msgstr "เตรียมสภาพแวดล้อมเป้าหมาย"
+
+msgid "Preparing installation…"
+msgstr "กำลังเตรียมการติดตั้ง…"
+
+msgid "Previous slide"
+msgstr "สไลด์ก่อนหน้า"
+
+msgid "Ready to Install"
+msgstr "พร้อมที่จะติดตั้ง"
+
+msgid "Reboot Now"
+msgstr "เริ่มระบบใหม่ตอนนี้"
+
+msgid "Refresh package indexes"
+msgstr "รีเฟรชดัชนีแพ็กเกจ"
+
+msgid "Remove live-session components"
+msgstr "ลบส่วนประกอบของเซสชันแบบ live"
+
+msgid "Remove the installation media and restart your computer"
+msgstr "นำสื่อติดตั้งออกและเริ่มคอมพิวเตอร์ของคุณใหม่"
+
+msgid "Requires an Internet connection. The base installation remains available when offline."
+msgstr "ต้องการการเชื่อมต่ออินเทอร์เน็ต การติดตั้งพื้นฐานจะยังคงใช้งานได้ในขณะที่ออฟไลน์"
+
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "เริ่มระบบใหม่และลงทะเบียนคีย์ Secure Boot"
+
+msgid "Restart is disabled in development protection mode"
+msgstr "การเริ่มระบบใหม่ถูกปิดใช้งานในโหมดป้องกันการพัฒนา"
+
+msgid "Return and Set a Password"
+msgstr "กลับและตั้งรหัสผ่าน"
+
+msgid "Return to Make Changes"
+msgstr "กลับไปแก้ไขการเปลี่ยนแปลง"
+
+msgid "Romanian"
+msgstr "ภาษาโรมาเนีย"
+
+msgid "Russian"
+msgstr "ภาษารัสเซีย"
+
+msgid "Save Log"
+msgstr "บันทึกรายการบันทึก"
+
+msgid "Schedule MOK enrollment"
+msgstr "กำหนดเวลาการลงทะเบียน MOK"
+
+msgid "Search timezones…"
+msgstr "ค้นหาเขตเวลา…"
+
+msgid "Secure Boot enrollment"
+msgstr "การลงทะเบียน Secure Boot"
+
+msgid "Select Installation Disk"
+msgstr "เลือกดิสก์ติดตั้ง"
+
+msgid "Select Timezone"
+msgstr "เลือกเขตเวลา"
+
+msgid "Select fastest package mirror"
+msgstr "เลือกมิเรอร์แพ็กเกจที่เร็วที่สุด"
+
+msgid "Selected timezone"
+msgstr "เขตเวลาที่เลือก"
+
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr "ไดรเวอร์บางตัวเป็นซอฟต์แวร์เฉพาะหรือซอฟต์แวร์ที่ไม่ใช่โอเพนซอร์ส"
+
+msgid "Spanish"
+msgstr "ภาษาสเปน"
+
+msgid "Stable disk identity"
+msgstr "เอกลักษณ์ดิสก์ที่เสถียร"
+
+msgid ""
+"Stable identity: {stable_id}\n"
+"\n"
+msgstr ""
+"เอกลักษณ์ที่เสถียร: {stable_id}\n"
+"\n"
+
+msgid "Subvolumes"
+msgstr "Subvolumes"
+
+msgid "Swap"
+msgstr "Swap"
+
+msgid "Swedish"
+msgstr "ภาษาสวีเดน"
+
+msgid "System updates"
+msgstr "อัปเดตระบบ"
+
+msgid "Target Disk"
+msgstr "ดิสก์เป้าหมาย"
+
+msgid "Test your keyboard here…"
+msgstr "ทดสอบคีย์บอร์ดของคุณที่นี่…"
+
+msgid "Thai"
+msgstr "ภาษาไทย"
+
+msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
+msgstr "แผนการติดตั้งถูกต้อง ไม่มีดิสก์ ระบบไฟล์ bootloader สถานะ Secure Boot หรือระบบที่ติดตั้งถูกเปลี่ยนแปลง"
+
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "โปรแกรมติดตั้งไม่สามารถปิดได้ขณะกำลังแก้ไขดิสก์เป้าหมาย"
+
+msgid "The privileged executor is disabled."
+msgstr "โปรแกรมที่มีสิทธิ์พิเศษถูกปิดใช้งาน"
+
+msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
+msgstr "ระบบจะเข้าสู่ระบบบัญชีนี้โดยอัตโนมัติและอนุญาตให้รับสิทธิ์ผู้ดูแลระบบเต็มรูปแบบโดยไม่ต้องใช้รหัสผ่าน ใครก็ตามที่สามารถเข้าถึงทางกายภาพและโปรแกรมใดๆ ที่ทำงานในฐานะผู้ใช้รายนี้สามารถควบคุมระบบได้อย่างสมบูรณ์ ใช้สิ่งนี้เฉพาะสำหรับ kiosk เครื่องเสมือนชั่วคราว หรือสภาพแวดล้อมที่มีการควบคุมเท่านั้น"
+
+msgid "The two passwords do not match."
+msgstr "รหัสผ่านทั้งสองไม่ตรงกัน"
+
+msgid "Third-party drivers"
+msgstr "ไดรเวอร์บุคคลที่สาม"
+
+msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
+msgstr "\\ต์บัญชีนี้ไม่มีรหัสผ่านสำหรับการเข้าสู่ระบบ แต่การใช้คำสั่ง sudo ยังคงต้องการรหัสผ่าน เนื่องจากบัญชี root ถูกปิดใช้งานโดยค่าเริ่มต้น คุณจึงไม่สามารถดำเนินการของผู้ดูแลระบบได้ ตั้งรหัสผ่านสำหรับบัญชีหรือเปิดใช้งาน sudo โดยไม่ต้องใช้รหัสผ่าน"
+
+msgid "This configuration is very unsafe"
+msgstr "การกำหนดค่านี้ไม่ปลอดภัยอย่างยิ่ง"
+
+msgid "This installer does not shrink or preserve other systems."
+msgstr "โปรแกรมติดตั้งนี้ไม่สามารถย่อหรือรักษาระบบอื่นไว้ได้"
+
+msgid "Timezone"
+msgstr "เขตเวลา"
+
+msgid "Turkish"
+msgstr "ภาษาตุรกี"
+
+msgid "Ukrainian"
+msgstr "ภาษาอูเครน"
+
+msgid "Unavailable: {error}"
+msgstr "ใช้ไม่ได้: {error}"
+
+msgid "Unmount installed system"
+msgstr "Unmount ระบบที่ติดตั้ง"
+
+msgid "Updates and Drivers"
+msgstr "อัปเดตและไดรเวอร์"
+
+msgid "User"
+msgstr "ผู้ใช้"
+
+msgid "User Account"
+msgstr "บัญชีผู้ใช้"
+
+msgid "Username"
+msgstr "ชื่อผู้ใช้"
+
+msgid "Username may only contain lowercase letters, digits, underscores and hyphens."
+msgstr "ชื่อผู้ใช้สามารถใช้เฉพาะตัวอักษรพิมพ์เล็ก ตัวเลข เครื่องหมายขีดล่าง และเครื่องหมายไฮเฟนเท่านั้น"
+
+msgid "Validate Plan (No Installation)"
+msgstr "ตรวจสอบแผน (ไม่ติดตั้ง)"
+
+msgid "Validate this installation plan?"
+msgstr "ต้องการตรวจสอบแผนการติดตั้งนี้หรือไม่?"
+
+msgid "Verify kernel module signatures"
+msgstr "ตรวจสอบลายเซ็นของโมดูลเคอร์เนล"
+
+msgid "Verify target disk isolation"
+msgstr "ตรวจสอบการแยกตัวของดิสก์เป้าหมาย"
+
+msgid "Vietnamese"
+msgstr "ภาษาเวียดนาม"
+
+msgid "Welcome to AnduinOS"
+msgstr "ยินดีต้อนรับสู่ AnduinOS"
+
+msgid "automatic login"
+msgstr "เข้าสู่ระบบอัตโนมัติ"
+
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr "สร้าง MOK เฉพาะเครื่อง; ลงทะเบียนหลังจากเริ่มระบบใหม่ด้วยรหัสผ่าน 123456"
+
+msgid "detect and install (may include non-free software)"
+msgstr "ตรวจจับและติดตั้ง (อาจรวมซอฟต์แวร์ที่ไม่ใช่โอเพนซอร์ส)"
+
+msgid "do not install"
+msgstr "ไม่ติดตั้ง"
+
+msgid "download and install"
+msgstr "ดาวน์โหลดและติดตั้ง"
+
+msgid "not required"
+msgstr "ไม่จำเป็น"
+
+msgid "password required for login"
+msgstr "จำเป็นต้องใช้รหัสผ่านสำหรับเข้าสู่ระบบ"
+
+msgid "single ext4 root filesystem"
+msgstr "ระบบไฟล์ ext4 แบบรากเดียว"
+
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+
+msgid "{step} failed"
+msgstr "{step} ล้มเหลว"
+
+msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
+msgstr "⚠ การกระทำนี้จะลบข้อมูลทั้งหมดบนดิสก์ที่เลือก ไม่สามารถย้อนกลับการกระทำนี้ได้"
