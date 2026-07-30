@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-why-ai</PackageName>
-    <PackageVersion>2.0.1-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>why — a fully offline, zero-daemon LLM CLI backed by a bundled Gemma 4 E2B model. Ask questions in plain text, pipe in context from stdin, or run --serve for an OpenAI-compatible HTTP API.</PackageDescription>
     <Section>utils</Section>
@@ -9,17 +9,17 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetSuites>resolute-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
     <Conflicts>anduinos-why-placeholder</Conflicts>
     <Replaces>anduinos-why-placeholder</Replaces>
     <Provides>anduinos-why-placeholder</Provides>
   </PropertyGroup>
 
   <ItemGroup>
-    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble resolute-addon=resolute" />
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +28,8 @@
     <Dependency Include="libstdc++6" />
     <Dependency Include="libgcc-s1" />
     <Dependency Include="libc6" />
+    <Dependency Include="llama.cpp-tools" />
+    <Dependency Include="libggml0-backend-vulkan" />
   </ItemGroup>
 
   <ItemGroup>

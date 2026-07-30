@@ -4,6 +4,9 @@ A fully offline, zero-daemon LLM CLI for AnduinOS, backed by a bundled
 [Gemma 4 E2B](https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF) model
 over llama.cpp with Vulkan GPU acceleration.
 
+This package targets AnduinOS 2.x (`resolute-addon`) only. Serve mode uses
+the Resolute `llama.cpp-tools` package, which provides `llama-server`.
+
 ## Usage
 
 ```sh
@@ -112,7 +115,7 @@ sudo apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
 # Single arch, single suite (fast)
 apkg build --distro anduinos --suite resolute-addon --arch amd64
 
-# All suites & arches (CI)
+# All configured architectures (CI)
 apkg build
 
 # Install the result
