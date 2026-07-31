@@ -16,7 +16,7 @@ path = "src/main.rs"
 
 [[bin]]
 name = "timebackctl"
-path = "src/bin/timebackctl.rs"
+path = "src/timebackctl.rs"
 
 [dependencies]
 gtk = { package = "gtk4", version = "0.11", features = ["v4_10"] }
