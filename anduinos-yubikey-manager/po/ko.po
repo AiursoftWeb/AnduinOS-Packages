@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 17:16+0000\n"
+"POT-Creation-Date: 2026-07-30 18:03+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,6 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgid "1 identity is currently available to SSH applications."
+msgstr "SSH 애플리케이션에서 현재 1개의 신원 정보를 사용할 수 있습니다."
+
+msgid "1 resident SSH key is available from your connected YubiKey."
+msgstr "연결된 YubiKey에서 1개의 상주 SSH 키를 사용할 수 있습니다."
+
+msgid "1 resident SSH key · {0}"
+msgstr "1개의 상주 SSH 키 · {0}"
+
 msgid "A key must be connected before it can be enrolled."
 msgstr "등록하려면 먼저 키를 연결해야 합니다."
 
@@ -25,6 +34,9 @@ msgstr "정보"
 
 msgid "Account password"
 msgstr "계정 비밀번호"
+
+msgid "Add another SSH key"
+msgstr "다른 SSH 키 추가"
 
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "이 공개 키를 GitHub에 서명 키로 추가하세요."
@@ -37,9 +49,6 @@ msgstr "고급 옵션"
 
 msgid "Algorithm"
 msgstr "알고리즘"
-
-msgid "All inspected resident credentials from this key are already in the agent"
-msgstr "이 키에서 검사된 모든 거주 자격 증명은 이미 에이전트에 있습니다"
 
 msgid "Allow sudo without authentication"
 msgstr "인증 없이 sudo 허용"
@@ -68,8 +77,8 @@ msgstr "AnduinOS 팀"
 msgid "AnduinOS YubiKey Security Center"
 msgstr "AnduinOS YubiKey 보안 센터"
 
-msgid "AnduinOS is safer with a YubiKey"
-msgstr "YubiKey를 사용하면 AnduinOS가 더 안전해집니다"
+msgid "AnduinOS works more securely with a YubiKey"
+msgstr "YubiKey와 함께 AnduinOS를 더 안전하게 사용하세요"
 
 msgid "Application"
 msgstr "애플리케이션"
@@ -86,14 +95,17 @@ msgstr "Available through SSH agent"
 msgid "Available through local key handle"
 msgstr "로컬 키 핸들을 통해 사용 가능"
 
+msgid "Buy a YubiKey"
+msgstr "YubiKey 구매하기"
+
 msgid "Cancel"
 msgstr "취소"
 
 msgid "Checking SSH keys…"
 msgstr "SSH 키 확인 중..."
 
-msgid "Checking SSH keys… Touch the YubiKey if it flashes."
-msgstr "SSH 키 확인 중... 플래시가 깜박이면 YubiKey를 터치하세요."
+msgid "Checking SSH support…"
+msgstr "SSH 지원 확인 중…"
 
 msgid "Checking connected YubiKeys"
 msgstr "연결된 YubiKey 확인 중"
@@ -146,11 +158,11 @@ msgstr "{0}에 대해 설정됨 · 연결 안 됨"
 msgid "Connect a FIDO security key first"
 msgstr "먼저 FIDO 보안 키를 연결하세요"
 
+msgid "Connect a YubiKey"
+msgstr "YubiKey 연결"
+
 msgid "Connect a YubiKey to get started"
 msgstr "시작하려면 YubiKey를 연결하세요"
-
-msgid "Connect exactly one FIDO security key to choose an unambiguous source"
-msgstr "모호하지 않은 소스를 선택하려면 정확히 하나의 FIDO 보안 키를 연결하세요"
 
 msgid "Connect your YubiKey"
 msgstr "YubiKey 연결하기"
@@ -184,6 +196,9 @@ msgstr "{0}을(를) 생성할 수 없습니다: {1}"
 
 msgid "Could not export the public key: {0}"
 msgstr "공개 키를 내보낼 수 없습니다: {0}"
+
+msgid "Could not find security keys"
+msgstr "보안 키를 찾을 수 없습니다"
 
 msgid "Could not flush the temporary public key: {0}"
 msgstr "임시 공개 키를 플러시할 수 없습니다: {0}"
@@ -242,6 +257,9 @@ msgstr "삭제 결과를 알 수 없습니다"
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr "비활성화됨 · sudo는 YubiKey 또는 계정 비밀번호로 인증해야 합니다"
 
+msgid "Discover SSH keys on your YubiKeys"
+msgstr "YubiKey의 SSH 키 탐색"
+
 msgid "Display label must be at most 200 bytes and contain no control characters."
 msgstr "표시 라벨은 최대 200바이트여야 하며 제어 문자를 포함해서는 안 됩니다."
 
@@ -281,14 +299,14 @@ msgstr "등록됨 · sudo 인증이 우회된 동안 비활성화"
 msgid "Enrollment safety"
 msgstr "등록 안전성"
 
+msgid "Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
+msgstr "{0}의 FIDO PIN을 입력하세요. 깜박이면 터치하세요. PIN은 절대 저장되지 않습니다."
+
 msgid "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 msgstr "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "FIDO PIN을 입력하세요. YubiKey가 깜빡이면 터치하세요."
-
-msgid "Enter the YubiKey FIDO PIN"
-msgstr "YubiKey FIDO PIN 입력"
 
 msgid "Enter the YubiKey FIDO PIN to test this local key handle."
 msgstr "Enter the YubiKey FIDO PIN to test this local key handle."
@@ -310,6 +328,9 @@ msgstr "FIDO 장치 탐색을 사용할 수 없습니다"
 
 msgid "FIDO security key"
 msgstr "FIDO 보안 키"
+
+msgid "Finish inspecting your YubiKeys"
+msgstr "YubiKey 검사 완료"
 
 msgid "Firmware {0}"
 msgstr "펌웨어 {0}"
@@ -342,17 +363,38 @@ msgstr "YubiKey 삽입"
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "YubiKey를 삽입한 다음 새로 고침을 누릅니다."
 
+msgid "Insert a YubiKey. This page will detect it when you refresh."
+msgstr "YubiKey를 삽입하세요. 이 페이지는 새로 고침 시 이를 감지합니다."
+
 msgid "Inspect"
 msgstr "검사"
 
-msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
-msgstr "거주 SSH 자격 증명을 검사, 로드, 내보내기, 테스트, 에이전트에서 제거 또는 영구 삭제합니다."
+msgid "Inspect YubiKey"
+msgstr "YubiKey 검사"
 
-msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
-msgstr "거주자 SSH 자격 증명 검사 중... YubiKey가 깜박이면 만지세요."
+msgid "Inspect YubiKey {0} of {1}"
+msgstr "YubiKey {0} 검사 (총 {1}개)"
+
+msgid "Inspect again"
+msgstr "다시 검사"
+
+msgid "Inspect all keys"
+msgstr "모든 키 검사"
+
+msgid "Inspect this YubiKey"
+msgstr "이 YubiKey 검사"
+
+msgid "Inspected"
+msgstr "검사 완료"
+
+msgid "Inspection needs attention · {0}"
+msgstr "주의 필요 · {0}"
 
 msgid "Invalid FIDO device path."
 msgstr "잘못된 FIDO 장치 경로입니다."
+
+msgid "Keys stored on your YubiKeys"
+msgstr "YubiKey에 저장된 키"
 
 msgid "Load"
 msgstr "로드"
@@ -360,8 +402,8 @@ msgstr "로드"
 msgid "Load SSH keys"
 msgstr "SSH 키 로드"
 
-msgid "Load into agent"
-msgstr "에이전트에 로드"
+msgid "Load all"
+msgstr "모두 로드"
 
 msgid "Load keys"
 msgstr "키 로드"
@@ -369,8 +411,14 @@ msgstr "키 로드"
 msgid "Load resident SSH keys"
 msgstr "거주 SSH 키 로드"
 
+msgid "Load this YubiKey's resident SSH keys into the agent"
+msgstr "이 YubiKey의 상주 SSH 키를 에이전트에 로드"
+
 msgid "Load this resident key into the SSH agent before signing"
 msgstr "서명 전에 이 거주 키를 SSH 에이전트에 로드하세요"
+
+msgid "Loaded"
+msgstr "로드됨"
 
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "SSH 키 로딩 중... YubiKey가 깜빡이면 터치하세요."
@@ -381,6 +429,12 @@ msgstr "로컬 키 핸들 경로"
 msgid "Local key label"
 msgstr "로컬 키 라벨"
 
+msgid "Looking for your SSH agent and connected YubiKeys."
+msgstr "SSH 에이전트와 연결된 YubiKey를 찾는 중입니다."
+
+msgid "Needs attention"
+msgstr "주의 필요"
+
 msgid "New hardware-backed SSH key"
 msgstr "새 하드웨어 기반 SSH 키"
 
@@ -390,23 +444,38 @@ msgstr "FIDO 보안 키가 감지되지 않았습니다"
 msgid "No SSH agent was detected"
 msgstr "SSH 에이전트가 감지되지 않았습니다"
 
+msgid "No YubiKey connected"
+msgstr "YubiKey가 연결되지 않았습니다"
+
 msgid "No hardware serial"
 msgstr "하드웨어 일련번호 없음"
 
-msgid "No resident SSH credentials"
-msgstr "거주 SSH 자격 증명이 없습니다"
+msgid "No resident SSH keys"
+msgstr "상주 SSH 키 없음"
 
 msgid "No resident SSH keys found"
 msgstr "거주 SSH 키가 없습니다"
 
+msgid "No resident SSH keys found · {0}"
+msgstr "상주 SSH 키를 찾을 수 없음 · {0}"
+
+msgid "No resident SSH keys were found on the connected YubiKeys."
+msgstr "연결된 YubiKey에서 상주 SSH 키를 찾지 못했습니다."
+
 msgid "No signing"
 msgstr "서명 없음"
 
-msgid "No ssh:* discoverable credentials were found on this key."
-msgstr "이 키에서 발견 가능한 ssh:* 자격 증명이 없습니다."
-
 msgid "Not configured"
 msgstr "설정 안 됨"
+
+msgid "Not inspected"
+msgstr "검사 안 됨"
+
+msgid "Not inspected yet · {0}"
+msgstr "아직 검사 안 됨 · {0}"
+
+msgid "Open the official Yubico Store"
+msgstr "공식 Yubico 스토어 열기"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH가 거주 키를 로드하지 못했습니다. SSH 에이전트에 새로 로드된 신원이 없습니다."
@@ -456,8 +525,17 @@ msgstr "인증 및 커밋 서명 보호"
 msgid "Protection for {0}"
 msgstr "{0}에 대한 보호"
 
+msgid "Read the resident SSH keys already stored on your YubiKeys. You will enter each key's FIDO PIN and may need to touch it."
+msgstr "YubiKey에 이미 저장된 상주 SSH 키를 읽으세요. 각 키의 FIDO PIN을 입력하고 필요시 터치해야 합니다."
+
+msgid "Reading SSH keys from {0}… Touch it if it flashes."
+msgstr "{0}에서 SSH 키 읽는 중… 깜박이면 터치하세요."
+
 msgid "Reading account security settings…"
 msgstr "계정 보안 설정을 읽는 중…"
+
+msgid "Ready"
+msgstr "준비 완료"
 
 msgid "Ready to inspect"
 msgstr "검사 준비 완료"
@@ -480,9 +558,6 @@ msgstr "모든 서명마다 확인 필요"
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "이 키가 서명할 때마다 FIDO PIN 필요"
 
-msgid "Resident SSH credentials"
-msgstr "거주 SSH 자격 증명"
-
 msgid "Resident SSH key created"
 msgstr "거주 SSH 키 생성됨"
 
@@ -498,17 +573,14 @@ msgstr "거주 사용자 이름"
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr "거주 사용자 이름에는 1~64바이트가 포함되어야 하며 제어 문자는 포함할 수 없습니다."
 
-msgid "Run ssh-add -K for this connected security key"
-msgstr "연결된 이 보안 키에 대해 ssh-add -K 실행"
-
 msgid "SSH & Git"
 msgstr "SSH 및 Git"
 
 msgid "SSH agent"
 msgstr "SSH 에이전트"
 
-msgid "SSH agent connected"
-msgstr "SSH 에이전트 연결됨"
+msgid "SSH agent is ready"
+msgstr "SSH 에이전트 준비 완료"
 
 msgid "SSH agent unavailable"
 msgstr "SSH 에이전트 사용 불가"
@@ -518,6 +590,9 @@ msgstr "SSH 커밋 서명"
 
 msgid "SSH key actions"
 msgstr "SSH 키 작업"
+
+msgid "SSH key for {0}"
+msgstr "{0}용 SSH 키"
 
 msgid "SSH keys"
 msgstr "SSH 키"
@@ -566,9 +641,6 @@ msgstr "PIN은 ssh-add로 직접 전송되며 저장되지 않습니다."
 
 msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
 msgstr "PIN은 OpenSSH로 전용 파이프를 통해 전송됩니다. PIN은 저장되거나 명령줄 인자에 포함되지 않습니다."
-
-msgid "The PIN is used only for this read-only inspection and is never stored."
-msgstr "PIN은 읽기 전용 검사에만 사용되며 저장되지 않습니다."
 
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "SSH 에이전트가 이 키로 데이터를 성공적으로 서명하고 확인했습니다."
@@ -701,6 +773,9 @@ msgstr "이 키는 이 계정에서 신뢰하지만 현재 연결되어 있지 �
 msgid "This PIN authorizes permanent deletion of the exact credential shown in the previous step. It is never stored."
 msgstr "이 PIN은 이전 단계에서 표시된 정확한 자격 증명의 영구 삭제를 승인합니다. 저장되지 않습니다."
 
+msgid "This YubiKey has no discoverable ssh:* credentials."
+msgstr "이 YubiKey에는 탐색 가능한 ssh:* 자격 증명이 없습니다."
+
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "이것은 지원되지 않는 OpenSSH 보안 키 공개 키입니다."
 
@@ -712,9 +787,6 @@ msgstr "이 설정은 현재 사용자에만 적용됩니다."
 
 msgid "This will only take a moment."
 msgstr "잠시만 기다려 주세요."
-
-msgid "Touch the YubiKey if it flashes."
-msgstr "플래시가 깜박이면 YubiKey를 터치하세요."
 
 msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr "요청 시 YubiKey를 터치하십시오. SSH 에이전트에 거주 키를 로드하는 중…"
@@ -742,6 +814,9 @@ msgstr "다시 시도"
 
 msgid "Type {0} to confirm"
 msgstr "확인하려면 {0} 입력"
+
+msgid "Unavailable"
+msgstr "사용 불가"
 
 msgid "Unknown authentication purpose."
 msgstr "인증 목적이 알려지지 않았습니다."
@@ -779,11 +854,23 @@ msgstr "YubiKey를 사용하여 sudo 잠금 해제"
 msgid "Verifying and permanently deleting the selected resident credential. Do not unplug the YubiKey…"
 msgstr "선택한 거주 자격 증명을 확인하고 영구 삭제 중입니다. YubiKey를 분리하지 마십시오…"
 
+msgid "Waiting"
+msgstr "대기 중"
+
 msgid "Waiting for a configured YubiKey"
 msgstr "설정된 YubiKey 대기 중"
 
 msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
 msgstr "지금 키를 등록할 수 있지만, 비밀번호 없는 액세스가 활성화되어 있으면 sudo는 PAM을 우회합니다."
+
+msgid "Your YubiKeys are inspected"
+msgstr "YubiKey가 검사되었습니다"
+
+msgid "Your hardware-backed SSH keys"
+msgstr "하드웨어 기반 SSH 키"
+
+msgid "Your resident SSH keys stay on the security key. Insert it to view and use them."
+msgstr "상주 SSH 키는 보안 키에 남아 있습니다. 삽입하여 확인하고 사용하세요."
 
 msgid "Your security settings are ready. Connect a configured YubiKey when you need it."
 msgstr "보안 설정이 준비되었습니다. 필요할 때 설정된 YubiKey를 연결하세요."
@@ -839,9 +926,6 @@ msgstr "sudo 인증 정책"
 msgid "unknown"
 msgstr "알 수 없음"
 
-msgid "unknown socket"
-msgstr "알 수 없는 소켓"
-
 msgid "user"
 msgstr "사용자"
 
@@ -857,8 +941,8 @@ msgstr "{0}(이)가 {1}으로 종료되었습니다"
 msgid "{0} failed: {1}"
 msgstr "{0} 실패: {1}"
 
-msgid "{0} identities · {1}"
-msgstr "{0}개 신원 · {1}"
+msgid "{0} identities are currently available to SSH applications."
+msgstr "SSH 애플리케이션에서 현재 {0}개의 신원 정보를 사용할 수 있습니다."
 
 msgid "{0} is enabled for this YubiKey"
 msgstr "이 YubiKey에 대해 {0}(이)가 활성화되었습니다"
@@ -872,14 +956,74 @@ msgstr "에이전트에 {0}개의 새 SSH 신원이 추가되었습니다."
 msgid "{0} new SSH identity was added to the agent."
 msgstr "에이전트에 {0}개의 새 SSH 신원이 추가되었습니다."
 
+msgid "{0} resident SSH keys are available from your connected YubiKeys."
+msgstr "연결된 YubiKey에서 {0}개의 상주 SSH 키를 사용할 수 있습니다."
+
+msgid "{0} resident SSH keys · {1}"
+msgstr "{0}개의 상주 SSH 키 · {1}"
+
 msgid "{0} resident credentials inspected"
 msgstr "{0}개의 거주 자격 증명 검사됨"
+
+msgid "{0} to inspect"
+msgstr "검사할 항목 {0}개"
 
 msgid "{0} · no hardware serial"
 msgstr "{0} · 시리얼 번호 없음"
 
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
+
+#~ msgid "All inspected resident credentials from this key are already in the agent"
+#~ msgstr "이 키에서 검사된 모든 거주 자격 증명은 이미 에이전트에 있습니다"
+
+#~ msgid "AnduinOS is safer with a YubiKey"
+#~ msgstr "YubiKey를 사용하면 AnduinOS가 더 안전해집니다"
+
+#~ msgid "Checking SSH keys… Touch the YubiKey if it flashes."
+#~ msgstr "SSH 키 확인 중... 플래시가 깜박이면 YubiKey를 터치하세요."
+
+#~ msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+#~ msgstr "모호하지 않은 소스를 선택하려면 정확히 하나의 FIDO 보안 키를 연결하세요"
+
+#~ msgid "Enter the YubiKey FIDO PIN"
+#~ msgstr "YubiKey FIDO PIN 입력"
+
+#~ msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
+#~ msgstr "거주 SSH 자격 증명을 검사, 로드, 내보내기, 테스트, 에이전트에서 제거 또는 영구 삭제합니다."
+
+#~ msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
+#~ msgstr "거주자 SSH 자격 증명 검사 중... YubiKey가 깜박이면 만지세요."
+
+#~ msgid "Load into agent"
+#~ msgstr "에이전트에 로드"
+
+#~ msgid "No resident SSH credentials"
+#~ msgstr "거주 SSH 자격 증명이 없습니다"
+
+#~ msgid "No ssh:* discoverable credentials were found on this key."
+#~ msgstr "이 키에서 발견 가능한 ssh:* 자격 증명이 없습니다."
+
+#~ msgid "Resident SSH credentials"
+#~ msgstr "거주 SSH 자격 증명"
+
+#~ msgid "Run ssh-add -K for this connected security key"
+#~ msgstr "연결된 이 보안 키에 대해 ssh-add -K 실행"
+
+#~ msgid "SSH agent connected"
+#~ msgstr "SSH 에이전트 연결됨"
+
+#~ msgid "The PIN is used only for this read-only inspection and is never stored."
+#~ msgstr "PIN은 읽기 전용 검사에만 사용되며 저장되지 않습니다."
+
+#~ msgid "Touch the YubiKey if it flashes."
+#~ msgstr "플래시가 깜박이면 YubiKey를 터치하세요."
+
+#~ msgid "unknown socket"
+#~ msgstr "알 수 없는 소켓"
+
+#~ msgid "{0} identities · {1}"
+#~ msgstr "{0}개 신원 · {1}"
 
 #~ msgid "Git Signing"
 #~ msgstr "Git Signing"

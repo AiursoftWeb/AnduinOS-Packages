@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 17:16+0000\n"
+"POT-Creation-Date: 2026-07-30 18:03+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,6 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "1 identity is currently available to SSH applications."
+msgstr "SSH uygulamaları için şu anda 1 kimlik kullanılabilir durumda."
+
+msgid "1 resident SSH key is available from your connected YubiKey."
+msgstr "Bağlı YubiKey'inizden 1 yerleşik SSH anahtarı kullanılabilir durumda."
+
+msgid "1 resident SSH key · {0}"
+msgstr "1 yerleşik SSH anahtarı · {0}"
+
 msgid "A key must be connected before it can be enrolled."
 msgstr "Kayıt oluşturulmadan önce bir anahtar bağlanmalıdır."
 
@@ -25,6 +34,9 @@ msgstr "Hakkında"
 
 msgid "Account password"
 msgstr "Hesap şifresi"
+
+msgid "Add another SSH key"
+msgstr "Başka bir SSH anahtarı ekle"
 
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "Bu genel anahtarı GitHub'a İmzalama Anahtarı olarak ekleyin."
@@ -37,9 +49,6 @@ msgstr "Gelişmiş seçenekler"
 
 msgid "Algorithm"
 msgstr "Algoritma"
-
-msgid "All inspected resident credentials from this key are already in the agent"
-msgstr "Bu anahtardan tüm denetlenen yerel kimlik bilgileri zaten aracıda bulunuyor"
 
 msgid "Allow sudo without authentication"
 msgstr "Yetkilendirme olmadan sudo'ya izin ver"
@@ -68,8 +77,8 @@ msgstr "AnduinOS Ekibi"
 msgid "AnduinOS YubiKey Security Center"
 msgstr "AnduinOS YubiKey Güvenlik Merkezi"
 
-msgid "AnduinOS is safer with a YubiKey"
-msgstr "AnduinOS, bir YubiKey ile daha güvenlidir"
+msgid "AnduinOS works more securely with a YubiKey"
+msgstr "AnduinOS, bir YubiKey ile daha güvenli çalışır"
 
 msgid "Application"
 msgstr "Uygulama"
@@ -86,14 +95,17 @@ msgstr "Available through SSH agent"
 msgid "Available through local key handle"
 msgstr "Yerel anahtar tutacağı aracılığıyla kullanılabilir"
 
+msgid "Buy a YubiKey"
+msgstr "Bir YubiKey satın alın"
+
 msgid "Cancel"
 msgstr "İptal"
 
 msgid "Checking SSH keys…"
 msgstr "SSH anahtarları kontrol ediliyor…"
 
-msgid "Checking SSH keys… Touch the YubiKey if it flashes."
-msgstr "SSH anahtarları kontrol ediliyor… Yanıp sönüyorsa YubiKey'e dokunun."
+msgid "Checking SSH support…"
+msgstr "SSH desteği kontrol ediliyor…"
 
 msgid "Checking connected YubiKeys"
 msgstr "Bağlı YubiKey'ler kontrol ediliyor"
@@ -146,11 +158,11 @@ msgstr "{0} için yapılandırıldı · Bağlı değil"
 msgid "Connect a FIDO security key first"
 msgstr "Önce bir FIDO güvenlik anahtarı bağlayın"
 
+msgid "Connect a YubiKey"
+msgstr "Bir YubiKey bağlayın"
+
 msgid "Connect a YubiKey to get started"
 msgstr "Başlamak için bir YubiKey bağlayın"
-
-msgid "Connect exactly one FIDO security key to choose an unambiguous source"
-msgstr "Açık bir kaynak seçmek için tam olarak bir FIDO güvenlik anahtarı bağlayın"
 
 msgid "Connect your YubiKey"
 msgstr "YubiKey'inizi bağlayın"
@@ -184,6 +196,9 @@ msgstr "{0} oluşturulamadı: {1}"
 
 msgid "Could not export the public key: {0}"
 msgstr "Açık anahtar dışa aktarılamadı: {0}"
+
+msgid "Could not find security keys"
+msgstr "Güvenlik anahtarları bulunamadı"
 
 msgid "Could not flush the temporary public key: {0}"
 msgstr "Geçici açık anahtar temizlenemedi: {0}"
@@ -242,6 +257,9 @@ msgstr "Silme sonucu bilinmiyor"
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr "Devre dışı · sudo'nun kimlik doğrulaması YubiKey veya hesap şifresi ile yapması gerekir"
 
+msgid "Discover SSH keys on your YubiKeys"
+msgstr "YubiKey'lerinizdeki SSH anahtarlarını keşfedin"
+
 msgid "Display label must be at most 200 bytes and contain no control characters."
 msgstr "Gösterim etiketi en fazla 200 bayt olmalı ve kontrol karakteri içermemelidir."
 
@@ -281,14 +299,14 @@ msgstr "Kayıtlı · sudo kimlik doğrulaması atlandığı için devre dışı"
 msgid "Enrollment safety"
 msgstr "Kayıt güvenliği"
 
+msgid "Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
+msgstr "{0} için FIDO PIN kodunu girin. Yanıp sönerse dokunun. PIN asla depolanmaz."
+
 msgid "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 msgstr "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "FIDO PIN'ini girin. Yanıp sönerse YubiKey'e dokunun."
-
-msgid "Enter the YubiKey FIDO PIN"
-msgstr "YubiKey FIDO PIN kodunu girin"
 
 msgid "Enter the YubiKey FIDO PIN to test this local key handle."
 msgstr "Enter the YubiKey FIDO PIN to test this local key handle."
@@ -310,6 +328,9 @@ msgstr "FIDO cihaz keşfi kullanılamıyor"
 
 msgid "FIDO security key"
 msgstr "FIDO güvenlik anahtarı"
+
+msgid "Finish inspecting your YubiKeys"
+msgstr "YubiKey'lerinizi incelemeyi tamamlayın"
 
 msgid "Firmware {0}"
 msgstr "Gömülü yazılım {0}"
@@ -342,17 +363,38 @@ msgstr "Bir YubiKey takın"
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "Bir YubiKey takın, ardından Yenile'ye basın."
 
+msgid "Insert a YubiKey. This page will detect it when you refresh."
+msgstr "Bir YubiKey takın. Bu sayfa yenilediğinizde algılayacaktır."
+
 msgid "Inspect"
 msgstr "İncele"
 
-msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
-msgstr "Konuk SSH kimlik bilgilerini inceleyin, yükleyin, dışa aktarın, test edin, aracından kaldırın veya kalıcı olarak silin."
+msgid "Inspect YubiKey"
+msgstr "YubiKey'i incele"
 
-msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
-msgstr "Konuk SSH kimlik bilgileri denetleniyor… Yanıp sönerse YubiKey'e dokunun."
+msgid "Inspect YubiKey {0} of {1}"
+msgstr "{0}/{1} numaralı YubiKey'i incele"
+
+msgid "Inspect again"
+msgstr "Tekrar incele"
+
+msgid "Inspect all keys"
+msgstr "Tüm anahtarları incele"
+
+msgid "Inspect this YubiKey"
+msgstr "Bu YubiKey'i incele"
+
+msgid "Inspected"
+msgstr "İncelendi"
+
+msgid "Inspection needs attention · {0}"
+msgstr "Dikkat gerektiriyor · {0}"
 
 msgid "Invalid FIDO device path."
 msgstr "Geçersiz FIDO cihaz yolu."
+
+msgid "Keys stored on your YubiKeys"
+msgstr "YubiKey'lerinizde depolanan anahtarlar"
 
 msgid "Load"
 msgstr "Yükle"
@@ -360,8 +402,8 @@ msgstr "Yükle"
 msgid "Load SSH keys"
 msgstr "SSH anahtarlarını yükle"
 
-msgid "Load into agent"
-msgstr "Akene yükleyin"
+msgid "Load all"
+msgstr "Tümünü yükle"
 
 msgid "Load keys"
 msgstr "Anahtarları yükle"
@@ -369,8 +411,14 @@ msgstr "Anahtarları yükle"
 msgid "Load resident SSH keys"
 msgstr "Yerel SSH anahtarlarını yükle"
 
+msgid "Load this YubiKey's resident SSH keys into the agent"
+msgstr "Bu YubiKey'in yerleşik SSH anahtarlarını aracıya yükleyin"
+
 msgid "Load this resident key into the SSH agent before signing"
 msgstr "İmzalamadan önce bu yerleşik anahtarı SSH aracıya yükleyin"
+
+msgid "Loaded"
+msgstr "Yüklendi"
 
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "SSH anahtarları yükleniyor… Yanıp sönerse YubiKey'e dokunun."
@@ -381,6 +429,12 @@ msgstr "Yerel anahtar tutucu yolu"
 msgid "Local key label"
 msgstr "Yerel anahtar etiketi"
 
+msgid "Looking for your SSH agent and connected YubiKeys."
+msgstr "SSH aracınız ve bağlı YubiKey'leriniz aranıyor."
+
+msgid "Needs attention"
+msgstr "Dikkat gerektiriyor"
+
 msgid "New hardware-backed SSH key"
 msgstr "Yeni donanım destekli SSH anahtarı"
 
@@ -390,23 +444,38 @@ msgstr "Hiçbir FIDO güvenlik anahtarı algılanamadı"
 msgid "No SSH agent was detected"
 msgstr "Hiçbir SSH aracı algılanamadı"
 
+msgid "No YubiKey connected"
+msgstr "Hiçbir YubiKey bağlı değil"
+
 msgid "No hardware serial"
 msgstr "Donanım seri numarası yok"
 
-msgid "No resident SSH credentials"
-msgstr "Yerel SSH kimlik bilgisi yok"
+msgid "No resident SSH keys"
+msgstr "Yerleşik SSH anahtarı yok"
 
 msgid "No resident SSH keys found"
 msgstr "Yerleşik SSH anahtarı bulunamadı"
 
+msgid "No resident SSH keys found · {0}"
+msgstr "Yerleşik SSH anahtarı bulunamadı · {0}"
+
+msgid "No resident SSH keys were found on the connected YubiKeys."
+msgstr "Bağlı YubiKey'lerde yerleşik SSH anahtarı bulunamadı."
+
 msgid "No signing"
 msgstr "İmzalama yok"
 
-msgid "No ssh:* discoverable credentials were found on this key."
-msgstr "Bu anahtar üzerinde ssh:* keşfedilebilir kimlik bilgisi bulunamadı."
-
 msgid "Not configured"
 msgstr "Yapılandırılmadı"
+
+msgid "Not inspected"
+msgstr "İncelenmedi"
+
+msgid "Not inspected yet · {0}"
+msgstr "Henüz incelenmedi · {0}"
+
+msgid "Open the official Yubico Store"
+msgstr "Resmi Yubico Mağazasını açın"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH, yerleşik anahtarları yükleyemedi. SSH aracı yeni yüklü bir kimlik içermiyor."
@@ -456,8 +525,17 @@ msgstr "Doğrulama ve işleme imzalamasını koruyun"
 msgid "Protection for {0}"
 msgstr "{0} için koruma"
 
+msgid "Read the resident SSH keys already stored on your YubiKeys. You will enter each key's FIDO PIN and may need to touch it."
+msgstr "YubiKey'lerinizde zaten depolanan yerleşik SSH anahtarlarını okuyun. Her anahtarın FIDO PIN kodunu girecek ve gerekirse dokunmanız gerekebilir."
+
+msgid "Reading SSH keys from {0}… Touch it if it flashes."
+msgstr "{0} adresinden SSH anahtarları okunuyor… Yanıp sönerse dokunun."
+
 msgid "Reading account security settings…"
 msgstr "Hesap güvenlik ayarları okunuyor…"
+
+msgid "Ready"
+msgstr "Hazır"
 
 msgid "Ready to inspect"
 msgstr "İncelemeye hazır"
@@ -480,9 +558,6 @@ msgstr "Her imza için doğrulama gerektir"
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "Bu anahtar her imzaladığında FIDO PIN kodu gerekir"
 
-msgid "Resident SSH credentials"
-msgstr "Yerleşik SSH kimlik bilgileri"
-
 msgid "Resident SSH key created"
 msgstr "Yerleşik SSH anahtarı oluşturuldu"
 
@@ -498,17 +573,14 @@ msgstr "Yerleşik kullanıcı adı"
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr "Yerleşik kullanıcı adı 1-64 bayt arasında olmalı ve kontrol karakteri içermemelidir."
 
-msgid "Run ssh-add -K for this connected security key"
-msgstr "Bu bağlı güvenlik anahtarı için ssh-add -K çalıştırın"
-
 msgid "SSH & Git"
 msgstr "SSH ve Git"
 
 msgid "SSH agent"
 msgstr "SSH aracı"
 
-msgid "SSH agent connected"
-msgstr "SSH aracı bağlandı"
+msgid "SSH agent is ready"
+msgstr "SSH aracı hazır"
 
 msgid "SSH agent unavailable"
 msgstr "SSH aracı kullanılamıyor"
@@ -518,6 +590,9 @@ msgstr "SSH işleme imzalama"
 
 msgid "SSH key actions"
 msgstr "SSH anahtar eylemleri"
+
+msgid "SSH key for {0}"
+msgstr "{0} için SSH anahtarı"
 
 msgid "SSH keys"
 msgstr "SSH anahtarları"
@@ -566,9 +641,6 @@ msgstr "PIN doğrudan ssh-add'ye gönderilir ve hiçbir zaman saklanmaz."
 
 msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
 msgstr "PIN, OpenSSH'ye özel bir kanal üzerinden gönderilir. Hiçbir zaman saklanmaz veya komut argümanlarına yerleştirilmez."
-
-msgid "The PIN is used only for this read-only inspection and is never stored."
-msgstr "PIN yalnızca bu salt okunur denetim için kullanılır ve hiçbir zaman saklanmaz."
 
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "SSH aracı, bu anahtarla verileri başarıyla imzaladı ve doğruladı."
@@ -701,6 +773,9 @@ msgstr "Bu anahtarlar bu hesap tarafından güvenilir olarak kabul edilmektedir 
 msgid "This PIN authorizes permanent deletion of the exact credential shown in the previous step. It is never stored."
 msgstr "Bu PIN, önceki adımda gösterilen tam kimlik bilgisinin kalıcı olarak silinmesini yetkilendirir. Asla saklanmaz."
 
+msgid "This YubiKey has no discoverable ssh:* credentials."
+msgstr "Bu YubiKey'de keşfedilebilir ssh:* kimlik bilgisi bulunmuyor."
+
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "Bu desteklenen bir OpenSSH güvenlik-anahtarı genel anahtarı değil."
 
@@ -712,9 +787,6 @@ msgstr "Bu ayar yalnızca geçerli kullanıcıya uygulanır."
 
 msgid "This will only take a moment."
 msgstr "Bu işlem sadece bir an sürer."
-
-msgid "Touch the YubiKey if it flashes."
-msgstr "Yanıp sönüyorsa YubiKey'e dokunun."
 
 msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr "İstenildiğinde YubiKey'e dokunun. Yerel anahtarlar SSH aracisine yükleniyor…"
@@ -742,6 +814,9 @@ msgstr "Tekrar Dene"
 
 msgid "Type {0} to confirm"
 msgstr "Onaylamak için {0} yazın"
+
+msgid "Unavailable"
+msgstr "Kullanılamıyor"
 
 msgid "Unknown authentication purpose."
 msgstr "Bilinmeyen kimlik doğrulama amacı."
@@ -779,11 +854,23 @@ msgstr "sudo kilidini açmak için YubiKey kullanın"
 msgid "Verifying and permanently deleting the selected resident credential. Do not unplug the YubiKey…"
 msgstr "Seçilen konuk kimlik bilgisi doğrulanıyor ve kalıcı olarak siliniyor. YubiKey'i çıkarmayın…"
 
+msgid "Waiting"
+msgstr "Bekleniyor"
+
 msgid "Waiting for a configured YubiKey"
 msgstr "Yapılandırılmış bir YubiKey bekleniyor"
 
 msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
 msgstr "Anahtarları şimdi kaydedebilirsiniz, ancak şifresiz erişim etkinleştirildiğinde sudo PAM'ı atlar."
+
+msgid "Your YubiKeys are inspected"
+msgstr "YubiKey'leriniz incelendi"
+
+msgid "Your hardware-backed SSH keys"
+msgstr "Donanım destekli SSH anahtarlarınız"
+
+msgid "Your resident SSH keys stay on the security key. Insert it to view and use them."
+msgstr "Yerleşik SSH anahtarlarınız güvenlik anahtarında kalır. Onları görüntülemek ve kullanmak için takın."
 
 msgid "Your security settings are ready. Connect a configured YubiKey when you need it."
 msgstr "Güvenlik ayarlarınız hazır. İhtiyacınız olduğunda yapılandırılmış bir YubiKey bağlayın."
@@ -839,9 +926,6 @@ msgstr "sudo kimlik doğrulama ilkesi"
 msgid "unknown"
 msgstr "bilinmeyen"
 
-msgid "unknown socket"
-msgstr "bilinmez soket"
-
 msgid "user"
 msgstr "kullanıcı"
 
@@ -857,8 +941,8 @@ msgstr "{0}, {1} ile çıktı"
 msgid "{0} failed: {1}"
 msgstr "{0} başarısız oldu: {1}"
 
-msgid "{0} identities · {1}"
-msgstr "{0} kimlik · {1}"
+msgid "{0} identities are currently available to SSH applications."
+msgstr "SSH uygulamaları için şu anda {0} kimlik kullanılabilir durumda."
 
 msgid "{0} is enabled for this YubiKey"
 msgstr "Bu YubiKey için {0} etkinleştirildi"
@@ -872,14 +956,74 @@ msgstr "Ajanta {0} yeni SSH kimliği eklendi."
 msgid "{0} new SSH identity was added to the agent."
 msgstr "Ajanta {0} yeni SSH kimliği eklendi."
 
+msgid "{0} resident SSH keys are available from your connected YubiKeys."
+msgstr "Bağlı YubiKey'lerinizden {0} yerleşik SSH anahtarı kullanılabilir durumda."
+
+msgid "{0} resident SSH keys · {1}"
+msgstr "{0} yerleşik SSH anahtarı · {1}"
+
 msgid "{0} resident credentials inspected"
 msgstr "{0} yerel kimlik bilgisi incelendi"
+
+msgid "{0} to inspect"
+msgstr "İncelenmesi gereken {0}"
 
 msgid "{0} · no hardware serial"
 msgstr "{0} · donanım seri numarası yok"
 
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
+
+#~ msgid "All inspected resident credentials from this key are already in the agent"
+#~ msgstr "Bu anahtardan tüm denetlenen yerel kimlik bilgileri zaten aracıda bulunuyor"
+
+#~ msgid "AnduinOS is safer with a YubiKey"
+#~ msgstr "AnduinOS, bir YubiKey ile daha güvenlidir"
+
+#~ msgid "Checking SSH keys… Touch the YubiKey if it flashes."
+#~ msgstr "SSH anahtarları kontrol ediliyor… Yanıp sönüyorsa YubiKey'e dokunun."
+
+#~ msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+#~ msgstr "Açık bir kaynak seçmek için tam olarak bir FIDO güvenlik anahtarı bağlayın"
+
+#~ msgid "Enter the YubiKey FIDO PIN"
+#~ msgstr "YubiKey FIDO PIN kodunu girin"
+
+#~ msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
+#~ msgstr "Konuk SSH kimlik bilgilerini inceleyin, yükleyin, dışa aktarın, test edin, aracından kaldırın veya kalıcı olarak silin."
+
+#~ msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
+#~ msgstr "Konuk SSH kimlik bilgileri denetleniyor… Yanıp sönerse YubiKey'e dokunun."
+
+#~ msgid "Load into agent"
+#~ msgstr "Akene yükleyin"
+
+#~ msgid "No resident SSH credentials"
+#~ msgstr "Yerel SSH kimlik bilgisi yok"
+
+#~ msgid "No ssh:* discoverable credentials were found on this key."
+#~ msgstr "Bu anahtar üzerinde ssh:* keşfedilebilir kimlik bilgisi bulunamadı."
+
+#~ msgid "Resident SSH credentials"
+#~ msgstr "Yerleşik SSH kimlik bilgileri"
+
+#~ msgid "Run ssh-add -K for this connected security key"
+#~ msgstr "Bu bağlı güvenlik anahtarı için ssh-add -K çalıştırın"
+
+#~ msgid "SSH agent connected"
+#~ msgstr "SSH aracı bağlandı"
+
+#~ msgid "The PIN is used only for this read-only inspection and is never stored."
+#~ msgstr "PIN yalnızca bu salt okunur denetim için kullanılır ve hiçbir zaman saklanmaz."
+
+#~ msgid "Touch the YubiKey if it flashes."
+#~ msgstr "Yanıp sönüyorsa YubiKey'e dokunun."
+
+#~ msgid "unknown socket"
+#~ msgstr "bilinmez soket"
+
+#~ msgid "{0} identities · {1}"
+#~ msgstr "{0} kimlik · {1}"
 
 #~ msgid "Git Signing"
 #~ msgstr "Git Signing"

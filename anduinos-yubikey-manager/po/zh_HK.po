@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 17:16+0000\n"
+"POT-Creation-Date: 2026-07-30 18:03+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -15,6 +15,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "1 identity is currently available to SSH applications."
+msgstr "目前有 1 個身份可供 SSH 應用程式使用。"
+
+msgid "1 resident SSH key is available from your connected YubiKey."
+msgstr "已連接的 YubiKey 中有 1 個駐留式 SSH 金鑰可用。"
+
+msgid "1 resident SSH key · {0}"
+msgstr "1 個駐留式 SSH 金鑰 · {0}"
 
 msgid "A key must be connected before it can be enrolled."
 msgstr "必須先連接金鑰，才能進行註冊。"
@@ -24,6 +33,9 @@ msgstr "關於"
 
 msgid "Account password"
 msgstr "帳戶密碼"
+
+msgid "Add another SSH key"
+msgstr "新增另一個 SSH 金鑰"
 
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "將此公開金鑰新增至 GitHub 作為簽署金鑰。"
@@ -36,9 +48,6 @@ msgstr "進階選項"
 
 msgid "Algorithm"
 msgstr "演算法"
-
-msgid "All inspected resident credentials from this key are already in the agent"
-msgstr "此金鑰中所有已檢查的駐留憑證都已存在於代理程式中"
 
 msgid "Allow sudo without authentication"
 msgstr "允許無需驗證即可執行 sudo"
@@ -67,8 +76,8 @@ msgstr "AnduinOS 團隊"
 msgid "AnduinOS YubiKey Security Center"
 msgstr "AnduinOS YubiKey 安全中心"
 
-msgid "AnduinOS is safer with a YubiKey"
-msgstr "AnduinOS 配合 YubiKey 更安全可靠"
+msgid "AnduinOS works more securely with a YubiKey"
+msgstr "AnduinOS 配合 YubiKey 使用會更加安全"
 
 msgid "Application"
 msgstr "應用程式"
@@ -85,14 +94,17 @@ msgstr "透過 SSH agent 可用"
 msgid "Available through local key handle"
 msgstr "可透過本地金鑰處理程序取得"
 
+msgid "Buy a YubiKey"
+msgstr "購買 YubiKey"
+
 msgid "Cancel"
 msgstr "取消"
 
 msgid "Checking SSH keys…"
 msgstr "正在檢查 SSH 金鑰…"
 
-msgid "Checking SSH keys… Touch the YubiKey if it flashes."
-msgstr "正在檢查 SSH 金鑰… 如果 YubiKey 閃爍，請觸摸它。"
+msgid "Checking SSH support…"
+msgstr "正在檢查 SSH 支援…"
 
 msgid "Checking connected YubiKeys"
 msgstr "正在檢查已連接的 YubiKey"
@@ -145,11 +157,11 @@ msgstr "已為 {0} 設定 · 未連接"
 msgid "Connect a FIDO security key first"
 msgstr "請先連接 FIDO 安全金鑰"
 
+msgid "Connect a YubiKey"
+msgstr "連接 YubiKey"
+
 msgid "Connect a YubiKey to get started"
 msgstr "連接 YubiKey 以開始使用"
-
-msgid "Connect exactly one FIDO security key to choose an unambiguous source"
-msgstr "請連接且僅連接一個 FIDO 安全金鑰以選擇明確的來源"
 
 msgid "Connect your YubiKey"
 msgstr "連接你的 YubiKey"
@@ -183,6 +195,9 @@ msgstr "無法建立 {0}：{1}"
 
 msgid "Could not export the public key: {0}"
 msgstr "無法匯出公開金鑰：{0}"
+
+msgid "Could not find security keys"
+msgstr "找不到安全金鑰"
 
 msgid "Could not flush the temporary public key: {0}"
 msgstr "無法清除暫存公開金鑰：{0}"
@@ -241,6 +256,9 @@ msgstr "刪除結果未知"
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr "已停用 · sudo 必須使用 YubiKey 或帳戶密碼進行驗證"
 
+msgid "Discover SSH keys on your YubiKeys"
+msgstr "探索 YubiKey 上的 SSH 金鑰"
+
 msgid "Display label must be at most 200 bytes and contain no control characters."
 msgstr "顯示標籤最多可包含 200 個位元組，且不得包含控制字元。"
 
@@ -280,14 +298,14 @@ msgstr "已註冊 · 在繞過 sudo 驗證時處於非活動狀態"
 msgid "Enrollment safety"
 msgstr "註冊安全性"
 
+msgid "Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
+msgstr "輸入 {0} 的 FIDO PIN。如果閃爍請觸碰它。PIN 絕不會儲存。"
+
 msgid "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 msgstr "輸入 FIDO PIN，然後在 YubiKey 閃爍時觸碰已選取的 YubiKey。不會建立任何提交。"
 
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "輸入 FIDO PIN。若 YubiKey 閃爍，請觸碰它。"
-
-msgid "Enter the YubiKey FIDO PIN"
-msgstr "輸入 YubiKey FIDO PIN"
 
 msgid "Enter the YubiKey FIDO PIN to test this local key handle."
 msgstr "輸入 YubiKey FIDO PIN 以測試此本地金鑰句柄。"
@@ -309,6 +327,9 @@ msgstr "FIDO 裝置偵測不可用"
 
 msgid "FIDO security key"
 msgstr "FIDO 安全金鑰"
+
+msgid "Finish inspecting your YubiKeys"
+msgstr "完成檢查 YubiKey"
 
 msgid "Firmware {0}"
 msgstr "韌體 {0}"
@@ -341,17 +362,38 @@ msgstr "插入 YubiKey"
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "插入 YubiKey，然後按一下「重新整理」。"
 
+msgid "Insert a YubiKey. This page will detect it when you refresh."
+msgstr "插入 YubiKey。重新整理此頁面時將偵測到它。"
+
 msgid "Inspect"
 msgstr "檢查"
 
-msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
-msgstr "檢查、載入、匯出、測試、從代理程式移除或永久刪除駐留 SSH 憑證。"
+msgid "Inspect YubiKey"
+msgstr "檢查 YubiKey"
 
-msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
-msgstr "正在檢查駐留 SSH 憑證… 如果 YubiKey 閃爍，請觸碰它。"
+msgid "Inspect YubiKey {0} of {1}"
+msgstr "檢查第 {0} 個 YubiKey，共 {1} 個"
+
+msgid "Inspect again"
+msgstr "再次檢查"
+
+msgid "Inspect all keys"
+msgstr "檢查所有金鑰"
+
+msgid "Inspect this YubiKey"
+msgstr "檢查此 YubiKey"
+
+msgid "Inspected"
+msgstr "已檢查"
+
+msgid "Inspection needs attention · {0}"
+msgstr "需要關注 · {0}"
 
 msgid "Invalid FIDO device path."
 msgstr "FIDO 裝置路徑無效。"
+
+msgid "Keys stored on your YubiKeys"
+msgstr "儲存在您 YubiKey 上的金鑰"
 
 msgid "Load"
 msgstr "載入"
@@ -359,8 +401,8 @@ msgstr "載入"
 msgid "Load SSH keys"
 msgstr "載入 SSH 金鑰"
 
-msgid "Load into agent"
-msgstr "載入至代理程式"
+msgid "Load all"
+msgstr "載入全部"
 
 msgid "Load keys"
 msgstr "載入金鑰"
@@ -368,8 +410,14 @@ msgstr "載入金鑰"
 msgid "Load resident SSH keys"
 msgstr "載入駐留 SSH 金鑰"
 
+msgid "Load this YubiKey's resident SSH keys into the agent"
+msgstr "將此 YubiKey 的駐留式 SSH 金鑰載入代理程式"
+
 msgid "Load this resident key into the SSH agent before signing"
 msgstr "在簽署前將此駐留金鑰載入 SSH agent"
+
+msgid "Loaded"
+msgstr "已載入"
 
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "正在載入 SSH 金鑰…若 YubiKey 閃爍，請觸碰它。"
@@ -380,6 +428,12 @@ msgstr "本機金鑰句柄路徑"
 msgid "Local key label"
 msgstr "本機金鑰標籤"
 
+msgid "Looking for your SSH agent and connected YubiKeys."
+msgstr "正在尋找您的 SSH 代理程式及已連接的 YubiKey。"
+
+msgid "Needs attention"
+msgstr "需要關注"
+
 msgid "New hardware-backed SSH key"
 msgstr "新硬體支援的 SSH 金鑰"
 
@@ -389,23 +443,38 @@ msgstr "未偵測到 FIDO 安全金鑰"
 msgid "No SSH agent was detected"
 msgstr "未偵測到 SSH 代理程式"
 
+msgid "No YubiKey connected"
+msgstr "未連接 YubiKey"
+
 msgid "No hardware serial"
 msgstr "無硬體序號"
 
-msgid "No resident SSH credentials"
-msgstr "無駐留 SSH 憑證"
+msgid "No resident SSH keys"
+msgstr "沒有駐留式 SSH 金鑰"
 
 msgid "No resident SSH keys found"
 msgstr "找不到駐留 SSH 金鑰"
 
+msgid "No resident SSH keys found · {0}"
+msgstr "找不到駐留式 SSH 金鑰 · {0}"
+
+msgid "No resident SSH keys were found on the connected YubiKeys."
+msgstr "在已連接的 YubiKey 上找不到駐留式 SSH 金鑰。"
+
 msgid "No signing"
 msgstr "不簽署"
 
-msgid "No ssh:* discoverable credentials were found on this key."
-msgstr "在此金鑰上未找到可發現的 ssh:* 憑證。"
-
 msgid "Not configured"
 msgstr "未設定"
+
+msgid "Not inspected"
+msgstr "未檢查"
+
+msgid "Not inspected yet · {0}"
+msgstr "尚未檢查 · {0}"
+
+msgid "Open the official Yubico Store"
+msgstr "開啟官方 Yubico 商店"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH 無法載入駐留金鑰。SSH agent 中沒有新載入的身份。"
@@ -455,8 +524,17 @@ msgstr "保護身份驗證及提交簽署"
 msgid "Protection for {0}"
 msgstr "{0} 的保護"
 
+msgid "Read the resident SSH keys already stored on your YubiKeys. You will enter each key's FIDO PIN and may need to touch it."
+msgstr "讀取已儲存在您 YubiKey 上的駐留式 SSH 金鑰。您將輸入每個金鑰的 FIDO PIN，並可能需要觸碰它。"
+
+msgid "Reading SSH keys from {0}… Touch it if it flashes."
+msgstr "正在從 {0} 讀取 SSH 金鑰… 如果閃爍請觸碰它。"
+
 msgid "Reading account security settings…"
 msgstr "正在讀取帳戶安全設定…"
+
+msgid "Ready"
+msgstr "就緒"
 
 msgid "Ready to inspect"
 msgstr "準備好進行檢查"
@@ -479,9 +557,6 @@ msgstr "每次簽署都需驗證"
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "此金鑰每次簽署時都需要 FIDO PIN"
 
-msgid "Resident SSH credentials"
-msgstr "駐留 SSH 憑證"
-
 msgid "Resident SSH key created"
 msgstr "已建立駐留 SSH 金鑰"
 
@@ -497,17 +572,14 @@ msgstr "駐留使用者名稱"
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr "駐留使用者名稱必須包含 1–64 位元組，且不得包含控制字元。"
 
-msgid "Run ssh-add -K for this connected security key"
-msgstr "對此已連接的安全金鑰執行 ssh-add -K"
-
 msgid "SSH & Git"
 msgstr "SSH 及 Git"
 
 msgid "SSH agent"
 msgstr "SSH agent"
 
-msgid "SSH agent connected"
-msgstr "SSH agent 已連接"
+msgid "SSH agent is ready"
+msgstr "SSH 代理程式已就緒"
 
 msgid "SSH agent unavailable"
 msgstr "SSH agent 不可用"
@@ -517,6 +589,9 @@ msgstr "SSH 提交簽署"
 
 msgid "SSH key actions"
 msgstr "SSH 金鑰操作"
+
+msgid "SSH key for {0}"
+msgstr "{0} 的 SSH 金鑰"
 
 msgid "SSH keys"
 msgstr "SSH 金鑰"
@@ -565,9 +640,6 @@ msgstr "PIN 碼會直接傳送給 ssh-add，且不會被儲存。"
 
 msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
 msgstr "PIN 碼會透過私人管道傳送至 OpenSSH。它絕不會被儲存或放在命令參數中。"
-
-msgid "The PIN is used only for this read-only inspection and is never stored."
-msgstr "PIN 碼僅用於此次唯讀檢查，且不會被儲存。"
 
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "SSH agent 已成功使用此金鑰簽署並驗證資料。"
@@ -700,6 +772,9 @@ msgstr "這些金鑰已獲此帳戶信任，但目前未連接。"
 msgid "This PIN authorizes permanent deletion of the exact credential shown in the previous step. It is never stored."
 msgstr "此 PIN 用於授權永久刪除上一步顯示的確切憑證。該 PIN 不會被儲存。"
 
+msgid "This YubiKey has no discoverable ssh:* credentials."
+msgstr "此 YubiKey 沒有可發現的 ssh:* 憑證。"
+
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "這不是受支援的 OpenSSH 安全金鑰公開金鑰。"
 
@@ -711,9 +786,6 @@ msgstr "此設定僅適用於目前使用者。"
 
 msgid "This will only take a moment."
 msgstr "這只需片刻時間。"
-
-msgid "Touch the YubiKey if it flashes."
-msgstr "如果 YubiKey 閃爍，請觸摸它。"
 
 msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr "依提示觸控 YubiKey。正在將駐留金鑰載入 SSH agent…"
@@ -741,6 +813,9 @@ msgstr "再試一次"
 
 msgid "Type {0} to confirm"
 msgstr "輸入 {0} 以確認"
+
+msgid "Unavailable"
+msgstr "不可用"
 
 msgid "Unknown authentication purpose."
 msgstr "未知的驗證目的。"
@@ -778,11 +853,23 @@ msgstr "使用 YubiKey 解鎖 sudo"
 msgid "Verifying and permanently deleting the selected resident credential. Do not unplug the YubiKey…"
 msgstr "正在驗證並永久刪除選定的駐留憑證。請勿拔除 YubiKey…"
 
+msgid "Waiting"
+msgstr "等待中"
+
 msgid "Waiting for a configured YubiKey"
 msgstr "等待已設定的 YubiKey"
 
 msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
 msgstr "您現在可以註冊金鑰，但在啟用無密碼存取時，sudo 會繞過 PAM。"
+
+msgid "Your YubiKeys are inspected"
+msgstr "您的 YubiKey 已完成檢查"
+
+msgid "Your hardware-backed SSH keys"
+msgstr "您由硬體支援的 SSH 金鑰"
+
+msgid "Your resident SSH keys stay on the security key. Insert it to view and use them."
+msgstr "您的駐留式 SSH 金鑰保留在安全金鑰上。插入它即可查看和使用它們。"
 
 msgid "Your security settings are ready. Connect a configured YubiKey when you need it."
 msgstr "你的安全設定已就緒。需要時請連接已設定的 YubiKey。"
@@ -838,9 +925,6 @@ msgstr "sudo 驗證策略"
 msgid "unknown"
 msgstr "未知"
 
-msgid "unknown socket"
-msgstr "未知 socket"
-
 msgid "user"
 msgstr "用戶"
 
@@ -856,8 +940,8 @@ msgstr "{0} 以 {1} 結束"
 msgid "{0} failed: {1}"
 msgstr "{0} 失敗：{1}"
 
-msgid "{0} identities · {1}"
-msgstr "{0} 個身分 · {1}"
+msgid "{0} identities are currently available to SSH applications."
+msgstr "目前有 {0} 個身份可供 SSH 應用程式使用。"
 
 msgid "{0} is enabled for this YubiKey"
 msgstr "此 YubiKey 已啟用 {0}"
@@ -871,14 +955,74 @@ msgstr "已向代理新增 {0} 個新 SSH 身分。"
 msgid "{0} new SSH identity was added to the agent."
 msgstr "已向代理新增 {0} 個新 SSH 身分。"
 
+msgid "{0} resident SSH keys are available from your connected YubiKeys."
+msgstr "已連接的 YubiKey 中有 {0} 個駐留式 SSH 金鑰可用。"
+
+msgid "{0} resident SSH keys · {1}"
+msgstr "{0} 個駐留式 SSH 金鑰 · {1}"
+
 msgid "{0} resident credentials inspected"
 msgstr "已檢查 {0} 個駐留憑證"
+
+msgid "{0} to inspect"
+msgstr "待檢查項目：{0}"
 
 msgid "{0} · no hardware serial"
 msgstr "{0} · 無硬體序列號"
 
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
+
+#~ msgid "All inspected resident credentials from this key are already in the agent"
+#~ msgstr "此金鑰中所有已檢查的駐留憑證都已存在於代理程式中"
+
+#~ msgid "AnduinOS is safer with a YubiKey"
+#~ msgstr "AnduinOS 配合 YubiKey 更安全可靠"
+
+#~ msgid "Checking SSH keys… Touch the YubiKey if it flashes."
+#~ msgstr "正在檢查 SSH 金鑰… 如果 YubiKey 閃爍，請觸摸它。"
+
+#~ msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+#~ msgstr "請連接且僅連接一個 FIDO 安全金鑰以選擇明確的來源"
+
+#~ msgid "Enter the YubiKey FIDO PIN"
+#~ msgstr "輸入 YubiKey FIDO PIN"
+
+#~ msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
+#~ msgstr "檢查、載入、匯出、測試、從代理程式移除或永久刪除駐留 SSH 憑證。"
+
+#~ msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
+#~ msgstr "正在檢查駐留 SSH 憑證… 如果 YubiKey 閃爍，請觸碰它。"
+
+#~ msgid "Load into agent"
+#~ msgstr "載入至代理程式"
+
+#~ msgid "No resident SSH credentials"
+#~ msgstr "無駐留 SSH 憑證"
+
+#~ msgid "No ssh:* discoverable credentials were found on this key."
+#~ msgstr "在此金鑰上未找到可發現的 ssh:* 憑證。"
+
+#~ msgid "Resident SSH credentials"
+#~ msgstr "駐留 SSH 憑證"
+
+#~ msgid "Run ssh-add -K for this connected security key"
+#~ msgstr "對此已連接的安全金鑰執行 ssh-add -K"
+
+#~ msgid "SSH agent connected"
+#~ msgstr "SSH agent 已連接"
+
+#~ msgid "The PIN is used only for this read-only inspection and is never stored."
+#~ msgstr "PIN 碼僅用於此次唯讀檢查，且不會被儲存。"
+
+#~ msgid "Touch the YubiKey if it flashes."
+#~ msgstr "如果 YubiKey 閃爍，請觸摸它。"
+
+#~ msgid "unknown socket"
+#~ msgstr "未知 socket"
+
+#~ msgid "{0} identities · {1}"
+#~ msgstr "{0} 個身分 · {1}"
 
 #~ msgid "Git Signing"
 #~ msgstr "Git 簽署"

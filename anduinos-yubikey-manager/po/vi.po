@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 17:16+0000\n"
+"POT-Creation-Date: 2026-07-30 18:03+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,6 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgid "1 identity is currently available to SSH applications."
+msgstr "1 danh tính hiện có sẵn cho các ứng dụng SSH."
+
+msgid "1 resident SSH key is available from your connected YubiKey."
+msgstr "1 khóa SSH cư trú có sẵn từ YubiKey của bạn đã kết nối."
+
+msgid "1 resident SSH key · {0}"
+msgstr "1 khóa SSH cư trú · {0}"
+
 msgid "A key must be connected before it can be enrolled."
 msgstr "Phải kết nối khóa trước khi có thể đăng ký."
 
@@ -25,6 +34,9 @@ msgstr "Giới thiệu"
 
 msgid "Account password"
 msgstr "Mật khẩu tài khoản"
+
+msgid "Add another SSH key"
+msgstr "Thêm một khóa SSH khác"
 
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "Thêm khóa công khai này vào GitHub dưới dạng Khóa Ký Tên."
@@ -37,9 +49,6 @@ msgstr "Tùy chọn nâng cao"
 
 msgid "Algorithm"
 msgstr "Giải thuật"
-
-msgid "All inspected resident credentials from this key are already in the agent"
-msgstr "Tất cả các thông tin xác thực cư dân đã được kiểm tra từ khóa này đều đã có trong tác nhân"
 
 msgid "Allow sudo without authentication"
 msgstr "Cho phép sudo mà không cần xác thực"
@@ -68,8 +77,8 @@ msgstr "AnduinOS Team"
 msgid "AnduinOS YubiKey Security Center"
 msgstr "Tâm bảo mật YubiKey của AnduinOS"
 
-msgid "AnduinOS is safer with a YubiKey"
-msgstr "AnduinOS an toàn hơn với YubiKey"
+msgid "AnduinOS works more securely with a YubiKey"
+msgstr "AnduinOS hoạt động an toàn hơn với YubiKey"
 
 msgid "Application"
 msgstr "Application"
@@ -86,14 +95,17 @@ msgstr "Available through SSH agent"
 msgid "Available through local key handle"
 msgstr "Có sẵn thông qua local key handle"
 
+msgid "Buy a YubiKey"
+msgstr "Mua YubiKey"
+
 msgid "Cancel"
 msgstr "Hủy bỏ"
 
 msgid "Checking SSH keys…"
 msgstr "Đang kiểm tra khóa SSH…"
 
-msgid "Checking SSH keys… Touch the YubiKey if it flashes."
-msgstr "Đang kiểm tra khóa SSH… Nhấn vào YubiKey nếu nó nhấp nháy."
+msgid "Checking SSH support…"
+msgstr "Đang kiểm tra hỗ trợ SSH…"
 
 msgid "Checking connected YubiKeys"
 msgstr "Đang kiểm tra các YubiKey đã kết nối"
@@ -146,11 +158,11 @@ msgstr "Đã cấu hình cho {0} · Chưa kết nối"
 msgid "Connect a FIDO security key first"
 msgstr "Kết nối một khóa bảo mật FIDO trước"
 
+msgid "Connect a YubiKey"
+msgstr "Kết nối YubiKey"
+
 msgid "Connect a YubiKey to get started"
 msgstr "Kết nối một YubiKey để bắt đầu"
-
-msgid "Connect exactly one FIDO security key to choose an unambiguous source"
-msgstr "Kết nối chính xác một khóa bảo mật FIDO để chọn nguồn không mơ hồ"
 
 msgid "Connect your YubiKey"
 msgstr "Kết nối YubiKey của bạn"
@@ -184,6 +196,9 @@ msgstr "Không thể tạo {0}: {1}"
 
 msgid "Could not export the public key: {0}"
 msgstr "Không thể xuất khóa công khai: {0}"
+
+msgid "Could not find security keys"
+msgstr "Không tìm thấy khóa bảo mật"
 
 msgid "Could not flush the temporary public key: {0}"
 msgstr "Không thể xóa khóa công khai tạm thời: {0}"
@@ -242,6 +257,9 @@ msgstr "Kết quả xóa không xác định"
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr "Đã tắt · sudo phải xác thực bằng YubiKey hoặc mật khẩu tài khoản"
 
+msgid "Discover SSH keys on your YubiKeys"
+msgstr "Khám phá các khóa SSH trên YubiKey của bạn"
+
 msgid "Display label must be at most 200 bytes and contain no control characters."
 msgstr "Nhãn hiển thị phải có tối đa 200 byte và không chứa ký tự điều khiển."
 
@@ -281,14 +299,14 @@ msgstr "Đã đăng ký · không hoạt động khi bỏ qua xác thực sudo"
 msgid "Enrollment safety"
 msgstr "An toàn khi đăng ký"
 
+msgid "Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
+msgstr "Nhập mã PIN FIDO cho {0}. Chạm vào nó nếu nó nhấp nháy. Mã PIN không bao giờ được lưu trữ."
+
 msgid "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 msgstr "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "Nhập PIN FIDO. Chạm vào YubiKey nếu nó nhấp nháy."
-
-msgid "Enter the YubiKey FIDO PIN"
-msgstr "Nhập mã PIN FIDO của YubiKey"
 
 msgid "Enter the YubiKey FIDO PIN to test this local key handle."
 msgstr "Enter the YubiKey FIDO PIN to test this local key handle."
@@ -310,6 +328,9 @@ msgstr "Tính năng phát hiện thiết bị FIDO không khả dụng"
 
 msgid "FIDO security key"
 msgstr "Chìa khóa bảo mật FIDO"
+
+msgid "Finish inspecting your YubiKeys"
+msgstr "Hoàn thành việc kiểm tra YubiKey của bạn"
 
 msgid "Firmware {0}"
 msgstr "Micro phần cứng {0}"
@@ -342,17 +363,38 @@ msgstr "Cắm một chiếc YubiKey"
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "Cắm một chiếc YubiKey, sau đó nhấn Làm mới."
 
+msgid "Insert a YubiKey. This page will detect it when you refresh."
+msgstr "Cắm một YubiKey. Trang này sẽ phát hiện khi bạn làm mới."
+
 msgid "Inspect"
 msgstr "Kiểm tra"
 
-msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
-msgstr "Thanh tra, tải, xuất, kiểm thử, gỡ bỏ khỏi tác nhân hoặc xóa vĩnh viễn thông tin đăng nhập SSH cư trú."
+msgid "Inspect YubiKey"
+msgstr "Kiểm tra YubiKey"
 
-msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
-msgstr "Đang kiểm tra thông tin xác thực SSH của cư dân... Chạm vào YubiKey nếu nó nhấp nháy."
+msgid "Inspect YubiKey {0} of {1}"
+msgstr "Kiểm tra YubiKey {0} trong số {1}"
+
+msgid "Inspect again"
+msgstr "Kiểm tra lại"
+
+msgid "Inspect all keys"
+msgstr "Kiểm tra tất cả các khóa"
+
+msgid "Inspect this YubiKey"
+msgstr "Kiểm tra YubiKey này"
+
+msgid "Inspected"
+msgstr "Đã kiểm tra"
+
+msgid "Inspection needs attention · {0}"
+msgstr "Việc kiểm tra cần chú ý · {0}"
 
 msgid "Invalid FIDO device path."
 msgstr "Đường dẫn thiết bị FIDO không hợp lệ."
+
+msgid "Keys stored on your YubiKeys"
+msgstr "Các khóa được lưu trữ trên YubiKey của bạn"
 
 msgid "Load"
 msgstr "Tải"
@@ -360,8 +402,8 @@ msgstr "Tải"
 msgid "Load SSH keys"
 msgstr "Tải khóa SSH"
 
-msgid "Load into agent"
-msgstr "Tải vào tác nhân"
+msgid "Load all"
+msgstr "Tải tất cả"
 
 msgid "Load keys"
 msgstr "Tải khóa"
@@ -369,8 +411,14 @@ msgstr "Tải khóa"
 msgid "Load resident SSH keys"
 msgstr "Tải khóa SSH cư trú"
 
+msgid "Load this YubiKey's resident SSH keys into the agent"
+msgstr "Tải các khóa SSH cư trú của YubiKey này vào tác nhân"
+
 msgid "Load this resident key into the SSH agent before signing"
 msgstr "Tải khóa resident này vào SSH agent trước khi ký"
+
+msgid "Loaded"
+msgstr "Đã tải"
 
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "Đang tải khóa SSH… Chạm vào YubiKey nếu nó nhấp nháy."
@@ -381,6 +429,12 @@ msgstr "Đường dẫn xử lý khóa cục bộ"
 msgid "Local key label"
 msgstr "Nhãn khóa cục bộ"
 
+msgid "Looking for your SSH agent and connected YubiKeys."
+msgstr "Đang tìm kiếm tác nhân SSH và YubiKey đã kết nối của bạn."
+
+msgid "Needs attention"
+msgstr "Cần chú ý"
+
 msgid "New hardware-backed SSH key"
 msgstr "Khoá SSH được hỗ trợ bởi phần cứng mới"
 
@@ -390,23 +444,38 @@ msgstr "Không phát hiện thấy chìa khóa bảo mật FIDO"
 msgid "No SSH agent was detected"
 msgstr "Không phát hiện thấy tác nhân SSH"
 
+msgid "No YubiKey connected"
+msgstr "Chưa kết nối YubiKey"
+
 msgid "No hardware serial"
 msgstr "Không có số sê-ri phần cứng"
 
-msgid "No resident SSH credentials"
-msgstr "Ko có thông tin xác thực SSH cư trú"
+msgid "No resident SSH keys"
+msgstr "Không có khóa SSH cư trú"
 
 msgid "No resident SSH keys found"
 msgstr "Không tìm thấy khóa SSH resident nào"
 
+msgid "No resident SSH keys found · {0}"
+msgstr "Không tìm thấy khóa SSH cư trú · {0}"
+
+msgid "No resident SSH keys were found on the connected YubiKeys."
+msgstr "Chưa tìm thấy khóa SSH cư trú trên các YubiKey đã kết nối."
+
 msgid "No signing"
 msgstr "Không ký"
 
-msgid "No ssh:* discoverable credentials were found on this key."
-msgstr "Chưa tìm thấy thông tin xác thực có thể phát hiện ssh:* nào trên khóa này."
-
 msgid "Not configured"
 msgstr "Chưa cấu hình"
+
+msgid "Not inspected"
+msgstr "Chưa kiểm tra"
+
+msgid "Not inspected yet · {0}"
+msgstr "Chưa được kiểm tra · {0}"
+
+msgid "Open the official Yubico Store"
+msgstr "Mở cửa hàng chính thức của Yubico"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH không thể tải các khóa cư trú. Tác nhân SSH không chứa danh tính nào vừa được tải."
@@ -456,8 +525,17 @@ msgstr "Bảo vệ xác thực và ký commit"
 msgid "Protection for {0}"
 msgstr "Bảo vệ cho {0}"
 
+msgid "Read the resident SSH keys already stored on your YubiKeys. You will enter each key's FIDO PIN and may need to touch it."
+msgstr "Đọc các khóa SSH cư trú đã được lưu trữ trên YubiKey của bạn. Bạn sẽ nhập mã PIN FIDO của mỗi khóa và có thể cần chạm vào nó."
+
+msgid "Reading SSH keys from {0}… Touch it if it flashes."
+msgstr "Đang đọc khóa SSH từ {0}… Chạm vào nó nếu nó nhấp nháy."
+
 msgid "Reading account security settings…"
 msgstr "Đang đọc cài đặt bảo mật tài khoản…"
+
+msgid "Ready"
+msgstr "Sẵn sàng"
 
 msgid "Ready to inspect"
 msgstr "Sẵn sàng để kiểm tra"
@@ -480,9 +558,6 @@ msgstr "Yêu cầu xác minh cho mọi chữ ký"
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "Yêu cầu mã PIN FIDO mỗi lần khóa này ký"
 
-msgid "Resident SSH credentials"
-msgstr "Thông tin xác thực SSH cư trú"
-
 msgid "Resident SSH key created"
 msgstr "Đã tạo khóa SSH cư trú"
 
@@ -498,17 +573,14 @@ msgstr "Tên người dùng cư trú"
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr "Tên người dùng cư trú phải chứa 1–64 byte và không có ký tự điều khiển."
 
-msgid "Run ssh-add -K for this connected security key"
-msgstr "Chạy ssh-add -K cho khóa bảo mật đã kết nối này"
-
 msgid "SSH & Git"
 msgstr "SSH & Git"
 
 msgid "SSH agent"
 msgstr "Tác nhân SSH"
 
-msgid "SSH agent connected"
-msgstr "Tác nhân SSH đã kết nối"
+msgid "SSH agent is ready"
+msgstr "Tác nhân SSH đã sẵn sàng"
 
 msgid "SSH agent unavailable"
 msgstr "Tác nhân SSH không khả dụng"
@@ -518,6 +590,9 @@ msgstr "Ký commit SSH"
 
 msgid "SSH key actions"
 msgstr "Hành động trên khóa SSH"
+
+msgid "SSH key for {0}"
+msgstr "Khoá SSH cho {0}"
 
 msgid "SSH keys"
 msgstr "Khóa SSH"
@@ -566,9 +641,6 @@ msgstr "PIN được gửi trực tiếp đến ssh-add và không bao giờ đ�
 
 msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
 msgstr "PIN được gửi qua một đường ống riêng tư đến OpenSSH. Nó không bao giờ được lưu trữ hoặc đặt trong các đối số lệnh."
-
-msgid "The PIN is used only for this read-only inspection and is never stored."
-msgstr "PIN chỉ được sử dụng cho việc kiểm tra chỉ đọc này và không bao giờ được lưu trữ."
 
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "Tác nhân SSH đã ký và xác minh dữ liệu với khóa này thành công."
@@ -701,6 +773,9 @@ msgstr "Các khóa này được tài khoản tin cậy nhưng hiện chưa kế
 msgid "This PIN authorizes permanent deletion of the exact credential shown in the previous step. It is never stored."
 msgstr "PIN này cho phép xóa vĩnh viễn thông tin đăng nhập chính xác như hiển thị trong bước trước. Nó không bao giờ được lưu trữ."
 
+msgid "This YubiKey has no discoverable ssh:* credentials."
+msgstr "YubiKey này không có thông tin đăng nhập ssh:* nào có thể phát hiện được."
+
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "Đây không phải là khóa công khai OpenSSH security-key được hỗ trợ."
 
@@ -712,9 +787,6 @@ msgstr "Cài đặt này chỉ áp dụng cho người dùng hiện tại."
 
 msgid "This will only take a moment."
 msgstr "Điều này chỉ mất một chút thời gian."
-
-msgid "Touch the YubiKey if it flashes."
-msgstr "Nhấn vào YubiKey nếu nó nhấp nháy."
 
 msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr "Chạm vào YubiKey khi được yêu cầu. Đang tải các khóa cư trú vào tác nhân SSH…"
@@ -742,6 +814,9 @@ msgstr "Thử lại"
 
 msgid "Type {0} to confirm"
 msgstr "Gõ {0} để xác nhận"
+
+msgid "Unavailable"
+msgstr "Không khả dụng"
 
 msgid "Unknown authentication purpose."
 msgstr "Mục đích xác thực không xác định."
@@ -779,11 +854,23 @@ msgstr "Sử dụng YubiKey để mở khóa sudo"
 msgid "Verifying and permanently deleting the selected resident credential. Do not unplug the YubiKey…"
 msgstr "Đang xác minh và xóa vĩnh viễn thông tin đăng nhập cư trú được chọn. Không rút YubiKey…"
 
+msgid "Waiting"
+msgstr "Đang chờ"
+
 msgid "Waiting for a configured YubiKey"
 msgstr "Đang chờ YubiKey đã cấu hình"
 
 msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
 msgstr "Bạn có thể đăng ký khóa ngay bây giờ, nhưng sudo sẽ bỏ qua PAM khi truy cập không mật khẩu được bật."
+
+msgid "Your YubiKeys are inspected"
+msgstr "YubiKey của bạn đã được kiểm tra"
+
+msgid "Your hardware-backed SSH keys"
+msgstr "Các khóa SSH dựa trên phần cứng của bạn"
+
+msgid "Your resident SSH keys stay on the security key. Insert it to view and use them."
+msgstr "Các khóa SSH cư trú của bạn vẫn nằm trên khóa bảo mật. Cắm nó để xem và sử dụng chúng."
 
 msgid "Your security settings are ready. Connect a configured YubiKey when you need it."
 msgstr "Cài đặt bảo mật của bạn đã sẵn sàng. Kết nối YubiKey đã cấu hình khi cần."
@@ -839,9 +926,6 @@ msgstr "chính sách xác thực sudo"
 msgid "unknown"
 msgstr "không xác định"
 
-msgid "unknown socket"
-msgstr "socket không xác định"
-
 msgid "user"
 msgstr "nhà phát triển"
 
@@ -857,8 +941,8 @@ msgstr "{0} đã thoát với {1}"
 msgid "{0} failed: {1}"
 msgstr "{0} thất bại: {1}"
 
-msgid "{0} identities · {1}"
-msgstr "{0} danh tính · {1}"
+msgid "{0} identities are currently available to SSH applications."
+msgstr "{0} danh tính hiện có sẵn cho các ứng dụng SSH."
 
 msgid "{0} is enabled for this YubiKey"
 msgstr "{0} được bật cho YubiKey này"
@@ -872,14 +956,74 @@ msgstr "Đã thêm {0} danh tính SSH mới vào tác nhân."
 msgid "{0} new SSH identity was added to the agent."
 msgstr "Đã thêm {0} danh tính SSH mới vào tác nhân."
 
+msgid "{0} resident SSH keys are available from your connected YubiKeys."
+msgstr "{0} khóa SSH cư trú có sẵn từ YubiKey đã kết nối của bạn."
+
+msgid "{0} resident SSH keys · {1}"
+msgstr "{0} khóa SSH cư trú · {1}"
+
 msgid "{0} resident credentials inspected"
 msgstr "Đã kiểm tra {0} thông tin xác thực cư trú"
+
+msgid "{0} to inspect"
+msgstr "{0} để kiểm tra"
 
 msgid "{0} · no hardware serial"
 msgstr "{0} · không có số sê-ri phần cứng"
 
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
+
+#~ msgid "All inspected resident credentials from this key are already in the agent"
+#~ msgstr "Tất cả các thông tin xác thực cư dân đã được kiểm tra từ khóa này đều đã có trong tác nhân"
+
+#~ msgid "AnduinOS is safer with a YubiKey"
+#~ msgstr "AnduinOS an toàn hơn với YubiKey"
+
+#~ msgid "Checking SSH keys… Touch the YubiKey if it flashes."
+#~ msgstr "Đang kiểm tra khóa SSH… Nhấn vào YubiKey nếu nó nhấp nháy."
+
+#~ msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+#~ msgstr "Kết nối chính xác một khóa bảo mật FIDO để chọn nguồn không mơ hồ"
+
+#~ msgid "Enter the YubiKey FIDO PIN"
+#~ msgstr "Nhập mã PIN FIDO của YubiKey"
+
+#~ msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
+#~ msgstr "Thanh tra, tải, xuất, kiểm thử, gỡ bỏ khỏi tác nhân hoặc xóa vĩnh viễn thông tin đăng nhập SSH cư trú."
+
+#~ msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
+#~ msgstr "Đang kiểm tra thông tin xác thực SSH của cư dân... Chạm vào YubiKey nếu nó nhấp nháy."
+
+#~ msgid "Load into agent"
+#~ msgstr "Tải vào tác nhân"
+
+#~ msgid "No resident SSH credentials"
+#~ msgstr "Ko có thông tin xác thực SSH cư trú"
+
+#~ msgid "No ssh:* discoverable credentials were found on this key."
+#~ msgstr "Chưa tìm thấy thông tin xác thực có thể phát hiện ssh:* nào trên khóa này."
+
+#~ msgid "Resident SSH credentials"
+#~ msgstr "Thông tin xác thực SSH cư trú"
+
+#~ msgid "Run ssh-add -K for this connected security key"
+#~ msgstr "Chạy ssh-add -K cho khóa bảo mật đã kết nối này"
+
+#~ msgid "SSH agent connected"
+#~ msgstr "Tác nhân SSH đã kết nối"
+
+#~ msgid "The PIN is used only for this read-only inspection and is never stored."
+#~ msgstr "PIN chỉ được sử dụng cho việc kiểm tra chỉ đọc này và không bao giờ được lưu trữ."
+
+#~ msgid "Touch the YubiKey if it flashes."
+#~ msgstr "Nhấn vào YubiKey nếu nó nhấp nháy."
+
+#~ msgid "unknown socket"
+#~ msgstr "socket không xác định"
+
+#~ msgid "{0} identities · {1}"
+#~ msgstr "{0} danh tính · {1}"
 
 #~ msgid "Git Signing"
 #~ msgstr "Git Signing"

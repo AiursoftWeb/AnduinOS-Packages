@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-yubikey-manager</PackageName>
-    <PackageVersion>0.3.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.3.1-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS YubiKey Security Center — protect sign-in, sudo, SSH, and Git with security keys</PackageDescription>
     <Section>admin</Section>
@@ -46,6 +46,7 @@
     <IncludeFile Include="data/security-key-symbolic.svg" Target="/usr/share/icons/hicolor/symbolic/apps/com.anduinos.yubikeymanager-security-key-symbolic.svg" />
     <IncludeFile Include="data/security-key-onboarding.svg" Target="/usr/share/anduinos-yubikey-manager/illustrations/security-key-onboarding.svg" />
     <IncludeFile Include="data/security-key-connected.svg" Target="/usr/share/anduinos-yubikey-manager/illustrations/security-key-connected.svg" />
+    <IncludeFile Include="data/yubikey-device.svg" Target="/usr/share/anduinos-yubikey-manager/illustrations/yubikey-device.svg" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
   </ItemGroup>
 </Project>

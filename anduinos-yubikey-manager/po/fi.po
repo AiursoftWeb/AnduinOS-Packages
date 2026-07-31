@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 17:16+0000\n"
+"POT-Creation-Date: 2026-07-30 18:03+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,6 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "1 identity is currently available to SSH applications."
+msgstr "1 tunniste on tällä hetkellä saatavilla SSH-sovelluksille."
+
+msgid "1 resident SSH key is available from your connected YubiKey."
+msgstr "1 asukas-SSH-avain on saatavilla yhdistetystä YubiKey-välineestäsi."
+
+msgid "1 resident SSH key · {0}"
+msgstr "1 asukas-SSH-avain · {0}"
+
 msgid "A key must be connected before it can be enrolled."
 msgstr "Avain on liitettävä ennen kuin se voidaan rekisteröidä."
 
@@ -25,6 +34,9 @@ msgstr "Tietoja"
 
 msgid "Account password"
 msgstr "Tilin salasana"
+
+msgid "Add another SSH key"
+msgstr "Lisää toinen SSH-avain"
 
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "Lisää tämä julkinen avain GitHubiin allekirjoitusavaimena."
@@ -37,9 +49,6 @@ msgstr "Lisävaihtoehdot"
 
 msgid "Algorithm"
 msgstr "Algoritmi"
-
-msgid "All inspected resident credentials from this key are already in the agent"
-msgstr "Tämän avaimen kaikki tarkastetut asukkaat ovat jo agentissa"
 
 msgid "Allow sudo without authentication"
 msgstr "Salli sudo ilman todennusta"
@@ -68,8 +77,8 @@ msgstr "AnduinOS-tiimi"
 msgid "AnduinOS YubiKey Security Center"
 msgstr "AnduinOS YubiKey Security Center"
 
-msgid "AnduinOS is safer with a YubiKey"
-msgstr "AnduinOS on turvallisempi YubiKeyllä"
+msgid "AnduinOS works more securely with a YubiKey"
+msgstr "AnduinOS toimii turvallisemmin YubiKeyn kanssa"
 
 msgid "Application"
 msgstr "Sovellus"
@@ -86,14 +95,17 @@ msgstr "Available through SSH agent"
 msgid "Available through local key handle"
 msgstr "Saatavilla paikallisen avaimenkäsittimen kautta"
 
+msgid "Buy a YubiKey"
+msgstr "Osta YubiKey"
+
 msgid "Cancel"
 msgstr "Peruuta"
 
 msgid "Checking SSH keys…"
 msgstr "Tarkistetaan SSH-avaimia…"
 
-msgid "Checking SSH keys… Touch the YubiKey if it flashes."
-msgstr "Tarkistetaan SSH-avaimia… Kosketa YubiKeyä, jos se vilkkuu."
+msgid "Checking SSH support…"
+msgstr "Tarkistetaan SSH-tukea…"
 
 msgid "Checking connected YubiKeys"
 msgstr "Yhdistettyjen YubiKeyjen tarkistus"
@@ -146,11 +158,11 @@ msgstr "Määritelty kohteelle {0} · Ei yhdistetty"
 msgid "Connect a FIDO security key first"
 msgstr "Liitä FIDO-turva-avain ensin"
 
+msgid "Connect a YubiKey"
+msgstr "Yhdistä YubiKey"
+
 msgid "Connect a YubiKey to get started"
 msgstr "Yhdistä YubiKey aloittaaksesi"
-
-msgid "Connect exactly one FIDO security key to choose an unambiguous source"
-msgstr "Liitä täsmälleen yksi FIDO-turva-avain valitaksesi yksiselitteisen lähteen"
 
 msgid "Connect your YubiKey"
 msgstr "Yhdistä YubiKeysi"
@@ -184,6 +196,9 @@ msgstr "{0}:n luominen epäonnistui: {1}"
 
 msgid "Could not export the public key: {0}"
 msgstr "Julkista avainta ei voitu viedä: {0}"
+
+msgid "Could not find security keys"
+msgstr "Turvavälineitä ei löytynyt"
 
 msgid "Could not flush the temporary public key: {0}"
 msgstr "Väliaikaista julkista avainta ei voitu tyhjentää: {0}"
@@ -242,6 +257,9 @@ msgstr "Poiston tulos on tuntematon"
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr "Pois käytöstä · sudo:n on todennuttava YubiKeyllä tai tilin salasanalla"
 
+msgid "Discover SSH keys on your YubiKeys"
+msgstr "Etsi SSH-avaimia YubiKey-välineiltäsi"
+
 msgid "Display label must be at most 200 bytes and contain no control characters."
 msgstr "Näyttömerkin saa olla enintään 200 tavua eikä se saa sisältää ohjausmerkkejä."
 
@@ -281,14 +299,14 @@ msgstr "Rekisteröitynyt · ei käytössä, kun oikeuksien korotus ohitetaan"
 msgid "Enrollment safety"
 msgstr "Rekisteröinnin turvallisuus"
 
+msgid "Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
+msgstr "Syötä FIDO PIN -koodi kohteelle {0}. Kosketa sitä, jos se vilkkuu. PIN-koodia ei koskaan tallenneta."
+
 msgid "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 msgstr "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "Syötä FIDO-PIN-koodi. Kosketa YubiKeyta, jos se vilkkuu."
-
-msgid "Enter the YubiKey FIDO PIN"
-msgstr "Syötä YubiKeyn FIDO-PIN-koodi"
 
 msgid "Enter the YubiKey FIDO PIN to test this local key handle."
 msgstr "Enter the YubiKey FIDO PIN to test this local key handle."
@@ -310,6 +328,9 @@ msgstr "FIDO-laitteen havaitseminen ei ole käytettävissä"
 
 msgid "FIDO security key"
 msgstr "FIDO-turvallisuusavain"
+
+msgid "Finish inspecting your YubiKeys"
+msgstr "Viimeistele YubiKey-välineidesi tarkastus"
 
 msgid "Firmware {0}"
 msgstr "Laiteohjelmisto {0}"
@@ -342,17 +363,38 @@ msgstr "Liitä YubiKey"
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "Liitä YubiKey ja paina Päivitä."
 
+msgid "Insert a YubiKey. This page will detect it when you refresh."
+msgstr "Aseta YubiKey paikalleen. Tämä sivu havaitsee sen, kun päivität sivun."
+
 msgid "Inspect"
 msgstr "Tarkastele"
 
-msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
-msgstr "Tarkastele, lataa, vie, testaa, poista agentista tai poista pysyvästi asukas SSH-tunnistetiedot."
+msgid "Inspect YubiKey"
+msgstr "Tarkasta YubiKey"
 
-msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
-msgstr "Tarkistetaan asukkaan SSH-tunnuksia… Kosketa YubiKeyä, jos se välkkyy."
+msgid "Inspect YubiKey {0} of {1}"
+msgstr "Tarkasta YubiKey {0} / {1}"
+
+msgid "Inspect again"
+msgstr "Tarkasta uudelleen"
+
+msgid "Inspect all keys"
+msgstr "Tarkasta kaikki avaimet"
+
+msgid "Inspect this YubiKey"
+msgstr "Tarkasta tämä YubiKey"
+
+msgid "Inspected"
+msgstr "Tarkastettu"
+
+msgid "Inspection needs attention · {0}"
+msgstr "Tarkastus vaatii huomiota · {0}"
 
 msgid "Invalid FIDO device path."
 msgstr "Virheellinen FIDO-laitteen polku."
+
+msgid "Keys stored on your YubiKeys"
+msgstr "Avaimet, jotka on tallennettu YubiKey-välineillesi"
 
 msgid "Load"
 msgstr "Lataa"
@@ -360,8 +402,8 @@ msgstr "Lataa"
 msgid "Load SSH keys"
 msgstr "Lataa SSH-avaimet"
 
-msgid "Load into agent"
-msgstr "Lataa agenttiin"
+msgid "Load all"
+msgstr "Lataa kaikki"
 
 msgid "Load keys"
 msgstr "Lataa avaimet"
@@ -369,8 +411,14 @@ msgstr "Lataa avaimet"
 msgid "Load resident SSH keys"
 msgstr "Lataa asuvat SSH-avaimet"
 
+msgid "Load this YubiKey's resident SSH keys into the agent"
+msgstr "Lataa tämän YubiKeyn asukas-SSH-avaimet agenttiin"
+
 msgid "Load this resident key into the SSH agent before signing"
 msgstr "Lataa tämä asukasavain SSH-agenttiin ennen allekirjoitusta"
+
+msgid "Loaded"
+msgstr "Ladattu"
 
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "Ladataan SSH-avaimia… Kosketa YubiKeyta, jos se vilkkuu."
@@ -381,6 +429,12 @@ msgstr "Paikallisen avaimen käsitteen polku"
 msgid "Local key label"
 msgstr "Paikallisen avaimen nimi"
 
+msgid "Looking for your SSH agent and connected YubiKeys."
+msgstr "Etsitään SSH-agenttiasi ja yhdistettyjä YubiKey-välineitäsi."
+
+msgid "Needs attention"
+msgstr "Vaatii huomiota"
+
 msgid "New hardware-backed SSH key"
 msgstr "Uusi laiteperusteinen SSH-avain"
 
@@ -390,23 +444,38 @@ msgstr "FIDO-turvallisuusavainta ei havaittu"
 msgid "No SSH agent was detected"
 msgstr "SSH-agenttia ei havaittu"
 
+msgid "No YubiKey connected"
+msgstr "Yhtään YubiKeya ei ole yhdistetty"
+
 msgid "No hardware serial"
 msgstr "Ei laite-serialinumeroa"
 
-msgid "No resident SSH credentials"
-msgstr "Asuvia SSH-tunnisteita ei ole"
+msgid "No resident SSH keys"
+msgstr "Ei asukas-SSH-avaimia"
 
 msgid "No resident SSH keys found"
 msgstr "Asukasavaimia ei löytynyt"
 
+msgid "No resident SSH keys found · {0}"
+msgstr "Asukas-SSH-avaimia ei löytynyt · {0}"
+
+msgid "No resident SSH keys were found on the connected YubiKeys."
+msgstr "Yhdistetyiltä YubiKey-välineiltä ei löytynyt yhtään asukas-SSH-avainta."
+
 msgid "No signing"
 msgstr "Ei allekirjoitusta"
 
-msgid "No ssh:* discoverable credentials were found on this key."
-msgstr "Tätä avainta ei löydetty sisältävän SSH-tunnistetietoja, jotka ovat etsittäviä."
-
 msgid "Not configured"
 msgstr "Ei määritelty"
+
+msgid "Not inspected"
+msgstr "Ei tarkastettu"
+
+msgid "Not inspected yet · {0}"
+msgstr "Ei vielä tarkastettu · {0}"
+
+msgid "Open the official Yubico Store"
+msgstr "Avaa virallinen Yubico Store"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH ei voinut ladata asukkaita avaimia. SSH-agentissa ei ole uusia ladattuja tunnisteita."
@@ -456,8 +525,17 @@ msgstr "Suojaile todennusta ja commit-merkintöjä"
 msgid "Protection for {0}"
 msgstr "Suojaus kohteelle {0}"
 
+msgid "Read the resident SSH keys already stored on your YubiKeys. You will enter each key's FIDO PIN and may need to touch it."
+msgstr "Lue jo YubiKey-välineillesi tallennetut asukas-SSH-avaimet. Syötät kunkin avaimen FIDO PIN -koodin ja saatat joutua koskettamaan sitä."
+
+msgid "Reading SSH keys from {0}… Touch it if it flashes."
+msgstr "Luetaan SSH-avaimia kohteesta {0}… Kosketa sitä, jos se vilkkuu."
+
 msgid "Reading account security settings…"
 msgstr "Luetaan tilin turva-asetuksia…"
+
+msgid "Ready"
+msgstr "Valmis"
 
 msgid "Ready to inspect"
 msgstr "Valmis tarkistettavaksi"
@@ -480,9 +558,6 @@ msgstr "Vahvistus vaaditaan jokaiselle allekirjoitukselle"
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "Vaatii FIDO-PIN-koodin joka kerta, kun tämä avain allekirjoittaa"
 
-msgid "Resident SSH credentials"
-msgstr "Asukas-SSH-tunnistetiedot"
-
 msgid "Resident SSH key created"
 msgstr "Asukas-SSH-avain luotu"
 
@@ -498,17 +573,14 @@ msgstr "Asukaskäyttäjätunnus"
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr "Asukaskäyttäjän nimen on sisällettävä 1–64 tavua eikä hallintamerkkejä."
 
-msgid "Run ssh-add -K for this connected security key"
-msgstr "Suorita ssh-add -K tälle yhdistetylle turva-avaimelle"
-
 msgid "SSH & Git"
 msgstr "SSH ja Git"
 
 msgid "SSH agent"
 msgstr "SSH-agentti"
 
-msgid "SSH agent connected"
-msgstr "SSH-agentti yhdistetty"
+msgid "SSH agent is ready"
+msgstr "SSH-agentti on valmis"
 
 msgid "SSH agent unavailable"
 msgstr "SSH-agentti ei käytettävissä"
@@ -518,6 +590,9 @@ msgstr "SSH commit-merkinnät"
 
 msgid "SSH key actions"
 msgstr "SSH-avain toiminnot"
+
+msgid "SSH key for {0}"
+msgstr "SSH-avain kohteelle {0}"
 
 msgid "SSH keys"
 msgstr "SSH-avaimet"
@@ -566,9 +641,6 @@ msgstr "PIN-koodi lähetetään suoraan ssh-add-ohjelmalle eikä sitä tallennet
 
 msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
 msgstr "PIN-koodi lähetetään yksityisen putken kautta OpenSSH:lle. Sitä ei tallenneta eikä sijoiteta komentoargumentteihin."
-
-msgid "The PIN is used only for this read-only inspection and is never stored."
-msgstr "PIN-koodia käytetään vain tähän lukuoikeudelliseen tarkastukseen eikä sitä tallenneta koskaan."
 
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "SSH-palvelu allekirjoitti ja varmisti onnistuneesti tämän avaimen tiedot."
@@ -701,6 +773,9 @@ msgstr "Nämä avaimet ovat tämän tilin luotamia, mutta niitä ei ole tällä 
 msgid "This PIN authorizes permanent deletion of the exact credential shown in the previous step. It is never stored."
 msgstr "Tämä PIN sallii edellisessä vaiheessa näkyvän tarkan tunnisteen pysyvän poiston. Sitä ei tallenneta koskaan."
 
+msgid "This YubiKey has no discoverable ssh:* credentials."
+msgstr "Tässä YubiKeyssä ei ole havaittavissa olevia ssh:* -todennus tietoja."
+
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "Tämä ei ole tuettu OpenSSH-turvallisuusavaimen julkinen avain."
 
@@ -712,9 +787,6 @@ msgstr "Tämä asetus koskee vain nykyistä käyttäjää."
 
 msgid "This will only take a moment."
 msgstr "Tämä vie vain hetken."
-
-msgid "Touch the YubiKey if it flashes."
-msgstr "Kosketa YubiKeyä, jos se vilkkuu."
 
 msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr "Kosketa YubiKeytä pyydettäessä. Ladataan asukasavaimia SSH-palveluun…"
@@ -742,6 +814,9 @@ msgstr "Yritä uudelleen"
 
 msgid "Type {0} to confirm"
 msgstr "Syötä {0} vahvistaaksesi"
+
+msgid "Unavailable"
+msgstr "Ei saatavilla"
 
 msgid "Unknown authentication purpose."
 msgstr "Tuntematon todennustarkoitus."
@@ -779,11 +854,23 @@ msgstr "Käytä YubiKey:tä sudo:n lukituksen purkamiseen"
 msgid "Verifying and permanently deleting the selected resident credential. Do not unplug the YubiKey…"
 msgstr "Varmistetaan ja poistetaan pysyvästi valittu asukastunniste. Älä irrota YubiKeytä…"
 
+msgid "Waiting"
+msgstr "Odotetaan"
+
 msgid "Waiting for a configured YubiKey"
 msgstr "Odotetaan määriteltyä YubiKeytä"
 
 msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
 msgstr "Voit rekisteröidä avaimet nyt, mutta sudo ohittaa PAM:in kun salasanasaton käyttö on käytössä."
+
+msgid "Your YubiKeys are inspected"
+msgstr "YubiKey-välineesi on tarkastettu"
+
+msgid "Your hardware-backed SSH keys"
+msgstr "Laitteistopohjaiset SSH-avaimet"
+
+msgid "Your resident SSH keys stay on the security key. Insert it to view and use them."
+msgstr "Asukas-SSH-avaimet pysyvät turvavälineessä. Aseta se paikalleen nähdäksesi ja käyttääksesi niitä."
 
 msgid "Your security settings are ready. Connect a configured YubiKey when you need it."
 msgstr "Turva-asetukset ovat valmiita. Yhdistä määritelty YubiKey, kun tarvitset sitä."
@@ -839,9 +926,6 @@ msgstr "sudo-todennuksen käytäntö"
 msgid "unknown"
 msgstr "tuntematon"
 
-msgid "unknown socket"
-msgstr "tuntematon socketti"
-
 msgid "user"
 msgstr "käyttäjä"
 
@@ -857,8 +941,8 @@ msgstr "{0} lopetettiin arvolla {1}"
 msgid "{0} failed: {1}"
 msgstr "{0} epäonnistui: {1}"
 
-msgid "{0} identities · {1}"
-msgstr "{0} identiteettiä · {1}"
+msgid "{0} identities are currently available to SSH applications."
+msgstr "{0} tunnisteita on tällä hetkellä saatavilla SSH-sovelluksille."
 
 msgid "{0} is enabled for this YubiKey"
 msgstr "{0} on käytössä tässä YubiKey:ssä"
@@ -872,14 +956,74 @@ msgstr "Agenttiin lisättiin {0} uutta SSH-tunnistetta."
 msgid "{0} new SSH identity was added to the agent."
 msgstr "Agenttiin lisättiin {0} uusi SSH-tunniste."
 
+msgid "{0} resident SSH keys are available from your connected YubiKeys."
+msgstr "{0} asukas-SSH-avainta on saatavilla yhdistetyistä YubiKey-välineistäsi."
+
+msgid "{0} resident SSH keys · {1}"
+msgstr "{0} asukas-SSH-avainta · {1}"
+
 msgid "{0} resident credentials inspected"
 msgstr "{0} asukastunnisteet tarkistettu"
+
+msgid "{0} to inspect"
+msgstr "{0} tarkastettavana"
 
 msgid "{0} · no hardware serial"
 msgstr "{0} · ei laitteiston sarjanumeroa"
 
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
+
+#~ msgid "All inspected resident credentials from this key are already in the agent"
+#~ msgstr "Tämän avaimen kaikki tarkastetut asukkaat ovat jo agentissa"
+
+#~ msgid "AnduinOS is safer with a YubiKey"
+#~ msgstr "AnduinOS on turvallisempi YubiKeyllä"
+
+#~ msgid "Checking SSH keys… Touch the YubiKey if it flashes."
+#~ msgstr "Tarkistetaan SSH-avaimia… Kosketa YubiKeyä, jos se vilkkuu."
+
+#~ msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+#~ msgstr "Liitä täsmälleen yksi FIDO-turva-avain valitaksesi yksiselitteisen lähteen"
+
+#~ msgid "Enter the YubiKey FIDO PIN"
+#~ msgstr "Syötä YubiKeyn FIDO-PIN-koodi"
+
+#~ msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
+#~ msgstr "Tarkastele, lataa, vie, testaa, poista agentista tai poista pysyvästi asukas SSH-tunnistetiedot."
+
+#~ msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
+#~ msgstr "Tarkistetaan asukkaan SSH-tunnuksia… Kosketa YubiKeyä, jos se välkkyy."
+
+#~ msgid "Load into agent"
+#~ msgstr "Lataa agenttiin"
+
+#~ msgid "No resident SSH credentials"
+#~ msgstr "Asuvia SSH-tunnisteita ei ole"
+
+#~ msgid "No ssh:* discoverable credentials were found on this key."
+#~ msgstr "Tätä avainta ei löydetty sisältävän SSH-tunnistetietoja, jotka ovat etsittäviä."
+
+#~ msgid "Resident SSH credentials"
+#~ msgstr "Asukas-SSH-tunnistetiedot"
+
+#~ msgid "Run ssh-add -K for this connected security key"
+#~ msgstr "Suorita ssh-add -K tälle yhdistetylle turva-avaimelle"
+
+#~ msgid "SSH agent connected"
+#~ msgstr "SSH-agentti yhdistetty"
+
+#~ msgid "The PIN is used only for this read-only inspection and is never stored."
+#~ msgstr "PIN-koodia käytetään vain tähän lukuoikeudelliseen tarkastukseen eikä sitä tallenneta koskaan."
+
+#~ msgid "Touch the YubiKey if it flashes."
+#~ msgstr "Kosketa YubiKeyä, jos se vilkkuu."
+
+#~ msgid "unknown socket"
+#~ msgstr "tuntematon socketti"
+
+#~ msgid "{0} identities · {1}"
+#~ msgstr "{0} identiteettiä · {1}"
 
 #~ msgid "Git Signing"
 #~ msgstr "Git Signing"

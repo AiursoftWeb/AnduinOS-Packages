@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 17:16+0000\n"
+"POT-Creation-Date: 2026-07-30 18:03+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -15,6 +15,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "1 identity is currently available to SSH applications."
+msgstr "1 पहचान वर्तमान में SSH एप्लिकेशन के लिए उपलब्ध है।"
+
+msgid "1 resident SSH key is available from your connected YubiKey."
+msgstr "आपके जुड़े YubiKey से 1 निवासी SSH कुंजी उपलब्ध है।"
+
+msgid "1 resident SSH key · {0}"
+msgstr "1 निवासी SSH कुंजी · {0}"
 
 msgid "A key must be connected before it can be enrolled."
 msgstr "एक कुंजी को एनरोल करने से पहले उसे कनेक्ट किया जाना चाहिए।"
@@ -24,6 +33,9 @@ msgstr "के बारे में"
 
 msgid "Account password"
 msgstr "खाता पासवर्ड"
+
+msgid "Add another SSH key"
+msgstr "अन्य SSH कुंजी जोड़ें"
 
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "इस पब्लिक की को GitHub पर एक साइनिंग की के रूप में जोड़ें।"
@@ -36,9 +48,6 @@ msgstr "उन्नत विकल्प"
 
 msgid "Algorithm"
 msgstr "एल्गोरिदम"
-
-msgid "All inspected resident credentials from this key are already in the agent"
-msgstr "इस कुंजी से सभी निरीक्षण किए गए रेजिडेंट क्रेडेंशियल्स पहले ही एजेंट में हैं"
 
 msgid "Allow sudo without authentication"
 msgstr "प्रमाणीकरण के बिना sudo की अनुमति दें"
@@ -67,8 +76,8 @@ msgstr "AnduinOS टीम"
 msgid "AnduinOS YubiKey Security Center"
 msgstr "AnduinOS यूबिकी सुरक्षा केंद्र"
 
-msgid "AnduinOS is safer with a YubiKey"
-msgstr "AnduinOS एक YubiKey के साथ अधिक सुरक्षित है"
+msgid "AnduinOS works more securely with a YubiKey"
+msgstr "AnduinOS YubiKey के साथ अधिक सुरक्षित रूप से काम करता है"
 
 msgid "Application"
 msgstr "अप्लिकेशन"
@@ -85,14 +94,17 @@ msgstr "Available through SSH agent"
 msgid "Available through local key handle"
 msgstr "स्थानीय की हैंडल के माध्यम से उपलब्ध"
 
+msgid "Buy a YubiKey"
+msgstr "YubiKey खरीदें"
+
 msgid "Cancel"
 msgstr "रद्द करें"
 
 msgid "Checking SSH keys…"
 msgstr "SSH की जाँच हो रही है..."
 
-msgid "Checking SSH keys… Touch the YubiKey if it flashes."
-msgstr "SSH की जाँच हो रही है... यदि यह चमकता है तो YubiKey को छुएं।"
+msgid "Checking SSH support…"
+msgstr "SSH सहायता की जांच हो रही है…"
 
 msgid "Checking connected YubiKeys"
 msgstr "जुड़े हुए YubiKeys की जाँच हो रही है"
@@ -145,11 +157,11 @@ msgstr "{0} के लिए कॉन्फ़िगर किया गया 
 msgid "Connect a FIDO security key first"
 msgstr "पहले एक FIDO सुरक्षा कुंजी कनेक्ट करें"
 
+msgid "Connect a YubiKey"
+msgstr "YubiKey कनेक्ट करें"
+
 msgid "Connect a YubiKey to get started"
 msgstr "शुरू करने के लिए एक YubiKey कनेक्ट करें"
-
-msgid "Connect exactly one FIDO security key to choose an unambiguous source"
-msgstr "एक अस्पष्ट स्रोत चुनने के लिए बिल्कुल एक FIDO सुरक्षा कुंजी कनेक्ट करें"
 
 msgid "Connect your YubiKey"
 msgstr "अपना YubiKey कनेक्ट करें"
@@ -183,6 +195,9 @@ msgstr "{0} नहीं बनाया जा सका: {1}"
 
 msgid "Could not export the public key: {0}"
 msgstr "सार्वजनिक कुंजी निर्यात नहीं की जा सकी: {0}"
+
+msgid "Could not find security keys"
+msgstr "सुरक्षा कुंजियाँ नहीं मिल सकीं"
 
 msgid "Could not flush the temporary public key: {0}"
 msgstr "अस्थायी सार्वजनिक कुंजी को फ्लश नहीं किया जा सका: {0}"
@@ -241,6 +256,9 @@ msgstr "मिलन परिणाम अज्ञात है"
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr "अक्षम · sudo को YubiKey या खाता पासवर्ड के साथ प्रमाणीकरण करना होगा"
 
+msgid "Discover SSH keys on your YubiKeys"
+msgstr "अपने YubiKeys पर SSH कुंजियाँ खोजें"
+
 msgid "Display label must be at most 200 bytes and contain no control characters."
 msgstr "डिस्प्ले लेबल अधिकतम 200 बाइट का होना चाहिए और इसमें कोई नियंत्रण वर्ण नहीं होना चाहिए।"
 
@@ -280,14 +298,14 @@ msgstr "पंजीकृत · जब तक सूडो प्रमाण�
 msgid "Enrollment safety"
 msgstr "पंजीकरण सुरक्षा"
 
+msgid "Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
+msgstr "{0} के लिए FIDO PIN दर्ज करें। यदि यह चमकता है, तो इसे छूएं। PIN कभी संग्रहीत नहीं होता है।"
+
 msgid "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 msgstr "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "FIDO PIN दर्ज करें। यदि यह चमक रहा है तो YubiKey को छुएँ।"
-
-msgid "Enter the YubiKey FIDO PIN"
-msgstr "यूबीआईकी फिडो पिन दर्ज करें"
 
 msgid "Enter the YubiKey FIDO PIN to test this local key handle."
 msgstr "Enter the YubiKey FIDO PIN to test this local key handle."
@@ -309,6 +327,9 @@ msgstr "फिडो डिवाइस खोज अनुपलब्ध ह�
 
 msgid "FIDO security key"
 msgstr "फिडो सुरक्षा कुंजी"
+
+msgid "Finish inspecting your YubiKeys"
+msgstr "अपने YubiKeys की जांच पूरी करें"
 
 msgid "Firmware {0}"
 msgstr "फर्मवेयर {0}"
@@ -341,17 +362,38 @@ msgstr "एक यूबीआईकी डालें"
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "एक यूबीआईकी डालें, फिर रिफ्रेश दबाएं।"
 
+msgid "Insert a YubiKey. This page will detect it when you refresh."
+msgstr "YubiKey डालें। जब आप रीफ़्रेश करेंगे, तो यह पेज उसे पता लगा लेगा।"
+
 msgid "Inspect"
 msgstr "निरीक्षण करें"
 
-msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
-msgstr "एजेंट से निरीक्षण, लोड, निर्यात, परीक्षण, हटाएं या स्थायी रूप से निवासी SSH प्रमाणपत्र को स्थायी रूप से हटाएं।"
+msgid "Inspect YubiKey"
+msgstr "YubiKey की जाँच करें"
 
-msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
-msgstr "रिज़िडेंट SSH क्रेडेंशियल का निरीक्षण किया जा रहा है... यदि यह चमकता है तो YubiKey को स्पर्श करें।"
+msgid "Inspect YubiKey {0} of {1}"
+msgstr "YubiKey {0} की जाँच करें (कुल {1})"
+
+msgid "Inspect again"
+msgstr "फिर से जांचें"
+
+msgid "Inspect all keys"
+msgstr "सभी कुंजियों की जाँच करें"
+
+msgid "Inspect this YubiKey"
+msgstr "इस YubiKey की जाँच करें"
+
+msgid "Inspected"
+msgstr "जाँचा गया"
+
+msgid "Inspection needs attention · {0}"
+msgstr "ध्यान देने की आवश्यकता · {0}"
 
 msgid "Invalid FIDO device path."
 msgstr "अमान्य फिडो डिवाइस पथ।"
+
+msgid "Keys stored on your YubiKeys"
+msgstr "आपके YubiKeys पर संग्रहीत कुंजियाँ"
 
 msgid "Load"
 msgstr "लोड करें"
@@ -359,8 +401,8 @@ msgstr "लोड करें"
 msgid "Load SSH keys"
 msgstr "SSH की लोड करें"
 
-msgid "Load into agent"
-msgstr "एजेंट में लोड करें"
+msgid "Load all"
+msgstr "सभी लोड करें"
 
 msgid "Load keys"
 msgstr "की लोड करें"
@@ -368,8 +410,14 @@ msgstr "की लोड करें"
 msgid "Load resident SSH keys"
 msgstr "निवासी SSH कुंजियाँ लोड करें"
 
+msgid "Load this YubiKey's resident SSH keys into the agent"
+msgstr "एजेंट में इस YubiKey की निवासी SSH कुंजियों को लोड करें"
+
 msgid "Load this resident key into the SSH agent before signing"
 msgstr "साइन करने से पहले इस रेज़िडेंट की को SSH एजेंट में लोड करें"
+
+msgid "Loaded"
+msgstr "लोड किया गया"
 
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "SSH की लोड हो रहे हैं… यदि यह चमक रहा है तो YubiKey को छुएँ।"
@@ -380,6 +428,12 @@ msgstr "स्थानीय कुंजी हैंडल पथ"
 msgid "Local key label"
 msgstr "स्थानीय कुंजी लेबल"
 
+msgid "Looking for your SSH agent and connected YubiKeys."
+msgstr "आपके SSH एजेंट और जुड़े YubiKeys की तलाश हो रही है।"
+
+msgid "Needs attention"
+msgstr "ध्यान देने की आवश्यकता"
+
 msgid "New hardware-backed SSH key"
 msgstr "नई हार्डवेयर-संचालित SSH कुंजी"
 
@@ -389,23 +443,38 @@ msgstr "कोई फिडो सुरक्षा कुंजी नही�
 msgid "No SSH agent was detected"
 msgstr "कोई SSH एजेंट नहीं मिला"
 
+msgid "No YubiKey connected"
+msgstr "कोई YubiKey कनेक्ट नहीं है"
+
 msgid "No hardware serial"
 msgstr "कोई हार्डवेयर सीरियल नहीं"
 
-msgid "No resident SSH credentials"
-msgstr "कोई निवासी SSH क्रेडेंशियल्स नहीं"
+msgid "No resident SSH keys"
+msgstr "कोई निवासी SSH कुंजी नहीं"
 
 msgid "No resident SSH keys found"
 msgstr "कोई रेज़िडेंट SSH की नहीं मिला"
 
+msgid "No resident SSH keys found · {0}"
+msgstr "कोई निवासी SSH कुंजी नहीं मिली · {0}"
+
+msgid "No resident SSH keys were found on the connected YubiKeys."
+msgstr "जुड़े YubiKeys पर कोई निवासी SSH कुंजी नहीं मिली।"
+
 msgid "No signing"
 msgstr "कोई साइनिंग नहीं"
 
-msgid "No ssh:* discoverable credentials were found on this key."
-msgstr "इस कुंजी पर कोई ssh:* खोज योग्य प्रमाणपत्र नहीं मिला।"
-
 msgid "Not configured"
 msgstr "कॉन्फ़िगर नहीं किया गया"
+
+msgid "Not inspected"
+msgstr "जाँचा नहीं गया"
+
+msgid "Not inspected yet · {0}"
+msgstr "अभी तक जाँचा नहीं गया · {0}"
+
+msgid "Open the official Yubico Store"
+msgstr "आधिकारिक Yubico स्टोर खोलें"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH ने रेजिडेंट कुंजियाँ लोड नहीं कीं। SSH एजेंट में कोई नई लोड की गई पहचान नहीं है।"
@@ -453,8 +522,17 @@ msgstr "प्रमाणीकरण और कमीट साइनिंग
 msgid "Protection for {0}"
 msgstr "{0} के लिए सुरक्षा"
 
+msgid "Read the resident SSH keys already stored on your YubiKeys. You will enter each key's FIDO PIN and may need to touch it."
+msgstr "अपने YubiKeys पर पहले से संग्रहीत निवासी SSH कुंजियाँ पढ़ें। आप प्रत्येक कुंजी का FIDO PIN दर्ज करेंगे और उसे छूना पड़ सकता है।"
+
+msgid "Reading SSH keys from {0}… Touch it if it flashes."
+msgstr "{0} से SSH कुंजियाँ पढ़ी जा रही हैं… यदि यह चमकता है, तो इसे छूएं।"
+
 msgid "Reading account security settings…"
 msgstr "खाता सुरक्षा सेटिंग्स पढ़ी जा रही हैं…"
+
+msgid "Ready"
+msgstr "तैयार"
 
 msgid "Ready to inspect"
 msgstr "जांचने के लिए तैयार"
@@ -477,9 +555,6 @@ msgstr "हर सिग्नेचर के लिए सत्यापन �
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "इस कुंजी के हस्ताक्षर करने पर हर बार FIDO PIN की आवश्यकता होती है"
 
-msgid "Resident SSH credentials"
-msgstr "रेजिडेंट SSH प्रमाणपत्र"
-
 msgid "Resident SSH key created"
 msgstr "रेजिडेंट SSH कुंजी बनाई गई"
 
@@ -495,17 +570,14 @@ msgstr "रेजिडेंट उपयोगकर्ता नाम"
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr "रेजिडेंट उपयोगकर्ता नाम में 1–64 बाइट्स होने चाहिए और कोई नियंत्रण वर्ण नहीं होना चाहिए।"
 
-msgid "Run ssh-add -K for this connected security key"
-msgstr "इस कनेक्टेड सुरक्षा कुंजी के लिए ssh-add -K चलाएं"
-
 msgid "SSH & Git"
 msgstr "SSH और Git"
 
 msgid "SSH agent"
 msgstr "SSH एजेंट"
 
-msgid "SSH agent connected"
-msgstr "SSH एजेंट कनेक्ट है"
+msgid "SSH agent is ready"
+msgstr "SSH एजेंट तैयार है"
 
 msgid "SSH agent unavailable"
 msgstr "SSH एजेंट अनुपलब्ध है"
@@ -515,6 +587,9 @@ msgstr "SSH कमीट साइनिंग"
 
 msgid "SSH key actions"
 msgstr "SSH कुंजी क्रियाएँ"
+
+msgid "SSH key for {0}"
+msgstr "{0} के लिए SSH कुंजी"
 
 msgid "SSH keys"
 msgstr "SSH कुंजियाँ"
@@ -563,9 +638,6 @@ msgstr "PIN को सीधे ssh-add भेजा जाता है और 
 
 msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
 msgstr "PIN को OpenSSH के लिए एक निजी पाइप के माध्यम से भेजा जाता है। इसे कभी संग्रहीत या कमांड तर्कों में रखा नहीं जाता है।"
-
-msgid "The PIN is used only for this read-only inspection and is never stored."
-msgstr "PIN का उपयोग केवल इस रीड-ओनली निरीक्षण के लिए किया जाता है और इसे कभी संग्रहीत नहीं किया जाता है।"
 
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "SSH एजेंट ने इस कुंजी के साथ डेटा को सफलतापूर्वक हस्ताक्षरित और सत्यापित किया।"
@@ -697,6 +769,9 @@ msgstr "ये कुंजियाँ इस खाते द्वारा �
 msgid "This PIN authorizes permanent deletion of the exact credential shown in the previous step. It is never stored."
 msgstr "यह PIN पिछले चरण में दिखाए गए सटीक प्रमाणपत्र के स्थायी मिटाने की अनुमति देता है। इसे कभी संग्रहीत नहीं किया जाता है।"
 
+msgid "This YubiKey has no discoverable ssh:* credentials."
+msgstr "इस YubiKey में कोई खोज योग्य ssh:* क्रेडेंशियल्स नहीं हैं।"
+
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "यह एक समर्थित OpenSSH सुरक्षा-की पब्लिक की नहीं है।"
 
@@ -708,9 +783,6 @@ msgstr "यह सेटिंग केवल वर्तमान उपय�
 
 msgid "This will only take a moment."
 msgstr "इसमें केवल एक पल लगेगा।"
-
-msgid "Touch the YubiKey if it flashes."
-msgstr "यदि यह चमकता है तो YubiKey को छुएं।"
 
 msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr "जब प्रॉम्प्ट किया जाए तो YubiKey को छूएं। रेजिडेंट कुंजियों को SSH एजेंट में लोड किया जा रहा है…"
@@ -738,6 +810,9 @@ msgstr "फिर से प्रयास करें"
 
 msgid "Type {0} to confirm"
 msgstr "पुष्टि करने के लिए {0} टाइप करें"
+
+msgid "Unavailable"
+msgstr "अनुपलब्ध"
 
 msgid "Unknown authentication purpose."
 msgstr "अज्ञात प्रमाणीकरण उद्देश्य।"
@@ -775,11 +850,23 @@ msgstr "sudo अनलॉक करने के लिए YubiKey का उप
 msgid "Verifying and permanently deleting the selected resident credential. Do not unplug the YubiKey…"
 msgstr "चयनित निवासी प्रमाणपत्र को सत्यापित और स्थायी रूप से हटाया जा रहा है। YubiKey को अनप्लग न करें…"
 
+msgid "Waiting"
+msgstr "प्रतीक्षा कर रहा है"
+
 msgid "Waiting for a configured YubiKey"
 msgstr "कॉन्फ़िगर किए गए YubiKey की प्रतीक्षा हो रही है"
 
 msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
 msgstr "आप अब कुंजियां रजिस्टर कर सकते हैं, लेकिन पासवर्ड रहित पहुँच सक्षम होने पर sudo PAM को बायपास करता है।"
+
+msgid "Your YubiKeys are inspected"
+msgstr "आपके YubiKeys की जाँच हो चुकी है"
+
+msgid "Your hardware-backed SSH keys"
+msgstr "आपकी हार्डवेयर-संचालित SSH कुंजियाँ"
+
+msgid "Your resident SSH keys stay on the security key. Insert it to view and use them."
+msgstr "आपकी निवासी SSH कुंजियाँ सुरक्षा कुंजी पर रहती हैं। उन्हें देखने और उपयोग करने के लिए इसे डालें।"
 
 msgid "Your security settings are ready. Connect a configured YubiKey when you need it."
 msgstr "आपकी सुरक्षा सेटिंग्स तैयार हैं। जब आपको आवश्यकता हो तो एक कॉन्फ़िगर किया गया YubiKey कनेक्ट करें।"
@@ -835,9 +922,6 @@ msgstr "sudo प्रमाणीकरण नीति"
 msgid "unknown"
 msgstr "अज्ञात"
 
-msgid "unknown socket"
-msgstr "अज्ञाट सॉकेट"
-
 msgid "user"
 msgstr "उपयोगकर्ता"
 
@@ -853,8 +937,8 @@ msgstr "{0} ने {1} के साथ समाप्त किया"
 msgid "{0} failed: {1}"
 msgstr "{0} विफल: {1}"
 
-msgid "{0} identities · {1}"
-msgstr "{0} पहचानें · {1}"
+msgid "{0} identities are currently available to SSH applications."
+msgstr "{0} पहचानें वर्तमान में SSH एप्लिकेशन के लिए उपलब्ध हैं।"
 
 msgid "{0} is enabled for this YubiKey"
 msgstr "इस YubiKey के लिए {0} सक्षम है"
@@ -868,14 +952,74 @@ msgstr "एजेंट में {0} नई SSH पहचानें जोड
 msgid "{0} new SSH identity was added to the agent."
 msgstr "एजेंट में {0} नई SSH पहचान जोड़ी गई।"
 
+msgid "{0} resident SSH keys are available from your connected YubiKeys."
+msgstr "आपके जुड़े YubiKeys से {0} निवासी SSH कुंजियाँ उपलब्ध हैं।"
+
+msgid "{0} resident SSH keys · {1}"
+msgstr "{0} निवासी SSH कुंजियाँ · {1}"
+
 msgid "{0} resident credentials inspected"
 msgstr "{0} निवासी प्रमाणपत्रों की जाँच की गई"
+
+msgid "{0} to inspect"
+msgstr "जाँच करने के लिए {0}"
 
 msgid "{0} · no hardware serial"
 msgstr "{0} · कोई हार्डवेयर सीरियल नहीं"
 
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
+
+#~ msgid "All inspected resident credentials from this key are already in the agent"
+#~ msgstr "इस कुंजी से सभी निरीक्षण किए गए रेजिडेंट क्रेडेंशियल्स पहले ही एजेंट में हैं"
+
+#~ msgid "AnduinOS is safer with a YubiKey"
+#~ msgstr "AnduinOS एक YubiKey के साथ अधिक सुरक्षित है"
+
+#~ msgid "Checking SSH keys… Touch the YubiKey if it flashes."
+#~ msgstr "SSH की जाँच हो रही है... यदि यह चमकता है तो YubiKey को छुएं।"
+
+#~ msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+#~ msgstr "एक अस्पष्ट स्रोत चुनने के लिए बिल्कुल एक FIDO सुरक्षा कुंजी कनेक्ट करें"
+
+#~ msgid "Enter the YubiKey FIDO PIN"
+#~ msgstr "यूबीआईकी फिडो पिन दर्ज करें"
+
+#~ msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
+#~ msgstr "एजेंट से निरीक्षण, लोड, निर्यात, परीक्षण, हटाएं या स्थायी रूप से निवासी SSH प्रमाणपत्र को स्थायी रूप से हटाएं।"
+
+#~ msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
+#~ msgstr "रिज़िडेंट SSH क्रेडेंशियल का निरीक्षण किया जा रहा है... यदि यह चमकता है तो YubiKey को स्पर्श करें।"
+
+#~ msgid "Load into agent"
+#~ msgstr "एजेंट में लोड करें"
+
+#~ msgid "No resident SSH credentials"
+#~ msgstr "कोई निवासी SSH क्रेडेंशियल्स नहीं"
+
+#~ msgid "No ssh:* discoverable credentials were found on this key."
+#~ msgstr "इस कुंजी पर कोई ssh:* खोज योग्य प्रमाणपत्र नहीं मिला।"
+
+#~ msgid "Resident SSH credentials"
+#~ msgstr "रेजिडेंट SSH प्रमाणपत्र"
+
+#~ msgid "Run ssh-add -K for this connected security key"
+#~ msgstr "इस कनेक्टेड सुरक्षा कुंजी के लिए ssh-add -K चलाएं"
+
+#~ msgid "SSH agent connected"
+#~ msgstr "SSH एजेंट कनेक्ट है"
+
+#~ msgid "The PIN is used only for this read-only inspection and is never stored."
+#~ msgstr "PIN का उपयोग केवल इस रीड-ओनली निरीक्षण के लिए किया जाता है और इसे कभी संग्रहीत नहीं किया जाता है।"
+
+#~ msgid "Touch the YubiKey if it flashes."
+#~ msgstr "यदि यह चमकता है तो YubiKey को छुएं।"
+
+#~ msgid "unknown socket"
+#~ msgstr "अज्ञाट सॉकेट"
+
+#~ msgid "{0} identities · {1}"
+#~ msgstr "{0} पहचानें · {1}"
 
 #~ msgid "Git Signing"
 #~ msgstr "Git Signing"

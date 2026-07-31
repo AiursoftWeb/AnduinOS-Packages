@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 17:16+0000\n"
+"POT-Creation-Date: 2026-07-30 18:03+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,6 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "1 identity is currently available to SSH applications."
+msgstr "1 Identität ist derzeit für SSH-Anwendungen verfügbar."
+
+msgid "1 resident SSH key is available from your connected YubiKey."
+msgstr "1 residierender SSH-Schlüssel ist von Ihrem verbundenen YubiKey verfügbar."
+
+msgid "1 resident SSH key · {0}"
+msgstr "1 residierender SSH-Schlüssel · {0}"
+
 msgid "A key must be connected before it can be enrolled."
 msgstr "Ein Schlüssel muss zuerst verbunden werden, bevor er registriert werden kann."
 
@@ -25,6 +34,9 @@ msgstr "Über"
 
 msgid "Account password"
 msgstr "Kontopasswort"
+
+msgid "Add another SSH key"
+msgstr "Einen weiteren SSH-Schlüssel hinzufügen"
 
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "Fügen Sie diesen öffentlichen Schlüssel als Signierschlüssel zu GitHub hinzu."
@@ -37,9 +49,6 @@ msgstr "Erweiterte Optionen"
 
 msgid "Algorithm"
 msgstr "Algorithmus"
-
-msgid "All inspected resident credentials from this key are already in the agent"
-msgstr "Alle geprüften Resident-Credentials dieses Schlüssels sind bereits im Agenten vorhanden"
 
 msgid "Allow sudo without authentication"
 msgstr "sudo ohne Authentifizierung erlauben"
@@ -68,8 +77,8 @@ msgstr "AnduinOS-Team"
 msgid "AnduinOS YubiKey Security Center"
 msgstr "AnduinOS YubiKey-Sicherheitszentrum"
 
-msgid "AnduinOS is safer with a YubiKey"
-msgstr "AnduinOS ist mit einem YubiKey sicherer"
+msgid "AnduinOS works more securely with a YubiKey"
+msgstr "AnduinOS arbeitet mit einem YubiKey sicherer"
 
 msgid "Application"
 msgstr "Anwendung"
@@ -86,14 +95,17 @@ msgstr "Available through SSH agent"
 msgid "Available through local key handle"
 msgstr "Verfügbar über lokalen Key-Handle"
 
+msgid "Buy a YubiKey"
+msgstr "Einen YubiKey kaufen"
+
 msgid "Cancel"
 msgstr "Abbrechen"
 
 msgid "Checking SSH keys…"
 msgstr "SSH-Schlüssel werden überprüft…"
 
-msgid "Checking SSH keys… Touch the YubiKey if it flashes."
-msgstr "SSH-Schlüssel werden überprüft… Berühren Sie den YubiKey, wenn er blinkt."
+msgid "Checking SSH support…"
+msgstr "SSH-Unterstützung wird überprüft…"
 
 msgid "Checking connected YubiKeys"
 msgstr "Verbundene YubiKeys werden überprüft"
@@ -146,11 +158,11 @@ msgstr "Konfiguriert für {0} · Nicht verbunden"
 msgid "Connect a FIDO security key first"
 msgstr "Zuerst einen FIDO-Sicherheitsschlüssel verbinden"
 
+msgid "Connect a YubiKey"
+msgstr "Einen YubiKey verbinden"
+
 msgid "Connect a YubiKey to get started"
 msgstr "Schließen Sie einen YubiKey an, um zu beginnen"
-
-msgid "Connect exactly one FIDO security key to choose an unambiguous source"
-msgstr "Verbinden Sie genau einen FIDO-Sicherheitsschlüssel, um eine eindeutige Quelle auszuwählen"
 
 msgid "Connect your YubiKey"
 msgstr "Verbinden Sie Ihren YubiKey"
@@ -184,6 +196,9 @@ msgstr "Konnte {0} nicht erstellen: {1}"
 
 msgid "Could not export the public key: {0}"
 msgstr "Konnte den öffentlichen Schlüssel nicht exportieren: {0}"
+
+msgid "Could not find security keys"
+msgstr "Sicherheitsschlüssel konnten nicht gefunden werden"
 
 msgid "Could not flush the temporary public key: {0}"
 msgstr "Konnte den temporären öffentlichen Schlüssel nicht leeren: {0}"
@@ -242,6 +257,9 @@ msgstr "Löschergebnis ist unbekannt"
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr "Deaktiviert · sudo muss sich mit einem YubiKey oder Kontopasswort authentifizieren"
 
+msgid "Discover SSH keys on your YubiKeys"
+msgstr "SSH-Schlüssel auf Ihren YubiKeys entdecken"
+
 msgid "Display label must be at most 200 bytes and contain no control characters."
 msgstr "Das Anzeigekennzeichen darf maximal 200 Bytes lang sein und keine Steuerzeichen enthalten."
 
@@ -281,14 +299,14 @@ msgstr "Registriert · inaktiv, während die Sudo-Authentifizierung umgangen wir
 msgid "Enrollment safety"
 msgstr "Sicherheit bei der Registrierung"
 
+msgid "Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
+msgstr "Geben Sie den FIDO-PIN für {0} ein. Berühren Sie ihn, wenn er blinkt. Der PIN wird niemals gespeichert."
+
 msgid "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 msgstr "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "Geben Sie die FIDO-PIN ein. Berühren Sie den YubiKey, wenn er blinkt."
-
-msgid "Enter the YubiKey FIDO PIN"
-msgstr "YubiKey-FIDO-PIN eingeben"
 
 msgid "Enter the YubiKey FIDO PIN to test this local key handle."
 msgstr "Enter the YubiKey FIDO PIN to test this local key handle."
@@ -310,6 +328,9 @@ msgstr "Die Erkennung von FIDO-Geräten ist nicht verfügbar"
 
 msgid "FIDO security key"
 msgstr "FIDO-Schlüssel"
+
+msgid "Finish inspecting your YubiKeys"
+msgstr "Inspektion Ihrer YubiKeys abschließen"
 
 msgid "Firmware {0}"
 msgstr "Firmware {0}"
@@ -342,17 +363,38 @@ msgstr "Einen YubiKey einstecken"
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "Einen YubiKey einstecken und dann auf Aktualisieren klicken."
 
+msgid "Insert a YubiKey. This page will detect it when you refresh."
+msgstr "Einen YubiKey einstecken. Diese Seite erkennt ihn beim Aktualisieren."
+
 msgid "Inspect"
 msgstr "Prüfen"
 
-msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
-msgstr "Wohn-Schlüssel (resident SSH credentials) inspizieren, laden, exportieren, testen, vom Agent entfernen oder dauerhaft löschen."
+msgid "Inspect YubiKey"
+msgstr "YubiKey inspizieren"
 
-msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
-msgstr "Überprüfe die SSH-Anmeldeinformationen des Benutzers… Berühre den YubiKey, wenn er blinkt."
+msgid "Inspect YubiKey {0} of {1}"
+msgstr "YubiKey {0} von {1} inspizieren"
+
+msgid "Inspect again"
+msgstr "Nach Inspizieren"
+
+msgid "Inspect all keys"
+msgstr "Alle Schlüssel inspizieren"
+
+msgid "Inspect this YubiKey"
+msgstr "Diesen YubiKey inspizieren"
+
+msgid "Inspected"
+msgstr "Inspektion durchgeführt"
+
+msgid "Inspection needs attention · {0}"
+msgstr "Inspektion erfordert Aufmerksamkeit · {0}"
 
 msgid "Invalid FIDO device path."
 msgstr "Ungültiger FIDO-Gerätepfad."
+
+msgid "Keys stored on your YubiKeys"
+msgstr "Schlüssel auf Ihren YubiKeys gespeichert"
 
 msgid "Load"
 msgstr "Laden"
@@ -360,8 +402,8 @@ msgstr "Laden"
 msgid "Load SSH keys"
 msgstr "SSH-Schlüssel laden"
 
-msgid "Load into agent"
-msgstr "In den Agenten laden"
+msgid "Load all"
+msgstr "Alle laden"
 
 msgid "Load keys"
 msgstr "Schlüssel laden"
@@ -369,8 +411,14 @@ msgstr "Schlüssel laden"
 msgid "Load resident SSH keys"
 msgstr "Wohnende SSH-Schlüssel laden"
 
+msgid "Load this YubiKey's resident SSH keys into the agent"
+msgstr "Die residierenden SSH-Schlüssel dieses YubiKeys in den Agenten laden"
+
 msgid "Load this resident key into the SSH agent before signing"
 msgstr "Laden Sie diesen Resident-Key vor der Signierung in den SSH-Agenten"
+
+msgid "Loaded"
+msgstr "Geladen"
 
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "SSH-Schlüssel werden geladen… Berühren Sie den YubiKey, wenn er blinkt."
@@ -381,6 +429,12 @@ msgstr "Pfad der lokalen Schlüssel-Handle"
 msgid "Local key label"
 msgstr "Kennzeichnung des lokalen Schlüssels"
 
+msgid "Looking for your SSH agent and connected YubiKeys."
+msgstr "Auf der Suche nach Ihrem SSH-Agent und verbundenen YubiKeys."
+
+msgid "Needs attention"
+msgstr "Erfordert Aufmerksamkeit"
+
 msgid "New hardware-backed SSH key"
 msgstr "Neuer hardwaregestützter SSH-Schlüssel"
 
@@ -390,23 +444,38 @@ msgstr "Kein FIDO-Sicherheitsschlüssel erkannt"
 msgid "No SSH agent was detected"
 msgstr "Kein SSH-Agent erkannt"
 
+msgid "No YubiKey connected"
+msgstr "Kein YubiKey verbunden"
+
 msgid "No hardware serial"
 msgstr "Keine Hardware-Seriennummer"
 
-msgid "No resident SSH credentials"
-msgstr "Keine wohnenden SSH-Anmeldeinformationen"
+msgid "No resident SSH keys"
+msgstr "Keine residierenden SSH-Schlüssel"
 
 msgid "No resident SSH keys found"
 msgstr "Keine Resident-SSH-Schlüssel gefunden"
 
+msgid "No resident SSH keys found · {0}"
+msgstr "Keine residierenden SSH-Schlüssel gefunden · {0}"
+
+msgid "No resident SSH keys were found on the connected YubiKeys."
+msgstr "Auf den verbundenen YubiKeys wurden keine residierenden SSH-Schlüssel gefunden."
+
 msgid "No signing"
 msgstr "Keine Signierung"
 
-msgid "No ssh:* discoverable credentials were found on this key."
-msgstr "Keine entdeckbaren ssh:*-Anmeldeinformationen wurden auf diesem Schlüssel gefunden."
-
 msgid "Not configured"
 msgstr "Nicht konfiguriert"
+
+msgid "Not inspected"
+msgstr "Nicht inspiziert"
+
+msgid "Not inspected yet · {0}"
+msgstr "Noch nicht inspiziert · {0}"
+
+msgid "Open the official Yubico Store"
+msgstr "Den offiziellen Yubico-Store öffnen"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH konnte die residenten Schlüssel nicht laden. Der SSH-Agent enthält keine neu geladene Identität."
@@ -456,8 +525,17 @@ msgstr "Authentifizierung und Commit-Signierung schützen"
 msgid "Protection for {0}"
 msgstr "Schutz für {0}"
 
+msgid "Read the resident SSH keys already stored on your YubiKeys. You will enter each key's FIDO PIN and may need to touch it."
+msgstr "Lesen Sie die bereits auf Ihren YubiKeys gespeicherten residierenden SSH-Schlüssel aus. Sie geben den FIDO-PIN für jeden Schlüssel ein und müssen ihn möglicherweise berühren."
+
+msgid "Reading SSH keys from {0}… Touch it if it flashes."
+msgstr "SSH-Schlüssel von {0} werden gelesen… Berühren Sie ihn, wenn er blinkt."
+
 msgid "Reading account security settings…"
 msgstr "Kontosicherheitseinstellungen werden gelesen…"
+
+msgid "Ready"
+msgstr "Bereit"
 
 msgid "Ready to inspect"
 msgstr "Bereit zur Inspektion"
@@ -480,9 +558,6 @@ msgstr "Verifizierung für jede Signatur erforderlich"
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "Erfordert bei jeder Signatur dieses Schlüssels die FIDO-PIN"
 
-msgid "Resident SSH credentials"
-msgstr "Residente SSH-Anmeldeinformationen"
-
 msgid "Resident SSH key created"
 msgstr "Residenter SSH-Schlüssel erstellt"
 
@@ -498,17 +573,14 @@ msgstr "Residenter Benutzername"
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr "Der residente Benutzername muss 1–64 Bytes enthalten und keine Steuerzeichen aufweisen."
 
-msgid "Run ssh-add -K for this connected security key"
-msgstr "Führen Sie ssh-add -K für diesen verbundenen Sicherheitsschlüssel aus"
-
 msgid "SSH & Git"
 msgstr "SSH & Git"
 
 msgid "SSH agent"
 msgstr "SSH-Agent"
 
-msgid "SSH agent connected"
-msgstr "SSH-Agent verbunden"
+msgid "SSH agent is ready"
+msgstr "SSH-Agent ist bereit"
 
 msgid "SSH agent unavailable"
 msgstr "SSH-Agent nicht verfügbar"
@@ -518,6 +590,9 @@ msgstr "SSH-Commit-Signierung"
 
 msgid "SSH key actions"
 msgstr "Aktionen für SSH-Schlüssel"
+
+msgid "SSH key for {0}"
+msgstr "SSH-Schlüssel für {0}"
 
 msgid "SSH keys"
 msgstr "SSH-Schlüssel"
@@ -566,9 +641,6 @@ msgstr "Die PIN wird direkt an ssh-add gesendet und niemals gespeichert."
 
 msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
 msgstr "Die PIN wird über eine private Pipe an OpenSSH gesendet. Sie wird weder gespeichert noch in Befehlsargumenten platziert."
-
-msgid "The PIN is used only for this read-only inspection and is never stored."
-msgstr "Die PIN wird nur für diese schreibgeschützte Inspektion verwendet und niemals gespeichert."
 
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "Der SSH-Agent hat die Daten mit diesem Schlüssel erfolgreich signiert und verifiziert."
@@ -701,6 +773,9 @@ msgstr "Diese Schlüssel werden von diesem Konto vertraut, sind jedoch derzeit n
 msgid "This PIN authorizes permanent deletion of the exact credential shown in the previous step. It is never stored."
 msgstr "Dieser PIN autorisiert das dauerhafte Löschen des im vorherigen Schritt angezeigten exakten Schlüssels. Er wird niemals gespeichert."
 
+msgid "This YubiKey has no discoverable ssh:* credentials."
+msgstr "Dieser YubiKey hat keine erkennbaren ssh:*-Anmeldeinformationen."
+
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "Dies ist kein unterstützter öffentlicher OpenSSH Security-Key-Schlüssel."
 
@@ -712,9 +787,6 @@ msgstr "Diese Einstellung gilt nur für den aktuellen Benutzer."
 
 msgid "This will only take a moment."
 msgstr "Dies dauert nur einen Moment."
-
-msgid "Touch the YubiKey if it flashes."
-msgstr "Berühren Sie den YubiKey, wenn er blinkt."
 
 msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr "Berühren Sie den YubiKey, wenn dazu aufgefordert wird. Laden der residenten Schlüssel in den SSH-Agenten…"
@@ -742,6 +814,9 @@ msgstr "Nochmal versuchen"
 
 msgid "Type {0} to confirm"
 msgstr "Geben Sie {0} zur Bestätigung ein"
+
+msgid "Unavailable"
+msgstr "Nicht verfügbar"
 
 msgid "Unknown authentication purpose."
 msgstr "Unbekannter Authentifizierungszweck."
@@ -779,11 +854,23 @@ msgstr "YubiKey zum Entsperren von sudo verwenden"
 msgid "Verifying and permanently deleting the selected resident credential. Do not unplug the YubiKey…"
 msgstr "Überprüfung und dauerhaftes Löschen des ausgewählten Wohn-Schlüssels (resident credential). YubiKey nicht abziehen…"
 
+msgid "Waiting"
+msgstr "Warten"
+
 msgid "Waiting for a configured YubiKey"
 msgstr "Warten auf einen konfigurierten YubiKey"
 
 msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
 msgstr "Sie können jetzt Schlüssel registrieren, aber sudo umgeht PAM, während der kennwortlose Zugriff aktiviert ist."
+
+msgid "Your YubiKeys are inspected"
+msgstr "Ihre YubiKeys wurden inspiziert"
+
+msgid "Your hardware-backed SSH keys"
+msgstr "Ihre hardwarebasierten SSH-Schlüssel"
+
+msgid "Your resident SSH keys stay on the security key. Insert it to view and use them."
+msgstr "Ihre residierenden SSH-Schlüssel verbleiben auf dem Sicherheitsschlüssel. Stecken Sie ihn ein, um sie anzuzeigen und zu verwenden."
 
 msgid "Your security settings are ready. Connect a configured YubiKey when you need it."
 msgstr "Ihre Sicherheitseinstellungen sind bereit. Schließen Sie einen konfigurierten YubiKey an, wenn Sie ihn benötigen."
@@ -839,9 +926,6 @@ msgstr "sudo-Authentifizierungsrichtlinie"
 msgid "unknown"
 msgstr "unbekannt"
 
-msgid "unknown socket"
-msgstr "Unbekannter Socket"
-
 msgid "user"
 msgstr "Benutzer"
 
@@ -857,8 +941,8 @@ msgstr "{0} wurde mit {1} beendet"
 msgid "{0} failed: {1}"
 msgstr "{0} fehlgeschlagen: {1}"
 
-msgid "{0} identities · {1}"
-msgstr "{0} Identitäten · {1}"
+msgid "{0} identities are currently available to SSH applications."
+msgstr "{0} Identitäten sind derzeit für SSH-Anwendungen verfügbar."
 
 msgid "{0} is enabled for this YubiKey"
 msgstr "{0} ist für diesen YubiKey aktiviert"
@@ -872,14 +956,74 @@ msgstr "{0} neue SSH-Identitäten wurden zum Agenten hinzugefügt."
 msgid "{0} new SSH identity was added to the agent."
 msgstr "{0} neue SSH-Identität wurde zum Agenten hinzugefügt."
 
+msgid "{0} resident SSH keys are available from your connected YubiKeys."
+msgstr "{0} residierende SSH-Schlüssel sind von Ihren verbundenen YubiKeys verfügbar."
+
+msgid "{0} resident SSH keys · {1}"
+msgstr "{0} residierende SSH-Schlüssel · {1}"
+
 msgid "{0} resident credentials inspected"
 msgstr "{0} residente Anmeldeinformationen inspiziert"
+
+msgid "{0} to inspect"
+msgstr "{0} zu inspizieren"
 
 msgid "{0} · no hardware serial"
 msgstr "{0} · keine Hardware-Seriennummer"
 
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
+
+#~ msgid "All inspected resident credentials from this key are already in the agent"
+#~ msgstr "Alle geprüften Resident-Credentials dieses Schlüssels sind bereits im Agenten vorhanden"
+
+#~ msgid "AnduinOS is safer with a YubiKey"
+#~ msgstr "AnduinOS ist mit einem YubiKey sicherer"
+
+#~ msgid "Checking SSH keys… Touch the YubiKey if it flashes."
+#~ msgstr "SSH-Schlüssel werden überprüft… Berühren Sie den YubiKey, wenn er blinkt."
+
+#~ msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+#~ msgstr "Verbinden Sie genau einen FIDO-Sicherheitsschlüssel, um eine eindeutige Quelle auszuwählen"
+
+#~ msgid "Enter the YubiKey FIDO PIN"
+#~ msgstr "YubiKey-FIDO-PIN eingeben"
+
+#~ msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
+#~ msgstr "Wohn-Schlüssel (resident SSH credentials) inspizieren, laden, exportieren, testen, vom Agent entfernen oder dauerhaft löschen."
+
+#~ msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
+#~ msgstr "Überprüfe die SSH-Anmeldeinformationen des Benutzers… Berühre den YubiKey, wenn er blinkt."
+
+#~ msgid "Load into agent"
+#~ msgstr "In den Agenten laden"
+
+#~ msgid "No resident SSH credentials"
+#~ msgstr "Keine wohnenden SSH-Anmeldeinformationen"
+
+#~ msgid "No ssh:* discoverable credentials were found on this key."
+#~ msgstr "Keine entdeckbaren ssh:*-Anmeldeinformationen wurden auf diesem Schlüssel gefunden."
+
+#~ msgid "Resident SSH credentials"
+#~ msgstr "Residente SSH-Anmeldeinformationen"
+
+#~ msgid "Run ssh-add -K for this connected security key"
+#~ msgstr "Führen Sie ssh-add -K für diesen verbundenen Sicherheitsschlüssel aus"
+
+#~ msgid "SSH agent connected"
+#~ msgstr "SSH-Agent verbunden"
+
+#~ msgid "The PIN is used only for this read-only inspection and is never stored."
+#~ msgstr "Die PIN wird nur für diese schreibgeschützte Inspektion verwendet und niemals gespeichert."
+
+#~ msgid "Touch the YubiKey if it flashes."
+#~ msgstr "Berühren Sie den YubiKey, wenn er blinkt."
+
+#~ msgid "unknown socket"
+#~ msgstr "Unbekannter Socket"
+
+#~ msgid "{0} identities · {1}"
+#~ msgstr "{0} Identitäten · {1}"
 
 #~ msgid "Git Signing"
 #~ msgstr "Git Signing"

@@ -9,12 +9,14 @@ use crate::progress_dialog;
 use crate::ssh;
 use adw::prelude::*;
 use adw::subclass::prelude::*;
-use gtk::{gio, glib};
+use gtk::{gdk, gio, glib};
 use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
 use std::rc::Rc;
 use std::time::Duration;
 use zeroize::Zeroizing;
+
+const YUBIKEY_DEVICE_SVG: &[u8] = include_bytes!("../data/yubikey-device.svg");
 
 mod imp {
     use super::*;
@@ -533,7 +535,7 @@ impl YubiKeyManagerWindow {
         let loading = adw::PreferencesGroup::new();
         loading.add(&action_row_with_icon(
             &i18n("Checking SSH keys…"),
-            &i18n("Touch the YubiKey if it flashes."),
+            &i18n("Looking for your SSH agent and connected YubiKeys."),
             "view-refresh-symbolic",
         ));
         page.add(&loading);
@@ -544,7 +546,7 @@ impl YubiKeyManagerWindow {
         glib::spawn_future_local(async move {
             let result = progress_dialog::run_with_progress(
                 &parent,
-                &i18n("Checking SSH keys… Touch the YubiKey if it flashes."),
+                &i18n("Checking SSH support…"),
                 || Ok((ssh::agent_status(), ssh::list_fido_devices())),
             )
             .await;
@@ -568,6 +570,62 @@ impl YubiKeyManagerWindow {
                     page.add(&group);
                     *window.imp().ssh_groups.borrow_mut() = vec![group];
                 }
+            }
+        });
+    }
+
+    fn inspect_ssh_devices(&self, devices: Vec<ssh::FidoDevice>) {
+        if devices.is_empty() {
+            return;
+        }
+        let parent: gtk::Window = self.clone().upcast();
+        let weak = self.downgrade();
+        glib::spawn_future_local(async move {
+            let total = devices.len();
+            for (index, device) in devices.into_iter().enumerate() {
+                let device_name = friendly_fido_name(&device);
+                let heading = if total == 1 {
+                    i18n("Inspect this YubiKey")
+                } else {
+                    i18n_fmt(
+                        &i18n("Inspect YubiKey {0} of {1}"),
+                        &[&(index + 1).to_string(), &total.to_string()],
+                    )
+                };
+                let Some(pin) = request_fido_pin_for(
+                    &parent,
+                    &heading,
+                    &i18n_fmt(
+                        &i18n("Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."),
+                        &[&device_name],
+                    ),
+                    &i18n("Inspect"),
+                )
+                .await
+                else {
+                    break;
+                };
+                let task_path = device.path.clone();
+                let result = progress_dialog::run_with_progress(
+                    &parent,
+                    &i18n_fmt(
+                        &i18n("Reading SSH keys from {0}… Touch it if it flashes."),
+                        &[&device_name],
+                    ),
+                    move || ssh::inspect_resident_ssh(&task_path, pin.as_str()),
+                )
+                .await;
+                let Some(window) = weak.upgrade() else {
+                    return;
+                };
+                window
+                    .imp()
+                    .ssh_results
+                    .borrow_mut()
+                    .insert(device.path, result);
+            }
+            if let Some(window) = weak.upgrade() {
+                window.refresh();
             }
         });
     }
@@ -1315,55 +1373,24 @@ fn rebuild_ssh(
     agent: ssh::AgentStatus,
     fido_devices: Result<Vec<ssh::FidoDevice>, String>,
 ) -> Vec<adw::PreferencesGroup> {
-    let agent_group = adw::PreferencesGroup::builder()
-        .title(i18n("SSH agent"))
-        .build();
-    let agent_description = if agent.available {
-        let identity_count = agent.identity_count.to_string();
-        let socket = if agent.socket.is_empty() {
-            i18n("unknown socket")
-        } else {
-            agent.socket.clone()
-        };
-        i18n_fmt(
-            &i18n("{0} identities · {1}"),
-            &[&identity_count, &socket],
-        )
-    } else {
-        agent
-            .error
-            .clone()
-            .unwrap_or_else(|| i18n("No SSH agent was detected"))
-    };
-    let agent_title = if agent.available {
-        i18n("SSH agent connected")
-    } else {
-        i18n("SSH agent unavailable")
-    };
-    agent_group.add(&action_row_with_icon(
-        &agent_title,
-        &agent_description,
-        if agent.available {
-            "emblem-ok-symbolic"
-        } else {
-            "dialog-warning-symbolic"
-        },
-    ));
-    page.add(&agent_group);
-
-    let create_group = rebuild_ssh_create(window, &fido_devices);
-    page.add(&create_group);
+    let mut groups = Vec::new();
+    let overview_group = ssh_overview_group(window, &fido_devices);
+    page.add(&overview_group);
+    groups.push(overview_group);
 
     let devices_group = adw::PreferencesGroup::builder()
-        .title(i18n("Resident SSH credentials"))
-        .description(i18n("Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."))
+        .title(i18n("Keys stored on your YubiKeys"))
+        .description(i18n(
+            "Inspect a connected YubiKey to reveal its resident SSH keys and available actions.",
+        ))
         .build();
-    match fido_devices {
+    match &fido_devices {
         Ok(devices) if devices.is_empty() => devices_group.add(
-            &adw::ActionRow::builder()
-                .title(i18n("No FIDO security key detected"))
-                .subtitle(i18n("Insert a YubiKey, then press Refresh."))
-                .build(),
+            &action_row_with_icon(
+                &i18n("No YubiKey connected"),
+                &i18n("Insert a YubiKey. This page will detect it when you refresh."),
+                "drive-removable-media-usb-symbolic",
+            ),
         ),
         Ok(devices) => {
             let single_device = devices.len() == 1;
@@ -1387,156 +1414,145 @@ fn rebuild_ssh(
                         .collect::<Vec<_>>(),
                     _ => Vec::new(),
                 };
-                let row = adw::ActionRow::builder()
-                    .title(&device.description)
-                    .subtitle(&device.path)
+                let credential_count = match &inspected {
+                    Some(Ok(credentials)) => Some(credentials.len()),
+                    _ => None,
+                };
+                let device_subtitle = match &inspected {
+                    Some(Ok(credentials)) if credentials.is_empty() => {
+                        i18n_fmt(&i18n("No resident SSH keys found · {0}"), &[&device.path])
+                    }
+                    Some(Ok(credentials)) if credentials.len() == 1 => {
+                        i18n_fmt(&i18n("1 resident SSH key · {0}"), &[&device.path])
+                    }
+                    Some(Ok(credentials)) => i18n_fmt(
+                        &i18n("{0} resident SSH keys · {1}"),
+                        &[&credentials.len().to_string(), &device.path],
+                    ),
+                    Some(Err(_)) => {
+                        i18n_fmt(&i18n("Inspection needs attention · {0}"), &[&device.path])
+                    }
+                    None => i18n_fmt(&i18n("Not inspected yet · {0}"), &[&device.path]),
+                };
+                let row = adw::ExpanderRow::builder()
+                    .title(friendly_fido_name(device))
+                    .subtitle(device_subtitle)
+                    .expanded(matches!(inspected, Some(Ok(_))))
                     .build();
-                row.add_prefix(
-                    &gtk::Image::builder()
-                        .icon_name("dialog-password-symbolic")
-                        .build(),
-                );
+                row.add_prefix(&ssh_device_picture(34, 48));
+                let (state, state_class) = match &inspected {
+                    Some(Ok(_)) => (i18n("Inspected"), "success"),
+                    Some(Err(_)) => (i18n("Needs attention"), "warning"),
+                    None => (i18n("Not inspected"), "warning"),
+                };
+                row.add_suffix(&ssh_status_badge(&state, state_class));
                 let inspect = gtk::Button::builder()
-                    .label(i18n("Inspect"))
+                    .label(if inspected.is_some() {
+                        i18n("Inspect again")
+                    } else {
+                        i18n("Inspect")
+                    })
                     .valign(gtk::Align::Center)
+                    .css_classes(if inspected.is_some() {
+                        vec!["flat"]
+                    } else {
+                        vec!["suggested-action", "pill"]
+                    })
                     .build();
-                let path = device.path.clone();
                 let weak = window.downgrade();
-                inspect.connect_clicked(move |button| {
-                    let Some(parent) = button.root().and_downcast::<gtk::Window>() else {
-                        return;
-                    };
-                    let path = path.clone();
-                    let weak = weak.clone();
-                    glib::spawn_future_local(async move {
-                        let Some(pin) = request_fido_pin(&parent).await else {
-                            return;
-                        };
-                        let task_path = path.clone();
-                        let result = progress_dialog::run_with_progress(
-                            &parent,
-                            &i18n("Inspecting resident SSH credentials… Touch the YubiKey if it flashes."),
-                            move || ssh::inspect_resident_ssh(&task_path, pin.as_str()),
-                        )
-                        .await;
-                        if let Some(window) = weak.upgrade() {
-                            window
-                                .imp()
-                                .ssh_results
-                                .borrow_mut()
-                                .insert(path, result);
-                            window.refresh();
-                        }
-                    });
+                let inspect_device = device.clone();
+                inspect.connect_clicked(move |_| {
+                    if let Some(window) = weak.upgrade() {
+                        window.inspect_ssh_devices(vec![inspect_device.clone()]);
+                    }
                 });
                 row.add_suffix(&inspect);
-                let load = gtk::Button::builder()
-                    .label(if all_loaded {
-                        i18n("Already loaded")
-                    } else {
-                        i18n("Load into agent")
-                    })
-                    .valign(gtk::Align::Center)
-                    .sensitive(single_device && agent.available && !all_loaded)
-                    .tooltip_text(if all_loaded {
-                        i18n("All inspected resident credentials from this key are already in the agent")
-                    } else if single_device {
-                        i18n("Run ssh-add -K for this connected security key")
-                    } else {
-                        i18n("Connect exactly one FIDO security key to choose an unambiguous source")
-                    })
-                    .build();
-                let weak = window.downgrade();
-                load.connect_clicked(move |button| {
-                    let Some(parent) = button.root().and_downcast::<gtk::Window>() else {
-                        return;
-                    };
-                    let weak = weak.clone();
-                    let expected_fingerprints = expected_fingerprints.clone();
-                    glib::spawn_future_local(async move {
-                        let Some(pin) = request_fido_pin_for(
-                            &parent,
-                            &i18n("Load resident SSH keys"),
-                            &i18n("The PIN is sent directly to ssh-add and is never stored."),
-                            &i18n("Load"),
-                        )
-                        .await
-                        else {
+
+                if matches!(credential_count, Some(count) if count > 0)
+                    && single_device
+                    && agent.available
+                    && !all_loaded
+                {
+                    let load = gtk::Button::builder()
+                        .label(i18n("Load all"))
+                        .valign(gtk::Align::Center)
+                        .tooltip_text(i18n("Load this YubiKey's resident SSH keys into the agent"))
+                        .build();
+                    let weak = window.downgrade();
+                    load.connect_clicked(move |button| {
+                        let Some(parent) = button.root().and_downcast::<gtk::Window>() else {
                             return;
                         };
-                        let result = progress_dialog::run_with_progress(
-                            &parent,
-                            &i18n("Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"),
-                            move || {
-                                ssh::load_resident_keys(pin.as_str(), &expected_fingerprints)
-                            },
-                        )
-                        .await;
-                        match result {
-                            Ok(load_result) => {
-                                if let Some(window) = weak.upgrade() {
-                                    refresh_cached_agent_matches(&window);
-                                    window.refresh();
-                                    match load_result {
-                                        ssh::LoadResult::AlreadyLoaded => show_message(
-                                            &window,
-                                            &i18n("Already loaded"),
-                                            &i18n("The inspected resident SSH credentials are already available in this agent."),
-                                        ),
-                                        ssh::LoadResult::Loaded { added } => show_message(
-                                            &window,
-                                            &i18n("Resident keys loaded"),
-                                            &if added == 1 {
-                                                i18n_fmt(&i18n("{0} new SSH identity was added to the agent."), &[&added.to_string()])
-                                            } else {
-                                                i18n_fmt(&i18n("{0} new SSH identities were added to the agent."), &[&added.to_string()])
-                                            },
-                                        ),
+                        let weak = weak.clone();
+                        let expected_fingerprints = expected_fingerprints.clone();
+                        glib::spawn_future_local(async move {
+                            let Some(pin) = request_fido_pin_for(
+                                &parent,
+                                &i18n("Load resident SSH keys"),
+                                &i18n("The PIN is sent directly to ssh-add and is never stored."),
+                                &i18n("Load"),
+                            )
+                            .await
+                            else {
+                                return;
+                            };
+                            let result = progress_dialog::run_with_progress(
+                                &parent,
+                                &i18n("Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"),
+                                move || {
+                                    ssh::load_resident_keys(pin.as_str(), &expected_fingerprints)
+                                },
+                            )
+                            .await;
+                            match result {
+                                Ok(load_result) => {
+                                    if let Some(window) = weak.upgrade() {
+                                        refresh_cached_agent_matches(&window);
+                                        window.refresh();
+                                        match load_result {
+                                            ssh::LoadResult::AlreadyLoaded => show_message(
+                                                &window,
+                                                &i18n("Already loaded"),
+                                                &i18n("The inspected resident SSH credentials are already available in this agent."),
+                                            ),
+                                            ssh::LoadResult::Loaded { added } => show_message(
+                                                &window,
+                                                &i18n("Resident keys loaded"),
+                                                &if added == 1 {
+                                                    i18n_fmt(&i18n("{0} new SSH identity was added to the agent."), &[&added.to_string()])
+                                                } else {
+                                                    i18n_fmt(&i18n("{0} new SSH identities were added to the agent."), &[&added.to_string()])
+                                                },
+                                            ),
+                                        }
                                     }
                                 }
+                                Err(error) => show_error(&parent, &error),
                             }
-                            Err(error) => show_error(&parent, &error),
-                        }
+                        });
                     });
-                });
-                row.add_suffix(&load);
-                devices_group.add(&row);
+                    row.add_suffix(&load);
+                } else if all_loaded {
+                    row.add_suffix(&ssh_status_badge(&i18n("Loaded"), "success"));
+                }
 
                 if let Some(result) = inspected {
                     match result {
-                        Ok(credentials) if credentials.is_empty() => devices_group.add(
+                        Ok(credentials) if credentials.is_empty() => row.add_row(
                             &adw::ActionRow::builder()
-                                .title(i18n("No resident SSH credentials"))
-                                .subtitle(i18n("No ssh:* discoverable credentials were found on this key."))
+                                .title(i18n("No resident SSH keys"))
+                                .subtitle(i18n("This YubiKey has no discoverable ssh:* credentials."))
                                 .build(),
                         ),
                         Ok(credentials) => {
                             for credential in credentials {
-                                let resident_name = if credential.username.is_empty() {
-                                    i18n("Unnamed SSH credential")
-                                } else {
-                                    credential.username.clone()
-                                };
-                                let credential_title = credential
-                                    .local_label
-                                    .clone()
-                                    .unwrap_or_else(|| resident_name.clone());
-                                let credential_subtitle = if credential.local_label.is_some() {
-                                    format!(
-                                        "{} · {} · {} · {}",
-                                        resident_name,
-                                        credential.algorithm,
-                                        credential.application,
-                                        credential.fingerprint
-                                    )
-                                } else {
-                                    format!(
-                                        "{} · {} · {}",
-                                        credential.algorithm,
-                                        credential.application,
-                                        credential.fingerprint
-                                    )
-                                };
+                                let credential_title = credential_display_title(&credential);
+                                let credential_subtitle = format!(
+                                    "{} · {}\n{}",
+                                    short_ssh_algorithm(&credential.algorithm),
+                                    credential.application,
+                                    credential.fingerprint
+                                );
                                 let credential_row = adw::ActionRow::builder()
                                     .title(credential_title)
                                     .subtitle(credential_subtitle)
@@ -1578,31 +1594,317 @@ fn rebuild_ssh(
                                 }
                                 credential_row.add_suffix(&credential_actions(
                                     window,
-                                    &device,
+                                    device,
                                     &credential,
                                 ));
-                                devices_group.add(&credential_row);
+                                row.add_row(&credential_row);
                             }
                         }
-                        Err(error) => devices_group.add(
-                            &adw::ActionRow::builder()
-                                .title(i18n("Could not inspect this YubiKey"))
-                                .subtitle(error)
-                                .build(),
+                        Err(error) => row.add_row(
+                            &action_row_with_icon(
+                                &i18n("Could not inspect this YubiKey"),
+                                &error,
+                                "dialog-warning-symbolic",
+                            ),
                         ),
                     }
                 }
+                devices_group.add(&row);
             }
         }
         Err(error) => devices_group.add(
-            &adw::ActionRow::builder()
-                .title(i18n("FIDO device discovery is unavailable"))
-                .subtitle(error)
-                .build(),
+            &action_row_with_icon(
+                &i18n("FIDO device discovery is unavailable"),
+                error,
+                "dialog-warning-symbolic",
+            ),
         ),
     }
     page.add(&devices_group);
-    vec![agent_group, create_group, devices_group]
+    groups.push(devices_group);
+
+    let agent_group = adw::PreferencesGroup::builder()
+        .title(i18n("SSH agent"))
+        .description(i18n(
+            "The SSH agent makes selected keys available to SSH applications during this session.",
+        ))
+        .build();
+    let (agent_title, agent_description, agent_icon, agent_state, agent_class) =
+        if agent.available {
+            (
+                i18n("SSH agent is ready"),
+                if agent.identity_count == 1 {
+                    i18n("1 identity is currently available to SSH applications.")
+                } else {
+                    i18n_fmt(
+                        &i18n("{0} identities are currently available to SSH applications."),
+                        &[&agent.identity_count.to_string()],
+                    )
+                },
+                "emblem-ok-symbolic",
+                i18n("Ready"),
+                "success",
+            )
+        } else {
+            (
+                i18n("SSH agent unavailable"),
+                agent
+                    .error
+                    .clone()
+                    .unwrap_or_else(|| i18n("No SSH agent was detected")),
+                "dialog-warning-symbolic",
+                i18n("Unavailable"),
+                "warning",
+            )
+        };
+    let agent_row = action_row_with_icon(&agent_title, &agent_description, agent_icon);
+    agent_row.add_suffix(&ssh_status_badge(&agent_state, agent_class));
+    if !agent.socket.is_empty() {
+        agent_row.set_tooltip_text(Some(&agent.socket));
+    }
+    agent_group.add(&agent_row);
+    page.add(&agent_group);
+    groups.push(agent_group);
+
+    let create_group = rebuild_ssh_create(window, &fido_devices);
+    page.add(&create_group);
+    groups.push(create_group);
+    groups
+}
+
+fn ssh_overview_group(
+    window: &YubiKeyManagerWindow,
+    devices: &Result<Vec<ssh::FidoDevice>, String>,
+) -> adw::PreferencesGroup {
+    let group = adw::PreferencesGroup::new();
+    let card = gtk::Box::builder().css_classes(["card"]).build();
+    let content = gtk::Box::builder()
+        .orientation(gtk::Orientation::Horizontal)
+        .spacing(16)
+        .margin_start(18)
+        .margin_end(18)
+        .margin_top(16)
+        .margin_bottom(16)
+        .build();
+    let (title, subtitle, icon, status, status_class, pending) = match devices {
+        Ok(devices) if devices.is_empty() => (
+            i18n("Connect a YubiKey"),
+            i18n("Your resident SSH keys stay on the security key. Insert it to view and use them."),
+            "drive-removable-media-usb-symbolic",
+            i18n("Waiting"),
+            "dim-label",
+            Vec::new(),
+        ),
+        Ok(devices) => {
+            let pending = devices
+                .iter()
+                .filter(|device| {
+                    !matches!(
+                        window.imp().ssh_results.borrow().get(&device.path),
+                        Some(Ok(_))
+                    )
+                })
+                .cloned()
+                .collect::<Vec<_>>();
+            if pending.is_empty() {
+                let credential_count = devices
+                    .iter()
+                    .filter_map(|device| {
+                        window
+                            .imp()
+                            .ssh_results
+                            .borrow()
+                            .get(&device.path)
+                            .and_then(|result| result.as_ref().ok())
+                            .map(Vec::len)
+                    })
+                    .sum::<usize>();
+                (
+                    if credential_count == 0 {
+                        i18n("Your YubiKeys are inspected")
+                    } else {
+                        i18n("Your hardware-backed SSH keys")
+                    },
+                    if credential_count == 0 {
+                        i18n("No resident SSH keys were found on the connected YubiKeys.")
+                    } else if credential_count == 1 {
+                        i18n("1 resident SSH key is available from your connected YubiKey.")
+                    } else {
+                        i18n_fmt(
+                            &i18n("{0} resident SSH keys are available from your connected YubiKeys."),
+                            &[&credential_count.to_string()],
+                        )
+                    },
+                    "security-high-symbolic",
+                    i18n("Ready"),
+                    "success",
+                    pending,
+                )
+            } else {
+                (
+                    if pending.len() == devices.len() {
+                        i18n("Discover SSH keys on your YubiKeys")
+                    } else {
+                        i18n("Finish inspecting your YubiKeys")
+                    },
+                    i18n("Read the resident SSH keys already stored on your YubiKeys. You will enter each key's FIDO PIN and may need to touch it."),
+                    "view-reveal-symbolic",
+                    i18n_fmt(
+                        &i18n("{0} to inspect"),
+                        &[&pending.len().to_string()],
+                    ),
+                    "warning",
+                    pending,
+                )
+            }
+        }
+        Err(error) => (
+            i18n("Could not find security keys"),
+            error.clone(),
+            "dialog-warning-symbolic",
+            i18n("Unavailable"),
+            "warning",
+            Vec::new(),
+        ),
+    };
+    if matches!(devices, Ok(items) if !items.is_empty()) {
+        content.append(&ssh_device_picture(42, 58));
+    } else {
+        content.append(
+            &gtk::Image::builder()
+                .icon_name(icon)
+                .pixel_size(32)
+                .valign(gtk::Align::Start)
+                .css_classes([status_class])
+                .build(),
+        );
+    }
+    let labels = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(5)
+        .hexpand(true)
+        .build();
+    labels.append(
+        &gtk::Label::builder()
+            .label(title)
+            .css_classes(["title-2"])
+            .halign(gtk::Align::Start)
+            .wrap(true)
+            .xalign(0.0)
+            .build(),
+    );
+    labels.append(
+        &gtk::Label::builder()
+            .label(subtitle)
+            .css_classes(["dim-label"])
+            .halign(gtk::Align::Start)
+            .wrap(true)
+            .xalign(0.0)
+            .build(),
+    );
+    content.append(&labels);
+    let actions = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(9)
+        .valign(gtk::Align::Center)
+        .halign(gtk::Align::End)
+        .build();
+    actions.append(&ssh_status_badge(&status, status_class));
+    if !pending.is_empty() {
+        let inspect_all = gtk::Button::builder()
+            .label(if pending.len() == 1 {
+                i18n("Inspect YubiKey")
+            } else {
+                i18n("Inspect all keys")
+            })
+            .css_classes(["suggested-action", "pill"])
+            .halign(gtk::Align::End)
+            .build();
+        let weak = window.downgrade();
+        inspect_all.connect_clicked(move |_| {
+            if let Some(window) = weak.upgrade() {
+                window.inspect_ssh_devices(pending.clone());
+            }
+        });
+        actions.append(&inspect_all);
+    }
+    content.append(&actions);
+    card.append(&content);
+    group.add(&card);
+    group
+}
+
+fn ssh_status_badge(text: &str, css_class: &str) -> gtk::Label {
+    gtk::Label::builder()
+        .label(text)
+        .css_classes(["caption", "pill", css_class])
+        .accessible_role(gtk::AccessibleRole::Status)
+        .build()
+}
+
+fn ssh_device_picture(width: i32, height: i32) -> gtk::Picture {
+    let picture = gtk::Picture::builder()
+        .width_request(width)
+        .height_request(height)
+        .content_fit(gtk::ContentFit::Contain)
+        .can_shrink(true)
+        .build();
+    let bytes = glib::Bytes::from_static(YUBIKEY_DEVICE_SVG);
+    if let Ok(texture) = gdk::Texture::from_bytes(&bytes) {
+        picture.set_paintable(Some(&texture));
+    }
+    picture
+}
+
+fn friendly_fido_name(device: &ssh::FidoDevice) -> String {
+    device
+        .description
+        .rsplit_once('(')
+        .and_then(|(_, name)| name.strip_suffix(')'))
+        .map(str::trim)
+        .filter(|name| !name.is_empty())
+        .unwrap_or(&device.description)
+        .replace("Yubico YubiKey", "YubiKey")
+}
+
+fn credential_display_title(credential: &ssh::ResidentSshCredential) -> String {
+    if let Some(label) = credential
+        .local_label
+        .as_deref()
+        .filter(|label| human_ssh_label(label))
+    {
+        return label.to_string();
+    }
+    if human_ssh_label(&credential.username) {
+        return credential.username.clone();
+    }
+    let application = credential
+        .application
+        .strip_prefix("ssh:")
+        .filter(|application| !application.is_empty())
+        .unwrap_or(&credential.application);
+    i18n_fmt(&i18n("SSH key for {0}"), &[application])
+}
+
+fn human_ssh_label(label: &str) -> bool {
+    let trimmed = label.trim();
+    !trimmed.is_empty()
+        && trimmed != i18n("Unnamed SSH credential")
+        && !trimmed.chars().any(char::is_control)
+        && !(trimmed.len() > 32
+            && trimmed
+                .bytes()
+                .all(|byte| byte.is_ascii_alphanumeric() || b"+/=_-".contains(&byte)))
+}
+
+fn short_ssh_algorithm(algorithm: &str) -> &str {
+    if algorithm.contains("ecdsa") {
+        "ECDSA-SK"
+    } else if algorithm.contains("ed25519") {
+        "Ed25519-SK"
+    } else {
+        algorithm
+    }
 }
 
 fn rebuild_ssh_create(
@@ -1610,10 +1912,10 @@ fn rebuild_ssh_create(
     devices: &Result<Vec<ssh::FidoDevice>, String>,
 ) -> adw::PreferencesGroup {
     let group = adw::PreferencesGroup::builder()
-        .title(i18n("Create a resident SSH key"))
+        .title(i18n("Add another SSH key"))
         .description(i18n(
-            "The private key is generated by the selected YubiKey and cannot be exported. \
-             A recoverable resident credential and local OpenSSH handle files are created.",
+            "Optional: create a new resident key only when you need another SSH identity. \
+             Its private key never leaves the selected YubiKey.",
         ))
         .build();
     let row = action_row_with_icon(
@@ -1835,16 +2137,6 @@ async fn request_ssh_create_options(
         output_path: output_path.text().trim().into(),
         verify_required: verify.is_active(),
     })
-}
-
-async fn request_fido_pin(parent: &gtk::Window) -> Option<Zeroizing<String>> {
-    request_fido_pin_for(
-        parent,
-        &i18n("Enter the YubiKey FIDO PIN"),
-        &i18n("The PIN is used only for this read-only inspection and is never stored."),
-        &i18n("Inspect"),
-    )
-    .await
 }
 
 async fn request_fido_pin_for(

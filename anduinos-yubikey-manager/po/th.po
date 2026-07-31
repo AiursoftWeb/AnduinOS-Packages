@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 17:16+0000\n"
+"POT-Creation-Date: 2026-07-30 18:03+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -15,6 +15,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "1 identity is currently available to SSH applications."
+msgstr "มีอัตลักษณ์ 1 รายการพร้อมใช้งานสำหรับแอปพลิเคชัน SSH ในขณะนี้"
+
+msgid "1 resident SSH key is available from your connected YubiKey."
+msgstr "มีคีย์ SSH แบบ resident 1 รายการพร้อมใช้งานจาก YubiKey ที่เชื่อมต่ออยู่"
+
+msgid "1 resident SSH key · {0}"
+msgstr "คีย์ SSH แบบ resident 1 รายการ · {0}"
 
 msgid "A key must be connected before it can be enrolled."
 msgstr "จำเป็นต้องเชื่อมต่อคีย์ก่อนจึงจะลงทะเบียนได้"
@@ -24,6 +33,9 @@ msgstr "เกี่ยวกับ"
 
 msgid "Account password"
 msgstr "รหัสผ่านบัญชี"
+
+msgid "Add another SSH key"
+msgstr "เพิ่มคีย์ SSH อีกรายการ"
 
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "เพิ่มคีย์สาธารณะนี้ลงใน GitHub ในฐานะคีย์สำหรับการลงนาม"
@@ -36,9 +48,6 @@ msgstr "ตัวเลือกขั้นสูง"
 
 msgid "Algorithm"
 msgstr "อัลกอริทึม"
-
-msgid "All inspected resident credentials from this key are already in the agent"
-msgstr "ข้อมูลประจำตัวที่ตรวจสอบแล้วทั้งหมดจากคีย์นี้ได้อยู่ในเอเจนต์แล้ว"
 
 msgid "Allow sudo without authentication"
 msgstr "อนุญาตให้ใช้ sudo โดยไม่ต้องตรวจสอบสิทธิ์"
@@ -67,8 +76,8 @@ msgstr "ทีม AnduinOS"
 msgid "AnduinOS YubiKey Security Center"
 msgstr "ศูนย์ความปลอดภัย AnduinOS YubiKey"
 
-msgid "AnduinOS is safer with a YubiKey"
-msgstr "AnduinOS ปลอดภัยยิ่งขึ้นเมื่อใช้ร่วมกับ YubiKey"
+msgid "AnduinOS works more securely with a YubiKey"
+msgstr "AnduinOS จะทำงานได้อย่างปลอดภัยยิ่งขึ้นเมื่อใช้ร่วมกับ YubiKey"
 
 msgid "Application"
 msgstr "แอปพลิเคชัน"
@@ -85,14 +94,17 @@ msgstr "Available through SSH agent"
 msgid "Available through local key handle"
 msgstr "ใช้ได้ผ่าน local key handle"
 
+msgid "Buy a YubiKey"
+msgstr "ซื้อ YubiKey"
+
 msgid "Cancel"
 msgstr "ยกเลิก"
 
 msgid "Checking SSH keys…"
 msgstr "กำลังตรวจสอบคีย์ SSH…"
 
-msgid "Checking SSH keys… Touch the YubiKey if it flashes."
-msgstr "กำลังตรวจสอบคีย์ SSH… แตะ YubiKey หากไฟกระพริบ"
+msgid "Checking SSH support…"
+msgstr "กำลังตรวจสอบการรองรับ SSH…"
 
 msgid "Checking connected YubiKeys"
 msgstr "กำลังตรวจสอบ YubiKey ที่เชื่อมต่ออยู่"
@@ -145,11 +157,11 @@ msgstr "กำหนดค่าสำหรับ {0} · ไม่ได้เ�
 msgid "Connect a FIDO security key first"
 msgstr "เชื่อมต่อคีย์ความปลอดภัย FIDO ก่อน"
 
+msgid "Connect a YubiKey"
+msgstr "เชื่อมต่อ YubiKey"
+
 msgid "Connect a YubiKey to get started"
 msgstr "เชื่อมต่อ YubiKey เพื่อเริ่มต้นใช้งาน"
-
-msgid "Connect exactly one FIDO security key to choose an unambiguous source"
-msgstr "เชื่อมต่อคีย์ความปลอดภัย FIDO เพียงตัวเดียวเพื่อเลือกแหล่งที่มาที่ชัดเจน"
 
 msgid "Connect your YubiKey"
 msgstr "เชื่อมต่อ YubiKey ของคุณ"
@@ -183,6 +195,9 @@ msgstr "ไม่สามารถสร้าง {0}: {1}"
 
 msgid "Could not export the public key: {0}"
 msgstr "ไม่สามารถส่งออกกุญแจสาธารณะ: {0}"
+
+msgid "Could not find security keys"
+msgstr "ไม่พบคีย์ความปลอดภัย"
 
 msgid "Could not flush the temporary public key: {0}"
 msgstr "ไม่สามารถล้างข้อมูลกุญแจสาธารณะชั่วคราว: {0}"
@@ -241,6 +256,9 @@ msgstr "ผลลัพธ์การลบไม่ทราบสถานะ
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr "ปิดใช้งาน · sudo ต้องยืนยันตัวตนด้วย YubiKey หรือรหัสผ่านบัญชี"
 
+msgid "Discover SSH keys on your YubiKeys"
+msgstr "ค้นหาคีย์ SSH บน YubiKey ของคุณ"
+
 msgid "Display label must be at most 200 bytes and contain no control characters."
 msgstr "ป้ายชื่อแสดงต้องมีความยาวไม่เกิน 200 ไบต์และไม่มีการควบคุมตัวอักษร"
 
@@ -280,14 +298,14 @@ msgstr "ลงทะเบียนแล้ว · ไม่ใช้งาน�
 msgid "Enrollment safety"
 msgstr "ความปลอดภัยในการลงทะเบียน"
 
+msgid "Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
+msgstr "ใส่รหัส PIN FIDO สำหรับ {0} แตะที่อุปกรณ์หากไฟกระพริบ รหัส PIN จะไม่ถูกเก็บไว้"
+
 msgid "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 msgstr "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "ใส่ PIN ของ FIDO แตะ YubiKey หากมันกระพริบ"
-
-msgid "Enter the YubiKey FIDO PIN"
-msgstr "ใส่ PIN ของ YubiKey FIDO"
 
 msgid "Enter the YubiKey FIDO PIN to test this local key handle."
 msgstr "Enter the YubiKey FIDO PIN to test this local key handle."
@@ -309,6 +327,9 @@ msgstr "การค้นพบอุปกรณ์ FIDO ไม่พร้อ
 
 msgid "FIDO security key"
 msgstr "คีย์ความปลอดภัย FIDO"
+
+msgid "Finish inspecting your YubiKeys"
+msgstr "เสร็จสิ้นการตรวจสอบ YubiKey ของคุณ"
 
 msgid "Firmware {0}"
 msgstr "เฟิร์มแวร์ {0}"
@@ -341,17 +362,38 @@ msgstr "เสียบ YubiKey"
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "เสียบ YubiKey แล้วกดปุ่มรีเฟรช"
 
+msgid "Insert a YubiKey. This page will detect it when you refresh."
+msgstr "เสียบ YubiKey หน้าต่างนี้จะตรวจจับเมื่อคุณรีเฟรช"
+
 msgid "Inspect"
 msgstr "ตรวจสอบ"
 
-msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
-msgstr "ตรวจสอบ โหลด ส่งออก ลบออกจากเอเจนต์ หรือลบข้อมูลประจำตัว SSH แบบเรสิดেন্টอย่างถาวร"
+msgid "Inspect YubiKey"
+msgstr "ตรวจสอบ YubiKey"
 
-msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
-msgstr "กำลังตรวจสอบข้อมูลประจำตัว SSH ของผู้พักอาศัย... แตะ YubiKey หากไฟกระพริบ"
+msgid "Inspect YubiKey {0} of {1}"
+msgstr "ตรวจสอบ YubiKey {0} จากทั้งหมด {1}"
+
+msgid "Inspect again"
+msgstr "ตรวจสอบอีกครั้ง"
+
+msgid "Inspect all keys"
+msgstr "ตรวจสอบคีย์ทั้งหมด"
+
+msgid "Inspect this YubiKey"
+msgstr "ตรวจสอบ YubiKey นี้"
+
+msgid "Inspected"
+msgstr "ตรวจสอบแล้ว"
+
+msgid "Inspection needs attention · {0}"
+msgstr "การตรวจสอบต้องการความสนใจ · {0}"
 
 msgid "Invalid FIDO device path."
 msgstr "เส้นทางอุปกรณ์ FIDO ไม่ถูกต้อง"
+
+msgid "Keys stored on your YubiKeys"
+msgstr "คีย์ที่เก็บไว้ใน YubiKey ของคุณ"
 
 msgid "Load"
 msgstr "โหลด"
@@ -359,8 +401,8 @@ msgstr "โหลด"
 msgid "Load SSH keys"
 msgstr "โหลดคีย์ SSH"
 
-msgid "Load into agent"
-msgstr "โหลดเข้าเอเจนต์"
+msgid "Load all"
+msgstr "โหลดทั้งหมด"
 
 msgid "Load keys"
 msgstr "โหลดคีย์"
@@ -368,8 +410,14 @@ msgstr "โหลดคีย์"
 msgid "Load resident SSH keys"
 msgstr "โหลดคีย์ SSH แบบถาวร"
 
+msgid "Load this YubiKey's resident SSH keys into the agent"
+msgstr "โหลดคีย์ SSH แบบ resident ของ YubiKey นี้อินโตเอเจนต์"
+
 msgid "Load this resident key into the SSH agent before signing"
 msgstr "โหลดคีย์ resident นี้เข้าสู่ SSH agent ก่อนทำการลงนาม"
+
+msgid "Loaded"
+msgstr "โหลดแล้ว"
 
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "กำลังโหลดคีย์ SSH… แตะ YubiKey หากมันกระพริบ"
@@ -380,6 +428,12 @@ msgstr "เส้นทางที่จัดการคีย์ในเค
 msgid "Local key label"
 msgstr "ป้ายกำกับคีย์ในเครื่อง"
 
+msgid "Looking for your SSH agent and connected YubiKeys."
+msgstr "กำลังค้นหา SSH agent และ YubiKey ที่เชื่อมต่ออยู่"
+
+msgid "Needs attention"
+msgstr "ต้องการความสนใจ"
+
 msgid "New hardware-backed SSH key"
 msgstr "คีย์ SSH แบบฮาร์ดแวร์ใหม่"
 
@@ -389,23 +443,38 @@ msgstr "ไม่พบคีย์ความปลอดภัย FIDO"
 msgid "No SSH agent was detected"
 msgstr "ไม่พบเอเจนต์ SSH"
 
+msgid "No YubiKey connected"
+msgstr "ไม่ได้เชื่อมต่อ YubiKey"
+
 msgid "No hardware serial"
 msgstr "ไม่มีหมายเลขซีเรียลฮาร์ดแวร์"
 
-msgid "No resident SSH credentials"
-msgstr "ไม่มีข้อมูลประจำตัว SSH แบบถาวร"
+msgid "No resident SSH keys"
+msgstr "ไม่มีคีย์ SSH แบบ resident"
 
 msgid "No resident SSH keys found"
 msgstr "ไม่พบคีย์ SSH แบบ resident"
 
+msgid "No resident SSH keys found · {0}"
+msgstr "ไม่พบคีย์ SSH แบบ resident · {0}"
+
+msgid "No resident SSH keys were found on the connected YubiKeys."
+msgstr "ไม่พบคีย์ SSH แบบ resident บน YubiKey ที่เชื่อมต่ออยู่"
+
 msgid "No signing"
 msgstr "ไม่มีการลงนาม"
 
-msgid "No ssh:* discoverable credentials were found on this key."
-msgstr "ไม่พบข้อมูลรับรองที่ค้นพบได้ ssh:* บนคีย์นี้"
-
 msgid "Not configured"
 msgstr "ไม่ได้กำหนดค่า"
+
+msgid "Not inspected"
+msgstr "ยังไม่ได้ตรวจสอบ"
+
+msgid "Not inspected yet · {0}"
+msgstr "ยังไม่ได้ตรวจสอบ · {0}"
+
+msgid "Open the official Yubico Store"
+msgstr "เปิดร้าน Yubico อย่างเป็นทางการ"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH ไม่สามารถโหลดคีย์ที่อยู่ประจำได้ ตัวจัดการ SSH ไม่มีตัวตนใหม่ที่เพิ่งโหลด"
@@ -455,8 +524,17 @@ msgstr "ป้องกันการทำลายความถูกต้
 msgid "Protection for {0}"
 msgstr "การป้องกันสำหรับ {0}"
 
+msgid "Read the resident SSH keys already stored on your YubiKeys. You will enter each key's FIDO PIN and may need to touch it."
+msgstr "อ่านคีย์ SSH แบบ resident ที่เก็บไว้บน YubiKey ของคุณแล้ว คุณจะต้องใส่รหัส PIN FIDO ของแต่ละคีย์และอาจต้องแตะที่อุปกรณ์"
+
+msgid "Reading SSH keys from {0}… Touch it if it flashes."
+msgstr "กำลังอ่านคีย์ SSH จาก {0}… แตะที่อุปกรณ์หากไฟกระพริบ"
+
 msgid "Reading account security settings…"
 msgstr "กำลังอ่านการตั้งค่าความปลอดภัยของบัญชี…"
+
+msgid "Ready"
+msgstr "พร้อมใช้งาน"
 
 msgid "Ready to inspect"
 msgstr "พร้อมสำหรับการตรวจสอบ"
@@ -479,9 +557,6 @@ msgstr "ต้องการการตรวจสอบสำหรับท
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "ต้องใช้ PIN ของ FIDO ทุกครั้งที่คีย์นี้ลงนาม"
 
-msgid "Resident SSH credentials"
-msgstr "ข้อมูลรับรอง SSH ที่อยู่ประจำ"
-
 msgid "Resident SSH key created"
 msgstr "สร้างคีย์ SSH ที่อยู่ประจำเสร็จสิ้น"
 
@@ -497,17 +572,14 @@ msgstr "ชื่อผู้ใช้ที่อยู่ประจำ"
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr "ชื่อผู้ใช้ที่อยู่ประจำต้องมีขนาด 1–64 ไบต์และไม่มีตัวควบคุม"
 
-msgid "Run ssh-add -K for this connected security key"
-msgstr "เรียกใช้ ssh-add -K สำหรับคีย์ความปลอดภัยที่เชื่อมต่อนี้"
-
 msgid "SSH & Git"
 msgstr "SSH และ Git"
 
 msgid "SSH agent"
 msgstr "ตัวจัดการ SSH"
 
-msgid "SSH agent connected"
-msgstr "ตัวจัดการ SSH เชื่อมต่อแล้ว"
+msgid "SSH agent is ready"
+msgstr "SSH agent พร้อมใช้งานแล้ว"
 
 msgid "SSH agent unavailable"
 msgstr "ตัวจัดการ SSH ไม่พร้อมใช้งาน"
@@ -517,6 +589,9 @@ msgstr "ลายเซ็นการยืนยัน (commit signing) ขอ
 
 msgid "SSH key actions"
 msgstr "การดำเนินการของคีย์ SSH"
+
+msgid "SSH key for {0}"
+msgstr "คีย์ SSH สำหรับ {0}"
 
 msgid "SSH keys"
 msgstr "คีย์ SSH"
@@ -565,9 +640,6 @@ msgstr "PIN จะถูกส่งไปยัง ssh-add โดยตรง�
 
 msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
 msgstr "PIN จะถูกส่งผ่านท่อส่วนตัวไปยัง OpenSSH โดยไม่มีการเก็บรักษาหรือใส่ในอาร์กิวเมนต์ของคำสั่ง"
-
-msgid "The PIN is used only for this read-only inspection and is never stored."
-msgstr "PIN ถูกใช้สำหรับการตรวจสอบแบบอ่านอย่างเดียว仅此ครั้งและไม่ถูกเก็บไว้"
 
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "เอเจนต์ SSH ได้ลงนามและยืนยันข้อมูลด้วยคีย์นี้สำเร็จแล้ว"
@@ -700,6 +772,9 @@ msgstr "คีย์เหล่านี้ได้รับไว้วาง
 msgid "This PIN authorizes permanent deletion of the exact credential shown in the previous step. It is never stored."
 msgstr "PIN นี้อนุญาตให้ลบข้อมูลประจำตัวที่แสดงในขั้นตอนก่อนหน้าอย่างถาวร จะไม่มีการเก็บ PIN ไว้"
 
+msgid "This YubiKey has no discoverable ssh:* credentials."
+msgstr "YubiKey นี้ไม่มีข้อมูลประจำตัว ssh:* ที่ค้นพบได้"
+
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "นี่ไม่ใช่คีย์สาธารณะ OpenSSH security-key ที่รองรับ"
 
@@ -711,9 +786,6 @@ msgstr "การตั้งค่านี้ใช้กับผู้ใช
 
 msgid "This will only take a moment."
 msgstr "กระบวนการนี้จะใช้เวลาเพียงครู่เดียว"
-
-msgid "Touch the YubiKey if it flashes."
-msgstr "แตะ YubiKey หากไฟกระพริบ"
 
 msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr "แตะ YubiKey เมื่อได้รับการร้องขอ กำลังโหลดคีย์เรซิดেন্টเข้าเอเจนต์ SSH…"
@@ -741,6 +813,9 @@ msgstr "ลองอีกครั้ง"
 
 msgid "Type {0} to confirm"
 msgstr "พิมพ์ {0} เพื่อยืนยัน"
+
+msgid "Unavailable"
+msgstr "ไม่สามารถใช้งานได้"
 
 msgid "Unknown authentication purpose."
 msgstr "วัตถุประสงค์ในการยืนยันตัวตนไม่ทราบแน่ชัด"
@@ -778,11 +853,23 @@ msgstr "ใช้ YubiKey เพื่อปลดล็อก sudo"
 msgid "Verifying and permanently deleting the selected resident credential. Do not unplug the YubiKey…"
 msgstr "กำลังตรวจสอบและลบข้อมูลประจำตัวแบบเรสидентที่เลือกอย่างถาวร อย่าถอดสาย YubiKey…"
 
+msgid "Waiting"
+msgstr "กำลังรอ"
+
 msgid "Waiting for a configured YubiKey"
 msgstr "กำลังรอ YubiKey ที่กำหนดค่าแล้ว"
 
 msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
 msgstr "คุณสามารถลงทะเบียนคีย์ได้ตอนนี้ แต่ sudo จะข้าม PAM เมื่อเปิดใช้งานการเข้าถึงแบบไม่ต้องใช้รหัสผ่าน"
+
+msgid "Your YubiKeys are inspected"
+msgstr "YubiKey ของคุณได้รับการตรวจสอบแล้ว"
+
+msgid "Your hardware-backed SSH keys"
+msgstr "คีย์ SSH ที่รองรับด้วยฮาร์ดแวร์ของคุณ"
+
+msgid "Your resident SSH keys stay on the security key. Insert it to view and use them."
+msgstr "คีย์ SSH แบบ resident ของคุณจะอยู่บนคีย์ความปลอดภัย เสียบอุปกรณ์เพื่อดูและใช้งาน"
 
 msgid "Your security settings are ready. Connect a configured YubiKey when you need it."
 msgstr "การตั้งค่าความปลอดภัยของคุณพร้อมใช้งานแล้ว เชื่อมต่อ YubiKey ที่กำหนดค่าไว้เมื่อคุณต้องการใช้งาน"
@@ -838,9 +925,6 @@ msgstr "นโยบายการยืนยันตัวตน sudo"
 msgid "unknown"
 msgstr "ไม่ทราบแน่ชัด"
 
-msgid "unknown socket"
-msgstr "ซ็อกเก็ตที่ไม่รู้จัก"
-
 msgid "user"
 msgstr "ผู้ใช้"
 
@@ -856,8 +940,8 @@ msgstr "{0} สิ้นสุดด้วย {1}"
 msgid "{0} failed: {1}"
 msgstr "{0} ล้มเหลว: {1}"
 
-msgid "{0} identities · {1}"
-msgstr "ข้อมูลประจำตัว {0} · {1}"
+msgid "{0} identities are currently available to SSH applications."
+msgstr "มีอัตลักษณ์ {0} รายการพร้อมใช้งานสำหรับแอปพลิเคชัน SSH ในขณะนี้"
 
 msgid "{0} is enabled for this YubiKey"
 msgstr "เปิดใช้งาน {0} สำหรับ YubiKey นี้"
@@ -871,14 +955,74 @@ msgstr "เพิ่มอัตลักษณ์ SSH ใหม่ {0} รา�
 msgid "{0} new SSH identity was added to the agent."
 msgstr "เพิ่มอัตลักษณ์ SSH ใหม่ {0} รายการลงในเอเจนต์แล้ว"
 
+msgid "{0} resident SSH keys are available from your connected YubiKeys."
+msgstr "มีคีย์ SSH แบบ resident {0} รายการพร้อมใช้งานจาก YubiKey ที่เชื่อมต่ออยู่"
+
+msgid "{0} resident SSH keys · {1}"
+msgstr "คีย์ SSH แบบ resident {0} รายการ · {1}"
+
 msgid "{0} resident credentials inspected"
 msgstr "ตรวจสอบข้อมูลประจำตัวที่เก็บในตัวแล้ว {0} รายการ"
+
+msgid "{0} to inspect"
+msgstr "{0} รายการที่รอตรวจสอบ"
 
 msgid "{0} · no hardware serial"
 msgstr "{0} · ไม่มีหมายเลขซีเรียลของฮาร์ดแวร์"
 
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
+
+#~ msgid "All inspected resident credentials from this key are already in the agent"
+#~ msgstr "ข้อมูลประจำตัวที่ตรวจสอบแล้วทั้งหมดจากคีย์นี้ได้อยู่ในเอเจนต์แล้ว"
+
+#~ msgid "AnduinOS is safer with a YubiKey"
+#~ msgstr "AnduinOS ปลอดภัยยิ่งขึ้นเมื่อใช้ร่วมกับ YubiKey"
+
+#~ msgid "Checking SSH keys… Touch the YubiKey if it flashes."
+#~ msgstr "กำลังตรวจสอบคีย์ SSH… แตะ YubiKey หากไฟกระพริบ"
+
+#~ msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+#~ msgstr "เชื่อมต่อคีย์ความปลอดภัย FIDO เพียงตัวเดียวเพื่อเลือกแหล่งที่มาที่ชัดเจน"
+
+#~ msgid "Enter the YubiKey FIDO PIN"
+#~ msgstr "ใส่ PIN ของ YubiKey FIDO"
+
+#~ msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
+#~ msgstr "ตรวจสอบ โหลด ส่งออก ลบออกจากเอเจนต์ หรือลบข้อมูลประจำตัว SSH แบบเรสิดেন্টอย่างถาวร"
+
+#~ msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
+#~ msgstr "กำลังตรวจสอบข้อมูลประจำตัว SSH ของผู้พักอาศัย... แตะ YubiKey หากไฟกระพริบ"
+
+#~ msgid "Load into agent"
+#~ msgstr "โหลดเข้าเอเจนต์"
+
+#~ msgid "No resident SSH credentials"
+#~ msgstr "ไม่มีข้อมูลประจำตัว SSH แบบถาวร"
+
+#~ msgid "No ssh:* discoverable credentials were found on this key."
+#~ msgstr "ไม่พบข้อมูลรับรองที่ค้นพบได้ ssh:* บนคีย์นี้"
+
+#~ msgid "Resident SSH credentials"
+#~ msgstr "ข้อมูลรับรอง SSH ที่อยู่ประจำ"
+
+#~ msgid "Run ssh-add -K for this connected security key"
+#~ msgstr "เรียกใช้ ssh-add -K สำหรับคีย์ความปลอดภัยที่เชื่อมต่อนี้"
+
+#~ msgid "SSH agent connected"
+#~ msgstr "ตัวจัดการ SSH เชื่อมต่อแล้ว"
+
+#~ msgid "The PIN is used only for this read-only inspection and is never stored."
+#~ msgstr "PIN ถูกใช้สำหรับการตรวจสอบแบบอ่านอย่างเดียว仅此ครั้งและไม่ถูกเก็บไว้"
+
+#~ msgid "Touch the YubiKey if it flashes."
+#~ msgstr "แตะ YubiKey หากไฟกระพริบ"
+
+#~ msgid "unknown socket"
+#~ msgstr "ซ็อกเก็ตที่ไม่รู้จัก"
+
+#~ msgid "{0} identities · {1}"
+#~ msgstr "ข้อมูลประจำตัว {0} · {1}"
 
 #~ msgid "Git Signing"
 #~ msgstr "Git Signing"

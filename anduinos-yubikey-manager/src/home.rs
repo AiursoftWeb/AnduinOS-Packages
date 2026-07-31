@@ -123,7 +123,7 @@ impl HomePage {
         let title = if configured {
             i18n("Connect your YubiKey")
         } else {
-            i18n("AnduinOS is safer with a YubiKey")
+            i18n("AnduinOS works more securely with a YubiKey")
         };
         hero.append(&centered_label(
             &title,
@@ -169,7 +169,30 @@ impl HomePage {
                 .build(),
         );
         prompt.append(&prompt_content);
-        hero.append(&prompt);
+        let prompt_actions = gtk::Box::builder()
+            .orientation(gtk::Orientation::Horizontal)
+            .spacing(8)
+            .halign(gtk::Align::Center)
+            .build();
+        prompt_actions.append(&prompt);
+        if !configured {
+            let buy = gtk::Button::builder()
+                .label(i18n("Buy a YubiKey"))
+                .icon_name("external-link-symbolic")
+                .tooltip_text(i18n("Open the official Yubico Store"))
+                .css_classes(["flat", "pill"])
+                .valign(gtk::Align::Center)
+                .build();
+            buy.connect_clicked(move |button| {
+                let parent = button.root().and_downcast::<gtk::Window>();
+                glib::spawn_future_local(async move {
+                    let launcher = gtk::UriLauncher::new("https://www.yubico.com/store/");
+                    let _ = launcher.launch_future(parent.as_ref()).await;
+                });
+            });
+            prompt_actions.append(&buy);
+        }
+        hero.append(&prompt_actions);
         self.content.append(&hero);
 
         if configured {

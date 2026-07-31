@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 17:16+0000\n"
+"POT-Creation-Date: 2026-07-30 18:03+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -15,6 +15,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "1 identity is currently available to SSH applications."
+msgstr "1 identitas saat ini tersedia untuk aplikasi SSH."
+
+msgid "1 resident SSH key is available from your connected YubiKey."
+msgstr "1 kunci SSH residen tersedia dari YubiKey yang terhubung."
+
+msgid "1 resident SSH key · {0}"
+msgstr "1 kunci SSH residen · {0}"
 
 msgid "A key must be connected before it can be enrolled."
 msgstr "Kunci harus terhubung sebelum dapat didaftarkan."
@@ -24,6 +33,9 @@ msgstr "tentang"
 
 msgid "Account password"
 msgstr "Kata sandi akun"
+
+msgid "Add another SSH key"
+msgstr "Tambahkan kunci SSH lainnya"
 
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "Tambahkan kunci publik ini ke GitHub sebagai Kunci Penandatanganan."
@@ -36,9 +48,6 @@ msgstr "Opsi lanjutan"
 
 msgid "Algorithm"
 msgstr "Algoritma"
-
-msgid "All inspected resident credentials from this key are already in the agent"
-msgstr "Semua kredensial residen yang diperiksa dari kunci ini sudah ada di agen"
 
 msgid "Allow sudo without authentication"
 msgstr "Izinkan sudo tanpa autentikasi"
@@ -67,8 +76,8 @@ msgstr "Tim AnduinOS"
 msgid "AnduinOS YubiKey Security Center"
 msgstr "Pusat Keamanan YubiKey AnduinOS"
 
-msgid "AnduinOS is safer with a YubiKey"
-msgstr "AnduinOS lebih aman dengan YubiKey"
+msgid "AnduinOS works more securely with a YubiKey"
+msgstr "AnduinOS bekerja lebih aman dengan YubiKey"
 
 msgid "Application"
 msgstr "Aplikasi"
@@ -85,14 +94,17 @@ msgstr "Available through SSH agent"
 msgid "Available through local key handle"
 msgstr "Tersedia melalui handle kunci lokal"
 
+msgid "Buy a YubiKey"
+msgstr "Beli YubiKey"
+
 msgid "Cancel"
 msgstr "Batal"
 
 msgid "Checking SSH keys…"
 msgstr "Memeriksa kunci SSH…"
 
-msgid "Checking SSH keys… Touch the YubiKey if it flashes."
-msgstr "Memeriksa kunci SSH… Sentuh YubiKey jika berkedip."
+msgid "Checking SSH support…"
+msgstr "Memeriksa dukungan SSH…"
 
 msgid "Checking connected YubiKeys"
 msgstr "Memeriksa YubiKey yang terhubung"
@@ -145,11 +157,11 @@ msgstr "Dikonfigurasi untuk {0} · Tidak terhubung"
 msgid "Connect a FIDO security key first"
 msgstr "Hubungkan kunci keamanan FIDO terlebih dahulu"
 
+msgid "Connect a YubiKey"
+msgstr "Hubungkan YubiKey"
+
 msgid "Connect a YubiKey to get started"
 msgstr "Sambungkan YubiKey untuk memulai"
-
-msgid "Connect exactly one FIDO security key to choose an unambiguous source"
-msgstr "Hubungkan tepat satu kunci keamanan FIDO untuk memilih sumber yang tidak ambigu"
 
 msgid "Connect your YubiKey"
 msgstr "Sambungkan YubiKey Anda"
@@ -183,6 +195,9 @@ msgstr "Tidak dapat membuat {0}: {1}"
 
 msgid "Could not export the public key: {0}"
 msgstr "Tidak dapat mengekspor kunci publik: {0}"
+
+msgid "Could not find security keys"
+msgstr "Tidak dapat menemukan kunci keamanan"
 
 msgid "Could not flush the temporary public key: {0}"
 msgstr "Tidak dapat menghapus kunci publik sementara: {0}"
@@ -241,6 +256,9 @@ msgstr "Hasil penghapusan tidak diketahui"
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr "Nonaktif · sudo harus mengautentikasi dengan YubiKey atau kata sandi akun"
 
+msgid "Discover SSH keys on your YubiKeys"
+msgstr "Temukan kunci SSH di YubiKey Anda"
+
 msgid "Display label must be at most 200 bytes and contain no control characters."
 msgstr "Label tampilan harus maksimal 200 byte dan tidak mengandung karakter kontrol."
 
@@ -280,14 +298,14 @@ msgstr "Terdaftar · tidak aktif saat autentikasi sudo dilewati"
 msgid "Enrollment safety"
 msgstr "Keamanan pendaftaran"
 
+msgid "Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
+msgstr "Masukkan PIN FIDO untuk {0}. Sentuh jika berkedip. PIN tidak pernah disimpan."
+
 msgid "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 msgstr "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No commit will be created."
 
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "Masukkan PIN FIDO. Sentuh YubiKey jika berkedip."
-
-msgid "Enter the YubiKey FIDO PIN"
-msgstr "Masukkan PIN FIDO YubiKey"
 
 msgid "Enter the YubiKey FIDO PIN to test this local key handle."
 msgstr "Enter the YubiKey FIDO PIN to test this local key handle."
@@ -309,6 +327,9 @@ msgstr "Pemindaian perangkat FIDO tidak tersedia"
 
 msgid "FIDO security key"
 msgstr "Kunci keamanan FIDO"
+
+msgid "Finish inspecting your YubiKeys"
+msgstr "Selesai memeriksa YubiKey Anda"
 
 msgid "Firmware {0}"
 msgstr "Firmware {0}"
@@ -341,17 +362,38 @@ msgstr "Sisipkan YubiKey"
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "Sisipkan YubiKey, lalu tekan Segarkan."
 
+msgid "Insert a YubiKey. This page will detect it when you refresh."
+msgstr "Sisipkan YubiKey. Halaman ini akan mendeteksinya saat Anda menyegarkan."
+
 msgid "Inspect"
 msgstr "Periksa"
 
-msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
-msgstr "Pemeriksa, muat, ekspor, uji, hapus dari agen, atau hapus secara permanen kredensial SSH residen."
+msgid "Inspect YubiKey"
+msgstr "Pemeriksa YubiKey"
 
-msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
-msgstr "Memeriksa kredensial SSH penduduk... Sentuh YubiKey jika berkedip."
+msgid "Inspect YubiKey {0} of {1}"
+msgstr "Pemeriksa YubiKey {0} dari {1}"
+
+msgid "Inspect again"
+msgstr "Pemeriksa lagi"
+
+msgid "Inspect all keys"
+msgstr "Pemeriksa semua kunci"
+
+msgid "Inspect this YubiKey"
+msgstr "Pemeriksa YubiKey ini"
+
+msgid "Inspected"
+msgstr "Diperiksa"
+
+msgid "Inspection needs attention · {0}"
+msgstr "Pemeriksaan membutuhkan perhatian · {0}"
 
 msgid "Invalid FIDO device path."
 msgstr "Jalur perangkat FIDO tidak valid."
+
+msgid "Keys stored on your YubiKeys"
+msgstr "Kunci yang disimpan di YubiKey Anda"
 
 msgid "Load"
 msgstr "Muat"
@@ -359,8 +401,8 @@ msgstr "Muat"
 msgid "Load SSH keys"
 msgstr "Muat kunci SSH"
 
-msgid "Load into agent"
-msgstr "Muat ke agen"
+msgid "Load all"
+msgstr "Muat semua"
 
 msgid "Load keys"
 msgstr "Muat kunci"
@@ -368,8 +410,14 @@ msgstr "Muat kunci"
 msgid "Load resident SSH keys"
 msgstr "Muat kunci SSH residen"
 
+msgid "Load this YubiKey's resident SSH keys into the agent"
+msgstr "Muat kunci SSH residen dari YubiKey ini ke dalam agen"
+
 msgid "Load this resident key into the SSH agent before signing"
 msgstr "Muat kunci residen ini ke agen SSH sebelum menandatangani"
+
+msgid "Loaded"
+msgstr "Dimuat"
 
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "Sedang memuat kunci SSH… Sentuh YubiKey jika berkedip."
@@ -380,6 +428,12 @@ msgstr "Jalur gagang kunci lokal"
 msgid "Local key label"
 msgstr "Label kunci lokal"
 
+msgid "Looking for your SSH agent and connected YubiKeys."
+msgstr "Mencari agen SSH dan YubiKey yang terhubung Anda."
+
+msgid "Needs attention"
+msgstr "Membutuhkan perhatian"
+
 msgid "New hardware-backed SSH key"
 msgstr "Kunci SSH berbasis perangkat keras baru"
 
@@ -389,23 +443,38 @@ msgstr "Tidak ada kunci keamanan FIDO yang terdeteksi"
 msgid "No SSH agent was detected"
 msgstr "Tidak ada agen SSH yang terdeteksi"
 
+msgid "No YubiKey connected"
+msgstr "Tidak ada YubiKey yang terhubung"
+
 msgid "No hardware serial"
 msgstr "Tidak ada serial perangkat keras"
 
-msgid "No resident SSH credentials"
-msgstr "Tidak ada kredensial SSH residen"
+msgid "No resident SSH keys"
+msgstr "Tidak ada kunci SSH residen"
 
 msgid "No resident SSH keys found"
 msgstr "Tidak ada kunci SSH residen yang ditemukan"
 
+msgid "No resident SSH keys found · {0}"
+msgstr "Tidak ditemukan kunci SSH residen · {0}"
+
+msgid "No resident SSH keys were found on the connected YubiKeys."
+msgstr "Tidak ditemukan kunci SSH residen pada YubiKey yang terhubung."
+
 msgid "No signing"
 msgstr "Tanpa penandatanganan"
 
-msgid "No ssh:* discoverable credentials were found on this key."
-msgstr "Tidak ditemukan kredensial ssh:* yang dapat ditemukan pada kunci ini."
-
 msgid "Not configured"
 msgstr "Tidak dikonfigurasi"
+
+msgid "Not inspected"
+msgstr "Belum diperiksa"
+
+msgid "Not inspected yet · {0}"
+msgstr "Belum diperiksa · {0}"
+
+msgid "Open the official Yubico Store"
+msgstr "Buka Toko Resmi Yubico"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH tidak dapat memuat kunci resident. Agen SSH tidak berisi identitas yang baru dimuat."
@@ -455,8 +524,17 @@ msgstr "Lindungi autentikasi dan penandatanganan commit"
 msgid "Protection for {0}"
 msgstr "Perlindungan untuk {0}"
 
+msgid "Read the resident SSH keys already stored on your YubiKeys. You will enter each key's FIDO PIN and may need to touch it."
+msgstr "Baca kunci SSH residen yang sudah disimpan di YubiKey Anda. Anda akan memasukkan PIN FIDO setiap kunci dan mungkin perlu menyentuhnya."
+
+msgid "Reading SSH keys from {0}… Touch it if it flashes."
+msgstr "Membaca kunci SSH dari {0}… Sentuh jika berkedip."
+
 msgid "Reading account security settings…"
 msgstr "Membaca pengaturan keamanan akun…"
+
+msgid "Ready"
+msgstr "Siap"
 
 msgid "Ready to inspect"
 msgstr "Siap diperiksa"
@@ -479,9 +557,6 @@ msgstr "Wajib verifikasi untuk setiap tanda tangan"
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "Membutuhkan PIN FIDO setiap kali kunci ini menandatangani"
 
-msgid "Resident SSH credentials"
-msgstr "Kredensial SSH resident"
-
 msgid "Resident SSH key created"
 msgstr "Kunci SSH resident dibuat"
 
@@ -497,17 +572,14 @@ msgstr "Nama pengguna resident"
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr "Nama pengguna resident harus berisi 1–64 byte dan tidak boleh mengandung karakter kontrol."
 
-msgid "Run ssh-add -K for this connected security key"
-msgstr "Jalankan ssh-add -K untuk kunci keamanan yang terhubung ini"
-
 msgid "SSH & Git"
 msgstr "SSH & Git"
 
 msgid "SSH agent"
 msgstr "Agen SSH"
 
-msgid "SSH agent connected"
-msgstr "Agen SSH terhubung"
+msgid "SSH agent is ready"
+msgstr "Agen SSH siap"
 
 msgid "SSH agent unavailable"
 msgstr "Agen SSH tidak tersedia"
@@ -517,6 +589,9 @@ msgstr "Penandatanganan commit SSH"
 
 msgid "SSH key actions"
 msgstr "Tindakan kunci SSH"
+
+msgid "SSH key for {0}"
+msgstr "Kunci SSH untuk {0}"
 
 msgid "SSH keys"
 msgstr "Kunci SSH"
@@ -565,9 +640,6 @@ msgstr "PIN dikirim langsung ke ssh-add dan tidak pernah disimpan."
 
 msgid "The PIN is sent through a private pipe to OpenSSH. It is never stored or placed in command arguments."
 msgstr "PIN dikirim melalui pipa pribadi ke OpenSSH. PIN tidak pernah disimpan atau ditempatkan dalam argumen perintah."
-
-msgid "The PIN is used only for this read-only inspection and is never stored."
-msgstr "PIN hanya digunakan untuk inspeksi baca-saja ini dan tidak pernah disimpan."
 
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "Agen SSH berhasil menandatangani dan memverifikasi data dengan kunci ini."
@@ -700,6 +772,9 @@ msgstr "Kunci ini dipercaya oleh akun ini tetapi saat ini tidak terhubung."
 msgid "This PIN authorizes permanent deletion of the exact credential shown in the previous step. It is never stored."
 msgstr "PIN ini mengotorisasi penghapusan permanen kredensial persis yang ditampilkan di langkah sebelumnya. PIN ini tidak pernah disimpan."
 
+msgid "This YubiKey has no discoverable ssh:* credentials."
+msgstr "YubiKey ini tidak memiliki kredensial ssh:* yang dapat ditemukan."
+
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "Ini bukan kunci publik security-key OpenSSH yang didukung."
 
@@ -711,9 +786,6 @@ msgstr "Pengaturan ini hanya berlaku untuk pengguna saat ini."
 
 msgid "This will only take a moment."
 msgstr "Hanya akan memakan waktu sebentar."
-
-msgid "Touch the YubiKey if it flashes."
-msgstr "Sentuh YubiKey jika berkedip."
 
 msgid "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr "Sentuh YubiKey ketika diminta. Memuat kunci residen ke agen SSH…"
@@ -741,6 +813,9 @@ msgstr "Coba Lagi"
 
 msgid "Type {0} to confirm"
 msgstr "Ketik {0} untuk konfirmasi"
+
+msgid "Unavailable"
+msgstr "Tidak tersedia"
 
 msgid "Unknown authentication purpose."
 msgstr "Tujuan autentikasi tidak diketahui."
@@ -778,11 +853,23 @@ msgstr "Gunakan YubiKey untuk membuka kunci sudo"
 msgid "Verifying and permanently deleting the selected resident credential. Do not unplug the YubiKey…"
 msgstr "Memverifikasi dan menghapus secara permanen kredensial residen yang dipilih. Jangan cabut YubiKey…"
 
+msgid "Waiting"
+msgstr "Menunggu"
+
 msgid "Waiting for a configured YubiKey"
 msgstr "Menunggu YubiKey yang dikonfigurasi"
 
 msgid "You may enroll keys now, but sudo bypasses PAM while passwordless access is enabled."
 msgstr "Anda dapat mendaftarkan kunci sekarang, tetapi sudo melewati PAM saat akses tanpa kata sandi diaktifkan."
+
+msgid "Your YubiKeys are inspected"
+msgstr "YubiKey Anda telah diperiksa"
+
+msgid "Your hardware-backed SSH keys"
+msgstr "Kunci SSH berbasis perangkat keras Anda"
+
+msgid "Your resident SSH keys stay on the security key. Insert it to view and use them."
+msgstr "Kunci SSH residen Anda tetap berada di kunci keamanan. Sisipkan untuk melihat dan menggunakannya."
 
 msgid "Your security settings are ready. Connect a configured YubiKey when you need it."
 msgstr "Pengaturan keamanan Anda siap. Sambungkan YubiKey yang telah dikonfigurasi saat diperlukan."
@@ -838,9 +925,6 @@ msgstr "kebijakan autentikasi sudo"
 msgid "unknown"
 msgstr "tidak diketahui"
 
-msgid "unknown socket"
-msgstr "socket tidak diketahui"
-
 msgid "user"
 msgstr "pengguna"
 
@@ -856,8 +940,8 @@ msgstr "{0} keluar dengan {1}"
 msgid "{0} failed: {1}"
 msgstr "{0} gagal: {1}"
 
-msgid "{0} identities · {1}"
-msgstr "{0} identitas · {1}"
+msgid "{0} identities are currently available to SSH applications."
+msgstr "{0} identitas saat ini tersedia untuk aplikasi SSH."
 
 msgid "{0} is enabled for this YubiKey"
 msgstr "{0} diaktifkan untuk YubiKey ini"
@@ -871,14 +955,74 @@ msgstr "{0} identitas SSH baru ditambahkan ke agen."
 msgid "{0} new SSH identity was added to the agent."
 msgstr "{0} identitas SSH baru ditambahkan ke agen."
 
+msgid "{0} resident SSH keys are available from your connected YubiKeys."
+msgstr "{0} kunci SSH residen tersedia dari YubiKey yang terhubung Anda."
+
+msgid "{0} resident SSH keys · {1}"
+msgstr "{0} kunci SSH residen · {1}"
+
 msgid "{0} resident credentials inspected"
 msgstr "{0} kredensial residen diperiksa"
+
+msgid "{0} to inspect"
+msgstr "{0} untuk diperiksa"
 
 msgid "{0} · no hardware serial"
 msgstr "{0} · tanpa serial perangkat keras"
 
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
+
+#~ msgid "All inspected resident credentials from this key are already in the agent"
+#~ msgstr "Semua kredensial residen yang diperiksa dari kunci ini sudah ada di agen"
+
+#~ msgid "AnduinOS is safer with a YubiKey"
+#~ msgstr "AnduinOS lebih aman dengan YubiKey"
+
+#~ msgid "Checking SSH keys… Touch the YubiKey if it flashes."
+#~ msgstr "Memeriksa kunci SSH… Sentuh YubiKey jika berkedip."
+
+#~ msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+#~ msgstr "Hubungkan tepat satu kunci keamanan FIDO untuk memilih sumber yang tidak ambigu"
+
+#~ msgid "Enter the YubiKey FIDO PIN"
+#~ msgstr "Masukkan PIN FIDO YubiKey"
+
+#~ msgid "Inspect, load, export, test, remove from the agent, or permanently delete resident SSH credentials."
+#~ msgstr "Pemeriksa, muat, ekspor, uji, hapus dari agen, atau hapus secara permanen kredensial SSH residen."
+
+#~ msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
+#~ msgstr "Memeriksa kredensial SSH penduduk... Sentuh YubiKey jika berkedip."
+
+#~ msgid "Load into agent"
+#~ msgstr "Muat ke agen"
+
+#~ msgid "No resident SSH credentials"
+#~ msgstr "Tidak ada kredensial SSH residen"
+
+#~ msgid "No ssh:* discoverable credentials were found on this key."
+#~ msgstr "Tidak ditemukan kredensial ssh:* yang dapat ditemukan pada kunci ini."
+
+#~ msgid "Resident SSH credentials"
+#~ msgstr "Kredensial SSH resident"
+
+#~ msgid "Run ssh-add -K for this connected security key"
+#~ msgstr "Jalankan ssh-add -K untuk kunci keamanan yang terhubung ini"
+
+#~ msgid "SSH agent connected"
+#~ msgstr "Agen SSH terhubung"
+
+#~ msgid "The PIN is used only for this read-only inspection and is never stored."
+#~ msgstr "PIN hanya digunakan untuk inspeksi baca-saja ini dan tidak pernah disimpan."
+
+#~ msgid "Touch the YubiKey if it flashes."
+#~ msgstr "Sentuh YubiKey jika berkedip."
+
+#~ msgid "unknown socket"
+#~ msgstr "socket tidak diketahui"
+
+#~ msgid "{0} identities · {1}"
+#~ msgstr "{0} identitas · {1}"
 
 #~ msgid "Git Signing"
 #~ msgstr "Git Signing"
