@@ -15,9 +15,11 @@ if [ "$ARCH" = "arm64" ]; then
     export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
     cargo build --release --target aarch64-unknown-linux-gnu
     cp target/aarch64-unknown-linux-gnu/release/anduinos-timeback-machine obj/
+    cp target/aarch64-unknown-linux-gnu/release/anduinos-timebackd obj/
     cp target/aarch64-unknown-linux-gnu/release/timebackctl obj/
 else
     cargo build --release
     cp target/release/anduinos-timeback-machine obj/
+    cp target/release/anduinos-timebackd obj/
     cp target/release/timebackctl obj/
 fi

@@ -122,11 +122,35 @@ impl DeploymentRecord {
         if self.schema_version != DEPLOYMENT_SCHEMA_VERSION {
             return Err(ModelError::UnsupportedSchema(self.schema_version));
         }
-        if self.title.trim().is_empty() || self.title.chars().count() > 120 {
+        if invalid_text(&self.title, 120) {
             return Err(ModelError::InvalidField("title"));
         }
-        if self.reason.trim().is_empty() || self.reason.chars().count() > 500 {
+        if invalid_text(&self.reason, 500) {
             return Err(ModelError::InvalidField("reason"));
+        }
+        for (name, value) in [
+            ("snapshot_uuid", self.snapshot_uuid.as_deref()),
+            ("snapshot_parent_uuid", self.snapshot_parent_uuid.as_deref()),
+        ] {
+            if value.is_some_and(|uuid| Uuid::parse_str(uuid).is_err()) {
+                return Err(ModelError::InvalidField(name));
+            }
+        }
+        if self.kernel_release.as_deref().is_some_and(|release| {
+            release.is_empty()
+                || release.len() > 128
+                || !release
+                    .bytes()
+                    .all(|byte| byte.is_ascii_alphanumeric() || b"._+-".contains(&byte))
+        }) {
+            return Err(ModelError::InvalidField("kernel_release"));
+        }
+        if self
+            .failure
+            .as_deref()
+            .is_some_and(|failure| invalid_optional_text(failure, 1000))
+        {
+            return Err(ModelError::InvalidField("failure"));
         }
         for (name, digest) in [
             ("initramfs_sha256", self.initramfs_sha256.as_deref()),
@@ -218,6 +242,16 @@ fn is_sha256(value: &str) -> bool {
 
 fn missing(value: &Option<String>) -> bool {
     value.as_ref().is_none_or(|item| item.trim().is_empty())
+}
+
+fn invalid_text(value: &str, maximum_characters: usize) -> bool {
+    value.trim().is_empty()
+        || value.chars().count() > maximum_characters
+        || value.chars().any(char::is_control)
+}
+
+fn invalid_optional_text(value: &str, maximum_characters: usize) -> bool {
+    value.chars().count() > maximum_characters || value.chars().any(char::is_control)
 }
 
 #[cfg(test)]
@@ -325,5 +359,33 @@ mod tests {
         let id = DeploymentId::new();
         assert_eq!(id.to_string().parse::<DeploymentId>().unwrap(), id);
         assert_eq!(id.to_string(), id.to_string().to_lowercase());
+    }
+
+    #[test]
+    fn display_fields_reject_control_characters_and_oversized_values() {
+        let mut record = valid_record();
+        record.title = "Trusted\nterminal escape".into();
+        assert_eq!(record.validate(), Err(ModelError::InvalidField("title")));
+
+        let mut record = valid_record();
+        record.failure = Some("x".repeat(1001));
+        assert_eq!(record.validate(), Err(ModelError::InvalidField("failure")));
+    }
+
+    #[test]
+    fn snapshot_and_kernel_identities_are_typed_and_bounded() {
+        let mut record = valid_record();
+        record.snapshot_uuid = Some("not-a-uuid".into());
+        assert_eq!(
+            record.validate(),
+            Err(ModelError::InvalidField("snapshot_uuid"))
+        );
+
+        let mut record = valid_record();
+        record.kernel_release = Some("../../boot/vmlinuz".into());
+        assert_eq!(
+            record.validate(),
+            Err(ModelError::InvalidField("kernel_release"))
+        );
     }
 }

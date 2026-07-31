@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-timeback-machine</PackageName>
-    <PackageVersion>0.1.0-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.1.0-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Timeback Machine — graphical Btrfs system recovery and deployment manager</PackageDescription>
     <Section>admin</Section>
@@ -27,6 +27,7 @@
     <Dependency Include="btrfs-progs" />
     <Dependency Include="util-linux" />
     <Dependency Include="polkitd" />
+    <Dependency Include="dbus-bin" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,12 +37,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PostInstallScript Include="scripts/postinst.sh" />
+    <PreRemoveScript Include="scripts/prerm.sh" />
+    <PostRemoveScript Include="scripts/postrm.sh" />
+    <SystemdUnit Include="data/anduinos-timebackd.service" AutoEnable="false" />
+  </ItemGroup>
+
+  <ItemGroup>
     <IncludeScript Include="obj/anduinos-timeback-machine" Target="/usr/bin/anduinos-timeback-machine" />
+    <IncludeScript Include="obj/anduinos-timebackd" Target="/usr/libexec/anduinos-timebackd" />
     <IncludeScript Include="obj/timebackctl" Target="/usr/bin/timebackctl" />
     <IncludeFile Include="data/com.anduinos.timebackmachine.desktop" Target="/usr/share/applications/com.anduinos.timebackmachine.desktop" />
     <IncludeFile Include="data/com.anduinos.timebackmachine.policy" Target="/usr/share/polkit-1/actions/com.anduinos.timebackmachine.policy" />
     <IncludeFile Include="data/com.anduinos.timebackmachine.svg" Target="/usr/share/icons/hicolor/scalable/apps/com.anduinos.timebackmachine.svg" />
     <IncludeFile Include="data/com.anduinos.timebackmachine.xml" Target="/usr/share/dbus-1/interfaces/com.anduinos.timebackmachine.xml" />
+    <IncludeFile Include="data/com.anduinos.TimebackMachine1.conf" Target="/usr/share/dbus-1/system.d/com.anduinos.TimebackMachine1.conf" />
+    <IncludeFile Include="data/com.anduinos.TimebackMachine1.service" Target="/usr/share/dbus-1/system-services/com.anduinos.TimebackMachine1.service" />
     <IncludeFile Include="docs/deployment-v1.schema.json" Target="/usr/share/anduinos-timeback-machine/deployment-v1.schema.json" />
     <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-timeback-machine/README.md" />
     <IncludeFile Include="ARCHITECTURE.md" Target="/usr/share/doc/anduinos-timeback-machine/ARCHITECTURE.md" />

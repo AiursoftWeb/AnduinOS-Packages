@@ -4,6 +4,9 @@ use adw::prelude::*;
 use gtk::{gdk, gio, glib};
 
 use anduinos_timeback::layout::{self, LayoutReport, LayoutSupport};
+use anduinos_timeback::model::{DeploymentKind, DeploymentRecord, DeploymentState};
+use anduinos_timeback::store::DiscoveryReport;
+use anduinos_timeback::{client, DEPLOYMENT_SCHEMA_VERSION};
 
 use crate::application::TimebackApplication;
 use crate::config;
@@ -23,12 +26,31 @@ struct TimelineHeading {
     count: gtk::Label,
 }
 
+struct DiscoveryState {
+    report: DiscoveryReport,
+    error: Option<String>,
+}
+
 pub fn build(app: &TimebackApplication) -> adw::ApplicationWindow {
     let demo = std::env::var_os("ANDUINOS_TIMEBACK_DEMO").is_some();
     let report = Rc::new(if demo {
         demo_layout()
     } else {
         layout::inspect_current()
+    });
+    let discovery = Rc::new(if demo || !report.is_supported() {
+        empty_discovery()
+    } else {
+        match client::list_deployments() {
+            Ok(report) => DiscoveryState {
+                report,
+                error: None,
+            },
+            Err(error) => DiscoveryState {
+                report: empty_discovery().report,
+                error: Some(error.to_string()),
+            },
+        }
     });
 
     let window = adw::ApplicationWindow::builder()
@@ -52,13 +74,13 @@ pub fn build(app: &TimebackApplication) -> adw::ApplicationWindow {
             name: "overview",
             title: i18n("Overview"),
             icon: "go-home-symbolic",
-            widget: build_overview(&window, &toast_overlay, &report, demo).upcast(),
+            widget: build_overview(&window, &toast_overlay, &report, &discovery, demo).upcast(),
         },
         Page {
             name: "points",
             title: i18n("Recovery Points"),
             icon: "document-open-recent-symbolic",
-            widget: build_recovery_points(&window, &report, demo).upcast(),
+            widget: build_recovery_points(&window, &report, &discovery, demo).upcast(),
         },
         Page {
             name: "storage",
@@ -70,7 +92,7 @@ pub fn build(app: &TimebackApplication) -> adw::ApplicationWindow {
             name: "activity",
             title: i18n("Activity"),
             icon: "view-list-symbolic",
-            widget: build_activity(&report, demo).upcast(),
+            widget: build_activity(&report, &discovery, demo).upcast(),
         },
         Page {
             name: "settings",
@@ -115,9 +137,12 @@ pub fn build(app: &TimebackApplication) -> adw::ApplicationWindow {
         .icon_name("view-refresh-symbolic")
         .tooltip_text(i18n("Refresh system status"))
         .build();
-    let toast = toast_overlay.clone();
+    let app_for_refresh = app.clone();
+    let window_for_refresh = window.clone();
     refresh_button.connect_clicked(move |_| {
-        toast.add_toast(adw::Toast::new(&i18n("System status refreshed")));
+        let refreshed = build(&app_for_refresh);
+        refreshed.present();
+        window_for_refresh.close();
     });
 
     let header = adw::HeaderBar::new();
@@ -322,6 +347,7 @@ fn build_overview(
     window: &adw::ApplicationWindow,
     toasts: &adw::ToastOverlay,
     report: &LayoutReport,
+    discovery: &DiscoveryState,
     demo: bool,
 ) -> gtk::ScrolledWindow {
     let content = page_content();
@@ -333,6 +359,15 @@ fn build_overview(
             .revealed(true)
             .build();
         content.append(&banner);
+    } else if discovery.error.is_some() {
+        content.append(
+            &adw::Banner::builder()
+                .title(i18n(
+                    "The recovery service could not be reached; no system data was changed",
+                ))
+                .revealed(true)
+                .build(),
+        );
     } else if !report.is_supported() && !is_ext4(report) {
         content.append(&unsupported_banner(report));
     }
@@ -346,6 +381,12 @@ fn build_overview(
         .homogeneous(true)
         .build();
     let supported = report.is_supported() || demo;
+    let latest_point = discovery
+        .report
+        .deployments
+        .first()
+        .map(deployment_time)
+        .unwrap_or_else(|| i18n("Not created yet"));
     let values = if supported {
         [
             (
@@ -354,7 +395,7 @@ fn build_overview(
                 if demo {
                     i18n("Today, 14:32")
                 } else {
-                    i18n("Not created yet")
+                    latest_point
                 },
                 i18n("System recovery"),
             ),
@@ -367,8 +408,18 @@ fn build_overview(
             (
                 "security-high-symbolic",
                 i18n("Boot safety"),
-                i18n("Verified"),
-                i18n("Kernel and initramfs"),
+                if demo {
+                    i18n("Verified")
+                } else if discovery.report.deployments.is_empty() {
+                    i18n("Waiting")
+                } else {
+                    i18n("Recorded")
+                },
+                if demo {
+                    i18n("Kernel and initramfs")
+                } else {
+                    i18n("Full integrity verification arrives in TM-2")
+                },
             ),
         ]
     } else {
@@ -443,6 +494,15 @@ fn build_overview(
             "warning",
             false,
         ));
+        content.append(&list);
+    } else if !discovery.report.deployments.is_empty() {
+        let list = gtk::ListBox::builder()
+            .selection_mode(gtk::SelectionMode::None)
+            .css_classes(["boxed-list"])
+            .build();
+        for deployment in discovery.report.deployments.iter().take(3) {
+            list.append(&deployment_row(deployment, false));
+        }
         content.append(&list);
     } else {
         let empty = adw::StatusPage::builder()
@@ -610,6 +670,7 @@ fn unsupported_banner(report: &LayoutReport) -> adw::Banner {
 fn build_recovery_points(
     window: &adw::ApplicationWindow,
     report: &LayoutReport,
+    discovery: &DiscoveryState,
     demo: bool,
 ) -> gtk::ScrolledWindow {
     let content = page_content();
@@ -778,13 +839,35 @@ fn build_recovery_points(
         content.append(&today_list);
         content.append(&yesterday_heading.widget);
         content.append(&yesterday_list);
+    } else if let Some(error) = &discovery.error {
+        content.append(
+            &adw::StatusPage::builder()
+                .icon_name("network-error-symbolic")
+                .title(i18n("The recovery service is unavailable"))
+                .description(error)
+                .build(),
+        );
+    } else if !discovery.report.deployments.is_empty() {
+        let heading = timeline_heading(
+            &i18n("Deployment metadata"),
+            discovery.report.deployments.len(),
+        );
+        content.append(&heading.widget);
+        let list = gtk::ListBox::builder()
+            .selection_mode(gtk::SelectionMode::None)
+            .css_classes(["boxed-list", "timeline-list"])
+            .build();
+        for deployment in &discovery.report.deployments {
+            list.append(&deployment_row(deployment, false));
+        }
+        content.append(&list);
     } else {
         content.append(
             &adw::StatusPage::builder()
                 .icon_name("document-open-recent-symbolic")
-                .title(i18n("The timeline is ready"))
+                .title(i18n("No recovery points yet"))
                 .description(i18n(
-                    "Recovery points will appear here after the snapshot backend is enabled.",
+                    "The read-only recovery service is ready. Manual recovery points arrive in TM-2.",
                 ))
                 .build(),
         );
@@ -947,7 +1030,11 @@ fn build_storage(report: &LayoutReport, demo: bool) -> adw::PreferencesPage {
     page
 }
 
-fn build_activity(report: &LayoutReport, demo: bool) -> adw::PreferencesPage {
+fn build_activity(
+    report: &LayoutReport,
+    discovery: &DiscoveryState,
+    demo: bool,
+) -> adw::PreferencesPage {
     let page = adw::PreferencesPage::builder()
         .title(i18n("Activity"))
         .icon_name("view-list-symbolic")
@@ -988,6 +1075,34 @@ fn build_activity(report: &LayoutReport, demo: bool) -> adw::PreferencesPage {
             .build(),
     );
     group.add(&row);
+    if let Some(error) = &discovery.error {
+        let row = adw::ActionRow::builder()
+            .title(i18n("Recovery service unavailable"))
+            .subtitle(error)
+            .build();
+        row.add_prefix(
+            &gtk::Image::builder()
+                .icon_name("dialog-warning-symbolic")
+                .pixel_size(24)
+                .css_classes(["warning"])
+                .build(),
+        );
+        group.add(&row);
+    }
+    for issue in &discovery.report.issues {
+        let row = adw::ActionRow::builder()
+            .title(i18n("Recovery point metadata needs attention"))
+            .subtitle(format!("{}: {}", issue.entry, issue.message))
+            .build();
+        row.add_prefix(
+            &gtk::Image::builder()
+                .icon_name("dialog-warning-symbolic")
+                .pixel_size(24)
+                .css_classes(["warning"])
+                .build(),
+        );
+        group.add(&row);
+    }
     page.add(&group);
     page
 }
@@ -1237,6 +1352,90 @@ fn timeline_heading(title: &str, count: usize) -> TimelineHeading {
         .build();
     row.append(&count);
     TimelineHeading { widget: row, count }
+}
+
+fn deployment_row(deployment: &DeploymentRecord, activatable: bool) -> adw::ActionRow {
+    let (badge, badge_class) = deployment_badge(deployment);
+    let kernel = deployment.kernel_release.clone().unwrap_or_else(|| {
+        if deployment.can_restore() {
+            "—".into()
+        } else {
+            i18n("Unverified")
+        }
+    });
+    let subtitle = format!(
+        "{} · {} · {}",
+        deployment_time(deployment),
+        deployment_kind(deployment.kind),
+        kernel
+    );
+    recovery_row(
+        deployment_icon(deployment),
+        &deployment.title,
+        &subtitle,
+        &badge,
+        badge_class,
+        activatable,
+    )
+}
+
+fn deployment_time(deployment: &DeploymentRecord) -> String {
+    deployment
+        .created_at
+        .format("%Y-%m-%d %H:%M UTC")
+        .to_string()
+}
+
+fn deployment_kind(kind: DeploymentKind) -> String {
+    match kind {
+        DeploymentKind::Factory => i18n("Factory"),
+        DeploymentKind::Manual => i18n("Manual"),
+        DeploymentKind::AptPre => i18n("Before update"),
+        DeploymentKind::AptPost => i18n("After update"),
+        DeploymentKind::PreRollback => i18n("Before rollback"),
+    }
+}
+
+fn deployment_badge(deployment: &DeploymentRecord) -> (String, &'static str) {
+    if deployment.pinned {
+        return (i18n("Pinned"), "warning");
+    }
+    match deployment.state {
+        DeploymentState::Current => (i18n("Current"), "accent"),
+        DeploymentState::Ready => (i18n("Ready"), "success"),
+        DeploymentState::FallbackProtected => (i18n("Protected"), "success"),
+        DeploymentState::PendingRollback => (i18n("Pending"), "warning"),
+        DeploymentState::BootedUnconfirmed => (i18n("Confirming"), "warning"),
+        DeploymentState::Creating => (i18n("Creating"), "accent"),
+        DeploymentState::Incomplete => (i18n("Incomplete"), "warning"),
+        DeploymentState::FailedReverted => (i18n("Reverted"), "warning"),
+        DeploymentState::Broken => (i18n("Broken"), "error"),
+        DeploymentState::Deleting => (i18n("Deleting"), "accent"),
+    }
+}
+
+fn deployment_icon(deployment: &DeploymentRecord) -> &'static str {
+    if deployment.pinned {
+        return "starred-symbolic";
+    }
+    match deployment.kind {
+        DeploymentKind::Factory => "emblem-default-symbolic",
+        DeploymentKind::Manual => "camera-photo-symbolic",
+        DeploymentKind::AptPre => "document-revert-symbolic",
+        DeploymentKind::AptPost => "software-update-available-symbolic",
+        DeploymentKind::PreRollback => "document-revert-symbolic",
+    }
+}
+
+fn empty_discovery() -> DiscoveryState {
+    DiscoveryState {
+        report: DiscoveryReport {
+            deployment_schema_version: DEPLOYMENT_SCHEMA_VERSION,
+            deployments: Vec::new(),
+            issues: Vec::new(),
+        },
+        error: None,
+    }
 }
 
 fn demo_layout() -> LayoutReport {

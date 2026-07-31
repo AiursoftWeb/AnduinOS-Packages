@@ -55,9 +55,10 @@ The daemon accepts deployment identifiers and typed options, never caller-
 provided filesystem paths, executable names, or arbitrary command arguments.
 It constructs all paths beneath `/.snapshots/anduinos` itself.
 
-TM-0 freezes the domain, on-disk, D-Bus, and authorization contracts. The
-privileged daemon and mutation methods are deliberately not installed until
-their implementation and failure-injection tests exist.
+TM-0 froze the domain, on-disk, D-Bus, and authorization contracts. TM-1
+installs the root system daemon for bounded read-only discovery only. Mutation
+methods are present in the stable interface but explicitly return a read-only
+milestone error until their implementation and failure-injection tests exist.
 
 ## On-disk format
 
@@ -150,8 +151,8 @@ has been completed.
 
 ## Milestones
 
-- **TM-0:** contracts, model, layout detector, CLI diagnostics, visual shell.
-- **TM-1:** read-only daemon, deployment discovery, overview and timeline.
+- **TM-0 (complete):** contracts, model, layout detector, CLI diagnostics, visual shell.
+- **TM-1 (complete):** read-only daemon, deployment discovery, overview and timeline.
 - **TM-2:** manual create, pin, delete, and integrity verification.
 - **TM-3:** initramfs rollback, one-shot boot, confirmation, automatic fallback.
 - **TM-4:** APT/dpkg pre/post recovery points and retention.

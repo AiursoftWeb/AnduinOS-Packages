@@ -3,17 +3,21 @@
 Rust, GTK4, and Libadwaita system-recovery frontend for the AnduinOS Btrfs
 storage ABI.
 
-TM-0 provides:
+TM-1 provides:
 
 - the versioned deployment model and state machine;
 - exact, read-only detection of the AnduinOS Btrfs subvolume layout;
 - the `timebackctl inspect` diagnostic command;
 - the system D-Bus and Polkit contracts;
-- a responsive application shell for the planned recovery workflow.
+- a hardened, D-Bus-activated, read-only system service;
+- bounded deployment discovery that isolates malformed metadata;
+- real recovery-point data in the responsive overview and timeline;
+- CLI access to both local layout diagnostics and daemon-owned deployments.
 
-No privileged recovery operation is implemented in TM-0. Buttons that would
-create or restore a recovery point explain the future milestone and do not
-modify the system.
+No recovery-point mutation is implemented in TM-1. The daemon explicitly
+rejects every create, pin, delete, rollback, and retention request until its
+transactional implementation and failure-injection tests arrive in later
+milestones.
 
 ## Local development
 
@@ -33,6 +37,12 @@ Inspect the machine-readable layout report with:
 
 ```bash
 cargo run --bin timebackctl -- inspect --json
+```
+
+On an installed package, query the D-Bus-activated read-only service with:
+
+```bash
+timebackctl list --json
 ```
 
 See `ARCHITECTURE.md` before implementing any privileged operation. The

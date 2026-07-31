@@ -1,0 +1,25 @@
+[Unit]
+Description=AnduinOS Timeback Machine service
+Documentation=file:/usr/share/doc/anduinos-timeback-machine/ARCHITECTURE.md
+
+[Service]
+Type=dbus
+BusName=com.anduinos.TimebackMachine1
+ExecStart=/usr/libexec/anduinos-timebackd
+User=root
+Group=root
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHostname=yes
+ProtectKernelLogs=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ReadOnlyPaths=-/.snapshots/anduinos
