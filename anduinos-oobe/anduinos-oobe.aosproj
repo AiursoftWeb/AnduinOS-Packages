@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-oobe</PackageName>
-    <PackageVersion>2.0.1-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS OOBE — First-run setup wizard and Welcome Center</PackageDescription>
     <Section>utils</Section>
@@ -27,6 +27,7 @@
     <Dependency Include="dconf-cli" />
     <Dependency Include="ufw" />
     <Dependency Include="flatpak" />
+    <Dependency Include="pkexec" />
     <Dependency Include="anduinos-appearance" />
   </ItemGroup>
 
@@ -40,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PrebuildCommand Run="python3 -m py_compile assets/anduinos-oobe" />
     <PrebuildCommand Run="bash compile-locales.sh" />
   </ItemGroup>
 </Project>

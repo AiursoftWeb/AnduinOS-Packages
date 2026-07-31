@@ -47,6 +47,10 @@ except Exception:
     _ = lambda s: s
 
 MARKER_FILE = os.path.expanduser("~/.config/anduinos-oobe-done")
+FLATHUB_REMOTE = 'flathub'
+FLATHUB_OFFICIAL_REPO = 'https://dl.flathub.org/repo/flathub.flatpakrepo'
+FLATHUB_OFFICIAL_URL = 'https://dl.flathub.org/repo'
+FLATHUB_USTC_URL = 'https://mirrors.ustc.edu.cn/flathub'
 
 # ── Icon helper ────────────────────────────────────────────────────
 _ICON_BASES = [
@@ -173,12 +177,13 @@ def is_chinese_locale():
 def _get_flathub_url():
     """Return the current Flathub remote URL, or empty string on failure."""
     try:
-        r = subprocess.run(['flatpak', 'remotes', '--system', '--show-details'],
+        r = subprocess.run(['flatpak', 'remotes', '--system',
+                            '--columns=name,url'],
                            capture_output=True, text=True, timeout=10)
         for line in r.stdout.splitlines():
             cols = line.split('\t')
-            if len(cols) >= 2 and cols[0] == 'flathub':
-                return cols[2] if len(cols) > 2 else ''
+            if len(cols) >= 2 and cols[0] == FLATHUB_REMOTE:
+                return cols[1]
     except Exception:
         pass
     return ''
@@ -2964,6 +2969,60 @@ def create_flathub_mirror_page():
 
     spinner = Gtk.Spinner()
 
+    def _run_checked(command, timeout):
+        """Run a command and preserve its useful error output."""
+        try:
+            proc = subprocess.run(
+                command, capture_output=True, text=True, timeout=timeout)
+        except subprocess.TimeoutExpired as e:
+            raise RuntimeError(
+                f'{os.path.basename(command[0])} timed out') from e
+        except OSError as e:
+            raise RuntimeError(str(e)) from e
+
+        if proc.returncode != 0:
+            detail = (proc.stderr or proc.stdout).strip()
+            if not detail:
+                detail = (
+                    f'{os.path.basename(command[0])} exited with status '
+                    f'{proc.returncode}'
+                )
+            raise RuntimeError(detail)
+        return proc
+
+    def _system_flathub_exists():
+        proc = _run_checked(
+            ['flatpak', 'remotes', '--system', '--show-disabled',
+             '--columns=name'], 10)
+        return FLATHUB_REMOTE in {
+            line.strip() for line in proc.stdout.splitlines()
+        }
+
+    def _test_ustc_repository():
+        # Probe actual OSTree metadata instead of the mirror's HTML index.
+        for metadata in ('config', 'summary.idx'):
+            request = urllib.request.Request(
+                f'{FLATHUB_USTC_URL}/{metadata}',
+                headers={
+                    'Range': 'bytes=0-0',
+                    'User-Agent': 'anduinos-oobe/2.0',
+                })
+            try:
+                with urllib.request.urlopen(request, timeout=10) as response:
+                    response.read(1)
+            except Exception as e:
+                raise RuntimeError(
+                    f'USTC mirror metadata is unreachable: {metadata}: {e}'
+                ) from e
+
+    def _ensure_system_flathub():
+        if _system_flathub_exists():
+            return
+        _run_checked(
+            ['pkexec', 'flatpak', '--system', 'remote-add',
+             '--if-not-exists', FLATHUB_REMOTE, FLATHUB_OFFICIAL_REPO],
+            300)
+
     def _run_btn(label, css_class, callback):
         btn = Gtk.Button(label=label)
         if css_class:
@@ -2975,6 +3034,7 @@ def create_flathub_mirror_page():
         return btn
 
     def _update_ustc_state():
+        spinner.stop()
         # Clear previous
         while True:
             c = btn_box.get_first_child()
@@ -3020,26 +3080,29 @@ def create_flathub_mirror_page():
 
         def _worker():
             try:
-                # Test connectivity
-                test = subprocess.run(
-                    ['curl', '-sI', '--connect-timeout', '5', '--max-time', '10',
-                     'https://mirrors.ustc.edu.cn/flathub/'],
-                    capture_output=True, timeout=15)
-                if test.returncode != 0:
-                    raise Exception('USTC mirror unreachable')
+                _test_ustc_repository()
+                _ensure_system_flathub()
 
                 # Switch
-                subprocess.run(
-                    ['sudo', 'flatpak', 'remote-modify', 'flathub',
-                     '--url=https://mirrors.ustc.edu.cn/flathub'],
-                    capture_output=True, check=True, timeout=30)
+                _run_checked(
+                    ['pkexec', 'flatpak', '--system', 'remote-modify',
+                     FLATHUB_REMOTE, '--enable',
+                     f'--url={FLATHUB_USTC_URL}'],
+                    300)
 
-                # Refresh app list
-                subprocess.run(
-                    ['flatpak', 'update', '--appstream'],
-                    capture_output=True, timeout=60)
+                # The remote switch is already complete. AppStream refresh is
+                # an optimization and must not turn a successful switch into a
+                # false failure when the catalog is temporarily unavailable.
+                try:
+                    _run_checked(
+                        ['flatpak', 'update', '--system', '--appstream'], 60)
+                except Exception as e:
+                    print(
+                        f'Warning: Flathub AppStream refresh failed: {e}',
+                        file=sys.stderr,
+                    )
             except Exception as e:
-                GLib.idle_add(_on_error, str(e))
+                GLib.idle_add(_on_error, str(e), _switch_to_ustc)
             else:
                 GLib.idle_add(_update_ustc_state)
 
@@ -3061,18 +3124,20 @@ def create_flathub_mirror_page():
 
         def _worker():
             try:
-                subprocess.run(
-                    ['sudo', 'flatpak', 'remote-modify', 'flathub',
-                     '--url=https://dl.flathub.org/repo'],
-                    capture_output=True, check=True, timeout=30)
+                _ensure_system_flathub()
+                _run_checked(
+                    ['pkexec', 'flatpak', '--system', 'remote-modify',
+                     FLATHUB_REMOTE, '--enable',
+                     f'--url={FLATHUB_OFFICIAL_URL}'],
+                    300)
             except Exception as e:
-                GLib.idle_add(_on_error, str(e))
+                GLib.idle_add(_on_error, str(e), _switch_back)
             else:
                 GLib.idle_add(_update_ustc_state)
 
         threading.Thread(target=_worker, daemon=True).start()
 
-    def _on_error(msg):
+    def _on_error(msg, retry_callback):
         spinner.stop()
         while True:
             c = btn_box.get_first_child()
@@ -3081,7 +3146,8 @@ def create_flathub_mirror_page():
             btn_box.remove(c)
         status_label.set_label(_('✗ Failed: ') + msg)
         status_label.remove_css_class('success')
-        btn_box.append(_run_btn(_('Retry'), 'suggested-action', lambda: _switch_to_ustc()))
+        btn_box.append(_run_btn(
+            _('Retry'), 'suggested-action', retry_callback))
 
     _update_ustc_state()
     return page
