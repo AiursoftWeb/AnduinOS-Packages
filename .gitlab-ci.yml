@@ -339,6 +339,11 @@ anduinos-swap-config:
   variables:
     PACKAGE_DIR: anduinos-swap-config
 
+anduinos-timeback-machine:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-timeback-machine
+
 anduinos-why-ai:
   extends: .publish
   timeout: 3h

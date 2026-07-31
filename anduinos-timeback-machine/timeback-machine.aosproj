@@ -1,0 +1,49 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-timeback-machine</PackageName>
+    <PackageVersion>0.1.0-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS Timeback Machine — graphical Btrfs system recovery and deployment manager</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource
+        Url="https://mirror.aiursoft.com/ubuntu"
+        SuiteMap="resolute-addon=resolute" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Dependency Include="libgtk-4-1" />
+    <Dependency Include="libadwaita-1-0" />
+    <Dependency Include="btrfs-progs" />
+    <Dependency Include="util-linux" />
+    <Dependency Include="polkitd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="bash scripts/prebuild-check.sh" />
+    <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IncludeScript Include="obj/anduinos-timeback-machine" Target="/usr/bin/anduinos-timeback-machine" />
+    <IncludeScript Include="obj/timebackctl" Target="/usr/bin/timebackctl" />
+    <IncludeFile Include="data/com.anduinos.timebackmachine.desktop" Target="/usr/share/applications/com.anduinos.timebackmachine.desktop" />
+    <IncludeFile Include="data/com.anduinos.timebackmachine.policy" Target="/usr/share/polkit-1/actions/com.anduinos.timebackmachine.policy" />
+    <IncludeFile Include="data/com.anduinos.timebackmachine.svg" Target="/usr/share/icons/hicolor/scalable/apps/com.anduinos.timebackmachine.svg" />
+    <IncludeFile Include="data/com.anduinos.timebackmachine.xml" Target="/usr/share/dbus-1/interfaces/com.anduinos.timebackmachine.xml" />
+    <IncludeFile Include="docs/deployment-v1.schema.json" Target="/usr/share/anduinos-timeback-machine/deployment-v1.schema.json" />
+    <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-timeback-machine/README.md" />
+    <IncludeFile Include="ARCHITECTURE.md" Target="/usr/share/doc/anduinos-timeback-machine/ARCHITECTURE.md" />
+  </ItemGroup>
+</Project>
