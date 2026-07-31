@@ -21,8 +21,12 @@ class ExecutorPipelineTests(unittest.TestCase):
             InstallerExecutor(lambda _message: None).run(valid_plan())
         pipeline = CapturingStepRunner.captured
         self.assertEqual(
-            pipeline[:2],
-            ("detect-boot-environment", "verify-target-disk"),
+            pipeline[:3],
+            (
+                "detect-boot-environment",
+                "detect-network-connectivity",
+                "verify-target-disk",
+            ),
         )
         expected = (
             "configure-system",

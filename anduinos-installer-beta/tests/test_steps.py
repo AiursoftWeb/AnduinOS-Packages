@@ -5,6 +5,7 @@ from installer_core.steps import (
     InstallContext,
     StepRunner,
     StepStatus,
+    StepWarning,
 )
 
 from helpers import valid_plan
@@ -116,6 +117,20 @@ class StepRunnerTests(unittest.TestCase):
         result = StepRunner(steps).run(self.context())
         self.assertTrue(result.succeeded)
         self.assertEqual(result.results[0].status, StepStatus.WARNING)
+
+    def test_explicit_step_warning_overrides_fatal_policy(self):
+        class OfflineStep(FakeStep):
+            def execute(self, _context):
+                self.events.append(f"{self.id}:execute")
+                raise StepWarning("Skipped because the installer is offline")
+
+        events = []
+        result = StepRunner([OfflineStep("drivers", events)]).run(
+            self.context()
+        )
+        self.assertTrue(result.succeeded)
+        self.assertEqual(result.results[0].status, StepStatus.WARNING)
+        self.assertIn("offline", result.results[0].message)
 
     def test_emits_running_and_terminal_status_for_each_step(self):
         events = []

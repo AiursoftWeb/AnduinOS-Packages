@@ -24,6 +24,10 @@ class StepStatus(str, Enum):
     SKIPPED = "skipped"
 
 
+class StepWarning(RuntimeError):
+    """Skip the current action with a visible warning, regardless of policy."""
+
+
 @dataclass
 class InstallContext:
     plan: InstallPlan
@@ -114,6 +118,14 @@ class StepRunner:
                 executed.append(step)
                 self.status(step.id, StepStatus.SUCCEEDED, "")
                 results.append(StepResult(step.id, StepStatus.SUCCEEDED))
+            except StepWarning as error:
+                message = str(error)
+                context.log(f"[{step.id}] warning: {message}")
+                self._cleanup(context, [step])
+                self.status(step.id, StepStatus.WARNING, message)
+                results.append(
+                    StepResult(step.id, StepStatus.WARNING, message)
+                )
             except Exception as error:
                 message = str(error)
                 context.log(f"[{step.id}] failed: {message}")

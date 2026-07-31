@@ -7,7 +7,7 @@ from pathlib import Path
 
 from .command import CommandError, CommandRunner
 from .mirrors import restore_original_mirror
-from .steps import FailurePolicy, InstallContext
+from .steps import FailurePolicy, InstallContext, StepWarning
 from .validation import validate_plan
 
 
@@ -44,6 +44,10 @@ class RefreshPackageIndexesStep:
         context.values["package_indexes_refreshed"] = False
         if not context.plan.software.install_updates:
             return
+        if context.values.get("network_online") is False:
+            raise StepWarning(
+                "Skipped package index refresh because the installer is offline"
+            )
         target = _target(context)
         _require_target_command(target, "usr/bin/apt-get")
         command = (
@@ -52,6 +56,12 @@ class RefreshPackageIndexesStep:
             "/usr/bin/env",
             "DEBIAN_FRONTEND=noninteractive",
             "apt-get",
+            "-o",
+            "Acquire::Retries=1",
+            "-o",
+            "Acquire::http::Timeout=15",
+            "-o",
+            "Acquire::https::Timeout=15",
             "update",
         )
         result = self.runner.run(command, check=False, timeout=1800)
@@ -92,27 +102,58 @@ class UpgradeSystemStep:
 
     def execute(self, context: InstallContext) -> None:
         context.values["system_upgraded"] = False
+        context.values["system_upgrade_downloaded"] = False
         if not context.plan.software.install_updates:
             return
-        if not context.values.get("package_indexes_refreshed"):
-            context.log(
-                "[upgrade-system] skipped because package indexes were not refreshed"
+        if context.values.get("network_online") is False:
+            raise StepWarning(
+                "Skipped system updates because the installer is offline"
             )
-            return
+        if not context.values.get("package_indexes_refreshed"):
+            raise StepWarning(
+                "Skipped system updates because package indexes were not refreshed"
+            )
         target = _target(context)
         _require_target_command(target, "usr/bin/apt-get")
+        command_prefix = (
+            "chroot",
+            str(target),
+            "/usr/bin/env",
+            "DEBIAN_FRONTEND=noninteractive",
+            "apt-get",
+            "--yes",
+            "-o",
+            "Dpkg::Options::=--force-confold",
+        )
+        try:
+            download = self.runner.run(
+                (
+                    *command_prefix,
+                    "-o",
+                    "Acquire::Retries=1",
+                    "-o",
+                    "Acquire::http::Timeout=15",
+                    "-o",
+                    "Acquire::https::Timeout=15",
+                    "--download-only",
+                    "upgrade",
+                ),
+                check=False,
+                timeout=7200,
+            )
+        except CommandError as error:
+            raise StepWarning(
+                "Could not download every system update; skipped the upgrade "
+                "to preserve the installation media's consistent package set"
+            ) from error
+        if download.returncode != 0:
+            raise StepWarning(
+                "Could not download every system update; skipped the upgrade "
+                "to preserve the installation media's consistent package set"
+            )
+        context.values["system_upgrade_downloaded"] = True
         self.runner.run(
-            (
-                "chroot",
-                str(target),
-                "/usr/bin/env",
-                "DEBIAN_FRONTEND=noninteractive",
-                "apt-get",
-                "--yes",
-                "-o",
-                "Dpkg::Options::=--force-confold",
-                "upgrade",
-            ),
+            (*command_prefix, "--no-download", "upgrade"),
             timeout=7200,
         )
         context.values["system_upgraded"] = True
@@ -153,9 +194,13 @@ class InstallThirdPartyDriversStep:
         context.values["third_party_drivers_installed"] = False
         if not context.plan.software.install_third_party_drivers:
             return
+        if context.values.get("network_online") is False:
+            raise StepWarning(
+                "Skipped third-party drivers because the installer is offline"
+            )
         target = _target(context)
         _require_target_command(target, "usr/bin/ubuntu-drivers")
-        self.runner.run(
+        result = self.runner.run(
             (
                 "chroot",
                 str(target),
@@ -165,8 +210,33 @@ class InstallThirdPartyDriversStep:
                 "--package-list",
                 "/run/anduinos-installer-drivers",
             ),
+            check=False,
             timeout=7200,
         )
+        if result.returncode != 0:
+            audit = self.runner.run(
+                ("chroot", str(target), "dpkg", "--audit"),
+                check=False,
+                timeout=300,
+            )
+            dependency_check = self.runner.run(
+                ("chroot", str(target), "apt-get", "check"),
+                check=False,
+                timeout=600,
+            )
+            if (
+                audit.returncode != 0
+                or audit.stdout.strip()
+                or dependency_check.returncode != 0
+            ):
+                raise CommandError(
+                    "Third-party driver installation failed and left an "
+                    "inconsistent package state"
+                )
+            raise StepWarning(
+                "Could not download or install the selected third-party "
+                "drivers; the base system remains usable"
+            )
         context.values["third_party_drivers_installed"] = True
 
     def verify(self, context: InstallContext) -> None:

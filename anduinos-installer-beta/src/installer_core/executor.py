@@ -26,6 +26,7 @@ from .execution_steps import (
 )
 from .live_cleanup import CleanupLiveSystemStep
 from .mirrors import SelectFastestAptMirrorStep
+from .network import DetectNetworkConnectivityStep
 from .model import InstallPlan
 from .steps import InstallContext, InstallResult, StepRunner, StepStatus
 from .storage_steps import MountTargetStep, PrepareStorageStep
@@ -55,6 +56,7 @@ class InstallerExecutor:
         context = InstallContext(plan, self.log)
         steps = [
             DetectBootEnvironmentStep(self.runner),
+            DetectNetworkConnectivityStep(),
             VerifyTargetDiskStep(self.runner),
             PrepareStorageStep(self.runner),
             MountTargetStep(self.runner, target=self.target),

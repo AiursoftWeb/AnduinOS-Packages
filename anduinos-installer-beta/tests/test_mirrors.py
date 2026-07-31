@@ -11,7 +11,7 @@ from installer_core.mirrors import (
     select_fastest_mirror,
 )
 from installer_core.model import Architecture
-from installer_core.steps import InstallContext
+from installer_core.steps import InstallContext, StepWarning
 
 
 class FakeResponse:
@@ -42,6 +42,19 @@ class AdvancingClock:
 
 
 class MirrorSelectionTests(unittest.TestCase):
+    def test_offline_step_does_not_probe_or_modify_sources(self):
+        context = InstallContext(
+            valid_plan(),
+            lambda _message: None,
+            {"network_online": False},
+        )
+        with (
+            patch("installer_core.mirrors.select_fastest_mirror") as select,
+            self.assertRaisesRegex(StepWarning, "offline"),
+        ):
+            SelectFastestAptMirrorStep().execute(context)
+        select.assert_not_called()
+
     def test_arm64_bandwidth_probe_uses_arm64_then_amd64_fallback(self):
         requested = []
         lock = threading.Lock()

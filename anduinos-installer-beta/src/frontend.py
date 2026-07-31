@@ -140,6 +140,7 @@ class DevelopmentExecutorClient:
 
     BASE_PIPELINE = (
         ("detect-boot-environment", 1),
+        ("detect-network-connectivity", 1),
         ("verify-target-disk", 1),
         ("prepare-storage", 10),
         ("mount-target", 3),

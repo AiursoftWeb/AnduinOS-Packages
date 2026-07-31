@@ -404,7 +404,18 @@ def build_software_page(shared, nav_view):
         bool(shared.get("install_third_party_drivers", False))
     )
     drivers_detail = Gtk.Label(
-        label=_("Some drivers are proprietary or otherwise non-free software.", lang),
+        label=(
+            _(
+                "Requires an Internet connection. The base installation "
+                "remains available when offline.",
+                lang,
+            )
+            + "\n"
+            + _(
+                "Some drivers are proprietary or otherwise non-free software.",
+                lang,
+            )
+        ),
         halign=Gtk.Align.START,
         wrap=True,
         margin_start=28,
@@ -1287,6 +1298,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     step_titles = {
         "detect-boot-environment": _(
             "Detect firmware and Secure Boot", lang
+        ),
+        "detect-network-connectivity": _(
+            "Detect Internet connectivity", lang
         ),
         "verify-target-disk": _("Verify target disk isolation", lang),
         "prepare-storage": _("Prepare installation disk", lang),

@@ -10,7 +10,7 @@ from installer_core.software import (
     RefreshPackageIndexesStep,
     UpgradeSystemStep,
 )
-from installer_core.steps import InstallContext
+from installer_core.steps import InstallContext, StepWarning
 
 
 def context_for(target: Path, *, updates: bool = True) -> InstallContext:
@@ -40,9 +40,13 @@ class PackageUpdateTests(unittest.TestCase):
 
         commands = [item[0] for item in runner.commands]
         self.assertTrue(context.values["package_indexes_refreshed"])
+        self.assertTrue(context.values["system_upgrade_downloaded"])
         self.assertTrue(context.values["system_upgraded"])
         self.assertTrue(any(command[-1] == "update" for command in commands))
-        self.assertTrue(any(command[-1] == "upgrade" for command in commands))
+        upgrades = [command for command in commands if command[-1] == "upgrade"]
+        self.assertEqual(len(upgrades), 2)
+        self.assertIn("--download-only", upgrades[0])
+        self.assertIn("--no-download", upgrades[1])
         self.assertTrue(any(command[-2:] == ("dpkg", "--audit") for command in commands))
         self.assertTrue(any(command[-2:] == ("apt-get", "check") for command in commands))
 
@@ -58,17 +62,80 @@ class PackageUpdateTests(unittest.TestCase):
                 "/usr/bin/env",
                 "DEBIAN_FRONTEND=noninteractive",
                 "apt-get",
+                "-o",
+                "Acquire::Retries=1",
+                "-o",
+                "Acquire::http::Timeout=15",
+                "-o",
+                "Acquire::https::Timeout=15",
                 "update",
             )
             runner.outputs[update_command] = ("", "offline", 100)
             with self.assertRaisesRegex(RuntimeError, "Could not refresh"):
                 RefreshPackageIndexesStep(runner).execute(context)
-            UpgradeSystemStep(runner).execute(context)
+            with self.assertRaisesRegex(StepWarning, "indexes"):
+                UpgradeSystemStep(runner).execute(context)
 
         self.assertFalse(context.values["package_indexes_refreshed"])
         self.assertFalse(context.values["system_upgraded"])
         self.assertFalse(
             any(item[0][-1] == "upgrade" for item in runner.commands)
+        )
+
+    def test_offline_mode_skips_all_network_package_commands(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_apt(target)
+            runner = FakeRunner()
+            context = context_for(target)
+            context.values["network_online"] = False
+
+            with self.assertRaisesRegex(StepWarning, "offline"):
+                RefreshPackageIndexesStep(runner).execute(context)
+            with self.assertRaisesRegex(StepWarning, "offline"):
+                UpgradeSystemStep(runner).execute(context)
+
+        self.assertEqual(runner.commands, [])
+        self.assertFalse(context.values["package_indexes_refreshed"])
+        self.assertFalse(context.values["system_upgraded"])
+
+    def test_failed_update_download_never_starts_package_installation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_apt(target)
+            runner = FakeRunner()
+            context = context_for(target)
+            context.values["package_indexes_refreshed"] = True
+            command_prefix = (
+                "chroot",
+                str(target),
+                "/usr/bin/env",
+                "DEBIAN_FRONTEND=noninteractive",
+                "apt-get",
+                "--yes",
+                "-o",
+                "Dpkg::Options::=--force-confold",
+            )
+            download = (
+                *command_prefix,
+                "-o",
+                "Acquire::Retries=1",
+                "-o",
+                "Acquire::http::Timeout=15",
+                "-o",
+                "Acquire::https::Timeout=15",
+                "--download-only",
+                "upgrade",
+            )
+            runner.outputs[download] = ("", "network lost", 100)
+
+            with self.assertRaisesRegex(StepWarning, "download every"):
+                UpgradeSystemStep(runner).execute(context)
+
+        self.assertFalse(context.values["system_upgrade_downloaded"])
+        self.assertFalse(context.values["system_upgraded"])
+        self.assertFalse(
+            any("--no-download" in item[0] for item in runner.commands)
         )
 
     def test_failed_selected_mirror_restores_original_and_retries(self):
@@ -159,4 +226,81 @@ class PackageUpdateTests(unittest.TestCase):
                 },
             )
             InstallThirdPartyDriversStep(runner).execute(context)
+        self.assertEqual(runner.commands, [])
+
+    def test_failed_driver_download_warns_when_package_state_is_clean(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            command = target / "usr/bin/ubuntu-drivers"
+            command.parent.mkdir(parents=True)
+            command.touch()
+            runner = FakeRunner()
+            context = InstallContext(
+                valid_plan(install_third_party_drivers=True),
+                lambda _message: None,
+                {"target": target, "chroot_environment_ready": True},
+            )
+            install = (
+                "chroot",
+                str(target),
+                "ubuntu-drivers",
+                "install",
+                "--no-oem",
+                "--package-list",
+                "/run/anduinos-installer-drivers",
+            )
+            runner.outputs[install] = ("", "network lost", 100)
+
+            with self.assertRaisesRegex(StepWarning, "base system"):
+                InstallThirdPartyDriversStep(runner).execute(context)
+
+        commands = [item[0] for item in runner.commands]
+        self.assertIn(("chroot", str(target), "dpkg", "--audit"), commands)
+        self.assertIn(("chroot", str(target), "apt-get", "check"), commands)
+        self.assertFalse(context.values["third_party_drivers_installed"])
+
+    def test_failed_driver_install_is_fatal_if_dpkg_is_inconsistent(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            command = target / "usr/bin/ubuntu-drivers"
+            command.parent.mkdir(parents=True)
+            command.touch()
+            runner = FakeRunner()
+            context = InstallContext(
+                valid_plan(install_third_party_drivers=True),
+                lambda _message: None,
+                {"target": target, "chroot_environment_ready": True},
+            )
+            install = (
+                "chroot",
+                str(target),
+                "ubuntu-drivers",
+                "install",
+                "--no-oem",
+                "--package-list",
+                "/run/anduinos-installer-drivers",
+            )
+            audit = ("chroot", str(target), "dpkg", "--audit")
+            runner.outputs[install] = ("", "install failed", 100)
+            runner.outputs[audit] = ("unpacked package remains\n", "", 0)
+
+            with self.assertRaisesRegex(RuntimeError, "inconsistent"):
+                InstallThirdPartyDriversStep(runner).execute(context)
+
+        self.assertFalse(context.values["third_party_drivers_installed"])
+
+    def test_offline_third_party_drivers_warn_without_running_command(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runner = FakeRunner()
+            context = InstallContext(
+                valid_plan(install_third_party_drivers=True),
+                lambda _message: None,
+                {
+                    "target": Path(directory),
+                    "chroot_environment_ready": True,
+                    "network_online": False,
+                },
+            )
+            with self.assertRaisesRegex(StepWarning, "offline"):
+                InstallThirdPartyDriversStep(runner).execute(context)
         self.assertEqual(runner.commands, [])
