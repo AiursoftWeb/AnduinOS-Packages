@@ -182,6 +182,14 @@ impl SwapcontrolWindow {
             .invert_boolean()
             .build();
 
+        let compact = adw::Breakpoint::new(
+            adw::BreakpointCondition::parse("max-width: 700px")
+                .expect("the compact window breakpoint must be valid"),
+        );
+        compact.add_setter(&split_view, "collapsed", Some(&true.to_value()));
+        compact.add_setter(&split_view, "show-sidebar", Some(&false.to_value()));
+        self.add_breakpoint(compact);
+
         // Connect list box to stack — switch page and refresh on every tab change
         let stack_clone = stack.clone();
         let weak_for_switch = self.downgrade();

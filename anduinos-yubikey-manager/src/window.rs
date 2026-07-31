@@ -205,6 +205,19 @@ impl YubiKeyManagerWindow {
             .bind_property("collapsed", &toggle, "visible")
             .sync_create()
             .build();
+        split
+            .bind_property("collapsed", &sidebar_header, "show-start-title-buttons")
+            .sync_create()
+            .invert_boolean()
+            .build();
+
+        let compact = adw::Breakpoint::new(
+            adw::BreakpointCondition::parse("max-width: 700px")
+                .expect("the compact window breakpoint must be valid"),
+        );
+        compact.add_setter(&split, "collapsed", Some(&true.to_value()));
+        compact.add_setter(&split, "show-sidebar", Some(&false.to_value()));
+        self.add_breakpoint(compact);
 
         let stack_clone = stack.clone();
         let page_title_clone = page_title.clone();

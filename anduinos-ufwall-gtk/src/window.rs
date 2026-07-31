@@ -194,6 +194,14 @@ impl UfwallWindow {
             .invert_boolean()
             .build();
 
+        let compact = adw::Breakpoint::new(
+            adw::BreakpointCondition::parse("max-width: 700px")
+                .expect("the compact window breakpoint must be valid"),
+        );
+        compact.add_setter(&split_view, "collapsed", Some(&true.to_value()));
+        compact.add_setter(&split_view, "show-sidebar", Some(&false.to_value()));
+        self.add_breakpoint(compact);
+
         // Connect list box to stack
         let stack_clone = stack.clone();
         sidebar_list.connect_row_selected(move |_, row| {
