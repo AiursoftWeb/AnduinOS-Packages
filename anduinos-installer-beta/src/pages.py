@@ -37,7 +37,7 @@ from frontend import (
 )
 from installer_core.btrfs import BTRFS_SUBVOLUMES
 from installer_core.account_security import AccountNextAction, account_next_action
-from installer_core.model import InstallPlan, SecureBoot
+from installer_core.model import Filesystem, InstallPlan, SecureBoot
 from installer_core.probe import ProbeError, probe_disks, probe_platform
 from slideshow import load_slides
 
@@ -1316,6 +1316,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "prepare-secure-boot": _("Prepare Secure Boot", lang),
         "refresh-package-indexes": _("Refresh package indexes", lang),
         "upgrade-system": _("Install system updates", lang),
+        "provision-timeback-machine": _("Install Timeback Machine", lang),
         "install-third-party-drivers": _("Install hardware drivers", lang),
         "verify-dkms-signatures": _(
             "Verify kernel module signatures", lang
@@ -1350,6 +1351,8 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     omitted_steps = set()
     if not plan.software.install_updates:
         omitted_steps.update(("refresh-package-indexes", "upgrade-system"))
+    if plan.storage.filesystem is not Filesystem.BTRFS:
+        omitted_steps.add("provision-timeback-machine")
     if not plan.software.install_third_party_drivers:
         omitted_steps.add("install-third-party-drivers")
     for step_id in omitted_steps:

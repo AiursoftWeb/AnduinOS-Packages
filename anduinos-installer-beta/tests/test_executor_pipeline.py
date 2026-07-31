@@ -34,6 +34,7 @@ class ExecutorPipelineTests(unittest.TestCase):
             "prepare-secure-boot",
             "refresh-package-indexes",
             "upgrade-system",
+            "provision-timeback-machine",
             "verify-dkms-signatures",
             "install-bootloader",
             "enroll-secure-boot",
@@ -57,4 +58,23 @@ class ExecutorPipelineTests(unittest.TestCase):
         self.assertLess(
             pipeline.index("install-third-party-drivers"),
             pipeline.index("verify-dkms-signatures"),
+        )
+
+    def test_timeback_step_is_only_present_for_btrfs(self):
+        from installer_core.model import Filesystem
+
+        with patch("installer_core.executor.StepRunner", CapturingStepRunner):
+            InstallerExecutor(lambda _message: None).run(
+                valid_plan(filesystem=Filesystem.EXT4)
+            )
+        self.assertNotIn(
+            "provision-timeback-machine",
+            CapturingStepRunner.captured,
+        )
+
+        with patch("installer_core.executor.StepRunner", CapturingStepRunner):
+            InstallerExecutor(lambda _message: None).run(valid_plan())
+        self.assertIn(
+            "provision-timeback-machine",
+            CapturingStepRunner.captured,
         )

@@ -27,11 +27,12 @@ from .execution_steps import (
 from .live_cleanup import CleanupLiveSystemStep
 from .mirrors import SelectFastestAptMirrorStep
 from .network import DetectNetworkConnectivityStep
-from .model import InstallPlan
+from .model import Filesystem, InstallPlan
 from .steps import InstallContext, InstallResult, StepRunner, StepStatus
 from .storage_steps import MountTargetStep, PrepareStorageStep
 from .system_config import ConfigureSystemStep
 from .target_config import ConfigureStorageStep
+from .timeback import ProvisionTimebackMachineStep
 
 
 class InstallerExecutor:
@@ -78,6 +79,8 @@ class InstallerExecutor:
                     UpgradeSystemStep(self.runner),
                 )
             )
+        if plan.storage.filesystem is Filesystem.BTRFS:
+            steps.append(ProvisionTimebackMachineStep(self.runner))
         if plan.software.install_third_party_drivers:
             steps.append(InstallThirdPartyDriversStep(self.runner))
         steps.extend(

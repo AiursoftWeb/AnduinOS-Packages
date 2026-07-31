@@ -25,6 +25,44 @@ def _require_target_command(target: Path, relative: str) -> None:
         raise RuntimeError(f"Target command is missing: /{relative}")
 
 
+def refresh_package_indexes(
+    context: InstallContext,
+    runner: CommandRunner,
+) -> None:
+    """Refresh target indexes with mirror rollback for package consumers."""
+
+    context.values["package_indexes_refreshed"] = False
+    target = _target(context)
+    _require_target_command(target, "usr/bin/apt-get")
+    command = (
+        "chroot",
+        str(target),
+        "/usr/bin/env",
+        "DEBIAN_FRONTEND=noninteractive",
+        "apt-get",
+        "-o",
+        "Acquire::Retries=1",
+        "-o",
+        "Acquire::http::Timeout=15",
+        "-o",
+        "Acquire::https::Timeout=15",
+        "update",
+    )
+    result = runner.run(command, check=False, timeout=1800)
+    if result.returncode != 0:
+        if restore_original_mirror(context):
+            context.log(
+                "Selected mirror failed apt update; restored original sources"
+            )
+            result = runner.run(command, check=False, timeout=1800)
+        if result.returncode != 0:
+            raise CommandError(
+                "Could not refresh package indexes; continuing with the "
+                "installation media's package set"
+            )
+    context.values["package_indexes_refreshed"] = True
+
+
 @dataclass
 class RefreshPackageIndexesStep:
     """Refresh indexes, but preserve a usable offline installation."""
@@ -48,35 +86,7 @@ class RefreshPackageIndexesStep:
             raise StepWarning(
                 "Skipped package index refresh because the installer is offline"
             )
-        target = _target(context)
-        _require_target_command(target, "usr/bin/apt-get")
-        command = (
-            "chroot",
-            str(target),
-            "/usr/bin/env",
-            "DEBIAN_FRONTEND=noninteractive",
-            "apt-get",
-            "-o",
-            "Acquire::Retries=1",
-            "-o",
-            "Acquire::http::Timeout=15",
-            "-o",
-            "Acquire::https::Timeout=15",
-            "update",
-        )
-        result = self.runner.run(command, check=False, timeout=1800)
-        if result.returncode != 0:
-            if restore_original_mirror(context):
-                context.log(
-                    "Selected mirror failed apt update; restored original sources"
-                )
-                result = self.runner.run(command, check=False, timeout=1800)
-            if result.returncode != 0:
-                raise CommandError(
-                    "Could not refresh package indexes; continuing with the "
-                    "installation media's package set"
-                )
-        context.values["package_indexes_refreshed"] = True
+        refresh_package_indexes(context, self.runner)
 
     def verify(self, context: InstallContext) -> None:
         return None

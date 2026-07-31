@@ -6,7 +6,7 @@ from pathlib import Path
 from fakes import FakeRunner
 from helpers import valid_plan
 from installer_core.live_cleanup import CleanupLiveSystemStep
-from installer_core.model import SourceSpec
+from installer_core.model import Filesystem, SourceSpec
 from installer_core.steps import InstallContext
 
 
@@ -124,6 +124,117 @@ class LiveCleanupTests(unittest.TestCase):
                 ),
             )
             with self.assertRaisesRegex(RuntimeError, "Live-only packages"):
+                CleanupLiveSystemStep(FakeRunner()).preflight(
+                    InstallContext(plan, lambda _message: None)
+                )
+
+    def test_btrfs_installation_retains_timeback_live_payload(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            target = root / "target"
+            target.mkdir()
+            full = root / "full"
+            desktop = root / "desktop"
+            full.write_text(
+                "bash 1\nanduinos-timeback-machine 2\n",
+                encoding="utf-8",
+            )
+            desktop.write_text("bash 1\n", encoding="utf-8")
+            base = valid_plan()
+            plan = replace(
+                base,
+                source=SourceSpec(
+                    image_path="/unused",
+                    manifest_path=str(full),
+                    desktop_manifest_path=str(desktop),
+                ),
+            )
+            runner = FakeRunner()
+            context = InstallContext(
+                plan,
+                lambda _message: None,
+                values={"target": target},
+            )
+            step = CleanupLiveSystemStep(runner)
+            step.preflight(context)
+            step.execute(context)
+
+        queried = [
+            command[-1]
+            for command, _ in runner.commands
+            if "dpkg-query" in command
+        ]
+        self.assertTrue(context.values["timeback_payload_in_live_image"])
+        self.assertNotIn("anduinos-timeback-machine", queried)
+
+    def test_ext4_installation_purges_timeback_live_payload(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            target = root / "target"
+            target.mkdir()
+            full = root / "full"
+            desktop = root / "desktop"
+            full.write_text(
+                "bash 1\nanduinos-timeback-machine 2\n",
+                encoding="utf-8",
+            )
+            desktop.write_text("bash 1\n", encoding="utf-8")
+            base = valid_plan(filesystem=Filesystem.EXT4)
+            plan = replace(
+                base,
+                source=SourceSpec(
+                    image_path="/unused",
+                    manifest_path=str(full),
+                    desktop_manifest_path=str(desktop),
+                ),
+            )
+            runner = FakeRunner()
+            query = (
+                "chroot",
+                str(target),
+                "dpkg-query",
+                "--show",
+                "--showformat=${db:Status-Abbrev}",
+                "anduinos-timeback-machine",
+            )
+            runner.outputs[query] = ("ii \n", "", 0)
+            context = InstallContext(
+                plan,
+                lambda _message: None,
+                values={"target": target},
+            )
+            step = CleanupLiveSystemStep(runner)
+            step.preflight(context)
+            step.execute(context)
+
+        purge = next(
+            command
+            for command, _ in runner.commands
+            if "purge" in command
+        )
+        self.assertEqual(purge[-1], "anduinos-timeback-machine")
+
+    def test_rejects_timeback_in_unconditional_desktop_manifest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            full = root / "full"
+            desktop = root / "desktop"
+            manifest = "bash 1\nanduinos-timeback-machine 2\n"
+            full.write_text(manifest, encoding="utf-8")
+            desktop.write_text(manifest, encoding="utf-8")
+            base = valid_plan()
+            plan = replace(
+                base,
+                source=SourceSpec(
+                    image_path="/unused",
+                    manifest_path=str(full),
+                    desktop_manifest_path=str(desktop),
+                ),
+            )
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "Conditional live packages",
+            ):
                 CleanupLiveSystemStep(FakeRunner()).preflight(
                     InstallContext(plan, lambda _message: None)
                 )

@@ -7,12 +7,14 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .command import CommandRunner
+from .model import Filesystem
 from .steps import FailurePolicy, InstallContext
 
 
 PACKAGE_RE = re.compile(r"^[a-z0-9][a-z0-9+.-]*(?::[a-z0-9]+)?$")
 VERSION_RE = re.compile(r"^[A-Za-z0-9.+:~\-]+$")
 ALWAYS_REMOVE = frozenset({"anduinos-installer-beta"})
+CONDITIONAL_LIVE_PACKAGES = frozenset({"anduinos-timeback-machine"})
 RIME_REQUIRED_PACKAGES = frozenset(
     {"anduinos-rime", "ibus-rime", "libglib2.0-bin"}
 )
@@ -57,6 +59,14 @@ class CleanupLiveSystemStep:
                 "Live-only packages leaked into the desktop manifest: "
                 + ", ".join(leaked)
             )
+        conditional_leaked = sorted(
+            CONDITIONAL_LIVE_PACKAGES & desktop.keys()
+        )
+        if conditional_leaked:
+            raise RuntimeError(
+                "Conditional live packages leaked into the desktop manifest: "
+                + ", ".join(conditional_leaked)
+            )
         if context.plan.regional.input_method == "rime":
             missing = sorted(RIME_REQUIRED_PACKAGES - desktop.keys())
             if missing:
@@ -66,6 +76,9 @@ class CleanupLiveSystemStep:
                 )
         context.values["casper_full_manifest"] = full
         context.values["casper_desktop_manifest"] = desktop
+        context.values["timeback_payload_in_live_image"] = (
+            "anduinos-timeback-machine" in full
+        )
 
     def execute(self, context: InstallContext) -> None:
         target = _target(context)
@@ -77,7 +90,10 @@ class CleanupLiveSystemStep:
             full_path, desktop_path = _manifest_paths(context)
             full = _read_manifest(full_path)
             desktop = _read_manifest(desktop_path)
-        candidates = sorted((full.keys() - desktop.keys()) | ALWAYS_REMOVE)
+        candidates = (full.keys() - desktop.keys()) | ALWAYS_REMOVE
+        if context.plan.storage.filesystem is Filesystem.BTRFS:
+            candidates -= CONDITIONAL_LIVE_PACKAGES
+        candidates = sorted(candidates)
 
         installed: list[str] = []
         for package in candidates:

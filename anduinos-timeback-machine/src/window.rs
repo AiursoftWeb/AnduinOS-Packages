@@ -10,7 +10,6 @@ use crate::config;
 use crate::i18n::{i18n, i18n_fmt};
 
 const HERO_SVG: &[u8] = include_bytes!("../data/timeback-hero.svg");
-const APP_ICON_SVG: &[u8] = include_bytes!("../data/com.anduinos.timebackmachine.svg");
 
 struct Page {
     name: &'static str,
@@ -212,7 +211,14 @@ fn build_unavailable_window(window: &adw::ApplicationWindow, report: &LayoutRepo
         .margin_top(36)
         .margin_bottom(48)
         .build();
-    content.append(&svg_picture(APP_ICON_SVG, 128, 128));
+    content.append(
+        &gtk::Image::builder()
+            .icon_name(config::APP_ID)
+            .pixel_size(128)
+            .halign(gtk::Align::Center)
+            .valign(gtk::Align::Center)
+            .build(),
+    );
     content.append(
         &gtk::Label::builder()
             .label(i18n("Temporarily unavailable"))
