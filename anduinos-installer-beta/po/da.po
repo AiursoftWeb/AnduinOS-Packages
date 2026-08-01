@@ -259,44 +259,44 @@ msgstr "Nogle drivere er proprietære eller anden ikke-fri software."
 
 #: src/pages.py:641
 msgid "Storage Device"
-msgstr "Storage Device"
+msgstr "Lagerenhed"
 
 #: src/pages.py:650
 msgid "No partition table"
-msgstr "No partition table"
+msgstr "Ingen partitionstabel"
 
 #: src/pages.py:673
 msgid "Current disk layout"
-msgstr "Current disk layout"
+msgstr "Aktuel disklayout"
 
 #: src/pages.py:693
 msgid "Unknown filesystem"
-msgstr "Unknown filesystem"
+msgstr "Ukendt filsystem"
 
 #: src/pages.py:706
 #, python-brace-format
 msgid "Unallocated · {size}"
-msgstr "Unallocated · {size}"
+msgstr "Utildelt · {size}"
 
 #: src/pages.py:713
 msgid "Partition details unavailable"
-msgstr "Partition details unavailable"
+msgstr "Partitionsdetaljer utilgængelige"
 
 #: src/pages.py:728
 msgid "Windows detected"
-msgstr "Windows detected"
+msgstr "Windows opdaget"
 
 #: src/pages.py:730
 msgid "BitLocker detected"
-msgstr "BitLocker detected"
+msgstr "BitLocker registreret"
 
 #: src/pages.py:732
 msgid "Live USB — excluded"
-msgstr "Live USB — excluded"
+msgstr "Live USB — ekskluderet"
 
 #: src/pages.py:734
 msgid "Too small"
-msgstr "Too small"
+msgstr "For lille"
 
 #: src/pages.py:751 src/pages.py:757
 msgid "Select Installation Disk"
@@ -304,7 +304,7 @@ msgstr "Vælg installationsdisk"
 
 #: src/pages.py:793
 msgid "Rescan Storage"
-msgstr "Rescan Storage"
+msgstr "Gensøg lagerplads"
 
 #: src/pages.py:863
 msgid "No suitable disks found."
@@ -312,77 +312,77 @@ msgstr "Ingen egnede diske fundet."
 
 #: src/pages.py:917
 msgid "Choose Installation Method"
-msgstr "Choose Installation Method"
+msgstr "Vælg installationsmetode"
 
 #: src/pages.py:922
 msgid "How should AnduinOS use this disk?"
-msgstr "How should AnduinOS use this disk?"
+msgstr "Hvordan skal AnduinOS bruge denne disk?"
 
 #: src/pages.py:937 src/pages.py:1191 src/pages.py:1425
 #, python-brace-format
 msgid "Target: {disk} ({size} — {model})"
-msgstr "Target: {disk} ({size} — {model})"
+msgstr "Mål: {disk} ({size} — {model})"
 
 #: src/pages.py:1014
 msgid "Erase every partition and all data on the selected disk."
-msgstr "Erase every partition and all data on the selected disk."
+msgstr "Slet alle partitioner og alle data på den valgte disk."
 
 #: src/pages.py:1018
 msgid "Btrfs — recommended"
-msgstr "Btrfs — recommended"
+msgstr "Btrfs — anbefalet"
 
 #: src/pages.py:1022
 msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
-msgstr "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "Aktiverer delte subvolumes, snapshots og Timeback Machine."
 
 #: src/pages.py:1030
 msgid "ext4 — classic"
-msgstr "ext4 — classic"
+msgstr "ext4 — klassisk"
 
 #: src/pages.py:1033
 msgid "Uses a traditional single root filesystem."
-msgstr "Uses a traditional single root filesystem."
+msgstr "Bruker et traditionelt enkelt rod-filsystem."
 
 #: src/pages.py:1039
 msgid "Advanced — keep existing systems"
-msgstr "Advanced — keep existing systems"
+msgstr "Avanceret — behold eksisterende systemer"
 
 #: src/pages.py:1041
 msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr "Bruk allerede udelt plads og bevare eksisterende partitioner. Dette er den eneste Windows-samlevingsvej."
 
 #: src/pages.py:1089
 msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr "Avanceret samexistens kan påvirke EFI-firmwaretilstanden og kan udløse BitLocker-gendannelse. Den krymper eller reparerer aldrig Windows-volumener."
 
 #: src/pages.py:1099
 #, python-brace-format
 msgid "ALL DATA on {disk} will be permanently erased."
-msgstr "ALL DATA on {disk} will be permanently erased."
+msgstr "ALLE DATA på {disk} vil blive permanent slettet."
 
 #: src/pages.py:1135
 msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "Disken er for lille til en fuld disk-installation. Avanceret kan kun fortsætte, hvis der findes egnet tildelt plads."
 
 #: src/pages.py:1145
 msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Eksisterende partitioner blev detekteret. De to første valg sletter dem; Avanceret er vejen til bevaring."
 
 #: src/pages.py:1178
 msgid "Advanced Storage"
-msgstr "Advanced Storage"
+msgstr "Avanceret lager"
 
 #: src/pages.py:1183
 msgid "Advanced: Install Alongside"
-msgstr "Advanced: Install Alongside"
+msgstr "Avanceret: Installer side om side"
 
 #: src/pages.py:1212
 msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Før du fortsætter: afslut Windows-opdateringer, deaktiver Hurtig start og hviletilstand, og sikkerhedskopier BitLocker-gendannelsesnøglen. EFI, Sikker opstart, TPM-målinger og startsekvens kan ændres."
 
 #: src/pages.py:1219
 msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "Denne avancerede sti bevarer eksisterende partitioner, men ændrer den valgte disks partitionstabel og maskinens EFI-boot-tilstand."
 
 #: src/pages.py:1250 src/pages.py:2113
 msgid "Filesystem"
@@ -394,46 +394,46 @@ msgstr "Btrfs (anbefalet)"
 
 #: src/pages.py:1253
 msgid "ext4 (classic)"
-msgstr "ext4 (classic)"
+msgstr "ext4 (klassisk)"
 
 #: src/pages.py:1263
 msgid "Unallocated space"
-msgstr "Unallocated space"
+msgstr "Udelt plads"
 
 #: src/pages.py:1271
 msgid "EFI System Partition"
-msgstr "EFI System Partition"
+msgstr "EFI-systempartition"
 
 #: src/pages.py:1285
 msgid "Rescan and Reselect Disk"
-msgstr "Rescan and Reselect Disk"
+msgstr "Gensøg og vælg disk igen"
 
 #: src/pages.py:1326
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
-msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Opret en ny 1 GiB AnduinOS EFI-systempartition"
 
 #: src/pages.py:1330
 #, python-brace-format
 msgid "Reuse {path} ({size})"
-msgstr "Reuse {path} ({size})"
+msgstr "Gendan {path} ({size})"
 
 #: src/pages.py:1394
 #, python-brace-format
 msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "Den valgte disk er ændret eller er forsvundet. Gå tilbage til disksiden og vælg den igen. {error}"
 
 #: src/pages.py:1407
 msgid "The selected disk size changed. Return and select it again."
-msgstr "The selected disk size changed. Return and select it again."
+msgstr "Størrelsen på den valgte disk er ændret. Gå tilbage og vælg den igen."
 
 #: src/pages.py:1417
 msgid "The selected disk topology changed. Review the disk and installation method again."
-msgstr "The selected disk topology changed. Review the disk and installation method again."
+msgstr "Topologien på den valgte disk er ændret. Gennemgå disken og installationsmetoden igen."
 
 #: src/pages.py:1453
 #, python-brace-format
 msgid "{size} unallocated at {offset}"
-msgstr "{size} unallocated at {offset}"
+msgstr "{size} ubenyttet plads ved {offset}"
 
 #: src/pages.py:1579 src/pages.py:1585
 msgid "User Account"
@@ -469,7 +469,7 @@ msgstr "Brugernavn må kun indeholde små bogstaver, tal, understregninger og bi
 
 #: src/pages.py:1680
 msgid "Install alongside requires a password-protected account."
-msgstr "Install alongside requires a password-protected account."
+msgstr "Installation ved siden af kræver en adgangskodebeskyttet konto."
 
 #: src/pages.py:1691
 msgid "The two passwords do not match."
@@ -575,7 +575,7 @@ msgstr "Platform"
 
 #: src/pages.py:2114
 msgid "Subvolumes"
-msgstr "Subvolumes"
+msgstr "Underbindinger"
 
 #: src/pages.py:2115
 msgid "Swap"
@@ -647,7 +647,7 @@ msgstr "Tidzone"
 
 #: src/pages.py:2166
 msgid "Guided storage selection is missing. Rescan and select the target again."
-msgstr "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Den vejledte lagerudvælgelse mangler. Genanmeld og vælg målet igen."
 
 #: src/pages.py:2174
 #, python-brace-format
@@ -657,37 +657,37 @@ msgstr "{name}: {start}–{end} MiB"
 #: src/pages.py:2182
 #, python-brace-format
 msgid "{path} as {filesystem}"
-msgstr "{path} as {filesystem}"
+msgstr "{path} som {filesystem}"
 
 #: src/pages.py:2190
 #, python-brace-format
 msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Gendan {path}; formatter den aldrig; verificer FAT-sundhed, identitet og 64 MiB fri plads før skrivning."
 
 #: src/pages.py:2198
 msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Opret og formatter en dedikeret AnduinOS EFI-systempartition i det valgte område."
 
 #: src/pages.py:2203
 msgid "Storage mode"
-msgstr "Storage mode"
+msgstr "Lagermodus"
 
 #: src/pages.py:2204
 msgid "Install alongside"
-msgstr "Install alongside"
+msgstr "Installer ved siden af"
 
 #: src/pages.py:2205
 msgid "Selected unallocated space"
-msgstr "Selected unallocated space"
+msgstr "Udvalgt tildelt plads"
 
 #: src/pages.py:2206
 #, python-brace-format
 msgid "{size} at {offset}"
-msgstr "{size} at {offset}"
+msgstr "{size} ved {offset}"
 
 #: src/pages.py:2210
 msgid "Preserved partitions"
-msgstr "Preserved partitions"
+msgstr "Bevarede partitioner"
 
 #: src/pages.py:2211
 #, python-brace-format
@@ -696,27 +696,27 @@ msgstr "{count}: {paths}"
 
 #: src/pages.py:2215
 msgid "New partitions"
-msgstr "New partitions"
+msgstr "Nye partitioner"
 
 #: src/pages.py:2217
 msgid "Formats"
-msgstr "Formats"
+msgstr "Formater"
 
 #: src/pages.py:2219
 msgid "EFI policy"
-msgstr "EFI policy"
+msgstr "EFI-politik"
 
 #: src/pages.py:2221
 msgid "Boot policy"
-msgstr "Boot policy"
+msgstr "Opstartspolitik"
 
 #: src/pages.py:2223
 msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Skriv kun EFI/AnduinOS, overskriv ikke EFI/BOOT, og kræv en verificeret AnduinOS NVRAM-post."
 
 #: src/pages.py:2253
 msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
-msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Kun det valgte ubenyttede område vil blive op delt og formatteret. Eksisterende partitioner bevares, men EFI/AnduinOS-filer og AnduinOS-firmwareens boot-post kan ændres. Denne installationsprogram vil ikke mindske Windows for dig."
 
 #: src/pages.py:2261
 msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
@@ -732,11 +732,11 @@ msgstr "Valider plan (ingen installation)"
 
 #: src/pages.py:2290
 msgid "Install in the selected free space?"
-msgstr "Install in the selected free space?"
+msgstr "Installer i det valgte ledige plads?"
 
 #: src/pages.py:2291 src/pages.py:2380
 msgid "Install Alongside"
-msgstr "Install Alongside"
+msgstr "Installer ved siden af"
 
 #: src/pages.py:2293
 msgid "Erase the entire selected disk?"
@@ -760,9 +760,7 @@ msgstr ""
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
-msgstr ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
+msgstr "AnduinOS vil kun bruge det valgte, ikke tildelte plads på {disk}. Eksisterende partitioner bevares.\n\n"
 
 #: src/pages.py:2314
 #, python-brace-format
@@ -788,7 +786,7 @@ msgstr "Den privilegerede eksekutor er deaktiveret."
 
 #: src/pages.py:2326
 msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Eksisterende partitioner bevares. Nye AnduinOS-partitioner oprettes kun i det valgte tildelte område; EFI-leverandørfiler og AnduinOS firmware-bootindgang kan opdateres."
 
 #: src/pages.py:2334
 msgid "This installer does not shrink or preserve other systems."
@@ -1004,40 +1002,40 @@ msgstr "{step} mislykkedes"
 
 #: src/pages.py:715
 msgid "Empty disk — no partitions"
-msgstr "Empty disk — no partitions"
+msgstr "Tom disk – ingen partitioner"
 
 #: src/pages.py:468
 msgid "Confirm your keyboard layout"
-msgstr "Confirm your keyboard layout"
+msgstr "Bekræft dit tastaturlayout"
 
 #: src/pages.py:540
 msgid "Choose optional software to install"
-msgstr "Choose optional software to install"
+msgstr "Vælg valgfri software til installation"
 
 #: src/pages.py:758
 msgid "Choose one target disk. Storage settings come next."
-msgstr "Choose one target disk. Storage settings come next."
+msgstr "Vælg én målskive. Lagringsindstillingerne følger herefter."
 
 #: src/pages.py:923
 msgid "Choose a complete installation method, not only a filesystem."
-msgstr "Choose a complete installation method, not only a filesystem."
+msgstr "Vælg en komplet installationsmetode, ikke kun et filsystem."
 
 #: src/pages.py:1184
 msgid "Use only existing unallocated space on the selected disk."
-msgstr "Use only existing unallocated space on the selected disk."
+msgstr "Bruk kun eksisterende udelt plads på det valgte disk."
 
 #: src/pages.py:1586
 msgid "Create your user account"
-msgstr "Create your user account"
+msgstr "Opret din brugerkonto"
 
 #: src/pages.py:1902
 msgid "Choose your location to set the system clock"
-msgstr "Choose your location to set the system clock"
+msgstr "Vælg din placering for at indstille systemuret"
 
 #: src/pages.py:2042
 msgid "Please review your choices before proceeding"
-msgstr "Please review your choices before proceeding"
+msgstr "Gennemse venligst dine valg, før du fortsætter"
 
 #: src/pages.py:2405
 msgid "Please do not turn off your computer"
-msgstr "Please do not turn off your computer"
+msgstr "Udskift venligst ikke din computer"

@@ -39,63 +39,63 @@ msgstr "Kurulumu Devam Ettir"
 
 #: src/pages.py:69
 msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
-msgstr "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "Yönlendirilmiş ortak yaşam, UEFI modunda önyükleme yapılmış bir sistem ve GPT hedef diski gerektirir. Bu disk yönlendirilmiş modda devam edemez."
 
 #: src/pages.py:73
 msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
-msgstr "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "Tam bölüm haritası ve boş alan geometrisi tutarlı bir şekilde okunamadı. Bu diskte kurulum için yetkilendirilmiş alan yok."
 
 #: src/pages.py:78
 msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
-msgstr "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "GPT disk veya bölümlerinden birinin benzersiz ve kararlı bir tanımlayıcısı yok. Yönlendirilmiş ortak yaşam, bu diskte korumanın veya yazma işleminin güvenli bir şekilde yetkilendirilmesine izin veremez."
 
 #: src/pages.py:83
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
-msgstr "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "Bu disk, kılavuzlu birlikte yaşamın desteklemediği aktif bir eşleyici, dizi veya diğer iç içe geçmiş blok cihazı topolojisini içeriyor."
 
 #: src/pages.py:87
 msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
-msgstr "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "Bu diskteki bir bölüm takılı. Devam etmeden önce bunu ayırın ve depolamayı yeniden tarayın."
 
 #: src/pages.py:91
 msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
-msgstr "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS yalnızca seçili tahsis edilmemiş alanı kullanacak. Kurucu mevcut bir dosya sistemini küçültmeyecek veya taşımayağıktır."
 
 #: src/pages.py:95
 msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
-msgstr "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "Mevcut Windows, kurtarma ve veri bölümleri yazma setinin dışında kalır ve korunur."
 
 #: src/pages.py:99
 msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
-msgstr "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "Mevcut EFI Sistem Bölümü yalnızca bir adaydır. Yeniden kullanılabilmesi için sağlık ve boş alan kontrollerinin başarılı olması gerekir ve asla biçimlendirilmeyecektir."
 
 #: src/pages.py:104
 msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
-msgstr "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "BitLocker depolama korunacaktır. Kurucu bunu kilidini açmayacak, yeniden boyutlandırmayacak, onarmayacak veya başka şekilde değiştirmeyecektir."
 
 #: src/pages.py:108
 msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
-msgstr "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "Kurulum programı, Windows bölümlerini uyku modu veya Hızlı Başlatma durumundan bağlamaz, onarmaz veya güvenliğini tahmin etmez. Gerekli tüm Windows bakım işlemleri Windows içinde tamamlanmalıdır."
 
 #: src/pages.py:113
 msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
-msgstr "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "Alternatif olarak, silmek için açıkça tek bir tüm bölümü seçebilirsiniz. Seçilen o bölümdeki her şey yok olacaktır; otomatik olarak asla seçilmez."
 
 #: src/pages.py:118
 msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
-msgstr "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "Kurulum bu seçimle devam edemez. Depolama güvenlik kontrolleri etrafında zorla devam etme seçeneği yoktur."
 
 #: src/pages.py:122
 msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
-msgstr "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "Bölümleri değiştirdikten veya bir birimi ayırdıktan sonra depolamayı yeniden tarayın ve hedefi tekrar seçin."
 
 #: src/pages.py:128
 msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
-msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "Uygun boş alan bulunamadı. Verilerinizi korumak için Windows Disk Yönetimi ile boş alan oluşturun, ardından yükleyiciyi yeniden başlatın ve diski tekrar tarayın."
 
 #: src/pages.py:133
 msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
-msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "Uygun boş alan bulunamadı. Verilerinizi korumak için bir bölüm aracıyla boş alan oluşturun, ardından yükleyiciyi yeniden başlatın ve diski tekrar tarayın."
 
 #: src/pages.py:204 src/pages.py:374
 msgid "Next"
@@ -259,44 +259,44 @@ msgstr "Bazı sürücüler tescilli veya başka şekilde özgür olmayan yazıl�
 
 #: src/pages.py:641
 msgid "Storage Device"
-msgstr "Storage Device"
+msgstr "Depolama Aygıtı"
 
 #: src/pages.py:650
 msgid "No partition table"
-msgstr "No partition table"
+msgstr "Bölüm tablosu yok"
 
 #: src/pages.py:673
 msgid "Current disk layout"
-msgstr "Current disk layout"
+msgstr "Güncel disk düzeni"
 
 #: src/pages.py:693
 msgid "Unknown filesystem"
-msgstr "Unknown filesystem"
+msgstr "Bilinmeyen dosya sistemi"
 
 #: src/pages.py:706
 #, python-brace-format
 msgid "Unallocated · {size}"
-msgstr "Unallocated · {size}"
+msgstr "Ayrılmamış · {size}"
 
 #: src/pages.py:713
 msgid "Partition details unavailable"
-msgstr "Partition details unavailable"
+msgstr "Bölüm ayrıntıları kullanılamıyor"
 
 #: src/pages.py:728
 msgid "Windows detected"
-msgstr "Windows detected"
+msgstr "Windows algılandı"
 
 #: src/pages.py:730
 msgid "BitLocker detected"
-msgstr "BitLocker detected"
+msgstr "BitLocker algılandı"
 
 #: src/pages.py:732
 msgid "Live USB — excluded"
-msgstr "Live USB — excluded"
+msgstr "USB'den canlı — hariç tutuldu"
 
 #: src/pages.py:734
 msgid "Too small"
-msgstr "Too small"
+msgstr "Çok küçük"
 
 #: src/pages.py:751 src/pages.py:757
 msgid "Select Installation Disk"
@@ -304,7 +304,7 @@ msgstr "Kurulum Diskini Seç"
 
 #: src/pages.py:793
 msgid "Rescan Storage"
-msgstr "Rescan Storage"
+msgstr "Depolamayı Yeniden Tara"
 
 #: src/pages.py:863
 msgid "No suitable disks found."
@@ -312,77 +312,77 @@ msgstr "Uygun disk bulunamadı."
 
 #: src/pages.py:917
 msgid "Choose Installation Method"
-msgstr "Choose Installation Method"
+msgstr "Kurulum Yöntemini Seçin"
 
 #: src/pages.py:922
 msgid "How should AnduinOS use this disk?"
-msgstr "How should AnduinOS use this disk?"
+msgstr "AnduinOS bu diski nasıl kullanmalı?"
 
 #: src/pages.py:937 src/pages.py:1191 src/pages.py:1425
 #, python-brace-format
 msgid "Target: {disk} ({size} — {model})"
-msgstr "Target: {disk} ({size} — {model})"
+msgstr "Hedef: {disk} ({size} — {model})"
 
 #: src/pages.py:1014
 msgid "Erase every partition and all data on the selected disk."
-msgstr "Erase every partition and all data on the selected disk."
+msgstr "Seçili diskteki her bölümü ve tüm verileri siler."
 
 #: src/pages.py:1018
 msgid "Btrfs — recommended"
-msgstr "Btrfs — recommended"
+msgstr "Btrfs — önerilen"
 
 #: src/pages.py:1022
 msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
-msgstr "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "Ortak alan alt hacimlerini, anlık görüntüleri ve Timeback Machine'i etkinleştirir."
 
 #: src/pages.py:1030
 msgid "ext4 — classic"
-msgstr "ext4 — classic"
+msgstr "ext4 — klasik"
 
 #: src/pages.py:1033
 msgid "Uses a traditional single root filesystem."
-msgstr "Uses a traditional single root filesystem."
+msgstr "Geleneksel tek kök dosya sistemini kullanır."
 
 #: src/pages.py:1039
 msgid "Advanced — keep existing systems"
-msgstr "Advanced — keep existing systems"
+msgstr "Gelişmiş — mevcut sistemleri koru"
 
 #: src/pages.py:1041
 msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr "Zaten ayrılmamış alanı kullanın ve mevcut bölümleri koruyun. Bu, Windows ile birlikte çalışmanın tek yoludur."
 
 #: src/pages.py:1089
 msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr "Gelişmiş birlikte yaşam, EFI firmware durumunu etkileyebilir ve BitLocker kurtarmasını tetikleyebilir. Asla Windows birimlerini küçültmez veya onarmaz."
 
 #: src/pages.py:1099
 #, python-brace-format
 msgid "ALL DATA on {disk} will be permanently erased."
-msgstr "ALL DATA on {disk} will be permanently erased."
+msgstr "{disk} üzerindeki TÜM VERİLER kalıcı olarak silinecektir."
 
 #: src/pages.py:1135
 msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "Bu disk, tüm disk kurulumu için çok küçük. Gelişmiş seçenek yalnızca uygun ayrılmamış alan varsa devam edebilir."
 
 #: src/pages.py:1145
 msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Mevcut bölümler algılandı. İlk iki seçenek bunları siler; Gelişmiş koruma yoludur."
 
 #: src/pages.py:1178
 msgid "Advanced Storage"
-msgstr "Advanced Storage"
+msgstr "Gelişmiş Depolama"
 
 #: src/pages.py:1183
 msgid "Advanced: Install Alongside"
-msgstr "Advanced: Install Alongside"
+msgstr "Gelişmiş: Yan Yana Kurulum"
 
 #: src/pages.py:1212
 msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Devam etmeden önce: Windows güncellemelerini tamamlayın, Hızlı Başlatmayı ve uyku modunu devre dışı bırakın ve BitLocker kurtarma anahtarını yedekleyin. EFI, Güvenli Önyükleme, TPM ölçümleri ve önyükleme sırası değişebilir."
 
 #: src/pages.py:1219
 msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "Bu gelişmiş yol, mevcut bölümleri korur ancak seçili diskin bölüm tablosunu ve makinenin EFI önyüklenme durumunu değiştirir."
 
 #: src/pages.py:1250 src/pages.py:2113
 msgid "Filesystem"
@@ -394,46 +394,46 @@ msgstr "Btrfs (önerilen)"
 
 #: src/pages.py:1253
 msgid "ext4 (classic)"
-msgstr "ext4 (classic)"
+msgstr "ext4 (klasik)"
 
 #: src/pages.py:1263
 msgid "Unallocated space"
-msgstr "Unallocated space"
+msgstr "Ayrılmamış alan"
 
 #: src/pages.py:1271
 msgid "EFI System Partition"
-msgstr "EFI System Partition"
+msgstr "EFI Sistem Bölümü"
 
 #: src/pages.py:1285
 msgid "Rescan and Reselect Disk"
-msgstr "Rescan and Reselect Disk"
+msgstr "Disk'i Yeniden Tara ve Tekrar Seç"
 
 #: src/pages.py:1326
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
-msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Yeni bir 1 GiB AnduinOS EFI Sistem Bölümü oluşturun"
 
 #: src/pages.py:1330
 #, python-brace-format
 msgid "Reuse {path} ({size})"
-msgstr "Reuse {path} ({size})"
+msgstr "{path} ({size}) yeniden kullan"
 
 #: src/pages.py:1394
 #, python-brace-format
 msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "Seçili disk değişti veya kayboldu. Disk sayfasına dönün ve tekrar seçin. {error}"
 
 #: src/pages.py:1407
 msgid "The selected disk size changed. Return and select it again."
-msgstr "The selected disk size changed. Return and select it again."
+msgstr "Seçili diskin boyutu değişti. Geri dönün ve tekrar seçin."
 
 #: src/pages.py:1417
 msgid "The selected disk topology changed. Review the disk and installation method again."
-msgstr "The selected disk topology changed. Review the disk and installation method again."
+msgstr "Seçili diskin topolojisi değişti. Diski ve kurulum yöntemini tekrar gözden geçirin."
 
 #: src/pages.py:1453
 #, python-brace-format
 msgid "{size} unallocated at {offset}"
-msgstr "{size} unallocated at {offset}"
+msgstr "{size} atanmamış, {offset} konumunda"
 
 #: src/pages.py:1579 src/pages.py:1585
 msgid "User Account"
@@ -469,7 +469,7 @@ msgstr "Kullanıcı adı yalnızca küçük harfler, rakamlar, alt çizgiler ve 
 
 #: src/pages.py:1680
 msgid "Install alongside requires a password-protected account."
-msgstr "Install alongside requires a password-protected account."
+msgstr "Yan yana kurulum, parola korumalı bir hesap gerektirir."
 
 #: src/pages.py:1691
 msgid "The two passwords do not match."
@@ -647,7 +647,7 @@ msgstr "Saat Dilimi"
 
 #: src/pages.py:2166
 msgid "Guided storage selection is missing. Rescan and select the target again."
-msgstr "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Yönlendirilmiş depolama seçimi eksik. Yeniden tarayın ve hedefi tekrar seçin."
 
 #: src/pages.py:2174
 #, python-brace-format
@@ -657,37 +657,37 @@ msgstr "{name}: {start}–{end} MiB"
 #: src/pages.py:2182
 #, python-brace-format
 msgid "{path} as {filesystem}"
-msgstr "{path} as {filesystem}"
+msgstr "{path}, {filesystem} olarak"
 
 #: src/pages.py:2190
 #, python-brace-format
 msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "{path} yeniden kullan; asla biçimlendirme; yazmadan önce FAT sağlığını, kimliğini ve 64 MiB boş alanı doğrula."
 
 #: src/pages.py:2198
 msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Seçilen alan içinde özel bir AnduinOS EFI Sistem Bölümü oluşturun ve biçimlendirin."
 
 #: src/pages.py:2203
 msgid "Storage mode"
-msgstr "Storage mode"
+msgstr "Depolama modu"
 
 #: src/pages.py:2204
 msgid "Install alongside"
-msgstr "Install alongside"
+msgstr "yan yana kur"
 
 #: src/pages.py:2205
 msgid "Selected unallocated space"
-msgstr "Selected unallocated space"
+msgstr "Seçili tahsis edilmemiş alan"
 
 #: src/pages.py:2206
 #, python-brace-format
 msgid "{size} at {offset}"
-msgstr "{size} at {offset}"
+msgstr "{size}, {offset} konumunda"
 
 #: src/pages.py:2210
 msgid "Preserved partitions"
-msgstr "Preserved partitions"
+msgstr "Korunan bölümler"
 
 #: src/pages.py:2211
 #, python-brace-format
@@ -696,27 +696,27 @@ msgstr "{count}: {paths}"
 
 #: src/pages.py:2215
 msgid "New partitions"
-msgstr "New partitions"
+msgstr "Yeni bölümler"
 
 #: src/pages.py:2217
 msgid "Formats"
-msgstr "Formats"
+msgstr "Biçimlendirir"
 
 #: src/pages.py:2219
 msgid "EFI policy"
-msgstr "EFI policy"
+msgstr "EFI ilkesi"
 
 #: src/pages.py:2221
 msgid "Boot policy"
-msgstr "Boot policy"
+msgstr "Önyükleme politikası"
 
 #: src/pages.py:2223
 msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Sadece EFI/AnduinOS'u yazın, EFI/BOOT'u üzerine yazmayın ve doğrulanmış bir AnduinOS NVRAM girdisi gerektirin."
 
 #: src/pages.py:2253
 msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
-msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Sadece seçilen atanmamış alan bölümlenecek ve biçimlendirilecek. Mevcut bölümler korunur, ancak EFI/AnduinOS dosyaları ve AnduinOS firmware önyükleme girdisi değişebilir. Bu kurucu Windows'u sizin için küçültmez."
 
 #: src/pages.py:2261
 msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
@@ -732,11 +732,11 @@ msgstr "Planı Doğrula (Kurulum Yok)"
 
 #: src/pages.py:2290
 msgid "Install in the selected free space?"
-msgstr "Install in the selected free space?"
+msgstr "Seçilen boş alana kurulur mu?"
 
 #: src/pages.py:2291 src/pages.py:2380
 msgid "Install Alongside"
-msgstr "Install Alongside"
+msgstr "Yan Yana Kur"
 
 #: src/pages.py:2293
 msgid "Erase the entire selected disk?"
@@ -760,9 +760,7 @@ msgstr ""
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
-msgstr ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
+msgstr "AnduinOS yalnızca {disk} üzerinde seçili tahsis edilmemiş alanı kullanacak. Mevcut bölümler korunacaktır.\n\n"
 
 #: src/pages.py:2314
 #, python-brace-format
@@ -788,7 +786,7 @@ msgstr "Ayrıcalıklı yürütücü devre dışı bırakılmıştır."
 
 #: src/pages.py:2326
 msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Mevcut bölümler korunacaktır. Yeni AnduinOS bölümleri yalnızca seçili tahsis edilmemiş alanda oluşturulur; EFI tedarikçi dosyaları ve AnduinOS firmware başlangıç girdisi güncellenebilir."
 
 #: src/pages.py:2334
 msgid "This installer does not shrink or preserve other systems."
@@ -1004,40 +1002,40 @@ msgstr "{step} başarısız oldu"
 
 #: src/pages.py:715
 msgid "Empty disk — no partitions"
-msgstr "Empty disk — no partitions"
+msgstr "Boş disk — bölüm yok"
 
 #: src/pages.py:468
 msgid "Confirm your keyboard layout"
-msgstr "Confirm your keyboard layout"
+msgstr "Klavye düzeninizi onaylayın"
 
 #: src/pages.py:540
 msgid "Choose optional software to install"
-msgstr "Choose optional software to install"
+msgstr "Yüklemek için isteğe bağlı yazılımları seçin"
 
 #: src/pages.py:758
 msgid "Choose one target disk. Storage settings come next."
-msgstr "Choose one target disk. Storage settings come next."
+msgstr "Bir hedef disk seçin. Depolama ayarları sıradadır."
 
 #: src/pages.py:923
 msgid "Choose a complete installation method, not only a filesystem."
-msgstr "Choose a complete installation method, not only a filesystem."
+msgstr "Yalnızca bir dosya sistemi değil, tam kurulum yöntemini seçin."
 
 #: src/pages.py:1184
 msgid "Use only existing unallocated space on the selected disk."
-msgstr "Use only existing unallocated space on the selected disk."
+msgstr "Sadece seçilen diskteki mevcut ayrılmamış alanı kullanın."
 
 #: src/pages.py:1586
 msgid "Create your user account"
-msgstr "Create your user account"
+msgstr "Kullanıcı hesabınızı oluşturun"
 
 #: src/pages.py:1902
 msgid "Choose your location to set the system clock"
-msgstr "Choose your location to set the system clock"
+msgstr "Sistem saatini ayarlamak için konumunuzu seçin"
 
 #: src/pages.py:2042
 msgid "Please review your choices before proceeding"
-msgstr "Please review your choices before proceeding"
+msgstr "Sürmeden önce tercihlerinizi gözden geçirin"
 
 #: src/pages.py:2405
 msgid "Please do not turn off your computer"
-msgstr "Please do not turn off your computer"
+msgstr "Bilgisayarınızı kapatmayın lütfen"

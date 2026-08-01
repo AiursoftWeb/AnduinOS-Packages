@@ -258,44 +258,44 @@ msgstr "بعض برامج التشغيل مملوكة أو غير حرة بطر�
 
 #: src/pages.py:641
 msgid "Storage Device"
-msgstr "Storage Device"
+msgstr "جهاز التخزين"
 
 #: src/pages.py:650
 msgid "No partition table"
-msgstr "No partition table"
+msgstr "لا يوجد جدول أقسام"
 
 #: src/pages.py:673
 msgid "Current disk layout"
-msgstr "Current disk layout"
+msgstr "تخطيط القرص الحالي"
 
 #: src/pages.py:693
 msgid "Unknown filesystem"
-msgstr "Unknown filesystem"
+msgstr "نظام ملفات غير معروف"
 
 #: src/pages.py:706
 #, python-brace-format
 msgid "Unallocated · {size}"
-msgstr "Unallocated · {size}"
+msgstr "غير مخصص · {size}"
 
 #: src/pages.py:713
 msgid "Partition details unavailable"
-msgstr "Partition details unavailable"
+msgstr "تفاصيل القسم غير متوفرة"
 
 #: src/pages.py:728
 msgid "Windows detected"
-msgstr "Windows detected"
+msgstr "تم اكتشاف ويندوز"
 
 #: src/pages.py:730
 msgid "BitLocker detected"
-msgstr "BitLocker detected"
+msgstr "تم اكتشاف BitLocker"
 
 #: src/pages.py:732
 msgid "Live USB — excluded"
-msgstr "Live USB — excluded"
+msgstr "USB حي — مستبعد"
 
 #: src/pages.py:734
 msgid "Too small"
-msgstr "Too small"
+msgstr "صغير جداً"
 
 #: src/pages.py:751 src/pages.py:757
 msgid "Select Installation Disk"
@@ -303,7 +303,7 @@ msgstr "اختيار قرص التثبيت"
 
 #: src/pages.py:793
 msgid "Rescan Storage"
-msgstr "Rescan Storage"
+msgstr "إعادة مسح التخزين"
 
 #: src/pages.py:863
 msgid "No suitable disks found."
@@ -311,77 +311,77 @@ msgstr "لم يتم العثور على أقراص مناسبة."
 
 #: src/pages.py:917
 msgid "Choose Installation Method"
-msgstr "Choose Installation Method"
+msgstr "اختر طريقة التثبيت"
 
 #: src/pages.py:922
 msgid "How should AnduinOS use this disk?"
-msgstr "How should AnduinOS use this disk?"
+msgstr "كيف يجب أن تستخدم AnduinOS هذا القرص؟"
 
 #: src/pages.py:937 src/pages.py:1191 src/pages.py:1425
 #, python-brace-format
 msgid "Target: {disk} ({size} — {model})"
-msgstr "Target: {disk} ({size} — {model})"
+msgstr "الهدف: {disk} ({size} — {model})"
 
 #: src/pages.py:1014
 msgid "Erase every partition and all data on the selected disk."
-msgstr "Erase every partition and all data on the selected disk."
+msgstr "محوا كل الأقسام وجميع البيانات على القرص المحدد."
 
 #: src/pages.py:1018
 msgid "Btrfs — recommended"
-msgstr "Btrfs — recommended"
+msgstr "Btrfs — موصى به"
 
 #: src/pages.py:1022
 msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
-msgstr "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "تفعيل مجلدات فرعية مشتركة في مساحة واحدة، ولقطات فورية، وآلة Timeback."
 
 #: src/pages.py:1030
 msgid "ext4 — classic"
-msgstr "ext4 — classic"
+msgstr "ext4 — كلاسيكي"
 
 #: src/pages.py:1033
 msgid "Uses a traditional single root filesystem."
-msgstr "Uses a traditional single root filesystem."
+msgstr "يستخدم نظام ملفات جذر واحد تقليدي."
 
 #: src/pages.py:1039
 msgid "Advanced — keep existing systems"
-msgstr "Advanced — keep existing systems"
+msgstr "متقدم — الاحتفاظ بالنظم الموجودة"
 
 #: src/pages.py:1041
 msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr "استخدم المساحة غير المخصصة بالفعل واحفظ التقسيمات الموجودة. هذا هو المسار الوحيد للتعايش مع نظام ويندوز."
 
 #: src/pages.py:1089
 msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr "يمكن للتعايش المتقدم أن يؤثر على حالة برنامج التمهيد الثابت EFI وقد يؤدي إلى تفعيل استرداد BitLocker. إنه لا يقوم أبدًا بتصغير أو إصلاح وحدات تخزين Windows."
 
 #: src/pages.py:1099
 #, python-brace-format
 msgid "ALL DATA on {disk} will be permanently erased."
-msgstr "ALL DATA on {disk} will be permanently erased."
+msgstr "سيتم مسح جميع البيانات على {disk} بشكل دائم."
 
 #: src/pages.py:1135
 msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "هذا القرص صغير جداً لتركيب النظام بالكامل. يمكن للمطورين المتقدمين المتابعة فقط إذا كان هناك مساحة غير مخصصة مناسبة."
 
 #: src/pages.py:1145
 msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "تم اكتشاف أقسام موجودة. الخياريان الأولان يحذفانها؛ بينما الخيار المتقدم هو المسار الذي يحافظ عليها."
 
 #: src/pages.py:1178
 msgid "Advanced Storage"
-msgstr "Advanced Storage"
+msgstr "التخزين المتقدم"
 
 #: src/pages.py:1183
 msgid "Advanced: Install Alongside"
-msgstr "Advanced: Install Alongside"
+msgstr "متقدم: التثبيت بالتوازي"
 
 #: src/pages.py:1212
 msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "قبل المتابعة: أكمل تحديثات Windows، وعطل بدء التشغيل السريع والوضع المعلق، وقم بنسخ مفتاح استرداد BitLocker احتياطيًا. قد تتغير إعدادات EFI، والتمهيد الآمن، وقياسات TPM، وترتيب التمهيد."
 
 #: src/pages.py:1219
 msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "يحافظ هذا المسار المتقدم على التقسيمات الحالية لكنه يغير جدول تقسيمات القرص المحدد وحالة تشغيل EFI للجهاز."
 
 #: src/pages.py:1250 src/pages.py:2113
 msgid "Filesystem"
@@ -393,46 +393,46 @@ msgstr "Btrfs (موصى به)"
 
 #: src/pages.py:1253
 msgid "ext4 (classic)"
-msgstr "ext4 (classic)"
+msgstr "ext4 (كلاسيكي)"
 
 #: src/pages.py:1263
 msgid "Unallocated space"
-msgstr "Unallocated space"
+msgstr "مساحة غير مخصصة"
 
 #: src/pages.py:1271
 msgid "EFI System Partition"
-msgstr "EFI System Partition"
+msgstr "قسم نظام EFI"
 
 #: src/pages.py:1285
 msgid "Rescan and Reselect Disk"
-msgstr "Rescan and Reselect Disk"
+msgstr "إعادة المسح وإعادة اختيار القرص"
 
 #: src/pages.py:1326
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
-msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "إنشاء قسم نظام EFI جديد بحجم 1 GiB لنظام AnduinOS"
 
 #: src/pages.py:1330
 #, python-brace-format
 msgid "Reuse {path} ({size})"
-msgstr "Reuse {path} ({size})"
+msgstr "إعادة استخدام {path} ({size})"
 
 #: src/pages.py:1394
 #, python-brace-format
 msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "تغير القرص المحدد أو اختفى. عد إلى صفحة الأقراص وحدده مرة أخرى. {error}"
 
 #: src/pages.py:1407
 msgid "The selected disk size changed. Return and select it again."
-msgstr "The selected disk size changed. Return and select it again."
+msgstr "تغير حجم القرص المحدد. عد واختره مرة أخرى."
 
 #: src/pages.py:1417
 msgid "The selected disk topology changed. Review the disk and installation method again."
-msgstr "The selected disk topology changed. Review the disk and installation method again."
+msgstr "تغير هيكلية القرص المحددة. راجع القرص وطريقة التثبيت مرة أخرى."
 
 #: src/pages.py:1453
 #, python-brace-format
 msgid "{size} unallocated at {offset}"
-msgstr "{size} unallocated at {offset}"
+msgstr "{size} غير مخصص عند الإزاحة {offset}"
 
 #: src/pages.py:1579 src/pages.py:1585
 msgid "User Account"
@@ -468,7 +468,7 @@ msgstr "قد يحتوي اسم المستخدم فقط على أحرف صغير�
 
 #: src/pages.py:1680
 msgid "Install alongside requires a password-protected account."
-msgstr "Install alongside requires a password-protected account."
+msgstr "يتطلب التثبيت بجانب نظام تشغيل آخر حسابًا محميًا بكلمة مرور."
 
 #: src/pages.py:1691
 msgid "The two passwords do not match."
@@ -646,47 +646,47 @@ msgstr "المنطقة الزمنية"
 
 #: src/pages.py:2166
 msgid "Guided storage selection is missing. Rescan and select the target again."
-msgstr "Guided storage selection is missing. Rescan and select the target again."
+msgstr "اختيار التخزين الإرشادي مفقود. أعد المسح واختر الهدف مرة أخرى."
 
 #: src/pages.py:2174
 #, python-brace-format
 msgid "{name}: {start}–{end} MiB"
-msgstr "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} ميغابايت"
 
 #: src/pages.py:2182
 #, python-brace-format
 msgid "{path} as {filesystem}"
-msgstr "{path} as {filesystem}"
+msgstr "{path} كـ {filesystem}"
 
 #: src/pages.py:2190
 #, python-brace-format
 msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "أعد استخدام {path}؛ لا تقم بتنسيقه أبداً؛ تحقق من صحة نظام الملفات FAT، والهوية، وتوفر 64 ميغابايت فارغة قبل الكتابة."
 
 #: src/pages.py:2198
 msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "إنشاء وتنسيق قسم نظام EFI مخصص لنظام AnduinOS داخل المساحة المحددة."
 
 #: src/pages.py:2203
 msgid "Storage mode"
-msgstr "Storage mode"
+msgstr "وضع التخزين"
 
 #: src/pages.py:2204
 msgid "Install alongside"
-msgstr "Install alongside"
+msgstr "التثبيت بجانب"
 
 #: src/pages.py:2205
 msgid "Selected unallocated space"
-msgstr "Selected unallocated space"
+msgstr "المساحة غير المخصصة المحددة"
 
 #: src/pages.py:2206
 #, python-brace-format
 msgid "{size} at {offset}"
-msgstr "{size} at {offset}"
+msgstr "{size} عند الإزاحة {offset}"
 
 #: src/pages.py:2210
 msgid "Preserved partitions"
-msgstr "Preserved partitions"
+msgstr "الأقسام المحفوظة"
 
 #: src/pages.py:2211
 #, python-brace-format
@@ -695,27 +695,27 @@ msgstr "{count}: {paths}"
 
 #: src/pages.py:2215
 msgid "New partitions"
-msgstr "New partitions"
+msgstr "الأقسام الجديدة"
 
 #: src/pages.py:2217
 msgid "Formats"
-msgstr "Formats"
+msgstr "التنسيقات"
 
 #: src/pages.py:2219
 msgid "EFI policy"
-msgstr "EFI policy"
+msgstr "سياسة EFI"
 
 #: src/pages.py:2221
 msgid "Boot policy"
-msgstr "Boot policy"
+msgstr "سياسة الإقلاع"
 
 #: src/pages.py:2223
 msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "اكتب EFI/AnduinOS فقط، ولا تجاوز EFI/BOOT، وتطلب إدخال NVRAM موثق لـ AnduinOS."
 
 #: src/pages.py:2253
 msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
-msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ سيتم تقسيم وتنسيق المساحة غير المخصصة المحددة فقط. ستُحفظ الأقسام الموجودة، لكن قد تتغير ملفات EFI/AnduinOS ودخول إقلاع نظام AnduinOS الثابت. لن يقوم مثبت النظام هذا بتصغير حجم Windows نيابةً عنك."
 
 #: src/pages.py:2261
 msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
@@ -731,11 +731,11 @@ msgstr "التحقق من صحة الخطة (بدون تثبيت)"
 
 #: src/pages.py:2290
 msgid "Install in the selected free space?"
-msgstr "Install in the selected free space?"
+msgstr "هل تريد التثبيت في المساحة الحرة المحددة؟"
 
 #: src/pages.py:2291 src/pages.py:2380
 msgid "Install Alongside"
-msgstr "Install Alongside"
+msgstr "التثبيت بجانب نظام التشغيل الحالي"
 
 #: src/pages.py:2293
 msgid "Erase the entire selected disk?"
@@ -759,9 +759,7 @@ msgstr ""
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
-msgstr ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
+msgstr "سيقوم AnduinOS باستخدام المساحة غير المخصصة المحددة على {disk} فقط. سيتم الحفاظ على التقسيمات الموجودة.\n\n"
 
 #: src/pages.py:2314
 #, python-brace-format
@@ -787,7 +785,7 @@ msgstr "تم تعطيل منفذ الامتيازات (Privileged executor)."
 
 #: src/pages.py:2326
 msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "سيتم الحفاظ على التقسيمات الحالية. سيتم إنشاء تقسيمات AnduinOS الجديدة فقط في الامتداد غير المخصص المحدد؛ قد يتم تحديث ملفات مورد EFI وإ引导 برامج AnduinOS."
 
 #: src/pages.py:2334
 msgid "This installer does not shrink or preserve other systems."
@@ -1003,40 +1001,40 @@ msgstr "فشل {step}"
 
 #: src/pages.py:715
 msgid "Empty disk — no partitions"
-msgstr "Empty disk — no partitions"
+msgstr "قرص فارغ — لا توجد أقسام"
 
 #: src/pages.py:468
 msgid "Confirm your keyboard layout"
-msgstr "Confirm your keyboard layout"
+msgstr "أعد تأكيد تخطيط لوحة المفاتيح الخاص بك"
 
 #: src/pages.py:540
 msgid "Choose optional software to install"
-msgstr "Choose optional software to install"
+msgstr "اختر البرامج الاختيارية للتثبيت"
 
 #: src/pages.py:758
 msgid "Choose one target disk. Storage settings come next."
-msgstr "Choose one target disk. Storage settings come next."
+msgstr "اختر قرصًا واحدًا كهدف. ستأتي إعدادات التخزين بعد ذلك."
 
 #: src/pages.py:923
 msgid "Choose a complete installation method, not only a filesystem."
-msgstr "Choose a complete installation method, not only a filesystem."
+msgstr "اختر طريقة تثبيت كاملة، وليس نظام ملفات فقط."
 
 #: src/pages.py:1184
 msgid "Use only existing unallocated space on the selected disk."
-msgstr "Use only existing unallocated space on the selected disk."
+msgstr "استخدم فقط المساحة غير المخصصة الموجودة على القرص المحدد."
 
 #: src/pages.py:1586
 msgid "Create your user account"
-msgstr "Create your user account"
+msgstr "إنشاء حساب المستخدم الخاص بك"
 
 #: src/pages.py:1902
 msgid "Choose your location to set the system clock"
-msgstr "Choose your location to set the system clock"
+msgstr "اختر موقعك لضبط ساعة النظام"
 
 #: src/pages.py:2042
 msgid "Please review your choices before proceeding"
-msgstr "Please review your choices before proceeding"
+msgstr "يرجى مراجعة اختياراتك قبل المتابعة"
 
 #: src/pages.py:2405
 msgid "Please do not turn off your computer"
-msgstr "Please do not turn off your computer"
+msgstr "يرجى عدم إيقاف تشغيل جهاز الكمبيوتر الخاص بك"

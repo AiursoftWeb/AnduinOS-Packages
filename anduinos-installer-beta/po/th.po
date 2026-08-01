@@ -38,63 +38,63 @@ msgstr "ดำเนินการติดตั้งต่อ"
 
 #: src/pages.py:69
 msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
-msgstr "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "การอยู่ร่วมกันแบบมีผู้แนะนำต้องการระบบที่บูตในโหมด UEFI และดิสก์เป้าหมายรูปแบบ GPT ดิสก์นี้ไม่สามารถดำเนินการต่อในโหมดที่มีผู้แนะนำได้"
 
 #: src/pages.py:73
 msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
-msgstr "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "ไม่อาจอ่านแผนที่พาร์ติชันและเรขาคณิตของพื้นที่ว่างได้อย่างสอดคล้องกัน ไม่มีพื้นที่บนดิสก์นี้ได้รับอนุญาตสำหรับการติดตั้ง"
 
 #: src/pages.py:78
 msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
-msgstr "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "ดิสก์ GPT หรือพาร์ติชันใดพาร์ติชันหนึ่งไม่มีตัวระบุที่เสถียรและไม่ซ้ำใคร การอยู่ร่วมกันแบบแนะนำไม่สามารถอนุญาตการเก็บรักษาหรือการเขียนบนดิสก์นี้ได้อย่างปลอดภัย"
 
 #: src/pages.py:83
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
-msgstr "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "ดิสก์นี้มีแมปเปอร์ แอเรย์ หรือโทโพโลยีบล็อกอุปกรณ์แบบซ้อนอื่นๆ ที่ใช้งานอยู่ ซึ่งการอยู่ร่วมกันแบบมีคำแนะนำไม่รองรับ"
 
 #: src/pages.py:87
 msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
-msgstr "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "มีพาร์ติชันดิสก์นี้ถูกเมาต์อยู่ โปรดยกเลิกการเมาต์และสแกนพื้นที่จัดเก็บข้อมูลใหม่ก่อนดำเนินการต่อ"
 
 #: src/pages.py:91
 msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
-msgstr "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS จะใช้พื้นที่ที่ยังไม่ได้จัดสรรที่เลือกไว้เท่านั้น โปรแกรมติดตั้งจะไม่ย่อขนาดหรือย้ายระบบไฟล์ที่มีอยู่"
 
 #: src/pages.py:95
 msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
-msgstr "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "พาร์ติชัน Windows, recovery และข้อมูลที่มีอยู่เดิมจะไม่ถูกเขียนทับและจะได้รับการรักษาไว้"
 
 #: src/pages.py:99
 msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
-msgstr "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "พาร์ติชันระบบ EFI ที่มีอยู่เป็นเพียงตัวเลือกเท่านั้น ต้องผ่านการตรวจสอบสุขภาพและพื้นที่ว่างก่อนจึงจะสามารถนำกลับมาใช้ใหม่ได้ และจะไม่มีการจัดรูปแบบใดๆ"
 
 #: src/pages.py:104
 msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
-msgstr "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "พื้นที่จัดเก็บข้อมูล BitLocker จะถูกเก็บรักษาไว้ โปรแกรมติดตั้งจะไม่ปลดล็อก ปรับขนาด ซ่อมแซม หรือแก้ไขในรูปแบบอื่น ๆ"
 
 #: src/pages.py:108
 msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
-msgstr "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "โปรแกรมติดตั้งจะไม่ทำการเมาต์ ซ่อมแซม หรือประเมินความปลอดภัยของโวลุ่ม Windows จากสถานะพักเครื่อง (Hibernation) หรือการเริ่มต้นอย่างรวดเร็ว (Fast Startup) การบำรุงรักษา Windows ที่จำเป็นทั้งหมดต้องดำเนินการเสร็จสิ้นใน Windows"
 
 #: src/pages.py:113
 msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
-msgstr "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "หรือคุณสามารถเลือกพาร์ติชันทั้งหมดเพื่อลบอย่างชัดเจน ทุกสิ่งในพาร์ติชันที่เลือกจะถูกทำลาย; จะไม่มีการเลือกโดยอัตโนมัติ"
 
 #: src/pages.py:118
 msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
-msgstr "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "ไม่สามารถดำเนินการติดตั้งต่อได้ด้วยการเลือกนี้ ไม่มีตัวเลือกบังคับให้ดำเนินการต่อบนการตรวจสอบความปลอดภัยการจัดเก็บข้อมูล"
 
 #: src/pages.py:122
 msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
-msgstr "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "หลังจากเปลี่ยนพาร์ติชันหรือยกเลิกการเมาต์ปริมาณข้อมูล โปรดสแกนพื้นที่จัดเก็บข้อมูลใหม่และเลือกเป้าหมายอีกครั้ง"
 
 #: src/pages.py:128
 msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
-msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "ไม่พบพื้นที่ที่ไม่ได้จัดสรรที่เหมาะสม เพื่อปกป้องข้อมูลของคุณ โปรดสร้างพื้นที่ที่ไม่ได้จัดสรรด้วย Windows Disk Management จากนั้นบูตโปรแกรมติดตั้งอีกครั้งและสแกนดิสก์ใหม่"
 
 #: src/pages.py:133
 msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
-msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "ไม่พบพื้นที่ที่ไม่ได้จัดสรรที่เหมาะสม เพื่อปกป้องข้อมูลของคุณ โปรดสร้างพื้นที่ที่ไม่ได้จัดสรรด้วยเครื่องมือจัดการพาร์ติชัน จากนั้นบูตโปรแกรมติดตั้งอีกครั้งและสแกนดิสก์ใหม่"
 
 #: src/pages.py:204 src/pages.py:374
 msgid "Next"
@@ -258,44 +258,44 @@ msgstr "ไดรเวอร์บางตัวเป็นซอฟต์แ
 
 #: src/pages.py:641
 msgid "Storage Device"
-msgstr "Storage Device"
+msgstr "อุปกรณ์จัดเก็บข้อมูล"
 
 #: src/pages.py:650
 msgid "No partition table"
-msgstr "No partition table"
+msgstr "ไม่มีตารางพาร์ติชัน"
 
 #: src/pages.py:673
 msgid "Current disk layout"
-msgstr "Current disk layout"
+msgstr "แผนผังดิสก์ปัจจุบัน"
 
 #: src/pages.py:693
 msgid "Unknown filesystem"
-msgstr "Unknown filesystem"
+msgstr "ระบบไฟล์ที่ไม่รู้จัก"
 
 #: src/pages.py:706
 #, python-brace-format
 msgid "Unallocated · {size}"
-msgstr "Unallocated · {size}"
+msgstr "ยังไม่ได้จัดสรร · {size}"
 
 #: src/pages.py:713
 msgid "Partition details unavailable"
-msgstr "Partition details unavailable"
+msgstr "ไม่สามารถดูรายละเอียดพาร์ติชันได้"
 
 #: src/pages.py:728
 msgid "Windows detected"
-msgstr "Windows detected"
+msgstr "ตรวจพบ Windows"
 
 #: src/pages.py:730
 msgid "BitLocker detected"
-msgstr "BitLocker detected"
+msgstr "ตรวจพบ BitLocker"
 
 #: src/pages.py:732
 msgid "Live USB — excluded"
-msgstr "Live USB — excluded"
+msgstr "USB แบบ Live — ถูกละเว้น"
 
 #: src/pages.py:734
 msgid "Too small"
-msgstr "Too small"
+msgstr "เล็กเกินไป"
 
 #: src/pages.py:751 src/pages.py:757
 msgid "Select Installation Disk"
@@ -303,7 +303,7 @@ msgstr "เลือกดิสก์ติดตั้ง"
 
 #: src/pages.py:793
 msgid "Rescan Storage"
-msgstr "Rescan Storage"
+msgstr "สแกนพื้นที่เก็บข้อมูลใหม่"
 
 #: src/pages.py:863
 msgid "No suitable disks found."
@@ -311,77 +311,77 @@ msgstr "ไม่พบดิสก์ที่เหมาะสม"
 
 #: src/pages.py:917
 msgid "Choose Installation Method"
-msgstr "Choose Installation Method"
+msgstr "เลือกวิธีการติดตั้ง"
 
 #: src/pages.py:922
 msgid "How should AnduinOS use this disk?"
-msgstr "How should AnduinOS use this disk?"
+msgstr "AnduinOS ควรใช้งานดิสก์นี้อย่างไร?"
 
 #: src/pages.py:937 src/pages.py:1191 src/pages.py:1425
 #, python-brace-format
 msgid "Target: {disk} ({size} — {model})"
-msgstr "Target: {disk} ({size} — {model})"
+msgstr "เป้าหมาย: {disk} ({size} — {model})"
 
 #: src/pages.py:1014
 msgid "Erase every partition and all data on the selected disk."
-msgstr "Erase every partition and all data on the selected disk."
+msgstr "ลบข้อมูลทุกพาร์ติชันและข้อมูลทั้งหมดบนดิสก์ที่เลือก"
 
 #: src/pages.py:1018
 msgid "Btrfs — recommended"
-msgstr "Btrfs — recommended"
+msgstr "Btrfs — แนะนำ"
 
 #: src/pages.py:1022
 msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
-msgstr "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "เปิดใช้งาน subvolumes แบบแชร์พื้นที่, snapshots และ Timeback Machine"
 
 #: src/pages.py:1030
 msgid "ext4 — classic"
-msgstr "ext4 — classic"
+msgstr "ext4 — คลาสสิก"
 
 #: src/pages.py:1033
 msgid "Uses a traditional single root filesystem."
-msgstr "Uses a traditional single root filesystem."
+msgstr "ใช้ระบบไฟล์รูทแบบดั้งเดิมเพียงอันเดียว"
 
 #: src/pages.py:1039
 msgid "Advanced — keep existing systems"
-msgstr "Advanced — keep existing systems"
+msgstr "ขั้นสูง — รักษาระบบที่มีอยู่"
 
 #: src/pages.py:1041
 msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr "ใช้พื้นที่ที่ยังไม่ได้จัดสรรไว้แล้วและรักษาพาร์ติชันที่มีอยู่ วิธีนี้คือทางเดียวสำหรับการอยู่ร่วมกันกับ Windows"
 
 #: src/pages.py:1089
 msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr "การทำงานร่วมกันขั้นสูงอาจส่งผลต่อสถานะเฟิร์มแวร์ EFI และอาจทำให้เกิดการกู้คืน BitLocker ไม่มีการย่อขนาดหรือซ่อมแซมปริมาณข้อมูลของ Windows"
 
 #: src/pages.py:1099
 #, python-brace-format
 msgid "ALL DATA on {disk} will be permanently erased."
-msgstr "ALL DATA on {disk} will be permanently erased."
+msgstr "ข้อมูลทั้งหมดบน {disk} จะถูกลบอย่างถาวร"
 
 #: src/pages.py:1135
 msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "dิสก์นี้มีขนาดเล็กเกินไปสำหรับการติดตั้งทั้งดิสก์ ขั้นสูงอาจดำเนินการต่อได้ก็ต่อเมื่อมีพื้นที่ที่ยังไม่ได้จัดสรรที่เหมาะสมเท่านั้น"
 
 #: src/pages.py:1145
 msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "ตรวจพบพาร์ติชันที่มีอยู่เดิม สองตัวเลือกแรกจะลบพาร์ติชันเหล่านี้; ตัวเลือกขั้นสูงคือการรักษาพาร์ติชันไว้"
 
 #: src/pages.py:1178
 msgid "Advanced Storage"
-msgstr "Advanced Storage"
+msgstr "พื้นที่จัดเก็บข้อมูลขั้นสูง"
 
 #: src/pages.py:1183
 msgid "Advanced: Install Alongside"
-msgstr "Advanced: Install Alongside"
+msgstr "ขั้นสูง: ติดตั้งควบคู่ไปกับระบบเดิม"
 
 #: src/pages.py:1212
 msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "ก่อนดำเนินการต่อ: อัปเดต Windows ให้เสร็จสิ้น ปิดใช้งานการเริ่มต้นแบบเร็วและโหมดพักเครื่อง และสำรองรหัสกู้คืน BitLocker ค่า EFI, Secure Boot, การวัดค่า TPM และลำดับการบูตอาจเปลี่ยนแปลงได้"
 
 #: src/pages.py:1219
 msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "เส้นทางขั้นสูงนี้จะรักษาพาร์ติชันที่มีอยู่ไว้ แต่จะเปลี่ยนแปลงตารางพาร์ติชันของดิสก์ที่เลือกและสถานะการบูต EFI ของเครื่อง"
 
 #: src/pages.py:1250 src/pages.py:2113
 msgid "Filesystem"
@@ -393,46 +393,46 @@ msgstr "Btrfs (แนะนำ)"
 
 #: src/pages.py:1253
 msgid "ext4 (classic)"
-msgstr "ext4 (classic)"
+msgstr "ext4 (คลาสสิก)"
 
 #: src/pages.py:1263
 msgid "Unallocated space"
-msgstr "Unallocated space"
+msgstr "พื้นที่ที่ยังไม่ได้จัดสรร"
 
 #: src/pages.py:1271
 msgid "EFI System Partition"
-msgstr "EFI System Partition"
+msgstr "พาร์ติชันระบบ EFI"
 
 #: src/pages.py:1285
 msgid "Rescan and Reselect Disk"
-msgstr "Rescan and Reselect Disk"
+msgstr "สแกนใหม่และเลือกดิสก์ใหม่"
 
 #: src/pages.py:1326
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
-msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "สร้างพาร์ติชัน EFI System สำหรับ AnduinOS ขนาด 1 GiB ใหม่"
 
 #: src/pages.py:1330
 #, python-brace-format
 msgid "Reuse {path} ({size})"
-msgstr "Reuse {path} ({size})"
+msgstr "นำ {path} ({size}) กลับมาใช้งานอีกครั้ง"
 
 #: src/pages.py:1394
 #, python-brace-format
 msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "ดิสก์ที่เลือกเปลี่ยนไปหรือหายไป กรุณากลับไปที่หน้าดิสก์และเลือกอีกครั้ง {error}"
 
 #: src/pages.py:1407
 msgid "The selected disk size changed. Return and select it again."
-msgstr "The selected disk size changed. Return and select it again."
+msgstr "ขนาดของดิสก์ที่เลือกเปลี่ยนไป กรุณากลับไปและเลือกอีกครั้ง"
 
 #: src/pages.py:1417
 msgid "The selected disk topology changed. Review the disk and installation method again."
-msgstr "The selected disk topology changed. Review the disk and installation method again."
+msgstr "โครงสร้างของดิสก์ที่เลือกเปลี่ยนแปลงไป กรุณาตรวจสอบดิสก์และวิธีการติดตั้งอีกครั้ง"
 
 #: src/pages.py:1453
 #, python-brace-format
 msgid "{size} unallocated at {offset}"
-msgstr "{size} unallocated at {offset}"
+msgstr "พื้นที่ที่ไม่ได้จัดสรร {size} ที่ {offset}"
 
 #: src/pages.py:1579 src/pages.py:1585
 msgid "User Account"
@@ -468,7 +468,7 @@ msgstr "ชื่อผู้ใช้สามารถใช้เฉพาะ
 
 #: src/pages.py:1680
 msgid "Install alongside requires a password-protected account."
-msgstr "Install alongside requires a password-protected account."
+msgstr "การติดตั้งพร้อมกันจำเป็นต้องมีบัญชีที่ป้องกันด้วยรหัสผ่าน"
 
 #: src/pages.py:1691
 msgid "The two passwords do not match."
@@ -574,11 +574,11 @@ msgstr "แพลตฟอร์ม"
 
 #: src/pages.py:2114
 msgid "Subvolumes"
-msgstr "Subvolumes"
+msgstr "ย่อยวอลุ่ม (Subvolumes)"
 
 #: src/pages.py:2115
 msgid "Swap"
-msgstr "Swap"
+msgstr "สวอป (Swap)"
 
 #: src/pages.py:2117
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
@@ -646,7 +646,7 @@ msgstr "เขตเวลา"
 
 #: src/pages.py:2166
 msgid "Guided storage selection is missing. Rescan and select the target again."
-msgstr "Guided storage selection is missing. Rescan and select the target again."
+msgstr "ตัวเลือกการจัดเก็บข้อมูลแบบมีผู้แนะนำหายไป กรุณาสแกนใหม่และเลือกเป้าหมายอีกครั้ง"
 
 #: src/pages.py:2174
 #, python-brace-format
@@ -656,37 +656,37 @@ msgstr "{name}: {start}–{end} MiB"
 #: src/pages.py:2182
 #, python-brace-format
 msgid "{path} as {filesystem}"
-msgstr "{path} as {filesystem}"
+msgstr "{path} เป็น {filesystem}"
 
 #: src/pages.py:2190
 #, python-brace-format
 msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "นำ {path} กลับมาใช้งานอีกครั้ง; ห้ามจัดรูปแบบเลย; ตรวจสอบสุขภาพ FAT, ตัวระบุ และพื้นที่ว่าง 64 MiB ก่อนเขียนข้อมูล"
 
 #: src/pages.py:2198
 msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "สร้างและจัดรูปแบบพาร์ติชัน EFI System สำหรับ AnduinOS เฉพาะภายในพื้นที่ที่เลือก"
 
 #: src/pages.py:2203
 msgid "Storage mode"
-msgstr "Storage mode"
+msgstr "โหมดการเก็บข้อมูล"
 
 #: src/pages.py:2204
 msgid "Install alongside"
-msgstr "Install alongside"
+msgstr "ติดตั้งพร้อมกัน"
 
 #: src/pages.py:2205
 msgid "Selected unallocated space"
-msgstr "Selected unallocated space"
+msgstr "พื้นที่ที่ยังไม่ได้จัดสรรที่เลือกไว้"
 
 #: src/pages.py:2206
 #, python-brace-format
 msgid "{size} at {offset}"
-msgstr "{size} at {offset}"
+msgstr "{size} ที่ {offset}"
 
 #: src/pages.py:2210
 msgid "Preserved partitions"
-msgstr "Preserved partitions"
+msgstr "Partition ที่เก็บรักษาไว้"
 
 #: src/pages.py:2211
 #, python-brace-format
@@ -695,27 +695,27 @@ msgstr "{count}: {paths}"
 
 #: src/pages.py:2215
 msgid "New partitions"
-msgstr "New partitions"
+msgstr "Partition ใหม่"
 
 #: src/pages.py:2217
 msgid "Formats"
-msgstr "Formats"
+msgstr "จัดรูปแบบ"
 
 #: src/pages.py:2219
 msgid "EFI policy"
-msgstr "EFI policy"
+msgstr "นโยบาย EFI"
 
 #: src/pages.py:2221
 msgid "Boot policy"
-msgstr "Boot policy"
+msgstr "นโยบายการบูต"
 
 #: src/pages.py:2223
 msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "เขียนเฉพาะ EFI/AnduinOS ห้ามเขียนทับ EFI/BOOT และต้องมีรายการ AnduinOS ใน NVRAM ที่ผ่านการตรวจสอบแล้ว"
 
 #: src/pages.py:2253
 msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
-msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ จะทำการแบ่งพาร์ติชันและจัดรูปแบบเฉพาะพื้นที่ที่ไม่ได้จัดสรรที่เลือกไว้เท่านั้น พาร์ติชันที่มีอยู่เดิมจะได้รับการรักษาไว้ แต่ไฟล์ EFI/AnduinOS และรายการบูตเฟิร์มแวร์ AnduinOS อาจเปลี่ยนแปลง ตัวติดตั้งนี้จะไม่ย่อขนาด Windows ให้คุณ"
 
 #: src/pages.py:2261
 msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
@@ -731,11 +731,11 @@ msgstr "ตรวจสอบแผน (ไม่ติดตั้ง)"
 
 #: src/pages.py:2290
 msgid "Install in the selected free space?"
-msgstr "Install in the selected free space?"
+msgstr "ต้องการติดตั้งในเนื้อที่ว่างที่เลือกหรือไม่?"
 
 #: src/pages.py:2291 src/pages.py:2380
 msgid "Install Alongside"
-msgstr "Install Alongside"
+msgstr "ติดตั้งพร้อมกัน"
 
 #: src/pages.py:2293
 msgid "Erase the entire selected disk?"
@@ -759,9 +759,7 @@ msgstr ""
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
-msgstr ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
+msgstr "AnduinOS จะใช้พื้นที่ที่ยังไม่ได้จัดสรรที่เลือกไว้บน {disk} เท่านั้น พาร์ติชันที่มีอยู่จะถูกเก็บรักษาไว้\n\n"
 
 #: src/pages.py:2314
 #, python-brace-format
@@ -787,7 +785,7 @@ msgstr "โปรแกรมที่มีสิทธิ์พิเศษถ
 
 #: src/pages.py:2326
 msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "พาร์ติชันที่มีอยู่เดิมจะถูกเก็บรักษาไว้ พาร์ติชัน AnduinOS ใหม่จะถูกสร้างขึ้นเฉพาะในพื้นที่ที่ยังไม่ได้จัดสรรเท่านั้น ไฟล์ผู้ผลิต EFI และรายการเริ่มต้นระบบเฟิร์มแวร์ของ AnduinOS อาจได้รับการอัปเดต"
 
 #: src/pages.py:2334
 msgid "This installer does not shrink or preserve other systems."
@@ -1003,40 +1001,40 @@ msgstr "{step} ล้มเหลว"
 
 #: src/pages.py:715
 msgid "Empty disk — no partitions"
-msgstr "Empty disk — no partitions"
+msgstr "ดิสก์ว่าง — ไม่มีพาร์ติชัน"
 
 #: src/pages.py:468
 msgid "Confirm your keyboard layout"
-msgstr "Confirm your keyboard layout"
+msgstr "ยืนยันเค้าโครงคีย์บอร์ดของคุณ"
 
 #: src/pages.py:540
 msgid "Choose optional software to install"
-msgstr "Choose optional software to install"
+msgstr "เลือกซอฟต์แวร์เสริมที่ต้องการติดตั้ง"
 
 #: src/pages.py:758
 msgid "Choose one target disk. Storage settings come next."
-msgstr "Choose one target disk. Storage settings come next."
+msgstr "เลือกดิสก์เป้าหมายหนึ่งรายการ การตั้งค่าพื้นที่จัดเก็บจะตามมาในลำดับถัดไป"
 
 #: src/pages.py:923
 msgid "Choose a complete installation method, not only a filesystem."
-msgstr "Choose a complete installation method, not only a filesystem."
+msgstr "เลือกวิธีการติดตั้งแบบสมบูรณ์ ไม่ใช่แค่ระบบไฟล์"
 
 #: src/pages.py:1184
 msgid "Use only existing unallocated space on the selected disk."
-msgstr "Use only existing unallocated space on the selected disk."
+msgstr "ใช้เฉพาะพื้นที่ที่ยังไม่ได้จัดสรรที่มีอยู่บนดิสก์ที่เลือก"
 
 #: src/pages.py:1586
 msgid "Create your user account"
-msgstr "Create your user account"
+msgstr "สร้างบัญชีผู้ใช้ของคุณ"
 
 #: src/pages.py:1902
 msgid "Choose your location to set the system clock"
-msgstr "Choose your location to set the system clock"
+msgstr "เลือกตำแหน่งที่ตั้งของคุณเพื่อตั้งนาฬิกาของระบบ"
 
 #: src/pages.py:2042
 msgid "Please review your choices before proceeding"
-msgstr "Please review your choices before proceeding"
+msgstr "โปรดตรวจสอบการเลือกของคุณก่อนดำเนินการต่อ"
 
 #: src/pages.py:2405
 msgid "Please do not turn off your computer"
-msgstr "Please do not turn off your computer"
+msgstr "กรุณาอย่าปิดเครื่องคอมพิวเตอร์ของคุณ"

@@ -39,63 +39,63 @@ msgstr "Продовжити встановлення"
 
 #: src/pages.py:69
 msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
-msgstr "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "Кероване співіснування вимагає завантаження системи в режимі UEFI та диска з ціллю GPT. Цей диск не може продовжувати роботу в керованому режимі."
 
 #: src/pages.py:73
 msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
-msgstr "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "Повну карту розділів та геометрію вільного простору не вдалося читати узгоджено. Жоден простір на цьому диску не авторизований для встановлення."
 
 #: src/pages.py:78
 msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
-msgstr "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "Disk GPT або одна з його розділів не має унікального стабільного ідентифікатора. Керований співіснування не може безпечно авторизувати збереження або записи на цьому диску."
 
 #: src/pages.py:83
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
-msgstr "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "\\\tЦей диск містить активний мапер, масив або іншу вкладену топологію блокового пристрою, яку підтримка спільного використання не підтримує."
 
 #: src/pages.py:87
 msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
-msgstr "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "На цьому диску є підключений розділ. Відмонтуйте його та повторно проскануйте сховище, перш ніж продовжувати."
 
 #: src/pages.py:91
 msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
-msgstr "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS використовуватиме лише вибране вільне місце. Інсталятор не буде зменшувати або переміщувати існуючу файлову систему."
 
 #: src/pages.py:95
 msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
-msgstr "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "Існуючі Windows, відновлення та дані розділи залишаться поза межами запису набору і будуть збережені."
 
 #: src/pages.py:99
 msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
-msgstr "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "\\\tІснуючий розділ EFI System Partition є лише кандидатом. Перевірки стану та вільного місця мають бути успішними, перш ніж його можна буде повторно використати, і він ніколи не буде відформатований."
 
 #: src/pages.py:104
 msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
-msgstr "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "Зберігання BitLocker буде збережено. Інсталятор не буде розблоковувати, змінювати розмір, ремонтувати або інакше модифікувати його."
 
 #: src/pages.py:108
 msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
-msgstr "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "\\\tВстановлювач не монтуватиме, не ремонтуватиме та не визначатиме безпеку томів Windows зі стану гибернації або Швидкого запуску. Будь-яке необхідне обслуговування Windows має бути завершено в Windows."
 
 #: src/pages.py:113
 msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
-msgstr "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "Крім того, ви можете явно вибрати один цілий розділ для стирання. Усе у цьому вибраному розділі буде знищено; він ніколи не обирається автоматично."
 
 #: src/pages.py:118
 msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
-msgstr "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "Інсталяцію не можна продовжити з цим вибором. Немає опції примусового продовження для перевірок безпеки сховища."
 
 #: src/pages.py:122
 msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
-msgstr "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "Після зміни розділів або відмонтування тому повторно проскануйте сховище та знову виберіть ціль."
 
 #: src/pages.py:128
 msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
-msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "Не знайдено підходящого вільного місця. Щоб захистити ваші дані, створіть вільне місце за допомогою засобу керування дисками Windows, потім перезавантажте інсталятор і знову відскануйте диск."
 
 #: src/pages.py:133
 msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
-msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "Не знайдено підходящого вільного місця. Щоб захистити ваші дані, створіть вільне місце за допомогою засобу розділення диска, потім перезавантажте інсталятор і знову відскануйте диск."
 
 #: src/pages.py:204 src/pages.py:374
 msgid "Next"
@@ -259,44 +259,44 @@ msgstr "Деякі драйвери є власницькими або інак�
 
 #: src/pages.py:641
 msgid "Storage Device"
-msgstr "Storage Device"
+msgstr "Накопичувач"
 
 #: src/pages.py:650
 msgid "No partition table"
-msgstr "No partition table"
+msgstr "Немає таблиці розділів"
 
 #: src/pages.py:673
 msgid "Current disk layout"
-msgstr "Current disk layout"
+msgstr "Поточна структура диска"
 
 #: src/pages.py:693
 msgid "Unknown filesystem"
-msgstr "Unknown filesystem"
+msgstr "Невідома файлова система"
 
 #: src/pages.py:706
 #, python-brace-format
 msgid "Unallocated · {size}"
-msgstr "Unallocated · {size}"
+msgstr "Невиділено · {size}"
 
 #: src/pages.py:713
 msgid "Partition details unavailable"
-msgstr "Partition details unavailable"
+msgstr "Деталі розділу недоступні"
 
 #: src/pages.py:728
 msgid "Windows detected"
-msgstr "Windows detected"
+msgstr "Windows виявлено"
 
 #: src/pages.py:730
 msgid "BitLocker detected"
-msgstr "BitLocker detected"
+msgstr "Виявлено BitLocker"
 
 #: src/pages.py:732
 msgid "Live USB — excluded"
-msgstr "Live USB — excluded"
+msgstr "Живий USB — виключено"
 
 #: src/pages.py:734
 msgid "Too small"
-msgstr "Too small"
+msgstr "Занадто мало"
 
 #: src/pages.py:751 src/pages.py:757
 msgid "Select Installation Disk"
@@ -304,7 +304,7 @@ msgstr "Вибір диска встановлення"
 
 #: src/pages.py:793
 msgid "Rescan Storage"
-msgstr "Rescan Storage"
+msgstr "Повторне сканування сховища"
 
 #: src/pages.py:863
 msgid "No suitable disks found."
@@ -312,77 +312,77 @@ msgstr "Не знайдено придатних дисків."
 
 #: src/pages.py:917
 msgid "Choose Installation Method"
-msgstr "Choose Installation Method"
+msgstr "Оберіть метод встановлення"
 
 #: src/pages.py:922
 msgid "How should AnduinOS use this disk?"
-msgstr "How should AnduinOS use this disk?"
+msgstr "Як AnduinOS має використовувати цей диск?"
 
 #: src/pages.py:937 src/pages.py:1191 src/pages.py:1425
 #, python-brace-format
 msgid "Target: {disk} ({size} — {model})"
-msgstr "Target: {disk} ({size} — {model})"
+msgstr "Мета: {disk} ({size} — {model})"
 
 #: src/pages.py:1014
 msgid "Erase every partition and all data on the selected disk."
-msgstr "Erase every partition and all data on the selected disk."
+msgstr "Видалити кожну розділ і всі дані на вибраному диску."
 
 #: src/pages.py:1018
 msgid "Btrfs — recommended"
-msgstr "Btrfs — recommended"
+msgstr "Btrfs — рекомендовано"
 
 #: src/pages.py:1022
 msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
-msgstr "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "Увімкнути підтомови спільного простору, миттєві знімки та Timeback Machine."
 
 #: src/pages.py:1030
 msgid "ext4 — classic"
-msgstr "ext4 — classic"
+msgstr "ext4 — класичний"
 
 #: src/pages.py:1033
 msgid "Uses a traditional single root filesystem."
-msgstr "Uses a traditional single root filesystem."
+msgstr "Використовує традиційну файлову систему з одним коренем."
 
 #: src/pages.py:1039
 msgid "Advanced — keep existing systems"
-msgstr "Advanced — keep existing systems"
+msgstr "Розширені — залишити існуючі системи"
 
 #: src/pages.py:1041
 msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr "Використовувати вже невиділений простір і зберігати існуючі розділи. Це єдиний шлях співіснування з Windows."
 
 #: src/pages.py:1089
 msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr "Розширене співіснування може вплинути на стан прошивки EFI та запустити відновлення BitLocker. Воно ніколи не зменшує і не ремонтує томи Windows."
 
 #: src/pages.py:1099
 #, python-brace-format
 msgid "ALL DATA on {disk} will be permanently erased."
-msgstr "ALL DATA on {disk} will be permanently erased."
+msgstr "ВСІ ДАНІ на {disk} буде остаточно видалено."
 
 #: src/pages.py:1135
 msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "\\\tЦей диск занадто малий для повного встановлення на диск. Розширений режим може продовжити лише за наявності відповідного невизначеного місця."
 
 #: src/pages.py:1145
 msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Був виявлено існуючі розділи. Перші два варіанти видаляють їх; Розширений є шляхом збереження."
 
 #: src/pages.py:1178
 msgid "Advanced Storage"
-msgstr "Advanced Storage"
+msgstr "Розширені налаштування сховища"
 
 #: src/pages.py:1183
 msgid "Advanced: Install Alongside"
-msgstr "Advanced: Install Alongside"
+msgstr "Розширені: встановити поряд із"
 
 #: src/pages.py:1212
 msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Перш ніж продовжити: завершіть оновлення Windows, вимкніть швидкий запуск та режим сну, а також створіть резервну копію ключа відновлення BitLocker. Налаштування EFI, Secure Boot, вимірювання TPM та порядок завантаження можуть змінитися."
 
 #: src/pages.py:1219
 msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "\\\tЦей розширений шлях зберігає існуючі розділи, але змінює таблицю розділів вибраного диска та стан завантаження EFI машини."
 
 #: src/pages.py:1250 src/pages.py:2113
 msgid "Filesystem"
@@ -394,11 +394,11 @@ msgstr "Btrfs (рекомендовано)"
 
 #: src/pages.py:1253
 msgid "ext4 (classic)"
-msgstr "ext4 (classic)"
+msgstr "ext4 (класична)"
 
 #: src/pages.py:1263
 msgid "Unallocated space"
-msgstr "Unallocated space"
+msgstr "Невиділений простір"
 
 #: src/pages.py:1271
 msgid "EFI System Partition"
@@ -406,34 +406,34 @@ msgstr "EFI System Partition"
 
 #: src/pages.py:1285
 msgid "Rescan and Reselect Disk"
-msgstr "Rescan and Reselect Disk"
+msgstr "Пересканувати та вибрати диск знову"
 
 #: src/pages.py:1326
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
-msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Створіть новий розділ системи EFI AnduinOS розміром 1 ГіБ"
 
 #: src/pages.py:1330
 #, python-brace-format
 msgid "Reuse {path} ({size})"
-msgstr "Reuse {path} ({size})"
+msgstr "Використати повторно {path} ({size})"
 
 #: src/pages.py:1394
 #, python-brace-format
 msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "\\\tВибраний диск змінився або зник. Поверніться на сторінку диска та виберіть його знову. {error}"
 
 #: src/pages.py:1407
 msgid "The selected disk size changed. Return and select it again."
-msgstr "The selected disk size changed. Return and select it again."
+msgstr "\\\tРозмір вибраного диска змінився. Поверніться та виберіть його знову."
 
 #: src/pages.py:1417
 msgid "The selected disk topology changed. Review the disk and installation method again."
-msgstr "The selected disk topology changed. Review the disk and installation method again."
+msgstr "\\\tТопологія вибраного диска змінилася. Перевірте диск та метод встановлення ще раз."
 
 #: src/pages.py:1453
 #, python-brace-format
 msgid "{size} unallocated at {offset}"
-msgstr "{size} unallocated at {offset}"
+msgstr "{size} невиділено на {offset}"
 
 #: src/pages.py:1579 src/pages.py:1585
 msgid "User Account"
@@ -469,7 +469,7 @@ msgstr "Ім'я користувача може містити лише малі
 
 #: src/pages.py:1680
 msgid "Install alongside requires a password-protected account."
-msgstr "Install alongside requires a password-protected account."
+msgstr "Для встановлення поруч потрібен обліковий запис із захистом паролем."
 
 #: src/pages.py:1691
 msgid "The two passwords do not match."
@@ -647,7 +647,7 @@ msgstr "Часовий пояс"
 
 #: src/pages.py:2166
 msgid "Guided storage selection is missing. Rescan and select the target again."
-msgstr "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Вибір керованого сховища відсутній. Повторно проскануйте та виберіть ціль ще раз."
 
 #: src/pages.py:2174
 #, python-brace-format
@@ -657,37 +657,37 @@ msgstr "{name}: {start}–{end} MiB"
 #: src/pages.py:2182
 #, python-brace-format
 msgid "{path} as {filesystem}"
-msgstr "{path} as {filesystem}"
+msgstr "{path} як {filesystem}"
 
 #: src/pages.py:2190
 #, python-brace-format
 msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Використати повторно {path}; ніколи не форматувати; перевірити стан FAT, ідентифікатор та наявність 64 МБ вільного місця перед записом."
 
 #: src/pages.py:2198
 msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Створіть та відформатуйте окремий розділ системи EFI AnduinOS у вибраному просторі."
 
 #: src/pages.py:2203
 msgid "Storage mode"
-msgstr "Storage mode"
+msgstr "Режим зберігання"
 
 #: src/pages.py:2204
 msgid "Install alongside"
-msgstr "Install alongside"
+msgstr "Встановити поруч"
 
 #: src/pages.py:2205
 msgid "Selected unallocated space"
-msgstr "Selected unallocated space"
+msgstr "Вибрано невиділений простір"
 
 #: src/pages.py:2206
 #, python-brace-format
 msgid "{size} at {offset}"
-msgstr "{size} at {offset}"
+msgstr "{size} на {offset}"
 
 #: src/pages.py:2210
 msgid "Preserved partitions"
-msgstr "Preserved partitions"
+msgstr "Збережені розділи"
 
 #: src/pages.py:2211
 #, python-brace-format
@@ -696,27 +696,27 @@ msgstr "{count}: {paths}"
 
 #: src/pages.py:2215
 msgid "New partitions"
-msgstr "New partitions"
+msgstr "Нові розділи"
 
 #: src/pages.py:2217
 msgid "Formats"
-msgstr "Formats"
+msgstr "Формати"
 
 #: src/pages.py:2219
 msgid "EFI policy"
-msgstr "EFI policy"
+msgstr "Pолітика EFI"
 
 #: src/pages.py:2221
 msgid "Boot policy"
-msgstr "Boot policy"
+msgstr "Політика завантаження"
 
 #: src/pages.py:2223
 msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Записувати лише EFI/AnduinOS, не перезаписувати EFI/BOOT та вимагати перевіреного запису AnduinOS у NVRAM."
 
 #: src/pages.py:2253
 msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
-msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Розділення та форматування буде виконано лише для вибраної невиділеної області. Існуючі розділи збережуться, але файли EFI/AnduinOS та запис автозавантаження прошивки AnduinOS можуть змінитися. Цей установщик не стисне Windows за вас."
 
 #: src/pages.py:2261
 msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
@@ -732,11 +732,11 @@ msgstr "Перевірити план (без встановлення)"
 
 #: src/pages.py:2290
 msgid "Install in the selected free space?"
-msgstr "Install in the selected free space?"
+msgstr "Встановити у вибраний вільний простір?"
 
 #: src/pages.py:2291 src/pages.py:2380
 msgid "Install Alongside"
-msgstr "Install Alongside"
+msgstr "Встановити поруч"
 
 #: src/pages.py:2293
 msgid "Erase the entire selected disk?"
@@ -760,9 +760,7 @@ msgstr ""
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
-msgstr ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
+msgstr "AnduinOS використовуватиме лише вибране вільне місце на диску {disk}. Існуючі розділи буде збережено.\n\n"
 
 #: src/pages.py:2314
 #, python-brace-format
@@ -788,7 +786,7 @@ msgstr "Привілейований виконавець відключений
 
 #: src/pages.py:2326
 msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Існуючі розділи будуть збережені. Нові розділи AnduinOS будуть створені тільки у вибраному невиділеному обсязі; файли постачальника EFI і записовий пункт прошивки AnduinOS можуть бути оновлені."
 
 #: src/pages.py:2334
 msgid "This installer does not shrink or preserve other systems."
@@ -1004,40 +1002,40 @@ msgstr "Помилка кроку {step}"
 
 #: src/pages.py:715
 msgid "Empty disk — no partitions"
-msgstr "Empty disk — no partitions"
+msgstr "Порожній диск — немає розділів"
 
 #: src/pages.py:468
 msgid "Confirm your keyboard layout"
-msgstr "Confirm your keyboard layout"
+msgstr "Підтвердіть розкладку клавіатури"
 
 #: src/pages.py:540
 msgid "Choose optional software to install"
-msgstr "Choose optional software to install"
+msgstr "Оберіть додаткове програмне забезпечення для встановлення"
 
 #: src/pages.py:758
 msgid "Choose one target disk. Storage settings come next."
-msgstr "Choose one target disk. Storage settings come next."
+msgstr "Оберіть один цільовий диск. Наступним кроком будуть налаштування сховища."
 
 #: src/pages.py:923
 msgid "Choose a complete installation method, not only a filesystem."
-msgstr "Choose a complete installation method, not only a filesystem."
+msgstr "Оберіть повний метод встановлення, а не лише файлову систему."
 
 #: src/pages.py:1184
 msgid "Use only existing unallocated space on the selected disk."
-msgstr "Use only existing unallocated space on the selected disk."
+msgstr "Використовувати лише наявний невиділений простір на вибраному диску."
 
 #: src/pages.py:1586
 msgid "Create your user account"
-msgstr "Create your user account"
+msgstr "Створіть обліковий запис користувача"
 
 #: src/pages.py:1902
 msgid "Choose your location to set the system clock"
-msgstr "Choose your location to set the system clock"
+msgstr "Оберіть ваше місцезнаходження, щоб налаштувати системний годинник"
 
 #: src/pages.py:2042
 msgid "Please review your choices before proceeding"
-msgstr "Please review your choices before proceeding"
+msgstr "Будь ласка, перевірте ваші виборі перед продовженням"
 
 #: src/pages.py:2405
 msgid "Please do not turn off your computer"
-msgstr "Please do not turn off your computer"
+msgstr "Будь ласка, не вимикайте комп’ютер"

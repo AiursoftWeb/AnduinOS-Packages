@@ -39,63 +39,63 @@ msgstr "Συνέχεια Εγκατάστασης"
 
 #: src/pages.py:69
 msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
-msgstr "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "Η καθοδηγούμενη συνύπαρξη απαιτεί ένα σύστημα που εκκινεί σε λειτουργία UEFI και έναν δίσκο στόχο GPT. Αυτός ο δίσκος δεν μπορεί να συνεχίσει σε καθοδηγούμενη λειτουργία."
 
 #: src/pages.py:73
 msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
-msgstr "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "Δεν ήταν δυνατή η ανάγνωση της πλήρους χάρτη διαμοιράσεων και της γεωμετρίας ελεύθερου χώρου με συνεπή τρόπο. Κανένας χώρος σε αυτόν τον δίσκο δεν είναι εξουσιοδοτημένος για εγκατάσταση."
 
 #: src/pages.py:78
 msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
-msgstr "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "Ο δίσκος GPT ή μία από τις διαμοιράσεις του δεν έχει μοναδικό σταθερό αναγνωριστικό. Η καθοδηγούμενη συνύπαρξη δεν μπορεί να εξουσιοδοτήσει με ασφάλεια τη διατήρηση ή εγγραφές σε αυτόν τον δίσκο."
 
 #: src/pages.py:83
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
-msgstr "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "Αυτός ο δίσκος περιέχει έναν ενεργό mapper, array ή άλλη ενσωματωμένη τοπολογία συσκευών blokk που η καθοδηγούμενη συνύπαρξη δεν υποστηρίζει."
 
 #: src/pages.py:87
 msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
-msgstr "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "Μια διαμέριση σε αυτόν τον δίσκο είναι προσαρτημένη. Αποσυνδέστε την και ξαναδιαβάστε την αποθηκευτική μονάδα πριν συνεχίσετε."
 
 #: src/pages.py:91
 msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
-msgstr "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "Το AnduinOS θα χρησιμοποιήσει μόνο τον επιλεγμένο μη κατανεμημένο χώρο. Ο εγκαταστάτης δεν θα συρρικνώσει ή μετακινήσει ένα υπάρχον σύστημα αρχείων."
 
 #: src/pages.py:95
 msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
-msgstr "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "Οι υπάρχοντες τομείς του Windows, ανάκτησης και δεδομένων παραμένουν εκτός του συνόλου εγγραφής και θα διατηρηθούν."
 
 #: src/pages.py:99
 msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
-msgstr "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "Η υπάρχουσα EFI System Partition είναι μόνο υποψήφια. Οι έλεγχοι υγείας και ελεύθερου χώρου πρέπει να περάσουν πριν μπορέσει να επαναχρησιμοποιηθεί, και ποτέ δεν θα μορφοποιηθεί."
 
 #: src/pages.py:104
 msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
-msgstr "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "Η αποθήκευση BitLocker θα διατηρηθεί. Ο εγκαταστάτης δεν θα ξεκλειδώσει, αλλάξει το μέγεθος, επισκευάσει ή τροποποιήσει με οποιοδήποτε άλλο τρόπο αυτή."
 
 #: src/pages.py:108
 msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
-msgstr "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "Το πρόγραμμα εγκατάστασης δεν θα προσαρτήσει, επισκευάσει ή συμπεράνει την ασφάλεια των συστημάτων Windows από κατάσταση λήθαργου ή γρήγορης εκκίνησης. Οποιαδήποτε απαιτούμενη συντήρηση Windows πρέπει να ολοκληρωθεί στο Windows."
 
 #: src/pages.py:113
 msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
-msgstr "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "Εναλλακτικά, μπορείτε να επιλέξετε ρητά μια ολόκληρη διαμέριση για διαγραφή. Όλα τα δεδομένα στην επιλεγμένη διαμέριση θα καταστραφούν· ποτέ δεν επιλέγεται αυτόματα."
 
 #: src/pages.py:118
 msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
-msgstr "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "Η εγκατάσταση δεν μπορεί να συνεχιστεί με αυτήν την επιλογή. Δεν υπάρχει επιλογή αναγκαστικής συνέχισης γύρω από τους ελέγχους ασφαλείας αποθήκευσης."
 
 #: src/pages.py:122
 msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
-msgstr "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "Μετά την αλλαγή των διαμερίσεων ή την αποσύνδεση ενός τόμου, ξαναδιαβάστε την αποθηκευτική μονάδα και επιλέξτε ξανά τον προορισμό."
 
 #: src/pages.py:128
 msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
-msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "Δεν βρέθηκε κατάλληλος μη κατειλημμένος χώρος. Για να προστατέψετε τα δεδομένα σας, δημιουργήστε μη κατειλημμένο χώρο με τη Διαχείριση Δίσκου των Windows, στη συνέχεια εκκινήστε ξανά τον εγκαταστάτη και σκανάρετε ξανά το δίσκο."
 
 #: src/pages.py:133
 msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
-msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "Δεν βρέθηκε κατάλληλος μη κατειλημμένος χώρος. Για να προστατέψετε τα δεδομένα σας, δημιουργήστε μη κατειλημμένο χώρο με ένα εργαλείο διαμόρφωσης, στη συνέχεια εκκινήστε ξανά τον εγκαταστάτη και σκανάρετε ξανά το δίσκο."
 
 #: src/pages.py:204 src/pages.py:374
 msgid "Next"
@@ -259,44 +259,44 @@ msgstr "Ορισμένοι οδηγοί είναι ιδιόκτητο ή αλλ�
 
 #: src/pages.py:641
 msgid "Storage Device"
-msgstr "Storage Device"
+msgstr "Συσκευή αποθήκευσης"
 
 #: src/pages.py:650
 msgid "No partition table"
-msgstr "No partition table"
+msgstr "Δεν υπάρχει πίνακας διαμερισμάτων"
 
 #: src/pages.py:673
 msgid "Current disk layout"
-msgstr "Current disk layout"
+msgstr "Τρέχουσα διάταξη δίσκου"
 
 #: src/pages.py:693
 msgid "Unknown filesystem"
-msgstr "Unknown filesystem"
+msgstr "Άγνωστο σύστημα αρχείων"
 
 #: src/pages.py:706
 #, python-brace-format
 msgid "Unallocated · {size}"
-msgstr "Unallocated · {size}"
+msgstr "Μη κατανεμημένο · {size}"
 
 #: src/pages.py:713
 msgid "Partition details unavailable"
-msgstr "Partition details unavailable"
+msgstr "Μη διαθέσιμες λεπτομέρειες διαμερίσματος"
 
 #: src/pages.py:728
 msgid "Windows detected"
-msgstr "Windows detected"
+msgstr "Ανιχνεύθηκαν τα Windows"
 
 #: src/pages.py:730
 msgid "BitLocker detected"
-msgstr "BitLocker detected"
+msgstr "Ανιχνεύθηκε BitLocker"
 
 #: src/pages.py:732
 msgid "Live USB — excluded"
-msgstr "Live USB — excluded"
+msgstr "Ζωντανός USB — αποκλείεται"
 
 #: src/pages.py:734
 msgid "Too small"
-msgstr "Too small"
+msgstr "Πολύ μικρό"
 
 #: src/pages.py:751 src/pages.py:757
 msgid "Select Installation Disk"
@@ -304,7 +304,7 @@ msgstr "Επιλέξτε δίσκο εγκατάστασης"
 
 #: src/pages.py:793
 msgid "Rescan Storage"
-msgstr "Rescan Storage"
+msgstr "Επανασάρωση Αποθήκευσης"
 
 #: src/pages.py:863
 msgid "No suitable disks found."
@@ -312,77 +312,77 @@ msgstr "Δεν βρέθηκαν κατάλληλοι δίσκοι."
 
 #: src/pages.py:917
 msgid "Choose Installation Method"
-msgstr "Choose Installation Method"
+msgstr "Επιλογή μεθόδου εγκατάστασης"
 
 #: src/pages.py:922
 msgid "How should AnduinOS use this disk?"
-msgstr "How should AnduinOS use this disk?"
+msgstr "Πώς θα χρησιμοποιήσει ο AnduinOS αυτόν τον δίσκο;"
 
 #: src/pages.py:937 src/pages.py:1191 src/pages.py:1425
 #, python-brace-format
 msgid "Target: {disk} ({size} — {model})"
-msgstr "Target: {disk} ({size} — {model})"
+msgstr "Στόχος: {disk} ({size} — {model})"
 
 #: src/pages.py:1014
 msgid "Erase every partition and all data on the selected disk."
-msgstr "Erase every partition and all data on the selected disk."
+msgstr "Διαγραφή όλων των τομέων και όλων των δεδομένων στον επιλεγμένο δίσκο."
 
 #: src/pages.py:1018
 msgid "Btrfs — recommended"
-msgstr "Btrfs — recommended"
+msgstr "Btrfs — συνιστάται"
 
 #: src/pages.py:1022
 msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
-msgstr "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "Ενεργοποιεί υποτόμους κοινόχρηστου χώρου, στιγμιότυπα και τη μηχανή Timeback."
 
 #: src/pages.py:1030
 msgid "ext4 — classic"
-msgstr "ext4 — classic"
+msgstr "ext4 — κλασικό"
 
 #: src/pages.py:1033
 msgid "Uses a traditional single root filesystem."
-msgstr "Uses a traditional single root filesystem."
+msgstr "Χρησιμοποιεί ένα παραδοσιακό μονό σύστημα αρχείων ρίζας."
 
 #: src/pages.py:1039
 msgid "Advanced — keep existing systems"
-msgstr "Advanced — keep existing systems"
+msgstr "Για προχωρημένους — διατήρηση των υπάρχοντων συστημάτων"
 
 #: src/pages.py:1041
 msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr "Χρήση ήδη μη κατανεμημένου χώρου και διατήρηση των υφιστάμενων τμημάτων. Αυτή είναι η μοναδική διαδρομή συμβίωσης με Windows."
 
 #: src/pages.py:1089
 msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr "Η προηγμένη συνύπαρξη μπορεί να επηρεάσει την κατάσταση της firmware EFI και ενδέχεται να ενεργοποιήσει την ανάκτηση BitLocker. Ποτέ δεν συρρικνώνει ή επισκευάζει τόμους Windows."
 
 #: src/pages.py:1099
 #, python-brace-format
 msgid "ALL DATA on {disk} will be permanently erased."
-msgstr "ALL DATA on {disk} will be permanently erased."
+msgstr "Όλα τα ΔΕΔΟΜΕΝΑ στο {disk} θα διαγραφούν οριστικά."
 
 #: src/pages.py:1135
 msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "Αυτός ο δίσκος είναι πολύ μικρός για εγκατάσταση σε ολόκληρο τον δίσκο. Η προηγμένη μπορεί να συνεχιστεί μόνο αν υπάρχει κατάλληλος μη εκχωρημένος χώρος."
 
 #: src/pages.py:1145
 msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Ανιχνεύτηκαν υπάρχοντες τομείς. Οι δύο πρώτες επιλογές τους διαγράφουν· η Προχωρημένη είναι η διαδρομή διατήρησης."
 
 #: src/pages.py:1178
 msgid "Advanced Storage"
-msgstr "Advanced Storage"
+msgstr "Για προχωρημένους χρήστες — Αποθήκευση"
 
 #: src/pages.py:1183
 msgid "Advanced: Install Alongside"
-msgstr "Advanced: Install Alongside"
+msgstr "Για προχωρημένους: Εγκατάσταση δίπλα σε άλλο σύστημα"
 
 #: src/pages.py:1212
 msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Πριν συνεχίσετε: ολοκληρώστε τις ενημερώσεις του Windows, απενεργοποιήστε την Εγρήγορση Ταχείας Εκκίνησης και την υπνωση (hibernation), και δημιουργήστε αντίγραφο ασφαλείας του κλειδιού ανάκτησης BitLocker. Οι ρυθμίσεις EFI, Secure Boot, οι μετρήσεις TPM και η σειρά εκκίνησης ενδέχεται να αλλάξουν."
 
 #: src/pages.py:1219
 msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "Αυτή η προηγμένη διαδρομή διατηρεί τις υπάρχουσες παρτίτες αλλά αλλάζει τον πίνακα παρτίτων του επιλεγμένου δίσκου και την κατάσταση εκκίνησης EFI της μηχανής."
 
 #: src/pages.py:1250 src/pages.py:2113
 msgid "Filesystem"
@@ -394,46 +394,46 @@ msgstr "Btrfs (προτεινόμενο)"
 
 #: src/pages.py:1253
 msgid "ext4 (classic)"
-msgstr "ext4 (classic)"
+msgstr "ext4 (κλασικό)"
 
 #: src/pages.py:1263
 msgid "Unallocated space"
-msgstr "Unallocated space"
+msgstr "Μη κατανεμημένος χώρος"
 
 #: src/pages.py:1271
 msgid "EFI System Partition"
-msgstr "EFI System Partition"
+msgstr "Τομέας Συστήματος EFI"
 
 #: src/pages.py:1285
 msgid "Rescan and Reselect Disk"
-msgstr "Rescan and Reselect Disk"
+msgstr "Επανασάρωση και επαναεπιλογή δίσκου"
 
 #: src/pages.py:1326
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
-msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Δημιουργία νέου τμήματος EFI συστήματος AnduinOS 1 GiB"
 
 #: src/pages.py:1330
 #, python-brace-format
 msgid "Reuse {path} ({size})"
-msgstr "Reuse {path} ({size})"
+msgstr "Επαναχρήση {path} ({size})"
 
 #: src/pages.py:1394
 #, python-brace-format
 msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "Ο επιλεγμένος δίσκος άλλαξε ή εξαφανίστηκε. Επιστρέψτε στη σελίδα του δίσκου και επιλέξτε τον ξανά. {error}"
 
 #: src/pages.py:1407
 msgid "The selected disk size changed. Return and select it again."
-msgstr "The selected disk size changed. Return and select it again."
+msgstr "Το μέγεθος του επιλεγμένου δίσκου άλλαξε. Επιστρέψτε και επιλέξτε τον ξανά."
 
 #: src/pages.py:1417
 msgid "The selected disk topology changed. Review the disk and installation method again."
-msgstr "The selected disk topology changed. Review the disk and installation method again."
+msgstr "Η τοπολογία του επιλεγμένου δίσκου άλλαξε. Εξετάστε ξανά τον δίσκο και τη μέθοδο εγκατάστασης."
 
 #: src/pages.py:1453
 #, python-brace-format
 msgid "{size} unallocated at {offset}"
-msgstr "{size} unallocated at {offset}"
+msgstr "{size} μη 할당ημένος χώρος στη θέση {offset}"
 
 #: src/pages.py:1579 src/pages.py:1585
 msgid "User Account"
@@ -469,7 +469,7 @@ msgstr "Το όνομα χρήστη μπορεί να περιέχει μόνο
 
 #: src/pages.py:1680
 msgid "Install alongside requires a password-protected account."
-msgstr "Install alongside requires a password-protected account."
+msgstr "Η εγκατάσταση παράλληλα απαιτεί λογαριασμό με προστασία κωδικού πρόσβασης."
 
 #: src/pages.py:1691
 msgid "The two passwords do not match."
@@ -647,7 +647,7 @@ msgstr "Ζώνη ώρας"
 
 #: src/pages.py:2166
 msgid "Guided storage selection is missing. Rescan and select the target again."
-msgstr "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Λείπει η καθοδηγούμενη επιλογή αποθήκευσης. Κάντε ξανασάρωση και επιλέξτε τον στόχο ξανά."
 
 #: src/pages.py:2174
 #, python-brace-format
@@ -657,37 +657,37 @@ msgstr "{name}: {start}–{end} MiB"
 #: src/pages.py:2182
 #, python-brace-format
 msgid "{path} as {filesystem}"
-msgstr "{path} as {filesystem}"
+msgstr "{path} ως {filesystem}"
 
 #: src/pages.py:2190
 #, python-brace-format
 msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Επαναχρήση {path}; ποτέ μην τον μορφοποιήσετε· ελέγξτε την υγεία του FAT, την ταυτότητα και 64 MiB ελεύθερου χώρου πριν τη γραφή."
 
 #: src/pages.py:2198
 msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Δημιουργία και μορφοποίηση ενός αφιερωμένου τμήματος EFI συστήματος AnduinOS μέσα στον επιλεγμένο χώρο."
 
 #: src/pages.py:2203
 msgid "Storage mode"
-msgstr "Storage mode"
+msgstr "Λειτουργία αποθήκευσης"
 
 #: src/pages.py:2204
 msgid "Install alongside"
-msgstr "Install alongside"
+msgstr "Εγκατάσταση παράλληλα"
 
 #: src/pages.py:2205
 msgid "Selected unallocated space"
-msgstr "Selected unallocated space"
+msgstr "Επιλεγμένος μη δεσμευμένος χώρος"
 
 #: src/pages.py:2206
 #, python-brace-format
 msgid "{size} at {offset}"
-msgstr "{size} at {offset}"
+msgstr "{size} στη θέση {offset}"
 
 #: src/pages.py:2210
 msgid "Preserved partitions"
-msgstr "Preserved partitions"
+msgstr "Διατηρηθέντες διαμοιρασμοί"
 
 #: src/pages.py:2211
 #, python-brace-format
@@ -696,27 +696,27 @@ msgstr "{count}: {paths}"
 
 #: src/pages.py:2215
 msgid "New partitions"
-msgstr "New partitions"
+msgstr "Νέες διαμοιρασμοί"
 
 #: src/pages.py:2217
 msgid "Formats"
-msgstr "Formats"
+msgstr "Μορφοποιήσεις"
 
 #: src/pages.py:2219
 msgid "EFI policy"
-msgstr "EFI policy"
+msgstr "Πολιτική EFI"
 
 #: src/pages.py:2221
 msgid "Boot policy"
-msgstr "Boot policy"
+msgstr "Πολιτική εκκίνησης"
 
 #: src/pages.py:2223
 msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Εγγραφή μόνο EFI/AnduinOS, χωρίς υπεργραφή του EFI/BOOT και με απαίτηση επαληθευμένης εγγραφής NVRAM AnduinOS."
 
 #: src/pages.py:2253
 msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
-msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Μόνο ο επιλεγμένος μη 할당ημένος χώρος θα διαμορφωθεί και θα μορφοποιηθεί. Οι υπάρχουσες παρτίτες διατηρούνται, αλλά τα αρχεία EFI/AnduinOS και η εγγραφή εκκίνησης του firmware AnduinOS ενδέχεται να αλλάξουν. Αυτή η εγκατάσταση δεν θα συρρικνώσει το Windows για εσάς."
 
 #: src/pages.py:2261
 msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
@@ -732,11 +732,11 @@ msgstr "Έλεγχος σχεδίου (χωρίς εγκατάσταση)"
 
 #: src/pages.py:2290
 msgid "Install in the selected free space?"
-msgstr "Install in the selected free space?"
+msgstr "Εγκατάσταση στην επιλεγμένη ελεύθερη θέση;"
 
 #: src/pages.py:2291 src/pages.py:2380
 msgid "Install Alongside"
-msgstr "Install Alongside"
+msgstr "Εγκατάσταση Παράλληλα"
 
 #: src/pages.py:2293
 msgid "Erase the entire selected disk?"
@@ -760,9 +760,7 @@ msgstr ""
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
-msgstr ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
+msgstr "Το AnduinOS θα χρησιμοποιήσει μόνο τον επιλεγμένο μη κατανεμημένο χώρο στον {disk}. Οι υπάρχουσες διαμερίσεις θα διατηρηθούν.\n\n"
 
 #: src/pages.py:2314
 #, python-brace-format
@@ -788,7 +786,7 @@ msgstr "Ο προνομιούχος εκτελεστής είναι απενερ
 
 #: src/pages.py:2326
 msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Οι υπάρχοντες τομείς θα διατηρηθούν. Νέοι τομείς AnduinOS θα δημιουργηθούν μόνο στην επιλεγμένη μη δεσμευμένη έκταση· τα αρχεία προμηθευτή EFI και η καταχώρηση εκκίνησης firmware του AnduinOS ενδέχεται να ενημερωθούν."
 
 #: src/pages.py:2334
 msgid "This installer does not shrink or preserve other systems."
@@ -1004,40 +1002,40 @@ msgstr "{step} απέτυχε"
 
 #: src/pages.py:715
 msgid "Empty disk — no partitions"
-msgstr "Empty disk — no partitions"
+msgstr "Κενός δίσκος — χωρίς διαμερίσματα"
 
 #: src/pages.py:468
 msgid "Confirm your keyboard layout"
-msgstr "Confirm your keyboard layout"
+msgstr "Επιβεβαιώστε τη διάταξη του πληκτρολογίου σας"
 
 #: src/pages.py:540
 msgid "Choose optional software to install"
-msgstr "Choose optional software to install"
+msgstr "Επιλέξτε προαιρετικό λογισμικό για εγκατάσταση"
 
 #: src/pages.py:758
 msgid "Choose one target disk. Storage settings come next."
-msgstr "Choose one target disk. Storage settings come next."
+msgstr "Επιλέξτε έναν δίσκο προορισμού. Ακολουθούν οι ρυθμίσεις αποθήκευσης."
 
 #: src/pages.py:923
 msgid "Choose a complete installation method, not only a filesystem."
-msgstr "Choose a complete installation method, not only a filesystem."
+msgstr "Επιλέξτε μια πλήρη μέθοδο εγκατάστασης, όχι μόνο ένα σύστημα αρχείων."
 
 #: src/pages.py:1184
 msgid "Use only existing unallocated space on the selected disk."
-msgstr "Use only existing unallocated space on the selected disk."
+msgstr "Χρήση μόνο του υπάρχοντος μη κατανεμημένου χώρου στον επιλεγμένο δίσκο."
 
 #: src/pages.py:1586
 msgid "Create your user account"
-msgstr "Create your user account"
+msgstr "Δημιουργία του λογαριασμού χρήστη σας"
 
 #: src/pages.py:1902
 msgid "Choose your location to set the system clock"
-msgstr "Choose your location to set the system clock"
+msgstr "Επιλέξτε την τοποθεσία σας για να ορίσετε το ρολόι του συστήματος"
 
 #: src/pages.py:2042
 msgid "Please review your choices before proceeding"
-msgstr "Please review your choices before proceeding"
+msgstr "Παρακαλώ ελέγξτε τις επιλογές σας πριν προχωρήσετε"
 
 #: src/pages.py:2405
 msgid "Please do not turn off your computer"
-msgstr "Please do not turn off your computer"
+msgstr "Παρακαλώ μην απενεργοποιήσετε τον υπολογιστή σας"

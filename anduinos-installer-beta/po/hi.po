@@ -38,63 +38,63 @@ msgstr "इंस्टालेशन जारी रखें"
 
 #: src/pages.py:69
 msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
-msgstr "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "संचालित सहअस्तित्व के लिए UEFI मोड में बूट किए गए सिस्टम और GPT टारगेट डिस्क की आवश्यकता होती है। यह डिस्क संचालित मोड में जारी नहीं रख सकती है।"
 
 #: src/pages.py:73
 msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
-msgstr "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "पूर्ण पार्शन मानचित्र और मुक्त-स्थान ज्यामिति को सुसंगत रूप से पढ़ा नहीं जा सका। इस डिस्क पर इंस्टॉलेशन के लिए कोई भी स्थान अनुमत नहीं है।"
 
 #: src/pages.py:78
 msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
-msgstr "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "GPT डिस्क या उसके किसी भी पार्शन का कोई अद्वितीय स्थिर पहचानकर्ता नहीं है। गाइडेड सहअस्तित्व इस डिस्क पर सुरक्षित रूप से संरक्षण या लेखन की अनुमति नहीं दे सकता है।"
 
 #: src/pages.py:83
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
-msgstr "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "इस डिस्क में एक सक्रिय मैपर, एरे या अन्य नेस्टेड ब्लॉक-डिवाइस टोपोलॉजी है जिसका समर्थन गाइडेड सहअस्तित्व नहीं करता है।"
 
 #: src/pages.py:87
 msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
-msgstr "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "इस डिस्क पर एक विभाजन माउंट किया गया है। आगे बढ़ने से पहले इसे अनमाउंट करें और स्टोरेज का पुनः स्कैन करें।"
 
 #: src/pages.py:91
 msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
-msgstr "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS केवल चयनित अविभाजित स्थान का उपयोग करेगा। इंस्टॉलर किसी मौजूदा फ़ाइल सिस्टम को छोटा या स्थानांतरित नहीं करेगा।"
 
 #: src/pages.py:95
 msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
-msgstr "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "विद्यमान Windows, रिकवरी और डेटा विभाजन लिखने वाले सेट के बाहर रहेंगे और संरक्षित रहेंगे।"
 
 #: src/pages.py:99
 msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
-msgstr "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "मौजूदा EFI सिस्टम पार्टिशन केवल एक उम्मीदवार है। इसे दोबारा उपयोग करने से पहले स्वास्थ्य और मुक्त-स्थान जाँच पास होनी चाहिए, और इसे कभी भी फॉर्मेट नहीं किया जाएगा।"
 
 #: src/pages.py:104
 msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
-msgstr "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "BitLocker स्टोरेज सुरक्षित रहेगा। इंस्टॉलर इसे अनलॉक, रीसाइज़, रिपेयर या किसी अन्य प्रकार से संशोधित नहीं करेगा।"
 
 #: src/pages.py:108
 msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
-msgstr "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "इंस्टालर हाइबरनेशन या फास्ट स्टार्टअप स्थिति से Windows वॉल्यूम्स को माउंट, मरम्मत या उनकी सुरक्षा का अनुमान नहीं लगाएगा। कोई भी आवश्यक Windows रखरखाव Windows में पूरा किया जाना चाहिए।"
 
 #: src/pages.py:113
 msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
-msgstr "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "वैकल्पिक रूप से, आप मिटाने के लिए एक पूर्ण विभाजन स्पष्ट रूप से चुन सकते हैं। उस चयनित विभाजन में मौजूद सब कुछ नष्ट हो जाएगा; इसे कभी भी स्वचालित रूप से चयनित नहीं किया जाता है।"
 
 #: src/pages.py:118
 msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
-msgstr "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "इस चयन के साथ इंस्टॉलेशन जारी नहीं रखा जा सकता। स्टोरेज सुरक्षा जांच के आसपास कोई फोर्स-कंटिन्यू विकल्प उपलब्ध नहीं है।"
 
 #: src/pages.py:122
 msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
-msgstr "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "विभाजनों को बदलने या किसी वॉल्यूम को अनमाउंट करने के बाद, स्टोरेज का पुनः स्कैन करें और लक्ष्य को फिर से चुनें।"
 
 #: src/pages.py:128
 msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
-msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "कोई उपयुक्त अनाबंटित स्थान नहीं मिला। अपने डेटा की सुरक्षा के लिए, विंडोज डिस्क मैनेजमेंट का उपयोग करके अनाबंटित स्थान बनाएं, फिर इंस्टॉलर को दोबारा बूट करें और डिस्क को पुनः स्कैन करें।"
 
 #: src/pages.py:133
 msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
-msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "कोई उपयुक्त अनाबंटित स्थान नहीं मिला। अपने डेटा की सुरक्षा के लिए, एक विभाजन टूल का उपयोग करके अनाबंटित स्थान बनाएं, फिर इंस्टॉलर को दोबारा बूट करें और डिस्क को पुनः स्कैन करें।"
 
 #: src/pages.py:204 src/pages.py:374
 msgid "Next"
@@ -258,44 +258,44 @@ msgstr "कुछ ड्राइवर प्रोप्राइटरी य
 
 #: src/pages.py:641
 msgid "Storage Device"
-msgstr "Storage Device"
+msgstr "स्टोरेज डिवाइस"
 
 #: src/pages.py:650
 msgid "No partition table"
-msgstr "No partition table"
+msgstr "कोई विभाजन तालिका नहीं"
 
 #: src/pages.py:673
 msgid "Current disk layout"
-msgstr "Current disk layout"
+msgstr "वर्तमान डिस्क लेआउट"
 
 #: src/pages.py:693
 msgid "Unknown filesystem"
-msgstr "Unknown filesystem"
+msgstr "अज्ञात फ़ाइल सिस्टम"
 
 #: src/pages.py:706
 #, python-brace-format
 msgid "Unallocated · {size}"
-msgstr "Unallocated · {size}"
+msgstr "अविभाजित · {size}"
 
 #: src/pages.py:713
 msgid "Partition details unavailable"
-msgstr "Partition details unavailable"
+msgstr "विभाजन विवरण उपलब्ध नहीं हैं"
 
 #: src/pages.py:728
 msgid "Windows detected"
-msgstr "Windows detected"
+msgstr "विंडोज़ का पता लगाया गया"
 
 #: src/pages.py:730
 msgid "BitLocker detected"
-msgstr "BitLocker detected"
+msgstr "BitLocker का पता चला"
 
 #: src/pages.py:732
 msgid "Live USB — excluded"
-msgstr "Live USB — excluded"
+msgstr "लाइव यूएसबी — बाहर रखा गया"
 
 #: src/pages.py:734
 msgid "Too small"
-msgstr "Too small"
+msgstr "बहुत छोटा"
 
 #: src/pages.py:751 src/pages.py:757
 msgid "Select Installation Disk"
@@ -303,7 +303,7 @@ msgstr "इंस्टालेशन डिस्क चुनें"
 
 #: src/pages.py:793
 msgid "Rescan Storage"
-msgstr "Rescan Storage"
+msgstr "स्टोरेज पुनः स्कैन करें"
 
 #: src/pages.py:863
 msgid "No suitable disks found."
@@ -311,77 +311,77 @@ msgstr "कोई उपयुक्त डिस्क नहीं मिल�
 
 #: src/pages.py:917
 msgid "Choose Installation Method"
-msgstr "Choose Installation Method"
+msgstr "इंस्टॉलेशन विधि चुनें"
 
 #: src/pages.py:922
 msgid "How should AnduinOS use this disk?"
-msgstr "How should AnduinOS use this disk?"
+msgstr "AnduinOS को इस डिस्क का उपयोग कैसे करना चाहिए?"
 
 #: src/pages.py:937 src/pages.py:1191 src/pages.py:1425
 #, python-brace-format
 msgid "Target: {disk} ({size} — {model})"
-msgstr "Target: {disk} ({size} — {model})"
+msgstr "लक्ष्य: {disk} ({size} — {model})"
 
 #: src/pages.py:1014
 msgid "Erase every partition and all data on the selected disk."
-msgstr "Erase every partition and all data on the selected disk."
+msgstr "चयनित डिस्क पर हर विभाजन और सभी डेटा मिटाएँ।"
 
 #: src/pages.py:1018
 msgid "Btrfs — recommended"
-msgstr "Btrfs — recommended"
+msgstr "Btrfs — अनुशंसित"
 
 #: src/pages.py:1022
 msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
-msgstr "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "शेयरड-स्पेस सबवॉल्यूम्स, स्नैपशॉट्स और टाइमबैक मशीन को सक्षम करता है।"
 
 #: src/pages.py:1030
 msgid "ext4 — classic"
-msgstr "ext4 — classic"
+msgstr "ext4 — क्लासिक"
 
 #: src/pages.py:1033
 msgid "Uses a traditional single root filesystem."
-msgstr "Uses a traditional single root filesystem."
+msgstr "परंपरागत एकल रूट फ़ाइल सिस्टम का उपयोग करता है।"
 
 #: src/pages.py:1039
 msgid "Advanced — keep existing systems"
-msgstr "Advanced — keep existing systems"
+msgstr "उन्नत — मौजूदा सिस्टम को बनाए रखें"
 
 #: src/pages.py:1041
 msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr "पहले से ही अविभाजित स्थान का उपयोग करें और मौजूदा विभाजनों को बनाए रखें। यह विंडोज़ सहअस्तित्व का एकमात्र मार्ग है।"
 
 #: src/pages.py:1089
 msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr "उन्नत सहअस्तित्व EFI फर्मवेयर की स्थिति को प्रभावित कर सकता है और BitLocker रिकवरी को ट्रिगर कर सकता है। यह कभी भी Windows वॉल्यूम को छोटा नहीं करता या उसकी मरम्मत नहीं करता।"
 
 #: src/pages.py:1099
 #, python-brace-format
 msgid "ALL DATA on {disk} will be permanently erased."
-msgstr "ALL DATA on {disk} will be permanently erased."
+msgstr "{disk} पर मौजूद सभी डेटा स्थायी रूप से मिटा दिया जाएगा।"
 
 #: src/pages.py:1135
 msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "यह डिस्क पूरे-डिस्क इंस्टालेशन के लिए बहुत छोटी है। उन्नत तभी जारी रख सकता है यदि उपयुक्त अनासंजत स्थिति उपलब्ध हो।"
 
 #: src/pages.py:1145
 msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "विद्यमान विभाजनों का पता चला है। पहले दो विकल्प उन्हें मिटाते हैं; उन्नत (Advanced) विकल्प संरक्षण मार्ग है।"
 
 #: src/pages.py:1178
 msgid "Advanced Storage"
-msgstr "Advanced Storage"
+msgstr "उन्नत स्टोरेज"
 
 #: src/pages.py:1183
 msgid "Advanced: Install Alongside"
-msgstr "Advanced: Install Alongside"
+msgstr "उन्नत: साथ में इंस्टॉल करें"
 
 #: src/pages.py:1212
 msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "आगे बढ़ने से पहले: Windows अपडेट पूरे करें, Fast Startup और हibernation अक्षम करें, और BitLocker रिकवरी की का बैकअप लें। EFI, Secure Boot, TPM माप और बूट क्रम बदल सकता है।"
 
 #: src/pages.py:1219
 msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "यह उन्नत पथ मौजूदा पार्टिशनों को बनाए रखता है लेकिन चयनित डिस्क की पार्टिशन टेबल और मशीन की EFI बूट स्थिति को बदल देता है।"
 
 #: src/pages.py:1250 src/pages.py:2113
 msgid "Filesystem"
@@ -393,46 +393,46 @@ msgstr "Btrfs (अनुशंसित)"
 
 #: src/pages.py:1253
 msgid "ext4 (classic)"
-msgstr "ext4 (classic)"
+msgstr "ext4 (क्लासिक)"
 
 #: src/pages.py:1263
 msgid "Unallocated space"
-msgstr "Unallocated space"
+msgstr "अविभाजित स्थान"
 
 #: src/pages.py:1271
 msgid "EFI System Partition"
-msgstr "EFI System Partition"
+msgstr "EFI सिस्टम विभाजन"
 
 #: src/pages.py:1285
 msgid "Rescan and Reselect Disk"
-msgstr "Rescan and Reselect Disk"
+msgstr "डिस्क को पुनः स्कैन करें और पुनः चुनें"
 
 #: src/pages.py:1326
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
-msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "एक नई 1 GiB AnduinOS EFI सिस्टम पार्तिशन बनाएं"
 
 #: src/pages.py:1330
 #, python-brace-format
 msgid "Reuse {path} ({size})"
-msgstr "Reuse {path} ({size})"
+msgstr "{path} ({size}) का पुन: उपयोग करें"
 
 #: src/pages.py:1394
 #, python-brace-format
 msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "चयनित डिस्क बदल गई या गायब हो गई। डिस्क पेज पर लौटें और इसे फिर से चयन करें। {error}"
 
 #: src/pages.py:1407
 msgid "The selected disk size changed. Return and select it again."
-msgstr "The selected disk size changed. Return and select it again."
+msgstr "चयनित डिस्क का आकार बदल गया। लौटें और इसे फिर से चयन करें।"
 
 #: src/pages.py:1417
 msgid "The selected disk topology changed. Review the disk and installation method again."
-msgstr "The selected disk topology changed. Review the disk and installation method again."
+msgstr "चयनित डिस्क की टोपोलॉजी बदल गई। डिस्क और इंस्टालेशन विधि को फिर से समीक्षा करें।"
 
 #: src/pages.py:1453
 #, python-brace-format
 msgid "{size} unallocated at {offset}"
-msgstr "{size} unallocated at {offset}"
+msgstr "{size} आवंटित नहीं किया गया at {offset}"
 
 #: src/pages.py:1579 src/pages.py:1585
 msgid "User Account"
@@ -468,7 +468,7 @@ msgstr "यूज़रनेम में केवल छोटे अक्�
 
 #: src/pages.py:1680
 msgid "Install alongside requires a password-protected account."
-msgstr "Install alongside requires a password-protected account."
+msgstr "साथ में इंस्टॉल करने के लिए पासवर्ड-सुरक्षित खाता आवश्यक है।"
 
 #: src/pages.py:1691
 msgid "The two passwords do not match."
@@ -646,7 +646,7 @@ msgstr "टाइमज़ोन"
 
 #: src/pages.py:2166
 msgid "Guided storage selection is missing. Rescan and select the target again."
-msgstr "Guided storage selection is missing. Rescan and select the target again."
+msgstr "संचालित स्टोरेज चयन गायब है। पुनः स्कैन करें और फिर से टारगेट का चयन करें।"
 
 #: src/pages.py:2174
 #, python-brace-format
@@ -656,37 +656,37 @@ msgstr "{name}: {start}–{end} MiB"
 #: src/pages.py:2182
 #, python-brace-format
 msgid "{path} as {filesystem}"
-msgstr "{path} as {filesystem}"
+msgstr "{path} को {filesystem} के रूप में"
 
 #: src/pages.py:2190
 #, python-brace-format
 msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "{path} का पुन: उपयोग करें; कभी भी इसे फॉर्मेट न करें; लिखने से पहले FAT स्वास्थ्य, पहचान और 64 MiB मुक्त स्थान की सत्यापन करें।"
 
 #: src/pages.py:2198
 msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "चयनित स्थान के भीतर एक समर्पित AnduinOS EFI सिस्टम पार्तिशन बनाएं और फॉर्मेट करें।"
 
 #: src/pages.py:2203
 msgid "Storage mode"
-msgstr "Storage mode"
+msgstr "स्टोरेज मोड"
 
 #: src/pages.py:2204
 msgid "Install alongside"
-msgstr "Install alongside"
+msgstr "साथ में इंस्टॉल करें"
 
 #: src/pages.py:2205
 msgid "Selected unallocated space"
-msgstr "Selected unallocated space"
+msgstr "अनुमानित आवंटित स्थान चयनित"
 
 #: src/pages.py:2206
 #, python-brace-format
 msgid "{size} at {offset}"
-msgstr "{size} at {offset}"
+msgstr "{offset} पर {size}"
 
 #: src/pages.py:2210
 msgid "Preserved partitions"
-msgstr "Preserved partitions"
+msgstr "संरक्षित विभाजन (Partitions)"
 
 #: src/pages.py:2211
 #, python-brace-format
@@ -695,27 +695,27 @@ msgstr "{count}: {paths}"
 
 #: src/pages.py:2215
 msgid "New partitions"
-msgstr "New partitions"
+msgstr "नई विभाजन (Partitions)"
 
 #: src/pages.py:2217
 msgid "Formats"
-msgstr "Formats"
+msgstr "फॉर्मेट करता है"
 
 #: src/pages.py:2219
 msgid "EFI policy"
-msgstr "EFI policy"
+msgstr "EFI नीति"
 
 #: src/pages.py:2221
 msgid "Boot policy"
-msgstr "Boot policy"
+msgstr "बूट नीति"
 
 #: src/pages.py:2223
 msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "केवल EFI/AnduinOS लिखें, EFI/BOOT को अधिलेखित न करें, और सत्यापित AnduinOS NVRAM प्रविष्टि की आवश्यकता हो।"
 
 #: src/pages.py:2253
 msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
-msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ केवल चयनित अनावंटित स्थान को विभाजित और प्रारूपित किया जाएगा। मौजूदा विभाजन सुरक्षित रहेंगे, लेकिन EFI/AnduinOS फ़ाइलें और AnduinOS फ़र्मवेयर बूट एंट्री बदल सकती हैं। यह इंस्टॉलर आपके लिए Windows को छोटा नहीं करेगा।"
 
 #: src/pages.py:2261
 msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
@@ -731,11 +731,11 @@ msgstr "योजना मान्य करें (कोई इंस्ट�
 
 #: src/pages.py:2290
 msgid "Install in the selected free space?"
-msgstr "Install in the selected free space?"
+msgstr "चयनित मुक्त स्थान में इंस्टॉल करें?"
 
 #: src/pages.py:2291 src/pages.py:2380
 msgid "Install Alongside"
-msgstr "Install Alongside"
+msgstr "साथ में इंस्टॉल करें"
 
 #: src/pages.py:2293
 msgid "Erase the entire selected disk?"
@@ -759,9 +759,7 @@ msgstr ""
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
-msgstr ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
+msgstr "AnduinOS केवल {disk} पर चयनित अविभाजित स्थान का उपयोग करेगा। मौजूदा विभाजन सुरक्षित रहेंगे।\n\n"
 
 #: src/pages.py:2314
 #, python-brace-format
@@ -787,7 +785,7 @@ msgstr "विशेषाधिकृत निष्पादक अक्ष�
 
 #: src/pages.py:2326
 msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "विद्यमान विभाजन संरक्षित रहेंगे। नए AnduinOS विभाजन केवल चयनित अबांट नहीं गए भाग में ही बनाए जाएंगे; EFI वेंडर फ़ाइलें और AnduinOS फर्मवेयर बूट एंट्री अपडेट की जा सकती हैं।"
 
 #: src/pages.py:2334
 msgid "This installer does not shrink or preserve other systems."
@@ -1003,40 +1001,40 @@ msgstr "{step} विफल रहा"
 
 #: src/pages.py:715
 msgid "Empty disk — no partitions"
-msgstr "Empty disk — no partitions"
+msgstr "खाली डिस्क — कोई पार्टیشن नहीं"
 
 #: src/pages.py:468
 msgid "Confirm your keyboard layout"
-msgstr "Confirm your keyboard layout"
+msgstr "अपनी कीबोर्ड लेआउट की पुष्टि करें"
 
 #: src/pages.py:540
 msgid "Choose optional software to install"
-msgstr "Choose optional software to install"
+msgstr "इंस्टॉल करने के लिए वैकल्पिक सॉफ्टवेयर चुनें"
 
 #: src/pages.py:758
 msgid "Choose one target disk. Storage settings come next."
-msgstr "Choose one target disk. Storage settings come next."
+msgstr "एक लक्ष्य डिस्क चुनें। स्टोरेज सेटिंग्स अगली हैं।"
 
 #: src/pages.py:923
 msgid "Choose a complete installation method, not only a filesystem."
-msgstr "Choose a complete installation method, not only a filesystem."
+msgstr "केवल फ़ाइल सिस्टम नहीं, बल्कि एक पूर्ण इंस्टॉलेशन विधि चुनें।"
 
 #: src/pages.py:1184
 msgid "Use only existing unallocated space on the selected disk."
-msgstr "Use only existing unallocated space on the selected disk."
+msgstr "केवल चयनित डिस्क पर मौजूद अविभाजित स्थान का उपयोग करें।"
 
 #: src/pages.py:1586
 msgid "Create your user account"
-msgstr "Create your user account"
+msgstr "अपना उपयोगकर्ता खाता बनाएं"
 
 #: src/pages.py:1902
 msgid "Choose your location to set the system clock"
-msgstr "Choose your location to set the system clock"
+msgstr "सिस्टम क्लॉक सेट करने के लिए अपनी स्थिति चुनें"
 
 #: src/pages.py:2042
 msgid "Please review your choices before proceeding"
-msgstr "Please review your choices before proceeding"
+msgstr "आगे बढ़ने से पहले कृपया अपने विकल्पों की समीक्षा करें"
 
 #: src/pages.py:2405
 msgid "Please do not turn off your computer"
-msgstr "Please do not turn off your computer"
+msgstr "कृपया अपना कंप्यूटर बंद न करें"

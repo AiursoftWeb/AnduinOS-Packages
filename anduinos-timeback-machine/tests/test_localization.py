@@ -15,6 +15,7 @@ LANGUAGES = {
     "ru", "sv", "th", "tr", "uk", "vi", "zh_CN", "zh_HK",
     "zh_TW",
 }
+OFFICIAL_DESKTOP_LANGUAGES = LANGUAGES | {"en_US"}
 RUST_I18N = re.compile(
     r'\bi18n\s*\(\s*"((?:[^"\\]|\\.)*)"\s*\)',
     re.DOTALL,
@@ -50,6 +51,18 @@ class LocalizationTests(unittest.TestCase):
             if isinstance(message, str) and message
         }
         self.assertEqual(catalog_messages, source_messages())
+
+    def test_desktop_entry_has_all_28_official_localizations(self):
+        desktop = (
+            PACKAGE / "data/com.anduinos.timebackmachine.desktop"
+        ).read_text(encoding="utf-8")
+        for key in ("Name", "GenericName", "Comment", "Keywords"):
+            actual = {
+                line.removeprefix(f"{key}[").split("]", 1)[0]
+                for line in desktop.splitlines()
+                if line.startswith(f"{key}[")
+            }
+            self.assertEqual(actual, OFFICIAL_DESKTOP_LANGUAGES)
 
     def test_every_catalog_translates_core_interface_text(self):
         for language in sorted(LANGUAGES):
