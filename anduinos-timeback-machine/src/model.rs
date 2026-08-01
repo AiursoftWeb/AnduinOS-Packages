@@ -67,18 +67,22 @@ impl DeploymentState {
         use DeploymentState::*;
         matches!(
             (self, next),
-            (Creating, Ready | Incomplete | Broken)
-                | (
-                    Ready,
-                    PendingRollback | FallbackProtected | Deleting | Broken
-                )
-                | (Current, FallbackProtected | Broken)
+            (
+                Creating,
+                Ready | FallbackProtected | Incomplete | Broken | Deleting
+            ) | (
+                Ready,
+                PendingRollback | FallbackProtected | Deleting | Broken
+            ) | (Current, FallbackProtected | Broken)
                 | (
                     PendingRollback,
                     BootedUnconfirmed | Ready | FailedReverted | Broken
                 )
                 | (BootedUnconfirmed, Current | FailedReverted | Broken)
-                | (FallbackProtected, Ready | PendingRollback | Broken)
+                | (
+                    FallbackProtected,
+                    Ready | Current | PendingRollback | Broken
+                )
                 | (Incomplete, Deleting | Broken)
                 | (FailedReverted, Ready | Deleting | Broken)
                 | (Broken, Deleting)
@@ -148,7 +152,7 @@ impl DeploymentRecord {
         if self
             .failure
             .as_deref()
-            .is_some_and(|failure| invalid_optional_text(failure, 1000))
+            .is_some_and(|failure| invalid_optional_text(failure, 2000))
         {
             return Err(ModelError::InvalidField("failure"));
         }
@@ -191,7 +195,8 @@ impl DeploymentRecord {
         !self.pinned
             && matches!(
                 self.state,
-                DeploymentState::Ready
+                DeploymentState::Creating
+                    | DeploymentState::Ready
                     | DeploymentState::Incomplete
                     | DeploymentState::FailedReverted
                     | DeploymentState::Broken
@@ -313,7 +318,7 @@ mod tests {
         assert!(!record.can_delete());
         record.pinned = false;
         record.state = DeploymentState::Creating;
-        assert!(!record.can_delete());
+        assert!(record.can_delete());
         record.state = DeploymentState::Deleting;
         assert!(!record.can_delete());
     }
@@ -344,6 +349,7 @@ mod tests {
     #[test]
     fn state_machine_rejects_dangerous_shortcuts() {
         assert!(DeploymentState::Creating.can_transition_to(DeploymentState::Ready));
+        assert!(DeploymentState::Creating.can_transition_to(DeploymentState::Deleting));
         assert!(DeploymentState::Ready.can_transition_to(DeploymentState::PendingRollback));
         assert!(
             DeploymentState::PendingRollback.can_transition_to(DeploymentState::BootedUnconfirmed)
@@ -368,7 +374,7 @@ mod tests {
         assert_eq!(record.validate(), Err(ModelError::InvalidField("title")));
 
         let mut record = valid_record();
-        record.failure = Some("x".repeat(1001));
+        record.failure = Some("x".repeat(2001));
         assert_eq!(record.validate(), Err(ModelError::InvalidField("failure")));
     }
 

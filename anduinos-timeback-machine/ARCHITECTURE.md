@@ -56,9 +56,10 @@ provided filesystem paths, executable names, or arbitrary command arguments.
 It constructs all paths beneath `/.snapshots/anduinos` itself.
 
 TM-0 froze the domain, on-disk, D-Bus, and authorization contracts. TM-1
-installs the root system daemon for bounded read-only discovery only. Mutation
-methods are present in the stable interface but explicitly return a read-only
-milestone error until their implementation and failure-injection tests exist.
+installed the root system daemon for bounded read-only discovery. TM-2 adds
+manual creation, integrity verification, pinning, and idempotent deletion.
+Rollback and retention methods remain explicit milestone errors until their
+boot-time and package-manager transactions are implemented and tested.
 
 ## On-disk format
 
@@ -70,7 +71,10 @@ milestone error until their implementation and failure-injection tests exist.
 ├── metadata/
 │   └── <deployment-id>.json
 └── transactions/
-    └── pending-rollback.json
+    ├── pending-rollback.json
+    ├── pending-package.json
+    └── package-history/
+        └── <package-transaction-id>.json
 ```
 
 The deployment ID is a lowercase UUID. Metadata is stored outside `@root`, is
@@ -82,8 +86,9 @@ diagnostic evidence but is not authoritative transaction state.
 
 ## Deployment invariants
 
-- Only a complete deployment with matching root, dpkg, kernel, initramfs, and
-  boot identities can be restored.
+- Only a complete deployment with matching Btrfs UUIDs, read-only property,
+  dpkg database, kernel, initramfs, boot artifacts, and MOK identity can be
+  restored.
 - `Current`, `PendingRollback`, `BootedUnconfirmed`, `FallbackProtected`, and
   pinned deployments cannot be deleted.
 - An incomplete post-package-transaction snapshot is visible for diagnosis but
@@ -129,13 +134,16 @@ Unified Kernel Images remain the preferred later deployment format.
 
 ## Space accounting
 
-TM-0 does not require qgroups. Initial accounting uses raw Btrfs filesystem
-usage and filesystem-du data and labels per-recovery-point values as estimates.
+TM-4 does not require qgroups. Initial accounting uses `statvfs` availability
+for the Btrfs filesystem; it does not claim per-recovery-point exclusive byte
+usage.
 
 The current deployment, pinned deployments, pending target, protected fallback,
 and only known-good bootable deployment are never automatically deleted.
-Retention defaults remain outside the ABI until update and low-space testing
-has been completed.
+The fixed Balanced policy retains at least two complete update transactions and
+one known-good restorable deployment. It rebuilds the deletion plan and
+re-measures free space after every operation. Policy customization remains
+outside the ABI until low-space VM qualification has been completed.
 
 ## UI principles
 
@@ -153,7 +161,18 @@ has been completed.
 
 - **TM-0 (complete):** contracts, model, layout detector, CLI diagnostics, visual shell.
 - **TM-1 (complete):** read-only daemon, deployment discovery, overview and timeline.
-- **TM-2:** manual create, pin, delete, and integrity verification.
-- **TM-3:** initramfs rollback, one-shot boot, confirmation, automatic fallback.
-- **TM-4:** APT/dpkg pre/post recovery points and retention.
-- **TM-5:** space-pressure automation and destructive failure-injection suite.
+- **TM-2 (complete):** manual create, pin, delete, and integrity verification.
+- **TM-3A (complete):** versioned rollback transaction, atomic store, retry limits.
+- **TM-3B (complete):** initramfs replacement engine and verified one-shot GRUB entry.
+- **TM-3C (implemented; VM qualification pending):** boot confirmation,
+  automatic fallback, D-Bus and GTK restore UX.
+- **TM-4A (implemented; VM qualification pending):** fail-open APT/dpkg pre/post
+  recovery-point pairs and interruption recovery.
+- **TM-4B (implemented; VM qualification pending):** conservative paired
+  retention, bounded free-space reserve, D-Bus/CLI inspection, and fail-open
+  post-APT cleanup.
+- **TM-5A (implemented; VM qualification pending):** hardened, fail-open
+  periodic space-pressure maintenance independent of APT transactions.
+- **TM-5B (harness implemented; qualification pending):** guarded real Btrfs
+  smoke and GRUB/initramfs rollback cycles plus a read-only-fixture QEMU
+  controller covering every apply and automatic-revert checkpoint.

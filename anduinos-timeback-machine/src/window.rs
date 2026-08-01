@@ -1,10 +1,13 @@
 use std::rc::Rc;
+use std::sync::mpsc;
+use std::time::Duration;
 
 use adw::prelude::*;
 use gtk::{gdk, gio, glib};
 
 use anduinos_timeback::layout::{self, LayoutReport, LayoutSupport};
 use anduinos_timeback::model::{DeploymentKind, DeploymentRecord, DeploymentState};
+use anduinos_timeback::retention::RetentionPlan;
 use anduinos_timeback::store::DiscoveryReport;
 use anduinos_timeback::{client, DEPLOYMENT_SCHEMA_VERSION};
 
@@ -31,7 +34,19 @@ struct DiscoveryState {
     error: Option<String>,
 }
 
+struct RetentionState {
+    plan: Option<RetentionPlan>,
+    error: Option<String>,
+}
+
 pub fn build(app: &TimebackApplication) -> adw::ApplicationWindow {
+    build_with_notice(app, None)
+}
+
+fn build_with_notice(
+    app: &TimebackApplication,
+    success_notice: Option<&str>,
+) -> adw::ApplicationWindow {
     let demo = std::env::var_os("ANDUINOS_TIMEBACK_DEMO").is_some();
     let report = Rc::new(if demo {
         demo_layout()
@@ -52,6 +67,23 @@ pub fn build(app: &TimebackApplication) -> adw::ApplicationWindow {
             },
         }
     });
+    let retention = if demo || !report.is_supported() {
+        RetentionState {
+            plan: None,
+            error: None,
+        }
+    } else {
+        match client::inspect_retention() {
+            Ok(plan) => RetentionState {
+                plan: Some(plan),
+                error: None,
+            },
+            Err(error) => RetentionState {
+                plan: None,
+                error: Some(error.to_string()),
+            },
+        }
+    };
 
     let window = adw::ApplicationWindow::builder()
         .application(app)
@@ -74,7 +106,7 @@ pub fn build(app: &TimebackApplication) -> adw::ApplicationWindow {
             name: "overview",
             title: i18n("Overview"),
             icon: "go-home-symbolic",
-            widget: build_overview(&window, &toast_overlay, &report, &discovery, demo).upcast(),
+            widget: build_overview(&window, &report, &discovery, demo).upcast(),
         },
         Page {
             name: "points",
@@ -98,7 +130,7 @@ pub fn build(app: &TimebackApplication) -> adw::ApplicationWindow {
             name: "settings",
             title: i18n("Settings"),
             icon: "preferences-system-symbolic",
-            widget: build_settings().upcast(),
+            widget: build_settings(&retention, demo).upcast(),
         },
     ];
 
@@ -206,6 +238,9 @@ pub fn build(app: &TimebackApplication) -> adw::ApplicationWindow {
     });
 
     window.set_content(Some(&split));
+    if let Some(notice) = success_notice {
+        toast_overlay.add_toast(adw::Toast::new(&i18n(notice)));
+    }
     window
 }
 
@@ -345,13 +380,12 @@ fn build_unavailable_window(window: &adw::ApplicationWindow, report: &LayoutRepo
 
 fn build_overview(
     window: &adw::ApplicationWindow,
-    toasts: &adw::ToastOverlay,
     report: &LayoutReport,
     discovery: &DiscoveryState,
     demo: bool,
 ) -> gtk::ScrolledWindow {
     let content = page_content();
-    content.append(&overview_hero(window, toasts, report, demo));
+    content.append(&overview_hero(window, report, demo));
 
     if demo {
         let banner = adw::Banner::builder()
@@ -418,7 +452,7 @@ fn build_overview(
                 if demo {
                     i18n("Kernel and initramfs")
                 } else {
-                    i18n("Full integrity verification arrives in TM-2")
+                    i18n("Integrity can be verified on demand")
                 },
             ),
         ]
@@ -536,7 +570,6 @@ fn build_overview(
 
 fn overview_hero(
     window: &adw::ApplicationWindow,
-    toasts: &adw::ToastOverlay,
     report: &LayoutReport,
     demo: bool,
 ) -> gtk::FlowBox {
@@ -631,18 +664,20 @@ fn overview_hero(
         .visible(supported)
         .build();
     let parent = window.clone();
-    let toast_overlay = toasts.clone();
     action.connect_clicked(move |_| {
-        let dialog = adw::AlertDialog::builder()
-            .heading(i18n("Recovery engine coming next"))
-            .body(i18n("The storage contract and safety checks are ready. Creating recovery points will be enabled in TM-2 after the privileged backend is complete."))
-            .close_response("close")
-            .build();
-        dialog.add_response("close", &i18n("Got it"));
-        dialog.present(Some(&parent));
-        toast_overlay.add_toast(adw::Toast::new(&i18n(
-            "No snapshot was created in this design preview",
-        )));
+        if demo {
+            let dialog = adw::AlertDialog::builder()
+                .heading(i18n("Design preview"))
+                .body(i18n(
+                    "No snapshot can be created while demo data is active.",
+                ))
+                .close_response("close")
+                .build();
+            dialog.add_response("close", &i18n("Close"));
+            dialog.present(Some(&parent));
+        } else {
+            show_create_dialog(&parent);
+        }
     });
     copy.append(&action);
     hero.insert(&copy, -1);
@@ -858,7 +893,7 @@ fn build_recovery_points(
             .css_classes(["boxed-list", "timeline-list"])
             .build();
         for deployment in &discovery.report.deployments {
-            list.append(&deployment_row(deployment, false));
+            list.append(&interactive_deployment_row(window, deployment));
         }
         content.append(&list);
     } else {
@@ -867,7 +902,7 @@ fn build_recovery_points(
                 .icon_name("document-open-recent-symbolic")
                 .title(i18n("No recovery points yet"))
                 .description(i18n(
-                    "The read-only recovery service is ready. Manual recovery points arrive in TM-2.",
+                    "Create a recovery point before a system change so you can return to a known state.",
                 ))
                 .build(),
         );
@@ -1107,7 +1142,7 @@ fn build_activity(
     page
 }
 
-fn build_settings() -> adw::PreferencesPage {
+fn build_settings(retention_state: &RetentionState, demo: bool) -> adw::PreferencesPage {
     let page = adw::PreferencesPage::builder()
         .title(i18n("Settings"))
         .icon_name("preferences-system-symbolic")
@@ -1115,60 +1150,118 @@ fn build_settings() -> adw::PreferencesPage {
     let automatic = adw::PreferencesGroup::builder()
         .title(i18n("Automatic Protection"))
         .description(i18n(
-            "Automatic recovery points will become available after package-manager integration.",
+            "APT-managed package changes are surrounded by fail-open recovery points.",
         ))
         .build();
-    automatic.add(&planned_row(
+    automatic.add(&status_row(
         &i18n("Before system updates"),
         &i18n("Create a recovery point before APT changes packages"),
+        &i18n("Active"),
+        "success",
     ));
-    automatic.add(&planned_row(
+    automatic.add(&status_row(
         &i18n("After successful updates"),
         &i18n("Keep a verified post-update deployment"),
+        &i18n("Active"),
+        "success",
     ));
     page.add(&automatic);
 
     let retention = adw::PreferencesGroup::builder()
         .title(i18n("Retention"))
         .description(i18n(
-            "Recovery point cleanup will remain conservative until low-space handling is ready.",
+            "Cleanup runs after package transactions and rechecks free space after every deletion.",
         ))
         .build();
-    let policy = adw::ActionRow::builder()
-        .title(i18n("Balanced"))
-        .subtitle(i18n("Protect pinned and boot-critical recovery points"))
-        .build();
-    policy.add_prefix(
-        &gtk::Image::builder()
-            .icon_name("preferences-system-time-symbolic")
-            .pixel_size(24)
-            .build(),
-    );
-    policy.add_suffix(
-        &gtk::Label::builder()
-            .label(i18n("Planned"))
-            .css_classes(["pill", "caption", "planned-badge"])
-            .valign(gtk::Align::Center)
-            .build(),
-    );
-    retention.add(&policy);
+    retention.add(&status_row(
+        &i18n("Balanced retention"),
+        &i18n("Keep at least two update pairs and one known-good recovery point"),
+        &i18n("Active"),
+        "success",
+    ));
+    if let Some(plan) = &retention_state.plan {
+        let subtitle = i18n_fmt(
+            &i18n("{0} available · cleanup target {1}"),
+            &[
+                &format_bytes(plan.space.available_bytes),
+                &format_bytes(plan.free_space_target_bytes),
+            ],
+        );
+        retention.add(&status_row(
+            &i18n("Btrfs free-space reserve"),
+            &subtitle,
+            &if plan.under_space_pressure {
+                i18n("Low space")
+            } else {
+                i18n("Healthy")
+            },
+            if plan.under_space_pressure {
+                "warning"
+            } else {
+                "success"
+            },
+        ));
+        retention.add(&status_row(
+            &i18n("Next cleanup"),
+            &i18n("Only eligible automatic package recovery points are considered"),
+            &i18n_fmt(&i18n("{0} point(s)"), &[&plan.actions.len().to_string()]),
+            if plan.actions.is_empty() {
+                "success"
+            } else {
+                "warning"
+            },
+        ));
+    } else if let Some(error) = &retention_state.error {
+        retention.add(&status_row(
+            &i18n("Retention status"),
+            error,
+            &i18n("Unavailable"),
+            "warning",
+        ));
+    } else if demo {
+        retention.add(&status_row(
+            &i18n("Btrfs free-space reserve"),
+            &i18n("Live free-space accounting appears on a Btrfs installation"),
+            &i18n("Preview"),
+            "planned-badge",
+        ));
+    }
     page.add(&retention);
     page
 }
 
-fn planned_row(title: &str, subtitle: &str) -> adw::ActionRow {
+fn status_row(title: &str, subtitle: &str, status: &str, style: &str) -> adw::ActionRow {
     let row = adw::ActionRow::builder()
         .title(title)
         .subtitle(subtitle)
         .build();
     row.add_suffix(
         &gtk::Label::builder()
-            .label(i18n("Planned"))
-            .css_classes(["pill", "caption", "planned-badge"])
+            .label(status)
+            .css_classes(["pill", "caption", style])
             .valign(gtk::Align::Center)
             .build(),
     );
     row
+}
+
+fn format_bytes(bytes: u64) -> String {
+    const KIB: f64 = 1024.0;
+    const MIB: f64 = KIB * 1024.0;
+    const GIB: f64 = MIB * 1024.0;
+    const TIB: f64 = GIB * 1024.0;
+    let bytes = bytes as f64;
+    if bytes >= TIB {
+        format!("{:.1} TiB", bytes / TIB)
+    } else if bytes >= GIB {
+        format!("{:.1} GiB", bytes / GIB)
+    } else if bytes >= MIB {
+        format!("{:.1} MiB", bytes / MIB)
+    } else if bytes >= KIB {
+        format!("{:.1} KiB", bytes / KIB)
+    } else {
+        format!("{} B", bytes as u64)
+    }
 }
 
 fn property_row(title: &str, value: &str, icon: &str) -> adw::ActionRow {
@@ -1352,6 +1445,489 @@ fn timeline_heading(title: &str, count: usize) -> TimelineHeading {
         .build();
     row.append(&count);
     TimelineHeading { widget: row, count }
+}
+
+#[derive(Clone, Debug)]
+enum UiMutation {
+    Create {
+        title: String,
+        reason: String,
+        pinned: bool,
+    },
+    SetPinned {
+        deployment_id: String,
+        pinned: bool,
+    },
+    Delete {
+        deployment_id: String,
+    },
+    Verify {
+        deployment_id: String,
+    },
+    Restore {
+        deployment_id: String,
+    },
+    CancelRestore,
+}
+
+enum UiMutationEvent {
+    Progress(client::OperationProgress),
+    Finished(Result<client::OperationResult, String>, bool),
+}
+
+fn show_create_dialog(parent: &adw::ApplicationWindow) {
+    let form = adw::PreferencesGroup::new();
+    let title = adw::EntryRow::builder()
+        .title(i18n("Name"))
+        .text(i18n("Manual recovery point"))
+        .build();
+    title.set_max_length(120);
+    let reason = adw::EntryRow::builder()
+        .title(i18n("Description"))
+        .text(i18n("Created before a manual system change"))
+        .build();
+    reason.set_max_length(500);
+    let pinned = adw::SwitchRow::builder()
+        .title(i18n("Keep until I delete it"))
+        .subtitle(i18n(
+            "Pinned recovery points are never cleaned automatically",
+        ))
+        .build();
+    form.add(&title);
+    form.add(&reason);
+    form.add(&pinned);
+
+    let dialog = adw::AlertDialog::builder()
+        .heading(i18n("Create Recovery Point"))
+        .body(i18n(
+            "The operating system will be captured without changing personal files, logs, containers, or virtual machines.",
+        ))
+        .extra_child(&form)
+        .close_response("cancel")
+        .default_response("create")
+        .build();
+    dialog.add_response("cancel", &i18n("Cancel"));
+    dialog.add_response("create", &i18n("Create"));
+    dialog.set_response_appearance("create", adw::ResponseAppearance::Suggested);
+    dialog.set_response_enabled("create", true);
+
+    let dialog_for_title = dialog.clone();
+    let reason_for_title = reason.clone();
+    title.connect_changed(move |title| {
+        dialog_for_title.set_response_enabled(
+            "create",
+            !title.text().trim().is_empty() && !reason_for_title.text().trim().is_empty(),
+        );
+    });
+    let dialog_for_reason = dialog.clone();
+    let title_for_reason = title.clone();
+    reason.connect_changed(move |reason| {
+        dialog_for_reason.set_response_enabled(
+            "create",
+            !title_for_reason.text().trim().is_empty() && !reason.text().trim().is_empty(),
+        );
+    });
+
+    let response_parent = parent.clone();
+    dialog.connect_response(None, move |_dialog, response| {
+        if response != "create" {
+            return;
+        }
+        run_ui_mutation(
+            &response_parent,
+            &i18n("Creating Recovery Point"),
+            UiMutation::Create {
+                title: title.text().to_string(),
+                reason: reason.text().to_string(),
+                pinned: pinned.is_active(),
+            },
+        );
+    });
+    dialog.present(Some(parent.upcast_ref::<gtk::Widget>()));
+}
+
+fn interactive_deployment_row(
+    parent: &adw::ApplicationWindow,
+    deployment: &DeploymentRecord,
+) -> adw::ActionRow {
+    let row = deployment_row(deployment, false);
+    if deployment.state == DeploymentState::Ready && deployment.can_restore() {
+        let restore = gtk::Button::builder()
+            .icon_name("document-revert-symbolic")
+            .tooltip_text(i18n("Restore to this recovery point"))
+            .valign(gtk::Align::Center)
+            .css_classes(["flat"])
+            .build();
+        let parent_for_restore = parent.clone();
+        let id_for_restore = deployment.id.to_string();
+        let title_for_restore = deployment.title.clone();
+        restore.connect_clicked(move |_| {
+            show_restore_dialog(&parent_for_restore, &id_for_restore, &title_for_restore);
+        });
+        row.add_suffix(&restore);
+    } else if deployment.state == DeploymentState::PendingRollback {
+        let cancel = gtk::Button::builder()
+            .icon_name("process-stop-symbolic")
+            .tooltip_text(i18n("Cancel pending system restore"))
+            .valign(gtk::Align::Center)
+            .css_classes(["flat"])
+            .build();
+        let parent_for_cancel = parent.clone();
+        cancel.connect_clicked(move |_| {
+            run_ui_mutation(
+                &parent_for_cancel,
+                &i18n("Cancelling System Restore"),
+                UiMutation::CancelRestore,
+            );
+        });
+        row.add_suffix(&cancel);
+    }
+    let verify = gtk::Button::builder()
+        .icon_name("security-high-symbolic")
+        .tooltip_text(i18n("Verify recovery point"))
+        .valign(gtk::Align::Center)
+        .sensitive(deployment.can_restore())
+        .css_classes(["flat"])
+        .build();
+    let parent_for_verify = parent.clone();
+    let id_for_verify = deployment.id.to_string();
+    verify.connect_clicked(move |_| {
+        run_ui_mutation(
+            &parent_for_verify,
+            &i18n("Verifying Recovery Point"),
+            UiMutation::Verify {
+                deployment_id: id_for_verify.clone(),
+            },
+        );
+    });
+    row.add_suffix(&verify);
+
+    let pin = gtk::Button::builder()
+        .icon_name(if deployment.pinned {
+            "starred-symbolic"
+        } else {
+            "non-starred-symbolic"
+        })
+        .tooltip_text(if deployment.pinned {
+            i18n("Unpin recovery point")
+        } else {
+            i18n("Pin recovery point")
+        })
+        .valign(gtk::Align::Center)
+        .sensitive(deployment.state != DeploymentState::Deleting)
+        .css_classes(["flat"])
+        .build();
+    let parent_for_pin = parent.clone();
+    let id_for_pin = deployment.id.to_string();
+    let pinned = deployment.pinned;
+    pin.connect_clicked(move |_| {
+        let heading = if pinned {
+            i18n("Unpinning Recovery Point")
+        } else {
+            i18n("Pinning Recovery Point")
+        };
+        run_ui_mutation(
+            &parent_for_pin,
+            &heading,
+            UiMutation::SetPinned {
+                deployment_id: id_for_pin.clone(),
+                pinned: !pinned,
+            },
+        );
+    });
+    row.add_suffix(&pin);
+
+    let delete = gtk::Button::builder()
+        .icon_name("user-trash-symbolic")
+        .tooltip_text(i18n("Delete recovery point"))
+        .valign(gtk::Align::Center)
+        .sensitive(deployment.can_delete() || deployment.state == DeploymentState::Deleting)
+        .css_classes(["flat"])
+        .build();
+    let parent_for_delete = parent.clone();
+    let id_for_delete = deployment.id.to_string();
+    let title_for_delete = deployment.title.clone();
+    delete.connect_clicked(move |_| {
+        show_delete_dialog(&parent_for_delete, &id_for_delete, &title_for_delete);
+    });
+    row.add_suffix(&delete);
+    row
+}
+
+fn show_restore_dialog(parent: &adw::ApplicationWindow, deployment_id: &str, title: &str) {
+    let details = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(10)
+        .margin_top(6)
+        .build();
+    for text in [
+        i18n("System software and settings will return to this point."),
+        i18n("Personal files, logs, containers, and virtual machines stay unchanged."),
+        i18n("The current system will be protected before restart."),
+        i18n("The restored system must boot successfully or the previous system returns automatically."),
+    ] {
+        let item = gtk::Box::builder()
+            .orientation(gtk::Orientation::Horizontal)
+            .spacing(10)
+            .build();
+        item.append(
+            &gtk::Image::builder()
+                .icon_name("emblem-ok-symbolic")
+                .css_classes(["success"])
+                .build(),
+        );
+        item.append(
+            &gtk::Label::builder()
+                .label(text)
+                .wrap(true)
+                .xalign(0.0)
+                .hexpand(true)
+                .build(),
+        );
+        details.append(&item);
+    }
+    let dialog = adw::AlertDialog::builder()
+        .heading(i18n_fmt(&i18n("Restore “{0}”?"), &[title]))
+        .body(i18n(
+            "A one-time recovery boot will be prepared. Nothing changes until you restart.",
+        ))
+        .extra_child(&details)
+        .close_response("cancel")
+        .default_response("cancel")
+        .build();
+    dialog.add_response("cancel", &i18n("Cancel"));
+    dialog.add_response("restore", &i18n("Prepare System Restore"));
+    dialog.set_response_appearance("restore", adw::ResponseAppearance::Suggested);
+    let response_parent = parent.clone();
+    let deployment_id = deployment_id.to_string();
+    dialog.connect_response(None, move |_dialog, response| {
+        if response == "restore" {
+            run_ui_mutation(
+                &response_parent,
+                &i18n("Preparing System Restore"),
+                UiMutation::Restore {
+                    deployment_id: deployment_id.clone(),
+                },
+            );
+        }
+    });
+    dialog.present(Some(parent.upcast_ref::<gtk::Widget>()));
+}
+
+fn show_delete_dialog(parent: &adw::ApplicationWindow, deployment_id: &str, title: &str) {
+    let dialog = adw::AlertDialog::builder()
+        .heading(i18n("Delete Recovery Point?"))
+        .body(i18n_fmt(
+            &i18n(
+                "“{0}” will be permanently removed. The running system and personal files will not change.",
+            ),
+            &[title],
+        ))
+        .close_response("cancel")
+        .default_response("cancel")
+        .build();
+    dialog.add_response("cancel", &i18n("Cancel"));
+    dialog.add_response("delete", &i18n("Delete"));
+    dialog.set_response_appearance("delete", adw::ResponseAppearance::Destructive);
+    let response_parent = parent.clone();
+    let deployment_id = deployment_id.to_string();
+    dialog.connect_response(None, move |_dialog, response| {
+        if response == "delete" {
+            run_ui_mutation(
+                &response_parent,
+                &i18n("Deleting Recovery Point"),
+                UiMutation::Delete {
+                    deployment_id: deployment_id.clone(),
+                },
+            );
+        }
+    });
+    dialog.present(Some(parent.upcast_ref::<gtk::Widget>()));
+}
+
+fn run_ui_mutation(parent: &adw::ApplicationWindow, heading: &str, mutation: UiMutation) {
+    let progress = gtk::ProgressBar::builder()
+        .show_text(false)
+        .fraction(0.0)
+        .build();
+    let initial_status = if matches!(&mutation, UiMutation::Verify { .. }) {
+        i18n("Preparing integrity verification…")
+    } else {
+        i18n("Waiting for authorization…")
+    };
+    let status = gtk::Label::builder()
+        .label(initial_status)
+        .wrap(true)
+        .xalign(0.0)
+        .css_classes(["dim-label"])
+        .build();
+    let content = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(12)
+        .build();
+    content.append(&progress);
+    content.append(&status);
+    let dialog = adw::AlertDialog::builder()
+        .heading(heading)
+        .body(i18n(
+            "Keep this window open. Recovery metadata is committed atomically.",
+        ))
+        .extra_child(&content)
+        .can_close(false)
+        .build();
+    dialog.present(Some(parent.upcast_ref::<gtk::Widget>()));
+
+    let reboot_after_success = matches!(&mutation, UiMutation::Restore { .. });
+    let (sender, receiver) = mpsc::channel::<UiMutationEvent>();
+    let worker_sender = sender.clone();
+    let spawn = std::thread::Builder::new()
+        .name("timeback-ui-operation".into())
+        .spawn(move || {
+            let progress_sender = worker_sender.clone();
+            let result = match mutation {
+                UiMutation::Create {
+                    title,
+                    reason,
+                    pinned,
+                } => client::create_recovery_point(&title, &reason, pinned, move |progress| {
+                    let _ = progress_sender.send(UiMutationEvent::Progress(progress));
+                }),
+                UiMutation::SetPinned {
+                    deployment_id,
+                    pinned,
+                } => client::set_pinned(&deployment_id, pinned, move |progress| {
+                    let _ = progress_sender.send(UiMutationEvent::Progress(progress));
+                }),
+                UiMutation::Delete { deployment_id } => {
+                    client::delete_recovery_point(&deployment_id, move |progress| {
+                        let _ = progress_sender.send(UiMutationEvent::Progress(progress));
+                    })
+                }
+                UiMutation::Verify { deployment_id } => {
+                    client::verify_recovery_point(&deployment_id, move |progress| {
+                        let _ = progress_sender.send(UiMutationEvent::Progress(progress));
+                    })
+                }
+                UiMutation::Restore { deployment_id } => {
+                    client::schedule_rollback(&deployment_id, move |progress| {
+                        let _ = progress_sender.send(UiMutationEvent::Progress(progress));
+                    })
+                }
+                UiMutation::CancelRestore => client::cancel_pending_rollback(move |progress| {
+                    let _ = progress_sender.send(UiMutationEvent::Progress(progress));
+                }),
+            };
+            let _ = worker_sender.send(UiMutationEvent::Finished(
+                result.map_err(|error| error.to_string()),
+                reboot_after_success,
+            ));
+        });
+    if let Err(error) = spawn {
+        dialog.force_close();
+        show_operation_error(parent, &format!("Could not start the UI worker: {error}"));
+        return;
+    }
+
+    let parent = parent.clone();
+    glib::timeout_add_local(Duration::from_millis(50), move || {
+        loop {
+            match receiver.try_recv() {
+                Ok(UiMutationEvent::Progress(update)) => {
+                    progress.set_fraction(update.fraction.clamp(0.0, 1.0));
+                    status.set_label(&update.message);
+                }
+                Ok(UiMutationEvent::Finished(result, reboot_ready)) => {
+                    dialog.force_close();
+                    match result {
+                        Ok(result) if result.success => {
+                            let refreshed = reload_window(&parent, Some(&result.message));
+                            if reboot_ready {
+                                show_restart_dialog(&refreshed);
+                            }
+                        }
+                        Ok(result) => {
+                            let refreshed = reload_window(&parent, None);
+                            show_operation_error(
+                                &refreshed,
+                                &format!("{}: {}", result.error_code, result.message),
+                            );
+                        }
+                        Err(error) => {
+                            let refreshed = reload_window(&parent, None);
+                            show_operation_error(&refreshed, &error);
+                        }
+                    }
+                    return glib::ControlFlow::Break;
+                }
+                Err(mpsc::TryRecvError::Empty) => break,
+                Err(mpsc::TryRecvError::Disconnected) => {
+                    dialog.force_close();
+                    show_operation_error(&parent, &i18n("The recovery worker disconnected"));
+                    return glib::ControlFlow::Break;
+                }
+            }
+        }
+        glib::ControlFlow::Continue
+    });
+}
+
+fn show_restart_dialog(parent: &adw::ApplicationWindow) {
+    let dialog = adw::AlertDialog::builder()
+        .heading(i18n("System Restore Is Ready"))
+        .body(i18n(
+            "Restart to enter the one-time recovery environment. You can cancel from the recovery point before restarting.",
+        ))
+        .close_response("later")
+        .default_response("later")
+        .build();
+    dialog.add_response("later", &i18n("Restart Later"));
+    dialog.add_response("restart", &i18n("Restart Now"));
+    dialog.set_response_appearance("restart", adw::ResponseAppearance::Suggested);
+    let response_parent = parent.clone();
+    dialog.connect_response(None, move |_dialog, response| {
+        if response != "restart" {
+            return;
+        }
+        if let Err(error) = std::process::Command::new("/usr/bin/systemctl")
+            .arg("reboot")
+            .spawn()
+        {
+            show_operation_error(
+                &response_parent,
+                &i18n_fmt(
+                    &i18n("Could not request a restart: {0}"),
+                    &[&error.to_string()],
+                ),
+            );
+        }
+    });
+    dialog.present(Some(parent.upcast_ref::<gtk::Widget>()));
+}
+
+fn reload_window(
+    window: &adw::ApplicationWindow,
+    success_notice: Option<&str>,
+) -> adw::ApplicationWindow {
+    let Some(application) = window
+        .application()
+        .and_then(|application| application.downcast::<TimebackApplication>().ok())
+    else {
+        return window.clone();
+    };
+    let refreshed = build_with_notice(&application, success_notice);
+    refreshed.present();
+    window.close();
+    refreshed
+}
+
+fn show_operation_error(parent: &adw::ApplicationWindow, message: &str) {
+    let dialog = adw::AlertDialog::builder()
+        .heading(i18n("Recovery Operation Failed"))
+        .body(message)
+        .close_response("close")
+        .build();
+    dialog.add_response("close", &i18n("Close"));
+    dialog.present(Some(parent.upcast_ref::<gtk::Widget>()));
 }
 
 fn deployment_row(deployment: &DeploymentRecord, activatable: bool) -> adw::ActionRow {

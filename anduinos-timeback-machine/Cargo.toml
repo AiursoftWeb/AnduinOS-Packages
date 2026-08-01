@@ -22,6 +22,22 @@ path = "src/timebackctl.rs"
 name = "anduinos-timebackd"
 path = "src/timebackd.rs"
 
+[[bin]]
+name = "anduinos-timeback-initramfs"
+path = "src/timeback_initramfs.rs"
+
+[[bin]]
+name = "anduinos-timeback-confirm"
+path = "src/timeback_confirm.rs"
+
+[[bin]]
+name = "anduinos-timeback-apt-hook"
+path = "src/timeback_apt_hook.rs"
+
+[[bin]]
+name = "anduinos-timeback-maintenance"
+path = "src/timeback_maintenance.rs"
+
 [dependencies]
 gtk = { package = "gtk4", version = "0.11", features = ["v4_10"] }
 adw = { package = "libadwaita", version = "0.9", features = ["v1_6"] }
@@ -33,6 +49,7 @@ gettext-rs = { version = "0.7", features = ["gettext-system"] }
 gio = "0.22"
 glib = "0.22"
 libc = "0.2"
+sha2 = "0.10"
 
 [profile.release]
 strip = true

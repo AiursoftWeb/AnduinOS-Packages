@@ -1,0 +1,8 @@
+// AnduinOS Timeback Machine automatic package recovery points.
+// Both hooks are deliberately fail-open and never make APT unavailable.
+DPkg::Pre-Invoke {
+  "if [ -x /usr/libexec/anduinos-timeback-apt-hook ]; then /usr/libexec/anduinos-timeback-apt-hook pre || true; fi";
+};
+DPkg::Post-Invoke {
+  "if [ -x /usr/libexec/anduinos-timeback-apt-hook ]; then /usr/libexec/anduinos-timeback-apt-hook post || true; fi";
+};

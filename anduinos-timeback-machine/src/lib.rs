@@ -1,9 +1,20 @@
+pub mod boot;
 pub mod client;
+pub mod confirmation;
+pub mod coordination;
 pub mod layout;
+pub mod maintenance;
 pub mod model;
+pub mod operations;
+pub mod package_hooks;
+pub mod package_transaction;
+pub mod recovery;
+pub mod retention;
+pub mod rollback;
 pub mod store;
+pub mod transaction;
 
-pub const CONTRACT_VERSION: u32 = 1;
+pub const CONTRACT_VERSION: u32 = 4;
 pub const DEPLOYMENT_SCHEMA_VERSION: u32 = 1;
 pub const SNAPSHOT_ROOT: &str = "/.snapshots/anduinos";
 pub const DBUS_NAME: &str = "com.anduinos.TimebackMachine1";

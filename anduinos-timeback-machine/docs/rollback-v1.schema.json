@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "com.anduinos.timebackmachine.rollback.v1",
+  "title": "AnduinOS Timeback rollback transaction",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "target_deployment_id",
+    "fallback_deployment_id",
+    "phase",
+    "created_at",
+    "updated_at",
+    "apply_attempts",
+    "applying_boot_id",
+    "root_filesystem_uuid",
+    "kernel_release",
+    "grub_entry_id",
+    "failure"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "$ref": "#/$defs/uuid" },
+    "target_deployment_id": { "$ref": "#/$defs/uuid" },
+    "fallback_deployment_id": { "$ref": "#/$defs/uuid" },
+    "phase": {
+      "enum": [
+        "preparing",
+        "armed",
+        "applying",
+        "booted-unconfirmed",
+        "reverting",
+        "reverted",
+        "confirmed",
+        "failed"
+      ]
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "apply_attempts": { "type": "integer", "minimum": 0, "maximum": 3 },
+    "applying_boot_id": {
+      "oneOf": [
+        { "$ref": "#/$defs/uuid" },
+        { "type": "null" }
+      ]
+    },
+    "root_filesystem_uuid": { "$ref": "#/$defs/uuid" },
+    "kernel_release": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9._+-]+$"
+    },
+    "grub_entry_id": {
+      "type": "string",
+      "pattern": "^anduinos-timeback-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "failure": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "maxLength": 2000
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "phase": {
+            "enum": ["preparing", "armed"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "apply_attempts": { "const": 0 },
+          "applying_boot_id": { "type": "null" },
+          "failure": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "phase": {
+            "enum": [
+              "applying",
+              "booted-unconfirmed",
+              "reverting",
+              "reverted",
+              "confirmed"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "apply_attempts": { "minimum": 1 },
+          "applying_boot_id": { "$ref": "#/$defs/uuid" },
+          "failure": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "phase": { "const": "failed" } }
+      },
+      "then": {
+        "properties": {
+          "failure": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    }
+  }
+}

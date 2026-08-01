@@ -6,7 +6,7 @@ use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 
-use crate::model::{DeploymentId, DeploymentRecord};
+use crate::model::{DeploymentId, DeploymentRecord, DeploymentState};
 use crate::{DEPLOYMENT_SCHEMA_VERSION, SNAPSHOT_ROOT};
 
 const MAX_METADATA_BYTES: u64 = 1024 * 1024;
@@ -110,7 +110,7 @@ impl DeploymentStore {
             if entry.path().extension() != Some(OsStr::new("json")) {
                 continue;
             }
-            match self.read_record(&entry.path()) {
+            match self.read_discoverable_record(&entry.path()) {
                 Ok(record) => report.deployments.push(record),
                 Err(problem) => report.issues.push(problem),
             }
@@ -125,7 +125,49 @@ impl DeploymentStore {
         report
     }
 
-    fn read_record(&self, path: &Path) -> Result<DeploymentRecord, DiscoveryIssue> {
+    pub fn load_record(&self, id: DeploymentId) -> Result<DeploymentRecord, DiscoveryIssue> {
+        self.read_metadata_record(&self.root.join("metadata").join(format!("{id}.json")))
+    }
+
+    fn read_discoverable_record(&self, path: &Path) -> Result<DeploymentRecord, DiscoveryIssue> {
+        let record = self.read_metadata_record(path)?;
+        if record.snapshot_uuid.is_none() {
+            return Ok(record);
+        }
+
+        let entry_name = safe_entry_name(path);
+        let snapshot = self
+            .root
+            .join("deployments")
+            .join(record.id.to_string())
+            .join("root");
+        let snapshot_metadata = match fs::symlink_metadata(&snapshot) {
+            Ok(metadata) => metadata,
+            Err(error)
+                if error.kind() == io::ErrorKind::NotFound
+                    && record.state == DeploymentState::Deleting =>
+            {
+                return Ok(record);
+            }
+            Err(error) => {
+                return Err(issue(
+                    &entry_name,
+                    DiscoveryIssueCode::MissingSnapshot,
+                    format!("The deployment root is unavailable: {error}"),
+                ));
+            }
+        };
+        if !snapshot_metadata.file_type().is_dir() {
+            return Err(issue(
+                &entry_name,
+                DiscoveryIssueCode::UnsafeEntry,
+                "The deployment root must be a real directory".into(),
+            ));
+        }
+        Ok(record)
+    }
+
+    fn read_metadata_record(&self, path: &Path) -> Result<DeploymentRecord, DiscoveryIssue> {
         let entry_name = safe_entry_name(path);
         let metadata = fs::symlink_metadata(path).map_err(|error| {
             issue(
@@ -221,25 +263,6 @@ impl DeploymentStore {
             ));
         }
 
-        let snapshot = self
-            .root
-            .join("deployments")
-            .join(record.id.to_string())
-            .join("root");
-        let snapshot_metadata = fs::symlink_metadata(&snapshot).map_err(|error| {
-            issue(
-                &entry_name,
-                DiscoveryIssueCode::MissingSnapshot,
-                format!("The deployment root is unavailable: {error}"),
-            )
-        })?;
-        if !snapshot_metadata.file_type().is_dir() {
-            return Err(issue(
-                &entry_name,
-                DiscoveryIssueCode::UnsafeEntry,
-                "The deployment root must be a real directory".into(),
-            ));
-        }
         Ok(record)
     }
 }

@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-timeback-machine</PackageName>
-    <PackageVersion>0.1.0-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.1.0-11+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Timeback Machine — graphical Btrfs system recovery and deployment manager</PackageDescription>
     <Section>admin</Section>
@@ -28,6 +28,8 @@
     <Dependency Include="util-linux" />
     <Dependency Include="polkitd" />
     <Dependency Include="dbus-bin" />
+    <Dependency Include="initramfs-tools" />
+    <Dependency Include="grub-common" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,12 +43,24 @@
     <PreRemoveScript Include="scripts/prerm.sh" />
     <PostRemoveScript Include="scripts/postrm.sh" />
     <SystemdUnit Include="data/anduinos-timebackd.service" AutoEnable="false" />
+    <SystemdUnit Include="data/anduinos-timeback-confirm.service" AutoEnable="true" />
+    <SystemdUnit Include="data/anduinos-timeback-maintenance.service" AutoEnable="false" />
+    <SystemdUnit Include="data/anduinos-timeback-maintenance.timer" AutoEnable="true" />
   </ItemGroup>
 
   <ItemGroup>
     <IncludeScript Include="obj/anduinos-timeback-machine" Target="/usr/bin/anduinos-timeback-machine" />
     <IncludeScript Include="obj/anduinos-timebackd" Target="/usr/libexec/anduinos-timebackd" />
     <IncludeScript Include="obj/timebackctl" Target="/usr/bin/timebackctl" />
+    <IncludeScript Include="obj/anduinos-timeback-initramfs" Target="/usr/libexec/anduinos-timeback-initramfs" />
+    <IncludeScript Include="obj/anduinos-timeback-confirm" Target="/usr/libexec/anduinos-timeback-confirm" />
+    <IncludeScript Include="obj/anduinos-timeback-apt-hook" Target="/usr/libexec/anduinos-timeback-apt-hook" />
+    <IncludeScript Include="obj/anduinos-timeback-maintenance" Target="/usr/libexec/anduinos-timeback-maintenance" />
+    <IncludeFile Include="data/85anduinos-timeback" Target="/etc/apt/apt.conf.d/85anduinos-timeback" />
+    <IncludeFile Include="data/initramfs-hook" Target="/usr/share/initramfs-tools/hooks/anduinos-timeback" Mode="755" />
+    <IncludeFile Include="data/initramfs-local-premount" Target="/usr/share/initramfs-tools/scripts/local-premount/anduinos-timeback" Mode="755" />
+    <IncludeFile Include="data/grub.d/09_anduinos_timeback" Target="/etc/grub.d/09_anduinos_timeback" Mode="755" />
+    <DpkgTrigger Include="update-initramfs" Type="activate-await" />
     <IncludeFile Include="data/com.anduinos.timebackmachine.desktop" Target="/usr/share/applications/com.anduinos.timebackmachine.desktop" />
     <IncludeFile Include="data/com.anduinos.timebackmachine.policy" Target="/usr/share/polkit-1/actions/com.anduinos.timebackmachine.policy" />
     <IncludeFile Include="data/com.anduinos.timebackmachine.svg" Target="/usr/share/icons/hicolor/scalable/apps/com.anduinos.timebackmachine.svg" />
@@ -54,7 +68,12 @@
     <IncludeFile Include="data/com.anduinos.TimebackMachine1.conf" Target="/usr/share/dbus-1/system.d/com.anduinos.TimebackMachine1.conf" />
     <IncludeFile Include="data/com.anduinos.TimebackMachine1.service" Target="/usr/share/dbus-1/system-services/com.anduinos.TimebackMachine1.service" />
     <IncludeFile Include="docs/deployment-v1.schema.json" Target="/usr/share/anduinos-timeback-machine/deployment-v1.schema.json" />
+    <IncludeFile Include="docs/rollback-v1.schema.json" Target="/usr/share/anduinos-timeback-machine/rollback-v1.schema.json" />
+    <IncludeFile Include="docs/package-transaction-v1.schema.json" Target="/usr/share/anduinos-timeback-machine/package-transaction-v1.schema.json" />
     <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-timeback-machine/README.md" />
     <IncludeFile Include="ARCHITECTURE.md" Target="/usr/share/doc/anduinos-timeback-machine/ARCHITECTURE.md" />
+    <IncludeFile Include="TM3-DESIGN.md" Target="/usr/share/doc/anduinos-timeback-machine/TM3-DESIGN.md" />
+    <IncludeFile Include="TM4-DESIGN.md" Target="/usr/share/doc/anduinos-timeback-machine/TM4-DESIGN.md" />
+    <IncludeFile Include="TM5-DESIGN.md" Target="/usr/share/doc/anduinos-timeback-machine/TM5-DESIGN.md" />
   </ItemGroup>
 </Project>

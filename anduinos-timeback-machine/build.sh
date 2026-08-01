@@ -17,9 +17,17 @@ if [ "$ARCH" = "arm64" ]; then
     cp target/aarch64-unknown-linux-gnu/release/anduinos-timeback-machine obj/
     cp target/aarch64-unknown-linux-gnu/release/anduinos-timebackd obj/
     cp target/aarch64-unknown-linux-gnu/release/timebackctl obj/
+    cp target/aarch64-unknown-linux-gnu/release/anduinos-timeback-initramfs obj/
+    cp target/aarch64-unknown-linux-gnu/release/anduinos-timeback-confirm obj/
+    cp target/aarch64-unknown-linux-gnu/release/anduinos-timeback-apt-hook obj/
+    cp target/aarch64-unknown-linux-gnu/release/anduinos-timeback-maintenance obj/
 else
     cargo build --release
     cp target/release/anduinos-timeback-machine obj/
     cp target/release/anduinos-timebackd obj/
     cp target/release/timebackctl obj/
+    cp target/release/anduinos-timeback-initramfs obj/
+    cp target/release/anduinos-timeback-confirm obj/
+    cp target/release/anduinos-timeback-apt-hook obj/
+    cp target/release/anduinos-timeback-maintenance obj/
 fi

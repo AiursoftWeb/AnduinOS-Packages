@@ -12,6 +12,13 @@
     <method name="ListDeployments">
       <arg name="deployments_json" type="s" direction="out"/>
     </method>
+    <method name="InspectRetention">
+      <arg name="retention_json" type="s" direction="out"/>
+    </method>
+    <method name="VerifyRecoveryPoint">
+      <arg name="deployment_id" type="s" direction="in"/>
+      <arg name="operation_id" type="s" direction="out"/>
+    </method>
     <method name="CreateRecoveryPoint">
       <arg name="title" type="s" direction="in"/>
       <arg name="reason" type="s" direction="in"/>
@@ -32,6 +39,9 @@
       <arg name="operation_id" type="s" direction="out"/>
     </method>
     <method name="CancelPendingRollback">
+      <arg name="operation_id" type="s" direction="out"/>
+    </method>
+    <method name="RunRetention">
       <arg name="operation_id" type="s" direction="out"/>
     </method>
     <method name="SetRetentionPolicy">

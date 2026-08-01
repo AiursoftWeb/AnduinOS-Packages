@@ -1,12 +1,37 @@
+use std::cell::RefCell;
+use std::collections::HashMap;
 use std::fmt;
+use std::rc::Rc;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 
 use gio::glib::VariantTy;
+use gio::prelude::ToVariant;
 
 use crate::layout::LayoutReport;
+use crate::retention::RetentionPlan;
 use crate::store::DiscoveryReport;
 use crate::{DBUS_INTERFACE, DBUS_NAME, DBUS_PATH};
 
 const READ_ONLY_CALL_TIMEOUT_MS: i32 = 3_000;
+const MUTATING_CALL_TIMEOUT_MS: i32 = 300_000;
+const OPERATION_TIMEOUT_SECONDS: u32 = 600;
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct OperationProgress {
+    pub operation_id: String,
+    pub phase: String,
+    pub fraction: f64,
+    pub message: String,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct OperationResult {
+    pub operation_id: String,
+    pub success: bool,
+    pub error_code: String,
+    pub message: String,
+}
 
 #[derive(Debug)]
 pub struct ClientError(String);
@@ -37,9 +62,104 @@ pub fn list_deployments() -> Result<DiscoveryReport, ClientError> {
     })
 }
 
+pub fn inspect_retention() -> Result<RetentionPlan, ClientError> {
+    let json = call_json_method("InspectRetention")?;
+    serde_json::from_str(&json).map_err(|error| {
+        ClientError(format!(
+            "The daemon returned an invalid retention report: {error}"
+        ))
+    })
+}
+
+pub fn create_recovery_point<F>(
+    title: &str,
+    reason: &str,
+    pinned: bool,
+    on_progress: F,
+) -> Result<OperationResult, ClientError>
+where
+    F: Fn(OperationProgress) + 'static,
+{
+    run_operation(
+        "CreateRecoveryPoint",
+        &(title, reason, pinned).to_variant(),
+        on_progress,
+    )
+}
+
+pub fn set_pinned<F>(
+    deployment_id: &str,
+    pinned: bool,
+    on_progress: F,
+) -> Result<OperationResult, ClientError>
+where
+    F: Fn(OperationProgress) + 'static,
+{
+    run_operation(
+        "SetPinned",
+        &(deployment_id, pinned).to_variant(),
+        on_progress,
+    )
+}
+
+pub fn delete_recovery_point<F>(
+    deployment_id: &str,
+    on_progress: F,
+) -> Result<OperationResult, ClientError>
+where
+    F: Fn(OperationProgress) + 'static,
+{
+    run_operation(
+        "DeleteRecoveryPoint",
+        &(deployment_id,).to_variant(),
+        on_progress,
+    )
+}
+
+pub fn verify_recovery_point<F>(
+    deployment_id: &str,
+    on_progress: F,
+) -> Result<OperationResult, ClientError>
+where
+    F: Fn(OperationProgress) + 'static,
+{
+    run_operation(
+        "VerifyRecoveryPoint",
+        &(deployment_id,).to_variant(),
+        on_progress,
+    )
+}
+
+pub fn schedule_rollback<F>(
+    deployment_id: &str,
+    on_progress: F,
+) -> Result<OperationResult, ClientError>
+where
+    F: Fn(OperationProgress) + 'static,
+{
+    run_operation(
+        "ScheduleRollback",
+        &(deployment_id,).to_variant(),
+        on_progress,
+    )
+}
+
+pub fn cancel_pending_rollback<F>(on_progress: F) -> Result<OperationResult, ClientError>
+where
+    F: Fn(OperationProgress) + 'static,
+{
+    run_operation("CancelPendingRollback", &().to_variant(), on_progress)
+}
+
+pub fn run_retention<F>(on_progress: F) -> Result<OperationResult, ClientError>
+where
+    F: Fn(OperationProgress) + 'static,
+{
+    run_operation("RunRetention", &().to_variant(), on_progress)
+}
+
 fn call_json_method(method: &str) -> Result<String, ClientError> {
-    let connection = gio::bus_get_sync(gio::BusType::System, None::<&gio::Cancellable>)
-        .map_err(|error| ClientError(format!("Could not connect to the system bus: {error}")))?;
+    let connection = system_bus()?;
     let reply_type = VariantTy::new("(s)").expect("static D-Bus reply type is valid");
     let reply = connection
         .call_sync(
@@ -55,4 +175,144 @@ fn call_json_method(method: &str) -> Result<String, ClientError> {
         )
         .map_err(|error| ClientError(format!("D-Bus method {method} failed: {error}")))?;
     Ok(reply.child_get::<String>(0))
+}
+
+fn run_operation<F>(
+    method: &str,
+    parameters: &gio::glib::Variant,
+    on_progress: F,
+) -> Result<OperationResult, ClientError>
+where
+    F: Fn(OperationProgress) + 'static,
+{
+    let context = gio::glib::MainContext::new();
+    context
+        .with_thread_default(|| run_operation_in_context(&context, method, parameters, on_progress))
+        .map_err(|error| ClientError(format!("Could not start a D-Bus event context: {error}")))?
+}
+
+fn run_operation_in_context<F>(
+    context: &gio::glib::MainContext,
+    method: &str,
+    parameters: &gio::glib::Variant,
+    on_progress: F,
+) -> Result<OperationResult, ClientError>
+where
+    F: Fn(OperationProgress) + 'static,
+{
+    let connection = system_bus()?;
+    let operation_id = Rc::new(RefCell::new(None::<String>));
+    let completed = Rc::new(RefCell::new(HashMap::<String, OperationResult>::new()));
+    let loop_ = gio::glib::MainLoop::new(Some(context), false);
+    let progress_callback = Rc::new(on_progress);
+
+    let progress_subscription = connection.subscribe_to_signal(
+        Some(DBUS_NAME),
+        Some(DBUS_INTERFACE),
+        Some("OperationProgress"),
+        Some(DBUS_PATH),
+        None,
+        gio::DBusSignalFlags::NONE,
+        {
+            let operation_id = operation_id.clone();
+            let progress_callback = progress_callback.clone();
+            move |signal| {
+                let parameters = signal.parameters;
+                let update = OperationProgress {
+                    operation_id: parameters.child_get(0),
+                    phase: parameters.child_get(1),
+                    fraction: parameters.child_get(2),
+                    message: parameters.child_get(3),
+                };
+                if operation_id.borrow().as_deref() == Some(&update.operation_id) {
+                    progress_callback(update);
+                }
+            }
+        },
+    );
+    let finished_subscription = connection.subscribe_to_signal(
+        Some(DBUS_NAME),
+        Some(DBUS_INTERFACE),
+        Some("OperationFinished"),
+        Some(DBUS_PATH),
+        None,
+        gio::DBusSignalFlags::NONE,
+        {
+            let operation_id = operation_id.clone();
+            let completed = completed.clone();
+            let loop_ = loop_.clone();
+            move |signal| {
+                let parameters = signal.parameters;
+                let result = OperationResult {
+                    operation_id: parameters.child_get(0),
+                    success: parameters.child_get(1),
+                    error_code: parameters.child_get(2),
+                    message: parameters.child_get(3),
+                };
+                let is_requested = operation_id.borrow().as_deref() == Some(&result.operation_id);
+                completed
+                    .borrow_mut()
+                    .insert(result.operation_id.clone(), result);
+                if is_requested {
+                    loop_.quit();
+                }
+            }
+        },
+    );
+
+    let reply_type = VariantTy::new("(s)").expect("static D-Bus reply type is valid");
+    let reply = connection
+        .call_sync(
+            Some(DBUS_NAME),
+            DBUS_PATH,
+            DBUS_INTERFACE,
+            method,
+            Some(parameters),
+            Some(reply_type),
+            gio::DBusCallFlags::NONE,
+            MUTATING_CALL_TIMEOUT_MS,
+            None::<&gio::Cancellable>,
+        )
+        .map_err(|error| ClientError(format!("D-Bus method {method} failed: {error}")))?;
+    let requested = reply.child_get::<String>(0);
+    *operation_id.borrow_mut() = Some(requested.clone());
+
+    if !completed.borrow().contains_key(&requested) {
+        let timed_out = Arc::new(AtomicBool::new(false));
+        let timeout_source = gio::glib::timeout_source_new_seconds(
+            OPERATION_TIMEOUT_SECONDS,
+            Some("timeback-operation-timeout"),
+            gio::glib::Priority::DEFAULT,
+            {
+                let loop_ = loop_.clone();
+                let timed_out = timed_out.clone();
+                move || {
+                    timed_out.store(true, Ordering::Release);
+                    loop_.quit();
+                    gio::glib::ControlFlow::Break
+                }
+            },
+        );
+        let timeout = timeout_source.attach(Some(context));
+        loop_.run();
+        if timed_out.load(Ordering::Acquire) {
+            return Err(ClientError(format!(
+                "Recovery operation {requested} did not finish within {OPERATION_TIMEOUT_SECONDS} seconds"
+            )));
+        }
+        timeout.remove();
+    }
+    drop(progress_subscription);
+    drop(finished_subscription);
+    let result = completed.borrow_mut().remove(&requested).ok_or_else(|| {
+        ClientError(format!(
+            "Recovery operation {requested} ended without a result signal"
+        ))
+    });
+    result
+}
+
+fn system_bus() -> Result<gio::DBusConnection, ClientError> {
+    gio::bus_get_sync(gio::BusType::System, None::<&gio::Cancellable>)
+        .map_err(|error| ClientError(format!("Could not connect to the system bus: {error}")))
 }
