@@ -23,6 +23,7 @@ from gi.repository import Gtk, Adw, Gio, GLib
 from i18n import _, N_
 from languages import default_timezone, detect_system_language
 from pages import build_all_pages
+from frontend import guided_storage_enabled
 
 
 APP_ID = "com.anduinos.InstallerBeta"
@@ -32,7 +33,10 @@ ICON_NAME = "anduinos-installer-beta"
 class InstallerApplication(Adw.Application):
     """GTK4 application for the AnduinOS installer."""
 
-    def __init__(self, development_mode: bool = False):
+    def __init__(
+        self,
+        development_mode: bool = False,
+    ):
         super().__init__(application_id=APP_ID)
         detected_language = detect_system_language()
         # Shared state — every page reads/writes this dict.
@@ -44,6 +48,17 @@ class InstallerApplication(Adw.Application):
             "disk_size_bytes": 0,
             "disk_model": "",
             "disk_stable_id": "",
+            "disk_topology_digest": "",
+            "disk_windows_detected": False,
+            "disk_bitlocker_detected": False,
+            "disk_has_existing_partitions": False,
+            "disk_erase_available": False,
+            "storage_strategy": "",
+            "storage_mode": "erase-disk",
+            "guided_extent_id": "",
+            "guided_esp_partuuid": "",
+            "guided_storage_preview_model": None,
+            "guided_storage_enabled": guided_storage_enabled(),
             "filesystem": "btrfs",
             "username": "",
             "full_name": "",

@@ -8,16 +8,33 @@ from pathlib import Path
 
 from .btrfs import BTRFS_SUBVOLUMES
 from .command import CommandRunner
-from .layout import build_erase_disk_layout
-from .model import Filesystem
+from .esp import inspect_esp_for_reuse, inspect_nvram
+from .execution_boundaries import emit_boundary
+from .model import Filesystem, InstallMode
 from .steps import FailurePolicy, InstallContext
-from .storage_commands import build_storage_commands, partition_path
-from .validation import validate_plan
+from .storage_commands import partition_path
+from .storage_inventory import probe_storage_inventory
+from .storage_planning import (
+    EraseDiskExecutionPlan,
+    GuidedCoexistenceExecutionPlan,
+    build_erase_disk_execution_plan,
+    build_guided_coexistence_execution_plan,
+    resolve_guided_esp_partition,
+)
+from .storage_preservation import (
+    GuidedPreservationSnapshot,
+    capture_guided_preservation_snapshot,
+    verify_guided_storage_result,
+)
 
 
 @dataclass
 class PrepareStorageStep:
     runner: CommandRunner
+    target: Path = Path("/target")
+    inventory_probe: object = probe_storage_inventory
+    esp_inspector: object = inspect_esp_for_reuse
+    nvram_inspector: object = inspect_nvram
     id: str = "prepare-storage"
     title: str = "Partition and format target disk"
     failure_policy: FailurePolicy = FailurePolicy.FATAL
@@ -25,7 +42,37 @@ class PrepareStorageStep:
     destructive: bool = True
 
     def preflight(self, context: InstallContext) -> None:
-        validate_plan(context.plan)
+        context.validate_plan()
+        if context.plan.storage.mode is InstallMode.GUIDED_COEXISTENCE:
+            inventory = self.inventory_probe()
+            esp, reuses_esp = resolve_guided_esp_partition(
+                context.plan, inventory
+            )
+            esp_inspection = (
+                self.esp_inspector(esp, self.runner)
+                if reuses_esp
+                else None
+            )
+            execution_plan = build_guided_coexistence_execution_plan(
+                context.plan,
+                inventory,
+                esp_inspection=esp_inspection,
+                nvram_inspection=self.nvram_inspector(self.runner),
+                target=str(self.target),
+            )
+            preservation = capture_guided_preservation_snapshot(
+                context.plan,
+                inventory,
+                execution_plan.write_set,
+            )
+            context.values["guided_storage_execution_plan"] = execution_plan
+            context.values["guided_preservation_snapshot"] = preservation
+            context.values["guided_esp_inspection"] = esp_inspection
+        else:
+            execution_plan = build_erase_disk_execution_plan(context.plan)
+            context.values["erase_disk_execution_plan"] = execution_plan
+        context.values["storage_execution_plan"] = execution_plan
+        context.values["storage_write_set"] = execution_plan.write_set
         commands = [
             "parted",
             "partprobe",
@@ -43,9 +90,29 @@ class PrepareStorageStep:
         self.runner.require_commands(commands)
 
     def execute(self, context: InstallContext) -> None:
-        layout = build_erase_disk_layout(context.plan)
-        commands = build_storage_commands(context.plan, layout)
-        context.values["layout"] = layout
+        execution_plan = context.values.get("storage_execution_plan")
+        if (
+            context.plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
+            and not isinstance(
+                execution_plan, GuidedCoexistenceExecutionPlan
+            )
+        ):
+            raise RuntimeError(
+                "Guided storage was not frozen during all-step preflight"
+            )
+        if not isinstance(
+            execution_plan,
+            (EraseDiskExecutionPlan, GuidedCoexistenceExecutionPlan),
+        ):
+            # Unit-level callers may execute this step directly. The real
+            # StepRunner always freezes the plan during the all-step preflight.
+            execution_plan = build_erase_disk_execution_plan(context.plan)
+            context.values["erase_disk_execution_plan"] = execution_plan
+            context.values["storage_execution_plan"] = execution_plan
+            context.values["storage_write_set"] = execution_plan.write_set
+        commands = execution_plan.commands
+        if isinstance(execution_plan, EraseDiskExecutionPlan):
+            context.values["layout"] = execution_plan.layout
         context.values["partition_devices"] = commands.devices
         # A previous failed attempt can leave the newly-created swap partition
         # active in the Live session.  That open block device prevents the
@@ -54,7 +121,11 @@ class PrepareStorageStep:
         deactivate_target_swap(context, self.runner)
         self._settle_existing_partition_table(context, strict=False)
 
+        guided = isinstance(execution_plan, GuidedCoexistenceExecutionPlan)
         for index, command in enumerate(commands.partition):
+            boundary = f"guided-partition-command-{index + 1}"
+            if guided:
+                emit_boundary(context, boundary, "before")
             if index == 0:
                 result = self.runner.run(
                     command, check=False, timeout=60
@@ -71,6 +142,8 @@ class PrepareStorageStep:
                     self.runner.run(command, timeout=60)
             else:
                 self.runner.run(command, timeout=60)
+            if guided:
+                emit_boundary(context, boundary, "after")
         self.runner.run(
             ("partprobe", context.plan.storage.disk.path), timeout=30
         )
@@ -78,8 +151,18 @@ class PrepareStorageStep:
         for device in commands.devices.values():
             if not Path(device).exists():
                 raise RuntimeError(f"Partition device did not appear: {device}")
-        for command in commands.format:
+        device_names = {
+            device: name for name, device in commands.devices.items()
+        }
+        for index, command in enumerate(commands.format):
+            name = device_names.get(command[-1], str(index + 1))
+            boundary = f"guided-format-{name}"
+            if guided:
+                emit_boundary(context, boundary, "before")
             self.runner.run(command, timeout=300)
+            if guided:
+                emit_boundary(context, boundary, "after")
+        self.runner.run(("udevadm", "settle", "--timeout=30"), timeout=35)
 
     def verify(self, context: InstallContext) -> None:
         devices = context.values["partition_devices"]
@@ -98,6 +181,13 @@ class PrepareStorageStep:
                 raise RuntimeError(
                     f"{name} has filesystem {actual!r}, expected {filesystem!r}"
                 )
+        preservation = context.values.get("guided_preservation_snapshot")
+        if isinstance(preservation, GuidedPreservationSnapshot):
+            verify_guided_storage_result(
+                context.plan,
+                preservation,
+                self.inventory_probe(),
+            )
 
     def cleanup(self, context: InstallContext) -> None:
         # Partitioning cannot be rolled back. Later mount steps own unmounting,

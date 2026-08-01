@@ -15,6 +15,20 @@ class InstallPlanTests(unittest.TestCase):
         plan = valid_plan()
         self.assertNotIn(plan.identity.password_hash, repr(plan.identity))
 
+    def test_rejects_unknown_top_level_field(self):
+        value = valid_plan().to_dict()
+        value["future_command"] = "mkfs.anything"
+        with self.assertRaisesRegex(ValueError, "Unknown field in plan"):
+            InstallPlan.from_dict(value)
+
+    def test_rejects_unknown_nested_field(self):
+        value = valid_plan().to_dict()
+        value["storage"]["disk"]["authoritative_path"] = "/dev/attacker"
+        with self.assertRaisesRegex(
+            ValueError, "Unknown field in storage.disk"
+        ):
+            InstallPlan.from_dict(value)
+
 
 if __name__ == "__main__":
     unittest.main()

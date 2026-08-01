@@ -6,7 +6,9 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Callable, Protocol
 
-from .model import InstallPlan
+from .execution_boundaries import emit_boundary
+from .model import InstallMode, InstallPlan
+from .validation import ExecutionPolicy, validate_plan_for_execution
 
 
 class FailurePolicy(str, Enum):
@@ -34,6 +36,10 @@ class InstallContext:
     log: Callable[[str], None]
     values: dict[str, Any] = field(default_factory=dict)
     destructive_started: bool = False
+    execution_policy: ExecutionPolicy = ExecutionPolicy.RELEASE
+
+    def validate_plan(self) -> None:
+        validate_plan_for_execution(self.plan, self.execution_policy)
 
 
 class InstallStep(Protocol):
@@ -112,8 +118,13 @@ class StepRunner:
             context.log(f"[{step.id}] {step.title}")
             if step.destructive:
                 context.destructive_started = True
+            boundary = self._guided_step_boundary(context, step)
             try:
+                if boundary:
+                    emit_boundary(context, boundary, "before")
                 step.execute(context)
+                if boundary:
+                    emit_boundary(context, boundary, "after")
                 step.verify(context)
                 executed.append(step)
                 self.status(step.id, StepStatus.SUCCEEDED, "")
@@ -153,6 +164,19 @@ class StepRunner:
 
         self.progress("complete", total, total)
         return InstallResult(True, tuple(results), context.destructive_started)
+
+    @staticmethod
+    def _guided_step_boundary(
+        context: InstallContext,
+        step: InstallStep,
+    ) -> str:
+        if (
+            context.execution_policy
+            is ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST
+            and context.plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
+        ):
+            return f"guided-step-{step.id}"
+        return ""
 
     @staticmethod
     def _cleanup(

@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from helpers import valid_plan
 from installer_core.executor import InstallerExecutor
+from test_guided_storage_graph import guided_plan
 
 
 class CapturingStepRunner:
@@ -16,6 +17,13 @@ class CapturingStepRunner:
 
 
 class ExecutorPipelineTests(unittest.TestCase):
+    def test_guided_pipeline_is_available_under_default_beta_policy(self):
+        plan, _inventory = guided_plan()
+        with patch("installer_core.executor.StepRunner", CapturingStepRunner):
+            InstallerExecutor(lambda _message: None).run(plan)
+        self.assertIn("prepare-storage", CapturingStepRunner.captured)
+        self.assertIn("install-bootloader", CapturingStepRunner.captured)
+
     def test_software_and_secure_boot_order_is_fixed(self):
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
             InstallerExecutor(lambda _message: None).run(valid_plan())

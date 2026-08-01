@@ -123,6 +123,35 @@ arm64 requires signed:
 Each file is checked with `sbverify`. The PE machine field is also checked by
 the bootloader verifier to prevent an amd64/arm64 mismatch.
 
+The fallback artifacts above are release-one erase-disk requirements. The
+installer owns that ESP completely in erase-disk mode.
+
+## Future coexistence and redundant boot targets
+
+Guided coexistence may reuse an existing ESP but never formats it. On a shared
+ESP the installer:
+
+- writes only the `EFI/AnduinOS` vendor directory;
+- never deletes or renames another vendor's files;
+- does not replace `EFI/BOOT/BOOTX64.EFI` or
+  `EFI/BOOT/BOOTAA64.EFI`;
+- creates and verifies an AnduinOS UEFI NVRAM entry;
+- fails with recovery instructions when NVRAM cannot be updated safely rather
+  than taking ownership of the shared fallback path.
+
+An existing ESP is accepted only after its identity, FAT filesystem, health
+and free-space reserve are validated and bound into the immutable plan.
+
+RAID and other redundant-root layouts require an ESP on every independently
+bootable physical disk. Every ESP receives an architecture-matched signed
+AnduinOS chain, and future kernel/initramfs/GRUB or UKI transactions update and
+verify all copies before completion. A redundant-root milestone does not pass
+until removal of each member in turn still reaches a verified boot chain.
+
+These modes are not part of release one. Their storage identities, write-set
+confirmation and delivery sequence are defined in
+[`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
+
 ## Enrollment and recovery
 
 MOK enrollment is a two-phase operation:
@@ -169,4 +198,5 @@ selection. Release still requires real UEFI tests for:
 - canceled or mistyped MOKManager password;
 - firmware that rejects EFI-variable writes;
 - interrupted installation before and after enrollment scheduling.
-
+- coexistence without changing pre-existing ESP files or fallback loaders;
+- multi-ESP synchronization and member-loss boot after RAID support exists.

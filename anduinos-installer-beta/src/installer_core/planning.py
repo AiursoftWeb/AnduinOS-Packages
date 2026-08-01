@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from dataclasses import replace
 
 from .model import (
     BootSpec,
@@ -21,6 +22,8 @@ from .model import (
     StorageSpec,
 )
 from .probe import PlatformProbe
+from .storage_graph_planning import build_erase_disk_storage_graph
+from .storage_inventory import DiskTopologyBinding
 from .validation import validate_plan
 from .model import DiskIdentity, SecureBoot
 
@@ -30,6 +33,9 @@ def build_plan(
     disk: DiskIdentity,
     platform: PlatformProbe,
     password_hash: str,
+    *,
+    disk_binding: DiskTopologyBinding,
+    inventory_digest: str,
 ) -> InstallPlan:
     locale = str(choices.get("locale") or "en_US.UTF-8")
     language = str(choices.get("lang") or "en_US")
@@ -80,5 +86,11 @@ def build_plan(
             )
         ),
     )
+    graph = build_erase_disk_storage_graph(
+        plan,
+        disk_binding,
+        inventory_digest,
+    )
+    plan = replace(plan, storage=replace(plan.storage, graph=graph))
     validate_plan(plan)
     return plan

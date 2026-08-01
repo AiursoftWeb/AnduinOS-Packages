@@ -9,6 +9,8 @@ from installer_core.steps import (
 )
 
 from helpers import valid_plan
+from test_guided_storage_graph import guided_plan
+from installer_core.validation import ExecutionPolicy
 
 
 class FakeStep:
@@ -161,6 +163,49 @@ class StepRunnerTests(unittest.TestCase):
             ],
         )
         self.assertIn("failed", statuses[-1][2])
+
+    def test_guided_policy_emits_stable_boundaries_around_each_execute(self):
+        events = []
+        step = FakeStep("copy-system", events)
+        plan, _inventory = guided_plan()
+        context = InstallContext(
+            plan,
+            events.append,
+            execution_policy=ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST,
+        )
+
+        result = StepRunner([step]).run(context)
+
+        before = (
+            "[anduinos-boundary:guided-step-copy-system:before]"
+        )
+        after = "[anduinos-boundary:guided-step-copy-system:after]"
+        self.assertTrue(result.succeeded)
+        self.assertLess(events.index(before), events.index("copy-system:execute"))
+        self.assertLess(events.index("copy-system:execute"), events.index(after))
+        self.assertLess(events.index(after), events.index("copy-system:verify"))
+
+    def test_failed_guided_execute_has_no_after_boundary(self):
+        events = []
+        step = FakeStep("configure-system", events, fail_at="execute")
+        plan, _inventory = guided_plan()
+        context = InstallContext(
+            plan,
+            events.append,
+            execution_policy=ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST,
+        )
+
+        result = StepRunner([step]).run(context)
+
+        self.assertFalse(result.succeeded)
+        self.assertIn(
+            "[anduinos-boundary:guided-step-configure-system:before]",
+            events,
+        )
+        self.assertNotIn(
+            "[anduinos-boundary:guided-step-configure-system:after]",
+            events,
+        )
 
 
 if __name__ == "__main__":

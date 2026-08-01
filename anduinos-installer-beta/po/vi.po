@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 01:18+0000\n"
+"POT-Creation-Date: 2026-08-01 03:39+0000\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -33,9 +33,6 @@ msgstr ""
 "\n"
 "Trên màn hình MOKManager màu xanh lam, hãy chọn Enroll MOK → Continue → Yes, mật khẩu: 123456"
 
-msgid "(Live USB — excluded)"
-msgstr "(USB Live — bị loại trừ)"
-
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr "Swap đĩa 4 GiB (độ ưu tiên 10) + zram LZ4 50% RAM (độ ưu tiên 100)"
 
@@ -45,14 +42,32 @@ msgstr "; sudo không yêu cầu mật khẩu"
 msgid "; sudo requires the account password"
 msgstr "; sudo yêu cầu mật khẩu tài khoản"
 
-msgid "ALL DATA on the selected disk will be permanently erased."
-msgstr "TẤT CẢ DỮ LIỆU trên đĩa đã chọn sẽ bị xóa vĩnh viễn."
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "ALL DATA on {disk} will be permanently erased."
 
 msgid "Account security"
 msgstr "Bảo mật tài khoản"
 
 msgid "Administrator access would be locked"
 msgstr "Truy cập quản trị sẽ bị khóa"
+
+msgid "Advanced Storage"
+msgstr "Advanced Storage"
+
+msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+
+msgid "Advanced — keep existing systems"
+msgstr "Advanced — keep existing systems"
+
+msgid "Advanced: Install Alongside"
+msgstr "Advanced: Install Alongside"
+
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "After changing partitions or unmounting a volume, rescan storage and select the target again."
 
 msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
 msgstr "Sau khi khởi động lại, MOKManager sẽ mở ra. Hãy chọn Enroll MOK → Continue → Yes, sau đó nhập mật khẩu 123456."
@@ -64,6 +79,9 @@ msgstr ""
 "Tất cả các phân vùng và dữ liệu trên {disk} sẽ bị phá hủy.\n"
 "\n"
 
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+
 msgid "AnduinOS Installer"
 msgstr "Cài đặt AnduinOS"
 
@@ -72,6 +90,16 @@ msgstr "Cài đặt AnduinOS (Beta)"
 
 msgid "AnduinOS Installer (Development)"
 msgstr "Cài đặt AnduinOS (Phát triển)"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
 
 msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
 msgstr "Bất kỳ chương trình nào chạy dưới quyền người dùng của bạn đều có thể giành được đặc quyền quản trị viên đầy đủ mà không cần xác thực. Mật khẩu đăng nhập của bạn vẫn bảo vệ việc đăng nhập, nhưng sẽ không bảo vệ sudo. Bạn có chắc chắn muốn tiếp tục không?"
@@ -82,17 +110,38 @@ msgstr "Tiếng Ả Rập"
 msgid "Back"
 msgstr "Quay lại"
 
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+
+msgid "BitLocker detected"
+msgstr "BitLocker detected"
+
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+
+msgid "Boot policy"
+msgstr "Boot policy"
+
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (được khuyến nghị)"
+
+msgid "Btrfs — recommended"
+msgstr "Btrfs — recommended"
 
 msgid "Cannot create installation plan"
 msgstr "Không thể tạo kế hoạch cài đặt"
 
+msgid "Choose Installation Method"
+msgstr "Choose Installation Method"
+
+msgid "Choose a complete installation method, not only a filesystem."
+msgstr "Choose a complete installation method, not only a filesystem."
+
+msgid "Choose one target disk. Storage settings come next."
+msgstr "Choose one target disk. Storage settings come next."
+
 msgid "Choose optional software to install"
 msgstr "Chọn phần mềm tùy chọn để cài đặt"
-
-msgid "Choose the disk where AnduinOS will be installed"
-msgstr "Chọn đĩa nơi AnduinOS sẽ được cài đặt"
 
 msgid "Choose your language to begin installation"
 msgstr "Chọn ngôn ngữ của bạn để bắt đầu cài đặt"
@@ -129,6 +178,12 @@ msgstr "Sao chép hệ thống AnduinOS"
 
 msgid "Copy Log"
 msgstr "Sao chép nhật ký"
+
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
+
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
 
 msgid "Create your user account"
 msgstr "Tạo tài khoản người dùng của bạn"
@@ -167,6 +222,15 @@ msgstr "Tải xuống và cài đặt bản cập nhật hệ thống trong quá
 msgid "Dutch"
 msgstr "Tiếng Hà Lan"
 
+msgid "EFI System Partition"
+msgstr "EFI System Partition"
+
+msgid "EFI policy"
+msgstr "EFI policy"
+
+msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "Enables shared-space subvolumes, snapshots and Timeback Machine."
+
 msgid "English (UK)"
 msgstr "Tiếng Anh (Anh)"
 
@@ -176,8 +240,23 @@ msgstr "Tiếng Anh (Mỹ)"
 msgid "Erase Disk and Install"
 msgstr "Xóa đĩa và Cài đặt"
 
+msgid "Erase every partition and all data on the selected disk."
+msgstr "Erase every partition and all data on the selected disk."
+
 msgid "Erase the entire selected disk?"
 msgstr "Xóa toàn bộ đĩa đã chọn?"
+
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+
+msgid "Existing partitions detected"
+msgstr "Existing partitions detected"
+
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
 
 msgid "Filesystem"
 msgstr "Hệ thống tập tin"
@@ -187,6 +266,9 @@ msgstr "Hoàn thiện môi trường đích"
 
 msgid "Finnish"
 msgstr "Tiếng Phần Lan"
+
+msgid "Formats"
+msgstr "Formats"
 
 msgid "French"
 msgstr "Tiếng Pháp"
@@ -200,8 +282,17 @@ msgstr "Tiếng Đức"
 msgid "Greek"
 msgstr "Tiếng Hy Lạp"
 
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+
+msgid "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Guided storage selection is missing. Rescan and select the target again."
+
 msgid "Hindi (India)"
 msgstr "Tiếng Hindi (Ấn Độ)"
+
+msgid "How should AnduinOS use this disk?"
+msgstr "How should AnduinOS use this disk?"
 
 msgid "I Understand the Risk, Continue"
 msgstr "Tôi hiểu rủi ro, tiếp tục"
@@ -212,17 +303,29 @@ msgstr "Tiếng Indonesia"
 msgid "Install"
 msgstr "Cài đặt"
 
+msgid "Install Alongside"
+msgstr "Install Alongside"
+
+msgid "Install Timeback Machine"
+msgstr "Cài đặt Timeback Machine"
+
+msgid "Install alongside"
+msgstr "Install alongside"
+
+msgid "Install alongside requires a password-protected account."
+msgstr "Install alongside requires a password-protected account."
+
 msgid "Install bootloader"
 msgstr "Cài đặt trình khởi động"
 
 msgid "Install hardware drivers"
 msgstr "Cài đặt trình điều khiển phần cứng"
 
+msgid "Install in the selected free space?"
+msgstr "Install in the selected free space?"
+
 msgid "Install system updates"
 msgstr "Cài đặt bản cập nhật hệ thống"
-
-msgid "Install Timeback Machine"
-msgstr "Cài đặt Timeback Machine"
 
 msgid "Install third-party drivers for this device"
 msgstr "Cài đặt trình điều khiển bên thứ ba cho thiết bị này"
@@ -235,6 +338,9 @@ msgstr "Cài đặt thất bại"
 
 msgid "Installation Steps"
 msgstr "Các bước cài đặt"
+
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
 
 msgid "Installation complete"
 msgstr "Cài đặt đã hoàn tất"
@@ -266,11 +372,17 @@ msgstr "Tiếng Hàn"
 msgid "Language"
 msgstr "Ngôn ngữ"
 
+msgid "Live USB — excluded"
+msgstr "Live USB — excluded"
+
 msgid "Mount target filesystems"
 msgstr "Gắn các hệ thống tập tin đích"
 
 msgid "Navigation error"
 msgstr "Lỗi điều hướng"
+
+msgid "New partitions"
+msgstr "New partitions"
 
 msgid "Next"
 msgstr "Tiếp theo"
@@ -281,11 +393,20 @@ msgstr "Slide tiếp theo"
 msgid "No suitable disks found."
 msgstr "Không tìm thấy đĩa phù hợp."
 
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+
 msgid "Norwegian"
 msgstr "Tiếng Na Uy"
 
 msgid "OK"
 msgstr "OK"
+
+msgid "Only this disk can be partitioned or formatted. Other disks will be inspected but not modified."
+msgstr "Only this disk can be partitioned or formatted. Other disks will be inspected but not modified."
 
 msgid "Output"
 msgstr "Đầu ra"
@@ -335,6 +456,9 @@ msgstr "Chuẩn bị môi trường đích"
 msgid "Preparing installation…"
 msgstr "Đang chuẩn bị cài đặt…"
 
+msgid "Preserved partitions"
+msgstr "Preserved partitions"
+
 msgid "Previous slide"
 msgstr "Slide trước đó"
 
@@ -356,6 +480,12 @@ msgstr "Gỡ thiết bị cài đặt và khởi động lại máy tính của 
 msgid "Requires an Internet connection. The base installation remains available when offline."
 msgstr "Yêu cầu kết nối Internet. Bản cài đặt cơ bản vẫn khả dụng khi ngoại tuyến."
 
+msgid "Rescan Storage"
+msgstr "Rescan Storage"
+
+msgid "Rescan and Reselect Disk"
+msgstr "Rescan and Reselect Disk"
+
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "Khởi động lại và Đăng ký Khóa Secure Boot"
 
@@ -367,6 +497,12 @@ msgstr "Quay lại và Đặt mật khẩu"
 
 msgid "Return to Make Changes"
 msgstr "Quay lại để thực hiện thay đổi"
+
+msgid "Reuse {path} ({size})"
+msgstr "Reuse {path} ({size})"
+
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
 
 msgid "Romanian"
 msgstr "Tiếng Rumani"
@@ -395,8 +531,14 @@ msgstr "Chọn múi giờ"
 msgid "Select fastest package mirror"
 msgstr "Chọn máy chủ gói nhanh nhất"
 
+msgid "Select the target disk to continue."
+msgstr "Select the target disk to continue."
+
 msgid "Selected timezone"
 msgstr "Múi giờ đã chọn"
+
+msgid "Selected unallocated space"
+msgstr "Selected unallocated space"
 
 msgid "Some drivers are proprietary or otherwise non-free software."
 msgstr "Một số trình điều khiển là phần mềm độc quyền hoặc không miễn phí khác."
@@ -414,6 +556,9 @@ msgstr ""
 "Danh tính ổn định: {stable_id}\n"
 "\n"
 
+msgid "Storage mode"
+msgstr "Storage mode"
+
 msgid "Subvolumes"
 msgstr "Subvolumes"
 
@@ -429,11 +574,23 @@ msgstr "Bản cập nhật hệ thống"
 msgid "Target Disk"
 msgstr "Đĩa đích"
 
+msgid "Target: {disk} ({size} — {model})"
+msgstr "Target: {disk} ({size} — {model})"
+
 msgid "Test your keyboard here…"
 msgstr "Thử bàn phím của bạn ở đây…"
 
 msgid "Thai"
 msgstr "Tiếng Thái"
+
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
 
 msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
 msgstr "Kế hoạch cài đặt hợp lệ. Không có đĩa, hệ thống tập tin, trình khởi động, trạng thái Secure Boot hoặc hệ thống đã cài đặt nào bị thay đổi."
@@ -441,8 +598,20 @@ msgstr "Kế hoạch cài đặt hợp lệ. Không có đĩa, hệ thống tậ
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr "Trình cài đặt không thể đóng trong khi nó đang sửa đổi đĩa đích."
 
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+
 msgid "The privileged executor is disabled."
 msgstr "Trình điều khiển đặc quyền bị vô hiệu hóa."
+
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+
+msgid "The selected disk size changed. Return and select it again."
+msgstr "The selected disk size changed. Return and select it again."
+
+msgid "The selected disk topology changed. Review the disk and installation method again."
+msgstr "The selected disk topology changed. Review the disk and installation method again."
 
 msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
 msgstr "Hệ thống sẽ tự động đăng nhập vào tài khoản này và cho phép nó giành được đặc quyền quản trị viên đầy đủ mà không cần mật khẩu. Bất kỳ ai có quyền truy cập vật lý và bất kỳ chương trình nào chạy dưới quyền người dùng này đều có thể kiểm soát hoàn toàn hệ thống. Chỉ sử dụng điều này cho kiosk, máy ảo tạm thời hoặc môi trường được kiểm soát khác."
@@ -456,8 +625,17 @@ msgstr "Trình điều khiển bên thứ ba"
 msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
 msgstr "Tài khoản này không có mật khẩu đăng nhập, nhưng lệnh sudo vẫn yêu cầu mật khẩu. Vì tài khoản root mặc định bị khóa, bạn sẽ không thể thực hiện các tác vụ của quản trị viên. Hãy đặt mật khẩu cho tài khoản hoặc kích hoạt sudo không cần mật khẩu."
 
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+
 msgid "This configuration is very unsafe"
 msgstr "Cấu hình này rất không an toàn"
+
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
 
 msgid "This installer does not shrink or preserve other systems."
 msgstr "Trình cài đặt này không thu nhỏ hoặc bảo lưu các hệ thống khác."
@@ -465,11 +643,17 @@ msgstr "Trình cài đặt này không thu nhỏ hoặc bảo lưu các hệ th�
 msgid "Timezone"
 msgstr "Múi giờ"
 
+msgid "Too small"
+msgstr "Too small"
+
 msgid "Turkish"
 msgstr "Tiếng Thổ Nhĩ Kỳ"
 
 msgid "Ukrainian"
 msgstr "Tiếng Ukraina"
+
+msgid "Unallocated space"
+msgstr "Unallocated space"
 
 msgid "Unavailable: {error}"
 msgstr "Khả dụng: {error}"
@@ -479,6 +663,12 @@ msgstr "Gỡ cài đặt hệ thống đã cài đặt"
 
 msgid "Updates and Drivers"
 msgstr "Bản cập nhật và Trình điều khiển"
+
+msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+
+msgid "Use only existing unallocated space on the selected disk."
+msgstr "Use only existing unallocated space on the selected disk."
 
 msgid "User"
 msgstr "Người dùng"
@@ -491,6 +681,9 @@ msgstr "Tên người dùng"
 
 msgid "Username may only contain lowercase letters, digits, underscores and hyphens."
 msgstr "Tên người dùng chỉ có thể chứa chữ thường, chữ số, dấu gạch dưới và dấu gạch ngang."
+
+msgid "Uses a traditional single root filesystem."
+msgstr "Uses a traditional single root filesystem."
 
 msgid "Validate Plan (No Installation)"
 msgstr "Xác thực Kế hoạch (Không cài đặt)"
@@ -510,6 +703,12 @@ msgstr "Tiếng Việt"
 msgid "Welcome to AnduinOS"
 msgstr "Chào mừng đến với AnduinOS"
 
+msgid "Windows detected"
+msgstr "Windows detected"
+
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+
 msgid "automatic login"
 msgstr "đăng nhập tự động"
 
@@ -525,6 +724,12 @@ msgstr "không cài đặt"
 msgid "download and install"
 msgstr "tải xuống và cài đặt"
 
+msgid "ext4 (classic)"
+msgstr "ext4 (classic)"
+
+msgid "ext4 — classic"
+msgstr "ext4 — classic"
+
 msgid "not required"
 msgstr "khob bắt buộc"
 
@@ -537,8 +742,26 @@ msgstr "hệ thống tập tin gốc ext4 đơn"
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+msgid "{path} as {filesystem}"
+msgstr "{path} as {filesystem}"
+
+msgid "{size} at {offset}"
+msgstr "{size} at {offset}"
+
+msgid "{size} unallocated at {offset}"
+msgstr "{size} unallocated at {offset}"
+
 msgid "{step} failed"
 msgstr "{step} thất bại"
+
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
 
 msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
 msgstr "⚠ Điều này sẽ xóa TẤT CẢ dữ liệu trên đĩa đã chọn. Hành động này không thể hoàn tác."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 01:18+0000\n"
+"POT-Creation-Date: 2026-08-01 03:39+0000\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -33,9 +33,6 @@ msgstr ""
 "\n"
 "在蓝色的 MOKManager 屏幕上选择“注册 MOK”→“继续”→“是”，密码：123456"
 
-msgid "(Live USB — excluded)"
-msgstr "（Live USB — 已排除）"
-
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr "4 GiB 磁盘交换空间（优先级 10）+ 50% RAM LZ4 zram（优先级 100）"
 
@@ -45,14 +42,32 @@ msgstr "; sudo 不需要密码"
 msgid "; sudo requires the account password"
 msgstr "; sudo 需要账户密码"
 
-msgid "ALL DATA on the selected disk will be permanently erased."
-msgstr "所选磁盘上的所有数据将被永久擦除。"
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "ALL DATA on {disk} will be permanently erased."
 
 msgid "Account security"
 msgstr "账户安全"
 
 msgid "Administrator access would be locked"
 msgstr "管理员访问权限将被锁定"
+
+msgid "Advanced Storage"
+msgstr "Advanced Storage"
+
+msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+
+msgid "Advanced — keep existing systems"
+msgstr "Advanced — keep existing systems"
+
+msgid "Advanced: Install Alongside"
+msgstr "Advanced: Install Alongside"
+
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "After changing partitions or unmounting a volume, rescan storage and select the target again."
 
 msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
 msgstr "重启后，将打开 MOKManager。选择“注册 MOK”→“继续”→“是”，然后输入密码 123456。"
@@ -64,6 +79,9 @@ msgstr ""
 "{disk} 上的所有分区和数据都将被销毁。\n"
 "\n"
 
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+
 msgid "AnduinOS Installer"
 msgstr "AnduinOS 安装程序"
 
@@ -72,6 +90,16 @@ msgstr "AnduinOS 安装程序（测试版）"
 
 msgid "AnduinOS Installer (Development)"
 msgstr "AnduinOS 安装程序（开发版）"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
 
 msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
 msgstr "任何以您的用户身份运行的程序都可以在无需验证的情况下获得完整的管理员权限。您的登录密码仍然可以保护登录，但无法保护 sudo。您确定要继续吗？"
@@ -82,17 +110,38 @@ msgstr "阿拉伯语"
 msgid "Back"
 msgstr "返回"
 
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+
+msgid "BitLocker detected"
+msgstr "BitLocker detected"
+
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+
+msgid "Boot policy"
+msgstr "Boot policy"
+
 msgid "Btrfs (recommended)"
 msgstr "Btrfs（推荐）"
+
+msgid "Btrfs — recommended"
+msgstr "Btrfs — recommended"
 
 msgid "Cannot create installation plan"
 msgstr "无法创建安装计划"
 
+msgid "Choose Installation Method"
+msgstr "Choose Installation Method"
+
+msgid "Choose a complete installation method, not only a filesystem."
+msgstr "Choose a complete installation method, not only a filesystem."
+
+msgid "Choose one target disk. Storage settings come next."
+msgstr "Choose one target disk. Storage settings come next."
+
 msgid "Choose optional software to install"
 msgstr "选择要安装的可选软件"
-
-msgid "Choose the disk where AnduinOS will be installed"
-msgstr "选择 AnduinOS 的安装磁盘"
 
 msgid "Choose your language to begin installation"
 msgstr "选择您的语言以开始安装"
@@ -129,6 +178,12 @@ msgstr "复制 AnduinOS 系统"
 
 msgid "Copy Log"
 msgstr "复制日志"
+
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
+
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
 
 msgid "Create your user account"
 msgstr "创建您的用户账户"
@@ -167,6 +222,15 @@ msgstr "在安装期间下载并安装系统更新"
 msgid "Dutch"
 msgstr "荷兰语"
 
+msgid "EFI System Partition"
+msgstr "EFI System Partition"
+
+msgid "EFI policy"
+msgstr "EFI policy"
+
+msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "Enables shared-space subvolumes, snapshots and Timeback Machine."
+
 msgid "English (UK)"
 msgstr "英语（英国）"
 
@@ -176,8 +240,23 @@ msgstr "英语（美国）"
 msgid "Erase Disk and Install"
 msgstr "擦除磁盘并安装"
 
+msgid "Erase every partition and all data on the selected disk."
+msgstr "Erase every partition and all data on the selected disk."
+
 msgid "Erase the entire selected disk?"
 msgstr "要擦除整个所选磁盘吗？"
+
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+
+msgid "Existing partitions detected"
+msgstr "Existing partitions detected"
+
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
 
 msgid "Filesystem"
 msgstr "文件系统"
@@ -187,6 +266,9 @@ msgstr "最终确定目标环境"
 
 msgid "Finnish"
 msgstr "芬兰语"
+
+msgid "Formats"
+msgstr "Formats"
 
 msgid "French"
 msgstr "法语"
@@ -200,8 +282,17 @@ msgstr "德语"
 msgid "Greek"
 msgstr "希腊语"
 
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+
+msgid "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Guided storage selection is missing. Rescan and select the target again."
+
 msgid "Hindi (India)"
 msgstr "印地语（印度）"
+
+msgid "How should AnduinOS use this disk?"
+msgstr "How should AnduinOS use this disk?"
 
 msgid "I Understand the Risk, Continue"
 msgstr "我了解风险，继续"
@@ -212,17 +303,29 @@ msgstr "印度尼西亚语"
 msgid "Install"
 msgstr "安装"
 
+msgid "Install Alongside"
+msgstr "Install Alongside"
+
+msgid "Install Timeback Machine"
+msgstr "安装 Timeback Machine"
+
+msgid "Install alongside"
+msgstr "Install alongside"
+
+msgid "Install alongside requires a password-protected account."
+msgstr "Install alongside requires a password-protected account."
+
 msgid "Install bootloader"
 msgstr "安装引导加载程序"
 
 msgid "Install hardware drivers"
 msgstr "安装硬件驱动程序"
 
+msgid "Install in the selected free space?"
+msgstr "Install in the selected free space?"
+
 msgid "Install system updates"
 msgstr "安装系统更新"
-
-msgid "Install Timeback Machine"
-msgstr "安装 Timeback Machine"
 
 msgid "Install third-party drivers for this device"
 msgstr "为此设备安装第三方驱动程序"
@@ -235,6 +338,9 @@ msgstr "安装失败"
 
 msgid "Installation Steps"
 msgstr "安装步骤"
+
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
 
 msgid "Installation complete"
 msgstr "安装已完成"
@@ -266,11 +372,17 @@ msgstr "韩语"
 msgid "Language"
 msgstr "语言"
 
+msgid "Live USB — excluded"
+msgstr "Live USB — excluded"
+
 msgid "Mount target filesystems"
 msgstr "挂载目标文件系统"
 
 msgid "Navigation error"
 msgstr "导航错误"
+
+msgid "New partitions"
+msgstr "New partitions"
 
 msgid "Next"
 msgstr "下一步"
@@ -281,11 +393,20 @@ msgstr "下一张幻灯片"
 msgid "No suitable disks found."
 msgstr "未找到合适的磁盘。"
 
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+
 msgid "Norwegian"
 msgstr "挪威语"
 
 msgid "OK"
 msgstr "确定"
+
+msgid "Only this disk can be partitioned or formatted. Other disks will be inspected but not modified."
+msgstr "Only this disk can be partitioned or formatted. Other disks will be inspected but not modified."
 
 msgid "Output"
 msgstr "输出"
@@ -335,6 +456,9 @@ msgstr "准备目标环境"
 msgid "Preparing installation…"
 msgstr "正在准备安装…"
 
+msgid "Preserved partitions"
+msgstr "Preserved partitions"
+
 msgid "Previous slide"
 msgstr "上一张幻灯片"
 
@@ -356,6 +480,12 @@ msgstr "移除安装介质并重启计算机"
 msgid "Requires an Internet connection. The base installation remains available when offline."
 msgstr "需要互联网连接。基础安装在离线时仍可用。"
 
+msgid "Rescan Storage"
+msgstr "Rescan Storage"
+
+msgid "Rescan and Reselect Disk"
+msgstr "Rescan and Reselect Disk"
+
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "重启并注册安全启动密钥"
 
@@ -367,6 +497,12 @@ msgstr "返回并设置密码"
 
 msgid "Return to Make Changes"
 msgstr "返回以进行修改"
+
+msgid "Reuse {path} ({size})"
+msgstr "Reuse {path} ({size})"
+
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
 
 msgid "Romanian"
 msgstr "罗马尼亚语"
@@ -395,8 +531,14 @@ msgstr "选择时区"
 msgid "Select fastest package mirror"
 msgstr "选择最快的软件包镜像"
 
+msgid "Select the target disk to continue."
+msgstr "Select the target disk to continue."
+
 msgid "Selected timezone"
 msgstr "所选时区"
+
+msgid "Selected unallocated space"
+msgstr "Selected unallocated space"
 
 msgid "Some drivers are proprietary or otherwise non-free software."
 msgstr "某些驱动程序是专有软件或其他非自由软件。"
@@ -414,6 +556,9 @@ msgstr ""
 "稳定标识符：{stable_id}\n"
 "\n"
 
+msgid "Storage mode"
+msgstr "Storage mode"
+
 msgid "Subvolumes"
 msgstr "子卷"
 
@@ -429,11 +574,23 @@ msgstr "系统更新"
 msgid "Target Disk"
 msgstr "目标磁盘"
 
+msgid "Target: {disk} ({size} — {model})"
+msgstr "Target: {disk} ({size} — {model})"
+
 msgid "Test your keyboard here…"
 msgstr "在此处测试您的键盘…"
 
 msgid "Thai"
 msgstr "泰语"
+
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
 
 msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
 msgstr "安装计划有效。未更改任何磁盘、文件系统、引导加载程序、安全启动状态或已安装的系统。"
@@ -441,8 +598,20 @@ msgstr "安装计划有效。未更改任何磁盘、文件系统、引导加载
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr "在安装程序修改目标磁盘时，无法关闭它。"
 
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+
 msgid "The privileged executor is disabled."
 msgstr "特权执行器已禁用。"
+
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+
+msgid "The selected disk size changed. Return and select it again."
+msgstr "The selected disk size changed. Return and select it again."
+
+msgid "The selected disk topology changed. Review the disk and installation method again."
+msgstr "The selected disk topology changed. Review the disk and installation method again."
 
 msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
 msgstr "系统将自动登录到此账户，并允许其在无需密码的情况下获得完整的管理员权限。任何拥有物理访问权限的人员以及任何以该用户身份运行的程序都可以完全控制系统。仅将此用于信息亭、临时虚拟机或其他受控环境。"
@@ -456,8 +625,17 @@ msgstr "第三方驱动程序"
 msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
 msgstr "此账户没有登录密码，但使用 sudo 仍需要密码。由于 root 账户默认处于锁定状态，您将无法执行管理任务。请设置账户密码或启用无密码 sudo。"
 
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+
 msgid "This configuration is very unsafe"
 msgstr "此配置非常不安全"
+
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
 
 msgid "This installer does not shrink or preserve other systems."
 msgstr "此安装程序不会缩小或保留其他系统。"
@@ -465,11 +643,17 @@ msgstr "此安装程序不会缩小或保留其他系统。"
 msgid "Timezone"
 msgstr "时区"
 
+msgid "Too small"
+msgstr "Too small"
+
 msgid "Turkish"
 msgstr "土耳其语"
 
 msgid "Ukrainian"
 msgstr "乌克兰语"
+
+msgid "Unallocated space"
+msgstr "Unallocated space"
 
 msgid "Unavailable: {error}"
 msgstr "不可用：{error}"
@@ -479,6 +663,12 @@ msgstr "卸载已安装的系统"
 
 msgid "Updates and Drivers"
 msgstr "更新和驱动程序"
+
+msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+
+msgid "Use only existing unallocated space on the selected disk."
+msgstr "Use only existing unallocated space on the selected disk."
 
 msgid "User"
 msgstr "用户"
@@ -491,6 +681,9 @@ msgstr "用户名"
 
 msgid "Username may only contain lowercase letters, digits, underscores and hyphens."
 msgstr "用户名只能包含小写字母、数字、下划线和连字符。"
+
+msgid "Uses a traditional single root filesystem."
+msgstr "Uses a traditional single root filesystem."
 
 msgid "Validate Plan (No Installation)"
 msgstr "验证计划（不安装）"
@@ -510,6 +703,12 @@ msgstr "越南语"
 msgid "Welcome to AnduinOS"
 msgstr "欢迎使用 AnduinOS"
 
+msgid "Windows detected"
+msgstr "Windows detected"
+
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+
 msgid "automatic login"
 msgstr "自动登录"
 
@@ -525,6 +724,12 @@ msgstr "不安装"
 msgid "download and install"
 msgstr "下载并安装"
 
+msgid "ext4 (classic)"
+msgstr "ext4 (classic)"
+
+msgid "ext4 — classic"
+msgstr "ext4 — classic"
+
 msgid "not required"
 msgstr "不需要"
 
@@ -537,8 +742,26 @@ msgstr "单个 ext4 根文件系统"
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / 安全启动：{secure_boot}"
 
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+msgid "{path} as {filesystem}"
+msgstr "{path} as {filesystem}"
+
+msgid "{size} at {offset}"
+msgstr "{size} at {offset}"
+
+msgid "{size} unallocated at {offset}"
+msgstr "{size} unallocated at {offset}"
+
 msgid "{step} failed"
 msgstr "{step} 失败"
+
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
 
 msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
 msgstr "⚠ 这将擦除所选磁盘上的所有数据。此操作无法撤销。"

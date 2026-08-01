@@ -33,13 +33,31 @@ class PrepareStorageStepTests(unittest.TestCase):
     def test_preflight_requires_filesystem_tools(self):
         plan = valid_plan()
         runner = FakeRunner()
-        PrepareStorageStep(runner).preflight(
-            InstallContext(plan, lambda _message: None)
-        )
+        context = InstallContext(plan, lambda _message: None)
+        PrepareStorageStep(runner).preflight(context)
         self.assertIn("mkfs.btrfs", runner.required)
         self.assertIn("mkswap", runner.required)
         self.assertIn("swapon", runner.required)
         self.assertIn("swapoff", runner.required)
+        execution_plan = context.values["erase_disk_execution_plan"]
+        self.assertIs(
+            context.values["storage_write_set"],
+            execution_plan.write_set,
+        )
+
+    def test_execute_reuses_the_preflight_execution_plan(self):
+        plan = valid_plan()
+        runner = FakeRunner()
+        context = InstallContext(plan, lambda _message: None)
+        step = PrepareStorageStep(runner)
+        step.preflight(context)
+        frozen = context.values["erase_disk_execution_plan"]
+
+        with patch("installer_core.storage_steps.Path.exists", return_value=True):
+            step.execute(context)
+
+        self.assertIs(context.values["erase_disk_execution_plan"], frozen)
+        self.assertIs(context.values["layout"], frozen.layout)
 
     def test_retry_deactivates_only_selected_disk_swap_before_parted(self):
         plan = valid_plan()

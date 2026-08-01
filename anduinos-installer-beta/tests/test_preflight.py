@@ -2,7 +2,7 @@ import unittest
 from dataclasses import replace
 
 from fakes import FakeRunner
-from helpers import valid_plan
+from helpers import valid_inventory, valid_plan
 from installer_core.preflight import (
     PreflightError,
     verify_execution_environment,
@@ -46,7 +46,7 @@ class ExecutionPreflightTests(unittest.TestCase):
                 plan.platform.firmware,
                 plan.platform.secure_boot,
             ),
-            disk_probe=lambda: (plan.storage.disk,),
+            inventory_probe=lambda: valid_inventory(plan),
         )
         self.assertTrue(runner.root_checked)
         self.assertEqual(
@@ -56,7 +56,11 @@ class ExecutionPreflightTests(unittest.TestCase):
     def test_rejects_disk_substitution_at_same_path(self):
         plan = valid_plan()
         replacement = replace(plan.storage.disk, stable_id="serial:attacker")
-        with self.assertRaisesRegex(PreflightError, "identity changed"):
+        replacement_plan = replace(
+            plan,
+            storage=replace(plan.storage, disk=replacement),
+        )
+        with self.assertRaisesRegex(PreflightError, "no longer present"):
             verify_execution_environment(
                 plan,
                 FakeRunner(),
@@ -65,8 +69,20 @@ class ExecutionPreflightTests(unittest.TestCase):
                     plan.platform.firmware,
                     plan.platform.secure_boot,
                 ),
-                disk_probe=lambda: (replacement,),
+                inventory_probe=lambda: valid_inventory(replacement_plan),
             )
+
+    def test_resolves_current_path_before_usage_checks(self):
+        plan = valid_plan()
+        current_path = "/dev/nvme8n1"
+        runner = self.idle_target_runner(current_path)
+        resolved = verify_target_disk_environment(
+            plan,
+            runner,
+            inventory_probe=lambda: valid_inventory(plan, path=current_path),
+        )
+        self.assertEqual(resolved.storage.disk.path, current_path)
+        self.assertEqual(runner.commands[-1][0][-1], current_path)
 
     def test_rejects_secure_boot_state_change(self):
         plan = valid_plan()
@@ -83,7 +99,7 @@ class ExecutionPreflightTests(unittest.TestCase):
                     changed.firmware,
                     changed.secure_boot,
                 ),
-                disk_probe=lambda: (plan.storage.disk,),
+                inventory_probe=lambda: valid_inventory(plan),
             )
 
     def test_rejects_mounted_partition_on_selected_disk(self):
@@ -103,7 +119,7 @@ class ExecutionPreflightTests(unittest.TestCase):
             verify_target_disk_environment(
                 plan,
                 runner,
-                disk_probe=lambda: (plan.storage.disk,),
+                inventory_probe=lambda: valid_inventory(plan),
             )
 
     def test_rejects_active_device_mapper_descendant(self):
@@ -121,7 +137,7 @@ class ExecutionPreflightTests(unittest.TestCase):
             verify_target_disk_environment(
                 plan,
                 runner,
-                disk_probe=lambda: (plan.storage.disk,),
+                inventory_probe=lambda: valid_inventory(plan),
             )
 
     def test_allows_expected_swap_partition_from_previous_attempt(self):
@@ -139,7 +155,7 @@ class ExecutionPreflightTests(unittest.TestCase):
         verify_target_disk_environment(
             plan,
             runner,
-            disk_probe=lambda: (plan.storage.disk,),
+            inventory_probe=lambda: valid_inventory(plan),
         )
 
     def test_rejects_unexpected_swap_partition_on_selected_disk(self):
@@ -158,5 +174,5 @@ class ExecutionPreflightTests(unittest.TestCase):
             verify_target_disk_environment(
                 plan,
                 runner,
-                disk_probe=lambda: (plan.storage.disk,),
+                inventory_probe=lambda: valid_inventory(plan),
             )

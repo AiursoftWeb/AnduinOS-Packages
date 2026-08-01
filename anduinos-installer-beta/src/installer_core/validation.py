@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from enum import Enum
 
 from .model import (
     AuthenticationMode,
@@ -14,6 +15,7 @@ from .model import (
     SCHEMA_VERSION,
     SecureBoot,
 )
+from .storage_graph_planning import validate_storage_graph
 
 
 MINIMUM_DISK_BYTES = 25 * 1024**3
@@ -35,7 +37,43 @@ class PlanValidationError(ValueError):
         super().__init__("; ".join(errors))
 
 
-def validate_plan(plan: InstallPlan) -> None:
+class ExecutionPolicy(str, Enum):
+    """Executor-owned capability; it is never serialized in an install plan."""
+
+    RELEASE = "release"
+    GUIDED_DESTRUCTIVE_TEST = "guided-destructive-test"
+
+
+def validate_plan_for_execution(
+    plan: InstallPlan,
+    policy: ExecutionPolicy = ExecutionPolicy.RELEASE,
+) -> None:
+    """Validate against a capability selected by the privileged process."""
+
+    if not isinstance(policy, ExecutionPolicy):
+        raise PlanValidationError(["Invalid executor policy"])
+    validate_plan(
+        plan,
+        allow_guided_compilation=True,
+    )
+    if (
+        plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
+        and policy is ExecutionPolicy.RELEASE
+        and plan.identity.authentication
+        is AuthenticationMode.PASSWORDLESS_SHARED
+    ):
+        raise PlanValidationError(
+            ["Install alongside requires a password-protected account"]
+        )
+
+
+def validate_plan(
+    plan: InstallPlan,
+    *,
+    allow_guided_compilation: bool = True,
+) -> None:
+    """Validate an erase-disk or beta guided-coexistence plan."""
+
     errors: list[str] = []
 
     if plan.schema_version != SCHEMA_VERSION:
@@ -44,7 +82,15 @@ def validate_plan(plan: InstallPlan) -> None:
             f"expected {SCHEMA_VERSION}"
         )
 
-    if plan.storage.mode is not InstallMode.ERASE_DISK:
+    if (
+        plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
+        and not allow_guided_compilation
+    ):
+        errors.append("Guided coexistence execution is not enabled")
+    elif plan.storage.mode not in {
+        InstallMode.ERASE_DISK,
+        InstallMode.GUIDED_COEXISTENCE,
+    }:
         errors.append("Manual partitioning is not implemented")
 
     disk = plan.storage.disk
@@ -64,6 +110,10 @@ def validate_plan(plan: InstallPlan) -> None:
         errors.append("EFI System Partition must be at least 512 MiB")
     if plan.storage.swap_size_mib != 4096:
         errors.append("AnduinOS release layout requires exactly 4096 MiB swap")
+    try:
+        validate_storage_graph(plan)
+    except ValueError as error:
+        errors.append(str(error))
 
     platform = plan.platform
     if platform.architecture is Architecture.ARM64:
@@ -85,6 +135,15 @@ def validate_plan(plan: InstallPlan) -> None:
     )
     if plan.boot.mok_password_policy is not expected_mok:
         errors.append("MOK password policy does not match Secure Boot state")
+    if type(plan.boot.install_fallback_path) is not bool:
+        errors.append("EFI fallback-path policy must be boolean")
+    elif (
+        plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
+        and plan.boot.install_fallback_path
+    ):
+        errors.append(
+            "Install alongside must not write the shared EFI fallback path"
+        )
 
     identity = plan.identity
     if not USERNAME_RE.fullmatch(identity.username):

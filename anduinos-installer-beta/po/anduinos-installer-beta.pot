@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 01:22+0000\n"
+"POT-Creation-Date: 2026-08-01 03:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,9 +23,6 @@ msgstr ""
 msgid "\nOn the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
 msgstr ""
 
-msgid "(Live USB — excluded)"
-msgstr ""
-
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr ""
 
@@ -35,7 +32,10 @@ msgstr ""
 msgid "; sudo requires the account password"
 msgstr ""
 
-msgid "ALL DATA on the selected disk will be permanently erased."
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr ""
+
+msgid "ALL DATA on {disk} will be permanently erased."
 msgstr ""
 
 msgid "Account security"
@@ -44,10 +44,28 @@ msgstr ""
 msgid "Administrator access would be locked"
 msgstr ""
 
+msgid "Advanced Storage"
+msgstr ""
+
+msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr ""
+
+msgid "Advanced — keep existing systems"
+msgstr ""
+
+msgid "Advanced: Install Alongside"
+msgstr ""
+
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr ""
+
 msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
 msgstr ""
 
 msgid "All partitions and data on {disk} will be destroyed.\n\n"
+msgstr ""
+
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
 msgstr ""
 
 msgid "AnduinOS Installer"
@@ -59,6 +77,12 @@ msgstr ""
 msgid "AnduinOS Installer (Development)"
 msgstr ""
 
+msgid "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n\n"
+msgstr ""
+
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr ""
+
 msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
 msgstr ""
 
@@ -68,16 +92,37 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr ""
+
+msgid "BitLocker detected"
+msgstr ""
+
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr ""
+
+msgid "Boot policy"
+msgstr ""
+
 msgid "Btrfs (recommended)"
+msgstr ""
+
+msgid "Btrfs — recommended"
 msgstr ""
 
 msgid "Cannot create installation plan"
 msgstr ""
 
-msgid "Choose optional software to install"
+msgid "Choose Installation Method"
 msgstr ""
 
-msgid "Choose the disk where AnduinOS will be installed"
+msgid "Choose a complete installation method, not only a filesystem."
+msgstr ""
+
+msgid "Choose one target disk. Storage settings come next."
+msgstr ""
+
+msgid "Choose optional software to install"
 msgstr ""
 
 msgid "Choose your language to begin installation"
@@ -116,6 +161,12 @@ msgstr ""
 msgid "Copy Log"
 msgstr ""
 
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr ""
+
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr ""
+
 msgid "Create your user account"
 msgstr ""
 
@@ -149,6 +200,15 @@ msgstr ""
 msgid "Dutch"
 msgstr ""
 
+msgid "EFI System Partition"
+msgstr ""
+
+msgid "EFI policy"
+msgstr ""
+
+msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr ""
+
 msgid "English (UK)"
 msgstr ""
 
@@ -158,7 +218,22 @@ msgstr ""
 msgid "Erase Disk and Install"
 msgstr ""
 
+msgid "Erase every partition and all data on the selected disk."
+msgstr ""
+
 msgid "Erase the entire selected disk?"
+msgstr ""
+
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr ""
+
+msgid "Existing partitions detected"
+msgstr ""
+
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr ""
+
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
 msgstr ""
 
 msgid "Filesystem"
@@ -168,6 +243,9 @@ msgid "Finalize target environment"
 msgstr ""
 
 msgid "Finnish"
+msgstr ""
+
+msgid "Formats"
 msgstr ""
 
 msgid "French"
@@ -182,7 +260,16 @@ msgstr ""
 msgid "Greek"
 msgstr ""
 
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr ""
+
+msgid "Guided storage selection is missing. Rescan and select the target again."
+msgstr ""
+
 msgid "Hindi (India)"
+msgstr ""
+
+msgid "How should AnduinOS use this disk?"
 msgstr ""
 
 msgid "I Understand the Risk, Continue"
@@ -194,16 +281,28 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
+msgid "Install Alongside"
+msgstr ""
+
+msgid "Install Timeback Machine"
+msgstr ""
+
+msgid "Install alongside"
+msgstr ""
+
+msgid "Install alongside requires a password-protected account."
+msgstr ""
+
 msgid "Install bootloader"
 msgstr ""
 
 msgid "Install hardware drivers"
 msgstr ""
 
-msgid "Install system updates"
+msgid "Install in the selected free space?"
 msgstr ""
 
-msgid "Install Timeback Machine"
+msgid "Install system updates"
 msgstr ""
 
 msgid "Install third-party drivers for this device"
@@ -216,6 +315,9 @@ msgid "Installation Failed"
 msgstr ""
 
 msgid "Installation Steps"
+msgstr ""
+
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
 msgstr ""
 
 msgid "Installation complete"
@@ -248,10 +350,16 @@ msgstr ""
 msgid "Language"
 msgstr ""
 
+msgid "Live USB — excluded"
+msgstr ""
+
 msgid "Mount target filesystems"
 msgstr ""
 
 msgid "Navigation error"
+msgstr ""
+
+msgid "New partitions"
 msgstr ""
 
 msgid "Next"
@@ -263,10 +371,19 @@ msgstr ""
 msgid "No suitable disks found."
 msgstr ""
 
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr ""
+
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr ""
+
 msgid "Norwegian"
 msgstr ""
 
 msgid "OK"
+msgstr ""
+
+msgid "Only this disk can be partitioned or formatted. Other disks will be inspected but not modified."
 msgstr ""
 
 msgid "Output"
@@ -317,6 +434,9 @@ msgstr ""
 msgid "Preparing installation…"
 msgstr ""
 
+msgid "Preserved partitions"
+msgstr ""
+
 msgid "Previous slide"
 msgstr ""
 
@@ -338,6 +458,12 @@ msgstr ""
 msgid "Requires an Internet connection. The base installation remains available when offline."
 msgstr ""
 
+msgid "Rescan Storage"
+msgstr ""
+
+msgid "Rescan and Reselect Disk"
+msgstr ""
+
 msgid "Restart and Enroll Secure Boot Key"
 msgstr ""
 
@@ -348,6 +474,12 @@ msgid "Return and Set a Password"
 msgstr ""
 
 msgid "Return to Make Changes"
+msgstr ""
+
+msgid "Reuse {path} ({size})"
+msgstr ""
+
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
 msgstr ""
 
 msgid "Romanian"
@@ -377,7 +509,13 @@ msgstr ""
 msgid "Select fastest package mirror"
 msgstr ""
 
+msgid "Select the target disk to continue."
+msgstr ""
+
 msgid "Selected timezone"
+msgstr ""
+
+msgid "Selected unallocated space"
 msgstr ""
 
 msgid "Some drivers are proprietary or otherwise non-free software."
@@ -390,6 +528,9 @@ msgid "Stable disk identity"
 msgstr ""
 
 msgid "Stable identity: {stable_id}\n\n"
+msgstr ""
+
+msgid "Storage mode"
 msgstr ""
 
 msgid "Subvolumes"
@@ -407,10 +548,22 @@ msgstr ""
 msgid "Target Disk"
 msgstr ""
 
+msgid "Target: {disk} ({size} — {model})"
+msgstr ""
+
 msgid "Test your keyboard here…"
 msgstr ""
 
 msgid "Thai"
+msgstr ""
+
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr ""
+
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr ""
+
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
 msgstr ""
 
 msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
@@ -419,7 +572,19 @@ msgstr ""
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr ""
 
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr ""
+
 msgid "The privileged executor is disabled."
+msgstr ""
+
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr ""
+
+msgid "The selected disk size changed. Return and select it again."
+msgstr ""
+
+msgid "The selected disk topology changed. Review the disk and installation method again."
 msgstr ""
 
 msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
@@ -434,7 +599,16 @@ msgstr ""
 msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
 msgstr ""
 
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr ""
+
 msgid "This configuration is very unsafe"
+msgstr ""
+
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr ""
+
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
 msgstr ""
 
 msgid "This installer does not shrink or preserve other systems."
@@ -443,10 +617,16 @@ msgstr ""
 msgid "Timezone"
 msgstr ""
 
+msgid "Too small"
+msgstr ""
+
 msgid "Turkish"
 msgstr ""
 
 msgid "Ukrainian"
+msgstr ""
+
+msgid "Unallocated space"
 msgstr ""
 
 msgid "Unavailable: {error}"
@@ -456,6 +636,12 @@ msgid "Unmount installed system"
 msgstr ""
 
 msgid "Updates and Drivers"
+msgstr ""
+
+msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr ""
+
+msgid "Use only existing unallocated space on the selected disk."
 msgstr ""
 
 msgid "User"
@@ -468,6 +654,9 @@ msgid "Username"
 msgstr ""
 
 msgid "Username may only contain lowercase letters, digits, underscores and hyphens."
+msgstr ""
+
+msgid "Uses a traditional single root filesystem."
 msgstr ""
 
 msgid "Validate Plan (No Installation)"
@@ -488,6 +677,12 @@ msgstr ""
 msgid "Welcome to AnduinOS"
 msgstr ""
 
+msgid "Windows detected"
+msgstr ""
+
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr ""
+
 msgid "automatic login"
 msgstr ""
 
@@ -503,6 +698,12 @@ msgstr ""
 msgid "download and install"
 msgstr ""
 
+msgid "ext4 (classic)"
+msgstr ""
+
+msgid "ext4 — classic"
+msgstr ""
+
 msgid "not required"
 msgstr ""
 
@@ -515,7 +716,25 @@ msgstr ""
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr ""
 
+msgid "{count}: {paths}"
+msgstr ""
+
+msgid "{name}: {start}–{end} MiB"
+msgstr ""
+
+msgid "{path} as {filesystem}"
+msgstr ""
+
+msgid "{size} at {offset}"
+msgstr ""
+
+msgid "{size} unallocated at {offset}"
+msgstr ""
+
 msgid "{step} failed"
+msgstr ""
+
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
 msgstr ""
 
 msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."

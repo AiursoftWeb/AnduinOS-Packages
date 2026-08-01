@@ -3,8 +3,11 @@
 ## Status
 
 This document defines the intended Btrfs storage and rollback architecture for
-AnduinOS. The subvolume layout is a system ABI: changing it after release
-affects installers, upgrades, recovery tools, snapshots and user data.
+AnduinOS. The release-one canonical subvolume layout is a system ABI: changing
+it after release affects installers, upgrades, recovery tools, snapshots and
+user data. Future custom layouts use an explicit semantic-role manifest and
+are enabled only through the milestones in
+[`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
 
 The legacy beta backend's single `@` subvolume is obsolete. It must not be
 treated as the release layout or remain in the production execution path.
@@ -36,6 +39,25 @@ encryption choices.
 - The ext4 installation path remains simple and does not pretend to offer
   Btrfs snapshot semantics.
 
+## Default filesystem policy
+
+Btrfs is the AnduinOS default because Timeback, snapshots and shared-space
+subvolumes are operating-system capabilities, not because every workload is
+faster than ext4. ext4 remains an explicit classic alternative and does not
+receive Btrfs snapshot or Timeback semantics.
+
+The default does not change solely because a device reports itself as
+rotational. Device names and rotational hints may be unreliable behind USB,
+virtualization and storage controllers, and silently switching filesystems
+would silently change the installed feature set. The UI may offer contextual
+performance guidance while keeping the capability trade-off explicit.
+
+An SSD flash translation layer performing out-of-place writes does not make
+filesystem CoW free. Filesystem CoW can still add metadata updates, write
+amplification and logical fragmentation. Policy changes require representative
+workload, snapshot-pressure and failure testing rather than an analogy to NAND
+behaviour or a short installer-time benchmark.
+
 ## Proposed subvolume layout
 
 | Subvolume | Mount point | System rollback | Snapshotted by default | Purpose |
@@ -61,6 +83,34 @@ with a clearly defined lifecycle outside the operating-system deployment.
 The installer must create subvolumes before copying data and must generate
 explicit mount entries for every subvolume. A subvolume must never be nested
 inside the snapshot boundary merely because its mount was forgotten.
+
+## Future custom subvolume layouts
+
+Custom names and paths are supported only after the installer and Timeback can
+consume a versioned semantic-role manifest. The manifest maps filesystem and
+subvolume UUIDs to roles such as system root, user home, persistent logs,
+snapshot store, container data and virtual-machine images.
+
+Timeback compatibility is determined by rollback invariants:
+
+- `/`, `/usr`, `/etc`, `/var/lib/dpkg`, `/var/lib/apt`, `/var/cache/apt` and
+  `/boot` share the system-root transaction boundary;
+- user home, persistent logs, the snapshot store, containers and virtual
+  machines remain outside a system rollback;
+- every declared subvolume has an explicit mount;
+- the snapshot repository cannot be recursively captured by system
+  snapshots;
+- boot artifacts can be proven compatible with a retained deployment.
+
+A custom layout that is bootable but violates these invariants is labeled
+`Custom layout — Timeback unsupported` before installation. Cosmetic names do
+not determine support, and canonical names do not override an invalid
+boundary.
+
+The release-one literal names remain the compatibility default until the role
+manifest and migration path are implemented. Sharing an existing Btrfs
+filesystem with another Linux installation is deferred until namespacing,
+collision handling and shared filesystem-wide mount options are specified.
 
 ## Rollback transaction
 
@@ -142,6 +192,28 @@ after files exist is not sufficient.
 Databases are not automatically marked NOCOW. The choice depends on the
 database, workload, durability settings and value of checksumming. Application
 packages should own those policies rather than the base installer guessing.
+
+Btrfs-specific mount options such as compression and nodatacow apply to the
+whole filesystem even when subvolumes are mounted separately. The custom UI
+must not present them as independent per-subvolume mount options. Per-workload
+NOCOW policy is applied to an empty directory before its first data file is
+created and explicitly trades away data checksums and compression.
+
+## Future multi-device Btrfs
+
+The first multi-device milestone consumes a healthy filesystem prepared by an
+expert and binds it by FSID plus its complete device UUID set. Creation follows
+later as curated profiles with separate data and metadata policy.
+
+Candidate profiles are single/DUP where appropriate, RAID0 with a
+zero-redundancy warning, RAID1, RAID10, RAID1C3 and RAID1C4. RAID56 is rejected
+for an AnduinOS system root while upstream classifies it as unstable. Device
+add/remove, balance and profile conversion are administration features, not
+initial installer actions.
+
+Btrfs redundancy does not make an EFI System Partition redundant. Each
+independently bootable member needs its own ESP and verified loader lifecycle,
+as defined in [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
 
 ## Swap and hibernation
 
@@ -254,6 +326,8 @@ The following are deliberately not frozen:
 - automatic CoW policy for Docker and specific databases;
 - home-directory snapshot and backup integration;
 - send/receive-based recovery and remote backup.
+- semantic-role manifest schema and migration from release-one literal names;
+- supported multi-device profiles and unequal-device capacity presentation.
 
 These require prototypes and destructive VM tests before becoming release
 contracts.

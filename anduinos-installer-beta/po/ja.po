@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 01:18+0000\n"
+"POT-Creation-Date: 2026-08-01 03:39+0000\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -33,9 +33,6 @@ msgstr ""
 "\n"
 "青い MOKManager画面で [MOK の登録] → [続行] → [はい] を選択し、パスワードは 123456 です"
 
-msgid "(Live USB — excluded)"
-msgstr "(Live USB — 除外)"
-
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr "4 GiB ディスクスワップ (優先度 10) + RAMの50%を占める LZ4 zram (優先度 100)"
 
@@ -45,14 +42,32 @@ msgstr "; sudo はパスワードを要求しません"
 msgid "; sudo requires the account password"
 msgstr "; sudo はアカウントパスワードを要求します"
 
-msgid "ALL DATA on the selected disk will be permanently erased."
-msgstr "選択したディスク上のすべてのデータは永久に消去されます。"
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "ALL DATA on {disk} will be permanently erased."
 
 msgid "Account security"
 msgstr "アカウントセキュリティ"
 
 msgid "Administrator access would be locked"
 msgstr "管理者アクセスがロックされます"
+
+msgid "Advanced Storage"
+msgstr "Advanced Storage"
+
+msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+
+msgid "Advanced — keep existing systems"
+msgstr "Advanced — keep existing systems"
+
+msgid "Advanced: Install Alongside"
+msgstr "Advanced: Install Alongside"
+
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "After changing partitions or unmounting a volume, rescan storage and select the target again."
 
 msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
 msgstr "再起動後、MOKManager が起動します。[MOK の登録] → [続行] → [はい] を選択し、パスワード 123456 を入力してください。"
@@ -64,6 +79,9 @@ msgstr ""
 "{disk} 上のすべてのパーティションとデータは破壊されます。\n"
 "\n"
 
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+
 msgid "AnduinOS Installer"
 msgstr "AnduinOS インストーラー"
 
@@ -72,6 +90,16 @@ msgstr "AnduinOS インストーラー (ベータ版)"
 
 msgid "AnduinOS Installer (Development)"
 msgstr "AnduinOS インストーラー (開発版)"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
 
 msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
 msgstr "ユーザーとして実行されている任意のプログラムは、認証なしで完全な管理者権限を取得できます。ログインパスワードはまだサインインを保護しますが、sudo は保護されません。続行してもよろしいですか？"
@@ -82,17 +110,38 @@ msgstr "アラビア語"
 msgid "Back"
 msgstr "戻る"
 
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+
+msgid "BitLocker detected"
+msgstr "BitLocker detected"
+
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+
+msgid "Boot policy"
+msgstr "Boot policy"
+
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (推奨)"
+
+msgid "Btrfs — recommended"
+msgstr "Btrfs — recommended"
 
 msgid "Cannot create installation plan"
 msgstr "インストールプランを作成できません"
 
+msgid "Choose Installation Method"
+msgstr "Choose Installation Method"
+
+msgid "Choose a complete installation method, not only a filesystem."
+msgstr "Choose a complete installation method, not only a filesystem."
+
+msgid "Choose one target disk. Storage settings come next."
+msgstr "Choose one target disk. Storage settings come next."
+
 msgid "Choose optional software to install"
 msgstr "オプションのソフトウェアを選択してインストール"
-
-msgid "Choose the disk where AnduinOS will be installed"
-msgstr "AnduinOS をインストールするディスクを選択してください"
 
 msgid "Choose your language to begin installation"
 msgstr "インストールを開始するには言語を選択してください"
@@ -129,6 +178,12 @@ msgstr "AnduinOS システムのコピー"
 
 msgid "Copy Log"
 msgstr "ログのコピー"
+
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
+
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
 
 msgid "Create your user account"
 msgstr "ユーザーアカウントを作成"
@@ -167,6 +222,15 @@ msgstr "インストール中にシステムアップデートのダウンロー
 msgid "Dutch"
 msgstr "オランダ語"
 
+msgid "EFI System Partition"
+msgstr "EFI System Partition"
+
+msgid "EFI policy"
+msgstr "EFI policy"
+
+msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "Enables shared-space subvolumes, snapshots and Timeback Machine."
+
 msgid "English (UK)"
 msgstr "英語 (UK)"
 
@@ -176,8 +240,23 @@ msgstr "英語 (US)"
 msgid "Erase Disk and Install"
 msgstr "ディスクを消去してインストール"
 
+msgid "Erase every partition and all data on the selected disk."
+msgstr "Erase every partition and all data on the selected disk."
+
 msgid "Erase the entire selected disk?"
 msgstr "選択したディスク全体を消去しますか？"
+
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+
+msgid "Existing partitions detected"
+msgstr "Existing partitions detected"
+
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
 
 msgid "Filesystem"
 msgstr "ファイルシステム"
@@ -187,6 +266,9 @@ msgstr "ターゲット環境の最終化"
 
 msgid "Finnish"
 msgstr "フィンランド語"
+
+msgid "Formats"
+msgstr "Formats"
 
 msgid "French"
 msgstr "フランス語"
@@ -200,8 +282,17 @@ msgstr "ドイツ語"
 msgid "Greek"
 msgstr "ギリシャ語"
 
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+
+msgid "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Guided storage selection is missing. Rescan and select the target again."
+
 msgid "Hindi (India)"
 msgstr "ヒンディー語 (インド)"
+
+msgid "How should AnduinOS use this disk?"
+msgstr "How should AnduinOS use this disk?"
 
 msgid "I Understand the Risk, Continue"
 msgstr "リスクを理解します、続行する"
@@ -212,17 +303,29 @@ msgstr "インドネシア語"
 msgid "Install"
 msgstr "インストール"
 
+msgid "Install Alongside"
+msgstr "Install Alongside"
+
+msgid "Install Timeback Machine"
+msgstr "Timeback Machine をインストール"
+
+msgid "Install alongside"
+msgstr "Install alongside"
+
+msgid "Install alongside requires a password-protected account."
+msgstr "Install alongside requires a password-protected account."
+
 msgid "Install bootloader"
 msgstr "ブートローダーをインストール"
 
 msgid "Install hardware drivers"
 msgstr "ハードウェアドライバーをインストール"
 
+msgid "Install in the selected free space?"
+msgstr "Install in the selected free space?"
+
 msgid "Install system updates"
 msgstr "システムアップデートをインストール"
-
-msgid "Install Timeback Machine"
-msgstr "Timeback Machine をインストール"
 
 msgid "Install third-party drivers for this device"
 msgstr "このデバイスのサードパーティ製ドライバーをインストール"
@@ -235,6 +338,9 @@ msgstr "インストールに失敗しました"
 
 msgid "Installation Steps"
 msgstr "インストール手順"
+
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
 
 msgid "Installation complete"
 msgstr "インストールが完了しました"
@@ -266,11 +372,17 @@ msgstr "韓国語"
 msgid "Language"
 msgstr "言語"
 
+msgid "Live USB — excluded"
+msgstr "Live USB — excluded"
+
 msgid "Mount target filesystems"
 msgstr "ターゲットファイルシステムのマウント"
 
 msgid "Navigation error"
 msgstr "ナビゲーションエラー"
+
+msgid "New partitions"
+msgstr "New partitions"
 
 msgid "Next"
 msgstr "次へ"
@@ -281,11 +393,20 @@ msgstr "次のスライド"
 msgid "No suitable disks found."
 msgstr "適切なディスクが見つかりませんでした。"
 
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+
 msgid "Norwegian"
 msgstr "ノルウェー語"
 
 msgid "OK"
 msgstr "OK"
+
+msgid "Only this disk can be partitioned or formatted. Other disks will be inspected but not modified."
+msgstr "Only this disk can be partitioned or formatted. Other disks will be inspected but not modified."
 
 msgid "Output"
 msgstr "出力"
@@ -335,6 +456,9 @@ msgstr "ターゲット環境の準備"
 msgid "Preparing installation…"
 msgstr "インストールの準備中…"
 
+msgid "Preserved partitions"
+msgstr "Preserved partitions"
+
 msgid "Previous slide"
 msgstr "前のスライド"
 
@@ -356,6 +480,12 @@ msgstr "インストールメディアを取り出し、コンピューターを
 msgid "Requires an Internet connection. The base installation remains available when offline."
 msgstr "インターネット接続が必要です。基本インストールはオフラインでも利用可能です。"
 
+msgid "Rescan Storage"
+msgstr "Rescan Storage"
+
+msgid "Rescan and Reselect Disk"
+msgstr "Rescan and Reselect Disk"
+
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "再起動してセキュアブートキーを登録"
 
@@ -367,6 +497,12 @@ msgstr "パスワードを設定に戻って設定する"
 
 msgid "Return to Make Changes"
 msgstr "変更を加えるために戻る"
+
+msgid "Reuse {path} ({size})"
+msgstr "Reuse {path} ({size})"
+
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
 
 msgid "Romanian"
 msgstr "ルーマニア語"
@@ -395,8 +531,14 @@ msgstr "タイムゾーンを選択"
 msgid "Select fastest package mirror"
 msgstr "最速のパッケージミラーを選択"
 
+msgid "Select the target disk to continue."
+msgstr "Select the target disk to continue."
+
 msgid "Selected timezone"
 msgstr "選択されたタイムゾーン"
+
+msgid "Selected unallocated space"
+msgstr "Selected unallocated space"
 
 msgid "Some drivers are proprietary or otherwise non-free software."
 msgstr "一部のドライバーはプロプライエタリまたはその他の非フリーソフトウェアです。"
@@ -414,6 +556,9 @@ msgstr ""
 "安定したID: {stable_id}\n"
 "\n"
 
+msgid "Storage mode"
+msgstr "Storage mode"
+
 msgid "Subvolumes"
 msgstr "サブボリューム"
 
@@ -429,11 +574,23 @@ msgstr "システムアップデート"
 msgid "Target Disk"
 msgstr "ターゲットディスク"
 
+msgid "Target: {disk} ({size} — {model})"
+msgstr "Target: {disk} ({size} — {model})"
+
 msgid "Test your keyboard here…"
 msgstr "ここでキーボードを試してください…"
 
 msgid "Thai"
 msgstr "タイ語"
+
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
 
 msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
 msgstr "インストールプランは有効です。ディスク、ファイルシステム、ブートローダー、セキュアブートの状態、またはインストールされたシステムは一切変更されませんでした。"
@@ -441,8 +598,20 @@ msgstr "インストールプランは有効です。ディスク、ファイル
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr "ターゲットディスクを変更している間は、インストーラーを閉じることはできません。"
 
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+
 msgid "The privileged executor is disabled."
 msgstr "特権実行プログラムは無効化されています。"
+
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+
+msgid "The selected disk size changed. Return and select it again."
+msgstr "The selected disk size changed. Return and select it again."
+
+msgid "The selected disk topology changed. Review the disk and installation method again."
+msgstr "The selected disk topology changed. Review the disk and installation method again."
 
 msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
 msgstr "システムはこのアカウントに自動的にサインインし、パスワードなしで完全な管理者権限を取得することを許可します。物理的にアクセスできる誰でも、およびこのユーザーとして実行されている任意のプログラムは、システムを完全に制御できます。これはキオスク、一時的な仮想マシン、またはその他の管理された環境でのみ使用してください。"
@@ -456,8 +625,17 @@ msgstr "サードパーティ製ドライバー"
 msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
 msgstr "このアカウントにはログインパスワードがありませんが、sudo は依然としてパスワードを要求します。root アカウントはデフォルトでロックされているため、管理者タスクを実行できません。アカウントのパスワードを設定するか、パスワードなしの sudo を有効にしてください。"
 
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+
 msgid "This configuration is very unsafe"
 msgstr "この設定は非常に安全ではありません"
+
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
 
 msgid "This installer does not shrink or preserve other systems."
 msgstr "このインストーラーは他のシステムを縮小したり保存したりしません。"
@@ -465,11 +643,17 @@ msgstr "このインストーラーは他のシステムを縮小したり保存
 msgid "Timezone"
 msgstr "タイムゾーン"
 
+msgid "Too small"
+msgstr "Too small"
+
 msgid "Turkish"
 msgstr "トルコ語"
 
 msgid "Ukrainian"
 msgstr "ウクライナ語"
+
+msgid "Unallocated space"
+msgstr "Unallocated space"
 
 msgid "Unavailable: {error}"
 msgstr "利用不可: {error}"
@@ -479,6 +663,12 @@ msgstr "インストールされたシステムのアンマウント"
 
 msgid "Updates and Drivers"
 msgstr "アップデートとドライバー"
+
+msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+
+msgid "Use only existing unallocated space on the selected disk."
+msgstr "Use only existing unallocated space on the selected disk."
 
 msgid "User"
 msgstr "ユーザー"
@@ -491,6 +681,9 @@ msgstr "ユーザー名"
 
 msgid "Username may only contain lowercase letters, digits, underscores and hyphens."
 msgstr "ユーザー名には小文字、数字、アンダースコア、ハイフンのみを使用できます。"
+
+msgid "Uses a traditional single root filesystem."
+msgstr "Uses a traditional single root filesystem."
 
 msgid "Validate Plan (No Installation)"
 msgstr "プランを検証する (インストールなし)"
@@ -510,6 +703,12 @@ msgstr "ベトナム語"
 msgid "Welcome to AnduinOS"
 msgstr "AnduinOS へようこそ"
 
+msgid "Windows detected"
+msgstr "Windows detected"
+
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+
 msgid "automatic login"
 msgstr "自動ログイン"
 
@@ -525,6 +724,12 @@ msgstr "インストールしない"
 msgid "download and install"
 msgstr "ダウンロードしてインストール"
 
+msgid "ext4 (classic)"
+msgstr "ext4 (classic)"
+
+msgid "ext4 — classic"
+msgstr "ext4 — classic"
+
 msgid "not required"
 msgstr "不要"
 
@@ -537,8 +742,26 @@ msgstr "ext4 ルートファイルシステムのみ"
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / セキュアブート: {secure_boot}"
 
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+msgid "{path} as {filesystem}"
+msgstr "{path} as {filesystem}"
+
+msgid "{size} at {offset}"
+msgstr "{size} at {offset}"
+
+msgid "{size} unallocated at {offset}"
+msgstr "{size} unallocated at {offset}"
+
 msgid "{step} failed"
 msgstr "{step} に失敗しました"
+
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
 
 msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
 msgstr "⚠ これにより選択したディスク上のすべてのデータが消去されます。この操作は元に戻せません。"

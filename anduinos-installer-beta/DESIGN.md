@@ -2,7 +2,10 @@
 
 The installer is split across a non-privileged planner and a privileged,
 fixed executor. The UI may describe desired state, but it may not supply
-commands, step policies, mount paths, or arbitrary hooks.
+commands, step policies, arbitrary hooks or unvalidated command arguments.
+Release one has no user-supplied mount paths. Future custom storage may carry
+declarative mount paths only after the executor normalizes and validates them
+and constructs every command itself.
 
 ## Release-one contract
 
@@ -12,8 +15,9 @@ commands, step policies, mount paths, or arbitrary hooks.
   installer creates/imports the AnduinOS MOK using the existing one-time
   enrollment password policy (`123456`). The password is an implementation
   secret and is never serialized into an install plan.
-- Storage mode: erase one complete disk. Manual partitioning is reserved for
-  phase two.
+- Storage mode: erase one complete disk. Guided coexistence, custom layouts
+  and RAID are post-release-one work defined in
+  [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
 - Filesystems: Btrfs by default, ext4 as an alternative.
 - Swap: a fixed 4 GiB disk swap partition plus the installed system's existing
   50%-of-RAM LZ4 zram policy. zram has the higher priority.
@@ -72,6 +76,12 @@ implementation is obsolete and must not be shipped; the new executor uses the
 multi-subvolume ABI. The release subvolume, rollback, CoW, hibernation and
 future encryption contract is defined in
 [`BTRFS-DESIGN.md`](BTRFS-DESIGN.md).
+
+The deterministic layout is not intended to be the only long-term product
+mode. It is the first proven execution path and remains isolated while the
+planner evolves toward a typed storage graph. That graph, Windows coexistence,
+custom filesystem/subvolume policy, multi-ESP boot and RAID milestones are
+defined in [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
 
 AnduinOS ISO builds now ship this beta as the default installer so the
 destructive VM matrix can run against the real image. Ubiquity,
@@ -157,9 +167,75 @@ artwork and does not depend on the OOBE package.
   opens a dedicated completion/MOK/reboot card. Output can be copied or saved
   to the live user's home directory, while the presentation and log remain
   available after completion.
+- Milestone 8A — complete: read-only storage inventory records stable disk and
+  partition identities, exact allocated/free geometry, filesystems, ESPs and
+  topology digests. The existing erase-disk executor freezes a typed write set
+  beside its command plan during preflight and fails closed if they drift.
+  `InstallPlan` v4, GTK choices and destructive commands remain unchanged.
+- Milestone 8B — complete: `InstallPlan` v5 carries strict storage graph schema
+  v1. The graph contains no commands or authoritative device paths; privileged
+  preflight re-probes its stable disk/topology binding, resolves the current
+  path and rejects unknown fields, stale topology, non-canonical declarations
+  and graph/write-set drift. The erase-disk UI and destructive command policy
+  remain unchanged.
+- Milestone 8C — complete: the read-only coexistence analyzer classifies
+  Windows-shaped GPT layouts, BitLocker, preliminary ESP candidates, exact
+  free extents, disposable whole partitions, mounts and unsupported nested
+  mappings. Missing space produces explicit shrink-in-Windows, rescan and
+  no-force-continue notices; no coexistence control is exposed yet.
+- Milestone 8D — complete: `InstallPlan` v6 and storage graph schema v2 model
+  every preserved partition, one topology-bound free extent, bounded new
+  partitions, reused/new ESP policy and NVRAM intent. Guided graphs reject
+  whole-disk replacement, BIOS and shared fallback writes, and privileged
+  reconstruction rejects stale topology. Execution remains disabled.
+- Milestone 8E — complete: the privileged coexistence compiler produces a
+  graph-identical typed write set and bounded free-space-only commands. Shared
+  ESP reuse requires a read-only FAT check, matching identities, 64 MiB free,
+  vendor-only boot files and an exact verified NVRAM entry. Command or
+  declaration drift fails closed; execution and GTK remain disabled.
+- Milestone 8F — complete: the coexistence GTK workflow selects an exact free
+  extent and ESP policy, surfaces shrink-in-Windows/rescan/no-force guidance,
+  and renders its final confirmation from the typed write set. The beta has no
+  command-line feature flag: a target-only disk page leads to explicit Btrfs
+  erase, ext4 erase or Advanced-preservation choices, and only Advanced opens
+  the coexistence controls. Existing partitions suppress automatic strategy
+  selection, and target/topology changes invalidate all dependent choices.
+- Milestone 8G — in progress: an executor-owned destructive-test policy now
+  remains available for passwordless disposable-VM and power-cut campaigns,
+  while password-protected guided plans use the normal beta public helper.
+  Runtime checks freeze and verify all
+  existing partition identities/boundaries and every shared-ESP entry outside
+  `EFI/AnduinOS`; new partition results and the exact NVRAM entry are verified
+  after writes. A test-only plan generator, strict full-partition/ESP/NVRAM
+  evidence manifest, stable destructive-boundary markers and a persistent
+  evidence qcow2 support the eight-row campaign. The ISO, Windows disk, OVMF
+  CODE and Windows-paired VARS are SHA-256 pinned, every fixed executor step
+  has a guided-only power-cut marker and retained artifact hashes are strictly
+  verifiable without inferring a pass from QEMU status. Real Windows
+  preservation, independent boot, hard-power-cut and partial-target recovery
+  runs remain mandatory. See
+  [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
 - Final release gate: complete the VM matrix and only then remove Ubiquity and
   `anduinos-installer-config`.
 
 Disk encryption, TPM2 unlocking and FIDO2 unlocking are explicitly outside
 the release-one scope. Release one supports unencrypted ext4 and unencrypted
 Btrfs only.
+
+## Post-release-one storage direction
+
+Storage development proceeds in independently gated milestones:
+
+1. refactor discovery and planning into an immutable storage graph while
+   preserving erase-disk command parity;
+2. add UEFI+GPT guided coexistence using only selected free space or an
+   explicit disposable partition;
+3. add custom partition, filesystem, mount and Btrfs subvolume mapping;
+4. consume healthy LVM volumes and arrays prepared by expert users;
+5. add curated redundant-array creation;
+6. add LUKS2 and hardware-assisted unlock as separate recovery-driven work.
+
+No mode is exposed merely because its UI exists. Each mode requires its
+executor, preservation checks, power-cut campaign and boot matrix to pass.
+The complete plan and invariants live in
+[`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).

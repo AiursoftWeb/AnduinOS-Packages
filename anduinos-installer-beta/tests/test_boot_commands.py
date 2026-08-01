@@ -1,7 +1,7 @@
 import unittest
 
 from helpers import valid_plan
-from installer_core.boot_commands import build_boot_commands
+from installer_core.boot_commands import build_boot_commands, guided_loader_path
 from installer_core.model import Architecture, Firmware, SecureBoot
 
 
@@ -75,4 +75,18 @@ class BootCommandPlanTests(unittest.TestCase):
         )
         self.assertFalse(
             any("--uefi-secure-boot" in command for command in commands.installs)
+        )
+
+    def test_guided_loader_path_tracks_architecture_and_secure_boot(self):
+        self.assertEqual(
+            guided_loader_path(valid_plan()),
+            r"\EFI\AnduinOS\shimx64.efi",
+        )
+        self.assertEqual(
+            guided_loader_path(valid_plan(architecture=Architecture.ARM64)),
+            r"\EFI\AnduinOS\shimaa64.efi",
+        )
+        self.assertEqual(
+            guided_loader_path(valid_plan(secure_boot=SecureBoot.DISABLED)),
+            r"\EFI\AnduinOS\grubx64.efi",
         )

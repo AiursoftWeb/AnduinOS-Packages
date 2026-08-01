@@ -1,5 +1,4 @@
 import unittest
-from dataclasses import replace
 
 from helpers import valid_plan
 from installer_core.layout import build_erase_disk_layout
@@ -54,10 +53,9 @@ class StorageCommandTests(unittest.TestCase):
         )
 
     def test_arm64_ext4_has_no_bios_partition(self):
-        base = valid_plan(architecture=Architecture.ARM64)
-        plan = replace(
-            base,
-            storage=replace(base.storage, filesystem=Filesystem.EXT4),
+        plan = valid_plan(
+            architecture=Architecture.ARM64,
+            filesystem=Filesystem.EXT4,
         )
         commands = build_storage_commands(
             plan, build_erase_disk_layout(plan)
@@ -78,16 +76,11 @@ class StorageCommandTests(unittest.TestCase):
         )
 
     def test_windows_disk_is_absent_from_selected_disk_write_plan(self):
-        base = valid_plan()
-        plan = replace(
-            base,
-            storage=replace(
-                base.storage,
-                disk=DiskIdentity(
-                    path="/dev/sdb",
-                    stable_id="serial:anduinos-target",
-                    expected_size_bytes=128 * 1024**3,
-                ),
+        plan = valid_plan(
+            disk=DiskIdentity(
+                path="/dev/sdb",
+                stable_id="serial:anduinos-target",
+                expected_size_bytes=128 * 1024**3,
             ),
         )
         storage = build_storage_commands(

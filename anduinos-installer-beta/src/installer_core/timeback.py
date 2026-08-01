@@ -8,7 +8,6 @@ from pathlib import Path
 from .command import CommandError, CommandRunner
 from .software import refresh_package_indexes
 from .steps import FailurePolicy, InstallContext, StepWarning
-from .validation import validate_plan
 
 
 TIMEBACK_PACKAGE = "anduinos-timeback-machine"
@@ -54,7 +53,7 @@ class ProvisionTimebackMachineStep:
     destructive: bool = False
 
     def preflight(self, context: InstallContext) -> None:
-        validate_plan(context.plan)
+        context.validate_plan()
         self.runner.require_commands(("chroot",))
 
     def execute(self, context: InstallContext) -> None:

@@ -9,7 +9,6 @@ from pathlib import Path
 from .command import CommandRunner
 from .model import Architecture, InstallPlan, SecureBoot
 from .steps import FailurePolicy, InstallContext
-from .validation import validate_plan
 
 
 # AnduinOS documents this as the one-time MOKManager enrollment password.
@@ -31,7 +30,7 @@ class PrepareSecureBootStep:
     destructive: bool = False
 
     def preflight(self, context: InstallContext) -> None:
-        validate_plan(context.plan)
+        context.validate_plan()
         if _enabled(context.plan):
             self.runner.require_commands(("chroot", "sbverify"))
 
@@ -113,7 +112,7 @@ class VerifyDkmsSignaturesStep:
     destructive: bool = False
 
     def preflight(self, context: InstallContext) -> None:
-        validate_plan(context.plan)
+        context.validate_plan()
         self.runner.require_commands(("chroot",))
 
     def execute(self, context: InstallContext) -> None:
@@ -191,7 +190,7 @@ class EnrollSecureBootStep:
     destructive: bool = False
 
     def preflight(self, context: InstallContext) -> None:
-        validate_plan(context.plan)
+        context.validate_plan()
 
     def execute(self, context: InstallContext) -> None:
         if not _enabled(context.plan):

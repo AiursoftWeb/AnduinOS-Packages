@@ -10,9 +10,10 @@ from .preflight import (
     verify_platform_environment,
     verify_target_disk_environment,
 )
-from .probe import probe_disks, probe_platform
-from .model import Architecture, Firmware, SecureBoot
+from .probe import probe_platform
+from .model import Architecture, Firmware, InstallMode, SecureBoot
 from .steps import FailurePolicy, InstallContext
+from .storage_inventory import probe_storage_inventory
 from .storage_steps import deactivate_target_swap
 
 
@@ -31,6 +32,7 @@ class DetectBootEnvironmentStep:
             context.plan,
             self.runner,
             platform_probe=self.platform_probe,
+            execution_policy=context.execution_policy,
         )
 
     def execute(self, context: InstallContext) -> None:
@@ -64,8 +66,25 @@ class DetectBootEnvironmentStep:
                 else "not supported on arm64"
             )
         )
-        context.log("UEFI fallback bootloader: enabled on the selected disk")
-        context.log("UEFI Boot#### entries: will not be modified")
+        guided = platform.firmware is Firmware.UEFI and (
+            context.plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
+        )
+        context.log(
+            "UEFI fallback bootloader: "
+            + (
+                "preserved; no fallback write"
+                if guided
+                else "enabled on the selected disk"
+            )
+        )
+        context.log(
+            "UEFI Boot#### entries: "
+            + (
+                "create and verify AnduinOS only"
+                if guided
+                else "will not be modified"
+            )
+        )
 
     def verify(self, context: InstallContext) -> None:
         return None
@@ -77,7 +96,7 @@ class DetectBootEnvironmentStep:
 @dataclass
 class VerifyTargetDiskStep:
     runner: CommandRunner
-    disk_probe: object = probe_disks
+    inventory_probe: object = probe_storage_inventory
     id: str = "verify-target-disk"
     title: str = "Verify target disk isolation"
     failure_policy: FailurePolicy = FailurePolicy.FATAL
@@ -85,10 +104,11 @@ class VerifyTargetDiskStep:
     destructive: bool = False
 
     def preflight(self, context: InstallContext) -> None:
-        verify_target_disk_environment(
+        context.plan = verify_target_disk_environment(
             context.plan,
             self.runner,
-            disk_probe=self.disk_probe,
+            inventory_probe=self.inventory_probe,
+            execution_policy=context.execution_policy,
         )
 
     def execute(self, context: InstallContext) -> None:
@@ -96,12 +116,23 @@ class VerifyTargetDiskStep:
         context.log(f"Selected target disk: {disk.path}")
         context.log(f"Target disk identity: {disk.stable_id}")
         context.log(f"Target disk size: {disk.expected_size_bytes} bytes")
-        context.log(
-            "Only the selected disk will be partitioned and formatted"
-        )
-        context.log(
-            "Other disks and their EFI System Partitions will not be modified"
-        )
+        if context.plan.storage.mode is InstallMode.GUIDED_COEXISTENCE:
+            context.log(
+                "Only the selected unallocated extent will receive new "
+                "partitions"
+            )
+            context.log(
+                "Every pre-existing partition on the selected disk is "
+                "preserve-marked"
+            )
+        else:
+            context.log(
+                "Only the selected disk will be partitioned and formatted"
+            )
+            context.log(
+                "Other disks and their EFI System Partitions will not be "
+                "modified"
+            )
         context.log(
             "Operating systems on other disks will not be added to the "
             "AnduinOS GRUB menu"

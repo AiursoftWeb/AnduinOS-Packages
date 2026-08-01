@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 01:18+0000\n"
+"POT-Creation-Date: 2026-08-01 03:39+0000\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -32,9 +32,6 @@ msgstr ""
 "\n"
 "Pada layar biru MOKManager, pilih Enroll MOK → Lanjutkan → Ya, kata sandi: 123456"
 
-msgid "(Live USB — excluded)"
-msgstr "(USB Live — dikecualikan)"
-
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr "Swap disk 4 GiB (prioritas 10) + zram LZ4 RAM 50% (prioritas 100)"
 
@@ -44,14 +41,32 @@ msgstr "; sudo tidak memerlukan kata sandi"
 msgid "; sudo requires the account password"
 msgstr "; sudo memerlukan kata sandi akun"
 
-msgid "ALL DATA on the selected disk will be permanently erased."
-msgstr "SEMUA DATA pada disk yang dipilih akan dihapus secara permanen."
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "ALL DATA on {disk} will be permanently erased."
 
 msgid "Account security"
 msgstr "Keamanan akun"
 
 msgid "Administrator access would be locked"
 msgstr "Akses administrator akan dikunci"
+
+msgid "Advanced Storage"
+msgstr "Advanced Storage"
+
+msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+
+msgid "Advanced — keep existing systems"
+msgstr "Advanced — keep existing systems"
+
+msgid "Advanced: Install Alongside"
+msgstr "Advanced: Install Alongside"
+
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "After changing partitions or unmounting a volume, rescan storage and select the target again."
 
 msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
 msgstr "Setelah restart, MOKManager akan terbuka. Pilih Enroll MOK → Lanjutkan → Ya, lalu masukkan kata sandi 123456."
@@ -63,6 +78,9 @@ msgstr ""
 "Semua partisi dan data pada {disk} akan hancur.\n"
 "\n"
 
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+
 msgid "AnduinOS Installer"
 msgstr "Penginstal AnduinOS"
 
@@ -71,6 +89,16 @@ msgstr "Penginstal AnduinOS (Beta)"
 
 msgid "AnduinOS Installer (Development)"
 msgstr "Penginstal AnduinOS (Pengembangan)"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
 
 msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
 msgstr "Program apa pun yang berjalan sebagai pengguna Anda dapat memperoleh hak administrator penuh tanpa autentikasi. Kata sandi login Anda masih melindungi masuk, tetapi tidak akan melindungi sudo. Apakah Anda yakin ingin melanjutkan?"
@@ -81,17 +109,38 @@ msgstr "Arab"
 msgid "Back"
 msgstr "Kembali"
 
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+
+msgid "BitLocker detected"
+msgstr "BitLocker detected"
+
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+
+msgid "Boot policy"
+msgstr "Boot policy"
+
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (direkomendasikan)"
+
+msgid "Btrfs — recommended"
+msgstr "Btrfs — recommended"
 
 msgid "Cannot create installation plan"
 msgstr "Tidak dapat membuat rencana instalasi"
 
+msgid "Choose Installation Method"
+msgstr "Choose Installation Method"
+
+msgid "Choose a complete installation method, not only a filesystem."
+msgstr "Choose a complete installation method, not only a filesystem."
+
+msgid "Choose one target disk. Storage settings come next."
+msgstr "Choose one target disk. Storage settings come next."
+
 msgid "Choose optional software to install"
 msgstr "Pilih perangkat lunak opsional untuk diinstal"
-
-msgid "Choose the disk where AnduinOS will be installed"
-msgstr "Pilih disk tempat AnduinOS akan diinstal"
 
 msgid "Choose your language to begin installation"
 msgstr "Pilih bahasa Anda untuk memulai instalasi"
@@ -128,6 +177,12 @@ msgstr "Salin sistem AnduinOS"
 
 msgid "Copy Log"
 msgstr "Salin Log"
+
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
+
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
 
 msgid "Create your user account"
 msgstr "Buat akun pengguna Anda"
@@ -166,6 +221,15 @@ msgstr "Unduh dan instal pembaruan sistem selama instalasi"
 msgid "Dutch"
 msgstr "Belanda"
 
+msgid "EFI System Partition"
+msgstr "EFI System Partition"
+
+msgid "EFI policy"
+msgstr "EFI policy"
+
+msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "Enables shared-space subvolumes, snapshots and Timeback Machine."
+
 msgid "English (UK)"
 msgstr "Bahasa Inggris (UK)"
 
@@ -175,8 +239,23 @@ msgstr "Bahasa Inggris (AS)"
 msgid "Erase Disk and Install"
 msgstr "Hapus Disk dan Instal"
 
+msgid "Erase every partition and all data on the selected disk."
+msgstr "Erase every partition and all data on the selected disk."
+
 msgid "Erase the entire selected disk?"
 msgstr "Hapus seluruh disk yang dipilih?"
+
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+
+msgid "Existing partitions detected"
+msgstr "Existing partitions detected"
+
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
 
 msgid "Filesystem"
 msgstr "Sistem file"
@@ -186,6 +265,9 @@ msgstr "Selesaikan lingkungan target"
 
 msgid "Finnish"
 msgstr "Finlandia"
+
+msgid "Formats"
+msgstr "Formats"
 
 msgid "French"
 msgstr "Prancis"
@@ -199,8 +281,17 @@ msgstr "Jerman"
 msgid "Greek"
 msgstr "Yunani"
 
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+
+msgid "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Guided storage selection is missing. Rescan and select the target again."
+
 msgid "Hindi (India)"
 msgstr "Hindi (India)"
+
+msgid "How should AnduinOS use this disk?"
+msgstr "How should AnduinOS use this disk?"
 
 msgid "I Understand the Risk, Continue"
 msgstr "Saya Memahami Risikonya, Lanjutkan"
@@ -211,17 +302,29 @@ msgstr "Indonesia"
 msgid "Install"
 msgstr "Instal"
 
+msgid "Install Alongside"
+msgstr "Install Alongside"
+
+msgid "Install Timeback Machine"
+msgstr "Instal Timeback Machine"
+
+msgid "Install alongside"
+msgstr "Install alongside"
+
+msgid "Install alongside requires a password-protected account."
+msgstr "Install alongside requires a password-protected account."
+
 msgid "Install bootloader"
 msgstr "Instal bootloader"
 
 msgid "Install hardware drivers"
 msgstr "Instal driver perangkat keras"
 
+msgid "Install in the selected free space?"
+msgstr "Install in the selected free space?"
+
 msgid "Install system updates"
 msgstr "Instal pembaruan sistem"
-
-msgid "Install Timeback Machine"
-msgstr "Instal Timeback Machine"
 
 msgid "Install third-party drivers for this device"
 msgstr "Instal driver pihak ketiga untuk perangkat ini"
@@ -234,6 +337,9 @@ msgstr "Instalasi Gagal"
 
 msgid "Installation Steps"
 msgstr "Langkah Instalasi"
+
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
 
 msgid "Installation complete"
 msgstr "Instalasi selesai"
@@ -265,11 +371,17 @@ msgstr "Korea"
 msgid "Language"
 msgstr "Bahasa"
 
+msgid "Live USB — excluded"
+msgstr "Live USB — excluded"
+
 msgid "Mount target filesystems"
 msgstr "Pasang sistem file target"
 
 msgid "Navigation error"
 msgstr "Kesalahan navigasi"
+
+msgid "New partitions"
+msgstr "New partitions"
 
 msgid "Next"
 msgstr "Selanjutnya"
@@ -280,11 +392,20 @@ msgstr "Slide berikutnya"
 msgid "No suitable disks found."
 msgstr "Tidak ditemukan disk yang sesuai."
 
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+
 msgid "Norwegian"
 msgstr "Norwegia"
 
 msgid "OK"
 msgstr "OKE"
+
+msgid "Only this disk can be partitioned or formatted. Other disks will be inspected but not modified."
+msgstr "Only this disk can be partitioned or formatted. Other disks will be inspected but not modified."
 
 msgid "Output"
 msgstr "Output"
@@ -334,6 +455,9 @@ msgstr "Siapkan lingkungan target"
 msgid "Preparing installation…"
 msgstr "Mempersiapkan instalasi…"
 
+msgid "Preserved partitions"
+msgstr "Preserved partitions"
+
 msgid "Previous slide"
 msgstr "Slide sebelumnya"
 
@@ -355,6 +479,12 @@ msgstr "Lepaskan media instalasi dan restart komputer Anda"
 msgid "Requires an Internet connection. The base installation remains available when offline."
 msgstr "Memerlukan koneksi Internet. Instalasi dasar tetap tersedia saat offline."
 
+msgid "Rescan Storage"
+msgstr "Rescan Storage"
+
+msgid "Rescan and Reselect Disk"
+msgstr "Rescan and Reselect Disk"
+
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "Restart dan Daftarkan Kunci Secure Boot"
 
@@ -366,6 +496,12 @@ msgstr "Kembali dan Atur Kata Sandi"
 
 msgid "Return to Make Changes"
 msgstr "Kembali untuk Melakukan Perubahan"
+
+msgid "Reuse {path} ({size})"
+msgstr "Reuse {path} ({size})"
+
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
 
 msgid "Romanian"
 msgstr "Rumania"
@@ -394,8 +530,14 @@ msgstr "Pilih Zona Waktu"
 msgid "Select fastest package mirror"
 msgstr "Pilih mirror paket tercepat"
 
+msgid "Select the target disk to continue."
+msgstr "Select the target disk to continue."
+
 msgid "Selected timezone"
 msgstr "Zona waktu yang dipilih"
+
+msgid "Selected unallocated space"
+msgstr "Selected unallocated space"
 
 msgid "Some drivers are proprietary or otherwise non-free software."
 msgstr "Beberapa driver bersifat proprietary atau perangkat lunak non-bebas lainnya."
@@ -413,6 +555,9 @@ msgstr ""
 "Identitas stabil: {stable_id}\n"
 "\n"
 
+msgid "Storage mode"
+msgstr "Storage mode"
+
 msgid "Subvolumes"
 msgstr "Subvolume"
 
@@ -428,11 +573,23 @@ msgstr "Pembaruan sistem"
 msgid "Target Disk"
 msgstr "Disk Target"
 
+msgid "Target: {disk} ({size} — {model})"
+msgstr "Target: {disk} ({size} — {model})"
+
 msgid "Test your keyboard here…"
 msgstr "Uji keyboard Anda di sini…"
 
 msgid "Thai"
 msgstr "Thai"
+
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
 
 msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
 msgstr "Rencana instalasi valid. Tidak ada disk, sistem file, bootloader, status Secure Boot, atau sistem yang terinstal yang diubah."
@@ -440,8 +597,20 @@ msgstr "Rencana instalasi valid. Tidak ada disk, sistem file, bootloader, status
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr "Penginstal tidak dapat ditutup saat memodifikasi disk target."
 
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+
 msgid "The privileged executor is disabled."
 msgstr "Eksekutor hak istimewa dinonaktifkan."
+
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+
+msgid "The selected disk size changed. Return and select it again."
+msgstr "The selected disk size changed. Return and select it again."
+
+msgid "The selected disk topology changed. Review the disk and installation method again."
+msgstr "The selected disk topology changed. Review the disk and installation method again."
 
 msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
 msgstr "Sistem akan masuk ke akun ini secara otomatis dan mengizinkannya untuk memperoleh hak administrator penuh tanpa kata sandi. Siapa pun dengan akses fisik, dan program apa pun yang berjalan sebagai pengguna ini, dapat sepenuhnya mengendalikan sistem. Gunakan ini hanya untuk kios, mesin virtual sementara, atau lingkungan terkendali lainnya."
@@ -455,8 +624,17 @@ msgstr "Driver pihak ketiga"
 msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
 msgstr "Akun ini tidak memiliki kata sandi masuk, tetapi sudo masih memerlukan satu. Karena akun root dikunci secara default, Anda tidak akan dapat melakukan tugas-tugas administrator. Tetapkan kata sandi akun atau aktifkan sudo tanpa kata sandi."
 
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+
 msgid "This configuration is very unsafe"
 msgstr "Konfigurasi ini sangat tidak aman"
+
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
 
 msgid "This installer does not shrink or preserve other systems."
 msgstr "Penginstal ini tidak mengecilkan atau melestarikan sistem lain."
@@ -464,11 +642,17 @@ msgstr "Penginstal ini tidak mengecilkan atau melestarikan sistem lain."
 msgid "Timezone"
 msgstr "Zona Waktu"
 
+msgid "Too small"
+msgstr "Too small"
+
 msgid "Turkish"
 msgstr "Turki"
 
 msgid "Ukrainian"
 msgstr "Ukraina"
+
+msgid "Unallocated space"
+msgstr "Unallocated space"
 
 msgid "Unavailable: {error}"
 msgstr "Tidak tersedia: {error}"
@@ -478,6 +662,12 @@ msgstr "Lepas sistem yang terinstal"
 
 msgid "Updates and Drivers"
 msgstr "Pembaruan dan Driver"
+
+msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+
+msgid "Use only existing unallocated space on the selected disk."
+msgstr "Use only existing unallocated space on the selected disk."
 
 msgid "User"
 msgstr "Pengguna"
@@ -490,6 +680,9 @@ msgstr "Nama Pengguna"
 
 msgid "Username may only contain lowercase letters, digits, underscores and hyphens."
 msgstr "Nama pengguna hanya boleh berisi huruf kecil, angka, garis bawah, dan tanda hubung."
+
+msgid "Uses a traditional single root filesystem."
+msgstr "Uses a traditional single root filesystem."
 
 msgid "Validate Plan (No Installation)"
 msgstr "Validasi Rencana (Tanpa Instalasi)"
@@ -509,6 +702,12 @@ msgstr "Vietnam"
 msgid "Welcome to AnduinOS"
 msgstr "Selamat datang di AnduinOS"
 
+msgid "Windows detected"
+msgstr "Windows detected"
+
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+
 msgid "automatic login"
 msgstr "login otomatis"
 
@@ -524,6 +723,12 @@ msgstr "jangan instal"
 msgid "download and install"
 msgstr "unduh dan instal"
 
+msgid "ext4 (classic)"
+msgstr "ext4 (classic)"
+
+msgid "ext4 — classic"
+msgstr "ext4 — classic"
+
 msgid "not required"
 msgstr "tidak diperlukan"
 
@@ -536,8 +741,26 @@ msgstr "sistem file root ext4 tunggal"
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+msgid "{path} as {filesystem}"
+msgstr "{path} as {filesystem}"
+
+msgid "{size} at {offset}"
+msgstr "{size} at {offset}"
+
+msgid "{size} unallocated at {offset}"
+msgstr "{size} unallocated at {offset}"
+
 msgid "{step} failed"
 msgstr "{step} gagal"
+
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
 
 msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
 msgstr "⚠ Ini akan menghapus SEMUA data pada disk yang dipilih. Tindakan ini tidak dapat dibatalkan."

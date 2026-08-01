@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 01:18+0000\n"
+"POT-Creation-Date: 2026-08-01 03:39+0000\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -32,9 +32,6 @@ msgstr ""
 "\n"
 "في شاشة MOKManager الزرقاء، اختر Enroll MOK → Continue → Yes، كلمة المرور: 123456"
 
-msgid "(Live USB — excluded)"
-msgstr "(USB مباشر — مستبعد)"
-
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr "مساحة تبديل (Swap) بحجم 4 جيجابايت على القرص (الأولوية 10) + ذاكرة عشوائية مضغوطة LZ4 zram بنسبة 50% من الذاكرة العشوائية (الأولوية 100)"
 
@@ -44,14 +41,32 @@ msgstr "؛ لا تتطلب أمر sudo كلمة مرور"
 msgid "; sudo requires the account password"
 msgstr "؛ يتطلب الأمر sudo كلمة مرور الحساب"
 
-msgid "ALL DATA on the selected disk will be permanently erased."
-msgstr "سيتم مسح جميع البيانات الموجودة على القرص المحدد نهائياً."
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "يتم تحميل إحدى التقسيمات على هذا القرص. قم بإلغاء تحميلها وإعادة مسح التخزين قبل المتابعة."
+
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "ALL DATA on {disk} will be permanently erased."
 
 msgid "Account security"
 msgstr "أمان الحساب"
 
 msgid "Administrator access would be locked"
 msgstr "سيتم قفل وصول المسؤول"
+
+msgid "Advanced Storage"
+msgstr "Advanced Storage"
+
+msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+
+msgid "Advanced — keep existing systems"
+msgstr "Advanced — keep existing systems"
+
+msgid "Advanced: Install Alongside"
+msgstr "Advanced: Install Alongside"
+
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "بعد تغيير التقسيمات أو إلغاء تحميل مجلد، أعد مسح التخزين وحدد الهدف مرة أخرى."
 
 msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
 msgstr "بعد إعادة التشغيل، سيفتح MOKManager. اختر Enroll MOK → Continue → Yes، ثم أدخل كلمة المرور 123456."
@@ -63,6 +78,9 @@ msgstr ""
 "سيتم تدمير جميع الأقسام والبيانات الموجودة على {disk}.\n"
 "\n"
 
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "بديلًا عن ذلك، يمكنك تحديد تقسيم كامل محدد لحذفه. سيتم تدمير كل شيء موجود في هذا التقسيم المحدد؛ ولن يتم تحديده تلقائيًا أبدًا."
+
 msgid "AnduinOS Installer"
 msgstr "برنامج تثبيت AnduinOS"
 
@@ -71,6 +89,16 @@ msgstr "برنامج تثبيت AnduinOS (نسخة تجريبية)"
 
 msgid "AnduinOS Installer (Development)"
 msgstr "برنامج تثبيت AnduinOS (وضع التطوير)"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "سوف يستخدم AnduinOS فقط المساحة غير المخصصة المحددة. لن يقوم المثبت بتصغير أو نقل نظام ملفات موجود."
 
 msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
 msgstr "يمكن لأي برنامج يعمل باسم مستخدمك الحصول على امتيازات مسؤول كاملة دون مصادقة. لا تزال كلمة مرور تسجيل الدخول تحمي عملية تسجيل الدخول، لكنها لن تحمي sudo. هل أنت متأكد من أنك تريد المتابعة؟"
@@ -81,17 +109,38 @@ msgstr "العربية"
 msgid "Back"
 msgstr "رجوع"
 
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+
+msgid "BitLocker detected"
+msgstr "BitLocker detected"
+
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "سيتم الحفاظ على تخزين BitLocker. لن يقوم المثبت بفك القفل أو تغيير الحجم أو إصلاح أو تعديل بطرق أخرى."
+
+msgid "Boot policy"
+msgstr "Boot policy"
+
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (موصى به)"
+
+msgid "Btrfs — recommended"
+msgstr "Btrfs — recommended"
 
 msgid "Cannot create installation plan"
 msgstr "تعذر إنشاء خطة التثبيت"
 
+msgid "Choose Installation Method"
+msgstr "Choose Installation Method"
+
+msgid "Choose a complete installation method, not only a filesystem."
+msgstr "Choose a complete installation method, not only a filesystem."
+
+msgid "Choose one target disk. Storage settings come next."
+msgstr "Choose one target disk. Storage settings come next."
+
 msgid "Choose optional software to install"
 msgstr "اختر البرامج الاختيارية للتثبيت"
-
-msgid "Choose the disk where AnduinOS will be installed"
-msgstr "اختر القرص الذي سيتم تثبيت AnduinOS عليه"
 
 msgid "Choose your language to begin installation"
 msgstr "اختر لغتك لبدء التثبيت"
@@ -128,6 +177,12 @@ msgstr "نسخ نظام AnduinOS"
 
 msgid "Copy Log"
 msgstr "نسخ السجل"
+
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
+
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
 
 msgid "Create your user account"
 msgstr "أنشئ حساب المستخدم الخاص بك"
@@ -166,6 +221,15 @@ msgstr "تحميل وتثبيت تحديثات النظام أثناء التث�
 msgid "Dutch"
 msgstr "الهولندية"
 
+msgid "EFI System Partition"
+msgstr "EFI System Partition"
+
+msgid "EFI policy"
+msgstr "EFI policy"
+
+msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "Enables shared-space subvolumes, snapshots and Timeback Machine."
+
 msgid "English (UK)"
 msgstr "الإنجليزية (المملكة المتحدة)"
 
@@ -175,8 +239,23 @@ msgstr "الإنجليزية (الولايات المتحدة)"
 msgid "Erase Disk and Install"
 msgstr "مسح القرص والتثبيت"
 
+msgid "Erase every partition and all data on the selected disk."
+msgstr "Erase every partition and all data on the selected disk."
+
 msgid "Erase the entire selected disk?"
 msgstr "هل تريد مسح القرص المحدد بالكامل؟"
+
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "تبقى تقسيمات Windows الحالية واستعادة البيانات خارج مجموعة الكتابة وسيتم الحفاظ عليها."
+
+msgid "Existing partitions detected"
+msgstr "Existing partitions detected"
+
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
 
 msgid "Filesystem"
 msgstr "نظام الملفات"
@@ -186,6 +265,9 @@ msgstr "إكمال بيئة الهدف"
 
 msgid "Finnish"
 msgstr "الفنلندية"
+
+msgid "Formats"
+msgstr "Formats"
 
 msgid "French"
 msgstr "الفرنسية"
@@ -199,8 +281,17 @@ msgstr "الألمانية"
 msgid "Greek"
 msgstr "اليونانية"
 
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "يتطلب التعايش الموجه نظامًا تم تشغيله في وضع UEFI وقرص هدف GPT. لا يمكن لهذا القرص الاستمرار في الوضع الموجه."
+
+msgid "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Guided storage selection is missing. Rescan and select the target again."
+
 msgid "Hindi (India)"
 msgstr "الهندية (الهند)"
+
+msgid "How should AnduinOS use this disk?"
+msgstr "How should AnduinOS use this disk?"
 
 msgid "I Understand the Risk, Continue"
 msgstr "أفهم المخاطر، المتابعة"
@@ -211,17 +302,29 @@ msgstr "الإندونيسية"
 msgid "Install"
 msgstr "تثبيت"
 
+msgid "Install Alongside"
+msgstr "Install Alongside"
+
+msgid "Install Timeback Machine"
+msgstr "تثبيت Timeback Machine"
+
+msgid "Install alongside"
+msgstr "Install alongside"
+
+msgid "Install alongside requires a password-protected account."
+msgstr "Install alongside requires a password-protected account."
+
 msgid "Install bootloader"
 msgstr "تثبيت محمل الإقلاع"
 
 msgid "Install hardware drivers"
 msgstr "تثبيت برامج تشغيل الأجهزة"
 
+msgid "Install in the selected free space?"
+msgstr "Install in the selected free space?"
+
 msgid "Install system updates"
 msgstr "تثبيت تحديثات النظام"
-
-msgid "Install Timeback Machine"
-msgstr "تثبيت Timeback Machine"
 
 msgid "Install third-party drivers for this device"
 msgstr "تثبيت برامج تشغيل الجهات الخارجية لهذا الجهاز"
@@ -234,6 +337,9 @@ msgstr "فشل التثبيت"
 
 msgid "Installation Steps"
 msgstr "خطوات التثبيت"
+
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "لا يمكن المتابعة في التثبيت مع هذا الاختيار. لا يوجد خيار للاستمرار القسري يتجاوز فحوصات سلامة التخزين."
 
 msgid "Installation complete"
 msgstr "اكتمل التثبيت"
@@ -265,11 +371,17 @@ msgstr "الكورية"
 msgid "Language"
 msgstr "اللغة"
 
+msgid "Live USB — excluded"
+msgstr "Live USB — excluded"
+
 msgid "Mount target filesystems"
 msgstr "تركيب أنظمة ملفات الهدف"
 
 msgid "Navigation error"
 msgstr "خطأ في التنقل"
+
+msgid "New partitions"
+msgstr "New partitions"
 
 msgid "Next"
 msgstr "التالي"
@@ -280,11 +392,20 @@ msgstr "الشريحة التالية"
 msgid "No suitable disks found."
 msgstr "لم يتم العثور على أقراص مناسبة."
 
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "لم يتم العثور على مساحة غير مخصصة مناسبة. لحماية بياناتك، قم بإنشاء مساحة غير مخصصة باستخدام إدارة الأقراص في Windows، ثم أعد تشغيل المثبت وأعد مسح القرص."
+
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "لم يتم العثور على مساحة غير مخصصة مناسبة. لحماية بياناتك، قم بإنشاء مساحة غير مخصصة باستخدام أداة تقسيم، ثم أعد تشغيل المثبت وأعد مسح القرص."
+
 msgid "Norwegian"
 msgstr "النرويجية"
 
 msgid "OK"
 msgstr "موافق"
+
+msgid "Only this disk can be partitioned or formatted. Other disks will be inspected but not modified."
+msgstr "Only this disk can be partitioned or formatted. Other disks will be inspected but not modified."
 
 msgid "Output"
 msgstr "الإخراج"
@@ -334,6 +455,9 @@ msgstr "تحضير بيئة الهدف"
 msgid "Preparing installation…"
 msgstr "جارٍ التحضير للتثبيت…"
 
+msgid "Preserved partitions"
+msgstr "Preserved partitions"
+
 msgid "Previous slide"
 msgstr "الشريحة السابقة"
 
@@ -355,6 +479,12 @@ msgstr "أزل وسيط التثبيت وأعد تشغيل حاسوبك"
 msgid "Requires an Internet connection. The base installation remains available when offline."
 msgstr "يتطلب اتصالاً بالإنترنت. يبقى التثبيت الأساسي متاحًا عند عدم الاتصال بالإنترنت."
 
+msgid "Rescan Storage"
+msgstr "Rescan Storage"
+
+msgid "Rescan and Reselect Disk"
+msgstr "Rescan and Reselect Disk"
+
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "إعادة التشغيل وتسجيل مفتاح الإقلاع الآمن"
 
@@ -366,6 +496,12 @@ msgstr "العودة وإعداد كلمة مرور"
 
 msgid "Return to Make Changes"
 msgstr "العودة لإجراء تغييرات"
+
+msgid "Reuse {path} ({size})"
+msgstr "Reuse {path} ({size})"
+
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
 
 msgid "Romanian"
 msgstr "الرومانية"
@@ -394,8 +530,14 @@ msgstr "اختيار المنطقة الزمنية"
 msgid "Select fastest package mirror"
 msgstr "اختيار أسرع مرآة للحزم"
 
+msgid "Select the target disk to continue."
+msgstr "Select the target disk to continue."
+
 msgid "Selected timezone"
 msgstr "المنطقة الزمنية المحددة"
+
+msgid "Selected unallocated space"
+msgstr "Selected unallocated space"
 
 msgid "Some drivers are proprietary or otherwise non-free software."
 msgstr "بعض برامج التشغيل مملوكة أو غير حرة بطرق أخرى."
@@ -413,6 +555,9 @@ msgstr ""
 "هوية مستقرة: {stable_id}\n"
 "\n"
 
+msgid "Storage mode"
+msgstr "Storage mode"
+
 msgid "Subvolumes"
 msgstr "المجلدات الفرعية (Subvolumes)"
 
@@ -428,11 +573,23 @@ msgstr "تحديثات النظام"
 msgid "Target Disk"
 msgstr "قرص الهدف"
 
+msgid "Target: {disk} ({size} — {model})"
+msgstr "Target: {disk} ({size} — {model})"
+
 msgid "Test your keyboard here…"
 msgstr "اختبر لوحة المفاتيح هنا…"
 
 msgid "Thai"
 msgstr "الثايلاندية"
+
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "لا يحتوي قرص GPT أو أحد أقسامه على معرّف فريد ومستقر. لا يمكن للتعايش الموجه تفويض الحفظ أو الكتابة بأمان على هذا القرص."
+
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "لم يتمكن من قراءة خريطة التقسيم الكاملة وهندسة المساحة الحرة بشكل متسق. لم يتم تفويض أي مساحة على هذا القرص للتثبيت."
+
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "تعد تقسيم نظام EFI الحالي مرشحًا فقط. يجب اجتياز فحوصات الصحة والمساحة الحرة قبل إعادة استخدامه، ولن يتم تنسيقه أبدًا."
 
 msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
 msgstr "خطة التثبيت صالحة. لم يتم تغيير أي قرص أو نظام ملفات أو محمّل إقلاع أو حالة الإقلاع الآمن أو النظام المثبت."
@@ -440,8 +597,20 @@ msgstr "خطة التثبيت صالحة. لم يتم تغيير أي قرص أ�
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr "لا يمكن إغلاق المثبت أثناء تعديله لقرص الهدف."
 
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "لن يقوم المثبت بتحميل أو إصلاح أو استنتاج أمان مجلدات Windows من حالة السبات أو التشغيل السريع. يجب إكمال أي صيانة مطلوبة لـ Windows داخل Windows."
+
 msgid "The privileged executor is disabled."
 msgstr "تم تعطيل منفذ الامتيازات (Privileged executor)."
+
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+
+msgid "The selected disk size changed. Return and select it again."
+msgstr "The selected disk size changed. Return and select it again."
+
+msgid "The selected disk topology changed. Review the disk and installation method again."
+msgstr "The selected disk topology changed. Review the disk and installation method again."
 
 msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
 msgstr "سيتصل النظام تلقائيًا بهذه الحساب ويسمح له بالحصول على امتيازات مسؤول كاملة دون كلمة مرور. يمكن لأي شخص لديه وصول مادي، وأي برنامج يعمل باسم هذا المستخدم، التحكم الكامل في النظام. استخدم هذا فقط لـ kiosk أو آلة افتراضية مؤقتة أو بيئة أخرى خاضعة للرقابة."
@@ -455,8 +624,17 @@ msgstr "برامج تشغيل الجهات الخارجية"
 msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
 msgstr "لا يحتوي هذا الحساب على كلمة مرور تسجيل الدخول، لكن الأمر sudo سيظل يتطلب واحدة. نظرًا لأن حساب root مقفول افتراضيًا، لن تتمكن من تنفيذ مهام المسؤول. قم بتعيين كلمة مرور للحساب أو فعّل sudo بدون كلمة مرور."
 
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+
 msgid "This configuration is very unsafe"
 msgstr "هذه الإعدادات غير آمنة للغاية"
+
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "يحتوي هذا القرص على مرساة نشطة، مصفوفة أو طبولوجيا جهاز كتلي متداخل آخر لا يدعمه التعايش الموجه."
+
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
 
 msgid "This installer does not shrink or preserve other systems."
 msgstr "لا يقوم هذا المثبت بتقليص أو الحفاظ على الأنظمة الأخرى."
@@ -464,11 +642,17 @@ msgstr "لا يقوم هذا المثبت بتقليص أو الحفاظ على 
 msgid "Timezone"
 msgstr "المنطقة الزمنية"
 
+msgid "Too small"
+msgstr "Too small"
+
 msgid "Turkish"
 msgstr "التركية"
 
 msgid "Ukrainian"
 msgstr "الأوكرانية"
+
+msgid "Unallocated space"
+msgstr "Unallocated space"
 
 msgid "Unavailable: {error}"
 msgstr "غير متاح: {error}"
@@ -478,6 +662,12 @@ msgstr "فك تركيب النظام المثبت"
 
 msgid "Updates and Drivers"
 msgstr "التحديثات وبرامج التشغيل"
+
+msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+
+msgid "Use only existing unallocated space on the selected disk."
+msgstr "Use only existing unallocated space on the selected disk."
 
 msgid "User"
 msgstr "المستخدم"
@@ -490,6 +680,9 @@ msgstr "اسم المستخدم"
 
 msgid "Username may only contain lowercase letters, digits, underscores and hyphens."
 msgstr "قد يحتوي اسم المستخدم فقط على أحرف صغيرة وأرقام وشرطات سفلية وواصلات."
+
+msgid "Uses a traditional single root filesystem."
+msgstr "Uses a traditional single root filesystem."
 
 msgid "Validate Plan (No Installation)"
 msgstr "التحقق من صحة الخطة (بدون تثبيت)"
@@ -509,6 +702,12 @@ msgstr "الفيتنامية"
 msgid "Welcome to AnduinOS"
 msgstr "مرحباً بك في AnduinOS"
 
+msgid "Windows detected"
+msgstr "Windows detected"
+
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+
 msgid "automatic login"
 msgstr "تسجيل الدخول التلقائي"
 
@@ -524,6 +723,12 @@ msgstr "عدم التثبيت"
 msgid "download and install"
 msgstr "التحميل والتثبيت"
 
+msgid "ext4 (classic)"
+msgstr "ext4 (classic)"
+
+msgid "ext4 — classic"
+msgstr "ext4 — classic"
+
 msgid "not required"
 msgstr "غير مطلوب"
 
@@ -536,8 +741,26 @@ msgstr "نظام ملفات جذري ext4 واحد"
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / الإقلاع الآمن: {secure_boot}"
 
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+msgid "{path} as {filesystem}"
+msgstr "{path} as {filesystem}"
+
+msgid "{size} at {offset}"
+msgstr "{size} at {offset}"
+
+msgid "{size} unallocated at {offset}"
+msgstr "{size} unallocated at {offset}"
+
 msgid "{step} failed"
 msgstr "فشل {step}"
+
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
 
 msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
 msgstr "⚠ سيؤدي هذا إلى مسح جميع البيانات الموجودة على القرص المحدد. لا يمكن التراجع عن هذا الإجراء."

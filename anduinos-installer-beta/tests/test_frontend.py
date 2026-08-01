@@ -1,15 +1,53 @@
 import io
+import json
 import unittest
+from dataclasses import replace
 from unittest.mock import patch
 
+from helpers import TEST_INVENTORY_DIGEST, TEST_TOPOLOGY_DIGEST
 from frontend import (
     DevelopmentExecutorClient,
     ExecutorClient,
     FrontendPlanError,
+    StorageStrategy,
+    apply_storage_strategy,
+    bind_storage_target,
+    clear_storage_target,
     create_install_plan,
+    guided_storage_enabled,
 )
-from installer_core.model import Architecture, DiskIdentity, Firmware, SecureBoot
+from installer_core.model import (
+    Architecture,
+    DiskIdentity,
+    Filesystem,
+    Firmware,
+    InstallMode,
+    SecureBoot,
+)
 from installer_core.probe import PlatformProbe
+from installer_core.storage_inventory import DiskInventory, StorageInventory
+from installer_core.storage_ui import (
+    build_guided_storage_preview,
+    build_storage_workflow,
+    recommended_guided_selection,
+)
+from test_coexistence import windows_disk
+
+
+def inventory_for(disk):
+    return StorageInventory(
+        (
+            DiskInventory(
+                identity=disk,
+                partition_table="gpt",
+                partition_table_uuid="test-table",
+                partitions=(),
+                free_extents=(),
+                topology_digest=TEST_TOPOLOGY_DIGEST,
+            ),
+        ),
+        TEST_INVENTORY_DIGEST,
+    )
 
 
 def state():
@@ -35,6 +73,31 @@ def state():
     }
 
 
+def guided_state():
+    disk = windows_disk(free_gib=24)
+    inventory = StorageInventory((disk,), "e" * 64)
+    platform = PlatformProbe(
+        Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED
+    )
+    workflow = build_storage_workflow(inventory, platform)
+    preview = build_guided_storage_preview(
+        workflow,
+        recommended_guided_selection(workflow.disks[0], Filesystem.BTRFS),
+    )
+    values = state()
+    values.update(
+        {
+            "disk": disk.identity.path,
+            "disk_size_bytes": disk.identity.expected_size_bytes,
+            "disk_stable_id": disk.identity.stable_id,
+            "disk_model": disk.identity.model,
+            "storage_mode": InstallMode.GUIDED_COEXISTENCE.value,
+            "guided_storage_preview_model": preview,
+        }
+    )
+    return values, disk, inventory, platform
+
+
 class FrontendPlanTests(unittest.TestCase):
     def make_plan(self):
         values = state()
@@ -46,7 +109,22 @@ class FrontendPlanTests(unittest.TestCase):
         )
         with (
             patch("frontend.hash_password", return_value="$6$salt$hash"),
-            patch("frontend.probe_disks", return_value=(disk,)),
+            patch(
+                "frontend.probe_storage_inventory",
+                return_value=inventory_for(disk),
+            ),
+            patch("frontend.probe_platform", return_value=platform),
+        ):
+            return create_install_plan(values)
+
+    def make_guided_plan(self):
+        values, _disk, inventory, platform = guided_state()
+        with (
+            patch("frontend.hash_password", return_value="$6$salt$hash"),
+            patch(
+                "frontend.probe_storage_inventory",
+                return_value=inventory,
+            ),
             patch("frontend.probe_platform", return_value=platform),
         ):
             return create_install_plan(values)
@@ -63,7 +141,10 @@ class FrontendPlanTests(unittest.TestCase):
         )
         with (
             patch("frontend.hash_password", return_value="$6$salt$hash"),
-            patch("frontend.probe_disks", return_value=(disk,)),
+            patch(
+                "frontend.probe_storage_inventory",
+                return_value=inventory_for(disk),
+            ),
             patch("frontend.probe_platform", return_value=platform),
         ):
             plan = create_install_plan(values)
@@ -99,7 +180,10 @@ class FrontendPlanTests(unittest.TestCase):
                 "frontend.hash_password",
                 side_effect=AssertionError("must not hash an empty password"),
             ),
-            patch("frontend.probe_disks", return_value=(disk,)),
+            patch(
+                "frontend.probe_storage_inventory",
+                return_value=inventory_for(disk),
+            ),
             patch("frontend.probe_platform", return_value=platform),
         ):
             plan = create_install_plan(values)
@@ -242,7 +326,10 @@ class FrontendPlanTests(unittest.TestCase):
         )
         with (
             patch("frontend.hash_password", return_value="$6$salt$hash"),
-            patch("frontend.probe_disks", return_value=(disk,)),
+            patch(
+                "frontend.probe_storage_inventory",
+                return_value=inventory_for(disk),
+            ),
             patch("frontend.probe_platform", return_value=platform),
         ):
             plan = create_install_plan(values)
@@ -265,8 +352,145 @@ class FrontendPlanTests(unittest.TestCase):
         )
         with (
             patch("frontend.hash_password", return_value="$6$salt$hash"),
-            patch("frontend.probe_disks", return_value=(replacement,)),
+            patch(
+                "frontend.probe_storage_inventory",
+                return_value=inventory_for(replacement),
+            ),
         ):
             with self.assertRaisesRegex(FrontendPlanError, "changed"):
                 create_install_plan(values)
         self.assertEqual(values["password"], "")
+
+    def test_device_path_is_only_a_display_hint(self):
+        values = state()
+        moved = DiskIdentity(
+            "/dev/vda", "serial:test", 64 * 1024**3, "Test", "test"
+        )
+        platform = PlatformProbe(
+            Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED
+        )
+        with (
+            patch("frontend.hash_password", return_value="$6$salt$hash"),
+            patch(
+                "frontend.probe_storage_inventory",
+                return_value=inventory_for(moved),
+            ),
+            patch("frontend.probe_platform", return_value=platform),
+        ):
+            plan = create_install_plan(values)
+        self.assertEqual(plan.storage.disk.path, "/dev/vda")
+        self.assertNotIn("/dev/", json.dumps(plan.storage.graph.to_dict()))
+
+    def test_guided_storage_is_always_enabled_in_beta(self):
+        self.assertTrue(guided_storage_enabled())
+
+    def test_target_change_clears_topology_dependent_storage_choices(self):
+        values, _disk, inventory, platform = guided_state()
+        values["storage_strategy"] = (
+            StorageStrategy.ADVANCED_COEXISTENCE.value
+        )
+        values["guided_extent_id"] = "stale-extent"
+        values["guided_esp_partuuid"] = "stale-esp"
+        values["disk_topology_digest"] = "0" * 64
+        choice = build_storage_workflow(inventory, platform).disks[0]
+
+        self.assertTrue(bind_storage_target(values, choice))
+        self.assertEqual(values["storage_strategy"], "")
+        self.assertEqual(values["guided_extent_id"], "")
+        self.assertEqual(values["guided_esp_partuuid"], "")
+        self.assertEqual(
+            values["disk_topology_digest"], choice.disk.topology_digest
+        )
+        self.assertTrue(values["disk_erase_available"])
+
+    def test_same_target_preserves_strategy_until_topology_changes(self):
+        values, _disk, inventory, platform = guided_state()
+        choice = build_storage_workflow(inventory, platform).disks[0]
+        bind_storage_target(values, choice)
+        apply_storage_strategy(
+            values, StorageStrategy.ADVANCED_COEXISTENCE
+        )
+        self.assertFalse(bind_storage_target(values, choice))
+        self.assertEqual(
+            values["storage_strategy"],
+            StorageStrategy.ADVANCED_COEXISTENCE.value,
+        )
+
+        changed = replace(
+            choice,
+            disk=replace(choice.disk, topology_digest="1" * 64),
+        )
+        self.assertTrue(bind_storage_target(values, changed))
+        self.assertEqual(values["storage_strategy"], "")
+
+    def test_storage_strategy_maps_to_mode_and_filesystem(self):
+        values = state()
+        values["guided_extent_id"] = "old"
+        apply_storage_strategy(values, StorageStrategy.ERASE_EXT4)
+        self.assertEqual(values["storage_mode"], "erase-disk")
+        self.assertEqual(values["filesystem"], "ext4")
+        self.assertEqual(values["guided_extent_id"], "")
+
+        apply_storage_strategy(
+            values, StorageStrategy.ADVANCED_COEXISTENCE
+        )
+        self.assertEqual(values["storage_mode"], "guided-coexistence")
+        self.assertEqual(values["filesystem"], "btrfs")
+
+        clear_storage_target(values)
+        self.assertEqual(values["disk_stable_id"], "")
+        self.assertEqual(values["storage_strategy"], "")
+        self.assertFalse(values["disk_erase_available"])
+
+    def test_guided_state_builds_from_a_fresh_topology_probe(self):
+        values, _disk, inventory, platform = guided_state()
+        old_preview = values["guided_storage_preview_model"]
+        with (
+            patch("frontend.hash_password", return_value="$6$salt$hash"),
+            patch("frontend.probe_storage_inventory", return_value=inventory),
+            patch("frontend.probe_platform", return_value=platform),
+        ):
+            plan = create_install_plan(values)
+        self.assertIs(plan.storage.mode, InstallMode.GUIDED_COEXISTENCE)
+        self.assertEqual(plan.storage.graph, old_preview.graph)
+        self.assertIsNot(values["guided_storage_preview_model"], old_preview)
+        self.assertEqual(values["password"], "")
+        self.assertEqual(values["password_confirmation"], "")
+
+    def test_guided_state_rejects_a_changed_free_extent(self):
+        values, disk, _inventory, platform = guided_state()
+        changed = replace(disk, free_extents=())
+        inventory = StorageInventory((changed,), "f" * 64)
+        with (
+            patch("frontend.hash_password", return_value="$6$salt$hash"),
+            patch("frontend.probe_storage_inventory", return_value=inventory),
+            patch("frontend.probe_platform", return_value=platform),
+        ):
+            with self.assertRaisesRegex(
+                FrontendPlanError, "unallocated space or EFI partition changed"
+            ):
+                create_install_plan(values)
+
+    def test_executor_client_starts_public_helper_for_guided_plan(self):
+        class FakeProcess:
+            def __init__(self):
+                self.stdin = io.StringIO()
+                self.stdout = io.StringIO(
+                    '{"event":"complete","error":""}\n'
+                )
+                self.stderr = io.StringIO("")
+
+            def wait(self):
+                return 0
+
+        process = FakeProcess()
+        process.stdin.close = lambda: None
+        with patch("frontend.subprocess.Popen", return_value=process) as popen:
+            succeeded, error = ExecutorClient("/test/executor").run(
+                self.make_guided_plan(),
+                lambda _message: None,
+                lambda *_args: None,
+            )
+        self.assertTrue(succeeded)
+        self.assertEqual(error, "")
+        popen.assert_called_once()

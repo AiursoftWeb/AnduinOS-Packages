@@ -14,7 +14,6 @@ from typing import Callable
 
 from .model import Architecture
 from .steps import FailurePolicy, InstallContext, StepWarning
-from .validation import validate_plan
 
 
 MIRRORS = (
@@ -186,7 +185,7 @@ class SelectFastestAptMirrorStep:
     destructive: bool = False
 
     def preflight(self, context: InstallContext) -> None:
-        validate_plan(context.plan)
+        context.validate_plan()
 
     def execute(self, context: InstallContext) -> None:
         if context.values.get("network_online") is False:

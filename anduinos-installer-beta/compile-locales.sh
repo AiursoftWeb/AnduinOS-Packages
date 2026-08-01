@@ -26,10 +26,12 @@ rm -rf "$locale_dir"
 compiled=0
 for po_file in "$po_dir"/*.po; do
     language="$(basename "$po_file" .po)"
-    untranslated="$(
-        msgattrib --untranslated --no-obsolete --no-wrap "$po_file"
-    )"
-    if grep -q '^msgid "[^"]' <<<"$untranslated"; then
+    # An untranslated multi-line entry starts with `msgid ""`, just like the
+    # catalog header. Count entries instead of grepping only single-line IDs.
+    # The filtered catalog always contains one header; a second msgid means at
+    # least one real untranslated message remains.
+    if msgattrib --untranslated --no-obsolete --no-wrap "$po_file" \
+        | awk '/^msgid / { count += 1 } END { exit count > 1 ? 0 : 1 }'; then
         echo "Untranslated installer messages remain in $po_file." >&2
         exit 1
     fi

@@ -7,11 +7,23 @@ import os
 import subprocess
 import time
 from collections.abc import Callable
+from dataclasses import replace
+from enum import Enum
 
-from installer_core.model import InstallPlan
+from installer_core.model import Filesystem, InstallMode, InstallPlan
 from installer_core.passwords import hash_password
 from installer_core.planning import build_plan
-from installer_core.probe import probe_disks, probe_platform
+from installer_core.probe import probe_platform
+from installer_core.storage_inventory import (
+    bind_disk_topology,
+    probe_storage_inventory,
+)
+from installer_core.storage_ui import (
+    GuidedStoragePreview,
+    StorageDiskChoice,
+    build_guided_storage_preview,
+    build_storage_workflow,
+)
 from installer_core.validation import validate_plan
 
 
@@ -19,7 +31,139 @@ class FrontendPlanError(RuntimeError):
     pass
 
 
+class StorageStrategy(str, Enum):
+    ERASE_BTRFS = "erase-btrfs"
+    ERASE_EXT4 = "erase-ext4"
+    ADVANCED_COEXISTENCE = "advanced-coexistence"
+
+
+def guided_storage_enabled() -> bool:
+    """Coexistence is an unconditional beta capability."""
+
+    return True
+
+
+def clear_guided_storage_selection(state: dict[str, object]) -> None:
+    state["guided_extent_id"] = ""
+    state["guided_esp_partuuid"] = ""
+    state["guided_storage_preview_model"] = None
+
+
+def clear_storage_strategy(state: dict[str, object]) -> None:
+    """Clear choices whose meaning depends on one exact target topology."""
+
+    state["storage_strategy"] = ""
+    state["storage_mode"] = InstallMode.ERASE_DISK.value
+    state["filesystem"] = Filesystem.BTRFS.value
+    clear_guided_storage_selection(state)
+
+
+def clear_storage_target(state: dict[str, object]) -> None:
+    for key in (
+        "disk",
+        "disk_size",
+        "disk_model",
+        "disk_stable_id",
+        "disk_topology_digest",
+    ):
+        state[key] = ""
+    state["disk_size_bytes"] = 0
+    state["disk_windows_detected"] = False
+    state["disk_bitlocker_detected"] = False
+    state["disk_has_existing_partitions"] = False
+    state["disk_erase_available"] = False
+    clear_storage_strategy(state)
+
+
+def bind_storage_target(
+    state: dict[str, object],
+    choice: StorageDiskChoice,
+) -> bool:
+    """Bind one disk and invalidate every choice from another topology."""
+
+    disk = choice.disk.identity
+    changed = (
+        str(state.get("disk_stable_id") or "") != disk.stable_id
+        or int(state.get("disk_size_bytes") or 0)
+        != disk.expected_size_bytes
+        or (
+            bool(state.get("disk_topology_digest"))
+            and state.get("disk_topology_digest")
+            != choice.disk.topology_digest
+        )
+    )
+    if changed:
+        clear_storage_strategy(state)
+    state["disk"] = disk.path
+    state["disk_size"] = _human_size(disk.expected_size_bytes)
+    state["disk_size_bytes"] = disk.expected_size_bytes
+    state["disk_model"] = disk.model
+    state["disk_stable_id"] = disk.stable_id
+    state["disk_topology_digest"] = choice.disk.topology_digest
+    state["disk_windows_detected"] = choice.coexistence.windows_detected
+    state["disk_bitlocker_detected"] = choice.coexistence.bitlocker_detected
+    state["disk_has_existing_partitions"] = bool(choice.disk.partitions)
+    state["disk_erase_available"] = choice.erase_available
+    return changed
+
+
+def apply_storage_strategy(
+    state: dict[str, object],
+    strategy: StorageStrategy,
+) -> None:
+    if not isinstance(strategy, StorageStrategy):
+        raise ValueError("Invalid storage strategy")
+    changed = state.get("storage_strategy") != strategy.value
+    if changed:
+        clear_guided_storage_selection(state)
+    state["storage_strategy"] = strategy.value
+    if strategy is StorageStrategy.ERASE_BTRFS:
+        state["storage_mode"] = InstallMode.ERASE_DISK.value
+        state["filesystem"] = Filesystem.BTRFS.value
+    elif strategy is StorageStrategy.ERASE_EXT4:
+        state["storage_mode"] = InstallMode.ERASE_DISK.value
+        state["filesystem"] = Filesystem.EXT4.value
+    else:
+        state["storage_mode"] = InstallMode.GUIDED_COEXISTENCE.value
+        if changed or state.get("filesystem") not in {
+            Filesystem.BTRFS.value,
+            Filesystem.EXT4.value,
+        }:
+            state["filesystem"] = Filesystem.BTRFS.value
+
+
+def _human_size(size_bytes: int) -> str:
+    size = float(size_bytes)
+    for unit in ("B", "KiB", "MiB", "GiB", "TiB"):
+        if size < 1024 or unit == "TiB":
+            return f"{size:.1f} {unit}"
+        size /= 1024
+    return f"{size_bytes} B"
+
+
+def _clear_plaintext_passwords(state: dict[str, object]) -> None:
+    state["password"] = ""
+    state["password_confirmation"] = ""
+    clear_ui = state.pop("_clear_password_ui", None)
+    if callable(clear_ui):
+        clear_ui()
+
+
 def create_install_plan(state: dict[str, object]) -> InstallPlan:
+    try:
+        storage_mode = InstallMode(
+            str(state.get("storage_mode", InstallMode.ERASE_DISK.value))
+        )
+    except ValueError as error:
+        _clear_plaintext_passwords(state)
+        raise FrontendPlanError("Unsupported storage mode") from error
+    if storage_mode not in {
+        InstallMode.ERASE_DISK,
+        InstallMode.GUIDED_COEXISTENCE,
+    }:
+        _clear_plaintext_passwords(state)
+        raise FrontendPlanError("Unsupported storage mode")
+
     password = str(state.get("password") or "")
     confirmation = str(state.get("password_confirmation") or "")
     passwordless = not password and not confirmation
@@ -29,6 +173,10 @@ def create_install_plan(state: dict[str, object]) -> InstallPlan:
                 raise FrontendPlanError(
                     "An account without a password requires passwordless sudo"
                 )
+            if storage_mode is InstallMode.GUIDED_COEXISTENCE:
+                raise FrontendPlanError(
+                    "Install alongside requires a password-protected account"
+                )
             password_hash = ""
         else:
             if password != confirmation:
@@ -37,30 +185,75 @@ def create_install_plan(state: dict[str, object]) -> InstallPlan:
         state["passwordless_shared"] = passwordless
     finally:
         # Plaintext exists only while the account page and this call need it.
-        state["password"] = ""
-        state["password_confirmation"] = ""
-        clear_ui = state.pop("_clear_password_ui", None)
-        if callable(clear_ui):
-            clear_ui()
+        _clear_plaintext_passwords(state)
 
     selected_path = str(state.get("disk") or "")
     selected_id = str(state.get("disk_stable_id") or "")
     selected_size = int(state.get("disk_size_bytes") or 0)
-    disk = next(
+    inventory = probe_storage_inventory()
+    selected = next(
         (
             item
-            for item in probe_disks()
-            if item.path == selected_path
-            and item.stable_id == selected_id
-            and item.expected_size_bytes == selected_size
+            for item in inventory.disks
+            if item.identity.stable_id == selected_id
+            and item.identity.expected_size_bytes == selected_size
         ),
         None,
     )
-    if disk is None:
+    if selected is None:
         raise FrontendPlanError(
             "The selected disk changed or disappeared; select it again"
         )
-    return build_plan(state, disk, probe_platform(), password_hash)
+    # The path selected by GTK is a display hint only. Stable identity and
+    # topology authorize the target; the executor resolves the current path.
+    if selected_path != selected.identity.path:
+        state["disk"] = selected.identity.path
+    platform = probe_platform()
+    plan = build_plan(
+        state,
+        selected.identity,
+        platform,
+        password_hash,
+        disk_binding=bind_disk_topology(inventory, selected_id),
+        inventory_digest=inventory.digest,
+    )
+    if storage_mode is InstallMode.ERASE_DISK:
+        return plan
+
+    previous_preview = state.get("guided_storage_preview_model")
+    if not isinstance(previous_preview, GuidedStoragePreview):
+        raise FrontendPlanError(
+            "Guided storage selection is missing; rescan and select it again"
+        )
+    try:
+        filesystem = Filesystem(str(state.get("filesystem") or "btrfs"))
+        selection = replace(
+            previous_preview.selection,
+            filesystem=filesystem,
+        )
+        current_preview = build_guided_storage_preview(
+            build_storage_workflow(inventory, platform),
+            selection,
+        )
+    except (KeyError, ValueError) as error:
+        raise FrontendPlanError(
+            "The selected unallocated space or EFI partition changed; "
+            "rescan and select it again"
+        ) from error
+
+    plan = replace(
+        plan,
+        storage=replace(
+            plan.storage,
+            mode=InstallMode.GUIDED_COEXISTENCE,
+            filesystem=filesystem,
+            graph=current_preview.graph,
+        ),
+        boot=replace(plan.boot, install_fallback_path=False),
+    )
+    validate_plan(plan)
+    state["guided_storage_preview_model"] = current_preview
+    return plan
 
 
 class ExecutorClient:
@@ -79,6 +272,10 @@ class ExecutorClient:
         step_status = step_status or (
             lambda _step, _status, _message: None
         )
+        try:
+            validate_plan(plan)
+        except Exception as error:
+            return False, str(error)
         helper_command = [self.helper]
         if os.geteuid() != 0:
             helper_command = ["sudo", "--non-interactive", *helper_command]

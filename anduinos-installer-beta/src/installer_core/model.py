@@ -11,8 +11,10 @@ from dataclasses import asdict, dataclass, field
 from enum import Enum
 from typing import Any
 
+from .storage_graph import StorageGraph
 
-SCHEMA_VERSION = 4
+
+SCHEMA_VERSION = 6
 
 
 class Architecture(str, Enum):
@@ -33,6 +35,7 @@ class SecureBoot(str, Enum):
 
 class InstallMode(str, Enum):
     ERASE_DISK = "erase-disk"
+    GUIDED_COEXISTENCE = "guided-coexistence"
     MANUAL = "manual"
 
 
@@ -74,6 +77,7 @@ class StorageSpec:
     filesystem: Filesystem = Filesystem.BTRFS
     esp_size_mib: int = 1024
     swap_size_mib: int = 4096
+    graph: StorageGraph | None = None
 
 
 @dataclass(frozen=True)
@@ -143,57 +147,150 @@ class InstallPlan:
 
     def to_dict(self) -> dict[str, Any]:
         """Return a JSON/YAML-safe mapping."""
-        return asdict(self)
+        result = asdict(self)
+        if self.storage.graph is not None:
+            result["storage"]["graph"] = self.storage.graph.to_dict()
+        return result
 
     @classmethod
     def from_dict(cls, value: dict[str, Any]) -> "InstallPlan":
-        """Parse a mapping while rejecting unknown enum values."""
-        source = SourceSpec(**value["source"])
-        disk = DiskIdentity(**value["storage"]["disk"])
+        """Strictly parse the versioned untrusted privilege-boundary input."""
+        root = _object(value, "plan")
+        _exact_fields(
+            root,
+            {
+                "schema_version",
+                "source",
+                "storage",
+                "platform",
+                "identity",
+                "regional",
+                "software",
+                "swap",
+                "boot",
+            },
+            "plan",
+        )
+        source_data = _object(root["source"], "source")
+        _exact_fields(
+            source_data,
+            {"image_path", "manifest_path", "desktop_manifest_path"},
+            "source",
+        )
+        source = SourceSpec(**source_data)
+
+        storage_data = _object(root["storage"], "storage")
+        _exact_fields(
+            storage_data,
+            {
+                "mode",
+                "disk",
+                "filesystem",
+                "esp_size_mib",
+                "swap_size_mib",
+                "graph",
+            },
+            "storage",
+        )
+        disk_data = _object(storage_data["disk"], "storage.disk")
+        _exact_fields(
+            disk_data,
+            {"path", "stable_id", "expected_size_bytes", "model", "serial"},
+            "storage.disk",
+        )
+        disk = DiskIdentity(**disk_data)
         storage = StorageSpec(
             **{
-                **value["storage"],
-                "mode": InstallMode(value["storage"]["mode"]),
-                "filesystem": Filesystem(value["storage"]["filesystem"]),
+                **storage_data,
+                "mode": InstallMode(storage_data["mode"]),
+                "filesystem": Filesystem(storage_data["filesystem"]),
                 "disk": disk,
+                "graph": StorageGraph.from_dict(storage_data["graph"]),
             }
         )
-        platform = PlatformSpec(
-            architecture=Architecture(value["platform"]["architecture"]),
-            firmware=Firmware(value["platform"]["firmware"]),
-            secure_boot=SecureBoot(value["platform"]["secure_boot"]),
+
+        platform_data = _object(root["platform"], "platform")
+        _exact_fields(
+            platform_data,
+            {"architecture", "firmware", "secure_boot"},
+            "platform",
         )
-        identity_data = value["identity"]
+        platform = PlatformSpec(
+            architecture=Architecture(platform_data["architecture"]),
+            firmware=Firmware(platform_data["firmware"]),
+            secure_boot=SecureBoot(platform_data["secure_boot"]),
+        )
+        identity_data = _object(root["identity"], "identity")
+        _exact_fields(
+            identity_data,
+            {
+                "hostname",
+                "username",
+                "full_name",
+                "authentication",
+                "sudo_without_password",
+                "password_hash",
+            },
+            "identity",
+        )
         identity = IdentitySpec(
             **{
                 **identity_data,
                 "authentication": AuthenticationMode(
-                    identity_data.get(
-                        "authentication", AuthenticationMode.PASSWORD.value
-                    )
+                    identity_data["authentication"]
                 ),
             }
         )
-        keyboard = KeyboardSpec(**value["regional"]["keyboard"])
-        regional = RegionalSpec(
-            **{**value["regional"], "keyboard": keyboard}
+
+        regional_data = _object(root["regional"], "regional")
+        _exact_fields(
+            regional_data,
+            {"locale", "timezone", "keyboard", "input_method"},
+            "regional",
         )
-        software = SoftwareSpec(**value.get("software", {}))
-        swap = SwapSpec(**value.get("swap", {}))
-        boot_data = value.get("boot", {})
+        keyboard_data = _object(regional_data["keyboard"], "regional.keyboard")
+        _exact_fields(keyboard_data, {"layout", "variant"}, "regional.keyboard")
+        keyboard = KeyboardSpec(**keyboard_data)
+        regional = RegionalSpec(
+            **{**regional_data, "keyboard": keyboard}
+        )
+
+        software_data = _object(root["software"], "software")
+        _exact_fields(
+            software_data,
+            {"install_updates", "install_third_party_drivers"},
+            "software",
+        )
+        software = SoftwareSpec(**software_data)
+        swap_data = _object(root["swap"], "swap")
+        _exact_fields(
+            swap_data,
+            {
+                "zram_enabled",
+                "zram_ram_percent",
+                "zram_algorithm",
+                "zram_priority",
+                "disk_priority",
+            },
+            "swap",
+        )
+        swap = SwapSpec(**swap_data)
+        boot_data = _object(root["boot"], "boot")
+        _exact_fields(
+            boot_data,
+            {"install_fallback_path", "mok_password_policy"},
+            "boot",
+        )
         boot = BootSpec(
             **{
                 **boot_data,
                 "mok_password_policy": MokPasswordPolicy(
-                    boot_data.get(
-                        "mok_password_policy",
-                        MokPasswordPolicy.NOT_APPLICABLE.value,
-                    )
+                    boot_data["mok_password_policy"]
                 ),
             }
         )
         return cls(
-            schema_version=value["schema_version"],
+            schema_version=root["schema_version"],
             source=source,
             storage=storage,
             platform=platform,
@@ -203,3 +300,23 @@ class InstallPlan:
             swap=swap,
             boot=boot,
         )
+
+
+def _object(value: object, path: str) -> dict[str, Any]:
+    if not isinstance(value, dict) or not all(
+        isinstance(key, str) for key in value
+    ):
+        raise TypeError(f"{path} must be an object")
+    return value
+
+
+def _exact_fields(
+    value: dict[str, Any], expected: set[str], path: str
+) -> None:
+    actual = set(value)
+    unknown = sorted(actual - expected)
+    missing = sorted(expected - actual)
+    if unknown:
+        raise ValueError(f"Unknown field in {path}: {unknown[0]}")
+    if missing:
+        raise ValueError(f"Missing field in {path}: {missing[0]}")

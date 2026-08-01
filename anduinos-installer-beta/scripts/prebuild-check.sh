@@ -13,7 +13,7 @@ cache_root="$(mktemp -d)"
 trap 'rm -rf "$cache_root"' EXIT
 
 PYTHONPYCACHEPREFIX="$cache_root" \
-    python3 -m compileall -q src tests
+    python3 -m compileall -q src tests scripts/verify-built-package.py
 PYTHONDONTWRITEBYTECODE=1 \
 PYTHONPATH=src:tests \
     python3 -m unittest discover -s tests -v

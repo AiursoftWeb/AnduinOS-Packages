@@ -8,7 +8,6 @@ from pathlib import Path
 from .command import CommandError, CommandRunner
 from .mirrors import restore_original_mirror
 from .steps import FailurePolicy, InstallContext, StepWarning
-from .validation import validate_plan
 
 
 def _target(context: InstallContext) -> Path:
@@ -75,7 +74,7 @@ class RefreshPackageIndexesStep:
     destructive: bool = False
 
     def preflight(self, context: InstallContext) -> None:
-        validate_plan(context.plan)
+        context.validate_plan()
         self.runner.require_commands(("chroot",))
 
     def execute(self, context: InstallContext) -> None:
@@ -107,7 +106,7 @@ class UpgradeSystemStep:
     destructive: bool = False
 
     def preflight(self, context: InstallContext) -> None:
-        validate_plan(context.plan)
+        context.validate_plan()
         self.runner.require_commands(("chroot",))
 
     def execute(self, context: InstallContext) -> None:
@@ -197,7 +196,7 @@ class InstallThirdPartyDriversStep:
     destructive: bool = False
 
     def preflight(self, context: InstallContext) -> None:
-        validate_plan(context.plan)
+        context.validate_plan()
         self.runner.require_commands(("chroot",))
 
     def execute(self, context: InstallContext) -> None:

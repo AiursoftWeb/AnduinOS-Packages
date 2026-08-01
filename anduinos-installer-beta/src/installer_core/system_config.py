@@ -9,7 +9,6 @@ from pathlib import Path
 from .command import CommandRunner
 from .model import AuthenticationMode
 from .steps import FailurePolicy, InstallContext
-from .validation import validate_plan
 
 
 MACHINE_ID_RE = re.compile(r"^[0-9a-f]{32}$")
@@ -31,7 +30,7 @@ class ConfigureSystemStep:
     destructive: bool = False
 
     def preflight(self, context: InstallContext) -> None:
-        validate_plan(context.plan)
+        context.validate_plan()
         self.runner.require_commands(("chroot", "systemd-machine-id-setup"))
 
     def execute(self, context: InstallContext) -> None:

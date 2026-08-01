@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 01:18+0000\n"
+"POT-Creation-Date: 2026-08-01 03:39+0000\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -32,9 +32,6 @@ msgstr ""
 "\n"
 "नीले MOKManager स्क्रीन पर Enroll MOK → Continue → Yes चुनें, पासवर्ड: 123456"
 
-msgid "(Live USB — excluded)"
-msgstr "(Live USB — बाहर)"
-
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr "4 GiB डिस्क स्विप (प्राथमिकता 10) + 50% RAM LZ4 zram (प्राथमिकता 100)"
 
@@ -44,14 +41,32 @@ msgstr "; sudo के लिए पासवर्ड की आवश्यक�
 msgid "; sudo requires the account password"
 msgstr "; sudo को अकाउंट पासवर्ड की आवश्यकता होती है"
 
-msgid "ALL DATA on the selected disk will be permanently erased."
-msgstr "चयनित डिस्क पर मौजूद सभी डेटा स्थायी रूप से मिटा दिया जाएगा।"
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "ALL DATA on {disk} will be permanently erased."
 
 msgid "Account security"
 msgstr "अकाउंट सुरक्षा"
 
 msgid "Administrator access would be locked"
 msgstr "प्रशासक पहुंच लॉक हो जाएगी"
+
+msgid "Advanced Storage"
+msgstr "Advanced Storage"
+
+msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+
+msgid "Advanced — keep existing systems"
+msgstr "Advanced — keep existing systems"
+
+msgid "Advanced: Install Alongside"
+msgstr "Advanced: Install Alongside"
+
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "After changing partitions or unmounting a volume, rescan storage and select the target again."
 
 msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
 msgstr "रीस्टार्ट के बाद, MOKManager खुलेगा। Enroll MOK → Continue → Yes चुनें, फिर पासवर्ड 123456 दर्ज करें।"
@@ -63,6 +78,9 @@ msgstr ""
 "{disk} पर मौजूद सभी विभाजन और डेटा नष्ट हो जाएंगे।\n"
 "\n"
 
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+
 msgid "AnduinOS Installer"
 msgstr "AnduinOS इंस्टालर"
 
@@ -71,6 +89,16 @@ msgstr "AnduinOS इंस्टालर (बीटा)"
 
 msgid "AnduinOS Installer (Development)"
 msgstr "AnduinOS इंस्टालर (विकास)"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
 
 msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
 msgstr "आपके उपयोगकर्ता के रूप में चल रहा कोई भी प्रोग्राम प्रमाणीकरण के बिना पूर्ण व्यवस्थापक विशेषाधिकार प्राप्त कर सकता है। आपका लॉगिन पासवर्ड अभी भी साइन-इन की रक्षा करता है, लेकिन यह sudo की रक्षा नहीं करेगा। क्या आप वास्तव में जारी रखना चाहते हैं?"
@@ -81,17 +109,38 @@ msgstr "अरबी"
 msgid "Back"
 msgstr "पीछे जाएं"
 
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+
+msgid "BitLocker detected"
+msgstr "BitLocker detected"
+
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+
+msgid "Boot policy"
+msgstr "Boot policy"
+
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (अनुशंसित)"
+
+msgid "Btrfs — recommended"
+msgstr "Btrfs — recommended"
 
 msgid "Cannot create installation plan"
 msgstr "इंस्टालेशन योजना नहीं बनाई जा सकती"
 
+msgid "Choose Installation Method"
+msgstr "Choose Installation Method"
+
+msgid "Choose a complete installation method, not only a filesystem."
+msgstr "Choose a complete installation method, not only a filesystem."
+
+msgid "Choose one target disk. Storage settings come next."
+msgstr "Choose one target disk. Storage settings come next."
+
 msgid "Choose optional software to install"
 msgstr "इंस्टॉल करने के लिए वैकल्पिक सॉफ्टवेयर चुनें"
-
-msgid "Choose the disk where AnduinOS will be installed"
-msgstr "वह डिस्क चुनें जहाँ AnduinOS इंस्टॉल किया जाएगा"
 
 msgid "Choose your language to begin installation"
 msgstr "इंस्टालेशन शुरू करने के लिए अपनी भाषा चुनें"
@@ -128,6 +177,12 @@ msgstr "AnduinOS सिस्टम कॉपी करें"
 
 msgid "Copy Log"
 msgstr "लॉग कॉपी करें"
+
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
+
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
 
 msgid "Create your user account"
 msgstr "अपना उपयोगकर्ता अकाउंट बनाएं"
@@ -166,6 +221,15 @@ msgstr "इंस्टालेशन के दौरान सिस्टम
 msgid "Dutch"
 msgstr "डच"
 
+msgid "EFI System Partition"
+msgstr "EFI System Partition"
+
+msgid "EFI policy"
+msgstr "EFI policy"
+
+msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "Enables shared-space subvolumes, snapshots and Timeback Machine."
+
 msgid "English (UK)"
 msgstr "अंग्रेजी (यूके)"
 
@@ -175,8 +239,23 @@ msgstr "अंग्रेजी (यूएस)"
 msgid "Erase Disk and Install"
 msgstr "डिस्क मिटाएं और इंस्टॉल करें"
 
+msgid "Erase every partition and all data on the selected disk."
+msgstr "Erase every partition and all data on the selected disk."
+
 msgid "Erase the entire selected disk?"
 msgstr "संपूर्ण चयनित डिस्क मिटाना है?"
+
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+
+msgid "Existing partitions detected"
+msgstr "Existing partitions detected"
+
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
 
 msgid "Filesystem"
 msgstr "फ़ाइल सिस्टम"
@@ -186,6 +265,9 @@ msgstr "लक्ष्य पर्यावरण को अंतिम र�
 
 msgid "Finnish"
 msgstr "फिनिश"
+
+msgid "Formats"
+msgstr "Formats"
 
 msgid "French"
 msgstr "फ्रेंच"
@@ -199,8 +281,17 @@ msgstr "जर्मन"
 msgid "Greek"
 msgstr "यूनानी"
 
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+
+msgid "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Guided storage selection is missing. Rescan and select the target again."
+
 msgid "Hindi (India)"
 msgstr "हिन्दी (भारत)"
+
+msgid "How should AnduinOS use this disk?"
+msgstr "How should AnduinOS use this disk?"
 
 msgid "I Understand the Risk, Continue"
 msgstr "मुझे जोखिम का पता है, जारी रखें"
@@ -211,17 +302,29 @@ msgstr "इंडोनेशियाई"
 msgid "Install"
 msgstr "इंस्टॉल करें"
 
+msgid "Install Alongside"
+msgstr "Install Alongside"
+
+msgid "Install Timeback Machine"
+msgstr "Timeback Machine इंस्टॉल करें"
+
+msgid "Install alongside"
+msgstr "Install alongside"
+
+msgid "Install alongside requires a password-protected account."
+msgstr "Install alongside requires a password-protected account."
+
 msgid "Install bootloader"
 msgstr "बूटलोडर इंस्टॉल करें"
 
 msgid "Install hardware drivers"
 msgstr "हार्डवेयर ड्राइवर इंस्टॉल करें"
 
+msgid "Install in the selected free space?"
+msgstr "Install in the selected free space?"
+
 msgid "Install system updates"
 msgstr "सिस्टम अपडेट इंस्टॉल करें"
-
-msgid "Install Timeback Machine"
-msgstr "Timeback Machine इंस्टॉल करें"
 
 msgid "Install third-party drivers for this device"
 msgstr "इस डिवाइस के लिए थर्ड-पार्टी ड्राइवर इंस्टॉल करें"
@@ -234,6 +337,9 @@ msgstr "इंस्टालेशन विफल रहा"
 
 msgid "Installation Steps"
 msgstr "इंस्टालेशन चरण"
+
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
 
 msgid "Installation complete"
 msgstr "इंस्टालेशन पूर्ण हो गया"
@@ -265,11 +371,17 @@ msgstr "कोरियाई"
 msgid "Language"
 msgstr "भाषा"
 
+msgid "Live USB — excluded"
+msgstr "Live USB — excluded"
+
 msgid "Mount target filesystems"
 msgstr "लक्ष्य फ़ाइल सिस्टम माउंट करें"
 
 msgid "Navigation error"
 msgstr "नेविगेशन त्रुटि"
+
+msgid "New partitions"
+msgstr "New partitions"
 
 msgid "Next"
 msgstr "अगला"
@@ -280,11 +392,20 @@ msgstr "अगला स्लाइड"
 msgid "No suitable disks found."
 msgstr "कोई उपयुक्त डिस्क नहीं मिली।"
 
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+
 msgid "Norwegian"
 msgstr "नॉर्वेजियन"
 
 msgid "OK"
 msgstr "ठीक है"
+
+msgid "Only this disk can be partitioned or formatted. Other disks will be inspected but not modified."
+msgstr "Only this disk can be partitioned or formatted. Other disks will be inspected but not modified."
 
 msgid "Output"
 msgstr "आउटपुट"
@@ -334,6 +455,9 @@ msgstr "लक्ष्य पर्यावरण तैयार करें
 msgid "Preparing installation…"
 msgstr "इंस्टालेशन तैयार हो रहा है…"
 
+msgid "Preserved partitions"
+msgstr "Preserved partitions"
+
 msgid "Previous slide"
 msgstr "पिछला स्लाइड"
 
@@ -355,6 +479,12 @@ msgstr "इंस्टालेशन मीडिया निकालें 
 msgid "Requires an Internet connection. The base installation remains available when offline."
 msgstr "इंटरनेट कनेक्शन की आवश्यकता होती है। ऑफ़लाइन होने पर बेस इंस्टालेशन उपलब्ध रहता है।"
 
+msgid "Rescan Storage"
+msgstr "Rescan Storage"
+
+msgid "Rescan and Reselect Disk"
+msgstr "Rescan and Reselect Disk"
+
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "रीस्टार्ट करें और सिक्योर बूट कुंजी पंजीकृत करें"
 
@@ -366,6 +496,12 @@ msgstr "वापस जाएं और पासवर्ड सेट कर�
 
 msgid "Return to Make Changes"
 msgstr "परिवर्तन करने के लिए वापस जाएं"
+
+msgid "Reuse {path} ({size})"
+msgstr "Reuse {path} ({size})"
+
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
 
 msgid "Romanian"
 msgstr "रोमानियन"
@@ -394,8 +530,14 @@ msgstr "टाइमज़ोन चुनें"
 msgid "Select fastest package mirror"
 msgstr "सबसे तेज़ पैकेज मिरर चुनें"
 
+msgid "Select the target disk to continue."
+msgstr "Select the target disk to continue."
+
 msgid "Selected timezone"
 msgstr "चयनित टाइमज़ोन"
+
+msgid "Selected unallocated space"
+msgstr "Selected unallocated space"
 
 msgid "Some drivers are proprietary or otherwise non-free software."
 msgstr "कुछ ड्राइवर प्रोप्राइटरी या अन्यथा गैर-मुफ़्त सॉफ्टवेयर हैं।"
@@ -413,6 +555,9 @@ msgstr ""
 "स्थिर पहचान: {stable_id}\n"
 "\n"
 
+msgid "Storage mode"
+msgstr "Storage mode"
+
 msgid "Subvolumes"
 msgstr "सबवॉल्यूम"
 
@@ -428,11 +573,23 @@ msgstr "सिस्टम अपडेट"
 msgid "Target Disk"
 msgstr "लक्ष्य डिस्क"
 
+msgid "Target: {disk} ({size} — {model})"
+msgstr "Target: {disk} ({size} — {model})"
+
 msgid "Test your keyboard here…"
 msgstr "अपना कीबोर्ड यहाँ परीक्षण करें…"
 
 msgid "Thai"
 msgstr "थाई"
+
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
 
 msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
 msgstr "इंस्टालेशन योजना मान्य है। कोई डिस्क, फ़ाइल सिस्टम, बूटलोडर, सिक्योर बूट स्थिति, या इंस्टॉल किया गया सिस्टम नहीं बदला गया था।"
@@ -440,8 +597,20 @@ msgstr "इंस्टालेशन योजना मान्य है।
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr "जब तक इंस्टालर लक्ष्य डिस्क को संशोधित कर रहा है, तब तक उसे बंद नहीं किया जा सकता।"
 
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+
 msgid "The privileged executor is disabled."
 msgstr "विशेषाधिकृत निष्पादक अक्षम है।"
+
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+
+msgid "The selected disk size changed. Return and select it again."
+msgstr "The selected disk size changed. Return and select it again."
+
+msgid "The selected disk topology changed. Review the disk and installation method again."
+msgstr "The selected disk topology changed. Review the disk and installation method again."
 
 msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
 msgstr "सिस्टम इस अकाउंट में स्वचालित रूप से साइन इन करेगा और इसे पासवर्ड के बिना पूर्ण व्यवस्थापक विशेषाधिकार प्राप्त करने की अनुमति देगा। भौतिक पहुँच रखने वाला कोई भी व्यक्ति, और इस उपयोगकर्ता के रूप में चल रहा कोई भी प्रोग्राम, सिस्टम का पूर्ण नियंत्रण कर सकता है। इसका उपयोग केवल कियोस्क, अस्थायी वर्चुअल मशीन, या अन्य नियंत्रित पर्यावरण के लिए करें।"
@@ -455,8 +624,17 @@ msgstr "थर्ड-पार्टी ड्राइवर"
 msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
 msgstr "इस खाते में कोई लॉगिन पासवर्ड नहीं है, लेकिन sudo के लिए अभी भी एक की आवश्यकता होगी। चूंकि रूट खात को डिफ़ॉल्ट रूप से लॉक किया गया है, आप प्रशासक कार्यों का पालन करने में असमर्थ होंगे। एक खाते पासवर्ड सेट करें या पासवर्ड रहित sudo सक्षम करें।"
 
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+
 msgid "This configuration is very unsafe"
 msgstr "यह कॉन्फ़िगरेशन बहुत असुरक्षित है"
+
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
 
 msgid "This installer does not shrink or preserve other systems."
 msgstr "यह इंस्टालर अन्य सिस्टम को संकुचित या संरक्षित नहीं करता।"
@@ -464,11 +642,17 @@ msgstr "यह इंस्टालर अन्य सिस्टम को �
 msgid "Timezone"
 msgstr "टाइमज़ोन"
 
+msgid "Too small"
+msgstr "Too small"
+
 msgid "Turkish"
 msgstr "तुर्की"
 
 msgid "Ukrainian"
 msgstr "यूक्रेनियन"
+
+msgid "Unallocated space"
+msgstr "Unallocated space"
 
 msgid "Unavailable: {error}"
 msgstr "अनुपलब्ध: {error}"
@@ -478,6 +662,12 @@ msgstr "इंस्टॉल किए गए सिस्टम को अन�
 
 msgid "Updates and Drivers"
 msgstr "अपडेट और ड्राइवर"
+
+msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+
+msgid "Use only existing unallocated space on the selected disk."
+msgstr "Use only existing unallocated space on the selected disk."
 
 msgid "User"
 msgstr "उपयोगकर्ता"
@@ -490,6 +680,9 @@ msgstr "यूज़रनेम"
 
 msgid "Username may only contain lowercase letters, digits, underscores and hyphens."
 msgstr "यूज़रनेम में केवल छोटे अक्षर, अंक, अंडरस्कोर और हाइफ़न हो सकते हैं।"
+
+msgid "Uses a traditional single root filesystem."
+msgstr "Uses a traditional single root filesystem."
 
 msgid "Validate Plan (No Installation)"
 msgstr "योजना मान्य करें (कोई इंस्टालेशन नहीं)"
@@ -509,6 +702,12 @@ msgstr "वियतनामी"
 msgid "Welcome to AnduinOS"
 msgstr "AnduinOS में आपका स्वागत है"
 
+msgid "Windows detected"
+msgstr "Windows detected"
+
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+
 msgid "automatic login"
 msgstr "स्वचालित लॉगिन"
 
@@ -524,6 +723,12 @@ msgstr "इंस्टॉल न करें"
 msgid "download and install"
 msgstr "डाउनलोड और इंस्टॉल करें"
 
+msgid "ext4 (classic)"
+msgstr "ext4 (classic)"
+
+msgid "ext4 — classic"
+msgstr "ext4 — classic"
+
 msgid "not required"
 msgstr "आवश्यक नहीं"
 
@@ -536,8 +741,26 @@ msgstr "एकल ext4 रूट फ़ाइल सिस्टम"
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / सिक्योर बूट: {secure_boot}"
 
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+msgid "{path} as {filesystem}"
+msgstr "{path} as {filesystem}"
+
+msgid "{size} at {offset}"
+msgstr "{size} at {offset}"
+
+msgid "{size} unallocated at {offset}"
+msgstr "{size} unallocated at {offset}"
+
 msgid "{step} failed"
 msgstr "{step} विफल रहा"
+
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
 
 msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
 msgstr "⚠ इससे चयनित डिस्क पर मौजूद सभी डेटा मिटा दिया जाएगा। इस कार्रवाई को पूर्ववत नहीं किया जा सकता।"

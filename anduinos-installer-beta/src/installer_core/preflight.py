@@ -6,10 +6,15 @@ import json
 from collections.abc import Callable
 
 from .command import CommandRunner
-from .model import DiskIdentity, InstallPlan, PlatformSpec
-from .probe import PlatformProbe, probe_disks, probe_platform
+from .model import InstallPlan, PlatformSpec
+from .probe import PlatformProbe, probe_platform
 from .storage_commands import partition_path
-from .validation import validate_plan
+from .storage_graph_planning import resolve_storage_graph
+from .storage_inventory import StorageInventory, probe_storage_inventory
+from .validation import (
+    ExecutionPolicy,
+    validate_plan_for_execution,
+)
 
 
 class PreflightError(RuntimeError):
@@ -21,18 +26,21 @@ def verify_execution_environment(
     runner: CommandRunner,
     *,
     platform_probe: Callable[[], PlatformProbe] = probe_platform,
-    disk_probe: Callable[[], tuple[DiskIdentity, ...]] = probe_disks,
-) -> None:
+    inventory_probe: Callable[[], StorageInventory] = probe_storage_inventory,
+    execution_policy: ExecutionPolicy = ExecutionPolicy.RELEASE,
+) -> InstallPlan:
     """Reject stale or substituted hardware before any destructive command."""
     verify_platform_environment(
         plan,
         runner,
         platform_probe=platform_probe,
+        execution_policy=execution_policy,
     )
-    verify_target_disk_environment(
+    return verify_target_disk_environment(
         plan,
         runner,
-        disk_probe=disk_probe,
+        inventory_probe=inventory_probe,
+        execution_policy=execution_policy,
     )
 
 
@@ -41,8 +49,9 @@ def verify_platform_environment(
     runner: CommandRunner,
     *,
     platform_probe: Callable[[], PlatformProbe] = probe_platform,
+    execution_policy: ExecutionPolicy = ExecutionPolicy.RELEASE,
 ) -> None:
-    validate_plan(plan)
+    validate_plan_for_execution(plan, execution_policy)
     runner.require_root()
 
     actual_platform = platform_probe()
@@ -62,23 +71,18 @@ def verify_target_disk_environment(
     plan: InstallPlan,
     runner: CommandRunner,
     *,
-    disk_probe: Callable[[], tuple[DiskIdentity, ...]] = probe_disks,
-) -> None:
-    validate_plan(plan)
+    inventory_probe: Callable[[], StorageInventory] = probe_storage_inventory,
+    execution_policy: ExecutionPolicy = ExecutionPolicy.RELEASE,
+) -> InstallPlan:
+    validate_plan_for_execution(plan, execution_policy)
     runner.require_root()
 
-    selected = next(
-        (disk for disk in disk_probe() if disk.path == plan.storage.disk.path),
-        None,
-    )
-    if selected is None:
-        raise PreflightError("Selected target disk is no longer available")
-    expected = plan.storage.disk
-    if selected.stable_id != expected.stable_id:
-        raise PreflightError("Target disk stable identity changed")
-    if selected.expected_size_bytes != expected.expected_size_bytes:
-        raise PreflightError("Target disk size changed")
-    _reject_active_target_disk(runner, selected.path)
+    try:
+        resolved_plan = resolve_storage_graph(plan, inventory_probe())
+    except ValueError as error:
+        raise PreflightError(str(error)) from error
+    _reject_active_target_disk(runner, resolved_plan.storage.disk.path)
+    return resolved_plan
 
 
 def _reject_active_target_disk(runner: CommandRunner, disk: str) -> None:

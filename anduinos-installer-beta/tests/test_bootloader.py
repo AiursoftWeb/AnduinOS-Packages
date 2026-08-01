@@ -1,11 +1,22 @@
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 from fakes import FakeRunner
 from helpers import valid_plan
 from installer_core.bootloader import InstallBootloaderStep
+from installer_core.esp import (
+    NvramInspection,
+    capture_preserved_esp_tree,
+)
+from installer_core.storage_planning import (
+    build_guided_coexistence_execution_plan,
+)
 from installer_core.steps import InstallContext
+from installer_core.validation import ExecutionPolicy
+from test_guided_storage_graph import guided_plan
+from test_guided_storage_planning import healthy_esp
 
 
 def prepare_target(target: Path) -> None:
@@ -35,6 +46,7 @@ GRUB_INSTALL_HELP = """
 --efi-directory=DIR
 --bootloader-id=ID
 --no-nvram
+--no-extra-removable
 --uefi-secure-boot
 """
 
@@ -172,3 +184,99 @@ class InstallBootloaderTests(unittest.TestCase):
                 [command for command, _kwargs in runner.commands],
                 [("chroot", str(target), "grub-install", "--help")],
             )
+
+    def test_guided_boot_preserves_shared_esp_and_verifies_nvram(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_target(target)
+            microsoft = target / "boot/efi/EFI/Microsoft/Boot/bootmgfw.efi"
+            fallback = target / "boot/efi/EFI/BOOT/BOOTX64.EFI"
+            microsoft.parent.mkdir(parents=True)
+            fallback.parent.mkdir(parents=True)
+            microsoft.write_bytes(b"windows-sentinel")
+            fallback.write_bytes(b"fallback-sentinel")
+
+            plan, inventory = guided_plan()
+            inspection = replace(
+                healthy_esp(plan, inventory),
+                preserved_entries=capture_preserved_esp_tree(
+                    target / "boot/efi"
+                ),
+            )
+            execution = build_guided_coexistence_execution_plan(
+                plan,
+                inventory,
+                esp_inspection=inspection,
+                nvram_inspection=NvramInspection(True),
+                target=str(target),
+            )
+            runner = self.compatible_runner(target)
+            esp_device = execution.commands.devices["efi-system"]
+            runner.outputs[
+                ("blkid", "-s", "PARTUUID", "-o", "value", esp_device)
+            ] = ("part-1\n", "", 0)
+            nvram = (
+                "Boot0001* Windows Boot Manager "
+                "HD(1,GPT,part-1,0x800,0x100000)/"
+                "File(\\EFI\\Microsoft\\Boot\\bootmgfw.efi)\n"
+                "Boot0007* AnduinOS "
+                "HD(1,GPT,part-1,0x800,0x100000)/"
+                "File(\\EFI\\AnduinOS\\shimx64.efi)\n"
+            )
+            runner.outputs[execution.boot_commands.nvram_verify] = (
+                nvram,
+                "",
+                0,
+            )
+            runner.outputs[
+                ("chroot", str(target), "dpkg", "--print-architecture")
+            ] = ("amd64\n", "", 0)
+            logs = []
+            context = InstallContext(
+                plan,
+                logs.append,
+                values={
+                    "target": target,
+                    "target_efi_mounted": True,
+                    "partition_devices": execution.commands.devices,
+                    "guided_storage_execution_plan": execution,
+                    "guided_esp_inspection": inspection,
+                },
+                execution_policy=ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST,
+            )
+            step = InstallBootloaderStep(runner)
+            step.preflight(context)
+            step.execute(context)
+
+            (target / "boot/vmlinuz-test").touch()
+            (target / "boot/initrd.img-test").touch()
+            (target / "boot/grub").mkdir(exist_ok=True)
+            (target / "boot/grub/grub.cfg").write_text(
+                "menuentry 'AnduinOS' { linux /boot/vmlinuz-test }\n"
+            )
+            vendor = target / "boot/efi/EFI/AnduinOS/shimx64.efi"
+            vendor.parent.mkdir(parents=True)
+            write_pe(vendor, 0x8664)
+            step.verify(context)
+
+            commands = [item[0] for item in runner.commands]
+            self.assertIn(execution.boot_commands.nvram_create, commands)
+            self.assertFalse(
+                any(
+                    "i386-pc" in argument
+                    for command in commands
+                    for argument in command
+                )
+            )
+            self.assertEqual(microsoft.read_bytes(), b"windows-sentinel")
+            self.assertEqual(fallback.read_bytes(), b"fallback-sentinel")
+            for boundary in ("guided-boot-files", "guided-nvram"):
+                before = f"[anduinos-boundary:{boundary}:before]"
+                after = f"[anduinos-boundary:{boundary}:after]"
+                self.assertIn(before, logs)
+                self.assertIn(after, logs)
+                self.assertLess(logs.index(before), logs.index(after))
+
+            fallback.write_bytes(b"tampered")
+            with self.assertRaisesRegex(RuntimeError, "outside EFI/AnduinOS"):
+                step.verify(context)

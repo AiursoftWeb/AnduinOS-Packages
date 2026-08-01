@@ -33,6 +33,7 @@ from .storage_steps import MountTargetStep, PrepareStorageStep
 from .system_config import ConfigureSystemStep
 from .target_config import ConfigureStorageStep
 from .timeback import ProvisionTimebackMachineStep
+from .validation import ExecutionPolicy, validate_plan_for_execution
 
 
 class InstallerExecutor:
@@ -46,20 +47,27 @@ class InstallerExecutor:
         *,
         target: Path = Path("/target"),
         runner: CommandRunner | None = None,
+        execution_policy: ExecutionPolicy = ExecutionPolicy.RELEASE,
     ):
         self.log = log
         self.progress = progress
         self.status = status
         self.target = target
         self.runner = runner or CommandRunner(log)
+        self.execution_policy = execution_policy
 
     def run(self, plan: InstallPlan) -> InstallResult:
-        context = InstallContext(plan, self.log)
+        validate_plan_for_execution(plan, self.execution_policy)
+        context = InstallContext(
+            plan,
+            self.log,
+            execution_policy=self.execution_policy,
+        )
         steps = [
             DetectBootEnvironmentStep(self.runner),
             DetectNetworkConnectivityStep(),
             VerifyTargetDiskStep(self.runner),
-            PrepareStorageStep(self.runner),
+            PrepareStorageStep(self.runner, target=self.target),
             MountTargetStep(self.runner, target=self.target),
             CopySystemStep(self.runner),
             ConfigureStorageStep(self.runner),
