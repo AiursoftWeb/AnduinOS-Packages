@@ -278,29 +278,11 @@ where
     *operation_id.borrow_mut() = Some(requested.clone());
 
     if !completed.borrow().contains_key(&requested) {
-        let timed_out = Arc::new(AtomicBool::new(false));
-        let timeout_source = gio::glib::timeout_source_new_seconds(
-            OPERATION_TIMEOUT_SECONDS,
-            Some("timeback-operation-timeout"),
-            gio::glib::Priority::DEFAULT,
-            {
-                let loop_ = loop_.clone();
-                let timed_out = timed_out.clone();
-                move || {
-                    timed_out.store(true, Ordering::Release);
-                    loop_.quit();
-                    gio::glib::ControlFlow::Break
-                }
-            },
-        );
-        let timeout = timeout_source.attach(Some(context));
-        loop_.run();
-        if timed_out.load(Ordering::Acquire) {
+        if wait_for_operation(context, &loop_, OPERATION_TIMEOUT_SECONDS) {
             return Err(ClientError(format!(
                 "Recovery operation {requested} did not finish within {OPERATION_TIMEOUT_SECONDS} seconds"
             )));
         }
-        timeout.remove();
     }
     drop(progress_subscription);
     drop(finished_subscription);
@@ -312,7 +294,66 @@ where
     result
 }
 
+fn wait_for_operation(
+    context: &gio::glib::MainContext,
+    loop_: &gio::glib::MainLoop,
+    timeout_seconds: u32,
+) -> bool {
+    let timed_out = Arc::new(AtomicBool::new(false));
+    let timeout_source = gio::glib::timeout_source_new_seconds(
+        timeout_seconds,
+        Some("timeback-operation-timeout"),
+        gio::glib::Priority::DEFAULT,
+        {
+            let loop_ = loop_.clone();
+            let timed_out = timed_out.clone();
+            move || {
+                timed_out.store(true, Ordering::Release);
+                loop_.quit();
+                gio::glib::ControlFlow::Break
+            }
+        },
+    );
+    let _timeout_id = timeout_source.attach(Some(context));
+    loop_.run();
+    // SourceId::remove() looks up the numeric ID in GLib's default main
+    // context. This timeout belongs to the private context above, so removing
+    // it by ID can fail and panic after a fast operation. Destroy the source
+    // object directly instead.
+    timeout_source.destroy();
+    timed_out.load(Ordering::Acquire)
+}
+
 fn system_bus() -> Result<gio::DBusConnection, ClientError> {
     gio::bus_get_sync(gio::BusType::System, None::<&gio::Cancellable>)
         .map_err(|error| ClientError(format!("Could not connect to the system bus: {error}")))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn fast_operation_cleans_up_timeout_on_private_context() {
+        let context = gio::glib::MainContext::new();
+        context
+            .with_thread_default(|| {
+                let loop_ = gio::glib::MainLoop::new(Some(&context), false);
+                let completion = gio::glib::idle_source_new(
+                    Some("timeback-test-completion"),
+                    gio::glib::Priority::DEFAULT,
+                    {
+                        let loop_ = loop_.clone();
+                        move || {
+                            loop_.quit();
+                            gio::glib::ControlFlow::Break
+                        }
+                    },
+                );
+                let _completion_id = completion.attach(Some(&context));
+
+                assert!(!wait_for_operation(&context, &loop_, 60));
+            })
+            .expect("the private test context must become thread-default");
+    }
 }
