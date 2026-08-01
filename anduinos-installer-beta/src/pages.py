@@ -2428,7 +2428,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "configure-storage": _("Configure storage and swap", lang),
         "enter-chroot": _("Prepare target environment", lang),
         "cleanup-live-system": _("Remove live-session components", lang),
-        "configure-system": _("Configure account and region", lang),
+        "configure-system": _(
+            "Configure account, region, and machine identity", lang
+        ),
         "select-fastest-apt-mirror": _(
             "Select fastest package mirror", lang
         ),

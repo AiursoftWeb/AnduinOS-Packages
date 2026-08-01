@@ -24,7 +24,7 @@ RIME_REQUIRED_PATHS = (
 class ConfigureSystemStep:
     runner: CommandRunner
     id: str = "configure-system"
-    title: str = "Configure user and regional settings"
+    title: str = "Configure account, region, and machine identity"
     failure_policy: FailurePolicy = FailurePolicy.FATAL
     progress_weight: int = 5
     destructive: bool = False
