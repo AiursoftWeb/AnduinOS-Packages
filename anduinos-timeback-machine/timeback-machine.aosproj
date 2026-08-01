@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-timeback-machine</PackageName>
-    <PackageVersion>0.1.0-11+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.1.0-12+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Timeback Machine — graphical Btrfs system recovery and deployment manager</PackageDescription>
     <Section>admin</Section>
@@ -33,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PrebuildCommand Run="bash compile-locales.sh" />
     <PrebuildCommand Run="bash scripts/prebuild-check.sh" />
     <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
     <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
@@ -64,6 +65,7 @@
     <IncludeFile Include="data/com.anduinos.timebackmachine.desktop" Target="/usr/share/applications/com.anduinos.timebackmachine.desktop" />
     <IncludeFile Include="data/com.anduinos.timebackmachine.policy" Target="/usr/share/polkit-1/actions/com.anduinos.timebackmachine.policy" />
     <IncludeFile Include="data/com.anduinos.timebackmachine.svg" Target="/usr/share/icons/hicolor/scalable/apps/com.anduinos.timebackmachine.svg" />
+    <IncludeFolder Include="locale" Target="/usr/share/locale" />
     <IncludeFile Include="data/com.anduinos.timebackmachine.xml" Target="/usr/share/dbus-1/interfaces/com.anduinos.timebackmachine.xml" />
     <IncludeFile Include="data/com.anduinos.TimebackMachine1.conf" Target="/usr/share/dbus-1/system.d/com.anduinos.TimebackMachine1.conf" />
     <IncludeFile Include="data/com.anduinos.TimebackMachine1.service" Target="/usr/share/dbus-1/system-services/com.anduinos.TimebackMachine1.service" />
