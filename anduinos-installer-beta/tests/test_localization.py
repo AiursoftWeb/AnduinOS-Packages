@@ -96,6 +96,8 @@ class LocalizationTests(unittest.TestCase):
                     "_nav_btn",
                 }:
                     expressions.append(node.args[0])
+                elif name == "_page_header":
+                    expressions.extend(node.args[:2])
                 elif name == "_nav_box":
                     expressions.extend(
                         keyword.value

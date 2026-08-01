@@ -10,6 +10,7 @@ from frontend import (
     ExecutorClient,
     FrontendPlanError,
     StorageStrategy,
+    _run_privileged_parted,
     apply_storage_strategy,
     bind_storage_target,
     clear_storage_target,
@@ -99,6 +100,46 @@ def guided_state():
 
 
 class FrontendPlanTests(unittest.TestCase):
+    def test_storage_geometry_uses_only_the_polkit_probe_when_unprivileged(self):
+        command = [
+            "parted",
+            "--machine",
+            "--script",
+            "/dev/nvme0n1",
+            "unit",
+            "B",
+            "print",
+            "free",
+        ]
+        with (
+            patch("frontend.os.geteuid", return_value=1000),
+            patch("frontend.subprocess.run") as run,
+        ):
+            _run_privileged_parted(command, capture_output=True, text=True)
+        run.assert_called_once_with(
+            [
+                "pkexec",
+                "/usr/bin/anduinos-installer-storage-probe",
+                "/dev/nvme0n1",
+            ],
+            capture_output=True,
+            text=True,
+        )
+
+    def test_storage_geometry_rejects_any_mutating_privileged_command(self):
+        with patch("frontend.subprocess.run") as run:
+            with self.assertRaisesRegex(ValueError, "non-read-only"):
+                _run_privileged_parted(
+                    [
+                        "parted",
+                        "--script",
+                        "/dev/nvme0n1",
+                        "mklabel",
+                        "gpt",
+                    ]
+                )
+        run.assert_not_called()
+
     def make_plan(self):
         values = state()
         disk = DiskIdentity(
@@ -304,6 +345,9 @@ class FrontendPlanTests(unittest.TestCase):
         self.assertIn("Other disks and EFI System Partitions", simulated)
         self.assertIn("[refresh-package-indexes]", simulated)
         self.assertIn("[upgrade-system]", simulated)
+        self.assertIn("Target filesystem: btrfs", simulated)
+        self.assertIn("[ensure-timeback-machine]", simulated)
+        self.assertIn("retain the installation-media payload", simulated)
         self.assertNotIn("[install-third-party-drivers]", simulated)
         step_order = [
             step for step, status, _message in statuses
@@ -318,6 +362,7 @@ class FrontendPlanTests(unittest.TestCase):
         values = state()
         values["install_updates"] = False
         values["install_third_party_drivers"] = True
+        values["filesystem"] = Filesystem.EXT4.value
         disk = DiskIdentity(
             "/dev/sda", "serial:test", 64 * 1024**3, "Test", "test"
         )
@@ -344,6 +389,9 @@ class FrontendPlanTests(unittest.TestCase):
         self.assertNotIn("[refresh-package-indexes]", simulated)
         self.assertNotIn("[upgrade-system]", simulated)
         self.assertIn("[install-third-party-drivers]", simulated)
+        self.assertNotIn("[ensure-timeback-machine]", simulated)
+        self.assertIn("Target filesystem: ext4", simulated)
+        self.assertIn("remove the live payload", simulated)
 
     def test_rejects_disk_that_changed_after_selection(self):
         values = state()

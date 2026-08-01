@@ -1,7 +1,8 @@
-"""Entry point for the AnduinOS GTK4 installer (beta).
+"""Entry point for the unprivileged AnduinOS GTK4 installer (beta).
 
-Run as root on a Live ISO.  The shell launcher handles privilege
-escalation — this module just starts the GTK application.
+Polkit delegates exact read-only storage geometry to a narrow helper. The UI
+passes one validated plan to a separate root executor only when installation
+begins.
 """
 
 import sys
@@ -24,6 +25,7 @@ from i18n import _, N_
 from languages import default_timezone, detect_system_language
 from pages import build_all_pages
 from frontend import guided_storage_enabled
+from ui import load_visual_style
 
 
 APP_ID = "com.anduinos.InstallerBeta"
@@ -92,7 +94,11 @@ class InstallerApplication(Adw.Application):
             win = Adw.ApplicationWindow(application=self,
                                         title=title,
                                         default_width=960,
-                                        default_height=640)
+                                        default_height=680,
+                                        width_request=720,
+                                        height_request=520)
+            win.add_css_class("installer-window")
+            load_visual_style(win.get_display())
 
             # ToolbarView: header bar (draggable, close button) + content
             toolbar = Adw.ToolbarView()
@@ -108,7 +114,7 @@ class InstallerApplication(Adw.Application):
 
             self.shared_state["_set_window_language"] = _set_window_language
 
-            self._nav = Adw.NavigationView()
+            self._nav = Adw.NavigationView(animate_transitions=True)
             toolbar.set_content(self._nav)
             win.set_content(toolbar)
 

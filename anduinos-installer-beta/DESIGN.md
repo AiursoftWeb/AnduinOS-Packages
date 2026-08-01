@@ -49,6 +49,14 @@ and constructs every command itself.
 
 ## Safety boundary
 
+The GTK process always runs as the desktop user. Ordinary `lsblk` discovery
+stays unprivileged. Exact free-space geometry crosses Polkit through
+`anduinos-installer-storage-probe`, a read-only helper that accepts exactly one
+validated fixed whole-disk path and can execute only `parted ... print free`.
+The policy never authorizes `parted` itself, so the UI cannot turn this probe
+into a partition-table write. Destructive work remains isolated in the
+separate plan-only executor.
+
 Before the first destructive command, the executor:
 
 1. Parses and validates the versioned `InstallPlan`.
@@ -96,6 +104,44 @@ session, inside that Live user's runtime home. It never writes to `/etc/skel`,
 so no dead installer shortcut can enter the installed user's home. The
 launcher package carries its own independent copy of the OOBE box-and-logo
 artwork and does not depend on the OOBE package.
+
+## Interface architecture
+
+The GTK interface uses a five-chapter visual model. Several guarded pages may
+belong to one chapter, so the chapter indicator communicates progress without
+pretending that every storage branch has the same number of screens.
+
+| Chapter | Pages |
+| --- | --- |
+| Preparation | Language, keyboard and software choices |
+| Storage | Target disk, installation method and conditional advanced storage |
+| Account | User account and timezone |
+| Review | Immutable plan summary and destructive confirmation |
+| Install | Execution dashboard and completion state |
+
+Every regular page has a package-owned SVG hero, a constrained content area
+and a persistent bottom navigation bar. The default 960 x 680 window must fit
+inside a 1024 x 768 live session without hiding navigation. Long or conditional
+content scrolls inside the middle region; the hero and navigation do not.
+
+The chapter dots are indicators, not arbitrary navigation controls. Forward
+movement continues to use the existing page-specific validation callbacks, and
+the navigation view remains the sole owner of the back stack. This prevents a
+carousel gesture or a dot click from bypassing disk selection, coexistence
+preflight, account validation or final confirmation.
+
+Visual assets are copied into `assets/icons` and shipped by this package. The
+runtime never depends on a sibling OOBE/Timeback checkout or a developer's icon
+theme source tree. Shared colors, cards, callouts, dots and progress states live
+in `assets/style.css`; reusable GTK construction lives in `src/ui.py`. New pages
+should extend those two layers rather than defining a page-local visual system.
+
+Storage selection represents each physical disk as a complete selectable card:
+model, stable display path, capacity, partition table, current partitions and
+known unallocated extents remain visible together. Installation methods use
+grouped whole-card toggles with equal icon canvases. Neither workflow relies on
+the toolkit's rectangular default list selection, which would escape the
+rounded visual boundary and obscure whether the card itself is active.
 
 ## Implementation milestones
 

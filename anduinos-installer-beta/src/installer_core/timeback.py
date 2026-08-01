@@ -1,4 +1,4 @@
-"""Provision the Btrfs-only AnduinOS Timeback Machine capability."""
+"""Ensure the Btrfs-only AnduinOS Timeback Machine capability is present."""
 
 from __future__ import annotations
 
@@ -22,32 +22,34 @@ def _target(context: InstallContext) -> Path:
     return target
 
 
-def _package_is_installed(
+def _installed_package_version(
     runner: CommandRunner,
     target: Path,
-) -> bool:
+) -> str | None:
     result = runner.run(
         (
             "chroot",
             str(target),
             "dpkg-query",
             "--show",
-            "--showformat=${db:Status-Abbrev}",
+            "--showformat=${db:Status-Abbrev}\t${Version}",
             TIMEBACK_PACKAGE,
         ),
         check=False,
         timeout=10,
     )
-    return result.returncode == 0 and result.stdout.startswith("ii ")
+    if result.returncode != 0 or not result.stdout.startswith("ii "):
+        return None
+    return result.stdout[3:].strip() or "unknown"
 
 
 @dataclass
-class ProvisionTimebackMachineStep:
+class EnsureTimebackMachineStep:
     """Retain the ISO payload or install it from APT on transitional ISOs."""
 
     runner: CommandRunner
-    id: str = "provision-timeback-machine"
-    title: str = "Install Timeback Machine"
+    id: str = "ensure-timeback-machine"
+    title: str = "Ensure Timeback Machine is available"
     failure_policy: FailurePolicy = FailurePolicy.FATAL
     progress_weight: int = 2
     destructive: bool = False
@@ -59,19 +61,40 @@ class ProvisionTimebackMachineStep:
     def execute(self, context: InstallContext) -> None:
         context.values["timeback_machine_installed"] = False
         context.values["timeback_machine_source"] = None
+        context.values["timeback_machine_version"] = None
         target = _target(context)
         apt_get = target / "usr/bin/apt-get"
         if not apt_get.is_file():
             raise RuntimeError("Target command is missing: /usr/bin/apt-get")
 
-        if _package_is_installed(self.runner, target):
+        media_payload = bool(
+            context.values.get("timeback_payload_in_live_image")
+        )
+        online = context.values.get("network_online") is not False
+        context.log("Timeback Machine target policy: required for Btrfs")
+        context.log(
+            "Timeback Machine installation-media payload: "
+            + ("present" if media_payload else "absent")
+        )
+        context.log(
+            "Timeback Machine repository fallback: "
+            + ("available" if online else "unavailable while offline")
+        )
+
+        version = _installed_package_version(self.runner, target)
+        if version is not None:
             source = (
                 "installation-media"
-                if context.values.get("timeback_payload_in_live_image")
+                if media_payload
                 else "copied-system"
             )
             context.values["timeback_machine_installed"] = True
             context.values["timeback_machine_source"] = source
+            context.values["timeback_machine_version"] = version
+            context.log(
+                f"Timeback Machine package state: installed ({version})"
+            )
+            context.log(f"Timeback Machine package source: {source}")
             if source == "installation-media":
                 context.log(
                     "Retained AnduinOS Timeback Machine from the "
@@ -84,6 +107,7 @@ class ProvisionTimebackMachineStep:
                 )
             return
 
+        context.log("Timeback Machine package state: missing from target")
         if context.values.get("network_online") is False:
             raise StepWarning(
                 "The installation media does not contain Timeback Machine "
@@ -145,6 +169,14 @@ class ProvisionTimebackMachineStep:
 
         context.values["timeback_machine_installed"] = True
         context.values["timeback_machine_source"] = "repository"
+        version = _installed_package_version(self.runner, target)
+        if version is None:
+            raise RuntimeError(
+                "Timeback Machine package verification failed after install"
+            )
+        context.values["timeback_machine_version"] = version
+        context.log(f"Timeback Machine package state: installed ({version})")
+        context.log("Timeback Machine package source: repository")
         context.log(
             "Installed AnduinOS Timeback Machine from the signed package "
             "repository"
@@ -154,10 +186,16 @@ class ProvisionTimebackMachineStep:
         if not context.values.get("timeback_machine_installed"):
             return
         target = _target(context)
-        if not _package_is_installed(self.runner, target):
+        version = _installed_package_version(self.runner, target)
+        if version is None:
             raise RuntimeError(
                 "Timeback Machine package verification failed"
             )
+        context.values["timeback_machine_version"] = version
+        context.log(
+            "Timeback Machine verification: package is installed and the "
+            f"target package database is consistent ({version})"
+        )
         self.runner.run(
             ("chroot", str(target), "dpkg", "--audit"),
             timeout=300,

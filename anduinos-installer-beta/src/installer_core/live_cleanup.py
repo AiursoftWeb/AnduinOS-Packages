@@ -79,6 +79,26 @@ class CleanupLiveSystemStep:
         context.values["timeback_payload_in_live_image"] = (
             "anduinos-timeback-machine" in full
         )
+        payload_version = full.get("anduinos-timeback-machine")
+        context.values["timeback_payload_version"] = payload_version
+        context.log(
+            "Timeback Machine installation-media payload: "
+            + (
+                f"present ({payload_version})"
+                if payload_version is not None
+                else "absent"
+            )
+        )
+        if context.plan.storage.filesystem is Filesystem.BTRFS:
+            context.log(
+                "Timeback Machine cleanup policy: retain the payload for "
+                "the Btrfs target"
+            )
+        else:
+            context.log(
+                "Timeback Machine cleanup policy: purge the live payload "
+                "from the ext4 target"
+            )
 
     def execute(self, context: InstallContext) -> None:
         target = _target(context)
@@ -93,6 +113,15 @@ class CleanupLiveSystemStep:
         candidates = (full.keys() - desktop.keys()) | ALWAYS_REMOVE
         if context.plan.storage.filesystem is Filesystem.BTRFS:
             candidates -= CONDITIONAL_LIVE_PACKAGES
+            context.log(
+                "Timeback Machine cleanup decision: excluded from the "
+                "live-package purge set"
+            )
+        elif "anduinos-timeback-machine" in full:
+            context.log(
+                "Timeback Machine cleanup decision: included in the "
+                "live-package purge set"
+            )
         candidates = sorted(candidates)
 
         installed: list[str] = []
@@ -126,6 +155,11 @@ class CleanupLiveSystemStep:
                     *installed,
                 ),
                 timeout=1800,
+            )
+        if "anduinos-timeback-machine" in installed:
+            context.log(
+                "Timeback Machine cleanup result: removed from the ext4 "
+                "target"
             )
 
     def verify(self, context: InstallContext) -> None:

@@ -42,7 +42,7 @@ class ExecutorPipelineTests(unittest.TestCase):
             "prepare-secure-boot",
             "refresh-package-indexes",
             "upgrade-system",
-            "provision-timeback-machine",
+            "ensure-timeback-machine",
             "verify-dkms-signatures",
             "install-bootloader",
             "enroll-secure-boot",
@@ -76,13 +76,13 @@ class ExecutorPipelineTests(unittest.TestCase):
                 valid_plan(filesystem=Filesystem.EXT4)
             )
         self.assertNotIn(
-            "provision-timeback-machine",
+            "ensure-timeback-machine",
             CapturingStepRunner.captured,
         )
 
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
             InstallerExecutor(lambda _message: None).run(valid_plan())
         self.assertIn(
-            "provision-timeback-machine",
+            "ensure-timeback-machine",
             CapturingStepRunner.captured,
         )

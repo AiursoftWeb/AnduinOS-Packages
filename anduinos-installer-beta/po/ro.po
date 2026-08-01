@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-01 03:39+0000\n"
+"POT-Creation-Date: 2026-08-01 18:33+0800\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,6 +17,940 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
 
+#: src/main.py:88
+msgid "AnduinOS Installer (Development)"
+msgstr "Instalator AnduinOS (Dezvoltare)"
+
+#: src/main.py:90
+msgid "AnduinOS Installer (Beta)"
+msgstr "Instalator AnduinOS (Beta)"
+
+#: src/main.py:125
+msgid "Installation in progress"
+msgstr "Instalare în curs"
+
+#: src/main.py:127
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "Instalatorul nu poate fi închis în timp ce modifică discul țintă."
+
+#: src/main.py:133
+msgid "Continue Installation"
+msgstr "Continuă instalarea"
+
+#: src/pages.py:69
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+
+#: src/pages.py:73
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+
+#: src/pages.py:78
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+
+#: src/pages.py:83
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+
+#: src/pages.py:87
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+
+#: src/pages.py:91
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+
+#: src/pages.py:95
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+
+#: src/pages.py:99
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+
+#: src/pages.py:104
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+
+#: src/pages.py:108
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+
+#: src/pages.py:113
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+
+#: src/pages.py:118
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+
+#: src/pages.py:122
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "After changing partitions or unmounting a volume, rescan storage and select the target again."
+
+#: src/pages.py:128
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+
+#: src/pages.py:133
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+
+#: src/pages.py:204 src/pages.py:374
+msgid "Next"
+msgstr "Următorul"
+
+#: src/pages.py:211 src/pages.py:373 src/pages.py:2341
+msgid "Back"
+msgstr "Înapoi"
+
+#: src/pages.py:287 src/pages.py:371
+msgid "AnduinOS Installer"
+msgstr "Instalator AnduinOS"
+
+#: src/pages.py:367
+msgid "Welcome to AnduinOS"
+msgstr "Bine ați venit la AnduinOS"
+
+#: src/pages.py:369
+msgid "Choose your language to begin installation"
+msgstr "Alegeți limba pentru a începe instalarea"
+
+#: src/pages.py:405
+msgid "Navigation error"
+msgstr "Eroare de navigare"
+
+#: src/pages.py:408 src/pages.py:2363
+msgid "OK"
+msgstr "OK"
+
+#: src/pages.py:440
+msgid "English (US)"
+msgstr "Engleză (US)"
+
+#: src/pages.py:440
+msgid "English (UK)"
+msgstr "Engleză (UK)"
+
+#: src/pages.py:441
+msgid "German"
+msgstr "Germană"
+
+#: src/pages.py:441
+msgid "French"
+msgstr "Franceză"
+
+#: src/pages.py:441
+msgid "Italian"
+msgstr "Italienă"
+
+#: src/pages.py:442
+msgid "Spanish"
+msgstr "Spainiolă"
+
+#: src/pages.py:442
+msgid "Portuguese"
+msgstr "Portugheză"
+
+#: src/pages.py:443
+msgid "Portuguese (Brazil)"
+msgstr "Portugheză (Brazilia)"
+
+#: src/pages.py:443
+msgid "Danish"
+msgstr "Daneză"
+
+#: src/pages.py:444
+msgid "Swedish"
+msgstr "Suedeză"
+
+#: src/pages.py:444
+msgid "Norwegian"
+msgstr "Norvegiană"
+
+#: src/pages.py:445
+msgid "Finnish"
+msgstr "Finlandeză"
+
+#: src/pages.py:445
+msgid "Dutch"
+msgstr "Olandeză"
+
+#: src/pages.py:445
+msgid "Polish"
+msgstr "Poloneză"
+
+#: src/pages.py:446
+msgid "Romanian"
+msgstr "Română"
+
+#: src/pages.py:448
+msgid "Russian"
+msgstr "Rusă"
+
+#: src/pages.py:448
+msgid "Ukrainian"
+msgstr "Ucraineană"
+
+#: src/pages.py:448
+msgid "Greek"
+msgstr "Greacă"
+
+#: src/pages.py:451
+msgid "Japanese"
+msgstr "Japoneză"
+
+#: src/pages.py:451
+msgid "Korean"
+msgstr "Coreeană"
+
+#: src/pages.py:452
+msgid "Hindi (India)"
+msgstr "Hindi (India)"
+
+#: src/pages.py:452
+msgid "Thai"
+msgstr "Tai"
+
+#: src/pages.py:453
+msgid "Vietnamese"
+msgstr "Vietnameză"
+
+#: src/pages.py:453
+msgid "Arabic"
+msgstr "Arabă"
+
+#: src/pages.py:454
+msgid "Turkish"
+msgstr "Turcă"
+
+#: src/pages.py:454
+msgid "Indonesian"
+msgstr "Indoneziană"
+
+#: src/pages.py:461 src/pages.py:467 src/pages.py:507
+msgid "Keyboard Layout"
+msgstr "Așezare tastatură"
+
+#: src/pages.py:499 src/pages.py:508
+msgid "Test your keyboard here…"
+msgstr "Testează tastatura aici…"
+
+#: src/pages.py:533 src/pages.py:539
+msgid "Updates and Drivers"
+msgstr "Actualizări și drivere"
+
+#: src/pages.py:556
+msgid "Download and install system updates during installation"
+msgstr "Descarcă și instalează actualizările sistemului în timpul instalării"
+
+#: src/pages.py:559 src/pages.py:575
+msgid "Requires an Internet connection. The base installation remains available when offline."
+msgstr "Necesită o conexiune la Internet. Instalarea de bază rămâne disponibilă offline."
+
+#: src/pages.py:568
+msgid "Install third-party drivers for this device"
+msgstr "Instalează drivere terțe pentru acest dispozitiv"
+
+#: src/pages.py:581
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr "Unele drivere sunt proprietare sau altfel software ne-liber."
+
+#: src/pages.py:641
+msgid "Storage Device"
+msgstr "Storage Device"
+
+#: src/pages.py:650
+msgid "No partition table"
+msgstr "No partition table"
+
+#: src/pages.py:673
+msgid "Current disk layout"
+msgstr "Current disk layout"
+
+#: src/pages.py:693
+msgid "Unknown filesystem"
+msgstr "Unknown filesystem"
+
+#: src/pages.py:706
+#, python-brace-format
+msgid "Unallocated · {size}"
+msgstr "Unallocated · {size}"
+
+#: src/pages.py:713
+msgid "Partition details unavailable"
+msgstr "Partition details unavailable"
+
+#: src/pages.py:728
+msgid "Windows detected"
+msgstr "Windows detected"
+
+#: src/pages.py:730
+msgid "BitLocker detected"
+msgstr "BitLocker detected"
+
+#: src/pages.py:732
+msgid "Live USB — excluded"
+msgstr "Live USB — excluded"
+
+#: src/pages.py:734
+msgid "Too small"
+msgstr "Too small"
+
+#: src/pages.py:751 src/pages.py:757
+msgid "Select Installation Disk"
+msgstr "Selectează discul de instalare"
+
+#: src/pages.py:793
+msgid "Rescan Storage"
+msgstr "Rescan Storage"
+
+#: src/pages.py:863
+msgid "No suitable disks found."
+msgstr "Nu s-au găsit discuri potrivite."
+
+#: src/pages.py:917
+msgid "Choose Installation Method"
+msgstr "Choose Installation Method"
+
+#: src/pages.py:922
+msgid "How should AnduinOS use this disk?"
+msgstr "How should AnduinOS use this disk?"
+
+#: src/pages.py:937 src/pages.py:1191 src/pages.py:1425
+#, python-brace-format
+msgid "Target: {disk} ({size} — {model})"
+msgstr "Target: {disk} ({size} — {model})"
+
+#: src/pages.py:1014
+msgid "Erase every partition and all data on the selected disk."
+msgstr "Erase every partition and all data on the selected disk."
+
+#: src/pages.py:1018
+msgid "Btrfs — recommended"
+msgstr "Btrfs — recommended"
+
+#: src/pages.py:1022
+msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "Enables shared-space subvolumes, snapshots and Timeback Machine."
+
+#: src/pages.py:1030
+msgid "ext4 — classic"
+msgstr "ext4 — classic"
+
+#: src/pages.py:1033
+msgid "Uses a traditional single root filesystem."
+msgstr "Uses a traditional single root filesystem."
+
+#: src/pages.py:1039
+msgid "Advanced — keep existing systems"
+msgstr "Advanced — keep existing systems"
+
+#: src/pages.py:1041
+msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+
+#: src/pages.py:1089
+msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+
+#: src/pages.py:1099
+#, python-brace-format
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "ALL DATA on {disk} will be permanently erased."
+
+#: src/pages.py:1135
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+
+#: src/pages.py:1145
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+
+#: src/pages.py:1178
+msgid "Advanced Storage"
+msgstr "Advanced Storage"
+
+#: src/pages.py:1183
+msgid "Advanced: Install Alongside"
+msgstr "Advanced: Install Alongside"
+
+#: src/pages.py:1212
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+
+#: src/pages.py:1219
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+
+#: src/pages.py:1250 src/pages.py:2113
+msgid "Filesystem"
+msgstr "Sistem de fișiere"
+
+#: src/pages.py:1253
+msgid "Btrfs (recommended)"
+msgstr "Btrfs (recomandat)"
+
+#: src/pages.py:1253
+msgid "ext4 (classic)"
+msgstr "ext4 (classic)"
+
+#: src/pages.py:1263
+msgid "Unallocated space"
+msgstr "Unallocated space"
+
+#: src/pages.py:1271
+msgid "EFI System Partition"
+msgstr "EFI System Partition"
+
+#: src/pages.py:1285
+msgid "Rescan and Reselect Disk"
+msgstr "Rescan and Reselect Disk"
+
+#: src/pages.py:1326
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
+
+#: src/pages.py:1330
+#, python-brace-format
+msgid "Reuse {path} ({size})"
+msgstr "Reuse {path} ({size})"
+
+#: src/pages.py:1394
+#, python-brace-format
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+
+#: src/pages.py:1407
+msgid "The selected disk size changed. Return and select it again."
+msgstr "The selected disk size changed. Return and select it again."
+
+#: src/pages.py:1417
+msgid "The selected disk topology changed. Review the disk and installation method again."
+msgstr "The selected disk topology changed. Review the disk and installation method again."
+
+#: src/pages.py:1453
+#, python-brace-format
+msgid "{size} unallocated at {offset}"
+msgstr "{size} unallocated at {offset}"
+
+#: src/pages.py:1579 src/pages.py:1585
+msgid "User Account"
+msgstr "Cont utilizator"
+
+#: src/pages.py:1605 src/pages.py:1606
+msgid "Full Name"
+msgstr "Nume complet"
+
+#: src/pages.py:1609 src/pages.py:1612
+msgid "Username"
+msgstr "Nume utilizator"
+
+#: src/pages.py:1616 src/pages.py:1627
+msgid "Password"
+msgstr "Parolă"
+
+#: src/pages.py:1620 src/pages.py:1628
+msgid "Confirm Password"
+msgstr "Confirmă parola"
+
+#: src/pages.py:1632
+msgid "Do not require a password for sudo commands"
+msgstr "Nu cere parolă pentru comenzile sudo"
+
+#: src/pages.py:1638 src/pages.py:1643 src/pages.py:2157
+msgid "Computer Name"
+msgstr "Numele calculatorului"
+
+#: src/pages.py:1669
+msgid "Username may only contain lowercase letters, digits, underscores and hyphens."
+msgstr "Numele de utilizator poate conține doar litere mici, cifre, underscore-uri și cratime."
+
+#: src/pages.py:1680
+msgid "Install alongside requires a password-protected account."
+msgstr "Install alongside requires a password-protected account."
+
+#: src/pages.py:1691
+msgid "The two passwords do not match."
+msgstr "Cele două parole nu se potrivesc."
+
+#: src/pages.py:1695
+msgid "Password must be at least 6 characters."
+msgstr "Parola trebuie să aibă cel puțin 6 caractere."
+
+#: src/pages.py:1703
+msgid "Computer name contains invalid characters."
+msgstr "Numele calculatorului conține caractere nevalide."
+
+#: src/pages.py:1756
+msgid "Return to Make Changes"
+msgstr "Întoarce-te pentru a face modificări"
+
+#: src/pages.py:1763
+msgid "This configuration is very unsafe"
+msgstr "Această configurație este foarte nesigură"
+
+#: src/pages.py:1765
+msgid "Passwordless sudo is unsafe"
+msgstr "sudo fără parolă este nesigur"
+
+#: src/pages.py:1769
+msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
+msgstr "Sistemul se va autentifica automat în acest cont și îi va permite să obțină privilegii complete de administrator fără parolă. Orice persoană cu acces fizic și orice program care rulează ca acest utilizator poate controla complet sistemul. Folosiți această opțiune doar pentru un kiosk, o mașină virtuală temporară sau alt mediu controlat."
+
+#: src/pages.py:1778
+msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
+msgstr "Orice program care rulează ca utilizatorul dvs. poate obține privilegii complete de administrator fără autentificare. Parola de conectare vă protejează încă la intrare, dar nu va proteja sudo. Sigur doriți să continuați?"
+
+#: src/pages.py:1792
+msgid "Return and Set a Password"
+msgstr "Întoarce-te și setează o parolă"
+
+#: src/pages.py:1798
+msgid "I Understand the Risk, Continue"
+msgstr "Înțeleg riscul, continuă"
+
+#: src/pages.py:1822
+msgid "Administrator access would be locked"
+msgstr "Accesul de administrator ar fi blocat"
+
+#: src/pages.py:1824
+msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
+msgstr "Acest cont nu are o parolă de autentificare, dar sudo ar cere în continuare una. Deoarece contul root este blocat implicit, nu ați putea executa sarcini de administrator. Stabiliți o parolă pentru cont sau activați sudo fără parolă."
+
+#: src/pages.py:1895 src/pages.py:1901
+msgid "Select Timezone"
+msgstr "Selectează fusul orar"
+
+#: src/pages.py:1914
+msgid "Search timezones…"
+msgstr "Caută fusuri orare…"
+
+#: src/pages.py:1967
+msgid "Selected timezone"
+msgstr "Fus orar selectat"
+
+#: src/pages.py:2035 src/pages.py:2041
+msgid "Ready to Install"
+msgstr "Gata pentru instalare"
+
+#: src/pages.py:2056
+msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
+msgstr "MOD DE DEZVOLTARE — planul va fi validat și simulat. Niciun executor privilegiat sau comandă pe disc nu poate rula."
+
+#: src/pages.py:2081
+#, python-brace-format
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+
+#: src/pages.py:2090
+#, python-brace-format
+msgid "Unavailable: {error}"
+msgstr "Indisponibil: {error}"
+
+#: src/pages.py:2100
+msgid "single ext4 root filesystem"
+msgstr "sistem de fișiere ext4 root unic"
+
+#: src/pages.py:2103
+msgid "Language"
+msgstr "Limbă"
+
+#: src/pages.py:2104
+msgid "Keyboard"
+msgstr "Tastatură"
+
+#: src/pages.py:2106
+msgid "Target Disk"
+msgstr "Disc țintă"
+
+#: src/pages.py:2110
+msgid "Stable disk identity"
+msgstr "Identitate stabilă a discului"
+
+#: src/pages.py:2112
+msgid "Platform"
+msgstr "Platformă"
+
+#: src/pages.py:2114
+msgid "Subvolumes"
+msgstr "Subvolume"
+
+#: src/pages.py:2115
+msgid "Swap"
+msgstr "Swap"
+
+#: src/pages.py:2117
+msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
+msgstr "Swap pe disc de 4 GiB (prioritate 10) + zram LZ4 cu 50% RAM (prioritate 100)"
+
+#: src/pages.py:2121
+msgid "System updates"
+msgstr "Actualizări sistem"
+
+#: src/pages.py:2123
+msgid "download and install"
+msgstr "descarcă și instalează"
+
+#: src/pages.py:2125 src/pages.py:2131
+msgid "do not install"
+msgstr "nu instala"
+
+#: src/pages.py:2127
+msgid "Third-party drivers"
+msgstr "Drivere terțe"
+
+#: src/pages.py:2129
+msgid "detect and install (may include non-free software)"
+msgstr "detectează și instalează (poate include software ne-liber)"
+
+#: src/pages.py:2133
+msgid "Secure Boot enrollment"
+msgstr "Înregistrare Secure Boot"
+
+#: src/pages.py:2136
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr "creează un MOK local pe mașină; înregistrează după repornire cu parola 123456"
+
+#: src/pages.py:2141
+msgid "not required"
+msgstr "nu este necesar"
+
+#: src/pages.py:2143
+msgid "User"
+msgstr "Utuzator"
+
+#: src/pages.py:2146
+msgid "Account security"
+msgstr "Securitatea contului"
+
+#: src/pages.py:2148
+msgid "automatic login"
+msgstr "conectare automată"
+
+#: src/pages.py:2150
+msgid "password required for login"
+msgstr "parolă necesară pentru conectare"
+
+#: src/pages.py:2153
+msgid "; sudo does not require a password"
+msgstr "; sudo nu necesită o parolă"
+
+#: src/pages.py:2155
+msgid "; sudo requires the account password"
+msgstr "; sudo necesită parola contului"
+
+#: src/pages.py:2159
+msgid "Timezone"
+msgstr "Fus orar"
+
+#: src/pages.py:2166
+msgid "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Guided storage selection is missing. Rescan and select the target again."
+
+#: src/pages.py:2174
+#, python-brace-format
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+#: src/pages.py:2182
+#, python-brace-format
+msgid "{path} as {filesystem}"
+msgstr "{path} as {filesystem}"
+
+#: src/pages.py:2190
+#, python-brace-format
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+
+#: src/pages.py:2198
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+
+#: src/pages.py:2203
+msgid "Storage mode"
+msgstr "Storage mode"
+
+#: src/pages.py:2204
+msgid "Install alongside"
+msgstr "Install alongside"
+
+#: src/pages.py:2205
+msgid "Selected unallocated space"
+msgstr "Selected unallocated space"
+
+#: src/pages.py:2206
+#, python-brace-format
+msgid "{size} at {offset}"
+msgstr "{size} at {offset}"
+
+#: src/pages.py:2210
+msgid "Preserved partitions"
+msgstr "Preserved partitions"
+
+#: src/pages.py:2211
+#, python-brace-format
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+#: src/pages.py:2215
+msgid "New partitions"
+msgstr "New partitions"
+
+#: src/pages.py:2217
+msgid "Formats"
+msgstr "Formats"
+
+#: src/pages.py:2219
+msgid "EFI policy"
+msgstr "EFI policy"
+
+#: src/pages.py:2221
+msgid "Boot policy"
+msgstr "Boot policy"
+
+#: src/pages.py:2223
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+
+#: src/pages.py:2253
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+
+#: src/pages.py:2261
+msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
+msgstr "⚠ Aceasta va șterge TOATE DATELE de pe discul selectat. Această acțiune nu poate fi anulată."
+
+#: src/pages.py:2287
+msgid "Validate this installation plan?"
+msgstr "Validați acest plan de instalare?"
+
+#: src/pages.py:2288
+msgid "Validate Plan (No Installation)"
+msgstr "Validează planul (fără instalare)"
+
+#: src/pages.py:2290
+msgid "Install in the selected free space?"
+msgstr "Install in the selected free space?"
+
+#: src/pages.py:2291 src/pages.py:2380
+msgid "Install Alongside"
+msgstr "Install Alongside"
+
+#: src/pages.py:2293
+msgid "Erase the entire selected disk?"
+msgstr "Șterge întregul disc selectat?"
+
+#: src/pages.py:2294
+msgid "Erase Disk and Install"
+msgstr "Șterge discul și instalează"
+
+#: src/pages.py:2301
+#, python-brace-format
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
+"\n"
+msgstr ""
+"Modul de dezvoltare va simula instalarea pe {disk}. Datele de pe disc nu vor fi modificate.\n"
+"\n"
+
+#: src/pages.py:2307
+#, python-brace-format
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+
+#: src/pages.py:2314
+#, python-brace-format
+msgid ""
+"All partitions and data on {disk} will be destroyed.\n"
+"\n"
+msgstr ""
+"Totale partițiile și datele de pe {disk} vor fi distruse.\n"
+"\n"
+
+#: src/pages.py:2319
+#, python-brace-format
+msgid ""
+"Stable identity: {stable_id}\n"
+"\n"
+msgstr ""
+"Identitate stabilă: {stable_id}\n"
+"\n"
+
+#: src/pages.py:2323
+msgid "The privileged executor is disabled."
+msgstr "Executorul privilegiat este dezactivat."
+
+#: src/pages.py:2326
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+
+#: src/pages.py:2334
+msgid "This installer does not shrink or preserve other systems."
+msgstr "Acest instalator nu reduce sau păstrează alte sisteme."
+
+#: src/pages.py:2360
+msgid "Cannot create installation plan"
+msgstr "Nu se poate crea planul de instalare"
+
+#: src/pages.py:2382
+msgid "Install"
+msgstr "Instalează"
+
+#: src/pages.py:2398 src/pages.py:2404
+msgid "Installing AnduinOS"
+msgstr "Se instalează AnduinOS"
+
+#: src/pages.py:2413
+msgid "Detect firmware and Secure Boot"
+msgstr "Detectează firmware-ul și Secure Boot"
+
+#: src/pages.py:2416
+msgid "Detect Internet connectivity"
+msgstr "Detectează conexiunea la internet"
+
+#: src/pages.py:2418
+msgid "Verify target disk isolation"
+msgstr "Verifică izolarea discului țintă"
+
+#: src/pages.py:2419
+msgid "Prepare installation disk"
+msgstr "Pregătește discul de instalare"
+
+#: src/pages.py:2420
+msgid "Mount target filesystems"
+msgstr "Montează sistemele de fișiere țintă"
+
+#: src/pages.py:2421
+msgid "Copy AnduinOS system"
+msgstr "Copiază sistemul AnduinOS"
+
+#: src/pages.py:2422
+msgid "Configure storage and swap"
+msgstr "Configurează stocarea și swap-ul"
+
+#: src/pages.py:2423
+msgid "Prepare target environment"
+msgstr "Pregătește mediul țintă"
+
+#: src/pages.py:2424
+msgid "Remove live-session components"
+msgstr "Îndepărtează componentele sesiunii live"
+
+#: src/pages.py:2425
+msgid "Configure account and region"
+msgstr "Configurează contul și regiunea"
+
+#: src/pages.py:2427
+msgid "Select fastest package mirror"
+msgstr "Selectează cel mai rapid oglindă pachete"
+
+#: src/pages.py:2429
+msgid "Prepare Secure Boot"
+msgstr "Pregătește Secure Boot"
+
+#: src/pages.py:2430
+msgid "Refresh package indexes"
+msgstr "Reîmprospătează indexele pachetelor"
+
+#: src/pages.py:2431
+msgid "Install system updates"
+msgstr "Instalează actualizările sistemului"
+
+#: src/pages.py:2433
+msgid "Ensure Timeback Machine is available"
+msgstr "Asigură-te că Timeback Machine este disponibil"
+
+#: src/pages.py:2435
+msgid "Install hardware drivers"
+msgstr "Instalează driverele hardware"
+
+#: src/pages.py:2437
+msgid "Verify kernel module signatures"
+msgstr "Verifică semnăturile modulelor kernel"
+
+#: src/pages.py:2439
+msgid "Install bootloader"
+msgstr "Instalează bootloader-ul"
+
+#: src/pages.py:2440
+msgid "Schedule MOK enrollment"
+msgstr "Programează înregistrarea MOK"
+
+#: src/pages.py:2441
+msgid "Finalize target environment"
+msgstr "Finalizează mediul țintă"
+
+#: src/pages.py:2442
+msgid "Unmount installed system"
+msgstr "Demontează sistemul instalat"
+
+#: src/pages.py:2480
+msgid "Installation Steps"
+msgstr "Etapa instalării"
+
+#: src/pages.py:2516
+msgid "Copy Log"
+msgstr "Copiază jurnalul"
+
+#: src/pages.py:2520
+msgid "Save Log"
+msgstr "Salvează jurnalul"
+
+#: src/pages.py:2591
+msgid "Previous slide"
+msgstr "Diafoa anterioară"
+
+#: src/pages.py:2597
+msgid "Next slide"
+msgstr "Diafoa următoare"
+
+#: src/pages.py:2642
+msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
+msgstr "După repornire, MOKManager se va deschide. Alegeți Enroll MOK → Continue → Yes, apoi introduceți parola 123456."
+
+#: src/pages.py:2650
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "Repornire și înregistrare cheie Secure Boot"
+
+#: src/pages.py:2652
+msgid "Reboot Now"
+msgstr "Repornire acum"
+
+#: src/pages.py:2673
+msgid "Discover AnduinOS"
+msgstr "Explorează AnduinOS"
+
+#: src/pages.py:2676
+msgid "Output"
+msgstr "Ieșire"
+
+#: src/pages.py:2679
+msgid "Complete"
+msgstr "Completat"
+
+#: src/pages.py:2712
+msgid "Preparing installation…"
+msgstr "Pregătire instalare…"
+
+#: src/pages.py:2758 src/pages.py:2824
+msgid "Installation complete"
+msgstr "Instalarea s-a finalizat"
+
+#: src/pages.py:2762
+msgid "Development simulation completed"
+msgstr "Simularea de dezvoltare s-a încheiat"
+
+#: src/pages.py:2765
+msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
+msgstr "Planul de instalare este valid. Niciun disc, sistem de fișiere, bootloader, stare Secure Boot sau sistem instalat nu a fost modificat."
+
+#: src/pages.py:2772
 msgid ""
 "\n"
 "\n"
@@ -26,6 +960,15 @@ msgstr ""
 "\n"
 "Instalarea reală va crea un MOK local pe mașină. După repornire, alegeți Enroll MOK → Continue → Yes în MOKManager și introduceți parola 123456."
 
+#: src/pages.py:2779 src/pages.py:2789 src/pages.py:2932 src/pages.py:2934
+msgid "Installation Complete"
+msgstr "Instalare completă"
+
+#: src/pages.py:2781 src/pages.py:2790
+msgid "Remove the installation media and restart your computer"
+msgstr "Îndepărtați media de instalare și reporniți calculatorul"
+
+#: src/pages.py:2783
 msgid ""
 "\n"
 "On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
@@ -33,735 +976,68 @@ msgstr ""
 "\n"
 "Pe ecranul albastru MOKManager alegeți Enroll MOK → Continue → Yes, parolă: 123456"
 
-msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
-msgstr "Swap pe disc de 4 GiB (prioritate 10) + zram LZ4 cu 50% RAM (prioritate 100)"
-
-msgid "; sudo does not require a password"
-msgstr "; sudo nu necesită o parolă"
-
-msgid "; sudo requires the account password"
-msgstr "; sudo necesită parola contului"
-
-msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
-msgstr "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
-
-msgid "ALL DATA on {disk} will be permanently erased."
-msgstr "ALL DATA on {disk} will be permanently erased."
-
-msgid "Account security"
-msgstr "Securitatea contului"
-
-msgid "Administrator access would be locked"
-msgstr "Accesul de administrator ar fi blocat"
-
-msgid "Advanced Storage"
-msgstr "Advanced Storage"
-
-msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-
-msgid "Advanced — keep existing systems"
-msgstr "Advanced — keep existing systems"
-
-msgid "Advanced: Install Alongside"
-msgstr "Advanced: Install Alongside"
-
-msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
-msgstr "After changing partitions or unmounting a volume, rescan storage and select the target again."
-
-msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
-msgstr "După repornire, MOKManager se va deschide. Alegeți Enroll MOK → Continue → Yes, apoi introduceți parola 123456."
-
-msgid ""
-"All partitions and data on {disk} will be destroyed.\n"
-"\n"
-msgstr ""
-"Totale partițiile și datele de pe {disk} vor fi distruse.\n"
-"\n"
-
-msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
-msgstr "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
-
-msgid "AnduinOS Installer"
-msgstr "Instalator AnduinOS"
-
-msgid "AnduinOS Installer (Beta)"
-msgstr "Instalator AnduinOS (Beta)"
-
-msgid "AnduinOS Installer (Development)"
-msgstr "Instalator AnduinOS (Dezvoltare)"
-
-msgid ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
-msgstr ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
-
-msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
-msgstr "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
-
-msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
-msgstr "Orice program care rulează ca utilizatorul dvs. poate obține privilegii complete de administrator fără autentificare. Parola de conectare vă protejează încă la intrare, dar nu va proteja sudo. Sigur doriți să continuați?"
-
-msgid "Arabic"
-msgstr "Arabă"
-
-msgid "Back"
-msgstr "Înapoi"
-
-msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-
-msgid "BitLocker detected"
-msgstr "BitLocker detected"
-
-msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
-msgstr "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
-
-msgid "Boot policy"
-msgstr "Boot policy"
-
-msgid "Btrfs (recommended)"
-msgstr "Btrfs (recomandat)"
-
-msgid "Btrfs — recommended"
-msgstr "Btrfs — recommended"
-
-msgid "Cannot create installation plan"
-msgstr "Nu se poate crea planul de instalare"
-
-msgid "Choose Installation Method"
-msgstr "Choose Installation Method"
-
-msgid "Choose a complete installation method, not only a filesystem."
-msgstr "Choose a complete installation method, not only a filesystem."
-
-msgid "Choose one target disk. Storage settings come next."
-msgstr "Choose one target disk. Storage settings come next."
-
-msgid "Choose optional software to install"
-msgstr "Alegeți software-ul opțional pentru instalare"
-
-msgid "Choose your language to begin installation"
-msgstr "Alegeți limba pentru a începe instalarea"
-
-msgid "Choose your location to set the system clock"
-msgstr "Alegeți locația pentru a seta ceasul sistemului"
-
-msgid "Complete"
-msgstr "Completat"
-
-msgid "Computer Name"
-msgstr "Numele calculatorului"
-
-msgid "Computer name contains invalid characters."
-msgstr "Numele calculatorului conține caractere nevalide."
-
-msgid "Configure account and region"
-msgstr "Configurează contul și regiunea"
-
-msgid "Configure storage and swap"
-msgstr "Configurează stocarea și swap-ul"
-
-msgid "Confirm Password"
-msgstr "Confirmă parola"
-
-msgid "Confirm your keyboard layout"
-msgstr "Confirmă așezarea tastaturii"
-
-msgid "Continue Installation"
-msgstr "Continuă instalarea"
-
-msgid "Copy AnduinOS system"
-msgstr "Copiază sistemul AnduinOS"
-
-msgid "Copy Log"
-msgstr "Copiază jurnalul"
-
-msgid "Create a new 1 GiB AnduinOS EFI System Partition"
-msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
-
-msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-
-msgid "Create your user account"
-msgstr "Creează contul de utilizator"
-
-msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
-msgstr "MOD DE DEZVOLTARE — planul va fi validat și simulat. Niciun executor privilegiat sau comandă pe disc nu poate rula."
-
-msgid "Danish"
-msgstr "Daneză"
-
-msgid "Detect Internet connectivity"
-msgstr "Detectează conexiunea la internet"
-
-msgid "Detect firmware and Secure Boot"
-msgstr "Detectează firmware-ul și Secure Boot"
-
-msgid ""
-"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
-"\n"
-msgstr ""
-"Modul de dezvoltare va simula instalarea pe {disk}. Datele de pe disc nu vor fi modificate.\n"
-"\n"
-
-msgid "Development simulation completed"
-msgstr "Simularea de dezvoltare s-a încheiat"
-
-msgid "Discover AnduinOS"
-msgstr "Explorează AnduinOS"
-
-msgid "Do not require a password for sudo commands"
-msgstr "Nu cere parolă pentru comenzile sudo"
-
-msgid "Download and install system updates during installation"
-msgstr "Descarcă și instalează actualizările sistemului în timpul instalării"
-
-msgid "Dutch"
-msgstr "Olandeză"
-
-msgid "EFI System Partition"
-msgstr "EFI System Partition"
-
-msgid "EFI policy"
-msgstr "EFI policy"
-
-msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
-msgstr "Enables shared-space subvolumes, snapshots and Timeback Machine."
-
-msgid "English (UK)"
-msgstr "Engleză (UK)"
-
-msgid "English (US)"
-msgstr "Engleză (US)"
-
-msgid "Erase Disk and Install"
-msgstr "Șterge discul și instalează"
-
-msgid "Erase every partition and all data on the selected disk."
-msgstr "Erase every partition and all data on the selected disk."
-
-msgid "Erase the entire selected disk?"
-msgstr "Șterge întregul disc selectat?"
-
-msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
-msgstr "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
-
-msgid "Existing partitions detected"
-msgstr "Existing partitions detected"
-
-msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-
-msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-
-msgid "Filesystem"
-msgstr "Sistem de fișiere"
-
-msgid "Finalize target environment"
-msgstr "Finalizează mediul țintă"
-
-msgid "Finnish"
-msgstr "Finlandeză"
-
-msgid "Formats"
-msgstr "Formats"
-
-msgid "French"
-msgstr "Franceză"
-
-msgid "Full Name"
-msgstr "Nume complet"
-
-msgid "German"
-msgstr "Germană"
-
-msgid "Greek"
-msgstr "Greacă"
-
-msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
-msgstr "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
-
-msgid "Guided storage selection is missing. Rescan and select the target again."
-msgstr "Guided storage selection is missing. Rescan and select the target again."
-
-msgid "Hindi (India)"
-msgstr "Hindi (India)"
-
-msgid "How should AnduinOS use this disk?"
-msgstr "How should AnduinOS use this disk?"
-
-msgid "I Understand the Risk, Continue"
-msgstr "Înțeleg riscul, continuă"
-
-msgid "Indonesian"
-msgstr "Indoneziană"
-
-msgid "Install"
-msgstr "Instalează"
-
-msgid "Install Alongside"
-msgstr "Install Alongside"
-
-msgid "Install Timeback Machine"
-msgstr "Instalează Timeback Machine"
-
-msgid "Install alongside"
-msgstr "Install alongside"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "Install alongside requires a password-protected account."
-
-msgid "Install bootloader"
-msgstr "Instalează bootloader-ul"
-
-msgid "Install hardware drivers"
-msgstr "Instalează driverele hardware"
-
-msgid "Install in the selected free space?"
-msgstr "Install in the selected free space?"
-
-msgid "Install system updates"
-msgstr "Instalează actualizările sistemului"
-
-msgid "Install third-party drivers for this device"
-msgstr "Instalează drivere terțe pentru acest dispozitiv"
-
-msgid "Installation Complete"
-msgstr "Instalare completă"
-
-msgid "Installation Failed"
-msgstr "Instalare eșuată"
-
-msgid "Installation Steps"
-msgstr "Etapa instalării"
-
-msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
-msgstr "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
-
-msgid "Installation complete"
-msgstr "Instalarea s-a finalizat"
-
-msgid "Installation failed"
-msgstr "Instalarea a eșuat"
-
-msgid "Installation in progress"
-msgstr "Instalare în curs"
-
-msgid "Installing AnduinOS"
-msgstr "Se instalează AnduinOS"
-
-msgid "Italian"
-msgstr "Italienă"
-
-msgid "Japanese"
-msgstr "Japoneză"
-
-msgid "Keyboard"
-msgstr "Tastatură"
-
-msgid "Keyboard Layout"
-msgstr "Așezare tastatură"
-
-msgid "Korean"
-msgstr "Coreeană"
-
-msgid "Language"
-msgstr "Limbă"
-
-msgid "Live USB — excluded"
-msgstr "Live USB — excluded"
-
-msgid "Mount target filesystems"
-msgstr "Montează sistemele de fișiere țintă"
-
-msgid "Navigation error"
-msgstr "Eroare de navigare"
-
-msgid "New partitions"
-msgstr "New partitions"
-
-msgid "Next"
-msgstr "Următorul"
-
-msgid "Next slide"
-msgstr "Diafoa următoare"
-
-msgid "No suitable disks found."
-msgstr "Nu s-au găsit discuri potrivite."
-
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
-msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
-
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
-msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
-
-msgid "Norwegian"
-msgstr "Norvegiană"
-
-msgid "OK"
-msgstr "OK"
-
-msgid "Only this disk can be partitioned or formatted. Other disks will be inspected but not modified."
-msgstr "Only this disk can be partitioned or formatted. Other disks will be inspected but not modified."
-
-msgid "Output"
-msgstr "Ieșire"
-
-msgid "Output • Error"
-msgstr "Ieșire • Eroare"
-
-msgid "Output • {count} warning(s)"
-msgstr "Ieșire • {count} avertisment(e)"
-
-msgid "Password"
-msgstr "Parolă"
-
-msgid "Password must be at least 6 characters."
-msgstr "Parola trebuie să aibă cel puțin 6 caractere."
-
-msgid "Passwordless sudo is unsafe"
-msgstr "sudo fără parolă este nesigur"
-
-msgid "Platform"
-msgstr "Platformă"
-
-msgid "Please do not turn off your computer"
-msgstr "Vă rugăm să nu opriți calculatorul"
-
-msgid "Please review your choices before proceeding"
-msgstr "Vă rugăm să verificați alegerile înainte de a continua"
-
-msgid "Polish"
-msgstr "Poloneză"
-
-msgid "Portuguese"
-msgstr "Portugheză"
-
-msgid "Portuguese (Brazil)"
-msgstr "Portugheză (Brazilia)"
-
-msgid "Prepare Secure Boot"
-msgstr "Pregătește Secure Boot"
-
-msgid "Prepare installation disk"
-msgstr "Pregătește discul de instalare"
-
-msgid "Prepare target environment"
-msgstr "Pregătește mediul țintă"
-
-msgid "Preparing installation…"
-msgstr "Pregătire instalare…"
-
-msgid "Preserved partitions"
-msgstr "Preserved partitions"
-
-msgid "Previous slide"
-msgstr "Diafoa anterioară"
-
-msgid "Ready to Install"
-msgstr "Gata pentru instalare"
-
-msgid "Reboot Now"
-msgstr "Repornire acum"
-
-msgid "Refresh package indexes"
-msgstr "Reîmprospătează indexele pachetelor"
-
-msgid "Remove live-session components"
-msgstr "Îndepărtează componentele sesiunii live"
-
-msgid "Remove the installation media and restart your computer"
-msgstr "Îndepărtați media de instalare și reporniți calculatorul"
-
-msgid "Requires an Internet connection. The base installation remains available when offline."
-msgstr "Necesită o conexiune la Internet. Instalarea de bază rămâne disponibilă offline."
-
-msgid "Rescan Storage"
-msgstr "Rescan Storage"
-
-msgid "Rescan and Reselect Disk"
-msgstr "Rescan and Reselect Disk"
-
-msgid "Restart and Enroll Secure Boot Key"
-msgstr "Repornire și înregistrare cheie Secure Boot"
-
+#: src/pages.py:2799
 msgid "Restart is disabled in development protection mode"
 msgstr "Repornirea este dezactivată în modul de protecție pentru dezvoltare"
 
-msgid "Return and Set a Password"
-msgstr "Întoarce-te și setează o parolă"
-
-msgid "Return to Make Changes"
-msgstr "Întoarce-te pentru a face modificări"
-
-msgid "Reuse {path} ({size})"
-msgstr "Reuse {path} ({size})"
-
-msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-
-msgid "Romanian"
-msgstr "Română"
-
-msgid "Russian"
-msgstr "Rusă"
-
-msgid "Save Log"
-msgstr "Salvează jurnalul"
-
-msgid "Schedule MOK enrollment"
-msgstr "Programează înregistrarea MOK"
-
-msgid "Search timezones…"
-msgstr "Caută fusuri orare…"
-
-msgid "Secure Boot enrollment"
-msgstr "Înregistrare Secure Boot"
-
-msgid "Select Installation Disk"
-msgstr "Selectează discul de instalare"
-
-msgid "Select Timezone"
-msgstr "Selectează fusul orar"
-
-msgid "Select fastest package mirror"
-msgstr "Selectează cel mai rapid oglindă pachete"
-
-msgid "Select the target disk to continue."
-msgstr "Select the target disk to continue."
-
-msgid "Selected timezone"
-msgstr "Fus orar selectat"
-
-msgid "Selected unallocated space"
-msgstr "Selected unallocated space"
-
-msgid "Some drivers are proprietary or otherwise non-free software."
-msgstr "Unele drivere sunt proprietare sau altfel software ne-liber."
-
-msgid "Spanish"
-msgstr "Spainiolă"
-
-msgid "Stable disk identity"
-msgstr "Identitate stabilă a discului"
-
-msgid ""
-"Stable identity: {stable_id}\n"
-"\n"
-msgstr ""
-"Identitate stabilă: {stable_id}\n"
-"\n"
-
-msgid "Storage mode"
-msgstr "Storage mode"
-
-msgid "Subvolumes"
-msgstr "Subvolume"
-
-msgid "Swap"
-msgstr "Swap"
-
-msgid "Swedish"
-msgstr "Suedeză"
-
-msgid "System updates"
-msgstr "Actualizări sistem"
-
-msgid "Target Disk"
-msgstr "Disc țintă"
-
-msgid "Target: {disk} ({size} — {model})"
-msgstr "Target: {disk} ({size} — {model})"
-
-msgid "Test your keyboard here…"
-msgstr "Testează tastatura aici…"
-
-msgid "Thai"
-msgstr "Tai"
-
-msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
-msgstr "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
-
-msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
-msgstr "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
-
-msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
-msgstr "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
-
-msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
-msgstr "Planul de instalare este valid. Niciun disc, sistem de fișiere, bootloader, stare Secure Boot sau sistem instalat nu a fost modificat."
-
-msgid "The installer cannot be closed while it is modifying the target disk."
-msgstr "Instalatorul nu poate fi închis în timp ce modifică discul țintă."
-
-msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
-msgstr "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
-
-msgid "The privileged executor is disabled."
-msgstr "Executorul privilegiat este dezactivat."
-
-msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-
-msgid "The selected disk size changed. Return and select it again."
-msgstr "The selected disk size changed. Return and select it again."
-
-msgid "The selected disk topology changed. Review the disk and installation method again."
-msgstr "The selected disk topology changed. Review the disk and installation method again."
-
-msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
-msgstr "Sistemul se va autentifica automat în acest cont și îi va permite să obțină privilegii complete de administrator fără parolă. Orice persoană cu acces fizic și orice program care rulează ca acest utilizator poate controla complet sistemul. Folosiți această opțiune doar pentru un kiosk, o mașină virtuală temporară sau alt mediu controlat."
-
-msgid "The two passwords do not match."
-msgstr "Cele două parole nu se potrivesc."
-
-msgid "Third-party drivers"
-msgstr "Drivere terțe"
-
-msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
-msgstr "Acest cont nu are o parolă de autentificare, dar sudo ar cere în continuare una. Deoarece contul root este blocat implicit, nu ați putea executa sarcini de administrator. Stabiliți o parolă pentru cont sau activați sudo fără parolă."
-
-msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-
-msgid "This configuration is very unsafe"
-msgstr "Această configurație este foarte nesigură"
-
-msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
-msgstr "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
-
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-
-msgid "This installer does not shrink or preserve other systems."
-msgstr "Acest instalator nu reduce sau păstrează alte sisteme."
-
-msgid "Timezone"
-msgstr "Fus orar"
-
-msgid "Too small"
-msgstr "Too small"
-
-msgid "Turkish"
-msgstr "Turcă"
-
-msgid "Ukrainian"
-msgstr "Ucraineană"
-
-msgid "Unallocated space"
-msgstr "Unallocated space"
-
-msgid "Unavailable: {error}"
-msgstr "Indisponibil: {error}"
-
-msgid "Unmount installed system"
-msgstr "Demontează sistemul instalat"
-
-msgid "Updates and Drivers"
-msgstr "Actualizări și drivere"
-
-msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-
-msgid "Use only existing unallocated space on the selected disk."
-msgstr "Use only existing unallocated space on the selected disk."
-
-msgid "User"
-msgstr "Utuzator"
-
-msgid "User Account"
-msgstr "Cont utilizator"
-
-msgid "Username"
-msgstr "Nume utilizator"
-
-msgid "Username may only contain lowercase letters, digits, underscores and hyphens."
-msgstr "Numele de utilizator poate conține doar litere mici, cifre, underscore-uri și cratime."
-
-msgid "Uses a traditional single root filesystem."
-msgstr "Uses a traditional single root filesystem."
-
-msgid "Validate Plan (No Installation)"
-msgstr "Validează planul (fără instalare)"
-
-msgid "Validate this installation plan?"
-msgstr "Validați acest plan de instalare?"
-
-msgid "Verify kernel module signatures"
-msgstr "Verifică semnăturile modulelor kernel"
-
-msgid "Verify target disk isolation"
-msgstr "Verifică izolarea discului țintă"
-
-msgid "Vietnamese"
-msgstr "Vietnameză"
-
-msgid "Welcome to AnduinOS"
-msgstr "Bine ați venit la AnduinOS"
-
-msgid "Windows detected"
-msgstr "Windows detected"
-
-msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-
-msgid "automatic login"
-msgstr "conectare automată"
-
-msgid "create a machine-local MOK; enroll after reboot with password 123456"
-msgstr "creează un MOK local pe mașină; înregistrează după repornire cu parola 123456"
-
-msgid "detect and install (may include non-free software)"
-msgstr "detectează și instalează (poate include software ne-liber)"
-
-msgid "do not install"
-msgstr "nu instala"
-
-msgid "download and install"
-msgstr "descarcă și instalează"
-
-msgid "ext4 (classic)"
-msgstr "ext4 (classic)"
-
-msgid "ext4 — classic"
-msgstr "ext4 — classic"
-
-msgid "not required"
-msgstr "nu este necesar"
-
-msgid "password required for login"
-msgstr "parolă necesară pentru conectare"
-
-msgid "single ext4 root filesystem"
-msgstr "sistem de fișiere ext4 root unic"
-
-msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
-msgstr "{architecture} / {firmware} / Secure Boot: {secure_boot}"
-
-msgid "{count}: {paths}"
-msgstr "{count}: {paths}"
-
-msgid "{name}: {start}–{end} MiB"
-msgstr "{name}: {start}–{end} MiB"
-
-msgid "{path} as {filesystem}"
-msgstr "{path} as {filesystem}"
-
-msgid "{size} at {offset}"
-msgstr "{size} at {offset}"
-
-msgid "{size} unallocated at {offset}"
-msgstr "{size} unallocated at {offset}"
-
+#: src/pages.py:2807
+msgid "Installation failed"
+msgstr "Instalarea a eșuat"
+
+#: src/pages.py:2809
+msgid "Installation Failed"
+msgstr "Instalare eșuată"
+
+#: src/pages.py:2812 src/pages.py:2867
+msgid "Output • Error"
+msgstr "Ieșire • Eroare"
+
+#: src/pages.py:2862
+#, python-brace-format
+msgid "Output • {count} warning(s)"
+msgstr "Ieșire • {count} avertisment(e)"
+
+#: src/pages.py:2870
+#, python-brace-format
 msgid "{step} failed"
 msgstr "{step} eșuat"
 
-msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
-msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+#: src/pages.py:715
+msgid "Empty disk — no partitions"
+msgstr "Empty disk — no partitions"
 
-msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
-msgstr "⚠ Aceasta va șterge TOATE DATELE de pe discul selectat. Această acțiune nu poate fi anulată."
+#: src/pages.py:468
+msgid "Confirm your keyboard layout"
+msgstr "Confirm your keyboard layout"
+
+#: src/pages.py:540
+msgid "Choose optional software to install"
+msgstr "Choose optional software to install"
+
+#: src/pages.py:758
+msgid "Choose one target disk. Storage settings come next."
+msgstr "Choose one target disk. Storage settings come next."
+
+#: src/pages.py:923
+msgid "Choose a complete installation method, not only a filesystem."
+msgstr "Choose a complete installation method, not only a filesystem."
+
+#: src/pages.py:1184
+msgid "Use only existing unallocated space on the selected disk."
+msgstr "Use only existing unallocated space on the selected disk."
+
+#: src/pages.py:1586
+msgid "Create your user account"
+msgstr "Create your user account"
+
+#: src/pages.py:1902
+msgid "Choose your location to set the system clock"
+msgstr "Choose your location to set the system clock"
+
+#: src/pages.py:2042
+msgid "Please review your choices before proceeding"
+msgstr "Please review your choices before proceeding"
+
+#: src/pages.py:2405
+msgid "Please do not turn off your computer"
+msgstr "Please do not turn off your computer"

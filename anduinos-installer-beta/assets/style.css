@@ -1,0 +1,265 @@
+.installer-window {
+  background-color: @window_bg_color;
+}
+
+.installer-hero {
+  background-image: linear-gradient(125deg, #1769e0, #7357dc);
+  border-radius: 22px;
+  padding: 20px 26px;
+  margin: 18px 32px 10px;
+  box-shadow: 0 8px 28px alpha(black, 0.16);
+  color: white;
+}
+
+.installer-hero image,
+.installer-hero label {
+  color: white;
+}
+
+.installer-hero-icon {
+  background-color: alpha(white, 0.16);
+  border: 1px solid alpha(white, 0.28);
+  border-radius: 999px;
+  padding: 12px;
+}
+
+.installer-hero-title {
+  font-size: 1.65em;
+  font-weight: 800;
+}
+
+.installer-hero-subtitle {
+  opacity: 0.88;
+  font-size: 1.02em;
+}
+
+.installer-card {
+  background-color: alpha(@window_fg_color, 0.045);
+  border: 1px solid alpha(@window_fg_color, 0.085);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.installer-card:hover {
+  background-color: alpha(@window_fg_color, 0.065);
+}
+
+.installer-list-card {
+  background-color: alpha(@window_fg_color, 0.035);
+  border: 1px solid alpha(@window_fg_color, 0.08);
+  border-radius: 16px;
+}
+
+.installer-list-row {
+  padding: 2px 4px;
+}
+
+listview row:selected .installer-list-row {
+  background-color: alpha(@accent_bg_color, 0.12);
+  border-radius: 12px;
+}
+
+.disk-card-scroll,
+.disk-card-list {
+  background-color: transparent;
+}
+
+.disk-card-list {
+  padding: 4px;
+}
+
+.disk-card-button {
+  background-color: alpha(@window_fg_color, 0.045);
+  background-image: none;
+  border: 1px solid alpha(@window_fg_color, 0.08);
+  border-radius: 18px;
+  box-shadow: none;
+  padding: 0;
+}
+
+.disk-card-button:hover {
+  background-color: alpha(@accent_bg_color, 0.08);
+}
+
+.disk-card-button:checked {
+  background-color: alpha(@accent_bg_color, 0.20);
+  border-color: alpha(@accent_bg_color, 0.62);
+}
+
+.disk-card-button:disabled {
+  opacity: 0.48;
+}
+
+.disk-card {
+  padding: 14px 16px;
+}
+
+.disk-card-title {
+  font-size: 1.18em;
+  font-weight: 800;
+}
+
+.partition-chip {
+  background-color: alpha(@window_fg_color, 0.075);
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 0.88em;
+}
+
+.disk-card-button:checked .partition-chip {
+  background-color: alpha(@accent_bg_color, 0.22);
+}
+
+.disk-card-check {
+  background-color: @accent_bg_color;
+  border-radius: 999px;
+  color: @accent_fg_color;
+  opacity: 0;
+  padding: 5px;
+}
+
+.disk-card-button:checked .disk-card-check {
+  opacity: 1;
+}
+
+.disk-card-notice {
+  color: @warning_color;
+  font-weight: 700;
+}
+
+.strategy-target {
+  background-color: alpha(@window_fg_color, 0.045);
+  border-radius: 999px;
+  padding: 8px 14px;
+}
+
+.strategy-card {
+  background-color: alpha(@window_fg_color, 0.055);
+  background-image: none;
+  border: none;
+  border-radius: 18px;
+  box-shadow: 0 5px 16px alpha(black, 0.08);
+  padding: 11px 16px;
+}
+
+.strategy-card:hover {
+  background-color: alpha(@accent_bg_color, 0.10);
+}
+
+.strategy-card:checked {
+  background-color: alpha(@accent_bg_color, 0.20);
+  box-shadow: 0 7px 20px alpha(black, 0.12);
+}
+
+.strategy-card:disabled {
+  opacity: 0.48;
+}
+
+.strategy-card-title {
+  font-size: 1.08em;
+  font-weight: 800;
+}
+
+.strategy-check {
+  background-color: @accent_bg_color;
+  border-radius: 999px;
+  color: @accent_fg_color;
+  opacity: 0;
+  padding: 5px;
+}
+
+.strategy-card:checked .strategy-check {
+  opacity: 1;
+}
+
+.strategy-warning {
+  background-color: alpha(@warning_color, 0.11);
+  border-radius: 16px;
+  padding: 9px 14px;
+}
+
+.installer-callout {
+  background-color: alpha(@accent_bg_color, 0.10);
+  border: 1px solid alpha(@accent_bg_color, 0.20);
+  border-radius: 14px;
+  padding: 11px 14px;
+}
+
+.installer-warning-card {
+  background-color: alpha(@warning_color, 0.10);
+  border: 1px solid alpha(@warning_color, 0.25);
+  border-radius: 14px;
+  padding: 11px 14px;
+}
+
+.installer-danger-card {
+  background-color: alpha(@error_color, 0.09);
+  border: 1px solid alpha(@error_color, 0.24);
+  border-radius: 14px;
+  padding: 11px 14px;
+}
+
+.wizard-navigation {
+  background-color: alpha(@window_bg_color, 0.96);
+  border-top: 1px solid alpha(@window_fg_color, 0.08);
+  padding: 12px 30px 16px;
+}
+
+.wizard-navigation button {
+  min-width: 108px;
+  min-height: 38px;
+  border-radius: 999px;
+}
+
+.wizard-dots {
+  padding: 6px 12px;
+}
+
+.wizard-dot {
+  min-width: 8px;
+  min-height: 8px;
+  border-radius: 999px;
+  background-color: alpha(@window_fg_color, 0.20);
+}
+
+.wizard-dot-complete {
+  background-color: alpha(@accent_bg_color, 0.48);
+}
+
+.wizard-dot-active {
+  min-width: 22px;
+  background-color: @accent_bg_color;
+}
+
+.storage-badge {
+  border-radius: 999px;
+  padding: 3px 9px;
+  background-color: alpha(@accent_bg_color, 0.12);
+  color: @accent_color;
+  font-weight: 700;
+}
+
+.progress-card {
+  background-color: alpha(@window_fg_color, 0.04);
+  border: 1px solid alpha(@window_fg_color, 0.08);
+  border-radius: 16px;
+}
+
+.installer-progress trough,
+.installer-progress progress {
+  min-height: 10px;
+  border-radius: 999px;
+}
+
+.step-light {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.step-pending { color: alpha(@window_fg_color, 0.28); }
+.step-running { color: @accent_color; }
+.step-succeeded { color: @success_color; }
+.step-warning { color: @warning_color; }
+.step-failed { color: @error_color; }
+.step-skipped { color: alpha(@window_fg_color, 0.45); }
+.step-active { font-weight: 700; }

@@ -16,7 +16,7 @@ from installer_core.planning import build_plan
 from installer_core.probe import probe_platform
 from installer_core.storage_inventory import (
     bind_disk_topology,
-    probe_storage_inventory,
+    probe_storage_inventory as _probe_storage_inventory,
 )
 from installer_core.storage_ui import (
     GuidedStoragePreview,
@@ -29,6 +29,40 @@ from installer_core.validation import validate_plan
 
 class FrontendPlanError(RuntimeError):
     pass
+
+
+_STORAGE_PROBE_HELPER = "/usr/bin/anduinos-installer-storage-probe"
+_PARTED_READ_ONLY_SUFFIX = ("unit", "B", "print", "free")
+
+
+def _run_privileged_parted(
+    command: list[str], **kwargs: object
+) -> subprocess.CompletedProcess[str]:
+    """Run only the fixed read-only geometry probe across the root boundary."""
+
+    if (
+        len(command) != 8
+        or command[:3] != ["parted", "--machine", "--script"]
+        or tuple(command[4:]) != _PARTED_READ_ONLY_SUFFIX
+    ):
+        raise ValueError("Refusing a non-read-only privileged storage command")
+    disk = command[3]
+    if os.geteuid() == 0:
+        return subprocess.run(command, **kwargs)
+    return subprocess.run(
+        ["pkexec", _STORAGE_PROBE_HELPER, disk],
+        **kwargs,
+    )
+
+
+def probe_storage_inventory():
+    """Probe storage while keeping the GTK process unprivileged.
+
+    ``lsblk`` remains in the desktop process. Only exact, read-only partition
+    geometry is delegated to the Polkit-authorized helper.
+    """
+
+    return _probe_storage_inventory(parted_run=_run_privileged_parted)
 
 
 class StorageStrategy(str, Enum):
@@ -373,6 +407,8 @@ class DevelopmentExecutorClient:
             pipeline.extend(
                 (("refresh-package-indexes", 2), ("upgrade-system", 8))
             )
+        if plan.storage.filesystem is Filesystem.BTRFS:
+            pipeline.append(("ensure-timeback-machine", 2))
         if plan.software.install_third_party_drivers:
             pipeline.append(("install-third-party-drivers", 8))
         pipeline.extend(
@@ -403,6 +439,18 @@ class DevelopmentExecutorClient:
         )
         log(f"Selected target disk: {plan.storage.disk.path}")
         log("Other disks and EFI System Partitions are excluded")
+        log(f"Target filesystem: {plan.storage.filesystem.value}")
+        if plan.storage.filesystem is Filesystem.BTRFS:
+            log(
+                "Timeback Machine policy: retain the installation-media "
+                "payload, verify it, and use the repository only as a "
+                "legacy fallback"
+            )
+        else:
+            log(
+                "Timeback Machine policy: remove the live payload from the "
+                "ext4 target"
+            )
         for step, weight in pipeline:
             progress(step, completed, total)
             step_status(step, "running", "")

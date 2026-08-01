@@ -102,11 +102,14 @@ class LiveShortcutAssetTests(unittest.TestCase):
             }
             self.assertEqual(actual, expected)
 
-    def test_welcome_page_uses_the_packaged_box_icon(self):
+    def test_welcome_page_uses_its_packaged_illustration(self):
         pages = (PACKAGE / "src/pages.py").read_text()
         self.assertIn(
-            'Gtk.Image.new_from_icon_name("anduinos-installer-beta")',
+            'icon_picture("welcome", 160)',
             pages,
+        )
+        self.assertTrue(
+            (PACKAGE / "assets/icons/welcome.svg").is_file()
         )
         self.assertNotIn(
             'Gtk.Image.new_from_icon_name("computer-symbolic")',

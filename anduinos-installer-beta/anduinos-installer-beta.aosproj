@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.1-18+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-22+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer (beta) — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -54,10 +54,11 @@
     <Dependency Include="squashfs-tools" />
     <Dependency Include="util-linux" />
     <Dependency Include="ubuntu-drivers-common" />
+    <Dependency Include="polkitd" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Shell launcher (sudo re-exec if not root) -->
+    <!-- Unprivileged GTK launcher; root work stays behind narrow helpers. -->
     <IncludeFile Include="assets/anduinos-installer-beta"
                  Target="/usr/bin/anduinos-installer-beta" Mode="755" />
     <!-- Desktop entry for app drawer -->
@@ -68,6 +69,10 @@
                  Target="/usr/share/icons/hicolor/scalable/apps/anduinos-installer-beta.svg" Mode="644" />
     <IncludeFile Include="assets/anduinos-installer-executor"
                  Target="/usr/bin/anduinos-installer-executor" Mode="755" />
+    <IncludeFile Include="assets/anduinos-installer-storage-probe"
+                 Target="/usr/bin/anduinos-installer-storage-probe" Mode="755" />
+    <IncludeFile Include="assets/com.anduinos.installer-beta.policy"
+                 Target="/usr/share/polkit-1/actions/com.anduinos.installer-beta.policy" Mode="644" />
     <IncludeFile Include="assets/anduinos-installer-beta-live-shortcut"
                  Target="/usr/lib/anduinos-installer-beta/create-live-shortcut" Mode="755" />
     <IncludeFile Include="assets/anduinos-installer-beta-live-shortcut.desktop"
@@ -80,6 +85,10 @@
     <!-- Independent, native-GTK reuse of the historical localized slideshow. -->
     <IncludeFolder Include="assets/slideshow/"
                    Target="/usr/share/anduinos-installer-beta/slideshow/" />
+    <IncludeFolder Include="assets/icons/"
+                   Target="/usr/share/anduinos-installer-beta/icons/" />
+    <IncludeFile Include="assets/style.css"
+                 Target="/usr/share/anduinos-installer-beta/style.css" Mode="644" />
   </ItemGroup>
 
   <ItemGroup>

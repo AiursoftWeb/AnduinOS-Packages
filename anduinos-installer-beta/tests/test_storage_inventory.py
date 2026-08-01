@@ -105,9 +105,33 @@ class StorageInventoryTests(unittest.TestCase):
         self.assertEqual(disk.free_extents[0].start_bytes, 61_074_790_400)
         self.assertEqual(disk.free_extents[0].size_bytes, 38_925_209_088)
         self.assertEqual(calls[0][0], "lsblk")
+        self.assertIn("--tree", calls[0])
         self.assertEqual(calls[1][0], "parted")
         self.assertIn("print", calls[1])
         self.assertIn("free", calls[1])
+
+    def test_parted_runner_is_separate_from_unprivileged_lsblk_runner(self):
+        lsblk_calls = []
+        parted_calls = []
+
+        def run(command, **_kwargs):
+            lsblk_calls.append(command)
+            return completed(json.dumps(self.lsblk_payload()))
+
+        def parted_run(command, **_kwargs):
+            parted_calls.append(command)
+            return completed(self.parted_output())
+
+        inventory = probe_storage_inventory(
+            run=run,
+            parted_run=parted_run,
+        )
+
+        self.assertEqual(len(inventory.disks[0].partitions), 2)
+        self.assertEqual(len(lsblk_calls), 1)
+        self.assertEqual(lsblk_calls[0][0], "lsblk")
+        self.assertEqual(len(parted_calls), 1)
+        self.assertEqual(parted_calls[0][0], "parted")
 
     def test_parted_parser_unescapes_labels_without_changing_fields(self):
         geometry = _parse_parted_machine(self.parted_output())
@@ -115,6 +139,28 @@ class StorageInventoryTests(unittest.TestCase):
         self.assertEqual(geometry.partitions[0].number, 1)
         self.assertEqual(geometry.partitions[0].flags, ("boot", "esp"))
         self.assertEqual(geometry.free_extents[0], (61_074_790_400, 38_925_209_088))
+
+    def test_parted_parser_treats_numbered_free_rows_as_free_space(self):
+        geometry = _parse_parted_machine(
+            """BYT;
+/dev/nvme0n1:1024209543168B:nvme:4096:4096:gpt:Test SSD:;
+1:24576B:1048575B:1024000B:free;
+1:1048576B:537919487B:536870912B:fat32:EFI System:boot, esp;
+2:537919488B:1024209190911B:1023671271424B:ext4::;
+1:1024209190912B:1024209522687B:331776B:free;
+"""
+        )
+        self.assertEqual(
+            [(item.number, item.start_bytes, item.size_bytes) for item in geometry.partitions],
+            [
+                (1, 1_048_576, 536_870_912),
+                (2, 537_919_488, 1_023_671_271_424),
+            ],
+        )
+        self.assertEqual(
+            geometry.free_extents,
+            ((24_576, 1_024_000), (1_024_209_190_912, 331_776)),
+        )
 
     def test_disk_without_readable_table_remains_erasable_but_has_no_free_space(self):
         inventory, _calls = self.probe(

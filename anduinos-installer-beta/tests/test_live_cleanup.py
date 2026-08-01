@@ -150,11 +150,8 @@ class LiveCleanupTests(unittest.TestCase):
                 ),
             )
             runner = FakeRunner()
-            context = InstallContext(
-                plan,
-                lambda _message: None,
-                values={"target": target},
-            )
+            logs: list[str] = []
+            context = InstallContext(plan, logs.append, values={"target": target})
             step = CleanupLiveSystemStep(runner)
             step.preflight(context)
             step.execute(context)
@@ -165,7 +162,11 @@ class LiveCleanupTests(unittest.TestCase):
             if "dpkg-query" in command
         ]
         self.assertTrue(context.values["timeback_payload_in_live_image"])
+        self.assertEqual(context.values["timeback_payload_version"], "2")
         self.assertNotIn("anduinos-timeback-machine", queried)
+        combined_logs = "\n".join(logs)
+        self.assertIn("payload: present (2)", combined_logs)
+        self.assertIn("excluded from the live-package purge set", combined_logs)
 
     def test_ext4_installation_purges_timeback_live_payload(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -198,11 +199,8 @@ class LiveCleanupTests(unittest.TestCase):
                 "anduinos-timeback-machine",
             )
             runner.outputs[query] = ("ii \n", "", 0)
-            context = InstallContext(
-                plan,
-                lambda _message: None,
-                values={"target": target},
-            )
+            logs: list[str] = []
+            context = InstallContext(plan, logs.append, values={"target": target})
             step = CleanupLiveSystemStep(runner)
             step.preflight(context)
             step.execute(context)
@@ -213,6 +211,9 @@ class LiveCleanupTests(unittest.TestCase):
             if "purge" in command
         )
         self.assertEqual(purge[-1], "anduinos-timeback-machine")
+        combined_logs = "\n".join(logs)
+        self.assertIn("included in the live-package purge set", combined_logs)
+        self.assertIn("removed from the ext4 target", combined_logs)
 
     def test_rejects_timeback_in_unconditional_desktop_manifest(self):
         with tempfile.TemporaryDirectory() as directory:

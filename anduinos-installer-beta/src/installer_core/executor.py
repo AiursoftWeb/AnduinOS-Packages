@@ -32,7 +32,7 @@ from .steps import InstallContext, InstallResult, StepRunner, StepStatus
 from .storage_steps import MountTargetStep, PrepareStorageStep
 from .system_config import ConfigureSystemStep
 from .target_config import ConfigureStorageStep
-from .timeback import ProvisionTimebackMachineStep
+from .timeback import EnsureTimebackMachineStep
 from .validation import ExecutionPolicy, validate_plan_for_execution
 
 
@@ -88,7 +88,7 @@ class InstallerExecutor:
                 )
             )
         if plan.storage.filesystem is Filesystem.BTRFS:
-            steps.append(ProvisionTimebackMachineStep(self.runner))
+            steps.append(EnsureTimebackMachineStep(self.runner))
         if plan.software.install_third_party_drivers:
             steps.append(InstallThirdPartyDriversStep(self.runner))
         steps.extend(

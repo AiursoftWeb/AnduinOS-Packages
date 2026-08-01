@@ -35,9 +35,45 @@ class PackageContractTests(unittest.TestCase):
             ("src/", "/usr/lib/anduinos-installer-beta/"),
             folders,
         )
+        self.assertIn(
+            ("assets/icons/", "/usr/share/anduinos-installer-beta/icons/"),
+            folders,
+        )
+        files = {
+            (item.get("Include"), item.get("Target"))
+            for item in root.iter("IncludeFile")
+        }
+        self.assertIn(
+            (
+                "assets/style.css",
+                "/usr/share/anduinos-installer-beta/style.css",
+            ),
+            files,
+        )
         self.assertTrue(
-            {"python3", "parted", "dosfstools", "efibootmgr", "util-linux"}
+            {
+                "python3",
+                "parted",
+                "dosfstools",
+                "efibootmgr",
+                "util-linux",
+                "polkitd",
+            }
             <= dependencies
+        )
+        self.assertIn(
+            (
+                "assets/anduinos-installer-storage-probe",
+                "/usr/bin/anduinos-installer-storage-probe",
+            ),
+            files,
+        )
+        self.assertIn(
+            (
+                "assets/com.anduinos.installer-beta.policy",
+                "/usr/share/polkit-1/actions/com.anduinos.installer-beta.policy",
+            ),
+            files,
         )
 
     def test_internal_vm_clis_load_but_have_no_public_launcher(self):
@@ -84,6 +120,13 @@ class PackageContractTests(unittest.TestCase):
                 if relative == Path("usr/bin/anduinos-installer-executor"):
                     path.write_text(
                         '#!/bin/sh\nif [ "$#" -ne 0 ]; then exit 2; fi\n'
+                    )
+                    path.chmod(0o755)
+                elif relative == Path(
+                    "usr/bin/anduinos-installer-storage-probe"
+                ):
+                    path.write_text(
+                        '#!/bin/sh\nif [ "$#" -ne 1 ]; then exit 2; fi\n'
                     )
                     path.chmod(0o755)
                 else:

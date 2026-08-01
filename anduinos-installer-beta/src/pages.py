@@ -39,6 +39,7 @@ from frontend import (
     clear_guided_storage_selection,
     clear_storage_target,
     create_install_plan,
+    probe_storage_inventory,
 )
 from installer_core.btrfs import BTRFS_SUBVOLUMES
 from installer_core.account_security import AccountNextAction, account_next_action
@@ -50,7 +51,6 @@ from installer_core.model import (
     SecureBoot,
 )
 from installer_core.probe import ProbeError, probe_platform
-from installer_core.storage_inventory import probe_storage_inventory
 from installer_core.storage_ui import (
     GuidedStoragePreview,
     GuidedStorageSelection,
@@ -61,6 +61,7 @@ from installer_core.storage_ui import (
     build_storage_workflow,
 )
 from slideshow import load_slides
+from ui import card, clamp_content, icon_picture, page_hero
 
 
 _COEXISTENCE_NOTICE_MESSAGES = {
@@ -134,6 +135,11 @@ _SHRINK_WITH_PARTITION_TOOL_MESSAGE = N_(
     "again and rescan the disk."
 )
 
+# GPT and partitioning tools deliberately leave tiny alignment gaps around
+# real partitions. Keep their exact geometry in the safety snapshot, but do
+# not render sub-4-MiB padding as if it were another layout item.
+_LAYOUT_FREE_SPACE_MINIMUM_BYTES = 4 * 1024**2
+
 
 def _coexistence_notice_text(notice, lang, windows_detected):
     if notice.code is CoexistenceNoticeCode.SHRINK_IN_WINDOWS:
@@ -169,30 +175,6 @@ class LanguageItem(GObject.Object):
         self._lang = lang  # keep the original for lookups
 
 
-class DiskItem(GObject.Object):
-    """GObject wrapper for a disk device entry."""
-    __gtype_name__ = "DiskItem"
-    devname = GObject.Property(type=str)
-    size = GObject.Property(type=str)
-    model = GObject.Property(type=str)
-    sensitive = GObject.Property(type=bool, default=True)
-    subtitle = GObject.Property(type=str)
-    size_bytes = GObject.Property(type=str)
-    stable_id = GObject.Property(type=str)
-
-    def __init__(self, devname: str, size: str, model: str,
-                 sensitive: bool = True, subtitle: str = "",
-                 size_bytes: int = 0, stable_id: str = ""):
-        super().__init__()
-        self.devname = devname
-        self.size = size
-        self.model = model
-        self.sensitive = sensitive
-        self.subtitle = subtitle
-        self.size_bytes = str(size_bytes)
-        self.stable_id = stable_id
-
-
 # ── helpers ──────────────────────────────────────────────────────────────
 
 def _nav_btn(label_key: str, lang: str, callback, sensitive: bool = True,
@@ -225,20 +207,44 @@ def _page_subtitle(key: str, lang: str) -> Gtk.Label:
 
 
 def _nav_box(lang, on_back, on_next, next_label=N_("Next"),
-             next_sensitive=True, next_destructive=False):
-    """Standard bottom navigation bar with Back / Next buttons."""
-    box = Gtk.Box(spacing=12, homogeneous=False, margin_top=24,
-                  margin_bottom=12, margin_start=24, margin_end=24)
-    box.set_halign(Gtk.Align.CENTER)
+             next_sensitive=True, next_destructive=False, stage=0,
+             show_back=True):
+    """Persistent-looking bottom bar with guarded navigation and progress."""
+    box = Gtk.CenterBox()
+    box.add_css_class("wizard-navigation")
 
     back = _nav_btn("Back", lang, on_back)
-    box.append(back)
+    back.set_visible(show_back)
+    box.set_start_widget(back)
+
+    dots = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=8,
+        halign=Gtk.Align.CENTER,
+        valign=Gtk.Align.CENTER,
+    )
+    dots.add_css_class("wizard-dots")
+    for index in range(5):
+        dot = Gtk.Box()
+        dot.add_css_class("wizard-dot")
+        if index < stage:
+            dot.add_css_class("wizard-dot-complete")
+        elif index == stage:
+            dot.add_css_class("wizard-dot-active")
+        dots.append(dot)
+    box.set_center_widget(dots)
 
     css = ["destructive-action"] if next_destructive else ["suggested-action"]
     nxt = _nav_btn(next_label, lang, on_next,
                    sensitive=next_sensitive, css_classes=css)
-    box.append(nxt)
+    box.set_end_widget(nxt)
+    box.back_button = back
+    box.next_button = nxt
     return box
+
+
+def _page_header(title, subtitle, icon, lang):
+    return page_hero(_(title, lang), _(subtitle, lang), icon)
 
 
 def _list_item_row():
@@ -252,6 +258,7 @@ def _list_item_row():
         margin_start=12,
         margin_end=12,
     )
+    row.add_css_class("installer-list-row")
     title = Gtk.Label(
         halign=Gtk.Align.START,
         xalign=0,
@@ -314,6 +321,7 @@ def build_welcome_page(shared, nav_view):
     lang_scroll.set_child(lang_list)
     lang_frame = Gtk.Frame()
     lang_frame.set_child(lang_scroll)
+    lang_frame.add_css_class("installer-list-card")
 
     # ── right: native GTK4 welcome panel ──
     right_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL,
@@ -322,8 +330,7 @@ def build_welcome_page(shared, nav_view):
                         valign=Gtk.Align.CENTER)
 
     # AnduinOS logo / icon
-    welcome_icon = Gtk.Image.new_from_icon_name("anduinos-installer-beta")
-    welcome_icon.set_pixel_size(128)
+    welcome_icon = icon_picture("welcome", 160)
     right_box.append(welcome_icon)
 
     # Welcome text (changes with language selection)
@@ -340,22 +347,21 @@ def build_welcome_page(shared, nav_view):
     right_box.append(welcome_title)
     right_box.append(welcome_desc)
 
-    right_frame = Gtk.Frame()
-    right_frame.set_child(right_box)
-
     # ── layout ──
-    hpaned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL,
-                        position=340, wide_handle=True, vexpand=True)
+    hpaned = Gtk.Paned(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        position=340,
+        wide_handle=True,
+        vexpand=True,
+        margin_start=32,
+        margin_end=32,
+        margin_top=18,
+        margin_bottom=12,
+    )
     hpaned.set_start_child(lang_frame)
-    hpaned.set_end_child(right_frame)
+    hpaned.set_end_child(right_box)
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    page_title = _page_title("Welcome to AnduinOS", lang)
-    page_subtitle = _page_subtitle(
-        "Choose your language to begin installation", lang
-    )
-    content.append(page_title)
-    content.append(page_subtitle)
     content.append(hpaned)
 
     # ── handlers ──
@@ -365,10 +371,6 @@ def build_welcome_page(shared, nav_view):
     def _update_welcome(lang_code: str):
         welcome_title.set_label(_("Welcome to AnduinOS", lang_code))
         welcome_desc.set_label(
-            _("Choose your language to begin installation", lang_code)
-        )
-        page_title.set_label(_("Welcome to AnduinOS", lang_code))
-        page_subtitle.set_label(
             _("Choose your language to begin installation", lang_code)
         )
         page.set_title(_("AnduinOS Installer", lang_code))
@@ -415,9 +417,11 @@ def build_welcome_page(shared, nav_view):
         lang,
         on_back=lambda: None,
         on_next=on_next,
+        stage=0,
+        show_back=False,
     )
-    navigation_widgets["back"] = navigation.get_first_child()
-    navigation_widgets["next"] = navigation.get_last_child()
+    navigation_widgets["back"] = navigation.back_button
+    navigation_widgets["next"] = navigation.next_button
     content.append(navigation)
 
     # Select the language detected from the Live session. The shared state is
@@ -463,8 +467,14 @@ def build_keyboard_page(shared, nav_view):
     page.set_tag("keyboard")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(_page_title("Keyboard Layout", lang))
-    content.append(_page_subtitle("Confirm your keyboard layout", lang))
+    content.append(
+        _page_header(
+            "Keyboard Layout",
+            "Confirm your keyboard layout",
+            "keyboard",
+            lang,
+        )
+    )
 
     # Find the index of the current keyboard variant
     variant_names = [v[0] for v in XKB_VARIANTS]
@@ -479,9 +489,7 @@ def build_keyboard_page(shared, nav_view):
     for _code, name in XKB_VARIANTS:
         kbd_store.append(_(name, lang))
 
-    kbd_dropdown = Gtk.DropDown(model=kbd_store,
-                                margin_start=48, margin_end=48,
-                                margin_top=24)
+    kbd_dropdown = Gtk.DropDown(model=kbd_store)
     kbd_dropdown.set_selected(default_idx)
 
     def _on_kbd_changed(dd, _pspec):
@@ -492,11 +500,23 @@ def build_keyboard_page(shared, nav_view):
     kbd_dropdown.connect("notify::selected", _on_kbd_changed)
 
     # Test entry
-    test_entry = Gtk.Entry(placeholder_text=_("Test your keyboard here…", lang),
-                           margin_top=24, margin_start=48, margin_end=48)
+    test_entry = Gtk.Entry(
+        placeholder_text=_("Test your keyboard here…", lang)
+    )
 
-    content.append(kbd_dropdown)
-    content.append(test_entry)
+    form = card(spacing=16)
+    form.set_margin_start(48)
+    form.set_margin_end(48)
+    form.set_margin_top(48)
+    form.set_margin_bottom(12)
+    form.append(_labeled(_("Keyboard Layout", lang), kbd_dropdown))
+    form.append(_labeled(_("Test your keyboard here…", lang), test_entry))
+    form_area = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        vexpand=True,
+    )
+    form_area.append(clamp_content(form, 720))
+    content.append(form_area)
 
     def on_next():
         nav_view.push(build_software_page(shared, nav_view))
@@ -504,7 +524,9 @@ def build_keyboard_page(shared, nav_view):
     def on_back():
         nav_view.pop()
 
-    content.append(_nav_box(lang, on_back=on_back, on_next=on_next))
+    content.append(
+        _nav_box(lang, on_back=on_back, on_next=on_next, stage=0)
+    )
     page.set_child(content)
     return page
 
@@ -517,8 +539,14 @@ def build_software_page(shared, nav_view):
     page.set_tag("software")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(_page_title("Updates and Drivers", lang))
-    content.append(_page_subtitle("Choose optional software to install", lang))
+    content.append(
+        _page_header(
+            "Updates and Drivers",
+            "Choose optional software to install",
+            "updates",
+            lang,
+        )
+    )
 
     options = Gtk.Box(
         orientation=Gtk.Orientation.VERTICAL,
@@ -528,6 +556,7 @@ def build_software_page(shared, nav_view):
         margin_top=32,
         vexpand=True,
     )
+    options.add_css_class("installer-card")
 
     updates = Gtk.CheckButton(label=_("Download and install system updates during installation", lang))
     updates.set_active(bool(shared.get("install_updates", True)))
@@ -582,12 +611,146 @@ def build_software_page(shared, nav_view):
         _save()
         nav_view.pop()
 
-    content.append(_nav_box(lang, on_back=on_back, on_next=on_next))
+    content.append(
+        _nav_box(lang, on_back=on_back, on_next=on_next, stage=0)
+    )
     page.set_child(content)
     return page
 
 
 # ── page 4: Target disk only ─────────────────────────────────────────────
+
+def _disk_card_button(
+    choice: StorageDiskChoice, lang: str
+) -> Gtk.ToggleButton:
+    """Render one physical disk and its current on-disk layout."""
+
+    disk = choice.disk
+    identity = disk.identity
+    available = not choice.is_live_media
+    button = Gtk.ToggleButton(sensitive=available)
+    button.add_css_class("disk-card-button")
+
+    body = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+    body.add_css_class("disk-card")
+    header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=14)
+    header.append(icon_picture("one-single-disk", 58))
+
+    identity_box = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=3,
+        hexpand=True,
+        valign=Gtk.Align.CENTER,
+    )
+    model = Gtk.Label(
+        label=identity.model or _("Storage Device", lang),
+        halign=Gtk.Align.START,
+        xalign=0,
+        ellipsize=Pango.EllipsizeMode.END,
+    )
+    model.add_css_class("disk-card-title")
+    table = (
+        disk.partition_table.upper()
+        if disk.partition_table
+        else _("No partition table", lang)
+    )
+    device = Gtk.Label(
+        label=f"{identity.path}  ·  {table}",
+        halign=Gtk.Align.START,
+        xalign=0,
+    )
+    device.add_css_class("dim-label")
+    identity_box.append(model)
+    identity_box.append(device)
+    header.append(identity_box)
+
+    capacity = Gtk.Label(label=_human_size(identity.expected_size_bytes))
+    capacity.add_css_class("storage-badge")
+    capacity.set_valign(Gtk.Align.CENTER)
+    header.append(capacity)
+    selected = Gtk.Image.new_from_icon_name("object-select-symbolic")
+    selected.add_css_class("disk-card-check")
+    selected.set_valign(Gtk.Align.CENTER)
+    header.append(selected)
+    body.append(header)
+
+    layout_title = Gtk.Label(
+        label=_("Current disk layout", lang),
+        halign=Gtk.Align.START,
+        xalign=0,
+    )
+    layout_title.add_css_class("heading")
+    body.append(layout_title)
+
+    layout = Gtk.FlowBox(
+        selection_mode=Gtk.SelectionMode.NONE,
+        row_spacing=6,
+        column_spacing=6,
+        max_children_per_line=5,
+        min_children_per_line=1,
+        homogeneous=False,
+    )
+    layout.set_halign(Gtk.Align.FILL)
+
+    layout_items = []
+    for partition in disk.partitions:
+        filesystem = partition.filesystem_type.upper() or _(
+            "Unknown filesystem", lang
+        )
+        label = partition.filesystem_label.strip()
+        parts = [
+            partition.identity.path,
+            filesystem,
+        ]
+        if label:
+            parts.append(label)
+        parts.append(_human_size(partition.identity.size_bytes))
+        layout_items.append("  ·  ".join(parts))
+    if not disk.geometry_probe_error:
+        layout_items.extend(
+            _("Unallocated · {size}", lang).format(
+                size=_human_size(extent.size_bytes)
+            )
+            for extent in disk.free_extents
+            if extent.size_bytes >= _LAYOUT_FREE_SPACE_MINIMUM_BYTES
+        )
+    if not layout_items:
+        empty_layout = (
+            N_("Partition details unavailable")
+            if disk.geometry_probe_error
+            else N_("Empty disk — no partitions")
+        )
+        layout_items.append(
+            _(empty_layout, lang)
+        )
+    for description in layout_items:
+        chip = Gtk.Label(label=description)
+        chip.add_css_class("partition-chip")
+        layout.insert(chip, -1)
+    body.append(layout)
+
+    notices = []
+    if choice.coexistence.windows_detected:
+        notices.append(_("Windows detected", lang))
+    if choice.coexistence.bitlocker_detected:
+        notices.append(_("BitLocker detected", lang))
+    if choice.is_live_media:
+        notices.append(_("Live USB — excluded", lang))
+    elif not choice.erase_available:
+        notices.append(_("Too small", lang))
+    if notices:
+        notice = Gtk.Label(
+            label="  ·  ".join(notices),
+            halign=Gtk.Align.START,
+            xalign=0,
+            wrap=True,
+        )
+        notice.add_css_class("disk-card-notice")
+        body.append(notice)
+
+    button.set_child(body)
+    return button
+
 
 def build_disk_page(shared, nav_view):
     lang = shared.get("lang", "en_US")
@@ -595,32 +758,23 @@ def build_disk_page(shared, nav_view):
     page.set_tag("disk")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(_page_title("Select Installation Disk", lang))
     content.append(
-        _page_subtitle(
-            "Choose one target disk. Storage settings come next.", lang
+        _page_header(
+            "Select Installation Disk",
+            "Choose one target disk. Storage settings come next.",
+            "select-installation-disk",
+            lang,
         )
     )
 
-    list_store = Gio.ListStore(item_type=DiskItem)
     disk_choices: list[StorageDiskChoice | None] = []
-    factory = Gtk.SignalListItemFactory()
-
-    def _disk_setup(_factory, item):
-        item.set_child(_list_item_row())
-
-    def _disk_bind(_factory, item):
-        row = item.get_child()
-        disk_item = item.get_item()
-        _bind_list_item_row(row, disk_item.devname, disk_item.subtitle)
-        row.set_sensitive(disk_item.sensitive)
-
-    factory.connect("setup", _disk_setup)
-    factory.connect("bind", _disk_bind)
-    selection = Gtk.SingleSelection(model=list_store)
-    selection.set_autoselect(False)
-    selection.set_can_unselect(True)
-    disk_list = Gtk.ListView(model=selection, factory=factory, vexpand=True)
+    disk_buttons: list[Gtk.ToggleButton] = []
+    disk_list = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=12,
+        vexpand=True,
+    )
+    disk_list.add_css_class("disk-card-list")
     disk_scroll = Gtk.ScrolledWindow(
         hscrollbar_policy=Gtk.PolicyType.NEVER,
         margin_start=48,
@@ -628,6 +782,7 @@ def build_disk_page(shared, nav_view):
         vexpand=True,
     )
     disk_scroll.set_child(disk_list)
+    disk_scroll.add_css_class("disk-card-scroll")
     content.append(disk_scroll)
 
     status = Gtk.Label(
@@ -637,6 +792,8 @@ def build_disk_page(shared, nav_view):
         margin_end=48,
     )
     status.add_css_class("dim-label")
+    status.add_css_class("installer-warning-card")
+    status.set_visible(False)
     content.append(status)
 
     rescan = Gtk.Button(label=_("Rescan Storage", lang))
@@ -650,13 +807,14 @@ def build_disk_page(shared, nav_view):
             next_button.set_sensitive(enabled)
 
     def _selected_choice() -> StorageDiskChoice | None:
-        position = selection.get_selected()
-        if (
-            position == Gtk.INVALID_LIST_POSITION
-            or position >= len(disk_choices)
-        ):
-            return None
-        return disk_choices[position]
+        return next(
+            (
+                choice
+                for choice, button in zip(disk_choices, disk_buttons)
+                if choice is not None and button.get_active()
+            ),
+            None,
+        )
 
     def _on_disk_selected():
         choice = _selected_choice()
@@ -664,31 +822,24 @@ def build_disk_page(shared, nav_view):
             _set_next(False)
             return
         bind_storage_target(shared, choice)
-        status.set_label(
-            _(
-                "Only this disk can be partitioned or formatted. Other disks "
-                "will be inspected but not modified.",
-                lang,
-            )
-        )
+        status.set_visible(False)
         _set_next(True)
 
-    selection.connect(
-        "selection-changed", lambda _model, _position, _count: (
-            _on_disk_selected()
-        )
-    )
-
     def _populate_disks(*, restore_selection: bool):
-        nonlocal disk_choices
+        nonlocal disk_choices, disk_buttons
         previous_id = (
             str(shared.get("disk_stable_id") or "")
             if restore_selection
             else ""
         )
-        list_store.remove_all()
+        child = disk_list.get_first_child()
+        while child is not None:
+            following = child.get_next_sibling()
+            disk_list.remove(child)
+            child = following
         disk_choices = []
-        selection.set_selected(Gtk.INVALID_LIST_POSITION)
+        disk_buttons = []
+        status.set_visible(False)
         _set_next(False)
         try:
             workflow = build_storage_workflow(
@@ -696,49 +847,31 @@ def build_disk_page(shared, nav_view):
                 probe_platform(),
                 live_device=_find_live_device(),
             )
+            first_button = None
             for choice in workflow.disks:
-                disk = choice.disk.identity
-                details = [
-                    _human_size(disk.expected_size_bytes),
-                    disk.model,
-                ]
-                if choice.coexistence.windows_detected:
-                    details.append(_("Windows detected", lang))
-                elif choice.disk.partitions:
-                    details.append(_("Existing partitions detected", lang))
-                if choice.coexistence.bitlocker_detected:
-                    details.append(_("BitLocker detected", lang))
-                if choice.is_live_media:
-                    details.append(_("Live USB — excluded", lang))
-                elif not choice.erase_available:
-                    details.append(_("Too small", lang))
-                list_store.append(
-                    DiskItem(
-                        devname=disk.path,
-                        size=details[0],
-                        model=disk.model,
-                        sensitive=(
-                            not choice.is_live_media
-                        ),
-                        subtitle=" — ".join(item for item in details if item),
-                        size_bytes=disk.expected_size_bytes,
-                        stable_id=disk.stable_id,
-                    )
+                button = _disk_card_button(choice, lang)
+                if first_button is None:
+                    first_button = button
+                else:
+                    button.set_group(first_button)
+                button.connect(
+                    "toggled", lambda _button: _on_disk_selected()
                 )
+                disk_list.append(button)
+                disk_buttons.append(button)
                 disk_choices.append(choice)
         except ProbeError as error:
             status.set_label(str(error))
+            status.set_visible(True)
 
         if not disk_choices:
-            list_store.append(
-                DiskItem(
-                    devname="",
-                    size="",
-                    model="",
-                    sensitive=False,
-                    subtitle=_("No suitable disks found.", lang),
-                )
+            empty = Gtk.Label(
+                label=_("No suitable disks found.", lang),
+                margin_top=28,
+                margin_bottom=28,
             )
+            empty.add_css_class("dim-label")
+            disk_list.append(empty)
             disk_choices.append(None)
             return
 
@@ -755,11 +888,7 @@ def build_disk_page(shared, nav_view):
             None,
         )
         if selected_index is not None:
-            selection.set_selected(selected_index)
-        else:
-            status.set_label(
-                _("Select the target disk to continue.", lang)
-            )
+            disk_buttons[selected_index].set_active(True)
 
     def _rescan():
         clear_storage_target(shared)
@@ -778,8 +907,9 @@ def build_disk_page(shared, nav_view):
         on_back=lambda: nav_view.pop(),
         on_next=on_next,
         next_sensitive=False,
+        stage=1,
     )
-    next_button = nav.get_last_child()
+    next_button = nav.next_button
     _populate_disks(restore_selection=True)
     content.append(nav)
     page.set_child(content)
@@ -793,14 +923,22 @@ def build_storage_strategy_page(shared, nav_view):
     page = Adw.NavigationPage(title=_("Choose Installation Method", lang))
     page.set_tag("storage-strategy")
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-    content.append(_page_title("How should AnduinOS use this disk?", lang))
     content.append(
-        _page_subtitle(
+        _page_header(
+            "How should AnduinOS use this disk?",
             "Choose a complete installation method, not only a filesystem.",
+            "how-should-use",
             lang,
         )
     )
 
+    target_box = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=10,
+        halign=Gtk.Align.CENTER,
+    )
+    target_box.add_css_class("strategy-target")
+    target_box.append(icon_picture("one-single-disk", 30))
     target = Gtk.Label(
         label=_("Target: {disk} ({size} — {model})", lang).format(
             disk=shared.get("disk", "?"),
@@ -811,35 +949,71 @@ def build_storage_strategy_page(shared, nav_view):
         wrap=True,
     )
     target.add_css_class("dim-label")
-    content.append(target)
+    target_box.append(target)
+    content.append(target_box)
 
-    options = Gtk.ListBox(
-        selection_mode=Gtk.SelectionMode.NONE,
+    options = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=8,
         margin_start=72,
         margin_end=72,
-        margin_top=12,
+        margin_top=4,
         vexpand=True,
     )
-    options.add_css_class("boxed-list")
-    radios: dict[StorageStrategy, Gtk.CheckButton] = {}
-    first_radio = None
+    options.add_css_class("strategy-options")
+    strategy_buttons: dict[StorageStrategy, Gtk.ToggleButton] = {}
+    first_button = None
 
-    def _add_strategy(strategy, title, subtitle, *, enabled=True):
-        nonlocal first_radio
-        row = Adw.ActionRow()
-        row.set_title(title)
-        row.set_subtitle(subtitle)
-        radio = Gtk.CheckButton()
-        if first_radio is None:
-            first_radio = radio
+    def _add_strategy(
+        strategy,
+        title,
+        subtitle,
+        icon,
+        *,
+        enabled=True,
+    ):
+        nonlocal first_button
+        button = Gtk.ToggleButton(sensitive=enabled)
+        button.add_css_class("strategy-card")
+        if first_button is None:
+            first_button = button
         else:
-            radio.set_group(first_radio)
-        row.add_prefix(radio)
-        row.set_activatable(True)
-        row.set_activatable_widget(radio)
-        row.set_sensitive(enabled)
-        options.append(row)
-        radios[strategy] = radio
+            button.set_group(first_button)
+
+        row = Gtk.Box(
+            orientation=Gtk.Orientation.HORIZONTAL,
+            spacing=16,
+        )
+        row.append(icon_picture(icon, 56))
+        copy = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=4,
+            hexpand=True,
+            valign=Gtk.Align.CENTER,
+        )
+        title_label = Gtk.Label(
+            label=title,
+            halign=Gtk.Align.START,
+            xalign=0,
+        )
+        title_label.add_css_class("strategy-card-title")
+        subtitle_label = Gtk.Label(
+            label=subtitle,
+            halign=Gtk.Align.START,
+            xalign=0,
+            wrap=True,
+        )
+        subtitle_label.add_css_class("dim-label")
+        copy.append(title_label)
+        copy.append(subtitle_label)
+        row.append(copy)
+        selected = Gtk.Image.new_from_icon_name("object-select-symbolic")
+        selected.add_css_class("strategy-check")
+        selected.set_valign(Gtk.Align.CENTER)
+        row.append(selected)
+        button.set_child(row)
+        options.append(button)
+        strategy_buttons[strategy] = button
 
     erase_available = bool(shared.get("disk_erase_available"))
     erase_warning = _(
@@ -854,6 +1028,7 @@ def build_storage_strategy_page(shared, nav_view):
             "Enables shared-space subvolumes, snapshots and Timeback Machine.",
             lang,
         ),
+        "btrfs",
         enabled=erase_available,
     )
     _add_strategy(
@@ -862,6 +1037,7 @@ def build_storage_strategy_page(shared, nav_view):
         erase_warning
         + " "
         + _("Uses a traditional single root filesystem.", lang),
+        "ext4",
         enabled=erase_available,
     )
     _add_strategy(
@@ -872,17 +1048,24 @@ def build_storage_strategy_page(shared, nav_view):
             "This is the only Windows coexistence path.",
             lang,
         ),
+        "advanced",
     )
     content.append(options)
 
-    warning = Gtk.Label(
-        wrap=True,
+    warning_box = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=12,
         halign=Gtk.Align.CENTER,
         margin_start=72,
         margin_end=72,
     )
+    warning_box.add_css_class("strategy-warning")
+    warning_icon = icon_picture("flashing-disk", 38)
+    warning = Gtk.Label(wrap=True, xalign=0)
     warning.add_css_class("warning")
-    content.append(warning)
+    warning_box.append(warning_icon)
+    warning_box.append(warning)
+    content.append(warning_box)
     next_button = None
 
     def _set_next(enabled):
@@ -892,37 +1075,44 @@ def build_storage_strategy_page(shared, nav_view):
     def _selected_strategy() -> StorageStrategy | None:
         return next(
             (
-                strategy
-                for strategy, radio in radios.items()
-                if radio.get_active()
+                strategy for strategy, button in strategy_buttons.items()
+                if button.get_active()
             ),
             None,
+        )
+
+    def _set_warning(message, icon):
+        warning.set_label(message)
+        warning_icon.set_paintable(
+            icon_picture(icon, 38).get_paintable()
         )
 
     def _show_strategy(strategy):
         apply_storage_strategy(shared, strategy)
         if strategy is StorageStrategy.ADVANCED_COEXISTENCE:
-            warning.set_label(
+            _set_warning(
                 _(
                     "Advanced coexistence can affect EFI firmware state and "
                     "may trigger BitLocker recovery. It never shrinks or "
                     "repairs Windows volumes.",
                     lang,
-                )
+                ),
+                "advanced",
             )
         else:
-            warning.set_label(
+            _set_warning(
                 _(
                     "ALL DATA on {disk} will be permanently erased.", lang
-                ).format(disk=shared.get("disk", "?"))
+                ).format(disk=shared.get("disk", "?")),
+                "flashing-disk",
             )
         _set_next(True)
 
-    for strategy, radio in radios.items():
-        radio.connect(
+    for strategy, button in strategy_buttons.items():
+        button.connect(
             "toggled",
-            lambda button, selected=strategy: (
-                _show_strategy(selected) if button.get_active() else None
+            lambda toggled, selected=strategy: (
+                _show_strategy(selected) if toggled.get_active() else None
             ),
         )
 
@@ -939,28 +1129,30 @@ def build_storage_strategy_page(shared, nav_view):
         clear_guided_storage_selection(shared)
         shared["storage_strategy"] = ""
     if restored is not None:
-        radios[restored].set_active(True)
+        strategy_buttons[restored].set_active(True)
     elif (
         erase_available
         and not bool(shared.get("disk_has_existing_partitions"))
     ):
-        radios[StorageStrategy.ERASE_BTRFS].set_active(True)
+        strategy_buttons[StorageStrategy.ERASE_BTRFS].set_active(True)
     elif not erase_available:
-        warning.set_label(
+        _set_warning(
             _(
                 "This disk is too small for whole-disk installation. "
                 "Advanced may continue only if suitable unallocated space "
                 "exists.",
                 lang,
-            )
+            ),
+            "advanced",
         )
     else:
-        warning.set_label(
+        _set_warning(
             _(
                 "Existing partitions were detected. The first two choices "
                 "delete them; Advanced is the preservation path.",
                 lang,
-            )
+            ),
+            "advanced",
         )
 
     def on_next():
@@ -977,8 +1169,9 @@ def build_storage_strategy_page(shared, nav_view):
         on_back=lambda: nav_view.pop(),
         on_next=on_next,
         next_sensitive=_selected_strategy() is not None,
+        stage=1,
     )
-    next_button = nav.get_last_child()
+    next_button = nav.next_button
     content.append(nav)
     page.set_child(content)
     return page
@@ -991,10 +1184,12 @@ def build_advanced_storage_page(shared, nav_view):
     page = Adw.NavigationPage(title=_("Advanced Storage", lang))
     page.set_tag("advanced-storage")
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-    content.append(_page_title("Advanced: Install Alongside", lang))
     content.append(
-        _page_subtitle(
-            "Use only existing unallocated space on the selected disk.", lang
+        _page_header(
+            "Advanced: Install Alongside",
+            "Use only existing unallocated space on the selected disk.",
+            "advanced",
+            lang,
         )
     )
 
@@ -1008,13 +1203,14 @@ def build_advanced_storage_page(shared, nav_view):
         wrap=True,
     )
     target.add_css_class("dim-label")
+    target.add_css_class("installer-callout")
     content.append(target)
 
     risk = Gtk.Label(
         wrap=True,
-        halign=Gtk.Align.CENTER,
-        margin_start=48,
-        margin_end=48,
+        halign=Gtk.Align.FILL,
+        xalign=0,
+        hexpand=True,
     )
     risk.add_css_class("warning")
     if shared.get("disk_windows_detected"):
@@ -1032,7 +1228,16 @@ def build_advanced_storage_page(shared, nav_view):
             lang,
         )
     risk.set_label(risk_text)
-    content.append(risk)
+    risk_card = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=14,
+        margin_start=48,
+        margin_end=48,
+    )
+    risk_card.add_css_class("installer-warning-card")
+    risk_card.append(icon_picture("secure-boot", 42))
+    risk_card.append(risk)
+    content.append(risk_card)
 
     controls = Gtk.Box(
         orientation=Gtk.Orientation.VERTICAL,
@@ -1042,6 +1247,7 @@ def build_advanced_storage_page(shared, nav_view):
         margin_top=8,
         vexpand=True,
     )
+    controls.add_css_class("installer-card")
     filesystem_row = Gtk.Box(
         orientation=Gtk.Orientation.HORIZONTAL,
         spacing=12,
@@ -1080,11 +1286,17 @@ def build_advanced_storage_page(shared, nav_view):
         selectable=True,
     )
     guidance.add_css_class("dim-label")
+    guidance.add_css_class("installer-callout")
     controls.append(guidance)
     rescan = Gtk.Button(label=_("Rescan and Reselect Disk", lang))
     rescan.set_halign(Gtk.Align.START)
     controls.append(rescan)
-    content.append(controls)
+    controls_scroll = Gtk.ScrolledWindow(
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+        vexpand=True,
+    )
+    controls_scroll.set_child(clamp_content(controls, 820))
+    content.append(controls_scroll)
 
     workflow: StorageWorkflow | None = None
     selected_choice: StorageDiskChoice | None = None
@@ -1227,7 +1439,11 @@ def build_advanced_storage_page(shared, nav_view):
         decision = candidate.coexistence
         guidance.set_label(
             "\n\n".join(
-                item.message
+                _coexistence_notice_text(
+                    item,
+                    lang,
+                    decision.windows_detected,
+                )
                 for item in decision.notices
                 if item.code
                 is not CoexistenceNoticeCode.DISPOSABLE_PARTITION_OPTION
@@ -1315,8 +1531,9 @@ def build_advanced_storage_page(shared, nav_view):
         on_back=lambda: nav_view.pop(),
         on_next=on_next,
         next_sensitive=False,
+        stage=1,
     )
-    next_button = nav.get_last_child()
+    next_button = nav.next_button
     _filesystem_changed()
     _load_workflow()
     content.append(nav)
@@ -1369,8 +1586,14 @@ def build_user_page(shared, nav_view):
     page.set_tag("user")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(_page_title("User Account", lang))
-    content.append(_page_subtitle("Create your user account", lang))
+    content.append(
+        _page_header(
+            "User Account",
+            "Create your user account",
+            "account",
+            lang,
+        )
+    )
 
     # Validation state
     valid = {"name": True, "pass": True, "host": True}
@@ -1380,8 +1603,9 @@ def build_user_page(shared, nav_view):
     )
 
     box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL,
-                  spacing=12, margin_start=48, margin_end=48,
-                  margin_top=24, vexpand=True)
+                  spacing=8, margin_start=48, margin_end=48,
+                  margin_top=12, vexpand=True)
+    box.add_css_class("installer-card")
 
     # Full name
     full_entry = Gtk.Entry(placeholder_text=_("Full Name", lang))
@@ -1510,7 +1734,12 @@ def build_user_page(shared, nav_view):
     shared["_clear_password_ui"] = _clear_password_ui
     host_entry.connect("changed", lambda _e: _validate())
 
-    content.append(box)
+    account_scroll = Gtk.ScrolledWindow(
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+        vexpand=True,
+    )
+    account_scroll.set_child(clamp_content(box, 760))
+    content.append(account_scroll)
 
     def _save_account_state():
         shared["username"] = user_entry.get_text()
@@ -1619,8 +1848,14 @@ def build_user_page(shared, nav_view):
     def on_back():
         nav_view.pop()
 
-    nav = _nav_box(lang, on_back=on_back, on_next=on_next, next_sensitive=False)
-    nxt_btn = nav.get_last_child()  # The "Next" button (last in the box)
+    nav = _nav_box(
+        lang,
+        on_back=on_back,
+        on_next=on_next,
+        next_sensitive=False,
+        stage=2,
+    )
+    nxt_btn = nav.next_button
     content.append(nav)
     page.set_child(content)
     return page
@@ -1667,8 +1902,14 @@ def build_timezone_page(shared, nav_view):
     page.set_tag("timezone")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(_page_title("Select Timezone", lang))
-    content.append(_page_subtitle("Choose your location to set the system clock", lang))
+    content.append(
+        _page_header(
+            "Select Timezone",
+            "Choose your location to set the system clock",
+            "timezone",
+            lang,
+        )
+    )
 
     # Load timezone list
     zones = _load_timezones()
@@ -1706,6 +1947,7 @@ def build_timezone_page(shared, nav_view):
                                    margin_start=48, margin_end=48,
                                    vexpand=True)
     tz_scroll.set_child(tz_list)
+    tz_scroll.add_css_class("installer-list-card")
 
     search.connect("search-changed", lambda _s: timezone_filter.changed(
         Gtk.FilterChange.DIFFERENT))
@@ -1720,6 +1962,7 @@ def build_timezone_page(shared, nav_view):
         margin_end=48,
     )
     selected_label.add_css_class("heading")
+    selected_label.add_css_class("installer-callout")
 
     def _on_tz_selected():
         pos = sel.get_selected()
@@ -1763,7 +2006,9 @@ def build_timezone_page(shared, nav_view):
     def on_back():
         nav_view.pop()
 
-    content.append(_nav_box(lang, on_back=on_back, on_next=on_next))
+    content.append(
+        _nav_box(lang, on_back=on_back, on_next=on_next, stage=2)
+    )
     page.set_child(content)
     return page
 
@@ -1797,8 +2042,14 @@ def build_summary_page(shared, nav_view):
     page.set_tag("summary")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(_page_title("Ready to Install", lang))
-    content.append(_page_subtitle("Please review your choices before proceeding", lang))
+    content.append(
+        _page_header(
+            "Ready to Install",
+            "Please review your choices before proceeding",
+            "review",
+            lang,
+        )
+    )
     development_mode = bool(shared.get("development_mode"))
     guided_mode = (
         shared.get("storage_mode")
@@ -1818,6 +2069,7 @@ def build_summary_page(shared, nav_view):
             wrap=True,
         )
         development_banner.add_css_class("warning")
+        development_banner.add_css_class("installer-warning-card")
         content.append(development_banner)
 
     # Build summary text
@@ -1989,11 +2241,16 @@ def build_summary_page(shared, nav_view):
         xalign=0,
     )
     summary_label.set_markup("\n\n".join(lines))
+    summary_card = card()
+    summary_card.set_margin_start(48)
+    summary_card.set_margin_end(48)
+    summary_card.set_margin_top(12)
+    summary_card.append(summary_label)
     summary_scroll = Gtk.ScrolledWindow(
         hscrollbar_policy=Gtk.PolicyType.NEVER,
         vexpand=True,
     )
-    summary_scroll.set_child(summary_label)
+    summary_scroll.set_child(clamp_content(summary_card, 860))
     content.append(summary_scroll)
 
     # Warning
@@ -2014,6 +2271,11 @@ def build_summary_page(shared, nav_view):
     )
     warn = Gtk.Label(label=warning_text, wrap=True)
     warn.add_css_class("warning")
+    warn.add_css_class(
+        "installer-warning-card"
+        if guided_mode
+        else "installer-danger-card"
+    )
     warn.set_halign(Gtk.Align.CENTER)
     warn.set_margin_top(24)
     content.append(warn)
@@ -2126,8 +2388,9 @@ def build_summary_page(shared, nav_view):
             else _("Install", lang)
         ),
         next_destructive=not development_mode,
+        stage=3,
     )
-    install_button = nav.get_last_child()
+    install_button = nav.next_button
     install_button.set_sensitive(not bool(platform_error))
     content.append(nav)
     page.set_child(content)
@@ -2142,24 +2405,13 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     page.set_tag("progress")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(_page_title("Installing AnduinOS", lang))
-    content.append(_page_subtitle("Please do not turn off your computer", lang))
-
-    css = Gtk.CssProvider()
-    css.load_from_data(
-        ".step-light { font-size: 18px; font-weight: 700; }"
-        ".step-pending { color: alpha(@window_fg_color, 0.28); }"
-        ".step-running { color: #3584e4; }"
-        ".step-succeeded { color: #2ec27e; }"
-        ".step-warning { color: #e5a50a; }"
-        ".step-failed { color: #e01b24; }"
-        ".step-skipped { color: alpha(@window_fg_color, 0.45); }"
-        ".step-active { font-weight: 700; }"
-    )
-    Gtk.StyleContext.add_provider_for_display(
-        content.get_display(),
-        css,
-        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+    content.append(
+        _page_header(
+            "Installing AnduinOS",
+            "Please do not turn off your computer",
+            "timeback",
+            lang,
+        )
     )
 
     step_titles = {
@@ -2183,7 +2435,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "prepare-secure-boot": _("Prepare Secure Boot", lang),
         "refresh-package-indexes": _("Refresh package indexes", lang),
         "upgrade-system": _("Install system updates", lang),
-        "provision-timeback-machine": _("Install Timeback Machine", lang),
+        "ensure-timeback-machine": _(
+            "Ensure Timeback Machine is available", lang
+        ),
         "install-third-party-drivers": _("Install hardware drivers", lang),
         "verify-dkms-signatures": _(
             "Verify kernel module signatures", lang
@@ -2219,7 +2473,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     if not plan.software.install_updates:
         omitted_steps.update(("refresh-package-indexes", "upgrade-system"))
     if plan.storage.filesystem is not Filesystem.BTRFS:
-        omitted_steps.add("provision-timeback-machine")
+        omitted_steps.add("ensure-timeback-machine")
     if not plan.software.install_third_party_drivers:
         omitted_steps.add("install-third-party-drivers")
     for step_id in omitted_steps:
@@ -2246,6 +2500,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     left_box.append(left_scroll)
     left_frame = Gtk.Frame()
     left_frame.set_child(left_box)
+    left_frame.add_css_class("progress-card")
 
     # Log view
     log_buf = Gtk.TextBuffer()
@@ -2379,6 +2634,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         margin_start=32,
         margin_end=32,
     )
+    result_box.add_css_class("installer-card")
     result_icon = Gtk.Image(pixel_size=72)
     result_label = Gtk.Label(wrap=True, justify=Gtk.Justification.CENTER)
     result_label.add_css_class("title-1")
@@ -2441,6 +2697,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     right_box.append(mode_stack)
     output_frame = Gtk.Frame()
     output_frame.set_child(right_box)
+    output_frame.add_css_class("progress-card")
 
     workspace = Gtk.Paned(
         orientation=Gtk.Orientation.HORIZONTAL,
@@ -2471,8 +2728,18 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         margin_bottom=12,
     )
     progress.set_show_text(True)
+    progress.add_css_class("installer-progress")
     content.append(progress_status)
     content.append(progress)
+    progress_footer = _nav_box(
+        lang,
+        on_back=lambda: None,
+        on_next=lambda: None,
+        stage=4,
+        show_back=False,
+    )
+    progress_footer.next_button.set_visible(False)
+    content.append(progress_footer)
 
     # Log callback (thread-safe via GLib.idle_add)
     def log(msg: str):

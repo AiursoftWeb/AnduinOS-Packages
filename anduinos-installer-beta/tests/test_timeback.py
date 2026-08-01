@@ -8,8 +8,8 @@ from helpers import valid_plan
 from installer_core.command import CommandError
 from installer_core.steps import InstallContext, StepWarning
 from installer_core.timeback import (
+    EnsureTimebackMachineStep,
     TIMEBACK_PACKAGE,
-    ProvisionTimebackMachineStep,
 )
 
 
@@ -33,7 +33,7 @@ class StatefulPackageRunner(FakeRunner):
             return subprocess.CompletedProcess(
                 command,
                 0 if self.installed else 1,
-                "ii \n" if self.installed else "",
+                "ii \t0.1.0-12+resolute\n" if self.installed else "",
                 "",
             )
         if command[-2:] == ("install", TIMEBACK_PACKAGE):
@@ -71,9 +71,10 @@ def context_for(
     apt_get = target / "usr/bin/apt-get"
     apt_get.parent.mkdir(parents=True, exist_ok=True)
     apt_get.touch()
-    return InstallContext(
+    logs: list[str] = []
+    context = InstallContext(
         valid_plan(),
-        lambda _message: None,
+        logs.append,
         {
             "target": target,
             "chroot_environment_ready": True,
@@ -81,9 +82,11 @@ def context_for(
             "timeback_payload_in_live_image": media_payload,
         },
     )
+    context.values["test_logs"] = logs
+    return context
 
 
-class ProvisionTimebackMachineTests(unittest.TestCase):
+class EnsureTimebackMachineTests(unittest.TestCase):
     def test_retains_installation_media_payload_without_network(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
@@ -93,7 +96,7 @@ class ProvisionTimebackMachineTests(unittest.TestCase):
                 online=False,
                 media_payload=True,
             )
-            step = ProvisionTimebackMachineStep(runner)
+            step = EnsureTimebackMachineStep(runner)
             step.execute(context)
             step.verify(context)
 
@@ -102,6 +105,13 @@ class ProvisionTimebackMachineTests(unittest.TestCase):
             context.values["timeback_machine_source"],
             "installation-media",
         )
+        self.assertEqual(
+            context.values["timeback_machine_version"],
+            "0.1.0-12+resolute",
+        )
+        logs = "\n".join(context.values["test_logs"])
+        self.assertIn("installation-media payload: present", logs)
+        self.assertIn("package source: installation-media", logs)
         self.assertFalse(
             any(command[-1] == "update" for command, _ in runner.commands)
         )
@@ -117,7 +127,7 @@ class ProvisionTimebackMachineTests(unittest.TestCase):
             target = Path(directory)
             runner = StatefulPackageRunner()
             context = context_for(target, online=True)
-            step = ProvisionTimebackMachineStep(runner)
+            step = EnsureTimebackMachineStep(runner)
             step.execute(context)
             step.verify(context)
 
@@ -127,6 +137,10 @@ class ProvisionTimebackMachineTests(unittest.TestCase):
         self.assertEqual(
             context.values["timeback_machine_source"],
             "repository",
+        )
+        self.assertIn(
+            "package source: repository",
+            "\n".join(context.values["test_logs"]),
         )
         self.assertTrue(any(command[-1] == "update" for command in commands))
         install = next(
@@ -142,7 +156,7 @@ class ProvisionTimebackMachineTests(unittest.TestCase):
             runner = StatefulPackageRunner()
             context = context_for(target, online=False)
             with self.assertRaisesRegex(StepWarning, "offline"):
-                ProvisionTimebackMachineStep(runner).execute(context)
+                EnsureTimebackMachineStep(runner).execute(context)
 
         self.assertFalse(context.values["timeback_machine_installed"])
         self.assertFalse(
@@ -159,7 +173,7 @@ class ProvisionTimebackMachineTests(unittest.TestCase):
             runner = StatefulPackageRunner(install_returncode=100)
             context = context_for(target, online=True)
             with self.assertRaisesRegex(StepWarning, "remains usable"):
-                ProvisionTimebackMachineStep(runner).execute(context)
+                EnsureTimebackMachineStep(runner).execute(context)
 
         commands = [command for command, _ in runner.commands]
         self.assertIn(("chroot", str(target), "dpkg", "--audit"), commands)
@@ -177,7 +191,7 @@ class ProvisionTimebackMachineTests(unittest.TestCase):
                 CommandError,
                 "inconsistent package state",
             ):
-                ProvisionTimebackMachineStep(runner).execute(context)
+                EnsureTimebackMachineStep(runner).execute(context)
 
 
 if __name__ == "__main__":

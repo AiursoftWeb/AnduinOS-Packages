@@ -172,6 +172,7 @@ class _PartedGeometry:
 def probe_storage_inventory(
     *,
     run: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+    parted_run: Callable[..., subprocess.CompletedProcess[str]] | None = None,
 ) -> StorageInventory:
     """Probe fixed disks, their direct partitions and unallocated extents.
 
@@ -182,11 +183,13 @@ def probe_storage_inventory(
     it has no selectable free extents.
     """
 
+    parted_run = parted_run or run
     command = [
         "lsblk",
         "--json",
         "--bytes",
         "--paths",
+        "--tree",
         "--output",
         (
             "PATH,SIZE,MODEL,SERIAL,WWN,TYPE,RM,MAJ:MIN,LOG-SEC,"
@@ -239,7 +242,7 @@ def probe_storage_inventory(
             model=str(root.get("model") or "").strip(),
             serial=str(root.get("serial") or "").strip(),
         )
-        geometry = _probe_parted_geometry(path, run)
+        geometry = _probe_parted_geometry(path, parted_run)
         geometry_error = geometry.error or _geometry_mismatch(root, geometry)
         unsupported_descendants = _unsupported_descendant_types(root)
         logical_sector = _positive_int(root.get("log-sec"), default=512)
@@ -370,6 +373,14 @@ def _parse_parted_machine(output: str) -> _PartedGeometry:
         fields = _split_parted_fields(line[:-1])
         if len(fields) < 4:
             continue
+        # Newer parted releases may put a display index in the first field of
+        # a free-space row. Detect the explicit marker before interpreting a
+        # numeric first field as an allocated partition number.
+        if any(field.strip().lower() == "free" for field in fields[4:]):
+            free_extents.append(
+                (_parted_bytes(fields[1]), _parted_bytes(fields[3]))
+            )
+            continue
         if fields[0].isdigit():
             number = int(fields[0])
             start = _parted_bytes(fields[1])
@@ -387,10 +398,6 @@ def _parse_parted_machine(output: str) -> _PartedGeometry:
             )
             partitions.append(_PartedPartition(number, start, size, flags))
             continue
-        if any(field.strip().lower() == "free" for field in fields[4:]):
-            free_extents.append(
-                (_parted_bytes(fields[1]), _parted_bytes(fields[3]))
-            )
     if not saw_header:
         raise ValueError("missing BYT header")
     return _PartedGeometry(

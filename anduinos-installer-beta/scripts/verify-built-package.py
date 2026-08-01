@@ -24,6 +24,25 @@ REQUIRED_FILES = (
     LIB / "installer_core/guided_evidence.py",
     LIB / "installer_core/guided_test_plan.py",
     Path("usr/bin/anduinos-installer-executor"),
+    Path("usr/bin/anduinos-installer-storage-probe"),
+    Path("usr/share/polkit-1/actions/com.anduinos.installer-beta.policy"),
+    Path("usr/share/anduinos-installer-beta/style.css"),
+    Path("usr/share/anduinos-installer-beta/icons/welcome.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/keyboard.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/updates.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/disk.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/timeback.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/coexistence.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/account.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/timezone.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/review.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/advanced.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/btrfs.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/ext4.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/flashing-disk.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/how-should-use.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/one-single-disk.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/select-installation-disk.svg"),
 )
 FORBIDDEN_PUBLIC_LAUNCHERS = (
     Path("usr/bin/guided-test-plan"),
@@ -35,6 +54,7 @@ REQUIRED_DEPENDENCIES = {
     "dosfstools",
     "efibootmgr",
     "util-linux",
+    "polkitd",
 }
 
 
@@ -62,6 +82,12 @@ def verify_staged_root(root: Path) -> dict[str, object]:
     launcher = wrapper.read_text()
     if 'if [ "$#" -ne 0 ]' not in launcher or 'executor_cli.py "$@"' in launcher:
         raise RuntimeError("Public executor wrapper can forward test arguments")
+    storage_probe = root / "usr/bin/anduinos-installer-storage-probe"
+    if not stat.S_IMODE(storage_probe.stat().st_mode) & 0o111:
+        raise RuntimeError("Storage probe wrapper is not executable")
+    probe_launcher = storage_probe.read_text()
+    if 'if [ "$#" -ne 1 ]' not in probe_launcher:
+        raise RuntimeError("Storage probe wrapper does not enforce one argument")
     caches = sorted(
         path.relative_to(root).as_posix()
         for path in root.rglob("*")
