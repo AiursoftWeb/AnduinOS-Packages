@@ -120,7 +120,7 @@ fn build_with_notice(
             name: "automatic",
             title: i18n(concat!("Automatic ", "Snapshots")),
             icon: "alarm-symbolic",
-            widget: build_automatic_snapshots(&report).upcast(),
+            widget: build_automatic_snapshots(&window, &report).upcast(),
         },
         Page {
             name: "storage",
@@ -1238,7 +1238,7 @@ fn build_settings(retention_state: &RetentionState, demo: bool) -> adw::Preferen
     page
 }
 
-fn build_automatic_snapshots(report: &LayoutReport) -> adw::PreferencesPage {
+fn build_automatic_snapshots(parent: &adw::ApplicationWindow, report: &LayoutReport) -> adw::PreferencesPage {
     let page = adw::PreferencesPage::builder()
         .title(i18n(concat!("Automatic ", "Snapshots")))
         .icon_name("alarm-symbolic")
@@ -1269,10 +1269,46 @@ fn build_automatic_snapshots(report: &LayoutReport) -> adw::PreferencesPage {
         if supported {
             let policy=automatic_status.as_ref().expect("supported status exists").policy.clone();
             let reverting=Rc::new(Cell::new(false));
+            let parent=parent.clone();
             enabled.connect_active_notify(move |row| {
                 if reverting.replace(false) { return; }
                 let mut updated=policy.clone(); updated.enabled=row.is_active();
-                if client::set_automatic_policy(&updated, |_| {}).is_err() { reverting.set(true); row.set_active(!row.is_active()); }
+                let requested=row.is_active();
+                row.set_sensitive(false);
+                let (sender,receiver)=mpsc::channel();
+                let spawn=std::thread::Builder::new().name("timeback-automatic-policy".into()).spawn(move || {
+                    let result=client::set_automatic_policy(&updated, |_| {}).map_err(|error| error.to_string());
+                    let _=sender.send(result);
+                });
+                if let Err(error)=spawn {
+                    reverting.set(true);
+                    row.set_active(!requested);
+                    row.set_sensitive(true);
+                    show_operation_error(&parent,&format!("Could not start the automatic-policy worker: {error}"));
+                    return;
+                }
+                let row=row.clone();
+                let reverting=reverting.clone();
+                let parent=parent.clone();
+                glib::timeout_add_local(Duration::from_millis(50),move || match receiver.try_recv() {
+                    Ok(Ok(result)) if result.success => { row.set_sensitive(true); glib::ControlFlow::Break }
+                    Ok(Ok(result)) => {
+                        reverting.set(true); row.set_active(!requested); row.set_sensitive(true);
+                        show_operation_error(&parent,&format!("{}: {}",result.error_code,result.message));
+                        glib::ControlFlow::Break
+                    }
+                    Ok(Err(error)) => {
+                        reverting.set(true); row.set_active(!requested); row.set_sensitive(true);
+                        show_operation_error(&parent,&error);
+                        glib::ControlFlow::Break
+                    }
+                    Err(mpsc::TryRecvError::Empty) => glib::ControlFlow::Continue,
+                    Err(mpsc::TryRecvError::Disconnected) => {
+                        reverting.set(true); row.set_active(!requested); row.set_sensitive(true);
+                        show_operation_error(&parent,&i18n("The recovery worker disconnected"));
+                        glib::ControlFlow::Break
+                    }
+                });
             });
         }
         group.add(&enabled);

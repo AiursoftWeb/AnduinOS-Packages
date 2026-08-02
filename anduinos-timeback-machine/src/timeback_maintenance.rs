@@ -72,13 +72,15 @@ fn run_automatic_snapshots() {
         if let Err(error)=store.record_result(now,result) { eprintln!("AnduinOS Timeback automatic state warning: {error}"); }
     }
     let report=DeploymentStore::default().discover();
-    if !report.issues.is_empty() { let message="Automatic cleanup skipped because the recovery catalog has unresolved issues"; eprintln!("AnduinOS Timeback automatic cleanup warning: {message}"); let _=store.record_error(message); return; }
+    if !report.issues.is_empty() { let message="Automatic cleanup skipped because the recovery catalog has unresolved issues"; eprintln!("AnduinOS Timeback automatic cleanup warning: {message}"); let _=store.record_cleanup_result(Err(message.into())); return; }
     let snapshots=report.deployments.iter().filter(|record| record.kind == DeploymentKind::Automatic).map(|record| AutomaticSnapshot { id: record.id.to_string(), created_at: record.created_at, protected: record.pinned || record.state.protects_from_deletion(), successful: record.failure.is_none() && record.state != DeploymentState::Broken && record.state != DeploymentState::Incomplete }).collect::<Vec<_>>();
-    let decisions=match plan(&status.policy,now,&snapshots) { Ok(plan) => plan, Err(error) => { eprintln!("AnduinOS Timeback automatic cleanup warning: {error}"); let _=store.record_error(error); return; } };
+    let decisions=match plan(&status.policy,now,&snapshots) { Ok(plan) => plan, Err(error) => { eprintln!("AnduinOS Timeback automatic cleanup warning: {error}"); let _=store.record_cleanup_result(Err(error.into())); return; } };
     let engine=OperationEngine::default();
     let current_layout=layout::inspect_current();
+    let mut cleanup_error=None;
     for decision in decisions.into_iter().filter(|decision| !decision.keep) {
         let Some(record)=report.deployments.iter().find(|record| record.id.to_string() == decision.id) else { continue };
-        match engine.delete_automatic(&current_layout,record.id,1) { Ok(()) => eprintln!("AnduinOS Timeback automatic cleanup: deleted {}",record.id), Err(error) => { eprintln!("AnduinOS Timeback automatic cleanup warning for {}: {error}",record.id); let _=store.record_error(format!("Could not clean automatic recovery point {}: {error}",record.id)); } }
+        match engine.delete_automatic(&current_layout,record.id,1) { Ok(()) => eprintln!("AnduinOS Timeback automatic cleanup: deleted {}",record.id), Err(error) => { eprintln!("AnduinOS Timeback automatic cleanup warning for {}: {error}",record.id); cleanup_error=Some(format!("Could not clean automatic recovery point {}: {error}",record.id)); } }
     }
+    if let Err(error)=store.record_cleanup_result(cleanup_error.map_or(Ok(()),Err)) { eprintln!("AnduinOS Timeback automatic cleanup state warning: {error}"); }
 }
