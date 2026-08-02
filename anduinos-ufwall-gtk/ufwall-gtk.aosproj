@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-ufwall-gtk</PackageName>
-    <PackageVersion>2.0.1-4+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Firewall Configuration — a modern GTK4 and Libadwaita frontend for monitoring firewall activity and managing UFW status, rules, and application profiles.</PackageDescription>
     <Section>admin</Section>
@@ -43,6 +43,8 @@
   <ItemGroup>
     <AppStreamApplication Include="data/com.anduinos.ufwall.desktop" Icon="data/com.anduinos.ufwall.svg" />
     <AppStreamScreenshot Include="screenshots/overview.png" Default="true" Caption="Monitor firewall activity and manage UFW from a modern dashboard" Environment="GNOME:dark" />
+    <AppStreamScreenshot Include="screenshots/rules.png" Caption="Create and manage firewall rules" Environment="GNOME:dark" />
+    <AppStreamScreenshot Include="screenshots/status.png" Caption="Review firewall status and default policies" Environment="GNOME:dark" />
   </ItemGroup>
 
   <ItemGroup>

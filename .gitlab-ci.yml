@@ -24,6 +24,26 @@ lint-all:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH != "master"
 
+# GNOME puts X-GNOME-Settings-Panel entries in a hidden menu directory. ArcMenu
+# builds its All Apps view from that menu tree, so standalone applications using
+# either of these categories remain searchable but disappear from All Apps.
+desktop-entry-policy:
+  stage: lint
+  script:
+    - |
+      offenders="$(grep -RIlE \
+        --include='*.desktop' \
+        '^(X-GNOME-Settings-Panel=|Categories=.*X-GNOME-(Settings-Panel|SystemSettings)(;|$))' \
+        . || true)"
+      if [ -n "$offenders" ]; then
+        echo "Standalone applications must not use GNOME Control Center panel categories:" >&2
+        echo "$offenders" >&2
+        exit 1
+      fi
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
 .publish:
   stage: publish
   before_script:

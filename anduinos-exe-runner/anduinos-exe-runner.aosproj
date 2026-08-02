@@ -1,13 +1,15 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-exe-runner</PackageName>
-    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Windows Executable Runner - Seamlessly run Windows .exe files via Bottles</PackageDescription>
     <Section>utils</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
+    <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
+    <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>noble-addon resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
@@ -29,8 +31,12 @@
 
   <ItemGroup>
     <IncludeFile Include="assets/anduinos-exe-runner" Target="/usr/bin/anduinos-exe-runner" Mode="755" />
-    <IncludeFile Include="assets/anduinos-exe-runner.desktop" Target="/usr/share/applications/anduinos-exe-runner.desktop" />
     <IncludeFile Include="assets/recommendations.json" Target="/usr/share/anduinos-exe-runner/recommendations.json" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AppStreamApplication Include="data/anduinos-exe-runner.desktop" Icon="data/anduinos-exe-runner.svg" />
+    <AppStreamScreenshot Include="screenshots/native-recommendation.png" Default="true" Caption="Get safer native alternatives for specialized Windows tools" Environment="GNOME:dark" />
   </ItemGroup>
 </Project>

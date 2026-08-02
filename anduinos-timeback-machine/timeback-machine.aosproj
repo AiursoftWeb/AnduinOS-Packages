@@ -1,13 +1,15 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-timeback-machine</PackageName>
-    <PackageVersion>0.2.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.2.0-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Timeback Machine — graphical Btrfs system recovery and deployment manager</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
+    <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
+    <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>resolute-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
@@ -62,9 +64,7 @@
     <IncludeFile Include="data/initramfs-local-premount" Target="/usr/share/initramfs-tools/scripts/local-premount/anduinos-timeback" Mode="755" />
     <IncludeFile Include="data/grub.d/09_anduinos_timeback" Target="/etc/grub.d/09_anduinos_timeback" Mode="755" />
     <DpkgTrigger Include="update-initramfs" Type="activate-await" />
-    <IncludeFile Include="data/com.anduinos.timebackmachine.desktop" Target="/usr/share/applications/com.anduinos.timebackmachine.desktop" />
     <IncludeFile Include="data/com.anduinos.timebackmachine.policy" Target="/usr/share/polkit-1/actions/com.anduinos.timebackmachine.policy" />
-    <IncludeFile Include="data/com.anduinos.timebackmachine.svg" Target="/usr/share/icons/hicolor/scalable/apps/com.anduinos.timebackmachine.svg" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
     <IncludeFile Include="data/com.anduinos.timebackmachine.xml" Target="/usr/share/dbus-1/interfaces/com.anduinos.timebackmachine.xml" />
     <IncludeFile Include="data/com.anduinos.TimebackMachine1.conf" Target="/usr/share/dbus-1/system.d/com.anduinos.TimebackMachine1.conf" />
@@ -77,5 +77,11 @@
     <IncludeFile Include="TM3-DESIGN.md" Target="/usr/share/doc/anduinos-timeback-machine/TM3-DESIGN.md" />
     <IncludeFile Include="TM4-DESIGN.md" Target="/usr/share/doc/anduinos-timeback-machine/TM4-DESIGN.md" />
     <IncludeFile Include="TM5-DESIGN.md" Target="/usr/share/doc/anduinos-timeback-machine/TM5-DESIGN.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AppStreamApplication Include="data/com.anduinos.timebackmachine.desktop" Icon="data/com.anduinos.timebackmachine.svg" />
+    <AppStreamScreenshot Include="screenshots/overview.png" Default="true" Caption="Protect your system with automatic recovery points" Environment="GNOME:dark" />
+    <AppStreamScreenshot Include="screenshots/restore-points.png" Caption="Review and manage system recovery points" Environment="GNOME:dark" />
   </ItemGroup>
 </Project>

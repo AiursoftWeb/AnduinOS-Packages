@@ -150,6 +150,86 @@ higher version number. This is safe because the AnduinOS addon repository only
 contains packages that are intentionally built and pushed — it is not a full
 mirror.
 
+## Desktop Entry Visibility: Search Is Not the Applications Menu
+
+GNOME Shell search, ArcMenu's **All Apps** view, and GNOME Software do not use
+the same index:
+
+| Surface | Data source |
+|---|---|
+| GNOME Shell / ArcMenu search | Installed `Gio.DesktopAppInfo` applications |
+| ArcMenu All Apps and categories | The freedesktop `applications.menu` tree |
+| GNOME Software | AppStream/DEP-11 metadata |
+
+An application can therefore be searchable but absent from All Apps. In
+particular, GNOME places entries with `X-GNOME-Settings-Panel` in the hidden
+`System Settings` menu directory. ArcMenu skips that directory when building
+All Apps. These categories are reserved for components embedded in GNOME
+Control Center, not for standalone settings applications.
+
+Standalone AnduinOS applications **must not** use any of the following:
+
+```ini
+Categories=...;X-GNOME-Settings-Panel;...
+Categories=...;X-GNOME-SystemSettings;...
+X-GNOME-Settings-Panel=panel-name
+```
+
+Use registered freedesktop categories instead, with one main category. For a
+standalone settings application:
+
+```ini
+[Desktop Entry]
+Type=Application
+Name=Swap Control
+Exec=swapcontrol-gtk
+Icon=com.anduinos.swapcontrol
+Categories=Settings;GTK;GNOME;
+```
+
+Avoid combining multiple main categories such as `Settings;System;` unless the
+application genuinely belongs in both; `desktop-file-validate` warns that this
+can create duplicate menu entries. Also use `NoDisplay=true`, `Hidden=true`,
+`OnlyShowIn`, and `NotShowIn` only for deliberately hidden handlers, autostart
+entries, or environment-specific launchers. They are not substitutes for
+normal application categorization.
+
+Before publishing a package containing a Desktop Entry:
+
+```bash
+desktop-file-validate path/to/application.desktop
+```
+
+Changing a Desktop Entry changes installed package content, so bump
+`PackageVersion`. The repository's `desktop-entry-policy` CI job rejects GNOME
+Control Center panel categories before any package is published. If AnduinOS
+ever ships a real embedded Control Center panel, its integration and a narrow
+CI exception must be reviewed explicitly.
+
+### Graphical application source layout
+
+Keep user-facing package inputs in predictable locations:
+
+- `src/` contains application source code and executable entry points.
+- `data/` contains freedesktop integration files such as the primary `.desktop`
+  file, application icon, PolicyKit policies, and systemd units.
+- `screenshots/` contains images referenced by `AppStreamScreenshot` items.
+- `po/` and `locale/` contain translation sources and compiled catalogs.
+- `bin/`, `obj/`, and `target/` are generated build directories and are ignored
+  by the repository-level `.gitignore`.
+
+For consistent AppStream declarations, place the primary desktop entry and icon
+under `data/`:
+
+```xml
+<AppStreamApplication Include="data/com.example.Application.desktop"
+                      Icon="data/com.example.Application.svg" />
+```
+
+Application-specific runtime resources may remain in a dedicated `resources/`
+or `assets/` directory when that distinction is useful; do not move them merely
+to make directory names uniform.
+
 ## Postinst Best Practices: Never Run `dconf update` or `glib-compile-schemas`
 
 **Do not** put `dconf update` or `glib-compile-schemas` in `postinst.sh` scripts.
