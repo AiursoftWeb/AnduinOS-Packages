@@ -106,4 +106,74 @@ pub fn next_run(last_success: Option<DateTime<Utc>>, now: DateTime<Utc>, policy:
     Some(last_success.map(|last| last + Duration::minutes(i64::from(policy.interval_minutes))).unwrap_or(now))
 }
 
-#[cfg(test)] mod tests { use super::*; #[test] fn presets_are_opt_in() { assert!(!AutomaticPolicy::system_preset().enabled); assert_eq!(AutomaticPolicy::home_preset().interval_minutes, 60); } #[test] fn protected_is_never_deleted() { let now=Utc::now(); let s=AutomaticSnapshot{id:"x".into(),created_at:now-Duration::days(800),protected:true,successful:true}; assert!(plan(&AutomaticPolicy::system_preset(),now,&[s]).unwrap()[0].keep); } #[test] fn monthly_representatives_survive_until_final_deletion() { let now=Utc::now(); let mut policy=AutomaticPolicy::system_preset(); policy.keep_monthly_days=365; policy.delete_after_days=730; let snapshots=[AutomaticSnapshot{id:"within".into(),created_at:now-Duration::days(500),protected:false,successful:true},AutomaticSnapshot{id:"expired".into(),created_at:now-Duration::days(731),protected:false,successful:true}]; let decisions=plan(&policy,now,&snapshots).unwrap(); assert!(decisions[0].keep); assert!(!decisions[1].keep); } }
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn presets_are_opt_in() {
+        assert!(!AutomaticPolicy::system_preset().enabled);
+        assert_eq!(AutomaticPolicy::home_preset().interval_minutes, 60);
+    }
+
+    #[test]
+    fn protected_is_never_deleted() {
+        let now = Utc::now();
+        let snapshot = AutomaticSnapshot {
+            id: "x".into(),
+            created_at: now - Duration::days(800),
+            protected: true,
+            successful: true,
+        };
+        assert!(plan(&AutomaticPolicy::system_preset(), now, &[snapshot]).unwrap()[0].keep);
+    }
+
+    #[test]
+    fn monthly_representatives_survive_until_final_deletion() {
+        let now = Utc::now();
+        let mut policy = AutomaticPolicy::system_preset();
+        policy.keep_monthly_days = 365;
+        policy.delete_after_days = 730;
+        let snapshots = [
+            AutomaticSnapshot {
+                id: "within".into(),
+                created_at: now - Duration::days(500),
+                protected: false,
+                successful: true,
+            },
+            AutomaticSnapshot {
+                id: "expired".into(),
+                created_at: now - Duration::days(731),
+                protected: false,
+                successful: true,
+            },
+        ];
+        let decisions = plan(&policy, now, &snapshots).unwrap();
+        assert!(decisions[0].keep);
+        assert!(!decisions[1].keep);
+    }
+
+    #[test]
+    fn successful_cleanup_clears_only_the_cleanup_error() {
+        let directory = std::env::temp_dir().join(format!(
+            "anduinos-timeback-automation-test-{}-{}",
+            std::process::id(),
+            Utc::now().timestamp_nanos_opt().unwrap()
+        ));
+        let store = AutomaticStore::new(&directory);
+        let now = Utc::now();
+
+        store
+            .record_result(now, Err("snapshot failed".into()))
+            .unwrap();
+        store
+            .record_cleanup_result(Err("cleanup failed".into()))
+            .unwrap();
+        assert_eq!(store.status(now).unwrap().last_error.as_deref(), Some("cleanup failed"));
+
+        store.record_cleanup_result(Ok(())).unwrap();
+        assert_eq!(store.status(now).unwrap().last_error.as_deref(), Some("snapshot failed"));
+
+        fs::remove_dir_all(directory).unwrap();
+    }
+}
