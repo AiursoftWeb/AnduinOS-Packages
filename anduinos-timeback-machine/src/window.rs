@@ -9,6 +9,7 @@ use anduinos_timeback::layout::{self, LayoutReport, LayoutSupport};
 use anduinos_timeback::model::{DeploymentKind, DeploymentRecord, DeploymentState};
 use anduinos_timeback::retention::RetentionPlan;
 use anduinos_timeback::store::DiscoveryReport;
+use anduinos_timeback::targets;
 use anduinos_timeback::{client, DEPLOYMENT_SCHEMA_VERSION};
 
 use crate::application::TimebackApplication;
@@ -113,6 +114,12 @@ fn build_with_notice(
             title: i18n("Recovery Points"),
             icon: "document-open-recent-symbolic",
             widget: build_recovery_points(&window, &report, &discovery, demo).upcast(),
+        },
+        Page {
+            name: "automatic",
+            title: i18n(concat!("Automatic ", "Snapshots")),
+            icon: "alarm-symbolic",
+            widget: build_automatic_snapshots(&report).upcast(),
         },
         Page {
             name: "storage",
@@ -1227,6 +1234,42 @@ fn build_settings(retention_state: &RetentionState, demo: bool) -> adw::Preferen
         ));
     }
     page.add(&retention);
+    page
+}
+
+fn build_automatic_snapshots(report: &LayoutReport) -> adw::PreferencesPage {
+    let page = adw::PreferencesPage::builder()
+        .title(i18n(concat!("Automatic ", "Snapshots")))
+        .icon_name("alarm-symbolic")
+        .build();
+    let intro = adw::PreferencesGroup::builder()
+        .title(i18n(concat!("Per-volume ", "schedules")))
+        .description(i18n(concat!("Schedules are independent. ", "Suggested presets remain disabled until you enable them.")))
+        .build();
+    page.add(&intro);
+
+    for target in targets::discover_targets(report) {
+        let group = adw::PreferencesGroup::builder()
+            .title(i18n(&target.display_name))
+            .description(target.issue.as_deref().unwrap_or(&target.mount_point))
+            .build();
+        let enabled = adw::SwitchRow::builder()
+            .title(i18n(concat!("Create snapshots ", "automatically")))
+            .subtitle(if target.available {
+                if target.kind == targets::TargetKind::Home { i18n(concat!("Suggested: every ", "hour")) } else { i18n(concat!("Suggested: every ", "2 hours")) }
+            } else { i18n(concat!("Unavailable because this is not an independent ", "compatible Btrfs subvolume")) })
+            .sensitive(target.available)
+            .active(false)
+            .build();
+        group.add(&enabled);
+        group.add(&status_row(
+            &i18n(concat!("Tiered ", "retention")),
+            &i18n(concat!("Keep all for 24 hours, then the first daily, weekly, and monthly snapshot; ", "delete after one year")),
+            &i18n(concat!("Suggest", "ed")),
+            "planned-badge",
+        ));
+        page.add(&group);
+    }
     page
 }
 

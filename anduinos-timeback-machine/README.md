@@ -30,6 +30,16 @@ destructive Btrfs path still requires VM qualification before release.
 TM-5A adds a hardened, fail-open periodic maintenance service so space pressure
 is detected even when no package transaction has recently completed.
 
+Version 0.2 introduces the target and policy foundations for independently
+mounted `@root` and `@home` snapshot streams. Suggested schedules are opt-in:
+two-hourly for System and hourly for Home. Tiered retention uses local civil
+days, ISO weeks, and months; manual/protected points are never selected for
+automatic deletion. Snapshot browsing paths are constrained to their
+read-only roots, and space reporting distinguishes referenced bytes from
+exclusive (estimated reclaimable) bytes. A Home directory that is not an
+independent compatible Btrfs subvolume is reported as unavailable and is never
+silently snapshotted as part of root.
+
 ## Local development
 
 ```bash
