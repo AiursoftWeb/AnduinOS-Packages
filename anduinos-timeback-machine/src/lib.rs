@@ -18,7 +18,7 @@ pub mod transaction;
 pub mod targets;
 pub mod space;
 
-pub const CONTRACT_VERSION: u32 = 5;
+pub const CONTRACT_VERSION: u32 = 6;
 pub const DEPLOYMENT_SCHEMA_VERSION: u32 = 1;
 pub const SNAPSHOT_ROOT: &str = "/.snapshots/anduinos";
 pub const DBUS_NAME: &str = "com.anduinos.TimebackMachine1";

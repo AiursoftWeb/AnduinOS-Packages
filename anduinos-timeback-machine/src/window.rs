@@ -1,3 +1,4 @@
+use std::cell::Cell;
 use std::rc::Rc;
 use std::sync::mpsc;
 use std::time::Duration;
@@ -1248,26 +1249,43 @@ fn build_automatic_snapshots(report: &LayoutReport) -> adw::PreferencesPage {
         .build();
     page.add(&intro);
 
+    let automatic_status=client::inspect_automatic().ok();
     for target in targets::discover_targets(report) {
         let group = adw::PreferencesGroup::builder()
             .title(i18n(&target.display_name))
             .description(target.issue.as_deref().unwrap_or(&target.mount_point))
             .build();
+        let supported=target.kind == targets::TargetKind::System && target.available && automatic_status.is_some();
         let enabled = adw::SwitchRow::builder()
             .title(i18n(concat!("Create snapshots ", "automatically")))
-            .subtitle(if target.available {
-                if target.kind == targets::TargetKind::Home { i18n(concat!("Suggested: every ", "hour")) } else { i18n(concat!("Suggested: every ", "2 hours")) }
+            .subtitle(if supported {
+                i18n(concat!("Every ", "2 hours; saved system-wide"))
+            } else if target.available && target.kind != targets::TargetKind::System {
+                i18n("Unavailable")
             } else { i18n(concat!("Unavailable because this is not an independent ", "compatible Btrfs subvolume")) })
-            .sensitive(target.available)
-            .active(false)
+            .sensitive(supported)
+            .active(supported && automatic_status.as_ref().is_some_and(|status| status.policy.enabled))
             .build();
+        if supported {
+            let policy=automatic_status.as_ref().expect("supported status exists").policy.clone();
+            let reverting=Rc::new(Cell::new(false));
+            enabled.connect_active_notify(move |row| {
+                if reverting.replace(false) { return; }
+                let mut updated=policy.clone(); updated.enabled=row.is_active();
+                if client::set_automatic_policy(&updated, |_| {}).is_err() { reverting.set(true); row.set_active(!row.is_active()); }
+            });
+        }
         group.add(&enabled);
         group.add(&status_row(
             &i18n(concat!("Tiered ", "retention")),
             &i18n(concat!("Keep all for 24 hours, then the first daily, weekly, and monthly snapshot; ", "delete after one year")),
-            &i18n(concat!("Suggest", "ed")),
-            "planned-badge",
+            if supported { &i18n("Active") } else { &i18n("Unavailable") },
+            if supported { "success" } else { "planned-badge" },
         ));
+        if supported {
+            let status=automatic_status.as_ref().expect("supported status exists");
+            if let Some(error)=&status.last_error { group.add(&status_row(&i18n("Automatic Protection"),error,&i18n("Recovery Operation Failed"),"error")); }
+        }
         page.add(&group);
     }
     page
@@ -2009,6 +2027,7 @@ fn deployment_kind(kind: DeploymentKind) -> String {
     match kind {
         DeploymentKind::Factory => i18n("Factory"),
         DeploymentKind::Manual => i18n("Manual"),
+        DeploymentKind::Automatic => i18n("Automatic"),
         DeploymentKind::AptPre => i18n("Before update"),
         DeploymentKind::AptPost => i18n("After update"),
         DeploymentKind::PreRollback => i18n("Before rollback"),
@@ -2040,6 +2059,7 @@ fn deployment_icon(deployment: &DeploymentRecord) -> &'static str {
     match deployment.kind {
         DeploymentKind::Factory => "emblem-default-symbolic",
         DeploymentKind::Manual => "camera-photo-symbolic",
+        DeploymentKind::Automatic => "alarm-symbolic",
         DeploymentKind::AptPre => "document-revert-symbolic",
         DeploymentKind::AptPost => "software-update-available-symbolic",
         DeploymentKind::PreRollback => "document-revert-symbolic",

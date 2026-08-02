@@ -9,6 +9,7 @@ use gio::glib::VariantTy;
 use gio::prelude::ToVariant;
 
 use crate::layout::LayoutReport;
+use crate::automation::{AutomaticPolicy, AutomaticStatus};
 use crate::retention::RetentionPlan;
 use crate::store::DiscoveryReport;
 use crate::{DBUS_INTERFACE, DBUS_NAME, DBUS_PATH};
@@ -69,6 +70,17 @@ pub fn inspect_retention() -> Result<RetentionPlan, ClientError> {
             "The daemon returned an invalid retention report: {error}"
         ))
     })
+}
+
+pub fn inspect_automatic() -> Result<AutomaticStatus, ClientError> {
+    serde_json::from_str(&call_json_method("InspectAutomatic")?).map_err(|error| ClientError(format!("The daemon returned invalid automatic-snapshot status: {error}")))
+}
+
+pub fn set_automatic_policy<F>(policy: &AutomaticPolicy, on_progress: F) -> Result<OperationResult, ClientError>
+where F: Fn(OperationProgress) + 'static,
+{
+    let json=serde_json::to_string(policy).map_err(|error| ClientError(format!("Could not encode automatic policy: {error}")))?;
+    run_operation("SetAutomaticPolicy", &(json,).to_variant(), on_progress)
 }
 
 pub fn create_recovery_point<F>(
