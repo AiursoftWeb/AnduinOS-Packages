@@ -53,6 +53,7 @@ class PackageContractTests(unittest.TestCase):
         self.assertTrue(
             {
                 "python3",
+                "python3-unidecode",
                 "parted",
                 "dosfstools",
                 "efibootmgr",
