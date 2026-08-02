@@ -4,6 +4,8 @@ Offline ghost-text suggestions for interactive Bash. The package combines
 ble.sh's history prefix search with Carapace's static command specifications.
 History is preferred; static completion is used as a fallback. Suggestions are
 never executed automatically and no command line or path is sent over a network.
+Command-line syntax, filenames, variables and completion menus retain Bash's
+normal uncolored appearance; only the pending ghost-text suggestion is dimmed.
 
 Right Arrow accepts the whole visible suggestion when the cursor is at the end
 of the line. Alt-Right accepts one word. Tab, Enter, Ctrl-C, Ctrl-D and Ctrl-R

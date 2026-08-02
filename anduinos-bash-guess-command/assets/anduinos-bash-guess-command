@@ -31,6 +31,15 @@ source "$_anduinos_guess_root/blesh/ble.sh" || {
     return 0
 }
 
+# Keep the normal Bash command-line appearance. This package provides ghost
+# text, but does not opt users into ble.sh's syntax, filename, or variable
+# coloring.
+bleopt highlight_syntax=
+bleopt highlight_filename=
+bleopt highlight_variable=
+bleopt complete_menu_color=
+bleopt complete_menu_color_match=
+
 # Classic history prefix search comes first; programmable completion (including
 # Carapace) is the fallback. A 25 ms idle delay avoids work during rapid input.
 bleopt complete_auto_complete=1

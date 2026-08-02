@@ -16,6 +16,12 @@ grep -q '<PackageName>anduinos-bash-guess-command</PackageName>' \
 grep -q 'Target="/etc/bash_completion.d/anduinos-bash-guess-command"' \
     "$ROOT/anduinos-bash-guess-command.aosproj" || fail 'standard Bash loader is not package-owned'
 
+for setting in highlight_syntax highlight_filename highlight_variable \
+    complete_menu_color complete_menu_color_match; do
+    grep -q "^bleopt $setting=$" "$ROOT/assets/anduinos-bash-guess-command" ||
+        fail "$setting is not disabled"
+done
+
 # Disabling must return before touching packaged resources, even when they are
 # absent from the test host.
 bash --noprofile --norc -ic \
