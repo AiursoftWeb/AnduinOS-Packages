@@ -99,5 +99,30 @@ class ValidationTests(unittest.TestCase):
             validate_plan(plan)
 
 
+    def test_rejects_non_ascii_or_overlong_username(self):
+        for username in ("Alice", "alice-smith", "张三", "a" * 17):
+            with self.subTest(username=username):
+                plan = valid_plan()
+                plan = dataclasses.replace(
+                    plan,
+                    identity=dataclasses.replace(
+                        plan.identity, username=username
+                    ),
+                )
+                with self.assertRaisesRegex(
+                    PlanValidationError, "Invalid username"
+                ):
+                    validate_plan(plan)
+
+    def test_rejects_full_name_over_sixteen_characters(self):
+        plan = valid_plan()
+        plan = dataclasses.replace(
+            plan,
+            identity=dataclasses.replace(plan.identity, full_name="A" * 17),
+        )
+        with self.assertRaisesRegex(PlanValidationError, "Invalid full name"):
+            validate_plan(plan)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -60,6 +60,7 @@ from installer_core.storage_ui import (
     build_guided_storage_confirmation,
     build_storage_workflow,
 )
+from installer_core.usernames import suggest_username
 from slideshow import load_slides
 from ui import card, clamp_content, icon_picture, page_hero
 
@@ -1608,11 +1609,15 @@ def build_user_page(shared, nav_view):
     box.add_css_class("installer-card")
 
     # Full name
-    full_entry = Gtk.Entry(placeholder_text=_("Full Name", lang))
+    full_entry = Gtk.Entry(
+        placeholder_text=_("Full Name", lang), max_length=16
+    )
     box.append(_labeled(_("Full Name", lang), full_entry))
 
     # Username
-    user_entry = Gtk.Entry(placeholder_text=_("Username", lang))
+    user_entry = Gtk.Entry(
+        placeholder_text=_("Username", lang), max_length=16
+    )
     name_warn = Gtk.Label(visible=False)
     name_warn.add_css_class("warning")
     box.append(_labeled(_("Username", lang), user_entry))
@@ -1649,20 +1654,29 @@ def build_user_page(shared, nav_view):
     box.append(_labeled(_("Computer Name", lang), host_entry))
     box.append(host_warn)
 
-    # Auto-transliterate full name → username
+    # Auto-transliterate full name → username until the user edits it.
+    username_state = {"user_edited": False, "setting_suggestion": False}
+
+    def _on_username_changed(_entry):
+        if not username_state["setting_suggestion"]:
+            username_state["user_edited"] = True
+
     def _on_full_changed(entry):
         full = entry.get_text()
         shared["full_name"] = full
-        if not user_entry.get_text():
-            # Simple ASCII transliteration
-            username = _transliterate(full)
-            user_entry.set_text(username)
+        if not username_state["user_edited"]:
+            username_state["setting_suggestion"] = True
+            try:
+                user_entry.set_text(suggest_username(full))
+            finally:
+                username_state["setting_suggestion"] = False
 
+    user_entry.connect("changed", _on_username_changed)
     full_entry.connect("changed", _on_full_changed)
 
     # Validate on change
     import re
-    NAME_RE = re.compile(r"^[a-z_][a-z0-9_-]*$")
+    NAME_RE = re.compile(r"^[a-z][a-z0-9]{0,15}$")
     HOST_RE = re.compile(r"^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$")
 
     def _validate():
@@ -1672,7 +1686,7 @@ def build_user_page(shared, nav_view):
         host = host_entry.get_text()
 
         if uname and not NAME_RE.match(uname):
-            name_warn.set_label(_("Username may only contain lowercase letters, digits, underscores and hyphens.", lang))
+            name_warn.set_label(_("Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters).", lang))
             name_warn.set_visible(True)
             valid["name"] = False
         else:
@@ -1869,29 +1883,6 @@ def _labeled(label_text, widget):
     g.append(lbl)
     g.append(widget)
     return g
-
-
-def _transliterate(full_name: str) -> str:
-    """Rough ASCII transliteration for auto-username generation."""
-    translit = {
-        "à": "a", "á": "a", "â": "a", "ã": "a", "ä": "a", "å": "a",
-        "æ": "ae", "ç": "c", "è": "e", "é": "e", "ê": "e", "ë": "e",
-        "ì": "i", "í": "i", "î": "i", "ï": "i", "ð": "d", "ñ": "n",
-        "ò": "o", "ó": "o", "ô": "o", "õ": "o", "ö": "o", "ø": "o",
-        "ù": "u", "ú": "u", "û": "u", "ü": "u", "ý": "y", "þ": "th",
-        "ß": "ss", "ā": "a", "ē": "e", "ī": "i", "ū": "u", "ő": "o",
-        "ű": "u",
-    }
-    name = full_name.lower().strip()
-    # Apply transliteration table
-    for k, v in translit.items():
-        name = name.replace(k, v)
-    # Remove anything that isn't a-z, 0-9, space, hyphen, underscore
-    import re
-    name = re.sub(r"[^a-z0-9 _-]", "", name)
-    # Collapse spaces and separators into a single separator
-    name = re.sub(r"[ _-]+", "-", name).strip("-")
-    return name or "user"
 
 
 # ── page 8: Timezone ─────────────────────────────────────────────────────

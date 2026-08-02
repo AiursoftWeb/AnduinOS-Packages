@@ -34,7 +34,7 @@ def build_guided_vm_test_plan(
     selection: GuidedStorageSelection,
     *,
     source_image: str = "/cdrom/casper/filesystem.squashfs",
-    username: str = "anduinos-test",
+    username: str = "anduinostest",
     full_name: str = "AnduinOS VM Test",
     hostname: str = "anduinos-test",
     locale: str = "en_US.UTF-8",

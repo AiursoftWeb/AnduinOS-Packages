@@ -23,7 +23,7 @@ MINIMUM_ROOT_BYTES = 16 * 1024**3
 HOSTNAME_RE = re.compile(
     r"^(?=.{1,63}$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
 )
-USERNAME_RE = re.compile(r"^[a-z_][a-z0-9_-]{0,31}$")
+USERNAME_RE = re.compile(r"^[a-z][a-z0-9]{0,15}$")
 LOCALE_RE = re.compile(r"^[A-Za-z]{2,3}(?:_[A-Z]{2})?\.UTF-8$")
 TIMEZONE_RE = re.compile(r"^[A-Za-z0-9._+-]+(?:/[A-Za-z0-9._+-]+)+$")
 WHOLE_DISK_RE = re.compile(
@@ -154,7 +154,7 @@ def validate_plan(
         errors.append("Invalid hostname")
     if (
         not identity.full_name.strip()
-        or len(identity.full_name) > 128
+        or len(identity.full_name) > 16
         or any(character in identity.full_name for character in ":\r\n")
     ):
         errors.append("Invalid full name")
