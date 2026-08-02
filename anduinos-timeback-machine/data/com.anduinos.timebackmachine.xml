@@ -15,6 +15,13 @@
     <method name="InspectRetention">
       <arg name="retention_json" type="s" direction="out"/>
     </method>
+    <method name="InspectAutomatic">
+      <arg name="status_json" type="s" direction="out"/>
+    </method>
+    <method name="SetAutomaticPolicy">
+      <arg name="policy_json" type="s" direction="in"/>
+      <arg name="operation_id" type="s" direction="out"/>
+    </method>
     <method name="VerifyRecoveryPoint">
       <arg name="deployment_id" type="s" direction="in"/>
       <arg name="operation_id" type="s" direction="out"/>

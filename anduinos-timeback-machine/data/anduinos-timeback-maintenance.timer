@@ -3,9 +3,9 @@ Description=Periodically maintain AnduinOS recovery points
 Documentation=file:/usr/share/doc/anduinos-timeback-machine/TM5-DESIGN.md
 
 [Timer]
-OnCalendar=*-*-* 00/6:00:00
-RandomizedDelaySec=15min
-AccuracySec=5min
+OnCalendar=*:0/15
+RandomizedDelaySec=2min
+AccuracySec=1min
 Persistent=true
 Unit=anduinos-timeback-maintenance.service
 

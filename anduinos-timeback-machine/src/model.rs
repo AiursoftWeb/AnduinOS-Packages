@@ -42,6 +42,7 @@ impl FromStr for DeploymentId {
 pub enum DeploymentKind {
     Factory,
     Manual,
+    Automatic,
     AptPre,
     AptPost,
     PreRollback,

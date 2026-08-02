@@ -9,6 +9,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
 use anduinos_timeback::layout;
+use anduinos_timeback::automation::{AutomaticPolicy, AutomaticStore};
 use anduinos_timeback::model::DeploymentId;
 use anduinos_timeback::operations::{OperationEngine, OperationError, OperationPhase};
 use anduinos_timeback::retention::{RetentionCoordinator, RetentionExecutionError};
@@ -133,6 +134,22 @@ fn register_api(
                             &error.to_string(),
                         ),
                     },
+                    "InspectAutomatic" => match AutomaticStore::default().status(chrono::Utc::now()) {
+                        Ok(status) => return_json(invocation, &status),
+                        Err(error) => invocation.return_dbus_error("com.anduinos.TimebackMachine1.Error.AutomaticUnavailable", &error.to_string()),
+                    },
+                    "SetAutomaticPolicy" => {
+                        let policy = match serde_json::from_str::<AutomaticPolicy>(&parameters.child_get::<String>(0)) {
+                            Ok(policy) => policy,
+                            Err(error) => { invocation.return_dbus_error(INVALID_ARGUMENT_ERROR, &format!("Invalid automatic policy: {error}")); return; }
+                        };
+                        start_operation(connection, sender, busy.clone(), Some(MANAGE_ACTION), invocation, move |connection, operation_id| {
+                            emit_progress(connection, operation_id, OperationPhase::Validate, 0.2, "Validating automatic snapshot policy");
+                            AutomaticStore::default().set_policy(&policy).map_err(|error| DaemonOperationError { code: "automatic-policy".into(), message: error.to_string() })?;
+                            emit_progress(connection, operation_id, OperationPhase::Commit, 1.0, "Automatic snapshot policy saved");
+                            Ok(if policy.enabled { "Automatic system snapshots enabled".into() } else { "Automatic system snapshots disabled".into() })
+                        });
+                    }
                     "CreateRecoveryPoint" => {
                         let title = parameters.child_get::<String>(0);
                         let reason = parameters.child_get::<String>(1);

@@ -78,9 +78,10 @@ pub fn inspect_mountinfo(contents: &str) -> LayoutReport {
     let mounts = entries
         .iter()
         .filter(|entry| {
-            EXPECTED_MOUNTS
-                .iter()
-                .any(|(mount_point, _)| entry.mount_point == *mount_point)
+            entry.filesystem == "btrfs"
+                || EXPECTED_MOUNTS
+                    .iter()
+                    .any(|(mount_point, _)| entry.mount_point == *mount_point)
         })
         .map(|entry| MountReport {
             mount_point: entry.mount_point.clone(),

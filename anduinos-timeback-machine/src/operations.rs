@@ -194,6 +194,12 @@ impl<R: CommandRunner> OperationEngine<R> {
         )
     }
 
+    pub fn create_automatic<F>(&self, layout: &LayoutReport, progress: F) -> Result<DeploymentRecord, OperationError>
+    where F: FnMut(OperationPhase, f64, &str),
+    {
+        self.create_snapshot(layout, "Scheduled system snapshot", "Created by the automatic snapshot schedule", false, DeploymentKind::Automatic, DeploymentState::Ready, progress)
+    }
+
     pub fn create_pre_rollback<F>(
         &self,
         layout: &LayoutReport,
@@ -568,11 +574,11 @@ impl<R: CommandRunner> OperationEngine<R> {
             if let Some(minimum) = minimum_restorable_deployments {
                 if !matches!(
                     record.kind,
-                    DeploymentKind::AptPre | DeploymentKind::AptPost
+                    DeploymentKind::Automatic | DeploymentKind::AptPre | DeploymentKind::AptPost
                 ) {
                     return Err(OperationError::new(
                         OperationErrorCode::Protected,
-                        "Automatic cleanup may delete only package recovery points",
+                        "Automatic cleanup may delete only scheduled or package recovery points",
                     ));
                 }
                 let discovery = DeploymentStore::new(&self.snapshot_root).discover();

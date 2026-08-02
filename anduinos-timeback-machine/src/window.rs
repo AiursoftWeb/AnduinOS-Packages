@@ -1,3 +1,4 @@
+use std::cell::Cell;
 use std::rc::Rc;
 use std::sync::mpsc;
 use std::time::Duration;
@@ -9,6 +10,7 @@ use anduinos_timeback::layout::{self, LayoutReport, LayoutSupport};
 use anduinos_timeback::model::{DeploymentKind, DeploymentRecord, DeploymentState};
 use anduinos_timeback::retention::RetentionPlan;
 use anduinos_timeback::store::DiscoveryReport;
+use anduinos_timeback::targets;
 use anduinos_timeback::{client, DEPLOYMENT_SCHEMA_VERSION};
 
 use crate::application::TimebackApplication;
@@ -113,6 +115,12 @@ fn build_with_notice(
             title: i18n("Recovery Points"),
             icon: "document-open-recent-symbolic",
             widget: build_recovery_points(&window, &report, &discovery, demo).upcast(),
+        },
+        Page {
+            name: "automatic",
+            title: i18n(concat!("Automatic ", "Snapshots")),
+            icon: "alarm-symbolic",
+            widget: build_automatic_snapshots(&window, &report).upcast(),
         },
         Page {
             name: "storage",
@@ -1230,6 +1238,95 @@ fn build_settings(retention_state: &RetentionState, demo: bool) -> adw::Preferen
     page
 }
 
+fn build_automatic_snapshots(parent: &adw::ApplicationWindow, report: &LayoutReport) -> adw::PreferencesPage {
+    let page = adw::PreferencesPage::builder()
+        .title(i18n(concat!("Automatic ", "Snapshots")))
+        .icon_name("alarm-symbolic")
+        .build();
+    let intro = adw::PreferencesGroup::builder()
+        .title(i18n(concat!("Per-volume ", "schedules")))
+        .description(i18n(concat!("Schedules are independent. ", "Suggested presets remain disabled until you enable them.")))
+        .build();
+    page.add(&intro);
+
+    let automatic_status=client::inspect_automatic().ok();
+    for target in targets::discover_targets(report) {
+        let group = adw::PreferencesGroup::builder()
+            .title(i18n(&target.display_name))
+            .description(target.issue.as_deref().unwrap_or(&target.mount_point))
+            .build();
+        let supported=target.kind == targets::TargetKind::System && target.available && automatic_status.is_some();
+        let enabled = adw::SwitchRow::builder()
+            .title(i18n(concat!("Create snapshots ", "automatically")))
+            .subtitle(if supported {
+                i18n(concat!("Every ", "2 hours; saved system-wide"))
+            } else if target.available && target.kind != targets::TargetKind::System {
+                i18n("Unavailable")
+            } else { i18n(concat!("Unavailable because this is not an independent ", "compatible Btrfs subvolume")) })
+            .sensitive(supported)
+            .active(supported && automatic_status.as_ref().is_some_and(|status| status.policy.enabled))
+            .build();
+        if supported {
+            let policy=automatic_status.as_ref().expect("supported status exists").policy.clone();
+            let reverting=Rc::new(Cell::new(false));
+            let parent=parent.clone();
+            enabled.connect_active_notify(move |row| {
+                if reverting.replace(false) { return; }
+                let mut updated=policy.clone(); updated.enabled=row.is_active();
+                let requested=row.is_active();
+                row.set_sensitive(false);
+                let (sender,receiver)=mpsc::channel();
+                let spawn=std::thread::Builder::new().name("timeback-automatic-policy".into()).spawn(move || {
+                    let result=client::set_automatic_policy(&updated, |_| {}).map_err(|error| error.to_string());
+                    let _=sender.send(result);
+                });
+                if let Err(error)=spawn {
+                    reverting.set(true);
+                    row.set_active(!requested);
+                    row.set_sensitive(true);
+                    show_operation_error(&parent,&format!("Could not start the automatic-policy worker: {error}"));
+                    return;
+                }
+                let row=row.clone();
+                let reverting=reverting.clone();
+                let parent=parent.clone();
+                glib::timeout_add_local(Duration::from_millis(50),move || match receiver.try_recv() {
+                    Ok(Ok(result)) if result.success => { row.set_sensitive(true); glib::ControlFlow::Break }
+                    Ok(Ok(result)) => {
+                        reverting.set(true); row.set_active(!requested); row.set_sensitive(true);
+                        show_operation_error(&parent,&format!("{}: {}",result.error_code,result.message));
+                        glib::ControlFlow::Break
+                    }
+                    Ok(Err(error)) => {
+                        reverting.set(true); row.set_active(!requested); row.set_sensitive(true);
+                        show_operation_error(&parent,&error);
+                        glib::ControlFlow::Break
+                    }
+                    Err(mpsc::TryRecvError::Empty) => glib::ControlFlow::Continue,
+                    Err(mpsc::TryRecvError::Disconnected) => {
+                        reverting.set(true); row.set_active(!requested); row.set_sensitive(true);
+                        show_operation_error(&parent,&i18n("The recovery worker disconnected"));
+                        glib::ControlFlow::Break
+                    }
+                });
+            });
+        }
+        group.add(&enabled);
+        group.add(&status_row(
+            &i18n(concat!("Tiered ", "retention")),
+            &i18n(concat!("Keep all for 24 hours, then the first daily, weekly, and monthly snapshot; ", "delete after one year")),
+            if supported { &i18n("Active") } else { &i18n("Unavailable") },
+            if supported { "success" } else { "planned-badge" },
+        ));
+        if supported {
+            let status=automatic_status.as_ref().expect("supported status exists");
+            if let Some(error)=&status.last_error { group.add(&status_row(&i18n("Automatic Protection"),error,&i18n("Recovery Operation Failed"),"error")); }
+        }
+        page.add(&group);
+    }
+    page
+}
+
 fn status_row(title: &str, subtitle: &str, status: &str, style: &str) -> adw::ActionRow {
     let row = adw::ActionRow::builder()
         .title(title)
@@ -1966,6 +2063,7 @@ fn deployment_kind(kind: DeploymentKind) -> String {
     match kind {
         DeploymentKind::Factory => i18n("Factory"),
         DeploymentKind::Manual => i18n("Manual"),
+        DeploymentKind::Automatic => i18n("Automatic"),
         DeploymentKind::AptPre => i18n("Before update"),
         DeploymentKind::AptPost => i18n("After update"),
         DeploymentKind::PreRollback => i18n("Before rollback"),
@@ -1997,6 +2095,7 @@ fn deployment_icon(deployment: &DeploymentRecord) -> &'static str {
     match deployment.kind {
         DeploymentKind::Factory => "emblem-default-symbolic",
         DeploymentKind::Manual => "camera-photo-symbolic",
+        DeploymentKind::Automatic => "alarm-symbolic",
         DeploymentKind::AptPre => "document-revert-symbolic",
         DeploymentKind::AptPost => "software-update-available-symbolic",
         DeploymentKind::PreRollback => "document-revert-symbolic",
