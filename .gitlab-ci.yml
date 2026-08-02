@@ -360,6 +360,11 @@ anduinos-why-placeholder:
   variables:
     PACKAGE_DIR: anduinos-why-placeholder
 
+anduinos-bash-guess-command:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-bash-guess-command
+
 anduinos-xbox-controller-driver:
   extends: .publish
   variables:
@@ -422,6 +427,7 @@ anduinos-desktop-core:
     - alsa-ucm-conf-anduinos
     - anduinos-rime
     - anduinos-why-placeholder
+    - anduinos-bash-guess-command
   variables:
     PACKAGE_DIR: anduinos-desktop-core
 

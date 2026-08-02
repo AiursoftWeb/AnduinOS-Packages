@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Bound Carapace latency and remove terminal control bytes from completion data.
+set -o pipefail
+
+real_carapace=/usr/lib/anduinos-bash-guess-command/carapace
+[[ -x "$real_carapace" ]] || exit 127
+
+# The initialization program is trusted package data and must remain byte-exact.
+if [[ ${1-} == _carapace ]]; then
+    exec timeout --signal=TERM --kill-after=20ms 200ms "$real_carapace" "$@"
+fi
+
+# Preserve TAB, LF, UTF-8 and Carapace's SOH field separator; drop other C0
+# controls and DEL. In particular this removes ESC without corrupting Unicode.
+completion_timeout=${ANDUINOS_GUESS_STATIC_TIMEOUT:-50ms}
+[[ $completion_timeout =~ ^([1-9][0-9]{0,2})ms$ ]] || completion_timeout=50ms
+timeout --signal=TERM --kill-after=20ms "$completion_timeout" \
+    "$real_carapace" "$@" | LC_ALL=C tr -d '\002-\010\013\014\016-\037\177'
