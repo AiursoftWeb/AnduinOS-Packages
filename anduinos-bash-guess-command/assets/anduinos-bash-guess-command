@@ -1,0 +1,48 @@
+# shellcheck shell=bash
+# AnduinOS Bash ghost-text suggestions. This file is owned by the package and
+# disappears on remove/autoremove; user shell files are never modified.
+[[ $- == *i* ]] || return 0
+[[ ${BASH_VERSINFO[0]:-0} -ge 4 ]] || return 0
+[[ ${ANDUINOS_GUESS_COMMAND:-1} != 0 ]] || return 0
+[[ -t 0 && -t 1 ]] || return 0
+[[ ${TERM:-dumb} != dumb ]] || return 0
+
+_anduinos_guess_root=/usr/share/anduinos-bash-guess-command
+[[ -r $_anduinos_guess_root/blesh/ble.sh ]] || return 0
+
+# Load Carapace before ble.sh so its programmable completions are visible to
+# ble.sh's syntax completion source. Failure only disables static suggestions.
+if [[ ${ANDUINOS_GUESS_STATIC:-1} != 0 &&
+      -x /usr/lib/anduinos-bash-guess-command/bin/carapace ]]; then
+    PATH=/usr/lib/anduinos-bash-guess-command/bin:$PATH
+    _anduinos_guess_carapace_init="$(carapace _carapace bash 2>/dev/null)" ||
+        _anduinos_guess_carapace_init=
+    if [[ $_anduinos_guess_carapace_init == *'_carapace_completer'* ]]; then
+        # Upstream emits a user-specific optional install directory. The
+        # packaged binary must not replace or leak a build/user-specific PATH.
+        _anduinos_guess_carapace_init="$(sed '/^export PATH=/d' <<<"$_anduinos_guess_carapace_init")"
+        builtin eval -- "$_anduinos_guess_carapace_init"
+    fi
+    unset _anduinos_guess_carapace_init
+fi
+
+source "$_anduinos_guess_root/blesh/ble.sh" || {
+    unset _anduinos_guess_root
+    return 0
+}
+
+# Classic history prefix search comes first; programmable completion (including
+# Carapace) is the fallback. A 25 ms idle delay avoids work during rapid input.
+bleopt complete_auto_complete=1
+_anduinos_guess_delay=${ANDUINOS_GUESS_DELAY:-25}
+[[ $_anduinos_guess_delay =~ ^[0-9]{1,3}$ ]] || _anduinos_guess_delay=25
+bleopt complete_auto_delay="$_anduinos_guess_delay"
+bleopt complete_auto_history="$([[ ${ANDUINOS_GUESS_HISTORY:-1} != 0 ]] && printf 1 || printf 0)"
+bleopt complete_auto_wordbreaks=' /:;,.@'
+ble-face auto_complete="${ANDUINOS_GUESS_COLOR:-fg=242}"
+
+# ble.sh already gives Right Arrow the safe accept-at-end behaviour. Alt-Right
+# accepts one word and does not replace Bash's conventional Alt-F binding.
+ble-bind -m auto_complete -f M-right auto_complete/insert-word
+
+unset _anduinos_guess_root _anduinos_guess_delay
