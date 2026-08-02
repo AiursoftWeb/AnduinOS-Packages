@@ -149,8 +149,16 @@ mod tests {
             },
         ];
         let decisions = plan(&policy, now, &snapshots).unwrap();
-        assert!(decisions[0].keep);
-        assert!(!decisions[1].keep);
+        assert!(decisions
+            .iter()
+            .find(|decision| decision.id == "within")
+            .unwrap()
+            .keep);
+        assert!(!decisions
+            .iter()
+            .find(|decision| decision.id == "expired")
+            .unwrap()
+            .keep);
     }
 
     #[test]

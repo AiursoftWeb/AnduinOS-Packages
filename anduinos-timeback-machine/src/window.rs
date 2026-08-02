@@ -1312,10 +1312,15 @@ fn build_automatic_snapshots(parent: &adw::ApplicationWindow, report: &LayoutRep
             });
         }
         group.add(&enabled);
+        let retention_status = if supported {
+            i18n("Active")
+        } else {
+            i18n("Unavailable")
+        };
         group.add(&status_row(
             &i18n(concat!("Tiered ", "retention")),
             &i18n(concat!("Keep all for 24 hours, then the first daily, weekly, and monthly snapshot; ", "delete after one year")),
-            if supported { &i18n("Active") } else { &i18n("Unavailable") },
+            &retention_status,
             if supported { "success" } else { "planned-badge" },
         ));
         if supported {
