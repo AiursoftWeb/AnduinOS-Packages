@@ -60,7 +60,12 @@ from installer_core.storage_ui import (
     build_guided_storage_confirmation,
     build_storage_workflow,
 )
-from installer_core.usernames import suggest_username
+from installer_core.username_policy import (
+    is_valid_username,
+)
+from installer_core.usernames import (
+    suggest_username,
+)
 from slideshow import load_slides
 from ui import card, clamp_content, icon_picture, page_hero
 
@@ -1610,7 +1615,7 @@ def build_user_page(shared, nav_view):
 
     # Full name
     full_entry = Gtk.Entry(
-        placeholder_text=_("Full Name", lang), max_length=16
+        placeholder_text=_("Full Name", lang), max_length=128
     )
     box.append(_labeled(_("Full Name", lang), full_entry))
 
@@ -1675,8 +1680,6 @@ def build_user_page(shared, nav_view):
     full_entry.connect("changed", _on_full_changed)
 
     # Validate on change
-    import re
-    NAME_RE = re.compile(r"^[a-z][a-z0-9]{0,15}$")
     HOST_RE = re.compile(r"^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$")
 
     def _validate():
@@ -1685,7 +1688,7 @@ def build_user_page(shared, nav_view):
         confirmation = confirm_entry.get_text()
         host = host_entry.get_text()
 
-        if uname and not NAME_RE.match(uname):
+        if uname and not is_valid_username(uname):
             name_warn.set_label(_("Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters).", lang))
             name_warn.set_visible(True)
             valid["name"] = False

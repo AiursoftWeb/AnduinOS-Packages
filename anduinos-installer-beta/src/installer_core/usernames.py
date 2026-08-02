@@ -7,6 +7,8 @@ import unicodedata
 
 from unidecode import unidecode
 
+from .username_policy import RESERVED_USERNAMES
+
 
 DEFAULT_USERNAME_MAX_LENGTH = 16
 _NON_USERNAME_CHARACTERS = re.compile(r"[^a-z0-9]")
@@ -26,4 +28,8 @@ def suggest_username(
     ascii_name = unidecode(first_component).lower()
     candidate = _NON_USERNAME_CHARACTERS.sub("", ascii_name)
     candidate = _LEADING_DIGITS.sub("", candidate)[:max_length]
-    return candidate or "user"[:max_length]
+    candidate = candidate or "user"[:max_length]
+    if candidate in RESERVED_USERNAMES:
+        suffix = "user"[:max_length]
+        candidate = candidate[: max_length - len(suffix)] + suffix
+    return candidate

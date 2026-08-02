@@ -114,14 +114,32 @@ class ValidationTests(unittest.TestCase):
                 ):
                     validate_plan(plan)
 
-    def test_rejects_full_name_over_sixteen_characters(self):
+    def test_accepts_long_full_name_with_truncated_username(self):
         plan = valid_plan()
         plan = dataclasses.replace(
             plan,
-            identity=dataclasses.replace(plan.identity, full_name="A" * 17),
+            identity=dataclasses.replace(
+                plan.identity,
+                full_name="Alexandria Johnson",
+                username="alexandriajohnso",
+            ),
         )
-        with self.assertRaisesRegex(PlanValidationError, "Invalid full name"):
-            validate_plan(plan)
+        validate_plan(plan)
+
+    def test_rejects_reserved_usernames(self):
+        for username in ("root", "live", "ubuntu"):
+            with self.subTest(username=username):
+                plan = valid_plan()
+                plan = dataclasses.replace(
+                    plan,
+                    identity=dataclasses.replace(
+                        plan.identity, username=username
+                    ),
+                )
+                with self.assertRaisesRegex(
+                    PlanValidationError, "Reserved username"
+                ):
+                    validate_plan(plan)
 
 
 if __name__ == "__main__":

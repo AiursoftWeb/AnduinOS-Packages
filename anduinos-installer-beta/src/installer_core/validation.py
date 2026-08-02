@@ -16,6 +16,7 @@ from .model import (
     SecureBoot,
 )
 from .storage_graph_planning import validate_storage_graph
+from .username_policy import RESERVED_USERNAMES, is_valid_username
 
 
 MINIMUM_DISK_BYTES = 25 * 1024**3
@@ -23,7 +24,6 @@ MINIMUM_ROOT_BYTES = 16 * 1024**3
 HOSTNAME_RE = re.compile(
     r"^(?=.{1,63}$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
 )
-USERNAME_RE = re.compile(r"^[a-z][a-z0-9]{0,15}$")
 LOCALE_RE = re.compile(r"^[A-Za-z]{2,3}(?:_[A-Z]{2})?\.UTF-8$")
 TIMEZONE_RE = re.compile(r"^[A-Za-z0-9._+-]+(?:/[A-Za-z0-9._+-]+)+$")
 WHOLE_DISK_RE = re.compile(
@@ -146,15 +146,15 @@ def validate_plan(
         )
 
     identity = plan.identity
-    if not USERNAME_RE.fullmatch(identity.username):
-        errors.append("Invalid username")
-    if identity.username in {"root", "live", "ubuntu"}:
+    if identity.username in RESERVED_USERNAMES:
         errors.append("Reserved username")
+    elif not is_valid_username(identity.username):
+        errors.append("Invalid username")
     if not HOSTNAME_RE.fullmatch(identity.hostname):
         errors.append("Invalid hostname")
     if (
         not identity.full_name.strip()
-        or len(identity.full_name) > 16
+        or len(identity.full_name) > 128
         or any(character in identity.full_name for character in ":\r\n")
     ):
         errors.append("Invalid full name")
