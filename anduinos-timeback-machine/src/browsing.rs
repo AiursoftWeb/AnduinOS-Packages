@@ -262,6 +262,10 @@ fn encode_component(bytes: &[u8]) -> String {
     encoded
 }
 
+pub fn decode_name_token(value: &str) -> Result<OsString, BrowseError> {
+    decode_component(value).map(OsString::from_vec)
+}
+
 fn decode_component(value: &str) -> Result<Vec<u8>, BrowseError> {
     if value.len() % 2 != 0 {
         return Err(BrowseError::invalid("Invalid filename token"));
