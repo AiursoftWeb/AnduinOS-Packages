@@ -70,11 +70,11 @@ keyboard offline and handles the selected input method independently. It can
 reuse a complete payload already present on the installation medium or install
 exactly the packages declared by the selected policy. Offline or download
 failure is a visible warning and does not abort installation. Desktop-source
-registration and `/etc/skel` files are generated generically from JSON; Rime's
-custom file is one policy instance rather than a product-specific code path.
-Adding a language, layout, locale alias or input method is a data-only change to
-`data/languages.json` (plus the normal gettext catalog when translating the
-installer UI into a new language).
+registration is generated generically from JSON. Input-method packages own
+their shared defaults, so the installer never writes product configuration to
+`/etc/skel` or an existing user's home. Adding a language, layout, locale alias
+or input method is a data-only change to `data/languages.json` (plus the normal
+gettext catalog when translating the installer UI into a new language).
 
 Raw command output remains unchanged in the Output view so that copied logs
 match command-line diagnostics and can be searched reliably. Installer-owned

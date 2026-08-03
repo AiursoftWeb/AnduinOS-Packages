@@ -27,15 +27,6 @@ class DesktopInputSource:
 
 
 @dataclass(frozen=True)
-class UserFile:
-    """One package-owned template deployed relative to a new user's home."""
-
-    source: Path
-    destination: Path
-    mode: int
-
-
-@dataclass(frozen=True)
 class InputMethod:
     """Installer-owned, fully declarative input-method policy."""
 
@@ -45,7 +36,6 @@ class InputMethod:
     desktop_source: DesktopInputSource | None
     packages: tuple[str, ...]
     required_paths: tuple[Path, ...]
-    user_files: tuple[UserFile, ...]
 
 
 @dataclass(frozen=True)
@@ -60,7 +50,7 @@ class Language:
     recommended_input_method: str | None = None
 
 
-_CONFIG_SCHEMA_VERSION = 2
+_CONFIG_SCHEMA_VERSION = 3
 _TOKEN_RE = re.compile(r"^[a-z0-9][a-z0-9+._-]*$")
 _SOURCE_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9+._:@/-]*$")
 
@@ -175,7 +165,7 @@ def _load_configuration() -> tuple[
             method,
             {
                 "display_name", "language_name", "desktop_source", "packages",
-                "required_paths", "user_files",
+                "required_paths",
             },
             f"input_methods.{method_id}",
         )
@@ -223,39 +213,6 @@ def _load_configuration() -> tuple[
             for item in raw_path_values
         )
 
-        raw_user_files = method["user_files"]
-        if not isinstance(raw_user_files, list):
-            raise RuntimeError(f"{method_id}.user_files must be a list")
-        user_files: list[UserFile] = []
-        destinations: set[Path] = set()
-        for index, raw_user_file in enumerate(raw_user_files):
-            label = f"input_methods.{method_id}.user_files[{index}]"
-            user_file = _object(raw_user_file, label)
-            _exact_fields(user_file, {"source", "destination", "mode"}, label)
-            source = _relative_path(
-                user_file["source"], f"{label}.source"
-            )
-            destination = _relative_path(
-                user_file["destination"], f"{label}.destination"
-            )
-            mode_value = _nonempty_string(user_file["mode"], f"{label}.mode")
-            if not re.fullmatch(r"0[0-7]{3}", mode_value):
-                raise RuntimeError(f"Unsafe user-file policy in {method_id}")
-            if source not in path_values:
-                raise RuntimeError(
-                    f"{label}.source must also appear in required_paths"
-                )
-            if destination in destinations:
-                raise RuntimeError(
-                    f"Duplicate user-file destination in {method_id}"
-                )
-            destinations.add(destination)
-            user_files.append(
-                UserFile(
-                    source, destination, int(mode_value, 8)
-                )
-            )
-
         methods[method_id] = InputMethod(
             method_id,
             display_name,
@@ -263,7 +220,6 @@ def _load_configuration() -> tuple[
             desktop_source,
             packages,
             path_values,
-            tuple(user_files),
         )
 
     languages_data = root["languages"]

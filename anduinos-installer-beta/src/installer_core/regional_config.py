@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from languages import INPUT_METHODS, InputMethod, UserFile, input_method
+from languages import InputMethod, input_method
 
 from .command import CommandError, CommandRunner
 from .software import refresh_package_indexes
@@ -144,11 +144,7 @@ class InstallInputMethodStep:
         method = input_method(context.plan.regional.input_method)
         override = _input_override(target)
         if method is None:
-            if override.exists() or any(
-                _user_file_target(target, user_file).exists()
-                for policy in INPUT_METHODS.values()
-                for user_file in policy.user_files
-            ):
+            if override.exists():
                 raise RuntimeError("Unexpected input-method configuration")
             return
         if context.values.get("input_method_installed") is not True:
@@ -158,15 +154,6 @@ class InstallInputMethodStep:
             raise RuntimeError("Input-method configuration is missing")
         if method.desktop_source is None and override.exists():
             raise RuntimeError("Unexpected desktop input-source configuration")
-        for user_file in method.user_files:
-            source = target / user_file.source
-            destination = _user_file_target(target, user_file)
-            if (
-                not destination.is_file()
-                or destination.read_bytes() != source.read_bytes()
-                or destination.stat().st_mode & 0o777 != user_file.mode
-            ):
-                raise RuntimeError("Input-method user defaults are missing")
 
     def cleanup(self, context: InstallContext) -> None:
         return None
@@ -194,15 +181,9 @@ def _input_override(target: Path) -> Path:
 
 
 def _clear_input_method_configuration(target: Path) -> None:
-    owned_paths = [_input_override(target)]
-    owned_paths.extend(
-        _user_file_target(target, user_file)
-        for method in INPUT_METHODS.values()
-        for user_file in method.user_files
-    )
-    for path in owned_paths:
-        if path.exists() or path.is_symlink():
-            path.unlink()
+    override = _input_override(target)
+    if override.exists() or override.is_symlink():
+        override.unlink()
 
 
 def _write_input_method_configuration(
@@ -220,18 +201,6 @@ def _write_input_method_configuration(
             f"'{method.desktop_source.id}')]\n",
             encoding="utf-8",
         )
-    for user_file in method.user_files:
-        source = target / user_file.source
-        destination = _user_file_target(target, user_file)
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_bytes(source.read_bytes())
-        destination.chmod(user_file.mode)
-
-
-def _user_file_target(target: Path, user_file: UserFile) -> Path:
-    return target / "etc/skel" / user_file.destination
-
-
 def _input_method_payload_complete(
     target: Path, method: InputMethod
 ) -> bool:

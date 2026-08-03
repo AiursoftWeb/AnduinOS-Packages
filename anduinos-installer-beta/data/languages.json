@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "default_language": "en_US",
   "locale_aliases": {
     "en": "en_US",
@@ -45,15 +45,10 @@
         "usr/lib/ibus-rime/ibus-engine-rime",
         "usr/share/ibus/component/rime.xml",
         "usr/share/rime-data/rime_ice.schema.yaml",
-        "usr/share/anduinos-rime/default.custom.yaml",
+        "usr/share/rime-data/anduinos_defaults.yaml",
+        "usr/share/rime-data/default.custom.yaml",
+        "usr/share/rime-data/rime_ice.custom.yaml",
         "usr/bin/glib-compile-schemas"
-      ],
-      "user_files": [
-        {
-          "source": "usr/share/anduinos-rime/default.custom.yaml",
-          "destination": ".config/ibus/rime/default.custom.yaml",
-          "mode": "0644"
-        }
       ]
     },
     "cangjie": {
@@ -66,8 +61,7 @@
         "usr/share/ibus/component/table.xml",
         "usr/share/ibus-table/tables/cangjie-big.db",
         "usr/bin/glib-compile-schemas"
-      ],
-      "user_files": []
+      ]
     },
     "chewing": {
       "display_name": "IBus Chewing",
@@ -78,8 +72,7 @@
         "usr/libexec/ibus-engine-chewing",
         "usr/share/ibus/component/chewing.xml",
         "usr/bin/glib-compile-schemas"
-      ],
-      "user_files": []
+      ]
     },
     "mozc": {
       "display_name": "IBus Mozc",
@@ -90,8 +83,7 @@
         "usr/lib/ibus-mozc/ibus-engine-mozc",
         "usr/share/ibus/component/mozc.xml",
         "usr/bin/glib-compile-schemas"
-      ],
-      "user_files": []
+      ]
     },
     "hangul": {
       "display_name": "IBus Hangul",
@@ -102,8 +94,7 @@
         "usr/libexec/ibus-engine-hangul",
         "usr/share/ibus/component/hangul.xml",
         "usr/bin/glib-compile-schemas"
-      ],
-      "user_files": []
+      ]
     },
     "unikey": {
       "display_name": "IBus Unikey",
@@ -114,8 +105,7 @@
         "usr/libexec/ibus-engine-unikey",
         "usr/share/ibus/component/unikey.xml",
         "usr/bin/glib-compile-schemas"
-      ],
-      "user_files": []
+      ]
     },
     "libthai": {
       "display_name": "IBus LibThai",
@@ -126,8 +116,7 @@
         "usr/libexec/ibus-engine-libthai",
         "usr/share/ibus/component/libthai.xml",
         "usr/bin/glib-compile-schemas"
-      ],
-      "user_files": []
+      ]
     }
   },
   "languages": [

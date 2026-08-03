@@ -101,13 +101,14 @@ These replace Ubuntu **files** without removing the Ubuntu **package**.
 | `anduinos-bwrap-hack` | `bwrap` → `bwrap.real` + shim | Swallows `bwrap` failures on Live squashfs |
 
 `anduinos-rime` is intentionally absent from this override table. Starting
-with `2.0.1-2`, it owns only AnduinOS-named Rime Ice resources and a defaults
-template below `/usr/share/anduinos-rime/`. The native installer applies that
-template after installing Rime for Chinese installations; it is not part of
-the default desktop package set. Ubuntu's `rime-prelude` and
-`language-selector-common` files remain untouched. The `2.0.1-2` post-install
-script only removes diversions left by older releases and can disappear after
-the migration release.
+with `2.0.1-2`, it owns only Rime Ice resources and an additive distribution
+patch; it is not part of the default desktop package set. Starting with
+`2.0.1-3`, Rime loads that patch from the shared
+`/usr/share/rime-data/default.custom.yaml`, so package updates propagate without
+copying configuration into `/etc/skel` or user homes. Ubuntu's `default.yaml`
+and `language-selector-common` files remain untouched. The `2.0.1-2`
+post-install script only removes diversions left by older releases and can
+disappear after the migration release.
 
 ---
 

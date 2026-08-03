@@ -95,12 +95,14 @@ class LanguageDefaultsTests(unittest.TestCase):
         }.items():
             with self.subTest(language=code):
                 self.assertEqual(mapping[code], method_id)
-        self.assertEqual(len(rime.user_files), 1)
-        self.assertEqual(
-            str(rime.user_files[0].destination),
-            ".config/ibus/rime/default.custom.yaml",
+        self.assertTrue(
+            {
+                Path("usr/share/rime-data/anduinos_defaults.yaml"),
+                Path("usr/share/rime-data/default.custom.yaml"),
+                Path("usr/share/rime-data/rime_ice.custom.yaml"),
+            }
+            <= set(rime.required_paths)
         )
-        self.assertEqual(rime.user_files[0].mode, 0o644)
         for method in INPUT_METHODS.values():
             with self.subTest(method=method.id):
                 self.assertTrue(method.packages)
@@ -181,9 +183,7 @@ class LanguageDefaultsTests(unittest.TestCase):
                 encoding="utf-8"
             )
         )
-        policy["input_methods"]["rime"]["user_files"][0][
-            "destination"
-        ] = "../unsafe"
+        policy["input_methods"]["rime"]["required_paths"][0] = "../unsafe"
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "languages.json"
             path.write_text(json.dumps(policy), encoding="utf-8")
@@ -217,7 +217,6 @@ class LanguageDefaultsTests(unittest.TestCase):
             "desktop_source": {"type": "ibus", "id": "example:engine"},
             "packages": ["ibus-example"],
             "required_paths": ["usr/share/ibus/component/example.xml"],
-            "user_files": [],
         }
         policy["keyboard_layouts"]["xx"] = "Example keyboard"
         policy["languages"].append(

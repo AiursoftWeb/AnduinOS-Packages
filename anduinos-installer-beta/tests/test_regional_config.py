@@ -54,12 +54,10 @@ def prepare_apt(target: Path) -> None:
 
 
 def prepare_payload(target: Path, method: InputMethod) -> None:
-    user_sources = {user_file.source for user_file in method.user_files}
     for relative in method.required_paths:
         path = target / relative
         path.parent.mkdir(parents=True, exist_ok=True)
-        content = f"payload for {method.id}\n" if relative in user_sources else ""
-        path.write_text(content, encoding="utf-8")
+        path.write_text("", encoding="utf-8")
 
 
 class ConfigureKeyboardTests(unittest.TestCase):
@@ -125,16 +123,7 @@ class InstallInputMethodTests(unittest.TestCase):
                         ),
                         override,
                     )
-                for user_file in method.user_files:
-                    destination = target / "etc/skel" / user_file.destination
-                    self.assertEqual(
-                        destination.read_text(encoding="utf-8"),
-                        f"payload for {method.id}\n",
-                    )
-                    self.assertEqual(
-                        destination.stat().st_mode & 0o777,
-                        user_file.mode,
-                    )
+                self.assertFalse((target / "etc/skel").exists())
                 self.assertFalse(
                     any("apt-get" in command for command, _ in runner.commands)
                 )

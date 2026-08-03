@@ -55,14 +55,15 @@ and constructs every command itself.
 - Regional input policy: `data/languages.json` is the single validated source
   for supported languages, locale aliases, the default language, physical XKB
   layouts and optional input methods. Each input method declares its label,
-  packages, required files, optional desktop source and user template files.
+  packages, required files and optional desktop source.
   The UI, planner, validator and privileged executor resolve the same policy;
   none contains a language-, region-, framework- or product-specific branch.
   Physical keyboard configuration remains an independent offline step. A
   selected method can reuse a complete payload on the medium or download only
   its declared packages; an offline or download failure produces a visible,
-  non-fatal warning. Desktop defaults and `/etc/skel` files are generated from
-  the selected policy. The installer has no dependency on Ubuntu Language
+  non-fatal warning. Desktop defaults are generated from the selected policy.
+  Input-method packages own their system defaults; the installer never writes
+  input-method files below `/etc/skel`. It has no dependency on Ubuntu Language
   Selector metadata and never modifies its `pkg_depends` database.
 
 ## Safety boundary
