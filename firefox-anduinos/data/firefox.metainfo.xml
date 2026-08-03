@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>firefox.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MPL-2.0</project_license>
+  <name>Firefox</name>
+  <summary>Fast, private, and secure web browser</summary>
+  <description>
+    <p>Firefox is Mozilla's independent web browser, built to give you control over your online life with strong privacy protection, modern web standards, and a rich extension ecosystem.</p>
+    <p>This AnduinOS package is built from Mozilla's official Debian package and does not require Snap.</p>
+  </description>
+  <developer id="org.mozilla">
+    <name>Mozilla</name>
+  </developer>
+  <url type="homepage">https://www.mozilla.org/firefox/</url>
+  <url type="bugtracker">https://bugzilla.mozilla.org/</url>
+  <url type="help">https://support.mozilla.org/</url>
+  <launchable type="desktop-id">firefox.desktop</launchable>
+  <icon type="stock">firefox</icon>
+  <categories>
+    <category>Network</category>
+    <category>WebBrowser</category>
+  </categories>
+  <provides>
+    <binary>firefox</binary>
+  </provides>
+  <content_rating type="oars-1.1" />
+</component>
