@@ -12,6 +12,7 @@ use adw::subclass::prelude::*;
 use gtk::{gdk, gio, glib};
 use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
+use std::ffi::OsStr;
 use std::rc::Rc;
 use std::time::Duration;
 use zeroize::Zeroizing;
@@ -715,6 +716,39 @@ fn rebuild_git(
     page: &adw::PreferencesPage,
 ) -> Vec<adw::PreferencesGroup> {
     let status = git_signing::status();
+    if !status.available {
+        let group = adw::PreferencesGroup::new();
+        let empty_state = adw::StatusPage::builder()
+            .icon_name("software-update-available-symbolic")
+            .title(i18n("Git is not installed"))
+            .description(i18n("Git is required for commit signing. Install it from Software, then return here."))
+            .margin_top(72)
+            .margin_bottom(48)
+            .build();
+        let install = gtk::Button::builder()
+            .label(i18n("Open Software"))
+            .css_classes(["suggested-action", "pill"])
+            .halign(gtk::Align::Center)
+            .build();
+        let weak = window.downgrade();
+        install.connect_clicked(move |_| {
+            let argv = [
+                OsStr::new("gnome-software"),
+                OsStr::new("--details-pkg=git"),
+                OsStr::new("--interaction=full"),
+            ];
+            let launcher = gio::SubprocessLauncher::new(gio::SubprocessFlags::NONE);
+            if let Err(error) = launcher.spawn(&argv) {
+                if let Some(window) = weak.upgrade() {
+                    show_error(&window, &error.to_string());
+                }
+            }
+        });
+        empty_state.set_child(Some(&install));
+        group.add(&empty_state);
+        page.add(&group);
+        return vec![group];
+    }
     let devices_group = adw::PreferencesGroup::builder()
         .title(i18n("YubiKeys"))
         .build();
@@ -1452,7 +1486,6 @@ fn rebuild_ssh(
                     .subtitle(device_subtitle)
                     .expanded(matches!(inspected, Some(Ok(_))))
                     .build();
-                row.add_prefix(&ssh_device_picture(34, 48));
                 let (state, state_class) = match &inspected {
                     Some(Ok(_)) => (i18n("Inspected"), "success"),
                     Some(Err(_)) => (i18n("Needs attention"), "warning"),
@@ -1469,7 +1502,7 @@ fn rebuild_ssh(
                     .css_classes(if inspected.is_some() {
                         vec!["flat"]
                     } else {
-                        vec!["suggested-action", "pill"]
+                        Vec::new()
                     })
                     .build();
                 let weak = window.downgrade();
