@@ -6,6 +6,9 @@ tool in `/usr/lib/apkg` and a system-wide launcher at `/usr/bin/apkg`. The .NET
 they are not bundled here. Consequently, both `apkg` and `sudo apkg` work
 without a per-user dotnet-tool installation or shell configuration.
 
+This package targets `resolute-addon` only because its .NET 10 runtime
+dependencies are not available from the configured Ubuntu Noble repository.
+
 ## Updating upstream
 
 The pinned version, checksums, source commit, and package revision require
