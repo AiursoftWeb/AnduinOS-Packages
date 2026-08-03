@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 from enum import Enum
 
+from languages import input_method, language_for_locale
+
 from .model import (
     AuthenticationMode,
     Architecture,
@@ -186,6 +188,19 @@ def validate_plan(
         errors.append("Invalid timezone")
     if not re.fullmatch(r"[a-z0-9_-]{1,32}", regional.keyboard.layout):
         errors.append("Invalid keyboard layout")
+    configured_language = language_for_locale(regional.locale)
+    if configured_language is None:
+        errors.append("Unsupported installer locale")
+    elif regional.input_method not in {
+        None,
+        configured_language.recommended_input_method,
+    }:
+        errors.append("Input method does not match installer language policy")
+    if (
+        regional.input_method is not None
+        and input_method(regional.input_method) is None
+    ):
+        errors.append("Unknown input method")
 
     swap = plan.swap
     if not swap.zram_enabled:

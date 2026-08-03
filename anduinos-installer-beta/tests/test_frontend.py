@@ -353,6 +353,8 @@ class FrontendPlanTests(unittest.TestCase):
             step for step, status, _message in statuses
             if status == "running"
         ]
+        self.assertIn("configure-keyboard-layout", step_order)
+        self.assertIn("install-input-method", step_order)
         self.assertLess(
             step_order.index("prepare-secure-boot"),
             step_order.index("refresh-package-indexes"),

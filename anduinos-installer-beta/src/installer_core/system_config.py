@@ -12,14 +12,6 @@ from .steps import FailurePolicy, InstallContext
 
 
 MACHINE_ID_RE = re.compile(r"^[0-9a-f]{32}$")
-RIME_REQUIRED_PATHS = (
-    Path("usr/lib/ibus-rime/ibus-engine-rime"),
-    Path("usr/share/ibus/component/rime.xml"),
-    Path("usr/share/rime-data/default.yaml"),
-    Path("usr/bin/glib-compile-schemas"),
-)
-
-
 @dataclass
 class ConfigureSystemStep:
     runner: CommandRunner
@@ -36,30 +28,13 @@ class ConfigureSystemStep:
     def execute(self, context: InstallContext) -> None:
         target = _target(context)
         plan = context.plan
-        _verify_input_method_payload(target, plan.regional.input_method)
         _write_hostname(target, plan.identity.hostname)
         _write_locale(target, plan.regional.locale)
         _write_timezone(target, plan.regional.timezone)
-        _write_keyboard(
-            target,
-            plan.regional.keyboard.layout,
-            plan.regional.keyboard.variant,
-        )
-        _write_input_method(target, plan.regional.input_method)
         self.runner.run(
             ("chroot", str(target), "locale-gen", plan.regional.locale),
             timeout=300,
         )
-        if plan.regional.input_method == "rime":
-            self.runner.run(
-                (
-                    "chroot",
-                    str(target),
-                    "glib-compile-schemas",
-                    "/usr/share/glib-2.0/schemas",
-                ),
-                timeout=60,
-            )
         self._create_user(context, target)
         self._create_machine_id(target)
 
@@ -177,19 +152,6 @@ class ConfigureSystemStep:
         locale = (target / "etc/default/locale").read_text()
         if f'LANG="{plan.regional.locale}"' not in locale:
             raise RuntimeError("Locale verification failed")
-        keyboard = (target / "etc/default/keyboard").read_text()
-        if f'XKBLAYOUT="{plan.regional.keyboard.layout}"' not in keyboard:
-            raise RuntimeError("Keyboard verification failed")
-        rime_override = (
-            target
-            / "usr/share/glib-2.0/schemas"
-            / "99_anduinos_default_input.gschema.override"
-        )
-        if plan.regional.input_method == "rime" and not rime_override.is_file():
-            raise RuntimeError("Rime input configuration is missing")
-        if plan.regional.input_method != "rime" and rime_override.exists():
-            raise RuntimeError("Unexpected Rime input configuration")
-        _verify_input_method_payload(target, plan.regional.input_method)
         if not MACHINE_ID_RE.fullmatch(
             (target / "etc/machine-id").read_text().strip()
         ):
@@ -332,50 +294,6 @@ def _write_timezone(target: Path, timezone: str) -> None:
     if localtime.exists() or localtime.is_symlink():
         localtime.unlink()
     localtime.symlink_to(f"/usr/share/zoneinfo/{timezone}")
-
-
-def _write_keyboard(target: Path, layout: str, variant: str) -> None:
-    default = target / "etc/default"
-    default.mkdir(parents=True, exist_ok=True)
-    (default / "keyboard").write_text(
-        'XKBMODEL="pc105"\n'
-        f'XKBLAYOUT="{layout}"\n'
-        f'XKBVARIANT="{variant}"\n'
-        'XKBOPTIONS=""\n'
-        "BACKSPACE=guess\n",
-        encoding="utf-8",
-    )
-
-
-def _write_input_method(target: Path, input_method: str | None) -> None:
-    override = (
-        target
-        / "usr/share/glib-2.0/schemas"
-        / "99_anduinos_default_input.gschema.override"
-    )
-    if input_method == "rime":
-        override.parent.mkdir(parents=True, exist_ok=True)
-        override.write_text(
-            "[org.gnome.desktop.input-sources]\n"
-            "sources=[('xkb', 'us'), ('ibus', 'rime')]\n",
-            encoding="utf-8",
-        )
-    elif override.exists():
-        override.unlink()
-
-
-def _verify_input_method_payload(target: Path, input_method: str | None) -> None:
-    if input_method != "rime":
-        return
-    missing = [
-        str(path)
-        for relative in RIME_REQUIRED_PATHS
-        if not (path := target / relative).is_file()
-    ]
-    if missing:
-        raise RuntimeError(
-            "Rime input payload is incomplete: " + ", ".join(missing)
-        )
 
 
 def _target(context: InstallContext) -> Path:

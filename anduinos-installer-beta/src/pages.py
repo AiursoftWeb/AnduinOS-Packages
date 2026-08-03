@@ -25,9 +25,13 @@ gi.require_version("Adw", "1")
 from gi.repository import Gtk, Adw, GLib, Gio, Pango, GObject
 
 from languages import (
+    DEFAULT_LANGUAGE,
+    KEYBOARD_LAYOUTS,
     LANGUAGES,
+    RTL_LANGUAGES,
     default_timezone,
-    is_chinese,
+    input_method,
+    language_for_locale,
     Language as LangData,
 )
 from i18n import _, N_
@@ -270,12 +274,78 @@ def internet_connection_ready(monitor=None) -> bool:
         return False
 
 
+def effective_network_choice(preferred: bool, online: bool) -> bool:
+    """Enable a preferred optional download only while fully online."""
+
+    return bool(preferred) and bool(online)
+
+
 def should_show_network_page(shared, monitor=None) -> bool:
     """Keep the page visible for development or incomplete connectivity."""
 
     return bool(shared.get("development_mode")) or not internet_connection_ready(
         monitor
     )
+
+
+def _recommended_input_method(shared):
+    """Return the selected locale's maintained input-method policy, if any."""
+
+    language = language_for_locale(str(shared.get("locale") or ""))
+    return (
+        input_method(language.recommended_input_method)
+        if language is not None
+        else None
+    )
+
+
+def _input_method_install_label(method, lang):
+    """Describe the user capability before the implementation product."""
+
+    return _(
+        "Install {language} input method: {name}", lang
+    ).format(
+        language=method.language_name,
+        name=method.display_name,
+    )
+
+
+def _offline_callout(lang):
+    """Build the shared non-fatal offline warning used by optional downloads."""
+
+    callout = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=12,
+        margin_bottom=4,
+    )
+    callout.add_css_class("installer-warning-card")
+    icon = Gtk.Image.new_from_icon_name("network-offline-symbolic")
+    icon.set_pixel_size(24)
+    icon.add_css_class("warning")
+    callout.append(icon)
+    text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+    heading = Gtk.Label(
+        label=_("Connect to the Internet", lang),
+        halign=Gtk.Align.START,
+        xalign=0,
+        wrap=True,
+    )
+    heading.add_css_class("heading")
+    body = Gtk.Label(
+        label=_(
+            "Requires an Internet connection. The base installation "
+            "remains available when offline.",
+            lang,
+        ),
+        halign=Gtk.Align.START,
+        xalign=0,
+        wrap=True,
+    )
+    body.add_css_class("dim-label")
+    text.append(heading)
+    text.append(body)
+    callout.append(text)
+    return callout
 
 
 def _list_item_row():
@@ -319,7 +389,7 @@ def _bind_list_item_row(row, title, subtitle=""):
 
 def build_welcome_page(shared, nav_view):
     """Language list on the left, native GTK4 welcome panel on the right."""
-    lang = shared.get("lang", "en_US")
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(title=_("AnduinOS Installer", lang))
     page.set_tag("welcome")
 
@@ -417,9 +487,14 @@ def build_welcome_page(shared, nav_view):
             shared["locale"] = l.locale
             shared["keyboard"] = l.keyboard
             shared["timezone"] = default_timezone(l.code)
+            recommends_input_method = l.recommended_input_method is not None
+            shared["install_input_method"] = recommends_input_method
+            shared["_preferred_install_input_method"] = (
+                recommends_input_method
+            )
             Gtk.Widget.set_default_direction(
                 Gtk.TextDirection.RTL
-                if l.code == "ar"
+                if l.code in RTL_LANGUAGES
                 else Gtk.TextDirection.LTR
             )
             _update_welcome(l.code)
@@ -440,7 +515,7 @@ def build_welcome_page(shared, nav_view):
         except Exception as e:
             import traceback
             traceback.print_exc()
-            selected_lang = str(shared.get("lang", "en_US"))
+            selected_lang = str(shared.get("lang", DEFAULT_LANGUAGE))
             dlg = Adw.MessageDialog(
                 transient_for=nav_view.get_root(),
                 heading=_("Navigation error", selected_lang),
@@ -462,7 +537,7 @@ def build_welcome_page(shared, nav_view):
 
     # Select the language detected from the Live session. The shared state is
     # initialized before this page is built, so regional defaults stay atomic.
-    initial_language = str(shared.get("lang", "en_US"))
+    initial_language = str(shared.get("lang", DEFAULT_LANGUAGE))
     for i, l in enumerate(lang_items):
         if l.code == initial_language:
             lang_list.get_model().select_item(i, True)
@@ -478,7 +553,7 @@ def build_welcome_page(shared, nav_view):
 def build_network_page(shared, nav_view):
     """Recommend connectivity while keeping offline installation available."""
 
-    lang = shared.get("lang", "en_US")
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(title=_("Connect to the Internet", lang))
     page.set_tag("network")
 
@@ -527,10 +602,16 @@ def build_network_page(shared, nav_view):
     explanation_text.add_css_class("dim-label")
     explanation.append(explanation_text)
 
-    for text in (
+    online_features = [
         _("Download and install system updates during installation", lang),
         _("Install hardware drivers", lang),
-    ):
+    ]
+    recommended_method = _recommended_input_method(shared)
+    if recommended_method is not None:
+        online_features.append(
+            _input_method_install_label(recommended_method, lang)
+        )
+    for text in online_features:
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         row.append(Gtk.Image.new_from_icon_name("emblem-ok-symbolic"))
         row.append(
@@ -604,6 +685,12 @@ def build_network_page(shared, nav_view):
     def _render_connectivity():
         online = _is_online()
         shared["network_preflight_online"] = online
+        if online:
+            status_box.remove_css_class("installer-warning-card")
+            status_icon.remove_css_class("warning")
+        else:
+            status_box.add_css_class("installer-warning-card")
+            status_icon.add_css_class("warning")
         status_icon.set_from_icon_name(
             "network-transmit-receive-symbolic"
             if online
@@ -757,29 +844,13 @@ def build_network_page(shared, nav_view):
 
 # ── page 3: Keyboard layout ──────────────────────────────────────────────
 
-# Common XKB variants, grouped by region
-XKB_VARIANTS = [
-    # Latin
-    ("us", N_("English (US)")), ("gb", N_("English (UK)")),
-    ("de", N_("German")), ("fr", N_("French")), ("it", N_("Italian")),
-    ("es", N_("Spanish")), ("pt", N_("Portuguese")),
-    ("br", N_("Portuguese (Brazil)")), ("dk", N_("Danish")),
-    ("se", N_("Swedish")), ("no", N_("Norwegian")),
-    ("fi", N_("Finnish")), ("nl", N_("Dutch")), ("pl", N_("Polish")),
-    ("ro", N_("Romanian")),
-    # Cyrillic / Greek
-    ("ru", N_("Russian")), ("ua", N_("Ukrainian")), ("gr", N_("Greek")),
-    # CJK / Indic / Other physical layouts. Chinese input is an input method
-    # layered over the US layout, not a separate physical keyboard layout.
-    ("jp", N_("Japanese")), ("kr", N_("Korean")),
-    ("in", N_("Hindi (India)")), ("th", N_("Thai")),
-    ("vn", N_("Vietnamese")), ("ara", N_("Arabic")),
-    ("tr", N_("Turkish")), ("id", N_("Indonesian")),
-]
+# Physical layouts and their labels come from the same validated policy as
+# languages and input methods. New layouts never require a Python edit.
+XKB_VARIANTS = list(KEYBOARD_LAYOUTS.items())
 
 
 def build_keyboard_page(shared, nav_view):
-    lang = shared.get("lang", "en_US")
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
     keyboard = shared.get("keyboard", "us")
     page = Adw.NavigationPage(title=_("Keyboard Layout", lang))
     page.set_tag("keyboard")
@@ -829,6 +900,76 @@ def build_keyboard_page(shared, nav_view):
     form.set_margin_bottom(12)
     form.append(_labeled(_("Keyboard Layout", lang), kbd_dropdown))
     form.append(_labeled(_("Test your keyboard here…", lang), test_entry))
+
+    recommended_method = _recommended_input_method(shared)
+    if recommended_method is not None:
+        form.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
+        input_method_choice = Gtk.CheckButton(
+            label=_input_method_install_label(recommended_method, lang)
+        )
+        input_method_detail = Gtk.Label(
+            label=_(
+                "Requires an Internet connection. The base installation "
+                "remains available when offline.",
+                lang,
+            ),
+            halign=Gtk.Align.START,
+            xalign=0,
+            wrap=True,
+            margin_start=28,
+        )
+        input_method_detail.add_css_class("dim-label")
+        offline_callout = _offline_callout(lang)
+        form.append(input_method_choice)
+        form.append(input_method_detail)
+        form.append(offline_callout)
+
+        preference_key = "_preferred_install_input_method"
+        preferred = bool(
+            shared.get(
+                preference_key,
+                shared.get("install_input_method", True),
+            )
+        )
+        shared[preference_key] = preferred
+        rendering = {"active": False}
+        monitor = Gio.NetworkMonitor.get_default()
+
+        def _save_input_method():
+            if rendering["active"]:
+                return
+            selected = input_method_choice.get_active()
+            shared[preference_key] = selected
+            shared["install_input_method"] = selected
+
+        def _render_input_method():
+            online = internet_connection_ready(monitor)
+            shared["network_preflight_online"] = online
+            rendering["active"] = True
+            input_method_choice.set_active(
+                effective_network_choice(
+                    bool(shared.get(preference_key, True)), online
+                )
+            )
+            input_method_choice.set_sensitive(online)
+            rendering["active"] = False
+            offline_callout.set_visible(not online)
+            shared["install_input_method"] = (
+                input_method_choice.get_active()
+            )
+
+        input_method_choice.connect(
+            "toggled", lambda _button: _save_input_method()
+        )
+        monitor.connect(
+            "network-changed",
+            lambda _monitor, _available: _render_input_method(),
+        )
+        _render_input_method()
+    else:
+        shared["install_input_method"] = False
+        shared["_preferred_install_input_method"] = False
+
     form_area = Gtk.Box(
         orientation=Gtk.Orientation.VERTICAL,
         vexpand=True,
@@ -852,7 +993,7 @@ def build_keyboard_page(shared, nav_view):
 # ── page 3: Updates and drivers ─────────────────────────────────────────
 
 def build_software_page(shared, nav_view):
-    lang = shared.get("lang", "en_US")
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(title=_("Updates and Drivers", lang))
     page.set_tag("software")
 
@@ -876,8 +1017,10 @@ def build_software_page(shared, nav_view):
     )
     options.add_css_class("installer-card")
 
+    offline_callout = _offline_callout(lang)
+    options.append(offline_callout)
+
     updates = Gtk.CheckButton(label=_("Download and install system updates during installation", lang))
-    updates.set_active(bool(shared.get("install_updates", True)))
     updates_detail = Gtk.Label(
         label=_("Requires an Internet connection. The base installation remains available when offline.", lang),
         halign=Gtk.Align.START,
@@ -889,9 +1032,6 @@ def build_software_page(shared, nav_view):
     options.append(updates_detail)
 
     drivers = Gtk.CheckButton(label=_("Install third-party drivers for this device", lang))
-    drivers.set_active(
-        bool(shared.get("install_third_party_drivers", False))
-    )
     drivers_detail = Gtk.Label(
         label=(
             _(
@@ -914,12 +1054,56 @@ def build_software_page(shared, nav_view):
     options.append(drivers_detail)
     content.append(options)
 
+    update_preference_key = "_preferred_install_updates"
+    driver_preference_key = "_preferred_install_third_party_drivers"
+    shared.setdefault(
+        update_preference_key, bool(shared.get("install_updates", True))
+    )
+    shared.setdefault(
+        driver_preference_key,
+        bool(shared.get("install_third_party_drivers", False)),
+    )
+    rendering = {"active": False}
+    monitor = Gio.NetworkMonitor.get_default()
+
     def _save():
+        if rendering["active"]:
+            return
+        if updates.get_sensitive():
+            shared[update_preference_key] = updates.get_active()
+        if drivers.get_sensitive():
+            shared[driver_preference_key] = drivers.get_active()
+        shared["install_updates"] = updates.get_active()
+        shared["install_third_party_drivers"] = drivers.get_active()
+
+    def _render_connectivity():
+        online = internet_connection_ready(monitor)
+        shared["network_preflight_online"] = online
+        rendering["active"] = True
+        updates.set_active(
+            effective_network_choice(
+                bool(shared.get(update_preference_key, True)), online
+            )
+        )
+        drivers.set_active(
+            effective_network_choice(
+                bool(shared.get(driver_preference_key, False)), online
+            )
+        )
+        updates.set_sensitive(online)
+        drivers.set_sensitive(online)
+        rendering["active"] = False
+        offline_callout.set_visible(not online)
         shared["install_updates"] = updates.get_active()
         shared["install_third_party_drivers"] = drivers.get_active()
 
     updates.connect("toggled", lambda _button: _save())
     drivers.connect("toggled", lambda _button: _save())
+    monitor.connect(
+        "network-changed",
+        lambda _monitor, _available: _render_connectivity(),
+    )
+    _render_connectivity()
 
     def on_next():
         _save()
@@ -1071,7 +1255,7 @@ def _disk_card_button(
 
 
 def build_disk_page(shared, nav_view):
-    lang = shared.get("lang", "en_US")
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(title=_("Select Installation Disk", lang))
     page.set_tag("disk")
 
@@ -1237,7 +1421,7 @@ def build_disk_page(shared, nav_view):
 # ── page 5: Storage strategy ─────────────────────────────────────────────
 
 def build_storage_strategy_page(shared, nav_view):
-    lang = shared.get("lang", "en_US")
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(title=_("Choose Installation Method", lang))
     page.set_tag("storage-strategy")
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
@@ -1487,7 +1671,7 @@ def build_storage_strategy_page(shared, nav_view):
 # ── page 6: Advanced coexistence storage ────────────────────────────────
 
 def build_advanced_storage_page(shared, nav_view):
-    lang = shared.get("lang", "en_US")
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(title=_("Advanced Storage", lang))
     page.set_tag("advanced-storage")
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
@@ -1888,7 +2072,7 @@ def _base_device(dev_path: str) -> str:
 # ── page 7: User account ─────────────────────────────────────────────────
 
 def build_user_page(shared, nav_view):
-    lang = shared.get("lang", "en_US")
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(title=_("User Account", lang))
     page.set_tag("user")
 
@@ -2192,7 +2376,7 @@ def _labeled(label_text, widget):
 # ── page 8: Timezone ─────────────────────────────────────────────────────
 
 def build_timezone_page(shared, nav_view):
-    lang = shared.get("lang", "en_US")
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(title=_("Select Timezone", lang))
     page.set_tag("timezone")
 
@@ -2332,7 +2516,7 @@ def _load_timezones():
 # ── page 9: Summary ──────────────────────────────────────────────────────
 
 def build_summary_page(shared, nav_view):
-    lang = shared.get("lang", "en_US")
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(title=_("Ready to Install", lang))
     page.set_tag("summary")
 
@@ -2460,6 +2644,18 @@ def build_summary_page(shared, nav_view):
         f"<b>{_('Timezone', lang)}:</b> "
         f"{escape(shared.get('timezone', '?'))}",
     ]
+
+    recommended_method = _recommended_input_method(shared)
+    if recommended_method is not None:
+        lines.insert(
+            2,
+            f"<b>{escape(recommended_method.display_name)}:</b> "
+            + (
+                _("download and install", lang)
+                if shared.get("install_input_method", True)
+                else _("do not install", lang)
+            ),
+        )
 
     if guided_mode:
         if not isinstance(guided_preview, GuidedStoragePreview):
@@ -2695,7 +2891,7 @@ def build_summary_page(shared, nav_view):
 # ── page 10: Progress / Installation ─────────────────────────────────────
 
 def build_progress_page(plan: InstallPlan, shared, nav_view):
-    lang = shared.get("lang", "en_US")
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(title=_("Installing AnduinOS", lang))
     page.set_tag("progress")
 
@@ -2709,6 +2905,12 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         )
     )
 
+    selected_method = input_method(plan.regional.input_method)
+    input_method_title = (
+        selected_method.display_name
+        if selected_method is not None
+        else _("Language", lang)
+    )
     step_titles = {
         "detect-boot-environment": _(
             "Detect firmware and Secure Boot", lang
@@ -2726,6 +2928,8 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "configure-storage": _("Configure storage and swap", lang),
         "enter-chroot": _("Prepare target environment", lang),
         "cleanup-live-system": _("Remove live-session components", lang),
+        "configure-keyboard-layout": _("Keyboard Layout", lang),
+        "install-input-method": input_method_title,
         "configure-system": _(
             "Configure account, region, and machine identity", lang
         ),
@@ -3234,7 +3438,7 @@ def _copy_log(log_buf, widget):
 
 def build_done_page(shared, nav_view):
     """Simple post-install page. Currently unused — progress page handles both states."""
-    lang = shared.get("lang", "en_US")
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(title=_("Installation Complete", lang))
     page.set_tag("done")
     page.set_child(Gtk.Label(label=_("Installation Complete", lang)))

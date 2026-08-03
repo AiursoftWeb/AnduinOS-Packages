@@ -21,10 +21,7 @@ def _locale_directory() -> Path:
     if override:
         return Path(override)
     source_tree = Path(__file__).resolve().parent.parent / "locale"
-    source_catalog = (
-        source_tree / "en_GB" / "LC_MESSAGES" / f"{DOMAIN}.mo"
-    )
-    if source_catalog.is_file():
+    if any(source_tree.glob(f"*/LC_MESSAGES/{DOMAIN}.mo")):
         return source_tree
     return Path("/usr/share/locale")
 

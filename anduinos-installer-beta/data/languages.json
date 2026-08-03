@@ -1,0 +1,387 @@
+{
+  "schema_version": 2,
+  "default_language": "en_US",
+  "locale_aliases": {
+    "en": "en_US",
+    "zh": "zh_CN",
+    "zh_MO": "zh_TW"
+  },
+  "rtl_languages": ["ar"],
+  "keyboard_layouts": {
+    "us": "English (US)",
+    "gb": "English (UK)",
+    "de": "German",
+    "fr": "French",
+    "it": "Italian",
+    "es": "Spanish",
+    "pt": "Portuguese",
+    "br": "Portuguese (Brazil)",
+    "dk": "Danish",
+    "se": "Swedish",
+    "no": "Norwegian",
+    "fi": "Finnish",
+    "nl": "Dutch",
+    "pl": "Polish",
+    "ro": "Romanian",
+    "ru": "Russian",
+    "ua": "Ukrainian",
+    "gr": "Greek",
+    "jp": "Japanese (JIS keyboard)",
+    "kr": "Korean",
+    "in": "Hindi (India)",
+    "th": "Thai",
+    "vn": "Vietnamese",
+    "ara": "Arabic",
+    "tr": "Turkish",
+    "id": "Indonesian"
+  },
+  "input_methods": {
+    "rime": {
+      "display_name": "AnduinOS Rime",
+      "language_name": "简体中文",
+      "desktop_source": {"type": "ibus", "id": "rime"},
+      "packages": ["anduinos-rime"],
+      "required_paths": [
+        "usr/lib/ibus-rime/ibus-engine-rime",
+        "usr/share/ibus/component/rime.xml",
+        "usr/share/rime-data/rime_ice.schema.yaml",
+        "usr/share/anduinos-rime/default.custom.yaml",
+        "usr/bin/glib-compile-schemas"
+      ],
+      "user_files": [
+        {
+          "source": "usr/share/anduinos-rime/default.custom.yaml",
+          "destination": ".config/ibus/rime/default.custom.yaml",
+          "mode": "0644"
+        }
+      ]
+    },
+    "cangjie": {
+      "display_name": "IBus Cangjie Big",
+      "language_name": "繁體中文（香港）",
+      "desktop_source": {"type": "ibus", "id": "table:cangjie-big"},
+      "packages": ["ibus-table-cangjie-big"],
+      "required_paths": [
+        "usr/libexec/ibus-engine-table",
+        "usr/share/ibus/component/table.xml",
+        "usr/share/ibus-table/tables/cangjie-big.db",
+        "usr/bin/glib-compile-schemas"
+      ],
+      "user_files": []
+    },
+    "chewing": {
+      "display_name": "IBus Chewing",
+      "language_name": "繁體中文（台灣）",
+      "desktop_source": {"type": "ibus", "id": "chewing"},
+      "packages": ["ibus-chewing"],
+      "required_paths": [
+        "usr/libexec/ibus-engine-chewing",
+        "usr/share/ibus/component/chewing.xml",
+        "usr/bin/glib-compile-schemas"
+      ],
+      "user_files": []
+    },
+    "mozc": {
+      "display_name": "IBus Mozc",
+      "language_name": "日本語",
+      "desktop_source": {"type": "ibus", "id": "mozc-jp"},
+      "packages": ["ibus-mozc"],
+      "required_paths": [
+        "usr/lib/ibus-mozc/ibus-engine-mozc",
+        "usr/share/ibus/component/mozc.xml",
+        "usr/bin/glib-compile-schemas"
+      ],
+      "user_files": []
+    },
+    "hangul": {
+      "display_name": "IBus Hangul",
+      "language_name": "한국어",
+      "desktop_source": {"type": "ibus", "id": "hangul"},
+      "packages": ["ibus-hangul"],
+      "required_paths": [
+        "usr/libexec/ibus-engine-hangul",
+        "usr/share/ibus/component/hangul.xml",
+        "usr/bin/glib-compile-schemas"
+      ],
+      "user_files": []
+    },
+    "unikey": {
+      "display_name": "IBus Unikey",
+      "language_name": "Tiếng Việt",
+      "desktop_source": {"type": "ibus", "id": "Unikey"},
+      "packages": ["ibus-unikey"],
+      "required_paths": [
+        "usr/libexec/ibus-engine-unikey",
+        "usr/share/ibus/component/unikey.xml",
+        "usr/bin/glib-compile-schemas"
+      ],
+      "user_files": []
+    },
+    "libthai": {
+      "display_name": "IBus LibThai",
+      "language_name": "ภาษาไทย",
+      "desktop_source": {"type": "ibus", "id": "libthai"},
+      "packages": ["ibus-libthai"],
+      "required_paths": [
+        "usr/libexec/ibus-engine-libthai",
+        "usr/share/ibus/component/libthai.xml",
+        "usr/bin/glib-compile-schemas"
+      ],
+      "user_files": []
+    }
+  },
+  "languages": [
+    {
+      "code": "ar",
+      "english_name": "Arabic",
+      "native_name": "العربية",
+      "locale": "ar_SA.UTF-8",
+      "keyboard": "ara",
+      "timezone": "Asia/Riyadh",
+      "recommended_input_method": null
+    },
+    {
+      "code": "zh_CN",
+      "english_name": "Chinese (Simplified)",
+      "native_name": "中文(简体)",
+      "locale": "zh_CN.UTF-8",
+      "keyboard": "us",
+      "timezone": "Asia/Shanghai",
+      "recommended_input_method": "rime"
+    },
+    {
+      "code": "zh_HK",
+      "english_name": "Chinese (Hong Kong)",
+      "native_name": "中文 (香港)",
+      "locale": "zh_HK.UTF-8",
+      "keyboard": "us",
+      "timezone": "Asia/Hong_Kong",
+      "recommended_input_method": "cangjie"
+    },
+    {
+      "code": "zh_TW",
+      "english_name": "Chinese (Traditional)",
+      "native_name": "中文(繁體)",
+      "locale": "zh_TW.UTF-8",
+      "keyboard": "us",
+      "timezone": "Asia/Taipei",
+      "recommended_input_method": "chewing"
+    },
+    {
+      "code": "da",
+      "english_name": "Danish",
+      "native_name": "Dansk",
+      "locale": "da_DK.UTF-8",
+      "keyboard": "dk",
+      "timezone": "Europe/Copenhagen",
+      "recommended_input_method": null
+    },
+    {
+      "code": "nl",
+      "english_name": "Dutch",
+      "native_name": "Nederlands",
+      "locale": "nl_NL.UTF-8",
+      "keyboard": "nl",
+      "timezone": "Europe/Amsterdam",
+      "recommended_input_method": null
+    },
+    {
+      "code": "en_US",
+      "english_name": "English (United States)",
+      "native_name": "English (United States)",
+      "locale": "en_US.UTF-8",
+      "keyboard": "us",
+      "timezone": "America/New_York",
+      "recommended_input_method": null
+    },
+    {
+      "code": "en_GB",
+      "english_name": "English (United Kingdom)",
+      "native_name": "English (United Kingdom)",
+      "locale": "en_GB.UTF-8",
+      "keyboard": "gb",
+      "timezone": "Europe/London",
+      "recommended_input_method": null
+    },
+    {
+      "code": "fi",
+      "english_name": "Finnish",
+      "native_name": "Suomi",
+      "locale": "fi_FI.UTF-8",
+      "keyboard": "fi",
+      "timezone": "Europe/Helsinki",
+      "recommended_input_method": null
+    },
+    {
+      "code": "fr",
+      "english_name": "French",
+      "native_name": "Français",
+      "locale": "fr_FR.UTF-8",
+      "keyboard": "fr",
+      "timezone": "Europe/Paris",
+      "recommended_input_method": null
+    },
+    {
+      "code": "de",
+      "english_name": "German",
+      "native_name": "Deutsch",
+      "locale": "de_DE.UTF-8",
+      "keyboard": "de",
+      "timezone": "Europe/Berlin",
+      "recommended_input_method": null
+    },
+    {
+      "code": "el",
+      "english_name": "Greek",
+      "native_name": "Ελληνικά",
+      "locale": "el_GR.UTF-8",
+      "keyboard": "gr",
+      "timezone": "Europe/Athens",
+      "recommended_input_method": null
+    },
+    {
+      "code": "hi",
+      "english_name": "Hindi",
+      "native_name": "हिन्दी",
+      "locale": "hi_IN.UTF-8",
+      "keyboard": "in",
+      "timezone": "Asia/Kolkata",
+      "recommended_input_method": null
+    },
+    {
+      "code": "id",
+      "english_name": "Indonesian",
+      "native_name": "Bahasa Indonesia",
+      "locale": "id_ID.UTF-8",
+      "keyboard": "id",
+      "timezone": "Asia/Jakarta",
+      "recommended_input_method": null
+    },
+    {
+      "code": "it",
+      "english_name": "Italian",
+      "native_name": "Italiano",
+      "locale": "it_IT.UTF-8",
+      "keyboard": "it",
+      "timezone": "Europe/Rome",
+      "recommended_input_method": null
+    },
+    {
+      "code": "ja",
+      "english_name": "Japanese",
+      "native_name": "日本語",
+      "locale": "ja_JP.UTF-8",
+      "keyboard": "jp",
+      "timezone": "Asia/Tokyo",
+      "recommended_input_method": "mozc"
+    },
+    {
+      "code": "ko",
+      "english_name": "Korean",
+      "native_name": "한국어",
+      "locale": "ko_KR.UTF-8",
+      "keyboard": "kr",
+      "timezone": "Asia/Seoul",
+      "recommended_input_method": "hangul"
+    },
+    {
+      "code": "pl",
+      "english_name": "Polish",
+      "native_name": "Polski",
+      "locale": "pl_PL.UTF-8",
+      "keyboard": "pl",
+      "timezone": "Europe/Warsaw",
+      "recommended_input_method": null
+    },
+    {
+      "code": "pt",
+      "english_name": "Portuguese",
+      "native_name": "Português",
+      "locale": "pt_PT.UTF-8",
+      "keyboard": "pt",
+      "timezone": "Europe/Lisbon",
+      "recommended_input_method": null
+    },
+    {
+      "code": "pt_BR",
+      "english_name": "Portuguese (Brazil)",
+      "native_name": "Português do Brasil",
+      "locale": "pt_BR.UTF-8",
+      "keyboard": "br",
+      "timezone": "America/Sao_Paulo",
+      "recommended_input_method": null
+    },
+    {
+      "code": "ro",
+      "english_name": "Romanian",
+      "native_name": "Română",
+      "locale": "ro_RO.UTF-8",
+      "keyboard": "ro",
+      "timezone": "Europe/Bucharest",
+      "recommended_input_method": null
+    },
+    {
+      "code": "ru",
+      "english_name": "Russian",
+      "native_name": "Русский",
+      "locale": "ru_RU.UTF-8",
+      "keyboard": "ru",
+      "timezone": "Europe/Moscow",
+      "recommended_input_method": null
+    },
+    {
+      "code": "es",
+      "english_name": "Spanish",
+      "native_name": "Español",
+      "locale": "es_ES.UTF-8",
+      "keyboard": "es",
+      "timezone": "Europe/Madrid",
+      "recommended_input_method": null
+    },
+    {
+      "code": "sv",
+      "english_name": "Swedish",
+      "native_name": "Svenska",
+      "locale": "sv_SE.UTF-8",
+      "keyboard": "se",
+      "timezone": "Europe/Stockholm",
+      "recommended_input_method": null
+    },
+    {
+      "code": "th",
+      "english_name": "Thai",
+      "native_name": "ภาษาไทย",
+      "locale": "th_TH.UTF-8",
+      "keyboard": "th",
+      "timezone": "Asia/Bangkok",
+      "recommended_input_method": "libthai"
+    },
+    {
+      "code": "tr",
+      "english_name": "Turkish",
+      "native_name": "Türkçe",
+      "locale": "tr_TR.UTF-8",
+      "keyboard": "tr",
+      "timezone": "Europe/Istanbul",
+      "recommended_input_method": null
+    },
+    {
+      "code": "uk",
+      "english_name": "Ukrainian",
+      "native_name": "Українська",
+      "locale": "uk_UA.UTF-8",
+      "keyboard": "ua",
+      "timezone": "Europe/Kyiv",
+      "recommended_input_method": null
+    },
+    {
+      "code": "vi",
+      "english_name": "Vietnamese",
+      "native_name": "Tiếng Việt",
+      "locale": "vi_VN.UTF-8",
+      "keyboard": "vn",
+      "timezone": "Asia/Ho_Chi_Minh",
+      "recommended_input_method": "unikey"
+    }
+  ]
+}

@@ -6,9 +6,21 @@ po_dir="$project_dir/po"
 locale_dir="$project_dir/locale"
 domain="anduinos-installer-beta"
 
-expected_languages=(
-    ar da de el en_GB es fi fr hi id it ja ko nl pl pt pt_BR ro ru sv
-    th tr uk vi zh_CN zh_HK zh_TW
+mapfile -t expected_languages < <(
+    python3 - "$project_dir/data/languages.json" <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], encoding="utf-8") as stream:
+    policy = json.load(stream)
+default = policy["default_language"]
+for code in sorted(
+    language["code"]
+    for language in policy["languages"]
+    if language["code"] != default
+):
+    print(code)
+PY
 )
 actual_languages=()
 for po_file in "$po_dir"/*.po; do

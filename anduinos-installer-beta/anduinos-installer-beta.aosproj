@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.1-27+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-33+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer (beta) — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -71,6 +71,7 @@
     <Dependency Include="network-manager" />
     <Dependency Include="gnome-control-center" />
     <Dependency Include="polkitd" />
+    <Dependency Include="libglib2.0-bin" />
   </ItemGroup>
 
   <ItemGroup>
@@ -94,6 +95,8 @@
     <!-- Python source tree -->
     <IncludeFolder Include="src/"
                    Target="/usr/lib/anduinos-installer-beta/" />
+    <IncludeFile Include="data/languages.json"
+                 Target="/usr/share/anduinos-installer-beta/languages.json" Mode="644" />
     <IncludeFolder Include="locale/"
                    Target="/usr/share/locale/" />
     <!-- Independent, native-GTK reuse of the historical localized slideshow. -->

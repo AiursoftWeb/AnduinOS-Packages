@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import replace
 
+from languages import DEFAULT_KEYBOARD, DEFAULT_LOCALE, DEFAULT_TIMEZONE
+
 from .model import (
     SCHEMA_VERSION,
     AuthenticationMode,
@@ -37,9 +39,9 @@ def build_guided_vm_test_plan(
     username: str = "anduinostest",
     full_name: str = "AnduinOS VM Test",
     hostname: str = "anduinos-test",
-    locale: str = "en_US.UTF-8",
-    timezone: str = "Etc/UTC",
-    keyboard: str = "us",
+    locale: str = DEFAULT_LOCALE,
+    timezone: str = DEFAULT_TIMEZONE,
+    keyboard: str = DEFAULT_KEYBOARD,
 ) -> InstallPlan:
     preview = build_guided_storage_preview(workflow, selection)
     platform = workflow.platform

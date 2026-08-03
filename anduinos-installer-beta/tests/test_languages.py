@@ -1,9 +1,14 @@
+import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
+
+import languages as language_module
 
 from languages import (
     DEFAULT_TIMEZONES,
+    INPUT_METHODS,
     LANGUAGES,
     default_timezone,
     detect_system_language,
@@ -12,10 +17,9 @@ from languages import (
 
 
 class LanguageDefaultsTests(unittest.TestCase):
-    def test_official_language_matrix_has_exactly_28_entries(self):
-        self.assertEqual(
-            [language.code for language in LANGUAGES],
-            [
+    def test_current_official_languages_remain_supported(self):
+        self.assertTrue(
+            {
                 "ar",
                 "zh_CN",
                 "zh_HK",
@@ -44,7 +48,8 @@ class LanguageDefaultsTests(unittest.TestCase):
                 "tr",
                 "uk",
                 "vi",
-            ],
+            }
+            <= {language.code for language in LANGUAGES}
         )
 
     def test_chinese_locales_use_us_physical_keyboard(self):
@@ -57,6 +62,50 @@ class LanguageDefaultsTests(unittest.TestCase):
             chinese,
             {"zh_CN": "us", "zh_HK": "us", "zh_TW": "us"},
         )
+
+    def test_input_method_policy_is_installer_owned_and_complete(self):
+        self.assertTrue(
+            {
+                "rime", "cangjie", "chewing", "mozc", "hangul",
+                "unikey", "libthai",
+            }
+            <= set(INPUT_METHODS)
+        )
+        rime = INPUT_METHODS["rime"]
+        self.assertEqual(rime.display_name, "AnduinOS Rime")
+        self.assertEqual(rime.language_name, "简体中文")
+        self.assertEqual(rime.desktop_source.type, "ibus")
+        self.assertEqual(rime.desktop_source.id, "rime")
+        self.assertEqual(
+            set(rime.packages),
+            {"anduinos-rime"},
+        )
+        mapping = {
+            language.code: language.recommended_input_method
+            for language in LANGUAGES
+        }
+        for code, method_id in {
+            "zh_CN": "rime",
+            "zh_HK": "cangjie",
+            "zh_TW": "chewing",
+            "ja": "mozc",
+            "ko": "hangul",
+            "th": "libthai",
+            "vi": "unikey",
+        }.items():
+            with self.subTest(language=code):
+                self.assertEqual(mapping[code], method_id)
+        self.assertEqual(len(rime.user_files), 1)
+        self.assertEqual(
+            str(rime.user_files[0].destination),
+            ".config/ibus/rime/default.custom.yaml",
+        )
+        self.assertEqual(rime.user_files[0].mode, 0o644)
+        for method in INPUT_METHODS.values():
+            with self.subTest(method=method.id):
+                self.assertTrue(method.packages)
+                self.assertTrue(method.required_paths)
+                self.assertIsNotNone(method.desktop_source)
 
     def test_every_supported_language_has_a_maintained_timezone(self):
         self.assertEqual(
@@ -125,3 +174,82 @@ class LanguageDefaultsTests(unittest.TestCase):
                     {"LANG": locale_name}, Path("/does/not/exist")
                 )
                 self.assertEqual(language.code, "en_US")
+
+    def test_policy_loader_rejects_path_traversal(self):
+        policy = json.loads(
+            (Path(__file__).parents[1] / "data/languages.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        policy["input_methods"]["rime"]["user_files"][0][
+            "destination"
+        ] = "../unsafe"
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "languages.json"
+            path.write_text(json.dumps(policy), encoding="utf-8")
+            with patch.object(language_module, "_config_path", return_value=path):
+                with self.assertRaisesRegex(RuntimeError, "Unsafe"):
+                    language_module._load_configuration()
+
+    def test_policy_loader_rejects_unknown_input_method(self):
+        policy = json.loads(
+            (Path(__file__).parents[1] / "data/languages.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        policy["languages"][0]["recommended_input_method"] = "missing"
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "languages.json"
+            path.write_text(json.dumps(policy), encoding="utf-8")
+            with patch.object(language_module, "_config_path", return_value=path):
+                with self.assertRaisesRegex(RuntimeError, "unknown input method"):
+                    language_module._load_configuration()
+
+    def test_new_language_and_input_method_require_json_changes_only(self):
+        policy = json.loads(
+            (Path(__file__).parents[1] / "data/languages.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        policy["input_methods"]["example-ime"] = {
+            "display_name": "Example IME",
+            "language_name": "Example language",
+            "desktop_source": {"type": "ibus", "id": "example:engine"},
+            "packages": ["ibus-example"],
+            "required_paths": ["usr/share/ibus/component/example.xml"],
+            "user_files": [],
+        }
+        policy["keyboard_layouts"]["xx"] = "Example keyboard"
+        policy["languages"].append(
+            {
+                "code": "xx",
+                "english_name": "Example language",
+                "native_name": "Example language",
+                "locale": "xx_XX.UTF-8",
+                "keyboard": "xx",
+                "timezone": "Etc/UTC",
+                "recommended_input_method": "example-ime",
+            }
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "languages.json"
+            path.write_text(json.dumps(policy), encoding="utf-8")
+            with patch.object(language_module, "_config_path", return_value=path):
+                (
+                    languages,
+                    methods,
+                    default_language,
+                    aliases,
+                    keyboards,
+                    rtl_languages,
+                ) = language_module._load_configuration()
+
+        added_language = languages[-1]
+        added_method = methods["example-ime"]
+        self.assertEqual(added_language.recommended_input_method, "example-ime")
+        self.assertEqual(added_method.packages, ("ibus-example",))
+        self.assertEqual(added_method.desktop_source.id, "example:engine")
+        self.assertEqual(default_language, "en_US")
+        self.assertEqual(aliases["zh_MO"], "zh_TW")
+        self.assertEqual(keyboards["xx"], "Example keyboard")
+        self.assertEqual(rtl_languages, frozenset({"ar"}))
