@@ -227,6 +227,139 @@ def is_live_environment():
     return True
 
 
+def internet_connection_ready(monitor=None):
+    """Return True only for complete Internet access without a captive portal."""
+    try:
+        monitor = monitor or Gio.NetworkMonitor.get_default()
+        return monitor.get_connectivity() == Gio.NetworkConnectivity.FULL
+    except Exception:
+        # Detection failures must keep the network page available.
+        return False
+
+
+def _split_nmcli_terse(line):
+    """Split an escaped nmcli terse record without losing literal colons."""
+    fields = []
+    current = []
+    escaped = False
+    for character in line.rstrip('\n'):
+        if escaped:
+            current.append(character)
+            escaped = False
+        elif character == '\\':
+            escaped = True
+        elif character == ':':
+            fields.append(''.join(current))
+            current = []
+        else:
+            current.append(character)
+    if escaped:
+        current.append('\\')
+    fields.append(''.join(current))
+    return fields
+
+
+def _scan_wifi_networks():
+    """Return visible NetworkManager Wi-Fi networks, grouped by SSID."""
+    result = subprocess.run(
+        ['nmcli', '--terse', '--escape', 'yes', '--fields',
+         'IN-USE,SSID,SIGNAL,SECURITY', 'device', 'wifi', 'list',
+         '--rescan', 'yes'],
+        capture_output=True, text=True, timeout=20)
+    if result.returncode != 0:
+        detail = (result.stderr or result.stdout).strip()
+        raise RuntimeError(detail or _('NetworkManager could not scan Wi-Fi.'))
+
+    networks = {}
+    for line in result.stdout.splitlines():
+        fields = _split_nmcli_terse(line)
+        if len(fields) != 4:
+            continue
+        active, ssid, signal_text, security = fields
+        ssid = ssid.strip()
+        if not ssid:
+            continue
+        try:
+            signal = max(0, min(100, int(signal_text)))
+        except ValueError:
+            signal = 0
+        candidate = {
+            'ssid': ssid,
+            'signal': signal,
+            'security': security.strip() or '--',
+            'active': active.strip() == '*',
+        }
+        previous = networks.get(ssid)
+        if previous is None or (
+            candidate['active'], candidate['signal']
+        ) > (previous['active'], previous['signal']):
+            networks[ssid] = candidate
+
+    return sorted(
+        networks.values(),
+        key=lambda network: (
+            not network['active'],
+            -network['signal'],
+            network['ssid'].casefold(),
+        ))
+
+
+def _parse_network_devices(output):
+    """Group NetworkManager devices by hardware type."""
+    devices = {'wifi': [], 'ethernet': []}
+    for line in output.splitlines():
+        fields = _split_nmcli_terse(line)
+        if len(fields) != 3:
+            continue
+        name, device_type, state = (field.strip() for field in fields)
+        if name and device_type in devices:
+            devices[device_type].append({
+                'name': name,
+                'state': state.lower(),
+            })
+    return devices
+
+
+def _get_network_devices():
+    """Return physical Wi-Fi and Ethernet devices known to NetworkManager."""
+    command_env = os.environ.copy()
+    command_env['LC_ALL'] = 'C'
+    result = subprocess.run(
+        ['nmcli', '--terse', '--escape', 'yes', '--fields',
+         'DEVICE,TYPE,STATE', 'device', 'status'],
+        capture_output=True, text=True, timeout=10, env=command_env)
+    if result.returncode != 0:
+        detail = (result.stderr or result.stdout).strip()
+        raise RuntimeError(
+            detail or _('Could not inspect network adapters.'))
+    return _parse_network_devices(result.stdout)
+
+
+def _wifi_radio_enabled():
+    result = subprocess.run(
+        ['nmcli', 'radio', 'wifi'],
+        capture_output=True, text=True, timeout=10)
+    if result.returncode != 0:
+        detail = (result.stderr or result.stdout).strip()
+        raise RuntimeError(detail or _('Could not read the Wi-Fi radio state.'))
+    state = result.stdout.strip().lower()
+    if state == 'enabled':
+        return True
+    if state == 'disabled':
+        return False
+    raise RuntimeError(_('Unknown Wi-Fi radio state: {}').format(
+        state or _('empty')))
+
+
+def _set_wifi_radio(enabled):
+    result = subprocess.run(
+        ['nmcli', 'radio', 'wifi', 'on' if enabled else 'off'],
+        capture_output=True, text=True, timeout=20)
+    if result.returncode != 0:
+        detail = (result.stderr or result.stdout).strip()
+        raise RuntimeError(detail or _('Could not change the Wi-Fi radio state.'))
+
+
 def _apply_theme(dark):
     scheme = 'prefer-dark' if dark else 'prefer-light'
     settings = Gio.Settings.new('org.gnome.desktop.interface')
@@ -433,11 +566,280 @@ def create_welcome_page(navigate_next):
 
 
 # ═══════════════════════════════════════════════════════════════════
+# NETWORK — shown immediately after Welcome when startup is offline
+# ═══════════════════════════════════════════════════════════════════
+
+def create_network_page(continue_offline, update_nav=None):
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page.set_margin_start(48)
+    page.set_margin_end(48)
+    page.set_margin_top(24)
+    page.set_margin_bottom(24)
+    page._hide_next = True
+    page._suggest_next = False
+
+    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=18)
+    center.set_valign(Gtk.Align.CENTER)
+    center.set_vexpand(True)
+    page.append(center)
+
+    icon = Gtk.Image.new_from_icon_name('network-wireless-symbolic')
+    icon.set_pixel_size(72)
+    icon.set_halign(Gtk.Align.CENTER)
+    center.append(icon)
+
+    title = Gtk.Label(label=_('Connect to the Internet'))
+    title.add_css_class('title-1')
+    title.set_halign(Gtk.Align.CENTER)
+    title.set_wrap(True)
+    title.set_justify(Gtk.Justification.CENTER)
+    center.append(title)
+
+    subtitle = Gtk.Label(
+        label=_('Connect now so AnduinOS can safely check for updates, drivers, and apps.'))
+    subtitle.add_css_class('dim-label')
+    subtitle.set_halign(Gtk.Align.CENTER)
+    subtitle.set_wrap(True)
+    subtitle.set_justify(Gtk.Justification.CENTER)
+    center.append(subtitle)
+
+    status_group = Adw.PreferencesGroup()
+    status_row = Adw.ActionRow(title=_('Internet Connection'))
+    status_icon = Gtk.Image(pixel_size=24)
+    status_row.add_prefix(status_icon)
+    status_group.add(status_row)
+    center.append(status_group)
+
+    hardware_group = Adw.PreferencesGroup()
+    hardware_group.set_title(_('Network Hardware'))
+    hardware_row = Adw.ActionRow()
+    hardware_icon = Gtk.Image(pixel_size=24)
+    hardware_row.add_prefix(hardware_icon)
+    hardware_group.add(hardware_row)
+    center.append(hardware_group)
+
+    networks_group = Adw.PreferencesGroup()
+    networks_group.set_title(_('Available Wi-Fi Networks'))
+
+    controls_row = Adw.ActionRow(title=_('Wi-Fi'))
+    refresh_btn = Gtk.Button(icon_name='view-refresh-symbolic')
+    refresh_btn.set_valign(Gtk.Align.CENTER)
+    refresh_btn.set_tooltip_text(_('Scan Again'))
+    wifi_switch = Gtk.Switch(valign=Gtk.Align.CENTER, sensitive=False)
+    controls_row.add_suffix(refresh_btn)
+    controls_row.add_suffix(wifi_switch)
+    networks_group.add(controls_row)
+
+    wifi_rows = []
+    center.append(networks_group)
+
+    settings_btn = Gtk.Button(label=_('Open Network Settings'))
+    settings_btn.set_halign(Gtk.Align.CENTER)
+    settings_state = {'panel': 'network'}
+
+    def _open_settings(panel='network'):
+        try:
+            subprocess.Popen(['gnome-control-center', panel])
+        except OSError as error:
+            status_row.set_subtitle(
+                _('Could not open network settings: {}').format(error))
+
+    def _open_wifi_settings(*_args):
+        _open_settings('wifi')
+
+    settings_btn.connect(
+        'clicked',
+        lambda _button: _open_settings(settings_state['panel']))
+    center.append(settings_btn)
+
+    offline_btn = Gtk.Button(label=_('Continue Offline'))
+    offline_btn.set_halign(Gtk.Align.CENTER)
+    offline_btn.add_css_class('flat')
+    offline_btn.set_tooltip_text(
+        _('Skip updates, online drivers, apps, and account setup.'))
+    offline_btn.connect('clicked', lambda _button: continue_offline())
+    center.append(offline_btn)
+
+    monitor = Gio.NetworkMonitor.get_default()
+
+    def _render_connectivity():
+        online = internet_connection_ready(monitor)
+        page._hide_next = not online
+        page._suggest_next = online
+        page._block_carousel = not online
+        if online:
+            status_icon.set_from_icon_name('network-transmit-receive-symbolic')
+            status_icon.remove_css_class('warning')
+            status_icon.add_css_class('success')
+            status_row.set_subtitle(
+                _('Internet connection is ready. Choose Next to continue.'))
+            offline_btn.set_visible(False)
+        else:
+            status_icon.set_from_icon_name('network-offline-symbolic')
+            status_icon.remove_css_class('success')
+            status_icon.add_css_class('warning')
+            status_row.set_subtitle(
+                _('Connect to Wi-Fi or a wired network to continue.'))
+            offline_btn.set_visible(True)
+        if update_nav:
+            update_nav()
+
+    def _clear_wifi_rows():
+        for row in wifi_rows:
+            networks_group.remove(row)
+        wifi_rows.clear()
+
+    def _replace_wifi_rows(devices, enabled, found):
+        wifi_devices = devices['wifi']
+        ethernet_devices = devices['ethernet']
+        has_wifi = bool(wifi_devices)
+        has_ethernet = bool(ethernet_devices)
+        ethernet_connected = any(
+            device['state'] in ('connected', 'connecting')
+            for device in ethernet_devices
+        )
+
+        networks_group.set_visible(has_wifi)
+        if not has_wifi and not has_ethernet:
+            hardware_icon.set_from_icon_name('network-offline-symbolic')
+            hardware_row.set_title(_('No network adapters detected.'))
+            hardware_row.set_subtitle(
+                _('Connect a network adapter or continue offline.'))
+            settings_btn.set_label(_('Open Network Settings'))
+            settings_state['panel'] = 'network'
+        elif has_ethernet and not has_wifi:
+            hardware_icon.set_from_icon_name('network-wired-symbolic')
+            hardware_row.set_title(_('Wired Network'))
+            hardware_row.set_subtitle(
+                _('Cable connected.') if ethernet_connected
+                else _('Plug in a network cable to connect.'))
+            settings_btn.set_label(_('Open Network Settings'))
+            settings_state['panel'] = 'network'
+        elif has_wifi and not has_ethernet:
+            hardware_icon.set_from_icon_name('network-wireless-symbolic')
+            hardware_row.set_title(_('Wireless Network'))
+            hardware_row.set_subtitle(_('Wi-Fi adapter detected.'))
+            settings_btn.set_label(_('Open Wi-Fi Settings'))
+            settings_state['panel'] = 'wifi'
+        else:
+            hardware_icon.set_from_icon_name('network-wired-symbolic')
+            hardware_row.set_title(_('Wired and Wireless Networks'))
+            hardware_row.set_subtitle(
+                _('Cable connected and Wi-Fi available.')
+                if ethernet_connected else
+                _('Wi-Fi is available; the network cable is disconnected.'))
+            settings_btn.set_label(_('Open Network Settings'))
+            settings_state['panel'] = 'network'
+
+        wifi_switch.handler_block(radio_handler)
+        wifi_switch.set_active(enabled)
+        wifi_switch.set_state(enabled)
+        wifi_switch.handler_unblock(radio_handler)
+        wifi_switch.set_sensitive(True)
+        _clear_wifi_rows()
+
+        if not enabled:
+            row = Adw.ActionRow(title=_('Wi-Fi is turned off.'))
+            networks_group.add(row)
+            wifi_rows.append(row)
+        elif not found:
+            row = Adw.ActionRow(title=_('No Wi-Fi networks found.'))
+            networks_group.add(row)
+            wifi_rows.append(row)
+        else:
+            for network in found:
+                detail = '{}%'.format(network['signal'])
+                if network['security'] != '--':
+                    detail += ' · ' + network['security']
+                row = Adw.ActionRow(
+                    title=network['ssid'], subtitle=detail, activatable=True)
+                signal = network['signal']
+                signal_icon = Gtk.Image.new_from_icon_name(
+                    'network-wireless-signal-excellent-symbolic'
+                    if signal >= 70 else
+                    'network-wireless-signal-good-symbolic'
+                    if signal >= 40 else
+                    'network-wireless-signal-weak-symbolic')
+                row.add_prefix(signal_icon)
+                if network['active']:
+                    row.add_suffix(
+                        Gtk.Image.new_from_icon_name('emblem-ok-symbolic'))
+                row.connect('activated', _open_wifi_settings)
+                networks_group.add(row)
+                wifi_rows.append(row)
+        refresh_btn.set_sensitive(True)
+
+    def _show_scan_error(error):
+        _clear_wifi_rows()
+        row = Adw.ActionRow(
+            title=_('Wi-Fi unavailable: {}').format(error))
+        networks_group.add(row)
+        wifi_rows.append(row)
+        wifi_switch.set_sensitive(True)
+        refresh_btn.set_sensitive(True)
+
+    def _scan_wifi(*_args):
+        refresh_btn.set_sensitive(False)
+
+        def _worker():
+            try:
+                devices = _get_network_devices()
+                has_wifi = bool(devices['wifi'])
+                enabled = _wifi_radio_enabled() if has_wifi else False
+                found = (
+                    _scan_wifi_networks() if has_wifi and enabled else []
+                )
+            except Exception as error:
+                GLib.idle_add(_show_scan_error, error)
+            else:
+                GLib.idle_add(
+                    _replace_wifi_rows, devices, enabled, found)
+
+        threading.Thread(target=_worker, daemon=True).start()
+
+    def _finish_radio_change(enabled, error):
+        if error is not None:
+            _show_scan_error(error)
+        else:
+            wifi_switch.handler_block(radio_handler)
+            wifi_switch.set_active(enabled)
+            wifi_switch.set_state(enabled)
+            wifi_switch.handler_unblock(radio_handler)
+        _scan_wifi()
+
+    def _on_radio_state_set(_switch, enabled):
+        wifi_switch.set_sensitive(False)
+        refresh_btn.set_sensitive(False)
+
+        def _worker():
+            error = None
+            try:
+                _set_wifi_radio(enabled)
+            except Exception as exception:
+                error = exception
+            GLib.idle_add(_finish_radio_change, enabled, error)
+
+        threading.Thread(target=_worker, daemon=True).start()
+        return True
+
+    radio_handler = wifi_switch.connect('state-set', _on_radio_state_set)
+    refresh_btn.connect('clicked', _scan_wifi)
+    monitor.connect(
+        'network-changed',
+        lambda _monitor, _available: (_render_connectivity(), _scan_wifi()))
+
+    _render_connectivity()
+    _scan_wifi()
+    return page
+
+
+# ═══════════════════════════════════════════════════════════════════
 # PAGE 2: APPEARANCE — 外观与秩序
 # ═══════════════════════════════════════════════════════════════════
 
 def create_appearance_page():
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page._oobe_page_name = 'appearance'
     page.set_valign(Gtk.Align.FILL)
     page.set_halign(Gtk.Align.FILL)
     page.set_margin_start(48)
@@ -809,6 +1211,7 @@ def create_security_page():
 
 def create_update_page(navigate_next, update_nav=None):
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page._requires_internet = True
     page.set_valign(Gtk.Align.FILL)
     page.set_halign(Gtk.Align.FILL)
     page.set_margin_start(48)
@@ -1788,6 +2191,7 @@ EOF
 
 def create_nvidia_page(navigate_next, update_nav=None):
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page._requires_internet = True
     page.set_valign(Gtk.Align.FILL)
     page.set_halign(Gtk.Align.FILL)
     page.set_margin_start(48)
@@ -1985,6 +2389,7 @@ def create_nvidia_page(navigate_next, update_nav=None):
 
 def create_xbox_page(navigate_next, update_nav=None):
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page._requires_internet = True
     page.set_valign(Gtk.Align.FILL)
     page.set_halign(Gtk.Align.FILL)
     page.set_margin_start(48)
@@ -2597,6 +3002,7 @@ apt update && apt reinstall -y anduinos-xbox-controller-driver
 
 def create_exe_sandbox_page(navigate_next):
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page._requires_internet = True
     page.set_valign(Gtk.Align.FILL)
     page.set_halign(Gtk.Align.FILL)
     page.set_margin_start(48)
@@ -2920,6 +3326,7 @@ def create_shortcuts_page():
 
 def create_flathub_mirror_page():
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page._requires_internet = True
     page.set_valign(Gtk.Align.FILL)
     page.set_halign(Gtk.Align.FILL)
     page.set_margin_start(48)
@@ -3159,6 +3566,7 @@ def create_flathub_mirror_page():
 
 def create_apps_page():
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page._requires_internet = True
     page.set_valign(Gtk.Align.FILL)
     page.set_halign(Gtk.Align.FILL)
     page.set_margin_start(48)
@@ -3349,6 +3757,7 @@ def _open_software_center(app_id):
 
 def create_sync_page():
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    page._requires_internet = True
     page.set_valign(Gtk.Align.FILL)
     page.set_halign(Gtk.Align.FILL)
     page.set_margin_start(48)
@@ -3686,6 +4095,7 @@ class OobeWindow(Adw.ApplicationWindow):
         super().__init__(application=app)
         self.app = app
         self.is_oobe = is_oobe
+        self.offline_mode = False
 
         if is_oobe:
             self.set_title(_('AnduinOS Setup'))
@@ -3716,16 +4126,9 @@ class OobeWindow(Adw.ApplicationWindow):
         nav = self  # navigation context
         nav._pages = []
 
-        def _nav_next():
-            idx = int(self.carousel.get_position())
-            if idx < self.carousel.get_n_pages() - 1:
-                self.carousel.scroll_to(
-                    self.carousel.get_nth_page(idx + 1), True
-                )
-            else:
-                self._finish_oobe()
-
-        for factory in self._get_page_factories(navigate_next=_nav_next):
+        for factory in self._get_page_factories(
+            navigate_next=self._nav_next
+        ):
             p = factory()
             scroll = Gtk.ScrolledWindow()
             scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
@@ -3761,7 +4164,7 @@ class OobeWindow(Adw.ApplicationWindow):
 
         self.next_btn = Gtk.Button(label=_('Next →'))
         self.next_btn.add_css_class('suggested-action')
-        self.next_btn.connect('clicked', lambda b: _nav_next())
+        self.next_btn.connect('clicked', lambda b: self._nav_next())
         bottom.set_end_widget(self.next_btn)
 
         self.carousel.connect('page-changed', self._on_page_changed)
@@ -3782,10 +4185,22 @@ class OobeWindow(Adw.ApplicationWindow):
 
         factories = [
             lambda: create_welcome_page(_nav if self.is_oobe else None),
+        ]
+
+        # Decide once while the welcome screen is being created. If startup is
+        # offline, Start leads to networking before any system setup page.
+        if not internet_connection_ready():
+            factories.append(
+                lambda: create_network_page(
+                    self._continue_offline, _update_nav
+                )
+            )
+
+        factories.extend([
             lambda: create_appearance_page(),
             lambda: create_security_page(),
             lambda: create_update_page(_nav, _update_nav),
-        ]
+        ])
 
         try:
             r = subprocess.run(['mokutil', '--sb-state'], capture_output=True, text=True, timeout=5)
@@ -3820,14 +4235,28 @@ class OobeWindow(Adw.ApplicationWindow):
     def _on_page_changed(self, carousel, index):
         self._update_nav_buttons()
 
+    @staticmethod
+    def _content_page(clamp):
+        """Return the actual page inside Clamp → ScrolledWindow."""
+        wrapper = clamp.get_child() if clamp else None
+        return (
+            wrapper.get_child()
+            if isinstance(wrapper, Gtk.ScrolledWindow)
+            else wrapper
+        )
+
     def _update_nav_buttons(self):
         idx = int(self.carousel.get_position())
         n_pages = self.carousel.get_n_pages()
 
         clamp = self.carousel.get_nth_page(idx)
-        page = clamp.get_child() if clamp else None
+        page = self._content_page(clamp)
 
         hide_next = getattr(page, '_hide_next', False) if page else False
+        block_carousel = (
+            getattr(page, '_block_carousel', False) if page else False
+        )
+        self.carousel.set_interactive(not block_carousel)
 
         self.back_btn.set_visible(idx > 0)
         if idx == 0 and self.is_oobe:
@@ -3835,7 +4264,11 @@ class OobeWindow(Adw.ApplicationWindow):
         else:
             self.next_btn.set_visible(not hide_next)
         
-        if idx == 1 and self.is_oobe:
+        current_is_appearance = (
+            page is not None and
+            getattr(page, '_oobe_page_name', None) == 'appearance'
+        )
+        if current_is_appearance and self.is_oobe:
             # Mark OOBE as seen once user reaches the Appearance page.
             # No need to nag them again even if they close the window here.
             os.makedirs(os.path.dirname(MARKER_FILE), exist_ok=True)
@@ -3856,6 +4289,30 @@ class OobeWindow(Adw.ApplicationWindow):
         idx = int(self.carousel.get_position())
         if idx > 0:
             self.carousel.scroll_to(self.carousel.get_nth_page(idx - 1), True)
+
+    def _nav_next(self):
+        idx = int(self.carousel.get_position())
+        if idx < self.carousel.get_n_pages() - 1:
+            self.carousel.scroll_to(
+                self.carousel.get_nth_page(idx + 1), True
+            )
+        else:
+            self._finish_oobe()
+
+    def _continue_offline(self):
+        """Remove network-only steps and continue with local setup."""
+        self.offline_mode = True
+        online_pages = [
+            clamp for clamp in self._pages
+            if getattr(
+                self._content_page(clamp), '_requires_internet', False
+            )
+        ]
+        for clamp in online_pages:
+            self.carousel.remove(clamp)
+            self._pages.remove(clamp)
+        self._update_nav_buttons()
+        self._nav_next()
 
     def _finish_oobe(self):
         """Mark OOBE done and close."""
