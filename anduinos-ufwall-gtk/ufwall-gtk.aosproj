@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-ufwall-gtk</PackageName>
-    <PackageVersion>2.0.1-5+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-6+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Firewall Configuration — a modern GTK4 and Libadwaita frontend for monitoring firewall activity and managing UFW status, rules, and application profiles.</PackageDescription>
     <Section>admin</Section>
@@ -30,11 +30,13 @@
   <ItemGroup>
     <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
     <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
+    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-network-service-helper.py" />
   </ItemGroup>
 
   <ItemGroup>
     <IncludeScript Include="obj/ufwall-gtk" Target="/usr/bin/ufwall-gtk" />
     <IncludeScript Include="obj/ufwall-auditor" Target="/usr/libexec/ufwall-gtk/ufwall-auditor" />
+    <IncludeScript Include="scripts/network-service-helper" Target="/usr/libexec/ufwall-gtk/network-service-helper" />
     <IncludeFile Include="data/com.anduinos.ufwall.policy" Target="/usr/share/polkit-1/actions/com.anduinos.ufwall.policy" />
     <IncludeFolder Include="data/app_profiles" Target="/usr/share/ufwall-gtk/app_profiles" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />

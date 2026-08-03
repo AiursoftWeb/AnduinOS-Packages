@@ -1,0 +1,51 @@
+#!/usr/bin/python3
+"""Restricted local network discovery control for AnduinOS OOBE."""
+
+from __future__ import annotations
+
+import os
+import subprocess
+import sys
+
+
+MDNS_UNITS = ("avahi-daemon.service", "avahi-daemon.socket")
+
+
+def run(command: list[str]) -> None:
+    result = subprocess.run(command, check=False)
+    if result.returncode:
+        raise RuntimeError(
+            f"{command[0]} exited with status {result.returncode}"
+        )
+
+
+def set_mdns_enabled(enabled: bool) -> None:
+    if enabled:
+        run(["systemctl", "unmask", *MDNS_UNITS])
+        run(["systemctl", "enable", "--now", *MDNS_UNITS])
+    else:
+        # Mask both activation paths so the socket cannot revive the daemon.
+        run(["systemctl", "mask", "--now", *MDNS_UNITS])
+
+
+def main(arguments: list[str]) -> int:
+    if os.geteuid() != 0:
+        print("This helper must be run through polkit.", file=sys.stderr)
+        return 77
+    try:
+        match arguments:
+            case ["set-mdns-enabled", "true"]:
+                set_mdns_enabled(True)
+            case ["set-mdns-enabled", "false"]:
+                set_mdns_enabled(False)
+            case _:
+                print("Unknown or incomplete action.", file=sys.stderr)
+                return 64
+    except (OSError, RuntimeError) as error:
+        print(f"Network service operation failed: {error}", file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))

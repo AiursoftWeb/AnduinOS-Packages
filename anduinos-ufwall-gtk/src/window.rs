@@ -62,7 +62,7 @@ impl UfwallWindow {
         glib::Object::builder()
             .property("application", app)
             .property("title", i18n("Firewall"))
-            .property("default-width", 900)
+            .property("default-width", 1100)
             .property("default-height", 650)
             .property("icon-name", "com.anduinos.ufwall")
             .build()
@@ -194,8 +194,12 @@ impl UfwallWindow {
             .invert_boolean()
             .build();
 
+        // The expanded sidebar and PreferencesPage content need roughly 1000 px
+        // together. Collapse before that natural width is violated, otherwise
+        // the content header (including the window controls) overflows to the
+        // right on the initial window size.
         let compact = adw::Breakpoint::new(
-            adw::BreakpointCondition::parse("max-width: 700px")
+            adw::BreakpointCondition::parse("max-width: 1050px")
                 .expect("the compact window breakpoint must be valid"),
         );
         compact.add_setter(&split_view, "collapsed", Some(&true.to_value()));
@@ -239,6 +243,11 @@ impl UfwallWindow {
         // Refresh dashboard data
         if let Some(view) = imp.dashboard_view.borrow().as_ref() {
             view.refresh_data();
+        }
+        // mDNS state is readable without UFW authentication and must remain
+        // available even if the firewall status prompt is cancelled.
+        if let Some(view) = imp.status_view.borrow().as_ref() {
+            view.refresh_mdns();
         }
 
         // Read status using backend

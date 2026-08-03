@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-oobe</PackageName>
-    <PackageVersion>2.0.1-5+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-6+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS OOBE — First-run setup wizard and Welcome Center</PackageDescription>
     <Section>utils</Section>
@@ -39,6 +39,8 @@
     <IncludeFile Include="assets/anduinos-oobe-autostart.desktop" Target="/etc/xdg/autostart/anduinos-oobe.desktop" />
     <IncludeFolder Include="resources/icons" Target="/usr/share/anduinos-oobe/icons" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
+    <IncludeScript Include="scripts/network-service-helper" Target="/usr/libexec/anduinos-oobe/network-service-helper" />
+    <IncludeFile Include="data/com.anduinos.oobe.policy" Target="/usr/share/polkit-1/actions/com.anduinos.oobe.policy" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +51,7 @@
 
   <ItemGroup>
     <PrebuildCommand Run="python3 -m py_compile assets/anduinos-oobe" />
+    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" />
     <PrebuildCommand Run="bash compile-locales.sh" />
   </ItemGroup>
 </Project>

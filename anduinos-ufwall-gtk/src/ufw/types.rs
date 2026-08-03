@@ -283,6 +283,17 @@ impl Default for UfwStatus {
     }
 }
 
+/// Local mDNS discovery state managed by Avahi.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MdnsState {
+    /// Whether the Avahi systemd unit exists on this system.
+    pub available: bool,
+    /// Whether discovery is allowed to start now or at boot.
+    pub enabled: bool,
+    /// Whether the daemon is currently running.
+    pub active: bool,
+}
+
 /// An application profile from /etc/ufw/applications.d/.
 #[derive(Debug, Clone)]
 pub struct AppProfile {

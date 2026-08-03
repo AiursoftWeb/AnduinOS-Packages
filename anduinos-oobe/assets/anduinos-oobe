@@ -51,6 +51,7 @@ FLATHUB_REMOTE = 'flathub'
 FLATHUB_OFFICIAL_REPO = 'https://dl.flathub.org/repo/flathub.flatpakrepo'
 FLATHUB_OFFICIAL_URL = 'https://dl.flathub.org/repo'
 FLATHUB_USTC_URL = 'https://mirrors.ustc.edu.cn/flathub'
+MDNS_HELPER = '/usr/libexec/anduinos-oobe/network-service-helper'
 
 # ── Icon helper ────────────────────────────────────────────────────
 _ICON_BASES = [
@@ -104,6 +105,40 @@ def _create_image(name):
 # ═══════════════════════════════════════════════════════════════════
 # HELPERS
 # ═══════════════════════════════════════════════════════════════════
+
+def get_mdns_control_state():
+    """Return (available, enabled) for the Avahi system service."""
+    if not os.path.isfile(MDNS_HELPER):
+        return False, False
+    try:
+        load_state = subprocess.run(
+            ['systemctl', 'show', 'avahi-daemon.service', '--property=LoadState',
+             '--value'], capture_output=True, text=True, timeout=5
+        ).stdout.strip()
+        if load_state in ('', 'not-found'):
+            return False, False
+        enabled_states = ('enabled', 'enabled-runtime', 'static', 'indirect')
+        service_state = subprocess.run(
+            ['systemctl', 'is-enabled', 'avahi-daemon.service'],
+            capture_output=True, text=True, timeout=5
+        ).stdout.strip()
+        socket_state = subprocess.run(
+            ['systemctl', 'is-enabled', 'avahi-daemon.socket'],
+            capture_output=True, text=True, timeout=5
+        ).stdout.strip()
+        return True, (service_state in enabled_states
+                      and socket_state in enabled_states)
+    except Exception:
+        return False, False
+
+
+def set_mdns_enabled(enabled):
+    """Change Avahi state through OOBE's fixed, polkit-authorized helper."""
+    return subprocess.run(
+        ['pkexec', MDNS_HELPER, 'set-mdns-enabled',
+         'true' if enabled else 'false'],
+        capture_output=True, text=True, timeout=30
+    )
 
 def _read_os_pretty_name():
     """Read PRETTY_NAME from /etc/os-release, fallback to NAME=."""
@@ -1082,11 +1117,11 @@ def create_security_page():
     sub.set_margin_bottom(48)
     center.append(sub)
 
-    # ── Firewall Card ──
+    # ── Network Security Card ──
     fw_card = Adw.PreferencesGroup()
-    fw_card.set_title(_('Firewall'))
+    fw_card.set_title(_('Network Security'))
     fw_card.set_description(
-        _('Enable low-level network protection — silently blocks all unauthorized inbound connections.')
+        _('Control inbound protection and whether this computer participates in local network discovery.')
     )
     fw_card.set_margin_bottom(24)
 
@@ -1142,6 +1177,53 @@ def create_security_page():
 
     fw_row.connect('notify::active', _on_fw_toggle)
     fw_card.add(fw_row)
+
+    mdns_row = Adw.SwitchRow()
+    mdns_row.set_title(_('Local Network Discovery (mDNS)'))
+    mdns_row.set_subtitle(
+        _('Find printers and nearby devices, and make .local names available on trusted networks.')
+    )
+
+    mdns_icon = _create_image('preferences-system-network-connection.svg')
+    mdns_icon.set_pixel_size(32)
+    mdns_row.add_prefix(mdns_icon)
+
+    mdns_available, mdns_enabled = get_mdns_control_state()
+    if mdns_available:
+        mdns_row.set_active(mdns_enabled)
+    else:
+        mdns_row.set_sensitive(False)
+        mdns_row.set_subtitle(_('Local network discovery controls are not installed.'))
+
+    mdns_row._update_in_progress = False
+
+    def _on_mdns_toggle(switch, pspec):
+        if switch._update_in_progress:
+            return
+
+        enable = switch.get_active()
+        switch._update_in_progress = True
+        switch.set_sensitive(False)
+
+        def _finish(returncode):
+            if returncode != 0:
+                switch.set_active(not enable)
+            switch.set_sensitive(True)
+            switch._update_in_progress = False
+            return False
+
+        def _run_mdns():
+            try:
+                proc = set_mdns_enabled(enable)
+                GLib.idle_add(_finish, proc.returncode)
+            except Exception:
+                GLib.idle_add(_finish, -1)
+
+        threading.Thread(target=_run_mdns, daemon=True).start()
+
+    if mdns_available:
+        mdns_row.connect('notify::active', _on_mdns_toggle)
+    fw_card.add(mdns_row)
     center.append(fw_card)
 
     # ── Location Card ──

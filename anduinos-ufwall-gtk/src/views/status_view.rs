@@ -14,15 +14,18 @@ mod imp {
 
     pub struct StatusView {
         pub active_switch: RefCell<Option<adw::SwitchRow>>,
+        pub mdns_switch: RefCell<Option<adw::SwitchRow>>,
         pub policy_group: RefCell<Option<adw::PreferencesGroup>>,
         pub incoming_combo: RefCell<Option<adw::ComboRow>>,
         pub outgoing_combo: RefCell<Option<adw::ComboRow>>,
         pub logging_combo: RefCell<Option<adw::ComboRow>>,
         pub sw_in_flight: Rc<Cell<bool>>,
+        pub mdns_in_flight: Rc<Cell<bool>>,
         pub in_in_flight: Rc<Cell<bool>>,
         pub out_in_flight: Rc<Cell<bool>>,
         pub log_in_flight: Rc<Cell<bool>>,
         pub sw_handler: RefCell<Option<glib::SignalHandlerId>>,
+        pub mdns_handler: RefCell<Option<glib::SignalHandlerId>>,
         pub in_handler: RefCell<Option<glib::SignalHandlerId>>,
         pub out_handler: RefCell<Option<glib::SignalHandlerId>>,
         pub log_handler: RefCell<Option<glib::SignalHandlerId>>,
@@ -32,15 +35,18 @@ mod imp {
         fn default() -> Self {
             Self {
                 active_switch: Default::default(),
+                mdns_switch: Default::default(),
                 policy_group: Default::default(),
                 incoming_combo: Default::default(),
                 outgoing_combo: Default::default(),
                 logging_combo: Default::default(),
                 sw_in_flight: Rc::new(Cell::new(false)),
+                mdns_in_flight: Rc::new(Cell::new(false)),
                 in_in_flight: Rc::new(Cell::new(false)),
                 out_in_flight: Rc::new(Cell::new(false)),
                 log_in_flight: Rc::new(Cell::new(false)),
                 sw_handler: Default::default(),
+                mdns_handler: Default::default(),
                 in_handler: Default::default(),
                 out_handler: Default::default(),
                 log_handler: Default::default(),
@@ -92,6 +98,22 @@ impl StatusView {
 
         status_group.add(&active_switch);
         self.add(&status_group);
+
+        let discovery_group = adw::PreferencesGroup::builder()
+            .title(i18n("Local Network Discovery"))
+            .description(i18n(
+                "Control multicast DNS discovery and .local name resolution.",
+            ))
+            .build();
+
+        let mdns_switch = adw::SwitchRow::builder()
+            .title(i18n("Local Network Discovery (mDNS)"))
+            .subtitle(i18n("Checking service status…"))
+            .sensitive(false)
+            .build();
+
+        discovery_group.add(&mdns_switch);
+        self.add(&discovery_group);
 
         let policy_group = adw::PreferencesGroup::builder()
             .title(i18n("Default Policies"))
@@ -169,6 +191,38 @@ impl StatusView {
             });
         });
 
+        let mdns_in_flight = imp.mdns_in_flight.clone();
+        let mdns_view = self.downgrade();
+        let mdns_handler = mdns_switch.connect_active_notify(move |switch| {
+            if mdns_in_flight.get() {
+                return;
+            }
+            mdns_in_flight.set(true);
+            let enabled = switch.is_active();
+            let switch_clone = switch.clone();
+            let view = mdns_view.clone();
+            let in_flight = mdns_in_flight.clone();
+            glib::spawn_future_local(async move {
+                switch_clone.set_sensitive(false);
+                let result = tokio::task::spawn_blocking(move || {
+                    backend::set_mdns_enabled(enabled)
+                })
+                .await
+                .unwrap();
+                in_flight.set(false);
+                if let Err(error) = &result {
+                    show_error(
+                        &switch_clone,
+                        &i18n("Network Discovery Error"),
+                        &error.to_string(),
+                    );
+                }
+                if let Some(view) = view.upgrade() {
+                    view.refresh_mdns();
+                }
+            });
+        });
+
         let in_in_flight = imp.in_in_flight.clone();
         let w2 = self.downgrade();
         let in_handler = incoming_combo.connect_selected_notify(move |combo| {
@@ -242,14 +296,74 @@ impl StatusView {
         });
 
         *imp.sw_handler.borrow_mut() = Some(sw_handler);
+        *imp.mdns_handler.borrow_mut() = Some(mdns_handler);
         *imp.in_handler.borrow_mut() = Some(in_handler);
         *imp.out_handler.borrow_mut() = Some(out_handler);
         *imp.log_handler.borrow_mut() = Some(log_handler);
         *imp.active_switch.borrow_mut() = Some(active_switch);
+        *imp.mdns_switch.borrow_mut() = Some(mdns_switch);
         *imp.policy_group.borrow_mut() = Some(policy_group);
         *imp.incoming_combo.borrow_mut() = Some(incoming_combo);
         *imp.outgoing_combo.borrow_mut() = Some(outgoing_combo);
         *imp.logging_combo.borrow_mut() = Some(logging_combo);
+    }
+
+    /// Refresh Avahi independently from UFW so authentication failures and
+    /// external systemd changes always resolve back to the real unit state.
+    pub fn refresh_mdns(&self) {
+        let imp = self.imp();
+        if let Some(switch) = imp.mdns_switch.borrow().as_ref() {
+            switch.set_sensitive(false);
+        }
+        let weak_self = self.downgrade();
+        glib::spawn_future_local(async move {
+            let state = tokio::task::spawn_blocking(backend::read_mdns_state)
+                .await
+                .unwrap();
+            if let Some(view) = weak_self.upgrade() {
+                match state {
+                    Ok(state) => view.apply_mdns_state(&state),
+                    Err(error) => {
+                        if let Some(switch) =
+                            view.imp().mdns_switch.borrow().as_ref()
+                        {
+                            show_error(
+                                switch,
+                                &i18n("Network Discovery Error"),
+                                &error.to_string(),
+                            );
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    fn apply_mdns_state(&self, state: &crate::ufw::types::MdnsState) {
+        let imp = self.imp();
+        if let (Some(switch), Some(handler)) = (
+            imp.mdns_switch.borrow().as_ref(),
+            imp.mdns_handler.borrow().as_ref(),
+        ) {
+            switch.block_signal(handler);
+            switch.set_active(state.enabled);
+            let subtitle = if !state.available {
+                i18n("Avahi is not installed.")
+            } else if state.active {
+                i18n(
+                    "Avahi is running; .local names and service discovery are available.",
+                )
+            } else if state.enabled {
+                i18n("Avahi is enabled but not currently running.")
+            } else {
+                i18n(
+                    "Avahi is blocked; .local names and service discovery are unavailable.",
+                )
+            };
+            switch.set_subtitle(&subtitle);
+            switch.set_sensitive(state.available);
+            switch.unblock_signal(handler);
+        }
     }
 
     /// Force a status re-read and UI update after an operation completes.
