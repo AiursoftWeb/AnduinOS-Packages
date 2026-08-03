@@ -119,6 +119,41 @@ class NetworkTests(unittest.TestCase):
         self.assertIn("create_appearance_page", offline[2].__code__.co_names)
         self.assertIn("create_appearance_page", online[1].__code__.co_names)
 
+    def test_navigation_refresh_waits_until_controls_are_ready(self):
+        building_window = types.SimpleNamespace(_nav_ready=False)
+
+        # The offline network page refreshes navigation while it is being
+        # constructed.  This must not touch controls that do not exist yet.
+        oobe.OobeWindow._update_nav_buttons(building_window)
+
+        page = types.SimpleNamespace(
+            _hide_next=True,
+            _block_carousel=True,
+            _suggest_next=False,
+        )
+        carousel = mock.Mock()
+        carousel.get_position.return_value = 1
+        carousel.get_n_pages.return_value = 3
+        carousel.get_nth_page.return_value = page
+        back_btn = mock.Mock()
+        next_btn = mock.Mock()
+        ready_window = types.SimpleNamespace(
+            _nav_ready=True,
+            carousel=carousel,
+            back_btn=back_btn,
+            next_btn=next_btn,
+            is_oobe=True,
+            _content_page=lambda clamp: clamp,
+        )
+
+        oobe.OobeWindow._update_nav_buttons(ready_window)
+
+        carousel.set_interactive.assert_called_once_with(False)
+        back_btn.set_visible.assert_called_once_with(True)
+        next_btn.set_visible.assert_called_once_with(False)
+        next_btn.set_label.assert_called_once_with("Next →")
+        next_btn.remove_css_class.assert_called_once_with("suggested-action")
+
     def test_continue_offline_physically_removes_online_pages(self):
         class Page:
             def __init__(self, requires_internet=False):
