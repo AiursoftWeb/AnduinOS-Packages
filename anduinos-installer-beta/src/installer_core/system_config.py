@@ -271,7 +271,13 @@ def _write_locale(target: Path, locale: str) -> None:
     etc = target / "etc"
     default = etc / "default"
     default.mkdir(parents=True, exist_ok=True)
-    (default / "locale").write_text(f'LANG="{locale}"\n', encoding="utf-8")
+    gettext_locale = locale.removesuffix(".UTF-8")
+    language = gettext_locale.partition("_")[0]
+    (default / "locale").write_text(
+        f'LANG="{locale}"\n'
+        f'LANGUAGE="{gettext_locale}:{language}"\n',
+        encoding="utf-8",
+    )
 
     locale_gen = etc / "locale.gen"
     content = locale_gen.read_text(encoding="utf-8") if locale_gen.exists() else ""

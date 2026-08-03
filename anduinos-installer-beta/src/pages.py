@@ -2937,6 +2937,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             "Select fastest package mirror", lang
         ),
         "prepare-secure-boot": _("Prepare Secure Boot", lang),
+        "install-language-packs": _("Install language support", lang),
         "refresh-package-indexes": _("Refresh package indexes", lang),
         "upgrade-system": _("Install system updates", lang),
         "ensure-timeback-machine": _(

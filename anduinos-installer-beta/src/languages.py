@@ -45,12 +45,13 @@ class Language:
     english_name: str   # "Chinese (Simplified)"
     native_name: str    # "中文(简体)"
     locale: str         # "zh_CN.UTF-8"
+    language_pack_code: str  # Ubuntu langpack suffix, e.g. "zh-hans"
     keyboard: str       # default physical XKB layout, e.g. "us"
     timezone: str
     recommended_input_method: str | None = None
 
 
-_CONFIG_SCHEMA_VERSION = 3
+_CONFIG_SCHEMA_VERSION = 4
 _TOKEN_RE = re.compile(r"^[a-z0-9][a-z0-9+._-]*$")
 _SOURCE_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9+._:@/-]*$")
 
@@ -232,7 +233,7 @@ def _load_configuration() -> tuple[
             language,
             {
                 "code", "english_name", "native_name", "locale", "keyboard",
-                "timezone", "recommended_input_method",
+                "language_pack_code", "timezone", "recommended_input_method",
             },
             f"languages[{index}]",
         )
@@ -240,9 +241,13 @@ def _load_configuration() -> tuple[
             key: _nonempty_string(language[key], f"languages[{index}].{key}")
             for key in (
                 "code", "english_name", "native_name", "locale", "keyboard",
-                "timezone",
+                "language_pack_code", "timezone",
             )
         }
+        if not _TOKEN_RE.fullmatch(values["language_pack_code"]):
+            raise RuntimeError(
+                f"Invalid language-pack code in languages[{index}]"
+            )
         if values["keyboard"] not in keyboard_layouts:
             raise RuntimeError(
                 f"languages[{index}] references unknown keyboard layout "
@@ -324,6 +329,17 @@ def input_method(method_id: str | None) -> InputMethod | None:
     if method_id is None:
         return None
     return INPUT_METHODS.get(method_id)
+
+
+def language_pack_packages(language: Language) -> tuple[str, ...]:
+    """Return the exact Ubuntu language-support packages for a language."""
+    code = language.language_pack_code
+    return (
+        f"language-pack-{code}",
+        f"language-pack-{code}-base",
+        f"language-pack-gnome-{code}",
+        f"language-pack-gnome-{code}-base",
+    )
 
 
 _LANGUAGE_BY_CODE = {language.code: language for language in LANGUAGES}

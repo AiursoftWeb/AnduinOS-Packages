@@ -59,7 +59,7 @@ class ConfigureSystemTests(unittest.TestCase):
             )
             self.assertEqual(
                 (target / "etc/default/locale").read_text(),
-                'LANG="en_US.UTF-8"\n',
+                'LANG="en_US.UTF-8"\nLANGUAGE="en_US:en"\n',
             )
             self.assertIn(
                 "en_US.UTF-8 UTF-8", (target / "etc/locale.gen").read_text()

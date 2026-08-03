@@ -4,6 +4,7 @@ from pathlib import Path
 
 from fakes import FakeRunner
 from helpers import valid_plan
+from installer_core.language_support import InstallLanguagePacksStep
 from installer_core.mirrors import SelectFastestAptMirrorStep
 from installer_core.network import DetectNetworkConnectivityStep
 from installer_core.software import (
@@ -52,6 +53,10 @@ class OfflinePipelineTests(unittest.TestCase):
             context = InstallContext(
                 valid_plan(install_third_party_drivers=True),
                 lambda _message: None,
+                {
+                    "target": Path(directory),
+                    "chroot_environment_ready": True,
+                },
             )
             steps = [
                 DetectNetworkConnectivityStep(
@@ -59,6 +64,7 @@ class OfflinePipelineTests(unittest.TestCase):
                     detector=lambda _codename: None,
                 ),
                 SelectFastestAptMirrorStep(),
+                InstallLanguagePacksStep(runner),
                 RefreshPackageIndexesStep(runner),
                 UpgradeSystemStep(runner),
                 InstallThirdPartyDriversStep(runner),
@@ -73,10 +79,16 @@ class OfflinePipelineTests(unittest.TestCase):
 
         self.assertTrue(result.succeeded)
         self.assertTrue(context.values["offline_pipeline_continued"])
-        self.assertEqual(runner.commands, [])
+        self.assertFalse(
+            any(
+                "apt-get" in command or "ubuntu-drivers" in command
+                for command, _kwargs in runner.commands
+            )
+        )
         self.assertEqual(
             [item.status for item in result.results],
             [
+                StepStatus.WARNING,
                 StepStatus.WARNING,
                 StepStatus.WARNING,
                 StepStatus.WARNING,

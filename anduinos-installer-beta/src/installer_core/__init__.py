@@ -53,6 +53,7 @@ from .executor import InstallerExecutor
 from .system_config import ConfigureSystemStep
 from .chroot_env import EnterChrootStep, LeaveChrootStep
 from .live_cleanup import CleanupLiveSystemStep
+from .language_support import InstallLanguagePacksStep
 from .boot_commands import build_boot_commands
 from .bootloader import InstallBootloaderStep
 from .secure_boot import (
@@ -81,6 +82,7 @@ __all__ = [
     "EnterChrootStep",
     "LeaveChrootStep",
     "CleanupLiveSystemStep",
+    "InstallLanguagePacksStep",
     "build_boot_commands",
     "InstallBootloaderStep",
     "PrepareSecureBootStep",

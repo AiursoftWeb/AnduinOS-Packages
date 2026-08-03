@@ -24,6 +24,7 @@ from .execution_steps import (
     UnmountTargetStep,
     VerifyTargetDiskStep,
 )
+from .language_support import InstallLanguagePacksStep
 from .live_cleanup import CleanupLiveSystemStep
 from .mirrors import SelectFastestAptMirrorStep
 from .network import DetectNetworkConnectivityStep
@@ -94,6 +95,7 @@ class InstallerExecutor:
             # can build kernel modules. Never let an upgrade inherit the
             # copied Live image's signing identity.
             PrepareSecureBootStep(self.runner),
+            InstallLanguagePacksStep(self.runner),
             InstallInputMethodStep(self.runner),
             ConfigureSystemStep(self.runner),
         ]

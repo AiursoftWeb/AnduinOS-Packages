@@ -45,6 +45,7 @@ class ExecutorPipelineTests(unittest.TestCase):
             "configure-keyboard-layout",
             "select-fastest-apt-mirror",
             "prepare-secure-boot",
+            "install-language-packs",
             "install-input-method",
             "configure-system",
             "refresh-package-indexes",

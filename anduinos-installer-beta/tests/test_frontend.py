@@ -354,6 +354,7 @@ class FrontendPlanTests(unittest.TestCase):
             if status == "running"
         ]
         self.assertIn("configure-keyboard-layout", step_order)
+        self.assertIn("install-language-packs", step_order)
         self.assertIn("install-input-method", step_order)
         self.assertLess(
             step_order.index("prepare-secure-boot"),

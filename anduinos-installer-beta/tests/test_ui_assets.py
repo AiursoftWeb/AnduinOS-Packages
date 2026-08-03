@@ -11,6 +11,7 @@ class InstallerVisualAssetTests(unittest.TestCase):
     def test_progress_ui_exposes_regional_steps_and_warnings(self):
         source = (ROOT / "src/pages.py").read_text(encoding="utf-8")
         self.assertIn('"configure-keyboard-layout":', source)
+        self.assertIn('"install-language-packs":', source)
         self.assertIn('"install-input-method":', source)
         self.assertIn('if status == "warning":', source)
 

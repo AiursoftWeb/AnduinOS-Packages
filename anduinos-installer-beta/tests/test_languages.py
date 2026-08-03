@@ -13,6 +13,7 @@ from languages import (
     default_timezone,
     detect_system_language,
     language_for_locale,
+    language_pack_packages,
 )
 
 
@@ -117,6 +118,12 @@ class LanguageDefaultsTests(unittest.TestCase):
         self.assertTrue(
             all("/" in timezone for timezone in DEFAULT_TIMEZONES.values())
         )
+
+    def test_every_supported_language_has_language_pack_policy(self):
+        for language in LANGUAGES:
+            with self.subTest(language=language.code):
+                self.assertTrue(language.language_pack_code)
+                self.assertEqual(len(language_pack_packages(language)), 4)
 
     def test_representative_timezone_examples(self):
         self.assertEqual(default_timezone("en_US"), "America/New_York")
@@ -225,6 +232,7 @@ class LanguageDefaultsTests(unittest.TestCase):
                 "english_name": "Example language",
                 "native_name": "Example language",
                 "locale": "xx_XX.UTF-8",
+                "language_pack_code": "xx",
                 "keyboard": "xx",
                 "timezone": "Etc/UTC",
                 "recommended_input_method": "example-ime",
