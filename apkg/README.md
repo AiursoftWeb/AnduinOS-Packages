@@ -8,15 +8,7 @@ without a per-user dotnet-tool installation or shell configuration.
 
 ## Updating upstream
 
-1. Update `VERSION`, `PACKAGE_URL`, and `PACKAGE_SHA256` in `download.sh`.
-2. Set `SOURCE_COMMIT`, `LICENSE_SHA256`, and `PackageVersion` to match the new
-   upstream release.
-3. Recreate `deploy/` with `bash download.sh`, then lint and build:
-
-   ```bash
-   apkg lint --path ./apkg
-   apkg build --path ./apkg
-   ```
-
-The SHA-256 values can be calculated with `sha256sum` after downloading the
-official NuGet package and the license from the pinned source commit.
+The pinned version, checksums, source commit, and package revision require
+periodic maintenance. Follow the **Apkg client** entry in the repository's
+[Monthly Update Manual](../README.md#monthly-update-manual), which is the
+canonical checklist for updating and verifying this package.
