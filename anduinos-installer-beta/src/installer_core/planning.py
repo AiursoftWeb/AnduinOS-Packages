@@ -5,6 +5,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import replace
 
+from languages import DEFAULT_LOCALE, language_for_locale
+
 from .model import (
     BootSpec,
     AuthenticationMode,
@@ -37,8 +39,10 @@ def build_plan(
     disk_binding: DiskTopologyBinding,
     inventory_digest: str,
 ) -> InstallPlan:
-    locale = str(choices.get("locale") or "en_US.UTF-8")
-    language = str(choices.get("lang") or "en_US")
+    locale = str(choices.get("locale") or DEFAULT_LOCALE)
+    language = language_for_locale(locale)
+    if language is None:
+        raise ValueError(f"Unsupported installer locale: {locale}")
     plan = InstallPlan(
         schema_version=SCHEMA_VERSION,
         source=SourceSpec(),
@@ -70,7 +74,16 @@ def build_plan(
             locale=locale,
             timezone=str(choices.get("timezone") or ""),
             keyboard=KeyboardSpec(str(choices.get("keyboard") or "")),
-            input_method="rime" if language.startswith("zh_") else None,
+            input_method=(
+                language.recommended_input_method
+                if bool(
+                    choices.get(
+                        "install_input_method",
+                        language.recommended_input_method is not None,
+                    )
+                )
+                else None
+            ),
         ),
         software=SoftwareSpec(
             install_updates=bool(choices.get("install_updates", True)),

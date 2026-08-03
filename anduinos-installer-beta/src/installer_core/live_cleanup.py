@@ -15,11 +15,6 @@ PACKAGE_RE = re.compile(r"^[a-z0-9][a-z0-9+.-]*(?::[a-z0-9]+)?$")
 VERSION_RE = re.compile(r"^[A-Za-z0-9.+:~\-]+$")
 ALWAYS_REMOVE = frozenset({"anduinos-installer-beta"})
 CONDITIONAL_LIVE_PACKAGES = frozenset({"anduinos-timeback-machine"})
-RIME_REQUIRED_PACKAGES = frozenset(
-    {"anduinos-rime", "ibus-rime", "libglib2.0-bin"}
-)
-
-
 @dataclass
 class CleanupLiveSystemStep:
     runner: CommandRunner
@@ -67,13 +62,6 @@ class CleanupLiveSystemStep:
                 "Conditional live packages leaked into the desktop manifest: "
                 + ", ".join(conditional_leaked)
             )
-        if context.plan.regional.input_method == "rime":
-            missing = sorted(RIME_REQUIRED_PACKAGES - desktop.keys())
-            if missing:
-                raise RuntimeError(
-                    "Chinese input payload is missing from the installed "
-                    f"system manifest: {', '.join(missing)}"
-                )
         context.values["casper_full_manifest"] = full
         context.values["casper_desktop_manifest"] = desktop
         context.values["timeback_payload_in_live_image"] = (

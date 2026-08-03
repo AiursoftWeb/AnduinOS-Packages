@@ -2,7 +2,10 @@ import unittest
 from unittest.mock import patch
 
 from helpers import valid_plan
-from installer_core.executor import InstallerExecutor
+from installer_core.executor import (
+    InstallerExecutor,
+    describe_installation_pipeline,
+)
 from test_guided_storage_graph import guided_plan
 
 
@@ -39,9 +42,11 @@ class ExecutorPipelineTests(unittest.TestCase):
         expected = (
             "copy-system",
             "migrate-wifi-connection",
-            "configure-system",
+            "configure-keyboard-layout",
             "select-fastest-apt-mirror",
             "prepare-secure-boot",
+            "install-input-method",
+            "configure-system",
             "refresh-package-indexes",
             "upgrade-system",
             "ensure-timeback-machine",
@@ -56,6 +61,13 @@ class ExecutorPipelineTests(unittest.TestCase):
             pipeline.index("configure-storage"),
         )
         self.assertNotIn("install-third-party-drivers", pipeline)
+        described = tuple(
+            step_id
+            for step_id, _weight in describe_installation_pipeline(
+                valid_plan()
+            )
+        )
+        self.assertEqual(described, pipeline)
 
     def test_optional_driver_step_is_only_present_when_selected(self):
         plan = valid_plan(install_third_party_drivers=True)

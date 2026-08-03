@@ -78,9 +78,12 @@ class RefreshPackageIndexesStep:
         self.runner.require_commands(("chroot",))
 
     def execute(self, context: InstallContext) -> None:
-        context.values["package_indexes_refreshed"] = False
         if not context.plan.software.install_updates:
             return
+        if context.values.get("package_indexes_refreshed"):
+            context.log("Reusing package indexes refreshed for an earlier step")
+            return
+        context.values["package_indexes_refreshed"] = False
         if context.values.get("network_online") is False:
             raise StepWarning(
                 "Skipped package index refresh because the installer is offline"

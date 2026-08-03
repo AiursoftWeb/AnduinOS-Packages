@@ -78,6 +78,13 @@ class PackageContractTests(unittest.TestCase):
             ),
             files,
         )
+        self.assertIn(
+            (
+                "data/languages.json",
+                "/usr/share/anduinos-installer-beta/languages.json",
+            ),
+            files,
+        )
         self.assertTrue(
             {
                 "python3",

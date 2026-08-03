@@ -10,6 +10,7 @@ from collections.abc import Callable
 from dataclasses import replace
 from enum import Enum
 
+from installer_core.executor import describe_installation_pipeline
 from installer_core.model import Filesystem, InstallMode, InstallPlan
 from installer_core.passwords import hash_password
 from installer_core.planning import build_plan
@@ -369,21 +370,6 @@ class ExecutorClient:
 class DevelopmentExecutorClient:
     """Exercise the frontend contract without starting privileged code."""
 
-    BASE_PIPELINE = (
-        ("detect-boot-environment", 1),
-        ("detect-network-connectivity", 1),
-        ("verify-target-disk", 1),
-        ("prepare-storage", 10),
-        ("mount-target", 3),
-        ("copy-system", 60),
-        ("migrate-wifi-connection", 1),
-        ("configure-storage", 3),
-        ("enter-chroot", 2),
-        ("cleanup-live-system", 4),
-        ("configure-system", 5),
-        ("select-fastest-apt-mirror", 3),
-    )
-
     def run(
         self,
         plan: InstallPlan,
@@ -399,28 +385,7 @@ class DevelopmentExecutorClient:
         except Exception as error:
             return False, str(error)
 
-        pipeline = list(self.BASE_PIPELINE)
-        # Match InstallerExecutor exactly: Secure Boot key preparation must
-        # precede upgrades and third-party drivers so any DKMS modules created
-        # by those operations can be signed immediately.
-        pipeline.append(("prepare-secure-boot", 4))
-        if plan.software.install_updates:
-            pipeline.extend(
-                (("refresh-package-indexes", 2), ("upgrade-system", 8))
-            )
-        if plan.storage.filesystem is Filesystem.BTRFS:
-            pipeline.append(("ensure-timeback-machine", 2))
-        if plan.software.install_third_party_drivers:
-            pipeline.append(("install-third-party-drivers", 8))
-        pipeline.extend(
-            (
-                ("verify-dkms-signatures", 3),
-                ("install-bootloader", 5),
-                ("enroll-secure-boot", 2),
-                ("leave-chroot", 1),
-                ("unmount-target", 1),
-            )
-        )
+        pipeline = describe_installation_pipeline(plan)
         total = sum(weight for _step, weight in pipeline)
         completed = 0
         log("DEVELOPMENT MODE: the privileged executor is disabled.")

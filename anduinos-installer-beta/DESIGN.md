@@ -52,6 +52,18 @@ and constructs every command itself.
   installer-owned representative timezone. The timezone page preselects it
   (for example US English → New York) while retaining the complete searchable
   system timezone list and allowing the user to override the guess.
+- Regional input policy: `data/languages.json` is the single validated source
+  for supported languages, locale aliases, the default language, physical XKB
+  layouts and optional input methods. Each input method declares its label,
+  packages, required files, optional desktop source and user template files.
+  The UI, planner, validator and privileged executor resolve the same policy;
+  none contains a language-, region-, framework- or product-specific branch.
+  Physical keyboard configuration remains an independent offline step. A
+  selected method can reuse a complete payload on the medium or download only
+  its declared packages; an offline or download failure produces a visible,
+  non-fatal warning. Desktop defaults and `/etc/skel` files are generated from
+  the selected policy. The installer has no dependency on Ubuntu Language
+  Selector metadata and never modifies its `pkg_depends` database.
 
 ## Safety boundary
 
@@ -157,8 +169,9 @@ rounded visual boundary and obscure whether the card itself is active.
   partition/format/mount/copy/unmount lifecycle, persistent fstab, 4 GiB disk
   swap and explicit zram defaults.
 - Milestone 3A — complete: target user, encrypted password input, sudo
-  membership, root locking, hostname, locale, timezone, keyboard, Rime and
-  fresh machine identity.
+  membership, root locking, hostname, locale, timezone, independent offline
+  keyboard configuration, optional online input-method installation and fresh
+  machine identity.
 - Milestone 3B — complete: isolated target `/run`, controlled virtual
   filesystems, temporary DNS, service-start suppression, reversible cleanup
   and manifest-driven removal of live-session packages.

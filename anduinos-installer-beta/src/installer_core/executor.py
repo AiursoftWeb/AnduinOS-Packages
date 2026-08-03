@@ -28,7 +28,14 @@ from .live_cleanup import CleanupLiveSystemStep
 from .mirrors import SelectFastestAptMirrorStep
 from .network import DetectNetworkConnectivityStep
 from .model import Filesystem, InstallPlan
-from .steps import InstallContext, InstallResult, StepRunner, StepStatus
+from .regional_config import ConfigureKeyboardStep, InstallInputMethodStep
+from .steps import (
+    InstallContext,
+    InstallResult,
+    InstallStep,
+    StepRunner,
+    StepStatus,
+)
 from .storage_steps import MountTargetStep, PrepareStorageStep
 from .system_config import ConfigureSystemStep
 from .target_config import ConfigureStorageStep
@@ -64,7 +71,13 @@ class InstallerExecutor:
             self.log,
             execution_policy=self.execution_policy,
         )
-        steps = [
+        steps = self.build_steps(plan)
+        return StepRunner(steps, self.progress, self.status).run(context)
+
+    def build_steps(self, plan: InstallPlan) -> list[InstallStep]:
+        """Build the canonical ordered pipeline without executing it."""
+
+        steps: list[InstallStep] = [
             DetectBootEnvironmentStep(self.runner),
             DetectNetworkConnectivityStep(),
             VerifyTargetDiskStep(self.runner),
@@ -75,12 +88,14 @@ class InstallerExecutor:
             ConfigureStorageStep(self.runner),
             EnterChrootStep(self.runner, target=self.target),
             CleanupLiveSystemStep(self.runner),
-            ConfigureSystemStep(self.runner),
+            ConfigureKeyboardStep(),
             SelectFastestAptMirrorStep(),
             # Establish the target-owned DKMS key before any package operation
             # can build kernel modules. Never let an upgrade inherit the
             # copied Live image's signing identity.
             PrepareSecureBootStep(self.runner),
+            InstallInputMethodStep(self.runner),
+            ConfigureSystemStep(self.runner),
         ]
         if plan.software.install_updates:
             steps.extend(
@@ -102,4 +117,16 @@ class InstallerExecutor:
                 UnmountTargetStep(self.runner),
             )
         )
-        return StepRunner(steps, self.progress, self.status).run(context)
+        return steps
+
+
+def describe_installation_pipeline(
+    plan: InstallPlan,
+) -> tuple[tuple[str, int], ...]:
+    """Return the production step IDs and weights for UI simulation."""
+
+    executor = InstallerExecutor(lambda _message: None)
+    return tuple(
+        (step.id, max(1, step.progress_weight))
+        for step in executor.build_steps(plan)
+    )

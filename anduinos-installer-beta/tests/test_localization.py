@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 
 from i18n import DOMAIN, _, clear_translation_cache
-from languages import LANGUAGES
+from languages import DEFAULT_LANGUAGE, KEYBOARD_LAYOUTS, LANGUAGES
 
 
 PACKAGE = Path(__file__).resolve().parents[1]
@@ -20,7 +20,7 @@ class LocalizationTests(unittest.TestCase):
         expected = {
             language.code
             for language in LANGUAGES
-            if language.code != "en_US"
+            if language.code != DEFAULT_LANGUAGE
         }
         po_languages = {path.stem for path in PO_DIR.glob("*.po")}
         compiled_languages = {
@@ -33,7 +33,7 @@ class LocalizationTests(unittest.TestCase):
 
     def test_every_catalog_loads_and_translates_interface_text(self):
         for language in LANGUAGES:
-            if language.code == "en_US":
+            if language.code == DEFAULT_LANGUAGE:
                 continue
             with self.subTest(language=language.code):
                 catalog_path = (
@@ -67,12 +67,12 @@ class LocalizationTests(unittest.TestCase):
 
     def test_runtime_language_selection_uses_selected_catalog(self):
         clear_translation_cache()
-        self.assertEqual(_("Next", "en_US"), "Next")
+        self.assertEqual(_("Next", DEFAULT_LANGUAGE), "Next")
         self.assertNotEqual(_("Next", "zh_CN"), "Next")
         self.assertNotEqual(_("Next", "de"), "Next")
 
-    def test_catalog_message_set_matches_current_python_source(self):
-        source_messages = set()
+    def test_catalog_message_set_matches_source_and_policy(self):
+        source_messages = set(KEYBOARD_LAYOUTS.values())
         for source in sorted((PACKAGE / "src").rglob("*.py")):
             tree = ast.parse(source.read_text(encoding="utf-8"))
             for node in ast.walk(tree):

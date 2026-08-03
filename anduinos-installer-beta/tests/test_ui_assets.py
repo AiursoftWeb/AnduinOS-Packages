@@ -8,6 +8,21 @@ ICONS = ROOT / "assets" / "icons"
 
 
 class InstallerVisualAssetTests(unittest.TestCase):
+    def test_progress_ui_exposes_regional_steps_and_warnings(self):
+        source = (ROOT / "src/pages.py").read_text(encoding="utf-8")
+        self.assertIn('"configure-keyboard-layout":', source)
+        self.assertIn('"install-input-method":', source)
+        self.assertIn('if status == "warning":', source)
+
+    def test_optional_downloads_share_visible_offline_state(self):
+        source = (ROOT / "src/pages.py").read_text(encoding="utf-8")
+        self.assertIn("def _offline_callout", source)
+        self.assertIn("input_method_choice.set_sensitive(online)", source)
+        self.assertIn("updates.set_sensitive(online)", source)
+        self.assertIn("drivers.set_sensitive(online)", source)
+        self.assertIn("recommended_method.display_name", source)
+        self.assertIn("method.language_name", source)
+
     def test_every_wizard_illustration_is_a_parseable_local_svg(self):
         expected = {
             "welcome.svg",

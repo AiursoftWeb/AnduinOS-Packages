@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 
+from languages import DEFAULT_KEYBOARD, DEFAULT_LOCALE, DEFAULT_TIMEZONE
+
 from .coexistence import (
     CoexistenceStatus,
     CoexistenceDecision,
@@ -309,9 +311,9 @@ def _preview_plan(
             sudo_without_password=True,
         ),
         regional=RegionalSpec(
-            locale="en_US.UTF-8",
-            timezone="Etc/UTC",
-            keyboard=KeyboardSpec("us"),
+            locale=DEFAULT_LOCALE,
+            timezone=DEFAULT_TIMEZONE,
+            keyboard=KeyboardSpec(DEFAULT_KEYBOARD),
         ),
         boot=BootSpec(
             install_fallback_path=False,

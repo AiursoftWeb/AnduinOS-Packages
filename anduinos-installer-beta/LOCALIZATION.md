@@ -4,6 +4,17 @@ The installer presents 28 official language and region choices. American
 English (`en_US`) is the source language; the other 27 choices have GNU
 gettext catalogs under `po/`.
 
+`data/languages.json` is the installer-owned regional policy source. Each
+entry binds a language choice to its locale, representative timezone, default
+physical XKB layout and optional input-method policy. The document also owns
+the default language, locale aliases and the complete keyboard-layout chooser.
+Input-method definitions declare the user-visible product and native-language
+names, an optional desktop input source, packages, required target paths and
+any user-default files to deploy. The executor does not know the names of Rime,
+Mozc, Cangjie, Chewing, Hangul, IBus or any particular language. The installer
+never reads or modifies
+`/usr/share/language-selector/data/pkg_depends`.
+
 | Code | Locale | Display name |
 | --- | --- | --- |
 | `ar` | `ar_SA.UTF-8` | العربية |
@@ -45,6 +56,25 @@ rejects a language matrix that differs from the list above, untranslated
 entries, invalid format placeholders, and catalogs that cannot be compiled.
 APKG runs it before packaging and installs the generated catalogs below
 `/usr/share/locale`.
+
+The maintained recommendations are Rime for Simplified Chinese, Cangjie Big
+for Hong Kong Traditional Chinese, Chewing for Taiwan Traditional Chinese,
+Mozc for Japanese, Hangul for Korean, LibThai for Thai and Unikey for
+Vietnamese. Each recommendation appears as a default-selected optional download
+and is disabled while offline, symmetrically with system updates and online
+driver discovery. Languages whose JSON entry has no recommendation do not show
+the extra choice.
+
+Before creating the account, the privileged installer configures the physical
+keyboard offline and handles the selected input method independently. It can
+reuse a complete payload already present on the installation medium or install
+exactly the packages declared by the selected policy. Offline or download
+failure is a visible warning and does not abort installation. Desktop-source
+registration and `/etc/skel` files are generated generically from JSON; Rime's
+custom file is one policy instance rather than a product-specific code path.
+Adding a language, layout, locale alias or input method is a data-only change to
+`data/languages.json` (plus the normal gettext catalog when translating the
+installer UI into a new language).
 
 Raw command output remains unchanged in the Output view so that copied logs
 match command-line diagnostics and can be searched reliably. Installer-owned
