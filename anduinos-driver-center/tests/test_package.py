@@ -25,6 +25,16 @@ class PackageTests(unittest.TestCase):
         self.assertIn('Gio.SimpleAction.new("about", None)', application)
         self.assertIn("Adw.AboutDialog()", application)
 
+    def test_audio_install_action_uses_the_restricted_helper(self):
+        application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
+        helper = (ROOT / "scripts/driver-helper").read_text()
+        self.assertIn('["install-audio"]', application)
+        self.assertIn('case ["install-audio"]:', helper)
+        self.assertIn(
+            'AUDIO_PACKAGES = ("firmware-sof-anduinos", "alsa-ucm-conf-anduinos")',
+            helper,
+        )
+
     def test_desktop_entry_is_visible_and_uses_stable_app_id(self):
         desktop = (ROOT / "data/com.anduinos.DriverCenter.desktop").read_text()
         self.assertIn("Type=Application", desktop)

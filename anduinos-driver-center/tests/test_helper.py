@@ -40,6 +40,23 @@ class HelperTests(unittest.TestCase):
             ["apt-get", "install", "-y", "--reinstall", "anduinos-xbox-controller-driver"]
         )
 
+    def test_audio_package_names_are_fixed(self):
+        with (
+            patch.object(driver_helper, "apt_update") as update,
+            patch.object(driver_helper, "run") as run,
+        ):
+            driver_helper.install_audio()
+        update.assert_called_once_with()
+        run.assert_called_once_with(
+            [
+                "apt-get",
+                "install",
+                "-y",
+                "firmware-sof-anduinos",
+                "alsa-ucm-conf-anduinos",
+            ]
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

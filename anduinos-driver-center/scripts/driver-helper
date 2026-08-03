@@ -15,6 +15,7 @@ MOK_PRIVATE_KEY = MOK_DIR / "MOK.priv"
 MOK_CERTIFICATE = MOK_DIR / "MOK.der"
 DKMS_CONFIG = Path("/etc/dkms/framework.conf.d/anduinos-sb-sign.conf")
 XBOX_PACKAGE = "anduinos-xbox-controller-driver"
+AUDIO_PACKAGES = ("firmware-sof-anduinos", "alsa-ucm-conf-anduinos")
 PACKAGE_PATTERN = re.compile(r"^[a-z0-9][a-z0-9+.-]+$")
 
 
@@ -82,6 +83,11 @@ def install_xbox(reinstall: bool = False) -> None:
     run(command)
 
 
+def install_audio() -> None:
+    apt_update()
+    run(["apt-get", "install", "-y", *AUDIO_PACKAGES])
+
+
 def enroll_mok() -> None:
     password = sys.stdin.readline().rstrip("\n")
     if not 8 <= len(password) <= 16 or "\x00" in password:
@@ -111,6 +117,8 @@ def main(arguments: list[str]) -> int:
                 install_xbox()
             case ["repair-xbox"]:
                 install_xbox(reinstall=True)
+            case ["install-audio"]:
+                install_audio()
             case ["repair-dkms"]:
                 configure_dkms_signing()
                 run(["dkms", "autoinstall", "--force"])

@@ -14,7 +14,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
-from .core import DkmsState, HardwareDevice, SecureBootState, XboxState, scan_system
+from .core import AudioState, DkmsState, HardwareDevice, SecureBootState, XboxState, scan_system
 
 
 APP_ID = "com.anduinos.DriverCenter"
@@ -69,6 +69,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self._secure_boot: SecureBootState | None = None
         self._xbox: XboxState | None = None
         self._dkms: DkmsState | None = None
+        self._audio: AudioState | None = None
         self._selected_package: str | None = None
 
         css = Gtk.CssProvider()
@@ -181,8 +182,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
         threading.Thread(target=worker, daemon=True).start()
 
-    def _apply_scan(self, graphics: list[HardwareDevice], secure_boot: SecureBootState, xbox: XboxState, dkms: DkmsState) -> bool:
-        self._graphics, self._secure_boot, self._xbox, self._dkms = graphics, secure_boot, xbox, dkms
+    def _apply_scan(self, graphics: list[HardwareDevice], secure_boot: SecureBootState, xbox: XboxState, dkms: DkmsState, audio: AudioState) -> bool:
+        self._graphics, self._secure_boot, self._xbox, self._dkms, self._audio = graphics, secure_boot, xbox, dkms, audio
         self.refresh_button.set_sensitive(True)
         self._clear(self.device_list)
         self._clear(self.stack)
@@ -194,6 +195,14 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             row.page_name = f"graphics-{index}"
             self.device_list.append(row)
             self.stack.add_named(self._graphics_page(device, secure_boot), row.page_name)
+
+        audio_row = self._device_row(
+            "audio-card-symbolic", _("Audio"),
+            _("Audio support ready") if audio.ready else _("Support needs attention"),
+        )
+        audio_row.page_name = "audio"
+        self.device_list.append(audio_row)
+        self.stack.add_named(self._audio_page(audio), "audio")
 
         xbox_row = self._device_row(
             "input-gaming-symbolic", _("Xbox Controller"),
@@ -415,6 +424,60 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         content.append(actions)
         return page
 
+    def _audio_page(self, state: AudioState) -> Gtk.Widget:
+        page, content = self._page_shell(
+            _("Audio Support"),
+            _("AnduinOS provides Intel SOF firmware and ALSA UCM profiles for reliable audio initialization and routing."),
+        )
+        packages = Adw.PreferencesGroup(title=_("Support packages"))
+        content.append(packages)
+        self._add_state_row(
+            packages,
+            _("Intel SOF firmware"),
+            state.sof_package.version if state.sof_package.installed else _("Not installed"),
+            state.sof_package.installed,
+        )
+        self._add_state_row(
+            packages,
+            _("ALSA UCM profiles"),
+            state.ucm_package.version if state.ucm_package.installed else _("Not installed"),
+            state.ucm_package.installed,
+        )
+
+        runtime = Adw.PreferencesGroup(title=_("Runtime status"))
+        content.append(runtime)
+        self._add_state_row(
+            runtime,
+            _("SOF firmware files"),
+            _("Available") if state.firmware_present else _("Missing"),
+            state.firmware_present,
+        )
+        self._add_state_row(
+            runtime,
+            _("UCM configuration files"),
+            _("Available") if state.ucm_profiles_present else _("Missing"),
+            state.ucm_profiles_present,
+        )
+        self._add_state_row(
+            runtime,
+            _("SOF kernel modules"),
+            ", ".join(state.sof_modules) if state.sof_modules else _("Not currently loaded"),
+            True if state.sof_modules else None,
+        )
+        self._add_state_row(
+            runtime,
+            _("Active audio drivers"),
+            ", ".join(state.active_drivers) if state.active_drivers else _("Not detected"),
+            True if state.active_drivers else None,
+        )
+
+        if not state.packages_installed:
+            button = Gtk.Button(label=_("Install Audio Support"), halign=Gtk.Align.END)
+            button.add_css_class("suggested-action")
+            button.connect("clicked", lambda btn: self._run_action(btn, ["install-audio"]))
+            content.append(button)
+        return page
+
     def _secure_boot_page(self, state: SecureBootState, dkms: DkmsState) -> Gtk.Widget:
         page, content = self._page_shell(
             _("Secure Boot Trust"),
@@ -451,9 +514,12 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             note.set_revealed(True); content.append(note)
         return page
 
-    def _add_state_row(self, group: Adw.PreferencesGroup, title: str, subtitle: str, good: bool) -> None:
+    def _add_state_row(self, group: Adw.PreferencesGroup, title: str, subtitle: str, good: bool | None) -> None:
         row = Adw.ActionRow(title=title, subtitle=subtitle)
-        row.add_suffix(_status_icon("emblem-ok-symbolic" if good else "dialog-warning-symbolic", "success" if good else "warning"))
+        if good is None:
+            row.add_suffix(_status_icon("dialog-information-symbolic", "dim-label"))
+        else:
+            row.add_suffix(_status_icon("emblem-ok-symbolic" if good else "dialog-warning-symbolic", "success" if good else "warning"))
         group.add(row)
 
     def _ask_mok_password(self, button: Gtk.Button) -> None:

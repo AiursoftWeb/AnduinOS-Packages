@@ -12,6 +12,8 @@ from typing import Protocol, Sequence
 
 MOK_PRIVATE_KEY = Path("/var/lib/shim-signed/mok/MOK.priv")
 MOK_CERTIFICATE = Path("/var/lib/shim-signed/mok/MOK.der")
+SOF_PACKAGE = "firmware-sof-anduinos"
+UCM_PACKAGE = "alsa-ucm-conf-anduinos"
 
 
 class Runner(Protocol):
@@ -21,7 +23,16 @@ class Runner(Protocol):
 class SubprocessRunner:
     def run(self, command: Sequence[str], timeout: int = 10) -> subprocess.CompletedProcess[str]:
         try:
-            return subprocess.run(command, capture_output=True, text=True, timeout=timeout, check=False)
+            environment = os.environ.copy()
+            environment["LC_ALL"] = "C"
+            return subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                check=False,
+                env=environment,
+            )
         except (FileNotFoundError, subprocess.TimeoutExpired) as error:
             return subprocess.CompletedProcess(command, 127, "", str(error))
 
@@ -91,6 +102,35 @@ class DkmsState:
         return not self.untrusted_modules
 
 
+@dataclass(frozen=True)
+class PackageState:
+    name: str
+    installed: bool
+    version: str | None
+
+
+@dataclass(frozen=True)
+class AudioState:
+    sof_package: PackageState
+    ucm_package: PackageState
+    firmware_present: bool
+    ucm_profiles_present: bool
+    sof_modules: tuple[str, ...]
+    active_drivers: tuple[str, ...]
+
+    @property
+    def packages_installed(self) -> bool:
+        return self.sof_package.installed and self.ucm_package.installed
+
+    @property
+    def ready(self) -> bool:
+        return (
+            self.packages_installed
+            and self.firmware_present
+            and self.ucm_profiles_present
+        )
+
+
 def normalize_key(value: str | None) -> str | None:
     if not value:
         return None
@@ -101,6 +141,76 @@ def normalize_key(value: str | None) -> str | None:
 def package_is_installed(package: str, runner: Runner) -> bool:
     result = runner.run(["dpkg-query", "-W", "-f=${db:Status-Abbrev}", package])
     return result.returncode == 0 and result.stdout.startswith("ii ")
+
+
+def package_state(package: str, runner: Runner) -> PackageState:
+    installed = package_is_installed(package, runner)
+    if not installed:
+        return PackageState(package, False, None)
+    result = runner.run(["dpkg-query", "-W", "-f=${Version}", package])
+    version = result.stdout.strip() if result.returncode == 0 else None
+    return PackageState(package, True, version or None)
+
+
+def _directory_contains_files(directory: Path, suffix: str | None = None) -> bool:
+    if not directory.is_dir():
+        return False
+    try:
+        return any(
+            path.is_file() and (suffix is None or path.name.endswith(suffix))
+            for path in directory.rglob("*")
+        )
+    except OSError:
+        return False
+
+
+def _active_audio_drivers(output: str) -> tuple[str, ...]:
+    drivers: set[str] = set()
+    audio_device = False
+    for line in output.splitlines():
+        if line and not line[0].isspace():
+            lowered = line.lower()
+            audio_device = "audio device" in lowered or "multimedia audio controller" in lowered
+            continue
+        if audio_device and "Kernel driver in use:" in line:
+            driver = line.split(":", 1)[1].strip()
+            if driver:
+                drivers.add(driver)
+    return tuple(sorted(drivers))
+
+
+def audio_state(
+    runner: Runner | None = None,
+    firmware_directories: Sequence[Path] | None = None,
+    ucm_directory: Path = Path("/usr/share/alsa/ucm2"),
+) -> AudioState:
+    runner = runner or SubprocessRunner()
+    firmware_directories = firmware_directories or (
+        Path("/lib/firmware/intel/sof"),
+        Path("/lib/firmware/intel/sof-ipc4"),
+    )
+    modules = runner.run(["lsmod"])
+    sof_modules = tuple(
+        sorted(
+            {
+                line.split(maxsplit=1)[0]
+                for line in modules.stdout.splitlines()
+                if line.strip() and line.split(maxsplit=1)[0].startswith("snd_sof")
+            }
+        )
+    ) if modules.returncode == 0 else ()
+    pci = runner.run(["lspci", "-nnk"])
+    active_drivers = _active_audio_drivers(pci.stdout) if pci.returncode == 0 else ()
+    return AudioState(
+        sof_package=package_state(SOF_PACKAGE, runner),
+        ucm_package=package_state(UCM_PACKAGE, runner),
+        firmware_present=any(
+            _directory_contains_files(directory) for directory in firmware_directories
+        ),
+        ucm_profiles_present=_directory_contains_files(ucm_directory, ".conf"),
+        sof_modules=sof_modules,
+        active_drivers=active_drivers,
+    )
 
 
 def secure_boot_state(
@@ -260,7 +370,7 @@ def dkms_state(
     return DkmsState(tuple(modules), tuple(trusted), tuple(untrusted))
 
 
-def scan_system(runner: Runner | None = None) -> tuple[list[HardwareDevice], SecureBootState, XboxState, DkmsState]:
+def scan_system(runner: Runner | None = None) -> tuple[list[HardwareDevice], SecureBootState, XboxState, DkmsState, AudioState]:
     runner = runner or SubprocessRunner()
     secure_boot = secure_boot_state(runner)
     return (
@@ -268,4 +378,5 @@ def scan_system(runner: Runner | None = None) -> tuple[list[HardwareDevice], Sec
         secure_boot,
         xbox_state(secure_boot, runner),
         dkms_state(secure_boot, runner),
+        audio_state(runner),
     )

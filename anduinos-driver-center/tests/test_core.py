@@ -9,6 +9,7 @@ import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from anduinos_driver_center.core import (  # noqa: E402
+    audio_state,
     normalize_key,
     dkms_state,
     parse_ubuntu_driver_devices,
@@ -18,9 +19,10 @@ from anduinos_driver_center.core import (  # noqa: E402
 
 
 class FakeRunner:
-    def __init__(self, responses=None, installed=()):
+    def __init__(self, responses=None, installed=(), versions=None):
         self.responses = responses or {}
         self.installed = set(installed)
+        self.versions = versions or {}
 
     def run(self, command, timeout=10):
         command = tuple(command)
@@ -31,6 +33,12 @@ class FakeRunner:
                 0 if package in self.installed else 1,
                 "ii " if package in self.installed else "",
                 "",
+            )
+        if command[:3] == ("dpkg-query", "-W", "-f=${Version}"):
+            package = command[3]
+            version = self.versions.get(package)
+            return subprocess.CompletedProcess(
+                command, 0 if version else 1, version or "", ""
             )
         return self.responses.get(
             command, subprocess.CompletedProcess(command, 1, "", "")
@@ -110,6 +118,56 @@ driver   : xserver-xorg-video-nouveau - distro free builtin
             self.assertEqual(state.modules, ("example.ko.zst",))
             self.assertEqual(state.untrusted_modules, ("example.ko.zst",))
             self.assertFalse(state.ready)
+
+    def test_audio_reports_packages_files_modules_and_active_drivers(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            firmware = root / "sof"
+            ucm = root / "ucm2"
+            firmware.mkdir()
+            ucm.mkdir()
+            (firmware / "sof-tgl.ri").write_text("firmware")
+            (ucm / "HiFi.conf").write_text("profile")
+            responses = {
+                ("lsmod",): subprocess.CompletedProcess(
+                    [], 0, "snd_sof 438272 1\nsnd_hda_intel 65536 2\n", ""
+                ),
+                ("lspci", "-nnk"): subprocess.CompletedProcess(
+                    [],
+                    0,
+                    "00:1f.3 Audio device [0403]: Intel Audio\n"
+                    "\tKernel driver in use: snd_hda_intel\n",
+                    "",
+                ),
+            }
+            installed = {"firmware-sof-anduinos", "alsa-ucm-conf-anduinos"}
+            versions = {
+                "firmware-sof-anduinos": "2.0.1-1+resolute",
+                "alsa-ucm-conf-anduinos": "2.0.0-1+resolute",
+            }
+            state = audio_state(
+                FakeRunner(responses, installed, versions),
+                (firmware,),
+                ucm,
+            )
+            self.assertTrue(state.ready)
+            self.assertEqual(state.sof_modules, ("snd_sof",))
+            self.assertEqual(state.active_drivers, ("snd_hda_intel",))
+            self.assertEqual(
+                state.sof_package.version, "2.0.1-1+resolute"
+            )
+
+    def test_audio_missing_packages_are_not_ready(self):
+        with tempfile.TemporaryDirectory() as directory:
+            missing = Path(directory) / "missing"
+            state = audio_state(
+                FakeRunner(),
+                (missing,),
+                missing,
+            )
+            self.assertFalse(state.packages_installed)
+            self.assertFalse(state.ready)
+            self.assertIsNone(state.sof_package.version)
 
 
 if __name__ == "__main__":
