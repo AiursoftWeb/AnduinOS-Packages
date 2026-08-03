@@ -4178,6 +4178,10 @@ class OobeWindow(Adw.ApplicationWindow):
         self.app = app
         self.is_oobe = is_oobe
         self.offline_mode = False
+        # Pages may request a navigation refresh while their widgets are being
+        # constructed.  The navigation controls do not exist until the bottom
+        # bar is complete, so defer those refreshes until then.
+        self._nav_ready = False
 
         if is_oobe:
             self.set_title(_('AnduinOS Setup'))
@@ -4252,6 +4256,7 @@ class OobeWindow(Adw.ApplicationWindow):
         self.carousel.connect('page-changed', self._on_page_changed)
         toolbar.add_bottom_bar(bottom)
 
+        self._nav_ready = True
         self._update_nav_buttons()
 
     def _get_page_factories(self, navigate_next=None):
@@ -4328,6 +4333,9 @@ class OobeWindow(Adw.ApplicationWindow):
         )
 
     def _update_nav_buttons(self):
+        if not getattr(self, '_nav_ready', False):
+            return
+
         idx = int(self.carousel.get_position())
         n_pages = self.carousel.get_n_pages()
 
