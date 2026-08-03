@@ -24,6 +24,10 @@
 - Exposed the read-only lineage graph through the D-Bus service.
 - Kept System and Personal Files browsing and copy-out independent from full
   system restore.
+- Replaced ambiguous snapshot creation actions with one explicit target
+  selector for System and User Data, System Only, or User Data Only. Manual
+  user-data snapshots are labeled, linked to paired System points when
+  applicable, excluded from automatic retention, and independently deletable.
 
 ### Validation
 

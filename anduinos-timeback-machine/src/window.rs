@@ -12,7 +12,7 @@ use anduinos_timeback::automation::{
 };
 use anduinos_timeback::layout::{self, LayoutReport, LayoutSupport};
 use anduinos_timeback::lineage::{LineageRelation, SystemLineage};
-use anduinos_timeback::model::{DeploymentKind, DeploymentRecord, DeploymentState};
+use anduinos_timeback::model::{DeploymentKind, DeploymentRecord, DeploymentState, SnapshotTarget};
 use anduinos_timeback::retention::RetentionPlan;
 use anduinos_timeback::store::DiscoveryReport;
 use anduinos_timeback::targets;
@@ -359,6 +359,24 @@ fn build_with_notice(
         window_for_refresh.close();
     });
     window.add_action(&refresh_action);
+    let create_action = gio::SimpleAction::new("create-snapshot", None);
+    let window_for_create = window.clone();
+    create_action.connect_activate(move |_, _| {
+        if demo {
+            let dialog = adw::AlertDialog::builder()
+                .heading(i18n("Design preview"))
+                .body(i18n(
+                    "No snapshot can be created while demo data is active.",
+                ))
+                .close_response("close")
+                .build();
+            dialog.add_response("close", &i18n("Close"));
+            dialog.present(Some(&window_for_create));
+        } else {
+            show_create_dialog(&window_for_create);
+        }
+    });
+    window.add_action(&create_action);
     let shortcuts_action = gio::SimpleAction::new("shortcuts", None);
     let window_for_shortcuts = window.clone();
     shortcuts_action.connect_activate(move |_, _| {
@@ -370,6 +388,7 @@ fn build_with_notice(
         ("win.system-history", &["<Primary>2"][..]),
         ("win.recover-files", &["<Primary>3"][..]),
         ("win.automatic", &["<Primary>4"][..]),
+        ("win.create-snapshot", &["<Primary>n"][..]),
         ("win.refresh", &["F5"][..]),
         ("win.settings", &["<Primary>comma"][..]),
     ] {
@@ -394,6 +413,7 @@ fn show_keyboard_shortcuts(parent: &adw::ApplicationWindow) {
         (i18n("Open System History"), "<Primary>2"),
         (i18n("Open Recover Files"), "<Primary>3"),
         (i18n("Open Automatic Protection"), "<Primary>4"),
+        (i18n("Create Snapshot…"), "<Primary>n"),
         (i18n("Refresh System Status"), "F5"),
         (i18n("Open Advanced Settings"), "<Primary>comma"),
     ] {
@@ -659,7 +679,7 @@ fn build_overview(
                 i18n("Recovery points are unavailable")
             })
             .description(if supported {
-                i18n("Use “Create First Point” in the checklist above to make system recovery ready.")
+                i18n("Use “Create Snapshot…” in the checklist above and choose what to protect.")
             } else if is_ext4(report) {
                 i18n(
                     "This installation uses ext4. Timeback Machine recovery points currently require Btrfs.",
@@ -761,7 +781,7 @@ fn classify_protection_health(
 }
 
 fn protection_checklist(
-    window: &adw::ApplicationWindow,
+    _window: &adw::ApplicationWindow,
     checklist: &ProtectionChecklist,
 ) -> adw::PreferencesGroup {
     let (title, description) = match checklist.health {
@@ -810,13 +830,12 @@ fn protection_checklist(
     );
     if !checklist.system_snapshot && !checklist.system_error {
         let create = gtk::Button::builder()
-            .label(i18n("Create First Point"))
+            .label(i18n("Create Snapshot…"))
             .icon_name("list-add-symbolic")
             .valign(gtk::Align::Center)
             .css_classes(["suggested-action"])
+            .action_name("win.create-snapshot")
             .build();
-        let parent = window.clone();
-        create.connect_clicked(move |_| show_create_dialog(&parent));
         system_row.add_suffix(&create);
     }
     group.add(&system_row);
@@ -1296,7 +1315,7 @@ fn automatic_time(time: Option<chrono::DateTime<chrono::Utc>>, missing: &str) ->
 }
 
 fn overview_hero(
-    window: &adw::ApplicationWindow,
+    _window: &adw::ApplicationWindow,
     report: &LayoutReport,
     demo: bool,
     health: ProtectionHealth,
@@ -1393,7 +1412,7 @@ fn overview_hero(
     );
     action_content.append(
         &gtk::Label::builder()
-            .label(i18n("Create Recovery Point"))
+            .label(i18n("Create Snapshot…"))
             .build(),
     );
     let action = gtk::Button::builder()
@@ -1404,23 +1423,8 @@ fn overview_hero(
         .valign(gtk::Align::Center)
         .sensitive(supported)
         .visible(supported)
+        .action_name("win.create-snapshot")
         .build();
-    let parent = window.clone();
-    action.connect_clicked(move |_| {
-        if demo {
-            let dialog = adw::AlertDialog::builder()
-                .heading(i18n("Design preview"))
-                .body(i18n(
-                    "No snapshot can be created while demo data is active.",
-                ))
-                .close_response("close")
-                .build();
-            dialog.add_response("close", &i18n("Close"));
-            dialog.present(Some(&parent));
-        } else {
-            show_create_dialog(&parent);
-        }
-    });
     let actions = gtk::Box::builder()
         .orientation(gtk::Orientation::Horizontal)
         .spacing(8)
@@ -1659,17 +1663,16 @@ fn build_system_history(
         content.append(&list);
     } else {
         let create = gtk::Button::builder()
-            .label(i18n("Create First Recovery Point"))
+            .label(i18n("Create Snapshot…"))
             .icon_name("list-add-symbolic")
             .halign(gtk::Align::Center)
             .css_classes(["suggested-action", "pill"])
+            .action_name("win.create-snapshot")
             .build();
-        let parent = window.clone();
-        create.connect_clicked(move |_| show_create_dialog(&parent));
         content.append(
             &adw::StatusPage::builder()
                 .icon_name("document-open-recent-symbolic")
-                .title(i18n("Create Your First Recovery Point"))
+                .title(i18n("Create Your First Snapshot"))
                 .description(i18n(
                     "Create a recovery point before a system change so you can return to a known state.",
                 ))
@@ -2058,20 +2061,54 @@ fn build_recover_files(
         ));
     } else if !home.snapshots.is_empty() {
         for snapshot in home.snapshots.iter().rev() {
-            let title = snapshot
+            let created = snapshot
                 .created_at
                 .with_timezone(&chrono::Local)
                 .format("%Y-%m-%d %H:%M")
                 .to_string();
-            user_group.add(&file_snapshot_row(
+            let title = if snapshot.title.is_empty() {
+                created
+            } else {
+                snapshot.title.clone()
+            };
+            let subtitle = match snapshot.kind {
+                anduinos_timeback::automatic_home::HomeSnapshotKind::Automatic => {
+                    i18n("Automatic · User data")
+                }
+                anduinos_timeback::automatic_home::HomeSnapshotKind::Manual
+                    if snapshot.system_recovery_point_id.is_some() =>
+                {
+                    i18n("Manual · User data · Linked with a system recovery point")
+                }
+                anduinos_timeback::automatic_home::HomeSnapshotKind::Manual => {
+                    i18n("Manual · User data")
+                }
+            };
+            let row = file_snapshot_row(
                 window,
                 &title,
-                &i18n("Automatic · Personal files"),
+                &subtitle,
                 "user-home-symbolic",
                 "home",
                 &snapshot.id.to_string(),
-                &i18n("Personal Files Snapshot"),
-            ));
+                &title,
+            );
+            if snapshot.kind == anduinos_timeback::automatic_home::HomeSnapshotKind::Manual {
+                let delete = gtk::Button::builder()
+                    .icon_name("user-trash-symbolic")
+                    .tooltip_text(i18n("Delete user data snapshot"))
+                    .valign(gtk::Align::Center)
+                    .css_classes(["flat"])
+                    .build();
+                let parent = window.clone();
+                let snapshot_id = snapshot.id.to_string();
+                let snapshot_title = title.clone();
+                delete.connect_clicked(move |_| {
+                    show_delete_home_dialog(&parent, &snapshot_id, &snapshot_title)
+                });
+                row.add_suffix(&delete);
+            }
+            user_group.add(&row);
         }
     } else {
         let state = if home.error.is_some() {
@@ -2088,7 +2125,13 @@ fn build_recover_files(
             if home.error.is_some() { "warning" } else { "" },
         );
         if home.error.is_none() {
-            row.add_suffix(&checklist_action_button(&i18n("Set Up")));
+            let create = gtk::Button::builder()
+                .label(i18n("Create Snapshot…"))
+                .icon_name("list-add-symbolic")
+                .valign(gtk::Align::Center)
+                .action_name("win.create-snapshot")
+                .build();
+            row.add_suffix(&create);
         }
         user_group.add(&row);
     }
@@ -2144,22 +2187,28 @@ fn build_recover_files(
             );
             if discovery.error.is_none() {
                 let create = gtk::Button::builder()
-                    .label(i18n("Create Recovery Point"))
+                    .label(i18n("Create Snapshot…"))
                     .icon_name("list-add-symbolic")
                     .valign(gtk::Align::Center)
+                    .action_name("win.create-snapshot")
                     .build();
-                let parent = window.clone();
-                create.connect_clicked(move |_| show_create_dialog(&parent));
                 row.add_suffix(&create);
             }
             system_group.add(&row);
         } else {
             for deployment in snapshots {
-                let subtitle = format!(
+                let mut subtitle = format!(
                     "{} · {}",
                     deployment_time(deployment),
                     deployment_kind(deployment.kind)
                 );
+                if home
+                    .snapshots
+                    .iter()
+                    .any(|snapshot| snapshot.system_recovery_point_id == Some(deployment.id))
+                {
+                    subtitle.push_str(&format!(" · {}", i18n("Linked user data snapshot")));
+                }
                 system_group.add(&file_snapshot_row(
                     window,
                     &deployment.title,
@@ -3155,6 +3204,7 @@ fn timeline_heading(title: &str, count: usize) -> TimelineHeading {
 #[derive(Clone, Debug)]
 enum UiMutation {
     Create {
+        target: SnapshotTarget,
         title: String,
         reason: String,
         pinned: bool,
@@ -3165,6 +3215,9 @@ enum UiMutation {
     },
     Delete {
         deployment_id: String,
+    },
+    DeleteHome {
+        snapshot_id: String,
     },
     Verify {
         deployment_id: String,
@@ -3180,34 +3233,108 @@ enum UiMutationEvent {
     Finished(Result<client::OperationResult, String>, bool),
 }
 
+fn snapshot_target_row(
+    toggle: &gtk::CheckButton,
+    title: &str,
+    subtitle: &str,
+    sensitive: bool,
+) -> adw::ActionRow {
+    toggle.set_sensitive(sensitive);
+    toggle.set_valign(gtk::Align::Center);
+    let row = adw::ActionRow::builder()
+        .title(title)
+        .subtitle(subtitle)
+        .sensitive(sensitive)
+        .activatable(sensitive)
+        .build();
+    row.add_prefix(toggle);
+    row.set_activatable_widget(Some(toggle));
+    row
+}
+
 fn show_create_dialog(parent: &adw::ApplicationWindow) {
+    let report = layout::inspect_current();
+    let home_available = targets::discover_targets(&report).iter().any(|target| {
+        target.kind == anduinos_timeback::targets::TargetKind::Home && target.available
+    });
+
+    let target_group = adw::PreferencesGroup::builder()
+        .title(i18n("What should this snapshot protect?"))
+        .description(i18n(
+            "Choose explicitly. The selection controls what is captured, retained, and available later.",
+        ))
+        .build();
+    let both = gtk::CheckButton::new();
+    let system = gtk::CheckButton::new();
+    let home = gtk::CheckButton::new();
+    system.set_group(Some(&both));
+    home.set_group(Some(&both));
+    both.set_active(home_available);
+    system.set_active(!home_available);
+    let unavailable_home = i18n("Unavailable because /home is not an independent Btrfs subvolume");
+    let both_subtitle = if home_available {
+        i18n("Recommended · Creates two linked snapshots in one operation")
+    } else {
+        unavailable_home.clone()
+    };
+    target_group.add(&snapshot_target_row(
+        &both,
+        &i18n("System and User Data"),
+        &both_subtitle,
+        home_available,
+    ));
+    target_group.add(&snapshot_target_row(
+        &system,
+        &i18n("System Only"),
+        &i18n("Operating system and installed applications; /home stays unchanged"),
+        true,
+    ));
+    let home_subtitle = if home_available {
+        i18n("Everything stored in /home; the operating system stays unchanged")
+    } else {
+        unavailable_home
+    };
+    target_group.add(&snapshot_target_row(
+        &home,
+        &i18n("User Data Only"),
+        &home_subtitle,
+        home_available,
+    ));
+
     let form = adw::PreferencesGroup::new();
     let title = adw::EntryRow::builder()
         .title(i18n("Name"))
-        .text(i18n("Manual recovery point"))
+        .text(i18n("Manual snapshot"))
         .build();
     title.set_max_length(120);
     let reason = adw::EntryRow::builder()
         .title(i18n("Description"))
-        .text(i18n("Created before a manual system change"))
+        .text(i18n("Created before a manual change"))
         .build();
     reason.set_max_length(500);
     let pinned = adw::SwitchRow::builder()
-        .title(i18n("Keep until I delete it"))
+        .title(i18n("Keep created snapshots until I delete them"))
         .subtitle(i18n(
-            "Pinned recovery points are never cleaned automatically",
+            "Manual snapshots are never cleaned by automatic retention; this also marks them as important",
         ))
         .build();
     form.add(&title);
     form.add(&reason);
     form.add(&pinned);
 
+    let content = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(18)
+        .build();
+    content.append(&target_group);
+    content.append(&form);
+
     let dialog = adw::AlertDialog::builder()
-        .heading(i18n("Create Recovery Point"))
+        .heading(i18n("Create Snapshot"))
         .body(i18n(
-            "The operating system will be captured without changing personal files, logs, containers, or virtual machines.",
+            "Review the selected target before creating. Existing files are not changed.",
         ))
-        .extra_child(&form)
+        .extra_child(&content)
         .close_response("cancel")
         .default_response("create")
         .build();
@@ -3238,10 +3365,23 @@ fn show_create_dialog(parent: &adw::ApplicationWindow) {
         if response != "create" {
             return;
         }
+        let target = if both.is_active() {
+            SnapshotTarget::SystemAndHome
+        } else if home.is_active() {
+            SnapshotTarget::Home
+        } else {
+            SnapshotTarget::System
+        };
+        let heading = match target {
+            SnapshotTarget::SystemAndHome => i18n("Creating System and User Data Snapshots"),
+            SnapshotTarget::System => i18n("Creating System Recovery Point"),
+            SnapshotTarget::Home => i18n("Creating User Data Snapshot"),
+        };
         run_ui_mutation(
             &response_parent,
-            &i18n("Creating Recovery Point"),
+            &heading,
             UiMutation::Create {
+                target,
                 title: title.text().to_string(),
                 reason: reason.text().to_string(),
                 pinned: pinned.is_active(),
@@ -3474,6 +3614,37 @@ fn show_delete_dialog(parent: &adw::ApplicationWindow, deployment_id: &str, titl
     dialog.present(Some(parent.upcast_ref::<gtk::Widget>()));
 }
 
+fn show_delete_home_dialog(parent: &adw::ApplicationWindow, snapshot_id: &str, title: &str) {
+    let dialog = adw::AlertDialog::builder()
+        .heading(i18n("Delete User Data Snapshot?"))
+        .body(i18n_fmt(
+            &i18n(
+                "“{0}” will be permanently removed. Current user data and the running system will not change.",
+            ),
+            &[title],
+        ))
+        .close_response("cancel")
+        .default_response("cancel")
+        .build();
+    dialog.add_response("cancel", &i18n("Cancel"));
+    dialog.add_response("delete", &i18n("Delete"));
+    dialog.set_response_appearance("delete", adw::ResponseAppearance::Destructive);
+    let response_parent = parent.clone();
+    let snapshot_id = snapshot_id.to_string();
+    dialog.connect_response(None, move |_dialog, response| {
+        if response == "delete" {
+            run_ui_mutation(
+                &response_parent,
+                &i18n("Deleting User Data Snapshot"),
+                UiMutation::DeleteHome {
+                    snapshot_id: snapshot_id.clone(),
+                },
+            );
+        }
+    });
+    dialog.present(Some(parent.upcast_ref::<gtk::Widget>()));
+}
+
 fn run_ui_mutation(parent: &adw::ApplicationWindow, heading: &str, mutation: UiMutation) {
     let progress = gtk::ProgressBar::builder()
         .show_text(false)
@@ -3515,10 +3686,11 @@ fn run_ui_mutation(parent: &adw::ApplicationWindow, heading: &str, mutation: UiM
             let progress_sender = worker_sender.clone();
             let result = match mutation {
                 UiMutation::Create {
+                    target,
                     title,
                     reason,
                     pinned,
-                } => client::create_recovery_point(&title, &reason, pinned, move |progress| {
+                } => client::create_snapshot(target, &title, &reason, pinned, move |progress| {
                     let _ = progress_sender.send(UiMutationEvent::Progress(progress));
                 }),
                 UiMutation::SetPinned {
@@ -3529,6 +3701,11 @@ fn run_ui_mutation(parent: &adw::ApplicationWindow, heading: &str, mutation: UiM
                 }),
                 UiMutation::Delete { deployment_id } => {
                     client::delete_recovery_point(&deployment_id, move |progress| {
+                        let _ = progress_sender.send(UiMutationEvent::Progress(progress));
+                    })
+                }
+                UiMutation::DeleteHome { snapshot_id } => {
+                    client::delete_home_snapshot(&snapshot_id, move |progress| {
                         let _ = progress_sender.send(UiMutationEvent::Progress(progress));
                     })
                 }

@@ -144,7 +144,10 @@ On an installed package, query or manage the D-Bus-activated service with:
 
 ```bash
 timebackctl list --json
-timebackctl create --pin "Before a risky change"
+# The target is always explicit: system, home, or system-and-home.
+timebackctl create --pin --target system-and-home "Before a risky change"
+timebackctl list-home
+timebackctl delete-home HOME_SNAPSHOT_ID
 timebackctl verify DEPLOYMENT_ID
 timebackctl pin DEPLOYMENT_ID
 timebackctl unpin DEPLOYMENT_ID

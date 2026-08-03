@@ -18,7 +18,7 @@ cleanup() {
 trap cleanup EXIT
 
 echo "[TM-5] Creating, verifying, pinning, and deleting a real recovery point"
-timebackctl create "$title"
+timebackctl create --target system "$title"
 deployment_id="$(timebackctl list --json | latest_id_for_title "$title")" ||
     die "the newly-created recovery point was not discovered"
 timebackctl verify "$deployment_id"

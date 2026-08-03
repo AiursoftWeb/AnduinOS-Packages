@@ -12,11 +12,20 @@ use uuid::Uuid;
 
 use crate::browsing::{acquire_exclusive_snapshot_lock_at, SnapshotKind};
 use crate::layout::LayoutReport;
+use crate::model::DeploymentId;
 use crate::targets::{discover_targets, TargetKind};
 use crate::SNAPSHOT_ROOT;
 
 const BTRFS: &str = "/usr/bin/btrfs";
-const HOME_SNAPSHOT_SCHEMA_VERSION: u32 = 1;
+const HOME_SNAPSHOT_SCHEMA_VERSION: u32 = 2;
+
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum HomeSnapshotKind {
+    #[default]
+    Automatic,
+    Manual,
+}
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct HomeSnapshotRecord {
@@ -24,6 +33,16 @@ pub struct HomeSnapshotRecord {
     pub id: Uuid,
     pub created_at: DateTime<Utc>,
     pub deleting: bool,
+    #[serde(default)]
+    pub kind: HomeSnapshotKind,
+    #[serde(default)]
+    pub title: String,
+    #[serde(default)]
+    pub reason: String,
+    #[serde(default)]
+    pub pinned: bool,
+    #[serde(default)]
+    pub system_recovery_point_id: Option<DeploymentId>,
 }
 
 #[derive(Clone, Debug)]
@@ -47,6 +66,45 @@ impl HomeSnapshotStore {
     }
 
     pub fn create(&self, layout: &LayoutReport) -> Result<HomeSnapshotRecord, String> {
+        self.create_record(
+            layout,
+            HomeSnapshotKind::Automatic,
+            "Scheduled personal files snapshot",
+            "Created by the automatic snapshot schedule",
+            false,
+            None,
+        )
+    }
+
+    pub fn create_manual(
+        &self,
+        layout: &LayoutReport,
+        title: &str,
+        reason: &str,
+        pinned: bool,
+        system_recovery_point_id: Option<DeploymentId>,
+    ) -> Result<HomeSnapshotRecord, String> {
+        validate_display_text("Home snapshot title", title, 120)?;
+        validate_display_text("Home snapshot description", reason, 500)?;
+        self.create_record(
+            layout,
+            HomeSnapshotKind::Manual,
+            title,
+            reason,
+            pinned,
+            system_recovery_point_id,
+        )
+    }
+
+    fn create_record(
+        &self,
+        layout: &LayoutReport,
+        kind: HomeSnapshotKind,
+        title: &str,
+        reason: &str,
+        pinned: bool,
+        system_recovery_point_id: Option<DeploymentId>,
+    ) -> Result<HomeSnapshotRecord, String> {
         self.ensure_supported(layout)?;
         self.ensure_directories()?;
         let _lock = self.lock()?;
@@ -55,6 +113,11 @@ impl HomeSnapshotStore {
             id: Uuid::new_v4(),
             created_at: Utc::now(),
             deleting: false,
+            kind,
+            title: title.to_string(),
+            reason: reason.to_string(),
+            pinned,
+            system_recovery_point_id,
         };
         let snapshot = self.snapshot_path(record.id);
         run_btrfs(&[
@@ -331,10 +394,24 @@ fn read_record(path: &Path) -> Result<HomeSnapshotRecord, String> {
 }
 
 fn validate_record(record: &HomeSnapshotRecord) -> Result<(), String> {
-    if record.schema_version != HOME_SNAPSHOT_SCHEMA_VERSION {
+    if !matches!(record.schema_version, 1 | HOME_SNAPSHOT_SCHEMA_VERSION) {
         return Err(format!(
             "Unsupported Home snapshot metadata version {}",
             record.schema_version
+        ));
+    }
+    if record.schema_version >= 2 {
+        validate_display_text("Home snapshot title", &record.title, 120)?;
+        validate_display_text("Home snapshot description", &record.reason, 500)?;
+    }
+    Ok(())
+}
+
+fn validate_display_text(label: &str, value: &str, maximum: usize) -> Result<(), String> {
+    let length = value.chars().count();
+    if value.trim().is_empty() || length > maximum || value.chars().any(char::is_control) {
+        return Err(format!(
+            "{label} must contain 1 to {maximum} safe characters"
         ));
     }
     Ok(())
@@ -347,6 +424,44 @@ mod tests {
     use super::*;
 
     #[test]
+    fn legacy_records_remain_automatic_and_unlinked() {
+        let id = Uuid::new_v4();
+        let record = serde_json::from_value::<HomeSnapshotRecord>(serde_json::json!({
+            "schema_version": 1,
+            "id": id,
+            "created_at": Utc::now(),
+            "deleting": false
+        }))
+        .unwrap();
+
+        assert_eq!(record.kind, HomeSnapshotKind::Automatic);
+        assert!(!record.pinned);
+        assert!(record.title.is_empty());
+        assert_eq!(record.system_recovery_point_id, None);
+        validate_record(&record).unwrap();
+    }
+
+    #[test]
+    fn manual_records_require_human_readable_metadata() {
+        let record = HomeSnapshotRecord {
+            schema_version: HOME_SNAPSHOT_SCHEMA_VERSION,
+            id: Uuid::new_v4(),
+            created_at: Utc::now(),
+            deleting: false,
+            kind: HomeSnapshotKind::Manual,
+            title: "Before editing photos".into(),
+            reason: "Keep the current user data".into(),
+            pinned: true,
+            system_recovery_point_id: Some(DeploymentId::new()),
+        };
+        validate_record(&record).unwrap();
+
+        let mut invalid = record;
+        invalid.title = "\n".into();
+        assert!(validate_record(&invalid).is_err());
+    }
+
+    #[test]
     fn discovers_home_snapshot_records_in_time_order() {
         let environment = TestEnvironment::new();
         let older = HomeSnapshotRecord {
@@ -354,12 +469,22 @@ mod tests {
             id: Uuid::new_v4(),
             created_at: Utc::now() - chrono::Duration::hours(2),
             deleting: false,
+            kind: HomeSnapshotKind::Automatic,
+            title: "Scheduled personal files snapshot".into(),
+            reason: "Created by the automatic snapshot schedule".into(),
+            pinned: false,
+            system_recovery_point_id: None,
         };
         let newer = HomeSnapshotRecord {
             schema_version: HOME_SNAPSHOT_SCHEMA_VERSION,
             id: Uuid::new_v4(),
             created_at: Utc::now(),
             deleting: false,
+            kind: HomeSnapshotKind::Automatic,
+            title: "Scheduled personal files snapshot".into(),
+            reason: "Created by the automatic snapshot schedule".into(),
+            pinned: false,
+            system_recovery_point_id: None,
         };
         environment.add(&newer);
         environment.add(&older);
@@ -375,6 +500,11 @@ mod tests {
             id: Uuid::new_v4(),
             created_at: Utc::now(),
             deleting: false,
+            kind: HomeSnapshotKind::Automatic,
+            title: "Scheduled personal files snapshot".into(),
+            reason: "Created by the automatic snapshot schedule".into(),
+            pinned: false,
+            system_recovery_point_id: None,
         };
         fs::create_dir_all(environment.store.snapshot_path(record.id)).unwrap();
         let outside = environment.root.join("outside.json");
@@ -399,6 +529,11 @@ mod tests {
             id: Uuid::new_v4(),
             created_at: Utc::now(),
             deleting: true,
+            kind: HomeSnapshotKind::Automatic,
+            title: "Scheduled personal files snapshot".into(),
+            reason: "Created by the automatic snapshot schedule".into(),
+            pinned: false,
+            system_recovery_point_id: None,
         };
         fs::write(
             environment

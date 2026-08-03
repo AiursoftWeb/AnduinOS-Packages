@@ -20,6 +20,7 @@ python3 -m json.tool docs/deployment-v1.schema.json >/dev/null
 python3 -m json.tool docs/rollback-v1.schema.json >/dev/null
 python3 -m json.tool docs/package-transaction-v1.schema.json >/dev/null
 python3 -m json.tool docs/home-snapshot-v1.schema.json >/dev/null
+python3 -m json.tool docs/home-snapshot-v2.schema.json >/dev/null
 python3 -m json.tool docs/automatic-configuration-v1.schema.json >/dev/null
 python3 -m json.tool docs/system-lineage-v1.schema.json >/dev/null
 python3 - <<'PY'
@@ -155,8 +156,10 @@ assert {
     "ListDeployments",
     "VerifyRecoveryPoint",
     "CreateRecoveryPoint",
+    "CreateSnapshot",
     "SetPinned",
     "DeleteRecoveryPoint",
+    "DeleteHomeSnapshot",
     "ScheduleRollback",
     "CancelPendingRollback",
     "InspectRetention",

@@ -720,10 +720,6 @@ msgid ""
 msgstr ""
 "Це встановлення не використовує повну структуру відновлення Btrfs AnduinOS."
 
-#: src/window.rs:760 src/window.rs:2089
-msgid "Create Recovery Point"
-msgstr "Створити точку відновлення"
-
 #: src/window.rs:776
 msgid "Design preview"
 msgstr "Попередній перегляд дизайну"
@@ -1154,41 +1150,17 @@ msgstr "Робітник відновлення відключився"
 msgid "Check Snapshot Policy"
 msgstr "Check Snapshot Policy"
 
-#: src/window.rs:2070
-msgid "Manual recovery point"
-msgstr "Ручна точка відновлення"
-
 #: src/window.rs:2074
 msgid "Description"
 msgstr "Опис"
-
-#: src/window.rs:2075
-msgid "Created before a manual system change"
-msgstr "Створено перед ручною зміною системи"
-
-#: src/window.rs:2079
-msgid "Keep until I delete it"
-msgstr "Зберігати, доки я не видалю"
-
-#: src/window.rs:2081
-msgid "Pinned recovery points are never cleaned automatically"
-msgstr "Pinned recovery points are never cleaned automatically"
-
-#: src/window.rs:2091
-msgid ""
-"The operating system will be captured without changing personal files, logs, "
-"containers, or virtual machines."
-msgstr ""
-"The operating system will be captured without changing personal files, logs, "
-"containers, or virtual machines."
 
 #: src/window.rs:2098
 msgid "Create"
 msgstr "Створити"
 
 #: src/window.rs:2126
-msgid "Creating Recovery Point"
-msgstr "Створення точки відновлення"
+msgid "Creating System Recovery Point"
+msgstr "Creating System Recovery Point"
 
 #: src/window.rs:2168
 msgid "Restore to this recovery point"
@@ -1512,10 +1484,6 @@ msgstr "Today, 15:00"
 #: src/window.rs:1364 src/window.rs:1370 src/window.rs:1383
 msgid "Automatic · Personal files"
 msgstr "Automatic · Personal files"
-
-#: src/window.rs:1387
-msgid "Personal Files Snapshot"
-msgstr "Personal Files Snapshot"
 
 #: src/window.rs:1397
 msgid "No personal-file snapshots yet"
@@ -1854,14 +1822,6 @@ msgstr ""
 "Restart to try the recovery entry once. You can still cancel from the "
 "Overview before restarting, or choose a normal AnduinOS entry in GRUB."
 
-#: src/window.rs:683
-msgid ""
-"Use “Create First Point” in the checklist above to make system recovery "
-"ready."
-msgstr ""
-"Use “Create First Point” in the checklist above to make system recovery "
-"ready."
-
 #: src/window.rs:790
 msgid "Protection Checklist — Complete"
 msgstr "Protection Checklist — Complete"
@@ -1915,10 +1875,6 @@ msgstr "Create your first recovery point before the next system change."
 #: src/window.rs:819 src/window.rs:876 src/window.rs:891 src/window.rs:2112
 msgid "Set Up"
 msgstr "Set Up"
-
-#: src/window.rs:834
-msgid "Create First Point"
-msgstr "Create First Point"
 
 #: src/window.rs:847
 msgid ""
@@ -1999,14 +1955,6 @@ msgid ""
 msgstr ""
 "Your existing data is untouched. Review the checklist below to fix the "
 "unavailable area."
-
-#: src/window.rs:1683
-msgid "Create First Recovery Point"
-msgstr "Create First Recovery Point"
-
-#: src/window.rs:1693
-msgid "Create Your First Recovery Point"
-msgstr "Create Your First Recovery Point"
 
 #: src/window.rs:255 src/window.rs:384
 msgid "Main Menu"
@@ -2219,3 +2167,107 @@ msgstr "Open Advanced Settings"
 
 #~ msgid "This folder is very large; only the first 1,000 items are shown."
 #~ msgstr "This folder is very large; only the first 1,000 items are shown."
+
+#: src/window.rs
+msgid "Automatic · User data"
+msgstr "Automatic · User data"
+
+#: src/window.rs
+msgid "Choose explicitly. The selection controls what is captured, retained, and available later."
+msgstr "Choose explicitly. The selection controls what is captured, retained, and available later."
+
+#: src/window.rs
+msgid "Create Snapshot"
+msgstr "Create Snapshot"
+
+#: src/window.rs
+msgid "Create Snapshot…"
+msgstr "Create Snapshot…"
+
+#: src/window.rs
+msgid "Create Your First Snapshot"
+msgstr "Create Your First Snapshot"
+
+#: src/window.rs
+msgid "Created before a manual change"
+msgstr "Created before a manual change"
+
+#: src/window.rs
+msgid "Creating System and User Data Snapshots"
+msgstr "Creating System and User Data Snapshots"
+
+#: src/window.rs
+msgid "Creating User Data Snapshot"
+msgstr "Creating User Data Snapshot"
+
+#: src/window.rs
+msgid "Everything stored in /home; the operating system stays unchanged"
+msgstr "Everything stored in /home; the operating system stays unchanged"
+
+#: src/window.rs
+msgid "Keep created snapshots until I delete them"
+msgstr "Keep created snapshots until I delete them"
+
+#: src/window.rs
+msgid "Manual snapshots are never cleaned by automatic retention; this also marks them as important"
+msgstr "Manual snapshots are never cleaned by automatic retention; this also marks them as important"
+
+#: src/window.rs
+msgid "Manual · User data"
+msgstr "Manual · User data"
+
+#: src/window.rs
+msgid "Manual · User data · Linked with a system recovery point"
+msgstr "Manual · User data · Linked with a system recovery point"
+
+#: src/window.rs
+msgid "Operating system and installed applications; /home stays unchanged"
+msgstr "Operating system and installed applications; /home stays unchanged"
+
+#: src/window.rs
+msgid "Recommended · Creates two linked snapshots in one operation"
+msgstr "Recommended · Creates two linked snapshots in one operation"
+
+#: src/window.rs
+msgid "Review the selected target before creating. Existing files are not changed."
+msgstr "Review the selected target before creating. Existing files are not changed."
+
+#: src/window.rs
+msgid "System Only"
+msgstr "System Only"
+
+#: src/window.rs
+msgid "Unavailable because /home is not an independent Btrfs subvolume"
+msgstr "Unavailable because /home is not an independent Btrfs subvolume"
+
+#: src/window.rs
+msgid "Use “Create Snapshot…” in the checklist above and choose what to protect."
+msgstr "Use “Create Snapshot…” in the checklist above and choose what to protect."
+
+#: src/window.rs
+msgid "User Data Only"
+msgstr "User Data Only"
+
+#: src/window.rs
+msgid "What should this snapshot protect?"
+msgstr "What should this snapshot protect?"
+
+#: src/window.rs
+msgid "Delete user data snapshot"
+msgstr "Delete user data snapshot"
+
+#: src/window.rs
+msgid "Delete User Data Snapshot?"
+msgstr "Delete User Data Snapshot?"
+
+#: src/window.rs
+msgid "“{0}” will be permanently removed. Current user data and the running system will not change."
+msgstr "“{0}” will be permanently removed. Current user data and the running system will not change."
+
+#: src/window.rs
+msgid "Deleting User Data Snapshot"
+msgstr "Deleting User Data Snapshot"
+
+#: src/window.rs
+msgid "Linked user data snapshot"
+msgstr "Linked user data snapshot"

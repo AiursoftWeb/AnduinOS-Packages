@@ -6,10 +6,10 @@
   <vendor_url>https://www.anduinos.com</vendor_url>
 
   <action id="com.anduinos.timebackmachine.create">
-    <description>Create an AnduinOS recovery point</description>
-    <description xml:lang="zh_CN">创建 AnduinOS 恢复点</description>
-    <message>Authentication is required to create a system recovery point</message>
-    <message xml:lang="zh_CN">创建系统恢复点需要身份验证</message>
+    <description>Create an AnduinOS snapshot</description>
+    <description xml:lang="zh_CN">创建 AnduinOS 快照</description>
+    <message>Authentication is required to create the selected snapshots</message>
+    <message xml:lang="zh_CN">创建所选快照需要身份验证</message>
     <icon_name>com.anduinos.timebackmachine</icon_name>
     <defaults>
       <allow_any>auth_admin</allow_any>

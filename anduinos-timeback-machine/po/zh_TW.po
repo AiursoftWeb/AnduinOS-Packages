@@ -716,10 +716,6 @@ msgid ""
 "This installation does not use the complete AnduinOS Btrfs recovery layout."
 msgstr "此安裝未使用完整的 AnduinOS Btrfs 還原配置。"
 
-#: src/window.rs:760 src/window.rs:2089
-msgid "Create Recovery Point"
-msgstr "建立還原點"
-
 #: src/window.rs:776
 msgid "Design preview"
 msgstr "設計預覽"
@@ -1146,41 +1142,17 @@ msgstr "還原工作程序已斷開連線"
 msgid "Check Snapshot Policy"
 msgstr "Check Snapshot Policy"
 
-#: src/window.rs:2070
-msgid "Manual recovery point"
-msgstr "手動還原點"
-
 #: src/window.rs:2074
 msgid "Description"
 msgstr "描述"
-
-#: src/window.rs:2075
-msgid "Created before a manual system change"
-msgstr "在手動系統變更前建立"
-
-#: src/window.rs:2079
-msgid "Keep until I delete it"
-msgstr "保留直到我刪除它"
-
-#: src/window.rs:2081
-msgid "Pinned recovery points are never cleaned automatically"
-msgstr "Pinned recovery points are never cleaned automatically"
-
-#: src/window.rs:2091
-msgid ""
-"The operating system will be captured without changing personal files, logs, "
-"containers, or virtual machines."
-msgstr ""
-"The operating system will be captured without changing personal files, logs, "
-"containers, or virtual machines."
 
 #: src/window.rs:2098
 msgid "Create"
 msgstr "建立"
 
 #: src/window.rs:2126
-msgid "Creating Recovery Point"
-msgstr "正在建立還原點"
+msgid "Creating System Recovery Point"
+msgstr "正在建立系統還原點"
 
 #: src/window.rs:2168
 msgid "Restore to this recovery point"
@@ -1502,10 +1474,6 @@ msgstr "Today, 15:00"
 #: src/window.rs:1364 src/window.rs:1370 src/window.rs:1383
 msgid "Automatic · Personal files"
 msgstr "Automatic · Personal files"
-
-#: src/window.rs:1387
-msgid "Personal Files Snapshot"
-msgstr "Personal Files Snapshot"
 
 #: src/window.rs:1397
 msgid "No personal-file snapshots yet"
@@ -1844,14 +1812,6 @@ msgstr ""
 "Restart to try the recovery entry once. You can still cancel from the "
 "Overview before restarting, or choose a normal AnduinOS entry in GRUB."
 
-#: src/window.rs:683
-msgid ""
-"Use “Create First Point” in the checklist above to make system recovery "
-"ready."
-msgstr ""
-"Use “Create First Point” in the checklist above to make system recovery "
-"ready."
-
 #: src/window.rs:790
 msgid "Protection Checklist — Complete"
 msgstr "Protection Checklist — Complete"
@@ -1905,10 +1865,6 @@ msgstr "Create your first recovery point before the next system change."
 #: src/window.rs:819 src/window.rs:876 src/window.rs:891 src/window.rs:2112
 msgid "Set Up"
 msgstr "Set Up"
-
-#: src/window.rs:834
-msgid "Create First Point"
-msgstr "Create First Point"
 
 #: src/window.rs:847
 msgid ""
@@ -1989,14 +1945,6 @@ msgid ""
 msgstr ""
 "Your existing data is untouched. Review the checklist below to fix the "
 "unavailable area."
-
-#: src/window.rs:1683
-msgid "Create First Recovery Point"
-msgstr "Create First Recovery Point"
-
-#: src/window.rs:1693
-msgid "Create Your First Recovery Point"
-msgstr "Create Your First Recovery Point"
 
 #: src/window.rs:255 src/window.rs:384
 msgid "Main Menu"
@@ -2207,3 +2155,107 @@ msgstr "Open Advanced Settings"
 
 #~ msgid "This folder is very large; only the first 1,000 items are shown."
 #~ msgstr "This folder is very large; only the first 1,000 items are shown."
+
+#: src/window.rs
+msgid "Automatic · User data"
+msgstr "自動 · 使用者資料"
+
+#: src/window.rs
+msgid "Choose explicitly. The selection controls what is captured, retained, and available later."
+msgstr "請明確選擇。此選擇決定要擷取、保留以及日後可找回的內容。"
+
+#: src/window.rs
+msgid "Create Snapshot"
+msgstr "建立快照"
+
+#: src/window.rs
+msgid "Create Snapshot…"
+msgstr "建立快照…"
+
+#: src/window.rs
+msgid "Create Your First Snapshot"
+msgstr "建立第一個快照"
+
+#: src/window.rs
+msgid "Created before a manual change"
+msgstr "在手動變更前建立"
+
+#: src/window.rs
+msgid "Creating System and User Data Snapshots"
+msgstr "正在建立系統和使用者資料快照"
+
+#: src/window.rs
+msgid "Creating User Data Snapshot"
+msgstr "正在建立使用者資料快照"
+
+#: src/window.rs
+msgid "Everything stored in /home; the operating system stays unchanged"
+msgstr "擷取 /home 中儲存的所有內容；作業系統保持不變"
+
+#: src/window.rs
+msgid "Keep created snapshots until I delete them"
+msgstr "保留建立的快照，直到我手動刪除"
+
+#: src/window.rs
+msgid "Manual snapshots are never cleaned by automatic retention; this also marks them as important"
+msgstr "手動快照不會被自動保留策略清理；此選項也會將其標記為重要"
+
+#: src/window.rs
+msgid "Manual · User data"
+msgstr "手動 · 使用者資料"
+
+#: src/window.rs
+msgid "Manual · User data · Linked with a system recovery point"
+msgstr "手動 · 使用者資料 · 已與系統還原點連結"
+
+#: src/window.rs
+msgid "Operating system and installed applications; /home stays unchanged"
+msgstr "擷取作業系統和已安裝的應用程式；/home 保持不變"
+
+#: src/window.rs
+msgid "Recommended · Creates two linked snapshots in one operation"
+msgstr "建議 · 在一次操作中建立兩個連結快照"
+
+#: src/window.rs
+msgid "Review the selected target before creating. Existing files are not changed."
+msgstr "建立前請檢查所選目標。現有檔案不會被變更。"
+
+#: src/window.rs
+msgid "System Only"
+msgstr "僅系統"
+
+#: src/window.rs
+msgid "Unavailable because /home is not an independent Btrfs subvolume"
+msgstr "無法使用，因為 /home 不是獨立的 Btrfs 子磁碟區"
+
+#: src/window.rs
+msgid "Use “Create Snapshot…” in the checklist above and choose what to protect."
+msgstr "使用上方清單中的「建立快照…」，然後選擇要保護的內容。"
+
+#: src/window.rs
+msgid "User Data Only"
+msgstr "僅使用者資料"
+
+#: src/window.rs
+msgid "What should this snapshot protect?"
+msgstr "此快照應保護什麼？"
+
+#: src/window.rs
+msgid "Delete user data snapshot"
+msgstr "刪除使用者資料快照"
+
+#: src/window.rs
+msgid "Delete User Data Snapshot?"
+msgstr "刪除使用者資料快照？"
+
+#: src/window.rs
+msgid "“{0}” will be permanently removed. Current user data and the running system will not change."
+msgstr "「{0}」將被永久刪除。目前使用者資料和正在執行的系統不會變更。"
+
+#: src/window.rs
+msgid "Deleting User Data Snapshot"
+msgstr "正在刪除使用者資料快照"
+
+#: src/window.rs
+msgid "Linked user data snapshot"
+msgstr "已連結使用者資料快照"

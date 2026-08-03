@@ -95,6 +95,13 @@
       <arg name="pinned" type="b" direction="in"/>
       <arg name="operation_id" type="s" direction="out"/>
     </method>
+    <method name="CreateSnapshot">
+      <arg name="target" type="s" direction="in"/>
+      <arg name="title" type="s" direction="in"/>
+      <arg name="reason" type="s" direction="in"/>
+      <arg name="pinned" type="b" direction="in"/>
+      <arg name="operation_id" type="s" direction="out"/>
+    </method>
     <method name="SetPinned">
       <arg name="deployment_id" type="s" direction="in"/>
       <arg name="pinned" type="b" direction="in"/>
@@ -102,6 +109,10 @@
     </method>
     <method name="DeleteRecoveryPoint">
       <arg name="deployment_id" type="s" direction="in"/>
+      <arg name="operation_id" type="s" direction="out"/>
+    </method>
+    <method name="DeleteHomeSnapshot">
+      <arg name="snapshot_id" type="s" direction="in"/>
       <arg name="operation_id" type="s" direction="out"/>
     </method>
     <method name="ScheduleRollback">

@@ -14,7 +14,7 @@ use anduinos_timeback::automation::{AutomaticConfiguration, AutomaticPolicy, Aut
 use anduinos_timeback::browsing::{self, SnapshotBrowseLock, SnapshotKind, SortMode};
 use anduinos_timeback::layout;
 use anduinos_timeback::lineage::LineageStore;
-use anduinos_timeback::model::DeploymentId;
+use anduinos_timeback::model::{DeploymentId, SnapshotTarget};
 use anduinos_timeback::operations::{OperationEngine, OperationError, OperationPhase};
 use anduinos_timeback::retention::{RetentionCoordinator, RetentionExecutionError};
 use anduinos_timeback::rollback::{RollbackCoordinator, RollbackError, RollbackProgressPhase};
@@ -46,6 +46,13 @@ struct BrowseSession {
 struct DaemonOperationError {
     code: String,
     message: String,
+}
+
+fn cleanup_result<E: std::fmt::Display>(result: Result<(), E>) -> String {
+    match result {
+        Ok(()) => "removed".into(),
+        Err(error) => format!("failed ({error})"),
+    }
 }
 
 impl From<OperationError> for DaemonOperationError {
@@ -630,6 +637,170 @@ fn register_api(
                             },
                         );
                     }
+                    "CreateSnapshot" => {
+                        let target = match SnapshotTarget::from_str(
+                            &parameters.child_get::<String>(0),
+                        ) {
+                            Ok(target) => target,
+                            Err(message) => {
+                                invocation.return_dbus_error(INVALID_ARGUMENT_ERROR, message);
+                                return;
+                            }
+                        };
+                        let title = parameters.child_get::<String>(1);
+                        let reason = parameters.child_get::<String>(2);
+                        let pinned = parameters.child_get::<bool>(3);
+                        start_operation(
+                            connection,
+                            sender,
+                            busy.clone(),
+                            Some(CREATE_ACTION),
+                            invocation,
+                            move |connection, operation_id| {
+                                let engine = OperationEngine::default();
+                                let home = HomeSnapshotStore::default();
+                                let report = layout::inspect_current();
+                                match target {
+                                    SnapshotTarget::System => {
+                                        let progress_connection = connection.clone();
+                                        let progress_operation = operation_id.to_string();
+                                        engine
+                                            .create_manual(
+                                                &report,
+                                                &title,
+                                                &reason,
+                                                pinned,
+                                                move |phase, fraction, message| {
+                                                    emit_progress(
+                                                        &progress_connection,
+                                                        &progress_operation,
+                                                        phase,
+                                                        fraction,
+                                                        message,
+                                                    );
+                                                },
+                                            )
+                                            .map(|record| {
+                                                format!(
+                                                    "System recovery point {} created",
+                                                    record.id
+                                                )
+                                            })
+                                            .map_err(Into::into)
+                                    }
+                                    SnapshotTarget::Home => {
+                                        emit_progress(
+                                            connection,
+                                            operation_id,
+                                            OperationPhase::Validate,
+                                            0.15,
+                                            "Validating personal-files snapshot storage",
+                                        );
+                                        home.create_manual(
+                                            &report, &title, &reason, pinned, None,
+                                        )
+                                        .map(|record| {
+                                            emit_progress(
+                                                connection,
+                                                operation_id,
+                                                OperationPhase::Commit,
+                                                1.0,
+                                                "Personal-files snapshot committed",
+                                            );
+                                            format!(
+                                                "Personal-files snapshot {} created",
+                                                record.id
+                                            )
+                                        })
+                                        .map_err(|message| DaemonOperationError {
+                                            code: "home-snapshot".into(),
+                                            message,
+                                        })
+                                    }
+                                    SnapshotTarget::SystemAndHome => {
+                                        let progress_connection = connection.clone();
+                                        let progress_operation = operation_id.to_string();
+                                        let system = engine
+                                            .create_manual(
+                                                &report,
+                                                &title,
+                                                &reason,
+                                                false,
+                                                move |phase, fraction, message| {
+                                                    emit_progress(
+                                                        &progress_connection,
+                                                        &progress_operation,
+                                                        phase,
+                                                        fraction * 0.55,
+                                                        message,
+                                                    );
+                                                },
+                                            )
+                                            .map_err(DaemonOperationError::from)?;
+                                        emit_progress(
+                                            connection,
+                                            operation_id,
+                                            OperationPhase::Snapshot,
+                                            0.65,
+                                            "Capturing personal files",
+                                        );
+                                        let personal = match home.create_manual(
+                                            &report,
+                                            &title,
+                                            &reason,
+                                            pinned,
+                                            Some(system.id),
+                                        ) {
+                                            Ok(record) => record,
+                                            Err(message) => {
+                                                let cleanup = engine.delete(&report, system.id);
+                                                let message = match cleanup {
+                                                    Ok(()) => format!(
+                                                        "Personal-files snapshot failed; the partial system recovery point was removed: {message}"
+                                                    ),
+                                                    Err(cleanup) => format!(
+                                                        "Personal-files snapshot failed: {message}; partial system recovery point {} also could not be removed: {cleanup}",
+                                                        system.id
+                                                    ),
+                                                };
+                                                return Err(DaemonOperationError {
+                                                    code: "combined-snapshot".into(),
+                                                    message,
+                                                });
+                                            }
+                                        };
+                                        if pinned {
+                                            if let Err(error) =
+                                                engine.set_pinned(&report, system.id, true)
+                                            {
+                                                let home_cleanup = home.delete(personal.id);
+                                                let system_cleanup = engine.delete(&report, system.id);
+                                                return Err(DaemonOperationError {
+                                                    code: "combined-snapshot".into(),
+                                                    message: format!(
+                                                        "Could not protect the combined snapshot: {error}; cleanup results: personal files={}, system={}",
+                                                        cleanup_result(home_cleanup),
+                                                        cleanup_result(system_cleanup)
+                                                    ),
+                                                });
+                                            }
+                                        }
+                                        emit_progress(
+                                            connection,
+                                            operation_id,
+                                            OperationPhase::Commit,
+                                            1.0,
+                                            "System and personal-files snapshots committed",
+                                        );
+                                        Ok(format!(
+                                            "System recovery point {} and personal-files snapshot {} created",
+                                            system.id, personal.id
+                                        ))
+                                    }
+                                }
+                            },
+                        );
+                    }
                     "SetPinned" => {
                         let id = match parse_deployment_id(&parameters.child_get::<String>(0)) {
                             Ok(id) => id,
@@ -704,6 +875,50 @@ fn register_api(
                                         "Recovery point deleted".into()
                                     })
                                     .map_err(Into::into)
+                            },
+                        );
+                    }
+                    "DeleteHomeSnapshot" => {
+                        let id = match uuid::Uuid::parse_str(&parameters.child_get::<String>(0)) {
+                            Ok(id) => id,
+                            Err(_) => {
+                                invocation.return_dbus_error(
+                                    INVALID_ARGUMENT_ERROR,
+                                    "Invalid user-data snapshot ID",
+                                );
+                                return;
+                            }
+                        };
+                        start_operation(
+                            connection,
+                            sender,
+                            busy.clone(),
+                            Some(MANAGE_ACTION),
+                            invocation,
+                            move |connection, operation_id| {
+                                emit_progress(
+                                    connection,
+                                    operation_id,
+                                    OperationPhase::Validate,
+                                    0.15,
+                                    "Validating user-data snapshot",
+                                );
+                                HomeSnapshotStore::default()
+                                    .delete(id)
+                                    .map(|_| {
+                                        emit_progress(
+                                            connection,
+                                            operation_id,
+                                            OperationPhase::Cleanup,
+                                            1.0,
+                                            "User-data snapshot deleted",
+                                        );
+                                        format!("User-data snapshot {id} deleted")
+                                    })
+                                    .map_err(|message| DaemonOperationError {
+                                        code: "home-snapshot".into(),
+                                        message,
+                                    })
                             },
                         );
                     }

@@ -31,6 +31,14 @@ def source_messages():
 
 
 class LocalizationTests(unittest.TestCase):
+    def test_snapshot_creation_entries_share_one_explicit_selector(self):
+        window = (PACKAGE / "src/window.rs").read_text(encoding="utf-8")
+        self.assertEqual(window.count('.action_name("win.create-snapshot")'), 5)
+        self.assertEqual(window.count("show_create_dialog("), 2)
+        self.assertIn('SnapshotTarget::SystemAndHome', window)
+        self.assertIn('SnapshotTarget::System', window)
+        self.assertIn('SnapshotTarget::Home', window)
+
     def test_language_matrix_and_compiled_catalogs(self):
         self.assertEqual({path.stem for path in PO_DIR.glob("*.po")}, LANGUAGES)
         self.assertEqual(
@@ -74,7 +82,7 @@ class LocalizationTests(unittest.TestCase):
                 translations = [
                     catalog.gettext("Overview"),
                     catalog.gettext("Recovery Points"),
-                    catalog.gettext("Create Recovery Point"),
+                    catalog.gettext("Create Snapshot…"),
                 ]
                 self.assertTrue(all(translations))
                 if language != "en_GB":
@@ -86,7 +94,7 @@ class LocalizationTests(unittest.TestCase):
                                 (
                                     "Overview",
                                     "Recovery Points",
-                                    "Create Recovery Point",
+                                    "Create Snapshot…",
                                 ),
                             )
                         )

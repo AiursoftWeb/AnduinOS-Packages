@@ -1,6 +1,7 @@
 use std::process::ExitCode;
 
 use anduinos_timeback::boot::BootIntegration;
+use anduinos_timeback::model::SnapshotTarget;
 use anduinos_timeback::{client, layout};
 use anduinos_timeback::{CONTRACT_VERSION, DEPLOYMENT_SCHEMA_VERSION, SNAPSHOT_ROOT};
 
@@ -11,13 +12,24 @@ fn main() -> ExitCode {
         [command, option] if command == "inspect" && option == "--json" => print_inspection(true),
         [command] if command == "list" => print_deployments(false),
         [command, option] if command == "list" && option == "--json" => print_deployments(true),
-        [command, title] if command == "create" => create_recovery_point(title, false),
-        [command, option, title] if command == "create" && option == "--pin" => {
-            create_recovery_point(title, true)
+        [command] if command == "list-home" => print_home_snapshots(false),
+        [command, option] if command == "list-home" && option == "--json" => {
+            print_home_snapshots(true)
+        }
+        [command, target_option, target, title]
+            if command == "create" && target_option == "--target" =>
+        {
+            create_snapshot(target, title, false)
+        }
+        [command, pin, target_option, target, title]
+            if command == "create" && pin == "--pin" && target_option == "--target" =>
+        {
+            create_snapshot(target, title, true)
         }
         [command, id] if command == "pin" => set_pinned(id, true),
         [command, id] if command == "unpin" => set_pinned(id, false),
         [command, id] if command == "delete" => delete_recovery_point(id),
+        [command, id] if command == "delete-home" => delete_home_snapshot(id),
         [command, id] if command == "verify" => verify_recovery_point(id),
         [command, action] if command == "restore" && action == "--cancel" => cancel_rollback(),
         [command, id] if command == "restore" => schedule_rollback(id),
@@ -34,8 +46,12 @@ fn main() -> ExitCode {
         _ => {
             eprintln!("Usage: timebackctl inspect [--json]");
             eprintln!("       timebackctl list [--json]");
-            eprintln!("       timebackctl create [--pin] TITLE");
+            eprintln!("       timebackctl list-home [--json]");
+            eprintln!(
+                "       timebackctl create [--pin] --target system|home|system-and-home TITLE"
+            );
             eprintln!("       timebackctl pin|unpin|delete|verify DEPLOYMENT_ID");
+            eprintln!("       timebackctl delete-home HOME_SNAPSHOT_ID");
             eprintln!("       timebackctl restore DEPLOYMENT_ID|--cancel");
             eprintln!("       timebackctl retention [--json|--apply]");
             eprintln!("       timebackctl contract");
@@ -44,10 +60,18 @@ fn main() -> ExitCode {
     }
 }
 
-fn create_recovery_point(title: &str, pinned: bool) -> ExitCode {
-    finish_operation(client::create_recovery_point(
+fn create_snapshot(target: &str, title: &str, pinned: bool) -> ExitCode {
+    let target = match target.parse::<SnapshotTarget>() {
+        Ok(target) => target,
+        Err(message) => {
+            eprintln!("Invalid snapshot target: {message}");
+            return ExitCode::from(64);
+        }
+    };
+    finish_operation(client::create_snapshot(
+        target,
         title,
-        "Manual recovery point created with timebackctl",
+        "Manual snapshot created with timebackctl",
         pinned,
         print_progress,
     ))
@@ -59,6 +83,42 @@ fn set_pinned(id: &str, pinned: bool) -> ExitCode {
 
 fn delete_recovery_point(id: &str) -> ExitCode {
     finish_operation(client::delete_recovery_point(id, print_progress))
+}
+
+fn delete_home_snapshot(id: &str) -> ExitCode {
+    finish_operation(client::delete_home_snapshot(id, print_progress))
+}
+
+fn print_home_snapshots(json: bool) -> ExitCode {
+    let snapshots = match client::list_home_snapshots() {
+        Ok(snapshots) => snapshots,
+        Err(error) => {
+            eprintln!("Could not query user-data snapshots: {error}");
+            return ExitCode::FAILURE;
+        }
+    };
+    if json {
+        match serde_json::to_string_pretty(&snapshots) {
+            Ok(serialized) => println!("{serialized}"),
+            Err(error) => {
+                eprintln!("Could not serialize user-data snapshots: {error}");
+                return ExitCode::FAILURE;
+            }
+        }
+    } else {
+        for snapshot in snapshots {
+            let title = if snapshot.title.is_empty() {
+                "Legacy automatic user-data snapshot"
+            } else {
+                &snapshot.title
+            };
+            println!(
+                "{}  {:?}  {}  {}",
+                snapshot.id, snapshot.kind, snapshot.created_at, title
+            );
+        }
+    }
+    ExitCode::SUCCESS
 }
 
 fn verify_recovery_point(id: &str) -> ExitCode {

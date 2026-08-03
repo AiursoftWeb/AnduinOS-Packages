@@ -75,7 +75,7 @@ os.close(directory)
 PY
 
 echo "[TM-5] Creating the rollback target"
-timebackctl create "$title"
+timebackctl create --target system "$title"
 deployment_id="$(timebackctl list --json | latest_id_for_title "$title")" ||
     die "the rollback target was not discovered"
 

@@ -14,6 +14,7 @@ use crate::automation::{AutomaticConfiguration, AutomaticStatus};
 use crate::browsing::{DirectoryListing, OpenedFileMetadata};
 use crate::layout::LayoutReport;
 use crate::lineage::SystemLineage;
+use crate::model::SnapshotTarget;
 use crate::retention::RetentionPlan;
 use crate::store::DiscoveryReport;
 use crate::{DBUS_INTERFACE, DBUS_NAME, DBUS_PATH};
@@ -429,6 +430,23 @@ where
     )
 }
 
+pub fn create_snapshot<F>(
+    target: SnapshotTarget,
+    title: &str,
+    reason: &str,
+    pinned: bool,
+    on_progress: F,
+) -> Result<OperationResult, ClientError>
+where
+    F: Fn(OperationProgress) + 'static,
+{
+    run_operation(
+        "CreateSnapshot",
+        &(target.as_str(), title, reason, pinned).to_variant(),
+        on_progress,
+    )
+}
+
 pub fn set_pinned<F>(
     deployment_id: &str,
     pinned: bool,
@@ -454,6 +472,20 @@ where
     run_operation(
         "DeleteRecoveryPoint",
         &(deployment_id,).to_variant(),
+        on_progress,
+    )
+}
+
+pub fn delete_home_snapshot<F>(
+    snapshot_id: &str,
+    on_progress: F,
+) -> Result<OperationResult, ClientError>
+where
+    F: Fn(OperationProgress) + 'static,
+{
+    run_operation(
+        "DeleteHomeSnapshot",
+        &(snapshot_id,).to_variant(),
         on_progress,
     )
 }

@@ -230,3 +230,9 @@ outside the ABI until low-space VM qualification has been completed.
   notes, and successful disposable-loopback Btrfs qualification. Destructive
   GRUB/initramfs reboot and power-cut qualification remains gated on a
   disposable AnduinOS VM.
+- **UX-0.4H (complete):** every user-triggered snapshot entry opens the same
+  explicit System and User Data / System Only / User Data Only selector.
+  Manual Home snapshots use schema v2 metadata, are excluded from automatic
+  retention, may link to their paired System recovery point, and can be
+  deleted independently from the file-recovery page. CLI creation requires an
+  explicit target as well.

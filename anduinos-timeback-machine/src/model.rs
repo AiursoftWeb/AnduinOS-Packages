@@ -7,6 +7,37 @@ use uuid::Uuid;
 
 use crate::DEPLOYMENT_SCHEMA_VERSION;
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum SnapshotTarget {
+    System,
+    Home,
+    SystemAndHome,
+}
+
+impl SnapshotTarget {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::System => "system",
+            Self::Home => "home",
+            Self::SystemAndHome => "system-and-home",
+        }
+    }
+}
+
+impl FromStr for SnapshotTarget {
+    type Err = &'static str;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        match value {
+            "system" => Ok(Self::System),
+            "home" => Ok(Self::Home),
+            "system-and-home" => Ok(Self::SystemAndHome),
+            _ => Err("Unknown snapshot target"),
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(transparent)]
 pub struct DeploymentId(Uuid);
@@ -263,6 +294,18 @@ fn invalid_optional_text(value: &str, maximum_characters: usize) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn snapshot_targets_round_trip_without_an_ambiguous_default() {
+        for target in [
+            SnapshotTarget::System,
+            SnapshotTarget::Home,
+            SnapshotTarget::SystemAndHome,
+        ] {
+            assert_eq!(target.as_str().parse::<SnapshotTarget>(), Ok(target));
+        }
+        assert!("both".parse::<SnapshotTarget>().is_err());
+    }
 
     fn valid_record() -> DeploymentRecord {
         DeploymentRecord {

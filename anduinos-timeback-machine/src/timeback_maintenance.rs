@@ -1,6 +1,6 @@
 use std::process::ExitCode;
 
-use anduinos_timeback::automatic_home::HomeSnapshotStore;
+use anduinos_timeback::automatic_home::{HomeSnapshotKind, HomeSnapshotStore};
 use anduinos_timeback::automation::{
     plan, AutomaticSnapshot, AutomaticStore, AutomaticTarget, TargetAutomaticStatus,
 };
@@ -202,15 +202,7 @@ fn run_home_snapshots(
             }
         };
     }
-    let catalog = records
-        .iter()
-        .map(|record| AutomaticSnapshot {
-            id: record.id.to_string(),
-            created_at: record.created_at,
-            protected: false,
-            successful: true,
-        })
-        .collect::<Vec<_>>();
+    let catalog = automatic_home_catalog(&records);
     let decisions = match plan(policy, now, &catalog) {
         Ok(decisions) => decisions,
         Err(error) => {
@@ -235,4 +227,56 @@ fn run_home_snapshots(
         }
     }
     let _ = store.record_cleanup_result(AutomaticTarget::Home, cleanup_error.map_or(Ok(()), Err));
+}
+
+fn automatic_home_catalog(
+    records: &[anduinos_timeback::automatic_home::HomeSnapshotRecord],
+) -> Vec<AutomaticSnapshot> {
+    records
+        .iter()
+        .filter(|record| record.kind == HomeSnapshotKind::Automatic)
+        .map(|record| AutomaticSnapshot {
+            id: record.id.to_string(),
+            created_at: record.created_at,
+            protected: record.pinned,
+            successful: true,
+        })
+        .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use anduinos_timeback::automatic_home::{HomeSnapshotKind, HomeSnapshotRecord};
+    use chrono::Utc;
+    use uuid::Uuid;
+
+    use super::*;
+
+    fn home_record(kind: HomeSnapshotKind, pinned: bool) -> HomeSnapshotRecord {
+        HomeSnapshotRecord {
+            schema_version: 2,
+            id: Uuid::new_v4(),
+            created_at: Utc::now(),
+            deleting: false,
+            kind,
+            title: "Snapshot".into(),
+            reason: "Retention test".into(),
+            pinned,
+            system_recovery_point_id: None,
+        }
+    }
+
+    #[test]
+    fn automatic_retention_never_considers_manual_home_snapshots() {
+        let automatic = home_record(HomeSnapshotKind::Automatic, false);
+        let pinned = home_record(HomeSnapshotKind::Automatic, true);
+        let manual = home_record(HomeSnapshotKind::Manual, false);
+        let catalog = automatic_home_catalog(&[automatic.clone(), pinned.clone(), manual]);
+
+        assert_eq!(catalog.len(), 2);
+        assert_eq!(catalog[0].id, automatic.id.to_string());
+        assert!(!catalog[0].protected);
+        assert_eq!(catalog[1].id, pinned.id.to_string());
+        assert!(catalog[1].protected);
+    }
 }
