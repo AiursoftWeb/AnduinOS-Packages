@@ -17,12 +17,14 @@ fail closed while history and local typed-context suggestions continue.
 
 Typed context is deliberately narrow and local. It completes Docker container
 names and IDs, process IDs, systemd services and current-repository Git branches.
-It can carry a simple filter intent across one command, for example:
+It also recognizes a few high-confidence command transitions. It can carry a
+simple intent across one successful command, for example:
 
 ```bash
 docker ps | grep mysql        # then: docker exec -it mysql-db
 ps aux | grep mysqld          # then: sudo kill 4242
 systemctl list-units | grep docker  # then: systemctl status docker.service
+sudo apt update                # then: sudo apt upgrade
 ```
 
 The package does not capture terminal output. It remembers only the successful
@@ -48,8 +50,9 @@ export ANDUINOS_GUESS_CONTEXT=0       # disable live typed-context suggestions
 export ANDUINOS_GUESS_DELAY=25        # idle delay in milliseconds
 export ANDUINOS_GUESS_COLOR='fg=242'  # ble.sh face specification
 export ANDUINOS_GUESS_STATIC_TIMEOUT=50ms
-export ANDUINOS_GUESS_CONTEXT_TIMEOUT=80ms
+export ANDUINOS_GUESS_CONTEXT_TIMEOUT=120ms
 export ANDUINOS_GUESS_HISTORY_SCAN=300 # recent entries used for local ranking
+export ANDUINOS_GUESS_TRIM_PASTE_NEWLINE=0 # preserve a pasted final newline
 ```
 
 Removing `anduinos-bash-guess-command` removes the system loader, ble.sh and

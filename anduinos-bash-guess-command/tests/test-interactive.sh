@@ -48,7 +48,13 @@ mkdir -p "$TEST_ROOT/home/bin"
 cat >"$TEST_ROOT/home/bin/docker" <<EOF
 #!/usr/bin/env bash
 if [[ \${1-} == container && \${2-} == ls ]]; then
-    printf '0ad123456789\\tmysql-db\\tmysql:8\\n7be987654321\\tweb\\tnginx:latest\\n'
+    if [[ -e '$TEST_ROOT/docker.empty' ]]; then
+        exit 0
+    elif [[ -e '$TEST_ROOT/docker.one' ]]; then
+        printf '873e1e5cb7e1\\tstoic_carson\\tmarktohtml:latest\\n'
+    else
+        printf '0ad123456789\\tmysql-db\\tmysql:8\\n7be987654321\\tweb\\tnginx:latest\\n'
+    fi
 elif [[ \${1-} == ps ]]; then
     printf 'ps\\n' >'$TEST_ROOT/docker.action'
     printf '0ad123456789 mysql-db mysql:8\\n7be987654321 web nginx:latest\\n'
@@ -69,6 +75,11 @@ EOF
 chmod 755 "$TEST_ROOT/home/bin/ps"
 cat >"$TEST_ROOT/home/bin/sudo" <<EOF
 #!/usr/bin/env bash
+if [[ \${1-} == -n && \${2-} == unshare && \${3-} == --net &&
+      \${4-} == docker ]]; then
+    shift 4
+    exec docker "\$@"
+fi
 printf '%s\\n' "\$*" >'$TEST_ROOT/sudo.args'
 EOF
 chmod 755 "$TEST_ROOT/home/bin/sudo"
@@ -85,6 +96,8 @@ cat >"$TEST_ROOT/home/bin/git" <<EOF
 if [[ \${1-} == for-each-ref ]]; then
     printf 'feature-login\\nmain\\n'
 elif [[ \${1-} == switch ]]; then
+    printf '%s\\n' "\$*" >'$TEST_ROOT/git.args'
+elif [[ \${1-} == clean ]]; then
     printf '%s\\n' "\$*" >'$TEST_ROOT/git.args'
 else
     exec /usr/bin/git "\$@"
@@ -127,6 +140,7 @@ history -s "docker rm web"
 history -s "docker rm web"
 history -s "docker rm web"
 history -s "docker ps"
+history -s "sudo docker exec -it 47355394ec65 bash"
 history -s "true && touch '$TEST_ROOT/enter-must-not-accept'"
 history -s 'echo malicious-\$(touch $TEST_ROOT/history-subscript-injection)'
 set -o history
@@ -178,6 +192,22 @@ context_session_input() {
     printf '\033[C\nexit\n'
 }
 
+sudo_context_session_input() {
+    sleep 1.5
+    printf 'sudo docker ps\n'
+    sleep 0.15
+    printf 'sudo docker exec -it '
+    sleep 0.3
+    printf '\033[C\nexit\n'
+}
+
+stale_docker_history_input() {
+    sleep 1.5
+    printf 'sudo docker exec -it '
+    sleep 0.3
+    printf '\033[C\nexit\n'
+}
+
 ranked_history_input() {
     sleep 1.5
     printf 'printf '
@@ -217,6 +247,28 @@ git_context_input() {
     printf '\033[C\nexit\n'
 }
 
+git_dash_option_input() {
+    sleep 1.5
+    printf 'git clean . -'
+    sleep 0.5
+    printf '\033[C\nexit\n'
+}
+
+single_line_paste_input() {
+    sleep 1.5
+    printf 'echo '
+    printf '\033[200~pasted-value\n\033[201~'
+    sleep 0.3
+    printf '\003exit\n'
+}
+
+multiline_paste_input() {
+    sleep 1.5
+    printf '\033[200~printf first\nprintf second\n\033[201~'
+    sleep 0.3
+    printf '\003exit\n'
+}
+
 danger_rank_input() {
     sleep 1.5
     printf 'docker '
@@ -228,6 +280,15 @@ apt_static_input() {
     sleep 1.5
     printf 'apt instal'
     sleep 0.5
+    printf '\033[C\nexit\n'
+}
+
+apt_workflow_input() {
+    sleep 1.5
+    printf 'sudo apt update\n'
+    sleep 0.2
+    printf 'sudo apt up'
+    sleep 0.25
     printf '\033[C\nexit\n'
 }
 
@@ -311,6 +372,21 @@ run_session git_context_input "$TEST_ROOT/context-git.typescript"
 [[ $(<"$TEST_ROOT/git.args") == 'switch feature-login' ]] ||
     fail 'current repository branch was not completed'
 
+run_session git_dash_option_input "$TEST_ROOT/static-git-dash-option.typescript"
+[[ $(<"$TEST_ROOT/git.args") == 'clean . --dry-run' ]] ||
+    fail 'typing a dash did not trigger the safe git clean option suggestion'
+
+run_session single_line_paste_input "$TEST_ROOT/paste-single-line.typescript"
+if LC_ALL=C tr -d '\r' <"$TEST_ROOT/paste-single-line.typescript" | \
+    grep -q -- '-- MULTILINE --'; then
+    fail 'a single pasted line with a terminator entered multiline mode'
+fi
+
+run_session multiline_paste_input "$TEST_ROOT/paste-multiline.typescript"
+LC_ALL=C tr -d '\r' <"$TEST_ROOT/paste-multiline.typescript" | \
+    grep -q -- '-- MULTILINE --' ||
+    fail 'a genuine multiline paste lost multiline safety'
+
 run_session static_input "$TEST_ROOT/static.typescript"
 LC_ALL=C tr -d '\r' <"$TEST_ROOT/static.typescript" | \
     grep -Eq 'On branch|HEAD detached' || fail 'Carapace ghost text was not accepted'
@@ -318,6 +394,10 @@ LC_ALL=C tr -d '\r' <"$TEST_ROOT/static.typescript" | \
 run_session apt_static_input "$TEST_ROOT/static-apt.typescript"
 [[ $(<"$TEST_ROOT/apt.args") == install ]] ||
     fail 'Carapace package-manager specification was not accepted'
+
+run_session apt_workflow_input "$TEST_ROOT/context-apt-workflow.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'apt upgrade' ]] ||
+    fail 'successful apt update did not predict the apt upgrade workflow'
 
 run_session file_input "$TEST_ROOT/static-file.typescript"
 LC_ALL=C tr -d '\r' <"$TEST_ROOT/static-file.typescript" | \
@@ -357,5 +437,16 @@ rm -f "$TEST_ROOT/docker.args"
 run_session context_session_input "$TEST_ROOT/context-session.typescript"
 [[ $(<"$TEST_ROOT/docker.args") == 'exec -it mysql-db' ]] ||
     fail 'previous Docker filter was not used as typed session context'
+
+touch "$TEST_ROOT/docker.one"
+run_session sudo_context_session_input "$TEST_ROOT/context-sudo-docker.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'docker exec -it stoic_carson' ]] ||
+    fail 'sudo Docker did not complete the current unique container'
+
+rm -f "$TEST_ROOT/docker.one"
+touch "$TEST_ROOT/docker.empty"
+run_session stale_docker_history_input "$TEST_ROOT/context-stale-docker.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'docker exec -it' ]] ||
+    fail 'a stale Docker container ID leaked from history'
 
 printf 'All interactive suggestion checks passed.\n'

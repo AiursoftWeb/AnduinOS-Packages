@@ -6,6 +6,7 @@
 _anduinos_guess_previous_docker_filter=
 _anduinos_guess_previous_process_filter=
 _anduinos_guess_previous_service_filter=
+_anduinos_guess_previous_workflow=
 _anduinos_guess_docker_cache_time=-100
 _anduinos_guess_docker_cache_sudo=
 _anduinos_guess_docker_cache=()
@@ -19,7 +20,7 @@ _anduinos_guess_git_cache=()
 _anduinos_guess_network_sandbox=(unshare --user --map-root-user --net)
 
 _anduinos_guess_duration_seconds() {
-    local value=${1-80ms} fallback=${2-80} milliseconds
+    local value=${1-120ms} fallback=${2-120} milliseconds
     [[ $value =~ ^([1-9][0-9]{0,2})ms$ ]] || value=${fallback}ms
     milliseconds=$((10#${value%ms}))
     printf '0.%03d' "$milliseconds"
@@ -27,10 +28,32 @@ _anduinos_guess_duration_seconds() {
 
 _anduinos_guess_observe_command() {
     local command=${1-} head tail word kind=
+    local -a command_words=()
     _anduinos_guess_previous_docker_filter=
     _anduinos_guess_previous_process_filter=
     _anduinos_guess_previous_service_filter=
+    _anduinos_guess_previous_workflow=
     ((_ble_edit_exec_lastexit == 0)) || return 0
+
+    command=${command#"${command%%[![:space:]]*}"}
+    command=${command%"${command##*[![:space:]]}"}
+    builtin read -r -a command_words <<<"$command"
+    if [[ ${command_words[0]-} == sudo &&
+          ${command_words[1]-} == apt &&
+          ${command_words[2]-} == update ]]; then
+        _anduinos_guess_previous_workflow='sudo apt upgrade'
+    elif [[ ${command_words[0]-} == apt &&
+            ${command_words[1]-} == update ]]; then
+        _anduinos_guess_previous_workflow='apt upgrade'
+    elif [[ ${command_words[0]-} == sudo &&
+            ${command_words[1]-} == apt-get &&
+            ${command_words[2]-} == update ]]; then
+        _anduinos_guess_previous_workflow='sudo apt-get upgrade'
+    elif [[ ${command_words[0]-} == apt-get &&
+            ${command_words[1]-} == update ]]; then
+        _anduinos_guess_previous_workflow='apt-get upgrade'
+    fi
+
     [[ $command == *'|'* ]] || return 0
 
     head=${command%%|*}
@@ -70,6 +93,12 @@ _anduinos_guess_observe_command() {
     done
 }
 
+_anduinos_guess_workflow_candidate() {
+    local text=$1 candidate=$_anduinos_guess_previous_workflow
+    [[ $candidate && $candidate == "$text"?* ]] || return 1
+    REPLY=$candidate
+}
+
 _anduinos_guess_refresh_docker() {
     local use_sudo=$1 now=$SECONDS timeout_seconds output
     if ((now - _anduinos_guess_docker_cache_time < 2)) &&
@@ -82,7 +111,7 @@ _anduinos_guess_refresh_docker() {
     _anduinos_guess_docker_cache_time=$now
     _anduinos_guess_docker_cache_sudo=$use_sudo
     timeout_seconds="$(_anduinos_guess_duration_seconds \
-        "${ANDUINOS_GUESS_CONTEXT_TIMEOUT:-80ms}" 80)"
+        "${ANDUINOS_GUESS_CONTEXT_TIMEOUT:-120ms}" 120)"
 
     local -a docker_command=("${_anduinos_guess_network_sandbox[@]}" docker)
     [[ $use_sudo ]] && docker_command=(sudo -n unshare --net docker)
@@ -148,6 +177,7 @@ _anduinos_guess_docker_exec_candidate() {
         esac
     done
     [[ ! $need_value ]] || return 1
+    _anduinos_guess_context_claimed=1
 
     _anduinos_guess_refresh_docker "$use_sudo" || return 1
     local entry id name image haystack filter=${_anduinos_guess_previous_docker_filter,,}
@@ -188,7 +218,7 @@ _anduinos_guess_refresh_processes() {
     _anduinos_guess_process_cache=()
     _anduinos_guess_process_cache_time=$now
     timeout_seconds="$(_anduinos_guess_duration_seconds \
-        "${ANDUINOS_GUESS_CONTEXT_TIMEOUT:-80ms}" 80)"
+        "${ANDUINOS_GUESS_CONTEXT_TIMEOUT:-120ms}" 120)"
     output="$(
         timeout --signal=TERM --kill-after=0.020 "$timeout_seconds" \
             "${_anduinos_guess_network_sandbox[@]}" ps -eo pid=,comm= \
@@ -214,8 +244,6 @@ _anduinos_guess_kill_candidate() {
         before=${args::${#args}-${#current}}
     fi
     [[ $current != -* ]] || return 1
-    [[ $current || $_anduinos_guess_previous_process_filter ]] || return 1
-
     local -a words=()
     builtin read -r -a words <<<"$before"
     for word in "${words[@]}"; do
@@ -230,6 +258,8 @@ _anduinos_guess_kill_candidate() {
         esac
     done
     [[ ! $need_value ]] || return 1
+    _anduinos_guess_context_claimed=1
+    [[ $current || $_anduinos_guess_previous_process_filter ]] || return 1
 
     _anduinos_guess_refresh_processes || return 1
     local entry pid process filter=${_anduinos_guess_previous_process_filter,,}
@@ -261,7 +291,7 @@ _anduinos_guess_refresh_services() {
     _anduinos_guess_service_cache=()
     _anduinos_guess_service_cache_time=$now
     timeout_seconds="$(_anduinos_guess_duration_seconds \
-        "${ANDUINOS_GUESS_CONTEXT_TIMEOUT:-80ms}" 80)"
+        "${ANDUINOS_GUESS_CONTEXT_TIMEOUT:-120ms}" 120)"
     output="$(
         timeout --signal=TERM --kill-after=0.020 "$timeout_seconds" \
             systemctl list-units --all --type=service --plain --no-legend \
@@ -301,12 +331,12 @@ _anduinos_guess_service_candidate() {
         current=${args##* }
     fi
     [[ $current != -* ]] || return 1
-    [[ $current || $_anduinos_guess_previous_service_filter ]] || return 1
-
     # User units and system units live in different managers. Keep this first
     # implementation conservative: Carapace handles --user completions while
     # the typed context source handles the system manager.
     [[ ! $user_scope ]] || return 1
+    _anduinos_guess_context_claimed=1
+    [[ $current || $_anduinos_guess_previous_service_filter ]] || return 1
     _anduinos_guess_refresh_services || return 1
     local filter=${_anduinos_guess_previous_service_filter,,}
     local -a matches=()
@@ -337,7 +367,7 @@ _anduinos_guess_refresh_git_branches() {
     _anduinos_guess_git_cache_time=$now
     _anduinos_guess_git_cache_pwd=$PWD
     timeout_seconds="$(_anduinos_guess_duration_seconds \
-        "${ANDUINOS_GUESS_CONTEXT_TIMEOUT:-80ms}" 80)"
+        "${ANDUINOS_GUESS_CONTEXT_TIMEOUT:-120ms}" 120)"
     output="$(
         timeout --signal=TERM --kill-after=0.020 "$timeout_seconds" \
             "${_anduinos_guess_network_sandbox[@]}" git for-each-ref \
@@ -371,6 +401,7 @@ _anduinos_guess_git_candidate() {
     for word in "${words[@]}"; do
         [[ $word == -* ]] || return 1
     done
+    _anduinos_guess_context_claimed=1
 
     _anduinos_guess_refresh_git_branches || return 1
     local branch
@@ -393,14 +424,22 @@ _anduinos_guess_git_candidate() {
 function ble/complete/auto-complete/source:anduinos-context {
     [[ ${ANDUINOS_GUESS_CONTEXT:-1} != 0 ]] || return 1
     ((_ble_edit_ind == ${#_ble_edit_str})) || return 1
-    local REPLY
-    _anduinos_guess_docker_exec_candidate "$_ble_edit_str" ||
+    local REPLY _anduinos_guess_context_claimed=
+    if _anduinos_guess_workflow_candidate "$_ble_edit_str" ||
+        _anduinos_guess_docker_exec_candidate "$_ble_edit_str" ||
         _anduinos_guess_kill_candidate "$_ble_edit_str" ||
         _anduinos_guess_service_candidate "$_ble_edit_str" ||
-        _anduinos_guess_git_candidate "$_ble_edit_str" || return 1
-    [[ $REPLY == "$_ble_edit_str"* ]] || return 1
-    ble/complete/auto-complete/enter \
-        h 0 "${REPLY:${#_ble_edit_str}}" '' "$REPLY"
+        _anduinos_guess_git_candidate "$_ble_edit_str"; then
+        [[ $REPLY == "$_ble_edit_str"* ]] || return 1
+        ble/complete/auto-complete/enter \
+            h 0 "${REPLY:${#_ble_edit_str}}" '' "$REPLY"
+        return
+    fi
+    # An entity position is authoritative. If its live source is empty or
+    # unavailable, stop here instead of leaking a stale container ID, PID,
+    # service, or branch from shell history.
+    [[ $_anduinos_guess_context_claimed ]] && return 0
+    return 1
 }
 
 _anduinos_guess_is_sensitive() {
@@ -424,7 +463,8 @@ _anduinos_guess_danger_penalty() {
         rm\ *|rmdir\ *|shred\ *|dd\ *|mkfs*\ *|wipefs\ *|\
         shutdown*|reboot*|poweroff*|halt*|\
         'docker rm '*|'docker container rm '*|\
-        'systemctl stop '*|'systemctl disable '*|'kubectl delete '*)
+        'systemctl stop '*|'systemctl disable '*|'kubectl delete '*|\
+        'git clean '*)
             REPLY=1000 ;;
         mv\ *|chmod\ *|chown\ *|'docker stop '*|'docker kill '*)
             REPLY=350 ;;

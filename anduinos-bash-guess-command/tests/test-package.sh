@@ -26,6 +26,12 @@ grep -q "builtin read -r -d '' nospace data" \
 grep -q '_anduinos_guess_normalize_carapace_assignment' \
     "$ROOT/assets/anduinos-bash-guess-command" ||
     fail 'Carapace assignment candidates are not normalized for ble.sh'
+grep -q '_anduinos_guess_enable_dash_autocomplete' \
+    "$ROOT/assets/anduinos-bash-guess-command" ||
+    fail 'dash option prefixes do not trigger automatic completion'
+grep -q 'ANDUINOS_GUESS_TRIM_PASTE_NEWLINE' \
+    "$ROOT/assets/anduinos-bash-guess-command" ||
+    fail 'terminal selection newlines are not handled'
 
 # shellcheck disable=SC2016 # the literal variable must appear in download.sh
 grep -q 'rm -rf -- "$destination"' "$ROOT/download.sh" ||

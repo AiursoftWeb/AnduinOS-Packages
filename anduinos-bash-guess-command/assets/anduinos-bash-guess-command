@@ -101,6 +101,38 @@ bleopt complete_auto_history="$([[ ${ANDUINOS_GUESS_HISTORY:-1} != 0 ]] && print
 bleopt complete_auto_wordbreaks=' /:;,.@'
 ble-face auto_complete="${ANDUINOS_GUESS_COLOR:-fg=242}"
 
+# ble.sh routes a literal '-' through append-arg so numeric Readline arguments
+# keep working, but its auto-complete idle gate does not include that widget.
+# Extend the pinned ble.sh function instead of rebinding '-' and breaking those
+# key semantics. This makes option prefixes such as `git clean . -` trigger.
+_anduinos_guess_enable_dash_autocomplete() {
+    ble/is-function ble/complete/auto-complete.idle || return 0
+    local definition needle='ble/widget/self-insert |'
+    local replacement='ble/widget/self-insert | ble/widget/append-arg |'
+    definition="$(declare -f ble/complete/auto-complete.idle)"
+    [[ $definition != *'ble/widget/append-arg'* ]] || return 0
+    [[ $definition == *"$needle"* ]] || return 0
+    definition=${definition/"$needle"/"$replacement"}
+    builtin eval -- "$definition"
+}
+blehook complete_load!=_anduinos_guess_enable_dash_autocomplete
+_anduinos_guess_enable_dash_autocomplete
+
+# Terminal selections commonly include one final newline. Keep bracketed
+# paste's no-execute safety, but drop that single terminator so a middle-click
+# of one selected line does not unexpectedly enter ble.sh's MULTILINE mode.
+# Internal newlines and additional trailing newlines remain untouched.
+if [[ ${ANDUINOS_GUESS_TRIM_PASTE_NEWLINE:-1} != 0 ]]; then
+    function ble/widget/bracketed-paste.proc {
+        local -a KEYS; KEYS=("$@")
+        local count=${#KEYS[@]}
+        if ((count > 0 && KEYS[count-1] == 10)); then
+            unset 'KEYS[count-1]'
+        fi
+        ((${#KEYS[@]})) && ble/widget/batch-insert
+    }
+fi
+
 # ble.sh already gives Right Arrow the safe accept-at-end behaviour. Alt-Right
 # accepts one word and does not replace Bash's conventional Alt-F binding.
 ble-bind -m auto_complete -f M-right auto_complete/insert-word
