@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+printf 'git\n' >>"$ANDUINOS_RUNTIME_ENTITY_COUNT"
+printf 'feature-login\nfeature-logout\nmain\n'

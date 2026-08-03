@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-bash-guess-command</PackageName>
-    <PackageVersion>1.0.0-8</PackageVersion>
+    <PackageVersion>1.0.0-23</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Fast offline ghost-text suggestions for interactive Bash, with typed local context, ranked history and network-isolated Carapace specifications.</PackageDescription>
     <Section>shells</Section>
@@ -28,17 +28,22 @@
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh amd64" Condition="'$(Arch)' == 'amd64'" />
     <PrebuildCommand Run="bash download.sh arm64" Condition="'$(Arch)' == 'arm64'" />
+    <PrebuildCommand Run="bash build-engine.sh amd64" Condition="'$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash build-engine.sh arm64" Condition="'$(Arch)' == 'arm64'" />
+    <PrebuildCommand Run="bash build-native.sh amd64" Condition="'$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash build-native.sh arm64" Condition="'$(Arch)' == 'arm64'" />
   </ItemGroup>
 
   <ItemGroup>
-    <IncludeFolder Include="deploy/amd64/blesh" Target="/usr/share/anduinos-bash-guess-command/blesh" Condition="'$(Arch)' == 'amd64'" />
-    <IncludeFolder Include="deploy/arm64/blesh" Target="/usr/share/anduinos-bash-guess-command/blesh" Condition="'$(Arch)' == 'arm64'" />
     <IncludeFile Include="deploy/amd64/carapace" Target="/usr/lib/anduinos-bash-guess-command/carapace" Mode="755" Condition="'$(Arch)' == 'amd64'" />
     <IncludeFile Include="deploy/arm64/carapace" Target="/usr/lib/anduinos-bash-guess-command/carapace" Mode="755" Condition="'$(Arch)' == 'arm64'" />
     <IncludeFile Include="deploy/amd64/CARAPACE-LICENSE" Target="/usr/share/doc/anduinos-bash-guess-command/CARAPACE-LICENSE" Condition="'$(Arch)' == 'amd64'" />
     <IncludeFile Include="deploy/arm64/CARAPACE-LICENSE" Target="/usr/share/doc/anduinos-bash-guess-command/CARAPACE-LICENSE" Condition="'$(Arch)' == 'arm64'" />
     <IncludeFile Include="assets/carapace-wrapper" Target="/usr/lib/anduinos-bash-guess-command/bin/carapace" Mode="755" />
-    <IncludeFile Include="assets/anduinos-guess-context.bash" Target="/usr/share/anduinos-bash-guess-command/anduinos-guess-context.bash" />
+    <IncludeFile Include="deploy/amd64/anduinos-quietd" Target="/usr/lib/anduinos-bash-guess-command/anduinos-quietd" Mode="755" Condition="'$(Arch)' == 'amd64'" />
+    <IncludeFile Include="deploy/arm64/anduinos-quietd" Target="/usr/lib/anduinos-bash-guess-command/anduinos-quietd" Mode="755" Condition="'$(Arch)' == 'arm64'" />
+    <IncludeFile Include="deploy/amd64/anduinos-ghost.so" Target="/usr/lib/anduinos-bash-guess-command/anduinos-ghost.so" Mode="644" Condition="'$(Arch)' == 'amd64'" />
+    <IncludeFile Include="deploy/arm64/anduinos-ghost.so" Target="/usr/lib/anduinos-bash-guess-command/anduinos-ghost.so" Mode="644" Condition="'$(Arch)' == 'arm64'" />
     <IncludeFile Include="assets/anduinos-bash-guess-command" Target="/etc/bash_completion.d/anduinos-bash-guess-command" />
     <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-bash-guess-command/README.md" />
     <IncludeFile Include="UPSTREAMS.md" Target="/usr/share/doc/anduinos-bash-guess-command/UPSTREAMS.md" />

@@ -7,11 +7,6 @@ need_cmd curl
 need_cmd sha256sum coreutils
 need_cmd tar
 
-BLE_VERSION="0.4.0-devel3"
-BLE_ARCHIVE="ble-${BLE_VERSION}-2.tar.xz"
-BLE_URL="https://github.com/akinomyoga/ble.sh/releases/download/v${BLE_VERSION}/${BLE_ARCHIVE}"
-BLE_SHA256="bdcdcfff216495403adf82a701fe41675f64b64644dc77caabd3e015871ebd61"
-
 CARAPACE_VERSION="1.7.3"
 CARAPACE_BASE_URL="https://github.com/carapace-sh/carapace-bin/releases/download/v${CARAPACE_VERSION}"
 
@@ -38,26 +33,6 @@ fetch() {
     curl --fail --location --retry 3 --output "$output.tmp" "$url"
     verify "$output.tmp" "$expected"
     mv "$output.tmp" "$output"
-}
-
-prepare_blesh() {
-    local arch="$1"
-    local cache="$SCRIPT_DIR/deploy/cache/$BLE_ARCHIVE"
-    local destination="$SCRIPT_DIR/deploy/$arch/blesh"
-    local temporary
-    fetch "$BLE_URL" "$cache" "$BLE_SHA256"
-    temporary="$(mktemp -d)"
-    tar -xJf "$cache" -C "$temporary"
-    [[ -f "$temporary/ble-${BLE_VERSION}/ble.sh" ]] || die "ble.sh archive has an unexpected layout"
-    [[ -f "$temporary/ble-${BLE_VERSION}/doc/LICENSE.md" ]] || die "ble.sh archive does not contain its license"
-    # The staged tree can be executed by local integration tests, causing
-    # ble.sh to create UID/terminal-specific cache.d entries beside itself.
-    # Recreate the validated architecture destination so those files can never
-    # leak into a package or make builds non-reproducible.
-    rm -rf -- "$destination"
-    mkdir -p "$destination"
-    cp -a "$temporary/ble-${BLE_VERSION}/." "$destination/"
-    rm -rf -- "$temporary"
 }
 
 prepare_carapace() {
@@ -90,7 +65,6 @@ main() {
         amd64|arm64) ;;
         *) die "unsupported architecture: $1" ;;
     esac
-    prepare_blesh "$1"
     prepare_carapace "$1"
 }
 

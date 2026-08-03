@@ -3,450 +3,228 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ARCH="$(dpkg --print-architecture 2>/dev/null || uname -m)"
-case "$ARCH" in
+case $ARCH in
     amd64|x86_64) ARCH=amd64 ;;
     arm64|aarch64) ARCH=arm64 ;;
     *) printf 'SKIP: unsupported test architecture: %s\n' "$ARCH"; exit 0 ;;
 esac
 
-BLESH="$ROOT/deploy/$ARCH/blesh/ble.sh"
-CARAPACE="$ROOT/deploy/$ARCH/carapace"
-if [[ ! -r "$BLESH" || ! -x "$CARAPACE" ]]; then
-    printf 'SKIP: run bash download.sh %s before interactive tests.\n' "$ARCH"
-    exit 0
-fi
+fail() { printf 'FAIL: %s\n' "$1" >&2; exit 1; }
 
-fail() {
-    printf 'FAIL: %s\n' "$1" >&2
-    exit 1
+MODULE="$ROOT/deploy/$ARCH/anduinos-ghost.so"
+DAEMON="$ROOT/deploy/$ARCH/anduinos-quietd"
+[[ -r $MODULE && -x $DAEMON ]] || {
+    printf 'SKIP: build native frontend and engine for %s first.\n' "$ARCH"
+    exit 0
 }
 
 TEST_ROOT="$(mktemp -d)"
 if [[ ${ANDUINOS_TEST_KEEP:-0} == 0 ]]; then
     trap 'rm -rf -- "$TEST_ROOT"' EXIT
 else
-    printf 'Keeping interactive test files in %s\n' "$TEST_ROOT"
+    printf 'Keeping native test files in %s\n' "$TEST_ROOT"
 fi
-mkdir -p "$TEST_ROOT/home" "$TEST_ROOT/package/bin" "$TEST_ROOT/package/blesh"
-cp -a "$(dirname "$BLESH")/." "$TEST_ROOT/package/blesh/"
-ln -s "$CARAPACE" "$TEST_ROOT/package/carapace"
-ln -s "$ROOT/assets/anduinos-guess-context.bash" \
-    "$TEST_ROOT/package/anduinos-guess-context.bash"
+mkdir -p "$TEST_ROOT/home/bin" "$TEST_ROOT/package/bin"
+cp "$MODULE" "$TEST_ROOT/package/anduinos-ghost.so"
+cp "$DAEMON" "$TEST_ROOT/package/anduinos-quietd"
 
-# Stage the package-owned files under a private prefix. Production paths remain
-# hard-coded in the shipped files; only this disposable test copy is rewritten.
 sed \
     -e "s|/usr/share/anduinos-bash-guess-command|$TEST_ROOT/package|g" \
     -e "s|/usr/lib/anduinos-bash-guess-command|$TEST_ROOT/package|g" \
     "$ROOT/assets/anduinos-bash-guess-command" >"$TEST_ROOT/package/loader"
-sed \
-    -e "s|/usr/lib/anduinos-bash-guess-command|$TEST_ROOT/package|g" \
-    "$ROOT/assets/carapace-wrapper" >"$TEST_ROOT/package/bin/carapace"
-chmod 755 "$TEST_ROOT/package/bin/carapace"
 
-mkdir -p "$TEST_ROOT/home/bin"
-cat >"$TEST_ROOT/home/bin/docker" <<EOF
+cat >"$TEST_ROOT/home/bin/sudo" <<EOF
 #!/usr/bin/env bash
-if [[ \${1-} == container && \${2-} == ls ]]; then
-    if [[ -e '$TEST_ROOT/docker.empty' ]]; then
-        exit 0
-    elif [[ -e '$TEST_ROOT/docker.one' ]]; then
-        printf '873e1e5cb7e1\\tstoic_carson\\tmarktohtml:latest\\n'
-    else
-        printf '0ad123456789\\tmysql-db\\tmysql:8\\n7be987654321\\tweb\\tnginx:latest\\n'
+if [[ \${1-} == -n && \${2-} == docker ]]; then
+    shift 2
+    exec docker "\$@"
+fi
+printf '%s\n' "\$*" >'$TEST_ROOT/sudo.args'
+EOF
+chmod 755 "$TEST_ROOT/home/bin/sudo"
+
+cat >"$TEST_ROOT/home/bin/docker" <<'EOF'
+#!/usr/bin/env bash
+if [[ ${1-} == container && ${2-} == ls ]]; then
+    printf '59ab75d539d4\tkind_bassi\tubuntu:26.04\n'
+    if [[ -f ${ANDUINOS_TEST_MULTIPLE_MARKER:-/nonexistent} ]]; then
+        printf '349eb1bc73fb\tjovial_ptolemy\tmarktohtml:latest\n'
     fi
-elif [[ \${1-} == ps ]]; then
-    printf 'ps\\n' >'$TEST_ROOT/docker.action'
-    printf '0ad123456789 mysql-db mysql:8\\n7be987654321 web nginx:latest\\n'
-else
-    printf '%s\\n' "\$*" >'$TEST_ROOT/docker.args'
 fi
 EOF
 chmod 755 "$TEST_ROOT/home/bin/docker"
-cat >"$TEST_ROOT/home/bin/curl" <<EOF
-#!/usr/bin/env bash
-printf '%s\\n' "\$*" >'$TEST_ROOT/curl.args'
-EOF
-chmod 755 "$TEST_ROOT/home/bin/curl"
-cat >"$TEST_ROOT/home/bin/ps" <<'EOF'
-#!/usr/bin/env bash
-printf '4242 mysqld\n7331 nginx\n'
-EOF
-chmod 755 "$TEST_ROOT/home/bin/ps"
-cat >"$TEST_ROOT/home/bin/sudo" <<EOF
-#!/usr/bin/env bash
-if [[ \${1-} == -n && \${2-} == unshare && \${3-} == --net &&
-      \${4-} == docker ]]; then
-    shift 4
-    exec docker "\$@"
-fi
-printf '%s\\n' "\$*" >'$TEST_ROOT/sudo.args'
-EOF
-chmod 755 "$TEST_ROOT/home/bin/sudo"
-cat >"$TEST_ROOT/home/bin/systemctl" <<'EOF'
-#!/usr/bin/env bash
-if [[ $* == list-units* ]]; then
-    printf 'docker.service loaded active running Docker Engine\n'
-    printf 'ssh.service loaded active running OpenSSH Server\n'
-fi
-EOF
-chmod 755 "$TEST_ROOT/home/bin/systemctl"
-cat >"$TEST_ROOT/home/bin/git" <<EOF
-#!/usr/bin/env bash
-if [[ \${1-} == for-each-ref ]]; then
-    printf 'feature-login\\nmain\\n'
-elif [[ \${1-} == switch ]]; then
-    printf '%s\\n' "\$*" >'$TEST_ROOT/git.args'
-elif [[ \${1-} == clean ]]; then
-    printf '%s\\n' "\$*" >'$TEST_ROOT/git.args'
-else
-    exec /usr/bin/git "\$@"
-fi
-EOF
-chmod 755 "$TEST_ROOT/home/bin/git"
-cat >"$TEST_ROOT/home/bin/apt" <<EOF
-#!/usr/bin/env bash
-printf '%s\\n' "\$*" >'$TEST_ROOT/apt.args'
-EOF
-chmod 755 "$TEST_ROOT/home/bin/apt"
-printf 'ANDUINOS_FILE_OK\n' >"$TEST_ROOT/quiet-file.txt"
-printf 'ANDUINOS_DD_OK\n' >"$TEST_ROOT/dd-input.img"
-mkdir -p "$TEST_ROOT/dd-many"
-printf 'first\n' >"$TEST_ROOT/dd-many/alpha.img"
-printf 'second\n' >"$TEST_ROOT/dd-many/beta.img"
 
 cat >"$TEST_ROOT/bashrc" <<EOF
-PS1='ANDUINOS_TEST> '
-PS2='ANDUINOS_MORE> '
+PS1='NATIVE_TEST> '
+PS2='NATIVE_MORE> '
+stty columns 120 rows 40
 PATH='$TEST_ROOT/home/bin':\$PATH
-HISTFILE='$TEST_ROOT/home/.bash_history'
-HISTSIZE=500
-HISTFILESIZE=500
-set +o history
-history -c
-for _anduinos_test_index in {1..250}; do
-    history -s "printf unrelated-\$_anduinos_test_index"
-done
-unset _anduinos_test_index
-history -s "touch '$TEST_ROOT/history.accepted'"
-history -s "printf frequent >'$TEST_ROOT/rank.result'"
-history -s "printf frequent >'$TEST_ROOT/rank.result'"
-history -s "printf frequent >'$TEST_ROOT/rank.result'"
-history -s "printf frequent >'$TEST_ROOT/rank.result'"
-history -s "printf accidental >'$TEST_ROOT/rank.result'"
-history -s "curl --token supersecret"
-history -s "docker rm web"
-history -s "docker rm web"
-history -s "docker rm web"
-history -s "docker rm web"
-history -s "docker ps"
-history -s "sudo docker exec -it 47355394ec65 bash"
-history -s "true && touch '$TEST_ROOT/enter-must-not-accept'"
-history -s 'echo malicious-\$(touch $TEST_ROOT/history-subscript-injection)'
-set -o history
+export ANDUINOS_QUIETD='$TEST_ROOT/package/anduinos-quietd'
+export ANDUINOS_TEST_MULTIPLE_MARKER='$TEST_ROOT/multiple-containers'
+ANDUINOS_GUESS_STATIC=0
+unset ANDUINOS_GUESS_COMMAND
 source '$TEST_ROOT/package/loader'
 EOF
 
 run_session() {
-    local input_function="$1" transcript="$2"
-    "$input_function" | TERM=xterm-256color HOME="$TEST_ROOT/home" \
-        script -qefc "bash --noprofile --rcfile '$TEST_ROOT/bashrc' -i" \
-        "$transcript" >/dev/null
-}
-
-run_session_without_context() {
-    local input_function="$1" transcript="$2"
-    "$input_function" | ANDUINOS_GUESS_CONTEXT=0 TERM=xterm-256color \
+    local producer=$1 transcript=$2
+    "$producer" | ANDUINOS_GUESS_COMMAND=0 TERM=xterm-256color \
         HOME="$TEST_ROOT/home" \
         script -qefc "bash --noprofile --rcfile '$TEST_ROOT/bashrc' -i" \
         "$transcript" >/dev/null
 }
 
-history_input() {
-    sleep 1.5
-    printf "touch '%s/hist" "$TEST_ROOT"
-    sleep 0.15
-    printf '\033[C\nexit\n'
-}
-
-static_input() {
-    sleep 1.5
-    printf 'git statu'
+accept_workflow_input() {
     sleep 0.5
-    printf '\033[C\nexit\n'
-}
-
-context_id_input() {
-    sleep 1.5
-    printf 'docker exec -it 0ad'
-    sleep 0.25
-    printf '\033[C\nexit\n'
-}
-
-context_session_input() {
-    sleep 1.5
-    printf 'docker ps | grep mysql\n'
-    sleep 0.15
-    printf 'docker exec -it '
-    sleep 0.25
-    printf '\033[C\nexit\n'
-}
-
-sudo_context_session_input() {
-    sleep 1.5
-    printf 'sudo docker ps\n'
-    sleep 0.15
-    printf 'sudo docker exec -it '
-    sleep 0.3
-    printf '\033[C\nexit\n'
-}
-
-stale_docker_history_input() {
-    sleep 1.5
-    printf 'sudo docker exec -it '
-    sleep 0.3
-    printf '\033[C\nexit\n'
-}
-
-ranked_history_input() {
-    sleep 1.5
-    printf 'printf '
-    sleep 0.15
-    printf '\033[C\nexit\n'
-}
-
-sensitive_input() {
-    sleep 1.5
-    printf 'curl --token '
-    sleep 0.15
-    printf '\033[C\nexit\n'
-}
-
-process_session_input() {
-    sleep 1.5
-    printf 'ps aux | grep mysqld\n'
-    sleep 0.15
-    printf 'sudo kill '
-    sleep 0.25
-    printf '\033[C\nexit\n'
-}
-
-service_session_input() {
-    sleep 1.5
-    printf 'systemctl list-units | grep docker\n'
-    sleep 0.15
-    printf 'sudo systemctl status '
-    sleep 0.25
-    printf '\033[C\nexit\n'
-}
-
-git_context_input() {
-    sleep 1.5
-    printf 'git switch fea'
-    sleep 0.25
-    printf '\033[C\nexit\n'
-}
-
-git_dash_option_input() {
-    sleep 1.5
-    printf 'git clean . -'
-    sleep 0.5
-    printf '\033[C\nexit\n'
-}
-
-single_line_paste_input() {
-    sleep 1.5
-    printf 'echo '
-    printf '\033[200~pasted-value\n\033[201~'
-    sleep 0.3
-    printf '\003exit\n'
-}
-
-multiline_paste_input() {
-    sleep 1.5
-    printf '\033[200~printf first\nprintf second\n\033[201~'
-    sleep 0.3
-    printf '\003exit\n'
-}
-
-danger_rank_input() {
-    sleep 1.5
-    printf 'docker '
-    sleep 0.15
-    printf '\033[C\nexit\n'
-}
-
-apt_static_input() {
-    sleep 1.5
-    printf 'apt instal'
-    sleep 0.5
-    printf '\033[C\nexit\n'
-}
-
-apt_workflow_input() {
-    sleep 1.5
     printf 'sudo apt update\n'
     sleep 0.2
     printf 'sudo apt up'
-    sleep 0.25
+    sleep 0.2
     printf '\033[C\nexit\n'
 }
 
-file_input() {
-    sleep 1.5
-    printf 'cat %s/quiet-f' "$TEST_ROOT"
+apt_skeleton_input() {
     sleep 0.5
+    printf 'sudo apt '
+    sleep 0.2
     printf '\033[C\nexit\n'
 }
 
-dd_assignment_input() {
-    sleep 1.5
-    printf 'sudo dd if=%s/dd-inp' "$TEST_ROOT"
+enter_native_input() {
     sleep 0.5
-    printf '\033[C\nexit\n'
-}
-
-dd_ambiguous_assignment_input() {
-    sleep 1.5
-    printf 'sudo dd if=%s/dd-many/' "$TEST_ROOT"
-    sleep 0.5
-    printf '\033[C\nexit\n'
-}
-
-enter_safety_input() {
-    sleep 1.5
-    printf 'true'
-    sleep 0.15
-    # A terminal Enter key sends CR (C-m). LF is C-j, which ble.sh deliberately
-    # binds to accept-and-execute and is therefore not equivalent here.
+    printf 'sudo apt up'
+    sleep 0.2
     printf '\r'
     sleep 0.2
     printf 'exit\n'
 }
 
-history_injection_input() {
-    sleep 1.5
-    printf 'echo malicious-'
-    sleep 0.15
-    printf '\003exit\n'
-}
-
-broad_history_input() {
-    sleep 1.5
-    printf 'printf unrelated'
-    # Includes ble.sh's debounce and PTY scheduling, not just ranking time.
-    sleep 0.25
+docker_input() {
+    sleep 0.5
+    printf 'sudo docker ps\n'
+    sleep 0.35
+    printf 'sudo docker exec -it '
+    sleep 0.2
     printf '\033[C\nexit\n'
 }
 
-run_session history_input "$TEST_ROOT/history.typescript"
-[[ -e "$TEST_ROOT/history.accepted" ]] || fail 'history ghost text was not accepted'
+docker_skeleton_input() {
+    sleep 0.5
+    printf 'sudo docker '
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
 
-run_session ranked_history_input "$TEST_ROOT/ranked-history.typescript"
-[[ $(<"$TEST_ROOT/rank.result") == frequent ]] ||
-    fail 'frequent history did not outrank an accidental recent command'
+git_skeleton_input() {
+    sleep 0.5
+    printf 'sudo git'
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
 
-rm -f "$TEST_ROOT/rank.result"
-run_session_without_context ranked_history_input \
-    "$TEST_ROOT/ranked-history-without-context.typescript"
-[[ $(<"$TEST_ROOT/rank.result") == frequent ]] ||
-    fail 'disabling live context also disabled ranked history'
+git_checkout_input() {
+    sleep 0.5
+    printf 'sudo git che'
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
 
-run_session sensitive_input "$TEST_ROOT/sensitive.typescript"
-[[ $(<"$TEST_ROOT/curl.args") == '--token' ]] ||
-    fail 'a sensitive history value leaked into ghost text'
+docker_ambiguous_input() {
+    sleep 0.5
+    touch "$TEST_ROOT/multiple-containers"
+    printf 'sudo docker ps\n'
+    sleep 0.35
+    printf 'sudo docker logs -f '
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
 
-run_session danger_rank_input "$TEST_ROOT/danger-rank.typescript"
-[[ $(<"$TEST_ROOT/docker.action") == ps ]] ||
-    fail 'a destructive history command outranked a safe alternative'
+paste_input() {
+    sleep 0.5
+    printf '\033[200~printf PASTE_ONE >%s/paste-one\nprintf PASTE_TWO >%s/paste-two\033[201~' \
+        "$TEST_ROOT" "$TEST_ROOT"
+    sleep 0.25
+    printf '\r'
+    sleep 0.25
+    printf 'exit\n'
+}
 
-run_session process_session_input "$TEST_ROOT/context-process.typescript"
-[[ $(<"$TEST_ROOT/sudo.args") == 'kill 4242' ]] ||
-    fail 'previous process filter was not used as typed session context'
+learn_history_input() {
+    sleep 0.5
+    printf "printf PERSONAL_MEMORY >'%s/personal-memory'\n" "$TEST_ROOT"
+    sleep 0.25
+    printf 'exit\n'
+}
 
-run_session service_session_input "$TEST_ROOT/context-service.typescript"
-[[ $(<"$TEST_ROOT/sudo.args") == 'systemctl status docker.service' ]] ||
-    fail 'previous service filter was not used as typed session context'
+recall_history_input() {
+    sleep 0.5
+    printf 'printf PERSONAL_'
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
 
-run_session git_context_input "$TEST_ROOT/context-git.typescript"
-[[ $(<"$TEST_ROOT/git.args") == 'switch feature-login' ]] ||
-    fail 'current repository branch was not completed'
+path_input() {
+    sleep 0.7
+    printf 'cat READ'
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
 
-run_session git_dash_option_input "$TEST_ROOT/static-git-dash-option.typescript"
-[[ $(<"$TEST_ROOT/git.args") == 'clean . --dry-run' ]] ||
-    fail 'typing a dash did not trigger the safe git clean option suggestion'
-
-run_session single_line_paste_input "$TEST_ROOT/paste-single-line.typescript"
-if LC_ALL=C tr -d '\r' <"$TEST_ROOT/paste-single-line.typescript" | \
-    grep -q -- '-- MULTILINE --'; then
-    fail 'a single pasted line with a terminator entered multiline mode'
-fi
-
-run_session multiline_paste_input "$TEST_ROOT/paste-multiline.typescript"
-LC_ALL=C tr -d '\r' <"$TEST_ROOT/paste-multiline.typescript" | \
-    grep -q -- '-- MULTILINE --' ||
-    fail 'a genuine multiline paste lost multiline safety'
-
-run_session static_input "$TEST_ROOT/static.typescript"
-LC_ALL=C tr -d '\r' <"$TEST_ROOT/static.typescript" | \
-    grep -Eq 'On branch|HEAD detached' || fail 'Carapace ghost text was not accepted'
-
-run_session apt_static_input "$TEST_ROOT/static-apt.typescript"
-[[ $(<"$TEST_ROOT/apt.args") == install ]] ||
-    fail 'Carapace package-manager specification was not accepted'
-
-run_session apt_workflow_input "$TEST_ROOT/context-apt-workflow.typescript"
+run_session accept_workflow_input "$TEST_ROOT/workflow.typescript"
 [[ $(<"$TEST_ROOT/sudo.args") == 'apt upgrade' ]] ||
-    fail 'successful apt update did not predict the apt upgrade workflow'
+    fail 'Right Arrow did not accept the apt workflow suggestion'
+LC_ALL=C grep -aFq $'\033[90m' "$TEST_ROOT/workflow.typescript" ||
+    fail 'the suggestion was accepted but never rendered as ghost text'
 
-run_session file_input "$TEST_ROOT/static-file.typescript"
-LC_ALL=C tr -d '\r' <"$TEST_ROOT/static-file.typescript" | \
-    grep -q ANDUINOS_FILE_OK || fail 'filesystem ghost text was not accepted'
+run_session apt_skeleton_input "$TEST_ROOT/apt-skeleton.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'apt update' ]] ||
+    fail 'apt command skeleton was silent'
 
-run_session dd_assignment_input "$TEST_ROOT/static-dd-assignment.typescript"
-[[ $(<"$TEST_ROOT/sudo.args") == "dd if=$TEST_ROOT/dd-input.img" ]] ||
-    fail 'Carapace and ble.sh duplicated a dd assignment prefix'
-if LC_ALL=C tr -d '\r' <"$TEST_ROOT/static-dd-assignment.typescript" | \
-    grep -q '\[if=if='; then
-    fail 'replacement-style dd assignment leaked into ghost text'
+run_session enter_native_input "$TEST_ROOT/enter.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'apt up' ]] ||
+    fail 'Enter accepted ghost text instead of executing the typed line'
+
+run_session docker_input "$TEST_ROOT/docker.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'docker exec -it kind_bassi' ]] ||
+    fail 'live Docker context was not suggested'
+
+run_session docker_skeleton_input "$TEST_ROOT/docker-skeleton.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'docker ps' ]] ||
+    fail 'Docker command skeleton was silent'
+
+run_session git_skeleton_input "$TEST_ROOT/git-skeleton.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'git status' ]] ||
+    fail 'Git command skeleton was silent'
+
+run_session git_checkout_input "$TEST_ROOT/git-checkout.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'git checkout' ]] ||
+    fail 'human-facing Git action did not outrank plumbing commands'
+
+run_session docker_ambiguous_input "$TEST_ROOT/docker-ambiguous.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'docker logs -f' ]] ||
+    fail 'Docker listing order was incorrectly treated as user intent'
+
+run_session paste_input "$TEST_ROOT/paste.typescript"
+[[ $(<"$TEST_ROOT/paste-one") == PASTE_ONE &&
+   $(<"$TEST_ROOT/paste-two") == PASTE_TWO ]] ||
+    fail 'native multiline paste did not execute normally after Enter'
+if LC_ALL=C tr -d '\r' <"$TEST_ROOT/paste.typescript" | grep -Eqi \
+    -- '-- MULTILINE --|RET or C-m:|progress|updating tput cache|ble\.sh'; then
+    fail 'line-editor UI leaked into multiline paste'
 fi
 
-run_session dd_ambiguous_assignment_input \
-    "$TEST_ROOT/static-dd-ambiguous.typescript"
-[[ $(<"$TEST_ROOT/sudo.args") == "dd if=$TEST_ROOT/dd-many/" ]] ||
-    fail 'an arbitrary dd path was suggested for ambiguous input'
+run_session learn_history_input "$TEST_ROOT/history-learn.typescript"
+history_file="$TEST_ROOT/home/.local/state/anduinos-bash-guess-command/history-v1"
+[[ -s $history_file && $(stat -c %a "$history_file") == 600 ]] ||
+    fail 'personal history was not persisted privately'
+find "$TEST_ROOT" -maxdepth 1 -type f -name personal-memory -delete
+run_session recall_history_input "$TEST_ROOT/history-recall.typescript"
+[[ $(<"$TEST_ROOT/personal-memory") == PERSONAL_MEMORY ]] ||
+    fail 'a new Bash session did not recall its local personal command'
 
-run_session enter_safety_input "$TEST_ROOT/enter-safety.typescript"
-[[ ! -e "$TEST_ROOT/enter-must-not-accept" ]] ||
-    fail 'Enter accepted and executed ghost text automatically'
+run_session path_input "$TEST_ROOT/path.typescript"
+LC_ALL=C tr -d '\r' <"$TEST_ROOT/path.typescript" | \
+    grep -q 'anduinos-bash-guess-command' ||
+    fail 'current-directory snapshot did not complete README.md'
 
-run_session history_injection_input "$TEST_ROOT/history-injection.typescript"
-[[ ! -e "$TEST_ROOT/history-subscript-injection" ]] ||
-    fail 'history text was evaluated while ranking candidates'
-
-run_session broad_history_input "$TEST_ROOT/broad-history.typescript"
-LC_ALL=C tr -d '\r' <"$TEST_ROOT/broad-history.typescript" | \
-    grep -q 'unrelated-250' ||
-    fail 'bounded broad-prefix history ranking missed its latency window'
-
-run_session context_id_input "$TEST_ROOT/context-id.typescript"
-[[ $(<"$TEST_ROOT/docker.args") == 'exec -it 0ad123456789' ]] ||
-    fail 'typed Docker container ID was not completed'
-
-rm -f "$TEST_ROOT/docker.args"
-run_session context_session_input "$TEST_ROOT/context-session.typescript"
-[[ $(<"$TEST_ROOT/docker.args") == 'exec -it mysql-db' ]] ||
-    fail 'previous Docker filter was not used as typed session context'
-
-touch "$TEST_ROOT/docker.one"
-run_session sudo_context_session_input "$TEST_ROOT/context-sudo-docker.typescript"
-[[ $(<"$TEST_ROOT/sudo.args") == 'docker exec -it stoic_carson' ]] ||
-    fail 'sudo Docker did not complete the current unique container'
-
-rm -f "$TEST_ROOT/docker.one"
-touch "$TEST_ROOT/docker.empty"
-run_session stale_docker_history_input "$TEST_ROOT/context-stale-docker.typescript"
-[[ $(<"$TEST_ROOT/sudo.args") == 'docker exec -it' ]] ||
-    fail 'a stale Docker container ID leaked from history'
-
-printf 'All interactive suggestion checks passed.\n'
+printf 'Native Readline interaction checks passed.\n'

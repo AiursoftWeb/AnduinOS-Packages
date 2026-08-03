@@ -60,7 +60,6 @@ p95_ms=${sorted[8]}
 installed_script_bytes=$(wc -c \
     <"$ROOT/assets/anduinos-bash-guess-command")
 ((installed_script_bytes += $(wc -c <"$ROOT/assets/carapace-wrapper")))
-((installed_script_bytes += $(wc -c <"$ROOT/assets/anduinos-guess-context.bash")))
 ((installed_script_bytes <= 49152)) ||
     fail "installed integration scripts exceed 48 KiB (${installed_script_bytes} bytes)"
 

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ ${1-} == -n && ${2-} == docker ]]; then
+    shift 2
+    exec docker "$@"
+fi
+exit 92

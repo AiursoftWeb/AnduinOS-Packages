@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+printf 'ps\n' >>"$ANDUINOS_RUNTIME_ENTITY_COUNT"
+printf '4242 mysqld\n7331 nginx\n'

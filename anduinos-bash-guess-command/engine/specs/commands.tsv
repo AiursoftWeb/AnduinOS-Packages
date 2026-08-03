@@ -1,0 +1,47 @@
+# Policy only: command<TAB>safe empty-prefix default<TAB>human-facing prominence
+# tier. Syntax is generated from pinned Carapace specifications into
+# generated-subcommands.tsv; this list ranks candidates but cannot legalize one.
+apt	update	update,upgrade,install,remove,search,show,autoremove
+apt-get	update	update,upgrade,install,remove,autoremove
+docker	ps	ps,images,exec,logs,run,pull,compose,inspect,stats,build,network,volume
+podman	ps	ps,images,exec,logs,run,pull,inspect,stats,build,network,volume
+git	status	status,diff,log,switch,add,restore,commit,checkout,clone,clean,push,pull,fetch,branch,merge,rebase,remote,show,tag,stash
+systemctl	status	status,list-units,is-active,is-enabled,restart,start,stop,enable,disable,daemon-reload
+journalctl	-f	-f,-xe,-b,--since,--unit,--user
+kubectl	get	get,describe,logs,config,apply,diff,explain,rollout,top,exec,port-forward
+helm	list	list,status,history,show,search,template,diff,upgrade,install,uninstall,repo
+cargo	check	check,build,test,run,fmt,clippy,update,add,remove,tree,doc,clean
+rustup	show	show,update,target,toolchain,component,default
+dotnet	build	build,test,run,restore,publish,new,tool,clean,pack,sln,add,list
+npm	install	install,test,run,start,ci,update,outdated,add,remove,exec,init
+pnpm	install	install,test,run,start,add,remove,update,outdated,exec,dlx
+yarn	install	install,test,run,start,add,remove,upgrade,dlx
+go	test	test,build,run,fmt,vet,get,install,mod,work,env,clean
+python3	-m	-m,-c,--version
+python	-m	-m,-c,--version
+pip	install	install,uninstall,list,show,freeze,check,download,wheel
+pip3	install	install,uninstall,list,show,freeze,check,download,wheel
+ls	-la	-la,-l,-a,-lh,--color
+find	.	.,-name,-type,-maxdepth,-mindepth,-newer,-size,-exec
+grep	-R	-R,-n,-i,-E,-F,-v,--color
+rg	--hidden	--hidden,--files,-n,-i,-g,-t,--type-list
+fd	.	.,--hidden,--type,--extension,--glob
+curl	-L	-L,-I,-o,-O,-X,--data,--json,--fail,--retry
+wget	-c	-c,-O,-q,--mirror,--spider
+rsync	-av	-av,-a,-v,-n,--delete,--exclude
+tar	-tf	-tf,-xf,-czf,-xzf,-cJf,-xJf
+zip	-r	-r,-u,-d,-e
+unzip	-l	-l,-t,-o,-d
+df	-h	-h,-T,-i
+du	-sh	-sh,-h,-s,-a,--max-depth
+free	-h	-h,-m,-g,-s
+ps	aux	aux,-ef,-eo
+ip	addr	addr,link,route,neigh,-br
+ss	-tulpn	-tulpn,-ltnp,-lunp,-s
+gh	status	status,repo,pr,issue,run,workflow,release,auth,api,browse
+flatpak	list	list,search,info,update,install,uninstall,run,history
+snap	list	list,find,info,refresh,install,remove,changes
+make	-	-j,-n,-C,-f
+cmake	--build	--build,--install,--preset,--workflow,-S,-B
+jq	.	.,-r,-c,-s,-n,--arg,--slurpfile
+yq	.	.,-r,-o,-i,-n

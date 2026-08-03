@@ -1,0 +1,25 @@
+[package]
+name = "anduinos-quiet-engine"
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-only"
+description = "Deterministic offline intent engine for AnduinOS Bash suggestions"
+
+[lib]
+name = "anduinos_quiet_engine"
+path = "src/lib.rs"
+
+[[bin]]
+name = "anduinos-quiet-sim"
+path = "src/bin/sim.rs"
+
+[[bin]]
+name = "anduinos-quietd"
+path = "src/bin/quietd.rs"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
