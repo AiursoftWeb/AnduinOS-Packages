@@ -16,7 +16,7 @@ MACHINE_ID_RE = re.compile(r"^[0-9a-f]{32}$")
 class ConfigureSystemStep:
     runner: CommandRunner
     id: str = "configure-system"
-    title: str = "Configure account, region, and machine identity"
+    title: str = "Configure account, region, timezone, and machine identity"
     failure_policy: FailurePolicy = FailurePolicy.FATAL
     progress_weight: int = 5
     destructive: bool = False

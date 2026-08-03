@@ -2931,7 +2931,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "configure-keyboard-layout": _("Keyboard Layout", lang),
         "install-input-method": input_method_title,
         "configure-system": _(
-            "Configure account, region, and machine identity", lang
+            "Configure account, region, timezone, and machine identity", lang
         ),
         "select-fastest-apt-mirror": _(
             "Select fastest package mirror", lang
