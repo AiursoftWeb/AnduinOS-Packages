@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-timeback-machine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-01 02:58+0000\n"
+"POT-Creation-Date: 2026-08-02 17:52+0000\n"
 "PO-Revision-Date: 2026-08-01 02:58+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -44,8 +44,18 @@ msgstr "시스템 변경 내역 명확히 제공"
 msgid "A compatible Btrfs layout is required"
 msgstr "호환되는 Btrfs 레이아웃이 필요합니다"
 
+msgid ""
+"A one-time recovery boot will be prepared. Nothing changes until you restart."
+msgstr ""
+"A one-time recovery boot will be prepared. Nothing changes until you restart."
+
 msgid "A protected safety point will be created before restart."
 msgstr "재시작 전에 보호된 안전 지점이 생성됩니다."
+
+msgid ""
+"APT-managed package changes are surrounded by fail-open recovery points."
+msgstr ""
+"APT-managed package changes are surrounded by fail-open recovery points."
 
 msgid "About Timeback Machine"
 msgstr "Timeback Machine 정보"
@@ -79,6 +89,21 @@ msgstr "자동"
 
 msgid "Automatic Protection"
 msgstr "자동 보호"
+
+msgid "Automatic snapshot"
+msgstr "Automatic snapshot"
+
+msgid "Automatic snapshot policies saved"
+msgstr "Automatic snapshot policies saved"
+
+msgid "Automatic snapshot service"
+msgstr "Automatic snapshot service"
+
+msgid "Automatic snapshot status could not be loaded."
+msgstr "Automatic snapshot status could not be loaded."
+
+msgid "Automatic snapshots"
+msgstr "Automatic snapshots"
 
 msgid "Available on Btrfs installations"
 msgstr "Btrfs 설치 환경에서 사용 가능"
@@ -134,6 +159,23 @@ msgstr "시스템 복원 취소 중"
 msgid "Capacity"
 msgstr "용량"
 
+msgid "Check Snapshot Policy"
+msgstr "Check Snapshot Policy"
+
+msgid ""
+"Choose one policy for both volumes, or manage System and User Data "
+"independently."
+msgstr ""
+"Choose one policy for both volumes, or manage System and User Data "
+"independently."
+
+msgid ""
+"Cleanup runs after package transactions and rechecks free space after every "
+"deletion."
+msgstr ""
+"Cleanup runs after package transactions and rechecks free space after every "
+"deletion."
+
 msgid "Close"
 msgstr "닫기"
 
@@ -155,6 +197,22 @@ msgstr "복구 지점 생성"
 msgid "Create a recovery point before APT changes packages"
 msgstr "APT가 패키지를 변경하기 전에 복구 지점을 생성합니다"
 
+msgid ""
+"Create a recovery point before a system change so you can return to a known "
+"state."
+msgstr ""
+"Create a recovery point before a system change so you can return to a known "
+"state."
+
+msgid "Create every"
+msgstr "Create every"
+
+msgid "Create recovery points and safely return AnduinOS to an earlier state."
+msgstr "Create recovery points and safely return AnduinOS to an earlier state."
+
+msgid "Create snapshots automatically"
+msgstr "Create snapshots automatically"
+
 msgid "Created before a manual system change"
 msgstr "수동 시스템 변경 전에 생성됨"
 
@@ -167,11 +225,17 @@ msgstr "복구 지점 생성 중"
 msgid "Current"
 msgstr "현재"
 
+msgid "Days after creation"
+msgstr "Days after creation"
+
 msgid "Delete"
 msgstr "삭제"
 
 msgid "Delete Recovery Point?"
 msgstr "복구 지점을 삭제하시겠습니까?"
+
+msgid "Delete all snapshots older than"
+msgstr "Delete all snapshots older than"
 
 msgid "Delete recovery point"
 msgstr "복구 지점 삭제"
@@ -209,11 +273,23 @@ msgstr "예상 전용 데이터"
 msgid "Factory"
 msgstr "공장 초기화"
 
+msgid "Factory snapshot"
+msgstr "Factory snapshot"
+
+msgid "Failed"
+msgstr "Failed"
+
 msgid "Filesystem"
 msgstr "파일 시스템"
 
 msgid "Healthy"
 msgstr "정상"
+
+msgid "Hours"
+msgstr "Hours"
+
+msgid "Hours between successful snapshots"
+msgstr "Hours between successful snapshots"
 
 msgid "Incomplete"
 msgstr "불완전"
@@ -224,17 +300,48 @@ msgstr "요청 시 무결성 검증 가능"
 msgid "Just now"
 msgstr "방금"
 
+msgid "Keep System and User Data snapshot policies identical"
+msgstr "Keep System and User Data snapshot policies identical"
+
 msgid "Keep a verified post-update deployment"
 msgstr "업데이트 후 배포본을 검증하여 유지"
 
 msgid "Keep at least two update pairs and one known-good recovery point"
 msgstr "최소 두 개의 업데이트 쌍과 하나의 안정적인 복구 지점 유지"
 
+msgid "Keep every snapshot for"
+msgstr "Keep every snapshot for"
+
+msgid ""
+"Keep recent snapshots densely, then retain the first snapshot in each "
+"calendar period."
+msgstr ""
+"Keep recent snapshots densely, then retain the first snapshot in each "
+"calendar period."
+
+msgid "Keep the first snapshot of each day until"
+msgstr "Keep the first snapshot of each day until"
+
+msgid "Keep the first snapshot of each month until"
+msgstr "Keep the first snapshot of each month until"
+
+msgid "Keep the first snapshot of each week until"
+msgstr "Keep the first snapshot of each week until"
+
+msgid "Keep this window open. Recovery metadata is committed atomically."
+msgstr "Keep this window open. Recovery metadata is committed atomically."
+
 msgid "Keep until I delete it"
 msgstr "삭제할 때까지 유지"
 
 msgid "Kernel and initramfs"
 msgstr "커널 및 initramfs"
+
+msgid "Last automatic operation"
+msgstr "Last automatic operation"
+
+msgid "Last snapshot: {0} · Next snapshot: {1}"
+msgstr "Last snapshot: {0} · Next snapshot: {1}"
 
 msgid "Latest point"
 msgstr "최신 지점"
@@ -251,6 +358,9 @@ msgstr "수동"
 msgid "Manual recovery point"
 msgstr "수동 복구 지점"
 
+msgid "Manual snapshot"
+msgstr "Manual snapshot"
+
 msgid "Measurement pending"
 msgstr "측정 대기 중"
 
@@ -260,14 +370,29 @@ msgstr "아침 체크포인트"
 msgid "Name"
 msgstr "이름"
 
+msgid "Never"
+msgstr "Never"
+
 msgid "Next cleanup"
 msgstr "다음 정리 작업"
+
+msgid "No complete shared snapshot yet"
+msgstr "No complete shared snapshot yet"
 
 msgid "No recovery points yet"
 msgstr "아직 복구 지점이 없습니다"
 
+msgid "No snapshot can be created while demo data is active."
+msgstr "No snapshot can be created while demo data is active."
+
 msgid "Not created yet"
 msgstr "아직 생성되지 않음"
+
+msgid "Not scheduled"
+msgstr "Not scheduled"
+
+msgid "Off"
+msgstr "Off"
 
 msgid "Only eligible automatic package recovery points are considered"
 msgstr "자동 패키지 복구 지점만 고려됩니다"
@@ -292,6 +417,9 @@ msgstr "복구 지점 고정"
 
 msgid "Pinned"
 msgstr "고정됨"
+
+msgid "Pinned recovery points are never cleaned automatically"
+msgstr "Pinned recovery points are never cleaned automatically"
 
 msgid "Pinning Recovery Point"
 msgstr "복구 지점 고정 중"
@@ -344,7 +472,9 @@ msgstr "ext4에서 복구 지점 저장소가 일시적으로 사용할 수 없�
 msgid "Recovery points are unavailable"
 msgstr "복구 지점을 사용할 수 없습니다"
 
-msgid "Recovery points protect the operating system while your personal files stay in the present."
+msgid ""
+"Recovery points protect the operating system while your personal files stay "
+"in the present."
 msgstr "복구 지점은 운영 체계를 보호하며 개인 파일은 현재 상태로 유지됩니다."
 
 msgid "Recovery service unavailable"
@@ -362,6 +492,19 @@ msgstr "나중에 재시작"
 msgid "Restart Now"
 msgstr "지금 재시작"
 
+msgid ""
+"Restart to enter the one-time recovery environment. You can cancel from the "
+"recovery point before restarting."
+msgstr ""
+"Restart to enter the one-time recovery environment. You can cancel from the "
+"recovery point before restarting."
+
+msgid "Restore Recommended Values"
+msgstr "Restore Recommended Values"
+
+msgid "Restore safety snapshot"
+msgstr "Restore safety snapshot"
+
 msgid "Restore to This Point"
 msgstr "이 지점으로 복원"
 
@@ -373,6 +516,13 @@ msgstr "“{0}”을(를) 복원하시겠습니까?"
 
 msgid "Retention"
 msgstr "보존 정책"
+
+msgid ""
+"Retention periods must progress from keep-all to daily, weekly, monthly, and "
+"final deletion."
+msgstr ""
+"Retention periods must progress from keep-all to daily, weekly, monthly, and "
+"final deletion."
 
 msgid "Retention status"
 msgstr "보존 상태"
@@ -386,11 +536,32 @@ msgstr "되돌림됨"
 msgid "Root filesystem"
 msgstr "루트 파일 시스템"
 
+msgid "Save Policy"
+msgstr "Save Policy"
+
+msgid "Schedule status"
+msgstr "Schedule status"
+
+msgid "See when your data was last captured and when protection runs next."
+msgstr "See when your data was last captured and when protection runs next."
+
 msgid "Settings"
 msgstr "설정"
 
+msgid "Shared Btrfs extents make per-recovery-point sizes approximate."
+msgstr "Shared Btrfs extents make per-recovery-point sizes approximate."
+
+msgid "Shared Policy"
+msgstr "Shared Policy"
+
 msgid "Show navigation"
 msgstr "네비게이션 표시"
+
+msgid "Snapshot Policies"
+msgstr "Snapshot Policies"
+
+msgid "Snapshot source"
+msgstr "Snapshot source"
 
 msgid "Space is shared between the system and recovery points."
 msgstr "공간은 시스템과 복구 지점 간에 공유됩니다."
@@ -401,6 +572,9 @@ msgstr "저장소"
 msgid "Storage layout inspected"
 msgstr "저장소 레이아웃 검사 완료"
 
+msgid "System"
+msgstr "System"
+
 msgid "System Recovery"
 msgstr "시스템 복구"
 
@@ -409,6 +583,9 @@ msgstr "시스템 복구 활동"
 
 msgid "System Restore Is Ready"
 msgstr "시스템 복원 준비 완료"
+
+msgid "System and User Data"
+msgstr "System and User Data"
 
 msgid "System changes"
 msgstr "시스템 변경 사항"
@@ -419,6 +596,9 @@ msgstr "시스템 복구"
 msgid "System recovery is unavailable"
 msgstr "시스템 복구를 사용할 수 없습니다"
 
+msgid "System snapshots can be used for a full system restore."
+msgstr "System snapshots can be used for a full system restore."
+
 msgid "System software and settings will return to this point."
 msgstr "시스템 소프트웨어 및 설정이 이 지점으로 되돌아갑니다."
 
@@ -428,29 +608,82 @@ msgstr "일시적으로 사용할 수 없음"
 msgid "The current system will be protected before restart."
 msgstr "재시작 전에 현재 시스템이 보호됩니다."
 
+msgid ""
+"The operating system will be captured without changing personal files, logs, "
+"containers, or virtual machines."
+msgstr ""
+"The operating system will be captured without changing personal files, logs, "
+"containers, or virtual machines."
+
+msgid "The recovery service could not be reached; no system data was changed"
+msgstr "The recovery service could not be reached; no system data was changed"
+
 msgid "The recovery service is unavailable"
 msgstr "복구 서비스를 사용할 수 없습니다"
 
 msgid "The recovery worker disconnected"
 msgstr "복구 작업자가 연결을 끊었습니다"
 
-msgid "The restored system must boot successfully or the previous system returns automatically."
-msgstr "복원된 시스템이 성공적으로 부팅해야 하며, 그렇지 않으면 이전 시스템으로 자동으로 돌아갑니다."
+msgid ""
+"The restored system must boot successfully or the previous system returns "
+"automatically."
+msgstr ""
+"복원된 시스템이 성공적으로 부팅해야 하며, 그렇지 않으면 이전 시스템으로 자동"
+"으로 돌아갑니다."
 
 msgid "The system is ready for the manual recovery milestone."
 msgstr "시스템은 수동 복구 마일스톤에 준비되었습니다."
 
+msgid "The system service did not return its automatic snapshot configuration."
+msgstr ""
+"The system service did not return its automatic snapshot configuration."
+
 msgid "The system storage layout could not be inspected"
 msgstr "시스템 저장소 레이아웃을 검사할 수 없습니다"
 
-msgid "This AnduinOS installation uses ext4. Timeback Machine recovery points currently require Btrfs."
-msgstr "이 AnduinOS 설치판은 ext4를 사용합니다. Timeback Machine 복구 지점은 현재 Btrfs가 필요합니다."
+msgid ""
+"This AnduinOS installation uses ext4. Timeback Machine recovery points "
+"currently require Btrfs."
+msgstr ""
+"이 AnduinOS 설치판은 ext4를 사용합니다. Timeback Machine 복구 지점은 현재 "
+"Btrfs가 필요합니다."
 
-msgid "This installation does not use the complete AnduinOS Btrfs recovery layout."
+msgid ""
+"This installation does not use the complete AnduinOS Btrfs recovery layout."
 msgstr "이 설치판은 완전한 AnduinOS Btrfs 복구 레이아웃을 사용하지 않습니다."
+
+msgid ""
+"This installation uses ext4. Nothing is wrong with your system, but recovery "
+"points currently require Btrfs."
+msgstr ""
+"This installation uses ext4. Nothing is wrong with your system, but recovery "
+"points currently require Btrfs."
+
+msgid ""
+"This installation uses ext4. Timeback Machine recovery points currently "
+"require Btrfs."
+msgstr ""
+"This installation uses ext4. Timeback Machine recovery points currently "
+"require Btrfs."
+
+msgid "This policy is applied to both snapshot streams."
+msgstr "This policy is applied to both snapshot streams."
+
+msgid "This volume is not an independent compatible Btrfs subvolume."
+msgstr "This volume is not an independent compatible Btrfs subvolume."
+
+msgid "Tiered Retention"
+msgstr "Tiered Retention"
 
 msgid "Timeback Machine"
 msgstr "타임백 머신"
+
+msgid ""
+"Timeback Machine currently requires an AnduinOS installation using Btrfs. "
+"This system uses {0}."
+msgstr ""
+"Timeback Machine currently requires an AnduinOS installation using Btrfs. "
+"This system uses {0}."
 
 msgid "Timeback Machine has not changed this installation."
 msgstr "Timeback Machine은 이 설치판을 변경하지 않았습니다."
@@ -459,10 +692,14 @@ msgid "Timeback Machine is temporarily unavailable on this ext4 installation"
 msgstr "Timeback Machine은 이 ext4 설치판에서 일시적으로 사용할 수 없습니다"
 
 msgid "Timeback Machine requires Btrfs; this system uses {0}"
-msgstr "Timeback Machine은 Btrfs가 필요합니다; 이 시스템은 {0}을(를) 사용합니다"
+msgstr ""
+"Timeback Machine은 Btrfs가 필요합니다; 이 시스템은 {0}을(를) 사용합니다"
 
 msgid "Today"
 msgstr "오늘"
+
+msgid "Today, 14:00"
+msgstr "Today, 14:00"
 
 msgid "Today, 14:27 · 12 packages changed"
 msgstr "오늘, 14:27 · 12개 패키지 변경됨"
@@ -472,6 +709,9 @@ msgstr "오늘, 14:32"
 
 msgid "Today, 14:32 · Kernel 7.0.0-28"
 msgstr "오늘, 14:32 · 커널 7.0.0-28"
+
+msgid "Today, 16:00"
+msgstr "Today, 16:00"
 
 msgid "Unavailable"
 msgstr "사용 불가"
@@ -488,6 +728,15 @@ msgstr "복구 지점 고정 해제 중"
 msgid "Unverified"
 msgstr "미검증"
 
+msgid "Update snapshot"
+msgstr "Update snapshot"
+
+msgid "User Data"
+msgstr "User Data"
+
+msgid "User Data snapshots preserve the independent Home subvolume."
+msgstr "User Data snapshots preserve the independent Home subvolume."
+
 msgid "Verified"
 msgstr "검증됨"
 
@@ -502,6 +751,13 @@ msgstr "대기 중"
 
 msgid "Waiting for authorization…"
 msgstr "승인 대기 중…"
+
+msgid ""
+"When linking different policies, the current System values become the shared "
+"policy."
+msgstr ""
+"When linking different policies, the current System values become the shared "
+"policy."
 
 msgid "Yesterday"
 msgstr "어제"
@@ -526,3 +782,102 @@ msgstr "{0}개 지점"
 
 msgid "—"
 msgstr "—"
+
+msgid ""
+"“{0}” will be permanently removed. The running system and personal files "
+"will not change."
+msgstr ""
+"“{0}” will be permanently removed. The running system and personal files "
+"will not change."
+
+#: src/snapshot_browser.rs:38
+msgid "Snapshot Files"
+msgstr "Snapshot Files"
+
+#: src/snapshot_browser.rs:61
+msgid "Parent Folder"
+msgstr "Parent Folder"
+
+#: src/snapshot_browser.rs:66
+msgid "Show Hidden Files"
+msgstr "Show Hidden Files"
+
+#: src/snapshot_browser.rs:74
+msgid "Read-only snapshot"
+msgstr "Read-only snapshot"
+
+#: src/snapshot_browser.rs:154
+msgid "Could Not Open Folder"
+msgstr "Could Not Open Folder"
+
+#: src/snapshot_browser.rs:176
+msgid "This Folder Is Empty"
+msgstr "This Folder Is Empty"
+
+#: src/snapshot_browser.rs:177
+msgid "There are no files to display."
+msgstr "There are no files to display."
+
+#: src/snapshot_browser.rs:182
+msgid "This folder is very large; only the first 1,000 items are shown."
+msgstr "This folder is very large; only the first 1,000 items are shown."
+
+#: src/snapshot_browser.rs:221
+msgid "Copy Out…"
+msgstr "Copy Out…"
+
+#: src/snapshot_browser.rs:236
+msgid "Not copyable"
+msgstr "Not copyable"
+
+#: src/snapshot_browser.rs:257
+msgid "Copy File Out of Snapshot"
+msgstr "Copy File Out of Snapshot"
+
+#: src/snapshot_browser.rs:259
+msgid "Copy"
+msgstr "Copy"
+
+#: src/snapshot_browser.rs:271
+msgid "Choose a location on this computer."
+msgstr "Choose a location on this computer."
+
+#: src/snapshot_browser.rs:298
+msgid "File copied successfully"
+msgstr "File copied successfully"
+
+#: src/snapshot_browser.rs:308
+msgid "Could not copy the file"
+msgstr "Could not copy the file"
+
+#: src/snapshot_browser.rs:332
+msgid "Folder"
+msgstr "Folder"
+
+#: src/snapshot_browser.rs:334
+msgid "Symbolic link — not followed for safety"
+msgstr "Symbolic link — not followed for safety"
+
+#: src/snapshot_browser.rs:335
+msgid "Special file — cannot be copied"
+msgstr "Special file — cannot be copied"
+
+#: src/window.rs:1019
+msgid "User Data Snapshots"
+msgstr "User Data Snapshots"
+
+#: src/window.rs:1027
+msgid "Automatic User Data Snapshot"
+msgstr "Automatic User Data Snapshot"
+
+#: src/window.rs:1045 src/window.rs:2148
+msgid "Browse snapshot files"
+msgstr "Browse snapshot files"
+
+#: src/window.rs:1056
+msgid "User Data Snapshot"
+msgstr "User Data Snapshot"
+
+#: src/window.rs:1067
+msgid "User data snapshots are unavailable"
+msgstr "User data snapshots are unavailable"

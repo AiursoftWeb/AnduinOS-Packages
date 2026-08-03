@@ -17,7 +17,7 @@ LANGUAGES = {
 }
 OFFICIAL_DESKTOP_LANGUAGES = LANGUAGES | {"en_US"}
 RUST_I18N = re.compile(
-    r'\bi18n\s*\(\s*"((?:[^"\\]|\\.)*)"\s*\)',
+    r'\bi18n\s*\(\s*"((?:[^"\\]|\\.)*)"\s*,?\s*\)',
     re.DOTALL,
 )
 

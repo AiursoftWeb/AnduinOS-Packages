@@ -18,8 +18,24 @@
     <method name="InspectAutomatic">
       <arg name="status_json" type="s" direction="out"/>
     </method>
+    <method name="ListHomeSnapshots">
+      <arg name="snapshots_json" type="s" direction="out"/>
+    </method>
+    <method name="ListSnapshotDirectory">
+      <arg name="snapshot_kind" type="s" direction="in"/>
+      <arg name="snapshot_id" type="s" direction="in"/>
+      <arg name="path_json" type="s" direction="in"/>
+      <arg name="listing_json" type="s" direction="out"/>
+    </method>
+    <method name="OpenSnapshotFile">
+      <arg name="snapshot_kind" type="s" direction="in"/>
+      <arg name="snapshot_id" type="s" direction="in"/>
+      <arg name="path_json" type="s" direction="in"/>
+      <arg name="file" type="h" direction="out"/>
+      <arg name="metadata_json" type="s" direction="out"/>
+    </method>
     <method name="SetAutomaticPolicy">
-      <arg name="policy_json" type="s" direction="in"/>
+      <arg name="configuration_json" type="s" direction="in"/>
       <arg name="operation_id" type="s" direction="out"/>
     </method>
     <method name="VerifyRecoveryPoint">

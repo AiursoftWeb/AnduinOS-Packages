@@ -7,7 +7,11 @@ pub const HOME_TARGET_ID: &str = "btrfs:@home";
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
-pub enum TargetKind { System, Home, Custom }
+pub enum TargetKind {
+    System,
+    Home,
+    Custom,
+}
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct SnapshotTarget {
@@ -22,7 +26,9 @@ pub struct SnapshotTarget {
 }
 
 impl SnapshotTarget {
-    pub fn supports_system_restore(&self) -> bool { self.kind == TargetKind::System }
+    pub fn supports_system_restore(&self) -> bool {
+        self.kind == TargetKind::System
+    }
 }
 
 /// Discover only real, independently mounted Btrfs subvolumes. In particular,
@@ -49,12 +55,22 @@ pub fn discover_targets(report: &LayoutReport) -> Vec<SnapshotTarget> {
             issue: None,
         });
     }
-    targets.sort_by(|left, right| left.kind.cmp(&right.kind).then_with(|| left.id.cmp(&right.id)));
+    targets.sort_by(|left, right| {
+        left.kind
+            .cmp(&right.kind)
+            .then_with(|| left.id.cmp(&right.id))
+    });
     targets.dedup_by(|left, right| left.id == right.id);
     targets
 }
 
-fn target(report: &LayoutReport, mount: &str, expected_subvolume: &str, kind: TargetKind, name: &str) -> SnapshotTarget {
+fn target(
+    report: &LayoutReport,
+    mount: &str,
+    expected_subvolume: &str,
+    kind: TargetKind,
+    name: &str,
+) -> SnapshotTarget {
     match report.mounts.iter().find(|item| item.mount_point == mount) {
         Some(item) if compatible(report, item, expected_subvolume) => SnapshotTarget {
             id: format!("btrfs:{}", item.subvolume.trim_start_matches('/')),
@@ -75,12 +91,27 @@ fn target(report: &LayoutReport, mount: &str, expected_subvolume: &str, kind: Ta
 }
 
 fn compatible(report: &LayoutReport, item: &MountReport, expected: &str) -> bool {
-    item.filesystem == "btrfs" && item.subvolume == expected
+    item.filesystem == "btrfs"
+        && item.subvolume == expected
         && report.root_source.as_deref() == Some(item.source.as_str())
 }
 
 fn unavailable(kind: TargetKind, name: &str, mount: &str, issue: String) -> SnapshotTarget {
-    SnapshotTarget { id: match kind { TargetKind::System => SYSTEM_TARGET_ID, TargetKind::Home => HOME_TARGET_ID, TargetKind::Custom => "btrfs:unavailable" }.into(), kind, display_name: name.into(), filesystem_source: String::new(), subvolume: String::new(), mount_point: mount.into(), available: false, issue: Some(issue) }
+    SnapshotTarget {
+        id: match kind {
+            TargetKind::System => SYSTEM_TARGET_ID,
+            TargetKind::Home => HOME_TARGET_ID,
+            TargetKind::Custom => "btrfs:unavailable",
+        }
+        .into(),
+        kind,
+        display_name: name.into(),
+        filesystem_source: String::new(),
+        subvolume: String::new(),
+        mount_point: mount.into(),
+        available: false,
+        issue: Some(issue),
+    }
 }
 
 #[cfg(test)]
@@ -93,6 +124,10 @@ mod tests {
         let targets = discover_targets(&report);
         assert!(targets[0].available);
         assert!(!targets[1].available);
-        assert!(targets[1].issue.as_deref().unwrap().contains("independently mounted"));
+        assert!(targets[1]
+            .issue
+            .as_deref()
+            .unwrap()
+            .contains("independently mounted"));
     }
 }

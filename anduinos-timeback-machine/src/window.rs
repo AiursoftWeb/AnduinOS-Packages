@@ -1,4 +1,3 @@
-use std::cell::Cell;
 use std::rc::Rc;
 use std::sync::mpsc;
 use std::time::Duration;
@@ -6,6 +5,9 @@ use std::time::Duration;
 use adw::prelude::*;
 use gtk::{gdk, gio, glib};
 
+use anduinos_timeback::automation::{
+    AutomaticConfiguration, AutomaticPolicy, TargetAutomaticStatus,
+};
 use anduinos_timeback::layout::{self, LayoutReport, LayoutSupport};
 use anduinos_timeback::model::{DeploymentKind, DeploymentRecord, DeploymentState};
 use anduinos_timeback::retention::RetentionPlan;
@@ -86,6 +88,11 @@ fn build_with_notice(
             },
         }
     };
+    let automatic = if demo || !report.is_supported() {
+        None
+    } else {
+        client::inspect_automatic().ok()
+    };
 
     let window = adw::ApplicationWindow::builder()
         .application(app)
@@ -108,7 +115,7 @@ fn build_with_notice(
             name: "overview",
             title: i18n("Overview"),
             icon: "go-home-symbolic",
-            widget: build_overview(&window, &report, &discovery, demo).upcast(),
+            widget: build_overview(&window, &report, &discovery, automatic.as_ref(), demo).upcast(),
         },
         Page {
             name: "points",
@@ -120,7 +127,7 @@ fn build_with_notice(
             name: "automatic",
             title: i18n(concat!("Automatic ", "Snapshots")),
             icon: "alarm-symbolic",
-            widget: build_automatic_snapshots(&window, &report).upcast(),
+            widget: build_automatic_snapshots(&window, &report, automatic.as_ref()).upcast(),
         },
         Page {
             name: "storage",
@@ -390,6 +397,7 @@ fn build_overview(
     window: &adw::ApplicationWindow,
     report: &LayoutReport,
     discovery: &DiscoveryState,
+    automatic: Option<&anduinos_timeback::automation::AutomaticStatus>,
     demo: bool,
 ) -> gtk::ScrolledWindow {
     let content = page_content();
@@ -413,6 +421,8 @@ fn build_overview(
     } else if !report.is_supported() && !is_ext4(report) {
         content.append(&unsupported_banner(report));
     }
+
+    content.append(&automatic_overview(automatic, demo));
 
     let metrics = gtk::FlowBox::builder()
         .selection_mode(gtk::SelectionMode::None)
@@ -574,6 +584,94 @@ fn build_overview(
         content.append(&empty);
     }
     wrap_page(content)
+}
+
+fn automatic_overview(
+    status: Option<&anduinos_timeback::automation::AutomaticStatus>,
+    demo: bool,
+) -> adw::PreferencesGroup {
+    let group = adw::PreferencesGroup::builder()
+        .title(i18n("Automatic Protection"))
+        .description(i18n(
+            "See when your data was last captured and when protection runs next.",
+        ))
+        .build();
+    if demo {
+        group.add(&automatic_overview_row(
+            &i18n("System and User Data"),
+            &i18n("Today, 14:00"),
+            &i18n("Today, 16:00"),
+            true,
+        ));
+        return group;
+    }
+    let Some(status) = status else {
+        group.add(&status_row(
+            &i18n("Automatic snapshots"),
+            &i18n("Automatic snapshot status could not be loaded."),
+            &i18n("Unavailable"),
+            "warning",
+        ));
+        return group;
+    };
+    if status.configuration.policies_linked {
+        let last = match (status.system.last_success, status.home.last_success) {
+            (Some(system), Some(home)) => Some(system.min(home)),
+            _ => None,
+        };
+        let next = match (status.system.next_run, status.home.next_run) {
+            (Some(system), Some(home)) => Some(system.min(home)),
+            _ => None,
+        };
+        group.add(&automatic_overview_row(
+            &i18n("System and User Data"),
+            &automatic_time(last, &i18n("No complete shared snapshot yet")),
+            &automatic_time(next, &i18n("Not scheduled")),
+            status.configuration.system.enabled,
+        ));
+    } else {
+        group.add(&automatic_overview_row(
+            &i18n("System"),
+            &automatic_time(status.system.last_success, &i18n("Never")),
+            &automatic_time(status.system.next_run, &i18n("Not scheduled")),
+            status.configuration.system.enabled,
+        ));
+        group.add(&automatic_overview_row(
+            &i18n("User Data"),
+            &automatic_time(status.home.last_success, &i18n("Never")),
+            &automatic_time(status.home.next_run, &i18n("Not scheduled")),
+            status.configuration.home.enabled,
+        ));
+    }
+    group
+}
+
+fn automatic_overview_row(
+    title: &str,
+    last_snapshot: &str,
+    next_snapshot: &str,
+    enabled: bool,
+) -> adw::ActionRow {
+    let subtitle = i18n_fmt(
+        &i18n("Last snapshot: {0} · Next snapshot: {1}"),
+        &[last_snapshot, next_snapshot],
+    );
+    let state = if enabled { i18n("Active") } else { i18n("Off") };
+    status_row(
+        title,
+        &subtitle,
+        &state,
+        if enabled { "success" } else { "warning" },
+    )
+}
+
+fn automatic_time(time: Option<chrono::DateTime<chrono::Utc>>, missing: &str) -> String {
+    time.map(|time| {
+        time.with_timezone(&chrono::Local)
+            .format("%Y-%m-%d %H:%M")
+            .to_string()
+    })
+    .unwrap_or_else(|| missing.to_string())
 }
 
 fn overview_hero(
@@ -915,6 +1013,70 @@ fn build_recovery_points(
                 .build(),
         );
     }
+    if !demo {
+        match client::list_home_snapshots() {
+            Ok(snapshots) if !snapshots.is_empty() => {
+                let heading = timeline_heading(&i18n("User Data Snapshots"), snapshots.len());
+                content.append(&heading.widget);
+                let list = gtk::ListBox::builder()
+                    .selection_mode(gtk::SelectionMode::None)
+                    .css_classes(["boxed-list", "timeline-list"])
+                    .build();
+                for snapshot in snapshots.iter().rev() {
+                    let row = adw::ActionRow::builder()
+                        .title(i18n("Automatic User Data Snapshot"))
+                        .subtitle(snapshot.created_at.format("%Y-%m-%d %H:%M UTC").to_string())
+                        .build();
+                    row.add_prefix(
+                        &gtk::Image::builder()
+                            .icon_name("user-home-symbolic")
+                            .pixel_size(28)
+                            .build(),
+                    );
+                    row.add_suffix(
+                        &gtk::Label::builder()
+                            .label(i18n("Automatic"))
+                            .css_classes(["pill", "caption", "accent"])
+                            .valign(gtk::Align::Center)
+                            .build(),
+                    );
+                    let browse = gtk::Button::builder()
+                        .icon_name("folder-open-symbolic")
+                        .tooltip_text(i18n("Browse snapshot files"))
+                        .valign(gtk::Align::Center)
+                        .css_classes(["flat"])
+                        .build();
+                    let parent = window.clone();
+                    let snapshot_id = snapshot.id.to_string();
+                    browse.connect_clicked(move |_| {
+                        crate::snapshot_browser::present(
+                            &parent,
+                            "home",
+                            &snapshot_id,
+                            &i18n("User Data Snapshot"),
+                        );
+                    });
+                    row.add_suffix(&browse);
+                    list.append(&row);
+                }
+                content.append(&list);
+            }
+            Ok(_) => {}
+            Err(error) => {
+                let warning = adw::ActionRow::builder()
+                    .title(i18n("User data snapshots are unavailable"))
+                    .subtitle(error.to_string())
+                    .build();
+                warning.add_prefix(
+                    &gtk::Image::builder()
+                        .icon_name("dialog-warning-symbolic")
+                        .css_classes(["warning"])
+                        .build(),
+                );
+                content.append(&warning);
+            }
+        }
+    }
     wrap_page(content)
 }
 
@@ -1238,98 +1400,422 @@ fn build_settings(retention_state: &RetentionState, demo: bool) -> adw::Preferen
     page
 }
 
-fn build_automatic_snapshots(parent: &adw::ApplicationWindow, report: &LayoutReport) -> adw::PreferencesPage {
+fn build_automatic_snapshots(
+    parent: &adw::ApplicationWindow,
+    report: &LayoutReport,
+    automatic_status: Option<&anduinos_timeback::automation::AutomaticStatus>,
+) -> adw::PreferencesPage {
     let page = adw::PreferencesPage::builder()
         .title(i18n(concat!("Automatic ", "Snapshots")))
         .icon_name("alarm-symbolic")
         .build();
     let intro = adw::PreferencesGroup::builder()
-        .title(i18n(concat!("Per-volume ", "schedules")))
-        .description(i18n(concat!("Schedules are independent. ", "Suggested presets remain disabled until you enable them.")))
+        .title(i18n("Snapshot Policies"))
+        .description(i18n(
+            "Choose one policy for both volumes, or manage System and User Data independently.",
+        ))
         .build();
     page.add(&intro);
 
-    let automatic_status=client::inspect_automatic().ok();
-    for target in targets::discover_targets(report) {
-        let group = adw::PreferencesGroup::builder()
-            .title(i18n(&target.display_name))
-            .description(target.issue.as_deref().unwrap_or(&target.mount_point))
-            .build();
-        let supported=target.kind == targets::TargetKind::System && target.available && automatic_status.is_some();
-        let enabled = adw::SwitchRow::builder()
-            .title(i18n(concat!("Create snapshots ", "automatically")))
-            .subtitle(if supported {
-                i18n(concat!("Every ", "2 hours; saved system-wide"))
-            } else if target.available && target.kind != targets::TargetKind::System {
-                i18n("Unavailable")
-            } else { i18n(concat!("Unavailable because this is not an independent ", "compatible Btrfs subvolume")) })
-            .sensitive(supported)
-            .active(supported && automatic_status.as_ref().is_some_and(|status| status.policy.enabled))
-            .build();
-        if supported {
-            let policy=automatic_status.as_ref().expect("supported status exists").policy.clone();
-            let reverting=Rc::new(Cell::new(false));
-            let parent=parent.clone();
-            enabled.connect_active_notify(move |row| {
-                if reverting.replace(false) { return; }
-                let mut updated=policy.clone(); updated.enabled=row.is_active();
-                let requested=row.is_active();
-                row.set_sensitive(false);
-                let (sender,receiver)=mpsc::channel();
-                let spawn=std::thread::Builder::new().name("timeback-automatic-policy".into()).spawn(move || {
-                    let result=client::set_automatic_policy(&updated, |_| {}).map_err(|error| error.to_string());
-                    let _=sender.send(result);
-                });
-                if let Err(error)=spawn {
-                    reverting.set(true);
-                    row.set_active(!requested);
-                    row.set_sensitive(true);
-                    show_operation_error(&parent,&format!("Could not start the automatic-policy worker: {error}"));
-                    return;
-                }
-                let row=row.clone();
-                let reverting=reverting.clone();
-                let parent=parent.clone();
-                glib::timeout_add_local(Duration::from_millis(50),move || match receiver.try_recv() {
-                    Ok(Ok(result)) if result.success => { row.set_sensitive(true); glib::ControlFlow::Break }
-                    Ok(Ok(result)) => {
-                        reverting.set(true); row.set_active(!requested); row.set_sensitive(true);
-                        show_operation_error(&parent,&format!("{}: {}",result.error_code,result.message));
-                        glib::ControlFlow::Break
-                    }
-                    Ok(Err(error)) => {
-                        reverting.set(true); row.set_active(!requested); row.set_sensitive(true);
-                        show_operation_error(&parent,&error);
-                        glib::ControlFlow::Break
-                    }
-                    Err(mpsc::TryRecvError::Empty) => glib::ControlFlow::Continue,
-                    Err(mpsc::TryRecvError::Disconnected) => {
-                        reverting.set(true); row.set_active(!requested); row.set_sensitive(true);
-                        show_operation_error(&parent,&i18n("The recovery worker disconnected"));
-                        glib::ControlFlow::Break
-                    }
-                });
-            });
-        }
-        group.add(&enabled);
-        let retention_status = if supported {
-            i18n("Active")
-        } else {
-            i18n("Unavailable")
-        };
-        group.add(&status_row(
-            &i18n(concat!("Tiered ", "retention")),
-            &i18n(concat!("Keep all for 24 hours, then the first daily, weekly, and monthly snapshot; ", "delete after one year")),
-            &retention_status,
-            if supported { "success" } else { "planned-badge" },
+    let Some(status) = automatic_status else {
+        intro.add(&status_row(
+            &i18n("Automatic snapshot service"),
+            &i18n("The system service did not return its automatic snapshot configuration."),
+            &i18n("Unavailable"),
+            "error",
         ));
-        if supported {
-            let status=automatic_status.as_ref().expect("supported status exists");
-            if let Some(error)=&status.last_error { group.add(&status_row(&i18n("Automatic Protection"),error,&i18n("Recovery Operation Failed"),"error")); }
-        }
-        page.add(&group);
+        return page;
+    };
+    let configuration = status.configuration.clone();
+    let targets = targets::discover_targets(report);
+    let system_available = targets
+        .iter()
+        .any(|target| target.kind == targets::TargetKind::System && target.available);
+    let home_available = targets
+        .iter()
+        .any(|target| target.kind == targets::TargetKind::Home && target.available);
+
+    let linked = gtk::CheckButton::builder()
+        .label(i18n(
+            "Keep System and User Data snapshot policies identical",
+        ))
+        .tooltip_text(i18n(
+            "When linking different policies, the current System values become the shared policy.",
+        ))
+        .active(configuration.policies_linked)
+        .build();
+    linked.set_sensitive(system_available && home_available);
+    intro.add(&linked);
+
+    let stack = gtk::Stack::builder()
+        .transition_type(gtk::StackTransitionType::Crossfade)
+        .hexpand(true)
+        .build();
+    let switcher = gtk::StackSwitcher::builder()
+        .stack(&stack)
+        .halign(gtk::Align::Center)
+        .build();
+    intro.add(&switcher);
+
+    let shared_status = TargetAutomaticStatus {
+        last_success: match (status.system.last_success, status.home.last_success) {
+            (Some(system), Some(home)) => Some(system.min(home)),
+            _ => None,
+        },
+        last_attempt: match (status.system.last_attempt, status.home.last_attempt) {
+            (Some(system), Some(home)) => Some(system.min(home)),
+            _ => None,
+        },
+        last_error: status
+            .system
+            .last_error
+            .clone()
+            .or_else(|| status.home.last_error.clone()),
+        next_run: match (status.system.next_run, status.home.next_run) {
+            (Some(system), Some(home)) => Some(system.min(home)),
+            _ => None,
+        },
+    };
+
+    let shared_editor = automatic_policy_editor(
+        parent,
+        &configuration,
+        PolicyEditorMode::Shared,
+        &configuration.system,
+        &shared_status,
+        system_available && home_available,
+    );
+    let system_editor = automatic_policy_editor(
+        parent,
+        &configuration,
+        PolicyEditorMode::System,
+        &configuration.system,
+        &status.system,
+        system_available,
+    );
+    let home_editor = automatic_policy_editor(
+        parent,
+        &configuration,
+        PolicyEditorMode::Home,
+        &configuration.home,
+        &status.home,
+        home_available,
+    );
+    stack.add_titled(&shared_editor, Some("shared"), &i18n("Shared Policy"));
+    stack.add_titled(&system_editor, Some("system"), &i18n("System"));
+    stack.add_titled(&home_editor, Some("home"), &i18n("User Data"));
+
+    if configuration.policies_linked {
+        stack.set_visible_child_name("shared");
+        switcher.set_visible(false);
+    } else {
+        stack.set_visible_child_name("system");
+        switcher.set_visible(true);
     }
+    let stack_for_link = stack.clone();
+    let switcher_for_link = switcher.clone();
+    linked.connect_toggled(move |linked| {
+        if linked.is_active() {
+            stack_for_link.set_visible_child_name("shared");
+            switcher_for_link.set_visible(false);
+        } else {
+            stack_for_link.set_visible_child_name("system");
+            switcher_for_link.set_visible(true);
+        }
+    });
+    intro.add(&stack);
     page
+}
+
+#[derive(Clone, Copy)]
+enum PolicyEditorMode {
+    Shared,
+    System,
+    Home,
+}
+
+fn automatic_policy_editor(
+    parent: &adw::ApplicationWindow,
+    configuration: &AutomaticConfiguration,
+    mode: PolicyEditorMode,
+    policy: &AutomaticPolicy,
+    status: &TargetAutomaticStatus,
+    available: bool,
+) -> gtk::Box {
+    let content = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(18)
+        .margin_top(12)
+        .build();
+    let schedule = adw::PreferencesGroup::builder()
+        .title(match mode {
+            PolicyEditorMode::Shared => i18n("System and User Data"),
+            PolicyEditorMode::System => i18n("System"),
+            PolicyEditorMode::Home => i18n("User Data"),
+        })
+        .description(if available {
+            match mode {
+                PolicyEditorMode::Shared => {
+                    i18n("This policy is applied to both snapshot streams.")
+                }
+                PolicyEditorMode::System => {
+                    i18n("System snapshots can be used for a full system restore.")
+                }
+                PolicyEditorMode::Home => {
+                    i18n("User Data snapshots preserve the independent Home subvolume.")
+                }
+            }
+        } else {
+            i18n("This volume is not an independent compatible Btrfs subvolume.")
+        })
+        .build();
+    let enabled = adw::SwitchRow::builder()
+        .title(i18n("Create snapshots automatically"))
+        .active(policy.enabled)
+        .sensitive(available)
+        .build();
+    schedule.add(&enabled);
+    let interval_adjustment = gtk::Adjustment::new(
+        f64::from(policy.interval_minutes) / 60.0,
+        0.25,
+        720.0,
+        0.25,
+        1.0,
+        0.0,
+    );
+    let interval = adw::SpinRow::builder()
+        .title(i18n("Create every"))
+        .subtitle(i18n("Hours between successful snapshots"))
+        .adjustment(&interval_adjustment)
+        .digits(2)
+        .build();
+    schedule.add(&interval);
+    schedule.add(&automatic_overview_row(
+        &i18n("Schedule status"),
+        &automatic_time(status.last_success, &i18n("Never")),
+        &automatic_time(status.next_run, &i18n("Not scheduled")),
+        policy.enabled,
+    ));
+    content.append(&schedule);
+
+    let retention = adw::PreferencesGroup::builder()
+        .title(i18n("Tiered Retention"))
+        .description(i18n(
+            "Keep recent snapshots densely, then retain the first snapshot in each calendar period.",
+        ))
+        .build();
+    let keep_all = policy_spin_row(
+        &i18n("Keep every snapshot for"),
+        &i18n("Hours"),
+        1.0,
+        8_760.0,
+        policy.keep_all_hours,
+    );
+    let daily = policy_spin_row(
+        &i18n("Keep the first snapshot of each day until"),
+        &i18n("Days after creation"),
+        1.0,
+        36_500.0,
+        policy.keep_daily_days,
+    );
+    let weekly = policy_spin_row(
+        &i18n("Keep the first snapshot of each week until"),
+        &i18n("Days after creation"),
+        1.0,
+        36_500.0,
+        policy.keep_weekly_days,
+    );
+    let monthly = policy_spin_row(
+        &i18n("Keep the first snapshot of each month until"),
+        &i18n("Days after creation"),
+        1.0,
+        36_500.0,
+        policy.keep_monthly_days,
+    );
+    let delete_after = policy_spin_row(
+        &i18n("Delete all snapshots older than"),
+        &i18n("Days after creation"),
+        1.0,
+        36_500.0,
+        policy.delete_after_days,
+    );
+    for row in [&keep_all, &daily, &weekly, &monthly, &delete_after] {
+        row.set_sensitive(available);
+        retention.add(row);
+    }
+    content.append(&retention);
+
+    let actions = gtk::Box::builder()
+        .orientation(gtk::Orientation::Horizontal)
+        .spacing(12)
+        .halign(gtk::Align::End)
+        .build();
+    let reset = gtk::Button::builder()
+        .label(i18n("Restore Recommended Values"))
+        .sensitive(available)
+        .build();
+    let save = gtk::Button::builder()
+        .label(i18n("Save Policy"))
+        .css_classes(["suggested-action"])
+        .sensitive(available)
+        .build();
+    actions.append(&reset);
+    actions.append(&save);
+    content.append(&actions);
+
+    if let Some(error) = &status.last_error {
+        content.append(&status_row(
+            &i18n("Last automatic operation"),
+            error,
+            &i18n("Failed"),
+            "error",
+        ));
+    }
+
+    let mut preset = match mode {
+        PolicyEditorMode::Home => AutomaticPolicy::home_preset(),
+        PolicyEditorMode::Shared | PolicyEditorMode::System => AutomaticPolicy::system_preset(),
+    };
+    // Resetting retention values must not unexpectedly turn protection off.
+    preset.enabled = policy.enabled;
+    {
+        let enabled = enabled.clone();
+        let interval = interval.clone();
+        let keep_all = keep_all.clone();
+        let daily = daily.clone();
+        let weekly = weekly.clone();
+        let monthly = monthly.clone();
+        let delete_after = delete_after.clone();
+        reset.connect_clicked(move |_| {
+            enabled.set_active(preset.enabled);
+            interval.set_value(f64::from(preset.interval_minutes) / 60.0);
+            keep_all.set_value(f64::from(preset.keep_all_hours));
+            daily.set_value(f64::from(preset.keep_daily_days));
+            weekly.set_value(f64::from(preset.keep_weekly_days));
+            monthly.set_value(f64::from(preset.keep_monthly_days));
+            delete_after.set_value(f64::from(preset.delete_after_days));
+        });
+    }
+
+    let parent = parent.clone();
+    let base = configuration.clone();
+    save.connect_clicked(move |button| {
+        let updated_policy = AutomaticPolicy {
+            enabled: enabled.is_active(),
+            interval_minutes: (interval.value() * 60.0).round() as u32,
+            keep_all_hours: keep_all.value() as u32,
+            keep_daily_days: daily.value() as u32,
+            keep_weekly_days: weekly.value() as u32,
+            keep_monthly_days: monthly.value() as u32,
+            delete_after_days: delete_after.value() as u32,
+        };
+        if updated_policy.validate().is_err() {
+            show_policy_error(
+                &parent,
+                &i18n(
+                    "Retention periods must progress from keep-all to daily, weekly, monthly, and final deletion.",
+                ),
+            );
+            return;
+        }
+        let mut updated = base.clone();
+        match mode {
+            PolicyEditorMode::Shared => {
+                updated.policies_linked = true;
+                updated.system = updated_policy.clone();
+                updated.home = updated_policy;
+            }
+            PolicyEditorMode::System => {
+                updated.policies_linked = false;
+                updated.system = updated_policy;
+            }
+            PolicyEditorMode::Home => {
+                updated.policies_linked = false;
+                updated.home = updated_policy;
+            }
+        }
+        save_automatic_configuration(&parent, button, updated);
+    });
+    content
+}
+
+fn policy_spin_row(
+    title: &str,
+    subtitle: &str,
+    minimum: f64,
+    maximum: f64,
+    value: u32,
+) -> adw::SpinRow {
+    let adjustment = gtk::Adjustment::new(f64::from(value), minimum, maximum, 1.0, 10.0, 0.0);
+    adw::SpinRow::builder()
+        .title(title)
+        .subtitle(subtitle)
+        .adjustment(&adjustment)
+        .digits(0)
+        .build()
+}
+
+fn save_automatic_configuration(
+    parent: &adw::ApplicationWindow,
+    button: &gtk::Button,
+    configuration: AutomaticConfiguration,
+) {
+    button.set_sensitive(false);
+    let (sender, receiver) = mpsc::channel();
+    let spawn = std::thread::Builder::new()
+        .name("timeback-automatic-configuration".into())
+        .spawn(move || {
+            let result = client::set_automatic_configuration(&configuration, |_| {})
+                .map_err(|error| error.to_string());
+            let _ = sender.send(result);
+        });
+    if let Err(error) = spawn {
+        button.set_sensitive(true);
+        show_operation_error(
+            parent,
+            &format!("Could not start the automatic-policy worker: {error}"),
+        );
+        return;
+    }
+    let parent = parent.clone();
+    let button = button.clone();
+    glib::timeout_add_local(Duration::from_millis(50), move || {
+        match receiver.try_recv() {
+            Ok(Ok(result)) if result.success => {
+                reload_window(&parent, Some(&i18n("Automatic snapshot policies saved")));
+                glib::ControlFlow::Break
+            }
+            Ok(Ok(result)) => {
+                button.set_sensitive(true);
+                show_operation_error(
+                    &parent,
+                    &format!("{}: {}", result.error_code, result.message),
+                );
+                glib::ControlFlow::Break
+            }
+            Ok(Err(error)) => {
+                button.set_sensitive(true);
+                show_operation_error(&parent, &error);
+                glib::ControlFlow::Break
+            }
+            Err(mpsc::TryRecvError::Empty) => glib::ControlFlow::Continue,
+            Err(mpsc::TryRecvError::Disconnected) => {
+                button.set_sensitive(true);
+                show_operation_error(&parent, &i18n("The recovery worker disconnected"));
+                glib::ControlFlow::Break
+            }
+        }
+    });
+}
+
+fn show_policy_error(parent: &adw::ApplicationWindow, message: &str) {
+    let dialog = adw::AlertDialog::builder()
+        .heading(i18n("Check Snapshot Policy"))
+        .body(message)
+        .close_response("close")
+        .build();
+    dialog.add_response("close", &i18n("Close"));
+    dialog.present(Some(parent.upcast_ref::<gtk::Widget>()));
 }
 
 fn status_row(title: &str, subtitle: &str, status: &str, style: &str) -> adw::ActionRow {
@@ -1653,6 +2139,29 @@ fn interactive_deployment_row(
     deployment: &DeploymentRecord,
 ) -> adw::ActionRow {
     let row = deployment_row(deployment, false);
+    if deployment.snapshot_uuid.is_some()
+        && deployment.state != DeploymentState::Creating
+        && deployment.state != DeploymentState::Deleting
+    {
+        let browse = gtk::Button::builder()
+            .icon_name("folder-open-symbolic")
+            .tooltip_text(i18n("Browse snapshot files"))
+            .valign(gtk::Align::Center)
+            .css_classes(["flat"])
+            .build();
+        let parent_for_browse = parent.clone();
+        let id_for_browse = deployment.id.to_string();
+        let title_for_browse = deployment.title.clone();
+        browse.connect_clicked(move |_| {
+            crate::snapshot_browser::present(
+                &parent_for_browse,
+                "system",
+                &id_for_browse,
+                &title_for_browse,
+            );
+        });
+        row.add_suffix(&browse);
+    }
     if deployment.state == DeploymentState::Ready && deployment.can_restore() {
         let restore = gtk::Button::builder()
             .icon_name("document-revert-symbolic")
@@ -2047,14 +2556,22 @@ fn deployment_row(deployment: &DeploymentRecord, activatable: bool) -> adw::Acti
         deployment_kind(deployment.kind),
         kernel
     );
-    recovery_row(
+    let row = recovery_row(
         deployment_icon(deployment),
         &deployment.title,
         &subtitle,
         &badge,
         badge_class,
         activatable,
-    )
+    );
+    let source = gtk::Label::builder()
+        .label(deployment_source(deployment.kind))
+        .css_classes(["pill", "caption", "neutral"])
+        .valign(gtk::Align::Center)
+        .tooltip_text(i18n("Snapshot source"))
+        .build();
+    row.add_suffix(&source);
+    row
 }
 
 fn deployment_time(deployment: &DeploymentRecord) -> String {
@@ -2072,6 +2589,16 @@ fn deployment_kind(kind: DeploymentKind) -> String {
         DeploymentKind::AptPre => i18n("Before update"),
         DeploymentKind::AptPost => i18n("After update"),
         DeploymentKind::PreRollback => i18n("Before rollback"),
+    }
+}
+
+fn deployment_source(kind: DeploymentKind) -> String {
+    match kind {
+        DeploymentKind::Manual => i18n("Manual snapshot"),
+        DeploymentKind::Factory => i18n("Factory snapshot"),
+        DeploymentKind::Automatic => i18n("Automatic snapshot"),
+        DeploymentKind::AptPre | DeploymentKind::AptPost => i18n("Update snapshot"),
+        DeploymentKind::PreRollback => i18n("Restore safety snapshot"),
     }
 }
 

@@ -22,6 +22,34 @@ def load_package_verifier():
 
 
 class PackageContractTests(unittest.TestCase):
+    def test_appstream_publishes_the_live_installer_as_an_application(self):
+        root = ET.parse(ROOT / "anduinos-installer-beta.aosproj").getroot()
+        application = root.find(".//AppStreamApplication")
+        self.assertIsNotNone(application)
+        self.assertEqual(
+            application.get("Include"),
+            "assets/anduinos-installer-beta.desktop",
+        )
+        self.assertEqual(
+            application.get("Icon"),
+            "assets/anduinos-installer-beta.svg",
+        )
+        screenshots = root.findall(".//AppStreamScreenshot")
+        self.assertEqual(
+            {screenshot.get("Include") for screenshot in screenshots},
+            {"screenshots/storage.png", "screenshots/welcome.png"},
+        )
+        self.assertEqual(
+            [
+                screenshot.get("Include")
+                for screenshot in screenshots
+                if screenshot.get("Default") == "true"
+            ],
+            ["screenshots/storage.png"],
+        )
+        for screenshot in screenshots:
+            self.assertTrue((ROOT / screenshot.get("Include")).is_file())
+
     def test_manifest_installs_the_source_tree_and_runtime_dependencies(self):
         root = ET.parse(ROOT / "anduinos-installer-beta.aosproj").getroot()
         folders = {
@@ -57,6 +85,8 @@ class PackageContractTests(unittest.TestCase):
                 "parted",
                 "dosfstools",
                 "efibootmgr",
+                "gnome-control-center",
+                "network-manager",
                 "util-linux",
                 "polkitd",
             }

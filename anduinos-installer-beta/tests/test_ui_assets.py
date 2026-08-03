@@ -12,6 +12,7 @@ class InstallerVisualAssetTests(unittest.TestCase):
         expected = {
             "welcome.svg",
             "language.svg",
+            "network.svg",
             "keyboard.svg",
             "updates.svg",
             "disk.svg",
@@ -78,6 +79,16 @@ class InstallerVisualAssetTests(unittest.TestCase):
             "Only this disk can be partitioned or formatted",
             pages,
         )
+
+    def test_storage_method_header_carries_disk_info_without_target_badge(self):
+        pages = (ROOT / "src/pages.py").read_text()
+        method_page = pages.split("def build_storage_strategy_page", 1)[1]
+        method_page = method_page.split("def ", 1)[0]
+        self.assertIn('shared.get("disk_model", "?")', method_page)
+        self.assertIn('shared.get("disk_size", "?")', method_page)
+        self.assertIn('shared.get("disk", "?")', method_page)
+        self.assertNotIn("target_box", method_page)
+        self.assertNotIn("Target:", method_page)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 mod application;
 mod config;
 mod i18n;
+mod snapshot_browser;
 mod window;
 
 use adw::prelude::*;

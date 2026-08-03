@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-timeback-machine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-01 02:58+0000\n"
+"POT-Creation-Date: 2026-08-02 17:52+0000\n"
 "PO-Revision-Date: 2026-08-01 02:58+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -44,8 +44,18 @@ msgstr "系統變更的清晰歷史記錄"
 msgid "A compatible Btrfs layout is required"
 msgstr "需要相容的 Btrfs 配置"
 
+msgid ""
+"A one-time recovery boot will be prepared. Nothing changes until you restart."
+msgstr ""
+"A one-time recovery boot will be prepared. Nothing changes until you restart."
+
 msgid "A protected safety point will be created before restart."
 msgstr "重新啟動前將建立受保護的安全點。"
+
+msgid ""
+"APT-managed package changes are surrounded by fail-open recovery points."
+msgstr ""
+"APT-managed package changes are surrounded by fail-open recovery points."
 
 msgid "About Timeback Machine"
 msgstr "關於 Timeback Machine"
@@ -79,6 +89,21 @@ msgstr "自動"
 
 msgid "Automatic Protection"
 msgstr "自動保護"
+
+msgid "Automatic snapshot"
+msgstr "Automatic snapshot"
+
+msgid "Automatic snapshot policies saved"
+msgstr "Automatic snapshot policies saved"
+
+msgid "Automatic snapshot service"
+msgstr "Automatic snapshot service"
+
+msgid "Automatic snapshot status could not be loaded."
+msgstr "Automatic snapshot status could not be loaded."
+
+msgid "Automatic snapshots"
+msgstr "Automatic snapshots"
 
 msgid "Available on Btrfs installations"
 msgstr "適用於 Btrfs 安裝"
@@ -134,6 +159,23 @@ msgstr "正在取消系統還原"
 msgid "Capacity"
 msgstr "容量"
 
+msgid "Check Snapshot Policy"
+msgstr "Check Snapshot Policy"
+
+msgid ""
+"Choose one policy for both volumes, or manage System and User Data "
+"independently."
+msgstr ""
+"Choose one policy for both volumes, or manage System and User Data "
+"independently."
+
+msgid ""
+"Cleanup runs after package transactions and rechecks free space after every "
+"deletion."
+msgstr ""
+"Cleanup runs after package transactions and rechecks free space after every "
+"deletion."
+
 msgid "Close"
 msgstr "關閉"
 
@@ -155,6 +197,22 @@ msgstr "建立還原點"
 msgid "Create a recovery point before APT changes packages"
 msgstr "在 APT 變更套件前建立還原點"
 
+msgid ""
+"Create a recovery point before a system change so you can return to a known "
+"state."
+msgstr ""
+"Create a recovery point before a system change so you can return to a known "
+"state."
+
+msgid "Create every"
+msgstr "Create every"
+
+msgid "Create recovery points and safely return AnduinOS to an earlier state."
+msgstr "Create recovery points and safely return AnduinOS to an earlier state."
+
+msgid "Create snapshots automatically"
+msgstr "Create snapshots automatically"
+
 msgid "Created before a manual system change"
 msgstr "在手動系統變更前建立"
 
@@ -167,11 +225,17 @@ msgstr "正在建立還原點"
 msgid "Current"
 msgstr "目前"
 
+msgid "Days after creation"
+msgstr "Days after creation"
+
 msgid "Delete"
 msgstr "刪除"
 
 msgid "Delete Recovery Point?"
 msgstr "刪除還原點？"
+
+msgid "Delete all snapshots older than"
+msgstr "Delete all snapshots older than"
 
 msgid "Delete recovery point"
 msgstr "刪除還原點"
@@ -209,11 +273,23 @@ msgstr "預估專屬資料"
 msgid "Factory"
 msgstr "原廠"
 
+msgid "Factory snapshot"
+msgstr "Factory snapshot"
+
+msgid "Failed"
+msgstr "Failed"
+
 msgid "Filesystem"
 msgstr "檔案系統"
 
 msgid "Healthy"
 msgstr "健康"
+
+msgid "Hours"
+msgstr "Hours"
+
+msgid "Hours between successful snapshots"
+msgstr "Hours between successful snapshots"
 
 msgid "Incomplete"
 msgstr "不完整"
@@ -224,17 +300,48 @@ msgstr "完整性可按需驗證"
 msgid "Just now"
 msgstr "剛剛"
 
+msgid "Keep System and User Data snapshot policies identical"
+msgstr "Keep System and User Data snapshot policies identical"
+
 msgid "Keep a verified post-update deployment"
 msgstr "保留一個經過驗證的更新後部署版本"
 
 msgid "Keep at least two update pairs and one known-good recovery point"
 msgstr "至少保留兩組更新配對和一個已知良好的還原點"
 
+msgid "Keep every snapshot for"
+msgstr "Keep every snapshot for"
+
+msgid ""
+"Keep recent snapshots densely, then retain the first snapshot in each "
+"calendar period."
+msgstr ""
+"Keep recent snapshots densely, then retain the first snapshot in each "
+"calendar period."
+
+msgid "Keep the first snapshot of each day until"
+msgstr "Keep the first snapshot of each day until"
+
+msgid "Keep the first snapshot of each month until"
+msgstr "Keep the first snapshot of each month until"
+
+msgid "Keep the first snapshot of each week until"
+msgstr "Keep the first snapshot of each week until"
+
+msgid "Keep this window open. Recovery metadata is committed atomically."
+msgstr "Keep this window open. Recovery metadata is committed atomically."
+
 msgid "Keep until I delete it"
 msgstr "保留直到我刪除它"
 
 msgid "Kernel and initramfs"
 msgstr "核心與 initramfs"
+
+msgid "Last automatic operation"
+msgstr "Last automatic operation"
+
+msgid "Last snapshot: {0} · Next snapshot: {1}"
+msgstr "Last snapshot: {0} · Next snapshot: {1}"
 
 msgid "Latest point"
 msgstr "最新點"
@@ -251,6 +358,9 @@ msgstr "手動"
 msgid "Manual recovery point"
 msgstr "手動還原點"
 
+msgid "Manual snapshot"
+msgstr "Manual snapshot"
+
 msgid "Measurement pending"
 msgstr "測量待處理"
 
@@ -260,14 +370,29 @@ msgstr "早晨檢查點"
 msgid "Name"
 msgstr "名稱"
 
+msgid "Never"
+msgstr "Never"
+
 msgid "Next cleanup"
 msgstr "下次清理"
+
+msgid "No complete shared snapshot yet"
+msgstr "No complete shared snapshot yet"
 
 msgid "No recovery points yet"
 msgstr "尚無還原點"
 
+msgid "No snapshot can be created while demo data is active."
+msgstr "No snapshot can be created while demo data is active."
+
 msgid "Not created yet"
 msgstr "尚未建立"
+
+msgid "Not scheduled"
+msgstr "Not scheduled"
+
+msgid "Off"
+msgstr "Off"
 
 msgid "Only eligible automatic package recovery points are considered"
 msgstr "僅考慮符合資格的自動套件還原點"
@@ -292,6 +417,9 @@ msgstr "固定還原點"
 
 msgid "Pinned"
 msgstr "已固定"
+
+msgid "Pinned recovery points are never cleaned automatically"
+msgstr "Pinned recovery points are never cleaned automatically"
 
 msgid "Pinning Recovery Point"
 msgstr "正在固定還原點"
@@ -344,7 +472,9 @@ msgstr "ext4 上的還原點儲存空間暫時不可用。"
 msgid "Recovery points are unavailable"
 msgstr "還原點不可用"
 
-msgid "Recovery points protect the operating system while your personal files stay in the present."
+msgid ""
+"Recovery points protect the operating system while your personal files stay "
+"in the present."
 msgstr "還原點保護作業系統，而您的個人檔案則保留在當前狀態。"
 
 msgid "Recovery service unavailable"
@@ -362,6 +492,19 @@ msgstr "稍後重新啟動"
 msgid "Restart Now"
 msgstr "立即重新啟動"
 
+msgid ""
+"Restart to enter the one-time recovery environment. You can cancel from the "
+"recovery point before restarting."
+msgstr ""
+"Restart to enter the one-time recovery environment. You can cancel from the "
+"recovery point before restarting."
+
+msgid "Restore Recommended Values"
+msgstr "Restore Recommended Values"
+
+msgid "Restore safety snapshot"
+msgstr "Restore safety snapshot"
+
 msgid "Restore to This Point"
 msgstr "還原至此點"
 
@@ -373,6 +516,13 @@ msgstr "還原「{0}」？"
 
 msgid "Retention"
 msgstr "保留策略"
+
+msgid ""
+"Retention periods must progress from keep-all to daily, weekly, monthly, and "
+"final deletion."
+msgstr ""
+"Retention periods must progress from keep-all to daily, weekly, monthly, and "
+"final deletion."
 
 msgid "Retention status"
 msgstr "保留狀態"
@@ -386,11 +536,32 @@ msgstr "已復原"
 msgid "Root filesystem"
 msgstr "根檔案系統"
 
+msgid "Save Policy"
+msgstr "Save Policy"
+
+msgid "Schedule status"
+msgstr "Schedule status"
+
+msgid "See when your data was last captured and when protection runs next."
+msgstr "See when your data was last captured and when protection runs next."
+
 msgid "Settings"
 msgstr "設定"
 
+msgid "Shared Btrfs extents make per-recovery-point sizes approximate."
+msgstr "Shared Btrfs extents make per-recovery-point sizes approximate."
+
+msgid "Shared Policy"
+msgstr "Shared Policy"
+
 msgid "Show navigation"
 msgstr "顯示導覽"
+
+msgid "Snapshot Policies"
+msgstr "Snapshot Policies"
+
+msgid "Snapshot source"
+msgstr "Snapshot source"
 
 msgid "Space is shared between the system and recovery points."
 msgstr "空間由系統和還原點共用。"
@@ -401,6 +572,9 @@ msgstr "儲存空間"
 msgid "Storage layout inspected"
 msgstr "已檢查儲存配置"
 
+msgid "System"
+msgstr "System"
+
 msgid "System Recovery"
 msgstr "系統還原"
 
@@ -409,6 +583,9 @@ msgstr "系統還原活動"
 
 msgid "System Restore Is Ready"
 msgstr "系統還原就緒"
+
+msgid "System and User Data"
+msgstr "System and User Data"
 
 msgid "System changes"
 msgstr "系統變更"
@@ -419,6 +596,9 @@ msgstr "系統還原"
 msgid "System recovery is unavailable"
 msgstr "系統還原不可用"
 
+msgid "System snapshots can be used for a full system restore."
+msgstr "System snapshots can be used for a full system restore."
+
 msgid "System software and settings will return to this point."
 msgstr "系統軟體和設定將恢復至此點。"
 
@@ -428,29 +608,78 @@ msgstr "暫時不可用"
 msgid "The current system will be protected before restart."
 msgstr "重新啟動前，目前系統將受到保護。"
 
+msgid ""
+"The operating system will be captured without changing personal files, logs, "
+"containers, or virtual machines."
+msgstr ""
+"The operating system will be captured without changing personal files, logs, "
+"containers, or virtual machines."
+
+msgid "The recovery service could not be reached; no system data was changed"
+msgstr "The recovery service could not be reached; no system data was changed"
+
 msgid "The recovery service is unavailable"
 msgstr "還原服務不可用"
 
 msgid "The recovery worker disconnected"
 msgstr "還原工作程序已斷開連線"
 
-msgid "The restored system must boot successfully or the previous system returns automatically."
+msgid ""
+"The restored system must boot successfully or the previous system returns "
+"automatically."
 msgstr "還原後的系統必須成功開機，否則將自動恢復到先前的系統。"
 
 msgid "The system is ready for the manual recovery milestone."
 msgstr "系統已準備好進行手動還原里程碑。"
 
+msgid "The system service did not return its automatic snapshot configuration."
+msgstr ""
+"The system service did not return its automatic snapshot configuration."
+
 msgid "The system storage layout could not be inspected"
 msgstr "無法檢查系統儲存配置"
 
-msgid "This AnduinOS installation uses ext4. Timeback Machine recovery points currently require Btrfs."
+msgid ""
+"This AnduinOS installation uses ext4. Timeback Machine recovery points "
+"currently require Btrfs."
 msgstr "此 AnduinOS 安裝使用 ext4。Timeback Machine 還原點目前需要 Btrfs。"
 
-msgid "This installation does not use the complete AnduinOS Btrfs recovery layout."
+msgid ""
+"This installation does not use the complete AnduinOS Btrfs recovery layout."
 msgstr "此安裝未使用完整的 AnduinOS Btrfs 還原配置。"
+
+msgid ""
+"This installation uses ext4. Nothing is wrong with your system, but recovery "
+"points currently require Btrfs."
+msgstr ""
+"This installation uses ext4. Nothing is wrong with your system, but recovery "
+"points currently require Btrfs."
+
+msgid ""
+"This installation uses ext4. Timeback Machine recovery points currently "
+"require Btrfs."
+msgstr ""
+"This installation uses ext4. Timeback Machine recovery points currently "
+"require Btrfs."
+
+msgid "This policy is applied to both snapshot streams."
+msgstr "This policy is applied to both snapshot streams."
+
+msgid "This volume is not an independent compatible Btrfs subvolume."
+msgstr "This volume is not an independent compatible Btrfs subvolume."
+
+msgid "Tiered Retention"
+msgstr "Tiered Retention"
 
 msgid "Timeback Machine"
 msgstr "時光回溯機"
+
+msgid ""
+"Timeback Machine currently requires an AnduinOS installation using Btrfs. "
+"This system uses {0}."
+msgstr ""
+"Timeback Machine currently requires an AnduinOS installation using Btrfs. "
+"This system uses {0}."
 
 msgid "Timeback Machine has not changed this installation."
 msgstr "Timeback Machine 尚未變更此安裝。"
@@ -464,6 +693,9 @@ msgstr "Timeback Machine 需要 Btrfs；此系統使用 {0}"
 msgid "Today"
 msgstr "今天"
 
+msgid "Today, 14:00"
+msgstr "Today, 14:00"
+
 msgid "Today, 14:27 · 12 packages changed"
 msgstr "今天，14:27 · 12 個套件已變更"
 
@@ -472,6 +704,9 @@ msgstr "今天，14:32"
 
 msgid "Today, 14:32 · Kernel 7.0.0-28"
 msgstr "今天，14:32 · 核心 7.0.0-28"
+
+msgid "Today, 16:00"
+msgstr "Today, 16:00"
 
 msgid "Unavailable"
 msgstr "不可用"
@@ -488,6 +723,15 @@ msgstr "正在取消固定還原點"
 msgid "Unverified"
 msgstr "未驗證"
 
+msgid "Update snapshot"
+msgstr "Update snapshot"
+
+msgid "User Data"
+msgstr "User Data"
+
+msgid "User Data snapshots preserve the independent Home subvolume."
+msgstr "User Data snapshots preserve the independent Home subvolume."
+
 msgid "Verified"
 msgstr "已驗證"
 
@@ -502,6 +746,13 @@ msgstr "等待中"
 
 msgid "Waiting for authorization…"
 msgstr "等待授權…"
+
+msgid ""
+"When linking different policies, the current System values become the shared "
+"policy."
+msgstr ""
+"When linking different policies, the current System values become the shared "
+"policy."
 
 msgid "Yesterday"
 msgstr "昨天"
@@ -526,3 +777,102 @@ msgstr "{0} 個點"
 
 msgid "—"
 msgstr "—"
+
+msgid ""
+"“{0}” will be permanently removed. The running system and personal files "
+"will not change."
+msgstr ""
+"“{0}” will be permanently removed. The running system and personal files "
+"will not change."
+
+#: src/snapshot_browser.rs:38
+msgid "Snapshot Files"
+msgstr "Snapshot Files"
+
+#: src/snapshot_browser.rs:61
+msgid "Parent Folder"
+msgstr "Parent Folder"
+
+#: src/snapshot_browser.rs:66
+msgid "Show Hidden Files"
+msgstr "Show Hidden Files"
+
+#: src/snapshot_browser.rs:74
+msgid "Read-only snapshot"
+msgstr "Read-only snapshot"
+
+#: src/snapshot_browser.rs:154
+msgid "Could Not Open Folder"
+msgstr "Could Not Open Folder"
+
+#: src/snapshot_browser.rs:176
+msgid "This Folder Is Empty"
+msgstr "This Folder Is Empty"
+
+#: src/snapshot_browser.rs:177
+msgid "There are no files to display."
+msgstr "There are no files to display."
+
+#: src/snapshot_browser.rs:182
+msgid "This folder is very large; only the first 1,000 items are shown."
+msgstr "This folder is very large; only the first 1,000 items are shown."
+
+#: src/snapshot_browser.rs:221
+msgid "Copy Out…"
+msgstr "Copy Out…"
+
+#: src/snapshot_browser.rs:236
+msgid "Not copyable"
+msgstr "Not copyable"
+
+#: src/snapshot_browser.rs:257
+msgid "Copy File Out of Snapshot"
+msgstr "Copy File Out of Snapshot"
+
+#: src/snapshot_browser.rs:259
+msgid "Copy"
+msgstr "Copy"
+
+#: src/snapshot_browser.rs:271
+msgid "Choose a location on this computer."
+msgstr "Choose a location on this computer."
+
+#: src/snapshot_browser.rs:298
+msgid "File copied successfully"
+msgstr "File copied successfully"
+
+#: src/snapshot_browser.rs:308
+msgid "Could not copy the file"
+msgstr "Could not copy the file"
+
+#: src/snapshot_browser.rs:332
+msgid "Folder"
+msgstr "Folder"
+
+#: src/snapshot_browser.rs:334
+msgid "Symbolic link — not followed for safety"
+msgstr "Symbolic link — not followed for safety"
+
+#: src/snapshot_browser.rs:335
+msgid "Special file — cannot be copied"
+msgstr "Special file — cannot be copied"
+
+#: src/window.rs:1019
+msgid "User Data Snapshots"
+msgstr "User Data Snapshots"
+
+#: src/window.rs:1027
+msgid "Automatic User Data Snapshot"
+msgstr "Automatic User Data Snapshot"
+
+#: src/window.rs:1045 src/window.rs:2148
+msgid "Browse snapshot files"
+msgstr "Browse snapshot files"
+
+#: src/window.rs:1056
+msgid "User Data Snapshot"
+msgstr "User Data Snapshot"
+
+#: src/window.rs:1067
+msgid "User data snapshots are unavailable"
+msgstr "User data snapshots are unavailable"

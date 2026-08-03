@@ -10,8 +10,9 @@ release-one Btrfs storage ABI or turns recovery points into backups.
 ## Automatic maintenance
 
 The post-APT hook remains the fastest cleanup path after package activity. A
-persistent systemd timer additionally runs every six hours, with a randomized
-delay, so space pressure caused by unrelated workloads is eventually noticed.
+persistent systemd timer additionally checks every fifteen minutes, with a
+randomized delay, so due System or Home snapshots and space pressure caused by
+unrelated workloads are noticed promptly.
 The timer invokes a dedicated root helper rather than the graphical D-Bus API.
 It therefore does not create an interactive Polkit request in the background.
 

@@ -194,10 +194,23 @@ impl<R: CommandRunner> OperationEngine<R> {
         )
     }
 
-    pub fn create_automatic<F>(&self, layout: &LayoutReport, progress: F) -> Result<DeploymentRecord, OperationError>
-    where F: FnMut(OperationPhase, f64, &str),
+    pub fn create_automatic<F>(
+        &self,
+        layout: &LayoutReport,
+        progress: F,
+    ) -> Result<DeploymentRecord, OperationError>
+    where
+        F: FnMut(OperationPhase, f64, &str),
     {
-        self.create_snapshot(layout, "Scheduled system snapshot", "Created by the automatic snapshot schedule", false, DeploymentKind::Automatic, DeploymentState::Ready, progress)
+        self.create_snapshot(
+            layout,
+            "Scheduled system snapshot",
+            "Created by the automatic snapshot schedule",
+            false,
+            DeploymentKind::Automatic,
+            DeploymentState::Ready,
+            progress,
+        )
     }
 
     pub fn create_pre_rollback<F>(

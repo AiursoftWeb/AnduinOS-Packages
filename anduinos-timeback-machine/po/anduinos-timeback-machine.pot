@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR AnduinOS Team
+# This file is distributed under the same license as the anduinos-timeback-machine package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: anduinos-timeback-machine\n"
+"Project-Id-Version: anduinos-timeback-machine 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-01 02:58+0000\n"
+"POT-Creation-Date: 2026-08-02 19:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,512 +17,1080 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "09:10 · Manual recovery point"
-msgstr ""
-
-msgid "14:27 · Automatic · 12 packages changed"
-msgstr ""
-
-msgid "14:32 · Current system · Kernel 7.0.0-28"
-msgstr ""
-
-msgid "20:41 · Manual · Kernel 7.0.0-27"
-msgstr ""
-
-msgid "42.6 GB used"
-msgstr ""
-
-msgid "77.4 GB available"
-msgstr ""
-
-msgid "8.4 GB"
-msgstr ""
-
-msgid "A clear history of system changes"
-msgstr ""
-
-msgid "A compatible Btrfs layout is required"
-msgstr ""
-
-msgid "A protected safety point will be created before restart."
-msgstr ""
-
-msgid "About Timeback Machine"
-msgstr ""
-
-msgid "Active"
-msgstr ""
-
-msgid "Activity"
-msgstr ""
-
-msgid "After successful updates"
-msgstr ""
-
-msgid "After system update"
-msgstr ""
-
-msgid "After update"
-msgstr ""
-
-msgid "All"
-msgstr ""
-
-msgid "AnduinOS Team"
-msgstr ""
-
+#: src/application.rs:69 src/window.rs:99
 msgid "AnduinOS Timeback Machine"
 msgstr ""
 
-msgid "Automatic"
+#: src/application.rs:71
+msgid "AnduinOS Team"
 msgstr ""
 
-msgid "Automatic Protection"
+#: src/application.rs:74
+msgid "Create recovery points and safely return AnduinOS to an earlier state."
 msgstr ""
 
-msgid "Available on Btrfs installations"
+#: src/snapshot_browser.rs:38
+msgid "Snapshot Files"
 msgstr ""
 
-msgid "Balanced retention"
+#: src/snapshot_browser.rs:61
+msgid "Parent Folder"
 msgstr ""
 
-msgid "Before graphics driver"
+#: src/snapshot_browser.rs:66
+msgid "Show Hidden Files"
 msgstr ""
 
-msgid "Before rollback"
+#: src/snapshot_browser.rs:74
+msgid "Read-only snapshot"
 msgstr ""
 
-msgid "Before system update"
+#: src/snapshot_browser.rs:154
+msgid "Could Not Open Folder"
 msgstr ""
 
-msgid "Before system updates"
+#: src/snapshot_browser.rs:176
+msgid "This Folder Is Empty"
 msgstr ""
 
-msgid "Before update"
+#: src/snapshot_browser.rs:177
+msgid "There are no files to display."
 msgstr ""
 
-msgid "Boot safety"
+#: src/snapshot_browser.rs:182
+msgid "This folder is very large; only the first 1,000 items are shown."
 msgstr ""
 
-msgid "Broken"
+#: src/snapshot_browser.rs:221
+msgid "Copy Out…"
 msgstr ""
 
-msgid "Btrfs Storage"
+#: src/snapshot_browser.rs:236
+msgid "Not copyable"
 msgstr ""
 
-msgid "Btrfs detected, but the AnduinOS recovery layout is incomplete"
+#: src/snapshot_browser.rs:257
+msgid "Copy File Out of Snapshot"
 msgstr ""
 
-msgid "Btrfs free-space reserve"
+#: src/snapshot_browser.rs:259
+msgid "Copy"
 msgstr ""
 
-msgid "Btrfs layout required"
+#: src/snapshot_browser.rs:271
+msgid "Choose a location on this computer."
 msgstr ""
 
-msgid "Btrfs recovery is available"
+#: src/snapshot_browser.rs:298
+msgid "File copied successfully"
 msgstr ""
 
-msgid "Cancel"
+#: src/snapshot_browser.rs:308
+msgid "Could not copy the file"
 msgstr ""
 
-msgid "Cancel pending system restore"
+#: src/snapshot_browser.rs:332
+msgid "Folder"
 msgstr ""
 
-msgid "Cancelling System Restore"
+#: src/snapshot_browser.rs:334
+msgid "Symbolic link — not followed for safety"
 msgstr ""
 
-msgid "Capacity"
+#: src/snapshot_browser.rs:335
+msgid "Special file — cannot be copied"
 msgstr ""
 
-msgid "Close"
-msgstr ""
-
-msgid "Compatible AnduinOS Btrfs layout found"
-msgstr ""
-
-msgid "Confirming"
-msgstr ""
-
-msgid "Could not request a restart: {0}"
-msgstr ""
-
-msgid "Create"
-msgstr ""
-
-msgid "Create Recovery Point"
-msgstr ""
-
-msgid "Create a recovery point before APT changes packages"
-msgstr ""
-
-msgid "Created before a manual system change"
-msgstr ""
-
-msgid "Creating"
-msgstr ""
-
-msgid "Creating Recovery Point"
-msgstr ""
-
-msgid "Current"
-msgstr ""
-
-msgid "Delete"
-msgstr ""
-
-msgid "Delete Recovery Point?"
-msgstr ""
-
-msgid "Delete recovery point"
-msgstr ""
-
-msgid "Deleting"
-msgstr ""
-
-msgid "Deleting Recovery Point"
-msgstr ""
-
-msgid "Deployment metadata"
-msgstr ""
-
-msgid "Description"
-msgstr ""
-
-msgid "Design preview"
-msgstr ""
-
-msgid "Design preview — no system changes can be made"
-msgstr ""
-
-msgid "Detected locally"
-msgstr ""
-
-msgid "Device"
-msgstr ""
-
-msgid "Disabled"
-msgstr ""
-
-msgid "Estimated exclusive data"
-msgstr ""
-
-msgid "Factory"
-msgstr ""
-
-msgid "Filesystem"
-msgstr ""
-
-msgid "Healthy"
-msgstr ""
-
-msgid "Incomplete"
-msgstr ""
-
-msgid "Integrity can be verified on demand"
-msgstr ""
-
-msgid "Just now"
-msgstr ""
-
-msgid "Keep a verified post-update deployment"
-msgstr ""
-
-msgid "Keep at least two update pairs and one known-good recovery point"
-msgstr ""
-
-msgid "Keep until I delete it"
-msgstr ""
-
-msgid "Kernel and initramfs"
-msgstr ""
-
-msgid "Latest point"
-msgstr ""
-
-msgid "Live free-space accounting appears on a Btrfs installation"
-msgstr ""
-
-msgid "Low space"
-msgstr ""
-
-msgid "Manual"
-msgstr ""
-
-msgid "Manual recovery point"
-msgstr ""
-
-msgid "Measurement pending"
-msgstr ""
-
-msgid "Morning checkpoint"
-msgstr ""
-
-msgid "Name"
-msgstr ""
-
-msgid "Next cleanup"
-msgstr ""
-
-msgid "No recovery points yet"
-msgstr ""
-
-msgid "Not created yet"
-msgstr ""
-
-msgid "Only eligible automatic package recovery points are considered"
-msgstr ""
-
+#: src/window.rs:116 src/window.rs:196
 msgid "Overview"
 msgstr ""
 
-msgid "Pending"
-msgstr ""
-
-msgid "Persistent, human-readable recovery events"
-msgstr ""
-
-msgid "Personal files and disks will not be modified by this application."
-msgstr ""
-
-msgid "Personal files, logs, containers, and virtual machines stay unchanged."
-msgstr ""
-
-msgid "Pin recovery point"
-msgstr ""
-
-msgid "Pinned"
-msgstr ""
-
-msgid "Pinning Recovery Point"
-msgstr ""
-
-msgid "Prepare System Restore"
-msgstr ""
-
-msgid "Preparing System Restore"
-msgstr ""
-
-msgid "Preparing integrity verification…"
-msgstr ""
-
-msgid "Preview"
-msgstr ""
-
-msgid "Protected"
-msgstr ""
-
-msgid "Protection"
-msgstr ""
-
-msgid "Ready"
-msgstr ""
-
-msgid "Recent recovery points"
-msgstr ""
-
-msgid "Recorded"
-msgstr ""
-
-msgid "Recovery Operation Failed"
-msgstr ""
-
+#: src/window.rs:122 src/window.rs:819
 msgid "Recovery Points"
 msgstr ""
 
-msgid "Recovery Storage"
-msgstr ""
-
-msgid "Recovery features remain disabled"
-msgstr ""
-
-msgid "Recovery point metadata needs attention"
-msgstr ""
-
-msgid "Recovery point storage is temporarily unavailable on ext4."
-msgstr ""
-
-msgid "Recovery points are unavailable"
-msgstr ""
-
-msgid "Recovery points protect the operating system while your personal files stay in the present."
-msgstr ""
-
-msgid "Recovery service unavailable"
-msgstr ""
-
-msgid "Recovery storage"
-msgstr ""
-
-msgid "Refresh system status"
-msgstr ""
-
-msgid "Restart Later"
-msgstr ""
-
-msgid "Restart Now"
-msgstr ""
-
-msgid "Restore to This Point"
-msgstr ""
-
-msgid "Restore to this recovery point"
-msgstr ""
-
-msgid "Restore “{0}”?"
-msgstr ""
-
-msgid "Retention"
-msgstr ""
-
-msgid "Retention status"
-msgstr ""
-
-msgid "Return the operating system to a known-good moment"
-msgstr ""
-
-msgid "Reverted"
-msgstr ""
-
-msgid "Root filesystem"
-msgstr ""
-
-msgid "Settings"
-msgstr ""
-
-msgid "Show navigation"
-msgstr ""
-
-msgid "Space is shared between the system and recovery points."
-msgstr ""
-
+#: src/window.rs:134 src/window.rs:1147
 msgid "Storage"
 msgstr ""
 
-msgid "Storage layout inspected"
+#: src/window.rs:140 src/window.rs:1244
+msgid "Activity"
 msgstr ""
 
-msgid "System Recovery"
+#: src/window.rs:146 src/window.rs:1317
+msgid "Settings"
 msgstr ""
 
-msgid "System Recovery Activity"
-msgstr ""
-
-msgid "System Restore Is Ready"
-msgstr ""
-
-msgid "System changes"
-msgstr ""
-
-msgid "System recovery"
-msgstr ""
-
-msgid "System recovery is unavailable"
-msgstr ""
-
-msgid "System software and settings will return to this point."
-msgstr ""
-
-msgid "Temporarily unavailable"
-msgstr ""
-
-msgid "The current system will be protected before restart."
-msgstr ""
-
-msgid "The recovery service is unavailable"
-msgstr ""
-
-msgid "The recovery worker disconnected"
-msgstr ""
-
-msgid "The restored system must boot successfully or the previous system returns automatically."
-msgstr ""
-
-msgid "The system is ready for the manual recovery milestone."
-msgstr ""
-
-msgid "The system storage layout could not be inspected"
-msgstr ""
-
-msgid "This AnduinOS installation uses ext4. Timeback Machine recovery points currently require Btrfs."
-msgstr ""
-
-msgid "This installation does not use the complete AnduinOS Btrfs recovery layout."
-msgstr ""
-
+#: src/window.rs:171 src/window.rs:273
 msgid "Timeback Machine"
 msgstr ""
 
-msgid "Timeback Machine has not changed this installation."
+#: src/window.rs:172 src/window.rs:274
+msgid "System Recovery"
 msgstr ""
 
-msgid "Timeback Machine is temporarily unavailable on this ext4 installation"
+#: src/window.rs:178 src/window.rs:266
+msgid "About Timeback Machine"
 msgstr ""
 
-msgid "Timeback Machine requires Btrfs; this system uses {0}"
+#: src/window.rs:185
+msgid "Refresh system status"
 msgstr ""
 
-msgid "Today"
+#: src/window.rs:213
+msgid "Show navigation"
 msgstr ""
 
-msgid "Today, 14:27 · 12 packages changed"
+#: src/window.rs:299 src/window.rs:483 src/window.rs:569 src/window.rs:723
+#: src/window.rs:827
+msgid "Temporarily unavailable"
 msgstr ""
 
-msgid "Today, 14:32"
+#: src/window.rs:310
+#, c++-format
+msgid ""
+"Timeback Machine currently requires an AnduinOS installation using Btrfs. "
+"This system uses {0}."
 msgstr ""
 
-msgid "Today, 14:32 · Kernel 7.0.0-28"
+#: src/window.rs:341 src/window.rs:495
+msgid "Root filesystem"
 msgstr ""
 
-msgid "Unavailable"
-msgstr ""
-
+#: src/window.rs:349 src/window.rs:499
 msgid "Unknown"
 msgstr ""
 
-msgid "Unpin recovery point"
-msgstr ""
-
-msgid "Unpinning Recovery Point"
-msgstr ""
-
-msgid "Unverified"
-msgstr ""
-
-msgid "Verified"
-msgstr ""
-
-msgid "Verify recovery point"
-msgstr ""
-
-msgid "Verifying Recovery Point"
-msgstr ""
-
-msgid "Waiting"
-msgstr ""
-
-msgid "Waiting for authorization…"
-msgstr ""
-
-msgid "Yesterday"
-msgstr ""
-
-msgid "Yesterday, 20:41 · Manual recovery point"
-msgstr ""
-
+#: src/window.rs:380
 msgid "Your files and system have not been changed."
 msgstr ""
 
-msgid "Your system can travel back"
+#: src/window.rs:408
+msgid "Design preview — no system changes can be made"
 msgstr ""
 
+#: src/window.rs:416
+msgid "The recovery service could not be reached; no system data was changed"
+msgstr ""
+
+#: src/window.rs:441
+msgid "Not created yet"
+msgstr ""
+
+#: src/window.rs:446
+msgid "Latest point"
+msgstr ""
+
+#: src/window.rs:448
+msgid "Today, 14:32"
+msgstr ""
+
+#: src/window.rs:452
+msgid "System recovery"
+msgstr ""
+
+#: src/window.rs:456 src/window.rs:1181
+msgid "Recovery storage"
+msgstr ""
+
+#: src/window.rs:457
+msgid "8.4 GB"
+msgstr ""
+
+#: src/window.rs:457 src/window.rs:875 src/window.rs:888 src/window.rs:2611
+msgid "Ready"
+msgstr ""
+
+#: src/window.rs:458
+msgid "Estimated exclusive data"
+msgstr ""
+
+#: src/window.rs:462
+msgid "Boot safety"
+msgstr ""
+
+#: src/window.rs:464
+msgid "Verified"
+msgstr ""
+
+#: src/window.rs:466
+msgid "Waiting"
+msgstr ""
+
+#: src/window.rs:468
+msgid "Recorded"
+msgstr ""
+
+#: src/window.rs:471
+msgid "Kernel and initramfs"
+msgstr ""
+
+#: src/window.rs:473
+msgid "Integrity can be verified on demand"
+msgstr ""
+
+#: src/window.rs:481
+msgid "Protection"
+msgstr ""
+
+#: src/window.rs:485 src/window.rs:612 src/window.rs:1388 src/window.rs:1424
+msgid "Unavailable"
+msgstr ""
+
+#: src/window.rs:488
+msgid "Available on Btrfs installations"
+msgstr ""
+
+#: src/window.rs:490
+msgid "Btrfs layout required"
+msgstr ""
+
+#: src/window.rs:500
+msgid "Detected locally"
+msgstr ""
+
+#: src/window.rs:504
+msgid "System changes"
+msgstr ""
+
+#: src/window.rs:505
+msgid "Disabled"
+msgstr ""
+
+#: src/window.rs:506
 msgid "Your system is untouched"
 msgstr ""
 
+#: src/window.rs:516
+msgid "Recent recovery points"
+msgstr ""
+
+#: src/window.rs:517
+msgid "A clear history of system changes"
+msgstr ""
+
+#: src/window.rs:527 src/window.rs:860
+msgid "After system update"
+msgstr ""
+
+#: src/window.rs:528
+msgid "Today, 14:32 · Kernel 7.0.0-28"
+msgstr ""
+
+#: src/window.rs:529 src/window.rs:862 src/window.rs:2610
+msgid "Current"
+msgstr ""
+
+#: src/window.rs:535 src/window.rs:873
+msgid "Before system update"
+msgstr ""
+
+#: src/window.rs:536
+msgid "Today, 14:27 · 12 packages changed"
+msgstr ""
+
+#: src/window.rs:537 src/window.rs:2612
+msgid "Protected"
+msgstr ""
+
+#: src/window.rs:543 src/window.rs:899
+msgid "Before graphics driver"
+msgstr ""
+
+#: src/window.rs:544
+msgid "Yesterday, 20:41 · Manual recovery point"
+msgstr ""
+
+#: src/window.rs:545 src/window.rs:901 src/window.rs:926 src/window.rs:2607
+msgid "Pinned"
+msgstr ""
+
+#: src/window.rs:567 src/window.rs:1009
+msgid "No recovery points yet"
+msgstr ""
+
+#: src/window.rs:571
+msgid "Recovery points are unavailable"
+msgstr ""
+
+#: src/window.rs:574
+msgid "The system is ready for the manual recovery milestone."
+msgstr ""
+
+#: src/window.rs:577
+msgid ""
+"This installation uses ext4. Timeback Machine recovery points currently "
+"require Btrfs."
+msgstr ""
+
+#: src/window.rs:580
+msgid "Timeback Machine has not changed this installation."
+msgstr ""
+
+#: src/window.rs:594 src/window.rs:1321
+msgid "Automatic Protection"
+msgstr ""
+
+#: src/window.rs:596
+msgid "See when your data was last captured and when protection runs next."
+msgstr ""
+
+#: src/window.rs:601 src/window.rs:627 src/window.rs:1552
+msgid "System and User Data"
+msgstr ""
+
+#: src/window.rs:602
+msgid "Today, 14:00"
+msgstr ""
+
+#: src/window.rs:603
+msgid "Today, 16:00"
+msgstr ""
+
+#: src/window.rs:610
+msgid "Automatic snapshots"
+msgstr ""
+
+#: src/window.rs:611
+msgid "Automatic snapshot status could not be loaded."
+msgstr ""
+
+#: src/window.rs:628
+msgid "No complete shared snapshot yet"
+msgstr ""
+
+#: src/window.rs:629 src/window.rs:636 src/window.rs:642 src/window.rs:1596
+msgid "Not scheduled"
+msgstr ""
+
+#: src/window.rs:634 src/window.rs:1505 src/window.rs:1553
+msgid "System"
+msgstr ""
+
+#: src/window.rs:635 src/window.rs:641 src/window.rs:1595
+msgid "Never"
+msgstr ""
+
+#: src/window.rs:640 src/window.rs:1506 src/window.rs:1554
+msgid "User Data"
+msgstr ""
+
+#: src/window.rs:656
+#, c++-format
+msgid "Last snapshot: {0} · Next snapshot: {1}"
+msgstr ""
+
+#: src/window.rs:659 src/window.rs:1329 src/window.rs:1335 src/window.rs:1349
+msgid "Active"
+msgstr ""
+
+#: src/window.rs:659
+msgid "Off"
+msgstr ""
+
+#: src/window.rs:721
+msgid "Your system can travel back"
+msgstr ""
+
+#: src/window.rs:725
+msgid "System recovery is unavailable"
+msgstr ""
+
+#: src/window.rs:736
+msgid ""
+"Recovery points protect the operating system while your personal files stay "
+"in the present."
+msgstr ""
+
+#: src/window.rs:738
+msgid ""
+"This AnduinOS installation uses ext4. Timeback Machine recovery points "
+"currently require Btrfs."
+msgstr ""
+
+#: src/window.rs:740
+msgid ""
+"This installation does not use the complete AnduinOS Btrfs recovery layout."
+msgstr ""
+
+#: src/window.rs:760 src/window.rs:2089
+msgid "Create Recovery Point"
+msgstr ""
+
+#: src/window.rs:776
+msgid "Design preview"
+msgstr ""
+
+#: src/window.rs:778
+msgid "No snapshot can be created while demo data is active."
+msgstr ""
+
+#: src/window.rs:782 src/window.rs:1138 src/window.rs:1817 src/window.rs:2540
+msgid "Close"
+msgstr ""
+
+#: src/window.rs:796
+msgid "Timeback Machine is temporarily unavailable on this ext4 installation"
+msgstr ""
+
+#: src/window.rs:799
+#, c++-format
+msgid "Timeback Machine requires Btrfs; this system uses {0}"
+msgstr ""
+
+#: src/window.rs:803
+msgid "Btrfs detected, but the AnduinOS recovery layout is incomplete"
+msgstr ""
+
+#: src/window.rs:805
+msgid "The system storage layout could not be inspected"
+msgstr ""
+
+#: src/window.rs:806
+msgid "Btrfs recovery is available"
+msgstr ""
+
+#: src/window.rs:820
+msgid "Return the operating system to a known-good moment"
+msgstr ""
+
+#: src/window.rs:829
+msgid "A compatible Btrfs layout is required"
+msgstr ""
+
+#: src/window.rs:833
+msgid ""
+"This installation uses ext4. Nothing is wrong with your system, but recovery "
+"points currently require Btrfs."
+msgstr ""
+
+#: src/window.rs:836
+msgid "Personal files and disks will not be modified by this application."
+msgstr ""
+
+#: src/window.rs:844
+msgid "Today"
+msgstr ""
+
+#: src/window.rs:849
+msgid "Yesterday"
+msgstr ""
+
+#: src/window.rs:861
+msgid "14:32 · Current system · Kernel 7.0.0-28"
+msgstr ""
+
+#: src/window.rs:874
+msgid "14:27 · Automatic · 12 packages changed"
+msgstr ""
+
+#: src/window.rs:886
+msgid "Morning checkpoint"
+msgstr ""
+
+#: src/window.rs:887
+msgid "09:10 · Manual recovery point"
+msgstr ""
+
+#: src/window.rs:900
+msgid "20:41 · Manual · Kernel 7.0.0-27"
+msgstr ""
+
+#: src/window.rs:923
+msgid "All"
+msgstr ""
+
+#: src/window.rs:924 src/window.rs:1038 src/window.rs:2588
+msgid "Automatic"
+msgstr ""
+
+#: src/window.rs:925 src/window.rs:2587
+msgid "Manual"
+msgstr ""
+
+#: src/window.rs:987
+msgid "The recovery service is unavailable"
+msgstr ""
+
+#: src/window.rs:993
+msgid "Deployment metadata"
+msgstr ""
+
+#: src/window.rs:1011
+msgid ""
+"Create a recovery point before a system change so you can return to a known "
+"state."
+msgstr ""
+
+#: src/window.rs:1019
+msgid "User Data Snapshots"
+msgstr ""
+
+#: src/window.rs:1027
+msgid "Automatic User Data Snapshot"
+msgstr ""
+
+#: src/window.rs:1045 src/window.rs:2148
+msgid "Browse snapshot files"
+msgstr ""
+
+#: src/window.rs:1056
+msgid "User Data Snapshot"
+msgstr ""
+
+#: src/window.rs:1067
+msgid "User data snapshots are unavailable"
+msgstr ""
+
+#: src/window.rs:1108 src/window.rs:2275
+msgid "System software and settings will return to this point."
+msgstr ""
+
+#: src/window.rs:1109 src/window.rs:2276
+msgid "Personal files, logs, containers, and virtual machines stay unchanged."
+msgstr ""
+
+#: src/window.rs:1110
+msgid "A protected safety point will be created before restart."
+msgstr ""
+
+#: src/window.rs:1139
+msgid "Restore to This Point"
+msgstr ""
+
+#: src/window.rs:1152
+msgid "Recovery Storage"
+msgstr ""
+
+#: src/window.rs:1154
+msgid "Btrfs Storage"
+msgstr ""
+
+#: src/window.rs:1157
+msgid "Recovery point storage is temporarily unavailable on ext4."
+msgstr ""
+
+#: src/window.rs:1159
+msgid "Space is shared between the system and recovery points."
+msgstr ""
+
+#: src/window.rs:1163
+msgid "Filesystem"
+msgstr ""
+
+#: src/window.rs:1172
+msgid "Device"
+msgstr ""
+
+#: src/window.rs:1192
+msgid "Capacity"
+msgstr ""
+
+#: src/window.rs:1194
+msgid "Shared Btrfs extents make per-recovery-point sizes approximate."
+msgstr ""
+
+#: src/window.rs:1209
+msgid "42.6 GB used"
+msgstr ""
+
+#: src/window.rs:1211
+msgid "Measurement pending"
+msgstr ""
+
+#: src/window.rs:1220
+msgid "77.4 GB available"
+msgstr ""
+
+#: src/window.rs:1222
+msgid "—"
+msgstr ""
+
+#: src/window.rs:1248
+msgid "System Recovery Activity"
+msgstr ""
+
+#: src/window.rs:1249
+msgid "Persistent, human-readable recovery events"
+msgstr ""
+
+#: src/window.rs:1252
+msgid "Compatible AnduinOS Btrfs layout found"
+msgstr ""
+
+#: src/window.rs:1254
+msgid "Recovery features remain disabled"
+msgstr ""
+
+#: src/window.rs:1257
+msgid "Storage layout inspected"
+msgstr ""
+
+#: src/window.rs:1277
+msgid "Just now"
+msgstr ""
+
+#: src/window.rs:1285
+msgid "Recovery service unavailable"
+msgstr ""
+
+#: src/window.rs:1299
+msgid "Recovery point metadata needs attention"
+msgstr ""
+
+#: src/window.rs:1323
+msgid ""
+"APT-managed package changes are surrounded by fail-open recovery points."
+msgstr ""
+
+#: src/window.rs:1327
+msgid "Before system updates"
+msgstr ""
+
+#: src/window.rs:1328
+msgid "Create a recovery point before APT changes packages"
+msgstr ""
+
+#: src/window.rs:1333
+msgid "After successful updates"
+msgstr ""
+
+#: src/window.rs:1334
+msgid "Keep a verified post-update deployment"
+msgstr ""
+
+#: src/window.rs:1341
+msgid "Retention"
+msgstr ""
+
+#: src/window.rs:1343
+msgid ""
+"Cleanup runs after package transactions and rechecks free space after every "
+"deletion."
+msgstr ""
+
+#: src/window.rs:1347
+msgid "Balanced retention"
+msgstr ""
+
+#: src/window.rs:1348
+msgid "Keep at least two update pairs and one known-good recovery point"
+msgstr ""
+
+#: src/window.rs:1354
+#, c++-format
 msgid "{0} available · cleanup target {1}"
 msgstr ""
 
+#: src/window.rs:1361 src/window.rs:1393
+msgid "Btrfs free-space reserve"
+msgstr ""
+
+#: src/window.rs:1364
+msgid "Low space"
+msgstr ""
+
+#: src/window.rs:1366
+msgid "Healthy"
+msgstr ""
+
+#: src/window.rs:1375
+msgid "Next cleanup"
+msgstr ""
+
+#: src/window.rs:1376
+msgid "Only eligible automatic package recovery points are considered"
+msgstr ""
+
+#: src/window.rs:1377
+#, c++-format
 msgid "{0} point(s)"
 msgstr ""
 
-msgid "—"
+#: src/window.rs:1386
+msgid "Retention status"
+msgstr ""
+
+#: src/window.rs:1394
+msgid "Live free-space accounting appears on a Btrfs installation"
+msgstr ""
+
+#: src/window.rs:1395
+msgid "Preview"
+msgstr ""
+
+#: src/window.rs:1413
+msgid "Snapshot Policies"
+msgstr ""
+
+#: src/window.rs:1415
+msgid ""
+"Choose one policy for both volumes, or manage System and User Data "
+"independently."
+msgstr ""
+
+#: src/window.rs:1422
+msgid "Automatic snapshot service"
+msgstr ""
+
+#: src/window.rs:1423
+msgid "The system service did not return its automatic snapshot configuration."
+msgstr ""
+
+#: src/window.rs:1440
+msgid "Keep System and User Data snapshot policies identical"
+msgstr ""
+
+#: src/window.rs:1443
+msgid ""
+"When linking different policies, the current System values become the shared "
+"policy."
+msgstr ""
+
+#: src/window.rs:1504
+msgid "Shared Policy"
+msgstr ""
+
+#: src/window.rs:1559
+msgid "This policy is applied to both snapshot streams."
+msgstr ""
+
+#: src/window.rs:1562
+msgid "System snapshots can be used for a full system restore."
+msgstr ""
+
+#: src/window.rs:1565
+msgid "User Data snapshots preserve the independent Home subvolume."
+msgstr ""
+
+#: src/window.rs:1569
+msgid "This volume is not an independent compatible Btrfs subvolume."
+msgstr ""
+
+#: src/window.rs:1573
+msgid "Create snapshots automatically"
+msgstr ""
+
+#: src/window.rs:1587
+msgid "Create every"
+msgstr ""
+
+#: src/window.rs:1588
+msgid "Hours between successful snapshots"
+msgstr ""
+
+#: src/window.rs:1594
+msgid "Schedule status"
+msgstr ""
+
+#: src/window.rs:1602
+msgid "Tiered Retention"
+msgstr ""
+
+#: src/window.rs:1604
+msgid ""
+"Keep recent snapshots densely, then retain the first snapshot in each "
+"calendar period."
+msgstr ""
+
+#: src/window.rs:1608
+msgid "Keep every snapshot for"
+msgstr ""
+
+#: src/window.rs:1609
+msgid "Hours"
+msgstr ""
+
+#: src/window.rs:1615
+msgid "Keep the first snapshot of each day until"
+msgstr ""
+
+#: src/window.rs:1616 src/window.rs:1623 src/window.rs:1630 src/window.rs:1637
+msgid "Days after creation"
+msgstr ""
+
+#: src/window.rs:1622
+msgid "Keep the first snapshot of each week until"
+msgstr ""
+
+#: src/window.rs:1629
+msgid "Keep the first snapshot of each month until"
+msgstr ""
+
+#: src/window.rs:1636
+msgid "Delete all snapshots older than"
+msgstr ""
+
+#: src/window.rs:1654
+msgid "Restore Recommended Values"
+msgstr ""
+
+#: src/window.rs:1658
+msgid "Save Policy"
+msgstr ""
+
+#: src/window.rs:1668
+msgid "Last automatic operation"
+msgstr ""
+
+#: src/window.rs:1670
+msgid "Failed"
+msgstr ""
+
+#: src/window.rs:1716
+msgid ""
+"Retention periods must progress from keep-all to daily, weekly, monthly, and "
+"final deletion."
+msgstr ""
+
+#: src/window.rs:1785
+msgid "Automatic snapshot policies saved"
+msgstr ""
+
+#: src/window.rs:1804 src/window.rs:2476
+msgid "The recovery worker disconnected"
+msgstr ""
+
+#: src/window.rs:1813
+msgid "Check Snapshot Policy"
+msgstr ""
+
+#: src/window.rs:2069
+msgid "Name"
+msgstr ""
+
+#: src/window.rs:2070
+msgid "Manual recovery point"
+msgstr ""
+
+#: src/window.rs:2074
+msgid "Description"
+msgstr ""
+
+#: src/window.rs:2075
+msgid "Created before a manual system change"
+msgstr ""
+
+#: src/window.rs:2079
+msgid "Keep until I delete it"
+msgstr ""
+
+#: src/window.rs:2081
+msgid "Pinned recovery points are never cleaned automatically"
+msgstr ""
+
+#: src/window.rs:2091
+msgid ""
+"The operating system will be captured without changing personal files, logs, "
+"containers, or virtual machines."
+msgstr ""
+
+#: src/window.rs:2097 src/window.rs:2309 src/window.rs:2340
+msgid "Cancel"
+msgstr ""
+
+#: src/window.rs:2098
+msgid "Create"
+msgstr ""
+
+#: src/window.rs:2126
+msgid "Creating Recovery Point"
+msgstr ""
+
+#: src/window.rs:2168
+msgid "Restore to this recovery point"
+msgstr ""
+
+#: src/window.rs:2182
+msgid "Cancel pending system restore"
+msgstr ""
+
+#: src/window.rs:2190
+msgid "Cancelling System Restore"
+msgstr ""
+
+#: src/window.rs:2198
+msgid "Verify recovery point"
+msgstr ""
+
+#: src/window.rs:2208
+msgid "Verifying Recovery Point"
+msgstr ""
+
+#: src/window.rs:2223
+msgid "Unpin recovery point"
+msgstr ""
+
+#: src/window.rs:2225
+msgid "Pin recovery point"
+msgstr ""
+
+#: src/window.rs:2236
+msgid "Unpinning Recovery Point"
+msgstr ""
+
+#: src/window.rs:2238
+msgid "Pinning Recovery Point"
+msgstr ""
+
+#: src/window.rs:2253
+msgid "Delete recovery point"
+msgstr ""
+
+#: src/window.rs:2277
+msgid "The current system will be protected before restart."
+msgstr ""
+
+#: src/window.rs:2278
+msgid ""
+"The restored system must boot successfully or the previous system returns "
+"automatically."
+msgstr ""
+
+#: src/window.rs:2301
+#, c++-format
+msgid "Restore “{0}”?"
+msgstr ""
+
+#: src/window.rs:2303
+msgid ""
+"A one-time recovery boot will be prepared. Nothing changes until you restart."
+msgstr ""
+
+#: src/window.rs:2310
+msgid "Prepare System Restore"
+msgstr ""
+
+#: src/window.rs:2318
+msgid "Preparing System Restore"
+msgstr ""
+
+#: src/window.rs:2330
+msgid "Delete Recovery Point?"
+msgstr ""
+
+#: src/window.rs:2333
+#, c++-format
+msgid ""
+"“{0}” will be permanently removed. The running system and personal files "
+"will not change."
+msgstr ""
+
+#: src/window.rs:2341
+msgid "Delete"
+msgstr ""
+
+#: src/window.rs:2349
+msgid "Deleting Recovery Point"
+msgstr ""
+
+#: src/window.rs:2365
+msgid "Preparing integrity verification…"
+msgstr ""
+
+#: src/window.rs:2367
+msgid "Waiting for authorization…"
+msgstr ""
+
+#: src/window.rs:2384
+msgid "Keep this window open. Recovery metadata is committed atomically."
+msgstr ""
+
+#: src/window.rs:2487
+msgid "System Restore Is Ready"
+msgstr ""
+
+#: src/window.rs:2489
+msgid ""
+"Restart to enter the one-time recovery environment. You can cancel from the "
+"recovery point before restarting."
+msgstr ""
+
+#: src/window.rs:2494
+msgid "Restart Later"
+msgstr ""
+
+#: src/window.rs:2495
+msgid "Restart Now"
+msgstr ""
+
+#: src/window.rs:2509
+#, c++-format
+msgid "Could not request a restart: {0}"
+msgstr ""
+
+#: src/window.rs:2536
+msgid "Recovery Operation Failed"
+msgstr ""
+
+#: src/window.rs:2550
+msgid "Unverified"
+msgstr ""
+
+#: src/window.rs:2571
+msgid "Snapshot source"
+msgstr ""
+
+#: src/window.rs:2586
+msgid "Factory"
+msgstr ""
+
+#: src/window.rs:2589
+msgid "Before update"
+msgstr ""
+
+#: src/window.rs:2590
+msgid "After update"
+msgstr ""
+
+#: src/window.rs:2591
+msgid "Before rollback"
+msgstr ""
+
+#: src/window.rs:2597
+msgid "Manual snapshot"
+msgstr ""
+
+#: src/window.rs:2598
+msgid "Factory snapshot"
+msgstr ""
+
+#: src/window.rs:2599
+msgid "Automatic snapshot"
+msgstr ""
+
+#: src/window.rs:2600
+msgid "Update snapshot"
+msgstr ""
+
+#: src/window.rs:2601
+msgid "Restore safety snapshot"
+msgstr ""
+
+#: src/window.rs:2613
+msgid "Pending"
+msgstr ""
+
+#: src/window.rs:2614
+msgid "Confirming"
+msgstr ""
+
+#: src/window.rs:2615
+msgid "Creating"
+msgstr ""
+
+#: src/window.rs:2616
+msgid "Incomplete"
+msgstr ""
+
+#: src/window.rs:2617
+msgid "Reverted"
+msgstr ""
+
+#: src/window.rs:2618
+msgid "Broken"
+msgstr ""
+
+#: src/window.rs:2619
+msgid "Deleting"
 msgstr ""

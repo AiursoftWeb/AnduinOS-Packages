@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-01 18:33+0800\n"
+"POT-Creation-Date: 2026-08-01 11:01+0000\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,753 +17,85 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/main.py:88
-msgid "AnduinOS Installer (Development)"
-msgstr "Instalador de AnduinOS (Desarrollo)"
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose "
+"Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"Una instalación real creará un MOK local de la máquina. Después del "
+"reinicio, seleccione Inscribir MOK → Continuar → Sí en MOKManager e "
+"introduzca la contraseña 123456."
+
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: "
+"123456"
+msgstr ""
+"\n"
+"En la pantalla azul de MOKManager, elija Inscribir MOK → Continuar → Sí, "
+"contraseña: 123456"
 
-#: src/main.py:90
-msgid "AnduinOS Installer (Beta)"
-msgstr "Instalador de AnduinOS (Beta)"
-
-#: src/main.py:125
-msgid "Installation in progress"
-msgstr "Instalación en curso"
-
-#: src/main.py:127
-msgid "The installer cannot be closed while it is modifying the target disk."
-msgstr "El instalador no se puede cerrar mientras está modificando el disco objetivo."
-
-#: src/main.py:133
-msgid "Continue Installation"
-msgstr "Continuar instalación"
-
-#: src/pages.py:69
-msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
-msgstr "La coexistencia guiada requiere un sistema iniciado en modo UEFI y un disco de destino GPT. Este disco no puede continuar en modo guiado."
-
-#: src/pages.py:73
-msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
-msgstr "No se ha podido leer de forma consistente el mapa de particiones completo y la geometría del espacio libre. No hay ningún espacio en este disco autorizado para la instalación."
-
-#: src/pages.py:78
-msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
-msgstr "El disco GPT o una de sus particiones no tiene un identificador único estable. La coexistencia guiada no puede autorizar de forma segura la preservación o escritura en este disco."
-
-#: src/pages.py:83
-msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
-msgstr "Este disco contiene un mapeador activo, una matriz u otra topología anidada de dispositivo de bloques que la coexistencia guiada no admite."
-
-#: src/pages.py:87
-msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
-msgstr "Una partición en este disco está montada. Desmóntela y vuelva a escanear el almacenamiento antes de continuar."
-
-#: src/pages.py:91
-msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
-msgstr "AnduinOS utilizará únicamente el espacio no asignado seleccionado. El instalador no reducirá ni moverá un sistema de archivos existente."
-
-#: src/pages.py:95
-msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
-msgstr "Las particiones existentes de Windows, de recuperación y de datos permanecen fuera del conjunto de escritura y se conservarán."
-
-#: src/pages.py:99
-msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
-msgstr "La partición del sistema EFI existente es solo una candidata. Deben superarse las comprobaciones de estado y espacio libre antes de que pueda reutilizarse, y nunca se formateará."
-
-#: src/pages.py:104
-msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
-msgstr "El almacenamiento de BitLocker se conservará. El instalador no desbloqueará, redimensionará, reparará ni modificará de otra manera este almacenamiento."
-
-#: src/pages.py:108
-msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
-msgstr "El instalador no montará, reparará ni inferirá la seguridad de los volúmenes de Windows procedentes del estado de hibernación o Inicio rápido. Cualquier mantenimiento requerido de Windows debe completarse en Windows."
-
-#: src/pages.py:113
-msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
-msgstr "Como alternativa, puede seleccionar explícitamente una partición completa para borrarla. Todo lo que haya en esa partición seleccionada se destruirá; nunca se selecciona automáticamente."
-
-#: src/pages.py:118
-msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
-msgstr "La instalación no puede continuar con esta selección. No existe una opción para forzar la continuidad en las comprobaciones de seguridad del almacenamiento."
-
-#: src/pages.py:122
-msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
-msgstr "Después de cambiar particiones o desmontar un volumen, vuelva a escanear el almacenamiento y seleccione de nuevo el destino."
-
-#: src/pages.py:128
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
-msgstr "No se encontró espacio no asignado adecuado. Para proteger sus datos, cree espacio no asignado con la Administración de discos de Windows, luego inicie el instalador nuevamente y vuelva a escanear el disco."
-
-#: src/pages.py:133
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
-msgstr "No se encontró espacio no asignado adecuado. Para proteger sus datos, cree espacio no asignado con una herramienta de particionado, luego inicie el instalador nuevamente y vuelva a escanear el disco."
-
-#: src/pages.py:204 src/pages.py:374
-msgid "Next"
-msgstr "Siguiente"
-
-#: src/pages.py:211 src/pages.py:373 src/pages.py:2341
-msgid "Back"
-msgstr "Atrás"
-
-#: src/pages.py:287 src/pages.py:371
-msgid "AnduinOS Installer"
-msgstr "Instalador de AnduinOS"
-
-#: src/pages.py:367
-msgid "Welcome to AnduinOS"
-msgstr "Bienvenido a AnduinOS"
-
-#: src/pages.py:369
-msgid "Choose your language to begin installation"
-msgstr "Elija su idioma para comenzar la instalación"
-
-#: src/pages.py:405
-msgid "Navigation error"
-msgstr "Error de navegación"
-
-#: src/pages.py:408 src/pages.py:2363
-msgid "OK"
-msgstr "Aceptar"
-
-#: src/pages.py:440
-msgid "English (US)"
-msgstr "Inglés (EE. UU.)"
-
-#: src/pages.py:440
-msgid "English (UK)"
-msgstr "Inglés (Reino Unido)"
-
-#: src/pages.py:441
-msgid "German"
-msgstr "Alemán"
-
-#: src/pages.py:441
-msgid "French"
-msgstr "Francés"
-
-#: src/pages.py:441
-msgid "Italian"
-msgstr "Italiano"
-
-#: src/pages.py:442
-msgid "Spanish"
-msgstr "Español"
-
-#: src/pages.py:442
-msgid "Portuguese"
-msgstr "Portugués"
-
-#: src/pages.py:443
-msgid "Portuguese (Brazil)"
-msgstr "Portugués (Brasil)"
-
-#: src/pages.py:443
-msgid "Danish"
-msgstr "Danés"
-
-#: src/pages.py:444
-msgid "Swedish"
-msgstr "Sueco"
-
-#: src/pages.py:444
-msgid "Norwegian"
-msgstr "Noruego"
-
-#: src/pages.py:445
-msgid "Finnish"
-msgstr "Finés"
-
-#: src/pages.py:445
-msgid "Dutch"
-msgstr "Alemán"
-
-#: src/pages.py:445
-msgid "Polish"
-msgstr "Polaco"
-
-#: src/pages.py:446
-msgid "Romanian"
-msgstr "Rumano"
-
-#: src/pages.py:448
-msgid "Russian"
-msgstr "Ruso"
-
-#: src/pages.py:448
-msgid "Ukrainian"
-msgstr "Ucraniano"
-
-#: src/pages.py:448
-msgid "Greek"
-msgstr "Griego"
-
-#: src/pages.py:451
-msgid "Japanese"
-msgstr "Japonés"
-
-#: src/pages.py:451
-msgid "Korean"
-msgstr "Coreano"
-
-#: src/pages.py:452
-msgid "Hindi (India)"
-msgstr "Hindi (India)"
-
-#: src/pages.py:452
-msgid "Thai"
-msgstr "Tailandés"
-
-#: src/pages.py:453
-msgid "Vietnamese"
-msgstr "Vietnamita"
-
-#: src/pages.py:453
-msgid "Arabic"
-msgstr "Árabe"
-
-#: src/pages.py:454
-msgid "Turkish"
-msgstr "Turco"
-
-#: src/pages.py:454
-msgid "Indonesian"
-msgstr "Indonesio"
-
-#: src/pages.py:461 src/pages.py:467 src/pages.py:507
-msgid "Keyboard Layout"
-msgstr "Distribución del teclado"
-
-#: src/pages.py:499 src/pages.py:508
-msgid "Test your keyboard here…"
-msgstr "Pruébe su teclado aquí…"
-
-#: src/pages.py:533 src/pages.py:539
-msgid "Updates and Drivers"
-msgstr "Actualizaciones y controladores"
-
-#: src/pages.py:556
-msgid "Download and install system updates during installation"
-msgstr "Descargar e instalar actualizaciones del sistema durante la instalación"
-
-#: src/pages.py:559 src/pages.py:575
-msgid "Requires an Internet connection. The base installation remains available when offline."
-msgstr "Requiere conexión a Internet. La instalación base permanece disponible sin conexión."
-
-#: src/pages.py:568
-msgid "Install third-party drivers for this device"
-msgstr "Instalar controladores de terceros para este dispositivo"
-
-#: src/pages.py:581
-msgid "Some drivers are proprietary or otherwise non-free software."
-msgstr "Algunos controladores son propietarios o software no libre."
-
-#: src/pages.py:641
-msgid "Storage Device"
-msgstr "Dispositivo de almacenamiento"
-
-#: src/pages.py:650
-msgid "No partition table"
-msgstr "Sin tabla de particiones"
-
-#: src/pages.py:673
-msgid "Current disk layout"
-msgstr "Distribución actual del disco"
-
-#: src/pages.py:693
-msgid "Unknown filesystem"
-msgstr "Sistema de archivos desconocido"
-
-#: src/pages.py:706
-#, python-brace-format
-msgid "Unallocated · {size}"
-msgstr "Sin asignar · {size}"
-
-#: src/pages.py:713
-msgid "Partition details unavailable"
-msgstr "Detalles de la partición no disponibles"
-
-#: src/pages.py:728
-msgid "Windows detected"
-msgstr "Windows detectado"
-
-#: src/pages.py:730
-msgid "BitLocker detected"
-msgstr "BitLocker detectado"
-
-#: src/pages.py:732
-msgid "Live USB — excluded"
-msgstr "USB Live — excluido"
-
-#: src/pages.py:734
-msgid "Too small"
-msgstr "Demasiado pequeño"
-
-#: src/pages.py:751 src/pages.py:757
-msgid "Select Installation Disk"
-msgstr "Seleccionar disco de instalación"
-
-#: src/pages.py:793
-msgid "Rescan Storage"
-msgstr "Reescanear almacenamiento"
-
-#: src/pages.py:863
-msgid "No suitable disks found."
-msgstr "No se encontraron discos adecuados."
-
-#: src/pages.py:917
-msgid "Choose Installation Method"
-msgstr "Elegir método de instalación"
-
-#: src/pages.py:922
-msgid "How should AnduinOS use this disk?"
-msgstr "¿Cómo debería AnduinOS utilizar este disco?"
-
-#: src/pages.py:937 src/pages.py:1191 src/pages.py:1425
-#, python-brace-format
-msgid "Target: {disk} ({size} — {model})"
-msgstr "Destino: {disk} ({size} — {model})"
-
-#: src/pages.py:1014
-msgid "Erase every partition and all data on the selected disk."
-msgstr "Borra cada partición y todos los datos en el disco seleccionado."
-
-#: src/pages.py:1018
-msgid "Btrfs — recommended"
-msgstr "Btrfs: recomendado"
-
-#: src/pages.py:1022
-msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
-msgstr "Habilita subvolúmenes de espacio compartido, instantáneas y Timeback Machine."
-
-#: src/pages.py:1030
-msgid "ext4 — classic"
-msgstr "ext4 — clásico"
-
-#: src/pages.py:1033
-msgid "Uses a traditional single root filesystem."
-msgstr "Utiliza un sistema de archivos raíz único tradicional."
-
-#: src/pages.py:1039
-msgid "Advanced — keep existing systems"
-msgstr "Avanzado: conservar los sistemas existentes"
-
-#: src/pages.py:1041
-msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-msgstr "Usar el espacio ya no asignado y preservar las particiones existentes. Este es el único camino de coexistencia con Windows."
-
-#: src/pages.py:1089
-msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-msgstr "La coexistencia avanzada puede afectar al estado del firmware EFI y puede desencadenar la recuperación de BitLocker. Nunca reduce ni repara las volúmenes de Windows."
-
-#: src/pages.py:1099
-#, python-brace-format
-msgid "ALL DATA on {disk} will be permanently erased."
-msgstr "TODOS LOS DATOS en {disk} se borrarán permanentemente."
-
-#: src/pages.py:1135
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "Este disco es demasiado pequeño para una instalación completa del disco. Advanced puede continuar solo si existe espacio no asignado adecuado."
-
-#: src/pages.py:1145
-msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-msgstr "Se detectaron particiones existentes. Las dos primeras opciones las eliminan; Avanzada es la ruta de preservación."
-
-#: src/pages.py:1178
-msgid "Advanced Storage"
-msgstr "Almacenamiento avanzado"
-
-#: src/pages.py:1183
-msgid "Advanced: Install Alongside"
-msgstr "Avanzado: instalar junto a otro sistema"
-
-#: src/pages.py:1212
-msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-msgstr "Antes de continuar: finalice las actualizaciones de Windows, desactive el inicio rápido y la hibernación, y realice una copia de seguridad de la clave de recuperación de BitLocker. EFI, Secure Boot, las medidas TPM y el orden de arranque pueden cambiar."
-
-#: src/pages.py:1219
-msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr "Esta ruta avanzada conserva las particiones existentes, pero cambia la tabla de particiones del disco seleccionado y el estado de arranque EFI del equipo."
-
-#: src/pages.py:1250 src/pages.py:2113
-msgid "Filesystem"
-msgstr "Sistema de archivos"
-
-#: src/pages.py:1253
-msgid "Btrfs (recommended)"
-msgstr "Btrfs (recomendado)"
-
-#: src/pages.py:1253
-msgid "ext4 (classic)"
-msgstr "ext4 (clásico)"
-
-#: src/pages.py:1263
-msgid "Unallocated space"
-msgstr "Espacio no asignado"
-
-#: src/pages.py:1271
-msgid "EFI System Partition"
-msgstr "Partición del sistema EFI"
-
-#: src/pages.py:1285
-msgid "Rescan and Reselect Disk"
-msgstr "Reescanear y volver a seleccionar disco"
-
-#: src/pages.py:1326
-msgid "Create a new 1 GiB AnduinOS EFI System Partition"
-msgstr "Crear una nueva partición EFI de AnduinOS de 1 GiB"
-
-#: src/pages.py:1330
-#, python-brace-format
-msgid "Reuse {path} ({size})"
-msgstr "Reutilizar {path} ({size})"
-
-#: src/pages.py:1394
-#, python-brace-format
-msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-msgstr "El disco seleccionado ha cambiado o ha desaparecido. Vuelva a la página de discos y seleccione uno de nuevo. {error}"
-
-#: src/pages.py:1407
-msgid "The selected disk size changed. Return and select it again."
-msgstr "El tamaño del disco seleccionado ha cambiado. Vuelva y selecciónelo de nuevo."
-
-#: src/pages.py:1417
-msgid "The selected disk topology changed. Review the disk and installation method again."
-msgstr "La topología del disco seleccionado ha cambiado. Revise el disco y el método de instalación de nuevo."
-
-#: src/pages.py:1453
-#, python-brace-format
-msgid "{size} unallocated at {offset}"
-msgstr "{size} sin asignar en {offset}"
-
-#: src/pages.py:1579 src/pages.py:1585
-msgid "User Account"
-msgstr "Cuenta de usuario"
-
-#: src/pages.py:1605 src/pages.py:1606
-msgid "Full Name"
-msgstr "Nombre completo"
-
-#: src/pages.py:1609 src/pages.py:1612
-msgid "Username"
-msgstr "Nombre de usuario"
-
-#: src/pages.py:1616 src/pages.py:1627
-msgid "Password"
-msgstr "Contraseña"
-
-#: src/pages.py:1620 src/pages.py:1628
-msgid "Confirm Password"
-msgstr "Confirmar contraseña"
-
-#: src/pages.py:1632
-msgid "Do not require a password for sudo commands"
-msgstr "No requerir contraseña para comandos sudo"
-
-#: src/pages.py:1638 src/pages.py:1643 src/pages.py:2157
-msgid "Computer Name"
-msgstr "Nombre del equipo"
-
-#: src/pages.py:1669
-msgid "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
-msgstr "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
-
-#: src/pages.py:1680
-msgid "Install alongside requires a password-protected account."
-msgstr "Instalar junto a requiere una cuenta protegida con contraseña."
-
-#: src/pages.py:1691
-msgid "The two passwords do not match."
-msgstr "Las dos contraseñas no coinciden."
-
-#: src/pages.py:1695
-msgid "Password must be at least 6 characters."
-msgstr "La contraseña debe tener al menos 6 caracteres."
-
-#: src/pages.py:1703
-msgid "Computer name contains invalid characters."
-msgstr "El nombre del equipo contiene caracteres no válidos."
-
-#: src/pages.py:1756
-msgid "Return to Make Changes"
-msgstr "Volver para realizar cambios"
-
-#: src/pages.py:1763
-msgid "This configuration is very unsafe"
-msgstr "Esta configuración es muy insegura"
-
-#: src/pages.py:1765
-msgid "Passwordless sudo is unsafe"
-msgstr "sudo sin contraseña es inseguro"
-
-#: src/pages.py:1769
-msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
-msgstr "El sistema iniciará sesión en esta cuenta automáticamente y le permitirá obtener privilegios completos de administrador sin contraseña. Cualquier persona con acceso físico y cualquier programa que se ejecute como este usuario puede controlar completamente el sistema. Úselo solo para un quiosco, una máquina virtual temporal u otro entorno controlado."
-
-#: src/pages.py:1778
-msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
-msgstr "Cualquier programa que se ejecute como su usuario puede obtener privilegios completos de administrador sin autenticación. Su contraseña de inicio de sesión sigue protegiendo el acceso, pero no protegerá sudo. ¿Está seguro de que desea continuar?"
-
-#: src/pages.py:1792
-msgid "Return and Set a Password"
-msgstr "Volver y establecer una contraseña"
-
-#: src/pages.py:1798
-msgid "I Understand the Risk, Continue"
-msgstr "Entiendo el riesgo, continuar"
-
-#: src/pages.py:1822
-msgid "Administrator access would be locked"
-msgstr "El acceso de administrador quedaría bloqueado"
-
-#: src/pages.py:1824
-msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
-msgstr "Esta cuenta no tiene contraseña de inicio de sesión, pero sudo aún requeriría una. Dado que la cuenta root está bloqueada por defecto, no podrá realizar tareas de administrador. Establezca una contraseña de cuenta o habilite sudo sin contraseña."
-
-#: src/pages.py:1895 src/pages.py:1901
-msgid "Select Timezone"
-msgstr "Seleccionar zona horaria"
-
-#: src/pages.py:1914
-msgid "Search timezones…"
-msgstr "Buscar zonas horarias…"
-
-#: src/pages.py:1967
-msgid "Selected timezone"
-msgstr "Zona horaria seleccionada"
-
-#: src/pages.py:2035 src/pages.py:2041
-msgid "Ready to Install"
-msgstr "Listo para instalar"
-
-#: src/pages.py:2056
-msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
-msgstr "MODO DE DESARROLLO: el plan se validará y simulará. No se podrá ejecutar ningún ejecutor con privilegios ni comando de disco."
-
-#: src/pages.py:2081
-#, python-brace-format
-msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
-msgstr "{architecture} / {firmware} / Inicio seguro: {secure_boot}"
-
-#: src/pages.py:2090
-#, python-brace-format
-msgid "Unavailable: {error}"
-msgstr "No disponible: {error}"
-
-#: src/pages.py:2100
-msgid "single ext4 root filesystem"
-msgstr "sistema de archivos raíz ext4 único"
-
-#: src/pages.py:2103
-msgid "Language"
-msgstr "Idioma"
-
-#: src/pages.py:2104
-msgid "Keyboard"
-msgstr "Teclado"
-
-#: src/pages.py:2106
-msgid "Target Disk"
-msgstr "Disco objetivo"
-
-#: src/pages.py:2110
-msgid "Stable disk identity"
-msgstr "Identidad de disco estable"
-
-#: src/pages.py:2112
-msgid "Platform"
-msgstr "Plataforma"
-
-#: src/pages.py:2114
-msgid "Subvolumes"
-msgstr "Sovolúmenes"
-
-#: src/pages.py:2115
-msgid "Swap"
-msgstr "Intercambio (Swap)"
-
-#: src/pages.py:2117
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
-msgstr "Intercambio en disco de 4 GiB (prioridad 10) + zram LZ4 del 50 % de RAM (prioridad 100)"
+msgstr ""
+"Intercambio en disco de 4 GiB (prioridad 10) + zram LZ4 del 50 % de RAM "
+"(prioridad 100)"
 
-#: src/pages.py:2121
-msgid "System updates"
-msgstr "Actualizaciones del sistema"
-
-#: src/pages.py:2123
-msgid "download and install"
-msgstr "descargar e instalar"
-
-#: src/pages.py:2125 src/pages.py:2131
-msgid "do not install"
-msgstr "no instalar"
-
-#: src/pages.py:2127
-msgid "Third-party drivers"
-msgstr "Controladores de terceros"
-
-#: src/pages.py:2129
-msgid "detect and install (may include non-free software)"
-msgstr "detectar e instalar (puede incluir software no libre)"
-
-#: src/pages.py:2133
-msgid "Secure Boot enrollment"
-msgstr "Inscripción de Inicio seguro"
-
-#: src/pages.py:2136
-msgid "create a machine-local MOK; enroll after reboot with password 123456"
-msgstr "crear un MOK local de la máquina; inscribir después del reinicio con la contraseña 123456"
-
-#: src/pages.py:2141
-msgid "not required"
-msgstr "no requerido"
-
-#: src/pages.py:2143
-msgid "User"
-msgstr "Usuario"
-
-#: src/pages.py:2146
-msgid "Account security"
-msgstr "Seguridad de la cuenta"
-
-#: src/pages.py:2148
-msgid "automatic login"
-msgstr "inicio de sesión automático"
-
-#: src/pages.py:2150
-msgid "password required for login"
-msgstr "contraseña requerida para iniciar sesión"
-
-#: src/pages.py:2153
 msgid "; sudo does not require a password"
 msgstr "; sudo no requiere contraseña"
 
-#: src/pages.py:2155
 msgid "; sudo requires the account password"
 msgstr "; sudo requiere la contraseña de la cuenta"
 
-#: src/pages.py:2159
-msgid "Timezone"
-msgstr "Zona horaria"
-
-#: src/pages.py:2166
-msgid "Guided storage selection is missing. Rescan and select the target again."
-msgstr "Falta la selección de almacenamiento guiado. Vuelva a analizar y seleccione el destino nuevamente."
-
-#: src/pages.py:2174
-#, python-brace-format
-msgid "{name}: {start}–{end} MiB"
-msgstr "{name}: {start}–{end} MiB"
-
-#: src/pages.py:2182
-#, python-brace-format
-msgid "{path} as {filesystem}"
-msgstr "{path} como {filesystem}"
-
-#: src/pages.py:2190
-#, python-brace-format
-msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-msgstr "Reutilizar {path}; no lo formatee nunca; verifique la salud FAT, la identidad y 64 MiB libres antes de escribir."
-
-#: src/pages.py:2198
-msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-msgstr "Crear y formatear una partición EFI dedicada de AnduinOS dentro del espacio seleccionado."
-
-#: src/pages.py:2203
-msgid "Storage mode"
-msgstr "Modo de almacenamiento"
-
-#: src/pages.py:2204
-msgid "Install alongside"
-msgstr "Instalar junto a"
-
-#: src/pages.py:2205
-msgid "Selected unallocated space"
-msgstr "Espacio sin asignar seleccionado"
-
-#: src/pages.py:2206
-#, python-brace-format
-msgid "{size} at {offset}"
-msgstr "{size} en {offset}"
-
-#: src/pages.py:2210
-msgid "Preserved partitions"
-msgstr "Particiones preservadas"
-
-#: src/pages.py:2211
-#, python-brace-format
-msgid "{count}: {paths}"
-msgstr "{count}: {paths}"
-
-#: src/pages.py:2215
-msgid "New partitions"
-msgstr "Nuevas particiones"
-
-#: src/pages.py:2217
-msgid "Formats"
-msgstr "Formatea"
-
-#: src/pages.py:2219
-msgid "EFI policy"
-msgstr "Política EFI"
-
-#: src/pages.py:2221
-msgid "Boot policy"
-msgstr "Política de arranque"
-
-#: src/pages.py:2223
-msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr "Escribir solo EFI/AnduinOS, no sobrescribir EFI/BOOT y requerir una entrada NVRAM de AnduinOS verificada."
-
-#: src/pages.py:2253
-msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
-msgstr "⚠ Solo el espacio no asignado seleccionado se particionará y formateará. Las particiones existentes se conservan, pero los archivos EFI/AnduinOS y la entrada de arranque del firmware de AnduinOS pueden cambiar. Este instalador no reducirá Windows por usted."
-
-#: src/pages.py:2261
-msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
-msgstr "⚠ Esto borrará TODOS los datos del disco seleccionado. Esta acción no se puede deshacer."
-
-#: src/pages.py:2287
-msgid "Validate this installation plan?"
-msgstr "¿Validar este plan de instalación?"
-
-#: src/pages.py:2288
-msgid "Validate Plan (No Installation)"
-msgstr "Validar plan (sin instalación)"
-
-#: src/pages.py:2290
-msgid "Install in the selected free space?"
-msgstr "¿Instalar en el espacio libre seleccionado?"
-
-#: src/pages.py:2291 src/pages.py:2380
-msgid "Install Alongside"
-msgstr "Instalar junto a"
-
-#: src/pages.py:2293
-msgid "Erase the entire selected disk?"
-msgstr "¿Borrar todo el disco seleccionado?"
-
-#: src/pages.py:2294
-msgid "Erase Disk and Install"
-msgstr "Borrar disco e instalar"
-
-#: src/pages.py:2301
-#, python-brace-format
 msgid ""
-"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
-"\n"
+"A partition on this disk is mounted. Unmount it and rescan storage before "
+"continuing."
 msgstr ""
-"El modo de desarrollo simulará la instalación en {disk}. No se modificarán los datos del disco.\n"
-"\n"
+"Una partición en este disco está montada. Desmóntela y vuelva a escanear el "
+"almacenamiento antes de continuar."
 
-#: src/pages.py:2307
-#, python-brace-format
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "TODOS LOS DATOS en {disk} se borrarán permanentemente."
+
+msgid "Account security"
+msgstr "Seguridad de la cuenta"
+
+msgid "Administrator access would be locked"
+msgstr "El acceso de administrador quedaría bloqueado"
+
+msgid "Advanced Storage"
+msgstr "Almacenamiento avanzado"
+
 msgid ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
-msgstr "AnduinOS utilizará únicamente el espacio no asignado seleccionado en {disk}. Las particiones existentes se conservarán.\n\n"
+"Advanced coexistence can affect EFI firmware state and may trigger BitLocker "
+"recovery. It never shrinks or repairs Windows volumes."
+msgstr ""
+"La coexistencia avanzada puede afectar al estado del firmware EFI y puede "
+"desencadenar la recuperación de BitLocker. Nunca reduce ni repara las "
+"volúmenes de Windows."
 
-#: src/pages.py:2314
-#, python-brace-format
+msgid "Advanced — keep existing systems"
+msgstr "Avanzado: conservar los sistemas existentes"
+
+msgid "Advanced: Install Alongside"
+msgstr "Avanzado: instalar junto a otro sistema"
+
+msgid ""
+"After changing partitions or unmounting a volume, rescan storage and select "
+"the target again."
+msgstr ""
+"Después de cambiar particiones o desmontar un volumen, vuelva a escanear el "
+"almacenamiento y seleccione de nuevo el destino."
+
+msgid ""
+"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
+"then enter password 123456."
+msgstr ""
+"Después del reinicio, se abrirá MOKManager. Seleccione Inscribir MOK → "
+"Continuar → Sí e introduzca la contraseña 123456."
+
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -771,8 +103,567 @@ msgstr ""
 "Todas las particiones y datos en {disk} serán destruidos.\n"
 "\n"
 
-#: src/pages.py:2319
-#, python-brace-format
+msgid ""
+"Alternatively, you may explicitly select one entire partition to erase. "
+"Everything in that selected partition will be destroyed; it is never "
+"selected automatically."
+msgstr ""
+"Como alternativa, puede seleccionar explícitamente una partición completa "
+"para borrarla. Todo lo que haya en esa partición seleccionada se destruirá; "
+"nunca se selecciona automáticamente."
+
+msgid "AnduinOS Installer"
+msgstr "Instalador de AnduinOS"
+
+msgid "AnduinOS Installer (Beta)"
+msgstr "Instalador de AnduinOS (Beta)"
+
+msgid "AnduinOS Installer (Development)"
+msgstr "Instalador de AnduinOS (Desarrollo)"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing "
+"partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS utilizará únicamente el espacio no asignado seleccionado en {disk}. "
+"Las particiones existentes se conservarán.\n"
+"\n"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space. The installer will "
+"not shrink or move an existing filesystem."
+msgstr ""
+"AnduinOS utilizará únicamente el espacio no asignado seleccionado. El "
+"instalador no reducirá ni moverá un sistema de archivos existente."
+
+msgid ""
+"Any program running as your user can obtain full administrator privileges "
+"without authentication. Your login password still protects sign-in, but it "
+"will not protect sudo. Are you sure you want to continue?"
+msgstr ""
+"Cualquier programa que se ejecute como su usuario puede obtener privilegios "
+"completos de administrador sin autenticación. Su contraseña de inicio de "
+"sesión sigue protegiendo el acceso, pero no protegerá sudo. ¿Está seguro de "
+"que desea continuar?"
+
+msgid "Arabic"
+msgstr "Árabe"
+
+msgid "Back"
+msgstr "Atrás"
+
+msgid ""
+"Before continuing: finish Windows updates, disable Fast Startup and "
+"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
+"measurements and boot order can change."
+msgstr ""
+"Antes de continuar: finalice las actualizaciones de Windows, desactive el "
+"inicio rápido y la hibernación, y realice una copia de seguridad de la clave "
+"de recuperación de BitLocker. EFI, Secure Boot, las medidas TPM y el orden "
+"de arranque pueden cambiar."
+
+msgid "BitLocker detected"
+msgstr "BitLocker detectado"
+
+msgid ""
+"BitLocker storage will be preserved. The installer will not unlock, resize, "
+"repair or otherwise modify it."
+msgstr ""
+"El almacenamiento de BitLocker se conservará. El instalador no desbloqueará, "
+"redimensionará, reparará ni modificará de otra manera este almacenamiento."
+
+msgid "Boot policy"
+msgstr "Política de arranque"
+
+msgid "Btrfs (recommended)"
+msgstr "Btrfs (recomendado)"
+
+msgid "Btrfs — recommended"
+msgstr "Btrfs: recomendado"
+
+msgid "Cannot create installation plan"
+msgstr "No se puede crear el plan de instalación"
+
+msgid "Choose Installation Method"
+msgstr "Elegir método de instalación"
+
+msgid "Choose one target disk. Storage settings come next."
+msgstr ""
+"Seleccione un disco destino. A continuación se mostrarán la configuración de "
+"almacenamiento."
+
+msgid "Choose optional software to install"
+msgstr "Elija el software opcional que desea instalar"
+
+msgid "Choose your language to begin installation"
+msgstr "Elija su idioma para comenzar la instalación"
+
+msgid "Choose your location to set the system clock"
+msgstr "Elija su ubicación para establecer la hora del sistema"
+
+msgid "Complete"
+msgstr "Completo"
+
+msgid "Computer Name"
+msgstr "Nombre del equipo"
+
+msgid "Computer name contains invalid characters."
+msgstr "El nombre del equipo contiene caracteres no válidos."
+
+msgid "Configure account, region, and machine identity"
+msgstr "Configurar cuenta, región e identidad del equipo"
+
+msgid "Configure storage and swap"
+msgstr "Configurar almacenamiento e intercambio"
+
+msgid "Confirm Password"
+msgstr "Confirmar contraseña"
+
+msgid "Confirm your keyboard layout"
+msgstr "Confirme su distribución de teclado"
+
+msgid "Continue Installation"
+msgstr "Continuar instalación"
+
+msgid "Copy AnduinOS system"
+msgstr "Copiar sistema AnduinOS"
+
+msgid "Copy Log"
+msgstr "Copiar registro"
+
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Crear una nueva partición EFI de AnduinOS de 1 GiB"
+
+msgid ""
+"Create and format a dedicated AnduinOS EFI System Partition inside the "
+"selected space."
+msgstr ""
+"Crear y formatear una partición EFI dedicada de AnduinOS dentro del espacio "
+"seleccionado."
+
+msgid "Create your user account"
+msgstr "Cree su cuenta de usuario"
+
+msgid "Current disk layout"
+msgstr "Distribución actual del disco"
+
+msgid ""
+"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
+"executor or disk command can run."
+msgstr ""
+"MODO DE DESARROLLO: el plan se validará y simulará. No se podrá ejecutar "
+"ningún ejecutor con privilegios ni comando de disco."
+
+msgid "Danish"
+msgstr "Danés"
+
+msgid "Detect Internet connectivity"
+msgstr "Detectar la conectividad a Internet"
+
+msgid "Detect firmware and Secure Boot"
+msgstr "Detectar firmware e Inicio seguro"
+
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be "
+"changed.\n"
+"\n"
+msgstr ""
+"El modo de desarrollo simulará la instalación en {disk}. No se modificarán "
+"los datos del disco.\n"
+"\n"
+
+msgid "Development simulation completed"
+msgstr "Simulación de desarrollo completada"
+
+msgid "Discover AnduinOS"
+msgstr "Explore AnduinOS"
+
+msgid "Do not require a password for sudo commands"
+msgstr "No requerir contraseña para comandos sudo"
+
+msgid "Download and install system updates during installation"
+msgstr ""
+"Descargar e instalar actualizaciones del sistema durante la instalación"
+
+msgid "Dutch"
+msgstr "Alemán"
+
+msgid "EFI System Partition"
+msgstr "Partición del sistema EFI"
+
+msgid "EFI policy"
+msgstr "Política EFI"
+
+msgid "Empty disk — no partitions"
+msgstr "Disco vacío: no hay particiones"
+
+msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr ""
+"Habilita subvolúmenes de espacio compartido, instantáneas y Timeback Machine."
+
+msgid "English (UK)"
+msgstr "Inglés (Reino Unido)"
+
+msgid "English (US)"
+msgstr "Inglés (EE. UU.)"
+
+msgid "Ensure Timeback Machine is available"
+msgstr "Asegúrese de que Timeback Machine esté disponible"
+
+msgid "Erase Disk and Install"
+msgstr "Borrar disco e instalar"
+
+msgid "Erase every partition and all data on the selected disk."
+msgstr "Borra cada partición y todos los datos en el disco seleccionado."
+
+msgid "Erase the entire selected disk?"
+msgstr "¿Borrar todo el disco seleccionado?"
+
+msgid ""
+"Existing Windows, recovery and data partitions remain outside the write set "
+"and will be preserved."
+msgstr ""
+"Las particiones existentes de Windows, de recuperación y de datos permanecen "
+"fuera del conjunto de escritura y se conservarán."
+
+msgid ""
+"Existing partitions were detected. The first two choices delete them; "
+"Advanced is the preservation path."
+msgstr ""
+"Se detectaron particiones existentes. Las dos primeras opciones las "
+"eliminan; Avanzada es la ruta de preservación."
+
+msgid ""
+"Existing partitions will be preserved. New AnduinOS partitions will be "
+"created only in the selected unallocated extent; EFI vendor files and the "
+"AnduinOS firmware boot entry may be updated."
+msgstr ""
+"Se conservarán las particiones existentes. Las nuevas particiones de "
+"AnduinOS se crearán únicamente en la extensión no asignada seleccionada; los "
+"archivos del proveedor EFI y la entrada de arranque del firmware de AnduinOS "
+"pueden actualizarse."
+
+msgid "Filesystem"
+msgstr "Sistema de archivos"
+
+msgid "Finalize target environment"
+msgstr "Finalizar entorno objetivo"
+
+msgid "Finnish"
+msgstr "Finés"
+
+msgid "Formats"
+msgstr "Formatea"
+
+msgid "French"
+msgstr "Francés"
+
+msgid "Full Name"
+msgstr "Nombre completo"
+
+msgid "German"
+msgstr "Alemán"
+
+msgid "Greek"
+msgstr "Griego"
+
+msgid ""
+"Guided coexistence requires a system booted in UEFI mode and a GPT target "
+"disk. This disk cannot continue in guided mode."
+msgstr ""
+"La coexistencia guiada requiere un sistema iniciado en modo UEFI y un disco "
+"de destino GPT. Este disco no puede continuar en modo guiado."
+
+msgid ""
+"Guided storage selection is missing. Rescan and select the target again."
+msgstr ""
+"Falta la selección de almacenamiento guiado. Vuelva a analizar y seleccione "
+"el destino nuevamente."
+
+msgid "Hindi (India)"
+msgstr "Hindi (India)"
+
+msgid "How should AnduinOS use this disk?"
+msgstr "¿Cómo debería AnduinOS utilizar este disco?"
+
+msgid "I Understand the Risk, Continue"
+msgstr "Entiendo el riesgo, continuar"
+
+msgid "Indonesian"
+msgstr "Indonesio"
+
+msgid "Install"
+msgstr "Instalar"
+
+msgid "Install Alongside"
+msgstr "Instalar junto a"
+
+msgid "Install alongside"
+msgstr "Instalar junto a"
+
+msgid "Install alongside requires a password-protected account."
+msgstr "Instalar junto a requiere una cuenta protegida con contraseña."
+
+msgid "Install bootloader"
+msgstr "Instalar cargador de arranque"
+
+msgid "Install hardware drivers"
+msgstr "Instalar controladores de hardware"
+
+msgid "Install in the selected free space?"
+msgstr "¿Instalar en el espacio libre seleccionado?"
+
+msgid "Install system updates"
+msgstr "Instalar actualizaciones del sistema"
+
+msgid "Install third-party drivers for this device"
+msgstr "Instalar controladores de terceros para este dispositivo"
+
+msgid "Installation Complete"
+msgstr "Instalación completada"
+
+msgid "Installation Failed"
+msgstr "Fallo en la instalación"
+
+msgid "Installation Steps"
+msgstr "Pasos de la instalación"
+
+msgid ""
+"Installation cannot continue with this selection. There is no force-continue "
+"option around storage safety checks."
+msgstr ""
+"La instalación no puede continuar con esta selección. No existe una opción "
+"para forzar la continuidad en las comprobaciones de seguridad del "
+"almacenamiento."
+
+msgid "Installation complete"
+msgstr "Instalación completada"
+
+msgid "Installation failed"
+msgstr "La instalación ha fallado"
+
+msgid "Installation in progress"
+msgstr "Instalación en curso"
+
+msgid "Installing AnduinOS"
+msgstr "Instalando AnduinOS"
+
+msgid "Italian"
+msgstr "Italiano"
+
+msgid "Japanese"
+msgstr "Japonés"
+
+msgid "Keyboard"
+msgstr "Teclado"
+
+msgid "Keyboard Layout"
+msgstr "Distribución del teclado"
+
+msgid "Korean"
+msgstr "Coreano"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "Live USB — excluded"
+msgstr "USB Live — excluido"
+
+msgid "Mount target filesystems"
+msgstr "Montar sistemas de archivos objetivo"
+
+msgid "Navigation error"
+msgstr "Error de navegación"
+
+msgid "New partitions"
+msgstr "Nuevas particiones"
+
+msgid "Next"
+msgstr "Siguiente"
+
+msgid "Next slide"
+msgstr "Diapositiva siguiente"
+
+msgid "No partition table"
+msgstr "Sin tabla de particiones"
+
+msgid "No suitable disks found."
+msgstr "No se encontraron discos adecuados."
+
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with Windows Disk Management, then boot the installer "
+"again and rescan the disk."
+msgstr ""
+"No se encontró espacio no asignado adecuado. Para proteger sus datos, cree "
+"espacio no asignado con la Administración de discos de Windows, luego inicie "
+"el instalador nuevamente y vuelva a escanear el disco."
+
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with a partitioning tool, then boot the installer again "
+"and rescan the disk."
+msgstr ""
+"No se encontró espacio no asignado adecuado. Para proteger sus datos, cree "
+"espacio no asignado con una herramienta de particionado, luego inicie el "
+"instalador nuevamente y vuelva a escanear el disco."
+
+msgid "Norwegian"
+msgstr "Noruego"
+
+msgid "OK"
+msgstr "Aceptar"
+
+msgid "Output"
+msgstr "Salida"
+
+msgid "Output • Error"
+msgstr "Salida • Error"
+
+msgid "Output • {count} warning(s)"
+msgstr "Salida • {count} advertencia(s)"
+
+msgid "Partition details unavailable"
+msgstr "Detalles de la partición no disponibles"
+
+msgid "Password"
+msgstr "Contraseña"
+
+msgid "Password must be at least 6 characters."
+msgstr "La contraseña debe tener al menos 6 caracteres."
+
+msgid "Passwordless sudo is unsafe"
+msgstr "sudo sin contraseña es inseguro"
+
+msgid "Platform"
+msgstr "Plataforma"
+
+msgid "Please do not turn off your computer"
+msgstr "Por favor, no apague su computadora"
+
+msgid "Please review your choices before proceeding"
+msgstr "Revise sus elecciones antes de continuar"
+
+msgid "Polish"
+msgstr "Polaco"
+
+msgid "Portuguese"
+msgstr "Portugués"
+
+msgid "Portuguese (Brazil)"
+msgstr "Portugués (Brasil)"
+
+msgid "Prepare Secure Boot"
+msgstr "Preparar Inicio seguro"
+
+msgid "Prepare installation disk"
+msgstr "Preparar disco de instalación"
+
+msgid "Prepare target environment"
+msgstr "Preparar entorno objetivo"
+
+msgid "Preparing installation…"
+msgstr "Preparando la instalación…"
+
+msgid "Preserved partitions"
+msgstr "Particiones preservadas"
+
+msgid "Previous slide"
+msgstr "Diapositiva anterior"
+
+msgid "Ready to Install"
+msgstr "Listo para instalar"
+
+msgid "Reboot Now"
+msgstr "Reiniciar ahora"
+
+msgid "Refresh package indexes"
+msgstr "Actualizar índices de paquetes"
+
+msgid "Remove live-session components"
+msgstr "Quitar componentes de sesión en vivo"
+
+msgid "Remove the installation media and restart your computer"
+msgstr "Extraiga el medio de instalación y reinicie su computadora"
+
+msgid ""
+"Requires an Internet connection. The base installation remains available "
+"when offline."
+msgstr ""
+"Requiere conexión a Internet. La instalación base permanece disponible sin "
+"conexión."
+
+msgid "Rescan Storage"
+msgstr "Reescanear almacenamiento"
+
+msgid "Rescan and Reselect Disk"
+msgstr "Reescanear y volver a seleccionar disco"
+
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "Reiniciar e inscribir clave de Inicio seguro"
+
+msgid "Restart is disabled in development protection mode"
+msgstr "El reinicio está deshabilitado en el modo de protección de desarrollo"
+
+msgid "Return and Set a Password"
+msgstr "Volver y establecer una contraseña"
+
+msgid "Return to Make Changes"
+msgstr "Volver para realizar cambios"
+
+msgid "Reuse {path} ({size})"
+msgstr "Reutilizar {path} ({size})"
+
+msgid ""
+"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
+"before writing."
+msgstr ""
+"Reutilizar {path}; no lo formatee nunca; verifique la salud FAT, la "
+"identidad y 64 MiB libres antes de escribir."
+
+msgid "Romanian"
+msgstr "Rumano"
+
+msgid "Russian"
+msgstr "Ruso"
+
+msgid "Save Log"
+msgstr "Guardar registro"
+
+msgid "Schedule MOK enrollment"
+msgstr "Programar inscripción de MOK"
+
+msgid "Search timezones…"
+msgstr "Buscar zonas horarias…"
+
+msgid "Secure Boot enrollment"
+msgstr "Inscripción de Inicio seguro"
+
+msgid "Select Installation Disk"
+msgstr "Seleccionar disco de instalación"
+
+msgid "Select Timezone"
+msgstr "Seleccionar zona horaria"
+
+msgid "Select fastest package mirror"
+msgstr "Seleccionar espejo de paquetes más rápido"
+
+msgid "Selected timezone"
+msgstr "Zona horaria seleccionada"
+
+msgid "Selected unallocated space"
+msgstr "Espacio sin asignar seleccionado"
+
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr "Algunos controladores son propietarios o software no libre."
+
+msgid "Spanish"
+msgstr "Español"
+
+msgid "Stable disk identity"
+msgstr "Identidad de disco estable"
+
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -780,262 +671,330 @@ msgstr ""
 "Identidad estable: {stable_id}\n"
 "\n"
 
-#: src/pages.py:2323
+msgid "Storage Device"
+msgstr "Dispositivo de almacenamiento"
+
+msgid "Storage mode"
+msgstr "Modo de almacenamiento"
+
+msgid "Subvolumes"
+msgstr "Sovolúmenes"
+
+msgid "Swap"
+msgstr "Intercambio (Swap)"
+
+msgid "Swedish"
+msgstr "Sueco"
+
+msgid "System updates"
+msgstr "Actualizaciones del sistema"
+
+msgid "Target Disk"
+msgstr "Disco objetivo"
+
+msgid "Target: {disk} ({size} — {model})"
+msgstr "Destino: {disk} ({size} — {model})"
+
+msgid "Test your keyboard here…"
+msgstr "Pruébe su teclado aquí…"
+
+msgid "Thai"
+msgstr "Tailandés"
+
+msgid ""
+"The GPT disk or one of its partitions has no unique stable identifier. "
+"Guided coexistence cannot safely authorize preservation or writes on this "
+"disk."
+msgstr ""
+"El disco GPT o una de sus particiones no tiene un identificador único "
+"estable. La coexistencia guiada no puede autorizar de forma segura la "
+"preservación o escritura en este disco."
+
+msgid ""
+"The complete partition map and free-space geometry could not be read "
+"consistently. No space on this disk is authorized for installation."
+msgstr ""
+"No se ha podido leer de forma consistente el mapa de particiones completo y "
+"la geometría del espacio libre. No hay ningún espacio en este disco "
+"autorizado para la instalación."
+
+msgid ""
+"The existing EFI System Partition is only a candidate. Health and free-space "
+"checks must pass before it can be reused, and it will never be formatted."
+msgstr ""
+"La partición del sistema EFI existente es solo una candidata. Deben "
+"superarse las comprobaciones de estado y espacio libre antes de que pueda "
+"reutilizarse, y nunca se formateará."
+
+msgid ""
+"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot "
+"state, or installed system was changed."
+msgstr ""
+"El plan de instalación es válido. No se modificó ningún disco, sistema de "
+"archivos, cargador de arranque, estado de Inicio seguro ni sistema instalado."
+
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr ""
+"El instalador no se puede cerrar mientras está modificando el disco objetivo."
+
+msgid ""
+"The installer will not mount, repair or infer the safety of Windows volumes "
+"from hibernation or Fast Startup state. Any required Windows maintenance "
+"must be completed in Windows."
+msgstr ""
+"El instalador no montará, reparará ni inferirá la seguridad de los volúmenes "
+"de Windows procedentes del estado de hibernación o Inicio rápido. Cualquier "
+"mantenimiento requerido de Windows debe completarse en Windows."
+
 msgid "The privileged executor is disabled."
 msgstr "El ejecutor con privilegios está deshabilitado."
 
-#: src/pages.py:2326
-msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-msgstr "Se conservarán las particiones existentes. Las nuevas particiones de AnduinOS se crearán únicamente en la extensión no asignada seleccionada; los archivos del proveedor EFI y la entrada de arranque del firmware de AnduinOS pueden actualizarse."
+msgid ""
+"The selected disk changed or disappeared. Return to the disk page and select "
+"it again. {error}"
+msgstr ""
+"El disco seleccionado ha cambiado o ha desaparecido. Vuelva a la página de "
+"discos y seleccione uno de nuevo. {error}"
 
-#: src/pages.py:2334
+msgid "The selected disk size changed. Return and select it again."
+msgstr ""
+"El tamaño del disco seleccionado ha cambiado. Vuelva y selecciónelo de nuevo."
+
+msgid ""
+"The selected disk topology changed. Review the disk and installation method "
+"again."
+msgstr ""
+"La topología del disco seleccionado ha cambiado. Revise el disco y el método "
+"de instalación de nuevo."
+
+msgid ""
+"The system will sign in to this account automatically and allow it to obtain "
+"full administrator privileges without a password. Anyone with physical "
+"access, and any program running as this user, can completely control the "
+"system. Use this only for a kiosk, temporary virtual machine, or another "
+"controlled environment."
+msgstr ""
+"El sistema iniciará sesión en esta cuenta automáticamente y le permitirá "
+"obtener privilegios completos de administrador sin contraseña. Cualquier "
+"persona con acceso físico y cualquier programa que se ejecute como este "
+"usuario puede controlar completamente el sistema. Úselo solo para un "
+"quiosco, una máquina virtual temporal u otro entorno controlado."
+
+msgid "The two passwords do not match."
+msgstr "Las dos contraseñas no coinciden."
+
+msgid "Third-party drivers"
+msgstr "Controladores de terceros"
+
+msgid ""
+"This account has no login password, but sudo would still require one. "
+"Because the root account is locked by default, you would be unable to "
+"perform administrator tasks. Set an account password or enable passwordless "
+"sudo."
+msgstr ""
+"Esta cuenta no tiene contraseña de inicio de sesión, pero sudo aún "
+"requeriría una. Dado que la cuenta root está bloqueada por defecto, no podrá "
+"realizar tareas de administrador. Establezca una contraseña de cuenta o "
+"habilite sudo sin contraseña."
+
+msgid ""
+"This advanced path preserves existing partitions but changes the selected "
+"disk's partition table and the machine's EFI boot state."
+msgstr ""
+"Esta ruta avanzada conserva las particiones existentes, pero cambia la tabla "
+"de particiones del disco seleccionado y el estado de arranque EFI del equipo."
+
+msgid "This configuration is very unsafe"
+msgstr "Esta configuración es muy insegura"
+
+msgid ""
+"This disk contains an active mapper, array or other nested block-device "
+"topology that guided coexistence does not support."
+msgstr ""
+"Este disco contiene un mapeador activo, una matriz u otra topología anidada "
+"de dispositivo de bloques que la coexistencia guiada no admite."
+
+msgid ""
+"This disk is too small for whole-disk installation. Advanced may continue "
+"only if suitable unallocated space exists."
+msgstr ""
+"Este disco es demasiado pequeño para una instalación completa del disco. "
+"Advanced puede continuar solo si existe espacio no asignado adecuado."
+
 msgid "This installer does not shrink or preserve other systems."
 msgstr "Este instalador no reduce ni conserva otros sistemas."
 
-#: src/pages.py:2360
-msgid "Cannot create installation plan"
-msgstr "No se puede crear el plan de instalación"
+msgid "Timezone"
+msgstr "Zona horaria"
 
-#: src/pages.py:2382
-msgid "Install"
-msgstr "Instalar"
+msgid "Too small"
+msgstr "Demasiado pequeño"
 
-#: src/pages.py:2398 src/pages.py:2404
-msgid "Installing AnduinOS"
-msgstr "Instalando AnduinOS"
+msgid "Turkish"
+msgstr "Turco"
 
-#: src/pages.py:2413
-msgid "Detect firmware and Secure Boot"
-msgstr "Detectar firmware e Inicio seguro"
+msgid "Ukrainian"
+msgstr "Ucraniano"
 
-#: src/pages.py:2416
-msgid "Detect Internet connectivity"
-msgstr "Detectar la conectividad a Internet"
+msgid "Unallocated space"
+msgstr "Espacio no asignado"
 
-#: src/pages.py:2418
-msgid "Verify target disk isolation"
-msgstr "Verificar aislamiento del disco objetivo"
+msgid "Unallocated · {size}"
+msgstr "Sin asignar · {size}"
 
-#: src/pages.py:2419
-msgid "Prepare installation disk"
-msgstr "Preparar disco de instalación"
+msgid "Unavailable: {error}"
+msgstr "No disponible: {error}"
 
-#: src/pages.py:2420
-msgid "Mount target filesystems"
-msgstr "Montar sistemas de archivos objetivo"
+msgid "Unknown filesystem"
+msgstr "Sistema de archivos desconocido"
 
-#: src/pages.py:2421
-msgid "Copy AnduinOS system"
-msgstr "Copiar sistema AnduinOS"
-
-#: src/pages.py:2422
-msgid "Configure storage and swap"
-msgstr "Configurar almacenamiento e intercambio"
-
-#: src/pages.py:2423
-msgid "Prepare target environment"
-msgstr "Preparar entorno objetivo"
-
-#: src/pages.py:2424
-msgid "Remove live-session components"
-msgstr "Quitar componentes de sesión en vivo"
-
-#: src/pages.py:2425
-msgid "Configure account, region, and machine identity"
-msgstr "Configurar cuenta, región e identidad del equipo"
-
-#: src/pages.py:2427
-msgid "Select fastest package mirror"
-msgstr "Seleccionar espejo de paquetes más rápido"
-
-#: src/pages.py:2429
-msgid "Prepare Secure Boot"
-msgstr "Preparar Inicio seguro"
-
-#: src/pages.py:2430
-msgid "Refresh package indexes"
-msgstr "Actualizar índices de paquetes"
-
-#: src/pages.py:2431
-msgid "Install system updates"
-msgstr "Instalar actualizaciones del sistema"
-
-#: src/pages.py:2433
-msgid "Ensure Timeback Machine is available"
-msgstr "Asegúrese de que Timeback Machine esté disponible"
-
-#: src/pages.py:2435
-msgid "Install hardware drivers"
-msgstr "Instalar controladores de hardware"
-
-#: src/pages.py:2437
-msgid "Verify kernel module signatures"
-msgstr "Verificar firmas de módulos del kernel"
-
-#: src/pages.py:2439
-msgid "Install bootloader"
-msgstr "Instalar cargador de arranque"
-
-#: src/pages.py:2440
-msgid "Schedule MOK enrollment"
-msgstr "Programar inscripción de MOK"
-
-#: src/pages.py:2441
-msgid "Finalize target environment"
-msgstr "Finalizar entorno objetivo"
-
-#: src/pages.py:2442
 msgid "Unmount installed system"
 msgstr "Desmatar sistema instalado"
 
-#: src/pages.py:2480
-msgid "Installation Steps"
-msgstr "Pasos de la instalación"
+msgid "Updates and Drivers"
+msgstr "Actualizaciones y controladores"
 
-#: src/pages.py:2516
-msgid "Copy Log"
-msgstr "Copiar registro"
-
-#: src/pages.py:2520
-msgid "Save Log"
-msgstr "Guardar registro"
-
-#: src/pages.py:2591
-msgid "Previous slide"
-msgstr "Diapositiva anterior"
-
-#: src/pages.py:2597
-msgid "Next slide"
-msgstr "Diapositiva siguiente"
-
-#: src/pages.py:2642
-msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
-msgstr "Después del reinicio, se abrirá MOKManager. Seleccione Inscribir MOK → Continuar → Sí e introduzca la contraseña 123456."
-
-#: src/pages.py:2650
-msgid "Restart and Enroll Secure Boot Key"
-msgstr "Reiniciar e inscribir clave de Inicio seguro"
-
-#: src/pages.py:2652
-msgid "Reboot Now"
-msgstr "Reiniciar ahora"
-
-#: src/pages.py:2673
-msgid "Discover AnduinOS"
-msgstr "Explore AnduinOS"
-
-#: src/pages.py:2676
-msgid "Output"
-msgstr "Salida"
-
-#: src/pages.py:2679
-msgid "Complete"
-msgstr "Completo"
-
-#: src/pages.py:2712
-msgid "Preparing installation…"
-msgstr "Preparando la instalación…"
-
-#: src/pages.py:2758 src/pages.py:2824
-msgid "Installation complete"
-msgstr "Instalación completada"
-
-#: src/pages.py:2762
-msgid "Development simulation completed"
-msgstr "Simulación de desarrollo completada"
-
-#: src/pages.py:2765
-msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
-msgstr "El plan de instalación es válido. No se modificó ningún disco, sistema de archivos, cargador de arranque, estado de Inicio seguro ni sistema instalado."
-
-#: src/pages.py:2772
 msgid ""
-"\n"
-"\n"
-"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+"Use already-unallocated space and preserve existing partitions. This is the "
+"only Windows coexistence path."
 msgstr ""
-"\n"
-"\n"
-"Una instalación real creará un MOK local de la máquina. Después del reinicio, seleccione Inscribir MOK → Continuar → Sí en MOKManager e introduzca la contraseña 123456."
+"Usar el espacio ya no asignado y preservar las particiones existentes. Este "
+"es el único camino de coexistencia con Windows."
 
-#: src/pages.py:2779 src/pages.py:2789 src/pages.py:2932 src/pages.py:2934
-msgid "Installation Complete"
-msgstr "Instalación completada"
+msgid "Use only existing unallocated space on the selected disk."
+msgstr ""
+"Usar únicamente el espacio no asignado existente en el disco seleccionado."
 
-#: src/pages.py:2781 src/pages.py:2790
-msgid "Remove the installation media and restart your computer"
-msgstr "Extraiga el medio de instalación y reinicie su computadora"
+msgid "User"
+msgstr "Usuario"
 
-#: src/pages.py:2783
+msgid "User Account"
+msgstr "Cuenta de usuario"
+
+msgid "Username"
+msgstr "Nombre de usuario"
+
 msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
+"Username must start with a lowercase ASCII letter and contain only lowercase "
+"ASCII letters or digits (maximum 16 characters)."
 msgstr ""
-"\n"
-"En la pantalla azul de MOKManager, elija Inscribir MOK → Continuar → Sí, contraseña: 123456"
+"Username must start with a lowercase ASCII letter and contain only lowercase "
+"ASCII letters or digits (maximum 16 characters)."
 
-#: src/pages.py:2799
-msgid "Restart is disabled in development protection mode"
-msgstr "El reinicio está deshabilitado en el modo de protección de desarrollo"
+msgid "Uses a traditional single root filesystem."
+msgstr "Utiliza un sistema de archivos raíz único tradicional."
 
-#: src/pages.py:2807
-msgid "Installation failed"
-msgstr "La instalación ha fallado"
+msgid "Validate Plan (No Installation)"
+msgstr "Validar plan (sin instalación)"
 
-#: src/pages.py:2809
-msgid "Installation Failed"
-msgstr "Fallo en la instalación"
+msgid "Validate this installation plan?"
+msgstr "¿Validar este plan de instalación?"
 
-#: src/pages.py:2812 src/pages.py:2867
-msgid "Output • Error"
-msgstr "Salida • Error"
+msgid "Verify kernel module signatures"
+msgstr "Verificar firmas de módulos del kernel"
 
-#: src/pages.py:2862
-#, python-brace-format
-msgid "Output • {count} warning(s)"
-msgstr "Salida • {count} advertencia(s)"
+msgid "Verify target disk isolation"
+msgstr "Verificar aislamiento del disco objetivo"
 
-#: src/pages.py:2870
-#, python-brace-format
+msgid "Vietnamese"
+msgstr "Vietnamita"
+
+msgid "Welcome to AnduinOS"
+msgstr "Bienvenido a AnduinOS"
+
+msgid "Windows detected"
+msgstr "Windows detectado"
+
+msgid ""
+"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
+"AnduinOS NVRAM entry."
+msgstr ""
+"Escribir solo EFI/AnduinOS, no sobrescribir EFI/BOOT y requerir una entrada "
+"NVRAM de AnduinOS verificada."
+
+msgid "automatic login"
+msgstr "inicio de sesión automático"
+
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr ""
+"crear un MOK local de la máquina; inscribir después del reinicio con la "
+"contraseña 123456"
+
+msgid "detect and install (may include non-free software)"
+msgstr "detectar e instalar (puede incluir software no libre)"
+
+msgid "do not install"
+msgstr "no instalar"
+
+msgid "download and install"
+msgstr "descargar e instalar"
+
+msgid "ext4 (classic)"
+msgstr "ext4 (clásico)"
+
+msgid "ext4 — classic"
+msgstr "ext4 — clásico"
+
+msgid "not required"
+msgstr "no requerido"
+
+msgid "password required for login"
+msgstr "contraseña requerida para iniciar sesión"
+
+msgid "single ext4 root filesystem"
+msgstr "sistema de archivos raíz ext4 único"
+
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / Inicio seguro: {secure_boot}"
+
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+msgid "{path} as {filesystem}"
+msgstr "{path} como {filesystem}"
+
+msgid "{size} at {offset}"
+msgstr "{size} en {offset}"
+
+msgid "{size} unallocated at {offset}"
+msgstr "{size} sin asignar en {offset}"
+
 msgid "{step} failed"
 msgstr "fallo en {step}"
 
-#: src/pages.py:715
-msgid "Empty disk — no partitions"
-msgstr "Disco vacío: no hay particiones"
+msgid ""
+"⚠ Only the selected unallocated space will be partitioned and formatted. "
+"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
+"firmware boot entry may change. This installer will not shrink Windows for "
+"you."
+msgstr ""
+"⚠ Solo el espacio no asignado seleccionado se particionará y formateará. Las "
+"particiones existentes se conservan, pero los archivos EFI/AnduinOS y la "
+"entrada de arranque del firmware de AnduinOS pueden cambiar. Este instalador "
+"no reducirá Windows por usted."
 
-#: src/pages.py:468
-msgid "Confirm your keyboard layout"
-msgstr "Confirme su distribución de teclado"
+msgid ""
+"⚠ This will erase ALL data on the selected disk. This action cannot be "
+"undone."
+msgstr ""
+"⚠ Esto borrará TODOS los datos del disco seleccionado. Esta acción no se "
+"puede deshacer."
 
-#: src/pages.py:540
-msgid "Choose optional software to install"
-msgstr "Elija el software opcional que desea instalar"
+#: src/pages.py
+msgid "Connect to the Internet"
+msgstr "Conectarse a Internet"
 
-#: src/pages.py:758
-msgid "Choose one target disk. Storage settings come next."
-msgstr "Seleccione un disco destino. A continuación se mostrarán la configuración de almacenamiento."
+#: src/pages.py
+msgid "Internet connection is ready."
+msgstr "La conexión a Internet está lista."
 
-#: src/pages.py:923
-msgid "Choose a complete installation method, not only a filesystem."
-msgstr "Elija un método de instalación completo, no solo un sistema de archivos."
+#: src/pages.py
+msgid "Available Wi-Fi Networks"
+msgstr "Redes Wi-Fi disponibles"
 
-#: src/pages.py:1184
-msgid "Use only existing unallocated space on the selected disk."
-msgstr "Usar únicamente el espacio no asignado existente en el disco seleccionado."
-
-#: src/pages.py:1586
-msgid "Create your user account"
-msgstr "Cree su cuenta de usuario"
-
-#: src/pages.py:1902
-msgid "Choose your location to set the system clock"
-msgstr "Elija su ubicación para establecer la hora del sistema"
-
-#: src/pages.py:2042
-msgid "Please review your choices before proceeding"
-msgstr "Revise sus elecciones antes de continuar"
-
-#: src/pages.py:2405
-msgid "Please do not turn off your computer"
-msgstr "Por favor, no apague su computadora"
+#~ msgid "Choose a complete installation method, not only a filesystem."
+#~ msgstr ""
+#~ "Elija un método de instalación completo, no solo un sistema de archivos."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-timeback-machine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-01 02:58+0000\n"
+"POT-Creation-Date: 2026-08-02 17:52+0000\n"
 "PO-Revision-Date: 2026-08-01 02:58+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -44,8 +44,19 @@ msgstr "Sistem değişikliklerinin net bir geçmişi"
 msgid "A compatible Btrfs layout is required"
 msgstr "Uyumlu bir Btrfs düzeni gereklidir"
 
+msgid ""
+"A one-time recovery boot will be prepared. Nothing changes until you restart."
+msgstr ""
+"A one-time recovery boot will be prepared. Nothing changes until you restart."
+
 msgid "A protected safety point will be created before restart."
-msgstr "Yeniden başlatmadan önce korunmuş bir güvenlik noktası oluşturulacaktır."
+msgstr ""
+"Yeniden başlatmadan önce korunmuş bir güvenlik noktası oluşturulacaktır."
+
+msgid ""
+"APT-managed package changes are surrounded by fail-open recovery points."
+msgstr ""
+"APT-managed package changes are surrounded by fail-open recovery points."
 
 msgid "About Timeback Machine"
 msgstr "Timeback Machine Hakkında"
@@ -79,6 +90,21 @@ msgstr "Otomatik"
 
 msgid "Automatic Protection"
 msgstr "Otomatik Koruma"
+
+msgid "Automatic snapshot"
+msgstr "Automatic snapshot"
+
+msgid "Automatic snapshot policies saved"
+msgstr "Automatic snapshot policies saved"
+
+msgid "Automatic snapshot service"
+msgstr "Automatic snapshot service"
+
+msgid "Automatic snapshot status could not be loaded."
+msgstr "Automatic snapshot status could not be loaded."
+
+msgid "Automatic snapshots"
+msgstr "Automatic snapshots"
 
 msgid "Available on Btrfs installations"
 msgstr "Btrfs kurulumlarında kullanılabilir"
@@ -134,6 +160,23 @@ msgstr "Sistem Geri Yüklemesi İptal Ediliyor"
 msgid "Capacity"
 msgstr "Kapasite"
 
+msgid "Check Snapshot Policy"
+msgstr "Check Snapshot Policy"
+
+msgid ""
+"Choose one policy for both volumes, or manage System and User Data "
+"independently."
+msgstr ""
+"Choose one policy for both volumes, or manage System and User Data "
+"independently."
+
+msgid ""
+"Cleanup runs after package transactions and rechecks free space after every "
+"deletion."
+msgstr ""
+"Cleanup runs after package transactions and rechecks free space after every "
+"deletion."
+
 msgid "Close"
 msgstr "Kapat"
 
@@ -155,6 +198,22 @@ msgstr "Kurtarma Noktası Oluştur"
 msgid "Create a recovery point before APT changes packages"
 msgstr "APT paketleri değiştirmeden önce bir kurtarma noktası oluştur"
 
+msgid ""
+"Create a recovery point before a system change so you can return to a known "
+"state."
+msgstr ""
+"Create a recovery point before a system change so you can return to a known "
+"state."
+
+msgid "Create every"
+msgstr "Create every"
+
+msgid "Create recovery points and safely return AnduinOS to an earlier state."
+msgstr "Create recovery points and safely return AnduinOS to an earlier state."
+
+msgid "Create snapshots automatically"
+msgstr "Create snapshots automatically"
+
 msgid "Created before a manual system change"
 msgstr "Manuel sistem değişikliğinden önce oluşturuldu"
 
@@ -167,11 +226,17 @@ msgstr "Kurtarma Noktası Oluşturuluyor"
 msgid "Current"
 msgstr "Geçerli"
 
+msgid "Days after creation"
+msgstr "Days after creation"
+
 msgid "Delete"
 msgstr "Sil"
 
 msgid "Delete Recovery Point?"
 msgstr "Kurtarma Noktası Silinsin mi?"
+
+msgid "Delete all snapshots older than"
+msgstr "Delete all snapshots older than"
 
 msgid "Delete recovery point"
 msgstr "Kurtarma noktasını sil"
@@ -209,11 +274,23 @@ msgstr "Tahmini özel veri"
 msgid "Factory"
 msgstr "Fabrika"
 
+msgid "Factory snapshot"
+msgstr "Factory snapshot"
+
+msgid "Failed"
+msgstr "Failed"
+
 msgid "Filesystem"
 msgstr "Dosya sistemi"
 
 msgid "Healthy"
 msgstr "Sağlıklı"
+
+msgid "Hours"
+msgstr "Hours"
+
+msgid "Hours between successful snapshots"
+msgstr "Hours between successful snapshots"
 
 msgid "Incomplete"
 msgstr "Eksik"
@@ -224,17 +301,48 @@ msgstr "Bütünlük talep üzerine doğrulanabilir"
 msgid "Just now"
 msgstr "Hemen şimdi"
 
+msgid "Keep System and User Data snapshot policies identical"
+msgstr "Keep System and User Data snapshot policies identical"
+
 msgid "Keep a verified post-update deployment"
 msgstr "Güncelleme sonrası doğrulanmış bir dağıtımı koru"
 
 msgid "Keep at least two update pairs and one known-good recovery point"
 msgstr "En az iki güncelleme çifti ve bir bilinen iyi kurtarma noktası tut"
 
+msgid "Keep every snapshot for"
+msgstr "Keep every snapshot for"
+
+msgid ""
+"Keep recent snapshots densely, then retain the first snapshot in each "
+"calendar period."
+msgstr ""
+"Keep recent snapshots densely, then retain the first snapshot in each "
+"calendar period."
+
+msgid "Keep the first snapshot of each day until"
+msgstr "Keep the first snapshot of each day until"
+
+msgid "Keep the first snapshot of each month until"
+msgstr "Keep the first snapshot of each month until"
+
+msgid "Keep the first snapshot of each week until"
+msgstr "Keep the first snapshot of each week until"
+
+msgid "Keep this window open. Recovery metadata is committed atomically."
+msgstr "Keep this window open. Recovery metadata is committed atomically."
+
 msgid "Keep until I delete it"
 msgstr "Silene kadar koru"
 
 msgid "Kernel and initramfs"
 msgstr "Çekirdek ve initramfs"
+
+msgid "Last automatic operation"
+msgstr "Last automatic operation"
+
+msgid "Last snapshot: {0} · Next snapshot: {1}"
+msgstr "Last snapshot: {0} · Next snapshot: {1}"
 
 msgid "Latest point"
 msgstr "Son nokta"
@@ -251,6 +359,9 @@ msgstr "Manuel"
 msgid "Manual recovery point"
 msgstr "Manuel kurtarma noktası"
 
+msgid "Manual snapshot"
+msgstr "Manual snapshot"
+
 msgid "Measurement pending"
 msgstr "Ölçüm bekliyor"
 
@@ -260,14 +371,29 @@ msgstr "Sabah kontrol noktası"
 msgid "Name"
 msgstr "İsim"
 
+msgid "Never"
+msgstr "Never"
+
 msgid "Next cleanup"
 msgstr "Sonraki temizlik"
+
+msgid "No complete shared snapshot yet"
+msgstr "No complete shared snapshot yet"
 
 msgid "No recovery points yet"
 msgstr "Henüz kurtarma noktası yok"
 
+msgid "No snapshot can be created while demo data is active."
+msgstr "No snapshot can be created while demo data is active."
+
 msgid "Not created yet"
 msgstr "Henüz oluşturulmadı"
+
+msgid "Not scheduled"
+msgstr "Not scheduled"
+
+msgid "Off"
+msgstr "Off"
 
 msgid "Only eligible automatic package recovery points are considered"
 msgstr "Sadece uygun otomatik paket kurtarma noktaları dikkate alınır"
@@ -282,16 +408,23 @@ msgid "Persistent, human-readable recovery events"
 msgstr "Sürekli, insan tarafından okunabilir kurtarma olayları"
 
 msgid "Personal files and disks will not be modified by this application."
-msgstr "Kişisel dosyalarınız ve diskleriniz bu uygulama tarafından değiştirilmeyecektir."
+msgstr ""
+"Kişisel dosyalarınız ve diskleriniz bu uygulama tarafından "
+"değiştirilmeyecektir."
 
 msgid "Personal files, logs, containers, and virtual machines stay unchanged."
-msgstr "Kişisel dosyalar, günlükler, konteynerler ve sanal makineler değişmeden kalır."
+msgstr ""
+"Kişisel dosyalar, günlükler, konteynerler ve sanal makineler değişmeden "
+"kalır."
 
 msgid "Pin recovery point"
 msgstr "Kurtarma noktasını sabitle"
 
 msgid "Pinned"
 msgstr "Sabitlenmiş"
+
+msgid "Pinned recovery points are never cleaned automatically"
+msgstr "Pinned recovery points are never cleaned automatically"
 
 msgid "Pinning Recovery Point"
 msgstr "Kurtarma Noktası Sabitleniyor"
@@ -339,13 +472,18 @@ msgid "Recovery point metadata needs attention"
 msgstr "Kurtarma noktası meta verilerinin dikkat gerektirdiği durumlar var"
 
 msgid "Recovery point storage is temporarily unavailable on ext4."
-msgstr "ext4 üzerinde kurtarma noktası depolaması geçici olarak kullanılamıyor."
+msgstr ""
+"ext4 üzerinde kurtarma noktası depolaması geçici olarak kullanılamıyor."
 
 msgid "Recovery points are unavailable"
 msgstr "Kurtarma noktaları kullanılamıyor"
 
-msgid "Recovery points protect the operating system while your personal files stay in the present."
-msgstr "Kurtarma noktaları işletim sistemini korurken kişisel dosyalarınız güncel kalır."
+msgid ""
+"Recovery points protect the operating system while your personal files stay "
+"in the present."
+msgstr ""
+"Kurtarma noktaları işletim sistemini korurken kişisel dosyalarınız güncel "
+"kalır."
 
 msgid "Recovery service unavailable"
 msgstr "Kurtarma hizmeti kullanılamıyor"
@@ -362,6 +500,19 @@ msgstr "Daha Sonra Yeniden Başlat"
 msgid "Restart Now"
 msgstr "Şimdi Yeniden Başlat"
 
+msgid ""
+"Restart to enter the one-time recovery environment. You can cancel from the "
+"recovery point before restarting."
+msgstr ""
+"Restart to enter the one-time recovery environment. You can cancel from the "
+"recovery point before restarting."
+
+msgid "Restore Recommended Values"
+msgstr "Restore Recommended Values"
+
+msgid "Restore safety snapshot"
+msgstr "Restore safety snapshot"
+
 msgid "Restore to This Point"
 msgstr "Bu Noktaya Geri Yükle"
 
@@ -373,6 +524,13 @@ msgstr "“{0}” Geri Yüklesin mi?"
 
 msgid "Retention"
 msgstr "Tutma"
+
+msgid ""
+"Retention periods must progress from keep-all to daily, weekly, monthly, and "
+"final deletion."
+msgstr ""
+"Retention periods must progress from keep-all to daily, weekly, monthly, and "
+"final deletion."
 
 msgid "Retention status"
 msgstr "Tutma durumu"
@@ -386,11 +544,32 @@ msgstr "Geri Döndürüldü"
 msgid "Root filesystem"
 msgstr "Kök dosya sistemi"
 
+msgid "Save Policy"
+msgstr "Save Policy"
+
+msgid "Schedule status"
+msgstr "Schedule status"
+
+msgid "See when your data was last captured and when protection runs next."
+msgstr "See when your data was last captured and when protection runs next."
+
 msgid "Settings"
 msgstr "Ayarlar"
 
+msgid "Shared Btrfs extents make per-recovery-point sizes approximate."
+msgstr "Shared Btrfs extents make per-recovery-point sizes approximate."
+
+msgid "Shared Policy"
+msgstr "Shared Policy"
+
 msgid "Show navigation"
 msgstr "Navigasyonu göster"
+
+msgid "Snapshot Policies"
+msgstr "Snapshot Policies"
+
+msgid "Snapshot source"
+msgstr "Snapshot source"
 
 msgid "Space is shared between the system and recovery points."
 msgstr "Uzay, sistem ve kurtarma noktaları arasında paylaşılmaktadır."
@@ -401,6 +580,9 @@ msgstr "Depolama"
 msgid "Storage layout inspected"
 msgstr "Depolama düzeni incelendi"
 
+msgid "System"
+msgstr "System"
+
 msgid "System Recovery"
 msgstr "Sistem Kurtarma"
 
@@ -409,6 +591,9 @@ msgstr "Sistem Kurtarma Aktivitesi"
 
 msgid "System Restore Is Ready"
 msgstr "Sistem Geri Yüklemesi Hazır"
+
+msgid "System and User Data"
+msgstr "System and User Data"
 
 msgid "System changes"
 msgstr "Sistem değişiklikleri"
@@ -419,6 +604,9 @@ msgstr "Sistem kurtarma"
 msgid "System recovery is unavailable"
 msgstr "Sistem kurtarması kullanılamıyor"
 
+msgid "System snapshots can be used for a full system restore."
+msgstr "System snapshots can be used for a full system restore."
+
 msgid "System software and settings will return to this point."
 msgstr "Sistem yazılımı ve ayarları bu noktaya dönecektir."
 
@@ -428,29 +616,82 @@ msgstr "Geçici olarak kullanılamıyor"
 msgid "The current system will be protected before restart."
 msgstr "Geçerli sistem yeniden başlatmadan önce korunacaktır."
 
+msgid ""
+"The operating system will be captured without changing personal files, logs, "
+"containers, or virtual machines."
+msgstr ""
+"The operating system will be captured without changing personal files, logs, "
+"containers, or virtual machines."
+
+msgid "The recovery service could not be reached; no system data was changed"
+msgstr "The recovery service could not be reached; no system data was changed"
+
 msgid "The recovery service is unavailable"
 msgstr "Kurtarma hizmeti kullanılamıyor"
 
 msgid "The recovery worker disconnected"
 msgstr "Kurtarma işçisi bağlantısını kesti"
 
-msgid "The restored system must boot successfully or the previous system returns automatically."
-msgstr "Geri yüklenen sistemin başarıyla önyüklemesi gerekir, aksi takdirde önceki sistem otomatik olarak geri döner."
+msgid ""
+"The restored system must boot successfully or the previous system returns "
+"automatically."
+msgstr ""
+"Geri yüklenen sistemin başarıyla önyüklemesi gerekir, aksi takdirde önceki "
+"sistem otomatik olarak geri döner."
 
 msgid "The system is ready for the manual recovery milestone."
 msgstr "Sistem manuel kurtarma kilometre taşı için hazır."
 
+msgid "The system service did not return its automatic snapshot configuration."
+msgstr ""
+"The system service did not return its automatic snapshot configuration."
+
 msgid "The system storage layout could not be inspected"
 msgstr "Sistem depolama düzeni inceleneemedi"
 
-msgid "This AnduinOS installation uses ext4. Timeback Machine recovery points currently require Btrfs."
-msgstr "Bu AnduinOS kurulumu ext4 kullanıyor. Timeback Machine kurtarma noktaları şu anda Btrfs gerektiriyor."
+msgid ""
+"This AnduinOS installation uses ext4. Timeback Machine recovery points "
+"currently require Btrfs."
+msgstr ""
+"Bu AnduinOS kurulumu ext4 kullanıyor. Timeback Machine kurtarma noktaları şu "
+"anda Btrfs gerektiriyor."
 
-msgid "This installation does not use the complete AnduinOS Btrfs recovery layout."
+msgid ""
+"This installation does not use the complete AnduinOS Btrfs recovery layout."
 msgstr "Bu kurulum tam AnduinOS Btrfs kurtarma düzenini kullanmıyor."
+
+msgid ""
+"This installation uses ext4. Nothing is wrong with your system, but recovery "
+"points currently require Btrfs."
+msgstr ""
+"This installation uses ext4. Nothing is wrong with your system, but recovery "
+"points currently require Btrfs."
+
+msgid ""
+"This installation uses ext4. Timeback Machine recovery points currently "
+"require Btrfs."
+msgstr ""
+"This installation uses ext4. Timeback Machine recovery points currently "
+"require Btrfs."
+
+msgid "This policy is applied to both snapshot streams."
+msgstr "This policy is applied to both snapshot streams."
+
+msgid "This volume is not an independent compatible Btrfs subvolume."
+msgstr "This volume is not an independent compatible Btrfs subvolume."
+
+msgid "Tiered Retention"
+msgstr "Tiered Retention"
 
 msgid "Timeback Machine"
 msgstr "Zaman Makinesi"
+
+msgid ""
+"Timeback Machine currently requires an AnduinOS installation using Btrfs. "
+"This system uses {0}."
+msgstr ""
+"Timeback Machine currently requires an AnduinOS installation using Btrfs. "
+"This system uses {0}."
 
 msgid "Timeback Machine has not changed this installation."
 msgstr "Timeback Machine bu kurulumu değiştirmemiştir."
@@ -464,6 +705,9 @@ msgstr "Timeback Machine Btrfs gerektiriyor; bu sistem {0} kullanıyor"
 msgid "Today"
 msgstr "Bugün"
 
+msgid "Today, 14:00"
+msgstr "Today, 14:00"
+
 msgid "Today, 14:27 · 12 packages changed"
 msgstr "Bugün, 14:27 · 12 paket değişti"
 
@@ -472,6 +716,9 @@ msgstr "Bugün, 14:32"
 
 msgid "Today, 14:32 · Kernel 7.0.0-28"
 msgstr "Bugün, 14:32 · Çekirdek 7.0.0-28"
+
+msgid "Today, 16:00"
+msgstr "Today, 16:00"
 
 msgid "Unavailable"
 msgstr "Kullanılamıyor"
@@ -488,6 +735,15 @@ msgstr "Kurtarma Noktasının Sabitliği Kaldırılıyor"
 msgid "Unverified"
 msgstr "Doğrulanmamış"
 
+msgid "Update snapshot"
+msgstr "Update snapshot"
+
+msgid "User Data"
+msgstr "User Data"
+
+msgid "User Data snapshots preserve the independent Home subvolume."
+msgstr "User Data snapshots preserve the independent Home subvolume."
+
 msgid "Verified"
 msgstr "Doğrulanmış"
 
@@ -502,6 +758,13 @@ msgstr "Bekliyor"
 
 msgid "Waiting for authorization…"
 msgstr "Onay bekleniyor…"
+
+msgid ""
+"When linking different policies, the current System values become the shared "
+"policy."
+msgstr ""
+"When linking different policies, the current System values become the shared "
+"policy."
 
 msgid "Yesterday"
 msgstr "Dün"
@@ -526,3 +789,102 @@ msgstr "{0} nokta(lar)"
 
 msgid "—"
 msgstr "—"
+
+msgid ""
+"“{0}” will be permanently removed. The running system and personal files "
+"will not change."
+msgstr ""
+"“{0}” will be permanently removed. The running system and personal files "
+"will not change."
+
+#: src/snapshot_browser.rs:38
+msgid "Snapshot Files"
+msgstr "Snapshot Files"
+
+#: src/snapshot_browser.rs:61
+msgid "Parent Folder"
+msgstr "Parent Folder"
+
+#: src/snapshot_browser.rs:66
+msgid "Show Hidden Files"
+msgstr "Show Hidden Files"
+
+#: src/snapshot_browser.rs:74
+msgid "Read-only snapshot"
+msgstr "Read-only snapshot"
+
+#: src/snapshot_browser.rs:154
+msgid "Could Not Open Folder"
+msgstr "Could Not Open Folder"
+
+#: src/snapshot_browser.rs:176
+msgid "This Folder Is Empty"
+msgstr "This Folder Is Empty"
+
+#: src/snapshot_browser.rs:177
+msgid "There are no files to display."
+msgstr "There are no files to display."
+
+#: src/snapshot_browser.rs:182
+msgid "This folder is very large; only the first 1,000 items are shown."
+msgstr "This folder is very large; only the first 1,000 items are shown."
+
+#: src/snapshot_browser.rs:221
+msgid "Copy Out…"
+msgstr "Copy Out…"
+
+#: src/snapshot_browser.rs:236
+msgid "Not copyable"
+msgstr "Not copyable"
+
+#: src/snapshot_browser.rs:257
+msgid "Copy File Out of Snapshot"
+msgstr "Copy File Out of Snapshot"
+
+#: src/snapshot_browser.rs:259
+msgid "Copy"
+msgstr "Copy"
+
+#: src/snapshot_browser.rs:271
+msgid "Choose a location on this computer."
+msgstr "Choose a location on this computer."
+
+#: src/snapshot_browser.rs:298
+msgid "File copied successfully"
+msgstr "File copied successfully"
+
+#: src/snapshot_browser.rs:308
+msgid "Could not copy the file"
+msgstr "Could not copy the file"
+
+#: src/snapshot_browser.rs:332
+msgid "Folder"
+msgstr "Folder"
+
+#: src/snapshot_browser.rs:334
+msgid "Symbolic link — not followed for safety"
+msgstr "Symbolic link — not followed for safety"
+
+#: src/snapshot_browser.rs:335
+msgid "Special file — cannot be copied"
+msgstr "Special file — cannot be copied"
+
+#: src/window.rs:1019
+msgid "User Data Snapshots"
+msgstr "User Data Snapshots"
+
+#: src/window.rs:1027
+msgid "Automatic User Data Snapshot"
+msgstr "Automatic User Data Snapshot"
+
+#: src/window.rs:1045 src/window.rs:2148
+msgid "Browse snapshot files"
+msgstr "Browse snapshot files"
+
+#: src/window.rs:1056
+msgid "User Data Snapshot"
+msgstr "User Data Snapshot"
+
+#: src/window.rs:1067
+msgid "User data snapshots are unavailable"
+msgstr "User data snapshots are unavailable"

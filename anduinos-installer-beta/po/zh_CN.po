@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-01 18:33+0800\n"
+"POT-Creation-Date: 2026-08-01 11:01+0000\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,753 +17,75 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.py:88
-msgid "AnduinOS Installer (Development)"
-msgstr "AnduinOS 安装程序（开发版）"
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose "
+"Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"实际安装将创建本地 MOK。重启后，在 MOKManager 中选择“注册 MOK”→“继续”→“是”，"
+"并输入密码 123456。"
+
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: "
+"123456"
+msgstr ""
+"\n"
+"在蓝色的 MOKManager 屏幕上选择“注册 MOK”→“继续”→“是”，密码：123456"
 
-#: src/main.py:90
-msgid "AnduinOS Installer (Beta)"
-msgstr "AnduinOS 安装程序（测试版）"
-
-#: src/main.py:125
-msgid "Installation in progress"
-msgstr "正在安装"
-
-#: src/main.py:127
-msgid "The installer cannot be closed while it is modifying the target disk."
-msgstr "在安装程序修改目标磁盘时，无法关闭它。"
-
-#: src/main.py:133
-msgid "Continue Installation"
-msgstr "继续安装"
-
-#: src/pages.py:69
-msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
-msgstr "引导式共存要求系统以 UEFI 模式启动，且目标磁盘为 GPT 格式。此磁盘无法继续以引导模式进行安装。"
-
-#: src/pages.py:73
-msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
-msgstr "无法一致地读取完整的分区表和空闲空间几何信息。此磁盘上的任何空间均未被授权用于安装。"
-
-#: src/pages.py:78
-msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
-msgstr "GPT 磁盘或其某个分区没有唯一的稳定标识符。引导共存无法安全地授权在此磁盘上保留数据或执行写入操作。"
-
-#: src/pages.py:83
-msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
-msgstr "此磁盘包含活动映射器、阵列或其他嵌套块设备拓扑，引导共存模式不支持这些拓扑。"
-
-#: src/pages.py:87
-msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
-msgstr "此磁盘上的一个分区已挂载。在继续之前，请卸载该分区并重新扫描存储设备。"
-
-#: src/pages.py:91
-msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
-msgstr "AnduinOS 将仅使用选定的未分配空间。安装程序不会缩小或移动现有的文件系统。"
-
-#: src/pages.py:95
-msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
-msgstr "现有的 Windows、恢复和数据分区将保留在写入集之外并得到保护。"
-
-#: src/pages.py:99
-msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
-msgstr "现有的 EFI 系统分区仅为候选项。在重用之前，必须通过健康和空闲空间检查，且该分区永远不会被格式化。"
-
-#: src/pages.py:104
-msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
-msgstr "BitLocker 存储将保持不变。安装程序不会解锁、调整大小、修复或以其他方式修改它。"
-
-#: src/pages.py:108
-msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
-msgstr "安装程序不会挂载、修复或推断处于休眠或快速启动状态的 Windows 卷的安全性。任何必需的 Windows 维护工作都必须在 Windows 中完成。"
-
-#: src/pages.py:113
-msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
-msgstr "或者，您可以显式选择一个完整的分区进行擦除。所选分区中的所有数据都将被销毁；该选项绝不会自动选中。"
-
-#: src/pages.py:118
-msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
-msgstr "无法使用当前选择继续安装。存储安全检查不提供强制跳过选项。"
-
-#: src/pages.py:122
-msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
-msgstr "更改分区或卸载卷后，请重新扫描存储设备并再次选择目标。"
-
-#: src/pages.py:128
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
-msgstr "未找到合适的未分配空间。为保护您的数据，请使用 Windows 磁盘管理创建未分配空间，然后再次启动安装程序并重新扫描磁盘。"
-
-#: src/pages.py:133
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
-msgstr "未找到合适的未分配空间。为保护您的数据，请使用分区工具创建未分配空间，然后再次启动安装程序并重新扫描磁盘。"
-
-#: src/pages.py:204 src/pages.py:374
-msgid "Next"
-msgstr "下一步"
-
-#: src/pages.py:211 src/pages.py:373 src/pages.py:2341
-msgid "Back"
-msgstr "返回"
-
-#: src/pages.py:287 src/pages.py:371
-msgid "AnduinOS Installer"
-msgstr "AnduinOS 安装程序"
-
-#: src/pages.py:367
-msgid "Welcome to AnduinOS"
-msgstr "欢迎使用 AnduinOS"
-
-#: src/pages.py:369
-msgid "Choose your language to begin installation"
-msgstr "选择您的语言以开始安装"
-
-#: src/pages.py:405
-msgid "Navigation error"
-msgstr "导航错误"
-
-#: src/pages.py:408 src/pages.py:2363
-msgid "OK"
-msgstr "确定"
-
-#: src/pages.py:440
-msgid "English (US)"
-msgstr "英语（美国）"
-
-#: src/pages.py:440
-msgid "English (UK)"
-msgstr "英语（英国）"
-
-#: src/pages.py:441
-msgid "German"
-msgstr "德语"
-
-#: src/pages.py:441
-msgid "French"
-msgstr "法语"
-
-#: src/pages.py:441
-msgid "Italian"
-msgstr "意大利语"
-
-#: src/pages.py:442
-msgid "Spanish"
-msgstr "西班牙语"
-
-#: src/pages.py:442
-msgid "Portuguese"
-msgstr "葡萄牙语"
-
-#: src/pages.py:443
-msgid "Portuguese (Brazil)"
-msgstr "葡萄牙语（巴西）"
-
-#: src/pages.py:443
-msgid "Danish"
-msgstr "丹麦语"
-
-#: src/pages.py:444
-msgid "Swedish"
-msgstr "瑞典语"
-
-#: src/pages.py:444
-msgid "Norwegian"
-msgstr "挪威语"
-
-#: src/pages.py:445
-msgid "Finnish"
-msgstr "芬兰语"
-
-#: src/pages.py:445
-msgid "Dutch"
-msgstr "荷兰语"
-
-#: src/pages.py:445
-msgid "Polish"
-msgstr "波兰语"
-
-#: src/pages.py:446
-msgid "Romanian"
-msgstr "罗马尼亚语"
-
-#: src/pages.py:448
-msgid "Russian"
-msgstr "俄语"
-
-#: src/pages.py:448
-msgid "Ukrainian"
-msgstr "乌克兰语"
-
-#: src/pages.py:448
-msgid "Greek"
-msgstr "希腊语"
-
-#: src/pages.py:451
-msgid "Japanese"
-msgstr "日语"
-
-#: src/pages.py:451
-msgid "Korean"
-msgstr "韩语"
-
-#: src/pages.py:452
-msgid "Hindi (India)"
-msgstr "印地语（印度）"
-
-#: src/pages.py:452
-msgid "Thai"
-msgstr "泰语"
-
-#: src/pages.py:453
-msgid "Vietnamese"
-msgstr "越南语"
-
-#: src/pages.py:453
-msgid "Arabic"
-msgstr "阿拉伯语"
-
-#: src/pages.py:454
-msgid "Turkish"
-msgstr "土耳其语"
-
-#: src/pages.py:454
-msgid "Indonesian"
-msgstr "印度尼西亚语"
-
-#: src/pages.py:461 src/pages.py:467 src/pages.py:507
-msgid "Keyboard Layout"
-msgstr "键盘布局"
-
-#: src/pages.py:499 src/pages.py:508
-msgid "Test your keyboard here…"
-msgstr "在此处测试您的键盘…"
-
-#: src/pages.py:533 src/pages.py:539
-msgid "Updates and Drivers"
-msgstr "更新和驱动程序"
-
-#: src/pages.py:556
-msgid "Download and install system updates during installation"
-msgstr "在安装期间下载并安装系统更新"
-
-#: src/pages.py:559 src/pages.py:575
-msgid "Requires an Internet connection. The base installation remains available when offline."
-msgstr "需要互联网连接。基础安装在离线时仍可用。"
-
-#: src/pages.py:568
-msgid "Install third-party drivers for this device"
-msgstr "为此设备安装第三方驱动程序"
-
-#: src/pages.py:581
-msgid "Some drivers are proprietary or otherwise non-free software."
-msgstr "某些驱动程序是专有软件或其他非自由软件。"
-
-#: src/pages.py:641
-msgid "Storage Device"
-msgstr "存储设备"
-
-#: src/pages.py:650
-msgid "No partition table"
-msgstr "无分区表"
-
-#: src/pages.py:673
-msgid "Current disk layout"
-msgstr "当前磁盘布局"
-
-#: src/pages.py:693
-msgid "Unknown filesystem"
-msgstr "未知文件系统"
-
-#: src/pages.py:706
-#, python-brace-format
-msgid "Unallocated · {size}"
-msgstr "未分配 · {size}"
-
-#: src/pages.py:713
-msgid "Partition details unavailable"
-msgstr "分区详情不可用"
-
-#: src/pages.py:728
-msgid "Windows detected"
-msgstr "检测到 Windows"
-
-#: src/pages.py:730
-msgid "BitLocker detected"
-msgstr "检测到 BitLocker"
-
-#: src/pages.py:732
-msgid "Live USB — excluded"
-msgstr "Live USB — 已排除"
-
-#: src/pages.py:734
-msgid "Too small"
-msgstr "太小"
-
-#: src/pages.py:751 src/pages.py:757
-msgid "Select Installation Disk"
-msgstr "选择安装磁盘"
-
-#: src/pages.py:793
-msgid "Rescan Storage"
-msgstr "重新扫描存储"
-
-#: src/pages.py:863
-msgid "No suitable disks found."
-msgstr "未找到合适的磁盘。"
-
-#: src/pages.py:917
-msgid "Choose Installation Method"
-msgstr "选择安装方式"
-
-#: src/pages.py:922
-msgid "How should AnduinOS use this disk?"
-msgstr "AnduinOS 应如何使用此磁盘？"
-
-#: src/pages.py:937 src/pages.py:1191 src/pages.py:1425
-#, python-brace-format
-msgid "Target: {disk} ({size} — {model})"
-msgstr "目标：{disk} ({size} — {model})"
-
-#: src/pages.py:1014
-msgid "Erase every partition and all data on the selected disk."
-msgstr "擦除所选磁盘上的所有分区和数据。"
-
-#: src/pages.py:1018
-msgid "Btrfs — recommended"
-msgstr "Btrfs — 推荐"
-
-#: src/pages.py:1022
-msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
-msgstr "启用共享空间子卷、快照和时光机。"
-
-#: src/pages.py:1030
-msgid "ext4 — classic"
-msgstr "ext4 — 经典"
-
-#: src/pages.py:1033
-msgid "Uses a traditional single root filesystem."
-msgstr "使用传统的单一根文件系统。"
-
-#: src/pages.py:1039
-msgid "Advanced — keep existing systems"
-msgstr "高级 — 保留现有系统"
-
-#: src/pages.py:1041
-msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-msgstr "使用已存在的未分配空间并保留现有分区。这是唯一支持 Windows 共存的路径。"
-
-#: src/pages.py:1089
-msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-msgstr "高级共存模式可能会影响 EFI 固件状态，并可能触发 BitLocker 恢复。它绝不会缩小或修复 Windows 卷。"
-
-#: src/pages.py:1099
-#, python-brace-format
-msgid "ALL DATA on {disk} will be permanently erased."
-msgstr "{disk} 上的所有数据将被永久擦除。"
-
-#: src/pages.py:1135
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "此磁盘太小，无法进行整盘安装。仅当存在合适的未分配空间时，高级选项才可继续。"
-
-#: src/pages.py:1145
-msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-msgstr "检测到现有分区。前两个选项会删除它们；高级选项是保留路径。"
-
-#: src/pages.py:1178
-msgid "Advanced Storage"
-msgstr "高级存储"
-
-#: src/pages.py:1183
-msgid "Advanced: Install Alongside"
-msgstr "高级：安装到现有系统旁"
-
-#: src/pages.py:1212
-msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-msgstr "继续之前：完成 Windows 更新，禁用快速启动和休眠功能，并备份 BitLocker 恢复密钥。EFI、安全启动、TPM 测量值和启动顺序可能会发生变化。"
-
-#: src/pages.py:1219
-msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr "此高级路径会保留现有分区，但会更改所选磁盘的分区表和机器的 EFI 引导状态。"
-
-#: src/pages.py:1250 src/pages.py:2113
-msgid "Filesystem"
-msgstr "文件系统"
-
-#: src/pages.py:1253
-msgid "Btrfs (recommended)"
-msgstr "Btrfs（推荐）"
-
-#: src/pages.py:1253
-msgid "ext4 (classic)"
-msgstr "ext4（经典版）"
-
-#: src/pages.py:1263
-msgid "Unallocated space"
-msgstr "未分配空间"
-
-#: src/pages.py:1271
-msgid "EFI System Partition"
-msgstr "EFI 系统分区"
-
-#: src/pages.py:1285
-msgid "Rescan and Reselect Disk"
-msgstr "重新扫描并重新选择磁盘"
-
-#: src/pages.py:1326
-msgid "Create a new 1 GiB AnduinOS EFI System Partition"
-msgstr "创建一个新的 1 GiB AnduinOS EFI 系统分区"
-
-#: src/pages.py:1330
-#, python-brace-format
-msgid "Reuse {path} ({size})"
-msgstr "重用 {path} ({size})"
-
-#: src/pages.py:1394
-#, python-brace-format
-msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-msgstr "所选磁盘已更改或消失。请返回磁盘页面并重新选择它。{error}"
-
-#: src/pages.py:1407
-msgid "The selected disk size changed. Return and select it again."
-msgstr "所选磁盘的大小已更改。请返回并重新选择它。"
-
-#: src/pages.py:1417
-msgid "The selected disk topology changed. Review the disk and installation method again."
-msgstr "所选磁盘的拓扑结构已更改。请重新检查磁盘和安装方法。"
-
-#: src/pages.py:1453
-#, python-brace-format
-msgid "{size} unallocated at {offset}"
-msgstr "{size} 未分配空间位于 {offset}"
-
-#: src/pages.py:1579 src/pages.py:1585
-msgid "User Account"
-msgstr "用户账户"
-
-#: src/pages.py:1605 src/pages.py:1606
-msgid "Full Name"
-msgstr "全名"
-
-#: src/pages.py:1609 src/pages.py:1612
-msgid "Username"
-msgstr "用户名"
-
-#: src/pages.py:1616 src/pages.py:1627
-msgid "Password"
-msgstr "密码"
-
-#: src/pages.py:1620 src/pages.py:1628
-msgid "Confirm Password"
-msgstr "确认密码"
-
-#: src/pages.py:1632
-msgid "Do not require a password for sudo commands"
-msgstr "sudo 命令无需密码"
-
-#: src/pages.py:1638 src/pages.py:1643 src/pages.py:2157
-msgid "Computer Name"
-msgstr "计算机名称"
-
-#: src/pages.py:1669
-msgid "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
-msgstr "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
-
-#: src/pages.py:1680
-msgid "Install alongside requires a password-protected account."
-msgstr "并列安装需要受密码保护的用户账户。"
-
-#: src/pages.py:1691
-msgid "The two passwords do not match."
-msgstr "两个密码不匹配。"
-
-#: src/pages.py:1695
-msgid "Password must be at least 6 characters."
-msgstr "密码长度必须至少为 6 个字符。"
-
-#: src/pages.py:1703
-msgid "Computer name contains invalid characters."
-msgstr "计算机名称包含无效字符。"
-
-#: src/pages.py:1756
-msgid "Return to Make Changes"
-msgstr "返回以进行修改"
-
-#: src/pages.py:1763
-msgid "This configuration is very unsafe"
-msgstr "此配置非常不安全"
-
-#: src/pages.py:1765
-msgid "Passwordless sudo is unsafe"
-msgstr "无密码 sudo 是不安全的"
-
-#: src/pages.py:1769
-msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
-msgstr "系统将自动登录到此账户，并允许其在无需密码的情况下获得完整的管理员权限。任何拥有物理访问权限的人员以及任何以该用户身份运行的程序都可以完全控制系统。仅将此用于信息亭、临时虚拟机或其他受控环境。"
-
-#: src/pages.py:1778
-msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
-msgstr "任何以您的用户身份运行的程序都可以在无需验证的情况下获得完整的管理员权限。您的登录密码仍然可以保护登录，但无法保护 sudo。您确定要继续吗？"
-
-#: src/pages.py:1792
-msgid "Return and Set a Password"
-msgstr "返回并设置密码"
-
-#: src/pages.py:1798
-msgid "I Understand the Risk, Continue"
-msgstr "我了解风险，继续"
-
-#: src/pages.py:1822
-msgid "Administrator access would be locked"
-msgstr "管理员访问权限将被锁定"
-
-#: src/pages.py:1824
-msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
-msgstr "此账户没有登录密码，但使用 sudo 仍需要密码。由于 root 账户默认处于锁定状态，您将无法执行管理任务。请设置账户密码或启用无密码 sudo。"
-
-#: src/pages.py:1895 src/pages.py:1901
-msgid "Select Timezone"
-msgstr "选择时区"
-
-#: src/pages.py:1914
-msgid "Search timezones…"
-msgstr "搜索时区…"
-
-#: src/pages.py:1967
-msgid "Selected timezone"
-msgstr "所选时区"
-
-#: src/pages.py:2035 src/pages.py:2041
-msgid "Ready to Install"
-msgstr "准备安装"
-
-#: src/pages.py:2056
-msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
-msgstr "开发模式——计划将被验证并模拟。不会运行任何特权执行器或磁盘命令。"
-
-#: src/pages.py:2081
-#, python-brace-format
-msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
-msgstr "{architecture} / {firmware} / 安全启动：{secure_boot}"
-
-#: src/pages.py:2090
-#, python-brace-format
-msgid "Unavailable: {error}"
-msgstr "不可用：{error}"
-
-#: src/pages.py:2100
-msgid "single ext4 root filesystem"
-msgstr "单个 ext4 根文件系统"
-
-#: src/pages.py:2103
-msgid "Language"
-msgstr "语言"
-
-#: src/pages.py:2104
-msgid "Keyboard"
-msgstr "键盘"
-
-#: src/pages.py:2106
-msgid "Target Disk"
-msgstr "目标磁盘"
-
-#: src/pages.py:2110
-msgid "Stable disk identity"
-msgstr "稳定的磁盘标识符"
-
-#: src/pages.py:2112
-msgid "Platform"
-msgstr "平台"
-
-#: src/pages.py:2114
-msgid "Subvolumes"
-msgstr "子卷"
-
-#: src/pages.py:2115
-msgid "Swap"
-msgstr "交换空间"
-
-#: src/pages.py:2117
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr "4 GiB 磁盘交换空间（优先级 10）+ 50% RAM LZ4 zram（优先级 100）"
 
-#: src/pages.py:2121
-msgid "System updates"
-msgstr "系统更新"
-
-#: src/pages.py:2123
-msgid "download and install"
-msgstr "下载并安装"
-
-#: src/pages.py:2125 src/pages.py:2131
-msgid "do not install"
-msgstr "不安装"
-
-#: src/pages.py:2127
-msgid "Third-party drivers"
-msgstr "第三方驱动程序"
-
-#: src/pages.py:2129
-msgid "detect and install (may include non-free software)"
-msgstr "检测并安装（可能包含非自由软件）"
-
-#: src/pages.py:2133
-msgid "Secure Boot enrollment"
-msgstr "安全启动注册"
-
-#: src/pages.py:2136
-msgid "create a machine-local MOK; enroll after reboot with password 123456"
-msgstr "创建本地 MOK；重启后使用密码 123456 注册"
-
-#: src/pages.py:2141
-msgid "not required"
-msgstr "不需要"
-
-#: src/pages.py:2143
-msgid "User"
-msgstr "用户"
-
-#: src/pages.py:2146
-msgid "Account security"
-msgstr "账户安全"
-
-#: src/pages.py:2148
-msgid "automatic login"
-msgstr "自动登录"
-
-#: src/pages.py:2150
-msgid "password required for login"
-msgstr "登录需要密码"
-
-#: src/pages.py:2153
 msgid "; sudo does not require a password"
 msgstr "; sudo 不需要密码"
 
-#: src/pages.py:2155
 msgid "; sudo requires the account password"
 msgstr "; sudo 需要账户密码"
 
-#: src/pages.py:2159
-msgid "Timezone"
-msgstr "时区"
-
-#: src/pages.py:2166
-msgid "Guided storage selection is missing. Rescan and select the target again."
-msgstr "缺少引导式存储选择。请重新扫描并再次选择目标。"
-
-#: src/pages.py:2174
-#, python-brace-format
-msgid "{name}: {start}–{end} MiB"
-msgstr "{name}：{start}–{end} MiB"
-
-#: src/pages.py:2182
-#, python-brace-format
-msgid "{path} as {filesystem}"
-msgstr "{path} 作为 {filesystem}"
-
-#: src/pages.py:2190
-#, python-brace-format
-msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-msgstr "重用 {path}；绝不格式化它；在写入前验证 FAT 健康状况、身份标识以及是否有 64 MiB 的可用空间。"
-
-#: src/pages.py:2198
-msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-msgstr "在所选空间内创建并格式化一个专用的 AnduinOS EFI 系统分区。"
-
-#: src/pages.py:2203
-msgid "Storage mode"
-msgstr "存储模式"
-
-#: src/pages.py:2204
-msgid "Install alongside"
-msgstr "与现有系统并列安装"
-
-#: src/pages.py:2205
-msgid "Selected unallocated space"
-msgstr "已选择的未分配空间"
-
-#: src/pages.py:2206
-#, python-brace-format
-msgid "{size} at {offset}"
-msgstr "{size} 位于 {offset}"
-
-#: src/pages.py:2210
-msgid "Preserved partitions"
-msgstr "保留的分区"
-
-#: src/pages.py:2211
-#, python-brace-format
-msgid "{count}: {paths}"
-msgstr "{count}：{paths}"
-
-#: src/pages.py:2215
-msgid "New partitions"
-msgstr "新分区"
-
-#: src/pages.py:2217
-msgid "Formats"
-msgstr "格式化"
-
-#: src/pages.py:2219
-msgid "EFI policy"
-msgstr "EFI 策略"
-
-#: src/pages.py:2221
-msgid "Boot policy"
-msgstr "启动策略"
-
-#: src/pages.py:2223
-msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr "仅写入 EFI/AnduinOS，不要覆盖 EFI/BOOT，并且需要已验证的 AnduinOS NVRAM 条目。"
-
-#: src/pages.py:2253
-msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
-msgstr "⚠ 仅选定的未分配空间将被分区和格式化。现有分区将保留，但 EFI/AnduinOS 文件以及 AnduinOS 固件启动条目可能会发生变化。本安装程序不会为您缩小 Windows 分区。"
-
-#: src/pages.py:2261
-msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
-msgstr "⚠ 这将擦除所选磁盘上的所有数据。此操作无法撤销。"
-
-#: src/pages.py:2287
-msgid "Validate this installation plan?"
-msgstr "要验证此安装计划吗？"
-
-#: src/pages.py:2288
-msgid "Validate Plan (No Installation)"
-msgstr "验证计划（不安装）"
-
-#: src/pages.py:2290
-msgid "Install in the selected free space?"
-msgstr "是否在所选空闲空间中安装？"
-
-#: src/pages.py:2291 src/pages.py:2380
-msgid "Install Alongside"
-msgstr "与现有系统并列安装"
-
-#: src/pages.py:2293
-msgid "Erase the entire selected disk?"
-msgstr "要擦除整个所选磁盘吗？"
-
-#: src/pages.py:2294
-msgid "Erase Disk and Install"
-msgstr "擦除磁盘并安装"
-
-#: src/pages.py:2301
-#, python-brace-format
 msgid ""
-"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
-"\n"
+"A partition on this disk is mounted. Unmount it and rescan storage before "
+"continuing."
+msgstr "此磁盘上的一个分区已挂载。在继续之前，请卸载该分区并重新扫描存储设备。"
+
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "{disk} 上的所有数据将被永久擦除。"
+
+msgid "Account security"
+msgstr "账户安全"
+
+msgid "Administrator access would be locked"
+msgstr "管理员访问权限将被锁定"
+
+msgid "Advanced Storage"
+msgstr "高级存储"
+
+msgid ""
+"Advanced coexistence can affect EFI firmware state and may trigger BitLocker "
+"recovery. It never shrinks or repairs Windows volumes."
 msgstr ""
-"开发模式将模拟安装到 {disk}。不会更改任何磁盘数据。\n"
-"\n"
+"高级共存模式可能会影响 EFI 固件状态，并可能触发 BitLocker 恢复。它绝不会缩小"
+"或修复 Windows 卷。"
 
-#: src/pages.py:2307
-#, python-brace-format
+msgid "Advanced — keep existing systems"
+msgstr "高级 — 保留现有系统"
+
+msgid "Advanced: Install Alongside"
+msgstr "高级：安装到现有系统旁"
+
 msgid ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
-msgstr "AnduinOS 将仅使用 {disk} 上选定的未分配空间。现有分区将保持不变。\n\n"
+"After changing partitions or unmounting a volume, rescan storage and select "
+"the target again."
+msgstr "更改分区或卸载卷后，请重新扫描存储设备并再次选择目标。"
 
-#: src/pages.py:2314
-#, python-brace-format
+msgid ""
+"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
+"then enter password 123456."
+msgstr ""
+"重启后，将打开 MOKManager。选择“注册 MOK”→“继续”→“是”，然后输入密码 123456。"
+
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -771,8 +93,536 @@ msgstr ""
 "{disk} 上的所有分区和数据都将被销毁。\n"
 "\n"
 
-#: src/pages.py:2319
-#, python-brace-format
+msgid ""
+"Alternatively, you may explicitly select one entire partition to erase. "
+"Everything in that selected partition will be destroyed; it is never "
+"selected automatically."
+msgstr ""
+"或者，您可以显式选择一个完整的分区进行擦除。所选分区中的所有数据都将被销毁；"
+"该选项绝不会自动选中。"
+
+msgid "AnduinOS Installer"
+msgstr "AnduinOS 安装程序"
+
+msgid "AnduinOS Installer (Beta)"
+msgstr "AnduinOS 安装程序（测试版）"
+
+msgid "AnduinOS Installer (Development)"
+msgstr "AnduinOS 安装程序（开发版）"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing "
+"partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS 将仅使用 {disk} 上选定的未分配空间。现有分区将保持不变。\n"
+"\n"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space. The installer will "
+"not shrink or move an existing filesystem."
+msgstr ""
+"AnduinOS 将仅使用选定的未分配空间。安装程序不会缩小或移动现有的文件系统。"
+
+msgid ""
+"Any program running as your user can obtain full administrator privileges "
+"without authentication. Your login password still protects sign-in, but it "
+"will not protect sudo. Are you sure you want to continue?"
+msgstr ""
+"任何以您的用户身份运行的程序都可以在无需验证的情况下获得完整的管理员权限。您"
+"的登录密码仍然可以保护登录，但无法保护 sudo。您确定要继续吗？"
+
+msgid "Arabic"
+msgstr "阿拉伯语"
+
+msgid "Back"
+msgstr "返回"
+
+msgid ""
+"Before continuing: finish Windows updates, disable Fast Startup and "
+"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
+"measurements and boot order can change."
+msgstr ""
+"继续之前：完成 Windows 更新，禁用快速启动和休眠功能，并备份 BitLocker 恢复密"
+"钥。EFI、安全启动、TPM 测量值和启动顺序可能会发生变化。"
+
+msgid "BitLocker detected"
+msgstr "检测到 BitLocker"
+
+msgid ""
+"BitLocker storage will be preserved. The installer will not unlock, resize, "
+"repair or otherwise modify it."
+msgstr ""
+"BitLocker 存储将保持不变。安装程序不会解锁、调整大小、修复或以其他方式修改"
+"它。"
+
+msgid "Boot policy"
+msgstr "启动策略"
+
+msgid "Btrfs (recommended)"
+msgstr "Btrfs（推荐）"
+
+msgid "Btrfs — recommended"
+msgstr "Btrfs — 推荐"
+
+msgid "Cannot create installation plan"
+msgstr "无法创建安装计划"
+
+msgid "Choose Installation Method"
+msgstr "选择安装方式"
+
+msgid "Choose one target disk. Storage settings come next."
+msgstr "选择一个目标磁盘。接下来是存储设置。"
+
+msgid "Choose optional software to install"
+msgstr "选择要安装的可选软件"
+
+msgid "Choose your language to begin installation"
+msgstr "选择您的语言以开始安装"
+
+msgid "Choose your location to set the system clock"
+msgstr "选择您的位置以设置系统时钟"
+
+msgid "Complete"
+msgstr "完成"
+
+msgid "Computer Name"
+msgstr "计算机名称"
+
+msgid "Computer name contains invalid characters."
+msgstr "计算机名称包含无效字符。"
+
+msgid "Configure account, region, and machine identity"
+msgstr "配置账户、区域和机器身份"
+
+msgid "Configure storage and swap"
+msgstr "配置存储和交换空间"
+
+msgid "Confirm Password"
+msgstr "确认密码"
+
+msgid "Confirm your keyboard layout"
+msgstr "确认您的键盘布局"
+
+msgid "Continue Installation"
+msgstr "继续安装"
+
+msgid "Copy AnduinOS system"
+msgstr "复制 AnduinOS 系统"
+
+msgid "Copy Log"
+msgstr "复制日志"
+
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "创建一个新的 1 GiB AnduinOS EFI 系统分区"
+
+msgid ""
+"Create and format a dedicated AnduinOS EFI System Partition inside the "
+"selected space."
+msgstr "在所选空间内创建并格式化一个专用的 AnduinOS EFI 系统分区。"
+
+msgid "Create your user account"
+msgstr "创建您的用户账户"
+
+msgid "Current disk layout"
+msgstr "当前磁盘布局"
+
+msgid ""
+"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
+"executor or disk command can run."
+msgstr "开发模式——计划将被验证并模拟。不会运行任何特权执行器或磁盘命令。"
+
+msgid "Danish"
+msgstr "丹麦语"
+
+msgid "Detect Internet connectivity"
+msgstr "检测互联网连接"
+
+msgid "Detect firmware and Secure Boot"
+msgstr "检测固件和安全启动"
+
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be "
+"changed.\n"
+"\n"
+msgstr ""
+"开发模式将模拟安装到 {disk}。不会更改任何磁盘数据。\n"
+"\n"
+
+msgid "Development simulation completed"
+msgstr "开发模拟已完成"
+
+msgid "Discover AnduinOS"
+msgstr "探索 AnduinOS"
+
+msgid "Do not require a password for sudo commands"
+msgstr "sudo 命令无需密码"
+
+msgid "Download and install system updates during installation"
+msgstr "在安装期间下载并安装系统更新"
+
+msgid "Dutch"
+msgstr "荷兰语"
+
+msgid "EFI System Partition"
+msgstr "EFI 系统分区"
+
+msgid "EFI policy"
+msgstr "EFI 策略"
+
+msgid "Empty disk — no partitions"
+msgstr "空磁盘——无分区"
+
+msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "启用共享空间子卷、快照和时光机。"
+
+msgid "English (UK)"
+msgstr "英语（英国）"
+
+msgid "English (US)"
+msgstr "英语（美国）"
+
+msgid "Ensure Timeback Machine is available"
+msgstr "确保时光机可用"
+
+msgid "Erase Disk and Install"
+msgstr "擦除磁盘并安装"
+
+msgid "Erase every partition and all data on the selected disk."
+msgstr "擦除所选磁盘上的所有分区和数据。"
+
+msgid "Erase the entire selected disk?"
+msgstr "要擦除整个所选磁盘吗？"
+
+msgid ""
+"Existing Windows, recovery and data partitions remain outside the write set "
+"and will be preserved."
+msgstr "现有的 Windows、恢复和数据分区将保留在写入集之外并得到保护。"
+
+msgid ""
+"Existing partitions were detected. The first two choices delete them; "
+"Advanced is the preservation path."
+msgstr "检测到现有分区。前两个选项会删除它们；高级选项是保留路径。"
+
+msgid ""
+"Existing partitions will be preserved. New AnduinOS partitions will be "
+"created only in the selected unallocated extent; EFI vendor files and the "
+"AnduinOS firmware boot entry may be updated."
+msgstr ""
+"现有分区将被保留。新的 AnduinOS 分区将仅在所选的未分配空间内创建；EFI 厂商文"
+"件和 AnduinOS 固件启动项可能会被更新。"
+
+msgid "Filesystem"
+msgstr "文件系统"
+
+msgid "Finalize target environment"
+msgstr "最终确定目标环境"
+
+msgid "Finnish"
+msgstr "芬兰语"
+
+msgid "Formats"
+msgstr "格式化"
+
+msgid "French"
+msgstr "法语"
+
+msgid "Full Name"
+msgstr "全名"
+
+msgid "German"
+msgstr "德语"
+
+msgid "Greek"
+msgstr "希腊语"
+
+msgid ""
+"Guided coexistence requires a system booted in UEFI mode and a GPT target "
+"disk. This disk cannot continue in guided mode."
+msgstr ""
+"引导式共存要求系统以 UEFI 模式启动，且目标磁盘为 GPT 格式。此磁盘无法继续以引"
+"导模式进行安装。"
+
+msgid ""
+"Guided storage selection is missing. Rescan and select the target again."
+msgstr "缺少引导式存储选择。请重新扫描并再次选择目标。"
+
+msgid "Hindi (India)"
+msgstr "印地语（印度）"
+
+msgid "How should AnduinOS use this disk?"
+msgstr "AnduinOS 应如何使用此磁盘？"
+
+msgid "I Understand the Risk, Continue"
+msgstr "我了解风险，继续"
+
+msgid "Indonesian"
+msgstr "印度尼西亚语"
+
+msgid "Install"
+msgstr "安装"
+
+msgid "Install Alongside"
+msgstr "与现有系统并列安装"
+
+msgid "Install alongside"
+msgstr "与现有系统并列安装"
+
+msgid "Install alongside requires a password-protected account."
+msgstr "并列安装需要受密码保护的用户账户。"
+
+msgid "Install bootloader"
+msgstr "安装引导加载程序"
+
+msgid "Install hardware drivers"
+msgstr "安装硬件驱动程序"
+
+msgid "Install in the selected free space?"
+msgstr "是否在所选空闲空间中安装？"
+
+msgid "Install system updates"
+msgstr "安装系统更新"
+
+msgid "Install third-party drivers for this device"
+msgstr "为此设备安装第三方驱动程序"
+
+msgid "Installation Complete"
+msgstr "安装完成"
+
+msgid "Installation Failed"
+msgstr "安装失败"
+
+msgid "Installation Steps"
+msgstr "安装步骤"
+
+msgid ""
+"Installation cannot continue with this selection. There is no force-continue "
+"option around storage safety checks."
+msgstr "无法使用当前选择继续安装。存储安全检查不提供强制跳过选项。"
+
+msgid "Installation complete"
+msgstr "安装已完成"
+
+msgid "Installation failed"
+msgstr "安装失败"
+
+msgid "Installation in progress"
+msgstr "正在安装"
+
+msgid "Installing AnduinOS"
+msgstr "正在安装 AnduinOS"
+
+msgid "Italian"
+msgstr "意大利语"
+
+msgid "Japanese"
+msgstr "日语"
+
+msgid "Keyboard"
+msgstr "键盘"
+
+msgid "Keyboard Layout"
+msgstr "键盘布局"
+
+msgid "Korean"
+msgstr "韩语"
+
+msgid "Language"
+msgstr "语言"
+
+msgid "Live USB — excluded"
+msgstr "Live USB — 已排除"
+
+msgid "Mount target filesystems"
+msgstr "挂载目标文件系统"
+
+msgid "Navigation error"
+msgstr "导航错误"
+
+msgid "New partitions"
+msgstr "新分区"
+
+msgid "Next"
+msgstr "下一步"
+
+msgid "Next slide"
+msgstr "下一张幻灯片"
+
+msgid "No partition table"
+msgstr "无分区表"
+
+msgid "No suitable disks found."
+msgstr "未找到合适的磁盘。"
+
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with Windows Disk Management, then boot the installer "
+"again and rescan the disk."
+msgstr ""
+"未找到合适的未分配空间。为保护您的数据，请使用 Windows 磁盘管理创建未分配空"
+"间，然后再次启动安装程序并重新扫描磁盘。"
+
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with a partitioning tool, then boot the installer again "
+"and rescan the disk."
+msgstr ""
+"未找到合适的未分配空间。为保护您的数据，请使用分区工具创建未分配空间，然后再"
+"次启动安装程序并重新扫描磁盘。"
+
+msgid "Norwegian"
+msgstr "挪威语"
+
+msgid "OK"
+msgstr "确定"
+
+msgid "Output"
+msgstr "输出"
+
+msgid "Output • Error"
+msgstr "输出 • 错误"
+
+msgid "Output • {count} warning(s)"
+msgstr "输出 • {count} 个警告"
+
+msgid "Partition details unavailable"
+msgstr "分区详情不可用"
+
+msgid "Password"
+msgstr "密码"
+
+msgid "Password must be at least 6 characters."
+msgstr "密码长度必须至少为 6 个字符。"
+
+msgid "Passwordless sudo is unsafe"
+msgstr "无密码 sudo 是不安全的"
+
+msgid "Platform"
+msgstr "平台"
+
+msgid "Please do not turn off your computer"
+msgstr "请勿关闭计算机"
+
+msgid "Please review your choices before proceeding"
+msgstr "请在继续之前检查您的选择"
+
+msgid "Polish"
+msgstr "波兰语"
+
+msgid "Portuguese"
+msgstr "葡萄牙语"
+
+msgid "Portuguese (Brazil)"
+msgstr "葡萄牙语（巴西）"
+
+msgid "Prepare Secure Boot"
+msgstr "准备安全启动"
+
+msgid "Prepare installation disk"
+msgstr "准备安装磁盘"
+
+msgid "Prepare target environment"
+msgstr "准备目标环境"
+
+msgid "Preparing installation…"
+msgstr "正在准备安装…"
+
+msgid "Preserved partitions"
+msgstr "保留的分区"
+
+msgid "Previous slide"
+msgstr "上一张幻灯片"
+
+msgid "Ready to Install"
+msgstr "准备安装"
+
+msgid "Reboot Now"
+msgstr "立即重启"
+
+msgid "Refresh package indexes"
+msgstr "刷新软件包索引"
+
+msgid "Remove live-session components"
+msgstr "移除 Live 会话组件"
+
+msgid "Remove the installation media and restart your computer"
+msgstr "移除安装介质并重启计算机"
+
+msgid ""
+"Requires an Internet connection. The base installation remains available "
+"when offline."
+msgstr "需要互联网连接。基础安装在离线时仍可用。"
+
+msgid "Rescan Storage"
+msgstr "重新扫描存储"
+
+msgid "Rescan and Reselect Disk"
+msgstr "重新扫描并重新选择磁盘"
+
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "重启并注册安全启动密钥"
+
+msgid "Restart is disabled in development protection mode"
+msgstr "在开发保护模式下已禁用重启"
+
+msgid "Return and Set a Password"
+msgstr "返回并设置密码"
+
+msgid "Return to Make Changes"
+msgstr "返回以进行修改"
+
+msgid "Reuse {path} ({size})"
+msgstr "重用 {path} ({size})"
+
+msgid ""
+"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
+"before writing."
+msgstr ""
+"重用 {path}；绝不格式化它；在写入前验证 FAT 健康状况、身份标识以及是否有 64 "
+"MiB 的可用空间。"
+
+msgid "Romanian"
+msgstr "罗马尼亚语"
+
+msgid "Russian"
+msgstr "俄语"
+
+msgid "Save Log"
+msgstr "保存日志"
+
+msgid "Schedule MOK enrollment"
+msgstr "安排 MOK 注册"
+
+msgid "Search timezones…"
+msgstr "搜索时区…"
+
+msgid "Secure Boot enrollment"
+msgstr "安全启动注册"
+
+msgid "Select Installation Disk"
+msgstr "选择安装磁盘"
+
+msgid "Select Timezone"
+msgstr "选择时区"
+
+msgid "Select fastest package mirror"
+msgstr "选择最快的软件包镜像"
+
+msgid "Selected timezone"
+msgstr "所选时区"
+
+msgid "Selected unallocated space"
+msgstr "已选择的未分配空间"
+
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr "某些驱动程序是专有软件或其他非自由软件。"
+
+msgid "Spanish"
+msgstr "西班牙语"
+
+msgid "Stable disk identity"
+msgstr "稳定的磁盘标识符"
+
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -780,262 +630,304 @@ msgstr ""
 "稳定标识符：{stable_id}\n"
 "\n"
 
-#: src/pages.py:2323
+msgid "Storage Device"
+msgstr "存储设备"
+
+msgid "Storage mode"
+msgstr "存储模式"
+
+msgid "Subvolumes"
+msgstr "子卷"
+
+msgid "Swap"
+msgstr "交换空间"
+
+msgid "Swedish"
+msgstr "瑞典语"
+
+msgid "System updates"
+msgstr "系统更新"
+
+msgid "Target Disk"
+msgstr "目标磁盘"
+
+msgid "Target: {disk} ({size} — {model})"
+msgstr "目标：{disk} ({size} — {model})"
+
+msgid "Test your keyboard here…"
+msgstr "在此处测试您的键盘…"
+
+msgid "Thai"
+msgstr "泰语"
+
+msgid ""
+"The GPT disk or one of its partitions has no unique stable identifier. "
+"Guided coexistence cannot safely authorize preservation or writes on this "
+"disk."
+msgstr ""
+"GPT 磁盘或其某个分区没有唯一的稳定标识符。引导共存无法安全地授权在此磁盘上保"
+"留数据或执行写入操作。"
+
+msgid ""
+"The complete partition map and free-space geometry could not be read "
+"consistently. No space on this disk is authorized for installation."
+msgstr ""
+"无法一致地读取完整的分区表和空闲空间几何信息。此磁盘上的任何空间均未被授权用"
+"于安装。"
+
+msgid ""
+"The existing EFI System Partition is only a candidate. Health and free-space "
+"checks must pass before it can be reused, and it will never be formatted."
+msgstr ""
+"现有的 EFI 系统分区仅为候选项。在重用之前，必须通过健康和空闲空间检查，且该分"
+"区永远不会被格式化。"
+
+msgid ""
+"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot "
+"state, or installed system was changed."
+msgstr ""
+"安装计划有效。未更改任何磁盘、文件系统、引导加载程序、安全启动状态或已安装的"
+"系统。"
+
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "在安装程序修改目标磁盘时，无法关闭它。"
+
+msgid ""
+"The installer will not mount, repair or infer the safety of Windows volumes "
+"from hibernation or Fast Startup state. Any required Windows maintenance "
+"must be completed in Windows."
+msgstr ""
+"安装程序不会挂载、修复或推断处于休眠或快速启动状态的 Windows 卷的安全性。任何"
+"必需的 Windows 维护工作都必须在 Windows 中完成。"
+
 msgid "The privileged executor is disabled."
 msgstr "特权执行器已禁用。"
 
-#: src/pages.py:2326
-msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-msgstr "现有分区将被保留。新的 AnduinOS 分区将仅在所选的未分配空间内创建；EFI 厂商文件和 AnduinOS 固件启动项可能会被更新。"
+msgid ""
+"The selected disk changed or disappeared. Return to the disk page and select "
+"it again. {error}"
+msgstr "所选磁盘已更改或消失。请返回磁盘页面并重新选择它。{error}"
 
-#: src/pages.py:2334
+msgid "The selected disk size changed. Return and select it again."
+msgstr "所选磁盘的大小已更改。请返回并重新选择它。"
+
+msgid ""
+"The selected disk topology changed. Review the disk and installation method "
+"again."
+msgstr "所选磁盘的拓扑结构已更改。请重新检查磁盘和安装方法。"
+
+msgid ""
+"The system will sign in to this account automatically and allow it to obtain "
+"full administrator privileges without a password. Anyone with physical "
+"access, and any program running as this user, can completely control the "
+"system. Use this only for a kiosk, temporary virtual machine, or another "
+"controlled environment."
+msgstr ""
+"系统将自动登录到此账户，并允许其在无需密码的情况下获得完整的管理员权限。任何"
+"拥有物理访问权限的人员以及任何以该用户身份运行的程序都可以完全控制系统。仅将"
+"此用于信息亭、临时虚拟机或其他受控环境。"
+
+msgid "The two passwords do not match."
+msgstr "两个密码不匹配。"
+
+msgid "Third-party drivers"
+msgstr "第三方驱动程序"
+
+msgid ""
+"This account has no login password, but sudo would still require one. "
+"Because the root account is locked by default, you would be unable to "
+"perform administrator tasks. Set an account password or enable passwordless "
+"sudo."
+msgstr ""
+"此账户没有登录密码，但使用 sudo 仍需要密码。由于 root 账户默认处于锁定状态，"
+"您将无法执行管理任务。请设置账户密码或启用无密码 sudo。"
+
+msgid ""
+"This advanced path preserves existing partitions but changes the selected "
+"disk's partition table and the machine's EFI boot state."
+msgstr ""
+"此高级路径会保留现有分区，但会更改所选磁盘的分区表和机器的 EFI 引导状态。"
+
+msgid "This configuration is very unsafe"
+msgstr "此配置非常不安全"
+
+msgid ""
+"This disk contains an active mapper, array or other nested block-device "
+"topology that guided coexistence does not support."
+msgstr ""
+"此磁盘包含活动映射器、阵列或其他嵌套块设备拓扑，引导共存模式不支持这些拓扑。"
+
+msgid ""
+"This disk is too small for whole-disk installation. Advanced may continue "
+"only if suitable unallocated space exists."
+msgstr ""
+"此磁盘太小，无法进行整盘安装。仅当存在合适的未分配空间时，高级选项才可继续。"
+
 msgid "This installer does not shrink or preserve other systems."
 msgstr "此安装程序不会缩小或保留其他系统。"
 
-#: src/pages.py:2360
-msgid "Cannot create installation plan"
-msgstr "无法创建安装计划"
+msgid "Timezone"
+msgstr "时区"
 
-#: src/pages.py:2382
-msgid "Install"
-msgstr "安装"
+msgid "Too small"
+msgstr "太小"
 
-#: src/pages.py:2398 src/pages.py:2404
-msgid "Installing AnduinOS"
-msgstr "正在安装 AnduinOS"
+msgid "Turkish"
+msgstr "土耳其语"
 
-#: src/pages.py:2413
-msgid "Detect firmware and Secure Boot"
-msgstr "检测固件和安全启动"
+msgid "Ukrainian"
+msgstr "乌克兰语"
 
-#: src/pages.py:2416
-msgid "Detect Internet connectivity"
-msgstr "检测互联网连接"
+msgid "Unallocated space"
+msgstr "未分配空间"
 
-#: src/pages.py:2418
-msgid "Verify target disk isolation"
-msgstr "验证目标磁盘隔离"
+msgid "Unallocated · {size}"
+msgstr "未分配 · {size}"
 
-#: src/pages.py:2419
-msgid "Prepare installation disk"
-msgstr "准备安装磁盘"
+msgid "Unavailable: {error}"
+msgstr "不可用：{error}"
 
-#: src/pages.py:2420
-msgid "Mount target filesystems"
-msgstr "挂载目标文件系统"
+msgid "Unknown filesystem"
+msgstr "未知文件系统"
 
-#: src/pages.py:2421
-msgid "Copy AnduinOS system"
-msgstr "复制 AnduinOS 系统"
-
-#: src/pages.py:2422
-msgid "Configure storage and swap"
-msgstr "配置存储和交换空间"
-
-#: src/pages.py:2423
-msgid "Prepare target environment"
-msgstr "准备目标环境"
-
-#: src/pages.py:2424
-msgid "Remove live-session components"
-msgstr "移除 Live 会话组件"
-
-#: src/pages.py:2425
-msgid "Configure account, region, and machine identity"
-msgstr "配置账户、区域和机器身份"
-
-#: src/pages.py:2427
-msgid "Select fastest package mirror"
-msgstr "选择最快的软件包镜像"
-
-#: src/pages.py:2429
-msgid "Prepare Secure Boot"
-msgstr "准备安全启动"
-
-#: src/pages.py:2430
-msgid "Refresh package indexes"
-msgstr "刷新软件包索引"
-
-#: src/pages.py:2431
-msgid "Install system updates"
-msgstr "安装系统更新"
-
-#: src/pages.py:2433
-msgid "Ensure Timeback Machine is available"
-msgstr "确保时光机可用"
-
-#: src/pages.py:2435
-msgid "Install hardware drivers"
-msgstr "安装硬件驱动程序"
-
-#: src/pages.py:2437
-msgid "Verify kernel module signatures"
-msgstr "验证内核模块签名"
-
-#: src/pages.py:2439
-msgid "Install bootloader"
-msgstr "安装引导加载程序"
-
-#: src/pages.py:2440
-msgid "Schedule MOK enrollment"
-msgstr "安排 MOK 注册"
-
-#: src/pages.py:2441
-msgid "Finalize target environment"
-msgstr "最终确定目标环境"
-
-#: src/pages.py:2442
 msgid "Unmount installed system"
 msgstr "卸载已安装的系统"
 
-#: src/pages.py:2480
-msgid "Installation Steps"
-msgstr "安装步骤"
+msgid "Updates and Drivers"
+msgstr "更新和驱动程序"
 
-#: src/pages.py:2516
-msgid "Copy Log"
-msgstr "复制日志"
-
-#: src/pages.py:2520
-msgid "Save Log"
-msgstr "保存日志"
-
-#: src/pages.py:2591
-msgid "Previous slide"
-msgstr "上一张幻灯片"
-
-#: src/pages.py:2597
-msgid "Next slide"
-msgstr "下一张幻灯片"
-
-#: src/pages.py:2642
-msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
-msgstr "重启后，将打开 MOKManager。选择“注册 MOK”→“继续”→“是”，然后输入密码 123456。"
-
-#: src/pages.py:2650
-msgid "Restart and Enroll Secure Boot Key"
-msgstr "重启并注册安全启动密钥"
-
-#: src/pages.py:2652
-msgid "Reboot Now"
-msgstr "立即重启"
-
-#: src/pages.py:2673
-msgid "Discover AnduinOS"
-msgstr "探索 AnduinOS"
-
-#: src/pages.py:2676
-msgid "Output"
-msgstr "输出"
-
-#: src/pages.py:2679
-msgid "Complete"
-msgstr "完成"
-
-#: src/pages.py:2712
-msgid "Preparing installation…"
-msgstr "正在准备安装…"
-
-#: src/pages.py:2758 src/pages.py:2824
-msgid "Installation complete"
-msgstr "安装已完成"
-
-#: src/pages.py:2762
-msgid "Development simulation completed"
-msgstr "开发模拟已完成"
-
-#: src/pages.py:2765
-msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
-msgstr "安装计划有效。未更改任何磁盘、文件系统、引导加载程序、安全启动状态或已安装的系统。"
-
-#: src/pages.py:2772
 msgid ""
-"\n"
-"\n"
-"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+"Use already-unallocated space and preserve existing partitions. This is the "
+"only Windows coexistence path."
 msgstr ""
-"\n"
-"\n"
-"实际安装将创建本地 MOK。重启后，在 MOKManager 中选择“注册 MOK”→“继续”→“是”，并输入密码 123456。"
+"使用已存在的未分配空间并保留现有分区。这是唯一支持 Windows 共存的路径。"
 
-#: src/pages.py:2779 src/pages.py:2789 src/pages.py:2932 src/pages.py:2934
-msgid "Installation Complete"
-msgstr "安装完成"
-
-#: src/pages.py:2781 src/pages.py:2790
-msgid "Remove the installation media and restart your computer"
-msgstr "移除安装介质并重启计算机"
-
-#: src/pages.py:2783
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"在蓝色的 MOKManager 屏幕上选择“注册 MOK”→“继续”→“是”，密码：123456"
-
-#: src/pages.py:2799
-msgid "Restart is disabled in development protection mode"
-msgstr "在开发保护模式下已禁用重启"
-
-#: src/pages.py:2807
-msgid "Installation failed"
-msgstr "安装失败"
-
-#: src/pages.py:2809
-msgid "Installation Failed"
-msgstr "安装失败"
-
-#: src/pages.py:2812 src/pages.py:2867
-msgid "Output • Error"
-msgstr "输出 • 错误"
-
-#: src/pages.py:2862
-#, python-brace-format
-msgid "Output • {count} warning(s)"
-msgstr "输出 • {count} 个警告"
-
-#: src/pages.py:2870
-#, python-brace-format
-msgid "{step} failed"
-msgstr "{step} 失败"
-
-#: src/pages.py:715
-msgid "Empty disk — no partitions"
-msgstr "空磁盘——无分区"
-
-#: src/pages.py:468
-msgid "Confirm your keyboard layout"
-msgstr "确认您的键盘布局"
-
-#: src/pages.py:540
-msgid "Choose optional software to install"
-msgstr "选择要安装的可选软件"
-
-#: src/pages.py:758
-msgid "Choose one target disk. Storage settings come next."
-msgstr "选择一个目标磁盘。接下来是存储设置。"
-
-#: src/pages.py:923
-msgid "Choose a complete installation method, not only a filesystem."
-msgstr "选择完整的安装方式，而不仅仅是文件系统。"
-
-#: src/pages.py:1184
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "仅使用所选磁盘上现有的未分配空间。"
 
-#: src/pages.py:1586
-msgid "Create your user account"
-msgstr "创建您的用户账户"
+msgid "User"
+msgstr "用户"
 
-#: src/pages.py:1902
-msgid "Choose your location to set the system clock"
-msgstr "选择您的位置以设置系统时钟"
+msgid "User Account"
+msgstr "用户账户"
 
-#: src/pages.py:2042
-msgid "Please review your choices before proceeding"
-msgstr "请在继续之前检查您的选择"
+msgid "Username"
+msgstr "用户名"
 
-#: src/pages.py:2405
-msgid "Please do not turn off your computer"
-msgstr "请勿关闭计算机"
+msgid ""
+"Username must start with a lowercase ASCII letter and contain only lowercase "
+"ASCII letters or digits (maximum 16 characters)."
+msgstr ""
+"Username must start with a lowercase ASCII letter and contain only lowercase "
+"ASCII letters or digits (maximum 16 characters)."
+
+msgid "Uses a traditional single root filesystem."
+msgstr "使用传统的单一根文件系统。"
+
+msgid "Validate Plan (No Installation)"
+msgstr "验证计划（不安装）"
+
+msgid "Validate this installation plan?"
+msgstr "要验证此安装计划吗？"
+
+msgid "Verify kernel module signatures"
+msgstr "验证内核模块签名"
+
+msgid "Verify target disk isolation"
+msgstr "验证目标磁盘隔离"
+
+msgid "Vietnamese"
+msgstr "越南语"
+
+msgid "Welcome to AnduinOS"
+msgstr "欢迎使用 AnduinOS"
+
+msgid "Windows detected"
+msgstr "检测到 Windows"
+
+msgid ""
+"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
+"AnduinOS NVRAM entry."
+msgstr ""
+"仅写入 EFI/AnduinOS，不要覆盖 EFI/BOOT，并且需要已验证的 AnduinOS NVRAM 条"
+"目。"
+
+msgid "automatic login"
+msgstr "自动登录"
+
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr "创建本地 MOK；重启后使用密码 123456 注册"
+
+msgid "detect and install (may include non-free software)"
+msgstr "检测并安装（可能包含非自由软件）"
+
+msgid "do not install"
+msgstr "不安装"
+
+msgid "download and install"
+msgstr "下载并安装"
+
+msgid "ext4 (classic)"
+msgstr "ext4（经典版）"
+
+msgid "ext4 — classic"
+msgstr "ext4 — 经典"
+
+msgid "not required"
+msgstr "不需要"
+
+msgid "password required for login"
+msgstr "登录需要密码"
+
+msgid "single ext4 root filesystem"
+msgstr "单个 ext4 根文件系统"
+
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / 安全启动：{secure_boot}"
+
+msgid "{count}: {paths}"
+msgstr "{count}：{paths}"
+
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}：{start}–{end} MiB"
+
+msgid "{path} as {filesystem}"
+msgstr "{path} 作为 {filesystem}"
+
+msgid "{size} at {offset}"
+msgstr "{size} 位于 {offset}"
+
+msgid "{size} unallocated at {offset}"
+msgstr "{size} 未分配空间位于 {offset}"
+
+msgid "{step} failed"
+msgstr "{step} 失败"
+
+msgid ""
+"⚠ Only the selected unallocated space will be partitioned and formatted. "
+"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
+"firmware boot entry may change. This installer will not shrink Windows for "
+"you."
+msgstr ""
+"⚠ 仅选定的未分配空间将被分区和格式化。现有分区将保留，但 EFI/AnduinOS 文件以"
+"及 AnduinOS 固件启动条目可能会发生变化。本安装程序不会为您缩小 Windows 分区。"
+
+msgid ""
+"⚠ This will erase ALL data on the selected disk. This action cannot be "
+"undone."
+msgstr "⚠ 这将擦除所选磁盘上的所有数据。此操作无法撤销。"
+
+#: src/pages.py
+msgid "Connect to the Internet"
+msgstr "连接到互联网"
+
+#: src/pages.py
+msgid "Internet connection is ready."
+msgstr "互联网连接已就绪。"
+
+#: src/pages.py
+msgid "Available Wi-Fi Networks"
+msgstr "可用的 Wi-Fi 网络"
+
+#~ msgid "Choose a complete installation method, not only a filesystem."
+#~ msgstr "选择完整的安装方式，而不仅仅是文件系统。"

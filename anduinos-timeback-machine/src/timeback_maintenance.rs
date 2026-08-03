@@ -1,13 +1,16 @@
 use std::process::ExitCode;
 
-use chrono::Utc;
-use anduinos_timeback::automation::{plan, AutomaticSnapshot, AutomaticStore};
+use anduinos_timeback::automatic_home::HomeSnapshotStore;
+use anduinos_timeback::automation::{
+    plan, AutomaticSnapshot, AutomaticStore, AutomaticTarget, TargetAutomaticStatus,
+};
 use anduinos_timeback::layout;
-use anduinos_timeback::model::{DeploymentKind, DeploymentState};
 use anduinos_timeback::maintenance::{run_maintenance, MaintenanceOutcome};
+use anduinos_timeback::model::{DeploymentKind, DeploymentState};
 use anduinos_timeback::operations::OperationEngine;
 use anduinos_timeback::retention::RetentionCoordinator;
 use anduinos_timeback::store::DeploymentStore;
+use chrono::Utc;
 
 fn main() -> ExitCode {
     run_automatic_snapshots();
@@ -63,24 +66,173 @@ fn main() -> ExitCode {
 }
 
 fn run_automatic_snapshots() {
-    let store=AutomaticStore::default();
-    let now=Utc::now();
-    let status=match store.status(now) { Ok(status) => status, Err(error) => { eprintln!("AnduinOS Timeback automatic snapshot warning: {error}"); return; } };
+    let store = AutomaticStore::default();
+    let now = Utc::now();
+    let status = match store.status(now) {
+        Ok(status) => status,
+        Err(error) => {
+            eprintln!("AnduinOS Timeback automatic snapshot warning: {error}");
+            return;
+        }
+    };
+    run_system_snapshots(&store, now, &status.system, &status.configuration.system);
+    run_home_snapshots(&store, now, &status.home, &status.configuration.home);
+}
+
+fn run_system_snapshots(
+    store: &AutomaticStore,
+    now: chrono::DateTime<Utc>,
+    status: &TargetAutomaticStatus,
+    policy: &anduinos_timeback::automation::AutomaticPolicy,
+) {
     if status.next_run.is_some_and(|next| next <= now) {
-        let result=OperationEngine::default().create_automatic(&layout::inspect_current(), |_,_,_| {}).map(|record| { eprintln!("AnduinOS Timeback automatic snapshot: created {}", record.id); Utc::now() }).map_err(|error| error.to_string());
-        if let Err(error)=&result { eprintln!("AnduinOS Timeback automatic snapshot warning: {error}"); }
-        if let Err(error)=store.record_result(now,result) { eprintln!("AnduinOS Timeback automatic state warning: {error}"); }
+        let result = OperationEngine::default()
+            .create_automatic(&layout::inspect_current(), |_, _, _| {})
+            .map(|record| {
+                eprintln!(
+                    "AnduinOS Timeback automatic System snapshot: created {}",
+                    record.id
+                );
+                Utc::now()
+            })
+            .map_err(|error| error.to_string());
+        if let Err(error) = &result {
+            eprintln!("AnduinOS Timeback automatic System snapshot warning: {error}");
+        }
+        if let Err(error) = store.record_result(AutomaticTarget::System, now, result) {
+            eprintln!("AnduinOS Timeback automatic System state warning: {error}");
+        }
     }
-    let report=DeploymentStore::default().discover();
-    if !report.issues.is_empty() { let message="Automatic cleanup skipped because the recovery catalog has unresolved issues"; eprintln!("AnduinOS Timeback automatic cleanup warning: {message}"); let _=store.record_cleanup_result(Err(message.into())); return; }
-    let snapshots=report.deployments.iter().filter(|record| record.kind == DeploymentKind::Automatic).map(|record| AutomaticSnapshot { id: record.id.to_string(), created_at: record.created_at, protected: record.pinned || record.state.protects_from_deletion(), successful: record.failure.is_none() && record.state != DeploymentState::Broken && record.state != DeploymentState::Incomplete }).collect::<Vec<_>>();
-    let decisions=match plan(&status.policy,now,&snapshots) { Ok(plan) => plan, Err(error) => { eprintln!("AnduinOS Timeback automatic cleanup warning: {error}"); let _=store.record_cleanup_result(Err(error.into())); return; } };
-    let engine=OperationEngine::default();
-    let current_layout=layout::inspect_current();
-    let mut cleanup_error=None;
+
+    let report = DeploymentStore::default().discover();
+    if !report.issues.is_empty() {
+        let message =
+            "Automatic System cleanup skipped because the recovery catalog has unresolved issues";
+        eprintln!("AnduinOS Timeback automatic cleanup warning: {message}");
+        let _ = store.record_cleanup_result(AutomaticTarget::System, Err(message.into()));
+        return;
+    }
+    let snapshots = report
+        .deployments
+        .iter()
+        .filter(|record| record.kind == DeploymentKind::Automatic)
+        .map(|record| AutomaticSnapshot {
+            id: record.id.to_string(),
+            created_at: record.created_at,
+            protected: record.pinned || record.state.protects_from_deletion(),
+            successful: record.failure.is_none()
+                && record.state != DeploymentState::Broken
+                && record.state != DeploymentState::Incomplete,
+        })
+        .collect::<Vec<_>>();
+    let decisions = match plan(policy, now, &snapshots) {
+        Ok(plan) => plan,
+        Err(error) => {
+            let _ = store.record_cleanup_result(AutomaticTarget::System, Err(error.into()));
+            return;
+        }
+    };
+    let engine = OperationEngine::default();
+    let current_layout = layout::inspect_current();
+    let mut cleanup_error = None;
     for decision in decisions.into_iter().filter(|decision| !decision.keep) {
-        let Some(record)=report.deployments.iter().find(|record| record.id.to_string() == decision.id) else { continue };
-        match engine.delete_automatic(&current_layout,record.id,1) { Ok(()) => eprintln!("AnduinOS Timeback automatic cleanup: deleted {}",record.id), Err(error) => { eprintln!("AnduinOS Timeback automatic cleanup warning for {}: {error}",record.id); cleanup_error=Some(format!("Could not clean automatic recovery point {}: {error}",record.id)); } }
+        let Some(record) = report
+            .deployments
+            .iter()
+            .find(|record| record.id.to_string() == decision.id)
+        else {
+            continue;
+        };
+        if let Err(error) = engine.delete_automatic(&current_layout, record.id, 1) {
+            cleanup_error = Some(format!(
+                "Could not clean automatic System recovery point {}: {error}",
+                record.id
+            ));
+        }
     }
-    if let Err(error)=store.record_cleanup_result(cleanup_error.map_or(Ok(()),Err)) { eprintln!("AnduinOS Timeback automatic cleanup state warning: {error}"); }
+    let _ = store.record_cleanup_result(AutomaticTarget::System, cleanup_error.map_or(Ok(()), Err));
+}
+
+fn run_home_snapshots(
+    store: &AutomaticStore,
+    now: chrono::DateTime<Utc>,
+    status: &TargetAutomaticStatus,
+    policy: &anduinos_timeback::automation::AutomaticPolicy,
+) {
+    let snapshots = HomeSnapshotStore::default();
+    if status.next_run.is_some_and(|next| next <= now) {
+        let result = snapshots.create(&layout::inspect_current()).map(|record| {
+            eprintln!(
+                "AnduinOS Timeback automatic Home snapshot: created {}",
+                record.id
+            );
+            Utc::now()
+        });
+        if let Err(error) = &result {
+            eprintln!("AnduinOS Timeback automatic Home snapshot warning: {error}");
+        }
+        if let Err(error) = store.record_result(AutomaticTarget::Home, now, result) {
+            eprintln!("AnduinOS Timeback automatic Home state warning: {error}");
+        }
+    }
+
+    let mut records = match snapshots.discover() {
+        Ok(records) => records,
+        Err(error) => {
+            let _ = store.record_cleanup_result(AutomaticTarget::Home, Err(error));
+            return;
+        }
+    };
+    for record in records.iter().filter(|record| record.deleting) {
+        if let Err(error) = snapshots.delete(record.id) {
+            let message = format!(
+                "Could not finish deleting automatic Home snapshot {}: {error}",
+                record.id
+            );
+            let _ = store.record_cleanup_result(AutomaticTarget::Home, Err(message));
+            return;
+        }
+    }
+    if records.iter().any(|record| record.deleting) {
+        records = match snapshots.discover() {
+            Ok(records) => records,
+            Err(error) => {
+                let _ = store.record_cleanup_result(AutomaticTarget::Home, Err(error));
+                return;
+            }
+        };
+    }
+    let catalog = records
+        .iter()
+        .map(|record| AutomaticSnapshot {
+            id: record.id.to_string(),
+            created_at: record.created_at,
+            protected: false,
+            successful: true,
+        })
+        .collect::<Vec<_>>();
+    let decisions = match plan(policy, now, &catalog) {
+        Ok(decisions) => decisions,
+        Err(error) => {
+            let _ = store.record_cleanup_result(AutomaticTarget::Home, Err(error.into()));
+            return;
+        }
+    };
+    let mut cleanup_error = None;
+    for decision in decisions.into_iter().filter(|decision| !decision.keep) {
+        let Some(record) = records
+            .iter()
+            .find(|record| record.id.to_string() == decision.id)
+        else {
+            continue;
+        };
+        if let Err(error) = snapshots.delete(record.id) {
+            cleanup_error = Some(format!(
+                "Could not clean automatic Home snapshot {}: {error}",
+                record.id
+            ));
+            break;
+        }
+    }
+    let _ = store.record_cleanup_result(AutomaticTarget::Home, cleanup_error.map_or(Ok(()), Err));
 }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-01 18:33+0800\n"
+"POT-Creation-Date: 2026-08-01 11:01+0000\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,753 +17,82 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/main.py:88
-msgid "AnduinOS Installer (Development)"
-msgstr "AnduinOS-asentaja (Kehitysversio)"
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose "
+"Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"Oikea asennus luo konekohtaisen MOK-avaimen. Käynnistämisen jälkeen valitse "
+"Enroll MOK → Continue → Yes ohjelmasta MOKManager ja syötä salasana 123456."
+
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: "
+"123456"
+msgstr ""
+"\n"
+"Valitse siniseltä MOKManager-näkymältä Enroll MOK → Continue → Yes, "
+"salasana: 123456"
 
-#: src/main.py:90
-msgid "AnduinOS Installer (Beta)"
-msgstr "AnduinOS-asentaja (Beta)"
-
-#: src/main.py:125
-msgid "Installation in progress"
-msgstr "Asennus käynnissä"
-
-#: src/main.py:127
-msgid "The installer cannot be closed while it is modifying the target disk."
-msgstr "Asentajaa ei voi sulkea, kun se muuttaa kohdelevyä."
-
-#: src/main.py:133
-msgid "Continue Installation"
-msgstr "Jatka asennusta"
-
-#: src/pages.py:69
-msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
-msgstr "Ohjattu rinnakkaiskäyttö vaatii järjestelmän käynnistymisen UEFI-tilassa ja GPT-tyyppisen kohdelevyn. Tämä levy ei voi jatkaa ohjatussa tilassa."
-
-#: src/pages.py:73
-msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
-msgstr "Koko osiokaarta ja vapaan tilan geometriaa ei voitu lukea johdonmukaisesti. Mitään tilaa tällä levyllä ei ole myönnetty asennusta varten."
-
-#: src/pages.py:78
-msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
-msgstr "GPT-levyllä tai yhdellä sen osioista ei ole yksilöllistä vakaata tunnisteetta. Automaattinen rinnakkaiskäyttö ei voi turvallisesti hyväksyä tämän levyn säilyttämistä tai kirjoituksia."
-
-#: src/pages.py:83
-msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
-msgstr "Tämä levy sisältää aktiivisen kartoittimen, taulukon tai muun sisäkkäisen lohkolaitetopologian, jota ohjattu rinnakkaisyhteensopivuus ei tue."
-
-#: src/pages.py:87
-msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
-msgstr "Tälle levylle on liitetty osio. Irrota se ja skannaa tallennustila uudelleen ennen jatkamista."
-
-#: src/pages.py:91
-msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
-msgstr "AnduinOS käyttää vain valittua varaamatonta tilaa. Asennusohjelma ei pienennä tai siirrä olemassa olevaa tiedostojärjestelmää."
-
-#: src/pages.py:95
-msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
-msgstr "Olemassa olevat Windows-, palautus- ja dataosiot jäävät kirjoitusjoukon ulkopuolelle ja ne säilytetään."
-
-#: src/pages.py:99
-msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
-msgstr "Olemassa oleva EFI-järjestelmäosio on vain ehdokas. Sen uudelleenkäyttö edellyttää, että kunto- ja vapaan tilan tarkastukset menevät läpi, eikä sitä ikinä formatoida."
-
-#: src/pages.py:104
-msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
-msgstr "BitLocker-tallennustila säilytetään. Asennusohjelma ei avaa lukkoa, muuta kokoa, korjaa tai tee muita muutoksia siihen."
-
-#: src/pages.py:108
-msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
-msgstr "Asennusohjelma ei liitä, korjaa tai arvioi Windows-volyymien turvallisuutta lepotilan tai Pikakäynnistystilan perusteella. Kaikki tarvittava Windowsin ylläpito on suoritettava Windowsissa."
-
-#: src/pages.py:113
-msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
-msgstr "Vaihtoehtoisesti voit valita erikseen yhden koko osion tyhjennettäväksi. Kaikki valitussa osiossa oleva tuhoutuu; sitä ei valita koskaan automaattisesti."
-
-#: src/pages.py:118
-msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
-msgstr "Asennusta ei voi jatkaa tällä valinnalla. Pakotetun jatkamisen vaihtoehtoa ei ole saatavilla tallennustilan turvallisuustarkistusten ohittamiseksi."
-
-#: src/pages.py:122
-msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
-msgstr "Osioita muutettuaan tai osion irrotettuaan, skannaa tallennustila uudelleen ja valitse kohde uudestaan."
-
-#: src/pages.py:128
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
-msgstr "Sopivaa varaamatonta tilaa ei löytynyt. Suojatakseen tietonsa, luo varaamaton tila Windowsin levytilanhallinnalla, käynnistä sitten asennusohjelma uudelleen ja skannaa levy uudelleen."
-
-#: src/pages.py:133
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
-msgstr "Sopivaa varaamatonta tilaa ei löytynyt. Suojatakseen tietonsa, luo varaamaton tila osiointityökalulla, käynnistä sitten asennusohjelma uudelleen ja skannaa levy uudelleen."
-
-#: src/pages.py:204 src/pages.py:374
-msgid "Next"
-msgstr "Seuraava"
-
-#: src/pages.py:211 src/pages.py:373 src/pages.py:2341
-msgid "Back"
-msgstr "Takaisin"
-
-#: src/pages.py:287 src/pages.py:371
-msgid "AnduinOS Installer"
-msgstr "AnduinOS-asentaja"
-
-#: src/pages.py:367
-msgid "Welcome to AnduinOS"
-msgstr "Tervetuloa AnduinOS:aan"
-
-#: src/pages.py:369
-msgid "Choose your language to begin installation"
-msgstr "Valitse kieli aloittaaksesi asennuksen"
-
-#: src/pages.py:405
-msgid "Navigation error"
-msgstr "Navigointivirhe"
-
-#: src/pages.py:408 src/pages.py:2363
-msgid "OK"
-msgstr "OK"
-
-#: src/pages.py:440
-msgid "English (US)"
-msgstr "Englanti (US)"
-
-#: src/pages.py:440
-msgid "English (UK)"
-msgstr "Englanti (UK)"
-
-#: src/pages.py:441
-msgid "German"
-msgstr "Saksa"
-
-#: src/pages.py:441
-msgid "French"
-msgstr "Ranska"
-
-#: src/pages.py:441
-msgid "Italian"
-msgstr "Itävalta"
-
-#: src/pages.py:442
-msgid "Spanish"
-msgstr "Espanja"
-
-#: src/pages.py:442
-msgid "Portuguese"
-msgstr "Portugali"
-
-#: src/pages.py:443
-msgid "Portuguese (Brazil)"
-msgstr "Portugali (Brasilia)"
-
-#: src/pages.py:443
-msgid "Danish"
-msgstr "Tanska"
-
-#: src/pages.py:444
-msgid "Swedish"
-msgstr "Ruotsi"
-
-#: src/pages.py:444
-msgid "Norwegian"
-msgstr "Norja"
-
-#: src/pages.py:445
-msgid "Finnish"
-msgstr "Suomi"
-
-#: src/pages.py:445
-msgid "Dutch"
-msgstr "Hollanti"
-
-#: src/pages.py:445
-msgid "Polish"
-msgstr "Puola"
-
-#: src/pages.py:446
-msgid "Romanian"
-msgstr "Romania"
-
-#: src/pages.py:448
-msgid "Russian"
-msgstr "Venäjä"
-
-#: src/pages.py:448
-msgid "Ukrainian"
-msgstr "Ukraina"
-
-#: src/pages.py:448
-msgid "Greek"
-msgstr "Kreikka"
-
-#: src/pages.py:451
-msgid "Japanese"
-msgstr "Japani"
-
-#: src/pages.py:451
-msgid "Korean"
-msgstr "Korea"
-
-#: src/pages.py:452
-msgid "Hindi (India)"
-msgstr "Hindi (Intia)"
-
-#: src/pages.py:452
-msgid "Thai"
-msgstr "Thai"
-
-#: src/pages.py:453
-msgid "Vietnamese"
-msgstr "Vietnam"
-
-#: src/pages.py:453
-msgid "Arabic"
-msgstr "Arabia"
-
-#: src/pages.py:454
-msgid "Turkish"
-msgstr "Turkki"
-
-#: src/pages.py:454
-msgid "Indonesian"
-msgstr "Indonesia"
-
-#: src/pages.py:461 src/pages.py:467 src/pages.py:507
-msgid "Keyboard Layout"
-msgstr "Näppäimistön asettelu"
-
-#: src/pages.py:499 src/pages.py:508
-msgid "Test your keyboard here…"
-msgstr "Testaa näppäimistösi täällä…"
-
-#: src/pages.py:533 src/pages.py:539
-msgid "Updates and Drivers"
-msgstr "Päivitykset ja ohjaimet"
-
-#: src/pages.py:556
-msgid "Download and install system updates during installation"
-msgstr "Lataa ja asenna järjestelmäpäivitykset asennuksen aikana"
-
-#: src/pages.py:559 src/pages.py:575
-msgid "Requires an Internet connection. The base installation remains available when offline."
-msgstr "Vaatii internet-yhteyden. Perusasennus pysyy saatavilla ilman verkkoyhteyttä."
-
-#: src/pages.py:568
-msgid "Install third-party drivers for this device"
-msgstr "Asenna kolmannen osapuolen ohjaimet tälle laitteelle"
-
-#: src/pages.py:581
-msgid "Some drivers are proprietary or otherwise non-free software."
-msgstr "Jotkut ohjaimet ovat omistusoikeudellisia tai muuten ei-vapaata ohjelmistoa."
-
-#: src/pages.py:641
-msgid "Storage Device"
-msgstr "Tallennuslaite"
-
-#: src/pages.py:650
-msgid "No partition table"
-msgstr "Ei osiotaulukkoa"
-
-#: src/pages.py:673
-msgid "Current disk layout"
-msgstr "Nykyinen levyjaottelu"
-
-#: src/pages.py:693
-msgid "Unknown filesystem"
-msgstr "Tuntematon tiedostojärjestelmä"
-
-#: src/pages.py:706
-#, python-brace-format
-msgid "Unallocated · {size}"
-msgstr "Varaamaton · {size}"
-
-#: src/pages.py:713
-msgid "Partition details unavailable"
-msgstr "Osiotiedot eivät ole saatavilla"
-
-#: src/pages.py:728
-msgid "Windows detected"
-msgstr "Windows havaittu"
-
-#: src/pages.py:730
-msgid "BitLocker detected"
-msgstr "BitLocker havaittu"
-
-#: src/pages.py:732
-msgid "Live USB — excluded"
-msgstr "Elävä USB — pois suljettu"
-
-#: src/pages.py:734
-msgid "Too small"
-msgstr "Liian pieni"
-
-#: src/pages.py:751 src/pages.py:757
-msgid "Select Installation Disk"
-msgstr "Valitse asennuslevy"
-
-#: src/pages.py:793
-msgid "Rescan Storage"
-msgstr "Tarkista tallennustila uudelleen"
-
-#: src/pages.py:863
-msgid "No suitable disks found."
-msgstr "Sopivia levyjä ei löydetty."
-
-#: src/pages.py:917
-msgid "Choose Installation Method"
-msgstr "Valitse asennustapa"
-
-#: src/pages.py:922
-msgid "How should AnduinOS use this disk?"
-msgstr "Miten AnduinOS:n tulisi käyttää tätä levyä?"
-
-#: src/pages.py:937 src/pages.py:1191 src/pages.py:1425
-#, python-brace-format
-msgid "Target: {disk} ({size} — {model})"
-msgstr "Kohde: {disk} ({size} — {model})"
-
-#: src/pages.py:1014
-msgid "Erase every partition and all data on the selected disk."
-msgstr "Poista kaikki valitun levyn osiot ja data."
-
-#: src/pages.py:1018
-msgid "Btrfs — recommended"
-msgstr "Btrfs — suositeltu"
-
-#: src/pages.py:1022
-msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
-msgstr "Ota käyttöön jaetun tilan alinvoluutit, hetkikuvat ja Timeback Machine."
-
-#: src/pages.py:1030
-msgid "ext4 — classic"
-msgstr "ext4 — klassinen"
-
-#: src/pages.py:1033
-msgid "Uses a traditional single root filesystem."
-msgstr "Käyttää perinteistä yksittäistä juuritasojen tiedostojärjestelmää."
-
-#: src/pages.py:1039
-msgid "Advanced — keep existing systems"
-msgstr "Edistynyt – säilytä olemassa olevat järjestelmät"
-
-#: src/pages.py:1041
-msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-msgstr "Käytä jo olevaa varaamatonta tilaa ja säilytä nykyiset osiot. Tämä on ainoa Windowsin rinnakkaiskäytön tuki."
-
-#: src/pages.py:1089
-msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-msgstr "Edistynyt rinnakkaiskäyttö voi vaikuttaa EFI-laitteiston tilaan ja aktivoida BitLocker-palautuksen. Se ei koskaan pienennä tai korjaa Windows-osioita."
-
-#: src/pages.py:1099
-#, python-brace-format
-msgid "ALL DATA on {disk} will be permanently erased."
-msgstr "{disk}-levyn KAIKKI TIEDOT poistetaan pysyvästi."
-
-#: src/pages.py:1135
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "Tämä levy on liian pieni koko levyn asennusta varten. Asennus voi jatkua vain, jos sopivaa varaamatonta tilaa on saatavilla."
-
-#: src/pages.py:1145
-msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-msgstr "Olemassa olevia osioita havaittiin. Kaksi ensimmäistä vaihtoehtoa poistaa ne; Advanced on säilytyspolku."
-
-#: src/pages.py:1178
-msgid "Advanced Storage"
-msgstr "Edistynyt tallennustila"
-
-#: src/pages.py:1183
-msgid "Advanced: Install Alongside"
-msgstr "Edistynyt: Asenna rinnakkain"
-
-#: src/pages.py:1212
-msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-msgstr "Jatkaaksesi: suorita Windows-päivitykset loppuun, poista nopea käynnistys ja valmiustila käytöstä sekä varuskopioida BitLockerin palautusavain. EFI, Secure Boot, TPM-mittaukset ja käynnistysjärjestys voivat muuttua."
-
-#: src/pages.py:1219
-msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr "Tämä edistynyt vaihtoehto säilyttää olemassa olevat osiot, mutta muuttaa valitun levyn osiotaulukon ja tietokoneen EFI-käynnistystilan."
-
-#: src/pages.py:1250 src/pages.py:2113
-msgid "Filesystem"
-msgstr "Tiedostojärjestelmä"
-
-#: src/pages.py:1253
-msgid "Btrfs (recommended)"
-msgstr "Btrfs (suositeltu)"
-
-#: src/pages.py:1253
-msgid "ext4 (classic)"
-msgstr "ext4 (klassinen)"
-
-#: src/pages.py:1263
-msgid "Unallocated space"
-msgstr "Varaamaton tila"
-
-#: src/pages.py:1271
-msgid "EFI System Partition"
-msgstr "EFI-järjestelmäosio"
-
-#: src/pages.py:1285
-msgid "Rescan and Reselect Disk"
-msgstr "Tarkista ja valitse levy uudelleen"
-
-#: src/pages.py:1326
-msgid "Create a new 1 GiB AnduinOS EFI System Partition"
-msgstr "Luo uusi 1 GiB:n AnduinOS EFI-järjestelmän osio"
-
-#: src/pages.py:1330
-#, python-brace-format
-msgid "Reuse {path} ({size})"
-msgstr "Käytä uudelleen polkua {path} ({size})"
-
-#: src/pages.py:1394
-#, python-brace-format
-msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-msgstr "Valittu levy muuttui tai katosi. Palaa levyyn liittyvälle sivulle ja valitse se uudelleen. {error}"
-
-#: src/pages.py:1407
-msgid "The selected disk size changed. Return and select it again."
-msgstr "Valitun levyn koko muuttui. Palaa ja valitse se uudelleen."
-
-#: src/pages.py:1417
-msgid "The selected disk topology changed. Review the disk and installation method again."
-msgstr "Valitun levyn topologia muuttui. Tarkista levy ja asennustapa uudelleen."
-
-#: src/pages.py:1453
-#, python-brace-format
-msgid "{size} unallocated at {offset}"
-msgstr "{size} varaamattomaa tilaa kohdassa {offset}"
-
-#: src/pages.py:1579 src/pages.py:1585
-msgid "User Account"
-msgstr "Käyttäjätili"
-
-#: src/pages.py:1605 src/pages.py:1606
-msgid "Full Name"
-msgstr "Koko nimi"
-
-#: src/pages.py:1609 src/pages.py:1612
-msgid "Username"
-msgstr "Käyttäjänimi"
-
-#: src/pages.py:1616 src/pages.py:1627
-msgid "Password"
-msgstr "Salasana"
-
-#: src/pages.py:1620 src/pages.py:1628
-msgid "Confirm Password"
-msgstr "Vahvista salasana"
-
-#: src/pages.py:1632
-msgid "Do not require a password for sudo commands"
-msgstr "Älä vaadi salasanaa sudo-komentoihin"
-
-#: src/pages.py:1638 src/pages.py:1643 src/pages.py:2157
-msgid "Computer Name"
-msgstr "Tietokoneen nimi"
-
-#: src/pages.py:1669
-msgid "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
-msgstr "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
-
-#: src/pages.py:1680
-msgid "Install alongside requires a password-protected account."
-msgstr "Rinnakkaisasennus vaatii salasanalla suojatun tilin."
-
-#: src/pages.py:1691
-msgid "The two passwords do not match."
-msgstr "Kaksi salasanaa eivät täsmää."
-
-#: src/pages.py:1695
-msgid "Password must be at least 6 characters."
-msgstr "Salasanan on oltava vähintään 6 merkkiä pitkä."
-
-#: src/pages.py:1703
-msgid "Computer name contains invalid characters."
-msgstr "Tietokoneen nimi sisältää kiellettyjä merkkejä."
-
-#: src/pages.py:1756
-msgid "Return to Make Changes"
-msgstr "Palaa tekemään muutoksia"
-
-#: src/pages.py:1763
-msgid "This configuration is very unsafe"
-msgstr "Tämä konfiguraatio on erittäin epäturvallinen"
-
-#: src/pages.py:1765
-msgid "Passwordless sudo is unsafe"
-msgstr "Salasanasoton sudo on epäturvallinen"
-
-#: src/pages.py:1769
-msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
-msgstr "Järjestelmä kirjautuu tähän tiliin automaattisesti ja sallii sen saavan täydet järjestelmänvalvojan oikeudet ilman salasanaa. Kuka tahansa, jolla on fyysinen pääsy, ja mikä tahansa tämän käyttäjänä suorittava ohjelma voi hallita järjestelmää täysin. Käytä tätä vain kioskissa, tilapäisessä virtuaalikoneessa tai toisessa kontrolloidussa ympäristössä."
-
-#: src/pages.py:1778
-msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
-msgstr "Mikä tahansa käyttäjänäsi suorittava ohjelma voi saada täydet järjestelmänvalvojan oikeudet ilman todennusta. Kirjautumissalasana suojaa edelleen sisäänkirjautumista, mutta se ei suojaa sudoa. Haluatko varmasti jatkaa?"
-
-#: src/pages.py:1792
-msgid "Return and Set a Password"
-msgstr "Palaa ja aseta salasana"
-
-#: src/pages.py:1798
-msgid "I Understand the Risk, Continue"
-msgstr "Ymmärrän riskin, jatka"
-
-#: src/pages.py:1822
-msgid "Administrator access would be locked"
-msgstr "Ylläpitäjän pääsy lukittuisi"
-
-#: src/pages.py:1824
-msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
-msgstr "Tässä tilissä ei ole kirjautumis salasanaa, mutta sudo vaatii silti yhden. Koska root-tili on oletuksena lukittu, et voi suorittaa ylläpitotehtäviä. Aseta tiliin salasana tai ota käyttöön salasanaton sudo."
-
-#: src/pages.py:1895 src/pages.py:1901
-msgid "Select Timezone"
-msgstr "Valitse aikavyöhyke"
-
-#: src/pages.py:1914
-msgid "Search timezones…"
-msgstr "Hae aikavyöhykkeitä…"
-
-#: src/pages.py:1967
-msgid "Selected timezone"
-msgstr "Valittu aikavyöhyke"
-
-#: src/pages.py:2035 src/pages.py:2041
-msgid "Ready to Install"
-msgstr "Valmis asennettavaksi"
-
-#: src/pages.py:2056
-msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
-msgstr "KEHITYSTILA — suunnitelma validoidaan ja simuloitaan. Etuoikeutettua suorittajaa tai levykomentoa ei voi suorittaa."
-
-#: src/pages.py:2081
-#, python-brace-format
-msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
-msgstr "{architecture} / {firmware} / Turvallinen käynnistys: {secure_boot}"
-
-#: src/pages.py:2090
-#, python-brace-format
-msgid "Unavailable: {error}"
-msgstr "Ei saatavilla: {error}"
-
-#: src/pages.py:2100
-msgid "single ext4 root filesystem"
-msgstr "yksi ext4-juuritiedostojärjestelmä"
-
-#: src/pages.py:2103
-msgid "Language"
-msgstr "Kieli"
-
-#: src/pages.py:2104
-msgid "Keyboard"
-msgstr "Näppäimistö"
-
-#: src/pages.py:2106
-msgid "Target Disk"
-msgstr "Kohdelevy"
-
-#: src/pages.py:2110
-msgid "Stable disk identity"
-msgstr "Vakaa levytunnus"
-
-#: src/pages.py:2112
-msgid "Platform"
-msgstr "Alusta"
-
-#: src/pages.py:2114
-msgid "Subvolumes"
-msgstr "Alueet (Subvolumes)"
-
-#: src/pages.py:2115
-msgid "Swap"
-msgstr "Vaihtotila"
-
-#: src/pages.py:2117
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
-msgstr "4 GiB levyvaihtotila (prioriteetti 10) + 50 % RAM LZ4 zram (prioriteetti 100)"
+msgstr ""
+"4 GiB levyvaihtotila (prioriteetti 10) + 50 % RAM LZ4 zram (prioriteetti 100)"
 
-#: src/pages.py:2121
-msgid "System updates"
-msgstr "Järjestelmäpäivitykset"
-
-#: src/pages.py:2123
-msgid "download and install"
-msgstr "lataa ja asenna"
-
-#: src/pages.py:2125 src/pages.py:2131
-msgid "do not install"
-msgstr "älä asenna"
-
-#: src/pages.py:2127
-msgid "Third-party drivers"
-msgstr "Kolmannen osapuolen ohjaimet"
-
-#: src/pages.py:2129
-msgid "detect and install (may include non-free software)"
-msgstr "tunnista ja asenna (voi sisältää ei-vapaata ohjelmistoa)"
-
-#: src/pages.py:2133
-msgid "Secure Boot enrollment"
-msgstr "Secure Boot -rekisteröinti"
-
-#: src/pages.py:2136
-msgid "create a machine-local MOK; enroll after reboot with password 123456"
-msgstr "luo konekohtainen MOK; rekisteröi uudelleenkäynnistyksen jälkeen salasanalla 123456"
-
-#: src/pages.py:2141
-msgid "not required"
-msgstr "ei vaadita"
-
-#: src/pages.py:2143
-msgid "User"
-msgstr "Käyttäjä"
-
-#: src/pages.py:2146
-msgid "Account security"
-msgstr "Tilin turvallisuus"
-
-#: src/pages.py:2148
-msgid "automatic login"
-msgstr "automaattinen kirjautuminen"
-
-#: src/pages.py:2150
-msgid "password required for login"
-msgstr "salasana vaaditaan kirjautumiseen"
-
-#: src/pages.py:2153
 msgid "; sudo does not require a password"
 msgstr "; sudo ei vaadi salasanaa"
 
-#: src/pages.py:2155
 msgid "; sudo requires the account password"
 msgstr "; sudo vaatii tilin salasanan"
 
-#: src/pages.py:2159
-msgid "Timezone"
-msgstr "Aikavyöhyke"
-
-#: src/pages.py:2166
-msgid "Guided storage selection is missing. Rescan and select the target again."
-msgstr "Ohjattu tallennustilan valinta puuttuu. Skannaa uudelleen ja valitse kohde uudelleen."
-
-#: src/pages.py:2174
-#, python-brace-format
-msgid "{name}: {start}–{end} MiB"
-msgstr "{name}: {start}–{end} MiB"
-
-#: src/pages.py:2182
-#, python-brace-format
-msgid "{path} as {filesystem}"
-msgstr "{path} tiedostojärjestelmänä {filesystem}"
-
-#: src/pages.py:2190
-#, python-brace-format
-msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-msgstr "Käytä uudelleen polkua {path}; muotoile sitä koskaan; varmista FAT-järjestelmän kunto, identiteetti ja 64 Mt vapaata tilaa ennen kirjoitusta."
-
-#: src/pages.py:2198
-msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-msgstr "Luo ja muotoile omistettu AnduinOS EFI-järjestelmän osio valitussa tilassa."
-
-#: src/pages.py:2203
-msgid "Storage mode"
-msgstr "Tallennustila"
-
-#: src/pages.py:2204
-msgid "Install alongside"
-msgstr "Asenna rinnakkain"
-
-#: src/pages.py:2205
-msgid "Selected unallocated space"
-msgstr "Valittu varaamaton tila"
-
-#: src/pages.py:2206
-#, python-brace-format
-msgid "{size} at {offset}"
-msgstr "{size} kohdassa {offset}"
-
-#: src/pages.py:2210
-msgid "Preserved partitions"
-msgstr "Säilytetyt osiot"
-
-#: src/pages.py:2211
-#, python-brace-format
-msgid "{count}: {paths}"
-msgstr "{count}: {paths}"
-
-#: src/pages.py:2215
-msgid "New partitions"
-msgstr "Uudet osiot"
-
-#: src/pages.py:2217
-msgid "Formats"
-msgstr "Muodostaa"
-
-#: src/pages.py:2219
-msgid "EFI policy"
-msgstr "EFI-käytäntö"
-
-#: src/pages.py:2221
-msgid "Boot policy"
-msgstr "Käynnistyspolitiikka"
-
-#: src/pages.py:2223
-msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr "Kirjoita vain EFI/AnduinOS, älä ylikirjoita EFI/BOOT ja vaadi vahvistettu AnduinOS NVRAM-merkintä."
-
-#: src/pages.py:2253
-msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
-msgstr "⚠ Vain valittu varaamaton tila jaetaan osioiksi ja muotoillaan. Olemassa olevat osiot säilyvät, mutta EFI/AnduinOS-tiedostot ja AnduinOS:n firmware-käynnistysehto voivat muuttua. Tämä asennusohjelma ei pienennä Windowsia puolestasi."
-
-#: src/pages.py:2261
-msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
-msgstr "⚠ Tämä poistaa KAIKKI valitun levyn tiedot. Tätä toimintoa ei voi peruuttaa."
-
-#: src/pages.py:2287
-msgid "Validate this installation plan?"
-msgstr "Validoidaanko tämä asennussuunnitelma?"
-
-#: src/pages.py:2288
-msgid "Validate Plan (No Installation)"
-msgstr "Validoi suunnitelma (ei asennusta)"
-
-#: src/pages.py:2290
-msgid "Install in the selected free space?"
-msgstr "Haluatko asentaa valittuun vapaaseen tilaan?"
-
-#: src/pages.py:2291 src/pages.py:2380
-msgid "Install Alongside"
-msgstr "Asenna rinnakkain"
-
-#: src/pages.py:2293
-msgid "Erase the entire selected disk?"
-msgstr "Poistetaanko koko valittu levy?"
-
-#: src/pages.py:2294
-msgid "Erase Disk and Install"
-msgstr "Poista levy ja asenna"
-
-#: src/pages.py:2301
-#, python-brace-format
 msgid ""
-"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
-"\n"
+"A partition on this disk is mounted. Unmount it and rescan storage before "
+"continuing."
 msgstr ""
-"Kehitystila simuloi asennusta levylle {disk}. Levydataa ei muuteta.\n"
-"\n"
+"Tälle levylle on liitetty osio. Irrota se ja skannaa tallennustila uudelleen "
+"ennen jatkamista."
 
-#: src/pages.py:2307
-#, python-brace-format
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "{disk}-levyn KAIKKI TIEDOT poistetaan pysyvästi."
+
+msgid "Account security"
+msgstr "Tilin turvallisuus"
+
+msgid "Administrator access would be locked"
+msgstr "Ylläpitäjän pääsy lukittuisi"
+
+msgid "Advanced Storage"
+msgstr "Edistynyt tallennustila"
+
 msgid ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
-msgstr "AnduinOS käyttää vain valitun varaamattoman tilan levyltä {disk}. Olemassa olevat osiot säilytetään.\n\n"
+"Advanced coexistence can affect EFI firmware state and may trigger BitLocker "
+"recovery. It never shrinks or repairs Windows volumes."
+msgstr ""
+"Edistynyt rinnakkaiskäyttö voi vaikuttaa EFI-laitteiston tilaan ja aktivoida "
+"BitLocker-palautuksen. Se ei koskaan pienennä tai korjaa Windows-osioita."
 
-#: src/pages.py:2314
-#, python-brace-format
+msgid "Advanced — keep existing systems"
+msgstr "Edistynyt – säilytä olemassa olevat järjestelmät"
+
+msgid "Advanced: Install Alongside"
+msgstr "Edistynyt: Asenna rinnakkain"
+
+msgid ""
+"After changing partitions or unmounting a volume, rescan storage and select "
+"the target again."
+msgstr ""
+"Osioita muutettuaan tai osion irrotettuaan, skannaa tallennustila uudelleen "
+"ja valitse kohde uudestaan."
+
+msgid ""
+"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
+"then enter password 123456."
+msgstr ""
+"Käynnistyksen jälkeen MOKManager avautuu. Valitse Enroll MOK → Continue → "
+"Yes ja syötä sitten salasana 123456."
+
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -771,8 +100,559 @@ msgstr ""
 "Kaikki osiot ja tiedot levyllä {disk} tuhoutuvat.\n"
 "\n"
 
-#: src/pages.py:2319
-#, python-brace-format
+msgid ""
+"Alternatively, you may explicitly select one entire partition to erase. "
+"Everything in that selected partition will be destroyed; it is never "
+"selected automatically."
+msgstr ""
+"Vaihtoehtoisesti voit valita erikseen yhden koko osion tyhjennettäväksi. "
+"Kaikki valitussa osiossa oleva tuhoutuu; sitä ei valita koskaan "
+"automaattisesti."
+
+msgid "AnduinOS Installer"
+msgstr "AnduinOS-asentaja"
+
+msgid "AnduinOS Installer (Beta)"
+msgstr "AnduinOS-asentaja (Beta)"
+
+msgid "AnduinOS Installer (Development)"
+msgstr "AnduinOS-asentaja (Kehitysversio)"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing "
+"partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS käyttää vain valitun varaamattoman tilan levyltä {disk}. Olemassa "
+"olevat osiot säilytetään.\n"
+"\n"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space. The installer will "
+"not shrink or move an existing filesystem."
+msgstr ""
+"AnduinOS käyttää vain valittua varaamatonta tilaa. Asennusohjelma ei "
+"pienennä tai siirrä olemassa olevaa tiedostojärjestelmää."
+
+msgid ""
+"Any program running as your user can obtain full administrator privileges "
+"without authentication. Your login password still protects sign-in, but it "
+"will not protect sudo. Are you sure you want to continue?"
+msgstr ""
+"Mikä tahansa käyttäjänäsi suorittava ohjelma voi saada täydet "
+"järjestelmänvalvojan oikeudet ilman todennusta. Kirjautumissalasana suojaa "
+"edelleen sisäänkirjautumista, mutta se ei suojaa sudoa. Haluatko varmasti "
+"jatkaa?"
+
+msgid "Arabic"
+msgstr "Arabia"
+
+msgid "Back"
+msgstr "Takaisin"
+
+msgid ""
+"Before continuing: finish Windows updates, disable Fast Startup and "
+"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
+"measurements and boot order can change."
+msgstr ""
+"Jatkaaksesi: suorita Windows-päivitykset loppuun, poista nopea käynnistys ja "
+"valmiustila käytöstä sekä varuskopioida BitLockerin palautusavain. EFI, "
+"Secure Boot, TPM-mittaukset ja käynnistysjärjestys voivat muuttua."
+
+msgid "BitLocker detected"
+msgstr "BitLocker havaittu"
+
+msgid ""
+"BitLocker storage will be preserved. The installer will not unlock, resize, "
+"repair or otherwise modify it."
+msgstr ""
+"BitLocker-tallennustila säilytetään. Asennusohjelma ei avaa lukkoa, muuta "
+"kokoa, korjaa tai tee muita muutoksia siihen."
+
+msgid "Boot policy"
+msgstr "Käynnistyspolitiikka"
+
+msgid "Btrfs (recommended)"
+msgstr "Btrfs (suositeltu)"
+
+msgid "Btrfs — recommended"
+msgstr "Btrfs — suositeltu"
+
+msgid "Cannot create installation plan"
+msgstr "Ei voi luoda asennussuunnitelmaa"
+
+msgid "Choose Installation Method"
+msgstr "Valitse asennustapa"
+
+msgid "Choose one target disk. Storage settings come next."
+msgstr "Valitse yksi kohdelevy. Tallennuksen asetukset seuraavaksi."
+
+msgid "Choose optional software to install"
+msgstr "Valitse valinnainen ohjelmisto asennettavaksi"
+
+msgid "Choose your language to begin installation"
+msgstr "Valitse kieli aloittaaksesi asennuksen"
+
+msgid "Choose your location to set the system clock"
+msgstr "Valitse sijaintisi järjestelmäajan määrittämiseksi"
+
+msgid "Complete"
+msgstr "Valmis"
+
+msgid "Computer Name"
+msgstr "Tietokoneen nimi"
+
+msgid "Computer name contains invalid characters."
+msgstr "Tietokoneen nimi sisältää kiellettyjä merkkejä."
+
+msgid "Configure account, region, and machine identity"
+msgstr "Määritä tili, alue ja koneen identiteetti"
+
+msgid "Configure storage and swap"
+msgstr "Määritä tallennustila ja vaihtotila"
+
+msgid "Confirm Password"
+msgstr "Vahvista salasana"
+
+msgid "Confirm your keyboard layout"
+msgstr "Vahvista näppäimistöasettelusi"
+
+msgid "Continue Installation"
+msgstr "Jatka asennusta"
+
+msgid "Copy AnduinOS system"
+msgstr "Kopioi AnduinOS-järjestelmä"
+
+msgid "Copy Log"
+msgstr "Kopioi loki"
+
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Luo uusi 1 GiB:n AnduinOS EFI-järjestelmän osio"
+
+msgid ""
+"Create and format a dedicated AnduinOS EFI System Partition inside the "
+"selected space."
+msgstr ""
+"Luo ja muotoile omistettu AnduinOS EFI-järjestelmän osio valitussa tilassa."
+
+msgid "Create your user account"
+msgstr "Luo käyttäjätilisi"
+
+msgid "Current disk layout"
+msgstr "Nykyinen levyjaottelu"
+
+msgid ""
+"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
+"executor or disk command can run."
+msgstr ""
+"KEHITYSTILA — suunnitelma validoidaan ja simuloitaan. Etuoikeutettua "
+"suorittajaa tai levykomentoa ei voi suorittaa."
+
+msgid "Danish"
+msgstr "Tanska"
+
+msgid "Detect Internet connectivity"
+msgstr "Havaitse internet-yhteys"
+
+msgid "Detect firmware and Secure Boot"
+msgstr "Tunnista laiteohjelmisto ja Secure Boot"
+
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be "
+"changed.\n"
+"\n"
+msgstr ""
+"Kehitystila simuloi asennusta levylle {disk}. Levydataa ei muuteta.\n"
+"\n"
+
+msgid "Development simulation completed"
+msgstr "Kehityssimulaatio suoritettu"
+
+msgid "Discover AnduinOS"
+msgstr "Tutustu AnduinOS:aan"
+
+msgid "Do not require a password for sudo commands"
+msgstr "Älä vaadi salasanaa sudo-komentoihin"
+
+msgid "Download and install system updates during installation"
+msgstr "Lataa ja asenna järjestelmäpäivitykset asennuksen aikana"
+
+msgid "Dutch"
+msgstr "Hollanti"
+
+msgid "EFI System Partition"
+msgstr "EFI-järjestelmäosio"
+
+msgid "EFI policy"
+msgstr "EFI-käytäntö"
+
+msgid "Empty disk — no partitions"
+msgstr "Tyhjä levy — ei osioita"
+
+msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr ""
+"Ota käyttöön jaetun tilan alinvoluutit, hetkikuvat ja Timeback Machine."
+
+msgid "English (UK)"
+msgstr "Englanti (UK)"
+
+msgid "English (US)"
+msgstr "Englanti (US)"
+
+msgid "Ensure Timeback Machine is available"
+msgstr "Varmista, että Timeback Machine on käytettävissä"
+
+msgid "Erase Disk and Install"
+msgstr "Poista levy ja asenna"
+
+msgid "Erase every partition and all data on the selected disk."
+msgstr "Poista kaikki valitun levyn osiot ja data."
+
+msgid "Erase the entire selected disk?"
+msgstr "Poistetaanko koko valittu levy?"
+
+msgid ""
+"Existing Windows, recovery and data partitions remain outside the write set "
+"and will be preserved."
+msgstr ""
+"Olemassa olevat Windows-, palautus- ja dataosiot jäävät kirjoitusjoukon "
+"ulkopuolelle ja ne säilytetään."
+
+msgid ""
+"Existing partitions were detected. The first two choices delete them; "
+"Advanced is the preservation path."
+msgstr ""
+"Olemassa olevia osioita havaittiin. Kaksi ensimmäistä vaihtoehtoa poistaa "
+"ne; Advanced on säilytyspolku."
+
+msgid ""
+"Existing partitions will be preserved. New AnduinOS partitions will be "
+"created only in the selected unallocated extent; EFI vendor files and the "
+"AnduinOS firmware boot entry may be updated."
+msgstr ""
+"Olemassa olevat osiot säilytetään. Uudet AnduinOS-osiot luodaan vain "
+"valitulla varaamattomalla alueella; EFI-valmistajan tiedostoja ja AnduinOS:n "
+"firmware-aloitusmerkintää voidaan päivittää."
+
+msgid "Filesystem"
+msgstr "Tiedostojärjestelmä"
+
+msgid "Finalize target environment"
+msgstr "Lopeta kohdeympäristö"
+
+msgid "Finnish"
+msgstr "Suomi"
+
+msgid "Formats"
+msgstr "Muodostaa"
+
+msgid "French"
+msgstr "Ranska"
+
+msgid "Full Name"
+msgstr "Koko nimi"
+
+msgid "German"
+msgstr "Saksa"
+
+msgid "Greek"
+msgstr "Kreikka"
+
+msgid ""
+"Guided coexistence requires a system booted in UEFI mode and a GPT target "
+"disk. This disk cannot continue in guided mode."
+msgstr ""
+"Ohjattu rinnakkaiskäyttö vaatii järjestelmän käynnistymisen UEFI-tilassa ja "
+"GPT-tyyppisen kohdelevyn. Tämä levy ei voi jatkaa ohjatussa tilassa."
+
+msgid ""
+"Guided storage selection is missing. Rescan and select the target again."
+msgstr ""
+"Ohjattu tallennustilan valinta puuttuu. Skannaa uudelleen ja valitse kohde "
+"uudelleen."
+
+msgid "Hindi (India)"
+msgstr "Hindi (Intia)"
+
+msgid "How should AnduinOS use this disk?"
+msgstr "Miten AnduinOS:n tulisi käyttää tätä levyä?"
+
+msgid "I Understand the Risk, Continue"
+msgstr "Ymmärrän riskin, jatka"
+
+msgid "Indonesian"
+msgstr "Indonesia"
+
+msgid "Install"
+msgstr "Asenna"
+
+msgid "Install Alongside"
+msgstr "Asenna rinnakkain"
+
+msgid "Install alongside"
+msgstr "Asenna rinnakkain"
+
+msgid "Install alongside requires a password-protected account."
+msgstr "Rinnakkaisasennus vaatii salasanalla suojatun tilin."
+
+msgid "Install bootloader"
+msgstr "Asenna käynnistyslataaja"
+
+msgid "Install hardware drivers"
+msgstr "Asenna laiteohjaimet"
+
+msgid "Install in the selected free space?"
+msgstr "Haluatko asentaa valittuun vapaaseen tilaan?"
+
+msgid "Install system updates"
+msgstr "Asenna järjestelmäpäivitykset"
+
+msgid "Install third-party drivers for this device"
+msgstr "Asenna kolmannen osapuolen ohjaimet tälle laitteelle"
+
+msgid "Installation Complete"
+msgstr "Asennus valmis"
+
+msgid "Installation Failed"
+msgstr "Asennus epäonnistui"
+
+msgid "Installation Steps"
+msgstr "Asennuksen vaiheet"
+
+msgid ""
+"Installation cannot continue with this selection. There is no force-continue "
+"option around storage safety checks."
+msgstr ""
+"Asennusta ei voi jatkaa tällä valinnalla. Pakotetun jatkamisen vaihtoehtoa "
+"ei ole saatavilla tallennustilan turvallisuustarkistusten ohittamiseksi."
+
+msgid "Installation complete"
+msgstr "Asennus suoritettu"
+
+msgid "Installation failed"
+msgstr "Asennus epäonnistui"
+
+msgid "Installation in progress"
+msgstr "Asennus käynnissä"
+
+msgid "Installing AnduinOS"
+msgstr "Asennetaan AnduinOS:aa"
+
+msgid "Italian"
+msgstr "Itävalta"
+
+msgid "Japanese"
+msgstr "Japani"
+
+msgid "Keyboard"
+msgstr "Näppäimistö"
+
+msgid "Keyboard Layout"
+msgstr "Näppäimistön asettelu"
+
+msgid "Korean"
+msgstr "Korea"
+
+msgid "Language"
+msgstr "Kieli"
+
+msgid "Live USB — excluded"
+msgstr "Elävä USB — pois suljettu"
+
+msgid "Mount target filesystems"
+msgstr "Mountaa kohde tiedostojärjestelmät"
+
+msgid "Navigation error"
+msgstr "Navigointivirhe"
+
+msgid "New partitions"
+msgstr "Uudet osiot"
+
+msgid "Next"
+msgstr "Seuraava"
+
+msgid "Next slide"
+msgstr "Seuraava dia"
+
+msgid "No partition table"
+msgstr "Ei osiotaulukkoa"
+
+msgid "No suitable disks found."
+msgstr "Sopivia levyjä ei löydetty."
+
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with Windows Disk Management, then boot the installer "
+"again and rescan the disk."
+msgstr ""
+"Sopivaa varaamatonta tilaa ei löytynyt. Suojatakseen tietonsa, luo "
+"varaamaton tila Windowsin levytilanhallinnalla, käynnistä sitten "
+"asennusohjelma uudelleen ja skannaa levy uudelleen."
+
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with a partitioning tool, then boot the installer again "
+"and rescan the disk."
+msgstr ""
+"Sopivaa varaamatonta tilaa ei löytynyt. Suojatakseen tietonsa, luo "
+"varaamaton tila osiointityökalulla, käynnistä sitten asennusohjelma "
+"uudelleen ja skannaa levy uudelleen."
+
+msgid "Norwegian"
+msgstr "Norja"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Output"
+msgstr "Tulos"
+
+msgid "Output • Error"
+msgstr "Tulos • Virhe"
+
+msgid "Output • {count} warning(s)"
+msgstr "Tulos • {count} varoitus(ta)"
+
+msgid "Partition details unavailable"
+msgstr "Osiotiedot eivät ole saatavilla"
+
+msgid "Password"
+msgstr "Salasana"
+
+msgid "Password must be at least 6 characters."
+msgstr "Salasanan on oltava vähintään 6 merkkiä pitkä."
+
+msgid "Passwordless sudo is unsafe"
+msgstr "Salasanasoton sudo on epäturvallinen"
+
+msgid "Platform"
+msgstr "Alusta"
+
+msgid "Please do not turn off your computer"
+msgstr "Älä sammuta tietokonettasi"
+
+msgid "Please review your choices before proceeding"
+msgstr "Tarkista valintasi ennen jatkamista"
+
+msgid "Polish"
+msgstr "Puola"
+
+msgid "Portuguese"
+msgstr "Portugali"
+
+msgid "Portuguese (Brazil)"
+msgstr "Portugali (Brasilia)"
+
+msgid "Prepare Secure Boot"
+msgstr "Valmistele Secure Boot"
+
+msgid "Prepare installation disk"
+msgstr "Valmistele asennuslevy"
+
+msgid "Prepare target environment"
+msgstr "Valmistele kohdeympäristö"
+
+msgid "Preparing installation…"
+msgstr "Valmistellaan asennusta…"
+
+msgid "Preserved partitions"
+msgstr "Säilytetyt osiot"
+
+msgid "Previous slide"
+msgstr "Eellinen dia"
+
+msgid "Ready to Install"
+msgstr "Valmis asennettavaksi"
+
+msgid "Reboot Now"
+msgstr "Käynnistä uudelleen nyt"
+
+msgid "Refresh package indexes"
+msgstr "Päivitä paketti-indeksejä"
+
+msgid "Remove live-session components"
+msgstr "Poista live-istunnon komponentit"
+
+msgid "Remove the installation media and restart your computer"
+msgstr "Poista asennusmedia ja käynnistä tietokoneesi uudelleen"
+
+msgid ""
+"Requires an Internet connection. The base installation remains available "
+"when offline."
+msgstr ""
+"Vaatii internet-yhteyden. Perusasennus pysyy saatavilla ilman verkkoyhteyttä."
+
+msgid "Rescan Storage"
+msgstr "Tarkista tallennustila uudelleen"
+
+msgid "Rescan and Reselect Disk"
+msgstr "Tarkista ja valitse levy uudelleen"
+
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "Käynnistä uudelleen ja rekisteröi Secure Boot -avain"
+
+msgid "Restart is disabled in development protection mode"
+msgstr "Uudelleenkäynnistys on poistettu käytöstä kehityssuojaustilassa"
+
+msgid "Return and Set a Password"
+msgstr "Palaa ja aseta salasana"
+
+msgid "Return to Make Changes"
+msgstr "Palaa tekemään muutoksia"
+
+msgid "Reuse {path} ({size})"
+msgstr "Käytä uudelleen polkua {path} ({size})"
+
+msgid ""
+"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
+"before writing."
+msgstr ""
+"Käytä uudelleen polkua {path}; muotoile sitä koskaan; varmista FAT-"
+"järjestelmän kunto, identiteetti ja 64 Mt vapaata tilaa ennen kirjoitusta."
+
+msgid "Romanian"
+msgstr "Romania"
+
+msgid "Russian"
+msgstr "Venäjä"
+
+msgid "Save Log"
+msgstr "Tallenna loki"
+
+msgid "Schedule MOK enrollment"
+msgstr "Aikatauluta MOK-rekisteröinti"
+
+msgid "Search timezones…"
+msgstr "Hae aikavyöhykkeitä…"
+
+msgid "Secure Boot enrollment"
+msgstr "Secure Boot -rekisteröinti"
+
+msgid "Select Installation Disk"
+msgstr "Valitse asennuslevy"
+
+msgid "Select Timezone"
+msgstr "Valitse aikavyöhyke"
+
+msgid "Select fastest package mirror"
+msgstr "Valitse nopein pakettipeili"
+
+msgid "Selected timezone"
+msgstr "Valittu aikavyöhyke"
+
+msgid "Selected unallocated space"
+msgstr "Valittu varaamaton tila"
+
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr ""
+"Jotkut ohjaimet ovat omistusoikeudellisia tai muuten ei-vapaata ohjelmistoa."
+
+msgid "Spanish"
+msgstr "Espanja"
+
+msgid "Stable disk identity"
+msgstr "Vakaa levytunnus"
+
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -780,262 +660,323 @@ msgstr ""
 "Vakaa tunnus: {stable_id}\n"
 "\n"
 
-#: src/pages.py:2323
+msgid "Storage Device"
+msgstr "Tallennuslaite"
+
+msgid "Storage mode"
+msgstr "Tallennustila"
+
+msgid "Subvolumes"
+msgstr "Alueet (Subvolumes)"
+
+msgid "Swap"
+msgstr "Vaihtotila"
+
+msgid "Swedish"
+msgstr "Ruotsi"
+
+msgid "System updates"
+msgstr "Järjestelmäpäivitykset"
+
+msgid "Target Disk"
+msgstr "Kohdelevy"
+
+msgid "Target: {disk} ({size} — {model})"
+msgstr "Kohde: {disk} ({size} — {model})"
+
+msgid "Test your keyboard here…"
+msgstr "Testaa näppäimistösi täällä…"
+
+msgid "Thai"
+msgstr "Thai"
+
+msgid ""
+"The GPT disk or one of its partitions has no unique stable identifier. "
+"Guided coexistence cannot safely authorize preservation or writes on this "
+"disk."
+msgstr ""
+"GPT-levyllä tai yhdellä sen osioista ei ole yksilöllistä vakaata "
+"tunnisteetta. Automaattinen rinnakkaiskäyttö ei voi turvallisesti hyväksyä "
+"tämän levyn säilyttämistä tai kirjoituksia."
+
+msgid ""
+"The complete partition map and free-space geometry could not be read "
+"consistently. No space on this disk is authorized for installation."
+msgstr ""
+"Koko osiokaarta ja vapaan tilan geometriaa ei voitu lukea johdonmukaisesti. "
+"Mitään tilaa tällä levyllä ei ole myönnetty asennusta varten."
+
+msgid ""
+"The existing EFI System Partition is only a candidate. Health and free-space "
+"checks must pass before it can be reused, and it will never be formatted."
+msgstr ""
+"Olemassa oleva EFI-järjestelmäosio on vain ehdokas. Sen uudelleenkäyttö "
+"edellyttää, että kunto- ja vapaan tilan tarkastukset menevät läpi, eikä sitä "
+"ikinä formatoida."
+
+msgid ""
+"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot "
+"state, or installed system was changed."
+msgstr ""
+"Asennussuunnitelma on kelvollinen. Levyä, tiedostojärjestelmää, "
+"käynnistyslataajaa, Secure Boot -tilaa tai asennettua järjestelmää ei "
+"muutettu."
+
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "Asentajaa ei voi sulkea, kun se muuttaa kohdelevyä."
+
+msgid ""
+"The installer will not mount, repair or infer the safety of Windows volumes "
+"from hibernation or Fast Startup state. Any required Windows maintenance "
+"must be completed in Windows."
+msgstr ""
+"Asennusohjelma ei liitä, korjaa tai arvioi Windows-volyymien turvallisuutta "
+"lepotilan tai Pikakäynnistystilan perusteella. Kaikki tarvittava Windowsin "
+"ylläpito on suoritettava Windowsissa."
+
 msgid "The privileged executor is disabled."
 msgstr "Etuvoikeuksilla varustettu suoritin on poistettu käytöstä."
 
-#: src/pages.py:2326
-msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-msgstr "Olemassa olevat osiot säilytetään. Uudet AnduinOS-osiot luodaan vain valitulla varaamattomalla alueella; EFI-valmistajan tiedostoja ja AnduinOS:n firmware-aloitusmerkintää voidaan päivittää."
+msgid ""
+"The selected disk changed or disappeared. Return to the disk page and select "
+"it again. {error}"
+msgstr ""
+"Valittu levy muuttui tai katosi. Palaa levyyn liittyvälle sivulle ja valitse "
+"se uudelleen. {error}"
 
-#: src/pages.py:2334
+msgid "The selected disk size changed. Return and select it again."
+msgstr "Valitun levyn koko muuttui. Palaa ja valitse se uudelleen."
+
+msgid ""
+"The selected disk topology changed. Review the disk and installation method "
+"again."
+msgstr ""
+"Valitun levyn topologia muuttui. Tarkista levy ja asennustapa uudelleen."
+
+msgid ""
+"The system will sign in to this account automatically and allow it to obtain "
+"full administrator privileges without a password. Anyone with physical "
+"access, and any program running as this user, can completely control the "
+"system. Use this only for a kiosk, temporary virtual machine, or another "
+"controlled environment."
+msgstr ""
+"Järjestelmä kirjautuu tähän tiliin automaattisesti ja sallii sen saavan "
+"täydet järjestelmänvalvojan oikeudet ilman salasanaa. Kuka tahansa, jolla on "
+"fyysinen pääsy, ja mikä tahansa tämän käyttäjänä suorittava ohjelma voi "
+"hallita järjestelmää täysin. Käytä tätä vain kioskissa, tilapäisessä "
+"virtuaalikoneessa tai toisessa kontrolloidussa ympäristössä."
+
+msgid "The two passwords do not match."
+msgstr "Kaksi salasanaa eivät täsmää."
+
+msgid "Third-party drivers"
+msgstr "Kolmannen osapuolen ohjaimet"
+
+msgid ""
+"This account has no login password, but sudo would still require one. "
+"Because the root account is locked by default, you would be unable to "
+"perform administrator tasks. Set an account password or enable passwordless "
+"sudo."
+msgstr ""
+"Tässä tilissä ei ole kirjautumis salasanaa, mutta sudo vaatii silti yhden. "
+"Koska root-tili on oletuksena lukittu, et voi suorittaa ylläpitotehtäviä. "
+"Aseta tiliin salasana tai ota käyttöön salasanaton sudo."
+
+msgid ""
+"This advanced path preserves existing partitions but changes the selected "
+"disk's partition table and the machine's EFI boot state."
+msgstr ""
+"Tämä edistynyt vaihtoehto säilyttää olemassa olevat osiot, mutta muuttaa "
+"valitun levyn osiotaulukon ja tietokoneen EFI-käynnistystilan."
+
+msgid "This configuration is very unsafe"
+msgstr "Tämä konfiguraatio on erittäin epäturvallinen"
+
+msgid ""
+"This disk contains an active mapper, array or other nested block-device "
+"topology that guided coexistence does not support."
+msgstr ""
+"Tämä levy sisältää aktiivisen kartoittimen, taulukon tai muun sisäkkäisen "
+"lohkolaitetopologian, jota ohjattu rinnakkaisyhteensopivuus ei tue."
+
+msgid ""
+"This disk is too small for whole-disk installation. Advanced may continue "
+"only if suitable unallocated space exists."
+msgstr ""
+"Tämä levy on liian pieni koko levyn asennusta varten. Asennus voi jatkua "
+"vain, jos sopivaa varaamatonta tilaa on saatavilla."
+
 msgid "This installer does not shrink or preserve other systems."
 msgstr "Tämä asentaja ei pienennä tai säilytä muita järjestelmiä."
 
-#: src/pages.py:2360
-msgid "Cannot create installation plan"
-msgstr "Ei voi luoda asennussuunnitelmaa"
+msgid "Timezone"
+msgstr "Aikavyöhyke"
 
-#: src/pages.py:2382
-msgid "Install"
-msgstr "Asenna"
+msgid "Too small"
+msgstr "Liian pieni"
 
-#: src/pages.py:2398 src/pages.py:2404
-msgid "Installing AnduinOS"
-msgstr "Asennetaan AnduinOS:aa"
+msgid "Turkish"
+msgstr "Turkki"
 
-#: src/pages.py:2413
-msgid "Detect firmware and Secure Boot"
-msgstr "Tunnista laiteohjelmisto ja Secure Boot"
+msgid "Ukrainian"
+msgstr "Ukraina"
 
-#: src/pages.py:2416
-msgid "Detect Internet connectivity"
-msgstr "Havaitse internet-yhteys"
+msgid "Unallocated space"
+msgstr "Varaamaton tila"
 
-#: src/pages.py:2418
-msgid "Verify target disk isolation"
-msgstr "Varmista kohdelevyn eristys"
+msgid "Unallocated · {size}"
+msgstr "Varaamaton · {size}"
 
-#: src/pages.py:2419
-msgid "Prepare installation disk"
-msgstr "Valmistele asennuslevy"
+msgid "Unavailable: {error}"
+msgstr "Ei saatavilla: {error}"
 
-#: src/pages.py:2420
-msgid "Mount target filesystems"
-msgstr "Mountaa kohde tiedostojärjestelmät"
+msgid "Unknown filesystem"
+msgstr "Tuntematon tiedostojärjestelmä"
 
-#: src/pages.py:2421
-msgid "Copy AnduinOS system"
-msgstr "Kopioi AnduinOS-järjestelmä"
-
-#: src/pages.py:2422
-msgid "Configure storage and swap"
-msgstr "Määritä tallennustila ja vaihtotila"
-
-#: src/pages.py:2423
-msgid "Prepare target environment"
-msgstr "Valmistele kohdeympäristö"
-
-#: src/pages.py:2424
-msgid "Remove live-session components"
-msgstr "Poista live-istunnon komponentit"
-
-#: src/pages.py:2425
-msgid "Configure account, region, and machine identity"
-msgstr "Määritä tili, alue ja koneen identiteetti"
-
-#: src/pages.py:2427
-msgid "Select fastest package mirror"
-msgstr "Valitse nopein pakettipeili"
-
-#: src/pages.py:2429
-msgid "Prepare Secure Boot"
-msgstr "Valmistele Secure Boot"
-
-#: src/pages.py:2430
-msgid "Refresh package indexes"
-msgstr "Päivitä paketti-indeksejä"
-
-#: src/pages.py:2431
-msgid "Install system updates"
-msgstr "Asenna järjestelmäpäivitykset"
-
-#: src/pages.py:2433
-msgid "Ensure Timeback Machine is available"
-msgstr "Varmista, että Timeback Machine on käytettävissä"
-
-#: src/pages.py:2435
-msgid "Install hardware drivers"
-msgstr "Asenna laiteohjaimet"
-
-#: src/pages.py:2437
-msgid "Verify kernel module signatures"
-msgstr "Tarkista ytimen moduulien allekirjoitukset"
-
-#: src/pages.py:2439
-msgid "Install bootloader"
-msgstr "Asenna käynnistyslataaja"
-
-#: src/pages.py:2440
-msgid "Schedule MOK enrollment"
-msgstr "Aikatauluta MOK-rekisteröinti"
-
-#: src/pages.py:2441
-msgid "Finalize target environment"
-msgstr "Lopeta kohdeympäristö"
-
-#: src/pages.py:2442
 msgid "Unmount installed system"
 msgstr "Unmountaa asennettu järjestelmä"
 
-#: src/pages.py:2480
-msgid "Installation Steps"
-msgstr "Asennuksen vaiheet"
+msgid "Updates and Drivers"
+msgstr "Päivitykset ja ohjaimet"
 
-#: src/pages.py:2516
-msgid "Copy Log"
-msgstr "Kopioi loki"
-
-#: src/pages.py:2520
-msgid "Save Log"
-msgstr "Tallenna loki"
-
-#: src/pages.py:2591
-msgid "Previous slide"
-msgstr "Eellinen dia"
-
-#: src/pages.py:2597
-msgid "Next slide"
-msgstr "Seuraava dia"
-
-#: src/pages.py:2642
-msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
-msgstr "Käynnistyksen jälkeen MOKManager avautuu. Valitse Enroll MOK → Continue → Yes ja syötä sitten salasana 123456."
-
-#: src/pages.py:2650
-msgid "Restart and Enroll Secure Boot Key"
-msgstr "Käynnistä uudelleen ja rekisteröi Secure Boot -avain"
-
-#: src/pages.py:2652
-msgid "Reboot Now"
-msgstr "Käynnistä uudelleen nyt"
-
-#: src/pages.py:2673
-msgid "Discover AnduinOS"
-msgstr "Tutustu AnduinOS:aan"
-
-#: src/pages.py:2676
-msgid "Output"
-msgstr "Tulos"
-
-#: src/pages.py:2679
-msgid "Complete"
-msgstr "Valmis"
-
-#: src/pages.py:2712
-msgid "Preparing installation…"
-msgstr "Valmistellaan asennusta…"
-
-#: src/pages.py:2758 src/pages.py:2824
-msgid "Installation complete"
-msgstr "Asennus suoritettu"
-
-#: src/pages.py:2762
-msgid "Development simulation completed"
-msgstr "Kehityssimulaatio suoritettu"
-
-#: src/pages.py:2765
-msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
-msgstr "Asennussuunnitelma on kelvollinen. Levyä, tiedostojärjestelmää, käynnistyslataajaa, Secure Boot -tilaa tai asennettua järjestelmää ei muutettu."
-
-#: src/pages.py:2772
 msgid ""
-"\n"
-"\n"
-"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+"Use already-unallocated space and preserve existing partitions. This is the "
+"only Windows coexistence path."
 msgstr ""
-"\n"
-"\n"
-"Oikea asennus luo konekohtaisen MOK-avaimen. Käynnistämisen jälkeen valitse Enroll MOK → Continue → Yes ohjelmasta MOKManager ja syötä salasana 123456."
+"Käytä jo olevaa varaamatonta tilaa ja säilytä nykyiset osiot. Tämä on ainoa "
+"Windowsin rinnakkaiskäytön tuki."
 
-#: src/pages.py:2779 src/pages.py:2789 src/pages.py:2932 src/pages.py:2934
-msgid "Installation Complete"
-msgstr "Asennus valmis"
-
-#: src/pages.py:2781 src/pages.py:2790
-msgid "Remove the installation media and restart your computer"
-msgstr "Poista asennusmedia ja käynnistä tietokoneesi uudelleen"
-
-#: src/pages.py:2783
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"Valitse siniseltä MOKManager-näkymältä Enroll MOK → Continue → Yes, salasana: 123456"
-
-#: src/pages.py:2799
-msgid "Restart is disabled in development protection mode"
-msgstr "Uudelleenkäynnistys on poistettu käytöstä kehityssuojaustilassa"
-
-#: src/pages.py:2807
-msgid "Installation failed"
-msgstr "Asennus epäonnistui"
-
-#: src/pages.py:2809
-msgid "Installation Failed"
-msgstr "Asennus epäonnistui"
-
-#: src/pages.py:2812 src/pages.py:2867
-msgid "Output • Error"
-msgstr "Tulos • Virhe"
-
-#: src/pages.py:2862
-#, python-brace-format
-msgid "Output • {count} warning(s)"
-msgstr "Tulos • {count} varoitus(ta)"
-
-#: src/pages.py:2870
-#, python-brace-format
-msgid "{step} failed"
-msgstr "{step} epäonnistui"
-
-#: src/pages.py:715
-msgid "Empty disk — no partitions"
-msgstr "Tyhjä levy — ei osioita"
-
-#: src/pages.py:468
-msgid "Confirm your keyboard layout"
-msgstr "Vahvista näppäimistöasettelusi"
-
-#: src/pages.py:540
-msgid "Choose optional software to install"
-msgstr "Valitse valinnainen ohjelmisto asennettavaksi"
-
-#: src/pages.py:758
-msgid "Choose one target disk. Storage settings come next."
-msgstr "Valitse yksi kohdelevy. Tallennuksen asetukset seuraavaksi."
-
-#: src/pages.py:923
-msgid "Choose a complete installation method, not only a filesystem."
-msgstr "Valitse täysi asennustapa, ei vain tiedostojärjestelmä."
-
-#: src/pages.py:1184
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "Käytä vain valitun levyn olemassa olevaa varaamatonta tilaa."
 
-#: src/pages.py:1586
-msgid "Create your user account"
-msgstr "Luo käyttäjätilisi"
+msgid "User"
+msgstr "Käyttäjä"
 
-#: src/pages.py:1902
-msgid "Choose your location to set the system clock"
-msgstr "Valitse sijaintisi järjestelmäajan määrittämiseksi"
+msgid "User Account"
+msgstr "Käyttäjätili"
 
-#: src/pages.py:2042
-msgid "Please review your choices before proceeding"
-msgstr "Tarkista valintasi ennen jatkamista"
+msgid "Username"
+msgstr "Käyttäjänimi"
 
-#: src/pages.py:2405
-msgid "Please do not turn off your computer"
-msgstr "Älä sammuta tietokonettasi"
+msgid ""
+"Username must start with a lowercase ASCII letter and contain only lowercase "
+"ASCII letters or digits (maximum 16 characters)."
+msgstr ""
+"Username must start with a lowercase ASCII letter and contain only lowercase "
+"ASCII letters or digits (maximum 16 characters)."
+
+msgid "Uses a traditional single root filesystem."
+msgstr "Käyttää perinteistä yksittäistä juuritasojen tiedostojärjestelmää."
+
+msgid "Validate Plan (No Installation)"
+msgstr "Validoi suunnitelma (ei asennusta)"
+
+msgid "Validate this installation plan?"
+msgstr "Validoidaanko tämä asennussuunnitelma?"
+
+msgid "Verify kernel module signatures"
+msgstr "Tarkista ytimen moduulien allekirjoitukset"
+
+msgid "Verify target disk isolation"
+msgstr "Varmista kohdelevyn eristys"
+
+msgid "Vietnamese"
+msgstr "Vietnam"
+
+msgid "Welcome to AnduinOS"
+msgstr "Tervetuloa AnduinOS:aan"
+
+msgid "Windows detected"
+msgstr "Windows havaittu"
+
+msgid ""
+"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
+"AnduinOS NVRAM entry."
+msgstr ""
+"Kirjoita vain EFI/AnduinOS, älä ylikirjoita EFI/BOOT ja vaadi vahvistettu "
+"AnduinOS NVRAM-merkintä."
+
+msgid "automatic login"
+msgstr "automaattinen kirjautuminen"
+
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr ""
+"luo konekohtainen MOK; rekisteröi uudelleenkäynnistyksen jälkeen salasanalla "
+"123456"
+
+msgid "detect and install (may include non-free software)"
+msgstr "tunnista ja asenna (voi sisältää ei-vapaata ohjelmistoa)"
+
+msgid "do not install"
+msgstr "älä asenna"
+
+msgid "download and install"
+msgstr "lataa ja asenna"
+
+msgid "ext4 (classic)"
+msgstr "ext4 (klassinen)"
+
+msgid "ext4 — classic"
+msgstr "ext4 — klassinen"
+
+msgid "not required"
+msgstr "ei vaadita"
+
+msgid "password required for login"
+msgstr "salasana vaaditaan kirjautumiseen"
+
+msgid "single ext4 root filesystem"
+msgstr "yksi ext4-juuritiedostojärjestelmä"
+
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / Turvallinen käynnistys: {secure_boot}"
+
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+msgid "{path} as {filesystem}"
+msgstr "{path} tiedostojärjestelmänä {filesystem}"
+
+msgid "{size} at {offset}"
+msgstr "{size} kohdassa {offset}"
+
+msgid "{size} unallocated at {offset}"
+msgstr "{size} varaamattomaa tilaa kohdassa {offset}"
+
+msgid "{step} failed"
+msgstr "{step} epäonnistui"
+
+msgid ""
+"⚠ Only the selected unallocated space will be partitioned and formatted. "
+"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
+"firmware boot entry may change. This installer will not shrink Windows for "
+"you."
+msgstr ""
+"⚠ Vain valittu varaamaton tila jaetaan osioiksi ja muotoillaan. Olemassa "
+"olevat osiot säilyvät, mutta EFI/AnduinOS-tiedostot ja AnduinOS:n firmware-"
+"käynnistysehto voivat muuttua. Tämä asennusohjelma ei pienennä Windowsia "
+"puolestasi."
+
+msgid ""
+"⚠ This will erase ALL data on the selected disk. This action cannot be "
+"undone."
+msgstr ""
+"⚠ Tämä poistaa KAIKKI valitun levyn tiedot. Tätä toimintoa ei voi peruuttaa."
+
+#: src/pages.py
+msgid "Connect to the Internet"
+msgstr "Yhdistä internetiin"
+
+#: src/pages.py
+msgid "Internet connection is ready."
+msgstr "Internet-yhteys on valmis."
+
+#: src/pages.py
+msgid "Available Wi-Fi Networks"
+msgstr "Käytettävissä olevat Wi-Fi-verkot"
+
+#~ msgid "Choose a complete installation method, not only a filesystem."
+#~ msgstr "Valitse täysi asennustapa, ei vain tiedostojärjestelmä."

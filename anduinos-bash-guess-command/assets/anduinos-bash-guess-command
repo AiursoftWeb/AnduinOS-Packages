@@ -10,6 +10,45 @@
 _anduinos_guess_root=/usr/share/anduinos-bash-guess-command
 [[ -r $_anduinos_guess_root/blesh/ble.sh ]] || return 0
 
+# Bash treats '=' as a programmable-completion word break. Carapace returns
+# full dd-style operands such as "if=/path", while ble.sh also reconstructs
+# the fixed "if=" part. Strip that fixed part from candidates before ble.sh
+# sees them; otherwise it can render a replacement ghost like [if=if=/path].
+_anduinos_guess_normalize_carapace_assignment() {
+    local line=${COMP_LINE-} point=${COMP_POINT:-0} token prefix index
+    local typed common value
+    ((point >= 0 && point <= ${#line})) || point=${#line}
+    token=${line:0:point}
+    token=${token##*[[:space:]]}
+    [[ $token =~ ^([_a-zA-Z][_a-zA-Z0-9-]*)= ]] || return 0
+    prefix=${BASH_REMATCH[1]}=
+    for index in "${!COMPREPLY[@]}"; do
+        [[ ${COMPREPLY[index]} == "$prefix"* ]] || continue
+        COMPREPLY[index]=${COMPREPLY[index]#"$prefix"}
+    done
+
+    # ble.sh's automatic syntax source otherwise takes the first candidate,
+    # even when many paths are equally valid. Only ghost a shared extension;
+    # ordinary Tab completion keeps the complete candidate array.
+    [[ :${comp_type-}: == *:auto:* ]] || return 0
+    ((${#COMPREPLY[@]} > 1)) || return 0
+    typed=${token#*=}
+    common=${COMPREPLY[0]}
+    for value in "${COMPREPLY[@]:1}"; do
+        while [[ $value != "$common"* ]]; do
+            common=${common::${#common}-1}
+            [[ $common ]] || break 2
+        done
+    done
+    if [[ $common == "$typed"?* ]]; then
+        COMPREPLY=("$common")
+    else
+        # Keep a no-op candidate so ble.sh does not fall through to its generic
+        # filename source and pick the first path arbitrarily.
+        COMPREPLY=("$typed")
+    fi
+}
+
 # Load Carapace before ble.sh so its programmable completions are visible to
 # ble.sh's syntax completion source. Failure only disables static suggestions.
 if [[ ${ANDUINOS_GUESS_STATIC:-1} != 0 &&
@@ -20,7 +59,18 @@ if [[ ${ANDUINOS_GUESS_STATIC:-1} != 0 &&
     if [[ $_anduinos_guess_carapace_init == *'_carapace_completer'* ]]; then
         # Upstream emits a user-specific optional install directory. The
         # packaged binary must not replace or leak a build/user-specific PATH.
-        _anduinos_guess_carapace_init="$(sed '/^export PATH=/d' <<<"$_anduinos_guess_carapace_init")"
+        # ble.sh temporarily wraps `read` while running programmable
+        # completions so a slow provider can be cancelled. Carapace uses
+        # `read -d ''` to unpack its SOH-delimited response; that invocation
+        # must reach Bash's builtin directly or ble.sh's internal DEL sentinel
+        # can be interpreted as a variable name.
+        _anduinos_guess_carapace_init="$(
+            sed "/^export PATH=/d;
+                s/ read -r -d '' nospace data/ builtin read -r -d '' nospace data/;
+                /unset COMPREPLY\[-1\]/a\\
+  _anduinos_guess_normalize_carapace_assignment" \
+                <<<"$_anduinos_guess_carapace_init"
+        )"
         builtin eval -- "$_anduinos_guess_carapace_init"
     fi
     unset _anduinos_guess_carapace_init
@@ -41,8 +91,8 @@ bleopt complete_menu_color=
 bleopt complete_menu_color_match=
 bleopt exec_errexit_mark=
 
-# Classic history prefix search comes first; programmable completion (including
-# Carapace) is the fallback. A 25 ms idle delay avoids work during rapid input.
+# Typed session context and ranked history run before programmable completion
+# (including Carapace). A 25 ms idle delay avoids work during rapid input.
 bleopt complete_auto_complete=1
 _anduinos_guess_delay=${ANDUINOS_GUESS_DELAY:-25}
 [[ $_anduinos_guess_delay =~ ^[0-9]{1,3}$ ]] || _anduinos_guess_delay=25
@@ -54,5 +104,12 @@ ble-face auto_complete="${ANDUINOS_GUESS_COLOR:-fg=242}"
 # ble.sh already gives Right Arrow the safe accept-at-end behaviour. Alt-Right
 # accepts one word and does not replace Bash's conventional Alt-F binding.
 ble-bind -m auto_complete -f M-right auto_complete/insert-word
+
+# Add a small set of typed, live-context completions before the generic history
+# and syntax sources. It is deliberately optional: failure leaves both existing
+# sources fully functional.
+if [[ -r $_anduinos_guess_root/anduinos-guess-context.bash ]]; then
+    source "$_anduinos_guess_root/anduinos-guess-context.bash" || true
+fi
 
 unset _anduinos_guess_root _anduinos_guess_delay

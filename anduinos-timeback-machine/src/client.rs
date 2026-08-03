@@ -1,15 +1,18 @@
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fmt;
+use std::fs::File;
 use std::rc::Rc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
 use gio::glib::VariantTy;
-use gio::prelude::ToVariant;
+use gio::prelude::{ToVariant, UnixFDListExtManual};
 
+use crate::automatic_home::HomeSnapshotRecord;
+use crate::automation::{AutomaticConfiguration, AutomaticStatus};
+use crate::browsing::{DirectoryListing, OpenedFileMetadata};
 use crate::layout::LayoutReport;
-use crate::automation::{AutomaticPolicy, AutomaticStatus};
 use crate::retention::RetentionPlan;
 use crate::store::DiscoveryReport;
 use crate::{DBUS_INTERFACE, DBUS_NAME, DBUS_PATH};
@@ -73,13 +76,94 @@ pub fn inspect_retention() -> Result<RetentionPlan, ClientError> {
 }
 
 pub fn inspect_automatic() -> Result<AutomaticStatus, ClientError> {
-    serde_json::from_str(&call_json_method("InspectAutomatic")?).map_err(|error| ClientError(format!("The daemon returned invalid automatic-snapshot status: {error}")))
+    serde_json::from_str(&call_json_method("InspectAutomatic")?).map_err(|error| {
+        ClientError(format!(
+            "The daemon returned invalid automatic-snapshot status: {error}"
+        ))
+    })
 }
 
-pub fn set_automatic_policy<F>(policy: &AutomaticPolicy, on_progress: F) -> Result<OperationResult, ClientError>
-where F: Fn(OperationProgress) + 'static,
+pub fn list_home_snapshots() -> Result<Vec<HomeSnapshotRecord>, ClientError> {
+    serde_json::from_str(&call_json_method("ListHomeSnapshots")?).map_err(|error| {
+        ClientError(format!(
+            "The daemon returned an invalid Home snapshot list: {error}"
+        ))
+    })
+}
+
+pub fn list_snapshot_directory(
+    snapshot_kind: &str,
+    snapshot_id: &str,
+    path: &[String],
+) -> Result<DirectoryListing, ClientError> {
+    let path_json = serde_json::to_string(path)
+        .map_err(|error| ClientError(format!("Could not encode the browser path: {error}")))?;
+    let connection = system_bus()?;
+    let reply_type = VariantTy::new("(s)").expect("static D-Bus reply type is valid");
+    let reply = connection
+        .call_sync(
+            Some(DBUS_NAME),
+            DBUS_PATH,
+            DBUS_INTERFACE,
+            "ListSnapshotDirectory",
+            Some(&(snapshot_kind, snapshot_id, path_json).to_variant()),
+            Some(reply_type),
+            gio::DBusCallFlags::NONE,
+            MUTATING_CALL_TIMEOUT_MS,
+            None::<&gio::Cancellable>,
+        )
+        .map_err(|error| ClientError(format!("Could not list snapshot files: {error}")))?;
+    serde_json::from_str(&reply.child_get::<String>(0))
+        .map_err(|error| ClientError(format!("The daemon returned an invalid listing: {error}")))
+}
+
+pub fn open_snapshot_file(
+    snapshot_kind: &str,
+    snapshot_id: &str,
+    path: &[String],
+) -> Result<(File, OpenedFileMetadata), ClientError> {
+    let path_json = serde_json::to_string(path)
+        .map_err(|error| ClientError(format!("Could not encode the browser path: {error}")))?;
+    let connection = system_bus()?;
+    let reply_type = VariantTy::new("(hs)").expect("static D-Bus reply type is valid");
+    let (reply, descriptors) = connection
+        .call_with_unix_fd_list_sync(
+            Some(DBUS_NAME),
+            DBUS_PATH,
+            DBUS_INTERFACE,
+            "OpenSnapshotFile",
+            Some(&(snapshot_kind, snapshot_id, path_json).to_variant()),
+            Some(reply_type),
+            gio::DBusCallFlags::NONE,
+            MUTATING_CALL_TIMEOUT_MS,
+            gio::UnixFDList::NONE,
+            None::<&gio::Cancellable>,
+        )
+        .map_err(|error| ClientError(format!("Could not open the snapshot file: {error}")))?;
+    let handle = reply.child_get::<gio::glib::variant::Handle>(0).0;
+    let descriptors = descriptors
+        .ok_or_else(|| ClientError("The daemon did not return a file descriptor".into()))?;
+    let descriptor = descriptors
+        .get(handle)
+        .map_err(|error| ClientError(format!("Could not receive the snapshot file: {error}")))?;
+    let metadata = serde_json::from_str(&reply.child_get::<String>(1)).map_err(|error| {
+        ClientError(format!(
+            "The daemon returned invalid file metadata: {error}"
+        ))
+    })?;
+    Ok((File::from(descriptor), metadata))
+}
+
+pub fn set_automatic_configuration<F>(
+    configuration: &AutomaticConfiguration,
+    on_progress: F,
+) -> Result<OperationResult, ClientError>
+where
+    F: Fn(OperationProgress) + 'static,
 {
-    let json=serde_json::to_string(policy).map_err(|error| ClientError(format!("Could not encode automatic policy: {error}")))?;
+    let json = serde_json::to_string(configuration).map_err(|error| {
+        ClientError(format!("Could not encode automatic configuration: {error}"))
+    })?;
     run_operation("SetAutomaticPolicy", &(json,).to_variant(), on_progress)
 }
 

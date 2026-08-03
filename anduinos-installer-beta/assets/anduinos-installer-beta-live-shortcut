@@ -16,7 +16,7 @@ case "$desktop_dir" in
     *) exit 0 ;;
 esac
 
-source=/usr/share/applications/com.anduinos.InstallerBeta.desktop
+source=/usr/share/applications/anduinos-installer-beta.desktop
 destination="$desktop_dir/anduinos-installer-beta.desktop"
 [ -f "$source" ] || exit 0
 

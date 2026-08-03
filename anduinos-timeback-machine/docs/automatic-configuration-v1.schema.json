@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.anduinos.com/schemas/timeback/automatic-configuration-v1.schema.json",
+  "title": "AnduinOS Timeback automatic snapshot configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "policies_linked", "system", "home"],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "policies_linked": {
+      "type": "boolean"
+    },
+    "system": {
+      "$ref": "#/$defs/policy"
+    },
+    "home": {
+      "$ref": "#/$defs/policy"
+    }
+  },
+  "$defs": {
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "interval_minutes",
+        "keep_all_hours",
+        "keep_daily_days",
+        "keep_weekly_days",
+        "keep_monthly_days",
+        "delete_after_days"
+      ],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "interval_minutes": { "type": "integer", "minimum": 15, "maximum": 43200 },
+        "keep_all_hours": { "type": "integer", "minimum": 1, "maximum": 8760 },
+        "keep_daily_days": { "type": "integer", "minimum": 1, "maximum": 36500 },
+        "keep_weekly_days": { "type": "integer", "minimum": 1, "maximum": 36500 },
+        "keep_monthly_days": { "type": "integer", "minimum": 1, "maximum": 36500 },
+        "delete_after_days": { "type": "integer", "minimum": 1, "maximum": 36500 }
+      }
+    }
+  }
+}

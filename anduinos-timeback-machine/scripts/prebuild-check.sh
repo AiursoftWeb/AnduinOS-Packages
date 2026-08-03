@@ -19,6 +19,8 @@ bash -n build.sh scripts/prebuild-check.sh scripts/postinst.sh scripts/prerm.sh 
 python3 -m json.tool docs/deployment-v1.schema.json >/dev/null
 python3 -m json.tool docs/rollback-v1.schema.json >/dev/null
 python3 -m json.tool docs/package-transaction-v1.schema.json >/dev/null
+python3 -m json.tool docs/home-snapshot-v1.schema.json >/dev/null
+python3 -m json.tool docs/automatic-configuration-v1.schema.json >/dev/null
 python3 - <<'PY'
 import ast
 from configparser import ConfigParser

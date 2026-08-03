@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-bash-guess-command</PackageName>
-    <PackageVersion>1.0.0-3</PackageVersion>
+    <PackageVersion>1.0.0-5</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>Fast, offline ghost-text command suggestions for interactive Bash sessions, powered by ble.sh history search and Carapace static completion specifications.</PackageDescription>
+    <PackageDescription>Fast offline ghost-text suggestions for interactive Bash, with typed local context, ranked history and network-isolated Carapace specifications.</PackageDescription>
     <Section>shells</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
@@ -22,6 +22,7 @@
     <Dependency Include="bash (&gt;= 4.4)" />
     <Dependency Include="bash-completion" />
     <Dependency Include="coreutils" />
+    <Dependency Include="util-linux" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +38,7 @@
     <IncludeFile Include="deploy/amd64/CARAPACE-LICENSE" Target="/usr/share/doc/anduinos-bash-guess-command/CARAPACE-LICENSE" Condition="'$(Arch)' == 'amd64'" />
     <IncludeFile Include="deploy/arm64/CARAPACE-LICENSE" Target="/usr/share/doc/anduinos-bash-guess-command/CARAPACE-LICENSE" Condition="'$(Arch)' == 'arm64'" />
     <IncludeFile Include="assets/carapace-wrapper" Target="/usr/lib/anduinos-bash-guess-command/bin/carapace" Mode="755" />
+    <IncludeFile Include="assets/anduinos-guess-context.bash" Target="/usr/share/anduinos-bash-guess-command/anduinos-guess-context.bash" />
     <IncludeFile Include="assets/anduinos-bash-guess-command" Target="/etc/bash_completion.d/anduinos-bash-guess-command" />
     <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-bash-guess-command/README.md" />
     <IncludeFile Include="UPSTREAMS.md" Target="/usr/share/doc/anduinos-bash-guess-command/UPSTREAMS.md" />

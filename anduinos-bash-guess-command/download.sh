@@ -50,8 +50,14 @@ prepare_blesh() {
     tar -xJf "$cache" -C "$temporary"
     [[ -f "$temporary/ble-${BLE_VERSION}/ble.sh" ]] || die "ble.sh archive has an unexpected layout"
     [[ -f "$temporary/ble-${BLE_VERSION}/doc/LICENSE.md" ]] || die "ble.sh archive does not contain its license"
+    # The staged tree can be executed by local integration tests, causing
+    # ble.sh to create UID/terminal-specific cache.d entries beside itself.
+    # Recreate the validated architecture destination so those files can never
+    # leak into a package or make builds non-reproducible.
+    rm -rf -- "$destination"
     mkdir -p "$destination"
     cp -a "$temporary/ble-${BLE_VERSION}/." "$destination/"
+    rm -rf -- "$temporary"
 }
 
 prepare_carapace() {
@@ -75,10 +81,15 @@ prepare_carapace() {
     mkdir -p "$SCRIPT_DIR/deploy/$arch"
     install -m 0755 "$temporary/carapace" "$SCRIPT_DIR/deploy/$arch/carapace"
     install -m 0644 "$temporary/LICENSE" "$SCRIPT_DIR/deploy/$arch/CARAPACE-LICENSE"
+    rm -rf -- "$temporary"
 }
 
 main() {
     [[ $# -eq 1 ]] || die "usage: $0 <amd64|arm64>"
+    case $1 in
+        amd64|arm64) ;;
+        *) die "unsupported architecture: $1" ;;
+    esac
     prepare_blesh "$1"
     prepare_carapace "$1"
 }

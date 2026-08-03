@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-01 18:33+0800\n"
+"POT-Creation-Date: 2026-08-01 11:01+0000\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -15,755 +15,86 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose "
+"Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"Реальна установка створить локальний для машини MOK. Після перезавантаження "
+"виберіть Enroll MOK → Continue → Yes у MOKManager і введіть пароль 123456."
+
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: "
+"123456"
+msgstr ""
+"\n"
+"На синьому екрані MOKManager виберіть Enroll MOK → Continue → Yes, пароль: "
+"123456"
 
-#: src/main.py:88
-msgid "AnduinOS Installer (Development)"
-msgstr "Встановлювач AnduinOS (Розробка)"
-
-#: src/main.py:90
-msgid "AnduinOS Installer (Beta)"
-msgstr "Встановлювач AnduinOS (Бета)"
-
-#: src/main.py:125
-msgid "Installation in progress"
-msgstr "Встановлення виконується"
-
-#: src/main.py:127
-msgid "The installer cannot be closed while it is modifying the target disk."
-msgstr "Встановлювач не можна закрити під час модифікації цільового диска."
-
-#: src/main.py:133
-msgid "Continue Installation"
-msgstr "Продовжити встановлення"
-
-#: src/pages.py:69
-msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
-msgstr "Кероване співіснування вимагає завантаження системи в режимі UEFI та диска з ціллю GPT. Цей диск не може продовжувати роботу в керованому режимі."
-
-#: src/pages.py:73
-msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
-msgstr "Повну карту розділів та геометрію вільного простору не вдалося читати узгоджено. Жоден простір на цьому диску не авторизований для встановлення."
-
-#: src/pages.py:78
-msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
-msgstr "Disk GPT або одна з його розділів не має унікального стабільного ідентифікатора. Керований співіснування не може безпечно авторизувати збереження або записи на цьому диску."
-
-#: src/pages.py:83
-msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
-msgstr "\\\tЦей диск містить активний мапер, масив або іншу вкладену топологію блокового пристрою, яку підтримка спільного використання не підтримує."
-
-#: src/pages.py:87
-msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
-msgstr "На цьому диску є підключений розділ. Відмонтуйте його та повторно проскануйте сховище, перш ніж продовжувати."
-
-#: src/pages.py:91
-msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
-msgstr "AnduinOS використовуватиме лише вибране вільне місце. Інсталятор не буде зменшувати або переміщувати існуючу файлову систему."
-
-#: src/pages.py:95
-msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
-msgstr "Існуючі Windows, відновлення та дані розділи залишаться поза межами запису набору і будуть збережені."
-
-#: src/pages.py:99
-msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
-msgstr "\\\tІснуючий розділ EFI System Partition є лише кандидатом. Перевірки стану та вільного місця мають бути успішними, перш ніж його можна буде повторно використати, і він ніколи не буде відформатований."
-
-#: src/pages.py:104
-msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
-msgstr "Зберігання BitLocker буде збережено. Інсталятор не буде розблоковувати, змінювати розмір, ремонтувати або інакше модифікувати його."
-
-#: src/pages.py:108
-msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
-msgstr "\\\tВстановлювач не монтуватиме, не ремонтуватиме та не визначатиме безпеку томів Windows зі стану гибернації або Швидкого запуску. Будь-яке необхідне обслуговування Windows має бути завершено в Windows."
-
-#: src/pages.py:113
-msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
-msgstr "Крім того, ви можете явно вибрати один цілий розділ для стирання. Усе у цьому вибраному розділі буде знищено; він ніколи не обирається автоматично."
-
-#: src/pages.py:118
-msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
-msgstr "Інсталяцію не можна продовжити з цим вибором. Немає опції примусового продовження для перевірок безпеки сховища."
-
-#: src/pages.py:122
-msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
-msgstr "Після зміни розділів або відмонтування тому повторно проскануйте сховище та знову виберіть ціль."
-
-#: src/pages.py:128
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
-msgstr "Не знайдено підходящого вільного місця. Щоб захистити ваші дані, створіть вільне місце за допомогою засобу керування дисками Windows, потім перезавантажте інсталятор і знову відскануйте диск."
-
-#: src/pages.py:133
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
-msgstr "Не знайдено підходящого вільного місця. Щоб захистити ваші дані, створіть вільне місце за допомогою засобу розділення диска, потім перезавантажте інсталятор і знову відскануйте диск."
-
-#: src/pages.py:204 src/pages.py:374
-msgid "Next"
-msgstr "Далі"
-
-#: src/pages.py:211 src/pages.py:373 src/pages.py:2341
-msgid "Back"
-msgstr "Назад"
-
-#: src/pages.py:287 src/pages.py:371
-msgid "AnduinOS Installer"
-msgstr "Встановлювач AnduinOS"
-
-#: src/pages.py:367
-msgid "Welcome to AnduinOS"
-msgstr "Ласкаво просимо до AnduinOS"
-
-#: src/pages.py:369
-msgid "Choose your language to begin installation"
-msgstr "Виберіть мову, щоб розпочати встановлення"
-
-#: src/pages.py:405
-msgid "Navigation error"
-msgstr "Помилка навігації"
-
-#: src/pages.py:408 src/pages.py:2363
-msgid "OK"
-msgstr "Гаразд"
-
-#: src/pages.py:440
-msgid "English (US)"
-msgstr "Англійська (США)"
-
-#: src/pages.py:440
-msgid "English (UK)"
-msgstr "Англійська (Велика Британія)"
-
-#: src/pages.py:441
-msgid "German"
-msgstr "Німецька"
-
-#: src/pages.py:441
-msgid "French"
-msgstr "Французька"
-
-#: src/pages.py:441
-msgid "Italian"
-msgstr "Італійська"
-
-#: src/pages.py:442
-msgid "Spanish"
-msgstr "Іспанська"
-
-#: src/pages.py:442
-msgid "Portuguese"
-msgstr "Португальська"
-
-#: src/pages.py:443
-msgid "Portuguese (Brazil)"
-msgstr "Португальська (Бразилія)"
-
-#: src/pages.py:443
-msgid "Danish"
-msgstr "Датська"
-
-#: src/pages.py:444
-msgid "Swedish"
-msgstr "Шведська"
-
-#: src/pages.py:444
-msgid "Norwegian"
-msgstr "Норвезька"
-
-#: src/pages.py:445
-msgid "Finnish"
-msgstr "Фінська"
-
-#: src/pages.py:445
-msgid "Dutch"
-msgstr "Нідерландська"
-
-#: src/pages.py:445
-msgid "Polish"
-msgstr "Польська"
-
-#: src/pages.py:446
-msgid "Romanian"
-msgstr "Румунська"
-
-#: src/pages.py:448
-msgid "Russian"
-msgstr "Українська"
-
-#: src/pages.py:448
-msgid "Ukrainian"
-msgstr "Українська"
-
-#: src/pages.py:448
-msgid "Greek"
-msgstr "Грецька"
-
-#: src/pages.py:451
-msgid "Japanese"
-msgstr "Японська"
-
-#: src/pages.py:451
-msgid "Korean"
-msgstr "Корейська"
-
-#: src/pages.py:452
-msgid "Hindi (India)"
-msgstr "Хінді (Індія)"
-
-#: src/pages.py:452
-msgid "Thai"
-msgstr "Тайська"
-
-#: src/pages.py:453
-msgid "Vietnamese"
-msgstr "В'єтнамська"
-
-#: src/pages.py:453
-msgid "Arabic"
-msgstr "Арабська"
-
-#: src/pages.py:454
-msgid "Turkish"
-msgstr "Турецька"
-
-#: src/pages.py:454
-msgid "Indonesian"
-msgstr "Індонезійська"
-
-#: src/pages.py:461 src/pages.py:467 src/pages.py:507
-msgid "Keyboard Layout"
-msgstr "Розкладка клавіатури"
-
-#: src/pages.py:499 src/pages.py:508
-msgid "Test your keyboard here…"
-msgstr "Перевірте клавіатуру тут…"
-
-#: src/pages.py:533 src/pages.py:539
-msgid "Updates and Drivers"
-msgstr "Оновлення та драйвери"
-
-#: src/pages.py:556
-msgid "Download and install system updates during installation"
-msgstr "Завантажити та встановити оновлення системи під час встановлення"
-
-#: src/pages.py:559 src/pages.py:575
-msgid "Requires an Internet connection. The base installation remains available when offline."
-msgstr "Вимагає підключення до Інтернету. Базове встановлення залишається доступним автономно."
-
-#: src/pages.py:568
-msgid "Install third-party drivers for this device"
-msgstr "Встановити сторонні драйвери для цього пристрою"
-
-#: src/pages.py:581
-msgid "Some drivers are proprietary or otherwise non-free software."
-msgstr "Деякі драйвери є власницькими або інакше не вільним програмним забезпеченням."
-
-#: src/pages.py:641
-msgid "Storage Device"
-msgstr "Накопичувач"
-
-#: src/pages.py:650
-msgid "No partition table"
-msgstr "Немає таблиці розділів"
-
-#: src/pages.py:673
-msgid "Current disk layout"
-msgstr "Поточна структура диска"
-
-#: src/pages.py:693
-msgid "Unknown filesystem"
-msgstr "Невідома файлова система"
-
-#: src/pages.py:706
-#, python-brace-format
-msgid "Unallocated · {size}"
-msgstr "Невиділено · {size}"
-
-#: src/pages.py:713
-msgid "Partition details unavailable"
-msgstr "Деталі розділу недоступні"
-
-#: src/pages.py:728
-msgid "Windows detected"
-msgstr "Windows виявлено"
-
-#: src/pages.py:730
-msgid "BitLocker detected"
-msgstr "Виявлено BitLocker"
-
-#: src/pages.py:732
-msgid "Live USB — excluded"
-msgstr "Живий USB — виключено"
-
-#: src/pages.py:734
-msgid "Too small"
-msgstr "Занадто мало"
-
-#: src/pages.py:751 src/pages.py:757
-msgid "Select Installation Disk"
-msgstr "Вибір диска встановлення"
-
-#: src/pages.py:793
-msgid "Rescan Storage"
-msgstr "Повторне сканування сховища"
-
-#: src/pages.py:863
-msgid "No suitable disks found."
-msgstr "Не знайдено придатних дисків."
-
-#: src/pages.py:917
-msgid "Choose Installation Method"
-msgstr "Оберіть метод встановлення"
-
-#: src/pages.py:922
-msgid "How should AnduinOS use this disk?"
-msgstr "Як AnduinOS має використовувати цей диск?"
-
-#: src/pages.py:937 src/pages.py:1191 src/pages.py:1425
-#, python-brace-format
-msgid "Target: {disk} ({size} — {model})"
-msgstr "Мета: {disk} ({size} — {model})"
-
-#: src/pages.py:1014
-msgid "Erase every partition and all data on the selected disk."
-msgstr "Видалити кожну розділ і всі дані на вибраному диску."
-
-#: src/pages.py:1018
-msgid "Btrfs — recommended"
-msgstr "Btrfs — рекомендовано"
-
-#: src/pages.py:1022
-msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
-msgstr "Увімкнути підтомови спільного простору, миттєві знімки та Timeback Machine."
-
-#: src/pages.py:1030
-msgid "ext4 — classic"
-msgstr "ext4 — класичний"
-
-#: src/pages.py:1033
-msgid "Uses a traditional single root filesystem."
-msgstr "Використовує традиційну файлову систему з одним коренем."
-
-#: src/pages.py:1039
-msgid "Advanced — keep existing systems"
-msgstr "Розширені — залишити існуючі системи"
-
-#: src/pages.py:1041
-msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-msgstr "Використовувати вже невиділений простір і зберігати існуючі розділи. Це єдиний шлях співіснування з Windows."
-
-#: src/pages.py:1089
-msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-msgstr "Розширене співіснування може вплинути на стан прошивки EFI та запустити відновлення BitLocker. Воно ніколи не зменшує і не ремонтує томи Windows."
-
-#: src/pages.py:1099
-#, python-brace-format
-msgid "ALL DATA on {disk} will be permanently erased."
-msgstr "ВСІ ДАНІ на {disk} буде остаточно видалено."
-
-#: src/pages.py:1135
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "\\\tЦей диск занадто малий для повного встановлення на диск. Розширений режим може продовжити лише за наявності відповідного невизначеного місця."
-
-#: src/pages.py:1145
-msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-msgstr "Був виявлено існуючі розділи. Перші два варіанти видаляють їх; Розширений є шляхом збереження."
-
-#: src/pages.py:1178
-msgid "Advanced Storage"
-msgstr "Розширені налаштування сховища"
-
-#: src/pages.py:1183
-msgid "Advanced: Install Alongside"
-msgstr "Розширені: встановити поряд із"
-
-#: src/pages.py:1212
-msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-msgstr "Перш ніж продовжити: завершіть оновлення Windows, вимкніть швидкий запуск та режим сну, а також створіть резервну копію ключа відновлення BitLocker. Налаштування EFI, Secure Boot, вимірювання TPM та порядок завантаження можуть змінитися."
-
-#: src/pages.py:1219
-msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr "\\\tЦей розширений шлях зберігає існуючі розділи, але змінює таблицю розділів вибраного диска та стан завантаження EFI машини."
-
-#: src/pages.py:1250 src/pages.py:2113
-msgid "Filesystem"
-msgstr "Файлова система"
-
-#: src/pages.py:1253
-msgid "Btrfs (recommended)"
-msgstr "Btrfs (рекомендовано)"
-
-#: src/pages.py:1253
-msgid "ext4 (classic)"
-msgstr "ext4 (класична)"
-
-#: src/pages.py:1263
-msgid "Unallocated space"
-msgstr "Невиділений простір"
-
-#: src/pages.py:1271
-msgid "EFI System Partition"
-msgstr "EFI System Partition"
-
-#: src/pages.py:1285
-msgid "Rescan and Reselect Disk"
-msgstr "Пересканувати та вибрати диск знову"
-
-#: src/pages.py:1326
-msgid "Create a new 1 GiB AnduinOS EFI System Partition"
-msgstr "Створіть новий розділ системи EFI AnduinOS розміром 1 ГіБ"
-
-#: src/pages.py:1330
-#, python-brace-format
-msgid "Reuse {path} ({size})"
-msgstr "Використати повторно {path} ({size})"
-
-#: src/pages.py:1394
-#, python-brace-format
-msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-msgstr "\\\tВибраний диск змінився або зник. Поверніться на сторінку диска та виберіть його знову. {error}"
-
-#: src/pages.py:1407
-msgid "The selected disk size changed. Return and select it again."
-msgstr "\\\tРозмір вибраного диска змінився. Поверніться та виберіть його знову."
-
-#: src/pages.py:1417
-msgid "The selected disk topology changed. Review the disk and installation method again."
-msgstr "\\\tТопологія вибраного диска змінилася. Перевірте диск та метод встановлення ще раз."
-
-#: src/pages.py:1453
-#, python-brace-format
-msgid "{size} unallocated at {offset}"
-msgstr "{size} невиділено на {offset}"
-
-#: src/pages.py:1579 src/pages.py:1585
-msgid "User Account"
-msgstr "Обліковий запис користувача"
-
-#: src/pages.py:1605 src/pages.py:1606
-msgid "Full Name"
-msgstr "Повне ім'я"
-
-#: src/pages.py:1609 src/pages.py:1612
-msgid "Username"
-msgstr "Ім'я користувача"
-
-#: src/pages.py:1616 src/pages.py:1627
-msgid "Password"
-msgstr "Пароль"
-
-#: src/pages.py:1620 src/pages.py:1628
-msgid "Confirm Password"
-msgstr "Підтвердження пароля"
-
-#: src/pages.py:1632
-msgid "Do not require a password for sudo commands"
-msgstr "Не вимагати пароль для команд sudo"
-
-#: src/pages.py:1638 src/pages.py:1643 src/pages.py:2157
-msgid "Computer Name"
-msgstr "Ім'я комп'ютера"
-
-#: src/pages.py:1669
-msgid "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
-msgstr "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
-
-#: src/pages.py:1680
-msgid "Install alongside requires a password-protected account."
-msgstr "Для встановлення поруч потрібен обліковий запис із захистом паролем."
-
-#: src/pages.py:1691
-msgid "The two passwords do not match."
-msgstr "Два паролі не збігаються."
-
-#: src/pages.py:1695
-msgid "Password must be at least 6 characters."
-msgstr "Пароль має містити щонайменше 6 символів."
-
-#: src/pages.py:1703
-msgid "Computer name contains invalid characters."
-msgstr "Ім'я комп'ютера містить недопустимі символи."
-
-#: src/pages.py:1756
-msgid "Return to Make Changes"
-msgstr "Повернутися для внесення змін"
-
-#: src/pages.py:1763
-msgid "This configuration is very unsafe"
-msgstr "Ця конфігурація є дуже небезпечною"
-
-#: src/pages.py:1765
-msgid "Passwordless sudo is unsafe"
-msgstr "Судо без пароля є небезпечним"
-
-#: src/pages.py:1769
-msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
-msgstr "Система автоматично увійде в цей обліковий запис і дозволить отримувати повні права адміністратора без пароля. Будь-хто з фізичним доступом, а також будь-яка програма, запущена від цього користувача, може повністю керувати системою. Використовуйте це лише для кіоску, тимчасової віртуальної машини або іншого контрольованого середовища."
-
-#: src/pages.py:1778
-msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
-msgstr "Будь-яка програма, запущена від вашого імені, може отримати повні права адміністратора без автентифікації. Ваш пароль входу захищає вхід у систему, але не захистить sudo. Ви впевнені, що хочете продовжити?"
-
-#: src/pages.py:1792
-msgid "Return and Set a Password"
-msgstr "Повернутися та встановити пароль"
-
-#: src/pages.py:1798
-msgid "I Understand the Risk, Continue"
-msgstr "Я розумію ризики, продовжити"
-
-#: src/pages.py:1822
-msgid "Administrator access would be locked"
-msgstr "Доступ адміністратора буде заблоковано"
-
-#: src/pages.py:1824
-msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
-msgstr "Цей обліковий запис не має пароля для входу, але sudo все одно вимагатиме пароль. Оскільки обліковий запис root за замовчуванням заблоковано, ви не зможете виконувати завдання адміністратора. Встановіть пароль облікового запису або увімкніть sudo без пароля."
-
-#: src/pages.py:1895 src/pages.py:1901
-msgid "Select Timezone"
-msgstr "Вибір часового поясу"
-
-#: src/pages.py:1914
-msgid "Search timezones…"
-msgstr "Пошук часових поясів…"
-
-#: src/pages.py:1967
-msgid "Selected timezone"
-msgstr "Обраний часовий пояс"
-
-#: src/pages.py:2035 src/pages.py:2041
-msgid "Ready to Install"
-msgstr "Готовий до встановлення"
-
-#: src/pages.py:2056
-msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
-msgstr "РЕЖИМ РОЗРОБКИ — план буде перевірено та імітовано. Жодна привілейована програма виконання або команда диска не може бути запущена."
-
-#: src/pages.py:2081
-#, python-brace-format
-msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
-msgstr "{architecture} / {firmware} / Secure Boot: {secure_boot}"
-
-#: src/pages.py:2090
-#, python-brace-format
-msgid "Unavailable: {error}"
-msgstr "Недоступно: {error}"
-
-#: src/pages.py:2100
-msgid "single ext4 root filesystem"
-msgstr "єдина файлова система ext4 кореневого каталогу"
-
-#: src/pages.py:2103
-msgid "Language"
-msgstr "Мова"
-
-#: src/pages.py:2104
-msgid "Keyboard"
-msgstr "Клавіатура"
-
-#: src/pages.py:2106
-msgid "Target Disk"
-msgstr "Цільовий диск"
-
-#: src/pages.py:2110
-msgid "Stable disk identity"
-msgstr "Стабільна ідентичність диска"
-
-#: src/pages.py:2112
-msgid "Platform"
-msgstr "Платформа"
-
-#: src/pages.py:2114
-msgid "Subvolumes"
-msgstr "Підтомі"
-
-#: src/pages.py:2115
-msgid "Swap"
-msgstr "Файл підкачки"
-
-#: src/pages.py:2117
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
-msgstr "Обмін дисковим простором 4 ГіБ (пріоритет 10) + LZ4 zram у розмірі 50% ОЗП (пріоритет 100)"
+msgstr ""
+"Обмін дисковим простором 4 ГіБ (пріоритет 10) + LZ4 zram у розмірі 50% ОЗП "
+"(пріоритет 100)"
 
-#: src/pages.py:2121
-msgid "System updates"
-msgstr "Оновлення системи"
-
-#: src/pages.py:2123
-msgid "download and install"
-msgstr "завантажити та встановити"
-
-#: src/pages.py:2125 src/pages.py:2131
-msgid "do not install"
-msgstr "не встановлювати"
-
-#: src/pages.py:2127
-msgid "Third-party drivers"
-msgstr "Сторонні драйвери"
-
-#: src/pages.py:2129
-msgid "detect and install (may include non-free software)"
-msgstr "виявити та встановити (може включати не вільне програмне забезпечення)"
-
-#: src/pages.py:2133
-msgid "Secure Boot enrollment"
-msgstr "Реєстрація Secure Boot"
-
-#: src/pages.py:2136
-msgid "create a machine-local MOK; enroll after reboot with password 123456"
-msgstr "створити локальний для машини MOK; зареєструвати після перезавантаження з паролем 123456"
-
-#: src/pages.py:2141
-msgid "not required"
-msgstr "не обов'язково"
-
-#: src/pages.py:2143
-msgid "User"
-msgstr "Користувач"
-
-#: src/pages.py:2146
-msgid "Account security"
-msgstr "Безпека облікового запису"
-
-#: src/pages.py:2148
-msgid "automatic login"
-msgstr "автоматичний вхід"
-
-#: src/pages.py:2150
-msgid "password required for login"
-msgstr "потрібен пароль для входу"
-
-#: src/pages.py:2153
 msgid "; sudo does not require a password"
 msgstr "; sudo не вимагає пароля"
 
-#: src/pages.py:2155
 msgid "; sudo requires the account password"
 msgstr "; sudo вимагає пароль облікового запису"
 
-#: src/pages.py:2159
-msgid "Timezone"
-msgstr "Часовий пояс"
-
-#: src/pages.py:2166
-msgid "Guided storage selection is missing. Rescan and select the target again."
-msgstr "Вибір керованого сховища відсутній. Повторно проскануйте та виберіть ціль ще раз."
-
-#: src/pages.py:2174
-#, python-brace-format
-msgid "{name}: {start}–{end} MiB"
-msgstr "{name}: {start}–{end} MiB"
-
-#: src/pages.py:2182
-#, python-brace-format
-msgid "{path} as {filesystem}"
-msgstr "{path} як {filesystem}"
-
-#: src/pages.py:2190
-#, python-brace-format
-msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-msgstr "Використати повторно {path}; ніколи не форматувати; перевірити стан FAT, ідентифікатор та наявність 64 МБ вільного місця перед записом."
-
-#: src/pages.py:2198
-msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-msgstr "Створіть та відформатуйте окремий розділ системи EFI AnduinOS у вибраному просторі."
-
-#: src/pages.py:2203
-msgid "Storage mode"
-msgstr "Режим зберігання"
-
-#: src/pages.py:2204
-msgid "Install alongside"
-msgstr "Встановити поруч"
-
-#: src/pages.py:2205
-msgid "Selected unallocated space"
-msgstr "Вибрано невиділений простір"
-
-#: src/pages.py:2206
-#, python-brace-format
-msgid "{size} at {offset}"
-msgstr "{size} на {offset}"
-
-#: src/pages.py:2210
-msgid "Preserved partitions"
-msgstr "Збережені розділи"
-
-#: src/pages.py:2211
-#, python-brace-format
-msgid "{count}: {paths}"
-msgstr "{count}: {paths}"
-
-#: src/pages.py:2215
-msgid "New partitions"
-msgstr "Нові розділи"
-
-#: src/pages.py:2217
-msgid "Formats"
-msgstr "Формати"
-
-#: src/pages.py:2219
-msgid "EFI policy"
-msgstr "Pолітика EFI"
-
-#: src/pages.py:2221
-msgid "Boot policy"
-msgstr "Політика завантаження"
-
-#: src/pages.py:2223
-msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr "Записувати лише EFI/AnduinOS, не перезаписувати EFI/BOOT та вимагати перевіреного запису AnduinOS у NVRAM."
-
-#: src/pages.py:2253
-msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
-msgstr "⚠ Розділення та форматування буде виконано лише для вибраної невиділеної області. Існуючі розділи збережуться, але файли EFI/AnduinOS та запис автозавантаження прошивки AnduinOS можуть змінитися. Цей установщик не стисне Windows за вас."
-
-#: src/pages.py:2261
-msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
-msgstr "⚠ Це видалить ВСІ дані на вибраному диску. Цю дію не можна скасувати."
-
-#: src/pages.py:2287
-msgid "Validate this installation plan?"
-msgstr "Перевірити цей план встановлення?"
-
-#: src/pages.py:2288
-msgid "Validate Plan (No Installation)"
-msgstr "Перевірити план (без встановлення)"
-
-#: src/pages.py:2290
-msgid "Install in the selected free space?"
-msgstr "Встановити у вибраний вільний простір?"
-
-#: src/pages.py:2291 src/pages.py:2380
-msgid "Install Alongside"
-msgstr "Встановити поруч"
-
-#: src/pages.py:2293
-msgid "Erase the entire selected disk?"
-msgstr "Видалити всі дані на вибраному диску?"
-
-#: src/pages.py:2294
-msgid "Erase Disk and Install"
-msgstr "Видалити дані диска та встановити"
-
-#: src/pages.py:2301
-#, python-brace-format
 msgid ""
-"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
-"\n"
+"A partition on this disk is mounted. Unmount it and rescan storage before "
+"continuing."
 msgstr ""
-"Режим розробки імітуватиме встановлення на {disk}. Дані на диску не будуть змінено.\n"
-"\n"
+"На цьому диску є підключений розділ. Відмонтуйте його та повторно "
+"проскануйте сховище, перш ніж продовжувати."
 
-#: src/pages.py:2307
-#, python-brace-format
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "ВСІ ДАНІ на {disk} буде остаточно видалено."
+
+msgid "Account security"
+msgstr "Безпека облікового запису"
+
+msgid "Administrator access would be locked"
+msgstr "Доступ адміністратора буде заблоковано"
+
+msgid "Advanced Storage"
+msgstr "Розширені налаштування сховища"
+
 msgid ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
-msgstr "AnduinOS використовуватиме лише вибране вільне місце на диску {disk}. Існуючі розділи буде збережено.\n\n"
+"Advanced coexistence can affect EFI firmware state and may trigger BitLocker "
+"recovery. It never shrinks or repairs Windows volumes."
+msgstr ""
+"Розширене співіснування може вплинути на стан прошивки EFI та запустити "
+"відновлення BitLocker. Воно ніколи не зменшує і не ремонтує томи Windows."
 
-#: src/pages.py:2314
-#, python-brace-format
+msgid "Advanced — keep existing systems"
+msgstr "Розширені — залишити існуючі системи"
+
+msgid "Advanced: Install Alongside"
+msgstr "Розширені: встановити поряд із"
+
+msgid ""
+"After changing partitions or unmounting a volume, rescan storage and select "
+"the target again."
+msgstr ""
+"Після зміни розділів або відмонтування тому повторно проскануйте сховище та "
+"знову виберіть ціль."
+
+msgid ""
+"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
+"then enter password 123456."
+msgstr ""
+"Після перезавантаження відкриється MOKManager. Виберіть Enroll MOK → "
+"Continue → Yes, а потім введіть пароль 123456."
+
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -771,8 +102,562 @@ msgstr ""
 "Усі розділи та дані на {disk} будуть знищені.\n"
 "\n"
 
-#: src/pages.py:2319
-#, python-brace-format
+msgid ""
+"Alternatively, you may explicitly select one entire partition to erase. "
+"Everything in that selected partition will be destroyed; it is never "
+"selected automatically."
+msgstr ""
+"Крім того, ви можете явно вибрати один цілий розділ для стирання. Усе у "
+"цьому вибраному розділі буде знищено; він ніколи не обирається автоматично."
+
+msgid "AnduinOS Installer"
+msgstr "Встановлювач AnduinOS"
+
+msgid "AnduinOS Installer (Beta)"
+msgstr "Встановлювач AnduinOS (Бета)"
+
+msgid "AnduinOS Installer (Development)"
+msgstr "Встановлювач AnduinOS (Розробка)"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing "
+"partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS використовуватиме лише вибране вільне місце на диску {disk}. "
+"Існуючі розділи буде збережено.\n"
+"\n"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space. The installer will "
+"not shrink or move an existing filesystem."
+msgstr ""
+"AnduinOS використовуватиме лише вибране вільне місце. Інсталятор не буде "
+"зменшувати або переміщувати існуючу файлову систему."
+
+msgid ""
+"Any program running as your user can obtain full administrator privileges "
+"without authentication. Your login password still protects sign-in, but it "
+"will not protect sudo. Are you sure you want to continue?"
+msgstr ""
+"Будь-яка програма, запущена від вашого імені, може отримати повні права "
+"адміністратора без автентифікації. Ваш пароль входу захищає вхід у систему, "
+"але не захистить sudo. Ви впевнені, що хочете продовжити?"
+
+msgid "Arabic"
+msgstr "Арабська"
+
+msgid "Back"
+msgstr "Назад"
+
+msgid ""
+"Before continuing: finish Windows updates, disable Fast Startup and "
+"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
+"measurements and boot order can change."
+msgstr ""
+"Перш ніж продовжити: завершіть оновлення Windows, вимкніть швидкий запуск та "
+"режим сну, а також створіть резервну копію ключа відновлення BitLocker. "
+"Налаштування EFI, Secure Boot, вимірювання TPM та порядок завантаження "
+"можуть змінитися."
+
+msgid "BitLocker detected"
+msgstr "Виявлено BitLocker"
+
+msgid ""
+"BitLocker storage will be preserved. The installer will not unlock, resize, "
+"repair or otherwise modify it."
+msgstr ""
+"Зберігання BitLocker буде збережено. Інсталятор не буде розблоковувати, "
+"змінювати розмір, ремонтувати або інакше модифікувати його."
+
+msgid "Boot policy"
+msgstr "Політика завантаження"
+
+msgid "Btrfs (recommended)"
+msgstr "Btrfs (рекомендовано)"
+
+msgid "Btrfs — recommended"
+msgstr "Btrfs — рекомендовано"
+
+msgid "Cannot create installation plan"
+msgstr "Не вдається створити план встановлення"
+
+msgid "Choose Installation Method"
+msgstr "Оберіть метод встановлення"
+
+msgid "Choose one target disk. Storage settings come next."
+msgstr ""
+"Оберіть один цільовий диск. Наступним кроком будуть налаштування сховища."
+
+msgid "Choose optional software to install"
+msgstr "Оберіть додаткове програмне забезпечення для встановлення"
+
+msgid "Choose your language to begin installation"
+msgstr "Виберіть мову, щоб розпочати встановлення"
+
+msgid "Choose your location to set the system clock"
+msgstr "Оберіть ваше місцезнаходження, щоб налаштувати системний годинник"
+
+msgid "Complete"
+msgstr "Завершено"
+
+msgid "Computer Name"
+msgstr "Ім'я комп'ютера"
+
+msgid "Computer name contains invalid characters."
+msgstr "Ім'я комп'ютера містить недопустимі символи."
+
+msgid "Configure account, region, and machine identity"
+msgstr "Налаштування облікового запису, регіону та ідентифікатора комп’ютера"
+
+msgid "Configure storage and swap"
+msgstr "Налаштування сховища та файлу підкачки"
+
+msgid "Confirm Password"
+msgstr "Підтвердження пароля"
+
+msgid "Confirm your keyboard layout"
+msgstr "Підтвердіть розкладку клавіатури"
+
+msgid "Continue Installation"
+msgstr "Продовжити встановлення"
+
+msgid "Copy AnduinOS system"
+msgstr "Копіювання системи AnduinOS"
+
+msgid "Copy Log"
+msgstr "Копіювати журнал"
+
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Створіть новий розділ системи EFI AnduinOS розміром 1 ГіБ"
+
+msgid ""
+"Create and format a dedicated AnduinOS EFI System Partition inside the "
+"selected space."
+msgstr ""
+"Створіть та відформатуйте окремий розділ системи EFI AnduinOS у вибраному "
+"просторі."
+
+msgid "Create your user account"
+msgstr "Створіть обліковий запис користувача"
+
+msgid "Current disk layout"
+msgstr "Поточна структура диска"
+
+msgid ""
+"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
+"executor or disk command can run."
+msgstr ""
+"РЕЖИМ РОЗРОБКИ — план буде перевірено та імітовано. Жодна привілейована "
+"програма виконання або команда диска не може бути запущена."
+
+msgid "Danish"
+msgstr "Датська"
+
+msgid "Detect Internet connectivity"
+msgstr "Визначити підключення до Інтернету"
+
+msgid "Detect firmware and Secure Boot"
+msgstr "Виявлення прошивки та Secure Boot"
+
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be "
+"changed.\n"
+"\n"
+msgstr ""
+"Режим розробки імітуватиме встановлення на {disk}. Дані на диску не будуть "
+"змінено.\n"
+"\n"
+
+msgid "Development simulation completed"
+msgstr "Імітацію розробки завершено"
+
+msgid "Discover AnduinOS"
+msgstr "Дізнайтеся більше про AnduinOS"
+
+msgid "Do not require a password for sudo commands"
+msgstr "Не вимагати пароль для команд sudo"
+
+msgid "Download and install system updates during installation"
+msgstr "Завантажити та встановити оновлення системи під час встановлення"
+
+msgid "Dutch"
+msgstr "Нідерландська"
+
+msgid "EFI System Partition"
+msgstr "EFI System Partition"
+
+msgid "EFI policy"
+msgstr "Pолітика EFI"
+
+msgid "Empty disk — no partitions"
+msgstr "Порожній диск — немає розділів"
+
+msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr ""
+"Увімкнути підтомови спільного простору, миттєві знімки та Timeback Machine."
+
+msgid "English (UK)"
+msgstr "Англійська (Велика Британія)"
+
+msgid "English (US)"
+msgstr "Англійська (США)"
+
+msgid "Ensure Timeback Machine is available"
+msgstr "Переконайтеся, що Timeback Machine доступний"
+
+msgid "Erase Disk and Install"
+msgstr "Видалити дані диска та встановити"
+
+msgid "Erase every partition and all data on the selected disk."
+msgstr "Видалити кожну розділ і всі дані на вибраному диску."
+
+msgid "Erase the entire selected disk?"
+msgstr "Видалити всі дані на вибраному диску?"
+
+msgid ""
+"Existing Windows, recovery and data partitions remain outside the write set "
+"and will be preserved."
+msgstr ""
+"Існуючі Windows, відновлення та дані розділи залишаться поза межами запису "
+"набору і будуть збережені."
+
+msgid ""
+"Existing partitions were detected. The first two choices delete them; "
+"Advanced is the preservation path."
+msgstr ""
+"Був виявлено існуючі розділи. Перші два варіанти видаляють їх; Розширений є "
+"шляхом збереження."
+
+msgid ""
+"Existing partitions will be preserved. New AnduinOS partitions will be "
+"created only in the selected unallocated extent; EFI vendor files and the "
+"AnduinOS firmware boot entry may be updated."
+msgstr ""
+"Існуючі розділи будуть збережені. Нові розділи AnduinOS будуть створені "
+"тільки у вибраному невиділеному обсязі; файли постачальника EFI і записовий "
+"пункт прошивки AnduinOS можуть бути оновлені."
+
+msgid "Filesystem"
+msgstr "Файлова система"
+
+msgid "Finalize target environment"
+msgstr "Завершення налаштування цільового середовища"
+
+msgid "Finnish"
+msgstr "Фінська"
+
+msgid "Formats"
+msgstr "Формати"
+
+msgid "French"
+msgstr "Французька"
+
+msgid "Full Name"
+msgstr "Повне ім'я"
+
+msgid "German"
+msgstr "Німецька"
+
+msgid "Greek"
+msgstr "Грецька"
+
+msgid ""
+"Guided coexistence requires a system booted in UEFI mode and a GPT target "
+"disk. This disk cannot continue in guided mode."
+msgstr ""
+"Кероване співіснування вимагає завантаження системи в режимі UEFI та диска з "
+"ціллю GPT. Цей диск не може продовжувати роботу в керованому режимі."
+
+msgid ""
+"Guided storage selection is missing. Rescan and select the target again."
+msgstr ""
+"Вибір керованого сховища відсутній. Повторно проскануйте та виберіть ціль ще "
+"раз."
+
+msgid "Hindi (India)"
+msgstr "Хінді (Індія)"
+
+msgid "How should AnduinOS use this disk?"
+msgstr "Як AnduinOS має використовувати цей диск?"
+
+msgid "I Understand the Risk, Continue"
+msgstr "Я розумію ризики, продовжити"
+
+msgid "Indonesian"
+msgstr "Індонезійська"
+
+msgid "Install"
+msgstr "Встановити"
+
+msgid "Install Alongside"
+msgstr "Встановити поруч"
+
+msgid "Install alongside"
+msgstr "Встановити поруч"
+
+msgid "Install alongside requires a password-protected account."
+msgstr "Для встановлення поруч потрібен обліковий запис із захистом паролем."
+
+msgid "Install bootloader"
+msgstr "Встановити завантажувач"
+
+msgid "Install hardware drivers"
+msgstr "Встановити драйвери обладнання"
+
+msgid "Install in the selected free space?"
+msgstr "Встановити у вибраний вільний простір?"
+
+msgid "Install system updates"
+msgstr "Встановити оновлення системи"
+
+msgid "Install third-party drivers for this device"
+msgstr "Встановити сторонні драйвери для цього пристрою"
+
+msgid "Installation Complete"
+msgstr "Встановлення завершено"
+
+msgid "Installation Failed"
+msgstr "Помилка встановлення"
+
+msgid "Installation Steps"
+msgstr "Кроки встановлення"
+
+msgid ""
+"Installation cannot continue with this selection. There is no force-continue "
+"option around storage safety checks."
+msgstr ""
+"Інсталяцію не можна продовжити з цим вибором. Немає опції примусового "
+"продовження для перевірок безпеки сховища."
+
+msgid "Installation complete"
+msgstr "Встановлення завершено"
+
+msgid "Installation failed"
+msgstr "Помилка встановлення"
+
+msgid "Installation in progress"
+msgstr "Встановлення виконується"
+
+msgid "Installing AnduinOS"
+msgstr "Встановлення AnduinOS"
+
+msgid "Italian"
+msgstr "Італійська"
+
+msgid "Japanese"
+msgstr "Японська"
+
+msgid "Keyboard"
+msgstr "Клавіатура"
+
+msgid "Keyboard Layout"
+msgstr "Розкладка клавіатури"
+
+msgid "Korean"
+msgstr "Корейська"
+
+msgid "Language"
+msgstr "Мова"
+
+msgid "Live USB — excluded"
+msgstr "Живий USB — виключено"
+
+msgid "Mount target filesystems"
+msgstr "Підключення цільових файлових систем"
+
+msgid "Navigation error"
+msgstr "Помилка навігації"
+
+msgid "New partitions"
+msgstr "Нові розділи"
+
+msgid "Next"
+msgstr "Далі"
+
+msgid "Next slide"
+msgstr "Наступний слайд"
+
+msgid "No partition table"
+msgstr "Немає таблиці розділів"
+
+msgid "No suitable disks found."
+msgstr "Не знайдено придатних дисків."
+
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with Windows Disk Management, then boot the installer "
+"again and rescan the disk."
+msgstr ""
+"Не знайдено підходящого вільного місця. Щоб захистити ваші дані, створіть "
+"вільне місце за допомогою засобу керування дисками Windows, потім "
+"перезавантажте інсталятор і знову відскануйте диск."
+
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with a partitioning tool, then boot the installer again "
+"and rescan the disk."
+msgstr ""
+"Не знайдено підходящого вільного місця. Щоб захистити ваші дані, створіть "
+"вільне місце за допомогою засобу розділення диска, потім перезавантажте "
+"інсталятор і знову відскануйте диск."
+
+msgid "Norwegian"
+msgstr "Норвезька"
+
+msgid "OK"
+msgstr "Гаразд"
+
+msgid "Output"
+msgstr "Вивід"
+
+msgid "Output • Error"
+msgstr "Вивід • Помилка"
+
+msgid "Output • {count} warning(s)"
+msgstr "Вивід • {count} попередженнь(ня)"
+
+msgid "Partition details unavailable"
+msgstr "Деталі розділу недоступні"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Password must be at least 6 characters."
+msgstr "Пароль має містити щонайменше 6 символів."
+
+msgid "Passwordless sudo is unsafe"
+msgstr "Судо без пароля є небезпечним"
+
+msgid "Platform"
+msgstr "Платформа"
+
+msgid "Please do not turn off your computer"
+msgstr "Будь ласка, не вимикайте комп’ютер"
+
+msgid "Please review your choices before proceeding"
+msgstr "Будь ласка, перевірте ваші виборі перед продовженням"
+
+msgid "Polish"
+msgstr "Польська"
+
+msgid "Portuguese"
+msgstr "Португальська"
+
+msgid "Portuguese (Brazil)"
+msgstr "Португальська (Бразилія)"
+
+msgid "Prepare Secure Boot"
+msgstr "Підготовка Secure Boot"
+
+msgid "Prepare installation disk"
+msgstr "Підготовка диска встановлення"
+
+msgid "Prepare target environment"
+msgstr "Підготовка цільового середовища"
+
+msgid "Preparing installation…"
+msgstr "Підготовка до встановлення…"
+
+msgid "Preserved partitions"
+msgstr "Збережені розділи"
+
+msgid "Previous slide"
+msgstr "Попередній слайд"
+
+msgid "Ready to Install"
+msgstr "Готовий до встановлення"
+
+msgid "Reboot Now"
+msgstr "Перезавантажити зараз"
+
+msgid "Refresh package indexes"
+msgstr "Оновити індекси пакетів"
+
+msgid "Remove live-session components"
+msgstr "Видалення компонентів сеансу Live"
+
+msgid "Remove the installation media and restart your computer"
+msgstr "Видаліть носій встановлення та перезавантажте комп'ютер"
+
+msgid ""
+"Requires an Internet connection. The base installation remains available "
+"when offline."
+msgstr ""
+"Вимагає підключення до Інтернету. Базове встановлення залишається доступним "
+"автономно."
+
+msgid "Rescan Storage"
+msgstr "Повторне сканування сховища"
+
+msgid "Rescan and Reselect Disk"
+msgstr "Пересканувати та вибрати диск знову"
+
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "Перезавантажити та зареєструвати ключ Secure Boot"
+
+msgid "Restart is disabled in development protection mode"
+msgstr "Перезавантаження відключено в режимі захисту розробки"
+
+msgid "Return and Set a Password"
+msgstr "Повернутися та встановити пароль"
+
+msgid "Return to Make Changes"
+msgstr "Повернутися для внесення змін"
+
+msgid "Reuse {path} ({size})"
+msgstr "Використати повторно {path} ({size})"
+
+msgid ""
+"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
+"before writing."
+msgstr ""
+"Використати повторно {path}; ніколи не форматувати; перевірити стан FAT, "
+"ідентифікатор та наявність 64 МБ вільного місця перед записом."
+
+msgid "Romanian"
+msgstr "Румунська"
+
+msgid "Russian"
+msgstr "Українська"
+
+msgid "Save Log"
+msgstr "Зберегти журнал"
+
+msgid "Schedule MOK enrollment"
+msgstr "Запланування реєстрації MOK"
+
+msgid "Search timezones…"
+msgstr "Пошук часових поясів…"
+
+msgid "Secure Boot enrollment"
+msgstr "Реєстрація Secure Boot"
+
+msgid "Select Installation Disk"
+msgstr "Вибір диска встановлення"
+
+msgid "Select Timezone"
+msgstr "Вибір часового поясу"
+
+msgid "Select fastest package mirror"
+msgstr "Вибір найшвидшого дзеркала пакетів"
+
+msgid "Selected timezone"
+msgstr "Обраний часовий пояс"
+
+msgid "Selected unallocated space"
+msgstr "Вибрано невиділений простір"
+
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr ""
+"Деякі драйвери є власницькими або інакше не вільним програмним забезпеченням."
+
+msgid "Spanish"
+msgstr "Іспанська"
+
+msgid "Stable disk identity"
+msgstr "Стабільна ідентичність диска"
+
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -780,262 +665,324 @@ msgstr ""
 "Стабільна ідентичність: {stable_id}\n"
 "\n"
 
-#: src/pages.py:2323
+msgid "Storage Device"
+msgstr "Накопичувач"
+
+msgid "Storage mode"
+msgstr "Режим зберігання"
+
+msgid "Subvolumes"
+msgstr "Підтомі"
+
+msgid "Swap"
+msgstr "Файл підкачки"
+
+msgid "Swedish"
+msgstr "Шведська"
+
+msgid "System updates"
+msgstr "Оновлення системи"
+
+msgid "Target Disk"
+msgstr "Цільовий диск"
+
+msgid "Target: {disk} ({size} — {model})"
+msgstr "Мета: {disk} ({size} — {model})"
+
+msgid "Test your keyboard here…"
+msgstr "Перевірте клавіатуру тут…"
+
+msgid "Thai"
+msgstr "Тайська"
+
+msgid ""
+"The GPT disk or one of its partitions has no unique stable identifier. "
+"Guided coexistence cannot safely authorize preservation or writes on this "
+"disk."
+msgstr ""
+"Disk GPT або одна з його розділів не має унікального стабільного "
+"ідентифікатора. Керований співіснування не може безпечно авторизувати "
+"збереження або записи на цьому диску."
+
+msgid ""
+"The complete partition map and free-space geometry could not be read "
+"consistently. No space on this disk is authorized for installation."
+msgstr ""
+"Повну карту розділів та геометрію вільного простору не вдалося читати "
+"узгоджено. Жоден простір на цьому диску не авторизований для встановлення."
+
+msgid ""
+"The existing EFI System Partition is only a candidate. Health and free-space "
+"checks must pass before it can be reused, and it will never be formatted."
+msgstr ""
+"\\\tІснуючий розділ EFI System Partition є лише кандидатом. Перевірки стану "
+"та вільного місця мають бути успішними, перш ніж його можна буде повторно "
+"використати, і він ніколи не буде відформатований."
+
+msgid ""
+"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot "
+"state, or installed system was changed."
+msgstr ""
+"План встановлення є валідним. Жоден диск, файлова система, завантажувач, "
+"стан Secure Boot або встановлена система не були змінено."
+
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "Встановлювач не можна закрити під час модифікації цільового диска."
+
+msgid ""
+"The installer will not mount, repair or infer the safety of Windows volumes "
+"from hibernation or Fast Startup state. Any required Windows maintenance "
+"must be completed in Windows."
+msgstr ""
+"\\\tВстановлювач не монтуватиме, не ремонтуватиме та не визначатиме безпеку "
+"томів Windows зі стану гибернації або Швидкого запуску. Будь-яке необхідне "
+"обслуговування Windows має бути завершено в Windows."
+
 msgid "The privileged executor is disabled."
 msgstr "Привілейований виконавець відключений."
 
-#: src/pages.py:2326
-msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-msgstr "Існуючі розділи будуть збережені. Нові розділи AnduinOS будуть створені тільки у вибраному невиділеному обсязі; файли постачальника EFI і записовий пункт прошивки AnduinOS можуть бути оновлені."
+msgid ""
+"The selected disk changed or disappeared. Return to the disk page and select "
+"it again. {error}"
+msgstr ""
+"\\\tВибраний диск змінився або зник. Поверніться на сторінку диска та "
+"виберіть його знову. {error}"
 
-#: src/pages.py:2334
+msgid "The selected disk size changed. Return and select it again."
+msgstr ""
+"\\\tРозмір вибраного диска змінився. Поверніться та виберіть його знову."
+
+msgid ""
+"The selected disk topology changed. Review the disk and installation method "
+"again."
+msgstr ""
+"\\\tТопологія вибраного диска змінилася. Перевірте диск та метод "
+"встановлення ще раз."
+
+msgid ""
+"The system will sign in to this account automatically and allow it to obtain "
+"full administrator privileges without a password. Anyone with physical "
+"access, and any program running as this user, can completely control the "
+"system. Use this only for a kiosk, temporary virtual machine, or another "
+"controlled environment."
+msgstr ""
+"Система автоматично увійде в цей обліковий запис і дозволить отримувати "
+"повні права адміністратора без пароля. Будь-хто з фізичним доступом, а також "
+"будь-яка програма, запущена від цього користувача, може повністю керувати "
+"системою. Використовуйте це лише для кіоску, тимчасової віртуальної машини "
+"або іншого контрольованого середовища."
+
+msgid "The two passwords do not match."
+msgstr "Два паролі не збігаються."
+
+msgid "Third-party drivers"
+msgstr "Сторонні драйвери"
+
+msgid ""
+"This account has no login password, but sudo would still require one. "
+"Because the root account is locked by default, you would be unable to "
+"perform administrator tasks. Set an account password or enable passwordless "
+"sudo."
+msgstr ""
+"Цей обліковий запис не має пароля для входу, але sudo все одно вимагатиме "
+"пароль. Оскільки обліковий запис root за замовчуванням заблоковано, ви не "
+"зможете виконувати завдання адміністратора. Встановіть пароль облікового "
+"запису або увімкніть sudo без пароля."
+
+msgid ""
+"This advanced path preserves existing partitions but changes the selected "
+"disk's partition table and the machine's EFI boot state."
+msgstr ""
+"\\\tЦей розширений шлях зберігає існуючі розділи, але змінює таблицю "
+"розділів вибраного диска та стан завантаження EFI машини."
+
+msgid "This configuration is very unsafe"
+msgstr "Ця конфігурація є дуже небезпечною"
+
+msgid ""
+"This disk contains an active mapper, array or other nested block-device "
+"topology that guided coexistence does not support."
+msgstr ""
+"\\\tЦей диск містить активний мапер, масив або іншу вкладену топологію "
+"блокового пристрою, яку підтримка спільного використання не підтримує."
+
+msgid ""
+"This disk is too small for whole-disk installation. Advanced may continue "
+"only if suitable unallocated space exists."
+msgstr ""
+"\\\tЦей диск занадто малий для повного встановлення на диск. Розширений "
+"режим може продовжити лише за наявності відповідного невизначеного місця."
+
 msgid "This installer does not shrink or preserve other systems."
 msgstr "Цей встановлювач не стискає та не зберігає інші системи."
 
-#: src/pages.py:2360
-msgid "Cannot create installation plan"
-msgstr "Не вдається створити план встановлення"
+msgid "Timezone"
+msgstr "Часовий пояс"
 
-#: src/pages.py:2382
-msgid "Install"
-msgstr "Встановити"
+msgid "Too small"
+msgstr "Занадто мало"
 
-#: src/pages.py:2398 src/pages.py:2404
-msgid "Installing AnduinOS"
-msgstr "Встановлення AnduinOS"
+msgid "Turkish"
+msgstr "Турецька"
 
-#: src/pages.py:2413
-msgid "Detect firmware and Secure Boot"
-msgstr "Виявлення прошивки та Secure Boot"
+msgid "Ukrainian"
+msgstr "Українська"
 
-#: src/pages.py:2416
-msgid "Detect Internet connectivity"
-msgstr "Визначити підключення до Інтернету"
+msgid "Unallocated space"
+msgstr "Невиділений простір"
 
-#: src/pages.py:2418
-msgid "Verify target disk isolation"
-msgstr "Перевірка ізоляції цільового диска"
+msgid "Unallocated · {size}"
+msgstr "Невиділено · {size}"
 
-#: src/pages.py:2419
-msgid "Prepare installation disk"
-msgstr "Підготовка диска встановлення"
+msgid "Unavailable: {error}"
+msgstr "Недоступно: {error}"
 
-#: src/pages.py:2420
-msgid "Mount target filesystems"
-msgstr "Підключення цільових файлових систем"
+msgid "Unknown filesystem"
+msgstr "Невідома файлова система"
 
-#: src/pages.py:2421
-msgid "Copy AnduinOS system"
-msgstr "Копіювання системи AnduinOS"
-
-#: src/pages.py:2422
-msgid "Configure storage and swap"
-msgstr "Налаштування сховища та файлу підкачки"
-
-#: src/pages.py:2423
-msgid "Prepare target environment"
-msgstr "Підготовка цільового середовища"
-
-#: src/pages.py:2424
-msgid "Remove live-session components"
-msgstr "Видалення компонентів сеансу Live"
-
-#: src/pages.py:2425
-msgid "Configure account, region, and machine identity"
-msgstr "Налаштування облікового запису, регіону та ідентифікатора комп’ютера"
-
-#: src/pages.py:2427
-msgid "Select fastest package mirror"
-msgstr "Вибір найшвидшого дзеркала пакетів"
-
-#: src/pages.py:2429
-msgid "Prepare Secure Boot"
-msgstr "Підготовка Secure Boot"
-
-#: src/pages.py:2430
-msgid "Refresh package indexes"
-msgstr "Оновити індекси пакетів"
-
-#: src/pages.py:2431
-msgid "Install system updates"
-msgstr "Встановити оновлення системи"
-
-#: src/pages.py:2433
-msgid "Ensure Timeback Machine is available"
-msgstr "Переконайтеся, що Timeback Machine доступний"
-
-#: src/pages.py:2435
-msgid "Install hardware drivers"
-msgstr "Встановити драйвери обладнання"
-
-#: src/pages.py:2437
-msgid "Verify kernel module signatures"
-msgstr "Перевірка підписів модулів ядра"
-
-#: src/pages.py:2439
-msgid "Install bootloader"
-msgstr "Встановити завантажувач"
-
-#: src/pages.py:2440
-msgid "Schedule MOK enrollment"
-msgstr "Запланування реєстрації MOK"
-
-#: src/pages.py:2441
-msgid "Finalize target environment"
-msgstr "Завершення налаштування цільового середовища"
-
-#: src/pages.py:2442
 msgid "Unmount installed system"
 msgstr "Відключення встановленої системи"
 
-#: src/pages.py:2480
-msgid "Installation Steps"
-msgstr "Кроки встановлення"
+msgid "Updates and Drivers"
+msgstr "Оновлення та драйвери"
 
-#: src/pages.py:2516
-msgid "Copy Log"
-msgstr "Копіювати журнал"
-
-#: src/pages.py:2520
-msgid "Save Log"
-msgstr "Зберегти журнал"
-
-#: src/pages.py:2591
-msgid "Previous slide"
-msgstr "Попередній слайд"
-
-#: src/pages.py:2597
-msgid "Next slide"
-msgstr "Наступний слайд"
-
-#: src/pages.py:2642
-msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
-msgstr "Після перезавантаження відкриється MOKManager. Виберіть Enroll MOK → Continue → Yes, а потім введіть пароль 123456."
-
-#: src/pages.py:2650
-msgid "Restart and Enroll Secure Boot Key"
-msgstr "Перезавантажити та зареєструвати ключ Secure Boot"
-
-#: src/pages.py:2652
-msgid "Reboot Now"
-msgstr "Перезавантажити зараз"
-
-#: src/pages.py:2673
-msgid "Discover AnduinOS"
-msgstr "Дізнайтеся більше про AnduinOS"
-
-#: src/pages.py:2676
-msgid "Output"
-msgstr "Вивід"
-
-#: src/pages.py:2679
-msgid "Complete"
-msgstr "Завершено"
-
-#: src/pages.py:2712
-msgid "Preparing installation…"
-msgstr "Підготовка до встановлення…"
-
-#: src/pages.py:2758 src/pages.py:2824
-msgid "Installation complete"
-msgstr "Встановлення завершено"
-
-#: src/pages.py:2762
-msgid "Development simulation completed"
-msgstr "Імітацію розробки завершено"
-
-#: src/pages.py:2765
-msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
-msgstr "План встановлення є валідним. Жоден диск, файлова система, завантажувач, стан Secure Boot або встановлена система не були змінено."
-
-#: src/pages.py:2772
 msgid ""
-"\n"
-"\n"
-"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+"Use already-unallocated space and preserve existing partitions. This is the "
+"only Windows coexistence path."
 msgstr ""
-"\n"
-"\n"
-"Реальна установка створить локальний для машини MOK. Після перезавантаження виберіть Enroll MOK → Continue → Yes у MOKManager і введіть пароль 123456."
+"Використовувати вже невиділений простір і зберігати існуючі розділи. Це "
+"єдиний шлях співіснування з Windows."
 
-#: src/pages.py:2779 src/pages.py:2789 src/pages.py:2932 src/pages.py:2934
-msgid "Installation Complete"
-msgstr "Встановлення завершено"
-
-#: src/pages.py:2781 src/pages.py:2790
-msgid "Remove the installation media and restart your computer"
-msgstr "Видаліть носій встановлення та перезавантажте комп'ютер"
-
-#: src/pages.py:2783
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"На синьому екрані MOKManager виберіть Enroll MOK → Continue → Yes, пароль: 123456"
-
-#: src/pages.py:2799
-msgid "Restart is disabled in development protection mode"
-msgstr "Перезавантаження відключено в режимі захисту розробки"
-
-#: src/pages.py:2807
-msgid "Installation failed"
-msgstr "Помилка встановлення"
-
-#: src/pages.py:2809
-msgid "Installation Failed"
-msgstr "Помилка встановлення"
-
-#: src/pages.py:2812 src/pages.py:2867
-msgid "Output • Error"
-msgstr "Вивід • Помилка"
-
-#: src/pages.py:2862
-#, python-brace-format
-msgid "Output • {count} warning(s)"
-msgstr "Вивід • {count} попередженнь(ня)"
-
-#: src/pages.py:2870
-#, python-brace-format
-msgid "{step} failed"
-msgstr "Помилка кроку {step}"
-
-#: src/pages.py:715
-msgid "Empty disk — no partitions"
-msgstr "Порожній диск — немає розділів"
-
-#: src/pages.py:468
-msgid "Confirm your keyboard layout"
-msgstr "Підтвердіть розкладку клавіатури"
-
-#: src/pages.py:540
-msgid "Choose optional software to install"
-msgstr "Оберіть додаткове програмне забезпечення для встановлення"
-
-#: src/pages.py:758
-msgid "Choose one target disk. Storage settings come next."
-msgstr "Оберіть один цільовий диск. Наступним кроком будуть налаштування сховища."
-
-#: src/pages.py:923
-msgid "Choose a complete installation method, not only a filesystem."
-msgstr "Оберіть повний метод встановлення, а не лише файлову систему."
-
-#: src/pages.py:1184
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "Використовувати лише наявний невиділений простір на вибраному диску."
 
-#: src/pages.py:1586
-msgid "Create your user account"
-msgstr "Створіть обліковий запис користувача"
+msgid "User"
+msgstr "Користувач"
 
-#: src/pages.py:1902
-msgid "Choose your location to set the system clock"
-msgstr "Оберіть ваше місцезнаходження, щоб налаштувати системний годинник"
+msgid "User Account"
+msgstr "Обліковий запис користувача"
 
-#: src/pages.py:2042
-msgid "Please review your choices before proceeding"
-msgstr "Будь ласка, перевірте ваші виборі перед продовженням"
+msgid "Username"
+msgstr "Ім'я користувача"
 
-#: src/pages.py:2405
-msgid "Please do not turn off your computer"
-msgstr "Будь ласка, не вимикайте комп’ютер"
+msgid ""
+"Username must start with a lowercase ASCII letter and contain only lowercase "
+"ASCII letters or digits (maximum 16 characters)."
+msgstr ""
+"Username must start with a lowercase ASCII letter and contain only lowercase "
+"ASCII letters or digits (maximum 16 characters)."
+
+msgid "Uses a traditional single root filesystem."
+msgstr "Використовує традиційну файлову систему з одним коренем."
+
+msgid "Validate Plan (No Installation)"
+msgstr "Перевірити план (без встановлення)"
+
+msgid "Validate this installation plan?"
+msgstr "Перевірити цей план встановлення?"
+
+msgid "Verify kernel module signatures"
+msgstr "Перевірка підписів модулів ядра"
+
+msgid "Verify target disk isolation"
+msgstr "Перевірка ізоляції цільового диска"
+
+msgid "Vietnamese"
+msgstr "В'єтнамська"
+
+msgid "Welcome to AnduinOS"
+msgstr "Ласкаво просимо до AnduinOS"
+
+msgid "Windows detected"
+msgstr "Windows виявлено"
+
+msgid ""
+"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
+"AnduinOS NVRAM entry."
+msgstr ""
+"Записувати лише EFI/AnduinOS, не перезаписувати EFI/BOOT та вимагати "
+"перевіреного запису AnduinOS у NVRAM."
+
+msgid "automatic login"
+msgstr "автоматичний вхід"
+
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr ""
+"створити локальний для машини MOK; зареєструвати після перезавантаження з "
+"паролем 123456"
+
+msgid "detect and install (may include non-free software)"
+msgstr "виявити та встановити (може включати не вільне програмне забезпечення)"
+
+msgid "do not install"
+msgstr "не встановлювати"
+
+msgid "download and install"
+msgstr "завантажити та встановити"
+
+msgid "ext4 (classic)"
+msgstr "ext4 (класична)"
+
+msgid "ext4 — classic"
+msgstr "ext4 — класичний"
+
+msgid "not required"
+msgstr "не обов'язково"
+
+msgid "password required for login"
+msgstr "потрібен пароль для входу"
+
+msgid "single ext4 root filesystem"
+msgstr "єдина файлова система ext4 кореневого каталогу"
+
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+msgid "{path} as {filesystem}"
+msgstr "{path} як {filesystem}"
+
+msgid "{size} at {offset}"
+msgstr "{size} на {offset}"
+
+msgid "{size} unallocated at {offset}"
+msgstr "{size} невиділено на {offset}"
+
+msgid "{step} failed"
+msgstr "Помилка кроку {step}"
+
+msgid ""
+"⚠ Only the selected unallocated space will be partitioned and formatted. "
+"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
+"firmware boot entry may change. This installer will not shrink Windows for "
+"you."
+msgstr ""
+"⚠ Розділення та форматування буде виконано лише для вибраної невиділеної "
+"області. Існуючі розділи збережуться, але файли EFI/AnduinOS та запис "
+"автозавантаження прошивки AnduinOS можуть змінитися. Цей установщик не "
+"стисне Windows за вас."
+
+msgid ""
+"⚠ This will erase ALL data on the selected disk. This action cannot be "
+"undone."
+msgstr "⚠ Це видалить ВСІ дані на вибраному диску. Цю дію не можна скасувати."
+
+#: src/pages.py
+msgid "Connect to the Internet"
+msgstr "Підключитися до Інтернету"
+
+#: src/pages.py
+msgid "Internet connection is ready."
+msgstr "Підключення до Інтернету готове."
+
+#: src/pages.py
+msgid "Available Wi-Fi Networks"
+msgstr "Доступні мережі Wi-Fi"
+
+#~ msgid "Choose a complete installation method, not only a filesystem."
+#~ msgstr "Оберіть повний метод встановлення, а не лише файлову систему."

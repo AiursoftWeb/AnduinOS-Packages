@@ -10,6 +10,7 @@ can push the next page when the user clicks "Next" / "Install".
 import threading
 import re
 import html
+import subprocess
 
 # Allow absolute imports when run directly (not as a package).
 import sys, os
@@ -65,6 +66,12 @@ from installer_core.username_policy import (
 )
 from installer_core.usernames import (
     suggest_username,
+)
+from installer_core.wifi import (
+    WifiNetwork,
+    scan_wifi_networks,
+    set_wifi_radio,
+    wifi_radio_enabled,
 )
 from slideshow import load_slides
 from ui import card, clamp_content, icon_picture, page_hero
@@ -253,6 +260,24 @@ def _page_header(title, subtitle, icon, lang):
     return page_hero(_(title, lang), _(subtitle, lang), icon)
 
 
+def internet_connection_ready(monitor=None) -> bool:
+    """Return true only for a complete, non-portal Internet connection."""
+
+    try:
+        monitor = monitor or Gio.NetworkMonitor.get_default()
+        return monitor.get_connectivity() == Gio.NetworkConnectivity.FULL
+    except Exception:
+        return False
+
+
+def should_show_network_page(shared, monitor=None) -> bool:
+    """Keep the page visible for development or incomplete connectivity."""
+
+    return bool(shared.get("development_mode")) or not internet_connection_ready(
+        monitor
+    )
+
+
 def _list_item_row():
     """Return a neutral ListView child; Adw.ActionRow requires Gtk.ListBox."""
 
@@ -406,7 +431,12 @@ def build_welcome_page(shared, nav_view):
 
     def on_next():
         try:
-            nav_view.push(build_keyboard_page(shared, nav_view))
+            next_page = (
+                build_network_page(shared, nav_view)
+                if should_show_network_page(shared)
+                else build_keyboard_page(shared, nav_view)
+            )
+            nav_view.push(next_page)
         except Exception as e:
             import traceback
             traceback.print_exc()
@@ -443,7 +473,289 @@ def build_welcome_page(shared, nav_view):
     return page
 
 
-# ── page 2: Keyboard layout ──────────────────────────────────────────────
+# ── page 2: Network recommendation ───────────────────────────────────────
+
+def build_network_page(shared, nav_view):
+    """Recommend connectivity while keeping offline installation available."""
+
+    lang = shared.get("lang", "en_US")
+    page = Adw.NavigationPage(title=_("Connect to the Internet", lang))
+    page.set_tag("network")
+
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    content.append(
+        _page_header(
+            "Connect to the Internet",
+            "Requires an Internet connection. The base installation remains available when offline.",
+            "network",
+            lang,
+        )
+    )
+
+    body = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=18,
+        homogeneous=True,
+        margin_start=32,
+        margin_end=32,
+        margin_top=12,
+        margin_bottom=8,
+        vexpand=True,
+    )
+
+    explanation = card(spacing=14)
+    explanation.set_vexpand(True)
+    explanation_title = Gtk.Label(
+        label=_("Updates and Drivers", lang),
+        halign=Gtk.Align.START,
+        xalign=0,
+        wrap=True,
+    )
+    explanation_title.add_css_class("title-3")
+    explanation.append(explanation_title)
+
+    explanation_text = Gtk.Label(
+        label=_(
+            "Requires an Internet connection. The base installation "
+            "remains available when offline.",
+            lang,
+        ),
+        halign=Gtk.Align.START,
+        xalign=0,
+        wrap=True,
+    )
+    explanation_text.add_css_class("dim-label")
+    explanation.append(explanation_text)
+
+    for text in (
+        _("Download and install system updates during installation", lang),
+        _("Install hardware drivers", lang),
+    ):
+        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        row.append(Gtk.Image.new_from_icon_name("emblem-ok-symbolic"))
+        row.append(
+            Gtk.Label(
+                label=text,
+                halign=Gtk.Align.START,
+                xalign=0,
+                wrap=True,
+            )
+        )
+        explanation.append(row)
+
+    status_box = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=10,
+        halign=Gtk.Align.START,
+        valign=Gtk.Align.END,
+        vexpand=True,
+    )
+    status_icon = Gtk.Image(pixel_size=22)
+    status_label = Gtk.Label(wrap=True, xalign=0)
+    status_box.append(status_icon)
+    status_box.append(status_label)
+    explanation.append(status_box)
+
+    body.append(explanation)
+
+    networks = card(spacing=10)
+    networks.set_vexpand(True)
+    networks_header = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=10,
+    )
+    networks_title = Gtk.Label(
+        label=_("Available Wi-Fi Networks", lang),
+        halign=Gtk.Align.START,
+        xalign=0,
+        hexpand=True,
+        wrap=True,
+    )
+    networks_title.add_css_class("title-3")
+    radio_switch = Gtk.Switch(
+        valign=Gtk.Align.CENTER,
+        sensitive=False,
+    )
+    refresh_button = Gtk.Button(icon_name="view-refresh-symbolic")
+    refresh_button.set_tooltip_text(_("Detect Internet connectivity", lang))
+    networks_header.append(networks_title)
+    networks_header.append(radio_switch)
+    networks_header.append(refresh_button)
+    networks.append(networks_header)
+
+    wifi_group = Adw.PreferencesGroup()
+    network_rows = []
+    wifi_scroll = Gtk.ScrolledWindow(
+        vexpand=True,
+        min_content_height=220,
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+        vscrollbar_policy=Gtk.PolicyType.AUTOMATIC,
+    )
+    wifi_scroll.set_child(wifi_group)
+    networks.append(wifi_scroll)
+    body.append(networks)
+
+    content.append(clamp_content(body, 920))
+    monitor = Gio.NetworkMonitor.get_default()
+
+    def _is_online():
+        return internet_connection_ready(monitor)
+
+    def _render_connectivity():
+        online = _is_online()
+        shared["network_preflight_online"] = online
+        status_icon.set_from_icon_name(
+            "network-transmit-receive-symbolic"
+            if online
+            else "network-offline-symbolic"
+        )
+        status_label.set_label(
+            _("Internet connection is ready.", lang)
+            if online
+            else _(
+                "Requires an Internet connection. The base installation "
+                "remains available when offline.",
+                lang,
+            )
+        )
+
+    def _open_wifi_settings():
+        try:
+            subprocess.Popen(("gnome-control-center", "wifi"))
+        except OSError as error:
+            status_label.set_label(
+                _("Unavailable: {error}", lang).format(error=error)
+            )
+
+    def _replace_network_rows(networks: tuple[WifiNetwork, ...]):
+        for row in network_rows:
+            wifi_group.remove(row)
+        network_rows.clear()
+        for network in networks:
+            detail = f"{network.signal}%"
+            if network.security != "--":
+                detail += f" · {network.security}"
+            row = Adw.ActionRow(
+                title=network.ssid,
+                subtitle=detail,
+                activatable=True,
+            )
+            row.add_prefix(
+                Gtk.Image.new_from_icon_name(
+                    "network-wireless-signal-excellent-symbolic"
+                    if network.signal >= 70
+                    else "network-wireless-signal-good-symbolic"
+                    if network.signal >= 40
+                    else "network-wireless-signal-weak-symbolic"
+                )
+            )
+            if network.active:
+                row.add_suffix(
+                    Gtk.Image.new_from_icon_name("emblem-ok-symbolic")
+                )
+            row.connect("activated", lambda _row: _open_wifi_settings())
+            wifi_group.add(row)
+            network_rows.append(row)
+        refresh_button.set_sensitive(True)
+
+    radio_handler = None
+
+    def _show_radio_state(enabled: bool):
+        if radio_handler is not None:
+            radio_switch.handler_block(radio_handler)
+        radio_switch.set_active(enabled)
+        radio_switch.set_state(enabled)
+        if radio_handler is not None:
+            radio_switch.handler_unblock(radio_handler)
+        radio_switch.set_sensitive(True)
+
+    def _apply_scan(enabled: bool, found: tuple[WifiNetwork, ...]):
+        _show_radio_state(enabled)
+        _replace_network_rows(found)
+
+    def _show_scan_error(error: Exception):
+        _replace_network_rows(())
+        row = Adw.ActionRow(
+            title=_("Unavailable: {error}", lang).format(error=error)
+        )
+        wifi_group.add(row)
+        network_rows.append(row)
+        refresh_button.set_sensitive(True)
+        if not _is_online():
+            status_label.set_label(
+                _("Requires an Internet connection. The base installation "
+                  "remains available when offline.", lang)
+            )
+        return False
+
+    def _scan_wifi():
+        refresh_button.set_sensitive(False)
+
+        def worker():
+            try:
+                enabled = wifi_radio_enabled()
+                found = scan_wifi_networks() if enabled else ()
+            except Exception as error:
+                GLib.idle_add(_show_scan_error, error)
+            else:
+                GLib.idle_add(_apply_scan, enabled, found)
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _finish_radio_change(enabled: bool, error: Exception | None):
+        if error is not None:
+            _show_scan_error(error)
+            _scan_wifi()
+            return False
+        _show_radio_state(enabled)
+        _scan_wifi()
+        return False
+
+    def _on_radio_state_set(_switch, enabled: bool):
+        radio_switch.set_sensitive(False)
+        refresh_button.set_sensitive(False)
+
+        def worker():
+            error = None
+            try:
+                set_wifi_radio(enabled)
+            except Exception as exception:
+                error = exception
+            GLib.idle_add(_finish_radio_change, enabled, error)
+
+        threading.Thread(target=worker, daemon=True).start()
+        return True
+
+    radio_handler = radio_switch.connect("state-set", _on_radio_state_set)
+    refresh_button.connect("clicked", lambda _button: _scan_wifi())
+    monitor.connect(
+        "network-changed",
+        lambda _monitor, _available: (
+            _render_connectivity(),
+            _scan_wifi(),
+        ),
+    )
+
+    def on_next():
+        shared["network_preflight_skipped"] = not _is_online()
+        nav_view.push(build_keyboard_page(shared, nav_view))
+
+    content.append(
+        _nav_box(
+            lang,
+            on_back=lambda: nav_view.pop(),
+            on_next=on_next,
+            next_label="Continue Installation",
+            stage=0,
+        )
+    )
+    page.set_child(content)
+    _render_connectivity()
+    _scan_wifi()
+    return page
+
+
+# ── page 3: Keyboard layout ──────────────────────────────────────────────
 
 # Common XKB variants, grouped by region
 XKB_VARIANTS = [
@@ -929,34 +1241,23 @@ def build_storage_strategy_page(shared, nav_view):
     page = Adw.NavigationPage(title=_("Choose Installation Method", lang))
     page.set_tag("storage-strategy")
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+    disk_subtitle = " · ".join(
+        str(value)
+        for value in (
+            shared.get("disk_model", "?"),
+            shared.get("disk_size", "?"),
+            shared.get("disk", "?"),
+        )
+        if value
+    )
     content.append(
         _page_header(
             "How should AnduinOS use this disk?",
-            "Choose a complete installation method, not only a filesystem.",
+            disk_subtitle,
             "how-should-use",
             lang,
         )
     )
-
-    target_box = Gtk.Box(
-        orientation=Gtk.Orientation.HORIZONTAL,
-        spacing=10,
-        halign=Gtk.Align.CENTER,
-    )
-    target_box.add_css_class("strategy-target")
-    target_box.append(icon_picture("one-single-disk", 30))
-    target = Gtk.Label(
-        label=_("Target: {disk} ({size} — {model})", lang).format(
-            disk=shared.get("disk", "?"),
-            size=shared.get("disk_size", "?"),
-            model=shared.get("disk_model", "?"),
-        ),
-        halign=Gtk.Align.CENTER,
-        wrap=True,
-    )
-    target.add_css_class("dim-label")
-    target_box.append(target)
-    content.append(target_box)
 
     options = Gtk.Box(
         orientation=Gtk.Orientation.VERTICAL,

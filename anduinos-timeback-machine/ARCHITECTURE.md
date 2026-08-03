@@ -70,6 +70,11 @@ boot-time and package-manager transactions are implemented and tested.
 │       └── root
 ├── metadata/
 │   └── <deployment-id>.json
+├── home/
+│   ├── snapshots/
+│   │   └── <home-snapshot-id>
+│   └── metadata/
+│       └── <home-snapshot-id>.json
 └── transactions/
     ├── pending-rollback.json
     ├── pending-package.json
@@ -80,6 +85,13 @@ boot-time and package-manager transactions are implemented and tested.
 The deployment ID is a lowercase UUID. Metadata is stored outside `@root`, is
 written atomically, and is fsynced before a transaction advances. The schema is
 versioned and unknown schema versions are never mutated.
+
+System recovery points and Home snapshots are independent streams. System
+recovery points snapshot `@root` and carry the boot identity required for a
+full rollback. Home snapshots capture the independently mounted `@home`
+subvolume and are never offered as system rollback targets. Each stream has an
+independent automatic schedule and tiered retention policy; users may link the
+two policies when they want identical settings.
 
 `/var/log/anduinos-timeback/` contains persistent operation logs. It is useful
 diagnostic evidence but is not authoritative transaction state.

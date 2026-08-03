@@ -8,6 +8,7 @@ icon theme.
 | --- | --- |
 | `welcome.svg` | `anduinos-oobe/resources/icons/anduinos-oobe.svg` |
 | `keyboard.svg` | `anduinos-oobe/resources/icons/keyboard.svg` |
+| `network.svg` | Package-local Wi-Fi illustration derived from the Fluent network glyph |
 | `updates.svg` | `anduinos-oobe/resources/icons/yast-upgrade.svg` |
 | `disk.svg` | `anduinos-oobe/resources/icons/disk.svg` |
 | `coexistence.svg` | `anduinos-oobe/resources/icons/window-duplicate.svg` |

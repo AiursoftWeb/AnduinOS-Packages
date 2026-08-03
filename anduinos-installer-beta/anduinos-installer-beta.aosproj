@@ -1,13 +1,15 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.1-25+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-26+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer (beta) — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
+    <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
+    <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>resolute-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
@@ -28,6 +30,17 @@
          and aborts the build immediately when syntax, UT, or hygiene fails. -->
     <PrebuildCommand Run="bash compile-locales.sh" />
     <PrebuildCommand Run="bash scripts/prebuild-check.sh" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AppStreamApplication Include="assets/anduinos-installer-beta.desktop"
+                          Icon="assets/anduinos-installer-beta.svg" />
+    <AppStreamScreenshot Include="screenshots/storage.png" Default="true"
+                         Caption="Choose the target disk with a clear view of its current layout"
+                         Environment="GNOME:dark" />
+    <AppStreamScreenshot Include="screenshots/welcome.png"
+                         Caption="Choose your language and begin installing AnduinOS"
+                         Environment="GNOME:dark" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +68,8 @@
     <Dependency Include="squashfs-tools" />
     <Dependency Include="util-linux" />
     <Dependency Include="ubuntu-drivers-common" />
+    <Dependency Include="network-manager" />
+    <Dependency Include="gnome-control-center" />
     <Dependency Include="polkitd" />
   </ItemGroup>
 
@@ -62,9 +77,7 @@
     <!-- Unprivileged GTK launcher; root work stays behind narrow helpers. -->
     <IncludeFile Include="assets/anduinos-installer-beta"
                  Target="/usr/bin/anduinos-installer-beta" Mode="755" />
-    <!-- Desktop entry for app drawer -->
-    <IncludeFile Include="assets/anduinos-installer-beta.desktop"
-                 Target="/usr/share/applications/com.anduinos.InstallerBeta.desktop" Mode="644" />
+    <!-- AppStreamApplication installs the single app-drawer desktop entry. -->
     <!-- Independent copy of the box-and-AnduinOS-logo artwork. -->
     <IncludeFile Include="assets/anduinos-installer-beta.svg"
                  Target="/usr/share/icons/hicolor/scalable/apps/anduinos-installer-beta.svg" Mode="644" />

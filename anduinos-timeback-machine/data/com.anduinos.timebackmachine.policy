@@ -56,4 +56,17 @@
       <allow_active>auth_admin_keep</allow_active>
     </defaults>
   </action>
+
+  <action id="com.anduinos.timebackmachine.browse">
+    <description>Browse files in an AnduinOS snapshot</description>
+    <description xml:lang="zh_CN">浏览 AnduinOS 快照中的文件</description>
+    <message>Authentication is required to read files from a snapshot</message>
+    <message xml:lang="zh_CN">读取快照中的文件需要身份验证</message>
+    <icon_name>com.anduinos.timebackmachine</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+  </action>
 </policyconfig>

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-01 18:33+0800\n"
+"POT-Creation-Date: 2026-08-01 11:01+0000\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,753 +16,81 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.py:88
-msgid "AnduinOS Installer (Development)"
-msgstr "โปรแกรมติดตั้ง AnduinOS (Development)"
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose "
+"Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"การติดตั้งจริงจะสร้าง MOK เฉพาะเครื่อง หลังจากเริ่มต้นระบบใหม่ ให้เลือก Enroll MOK → "
+"Continue → Yes ใน MOKManager และป้อนรหัสผ่าน 123456"
+
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: "
+"123456"
+msgstr ""
+"\n"
+"บนหน้าจอ MOKManager สีน้ำเงิน ให้เลือก Enroll MOK → Continue → Yes รหัสผ่าน: 123456"
 
-#: src/main.py:90
-msgid "AnduinOS Installer (Beta)"
-msgstr "โปรแกรมติดตั้ง AnduinOS (Beta)"
-
-#: src/main.py:125
-msgid "Installation in progress"
-msgstr "กำลังดำเนินการติดตั้ง"
-
-#: src/main.py:127
-msgid "The installer cannot be closed while it is modifying the target disk."
-msgstr "โปรแกรมติดตั้งไม่สามารถปิดได้ขณะกำลังแก้ไขดิสก์เป้าหมาย"
-
-#: src/main.py:133
-msgid "Continue Installation"
-msgstr "ดำเนินการติดตั้งต่อ"
-
-#: src/pages.py:69
-msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
-msgstr "การอยู่ร่วมกันแบบมีผู้แนะนำต้องการระบบที่บูตในโหมด UEFI และดิสก์เป้าหมายรูปแบบ GPT ดิสก์นี้ไม่สามารถดำเนินการต่อในโหมดที่มีผู้แนะนำได้"
-
-#: src/pages.py:73
-msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
-msgstr "ไม่อาจอ่านแผนที่พาร์ติชันและเรขาคณิตของพื้นที่ว่างได้อย่างสอดคล้องกัน ไม่มีพื้นที่บนดิสก์นี้ได้รับอนุญาตสำหรับการติดตั้ง"
-
-#: src/pages.py:78
-msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
-msgstr "ดิสก์ GPT หรือพาร์ติชันใดพาร์ติชันหนึ่งไม่มีตัวระบุที่เสถียรและไม่ซ้ำใคร การอยู่ร่วมกันแบบแนะนำไม่สามารถอนุญาตการเก็บรักษาหรือการเขียนบนดิสก์นี้ได้อย่างปลอดภัย"
-
-#: src/pages.py:83
-msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
-msgstr "ดิสก์นี้มีแมปเปอร์ แอเรย์ หรือโทโพโลยีบล็อกอุปกรณ์แบบซ้อนอื่นๆ ที่ใช้งานอยู่ ซึ่งการอยู่ร่วมกันแบบมีคำแนะนำไม่รองรับ"
-
-#: src/pages.py:87
-msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
-msgstr "มีพาร์ติชันดิสก์นี้ถูกเมาต์อยู่ โปรดยกเลิกการเมาต์และสแกนพื้นที่จัดเก็บข้อมูลใหม่ก่อนดำเนินการต่อ"
-
-#: src/pages.py:91
-msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
-msgstr "AnduinOS จะใช้พื้นที่ที่ยังไม่ได้จัดสรรที่เลือกไว้เท่านั้น โปรแกรมติดตั้งจะไม่ย่อขนาดหรือย้ายระบบไฟล์ที่มีอยู่"
-
-#: src/pages.py:95
-msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
-msgstr "พาร์ติชัน Windows, recovery และข้อมูลที่มีอยู่เดิมจะไม่ถูกเขียนทับและจะได้รับการรักษาไว้"
-
-#: src/pages.py:99
-msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
-msgstr "พาร์ติชันระบบ EFI ที่มีอยู่เป็นเพียงตัวเลือกเท่านั้น ต้องผ่านการตรวจสอบสุขภาพและพื้นที่ว่างก่อนจึงจะสามารถนำกลับมาใช้ใหม่ได้ และจะไม่มีการจัดรูปแบบใดๆ"
-
-#: src/pages.py:104
-msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
-msgstr "พื้นที่จัดเก็บข้อมูล BitLocker จะถูกเก็บรักษาไว้ โปรแกรมติดตั้งจะไม่ปลดล็อก ปรับขนาด ซ่อมแซม หรือแก้ไขในรูปแบบอื่น ๆ"
-
-#: src/pages.py:108
-msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
-msgstr "โปรแกรมติดตั้งจะไม่ทำการเมาต์ ซ่อมแซม หรือประเมินความปลอดภัยของโวลุ่ม Windows จากสถานะพักเครื่อง (Hibernation) หรือการเริ่มต้นอย่างรวดเร็ว (Fast Startup) การบำรุงรักษา Windows ที่จำเป็นทั้งหมดต้องดำเนินการเสร็จสิ้นใน Windows"
-
-#: src/pages.py:113
-msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
-msgstr "หรือคุณสามารถเลือกพาร์ติชันทั้งหมดเพื่อลบอย่างชัดเจน ทุกสิ่งในพาร์ติชันที่เลือกจะถูกทำลาย; จะไม่มีการเลือกโดยอัตโนมัติ"
-
-#: src/pages.py:118
-msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
-msgstr "ไม่สามารถดำเนินการติดตั้งต่อได้ด้วยการเลือกนี้ ไม่มีตัวเลือกบังคับให้ดำเนินการต่อบนการตรวจสอบความปลอดภัยการจัดเก็บข้อมูล"
-
-#: src/pages.py:122
-msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
-msgstr "หลังจากเปลี่ยนพาร์ติชันหรือยกเลิกการเมาต์ปริมาณข้อมูล โปรดสแกนพื้นที่จัดเก็บข้อมูลใหม่และเลือกเป้าหมายอีกครั้ง"
-
-#: src/pages.py:128
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
-msgstr "ไม่พบพื้นที่ที่ไม่ได้จัดสรรที่เหมาะสม เพื่อปกป้องข้อมูลของคุณ โปรดสร้างพื้นที่ที่ไม่ได้จัดสรรด้วย Windows Disk Management จากนั้นบูตโปรแกรมติดตั้งอีกครั้งและสแกนดิสก์ใหม่"
-
-#: src/pages.py:133
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
-msgstr "ไม่พบพื้นที่ที่ไม่ได้จัดสรรที่เหมาะสม เพื่อปกป้องข้อมูลของคุณ โปรดสร้างพื้นที่ที่ไม่ได้จัดสรรด้วยเครื่องมือจัดการพาร์ติชัน จากนั้นบูตโปรแกรมติดตั้งอีกครั้งและสแกนดิสก์ใหม่"
-
-#: src/pages.py:204 src/pages.py:374
-msgid "Next"
-msgstr "ถัดไป"
-
-#: src/pages.py:211 src/pages.py:373 src/pages.py:2341
-msgid "Back"
-msgstr "ย้อนกลับ"
-
-#: src/pages.py:287 src/pages.py:371
-msgid "AnduinOS Installer"
-msgstr "โปรแกรมติดตั้ง AnduinOS"
-
-#: src/pages.py:367
-msgid "Welcome to AnduinOS"
-msgstr "ยินดีต้อนรับสู่ AnduinOS"
-
-#: src/pages.py:369
-msgid "Choose your language to begin installation"
-msgstr "เลือกภาษาของคุณเพื่อเริ่มต้นการติดตั้ง"
-
-#: src/pages.py:405
-msgid "Navigation error"
-msgstr "ข้อผิดพลาดในการนำทาง"
-
-#: src/pages.py:408 src/pages.py:2363
-msgid "OK"
-msgstr "ตกลง"
-
-#: src/pages.py:440
-msgid "English (US)"
-msgstr "ภาษาอังกฤษ (สหรัฐอเมริกา)"
-
-#: src/pages.py:440
-msgid "English (UK)"
-msgstr "ภาษาอังกฤษ (สหราชอาณาจักร)"
-
-#: src/pages.py:441
-msgid "German"
-msgstr "ภาษาเยอรมัน"
-
-#: src/pages.py:441
-msgid "French"
-msgstr "ภาษาฝรั่งเศส"
-
-#: src/pages.py:441
-msgid "Italian"
-msgstr "ภาษาอิตาลี"
-
-#: src/pages.py:442
-msgid "Spanish"
-msgstr "ภาษาสเปน"
-
-#: src/pages.py:442
-msgid "Portuguese"
-msgstr "ภาษาโปรตุเกส"
-
-#: src/pages.py:443
-msgid "Portuguese (Brazil)"
-msgstr "ภาษาโปรตุเกส (บราซิล)"
-
-#: src/pages.py:443
-msgid "Danish"
-msgstr "ภาษาเดนมาร์ก"
-
-#: src/pages.py:444
-msgid "Swedish"
-msgstr "ภาษาสวีเดน"
-
-#: src/pages.py:444
-msgid "Norwegian"
-msgstr "ภาษาโนルเวย์"
-
-#: src/pages.py:445
-msgid "Finnish"
-msgstr "ภาษาฟินแลนด์"
-
-#: src/pages.py:445
-msgid "Dutch"
-msgstr "ภาษาดัตช์"
-
-#: src/pages.py:445
-msgid "Polish"
-msgstr "ภาษาโปแลนด์"
-
-#: src/pages.py:446
-msgid "Romanian"
-msgstr "ภาษาโรมาเนีย"
-
-#: src/pages.py:448
-msgid "Russian"
-msgstr "ภาษารัสเซีย"
-
-#: src/pages.py:448
-msgid "Ukrainian"
-msgstr "ภาษาอูเครน"
-
-#: src/pages.py:448
-msgid "Greek"
-msgstr "ภาษากรีก"
-
-#: src/pages.py:451
-msgid "Japanese"
-msgstr "ภาษาญี่ปุ่น"
-
-#: src/pages.py:451
-msgid "Korean"
-msgstr "ภาษากาหลี"
-
-#: src/pages.py:452
-msgid "Hindi (India)"
-msgstr "ภาษาฮินดี (อินเดีย)"
-
-#: src/pages.py:452
-msgid "Thai"
-msgstr "ภาษาไทย"
-
-#: src/pages.py:453
-msgid "Vietnamese"
-msgstr "ภาษาเวียดนาม"
-
-#: src/pages.py:453
-msgid "Arabic"
-msgstr "ภาษาอาหรับ"
-
-#: src/pages.py:454
-msgid "Turkish"
-msgstr "ภาษาตุรกี"
-
-#: src/pages.py:454
-msgid "Indonesian"
-msgstr "ภาษาอินโดนีเซีย"
-
-#: src/pages.py:461 src/pages.py:467 src/pages.py:507
-msgid "Keyboard Layout"
-msgstr "เลย์เอาต์คีย์บอร์ด"
-
-#: src/pages.py:499 src/pages.py:508
-msgid "Test your keyboard here…"
-msgstr "ทดสอบคีย์บอร์ดของคุณที่นี่…"
-
-#: src/pages.py:533 src/pages.py:539
-msgid "Updates and Drivers"
-msgstr "อัปเดตและไดรเวอร์"
-
-#: src/pages.py:556
-msgid "Download and install system updates during installation"
-msgstr "ดาวน์โหลดและติดตั้งอัปเดตระบบระหว่างการติดตั้ง"
-
-#: src/pages.py:559 src/pages.py:575
-msgid "Requires an Internet connection. The base installation remains available when offline."
-msgstr "ต้องการการเชื่อมต่ออินเทอร์เน็ต การติดตั้งพื้นฐานจะยังคงใช้งานได้ในขณะที่ออฟไลน์"
-
-#: src/pages.py:568
-msgid "Install third-party drivers for this device"
-msgstr "ติดตั้งไดรเวอร์บุคคลที่สามสำหรับอุปกรณ์นี้"
-
-#: src/pages.py:581
-msgid "Some drivers are proprietary or otherwise non-free software."
-msgstr "ไดรเวอร์บางตัวเป็นซอฟต์แวร์เฉพาะหรือซอฟต์แวร์ที่ไม่ใช่โอเพนซอร์ส"
-
-#: src/pages.py:641
-msgid "Storage Device"
-msgstr "อุปกรณ์จัดเก็บข้อมูล"
-
-#: src/pages.py:650
-msgid "No partition table"
-msgstr "ไม่มีตารางพาร์ติชัน"
-
-#: src/pages.py:673
-msgid "Current disk layout"
-msgstr "แผนผังดิสก์ปัจจุบัน"
-
-#: src/pages.py:693
-msgid "Unknown filesystem"
-msgstr "ระบบไฟล์ที่ไม่รู้จัก"
-
-#: src/pages.py:706
-#, python-brace-format
-msgid "Unallocated · {size}"
-msgstr "ยังไม่ได้จัดสรร · {size}"
-
-#: src/pages.py:713
-msgid "Partition details unavailable"
-msgstr "ไม่สามารถดูรายละเอียดพาร์ติชันได้"
-
-#: src/pages.py:728
-msgid "Windows detected"
-msgstr "ตรวจพบ Windows"
-
-#: src/pages.py:730
-msgid "BitLocker detected"
-msgstr "ตรวจพบ BitLocker"
-
-#: src/pages.py:732
-msgid "Live USB — excluded"
-msgstr "USB แบบ Live — ถูกละเว้น"
-
-#: src/pages.py:734
-msgid "Too small"
-msgstr "เล็กเกินไป"
-
-#: src/pages.py:751 src/pages.py:757
-msgid "Select Installation Disk"
-msgstr "เลือกดิสก์ติดตั้ง"
-
-#: src/pages.py:793
-msgid "Rescan Storage"
-msgstr "สแกนพื้นที่เก็บข้อมูลใหม่"
-
-#: src/pages.py:863
-msgid "No suitable disks found."
-msgstr "ไม่พบดิสก์ที่เหมาะสม"
-
-#: src/pages.py:917
-msgid "Choose Installation Method"
-msgstr "เลือกวิธีการติดตั้ง"
-
-#: src/pages.py:922
-msgid "How should AnduinOS use this disk?"
-msgstr "AnduinOS ควรใช้งานดิสก์นี้อย่างไร?"
-
-#: src/pages.py:937 src/pages.py:1191 src/pages.py:1425
-#, python-brace-format
-msgid "Target: {disk} ({size} — {model})"
-msgstr "เป้าหมาย: {disk} ({size} — {model})"
-
-#: src/pages.py:1014
-msgid "Erase every partition and all data on the selected disk."
-msgstr "ลบข้อมูลทุกพาร์ติชันและข้อมูลทั้งหมดบนดิสก์ที่เลือก"
-
-#: src/pages.py:1018
-msgid "Btrfs — recommended"
-msgstr "Btrfs — แนะนำ"
-
-#: src/pages.py:1022
-msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
-msgstr "เปิดใช้งาน subvolumes แบบแชร์พื้นที่, snapshots และ Timeback Machine"
-
-#: src/pages.py:1030
-msgid "ext4 — classic"
-msgstr "ext4 — คลาสสิก"
-
-#: src/pages.py:1033
-msgid "Uses a traditional single root filesystem."
-msgstr "ใช้ระบบไฟล์รูทแบบดั้งเดิมเพียงอันเดียว"
-
-#: src/pages.py:1039
-msgid "Advanced — keep existing systems"
-msgstr "ขั้นสูง — รักษาระบบที่มีอยู่"
-
-#: src/pages.py:1041
-msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-msgstr "ใช้พื้นที่ที่ยังไม่ได้จัดสรรไว้แล้วและรักษาพาร์ติชันที่มีอยู่ วิธีนี้คือทางเดียวสำหรับการอยู่ร่วมกันกับ Windows"
-
-#: src/pages.py:1089
-msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-msgstr "การทำงานร่วมกันขั้นสูงอาจส่งผลต่อสถานะเฟิร์มแวร์ EFI และอาจทำให้เกิดการกู้คืน BitLocker ไม่มีการย่อขนาดหรือซ่อมแซมปริมาณข้อมูลของ Windows"
-
-#: src/pages.py:1099
-#, python-brace-format
-msgid "ALL DATA on {disk} will be permanently erased."
-msgstr "ข้อมูลทั้งหมดบน {disk} จะถูกลบอย่างถาวร"
-
-#: src/pages.py:1135
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "dิสก์นี้มีขนาดเล็กเกินไปสำหรับการติดตั้งทั้งดิสก์ ขั้นสูงอาจดำเนินการต่อได้ก็ต่อเมื่อมีพื้นที่ที่ยังไม่ได้จัดสรรที่เหมาะสมเท่านั้น"
-
-#: src/pages.py:1145
-msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-msgstr "ตรวจพบพาร์ติชันที่มีอยู่เดิม สองตัวเลือกแรกจะลบพาร์ติชันเหล่านี้; ตัวเลือกขั้นสูงคือการรักษาพาร์ติชันไว้"
-
-#: src/pages.py:1178
-msgid "Advanced Storage"
-msgstr "พื้นที่จัดเก็บข้อมูลขั้นสูง"
-
-#: src/pages.py:1183
-msgid "Advanced: Install Alongside"
-msgstr "ขั้นสูง: ติดตั้งควบคู่ไปกับระบบเดิม"
-
-#: src/pages.py:1212
-msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-msgstr "ก่อนดำเนินการต่อ: อัปเดต Windows ให้เสร็จสิ้น ปิดใช้งานการเริ่มต้นแบบเร็วและโหมดพักเครื่อง และสำรองรหัสกู้คืน BitLocker ค่า EFI, Secure Boot, การวัดค่า TPM และลำดับการบูตอาจเปลี่ยนแปลงได้"
-
-#: src/pages.py:1219
-msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr "เส้นทางขั้นสูงนี้จะรักษาพาร์ติชันที่มีอยู่ไว้ แต่จะเปลี่ยนแปลงตารางพาร์ติชันของดิสก์ที่เลือกและสถานะการบูต EFI ของเครื่อง"
-
-#: src/pages.py:1250 src/pages.py:2113
-msgid "Filesystem"
-msgstr "ระบบไฟล์"
-
-#: src/pages.py:1253
-msgid "Btrfs (recommended)"
-msgstr "Btrfs (แนะนำ)"
-
-#: src/pages.py:1253
-msgid "ext4 (classic)"
-msgstr "ext4 (คลาสสิก)"
-
-#: src/pages.py:1263
-msgid "Unallocated space"
-msgstr "พื้นที่ที่ยังไม่ได้จัดสรร"
-
-#: src/pages.py:1271
-msgid "EFI System Partition"
-msgstr "พาร์ติชันระบบ EFI"
-
-#: src/pages.py:1285
-msgid "Rescan and Reselect Disk"
-msgstr "สแกนใหม่และเลือกดิสก์ใหม่"
-
-#: src/pages.py:1326
-msgid "Create a new 1 GiB AnduinOS EFI System Partition"
-msgstr "สร้างพาร์ติชัน EFI System สำหรับ AnduinOS ขนาด 1 GiB ใหม่"
-
-#: src/pages.py:1330
-#, python-brace-format
-msgid "Reuse {path} ({size})"
-msgstr "นำ {path} ({size}) กลับมาใช้งานอีกครั้ง"
-
-#: src/pages.py:1394
-#, python-brace-format
-msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-msgstr "ดิสก์ที่เลือกเปลี่ยนไปหรือหายไป กรุณากลับไปที่หน้าดิสก์และเลือกอีกครั้ง {error}"
-
-#: src/pages.py:1407
-msgid "The selected disk size changed. Return and select it again."
-msgstr "ขนาดของดิสก์ที่เลือกเปลี่ยนไป กรุณากลับไปและเลือกอีกครั้ง"
-
-#: src/pages.py:1417
-msgid "The selected disk topology changed. Review the disk and installation method again."
-msgstr "โครงสร้างของดิสก์ที่เลือกเปลี่ยนแปลงไป กรุณาตรวจสอบดิสก์และวิธีการติดตั้งอีกครั้ง"
-
-#: src/pages.py:1453
-#, python-brace-format
-msgid "{size} unallocated at {offset}"
-msgstr "พื้นที่ที่ไม่ได้จัดสรร {size} ที่ {offset}"
-
-#: src/pages.py:1579 src/pages.py:1585
-msgid "User Account"
-msgstr "บัญชีผู้ใช้"
-
-#: src/pages.py:1605 src/pages.py:1606
-msgid "Full Name"
-msgstr "ชื่อเต็ม"
-
-#: src/pages.py:1609 src/pages.py:1612
-msgid "Username"
-msgstr "ชื่อผู้ใช้"
-
-#: src/pages.py:1616 src/pages.py:1627
-msgid "Password"
-msgstr "รหัสผ่าน"
-
-#: src/pages.py:1620 src/pages.py:1628
-msgid "Confirm Password"
-msgstr "ยืนยันรหัสผ่าน"
-
-#: src/pages.py:1632
-msgid "Do not require a password for sudo commands"
-msgstr "ไม่ต้องใช้รหัสผ่านสำหรับคำสั่ง sudo"
-
-#: src/pages.py:1638 src/pages.py:1643 src/pages.py:2157
-msgid "Computer Name"
-msgstr "ชื่อคอมพิวเตอร์"
-
-#: src/pages.py:1669
-msgid "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
-msgstr "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
-
-#: src/pages.py:1680
-msgid "Install alongside requires a password-protected account."
-msgstr "การติดตั้งพร้อมกันจำเป็นต้องมีบัญชีที่ป้องกันด้วยรหัสผ่าน"
-
-#: src/pages.py:1691
-msgid "The two passwords do not match."
-msgstr "รหัสผ่านทั้งสองไม่ตรงกัน"
-
-#: src/pages.py:1695
-msgid "Password must be at least 6 characters."
-msgstr "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
-
-#: src/pages.py:1703
-msgid "Computer name contains invalid characters."
-msgstr "ชื่อคอมพิวเตอร์มีอักขระที่ไม่ถูกต้อง"
-
-#: src/pages.py:1756
-msgid "Return to Make Changes"
-msgstr "กลับไปแก้ไขการเปลี่ยนแปลง"
-
-#: src/pages.py:1763
-msgid "This configuration is very unsafe"
-msgstr "การกำหนดค่านี้ไม่ปลอดภัยอย่างยิ่ง"
-
-#: src/pages.py:1765
-msgid "Passwordless sudo is unsafe"
-msgstr "sudo โดยไม่ต้องใช้รหัสผ่านนั้นไม่ปลอดภัย"
-
-#: src/pages.py:1769
-msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
-msgstr "ระบบจะเข้าสู่ระบบบัญชีนี้โดยอัตโนมัติและอนุญาตให้รับสิทธิ์ผู้ดูแลระบบเต็มรูปแบบโดยไม่ต้องใช้รหัสผ่าน ใครก็ตามที่สามารถเข้าถึงทางกายภาพและโปรแกรมใดๆ ที่ทำงานในฐานะผู้ใช้รายนี้สามารถควบคุมระบบได้อย่างสมบูรณ์ ใช้สิ่งนี้เฉพาะสำหรับ kiosk เครื่องเสมือนชั่วคราว หรือสภาพแวดล้อมที่มีการควบคุมเท่านั้น"
-
-#: src/pages.py:1778
-msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
-msgstr "โปรแกรมใดๆ ที่ทำงานในฐานะผู้ใช้ของคุณสามารถรับสิทธิ์ผู้ดูแลระบบเต็มรูปแบบได้โดยไม่ต้องยืนยันตัวตน รหัสผ่านเข้าสู่ระบบของคุณยังคงป้องกันขั้นตอนการเข้าสู่ระบบ แต่จะไม่ป้องกัน sudo คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?"
-
-#: src/pages.py:1792
-msgid "Return and Set a Password"
-msgstr "กลับและตั้งรหัสผ่าน"
-
-#: src/pages.py:1798
-msgid "I Understand the Risk, Continue"
-msgstr "ฉันเข้าใจความเสี่ยงแล้ว ดำเนินการต่อ"
-
-#: src/pages.py:1822
-msgid "Administrator access would be locked"
-msgstr "การเข้าถึงของผู้ดูแลระบบจะถูกปิดใช้งาน"
-
-#: src/pages.py:1824
-msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
-msgstr "\\ต์บัญชีนี้ไม่มีรหัสผ่านสำหรับการเข้าสู่ระบบ แต่การใช้คำสั่ง sudo ยังคงต้องการรหัสผ่าน เนื่องจากบัญชี root ถูกปิดใช้งานโดยค่าเริ่มต้น คุณจึงไม่สามารถดำเนินการของผู้ดูแลระบบได้ ตั้งรหัสผ่านสำหรับบัญชีหรือเปิดใช้งาน sudo โดยไม่ต้องใช้รหัสผ่าน"
-
-#: src/pages.py:1895 src/pages.py:1901
-msgid "Select Timezone"
-msgstr "เลือกเขตเวลา"
-
-#: src/pages.py:1914
-msgid "Search timezones…"
-msgstr "ค้นหาเขตเวลา…"
-
-#: src/pages.py:1967
-msgid "Selected timezone"
-msgstr "เขตเวลาที่เลือก"
-
-#: src/pages.py:2035 src/pages.py:2041
-msgid "Ready to Install"
-msgstr "พร้อมที่จะติดตั้ง"
-
-#: src/pages.py:2056
-msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
-msgstr "โหมดการพัฒนา — แผนจะถูกตรวจสอบและจำลองการทำงาน ไม่สามารถเรียกใช้โปรแกรมที่มีสิทธิ์พิเศษหรือคำสั่งดิสก์ได้"
-
-#: src/pages.py:2081
-#, python-brace-format
-msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
-msgstr "{architecture} / {firmware} / Secure Boot: {secure_boot}"
-
-#: src/pages.py:2090
-#, python-brace-format
-msgid "Unavailable: {error}"
-msgstr "ใช้ไม่ได้: {error}"
-
-#: src/pages.py:2100
-msgid "single ext4 root filesystem"
-msgstr "ระบบไฟล์ ext4 แบบรากเดียว"
-
-#: src/pages.py:2103
-msgid "Language"
-msgstr "ภาษา"
-
-#: src/pages.py:2104
-msgid "Keyboard"
-msgstr "คีย์บอร์ด"
-
-#: src/pages.py:2106
-msgid "Target Disk"
-msgstr "ดิสก์เป้าหมาย"
-
-#: src/pages.py:2110
-msgid "Stable disk identity"
-msgstr "เอกลักษณ์ดิสก์ที่เสถียร"
-
-#: src/pages.py:2112
-msgid "Platform"
-msgstr "แพลตฟอร์ม"
-
-#: src/pages.py:2114
-msgid "Subvolumes"
-msgstr "ย่อยวอลุ่ม (Subvolumes)"
-
-#: src/pages.py:2115
-msgid "Swap"
-msgstr "สวอป (Swap)"
-
-#: src/pages.py:2117
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
-msgstr "Swap ขนาด 4 GiB (ลำดับความสำคัญ 10) + zram LZ4 ขนาด 50% ของ RAM (ลำดับความสำคัญ 100)"
+msgstr ""
+"Swap ขนาด 4 GiB (ลำดับความสำคัญ 10) + zram LZ4 ขนาด 50% ของ RAM (ลำดับความสำคัญ "
+"100)"
 
-#: src/pages.py:2121
-msgid "System updates"
-msgstr "อัปเดตระบบ"
-
-#: src/pages.py:2123
-msgid "download and install"
-msgstr "ดาวน์โหลดและติดตั้ง"
-
-#: src/pages.py:2125 src/pages.py:2131
-msgid "do not install"
-msgstr "ไม่ติดตั้ง"
-
-#: src/pages.py:2127
-msgid "Third-party drivers"
-msgstr "ไดรเวอร์บุคคลที่สาม"
-
-#: src/pages.py:2129
-msgid "detect and install (may include non-free software)"
-msgstr "ตรวจจับและติดตั้ง (อาจรวมซอฟต์แวร์ที่ไม่ใช่โอเพนซอร์ส)"
-
-#: src/pages.py:2133
-msgid "Secure Boot enrollment"
-msgstr "การลงทะเบียน Secure Boot"
-
-#: src/pages.py:2136
-msgid "create a machine-local MOK; enroll after reboot with password 123456"
-msgstr "สร้าง MOK เฉพาะเครื่อง; ลงทะเบียนหลังจากเริ่มระบบใหม่ด้วยรหัสผ่าน 123456"
-
-#: src/pages.py:2141
-msgid "not required"
-msgstr "ไม่จำเป็น"
-
-#: src/pages.py:2143
-msgid "User"
-msgstr "ผู้ใช้"
-
-#: src/pages.py:2146
-msgid "Account security"
-msgstr "ความปลอดภัยของบัญชี"
-
-#: src/pages.py:2148
-msgid "automatic login"
-msgstr "เข้าสู่ระบบอัตโนมัติ"
-
-#: src/pages.py:2150
-msgid "password required for login"
-msgstr "จำเป็นต้องใช้รหัสผ่านสำหรับเข้าสู่ระบบ"
-
-#: src/pages.py:2153
 msgid "; sudo does not require a password"
 msgstr "; sudo ไม่จำเป็นต้องใช้รหัสผ่าน"
 
-#: src/pages.py:2155
 msgid "; sudo requires the account password"
 msgstr "; sudo จำเป็นต้องใช้รหัสผ่านของบัญชี"
 
-#: src/pages.py:2159
-msgid "Timezone"
-msgstr "เขตเวลา"
-
-#: src/pages.py:2166
-msgid "Guided storage selection is missing. Rescan and select the target again."
-msgstr "ตัวเลือกการจัดเก็บข้อมูลแบบมีผู้แนะนำหายไป กรุณาสแกนใหม่และเลือกเป้าหมายอีกครั้ง"
-
-#: src/pages.py:2174
-#, python-brace-format
-msgid "{name}: {start}–{end} MiB"
-msgstr "{name}: {start}–{end} MiB"
-
-#: src/pages.py:2182
-#, python-brace-format
-msgid "{path} as {filesystem}"
-msgstr "{path} เป็น {filesystem}"
-
-#: src/pages.py:2190
-#, python-brace-format
-msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-msgstr "นำ {path} กลับมาใช้งานอีกครั้ง; ห้ามจัดรูปแบบเลย; ตรวจสอบสุขภาพ FAT, ตัวระบุ และพื้นที่ว่าง 64 MiB ก่อนเขียนข้อมูล"
-
-#: src/pages.py:2198
-msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-msgstr "สร้างและจัดรูปแบบพาร์ติชัน EFI System สำหรับ AnduinOS เฉพาะภายในพื้นที่ที่เลือก"
-
-#: src/pages.py:2203
-msgid "Storage mode"
-msgstr "โหมดการเก็บข้อมูล"
-
-#: src/pages.py:2204
-msgid "Install alongside"
-msgstr "ติดตั้งพร้อมกัน"
-
-#: src/pages.py:2205
-msgid "Selected unallocated space"
-msgstr "พื้นที่ที่ยังไม่ได้จัดสรรที่เลือกไว้"
-
-#: src/pages.py:2206
-#, python-brace-format
-msgid "{size} at {offset}"
-msgstr "{size} ที่ {offset}"
-
-#: src/pages.py:2210
-msgid "Preserved partitions"
-msgstr "Partition ที่เก็บรักษาไว้"
-
-#: src/pages.py:2211
-#, python-brace-format
-msgid "{count}: {paths}"
-msgstr "{count}: {paths}"
-
-#: src/pages.py:2215
-msgid "New partitions"
-msgstr "Partition ใหม่"
-
-#: src/pages.py:2217
-msgid "Formats"
-msgstr "จัดรูปแบบ"
-
-#: src/pages.py:2219
-msgid "EFI policy"
-msgstr "นโยบาย EFI"
-
-#: src/pages.py:2221
-msgid "Boot policy"
-msgstr "นโยบายการบูต"
-
-#: src/pages.py:2223
-msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr "เขียนเฉพาะ EFI/AnduinOS ห้ามเขียนทับ EFI/BOOT และต้องมีรายการ AnduinOS ใน NVRAM ที่ผ่านการตรวจสอบแล้ว"
-
-#: src/pages.py:2253
-msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
-msgstr "⚠ จะทำการแบ่งพาร์ติชันและจัดรูปแบบเฉพาะพื้นที่ที่ไม่ได้จัดสรรที่เลือกไว้เท่านั้น พาร์ติชันที่มีอยู่เดิมจะได้รับการรักษาไว้ แต่ไฟล์ EFI/AnduinOS และรายการบูตเฟิร์มแวร์ AnduinOS อาจเปลี่ยนแปลง ตัวติดตั้งนี้จะไม่ย่อขนาด Windows ให้คุณ"
-
-#: src/pages.py:2261
-msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
-msgstr "⚠ การกระทำนี้จะลบข้อมูลทั้งหมดบนดิสก์ที่เลือก ไม่สามารถย้อนกลับการกระทำนี้ได้"
-
-#: src/pages.py:2287
-msgid "Validate this installation plan?"
-msgstr "ต้องการตรวจสอบแผนการติดตั้งนี้หรือไม่?"
-
-#: src/pages.py:2288
-msgid "Validate Plan (No Installation)"
-msgstr "ตรวจสอบแผน (ไม่ติดตั้ง)"
-
-#: src/pages.py:2290
-msgid "Install in the selected free space?"
-msgstr "ต้องการติดตั้งในเนื้อที่ว่างที่เลือกหรือไม่?"
-
-#: src/pages.py:2291 src/pages.py:2380
-msgid "Install Alongside"
-msgstr "ติดตั้งพร้อมกัน"
-
-#: src/pages.py:2293
-msgid "Erase the entire selected disk?"
-msgstr "ต้องการลบดิสก์ที่เลือกทั้งหมดหรือไม่?"
-
-#: src/pages.py:2294
-msgid "Erase Disk and Install"
-msgstr "ลบดิสก์และติดตั้ง"
-
-#: src/pages.py:2301
-#, python-brace-format
 msgid ""
-"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
-"\n"
+"A partition on this disk is mounted. Unmount it and rescan storage before "
+"continuing."
 msgstr ""
-"โหมดพัฒนาจะจำลองการติดตั้งไปยัง {disk} ข้อมูลบนดิสก์จะไม่มีการเปลี่ยนแปลง\n"
-"\n"
+"มีพาร์ติชันดิสก์นี้ถูกเมาต์อยู่ โปรดยกเลิกการเมาต์และสแกนพื้นที่จัดเก็บข้อมูลใหม่ก่อนดำเนินการต่อ"
 
-#: src/pages.py:2307
-#, python-brace-format
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "ข้อมูลทั้งหมดบน {disk} จะถูกลบอย่างถาวร"
+
+msgid "Account security"
+msgstr "ความปลอดภัยของบัญชี"
+
+msgid "Administrator access would be locked"
+msgstr "การเข้าถึงของผู้ดูแลระบบจะถูกปิดใช้งาน"
+
+msgid "Advanced Storage"
+msgstr "พื้นที่จัดเก็บข้อมูลขั้นสูง"
+
 msgid ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
-msgstr "AnduinOS จะใช้พื้นที่ที่ยังไม่ได้จัดสรรที่เลือกไว้บน {disk} เท่านั้น พาร์ติชันที่มีอยู่จะถูกเก็บรักษาไว้\n\n"
+"Advanced coexistence can affect EFI firmware state and may trigger BitLocker "
+"recovery. It never shrinks or repairs Windows volumes."
+msgstr ""
+"การทำงานร่วมกันขั้นสูงอาจส่งผลต่อสถานะเฟิร์มแวร์ EFI และอาจทำให้เกิดการกู้คืน BitLocker "
+"ไม่มีการย่อขนาดหรือซ่อมแซมปริมาณข้อมูลของ Windows"
 
-#: src/pages.py:2314
-#, python-brace-format
+msgid "Advanced — keep existing systems"
+msgstr "ขั้นสูง — รักษาระบบที่มีอยู่"
+
+msgid "Advanced: Install Alongside"
+msgstr "ขั้นสูง: ติดตั้งควบคู่ไปกับระบบเดิม"
+
+msgid ""
+"After changing partitions or unmounting a volume, rescan storage and select "
+"the target again."
+msgstr ""
+"หลังจากเปลี่ยนพาร์ติชันหรือยกเลิกการเมาต์ปริมาณข้อมูล "
+"โปรดสแกนพื้นที่จัดเก็บข้อมูลใหม่และเลือกเป้าหมายอีกครั้ง"
+
+msgid ""
+"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
+"then enter password 123456."
+msgstr ""
+"หลังจากเริ่มระบบใหม่ MOKManager จะเปิดขึ้น ให้เลือก Enroll MOK → Continue → Yes "
+"จากนั้นป้อนรหัสผ่าน 123456"
+
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -770,8 +98,546 @@ msgstr ""
 "พาร์ติชันและข้อมูลทั้งหมดบน {disk} จะถูกทำลาย\n"
 "\n"
 
-#: src/pages.py:2319
-#, python-brace-format
+msgid ""
+"Alternatively, you may explicitly select one entire partition to erase. "
+"Everything in that selected partition will be destroyed; it is never "
+"selected automatically."
+msgstr ""
+"หรือคุณสามารถเลือกพาร์ติชันทั้งหมดเพื่อลบอย่างชัดเจน ทุกสิ่งในพาร์ติชันที่เลือกจะถูกทำลาย; "
+"จะไม่มีการเลือกโดยอัตโนมัติ"
+
+msgid "AnduinOS Installer"
+msgstr "โปรแกรมติดตั้ง AnduinOS"
+
+msgid "AnduinOS Installer (Beta)"
+msgstr "โปรแกรมติดตั้ง AnduinOS (Beta)"
+
+msgid "AnduinOS Installer (Development)"
+msgstr "โปรแกรมติดตั้ง AnduinOS (Development)"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing "
+"partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS จะใช้พื้นที่ที่ยังไม่ได้จัดสรรที่เลือกไว้บน {disk} เท่านั้น พาร์ติชันที่มีอยู่จะถูกเก็บรักษาไว้\n"
+"\n"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space. The installer will "
+"not shrink or move an existing filesystem."
+msgstr ""
+"AnduinOS จะใช้พื้นที่ที่ยังไม่ได้จัดสรรที่เลือกไว้เท่านั้น "
+"โปรแกรมติดตั้งจะไม่ย่อขนาดหรือย้ายระบบไฟล์ที่มีอยู่"
+
+msgid ""
+"Any program running as your user can obtain full administrator privileges "
+"without authentication. Your login password still protects sign-in, but it "
+"will not protect sudo. Are you sure you want to continue?"
+msgstr ""
+"โปรแกรมใดๆ ที่ทำงานในฐานะผู้ใช้ของคุณสามารถรับสิทธิ์ผู้ดูแลระบบเต็มรูปแบบได้โดยไม่ต้องยืนยันตัวตน "
+"รหัสผ่านเข้าสู่ระบบของคุณยังคงป้องกันขั้นตอนการเข้าสู่ระบบ แต่จะไม่ป้องกัน sudo "
+"คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?"
+
+msgid "Arabic"
+msgstr "ภาษาอาหรับ"
+
+msgid "Back"
+msgstr "ย้อนกลับ"
+
+msgid ""
+"Before continuing: finish Windows updates, disable Fast Startup and "
+"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
+"measurements and boot order can change."
+msgstr ""
+"ก่อนดำเนินการต่อ: อัปเดต Windows ให้เสร็จสิ้น ปิดใช้งานการเริ่มต้นแบบเร็วและโหมดพักเครื่อง "
+"และสำรองรหัสกู้คืน BitLocker ค่า EFI, Secure Boot, การวัดค่า TPM "
+"และลำดับการบูตอาจเปลี่ยนแปลงได้"
+
+msgid "BitLocker detected"
+msgstr "ตรวจพบ BitLocker"
+
+msgid ""
+"BitLocker storage will be preserved. The installer will not unlock, resize, "
+"repair or otherwise modify it."
+msgstr ""
+"พื้นที่จัดเก็บข้อมูล BitLocker จะถูกเก็บรักษาไว้ โปรแกรมติดตั้งจะไม่ปลดล็อก ปรับขนาด ซ่อมแซม "
+"หรือแก้ไขในรูปแบบอื่น ๆ"
+
+msgid "Boot policy"
+msgstr "นโยบายการบูต"
+
+msgid "Btrfs (recommended)"
+msgstr "Btrfs (แนะนำ)"
+
+msgid "Btrfs — recommended"
+msgstr "Btrfs — แนะนำ"
+
+msgid "Cannot create installation plan"
+msgstr "ไม่สามารถสร้างแผนการติดตั้งได้"
+
+msgid "Choose Installation Method"
+msgstr "เลือกวิธีการติดตั้ง"
+
+msgid "Choose one target disk. Storage settings come next."
+msgstr "เลือกดิสก์เป้าหมายหนึ่งรายการ การตั้งค่าพื้นที่จัดเก็บจะตามมาในลำดับถัดไป"
+
+msgid "Choose optional software to install"
+msgstr "เลือกซอฟต์แวร์เสริมที่ต้องการติดตั้ง"
+
+msgid "Choose your language to begin installation"
+msgstr "เลือกภาษาของคุณเพื่อเริ่มต้นการติดตั้ง"
+
+msgid "Choose your location to set the system clock"
+msgstr "เลือกตำแหน่งที่ตั้งของคุณเพื่อตั้งนาฬิกาของระบบ"
+
+msgid "Complete"
+msgstr "เสร็จสิ้น"
+
+msgid "Computer Name"
+msgstr "ชื่อคอมพิวเตอร์"
+
+msgid "Computer name contains invalid characters."
+msgstr "ชื่อคอมพิวเตอร์มีอักขระที่ไม่ถูกต้อง"
+
+msgid "Configure account, region, and machine identity"
+msgstr "กำหนดค่าบัญชี ภูมิภาค และข้อมูลประจำเครื่อง"
+
+msgid "Configure storage and swap"
+msgstr "กำหนดการจัดเก็บข้อมูลและ swap"
+
+msgid "Confirm Password"
+msgstr "ยืนยันรหัสผ่าน"
+
+msgid "Confirm your keyboard layout"
+msgstr "ยืนยันเค้าโครงคีย์บอร์ดของคุณ"
+
+msgid "Continue Installation"
+msgstr "ดำเนินการติดตั้งต่อ"
+
+msgid "Copy AnduinOS system"
+msgstr "คัดลอกระบบ AnduinOS"
+
+msgid "Copy Log"
+msgstr "คัดลอกรายการบันทึก"
+
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "สร้างพาร์ติชัน EFI System สำหรับ AnduinOS ขนาด 1 GiB ใหม่"
+
+msgid ""
+"Create and format a dedicated AnduinOS EFI System Partition inside the "
+"selected space."
+msgstr "สร้างและจัดรูปแบบพาร์ติชัน EFI System สำหรับ AnduinOS เฉพาะภายในพื้นที่ที่เลือก"
+
+msgid "Create your user account"
+msgstr "สร้างบัญชีผู้ใช้ของคุณ"
+
+msgid "Current disk layout"
+msgstr "แผนผังดิสก์ปัจจุบัน"
+
+msgid ""
+"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
+"executor or disk command can run."
+msgstr ""
+"โหมดการพัฒนา — แผนจะถูกตรวจสอบและจำลองการทำงาน "
+"ไม่สามารถเรียกใช้โปรแกรมที่มีสิทธิ์พิเศษหรือคำสั่งดิสก์ได้"
+
+msgid "Danish"
+msgstr "ภาษาเดนมาร์ก"
+
+msgid "Detect Internet connectivity"
+msgstr "ตรวจจับการเชื่อมต่ออินเทอร์เน็ต"
+
+msgid "Detect firmware and Secure Boot"
+msgstr "ตรวจจับเฟิร์มแวร์และ Secure Boot"
+
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be "
+"changed.\n"
+"\n"
+msgstr ""
+"โหมดพัฒนาจะจำลองการติดตั้งไปยัง {disk} ข้อมูลบนดิสก์จะไม่มีการเปลี่ยนแปลง\n"
+"\n"
+
+msgid "Development simulation completed"
+msgstr "การจำลองการพัฒนาเสร็จสิ้น"
+
+msgid "Discover AnduinOS"
+msgstr "สำรวจ AnduinOS"
+
+msgid "Do not require a password for sudo commands"
+msgstr "ไม่ต้องใช้รหัสผ่านสำหรับคำสั่ง sudo"
+
+msgid "Download and install system updates during installation"
+msgstr "ดาวน์โหลดและติดตั้งอัปเดตระบบระหว่างการติดตั้ง"
+
+msgid "Dutch"
+msgstr "ภาษาดัตช์"
+
+msgid "EFI System Partition"
+msgstr "พาร์ติชันระบบ EFI"
+
+msgid "EFI policy"
+msgstr "นโยบาย EFI"
+
+msgid "Empty disk — no partitions"
+msgstr "ดิสก์ว่าง — ไม่มีพาร์ติชัน"
+
+msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr "เปิดใช้งาน subvolumes แบบแชร์พื้นที่, snapshots และ Timeback Machine"
+
+msgid "English (UK)"
+msgstr "ภาษาอังกฤษ (สหราชอาณาจักร)"
+
+msgid "English (US)"
+msgstr "ภาษาอังกฤษ (สหรัฐอเมริกา)"
+
+msgid "Ensure Timeback Machine is available"
+msgstr "ตรวจสอบว่า Timeback Machine พร้อมใช้งาน"
+
+msgid "Erase Disk and Install"
+msgstr "ลบดิสก์และติดตั้ง"
+
+msgid "Erase every partition and all data on the selected disk."
+msgstr "ลบข้อมูลทุกพาร์ติชันและข้อมูลทั้งหมดบนดิสก์ที่เลือก"
+
+msgid "Erase the entire selected disk?"
+msgstr "ต้องการลบดิสก์ที่เลือกทั้งหมดหรือไม่?"
+
+msgid ""
+"Existing Windows, recovery and data partitions remain outside the write set "
+"and will be preserved."
+msgstr "พาร์ติชัน Windows, recovery และข้อมูลที่มีอยู่เดิมจะไม่ถูกเขียนทับและจะได้รับการรักษาไว้"
+
+msgid ""
+"Existing partitions were detected. The first two choices delete them; "
+"Advanced is the preservation path."
+msgstr ""
+"ตรวจพบพาร์ติชันที่มีอยู่เดิม สองตัวเลือกแรกจะลบพาร์ติชันเหล่านี้; ตัวเลือกขั้นสูงคือการรักษาพาร์ติชันไว้"
+
+msgid ""
+"Existing partitions will be preserved. New AnduinOS partitions will be "
+"created only in the selected unallocated extent; EFI vendor files and the "
+"AnduinOS firmware boot entry may be updated."
+msgstr ""
+"พาร์ติชันที่มีอยู่เดิมจะถูกเก็บรักษาไว้ พาร์ติชัน AnduinOS "
+"ใหม่จะถูกสร้างขึ้นเฉพาะในพื้นที่ที่ยังไม่ได้จัดสรรเท่านั้น ไฟล์ผู้ผลิต EFI "
+"และรายการเริ่มต้นระบบเฟิร์มแวร์ของ AnduinOS อาจได้รับการอัปเดต"
+
+msgid "Filesystem"
+msgstr "ระบบไฟล์"
+
+msgid "Finalize target environment"
+msgstr "สรุปสภาพแวดล้อมเป้าหมาย"
+
+msgid "Finnish"
+msgstr "ภาษาฟินแลนด์"
+
+msgid "Formats"
+msgstr "จัดรูปแบบ"
+
+msgid "French"
+msgstr "ภาษาฝรั่งเศส"
+
+msgid "Full Name"
+msgstr "ชื่อเต็ม"
+
+msgid "German"
+msgstr "ภาษาเยอรมัน"
+
+msgid "Greek"
+msgstr "ภาษากรีก"
+
+msgid ""
+"Guided coexistence requires a system booted in UEFI mode and a GPT target "
+"disk. This disk cannot continue in guided mode."
+msgstr ""
+"การอยู่ร่วมกันแบบมีผู้แนะนำต้องการระบบที่บูตในโหมด UEFI และดิสก์เป้าหมายรูปแบบ GPT "
+"ดิสก์นี้ไม่สามารถดำเนินการต่อในโหมดที่มีผู้แนะนำได้"
+
+msgid ""
+"Guided storage selection is missing. Rescan and select the target again."
+msgstr "ตัวเลือกการจัดเก็บข้อมูลแบบมีผู้แนะนำหายไป กรุณาสแกนใหม่และเลือกเป้าหมายอีกครั้ง"
+
+msgid "Hindi (India)"
+msgstr "ภาษาฮินดี (อินเดีย)"
+
+msgid "How should AnduinOS use this disk?"
+msgstr "AnduinOS ควรใช้งานดิสก์นี้อย่างไร?"
+
+msgid "I Understand the Risk, Continue"
+msgstr "ฉันเข้าใจความเสี่ยงแล้ว ดำเนินการต่อ"
+
+msgid "Indonesian"
+msgstr "ภาษาอินโดนีเซีย"
+
+msgid "Install"
+msgstr "ติดตั้ง"
+
+msgid "Install Alongside"
+msgstr "ติดตั้งพร้อมกัน"
+
+msgid "Install alongside"
+msgstr "ติดตั้งพร้อมกัน"
+
+msgid "Install alongside requires a password-protected account."
+msgstr "การติดตั้งพร้อมกันจำเป็นต้องมีบัญชีที่ป้องกันด้วยรหัสผ่าน"
+
+msgid "Install bootloader"
+msgstr "ติดตั้ง bootloader"
+
+msgid "Install hardware drivers"
+msgstr "ติดตั้งไดรเวอร์ฮาร์ดแวร์"
+
+msgid "Install in the selected free space?"
+msgstr "ต้องการติดตั้งในเนื้อที่ว่างที่เลือกหรือไม่?"
+
+msgid "Install system updates"
+msgstr "ติดตั้งอัปเดตระบบ"
+
+msgid "Install third-party drivers for this device"
+msgstr "ติดตั้งไดรเวอร์บุคคลที่สามสำหรับอุปกรณ์นี้"
+
+msgid "Installation Complete"
+msgstr "การติดตั้งเสร็จสมบูรณ์"
+
+msgid "Installation Failed"
+msgstr "การติดตั้งล้มเหลว"
+
+msgid "Installation Steps"
+msgstr "ขั้นตอนการติดตั้ง"
+
+msgid ""
+"Installation cannot continue with this selection. There is no force-continue "
+"option around storage safety checks."
+msgstr ""
+"ไม่สามารถดำเนินการติดตั้งต่อได้ด้วยการเลือกนี้ "
+"ไม่มีตัวเลือกบังคับให้ดำเนินการต่อบนการตรวจสอบความปลอดภัยการจัดเก็บข้อมูล"
+
+msgid "Installation complete"
+msgstr "การติดตั้งเสร็จสมบูรณ์"
+
+msgid "Installation failed"
+msgstr "การติดตั้งล้มเหลว"
+
+msgid "Installation in progress"
+msgstr "กำลังดำเนินการติดตั้ง"
+
+msgid "Installing AnduinOS"
+msgstr "กำลังติดตั้ง AnduinOS"
+
+msgid "Italian"
+msgstr "ภาษาอิตาลี"
+
+msgid "Japanese"
+msgstr "ภาษาญี่ปุ่น"
+
+msgid "Keyboard"
+msgstr "คีย์บอร์ด"
+
+msgid "Keyboard Layout"
+msgstr "เลย์เอาต์คีย์บอร์ด"
+
+msgid "Korean"
+msgstr "ภาษากาหลี"
+
+msgid "Language"
+msgstr "ภาษา"
+
+msgid "Live USB — excluded"
+msgstr "USB แบบ Live — ถูกละเว้น"
+
+msgid "Mount target filesystems"
+msgstr "Mount ระบบไฟล์เป้าหมาย"
+
+msgid "Navigation error"
+msgstr "ข้อผิดพลาดในการนำทาง"
+
+msgid "New partitions"
+msgstr "Partition ใหม่"
+
+msgid "Next"
+msgstr "ถัดไป"
+
+msgid "Next slide"
+msgstr "สไลด์ถัดไป"
+
+msgid "No partition table"
+msgstr "ไม่มีตารางพาร์ติชัน"
+
+msgid "No suitable disks found."
+msgstr "ไม่พบดิสก์ที่เหมาะสม"
+
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with Windows Disk Management, then boot the installer "
+"again and rescan the disk."
+msgstr ""
+"ไม่พบพื้นที่ที่ไม่ได้จัดสรรที่เหมาะสม เพื่อปกป้องข้อมูลของคุณ โปรดสร้างพื้นที่ที่ไม่ได้จัดสรรด้วย Windows "
+"Disk Management จากนั้นบูตโปรแกรมติดตั้งอีกครั้งและสแกนดิสก์ใหม่"
+
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with a partitioning tool, then boot the installer again "
+"and rescan the disk."
+msgstr ""
+"ไม่พบพื้นที่ที่ไม่ได้จัดสรรที่เหมาะสม เพื่อปกป้องข้อมูลของคุณ "
+"โปรดสร้างพื้นที่ที่ไม่ได้จัดสรรด้วยเครื่องมือจัดการพาร์ติชัน "
+"จากนั้นบูตโปรแกรมติดตั้งอีกครั้งและสแกนดิสก์ใหม่"
+
+msgid "Norwegian"
+msgstr "ภาษาโนルเวย์"
+
+msgid "OK"
+msgstr "ตกลง"
+
+msgid "Output"
+msgstr "ผลลัพธ์"
+
+msgid "Output • Error"
+msgstr "ผลลัพธ์ • ข้อผิดพลาด"
+
+msgid "Output • {count} warning(s)"
+msgstr "ผลลัพธ์ • คำเตือน {count} รายการ"
+
+msgid "Partition details unavailable"
+msgstr "ไม่สามารถดูรายละเอียดพาร์ติชันได้"
+
+msgid "Password"
+msgstr "รหัสผ่าน"
+
+msgid "Password must be at least 6 characters."
+msgstr "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
+
+msgid "Passwordless sudo is unsafe"
+msgstr "sudo โดยไม่ต้องใช้รหัสผ่านนั้นไม่ปลอดภัย"
+
+msgid "Platform"
+msgstr "แพลตฟอร์ม"
+
+msgid "Please do not turn off your computer"
+msgstr "กรุณาอย่าปิดเครื่องคอมพิวเตอร์ของคุณ"
+
+msgid "Please review your choices before proceeding"
+msgstr "โปรดตรวจสอบการเลือกของคุณก่อนดำเนินการต่อ"
+
+msgid "Polish"
+msgstr "ภาษาโปแลนด์"
+
+msgid "Portuguese"
+msgstr "ภาษาโปรตุเกส"
+
+msgid "Portuguese (Brazil)"
+msgstr "ภาษาโปรตุเกส (บราซิล)"
+
+msgid "Prepare Secure Boot"
+msgstr "เตรียม Secure Boot"
+
+msgid "Prepare installation disk"
+msgstr "เตรียมดิสก์ติดตั้ง"
+
+msgid "Prepare target environment"
+msgstr "เตรียมสภาพแวดล้อมเป้าหมาย"
+
+msgid "Preparing installation…"
+msgstr "กำลังเตรียมการติดตั้ง…"
+
+msgid "Preserved partitions"
+msgstr "Partition ที่เก็บรักษาไว้"
+
+msgid "Previous slide"
+msgstr "สไลด์ก่อนหน้า"
+
+msgid "Ready to Install"
+msgstr "พร้อมที่จะติดตั้ง"
+
+msgid "Reboot Now"
+msgstr "เริ่มระบบใหม่ตอนนี้"
+
+msgid "Refresh package indexes"
+msgstr "รีเฟรชดัชนีแพ็กเกจ"
+
+msgid "Remove live-session components"
+msgstr "ลบส่วนประกอบของเซสชันแบบ live"
+
+msgid "Remove the installation media and restart your computer"
+msgstr "นำสื่อติดตั้งออกและเริ่มคอมพิวเตอร์ของคุณใหม่"
+
+msgid ""
+"Requires an Internet connection. The base installation remains available "
+"when offline."
+msgstr "ต้องการการเชื่อมต่ออินเทอร์เน็ต การติดตั้งพื้นฐานจะยังคงใช้งานได้ในขณะที่ออฟไลน์"
+
+msgid "Rescan Storage"
+msgstr "สแกนพื้นที่เก็บข้อมูลใหม่"
+
+msgid "Rescan and Reselect Disk"
+msgstr "สแกนใหม่และเลือกดิสก์ใหม่"
+
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "เริ่มระบบใหม่และลงทะเบียนคีย์ Secure Boot"
+
+msgid "Restart is disabled in development protection mode"
+msgstr "การเริ่มระบบใหม่ถูกปิดใช้งานในโหมดป้องกันการพัฒนา"
+
+msgid "Return and Set a Password"
+msgstr "กลับและตั้งรหัสผ่าน"
+
+msgid "Return to Make Changes"
+msgstr "กลับไปแก้ไขการเปลี่ยนแปลง"
+
+msgid "Reuse {path} ({size})"
+msgstr "นำ {path} ({size}) กลับมาใช้งานอีกครั้ง"
+
+msgid ""
+"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
+"before writing."
+msgstr ""
+"นำ {path} กลับมาใช้งานอีกครั้ง; ห้ามจัดรูปแบบเลย; ตรวจสอบสุขภาพ FAT, ตัวระบุ และพื้นที่ว่าง "
+"64 MiB ก่อนเขียนข้อมูล"
+
+msgid "Romanian"
+msgstr "ภาษาโรมาเนีย"
+
+msgid "Russian"
+msgstr "ภาษารัสเซีย"
+
+msgid "Save Log"
+msgstr "บันทึกรายการบันทึก"
+
+msgid "Schedule MOK enrollment"
+msgstr "กำหนดเวลาการลงทะเบียน MOK"
+
+msgid "Search timezones…"
+msgstr "ค้นหาเขตเวลา…"
+
+msgid "Secure Boot enrollment"
+msgstr "การลงทะเบียน Secure Boot"
+
+msgid "Select Installation Disk"
+msgstr "เลือกดิสก์ติดตั้ง"
+
+msgid "Select Timezone"
+msgstr "เลือกเขตเวลา"
+
+msgid "Select fastest package mirror"
+msgstr "เลือกมิเรอร์แพ็กเกจที่เร็วที่สุด"
+
+msgid "Selected timezone"
+msgstr "เขตเวลาที่เลือก"
+
+msgid "Selected unallocated space"
+msgstr "พื้นที่ที่ยังไม่ได้จัดสรรที่เลือกไว้"
+
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr "ไดรเวอร์บางตัวเป็นซอฟต์แวร์เฉพาะหรือซอฟต์แวร์ที่ไม่ใช่โอเพนซอร์ส"
+
+msgid "Spanish"
+msgstr "ภาษาสเปน"
+
+msgid "Stable disk identity"
+msgstr "เอกลักษณ์ดิสก์ที่เสถียร"
+
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -779,262 +645,312 @@ msgstr ""
 "เอกลักษณ์ที่เสถียร: {stable_id}\n"
 "\n"
 
-#: src/pages.py:2323
+msgid "Storage Device"
+msgstr "อุปกรณ์จัดเก็บข้อมูล"
+
+msgid "Storage mode"
+msgstr "โหมดการเก็บข้อมูล"
+
+msgid "Subvolumes"
+msgstr "ย่อยวอลุ่ม (Subvolumes)"
+
+msgid "Swap"
+msgstr "สวอป (Swap)"
+
+msgid "Swedish"
+msgstr "ภาษาสวีเดน"
+
+msgid "System updates"
+msgstr "อัปเดตระบบ"
+
+msgid "Target Disk"
+msgstr "ดิสก์เป้าหมาย"
+
+msgid "Target: {disk} ({size} — {model})"
+msgstr "เป้าหมาย: {disk} ({size} — {model})"
+
+msgid "Test your keyboard here…"
+msgstr "ทดสอบคีย์บอร์ดของคุณที่นี่…"
+
+msgid "Thai"
+msgstr "ภาษาไทย"
+
+msgid ""
+"The GPT disk or one of its partitions has no unique stable identifier. "
+"Guided coexistence cannot safely authorize preservation or writes on this "
+"disk."
+msgstr ""
+"ดิสก์ GPT หรือพาร์ติชันใดพาร์ติชันหนึ่งไม่มีตัวระบุที่เสถียรและไม่ซ้ำใคร "
+"การอยู่ร่วมกันแบบแนะนำไม่สามารถอนุญาตการเก็บรักษาหรือการเขียนบนดิสก์นี้ได้อย่างปลอดภัย"
+
+msgid ""
+"The complete partition map and free-space geometry could not be read "
+"consistently. No space on this disk is authorized for installation."
+msgstr ""
+"ไม่อาจอ่านแผนที่พาร์ติชันและเรขาคณิตของพื้นที่ว่างได้อย่างสอดคล้องกัน "
+"ไม่มีพื้นที่บนดิสก์นี้ได้รับอนุญาตสำหรับการติดตั้ง"
+
+msgid ""
+"The existing EFI System Partition is only a candidate. Health and free-space "
+"checks must pass before it can be reused, and it will never be formatted."
+msgstr ""
+"พาร์ติชันระบบ EFI ที่มีอยู่เป็นเพียงตัวเลือกเท่านั้น "
+"ต้องผ่านการตรวจสอบสุขภาพและพื้นที่ว่างก่อนจึงจะสามารถนำกลับมาใช้ใหม่ได้ "
+"และจะไม่มีการจัดรูปแบบใดๆ"
+
+msgid ""
+"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot "
+"state, or installed system was changed."
+msgstr ""
+"แผนการติดตั้งถูกต้อง ไม่มีดิสก์ ระบบไฟล์ bootloader สถานะ Secure Boot "
+"หรือระบบที่ติดตั้งถูกเปลี่ยนแปลง"
+
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "โปรแกรมติดตั้งไม่สามารถปิดได้ขณะกำลังแก้ไขดิสก์เป้าหมาย"
+
+msgid ""
+"The installer will not mount, repair or infer the safety of Windows volumes "
+"from hibernation or Fast Startup state. Any required Windows maintenance "
+"must be completed in Windows."
+msgstr ""
+"โปรแกรมติดตั้งจะไม่ทำการเมาต์ ซ่อมแซม หรือประเมินความปลอดภัยของโวลุ่ม Windows "
+"จากสถานะพักเครื่อง (Hibernation) หรือการเริ่มต้นอย่างรวดเร็ว (Fast Startup) "
+"การบำรุงรักษา Windows ที่จำเป็นทั้งหมดต้องดำเนินการเสร็จสิ้นใน Windows"
+
 msgid "The privileged executor is disabled."
 msgstr "โปรแกรมที่มีสิทธิ์พิเศษถูกปิดใช้งาน"
 
-#: src/pages.py:2326
-msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-msgstr "พาร์ติชันที่มีอยู่เดิมจะถูกเก็บรักษาไว้ พาร์ติชัน AnduinOS ใหม่จะถูกสร้างขึ้นเฉพาะในพื้นที่ที่ยังไม่ได้จัดสรรเท่านั้น ไฟล์ผู้ผลิต EFI และรายการเริ่มต้นระบบเฟิร์มแวร์ของ AnduinOS อาจได้รับการอัปเดต"
+msgid ""
+"The selected disk changed or disappeared. Return to the disk page and select "
+"it again. {error}"
+msgstr "ดิสก์ที่เลือกเปลี่ยนไปหรือหายไป กรุณากลับไปที่หน้าดิสก์และเลือกอีกครั้ง {error}"
 
-#: src/pages.py:2334
+msgid "The selected disk size changed. Return and select it again."
+msgstr "ขนาดของดิสก์ที่เลือกเปลี่ยนไป กรุณากลับไปและเลือกอีกครั้ง"
+
+msgid ""
+"The selected disk topology changed. Review the disk and installation method "
+"again."
+msgstr "โครงสร้างของดิสก์ที่เลือกเปลี่ยนแปลงไป กรุณาตรวจสอบดิสก์และวิธีการติดตั้งอีกครั้ง"
+
+msgid ""
+"The system will sign in to this account automatically and allow it to obtain "
+"full administrator privileges without a password. Anyone with physical "
+"access, and any program running as this user, can completely control the "
+"system. Use this only for a kiosk, temporary virtual machine, or another "
+"controlled environment."
+msgstr ""
+"ระบบจะเข้าสู่ระบบบัญชีนี้โดยอัตโนมัติและอนุญาตให้รับสิทธิ์ผู้ดูแลระบบเต็มรูปแบบโดยไม่ต้องใช้รหัสผ่าน "
+"ใครก็ตามที่สามารถเข้าถึงทางกายภาพและโปรแกรมใดๆ "
+"ที่ทำงานในฐานะผู้ใช้รายนี้สามารถควบคุมระบบได้อย่างสมบูรณ์ ใช้สิ่งนี้เฉพาะสำหรับ kiosk "
+"เครื่องเสมือนชั่วคราว หรือสภาพแวดล้อมที่มีการควบคุมเท่านั้น"
+
+msgid "The two passwords do not match."
+msgstr "รหัสผ่านทั้งสองไม่ตรงกัน"
+
+msgid "Third-party drivers"
+msgstr "ไดรเวอร์บุคคลที่สาม"
+
+msgid ""
+"This account has no login password, but sudo would still require one. "
+"Because the root account is locked by default, you would be unable to "
+"perform administrator tasks. Set an account password or enable passwordless "
+"sudo."
+msgstr ""
+"\\ต์บัญชีนี้ไม่มีรหัสผ่านสำหรับการเข้าสู่ระบบ แต่การใช้คำสั่ง sudo ยังคงต้องการรหัสผ่าน "
+"เนื่องจากบัญชี root ถูกปิดใช้งานโดยค่าเริ่มต้น คุณจึงไม่สามารถดำเนินการของผู้ดูแลระบบได้ "
+"ตั้งรหัสผ่านสำหรับบัญชีหรือเปิดใช้งาน sudo โดยไม่ต้องใช้รหัสผ่าน"
+
+msgid ""
+"This advanced path preserves existing partitions but changes the selected "
+"disk's partition table and the machine's EFI boot state."
+msgstr ""
+"เส้นทางขั้นสูงนี้จะรักษาพาร์ติชันที่มีอยู่ไว้ "
+"แต่จะเปลี่ยนแปลงตารางพาร์ติชันของดิสก์ที่เลือกและสถานะการบูต EFI ของเครื่อง"
+
+msgid "This configuration is very unsafe"
+msgstr "การกำหนดค่านี้ไม่ปลอดภัยอย่างยิ่ง"
+
+msgid ""
+"This disk contains an active mapper, array or other nested block-device "
+"topology that guided coexistence does not support."
+msgstr ""
+"ดิสก์นี้มีแมปเปอร์ แอเรย์ หรือโทโพโลยีบล็อกอุปกรณ์แบบซ้อนอื่นๆ ที่ใช้งานอยู่ "
+"ซึ่งการอยู่ร่วมกันแบบมีคำแนะนำไม่รองรับ"
+
+msgid ""
+"This disk is too small for whole-disk installation. Advanced may continue "
+"only if suitable unallocated space exists."
+msgstr ""
+"dิสก์นี้มีขนาดเล็กเกินไปสำหรับการติดตั้งทั้งดิสก์ "
+"ขั้นสูงอาจดำเนินการต่อได้ก็ต่อเมื่อมีพื้นที่ที่ยังไม่ได้จัดสรรที่เหมาะสมเท่านั้น"
+
 msgid "This installer does not shrink or preserve other systems."
 msgstr "โปรแกรมติดตั้งนี้ไม่สามารถย่อหรือรักษาระบบอื่นไว้ได้"
 
-#: src/pages.py:2360
-msgid "Cannot create installation plan"
-msgstr "ไม่สามารถสร้างแผนการติดตั้งได้"
+msgid "Timezone"
+msgstr "เขตเวลา"
 
-#: src/pages.py:2382
-msgid "Install"
-msgstr "ติดตั้ง"
+msgid "Too small"
+msgstr "เล็กเกินไป"
 
-#: src/pages.py:2398 src/pages.py:2404
-msgid "Installing AnduinOS"
-msgstr "กำลังติดตั้ง AnduinOS"
+msgid "Turkish"
+msgstr "ภาษาตุรกี"
 
-#: src/pages.py:2413
-msgid "Detect firmware and Secure Boot"
-msgstr "ตรวจจับเฟิร์มแวร์และ Secure Boot"
+msgid "Ukrainian"
+msgstr "ภาษาอูเครน"
 
-#: src/pages.py:2416
-msgid "Detect Internet connectivity"
-msgstr "ตรวจจับการเชื่อมต่ออินเทอร์เน็ต"
+msgid "Unallocated space"
+msgstr "พื้นที่ที่ยังไม่ได้จัดสรร"
 
-#: src/pages.py:2418
-msgid "Verify target disk isolation"
-msgstr "ตรวจสอบการแยกตัวของดิสก์เป้าหมาย"
+msgid "Unallocated · {size}"
+msgstr "ยังไม่ได้จัดสรร · {size}"
 
-#: src/pages.py:2419
-msgid "Prepare installation disk"
-msgstr "เตรียมดิสก์ติดตั้ง"
+msgid "Unavailable: {error}"
+msgstr "ใช้ไม่ได้: {error}"
 
-#: src/pages.py:2420
-msgid "Mount target filesystems"
-msgstr "Mount ระบบไฟล์เป้าหมาย"
+msgid "Unknown filesystem"
+msgstr "ระบบไฟล์ที่ไม่รู้จัก"
 
-#: src/pages.py:2421
-msgid "Copy AnduinOS system"
-msgstr "คัดลอกระบบ AnduinOS"
-
-#: src/pages.py:2422
-msgid "Configure storage and swap"
-msgstr "กำหนดการจัดเก็บข้อมูลและ swap"
-
-#: src/pages.py:2423
-msgid "Prepare target environment"
-msgstr "เตรียมสภาพแวดล้อมเป้าหมาย"
-
-#: src/pages.py:2424
-msgid "Remove live-session components"
-msgstr "ลบส่วนประกอบของเซสชันแบบ live"
-
-#: src/pages.py:2425
-msgid "Configure account, region, and machine identity"
-msgstr "กำหนดค่าบัญชี ภูมิภาค และข้อมูลประจำเครื่อง"
-
-#: src/pages.py:2427
-msgid "Select fastest package mirror"
-msgstr "เลือกมิเรอร์แพ็กเกจที่เร็วที่สุด"
-
-#: src/pages.py:2429
-msgid "Prepare Secure Boot"
-msgstr "เตรียม Secure Boot"
-
-#: src/pages.py:2430
-msgid "Refresh package indexes"
-msgstr "รีเฟรชดัชนีแพ็กเกจ"
-
-#: src/pages.py:2431
-msgid "Install system updates"
-msgstr "ติดตั้งอัปเดตระบบ"
-
-#: src/pages.py:2433
-msgid "Ensure Timeback Machine is available"
-msgstr "ตรวจสอบว่า Timeback Machine พร้อมใช้งาน"
-
-#: src/pages.py:2435
-msgid "Install hardware drivers"
-msgstr "ติดตั้งไดรเวอร์ฮาร์ดแวร์"
-
-#: src/pages.py:2437
-msgid "Verify kernel module signatures"
-msgstr "ตรวจสอบลายเซ็นของโมดูลเคอร์เนล"
-
-#: src/pages.py:2439
-msgid "Install bootloader"
-msgstr "ติดตั้ง bootloader"
-
-#: src/pages.py:2440
-msgid "Schedule MOK enrollment"
-msgstr "กำหนดเวลาการลงทะเบียน MOK"
-
-#: src/pages.py:2441
-msgid "Finalize target environment"
-msgstr "สรุปสภาพแวดล้อมเป้าหมาย"
-
-#: src/pages.py:2442
 msgid "Unmount installed system"
 msgstr "Unmount ระบบที่ติดตั้ง"
 
-#: src/pages.py:2480
-msgid "Installation Steps"
-msgstr "ขั้นตอนการติดตั้ง"
+msgid "Updates and Drivers"
+msgstr "อัปเดตและไดรเวอร์"
 
-#: src/pages.py:2516
-msgid "Copy Log"
-msgstr "คัดลอกรายการบันทึก"
-
-#: src/pages.py:2520
-msgid "Save Log"
-msgstr "บันทึกรายการบันทึก"
-
-#: src/pages.py:2591
-msgid "Previous slide"
-msgstr "สไลด์ก่อนหน้า"
-
-#: src/pages.py:2597
-msgid "Next slide"
-msgstr "สไลด์ถัดไป"
-
-#: src/pages.py:2642
-msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
-msgstr "หลังจากเริ่มระบบใหม่ MOKManager จะเปิดขึ้น ให้เลือก Enroll MOK → Continue → Yes จากนั้นป้อนรหัสผ่าน 123456"
-
-#: src/pages.py:2650
-msgid "Restart and Enroll Secure Boot Key"
-msgstr "เริ่มระบบใหม่และลงทะเบียนคีย์ Secure Boot"
-
-#: src/pages.py:2652
-msgid "Reboot Now"
-msgstr "เริ่มระบบใหม่ตอนนี้"
-
-#: src/pages.py:2673
-msgid "Discover AnduinOS"
-msgstr "สำรวจ AnduinOS"
-
-#: src/pages.py:2676
-msgid "Output"
-msgstr "ผลลัพธ์"
-
-#: src/pages.py:2679
-msgid "Complete"
-msgstr "เสร็จสิ้น"
-
-#: src/pages.py:2712
-msgid "Preparing installation…"
-msgstr "กำลังเตรียมการติดตั้ง…"
-
-#: src/pages.py:2758 src/pages.py:2824
-msgid "Installation complete"
-msgstr "การติดตั้งเสร็จสมบูรณ์"
-
-#: src/pages.py:2762
-msgid "Development simulation completed"
-msgstr "การจำลองการพัฒนาเสร็จสิ้น"
-
-#: src/pages.py:2765
-msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
-msgstr "แผนการติดตั้งถูกต้อง ไม่มีดิสก์ ระบบไฟล์ bootloader สถานะ Secure Boot หรือระบบที่ติดตั้งถูกเปลี่ยนแปลง"
-
-#: src/pages.py:2772
 msgid ""
-"\n"
-"\n"
-"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+"Use already-unallocated space and preserve existing partitions. This is the "
+"only Windows coexistence path."
 msgstr ""
-"\n"
-"\n"
-"การติดตั้งจริงจะสร้าง MOK เฉพาะเครื่อง หลังจากเริ่มต้นระบบใหม่ ให้เลือก Enroll MOK → Continue → Yes ใน MOKManager และป้อนรหัสผ่าน 123456"
+"ใช้พื้นที่ที่ยังไม่ได้จัดสรรไว้แล้วและรักษาพาร์ติชันที่มีอยู่ วิธีนี้คือทางเดียวสำหรับการอยู่ร่วมกันกับ Windows"
 
-#: src/pages.py:2779 src/pages.py:2789 src/pages.py:2932 src/pages.py:2934
-msgid "Installation Complete"
-msgstr "การติดตั้งเสร็จสมบูรณ์"
-
-#: src/pages.py:2781 src/pages.py:2790
-msgid "Remove the installation media and restart your computer"
-msgstr "นำสื่อติดตั้งออกและเริ่มคอมพิวเตอร์ของคุณใหม่"
-
-#: src/pages.py:2783
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"บนหน้าจอ MOKManager สีน้ำเงิน ให้เลือก Enroll MOK → Continue → Yes รหัสผ่าน: 123456"
-
-#: src/pages.py:2799
-msgid "Restart is disabled in development protection mode"
-msgstr "การเริ่มระบบใหม่ถูกปิดใช้งานในโหมดป้องกันการพัฒนา"
-
-#: src/pages.py:2807
-msgid "Installation failed"
-msgstr "การติดตั้งล้มเหลว"
-
-#: src/pages.py:2809
-msgid "Installation Failed"
-msgstr "การติดตั้งล้มเหลว"
-
-#: src/pages.py:2812 src/pages.py:2867
-msgid "Output • Error"
-msgstr "ผลลัพธ์ • ข้อผิดพลาด"
-
-#: src/pages.py:2862
-#, python-brace-format
-msgid "Output • {count} warning(s)"
-msgstr "ผลลัพธ์ • คำเตือน {count} รายการ"
-
-#: src/pages.py:2870
-#, python-brace-format
-msgid "{step} failed"
-msgstr "{step} ล้มเหลว"
-
-#: src/pages.py:715
-msgid "Empty disk — no partitions"
-msgstr "ดิสก์ว่าง — ไม่มีพาร์ติชัน"
-
-#: src/pages.py:468
-msgid "Confirm your keyboard layout"
-msgstr "ยืนยันเค้าโครงคีย์บอร์ดของคุณ"
-
-#: src/pages.py:540
-msgid "Choose optional software to install"
-msgstr "เลือกซอฟต์แวร์เสริมที่ต้องการติดตั้ง"
-
-#: src/pages.py:758
-msgid "Choose one target disk. Storage settings come next."
-msgstr "เลือกดิสก์เป้าหมายหนึ่งรายการ การตั้งค่าพื้นที่จัดเก็บจะตามมาในลำดับถัดไป"
-
-#: src/pages.py:923
-msgid "Choose a complete installation method, not only a filesystem."
-msgstr "เลือกวิธีการติดตั้งแบบสมบูรณ์ ไม่ใช่แค่ระบบไฟล์"
-
-#: src/pages.py:1184
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "ใช้เฉพาะพื้นที่ที่ยังไม่ได้จัดสรรที่มีอยู่บนดิสก์ที่เลือก"
 
-#: src/pages.py:1586
-msgid "Create your user account"
-msgstr "สร้างบัญชีผู้ใช้ของคุณ"
+msgid "User"
+msgstr "ผู้ใช้"
 
-#: src/pages.py:1902
-msgid "Choose your location to set the system clock"
-msgstr "เลือกตำแหน่งที่ตั้งของคุณเพื่อตั้งนาฬิกาของระบบ"
+msgid "User Account"
+msgstr "บัญชีผู้ใช้"
 
-#: src/pages.py:2042
-msgid "Please review your choices before proceeding"
-msgstr "โปรดตรวจสอบการเลือกของคุณก่อนดำเนินการต่อ"
+msgid "Username"
+msgstr "ชื่อผู้ใช้"
 
-#: src/pages.py:2405
-msgid "Please do not turn off your computer"
-msgstr "กรุณาอย่าปิดเครื่องคอมพิวเตอร์ของคุณ"
+msgid ""
+"Username must start with a lowercase ASCII letter and contain only lowercase "
+"ASCII letters or digits (maximum 16 characters)."
+msgstr ""
+"Username must start with a lowercase ASCII letter and contain only lowercase "
+"ASCII letters or digits (maximum 16 characters)."
+
+msgid "Uses a traditional single root filesystem."
+msgstr "ใช้ระบบไฟล์รูทแบบดั้งเดิมเพียงอันเดียว"
+
+msgid "Validate Plan (No Installation)"
+msgstr "ตรวจสอบแผน (ไม่ติดตั้ง)"
+
+msgid "Validate this installation plan?"
+msgstr "ต้องการตรวจสอบแผนการติดตั้งนี้หรือไม่?"
+
+msgid "Verify kernel module signatures"
+msgstr "ตรวจสอบลายเซ็นของโมดูลเคอร์เนล"
+
+msgid "Verify target disk isolation"
+msgstr "ตรวจสอบการแยกตัวของดิสก์เป้าหมาย"
+
+msgid "Vietnamese"
+msgstr "ภาษาเวียดนาม"
+
+msgid "Welcome to AnduinOS"
+msgstr "ยินดีต้อนรับสู่ AnduinOS"
+
+msgid "Windows detected"
+msgstr "ตรวจพบ Windows"
+
+msgid ""
+"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
+"AnduinOS NVRAM entry."
+msgstr ""
+"เขียนเฉพาะ EFI/AnduinOS ห้ามเขียนทับ EFI/BOOT และต้องมีรายการ AnduinOS ใน NVRAM "
+"ที่ผ่านการตรวจสอบแล้ว"
+
+msgid "automatic login"
+msgstr "เข้าสู่ระบบอัตโนมัติ"
+
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr "สร้าง MOK เฉพาะเครื่อง; ลงทะเบียนหลังจากเริ่มระบบใหม่ด้วยรหัสผ่าน 123456"
+
+msgid "detect and install (may include non-free software)"
+msgstr "ตรวจจับและติดตั้ง (อาจรวมซอฟต์แวร์ที่ไม่ใช่โอเพนซอร์ส)"
+
+msgid "do not install"
+msgstr "ไม่ติดตั้ง"
+
+msgid "download and install"
+msgstr "ดาวน์โหลดและติดตั้ง"
+
+msgid "ext4 (classic)"
+msgstr "ext4 (คลาสสิก)"
+
+msgid "ext4 — classic"
+msgstr "ext4 — คลาสสิก"
+
+msgid "not required"
+msgstr "ไม่จำเป็น"
+
+msgid "password required for login"
+msgstr "จำเป็นต้องใช้รหัสผ่านสำหรับเข้าสู่ระบบ"
+
+msgid "single ext4 root filesystem"
+msgstr "ระบบไฟล์ ext4 แบบรากเดียว"
+
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+msgid "{path} as {filesystem}"
+msgstr "{path} เป็น {filesystem}"
+
+msgid "{size} at {offset}"
+msgstr "{size} ที่ {offset}"
+
+msgid "{size} unallocated at {offset}"
+msgstr "พื้นที่ที่ไม่ได้จัดสรร {size} ที่ {offset}"
+
+msgid "{step} failed"
+msgstr "{step} ล้มเหลว"
+
+msgid ""
+"⚠ Only the selected unallocated space will be partitioned and formatted. "
+"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
+"firmware boot entry may change. This installer will not shrink Windows for "
+"you."
+msgstr ""
+"⚠ จะทำการแบ่งพาร์ติชันและจัดรูปแบบเฉพาะพื้นที่ที่ไม่ได้จัดสรรที่เลือกไว้เท่านั้น "
+"พาร์ติชันที่มีอยู่เดิมจะได้รับการรักษาไว้ แต่ไฟล์ EFI/AnduinOS และรายการบูตเฟิร์มแวร์ AnduinOS "
+"อาจเปลี่ยนแปลง ตัวติดตั้งนี้จะไม่ย่อขนาด Windows ให้คุณ"
+
+msgid ""
+"⚠ This will erase ALL data on the selected disk. This action cannot be "
+"undone."
+msgstr "⚠ การกระทำนี้จะลบข้อมูลทั้งหมดบนดิสก์ที่เลือก ไม่สามารถย้อนกลับการกระทำนี้ได้"
+
+#: src/pages.py
+msgid "Connect to the Internet"
+msgstr "เชื่อมต่ออินเทอร์เน็ต"
+
+#: src/pages.py
+msgid "Internet connection is ready."
+msgstr "การเชื่อมต่ออินเทอร์เน็ตพร้อมใช้งานแล้ว"
+
+#: src/pages.py
+msgid "Available Wi-Fi Networks"
+msgstr "เครือข่าย Wi-Fi ที่พร้อมใช้งาน"
+
+#~ msgid "Choose a complete installation method, not only a filesystem."
+#~ msgstr "เลือกวิธีการติดตั้งแบบสมบูรณ์ ไม่ใช่แค่ระบบไฟล์"

@@ -5,14 +5,25 @@ set -o pipefail
 real_carapace=/usr/lib/anduinos-bash-guess-command/carapace
 [[ -x "$real_carapace" ]] || exit 127
 
+# Carapace specifications may invoke installed command helpers. Run the entire
+# completion tree in a fresh unprivileged network namespace so neither a spec
+# nor a bridged helper can contact a local or remote network service. If the
+# kernel denies unprivileged namespaces, Carapace fails closed and ble.sh falls
+# back to the in-process history/context sources.
+network_sandbox=(unshare --user --map-root-user --net)
+
 # The initialization program is trusted package data and must remain byte-exact.
 if [[ ${1-} == _carapace ]]; then
-    exec timeout --signal=TERM --kill-after=20ms 200ms "$real_carapace" "$@"
+    exec timeout --signal=TERM --kill-after=0.020 0.200 \
+        "${network_sandbox[@]}" "$real_carapace" "$@"
 fi
 
 # Preserve TAB, LF, UTF-8 and Carapace's SOH field separator; drop other C0
 # controls and DEL. In particular this removes ESC without corrupting Unicode.
 completion_timeout=${ANDUINOS_GUESS_STATIC_TIMEOUT:-50ms}
 [[ $completion_timeout =~ ^([1-9][0-9]{0,2})ms$ ]] || completion_timeout=50ms
-timeout --signal=TERM --kill-after=20ms "$completion_timeout" \
-    "$real_carapace" "$@" | LC_ALL=C tr -d '\002-\010\013\014\016-\037\177'
+completion_timeout_ms=$((10#${completion_timeout%ms}))
+printf -v completion_timeout_seconds '0.%03d' "$completion_timeout_ms"
+timeout --signal=TERM --kill-after=0.020 "$completion_timeout_seconds" \
+    "${network_sandbox[@]}" "$real_carapace" "$@" | \
+    LC_ALL=C tr -d '\002-\010\013\014\016-\037\177'

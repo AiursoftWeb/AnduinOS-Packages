@@ -28,7 +28,7 @@ class LiveShortcutAssetTests(unittest.TestCase):
         self.assertTrue(icon.is_file())
         self.assertIn("<svg", icon.read_text())
         self.assertIn(
-            "/usr/share/applications/com.anduinos.InstallerBeta.desktop",
+            "/usr/share/applications/anduinos-installer-beta.desktop",
             script,
         )
         self.assertIn("metadata::trusted true", script)
@@ -45,13 +45,17 @@ class LiveShortcutAssetTests(unittest.TestCase):
             script,
         )
 
-    def test_desktop_file_target_matches_gtk_application_id(self):
+    def test_appstream_owns_the_single_desktop_entry_for_the_gtk_app(self):
         project = (
             PACKAGE / "anduinos-installer-beta.aosproj"
         ).read_text()
         main = (PACKAGE / "src/main.py").read_text()
         self.assertIn('APP_ID = "com.anduinos.InstallerBeta"', main)
         self.assertIn(
+            '<AppStreamApplication Include="assets/anduinos-installer-beta.desktop"',
+            project,
+        )
+        self.assertNotIn(
             'Target="/usr/share/applications/com.anduinos.InstallerBeta.desktop"',
             project,
         )

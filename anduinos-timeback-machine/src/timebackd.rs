@@ -8,8 +8,10 @@ use std::str::FromStr;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
+use anduinos_timeback::automatic_home::HomeSnapshotStore;
+use anduinos_timeback::automation::{AutomaticConfiguration, AutomaticPolicy, AutomaticStore};
+use anduinos_timeback::browsing::{self, SnapshotKind};
 use anduinos_timeback::layout;
-use anduinos_timeback::automation::{AutomaticPolicy, AutomaticStore};
 use anduinos_timeback::model::DeploymentId;
 use anduinos_timeback::operations::{OperationEngine, OperationError, OperationPhase};
 use anduinos_timeback::retention::{RetentionCoordinator, RetentionExecutionError};
@@ -17,7 +19,7 @@ use anduinos_timeback::rollback::{RollbackCoordinator, RollbackError, RollbackPr
 use anduinos_timeback::store::DeploymentStore;
 use anduinos_timeback::{CONTRACT_VERSION, DBUS_INTERFACE, DBUS_NAME, DBUS_PATH};
 use gio::glib;
-use gio::prelude::ToVariant;
+use gio::prelude::{ToVariant, UnixFDListExtManual};
 
 const INTROSPECTION_XML: &str = include_str!("../data/com.anduinos.timebackmachine.xml");
 const READ_ONLY_ERROR: &str = "com.anduinos.TimebackMachine1.Error.ReadOnlyMilestone";
@@ -27,6 +29,7 @@ const INVALID_ARGUMENT_ERROR: &str = "org.freedesktop.DBus.Error.InvalidArgs";
 const CREATE_ACTION: &str = "com.anduinos.timebackmachine.create";
 const MANAGE_ACTION: &str = "com.anduinos.timebackmachine.manage";
 const RESTORE_ACTION: &str = "com.anduinos.timebackmachine.restore";
+const BROWSE_ACTION: &str = "com.anduinos.timebackmachine.browse";
 
 struct DaemonOperationError {
     code: String,
@@ -134,21 +137,188 @@ fn register_api(
                             &error.to_string(),
                         ),
                     },
-                    "InspectAutomatic" => match AutomaticStore::default().status(chrono::Utc::now()) {
-                        Ok(status) => return_json(invocation, &status),
-                        Err(error) => invocation.return_dbus_error("com.anduinos.TimebackMachine1.Error.AutomaticUnavailable", &error.to_string()),
+                    "InspectAutomatic" => {
+                        match AutomaticStore::default().status(chrono::Utc::now()) {
+                            Ok(status) => return_json(invocation, &status),
+                            Err(error) => invocation.return_dbus_error(
+                                "com.anduinos.TimebackMachine1.Error.AutomaticUnavailable",
+                                &error.to_string(),
+                            ),
+                        }
+                    }
+                    "ListHomeSnapshots" => match HomeSnapshotStore::default().discover() {
+                        Ok(records) => return_json(invocation, &records),
+                        Err(error) => invocation.return_dbus_error(
+                            "com.anduinos.TimebackMachine1.Error.HomeSnapshotsUnavailable",
+                            &error,
+                        ),
                     },
-                    "SetAutomaticPolicy" => {
-                        let policy = match serde_json::from_str::<AutomaticPolicy>(&parameters.child_get::<String>(0)) {
-                            Ok(policy) => policy,
-                            Err(error) => { invocation.return_dbus_error(INVALID_ARGUMENT_ERROR, &format!("Invalid automatic policy: {error}")); return; }
+                    "ListSnapshotDirectory" => {
+                        let Some(sender) = sender else {
+                            invocation.return_dbus_error(
+                                AUTHORIZATION_ERROR,
+                                "The D-Bus caller is unknown",
+                            );
+                            return;
                         };
-                        start_operation(connection, sender, busy.clone(), Some(MANAGE_ACTION), invocation, move |connection, operation_id| {
-                            emit_progress(connection, operation_id, OperationPhase::Validate, 0.2, "Validating automatic snapshot policy");
-                            AutomaticStore::default().set_policy(&policy).map_err(|error| DaemonOperationError { code: "automatic-policy".into(), message: error.to_string() })?;
-                            emit_progress(connection, operation_id, OperationPhase::Commit, 1.0, "Automatic snapshot policy saved");
-                            Ok(if policy.enabled { "Automatic system snapshots enabled".into() } else { "Automatic system snapshots disabled".into() })
-                        });
+                        if let Err(message) = authorize(sender, BROWSE_ACTION) {
+                            invocation.return_dbus_error(AUTHORIZATION_ERROR, &message);
+                            return;
+                        }
+                        let kind = match SnapshotKind::parse(&parameters.child_get::<String>(0)) {
+                            Ok(kind) => kind,
+                            Err(error) => {
+                                return_browse_error(invocation, error);
+                                return;
+                            }
+                        };
+                        let snapshot_id = parameters.child_get::<String>(1);
+                        let path_json = parameters.child_get::<String>(2);
+                        let path = match serde_json::from_str::<Vec<String>>(&path_json) {
+                            Ok(path) => path,
+                            Err(error) => {
+                                invocation.return_dbus_error(
+                                    INVALID_ARGUMENT_ERROR,
+                                    &format!("Invalid snapshot browser path: {error}"),
+                                );
+                                return;
+                            }
+                        };
+                        match browsing::list_directory(kind, &snapshot_id, &path) {
+                            Ok(listing) => return_json(invocation, &listing),
+                            Err(error) => return_browse_error(invocation, error),
+                        }
+                    }
+                    "OpenSnapshotFile" => {
+                        let Some(sender) = sender else {
+                            invocation.return_dbus_error(
+                                AUTHORIZATION_ERROR,
+                                "The D-Bus caller is unknown",
+                            );
+                            return;
+                        };
+                        if let Err(message) = authorize(sender, BROWSE_ACTION) {
+                            invocation.return_dbus_error(AUTHORIZATION_ERROR, &message);
+                            return;
+                        }
+                        let kind = match SnapshotKind::parse(&parameters.child_get::<String>(0)) {
+                            Ok(kind) => kind,
+                            Err(error) => {
+                                return_browse_error(invocation, error);
+                                return;
+                            }
+                        };
+                        let snapshot_id = parameters.child_get::<String>(1);
+                        let path_json = parameters.child_get::<String>(2);
+                        let path = match serde_json::from_str::<Vec<String>>(&path_json) {
+                            Ok(path) => path,
+                            Err(error) => {
+                                invocation.return_dbus_error(
+                                    INVALID_ARGUMENT_ERROR,
+                                    &format!("Invalid snapshot browser path: {error}"),
+                                );
+                                return;
+                            }
+                        };
+                        match browsing::open_regular_file(kind, &snapshot_id, &path) {
+                            Ok((file, metadata)) => {
+                                let descriptors = gio::UnixFDList::new();
+                                let index = match descriptors.append(&file) {
+                                    Ok(index) => index,
+                                    Err(error) => {
+                                        invocation.return_dbus_error(
+                                            "com.anduinos.TimebackMachine1.Error.BrowseIo",
+                                            &format!("Could not transfer the snapshot file: {error}"),
+                                        );
+                                        return;
+                                    }
+                                };
+                                let metadata_json = match serde_json::to_string(&metadata) {
+                                    Ok(json) => json,
+                                    Err(error) => {
+                                        invocation.return_dbus_error(
+                                            "com.anduinos.TimebackMachine1.Error.Internal",
+                                            &format!("Could not encode file metadata: {error}"),
+                                        );
+                                        return;
+                                    }
+                                };
+                                invocation.return_value_with_unix_fd_list(
+                                    Some(&(glib::variant::Handle(index), metadata_json).to_variant()),
+                                    Some(&descriptors),
+                                );
+                            }
+                            Err(error) => return_browse_error(invocation, error),
+                        }
+                    }
+                    "SetAutomaticPolicy" => {
+                        let json = parameters.child_get::<String>(0);
+                        let configuration =
+                            match serde_json::from_str::<AutomaticConfiguration>(&json) {
+                                Ok(configuration) => configuration,
+                                Err(configuration_error) => {
+                                    match serde_json::from_str::<AutomaticPolicy>(&json) {
+                                        Ok(policy) => {
+                                            let mut configuration = match AutomaticStore::default()
+                                                .configuration()
+                                            {
+                                                Ok(configuration) => configuration,
+                                                Err(error) => {
+                                                    invocation.return_dbus_error(
+                                                        INVALID_ARGUMENT_ERROR,
+                                                        &format!(
+                                                            "Could not migrate the automatic policy: {error}"
+                                                        ),
+                                                    );
+                                                    return;
+                                                }
+                                            };
+                                            configuration.policies_linked = false;
+                                            configuration.system = policy;
+                                            configuration
+                                        }
+                                        Err(_) => {
+                                            invocation.return_dbus_error(
+                                                INVALID_ARGUMENT_ERROR,
+                                                &format!(
+                                                    "Invalid automatic policy: {configuration_error}"
+                                                ),
+                                            );
+                                            return;
+                                        }
+                                    }
+                                }
+                            };
+                        start_operation(
+                            connection,
+                            sender,
+                            busy.clone(),
+                            Some(MANAGE_ACTION),
+                            invocation,
+                            move |connection, operation_id| {
+                                emit_progress(
+                                    connection,
+                                    operation_id,
+                                    OperationPhase::Validate,
+                                    0.2,
+                                    "Validating automatic snapshot policy",
+                                );
+                                AutomaticStore::default()
+                                    .set_configuration(&configuration)
+                                    .map_err(|error| DaemonOperationError {
+                                        code: "automatic-policy".into(),
+                                        message: error.to_string(),
+                                    })?;
+                                emit_progress(
+                                    connection,
+                                    operation_id,
+                                    OperationPhase::Commit,
+                                    1.0,
+                                    "Automatic snapshot policy saved",
+                                );
+                                Ok("Automatic snapshot policies saved".into())
+                            },
+                        );
                     }
                     "CreateRecoveryPoint" => {
                         let title = parameters.child_get::<String>(0);
@@ -627,4 +797,25 @@ fn return_json<T: serde::Serialize>(invocation: gio::DBusMethodInvocation, value
             &format!("Could not serialize read-only report: {error}"),
         ),
     }
+}
+
+fn return_browse_error(
+    invocation: gio::DBusMethodInvocation,
+    error: anduinos_timeback::browsing::BrowseError,
+) {
+    let name = format!(
+        "com.anduinos.TimebackMachine1.Error.{}",
+        error
+            .code
+            .split('-')
+            .map(|part| {
+                let mut characters = part.chars();
+                match characters.next() {
+                    Some(first) => first.to_uppercase().collect::<String>() + characters.as_str(),
+                    None => String::new(),
+                }
+            })
+            .collect::<String>()
+    );
+    invocation.return_dbus_error(&name, &error.message);
 }

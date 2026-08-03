@@ -40,6 +40,12 @@ exclusive (estimated reclaimable) bytes. A Home directory that is not an
 independent compatible Btrfs subvolume is reported as unavailable and is never
 silently snapshotted as part of root.
 
+The Automatic Snapshots page exposes the complete schedule and tiered-retention
+policy. System and User Data may use independent policies, or users may link
+them and edit one shared policy. The overview reports the last successful and
+next planned snapshot for each active stream. Home snapshots are stored and
+retained independently from bootable System recovery points.
+
 ## Local development
 
 ```bash

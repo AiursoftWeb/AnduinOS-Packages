@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-01 18:33+0800\n"
+"POT-Creation-Date: 2026-08-01 11:01+0000\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,753 +16,82 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.py:88
-msgid "AnduinOS Installer (Development)"
-msgstr "Penginstal AnduinOS (Pengembangan)"
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose "
+"Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"Pemasangan asli akan membuat MOK lokal mesin. Setelah reboot, pilih Enroll "
+"MOK → Lanjutkan → Ya di MOKManager dan masukkan kata sandi 123456."
+
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: "
+"123456"
+msgstr ""
+"\n"
+"Pada layar biru MOKManager, pilih Enroll MOK → Lanjutkan → Ya, kata sandi: "
+"123456"
 
-#: src/main.py:90
-msgid "AnduinOS Installer (Beta)"
-msgstr "Penginstal AnduinOS (Beta)"
-
-#: src/main.py:125
-msgid "Installation in progress"
-msgstr "Instalasi sedang berlangsung"
-
-#: src/main.py:127
-msgid "The installer cannot be closed while it is modifying the target disk."
-msgstr "Penginstal tidak dapat ditutup saat memodifikasi disk target."
-
-#: src/main.py:133
-msgid "Continue Installation"
-msgstr "Lanjutkan Instalasi"
-
-#: src/pages.py:69
-msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
-msgstr "Koeksistensi terpandu memerlukan sistem yang dimulai dalam mode UEFI dan disk target GPT. Disk ini tidak dapat melanjutkan dalam mode terpandu."
-
-#: src/pages.py:73
-msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
-msgstr "Peta partisi lengkap dan geometri ruang kosong tidak dapat dibaca secara konsisten. Tidak ada ruang pada disk ini yang diotorisasi untuk instalasi."
-
-#: src/pages.py:78
-msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
-msgstr "Disk GPT atau salah satu partisi-nya tidak memiliki pengenal stabil yang unik. Koeksistensi terpandu tidak dapat secara aman mengotorisasi pelestarian atau penulisan pada disk ini."
-
-#: src/pages.py:83
-msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
-msgstr "Disk ini berisi mapper aktif, array, atau topologi perangkat blok bersarang lainnya yang tidak didukung oleh koeksistensi terpandu."
-
-#: src/pages.py:87
-msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
-msgstr "Sebuah partisi pada disk ini sedang dipasang (mounted). Lepaskan pemasangan dan pindai ulang penyimpanan sebelum melanjutkan."
-
-#: src/pages.py:91
-msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
-msgstr "AnduinOS hanya akan menggunakan ruang yang belum dialokasikan yang dipilih. Pemasang tidak akan mengecilkan atau memindahkan sistem berkas yang ada."
-
-#: src/pages.py:95
-msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
-msgstr "Partisi Windows, pemulihan, dan data yang ada tetap berada di luar set penulisan dan akan dipertahankan."
-
-#: src/pages.py:99
-msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
-msgstr "Partisi Sistem EFI yang ada hanyalah kandidat. Pemeriksaan kesehatan dan ruang kosong harus lulus sebelum dapat digunakan kembali, dan tidak akan pernah diformat."
-
-#: src/pages.py:104
-msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
-msgstr "Penyimpanan BitLocker akan dipertahankan. Pemasang tidak akan membuka kunci, mengubah ukuran, memperbaiki, atau memodifikasinya dengan cara lain."
-
-#: src/pages.py:108
-msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
-msgstr "Penginstal tidak akan memasang, memperbaiki, atau menyimpulkan keamanan volume Windows dari status hibernasi atau Startup Cepat. Pemeliharaan Windows yang diperlukan harus diselesaikan di Windows."
-
-#: src/pages.py:113
-msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
-msgstr "Sebagai alternatif, Anda dapat secara eksplisit memilih satu partisi utuh untuk dihapus. Semua isi pada partisi yang dipilih akan dihancurkan; partisi ini tidak pernah dipilih secara otomatis."
-
-#: src/pages.py:118
-msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
-msgstr "Pemasangan tidak dapat dilanjutkan dengan pilihan ini. Tidak ada opsi paksa-lanjutkan di sekitar pemeriksaan keamanan penyimpanan."
-
-#: src/pages.py:122
-msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
-msgstr "Setelah mengubah partisi atau melepaskan pemasangan volume, pindai ulang penyimpanan dan pilih target lagi."
-
-#: src/pages.py:128
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
-msgstr "Tidak ditemukan ruang yang belum dialokasikan yang sesuai. Untuk melindungi data Anda, buat ruang yang belum dialokasikan dengan Manajemen Disk Windows, lalu boot installer lagi dan pindai ulang disk."
-
-#: src/pages.py:133
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
-msgstr "Tidak ditemukan ruang yang belum dialokasikan yang sesuai. Untuk melindungi data Anda, buat ruang yang belum dialokasikan dengan alat partisi, lalu boot installer lagi dan pindai ulang disk."
-
-#: src/pages.py:204 src/pages.py:374
-msgid "Next"
-msgstr "Selanjutnya"
-
-#: src/pages.py:211 src/pages.py:373 src/pages.py:2341
-msgid "Back"
-msgstr "Kembali"
-
-#: src/pages.py:287 src/pages.py:371
-msgid "AnduinOS Installer"
-msgstr "Penginstal AnduinOS"
-
-#: src/pages.py:367
-msgid "Welcome to AnduinOS"
-msgstr "Selamat datang di AnduinOS"
-
-#: src/pages.py:369
-msgid "Choose your language to begin installation"
-msgstr "Pilih bahasa Anda untuk memulai instalasi"
-
-#: src/pages.py:405
-msgid "Navigation error"
-msgstr "Kesalahan navigasi"
-
-#: src/pages.py:408 src/pages.py:2363
-msgid "OK"
-msgstr "OKE"
-
-#: src/pages.py:440
-msgid "English (US)"
-msgstr "Bahasa Inggris (AS)"
-
-#: src/pages.py:440
-msgid "English (UK)"
-msgstr "Bahasa Inggris (UK)"
-
-#: src/pages.py:441
-msgid "German"
-msgstr "Jerman"
-
-#: src/pages.py:441
-msgid "French"
-msgstr "Prancis"
-
-#: src/pages.py:441
-msgid "Italian"
-msgstr "Italia"
-
-#: src/pages.py:442
-msgid "Spanish"
-msgstr "Spanyol"
-
-#: src/pages.py:442
-msgid "Portuguese"
-msgstr "Portugis"
-
-#: src/pages.py:443
-msgid "Portuguese (Brazil)"
-msgstr "Portugis (Brasil)"
-
-#: src/pages.py:443
-msgid "Danish"
-msgstr "Denmark"
-
-#: src/pages.py:444
-msgid "Swedish"
-msgstr "Swedia"
-
-#: src/pages.py:444
-msgid "Norwegian"
-msgstr "Norwegia"
-
-#: src/pages.py:445
-msgid "Finnish"
-msgstr "Finlandia"
-
-#: src/pages.py:445
-msgid "Dutch"
-msgstr "Belanda"
-
-#: src/pages.py:445
-msgid "Polish"
-msgstr "Polandia"
-
-#: src/pages.py:446
-msgid "Romanian"
-msgstr "Rumania"
-
-#: src/pages.py:448
-msgid "Russian"
-msgstr "Rusia"
-
-#: src/pages.py:448
-msgid "Ukrainian"
-msgstr "Ukraina"
-
-#: src/pages.py:448
-msgid "Greek"
-msgstr "Yunani"
-
-#: src/pages.py:451
-msgid "Japanese"
-msgstr "Jepang"
-
-#: src/pages.py:451
-msgid "Korean"
-msgstr "Korea"
-
-#: src/pages.py:452
-msgid "Hindi (India)"
-msgstr "India (Hindi)"
-
-#: src/pages.py:452
-msgid "Thai"
-msgstr "Bahasa Thailand"
-
-#: src/pages.py:453
-msgid "Vietnamese"
-msgstr "Vietnam"
-
-#: src/pages.py:453
-msgid "Arabic"
-msgstr "Arab"
-
-#: src/pages.py:454
-msgid "Turkish"
-msgstr "Turki"
-
-#: src/pages.py:454
-msgid "Indonesian"
-msgstr "Indonesia"
-
-#: src/pages.py:461 src/pages.py:467 src/pages.py:507
-msgid "Keyboard Layout"
-msgstr "Tata Letak Keyboard"
-
-#: src/pages.py:499 src/pages.py:508
-msgid "Test your keyboard here…"
-msgstr "Uji keyboard Anda di sini…"
-
-#: src/pages.py:533 src/pages.py:539
-msgid "Updates and Drivers"
-msgstr "Pembaruan dan Driver"
-
-#: src/pages.py:556
-msgid "Download and install system updates during installation"
-msgstr "Unduh dan instal pembaruan sistem selama instalasi"
-
-#: src/pages.py:559 src/pages.py:575
-msgid "Requires an Internet connection. The base installation remains available when offline."
-msgstr "Memerlukan koneksi Internet. Instalasi dasar tetap tersedia saat offline."
-
-#: src/pages.py:568
-msgid "Install third-party drivers for this device"
-msgstr "Instal driver pihak ketiga untuk perangkat ini"
-
-#: src/pages.py:581
-msgid "Some drivers are proprietary or otherwise non-free software."
-msgstr "Beberapa driver bersifat proprietary atau perangkat lunak non-bebas lainnya."
-
-#: src/pages.py:641
-msgid "Storage Device"
-msgstr "Perangkat Penyimpanan"
-
-#: src/pages.py:650
-msgid "No partition table"
-msgstr "Tidak ada tabel partisi"
-
-#: src/pages.py:673
-msgid "Current disk layout"
-msgstr "Tata letak disk saat ini"
-
-#: src/pages.py:693
-msgid "Unknown filesystem"
-msgstr "Sistem file tidak dikenal"
-
-#: src/pages.py:706
-#, python-brace-format
-msgid "Unallocated · {size}"
-msgstr "Tidak dialokasikan · {size}"
-
-#: src/pages.py:713
-msgid "Partition details unavailable"
-msgstr "Rincian partisi tidak tersedia"
-
-#: src/pages.py:728
-msgid "Windows detected"
-msgstr "Windows terdeteksi"
-
-#: src/pages.py:730
-msgid "BitLocker detected"
-msgstr "BitLocker terdeteksi"
-
-#: src/pages.py:732
-msgid "Live USB — excluded"
-msgstr "USB Langsung — dikecualikan"
-
-#: src/pages.py:734
-msgid "Too small"
-msgstr "Terlalu kecil"
-
-#: src/pages.py:751 src/pages.py:757
-msgid "Select Installation Disk"
-msgstr "Pilih Disk Instalasi"
-
-#: src/pages.py:793
-msgid "Rescan Storage"
-msgstr "Pindai Ulang Penyimpanan"
-
-#: src/pages.py:863
-msgid "No suitable disks found."
-msgstr "Tidak ditemukan disk yang sesuai."
-
-#: src/pages.py:917
-msgid "Choose Installation Method"
-msgstr "Pilih Metode Instalasi"
-
-#: src/pages.py:922
-msgid "How should AnduinOS use this disk?"
-msgstr "Bagaimana AnduinOS harus menggunakan disk ini?"
-
-#: src/pages.py:937 src/pages.py:1191 src/pages.py:1425
-#, python-brace-format
-msgid "Target: {disk} ({size} — {model})"
-msgstr "Tujuan: {disk} ({size} — {model})"
-
-#: src/pages.py:1014
-msgid "Erase every partition and all data on the selected disk."
-msgstr "Hapus setiap partisi dan semua data pada disk yang dipilih."
-
-#: src/pages.py:1018
-msgid "Btrfs — recommended"
-msgstr "Btrfs — direkomendasikan"
-
-#: src/pages.py:1022
-msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
-msgstr "Mengaktifkan subvolume ruang bersama, snapshot, dan Mesin Waktu Kembali."
-
-#: src/pages.py:1030
-msgid "ext4 — classic"
-msgstr "ext4 — klasik"
-
-#: src/pages.py:1033
-msgid "Uses a traditional single root filesystem."
-msgstr "Menggunakan sistem file root tunggal tradisional."
-
-#: src/pages.py:1039
-msgid "Advanced — keep existing systems"
-msgstr "Lanjutan — pertahankan sistem yang ada"
-
-#: src/pages.py:1041
-msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-msgstr "Gunakan ruang yang belum dialokasikan dan lestarikan partisi yang ada. Ini adalah satu-satunya jalur koeksistensi Windows."
-
-#: src/pages.py:1089
-msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-msgstr "Koeksistensi lanjutan dapat mempengaruhi status firmware EFI dan mungkin memicu pemulihan BitLocker. Fitur ini tidak pernah mengecilkan atau memperbaiki volume Windows."
-
-#: src/pages.py:1099
-#, python-brace-format
-msgid "ALL DATA on {disk} will be permanently erased."
-msgstr "SEMUA DATA pada {disk} akan dihapus secara permanen."
-
-#: src/pages.py:1135
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "Disk ini terlalu kecil untuk instalasi seluruh-disk. Lanjutan hanya dapat dilanjutkan jika ada ruang belum dialokasikan yang sesuai."
-
-#: src/pages.py:1145
-msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-msgstr "Partisi yang ada terdeteksi. Dua pilihan pertama menghapusnya; Lanjutan adalah jalur pelestarian."
-
-#: src/pages.py:1178
-msgid "Advanced Storage"
-msgstr "Penyimpanan Lanjutan"
-
-#: src/pages.py:1183
-msgid "Advanced: Install Alongside"
-msgstr "Lanjutan: Instal Bersamaan"
-
-#: src/pages.py:1212
-msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-msgstr "Sebelum melanjutkan: selesaikan pembaruan Windows, nonaktifkan Startup Cepat dan hibernasi, serta cadangkan kunci pemulihan BitLocker. EFI, Secure Boot, pengukuran TPM, dan urutan boot dapat berubah."
-
-#: src/pages.py:1219
-msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr "Jalur lanjutan ini mempertahankan partisi yang ada tetapi mengubah tabel partisi disk yang dipilih dan status boot EFI mesin."
-
-#: src/pages.py:1250 src/pages.py:2113
-msgid "Filesystem"
-msgstr "Sistem file"
-
-#: src/pages.py:1253
-msgid "Btrfs (recommended)"
-msgstr "Btrfs (direkomendasikan)"
-
-#: src/pages.py:1253
-msgid "ext4 (classic)"
-msgstr "ext4 (klasik)"
-
-#: src/pages.py:1263
-msgid "Unallocated space"
-msgstr "Ruang belum dialokasikan"
-
-#: src/pages.py:1271
-msgid "EFI System Partition"
-msgstr "Partisi Sistem EFI"
-
-#: src/pages.py:1285
-msgid "Rescan and Reselect Disk"
-msgstr "Pindai dan Pilih Ulang Cakram"
-
-#: src/pages.py:1326
-msgid "Create a new 1 GiB AnduinOS EFI System Partition"
-msgstr "Buat Partisi Sistem EFI AnduinOS 1 GiB baru"
-
-#: src/pages.py:1330
-#, python-brace-format
-msgid "Reuse {path} ({size})"
-msgstr "Gunakan kembali {path} ({size})"
-
-#: src/pages.py:1394
-#, python-brace-format
-msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-msgstr "Disk yang dipilih berubah atau hilang. Kembali ke halaman disk dan pilih lagi. {error}"
-
-#: src/pages.py:1407
-msgid "The selected disk size changed. Return and select it again."
-msgstr "Ukuran disk yang dipilih berubah. Kembali dan pilih lagi."
-
-#: src/pages.py:1417
-msgid "The selected disk topology changed. Review the disk and installation method again."
-msgstr "Topologi disk yang dipilih berubah. Tinjau kembali disk dan metode instalasi."
-
-#: src/pages.py:1453
-#, python-brace-format
-msgid "{size} unallocated at {offset}"
-msgstr "{size} tidak dialokasikan pada {offset}"
-
-#: src/pages.py:1579 src/pages.py:1585
-msgid "User Account"
-msgstr "Akun Pengguna"
-
-#: src/pages.py:1605 src/pages.py:1606
-msgid "Full Name"
-msgstr "Nama Lengkap"
-
-#: src/pages.py:1609 src/pages.py:1612
-msgid "Username"
-msgstr "Nama Pengguna"
-
-#: src/pages.py:1616 src/pages.py:1627
-msgid "Password"
-msgstr "Kata Sandi"
-
-#: src/pages.py:1620 src/pages.py:1628
-msgid "Confirm Password"
-msgstr "Konfirmasi Kata Sandi"
-
-#: src/pages.py:1632
-msgid "Do not require a password for sudo commands"
-msgstr "Jangan memerlukan kata sandi untuk perintah sudo"
-
-#: src/pages.py:1638 src/pages.py:1643 src/pages.py:2157
-msgid "Computer Name"
-msgstr "Nama Komputer"
-
-#: src/pages.py:1669
-msgid "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
-msgstr "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
-
-#: src/pages.py:1680
-msgid "Install alongside requires a password-protected account."
-msgstr "Instalasi bersama memerlukan akun yang dilindungi kata sandi."
-
-#: src/pages.py:1691
-msgid "The two passwords do not match."
-msgstr "Kedua kata sandi tidak cocok."
-
-#: src/pages.py:1695
-msgid "Password must be at least 6 characters."
-msgstr "Kata sandi harus minimal 6 karakter."
-
-#: src/pages.py:1703
-msgid "Computer name contains invalid characters."
-msgstr "Nama komputer berisi karakter tidak valid."
-
-#: src/pages.py:1756
-msgid "Return to Make Changes"
-msgstr "Kembali untuk Melakukan Perubahan"
-
-#: src/pages.py:1763
-msgid "This configuration is very unsafe"
-msgstr "Konfigurasi ini sangat tidak aman"
-
-#: src/pages.py:1765
-msgid "Passwordless sudo is unsafe"
-msgstr "Sudo tanpa kata sandi tidak aman"
-
-#: src/pages.py:1769
-msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
-msgstr "Sistem akan masuk ke akun ini secara otomatis dan mengizinkannya untuk memperoleh hak administrator penuh tanpa kata sandi. Siapa pun dengan akses fisik, dan program apa pun yang berjalan sebagai pengguna ini, dapat sepenuhnya mengendalikan sistem. Gunakan ini hanya untuk kios, mesin virtual sementara, atau lingkungan terkendali lainnya."
-
-#: src/pages.py:1778
-msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
-msgstr "Program apa pun yang berjalan sebagai pengguna Anda dapat memperoleh hak administrator penuh tanpa autentikasi. Kata sandi login Anda masih melindungi masuk, tetapi tidak akan melindungi sudo. Apakah Anda yakin ingin melanjutkan?"
-
-#: src/pages.py:1792
-msgid "Return and Set a Password"
-msgstr "Kembali dan Atur Kata Sandi"
-
-#: src/pages.py:1798
-msgid "I Understand the Risk, Continue"
-msgstr "Saya Memahami Risikonya, Lanjutkan"
-
-#: src/pages.py:1822
-msgid "Administrator access would be locked"
-msgstr "Akses administrator akan dikunci"
-
-#: src/pages.py:1824
-msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
-msgstr "Akun ini tidak memiliki kata sandi masuk, tetapi sudo masih memerlukan satu. Karena akun root dikunci secara default, Anda tidak akan dapat melakukan tugas-tugas administrator. Tetapkan kata sandi akun atau aktifkan sudo tanpa kata sandi."
-
-#: src/pages.py:1895 src/pages.py:1901
-msgid "Select Timezone"
-msgstr "Pilih Zona Waktu"
-
-#: src/pages.py:1914
-msgid "Search timezones…"
-msgstr "Cari zona waktu…"
-
-#: src/pages.py:1967
-msgid "Selected timezone"
-msgstr "Zona waktu yang dipilih"
-
-#: src/pages.py:2035 src/pages.py:2041
-msgid "Ready to Install"
-msgstr "Siap untuk Diinstal"
-
-#: src/pages.py:2056
-msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
-msgstr "MODE PENGEMBANGAN — rencana akan divalidasi dan disimulasikan. Tidak ada eksekutor hak istimewa atau perintah disk yang dapat dijalankan."
-
-#: src/pages.py:2081
-#, python-brace-format
-msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
-msgstr "{architecture} / {firmware} / Secure Boot: {secure_boot}"
-
-#: src/pages.py:2090
-#, python-brace-format
-msgid "Unavailable: {error}"
-msgstr "Tidak tersedia: {error}"
-
-#: src/pages.py:2100
-msgid "single ext4 root filesystem"
-msgstr "sistem file root ext4 tunggal"
-
-#: src/pages.py:2103
-msgid "Language"
-msgstr "Bahasa"
-
-#: src/pages.py:2104
-msgid "Keyboard"
-msgstr "Papan ketik"
-
-#: src/pages.py:2106
-msgid "Target Disk"
-msgstr "Disk Target"
-
-#: src/pages.py:2110
-msgid "Stable disk identity"
-msgstr "Identitas disk stabil"
-
-#: src/pages.py:2112
-msgid "Platform"
-msgstr "Platform"
-
-#: src/pages.py:2114
-msgid "Subvolumes"
-msgstr "Subvolume"
-
-#: src/pages.py:2115
-msgid "Swap"
-msgstr "Swap"
-
-#: src/pages.py:2117
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr "Swap disk 4 GiB (prioritas 10) + zram LZ4 RAM 50% (prioritas 100)"
 
-#: src/pages.py:2121
-msgid "System updates"
-msgstr "Pembaruan sistem"
-
-#: src/pages.py:2123
-msgid "download and install"
-msgstr "unduh dan instal"
-
-#: src/pages.py:2125 src/pages.py:2131
-msgid "do not install"
-msgstr "jangan instal"
-
-#: src/pages.py:2127
-msgid "Third-party drivers"
-msgstr "Driver pihak ketiga"
-
-#: src/pages.py:2129
-msgid "detect and install (may include non-free software)"
-msgstr "deteksi dan instal (mungkin termasuk perangkat lunak non-bebas)"
-
-#: src/pages.py:2133
-msgid "Secure Boot enrollment"
-msgstr "Pendaftaran Secure Boot"
-
-#: src/pages.py:2136
-msgid "create a machine-local MOK; enroll after reboot with password 123456"
-msgstr "membuat MOK lokal mesin; daftarkan setelah reboot dengan kata sandi 123456"
-
-#: src/pages.py:2141
-msgid "not required"
-msgstr "tidak diperlukan"
-
-#: src/pages.py:2143
-msgid "User"
-msgstr "Pengguna"
-
-#: src/pages.py:2146
-msgid "Account security"
-msgstr "Keamanan akun"
-
-#: src/pages.py:2148
-msgid "automatic login"
-msgstr "login otomatis"
-
-#: src/pages.py:2150
-msgid "password required for login"
-msgstr "kata sandi diperlukan untuk login"
-
-#: src/pages.py:2153
 msgid "; sudo does not require a password"
 msgstr "; sudo tidak memerlukan kata sandi"
 
-#: src/pages.py:2155
 msgid "; sudo requires the account password"
 msgstr "; sudo memerlukan kata sandi akun"
 
-#: src/pages.py:2159
-msgid "Timezone"
-msgstr "Zona Waktu"
-
-#: src/pages.py:2166
-msgid "Guided storage selection is missing. Rescan and select the target again."
-msgstr "Pemilihan penyimpanan terpandu hilang. Pindai ulang dan pilih target lagi."
-
-#: src/pages.py:2174
-#, python-brace-format
-msgid "{name}: {start}–{end} MiB"
-msgstr "{name}: {start}–{end} MiB"
-
-#: src/pages.py:2182
-#, python-brace-format
-msgid "{path} as {filesystem}"
-msgstr "{path} sebagai {filesystem}"
-
-#: src/pages.py:2190
-#, python-brace-format
-msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-msgstr "Gunakan kembali {path}; jangan pernah memformatnya; verifikasi kesehatan FAT, identitas, dan 64 MiB ruang kosong sebelum menulis."
-
-#: src/pages.py:2198
-msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-msgstr "Buat dan format Partisi Sistem EFI AnduinOS khusus di dalam ruang yang dipilih."
-
-#: src/pages.py:2203
-msgid "Storage mode"
-msgstr "Mode penyimpanan"
-
-#: src/pages.py:2204
-msgid "Install alongside"
-msgstr "Instal bersama sistem yang ada"
-
-#: src/pages.py:2205
-msgid "Selected unallocated space"
-msgstr "Ruang yang tidak dialokasikan telah dipilih"
-
-#: src/pages.py:2206
-#, python-brace-format
-msgid "{size} at {offset}"
-msgstr "{size} pada {offset}"
-
-#: src/pages.py:2210
-msgid "Preserved partitions"
-msgstr "Partisi yang dipertahankan"
-
-#: src/pages.py:2211
-#, python-brace-format
-msgid "{count}: {paths}"
-msgstr "{count}: {paths}"
-
-#: src/pages.py:2215
-msgid "New partitions"
-msgstr "Partisi baru"
-
-#: src/pages.py:2217
-msgid "Formats"
-msgstr "Memformat"
-
-#: src/pages.py:2219
-msgid "EFI policy"
-msgstr "Kebijakan EFI"
-
-#: src/pages.py:2221
-msgid "Boot policy"
-msgstr "Kebijakan boot"
-
-#: src/pages.py:2223
-msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr "Tulis hanya EFI/AnduinOS, jangan timpa EFI/BOOT, dan memerlukan entri NVRAM AnduinOS yang terverifikasi."
-
-#: src/pages.py:2253
-msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
-msgstr "⚠ Hanya ruang tidak dialokasikan yang dipilih akan dipartisi dan diformat. Partisi yang ada tetap dipertahankan, tetapi file EFI/AnduinOS dan entri boot firmware AnduinOS mungkin berubah. Pemasang ini tidak akan mengecilkan Windows untuk Anda."
-
-#: src/pages.py:2261
-msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
-msgstr "⚠ Ini akan menghapus SEMUA data pada disk yang dipilih. Tindakan ini tidak dapat dibatalkan."
-
-#: src/pages.py:2287
-msgid "Validate this installation plan?"
-msgstr "Validasi rencana instalasi ini?"
-
-#: src/pages.py:2288
-msgid "Validate Plan (No Installation)"
-msgstr "Validasi Rencana (Tanpa Instalasi)"
-
-#: src/pages.py:2290
-msgid "Install in the selected free space?"
-msgstr "Instal di ruang kosong yang dipilih?"
-
-#: src/pages.py:2291 src/pages.py:2380
-msgid "Install Alongside"
-msgstr "Instal Bersama Sistem yang Ada"
-
-#: src/pages.py:2293
-msgid "Erase the entire selected disk?"
-msgstr "Hapus seluruh disk yang dipilih?"
-
-#: src/pages.py:2294
-msgid "Erase Disk and Install"
-msgstr "Hapus Disk dan Instal"
-
-#: src/pages.py:2301
-#, python-brace-format
 msgid ""
-"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
-"\n"
+"A partition on this disk is mounted. Unmount it and rescan storage before "
+"continuing."
 msgstr ""
-"Mode pengembangan akan mensimulasikan instalasi ke {disk}. Tidak ada data disk yang akan diubah.\n"
-"\n"
+"Sebuah partisi pada disk ini sedang dipasang (mounted). Lepaskan pemasangan "
+"dan pindai ulang penyimpanan sebelum melanjutkan."
 
-#: src/pages.py:2307
-#, python-brace-format
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "SEMUA DATA pada {disk} akan dihapus secara permanen."
+
+msgid "Account security"
+msgstr "Keamanan akun"
+
+msgid "Administrator access would be locked"
+msgstr "Akses administrator akan dikunci"
+
+msgid "Advanced Storage"
+msgstr "Penyimpanan Lanjutan"
+
 msgid ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
-msgstr "AnduinOS hanya akan menggunakan ruang yang belum dialokasikan yang dipilih pada {disk}. Partisi yang ada akan dipertahankan.\n\n"
+"Advanced coexistence can affect EFI firmware state and may trigger BitLocker "
+"recovery. It never shrinks or repairs Windows volumes."
+msgstr ""
+"Koeksistensi lanjutan dapat mempengaruhi status firmware EFI dan mungkin "
+"memicu pemulihan BitLocker. Fitur ini tidak pernah mengecilkan atau "
+"memperbaiki volume Windows."
 
-#: src/pages.py:2314
-#, python-brace-format
+msgid "Advanced — keep existing systems"
+msgstr "Lanjutan — pertahankan sistem yang ada"
+
+msgid "Advanced: Install Alongside"
+msgstr "Lanjutan: Instal Bersamaan"
+
+msgid ""
+"After changing partitions or unmounting a volume, rescan storage and select "
+"the target again."
+msgstr ""
+"Setelah mengubah partisi atau melepaskan pemasangan volume, pindai ulang "
+"penyimpanan dan pilih target lagi."
+
+msgid ""
+"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
+"then enter password 123456."
+msgstr ""
+"Setelah restart, MOKManager akan terbuka. Pilih Enroll MOK → Lanjutkan → Ya, "
+"lalu masukkan kata sandi 123456."
+
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -770,8 +99,560 @@ msgstr ""
 "Semua partisi dan data pada {disk} akan hancur.\n"
 "\n"
 
-#: src/pages.py:2319
-#, python-brace-format
+msgid ""
+"Alternatively, you may explicitly select one entire partition to erase. "
+"Everything in that selected partition will be destroyed; it is never "
+"selected automatically."
+msgstr ""
+"Sebagai alternatif, Anda dapat secara eksplisit memilih satu partisi utuh "
+"untuk dihapus. Semua isi pada partisi yang dipilih akan dihancurkan; partisi "
+"ini tidak pernah dipilih secara otomatis."
+
+msgid "AnduinOS Installer"
+msgstr "Penginstal AnduinOS"
+
+msgid "AnduinOS Installer (Beta)"
+msgstr "Penginstal AnduinOS (Beta)"
+
+msgid "AnduinOS Installer (Development)"
+msgstr "Penginstal AnduinOS (Pengembangan)"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing "
+"partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS hanya akan menggunakan ruang yang belum dialokasikan yang dipilih "
+"pada {disk}. Partisi yang ada akan dipertahankan.\n"
+"\n"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space. The installer will "
+"not shrink or move an existing filesystem."
+msgstr ""
+"AnduinOS hanya akan menggunakan ruang yang belum dialokasikan yang dipilih. "
+"Pemasang tidak akan mengecilkan atau memindahkan sistem berkas yang ada."
+
+msgid ""
+"Any program running as your user can obtain full administrator privileges "
+"without authentication. Your login password still protects sign-in, but it "
+"will not protect sudo. Are you sure you want to continue?"
+msgstr ""
+"Program apa pun yang berjalan sebagai pengguna Anda dapat memperoleh hak "
+"administrator penuh tanpa autentikasi. Kata sandi login Anda masih "
+"melindungi masuk, tetapi tidak akan melindungi sudo. Apakah Anda yakin ingin "
+"melanjutkan?"
+
+msgid "Arabic"
+msgstr "Arab"
+
+msgid "Back"
+msgstr "Kembali"
+
+msgid ""
+"Before continuing: finish Windows updates, disable Fast Startup and "
+"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
+"measurements and boot order can change."
+msgstr ""
+"Sebelum melanjutkan: selesaikan pembaruan Windows, nonaktifkan Startup Cepat "
+"dan hibernasi, serta cadangkan kunci pemulihan BitLocker. EFI, Secure Boot, "
+"pengukuran TPM, dan urutan boot dapat berubah."
+
+msgid "BitLocker detected"
+msgstr "BitLocker terdeteksi"
+
+msgid ""
+"BitLocker storage will be preserved. The installer will not unlock, resize, "
+"repair or otherwise modify it."
+msgstr ""
+"Penyimpanan BitLocker akan dipertahankan. Pemasang tidak akan membuka kunci, "
+"mengubah ukuran, memperbaiki, atau memodifikasinya dengan cara lain."
+
+msgid "Boot policy"
+msgstr "Kebijakan boot"
+
+msgid "Btrfs (recommended)"
+msgstr "Btrfs (direkomendasikan)"
+
+msgid "Btrfs — recommended"
+msgstr "Btrfs — direkomendasikan"
+
+msgid "Cannot create installation plan"
+msgstr "Tidak dapat membuat rencana instalasi"
+
+msgid "Choose Installation Method"
+msgstr "Pilih Metode Instalasi"
+
+msgid "Choose one target disk. Storage settings come next."
+msgstr "Pilih satu disk target. Pengaturan penyimpanan akan menyusul."
+
+msgid "Choose optional software to install"
+msgstr "Pilih perangkat lunak opsional untuk diinstal"
+
+msgid "Choose your language to begin installation"
+msgstr "Pilih bahasa Anda untuk memulai instalasi"
+
+msgid "Choose your location to set the system clock"
+msgstr "Pilih lokasi Anda untuk mengatur jam sistem"
+
+msgid "Complete"
+msgstr "Selesai"
+
+msgid "Computer Name"
+msgstr "Nama Komputer"
+
+msgid "Computer name contains invalid characters."
+msgstr "Nama komputer berisi karakter tidak valid."
+
+msgid "Configure account, region, and machine identity"
+msgstr "Konfigurasi akun, wilayah, dan identitas mesin"
+
+msgid "Configure storage and swap"
+msgstr "Konfigurasi penyimpanan dan swap"
+
+msgid "Confirm Password"
+msgstr "Konfirmasi Kata Sandi"
+
+msgid "Confirm your keyboard layout"
+msgstr "Konfirmasi tata letak keyboard Anda"
+
+msgid "Continue Installation"
+msgstr "Lanjutkan Instalasi"
+
+msgid "Copy AnduinOS system"
+msgstr "Salin sistem AnduinOS"
+
+msgid "Copy Log"
+msgstr "Salin Log"
+
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Buat Partisi Sistem EFI AnduinOS 1 GiB baru"
+
+msgid ""
+"Create and format a dedicated AnduinOS EFI System Partition inside the "
+"selected space."
+msgstr ""
+"Buat dan format Partisi Sistem EFI AnduinOS khusus di dalam ruang yang "
+"dipilih."
+
+msgid "Create your user account"
+msgstr "Buat akun pengguna Anda"
+
+msgid "Current disk layout"
+msgstr "Tata letak disk saat ini"
+
+msgid ""
+"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
+"executor or disk command can run."
+msgstr ""
+"MODE PENGEMBANGAN — rencana akan divalidasi dan disimulasikan. Tidak ada "
+"eksekutor hak istimewa atau perintah disk yang dapat dijalankan."
+
+msgid "Danish"
+msgstr "Denmark"
+
+msgid "Detect Internet connectivity"
+msgstr "Deteksi koneksi internet"
+
+msgid "Detect firmware and Secure Boot"
+msgstr "Deteksi firmware dan Secure Boot"
+
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be "
+"changed.\n"
+"\n"
+msgstr ""
+"Mode pengembangan akan mensimulasikan instalasi ke {disk}. Tidak ada data "
+"disk yang akan diubah.\n"
+"\n"
+
+msgid "Development simulation completed"
+msgstr "Simulasi pengembangan selesai"
+
+msgid "Discover AnduinOS"
+msgstr "Jelajahi AnduinOS"
+
+msgid "Do not require a password for sudo commands"
+msgstr "Jangan memerlukan kata sandi untuk perintah sudo"
+
+msgid "Download and install system updates during installation"
+msgstr "Unduh dan instal pembaruan sistem selama instalasi"
+
+msgid "Dutch"
+msgstr "Belanda"
+
+msgid "EFI System Partition"
+msgstr "Partisi Sistem EFI"
+
+msgid "EFI policy"
+msgstr "Kebijakan EFI"
+
+msgid "Empty disk — no partitions"
+msgstr "Disk kosong — tidak ada partisi"
+
+msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr ""
+"Mengaktifkan subvolume ruang bersama, snapshot, dan Mesin Waktu Kembali."
+
+msgid "English (UK)"
+msgstr "Bahasa Inggris (UK)"
+
+msgid "English (US)"
+msgstr "Bahasa Inggris (AS)"
+
+msgid "Ensure Timeback Machine is available"
+msgstr "Pastikan Timeback Machine tersedia"
+
+msgid "Erase Disk and Install"
+msgstr "Hapus Disk dan Instal"
+
+msgid "Erase every partition and all data on the selected disk."
+msgstr "Hapus setiap partisi dan semua data pada disk yang dipilih."
+
+msgid "Erase the entire selected disk?"
+msgstr "Hapus seluruh disk yang dipilih?"
+
+msgid ""
+"Existing Windows, recovery and data partitions remain outside the write set "
+"and will be preserved."
+msgstr ""
+"Partisi Windows, pemulihan, dan data yang ada tetap berada di luar set "
+"penulisan dan akan dipertahankan."
+
+msgid ""
+"Existing partitions were detected. The first two choices delete them; "
+"Advanced is the preservation path."
+msgstr ""
+"Partisi yang ada terdeteksi. Dua pilihan pertama menghapusnya; Lanjutan "
+"adalah jalur pelestarian."
+
+msgid ""
+"Existing partitions will be preserved. New AnduinOS partitions will be "
+"created only in the selected unallocated extent; EFI vendor files and the "
+"AnduinOS firmware boot entry may be updated."
+msgstr ""
+"Partisi yang ada akan dipertahankan. Partisi AnduinOS baru hanya akan dibuat "
+"di area yang belum dialokasikan; file vendor EFI dan entri boot firmware "
+"AnduinOS mungkin diperbarui."
+
+msgid "Filesystem"
+msgstr "Sistem file"
+
+msgid "Finalize target environment"
+msgstr "Selesaikan lingkungan target"
+
+msgid "Finnish"
+msgstr "Finlandia"
+
+msgid "Formats"
+msgstr "Memformat"
+
+msgid "French"
+msgstr "Prancis"
+
+msgid "Full Name"
+msgstr "Nama Lengkap"
+
+msgid "German"
+msgstr "Jerman"
+
+msgid "Greek"
+msgstr "Yunani"
+
+msgid ""
+"Guided coexistence requires a system booted in UEFI mode and a GPT target "
+"disk. This disk cannot continue in guided mode."
+msgstr ""
+"Koeksistensi terpandu memerlukan sistem yang dimulai dalam mode UEFI dan "
+"disk target GPT. Disk ini tidak dapat melanjutkan dalam mode terpandu."
+
+msgid ""
+"Guided storage selection is missing. Rescan and select the target again."
+msgstr ""
+"Pemilihan penyimpanan terpandu hilang. Pindai ulang dan pilih target lagi."
+
+msgid "Hindi (India)"
+msgstr "India (Hindi)"
+
+msgid "How should AnduinOS use this disk?"
+msgstr "Bagaimana AnduinOS harus menggunakan disk ini?"
+
+msgid "I Understand the Risk, Continue"
+msgstr "Saya Memahami Risikonya, Lanjutkan"
+
+msgid "Indonesian"
+msgstr "Indonesia"
+
+msgid "Install"
+msgstr "Instal"
+
+msgid "Install Alongside"
+msgstr "Instal Bersama Sistem yang Ada"
+
+msgid "Install alongside"
+msgstr "Instal bersama sistem yang ada"
+
+msgid "Install alongside requires a password-protected account."
+msgstr "Instalasi bersama memerlukan akun yang dilindungi kata sandi."
+
+msgid "Install bootloader"
+msgstr "Instal bootloader"
+
+msgid "Install hardware drivers"
+msgstr "Instal driver perangkat keras"
+
+msgid "Install in the selected free space?"
+msgstr "Instal di ruang kosong yang dipilih?"
+
+msgid "Install system updates"
+msgstr "Instal pembaruan sistem"
+
+msgid "Install third-party drivers for this device"
+msgstr "Instal driver pihak ketiga untuk perangkat ini"
+
+msgid "Installation Complete"
+msgstr "Instalasi Selesai"
+
+msgid "Installation Failed"
+msgstr "Instalasi Gagal"
+
+msgid "Installation Steps"
+msgstr "Langkah Instalasi"
+
+msgid ""
+"Installation cannot continue with this selection. There is no force-continue "
+"option around storage safety checks."
+msgstr ""
+"Pemasangan tidak dapat dilanjutkan dengan pilihan ini. Tidak ada opsi paksa-"
+"lanjutkan di sekitar pemeriksaan keamanan penyimpanan."
+
+msgid "Installation complete"
+msgstr "Instalasi selesai"
+
+msgid "Installation failed"
+msgstr "Instalasi gagal"
+
+msgid "Installation in progress"
+msgstr "Instalasi sedang berlangsung"
+
+msgid "Installing AnduinOS"
+msgstr "Menginstal AnduinOS"
+
+msgid "Italian"
+msgstr "Italia"
+
+msgid "Japanese"
+msgstr "Jepang"
+
+msgid "Keyboard"
+msgstr "Papan ketik"
+
+msgid "Keyboard Layout"
+msgstr "Tata Letak Keyboard"
+
+msgid "Korean"
+msgstr "Korea"
+
+msgid "Language"
+msgstr "Bahasa"
+
+msgid "Live USB — excluded"
+msgstr "USB Langsung — dikecualikan"
+
+msgid "Mount target filesystems"
+msgstr "Pasang sistem file target"
+
+msgid "Navigation error"
+msgstr "Kesalahan navigasi"
+
+msgid "New partitions"
+msgstr "Partisi baru"
+
+msgid "Next"
+msgstr "Selanjutnya"
+
+msgid "Next slide"
+msgstr "Slide berikutnya"
+
+msgid "No partition table"
+msgstr "Tidak ada tabel partisi"
+
+msgid "No suitable disks found."
+msgstr "Tidak ditemukan disk yang sesuai."
+
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with Windows Disk Management, then boot the installer "
+"again and rescan the disk."
+msgstr ""
+"Tidak ditemukan ruang yang belum dialokasikan yang sesuai. Untuk melindungi "
+"data Anda, buat ruang yang belum dialokasikan dengan Manajemen Disk Windows, "
+"lalu boot installer lagi dan pindai ulang disk."
+
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with a partitioning tool, then boot the installer again "
+"and rescan the disk."
+msgstr ""
+"Tidak ditemukan ruang yang belum dialokasikan yang sesuai. Untuk melindungi "
+"data Anda, buat ruang yang belum dialokasikan dengan alat partisi, lalu boot "
+"installer lagi dan pindai ulang disk."
+
+msgid "Norwegian"
+msgstr "Norwegia"
+
+msgid "OK"
+msgstr "OKE"
+
+msgid "Output"
+msgstr "Hasil"
+
+msgid "Output • Error"
+msgstr "Output • Kesalahan"
+
+msgid "Output • {count} warning(s)"
+msgstr "Output • {count} peringatan"
+
+msgid "Partition details unavailable"
+msgstr "Rincian partisi tidak tersedia"
+
+msgid "Password"
+msgstr "Kata Sandi"
+
+msgid "Password must be at least 6 characters."
+msgstr "Kata sandi harus minimal 6 karakter."
+
+msgid "Passwordless sudo is unsafe"
+msgstr "Sudo tanpa kata sandi tidak aman"
+
+msgid "Platform"
+msgstr "Platform"
+
+msgid "Please do not turn off your computer"
+msgstr "Mohon jangan matikan komputer Anda"
+
+msgid "Please review your choices before proceeding"
+msgstr "Mohon tinjau pilihan Anda sebelum melanjutkan"
+
+msgid "Polish"
+msgstr "Polandia"
+
+msgid "Portuguese"
+msgstr "Portugis"
+
+msgid "Portuguese (Brazil)"
+msgstr "Portugis (Brasil)"
+
+msgid "Prepare Secure Boot"
+msgstr "Siapkan Secure Boot"
+
+msgid "Prepare installation disk"
+msgstr "Siapkan disk instalasi"
+
+msgid "Prepare target environment"
+msgstr "Siapkan lingkungan target"
+
+msgid "Preparing installation…"
+msgstr "Mempersiapkan instalasi…"
+
+msgid "Preserved partitions"
+msgstr "Partisi yang dipertahankan"
+
+msgid "Previous slide"
+msgstr "Slide sebelumnya"
+
+msgid "Ready to Install"
+msgstr "Siap untuk Diinstal"
+
+msgid "Reboot Now"
+msgstr "Restart Sekarang"
+
+msgid "Refresh package indexes"
+msgstr "Segarkan indeks paket"
+
+msgid "Remove live-session components"
+msgstr "Hapus komponen sesi langsung"
+
+msgid "Remove the installation media and restart your computer"
+msgstr "Lepaskan media instalasi dan restart komputer Anda"
+
+msgid ""
+"Requires an Internet connection. The base installation remains available "
+"when offline."
+msgstr ""
+"Memerlukan koneksi Internet. Instalasi dasar tetap tersedia saat offline."
+
+msgid "Rescan Storage"
+msgstr "Pindai Ulang Penyimpanan"
+
+msgid "Rescan and Reselect Disk"
+msgstr "Pindai dan Pilih Ulang Cakram"
+
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "Restart dan Daftarkan Kunci Secure Boot"
+
+msgid "Restart is disabled in development protection mode"
+msgstr "Restart dinonaktifkan dalam mode perlindungan pengembangan"
+
+msgid "Return and Set a Password"
+msgstr "Kembali dan Atur Kata Sandi"
+
+msgid "Return to Make Changes"
+msgstr "Kembali untuk Melakukan Perubahan"
+
+msgid "Reuse {path} ({size})"
+msgstr "Gunakan kembali {path} ({size})"
+
+msgid ""
+"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
+"before writing."
+msgstr ""
+"Gunakan kembali {path}; jangan pernah memformatnya; verifikasi kesehatan "
+"FAT, identitas, dan 64 MiB ruang kosong sebelum menulis."
+
+msgid "Romanian"
+msgstr "Rumania"
+
+msgid "Russian"
+msgstr "Rusia"
+
+msgid "Save Log"
+msgstr "Simpan Log"
+
+msgid "Schedule MOK enrollment"
+msgstr "Jadwalkan pendaftaran MOK"
+
+msgid "Search timezones…"
+msgstr "Cari zona waktu…"
+
+msgid "Secure Boot enrollment"
+msgstr "Pendaftaran Secure Boot"
+
+msgid "Select Installation Disk"
+msgstr "Pilih Disk Instalasi"
+
+msgid "Select Timezone"
+msgstr "Pilih Zona Waktu"
+
+msgid "Select fastest package mirror"
+msgstr "Pilih mirror paket tercepat"
+
+msgid "Selected timezone"
+msgstr "Zona waktu yang dipilih"
+
+msgid "Selected unallocated space"
+msgstr "Ruang yang tidak dialokasikan telah dipilih"
+
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr ""
+"Beberapa driver bersifat proprietary atau perangkat lunak non-bebas lainnya."
+
+msgid "Spanish"
+msgstr "Spanyol"
+
+msgid "Stable disk identity"
+msgstr "Identitas disk stabil"
+
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -779,262 +660,323 @@ msgstr ""
 "Identitas stabil: {stable_id}\n"
 "\n"
 
-#: src/pages.py:2323
+msgid "Storage Device"
+msgstr "Perangkat Penyimpanan"
+
+msgid "Storage mode"
+msgstr "Mode penyimpanan"
+
+msgid "Subvolumes"
+msgstr "Subvolume"
+
+msgid "Swap"
+msgstr "Swap"
+
+msgid "Swedish"
+msgstr "Swedia"
+
+msgid "System updates"
+msgstr "Pembaruan sistem"
+
+msgid "Target Disk"
+msgstr "Disk Target"
+
+msgid "Target: {disk} ({size} — {model})"
+msgstr "Tujuan: {disk} ({size} — {model})"
+
+msgid "Test your keyboard here…"
+msgstr "Uji keyboard Anda di sini…"
+
+msgid "Thai"
+msgstr "Bahasa Thailand"
+
+msgid ""
+"The GPT disk or one of its partitions has no unique stable identifier. "
+"Guided coexistence cannot safely authorize preservation or writes on this "
+"disk."
+msgstr ""
+"Disk GPT atau salah satu partisi-nya tidak memiliki pengenal stabil yang "
+"unik. Koeksistensi terpandu tidak dapat secara aman mengotorisasi "
+"pelestarian atau penulisan pada disk ini."
+
+msgid ""
+"The complete partition map and free-space geometry could not be read "
+"consistently. No space on this disk is authorized for installation."
+msgstr ""
+"Peta partisi lengkap dan geometri ruang kosong tidak dapat dibaca secara "
+"konsisten. Tidak ada ruang pada disk ini yang diotorisasi untuk instalasi."
+
+msgid ""
+"The existing EFI System Partition is only a candidate. Health and free-space "
+"checks must pass before it can be reused, and it will never be formatted."
+msgstr ""
+"Partisi Sistem EFI yang ada hanyalah kandidat. Pemeriksaan kesehatan dan "
+"ruang kosong harus lulus sebelum dapat digunakan kembali, dan tidak akan "
+"pernah diformat."
+
+msgid ""
+"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot "
+"state, or installed system was changed."
+msgstr ""
+"Rencana instalasi valid. Tidak ada disk, sistem file, bootloader, status "
+"Secure Boot, atau sistem yang terinstal yang diubah."
+
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "Penginstal tidak dapat ditutup saat memodifikasi disk target."
+
+msgid ""
+"The installer will not mount, repair or infer the safety of Windows volumes "
+"from hibernation or Fast Startup state. Any required Windows maintenance "
+"must be completed in Windows."
+msgstr ""
+"Penginstal tidak akan memasang, memperbaiki, atau menyimpulkan keamanan "
+"volume Windows dari status hibernasi atau Startup Cepat. Pemeliharaan "
+"Windows yang diperlukan harus diselesaikan di Windows."
+
 msgid "The privileged executor is disabled."
 msgstr "Eksekutor hak istimewa dinonaktifkan."
 
-#: src/pages.py:2326
-msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-msgstr "Partisi yang ada akan dipertahankan. Partisi AnduinOS baru hanya akan dibuat di area yang belum dialokasikan; file vendor EFI dan entri boot firmware AnduinOS mungkin diperbarui."
+msgid ""
+"The selected disk changed or disappeared. Return to the disk page and select "
+"it again. {error}"
+msgstr ""
+"Disk yang dipilih berubah atau hilang. Kembali ke halaman disk dan pilih "
+"lagi. {error}"
 
-#: src/pages.py:2334
+msgid "The selected disk size changed. Return and select it again."
+msgstr "Ukuran disk yang dipilih berubah. Kembali dan pilih lagi."
+
+msgid ""
+"The selected disk topology changed. Review the disk and installation method "
+"again."
+msgstr ""
+"Topologi disk yang dipilih berubah. Tinjau kembali disk dan metode instalasi."
+
+msgid ""
+"The system will sign in to this account automatically and allow it to obtain "
+"full administrator privileges without a password. Anyone with physical "
+"access, and any program running as this user, can completely control the "
+"system. Use this only for a kiosk, temporary virtual machine, or another "
+"controlled environment."
+msgstr ""
+"Sistem akan masuk ke akun ini secara otomatis dan mengizinkannya untuk "
+"memperoleh hak administrator penuh tanpa kata sandi. Siapa pun dengan akses "
+"fisik, dan program apa pun yang berjalan sebagai pengguna ini, dapat "
+"sepenuhnya mengendalikan sistem. Gunakan ini hanya untuk kios, mesin virtual "
+"sementara, atau lingkungan terkendali lainnya."
+
+msgid "The two passwords do not match."
+msgstr "Kedua kata sandi tidak cocok."
+
+msgid "Third-party drivers"
+msgstr "Driver pihak ketiga"
+
+msgid ""
+"This account has no login password, but sudo would still require one. "
+"Because the root account is locked by default, you would be unable to "
+"perform administrator tasks. Set an account password or enable passwordless "
+"sudo."
+msgstr ""
+"Akun ini tidak memiliki kata sandi masuk, tetapi sudo masih memerlukan satu. "
+"Karena akun root dikunci secara default, Anda tidak akan dapat melakukan "
+"tugas-tugas administrator. Tetapkan kata sandi akun atau aktifkan sudo tanpa "
+"kata sandi."
+
+msgid ""
+"This advanced path preserves existing partitions but changes the selected "
+"disk's partition table and the machine's EFI boot state."
+msgstr ""
+"Jalur lanjutan ini mempertahankan partisi yang ada tetapi mengubah tabel "
+"partisi disk yang dipilih dan status boot EFI mesin."
+
+msgid "This configuration is very unsafe"
+msgstr "Konfigurasi ini sangat tidak aman"
+
+msgid ""
+"This disk contains an active mapper, array or other nested block-device "
+"topology that guided coexistence does not support."
+msgstr ""
+"Disk ini berisi mapper aktif, array, atau topologi perangkat blok bersarang "
+"lainnya yang tidak didukung oleh koeksistensi terpandu."
+
+msgid ""
+"This disk is too small for whole-disk installation. Advanced may continue "
+"only if suitable unallocated space exists."
+msgstr ""
+"Disk ini terlalu kecil untuk instalasi seluruh-disk. Lanjutan hanya dapat "
+"dilanjutkan jika ada ruang belum dialokasikan yang sesuai."
+
 msgid "This installer does not shrink or preserve other systems."
 msgstr "Penginstal ini tidak mengecilkan atau melestarikan sistem lain."
 
-#: src/pages.py:2360
-msgid "Cannot create installation plan"
-msgstr "Tidak dapat membuat rencana instalasi"
+msgid "Timezone"
+msgstr "Zona Waktu"
 
-#: src/pages.py:2382
-msgid "Install"
-msgstr "Instal"
+msgid "Too small"
+msgstr "Terlalu kecil"
 
-#: src/pages.py:2398 src/pages.py:2404
-msgid "Installing AnduinOS"
-msgstr "Menginstal AnduinOS"
+msgid "Turkish"
+msgstr "Turki"
 
-#: src/pages.py:2413
-msgid "Detect firmware and Secure Boot"
-msgstr "Deteksi firmware dan Secure Boot"
+msgid "Ukrainian"
+msgstr "Ukraina"
 
-#: src/pages.py:2416
-msgid "Detect Internet connectivity"
-msgstr "Deteksi koneksi internet"
+msgid "Unallocated space"
+msgstr "Ruang belum dialokasikan"
 
-#: src/pages.py:2418
-msgid "Verify target disk isolation"
-msgstr "Verifikasi isolasi disk target"
+msgid "Unallocated · {size}"
+msgstr "Tidak dialokasikan · {size}"
 
-#: src/pages.py:2419
-msgid "Prepare installation disk"
-msgstr "Siapkan disk instalasi"
+msgid "Unavailable: {error}"
+msgstr "Tidak tersedia: {error}"
 
-#: src/pages.py:2420
-msgid "Mount target filesystems"
-msgstr "Pasang sistem file target"
+msgid "Unknown filesystem"
+msgstr "Sistem file tidak dikenal"
 
-#: src/pages.py:2421
-msgid "Copy AnduinOS system"
-msgstr "Salin sistem AnduinOS"
-
-#: src/pages.py:2422
-msgid "Configure storage and swap"
-msgstr "Konfigurasi penyimpanan dan swap"
-
-#: src/pages.py:2423
-msgid "Prepare target environment"
-msgstr "Siapkan lingkungan target"
-
-#: src/pages.py:2424
-msgid "Remove live-session components"
-msgstr "Hapus komponen sesi langsung"
-
-#: src/pages.py:2425
-msgid "Configure account, region, and machine identity"
-msgstr "Konfigurasi akun, wilayah, dan identitas mesin"
-
-#: src/pages.py:2427
-msgid "Select fastest package mirror"
-msgstr "Pilih mirror paket tercepat"
-
-#: src/pages.py:2429
-msgid "Prepare Secure Boot"
-msgstr "Siapkan Secure Boot"
-
-#: src/pages.py:2430
-msgid "Refresh package indexes"
-msgstr "Segarkan indeks paket"
-
-#: src/pages.py:2431
-msgid "Install system updates"
-msgstr "Instal pembaruan sistem"
-
-#: src/pages.py:2433
-msgid "Ensure Timeback Machine is available"
-msgstr "Pastikan Timeback Machine tersedia"
-
-#: src/pages.py:2435
-msgid "Install hardware drivers"
-msgstr "Instal driver perangkat keras"
-
-#: src/pages.py:2437
-msgid "Verify kernel module signatures"
-msgstr "Verifikasi tanda tangan modul kernel"
-
-#: src/pages.py:2439
-msgid "Install bootloader"
-msgstr "Instal bootloader"
-
-#: src/pages.py:2440
-msgid "Schedule MOK enrollment"
-msgstr "Jadwalkan pendaftaran MOK"
-
-#: src/pages.py:2441
-msgid "Finalize target environment"
-msgstr "Selesaikan lingkungan target"
-
-#: src/pages.py:2442
 msgid "Unmount installed system"
 msgstr "Lepas sistem yang terinstal"
 
-#: src/pages.py:2480
-msgid "Installation Steps"
-msgstr "Langkah Instalasi"
+msgid "Updates and Drivers"
+msgstr "Pembaruan dan Driver"
 
-#: src/pages.py:2516
-msgid "Copy Log"
-msgstr "Salin Log"
-
-#: src/pages.py:2520
-msgid "Save Log"
-msgstr "Simpan Log"
-
-#: src/pages.py:2591
-msgid "Previous slide"
-msgstr "Slide sebelumnya"
-
-#: src/pages.py:2597
-msgid "Next slide"
-msgstr "Slide berikutnya"
-
-#: src/pages.py:2642
-msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
-msgstr "Setelah restart, MOKManager akan terbuka. Pilih Enroll MOK → Lanjutkan → Ya, lalu masukkan kata sandi 123456."
-
-#: src/pages.py:2650
-msgid "Restart and Enroll Secure Boot Key"
-msgstr "Restart dan Daftarkan Kunci Secure Boot"
-
-#: src/pages.py:2652
-msgid "Reboot Now"
-msgstr "Restart Sekarang"
-
-#: src/pages.py:2673
-msgid "Discover AnduinOS"
-msgstr "Jelajahi AnduinOS"
-
-#: src/pages.py:2676
-msgid "Output"
-msgstr "Hasil"
-
-#: src/pages.py:2679
-msgid "Complete"
-msgstr "Selesai"
-
-#: src/pages.py:2712
-msgid "Preparing installation…"
-msgstr "Mempersiapkan instalasi…"
-
-#: src/pages.py:2758 src/pages.py:2824
-msgid "Installation complete"
-msgstr "Instalasi selesai"
-
-#: src/pages.py:2762
-msgid "Development simulation completed"
-msgstr "Simulasi pengembangan selesai"
-
-#: src/pages.py:2765
-msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
-msgstr "Rencana instalasi valid. Tidak ada disk, sistem file, bootloader, status Secure Boot, atau sistem yang terinstal yang diubah."
-
-#: src/pages.py:2772
 msgid ""
-"\n"
-"\n"
-"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+"Use already-unallocated space and preserve existing partitions. This is the "
+"only Windows coexistence path."
 msgstr ""
-"\n"
-"\n"
-"Pemasangan asli akan membuat MOK lokal mesin. Setelah reboot, pilih Enroll MOK → Lanjutkan → Ya di MOKManager dan masukkan kata sandi 123456."
+"Gunakan ruang yang belum dialokasikan dan lestarikan partisi yang ada. Ini "
+"adalah satu-satunya jalur koeksistensi Windows."
 
-#: src/pages.py:2779 src/pages.py:2789 src/pages.py:2932 src/pages.py:2934
-msgid "Installation Complete"
-msgstr "Instalasi Selesai"
-
-#: src/pages.py:2781 src/pages.py:2790
-msgid "Remove the installation media and restart your computer"
-msgstr "Lepaskan media instalasi dan restart komputer Anda"
-
-#: src/pages.py:2783
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"Pada layar biru MOKManager, pilih Enroll MOK → Lanjutkan → Ya, kata sandi: 123456"
-
-#: src/pages.py:2799
-msgid "Restart is disabled in development protection mode"
-msgstr "Restart dinonaktifkan dalam mode perlindungan pengembangan"
-
-#: src/pages.py:2807
-msgid "Installation failed"
-msgstr "Instalasi gagal"
-
-#: src/pages.py:2809
-msgid "Installation Failed"
-msgstr "Instalasi Gagal"
-
-#: src/pages.py:2812 src/pages.py:2867
-msgid "Output • Error"
-msgstr "Output • Kesalahan"
-
-#: src/pages.py:2862
-#, python-brace-format
-msgid "Output • {count} warning(s)"
-msgstr "Output • {count} peringatan"
-
-#: src/pages.py:2870
-#, python-brace-format
-msgid "{step} failed"
-msgstr "{step} gagal"
-
-#: src/pages.py:715
-msgid "Empty disk — no partitions"
-msgstr "Disk kosong — tidak ada partisi"
-
-#: src/pages.py:468
-msgid "Confirm your keyboard layout"
-msgstr "Konfirmasi tata letak keyboard Anda"
-
-#: src/pages.py:540
-msgid "Choose optional software to install"
-msgstr "Pilih perangkat lunak opsional untuk diinstal"
-
-#: src/pages.py:758
-msgid "Choose one target disk. Storage settings come next."
-msgstr "Pilih satu disk target. Pengaturan penyimpanan akan menyusul."
-
-#: src/pages.py:923
-msgid "Choose a complete installation method, not only a filesystem."
-msgstr "Pilih metode instalasi lengkap, bukan hanya sistem berkas."
-
-#: src/pages.py:1184
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "Hanya gunakan ruang yang belum dialokasikan pada disk yang dipilih."
 
-#: src/pages.py:1586
-msgid "Create your user account"
-msgstr "Buat akun pengguna Anda"
+msgid "User"
+msgstr "Pengguna"
 
-#: src/pages.py:1902
-msgid "Choose your location to set the system clock"
-msgstr "Pilih lokasi Anda untuk mengatur jam sistem"
+msgid "User Account"
+msgstr "Akun Pengguna"
 
-#: src/pages.py:2042
-msgid "Please review your choices before proceeding"
-msgstr "Mohon tinjau pilihan Anda sebelum melanjutkan"
+msgid "Username"
+msgstr "Nama Pengguna"
 
-#: src/pages.py:2405
-msgid "Please do not turn off your computer"
-msgstr "Mohon jangan matikan komputer Anda"
+msgid ""
+"Username must start with a lowercase ASCII letter and contain only lowercase "
+"ASCII letters or digits (maximum 16 characters)."
+msgstr ""
+"Username must start with a lowercase ASCII letter and contain only lowercase "
+"ASCII letters or digits (maximum 16 characters)."
+
+msgid "Uses a traditional single root filesystem."
+msgstr "Menggunakan sistem file root tunggal tradisional."
+
+msgid "Validate Plan (No Installation)"
+msgstr "Validasi Rencana (Tanpa Instalasi)"
+
+msgid "Validate this installation plan?"
+msgstr "Validasi rencana instalasi ini?"
+
+msgid "Verify kernel module signatures"
+msgstr "Verifikasi tanda tangan modul kernel"
+
+msgid "Verify target disk isolation"
+msgstr "Verifikasi isolasi disk target"
+
+msgid "Vietnamese"
+msgstr "Vietnam"
+
+msgid "Welcome to AnduinOS"
+msgstr "Selamat datang di AnduinOS"
+
+msgid "Windows detected"
+msgstr "Windows terdeteksi"
+
+msgid ""
+"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
+"AnduinOS NVRAM entry."
+msgstr ""
+"Tulis hanya EFI/AnduinOS, jangan timpa EFI/BOOT, dan memerlukan entri NVRAM "
+"AnduinOS yang terverifikasi."
+
+msgid "automatic login"
+msgstr "login otomatis"
+
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr ""
+"membuat MOK lokal mesin; daftarkan setelah reboot dengan kata sandi 123456"
+
+msgid "detect and install (may include non-free software)"
+msgstr "deteksi dan instal (mungkin termasuk perangkat lunak non-bebas)"
+
+msgid "do not install"
+msgstr "jangan instal"
+
+msgid "download and install"
+msgstr "unduh dan instal"
+
+msgid "ext4 (classic)"
+msgstr "ext4 (klasik)"
+
+msgid "ext4 — classic"
+msgstr "ext4 — klasik"
+
+msgid "not required"
+msgstr "tidak diperlukan"
+
+msgid "password required for login"
+msgstr "kata sandi diperlukan untuk login"
+
+msgid "single ext4 root filesystem"
+msgstr "sistem file root ext4 tunggal"
+
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+msgid "{path} as {filesystem}"
+msgstr "{path} sebagai {filesystem}"
+
+msgid "{size} at {offset}"
+msgstr "{size} pada {offset}"
+
+msgid "{size} unallocated at {offset}"
+msgstr "{size} tidak dialokasikan pada {offset}"
+
+msgid "{step} failed"
+msgstr "{step} gagal"
+
+msgid ""
+"⚠ Only the selected unallocated space will be partitioned and formatted. "
+"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
+"firmware boot entry may change. This installer will not shrink Windows for "
+"you."
+msgstr ""
+"⚠ Hanya ruang tidak dialokasikan yang dipilih akan dipartisi dan diformat. "
+"Partisi yang ada tetap dipertahankan, tetapi file EFI/AnduinOS dan entri "
+"boot firmware AnduinOS mungkin berubah. Pemasang ini tidak akan mengecilkan "
+"Windows untuk Anda."
+
+msgid ""
+"⚠ This will erase ALL data on the selected disk. This action cannot be "
+"undone."
+msgstr ""
+"⚠ Ini akan menghapus SEMUA data pada disk yang dipilih. Tindakan ini tidak "
+"dapat dibatalkan."
+
+#: src/pages.py
+msgid "Connect to the Internet"
+msgstr "Hubungkan ke Internet"
+
+#: src/pages.py
+msgid "Internet connection is ready."
+msgstr "Koneksi Internet siap."
+
+#: src/pages.py
+msgid "Available Wi-Fi Networks"
+msgstr "Jaringan Wi-Fi yang Tersedia"
+
+#~ msgid "Choose a complete installation method, not only a filesystem."
+#~ msgstr "Pilih metode instalasi lengkap, bukan hanya sistem berkas."

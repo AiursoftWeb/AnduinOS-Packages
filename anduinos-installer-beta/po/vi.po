@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-01 18:33+0800\n"
+"POT-Creation-Date: 2026-08-01 11:01+0000\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,753 +17,82 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/main.py:88
-msgid "AnduinOS Installer (Development)"
-msgstr "Cài đặt AnduinOS (Phát triển)"
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose "
+"Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"Cài đặt thực tế sẽ tạo MOK cục bộ cho máy. Sau khi khởi động lại, hãy chọn "
+"Enroll MOK → Continue → Yes trong MOKManager và nhập mật khẩu 123456."
+
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: "
+"123456"
+msgstr ""
+"\n"
+"Trên màn hình MOKManager màu xanh lam, hãy chọn Enroll MOK → Continue → Yes, "
+"mật khẩu: 123456"
 
-#: src/main.py:90
-msgid "AnduinOS Installer (Beta)"
-msgstr "Cài đặt AnduinOS (Beta)"
-
-#: src/main.py:125
-msgid "Installation in progress"
-msgstr "Đang cài đặt"
-
-#: src/main.py:127
-msgid "The installer cannot be closed while it is modifying the target disk."
-msgstr "Trình cài đặt không thể đóng trong khi nó đang sửa đổi đĩa đích."
-
-#: src/main.py:133
-msgid "Continue Installation"
-msgstr "Tiếp tục cài đặt"
-
-#: src/pages.py:69
-msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
-msgstr "Sự cùng tồn tại có hướng dẫn yêu cầu hệ thống khởi động ở chế độ UEFI và đĩa đích GPT. Đĩa này không thể tiếp tục ở chế độ hướng dẫn."
-
-#: src/pages.py:73
-msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
-msgstr "Bản đồ phân vùng hoàn chỉnh và hình học không gian trống không thể đọc được một cách nhất quán. Không có không gian nào trên đĩa này được ủy quyền để cài đặt."
-
-#: src/pages.py:78
-msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
-msgstr "Đĩa GPT hoặc một trong các phân vùng của nó không có định danh ổn định duy nhất. Chế độ cùng tồn tại có hướng dẫn không thể an toàn ủy quyền bảo lưu hoặc ghi vào đĩa này."
-
-#: src/pages.py:83
-msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
-msgstr "Oss đĩa này chứa một trình ánh xạ, mảng hoặc cấu trúc thiết bị khối lồng nhau khác mà chế độ cùng tồn tại có hướng dẫn không hỗ trợ."
-
-#: src/pages.py:87
-msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
-msgstr "Một phân vùng trên ổ đĩa này đang được gắn kết. Hãy ngắt kết nối nó và quét lại bộ nhớ trước khi tiếp tục."
-
-#: src/pages.py:91
-msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
-msgstr "AnduinOS sẽ chỉ sử dụng phần dung lượng chưa được phân bổ đã chọn. Trình cài đặt sẽ không thu nhỏ hoặc di chuyển hệ thống tệp hiện có."
-
-#: src/pages.py:95
-msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
-msgstr "Các phân vùng Windows, khôi phục và dữ liệu hiện có sẽ nằm ngoài tập hợp ghi và được bảo tồn."
-
-#: src/pages.py:99
-msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
-msgstr "Phân vùng Hệ thống EFI hiện có chỉ là ứng viên. Các kiểm tra tình trạng và không gian trống phải đạt yêu cầu trước khi nó có thể được tái sử dụng, và nó sẽ không bao giờ được định dạng lại."
-
-#: src/pages.py:104
-msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
-msgstr "Lưu trữ BitLocker sẽ được giữ nguyên. Trình cài đặt sẽ không mở khóa, thay đổi kích thước, sửa chữa hoặc sửa đổi nó theo bất kỳ cách nào khác."
-
-#: src/pages.py:108
-msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
-msgstr "Cài đặt sẽ không gắn kết, sửa chữa hoặc suy luận tính an toàn của các ổ Windows từ trạng thái ngủ đông hoặc Khởi động nhanh. Mọi bảo trì Windows cần thiết phải được hoàn tất trong Windows."
-
-#: src/pages.py:113
-msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
-msgstr "Ngoài ra, bạn có thể chọn rõ ràng toàn bộ một phân vùng để xóa. Mọi thứ trong phân vùng được chọn đó sẽ bị phá hủy; nó không bao giờ được chọn tự động."
-
-#: src/pages.py:118
-msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
-msgstr "Quá trình cài đặt không thể tiếp tục với lựa chọn này. Không có tùy chọn buộc tiếp tục xung quanh các kiểm tra an toàn lưu trữ."
-
-#: src/pages.py:122
-msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
-msgstr "Sau khi thay đổi phân vùng hoặc ngắt kết nối một vùng lưu trữ, hãy quét lại bộ nhớ và chọn đích lần nữa."
-
-#: src/pages.py:128
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
-msgstr "Không tìm thấy khoảng trống chưa phân bổ phù hợp. Để bảo vệ dữ liệu của bạn, hãy tạo không gian chưa phân bổ bằng Quản lý đĩa Windows, sau đó khởi động trình cài đặt lại và quét lại đĩa."
-
-#: src/pages.py:133
-msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
-msgstr "Không tìm thấy khoảng trống chưa phân bổ phù hợp. Để bảo vệ dữ liệu của bạn, hãy tạo không gian chưa phân bổ bằng công cụ phân vùng, sau đó khởi động trình cài đặt lại và quét lại đĩa."
-
-#: src/pages.py:204 src/pages.py:374
-msgid "Next"
-msgstr "Tiếp theo"
-
-#: src/pages.py:211 src/pages.py:373 src/pages.py:2341
-msgid "Back"
-msgstr "Quay lại"
-
-#: src/pages.py:287 src/pages.py:371
-msgid "AnduinOS Installer"
-msgstr "Cài đặt AnduinOS"
-
-#: src/pages.py:367
-msgid "Welcome to AnduinOS"
-msgstr "Chào mừng đến với AnduinOS"
-
-#: src/pages.py:369
-msgid "Choose your language to begin installation"
-msgstr "Chọn ngôn ngữ của bạn để bắt đầu cài đặt"
-
-#: src/pages.py:405
-msgid "Navigation error"
-msgstr "Lỗi điều hướng"
-
-#: src/pages.py:408 src/pages.py:2363
-msgid "OK"
-msgstr "Đồng ý"
-
-#: src/pages.py:440
-msgid "English (US)"
-msgstr "Tiếng Anh (Mỹ)"
-
-#: src/pages.py:440
-msgid "English (UK)"
-msgstr "Tiếng Anh (Anh)"
-
-#: src/pages.py:441
-msgid "German"
-msgstr "Tiếng Đức"
-
-#: src/pages.py:441
-msgid "French"
-msgstr "Tiếng Pháp"
-
-#: src/pages.py:441
-msgid "Italian"
-msgstr "Tiếng Ý"
-
-#: src/pages.py:442
-msgid "Spanish"
-msgstr "Tiếng Tây Ban Nha"
-
-#: src/pages.py:442
-msgid "Portuguese"
-msgstr "Tiếng Bồ Đào Nha"
-
-#: src/pages.py:443
-msgid "Portuguese (Brazil)"
-msgstr "Tiếng Bồ Đào Nha (Brazil)"
-
-#: src/pages.py:443
-msgid "Danish"
-msgstr "Tiếng Đan Mạch"
-
-#: src/pages.py:444
-msgid "Swedish"
-msgstr "Tiếng Thụy Điển"
-
-#: src/pages.py:444
-msgid "Norwegian"
-msgstr "Tiếng Na Uy"
-
-#: src/pages.py:445
-msgid "Finnish"
-msgstr "Tiếng Phần Lan"
-
-#: src/pages.py:445
-msgid "Dutch"
-msgstr "Tiếng Hà Lan"
-
-#: src/pages.py:445
-msgid "Polish"
-msgstr "Tiếng Ba Lan"
-
-#: src/pages.py:446
-msgid "Romanian"
-msgstr "Tiếng Rumani"
-
-#: src/pages.py:448
-msgid "Russian"
-msgstr "Tiếng Nga"
-
-#: src/pages.py:448
-msgid "Ukrainian"
-msgstr "Tiếng Ukraina"
-
-#: src/pages.py:448
-msgid "Greek"
-msgstr "Tiếng Hy Lạp"
-
-#: src/pages.py:451
-msgid "Japanese"
-msgstr "Tiếng Nhật"
-
-#: src/pages.py:451
-msgid "Korean"
-msgstr "Tiếng Hàn"
-
-#: src/pages.py:452
-msgid "Hindi (India)"
-msgstr "Tiếng Hindi (Ấn Độ)"
-
-#: src/pages.py:452
-msgid "Thai"
-msgstr "Tiếng Thái"
-
-#: src/pages.py:453
-msgid "Vietnamese"
-msgstr "Tiếng Việt"
-
-#: src/pages.py:453
-msgid "Arabic"
-msgstr "Tiếng Ả Rập"
-
-#: src/pages.py:454
-msgid "Turkish"
-msgstr "Tiếng Thổ Nhĩ Kỳ"
-
-#: src/pages.py:454
-msgid "Indonesian"
-msgstr "Tiếng Indonesia"
-
-#: src/pages.py:461 src/pages.py:467 src/pages.py:507
-msgid "Keyboard Layout"
-msgstr "Bố cục bàn phím"
-
-#: src/pages.py:499 src/pages.py:508
-msgid "Test your keyboard here…"
-msgstr "Thử bàn phím của bạn ở đây…"
-
-#: src/pages.py:533 src/pages.py:539
-msgid "Updates and Drivers"
-msgstr "Bản cập nhật và Trình điều khiển"
-
-#: src/pages.py:556
-msgid "Download and install system updates during installation"
-msgstr "Tải xuống và cài đặt bản cập nhật hệ thống trong quá trình cài đặt"
-
-#: src/pages.py:559 src/pages.py:575
-msgid "Requires an Internet connection. The base installation remains available when offline."
-msgstr "Yêu cầu kết nối Internet. Bản cài đặt cơ bản vẫn khả dụng khi ngoại tuyến."
-
-#: src/pages.py:568
-msgid "Install third-party drivers for this device"
-msgstr "Cài đặt trình điều khiển bên thứ ba cho thiết bị này"
-
-#: src/pages.py:581
-msgid "Some drivers are proprietary or otherwise non-free software."
-msgstr "Một số trình điều khiển là phần mềm độc quyền hoặc không miễn phí khác."
-
-#: src/pages.py:641
-msgid "Storage Device"
-msgstr "Thiết bị lưu trữ"
-
-#: src/pages.py:650
-msgid "No partition table"
-msgstr "Không có bảng phân vùng"
-
-#: src/pages.py:673
-msgid "Current disk layout"
-msgstr "Bố cục đĩa hiện tại"
-
-#: src/pages.py:693
-msgid "Unknown filesystem"
-msgstr "Hệ thống tệp không xác định"
-
-#: src/pages.py:706
-#, python-brace-format
-msgid "Unallocated · {size}"
-msgstr "Chưa được phân bổ · {size}"
-
-#: src/pages.py:713
-msgid "Partition details unavailable"
-msgstr "Không thể xác định chi tiết phân vùng"
-
-#: src/pages.py:728
-msgid "Windows detected"
-msgstr "Windows đã được phát hiện"
-
-#: src/pages.py:730
-msgid "BitLocker detected"
-msgstr "Phát hiện BitLocker"
-
-#: src/pages.py:732
-msgid "Live USB — excluded"
-msgstr "USB Live — đã loại trừ"
-
-#: src/pages.py:734
-msgid "Too small"
-msgstr "Qúa nhỏ"
-
-#: src/pages.py:751 src/pages.py:757
-msgid "Select Installation Disk"
-msgstr "Chọn đĩa cài đặt"
-
-#: src/pages.py:793
-msgid "Rescan Storage"
-msgstr "Tìm lại bộ nhớ"
-
-#: src/pages.py:863
-msgid "No suitable disks found."
-msgstr "Không tìm thấy đĩa phù hợp."
-
-#: src/pages.py:917
-msgid "Choose Installation Method"
-msgstr "Chọn Phương thức Cài đặt"
-
-#: src/pages.py:922
-msgid "How should AnduinOS use this disk?"
-msgstr "AnduinOS nên sử dụng đĩa này như thế nào?"
-
-#: src/pages.py:937 src/pages.py:1191 src/pages.py:1425
-#, python-brace-format
-msgid "Target: {disk} ({size} — {model})"
-msgstr "Mục tiêu: {disk} ({size} — {model})"
-
-#: src/pages.py:1014
-msgid "Erase every partition and all data on the selected disk."
-msgstr "Xóa mọi phân vùng và tất cả dữ liệu trên đĩa đã chọn."
-
-#: src/pages.py:1018
-msgid "Btrfs — recommended"
-msgstr "Btrfs — được khuyến nghị"
-
-#: src/pages.py:1022
-msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
-msgstr "Kích hoạt các subvolume không gian chia sẻ, snapshot và Timeback Machine."
-
-#: src/pages.py:1030
-msgid "ext4 — classic"
-msgstr "ext4 — cổ điển"
-
-#: src/pages.py:1033
-msgid "Uses a traditional single root filesystem."
-msgstr "Sử dụng hệ thống tệp gốc đơn truyền thống."
-
-#: src/pages.py:1039
-msgid "Advanced — keep existing systems"
-msgstr "Nâng cao — giữ lại các hệ thống hiện có"
-
-#: src/pages.py:1041
-msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
-msgstr "Sử dụng khoảng trống chưa phân bổ sẵn và bảo toàn các phân vùng hiện có. Đây là cách duy nhất để cùng tồn tại với Windows."
-
-#: src/pages.py:1089
-msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
-msgstr "Tính năng cùng tồn tại nâng cao có thể ảnh hưởng đến trạng thái firmware EFI và có thể kích hoạt khôi phục BitLocker. Nó không bao giờ thu nhỏ hoặc sửa chữa các vùng lưu trữ Windows."
-
-#: src/pages.py:1099
-#, python-brace-format
-msgid "ALL DATA on {disk} will be permanently erased."
-msgstr "TẤT CẢ DỮ LIỆU trên {disk} sẽ bị xóa vĩnh viễn."
-
-#: src/pages.py:1135
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "Ổ đĩa này quá nhỏ để cài đặt toàn bộ ổ đĩa. Chế độ nâng cao chỉ có thể tiếp tục nếu có đủ không gian chưa phân bổ phù hợp."
-
-#: src/pages.py:1145
-msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
-msgstr "Đã phát hiện các phân vùng hiện có. Hai lựa chọn đầu tiên sẽ xóa chúng; Nâng cao là đường dẫn bảo tồn."
-
-#: src/pages.py:1178
-msgid "Advanced Storage"
-msgstr "Bộ nhớ nâng cao"
-
-#: src/pages.py:1183
-msgid "Advanced: Install Alongside"
-msgstr "Nâng cao: Cài đặt song song"
-
-#: src/pages.py:1212
-msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
-msgstr "Trước khi tiếp tục: hoàn tất các bản cập nhật Windows, tắt Khởi động nhanh và chế độ ngủ đông, sao lưu khóa khôi phục BitLocker. EFI, Khởi động an toàn, đo lường TPM và thứ tự khởi động có thể thay đổi."
-
-#: src/pages.py:1219
-msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr "Path nâng cao này bảo toàn các phân vùng hiện có nhưng thay đổi bảng phân vùng của ổ đĩa đã chọn và trạng thái khởi động EFI của máy."
-
-#: src/pages.py:1250 src/pages.py:2113
-msgid "Filesystem"
-msgstr "Hệ thống tập tin"
-
-#: src/pages.py:1253
-msgid "Btrfs (recommended)"
-msgstr "Btrfs (được khuyến nghị)"
-
-#: src/pages.py:1253
-msgid "ext4 (classic)"
-msgstr "ext4 (cổ điển)"
-
-#: src/pages.py:1263
-msgid "Unallocated space"
-msgstr "Khoảng trống chưa phân bổ"
-
-#: src/pages.py:1271
-msgid "EFI System Partition"
-msgstr "Phân vùng Hệ thống EFI"
-
-#: src/pages.py:1285
-msgid "Rescan and Reselect Disk"
-msgstr "Tìm lại và chọn lại đĩa"
-
-#: src/pages.py:1326
-msgid "Create a new 1 GiB AnduinOS EFI System Partition"
-msgstr "Tạo phân vùng EFI Hệ thống AnduinOS mới 1 GiB"
-
-#: src/pages.py:1330
-#, python-brace-format
-msgid "Reuse {path} ({size})"
-msgstr "Tái sử dụng {path} ({size})"
-
-#: src/pages.py:1394
-#, python-brace-format
-msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
-msgstr "Đĩa đã chọn bị thay đổi hoặc biến mất. Quay lại trang đĩa và chọn lại. {error}"
-
-#: src/pages.py:1407
-msgid "The selected disk size changed. Return and select it again."
-msgstr "Kích thước đĩa đã chọn bị thay đổi. Quay lại và chọn lại."
-
-#: src/pages.py:1417
-msgid "The selected disk topology changed. Review the disk and installation method again."
-msgstr "Cấu trúc đĩa đã chọn bị thay đổi. Xem xét lại đĩa và phương pháp cài đặt."
-
-#: src/pages.py:1453
-#, python-brace-format
-msgid "{size} unallocated at {offset}"
-msgstr "{size} chưa phân bổ tại {offset}"
-
-#: src/pages.py:1579 src/pages.py:1585
-msgid "User Account"
-msgstr "Tài khoản người dùng"
-
-#: src/pages.py:1605 src/pages.py:1606
-msgid "Full Name"
-msgstr "Họ và tên đầy đủ"
-
-#: src/pages.py:1609 src/pages.py:1612
-msgid "Username"
-msgstr "Tên người dùng"
-
-#: src/pages.py:1616 src/pages.py:1627
-msgid "Password"
-msgstr "Mật khẩu"
-
-#: src/pages.py:1620 src/pages.py:1628
-msgid "Confirm Password"
-msgstr "Xác nhận mật khẩu"
-
-#: src/pages.py:1632
-msgid "Do not require a password for sudo commands"
-msgstr "Không yêu cầu mật khẩu cho các lệnh sudo"
-
-#: src/pages.py:1638 src/pages.py:1643 src/pages.py:2157
-msgid "Computer Name"
-msgstr "Tên máy tính"
-
-#: src/pages.py:1669
-msgid "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
-msgstr "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
-
-#: src/pages.py:1680
-msgid "Install alongside requires a password-protected account."
-msgstr "Cài đặt song song yêu cầu tài khoản được bảo vệ bằng mật khẩu."
-
-#: src/pages.py:1691
-msgid "The two passwords do not match."
-msgstr "Hai mật khẩu không khớp nhau."
-
-#: src/pages.py:1695
-msgid "Password must be at least 6 characters."
-msgstr "Mật khẩu phải có ít nhất 6 ký tự."
-
-#: src/pages.py:1703
-msgid "Computer name contains invalid characters."
-msgstr "Tên máy tính chứa ký tự không hợp lệ."
-
-#: src/pages.py:1756
-msgid "Return to Make Changes"
-msgstr "Quay lại để thực hiện thay đổi"
-
-#: src/pages.py:1763
-msgid "This configuration is very unsafe"
-msgstr "Cấu hình này rất không an toàn"
-
-#: src/pages.py:1765
-msgid "Passwordless sudo is unsafe"
-msgstr "Sudo không mật khẩu là không an toàn"
-
-#: src/pages.py:1769
-msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
-msgstr "Hệ thống sẽ tự động đăng nhập vào tài khoản này và cho phép nó giành được đặc quyền quản trị viên đầy đủ mà không cần mật khẩu. Bất kỳ ai có quyền truy cập vật lý và bất kỳ chương trình nào chạy dưới quyền người dùng này đều có thể kiểm soát hoàn toàn hệ thống. Chỉ sử dụng điều này cho kiosk, máy ảo tạm thời hoặc môi trường được kiểm soát khác."
-
-#: src/pages.py:1778
-msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
-msgstr "Bất kỳ chương trình nào chạy dưới quyền người dùng của bạn đều có thể giành được đặc quyền quản trị viên đầy đủ mà không cần xác thực. Mật khẩu đăng nhập của bạn vẫn bảo vệ việc đăng nhập, nhưng sẽ không bảo vệ sudo. Bạn có chắc chắn muốn tiếp tục không?"
-
-#: src/pages.py:1792
-msgid "Return and Set a Password"
-msgstr "Quay lại và Đặt mật khẩu"
-
-#: src/pages.py:1798
-msgid "I Understand the Risk, Continue"
-msgstr "Tôi hiểu rủi ro, tiếp tục"
-
-#: src/pages.py:1822
-msgid "Administrator access would be locked"
-msgstr "Truy cập quản trị sẽ bị khóa"
-
-#: src/pages.py:1824
-msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
-msgstr "Tài khoản này không có mật khẩu đăng nhập, nhưng lệnh sudo vẫn yêu cầu mật khẩu. Vì tài khoản root mặc định bị khóa, bạn sẽ không thể thực hiện các tác vụ của quản trị viên. Hãy đặt mật khẩu cho tài khoản hoặc kích hoạt sudo không cần mật khẩu."
-
-#: src/pages.py:1895 src/pages.py:1901
-msgid "Select Timezone"
-msgstr "Chọn múi giờ"
-
-#: src/pages.py:1914
-msgid "Search timezones…"
-msgstr "Tìm kiếm múi giờ…"
-
-#: src/pages.py:1967
-msgid "Selected timezone"
-msgstr "Múi giờ đã chọn"
-
-#: src/pages.py:2035 src/pages.py:2041
-msgid "Ready to Install"
-msgstr "Sẵn sàng để cài đặt"
-
-#: src/pages.py:2056
-msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
-msgstr "CHẾ ĐỘ PHÁT TRIỂN — kế hoạch sẽ được xác thực và mô phỏng. Không có trình điều khiển đặc quyền hoặc lệnh đĩa nào có thể chạy."
-
-#: src/pages.py:2081
-#, python-brace-format
-msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
-msgstr "{architecture} / {firmware} / Khởi động an toàn: {secure_boot}"
-
-#: src/pages.py:2090
-#, python-brace-format
-msgid "Unavailable: {error}"
-msgstr "Khả dụng: {error}"
-
-#: src/pages.py:2100
-msgid "single ext4 root filesystem"
-msgstr "hệ thống tập tin gốc ext4 đơn"
-
-#: src/pages.py:2103
-msgid "Language"
-msgstr "Ngôn ngữ"
-
-#: src/pages.py:2104
-msgid "Keyboard"
-msgstr "Bàn phím"
-
-#: src/pages.py:2106
-msgid "Target Disk"
-msgstr "Đĩa đích"
-
-#: src/pages.py:2110
-msgid "Stable disk identity"
-msgstr "Danh tính đĩa ổn định"
-
-#: src/pages.py:2112
-msgid "Platform"
-msgstr "Nền tảng"
-
-#: src/pages.py:2114
-msgid "Subvolumes"
-msgstr "Cục con (Subvolumes)"
-
-#: src/pages.py:2115
-msgid "Swap"
-msgstr "Swap"
-
-#: src/pages.py:2117
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr "Swap đĩa 4 GiB (độ ưu tiên 10) + zram LZ4 50% RAM (độ ưu tiên 100)"
 
-#: src/pages.py:2121
-msgid "System updates"
-msgstr "Bản cập nhật hệ thống"
-
-#: src/pages.py:2123
-msgid "download and install"
-msgstr "tải xuống và cài đặt"
-
-#: src/pages.py:2125 src/pages.py:2131
-msgid "do not install"
-msgstr "không cài đặt"
-
-#: src/pages.py:2127
-msgid "Third-party drivers"
-msgstr "Trình điều khiển bên thứ ba"
-
-#: src/pages.py:2129
-msgid "detect and install (may include non-free software)"
-msgstr "p phát hiện và cài đặt (có thể bao gồm phần mềm không miễn phí)"
-
-#: src/pages.py:2133
-msgid "Secure Boot enrollment"
-msgstr "Đăng ký Secure Boot"
-
-#: src/pages.py:2136
-msgid "create a machine-local MOK; enroll after reboot with password 123456"
-msgstr "tạo MOK cục bộ cho máy; đăng ký sau khi khởi động lại với mật khẩu 123456"
-
-#: src/pages.py:2141
-msgid "not required"
-msgstr "khob bắt buộc"
-
-#: src/pages.py:2143
-msgid "User"
-msgstr "Người dùng"
-
-#: src/pages.py:2146
-msgid "Account security"
-msgstr "Bảo mật tài khoản"
-
-#: src/pages.py:2148
-msgid "automatic login"
-msgstr "đăng nhập tự động"
-
-#: src/pages.py:2150
-msgid "password required for login"
-msgstr "yêu cầu mật khẩu để đăng nhập"
-
-#: src/pages.py:2153
 msgid "; sudo does not require a password"
 msgstr "; sudo không yêu cầu mật khẩu"
 
-#: src/pages.py:2155
 msgid "; sudo requires the account password"
 msgstr "; sudo yêu cầu mật khẩu tài khoản"
 
-#: src/pages.py:2159
-msgid "Timezone"
-msgstr "Múi giờ"
-
-#: src/pages.py:2166
-msgid "Guided storage selection is missing. Rescan and select the target again."
-msgstr "Thiếu lựa chọn lưu trữ được hướng dẫn. Quét lại và chọn đích một lần nữa."
-
-#: src/pages.py:2174
-#, python-brace-format
-msgid "{name}: {start}–{end} MiB"
-msgstr "{name}: {start}–{end} MiB"
-
-#: src/pages.py:2182
-#, python-brace-format
-msgid "{path} as {filesystem}"
-msgstr "{path} dưới dạng {filesystem}"
-
-#: src/pages.py:2190
-#, python-brace-format
-msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
-msgstr "Tái sử dụng {path}; không bao giờ định dạng nó; xác minh sức khỏe FAT, danh tính và 64 MiB trống trước khi ghi."
-
-#: src/pages.py:2198
-msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
-msgstr "Tạo và định dạng một phân vùng EFI Hệ thống AnduinOS chuyên dụng bên trong không gian đã chọn."
-
-#: src/pages.py:2203
-msgid "Storage mode"
-msgstr "Chế độ lưu trữ"
-
-#: src/pages.py:2204
-msgid "Install alongside"
-msgstr "Cài đặt song song"
-
-#: src/pages.py:2205
-msgid "Selected unallocated space"
-msgstr "Không gian chưa phân bổ được chọn"
-
-#: src/pages.py:2206
-#, python-brace-format
-msgid "{size} at {offset}"
-msgstr "{size} tại {offset}"
-
-#: src/pages.py:2210
-msgid "Preserved partitions"
-msgstr "Các phân vùng được bảo lưu"
-
-#: src/pages.py:2211
-#, python-brace-format
-msgid "{count}: {paths}"
-msgstr "{count}: {paths}"
-
-#: src/pages.py:2215
-msgid "New partitions"
-msgstr "Nhóm phân vùng mới"
-
-#: src/pages.py:2217
-msgid "Formats"
-msgstr "Định dạng"
-
-#: src/pages.py:2219
-msgid "EFI policy"
-msgstr "Chính sách EFI"
-
-#: src/pages.py:2221
-msgid "Boot policy"
-msgstr "Chính sách khởi động"
-
-#: src/pages.py:2223
-msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr "Chỉ ghi EFI/AnduinOS, không ghi đè lên EFI/BOOT và yêu cầu mục NVRAM AnduinOS đã được xác minh."
-
-#: src/pages.py:2253
-msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
-msgstr "⚠ Chỉ vùng trống chưa được phân bổ đã chọn sẽ được chia và định dạng. Các phân vùng hiện có sẽ được giữ nguyên, nhưng các tệp EFI/AnduinOS và mục khởi động firmware AnduinOS có thể thay đổi. Trình cài đặt này sẽ không thu nhỏ Windows cho bạn."
-
-#: src/pages.py:2261
-msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
-msgstr "⚠ Điều này sẽ xóa TẤT CẢ dữ liệu trên đĩa đã chọn. Hành động này không thể hoàn tác."
-
-#: src/pages.py:2287
-msgid "Validate this installation plan?"
-msgstr "Xác thực kế hoạch cài đặt này?"
-
-#: src/pages.py:2288
-msgid "Validate Plan (No Installation)"
-msgstr "Xác thực Kế hoạch (Không cài đặt)"
-
-#: src/pages.py:2290
-msgid "Install in the selected free space?"
-msgstr "Cài đặt trong khoảng trống đã chọn?"
-
-#: src/pages.py:2291 src/pages.py:2380
-msgid "Install Alongside"
-msgstr "Cài đặt song song"
-
-#: src/pages.py:2293
-msgid "Erase the entire selected disk?"
-msgstr "Xóa toàn bộ đĩa đã chọn?"
-
-#: src/pages.py:2294
-msgid "Erase Disk and Install"
-msgstr "Xóa đĩa và Cài đặt"
-
-#: src/pages.py:2301
-#, python-brace-format
 msgid ""
-"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
-"\n"
+"A partition on this disk is mounted. Unmount it and rescan storage before "
+"continuing."
 msgstr ""
-"Chế độ phát triển sẽ mô phỏng cài đặt lên {disk}. Dữ liệu đĩa sẽ không bị thay đổi.\n"
-"\n"
+"Một phân vùng trên ổ đĩa này đang được gắn kết. Hãy ngắt kết nối nó và quét "
+"lại bộ nhớ trước khi tiếp tục."
 
-#: src/pages.py:2307
-#, python-brace-format
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "TẤT CẢ DỮ LIỆU trên {disk} sẽ bị xóa vĩnh viễn."
+
+msgid "Account security"
+msgstr "Bảo mật tài khoản"
+
+msgid "Administrator access would be locked"
+msgstr "Truy cập quản trị sẽ bị khóa"
+
+msgid "Advanced Storage"
+msgstr "Bộ nhớ nâng cao"
+
 msgid ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
-"\n"
-msgstr "AnduinOS sẽ chỉ sử dụng phần dung lượng chưa được phân bổ đã chọn trên {disk}. Các phân vùng hiện có sẽ được giữ nguyên.\n\n"
+"Advanced coexistence can affect EFI firmware state and may trigger BitLocker "
+"recovery. It never shrinks or repairs Windows volumes."
+msgstr ""
+"Tính năng cùng tồn tại nâng cao có thể ảnh hưởng đến trạng thái firmware EFI "
+"và có thể kích hoạt khôi phục BitLocker. Nó không bao giờ thu nhỏ hoặc sửa "
+"chữa các vùng lưu trữ Windows."
 
-#: src/pages.py:2314
-#, python-brace-format
+msgid "Advanced — keep existing systems"
+msgstr "Nâng cao — giữ lại các hệ thống hiện có"
+
+msgid "Advanced: Install Alongside"
+msgstr "Nâng cao: Cài đặt song song"
+
+msgid ""
+"After changing partitions or unmounting a volume, rescan storage and select "
+"the target again."
+msgstr ""
+"Sau khi thay đổi phân vùng hoặc ngắt kết nối một vùng lưu trữ, hãy quét lại "
+"bộ nhớ và chọn đích lần nữa."
+
+msgid ""
+"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
+"then enter password 123456."
+msgstr ""
+"Sau khi khởi động lại, MOKManager sẽ mở ra. Hãy chọn Enroll MOK → Continue → "
+"Yes, sau đó nhập mật khẩu 123456."
+
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -771,8 +100,560 @@ msgstr ""
 "Tất cả các phân vùng và dữ liệu trên {disk} sẽ bị phá hủy.\n"
 "\n"
 
-#: src/pages.py:2319
-#, python-brace-format
+msgid ""
+"Alternatively, you may explicitly select one entire partition to erase. "
+"Everything in that selected partition will be destroyed; it is never "
+"selected automatically."
+msgstr ""
+"Ngoài ra, bạn có thể chọn rõ ràng toàn bộ một phân vùng để xóa. Mọi thứ "
+"trong phân vùng được chọn đó sẽ bị phá hủy; nó không bao giờ được chọn tự "
+"động."
+
+msgid "AnduinOS Installer"
+msgstr "Cài đặt AnduinOS"
+
+msgid "AnduinOS Installer (Beta)"
+msgstr "Cài đặt AnduinOS (Beta)"
+
+msgid "AnduinOS Installer (Development)"
+msgstr "Cài đặt AnduinOS (Phát triển)"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing "
+"partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS sẽ chỉ sử dụng phần dung lượng chưa được phân bổ đã chọn trên "
+"{disk}. Các phân vùng hiện có sẽ được giữ nguyên.\n"
+"\n"
+
+msgid ""
+"AnduinOS will use only the selected unallocated space. The installer will "
+"not shrink or move an existing filesystem."
+msgstr ""
+"AnduinOS sẽ chỉ sử dụng phần dung lượng chưa được phân bổ đã chọn. Trình cài "
+"đặt sẽ không thu nhỏ hoặc di chuyển hệ thống tệp hiện có."
+
+msgid ""
+"Any program running as your user can obtain full administrator privileges "
+"without authentication. Your login password still protects sign-in, but it "
+"will not protect sudo. Are you sure you want to continue?"
+msgstr ""
+"Bất kỳ chương trình nào chạy dưới quyền người dùng của bạn đều có thể giành "
+"được đặc quyền quản trị viên đầy đủ mà không cần xác thực. Mật khẩu đăng "
+"nhập của bạn vẫn bảo vệ việc đăng nhập, nhưng sẽ không bảo vệ sudo. Bạn có "
+"chắc chắn muốn tiếp tục không?"
+
+msgid "Arabic"
+msgstr "Tiếng Ả Rập"
+
+msgid "Back"
+msgstr "Quay lại"
+
+msgid ""
+"Before continuing: finish Windows updates, disable Fast Startup and "
+"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
+"measurements and boot order can change."
+msgstr ""
+"Trước khi tiếp tục: hoàn tất các bản cập nhật Windows, tắt Khởi động nhanh "
+"và chế độ ngủ đông, sao lưu khóa khôi phục BitLocker. EFI, Khởi động an "
+"toàn, đo lường TPM và thứ tự khởi động có thể thay đổi."
+
+msgid "BitLocker detected"
+msgstr "Phát hiện BitLocker"
+
+msgid ""
+"BitLocker storage will be preserved. The installer will not unlock, resize, "
+"repair or otherwise modify it."
+msgstr ""
+"Lưu trữ BitLocker sẽ được giữ nguyên. Trình cài đặt sẽ không mở khóa, thay "
+"đổi kích thước, sửa chữa hoặc sửa đổi nó theo bất kỳ cách nào khác."
+
+msgid "Boot policy"
+msgstr "Chính sách khởi động"
+
+msgid "Btrfs (recommended)"
+msgstr "Btrfs (được khuyến nghị)"
+
+msgid "Btrfs — recommended"
+msgstr "Btrfs — được khuyến nghị"
+
+msgid "Cannot create installation plan"
+msgstr "Không thể tạo kế hoạch cài đặt"
+
+msgid "Choose Installation Method"
+msgstr "Chọn Phương thức Cài đặt"
+
+msgid "Choose one target disk. Storage settings come next."
+msgstr "Chọn một ổ đĩa đích. Cài đặt lưu trữ sẽ được thực hiện tiếp theo."
+
+msgid "Choose optional software to install"
+msgstr "Chọn phần mềm tùy chọn để cài đặt"
+
+msgid "Choose your language to begin installation"
+msgstr "Chọn ngôn ngữ của bạn để bắt đầu cài đặt"
+
+msgid "Choose your location to set the system clock"
+msgstr "Chọn vị trí của bạn để thiết lập đồng hồ hệ thống"
+
+msgid "Complete"
+msgstr "Hoàn tất"
+
+msgid "Computer Name"
+msgstr "Tên máy tính"
+
+msgid "Computer name contains invalid characters."
+msgstr "Tên máy tính chứa ký tự không hợp lệ."
+
+msgid "Configure account, region, and machine identity"
+msgstr "Cấu hình tài khoản, khu vực và danh tính máy"
+
+msgid "Configure storage and swap"
+msgstr "Cấu hình lưu trữ và swap"
+
+msgid "Confirm Password"
+msgstr "Xác nhận mật khẩu"
+
+msgid "Confirm your keyboard layout"
+msgstr "Xác nhận bố cục bàn phím của bạn"
+
+msgid "Continue Installation"
+msgstr "Tiếp tục cài đặt"
+
+msgid "Copy AnduinOS system"
+msgstr "Sao chép hệ thống AnduinOS"
+
+msgid "Copy Log"
+msgstr "Sao chép nhật ký"
+
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Tạo phân vùng EFI Hệ thống AnduinOS mới 1 GiB"
+
+msgid ""
+"Create and format a dedicated AnduinOS EFI System Partition inside the "
+"selected space."
+msgstr ""
+"Tạo và định dạng một phân vùng EFI Hệ thống AnduinOS chuyên dụng bên trong "
+"không gian đã chọn."
+
+msgid "Create your user account"
+msgstr "Tạo tài khoản người dùng của bạn"
+
+msgid "Current disk layout"
+msgstr "Bố cục đĩa hiện tại"
+
+msgid ""
+"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
+"executor or disk command can run."
+msgstr ""
+"CHẾ ĐỘ PHÁT TRIỂN — kế hoạch sẽ được xác thực và mô phỏng. Không có trình "
+"điều khiển đặc quyền hoặc lệnh đĩa nào có thể chạy."
+
+msgid "Danish"
+msgstr "Tiếng Đan Mạch"
+
+msgid "Detect Internet connectivity"
+msgstr "Phát hiện kết nối Internet"
+
+msgid "Detect firmware and Secure Boot"
+msgstr "Phát hiện firmware và Secure Boot"
+
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be "
+"changed.\n"
+"\n"
+msgstr ""
+"Chế độ phát triển sẽ mô phỏng cài đặt lên {disk}. Dữ liệu đĩa sẽ không bị "
+"thay đổi.\n"
+"\n"
+
+msgid "Development simulation completed"
+msgstr "Mô phỏng phát triển đã hoàn tất"
+
+msgid "Discover AnduinOS"
+msgstr "Khám phá AnduinOS"
+
+msgid "Do not require a password for sudo commands"
+msgstr "Không yêu cầu mật khẩu cho các lệnh sudo"
+
+msgid "Download and install system updates during installation"
+msgstr "Tải xuống và cài đặt bản cập nhật hệ thống trong quá trình cài đặt"
+
+msgid "Dutch"
+msgstr "Tiếng Hà Lan"
+
+msgid "EFI System Partition"
+msgstr "Phân vùng Hệ thống EFI"
+
+msgid "EFI policy"
+msgstr "Chính sách EFI"
+
+msgid "Empty disk — no partitions"
+msgstr "Đĩa trống — không có phân vùng"
+
+msgid "Enables shared-space subvolumes, snapshots and Timeback Machine."
+msgstr ""
+"Kích hoạt các subvolume không gian chia sẻ, snapshot và Timeback Machine."
+
+msgid "English (UK)"
+msgstr "Tiếng Anh (Anh)"
+
+msgid "English (US)"
+msgstr "Tiếng Anh (Mỹ)"
+
+msgid "Ensure Timeback Machine is available"
+msgstr "Đảm bảo Timeback Machine khả dụng"
+
+msgid "Erase Disk and Install"
+msgstr "Xóa đĩa và Cài đặt"
+
+msgid "Erase every partition and all data on the selected disk."
+msgstr "Xóa mọi phân vùng và tất cả dữ liệu trên đĩa đã chọn."
+
+msgid "Erase the entire selected disk?"
+msgstr "Xóa toàn bộ đĩa đã chọn?"
+
+msgid ""
+"Existing Windows, recovery and data partitions remain outside the write set "
+"and will be preserved."
+msgstr ""
+"Các phân vùng Windows, khôi phục và dữ liệu hiện có sẽ nằm ngoài tập hợp ghi "
+"và được bảo tồn."
+
+msgid ""
+"Existing partitions were detected. The first two choices delete them; "
+"Advanced is the preservation path."
+msgstr ""
+"Đã phát hiện các phân vùng hiện có. Hai lựa chọn đầu tiên sẽ xóa chúng; Nâng "
+"cao là đường dẫn bảo tồn."
+
+msgid ""
+"Existing partitions will be preserved. New AnduinOS partitions will be "
+"created only in the selected unallocated extent; EFI vendor files and the "
+"AnduinOS firmware boot entry may be updated."
+msgstr ""
+"Các phân vùng hiện có sẽ được bảo tồn. Các phân vùng AnduinOS mới chỉ được "
+"tạo trong phần mở rộng chưa cấp phát đã chọn; các tệp nhà cung cấp EFI và "
+"mục khởi động firmware AnduinOS có thể được cập nhật."
+
+msgid "Filesystem"
+msgstr "Hệ thống tập tin"
+
+msgid "Finalize target environment"
+msgstr "Hoàn thiện môi trường đích"
+
+msgid "Finnish"
+msgstr "Tiếng Phần Lan"
+
+msgid "Formats"
+msgstr "Định dạng"
+
+msgid "French"
+msgstr "Tiếng Pháp"
+
+msgid "Full Name"
+msgstr "Họ và tên đầy đủ"
+
+msgid "German"
+msgstr "Tiếng Đức"
+
+msgid "Greek"
+msgstr "Tiếng Hy Lạp"
+
+msgid ""
+"Guided coexistence requires a system booted in UEFI mode and a GPT target "
+"disk. This disk cannot continue in guided mode."
+msgstr ""
+"Sự cùng tồn tại có hướng dẫn yêu cầu hệ thống khởi động ở chế độ UEFI và đĩa "
+"đích GPT. Đĩa này không thể tiếp tục ở chế độ hướng dẫn."
+
+msgid ""
+"Guided storage selection is missing. Rescan and select the target again."
+msgstr ""
+"Thiếu lựa chọn lưu trữ được hướng dẫn. Quét lại và chọn đích một lần nữa."
+
+msgid "Hindi (India)"
+msgstr "Tiếng Hindi (Ấn Độ)"
+
+msgid "How should AnduinOS use this disk?"
+msgstr "AnduinOS nên sử dụng đĩa này như thế nào?"
+
+msgid "I Understand the Risk, Continue"
+msgstr "Tôi hiểu rủi ro, tiếp tục"
+
+msgid "Indonesian"
+msgstr "Tiếng Indonesia"
+
+msgid "Install"
+msgstr "Cài đặt"
+
+msgid "Install Alongside"
+msgstr "Cài đặt song song"
+
+msgid "Install alongside"
+msgstr "Cài đặt song song"
+
+msgid "Install alongside requires a password-protected account."
+msgstr "Cài đặt song song yêu cầu tài khoản được bảo vệ bằng mật khẩu."
+
+msgid "Install bootloader"
+msgstr "Cài đặt trình khởi động"
+
+msgid "Install hardware drivers"
+msgstr "Cài đặt trình điều khiển phần cứng"
+
+msgid "Install in the selected free space?"
+msgstr "Cài đặt trong khoảng trống đã chọn?"
+
+msgid "Install system updates"
+msgstr "Cài đặt bản cập nhật hệ thống"
+
+msgid "Install third-party drivers for this device"
+msgstr "Cài đặt trình điều khiển bên thứ ba cho thiết bị này"
+
+msgid "Installation Complete"
+msgstr "Cài đặt hoàn tất"
+
+msgid "Installation Failed"
+msgstr "Cài đặt thất bại"
+
+msgid "Installation Steps"
+msgstr "Các bước cài đặt"
+
+msgid ""
+"Installation cannot continue with this selection. There is no force-continue "
+"option around storage safety checks."
+msgstr ""
+"Quá trình cài đặt không thể tiếp tục với lựa chọn này. Không có tùy chọn "
+"buộc tiếp tục xung quanh các kiểm tra an toàn lưu trữ."
+
+msgid "Installation complete"
+msgstr "Cài đặt đã hoàn tất"
+
+msgid "Installation failed"
+msgstr "Cài đặt thất bại"
+
+msgid "Installation in progress"
+msgstr "Đang cài đặt"
+
+msgid "Installing AnduinOS"
+msgstr "Đang cài đặt AnduinOS"
+
+msgid "Italian"
+msgstr "Tiếng Ý"
+
+msgid "Japanese"
+msgstr "Tiếng Nhật"
+
+msgid "Keyboard"
+msgstr "Bàn phím"
+
+msgid "Keyboard Layout"
+msgstr "Bố cục bàn phím"
+
+msgid "Korean"
+msgstr "Tiếng Hàn"
+
+msgid "Language"
+msgstr "Ngôn ngữ"
+
+msgid "Live USB — excluded"
+msgstr "USB Live — đã loại trừ"
+
+msgid "Mount target filesystems"
+msgstr "Gắn các hệ thống tập tin đích"
+
+msgid "Navigation error"
+msgstr "Lỗi điều hướng"
+
+msgid "New partitions"
+msgstr "Nhóm phân vùng mới"
+
+msgid "Next"
+msgstr "Tiếp theo"
+
+msgid "Next slide"
+msgstr "Slide tiếp theo"
+
+msgid "No partition table"
+msgstr "Không có bảng phân vùng"
+
+msgid "No suitable disks found."
+msgstr "Không tìm thấy đĩa phù hợp."
+
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with Windows Disk Management, then boot the installer "
+"again and rescan the disk."
+msgstr ""
+"Không tìm thấy khoảng trống chưa phân bổ phù hợp. Để bảo vệ dữ liệu của bạn, "
+"hãy tạo không gian chưa phân bổ bằng Quản lý đĩa Windows, sau đó khởi động "
+"trình cài đặt lại và quét lại đĩa."
+
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with a partitioning tool, then boot the installer again "
+"and rescan the disk."
+msgstr ""
+"Không tìm thấy khoảng trống chưa phân bổ phù hợp. Để bảo vệ dữ liệu của bạn, "
+"hãy tạo không gian chưa phân bổ bằng công cụ phân vùng, sau đó khởi động "
+"trình cài đặt lại và quét lại đĩa."
+
+msgid "Norwegian"
+msgstr "Tiếng Na Uy"
+
+msgid "OK"
+msgstr "Đồng ý"
+
+msgid "Output"
+msgstr "Đầu ra"
+
+msgid "Output • Error"
+msgstr "Đầu ra • Lỗi"
+
+msgid "Output • {count} warning(s)"
+msgstr "Đầu ra • {count} cảnh báo"
+
+msgid "Partition details unavailable"
+msgstr "Không thể xác định chi tiết phân vùng"
+
+msgid "Password"
+msgstr "Mật khẩu"
+
+msgid "Password must be at least 6 characters."
+msgstr "Mật khẩu phải có ít nhất 6 ký tự."
+
+msgid "Passwordless sudo is unsafe"
+msgstr "Sudo không mật khẩu là không an toàn"
+
+msgid "Platform"
+msgstr "Nền tảng"
+
+msgid "Please do not turn off your computer"
+msgstr "Vui lòng không tắt máy tính của bạn"
+
+msgid "Please review your choices before proceeding"
+msgstr "Vui lòng xem lại các lựa chọn của bạn trước khi tiếp tục"
+
+msgid "Polish"
+msgstr "Tiếng Ba Lan"
+
+msgid "Portuguese"
+msgstr "Tiếng Bồ Đào Nha"
+
+msgid "Portuguese (Brazil)"
+msgstr "Tiếng Bồ Đào Nha (Brazil)"
+
+msgid "Prepare Secure Boot"
+msgstr "Chuẩn bị Secure Boot"
+
+msgid "Prepare installation disk"
+msgstr "Chuẩn bị đĩa cài đặt"
+
+msgid "Prepare target environment"
+msgstr "Chuẩn bị môi trường đích"
+
+msgid "Preparing installation…"
+msgstr "Đang chuẩn bị cài đặt…"
+
+msgid "Preserved partitions"
+msgstr "Các phân vùng được bảo lưu"
+
+msgid "Previous slide"
+msgstr "Slide trước đó"
+
+msgid "Ready to Install"
+msgstr "Sẵn sàng để cài đặt"
+
+msgid "Reboot Now"
+msgstr "Khởi động lại ngay"
+
+msgid "Refresh package indexes"
+msgstr "Làm mới chỉ mục gói"
+
+msgid "Remove live-session components"
+msgstr "Gỡ bỏ các thành phần phiên live"
+
+msgid "Remove the installation media and restart your computer"
+msgstr "Gỡ thiết bị cài đặt và khởi động lại máy tính của bạn"
+
+msgid ""
+"Requires an Internet connection. The base installation remains available "
+"when offline."
+msgstr ""
+"Yêu cầu kết nối Internet. Bản cài đặt cơ bản vẫn khả dụng khi ngoại tuyến."
+
+msgid "Rescan Storage"
+msgstr "Tìm lại bộ nhớ"
+
+msgid "Rescan and Reselect Disk"
+msgstr "Tìm lại và chọn lại đĩa"
+
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "Khởi động lại và Đăng ký Khóa Secure Boot"
+
+msgid "Restart is disabled in development protection mode"
+msgstr "Khởi động lại bị vô hiệu hóa trong chế độ bảo vệ phát triển"
+
+msgid "Return and Set a Password"
+msgstr "Quay lại và Đặt mật khẩu"
+
+msgid "Return to Make Changes"
+msgstr "Quay lại để thực hiện thay đổi"
+
+msgid "Reuse {path} ({size})"
+msgstr "Tái sử dụng {path} ({size})"
+
+msgid ""
+"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
+"before writing."
+msgstr ""
+"Tái sử dụng {path}; không bao giờ định dạng nó; xác minh sức khỏe FAT, danh "
+"tính và 64 MiB trống trước khi ghi."
+
+msgid "Romanian"
+msgstr "Tiếng Rumani"
+
+msgid "Russian"
+msgstr "Tiếng Nga"
+
+msgid "Save Log"
+msgstr "Lưu nhật ký"
+
+msgid "Schedule MOK enrollment"
+msgstr "Lên lịch đăng ký MOK"
+
+msgid "Search timezones…"
+msgstr "Tìm kiếm múi giờ…"
+
+msgid "Secure Boot enrollment"
+msgstr "Đăng ký Secure Boot"
+
+msgid "Select Installation Disk"
+msgstr "Chọn đĩa cài đặt"
+
+msgid "Select Timezone"
+msgstr "Chọn múi giờ"
+
+msgid "Select fastest package mirror"
+msgstr "Chọn máy chủ gói nhanh nhất"
+
+msgid "Selected timezone"
+msgstr "Múi giờ đã chọn"
+
+msgid "Selected unallocated space"
+msgstr "Không gian chưa phân bổ được chọn"
+
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr ""
+"Một số trình điều khiển là phần mềm độc quyền hoặc không miễn phí khác."
+
+msgid "Spanish"
+msgstr "Tiếng Tây Ban Nha"
+
+msgid "Stable disk identity"
+msgstr "Danh tính đĩa ổn định"
+
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -780,262 +661,324 @@ msgstr ""
 "Danh tính ổn định: {stable_id}\n"
 "\n"
 
-#: src/pages.py:2323
+msgid "Storage Device"
+msgstr "Thiết bị lưu trữ"
+
+msgid "Storage mode"
+msgstr "Chế độ lưu trữ"
+
+msgid "Subvolumes"
+msgstr "Cục con (Subvolumes)"
+
+msgid "Swap"
+msgstr "Swap"
+
+msgid "Swedish"
+msgstr "Tiếng Thụy Điển"
+
+msgid "System updates"
+msgstr "Bản cập nhật hệ thống"
+
+msgid "Target Disk"
+msgstr "Đĩa đích"
+
+msgid "Target: {disk} ({size} — {model})"
+msgstr "Mục tiêu: {disk} ({size} — {model})"
+
+msgid "Test your keyboard here…"
+msgstr "Thử bàn phím của bạn ở đây…"
+
+msgid "Thai"
+msgstr "Tiếng Thái"
+
+msgid ""
+"The GPT disk or one of its partitions has no unique stable identifier. "
+"Guided coexistence cannot safely authorize preservation or writes on this "
+"disk."
+msgstr ""
+"Đĩa GPT hoặc một trong các phân vùng của nó không có định danh ổn định duy "
+"nhất. Chế độ cùng tồn tại có hướng dẫn không thể an toàn ủy quyền bảo lưu "
+"hoặc ghi vào đĩa này."
+
+msgid ""
+"The complete partition map and free-space geometry could not be read "
+"consistently. No space on this disk is authorized for installation."
+msgstr ""
+"Bản đồ phân vùng hoàn chỉnh và hình học không gian trống không thể đọc được "
+"một cách nhất quán. Không có không gian nào trên đĩa này được ủy quyền để "
+"cài đặt."
+
+msgid ""
+"The existing EFI System Partition is only a candidate. Health and free-space "
+"checks must pass before it can be reused, and it will never be formatted."
+msgstr ""
+"Phân vùng Hệ thống EFI hiện có chỉ là ứng viên. Các kiểm tra tình trạng và "
+"không gian trống phải đạt yêu cầu trước khi nó có thể được tái sử dụng, và "
+"nó sẽ không bao giờ được định dạng lại."
+
+msgid ""
+"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot "
+"state, or installed system was changed."
+msgstr ""
+"Kế hoạch cài đặt hợp lệ. Không có đĩa, hệ thống tập tin, trình khởi động, "
+"trạng thái Secure Boot hoặc hệ thống đã cài đặt nào bị thay đổi."
+
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "Trình cài đặt không thể đóng trong khi nó đang sửa đổi đĩa đích."
+
+msgid ""
+"The installer will not mount, repair or infer the safety of Windows volumes "
+"from hibernation or Fast Startup state. Any required Windows maintenance "
+"must be completed in Windows."
+msgstr ""
+"Cài đặt sẽ không gắn kết, sửa chữa hoặc suy luận tính an toàn của các ổ "
+"Windows từ trạng thái ngủ đông hoặc Khởi động nhanh. Mọi bảo trì Windows cần "
+"thiết phải được hoàn tất trong Windows."
+
 msgid "The privileged executor is disabled."
 msgstr "Trình điều khiển đặc quyền bị vô hiệu hóa."
 
-#: src/pages.py:2326
-msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
-msgstr "Các phân vùng hiện có sẽ được bảo tồn. Các phân vùng AnduinOS mới chỉ được tạo trong phần mở rộng chưa cấp phát đã chọn; các tệp nhà cung cấp EFI và mục khởi động firmware AnduinOS có thể được cập nhật."
+msgid ""
+"The selected disk changed or disappeared. Return to the disk page and select "
+"it again. {error}"
+msgstr ""
+"Đĩa đã chọn bị thay đổi hoặc biến mất. Quay lại trang đĩa và chọn lại. "
+"{error}"
 
-#: src/pages.py:2334
+msgid "The selected disk size changed. Return and select it again."
+msgstr "Kích thước đĩa đã chọn bị thay đổi. Quay lại và chọn lại."
+
+msgid ""
+"The selected disk topology changed. Review the disk and installation method "
+"again."
+msgstr ""
+"Cấu trúc đĩa đã chọn bị thay đổi. Xem xét lại đĩa và phương pháp cài đặt."
+
+msgid ""
+"The system will sign in to this account automatically and allow it to obtain "
+"full administrator privileges without a password. Anyone with physical "
+"access, and any program running as this user, can completely control the "
+"system. Use this only for a kiosk, temporary virtual machine, or another "
+"controlled environment."
+msgstr ""
+"Hệ thống sẽ tự động đăng nhập vào tài khoản này và cho phép nó giành được "
+"đặc quyền quản trị viên đầy đủ mà không cần mật khẩu. Bất kỳ ai có quyền "
+"truy cập vật lý và bất kỳ chương trình nào chạy dưới quyền người dùng này "
+"đều có thể kiểm soát hoàn toàn hệ thống. Chỉ sử dụng điều này cho kiosk, máy "
+"ảo tạm thời hoặc môi trường được kiểm soát khác."
+
+msgid "The two passwords do not match."
+msgstr "Hai mật khẩu không khớp nhau."
+
+msgid "Third-party drivers"
+msgstr "Trình điều khiển bên thứ ba"
+
+msgid ""
+"This account has no login password, but sudo would still require one. "
+"Because the root account is locked by default, you would be unable to "
+"perform administrator tasks. Set an account password or enable passwordless "
+"sudo."
+msgstr ""
+"Tài khoản này không có mật khẩu đăng nhập, nhưng lệnh sudo vẫn yêu cầu mật "
+"khẩu. Vì tài khoản root mặc định bị khóa, bạn sẽ không thể thực hiện các tác "
+"vụ của quản trị viên. Hãy đặt mật khẩu cho tài khoản hoặc kích hoạt sudo "
+"không cần mật khẩu."
+
+msgid ""
+"This advanced path preserves existing partitions but changes the selected "
+"disk's partition table and the machine's EFI boot state."
+msgstr ""
+"Path nâng cao này bảo toàn các phân vùng hiện có nhưng thay đổi bảng phân "
+"vùng của ổ đĩa đã chọn và trạng thái khởi động EFI của máy."
+
+msgid "This configuration is very unsafe"
+msgstr "Cấu hình này rất không an toàn"
+
+msgid ""
+"This disk contains an active mapper, array or other nested block-device "
+"topology that guided coexistence does not support."
+msgstr ""
+"Oss đĩa này chứa một trình ánh xạ, mảng hoặc cấu trúc thiết bị khối lồng "
+"nhau khác mà chế độ cùng tồn tại có hướng dẫn không hỗ trợ."
+
+msgid ""
+"This disk is too small for whole-disk installation. Advanced may continue "
+"only if suitable unallocated space exists."
+msgstr ""
+"Ổ đĩa này quá nhỏ để cài đặt toàn bộ ổ đĩa. Chế độ nâng cao chỉ có thể tiếp "
+"tục nếu có đủ không gian chưa phân bổ phù hợp."
+
 msgid "This installer does not shrink or preserve other systems."
 msgstr "Trình cài đặt này không thu nhỏ hoặc bảo lưu các hệ thống khác."
 
-#: src/pages.py:2360
-msgid "Cannot create installation plan"
-msgstr "Không thể tạo kế hoạch cài đặt"
+msgid "Timezone"
+msgstr "Múi giờ"
 
-#: src/pages.py:2382
-msgid "Install"
-msgstr "Cài đặt"
+msgid "Too small"
+msgstr "Qúa nhỏ"
 
-#: src/pages.py:2398 src/pages.py:2404
-msgid "Installing AnduinOS"
-msgstr "Đang cài đặt AnduinOS"
+msgid "Turkish"
+msgstr "Tiếng Thổ Nhĩ Kỳ"
 
-#: src/pages.py:2413
-msgid "Detect firmware and Secure Boot"
-msgstr "Phát hiện firmware và Secure Boot"
+msgid "Ukrainian"
+msgstr "Tiếng Ukraina"
 
-#: src/pages.py:2416
-msgid "Detect Internet connectivity"
-msgstr "Phát hiện kết nối Internet"
+msgid "Unallocated space"
+msgstr "Khoảng trống chưa phân bổ"
 
-#: src/pages.py:2418
-msgid "Verify target disk isolation"
-msgstr "Xác minh cách ly đĩa đích"
+msgid "Unallocated · {size}"
+msgstr "Chưa được phân bổ · {size}"
 
-#: src/pages.py:2419
-msgid "Prepare installation disk"
-msgstr "Chuẩn bị đĩa cài đặt"
+msgid "Unavailable: {error}"
+msgstr "Khả dụng: {error}"
 
-#: src/pages.py:2420
-msgid "Mount target filesystems"
-msgstr "Gắn các hệ thống tập tin đích"
+msgid "Unknown filesystem"
+msgstr "Hệ thống tệp không xác định"
 
-#: src/pages.py:2421
-msgid "Copy AnduinOS system"
-msgstr "Sao chép hệ thống AnduinOS"
-
-#: src/pages.py:2422
-msgid "Configure storage and swap"
-msgstr "Cấu hình lưu trữ và swap"
-
-#: src/pages.py:2423
-msgid "Prepare target environment"
-msgstr "Chuẩn bị môi trường đích"
-
-#: src/pages.py:2424
-msgid "Remove live-session components"
-msgstr "Gỡ bỏ các thành phần phiên live"
-
-#: src/pages.py:2425
-msgid "Configure account, region, and machine identity"
-msgstr "Cấu hình tài khoản, khu vực và danh tính máy"
-
-#: src/pages.py:2427
-msgid "Select fastest package mirror"
-msgstr "Chọn máy chủ gói nhanh nhất"
-
-#: src/pages.py:2429
-msgid "Prepare Secure Boot"
-msgstr "Chuẩn bị Secure Boot"
-
-#: src/pages.py:2430
-msgid "Refresh package indexes"
-msgstr "Làm mới chỉ mục gói"
-
-#: src/pages.py:2431
-msgid "Install system updates"
-msgstr "Cài đặt bản cập nhật hệ thống"
-
-#: src/pages.py:2433
-msgid "Ensure Timeback Machine is available"
-msgstr "Đảm bảo Timeback Machine khả dụng"
-
-#: src/pages.py:2435
-msgid "Install hardware drivers"
-msgstr "Cài đặt trình điều khiển phần cứng"
-
-#: src/pages.py:2437
-msgid "Verify kernel module signatures"
-msgstr "Xác minh chữ ký mô đun kernel"
-
-#: src/pages.py:2439
-msgid "Install bootloader"
-msgstr "Cài đặt trình khởi động"
-
-#: src/pages.py:2440
-msgid "Schedule MOK enrollment"
-msgstr "Lên lịch đăng ký MOK"
-
-#: src/pages.py:2441
-msgid "Finalize target environment"
-msgstr "Hoàn thiện môi trường đích"
-
-#: src/pages.py:2442
 msgid "Unmount installed system"
 msgstr "Gỡ cài đặt hệ thống đã cài đặt"
 
-#: src/pages.py:2480
-msgid "Installation Steps"
-msgstr "Các bước cài đặt"
+msgid "Updates and Drivers"
+msgstr "Bản cập nhật và Trình điều khiển"
 
-#: src/pages.py:2516
-msgid "Copy Log"
-msgstr "Sao chép nhật ký"
-
-#: src/pages.py:2520
-msgid "Save Log"
-msgstr "Lưu nhật ký"
-
-#: src/pages.py:2591
-msgid "Previous slide"
-msgstr "Slide trước đó"
-
-#: src/pages.py:2597
-msgid "Next slide"
-msgstr "Slide tiếp theo"
-
-#: src/pages.py:2642
-msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
-msgstr "Sau khi khởi động lại, MOKManager sẽ mở ra. Hãy chọn Enroll MOK → Continue → Yes, sau đó nhập mật khẩu 123456."
-
-#: src/pages.py:2650
-msgid "Restart and Enroll Secure Boot Key"
-msgstr "Khởi động lại và Đăng ký Khóa Secure Boot"
-
-#: src/pages.py:2652
-msgid "Reboot Now"
-msgstr "Khởi động lại ngay"
-
-#: src/pages.py:2673
-msgid "Discover AnduinOS"
-msgstr "Khám phá AnduinOS"
-
-#: src/pages.py:2676
-msgid "Output"
-msgstr "Đầu ra"
-
-#: src/pages.py:2679
-msgid "Complete"
-msgstr "Hoàn tất"
-
-#: src/pages.py:2712
-msgid "Preparing installation…"
-msgstr "Đang chuẩn bị cài đặt…"
-
-#: src/pages.py:2758 src/pages.py:2824
-msgid "Installation complete"
-msgstr "Cài đặt đã hoàn tất"
-
-#: src/pages.py:2762
-msgid "Development simulation completed"
-msgstr "Mô phỏng phát triển đã hoàn tất"
-
-#: src/pages.py:2765
-msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
-msgstr "Kế hoạch cài đặt hợp lệ. Không có đĩa, hệ thống tập tin, trình khởi động, trạng thái Secure Boot hoặc hệ thống đã cài đặt nào bị thay đổi."
-
-#: src/pages.py:2772
 msgid ""
-"\n"
-"\n"
-"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+"Use already-unallocated space and preserve existing partitions. This is the "
+"only Windows coexistence path."
 msgstr ""
-"\n"
-"\n"
-"Cài đặt thực tế sẽ tạo MOK cục bộ cho máy. Sau khi khởi động lại, hãy chọn Enroll MOK → Continue → Yes trong MOKManager và nhập mật khẩu 123456."
+"Sử dụng khoảng trống chưa phân bổ sẵn và bảo toàn các phân vùng hiện có. Đây "
+"là cách duy nhất để cùng tồn tại với Windows."
 
-#: src/pages.py:2779 src/pages.py:2789 src/pages.py:2932 src/pages.py:2934
-msgid "Installation Complete"
-msgstr "Cài đặt hoàn tất"
-
-#: src/pages.py:2781 src/pages.py:2790
-msgid "Remove the installation media and restart your computer"
-msgstr "Gỡ thiết bị cài đặt và khởi động lại máy tính của bạn"
-
-#: src/pages.py:2783
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"Trên màn hình MOKManager màu xanh lam, hãy chọn Enroll MOK → Continue → Yes, mật khẩu: 123456"
-
-#: src/pages.py:2799
-msgid "Restart is disabled in development protection mode"
-msgstr "Khởi động lại bị vô hiệu hóa trong chế độ bảo vệ phát triển"
-
-#: src/pages.py:2807
-msgid "Installation failed"
-msgstr "Cài đặt thất bại"
-
-#: src/pages.py:2809
-msgid "Installation Failed"
-msgstr "Cài đặt thất bại"
-
-#: src/pages.py:2812 src/pages.py:2867
-msgid "Output • Error"
-msgstr "Đầu ra • Lỗi"
-
-#: src/pages.py:2862
-#, python-brace-format
-msgid "Output • {count} warning(s)"
-msgstr "Đầu ra • {count} cảnh báo"
-
-#: src/pages.py:2870
-#, python-brace-format
-msgid "{step} failed"
-msgstr "{step} thất bại"
-
-#: src/pages.py:715
-msgid "Empty disk — no partitions"
-msgstr "Đĩa trống — không có phân vùng"
-
-#: src/pages.py:468
-msgid "Confirm your keyboard layout"
-msgstr "Xác nhận bố cục bàn phím của bạn"
-
-#: src/pages.py:540
-msgid "Choose optional software to install"
-msgstr "Chọn phần mềm tùy chọn để cài đặt"
-
-#: src/pages.py:758
-msgid "Choose one target disk. Storage settings come next."
-msgstr "Chọn một ổ đĩa đích. Cài đặt lưu trữ sẽ được thực hiện tiếp theo."
-
-#: src/pages.py:923
-msgid "Choose a complete installation method, not only a filesystem."
-msgstr "Chọn phương pháp cài đặt đầy đủ, không chỉ là hệ thống tệp."
-
-#: src/pages.py:1184
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "Chỉ sử dụng khoảng trống chưa phân bổ hiện có trên ổ đĩa đã chọn."
 
-#: src/pages.py:1586
-msgid "Create your user account"
-msgstr "Tạo tài khoản người dùng của bạn"
+msgid "User"
+msgstr "Người dùng"
 
-#: src/pages.py:1902
-msgid "Choose your location to set the system clock"
-msgstr "Chọn vị trí của bạn để thiết lập đồng hồ hệ thống"
+msgid "User Account"
+msgstr "Tài khoản người dùng"
 
-#: src/pages.py:2042
-msgid "Please review your choices before proceeding"
-msgstr "Vui lòng xem lại các lựa chọn của bạn trước khi tiếp tục"
+msgid "Username"
+msgstr "Tên người dùng"
 
-#: src/pages.py:2405
-msgid "Please do not turn off your computer"
-msgstr "Vui lòng không tắt máy tính của bạn"
+msgid ""
+"Username must start with a lowercase ASCII letter and contain only lowercase "
+"ASCII letters or digits (maximum 16 characters)."
+msgstr ""
+"Username must start with a lowercase ASCII letter and contain only lowercase "
+"ASCII letters or digits (maximum 16 characters)."
+
+msgid "Uses a traditional single root filesystem."
+msgstr "Sử dụng hệ thống tệp gốc đơn truyền thống."
+
+msgid "Validate Plan (No Installation)"
+msgstr "Xác thực Kế hoạch (Không cài đặt)"
+
+msgid "Validate this installation plan?"
+msgstr "Xác thực kế hoạch cài đặt này?"
+
+msgid "Verify kernel module signatures"
+msgstr "Xác minh chữ ký mô đun kernel"
+
+msgid "Verify target disk isolation"
+msgstr "Xác minh cách ly đĩa đích"
+
+msgid "Vietnamese"
+msgstr "Tiếng Việt"
+
+msgid "Welcome to AnduinOS"
+msgstr "Chào mừng đến với AnduinOS"
+
+msgid "Windows detected"
+msgstr "Windows đã được phát hiện"
+
+msgid ""
+"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
+"AnduinOS NVRAM entry."
+msgstr ""
+"Chỉ ghi EFI/AnduinOS, không ghi đè lên EFI/BOOT và yêu cầu mục NVRAM "
+"AnduinOS đã được xác minh."
+
+msgid "automatic login"
+msgstr "đăng nhập tự động"
+
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr ""
+"tạo MOK cục bộ cho máy; đăng ký sau khi khởi động lại với mật khẩu 123456"
+
+msgid "detect and install (may include non-free software)"
+msgstr "p phát hiện và cài đặt (có thể bao gồm phần mềm không miễn phí)"
+
+msgid "do not install"
+msgstr "không cài đặt"
+
+msgid "download and install"
+msgstr "tải xuống và cài đặt"
+
+msgid "ext4 (classic)"
+msgstr "ext4 (cổ điển)"
+
+msgid "ext4 — classic"
+msgstr "ext4 — cổ điển"
+
+msgid "not required"
+msgstr "khob bắt buộc"
+
+msgid "password required for login"
+msgstr "yêu cầu mật khẩu để đăng nhập"
+
+msgid "single ext4 root filesystem"
+msgstr "hệ thống tập tin gốc ext4 đơn"
+
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / Khởi động an toàn: {secure_boot}"
+
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+msgid "{path} as {filesystem}"
+msgstr "{path} dưới dạng {filesystem}"
+
+msgid "{size} at {offset}"
+msgstr "{size} tại {offset}"
+
+msgid "{size} unallocated at {offset}"
+msgstr "{size} chưa phân bổ tại {offset}"
+
+msgid "{step} failed"
+msgstr "{step} thất bại"
+
+msgid ""
+"⚠ Only the selected unallocated space will be partitioned and formatted. "
+"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
+"firmware boot entry may change. This installer will not shrink Windows for "
+"you."
+msgstr ""
+"⚠ Chỉ vùng trống chưa được phân bổ đã chọn sẽ được chia và định dạng. Các "
+"phân vùng hiện có sẽ được giữ nguyên, nhưng các tệp EFI/AnduinOS và mục khởi "
+"động firmware AnduinOS có thể thay đổi. Trình cài đặt này sẽ không thu nhỏ "
+"Windows cho bạn."
+
+msgid ""
+"⚠ This will erase ALL data on the selected disk. This action cannot be "
+"undone."
+msgstr ""
+"⚠ Điều này sẽ xóa TẤT CẢ dữ liệu trên đĩa đã chọn. Hành động này không thể "
+"hoàn tác."
+
+#: src/pages.py
+msgid "Connect to the Internet"
+msgstr "Kết nối Internet"
+
+#: src/pages.py
+msgid "Internet connection is ready."
+msgstr "Kết nối Internet đã sẵn sàng."
+
+#: src/pages.py
+msgid "Available Wi-Fi Networks"
+msgstr "Các mạng Wi-Fi khả dụng"
+
+#~ msgid "Choose a complete installation method, not only a filesystem."
+#~ msgstr "Chọn phương pháp cài đặt đầy đủ, không chỉ là hệ thống tệp."
