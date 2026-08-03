@@ -1,2 +1,2 @@
 #!/bin/sh
-exec dotnet /usr/lib/apkg/apkg.dll "$@"
+exec /usr/bin/dotnet /usr/lib/apkg/apkg.dll "$@"
