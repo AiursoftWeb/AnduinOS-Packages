@@ -16,6 +16,33 @@ MOK_CERTIFICATE = MOK_DIR / "MOK.der"
 DKMS_CONFIG = Path("/etc/dkms/framework.conf.d/anduinos-sb-sign.conf")
 XBOX_PACKAGE = "anduinos-xbox-controller-driver"
 AUDIO_PACKAGES = ("firmware-sof-anduinos", "alsa-ucm-conf-anduinos")
+PRINTING_PACKAGES = (
+    "cups",
+    "cups-client",
+    "cups-core-drivers",
+    "cups-filters",
+    "cups-filters-core-drivers",
+    "cups-ipp-utils",
+    "cups-browsed",
+    "avahi-daemon",
+    "ipp-usb",
+    "cups-pk-helper",
+    "printer-driver-all",
+    "sane-airscan",
+)
+PRINTING_UNITS = (
+    "cups.service",
+    "cups.socket",
+    "cups.path",
+    "cups-browsed.service",
+    "ipp-usb.service",
+)
+PRINTING_AUTOSTART_UNITS = (
+    "cups.service",
+    "cups.socket",
+    "cups.path",
+    "cups-browsed.service",
+)
 PACKAGE_PATTERN = re.compile(r"^[a-z0-9][a-z0-9+.-]+$")
 
 
@@ -88,6 +115,21 @@ def install_audio() -> None:
     run(["apt-get", "install", "-y", *AUDIO_PACKAGES])
 
 
+def install_printing_support() -> None:
+    apt_update()
+    run(["apt-get", "install", "-y", *PRINTING_PACKAGES])
+
+
+def set_printing_enabled(enabled: bool) -> None:
+    if enabled:
+        run(["systemctl", "unmask", *PRINTING_UNITS])
+        run(["systemctl", "enable", "--now", *PRINTING_AUTOSTART_UNITS])
+    else:
+        # Mask every activation path, including the static ipp-usb unit. Merely
+        # stopping cups.service would allow its socket or path unit to revive it.
+        run(["systemctl", "mask", "--now", *PRINTING_UNITS])
+
+
 def enroll_mok() -> None:
     password = sys.stdin.readline().rstrip("\n")
     if not 8 <= len(password) <= 16 or "\x00" in password:
@@ -119,6 +161,12 @@ def main(arguments: list[str]) -> int:
                 install_xbox(reinstall=True)
             case ["install-audio"]:
                 install_audio()
+            case ["install-printing-support"]:
+                install_printing_support()
+            case ["set-printing-enabled", "true"]:
+                set_printing_enabled(True)
+            case ["set-printing-enabled", "false"]:
+                set_printing_enabled(False)
             case ["repair-dkms"]:
                 configure_dkms_signing()
                 run(["dkms", "autoinstall", "--force"])

@@ -14,6 +14,20 @@ MOK_PRIVATE_KEY = Path("/var/lib/shim-signed/mok/MOK.priv")
 MOK_CERTIFICATE = Path("/var/lib/shim-signed/mok/MOK.der")
 SOF_PACKAGE = "firmware-sof-anduinos"
 UCM_PACKAGE = "alsa-ucm-conf-anduinos"
+PRINTING_CORE_PACKAGES = ("cups", "cups-client")
+PRINTING_DRIVERLESS_PACKAGES = (
+    "cups-core-drivers",
+    "cups-filters",
+    "cups-filters-core-drivers",
+    "cups-ipp-utils",
+)
+PRINTING_DISCOVERY_PACKAGES = ("cups-browsed", "avahi-daemon")
+PRINTING_OPTIONAL_PACKAGES = (
+    "ipp-usb",
+    "cups-pk-helper",
+    "printer-driver-all",
+    "sane-airscan",
+)
 
 
 class Runner(Protocol):
@@ -131,6 +145,42 @@ class AudioState:
         )
 
 
+@dataclass(frozen=True)
+class PrintingState:
+    service_running: bool
+    startup_enabled: bool
+    printers: tuple[str, ...]
+    disabled_printers: tuple[str, ...]
+    default_printer: str | None
+    core_packages: tuple[PackageState, ...]
+    driverless_packages: tuple[PackageState, ...]
+    discovery_packages: tuple[PackageState, ...]
+    optional_packages: tuple[PackageState, ...]
+
+    @property
+    def core_ready(self) -> bool:
+        return self.service_running and all(
+            package.installed for package in self.core_packages
+        )
+
+    @property
+    def queues_ready(self) -> bool:
+        return self.service_running and not self.disabled_printers
+
+    @property
+    def packages(self) -> tuple[PackageState, ...]:
+        return (
+            self.core_packages
+            + self.driverless_packages
+            + self.discovery_packages
+            + self.optional_packages
+        )
+
+    @property
+    def missing_packages(self) -> tuple[PackageState, ...]:
+        return tuple(package for package in self.packages if not package.installed)
+
+
 def normalize_key(value: str | None) -> str | None:
     if not value:
         return None
@@ -210,6 +260,65 @@ def audio_state(
         ucm_profiles_present=_directory_contains_files(ucm_directory, ".conf"),
         sof_modules=sof_modules,
         active_drivers=active_drivers,
+    )
+
+
+def _printer_queues(output: str) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    printers: list[str] = []
+    disabled: list[str] = []
+    for line in output.splitlines():
+        match = re.match(r"^printer\s+(\S+)\s+(.+)$", line.strip())
+        if not match:
+            continue
+        name, status = match.groups()
+        printers.append(name)
+        if " disabled " in f" {status.lower()} ":
+            disabled.append(name)
+    return tuple(printers), tuple(disabled)
+
+
+def printing_state(runner: Runner | None = None) -> PrintingState:
+    runner = runner or SubprocessRunner()
+    service = runner.run(["systemctl", "is-active", "cups.service"])
+    socket = runner.run(["systemctl", "is-active", "cups.socket"])
+    service_running = (
+        service.returncode == 0 and service.stdout.strip() == "active"
+    ) or (socket.returncode == 0 and socket.stdout.strip() == "active")
+
+    service_enabled = runner.run(["systemctl", "is-enabled", "cups.service"])
+    socket_enabled = runner.run(["systemctl", "is-enabled", "cups.socket"])
+    enabled_states = {"enabled", "static", "indirect"}
+    startup_enabled = (
+        service_enabled.returncode == 0
+        and service_enabled.stdout.strip() in enabled_states
+    ) or (
+        socket_enabled.returncode == 0
+        and socket_enabled.stdout.strip() in enabled_states
+    )
+
+    queues = runner.run(["lpstat", "-p"])
+    printers, disabled = (
+        _printer_queues(queues.stdout) if queues.returncode == 0 else ((), ())
+    )
+    default_result = runner.run(["lpstat", "-d"])
+    default_printer = None
+    if default_result.returncode == 0 and ":" in default_result.stdout:
+        candidate = default_result.stdout.split(":", 1)[1].strip()
+        default_printer = candidate or None
+
+    def states(packages: Sequence[str]) -> tuple[PackageState, ...]:
+        return tuple(package_state(package, runner) for package in packages)
+
+    return PrintingState(
+        service_running=service_running,
+        startup_enabled=startup_enabled,
+        printers=printers,
+        disabled_printers=disabled,
+        default_printer=default_printer,
+        core_packages=states(PRINTING_CORE_PACKAGES),
+        driverless_packages=states(PRINTING_DRIVERLESS_PACKAGES),
+        discovery_packages=states(PRINTING_DISCOVERY_PACKAGES),
+        optional_packages=states(PRINTING_OPTIONAL_PACKAGES),
     )
 
 
@@ -370,7 +479,7 @@ def dkms_state(
     return DkmsState(tuple(modules), tuple(trusted), tuple(untrusted))
 
 
-def scan_system(runner: Runner | None = None) -> tuple[list[HardwareDevice], SecureBootState, XboxState, DkmsState, AudioState]:
+def scan_system(runner: Runner | None = None) -> tuple[list[HardwareDevice], SecureBootState, XboxState, DkmsState, AudioState, PrintingState]:
     runner = runner or SubprocessRunner()
     secure_boot = secure_boot_state(runner)
     return (
@@ -379,4 +488,5 @@ def scan_system(runner: Runner | None = None) -> tuple[list[HardwareDevice], Sec
         xbox_state(secure_boot, runner),
         dkms_state(secure_boot, runner),
         audio_state(runner),
+        printing_state(runner),
     )

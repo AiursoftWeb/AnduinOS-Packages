@@ -2,7 +2,7 @@ from importlib.machinery import SourceFileLoader
 from pathlib import Path
 import types
 import unittest
-from unittest.mock import patch
+from unittest.mock import call, patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -55,6 +55,61 @@ class HelperTests(unittest.TestCase):
                 "firmware-sof-anduinos",
                 "alsa-ucm-conf-anduinos",
             ]
+        )
+
+    def test_printing_support_package_names_are_fixed(self):
+        with (
+            patch.object(driver_helper, "apt_update") as update,
+            patch.object(driver_helper, "run") as run,
+        ):
+            driver_helper.install_printing_support()
+        update.assert_called_once_with()
+        run.assert_called_once_with(
+            ["apt-get", "install", "-y", *driver_helper.PRINTING_PACKAGES]
+        )
+        self.assertEqual(
+            driver_helper.PRINTING_PACKAGES,
+            (
+                "cups",
+                "cups-client",
+                "cups-core-drivers",
+                "cups-filters",
+                "cups-filters-core-drivers",
+                "cups-ipp-utils",
+                "cups-browsed",
+                "avahi-daemon",
+                "ipp-usb",
+                "cups-pk-helper",
+                "printer-driver-all",
+                "sane-airscan",
+            ),
+        )
+
+    def test_disabling_printing_masks_every_activation_path(self):
+        with patch.object(driver_helper, "run") as run:
+            driver_helper.set_printing_enabled(False)
+        run.assert_called_once_with(
+            ["systemctl", "mask", "--now", *driver_helper.PRINTING_UNITS]
+        )
+
+    def test_enabling_printing_unmasks_then_starts_autostart_units(self):
+        with patch.object(driver_helper, "run") as run:
+            driver_helper.set_printing_enabled(True)
+        self.assertEqual(
+            run.call_args_list,
+            [
+                call(
+                    ["systemctl", "unmask", *driver_helper.PRINTING_UNITS]
+                ),
+                call(
+                    [
+                        "systemctl",
+                        "enable",
+                        "--now",
+                        *driver_helper.PRINTING_AUTOSTART_UNITS,
+                    ]
+                ),
+            ],
         )
 
 

@@ -35,6 +35,28 @@ class PackageTests(unittest.TestCase):
             helper,
         )
 
+    def test_printing_page_exposes_status_and_package_groups(self):
+        application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
+        core = (ROOT / "src/anduinos_driver_center/core.py").read_text()
+        self.assertIn('printing_row.page_name = "printing"', application)
+        self.assertIn('_("Core printing")', application)
+        self.assertIn('_("Driverless printing")', application)
+        self.assertIn('_("Network discovery")', application)
+        self.assertIn('"printer-driver-all"', core)
+        self.assertIn('"sane-airscan"', core)
+        self.assertIn('["install-printing-support"]', application)
+        self.assertIn('Adw.SwitchRow(', application)
+        self.assertIn('"set-printing-enabled"', application)
+
+    def test_refresh_preserves_the_selected_hardware_page(self):
+        application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
+        self.assertIn("self._selected_page_name = row.page_name", application)
+        self.assertIn(
+            'getattr(row, "page_name", None) == self._selected_page_name',
+            application,
+        )
+        self.assertIn("if self._rebuilding_navigation:", application)
+
     def test_desktop_entry_is_visible_and_uses_stable_app_id(self):
         desktop = (ROOT / "data/com.anduinos.DriverCenter.desktop").read_text()
         self.assertIn("Type=Application", desktop)

@@ -13,6 +13,7 @@ from anduinos_driver_center.core import (  # noqa: E402
     normalize_key,
     dkms_state,
     parse_ubuntu_driver_devices,
+    printing_state,
     secure_boot_state,
     xbox_state,
 )
@@ -168,6 +169,60 @@ driver   : xserver-xorg-video-nouveau - distro free builtin
             self.assertFalse(state.packages_installed)
             self.assertFalse(state.ready)
             self.assertIsNone(state.sof_package.version)
+
+    def test_printing_reports_services_queues_default_and_packages(self):
+        responses = {
+            ("systemctl", "is-active", "cups.service"):
+                subprocess.CompletedProcess([], 0, "active\n", ""),
+            ("systemctl", "is-active", "cups.socket"):
+                subprocess.CompletedProcess([], 3, "inactive\n", ""),
+            ("systemctl", "is-enabled", "cups.service"):
+                subprocess.CompletedProcess([], 0, "enabled\n", ""),
+            ("systemctl", "is-enabled", "cups.socket"):
+                subprocess.CompletedProcess([], 0, "enabled\n", ""),
+            ("lpstat", "-p"): subprocess.CompletedProcess(
+                [],
+                0,
+                "printer Office is idle. enabled since Monday\n"
+                "printer Lab disabled since Tuesday\n",
+                "",
+            ),
+            ("lpstat", "-d"): subprocess.CompletedProcess(
+                [], 0, "system default destination: Office\n", ""
+            ),
+        }
+        installed = {
+            "cups",
+            "cups-client",
+            "cups-core-drivers",
+            "cups-filters",
+            "cups-filters-core-drivers",
+            "cups-ipp-utils",
+        }
+        state = printing_state(
+            FakeRunner(
+                responses,
+                installed,
+                {"cups": "2.4.16-1ubuntu1.3"},
+            )
+        )
+        self.assertTrue(state.service_running)
+        self.assertTrue(state.startup_enabled)
+        self.assertEqual(state.printers, ("Office", "Lab"))
+        self.assertEqual(state.disabled_printers, ("Lab",))
+        self.assertEqual(state.default_printer, "Office")
+        self.assertEqual(state.core_packages[0].version, "2.4.16-1ubuntu1.3")
+        self.assertTrue(state.core_ready)
+        self.assertFalse(state.queues_ready)
+
+    def test_printing_handles_missing_service_and_no_queues(self):
+        state = printing_state(FakeRunner())
+        self.assertFalse(state.service_running)
+        self.assertFalse(state.startup_enabled)
+        self.assertEqual(state.printers, ())
+        self.assertIsNone(state.default_printer)
+        self.assertFalse(state.core_ready)
+        self.assertEqual(len(state.missing_packages), 12)
 
 
 if __name__ == "__main__":

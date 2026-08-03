@@ -14,7 +14,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
-from .core import AudioState, DkmsState, HardwareDevice, SecureBootState, XboxState, scan_system
+from .core import AudioState, DkmsState, HardwareDevice, PackageState, PrintingState, SecureBootState, XboxState, scan_system
 
 
 APP_ID = "com.anduinos.DriverCenter"
@@ -70,7 +70,10 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self._xbox: XboxState | None = None
         self._dkms: DkmsState | None = None
         self._audio: AudioState | None = None
+        self._printing: PrintingState | None = None
         self._selected_package: str | None = None
+        self._selected_page_name: str | None = None
+        self._rebuilding_navigation = False
 
         css = Gtk.CssProvider()
         css.load_from_data(
@@ -174,6 +177,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
     def refresh(self) -> None:
         self.refresh_button.set_sensitive(False)
+        self._rebuilding_navigation = True
         self._show_loading()
 
         def worker() -> None:
@@ -182,8 +186,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
         threading.Thread(target=worker, daemon=True).start()
 
-    def _apply_scan(self, graphics: list[HardwareDevice], secure_boot: SecureBootState, xbox: XboxState, dkms: DkmsState, audio: AudioState) -> bool:
-        self._graphics, self._secure_boot, self._xbox, self._dkms, self._audio = graphics, secure_boot, xbox, dkms, audio
+    def _apply_scan(self, graphics: list[HardwareDevice], secure_boot: SecureBootState, xbox: XboxState, dkms: DkmsState, audio: AudioState, printing: PrintingState) -> bool:
+        self._graphics, self._secure_boot, self._xbox, self._dkms, self._audio, self._printing = graphics, secure_boot, xbox, dkms, audio, printing
         self.refresh_button.set_sensitive(True)
         self._clear(self.device_list)
         self._clear(self.stack)
@@ -204,6 +208,26 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self.device_list.append(audio_row)
         self.stack.add_named(self._audio_page(audio), "audio")
 
+        printer_count = len(printing.printers)
+        if not printing.service_running:
+            printing_subtitle = _("Printing service stopped")
+        elif printing.disabled_printers:
+            printing_subtitle = _("Some queues are paused")
+        elif not printing.printers:
+            printing_subtitle = _("No printers configured")
+        else:
+            printing_subtitle = gettext.ngettext(
+                "%d printer configured",
+                "%d printers configured",
+                printer_count,
+            ) % printer_count
+        printing_row = self._device_row(
+            "printer-symbolic", _("Printers"), printing_subtitle
+        )
+        printing_row.page_name = "printing"
+        self.device_list.append(printing_row)
+        self.stack.add_named(self._printing_page(printing), "printing")
+
         xbox_row = self._device_row(
             "input-gaming-symbolic", _("Xbox Controller"),
             _("xpadneo installed") if xbox.installed else _("Optional Bluetooth driver"),
@@ -220,9 +244,17 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self.device_list.append(secure_row)
         self.stack.add_named(self._secure_boot_page(secure_boot, dkms), "secure-boot")
 
-        first = self.device_list.get_row_at_index(0)
-        if first:
-            self.device_list.select_row(first)
+        selected = None
+        row = self.device_list.get_row_at_index(0)
+        while row:
+            if getattr(row, "page_name", None) == self._selected_page_name:
+                selected = row
+                break
+            row = self.device_list.get_row_at_index(row.get_index() + 1)
+        selected = selected or self.device_list.get_row_at_index(0)
+        self._rebuilding_navigation = False
+        if selected:
+            self.device_list.select_row(selected)
         return GLib.SOURCE_REMOVE
 
     def _device_row(self, icon_name: str, title: str, subtitle: str) -> Gtk.ListBoxRow:
@@ -243,7 +275,10 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         return row
 
     def _row_selected(self, _list: Gtk.ListBox, row: Gtk.ListBoxRow | None) -> None:
+        if self._rebuilding_navigation:
+            return
         if row and hasattr(row, "page_name"):
+            self._selected_page_name = row.page_name
             self.stack.set_visible_child_name(row.page_name)
 
     def _page_shell(
@@ -477,6 +512,206 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             button.connect("clicked", lambda btn: self._run_action(btn, ["install-audio"]))
             content.append(button)
         return page
+
+    def _printing_page(self, state: PrintingState) -> Gtk.Widget:
+        page, content = self._page_shell(
+            _("Printing Support"),
+            _("Inspect the local print service, configured queues, and the packages that provide modern and legacy printer support."),
+        )
+        availability = Adw.PreferencesGroup()
+        enable_printing = Adw.SwitchRow(
+            title=_("Enable Printing Support"),
+            subtitle=_("Allow local, network, and USB printing services to run."),
+        )
+        enable_printing.set_active(state.startup_enabled)
+        enable_printing.connect(
+            "notify::active", self._printing_switch_changed
+        )
+        availability.add(enable_printing)
+        content.append(availability)
+
+        overview = Adw.PreferencesGroup(title=_("System status"))
+        content.append(overview)
+        self._add_state_row(
+            overview,
+            _("CUPS service"),
+            _("Running") if state.service_running else _("Stopped"),
+            state.service_running,
+        )
+        self._add_state_row(
+            overview,
+            _("Start at boot"),
+            _("Enabled") if state.startup_enabled else _("Disabled"),
+            state.startup_enabled,
+        )
+        printer_count = len(state.printers)
+        printer_summary = gettext.ngettext(
+            "%d configured printer",
+            "%d configured printers",
+            printer_count,
+        ) % printer_count
+        self._add_state_row(
+            overview,
+            _("Configured printers"),
+            printer_summary,
+            True if printer_count else None,
+        )
+        self._add_state_row(
+            overview,
+            _("Default printer"),
+            state.default_printer or _("Not set"),
+            True if state.default_printer else None,
+        )
+        if not state.printers:
+            queue_summary = _("No configured queues")
+            queue_good = None
+        elif state.disabled_printers:
+            paused = len(state.disabled_printers)
+            queue_summary = gettext.ngettext(
+                "%d queue paused", "%d queues paused", paused
+            ) % paused
+            queue_good = False
+        else:
+            queue_summary = _("All queues enabled")
+            queue_good = True
+        self._add_state_row(
+            overview, _("Print queues"), queue_summary, queue_good
+        )
+
+        content.append(
+            self._printing_package_group(
+                _("Core printing"),
+                _("Required for the local print service and command-line clients."),
+                state.core_packages,
+                required=True,
+            )
+        )
+        content.append(
+            self._printing_package_group(
+                _("Driverless printing"),
+                _("Modern IPP drivers, document filters, and capability tools."),
+                state.driverless_packages,
+                required=True,
+            )
+        )
+        content.append(
+            self._printing_package_group(
+                _("Network discovery"),
+                _("Automatic discovery of printers advertised on the local network."),
+                state.discovery_packages,
+                required=False,
+            )
+        )
+        content.append(
+            self._printing_package_group(
+                _("Optional compatibility"),
+                _("USB IPP, administrative authorization, legacy drivers, and network scanning."),
+                state.optional_packages,
+                required=False,
+            )
+        )
+        if state.missing_packages:
+            missing = len(state.missing_packages)
+            action_group = Adw.PreferencesGroup(title=_("Complete printing support"))
+            action_row = Adw.ActionRow(
+                title=_("Install missing printing packages"),
+                subtitle=gettext.ngettext(
+                    "%d package is missing",
+                    "%d packages are missing",
+                    missing,
+                ) % missing,
+            )
+            install = Gtk.Button(
+                label=_("Install Missing Packages"),
+                valign=Gtk.Align.CENTER,
+            )
+            install.add_css_class("suggested-action")
+            install.connect(
+                "clicked",
+                lambda btn: self._run_action(
+                    btn, ["install-printing-support"]
+                ),
+            )
+            action_row.add_suffix(install)
+            action_group.add(action_row)
+            content.append(action_group)
+        return page
+
+    def _printing_package_group(
+        self,
+        title: str,
+        description: str,
+        packages: tuple[PackageState, ...],
+        required: bool,
+    ) -> Adw.PreferencesGroup:
+        group = Adw.PreferencesGroup(title=title, description=description)
+        for package in packages:
+            self._add_state_row(
+                group,
+                package.name,
+                package.version if package.installed else _("Not installed"),
+                package.installed if required else (
+                    True if package.installed else None
+                ),
+            )
+        return group
+
+    def _printing_switch_changed(
+        self, row: Adw.SwitchRow, _parameter
+    ) -> None:
+        row.set_sensitive(False)
+        enabled = row.get_active()
+
+        def worker() -> None:
+            try:
+                result = subprocess.run(
+                    [
+                        "pkexec",
+                        HELPER,
+                        "set-printing-enabled",
+                        "true" if enabled else "false",
+                    ],
+                    capture_output=True,
+                    text=True,
+                    timeout=1800,
+                    check=False,
+                )
+                message = (
+                    result.stdout.strip().splitlines()[-1]
+                    if result.stdout.strip()
+                    else result.stderr.strip()
+                )
+                GLib.idle_add(
+                    self._printing_switch_done,
+                    enabled,
+                    result.returncode,
+                    message,
+                )
+            except Exception as error:
+                GLib.idle_add(
+                    self._printing_switch_done, enabled, 1, str(error)
+                )
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _printing_switch_done(
+        self, enabled: bool, code: int, message: str
+    ) -> bool:
+        if code == 0:
+            self._toast(
+                _("Printing support enabled.")
+                if enabled
+                else _("Printing support disabled.")
+            )
+        else:
+            self._toast(
+                _("Printing operation failed: ")
+                + (message or _("unknown error"))
+            )
+        # Re-scan even after failure so the switch always reflects systemd,
+        # rather than the optimistic state selected before authentication.
+        self.refresh()
+        return GLib.SOURCE_REMOVE
 
     def _secure_boot_page(self, state: SecureBootState, dkms: DkmsState) -> Gtk.Widget:
         page, content = self._page_shell(
