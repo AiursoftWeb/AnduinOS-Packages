@@ -1,6 +1,7 @@
 pub mod automatic_home;
 pub mod automation;
 pub mod boot;
+pub mod browser_preferences;
 pub mod browsing;
 pub mod client;
 pub mod confirmation;
@@ -15,12 +16,13 @@ pub mod package_transaction;
 pub mod recovery;
 pub mod retention;
 pub mod rollback;
+pub mod snapshot_search;
 pub mod space;
 pub mod store;
 pub mod targets;
 pub mod transaction;
 
-pub const CONTRACT_VERSION: u32 = 8;
+pub const CONTRACT_VERSION: u32 = 11;
 pub const DEPLOYMENT_SCHEMA_VERSION: u32 = 1;
 pub const SNAPSHOT_ROOT: &str = "/.snapshots/anduinos";
 pub const DBUS_NAME: &str = "com.anduinos.TimebackMachine1";

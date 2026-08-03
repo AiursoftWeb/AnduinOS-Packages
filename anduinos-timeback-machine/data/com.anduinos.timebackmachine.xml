@@ -21,10 +21,54 @@
     <method name="ListHomeSnapshots">
       <arg name="snapshots_json" type="s" direction="out"/>
     </method>
+    <method name="BeginSnapshotBrowse">
+      <arg name="snapshot_kind" type="s" direction="in"/>
+      <arg name="snapshot_id" type="s" direction="in"/>
+      <arg name="session_id" type="s" direction="out"/>
+    </method>
+    <method name="ListSnapshotDirectorySession">
+      <arg name="session_id" type="s" direction="in"/>
+      <arg name="path_json" type="s" direction="in"/>
+      <arg name="offset" type="u" direction="in"/>
+      <arg name="limit" type="u" direction="in"/>
+      <arg name="sort_mode" type="s" direction="in"/>
+      <arg name="descending" type="b" direction="in"/>
+      <arg name="listing_json" type="s" direction="out"/>
+    </method>
+    <method name="OpenSnapshotFileSession">
+      <arg name="session_id" type="s" direction="in"/>
+      <arg name="path_json" type="s" direction="in"/>
+      <arg name="file" type="h" direction="out"/>
+      <arg name="metadata_json" type="s" direction="out"/>
+    </method>
+    <method name="CloseSnapshotBrowse">
+      <arg name="session_id" type="s" direction="in"/>
+    </method>
+    <method name="KeepSnapshotBrowseAlive">
+      <arg name="session_id" type="s" direction="in"/>
+    </method>
     <method name="ListSnapshotDirectory">
       <arg name="snapshot_kind" type="s" direction="in"/>
       <arg name="snapshot_id" type="s" direction="in"/>
       <arg name="path_json" type="s" direction="in"/>
+      <arg name="listing_json" type="s" direction="out"/>
+    </method>
+    <method name="ListSnapshotDirectoryPage">
+      <arg name="snapshot_kind" type="s" direction="in"/>
+      <arg name="snapshot_id" type="s" direction="in"/>
+      <arg name="path_json" type="s" direction="in"/>
+      <arg name="offset" type="u" direction="in"/>
+      <arg name="limit" type="u" direction="in"/>
+      <arg name="listing_json" type="s" direction="out"/>
+    </method>
+    <method name="ListSnapshotDirectoryPageSorted">
+      <arg name="snapshot_kind" type="s" direction="in"/>
+      <arg name="snapshot_id" type="s" direction="in"/>
+      <arg name="path_json" type="s" direction="in"/>
+      <arg name="offset" type="u" direction="in"/>
+      <arg name="limit" type="u" direction="in"/>
+      <arg name="sort_mode" type="s" direction="in"/>
+      <arg name="descending" type="b" direction="in"/>
       <arg name="listing_json" type="s" direction="out"/>
     </method>
     <method name="OpenSnapshotFile">

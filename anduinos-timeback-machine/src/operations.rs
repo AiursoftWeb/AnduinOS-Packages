@@ -10,6 +10,7 @@ use chrono::Utc;
 use sha2::{Digest, Sha256};
 use uuid::Uuid;
 
+use crate::browsing::{acquire_exclusive_snapshot_lock_at, SnapshotKind};
 use crate::coordination::TransactionStartLock;
 use crate::layout::{LayoutReport, LayoutSupport};
 use crate::model::{DeploymentId, DeploymentKind, DeploymentRecord, DeploymentState};
@@ -581,6 +582,21 @@ impl<R: CommandRunner> OperationEngine<R> {
                     format!("Could not coordinate recovery-point deletion: {error}"),
                 )
             })?;
+        let _browse_lock = acquire_exclusive_snapshot_lock_at(
+            &self.snapshot_root,
+            SnapshotKind::System,
+            &id.to_string(),
+        )
+        .map_err(|error| {
+            OperationError::new(
+                if error.kind() == io::ErrorKind::WouldBlock {
+                    OperationErrorCode::Busy
+                } else {
+                    OperationErrorCode::Io
+                },
+                format!("Could not coordinate with snapshot browsing: {error}"),
+            )
+        })?;
         let mut record = self.load_record(id)?;
         self.ensure_not_transaction_referenced(id)?;
         if record.state != DeploymentState::Deleting {

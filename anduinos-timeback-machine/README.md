@@ -46,6 +46,33 @@ them and edit one shared policy. The overview reports the last successful and
 next planned snapshot for each active stream. Home snapshots are stored and
 retained independently from bootable System recovery points.
 
+The read-only snapshot file browser provides list and grid views, paging,
+preview, recursive copy-out, a Places sidebar, and item Properties. Properties
+show the historical path, local-time modification date, size, Unix permissions,
+visibility, and whether the item can be copied safely. Folder Properties
+calculate total size and child counts asynchronously with cancellation and a
+100,000-item safety ceiling; files and folders can be copied out directly from
+the same dialog. User Data places come from the selected snapshot's own XDG
+user-directory configuration, so
+customized and localized Desktop, Documents, and media paths remain accurate
+historically. Common file classes use content-aware icons, while bounded raster
+images receive asynchronously loaded thumbnails with a small in-memory cache;
+failed or unsupported image decoding falls back to the safe file-type icon.
+The browser remembers list or grid view, hidden-file visibility, sorting, and
+copy conflict policy in a bounded, versioned user preference file. Preferences
+are replaced atomically and never stored in or applied to a snapshot.
+Successful single-file and recursive exports report files, directories, skipped
+items, and bytes, with an action that opens the destination in the desktop's
+default file manager.
+Search in the browser is recursive from the current snapshot location and runs
+asynchronously. Results retain their full historical path and support opening
+folders, previewing files, viewing Properties, and copying files or whole
+folders out. A new query cancels the previous scan; hidden folders follow the
+browser's visibility setting, and 100,000 scanned items or 1,000 matches form a
+clear safety ceiling. File results can open their containing snapshot folder;
+the matching row is focused and kept visible even when it originally fell
+outside that directory's first 1,000-item page.
+
 ## Local development
 
 ```bash

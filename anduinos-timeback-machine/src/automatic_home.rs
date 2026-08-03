@@ -10,6 +10,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
+use crate::browsing::{acquire_exclusive_snapshot_lock_at, SnapshotKind};
 use crate::layout::LayoutReport;
 use crate::targets::{discover_targets, TargetKind};
 use crate::SNAPSHOT_ROOT;
@@ -136,6 +137,11 @@ impl HomeSnapshotStore {
     pub fn delete(&self, id: Uuid) -> Result<(), String> {
         self.ensure_directories()?;
         let _lock = self.lock()?;
+        let _browse_lock =
+            acquire_exclusive_snapshot_lock_at(&self.root, SnapshotKind::Home, &id.to_string())
+                .map_err(|error| {
+                    format!("Could not delete a Home snapshot while it is browsed: {error}")
+                })?;
         let metadata = self.metadata_directory().join(format!("{id}.json"));
         let mut record = read_record(&metadata)?;
         validate_record(&record)?;

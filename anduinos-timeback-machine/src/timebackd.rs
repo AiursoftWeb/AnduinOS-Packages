@@ -1,4 +1,4 @@
-use std::cell::Cell;
+use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
 use std::panic::{self, AssertUnwindSafe};
 use std::process::Command;
@@ -7,10 +7,11 @@ use std::rc::Rc;
 use std::str::FromStr;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
+use std::time::{Duration, Instant};
 
 use anduinos_timeback::automatic_home::HomeSnapshotStore;
 use anduinos_timeback::automation::{AutomaticConfiguration, AutomaticPolicy, AutomaticStore};
-use anduinos_timeback::browsing::{self, SnapshotKind};
+use anduinos_timeback::browsing::{self, SnapshotBrowseLock, SnapshotKind, SortMode};
 use anduinos_timeback::layout;
 use anduinos_timeback::model::DeploymentId;
 use anduinos_timeback::operations::{OperationEngine, OperationError, OperationPhase};
@@ -30,6 +31,16 @@ const CREATE_ACTION: &str = "com.anduinos.timebackmachine.create";
 const MANAGE_ACTION: &str = "com.anduinos.timebackmachine.manage";
 const RESTORE_ACTION: &str = "com.anduinos.timebackmachine.restore";
 const BROWSE_ACTION: &str = "com.anduinos.timebackmachine.browse";
+const BROWSE_SESSION_TTL: Duration = Duration::from_secs(15 * 60);
+const MAX_BROWSE_SESSIONS: usize = 128;
+
+struct BrowseSession {
+    sender: String,
+    kind: SnapshotKind,
+    snapshot_id: String,
+    last_used: Instant,
+    _lock: SnapshotBrowseLock,
+}
 
 struct DaemonOperationError {
     code: String,
@@ -111,6 +122,31 @@ fn register_api(
     connection: &gio::DBusConnection,
     busy: Arc<AtomicBool>,
 ) -> Result<(), glib::Error> {
+    let browse_sessions = Rc::new(RefCell::new(HashMap::<String, BrowseSession>::new()));
+    let sessions_for_names = browse_sessions.clone();
+    #[allow(deprecated)]
+    connection.signal_subscribe(
+        Some("org.freedesktop.DBus"),
+        Some("org.freedesktop.DBus"),
+        Some("NameOwnerChanged"),
+        Some("/org/freedesktop/DBus"),
+        None,
+        gio::DBusSignalFlags::NONE,
+        move |_connection, _sender, _path, _interface, _signal, parameters| {
+            let name = parameters.child_get::<String>(0);
+            let new_owner = parameters.child_get::<String>(2);
+            if new_owner.is_empty() && name.starts_with(':') {
+                sessions_for_names
+                    .borrow_mut()
+                    .retain(|_, session| session.sender != name);
+            }
+        },
+    );
+    let sessions_for_expiry = browse_sessions.clone();
+    glib::timeout_add_local(Duration::from_secs(60), move || {
+        expire_browse_sessions(&mut sessions_for_expiry.borrow_mut());
+        glib::ControlFlow::Continue
+    });
     let interface = gio::DBusNodeInfo::for_xml(INTROSPECTION_XML)?
         .lookup_interface(DBUS_INTERFACE)
         .expect("the embedded D-Bus interface must exist");
@@ -118,6 +154,7 @@ fn register_api(
         .register_object(DBUS_PATH, &interface)
         .method_call({
             let busy = busy.clone();
+            let browse_sessions = browse_sessions.clone();
             move |connection,
                   sender,
                   _object_path,
@@ -153,7 +190,200 @@ fn register_api(
                             &error,
                         ),
                     },
-                    "ListSnapshotDirectory" => {
+                    "BeginSnapshotBrowse" => {
+                        let Some(sender) = sender else {
+                            invocation.return_dbus_error(
+                                AUTHORIZATION_ERROR,
+                                "The D-Bus caller is unknown",
+                            );
+                            return;
+                        };
+                        if let Err(message) = authorize(sender, BROWSE_ACTION) {
+                            invocation.return_dbus_error(AUTHORIZATION_ERROR, &message);
+                            return;
+                        }
+                        let kind = match SnapshotKind::parse(&parameters.child_get::<String>(0)) {
+                            Ok(kind) => kind,
+                            Err(error) => {
+                                return_browse_error(invocation, error);
+                                return;
+                            }
+                        };
+                        let snapshot_id = parameters.child_get::<String>(1);
+                        let browse_lock = match browsing::acquire_shared_snapshot_lock(
+                            kind,
+                            &snapshot_id,
+                        ) {
+                            Ok(lock) => lock,
+                            Err(error) => {
+                                return_browse_error(invocation, error);
+                                return;
+                            }
+                        };
+                        if let Err(error) = browsing::list_directory_page(
+                            kind,
+                            &snapshot_id,
+                            &[],
+                            0,
+                            1,
+                        ) {
+                            return_browse_error(invocation, error);
+                            return;
+                        }
+                        expire_browse_sessions(&mut browse_sessions.borrow_mut());
+                        if browse_sessions.borrow().len() >= MAX_BROWSE_SESSIONS {
+                            invocation.return_dbus_error(
+                                BUSY_ERROR,
+                                "Too many snapshot browsing sessions are active",
+                            );
+                            return;
+                        }
+                        let session_id = uuid::Uuid::new_v4().hyphenated().to_string();
+                        browse_sessions.borrow_mut().insert(
+                            session_id.clone(),
+                            BrowseSession {
+                                sender: sender.to_string(),
+                                kind,
+                                snapshot_id,
+                                last_used: Instant::now(),
+                                _lock: browse_lock,
+                            },
+                        );
+                        invocation.return_value(Some(&(session_id,).to_variant()));
+                    }
+                    "ListSnapshotDirectorySession" => {
+                        let Some(sender) = sender else {
+                            invocation.return_dbus_error(
+                                AUTHORIZATION_ERROR,
+                                "The D-Bus caller is unknown",
+                            );
+                            return;
+                        };
+                        let session_id = parameters.child_get::<String>(0);
+                        let (kind, snapshot_id) = match browse_session_target(
+                            &browse_sessions,
+                            &session_id,
+                            sender,
+                        ) {
+                            Ok(target) => target,
+                            Err(message) => {
+                                invocation.return_dbus_error(AUTHORIZATION_ERROR, &message);
+                                return;
+                            }
+                        };
+                        let path = match serde_json::from_str::<Vec<String>>(
+                            &parameters.child_get::<String>(1),
+                        ) {
+                            Ok(path) => path,
+                            Err(error) => {
+                                invocation.return_dbus_error(
+                                    INVALID_ARGUMENT_ERROR,
+                                    &format!("Invalid snapshot browser path: {error}"),
+                                );
+                                return;
+                            }
+                        };
+                        let sort_mode =
+                            match SortMode::parse(&parameters.child_get::<String>(4)) {
+                                Ok(mode) => mode,
+                                Err(error) => {
+                                    return_browse_error(invocation, error);
+                                    return;
+                                }
+                            };
+                        match browsing::list_directory_page_sorted(
+                            kind,
+                            &snapshot_id,
+                            &path,
+                            parameters.child_get::<u32>(2) as usize,
+                            parameters.child_get::<u32>(3) as usize,
+                            sort_mode,
+                            parameters.child_get::<bool>(5),
+                        ) {
+                            Ok(listing) => return_json(invocation, &listing),
+                            Err(error) => return_browse_error(invocation, error),
+                        }
+                    }
+                    "OpenSnapshotFileSession" => {
+                        let Some(sender) = sender else {
+                            invocation.return_dbus_error(
+                                AUTHORIZATION_ERROR,
+                                "The D-Bus caller is unknown",
+                            );
+                            return;
+                        };
+                        let session_id = parameters.child_get::<String>(0);
+                        let (kind, snapshot_id) = match browse_session_target(
+                            &browse_sessions,
+                            &session_id,
+                            sender,
+                        ) {
+                            Ok(target) => target,
+                            Err(message) => {
+                                invocation.return_dbus_error(AUTHORIZATION_ERROR, &message);
+                                return;
+                            }
+                        };
+                        let path = match serde_json::from_str::<Vec<String>>(
+                            &parameters.child_get::<String>(1),
+                        ) {
+                            Ok(path) => path,
+                            Err(error) => {
+                                invocation.return_dbus_error(
+                                    INVALID_ARGUMENT_ERROR,
+                                    &format!("Invalid snapshot browser path: {error}"),
+                                );
+                                return;
+                            }
+                        };
+                        return_open_snapshot_file(
+                            invocation,
+                            browsing::open_regular_file(kind, &snapshot_id, &path),
+                        );
+                    }
+                    "CloseSnapshotBrowse" => {
+                        let Some(sender) = sender else {
+                            invocation.return_dbus_error(
+                                AUTHORIZATION_ERROR,
+                                "The D-Bus caller is unknown",
+                            );
+                            return;
+                        };
+                        let session_id = parameters.child_get::<String>(0);
+                        let mut sessions = browse_sessions.borrow_mut();
+                        expire_browse_sessions(&mut sessions);
+                        if sessions
+                            .get(&session_id)
+                            .is_some_and(|session| session.sender == sender)
+                        {
+                            sessions.remove(&session_id);
+                            invocation.return_value(Some(&().to_variant()));
+                        } else {
+                            invocation.return_dbus_error(
+                                AUTHORIZATION_ERROR,
+                                "The browsing session is unavailable for this caller",
+                            );
+                        }
+                    }
+                    "KeepSnapshotBrowseAlive" => {
+                        let Some(sender) = sender else {
+                            invocation.return_dbus_error(
+                                AUTHORIZATION_ERROR,
+                                "The D-Bus caller is unknown",
+                            );
+                            return;
+                        };
+                        let session_id = parameters.child_get::<String>(0);
+                        match browse_session_target(&browse_sessions, &session_id, sender) {
+                            Ok(_) => invocation.return_value(Some(&().to_variant())),
+                            Err(message) => {
+                                invocation.return_dbus_error(AUTHORIZATION_ERROR, &message)
+                            }
+                        }
+                    }
+                    "ListSnapshotDirectory"
+                    | "ListSnapshotDirectoryPage"
+                    | "ListSnapshotDirectoryPageSorted" => {
                         let Some(sender) = sender else {
                             invocation.return_dbus_error(
                                 AUTHORIZATION_ERROR,
@@ -184,7 +414,38 @@ fn register_api(
                                 return;
                             }
                         };
-                        match browsing::list_directory(kind, &snapshot_id, &path) {
+                        let paginated = method != "ListSnapshotDirectory";
+                        let (offset, limit) = if paginated {
+                            (
+                                parameters.child_get::<u32>(3) as usize,
+                                parameters.child_get::<u32>(4) as usize,
+                            )
+                        } else {
+                            (0, 1_000)
+                        };
+                        let (sort_mode, descending) =
+                            if method == "ListSnapshotDirectoryPageSorted" {
+                                let sort_mode =
+                                    match SortMode::parse(&parameters.child_get::<String>(5)) {
+                                        Ok(mode) => mode,
+                                        Err(error) => {
+                                            return_browse_error(invocation, error);
+                                            return;
+                                        }
+                                    };
+                                (sort_mode, parameters.child_get::<bool>(6))
+                            } else {
+                                (SortMode::Name, false)
+                            };
+                        match browsing::list_directory_page_sorted(
+                            kind,
+                            &snapshot_id,
+                            &path,
+                            offset,
+                            limit,
+                            sort_mode,
+                            descending,
+                        ) {
                             Ok(listing) => return_json(invocation, &listing),
                             Err(error) => return_browse_error(invocation, error),
                         }
@@ -818,4 +1079,68 @@ fn return_browse_error(
             .collect::<String>()
     );
     invocation.return_dbus_error(&name, &error.message);
+}
+
+fn expire_browse_sessions(sessions: &mut HashMap<String, BrowseSession>) {
+    let now = Instant::now();
+    sessions.retain(|_, session| now.duration_since(session.last_used) < BROWSE_SESSION_TTL);
+}
+
+fn browse_session_target(
+    sessions: &Rc<RefCell<HashMap<String, BrowseSession>>>,
+    session_id: &str,
+    sender: &str,
+) -> Result<(SnapshotKind, String), String> {
+    let mut sessions = sessions.borrow_mut();
+    expire_browse_sessions(&mut sessions);
+    let session = sessions
+        .get_mut(session_id)
+        .ok_or_else(|| "The browsing session expired or does not exist".to_string())?;
+    if session.sender != sender {
+        return Err("The browsing session belongs to another D-Bus caller".into());
+    }
+    session.last_used = Instant::now();
+    Ok((session.kind, session.snapshot_id.clone()))
+}
+
+fn return_open_snapshot_file(
+    invocation: gio::DBusMethodInvocation,
+    result: Result<
+        (
+            std::fs::File,
+            anduinos_timeback::browsing::OpenedFileMetadata,
+        ),
+        anduinos_timeback::browsing::BrowseError,
+    >,
+) {
+    match result {
+        Ok((file, metadata)) => {
+            let descriptors = gio::UnixFDList::new();
+            let index = match descriptors.append(&file) {
+                Ok(index) => index,
+                Err(error) => {
+                    invocation.return_dbus_error(
+                        "com.anduinos.TimebackMachine1.Error.BrowseIo",
+                        &format!("Could not transfer the snapshot file: {error}"),
+                    );
+                    return;
+                }
+            };
+            let metadata_json = match serde_json::to_string(&metadata) {
+                Ok(json) => json,
+                Err(error) => {
+                    invocation.return_dbus_error(
+                        "com.anduinos.TimebackMachine1.Error.Internal",
+                        &format!("Could not encode file metadata: {error}"),
+                    );
+                    return;
+                }
+            };
+            invocation.return_value_with_unix_fd_list(
+                Some(&(glib::variant::Handle(index), metadata_json).to_variant()),
+                Some(&descriptors),
+            );
+        }
+        Err(error) => return_browse_error(invocation, error),
+    }
 }

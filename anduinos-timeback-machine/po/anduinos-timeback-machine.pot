@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: anduinos-timeback-machine 0.2.0\n"
+"Project-Id-Version: anduinos-timeback-machine 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-02 19:24+0000\n"
+"POT-Creation-Date: 2026-08-03 06:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,75 +29,470 @@ msgstr ""
 msgid "Create recovery points and safely return AnduinOS to an earlier state."
 msgstr ""
 
-#: src/snapshot_browser.rs:38
+#: src/snapshot_browser.rs:155
+msgid "Could Not Browse Snapshot"
+msgstr ""
+
+#: src/snapshot_browser.rs:159 src/window.rs:782 src/window.rs:1138
+#: src/window.rs:1817 src/window.rs:2540
+msgid "Close"
+msgstr ""
+
+#: src/snapshot_browser.rs:167
 msgid "Snapshot Files"
 msgstr ""
 
-#: src/snapshot_browser.rs:61
+#: src/snapshot_browser.rs:205
+msgid "Search This Snapshot Location"
+msgstr ""
+
+#: src/snapshot_browser.rs:209 src/snapshot_browser.rs:1079
+msgid "Searching Snapshot…"
+msgstr ""
+
+#: src/snapshot_browser.rs:214
 msgid "Parent Folder"
 msgstr ""
 
-#: src/snapshot_browser.rs:66
+#: src/snapshot_browser.rs:219
+msgid "Back"
+msgstr ""
+
+#: src/snapshot_browser.rs:224
+msgid "Forward"
+msgstr ""
+
+#: src/snapshot_browser.rs:229
 msgid "Show Hidden Files"
 msgstr ""
 
-#: src/snapshot_browser.rs:74
+#: src/snapshot_browser.rs:239 src/snapshot_browser.rs:535
+msgid "List View"
+msgstr ""
+
+#: src/snapshot_browser.rs:241 src/snapshot_browser.rs:537
+msgid "Grid View"
+msgstr ""
+
+#: src/snapshot_browser.rs:245 src/window.rs:2069
+msgid "Name"
+msgstr ""
+
+#: src/snapshot_browser.rs:245 src/snapshot_browser.rs:1789
+msgid "Modified"
+msgstr ""
+
+#: src/snapshot_browser.rs:245 src/snapshot_browser.rs:1775
+msgid "Size"
+msgstr ""
+
+#: src/snapshot_browser.rs:251
+msgid "Sort files"
+msgstr ""
+
+#: src/snapshot_browser.rs:254
+msgid "Reverse Sort Order"
+msgstr ""
+
+#: src/snapshot_browser.rs:258
+msgid "Copy Selected…"
+msgstr ""
+
+#: src/snapshot_browser.rs:264 src/snapshot_browser.rs:1715
+msgid "No items selected"
+msgstr ""
+
+#: src/snapshot_browser.rs:270
+msgid "Keep Both"
+msgstr ""
+
+#: src/snapshot_browser.rs:270
+msgid "Replace"
+msgstr ""
+
+#: src/snapshot_browser.rs:270
+msgid "Skip"
+msgstr ""
+
+#: src/snapshot_browser.rs:276
+msgid "When an item already exists"
+msgstr ""
+
+#: src/snapshot_browser.rs:286
 msgid "Read-only snapshot"
 msgstr ""
 
-#: src/snapshot_browser.rs:154
+#: src/snapshot_browser.rs:373
+msgid "Places"
+msgstr ""
+
+#: src/snapshot_browser.rs:405
+msgid "Preparing copy…"
+msgstr ""
+
+#: src/snapshot_browser.rs:410 src/window.rs:2097 src/window.rs:2309
+#: src/window.rs:2340
+msgid "Cancel"
+msgstr ""
+
+#: src/snapshot_browser.rs:581
+msgid "Cancelling…"
+msgstr ""
+
+#: src/snapshot_browser.rs:589
+msgid "Cancelling the active copy before closing…"
+msgstr ""
+
+#: src/snapshot_browser.rs:648
+msgid "Could not save browser preferences"
+msgstr ""
+
+#: src/snapshot_browser.rs:896
 msgid "Could Not Open Folder"
 msgstr ""
 
-#: src/snapshot_browser.rs:176
+#: src/snapshot_browser.rs:920 src/snapshot_browser.rs:2271
+msgid "Snapshot Root"
+msgstr ""
+
+#: src/snapshot_browser.rs:998
+msgid "Load More"
+msgstr ""
+
+#: src/snapshot_browser.rs:1018
 msgid "This Folder Is Empty"
 msgstr ""
 
-#: src/snapshot_browser.rs:177
+#: src/snapshot_browser.rs:1019
 msgid "There are no files to display."
 msgstr ""
 
-#: src/snapshot_browser.rs:182
-msgid "This folder is very large; only the first 1,000 items are shown."
+#: src/snapshot_browser.rs:1024
+msgid ""
+"This folder reached the 100,000-item safety limit; some items cannot be "
+"shown."
 msgstr ""
 
-#: src/snapshot_browser.rs:221
+#: src/snapshot_browser.rs:1061
+msgid "Type at Least 2 Characters"
+msgstr ""
+
+#: src/snapshot_browser.rs:1062
+msgid "Enter a longer name to search this snapshot."
+msgstr ""
+
+#: src/snapshot_browser.rs:1069
+msgid "Search Is Too Long"
+msgstr ""
+
+#: src/snapshot_browser.rs:1070
+msgid "Use a search of no more than 128 characters."
+msgstr ""
+
+#: src/snapshot_browser.rs:1080
+msgid "Searching this location and all folders below it."
+msgstr ""
+
+#: src/snapshot_browser.rs:1134
+msgid "Enter a valid search."
+msgstr ""
+
+#: src/snapshot_browser.rs:1143
+msgid "The search process stopped unexpectedly."
+msgstr ""
+
+#: src/snapshot_browser.rs:1157
+msgid "Could Not Search Snapshot"
+msgstr ""
+
+#: src/snapshot_browser.rs:1184
+msgid "No Matching Files"
+msgstr ""
+
+#: src/snapshot_browser.rs:1185
+msgid "No files below this location match your search."
+msgstr ""
+
+#: src/snapshot_browser.rs:1194
+msgid "Search Results May Be Incomplete"
+msgstr ""
+
+#: src/snapshot_browser.rs:1196
+msgid "The search stopped at its 100,000-item or 1,000-result safety limit."
+msgstr ""
+
+#: src/snapshot_browser.rs:1233 src/snapshot_browser.rs:1526
+#: src/snapshot_browser.rs:1657 src/snapshot_browser.rs:1834
+msgid "Properties"
+msgstr ""
+
+#: src/snapshot_browser.rs:1248
+msgid "Open Containing Folder"
+msgstr ""
+
+#: src/snapshot_browser.rs:1268 src/snapshot_browser.rs:1304
+#: src/snapshot_browser.rs:1570 src/snapshot_browser.rs:1823
 msgid "Copy Out…"
 msgstr ""
 
-#: src/snapshot_browser.rs:236
+#: src/snapshot_browser.rs:1291 src/snapshot_browser.rs:1557 src/window.rs:1395
+msgid "Preview"
+msgstr ""
+
+#: src/snapshot_browser.rs:1317 src/snapshot_browser.rs:1583
 msgid "Not copyable"
 msgstr ""
 
-#: src/snapshot_browser.rs:257
-msgid "Copy File Out of Snapshot"
+#: src/snapshot_browser.rs:1504 src/snapshot_browser.rs:1647
+msgid "Select for copying"
 msgstr ""
 
-#: src/snapshot_browser.rs:259
-msgid "Copy"
+#: src/snapshot_browser.rs:1643
+msgid "Not opened for safety"
 msgstr ""
 
-#: src/snapshot_browser.rs:271
+#: src/snapshot_browser.rs:1705
+msgid "Showing in Containing Folder"
+msgstr ""
+
+#: src/snapshot_browser.rs:1716
+msgid "1 item selected"
+msgstr ""
+
+#: src/snapshot_browser.rs:1717
+msgid "items selected"
+msgstr ""
+
+#: src/snapshot_browser.rs:1761
+msgid "This item is inside a read-only snapshot."
+msgstr ""
+
+#: src/snapshot_browser.rs:1769
+msgid "Type"
+msgstr ""
+
+#: src/snapshot_browser.rs:1771
+msgid "Location"
+msgstr ""
+
+#: src/snapshot_browser.rs:1777 src/snapshot_browser.rs:1784
+msgid "Calculating…"
+msgstr ""
+
+#: src/snapshot_browser.rs:1784
+msgid "Contents"
+msgstr ""
+
+#: src/snapshot_browser.rs:1793
+msgid "Permissions"
+msgstr ""
+
+#: src/snapshot_browser.rs:1797
+msgid "Visibility"
+msgstr ""
+
+#: src/snapshot_browser.rs:1799
+msgid "Hidden"
+msgstr ""
+
+#: src/snapshot_browser.rs:1801
+msgid "Visible"
+msgstr ""
+
+#: src/snapshot_browser.rs:1805
+msgid "Copying"
+msgstr ""
+
+#: src/snapshot_browser.rs:1891
+msgid "Could not calculate folder size"
+msgstr ""
+
+#: src/snapshot_browser.rs:1892
+msgid "Could not calculate folder contents"
+msgstr ""
+
+#: src/snapshot_browser.rs:1919
+msgid "This file is too large to preview. You can still copy it out."
+msgstr ""
+
+#: src/snapshot_browser.rs:1927
+msgid "Could not read the preview"
+msgstr ""
+
+#: src/snapshot_browser.rs:1943
+msgid "Could not decode the image preview"
+msgstr ""
+
+#: src/snapshot_browser.rs:1957
+msgid "Text previews are limited to 1 MB. You can still copy this file out."
+msgstr ""
+
+#: src/snapshot_browser.rs:1978
+msgid "No safe preview is available for this file type."
+msgstr ""
+
+#: src/snapshot_browser.rs:2014
+msgid "Choose Where to Copy the Selected Items"
+msgstr ""
+
+#: src/snapshot_browser.rs:2015
+msgid "Copy Here"
+msgstr ""
+
+#: src/snapshot_browser.rs:2027
 msgid "Choose a location on this computer."
 msgstr ""
 
-#: src/snapshot_browser.rs:298
+#: src/snapshot_browser.rs:2076
+msgid "Scanning selected items…"
+msgstr ""
+
+#: src/snapshot_browser.rs:2142 src/snapshot_browser.rs:2631
+#: src/snapshot_browser.rs:2655
+msgid "files"
+msgstr ""
+
+#: src/snapshot_browser.rs:2160
+msgid "Copy cancelled"
+msgstr ""
+
+#: src/snapshot_browser.rs:2163
+msgid "Could not copy the selected items"
+msgstr ""
+
+#: src/snapshot_browser.rs:2171
+msgid "Show in Files"
+msgstr ""
+
+#: src/snapshot_browser.rs:2183
+msgid "Could not open the destination folder"
+msgstr ""
+
+#: src/snapshot_browser.rs:2205
+msgid "Copy File Out of Snapshot"
+msgstr ""
+
+#: src/snapshot_browser.rs:2207
+msgid "Copy"
+msgstr ""
+
+#: src/snapshot_browser.rs:2241
 msgid "File copied successfully"
 msgstr ""
 
-#: src/snapshot_browser.rs:308
+#: src/snapshot_browser.rs:2254
 msgid "Could not copy the file"
 msgstr ""
 
-#: src/snapshot_browser.rs:332
+#: src/snapshot_browser.rs:2289
+msgid "System Configuration"
+msgstr ""
+
+#: src/snapshot_browser.rs:2293
+msgid "User Homes"
+msgstr ""
+
+#: src/snapshot_browser.rs:2295
+msgid "System Logs"
+msgstr ""
+
+#: src/snapshot_browser.rs:2316
+msgid "Desktop"
+msgstr ""
+
+#: src/snapshot_browser.rs:2322
+msgid "Documents"
+msgstr ""
+
+#: src/snapshot_browser.rs:2328
+msgid "Downloads"
+msgstr ""
+
+#: src/snapshot_browser.rs:2334
+msgid "Music"
+msgstr ""
+
+#: src/snapshot_browser.rs:2340
+msgid "Pictures"
+msgstr ""
+
+#: src/snapshot_browser.rs:2346
+msgid "Videos"
+msgstr ""
+
+#: src/snapshot_browser.rs:2607 src/snapshot_browser.rs:2835
 msgid "Folder"
 msgstr ""
 
-#: src/snapshot_browser.rs:334
+#: src/snapshot_browser.rs:2608
+msgid "Regular File"
+msgstr ""
+
+#: src/snapshot_browser.rs:2609
+msgid "Symbolic Link"
+msgstr ""
+
+#: src/snapshot_browser.rs:2610
+msgid "Special File"
+msgstr ""
+
+#: src/snapshot_browser.rs:2620
+msgid "bytes"
+msgstr ""
+
+#: src/snapshot_browser.rs:2623
+msgid "Not calculated"
+msgstr ""
+
+#: src/snapshot_browser.rs:2633 src/snapshot_browser.rs:2656
+msgid "folders"
+msgstr ""
+
+#: src/snapshot_browser.rs:2639
+msgid "unsupported items"
+msgstr ""
+
+#: src/snapshot_browser.rs:2645
+msgid "Partial result — 100,000-item limit reached"
+msgstr ""
+
+#: src/snapshot_browser.rs:2653
+msgid "Copy complete"
+msgstr ""
+
+#: src/snapshot_browser.rs:2662
+msgid "items skipped"
+msgstr ""
+
+#: src/snapshot_browser.rs:2670
+msgid "Can be copied recursively"
+msgstr ""
+
+#: src/snapshot_browser.rs:2671
+msgid "Can be copied out"
+msgstr ""
+
+#: src/snapshot_browser.rs:2672
+msgid "Unavailable — symbolic links are not followed"
+msgstr ""
+
+#: src/snapshot_browser.rs:2673
+msgid "Unavailable — special files are not copied"
+msgstr ""
+
+#: src/snapshot_browser.rs:2757 src/snapshot_browser.rs:2767
+msgid "Unknown date"
+msgstr ""
+
+#: src/snapshot_browser.rs:2772 src/window.rs:349 src/window.rs:499
+msgid "Unknown"
+msgstr ""
+
+#: src/snapshot_browser.rs:2837
 msgid "Symbolic link — not followed for safety"
 msgstr ""
 
-#: src/snapshot_browser.rs:335
+#: src/snapshot_browser.rs:2838
 msgid "Special file — cannot be copied"
 msgstr ""
 
@@ -155,10 +550,6 @@ msgstr ""
 
 #: src/window.rs:341 src/window.rs:495
 msgid "Root filesystem"
-msgstr ""
-
-#: src/window.rs:349 src/window.rs:499
-msgid "Unknown"
 msgstr ""
 
 #: src/window.rs:380
@@ -423,10 +814,6 @@ msgstr ""
 
 #: src/window.rs:778
 msgid "No snapshot can be created while demo data is active."
-msgstr ""
-
-#: src/window.rs:782 src/window.rs:1138 src/window.rs:1817 src/window.rs:2540
-msgid "Close"
 msgstr ""
 
 #: src/window.rs:796
@@ -715,10 +1102,6 @@ msgstr ""
 msgid "Live free-space accounting appears on a Btrfs installation"
 msgstr ""
 
-#: src/window.rs:1395
-msgid "Preview"
-msgstr ""
-
 #: src/window.rs:1413
 msgid "Snapshot Policies"
 msgstr ""
@@ -855,10 +1238,6 @@ msgstr ""
 msgid "Check Snapshot Policy"
 msgstr ""
 
-#: src/window.rs:2069
-msgid "Name"
-msgstr ""
-
 #: src/window.rs:2070
 msgid "Manual recovery point"
 msgstr ""
@@ -883,10 +1262,6 @@ msgstr ""
 msgid ""
 "The operating system will be captured without changing personal files, logs, "
 "containers, or virtual machines."
-msgstr ""
-
-#: src/window.rs:2097 src/window.rs:2309 src/window.rs:2340
-msgid "Cancel"
 msgstr ""
 
 #: src/window.rs:2098

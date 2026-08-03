@@ -1,3 +1,4 @@
+use std::collections::VecDeque;
 use std::ffi::OsString;
 use std::fs::{self, File, OpenOptions};
 use std::io::{self, Read, Write};
@@ -38,6 +39,71 @@ pub struct ExportReport {
     pub copied_files: u64,
     pub copied_directories: u64,
     pub skipped_items: u64,
+}
+
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+pub struct TreeStatistics {
+    pub bytes: u64,
+    pub files: u64,
+    pub directories: u64,
+    pub unsupported_items: u64,
+    pub complete: bool,
+}
+
+#[derive(Debug, Eq, PartialEq)]
+pub enum TreeStatisticsError {
+    Cancelled,
+    Failed(String),
+}
+
+pub fn calculate_tree_statistics<L>(
+    root: &[String],
+    cancelled: &AtomicBool,
+    mut list_directory: L,
+) -> Result<TreeStatistics, TreeStatisticsError>
+where
+    L: FnMut(&[String]) -> Result<DirectoryListing, String>,
+{
+    const MAX_STATISTIC_ITEMS: u64 = 100_000;
+    let mut statistics = TreeStatistics {
+        complete: true,
+        ..TreeStatistics::default()
+    };
+    let mut pending = VecDeque::from([root.to_vec()]);
+    let mut inspected = 0u64;
+    while let Some(directory) = pending.pop_front() {
+        if cancelled.load(Ordering::Acquire) {
+            return Err(TreeStatisticsError::Cancelled);
+        }
+        let listing = list_directory(&directory).map_err(TreeStatisticsError::Failed)?;
+        if listing.truncated {
+            statistics.complete = false;
+        }
+        for entry in listing.entries {
+            if cancelled.load(Ordering::Acquire) {
+                return Err(TreeStatisticsError::Cancelled);
+            }
+            if inspected == MAX_STATISTIC_ITEMS {
+                statistics.complete = false;
+                return Ok(statistics);
+            }
+            inspected += 1;
+            match entry.kind {
+                EntryKind::File => {
+                    statistics.files += 1;
+                    statistics.bytes = statistics.bytes.saturating_add(entry.size);
+                }
+                EntryKind::Directory => {
+                    statistics.directories += 1;
+                    let mut child = directory.clone();
+                    child.push(entry.token);
+                    pending.push_back(child);
+                }
+                EntryKind::Symlink | EntryKind::Special => statistics.unsupported_items += 1,
+            }
+        }
+    }
+    Ok(statistics)
 }
 
 #[derive(Debug)]
@@ -127,14 +193,18 @@ where
             continue;
         };
         let relative_without_root = item.relative_path.components().skip(1).collect::<PathBuf>();
-        let target = root_destination.join(relative_without_root);
+        let target = if relative_without_root.as_os_str().is_empty() {
+            root_destination.clone()
+        } else {
+            root_destination.join(relative_without_root)
+        };
         match item.kind {
             EntryKind::Directory => {
                 prepare_directory(&target, conflict_policy)?;
                 report.copied_directories += 1;
             }
             EntryKind::File => {
-                if conflict_policy == ConflictPolicy::Skip && target.exists() {
+                if conflict_policy == ConflictPolicy::Skip && entry_exists(&target)? {
                     report.skipped_items += 1;
                     continue;
                 }
@@ -200,7 +270,7 @@ where
             let listing = list_directory(&snapshot_path).map_err(ExportError::Failed)?;
             if listing.truncated {
                 return Err(ExportError::Failed(
-                    "A selected folder contains more than 1,000 items. Nothing was copied because the folder listing is incomplete."
+                    "A selected folder exceeds the 100,000-item safety limit. Nothing was copied because the folder listing is incomplete."
                         .into(),
                 ));
             }
@@ -252,12 +322,12 @@ fn resolve_roots(
         let name = decode_name_token(&selection.name_token)
             .map_err(|error| ExportError::Failed(error.message))?;
         let target = destination.join(name);
-        let resolved = if !target.exists() || policy == ConflictPolicy::Replace {
+        let resolved = if !entry_exists(&target)? || policy == ConflictPolicy::Replace {
             Some(target)
         } else if policy == ConflictPolicy::Skip {
             None
         } else {
-            Some(unique_destination(&target))
+            Some(unique_destination(&target)?)
         };
         roots.push(ResolvedRoot {
             destination: resolved,
@@ -266,7 +336,7 @@ fn resolve_roots(
     Ok(roots)
 }
 
-fn unique_destination(target: &Path) -> PathBuf {
+fn unique_destination(target: &Path) -> Result<PathBuf, ExportError> {
     let parent = target.parent().unwrap_or_else(|| Path::new("."));
     let stem = target
         .file_stem()
@@ -281,11 +351,22 @@ fn unique_destination(target: &Path) -> PathBuf {
             name.push(extension);
         }
         let candidate = parent.join(name);
-        if !candidate.exists() {
-            return candidate;
+        if !entry_exists(&candidate)? {
+            return Ok(candidate);
         }
     }
-    parent.join(format!("restored-{}", Uuid::new_v4().hyphenated()))
+    Ok(parent.join(format!("restored-{}", Uuid::new_v4().hyphenated())))
+}
+
+fn entry_exists(path: &Path) -> Result<bool, ExportError> {
+    match fs::symlink_metadata(path) {
+        Ok(_) => Ok(true),
+        Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(false),
+        Err(error) => Err(ExportError::Failed(format!(
+            "Could not inspect {}: {error}",
+            path.display()
+        ))),
+    }
 }
 
 fn prepare_directory(target: &Path, policy: ConflictPolicy) -> Result<(), ExportError> {
@@ -403,7 +484,81 @@ fn temporary_path(parent: &Path, name: &std::ffi::OsStr) -> PathBuf {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::browsing::{encode_name_token, BrowserEntry};
     use std::io::Read;
+
+    fn browser_entry(token: &str, kind: EntryKind, size: u64) -> BrowserEntry {
+        BrowserEntry {
+            token: token.into(),
+            display_name: token.into(),
+            kind,
+            size,
+            modified_unix: 0,
+            mode: 0o100644,
+            hidden: false,
+        }
+    }
+
+    #[test]
+    fn recursively_calculates_bounded_tree_statistics() {
+        let statistics =
+            calculate_tree_statistics(&["root".into()], &AtomicBool::new(false), |path| {
+                let entries = if path == ["root"] {
+                    vec![
+                        browser_entry("first", EntryKind::File, 10),
+                        browser_entry("sub", EntryKind::Directory, 0),
+                        browser_entry("link", EntryKind::Symlink, 0),
+                    ]
+                } else if path == ["root", "sub"] {
+                    vec![
+                        browser_entry("second", EntryKind::File, 20),
+                        browser_entry("device", EntryKind::Special, 0),
+                    ]
+                } else {
+                    panic!("unexpected path: {path:?}");
+                };
+                Ok(DirectoryListing {
+                    path: path.to_vec(),
+                    total_entries: entries.len(),
+                    entries,
+                    next_offset: None,
+                    truncated: false,
+                })
+            })
+            .unwrap();
+        assert_eq!(
+            statistics,
+            TreeStatistics {
+                bytes: 30,
+                files: 2,
+                directories: 1,
+                unsupported_items: 2,
+                complete: true,
+            }
+        );
+    }
+
+    #[test]
+    fn tree_statistics_report_partial_results_and_cancellation() {
+        let partial = calculate_tree_statistics(&[], &AtomicBool::new(false), |path| {
+            Ok(DirectoryListing {
+                path: path.to_vec(),
+                entries: vec![browser_entry("file", EntryKind::File, 5)],
+                total_entries: 1,
+                next_offset: None,
+                truncated: true,
+            })
+        })
+        .unwrap();
+        assert_eq!(partial.bytes, 5);
+        assert!(!partial.complete);
+
+        let cancelled = AtomicBool::new(true);
+        assert_eq!(
+            calculate_tree_statistics(&[], &cancelled, |_| panic!("must not list")),
+            Err(TreeStatisticsError::Cancelled)
+        );
+    }
 
     #[test]
     fn copies_atomically_and_strips_privileged_mode_bits() {
@@ -453,6 +608,108 @@ mod tests {
         assert_eq!(result.unwrap_err().kind(), io::ErrorKind::Interrupted);
         assert!(!destination.exists());
         assert_eq!(fs::read_dir(&root).unwrap().count(), 1);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn recursively_exports_a_selected_directory() {
+        let root = std::env::temp_dir().join(format!("timeback-tree-{}", Uuid::new_v4()));
+        let source_root = root.join("source");
+        let destination = root.join("destination");
+        fs::create_dir_all(&source_root).unwrap();
+        fs::create_dir_all(&destination).unwrap();
+        fs::write(source_root.join("note.txt"), b"from snapshot").unwrap();
+        let folder = encode_name_token(b"Documents");
+        let note = encode_name_token(b"note.txt");
+        let selection = ExportSelection {
+            snapshot_path: vec![folder.clone()],
+            name_token: folder.clone(),
+            kind: EntryKind::Directory,
+            size: 0,
+        };
+        let report = export_items(
+            &[selection],
+            &destination,
+            ConflictPolicy::KeepBoth,
+            &AtomicBool::new(false),
+            |path| {
+                assert_eq!(path, &[folder.clone()]);
+                Ok(DirectoryListing {
+                    path: path.to_vec(),
+                    entries: vec![BrowserEntry {
+                        token: note.clone(),
+                        display_name: "note.txt".into(),
+                        kind: EntryKind::File,
+                        size: 13,
+                        modified_unix: 0,
+                        mode: 0o100644,
+                        hidden: false,
+                    }],
+                    total_entries: 1,
+                    next_offset: None,
+                    truncated: false,
+                })
+            },
+            |path| {
+                assert_eq!(path, &[folder.clone(), note.clone()]);
+                Ok((
+                    File::open(source_root.join("note.txt")).unwrap(),
+                    OpenedFileMetadata {
+                        size: 13,
+                        modified_unix: 0,
+                        mode: 0o100644,
+                    },
+                ))
+            },
+            |_| {},
+        )
+        .unwrap();
+        assert_eq!(report.copied_files, 1);
+        assert_eq!(
+            fs::read(destination.join("Documents/note.txt")).unwrap(),
+            b"from snapshot"
+        );
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn keep_both_never_overwrites_an_existing_file() {
+        let root = std::env::temp_dir().join(format!("timeback-conflict-{}", Uuid::new_v4()));
+        let destination = root.join("destination");
+        fs::create_dir_all(&destination).unwrap();
+        fs::write(destination.join("note.txt"), b"present").unwrap();
+        let source = root.join("source.txt");
+        fs::write(&source, b"snapshot").unwrap();
+        let note = encode_name_token(b"note.txt");
+        export_items(
+            &[ExportSelection {
+                snapshot_path: vec![note.clone()],
+                name_token: note,
+                kind: EntryKind::File,
+                size: 8,
+            }],
+            &destination,
+            ConflictPolicy::KeepBoth,
+            &AtomicBool::new(false),
+            |_| unreachable!(),
+            |_| {
+                Ok((
+                    File::open(&source).unwrap(),
+                    OpenedFileMetadata {
+                        size: 8,
+                        modified_unix: 0,
+                        mode: 0o100644,
+                    },
+                ))
+            },
+            |_| {},
+        )
+        .unwrap();
+        assert_eq!(fs::read(destination.join("note.txt")).unwrap(), b"present");
+        assert_eq!(
+            fs::read(destination.join("note (2).txt")).unwrap(),
+            b"snapshot"
+        );
         fs::remove_dir_all(root).unwrap();
     }
 }

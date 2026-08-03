@@ -19,6 +19,7 @@ use crate::{DBUS_INTERFACE, DBUS_NAME, DBUS_PATH};
 
 const READ_ONLY_CALL_TIMEOUT_MS: i32 = 3_000;
 const MUTATING_CALL_TIMEOUT_MS: i32 = 300_000;
+const BROWSE_CALL_TIMEOUT_MS: i32 = 30_000;
 const OPERATION_TIMEOUT_SECONDS: u32 = 600;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -91,11 +92,199 @@ pub fn list_home_snapshots() -> Result<Vec<HomeSnapshotRecord>, ClientError> {
     })
 }
 
+pub fn begin_snapshot_browse(
+    snapshot_kind: &str,
+    snapshot_id: &str,
+) -> Result<String, ClientError> {
+    let connection = system_bus()?;
+    let reply_type = VariantTy::new("(s)").expect("static D-Bus reply type is valid");
+    let reply = connection
+        .call_sync(
+            Some(DBUS_NAME),
+            DBUS_PATH,
+            DBUS_INTERFACE,
+            "BeginSnapshotBrowse",
+            Some(&(snapshot_kind, snapshot_id).to_variant()),
+            Some(reply_type),
+            gio::DBusCallFlags::NONE,
+            MUTATING_CALL_TIMEOUT_MS,
+            None::<&gio::Cancellable>,
+        )
+        .map_err(|error| ClientError(format!("Could not start snapshot browsing: {error}")))?;
+    Ok(reply.child_get::<String>(0))
+}
+
+pub fn close_snapshot_browse(session_id: &str) -> Result<(), ClientError> {
+    system_bus()?
+        .call_sync(
+            Some(DBUS_NAME),
+            DBUS_PATH,
+            DBUS_INTERFACE,
+            "CloseSnapshotBrowse",
+            Some(&(session_id,).to_variant()),
+            None,
+            gio::DBusCallFlags::NONE,
+            BROWSE_CALL_TIMEOUT_MS,
+            None::<&gio::Cancellable>,
+        )
+        .map_err(|error| ClientError(format!("Could not close snapshot browsing: {error}")))?;
+    Ok(())
+}
+
+pub fn keep_snapshot_browse_alive(session_id: &str) -> Result<(), ClientError> {
+    system_bus()?
+        .call_sync(
+            Some(DBUS_NAME),
+            DBUS_PATH,
+            DBUS_INTERFACE,
+            "KeepSnapshotBrowseAlive",
+            Some(&(session_id,).to_variant()),
+            None,
+            gio::DBusCallFlags::NONE,
+            BROWSE_CALL_TIMEOUT_MS,
+            None::<&gio::Cancellable>,
+        )
+        .map_err(|error| {
+            ClientError(format!("Could not keep snapshot browsing active: {error}"))
+        })?;
+    Ok(())
+}
+
+pub fn list_snapshot_directory_session(
+    session_id: &str,
+    path: &[String],
+    offset: usize,
+    limit: usize,
+    sort_mode: &str,
+    descending: bool,
+) -> Result<DirectoryListing, ClientError> {
+    let path_json = serde_json::to_string(path)
+        .map_err(|error| ClientError(format!("Could not encode the browser path: {error}")))?;
+    let offset = u32::try_from(offset)
+        .map_err(|_| ClientError("Directory page offset is too large".into()))?;
+    let limit = u32::try_from(limit)
+        .map_err(|_| ClientError("Directory page limit is too large".into()))?;
+    let connection = system_bus()?;
+    let reply_type = VariantTy::new("(s)").expect("static D-Bus reply type is valid");
+    let reply = connection
+        .call_sync(
+            Some(DBUS_NAME),
+            DBUS_PATH,
+            DBUS_INTERFACE,
+            "ListSnapshotDirectorySession",
+            Some(&(session_id, path_json, offset, limit, sort_mode, descending).to_variant()),
+            Some(reply_type),
+            gio::DBusCallFlags::NONE,
+            BROWSE_CALL_TIMEOUT_MS,
+            None::<&gio::Cancellable>,
+        )
+        .map_err(|error| ClientError(format!("Could not list snapshot files: {error}")))?;
+    serde_json::from_str(&reply.child_get::<String>(0))
+        .map_err(|error| ClientError(format!("The daemon returned an invalid listing: {error}")))
+}
+
+pub fn list_snapshot_directory_session_all(
+    session_id: &str,
+    path: &[String],
+) -> Result<DirectoryListing, ClientError> {
+    let mut offset = 0usize;
+    let mut entries = Vec::new();
+    let mut truncated = false;
+    let total_entries = loop {
+        let page = list_snapshot_directory_session(session_id, path, offset, 1_000, "name", false)?;
+        let total_entries = page.total_entries;
+        truncated |= page.truncated;
+        entries.extend(page.entries);
+        match page.next_offset {
+            Some(next) if next > offset => offset = next,
+            Some(_) => return Err(ClientError("The daemon returned an invalid cursor".into())),
+            None => break total_entries,
+        }
+    };
+    Ok(DirectoryListing {
+        path: path.to_vec(),
+        entries,
+        total_entries,
+        next_offset: None,
+        truncated,
+    })
+}
+
+pub fn open_snapshot_file_session(
+    session_id: &str,
+    path: &[String],
+) -> Result<(File, OpenedFileMetadata), ClientError> {
+    let path_json = serde_json::to_string(path)
+        .map_err(|error| ClientError(format!("Could not encode the browser path: {error}")))?;
+    let connection = system_bus()?;
+    let reply_type = VariantTy::new("(hs)").expect("static D-Bus reply type is valid");
+    let (reply, descriptors) = connection
+        .call_with_unix_fd_list_sync(
+            Some(DBUS_NAME),
+            DBUS_PATH,
+            DBUS_INTERFACE,
+            "OpenSnapshotFileSession",
+            Some(&(session_id, path_json).to_variant()),
+            Some(reply_type),
+            gio::DBusCallFlags::NONE,
+            BROWSE_CALL_TIMEOUT_MS,
+            gio::UnixFDList::NONE,
+            None::<&gio::Cancellable>,
+        )
+        .map_err(|error| ClientError(format!("Could not open the snapshot file: {error}")))?;
+    let handle = reply.child_get::<gio::glib::variant::Handle>(0).0;
+    let descriptors = descriptors
+        .ok_or_else(|| ClientError("The daemon did not return a file descriptor".into()))?;
+    let descriptor = descriptors
+        .get(handle)
+        .map_err(|error| ClientError(format!("Could not receive the snapshot file: {error}")))?;
+    let metadata = serde_json::from_str(&reply.child_get::<String>(1)).map_err(|error| {
+        ClientError(format!(
+            "The daemon returned invalid file metadata: {error}"
+        ))
+    })?;
+    Ok((File::from(descriptor), metadata))
+}
+
 pub fn list_snapshot_directory(
     snapshot_kind: &str,
     snapshot_id: &str,
     path: &[String],
 ) -> Result<DirectoryListing, ClientError> {
+    list_snapshot_directory_page(snapshot_kind, snapshot_id, path, 0, 1_000)
+}
+
+pub fn list_snapshot_directory_page(
+    snapshot_kind: &str,
+    snapshot_id: &str,
+    path: &[String],
+    offset: usize,
+    limit: usize,
+) -> Result<DirectoryListing, ClientError> {
+    list_snapshot_directory_page_sorted(
+        snapshot_kind,
+        snapshot_id,
+        path,
+        offset,
+        limit,
+        "name",
+        false,
+    )
+}
+
+pub fn list_snapshot_directory_page_sorted(
+    snapshot_kind: &str,
+    snapshot_id: &str,
+    path: &[String],
+    offset: usize,
+    limit: usize,
+    sort_mode: &str,
+    descending: bool,
+) -> Result<DirectoryListing, ClientError> {
+    let offset = u32::try_from(offset)
+        .map_err(|_| ClientError("Directory page offset is too large".into()))?;
+    let limit = u32::try_from(limit)
+        .map_err(|_| ClientError("Directory page limit is too large".into()))?;
     let path_json = serde_json::to_string(path)
         .map_err(|error| ClientError(format!("Could not encode the browser path: {error}")))?;
     let connection = system_bus()?;
@@ -105,8 +294,19 @@ pub fn list_snapshot_directory(
             Some(DBUS_NAME),
             DBUS_PATH,
             DBUS_INTERFACE,
-            "ListSnapshotDirectory",
-            Some(&(snapshot_kind, snapshot_id, path_json).to_variant()),
+            "ListSnapshotDirectoryPageSorted",
+            Some(
+                &(
+                    snapshot_kind,
+                    snapshot_id,
+                    path_json,
+                    offset,
+                    limit,
+                    sort_mode,
+                    descending,
+                )
+                    .to_variant(),
+            ),
             Some(reply_type),
             gio::DBusCallFlags::NONE,
             MUTATING_CALL_TIMEOUT_MS,
@@ -115,6 +315,43 @@ pub fn list_snapshot_directory(
         .map_err(|error| ClientError(format!("Could not list snapshot files: {error}")))?;
     serde_json::from_str(&reply.child_get::<String>(0))
         .map_err(|error| ClientError(format!("The daemon returned an invalid listing: {error}")))
+}
+
+pub fn list_snapshot_directory_all(
+    snapshot_kind: &str,
+    snapshot_id: &str,
+    path: &[String],
+) -> Result<DirectoryListing, ClientError> {
+    let mut offset = 0usize;
+    let mut entries = Vec::new();
+    let mut truncated = false;
+    let total_entries = loop {
+        let page = list_snapshot_directory_page(snapshot_kind, snapshot_id, path, offset, 1_000)?;
+        let total_entries = page.total_entries;
+        truncated |= page.truncated;
+        entries.extend(page.entries);
+        match page.next_offset {
+            Some(next) if next > offset => offset = next,
+            Some(_) => {
+                return Err(ClientError(
+                    "The daemon returned an invalid directory cursor".into(),
+                ))
+            }
+            None => break total_entries,
+        }
+        if offset > 100_000 {
+            return Err(ClientError(
+                "The directory exceeds the browser safety limit".into(),
+            ));
+        }
+    };
+    Ok(DirectoryListing {
+        path: path.to_vec(),
+        entries,
+        total_entries,
+        next_offset: None,
+        truncated,
+    })
 }
 
 pub fn open_snapshot_file(
