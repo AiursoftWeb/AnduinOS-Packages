@@ -11,11 +11,11 @@ path = "src/lib.rs"
 
 [[bin]]
 name = "anduinos-quiet-sim"
-path = "src/bin/sim.rs"
+path = "src/sim_main.rs"
 
 [[bin]]
 name = "anduinos-quietd"
-path = "src/bin/quietd.rs"
+path = "src/quietd_main.rs"
 
 [profile.release]
 opt-level = "z"
