@@ -171,12 +171,12 @@ apkg publish
 
 | Category | Packages | Monthly action |
 |---|---|---|
-| 🔧 **Manual — update commit/version** | Fluent GTK theme, Fluent icon theme, ALSA UCM Conf, Firmware SOF, Xbox Driver | Edit `download.sh` + bump `.aosproj` |
+| 🔧 **Manual — update commit/version** | Apkg client, Fluent GTK theme, Fluent icon theme, ALSA UCM Conf, Firmware SOF, Xbox Driver | Edit `download.sh` + bump `.aosproj` |
 | 🤖 **Auto — CI resolves at build time** | 19 GNOME Shell extensions | Trigger CI; resolver pulls latest from extensions.gnome.org |
 | 🤖 **Auto — pulls latest upstream .deb** | base-files, plymouth, software-properties-common, software-properties-gtk, firefox | Trigger CI; pulls latest from Ubuntu/Mozilla mirrors |
 | 🤖 **Auto — metapackages** | anduinos-desktop, theme, desktop-core, etc. | Trigger CI only if dependency list changed |
 
-**Bottom line:** 5 packages need manual edits each month. Everything else = run CI.
+**Bottom line:** 6 packages need manual edits each month. Everything else = run CI.
 
 ---
 
@@ -192,26 +192,28 @@ Run through this table each month. If anything has changed upstream, follow the 
 
 | # | What | Where to check | Update action |
 |---|---|---|---|
-| 1 | **Fluent GTK theme** | `anduinos-fluent-gtk-theme/download.sh:5` (commit) + [gtk-mirror] | Update commit → section B |
-| 2 | **Fluent icon theme** | `anduinos-fluent-icon-theme/download.sh:5` (commit) + [icon-mirror] | Update commit → section B |
-| 3 | **ALSA UCM Conf** | `alsa-ucm-conf-anduinos/download.sh:5` (commit) + upstream [alsa-repo] | Update commit → section B |
-| 4 | **SOF firmware** | `firmware-sof-anduinos/download.sh:5` (`SOF_VERSION`) + upstream [sof-releases] | Update version → section C |
-| 5 | **Xbox Controller Driver** | `anduinos-xbox-controller-driver/download.sh` (`COMMIT_ID`) + [xpadneo-mirror] | Update commit → section B |
-| 6 | **GNOME Shell version map** | `lib/gnome-versions.sh:3-7` — compare with Ubuntu's `gnome-shell` package for each supported suite | Update map → section D |
-| 7 | **Fluent upstream versions** | [Fluent-gtk-theme] and [Fluent-icon-theme] GitHub releases — determine latest upstream version | Update version → section B |
-| 8 | **GNOME Shell extensions** | Run a CI build — the resolver fetches the latest compatible version dynamically | Update version → section D |
+| 1 | **Apkg client** | `apkg/download.sh` (`VERSION`) + [apkg-nuget] | Update version and checksums → section B.4 |
+| 2 | **Fluent GTK theme** | `anduinos-fluent-gtk-theme/download.sh:5` (commit) + [gtk-mirror] | Update commit → section B |
+| 3 | **Fluent icon theme** | `anduinos-fluent-icon-theme/download.sh:5` (commit) + [icon-mirror] | Update commit → section B |
+| 4 | **ALSA UCM Conf** | `alsa-ucm-conf-anduinos/download.sh:5` (commit) + upstream [alsa-repo] | Update commit → section B |
+| 5 | **SOF firmware** | `firmware-sof-anduinos/download.sh:5` (`SOF_VERSION`) + upstream [sof-releases] | Update version → section C |
+| 6 | **Xbox Controller Driver** | `anduinos-xbox-controller-driver/download.sh` (`COMMIT_ID`) + [xpadneo-mirror] | Update commit → section B |
+| 7 | **GNOME Shell version map** | `lib/gnome-versions.sh:3-7` — compare with Ubuntu's `gnome-shell` package for each supported suite | Update map → section D |
+| 8 | **Fluent upstream versions** | [Fluent-gtk-theme] and [Fluent-icon-theme] GitHub releases — determine latest upstream version | Update version → section B |
+| 9 | **GNOME Shell extensions** | Run a CI build — the resolver fetches the latest compatible version dynamically | Update version → section D |
 
 [sof-releases]: https://github.com/thesofproject/sof-bin/releases
 [alsa-repo]: https://github.com/alsa-project/alsa-ucm-conf
 [gtk-mirror]: https://gitlab.aiursoft.com/mirror/fluent-gtk-theme/
 [icon-mirror]: https://gitlab.aiursoft.com/mirror/fluent-icon-theme/
 [xpadneo-mirror]: https://gitlab.aiursoft.com/mirror/xpadneo/
+[apkg-nuget]: https://www.nuget.org/packages/Aiursoft.Apkg.Client
 
 ---
 
-### B. Git-Pinned Packages (Fluent GTK, Fluent Icon, ALSA UCM Conf, Xbox Driver)
+### B. Pinned Upstream Packages
 
-Three packages clone a git repo and pin to a specific commit hash. Both the **commit hash** and the **`.aosproj` PackageVersion** must be updated together.
+Four packages clone a git repo and pin to a specific commit hash. Both the **commit hash** and the **`.aosproj` PackageVersion** must be updated together. The Apkg client is pinned to a NuGet release and is covered separately in section B.4.
 
 #### B.1 Check for updates
 
@@ -258,6 +260,25 @@ Example diff for Fluent GTK theme:
 cd <package-dir>
 apkg publish
 ```
+
+#### B.4 Apkg client
+
+The `apkg` package extracts the framework-dependent client from an official NuGet package. Once per month, compare `VERSION` in `apkg/download.sh` with the latest stable [Aiursoft.Apkg.Client release][apkg-nuget]. When a new release is available:
+
+1. Update `VERSION` in `apkg/download.sh`; `PACKAGE` and `PACKAGE_URL` are derived from it.
+2. Download the official `.nupkg` and update `PACKAGE_SHA256` with `sha256sum`.
+3. Set `SOURCE_COMMIT` to the commit matching that release, download its `LICENSE`, and update `LICENSE_SHA256`.
+4. Update `<PackageVersion>` in `apkg/apkg.aosproj` to the upstream version with Debian revision `-1`; if only the packaging changes, increment that revision instead.
+5. Recreate and verify the payload:
+
+   ```bash
+   cd apkg
+   bash download.sh
+   apkg lint --path .
+   apkg build --path .
+   ```
+
+Do not commit `apkg/deploy/`; it is regenerated by `download.sh` during the build.
 
 ---
 
@@ -384,12 +405,13 @@ These URLs are not on a monthly schedule, but should be reviewed whenever infras
 
 When doing a full monthly triage, follow this order — earlier packages are dependencies of later ones:
 
-1. **Fluent icon theme** + **Fluent GTK theme** (no deps)
-2. **ALSA UCM Conf** + **SOF firmware** (alsa-ucm-conf depends on nothing; SOF recommends alsa-ucm-conf but doesn't build-depend on it)
-3. **GNOME Shell extension** version audits (no cross-deps)
-4. **GNOME version map** update (triggers extension rebuilds)
-5. **Ubuntu-derived packages** (no cross-deps; build picks up latest)
-6. **Meta-packages** — rebuild last (`anduinos-desktop`, `anduinos-desktop-core`, `anduinos-gnome-extensions`, `anduinos-theme`)
+1. **Apkg client** (build tool; update and verify it first)
+2. **Fluent icon theme** + **Fluent GTK theme** (no deps)
+3. **ALSA UCM Conf** + **SOF firmware** (alsa-ucm-conf depends on nothing; SOF recommends alsa-ucm-conf but doesn't build-depend on it)
+4. **GNOME Shell extension** version audits (no cross-deps)
+5. **GNOME version map** update (triggers extension rebuilds)
+6. **Ubuntu-derived packages** (no cross-deps; build picks up latest)
+7. **Meta-packages** — rebuild last (`anduinos-desktop`, `anduinos-desktop-core`, `anduinos-gnome-extensions`, `anduinos-theme`)
 
 For each updated package, push to `master` — CI runs `apkg publish && apkg push` automatically.
 

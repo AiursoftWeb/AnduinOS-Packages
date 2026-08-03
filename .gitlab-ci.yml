@@ -70,6 +70,11 @@ desktop-entry-policy:
     - if: $CI_COMMIT_BRANCH == "master"
     - if: $CI_COMMIT_BRANCH == "prod"
 
+apkg:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: apkg
+
 base-files:
   extends: .publish
   variables:

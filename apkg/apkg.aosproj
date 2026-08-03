@@ -1,0 +1,37 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>apkg</PackageName>
+    <PackageVersion>10.0.51-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Command-line client for creating, linting, building, and publishing Apkg packages.</PackageDescription>
+    <Section>utils</Section>
+    <PackageHomepage>https://gitlab.aiursoft.com/aiursoft/apkg</PackageHomepage>
+    <RepositoryUrl>https://gitlab.aiursoft.com/aiursoft/apkg.git</RepositoryUrl>
+    <LicenseType>MIT</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Dependency Include="dotnet-runtime-10.0" />
+    <Dependency Include="aspnetcore-runtime-10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="bash download.sh" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IncludeFile Include="assets/apkg" Target="/usr/bin/apkg" Mode="755" />
+    <IncludeFolder Include="deploy/app" Target="/usr/lib/apkg" />
+    <IncludeFile Include="deploy/LICENSE" Target="/usr/share/doc/apkg/copyright" />
+    <IncludeFile Include="README.md" Target="/usr/share/doc/apkg/README.md" />
+  </ItemGroup>
+</Project>
