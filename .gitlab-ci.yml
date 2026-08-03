@@ -10,6 +10,7 @@ lint-all:
     - export PATH="$PATH:$HOME/.dotnet/tools"
     - apkg --version
   script:
+    - python3 lib/verify-ci-package-needs.py
     - |
       failed=0
       for dir in */; do
@@ -455,7 +456,6 @@ anduinos-desktop-core:
     - anduinos-session
     - firmware-sof-anduinos
     - alsa-ucm-conf-anduinos
-    - anduinos-rime
     - anduinos-why-placeholder
     - anduinos-bash-guess-command
   variables:

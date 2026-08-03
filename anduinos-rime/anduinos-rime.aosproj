@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-rime</PackageName>
-    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default Chinese input method (rime-ice configuration for ibus-rime)</PackageDescription>
     <Section>utils</Section>
@@ -13,20 +13,21 @@
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
     <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <PrebuildCommand Run="bash scripts/prebuild-check.sh" />
   </PropertyGroup>
 
   <ItemGroup>
     <Dependency Include="ibus-rime" />
-    <Dependency Include="language-selector-common" />
   </ItemGroup>
 
   <ItemGroup>
     <IncludeFolder Include="assets/" Target="/usr/share/rime-data/" />
-    <IncludeFile Include="assets/pkg_depends" Target="/usr/share/language-selector/data/pkg_depends" Mode="644" />
+    <IncludeFile Include="defaults/default.custom.yaml"
+                 Target="/usr/share/anduinos-rime/default.custom.yaml" Mode="644" />
   </ItemGroup>
 
   <ItemGroup>
-    <PreInstallScript Include="scripts/preinst.sh" />
-    <PostRemoveScript Include="scripts/postrm.sh" />
+    <!-- One-release migration: remove diversions created by <= 2.0.1-1. -->
+    <PostInstallScript Include="scripts/postinst.sh" />
   </ItemGroup>
 </Project>

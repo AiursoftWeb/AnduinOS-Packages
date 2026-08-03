@@ -99,7 +99,15 @@ These replace Ubuntu **files** without removing the Ubuntu **package**.
 | `anduinos-apt-config` | APT sources (`packages.anduinos.com`) + preferences | Dual pin: `origin` (domain) + `release o=` (Origin field), both at priority 1001; also shipped as `anduinos-apt-config-dev` (→ `apkg-dev.aiursoft.com`) |
 | `anduinos-mimeapps` | `gnome-mimeapps.list` | `dpkg-divert` (original → `.ubuntu-original`) |
 | `anduinos-bwrap-hack` | `bwrap` → `bwrap.real` + shim | Swallows `bwrap` failures on Live squashfs |
-| `anduinos-rime` | `rime-prelude`'s `default.yaml` → `default.yaml.prelude` | `dpkg-divert`; ships rime-ice config to `/usr/share/rime-data/` |
+
+`anduinos-rime` is intentionally absent from this override table. Starting
+with `2.0.1-2`, it owns only AnduinOS-named Rime Ice resources and a defaults
+template below `/usr/share/anduinos-rime/`. The native installer applies that
+template after installing Rime for Chinese installations; it is not part of
+the default desktop package set. Ubuntu's `rime-prelude` and
+`language-selector-common` files remain untouched. The `2.0.1-2` post-install
+script only removes diversions left by older releases and can disappear after
+the migration release.
 
 ---
 
