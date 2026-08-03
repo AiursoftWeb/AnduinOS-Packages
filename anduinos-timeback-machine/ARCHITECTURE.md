@@ -70,6 +70,9 @@ boot-time and package-manager transactions are implemented and tested.
 │       └── root
 ├── metadata/
 │   └── <deployment-id>.json
+├── history/
+│   ├── system-lineage.json
+│   └── system-lineage.lock
 ├── home/
 │   ├── snapshots/
 │   │   └── <home-snapshot-id>
@@ -85,6 +88,15 @@ boot-time and package-manager transactions are implemented and tested.
 The deployment ID is a lowercase UUID. Metadata is stored outside `@root`, is
 written atomically, and is fsynced before a transaction advances. The schema is
 versioned and unknown schema versions are never mutated.
+
+`history/system-lineage.json` is the authoritative, versioned relationship
+graph used by the 0.4 system-history UI. New recovery points form an exact
+parent chain from the active branch head. A confirmed restore moves that head
+to its target; an automatic revert moves it to the protected safety point.
+Activation events are keyed by rollback UUID, so resumable confirmation cannot
+create duplicate branches. Legacy recovery points are imported as unlinked
+history rather than assigned guessed relationships. Deleting snapshot data
+keeps a bounded tombstone node so descendants never silently change parents.
 
 System recovery points and Home snapshots are independent streams. System
 recovery points snapshot `@root` and carry the boot identity required for a
@@ -188,3 +200,33 @@ outside the ABI until low-space VM qualification has been completed.
 - **TM-5B (harness implemented; qualification pending):** guarded real Btrfs
   smoke and GRUB/initramfs rollback cycles plus a read-only-fixture QEMU
   controller covering every apply and automatic-revert checkpoint.
+- **UX-0.4A (complete):** atomic system lineage, activation history, safe
+  legacy migration, and a read-only D-Bus history graph for the visual tree.
+- **UX-0.4B (complete):** four task-oriented primary destinations, an explicit
+  “You Are Here” current-system card, a lineage-backed System History view, and
+  a dedicated read-only Recover Files entry for System and Personal Files
+  snapshots. Storage, diagnostics, and advanced settings remain secondary menu
+  destinations.
+- **UX-0.4C (complete):** bounded, scrollable system branch map with exact
+  lineage connectors, native selectable node cards, automatic focus on the
+  current system, correct new-lane rendering after returning to an older point,
+  and a separate non-speculative presentation for legacy relationships.
+- **UX-0.4D (complete):** persistent node selection and a responsive,
+  state-aware history action panel. Browse and verify remain non-mutating,
+  restore delegates to the explanatory one-time boot flow, pending restores
+  become cancellable, and current or history-only nodes never expose misleading
+  actions.
+- **UX-0.4E (complete):** prominent pending/confirming restore status on
+  Overview, direct pre-boot cancellation, and an evidence-backed explanation of
+  the one-shot `grub-reboot` flow, preserved normal menu entries, successful
+  branch creation, and automatic fallback.
+- **UX-0.4F (complete):** real-state first-run protection checklist and global
+  Active / Setup Needed / Attention classification across System recovery,
+  Personal Files, and Automatic Protection. Empty states provide direct next
+  actions, while service errors and unsupported Home layouts are never
+  misrepresented as ordinary setup work.
+- **UX-0.4G (complete):** reduced Overview duplication, keyboard
+  shortcuts and menu accessibility hints, 0.4.0 package metadata, release
+  notes, and successful disposable-loopback Btrfs qualification. Destructive
+  GRUB/initramfs reboot and power-cut qualification remains gated on a
+  disposable AnduinOS VM.

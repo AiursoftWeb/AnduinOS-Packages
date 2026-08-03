@@ -13,6 +13,7 @@ use crate::automatic_home::HomeSnapshotRecord;
 use crate::automation::{AutomaticConfiguration, AutomaticStatus};
 use crate::browsing::{DirectoryListing, OpenedFileMetadata};
 use crate::layout::LayoutReport;
+use crate::lineage::SystemLineage;
 use crate::retention::RetentionPlan;
 use crate::store::DiscoveryReport;
 use crate::{DBUS_INTERFACE, DBUS_NAME, DBUS_PATH};
@@ -63,6 +64,14 @@ pub fn list_deployments() -> Result<DiscoveryReport, ClientError> {
     serde_json::from_str(&json).map_err(|error| {
         ClientError(format!(
             "The daemon returned an invalid deployment report: {error}"
+        ))
+    })
+}
+
+pub fn inspect_system_history() -> Result<SystemLineage, ClientError> {
+    serde_json::from_str(&call_json_method("InspectSystemHistory")?).map_err(|error| {
+        ClientError(format!(
+            "The daemon returned invalid system history: {error}"
         ))
     })
 }

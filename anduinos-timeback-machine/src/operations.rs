@@ -13,6 +13,7 @@ use uuid::Uuid;
 use crate::browsing::{acquire_exclusive_snapshot_lock_at, SnapshotKind};
 use crate::coordination::TransactionStartLock;
 use crate::layout::{LayoutReport, LayoutSupport};
+use crate::lineage::{LineageError, LineageErrorCode, LineageStore};
 use crate::model::{DeploymentId, DeploymentKind, DeploymentRecord, DeploymentState};
 use crate::package_transaction::PackageTransactionStore;
 use crate::store::DeploymentStore;
@@ -296,12 +297,17 @@ impl<R: CommandRunner> OperationEngine<R> {
         ensure_supported_layout(layout)?;
         self.ensure_store_directories()?;
         let _lock = self.acquire_lock()?;
+        let deployments = DeploymentStore::new(&self.snapshot_root).discover();
+        let lineage_store = LineageStore::new(&self.snapshot_root);
+        let lineage = lineage_store
+            .ensure_initialized(&deployments.deployments)
+            .map_err(lineage_error)?;
 
         let id = DeploymentId::new();
         let mut record = DeploymentRecord {
             schema_version: DEPLOYMENT_SCHEMA_VERSION,
             id,
-            parent_id: self.current_parent(),
+            parent_id: lineage.current_head_id,
             kind,
             state: DeploymentState::Creating,
             created_at: Utc::now(),
@@ -385,6 +391,9 @@ impl<R: CommandRunner> OperationEngine<R> {
             })?;
             self.write_record_atomic(&record)?;
             self.sync_btrfs()?;
+            lineage_store
+                .record_recovery_point(&record)
+                .map_err(lineage_error)?;
             Ok(())
         })();
 
@@ -670,6 +679,12 @@ impl<R: CommandRunner> OperationEngine<R> {
             Err(error) if error.kind() == io::ErrorKind::NotFound => {}
             Err(error) => return Err(io_error("Could not remove the deployment directory", error)),
         }
+        let deployments = DeploymentStore::new(&self.snapshot_root).discover();
+        let lineage_store = LineageStore::new(&self.snapshot_root);
+        lineage_store
+            .ensure_initialized(&deployments.deployments)
+            .and_then(|_| lineage_store.mark_snapshot_removed(id, Utc::now()))
+            .map_err(lineage_error)?;
         self.remove_record(id)?;
         self.sync_btrfs()?;
         Ok(())
@@ -709,15 +724,6 @@ impl<R: CommandRunner> OperationEngine<R> {
             ));
         }
         Ok(())
-    }
-
-    fn current_parent(&self) -> Option<DeploymentId> {
-        DeploymentStore::new(&self.snapshot_root)
-            .discover()
-            .deployments
-            .into_iter()
-            .find(|record| record.state == DeploymentState::Current)
-            .map(|record| record.id)
     }
 
     fn load_record(&self, id: DeploymentId) -> Result<DeploymentRecord, OperationError> {
@@ -1152,6 +1158,17 @@ fn truncate_failure(message: String) -> String {
 
 fn io_error(context: &str, error: io::Error) -> OperationError {
     OperationError::new(OperationErrorCode::Io, format!("{context}: {error}"))
+}
+
+fn lineage_error(error: LineageError) -> OperationError {
+    OperationError::new(
+        match error.code {
+            LineageErrorCode::UnsafePath => OperationErrorCode::UnsafePath,
+            LineageErrorCode::InvalidRecord => OperationErrorCode::InvalidIdentity,
+            LineageErrorCode::Io => OperationErrorCode::Io,
+        },
+        format!("Could not update system history: {}", error.message),
+    )
 }
 
 fn verify_digest(

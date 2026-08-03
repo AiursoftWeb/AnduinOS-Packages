@@ -7,6 +7,7 @@ use std::process::Command;
 use chrono::Utc;
 
 use crate::layout::{self, LayoutReport};
+use crate::lineage::{ActivationOutcome, LineageStore};
 use crate::model::{DeploymentId, DeploymentRecord, DeploymentState};
 use crate::operations::OperationEngine;
 use crate::store::DeploymentStore;
@@ -76,6 +77,11 @@ pub trait ConfirmationBackend {
     fn delete_old_root(&self, transaction: &RollbackTransaction) -> Result<(), ConfirmationError>;
     fn remove_transaction(&self) -> Result<(), ConfirmationError>;
     fn regenerate_grub(&self) -> Result<(), ConfirmationError>;
+    fn record_lineage_activation(
+        &self,
+        transaction: &RollbackTransaction,
+        outcome: ActivationOutcome,
+    ) -> Result<(), ConfirmationError>;
 }
 
 #[derive(Clone, Copy, Debug, Default)]
@@ -213,6 +219,25 @@ impl ConfirmationBackend for SystemConfirmationBackend {
     fn regenerate_grub(&self) -> Result<(), ConfirmationError> {
         run_command(Path::new(UPDATE_GRUB), &[]).map(|_| ())
     }
+
+    fn record_lineage_activation(
+        &self,
+        transaction: &RollbackTransaction,
+        outcome: ActivationOutcome,
+    ) -> Result<(), ConfirmationError> {
+        let deployments = DeploymentStore::default().discover();
+        let store = LineageStore::default();
+        store
+            .ensure_initialized(&deployments.deployments)
+            .and_then(|_| store.record_activation(transaction, outcome, Utc::now()))
+            .map(|_| ())
+            .map_err(|error| {
+                ConfirmationError::new(
+                    ConfirmationErrorCode::StateCommit,
+                    format!("Could not update system history: {error}"),
+                )
+            })
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -299,6 +324,8 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
             .transition(target.id, DeploymentState::Current)?;
         self.backend
             .transition(transaction.fallback_deployment_id, DeploymentState::Ready)?;
+        self.backend
+            .record_lineage_activation(transaction, ActivationOutcome::Confirmed)?;
         self.backend.delete_old_root(transaction)?;
         self.backend.remove_transaction()?;
         self.backend.regenerate_grub()?;
@@ -312,6 +339,8 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
         )?;
         self.backend
             .transition(transaction.fallback_deployment_id, DeploymentState::Current)?;
+        self.backend
+            .record_lineage_activation(transaction, ActivationOutcome::Reverted)?;
         self.backend.remove_transaction()?;
         self.backend.regenerate_grub()?;
         Ok(())
@@ -576,6 +605,15 @@ mod tests {
             self.call("regenerate-grub");
             Ok(())
         }
+
+        fn record_lineage_activation(
+            &self,
+            _transaction: &RollbackTransaction,
+            outcome: ActivationOutcome,
+        ) -> Result<(), ConfirmationError> {
+            self.call(&format!("lineage-{outcome:?}"));
+            Ok(())
+        }
     }
 
     fn record(kind: DeploymentKind, state: DeploymentState) -> DeploymentRecord {
@@ -630,6 +668,12 @@ mod tests {
             .position(|call| call == "delete-old-root")
             .unwrap();
         assert!(committed < deleted);
+        let lineage = inner
+            .calls
+            .iter()
+            .position(|call| call == "lineage-Confirmed")
+            .unwrap();
+        assert!(lineage < deleted);
     }
 
     #[test]

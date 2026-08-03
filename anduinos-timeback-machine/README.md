@@ -3,6 +3,12 @@
 Rust, GTK4, and Libadwaita system-recovery frontend for the AnduinOS Btrfs
 storage ABI.
 
+Version 0.4 focuses on making recovery understandable before it is needed:
+task-oriented navigation, a truthful system branch map, direct file recovery,
+state-aware restore guidance, and a real-state first-run protection checklist.
+See [CHANGELOG.md](CHANGELOG.md) for the release summary and remaining VM
+qualification boundary.
+
 The current TM-3 implementation provides:
 
 - the versioned deployment model and state machine;
@@ -40,7 +46,48 @@ exclusive (estimated reclaimable) bytes. A Home directory that is not an
 independent compatible Btrfs subvolume is reported as unavailable and is never
 silently snapshotted as part of root.
 
-The Automatic Snapshots page exposes the complete schedule and tiered-retention
+The main window is organized around four user questions: Overview explains the
+current protection state, System History shows the active branch and recovery
+paths, Recover Files opens earlier System or Personal Files snapshots without
+rolling anything back, and Automatic Protection controls schedules and
+retention. Storage, activity, and advanced settings remain available from the
+application menu without competing with those primary tasks.
+
+System History renders verified parent relationships as a scrollable branch
+map with native, keyboard-focusable cards. Time flows downward, forks open a
+new horizontal lane, and the view initially centres the current system. When a
+restore returns to a point that already has descendants, “You Are Here” opens
+a new lane instead of visually claiming those abandoned changes. Legacy points
+whose relationship predates lineage tracking are listed separately and are
+never connected by guesswork.
+
+Selecting a branch card opens a state-aware action panel. Available snapshots
+can be browsed without changing the system, verified for integrity, or passed
+to the existing explanatory one-time restore flow. The current-system card has
+no restore actions, removed snapshots remain explanatory only, and a pending
+restore changes the primary action to an explicit cancellation. The action
+buttons reflow on narrow windows and demo mode previews them without touching
+snapshot data.
+
+When a restore is pending, Overview promotes it above the normal protection
+cards. It names the target, states that the running system has not changed,
+offers immediate cancellation, and explains the verified one-shot GRUB flow.
+The normal AnduinOS entries remain available if the user changes their mind at
+the boot menu; after skipping recovery, the recorded request can be cancelled
+from Overview before another restore is prepared. A restored-but-unconfirmed
+boot is shown as a safety check rather than prematurely labelled successful.
+
+Overview also includes a first-run protection checklist driven by real system
+state rather than a generic welcome screen. System recovery, Personal Files,
+and Automatic Protection are evaluated independently; the hero only reports
+active protection when all available areas have a usable first snapshot and an
+enabled schedule. Missing steps link directly to creation or policy setup,
+while service failures, an incompatible `/home`, and a schedule waiting for its
+first successful run receive distinct explanations. Empty System History and
+Recover Files views provide the same concrete next actions instead of dead-end
+placeholder text.
+
+The Automatic Protection page exposes the complete schedule and tiered-retention
 policy. System and User Data may use independent policies, or users may link
 them and edit one shared policy. The overview reports the last successful and
 next planned snapshot for each active stream. Home snapshots are stored and

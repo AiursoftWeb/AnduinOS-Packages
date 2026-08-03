@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "com.anduinos.timebackmachine.system-lineage.v1",
+  "title": "AnduinOS Timeback system history lineage",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "revision",
+    "current_head_id",
+    "nodes",
+    "activations"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "revision": { "type": "integer", "minimum": 1 },
+    "current_head_id": {
+      "oneOf": [
+        { "$ref": "#/$defs/uuid" },
+        { "type": "null" }
+      ]
+    },
+    "nodes": {
+      "type": "array",
+      "maxItems": 100000,
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "activations": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": { "$ref": "#/$defs/activation" }
+    }
+  },
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recovery_point_id",
+        "parent_id",
+        "relation",
+        "created_at",
+        "kind",
+        "title",
+        "snapshot_available",
+        "removed_at"
+      ],
+      "properties": {
+        "recovery_point_id": { "$ref": "#/$defs/uuid" },
+        "parent_id": {
+          "oneOf": [
+            { "$ref": "#/$defs/uuid" },
+            { "type": "null" }
+          ]
+        },
+        "relation": { "enum": ["exact", "legacy-unknown"] },
+        "created_at": { "type": "string", "format": "date-time" },
+        "kind": {
+          "enum": ["factory", "manual", "automatic", "apt-pre", "apt-post", "pre-rollback"]
+        },
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "snapshot_available": { "type": "boolean" },
+        "removed_at": {
+          "oneOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "activation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transaction_id",
+        "previous_head_id",
+        "target_recovery_point_id",
+        "safety_recovery_point_id",
+        "scheduled_at",
+        "completed_at",
+        "outcome"
+      ],
+      "properties": {
+        "transaction_id": { "$ref": "#/$defs/uuid" },
+        "previous_head_id": {
+          "oneOf": [
+            { "$ref": "#/$defs/uuid" },
+            { "type": "null" }
+          ]
+        },
+        "target_recovery_point_id": { "$ref": "#/$defs/uuid" },
+        "safety_recovery_point_id": { "$ref": "#/$defs/uuid" },
+        "scheduled_at": { "type": "string", "format": "date-time" },
+        "completed_at": { "type": "string", "format": "date-time" },
+        "outcome": { "enum": ["confirmed", "reverted"] }
+      }
+    }
+  }
+}

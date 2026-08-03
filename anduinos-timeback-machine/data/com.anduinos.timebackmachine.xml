@@ -12,6 +12,9 @@
     <method name="ListDeployments">
       <arg name="deployments_json" type="s" direction="out"/>
     </method>
+    <method name="InspectSystemHistory">
+      <arg name="history_json" type="s" direction="out"/>
+    </method>
     <method name="InspectRetention">
       <arg name="retention_json" type="s" direction="out"/>
     </method>

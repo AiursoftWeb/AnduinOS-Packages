@@ -21,12 +21,28 @@ python3 -m json.tool docs/rollback-v1.schema.json >/dev/null
 python3 -m json.tool docs/package-transaction-v1.schema.json >/dev/null
 python3 -m json.tool docs/home-snapshot-v1.schema.json >/dev/null
 python3 -m json.tool docs/automatic-configuration-v1.schema.json >/dev/null
+python3 -m json.tool docs/system-lineage-v1.schema.json >/dev/null
 python3 - <<'PY'
 import ast
+import re
+import tomllib
 from configparser import ConfigParser
 from pathlib import Path
 from subprocess import check_output
 from xml.etree import ElementTree
+
+with Path("Cargo.toml").open("rb") as stream:
+    package_version = tomllib.load(stream)["package"]["version"]
+project = ElementTree.parse("timeback-machine.aosproj")
+packaging_version = project.findtext(".//PackageVersion")
+assert packaging_version == f"{package_version}-1+$(SuiteShortName)"
+assert f"## {package_version} —" in Path("CHANGELOG.md").read_text()
+pot = Path("po/anduinos-timeback-machine.pot").read_text()
+assert re.search(
+    rf'^"Project-Id-Version: anduinos-timeback-machine {re.escape(package_version)}\\n"$',
+    pot,
+    re.MULTILINE,
+)
 
 apt_config = check_output(
     ["apt-config", "-c", "data/85anduinos-timeback", "dump"],
@@ -135,6 +151,7 @@ assert interface is not None
 methods = {method.attrib["name"] for method in interface.findall("method")}
 assert {
     "InspectLayout",
+    "InspectSystemHistory",
     "ListDeployments",
     "VerifyRecoveryPoint",
     "CreateRecoveryPoint",

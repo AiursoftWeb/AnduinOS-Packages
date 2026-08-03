@@ -8,6 +8,7 @@ pub mod confirmation;
 pub mod coordination;
 pub mod copy_out;
 pub mod layout;
+pub mod lineage;
 pub mod maintenance;
 pub mod model;
 pub mod operations;
@@ -22,7 +23,7 @@ pub mod store;
 pub mod targets;
 pub mod transaction;
 
-pub const CONTRACT_VERSION: u32 = 11;
+pub const CONTRACT_VERSION: u32 = 12;
 pub const DEPLOYMENT_SCHEMA_VERSION: u32 = 1;
 pub const SNAPSHOT_ROOT: &str = "/.snapshots/anduinos";
 pub const DBUS_NAME: &str = "com.anduinos.TimebackMachine1";

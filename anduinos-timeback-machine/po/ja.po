@@ -502,10 +502,6 @@ msgstr "Special file — cannot be copied"
 msgid "Overview"
 msgstr "概要"
 
-#: src/window.rs:122 src/window.rs:819
-msgid "Recovery Points"
-msgstr "復元ポイント"
-
 #: src/window.rs:134 src/window.rs:1147
 msgid "Storage"
 msgstr "ストレージ"
@@ -568,93 +564,21 @@ msgstr "デザインプレビュー — システム変更はできません"
 msgid "The recovery service could not be reached; no system data was changed"
 msgstr "The recovery service could not be reached; no system data was changed"
 
-#: src/window.rs:441
-msgid "Not created yet"
-msgstr "まだ作成されていません"
-
-#: src/window.rs:446
-msgid "Latest point"
-msgstr "最新ポイント"
-
-#: src/window.rs:448
-msgid "Today, 14:32"
-msgstr "本日 14:32"
-
-#: src/window.rs:452
-msgid "System recovery"
-msgstr "システム復元"
-
 #: src/window.rs:456 src/window.rs:1181
 msgid "Recovery storage"
 msgstr "復元ストレージ"
-
-#: src/window.rs:457
-msgid "8.4 GB"
-msgstr "8.4 GB"
 
 #: src/window.rs:457 src/window.rs:875 src/window.rs:888 src/window.rs:2611
 msgid "Ready"
 msgstr "準備完了"
 
-#: src/window.rs:458
-msgid "Estimated exclusive data"
-msgstr "推定排他データ"
-
-#: src/window.rs:462
-msgid "Boot safety"
-msgstr "ブート安全性"
-
-#: src/window.rs:464
-msgid "Verified"
-msgstr "検証済み"
-
 #: src/window.rs:466
 msgid "Waiting"
 msgstr "待機中"
 
-#: src/window.rs:468
-msgid "Recorded"
-msgstr "記録済み"
-
-#: src/window.rs:471
-msgid "Kernel and initramfs"
-msgstr "カーネルとinitramfs"
-
-#: src/window.rs:473
-msgid "Integrity can be verified on demand"
-msgstr "整合性はオンデマンドで検証できます"
-
-#: src/window.rs:481
-msgid "Protection"
-msgstr "保護"
-
 #: src/window.rs:485 src/window.rs:612 src/window.rs:1388 src/window.rs:1424
 msgid "Unavailable"
 msgstr "利用不可"
-
-#: src/window.rs:488
-msgid "Available on Btrfs installations"
-msgstr "Btrfsインストールで利用可能"
-
-#: src/window.rs:490
-msgid "Btrfs layout required"
-msgstr "Btrfsレイアウトが必要です"
-
-#: src/window.rs:500
-msgid "Detected locally"
-msgstr "ローカルで検出"
-
-#: src/window.rs:504
-msgid "System changes"
-msgstr "システム変更"
-
-#: src/window.rs:505
-msgid "Disabled"
-msgstr "無効"
-
-#: src/window.rs:506
-msgid "Your system is untouched"
-msgstr "システムは無傷です"
 
 #: src/window.rs:516
 msgid "Recent recovery points"
@@ -708,10 +632,6 @@ msgstr "まだ復元ポイントがありません"
 msgid "Recovery points are unavailable"
 msgstr "復元ポイントは利用できません"
 
-#: src/window.rs:574
-msgid "The system is ready for the manual recovery milestone."
-msgstr "システムは手動復元のマイルストーンに準備できました。"
-
 #: src/window.rs:577
 msgid ""
 "This installation uses ext4. Timeback Machine recovery points currently "
@@ -727,10 +647,6 @@ msgstr "Timeback Machineはこのインストールに変更を加えていま�
 #: src/window.rs:594 src/window.rs:1321
 msgid "Automatic Protection"
 msgstr "自動保護"
-
-#: src/window.rs:596
-msgid "See when your data was last captured and when protection runs next."
-msgstr "See when your data was last captured and when protection runs next."
 
 #: src/window.rs:601 src/window.rs:627 src/window.rs:1552
 msgid "System and User Data"
@@ -785,21 +701,9 @@ msgstr "アクティブ"
 msgid "Off"
 msgstr "Off"
 
-#: src/window.rs:721
-msgid "Your system can travel back"
-msgstr "システムは過去に戻ることができます"
-
 #: src/window.rs:725
 msgid "System recovery is unavailable"
 msgstr "システム復元は利用できません"
-
-#: src/window.rs:736
-msgid ""
-"Recovery points protect the operating system while your personal files stay "
-"in the present."
-msgstr ""
-"復元ポイントはオペレーティングシステムを保護し、個人ファイルは現在時点のまま"
-"です。"
 
 #: src/window.rs:738
 msgid ""
@@ -847,10 +751,6 @@ msgstr "システムストレージレイアウトの検査に失敗しました
 #: src/window.rs:806
 msgid "Btrfs recovery is available"
 msgstr "Btrfs復元が利用可能です"
-
-#: src/window.rs:820
-msgid "Return the operating system to a known-good moment"
-msgstr "オペレーティングシステムを既知の健全な状態に戻す"
 
 #: src/window.rs:829
 msgid "A compatible Btrfs layout is required"
@@ -924,25 +824,9 @@ msgstr ""
 "Create a recovery point before a system change so you can return to a known "
 "state."
 
-#: src/window.rs:1019
-msgid "User Data Snapshots"
-msgstr "User Data Snapshots"
-
-#: src/window.rs:1027
-msgid "Automatic User Data Snapshot"
-msgstr "Automatic User Data Snapshot"
-
 #: src/window.rs:1045 src/window.rs:2148
 msgid "Browse snapshot files"
 msgstr "Browse snapshot files"
-
-#: src/window.rs:1056
-msgid "User Data Snapshot"
-msgstr "User Data Snapshot"
-
-#: src/window.rs:1067
-msgid "User data snapshots are unavailable"
-msgstr "User data snapshots are unavailable"
 
 #: src/window.rs:1108 src/window.rs:2275
 msgid "System software and settings will return to this point."
@@ -1409,14 +1293,6 @@ msgstr "Keep this window open. Recovery metadata is committed atomically."
 msgid "System Restore Is Ready"
 msgstr "システム復元の準備ができました"
 
-#: src/window.rs:2489
-msgid ""
-"Restart to enter the one-time recovery environment. You can cancel from the "
-"recovery point before restarting."
-msgstr ""
-"Restart to enter the one-time recovery environment. You can cancel from the "
-"recovery point before restarting."
-
 #: src/window.rs:2494
 msgid "Restart Later"
 msgstr "後で再起動"
@@ -1505,6 +1381,830 @@ msgstr "破損"
 #: src/window.rs:2619
 msgid "Deleting"
 msgstr "削除中"
+
+#: src/window.rs:175 src/window.rs:309 src/window.rs:987
+msgid "System History"
+msgstr "System History"
+
+#: src/window.rs:181 src/window.rs:310 src/window.rs:1330
+msgid "Recover Files"
+msgstr "Recover Files"
+
+#: src/window.rs:224 src/window.rs:312
+msgid "Storage & Retention"
+msgstr "Storage & Retention"
+
+#: src/window.rs:226 src/window.rs:314
+msgid "Advanced Settings"
+msgstr "Advanced Settings"
+
+#: src/window.rs:677
+msgid "Current System"
+msgstr "Current System"
+
+#: src/window.rs:679
+msgid "This is the system state that will continue when you restart normally."
+msgstr "This is the system state that will continue when you restart normally."
+
+#: src/window.rs:684
+msgid ""
+"Developed from “After system update” · Your newer changes are still here"
+msgstr ""
+"Developed from “After system update” · Your newer changes are still here"
+
+#: src/window.rs:685 src/window.rs:700 src/window.rs:1286
+msgid "You Are Here"
+msgstr "You Are Here"
+
+#: src/window.rs:697
+#, c++-format
+msgid "Developed from “{0}” · View its branch in System History"
+msgstr "Developed from “{0}” · View its branch in System History"
+
+#: src/window.rs:705
+msgid "The current branch will be recorded with your next recovery point."
+msgstr "The current branch will be recorded with your next recovery point."
+
+#: src/window.rs:712
+msgid "The system branch could not be loaded. No changes were made."
+msgstr "The system branch could not be loaded. No changes were made."
+
+#: src/window.rs:718
+msgid "Create a recovery point to begin a visible system history."
+msgstr "Create a recovery point to begin a visible system history."
+
+#: src/window.rs:724 src/window.rs:1199 src/window.rs:1247
+msgid "Current System — You Are Here"
+msgstr "Current System — You Are Here"
+
+#: src/window.rs:948
+msgid "Find a File"
+msgstr "Find a File"
+
+#: src/window.rs:988
+msgid "See which system state you are using and where each recovery path began"
+msgstr ""
+"See which system state you are using and where each recovery path began"
+
+#: src/window.rs:1235
+msgid "System branch unavailable"
+msgstr "System branch unavailable"
+
+#: src/window.rs:1239 src/window.rs:1248
+msgid "Create a recovery point to begin the branch map."
+msgstr "Create a recovery point to begin the branch map."
+
+#: src/window.rs:1240
+msgid "No Changes Made"
+msgstr "No Changes Made"
+
+#: src/window.rs:1288
+msgid "Available"
+msgstr "Available"
+
+#: src/window.rs:1290
+msgid "History Only"
+msgstr "History Only"
+
+#: src/window.rs:1331
+msgid ""
+"Open an earlier moment like a normal folder, then copy out only what you need"
+msgstr ""
+"Open an earlier moment like a normal folder, then copy out only what you need"
+
+#: src/window.rs:1336
+msgid ""
+"Browsing is read-only. Copying a file out does not change the snapshot or "
+"roll back your system."
+msgstr ""
+"Browsing is read-only. Copying a file out does not change the snapshot or "
+"roll back your system."
+
+#: src/window.rs:1345
+msgid "Earlier files are unavailable"
+msgstr "Earlier files are unavailable"
+
+#: src/window.rs:1347
+msgid ""
+"A compatible AnduinOS Btrfs layout is required. No files have been changed."
+msgstr ""
+"A compatible AnduinOS Btrfs layout is required. No files have been changed."
+
+#: src/window.rs:1355
+msgid "Personal Files"
+msgstr "Personal Files"
+
+#: src/window.rs:1357
+msgid ""
+"Choose when the file still existed. The snapshot opens at your home folder."
+msgstr ""
+"Choose when the file still existed. The snapshot opens at your home folder."
+
+#: src/window.rs:1363
+msgid "Today, 15:00"
+msgstr "Today, 15:00"
+
+#: src/window.rs:1364 src/window.rs:1370 src/window.rs:1383
+msgid "Automatic · Personal files"
+msgstr "Automatic · Personal files"
+
+#: src/window.rs:1387
+msgid "Personal Files Snapshot"
+msgstr "Personal Files Snapshot"
+
+#: src/window.rs:1397
+msgid "No personal-file snapshots yet"
+msgstr "No personal-file snapshots yet"
+
+#: src/window.rs:1408
+msgid "System Files"
+msgstr "System Files"
+
+#: src/window.rs:1410
+msgid ""
+"Use this for an earlier configuration or system file. This does not restore "
+"the whole system."
+msgstr ""
+"Use this for an earlier configuration or system file. This does not restore "
+"the whole system."
+
+#: src/window.rs:1417
+msgid "Today, 14:32 · Automatic system recovery point"
+msgstr "Today, 14:32 · Automatic system recovery point"
+
+#: src/window.rs:1423
+msgid "Today, 14:27 · Automatic system recovery point"
+msgstr "Today, 14:27 · Automatic system recovery point"
+
+#: src/window.rs:1444
+msgid "No system snapshots available"
+msgstr "No system snapshots available"
+
+#: src/window.rs:1493 src/window.rs:1521
+msgid "Browse"
+msgstr "Browse"
+
+#: src/window.rs:1495
+msgid "Browse and copy files from this snapshot"
+msgstr "Browse and copy files from this snapshot"
+
+#: src/window.rs:1529
+msgid "Design Preview"
+msgstr "Design Preview"
+
+#: src/window.rs:1531
+msgid ""
+"The real file browser opens here on a supported system. Demo mode never "
+"reads or changes your files."
+msgstr ""
+"The real file browser opens here on a supported system. Demo mode never "
+"reads or changes your files."
+
+#: src/history_graph.rs:78
+msgid "Graphics experiment"
+msgstr "Graphics experiment"
+
+#: src/history_graph.rs:177
+msgid "Safety Point"
+msgstr "Safety Point"
+
+#: src/history_graph.rs:187
+msgid "Current Branch Base"
+msgstr "Current Branch Base"
+
+#: src/history_graph.rs:225
+msgid "Newer changes continue from the recovery point above"
+msgstr "Newer changes continue from the recovery point above"
+
+#: src/history_graph.rs:341
+#, c++-format
+msgid "Showing the newest branch points · {0} older points are hidden"
+msgstr "Showing the newest branch points · {0} older points are hidden"
+
+#: src/history_graph.rs:399
+msgid "Select this history point"
+msgstr "Select this history point"
+
+#: src/window.rs:1191
+msgid "System Branch Map"
+msgstr "System Branch Map"
+
+#: src/window.rs:1193
+msgid ""
+"Time flows downward. Connected points have a verified parent relationship; a "
+"fork is another path you can still return to."
+msgstr ""
+"Time flows downward. Connected points have a verified parent relationship; a "
+"fork is another path you can still return to."
+
+#: src/window.rs:1223
+msgid "Older Points — Relationship Unknown"
+msgstr "Older Points — Relationship Unknown"
+
+#: src/window.rs:1233
+msgid ""
+"These points predate branch tracking. They remain usable, but Timeback "
+"Machine will not guess where to connect them."
+msgstr ""
+"These points predate branch tracking. They remain usable, but Timeback "
+"Machine will not guess where to connect them."
+
+#: src/window.rs:1265
+msgid "More older points"
+msgstr "More older points"
+
+#: src/window.rs:1267
+#, c++-format
+msgid "{0} additional points remain available in the timeline below."
+msgstr "{0} additional points remain available in the timeline below."
+
+#: src/window.rs:1270
+msgid "Timeline"
+msgstr "Timeline"
+
+#: src/window.rs:1303
+msgid "Select a Point"
+msgstr "Select a Point"
+
+#: src/window.rs:1311
+msgid "Choose a card above to see what you can safely do with that moment."
+msgstr "Choose a card above to see what you can safely do with that moment."
+
+#: src/window.rs:1329 src/window.rs:1378
+msgid "Browse Files"
+msgstr "Browse Files"
+
+#: src/window.rs:1331
+msgid "Open this recovery point without changing the system"
+msgstr "Open this recovery point without changing the system"
+
+#: src/window.rs:1335
+msgid "Verify"
+msgstr "Verify"
+
+#: src/window.rs:1338
+msgid "Check that this recovery point is complete and unchanged"
+msgstr "Check that this recovery point is complete and unchanged"
+
+#: src/window.rs:1343 src/window.rs:1446 src/window.rs:1454 src/window.rs:1486
+#: src/window.rs:1496
+msgid "Prepare Restore"
+msgstr "Prepare Restore"
+
+#: src/window.rs:1346
+msgid "Review what changes before preparing a one-time restore"
+msgstr "Review what changes before preparing a one-time restore"
+
+#: src/window.rs:1398
+msgid "Verify Recovery Point"
+msgstr "Verify Recovery Point"
+
+#: src/window.rs:1441
+msgid ""
+"You are using this system now. A normal restart continues here, including "
+"changes made after the latest recovery point."
+msgstr ""
+"You are using this system now. A normal restart continues here, including "
+"changes made after the latest recovery point."
+
+#: src/window.rs:1449
+msgid ""
+"This recovery point can be browsed, verified, or prepared for restore. Demo "
+"mode never changes the system."
+msgstr ""
+"This recovery point can be browsed, verified, or prepared for restore. Demo "
+"mode never changes the system."
+
+#: src/window.rs:1462
+msgid ""
+"This restore is prepared for the next restart. You can still cancel it "
+"without changing the running system."
+msgstr ""
+"This restore is prepared for the next restart. You can still cancel it "
+"without changing the running system."
+
+#: src/window.rs:1466
+msgid ""
+"Browsing and verification do not change anything. Restore only prepares a "
+"one-time boot and explains every affected area first."
+msgstr ""
+"Browsing and verification do not change anything. Restore only prepares a "
+"one-time boot and explains every affected area first."
+
+#: src/window.rs:1470
+msgid ""
+"You can still copy files from this point, but its current state is not "
+"eligible for a full system restore."
+msgstr ""
+"You can still copy files from this point, but its current state is not "
+"eligible for a full system restore."
+
+#: src/window.rs:1474
+msgid ""
+"The snapshot data is no longer available. Its card remains only to explain "
+"system history."
+msgstr ""
+"The snapshot data is no longer available. Its card remains only to explain "
+"system history."
+
+#: src/window.rs:1484
+msgid "Cancel Prepared Restore"
+msgstr "Cancel Prepared Restore"
+
+#: src/window.rs:1491
+msgid ""
+"This point remains in the branch record, but its snapshot is no longer "
+"available."
+msgstr ""
+"This point remains in the branch record, but its snapshot is no longer "
+"available."
+
+#: src/window.rs:1507
+msgid ""
+"This action is available here on a supported system. Design preview never "
+"reads or changes snapshots."
+msgstr ""
+"This action is available here on a supported system. Design preview never "
+"reads or changes snapshots."
+
+#: src/window.rs:700
+msgid "System Restore Status"
+msgstr "System Restore Status"
+
+#: src/window.rs:704
+msgid "Checking the Restored System"
+msgstr "Checking the Restored System"
+
+#: src/window.rs:707
+#, c++-format
+msgid ""
+"“{0}” has started. Timeback Machine is confirming its identity before "
+"removing the protected previous system."
+msgstr ""
+"“{0}” has started. Timeback Machine is confirming its identity before "
+"removing the protected previous system."
+
+#: src/window.rs:711
+msgid "Safety Check"
+msgstr "Safety Check"
+
+#: src/window.rs:743
+msgid "System Restore Is Prepared"
+msgstr "System Restore Is Prepared"
+
+#: src/window.rs:754
+#, c++-format
+msgid ""
+"Target: “{0}” · Your running system has not changed. The recovery entry is "
+"selected for one boot only."
+msgstr ""
+"Target: “{0}” · Your running system has not changed. The recovery entry is "
+"selected for one boot only."
+
+#: src/window.rs:775
+msgid "What Happens Next?"
+msgstr "What Happens Next?"
+
+#: src/window.rs:816
+msgid "Your Current System Is Protected"
+msgstr "Your Current System Is Protected"
+
+#: src/window.rs:817
+msgid "A safety recovery point was created before anything was scheduled."
+msgstr "A safety recovery point was created before anything was scheduled."
+
+#: src/window.rs:821
+msgid "The Recovery Entry Runs Once"
+msgstr "The Recovery Entry Runs Once"
+
+#: src/window.rs:823
+#, c++-format
+msgid ""
+"The next selected recovery boot tries “{0}”. It does not permanently replace "
+"the normal GRUB default."
+msgstr ""
+"The next selected recovery boot tries “{0}”. It does not permanently replace "
+"the normal GRUB default."
+
+#: src/window.rs:829
+msgid "Success Creates a New Branch"
+msgstr "Success Creates a New Branch"
+
+#: src/window.rs:830
+msgid ""
+"After a verified boot, your new changes continue from the restored point."
+msgstr ""
+"After a verified boot, your new changes continue from the restored point."
+
+#: src/window.rs:834
+msgid "Failure Returns Automatically"
+msgstr "Failure Returns Automatically"
+
+#: src/window.rs:835
+msgid ""
+"If recovery cannot finish safely, the protected previous system returns on "
+"the following boot."
+msgstr ""
+"If recovery cannot finish safely, the protected previous system returns on "
+"the following boot."
+
+#: src/window.rs:839
+msgid "Changed Your Mind at GRUB?"
+msgstr "Changed Your Mind at GRUB?"
+
+#: src/window.rs:840
+msgid ""
+"Choose a normal AnduinOS entry to skip recovery. After logging in, cancel "
+"the pending request here before preparing another restore."
+msgstr ""
+"Choose a normal AnduinOS entry to skip recovery. After logging in, cancel "
+"the pending request here before preparing another restore."
+
+#: src/window.rs:881
+msgid "What Happens After Restart"
+msgstr "What Happens After Restart"
+
+#: src/window.rs:883
+msgid ""
+"Before restarting, you can cancel from this page. The normal AnduinOS "
+"entries also remain available in the GRUB menu."
+msgstr ""
+"Before restarting, you can cancel from this page. The normal AnduinOS "
+"entries also remain available in the GRUB menu."
+
+#: src/window.rs:888
+msgid "Got It"
+msgstr "Got It"
+
+#: src/window.rs:3147
+msgid "Normal AnduinOS entries remain in GRUB if you change your mind at boot."
+msgstr ""
+"Normal AnduinOS entries remain in GRUB if you change your mind at boot."
+
+#: src/window.rs:3358
+msgid ""
+"Restart to try the recovery entry once. You can still cancel from the "
+"Overview before restarting, or choose a normal AnduinOS entry in GRUB."
+msgstr ""
+"Restart to try the recovery entry once. You can still cancel from the "
+"Overview before restarting, or choose a normal AnduinOS entry in GRUB."
+
+#: src/window.rs:683
+msgid ""
+"Use “Create First Point” in the checklist above to make system recovery "
+"ready."
+msgstr ""
+"Use “Create First Point” in the checklist above to make system recovery "
+"ready."
+
+#: src/window.rs:790
+msgid "Protection Checklist — Complete"
+msgstr "Protection Checklist — Complete"
+
+#: src/window.rs:791 src/window.rs:1330
+msgid ""
+"System recovery and earlier personal files are ready when you need them."
+msgstr ""
+"System recovery and earlier personal files are ready when you need them."
+
+#: src/window.rs:794 src/window.rs:1333
+msgid "Finish Setting Up Protection"
+msgstr "Finish Setting Up Protection"
+
+#: src/window.rs:795
+msgid ""
+"Complete the remaining steps now so recovery is ready before something goes "
+"wrong."
+msgstr ""
+"Complete the remaining steps now so recovery is ready before something goes "
+"wrong."
+
+#: src/window.rs:798 src/window.rs:1337
+msgid "Protection Needs Attention"
+msgstr "Protection Needs Attention"
+
+#: src/window.rs:799
+msgid ""
+"One area cannot protect new data right now. Existing snapshots remain "
+"unchanged."
+msgstr ""
+"One area cannot protect new data right now. Existing snapshots remain "
+"unchanged."
+
+#: src/window.rs:808
+msgid ""
+"The recovery service could not be reached. Refresh after the service is "
+"available again."
+msgstr ""
+"The recovery service could not be reached. Refresh after the service is "
+"available again."
+
+#: src/window.rs:810
+msgid "At least one usable recovery point exists."
+msgstr "At least one usable recovery point exists."
+
+#: src/window.rs:812
+msgid "Create your first recovery point before the next system change."
+msgstr "Create your first recovery point before the next system change."
+
+#: src/window.rs:819 src/window.rs:876 src/window.rs:891 src/window.rs:2112
+msgid "Set Up"
+msgstr "Set Up"
+
+#: src/window.rs:834
+msgid "Create First Point"
+msgstr "Create First Point"
+
+#: src/window.rs:847
+msgid ""
+"Personal-file snapshot status could not be loaded. Existing files and "
+"snapshots were not changed."
+msgstr ""
+"Personal-file snapshot status could not be loaded. Existing files and "
+"snapshots were not changed."
+
+#: src/window.rs:854
+msgid ""
+"Personal Files requires /home to be an independent Btrfs subvolume; system "
+"snapshots do not silently include it."
+msgstr ""
+"Personal Files requires /home to be an independent Btrfs subvolume; system "
+"snapshots do not silently include it."
+
+#: src/window.rs:861
+msgid "An earlier copy of your personal files can be browsed and copied out."
+msgstr "An earlier copy of your personal files can be browsed and copied out."
+
+#: src/window.rs:868
+msgid ""
+"Automatic protection is scheduled and waiting for its first successful "
+"snapshot."
+msgstr ""
+"Automatic protection is scheduled and waiting for its first successful "
+"snapshot."
+
+#: src/window.rs:870
+msgid "Starting"
+msgstr "Starting"
+
+#: src/window.rs:875
+msgid "Turn on Personal Files protection to create browsable earlier copies."
+msgstr "Turn on Personal Files protection to create browsable earlier copies."
+
+#: src/window.rs:897
+msgid "The automatic schedule could not be read or its last operation failed."
+msgstr "The automatic schedule could not be read or its last operation failed."
+
+#: src/window.rs:898
+msgid "Check"
+msgstr "Check"
+
+#: src/window.rs:904
+msgid "New snapshots are scheduled without requiring you to remember."
+msgstr "New snapshots are scheduled without requiring you to remember."
+
+#: src/window.rs:910
+msgid "Automatic protection is enabled for only one data area."
+msgstr "Automatic protection is enabled for only one data area."
+
+#: src/window.rs:911
+msgid "Partial"
+msgstr "Partial"
+
+#: src/window.rs:916
+msgid "No new snapshots will be created automatically."
+msgstr "No new snapshots will be created automatically."
+
+#: src/window.rs:932
+msgid "Review Policy"
+msgstr "Review Policy"
+
+#: src/window.rs:1329
+msgid "Protection Is Active"
+msgstr "Protection Is Active"
+
+#: src/window.rs:1334
+msgid "A few clear steps remain before automatic recovery is fully ready."
+msgstr "A few clear steps remain before automatic recovery is fully ready."
+
+#: src/window.rs:1338
+msgid ""
+"Your existing data is untouched. Review the checklist below to fix the "
+"unavailable area."
+msgstr ""
+"Your existing data is untouched. Review the checklist below to fix the "
+"unavailable area."
+
+#: src/window.rs:1683
+msgid "Create First Recovery Point"
+msgstr "Create First Recovery Point"
+
+#: src/window.rs:1693
+msgid "Create Your First Recovery Point"
+msgstr "Create Your First Recovery Point"
+
+#: src/window.rs:255 src/window.rs:384
+msgid "Main Menu"
+msgstr "Main Menu"
+
+#: src/window.rs:1164
+msgid "Snapshot Timing"
+msgstr "Snapshot Timing"
+
+#: src/window.rs:1166
+msgid ""
+"The last successful snapshot and the next planned run for each protected "
+"area."
+msgstr ""
+"The last successful snapshot and the next planned run for each protected "
+"area."
+
+#: src/window.rs:251 src/window.rs:420
+msgid "Keyboard Shortcuts"
+msgstr "Keyboard Shortcuts"
+
+#: src/window.rs:393
+msgid "Open Overview"
+msgstr "Open Overview"
+
+#: src/window.rs:394
+msgid "Open System History"
+msgstr "Open System History"
+
+#: src/window.rs:395
+msgid "Open Recover Files"
+msgstr "Open Recover Files"
+
+#: src/window.rs:396
+msgid "Open Automatic Protection"
+msgstr "Open Automatic Protection"
+
+#: src/window.rs:397
+msgid "Refresh System Status"
+msgstr "Refresh System Status"
+
+#: src/window.rs:398
+msgid "Open Advanced Settings"
+msgstr "Open Advanced Settings"
+
+#~ msgid "Not created yet"
+#~ msgstr "まだ作成されていません"
+
+#~ msgid "Latest point"
+#~ msgstr "最新ポイント"
+
+#~ msgid "Today, 14:32"
+#~ msgstr "本日 14:32"
+
+#~ msgid "System recovery"
+#~ msgstr "システム復元"
+
+#~ msgid "8.4 GB"
+#~ msgstr "8.4 GB"
+
+#~ msgid "Estimated exclusive data"
+#~ msgstr "推定排他データ"
+
+#~ msgid "Boot safety"
+#~ msgstr "ブート安全性"
+
+#~ msgid "Verified"
+#~ msgstr "検証済み"
+
+#~ msgid "Recorded"
+#~ msgstr "記録済み"
+
+#~ msgid "Kernel and initramfs"
+#~ msgstr "カーネルとinitramfs"
+
+#~ msgid "Integrity can be verified on demand"
+#~ msgstr "整合性はオンデマンドで検証できます"
+
+#~ msgid "Protection"
+#~ msgstr "保護"
+
+#~ msgid "Available on Btrfs installations"
+#~ msgstr "Btrfsインストールで利用可能"
+
+#~ msgid "Btrfs layout required"
+#~ msgstr "Btrfsレイアウトが必要です"
+
+#~ msgid "Detected locally"
+#~ msgstr "ローカルで検出"
+
+#~ msgid "System changes"
+#~ msgstr "システム変更"
+
+#~ msgid "Disabled"
+#~ msgstr "無効"
+
+#~ msgid "Your system is untouched"
+#~ msgstr "システムは無傷です"
+
+#~ msgid "See when your data was last captured and when protection runs next."
+#~ msgstr "See when your data was last captured and when protection runs next."
+
+#~ msgid "The system is ready for the manual recovery milestone."
+#~ msgstr "システムは手動復元のマイルストーンに準備できました。"
+
+#~ msgid "Your System Is Protected"
+#~ msgstr "Your System Is Protected"
+
+#~ msgid "Protection Is Ready"
+#~ msgstr "Protection Is Ready"
+
+#~ msgid ""
+#~ "See where you are now, find an earlier file, or safely return the system "
+#~ "to a known moment."
+#~ msgstr ""
+#~ "See where you are now, find an earlier file, or safely return the system "
+#~ "to a known moment."
+
+#~ msgid ""
+#~ "Restart to enter the one-time recovery environment. You can cancel from "
+#~ "the recovery point before restarting."
+#~ msgstr ""
+#~ "Restart to enter the one-time recovery environment. You can cancel from "
+#~ "the recovery point before restarting."
+
+#~ msgid "Select a point to understand its place in this history."
+#~ msgstr "Select a point to understand its place in this history."
+
+#, c++-format
+#~ msgid "Selected: {0} · {1}"
+#~ msgstr "Selected: {0} · {1}"
+
+#~ msgid "Where You Are"
+#~ msgstr "Where You Are"
+
+#~ msgid ""
+#~ "“You Are Here” is the branch that a normal restart continues. Restoring "
+#~ "creates a new path; it does not erase the old one."
+#~ msgstr ""
+#~ "“You Are Here” is the branch that a normal restart continues. Restoring "
+#~ "creates a new path; it does not erase the old one."
+
+#~ msgid "New changes made after the 14:32 recovery point"
+#~ msgstr "New changes made after the 14:32 recovery point"
+
+#~ msgid "Today, 14:32 · Continues from Before system update"
+#~ msgstr "Today, 14:32 · Continues from Before system update"
+
+#~ msgid "On This Path"
+#~ msgstr "On This Path"
+
+#~ msgid "Today, 14:27 · Automatic recovery point"
+#~ msgstr "Today, 14:27 · Automatic recovery point"
+
+#~ msgid "Earlier"
+#~ msgstr "Earlier"
+
+#~ msgid "Yesterday, 20:41 · Another path you can still return to"
+#~ msgstr "Yesterday, 20:41 · Another path you can still return to"
+
+#~ msgid "Other Path"
+#~ msgstr "Other Path"
+
+#, c++-format
+#~ msgid "Continues from “{0}”"
+#~ msgstr "Continues from “{0}”"
+
+#~ msgid "Beginning of this path"
+#~ msgstr "Beginning of this path"
+
+#~ msgid "Older recovery point · Earlier connection is unknown"
+#~ msgstr "Older recovery point · Earlier connection is unknown"
+
+#~ msgid "Snapshot removed"
+#~ msgstr "Snapshot removed"
+
+#~ msgid "Recovery Points"
+#~ msgstr "復元ポイント"
+
+#~ msgid "Your system can travel back"
+#~ msgstr "システムは過去に戻ることができます"
+
+#~ msgid ""
+#~ "Recovery points protect the operating system while your personal files "
+#~ "stay in the present."
+#~ msgstr ""
+#~ "復元ポイントはオペレーティングシステムを保護し、個人ファイルは現在時点のま"
+#~ "まです。"
+
+#~ msgid "Return the operating system to a known-good moment"
+#~ msgstr "オペレーティングシステムを既知の健全な状態に戻す"
+
+#~ msgid "User Data Snapshots"
+#~ msgstr "User Data Snapshots"
+
+#~ msgid "Automatic User Data Snapshot"
+#~ msgstr "Automatic User Data Snapshot"
+
+#~ msgid "User Data Snapshot"
+#~ msgstr "User Data Snapshot"
+
+#~ msgid "User data snapshots are unavailable"
+#~ msgstr "User data snapshots are unavailable"
 
 #~ msgid "Search This Folder"
 #~ msgstr "Search This Folder"

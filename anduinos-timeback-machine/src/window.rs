@@ -1,3 +1,5 @@
+use std::cell::RefCell;
+use std::collections::HashMap;
 use std::rc::Rc;
 use std::sync::mpsc;
 use std::time::Duration;
@@ -9,6 +11,7 @@ use anduinos_timeback::automation::{
     AutomaticConfiguration, AutomaticPolicy, TargetAutomaticStatus,
 };
 use anduinos_timeback::layout::{self, LayoutReport, LayoutSupport};
+use anduinos_timeback::lineage::{LineageRelation, SystemLineage};
 use anduinos_timeback::model::{DeploymentKind, DeploymentRecord, DeploymentState};
 use anduinos_timeback::retention::RetentionPlan;
 use anduinos_timeback::store::DiscoveryReport;
@@ -41,6 +44,35 @@ struct DiscoveryState {
 struct RetentionState {
     plan: Option<RetentionPlan>,
     error: Option<String>,
+}
+
+struct HistoryState {
+    history: Option<SystemLineage>,
+    error: Option<String>,
+}
+
+struct HomeDiscoveryState {
+    snapshots: Vec<anduinos_timeback::automatic_home::HomeSnapshotRecord>,
+    error: Option<String>,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum ProtectionHealth {
+    Active,
+    SetupNeeded,
+    Attention,
+}
+
+struct ProtectionChecklist {
+    health: ProtectionHealth,
+    system_error: bool,
+    system_snapshot: bool,
+    home_available: bool,
+    home_error: bool,
+    home_snapshot: bool,
+    system_automatic: bool,
+    home_automatic: bool,
+    automatic_error: bool,
 }
 
 pub fn build(app: &TimebackApplication) -> adw::ApplicationWindow {
@@ -93,6 +125,40 @@ fn build_with_notice(
     } else {
         client::inspect_automatic().ok()
     };
+    let history = if demo || !report.is_supported() {
+        HistoryState {
+            history: None,
+            error: None,
+        }
+    } else {
+        match client::inspect_system_history() {
+            Ok(history) => HistoryState {
+                history: Some(history),
+                error: None,
+            },
+            Err(error) => HistoryState {
+                history: None,
+                error: Some(error.to_string()),
+            },
+        }
+    };
+    let home_discovery = if demo || !report.is_supported() {
+        HomeDiscoveryState {
+            snapshots: Vec::new(),
+            error: None,
+        }
+    } else {
+        match client::list_home_snapshots() {
+            Ok(snapshots) => HomeDiscoveryState {
+                snapshots,
+                error: None,
+            },
+            Err(error) => HomeDiscoveryState {
+                snapshots: Vec::new(),
+                error: Some(error.to_string()),
+            },
+        }
+    };
 
     let window = adw::ApplicationWindow::builder()
         .application(app)
@@ -115,37 +181,35 @@ fn build_with_notice(
             name: "overview",
             title: i18n("Overview"),
             icon: "go-home-symbolic",
-            widget: build_overview(&window, &report, &discovery, automatic.as_ref(), demo).upcast(),
+            widget: build_overview(
+                &window,
+                &report,
+                &discovery,
+                automatic.as_ref(),
+                &home_discovery,
+                &history,
+                demo,
+            )
+            .upcast(),
         },
         Page {
-            name: "points",
-            title: i18n("Recovery Points"),
+            name: "history",
+            title: i18n("System History"),
             icon: "document-open-recent-symbolic",
-            widget: build_recovery_points(&window, &report, &discovery, demo).upcast(),
+            widget: build_system_history(&window, &report, &discovery, &history, demo).upcast(),
+        },
+        Page {
+            name: "files",
+            title: i18n("Recover Files"),
+            icon: "folder-open-symbolic",
+            widget: build_recover_files(&window, &report, &discovery, &home_discovery, demo)
+                .upcast(),
         },
         Page {
             name: "automatic",
-            title: i18n(concat!("Automatic ", "Snapshots")),
+            title: i18n("Automatic Protection"),
             icon: "alarm-symbolic",
             widget: build_automatic_snapshots(&window, &report, automatic.as_ref()).upcast(),
-        },
-        Page {
-            name: "storage",
-            title: i18n("Storage"),
-            icon: "drive-harddisk-symbolic",
-            widget: build_storage(&report, demo).upcast(),
-        },
-        Page {
-            name: "activity",
-            title: i18n("Activity"),
-            icon: "view-list-symbolic",
-            widget: build_activity(&report, &discovery, demo).upcast(),
-        },
-        Page {
-            name: "settings",
-            title: i18n("Settings"),
-            icon: "preferences-system-symbolic",
-            widget: build_settings(&retention, demo).upcast(),
         },
     ];
 
@@ -162,6 +226,9 @@ fn build_with_notice(
         sidebar.append(&navigation_row(page.icon, &page.title));
         stack.add_named(&page.widget, Some(page.name));
     }
+    stack.add_named(&build_storage(&report, demo), Some("storage"));
+    stack.add_named(&build_activity(&report, &discovery, demo), Some("activity"));
+    stack.add_named(&build_settings(&retention, demo), Some("settings"));
     sidebar.select_row(sidebar.row_at_index(0).as_ref());
 
     let sidebar_header = adw::HeaderBar::builder()
@@ -175,22 +242,27 @@ fn build_with_notice(
     sidebar_toolbar.add_top_bar(&sidebar_header);
 
     let menu = gio::Menu::new();
-    menu.append(Some(&i18n("About Timeback Machine")), Some("app.about"));
+    let advanced = gio::Menu::new();
+    advanced.append(Some(&i18n("Storage & Retention")), Some("win.storage"));
+    advanced.append(Some(&i18n("Activity")), Some("win.activity"));
+    advanced.append(Some(&i18n("Advanced Settings")), Some("win.settings"));
+    menu.append_section(None, &advanced);
+    let help = gio::Menu::new();
+    help.append(Some(&i18n("Keyboard Shortcuts")), Some("win.shortcuts"));
+    menu.append_section(None, &help);
+    let about = gio::Menu::new();
+    about.append(Some(&i18n("About Timeback Machine")), Some("app.about"));
+    menu.append_section(None, &about);
     let menu_button = gtk::MenuButton::builder()
         .icon_name("open-menu-symbolic")
+        .tooltip_text(i18n("Main Menu"))
         .menu_model(&menu)
         .build();
     let refresh_button = gtk::Button::builder()
         .icon_name("view-refresh-symbolic")
         .tooltip_text(i18n("Refresh system status"))
+        .action_name("win.refresh")
         .build();
-    let app_for_refresh = app.clone();
-    let window_for_refresh = window.clone();
-    refresh_button.connect_clicked(move |_| {
-        let refreshed = build(&app_for_refresh);
-        refreshed.present();
-        window_for_refresh.close();
-    });
 
     let header = adw::HeaderBar::new();
     let title = adw::WindowTitle::new(&i18n("Overview"), "");
@@ -252,11 +324,105 @@ fn build_with_notice(
         }
     });
 
+    for (action_name, page_name, page_title) in [
+        ("overview", "overview", i18n("Overview")),
+        ("system-history", "history", i18n("System History")),
+        ("recover-files", "files", i18n("Recover Files")),
+        ("automatic", "automatic", i18n("Automatic Protection")),
+        ("storage", "storage", i18n("Storage & Retention")),
+        ("activity", "activity", i18n("Activity")),
+        ("settings", "settings", i18n("Advanced Settings")),
+    ] {
+        let action = gio::SimpleAction::new(action_name, None);
+        let stack = stack.clone();
+        let sidebar = sidebar.clone();
+        let title = title.clone();
+        action.connect_activate(move |_, _| {
+            stack.set_visible_child_name(page_name);
+            title.set_title(&page_title);
+            match page_name {
+                "overview" => sidebar.select_row(sidebar.row_at_index(0).as_ref()),
+                "history" => sidebar.select_row(sidebar.row_at_index(1).as_ref()),
+                "files" => sidebar.select_row(sidebar.row_at_index(2).as_ref()),
+                "automatic" => sidebar.select_row(sidebar.row_at_index(3).as_ref()),
+                _ => sidebar.unselect_all(),
+            }
+        });
+        window.add_action(&action);
+    }
+    let refresh_action = gio::SimpleAction::new("refresh", None);
+    let app_for_refresh = app.clone();
+    let window_for_refresh = window.clone();
+    refresh_action.connect_activate(move |_, _| {
+        let refreshed = build(&app_for_refresh);
+        refreshed.present();
+        window_for_refresh.close();
+    });
+    window.add_action(&refresh_action);
+    let shortcuts_action = gio::SimpleAction::new("shortcuts", None);
+    let window_for_shortcuts = window.clone();
+    shortcuts_action.connect_activate(move |_, _| {
+        show_keyboard_shortcuts(&window_for_shortcuts);
+    });
+    window.add_action(&shortcuts_action);
+    for (action, accelerators) in [
+        ("win.overview", &["<Primary>1"][..]),
+        ("win.system-history", &["<Primary>2"][..]),
+        ("win.recover-files", &["<Primary>3"][..]),
+        ("win.automatic", &["<Primary>4"][..]),
+        ("win.refresh", &["F5"][..]),
+        ("win.settings", &["<Primary>comma"][..]),
+    ] {
+        app.set_accels_for_action(action, accelerators);
+    }
+
     window.set_content(Some(&split));
     if let Some(notice) = success_notice {
         toast_overlay.add_toast(adw::Toast::new(&i18n(notice)));
     }
     window
+}
+
+fn show_keyboard_shortcuts(parent: &adw::ApplicationWindow) {
+    let list = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(8)
+        .margin_top(6)
+        .build();
+    for (title, accelerator) in [
+        (i18n("Open Overview"), "<Primary>1"),
+        (i18n("Open System History"), "<Primary>2"),
+        (i18n("Open Recover Files"), "<Primary>3"),
+        (i18n("Open Automatic Protection"), "<Primary>4"),
+        (i18n("Refresh System Status"), "F5"),
+        (i18n("Open Advanced Settings"), "<Primary>comma"),
+    ] {
+        let row = gtk::Box::builder()
+            .orientation(gtk::Orientation::Horizontal)
+            .spacing(18)
+            .build();
+        row.append(
+            &gtk::Label::builder()
+                .label(title)
+                .halign(gtk::Align::Start)
+                .xalign(0.0)
+                .hexpand(true)
+                .build(),
+        );
+        row.append(
+            &gtk::ShortcutLabel::builder()
+                .accelerator(accelerator)
+                .build(),
+        );
+        list.append(&row);
+    }
+    let dialog = adw::AlertDialog::builder()
+        .heading(i18n("Keyboard Shortcuts"))
+        .extra_child(&list)
+        .close_response("close")
+        .build();
+    dialog.add_response("close", &i18n("Close"));
+    dialog.present(Some(parent));
 }
 
 fn build_unavailable_window(window: &adw::ApplicationWindow, report: &LayoutReport) {
@@ -266,6 +432,7 @@ fn build_unavailable_window(window: &adw::ApplicationWindow, report: &LayoutRepo
     menu.append(Some(&i18n("About Timeback Machine")), Some("app.about"));
     let menu_button = gtk::MenuButton::builder()
         .icon_name("open-menu-symbolic")
+        .tooltip_text(i18n("Main Menu"))
         .menu_model(&menu)
         .build();
     let header = adw::HeaderBar::new();
@@ -398,10 +565,13 @@ fn build_overview(
     report: &LayoutReport,
     discovery: &DiscoveryState,
     automatic: Option<&anduinos_timeback::automation::AutomaticStatus>,
+    home: &HomeDiscoveryState,
+    history: &HistoryState,
     demo: bool,
 ) -> gtk::ScrolledWindow {
     let content = page_content();
-    content.append(&overview_hero(window, report, demo));
+    let checklist = protection_checklist_state(report, discovery, automatic, home, demo);
+    content.append(&overview_hero(window, report, demo, checklist.health));
 
     if demo {
         let banner = adw::Banner::builder()
@@ -422,96 +592,14 @@ fn build_overview(
         content.append(&unsupported_banner(report));
     }
 
+    if let Some(restore_status) = restore_status_overview(window, discovery, demo) {
+        content.append(&restore_status);
+    }
+    content.append(&protection_checklist(window, &checklist));
+    content.append(&current_system_overview(history, demo));
     content.append(&automatic_overview(automatic, demo));
 
-    let metrics = gtk::FlowBox::builder()
-        .selection_mode(gtk::SelectionMode::None)
-        .min_children_per_line(1)
-        .max_children_per_line(3)
-        .column_spacing(14)
-        .row_spacing(14)
-        .homogeneous(true)
-        .build();
     let supported = report.is_supported() || demo;
-    let latest_point = discovery
-        .report
-        .deployments
-        .first()
-        .map(deployment_time)
-        .unwrap_or_else(|| i18n("Not created yet"));
-    let values = if supported {
-        [
-            (
-                "document-open-recent-symbolic",
-                i18n("Latest point"),
-                if demo {
-                    i18n("Today, 14:32")
-                } else {
-                    latest_point
-                },
-                i18n("System recovery"),
-            ),
-            (
-                "drive-harddisk-symbolic",
-                i18n("Recovery storage"),
-                if demo { i18n("8.4 GB") } else { i18n("Ready") },
-                i18n("Estimated exclusive data"),
-            ),
-            (
-                "security-high-symbolic",
-                i18n("Boot safety"),
-                if demo {
-                    i18n("Verified")
-                } else if discovery.report.deployments.is_empty() {
-                    i18n("Waiting")
-                } else {
-                    i18n("Recorded")
-                },
-                if demo {
-                    i18n("Kernel and initramfs")
-                } else {
-                    i18n("Integrity can be verified on demand")
-                },
-            ),
-        ]
-    } else {
-        [
-            (
-                "dialog-warning-symbolic",
-                i18n("Protection"),
-                if is_ext4(report) {
-                    i18n("Temporarily unavailable")
-                } else {
-                    i18n("Unavailable")
-                },
-                if is_ext4(report) {
-                    i18n("Available on Btrfs installations")
-                } else {
-                    i18n("Btrfs layout required")
-                },
-            ),
-            (
-                "drive-harddisk-symbolic",
-                i18n("Root filesystem"),
-                report
-                    .root_filesystem
-                    .clone()
-                    .unwrap_or_else(|| i18n("Unknown")),
-                i18n("Detected locally"),
-            ),
-            (
-                "security-medium-symbolic",
-                i18n("System changes"),
-                i18n("Disabled"),
-                i18n("Your system is untouched"),
-            ),
-        ]
-    };
-    for (icon, label, value, detail) in values {
-        metrics.insert(&metric_card(icon, &label, &value, &detail), -1);
-    }
-    content.append(&metrics);
-
     let heading = section_heading(
         &i18n("Recent recovery points"),
         &i18n("A clear history of system changes"),
@@ -571,7 +659,7 @@ fn build_overview(
                 i18n("Recovery points are unavailable")
             })
             .description(if supported {
-                i18n("The system is ready for the manual recovery milestone.")
+                i18n("Use “Create First Point” in the checklist above to make system recovery ready.")
             } else if is_ext4(report) {
                 i18n(
                     "This installation uses ext4. Timeback Machine recovery points currently require Btrfs.",
@@ -586,14 +674,547 @@ fn build_overview(
     wrap_page(content)
 }
 
+fn protection_checklist_state(
+    report: &LayoutReport,
+    discovery: &DiscoveryState,
+    automatic: Option<&anduinos_timeback::automation::AutomaticStatus>,
+    home: &HomeDiscoveryState,
+    demo: bool,
+) -> ProtectionChecklist {
+    if demo {
+        return ProtectionChecklist {
+            health: ProtectionHealth::Active,
+            system_error: false,
+            system_snapshot: true,
+            home_available: true,
+            home_error: false,
+            home_snapshot: true,
+            system_automatic: true,
+            home_automatic: true,
+            automatic_error: false,
+        };
+    }
+    let system_snapshot = discovery.report.deployments.iter().any(|record| {
+        record.snapshot_uuid.is_some()
+            && !matches!(
+                record.state,
+                DeploymentState::Creating
+                    | DeploymentState::Incomplete
+                    | DeploymentState::FailedReverted
+                    | DeploymentState::Broken
+                    | DeploymentState::Deleting
+            )
+    });
+    let home_available = targets::discover_targets(report)
+        .iter()
+        .any(|target| target.kind == targets::TargetKind::Home && target.available);
+    let home_snapshot = home.snapshots.iter().any(|snapshot| !snapshot.deleting);
+    let (system_automatic, home_automatic, automatic_error) = automatic
+        .map(|status| {
+            (
+                status.configuration.system.enabled,
+                status.configuration.home.enabled,
+                status.system.last_error.is_some() || status.home.last_error.is_some(),
+            )
+        })
+        .unwrap_or((false, false, true));
+    let attention = discovery.error.is_some()
+        || home.error.is_some()
+        || automatic_error
+        || !report.is_supported()
+        || !home_available;
+    ProtectionChecklist {
+        health: classify_protection_health(
+            attention,
+            system_snapshot,
+            home_available,
+            home_snapshot,
+            system_automatic,
+            home_automatic,
+        ),
+        system_error: discovery.error.is_some(),
+        system_snapshot,
+        home_available,
+        home_error: home.error.is_some(),
+        home_snapshot,
+        system_automatic,
+        home_automatic,
+        automatic_error,
+    }
+}
+
+fn classify_protection_health(
+    attention: bool,
+    system_snapshot: bool,
+    home_available: bool,
+    home_snapshot: bool,
+    system_automatic: bool,
+    home_automatic: bool,
+) -> ProtectionHealth {
+    if attention || !home_available {
+        ProtectionHealth::Attention
+    } else if !system_snapshot || !system_automatic || !home_snapshot || !home_automatic {
+        ProtectionHealth::SetupNeeded
+    } else {
+        ProtectionHealth::Active
+    }
+}
+
+fn protection_checklist(
+    window: &adw::ApplicationWindow,
+    checklist: &ProtectionChecklist,
+) -> adw::PreferencesGroup {
+    let (title, description) = match checklist.health {
+        ProtectionHealth::Active => (
+            i18n("Protection Checklist — Complete"),
+            i18n("System recovery and earlier personal files are ready when you need them."),
+        ),
+        ProtectionHealth::SetupNeeded => (
+            i18n("Finish Setting Up Protection"),
+            i18n("Complete the remaining steps now so recovery is ready before something goes wrong."),
+        ),
+        ProtectionHealth::Attention => (
+            i18n("Protection Needs Attention"),
+            i18n("One area cannot protect new data right now. Existing snapshots remain unchanged."),
+        ),
+    };
+    let group = adw::PreferencesGroup::builder()
+        .title(title)
+        .description(description)
+        .build();
+
+    let system_detail = if checklist.system_error {
+        i18n("The recovery service could not be reached. Refresh after the service is available again.")
+    } else if checklist.system_snapshot {
+        i18n("At least one usable recovery point exists.")
+    } else {
+        i18n("Create your first recovery point before the next system change.")
+    };
+    let system_badge = if checklist.system_error {
+        i18n("Unavailable")
+    } else if checklist.system_snapshot {
+        i18n("Ready")
+    } else {
+        i18n("Set Up")
+    };
+    let system_row = checklist_row(
+        "drive-harddisk-symbolic",
+        &i18n("System Recovery"),
+        &system_detail,
+        &system_badge,
+        if checklist.system_snapshot {
+            "success"
+        } else {
+            "warning"
+        },
+    );
+    if !checklist.system_snapshot && !checklist.system_error {
+        let create = gtk::Button::builder()
+            .label(i18n("Create First Point"))
+            .icon_name("list-add-symbolic")
+            .valign(gtk::Align::Center)
+            .css_classes(["suggested-action"])
+            .build();
+        let parent = window.clone();
+        create.connect_clicked(move |_| show_create_dialog(&parent));
+        system_row.add_suffix(&create);
+    }
+    group.add(&system_row);
+
+    let (home_detail, home_badge, home_class) = if checklist.home_error {
+        (
+            i18n("Personal-file snapshot status could not be loaded. Existing files and snapshots were not changed."),
+            i18n("Unavailable"),
+            "warning",
+        )
+    } else if !checklist.home_available {
+        (
+            i18n(
+                "Personal Files requires /home to be an independent Btrfs subvolume; system snapshots do not silently include it.",
+            ),
+            i18n("Unavailable"),
+            "warning",
+        )
+    } else if checklist.home_snapshot {
+        (
+            i18n("An earlier copy of your personal files can be browsed and copied out."),
+            i18n("Ready"),
+            "success",
+        )
+    } else if checklist.home_automatic {
+        (
+            i18n(
+                "Automatic protection is scheduled and waiting for its first successful snapshot.",
+            ),
+            i18n("Starting"),
+            "accent",
+        )
+    } else {
+        (
+            i18n("Turn on Personal Files protection to create browsable earlier copies."),
+            i18n("Set Up"),
+            "warning",
+        )
+    };
+    let home_row = checklist_row(
+        "user-home-symbolic",
+        &i18n("Personal Files"),
+        &home_detail,
+        &home_badge,
+        home_class,
+    );
+    if !checklist.home_error
+        && checklist.home_available
+        && (!checklist.home_snapshot || !checklist.home_automatic)
+    {
+        home_row.add_suffix(&checklist_action_button(&i18n("Set Up")));
+    }
+    group.add(&home_row);
+
+    let (automatic_detail, automatic_badge, automatic_class) = if checklist.automatic_error {
+        (
+            i18n("The automatic schedule could not be read or its last operation failed."),
+            i18n("Check"),
+            "warning",
+        )
+    } else if checklist.system_automatic && (checklist.home_automatic || !checklist.home_available)
+    {
+        (
+            i18n("New snapshots are scheduled without requiring you to remember."),
+            i18n("Active"),
+            "success",
+        )
+    } else if checklist.system_automatic || checklist.home_automatic {
+        (
+            i18n("Automatic protection is enabled for only one data area."),
+            i18n("Partial"),
+            "warning",
+        )
+    } else {
+        (
+            i18n("No new snapshots will be created automatically."),
+            i18n("Off"),
+            "warning",
+        )
+    };
+    let automatic_row = checklist_row(
+        "alarm-symbolic",
+        &i18n("Automatic Protection"),
+        &automatic_detail,
+        &automatic_badge,
+        automatic_class,
+    );
+    if checklist.automatic_error
+        || !checklist.system_automatic
+        || (checklist.home_available && !checklist.home_automatic)
+    {
+        automatic_row.add_suffix(&checklist_action_button(&i18n("Review Policy")));
+    }
+    group.add(&automatic_row);
+    group
+}
+
+fn checklist_row(
+    icon: &str,
+    title: &str,
+    subtitle: &str,
+    badge: &str,
+    badge_class: &str,
+) -> adw::ActionRow {
+    let row = status_row(title, subtitle, badge, badge_class);
+    row.add_prefix(&gtk::Image::builder().icon_name(icon).pixel_size(24).build());
+    row
+}
+
+fn checklist_action_button(label: &str) -> gtk::Button {
+    gtk::Button::builder()
+        .label(label)
+        .icon_name("go-next-symbolic")
+        .action_name("win.automatic")
+        .valign(gtk::Align::Center)
+        .build()
+}
+
+fn restore_status_overview(
+    window: &adw::ApplicationWindow,
+    discovery: &DiscoveryState,
+    demo: bool,
+) -> Option<adw::PreferencesGroup> {
+    let pending = discovery
+        .report
+        .deployments
+        .iter()
+        .find(|record| record.state == DeploymentState::PendingRollback);
+    let confirming = discovery
+        .report
+        .deployments
+        .iter()
+        .find(|record| record.state == DeploymentState::BootedUnconfirmed);
+    if pending.is_none() && confirming.is_none() && !demo {
+        return None;
+    }
+
+    let group = adw::PreferencesGroup::builder()
+        .title(i18n("System Restore Status"))
+        .build();
+    if let Some(confirming) = confirming {
+        group.add(&status_row(
+            &i18n("Checking the Restored System"),
+            &i18n_fmt(
+                &i18n(
+                    "“{0}” has started. Timeback Machine is confirming its identity before removing the protected previous system.",
+                ),
+                &[&confirming.title],
+            ),
+            &i18n("Safety Check"),
+            "warning",
+        ));
+        return Some(group);
+    }
+
+    let target_title = pending
+        .map(|record| record.title.clone())
+        .unwrap_or_else(|| i18n("Before system update"));
+    let card = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(10)
+        .css_classes(["timeback-card", "restore-pending-card"])
+        .build();
+    let heading = gtk::Box::builder()
+        .orientation(gtk::Orientation::Horizontal)
+        .spacing(10)
+        .build();
+    heading.append(
+        &gtk::Image::builder()
+            .icon_name("document-revert-symbolic")
+            .pixel_size(28)
+            .css_classes(["warning"])
+            .build(),
+    );
+    let copy = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(3)
+        .hexpand(true)
+        .build();
+    copy.append(
+        &gtk::Label::builder()
+            .label(i18n("System Restore Is Prepared"))
+            .halign(gtk::Align::Start)
+            .xalign(0.0)
+            .wrap(true)
+            .css_classes(["title-4"])
+            .build(),
+    );
+    copy.append(
+        &gtk::Label::builder()
+            .label(i18n_fmt(
+                &i18n(
+                    "Target: “{0}” · Your running system has not changed. The recovery entry is selected for one boot only.",
+                ),
+                &[&target_title],
+            ))
+            .halign(gtk::Align::Start)
+            .xalign(0.0)
+            .wrap(true)
+            .css_classes(["dim-label"])
+            .build(),
+    );
+    heading.append(&copy);
+    card.append(&heading);
+
+    let actions = gtk::FlowBox::builder()
+        .selection_mode(gtk::SelectionMode::None)
+        .min_children_per_line(1)
+        .max_children_per_line(2)
+        .column_spacing(8)
+        .row_spacing(8)
+        .build();
+    let explain = gtk::Button::builder()
+        .label(i18n("What Happens Next?"))
+        .icon_name("help-about-symbolic")
+        .build();
+    let parent = window.clone();
+    let target_for_explanation = target_title.clone();
+    explain.connect_clicked(move |_| {
+        show_pending_restore_explanation(&parent, &target_for_explanation);
+    });
+    let cancel = gtk::Button::builder()
+        .label(i18n("Cancel Prepared Restore"))
+        .icon_name("process-stop-symbolic")
+        .css_classes(["destructive-action"])
+        .build();
+    let parent = window.clone();
+    cancel.connect_clicked(move |_| {
+        if demo {
+            show_history_demo_action(&parent, &i18n("Cancel Prepared Restore"));
+        } else {
+            run_ui_mutation(
+                &parent,
+                &i18n("Cancelling System Restore"),
+                UiMutation::CancelRestore,
+            );
+        }
+    });
+    actions.insert(&explain, -1);
+    actions.insert(&cancel, -1);
+    card.append(&actions);
+    group.add(&card);
+    Some(group)
+}
+
+fn show_pending_restore_explanation(parent: &adw::ApplicationWindow, target: &str) {
+    let steps = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(10)
+        .margin_top(6)
+        .build();
+    for (icon, title, detail) in [
+        (
+            "security-high-symbolic",
+            i18n("Your Current System Is Protected"),
+            i18n("A safety recovery point was created before anything was scheduled."),
+        ),
+        (
+            "media-playback-start-symbolic",
+            i18n("The Recovery Entry Runs Once"),
+            i18n_fmt(
+                &i18n("The next selected recovery boot tries “{0}”. It does not permanently replace the normal GRUB default."),
+                &[target],
+            ),
+        ),
+        (
+            "emblem-ok-symbolic",
+            i18n("Success Creates a New Branch"),
+            i18n("After a verified boot, your new changes continue from the restored point."),
+        ),
+        (
+            "edit-undo-symbolic",
+            i18n("Failure Returns Automatically"),
+            i18n("If recovery cannot finish safely, the protected previous system returns on the following boot."),
+        ),
+        (
+            "system-reboot-symbolic",
+            i18n("Changed Your Mind at GRUB?"),
+            i18n("Choose a normal AnduinOS entry to skip recovery. After logging in, cancel the pending request here before preparing another restore."),
+        ),
+    ] {
+        let row = gtk::Box::builder()
+            .orientation(gtk::Orientation::Horizontal)
+            .spacing(10)
+            .build();
+        row.append(
+            &gtk::Image::builder()
+                .icon_name(icon)
+                .pixel_size(20)
+                .css_classes(["accent"])
+                .build(),
+        );
+        let text = gtk::Box::builder()
+            .orientation(gtk::Orientation::Vertical)
+            .spacing(2)
+            .hexpand(true)
+            .build();
+        text.append(
+            &gtk::Label::builder()
+                .label(title)
+                .halign(gtk::Align::Start)
+                .xalign(0.0)
+                .wrap(true)
+                .css_classes(["heading"])
+                .build(),
+        );
+        text.append(
+            &gtk::Label::builder()
+                .label(detail)
+                .halign(gtk::Align::Start)
+                .xalign(0.0)
+                .wrap(true)
+                .css_classes(["caption", "dim-label"])
+                .build(),
+        );
+        row.append(&text);
+        steps.append(&row);
+    }
+    let dialog = adw::AlertDialog::builder()
+        .heading(i18n("What Happens After Restart"))
+        .body(i18n(
+            "Before restarting, you can cancel from this page. The normal AnduinOS entries also remain available in the GRUB menu.",
+        ))
+        .extra_child(&steps)
+        .close_response("close")
+        .build();
+    dialog.add_response("close", &i18n("Got It"));
+    dialog.present(Some(parent));
+}
+
+fn current_system_overview(history: &HistoryState, demo: bool) -> adw::PreferencesGroup {
+    let group = adw::PreferencesGroup::builder()
+        .title(i18n("Current System"))
+        .description(i18n(
+            "This is the system state that will continue when you restart normally.",
+        ))
+        .build();
+    let (subtitle, state, class) = if demo {
+        (
+            i18n("Developed from “After system update” · Your newer changes are still here"),
+            i18n("You Are Here"),
+            "success",
+        )
+    } else if let Some(history) = &history.history {
+        if let Some(head) = history.current_head_id.and_then(|id| {
+            history
+                .nodes
+                .iter()
+                .find(|node| node.recovery_point_id == id)
+        }) {
+            (
+                i18n_fmt(
+                    &i18n("Developed from “{0}” · View its branch in System History"),
+                    &[&head.title],
+                ),
+                i18n("You Are Here"),
+                "success",
+            )
+        } else {
+            (
+                i18n("The current branch will be recorded with your next recovery point."),
+                i18n("Current"),
+                "accent",
+            )
+        }
+    } else if history.error.is_some() {
+        (
+            i18n("The system branch could not be loaded. No changes were made."),
+            i18n("Unavailable"),
+            "warning",
+        )
+    } else {
+        (
+            i18n("Create a recovery point to begin a visible system history."),
+            i18n("Current"),
+            "accent",
+        )
+    };
+    let row = status_row(
+        &i18n("Current System — You Are Here"),
+        &subtitle,
+        &state,
+        class,
+    );
+    row.set_activatable(true);
+    row.set_action_name(Some("win.system-history"));
+    group.add(&row);
+    group
+}
+
 fn automatic_overview(
     status: Option<&anduinos_timeback::automation::AutomaticStatus>,
     demo: bool,
 ) -> adw::PreferencesGroup {
     let group = adw::PreferencesGroup::builder()
-        .title(i18n("Automatic Protection"))
+        .title(i18n("Snapshot Timing"))
         .description(i18n(
-            "See when your data was last captured and when protection runs next.",
+            "The last successful snapshot and the next planned run for each protected area.",
         ))
         .build();
     if demo {
@@ -678,8 +1299,35 @@ fn overview_hero(
     window: &adw::ApplicationWindow,
     report: &LayoutReport,
     demo: bool,
+    health: ProtectionHealth,
 ) -> gtk::FlowBox {
     let supported = report.is_supported() || demo;
+    let (hero_title, hero_description) = if supported {
+        match health {
+            ProtectionHealth::Active => (
+                i18n("Protection Is Active"),
+                i18n("System recovery and earlier personal files are ready when you need them."),
+            ),
+            ProtectionHealth::SetupNeeded => (
+                i18n("Finish Setting Up Protection"),
+                i18n("A few clear steps remain before automatic recovery is fully ready."),
+            ),
+            ProtectionHealth::Attention => (
+                i18n("Protection Needs Attention"),
+                i18n("Your existing data is untouched. Review the checklist below to fix the unavailable area."),
+            ),
+        }
+    } else if is_ext4(report) {
+        (
+            i18n("Temporarily unavailable"),
+            i18n("This AnduinOS installation uses ext4. Timeback Machine recovery points currently require Btrfs."),
+        )
+    } else {
+        (
+            i18n("System recovery is unavailable"),
+            i18n("This installation does not use the complete AnduinOS Btrfs recovery layout."),
+        )
+    };
     let hero = gtk::FlowBox::builder()
         .selection_mode(gtk::SelectionMode::None)
         .min_children_per_line(1)
@@ -717,13 +1365,7 @@ fn overview_hero(
         .build();
     copy.append(
         &gtk::Label::builder()
-            .label(if supported {
-                i18n("Your system can travel back")
-            } else if is_ext4(report) {
-                i18n("Temporarily unavailable")
-            } else {
-                i18n("System recovery is unavailable")
-            })
+            .label(hero_title)
             .css_classes(["title-1", "hero-title"])
             .halign(gtk::Align::Start)
             .wrap(true)
@@ -732,13 +1374,7 @@ fn overview_hero(
     );
     copy.append(
         &gtk::Label::builder()
-            .label(if supported {
-                i18n("Recovery points protect the operating system while your personal files stay in the present.")
-            } else if is_ext4(report) {
-                i18n("This AnduinOS installation uses ext4. Timeback Machine recovery points currently require Btrfs.")
-            } else {
-                i18n("This installation does not use the complete AnduinOS Btrfs recovery layout.")
-            })
+            .label(hero_description)
             .css_classes(["hero-subtitle"])
             .halign(gtk::Align::Start)
             .wrap(true)
@@ -785,7 +1421,23 @@ fn overview_hero(
             show_create_dialog(&parent);
         }
     });
-    copy.append(&action);
+    let actions = gtk::Box::builder()
+        .orientation(gtk::Orientation::Horizontal)
+        .spacing(8)
+        .margin_top(8)
+        .build();
+    action.set_margin_top(0);
+    actions.append(&action);
+    actions.append(
+        &gtk::Button::builder()
+            .label(i18n("Find a File"))
+            .icon_name("folder-open-symbolic")
+            .action_name("win.recover-files")
+            .css_classes(["pill"])
+            .visible(supported)
+            .build(),
+    );
+    copy.append(&actions);
     hero.insert(&copy, -1);
     hero
 }
@@ -808,16 +1460,17 @@ fn unsupported_banner(report: &LayoutReport) -> adw::Banner {
     adw::Banner::builder().title(title).revealed(true).build()
 }
 
-fn build_recovery_points(
+fn build_system_history(
     window: &adw::ApplicationWindow,
     report: &LayoutReport,
     discovery: &DiscoveryState,
+    history: &HistoryState,
     demo: bool,
 ) -> gtk::ScrolledWindow {
     let content = page_content();
     content.append(&section_heading(
-        &i18n("Recovery Points"),
-        &i18n("Return the operating system to a known-good moment"),
+        &i18n("System History"),
+        &i18n("See which system state you are using and where each recovery path began"),
     ));
     if !(report.is_supported() || demo) {
         content.append(
@@ -839,6 +1492,8 @@ fn build_recovery_points(
         );
         return wrap_page(content);
     }
+
+    content.append(&system_branch_map(window, discovery, history, demo));
 
     if demo {
         let today_heading = timeline_heading(&i18n("Today"), 3);
@@ -1003,81 +1658,586 @@ fn build_recovery_points(
         }
         content.append(&list);
     } else {
+        let create = gtk::Button::builder()
+            .label(i18n("Create First Recovery Point"))
+            .icon_name("list-add-symbolic")
+            .halign(gtk::Align::Center)
+            .css_classes(["suggested-action", "pill"])
+            .build();
+        let parent = window.clone();
+        create.connect_clicked(move |_| show_create_dialog(&parent));
         content.append(
             &adw::StatusPage::builder()
                 .icon_name("document-open-recent-symbolic")
-                .title(i18n("No recovery points yet"))
+                .title(i18n("Create Your First Recovery Point"))
                 .description(i18n(
                     "Create a recovery point before a system change so you can return to a known state.",
                 ))
+                .child(&create)
                 .build(),
         );
     }
-    if !demo {
-        match client::list_home_snapshots() {
-            Ok(snapshots) if !snapshots.is_empty() => {
-                let heading = timeline_heading(&i18n("User Data Snapshots"), snapshots.len());
-                content.append(&heading.widget);
-                let list = gtk::ListBox::builder()
-                    .selection_mode(gtk::SelectionMode::None)
-                    .css_classes(["boxed-list", "timeline-list"])
-                    .build();
-                for snapshot in snapshots.iter().rev() {
-                    let row = adw::ActionRow::builder()
-                        .title(i18n("Automatic User Data Snapshot"))
-                        .subtitle(snapshot.created_at.format("%Y-%m-%d %H:%M UTC").to_string())
-                        .build();
-                    row.add_prefix(
-                        &gtk::Image::builder()
-                            .icon_name("user-home-symbolic")
-                            .pixel_size(28)
-                            .build(),
-                    );
-                    row.add_suffix(
-                        &gtk::Label::builder()
-                            .label(i18n("Automatic"))
-                            .css_classes(["pill", "caption", "accent"])
-                            .valign(gtk::Align::Center)
-                            .build(),
-                    );
-                    let browse = gtk::Button::builder()
-                        .icon_name("folder-open-symbolic")
-                        .tooltip_text(i18n("Browse snapshot files"))
-                        .valign(gtk::Align::Center)
-                        .css_classes(["flat"])
-                        .build();
-                    let parent = window.clone();
-                    let snapshot_id = snapshot.id.to_string();
-                    browse.connect_clicked(move |_| {
-                        crate::snapshot_browser::present(
-                            &parent,
-                            "home",
-                            &snapshot_id,
-                            &i18n("User Data Snapshot"),
-                        );
-                    });
-                    row.add_suffix(&browse);
-                    list.append(&row);
-                }
-                content.append(&list);
-            }
-            Ok(_) => {}
-            Err(error) => {
-                let warning = adw::ActionRow::builder()
-                    .title(i18n("User data snapshots are unavailable"))
-                    .subtitle(error.to_string())
-                    .build();
-                warning.add_prefix(
-                    &gtk::Image::builder()
-                        .icon_name("dialog-warning-symbolic")
-                        .css_classes(["warning"])
-                        .build(),
+    wrap_page(content)
+}
+
+fn system_branch_map(
+    window: &adw::ApplicationWindow,
+    discovery: &DiscoveryState,
+    history: &HistoryState,
+    demo: bool,
+) -> adw::PreferencesGroup {
+    let group = adw::PreferencesGroup::builder()
+        .title(i18n("System Branch Map"))
+        .description(i18n(
+            "Time flows downward. Connected points have a verified parent relationship; a fork is another path you can still return to.",
+        ))
+        .build();
+    if demo {
+        let (details, on_select) = history_action_panel(window, discovery, true);
+        group.add(&crate::history_graph::build_demo(on_select));
+        group.add(&details);
+        return group;
+    }
+    let Some(lineage) = &history.history else {
+        group.add(&status_row(
+            &i18n("System branch unavailable"),
+            history
+                .error
+                .as_deref()
+                .unwrap_or(&i18n("Create a recovery point to begin the branch map.")),
+            &i18n("No Changes Made"),
+            "warning",
+        ));
+        return group;
+    };
+    let (details, on_select) = history_action_panel(window, discovery, false);
+    group.add(&crate::history_graph::build(lineage, on_select));
+    group.add(&details);
+
+    let mut legacy = lineage
+        .nodes
+        .iter()
+        .filter(|node| node.relation == LineageRelation::LegacyUnknown)
+        .collect::<Vec<_>>();
+    legacy.sort_by_key(|node| std::cmp::Reverse(node.created_at));
+    if !legacy.is_empty() {
+        group.add(
+            &gtk::Label::builder()
+                .label(i18n("Older Points — Relationship Unknown"))
+                .halign(gtk::Align::Start)
+                .xalign(0.0)
+                .margin_top(8)
+                .css_classes(["heading"])
+                .build(),
+        );
+        group.add(
+            &gtk::Label::builder()
+                .label(i18n(
+                    "These points predate branch tracking. They remain usable, but Timeback Machine will not guess where to connect them.",
+                ))
+                .halign(gtk::Align::Start)
+                .xalign(0.0)
+                .wrap(true)
+                .css_classes(["caption", "dim-label"])
+                .build(),
+        );
+        for node in legacy.iter().take(12) {
+            let time = node
+                .created_at
+                .with_timezone(&chrono::Local)
+                .format("%Y-%m-%d %H:%M")
+                .to_string();
+            let badge = if node.snapshot_available {
+                i18n("Available")
+            } else {
+                i18n("History Only")
+            };
+            group.add(&status_row(
+                &node.title,
+                &time,
+                &badge,
+                if node.snapshot_available {
+                    "accent"
+                } else {
+                    ""
+                },
+            ));
+        }
+        if legacy.len() > 12 {
+            group.add(&status_row(
+                &i18n("More older points"),
+                &i18n_fmt(
+                    &i18n("{0} additional points remain available in the timeline below."),
+                    &[&(legacy.len() - 12).to_string()],
+                ),
+                &i18n("Timeline"),
+                "",
+            ));
+        }
+    }
+    group
+}
+
+fn history_action_panel(
+    window: &adw::ApplicationWindow,
+    discovery: &DiscoveryState,
+    demo: bool,
+) -> (
+    gtk::Box,
+    impl Fn(crate::history_graph::HistorySelection) + 'static,
+) {
+    let panel = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(10)
+        .css_classes(["timeback-card", "history-actions"])
+        .build();
+    let title = gtk::Label::builder()
+        .label(i18n("Select a Point"))
+        .halign(gtk::Align::Start)
+        .xalign(0.0)
+        .wrap(true)
+        .css_classes(["title-4"])
+        .build();
+    let description = gtk::Label::builder()
+        .label(i18n(
+            "Choose a card above to see what you can safely do with that moment.",
+        ))
+        .halign(gtk::Align::Start)
+        .xalign(0.0)
+        .wrap(true)
+        .css_classes(["dim-label"])
+        .build();
+    panel.append(&title);
+    panel.append(&description);
+
+    let actions = gtk::FlowBox::builder()
+        .selection_mode(gtk::SelectionMode::None)
+        .min_children_per_line(1)
+        .max_children_per_line(3)
+        .column_spacing(8)
+        .row_spacing(8)
+        .build();
+    let browse = gtk::Button::builder()
+        .label(i18n("Browse Files"))
+        .icon_name("folder-open-symbolic")
+        .tooltip_text(i18n("Open this recovery point without changing the system"))
+        .sensitive(false)
+        .build();
+    let verify = gtk::Button::builder()
+        .label(i18n("Verify"))
+        .icon_name("security-high-symbolic")
+        .tooltip_text(i18n(
+            "Check that this recovery point is complete and unchanged",
+        ))
+        .sensitive(false)
+        .build();
+    let restore = gtk::Button::builder()
+        .label(i18n("Prepare Restore"))
+        .icon_name("document-revert-symbolic")
+        .tooltip_text(i18n(
+            "Review what changes before preparing a one-time restore",
+        ))
+        .css_classes(["suggested-action"])
+        .sensitive(false)
+        .build();
+    actions.insert(&browse, -1);
+    actions.insert(&verify, -1);
+    actions.insert(&restore, -1);
+    panel.append(&actions);
+
+    type SelectedPoint = (
+        crate::history_graph::HistorySelection,
+        Option<DeploymentRecord>,
+    );
+    let selected = Rc::new(RefCell::new(None::<SelectedPoint>));
+    let records = discovery
+        .report
+        .deployments
+        .iter()
+        .cloned()
+        .map(|record| (record.id, record))
+        .collect::<HashMap<_, _>>();
+
+    {
+        let selected = selected.clone();
+        let parent = window.clone();
+        browse.connect_clicked(move |_| {
+            let selected = selected.borrow();
+            let Some((selection, deployment)) = selected.as_ref() else {
+                return;
+            };
+            if demo {
+                show_history_demo_action(&parent, &i18n("Browse Files"));
+            } else if let Some(deployment) = deployment {
+                crate::snapshot_browser::present(
+                    &parent,
+                    "system",
+                    &deployment.id.to_string(),
+                    &selection.title,
                 );
-                content.append(&warning);
+            }
+        });
+    }
+    {
+        let selected = selected.clone();
+        let parent = window.clone();
+        verify.connect_clicked(move |_| {
+            let selected = selected.borrow();
+            let Some((_, deployment)) = selected.as_ref() else {
+                return;
+            };
+            if demo {
+                show_history_demo_action(&parent, &i18n("Verify Recovery Point"));
+            } else if let Some(deployment) = deployment {
+                run_ui_mutation(
+                    &parent,
+                    &i18n("Verifying Recovery Point"),
+                    UiMutation::Verify {
+                        deployment_id: deployment.id.to_string(),
+                    },
+                );
+            }
+        });
+    }
+    {
+        let selected = selected.clone();
+        let parent = window.clone();
+        restore.connect_clicked(move |_| {
+            let selected = selected.borrow();
+            let Some((selection, deployment)) = selected.as_ref() else {
+                return;
+            };
+            if demo {
+                show_history_demo_action(&parent, &i18n("Prepare System Restore"));
+            } else if let Some(deployment) = deployment {
+                if deployment.state == DeploymentState::PendingRollback {
+                    run_ui_mutation(
+                        &parent,
+                        &i18n("Cancelling System Restore"),
+                        UiMutation::CancelRestore,
+                    );
+                } else {
+                    show_restore_dialog(&parent, &deployment.id.to_string(), &selection.title);
+                }
+            }
+        });
+    }
+
+    let callback = move |selection: crate::history_graph::HistorySelection| {
+        let deployment = selection
+            .recovery_point_id
+            .and_then(|id| records.get(&id).cloned());
+        title.set_label(&selection.title);
+        if selection.current {
+            description.set_label(&i18n(
+                "You are using this system now. A normal restart continues here, including changes made after the latest recovery point.",
+            ));
+            browse.set_sensitive(false);
+            verify.set_sensitive(false);
+            restore.set_sensitive(false);
+            restore.set_label(&i18n("Prepare Restore"));
+        } else if demo {
+            description.set_label(&i18n(
+                "This recovery point can be browsed, verified, or prepared for restore. Demo mode never changes the system.",
+            ));
+            browse.set_sensitive(selection.available);
+            verify.set_sensitive(selection.available);
+            restore.set_sensitive(selection.available);
+            restore.set_label(&i18n("Prepare Restore"));
+        } else if let Some(record) = &deployment {
+            let browse_available = record.snapshot_uuid.is_some()
+                && record.state != DeploymentState::Creating
+                && record.state != DeploymentState::Deleting;
+            let restore_available = record.can_restore();
+            let explanation = if record.state == DeploymentState::PendingRollback {
+                i18n(
+                    "This restore is prepared for the next restart. You can still cancel it without changing the running system.",
+                )
+            } else if restore_available {
+                i18n(
+                    "Browsing and verification do not change anything. Restore only prepares a one-time boot and explains every affected area first.",
+                )
+            } else if browse_available {
+                i18n(
+                    "You can still copy files from this point, but its current state is not eligible for a full system restore.",
+                )
+            } else {
+                i18n(
+                    "The snapshot data is no longer available. Its card remains only to explain system history.",
+                )
+            };
+            description.set_label(&explanation);
+            browse.set_sensitive(browse_available);
+            verify.set_sensitive(restore_available);
+            restore.set_sensitive(
+                restore_available || record.state == DeploymentState::PendingRollback,
+            );
+            let restore_label = if record.state == DeploymentState::PendingRollback {
+                i18n("Cancel Prepared Restore")
+            } else {
+                i18n("Prepare Restore")
+            };
+            restore.set_label(&restore_label);
+        } else {
+            description.set_label(&i18n(
+                "This point remains in the branch record, but its snapshot is no longer available.",
+            ));
+            browse.set_sensitive(false);
+            verify.set_sensitive(false);
+            restore.set_sensitive(false);
+            restore.set_label(&i18n("Prepare Restore"));
+        }
+        selected.replace(Some((selection, deployment)));
+    };
+    (panel, callback)
+}
+
+fn show_history_demo_action(parent: &adw::ApplicationWindow, action: &str) {
+    let dialog = adw::AlertDialog::builder()
+        .heading(action)
+        .body(i18n(
+            "This action is available here on a supported system. Design preview never reads or changes snapshots.",
+        ))
+        .close_response("close")
+        .build();
+    dialog.add_response("close", &i18n("Close"));
+    dialog.present(Some(parent));
+}
+
+fn build_recover_files(
+    window: &adw::ApplicationWindow,
+    report: &LayoutReport,
+    discovery: &DiscoveryState,
+    home: &HomeDiscoveryState,
+    demo: bool,
+) -> gtk::ScrolledWindow {
+    let content = page_content();
+    content.append(&section_heading(
+        &i18n("Recover Files"),
+        &i18n("Open an earlier moment like a normal folder, then copy out only what you need"),
+    ));
+    content.append(
+        &adw::Banner::builder()
+            .title(i18n(
+                "Browsing is read-only. Copying a file out does not change the snapshot or roll back your system.",
+            ))
+            .revealed(true)
+            .build(),
+    );
+    if !(report.is_supported() || demo) {
+        content.append(
+            &adw::StatusPage::builder()
+                .icon_name("folder-open-symbolic")
+                .title(i18n("Earlier files are unavailable"))
+                .description(i18n(
+                    "A compatible AnduinOS Btrfs layout is required. No files have been changed.",
+                ))
+                .build(),
+        );
+        return wrap_page(content);
+    }
+
+    let user_group = adw::PreferencesGroup::builder()
+        .title(i18n("Personal Files"))
+        .description(i18n(
+            "Choose when the file still existed. The snapshot opens at your home folder.",
+        ))
+        .build();
+    if demo {
+        user_group.add(&demo_file_snapshot_row(
+            window,
+            &i18n("Today, 15:00"),
+            &i18n("Automatic · Personal files"),
+            "user-home-symbolic",
+        ));
+        user_group.add(&demo_file_snapshot_row(
+            window,
+            &i18n("Today, 14:00"),
+            &i18n("Automatic · Personal files"),
+            "user-home-symbolic",
+        ));
+    } else if !home.snapshots.is_empty() {
+        for snapshot in home.snapshots.iter().rev() {
+            let title = snapshot
+                .created_at
+                .with_timezone(&chrono::Local)
+                .format("%Y-%m-%d %H:%M")
+                .to_string();
+            user_group.add(&file_snapshot_row(
+                window,
+                &title,
+                &i18n("Automatic · Personal files"),
+                "user-home-symbolic",
+                "home",
+                &snapshot.id.to_string(),
+                &i18n("Personal Files Snapshot"),
+            ));
+        }
+    } else {
+        let state = if home.error.is_some() {
+            i18n("Unavailable")
+        } else {
+            i18n("Waiting")
+        };
+        let row = status_row(
+            &i18n("No personal-file snapshots yet"),
+            home.error
+                .as_deref()
+                .unwrap_or("Automatic Protection can create these for you."),
+            &state,
+            if home.error.is_some() { "warning" } else { "" },
+        );
+        if home.error.is_none() {
+            row.add_suffix(&checklist_action_button(&i18n("Set Up")));
+        }
+        user_group.add(&row);
+    }
+    content.append(&user_group);
+
+    let system_group = adw::PreferencesGroup::builder()
+        .title(i18n("System Files"))
+        .description(i18n(
+            "Use this for an earlier configuration or system file. This does not restore the whole system.",
+        ))
+        .build();
+    if demo {
+        system_group.add(&demo_file_snapshot_row(
+            window,
+            &i18n("After system update"),
+            &i18n("Today, 14:32 · Automatic system recovery point"),
+            "drive-harddisk-symbolic",
+        ));
+        system_group.add(&demo_file_snapshot_row(
+            window,
+            &i18n("Before system update"),
+            &i18n("Today, 14:27 · Automatic system recovery point"),
+            "drive-harddisk-symbolic",
+        ));
+    } else {
+        let snapshots = discovery
+            .report
+            .deployments
+            .iter()
+            .filter(|deployment| {
+                deployment.snapshot_uuid.is_some()
+                    && deployment.state != DeploymentState::Creating
+                    && deployment.state != DeploymentState::Deleting
+            })
+            .collect::<Vec<_>>();
+        if snapshots.is_empty() {
+            let state = if discovery.error.is_some() {
+                i18n("Unavailable")
+            } else {
+                i18n("Waiting")
+            };
+            let row = status_row(
+                &i18n("No system snapshots available"),
+                discovery.error.as_deref().unwrap_or(
+                    "Create a recovery point before a system change to browse its files later.",
+                ),
+                &state,
+                if discovery.error.is_some() {
+                    "warning"
+                } else {
+                    ""
+                },
+            );
+            if discovery.error.is_none() {
+                let create = gtk::Button::builder()
+                    .label(i18n("Create Recovery Point"))
+                    .icon_name("list-add-symbolic")
+                    .valign(gtk::Align::Center)
+                    .build();
+                let parent = window.clone();
+                create.connect_clicked(move |_| show_create_dialog(&parent));
+                row.add_suffix(&create);
+            }
+            system_group.add(&row);
+        } else {
+            for deployment in snapshots {
+                let subtitle = format!(
+                    "{} · {}",
+                    deployment_time(deployment),
+                    deployment_kind(deployment.kind)
+                );
+                system_group.add(&file_snapshot_row(
+                    window,
+                    &deployment.title,
+                    &subtitle,
+                    "drive-harddisk-symbolic",
+                    "system",
+                    &deployment.id.to_string(),
+                    &deployment.title,
+                ));
             }
         }
     }
+    content.append(&system_group);
     wrap_page(content)
+}
+
+fn file_snapshot_row(
+    window: &adw::ApplicationWindow,
+    title: &str,
+    subtitle: &str,
+    icon: &str,
+    kind: &'static str,
+    id: &str,
+    browser_title: &str,
+) -> adw::ActionRow {
+    let row = adw::ActionRow::builder()
+        .title(title)
+        .subtitle(subtitle)
+        .build();
+    row.add_prefix(&gtk::Image::builder().icon_name(icon).pixel_size(26).build());
+    let browse = gtk::Button::builder()
+        .label(i18n("Browse"))
+        .icon_name("folder-open-symbolic")
+        .tooltip_text(i18n("Browse and copy files from this snapshot"))
+        .valign(gtk::Align::Center)
+        .css_classes(["flat"])
+        .build();
+    let parent = window.clone();
+    let id = id.to_string();
+    let browser_title = browser_title.to_string();
+    browse.connect_clicked(move |_| {
+        crate::snapshot_browser::present(&parent, kind, &id, &browser_title);
+    });
+    row.add_suffix(&browse);
+    row
+}
+
+fn demo_file_snapshot_row(
+    window: &adw::ApplicationWindow,
+    title: &str,
+    subtitle: &str,
+    icon: &str,
+) -> adw::ActionRow {
+    let row = adw::ActionRow::builder()
+        .title(title)
+        .subtitle(subtitle)
+        .build();
+    row.add_prefix(&gtk::Image::builder().icon_name(icon).pixel_size(26).build());
+    let browse = gtk::Button::builder()
+        .label(i18n("Browse"))
+        .icon_name("folder-open-symbolic")
+        .valign(gtk::Align::Center)
+        .css_classes(["flat"])
+        .build();
+    let parent = window.clone();
+    browse.connect_clicked(move |_| {
+        let dialog = adw::AlertDialog::builder()
+            .heading(i18n("Design Preview"))
+            .body(i18n(
+                "The real file browser opens here on a supported system. Demo mode never reads or changes your files.",
+            ))
+            .close_response("close")
+            .build();
+        dialog.add_response("close", &i18n("Close"));
+        dialog.present(Some(&parent));
+    });
+    row.add_suffix(&browse);
+    row
 }
 
 fn demo_recovery_row(
@@ -1933,49 +3093,6 @@ fn section_heading(title: &str, subtitle: &str) -> gtk::Box {
     content
 }
 
-fn metric_card(icon: &str, label: &str, value: &str, detail: &str) -> gtk::Box {
-    let card = gtk::Box::builder()
-        .orientation(gtk::Orientation::Vertical)
-        .spacing(6)
-        .width_request(170)
-        .css_classes(["timeback-card"])
-        .build();
-    card.append(
-        &gtk::Image::builder()
-            .icon_name(icon)
-            .pixel_size(25)
-            .halign(gtk::Align::Start)
-            .css_classes(["accent"])
-            .build(),
-    );
-    card.append(
-        &gtk::Label::builder()
-            .label(label)
-            .css_classes(["caption", "dim-label"])
-            .halign(gtk::Align::Start)
-            .build(),
-    );
-    card.append(
-        &gtk::Label::builder()
-            .label(value)
-            .css_classes(["title-3"])
-            .halign(gtk::Align::Start)
-            .wrap(true)
-            .xalign(0.0)
-            .build(),
-    );
-    card.append(
-        &gtk::Label::builder()
-            .label(detail)
-            .css_classes(["caption", "dim-label"])
-            .halign(gtk::Align::Start)
-            .wrap(true)
-            .xalign(0.0)
-            .build(),
-    );
-    card
-}
-
 fn recovery_row(
     icon: &str,
     title: &str,
@@ -2276,6 +3393,7 @@ fn show_restore_dialog(parent: &adw::ApplicationWindow, deployment_id: &str, tit
         i18n("Personal files, logs, containers, and virtual machines stay unchanged."),
         i18n("The current system will be protected before restart."),
         i18n("The restored system must boot successfully or the previous system returns automatically."),
+        i18n("Normal AnduinOS entries remain in GRUB if you change your mind at boot."),
     ] {
         let item = gtk::Box::builder()
             .orientation(gtk::Orientation::Horizontal)
@@ -2486,7 +3604,7 @@ fn show_restart_dialog(parent: &adw::ApplicationWindow) {
     let dialog = adw::AlertDialog::builder()
         .heading(i18n("System Restore Is Ready"))
         .body(i18n(
-            "Restart to enter the one-time recovery environment. You can cancel from the recovery point before restarting.",
+            "Restart to try the recovery entry once. You can still cancel from the Overview before restarting, or choose a normal AnduinOS entry in GRUB.",
         ))
         .close_response("later")
         .default_response("later")
@@ -2671,4 +3789,41 @@ fn svg_picture(svg: &'static [u8], width: i32, height: i32) -> gtk::Picture {
         picture.set_paintable(Some(&texture));
     }
     picture
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{classify_protection_health, ProtectionHealth};
+
+    #[test]
+    fn complete_system_home_and_automation_are_active() {
+        assert_eq!(
+            classify_protection_health(false, true, true, true, true, true),
+            ProtectionHealth::Active
+        );
+    }
+
+    #[test]
+    fn any_missing_first_run_step_requires_setup() {
+        assert_eq!(
+            classify_protection_health(false, true, true, false, true, true),
+            ProtectionHealth::SetupNeeded
+        );
+        assert_eq!(
+            classify_protection_health(false, false, true, true, true, true),
+            ProtectionHealth::SetupNeeded
+        );
+    }
+
+    #[test]
+    fn errors_and_unavailable_home_require_attention() {
+        assert_eq!(
+            classify_protection_health(true, true, true, true, true, true),
+            ProtectionHealth::Attention
+        );
+        assert_eq!(
+            classify_protection_health(false, true, false, false, true, false),
+            ProtectionHealth::Attention
+        );
+    }
 }

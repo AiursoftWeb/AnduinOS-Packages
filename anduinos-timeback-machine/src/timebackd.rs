@@ -13,6 +13,7 @@ use anduinos_timeback::automatic_home::HomeSnapshotStore;
 use anduinos_timeback::automation::{AutomaticConfiguration, AutomaticPolicy, AutomaticStore};
 use anduinos_timeback::browsing::{self, SnapshotBrowseLock, SnapshotKind, SortMode};
 use anduinos_timeback::layout;
+use anduinos_timeback::lineage::LineageStore;
 use anduinos_timeback::model::DeploymentId;
 use anduinos_timeback::operations::{OperationEngine, OperationError, OperationPhase};
 use anduinos_timeback::retention::{RetentionCoordinator, RetentionExecutionError};
@@ -166,6 +167,18 @@ fn register_api(
                     "InspectLayout" => return_json(invocation, &layout::inspect_current()),
                     "ListDeployments" => {
                         return_json(invocation, &DeploymentStore::default().discover())
+                    }
+                    "InspectSystemHistory" => {
+                        let deployments = DeploymentStore::default().discover();
+                        match LineageStore::default()
+                            .ensure_initialized(&deployments.deployments)
+                        {
+                            Ok(history) => return_json(invocation, &history),
+                            Err(error) => invocation.return_dbus_error(
+                                "com.anduinos.TimebackMachine1.Error.HistoryUnavailable",
+                                &error.to_string(),
+                            ),
+                        }
                     }
                     "InspectRetention" => match RetentionCoordinator::default().inspect() {
                         Ok(plan) => return_json(invocation, &plan),

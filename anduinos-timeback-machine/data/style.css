@@ -111,3 +111,40 @@
   color: alpha(@window_fg_color, 0.72);
   font-weight: 600;
 }
+
+.history-graph {
+  background-color: alpha(@window_fg_color, 0.025);
+  border: 1px solid alpha(@window_fg_color, 0.09);
+  border-radius: 16px;
+}
+
+.history-node {
+  background-color: @card_bg_color;
+  border: 1px solid alpha(@window_fg_color, 0.13);
+  border-radius: 13px;
+  padding: 0;
+  box-shadow: 0 3px 10px alpha(black, 0.10);
+}
+
+.history-node:hover,
+.history-node:focus-visible {
+  background-color: color-mix(in srgb, @card_bg_color 90%, @accent_bg_color);
+  border-color: alpha(@accent_color, 0.58);
+}
+
+.history-selected {
+  border-color: @accent_color;
+  box-shadow: 0 0 0 2px alpha(@accent_color, 0.22),
+              0 4px 14px alpha(black, 0.12);
+}
+
+.history-current {
+  border: 2px solid @success_color;
+  background-color: alpha(@success_color, 0.08);
+  box-shadow: 0 4px 14px alpha(@success_color, 0.16);
+}
+
+.history-current.history-selected {
+  box-shadow: 0 0 0 2px alpha(@success_color, 0.24),
+              0 4px 14px alpha(@success_color, 0.18);
+}
