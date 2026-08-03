@@ -4,6 +4,12 @@ This package provides the Rime Ice schema, dictionaries and Lua extensions
 used for Chinese input on AnduinOS. It depends on `ibus-rime`, but deliberately
 does not depend on `language-selector-common`.
 
+This directory is the canonical source of AnduinOS Rime. Upstream Rime Ice
+updates are reviewed and imported directly into `assets/`; the package must not
+download input method content from a second AnduinOS-Rime repository at build
+time. Keeping the content and its Debian integration together makes every
+package revision self-contained and reproducible from this repository alone.
+
 The package owns its schema resources and three layered distribution files
 below Rime's shared data directory:
 

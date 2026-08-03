@@ -7,6 +7,25 @@ PROJECT = Path(__file__).resolve().parent.parent
 
 
 class RimePackagePolicyTests(unittest.TestCase):
+    def test_package_is_the_canonical_self_contained_source(self):
+        project = (PROJECT / "anduinos-rime.aosproj").read_text(encoding="utf-8")
+        self.assertIn('IncludeFolder Include="assets/"', project)
+        self.assertFalse((PROJECT / "download.sh").exists())
+
+        required_assets = {
+            "rime.lua",
+            "rime_ice.dict.yaml",
+            "rime_ice.schema.yaml",
+            "melt_eng.dict.yaml",
+            "melt_eng.schema.yaml",
+            "cn_dicts/41448.dict.yaml",
+            "cn_dicts/tencent.dict.yaml",
+            "lua/convert_ar_num_to_zh.lua",
+        }
+        for relative_path in required_assets:
+            with self.subTest(asset=relative_path):
+                self.assertTrue((PROJECT / "assets" / relative_path).is_file())
+
     def test_package_does_not_depend_on_or_replace_language_selector(self):
         project = (PROJECT / "anduinos-rime.aosproj").read_text(encoding="utf-8")
         self.assertNotIn("language-selector-common", project)
