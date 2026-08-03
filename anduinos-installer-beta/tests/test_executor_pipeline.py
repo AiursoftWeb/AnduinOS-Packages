@@ -37,6 +37,8 @@ class ExecutorPipelineTests(unittest.TestCase):
             ),
         )
         expected = (
+            "copy-system",
+            "migrate-wifi-connection",
             "configure-system",
             "select-fastest-apt-mirror",
             "prepare-secure-boot",
@@ -49,6 +51,10 @@ class ExecutorPipelineTests(unittest.TestCase):
         )
         positions = tuple(pipeline.index(step) for step in expected)
         self.assertEqual(positions, tuple(sorted(positions)))
+        self.assertLess(
+            pipeline.index("migrate-wifi-connection"),
+            pipeline.index("configure-storage"),
+        )
         self.assertNotIn("install-third-party-drivers", pipeline)
 
     def test_optional_driver_step_is_only_present_when_selected(self):

@@ -2720,6 +2720,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "prepare-storage": _("Prepare installation disk", lang),
         "mount-target": _("Mount target filesystems", lang),
         "copy-system": _("Copy AnduinOS system", lang),
+        "migrate-wifi-connection": _(
+            "Preserve connected Wi-Fi network", lang
+        ),
         "configure-storage": _("Configure storage and swap", lang),
         "enter-chroot": _("Prepare target environment", lang),
         "cleanup-live-system": _("Remove live-session components", lang),

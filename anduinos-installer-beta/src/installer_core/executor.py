@@ -33,6 +33,7 @@ from .storage_steps import MountTargetStep, PrepareStorageStep
 from .system_config import ConfigureSystemStep
 from .target_config import ConfigureStorageStep
 from .timeback import EnsureTimebackMachineStep
+from .wifi_migration import MigrateWifiConnectionStep
 from .validation import ExecutionPolicy, validate_plan_for_execution
 
 
@@ -70,6 +71,7 @@ class InstallerExecutor:
             PrepareStorageStep(self.runner, target=self.target),
             MountTargetStep(self.runner, target=self.target),
             CopySystemStep(self.runner),
+            MigrateWifiConnectionStep(self.runner),
             ConfigureStorageStep(self.runner),
             EnterChrootStep(self.runner, target=self.target),
             CleanupLiveSystemStep(self.runner),

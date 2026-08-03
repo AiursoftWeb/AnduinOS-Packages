@@ -376,6 +376,7 @@ class DevelopmentExecutorClient:
         ("prepare-storage", 10),
         ("mount-target", 3),
         ("copy-system", 60),
+        ("migrate-wifi-connection", 1),
         ("configure-storage", 3),
         ("enter-chroot", 2),
         ("cleanup-live-system", 4),

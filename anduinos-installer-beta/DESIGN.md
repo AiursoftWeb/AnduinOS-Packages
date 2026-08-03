@@ -28,6 +28,12 @@ and constructs every command itself.
   the upgrade; after an upgrade transaction starts, any APT/dpkg failure is
   fatal. Recommended third-party drivers are an explicit opt-in and use
   `ubuntu-drivers install --no-oem`.
+- Wi-Fi: the one active, persistent Live-session NetworkManager Wi-Fi profile
+  is migrated after the target image is copied. Historical connections, VPNs,
+  hotspots, unsafe files and duplicate profiles are excluded. The executor
+  never overwrites a target profile and publishes the migrated keyfile
+  atomically as root with mode 0600. Migration failure is a visible warning,
+  not an installation failure.
 - Mirrors: before refreshing APT, a warning-policy step concurrently probes a
   maintained HTTP+HTTPS Ubuntu mirror list, bandwidth-tests the five lowest
   latency candidates, and atomically replaces only `URIs:` fields in the
