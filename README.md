@@ -124,7 +124,8 @@ anduinos-desktop  ──Conflicts──→  ubuntu-desktop
       ├─Depends──→ anduinos-no-snapd  ──Conflicts──→ snapd
       │
       └─Recommends─→ anduinos-software-properties-common
-                   → anduinos-software-properties-gtk  (resolute only)
+                   → anduinos-desktop-apps
+                     └─Recommends─→ anduinos-driver-center
 ```
 
 **Total: 23 Ubuntu packages removed or pinned out.**
@@ -148,6 +149,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-gdm3-wallpaper` | Theme | GDM3 dynamic wallpaper engine |
 | `anduinos-appearance` | App | Taskbar layout switcher (Windows 11 / Classic) |
 | `anduinos-appstore` | App | Flatpak-based app store with Flathub remote |
+| `anduinos-driver-center` | App | Focused GTK4 driver manager for graphics, Xbox controllers, and Secure Boot trust |
 | `anduinos-deskmon` | Service | Desktop monitoring / hardware info agent |
 | `anduinos-system-tweaks` | Config | System tuning (swappiness, I/O scheduler, sysctl) |
 | `anduinos-system-tweaks-server` | Service | Background service for system tweaks |
@@ -444,7 +446,7 @@ sudo apt install -y \
     anduinos-no-snapd \
     anduinos-session \
     anduinos-software-properties-common \
-    anduinos-software-properties-gtk \
+    anduinos-driver-center \
     anduinos-system-tweaks \
     firefox-anduinos \
     gnome-shell-extension-appindicator-anduinos \
@@ -468,6 +470,7 @@ sudo apt install -y \
     ubuntu-release-upgrader-core- \
     ubuntu-release-upgrader-gtk- \
     whoopsie- \
+    anduinos-software-properties-gtk- \
     software-properties-gtk- \
     software-properties-common- \
     firmware-sof-signed- \

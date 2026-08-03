@@ -390,6 +390,11 @@ anduinos-xbox-controller-driver:
   variables:
     PACKAGE_DIR: anduinos-xbox-controller-driver
 
+anduinos-driver-center:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-driver-center
+
 anduinos-gnome-shell-locale:
   extends: .publish
   variables:
@@ -516,6 +521,7 @@ anduinos-desktop-apps:
   extends: .publish
   stage: meta
   needs:
+    - anduinos-driver-center
     - anduinos-mimeapps
     - firefox-anduinos
     - anduinos-ufwall-gtk
@@ -542,7 +548,6 @@ anduinos-desktop:
     - anduinos-theme
     - anduinos-templates
     - anduinos-software-properties-common
-    - anduinos-software-properties-gtk
     - anduinos-no-snapd
     - anduinos-swap-config
     - anduinos-desktop-apps

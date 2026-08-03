@@ -1,0 +1,130 @@
+#!/usr/bin/python3
+"""Restricted privileged operations for AnduinOS Driver Center."""
+
+from __future__ import annotations
+
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+
+MOK_DIR = Path("/var/lib/shim-signed/mok")
+MOK_PRIVATE_KEY = MOK_DIR / "MOK.priv"
+MOK_CERTIFICATE = MOK_DIR / "MOK.der"
+DKMS_CONFIG = Path("/etc/dkms/framework.conf.d/anduinos-sb-sign.conf")
+XBOX_PACKAGE = "anduinos-xbox-controller-driver"
+PACKAGE_PATTERN = re.compile(r"^[a-z0-9][a-z0-9+.-]+$")
+
+
+def run(command: list[str], *, stdin: str | None = None) -> None:
+    print("+ " + " ".join(command), flush=True)
+    result = subprocess.run(command, input=stdin, text=True, check=False)
+    if result.returncode:
+        raise RuntimeError(f"{command[0]} exited with status {result.returncode}")
+
+
+def configure_dkms_signing() -> None:
+    if not (MOK_PRIVATE_KEY.is_file() and MOK_CERTIFICATE.is_file()):
+        return
+    DKMS_CONFIG.parent.mkdir(parents=True, exist_ok=True)
+    temporary = DKMS_CONFIG.with_suffix(".tmp")
+    temporary.write_text(
+        'mok_signing_key="/var/lib/shim-signed/mok/MOK.priv"\n'
+        'mok_certificate="/var/lib/shim-signed/mok/MOK.der"\n',
+        encoding="utf-8",
+    )
+    temporary.chmod(0o644)
+    temporary.replace(DKMS_CONFIG)
+
+
+def available_driver_packages() -> set[str]:
+    result = subprocess.run(
+        ["ubuntu-drivers", "devices"], capture_output=True, text=True, check=False
+    )
+    packages: set[str] = set()
+    for line in result.stdout.splitlines():
+        if line.strip().startswith("driver") and ":" in line:
+            package = line.split(":", 1)[1].strip().split(" - ", 1)[0]
+            if PACKAGE_PATTERN.fullmatch(package):
+                packages.add(package)
+    return packages
+
+
+def apt_update() -> None:
+    run(["apt-get", "update"])
+
+
+def install_driver(package: str) -> None:
+    if package not in available_driver_packages():
+        raise ValueError("The selected package is not offered by ubuntu-drivers")
+    configure_dkms_signing()
+    apt_update()
+    # Let ubuntu-drivers perform family/version switching instead of treating
+    # a driver metapackage like an unrelated APT package.
+    run(["ubuntu-drivers", "install", package])
+
+
+def install_recommended() -> None:
+    configure_dkms_signing()
+    apt_update()
+    run(["ubuntu-drivers", "install"])
+
+
+def install_xbox(reinstall: bool = False) -> None:
+    configure_dkms_signing()
+    apt_update()
+    command = ["apt-get", "install", "-y"]
+    if reinstall:
+        command.append("--reinstall")
+    command.append(XBOX_PACKAGE)
+    run(command)
+
+
+def enroll_mok() -> None:
+    password = sys.stdin.readline().rstrip("\n")
+    if not 8 <= len(password) <= 16 or "\x00" in password:
+        raise ValueError("MOK password must contain 8–16 characters")
+    MOK_DIR.mkdir(parents=True, exist_ok=True)
+    if not (MOK_PRIVATE_KEY.is_file() and MOK_CERTIFICATE.is_file()):
+        run(["update-secureboot-policy", "--new-key"])
+    configure_dkms_signing()
+    run(
+        ["mokutil", "--import", str(MOK_CERTIFICATE)],
+        stdin=f"{password}\n{password}\n",
+    )
+    run(["dkms", "autoinstall"])
+
+
+def main(arguments: list[str]) -> int:
+    if os.geteuid() != 0:
+        print("This helper must be run through polkit.", file=sys.stderr)
+        return 77
+    try:
+        match arguments:
+            case ["install", package]:
+                install_driver(package)
+            case ["install-recommended"]:
+                install_recommended()
+            case ["install-xbox"]:
+                install_xbox()
+            case ["repair-xbox"]:
+                install_xbox(reinstall=True)
+            case ["repair-dkms"]:
+                configure_dkms_signing()
+                run(["dkms", "autoinstall", "--force"])
+            case ["enroll-mok"]:
+                enroll_mok()
+            case _:
+                print("Unknown or incomplete action.", file=sys.stderr)
+                return 64
+    except (OSError, ValueError, RuntimeError) as error:
+        print(f"Driver operation failed: {error}", file=sys.stderr)
+        return 1
+    print("Driver operation completed successfully.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))
