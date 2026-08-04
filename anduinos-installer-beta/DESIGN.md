@@ -77,6 +77,9 @@ The GTK process always runs as the desktop user. Ordinary `lsblk` discovery
 stays unprivileged. Exact free-space geometry crosses Polkit through
 `anduinos-installer-storage-probe`, a read-only helper that accepts exactly one
 validated fixed whole-disk path and can execute only `parted ... print free`.
+The shared inventory probe forces the C locale for both `lsblk` and `parted`,
+so translated machine-output flags cannot change the topology authorization
+digest between the desktop process and the root executor.
 The policy never authorizes `parted` itself, so the UI cannot turn this probe
 into a partition-table write. Destructive work remains isolated in the
 separate plan-only executor.

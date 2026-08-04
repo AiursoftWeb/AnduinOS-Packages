@@ -1,7 +1,9 @@
 import json
+import os
 import subprocess
 import unittest
 from dataclasses import replace
+from unittest.mock import patch
 
 from installer_core.probe import ProbeError
 from installer_core.storage_inventory import (
@@ -132,6 +134,53 @@ class StorageInventoryTests(unittest.TestCase):
         self.assertEqual(lsblk_calls[0][0], "lsblk")
         self.assertEqual(len(parted_calls), 1)
         self.assertEqual(parted_calls[0][0], "parted")
+
+    def test_storage_digest_is_independent_from_process_locale(self):
+        environments = []
+
+        def run(command, **kwargs):
+            environment = kwargs.get("env", os.environ)
+            environments.append(
+                (
+                    command[0],
+                    environment.get("LC_ALL"),
+                    environment.get("LANGUAGE"),
+                )
+            )
+            if command[0] == "lsblk":
+                return completed(json.dumps(self.lsblk_payload()))
+            output = self.parted_output()
+            if environment.get("LC_ALL") != "C":
+                output = output.replace("boot, esp", "启动, esp")
+                output = output.replace("msftdata", "微软数据")
+            return completed(output)
+
+        with patch.dict(
+            os.environ,
+            {"LC_ALL": "zh_CN.UTF-8", "LANGUAGE": "zh_CN"},
+        ):
+            localized = probe_storage_inventory(run=run)
+        with patch.dict(
+            os.environ,
+            {"LC_ALL": "C", "LANGUAGE": "C"},
+        ):
+            canonical = probe_storage_inventory(run=run)
+
+        self.assertEqual(
+            localized.disks[0].topology_digest,
+            canonical.disks[0].topology_digest,
+        )
+        self.assertEqual(
+            localized.disks[0].partitions[0].flags,
+            ("boot", "esp"),
+        )
+        self.assertTrue(environments)
+        self.assertTrue(
+            all(
+                lc_all == "C" and language == "C"
+                for _command, lc_all, language in environments
+            )
+        )
 
     def test_parted_parser_unescapes_labels_without_changing_fields(self):
         geometry = _parse_parted_machine(self.parted_output())

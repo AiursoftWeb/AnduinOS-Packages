@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -184,6 +185,7 @@ def probe_storage_inventory(
     """
 
     parted_run = parted_run or run
+    environment = dict(os.environ, LC_ALL="C", LANGUAGE="C")
     command = [
         "lsblk",
         "--json",
@@ -204,6 +206,7 @@ def probe_storage_inventory(
             text=True,
             timeout=10,
             check=False,
+            env=environment,
         )
     except (FileNotFoundError, subprocess.TimeoutExpired) as error:
         raise ProbeError(f"Cannot enumerate storage topology: {error}") from error
@@ -242,7 +245,11 @@ def probe_storage_inventory(
             model=str(root.get("model") or "").strip(),
             serial=str(root.get("serial") or "").strip(),
         )
-        geometry = _probe_parted_geometry(path, parted_run)
+        geometry = _probe_parted_geometry(
+            path,
+            parted_run,
+            environment=environment,
+        )
         geometry_error = geometry.error or _geometry_mismatch(root, geometry)
         unsupported_descendants = _unsupported_descendant_types(root)
         logical_sector = _positive_int(root.get("log-sec"), default=512)
@@ -327,6 +334,8 @@ def verify_disk_topology(
 def _probe_parted_geometry(
     disk: str,
     run: Callable[..., subprocess.CompletedProcess[str]],
+    *,
+    environment: dict[str, str],
 ) -> _PartedGeometry:
     try:
         result = run(
@@ -344,6 +353,7 @@ def _probe_parted_geometry(
             text=True,
             timeout=10,
             check=False,
+            env=environment,
         )
     except (FileNotFoundError, subprocess.TimeoutExpired) as error:
         return _PartedGeometry((), (), str(error))
