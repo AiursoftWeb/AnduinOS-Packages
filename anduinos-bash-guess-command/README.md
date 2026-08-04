@@ -4,27 +4,45 @@ Fast, offline ghost-text suggestions for interactive Bash without replacing
 Bash's line editor.
 
 The foreground consists of a roughly 10 KiB native loadable builtin and a small
-Rust decision engine. The builtin wraps only Readline redisplay and Right Arrow:
-paste, multiline input, Enter, history search, editing modes and every other key
-remain native Bash/Readline behavior. There is no status bar, paste progress,
-mode banner, syntax highlighting, or terminal cache generation.
+dependency-free Rust decision engine. The builtin wraps only Readline redisplay
+and Right Arrow: paste, multiline input, Enter, history search, editing modes
+and every other key remain native Bash/Readline behavior. There is no status
+bar, paste progress, mode banner, syntax highlighting, or terminal cache
+generation.
 
 The engine is local and typed. It understands apt workflows, Docker container
-slots, process IDs, systemd services, Git refs and guarded `git clean` options.
+slots, process IDs, systemd services, Git refs, SSH aliases, verified command
+artifacts and guarded `git clean` options.
 Slow local discovery happens in the background between prompts; a keystroke
 query only reads an immutable in-memory snapshot. Suggestions are append-only,
 single-line, control-character-free and never execute automatically.
 
-A compact offline index supplies safe defaults and shared-prefix completion for
-more than 40 common CLIs. High-value verb grammars are generated from the pinned
-Carapace specification instead of being copied by hand, then compiled into the
-Rust engine; Carapace is never launched while typing. Existing Bash history
-provides immediate personal ranking across equivalent `sudo` wrappers;
-successful commands are then learned across sessions with frequency, recency
-and current-directory weights. Credential-like commands are never
-persisted, dangerous history is never replayed, and the private state file is
-bounded. Current-directory filenames are also snapshotted between prompts, so
-path suggestions perform no foreground disk access.
+A compact offline index supplies safe defaults for high-value workflows plus a
+generated corpus of more than 700 CLIs and 7,500 multi-level command nodes. It
+contains over 20,000 uniquely testable option prefixes and more than 2,000
+positional path slots, including deep forms such as `docker builder prune`,
+`kubectl create clusterrolebinding`, `git commit --amend` and
+`docker compose build`. The corpus is exported at development time from a
+pinned Carapace release and compiled into the Rust engine; Carapace is not
+installed or launched at runtime.
+
+Existing Bash history provides immediate personal ranking across equivalent
+`sudo` wrappers. Successful commands are then learned across sessions with
+frequency, recency and current-directory weights. A bounded adjacent-command
+graph additionally learns that, in a given directory, one successful command
+usually follows another. Credential-like commands are never persisted, failed
+commands do not train transitions, and completion never executes text by itself.
+Ordinary destructive commands are eligible because Right Arrow only accepts
+text and Enter remains the execution boundary. The sole narrow replay guard is
+a complete historical `dd` command writing directly to a `/dev/` device;
+manually typed `dd` paths still complete normally.
+
+Bounded directory snapshots cover the current tree plus useful home locations
+such as `~/.ssh`, `~/.config` and `~/.local/bin`. Successful `ssh-keygen`,
+`mkdir`, `git clone` and Python venv commands publish only artifacts that a
+background observer verifies actually exist. SSH config aliases and unhashed
+known hosts are snapshotted the same way. None of these providers performs
+filesystem or process work on a keystroke query.
 
 Examples:
 
@@ -32,35 +50,46 @@ Examples:
 sudo apt update                   # next: sudo apt up -> upgrade
 apt auto                          # -> your most-used matching apt action
 sudo docker ps | grep mysql       # next: docker logs -f  -> unique container
+sudo docker ps                    # next: docker e -> docker exec -it <container>
 ps aux | grep mysqld              # next: sudo kill  -> matching PID
 systemctl list-units | grep ssh   # next: systemctl status  -> ssh.service
+ssh-keygen -f ~/.ssh/id_work      # next: cat ~/.ssh/i -> its verified .pub file
+python3 -m venv .venv             # next: source .v -> .venv/bin/activate
+ssh prod                          # -> an alias from ~/.ssh/config
+docker compose lo                 # -> logs
+docker run --publ                 # -> --publish
+kubectl apply -f manifests/de     # -> a real matching local path
+git add src/ma                    # -> a real matching local path
 git switch fea                    # -> a live matching branch
 git clean . -                     # -> --dry-run
 ```
 
 Right Arrow accepts the visible suggestion only when the cursor is at the end.
-Enter always executes exactly the visible line. Tab remains normal programmable
-completion, backed by the bundled Carapace command specifications.
-
-Carapace and any helper it starts run inside a fresh unprivileged network
-namespace. If the kernel denies that isolation, completion fails closed. No
-command line, path, container name or other user data is sent over the network.
+Enter always executes exactly the visible line. Tab completion is never
+registered or modified by this package and remains owned by Bash and the
+system's existing completion scripts.
 
 The feature is enabled by Bash's standard completion loader. Variables set
 before the bash-completion block in `~/.bashrc`:
 
 ```bash
 export ANDUINOS_GUESS_COMMAND=0       # disable the package entirely
-export ANDUINOS_GUESS_ENGINE=0        # keep Tab completion, disable ghost text
-export ANDUINOS_GUESS_STATIC=0        # disable Carapace Tab completion
+export ANDUINOS_GUESS_ENGINE=0        # disable ghost text
 export ANDUINOS_GUESS_HISTORY=0       # disable history import and learning
-export ANDUINOS_GUESS_STATIC_TIMEOUT=100ms
 ```
 
-Removing the package removes the loader, native frontend, engine and Carapace.
-The next Bash session is stock Readline again; no user dotfile is modified.
+Removing the package removes the loader, native frontend and engine. The next
+Bash session is stock Readline again; no user dotfile is modified.
 
-Builds fetch only fixed, checksummed Carapace release archives. Installation and
-normal shell startup never access the network. The native frontend uses a small
-vendored declaration of Bash's stable loadable-builtin/Readline ABI, so cross
-builds do not depend on host Bash development headers.
+Learning uses no database and no daemon-wide service. Each interactive Bash owns
+its small engine process. Private mode-0600 append logs live under
+`${XDG_STATE_HOME:-~/.local/state}/anduinos-bash-guess-command/` as `history-v1`
+and `transitions-v1`; each log compacts at 1 MiB and each in-memory index is
+capped at 2,000 entries. Setting `ANDUINOS_GUESS_HISTORY=0` disables both import
+and persistence.
+
+The optional grammar-update workflow fetches only fixed, checksummed Carapace
+release archives. Package builds, installation and normal shell startup do not
+access the network. The native frontend uses a small vendored declaration of
+Bash's stable loadable-builtin/Readline ABI, so cross builds do not depend on
+host Bash development headers.

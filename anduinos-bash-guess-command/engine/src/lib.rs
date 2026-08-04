@@ -19,7 +19,8 @@ pub use candidate::{Candidate, CandidateKind, CandidateSource, Dependency, Evide
 pub use shell::{parse_line, ParsedLine, Token};
 pub use slot::{classify_slot, Slot, SlotKind};
 pub use world::{
-    Action, CommandEvent, Container, FileEntry, GitRef, HistoryEntry, Process, Service, WorldState,
+    Action, Artifact, ArtifactKind, CommandEvent, Container, FileEntry, GitRef, HistoryEntry, Host,
+    Process, Service, TransitionEntry, WorldState,
 };
 
 use arbiter::choose;

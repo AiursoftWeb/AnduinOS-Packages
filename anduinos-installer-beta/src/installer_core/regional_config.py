@@ -70,7 +70,17 @@ class InstallInputMethodStep:
             context.log("Language input method: not required")
             return
 
-        if not _input_method_payload_complete(target, method):
+        context.log(
+            f"Selected language input method: {method.display_name} "
+            f"({method.id})"
+        )
+        payload_complete = _input_method_payload_complete(target, method)
+        if payload_complete:
+            context.log(
+                "Input-method payload is already present in the target system; "
+                "no package download is needed"
+            )
+        else:
             if context.values.get("network_online") is False:
                 raise StepWarning(
                     f"Skipped {method.display_name} installation "
@@ -78,6 +88,10 @@ class InstallInputMethodStep:
                     "layout is still configured"
                 )
             _require_target_command(target, "usr/bin/apt-get")
+            context.log(
+                "Installing input-method packages in the target system: "
+                + ", ".join(method.packages)
+            )
             try:
                 if not context.values.get("package_indexes_refreshed"):
                     refresh_package_indexes(context, self.runner)
@@ -121,6 +135,24 @@ class InstallInputMethodStep:
                 )
 
         _verify_input_method_payload(target, method)
+        context.log(
+            f"Input-method payload verified for {method.display_name}"
+        )
+        if method.desktop_source is not None:
+            sources = _input_sources_value(
+                method,
+                context.plan.regional.keyboard.layout,
+            )
+            context.log(f"GNOME input-source defaults: sources={sources}")
+            context.log(
+                "Writing GNOME input-source defaults to "
+                "/usr/share/glib-2.0/schemas/"
+                "99_anduinos_default_input.gschema.override"
+            )
+            context.log(
+                "This is a system-wide default for new users; per-user dconf "
+                "and mru-sources remain managed by GNOME"
+            )
         _write_input_method_configuration(
             target,
             method,
@@ -135,6 +167,10 @@ class InstallInputMethodStep:
                     "/usr/share/glib-2.0/schemas",
                 ),
                 timeout=60,
+            )
+            context.log(
+                "Compiled GNOME settings schemas; the input sources will be "
+                "available to newly created users"
             )
         context.values["input_method_installed"] = True
         context.log(f"Language input method: {method.id} installed")
@@ -196,11 +232,22 @@ def _write_input_method_configuration(
         override.parent.mkdir(parents=True, exist_ok=True)
         override.write_text(
             "[org.gnome.desktop.input-sources]\n"
-            f"sources=[('xkb', '{keyboard_layout}'), "
-            f"('{method.desktop_source.type}', "
-            f"'{method.desktop_source.id}')]\n",
+            f"sources={_input_sources_value(method, keyboard_layout)}\n",
             encoding="utf-8",
         )
+
+
+def _input_sources_value(method: InputMethod, keyboard_layout: str) -> str:
+    """Return the GSettings value written as the new-user input-source default."""
+
+    if method.desktop_source is None:
+        raise ValueError("Input method has no desktop input source")
+    return (
+        f"[('xkb', '{keyboard_layout}'), "
+        f"('{method.desktop_source.type}', '{method.desktop_source.id}')]"
+    )
+
+
 def _input_method_payload_complete(
     target: Path, method: InputMethod
 ) -> bool:

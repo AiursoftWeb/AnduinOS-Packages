@@ -1,4 +1,6 @@
-use anduinos_quiet_engine::{parse_line, suggest, Query, WorldState};
+use anduinos_quiet_engine::{
+    parse_line, suggest, Action, CommandEvent, HistoryEntry, Query, TransitionEntry, WorldState,
+};
 use std::time::Instant;
 
 #[test]
@@ -71,5 +73,54 @@ fn foreground_query_stays_inside_a_conservative_cpu_budget() {
     assert!(
         elapsed.as_millis() < 5_000,
         "100k foreground queries took {elapsed:?}"
+    );
+}
+
+#[test]
+fn bounded_full_indexes_stay_inside_the_frontend_deadline_budget() {
+    let mut world = WorldState {
+        current_cwd: "/repo".into(),
+        last_event: Some(CommandEvent {
+            action: Action::GitMutation,
+            normalized: "git status".into(),
+            exit_code: 0,
+            at_ms: 1_000_000,
+            focus_filter: None,
+        }),
+        ..WorldState::default()
+    };
+    for index in 0..2_000 {
+        world.history.push(HistoryEntry {
+            command: format!("terraform plan -var item={index}"),
+            cwd: "/repo".into(),
+            count: 1,
+            last_used_ms: index,
+        });
+        world.transitions.push(TransitionEntry {
+            previous: "git status".into(),
+            next: format!("cargo test package_{index}"),
+            cwd: "/repo".into(),
+            count: 1,
+            last_used_ms: index,
+        });
+    }
+
+    let line = "terraform p";
+    let started = Instant::now();
+    for _ in 0..1_000 {
+        let suggestion = suggest(
+            Query {
+                line,
+                cursor: line.len(),
+                now_ms: 1_000_001,
+            },
+            &world,
+        );
+        assert!(suggestion.is_some());
+    }
+    let elapsed = started.elapsed();
+    assert!(
+        elapsed.as_secs_f32() < 5.0,
+        "1k full-index foreground queries took {elapsed:?}"
     );
 }

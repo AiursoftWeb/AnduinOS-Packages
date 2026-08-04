@@ -86,7 +86,7 @@ Version `1.0.0-19` introduces the general coverage layers. A compact compiled
 registry supplies safe defaults and shared-prefix actions for more than 40 CLIs.
 The personal layer imports filtered Bash history, learns successful commands in
 a bounded mode-0600 state file, and ranks by cwd, frequency and recency; secrets
-are rejected before persistence and dangerous personal commands cannot pass the
+are rejected before persistence and learned commands pass through the common
 arbiter. A versioned current-directory snapshot adds `cd` and read-only path
 completion without foreground filesystem access. The real daemon remains near
 400 KiB and measured foreground pipe P95 remains under 2 ms.
@@ -118,3 +118,54 @@ tier promotes ordinary human-facing actions over plumbing commands after a
 meaningful prefix (`git che` therefore selects `checkout`). Entity listing
 order is no longer treated as intent: multiple Docker containers produce only
 a shared typed-prefix extension, or silence when no container is distinguished.
+
+Version `1.0.0-24` removes runtime Carapace and leaves programmable Tab
+completion entirely untouched. Carapace remains only an optional, pinned
+development tool for regenerating the compiled root-subcommand grammar. The
+installed package now owns only ghost-text redisplay, Right Arrow acceptance and
+prompt-time observation; a regression contract verifies that loading it
+preserves an existing Bash completion registration byte-for-byte.
+
+Version `1.0.0-25` adds a compact contextual ranking layer inspired by mature
+history search and autosuggestion systems. A bounded adjacent-command graph
+ranks likely successors by previous command, cwd, frequency and recency. A
+background verifier turns successful `ssh-keygen`, `mkdir`, `git clone` and
+Python venv actions into expiring artifact facts; Docker, process, service and
+Git workflows use typed entity snapshots rather than terminal output. Bounded
+three-level path snapshots, SSH aliases, more than 90 root CLI policies and over
+370 nested actions improve cold-start coverage. The installed amd64 frontend and
+engine remain below 600 KiB combined, with a measured real-pipe P95 of 1 ms.
+PTY contracts now exercise full-command prediction, transition ranking,
+artifact handoff, SSH aliases, multiline paste, exact Enter behavior, Right
+Arrow acceptance and unchanged programmable Tab completion.
+
+Version `1.0.0-26` normalizes an explicit `./` for current-directory snapshot
+matching while preserving it in the rendered suggestion. Hidden-path common
+prefixes such as `cat ./.ba` now extend safely to `cat ./.bash` instead of being
+silent.
+
+Version `1.0.0-27` removes the blanket dangerous-command completion penalty:
+ghost text is not execution, and Enter remains the user's confirmation boundary.
+Failed and credential-bearing commands are still excluded from learning. A
+narrow guard prevents one-shot history replay of a complete `dd` write to a
+`/dev/` device. Independently, `dd if=` and `dd of=` now have structured path
+slots; `if=/` may suggest `/dev/`, absolute device paths and relative image files
+use verified snapshots, and an empty `of=` never invents a destination.
+
+Version `1.0.0-28` routes `ls` and other unambiguous filesystem consumers
+through the path slot even after command options. The exact root-directory case
+`ls -ashl ./de` now preserves `./` and extends to `ls -ashl ./dev/` from the
+prompt-time snapshot.
+
+Version `1.0.0-29` replaces the small root-only extraction with Carapace's
+explicit JSON export trees. A hermetic development-time generator compiles more
+than 700 commands and 7,500 multi-level nodes into an approximately 900 KiB TSV
+corpus; the runtime uses sorted binary lookup and contains no Carapace or Go
+code. Local and persistent flags become typed option candidates, Docker's
+grouped/legacy aliases and Compose v2 paths share grammar, and ambiguous command
+names extend only to their common prefix rather than selecting an arbitrary
+program. More than 6,500 subcommand and 20,000 option unique-prefix contracts
+exercise the public prediction entry point. A second hermetic probe containing
+only synthetic filenames identifies over 2,000 positional path slots, while a
+small audited overlay handles common path-valued flags such as `kubectl -f`,
+`curl -o`, `git -F` and `docker build -f`.

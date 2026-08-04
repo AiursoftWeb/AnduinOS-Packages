@@ -24,7 +24,7 @@ if [[ ${ANDUINOS_TEST_KEEP:-0} == 0 ]]; then
 else
     printf 'Keeping native test files in %s\n' "$TEST_ROOT"
 fi
-mkdir -p "$TEST_ROOT/home/bin" "$TEST_ROOT/package/bin"
+mkdir -p "$TEST_ROOT/home/bin" "$TEST_ROOT/home/.ssh" "$TEST_ROOT/package/bin"
 cp "$MODULE" "$TEST_ROOT/package/anduinos-ghost.so"
 cp "$DAEMON" "$TEST_ROOT/package/anduinos-quietd"
 
@@ -54,6 +54,24 @@ fi
 EOF
 chmod 755 "$TEST_ROOT/home/bin/docker"
 
+cat >"$TEST_ROOT/home/bin/nativecmd" <<EOF
+#!/usr/bin/env bash
+printf '%s' "\$*" >'$TEST_ROOT/native-tab.args'
+EOF
+chmod 755 "$TEST_ROOT/home/bin/nativecmd"
+
+cat >"$TEST_ROOT/home/bin/ssh" <<EOF
+#!/usr/bin/env bash
+printf '%s' "\$*" >'$TEST_ROOT/ssh.args'
+EOF
+chmod 755 "$TEST_ROOT/home/bin/ssh"
+cat >"$TEST_ROOT/home/.ssh/config" <<'EOF'
+Host production-api
+    HostName 192.0.2.10
+EOF
+printf 'EXPLICIT_PATH_PREFIX\n' >"$TEST_ROOT/home/.bash_alpha"
+mkdir -p "$TEST_ROOT/home/demo-directory"
+
 cat >"$TEST_ROOT/bashrc" <<EOF
 PS1='NATIVE_TEST> '
 PS2='NATIVE_MORE> '
@@ -61,8 +79,9 @@ stty columns 120 rows 40
 PATH='$TEST_ROOT/home/bin':\$PATH
 export ANDUINOS_QUIETD='$TEST_ROOT/package/anduinos-quietd'
 export ANDUINOS_TEST_MULTIPLE_MARKER='$TEST_ROOT/multiple-containers'
-ANDUINOS_GUESS_STATIC=0
 unset ANDUINOS_GUESS_COMMAND
+_anduinos_native_tab_complete() { COMPREPLY=(native-tab-result); }
+complete -F _anduinos_native_tab_complete nativecmd
 source '$TEST_ROOT/package/loader'
 EOF
 
@@ -104,6 +123,15 @@ docker_input() {
     printf 'sudo docker ps\n'
     sleep 0.35
     printf 'sudo docker exec -it '
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
+
+docker_mind_reading_input() {
+    sleep 0.5
+    printf 'sudo docker ps\n'
+    sleep 0.35
+    printf 'sudo docker e'
     sleep 0.2
     printf '\033[C\nexit\n'
 }
@@ -170,6 +198,83 @@ path_input() {
     printf '\033[C\nexit\n'
 }
 
+explicit_current_path_input() {
+    sleep 0.5
+    printf 'cd %s\n' "$TEST_ROOT/home"
+    sleep 0.3
+    printf 'cat ./.bash_a'
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
+
+ls_option_path_input() {
+    sleep 0.5
+    printf 'cd %s\n' "$TEST_ROOT/home"
+    sleep 0.3
+    printf 'ls -ashl ./de'
+    sleep 0.2
+    printf '\033[C >%s/ls-option-output\nexit\n' "$TEST_ROOT"
+}
+
+native_tab_input() {
+    sleep 0.5
+    printf 'nativecmd nat\t\nexit\n'
+}
+
+transition_input() {
+    sleep 0.5
+    printf 'printf CONTEXT_ONE >%s/context-one\n' "$TEST_ROOT"
+    sleep 0.15
+    printf 'printf CONTEXT_TWO >%s/context-two\n' "$TEST_ROOT"
+    sleep 0.15
+    printf 'printf CONTEXT_ONE >%s/context-one\n' "$TEST_ROOT"
+    sleep 0.15
+    printf 'printf CONTEXT_'
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
+
+created_directory_input() {
+    sleep 0.5
+    printf 'mkdir %s/smart-directory\n' "$TEST_ROOT"
+    sleep 0.3
+    printf 'cd %s/sm' "$TEST_ROOT"
+    sleep 0.2
+    printf '\033[C\n'
+    sleep 0.15
+    printf 'pwd >%s/artifact-pwd\nexit\n' "$TEST_ROOT"
+}
+
+ssh_host_input() {
+    sleep 0.7
+    printf 'ssh prod'
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
+
+dd_input_path_input() {
+    sleep 0.6
+    printf 'sudo dd if=/'
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
+
+dd_empty_output_input() {
+    sleep 0.6
+    printf 'sudo dd of='
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
+
+destructive_history_input() {
+    sleep 0.6
+    printf 'sudo rm -rf /nonexistent-anduinos-ghost-test\n'
+    sleep 0.2
+    printf 'sudo rm -'
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
+
 run_session accept_workflow_input "$TEST_ROOT/workflow.typescript"
 [[ $(<"$TEST_ROOT/sudo.args") == 'apt upgrade' ]] ||
     fail 'Right Arrow did not accept the apt workflow suggestion'
@@ -187,6 +292,10 @@ run_session enter_native_input "$TEST_ROOT/enter.typescript"
 run_session docker_input "$TEST_ROOT/docker.typescript"
 [[ $(<"$TEST_ROOT/sudo.args") == 'docker exec -it kind_bassi' ]] ||
     fail 'live Docker context was not suggested'
+
+run_session docker_mind_reading_input "$TEST_ROOT/docker-mind-reading.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'docker exec -it kind_bassi' ]] ||
+    fail 'Docker listing did not predict the full exec workflow'
 
 run_session docker_skeleton_input "$TEST_ROOT/docker-skeleton.typescript"
 [[ $(<"$TEST_ROOT/sudo.args") == 'docker ps' ]] ||
@@ -226,5 +335,46 @@ run_session path_input "$TEST_ROOT/path.typescript"
 LC_ALL=C tr -d '\r' <"$TEST_ROOT/path.typescript" | \
     grep -q 'anduinos-bash-guess-command' ||
     fail 'current-directory snapshot did not complete README.md'
+
+run_session explicit_current_path_input "$TEST_ROOT/explicit-path.typescript"
+LC_ALL=C tr -d '\r' <"$TEST_ROOT/explicit-path.typescript" | \
+    grep -q 'EXPLICIT_PATH_PREFIX' ||
+    fail 'an explicit ./ prefix prevented current-directory path completion'
+
+run_session ls_option_path_input "$TEST_ROOT/ls-option-path.typescript"
+[[ -s $TEST_ROOT/ls-option-output ]] ||
+    fail 'ls options prevented its final argument from using path completion'
+
+run_session native_tab_input "$TEST_ROOT/native-tab.typescript"
+[[ $(<"$TEST_ROOT/native-tab.args") == native-tab-result ]] ||
+    fail 'the loader changed native programmable Tab completion behavior'
+
+find "$TEST_ROOT" -maxdepth 1 -type f -name 'context-*' -delete
+run_session transition_input "$TEST_ROOT/transition.typescript"
+[[ $(<"$TEST_ROOT/context-two") == CONTEXT_TWO ]] ||
+    fail 'adjacent-command context did not outrank generic history'
+transition_file="$TEST_ROOT/home/.local/state/anduinos-bash-guess-command/transitions-v1"
+[[ -s $transition_file && $(stat -c %a "$transition_file") == 600 ]] ||
+    fail 'the transition graph was not persisted privately'
+
+run_session created_directory_input "$TEST_ROOT/artifact-directory.typescript"
+[[ $(<"$TEST_ROOT/artifact-pwd") == "$TEST_ROOT/smart-directory" ]] ||
+    fail 'a verified created directory did not become a cross-command fact'
+
+run_session ssh_host_input "$TEST_ROOT/ssh-host.typescript"
+[[ $(<"$TEST_ROOT/ssh.args") == production-api ]] ||
+    fail 'the background SSH config snapshot did not complete a host alias'
+
+run_session dd_input_path_input "$TEST_ROOT/dd-input.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'dd if=/dev/' ]] ||
+    fail 'dd if=/ did not receive its structured /dev/ path suggestion'
+
+run_session dd_empty_output_input "$TEST_ROOT/dd-empty-output.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'dd of=' ]] ||
+    fail 'an empty dd of= invented an output destination'
+
+run_session destructive_history_input "$TEST_ROOT/destructive-history.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'rm -rf /nonexistent-anduinos-ghost-test' ]] ||
+    fail 'ordinary destructive command text remained blocked from history completion'
 
 printf 'Native Readline interaction checks passed.\n'

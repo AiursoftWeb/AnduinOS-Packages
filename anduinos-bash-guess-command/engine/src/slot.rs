@@ -12,7 +12,9 @@ pub enum SlotKind {
     Process,
     Service,
     GitRef,
+    Host,
     GitCleanOption,
+    Option,
     Path,
 }
 
@@ -53,8 +55,22 @@ pub fn classify_slot(parsed: &ParsedLine) -> Slot {
             false,
         );
     }
+    if values[0] == "dd" && !parsed.trailing_space {
+        if let Some((name, path)) = parsed.current_prefix.split_once('=') {
+            if matches!(name, "if" | "of") {
+                return slot(
+                    SlotKind::Path,
+                    path.to_owned(),
+                    token_start + name.len() + 1,
+                    &[CandidateKind::Path],
+                    true,
+                );
+            }
+        }
+    }
     if (values[0] == "apt" || values[0] == "apt-get")
         && (values.len() == 1 || (values.len() == 2 && !parsed.trailing_space))
+        && !prefix.starts_with('-')
     {
         return slot(
             SlotKind::AptAction,
@@ -102,13 +118,75 @@ pub fn classify_slot(parsed: &ParsedLine) -> Slot {
             true,
         );
     }
-    if values.starts_with(&["git", "clean"]) && (parsed.trailing_space || prefix.starts_with('-')) {
+    if ((values[0] == "ssh" && ssh_host_position(&values[1..], parsed.trailing_space, false))
+        || (values[0] == "ssh-copy-id"
+            && ssh_host_position(&values[1..], parsed.trailing_space, true)))
+        && !prefix.contains(':')
+    {
+        return slot(
+            SlotKind::Host,
+            prefix,
+            token_start,
+            &[CandidateKind::Host],
+            true,
+        );
+    }
+    if values.starts_with(&["git", "clean"]) && (parsed.trailing_space || prefix == "-") {
         return slot(
             SlotKind::GitCleanOption,
             prefix,
             token_start,
-            &[CandidateKind::Option],
+            &[CandidateKind::Option, CandidateKind::Command],
             true,
+        );
+    }
+    let grammar_base = if parsed.trailing_space {
+        values.as_slice()
+    } else {
+        &values[..values.len().saturating_sub(1)]
+    };
+    if let Some((path_prefix, path_start)) =
+        option_path_position(&values, parsed.trailing_space, &prefix, token_start)
+    {
+        return slot(
+            SlotKind::Path,
+            path_prefix,
+            path_start,
+            &[CandidateKind::Path, CandidateKind::Command],
+            false,
+        );
+    }
+    if !parsed.trailing_space
+        && prefix.starts_with('-')
+        && !prefix.contains('=')
+        && !grammar_base.is_empty()
+        && specs::find_options(grammar_base).is_some()
+    {
+        return slot(
+            SlotKind::Option,
+            prefix,
+            token_start,
+            &[CandidateKind::Option, CandidateKind::Command],
+            true,
+        );
+    }
+    if !grammar_base.is_empty()
+        && !prefix.starts_with('-')
+        && specs::find_nested(grammar_base).is_some_and(|spec| {
+            spec.positional_path
+                && (prefix.is_empty()
+                    || !spec
+                        .actions
+                        .iter()
+                        .any(|action| action.starts_with(&prefix)))
+        })
+    {
+        return slot(
+            SlotKind::Path,
+            prefix,
+            token_start,
+            &[CandidateKind::Path, CandidateKind::Command],
+            false,
         );
     }
     if path_position(&values, parsed.trailing_space) {
@@ -118,6 +196,24 @@ pub fn classify_slot(parsed: &ParsedLine) -> Slot {
             token_start,
             &[CandidateKind::Path, CandidateKind::Command],
             false,
+        );
+    }
+    let nested_base = if parsed.trailing_space {
+        values.as_slice()
+    } else {
+        &values[..values.len().saturating_sub(1)]
+    };
+    if nested_base.len() >= 2 && specs::find_nested(nested_base).is_some_and(specs::has_actions) {
+        return slot(
+            SlotKind::Subcommand,
+            if parsed.trailing_space {
+                String::new()
+            } else {
+                prefix
+            },
+            token_start,
+            &[CandidateKind::Subcommand],
+            true,
         );
     }
     if grammar_command(values[0])
@@ -150,21 +246,69 @@ pub fn classify_slot(parsed: &ParsedLine) -> Slot {
 }
 
 fn grammar_command(command: &str) -> bool {
-    specs::find(command).is_some()
+    specs::find(command).is_some_and(specs::has_actions)
 }
 
 fn path_position(values: &[&str], trailing_space: bool) -> bool {
     let Some(command) = values.first() else {
         return false;
     };
-    if !matches!(*command, "cd" | "cat" | "less" | "head" | "tail") {
+    if *command == "ssh-copy-id" {
+        return (trailing_space && values.last() == Some(&"-i"))
+            || (!trailing_space
+                && values.len() >= 3
+                && values.get(values.len() - 2) == Some(&"-i"));
+    }
+    if !matches!(
+        *command,
+        "cd" | "ls"
+            | "tree"
+            | "du"
+            | "cat"
+            | "less"
+            | "head"
+            | "tail"
+            | "wc"
+            | "realpath"
+            | "readlink"
+            | "basename"
+            | "dirname"
+            | "md5sum"
+            | "sha1sum"
+            | "sha256sum"
+            | "sha512sum"
+            | "cksum"
+            | "diff"
+            | "cmp"
+            | "comm"
+            | "source"
+            | "."
+            | "vim"
+            | "nvim"
+            | "nano"
+            | "code"
+            | "mkdir"
+            | "touch"
+            | "rm"
+            | "rmdir"
+            | "cp"
+            | "mv"
+            | "ln"
+            | "chmod"
+            | "chown"
+            | "stat"
+            | "file"
+    ) {
         return false;
     }
     let args = &values[1..];
     if args.is_empty() {
         return trailing_space;
     }
-    args.len() == 1 && !trailing_space && !args[0].starts_with('-')
+    if !trailing_space {
+        return args.last().is_some_and(|value| !value.starts_with('-'));
+    }
+    !matches!(args.last(), Some(&("-n" | "--lines" | "-c" | "--bytes")))
 }
 
 fn positional_slot(args: &[&str], trailing_space: bool, value_options: &[&str]) -> bool {
@@ -183,6 +327,29 @@ fn positional_slot(args: &[&str], trailing_space: bool, value_options: &[&str]) 
         }
     }
     trailing_space
+}
+
+fn option_path_position(
+    values: &[&str],
+    trailing_space: bool,
+    prefix: &str,
+    token_start: usize,
+) -> Option<(String, usize)> {
+    if trailing_space {
+        let (option, context) = values.split_last()?;
+        return specs::option_takes_path(context, option).then(|| (String::new(), token_start));
+    }
+    if let Some((option, path)) = prefix.split_once('=') {
+        let context = &values[..values.len().saturating_sub(1)];
+        return specs::option_takes_path(context, option)
+            .then(|| (path.to_owned(), token_start + option.len() + 1));
+    }
+    if values.len() >= 2 {
+        let option = values[values.len() - 2];
+        let context = &values[..values.len() - 2];
+        return specs::option_takes_path(context, option).then(|| (prefix.to_owned(), token_start));
+    }
+    None
 }
 
 fn systemctl_entity_position(args: &[&str], trailing_space: bool) -> bool {
@@ -206,6 +373,32 @@ fn git_ref_position(args: &[&str], trailing_space: bool) -> bool {
             trailing_space,
             &["-b", "-B", "-c", "-C", "--track"],
         )
+}
+
+fn ssh_host_position(args: &[&str], trailing_space: bool, copy_id: bool) -> bool {
+    let value_options: &[&str] = if copy_id {
+        &["-F", "-i", "-o", "-p"]
+    } else {
+        &[
+            "-b", "-c", "-D", "-E", "-e", "-F", "-I", "-i", "-J", "-L", "-l", "-m", "-O", "-o",
+            "-p", "-Q", "-R", "-S", "-W", "-w",
+        ]
+    };
+    let mut index = 0;
+    while index < args.len() {
+        let value = args[index];
+        if index + 1 == args.len() && !trailing_space && !value.starts_with('-') {
+            return true;
+        }
+        if value_options.contains(&value) {
+            index += 2;
+        } else if value.starts_with('-') {
+            index += 1;
+        } else {
+            return false;
+        }
+    }
+    trailing_space
 }
 
 fn docker_slot(parsed: &ParsedLine, values: &[&str], token_start: usize) -> Option<Slot> {
@@ -343,6 +536,8 @@ mod tests {
         assert_eq!(kind("systemctl --user restart dock"), SlotKind::Service);
         assert_eq!(kind("git switch fea"), SlotKind::GitRef);
         assert_eq!(kind("git merge main "), SlotKind::Unknown);
+        assert_eq!(kind("ssh -p 2222 prod"), SlotKind::Host);
+        assert_eq!(kind("ssh-copy-id -i ~/.ssh/id.pub prod"), SlotKind::Host);
     }
 
     #[test]
@@ -350,5 +545,9 @@ mod tests {
         assert_eq!(kind("sudo docker "), SlotKind::Subcommand);
         assert_eq!(kind("sudo git"), SlotKind::Subcommand);
         assert_eq!(kind("git st"), SlotKind::Subcommand);
+        assert_eq!(kind("docker compose "), SlotKind::Subcommand);
+        assert_eq!(kind("git remote g"), SlotKind::Subcommand);
+        assert_eq!(kind("ls -ashl ./de"), SlotKind::Path);
+        assert_eq!(kind("sha256sum ./ima"), SlotKind::Path);
     }
 }

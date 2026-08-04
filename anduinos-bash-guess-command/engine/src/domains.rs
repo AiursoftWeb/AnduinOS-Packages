@@ -2,7 +2,7 @@ use crate::candidate::{Candidate, CandidateKind, CandidateSource, Dependency, Ev
 use crate::shell::ParsedLine;
 use crate::slot::{Slot, SlotKind};
 use crate::specs;
-use crate::world::{Action, Container, WorldState};
+use crate::world::{Action, ArtifactKind, Container, WorldState};
 
 pub(crate) fn generate(
     parsed: &ParsedLine,
@@ -11,6 +11,7 @@ pub(crate) fn generate(
     now_ms: u64,
 ) -> Vec<Candidate> {
     let mut candidates = Vec::new();
+    command_name_candidates(parsed, slot, &mut candidates);
     match slot.kind {
         SlotKind::Subcommand => subcommand_candidates(parsed, slot, &mut candidates),
         SlotKind::AptAction => apt_candidates(parsed, world, now_ms, &mut candidates),
@@ -18,14 +19,42 @@ pub(crate) fn generate(
             docker_candidates(parsed, slot, world, now_ms, &mut candidates)
         }
         SlotKind::GitCleanOption => git_clean_candidates(parsed, &mut candidates),
+        SlotKind::Option => grammar_option_candidates(parsed, slot, &mut candidates),
         SlotKind::Process => process_candidates(parsed, slot, world, now_ms, &mut candidates),
         SlotKind::Service => service_candidates(parsed, slot, world, now_ms, &mut candidates),
         SlotKind::GitRef => git_ref_candidates(parsed, slot, world, now_ms, &mut candidates),
+        SlotKind::Host => host_candidates(parsed, slot, world, now_ms, &mut candidates),
         SlotKind::Path => path_candidates(parsed, slot, world, now_ms, &mut candidates),
         _ => {}
     }
+    workflow_candidates(parsed, slot, world, now_ms, &mut candidates);
+    transition_candidates(parsed, slot, world, now_ms, &mut candidates);
     personal_candidates(parsed, slot, world, now_ms, &mut candidates);
     candidates
+}
+
+fn command_name_candidates(parsed: &ParsedLine, slot: &Slot, out: &mut Vec<Candidate>) {
+    let values = parsed.command_values();
+    if !slot.allows(CandidateKind::Command)
+        || values.len() != 1
+        || parsed.trailing_space
+        || parsed.current_prefix.len() < 2
+        || parsed.current_prefix.contains('/')
+    {
+        return;
+    }
+    let Some(first) = parsed.command_tokens().first() else {
+        return;
+    };
+    for command in specs::command_names().filter(|command| {
+        command.starts_with(&parsed.current_prefix) && *command != parsed.current_prefix
+    }) {
+        out.push(Candidate::grammar(
+            format!("{}{command}", &parsed.source[..first.start]),
+            CandidateKind::Command,
+            0.84,
+        ));
+    }
 }
 
 fn path_candidates(
@@ -35,29 +64,60 @@ fn path_candidates(
     now_ms: u64,
     out: &mut Vec<Candidate>,
 ) {
+    artifact_path_candidates(parsed, slot, world, now_ms, out);
     if world.files.cwd != world.current_cwd
-        || now_ms.saturating_sub(world.files.refreshed_at_ms) > 30_000
+        || now_ms.saturating_sub(world.files.refreshed_at_ms) > 120_000
     {
         return;
     }
     let directories_only = parsed.command_values().first() == Some(&"cd");
+    let values = parsed.command_values();
+    let dd_input = values.first() == Some(&"dd")
+        && values.last().is_some_and(|value| value.starts_with("if="));
+    let dd_empty_output = values.first() == Some(&"dd") && values.last() == Some(&"of=");
+    if dd_empty_output {
+        return;
+    }
+    if dd_input && slot.prefix == "/" {
+        out.push(Candidate {
+            resulting_line: format!("{}/dev/", &parsed.source[..slot.token_start]),
+            kind: CandidateKind::Path,
+            source: CandidateSource::Workflow,
+            confidence: 0.88,
+            risk: Risk::Safe,
+            evidence: vec![Evidence::GrammarMatch],
+            dependencies: Vec::new(),
+            expires_at_ms: None,
+        });
+    }
+    let (lookup_prefix, display_prefix) = slot
+        .prefix
+        .strip_prefix("./")
+        .map(|prefix| (prefix, "./"))
+        .unwrap_or((slot.prefix.as_str(), ""));
     let mut matches: Vec<String> = world
         .files
         .entries
         .iter()
         .filter(|entry| !directories_only || entry.directory)
-        .filter(|entry| slot.prefix.starts_with('.') || !entry.name.starts_with('.'))
-        .filter(|entry| entry.name.starts_with(&slot.prefix))
+        .filter(|entry| lookup_prefix.starts_with('.') || !entry.name.starts_with('.'))
+        .filter(|entry| {
+            if display_prefix == "./" && entry.name.starts_with("~/") {
+                return false;
+            }
+            entry.name.starts_with(lookup_prefix)
+        })
         .filter(|entry| {
             !entry.name.chars().any(|character| {
                 character.is_whitespace() || character.is_control() || character == '\\'
             })
         })
         .map(|entry| {
+            let displayed = format!("{display_prefix}{}", entry.name);
             if entry.directory {
-                format!("{}/", entry.name)
+                format!("{displayed}/")
             } else {
-                entry.name.clone()
+                displayed
             }
         })
         .collect();
@@ -83,8 +143,422 @@ fn path_candidates(
             generation: world.files.generation,
         }],
         dependencies: vec![Dependency::FileGeneration(world.files.generation)],
-        expires_at_ms: Some(world.files.refreshed_at_ms.saturating_add(30_000)),
+        expires_at_ms: Some(world.files.refreshed_at_ms.saturating_add(120_000)),
     });
+}
+
+fn artifact_path_candidates(
+    parsed: &ParsedLine,
+    slot: &Slot,
+    world: &WorldState,
+    now_ms: u64,
+    out: &mut Vec<Candidate>,
+) {
+    if now_ms.saturating_sub(world.artifacts.refreshed_at_ms) > 600_000 {
+        return;
+    }
+    let command = parsed.command_values().first().copied().unwrap_or_default();
+    for artifact in &world.artifacts.artifacts {
+        let relevant = match artifact.kind {
+            ArtifactKind::Directory => command == "cd",
+            ArtifactKind::ActivationScript => matches!(command, "source" | "."),
+            ArtifactKind::PublicKey => {
+                matches!(command, "cat" | "less" | "head" | "tail" | "ssh-copy-id")
+            }
+            ArtifactKind::File => command != "cd",
+        };
+        if !relevant
+            || !artifact.path.starts_with(&slot.prefix)
+            || artifact.path == slot.prefix
+            || unsafe_shell_word(&artifact.path)
+        {
+            continue;
+        }
+        out.push(Candidate {
+            resulting_line: format!("{}{}", &parsed.source[..slot.token_start], artifact.path),
+            kind: CandidateKind::Path,
+            source: CandidateSource::Workflow,
+            confidence: 0.96,
+            risk: Risk::Safe,
+            evidence: vec![
+                Evidence::ProducedArtifact,
+                Evidence::LiveEntity {
+                    generation: world.artifacts.generation,
+                },
+            ],
+            dependencies: vec![Dependency::ArtifactGeneration(world.artifacts.generation)],
+            expires_at_ms: Some(world.artifacts.refreshed_at_ms.saturating_add(600_000)),
+        });
+    }
+}
+
+fn transition_candidates(
+    parsed: &ParsedLine,
+    slot: &Slot,
+    world: &WorldState,
+    now_ms: u64,
+    out: &mut Vec<Candidate>,
+) {
+    let Some(previous) = world
+        .last_event
+        .as_ref()
+        .filter(|event| event.exit_code == 0 && now_ms.saturating_sub(event.at_ms) <= 1_800_000)
+    else {
+        return;
+    };
+    let Some(current) = normalized_command(parsed) else {
+        return;
+    };
+    if current.trim().len() < 2 {
+        return;
+    }
+    let Some(kind) = learned_kind(slot) else {
+        return;
+    };
+    let typed_wrapper = &parsed.source[..parsed.command_tokens()[0].start];
+    for entry in &world.transitions {
+        if entry.previous != previous.normalized
+            || entry.next == current
+            || !entry.next.starts_with(current)
+            || destructive_dd_device_replay(&entry.next)
+        {
+            continue;
+        }
+        let same_directory = !world.current_cwd.is_empty() && entry.cwd == world.current_cwd;
+        let age = now_ms.saturating_sub(entry.last_used_ms);
+        let mut confidence = 0.74 + (entry.count.min(8) as f32 * 0.025);
+        if same_directory {
+            confidence += 0.10;
+        }
+        if age <= 86_400_000 {
+            confidence += 0.04;
+        }
+        let mut evidence = vec![
+            Evidence::PreviousCommand("learned transition"),
+            Evidence::TransitionFrequency(entry.count),
+        ];
+        if same_directory {
+            evidence.push(Evidence::SameDirectory);
+        }
+        out.push(Candidate::transition(
+            format!("{typed_wrapper}{}", entry.next),
+            kind,
+            confidence.min(0.96),
+            Risk::Safe,
+            evidence,
+        ));
+    }
+}
+
+fn learned_kind(slot: &Slot) -> Option<CandidateKind> {
+    [
+        CandidateKind::Command,
+        CandidateKind::Subcommand,
+        CandidateKind::Path,
+    ]
+    .into_iter()
+    .find(|kind| slot.allows(*kind))
+}
+
+fn workflow_candidates(
+    parsed: &ParsedLine,
+    slot: &Slot,
+    world: &WorldState,
+    now_ms: u64,
+    out: &mut Vec<Candidate>,
+) {
+    let Some(event) = world
+        .last_event
+        .as_ref()
+        .filter(|event| event.exit_code == 0 && now_ms.saturating_sub(event.at_ms) <= 600_000)
+    else {
+        return;
+    };
+    let evidence = vec![
+        Evidence::PreviousCommand("semantic workflow"),
+        Evidence::SuccessfulExit,
+    ];
+    match &event.action {
+        Action::DockerList { .. } => {
+            if now_ms.saturating_sub(world.docker.refreshed_at_ms) <= 30_000 {
+                if let Some(container) = focused_container(world, event.focus_filter.as_deref()) {
+                    let dependencies = vec![Dependency::DockerGeneration(world.docker.generation)];
+                    push_contextual(
+                        parsed,
+                        slot,
+                        &format!("docker exec -it {}", container.name),
+                        0.98,
+                        Risk::Safe,
+                        evidence.clone(),
+                        dependencies.clone(),
+                        Some(world.docker.refreshed_at_ms.saturating_add(30_000)),
+                        out,
+                    );
+                    push_contextual(
+                        parsed,
+                        slot,
+                        &format!("docker logs -f {}", container.name),
+                        0.96,
+                        Risk::Safe,
+                        evidence.clone(),
+                        dependencies,
+                        Some(world.docker.refreshed_at_ms.saturating_add(30_000)),
+                        out,
+                    );
+                }
+            }
+        }
+        Action::ProcessList => {
+            if let Some(filter) = event.focus_filter.as_deref() {
+                let matches: Vec<&crate::world::Process> = world
+                    .processes
+                    .processes
+                    .iter()
+                    .filter(|process| {
+                        process
+                            .command
+                            .to_ascii_lowercase()
+                            .contains(&filter.to_ascii_lowercase())
+                    })
+                    .collect();
+                if let [process] = matches.as_slice() {
+                    push_contextual(
+                        parsed,
+                        slot,
+                        &format!("kill {}", process.pid),
+                        0.96,
+                        Risk::Moderate,
+                        evidence.clone(),
+                        vec![Dependency::ProcessGeneration(world.processes.generation)],
+                        Some(world.processes.refreshed_at_ms.saturating_add(30_000)),
+                        out,
+                    );
+                }
+            }
+        }
+        Action::ServiceList => {
+            if let Some(filter) = event.focus_filter.as_deref() {
+                let matches: Vec<&str> = world
+                    .services
+                    .services
+                    .iter()
+                    .map(|service| service.name.as_str())
+                    .filter(|name| {
+                        name.to_ascii_lowercase()
+                            .contains(&filter.to_ascii_lowercase())
+                    })
+                    .collect();
+                if let [service] = matches.as_slice() {
+                    push_contextual(
+                        parsed,
+                        slot,
+                        &format!("systemctl status {service}"),
+                        0.97,
+                        Risk::Safe,
+                        evidence.clone(),
+                        vec![Dependency::ServiceGeneration(world.services.generation)],
+                        Some(world.services.refreshed_at_ms.saturating_add(60_000)),
+                        out,
+                    );
+                }
+            }
+        }
+        Action::SystemctlOperation { unit, .. } if !unsafe_shell_word(unit) => {
+            push_contextual(
+                parsed,
+                slot,
+                &format!("systemctl status {unit}"),
+                0.94,
+                Risk::Safe,
+                evidence.clone(),
+                Vec::new(),
+                Some(event.at_ms.saturating_add(600_000)),
+                out,
+            );
+        }
+        Action::DockerBuild { image: Some(image) } if !unsafe_shell_word(image) => {
+            push_contextual(
+                parsed,
+                slot,
+                &format!("docker run --rm -it {image}"),
+                0.91,
+                Risk::Moderate,
+                evidence.clone(),
+                Vec::new(),
+                Some(event.at_ms.saturating_add(600_000)),
+                out,
+            );
+        }
+        Action::GitStage => {
+            push_contextual(
+                parsed,
+                slot,
+                "git commit",
+                0.92,
+                Risk::Moderate,
+                evidence.clone(),
+                Vec::new(),
+                Some(event.at_ms.saturating_add(600_000)),
+                out,
+            );
+        }
+        Action::GitCommit => {
+            push_contextual(
+                parsed,
+                slot,
+                "git push",
+                0.88,
+                Risk::Moderate,
+                evidence.clone(),
+                Vec::new(),
+                Some(event.at_ms.saturating_add(600_000)),
+                out,
+            );
+        }
+        _ => {}
+    }
+
+    let artifact_kind = match event.action {
+        Action::SshKeygen { .. } => Some(ArtifactKind::PublicKey),
+        Action::MakeDirectory { .. } | Action::GitClone { .. } => Some(ArtifactKind::Directory),
+        Action::PythonVenv { .. } => Some(ArtifactKind::ActivationScript),
+        _ => None,
+    };
+    let Some(kind) = artifact_kind else {
+        return;
+    };
+    if now_ms.saturating_sub(world.artifacts.refreshed_at_ms) > 600_000 {
+        return;
+    }
+    for artifact in world
+        .artifacts
+        .artifacts
+        .iter()
+        .filter(|artifact| artifact.kind == kind)
+    {
+        if unsafe_shell_word(&artifact.path) {
+            continue;
+        }
+        let dependencies = vec![Dependency::ArtifactGeneration(world.artifacts.generation)];
+        let mut artifact_evidence = evidence.clone();
+        artifact_evidence.push(Evidence::ProducedArtifact);
+        match kind {
+            ArtifactKind::PublicKey => {
+                push_contextual(
+                    parsed,
+                    slot,
+                    &format!("cat {}", artifact.path),
+                    0.99,
+                    Risk::Safe,
+                    artifact_evidence.clone(),
+                    dependencies.clone(),
+                    Some(world.artifacts.refreshed_at_ms.saturating_add(600_000)),
+                    out,
+                );
+                push_contextual(
+                    parsed,
+                    slot,
+                    &format!("ssh-copy-id -i {}", artifact.path),
+                    0.94,
+                    Risk::Safe,
+                    artifact_evidence.clone(),
+                    dependencies.clone(),
+                    Some(world.artifacts.refreshed_at_ms.saturating_add(600_000)),
+                    out,
+                );
+            }
+            ArtifactKind::Directory => push_contextual(
+                parsed,
+                slot,
+                &format!("cd {}", artifact.path),
+                0.98,
+                Risk::Safe,
+                artifact_evidence,
+                dependencies,
+                Some(world.artifacts.refreshed_at_ms.saturating_add(600_000)),
+                out,
+            ),
+            ArtifactKind::ActivationScript => push_contextual(
+                parsed,
+                slot,
+                &format!("source {}", artifact.path),
+                0.99,
+                Risk::Safe,
+                artifact_evidence,
+                dependencies,
+                Some(world.artifacts.refreshed_at_ms.saturating_add(600_000)),
+                out,
+            ),
+            ArtifactKind::File => {}
+        }
+    }
+}
+
+#[allow(clippy::too_many_arguments)]
+fn push_contextual(
+    parsed: &ParsedLine,
+    slot: &Slot,
+    expected: &str,
+    confidence: f32,
+    risk: Risk,
+    evidence: Vec<Evidence>,
+    dependencies: Vec<Dependency>,
+    expires_at_ms: Option<u64>,
+    out: &mut Vec<Candidate>,
+) {
+    let Some(first) = parsed.command_tokens().first() else {
+        return;
+    };
+    let resulting_line = format!("{}{}", &parsed.source[..first.start], expected);
+    if resulting_line == parsed.source || !resulting_line.starts_with(&parsed.source) {
+        return;
+    }
+    let Some(kind) = [
+        CandidateKind::Workflow,
+        CandidateKind::Command,
+        CandidateKind::Subcommand,
+        CandidateKind::Container,
+        CandidateKind::Service,
+        CandidateKind::Process,
+        CandidateKind::Path,
+    ]
+    .into_iter()
+    .find(|kind| slot.allows(*kind)) else {
+        return;
+    };
+    out.push(Candidate {
+        resulting_line,
+        kind,
+        source: CandidateSource::Workflow,
+        confidence,
+        risk,
+        evidence,
+        dependencies,
+        expires_at_ms,
+    });
+}
+
+fn focused_container<'a>(world: &'a WorldState, filter: Option<&str>) -> Option<&'a Container> {
+    let matches: Vec<&Container> = world
+        .docker
+        .containers
+        .iter()
+        .filter(|container| container.running)
+        .filter(|container| filter.is_none_or(|needle| container_matches(container, needle)))
+        .collect();
+    match matches.as_slice() {
+        [container] => Some(*container),
+        _ => None,
+    }
+}
+
+fn unsafe_shell_word(value: &str) -> bool {
+    value.is_empty()
+        || value.chars().any(|character| {
+            character.is_whitespace()
+                || character.is_control()
+                || matches!(character, '\\' | '\'' | '"' | '`' | '$' | ';' | '|' | '&')
+        })
 }
 
 fn personal_candidates(
@@ -113,6 +587,9 @@ fn personal_candidates(
         if history_command == current_command || !history_command.starts_with(current_command) {
             continue;
         }
+        if destructive_dd_device_replay(history_command) {
+            continue;
+        }
         let same_directory = !world.current_cwd.is_empty() && entry.cwd == world.current_cwd;
         let age = now_ms.saturating_sub(entry.last_used_ms);
         let mut confidence = 0.66 + (entry.count.min(10) as f32 * 0.020);
@@ -132,7 +609,7 @@ fn personal_candidates(
             format!("{typed_wrapper}{history_command}"),
             kind,
             confidence.min(0.86),
-            personal_risk(&entry.command),
+            Risk::Safe,
             evidence,
         ));
     }
@@ -151,42 +628,42 @@ fn normalized_history_command(command: &str) -> &str {
         .unwrap_or(trimmed)
 }
 
-fn personal_risk(command: &str) -> Risk {
-    let lower = command.trim_start().to_ascii_lowercase();
-    if lower.starts_with("rm ")
-        || lower.starts_with("sudo rm ")
-        || lower.starts_with("dd ")
-        || lower.starts_with("sudo dd ")
-        || lower.starts_with("shutdown")
-        || lower.starts_with("reboot")
-        || lower.starts_with("git reset")
-        || lower.starts_with("git clean")
-        || lower.starts_with("docker rm")
-        || lower.starts_with("docker system prune")
-    {
-        Risk::Dangerous
-    } else {
-        Risk::Safe
+fn destructive_dd_device_replay(command: &str) -> bool {
+    let trimmed = command.trim_start();
+    let normalized = trimmed
+        .strip_prefix("sudo ")
+        .map(str::trim_start)
+        .unwrap_or(trimmed);
+    if !normalized.starts_with("dd ") || !normalized.contains("of=/dev/") {
+        return false;
     }
+    let Some(parsed) = crate::shell::parse_line(trimmed, trimmed.len()) else {
+        return false;
+    };
+    let values = parsed.command_values();
+    values.first() == Some(&"dd")
+        && values.iter().any(|value| {
+            value
+                .strip_prefix("of=")
+                .is_some_and(|path| path.starts_with("/dev/"))
+        })
 }
 
 fn subcommand_candidates(parsed: &ParsedLine, slot: &Slot, out: &mut Vec<Candidate>) {
     let values = parsed.command_values();
-    let command = values[0];
-    let Some(spec) = specs::find(command) else {
-        return;
+    let nested_base = if parsed.trailing_space {
+        values.as_slice()
+    } else {
+        &values[..values.len().saturating_sub(1)]
     };
+    let spec = specs::find_nested(nested_base).or_else(|| specs::find(values[0]));
+    let Some(spec) = spec else { return };
     let actions = &spec.actions;
     let prefix = slot.prefix.as_str();
-    let mut base = if values.len() == 1 {
-        let mut value = parsed.source.clone();
-        if !parsed.trailing_space {
-            value.push(' ');
-        }
-        value
-    } else {
-        parsed.source[..slot.token_start].to_owned()
-    };
+    let mut base = parsed.source[..slot.token_start].to_owned();
+    if values.len() == 1 && !parsed.trailing_space {
+        base.push(' ');
+    }
 
     if prefix.is_empty() {
         if let Some(default) = spec.default {
@@ -208,6 +685,24 @@ fn subcommand_candidates(parsed: &ParsedLine, slot: &Slot, out: &mut Vec<Candida
                 } else {
                     0.62
                 },
+            ));
+        }
+    }
+}
+
+fn grammar_option_candidates(parsed: &ParsedLine, slot: &Slot, out: &mut Vec<Candidate>) {
+    let values = parsed.command_values();
+    let base_path = &values[..values.len().saturating_sub(1)];
+    let Some(spec) = specs::find_options(base_path) else {
+        return;
+    };
+    let base = &parsed.source[..slot.token_start];
+    for option in &spec.options {
+        if option.starts_with(&slot.prefix) && *option != slot.prefix {
+            out.push(Candidate::grammar(
+                format!("{base}{option}"),
+                CandidateKind::Option,
+                0.64,
             ));
         }
     }
@@ -248,6 +743,7 @@ fn process_candidates(
             kind: CandidateKind::Process,
             dependency: Dependency::ProcessGeneration(world.processes.generation),
             refreshed_at_ms: world.processes.refreshed_at_ms,
+            ttl_ms: 30_000,
         },
         out,
     );
@@ -286,6 +782,7 @@ fn service_candidates(
             kind: CandidateKind::Service,
             dependency: Dependency::ServiceGeneration(world.services.generation),
             refreshed_at_ms: world.services.refreshed_at_ms,
+            ttl_ms: 60_000,
         },
         out,
     );
@@ -317,6 +814,52 @@ fn git_ref_candidates(
             kind: CandidateKind::GitRef,
             dependency: Dependency::GitGeneration(world.git.generation),
             refreshed_at_ms: world.git.refreshed_at_ms,
+            ttl_ms: 120_000,
+        },
+        out,
+    );
+}
+
+fn host_candidates(
+    parsed: &ParsedLine,
+    slot: &Slot,
+    world: &WorldState,
+    now_ms: u64,
+    out: &mut Vec<Candidate>,
+) {
+    if slot.prefix.is_empty() || now_ms.saturating_sub(world.hosts.refreshed_at_ms) > 300_000 {
+        return;
+    }
+    let (user, host_prefix) = slot
+        .prefix
+        .rsplit_once('@')
+        .map(|(user, host)| (Some(user), host))
+        .unwrap_or((None, slot.prefix.as_str()));
+    let matches = world
+        .hosts
+        .hosts
+        .iter()
+        .map(|host| match user {
+            Some(user) => format!("{user}@{}", host.name),
+            None => host.name.clone(),
+        })
+        .filter(|name| {
+            name.starts_with(&slot.prefix)
+                || name
+                    .rsplit_once('@')
+                    .is_some_and(|(_, host)| host.starts_with(host_prefix))
+        })
+        .collect();
+    push_entity(
+        parsed,
+        slot,
+        EntitySet {
+            matches,
+            filter: None,
+            kind: CandidateKind::Host,
+            dependency: Dependency::HostGeneration(world.hosts.generation),
+            refreshed_at_ms: world.hosts.refreshed_at_ms,
+            ttl_ms: 300_000,
         },
         out,
     );
@@ -340,6 +883,7 @@ struct EntitySet<'a> {
     kind: CandidateKind,
     dependency: Dependency,
     refreshed_at_ms: u64,
+    ttl_ms: u64,
 }
 
 fn push_entity(parsed: &ParsedLine, slot: &Slot, entity: EntitySet<'_>, out: &mut Vec<Candidate>) {
@@ -349,6 +893,7 @@ fn push_entity(parsed: &ParsedLine, slot: &Slot, entity: EntitySet<'_>, out: &mu
         kind,
         dependency,
         refreshed_at_ms,
+        ttl_ms,
     } = entity;
     if matches.is_empty() || (matches.len() > 1 && slot.prefix.is_empty() && filter.is_none()) {
         return;
@@ -366,7 +911,8 @@ fn push_entity(parsed: &ParsedLine, slot: &Slot, entity: EntitySet<'_>, out: &mu
         generation: match dependency {
             Dependency::ProcessGeneration(value)
             | Dependency::ServiceGeneration(value)
-            | Dependency::GitGeneration(value) => value,
+            | Dependency::GitGeneration(value)
+            | Dependency::HostGeneration(value) => value,
             _ => 0,
         },
     }];
@@ -392,7 +938,7 @@ fn push_entity(parsed: &ParsedLine, slot: &Slot, entity: EntitySet<'_>, out: &mu
         risk: Risk::Safe,
         evidence,
         dependencies: vec![dependency],
-        expires_at_ms: Some(refreshed_at_ms.saturating_add(120_000)),
+        expires_at_ms: Some(refreshed_at_ms.saturating_add(ttl_ms)),
     });
 }
 

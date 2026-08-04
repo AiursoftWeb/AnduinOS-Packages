@@ -7,6 +7,7 @@ pub enum CandidateKind {
     GitRef,
     Service,
     Process,
+    Host,
     Path,
     Workflow,
 }
@@ -16,6 +17,7 @@ pub enum CandidateSource {
     Grammar,
     LiveEntity,
     Workflow,
+    Transition,
     Personal,
     Recovery,
     Filesystem,
@@ -40,7 +42,9 @@ pub enum Evidence {
     UpgradesAvailable(u32),
     DryRunGuard,
     PersonalFrequency(u32),
+    TransitionFrequency(u32),
     SameDirectory,
+    ProducedArtifact,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -50,7 +54,9 @@ pub enum Dependency {
     ProcessGeneration(u64),
     ServiceGeneration(u64),
     GitGeneration(u64),
+    HostGeneration(u64),
     FileGeneration(u64),
+    ArtifactGeneration(u64),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -93,6 +99,25 @@ impl Candidate {
             resulting_line,
             kind,
             source: CandidateSource::Personal,
+            confidence,
+            risk,
+            evidence,
+            dependencies: Vec::new(),
+            expires_at_ms: None,
+        }
+    }
+
+    pub(crate) fn transition(
+        resulting_line: String,
+        kind: CandidateKind,
+        confidence: f32,
+        risk: Risk,
+        evidence: Vec<Evidence>,
+    ) -> Self {
+        Self {
+            resulting_line,
+            kind,
+            source: CandidateSource::Transition,
             confidence,
             risk,
             evidence,

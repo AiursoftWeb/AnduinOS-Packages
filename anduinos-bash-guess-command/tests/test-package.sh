@@ -13,9 +13,7 @@ fail() { printf 'FAIL: %s\n' "$1" >&2; exit 1; }
 bash -n "$ROOT/download.sh" "$ROOT/build-engine.sh" \
     "$ROOT/build-native.sh" "$ROOT/update-command-specs.sh" \
     "$ROOT/assets/anduinos-bash-guess-command" \
-    "$ROOT/assets/carapace-wrapper" "$ROOT/tests/test-interactive.sh" \
-    "$ROOT/tests/test-engine-runtime.sh" "$ROOT/tests/test-offline.sh" \
-    "$ROOT/tests/test-performance.sh"
+    "$ROOT/tests/test-interactive.sh" "$ROOT/tests/test-engine-runtime.sh"
 
 grep -q 'anduinos-ghost.so' "$ROOT/anduinos-bash-guess-command.aosproj" ||
     fail 'native frontend is not packaged'
@@ -27,21 +25,39 @@ grep -q 'enable -f.*anduinos-ghost.so' "$ROOT/assets/anduinos-bash-guess-command
     fail 'loader does not enable the native frontend'
 grep -q 'PROMPT_COMMAND' "$ROOT/assets/anduinos-bash-guess-command" ||
     fail 'command observations are not installed'
-grep -q 'unshare --user --map-root-user --net' "$ROOT/assets/carapace-wrapper" ||
-    fail 'Carapace is not isolated from the network'
+if grep -Eqi 'carapace|(^|[[:space:]])complete([[:space:]]|$)' \
+    "$ROOT/assets/anduinos-bash-guess-command" \
+    "$ROOT/anduinos-bash-guess-command.aosproj"; then
+    fail 'the runtime package still modifies Tab completion'
+fi
 
 # The opt-out path must work even when package files do not exist.
 bash --noprofile --norc -ic \
     'set -u; ANDUINOS_GUESS_COMMAND=0; source "$1"' bash \
     "$ROOT/assets/anduinos-bash-guess-command" 2>/dev/null
 
+# Loading the package must preserve an existing programmable completion.
+TERM=xterm script -qefc \
+    "bash --noprofile --norc -ic 'complete -W sentinel apt; before=\$(complete -p apt); ANDUINOS_GUESS_ENGINE=0 source \"$ROOT/assets/anduinos-bash-guess-command\"; after=\$(complete -p apt); [[ \$before == \$after ]]'" \
+    /dev/null >/dev/null
+
 cargo test --offline --manifest-path "$ROOT/engine/Cargo.toml"
+grammar="$ROOT/engine/specs/generated-command-tree.tsv"
+grammar_nodes=$(awk -F '\t' 'NR > 1 { count++ } END { print count + 0 }' "$grammar")
+grammar_roots=$(awk -F '\t' 'NR > 1 && $1 !~ / / { count++ } END { print count + 0 }' "$grammar")
+path_slots=$(awk -F '\t' '$4 == "path" { count++ } END { print count + 0 }' "$grammar")
+((grammar_nodes >= 7000 && grammar_roots >= 700 && path_slots >= 1900)) ||
+    fail "generated grammar corpus is incomplete: $grammar_roots roots, $grammar_nodes nodes, $path_slots path slots"
 bash "$ROOT/build-engine.sh" "$ARCH"
 bash "$ROOT/build-native.sh" "$ARCH"
+runtime_bytes=$((
+    $(stat -c %s "$ROOT/deploy/$ARCH/anduinos-quietd") +
+    $(stat -c %s "$ROOT/deploy/$ARCH/anduinos-ghost.so")
+))
+((runtime_bytes < 20 * 1024 * 1024)) ||
+    fail "runtime payload exceeds 20 MiB: $runtime_bytes bytes"
 ANDUINOS_QUIETD="$ROOT/deploy/$ARCH/anduinos-quietd" \
     bash "$ROOT/tests/test-engine-runtime.sh"
 bash "$ROOT/tests/test-interactive.sh"
-bash "$ROOT/tests/test-offline.sh"
-bash "$ROOT/tests/test-performance.sh"
 
 printf 'All package integration checks passed.\n'

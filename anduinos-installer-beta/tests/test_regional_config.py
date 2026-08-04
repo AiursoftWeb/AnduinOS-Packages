@@ -128,6 +128,41 @@ class InstallInputMethodTests(unittest.TestCase):
                     any("apt-get" in command for command, _ in runner.commands)
                 )
 
+    def test_logs_the_gnome_input_source_value_and_destination(self):
+        selected = input_method("rime")
+        assert selected is not None
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_payload(target, selected)
+            messages = []
+            context = InstallContext(
+                plan_for(selected.id),
+                messages.append,
+                {
+                    "target": target,
+                    "chroot_environment_ready": True,
+                    "network_online": False,
+                },
+            )
+            InstallInputMethodStep(FakeRunner()).execute(context)
+
+        self.assertIn(
+            "GNOME input-source defaults: "
+            "sources=[('xkb', 'us'), ('ibus', 'rime')]",
+            messages,
+        )
+        self.assertIn(
+            "Writing GNOME input-source defaults to "
+            "/usr/share/glib-2.0/schemas/"
+            "99_anduinos_default_input.gschema.override",
+            messages,
+        )
+        self.assertIn(
+            "This is a system-wide default for new users; per-user dconf "
+            "and mru-sources remain managed by GNOME",
+            messages,
+        )
+
     def test_online_install_uses_only_the_selected_policy_packages(self):
         selected = input_method("mozc")
         assert selected is not None

@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-bash-guess-command</PackageName>
-    <PackageVersion>1.0.0-23</PackageVersion>
+    <PackageVersion>1.0.0-29</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>Fast offline ghost-text suggestions for interactive Bash, with typed local context, ranked history and network-isolated Carapace specifications.</PackageDescription>
+    <PackageDescription>Fast offline ghost-text suggestions for Bash, with semantic local context and transition-ranked history while preserving native Tab completion.</PackageDescription>
     <Section>shells</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
@@ -21,13 +21,9 @@
   <ItemGroup>
     <Dependency Include="bash (&gt;= 4.4)" />
     <Dependency Include="bash-completion" />
-    <Dependency Include="coreutils" />
-    <Dependency Include="util-linux" />
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="bash download.sh amd64" Condition="'$(Arch)' == 'amd64'" />
-    <PrebuildCommand Run="bash download.sh arm64" Condition="'$(Arch)' == 'arm64'" />
     <PrebuildCommand Run="bash build-engine.sh amd64" Condition="'$(Arch)' == 'amd64'" />
     <PrebuildCommand Run="bash build-engine.sh arm64" Condition="'$(Arch)' == 'arm64'" />
     <PrebuildCommand Run="bash build-native.sh amd64" Condition="'$(Arch)' == 'amd64'" />
@@ -35,11 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <IncludeFile Include="deploy/amd64/carapace" Target="/usr/lib/anduinos-bash-guess-command/carapace" Mode="755" Condition="'$(Arch)' == 'amd64'" />
-    <IncludeFile Include="deploy/arm64/carapace" Target="/usr/lib/anduinos-bash-guess-command/carapace" Mode="755" Condition="'$(Arch)' == 'arm64'" />
-    <IncludeFile Include="deploy/amd64/CARAPACE-LICENSE" Target="/usr/share/doc/anduinos-bash-guess-command/CARAPACE-LICENSE" Condition="'$(Arch)' == 'amd64'" />
-    <IncludeFile Include="deploy/arm64/CARAPACE-LICENSE" Target="/usr/share/doc/anduinos-bash-guess-command/CARAPACE-LICENSE" Condition="'$(Arch)' == 'arm64'" />
-    <IncludeFile Include="assets/carapace-wrapper" Target="/usr/lib/anduinos-bash-guess-command/bin/carapace" Mode="755" />
     <IncludeFile Include="deploy/amd64/anduinos-quietd" Target="/usr/lib/anduinos-bash-guess-command/anduinos-quietd" Mode="755" Condition="'$(Arch)' == 'amd64'" />
     <IncludeFile Include="deploy/arm64/anduinos-quietd" Target="/usr/lib/anduinos-bash-guess-command/anduinos-quietd" Mode="755" Condition="'$(Arch)' == 'arm64'" />
     <IncludeFile Include="deploy/amd64/anduinos-ghost.so" Target="/usr/lib/anduinos-bash-guess-command/anduinos-ghost.so" Mode="644" Condition="'$(Arch)' == 'amd64'" />

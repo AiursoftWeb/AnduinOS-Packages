@@ -1,4 +1,4 @@
-use crate::candidate::{Candidate, CandidateKind, CandidateSource, Dependency, Risk};
+use crate::candidate::{Candidate, CandidateKind, CandidateSource, Dependency};
 use crate::slot::{Slot, SlotKind};
 use crate::world::WorldState;
 use crate::Suggestion;
@@ -36,7 +36,8 @@ pub(crate) fn choose(
             // A small grammar-only ambiguity is still useful as quiet ghost
             // text. Carapace's stable specification order breaks the tie;
             // broad ambiguities remain silent.
-            let grammar_only = candidate.source == CandidateSource::Grammar
+            let grammar_only = candidate.kind != CandidateKind::Command
+                && candidate.source == CandidateSource::Grammar
                 && tied
                     .iter()
                     .all(|other| other.source == CandidateSource::Grammar);
@@ -98,15 +99,14 @@ fn eligible(
             Dependency::ProcessGeneration(generation) => *generation != world.processes.generation,
             Dependency::ServiceGeneration(generation) => *generation != world.services.generation,
             Dependency::GitGeneration(generation) => *generation != world.git.generation,
+            Dependency::HostGeneration(generation) => *generation != world.hosts.generation,
             Dependency::FileGeneration(generation) => *generation != world.files.generation,
+            Dependency::ArtifactGeneration(generation) => *generation != world.artifacts.generation,
         })
     {
         return false;
     }
     if slot.kind == SlotKind::DockerContainer && candidate.kind == CandidateKind::Path {
-        return false;
-    }
-    if candidate.risk == Risk::Dangerous && candidate.source == CandidateSource::Personal {
         return false;
     }
     true
@@ -116,15 +116,11 @@ fn score(candidate: &Candidate) -> f32 {
     let source_bonus = match candidate.source {
         CandidateSource::LiveEntity => 0.08,
         CandidateSource::Workflow => 0.06,
+        CandidateSource::Transition => 0.04,
         CandidateSource::Grammar => 0.0,
         CandidateSource::Personal => -0.03,
         CandidateSource::Recovery => 0.02,
         CandidateSource::Filesystem => -0.08,
     };
-    let risk_penalty = match candidate.risk {
-        Risk::Safe => 0.0,
-        Risk::Moderate => 0.04,
-        Risk::Dangerous => 0.30,
-    };
-    candidate.confidence + source_bonus - risk_penalty
+    candidate.confidence + source_bonus
 }

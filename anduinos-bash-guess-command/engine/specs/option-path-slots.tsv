@@ -1,0 +1,47 @@
+# command path<TAB>options whose following/separated value is a local path
+git add	--pathspec-from-file
+git apply	--directory
+git commit	-F,--file,-t,--template
+git config	-f,--file
+kubectl apply	-f,--filename,-k,--kustomize
+kubectl create	-f,--filename,-k,--kustomize
+kubectl delete	-f,--filename,-k,--kustomize
+kubectl diff	-f,--filename,-k,--kustomize
+kubectl replace	-f,--filename,-k,--kustomize
+helm install	-f,--values
+helm upgrade	-f,--values
+docker build	-f,--file
+docker run	--env-file
+docker compose	--env-file,-f,--file,--project-directory
+docker compose build	--env-file
+curl	-K,--config,-o,--output,-T,--upload-file,-b,--cookie,-c,--cookie-jar,--cacert,--cert,--key
+wget	-O,--output-document,-i,--input-file
+tar	-f,--file,-C,--directory,-T,--files-from,-X,--exclude-from
+zip	-b,--temp-path
+unzip	-d
+rsync	--exclude-from,--files-from,--include-from
+ssh	-F,-i,-E
+scp	-F,-i
+ssh-copy-id	-F,-i
+gpg	-o,--output,--keyring,--secret-keyring
+openssl	-in,-out,-key,-cert,-config
+ffmpeg	-i
+pandoc	-o,--output,--template,--reference-doc
+gcc	-o
+g++	-o
+clang	-o
+clang++	-o
+rustc	-o,--out-dir
+cargo	--manifest-path,--target-dir
+make	-C,-f,--file,--makefile
+cmake	-S,-B,--toolchain
+npm	--prefix
+pnpm	--dir
+systemctl	--root
+journalctl	--file,--directory,--root
+strace	-o
+ninja	-C,-f
+meson setup	--cross-file,--native-file
+psql	-f,--file
+mysql	--defaults-file,--defaults-extra-file
+mongosh	-f,--file
