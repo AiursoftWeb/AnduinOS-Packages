@@ -18,10 +18,13 @@ mod imp {
     pub struct SwapView {
         pub operation_running: RefCell<bool>,
         pub usage_bar: RefCell<Option<UsageBar>>,
+        pub partition_icon: RefCell<Option<gtk::Image>>,
+        pub partition_row: RefCell<Option<adw::ActionRow>>,
         pub status_icon: RefCell<Option<gtk::Image>>,
         pub enable_row: RefCell<Option<adw::SwitchRow>>,
         pub swappiness_scale: RefCell<Option<gtk::Scale>>,
         pub size_scale: RefCell<Option<gtk::Scale>>,
+        pub remove_file_btn: RefCell<Option<gtk::Button>>,
         pub settings_group: RefCell<Option<adw::PreferencesGroup>>,
         pub size_row: RefCell<Option<adw::ActionRow>>,
         pub adv_group: RefCell<Option<adw::PreferencesGroup>>,
@@ -99,7 +102,7 @@ impl SwapView {
         inner.append(
             &gtk::Label::builder()
                 .label(&i18n(
-                    "Disk-based swap file — the last line of defense when RAM is full",
+                    "Review installer-managed swap partitions and manage the legacy supplementary swap file",
                 ))
                 .css_classes(["caption"])
                 .halign(gtk::Align::Start)
@@ -109,22 +112,21 @@ impl SwapView {
 
         // Recommendation
         {
-            let total_ram = sysctl::read_total_ram().unwrap_or(32 * 1024 * 1024 * 1024);
-            let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
-            let rec_size = (total_ram / (1024 * 1024 * 1024)).max(1);
             let sw = sysctl::recommended_swappiness();
             let has_zram = !zram::read_zram_devices().is_empty();
             let sw_reason = if has_zram {
                 i18n("with Zram")
             } else {
+                let total_ram = sysctl::read_total_ram().unwrap_or(32 * 1024 * 1024 * 1024);
+                let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
                 i18n_fmt("for {0} GiB RAM", &[&format!("{:.0}", ram_gb)])
             };
             inner.append(
                 &gtk::Label::builder()
                     .use_markup(true)
                     .label(&i18n_fmt(
-                        "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>",
-                        &[&rec_size.to_string(), &sw.to_string(), &sw_reason],
+                        "<i>Recommended swappiness: {0} ({1})</i>",
+                        &[&sw.to_string(), &sw_reason],
                     ))
                     .css_classes(["caption"])
                     .halign(gtk::Align::Start)
@@ -146,12 +148,25 @@ impl SwapView {
         inner.append(&usage_bar);
         *imp.usage_bar.borrow_mut() = Some(usage_bar);
 
-        // ─── Main settings: Disk Swap + Zswap + Size ──────────────────
+        // ─── Main settings: partition status + legacy swapfile ────────
         let settings_group = adw::PreferencesGroup::builder().build();
 
-        // Disk Swap
+        let partition_row = adw::ActionRow::builder()
+            .title(&i18n("Swap partition"))
+            .subtitle(&i18n("Loading..."))
+            .build();
+        let partition_icon = gtk::Image::builder()
+            .icon_name("drive-harddisk-symbolic")
+            .pixel_size(24)
+            .build();
+        partition_row.add_prefix(&partition_icon);
+        settings_group.add(&partition_row);
+        *imp.partition_icon.borrow_mut() = Some(partition_icon);
+        *imp.partition_row.borrow_mut() = Some(partition_row);
+
+        // The switch controls /swapfile only. It never targets a partition.
         let enable_row = adw::SwitchRow::builder()
-            .title(&i18n("Disk Swap"))
+            .title(&i18n("Additional swap file"))
             .subtitle(&i18n("Loading..."))
             .build();
         let status_icon = gtk::Image::builder().pixel_size(24).build();
@@ -174,49 +189,31 @@ impl SwapView {
         settings_group.add(&zswap_switch_row);
         *imp.zswap_switch.borrow_mut() = Some(zswap_switch_row);
 
-        // Swap file size
-        let total_ram = sysctl::read_total_ram().unwrap_or(32 * 1024 * 1024 * 1024);
-        let max_size = (total_ram / (1024 * 1024 * 1024) * 2).max(64);
-        let hiber_active = hibernation::is_hibernation_configured();
-        let min_size = if hiber_active {
-            (total_ram / (1024 * 1024 * 1024)).max(1) + 1
-        } else {
-            1
-        };
-        let rec_size = (total_ram / (1024 * 1024 * 1024)).max(1);
-        let hint_str = if hiber_active {
-            i18n_fmt(
-                "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB",
-                &[&min_size.to_string(), &rec_size.max(min_size).to_string()],
-            )
-        } else {
-            i18n_fmt(
-                "Hibernation not detected — recommended: {0} GiB",
-                &[&rec_size.to_string()],
-            )
-        };
+        // Optional compatibility file. Zero means absent; partition capacity is
+        // intentionally not copied into this control.
         let size_row = adw::ActionRow::builder()
-            .title(&i18n("Swap file size"))
-            .subtitle(&hint_str)
+            .title(&i18n("Additional swap file size"))
+            .subtitle(&i18n("0 GiB means no supplementary swap file"))
             .build();
         let size_scale = gtk::Scale::builder()
             .orientation(gtk::Orientation::Horizontal)
-            .adjustment(&gtk::Adjustment::new(
-                rec_size.max(min_size) as f64,
-                min_size as f64,
-                max_size as f64,
-                1.0,
-                4.0,
-                0.0,
-            ))
+            .adjustment(&gtk::Adjustment::new(0.0, 0.0, 64.0, 1.0, 4.0, 0.0))
             .draw_value(true)
             .value_pos(gtk::PositionType::Right)
             .hexpand(true)
             .width_request(200)
             .build();
+        let remove_file_btn = gtk::Button::builder()
+            .label(&i18n("Remove incompatible file"))
+            .css_classes(["destructive-action"])
+            .valign(gtk::Align::Center)
+            .visible(false)
+            .build();
+        size_row.add_suffix(&remove_file_btn);
         size_row.add_suffix(&size_scale);
         settings_group.add(&size_row);
         *imp.size_scale.borrow_mut() = Some(size_scale);
+        *imp.remove_file_btn.borrow_mut() = Some(remove_file_btn);
         *imp.size_row.borrow_mut() = Some(size_row);
 
         inner.append(&settings_group);
@@ -369,6 +366,17 @@ impl SwapView {
             btn.connect_clicked(move |_| {
                 if let Some(v) = weak_self.upgrade() {
                     v.apply_all();
+                }
+            });
+        }
+
+        if let Some(btn) = imp.remove_file_btn.borrow().as_ref() {
+            let weak_self = self.downgrade();
+            btn.connect_clicked(move |_| {
+                if let Some(view) = weak_self.upgrade() {
+                    view.run_op(i18n("Removing incompatible swap file…"), || {
+                        swapfile::resize_swapfile(0).map(|_| ())
+                    });
                 }
             });
         }
@@ -555,11 +563,13 @@ impl SwapView {
         do_it();
     }
     fn toggle_swap(&self, enable: bool) {
-        let is_active = swapfile::is_swap_active();
+        let is_active = swapfile::read_managed_swapfile()
+            .map(|status| status.active)
+            .unwrap_or(false);
         if enable == is_active {
             return;
         }
-        let needs_confirm = is_active && hibernation::is_hibernation_configured();
+        let needs_confirm = is_active && hibernation::managed_swapfile_is_resume_target();
         let weak_self = self.downgrade();
 
         let do_toggle = move || {
@@ -585,7 +595,7 @@ impl SwapView {
                 utils::show_confirm(
                     &p,
                     &i18n("Hibernation Warning"),
-                    &i18n("Disabling swap will break hibernation. Continue?"),
+                    &i18n("This swap file is the configured resume target. Disabling it will break hibernation. Continue?"),
                     do_toggle,
                 );
             }
@@ -607,7 +617,8 @@ impl SwapView {
             .borrow()
             .as_ref()
             .map(|s| s.value() as u64)
-            .unwrap_or(2);
+            .unwrap_or(0);
+        let size_changed = sz != *imp.orig_size.borrow();
         let zswap_enabled = imp
             .zswap_switch
             .borrow()
@@ -648,20 +659,22 @@ impl SwapView {
         let weak_self = self.downgrade();
         let weak_self2 = weak_self.clone();
 
-        let needs_warn = hibernation::is_hibernation_configured() && {
-            let total_ram = sysctl::read_total_ram().unwrap_or(0);
-            (sz * 1024 * 1024 * 1024) < total_ram
-        };
+        let hibernation = hibernation::check_hibernation();
+        let resize_blocked = size_changed && hibernation.managed_swapfile_is_target;
 
         let do_apply = move || {
             if let Some(v) = weak_self2.upgrade() {
                 v.run_op(i18n("Applying settings…"), move || {
                     let mut errs = Vec::new();
+                    // Resize first: it is the riskiest operation and must not
+                    // leave unrelated settings partially applied on failure.
+                    if size_changed {
+                        if let Err(e) = swapfile::resize_swapfile(sz) {
+                            return Err(format!("Resize: {}", e));
+                        }
+                    }
                     if let Err(e) = sysctl::set_swappiness(sw) {
                         errs.push(format!("Swappiness: {}", e));
-                    }
-                    if let Err(e) = swapfile::resize_swapfile(sz) {
-                        errs.push(format!("Resize: {}", e));
                     }
                     // Only touch zswap persistence when the user actually changed
                     // zswap-specific parameters. Plain swapfile/swappiness changes
@@ -682,20 +695,14 @@ impl SwapView {
             }
         };
 
-        if needs_warn {
-            let total_ram = sysctl::read_total_ram().unwrap_or(0);
-            let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
+        if resize_blocked {
             if let Some(view) = weak_self.upgrade() {
                 let win = view.root().and_then(|r| r.downcast::<gtk::Window>().ok());
                 if let Some(p) = win {
-                    utils::show_confirm(
+                    utils::show_error(
                         &p,
                         &i18n("Hibernation Warning"),
-                        &format!(
-                            "Swap ({:.0} GiB) < RAM ({:.1} GiB) — hibernation may fail. Continue?",
-                            sz, ram_gb
-                        ),
-                        do_apply,
+                        &i18n("This swap file is the configured resume target. Its physical offset would change, so resize is blocked until hibernation is disabled."),
                     );
                 }
             }
@@ -708,46 +715,129 @@ impl SwapView {
         let imp = self.imp();
         *imp.refreshing.borrow_mut() = true;
 
-        if let Ok(status) = swapfile::read_swap_status() {
-            if let Some(icon) = imp.status_icon.borrow().as_ref() {
-                icon.set_icon_name(if status.active {
-                    Some("emblem-ok-symbolic")
-                } else {
-                    Some("emblem-important-symbolic")
-                });
-            }
-            if let Some(row) = imp.enable_row.borrow().as_ref() {
-                row.set_active(status.active);
-                if status.active {
-                    let total_gb = status.size_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
-                    let used_gb = status.used_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
-                    row.set_subtitle(&i18n_fmt(
-                        "Active — {0} GiB used / {1} GiB total",
-                        &[&format!("{:.1}", used_gb), &format!("{:.1}", total_gb)],
-                    ));
-                } else {
-                    row.set_subtitle(&i18n("Inactive"));
-                }
-            }
-            if let Some(bar) = imp.usage_bar.borrow().as_ref() {
-                if status.active && status.size_bytes > 0 {
-                    let frac = status.used_bytes as f64 / status.size_bytes as f64;
-                    let used_gb = status.used_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
-                    let total_gb = status.size_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
-                    bar.set_fraction(frac, &format!("{:.1} / {:.1} GiB", used_gb, total_gb));
-                } else {
-                    bar.set_fraction(0.0, &i18n("Inactive"));
-                }
-            }
-            // Update size slider to match actual swapfile
-            if status.active {
-                let gb = status.size_bytes / (1024 * 1024 * 1024);
-                if let Some(s) = imp.size_scale.borrow().as_ref() {
-                    s.set_value(gb as f64);
-                }
-                *imp.orig_size.borrow_mut() = gb;
+        let aggregate = swapfile::read_swap_status().unwrap_or_default();
+        let partitions = swapfile::read_swap_partitions().unwrap_or_default();
+        let managed = swapfile::read_managed_swapfile().unwrap_or_default();
+        let (filesystem_supported, filesystem) =
+            swapfile::swapfile_management_support().unwrap_or((false, i18n("unknown")));
+        let hibernation = hibernation::check_hibernation();
+        let maximum_file_gib = swapfile::maximum_swapfile_size_gib(managed.size_bytes);
+        let resize_supported = filesystem_supported
+            && !hibernation.managed_swapfile_is_target
+            && (managed.size_bytes > 0 || maximum_file_gib > 0);
+
+        if let Some(icon) = imp.partition_icon.borrow().as_ref() {
+            icon.set_icon_name(Some(if partitions.is_empty() {
+                "drive-harddisk-symbolic"
+            } else {
+                "emblem-ok-symbolic"
+            }));
+        }
+        if let Some(row) = imp.partition_row.borrow().as_ref() {
+            if partitions.is_empty() {
+                row.set_subtitle(&i18n(
+                    "No swap partition — a legacy swap file can be managed below",
+                ));
+            } else {
+                let details = partitions
+                    .iter()
+                    .map(|item| {
+                        format!(
+                            "{} · {:.1} GiB",
+                            item.path,
+                            item.size_bytes as f64 / (1024.0 * 1024.0 * 1024.0)
+                        )
+                    })
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                row.set_subtitle(&i18n_fmt(
+                    "{0} — installer-managed; size cannot be changed while the system is running",
+                    &[&details],
+                ));
             }
         }
+
+        if let Some(icon) = imp.status_icon.borrow().as_ref() {
+            icon.set_icon_name(Some(if managed.active {
+                "emblem-ok-symbolic"
+            } else {
+                "drive-harddisk-symbolic"
+            }));
+        }
+        if let Some(row) = imp.enable_row.borrow().as_ref() {
+            row.set_active(managed.active);
+            row.set_sensitive(managed.active || (filesystem_supported && managed.size_bytes > 0));
+            if managed.active {
+                row.set_subtitle(&i18n_fmt(
+                    "Active — {0} GiB used / {1} GiB total",
+                    &[
+                        &format!(
+                            "{:.1}",
+                            managed.used_bytes as f64 / (1024.0 * 1024.0 * 1024.0)
+                        ),
+                        &format!(
+                            "{:.1}",
+                            managed.size_bytes as f64 / (1024.0 * 1024.0 * 1024.0)
+                        ),
+                    ],
+                ));
+            } else if managed.size_bytes > 0 && !filesystem_supported {
+                row.set_subtitle(&i18n_fmt(
+                    "Present but inactive — activation is disabled on {0}",
+                    &[&filesystem],
+                ));
+            } else if managed.size_bytes > 0 {
+                row.set_subtitle(&i18n("Present but inactive"));
+            } else if resize_supported {
+                row.set_subtitle(&i18n("Not created — choose a size below to add one"));
+            } else if filesystem_supported && maximum_file_gib == 0 {
+                row.set_subtitle(&i18n("Not created — at least 20 GiB must remain free"));
+            } else {
+                row.set_subtitle(&i18n_fmt(
+                    "Unavailable on {0}; the swap partition remains active",
+                    &[&filesystem],
+                ));
+            }
+        }
+
+        if let Some(bar) = imp.usage_bar.borrow().as_ref() {
+            if aggregate.active && aggregate.size_bytes > 0 {
+                let frac = aggregate.used_bytes as f64 / aggregate.size_bytes as f64;
+                let used_gb = aggregate.used_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
+                let total_gb = aggregate.size_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
+                bar.set_fraction(frac, &format!("{:.1} / {:.1} GiB", used_gb, total_gb));
+            } else {
+                bar.set_fraction(0.0, &i18n("Inactive"));
+            }
+        }
+
+        let file_gib = if managed.size_bytes == 0 {
+            0
+        } else {
+            managed.size_bytes.div_ceil(1024 * 1024 * 1024)
+        };
+        if let Some(scale) = imp.size_scale.borrow().as_ref() {
+            scale.adjustment().set_upper(maximum_file_gib as f64);
+            scale.set_value(file_gib as f64);
+            scale.set_sensitive(resize_supported);
+        }
+        if let Some(button) = imp.remove_file_btn.borrow().as_ref() {
+            button.set_visible(!filesystem_supported && managed.size_bytes > 0 && !managed.active);
+        }
+        if let Some(row) = imp.size_row.borrow().as_ref() {
+            row.set_sensitive(resize_supported);
+            let subtitle = if hibernation.managed_swapfile_is_target {
+                i18n("Resize is locked because this file is the configured hibernation resume target")
+            } else if resize_supported {
+                i18n("Optional compatibility file; 0 GiB removes it and 20 GiB remains reserved for the system")
+            } else if filesystem == "btrfs" {
+                i18n("Disabled on Btrfs because a root-subvolume swap file would prevent Timeback snapshots")
+            } else {
+                i18n_fmt("Swap file resizing is unsupported on {0}", &[&filesystem])
+            };
+            row.set_subtitle(&subtitle);
+        }
+        *imp.orig_size.borrow_mut() = file_gib;
 
         if let Ok(val) = sysctl::read_swappiness() {
             if let Some(s) = imp.swappiness_scale.borrow().as_ref() {
@@ -756,18 +846,13 @@ impl SwapView {
             *imp.orig_swap.borrow_mut() = val;
         }
 
-        // Hide swap-dependent controls when swap is off — nothing to configure
-        let swap_active = imp
-            .enable_row
-            .borrow()
-            .as_ref()
-            .map(|s| s.is_active())
-            .unwrap_or(false);
+        // Zswap depends on any active disk-backed swap, not specifically /swapfile.
+        let swap_active = aggregate.active;
         if let Some(bar) = imp.usage_bar.borrow().as_ref() {
-            bar.set_visible(swap_active);
+            bar.set_visible(true);
         }
         if let Some(row) = imp.size_row.borrow().as_ref() {
-            row.set_visible(swap_active);
+            row.set_visible(true);
         }
         if let Some(row) = imp.zswap_switch.borrow().as_ref() {
             row.set_visible(swap_active);

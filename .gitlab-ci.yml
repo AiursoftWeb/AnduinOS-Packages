@@ -45,6 +45,18 @@ desktop-entry-policy:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH
 
+swapcontrol-tests:
+  stage: lint
+  script:
+    - cd anduinos-swapcontrol-gtk
+    - cargo fmt -- --check
+    - cargo test --locked
+    - bash -n data/helper
+    - msgfmt --check --check-format po/zh_CN.po -o /dev/null
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
 .publish:
   stage: publish
   before_script:

@@ -3,10 +3,10 @@
 ## 职责
 
 为 AnduinOS 提供**出厂默认**的 swap 配置。
-用户装完系统默认只有 **50% RAM 的 lz4 zram**，以及 `swappiness=100`；`zswap` 保持关闭，按需再由 GUI 开启。
+本包提供 **50% RAM 的 lz4 zram** 和 `swappiness=100`；新版安装器另外创建动态大小的专用磁盘 Swap 分区。`zswap` 保持关闭，按需再由 GUI 开启。
 
 **这个包不做的事情：** 不提供 GUI，不依赖 polkit，不依赖 GTK。
-用户自定义 → 用 `anduinos-swapcontrol-gtk`（纯配置编辑器，写 `/etc/default/anduinos-{zram,zswap}`）。
+用户自定义 → 用 `anduinos-swapcontrol-gtk`。它写 `/etc/default/anduinos-{zram,zswap}`、只读展示安装器管理的 Swap 分区，并继续管理旧系统的 `/swapfile`。
 
 ## 包含的服务
 
@@ -77,7 +77,7 @@ GUI 不再生成 systemd unit 到 `/etc`。GUI 只写 `/etc/default/anduinos-{zr
 
 ```
 anduinos-swapcontrol-gtk (GUI)
-  "纯配置编辑器 + 只读监控"
+  "配置编辑器 + 只读分区监控 + 旧 /swapfile 兼容"
        │
        │ 写 /etc/default/anduinos-zram
        │ 写 /etc/default/anduinos-zswap
@@ -85,11 +85,11 @@ anduinos-swapcontrol-gtk (GUI)
        │ 读 /sys/block/zram* / /sys/module/zswap/* / /proc/swaps
        ▼
 anduinos-swap-config (vendor)
-  "拥有所有执行逻辑"
+  "拥有 Zram/Zswap 执行逻辑"
   setup-zram.sh  → zramctl / mkswap / swapon
   setup-zswap.sh → echo to sysfs
 ```
 
 - **GUI 不写 systemd unit** — 只写声明式 config
-- **GUI 不调 zramctl/mkswap/swapon** — service 脚本全权负责
+- **GUI 不直接管理 Zram 设备** — service 脚本全权负责；兼容 `/swapfile` 的固定目标操作由 GUI helper 承担
 - **可以只装一个** — 没有硬依赖，但 GUI 会提示安装 swap-config 以启用持久化

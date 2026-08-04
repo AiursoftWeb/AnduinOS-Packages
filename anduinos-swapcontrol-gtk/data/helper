@@ -1,18 +1,207 @@
 #!/bin/bash
-# AnduinOS Swap Control helper — single polkit entry point
-# All privileged operations route through this script so polkit caches one auth.
-cmd="$1"; shift
+# AnduinOS Swap Control helper — single polkit entry point.
+set -euo pipefail
+
+readonly SWAPFILE=/swapfile
+readonly FSTAB=/etc/fstab
+readonly ROOT_RESERVE_BYTES=$((20 * 1024 * 1024 * 1024))
+
+swapfile_is_active() {
+    /usr/sbin/swapon --show=NAME --noheadings --raw | /usr/bin/grep -Fxq "$SWAPFILE"
+}
+
+remove_swapfile_fstab_entry() {
+    local temporary
+    temporary=$(/usr/bin/mktemp /etc/fstab.anduinos-swap.XXXXXX)
+    /usr/bin/awk '$1 != "/swapfile" { print }' "$FSTAB" > "$temporary"
+    /usr/bin/chmod --reference="$FSTAB" "$temporary"
+    /usr/bin/chown --reference="$FSTAB" "$temporary"
+    /usr/bin/mv -- "$temporary" "$FSTAB"
+}
+
+ensure_swapfile_fstab_entry() {
+    if ! /usr/bin/awk '$1 == "/swapfile" && $0 !~ /^[[:space:]]*#/ { found=1 } END { exit !found }' "$FSTAB"; then
+        /usr/bin/printf '%s\n' '/swapfile none swap sw,pri=10 0 0' >> "$FSTAB"
+    fi
+}
+
+swapfile_enable() {
+    [ ! -L "$SWAPFILE" ] || { echo "$SWAPFILE must not be a symbolic link" >&2; exit 1; }
+    [ -f "$SWAPFILE" ] || { echo "$SWAPFILE does not exist; choose a size first" >&2; exit 1; }
+    if ! swapfile_is_active; then
+        /usr/sbin/swapon --priority 10 -- "$SWAPFILE"
+    fi
+    ensure_swapfile_fstab_entry
+}
+
+swapfile_disable() {
+    if swapfile_is_active; then
+        /usr/sbin/swapoff -- "$SWAPFILE"
+    fi
+    remove_swapfile_fstab_entry
+}
+
+create_swapfile() {
+    local path="$1" length="$2"
+    /usr/bin/rm -f -- "$path"
+    /usr/bin/fallocate --length "$length" "$path" || return 1
+    /usr/bin/chmod 600 "$path" || return 1
+    /usr/sbin/mkswap "$path" >/dev/null || return 1
+}
+
+swapfile_resize() {
+    local size_gib="$1"
+    [[ "$size_gib" =~ ^[0-9]+$ ]] || { echo "Swapfile size must be an integer number of GiB" >&2; exit 2; }
+    (( size_gib <= 64 )) || { echo "Swapfile size cannot exceed 64 GiB" >&2; exit 2; }
+    [ ! -L "$SWAPFILE" ] || { echo "$SWAPFILE must not be a symbolic link" >&2; exit 1; }
+    if [ -e "$SWAPFILE" ] && [ ! -f "$SWAPFILE" ]; then
+        echo "$SWAPFILE is not a regular file" >&2
+        exit 1
+    fi
+
+    if (( size_gib == 0 )); then
+        swapfile_disable
+        /usr/bin/rm -f -- "$SWAPFILE"
+        exit 0
+    fi
+
+    local root_filesystem
+    root_filesystem=$(/usr/bin/findmnt --noheadings --output FSTYPE --target /)
+    case "$root_filesystem" in
+        ext2|ext3|ext4|xfs) ;;
+        btrfs)
+            echo "Additional swap files are disabled on the AnduinOS Btrfs snapshot root; use the installer-managed swap partition" >&2
+            exit 1
+            ;;
+        *)
+            echo "Swapfile resizing is not supported on $root_filesystem" >&2
+            exit 1
+            ;;
+    esac
+
+    local available_bytes requested_bytes old_allocated_bytes=0 old_size_bytes=0
+    available_bytes=$(/usr/bin/df --output=avail -B1 / | /usr/bin/tail -n 1)
+    requested_bytes=$((size_gib * 1024 * 1024 * 1024))
+    if [ -f "$SWAPFILE" ]; then
+        old_allocated_bytes=$(( $(/usr/bin/stat --format=%b "$SWAPFILE") * 512 ))
+        old_size_bytes=$(/usr/bin/stat --format=%s "$SWAPFILE")
+    fi
+    if (( available_bytes + old_allocated_bytes < requested_bytes + ROOT_RESERVE_BYTES )); then
+        echo "Not enough free space for this size while preserving 20 GiB for the system" >&2
+        exit 1
+    fi
+
+    local temporary backup was_active=0
+    temporary=/swapfile.anduinos-new
+    backup=/swapfile.anduinos-old
+    [ ! -e "$temporary" ] || { echo "$temporary already exists; remove the stale temporary file first" >&2; exit 1; }
+    [ ! -e "$backup" ] || { echo "$backup already exists; inspect the previous recovery file first" >&2; exit 1; }
+
+    if (( available_bytes >= requested_bytes + ROOT_RESERVE_BYTES )); then
+        # Preferred transaction: build and validate the replacement while the
+        # old file remains untouched, then switch paths atomically.
+        create_swapfile "$temporary" "${size_gib}G"
+        if swapfile_is_active; then
+            was_active=1
+            if ! /usr/sbin/swapoff -- "$SWAPFILE"; then
+                /usr/bin/rm -f -- "$temporary"
+                echo "The existing swapfile could not be disabled; no files were changed" >&2
+                exit 1
+            fi
+        fi
+        if [ -e "$SWAPFILE" ]; then
+            /usr/bin/mv -- "$SWAPFILE" "$backup"
+        fi
+        /usr/bin/mv -- "$temporary" "$SWAPFILE"
+        if ! /usr/sbin/swapon --priority 10 -- "$SWAPFILE"; then
+            /usr/bin/rm -f -- "$SWAPFILE"
+            if [ -e "$backup" ]; then
+                /usr/bin/mv -- "$backup" "$SWAPFILE"
+                if (( was_active )); then
+                    /usr/sbin/swapon --priority 10 -- "$SWAPFILE" || true
+                fi
+            fi
+            echo "The replacement swapfile could not be activated; the previous file was restored" >&2
+            exit 1
+        fi
+        /usr/bin/rm -f -- "$backup"
+    else
+        # Low-free-space compatibility path: swap contents are first returned
+        # to RAM, then the old allocation is released. If activation fails we
+        # recreate the old size and activation state.
+        if swapfile_is_active; then
+            was_active=1
+            /usr/sbin/swapoff -- "$SWAPFILE" || {
+                echo "The existing swapfile could not be disabled; no files were changed" >&2
+                exit 1
+            }
+        fi
+        /usr/bin/rm -f -- "$SWAPFILE"
+        if ! create_swapfile "$SWAPFILE" "${size_gib}G" || ! /usr/sbin/swapon --priority 10 -- "$SWAPFILE"; then
+            /usr/sbin/swapoff -- "$SWAPFILE" 2>/dev/null || true
+            /usr/bin/rm -f -- "$SWAPFILE"
+            if (( old_size_bytes > 0 )); then
+                if create_swapfile "$SWAPFILE" "$old_size_bytes" && (( was_active )); then
+                    /usr/sbin/swapon --priority 10 -- "$SWAPFILE" || true
+                fi
+            fi
+            echo "The replacement swapfile could not be activated; the previous size was recreated" >&2
+            exit 1
+        fi
+    fi
+    ensure_swapfile_fstab_entry
+}
+
+cmd="${1:-}"
+[ "$#" -gt 0 ] && shift
 case "$cmd" in
-    swapon)    /usr/sbin/swapon "$@" ;;
-    swapoff)   /usr/sbin/swapoff "$@" ;;
-    mkswap)    /usr/sbin/mkswap "$@" ;;
-    dd)        /usr/bin/dd "$@" ;;
-    chmod)     /usr/bin/chmod "$@" ;;
-    rm)        /usr/bin/rm "$@" ;;
-    sysctl)    /usr/sbin/sysctl "$@" ;;
-    modprobe)  /usr/sbin/modprobe "$@" ;;
-    tee)       /usr/bin/tee "$@" ;;
-    systemctl) /usr/bin/systemctl "$@" ;;
-    dmidecode) /usr/sbin/dmidecode "$@" ;;
+    swapfile-enable)
+        [ "$#" -eq 0 ] || exit 2
+        swapfile_enable
+        ;;
+    swapfile-disable)
+        [ "$#" -eq 0 ] || exit 2
+        swapfile_disable
+        ;;
+    swapfile-resize)
+        [ "$#" -eq 1 ] || exit 2
+        swapfile_resize "$1"
+        ;;
+    # Narrow, fixed-target operations retained for zram/zswap/sysctl.
+    rm)
+        [ "$#" -eq 2 ] && [ "$1" = "-f" ] || exit 2
+        case "$2" in
+            /etc/systemd/system/anduinos-zram.service|/etc/systemd/system/anduinos-zswap.service)
+                /usr/bin/rm -f -- "$2" ;;
+            *) exit 2 ;;
+        esac
+        ;;
+    sysctl)
+        [ "$#" -eq 2 ] && [ "$1" = "-w" ] || exit 2
+        [[ "$2" =~ ^vm\.swappiness=([0-9]|[1-9][0-9]|100)$ ]] || exit 2
+        /usr/sbin/sysctl -w "$2"
+        ;;
+    tee)
+        [ "$#" -eq 1 ] || exit 2
+        case "$1" in
+            /etc/sysctl.d/90-anduinos-swapcontrol.conf|/etc/default/anduinos-zram|/etc/default/anduinos-zswap)
+                /usr/bin/tee "$1" ;;
+            *) exit 2 ;;
+        esac
+        ;;
+    systemctl)
+        if [ "$#" -eq 1 ] && [ "$1" = "daemon-reload" ]; then
+            /usr/bin/systemctl daemon-reload
+        elif [ "$#" -eq 2 ] && [[ "$1" =~ ^(unmask|enable|restart)$ ]] && \
+             [[ "$2" =~ ^anduinos-(zram|zswap)\.service$ ]]; then
+            /usr/bin/systemctl "$1" "$2"
+        else
+            exit 2
+        fi
+        ;;
+    dmidecode)
+        [ "$#" -eq 2 ] && [ "$1" = "-t" ] && [ "$2" = "memory" ] || exit 2
+        /usr/sbin/dmidecode -t memory
+        ;;
     *)         echo "Unknown command: $cmd" >&2; exit 1 ;;
 esac

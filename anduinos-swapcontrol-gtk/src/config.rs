@@ -30,7 +30,6 @@ pub const VENDOR_ZSWAP_SERVICE: &str = "/usr/lib/systemd/system/anduinos-zswap.s
 // Proc / sys files
 pub const PROC_SWAPS: &str = "/proc/swaps";
 pub const PROC_MEMINFO: &str = "/proc/meminfo";
-pub const PROC_CRYPTO: &str = "/proc/crypto";
 pub const PROC_CMDLINE: &str = "/proc/cmdline";
 
 // Power / hibernation

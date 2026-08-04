@@ -2,91 +2,78 @@
 
 ## 职责
 
-AnduinOS 虚拟内存配置的 GTK4 GUI。**纯配置编辑器 + 只读状态展示。**
+AnduinOS 虚拟内存配置的 GTK4 GUI。它必须区分三种完全不同的对象：
 
-用户可以**查看、修改并持久化**：磁盘 swap、zswap 参数、zram 设备。
-**执行权完全交给 `anduinos-swap-config` 包。**
+- 安装器创建的磁盘 Swap 分区：只读展示，不在线调整大小；
+- 旧版 AnduinOS 的 `/swapfile`：继续支持启停和调整大小；
+- Zram/Zswap/sysctl：写声明式配置，并交给 `anduinos-swap-config` 应用。
 
----
+`/proc/swaps` 中发现一个非 Zram 设备，绝不意味着它就是 `/swapfile`。状态读取和
+写入目标必须使用同一个明确的设备身份。
 
-## 架构原则
+## Swap 分区
 
+新版安装器为 Btrfs 和 ext4 都创建动态大小的专用 Swap 分区。GUI 显示设备路径、
+容量和使用量，但不提供大小滑块。在线扩大该分区可能需要移动紧邻的根分区，不能
+包装成普通设置操作。
+
+分区容量由安装器策略决定：至少 2 GiB，保留至少 20 GiB 根空间，空间允许时优先
+满足向上取整的 RAM + 1 GiB，否则使用 RAM/2 的回退目标并封顶 64 GiB。
+
+## `/swapfile` 兼容层
+
+老用户已有的 `/swapfile` 是稳定、受支持的兼容路径。GUI 单独显示它；不存在时大小
+为 0 GiB，绝不能把 Swap 分区的容量填入这个滑块。
+
+- 支持 ext2/ext3/ext4/XFS；
+- 新大小最多 64 GiB，并始终为系统保留 20 GiB 可用空间；
+- Apply 仅在大小确实变化时触发文件替换；
+- `swapoff` 失败时不得修改文件；
+- 空间足够时先构建并验证替换文件，再切换路径；
+- 空间不足以同时容纳新旧文件时，释放已停用的旧文件，并在失败时重建旧容量；
+- 开关同步维护 `/etc/fstab`，而不是只改变当前启动周期；
+- 0 GiB 表示停用、移除 `/swapfile` 及其 fstab 项。
+
+AnduinOS 默认 Btrfs 根禁止创建额外 `/swapfile`。即使正确创建 NOCOW Swapfile，活跃
+文件仍会阻止包含它的 `@root` 子卷被 Timeback 快照。增加第七个 `@swap` 子卷属于
+安装器和 Timeback 的系统 ABI 变更，不能由这个 App 私自创建。
+
+## 休眠健康状态
+
+“内核提供 suspend-to-disk”不等于“休眠已经配置”。Dashboard 只有在以下条件全部
+满足时才显示 Ready：
+
+1. `/sys/power/state` 支持 `disk`，并且存在可用的 `/sys/power/disk` 模式；
+2. 内核命令行或 initramfs 配置声明了 resume 目标；
+3. UUID/路径能够解析为真实设备；
+4. 该目标当前是活跃 Swap；
+5. 目标容量至少达到向上取整的 RAM + 1 GiB。
+
+容量判断使用 Swap 文件的真实长度或块设备的真实容量，而不是 `/proc/swaps` 扣除
+Swap header 后的可用页数，避免将安装器精确创建的容量误报为不足。
+
+对于 Swapfile，resume 依赖底层块设备和 `resume_offset`。已作为 resume 目标的
+`/swapfile` 禁止调整大小，因为重新分配会改变物理 offset；用户必须先禁用休眠。
+关闭该文件也必须显示明确警告；即使文件暂时 inactive，仍保持目标身份和调整锁。
+无关的 Swap 分区休眠配置不会阻止调整兼容文件。
+
+## 提权边界
+
+所有 root 操作通过 `/usr/lib/anduinos-swapcontrol/helper` 和一个 polkit action。Helper
+只接受固定语义的 Swapfile 操作，以及固定路径/固定 unit 的 Zram、Zswap、sysctl
+操作。不得重新引入可向 `dd`、`rm`、`tee` 或 `systemctl` 透传任意参数的入口。
+
+## 与 `anduinos-swap-config` 的关系
+
+```text
+GUI                                      anduinos-swap-config
+──────────────────────────────────       ───────────────────────
+读 /proc/swaps、/sys、resume 配置
+管理兼容 /swapfile
+写 /etc/default/anduinos-zram       →    setup-zram.sh
+写 /etc/default/anduinos-zswap      →    setup-zswap.sh
+systemctl restart vendor service    →    应用 Zram/Zswap 配置
 ```
-GUI (本包)                           anduinos-swap-config (vendor)
-────────                             ─────────────────────────────
-写 /etc/default/anduinos-zram   →    setup-zram.sh 读取并执行
-写 /etc/default/anduinos-zswap  →    setup-zswap.sh 读取并执行
-systemctl restart service       →    service 重启 = 立即应用
-读 /sys/* /proc/*               ←    (只读 sysfs，无需 root)
-```
 
-**GUI 不做的事情：** 不调 zramctl，不写 sysfs，不生成 systemd unit。
-
----
-
-## 技术要点
-
-### 1. 单入口提权
-
-所有需要 root 的操作通过 `/usr/lib/anduinos-swapcontrol/helper` + polkit：
-
-```
-GUI → pkexec → helper → {swapon, swapoff, mkswap, dd, chmod, rm, sysctl, tee, systemctl}
-```
-
-已从 helper 中删除的废弃子命令：`zramctl`、`bash`（迁入 vendor service 后不再需要）。
-
-### 2. persist 层只写 config 文件
-
-`persist_zram()`: 写 `/etc/default/anduinos-zram` → `systemctl restart anduinos-zram.service`
-`persist_zswap()`: 写 `/etc/default/anduinos-zswap` → `systemctl restart anduinos-zswap.service`
-
-注意：即使是“关闭” zram / zswap，也必须 `restart` vendor service，而不是 `stop`。因为这两个 unit 都是 `Type=oneshot`，`stop` 不会把“禁用配置”重新写回内核状态。
-
-不再生成 systemd unit 到 `/etc`，不再调 mask/unmask。
-
-### 3. vendor service 存在性检查
-
-如果 `anduinos-swap-config` 未安装（用户跳过 Recommends 或手动卸载），persist 层返回明确的错误消息提示用户安装。GUI 不会静默失败。
-
-### 4. DefaultDependencies=no 是生死线
-
-所有 vendor service（由 anduinos-swap-config 提供）必须包含：
-```ini
-DefaultDependencies=no
-After=systemd-journald.socket
-Before=swap.target
-```
-
-详见 `anduinos-swap-config/ARCHITECTURE.md`。
-
-### 5. 只读操作不需要提权
-
-- `zram.rs`：读 `/sys/block/zram*/` 和 `/proc/swaps`（纯 fs::read_to_string）
-- `zswap.rs`：读 `/sys/module/zswap/parameters/*`（纯 fs::read_to_string）
-- `swapfile.rs`：读 `/proc/swaps`
-
-所有只读函数都不需要 pkexec，GUI 打开即可看到实时状态。
-
----
-
-## 与 anduinos-swap-config 的关系
-
-- **无硬依赖：** Recommends，不是 Depends。可以不装 config 包，GUI 仍能查看状态
-- **无 systemd unit 冲突：** GUI 不写 `/etc/systemd/system/`，vendor service 永远在 `/usr/lib/`
-- **用户配置优先：** `/etc/default/anduinos-zram` 是用户的显式选择，vendor service 优先读它，不存在才用 fallback
-
----
-
-## 迁移兼容性
-
-`persist_zram()` 和 `persist_zswap()` 首次运行时自动清理旧版遗留：
-- 删除 `/etc/systemd/system/anduinos-zram.service`（旧版 GUI 生成的 unit）
-- 删除 `/etc/systemd/system/anduinos-zswap.service`（旧版 GUI 生成的 unit）
-- 之后再对 vendor service 执行 `daemon-reload` / `unmask` / `restart`，避免 systemd 继续优先使用 `/etc` 下的旧 unit
-
-### 6. systemctl 失败必须向上抛
-
-写配置文件不等于“已经应用成功”。
-
-`persist_zram()` / `persist_zswap()` 对 `systemctl enable|restart|unmask|daemon-reload` 的失败都会返回错误，让 GUI 明确提示用户，而不是出现“配置写入了但实际没生效”的假成功。
+GUI 首次持久化 Zram/Zswap 时继续清理旧 GUI 生成的 `/etc/systemd/system` unit。Vendor
+service 固定由 `anduinos-swap-config` 安装在 `/usr/lib/systemd/system`。

@@ -542,10 +542,23 @@ impl DashboardView {
             l.set_text(if devs.is_empty() { &none_str } else { &dev_str });
         }
         let h = hibernation::check_hibernation();
-        let en = i18n("On");
-        let dis = i18n("Off");
         if let Some(l) = imp.hiber_sub.borrow().as_ref() {
-            l.set_text(if h.enabled { &en } else { &dis });
+            let state = if h.ready {
+                i18n("Ready")
+            } else if !h.system_supports || h.disk_modes.is_empty() {
+                i18n("Unsupported")
+            } else if h.configured_target.is_none() {
+                i18n("Not configured")
+            } else if h.resolved_target.is_none() {
+                i18n("Resume target missing")
+            } else if !h.target_active {
+                i18n("Resume target inactive")
+            } else if h.target_size_bytes < h.required_size_bytes {
+                i18n("Swap too small")
+            } else {
+                i18n("Not ready")
+            };
+            l.set_text(&state);
         }
         if let Ok(sw) = sysctl::read_swappiness() {
             let sw_str = format!("{}", sw);

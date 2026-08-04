@@ -292,14 +292,8 @@ msgstr "已启用 Zram"
 msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr "已启用 Zram — 优先使用快速压缩的 RAM 而非磁盘缓存"
 
-#~ msgid "<i>Recommended swappiness: {0} ({1})</i>"
-#~ msgstr "<i>推荐的交换倾向值：{0} ({1})</i>"
-
 #~ msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
 #~ msgstr "<i>推荐：{0} GiB 虚拟内存，交换倾向值 {1} ({2})</i>"
-
-#~ msgid "Active — {0} GiB used / {1} GiB total"
-#~ msgstr "活动 — 已用 {0} GiB / 共 {1} GiB"
 
 #~ msgid "Creating Zram device…"
 #~ msgstr "正在创建 Zram 设备…"
@@ -406,3 +400,97 @@ msgstr "已启用 Zram — 优先使用快速压缩的 RAM 而非磁盘缓存"
 #~ msgstr ""
 #~ "内核交换的激进程度——在 Zram 启用时，设置为 {0} 以优先使用快速压缩的 RAM 而"
 #~ "非磁盘缓存（推荐值：{0}）"
+
+# AnduinOS 2.0.1-5 swap partition and hibernation model
+msgid "for {0} GiB RAM"
+msgstr "适用于 {0} GiB 内存"
+
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>推荐的交换倾向值：{0}（{1}）</i>"
+
+msgid "Ready"
+msgstr "就绪"
+
+msgid "Unsupported"
+msgstr "不支持"
+
+msgid "Not configured"
+msgstr "未配置"
+
+msgid "Resume target missing"
+msgstr "休眠恢复目标不存在"
+
+msgid "Resume target inactive"
+msgstr "休眠恢复目标未激活"
+
+msgid "Swap too small"
+msgstr "虚拟内存容量不足"
+
+msgid "Not ready"
+msgstr "未就绪"
+
+msgid "Review installer-managed swap partitions and manage the legacy supplementary swap file"
+msgstr "查看由安装程序管理的虚拟内存分区，并管理旧版附加虚拟内存文件"
+
+msgid "Swap partition"
+msgstr "虚拟内存分区"
+
+msgid "Additional swap file"
+msgstr "附加虚拟内存文件"
+
+msgid "Additional swap file size"
+msgstr "附加虚拟内存文件大小"
+
+msgid "0 GiB means no supplementary swap file"
+msgstr "0 GiB 表示不创建附加虚拟内存文件"
+
+msgid "This swap file is the configured resume target. Disabling it will break hibernation. Continue?"
+msgstr "该虚拟内存文件是已配置的休眠恢复目标。禁用它将破坏休眠功能。是否继续？"
+
+msgid "This swap file is the configured resume target. Its physical offset would change, so resize is blocked until hibernation is disabled."
+msgstr "该虚拟内存文件是已配置的休眠恢复目标。调整大小会改变其物理偏移，因此在禁用休眠前无法调整。"
+
+msgid "unknown"
+msgstr "未知文件系统"
+
+msgid "No swap partition — a legacy swap file can be managed below"
+msgstr "没有虚拟内存分区 — 可在下方管理旧版虚拟内存文件"
+
+msgid "Remove incompatible file"
+msgstr "移除不兼容文件"
+
+msgid "Removing incompatible swap file…"
+msgstr "正在移除不兼容的虚拟内存文件…"
+
+msgid "{0} — installer-managed; size cannot be changed while the system is running"
+msgstr "{0} — 由安装程序管理；系统运行期间无法调整大小"
+
+msgid "Active — {0} GiB used / {1} GiB total"
+msgstr "活动 — 已用 {0} GiB / 共 {1} GiB"
+
+msgid "Present but inactive"
+msgstr "文件存在，但未激活"
+
+msgid "Present but inactive — activation is disabled on {0}"
+msgstr "文件存在但未激活 — 已禁止在 {0} 上激活"
+
+msgid "Not created — choose a size below to add one"
+msgstr "尚未创建 — 在下方选择大小即可添加"
+
+msgid "Not created — at least 20 GiB must remain free"
+msgstr "尚未创建 — 必须至少保留 20 GiB 可用空间"
+
+msgid "Unavailable on {0}; the swap partition remains active"
+msgstr "在 {0} 上不可用；虚拟内存分区仍保持激活"
+
+msgid "Resize is locked because this file is the configured hibernation resume target"
+msgstr "该文件是已配置的休眠恢复目标，因此大小已锁定"
+
+msgid "Optional compatibility file; 0 GiB removes it and 20 GiB remains reserved for the system"
+msgstr "可选的兼容文件；0 GiB 表示移除，并始终为系统保留 20 GiB 空间"
+
+msgid "Disabled on Btrfs because a root-subvolume swap file would prevent Timeback snapshots"
+msgstr "在 Btrfs 上已禁用，因为根子卷中的虚拟内存文件会阻止 Timeback 创建快照"
+
+msgid "Swap file resizing is unsupported on {0}"
+msgstr "不支持在 {0} 上调整虚拟内存文件大小"
