@@ -6,6 +6,7 @@ mod git_signing;
 mod home;
 mod i18n;
 mod model;
+mod passkeys;
 mod progress_dialog;
 mod ssh;
 mod window;
