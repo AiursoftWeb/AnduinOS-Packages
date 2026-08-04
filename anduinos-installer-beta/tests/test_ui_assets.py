@@ -12,7 +12,12 @@ class InstallerVisualAssetTests(unittest.TestCase):
         source = (ROOT / "src/pages.py").read_text(encoding="utf-8")
         self.assertIn('"configure-keyboard-layout":', source)
         self.assertIn('"install-language-packs":', source)
+        self.assertIn(
+            '"Ensure required language packs are installed", lang', source
+        )
         self.assertIn('"install-input-method":', source)
+        self.assertIn('_("Install input method", lang)', source)
+        self.assertIn('f" · {selected_method.display_name}"', source)
         self.assertIn('if status == "warning":', source)
 
     def test_optional_downloads_share_visible_offline_state(self):

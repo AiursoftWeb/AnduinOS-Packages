@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Callable
 
 from .model import Architecture
-from .steps import FailurePolicy, InstallContext, StepWarning
+from .steps import FailurePolicy, InstallContext, StepSkipped
 
 
 MIRRORS = (
@@ -189,8 +189,10 @@ class SelectFastestAptMirrorStep:
 
     def execute(self, context: InstallContext) -> None:
         if context.values.get("network_online") is False:
-            raise StepWarning(
-                "Skipped package mirror selection because the installer is offline"
+            context.values["apt_mirror_preserved"] = True
+            raise StepSkipped(
+                "Offline installation; kept the package mirror preset in the "
+                "installation image"
             )
         target = _target(context)
         source = target / "etc/apt/sources.list.d/ubuntu.sources"

@@ -10,7 +10,12 @@ from installer_core.regional_config import (
     ConfigureKeyboardStep,
     InstallInputMethodStep,
 )
-from installer_core.steps import InstallContext, StepWarning
+from installer_core.steps import (
+    InstallContext,
+    StepRunner,
+    StepStatus,
+    StepWarning,
+)
 
 
 def plan_for(method_id: str):
@@ -74,15 +79,42 @@ class ConfigureKeyboardTests(unittest.TestCase):
 
 
 class InstallInputMethodTests(unittest.TestCase):
-    def test_non_input_method_locale_runs_no_package_command(self):
+    def test_non_input_method_locale_is_skipped_and_clears_live_default(self):
         with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            override = (
+                target
+                / "usr/share/glib-2.0/schemas"
+                / "99_anduinos_default_input.gschema.override"
+            )
+            override.parent.mkdir(parents=True)
+            override.write_text("copied live-session default")
             runner = FakeRunner()
-            context = context_for(Path(directory), online=False)
+            context = context_for(target, online=False)
             step = InstallInputMethodStep(runner)
-            step.execute(context)
-            step.verify(context)
+            result = StepRunner([step]).run(context)
+        self.assertTrue(result.succeeded)
+        self.assertEqual(result.results[0].status, StepStatus.SKIPPED)
+        self.assertIn("not required", result.results[0].message)
         self.assertEqual(runner.commands, [])
         self.assertIsNone(context.values["input_method_installed"])
+        self.assertFalse(override.exists())
+
+    def test_unselected_recommended_input_method_is_skipped(self):
+        plan = plan_for("rime")
+        plan = replace(
+            plan,
+            regional=replace(plan.regional, input_method=None),
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            runner = FakeRunner()
+            context = context_for(Path(directory), plan, online=True)
+            result = StepRunner(
+                [InstallInputMethodStep(runner)]
+            ).run(context)
+        self.assertEqual(result.results[0].status, StepStatus.SKIPPED)
+        self.assertIn("not selected", result.results[0].message)
+        self.assertEqual(runner.commands, [])
 
     def test_every_input_method_warns_offline_when_payload_is_missing(self):
         for method_id in INPUT_METHODS:

@@ -30,6 +30,10 @@ class StepWarning(RuntimeError):
     """Skip the current action with a visible warning, regardless of policy."""
 
 
+class StepSkipped(RuntimeError):
+    """Report an expected no-op without counting it as a warning."""
+
+
 @dataclass
 class InstallContext:
     plan: InstallPlan
@@ -129,6 +133,13 @@ class StepRunner:
                 executed.append(step)
                 self.status(step.id, StepStatus.SUCCEEDED, "")
                 results.append(StepResult(step.id, StepStatus.SUCCEEDED))
+            except StepSkipped as error:
+                message = str(error)
+                context.log(f"[{step.id}] skipped: {message}")
+                self.status(step.id, StepStatus.SKIPPED, message)
+                results.append(
+                    StepResult(step.id, StepStatus.SKIPPED, message)
+                )
             except StepWarning as error:
                 message = str(error)
                 context.log(f"[{step.id}] warning: {message}")

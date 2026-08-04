@@ -2906,11 +2906,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     )
 
     selected_method = input_method(plan.regional.input_method)
-    input_method_title = (
-        selected_method.display_name
-        if selected_method is not None
-        else _("Language", lang)
-    )
+    input_method_title = _("Install input method", lang)
+    if selected_method is not None:
+        input_method_title += f" · {selected_method.display_name}"
     step_titles = {
         "detect-boot-environment": _(
             "Detect firmware and Secure Boot", lang
@@ -2937,7 +2935,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             "Select fastest package mirror", lang
         ),
         "prepare-secure-boot": _("Prepare Secure Boot", lang),
-        "install-language-packs": _("Install language support", lang),
+        "install-language-packs": _(
+            "Ensure required language packs are installed", lang
+        ),
         "refresh-package-indexes": _("Refresh package indexes", lang),
         "upgrade-system": _("Install system updates", lang),
         "ensure-timeback-machine": _(

@@ -38,7 +38,9 @@ and constructs every command itself.
   maintained HTTP+HTTPS Ubuntu mirror list, bandwidth-tests the five lowest
   latency candidates, and atomically replaces only `URIs:` fields in the
   target's Ubuntu Deb822 source. Current-architecture package indexes are used
-  first, with OOBE's `Contents-amd64.gz` probe as fallback. A failed update
+  first, with OOBE's `Contents-amd64.gz` probe as fallback. Offline installation
+  explicitly skips this step and preserves the source embedded in the image;
+  an online probe failure is a warning and preserves that source. A failed update
   restores the exact original source bytes and mode, retries once, and never
   weakens APT signature or `Valid-Until` verification.
 - Accounts: password authentication requires matching password entries. A

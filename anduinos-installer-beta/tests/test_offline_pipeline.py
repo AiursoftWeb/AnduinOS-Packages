@@ -42,7 +42,7 @@ class FinalOfflineStep:
 
 
 class OfflinePipelineTests(unittest.TestCase):
-    def test_every_online_only_step_warns_and_pipeline_continues(self):
+    def test_offline_mirror_is_skipped_and_pipeline_continues(self):
         with tempfile.TemporaryDirectory() as directory:
             os_release = Path(directory) / "os-release"
             os_release.write_text(
@@ -79,6 +79,7 @@ class OfflinePipelineTests(unittest.TestCase):
 
         self.assertTrue(result.succeeded)
         self.assertTrue(context.values["offline_pipeline_continued"])
+        self.assertTrue(context.values["apt_mirror_preserved"])
         self.assertFalse(
             any(
                 "apt-get" in command or "ubuntu-drivers" in command
@@ -89,7 +90,7 @@ class OfflinePipelineTests(unittest.TestCase):
             [item.status for item in result.results],
             [
                 StepStatus.WARNING,
-                StepStatus.WARNING,
+                StepStatus.SKIPPED,
                 StepStatus.WARNING,
                 StepStatus.WARNING,
                 StepStatus.WARNING,
@@ -97,6 +98,7 @@ class OfflinePipelineTests(unittest.TestCase):
                 StepStatus.SUCCEEDED,
             ],
         )
+        self.assertEqual(len(result.warnings), 5)
         terminal = [item for item in statuses if item[1] is not StepStatus.RUNNING]
         self.assertTrue(all(item[2] for item in terminal[:-1]))
 

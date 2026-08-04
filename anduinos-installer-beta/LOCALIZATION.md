@@ -70,6 +70,9 @@ keyboard offline, installs the selected language's exact Ubuntu base and GNOME
 language packs, and handles the selected input method independently. It reuses
 complete payloads already present on the installation medium. Offline or
 download failure is a visible warning and does not abort installation.
+The input-method progress row is independent from the physical keyboard and
+language-pack rows. It is explicitly skipped when the selected language needs
+no additional method or the user leaves the optional method unselected.
 Desktop-source registration is generated generically from JSON. Input-method
 packages own their shared defaults, so the installer never writes product
 configuration to `/etc/skel` or an existing user's home. Adding a language,

@@ -4,6 +4,7 @@ from installer_core.steps import (
     FailurePolicy,
     InstallContext,
     StepRunner,
+    StepSkipped,
     StepStatus,
     StepWarning,
 )
@@ -133,6 +134,26 @@ class StepRunnerTests(unittest.TestCase):
         self.assertTrue(result.succeeded)
         self.assertEqual(result.results[0].status, StepStatus.WARNING)
         self.assertIn("offline", result.results[0].message)
+
+    def test_explicit_expected_noop_is_skipped_without_warning(self):
+        class NoOpStep(FakeStep):
+            def execute(self, _context):
+                self.events.append(f"{self.id}:execute")
+                raise StepSkipped("Nothing needs to be changed")
+
+        events = []
+        statuses = []
+        result = StepRunner(
+            [NoOpStep("already-ready", events)],
+            status=lambda step, status, message: statuses.append(
+                (step, status, message)
+            ),
+        ).run(self.context())
+        self.assertTrue(result.succeeded)
+        self.assertEqual(result.results[0].status, StepStatus.SKIPPED)
+        self.assertEqual(result.warnings, ())
+        self.assertEqual(statuses[-1][1], StepStatus.SKIPPED)
+        self.assertIn("Nothing needs", result.results[0].message)
 
     def test_emits_running_and_terminal_status_for_each_step(self):
         events = []

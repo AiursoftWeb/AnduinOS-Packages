@@ -18,7 +18,7 @@ class InstallLanguagePacksStep:
 
     runner: CommandRunner
     id: str = "install-language-packs"
-    title: str = "Install language support"
+    title: str = "Ensure required language packs are installed"
     failure_policy: FailurePolicy = FailurePolicy.WARNING
     progress_weight: int = 3
     destructive: bool = False

@@ -11,7 +11,7 @@ from installer_core.mirrors import (
     select_fastest_mirror,
 )
 from installer_core.model import Architecture
-from installer_core.steps import InstallContext, StepWarning
+from installer_core.steps import InstallContext, StepRunner, StepStatus
 
 
 class FakeResponse:
@@ -43,17 +43,62 @@ class AdvancingClock:
 
 class MirrorSelectionTests(unittest.TestCase):
     def test_offline_step_does_not_probe_or_modify_sources(self):
-        context = InstallContext(
-            valid_plan(),
-            lambda _message: None,
-            {"network_online": False},
-        )
-        with (
-            patch("installer_core.mirrors.select_fastest_mirror") as select,
-            self.assertRaisesRegex(StepWarning, "offline"),
-        ):
-            SelectFastestAptMirrorStep().execute(context)
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            source = target / "etc/apt/sources.list.d/ubuntu.sources"
+            source.parent.mkdir(parents=True)
+            original = "URIs: http://image.example/ubuntu/\n"
+            source.write_text(original)
+            context = InstallContext(
+                valid_plan(),
+                lambda _message: None,
+                {"network_online": False, "target": target},
+            )
+            with patch(
+                "installer_core.mirrors.select_fastest_mirror"
+            ) as select:
+                result = StepRunner(
+                    [SelectFastestAptMirrorStep()]
+                ).run(context)
+            persisted = source.read_text()
+
         select.assert_not_called()
+        self.assertTrue(result.succeeded)
+        self.assertEqual(result.results[0].status, StepStatus.SKIPPED)
+        self.assertEqual(result.warnings, ())
+        self.assertIn("installation image", result.results[0].message)
+        self.assertTrue(context.values["apt_mirror_preserved"])
+        self.assertEqual(persisted, original)
+
+    def test_online_probe_failure_warns_and_preserves_image_mirror(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            (target / "etc").mkdir()
+            (target / "etc/os-release").write_text(
+                "NAME=AnduinOS\nVERSION_CODENAME=resolute\n"
+            )
+            source = target / "etc/apt/sources.list.d/ubuntu.sources"
+            source.parent.mkdir(parents=True)
+            original = "URIs: http://image.example/ubuntu/\n"
+            source.write_text(original)
+            context = InstallContext(
+                valid_plan(),
+                lambda _message: None,
+                {"network_online": True, "target": target},
+            )
+            with patch(
+                "installer_core.mirrors.select_fastest_mirror",
+                side_effect=RuntimeError("No mirror is reachable"),
+            ):
+                result = StepRunner(
+                    [SelectFastestAptMirrorStep()]
+                ).run(context)
+            persisted = source.read_text()
+
+        self.assertTrue(result.succeeded)
+        self.assertEqual(result.results[0].status, StepStatus.WARNING)
+        self.assertEqual(len(result.warnings), 1)
+        self.assertEqual(persisted, original)
 
     def test_arm64_bandwidth_probe_uses_arm64_then_amd64_fallback(self):
         requested = []

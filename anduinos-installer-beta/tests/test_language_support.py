@@ -66,6 +66,12 @@ class PackageRunner(FakeRunner):
 
 
 class InstallLanguagePacksTests(unittest.TestCase):
+    def test_step_title_describes_its_ensure_semantics(self):
+        self.assertEqual(
+            InstallLanguagePacksStep.title,
+            "Ensure required language packs are installed",
+        )
+
     def test_every_language_has_exact_safe_package_policy(self):
         for language in LANGUAGES:
             with self.subTest(language=language.code):

@@ -5,11 +5,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from languages import InputMethod, input_method
+from languages import InputMethod, input_method, language_for_locale
 
 from .command import CommandError, CommandRunner
 from .software import refresh_package_indexes
-from .steps import FailurePolicy, InstallContext, StepWarning
+from .steps import FailurePolicy, InstallContext, StepSkipped, StepWarning
 
 
 @dataclass
@@ -68,7 +68,18 @@ class InstallInputMethodStep:
         if method is None:
             context.values["input_method_installed"] = None
             context.log("Language input method: not required")
-            return
+            language = language_for_locale(context.plan.regional.locale)
+            if (
+                language is not None
+                and language.recommended_input_method is None
+            ):
+                raise StepSkipped(
+                    f"An additional input method is not required for "
+                    f"{language.native_name}"
+                )
+            raise StepSkipped(
+                "Skipped optional input method because it was not selected"
+            )
 
         context.log(
             f"Selected language input method: {method.display_name} "
