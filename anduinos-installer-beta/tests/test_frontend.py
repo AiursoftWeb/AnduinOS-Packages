@@ -432,6 +432,82 @@ class FrontendPlanTests(unittest.TestCase):
         self.assertEqual(plan.storage.disk.path, "/dev/vda")
         self.assertNotIn("/dev/", json.dumps(plan.storage.graph.to_dict()))
 
+    def test_preprobed_snapshot_does_not_probe_again(self):
+        values = state()
+        disk = DiskIdentity(
+            "/dev/sda", "serial:test", 64 * 1024**3, "Test", "test"
+        )
+        inventory = inventory_for(disk)
+        platform = PlatformProbe(
+            Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED
+        )
+        with (
+            patch("frontend.hash_password", return_value="$6$salt$hash"),
+            patch(
+                "frontend.probe_storage_inventory",
+                side_effect=AssertionError("inventory was already probed"),
+            ),
+            patch(
+                "frontend.probe_platform",
+                side_effect=AssertionError("platform was already probed"),
+            ),
+        ):
+            plan = create_install_plan(
+                values,
+                inventory=inventory,
+                platform=platform,
+            )
+        self.assertEqual(plan.storage.disk.stable_id, "serial:test")
+
+    def test_preprobed_snapshot_rejects_disappeared_target(self):
+        values = state()
+        replacement = DiskIdentity(
+            "/dev/sda", "serial:replacement", 64 * 1024**3
+        )
+        platform = PlatformProbe(
+            Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED
+        )
+        with patch("frontend.hash_password", return_value="$6$salt$hash"):
+            with self.assertRaisesRegex(FrontendPlanError, "changed"):
+                create_install_plan(
+                    values,
+                    inventory=inventory_for(replacement),
+                    platform=platform,
+                )
+
+    def test_preprobed_snapshot_rejects_changed_capacity(self):
+        values = state()
+        resized = DiskIdentity(
+            "/dev/sda", "serial:test", 128 * 1024**3, "Test", "test"
+        )
+        platform = PlatformProbe(
+            Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED
+        )
+        with patch("frontend.hash_password", return_value="$6$salt$hash"):
+            with self.assertRaisesRegex(FrontendPlanError, "changed"):
+                create_install_plan(
+                    values,
+                    inventory=inventory_for(resized),
+                    platform=platform,
+                )
+
+    def test_preprobed_snapshot_rejects_changed_topology(self):
+        values = state()
+        values["disk_topology_digest"] = "1" * 64
+        disk = DiskIdentity(
+            "/dev/sda", "serial:test", 64 * 1024**3, "Test", "test"
+        )
+        platform = PlatformProbe(
+            Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED
+        )
+        with patch("frontend.hash_password", return_value="$6$salt$hash"):
+            with self.assertRaisesRegex(FrontendPlanError, "topology changed"):
+                create_install_plan(
+                    values,
+                    inventory=inventory_for(disk),
+                    platform=platform,
+                )
+
     def test_guided_storage_is_always_enabled_in_beta(self):
         self.assertTrue(guided_storage_enabled())
 

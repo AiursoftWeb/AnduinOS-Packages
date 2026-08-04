@@ -14,8 +14,9 @@ from installer_core.executor import describe_installation_pipeline
 from installer_core.model import Filesystem, InstallMode, InstallPlan
 from installer_core.passwords import hash_password
 from installer_core.planning import build_plan
-from installer_core.probe import probe_platform
+from installer_core.probe import PlatformProbe, probe_platform
 from installer_core.storage_inventory import (
+    StorageInventory,
     bind_disk_topology,
     probe_storage_inventory as _probe_storage_inventory,
 )
@@ -184,7 +185,12 @@ def _clear_plaintext_passwords(state: dict[str, object]) -> None:
         clear_ui()
 
 
-def create_install_plan(state: dict[str, object]) -> InstallPlan:
+def create_install_plan(
+    state: dict[str, object],
+    *,
+    inventory: StorageInventory | None = None,
+    platform: PlatformProbe | None = None,
+) -> InstallPlan:
     try:
         storage_mode = InstallMode(
             str(state.get("storage_mode", InstallMode.ERASE_DISK.value))
@@ -225,7 +231,8 @@ def create_install_plan(state: dict[str, object]) -> InstallPlan:
     selected_path = str(state.get("disk") or "")
     selected_id = str(state.get("disk_stable_id") or "")
     selected_size = int(state.get("disk_size_bytes") or 0)
-    inventory = probe_storage_inventory()
+    if inventory is None:
+        inventory = probe_storage_inventory()
     selected = next(
         (
             item
@@ -239,11 +246,20 @@ def create_install_plan(state: dict[str, object]) -> InstallPlan:
         raise FrontendPlanError(
             "The selected disk changed or disappeared; select it again"
         )
+    selected_topology = str(state.get("disk_topology_digest") or "")
+    if (
+        selected_topology
+        and selected.topology_digest != selected_topology
+    ):
+        raise FrontendPlanError(
+            "The selected disk topology changed; select it again"
+        )
     # The path selected by GTK is a display hint only. Stable identity and
     # topology authorize the target; the executor resolves the current path.
     if selected_path != selected.identity.path:
         state["disk"] = selected.identity.path
-    platform = probe_platform()
+    if platform is None:
+        platform = probe_platform()
     plan = build_plan(
         state,
         selected.identity,
