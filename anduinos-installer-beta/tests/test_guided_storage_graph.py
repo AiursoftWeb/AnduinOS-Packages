@@ -2,7 +2,7 @@ import json
 import unittest
 from dataclasses import replace
 
-from helpers import valid_plan
+from helpers import TEST_PHYSICAL_MEMORY_BYTES, valid_plan
 from test_coexistence import windows_disk
 from installer_core.model import Filesystem, InstallMode, InstallPlan
 from installer_core.storage_graph import (
@@ -16,6 +16,7 @@ from installer_core.storage_graph_planning import (
     validate_storage_graph,
 )
 from installer_core.storage_inventory import StorageInventory
+from installer_core.swap_policy import calculate_swap_sizing
 from installer_core.validation import validate_plan
 
 
@@ -37,6 +38,17 @@ def guided_plan(*, free_gib=24, filesystem=Filesystem.BTRFS, reuse_esp=True):
     )
     extent = disk.free_extents[0]
     esp = disk.partitions[0] if reuse_esp else None
+    draft = replace(
+        draft,
+        storage=replace(
+            draft.storage,
+            swap_size_mib=calculate_swap_sizing(
+                TEST_PHYSICAL_MEMORY_BYTES,
+                extent.size_bytes,
+                esp_size_mib=(0 if esp is not None else 1024),
+            ).swap_size_mib,
+        ),
+    )
     graph = build_guided_coexistence_storage_graph(
         draft,
         disk,
@@ -51,7 +63,7 @@ def guided_plan(*, free_gib=24, filesystem=Filesystem.BTRFS, reuse_esp=True):
 
 class GuidedStorageGraphTests(unittest.TestCase):
     def test_reused_esp_preserves_every_existing_partition(self):
-        plan, inventory = guided_plan(free_gib=20.5)
+        plan, inventory = guided_plan(free_gib=22.5)
         graph = plan.storage.graph
         validate_storage_graph(plan)
         self.assertIs(
@@ -204,7 +216,7 @@ class GuidedStorageGraphTests(unittest.TestCase):
             validate_plan(changed)
 
     def test_small_extent_cannot_skip_esp_reuse(self):
-        disk = windows_disk(free_gib=20.5)
+        disk = windows_disk(free_gib=22.5)
         base = valid_plan()
         draft = replace(
             base,
@@ -213,6 +225,7 @@ class GuidedStorageGraphTests(unittest.TestCase):
                 mode=InstallMode.GUIDED_COEXISTENCE,
                 disk=disk.identity,
                 graph=None,
+                swap_size_mib=2 * 1024,
             ),
         )
         with self.assertRaisesRegex(ValueError, "requires a reusable ESP"):

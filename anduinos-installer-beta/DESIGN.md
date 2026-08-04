@@ -19,8 +19,14 @@ and constructs every command itself.
   and RAID are post-release-one work defined in
   [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
 - Filesystems: Btrfs by default, ext4 as an alternative.
-- Swap: a fixed 4 GiB disk swap partition plus the installed system's existing
-  50%-of-RAM LZ4 zram policy. zram has the higher priority.
+- Swap: a dynamically sized whole-GiB disk swap partition plus the installed
+  system's existing 50%-of-RAM LZ4 zram policy. Disk swap is never below 2 GiB
+  and never reduces the planned root filesystem below 20 GiB. When space
+  permits, the disk partition is rounded-up RAM plus 1 GiB so the layout has
+  hibernation capacity; otherwise it falls back to rounded-up RAM/2, capped at
+  64 GiB. zram has the higher runtime priority. Partition capacity alone does
+  not enable hibernation; resume configuration and platform support remain
+  separate requirements.
 - Live system: Casper remains the image/boot transport for release one. Its
   live-session state must not leak into the installed target.
 - Software: refreshing package indexes and installing available updates is
@@ -95,8 +101,9 @@ Before the first destructive command, the executor:
 1. Parses and validates the versioned `InstallPlan`.
 2. Re-probes architecture, firmware and Secure Boot.
 3. Resolves the selected whole disk and compares stable ID and byte size.
-4. Locates and verifies the source image.
-5. Runs every step's preflight check.
+4. Re-reads physical RAM and rejects a stale or forged dynamic swap size.
+5. Locates and verifies the source image.
+6. Runs every step's preflight check.
 
 The executor owns the ordered step list and each step's failure policy. Plans
 cannot mark failures optional. Partitioning, formatting, filesystem copying,
@@ -106,11 +113,11 @@ Cosmetic live-session cleanup may be best-effort.
 ## Deterministic erase-disk layouts
 
 amd64 uses GPT with a 2 MiB BIOS boot partition, 1 GiB EFI System Partition,
-4 GiB swap, and the remaining space as root. This supports either UEFI or
-Legacy BIOS without repartitioning.
+a policy-sized swap partition, and the remaining space as root. This supports
+either UEFI or Legacy BIOS without repartitioning.
 
-arm64 uses GPT with a 1 GiB EFI System Partition, 4 GiB swap, and the remaining
-space as root.
+arm64 uses GPT with a 1 GiB EFI System Partition, the same policy-sized swap,
+and the remaining space as root.
 
 The partition boundary is stable. The legacy `backend.py` single-`@`
 implementation is obsolete and must not be shipped; the new executor uses the
@@ -181,7 +188,7 @@ rounded visual boundary and obscure whether the card itself is active.
 - Milestone 1 — complete: plan schema, validation, hardware discovery,
   deterministic layouts, command generation and step state machine.
 - Milestone 2 — complete: privileged command boundary, hardware revalidation,
-  partition/format/mount/copy/unmount lifecycle, persistent fstab, 4 GiB disk
+  partition/format/mount/copy/unmount lifecycle, persistent fstab, dynamic disk
   swap and explicit zram defaults.
 - Milestone 3A — complete: target user, encrypted password input, sudo
   membership, root locking, hostname, locale, timezone, independent offline
@@ -201,7 +208,10 @@ rounded visual boundary and obscure whether the card itself is active.
 - Milestone 5A — implementation complete: GTK state is converted once into an
   immutable, versioned plan; plaintext passwords are erased after hashing; the
   destructive summary and final disk confirmation expose the exact platform,
-  disk identity, filesystem, swap and Secure Boot intent; a root-only helper
+  disk identity, planned partition layout, filesystem, swap and Secure Boot
+  intent. Dynamic swap includes a compact expandable formula showing the
+  current RAM, disk budget, hibernation target, fallback target and chosen
+  size; a root-only helper
   streams executor progress while shutdown, sleep and window-close paths are
   inhibited. The obsolete prototype backend is no longer shipped.
 - Milestone 5B — test infrastructure complete, execution pending: the

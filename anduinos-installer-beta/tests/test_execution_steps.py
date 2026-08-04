@@ -4,7 +4,11 @@ from dataclasses import replace
 from pathlib import Path
 
 from fakes import FakeRunner
-from helpers import valid_inventory, valid_plan
+from helpers import (
+    TEST_PHYSICAL_MEMORY_BYTES,
+    valid_inventory,
+    valid_plan,
+)
 from installer_core.execution_steps import (
     CopySystemStep,
     DetectBootEnvironmentStep,
@@ -112,7 +116,9 @@ class EnvironmentReportingTests(unittest.TestCase):
             0,
         )
         step = VerifyTargetDiskStep(
-            runner, inventory_probe=lambda: valid_inventory(plan)
+            runner,
+            inventory_probe=lambda: valid_inventory(plan),
+            physical_memory_probe=lambda: TEST_PHYSICAL_MEMORY_BYTES,
         )
         context = InstallContext(plan, logs.append)
         step.preflight(context)

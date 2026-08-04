@@ -51,10 +51,27 @@ def build_erase_disk_layout(plan: InstallPlan) -> PartitionLayout:
     if plan.storage.mode is not InstallMode.ERASE_DISK:
         raise ValueError("Only erase-disk layouts are implemented")
 
+    return build_erase_disk_layout_spec(
+        architecture=plan.platform.architecture,
+        filesystem=plan.storage.filesystem,
+        esp_size_mib=plan.storage.esp_size_mib,
+        swap_size_mib=plan.storage.swap_size_mib,
+    )
+
+
+def build_erase_disk_layout_spec(
+    *,
+    architecture: Architecture,
+    filesystem: Filesystem,
+    esp_size_mib: int,
+    swap_size_mib: int,
+) -> PartitionLayout:
+    """Build the same layout for a pre-installation UI preview."""
+
     cursor = ALIGNMENT_MIB
     parts: list[PartitionSpec] = []
 
-    if plan.platform.architecture is Architecture.AMD64:
+    if architecture is Architecture.AMD64:
         parts.append(
             PartitionSpec(
                 number=1,
@@ -74,13 +91,13 @@ def build_erase_disk_layout(plan: InstallPlan) -> PartitionLayout:
             number=esp_number,
             name="efi-system",
             start_mib=cursor,
-            end_mib=cursor + plan.storage.esp_size_mib,
+            end_mib=cursor + esp_size_mib,
             filesystem="fat32",
             mount_point="/boot/efi",
             flags=("esp",),
         )
     )
-    cursor += plan.storage.esp_size_mib
+    cursor += esp_size_mib
 
     swap_number = len(parts) + 1
     parts.append(
@@ -88,13 +105,13 @@ def build_erase_disk_layout(plan: InstallPlan) -> PartitionLayout:
             number=swap_number,
             name="swap",
             start_mib=cursor,
-            end_mib=cursor + plan.storage.swap_size_mib,
+            end_mib=cursor + swap_size_mib,
             filesystem="linux-swap",
             mount_point=None,
             flags=("swap",),
         )
     )
-    cursor += plan.storage.swap_size_mib
+    cursor += swap_size_mib
 
     root_number = len(parts) + 1
     parts.append(
@@ -103,7 +120,7 @@ def build_erase_disk_layout(plan: InstallPlan) -> PartitionLayout:
             name="root",
             start_mib=cursor,
             end_mib=None,
-            filesystem=plan.storage.filesystem.value,
+            filesystem=filesystem.value,
             mount_point="/",
         )
     )

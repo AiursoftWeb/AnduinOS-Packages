@@ -14,7 +14,7 @@ from typing import Any
 from .storage_graph import StorageGraph
 
 
-SCHEMA_VERSION = 6
+SCHEMA_VERSION = 7
 
 
 class Architecture(str, Enum):
@@ -76,7 +76,7 @@ class StorageSpec:
     disk: DiskIdentity
     filesystem: Filesystem = Filesystem.BTRFS
     esp_size_mib: int = 1024
-    swap_size_mib: int = 4096
+    swap_size_mib: int = 2048
     graph: StorageGraph | None = None
 
 

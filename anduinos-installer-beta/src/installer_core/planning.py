@@ -26,6 +26,10 @@ from .model import (
 from .probe import PlatformProbe
 from .storage_graph_planning import build_erase_disk_storage_graph
 from .storage_inventory import DiskTopologyBinding
+from .swap_policy import (
+    calculate_swap_sizing,
+    probe_physical_memory_bytes,
+)
 from .validation import validate_plan
 from .model import DiskIdentity, SecureBoot
 
@@ -38,11 +42,16 @@ def build_plan(
     *,
     disk_binding: DiskTopologyBinding,
     inventory_digest: str,
+    physical_memory_probe=probe_physical_memory_bytes,
 ) -> InstallPlan:
     locale = str(choices.get("locale") or DEFAULT_LOCALE)
     language = language_for_locale(locale)
     if language is None:
         raise ValueError(f"Unsupported installer locale: {locale}")
+    swap_sizing = calculate_swap_sizing(
+        physical_memory_probe(),
+        disk.expected_size_bytes,
+    )
     plan = InstallPlan(
         schema_version=SCHEMA_VERSION,
         source=SourceSpec(),
@@ -50,6 +59,7 @@ def build_plan(
             mode=InstallMode.ERASE_DISK,
             disk=disk,
             filesystem=Filesystem(str(choices.get("filesystem") or "btrfs")),
+            swap_size_mib=swap_sizing.swap_size_mib,
         ),
         platform=PlatformSpec(
             architecture=platform.architecture,

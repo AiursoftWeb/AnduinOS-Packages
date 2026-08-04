@@ -22,6 +22,7 @@ from installer_core.storage_ui import (
     recommended_guided_selection,
 )
 from installer_core.storage_write_set import StorageAction
+from installer_core.swap_policy import GIB
 
 
 INVENTORY_DIGEST = "e" * 64
@@ -39,6 +40,7 @@ def workflow(*, free_gib=24, live_device=""):
         inventory,
         PLATFORM,
         live_device=live_device,
+        physical_memory_probe=lambda: 8 * GIB,
     )
 
 
@@ -68,6 +70,8 @@ class StorageWorkflowTests(unittest.TestCase):
             tuple(item.name for item in preview.graph.partitions),
             ("swap", "root"),
         )
+        self.assertEqual(preview.swap_sizing.swap_size_mib, 3 * 1024)
+        self.assertFalse(preview.swap_sizing.hibernation_capacity)
 
     def test_user_can_choose_a_new_esp_when_extent_is_large_enough(self):
         model = workflow()
@@ -81,6 +85,8 @@ class StorageWorkflowTests(unittest.TestCase):
             tuple(item.name for item in preview.graph.partitions),
             ("efi-system", "swap", "root"),
         )
+        self.assertEqual(preview.swap_sizing.swap_size_mib, 2 * 1024)
+        self.assertFalse(preview.swap_sizing.hibernation_capacity)
         formats = {
             item.detail("filesystem")
             for item in preview.write_set.operations

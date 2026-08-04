@@ -217,9 +217,11 @@ as defined in [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
 
 ## Swap and hibernation
 
-Release one uses a dedicated 4 GiB swap partition for both Btrfs and ext4
-installs. It is independent of snapshots and avoids Btrfs swapfile physical
-offset and CoW constraints.
+AnduinOS uses a dedicated, dynamically sized swap partition for both Btrfs and
+ext4 installs. It is independent of snapshots and avoids Btrfs swapfile
+physical-offset and CoW constraints. The policy always reserves at least 2 GiB
+swap and 20 GiB root space. It prefers rounded-up RAM plus 1 GiB when that fits;
+otherwise it uses rounded-up RAM/2, capped at 64 GiB.
 
 AnduinOS also enables:
 
@@ -227,20 +229,17 @@ AnduinOS also enables:
 - zram priority 100;
 - disk swap priority 10.
 
-The 4 GiB partition is an availability feature, not a promise of hibernation.
-zram cannot be used as a persistent resume target.
+The size calculation can make the layout large enough for hibernation, but
+capacity is not a promise that hibernation is enabled. zram cannot be used as a
+persistent resume target.
 
 Hibernation must remain disabled or explicitly unsupported until the installer
-can:
+also configures and verifies the remaining resume path:
 
-- size persistent swap for the machine and expected compression ratio;
 - configure a stable resume device;
 - generate a matching initramfs;
 - verify resume with encryption and Secure Boot enabled;
-- handle memory upgrades and insufficient resume capacity.
-
-A later “enable hibernation” option may replace the fixed swap size with a
-calculated value. It must be an explicit storage-policy choice.
+- handle memory upgrades and runtime insufficient resume capacity.
 
 ## Snapshot retention and space pressure
 
@@ -304,7 +303,7 @@ Before Btrfs installation is release-ready, the installer must:
 - create the complete approved subvolume topology;
 - mount every subvolume with its intended options;
 - ensure snapshot-excluded paths are separate mounts;
-- configure the 4 GiB swap partition and zram priorities;
+- configure the policy-sized swap partition and zram priorities;
 - copy the live filesystem without importing live-session state;
 - generate and validate `fstab`;
 - install boot artifacts matching the target deployment;

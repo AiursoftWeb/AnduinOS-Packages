@@ -11,11 +11,17 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .command import CommandRunner
-from .model import InstallPlan, PlatformSpec
+from .model import InstallMode, InstallPlan, PlatformSpec
 from .probe import PlatformProbe, probe_platform
 from .storage_commands import partition_path
+from .storage_graph import BlockReferenceKind
 from .storage_graph_planning import resolve_storage_graph
 from .storage_inventory import StorageInventory, probe_storage_inventory
+from .swap_policy import (
+    SwapSizingError,
+    calculate_swap_sizing,
+    probe_physical_memory_bytes,
+)
 from .validation import (
     ExecutionPolicy,
     validate_plan_for_execution,
@@ -43,6 +49,7 @@ def verify_execution_environment(
     platform_probe: Callable[[], PlatformProbe] = probe_platform,
     inventory_probe: Callable[[], StorageInventory] = probe_storage_inventory,
     namespace_mount_probe: NamespaceMountProbe | None = None,
+    physical_memory_probe: Callable[[], int] | None = None,
     execution_policy: ExecutionPolicy = ExecutionPolicy.RELEASE,
 ) -> InstallPlan:
     """Reject stale or substituted hardware before any destructive command."""
@@ -57,6 +64,7 @@ def verify_execution_environment(
         runner,
         inventory_probe=inventory_probe,
         namespace_mount_probe=namespace_mount_probe,
+        physical_memory_probe=physical_memory_probe,
         execution_policy=execution_policy,
     )
 
@@ -90,6 +98,7 @@ def verify_target_disk_environment(
     *,
     inventory_probe: Callable[[], StorageInventory] = probe_storage_inventory,
     namespace_mount_probe: NamespaceMountProbe | None = None,
+    physical_memory_probe: Callable[[], int] | None = None,
     execution_policy: ExecutionPolicy = ExecutionPolicy.RELEASE,
 ) -> InstallPlan:
     validate_plan_for_execution(plan, execution_policy)
@@ -99,12 +108,60 @@ def verify_target_disk_environment(
         resolved_plan = resolve_storage_graph(plan, inventory_probe())
     except ValueError as error:
         raise PreflightError(str(error)) from error
+    try:
+        expected_swap = calculate_swap_sizing(
+            (physical_memory_probe or probe_physical_memory_bytes)(),
+            _installation_space_bytes(resolved_plan),
+            esp_size_mib=_installation_esp_size_mib(resolved_plan),
+        )
+    except (RuntimeError, SwapSizingError, ValueError) as error:
+        raise PreflightError(
+            f"Could not validate disk swap size: {error}"
+        ) from error
+    if resolved_plan.storage.swap_size_mib != expected_swap.swap_size_mib:
+        raise PreflightError(
+            "Planned disk swap size is stale: expected "
+            f"{expected_swap.swap_size_mib} MiB for the current memory and "
+            f"installation space, found "
+            f"{resolved_plan.storage.swap_size_mib} MiB"
+        )
     _reject_active_target_disk(
         runner,
         resolved_plan.storage.disk.path,
         namespace_mount_probe=namespace_mount_probe,
     )
     return resolved_plan
+
+
+def _installation_space_bytes(plan: InstallPlan) -> int:
+    if plan.storage.mode is InstallMode.ERASE_DISK:
+        return plan.storage.disk.expected_size_bytes
+    graph = plan.storage.graph
+    if graph is None:
+        raise ValueError("Guided storage graph is missing")
+    extents = tuple(
+        item
+        for item in graph.block_references
+        if item.kind is BlockReferenceKind.FREE_EXTENT
+    )
+    if len(extents) != 1:
+        raise ValueError(
+            "Guided storage graph must bind exactly one free extent"
+        )
+    return extents[0].expected_size_bytes
+
+
+def _installation_esp_size_mib(plan: InstallPlan) -> int:
+    if plan.storage.mode is InstallMode.ERASE_DISK:
+        return plan.storage.esp_size_mib
+    graph = plan.storage.graph
+    if graph is None:
+        raise ValueError("Guided storage graph is missing")
+    return (
+        plan.storage.esp_size_mib
+        if any(item.name == "efi-system" for item in graph.partitions)
+        else 0
+    )
 
 
 def _reject_active_target_disk(

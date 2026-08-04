@@ -49,6 +49,7 @@ from frontend import (
 from installer_core.btrfs import BTRFS_SUBVOLUMES
 from installer_core.account_security import AccountNextAction, account_next_action
 from installer_core.coexistence import CoexistenceNoticeCode
+from installer_core.layout import MIB, build_erase_disk_layout_spec
 from installer_core.model import (
     Filesystem,
     InstallMode,
@@ -64,6 +65,10 @@ from installer_core.storage_ui import (
     build_guided_storage_preview,
     build_guided_storage_confirmation,
     build_storage_workflow,
+)
+from installer_core.swap_policy import (
+    calculate_swap_sizing,
+    probe_physical_memory_bytes,
 )
 from installer_core.username_policy import (
     is_valid_username,
@@ -2559,6 +2564,7 @@ def build_summary_page(shared, nav_view):
             break
 
     secure_boot_enabled = False
+    platform = None
     try:
         platform = probe_platform()
         secure_boot_enabled = platform.secure_boot is SecureBoot.ENABLED
@@ -2584,6 +2590,18 @@ def build_summary_page(shared, nav_view):
         if filesystem == "btrfs"
         else _("single ext4 root filesystem", lang)
     )
+    swap_sizing = None
+    try:
+        swap_sizing = (
+            guided_preview.swap_sizing
+            if guided_mode and isinstance(guided_preview, GuidedStoragePreview)
+            else calculate_swap_sizing(
+                probe_physical_memory_bytes(),
+                int(shared.get("disk_size_bytes") or 0),
+            )
+        )
+    except (RuntimeError, ValueError):
+        pass
     lines = [
         f"<b>{_('Language', lang)}:</b> {lang_name}",
         f"<b>{_('Keyboard', lang)}:</b> "
@@ -2597,12 +2615,6 @@ def build_summary_page(shared, nav_view):
         f"<b>{_('Platform', lang)}:</b> {escape(platform_text)}",
         f"<b>{_('Filesystem', lang)}:</b> {escape(filesystem)}",
         f"<b>{_('Subvolumes', lang)}:</b> {escape(storage_detail)}",
-        f"<b>{_('Swap', lang)}:</b> "
-        + _(
-            "4 GiB disk swap (priority 10) + "
-            "50% RAM LZ4 zram (priority 100)",
-            lang,
-        ),
         f"<b>{_('System updates', lang)}:</b> "
         + (
             _("download and install", lang)
@@ -2723,6 +2735,44 @@ def build_summary_page(shared, nav_view):
                 ),
             ]
             lines[5:5] = coexistence_lines
+    elif platform is not None and swap_sizing is not None:
+        layout = build_erase_disk_layout_spec(
+            architecture=platform.architecture,
+            filesystem=Filesystem(filesystem),
+            esp_size_mib=1024,
+            swap_size_mib=swap_sizing.swap_size_mib,
+        )
+        disk_size_mib = int(shared.get("disk_size_bytes") or 0) // MIB
+        partition_rows = []
+        for item in layout.partitions:
+            size_mib = (
+                item.size_mib
+                if item.size_mib is not None
+                else max(0, disk_size_mib - item.start_mib)
+            )
+            size_text = _human_size(size_mib * MIB)
+            if item.end_mib is None:
+                size_text = f"≈ {size_text}"
+            details = [
+                f"#{item.number}",
+                item.name,
+                size_text,
+                item.filesystem or "—",
+            ]
+            if item.mount_point:
+                details.append(f"→ {item.mount_point}")
+            elif item.flags:
+                details.append(",".join(item.flags))
+            partition_rows.append(" · ".join(details))
+        lines[5:5] = [
+            f"<b>{_('Storage mode', lang)}:</b> "
+            + _(
+                "Erase every partition and all data on the selected disk.",
+                lang,
+            ),
+            f"<b>{_('New partitions', lang)}:</b>\n"
+            + escape("\n".join(partition_rows)),
+        ]
 
     summary_label = Gtk.Label(
         margin_start=48,
@@ -2737,6 +2787,53 @@ def build_summary_page(shared, nav_view):
     summary_card.set_margin_end(48)
     summary_card.set_margin_top(12)
     summary_card.append(summary_label)
+    if swap_sizing is not None:
+        swap_gib = swap_sizing.swap_size_mib // 1024
+        hibernation_gib = swap_sizing.hibernation_target_mib // 1024
+        runtime_gib = swap_sizing.runtime_target_mib // 1024
+        budget_gib = swap_sizing.disk_budget_mib // 1024
+        swap_details = [
+            f"RAM = {_human_size(swap_sizing.physical_memory_bytes)}",
+            "swap ≥ 2 GiB",
+            "/ ≥ 20 GiB",
+            f"swap ≤ {budget_gib} GiB  (disk − ESP − /)",
+            (
+                f"ceil(RAM) + 1 GiB = {hibernation_gib} GiB  ✓"
+                if swap_sizing.hibernation_capacity
+                else f"ceil(RAM) + 1 GiB = {hibernation_gib} GiB  ✗"
+            ),
+        ]
+        if not swap_sizing.hibernation_capacity:
+            swap_details.append(
+                f"ceil(RAM / 2) ≤ 64 GiB = {runtime_gib} GiB  ✓"
+            )
+        swap_details.append(f"⇒ swap = {swap_gib} GiB")
+        swap_explanation = Gtk.Expander(
+            label=f"{_('Swap', lang)}: {swap_gib} GiB · ⚙ AUTO ⓘ",
+            margin_start=12,
+            margin_end=12,
+            margin_bottom=8,
+        )
+        swap_explanation.set_tooltip_text(
+            _(
+                "4 GiB disk swap (priority 10) + "
+                "50% RAM LZ4 zram (priority 100)",
+                lang,
+            ).replace("4 GiB", f"{swap_gib} GiB", 1)
+        )
+        detail_label = Gtk.Label(
+            xalign=0,
+            wrap=True,
+            selectable=True,
+            margin_start=24,
+            margin_top=8,
+            margin_bottom=8,
+        )
+        detail_label.set_markup(
+            "<tt>" + escape("\n".join(swap_details)) + "</tt>"
+        )
+        swap_explanation.set_child(detail_label)
+        summary_card.append(swap_explanation)
     summary_scroll = Gtk.ScrolledWindow(
         hscrollbar_policy=Gtk.PolicyType.NEVER,
         vexpand=True,

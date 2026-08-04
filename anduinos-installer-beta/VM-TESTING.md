@@ -56,8 +56,8 @@ firmware for arm64.
    ABI from `BTRFS-DESIGN.md`; ext4 rows contain no Btrfs subvolume mounts.
 6. The EFI System Partition is mounted at `/boot/efi`; amd64 BIOS rows also
    boot through GRUB BIOS without depending on EFI NVRAM.
-7. A 4 GiB disk swap is active at priority 10. zram uses LZ4, 50% of RAM and
-   priority 100.
+7. The policy-sized disk swap is active at priority 10 (5 GiB for the matrix's
+   4 GiB RAM / 32 GiB disk rows). zram uses LZ4, 50% of RAM and priority 100.
 8. The created user can log in and use sudo; locale, timezone, keyboard,
    hostname and machine-id are correct.
 9. No live-session-only packages, mounts, DNS files or `policy-rc.d` remain.

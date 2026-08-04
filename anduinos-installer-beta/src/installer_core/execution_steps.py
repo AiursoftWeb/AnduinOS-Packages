@@ -15,6 +15,7 @@ from .model import Architecture, Firmware, InstallMode, SecureBoot
 from .steps import FailurePolicy, InstallContext
 from .storage_inventory import probe_storage_inventory
 from .storage_steps import deactivate_target_swap
+from .swap_policy import probe_physical_memory_bytes
 
 
 @dataclass
@@ -97,6 +98,7 @@ class DetectBootEnvironmentStep:
 class VerifyTargetDiskStep:
     runner: CommandRunner
     inventory_probe: object = probe_storage_inventory
+    physical_memory_probe: object = probe_physical_memory_bytes
     id: str = "verify-target-disk"
     title: str = "Verify target disk isolation"
     failure_policy: FailurePolicy = FailurePolicy.FATAL
@@ -108,6 +110,7 @@ class VerifyTargetDiskStep:
             context.plan,
             self.runner,
             inventory_probe=self.inventory_probe,
+            physical_memory_probe=self.physical_memory_probe,
             execution_policy=context.execution_policy,
         )
 

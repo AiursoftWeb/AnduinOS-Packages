@@ -5,7 +5,11 @@ from dataclasses import replace
 from unittest import mock
 
 from fakes import FakeRunner
-from helpers import valid_inventory, valid_plan
+from helpers import (
+    TEST_PHYSICAL_MEMORY_BYTES,
+    valid_inventory,
+    valid_plan,
+)
 from installer_core.preflight import (
     NamespaceMount,
     PreflightError,
@@ -24,6 +28,12 @@ class ExecutionPreflightTests(unittest.TestCase):
         )
         namespace_probe.start()
         self.addCleanup(namespace_probe.stop)
+        memory_probe = mock.patch(
+            "installer_core.preflight.probe_physical_memory_bytes",
+            return_value=TEST_PHYSICAL_MEMORY_BYTES,
+        )
+        memory_probe.start()
+        self.addCleanup(memory_probe.stop)
 
     def idle_target_runner(self, disk="/dev/nvme0n1"):
         runner = FakeRunner()
@@ -47,6 +57,10 @@ class ExecutionPreflightTests(unittest.TestCase):
             0,
         )
         return runner
+
+    @staticmethod
+    def memory_probe():
+        return TEST_PHYSICAL_MEMORY_BYTES
 
     def test_accepts_matching_platform_and_disk(self):
         plan = valid_plan()
@@ -113,6 +127,17 @@ class ExecutionPreflightTests(unittest.TestCase):
                     changed.secure_boot,
                 ),
                 inventory_probe=lambda: valid_inventory(plan),
+            )
+
+    def test_rejects_swap_size_planned_for_different_physical_memory(self):
+        plan = valid_plan()
+        runner = self.idle_target_runner()
+        with self.assertRaisesRegex(PreflightError, "swap size is stale"):
+            verify_target_disk_environment(
+                plan,
+                runner,
+                inventory_probe=lambda: valid_inventory(plan),
+                physical_memory_probe=lambda: 16 * 1024**3,
             )
 
     def test_rejects_mounted_partition_on_selected_disk(self):

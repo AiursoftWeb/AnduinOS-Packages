@@ -155,7 +155,7 @@ def build_guided_coexistence_storage_graph(
     if root.end_mib is None or (
         root.end_mib - root.start_mib
     ) * MIB < GUIDED_ROOT_MINIMUM_BYTES:
-        raise ValueError("Selected free extent leaves less than 16 GiB for root")
+        raise ValueError("Selected free extent leaves less than 20 GiB for root")
 
     if reused_esp is None:
         esp_id = partition_ids["efi-system"]

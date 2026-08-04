@@ -18,11 +18,12 @@ from .model import (
     SecureBoot,
 )
 from .storage_graph_planning import validate_storage_graph
+from .swap_policy import MINIMUM_DISK_SWAP_MIB, MINIMUM_ROOT_MIB
 from .username_policy import RESERVED_USERNAMES, is_valid_username
 
 
-MINIMUM_DISK_BYTES = 25 * 1024**3
-MINIMUM_ROOT_BYTES = 16 * 1024**3
+MINIMUM_DISK_BYTES = 24 * 1024**3
+MINIMUM_ROOT_BYTES = MINIMUM_ROOT_MIB * 1024**2
 HOSTNAME_RE = re.compile(
     r"^(?=.{1,63}$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
 )
@@ -101,17 +102,23 @@ def validate_plan(
     if not disk.stable_id.strip():
         errors.append("Target disk requires a stable hardware identifier")
     if disk.expected_size_bytes < MINIMUM_DISK_BYTES:
-        errors.append("Target disk must be at least 25 GiB")
+        errors.append("Target disk must be at least 24 GiB")
 
     reserved = (
         plan.storage.esp_size_mib + plan.storage.swap_size_mib + 4
     ) * 1024**2
     if disk.expected_size_bytes - reserved < MINIMUM_ROOT_BYTES:
-        errors.append("Partition layout leaves less than 16 GiB for root")
+        errors.append("Partition layout leaves less than 20 GiB for root")
     if plan.storage.esp_size_mib < 512:
         errors.append("EFI System Partition must be at least 512 MiB")
-    if plan.storage.swap_size_mib != 4096:
-        errors.append("AnduinOS release layout requires exactly 4096 MiB swap")
+    if (
+        type(plan.storage.swap_size_mib) is not int
+        or plan.storage.swap_size_mib < MINIMUM_DISK_SWAP_MIB
+        or plan.storage.swap_size_mib % 1024
+    ):
+        errors.append(
+            "Disk swap must be at least 2 GiB and use whole-GiB sizing"
+        )
     try:
         validate_storage_graph(plan)
     except ValueError as error:

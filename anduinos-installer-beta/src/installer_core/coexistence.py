@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 from .model import Firmware
+from .swap_policy import MINIMUM_DISK_SWAP_MIB, MINIMUM_ROOT_MIB
 from .storage_inventory import (
     DiskInventory,
     FreeExtent,
@@ -21,8 +22,8 @@ from .storage_inventory import (
 
 MIB = 1024**2
 GIB = 1024**3
-GUIDED_ROOT_MINIMUM_BYTES = 16 * GIB
-GUIDED_SWAP_BYTES = 4096 * MIB
+GUIDED_ROOT_MINIMUM_BYTES = MINIMUM_ROOT_MIB * MIB
+GUIDED_MINIMUM_SWAP_BYTES = MINIMUM_DISK_SWAP_MIB * MIB
 GUIDED_ESP_BYTES = 1024 * MIB
 GUIDED_ALIGNMENT_RESERVE_BYTES = 4 * MIB
 MINIMUM_REUSABLE_ESP_BYTES = 100 * MIB
@@ -120,7 +121,13 @@ def analyze_guided_coexistence(
         if not item.is_windows_critical_partition
         and bool(item.identity.partuuid)
         and not item.mountpoints
-        and item.identity.size_bytes >= GUIDED_ROOT_MINIMUM_BYTES
+        and item.identity.size_bytes
+        >= (
+            GUIDED_ROOT_MINIMUM_BYTES
+            + GUIDED_MINIMUM_SWAP_BYTES
+            + GUIDED_ALIGNMENT_RESERVE_BYTES
+            + (0 if esp_candidates else GUIDED_ESP_BYTES)
+        )
     )
 
     blockers: list[CoexistenceBlocker] = []
@@ -188,7 +195,7 @@ def _free_space_candidates(
 ) -> tuple[FreeSpaceCandidate, ...]:
     required_with_reused_esp = (
         GUIDED_ROOT_MINIMUM_BYTES
-        + GUIDED_SWAP_BYTES
+        + GUIDED_MINIMUM_SWAP_BYTES
         + GUIDED_ALIGNMENT_RESERVE_BYTES
     )
     required_with_new_esp = required_with_reused_esp + GUIDED_ESP_BYTES

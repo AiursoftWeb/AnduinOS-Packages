@@ -282,6 +282,7 @@ def create_install_plan(state: dict[str, object]) -> InstallPlan:
             plan.storage,
             mode=InstallMode.GUIDED_COEXISTENCE,
             filesystem=filesystem,
+            swap_size_mib=current_preview.swap_sizing.swap_size_mib,
             graph=current_preview.graph,
         ),
         boot=replace(plan.boot, install_fallback_path=False),

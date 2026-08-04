@@ -36,6 +36,11 @@ from .storage_inventory import (
     PartitionInventory,
     StorageInventory,
 )
+from .swap_policy import (
+    SwapSizing,
+    calculate_swap_sizing,
+    probe_physical_memory_bytes,
+)
 from .storage_write_set import (
     StorageAction,
     StorageWriteSet,
@@ -63,6 +68,7 @@ class StorageDiskChoice:
 class StorageWorkflow:
     inventory: StorageInventory
     platform: PlatformProbe
+    physical_memory_bytes: int
     disks: tuple[StorageDiskChoice, ...]
 
     def disk(self, stable_id: str) -> StorageDiskChoice:
@@ -89,6 +95,7 @@ class GuidedStoragePreview:
     disk: DiskInventory
     extent: FreeExtent
     reused_esp: PartitionInventory | None
+    swap_sizing: SwapSizing
 
 
 @dataclass(frozen=True)
@@ -121,7 +128,9 @@ def build_storage_workflow(
     platform: PlatformProbe,
     *,
     live_device: str = "",
+    physical_memory_probe=probe_physical_memory_bytes,
 ) -> StorageWorkflow:
+    physical_memory_bytes = physical_memory_probe()
     choices = tuple(
         StorageDiskChoice(
             disk=disk,
@@ -136,7 +145,9 @@ def build_storage_workflow(
         )
         for disk in inventory.disks
     )
-    return StorageWorkflow(inventory, platform, choices)
+    return StorageWorkflow(
+        inventory, platform, physical_memory_bytes, choices
+    )
 
 
 def recommended_guided_selection(
@@ -189,7 +200,17 @@ def build_guided_storage_preview(
         raise ValueError("Selected free extent changed")
     reused_esp = _selected_esp(choice, selection.reused_esp_partuuid)
 
-    plan = _preview_plan(selection, disk, workflow.platform)
+    swap_sizing = calculate_swap_sizing(
+        workflow.physical_memory_bytes,
+        extent.size_bytes,
+        esp_size_mib=(0 if reused_esp is not None else 1024),
+    )
+    plan = _preview_plan(
+        selection,
+        disk,
+        workflow.platform,
+        swap_sizing.swap_size_mib,
+    )
     graph = build_guided_coexistence_storage_graph(
         plan,
         disk,
@@ -208,6 +229,7 @@ def build_guided_storage_preview(
         disk=disk,
         extent=extent,
         reused_esp=reused_esp,
+        swap_sizing=swap_sizing,
     )
 
 
@@ -287,6 +309,7 @@ def _preview_plan(
     selection: GuidedStorageSelection,
     disk: DiskInventory,
     platform: PlatformProbe,
+    swap_size_mib: int,
 ) -> InstallPlan:
     """Create a secret-free draft used only by graph and write-set builders."""
 
@@ -297,6 +320,7 @@ def _preview_plan(
             mode=InstallMode.GUIDED_COEXISTENCE,
             disk=disk.identity,
             filesystem=selection.filesystem,
+            swap_size_mib=swap_size_mib,
         ),
         platform=PlatformSpec(
             architecture=platform.architecture,

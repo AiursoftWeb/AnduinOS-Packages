@@ -180,7 +180,7 @@ class GuidedCoexistenceEligibilityTests(unittest.TestCase):
 
     def test_existing_esp_can_enable_a_smaller_free_extent(self):
         with_esp = analyze_guided_coexistence(
-            windows_disk(free_gib=20.5),
+            windows_disk(free_gib=22.5),
             Firmware.UEFI,
         )
         self.assertTrue(with_esp.can_install_from_free_space)
@@ -188,7 +188,7 @@ class GuidedCoexistenceEligibilityTests(unittest.TestCase):
             with_esp.free_space_candidates[0].requires_reused_esp
         )
 
-        disk = windows_disk(free_gib=20.5)
+        disk = windows_disk(free_gib=22.5)
         without_esp = replace(
             disk,
             partitions=tuple(

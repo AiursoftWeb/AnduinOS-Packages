@@ -27,10 +27,12 @@ from installer_core.storage_inventory import (
     DiskTopologyBinding,
     StorageInventory,
 )
+from installer_core.swap_policy import GIB, calculate_swap_sizing
 
 
 TEST_TOPOLOGY_DIGEST = "a" * 64
 TEST_INVENTORY_DIGEST = "b" * 64
+TEST_PHYSICAL_MEMORY_BYTES = 8 * GIB
 
 
 def valid_plan(
@@ -64,6 +66,10 @@ def valid_plan(
             mode=InstallMode.ERASE_DISK,
             disk=selected_disk,
             filesystem=filesystem,
+            swap_size_mib=calculate_swap_sizing(
+                TEST_PHYSICAL_MEMORY_BYTES,
+                selected_disk.expected_size_bytes,
+            ).swap_size_mib,
         ),
         platform=PlatformSpec(
             architecture=architecture,

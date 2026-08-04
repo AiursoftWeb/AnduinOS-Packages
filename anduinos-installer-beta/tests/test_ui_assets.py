@@ -111,6 +111,21 @@ class InstallerVisualAssetTests(unittest.TestCase):
         self.assertNotIn("target_box", method_page)
         self.assertNotIn("Target:", method_page)
 
+    def test_review_exposes_partition_plan_and_expandable_swap_formula(self):
+        pages = (ROOT / "src/pages.py").read_text()
+        summary = pages.split("def build_summary_page", 1)[1]
+        for fragment in (
+            "build_erase_disk_layout_spec(",
+            'f"#{item.number}"',
+            "Gtk.Expander(",
+            "⚙ AUTO ⓘ",
+            '"swap ≥ 2 GiB"',
+            '"/ ≥ 20 GiB"',
+            'f"⇒ swap = {swap_gib} GiB"',
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, summary)
+
 
 if __name__ == "__main__":
     unittest.main()

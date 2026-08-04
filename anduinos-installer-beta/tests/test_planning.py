@@ -14,6 +14,7 @@ from installer_core.model import (
 from installer_core.planning import build_plan
 from installer_core.probe import PlatformProbe
 from installer_core.storage_inventory import DiskTopologyBinding
+from installer_core.swap_policy import GIB
 
 
 class PlanningTests(unittest.TestCase):
@@ -47,6 +48,7 @@ class PlanningTests(unittest.TestCase):
                 TEST_TOPOLOGY_DIGEST,
             ),
             inventory_digest=TEST_INVENTORY_DIGEST,
+            physical_memory_probe=lambda: 8 * GIB,
         )
         self.assertEqual(plan.regional.input_method, "rime")
         self.assertEqual(plan.regional.keyboard.layout, "us")
@@ -55,6 +57,7 @@ class PlanningTests(unittest.TestCase):
         self.assertTrue(plan.software.install_third_party_drivers)
         self.assertTrue(plan.identity.sudo_without_password)
         self.assertIsNotNone(plan.storage.graph)
+        self.assertEqual(plan.storage.swap_size_mib, 9 * 1024)
 
     def test_locale_not_untrusted_ui_language_field_selects_input_method(self):
         original = valid_plan()
