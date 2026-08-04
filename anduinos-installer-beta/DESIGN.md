@@ -83,6 +83,12 @@ digest between the desktop process and the root executor.
 The policy never authorizes `parted` itself, so the UI cannot turn this probe
 into a partition-table write. Destructive work remains isolated in the
 separate plan-only executor.
+The root executor creates a private mount namespace and recursively disables
+mount propagation before it reads or executes a plan. Target and chroot mounts
+therefore cannot leak into long-running Live-session services. A target mount
+left in another process namespace by an older installer run is detected before
+the first disk write and requires a Live-session restart; the installer does
+not force-unmount unrelated process namespaces.
 
 Before the first destructive command, the executor:
 

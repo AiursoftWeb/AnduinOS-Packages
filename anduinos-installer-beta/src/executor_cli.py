@@ -14,6 +14,7 @@ from installer_core.destructive_test import (
     require_disposable_guided_vm,
 )
 from installer_core.model import InstallPlan
+from installer_core.mount_namespace import isolate_mount_namespace
 from installer_core.validation import (
     ExecutionPolicy,
     validate_plan_for_execution,
@@ -28,6 +29,7 @@ def main() -> int:
         return 1
     try:
         policy = execution_policy(sys.argv[1:], dict(os.environ))
+        isolate_mount_namespace()
         line = sys.stdin.readline()
         if not line:
             raise ValueError("No installation plan was provided")

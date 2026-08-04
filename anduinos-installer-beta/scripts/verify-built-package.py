@@ -23,6 +23,7 @@ REQUIRED_FILES = (
     LIB / "installer_core/execution_boundaries.py",
     LIB / "installer_core/guided_evidence.py",
     LIB / "installer_core/guided_test_plan.py",
+    LIB / "installer_core/mount_namespace.py",
     LIB / "installer_core/regional_config.py",
     Path("usr/bin/anduinos-installer-executor"),
     Path("usr/bin/anduinos-installer-storage-probe"),
@@ -84,6 +85,13 @@ def verify_staged_root(root: Path) -> dict[str, object]:
     launcher = wrapper.read_text()
     if 'if [ "$#" -ne 0 ]' not in launcher or 'executor_cli.py "$@"' in launcher:
         raise RuntimeError("Public executor wrapper can forward test arguments")
+    executor_source = (root / LIB / "executor_cli.py").read_text()
+    if (
+        "isolate_mount_namespace()" not in executor_source
+        or executor_source.index("isolate_mount_namespace()")
+        > executor_source.index("sys.stdin.readline()")
+    ):
+        raise RuntimeError("Executor does not isolate mounts before reading plans")
     storage_probe = root / "usr/bin/anduinos-installer-storage-probe"
     if not stat.S_IMODE(storage_probe.stat().st_mode) & 0o111:
         raise RuntimeError("Storage probe wrapper is not executable")

@@ -1,10 +1,15 @@
+import os
+import stat
 import unittest
 from dataclasses import replace
+from unittest import mock
 
 from fakes import FakeRunner
 from helpers import valid_inventory, valid_plan
 from installer_core.preflight import (
+    NamespaceMount,
     PreflightError,
+    _find_target_mount,
     verify_execution_environment,
     verify_target_disk_environment,
 )
@@ -12,6 +17,14 @@ from installer_core.probe import PlatformProbe
 
 
 class ExecutionPreflightTests(unittest.TestCase):
+    def setUp(self):
+        namespace_probe = mock.patch(
+            "installer_core.preflight.probe_cross_namespace_target_mount",
+            return_value=None,
+        )
+        namespace_probe.start()
+        self.addCleanup(namespace_probe.stop)
+
     def idle_target_runner(self, disk="/dev/nvme0n1"):
         runner = FakeRunner()
         runner.outputs[
@@ -176,3 +189,41 @@ class ExecutionPreflightTests(unittest.TestCase):
                 runner,
                 inventory_probe=lambda: valid_inventory(plan),
             )
+
+    def test_rejects_target_mount_hidden_in_another_namespace(self):
+        plan = valid_plan()
+        runner = self.idle_target_runner()
+
+        with self.assertRaisesRegex(
+            PreflightError,
+            "Restart the Live environment",
+        ):
+            verify_target_disk_environment(
+                plan,
+                runner,
+                inventory_probe=lambda: valid_inventory(plan),
+                namespace_mount_probe=lambda _paths: NamespaceMount(
+                    "/dev/nvme0n1p4", "/target", 1071
+                ),
+            )
+
+    def test_mountinfo_matches_btrfs_source_when_device_number_is_virtual(self):
+        mountinfo = (
+            "519 78 0:75 /@root /target rw,noatime shared:427 - "
+            "btrfs /dev/vda4 rw,compress=zstd:3\n"
+        )
+
+        with mock.patch("installer_core.preflight.os.stat") as stat_call:
+            source_stat = stat_call.return_value
+            source_stat.st_mode = stat.S_IFBLK
+            source_stat.st_rdev = os.makedev(253, 4)
+            match = _find_target_mount(
+                mountinfo,
+                {(253, 4): "/dev/vda4"},
+                1071,
+            )
+
+        self.assertEqual(
+            match,
+            NamespaceMount("/dev/vda4", "/target", 1071),
+        )

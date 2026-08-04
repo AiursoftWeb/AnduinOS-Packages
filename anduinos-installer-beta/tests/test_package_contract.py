@@ -167,6 +167,13 @@ class PackageContractTests(unittest.TestCase):
                         '#!/bin/sh\nif [ "$#" -ne 1 ]; then exit 2; fi\n'
                     )
                     path.chmod(0o755)
+                elif relative == Path(
+                    "usr/lib/anduinos-installer-beta/executor_cli.py"
+                ):
+                    path.write_text(
+                        "isolate_mount_namespace()\n"
+                        "sys.stdin.readline()\n"
+                    )
                 else:
                     path.write_text("# package fixture\n")
             result = verifier.verify_staged_root(root)
