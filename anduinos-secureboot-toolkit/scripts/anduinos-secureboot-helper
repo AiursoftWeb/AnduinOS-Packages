@@ -1,0 +1,9 @@
+#!/usr/bin/python3
+"""Polkit-authorized Secure Boot operations."""
+
+import sys
+
+from anduinos_secureboot.operations import helper_main
+
+
+raise SystemExit(helper_main(sys.argv[1:]))

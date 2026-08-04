@@ -13,6 +13,8 @@ class PackageTests(unittest.TestCase):
             *ROOT.glob("src/anduinos_driver_center/*.py"),
         ]
         for source in sources:
+            if not source.is_file():
+                continue
             compile(source.read_text(), str(source), "exec")
 
     def test_python_package_uses_importable_underscore_name(self):
@@ -89,6 +91,25 @@ class PackageTests(unittest.TestCase):
         self.assertNotIn("shell=True", helper)
         self.assertNotIn("bash -c", helper)
         self.assertNotIn("sh -c", helper)
+
+    def test_secure_boot_experience_comes_from_shared_toolkit(self):
+        application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
+        core = (ROOT / "src/anduinos_driver_center/core.py").read_text()
+        helper = (ROOT / "scripts/driver-helper").read_text()
+        self.assertIn("create_secure_boot_page", application)
+        self.assertIn("_inspect_secure_boot", core)
+        self.assertNotIn('case ["repair-dkms"]', helper)
+        self.assertNotIn('case ["enroll-mok"]', helper)
+
+    def test_secure_boot_navigation_only_exists_when_firmware_enforces_it(self):
+        application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
+        guard = application.index("if secure_boot.enabled:")
+        navigation = application.index(
+            'secure_row.page_name = "secure-boot"', guard
+        )
+        next_method = application.index("\n    def _device_row", guard)
+        self.assertLess(guard, navigation)
+        self.assertLess(navigation, next_method)
 
 
 if __name__ == "__main__":

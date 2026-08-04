@@ -20,18 +20,15 @@ class HelperTests(unittest.TestCase):
     def test_selected_graphics_driver_is_delegated_to_ubuntu_drivers(self):
         with (
             patch.object(driver_helper, "available_driver_packages", return_value={"nvidia-driver-595-open"}),
-            patch.object(driver_helper, "configure_dkms_signing") as signing,
             patch.object(driver_helper, "apt_update") as update,
             patch.object(driver_helper, "run") as run,
         ):
             driver_helper.install_driver("nvidia-driver-595-open")
-        signing.assert_called_once_with()
         update.assert_called_once_with()
         run.assert_called_once_with(["ubuntu-drivers", "install", "nvidia-driver-595-open"])
 
     def test_xbox_package_name_is_fixed(self):
         with (
-            patch.object(driver_helper, "configure_dkms_signing"),
             patch.object(driver_helper, "apt_update"),
             patch.object(driver_helper, "run") as run,
         ):

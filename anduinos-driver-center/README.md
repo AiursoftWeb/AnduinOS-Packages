@@ -24,7 +24,12 @@ masks and starts the normal printing units.
 
 The unprivileged UI reads hardware state. Mutating operations go through a
 fixed polkit helper which only accepts drivers reported by `ubuntu-drivers`,
-the AnduinOS xpadneo package, and the local Secure Boot enrollment workflow.
+the AnduinOS xpadneo package, and fixed audio and printing operations.
+
+Secure Boot, MOK enrollment, DKMS signing health, repair operations, and the
+trust panel are provided by `anduinos-secureboot-toolkit`. This is the same
+implementation and fixed enrollment-code experience used by AnduinOS OOBE;
+Driver Center must not add a second Secure Boot backend or diverging prompts.
 
 ## Development
 

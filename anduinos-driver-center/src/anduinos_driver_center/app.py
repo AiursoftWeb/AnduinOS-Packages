@@ -16,6 +16,14 @@ from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
 from .core import AudioState, DkmsState, HardwareDevice, PackageState, PrintingState, SecureBootState, XboxState, scan_system
 
+try:
+    from anduinos_secureboot.ui import create_secure_boot_page
+except ModuleNotFoundError:
+    import sys
+    _toolkit_src = Path(__file__).resolve().parents[3] / "anduinos-secureboot-toolkit" / "src"
+    sys.path.insert(0, str(_toolkit_src))
+    from anduinos_secureboot.ui import create_secure_boot_page
+
 
 APP_ID = "com.anduinos.DriverCenter"
 HELPER = "/usr/libexec/anduinos-driver-center/driver-helper"
@@ -236,13 +244,17 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self.device_list.append(xbox_row)
         self.stack.add_named(self._xbox_page(xbox, secure_boot), "xbox")
 
-        secure_row = self._device_row(
-            "security-high-symbolic", _("Secure Boot"),
-            _("Trust established") if secure_boot.ready else _("Action required"),
-        )
-        secure_row.page_name = "secure-boot"
-        self.device_list.append(secure_row)
-        self.stack.add_named(self._secure_boot_page(secure_boot, dkms), "secure-boot")
+        # Secure Boot management is irrelevant when firmware enforcement is
+        # disabled.  Keep the device workflow uncluttered and, importantly,
+        # do not turn MOK or signing configuration into an install gate.
+        if secure_boot.enabled:
+            secure_row = self._device_row(
+                "security-high-symbolic", _("Secure Boot"),
+                _("Trust established") if secure_boot.ready else _("Action required"),
+            )
+            secure_row.page_name = "secure-boot"
+            self.device_list.append(secure_row)
+            self.stack.add_named(self._secure_boot_page(secure_boot, dkms), "secure-boot")
 
         selected = None
         row = self.device_list.get_row_at_index(0)
@@ -714,40 +726,21 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         return GLib.SOURCE_REMOVE
 
     def _secure_boot_page(self, state: SecureBootState, dkms: DkmsState) -> Gtk.Widget:
-        page, content = self._page_shell(
-            _("Secure Boot Trust"),
-            _("AnduinOS signs third-party DKMS modules with a local Machine Owner Key so they can load without disabling Secure Boot."),
-            "secureboot-chip.svg",
+        def icon_factory(name: str) -> Gtk.Image:
+            image = Gtk.Image()
+            path = _resource_path(name)
+            if path.is_file():
+                image.set_from_file(str(path))
+            else:
+                image.set_from_icon_name(name)
+            return image
+
+        return create_secure_boot_page(
+            translate=_,
+            icon_factory=icon_factory,
+            state_changed=lambda: None,
+            initial_state=(state, dkms),
         )
-        group = Adw.PreferencesGroup(title=_("Trust chain"))
-        content.append(group)
-        self._add_state_row(group, _("Secure Boot"), _("Enabled") if state.enabled else _("Disabled"), True)
-        if state.enabled:
-            self._add_state_row(group, _("Local certificate"), _("Available") if state.certificate_present and state.key_present else _("Missing"), state.certificate_present and state.key_present)
-            self._add_state_row(group, _("Firmware enrollment"), _("Trusted by firmware") if state.enrolled else _("Not enrolled"), state.enrolled)
-            module_summary = (
-                _("All detected DKMS modules are trusted")
-                if dkms.ready else
-                _("Some DKMS modules need to be re-signed")
-            )
-            self._add_state_row(group, _("Third-party modules"), module_summary, dkms.ready)
-        if state.enabled and not state.ready:
-            button = Gtk.Button(label=_("Create or Enroll Certificate"), halign=Gtk.Align.END)
-            button.add_css_class("suggested-action")
-            button.connect("clicked", self._ask_mok_password)
-            content.append(button)
-        elif state.enabled:
-            note = Adw.Banner(title=_("Secure Boot is ready for third-party drivers."))
-            note.set_revealed(True); content.append(note)
-            if not dkms.ready:
-                repair = Gtk.Button(label=_("Repair Module Signatures"), halign=Gtk.Align.END)
-                repair.add_css_class("suggested-action")
-                repair.connect("clicked", lambda btn: self._run_action(btn, ["repair-dkms"]))
-                content.append(repair)
-        else:
-            note = Adw.Banner(title=_("No certificate is required while Secure Boot is disabled."))
-            note.set_revealed(True); content.append(note)
-        return page
 
     def _add_state_row(self, group: Adw.PreferencesGroup, title: str, subtitle: str, good: bool | None) -> None:
         row = Adw.ActionRow(title=title, subtitle=subtitle)
@@ -756,24 +749,6 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         else:
             row.add_suffix(_status_icon("emblem-ok-symbolic" if good else "dialog-warning-symbolic", "success" if good else "warning"))
         group.add(row)
-
-    def _ask_mok_password(self, button: Gtk.Button) -> None:
-        dialog = Adw.MessageDialog(transient_for=self, heading=_("Secure Boot enrollment password"), body=_("Choose a temporary password. Enter it once in the blue MOKManager screen after reboot."))
-        entry = Gtk.PasswordEntry(show_peek_icon=True)
-        entry.set_placeholder_text(_("8–16 characters"))
-        dialog.set_extra_child(entry)
-        dialog.add_response("cancel", _("Cancel")); dialog.add_response("continue", _("Continue"))
-        dialog.set_response_appearance("continue", Adw.ResponseAppearance.SUGGESTED)
-        dialog.set_default_response("continue"); dialog.set_close_response("cancel")
-        def response(_dialog: Adw.MessageDialog, name: str) -> None:
-            if name == "continue":
-                password = entry.get_text()
-                if 8 <= len(password) <= 16:
-                    self._run_action(button, ["enroll-mok"], password + "\n")
-                else:
-                    self._toast(_("The password must contain 8–16 characters."))
-            dialog.close()
-        dialog.connect("response", response); dialog.present()
 
     def _run_action(self, button: Gtk.Button, arguments: list[str], stdin: str | None = None) -> None:
         if not arguments: return

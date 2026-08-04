@@ -217,17 +217,7 @@ class EnrollSecureBootTests(unittest.TestCase):
                     "chroot",
                     str(target),
                     "mokutil",
-                    "--test-key",
-                    f"/{MOK_CERTIFICATE}",
-                )
-            ] = ("not enrolled", "", 1)
-            runner.outputs[
-                (
-                    "chroot",
-                    str(target),
-                    "mokutil",
                     "--list-new",
-                    "--short",
                 )
             ] = ("", "", 0)
             context = InstallContext(
@@ -258,11 +248,14 @@ class EnrollSecureBootTests(unittest.TestCase):
             target = Path(directory)
             certificate = target / MOK_CERTIFICATE
             certificate.parent.mkdir(parents=True)
-            certificate.write_bytes(b"certificate")
+            # Its SHA-1 begins with 01. Leading zeroes are part of a
+            # fingerprint and must not be stripped like certificate serials.
+            certificate.write_bytes(b"certificate-17")
             prepare_signed_efi_chain(target)
             fingerprint = hashlib.sha1(
-                b"certificate", usedforsecurity=False
+                b"certificate-17", usedforsecurity=False
             ).hexdigest()
+            self.assertTrue(fingerprint.startswith("0"))
             formatted = ":".join(
                 fingerprint[index : index + 2]
                 for index in range(0, len(fingerprint), 2)
@@ -273,17 +266,7 @@ class EnrollSecureBootTests(unittest.TestCase):
                     "chroot",
                     str(target),
                     "mokutil",
-                    "--test-key",
-                    f"/{MOK_CERTIFICATE}",
-                )
-            ] = ("not enrolled", "", 1)
-            runner.outputs[
-                (
-                    "chroot",
-                    str(target),
-                    "mokutil",
                     "--list-new",
-                    "--short",
                 )
             ] = (f"SHA1 Fingerprint: {formatted}\n", "", 0)
             context = InstallContext(
@@ -301,18 +284,27 @@ class EnrollSecureBootTests(unittest.TestCase):
             target = Path(directory)
             certificate = target / MOK_CERTIFICATE
             certificate.parent.mkdir(parents=True)
-            certificate.write_bytes(b"certificate")
+            # Exercise the real-machine failure mode: the enrolled MOK SHA-1
+            # begins with 0F and was previously compared after losing that 0.
+            certificate.write_bytes(b"certificate-17")
             prepare_signed_efi_chain(target)
+            fingerprint = hashlib.sha1(
+                b"certificate-17", usedforsecurity=False
+            ).hexdigest()
+            self.assertTrue(fingerprint.startswith("0"))
+            formatted = ":".join(
+                fingerprint[index : index + 2]
+                for index in range(0, len(fingerprint), 2)
+            )
             runner = FakeRunner()
             runner.outputs[
                 (
                     "chroot",
                     str(target),
                     "mokutil",
-                    "--test-key",
-                    f"/{MOK_CERTIFICATE}",
+                    "--list-enrolled",
                 )
-            ] = ("already enrolled", "", 0)
+            ] = (f"SHA1 Fingerprint: {formatted}\n", "", 0)
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
@@ -325,6 +317,37 @@ class EnrollSecureBootTests(unittest.TestCase):
                 "--import" in command or "--timeout" in command
                 for command, _kwargs in runner.commands
             )
+        )
+
+    def test_mokutil_072_status_is_not_used_as_enrollment_boolean(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            certificate = target / MOK_CERTIFICATE
+            certificate.parent.mkdir(parents=True)
+            certificate.write_bytes(b"certificate")
+            prepare_signed_efi_chain(target)
+            runner = FakeRunner()
+            runner.outputs[
+                ("chroot", str(target), "mokutil", "--list-enrolled")
+            ] = ("", "failed", 1)
+            runner.outputs[
+                (
+                    "chroot",
+                    str(target),
+                    "mokutil",
+                    "--test-key",
+                    f"/{MOK_CERTIFICATE}",
+                )
+            ] = (f"/{MOK_CERTIFICATE} is already enrolled\n", "", 1)
+            context = InstallContext(
+                valid_plan(),
+                lambda _message: None,
+                {"target": target, "secure_boot_prepared": True},
+            )
+            EnrollSecureBootStep(runner).execute(context)
+        self.assertFalse(context.values["mok_enrollment_pending"])
+        self.assertFalse(
+            any("--import" in command for command, _kwargs in runner.commands)
         )
 
     def test_disabled_secure_boot_never_touches_efi_variables(self):

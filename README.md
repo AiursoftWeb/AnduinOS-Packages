@@ -134,7 +134,8 @@ anduinos-desktop  ──Conflicts──→  ubuntu-desktop
       │
       └─Recommends─→ anduinos-software-properties-common
                    → anduinos-desktop-apps
-                     └─Recommends─→ anduinos-driver-center
+                     ├─Recommends─→ anduinos-driver-center ─┐
+                     └─Recommends─→ anduinos-oobe ──────────┴─Depends─→ anduinos-secureboot-toolkit
 ```
 
 **Total: 23 Ubuntu packages removed or pinned out.**
@@ -159,6 +160,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-appearance` | App | Taskbar layout switcher (Windows 11 / Classic) |
 | `anduinos-appstore` | App | Flatpak-based app store with Flathub remote |
 | `anduinos-driver-center` | App | Focused GTK4 driver manager for graphics, Xbox controllers, and Secure Boot trust |
+| `anduinos-secureboot-toolkit` | Library | Shared Secure Boot, MOK enrollment, and DKMS signing health/repair backend and UI |
 | `anduinos-deskmon` | Service | Desktop monitoring / hardware info agent |
 | `anduinos-system-tweaks` | Config | System tuning (swappiness, I/O scheduler, sysctl) |
 | `anduinos-system-tweaks-server` | Service | Background service for system tweaks |

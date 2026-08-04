@@ -398,8 +398,15 @@ anduinos-xbox-controller-driver:
 
 anduinos-driver-center:
   extends: .publish
+  needs:
+    - anduinos-secureboot-toolkit
   variables:
     PACKAGE_DIR: anduinos-driver-center
+
+anduinos-secureboot-toolkit:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-secureboot-toolkit
 
 anduinos-gnome-shell-locale:
   extends: .publish
@@ -519,6 +526,7 @@ anduinos-oobe:
   extends: .publish
   needs:
     - anduinos-appearance
+    - anduinos-secureboot-toolkit
   variables:
     PACKAGE_DIR: anduinos-oobe
 

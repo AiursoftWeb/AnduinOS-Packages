@@ -1,5 +1,11 @@
 # AnduinOS Secure Boot Module Signing Architecture
 
+> Implementation ownership has moved to `anduinos-secureboot-toolkit`. This
+> document preserves the original OOBE design rationale; the toolkit README is
+> authoritative for current scope, dependencies, helper actions, and shared UI
+> architecture. OOBE remains the first-run entry point and embeds the shared
+> toolkit panel.
+
 ## Overview
 
 AnduinOS ships third-party kernel modules (xpadneo, NVIDIA, IPU6 camera drivers, etc.) that must pass Secure Boot validation.

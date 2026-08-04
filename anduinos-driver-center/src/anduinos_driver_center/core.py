@@ -7,7 +7,29 @@ from pathlib import Path
 import os
 import re
 import subprocess
+import sys
 from typing import Protocol, Sequence
+
+try:
+    from anduinos_secureboot import (
+        DkmsState,
+        SecureBootState,
+        inspect_dkms as _inspect_dkms,
+        inspect_secure_boot as _inspect_secure_boot,
+        normalize_key,
+    )
+    from anduinos_secureboot.inspect import module_signature
+except ModuleNotFoundError:
+    _toolkit_src = Path(__file__).resolve().parents[3] / "anduinos-secureboot-toolkit" / "src"
+    sys.path.insert(0, str(_toolkit_src))
+    from anduinos_secureboot import (
+        DkmsState,
+        SecureBootState,
+        inspect_dkms as _inspect_dkms,
+        inspect_secure_boot as _inspect_secure_boot,
+        normalize_key,
+    )
+    from anduinos_secureboot.inspect import module_signature
 
 
 MOK_PRIVATE_KEY = Path("/var/lib/shim-signed/mok/MOK.priv")
@@ -82,38 +104,12 @@ class HardwareDevice:
 
 
 @dataclass(frozen=True)
-class SecureBootState:
-    enabled: bool
-    key_present: bool
-    certificate_present: bool
-    enrolled: bool
-    certificate_serial: str | None
-
-    @property
-    def ready(self) -> bool:
-        return not self.enabled or (
-            self.key_present and self.certificate_present and self.enrolled
-        )
-
-
-@dataclass(frozen=True)
 class XboxState:
     installed: bool
     module_loaded: bool
     signature_key: str | None
     signature_matches: bool
     blocked_by_secure_boot: bool
-
-
-@dataclass(frozen=True)
-class DkmsState:
-    modules: tuple[str, ...]
-    trusted_modules: tuple[str, ...]
-    untrusted_modules: tuple[str, ...]
-
-    @property
-    def ready(self) -> bool:
-        return not self.untrusted_modules
 
 
 @dataclass(frozen=True)
@@ -179,13 +175,6 @@ class PrintingState:
     @property
     def missing_packages(self) -> tuple[PackageState, ...]:
         return tuple(package for package in self.packages if not package.installed)
-
-
-def normalize_key(value: str | None) -> str | None:
-    if not value:
-        return None
-    normalized = re.sub(r"[^0-9a-f]", "", value.lower())
-    return normalized or None
 
 
 def package_is_installed(package: str, runner: Runner) -> bool:
@@ -326,27 +315,11 @@ def secure_boot_state(
     runner: Runner | None = None,
     private_key: Path = MOK_PRIVATE_KEY,
     certificate: Path = MOK_CERTIFICATE,
+    configuration: Path = Path("/etc/dkms/framework.conf.d/anduinos-sb-sign.conf"),
 ) -> SecureBootState:
-    runner = runner or SubprocessRunner()
-    state = runner.run(["mokutil", "--sb-state"])
-    enabled = state.returncode == 0 and "secureboot enabled" in state.stdout.lower()
-    key_present = private_key.is_file()
-    certificate_present = certificate.is_file()
-    enrolled = False
-    serial = None
-
-    if certificate_present:
-        test = runner.run(["mokutil", "--test-key", str(certificate)])
-        enrolled = test.returncode == 0 or "already enrolled" in (
-            test.stdout + test.stderr
-        ).lower()
-        cert = runner.run(
-            ["openssl", "x509", "-in", str(certificate), "-inform", "DER", "-noout", "-serial"]
-        )
-        if cert.returncode == 0 and "=" in cert.stdout:
-            serial = normalize_key(cert.stdout.strip().split("=", 1)[1])
-
-    return SecureBootState(enabled, key_present, certificate_present, enrolled, serial)
+    return _inspect_secure_boot(
+        runner, private_key, certificate, configuration=configuration
+    )
 
 
 def _parse_driver_line(line: str, runner: Runner) -> DriverOption | None:
@@ -415,16 +388,6 @@ def graphics_devices(runner: Runner | None = None) -> list[HardwareDevice]:
     return parse_ubuntu_driver_devices(result.stdout, runner)
 
 
-def module_signature(module: str, runner: Runner) -> str | None:
-    result = runner.run(["modinfo", module])
-    if result.returncode:
-        return None
-    for line in result.stdout.splitlines():
-        if line.startswith("sig_key:"):
-            return normalize_key(line.split(":", 1)[1])
-    return None
-
-
 def xbox_state(
     secure_boot: SecureBootState,
     runner: Runner | None = None,
@@ -454,29 +417,7 @@ def dkms_state(
     runner: Runner | None = None,
     module_directory: Path | None = None,
 ) -> DkmsState:
-    runner = runner or SubprocessRunner()
-    module_directory = module_directory or Path(
-        "/lib/modules", os.uname().release, "updates/dkms"
-    )
-    modules: list[str] = []
-    trusted: list[str] = []
-    untrusted: list[str] = []
-    if not module_directory.is_dir():
-        return DkmsState((), (), ())
-    for path in sorted(module_directory.iterdir()):
-        if not any(path.name.endswith(suffix) for suffix in (".ko", ".ko.xz", ".ko.zst")):
-            continue
-        modules.append(path.name)
-        signature = module_signature(str(path), runner)
-        if not secure_boot.enabled or (
-            signature and secure_boot.certificate_serial
-            and signature == secure_boot.certificate_serial
-            and secure_boot.enrolled
-        ):
-            trusted.append(path.name)
-        else:
-            untrusted.append(path.name)
-    return DkmsState(tuple(modules), tuple(trusted), tuple(untrusted))
+    return _inspect_dkms(secure_boot, runner, module_directory)
 
 
 def scan_system(runner: Runner | None = None) -> tuple[list[HardwareDevice], SecureBootState, XboxState, DkmsState, AudioState, PrintingState]:

@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-driver-center</PackageName>
-    <PackageVersion>2.0.0-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Driver Center — inspect and manage graphics, audio, printer, Xbox controller, and Secure Boot driver support.</PackageDescription>
     <Section>admin</Section>
@@ -27,9 +27,7 @@
     <Dependency Include="gir1.2-gtk-4.0" />
     <Dependency Include="gir1.2-adw-1" />
     <Dependency Include="ubuntu-drivers-common" />
-    <Dependency Include="mokutil" />
-    <Dependency Include="openssl" />
-    <Dependency Include="dkms" />
+    <Dependency Include="anduinos-secureboot-toolkit" />
     <Dependency Include="pkexec" />
     <Dependency Include="pciutils" />
   </ItemGroup>
@@ -37,7 +35,10 @@
   <ItemGroup>
     <IncludeScript Include="scripts/anduinos-driver-center" Target="/usr/bin/anduinos-driver-center" />
     <IncludeScript Include="scripts/driver-helper" Target="/usr/libexec/anduinos-driver-center/driver-helper" />
-    <IncludeFolder Include="src/anduinos_driver_center" Target="/usr/lib/python3/dist-packages/anduinos_driver_center" />
+    <IncludeFile Include="src/anduinos_driver_center/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/__init__.py" />
+    <IncludeFile Include="src/anduinos_driver_center/__main__.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/__main__.py" />
+    <IncludeFile Include="src/anduinos_driver_center/app.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/app.py" />
+    <IncludeFile Include="src/anduinos_driver_center/core.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/core.py" />
     <IncludeFolder Include="resources" Target="/usr/share/anduinos-driver-center/illustrations" />
     <IncludeFile Include="data/com.anduinos.DriverCenter.policy" Target="/usr/share/polkit-1/actions/com.anduinos.DriverCenter.policy" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />

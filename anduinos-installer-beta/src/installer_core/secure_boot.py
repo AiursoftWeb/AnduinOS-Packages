@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -338,6 +339,14 @@ def _verify_signed_efi_chain(
 
 
 def _is_enrolled(runner: CommandRunner, target: Path) -> bool:
+    fingerprint = _sha1(target / MOK_CERTIFICATE)
+    enrolled = _mok_fingerprints(runner, target, "--list-enrolled")
+    if enrolled is not None:
+        return fingerprint in enrolled
+
+    # Upstream mokutil 0.7.2 returns 0 for "not enrolled" and 1 for
+    # "already enrolled". Parse its C-locale message only as a fallback;
+    # never reinterpret its process status as a boolean.
     result = runner.run(
         (
             "chroot",
@@ -349,18 +358,35 @@ def _is_enrolled(runner: CommandRunner, target: Path) -> bool:
         check=False,
         timeout=30,
     )
-    return result.returncode == 0
+    message = f"{result.stdout}\n{result.stderr}".lower()
+    return "is already enrolled" in message or "is already in db" in message
 
 
-def _pending_fingerprints(runner: CommandRunner, target: Path) -> str:
+def _mok_fingerprints(
+    runner: CommandRunner, target: Path, operation: str
+) -> frozenset[str] | None:
     result = runner.run(
-        ("chroot", str(target), "mokutil", "--list-new", "--short"),
+        ("chroot", str(target), "mokutil", operation),
         check=False,
         timeout=30,
     )
     if result.returncode != 0:
-        return ""
-    return "".join(character for character in result.stdout.lower() if character in "0123456789abcdef")
+        return None
+    return frozenset(
+        normalized
+        for value in re.findall(
+            r"^SHA1 Fingerprint:\s*([0-9a-f:]+)\s*$",
+            result.stdout,
+            re.IGNORECASE | re.MULTILINE,
+        )
+        if (normalized := _sha1_fingerprint(value))
+    )
+
+
+def _pending_fingerprints(
+    runner: CommandRunner, target: Path
+) -> frozenset[str]:
+    return _mok_fingerprints(runner, target, "--list-new") or frozenset()
 
 
 def _sha1(path: Path) -> str:
@@ -379,6 +405,14 @@ def _hex_identifier(value: str) -> str:
     return "".join(
         character for character in value.lower() if character in "0123456789abcdef"
     ).lstrip("0") or "0"
+
+
+def _sha1_fingerprint(value: str) -> str:
+    """Normalize a complete SHA-1 fingerprint without dropping leading zeroes."""
+    normalized = "".join(
+        character for character in value.lower() if character in "0123456789abcdef"
+    )
+    return normalized if len(normalized) == 40 else ""
 
 
 def _target(context: InstallContext) -> Path:

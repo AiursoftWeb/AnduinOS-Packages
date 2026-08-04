@@ -73,6 +73,13 @@ Secure Boot enabled
         +-- mokutil --timeout -1
 ```
 
+Enrollment and pending state use an exact SHA-1 fingerprint match against the
+full `mokutil --list-enrolled` and `--list-new` output, preserving all 40 hex
+digits including leading zeroes. The installer must not
+treat `mokutil --test-key` as a boolean exit status: upstream 0.7.2 returns
+zero for an unenrolled key and one for an already enrolled key, while some
+distributions patch that convention.
+
 ## Secret handling
 
 The MOK enrollment password is executor policy and never appears in

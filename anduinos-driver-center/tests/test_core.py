@@ -6,6 +6,14 @@ import sys
 import tempfile
 import unittest
 
+sys.path.insert(
+    0,
+    str(
+        Path(__file__).resolve().parents[2]
+        / "anduinos-secureboot-toolkit"
+        / "src"
+    ),
+)
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from anduinos_driver_center.core import (  # noqa: E402
@@ -75,14 +83,18 @@ driver   : xserver-xorg-video-nouveau - distro free builtin
         with tempfile.TemporaryDirectory() as directory:
             private = Path(directory) / "MOK.priv"
             certificate = Path(directory) / "MOK.der"
+            configuration = Path(directory) / "anduinos-sb-sign.conf"
             private.write_text("private")
             certificate.write_text("certificate")
+            configuration.write_text("configuration")
             responses = {
                 ("mokutil", "--sb-state"): subprocess.CompletedProcess([], 0, "SecureBoot enabled\n", ""),
-                ("mokutil", "--test-key", str(certificate)): subprocess.CompletedProcess([], 0, "MOK.der is already enrolled\n", ""),
+                ("mokutil", "--test-key", str(certificate)): subprocess.CompletedProcess([], 1, "MOK.der is already enrolled\n", ""),
                 ("openssl", "x509", "-in", str(certificate), "-inform", "DER", "-noout", "-serial"): subprocess.CompletedProcess([], 0, "serial=AA12BB34\n", ""),
             }
-            state = secure_boot_state(FakeRunner(responses), private, certificate)
+            state = secure_boot_state(
+                FakeRunner(responses), private, certificate, configuration
+            )
             self.assertTrue(state.ready)
             self.assertEqual(state.certificate_serial, "aa12bb34")
 
@@ -102,6 +114,33 @@ driver   : xserver-xorg-video-nouveau - distro free builtin
         self.assertTrue(state.module_loaded)
         self.assertFalse(state.signature_matches)
         self.assertTrue(state.blocked_by_secure_boot)
+
+    def test_disabled_secure_boot_never_blocks_unsigned_driver_workflows(self):
+        from anduinos_driver_center.core import SecureBootState
+
+        secure = SecureBootState(
+            False,
+            False,
+            False,
+            False,
+            None,
+            configuration_present=False,
+        )
+        responses = {
+            ("modinfo", "hid-xpadneo"): subprocess.CompletedProcess(
+                [], 0, "sig_key: BB:34\n", ""
+            ),
+            ("lsmod",): subprocess.CompletedProcess([], 0, "", ""),
+        }
+        state = xbox_state(
+            secure,
+            FakeRunner(
+                responses, installed={"anduinos-xbox-controller-driver"}
+            ),
+        )
+        self.assertTrue(secure.ready)
+        self.assertFalse(secure.enrollment_required)
+        self.assertFalse(state.blocked_by_secure_boot)
 
     def test_dkms_health_reports_modules_signed_by_a_different_key(self):
         from anduinos_driver_center.core import SecureBootState
