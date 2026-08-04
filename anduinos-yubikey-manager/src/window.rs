@@ -5,6 +5,7 @@ use crate::git_signing;
 use crate::home::{HomePage, HomeSnapshot};
 use crate::i18n::{i18n, i18n_fmt};
 use crate::model::{Enrollment, YubiKey};
+use crate::passkeys;
 use crate::progress_dialog;
 use crate::ssh;
 use adw::prelude::*;
@@ -31,6 +32,7 @@ mod imp {
         pub sudo: RefCell<Option<adw::PreferencesPage>>,
         pub ssh: RefCell<Option<adw::PreferencesPage>>,
         pub git: RefCell<Option<adw::PreferencesPage>>,
+        pub passkeys: RefCell<Option<gtk::Box>>,
         pub login_groups: RefCell<Vec<adw::PreferencesGroup>>,
         pub sudo_groups: RefCell<Vec<adw::PreferencesGroup>>,
         pub ssh_groups: RefCell<Vec<adw::PreferencesGroup>>,
@@ -45,6 +47,7 @@ mod imp {
         pub login_refreshing: Cell<bool>,
         pub sudo_refreshing: Cell<bool>,
         pub ssh_refreshing: Cell<bool>,
+        pub passkeys_refreshing: Cell<bool>,
         pub ssh_results:
             RefCell<HashMap<String, Result<Vec<ssh::ResidentSshCredential>, String>>>,
     }
@@ -108,11 +111,13 @@ impl YubiKeyManagerWindow {
         let sudo_row = nav_row("security-high-symbolic", &i18n("Unlock sudo"));
         let ssh_row = nav_row("network-server-symbolic", &i18n("SSH keys"));
         let git_row = nav_row("document-edit-symbolic", &i18n("Git signing"));
+        let passkeys_row = nav_row("dialog-password-symbolic", &i18n("Passkeys"));
         sidebar.append(&home_row);
         sidebar.append(&login_row);
         sidebar.append(&sudo_row);
         sidebar.append(&ssh_row);
         sidebar.append(&git_row);
+        sidebar.append(&passkeys_row);
         sidebar.select_row(Some(&home_row));
 
         let sidebar_header = adw::HeaderBar::builder()
@@ -157,11 +162,19 @@ impl YubiKeyManagerWindow {
             .title(i18n("Git signing"))
             .icon_name("document-edit-symbolic")
             .build();
+        let passkeys = gtk::Box::builder()
+            .orientation(gtk::Orientation::Vertical)
+            .halign(gtk::Align::Center)
+            .valign(gtk::Align::Center)
+            .hexpand(true)
+            .vexpand(true)
+            .build();
         stack.add_named(home.widget(), Some("home"));
         stack.add_named(&login, Some("login"));
         stack.add_named(&sudo, Some("sudo"));
         stack.add_named(&ssh, Some("ssh"));
         stack.add_named(&git, Some("git"));
+        stack.add_named(&passkeys, Some("passkeys"));
 
         let menu = gio::Menu::new();
         menu.append(Some(&i18n("About")), Some("app.about"));
@@ -230,7 +243,8 @@ impl YubiKeyManagerWindow {
                     1 => i18n("Unlock GDM"),
                     2 => i18n("Unlock sudo"),
                     3 => i18n("SSH keys"),
-                    _ => i18n("Git signing"),
+                    4 => i18n("Git signing"),
+                    _ => i18n("Passkeys"),
                 };
                 page_title_clone.set_title(&title);
                 stack_clone.set_visible_child_name(match row.index() {
@@ -238,7 +252,8 @@ impl YubiKeyManagerWindow {
                     1 => "login",
                     2 => "sudo",
                     3 => "ssh",
-                    _ => "git",
+                    4 => "git",
+                    _ => "passkeys",
                 });
                 if let Some(window) = weak.upgrade() {
                     window.refresh();
@@ -254,6 +269,7 @@ impl YubiKeyManagerWindow {
         *self.imp().sudo.borrow_mut() = Some(sudo);
         *self.imp().ssh.borrow_mut() = Some(ssh);
         *self.imp().git.borrow_mut() = Some(git);
+        *self.imp().passkeys.borrow_mut() = Some(passkeys);
 
         self.start_device_monitor();
 
@@ -282,6 +298,8 @@ impl YubiKeyManagerWindow {
             }
         } else if visible.as_str() == "ssh" {
             self.refresh_ssh();
+        } else if visible.as_str() == "passkeys" {
+            self.refresh_passkeys();
         } else if matches!(visible.as_str(), "login" | "sudo") {
             self.refresh_security_page(visible.as_str());
         }
@@ -294,6 +312,7 @@ impl YubiKeyManagerWindow {
             "sudo" => 2,
             "ssh" => 3,
             "git" => 4,
+            "passkeys" => 5,
             _ => return,
         };
         if let Some(sidebar) = self.imp().sidebar.borrow().as_ref() {
@@ -588,6 +607,101 @@ impl YubiKeyManagerWindow {
         });
     }
 
+    fn refresh_passkeys(&self) {
+        if self.imp().passkeys_refreshing.replace(true) {
+            return;
+        }
+        let Some(page) = self.imp().passkeys.borrow().as_ref().cloned() else {
+            self.imp().passkeys_refreshing.set(false);
+            return;
+        };
+        clear_box(&page);
+        let loading = gtk::Box::builder()
+            .orientation(gtk::Orientation::Vertical)
+            .spacing(12)
+            .halign(gtk::Align::Center)
+            .build();
+        loading.append(
+            &gtk::Spinner::builder()
+                .spinning(true)
+                .halign(gtk::Align::Center)
+                .build(),
+        );
+        loading.append(
+            &gtk::Label::builder()
+                .label(i18n("Checking Passkeys support…"))
+                .build(),
+        );
+        page.append(&loading);
+
+        let weak = self.downgrade();
+        glib::spawn_future_local(async move {
+            let installed = gio::spawn_blocking(passkeys::is_installed).await;
+            let Some(window) = weak.upgrade() else {
+                return;
+            };
+            window.imp().passkeys_refreshing.set(false);
+            clear_box(&page);
+            if installed.unwrap_or(false) {
+                let open = gtk::Button::builder()
+                    .label(i18n("Open Yubico Authenticator"))
+                    .css_classes(["suggested-action"])
+                    .build();
+                let weak = window.downgrade();
+                open.connect_clicked(move |_| match passkeys::launch() {
+                    Ok(mut child) => {
+                        let weak = weak.clone();
+                        glib::spawn_future_local(async move {
+                            let result = gio::spawn_blocking(move || child.wait()).await;
+                            let Some(window) = weak.upgrade() else {
+                                return;
+                            };
+                            match result {
+                                Ok(Ok(status)) if status.success() => {}
+                                Ok(Ok(status)) => show_error_with_heading(
+                                    &window,
+                                    &i18n("Could not open Yubico Authenticator"),
+                                    &i18n_fmt(
+                                        &i18n("Command exited with {0}"),
+                                        &[&status.to_string()],
+                                    ),
+                                ),
+                                Ok(Err(error)) => show_error_with_heading(
+                                    &window,
+                                    &i18n("Could not open Yubico Authenticator"),
+                                    &error.to_string(),
+                                ),
+                                Err(_) => show_error_with_heading(
+                                    &window,
+                                    &i18n("Could not open Yubico Authenticator"),
+                                    &i18n("Could not open Yubico Authenticator"),
+                                ),
+                            }
+                        });
+                    }
+                    Err(error) => {
+                        if let Some(window) = weak.upgrade() {
+                            show_error_with_heading(
+                                &window,
+                                &i18n("Could not open Yubico Authenticator"),
+                                &error.to_string(),
+                            );
+                        }
+                    }
+                });
+                page.append(&open);
+            } else {
+                page.append(
+                    &gtk::Label::builder()
+                        .label(passkeys_install_requirement())
+                        .justify(gtk::Justification::Center)
+                        .wrap(true)
+                        .build(),
+                );
+            }
+        });
+    }
+
     fn inspect_ssh_devices(&self, devices: Vec<ssh::FidoDevice>) {
         if devices.is_empty() {
             return;
@@ -670,6 +784,16 @@ fn nav_row(icon: &str, title: &str) -> gtk::ListBoxRow {
             .build(),
     );
     gtk::ListBoxRow::builder().child(&content).build()
+}
+
+fn clear_box(container: &gtk::Box) {
+    while let Some(child) = container.first_child() {
+        container.remove(&child);
+    }
+}
+
+fn passkeys_install_requirement() -> String {
+    i18n("Yubico Authenticator must be installed before you can use Passkeys.")
 }
 
 fn clear_groups(
