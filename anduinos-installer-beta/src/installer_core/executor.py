@@ -14,6 +14,7 @@ from .secure_boot import (
     VerifyDkmsSignaturesStep,
 )
 from .software import (
+    InstallMultimediaCodecsStep,
     InstallThirdPartyDriversStep,
     RefreshPackageIndexesStep,
     UpgradeSystemStep,
@@ -97,8 +98,10 @@ class InstallerExecutor:
             PrepareSecureBootStep(self.runner),
             InstallLanguagePacksStep(self.runner),
             InstallInputMethodStep(self.runner),
-            ConfigureSystemStep(self.runner),
         ]
+        if plan.software.install_multimedia_codecs:
+            steps.append(InstallMultimediaCodecsStep(self.runner))
+        steps.append(ConfigureSystemStep(self.runner))
         if plan.software.install_updates:
             steps.extend(
                 (

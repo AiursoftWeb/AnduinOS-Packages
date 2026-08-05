@@ -7,7 +7,15 @@ from pathlib import Path
 
 from .command import CommandError, CommandRunner
 from .mirrors import restore_original_mirror
-from .steps import FailurePolicy, InstallContext, StepWarning
+from .steps import (
+    FailurePolicy,
+    InstallContext,
+    StepSkipped,
+    StepWarning,
+)
+
+
+MULTIMEDIA_CODECS_PACKAGE = "anduinos-multimedia-codecs"
 
 
 def _target(context: InstallContext) -> Path:
@@ -182,6 +190,153 @@ class UpgradeSystemStep:
             ("chroot", str(target), "apt-get", "check"),
             timeout=600,
         )
+
+    def cleanup(self, context: InstallContext) -> None:
+        return None
+
+
+def _package_is_installed(
+    target: Path,
+    package: str,
+    runner: CommandRunner,
+) -> bool:
+    result = runner.run(
+        (
+            "chroot",
+            str(target),
+            "dpkg-query",
+            "-W",
+            "-f=${db:Status-Abbrev}",
+            package,
+        ),
+        check=False,
+        timeout=60,
+    )
+    return result.returncode == 0 and result.stdout.strip() == "ii"
+
+
+def _package_state_is_consistent(
+    target: Path,
+    runner: CommandRunner,
+) -> bool:
+    audit = runner.run(
+        ("chroot", str(target), "dpkg", "--audit"),
+        check=False,
+        timeout=300,
+    )
+    dependency_check = runner.run(
+        ("chroot", str(target), "apt-get", "check"),
+        check=False,
+        timeout=600,
+    )
+    return (
+        audit.returncode == 0
+        and not audit.stdout.strip()
+        and dependency_check.returncode == 0
+    )
+
+
+@dataclass
+class InstallMultimediaCodecsStep:
+    """Install the selected extended-format metapackage in the target."""
+
+    runner: CommandRunner
+    id: str = "install-multimedia-codecs"
+    title: str = "Install extended multimedia format support"
+    failure_policy: FailurePolicy = FailurePolicy.FATAL
+    progress_weight: int = 3
+    destructive: bool = False
+
+    def preflight(self, context: InstallContext) -> None:
+        context.validate_plan()
+        self.runner.require_commands(("chroot",))
+
+    def execute(self, context: InstallContext) -> None:
+        context.values["multimedia_codecs_installed"] = False
+        if not context.plan.software.install_multimedia_codecs:
+            raise StepSkipped(
+                "Skipped extended multimedia formats because they were not "
+                "selected"
+            )
+
+        target = _target(context)
+        if _package_is_installed(
+            target, MULTIMEDIA_CODECS_PACKAGE, self.runner
+        ):
+            context.values["multimedia_codecs_installed"] = True
+            context.log(
+                "Extended multimedia format support is already installed"
+            )
+            return
+
+        if context.values.get("network_online") is False:
+            raise StepWarning(
+                "Skipped extended multimedia formats because the installer "
+                "is offline; everyday playback remains available"
+            )
+
+        _require_target_command(target, "usr/bin/apt-get")
+        try:
+            if not context.values.get("package_indexes_refreshed"):
+                refresh_package_indexes(context, self.runner)
+        except CommandError as error:
+            raise StepWarning(
+                "Could not refresh package indexes for extended multimedia "
+                "formats; everyday playback remains available"
+            ) from error
+
+        result = self.runner.run(
+            (
+                "chroot",
+                str(target),
+                "/usr/bin/env",
+                "DEBIAN_FRONTEND=noninteractive",
+                "apt-get",
+                "--yes",
+                "--no-install-recommends",
+                "-o",
+                "Acquire::Retries=1",
+                "-o",
+                "Acquire::http::Timeout=15",
+                "-o",
+                "Acquire::https::Timeout=15",
+                "install",
+                MULTIMEDIA_CODECS_PACKAGE,
+            ),
+            check=False,
+            timeout=3600,
+        )
+        if result.returncode != 0:
+            if not _package_state_is_consistent(target, self.runner):
+                raise CommandError(
+                    "Extended multimedia format installation failed and "
+                    "left an inconsistent package state"
+                )
+            raise StepWarning(
+                "Could not download or install extended multimedia formats; "
+                "everyday playback remains available"
+            )
+
+        context.values["multimedia_codecs_installed"] = True
+        context.log(
+            "Installed extended multimedia format support from "
+            f"{MULTIMEDIA_CODECS_PACKAGE}"
+        )
+
+    def verify(self, context: InstallContext) -> None:
+        if not context.plan.software.install_multimedia_codecs:
+            return
+        target = _target(context)
+        if context.values.get("multimedia_codecs_installed") is not True:
+            raise RuntimeError(
+                "Extended multimedia format installation was not recorded"
+            )
+        if not _package_is_installed(
+            target, MULTIMEDIA_CODECS_PACKAGE, self.runner
+        ):
+            raise RuntimeError(
+                "Extended multimedia format metapackage is not installed"
+            )
 
     def cleanup(self, context: InstallContext) -> None:
         return None

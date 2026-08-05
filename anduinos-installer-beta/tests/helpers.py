@@ -43,6 +43,7 @@ def valid_plan(
     filesystem: Filesystem = Filesystem.BTRFS,
     install_updates: bool = True,
     install_third_party_drivers: bool = False,
+    install_multimedia_codecs: bool = False,
     authentication: AuthenticationMode = AuthenticationMode.PASSWORD,
     sudo_without_password: bool | None = None,
     disk: DiskIdentity | None = None,
@@ -100,6 +101,7 @@ def valid_plan(
         software=SoftwareSpec(
             install_updates=install_updates,
             install_third_party_drivers=install_third_party_drivers,
+            install_multimedia_codecs=install_multimedia_codecs,
         ),
         swap=SwapSpec(),
         boot=BootSpec(mok_password_policy=mok_policy),

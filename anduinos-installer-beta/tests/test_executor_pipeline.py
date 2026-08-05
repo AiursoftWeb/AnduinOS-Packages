@@ -95,6 +95,27 @@ class ExecutorPipelineTests(unittest.TestCase):
             pipeline.index("verify-dkms-signatures"),
         )
 
+    def test_optional_multimedia_step_is_only_present_when_selected(self):
+        plan = valid_plan(install_multimedia_codecs=True)
+        with patch("installer_core.executor.StepRunner", CapturingStepRunner):
+            InstallerExecutor(lambda _message: None).run(plan)
+        pipeline = CapturingStepRunner.captured
+        self.assertIn("install-multimedia-codecs", pipeline)
+        self.assertLess(
+            pipeline.index("install-input-method"),
+            pipeline.index("install-multimedia-codecs"),
+        )
+        self.assertLess(
+            pipeline.index("install-multimedia-codecs"),
+            pipeline.index("configure-system"),
+        )
+
+        with patch("installer_core.executor.StepRunner", CapturingStepRunner):
+            InstallerExecutor(lambda _message: None).run(valid_plan())
+        self.assertNotIn(
+            "install-multimedia-codecs", CapturingStepRunner.captured
+        )
+
     def test_waypoint_step_is_only_present_for_btrfs(self):
         from installer_core.model import Filesystem
 

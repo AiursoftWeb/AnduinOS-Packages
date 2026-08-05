@@ -208,7 +208,9 @@ msgid "Computer name contains invalid characters."
 msgstr "Ім'я комп'ютера містить недопустимі символи."
 
 msgid "Configure account, region, timezone, and machine identity"
-msgstr "Налаштування облікового запису, регіону, часового поясу та ідентифікатора комп’ютера"
+msgstr ""
+"Налаштування облікового запису, регіону, часового поясу та ідентифікатора "
+"комп’ютера"
 
 msgid "Configure storage and swap"
 msgstr "Налаштування сховища та файлу підкачки"
@@ -294,8 +296,7 @@ msgid "Empty disk — no partitions"
 msgstr "Порожній диск — немає розділів"
 
 msgid "Enables shared-space subvolumes, snapshots and Waypoint."
-msgstr ""
-"Увімкнути підтомови спільного простору, миттєві знімки та Waypoint."
+msgstr "Увімкнути підтомови спільного простору, миттєві знімки та Waypoint."
 
 msgid "English (UK)"
 msgstr "Англійська (Велика Британія)"
@@ -993,8 +994,6 @@ msgstr "Підключення до Інтернету готове."
 msgid "Available Wi-Fi Networks"
 msgstr "Доступні мережі Wi-Fi"
 
-#~ msgid "Choose a complete installation method, not only a filesystem."
-#~ msgstr "Оберіть повний метод встановлення, а не лише файлову систему."
 msgid "Preserve connected Wi-Fi network"
 msgstr "Зберегти підключену мережу Wi-Fi"
 
@@ -1006,3 +1005,21 @@ msgstr "Повторна перевірка цільового диска…"
 
 msgid "Storage devices could not be loaded: {error}"
 msgstr "Не вдалося завантажити пристрої зберігання: {error}"
+
+#: src/pages.py
+msgid "Install extended multimedia format support"
+msgstr "Установити розширену підтримку мультимедійних форматів"
+
+#: src/pages.py
+msgid "Extended multimedia formats"
+msgstr "Розширені мультимедійні формати"
+
+#: src/pages.py
+msgid ""
+"Adds wider GStreamer compatibility and support for additional legacy and "
+"specialist media formats. Some components may be subject to patent or "
+"redistribution terms."
+msgstr "Розширює сумісність із GStreamer і додає підтримку застарілих та спеціалізованих медіаформатів. На деякі компоненти можуть поширюватися патенти або умови повторного розповсюдження."
+
+#~ msgid "Choose a complete installation method, not only a filesystem."
+#~ msgstr "Оберіть повний метод встановлення, а не лише файлову систему."

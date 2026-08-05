@@ -31,6 +31,7 @@ class PlanningTests(unittest.TestCase):
             "timezone": "Asia/Shanghai",
             "install_updates": False,
             "install_third_party_drivers": True,
+            "install_multimedia_codecs": True,
             "sudo_without_password": True,
         }
         disk = DiskIdentity("/dev/sda", "serial:test", 64 * 1024**3)
@@ -55,6 +56,7 @@ class PlanningTests(unittest.TestCase):
         self.assertEqual(plan.boot.mok_password_policy.value, "anduinos-default")
         self.assertFalse(plan.software.install_updates)
         self.assertTrue(plan.software.install_third_party_drivers)
+        self.assertTrue(plan.software.install_multimedia_codecs)
         self.assertTrue(plan.identity.sudo_without_password)
         self.assertIsNotNone(plan.storage.graph)
         self.assertEqual(plan.storage.swap_size_mib, 9 * 1024)

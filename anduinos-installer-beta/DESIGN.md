@@ -38,7 +38,12 @@ and constructs every command itself.
   enabled by default. An offline index-refresh failure is a warning and skips
   the upgrade; after an upgrade transaction starts, any APT/dpkg failure is
   fatal. Recommended third-party drivers are an explicit opt-in and use
-  `ubuntu-drivers install --no-oem`.
+  `ubuntu-drivers install --no-oem`. Celluloid, yt-dlp, FFmpeg, libmpv and the
+  GStreamer base/good sets remain in the default system for everyday playback.
+  Wider GStreamer, legacy and specialist format support is a separate,
+  default-off online choice owned by the `anduinos-multimedia-codecs`
+  metapackage. A clean download failure is a visible warning; an inconsistent
+  APT/dpkg state remains fatal.
 - Wi-Fi: the one active, persistent Live-session NetworkManager Wi-Fi profile
   is migrated after the target image is copied. Historical connections, VPNs,
   hotspots, unsafe files and duplicate profiles are excluded. The executor

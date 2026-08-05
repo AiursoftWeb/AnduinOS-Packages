@@ -45,6 +45,16 @@ class InstallPlanTests(unittest.TestCase):
         ):
             InstallPlan.from_dict(value)
 
+    def test_software_choice_is_strict_and_round_trips(self):
+        plan = valid_plan(install_multimedia_codecs=True)
+        restored = InstallPlan.from_dict(plan.to_dict())
+        self.assertTrue(restored.software.install_multimedia_codecs)
+
+        value = plan.to_dict()
+        del value["software"]["install_multimedia_codecs"]
+        with self.assertRaisesRegex(ValueError, "Missing field in software"):
+            InstallPlan.from_dict(value)
+
 
 if __name__ == "__main__":
     unittest.main()

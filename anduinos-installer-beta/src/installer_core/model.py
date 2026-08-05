@@ -14,7 +14,7 @@ from typing import Any
 from .storage_graph import StorageGraph
 
 
-SCHEMA_VERSION = 9
+SCHEMA_VERSION = 10
 
 
 class Architecture(str, Enum):
@@ -129,6 +129,7 @@ class BootSpec:
 class SoftwareSpec:
     install_updates: bool = True
     install_third_party_drivers: bool = False
+    install_multimedia_codecs: bool = False
 
 
 @dataclass(frozen=True)
@@ -267,7 +268,11 @@ class InstallPlan:
         software_data = _object(root["software"], "software")
         _exact_fields(
             software_data,
-            {"install_updates", "install_third_party_drivers"},
+            {
+                "install_updates",
+                "install_third_party_drivers",
+                "install_multimedia_codecs",
+            },
             "software",
         )
         software = SoftwareSpec(**software_data)

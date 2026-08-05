@@ -210,7 +210,8 @@ msgid "Computer name contains invalid characters."
 msgstr "Имя компьютера содержит недопустимые символы."
 
 msgid "Configure account, region, timezone, and machine identity"
-msgstr "Настройка учетной записи, региона, часового пояса и идентификатора компьютера"
+msgstr ""
+"Настройка учетной записи, региона, часового пояса и идентификатора компьютера"
 
 msgid "Configure storage and swap"
 msgstr "Настройка хранилища и файла подкачки"
@@ -296,8 +297,7 @@ msgid "Empty disk — no partitions"
 msgstr "Пустой диск — нет разделов"
 
 msgid "Enables shared-space subvolumes, snapshots and Waypoint."
-msgstr ""
-"Включает подтома общего пространства, снимки и Waypoint."
+msgstr "Включает подтома общего пространства, снимки и Waypoint."
 
 msgid "English (UK)"
 msgstr "Английский (Великобритания)"
@@ -1004,8 +1004,6 @@ msgstr "Подключение к Интернету готово."
 msgid "Available Wi-Fi Networks"
 msgstr "Доступные сети Wi-Fi"
 
-#~ msgid "Choose a complete installation method, not only a filesystem."
-#~ msgstr "Выберите метод полной установки, а не только файловую систему."
 msgid "Preserve connected Wi-Fi network"
 msgstr "Сохранить подключённую сеть Wi-Fi"
 
@@ -1017,3 +1015,21 @@ msgstr "Повторная проверка целевого диска…"
 
 msgid "Storage devices could not be loaded: {error}"
 msgstr "Не удалось загрузить накопители: {error}"
+
+#: src/pages.py
+msgid "Install extended multimedia format support"
+msgstr "Установить расширенную поддержку мультимедийных форматов"
+
+#: src/pages.py
+msgid "Extended multimedia formats"
+msgstr "Расширенные мультимедийные форматы"
+
+#: src/pages.py
+msgid ""
+"Adds wider GStreamer compatibility and support for additional legacy and "
+"specialist media formats. Some components may be subject to patent or "
+"redistribution terms."
+msgstr "Расширяет совместимость с GStreamer и добавляет поддержку устаревших и специализированных медиаформатов. На некоторые компоненты могут распространяться патенты или условия повторного распространения."
+
+#~ msgid "Choose a complete installation method, not only a filesystem."
+#~ msgstr "Выберите метод полной установки, а не только файловую систему."

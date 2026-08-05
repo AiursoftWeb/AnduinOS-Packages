@@ -71,6 +71,7 @@ def state():
         "timezone": "Asia/Singapore",
         "install_updates": True,
         "install_third_party_drivers": False,
+        "install_multimedia_codecs": False,
     }
 
 
@@ -365,6 +366,7 @@ class FrontendPlanTests(unittest.TestCase):
         values = state()
         values["install_updates"] = False
         values["install_third_party_drivers"] = True
+        values["install_multimedia_codecs"] = True
         values["filesystem"] = Filesystem.EXT4.value
         disk = DiskIdentity(
             "/dev/sda", "serial:test", 64 * 1024**3, "Test", "test"
@@ -392,6 +394,7 @@ class FrontendPlanTests(unittest.TestCase):
         self.assertNotIn("[refresh-package-indexes]", simulated)
         self.assertNotIn("[upgrade-system]", simulated)
         self.assertIn("[install-third-party-drivers]", simulated)
+        self.assertIn("[install-multimedia-codecs]", simulated)
         self.assertNotIn("[ensure-waypoint]", simulated)
         self.assertIn("Target filesystem: ext4", simulated)
         self.assertIn("remove the live payload", simulated)

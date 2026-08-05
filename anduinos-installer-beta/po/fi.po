@@ -290,8 +290,7 @@ msgid "Empty disk — no partitions"
 msgstr "Tyhjä levy — ei osioita"
 
 msgid "Enables shared-space subvolumes, snapshots and Waypoint."
-msgstr ""
-"Ota käyttöön jaetun tilan alinvoluutit, hetkikuvat ja Waypoint."
+msgstr "Ota käyttöön jaetun tilan alinvoluutit, hetkikuvat ja Waypoint."
 
 msgid "English (UK)"
 msgstr "Englanti (UK)"
@@ -987,8 +986,6 @@ msgstr "Internet-yhteys on valmis."
 msgid "Available Wi-Fi Networks"
 msgstr "Käytettävissä olevat Wi-Fi-verkot"
 
-#~ msgid "Choose a complete installation method, not only a filesystem."
-#~ msgstr "Valitse täysi asennustapa, ei vain tiedostojärjestelmä."
 msgid "Preserve connected Wi-Fi network"
 msgstr "Säilytä yhdistetty Wi-Fi-verkko"
 
@@ -1000,3 +997,21 @@ msgstr "Tarkistetaan kohdelevyä uudelleen…"
 
 msgid "Storage devices could not be loaded: {error}"
 msgstr "Tallennuslaitteita ei voitu ladata: {error}"
+
+#: src/pages.py
+msgid "Install extended multimedia format support"
+msgstr "Asenna laajennettu mediamuotojen tuki"
+
+#: src/pages.py
+msgid "Extended multimedia formats"
+msgstr "Laajennetut mediamuodot"
+
+#: src/pages.py
+msgid ""
+"Adds wider GStreamer compatibility and support for additional legacy and "
+"specialist media formats. Some components may be subject to patent or "
+"redistribution terms."
+msgstr "Laajentaa GStreamer-yhteensopivuutta sekä lisää tuen vanhoille ja erikoistuneille mediamuodoille. Joihinkin osiin voi liittyä patentti- tai uudelleenjakeluehtoja."
+
+#~ msgid "Choose a complete installation method, not only a filesystem."
+#~ msgstr "Valitse täysi asennustapa, ei vain tiedostojärjestelmä."

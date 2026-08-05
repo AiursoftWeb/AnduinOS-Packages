@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-core</PackageName>
-    <PackageVersion>2.0.1-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS desktop core metapackage — pure upstream GNOME desktop environment with multimedia, printing, and input method support. No AnduinOS branding.</PackageDescription>
     <Section>metapackages</Section>
@@ -131,16 +131,17 @@
     <Recommend Include="libcanberra0" />
 
     <!-- ============================================================
-         Recommends: GStreamer extras (non-core plugins & codecs)
+         Recommends: GStreamer desktop integration
+
+         Extended codec plugins deliberately live in the optional
+         anduinos-multimedia-codecs metapackage. Celluloid, libmpv, FFmpeg,
+         and the GStreamer base/good sets continue to provide useful
+         out-of-box playback without that optional package.
          ============================================================ -->
-    <Recommend Include="gstreamer1.0-plugins-bad" />
-    <Recommend Include="gstreamer1.0-plugins-ugly" />
-    <Recommend Include="gstreamer1.0-libav" />
     <Recommend Include="gstreamer1.0-alsa" />
     <Recommend Include="gstreamer1.0-gl" />
     <Recommend Include="gstreamer1.0-gtk3" />
     <Recommend Include="gstreamer1.0-x" />
-    <Recommend Include="libavcodec-extra" />
 
     <!-- ============================================================
          Recommends: ALSA legacy tools (PipeWire handles audio now)

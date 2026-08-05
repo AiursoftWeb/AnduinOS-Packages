@@ -91,6 +91,9 @@ def build_plan(
             install_third_party_drivers=bool(
                 choices.get("install_third_party_drivers", False)
             ),
+            install_multimedia_codecs=bool(
+                choices.get("install_multimedia_codecs", False)
+            ),
         ),
         boot=BootSpec(
             mok_password_policy=(

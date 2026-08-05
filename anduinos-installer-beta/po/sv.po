@@ -291,8 +291,7 @@ msgid "Empty disk — no partitions"
 msgstr "Tom skiva – inga partitioner"
 
 msgid "Enables shared-space subvolumes, snapshots and Waypoint."
-msgstr ""
-"Aktiverar delade underbindningar, ögonblicksbilder och Waypoint."
+msgstr "Aktiverar delade underbindningar, ögonblicksbilder och Waypoint."
 
 msgid "English (UK)"
 msgstr "Engelska (UK)"
@@ -987,8 +986,6 @@ msgstr "Internetanslutningen är klar."
 msgid "Available Wi-Fi Networks"
 msgstr "Tillgängliga Wi-Fi-nätverk"
 
-#~ msgid "Choose a complete installation method, not only a filesystem."
-#~ msgstr "Välj en komplett installationsmetod, inte bara ett filsystem."
 msgid "Preserve connected Wi-Fi network"
 msgstr "Behåll det anslutna Wi-Fi-nätverket"
 
@@ -1000,3 +997,21 @@ msgstr "Kontrollerar måldisken igen…"
 
 msgid "Storage devices could not be loaded: {error}"
 msgstr "Lagringsenheterna kunde inte läsas in: {error}"
+
+#: src/pages.py
+msgid "Install extended multimedia format support"
+msgstr "Installera utökat stöd för multimedieformat"
+
+#: src/pages.py
+msgid "Extended multimedia formats"
+msgstr "Utökade multimedieformat"
+
+#: src/pages.py
+msgid ""
+"Adds wider GStreamer compatibility and support for additional legacy and "
+"specialist media formats. Some components may be subject to patent or "
+"redistribution terms."
+msgstr "Ger bredare GStreamer-kompatibilitet och stöd för fler äldre och specialiserade medieformat. Vissa komponenter kan omfattas av patent- eller vidaredistributionsvillkor."
+
+#~ msgid "Choose a complete installation method, not only a filesystem."
+#~ msgstr "Välj en komplett installationsmetod, inte bara ett filsystem."

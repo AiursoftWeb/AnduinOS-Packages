@@ -642,6 +642,7 @@ def build_network_page(shared, nav_view):
     online_features = [
         _("Download and install system updates during installation", lang),
         _("Install hardware drivers", lang),
+        _("Install extended multimedia format support", lang),
     ]
     recommended_methods = _recommended_input_methods(shared)
     if recommended_methods:
@@ -1195,16 +1196,39 @@ def build_software_page(shared, nav_view):
     drivers_detail.add_css_class("dim-label")
     options.append(drivers)
     options.append(drivers_detail)
+
+    multimedia = Gtk.CheckButton(
+        label=_("Install extended multimedia format support", lang)
+    )
+    multimedia_detail = Gtk.Label(
+        label=_(
+            "Adds wider GStreamer compatibility and support for additional "
+            "legacy and specialist media formats. Some components may be "
+            "subject to patent or redistribution terms.",
+            lang,
+        ),
+        halign=Gtk.Align.START,
+        wrap=True,
+        margin_start=28,
+    )
+    multimedia_detail.add_css_class("dim-label")
+    options.append(multimedia)
+    options.append(multimedia_detail)
     content.append(options)
 
     update_preference_key = "_preferred_install_updates"
     driver_preference_key = "_preferred_install_third_party_drivers"
+    multimedia_preference_key = "_preferred_install_multimedia_codecs"
     shared.setdefault(
         update_preference_key, bool(shared.get("install_updates", True))
     )
     shared.setdefault(
         driver_preference_key,
         bool(shared.get("install_third_party_drivers", False)),
+    )
+    shared.setdefault(
+        multimedia_preference_key,
+        bool(shared.get("install_multimedia_codecs", False)),
     )
     rendering = {"active": False}
     monitor = Gio.NetworkMonitor.get_default()
@@ -1216,8 +1240,11 @@ def build_software_page(shared, nav_view):
             shared[update_preference_key] = updates.get_active()
         if drivers.get_sensitive():
             shared[driver_preference_key] = drivers.get_active()
+        if multimedia.get_sensitive():
+            shared[multimedia_preference_key] = multimedia.get_active()
         shared["install_updates"] = updates.get_active()
         shared["install_third_party_drivers"] = drivers.get_active()
+        shared["install_multimedia_codecs"] = multimedia.get_active()
 
     def _render_connectivity():
         online = internet_connection_ready(monitor)
@@ -1233,15 +1260,23 @@ def build_software_page(shared, nav_view):
                 bool(shared.get(driver_preference_key, False)), online
             )
         )
+        multimedia.set_active(
+            effective_network_choice(
+                bool(shared.get(multimedia_preference_key, False)), online
+            )
+        )
         updates.set_sensitive(online)
         drivers.set_sensitive(online)
+        multimedia.set_sensitive(online)
         rendering["active"] = False
         offline_callout.set_visible(not online)
         shared["install_updates"] = updates.get_active()
         shared["install_third_party_drivers"] = drivers.get_active()
+        shared["install_multimedia_codecs"] = multimedia.get_active()
 
     updates.connect("toggled", lambda _button: _save())
     drivers.connect("toggled", lambda _button: _save())
+    multimedia.connect("toggled", lambda _button: _save())
     monitor.connect(
         "network-changed",
         lambda _monitor, _available: _render_connectivity(),
@@ -2887,6 +2922,12 @@ def build_summary_page(shared, nav_view):
             if shared.get("install_third_party_drivers", False)
             else _("do not install", lang)
         ),
+        f"<b>{_('Extended multimedia formats', lang)}:</b> "
+        + (
+            _("download and install", lang)
+            if shared.get("install_multimedia_codecs", False)
+            else _("do not install", lang)
+        ),
         f"<b>{_('Secure Boot enrollment', lang)}:</b> "
         + (
             _(
@@ -3366,6 +3407,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "remove-live-packages": _("Remove live-session components", lang),
         "configure-keyboard-layout": _("Keyboard Layout", lang),
         "install-input-method": input_method_title,
+        "install-multimedia-codecs": _(
+            "Install extended multimedia format support", lang
+        ),
         "configure-system": _(
             "Configure account, region, timezone, and machine identity", lang
         ),
@@ -3419,6 +3463,8 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         omitted_steps.add("ensure-waypoint")
     if not plan.software.install_third_party_drivers:
         omitted_steps.add("install-third-party-drivers")
+    if not plan.software.install_multimedia_codecs:
+        omitted_steps.add("install-multimedia-codecs")
     for step_id in omitted_steps:
         _row, light, _label = step_rows[step_id]
         light.remove_css_class("step-pending")

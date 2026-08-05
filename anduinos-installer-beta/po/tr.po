@@ -291,8 +291,7 @@ msgstr "Boş disk — bölüm yok"
 
 msgid "Enables shared-space subvolumes, snapshots and Waypoint."
 msgstr ""
-"Ortak alan alt hacimlerini, anlık görüntüleri ve Waypoint'i "
-"etkinleştirir."
+"Ortak alan alt hacimlerini, anlık görüntüleri ve Waypoint'i etkinleştirir."
 
 msgid "English (UK)"
 msgstr "İngilizce (BK)"
@@ -988,8 +987,6 @@ msgstr "İnternet bağlantısı hazır."
 msgid "Available Wi-Fi Networks"
 msgstr "Kullanılabilir Wi-Fi Ağları"
 
-#~ msgid "Choose a complete installation method, not only a filesystem."
-#~ msgstr "Yalnızca bir dosya sistemi değil, tam kurulum yöntemini seçin."
 msgid "Preserve connected Wi-Fi network"
 msgstr "Bağlı Wi-Fi ağını koru"
 
@@ -1001,3 +998,21 @@ msgstr "Hedef disk yeniden denetleniyor…"
 
 msgid "Storage devices could not be loaded: {error}"
 msgstr "Depolama aygıtları yüklenemedi: {error}"
+
+#: src/pages.py
+msgid "Install extended multimedia format support"
+msgstr "Genişletilmiş çoklu ortam biçimi desteğini yükle"
+
+#: src/pages.py
+msgid "Extended multimedia formats"
+msgstr "Genişletilmiş çoklu ortam biçimleri"
+
+#: src/pages.py
+msgid ""
+"Adds wider GStreamer compatibility and support for additional legacy and "
+"specialist media formats. Some components may be subject to patent or "
+"redistribution terms."
+msgstr "Daha geniş GStreamer uyumluluğu ile ek eski ve özel medya biçimleri için destek sağlar. Bazı bileşenler patent veya yeniden dağıtım koşullarına tabi olabilir."
+
+#~ msgid "Choose a complete installation method, not only a filesystem."
+#~ msgstr "Yalnızca bir dosya sistemi değil, tam kurulum yöntemini seçin."

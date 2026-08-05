@@ -72,6 +72,7 @@ def build_guided_vm_test_plan(
         software=SoftwareSpec(
             install_updates=False,
             install_third_party_drivers=False,
+            install_multimedia_codecs=False,
         ),
         boot=BootSpec(
             install_fallback_path=False,

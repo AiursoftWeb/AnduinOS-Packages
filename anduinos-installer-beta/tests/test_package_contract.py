@@ -26,8 +26,49 @@ class PackageContractTests(unittest.TestCase):
         root = ET.parse(ROOT / "anduinos-installer-beta.aosproj").getroot()
         self.assertEqual(
             root.findtext(".//PackageVersion"),
-            "2.0.1-49+$(SuiteShortName)",
+            "2.0.1-50+$(SuiteShortName)",
         )
+
+    def test_extended_codecs_are_optional_and_owned_by_one_metapackage(self):
+        package_root = ROOT.parent
+        desktop = ET.parse(
+            package_root
+            / "anduinos-desktop-core"
+            / "anduinos-desktop-core.aosproj"
+        ).getroot()
+        multimedia = ET.parse(
+            package_root
+            / "anduinos-multimedia-codecs"
+            / "anduinos-multimedia-codecs.aosproj"
+        ).getroot()
+        optional_packages = {
+            "gstreamer1.0-plugins-bad",
+            "gstreamer1.0-plugins-ugly",
+            "gstreamer1.0-libav",
+            "libavcodec-extra",
+        }
+        desktop_dependencies = {
+            item.get("Include")
+            for tag in ("Dependency", "Recommend")
+            for item in desktop.iter(tag)
+        }
+        multimedia_dependencies = {
+            item.get("Include")
+            for item in multimedia.iter("Dependency")
+        }
+        self.assertTrue(optional_packages.isdisjoint(desktop_dependencies))
+        self.assertEqual(multimedia_dependencies, optional_packages)
+
+        apps = ET.parse(
+            package_root
+            / "anduinos-desktop-apps"
+            / "anduinos-desktop-apps.aosproj"
+        ).getroot()
+        app_recommendations = {
+            item.get("Include") for item in apps.iter("Recommend")
+        }
+        self.assertIn("celluloid", app_recommendations)
+        self.assertIn("ffmpegthumbnailer", app_recommendations)
 
     def test_appstream_publishes_the_live_installer_as_an_application(self):
         root = ET.parse(ROOT / "anduinos-installer-beta.aosproj").getroot()

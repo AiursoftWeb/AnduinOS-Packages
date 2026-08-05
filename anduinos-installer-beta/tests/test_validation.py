@@ -76,6 +76,18 @@ class ValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(PlanValidationError, "boolean"):
             validate_plan(plan)
 
+        plan = valid_plan()
+        plan = dataclasses.replace(
+            plan,
+            software=dataclasses.replace(
+                plan.software, install_multimedia_codecs="yes"
+            ),
+        )
+        with self.assertRaisesRegex(
+            PlanValidationError, "Multimedia-codec policy must be boolean"
+        ):
+            validate_plan(plan)
+
     def test_accepts_multiple_input_methods_for_the_locale(self):
         plan = valid_plan()
         plan = dataclasses.replace(

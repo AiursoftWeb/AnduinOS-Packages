@@ -1,0 +1,27 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-multimedia-codecs</PackageName>
+    <PackageVersion>1.0.0-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Extended multimedia format support for AnduinOS GStreamer and FFmpeg applications</PackageDescription>
+    <Section>metapackages</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Keep everyday playback in the base desktop. This optional metapackage
+         adds the wider GStreamer plugin sets, FFmpeg-backed GStreamer
+         decoding, and FFmpeg's additional legacy/specialist codecs. -->
+    <Dependency Include="gstreamer1.0-plugins-bad" />
+    <Dependency Include="gstreamer1.0-plugins-ugly" />
+    <Dependency Include="gstreamer1.0-libav" />
+    <Dependency Include="libavcodec-extra" />
+  </ItemGroup>
+</Project>

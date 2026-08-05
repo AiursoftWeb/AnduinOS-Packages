@@ -6,11 +6,13 @@ import subprocess
 from fakes import FakeRunner
 from helpers import valid_plan
 from installer_core.software import (
+    MULTIMEDIA_CODECS_PACKAGE,
+    InstallMultimediaCodecsStep,
     InstallThirdPartyDriversStep,
     RefreshPackageIndexesStep,
     UpgradeSystemStep,
 )
-from installer_core.steps import InstallContext, StepWarning
+from installer_core.steps import InstallContext, StepSkipped, StepWarning
 
 
 def context_for(target: Path, *, updates: bool = True) -> InstallContext:
@@ -27,7 +29,164 @@ def prepare_apt(target: Path) -> None:
     apt_get.touch()
 
 
+class CodecInstallRunner(FakeRunner):
+    """Report the codec metapackage missing once, then installed."""
+
+    def __init__(self):
+        super().__init__()
+        self.codec_queries = 0
+
+    def run(self, command, **kwargs):
+        command = tuple(command)
+        if "dpkg-query" in command and command[-1] == MULTIMEDIA_CODECS_PACKAGE:
+            self.commands.append((command, kwargs))
+            self.codec_queries += 1
+            if self.codec_queries == 1:
+                return subprocess.CompletedProcess(command, 1, "", "missing")
+            return subprocess.CompletedProcess(command, 0, "ii ", "")
+        return super().run(command, **kwargs)
+
+
 class PackageUpdateTests(unittest.TestCase):
+    def test_selected_multimedia_formats_install_one_owned_metapackage(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_apt(target)
+            runner = CodecInstallRunner()
+            context = InstallContext(
+                valid_plan(install_multimedia_codecs=True),
+                lambda _message: None,
+                {
+                    "target": target,
+                    "chroot_environment_ready": True,
+                    "network_online": True,
+                },
+            )
+            step = InstallMultimediaCodecsStep(runner)
+            step.execute(context)
+            step.verify(context)
+
+        self.assertTrue(context.values["multimedia_codecs_installed"])
+        install_commands = [
+            command
+            for command, _kwargs in runner.commands
+            if command[-2:] == ("install", MULTIMEDIA_CODECS_PACKAGE)
+        ]
+        self.assertEqual(len(install_commands), 1)
+        self.assertIn("--no-install-recommends", install_commands[0])
+        self.assertTrue(context.values["package_indexes_refreshed"])
+
+    def test_unselected_multimedia_formats_do_not_probe_or_run_apt(self):
+        runner = FakeRunner()
+        context = InstallContext(
+            valid_plan(install_multimedia_codecs=False),
+            lambda _message: None,
+        )
+        with self.assertRaisesRegex(StepSkipped, "not selected"):
+            InstallMultimediaCodecsStep(runner).execute(context)
+        self.assertEqual(runner.commands, [])
+
+    def test_selected_multimedia_formats_warn_without_network(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            runner = FakeRunner()
+            context = InstallContext(
+                valid_plan(install_multimedia_codecs=True),
+                lambda _message: None,
+                {
+                    "target": target,
+                    "chroot_environment_ready": True,
+                    "network_online": False,
+                },
+            )
+            with self.assertRaisesRegex(StepWarning, "offline"):
+                InstallMultimediaCodecsStep(runner).execute(context)
+
+        self.assertEqual(len(runner.commands), 1)
+        self.assertIn("dpkg-query", runner.commands[0][0])
+        self.assertFalse(
+            any("apt-get" in command for command, _kwargs in runner.commands)
+        )
+
+    def test_clean_multimedia_download_failure_is_only_a_warning(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_apt(target)
+            runner = CodecInstallRunner()
+            context = InstallContext(
+                valid_plan(install_multimedia_codecs=True),
+                lambda _message: None,
+                {
+                    "target": target,
+                    "chroot_environment_ready": True,
+                    "network_online": True,
+                    "package_indexes_refreshed": True,
+                },
+            )
+            install = (
+                "chroot",
+                str(target),
+                "/usr/bin/env",
+                "DEBIAN_FRONTEND=noninteractive",
+                "apt-get",
+                "--yes",
+                "--no-install-recommends",
+                "-o",
+                "Acquire::Retries=1",
+                "-o",
+                "Acquire::http::Timeout=15",
+                "-o",
+                "Acquire::https::Timeout=15",
+                "install",
+                MULTIMEDIA_CODECS_PACKAGE,
+            )
+            runner.outputs[install] = ("", "download failed", 100)
+            with self.assertRaisesRegex(StepWarning, "Could not download"):
+                InstallMultimediaCodecsStep(runner).execute(context)
+
+        self.assertFalse(context.values["multimedia_codecs_installed"])
+        self.assertTrue(
+            any(command[-2:] == ("apt-get", "check") for command, _ in runner.commands)
+        )
+
+    def test_inconsistent_multimedia_failure_remains_fatal(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_apt(target)
+            runner = CodecInstallRunner()
+            context = InstallContext(
+                valid_plan(install_multimedia_codecs=True),
+                lambda _message: None,
+                {
+                    "target": target,
+                    "chroot_environment_ready": True,
+                    "network_online": True,
+                    "package_indexes_refreshed": True,
+                },
+            )
+            install = (
+                "chroot",
+                str(target),
+                "/usr/bin/env",
+                "DEBIAN_FRONTEND=noninteractive",
+                "apt-get",
+                "--yes",
+                "--no-install-recommends",
+                "-o",
+                "Acquire::Retries=1",
+                "-o",
+                "Acquire::http::Timeout=15",
+                "-o",
+                "Acquire::https::Timeout=15",
+                "install",
+                MULTIMEDIA_CODECS_PACKAGE,
+            )
+            runner.outputs[install] = ("", "dpkg failed", 100)
+            audit = ("chroot", str(target), "dpkg", "--audit")
+            runner.outputs[audit] = ("half-configured package", "", 0)
+            with self.assertRaisesRegex(RuntimeError, "inconsistent"):
+                InstallMultimediaCodecsStep(runner).execute(context)
+
     def test_refresh_then_upgrade_and_audit(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)

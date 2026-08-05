@@ -430,10 +430,16 @@ anduinos-live-settings:
   variables:
     PACKAGE_DIR: anduinos-live-settings
 
+anduinos-multimedia-codecs:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-multimedia-codecs
+
 anduinos-installer-beta:
   extends: .publish
   needs:
     - anduinos-live-settings
+    - anduinos-multimedia-codecs
   variables:
     PACKAGE_DIR: anduinos-installer-beta
 

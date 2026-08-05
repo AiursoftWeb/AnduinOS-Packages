@@ -292,8 +292,7 @@ msgid "Empty disk — no partitions"
 msgstr "Đĩa trống — không có phân vùng"
 
 msgid "Enables shared-space subvolumes, snapshots and Waypoint."
-msgstr ""
-"Kích hoạt các subvolume không gian chia sẻ, snapshot và Waypoint."
+msgstr "Kích hoạt các subvolume không gian chia sẻ, snapshot và Waypoint."
 
 msgid "English (UK)"
 msgstr "Tiếng Anh (Anh)"
@@ -989,8 +988,6 @@ msgstr "Kết nối Internet đã sẵn sàng."
 msgid "Available Wi-Fi Networks"
 msgstr "Các mạng Wi-Fi khả dụng"
 
-#~ msgid "Choose a complete installation method, not only a filesystem."
-#~ msgstr "Chọn phương pháp cài đặt đầy đủ, không chỉ là hệ thống tệp."
 msgid "Preserve connected Wi-Fi network"
 msgstr "Giữ mạng Wi-Fi đang kết nối"
 
@@ -1002,3 +999,21 @@ msgstr "Đang kiểm tra lại đĩa đích…"
 
 msgid "Storage devices could not be loaded: {error}"
 msgstr "Không thể tải thiết bị lưu trữ: {error}"
+
+#: src/pages.py
+msgid "Install extended multimedia format support"
+msgstr "Cài đặt hỗ trợ định dạng đa phương tiện mở rộng"
+
+#: src/pages.py
+msgid "Extended multimedia formats"
+msgstr "Các định dạng đa phương tiện mở rộng"
+
+#: src/pages.py
+msgid ""
+"Adds wider GStreamer compatibility and support for additional legacy and "
+"specialist media formats. Some components may be subject to patent or "
+"redistribution terms."
+msgstr "Mở rộng khả năng tương thích với GStreamer và hỗ trợ thêm các định dạng phương tiện cũ và chuyên dụng. Một số thành phần có thể chịu các điều khoản về bằng sáng chế hoặc phân phối lại."
+
+#~ msgid "Choose a complete installation method, not only a filesystem."
+#~ msgstr "Chọn phương pháp cài đặt đầy đủ, không chỉ là hệ thống tệp."

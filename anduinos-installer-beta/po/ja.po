@@ -295,8 +295,8 @@ msgstr "空のディスク — パーティションなし"
 
 msgid "Enables shared-space subvolumes, snapshots and Waypoint."
 msgstr ""
-"共有スペース サブボリューム、スナップショット、および Waypoint を有効"
-"にします。"
+"共有スペース サブボリューム、スナップショット、および Waypoint を有効にしま"
+"す。"
 
 msgid "English (UK)"
 msgstr "英語 (UK)"
@@ -995,9 +995,6 @@ msgstr "インターネット接続の準備ができました。"
 msgid "Available Wi-Fi Networks"
 msgstr "利用可能な Wi-Fi ネットワーク"
 
-#~ msgid "Choose a complete installation method, not only a filesystem."
-#~ msgstr ""
-#~ "ファイルシステムだけでなく、完全なインストール方法を選択してください。"
 msgid "Preserve connected Wi-Fi network"
 msgstr "接続中の Wi-Fi ネットワークを保持"
 
@@ -1009,3 +1006,22 @@ msgstr "対象ディスクを再確認しています…"
 
 msgid "Storage devices could not be loaded: {error}"
 msgstr "ストレージデバイスを読み込めませんでした: {error}"
+
+#: src/pages.py
+msgid "Install extended multimedia format support"
+msgstr "拡張マルチメディア形式サポートをインストール"
+
+#: src/pages.py
+msgid "Extended multimedia formats"
+msgstr "拡張マルチメディア形式"
+
+#: src/pages.py
+msgid ""
+"Adds wider GStreamer compatibility and support for additional legacy and "
+"specialist media formats. Some components may be subject to patent or "
+"redistribution terms."
+msgstr "GStreamer の互換性を拡張し、従来形式や特殊なメディア形式への対応を追加します。一部のコンポーネントには、特許または再配布条件が適用される場合があります。"
+
+#~ msgid "Choose a complete installation method, not only a filesystem."
+#~ msgstr ""
+#~ "ファイルシステムだけでなく、完全なインストール方法を選択してください。"

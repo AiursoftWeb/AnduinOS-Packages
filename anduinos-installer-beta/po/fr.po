@@ -210,7 +210,9 @@ msgid "Computer name contains invalid characters."
 msgstr "Le nom de l'ordinateur contient des caractères non valides."
 
 msgid "Configure account, region, timezone, and machine identity"
-msgstr "Configurer le compte, la région, le fuseau horaire et l’identité de la machine"
+msgstr ""
+"Configurer le compte, la région, le fuseau horaire et l’identité de la "
+"machine"
 
 msgid "Configure storage and swap"
 msgstr "Configurer le stockage et l'espace d'échange"
@@ -297,8 +299,7 @@ msgid "Empty disk — no partitions"
 msgstr "Disque vide — aucune partition"
 
 msgid "Enables shared-space subvolumes, snapshots and Waypoint."
-msgstr ""
-"Active les sous-volumes, instantanés et Waypoint en espace partagé."
+msgstr "Active les sous-volumes, instantanés et Waypoint en espace partagé."
 
 msgid "English (UK)"
 msgstr "Anglais (Royaume-Uni)"
@@ -1010,10 +1011,6 @@ msgstr "La connexion Internet est prête."
 msgid "Available Wi-Fi Networks"
 msgstr "Réseaux Wi-Fi disponibles"
 
-#~ msgid "Choose a complete installation method, not only a filesystem."
-#~ msgstr ""
-#~ "Choisissez une méthode d'installation complète, pas seulement un système "
-#~ "de fichiers."
 msgid "Preserve connected Wi-Fi network"
 msgstr "Conserver le réseau Wi-Fi connecté"
 
@@ -1025,3 +1022,23 @@ msgstr "Nouvelle vérification du disque cible…"
 
 msgid "Storage devices could not be loaded: {error}"
 msgstr "Impossible de charger les périphériques de stockage : {error}"
+
+#: src/pages.py
+msgid "Install extended multimedia format support"
+msgstr "Installer la prise en charge étendue des formats multimédias"
+
+#: src/pages.py
+msgid "Extended multimedia formats"
+msgstr "Formats multimédias étendus"
+
+#: src/pages.py
+msgid ""
+"Adds wider GStreamer compatibility and support for additional legacy and "
+"specialist media formats. Some components may be subject to patent or "
+"redistribution terms."
+msgstr "Améliore la compatibilité GStreamer et prend en charge davantage de formats multimédias anciens ou spécialisés. Certains composants peuvent être soumis à des brevets ou à des conditions de redistribution."
+
+#~ msgid "Choose a complete installation method, not only a filesystem."
+#~ msgstr ""
+#~ "Choisissez une méthode d'installation complète, pas seulement un système "
+#~ "de fichiers."

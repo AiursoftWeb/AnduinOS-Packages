@@ -8,6 +8,7 @@ from installer_core.language_support import InstallLanguagePacksStep
 from installer_core.mirrors import SelectFastestAptMirrorStep
 from installer_core.network import DetectNetworkConnectivityStep
 from installer_core.software import (
+    InstallMultimediaCodecsStep,
     InstallThirdPartyDriversStep,
     RefreshPackageIndexesStep,
     UpgradeSystemStep,
@@ -51,7 +52,10 @@ class OfflinePipelineTests(unittest.TestCase):
             runner = FakeRunner()
             statuses = []
             context = InstallContext(
-                valid_plan(install_third_party_drivers=True),
+                valid_plan(
+                    install_third_party_drivers=True,
+                    install_multimedia_codecs=True,
+                ),
                 lambda _message: None,
                 {
                     "target": Path(directory),
@@ -67,6 +71,7 @@ class OfflinePipelineTests(unittest.TestCase):
                 InstallLanguagePacksStep(runner),
                 RefreshPackageIndexesStep(runner),
                 UpgradeSystemStep(runner),
+                InstallMultimediaCodecsStep(runner),
                 InstallThirdPartyDriversStep(runner),
                 FinalOfflineStep(),
             ]
@@ -95,10 +100,11 @@ class OfflinePipelineTests(unittest.TestCase):
                 StepStatus.WARNING,
                 StepStatus.WARNING,
                 StepStatus.WARNING,
+                StepStatus.WARNING,
                 StepStatus.SUCCEEDED,
             ],
         )
-        self.assertEqual(len(result.warnings), 5)
+        self.assertEqual(len(result.warnings), 6)
         terminal = [item for item in statuses if item[1] is not StepStatus.RUNNING]
         self.assertTrue(all(item[2] for item in terminal[:-1]))
 
