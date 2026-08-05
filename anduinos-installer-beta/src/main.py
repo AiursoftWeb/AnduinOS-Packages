@@ -75,14 +75,10 @@ class InstallerApplication(Adw.Application):
             "development_mode": development_mode,
             "install_updates": True,
             "install_third_party_drivers": False,
-            "install_input_method": bool(
-                detected_language.recommended_input_method
-            ),
+            "input_methods": detected_language.default_input_methods,
             "_preferred_install_updates": True,
             "_preferred_install_third_party_drivers": False,
-            "_preferred_install_input_method": bool(
-                detected_language.recommended_input_method
-            ),
+            "_preferred_input_methods": detected_language.default_input_methods,
         }
 
     def do_startup(self):

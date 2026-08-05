@@ -50,7 +50,7 @@ class PlanningTests(unittest.TestCase):
             inventory_digest=TEST_INVENTORY_DIGEST,
             physical_memory_probe=lambda: 8 * GIB,
         )
-        self.assertEqual(plan.regional.input_method, "rime")
+        self.assertEqual(plan.regional.input_methods, ("rime",))
         self.assertEqual(plan.regional.keyboard.layout, "us")
         self.assertEqual(plan.boot.mok_password_policy.value, "anduinos-default")
         self.assertFalse(plan.software.install_updates)
@@ -82,7 +82,7 @@ class PlanningTests(unittest.TestCase):
             ),
             inventory_digest=TEST_INVENTORY_DIGEST,
         )
-        self.assertEqual(plan.regional.input_method, "rime")
+        self.assertEqual(plan.regional.input_methods, ("rime",))
 
     def test_recommended_input_method_can_be_declined(self):
         original = valid_plan()
@@ -93,7 +93,7 @@ class PlanningTests(unittest.TestCase):
             "username": original.identity.username,
             "full_name": original.identity.full_name,
             "timezone": "Asia/Shanghai",
-            "install_input_method": False,
+            "input_methods": (),
         }
         plan = build_plan(
             choices,
@@ -107,4 +107,29 @@ class PlanningTests(unittest.TestCase):
             ),
             inventory_digest=TEST_INVENTORY_DIGEST,
         )
-        self.assertIsNone(plan.regional.input_method)
+        self.assertEqual(plan.regional.input_methods, ())
+
+    def test_multiple_recommended_input_methods_can_be_selected(self):
+        original = valid_plan()
+        choices = {
+            "locale": "zh_CN.UTF-8",
+            "keyboard": "us",
+            "hostname": original.identity.hostname,
+            "username": original.identity.username,
+            "full_name": original.identity.full_name,
+            "timezone": "Asia/Shanghai",
+            "input_methods": ("rime", "wubi"),
+        }
+        plan = build_plan(
+            choices,
+            DiskIdentity("/dev/sda", "serial:test", 64 * 1024**3),
+            PlatformProbe(
+                Architecture.AMD64, Firmware.UEFI, SecureBoot.DISABLED
+            ),
+            "$y$j9T$example$example",
+            disk_binding=DiskTopologyBinding(
+                "serial:test", 64 * 1024**3, TEST_TOPOLOGY_DIGEST
+            ),
+            inventory_digest=TEST_INVENTORY_DIGEST,
+        )
+        self.assertEqual(plan.regional.input_methods, ("rime", "wubi"))

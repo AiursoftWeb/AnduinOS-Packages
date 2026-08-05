@@ -1,5 +1,5 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "default_language": "en_US",
   "locale_aliases": {
     "en": "en_US",
@@ -63,6 +63,30 @@
         "usr/bin/glib-compile-schemas"
       ]
     },
+    "quick": {
+      "display_name": "IBus Quick Classic",
+      "language_name": "繁體中文（香港速成）",
+      "desktop_source": {"type": "ibus", "id": "table:quick-classic"},
+      "packages": ["ibus-table-quick-classic"],
+      "required_paths": [
+        "usr/libexec/ibus-engine-table",
+        "usr/share/ibus/component/table.xml",
+        "usr/share/ibus-table/tables/quick-classic.db",
+        "usr/bin/glib-compile-schemas"
+      ]
+    },
+    "cangjie5": {
+      "display_name": "IBus Cangjie 5",
+      "language_name": "繁體中文（香港倉頡五代）",
+      "desktop_source": {"type": "ibus", "id": "table:cangjie5"},
+      "packages": ["ibus-table-cangjie5"],
+      "required_paths": [
+        "usr/libexec/ibus-engine-table",
+        "usr/share/ibus/component/table.xml",
+        "usr/share/ibus-table/tables/cangjie5.db",
+        "usr/bin/glib-compile-schemas"
+      ]
+    },
     "chewing": {
       "display_name": "IBus Chewing",
       "language_name": "繁體中文（台灣）",
@@ -71,6 +95,29 @@
       "required_paths": [
         "usr/libexec/ibus-engine-chewing",
         "usr/share/ibus/component/chewing.xml",
+        "usr/bin/glib-compile-schemas"
+      ]
+    },
+    "libzhuyin": {
+      "display_name": "IBus LibZhuyin",
+      "language_name": "繁體中文（台灣注音）",
+      "desktop_source": {"type": "ibus", "id": "libzhuyin"},
+      "packages": ["ibus-libzhuyin"],
+      "required_paths": [
+        "usr/libexec/ibus-engine-libzhuyin",
+        "usr/share/ibus/component/libzhuyin.xml",
+        "usr/bin/glib-compile-schemas"
+      ]
+    },
+    "wubi": {
+      "display_name": "IBus Wubi 86",
+      "language_name": "简体中文（五笔）",
+      "desktop_source": {"type": "ibus", "id": "table:wubi-jidian86"},
+      "packages": ["ibus-table-wubi"],
+      "required_paths": [
+        "usr/libexec/ibus-engine-table",
+        "usr/share/ibus/component/table.xml",
+        "usr/share/ibus-table/tables/wubi-jidian86.db",
         "usr/bin/glib-compile-schemas"
       ]
     },
@@ -117,6 +164,30 @@
         "usr/share/ibus/component/libthai.xml",
         "usr/bin/glib-compile-schemas"
       ]
+    },
+    "hindi_itrans": {
+      "display_name": "IBus M17N ITRANS",
+      "language_name": "हिन्दी (ITRANS)",
+      "desktop_source": {"type": "ibus", "id": "m17n:hi:itrans"},
+      "packages": ["ibus-m17n", "m17n-db"],
+      "required_paths": [
+        "usr/libexec/ibus-engine-m17n",
+        "usr/share/ibus/component/m17n.xml",
+        "usr/share/m17n/hi-itrans.mim",
+        "usr/bin/glib-compile-schemas"
+      ]
+    },
+    "hindi_inscript2": {
+      "display_name": "IBus M17N InScript 2",
+      "language_name": "हिन्दी (InScript 2)",
+      "desktop_source": {"type": "ibus", "id": "m17n:hi:inscript2"},
+      "packages": ["ibus-m17n", "m17n-db"],
+      "required_paths": [
+        "usr/libexec/ibus-engine-m17n",
+        "usr/share/ibus/component/m17n.xml",
+        "usr/share/m17n/hi-inscript2.mim",
+        "usr/bin/glib-compile-schemas"
+      ]
     }
   },
   "languages": [
@@ -128,7 +199,7 @@
       "language_pack_code": "ar",
       "keyboard": "ara",
       "timezone": "Asia/Riyadh",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "zh_CN",
@@ -138,7 +209,7 @@
       "language_pack_code": "zh-hans",
       "keyboard": "us",
       "timezone": "Asia/Shanghai",
-      "recommended_input_method": "rime"
+      "recommended_input_methods": ["rime", "wubi"]
     },
     {
       "code": "zh_HK",
@@ -148,7 +219,7 @@
       "language_pack_code": "zh-hant",
       "keyboard": "us",
       "timezone": "Asia/Hong_Kong",
-      "recommended_input_method": "cangjie"
+      "recommended_input_methods": ["cangjie", "quick", "cangjie5"]
     },
     {
       "code": "zh_TW",
@@ -158,7 +229,7 @@
       "language_pack_code": "zh-hant",
       "keyboard": "us",
       "timezone": "Asia/Taipei",
-      "recommended_input_method": "chewing"
+      "recommended_input_methods": ["chewing", "libzhuyin"]
     },
     {
       "code": "da",
@@ -168,7 +239,7 @@
       "language_pack_code": "da",
       "keyboard": "dk",
       "timezone": "Europe/Copenhagen",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "nl",
@@ -178,7 +249,7 @@
       "language_pack_code": "nl",
       "keyboard": "nl",
       "timezone": "Europe/Amsterdam",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "en_US",
@@ -188,7 +259,7 @@
       "language_pack_code": "en",
       "keyboard": "us",
       "timezone": "America/New_York",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "en_GB",
@@ -198,7 +269,7 @@
       "language_pack_code": "en",
       "keyboard": "gb",
       "timezone": "Europe/London",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "fi",
@@ -208,7 +279,7 @@
       "language_pack_code": "fi",
       "keyboard": "fi",
       "timezone": "Europe/Helsinki",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "fr",
@@ -218,7 +289,7 @@
       "language_pack_code": "fr",
       "keyboard": "fr",
       "timezone": "Europe/Paris",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "de",
@@ -228,7 +299,7 @@
       "language_pack_code": "de",
       "keyboard": "de",
       "timezone": "Europe/Berlin",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "el",
@@ -238,7 +309,7 @@
       "language_pack_code": "el",
       "keyboard": "gr",
       "timezone": "Europe/Athens",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "hi",
@@ -246,9 +317,9 @@
       "native_name": "हिन्दी",
       "locale": "hi_IN.UTF-8",
       "language_pack_code": "hi",
-      "keyboard": "in",
+      "keyboard": "us",
       "timezone": "Asia/Kolkata",
-      "recommended_input_method": null
+      "recommended_input_methods": ["hindi_itrans", "hindi_inscript2"]
     },
     {
       "code": "id",
@@ -258,7 +329,7 @@
       "language_pack_code": "id",
       "keyboard": "id",
       "timezone": "Asia/Jakarta",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "it",
@@ -268,7 +339,7 @@
       "language_pack_code": "it",
       "keyboard": "it",
       "timezone": "Europe/Rome",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "ja",
@@ -278,7 +349,7 @@
       "language_pack_code": "ja",
       "keyboard": "jp",
       "timezone": "Asia/Tokyo",
-      "recommended_input_method": "mozc"
+      "recommended_input_methods": ["mozc"]
     },
     {
       "code": "ko",
@@ -288,7 +359,7 @@
       "language_pack_code": "ko",
       "keyboard": "kr",
       "timezone": "Asia/Seoul",
-      "recommended_input_method": "hangul"
+      "recommended_input_methods": ["hangul"]
     },
     {
       "code": "pl",
@@ -298,7 +369,7 @@
       "language_pack_code": "pl",
       "keyboard": "pl",
       "timezone": "Europe/Warsaw",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "pt",
@@ -308,7 +379,7 @@
       "language_pack_code": "pt",
       "keyboard": "pt",
       "timezone": "Europe/Lisbon",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "pt_BR",
@@ -318,7 +389,7 @@
       "language_pack_code": "pt",
       "keyboard": "br",
       "timezone": "America/Sao_Paulo",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "ro",
@@ -328,7 +399,7 @@
       "language_pack_code": "ro",
       "keyboard": "ro",
       "timezone": "Europe/Bucharest",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "ru",
@@ -338,7 +409,7 @@
       "language_pack_code": "ru",
       "keyboard": "ru",
       "timezone": "Europe/Moscow",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "es",
@@ -348,7 +419,7 @@
       "language_pack_code": "es",
       "keyboard": "es",
       "timezone": "Europe/Madrid",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "sv",
@@ -358,7 +429,7 @@
       "language_pack_code": "sv",
       "keyboard": "se",
       "timezone": "Europe/Stockholm",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "th",
@@ -368,7 +439,7 @@
       "language_pack_code": "th",
       "keyboard": "th",
       "timezone": "Asia/Bangkok",
-      "recommended_input_method": "libthai"
+      "recommended_input_methods": ["libthai"]
     },
     {
       "code": "tr",
@@ -378,7 +449,7 @@
       "language_pack_code": "tr",
       "keyboard": "tr",
       "timezone": "Europe/Istanbul",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "uk",
@@ -388,7 +459,7 @@
       "language_pack_code": "uk",
       "keyboard": "ua",
       "timezone": "Europe/Kyiv",
-      "recommended_input_method": null
+      "recommended_input_methods": []
     },
     {
       "code": "vi",
@@ -396,9 +467,9 @@
       "native_name": "Tiếng Việt",
       "locale": "vi_VN.UTF-8",
       "language_pack_code": "vi",
-      "keyboard": "vn",
+      "keyboard": "us",
       "timezone": "Asia/Ho_Chi_Minh",
-      "recommended_input_method": "unikey"
+      "recommended_input_methods": ["unikey"]
     }
   ]
 }

@@ -64,11 +64,18 @@ class LanguageDefaultsTests(unittest.TestCase):
             {"zh_CN": "us", "zh_HK": "us", "zh_TW": "us"},
         )
 
+    def test_transliteration_defaults_use_us_physical_keyboard(self):
+        keyboards = {language.code: language.keyboard for language in LANGUAGES}
+        self.assertEqual(keyboards["hi"], "us")
+        self.assertEqual(keyboards["vi"], "us")
+
     def test_input_method_policy_is_installer_owned_and_complete(self):
         self.assertTrue(
             {
                 "rime", "cangjie", "chewing", "mozc", "hangul",
-                "unikey", "libthai",
+                "unikey", "libthai", "wubi", "quick",
+                "cangjie5", "libzhuyin", "hindi_itrans",
+                "hindi_inscript2",
             }
             <= set(INPUT_METHODS)
         )
@@ -82,20 +89,29 @@ class LanguageDefaultsTests(unittest.TestCase):
             {"anduinos-rime"},
         )
         mapping = {
-            language.code: language.recommended_input_method
+            language.code: language.recommended_input_methods
             for language in LANGUAGES
         }
-        for code, method_id in {
-            "zh_CN": "rime",
-            "zh_HK": "cangjie",
-            "zh_TW": "chewing",
-            "ja": "mozc",
-            "ko": "hangul",
-            "th": "libthai",
-            "vi": "unikey",
+        for code, method_ids in {
+            "zh_CN": ("rime", "wubi"),
+            "zh_HK": ("cangjie", "quick", "cangjie5"),
+            "zh_TW": ("chewing", "libzhuyin"),
+            "hi": ("hindi_itrans", "hindi_inscript2"),
+            "ja": ("mozc",),
+            "ko": ("hangul",),
+            "th": ("libthai",),
+            "vi": ("unikey",),
         }.items():
             with self.subTest(language=code):
-                self.assertEqual(mapping[code], method_id)
+                self.assertEqual(mapping[code], method_ids)
+                self.assertEqual(
+                    next(
+                        language.default_input_methods
+                        for language in LANGUAGES
+                        if language.code == code
+                    ),
+                    method_ids[:1],
+                )
         self.assertTrue(
             {
                 Path("usr/share/rime-data/anduinos_defaults.yaml"),
@@ -109,6 +125,14 @@ class LanguageDefaultsTests(unittest.TestCase):
                 self.assertTrue(method.packages)
                 self.assertTrue(method.required_paths)
                 self.assertIsNotNone(method.desktop_source)
+        self.assertEqual(
+            {
+                method_id
+                for language in LANGUAGES
+                for method_id in language.recommended_input_methods
+            },
+            set(INPUT_METHODS),
+        )
 
     def test_every_supported_language_has_a_maintained_timezone(self):
         self.assertEqual(
@@ -204,7 +228,7 @@ class LanguageDefaultsTests(unittest.TestCase):
                 encoding="utf-8"
             )
         )
-        policy["languages"][0]["recommended_input_method"] = "missing"
+        policy["languages"][0]["recommended_input_methods"] = ["missing"]
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "languages.json"
             path.write_text(json.dumps(policy), encoding="utf-8")
@@ -235,7 +259,7 @@ class LanguageDefaultsTests(unittest.TestCase):
                 "language_pack_code": "xx",
                 "keyboard": "xx",
                 "timezone": "Etc/UTC",
-                "recommended_input_method": "example-ime",
+                "recommended_input_methods": ["example-ime", "rime"],
             }
         )
         with tempfile.TemporaryDirectory() as directory:
@@ -253,7 +277,13 @@ class LanguageDefaultsTests(unittest.TestCase):
 
         added_language = languages[-1]
         added_method = methods["example-ime"]
-        self.assertEqual(added_language.recommended_input_method, "example-ime")
+        self.assertEqual(
+            added_language.recommended_input_methods,
+            ("example-ime", "rime"),
+        )
+        self.assertEqual(
+            added_language.default_input_methods, ("example-ime",)
+        )
         self.assertEqual(added_method.packages, ("ibus-example",))
         self.assertEqual(added_method.desktop_source.id, "example:engine")
         self.assertEqual(default_language, "en_US")

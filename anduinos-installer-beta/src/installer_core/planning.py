@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import replace
 
-from languages import DEFAULT_LOCALE, language_for_locale
+from languages import DEFAULT_LOCALE, Language, language_for_locale
 
 from .model import (
     BootSpec,
@@ -84,16 +84,7 @@ def build_plan(
             locale=locale,
             timezone=str(choices.get("timezone") or ""),
             keyboard=KeyboardSpec(str(choices.get("keyboard") or "")),
-            input_method=(
-                language.recommended_input_method
-                if bool(
-                    choices.get(
-                        "install_input_method",
-                        language.recommended_input_method is not None,
-                    )
-                )
-                else None
-            ),
+            input_methods=_input_method_choices(choices, language),
         ),
         software=SoftwareSpec(
             install_updates=bool(choices.get("install_updates", True)),
@@ -117,3 +108,14 @@ def build_plan(
     plan = replace(plan, storage=replace(plan.storage, graph=graph))
     validate_plan(plan)
     return plan
+
+
+def _input_method_choices(
+    choices: Mapping[str, object], language: Language
+) -> tuple[str, ...]:
+    selected = choices.get("input_methods", language.default_input_methods)
+    if not isinstance(selected, (tuple, list)):
+        raise ValueError("Input methods must be a list or tuple")
+    if not all(isinstance(method_id, str) for method_id in selected):
+        raise ValueError("Input method identifiers must be strings")
+    return tuple(selected)

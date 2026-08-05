@@ -304,14 +304,16 @@ def should_show_network_page(shared, monitor=None) -> bool:
     )
 
 
-def _recommended_input_method(shared):
-    """Return the selected locale's maintained input-method policy, if any."""
+def _recommended_input_methods(shared):
+    """Return the selected locale's ordered input-method recommendations."""
 
     language = language_for_locale(str(shared.get("locale") or ""))
-    return (
-        input_method(language.recommended_input_method)
-        if language is not None
-        else None
+    if language is None:
+        return ()
+    return tuple(
+        method
+        for method_id in language.recommended_input_methods
+        if (method := input_method(method_id)) is not None
     )
 
 
@@ -324,6 +326,26 @@ def _input_method_install_label(method, lang):
         language=method.language_name,
         name=method.display_name,
     )
+
+
+def normalize_input_method_choices(
+    method_ids: tuple[str, ...],
+    selected: object,
+) -> tuple[str, ...]:
+    """Keep valid selections once, in maintained recommendation order."""
+
+    if not isinstance(selected, (tuple, list, set, frozenset)):
+        return ()
+    return tuple(method_id for method_id in method_ids if method_id in selected)
+
+
+def effective_network_input_methods(
+    preferred: tuple[str, ...],
+    online: bool,
+) -> tuple[str, ...]:
+    """Apply connectivity without forgetting selected IME preferences."""
+
+    return preferred if online else ()
 
 
 def _offline_callout(lang):
@@ -503,11 +525,8 @@ def build_welcome_page(shared, nav_view):
             shared["locale"] = l.locale
             shared["keyboard"] = l.keyboard
             shared["timezone"] = default_timezone(l.code)
-            recommends_input_method = l.recommended_input_method is not None
-            shared["install_input_method"] = recommends_input_method
-            shared["_preferred_install_input_method"] = (
-                recommends_input_method
-            )
+            shared["input_methods"] = l.default_input_methods
+            shared["_preferred_input_methods"] = l.default_input_methods
             Gtk.Widget.set_default_direction(
                 Gtk.TextDirection.RTL
                 if l.code in RTL_LANGUAGES
@@ -622,11 +641,9 @@ def build_network_page(shared, nav_view):
         _("Download and install system updates during installation", lang),
         _("Install hardware drivers", lang),
     ]
-    recommended_method = _recommended_input_method(shared)
-    if recommended_method is not None:
-        online_features.append(
-            _input_method_install_label(recommended_method, lang)
-        )
+    recommended_methods = _recommended_input_methods(shared)
+    if recommended_methods:
+        online_features.append(_("Install input method", lang))
     for text in online_features:
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         row.append(Gtk.Image.new_from_icon_name("emblem-ok-symbolic"))
@@ -917,12 +934,17 @@ def build_keyboard_page(shared, nav_view):
     form.append(_labeled(_("Keyboard Layout", lang), kbd_dropdown))
     form.append(_labeled(_("Test your keyboard here…", lang), test_entry))
 
-    recommended_method = _recommended_input_method(shared)
-    if recommended_method is not None:
+    recommended_methods = _recommended_input_methods(shared)
+    if recommended_methods:
         form.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
-        input_method_choice = Gtk.CheckButton(
-            label=_input_method_install_label(recommended_method, lang)
-        )
+        method_ids = tuple(method.id for method in recommended_methods)
+        input_method_choices = []
+        for method in recommended_methods:
+            choice = Gtk.CheckButton(
+                label=_input_method_install_label(method, lang)
+            )
+            input_method_choices.append((method.id, choice))
+            form.append(choice)
         input_method_detail = Gtk.Label(
             label=_(
                 "Requires an Internet connection. The base installation "
@@ -932,59 +954,64 @@ def build_keyboard_page(shared, nav_view):
             halign=Gtk.Align.START,
             xalign=0,
             wrap=True,
-            margin_start=28,
         )
         input_method_detail.add_css_class("dim-label")
         offline_callout = _offline_callout(lang)
-        form.append(input_method_choice)
         form.append(input_method_detail)
         form.append(offline_callout)
 
-        preference_key = "_preferred_install_input_method"
-        preferred = bool(
+        preference_key = "_preferred_input_methods"
+        preferred = normalize_input_method_choices(
+            method_ids,
             shared.get(
                 preference_key,
-                shared.get("install_input_method", True),
-            )
+                shared.get("input_methods", method_ids[:1]),
+            ),
         )
         shared[preference_key] = preferred
         rendering = {"active": False}
         monitor = Gio.NetworkMonitor.get_default()
 
-        def _save_input_method():
+        def _save_input_methods():
             if rendering["active"]:
                 return
-            selected = input_method_choice.get_active()
+            selected = tuple(
+                method_id
+                for method_id, choice in input_method_choices
+                if choice.get_active()
+            )
             shared[preference_key] = selected
-            shared["install_input_method"] = selected
+            shared["input_methods"] = selected
 
-        def _render_input_method():
+        def _render_input_methods():
             online = internet_connection_ready(monitor)
             shared["network_preflight_online"] = online
-            rendering["active"] = True
-            input_method_choice.set_active(
-                effective_network_choice(
-                    bool(shared.get(preference_key, True)), online
-                )
+            selected = effective_network_input_methods(
+                normalize_input_method_choices(
+                    method_ids, shared.get(preference_key)
+                ),
+                online,
             )
-            input_method_choice.set_sensitive(online)
+            rendering["active"] = True
+            for method_id, choice in input_method_choices:
+                choice.set_active(method_id in selected)
+                choice.set_sensitive(online)
             rendering["active"] = False
             offline_callout.set_visible(not online)
-            shared["install_input_method"] = (
-                input_method_choice.get_active()
-            )
+            shared["input_methods"] = selected
 
-        input_method_choice.connect(
-            "toggled", lambda _button: _save_input_method()
-        )
+        for _method_id, choice in input_method_choices:
+            choice.connect(
+                "toggled", lambda _button: _save_input_methods()
+            )
         monitor.connect(
             "network-changed",
-            lambda _monitor, _available: _render_input_method(),
+            lambda _monitor, _available: _render_input_methods(),
         )
-        _render_input_method()
+        _render_input_methods()
     else:
-        shared["install_input_method"] = False
-        shared["_preferred_install_input_method"] = False
+        shared["input_methods"] = ()
+        shared["_preferred_input_methods"] = ()
 
     form_area = Gtk.Box(
         orientation=Gtk.Orientation.VERTICAL,
@@ -2790,16 +2817,25 @@ def build_summary_page(shared, nav_view):
         f"{escape(shared.get('timezone', '?'))}",
     ]
 
-    recommended_method = _recommended_input_method(shared)
-    if recommended_method is not None:
+    recommended_methods = _recommended_input_methods(shared)
+    if recommended_methods:
+        selected_methods = tuple(
+            method
+            for method_id in shared.get("input_methods", ())
+            if (method := input_method(method_id)) is not None
+        )
+        method_summary = (
+            escape(
+                ", ".join(
+                    method.display_name for method in selected_methods
+                )
+            )
+            if selected_methods
+            else _("do not install", lang)
+        )
         lines.insert(
             2,
-            f"<b>{escape(recommended_method.display_name)}:</b> "
-            + (
-                _("download and install", lang)
-                if shared.get("install_input_method", True)
-                else _("do not install", lang)
-            ),
+            f"<b>{_('Install input method', lang)}:</b> {method_summary}",
         )
 
     if guided_mode:
@@ -3201,10 +3237,16 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         )
     )
 
-    selected_method = input_method(plan.regional.input_method)
+    selected_methods = tuple(
+        method
+        for method_id in plan.regional.input_methods
+        if (method := input_method(method_id)) is not None
+    )
     input_method_title = _("Install input method", lang)
-    if selected_method is not None:
-        input_method_title += f" · {selected_method.display_name}"
+    if selected_methods:
+        input_method_title += " · " + ", ".join(
+            method.display_name for method in selected_methods
+        )
     step_titles = {
         "detect-boot-environment": _(
             "Detect firmware and Secure Boot", lang

@@ -76,6 +76,64 @@ class ValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(PlanValidationError, "boolean"):
             validate_plan(plan)
 
+    def test_accepts_multiple_input_methods_for_the_locale(self):
+        plan = valid_plan()
+        plan = dataclasses.replace(
+            plan,
+            regional=dataclasses.replace(
+                plan.regional,
+                locale="zh_CN.UTF-8",
+                timezone="Asia/Shanghai",
+                input_methods=("rime", "wubi"),
+            ),
+        )
+        validate_plan(plan)
+
+    def test_rejects_an_input_method_recommended_for_another_locale(self):
+        plan = valid_plan()
+        plan = dataclasses.replace(
+            plan,
+            regional=dataclasses.replace(
+                plan.regional,
+                locale="zh_CN.UTF-8",
+                timezone="Asia/Shanghai",
+                input_methods=("cangjie",),
+            ),
+        )
+        with self.assertRaisesRegex(
+            PlanValidationError,
+            "do not match installer language policy",
+        ):
+            validate_plan(plan)
+
+    def test_rejects_duplicate_input_methods(self):
+        plan = valid_plan()
+        plan = dataclasses.replace(
+            plan,
+            regional=dataclasses.replace(
+                plan.regional,
+                locale="zh_CN.UTF-8",
+                timezone="Asia/Shanghai",
+                input_methods=("rime", "rime"),
+            ),
+        )
+        with self.assertRaisesRegex(PlanValidationError, "duplicates"):
+            validate_plan(plan)
+
+    def test_rejects_input_methods_outside_policy_order(self):
+        plan = valid_plan()
+        plan = dataclasses.replace(
+            plan,
+            regional=dataclasses.replace(
+                plan.regional,
+                locale="zh_CN.UTF-8",
+                timezone="Asia/Shanghai",
+                input_methods=("wubi", "rime"),
+            ),
+        )
+        with self.assertRaisesRegex(PlanValidationError, "policy order"):
+            validate_plan(plan)
+
     def test_rejects_password_in_passwordless_plan(self):
         plan = valid_plan(authentication=AuthenticationMode.PASSWORDLESS_SHARED)
         plan = dataclasses.replace(

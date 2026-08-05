@@ -5,7 +5,9 @@ from gi.repository import Gio
 from pages import (
     _input_method_install_label,
     effective_network_choice,
+    effective_network_input_methods,
     internet_connection_ready,
+    normalize_input_method_choices,
     should_show_network_page,
 )
 from languages import INPUT_METHODS, input_method
@@ -49,6 +51,28 @@ class NetworkPageRoutingTests(unittest.TestCase):
                 self.assertEqual(
                     effective_network_choice(preferred, online), expected
                 )
+
+    def test_offline_input_methods_are_all_unselected(self):
+        self.assertEqual(
+            effective_network_input_methods(("rime", "wubi"), True),
+            ("rime", "wubi"),
+        )
+        self.assertEqual(
+            effective_network_input_methods(("rime", "wubi"), False),
+            (),
+        )
+        self.assertEqual(effective_network_input_methods((), True), ())
+
+    def test_input_method_selection_is_normalized_to_policy_order(self):
+        self.assertEqual(
+            normalize_input_method_choices(
+                ("rime", "wubi"), ("wubi", "unknown", "rime", "wubi")
+            ),
+            ("rime", "wubi"),
+        )
+        self.assertEqual(
+            normalize_input_method_choices(("rime", "wubi"), None), ()
+        )
 
     def test_only_full_connectivity_skips_the_network_page(self):
         for connectivity in Gio.NetworkConnectivity:

@@ -14,7 +14,7 @@ from typing import Any
 from .storage_graph import StorageGraph
 
 
-SCHEMA_VERSION = 8
+SCHEMA_VERSION = 9
 
 
 class Architecture(str, Enum):
@@ -107,7 +107,7 @@ class RegionalSpec:
     locale: str
     timezone: str
     keyboard: KeyboardSpec
-    input_method: str | None = None
+    input_methods: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -146,6 +146,9 @@ class InstallPlan:
     def to_dict(self) -> dict[str, Any]:
         """Return a JSON/YAML-safe mapping."""
         result = asdict(self)
+        result["regional"]["input_methods"] = list(
+            self.regional.input_methods
+        )
         if self.storage.graph is not None:
             result["storage"]["graph"] = self.storage.graph.to_dict()
         return result
@@ -243,14 +246,22 @@ class InstallPlan:
         regional_data = _object(root["regional"], "regional")
         _exact_fields(
             regional_data,
-            {"locale", "timezone", "keyboard", "input_method"},
+            {"locale", "timezone", "keyboard", "input_methods"},
             "regional",
         )
         keyboard_data = _object(regional_data["keyboard"], "regional.keyboard")
         _exact_fields(keyboard_data, {"layout", "variant"}, "regional.keyboard")
         keyboard = KeyboardSpec(**keyboard_data)
+        raw_input_methods = regional_data["input_methods"]
+        if not isinstance(raw_input_methods, list) or not all(
+            isinstance(method_id, str) for method_id in raw_input_methods
+        ):
+            raise TypeError("regional.input_methods must be a list of strings")
         regional = RegionalSpec(
-            **{**regional_data, "keyboard": keyboard}
+            locale=regional_data["locale"],
+            timezone=regional_data["timezone"],
+            keyboard=keyboard,
+            input_methods=tuple(raw_input_methods),
         )
 
         software_data = _object(root["software"], "software")

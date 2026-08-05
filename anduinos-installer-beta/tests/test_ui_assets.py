@@ -25,16 +25,18 @@ class InstallerVisualAssetTests(unittest.TestCase):
         )
         self.assertIn('"install-input-method":', source)
         self.assertIn('_("Install input method", lang)', source)
-        self.assertIn('f" · {selected_method.display_name}"', source)
+        self.assertIn('", ".join(', source)
         self.assertIn('if status == "warning":', source)
 
     def test_optional_downloads_share_visible_offline_state(self):
         source = (ROOT / "src/pages.py").read_text(encoding="utf-8")
         self.assertIn("def _offline_callout", source)
-        self.assertIn("input_method_choice.set_sensitive(online)", source)
+        self.assertIn("Gtk.CheckButton(", source)
+        self.assertIn("choice.set_sensitive(online)", source)
+        self.assertIn('shared["input_methods"] = selected', source)
         self.assertIn("updates.set_sensitive(online)", source)
         self.assertIn("drivers.set_sensitive(online)", source)
-        self.assertIn("recommended_method.display_name", source)
+        self.assertIn("selected_methods", source)
         self.assertIn("method.language_name", source)
 
     def test_every_wizard_illustration_is_a_parseable_local_svg(self):

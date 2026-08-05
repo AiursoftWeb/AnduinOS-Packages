@@ -18,12 +18,15 @@ from installer_core.steps import (
 )
 
 
-def plan_for(method_id: str):
+def plan_for(*method_ids: str):
     base = valid_plan()
     language = next(
         language
         for language in LANGUAGES
-        if language.recommended_input_method == method_id
+        if all(
+            method_id in language.recommended_input_methods
+            for method_id in method_ids
+        )
     )
     return replace(
         base,
@@ -35,7 +38,7 @@ def plan_for(method_id: str):
                 base.regional.keyboard,
                 layout=language.keyboard,
             ),
-            input_method=method_id,
+            input_methods=method_ids,
         ),
     )
 
@@ -97,14 +100,14 @@ class InstallInputMethodTests(unittest.TestCase):
         self.assertEqual(result.results[0].status, StepStatus.SKIPPED)
         self.assertIn("not required", result.results[0].message)
         self.assertEqual(runner.commands, [])
-        self.assertIsNone(context.values["input_method_installed"])
+        self.assertIsNone(context.values["input_methods_installed"])
         self.assertFalse(override.exists())
 
     def test_unselected_recommended_input_method_is_skipped(self):
         plan = plan_for("rime")
         plan = replace(
             plan,
-            regional=replace(plan.regional, input_method=None),
+            regional=replace(plan.regional, input_methods=()),
         )
         with tempfile.TemporaryDirectory() as directory:
             runner = FakeRunner()
@@ -126,7 +129,7 @@ class InstallInputMethodTests(unittest.TestCase):
                 with self.assertRaisesRegex(StepWarning, "offline"):
                     InstallInputMethodStep(runner).execute(context)
                 self.assertEqual(runner.commands, [])
-                self.assertFalse(context.values["input_method_installed"])
+                self.assertFalse(context.values["input_methods_installed"])
 
     def test_every_declared_payload_configures_without_network(self):
         for method in INPUT_METHODS.values():
@@ -139,7 +142,7 @@ class InstallInputMethodTests(unittest.TestCase):
                 step.execute(context)
                 step.verify(context)
 
-                self.assertTrue(context.values["input_method_installed"])
+                self.assertTrue(context.values["input_methods_installed"])
                 if method.desktop_source is not None:
                     override = (
                         target
@@ -195,6 +198,35 @@ class InstallInputMethodTests(unittest.TestCase):
             messages,
         )
 
+    def test_multiple_selected_methods_are_all_registered_in_policy_order(self):
+        selected = tuple(
+            method
+            for method_id in ("rime", "wubi")
+            if (method := input_method(method_id)) is not None
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            for method in selected:
+                prepare_payload(target, method)
+            context = context_for(
+                target, plan_for("rime", "wubi"), online=False
+            )
+            step = InstallInputMethodStep(FakeRunner())
+            step.execute(context)
+            step.verify(context)
+            override = (
+                target
+                / "usr/share/glib-2.0/schemas"
+                / "99_anduinos_default_input.gschema.override"
+            ).read_text(encoding="utf-8")
+
+        self.assertEqual(
+            override,
+            "[org.gnome.desktop.input-sources]\n"
+            "sources=[('xkb', 'us'), ('ibus', 'rime'), "
+            "('ibus', 'table:wubi-jidian86')]\n",
+        )
+
     def test_online_install_uses_only_the_selected_policy_packages(self):
         selected = input_method("mozc")
         assert selected is not None
@@ -219,7 +251,45 @@ class InstallInputMethodTests(unittest.TestCase):
         install = next(command for command in commands if "install" in command)
         self.assertEqual(install[-len(selected.packages):], selected.packages)
         self.assertTrue(context.values["package_indexes_refreshed"])
-        self.assertTrue(context.values["input_method_installed"])
+        self.assertTrue(context.values["input_methods_installed"])
+
+    def test_online_install_merges_packages_for_every_selected_method(self):
+        selected = tuple(
+            method
+            for method_id in ("rime", "wubi")
+            if (method := input_method(method_id)) is not None
+        )
+        expected_packages = tuple(
+            dict.fromkeys(
+                package
+                for method in selected
+                for package in method.packages
+            )
+        )
+
+        class InstallingRunner(FakeRunner):
+            def run(self, command, **kwargs):
+                result = super().run(command, **kwargs)
+                if "install" in command:
+                    for method in selected:
+                        prepare_payload(target, method)
+                return result
+
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_apt(target)
+            runner = InstallingRunner()
+            context = context_for(
+                target, plan_for("rime", "wubi"), online=True
+            )
+            step = InstallInputMethodStep(runner)
+            step.execute(context)
+            step.verify(context)
+
+        commands = [item[0] for item in runner.commands]
+        install = next(command for command in commands if "install" in command)
+        self.assertEqual(install[-len(expected_packages):], expected_packages)
+        self.assertEqual(len(expected_packages), len(set(expected_packages)))
 
     def test_failed_download_is_warning_when_package_state_is_clean(self):
         selected = input_method("hangul")

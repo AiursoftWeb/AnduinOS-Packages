@@ -48,10 +48,16 @@ class Language:
     language_pack_code: str  # Ubuntu langpack suffix, e.g. "zh-hans"
     keyboard: str       # default physical XKB layout, e.g. "us"
     timezone: str
-    recommended_input_method: str | None = None
+    recommended_input_methods: tuple[str, ...] = ()
+
+    @property
+    def default_input_methods(self) -> tuple[str, ...]:
+        """Return the default-selected recommendation as an ordered tuple."""
+
+        return self.recommended_input_methods[:1]
 
 
-_CONFIG_SCHEMA_VERSION = 4
+_CONFIG_SCHEMA_VERSION = 5
 _TOKEN_RE = re.compile(r"^[a-z0-9][a-z0-9+._-]*$")
 _SOURCE_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9+._:@/-]*$")
 
@@ -91,9 +97,15 @@ def _nonempty_string(value: object, label: str) -> str:
     return value
 
 
-def _string_list(value: object, label: str) -> tuple[str, ...]:
-    if not isinstance(value, list) or not value:
-        raise RuntimeError(f"{label} must be a non-empty list")
+def _string_list(
+    value: object,
+    label: str,
+    *,
+    allow_empty: bool = False,
+) -> tuple[str, ...]:
+    if not isinstance(value, list) or (not value and not allow_empty):
+        qualifier = "a list" if allow_empty else "a non-empty list"
+        raise RuntimeError(f"{label} must be {qualifier}")
     result = tuple(_nonempty_string(item, label) for item in value)
     if len(result) != len(set(result)):
         raise RuntimeError(f"{label} contains duplicates")
@@ -233,7 +245,7 @@ def _load_configuration() -> tuple[
             language,
             {
                 "code", "english_name", "native_name", "locale", "keyboard",
-                "language_pack_code", "timezone", "recommended_input_method",
+                "language_pack_code", "timezone", "recommended_input_methods",
             },
             f"languages[{index}]",
         )
@@ -253,14 +265,19 @@ def _load_configuration() -> tuple[
                 f"languages[{index}] references unknown keyboard layout "
                 f"{values['keyboard']!r}"
             )
-        input_method_id = language["recommended_input_method"]
-        if input_method_id is not None and input_method_id not in methods:
+        input_method_ids = _string_list(
+            language["recommended_input_methods"],
+            f"languages[{index}].recommended_input_methods",
+            allow_empty=True,
+        )
+        unknown_input_methods = set(input_method_ids) - set(methods)
+        if unknown_input_methods:
             raise RuntimeError(
                 f"languages[{index}] references unknown input method "
-                f"{input_method_id!r}"
+                f"{sorted(unknown_input_methods)!r}"
             )
         languages.append(
-            Language(**values, recommended_input_method=input_method_id)
+            Language(**values, recommended_input_methods=input_method_ids)
         )
     codes = [language.code for language in languages]
     locales = [language.locale for language in languages]

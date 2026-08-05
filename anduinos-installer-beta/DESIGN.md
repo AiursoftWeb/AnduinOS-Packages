@@ -67,9 +67,12 @@ and constructs every command itself.
   system timezone list and allowing the user to override the guess.
 - Regional input policy: `data/languages.json` is the single validated source
   for supported languages, locale aliases, the default language, physical XKB
-  layouts, Ubuntu language-pack codes and optional input methods. Each input
-  method declares its label, packages, required files and optional desktop
-  source.
+  layouts, Ubuntu language-pack codes and ordered optional input-method
+  recommendations. Each input method declares its label, packages, required
+  files and optional desktop source. The first recommendation is checked by
+  default; the UI lets the user select any number of maintained methods,
+  including none. While offline, every input-method choice is unchecked and
+  disabled.
   The UI, planner, validator and privileged executor resolve the same policy;
   none contains a language-, region-, framework- or product-specific branch.
   Physical keyboard configuration remains an independent offline step. The

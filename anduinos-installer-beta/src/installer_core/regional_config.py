@@ -47,7 +47,7 @@ class ConfigureKeyboardStep:
 
 @dataclass
 class InstallInputMethodStep:
-    """Install and configure the locale-selected input method when possible."""
+    """Install and configure every selected language input method."""
 
     runner: CommandRunner
     id: str = "install-input-method"
@@ -62,16 +62,16 @@ class InstallInputMethodStep:
 
     def execute(self, context: InstallContext) -> None:
         target = _target(context)
-        method = input_method(context.plan.regional.input_method)
-        context.values["input_method_installed"] = False
+        methods = _selected_input_methods(context)
+        context.values["input_methods_installed"] = False
         _clear_input_method_configuration(target)
-        if method is None:
-            context.values["input_method_installed"] = None
+        if not methods:
+            context.values["input_methods_installed"] = None
             context.log("Language input method: not required")
             language = language_for_locale(context.plan.regional.locale)
             if (
                 language is not None
-                and language.recommended_input_method is None
+                and not language.recommended_input_methods
             ):
                 raise StepSkipped(
                     f"An additional input method is not required for "
@@ -82,34 +82,52 @@ class InstallInputMethodStep:
             )
 
         context.log(
-            f"Selected language input method: {method.display_name} "
-            f"({method.id})"
+            "Selected language input methods: "
+            + ", ".join(
+                f"{method.display_name} ({method.id})" for method in methods
+            )
         )
-        payload_complete = _input_method_payload_complete(target, method)
-        if payload_complete:
+        missing_methods = tuple(
+            method
+            for method in methods
+            if not _input_method_payload_complete(target, method)
+        )
+        if not missing_methods:
             context.log(
-                "Input-method payload is already present in the target system; "
+                "All input-method payloads are already present in the target "
+                "system; "
                 "no package download is needed"
             )
         else:
             if context.values.get("network_online") is False:
                 raise StepWarning(
-                    f"Skipped {method.display_name} installation "
+                    "Skipped input-method installation for "
+                    + ", ".join(
+                        method.display_name for method in missing_methods
+                    )
+                    + " "
                     "because the installer is offline; the physical keyboard "
                     "layout is still configured"
                 )
             _require_target_command(target, "usr/bin/apt-get")
+            packages = tuple(
+                dict.fromkeys(
+                    package
+                    for method in missing_methods
+                    for package in method.packages
+                )
+            )
             context.log(
                 "Installing input-method packages in the target system: "
-                + ", ".join(method.packages)
+                + ", ".join(packages)
             )
             try:
                 if not context.values.get("package_indexes_refreshed"):
                     refresh_package_indexes(context, self.runner)
             except CommandError as error:
                 raise StepWarning(
-                    f"Could not refresh package indexes for the "
-                    f"{method.display_name} input method; the physical keyboard "
+                    "Could not refresh package indexes for the selected input "
+                    "methods; the physical keyboard "
                     "layout is still configured"
                 ) from error
             result = self.runner.run(
@@ -128,7 +146,7 @@ class InstallInputMethodStep:
                     "-o",
                     "Acquire::https::Timeout=15",
                     "install",
-                    *method.packages,
+                    *packages,
                 ),
                 check=False,
                 timeout=3600,
@@ -140,18 +158,22 @@ class InstallInputMethodStep:
                         "inconsistent package state"
                     )
                 raise StepWarning(
-                    f"Could not download or install {method.display_name}; "
+                    "Could not download or install the selected input methods; "
                     "the physical keyboard layout is still "
                     "configured"
                 )
 
-        _verify_input_method_payload(target, method)
-        context.log(
-            f"Input-method payload verified for {method.display_name}"
+        for method in methods:
+            _verify_input_method_payload(target, method)
+            context.log(
+                f"Input-method payload verified for {method.display_name}"
+            )
+        desktop_methods = tuple(
+            method for method in methods if method.desktop_source is not None
         )
-        if method.desktop_source is not None:
+        if desktop_methods:
             sources = _input_sources_value(
-                method,
+                desktop_methods,
                 context.plan.regional.keyboard.layout,
             )
             context.log(f"GNOME input-source defaults: sources={sources}")
@@ -166,10 +188,10 @@ class InstallInputMethodStep:
             )
         _write_input_method_configuration(
             target,
-            method,
+            desktop_methods,
             context.plan.regional.keyboard.layout,
         )
-        if method.desktop_source is not None:
+        if desktop_methods:
             self.runner.run(
                 (
                     "chroot",
@@ -183,24 +205,43 @@ class InstallInputMethodStep:
                 "Compiled GNOME settings schemas; the input sources will be "
                 "available to newly created users"
             )
-        context.values["input_method_installed"] = True
-        context.log(f"Language input method: {method.id} installed")
+        context.values["input_methods_installed"] = True
+        context.log(
+            "Language input methods installed: "
+            + ", ".join(method.id for method in methods)
+        )
 
     def verify(self, context: InstallContext) -> None:
         target = _target(context)
-        method = input_method(context.plan.regional.input_method)
+        methods = _selected_input_methods(context)
         override = _input_override(target)
-        if method is None:
+        if not methods:
             if override.exists():
                 raise RuntimeError("Unexpected input-method configuration")
             return
-        if context.values.get("input_method_installed") is not True:
+        if context.values.get("input_methods_installed") is not True:
             raise RuntimeError("Input-method installation was not recorded")
-        _verify_input_method_payload(target, method)
-        if method.desktop_source is not None and not override.is_file():
+        for method in methods:
+            _verify_input_method_payload(target, method)
+        desktop_methods = tuple(
+            method for method in methods if method.desktop_source is not None
+        )
+        if desktop_methods and not override.is_file():
             raise RuntimeError("Input-method configuration is missing")
-        if method.desktop_source is None and override.exists():
+        if not desktop_methods and override.exists():
             raise RuntimeError("Unexpected desktop input-source configuration")
+        if desktop_methods:
+            expected = (
+                "[org.gnome.desktop.input-sources]\n"
+                "sources="
+                + _input_sources_value(
+                    desktop_methods,
+                    context.plan.regional.keyboard.layout,
+                )
+                + "\n"
+            )
+            if override.read_text(encoding="utf-8") != expected:
+                raise RuntimeError("Input-method configuration is incorrect")
 
     def cleanup(self, context: InstallContext) -> None:
         return None
@@ -235,28 +276,42 @@ def _clear_input_method_configuration(target: Path) -> None:
 
 def _write_input_method_configuration(
     target: Path,
-    method: InputMethod,
+    methods: tuple[InputMethod, ...],
     keyboard_layout: str,
 ) -> None:
-    if method.desktop_source is not None:
+    if methods:
         override = _input_override(target)
         override.parent.mkdir(parents=True, exist_ok=True)
         override.write_text(
             "[org.gnome.desktop.input-sources]\n"
-            f"sources={_input_sources_value(method, keyboard_layout)}\n",
+            f"sources={_input_sources_value(methods, keyboard_layout)}\n",
             encoding="utf-8",
         )
 
 
-def _input_sources_value(method: InputMethod, keyboard_layout: str) -> str:
+def _input_sources_value(
+    methods: tuple[InputMethod, ...], keyboard_layout: str
+) -> str:
     """Return the GSettings value written as the new-user input-source default."""
 
-    if method.desktop_source is None:
-        raise ValueError("Input method has no desktop input source")
-    return (
-        f"[('xkb', '{keyboard_layout}'), "
-        f"('{method.desktop_source.type}', '{method.desktop_source.id}')]"
-    )
+    sources = [("xkb", keyboard_layout)]
+    for method in methods:
+        if method.desktop_source is None:
+            raise ValueError("Input method has no desktop input source")
+        sources.append((method.desktop_source.type, method.desktop_source.id))
+    return repr(sources)
+
+
+def _selected_input_methods(
+    context: InstallContext,
+) -> tuple[InputMethod, ...]:
+    methods = []
+    for method_id in context.plan.regional.input_methods:
+        method = input_method(method_id)
+        if method is None:
+            raise RuntimeError(f"Unknown selected input method: {method_id}")
+        methods.append(method)
+    return tuple(methods)
 
 
 def _input_method_payload_complete(

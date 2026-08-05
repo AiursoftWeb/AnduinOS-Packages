@@ -198,14 +198,35 @@ def validate_plan(
     configured_language = language_for_locale(regional.locale)
     if configured_language is None:
         errors.append("Unsupported installer locale")
-    elif regional.input_method not in {
-        None,
-        configured_language.recommended_input_method,
-    }:
-        errors.append("Input method does not match installer language policy")
-    if (
-        regional.input_method is not None
-        and input_method(regional.input_method) is None
+    selected_input_methods: tuple[str, ...] = ()
+    if type(regional.input_methods) is not tuple:
+        errors.append("Input methods must be an ordered tuple")
+    elif not all(
+        isinstance(method_id, str) for method_id in regional.input_methods
+    ):
+        errors.append("Input method identifiers must be strings")
+    else:
+        selected_input_methods = regional.input_methods
+        if len(selected_input_methods) != len(set(selected_input_methods)):
+            errors.append("Input methods must not contain duplicates")
+    if configured_language is not None:
+        maintained = configured_language.recommended_input_methods
+        if any(
+            method_id not in maintained
+            for method_id in selected_input_methods
+        ):
+            errors.append(
+                "Input methods do not match installer language policy"
+            )
+        selected_set = set(selected_input_methods)
+        policy_order = tuple(
+            method_id for method_id in maintained if method_id in selected_set
+        )
+        if selected_input_methods != policy_order:
+            errors.append("Input methods must follow language policy order")
+    if any(
+        input_method(method_id) is None
+        for method_id in selected_input_methods
     ):
         errors.append("Unknown input method")
 

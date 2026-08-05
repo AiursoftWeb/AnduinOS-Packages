@@ -24,7 +24,7 @@ def context_for(target: Path, language_code: str, *, online: bool):
                 plan.regional.keyboard,
                 layout=language.keyboard,
             ),
-            input_method=language.recommended_input_method,
+            input_methods=language.default_input_methods,
         ),
     )
     return InstallContext(

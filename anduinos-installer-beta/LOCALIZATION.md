@@ -57,22 +57,24 @@ entries, invalid format placeholders, and catalogs that cannot be compiled.
 APKG runs it before packaging and installs the generated catalogs below
 `/usr/share/locale`.
 
-The maintained recommendations are Rime for Simplified Chinese, Cangjie Big
-for Hong Kong Traditional Chinese, Chewing for Taiwan Traditional Chinese,
-Mozc for Japanese, Hangul for Korean, LibThai for Thai and Unikey for
-Vietnamese. Each recommendation appears as a default-selected optional download
-and is disabled while offline, symmetrically with system updates and online
-driver discovery. Languages whose JSON entry has no recommendation do not show
-the extra choice.
+The maintained ordered recommendations are Rime then Wubi for Simplified
+Chinese; Cangjie Big, Quick Classic then Cangjie 5 for Hong Kong Traditional
+Chinese; Chewing then LibZhuyin for Taiwan Traditional Chinese; ITRANS then
+InScript 2 for Hindi; Mozc for Japanese; Hangul for Korean; LibThai for Thai;
+and Unikey for Vietnamese. The first item is checked by default, while the UI
+allows any number of maintained methods, including none. All boxes are
+unchecked and disabled while offline, symmetrically with system updates and
+online driver discovery; reconnecting restores the user's remembered choices.
+Languages whose JSON entry has no recommendation do not show the extra choice.
 
 Before creating the account, the privileged installer configures the physical
 keyboard offline, installs the selected language's exact Ubuntu base and GNOME
-language packs, and handles the selected input method independently. It reuses
-complete payloads already present on the installation medium. Offline or
-download failure is a visible warning and does not abort installation.
+language packs, and handles every selected input method independently. It
+reuses complete payloads already present on the installation medium. Offline
+or download failure is a visible warning and does not abort installation.
 The input-method progress row is independent from the physical keyboard and
 language-pack rows. It is explicitly skipped when the selected language needs
-no additional method or the user leaves the optional method unselected.
+no additional method or the user leaves every optional method unselected.
 Desktop-source registration is generated generically from JSON. Input-method
 packages own their shared defaults, so the installer never writes product
 configuration to `/etc/skel` or an existing user's home. Adding a language,
