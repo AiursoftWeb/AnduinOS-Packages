@@ -662,7 +662,12 @@ def _attach_timeout(GLib, context, milliseconds: int, callback):
 
 
 def _persist_active_profile(client, active, NM, GLib, context) -> None:
-    remote = client.get_connection_by_path(active.get_connection())
+    # Modern libnm returns the RemoteConnection object itself here.  Older
+    # introspection data exposed its D-Bus path instead, so retain that narrow
+    # compatibility branch without ever passing an object to a string API.
+    remote = active.get_connection()
+    if isinstance(remote, str):
+        remote = client.get_connection_by_path(remote)
     if remote is None:
         raise WifiError("NetworkManager did not publish the connected profile")
     loop = GLib.MainLoop.new(context, False)

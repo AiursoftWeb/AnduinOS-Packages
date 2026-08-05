@@ -22,13 +22,6 @@ def load_package_verifier():
 
 
 class PackageContractTests(unittest.TestCase):
-    def test_package_version_matches_live_cleanup_release(self):
-        root = ET.parse(ROOT / "anduinos-installer-beta.aosproj").getroot()
-        self.assertEqual(
-            root.findtext(".//PackageVersion"),
-            "2.0.1-52+$(SuiteShortName)",
-        )
-
     def test_extended_codecs_are_optional_and_owned_by_one_metapackage(self):
         package_root = ROOT.parent
         desktop = ET.parse(

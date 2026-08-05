@@ -4,13 +4,14 @@ from pathlib import Path
 import gi
 
 gi.require_version("NM", "1.0")
-from gi.repository import NM
+from gi.repository import GLib, NM
 
 from installer_core.wifi import (
     WifiConnectionRequest,
     WifiEapMethod,
     WifiError,
     WifiSecurity,
+    _persist_active_profile,
     build_nm_connection,
     classify_wifi_security,
     disconnect_wifi,
@@ -128,6 +129,55 @@ class FakeClient:
 
 
 class WifiDiscoveryTests(unittest.TestCase):
+    def test_persist_uses_the_remote_connection_returned_by_libnm(self):
+        context = GLib.MainContext.new()
+
+        class RemoteConnection:
+            def __init__(self):
+                self.updated = False
+
+            def update2(
+                self, settings, flags, arguments, _cancellable, callback
+            ):
+                self.updated = True
+                self.settings = settings.unpack()
+                self.flags = flags
+                self.arguments = arguments.unpack()
+                source = GLib.idle_source_new()
+
+                def complete():
+                    callback(self, object())
+                    return GLib.SOURCE_REMOVE
+
+                source.set_callback(complete)
+                source.attach(context)
+
+            def update2_finish(self, _result):
+                return True
+
+        class ActiveConnection:
+            def __init__(self, remote):
+                self.remote = remote
+
+            def get_connection(self):
+                return self.remote
+
+        class Client:
+            def get_connection_by_path(self, _path):
+                raise AssertionError(
+                    "RemoteConnection must not be passed to a path API"
+                )
+
+        remote = RemoteConnection()
+        _persist_active_profile(
+            Client(), ActiveConnection(remote), NM, GLib, context
+        )
+
+        self.assertTrue(remote.updated)
+        self.assertEqual(remote.settings, {})
+        self.assertEqual(remote.arguments, {})
+        self.assertEqual(remote.flags, NM.SettingsUpdate2Flags.TO_DISK)
+
     def test_frontend_wifi_backend_never_spawns_an_external_process(self):
         source = (
             Path(__file__).parents[1] / "src/installer_core/wifi.py"
