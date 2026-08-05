@@ -61,7 +61,6 @@ User **cannot** install both.  Dpkg removes the Ubuntu package at install time.
 | 9a | 〃 | `whoopsie` | 〃 | Error reporting → Ubuntu servers |
 | 10 | `anduinos-session` | `ubuntu-session` | yes | + postinst purges `10_ubuntu-session.gschema.override` |
 | 11 | `anduinos-gnome-extensions` | `gnome-shell-ubuntu-extensions` | yes | Metapackage — AnduinOS-curated extension set |
-| 12 | `anduinos-installer-config` | `ubiquity-slideshow-ubuntu` | yes | + postinst `dpkg-divert` of Ubiquity languagelist |
 | 13 | `anduinos-software-properties-common` | `software-properties-common` | yes | Patches `add-apt-repository` → `--distro=ubuntu` |
 | 14 | `anduinos-software-properties-gtk` | `software-properties-gtk` | yes | Strips Ubuntu Pro ads; suppresses `ubuntu-pro-client` dep |
 | 15 | `firefox-anduinos` | `firefox` | — | Mozilla Apt `.deb`, not the snap wrapper |

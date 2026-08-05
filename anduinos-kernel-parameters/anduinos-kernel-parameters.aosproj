@@ -1,13 +1,14 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-kernel-parameters</PackageName>
-    <PackageVersion>2.0.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS desktop kernel parameters — enables full dynamic preemption on the Ubuntu generic kernel</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
+    <Conflicts>lowlatency-kernel</Conflicts>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
@@ -23,12 +24,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Dependency Include="linux-generic" />
     <Dependency Include="grub2-common" />
   </ItemGroup>
 
   <ItemGroup>
-    <ConfFile Include="assets/50-anduinos-desktop.cfg"
-              Target="/etc/default/grub.d/50-anduinos-desktop.cfg" />
+    <IncludeFile Include="assets/99-anduinos-desktop.cfg"
+                 Target="/etc/default/grub.d/99-anduinos-desktop.cfg" />
     <PostInstallScript Include="scripts/postinst.sh" />
     <PostRemoveScript Include="scripts/postrm.sh" />
   </ItemGroup>

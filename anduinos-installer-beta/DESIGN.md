@@ -132,11 +132,10 @@ custom filesystem/subvolume policy, multi-ESP boot and RAID milestones are
 defined in [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
 
 AnduinOS ISO builds now ship this beta as the default installer so the
-destructive VM matrix can run against the real image. Ubiquity,
-`anduinos-installer-config`, and `anduinos-bwrap-hack` remain built and
-published but are not installed automatically. During the beta period a user
-may explicitly install `anduinos-installer-config` to obtain the complete
-legacy fallback stack.
+destructive VM matrix can run against the real image. The legacy Ubiquity
+integration package has been retired and is no longer built or published.
+`anduinos-bwrap-hack` remains available independently but is not installed
+automatically.
 
 The package owns both its application-menu entry and a GNOME autostart helper.
 The helper creates a trusted desktop launcher only in a non-root Casper
@@ -305,8 +304,8 @@ rounded visual boundary and obscure whether the card itself is active.
   preservation, independent boot, hard-power-cut and partial-target recovery
   runs remain mandatory. See
   [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
-- Final release gate: complete the VM matrix and only then remove Ubiquity and
-  `anduinos-installer-config`.
+- Final release gate: complete the VM matrix before promoting and renaming the
+  native installer package.
 
 Disk encryption, TPM2 unlocking and FIDO2 unlocking are explicitly outside
 the release-one scope. Release one supports unencrypted ext4 and unencrypted
