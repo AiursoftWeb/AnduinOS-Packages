@@ -532,6 +532,39 @@ msgstr "安全启动配置"
 msgid "Secure Boot Enabled"
 msgstr "安全启动已启用"
 
+msgid "Firmware does not support Secure Boot"
+msgstr "固件不支持安全启动"
+
+msgid "Secure Boot state could not be determined"
+msgstr "无法确定安全启动状态"
+
+msgid "Not required without firmware enforcement"
+msgstr "固件未强制验证时无需配置"
+
+msgid "Not checked because Secure Boot state is unknown"
+msgstr "安全启动状态未知，因此未检查"
+
+msgid "Kernel signature enforcement is inactive"
+msgstr "内核签名强制验证未启用"
+
+msgid "Driver trust cannot be verified"
+msgstr "无法验证驱动程序信任状态"
+
+msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgstr "此固件不提供安全启动功能，无需配置证书。"
+
+msgid "Secure Boot status could not be read. Driver trust operations are blocked until detection succeeds."
+msgstr "无法读取安全启动状态。在成功检测之前，驱动程序信任操作已被阻止。"
+
+msgid "Secure Boot Trust Not Required"
+msgstr "无需配置安全启动信任"
+
+msgid "Firmware signature enforcement is not active."
+msgstr "固件签名强制验证未启用。"
+
+msgid "Driver installation is blocked until detection succeeds."
+msgstr "在成功检测之前，驱动程序安装已被阻止。"
+
 msgid "Secure Boot is a motherboard security standard that ensures only trusted software loads at startup."
 msgstr "Secure Boot 是一种主板安全标准，确保仅在启动时加载受信任的软件"
 

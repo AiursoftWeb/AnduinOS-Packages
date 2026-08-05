@@ -181,11 +181,14 @@ Carapace roots remain available for cold-start grammar, while commands absent
 from Carapace, such as distribution-provided compatibility tools, can be
 suggested directly from the live executable snapshot.
 
-Version `1.0.0-30` hardens that feature set for default desktop deployment.
+Version `1.0.0-31` hardens that feature set for default desktop deployment.
 The Bash loader is idempotent, each shell owns exactly one private helper, and
 failed helpers are reaped and replaced without turning the next keystroke into
-a cold-start loop. The child closes every inherited descriptor except its
-protocol stdin/stdout and `/dev/null` stderr. Wire lines, PATH scans, directory
+a cold-start loop. The native frontend also observes the master opt-out at
+runtime: disabling predictions restores the previous Readline hooks, removes
+stale ghost text and stops the shell's helper. The child closes every inherited
+descriptor except its protocol stdin/stdout and `/dev/null` stderr. Wire lines,
+PATH scans, directory
 scans, command output, entity collections, worker count and worker queue all
 have explicit limits; foreground send and receive share one 8 ms deadline.
 

@@ -1,7 +1,7 @@
 import unittest
 from dataclasses import replace
 
-from installer_core.model import InstallPlan
+from installer_core.model import InstallPlan, SecureBoot
 
 from helpers import valid_plan
 
@@ -20,6 +20,10 @@ class InstallPlanTests(unittest.TestCase):
         )
         restored = InstallPlan.from_dict(plan.to_dict())
         self.assertEqual(restored, plan)
+
+    def test_unsupported_secure_boot_round_trips(self):
+        plan = valid_plan(secure_boot=SecureBoot.UNSUPPORTED)
+        self.assertEqual(InstallPlan.from_dict(plan.to_dict()), plan)
 
     def test_rejects_non_list_input_methods_at_privilege_boundary(self):
         value = valid_plan().to_dict()

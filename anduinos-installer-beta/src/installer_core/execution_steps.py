@@ -46,6 +46,7 @@ class DetectBootEnvironmentStep:
         secure_boot = {
             SecureBoot.ENABLED: "enabled",
             SecureBoot.DISABLED: "disabled",
+            SecureBoot.UNSUPPORTED: "unsupported by firmware",
             SecureBoot.NOT_APPLICABLE: "not applicable in Legacy BIOS mode",
         }[platform.secure_boot]
         context.log(f"Architecture: {platform.architecture.value}")

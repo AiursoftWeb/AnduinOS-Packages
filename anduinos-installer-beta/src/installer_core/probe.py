@@ -54,25 +54,47 @@ def probe_platform(
         )
 
     try:
+        environment = os.environ.copy()
+        environment["LC_ALL"] = "C"
+        environment["LANG"] = "C"
         result = run(
             ["mokutil", "--sb-state"],
             capture_output=True,
             text=True,
             timeout=10,
             check=False,
+            env=environment,
         )
     except (FileNotFoundError, subprocess.TimeoutExpired) as error:
         raise ProbeError(f"Cannot determine Secure Boot state: {error}") from error
 
     output = f"{result.stdout}\n{result.stderr}".lower()
-    if "secureboot enabled" in output or "secure boot enabled" in output:
-        secure_boot = SecureBoot.ENABLED
-    elif "secureboot disabled" in output or "secure boot disabled" in output:
-        secure_boot = SecureBoot.DISABLED
-    else:
+    reported_states = {
+        state
+        for state, reported in (
+            (
+                SecureBoot.ENABLED,
+                "secureboot enabled" in output
+                or "secure boot enabled" in output,
+            ),
+            (
+                SecureBoot.DISABLED,
+                "secureboot disabled" in output
+                or "secure boot disabled" in output,
+            ),
+            (
+                SecureBoot.UNSUPPORTED,
+                "doesn't support secure boot" in output
+                or "does not support secure boot" in output,
+            ),
+        )
+        if reported
+    }
+    if len(reported_states) != 1:
         raise ProbeError(
             "mokutil did not report an unambiguous Secure Boot state"
         )
+    secure_boot = reported_states.pop()
     return PlatformProbe(architecture, Firmware.UEFI, secure_boot)
 
 

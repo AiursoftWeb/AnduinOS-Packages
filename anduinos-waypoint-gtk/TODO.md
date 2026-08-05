@@ -94,25 +94,28 @@ Items marked complete must have direct test or artifact evidence.
     authenticated incremental chains are deferred until they have atomic
     chain-level retention and power-loss qualification. See
     `docs/RECOVERY-SCOPE.md`.
-- [x] Replace generic/custom subvolume selection with a fixed System recovery
-  policy and an explicit independent Personal Files boundary; `/home` is never
-  implied to be recoverable until a separate trusted design exists.
+- [x] Keep System recovery and Personal Files history as independent policies;
+  System rollback never changes `/home`.
 - [x] Make recovery previews explain packages, kernel, personal-data scope, boot
   fallback, and required restart.
 - [x] Remove the imported individual-file restore GUI, CLI, D-Bus method, root
   path-copy implementation, and `rsync` dependency from the compiled product.
-- [x] Design a non-privileged, descriptor-confined export path before adding
-  individual-file recovery again; the root helper must never follow
-  user-controlled destination paths. Remove the non-functional imported browse
-  action while the root-owned store remains private. See
-  `docs/RECOVERY-SCOPE.md`.
+- [x] Implement independent immutable `@home` history with manual and scheduled
+  creation, timeline retention, pinning, verification and safe deletion.
+- [x] Implement caller-scoped, descriptor-confined Personal Files browsing and
+  file/folder recovery; the root helper never receives a destination path.
+- [x] Export, verify, import and delete Personal Files backups as independent
+  full Btrfs streams with versioned SHA-256 manifests.
+- [x] Deliver opt-out automatic creation notifications and aggregated retention
+  cleanup notifications through an unprivileged desktop-session listener.
 - [x] Integrate paired APT pre/post recovery points using fail-open hooks that
   can never make APT or dpkg fail.
 - [x] Finish hardening and integration-testing the root D-Bus helper and systemd
   services. The release build already removes legacy path-based backup methods,
   restricts callers to root/local sudo administrators, fixes privileged paths and
-  environment handling, narrows the helper write sandbox, and gives external backup
-  its own non-cached administrator authorization action.
+  environment handling, narrows the helper write sandbox, gives external backup
+  its own non-cached administrator authorization action, and uses a cached
+  self-authentication action for descriptor-only Personal Files access.
   - [x] Bound file-comparison scan input, entry count, and serialized D-Bus
     output; use NUL-delimited records, reject unsafe/non-UTF-8 paths, and include
     file kind and ctime instead of trusting size and mtime alone.

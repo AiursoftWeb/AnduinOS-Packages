@@ -101,9 +101,9 @@ class PackageTests(unittest.TestCase):
         self.assertNotIn('case ["repair-dkms"]', helper)
         self.assertNotIn('case ["enroll-mok"]', helper)
 
-    def test_secure_boot_navigation_only_exists_when_firmware_enforces_it(self):
+    def test_secure_boot_navigation_includes_indeterminate_state(self):
         application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
-        guard = application.index("if secure_boot.enabled:")
+        guard = application.index("if not secure_boot.enforcement_inactive:")
         navigation = application.index(
             'secure_row.page_name = "secure-boot"', guard
         )

@@ -29,6 +29,11 @@ fallback, Secure Boot, or power loss. Those properties require this matrix.
 4. Take a powered-off hypervisor snapshot named `waypoint-clean`. Every
    destructive lane starts from this snapshot.
 
+Add a UEFI-without-Secure-Boot-support lane. Recovery validation must skip
+signature requirements only when the toolkit explicitly reports `unsupported`;
+an `unknown` toolkit state or an older boolean-only status schema must fail
+closed.
+
 The helper refuses physical machines, containers, incomplete layouts, and
 implicit destructive execution. Its state lives below `/var/log` on `@log`,
 which is intentionally outside system recovery points.

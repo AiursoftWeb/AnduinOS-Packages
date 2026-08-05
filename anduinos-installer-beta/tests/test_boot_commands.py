@@ -49,6 +49,11 @@ class BootCommandPlanTests(unittest.TestCase):
                 "--target=arm64-efi",
                 False,
             ),
+            (
+                valid_plan(secure_boot=SecureBoot.UNSUPPORTED),
+                "--target=x86_64-efi",
+                False,
+            ),
         )
         for plan, target_flag, secure_flag_expected in cases:
             with self.subTest(platform=plan.platform):

@@ -2327,6 +2327,8 @@ def create_xbox_page(navigate_next, update_nav=None):
 
     is_installed = False
     sb_enabled = False
+    sb_state_known = False
+    sb_enforcement_inactive = False
     has_cert = False
     is_trusted = False
     current_cert_serial = None
@@ -2334,7 +2336,9 @@ def create_xbox_page(navigate_next, update_nav=None):
     is_loaded = False
 
     def _refresh_xbox_checks():
-        nonlocal is_installed, sb_enabled, has_cert, is_trusted, current_cert_serial, modinfo_sig_key, is_loaded
+        nonlocal is_installed, sb_enabled, sb_state_known
+        nonlocal sb_enforcement_inactive, has_cert, is_trusted
+        nonlocal current_cert_serial, modinfo_sig_key, is_loaded
 
         try:
             package = subprocess.run(
@@ -2347,8 +2351,10 @@ def create_xbox_page(navigate_next, update_nav=None):
 
         trust = _inspect_secure_boot()
         sb_enabled = trust.enabled
+        sb_state_known = trust.state_known
+        sb_enforcement_inactive = trust.enforcement_inactive
         has_cert = trust.key_present and trust.certificate_present
-        is_trusted = trust.enrolled if has_cert else not sb_enabled
+        is_trusted = trust.enrolled if sb_enabled and has_cert else sb_enforcement_inactive
         current_cert_serial = trust.certificate_serial
 
         modinfo_sig_key = None
@@ -2420,12 +2426,15 @@ def create_xbox_page(navigate_next, update_nav=None):
     r1.add_suffix(icon1)
     list_group.add(r1)
 
-    if sb_enabled:
+    if not sb_enforcement_inactive:
         r2 = Adw.ActionRow(title=_("Driver Signature Trusted"))
         icon2 = _create_image('dialog-error-symbolic')
         icon2.set_pixel_size(16)
-        
-        if not is_installed:
+
+        if not sb_state_known:
+            r2.set_subtitle(_("Secure Boot state could not be determined"))
+            icon2.add_css_class('error')
+        elif not is_installed:
             r2.set_subtitle(_("Driver not installed, signature missing"))
             icon2.add_css_class('error')
         else:
@@ -2461,11 +2470,17 @@ def create_xbox_page(navigate_next, update_nav=None):
             icon3.add_css_class('success')
         else:
             is_blocked = False
-            if sb_enabled and (not is_trusted or modinfo_sig_key != current_cert_serial):
+            if not sb_state_known:
                 is_blocked = True
-            
+            elif sb_enabled and (not is_trusted or modinfo_sig_key != current_cert_serial):
+                is_blocked = True
+
             if is_blocked:
-                r3.set_subtitle(_("Driver cannot load due to missing signature trust"))
+                r3.set_subtitle(
+                    _("Driver trust cannot be verified")
+                    if not sb_state_known
+                    else _("Driver cannot load due to missing signature trust")
+                )
                 icon3.set_from_icon_name('dialog-error-symbolic')
                 icon3.add_css_class('error')
             else:
@@ -2515,7 +2530,7 @@ def create_xbox_page(navigate_next, update_nav=None):
         if sb_enabled:
             if is_trusted and modinfo_sig_key == current_cert_serial:
                 is_ready_to_play = True
-        else:
+        elif sb_enforcement_inactive:
             is_ready_to_play = True
     tools_box.set_visible(is_ready_to_play)
 
@@ -2535,7 +2550,18 @@ def create_xbox_page(navigate_next, update_nav=None):
     status_label.set_label('')
 
     if not is_installed:
-        if sb_enabled and not is_trusted:
+        if not sb_state_known:
+            install_btn.set_visible(True)
+            install_btn.set_sensitive(False)
+            status_label.set_markup(
+                '<span foreground="#ffcc00">'
+                + _("Secure Boot state could not be determined")
+                + '\n'
+                + _("Driver installation is blocked until detection succeeds.")
+                + '</span>'
+            )
+            page._suggest_next = False
+        elif sb_enabled and not is_trusted:
             install_btn.set_visible(True)
             install_btn.set_sensitive(False)
             status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ Secure Boot is enabled but the custom certificate is not yet enrolled.') + '\n' + _('Please configure Secure Boot in the previous step before installing this driver.') + '</span>')
@@ -2545,7 +2571,14 @@ def create_xbox_page(navigate_next, update_nav=None):
             install_btn.set_sensitive(True)
             page._suggest_next = False
     else:
-        if sb_enabled and is_trusted and modinfo_sig_key != current_cert_serial:
+        if not sb_state_known:
+            status_label.set_markup(
+                '<span foreground="#ffcc00">'
+                + _("Driver trust cannot be verified")
+                + '</span>'
+            )
+            page._suggest_next = False
+        elif sb_enabled and is_trusted and modinfo_sig_key != current_cert_serial:
             reinstall_btn.set_visible(True)
             status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ The driver signature does not match your system certificate. Click Fix & Reinstall to repair the driver.') + '</span>')
             page._suggest_next = False
@@ -2641,9 +2674,13 @@ apt install -y anduinos-xbox-controller-driver
 
                         progress_bar.set_visible(False)
                         btn.set_visible(False)
-                        tools_box.set_visible(True)
-                        page._suggest_next = True
-                        xb_refresh_btn.set_visible(False)
+                        tools_box.set_visible(sb_state_known)
+                        page._suggest_next = sb_state_known
+                        xb_refresh_btn.set_visible(not sb_state_known)
+                        if not sb_state_known:
+                            status_label.set_label(
+                                _("Driver trust cannot be verified")
+                            )
                         if update_nav: update_nav()
                     GLib.idle_add(_set_success)
                 else:
@@ -2755,12 +2792,16 @@ apt install -y anduinos-xbox-controller-driver
                     r1.set_subtitle(_("The driver is not installed"))
                     icon1.add_css_class('error')
 
-                # r2 — Signature Trusted (only if sb_enabled)
-                if sb_enabled:
+                # r2 — Signature Trusted (enabled or indeterminate state)
+                if not sb_enforcement_inactive:
                     icon2.remove_css_class('success')
                     icon2.remove_css_class('error')
                     icon2.remove_css_class('warning')
-                    if not is_installed:
+                    if not sb_state_known:
+                        r2.set_subtitle(_("Secure Boot state could not be determined"))
+                        icon2.set_from_icon_name('dialog-error-symbolic')
+                        icon2.add_css_class('error')
+                    elif not is_installed:
                         r2.set_subtitle(_("Driver not installed, signature missing"))
                         icon2.set_from_icon_name('dialog-error-symbolic')
                         icon2.add_css_class('error')
@@ -2798,10 +2839,16 @@ apt install -y anduinos-xbox-controller-driver
                         icon3.add_css_class('success')
                     else:
                         is_blocked = False
-                        if sb_enabled and (not is_trusted or modinfo_sig_key != current_cert_serial):
+                        if not sb_state_known:
+                            is_blocked = True
+                        elif sb_enabled and (not is_trusted or modinfo_sig_key != current_cert_serial):
                             is_blocked = True
                         if is_blocked:
-                            r3.set_subtitle(_("Driver cannot load due to missing signature trust"))
+                            r3.set_subtitle(
+                                _("Driver trust cannot be verified")
+                                if not sb_state_known
+                                else _("Driver cannot load due to missing signature trust")
+                            )
                             icon3.set_from_icon_name('dialog-error-symbolic')
                             icon3.add_css_class('error')
                         else:
@@ -2815,7 +2862,7 @@ apt install -y anduinos-xbox-controller-driver
                     if sb_enabled:
                         if is_trusted and modinfo_sig_key == current_cert_serial:
                             _ready = True
-                    else:
+                    elif sb_enforcement_inactive:
                         _ready = True
                 tools_box.set_visible(_ready)
 
@@ -2826,7 +2873,18 @@ apt install -y anduinos-xbox-controller-driver
                 status_label.set_label('')
 
                 if not is_installed:
-                    if sb_enabled and not is_trusted:
+                    if not sb_state_known:
+                        install_btn.set_visible(True)
+                        install_btn.set_sensitive(False)
+                        status_label.set_markup(
+                            '<span foreground="#ffcc00">'
+                            + _("Secure Boot state could not be determined")
+                            + '\n'
+                            + _("Driver installation is blocked until detection succeeds.")
+                            + '</span>'
+                        )
+                        page._suggest_next = False
+                    elif sb_enabled and not is_trusted:
                         install_btn.set_visible(True)
                         install_btn.set_sensitive(False)
                         status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ Secure Boot is enabled but the custom certificate is not yet enrolled.') + '\n' + _('Please reboot to enroll the certificate before installing this driver.') + '</span>')
@@ -2835,6 +2893,13 @@ apt install -y anduinos-xbox-controller-driver
                         install_btn.set_visible(True)
                         install_btn.set_sensitive(True)
                         page._suggest_next = False
+                elif not sb_state_known:
+                    status_label.set_markup(
+                        '<span foreground="#ffcc00">'
+                        + _("Driver trust cannot be verified")
+                        + '</span>'
+                    )
+                    page._suggest_next = False
                 elif sb_enabled and is_trusted and modinfo_sig_key != current_cert_serial:
                     reinstall_btn.set_visible(True)
                     status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ The driver signature does not match your system certificate. Click Fix & Reinstall to repair the driver.') + '</span>')
@@ -4060,7 +4125,7 @@ class OobeWindow(Adw.ApplicationWindow):
         ])
 
         try:
-            if _inspect_secure_boot().enabled:
+            if not _inspect_secure_boot().enforcement_inactive:
                 factories.append(lambda: create_secureboot_page(_nav, _update_nav))
         except Exception:
             pass

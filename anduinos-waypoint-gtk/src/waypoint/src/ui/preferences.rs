@@ -29,13 +29,16 @@ pub fn create_recovery_scope_page() -> adw::PreferencesPage {
     let personal = adw::PreferencesGroup::new();
     personal.set_title(&tr("Personal Files"));
     personal.set_description(Some(&tr(
-        "Personal Files use the separate @home subvolume. System restore never changes it.",
+        "Personal Files use an independent @home history. Browse and recover files without changing the System deployment.",
     )));
     let home = adw::ActionRow::new();
     home.set_title(&tr("Separate Personal Files recovery"));
-    home.set_subtitle(&tr("Not available yet; Personal Files remain unchanged"));
-    let pending = gtk::Image::from_icon_name("dialog-information-symbolic");
-    home.add_suffix(&pending);
+    home.set_subtitle(&tr(
+        "Available from Personal Files History; System restore still leaves @home unchanged",
+    ));
+    let available = gtk::Image::from_icon_name("emblem-ok-symbolic");
+    available.add_css_class("success");
+    home.add_suffix(&available);
     personal.add(&home);
     page.add(&personal);
 

@@ -2,7 +2,7 @@ use adw::prelude::*;
 use gtk::prelude::*;
 use gtk::{Box, Label, Orientation, SpinButton};
 use libadwaita as adw;
-use waypoint_common::{Schedule, ScheduleType};
+use waypoint_common::{Schedule, ScheduleScope, ScheduleType};
 
 use crate::i18n::{tr, trf};
 
@@ -88,15 +88,38 @@ pub fn create_schedule_edit_dialog(
     let scope_group = adw::PreferencesGroup::new();
     scope_group.set_title(&tr("Recovery Scope"));
     scope_group.set_description(Some(&tr(
-        "Scheduled recovery points always protect the complete AnduinOS system deployment. Personal Files are managed separately and are never rolled back by this schedule.",
+        "System recovery and Personal Files history are independent. Personal history can recover files without rolling back the operating system.",
     )));
-    let system_row = adw::ActionRow::new();
-    system_row.set_title(&tr("System"));
-    system_row.set_subtitle(&tr("@root · required"));
-    let enabled = gtk::Image::from_icon_name("emblem-ok-symbolic");
-    system_row.add_suffix(&enabled);
-    scope_group.add(&system_row);
+    let scope_row = adw::ComboRow::new();
+    scope_row.set_title(&tr("History"));
+    scope_row.set_subtitle(&tr(
+        "Choose the independent data protected by this schedule",
+    ));
+    scope_row.set_model(Some(&gtk::StringList::new(&[
+        &tr("System · @root"),
+        &tr("Personal Files · @home"),
+    ])));
+    scope_row.set_selected(match schedule.scope {
+        ScheduleScope::System => 0,
+        ScheduleScope::Personal => 1,
+    });
+    scope_group.add(&scope_row);
     page.add(&scope_group);
+
+    let notifications_group = adw::PreferencesGroup::new();
+    notifications_group.set_title(&tr("Notifications"));
+    let notify_row = adw::ActionRow::new();
+    notify_row.set_title(&tr("Notify when created"));
+    notify_row.set_subtitle(&tr(
+        "Show a desktop notification after this automatic recovery point succeeds",
+    ));
+    let notify_check = gtk::CheckButton::new();
+    notify_check.set_active(schedule.notify_on_create);
+    notify_check.set_valign(gtk::Align::Center);
+    notify_row.add_suffix(&notify_check);
+    notify_row.set_activatable_widget(Some(&notify_check));
+    notifications_group.add(&notify_row);
+    page.add(&notifications_group);
 
     // Retention group with timeline-based retention
     let retention_group = adw::PreferencesGroup::new();
@@ -115,6 +138,9 @@ pub fn create_schedule_edit_dialog(
     // Store widget references for later data extraction
     unsafe {
         dialog.set_data("schedule_type", schedule.schedule_type as u32);
+        dialog.set_data("scope_row", scope_row);
+        dialog.set_data("notify_check", notify_check);
+        dialog.set_data("schedule_description", schedule.description.clone());
 
         if let Some(time_row) = time_row_opt {
             dialog.set_data("time_row", time_row);
@@ -362,18 +388,25 @@ pub fn extract_schedule_from_dialog(dialog: &adw::PreferencesWindow) -> Option<S
 
         let mut schedule = Schedule {
             enabled: true, // Will be set by the card's switch
+            scope: dialog
+                .data::<adw::ComboRow>("scope_row")
+                .map(|row| match row.as_ref().selected() {
+                    1 => ScheduleScope::Personal,
+                    _ => ScheduleScope::System,
+                })
+                .unwrap_or_default(),
+            notify_on_create: dialog
+                .data::<gtk::CheckButton>("notify_check")
+                .is_none_or(|check| check.as_ref().is_active()),
             schedule_type,
             time: None,
             day_of_week: None,
             day_of_month: None,
             prefix: String::new(),
-            description: match schedule_type {
-                ScheduleType::Hourly => "Hourly automatic recovery point",
-                ScheduleType::Daily => "Daily automatic recovery point",
-                ScheduleType::Weekly => "Weekly automatic recovery point",
-                ScheduleType::Monthly => "Monthly automatic recovery point",
-            }
-            .to_string(),
+            description: dialog
+                .data::<String>("schedule_description")
+                .map(|value| value.as_ref().clone())
+                .unwrap_or_else(|| "Automatic recovery history point".to_string()),
             keep_count: 0,
             keep_days: 0,
             timeline_retention: None, // Will be populated if using timeline retention

@@ -7,6 +7,10 @@ use anduinos_recovery_engine::{
     layout,
     model::{DeploymentId, DeploymentKind, DeploymentRecord, DeploymentState},
     operations::OperationEngine,
+    personal::{
+        PersonalSnapshotEngine, PersonalSnapshotId, PersonalSnapshotKind, PersonalSnapshotState,
+    },
+    personal_backup::PersonalBackupManager,
     rollback::RollbackCoordinator,
     store::DeploymentStore,
     transaction::TransactionStore,
@@ -84,6 +88,26 @@ struct WaypointHelper {
     rate_limiter: RateLimiter,
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+struct ScheduleRetentionSummary {
+    system_deleted: u64,
+    personal_deleted: u64,
+    system_retained: u64,
+    personal_retained: u64,
+}
+
+impl ScheduleRetentionSummary {
+    fn message(self) -> String {
+        format!(
+            "Cleaned up {} automatic system recovery point(s) and {} Personal Files history point(s); retained {} system and {} personal point(s) for safety",
+            self.system_deleted,
+            self.personal_deleted,
+            self.system_retained,
+            self.personal_retained,
+        )
+    }
+}
+
 impl WaypointHelper {
     fn new() -> Self {
         Self {
@@ -152,6 +176,37 @@ impl WaypointHelper {
             .unwrap_or_else(|_| "unknown".to_string());
         let pid = Self::get_caller_pid(hdr, connection).await.unwrap_or(0);
         (uid, pid)
+    }
+
+    /// Resolve the D-Bus caller to exactly one direct child of `/home`. This
+    /// prevents one desktop user from browsing another user's history even
+    /// after Polkit has authorized use of the recovery feature.
+    async fn caller_home_directory(
+        hdr: &zbus::message::Header<'_>,
+        connection: &Connection,
+    ) -> Result<String> {
+        let uid = Self::get_caller_uid(hdr, connection)
+            .await?
+            .parse::<u32>()
+            .context("D-Bus returned an invalid caller UID")?;
+        let user = nix::unistd::User::from_uid(nix::unistd::Uid::from_raw(uid))?
+            .context("D-Bus caller has no local account")?;
+        let parent = user
+            .dir
+            .parent()
+            .context("Caller home has no parent directory")?;
+        if parent != std::path::Path::new("/home") {
+            anyhow::bail!("Personal history is available only for accounts directly under /home");
+        }
+        let directory = user
+            .dir
+            .file_name()
+            .and_then(std::ffi::OsStr::to_str)
+            .context("Caller home directory name is not valid UTF-8")?;
+        if directory != user.name {
+            anyhow::bail!("Caller account and home directory identity do not match");
+        }
+        Ok(directory.to_string())
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -224,6 +279,31 @@ impl WaypointHelper {
         ctxt: &zbus::SignalContext<'_>,
         snapshot_name: &str,
         created_by: &str,
+    ) -> zbus::Result<()>;
+
+    /// Signal emitted when an independent Personal Files history point is created.
+    #[zbus(signal)]
+    async fn personal_snapshot_created(
+        ctxt: &zbus::SignalContext<'_>,
+        snapshot_id: &str,
+        created_by: &str,
+    ) -> zbus::Result<()>;
+
+    /// Privacy-preserving desktop event emitted only when the matching
+    /// automatic schedule has creation notifications enabled.
+    #[zbus(signal)]
+    async fn automatic_snapshot_created(
+        ctxt: &zbus::SignalContext<'_>,
+        scope: &str,
+    ) -> zbus::Result<()>;
+
+    /// Aggregated retention event. Individual snapshot identities and titles
+    /// never leave the privileged service through this notification channel.
+    #[zbus(signal)]
+    async fn automatic_snapshots_deleted(
+        ctxt: &zbus::SignalContext<'_>,
+        system_deleted: u64,
+        personal_deleted: u64,
     ) -> zbus::Result<()>;
 
     /// Report the trusted deployment engine state without authorizing mutation.
@@ -340,6 +420,11 @@ impl WaypointHelper {
                     {
                         log::warn!("Could not emit scheduled recovery-point signal: {error}");
                     }
+                    if schedule_notification_enabled(ScheduleScope::System, &schedule_id)
+                        && let Err(error) = Self::automatic_snapshot_created(&ctxt, "system").await
+                    {
+                        log::warn!("Could not emit automatic System notification: {error}");
+                    }
                     (true, json)
                 }
                 Err(error) => (
@@ -352,6 +437,280 @@ impl WaypointHelper {
                 (false, error.to_string())
             }
         }
+    }
+
+    /// Create an immutable snapshot of the independent `@home` subvolume.
+    async fn create_personal_snapshot(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        #[zbus(signal_context)] ctxt: zbus::SignalContext<'_>,
+        title: String,
+        reason: String,
+        pinned: bool,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_CREATE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_CREATE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        if let Err(wait) = self
+            .rate_limiter
+            .check_rate_limit(&uid, "create_personal_snapshot")
+        {
+            return (
+                false,
+                format!(
+                    "Please wait {} seconds before creating another Personal Files history point",
+                    wait.as_secs()
+                ),
+            );
+        }
+        match PersonalSnapshotEngine::default().create_manual(
+            &layout::inspect_current(),
+            &title,
+            &reason,
+            pinned,
+        ) {
+            Ok(record) => match serde_json::to_string(&record) {
+                Ok(json) => {
+                    audit::log_operation(
+                        uid,
+                        pid,
+                        "create_personal_snapshot",
+                        &record.id.to_string(),
+                        true,
+                        None,
+                    );
+                    if let Err(error) =
+                        Self::personal_snapshot_created(&ctxt, &record.id.to_string(), "manual")
+                            .await
+                    {
+                        log::warn!("Could not emit Personal Files history signal: {error}");
+                    }
+                    (true, json)
+                }
+                Err(error) => (
+                    false,
+                    format!("Could not serialize personal snapshot: {error}"),
+                ),
+            },
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "create_personal_snapshot",
+                    &title,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
+        }
+    }
+
+    /// Trusted scheduler entry point for Personal Files history.
+    async fn create_scheduled_personal_snapshot(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        #[zbus(signal_context)] ctxt: zbus::SignalContext<'_>,
+        schedule_id: String,
+        title: String,
+        reason: String,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_CREATE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_CREATE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        if let Err(wait) = self
+            .rate_limiter
+            .check_rate_limit(&uid, "create_scheduled_personal_snapshot")
+        {
+            return (
+                false,
+                format!(
+                    "Please wait {} seconds before creating another Personal Files history point",
+                    wait.as_secs()
+                ),
+            );
+        }
+        match PersonalSnapshotEngine::default().create_scheduled(
+            &layout::inspect_current(),
+            &schedule_id,
+            &title,
+            &reason,
+        ) {
+            Ok(record) => match serde_json::to_string(&record) {
+                Ok(json) => {
+                    audit::log_operation(
+                        uid,
+                        pid,
+                        "create_scheduled_personal_snapshot",
+                        &record.id.to_string(),
+                        true,
+                        None,
+                    );
+                    if let Err(error) =
+                        Self::personal_snapshot_created(&ctxt, &record.id.to_string(), "scheduler")
+                            .await
+                    {
+                        log::warn!(
+                            "Could not emit scheduled Personal Files history signal: {error}"
+                        );
+                    }
+                    if schedule_notification_enabled(ScheduleScope::Personal, &schedule_id)
+                        && let Err(error) =
+                            Self::automatic_snapshot_created(&ctxt, "personal").await
+                    {
+                        log::warn!("Could not emit automatic Personal Files notification: {error}");
+                    }
+                    (true, json)
+                }
+                Err(error) => (
+                    false,
+                    format!("Could not serialize personal snapshot: {error}"),
+                ),
+            },
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "create_scheduled_personal_snapshot",
+                    &title,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
+        }
+    }
+
+    /// Delete one unpinned Personal Files history point.
+    async fn delete_personal_snapshot(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        snapshot_id: String,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_DELETE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_DELETE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match snapshot_id.parse::<PersonalSnapshotId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid personal snapshot ID: {error}")),
+        };
+        match PersonalSnapshotEngine::default().delete(&layout::inspect_current(), id) {
+            Ok(()) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "delete_personal_snapshot",
+                    &snapshot_id,
+                    true,
+                    None,
+                );
+                (true, "Personal Files history point deleted".into())
+            }
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "delete_personal_snapshot",
+                    &snapshot_id,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
+        }
+    }
+
+    /// Protect or unprotect one Personal Files history point.
+    async fn set_personal_snapshot_pinned(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        snapshot_id: String,
+        pinned: bool,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_DELETE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_DELETE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match snapshot_id.parse::<PersonalSnapshotId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid personal snapshot ID: {error}")),
+        };
+        match PersonalSnapshotEngine::default().set_pinned(&layout::inspect_current(), id, pinned) {
+            Ok(record) => serde_json::to_string(&record)
+                .map(|json| (true, json))
+                .unwrap_or_else(|error| (false, error.to_string())),
+            Err(error) => (false, error.to_string()),
+        }
+    }
+
+    /// List one bounded directory from the caller's own historical home.
+    async fn list_personal_files(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        snapshot_id: String,
+        relative_path: String,
+    ) -> (bool, String) {
+        if let Err(error) =
+            check_authorization(&hdr, connection, POLKIT_ACTION_PERSONAL_FILES).await
+        {
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let user_directory = match Self::caller_home_directory(&hdr, connection).await {
+            Ok(value) => value,
+            Err(error) => return (false, error.to_string()),
+        };
+        let id = match snapshot_id.parse::<PersonalSnapshotId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid personal snapshot ID: {error}")),
+        };
+        let engine = PersonalSnapshotEngine::default();
+        let result = engine
+            .browser(&layout::inspect_current(), id, &user_directory)
+            .and_then(|browser| browser.list(&relative_path));
+        match result {
+            Ok(entries) => serde_json::to_string(&entries)
+                .map(|json| (true, json))
+                .unwrap_or_else(|error| (false, error.to_string())),
+            Err(error) => (false, error.to_string()),
+        }
+    }
+
+    /// Return one regular historical file as a read-only Unix descriptor. The
+    /// helper never receives or writes a destination path.
+    async fn export_personal_file(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        snapshot_id: String,
+        relative_path: String,
+    ) -> zbus::fdo::Result<zbus::zvariant::OwnedFd> {
+        check_authorization(&hdr, connection, POLKIT_ACTION_PERSONAL_FILES)
+            .await
+            .map_err(|error| zbus::fdo::Error::AccessDenied(error.to_string()))?;
+        let user_directory = Self::caller_home_directory(&hdr, connection)
+            .await
+            .map_err(|error| zbus::fdo::Error::Failed(error.to_string()))?;
+        let id = snapshot_id
+            .parse::<PersonalSnapshotId>()
+            .map_err(|error| zbus::fdo::Error::InvalidArgs(error.to_string()))?;
+        let engine = PersonalSnapshotEngine::default();
+        let file = engine
+            .browser(&layout::inspect_current(), id, &user_directory)
+            .and_then(|browser| browser.open_file(&relative_path))
+            .map_err(|error| zbus::fdo::Error::Failed(error.to_string()))?;
+        Ok(std::os::fd::OwnedFd::from(file).into())
     }
 
     /// Delete an unprotected immutable system recovery point.
@@ -560,6 +919,144 @@ impl WaypointHelper {
             },
             Err(error) => (false, error.to_string()),
         }
+    }
+
+    /// List independent Personal Files backup manifests on an external drive.
+    async fn list_personal_external_backups(&self, filesystem_uuid: String) -> (bool, String) {
+        match PersonalBackupManager.discover(&filesystem_uuid) {
+            Ok(report) => serde_json::to_string(&report)
+                .map(|json| (true, json))
+                .unwrap_or_else(|error| (false, error.to_string())),
+            Err(error) => (false, error.to_string()),
+        }
+    }
+
+    /// Export one immutable Personal Files history point as a full Btrfs stream.
+    async fn export_personal_snapshot(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        snapshot_id: String,
+        filesystem_uuid: String,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) =
+            check_authorization(&hdr, connection, POLKIT_ACTION_EXTERNAL_BACKUP).await
+        {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_EXTERNAL_BACKUP, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        if let Err(wait) = self
+            .rate_limiter
+            .check_rate_limit(&uid, "export_personal_snapshot")
+        {
+            return (
+                false,
+                format!(
+                    "Please wait {} seconds before exporting another Personal Files history point",
+                    wait.as_secs()
+                ),
+            );
+        }
+        let id = match snapshot_id.parse::<PersonalSnapshotId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid personal snapshot ID: {error}")),
+        };
+        let resource = format!("{snapshot_id}@{filesystem_uuid}");
+        match PersonalBackupManager.export(&layout::inspect_current(), id, &filesystem_uuid) {
+            Ok(manifest) => match serde_json::to_string(&manifest) {
+                Ok(json) => {
+                    audit::log_external_backup(uid, pid, "export_personal", &resource, true, None);
+                    (true, json)
+                }
+                Err(error) => (false, error.to_string()),
+            },
+            Err(error) => {
+                audit::log_external_backup(
+                    uid,
+                    pid,
+                    "export_personal",
+                    &resource,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
+        }
+    }
+
+    async fn verify_personal_external_backup(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        filesystem_uuid: String,
+        backup_id: String,
+    ) -> (bool, String) {
+        self.external_backup_by_id(
+            &hdr,
+            connection,
+            &filesystem_uuid,
+            &backup_id,
+            "verify_personal_external_backup",
+            "verify_external_personal",
+            |id| PersonalBackupManager.verify(&filesystem_uuid, id),
+        )
+        .await
+    }
+
+    async fn import_personal_external_backup(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        #[zbus(signal_context)] ctxt: zbus::SignalContext<'_>,
+        filesystem_uuid: String,
+        backup_id: String,
+    ) -> (bool, String) {
+        let result = self
+            .external_backup_by_id(
+                &hdr,
+                connection,
+                &filesystem_uuid,
+                &backup_id,
+                "import_personal_external_backup",
+                "import_external_personal",
+                |id| PersonalBackupManager.import(&layout::inspect_current(), &filesystem_uuid, id),
+            )
+            .await;
+        if result.0
+            && let Ok(record) = serde_json::from_str::<
+                anduinos_recovery_engine::personal::PersonalSnapshotRecord,
+            >(&result.1)
+            && let Err(error) =
+                Self::personal_snapshot_created(&ctxt, &record.id.to_string(), "external-import")
+                    .await
+        {
+            log::warn!("Could not emit imported Personal Files history signal: {error}");
+        }
+        result
+    }
+
+    async fn delete_personal_external_backup(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        filesystem_uuid: String,
+        backup_id: String,
+    ) -> (bool, String) {
+        self.external_backup_by_id(
+            &hdr,
+            connection,
+            &filesystem_uuid,
+            &backup_id,
+            "delete_personal_external_backup",
+            "delete_external_personal",
+            |id| {
+                PersonalBackupManager
+                    .delete(&filesystem_uuid, id)
+                    .map(|()| serde_json::json!({"deleted": true}))
+            },
+        )
+        .await
     }
 
     /// Export one trusted immutable deployment to a mounted filesystem UUID.
@@ -901,6 +1398,7 @@ impl WaypointHelper {
         &self,
         #[zbus(header)] hdr: zbus::message::Header<'_>,
         #[zbus(connection)] connection: &Connection,
+        #[zbus(signal_context)] ctxt: zbus::SignalContext<'_>,
     ) -> (bool, String) {
         let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
         if let Err(e) = check_authorization(&hdr, connection, POLKIT_ACTION_DELETE).await {
@@ -908,10 +1406,22 @@ impl WaypointHelper {
             return (false, format!("Authorization failed: {e}"));
         }
 
-        let response = result_to_dbus_response(
-            Self::apply_schedule_retention_impl(),
-            "Schedule retention failed",
-        );
+        let response = match Self::apply_schedule_retention_impl() {
+            Ok(summary) => {
+                if (summary.system_deleted > 0 || summary.personal_deleted > 0)
+                    && let Err(error) = Self::automatic_snapshots_deleted(
+                        &ctxt,
+                        summary.system_deleted,
+                        summary.personal_deleted,
+                    )
+                    .await
+                {
+                    log::warn!("Could not emit automatic retention notification: {error}");
+                }
+                (true, summary.message())
+            }
+            Err(error) => result_to_dbus_response(Err(error), "Schedule retention failed"),
+        };
         audit::log_operation(
             uid,
             pid,
@@ -1052,6 +1562,7 @@ impl WaypointHelper {
             .load_pending()
             .map_err(|error| anyhow::anyhow!(error.message))?;
         let deployments = DeploymentStore::new(store_root).discover();
+        let personal = PersonalSnapshotEngine::default().discover();
         let layout = layout::inspect_current();
         let available = layout.is_supported();
         serde_json::to_string(&serde_json::json!({
@@ -1061,13 +1572,16 @@ impl WaypointHelper {
             "pending": pending,
             "deployment_count": deployments.deployments.len(),
             "deployments": deployments.deployments,
+            "personal_snapshot_count": personal.snapshots.len(),
+            "personal_snapshots": personal.snapshots,
             "issues": deployments.issues,
+            "personal_issues": personal.issues,
             "layout": layout,
         }))
         .context("Failed to serialize recovery engine status")
     }
 
-    fn apply_schedule_retention_impl() -> Result<String> {
+    fn apply_schedule_retention_impl() -> Result<ScheduleRetentionSummary> {
         use std::collections::HashSet;
         use waypoint_common::retention::{SnapshotForRetention, apply_timeline_retention};
 
@@ -1094,7 +1608,7 @@ impl WaypointHelper {
         for schedule in schedules
             .schedules
             .iter()
-            .filter(|schedule| schedule.enabled)
+            .filter(|schedule| schedule.enabled && schedule.scope == ScheduleScope::System)
         {
             let mut matching = eligible
                 .iter()
@@ -1128,8 +1642,8 @@ impl WaypointHelper {
         }
 
         let engine = OperationEngine::default();
-        let mut deleted = 0;
-        let mut retained = 0;
+        let mut deleted = 0u64;
+        let mut retained = 0u64;
         for value in selected {
             let id = value.parse::<DeploymentId>().map_err(|error| {
                 anyhow::anyhow!("Retention selected an invalid deployment ID: {error}")
@@ -1142,9 +1656,83 @@ impl WaypointHelper {
                 }
             }
         }
-        Ok(format!(
-            "Cleaned up {deleted} automatic recovery point(s); retained {retained} for safety"
-        ))
+        let personal_engine = PersonalSnapshotEngine::default();
+        let personal = personal_engine.discover();
+        let personal_eligible = personal
+            .snapshots
+            .iter()
+            .filter(|record| {
+                record.kind == PersonalSnapshotKind::Automatic
+                    && record.state == PersonalSnapshotState::Ready
+                    && !record.pinned
+            })
+            .collect::<Vec<_>>();
+        let mut personal_selected = HashSet::new();
+        for schedule in schedules
+            .schedules
+            .iter()
+            .filter(|schedule| schedule.enabled && schedule.scope == ScheduleScope::Personal)
+        {
+            let mut matching = personal_eligible
+                .iter()
+                .copied()
+                .filter(|record| record.schedule_id.as_deref() == Some(&schedule.prefix))
+                .collect::<Vec<_>>();
+            matching.sort_by_key(|record| std::cmp::Reverse(record.created_at));
+            if let Some(timeline) = &schedule.timeline_retention {
+                let snapshots = matching
+                    .iter()
+                    .map(|record| SnapshotForRetention {
+                        name: record.id.to_string(),
+                        timestamp: record.created_at,
+                    })
+                    .collect::<Vec<_>>();
+                personal_selected.extend(apply_timeline_retention(&snapshots, timeline, now));
+                continue;
+            }
+            for (index, record) in matching.into_iter().enumerate() {
+                let exceeds_count =
+                    schedule.keep_count > 0 && index >= schedule.keep_count as usize;
+                let exceeds_age = schedule.keep_days > 0
+                    && now.signed_duration_since(record.created_at)
+                        > chrono::Duration::days(schedule.keep_days as i64);
+                if exceeds_count || exceeds_age {
+                    personal_selected.insert(record.id.to_string());
+                }
+            }
+        }
+        let mut ready_personal_count = personal
+            .snapshots
+            .iter()
+            .filter(|record| record.state == PersonalSnapshotState::Ready)
+            .count();
+        let mut personal_deleted = 0u64;
+        let mut personal_retained = 0u64;
+        for value in personal_selected {
+            if ready_personal_count <= config.retention_min_snapshots {
+                personal_retained += 1;
+                continue;
+            }
+            let id = value.parse::<PersonalSnapshotId>().map_err(|error| {
+                anyhow::anyhow!("Retention selected an invalid personal snapshot ID: {error}")
+            })?;
+            match personal_engine.delete(&layout, id) {
+                Ok(()) => {
+                    personal_deleted += 1;
+                    ready_personal_count = ready_personal_count.saturating_sub(1);
+                }
+                Err(error) => {
+                    personal_retained += 1;
+                    log::info!("Retention kept Personal Files history point {id}: {error}");
+                }
+            }
+        }
+        Ok(ScheduleRetentionSummary {
+            system_deleted: deleted,
+            personal_deleted,
+            system_retained: retained,
+            personal_retained,
+        })
     }
 
     fn compare_snapshots_impl(old_snapshot_name: &str, new_snapshot_name: &str) -> Result<String> {
@@ -1395,6 +1983,30 @@ fn result_to_dbus_response(result: Result<String>, error_prefix: &str) -> (bool,
         Err(e) => {
             let sanitized = sanitize_error_for_client(&e);
             (false, format!("{error_prefix}: {sanitized}"))
+        }
+    }
+}
+
+fn schedule_notification_enabled(scope: ScheduleScope, schedule_id: &str) -> bool {
+    let path = WaypointConfig::default().schedules_config;
+    schedule_notification_enabled_at(&path, scope, schedule_id)
+}
+
+fn schedule_notification_enabled_at(
+    path: &std::path::PathBuf,
+    scope: ScheduleScope,
+    schedule_id: &str,
+) -> bool {
+    match SchedulesConfig::load_from_file(path) {
+        Ok(config) => config.schedules.iter().any(|schedule| {
+            schedule.scope == scope && schedule.prefix == schedule_id && schedule.notify_on_create
+        }),
+        Err(error) => {
+            log::warn!(
+                "Could not load automatic notification preference from {}: {error}",
+                path.display()
+            );
+            false
         }
     }
 }
@@ -1810,6 +2422,43 @@ fn run_command_with_output(cmd: &str, args: &[&str]) -> Result<(String, String)>
 mod tests {
     use super::*;
     use std::io::Write;
+
+    #[test]
+    fn scheduled_notification_preference_is_scope_and_prefix_bound() {
+        let path = std::env::temp_dir().join(format!(
+            "anduinos-waypoint-notification-schedule-{}-{}.toml",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let mut config = SchedulesConfig::default();
+        config.schedules[0].notify_on_create = false;
+        config.save_to_file(&path).unwrap();
+
+        assert!(!schedule_notification_enabled_at(
+            &path,
+            ScheduleScope::System,
+            "hourly"
+        ));
+        assert!(schedule_notification_enabled_at(
+            &path,
+            ScheduleScope::System,
+            "daily"
+        ));
+        assert!(!schedule_notification_enabled_at(
+            &path,
+            ScheduleScope::Personal,
+            "daily"
+        ));
+        assert!(!schedule_notification_enabled_at(
+            &path,
+            ScheduleScope::System,
+            "missing"
+        ));
+        std::fs::remove_file(path).unwrap();
+    }
 
     #[test]
     fn empty_recovery_store_reports_layout_availability_without_inventing_deployments() {

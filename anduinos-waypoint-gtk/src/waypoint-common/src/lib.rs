@@ -18,7 +18,7 @@ pub use config::WaypointConfig;
 pub use format::{format_bytes, format_elapsed_time};
 pub use quota::{QuotaUsage, SnapshotSpace};
 pub use retention::{SnapshotForRetention, TimelineRetention};
-pub use schedules::{Schedule, ScheduleType, SchedulesConfig};
+pub use schedules::{Schedule, ScheduleScope, ScheduleType, SchedulesConfig};
 
 /// A package installed on the system
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -61,6 +61,7 @@ pub const POLKIT_ACTION_DELETE: &str = "org.anduinos.waypoint.delete-snapshot";
 pub const POLKIT_ACTION_RESTORE: &str = "org.anduinos.waypoint.restore-snapshot";
 pub const POLKIT_ACTION_CONFIGURE: &str = "org.anduinos.waypoint.configure-system";
 pub const POLKIT_ACTION_EXTERNAL_BACKUP: &str = "org.anduinos.waypoint.external-backup";
+pub const POLKIT_ACTION_PERSONAL_FILES: &str = "org.anduinos.waypoint.personal-files";
 
 /// Validate snapshot name for security and filesystem compatibility
 ///

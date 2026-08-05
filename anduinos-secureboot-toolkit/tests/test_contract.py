@@ -52,6 +52,10 @@ class ContractTests(unittest.TestCase):
                 continue
             compile(source.read_text(encoding="utf-8"), str(source), "exec")
 
+    def test_status_cli_uses_state_aware_schema(self):
+        cli = (ROOT / "scripts/anduinos-securebootctl").read_text()
+        self.assertIn('{"schema": 2, "secure_boot":', cli)
+
     def test_ui_translation_function_is_not_shadowed(self):
         source = (ROOT / "src/anduinos_secureboot/ui.py").read_text(encoding="utf-8")
         tree = ast.parse(source)

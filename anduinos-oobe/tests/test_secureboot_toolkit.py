@@ -16,13 +16,24 @@ class SecureBootToolkitTests(unittest.TestCase):
         self.assertNotIn("['openssl'", application)
         self.assertNotIn("['modinfo'", application)
 
-    def test_oobe_omits_secure_boot_page_when_firmware_disables_it(self):
+    def test_oobe_omits_only_known_non_enforcing_secure_boot_states(self):
         application = (ROOT / "assets/anduinos-oobe").read_text(encoding="utf-8")
-        guard = application.index("if _inspect_secure_boot().enabled:")
+        guard = application.index(
+            "if not _inspect_secure_boot().enforcement_inactive:"
+        )
         page = application.index("factories.append(lambda: create_secureboot_page", guard)
         next_hardware_page = application.index("if has_nvidia_gpu():", guard)
         self.assertLess(guard, page)
         self.assertLess(page, next_hardware_page)
+
+    def test_xbox_driver_workflow_fails_closed_on_unknown_state(self):
+        application = (ROOT / "assets/anduinos-oobe").read_text(encoding="utf-8")
+        self.assertIn("sb_state_known = trust.state_known", application)
+        self.assertIn("elif sb_enforcement_inactive:", application)
+        self.assertIn(
+            "Driver installation is blocked until detection succeeds.",
+            application,
+        )
 
     def test_oobe_declares_shared_and_hardware_dependencies(self):
         project = ET.parse(ROOT / "anduinos-oobe.aosproj").getroot()

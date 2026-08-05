@@ -14,4 +14,4 @@ if sys.argv[1:] not in ([], ["status"], ["status", "--json"]):
 
 secure_boot = inspect_secure_boot()
 dkms = inspect_dkms(secure_boot)
-print(json.dumps({"schema": 1, "secure_boot": asdict(secure_boot), "dkms": asdict(dkms)}))
+print(json.dumps({"schema": 2, "secure_boot": asdict(secure_boot), "dkms": asdict(dkms)}))

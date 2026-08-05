@@ -81,11 +81,12 @@ Enter always executes exactly the visible line. Tab completion is never
 registered or modified by this package and remains owned by Bash and the
 system's existing completion scripts.
 
-The feature is enabled by Bash's standard completion loader. Variables set
-before the bash-completion block in `~/.bashrc`:
+The feature is enabled by Bash's standard completion loader. These variables
+may be set anywhere in `~/.bashrc`; setting the master switch to `0` in an
+active shell takes effect at the next prompt or redisplay:
 
 ```bash
-export ANDUINOS_GUESS_COMMAND=0       # disable the package entirely
+export ANDUINOS_GUESS_COMMAND=0       # disable predictions and their helper
 export ANDUINOS_GUESS_ENGINE=0        # disable ghost text
 export ANDUINOS_GUESS_HISTORY=0       # disable history import and learning
 export ANDUINOS_GUESS_PERSIST=1       # opt in to extra cross-session state

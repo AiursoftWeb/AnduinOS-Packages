@@ -8,6 +8,7 @@ mod error_helpers;
 mod external_backups;
 mod main_window_helpers;
 pub mod notifications;
+mod personal_history;
 pub mod preferences;
 mod preferences_window;
 mod schedule_card;
@@ -177,6 +178,12 @@ impl MainWindow {
             .activatable(true)
             .build();
         menu_list.append(&external_backups_row);
+
+        let personal_history_row = adw::ActionRow::builder()
+            .title(tr("Personal Files History"))
+            .activatable(true)
+            .build();
+        menu_list.append(&personal_history_row);
 
         let preferences_row = adw::ActionRow::builder()
             .title(tr("Preferences"))
@@ -649,6 +656,13 @@ impl MainWindow {
         external_backups_row.connect_activated(move |_| {
             popover_clone_external_backups.popdown();
             external_backups::show(&win_clone_external_backups);
+        });
+
+        let win_clone_personal_history = window.clone();
+        let popover_clone_personal_history = popover.clone();
+        personal_history_row.connect_activated(move |_| {
+            popover_clone_personal_history.popdown();
+            personal_history::show(&win_clone_personal_history);
         });
 
         let win_clone_menu_prefs = window.clone();

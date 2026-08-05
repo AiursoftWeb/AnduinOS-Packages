@@ -53,6 +53,7 @@ dependencies = [
  "glib",
  "gtk4",
  "libadwaita",
+ "libc",
  "log",
  "once_cell",
  "serde",
@@ -79,6 +80,20 @@ dependencies = [
  "serde_json",
  "tokio",
  "toml 0.8.23",
+ "waypoint-common",
+ "zbus",
+]
+
+[[package]]
+name = "anduinos-waypoint-notifier"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "env_logger",
+ "futures-util",
+ "gettext-rs",
+ "log",
+ "tokio",
  "waypoint-common",
  "zbus",
 ]

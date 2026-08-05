@@ -165,6 +165,23 @@ class PrepareSecureBootTests(unittest.TestCase):
         self.assertFalse(context.values["secure_boot_prepared"])
         self.assertEqual(runner.commands, [])
 
+    def test_unsupported_secure_boot_does_nothing(self):
+        base = valid_plan()
+        plan = replace(
+            base,
+            platform=replace(
+                base.platform, secure_boot=SecureBoot.UNSUPPORTED
+            ),
+            boot=BootSpec(
+                mok_password_policy=MokPasswordPolicy.NOT_APPLICABLE
+            ),
+        )
+        runner = FakeRunner()
+        context = InstallContext(plan, lambda _message: None)
+        PrepareSecureBootStep(runner).execute(context)
+        self.assertFalse(context.values["secure_boot_prepared"])
+        self.assertEqual(runner.commands, [])
+
     def test_arm64_requires_and_accepts_arm64_signed_payloads(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
@@ -355,6 +372,23 @@ class EnrollSecureBootTests(unittest.TestCase):
         plan = replace(
             base,
             platform=replace(base.platform, secure_boot=SecureBoot.DISABLED),
+            boot=BootSpec(
+                mok_password_policy=MokPasswordPolicy.NOT_APPLICABLE
+            ),
+        )
+        runner = FakeRunner()
+        context = InstallContext(plan, lambda _message: None)
+        EnrollSecureBootStep(runner).execute(context)
+        self.assertFalse(context.values["mok_enrollment_pending"])
+        self.assertEqual(runner.commands, [])
+
+    def test_unsupported_secure_boot_never_touches_efi_variables(self):
+        base = valid_plan()
+        plan = replace(
+            base,
+            platform=replace(
+                base.platform, secure_boot=SecureBoot.UNSUPPORTED
+            ),
             boot=BootSpec(
                 mok_password_policy=MokPasswordPolicy.NOT_APPLICABLE
             ),

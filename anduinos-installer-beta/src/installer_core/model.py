@@ -14,7 +14,7 @@ from typing import Any
 from .storage_graph import StorageGraph
 
 
-SCHEMA_VERSION = 10
+SCHEMA_VERSION = 11
 
 
 class Architecture(str, Enum):
@@ -30,6 +30,7 @@ class Firmware(str, Enum):
 class SecureBoot(str, Enum):
     ENABLED = "enabled"
     DISABLED = "disabled"
+    UNSUPPORTED = "unsupported"
     NOT_APPLICABLE = "not-applicable"
 
 

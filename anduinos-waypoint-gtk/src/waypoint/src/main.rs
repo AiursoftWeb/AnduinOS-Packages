@@ -80,7 +80,7 @@ fn load_css() {
 
 fn build_ui(app: &Application) {
     // Keep the list synchronized with recovery points created by the scheduler.
-    let snapshot_created_rx = signal_listener::start_signal_listener(app.clone());
+    let snapshot_created_rx = signal_listener::start_signal_listener();
 
     let window = ui::MainWindow::build(app, snapshot_created_rx);
     window.present();

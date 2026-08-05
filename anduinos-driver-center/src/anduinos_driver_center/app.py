@@ -247,7 +247,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         # Secure Boot management is irrelevant when firmware enforcement is
         # disabled.  Keep the device workflow uncluttered and, importantly,
         # do not turn MOK or signing configuration into an install gate.
-        if secure_boot.enabled:
+        if not secure_boot.enforcement_inactive:
             secure_row = self._device_row(
                 "security-high-symbolic", _("Secure Boot"),
                 _("Trust established") if secure_boot.ready else _("Action required"),
@@ -329,8 +329,12 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         page.append(scroll)
         group = Adw.PreferencesGroup(title=_("Available drivers"))
         content.append(group)
-        if secure_boot.enabled and not secure_boot.ready:
-            warning = Adw.Banner(title=_("Prepare Secure Boot before installing a third-party driver."))
+        if not secure_boot.ready:
+            warning = Adw.Banner(
+                title=_(
+                    "Secure Boot status or trust must be resolved before installing a third-party driver."
+                )
+            )
             warning.set_revealed(True)
             content.append(warning)
         selection: dict[str, str | None] = {"package": None}
@@ -451,8 +455,18 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         group = Adw.PreferencesGroup(title=_("Driver status"))
         content.append(group)
         self._add_state_row(group, _("Driver package"), _("Installed") if state.installed else _("Not installed"), state.installed)
-        if secure_boot.enabled:
-            self._add_state_row(group, _("Module signature"), _("Trusted") if state.signature_matches and secure_boot.enrolled else _("Needs attention"), state.signature_matches and secure_boot.enrolled)
+        if not secure_boot.enforcement_inactive:
+            signature_ready = bool(
+                secure_boot.state_known
+                and state.signature_matches
+                and secure_boot.enrolled
+            )
+            self._add_state_row(
+                group,
+                _("Module signature"),
+                _("Trusted") if signature_ready else _("Needs attention"),
+                signature_ready,
+            )
         self._add_state_row(group, _("Kernel module"), _("Loaded") if state.module_loaded else (_("Blocked by Secure Boot") if state.blocked_by_secure_boot else _("Standing by")), not state.blocked_by_secure_boot)
         actions = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10, halign=Gtk.Align.END)
         bluetooth = Gtk.Button(label=_("Bluetooth Settings"))

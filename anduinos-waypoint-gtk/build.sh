@@ -37,11 +37,24 @@ for method in ListBackupDestinations ExportDeployment ImportExternalBackup Delet
         exit 1
     fi
 done
+for method in CreatePersonalSnapshot CreateScheduledPersonalSnapshot ListPersonalFiles ExportPersonalFile ExportPersonalSnapshot ImportPersonalExternalBackup; do
+    if ! rg -a -q "<method name=\"$method\">" "$SCRIPT_DIR/obj/anduinos-waypoint-helper"; then
+        echo "Required Personal Files D-Bus method is missing: $method" >&2
+        exit 1
+    fi
+done
+for signal in AutomaticSnapshotCreated AutomaticSnapshotsDeleted; do
+    if ! rg -a -q "<signal name=\"$signal\">" "$SCRIPT_DIR/obj/anduinos-waypoint-helper"; then
+        echo "Required automatic notification D-Bus signal is missing: $signal" >&2
+        exit 1
+    fi
+done
 if rg -a -q '<method name="CleanupSnapshots">' "$SCRIPT_DIR/obj/anduinos-waypoint-helper"; then
     echo "The obsolete generic CleanupSnapshots D-Bus method leaked into the release binary" >&2
     exit 1
 fi
 install -m755 "$RELEASE_DIR/anduinos-waypoint-scheduler" "$SCRIPT_DIR/obj/anduinos-waypoint-scheduler"
+install -m755 "$RELEASE_DIR/anduinos-waypoint-notifier" "$SCRIPT_DIR/obj/anduinos-waypoint-notifier"
 install -m755 "$RELEASE_DIR/anduinos-waypoint-initramfs" "$SCRIPT_DIR/obj/anduinos-waypoint-initramfs"
 install -m755 "$RELEASE_DIR/anduinos-waypoint-boot-config" "$SCRIPT_DIR/obj/anduinos-waypoint-boot-config"
 install -m755 "$RELEASE_DIR/anduinos-waypoint-confirm" "$SCRIPT_DIR/obj/anduinos-waypoint-confirm"

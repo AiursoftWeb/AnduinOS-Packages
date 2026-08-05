@@ -17,6 +17,7 @@ actions=(
     org.anduinos.waypoint.restore-snapshot
     org.anduinos.waypoint.configure-system
     org.anduinos.waypoint.external-backup
+    org.anduinos.waypoint.personal-files
 )
 
 for command in busctl getent jq pkaction pkcheck sudo; do
@@ -67,13 +68,15 @@ assert_safe_failure() {
     }
 }
 
-before=$(status | jq -c '{pending, deployment_count}')
+before=$(status | jq -c '{pending, deployment_count, personal_snapshot_count}')
 assert_safe_failure CreateDeployment ssb "" "" false
 assert_safe_failure DeleteDeployment s "$INVALID_ID"
 assert_safe_failure ScheduleDeploymentRestore s "$INVALID_ID"
 assert_safe_failure SetDeploymentPinned sb "$INVALID_ID" false
 assert_safe_failure VerifyExternalBackup ss "invalid-filesystem" "$INVALID_ID"
-after=$(status | jq -c '{pending, deployment_count}')
+assert_safe_failure DeletePersonalSnapshot s "$INVALID_ID"
+assert_safe_failure VerifyPersonalExternalBackup ss "invalid-filesystem" "$INVALID_ID"
+after=$(status | jq -c '{pending, deployment_count, personal_snapshot_count}')
 [[ "$before" == "$after" ]] || {
     echo "Invalid authorization probes unexpectedly changed recovery state" >&2
     exit 1
@@ -99,6 +102,12 @@ introspection=$(busctl --system introspect "$SERVICE" "$OBJECT" "$INTERFACE")
 grep -q 'CompareDeploymentPackages' <<<"$introspection"
 grep -q 'CreateScheduledDeployment' <<<"$introspection"
 grep -q 'ApplyScheduleRetention' <<<"$introspection"
+grep -q 'CreateScheduledPersonalSnapshot' <<<"$introspection"
+grep -q 'AutomaticSnapshotCreated' <<<"$introspection"
+grep -q 'AutomaticSnapshotsDeleted' <<<"$introspection"
+grep -q 'ListPersonalFiles' <<<"$introspection"
+grep -q 'ExportPersonalFile' <<<"$introspection"
+grep -q 'ExportPersonalSnapshot' <<<"$introspection"
 if grep -q 'CleanupSnapshots' <<<"$introspection"; then
     echo "The obsolete generic retention method is still installed" >&2
     exit 1

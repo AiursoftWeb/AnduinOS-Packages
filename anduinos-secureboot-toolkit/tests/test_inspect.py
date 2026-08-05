@@ -12,7 +12,9 @@ from anduinos_secureboot.inspect import (  # noqa: E402
     inspect_dkms,
     inspect_secure_boot,
     normalize_key,
+    parse_secure_boot_status,
 )
+from anduinos_secureboot.model import SecureBootStatus  # noqa: E402
 
 
 class FakeRunner:
@@ -30,6 +32,91 @@ class InspectTests(unittest.TestCase):
     def test_normalizes_certificate_keys(self):
         self.assertEqual(normalize_key("AA:12 bb"), "aa12bb")
         self.assertIsNone(normalize_key("---"))
+
+    def test_parses_every_explicit_mokutil_state(self):
+        cases = (
+            ("SecureBoot enabled", SecureBootStatus.ENABLED),
+            ("Secure Boot disabled", SecureBootStatus.DISABLED),
+            (
+                "This system doesn't support Secure Boot",
+                SecureBootStatus.UNSUPPORTED,
+            ),
+            (
+                "This system does not support Secure Boot",
+                SecureBootStatus.UNSUPPORTED,
+            ),
+        )
+        for output, expected in cases:
+            with self.subTest(output=output):
+                result = subprocess.CompletedProcess([], 0, output, "")
+                self.assertEqual(parse_secure_boot_status(result), expected)
+
+    def test_failed_or_contradictory_probe_is_unknown(self):
+        cases = (
+            subprocess.CompletedProcess([], 127, "", "mokutil not found"),
+            subprocess.CompletedProcess(
+                [],
+                0,
+                "SecureBoot enabled\nSecureBoot disabled",
+                "",
+            ),
+        )
+        for result in cases:
+            with self.subTest(output=(result.stdout, result.stderr)):
+                self.assertEqual(
+                    parse_secure_boot_status(result),
+                    SecureBootStatus.UNKNOWN,
+                )
+
+    def test_unsupported_firmware_is_not_treated_as_probe_failure(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            state = inspect_secure_boot(
+                FakeRunner(
+                    {
+                        ("mokutil", "--sb-state"): subprocess.CompletedProcess(
+                            [], 0, "This system doesn't support Secure Boot\n", ""
+                        )
+                    }
+                ),
+                root / "missing.priv",
+                root / "missing.der",
+                "test-kernel",
+                root / "missing.conf",
+            )
+        self.assertEqual(state.status, SecureBootStatus.UNSUPPORTED)
+        self.assertFalse(state.supported)
+        self.assertTrue(state.state_known)
+        self.assertTrue(state.enforcement_inactive)
+        self.assertTrue(state.ready)
+
+    def test_indeterminate_probe_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            module = root / "unsigned.ko"
+            module.write_text("module")
+            state = inspect_secure_boot(
+                FakeRunner(),
+                root / "missing.priv",
+                root / "missing.der",
+                "test-kernel",
+                root / "missing.conf",
+            )
+            dkms = inspect_dkms(
+                state,
+                FakeRunner(
+                    {
+                        ("modinfo", "-F", "sig_key", str(module)):
+                            subprocess.CompletedProcess([], 0, "", "")
+                    }
+                ),
+                root,
+            )
+        self.assertEqual(state.status, SecureBootStatus.UNKNOWN)
+        self.assertFalse(state.supported)
+        self.assertFalse(state.state_known)
+        self.assertFalse(state.ready)
+        self.assertEqual(dkms.untrusted_modules, ("unsigned.ko",))
 
     def test_enrolled_certificate_is_ready(self):
         with tempfile.TemporaryDirectory() as directory:

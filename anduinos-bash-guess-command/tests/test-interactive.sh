@@ -96,12 +96,23 @@ source '$TEST_ROOT/package/loader'
 source '$TEST_ROOT/package/loader'
 EOF
 
-run_session() {
-    local producer=$1 transcript=$2
+cp "$TEST_ROOT/bashrc" "$TEST_ROOT/late-disabled-bashrc"
+cat >>"$TEST_ROOT/late-disabled-bashrc" <<'EOF'
+# Match the OOBE-managed block at the end of a normal Ubuntu .bashrc, after
+# bash-completion has already sourced the package loader.
+export ANDUINOS_GUESS_COMMAND=0
+EOF
+
+run_session_with_rcfile() {
+    local producer=$1 transcript=$2 rcfile=$3
     "$producer" | ANDUINOS_GUESS_COMMAND=0 TERM=xterm-256color \
         HOME="$TEST_ROOT/home" \
-        script -qefc "bash --noprofile --rcfile '$TEST_ROOT/bashrc' -i" \
+        script -qefc "bash --noprofile --rcfile '$rcfile' -i" \
         "$transcript" >/dev/null
+}
+
+run_session() {
+    run_session_with_rcfile "$1" "$2" "$TEST_ROOT/bashrc"
 }
 
 accept_workflow_input() {
@@ -303,6 +314,35 @@ helper_recovery_input() {
     printf '\033[C\nexit\n'
 }
 
+disabled_prediction_probe_input() {
+    sleep 0.5
+    printf 'helper=$(pgrep -P $$ -x anduinos-quietd || :); [[ -z $helper ]] && printf STOPPED >%s/helper-stopped\n' "$TEST_ROOT"
+    printf 'sudo docker p'
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
+
+runtime_disable_input() {
+    sleep 0.5
+    printf 'export ANDUINOS_GUESS_COMMAND=0\n'
+    sleep 0.2
+    printf 'helper=$(pgrep -P $$ -x anduinos-quietd || :); [[ -z $helper ]] && printf STOPPED >%s/runtime-helper-stopped\n' "$TEST_ROOT"
+    printf 'sudo docker p'
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
+
+runtime_reenable_input() {
+    sleep 0.5
+    printf 'export ANDUINOS_GUESS_COMMAND=0\n'
+    sleep 0.2
+    printf 'export ANDUINOS_GUESS_COMMAND=1\n'
+    sleep 0.3
+    printf 'sudo git che'
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
+
 run_session loader_lifecycle_input "$TEST_ROOT/loader-lifecycle.typescript"
 [[ $(grep -o '_anduinos_guess_prompt_observe' "$TEST_ROOT/prompt-command" | wc -l) == 1 ]] ||
     fail 're-sourcing the loader duplicated PROMPT_COMMAND'
@@ -414,5 +454,27 @@ run_session dd_empty_output_input "$TEST_ROOT/dd-empty-output.typescript"
 run_session destructive_history_input "$TEST_ROOT/destructive-history.typescript"
 [[ $(<"$TEST_ROOT/sudo.args") == 'rm -rf /nonexistent-anduinos-ghost-test' ]] ||
     fail 'ordinary destructive command text remained blocked from history completion'
+
+# Keep opt-out lifecycle probes last: they deliberately toggle the master switch
+# and must not influence the persistent ranking exercised above.
+run_session_with_rcfile disabled_prediction_probe_input \
+    "$TEST_ROOT/late-disabled.typescript" "$TEST_ROOT/late-disabled-bashrc"
+[[ $(<"$TEST_ROOT/helper-stopped") == STOPPED ]] ||
+    fail 'a setting after bash-completion left the helper running'
+[[ $(<"$TEST_ROOT/sudo.args") == 'docker p' ]] ||
+    fail 'a setting after bash-completion did not disable suggestions'
+if LC_ALL=C grep -aFq $'\033[90m' "$TEST_ROOT/late-disabled.typescript"; then
+    fail 'a setting after bash-completion still rendered ghost text'
+fi
+
+run_session runtime_disable_input "$TEST_ROOT/runtime-disabled.typescript"
+[[ $(<"$TEST_ROOT/runtime-helper-stopped") == STOPPED ]] ||
+    fail 'runtime opt-out left the helper running'
+[[ $(<"$TEST_ROOT/sudo.args") == 'docker p' ]] ||
+    fail 'runtime opt-out left suggestions active'
+
+run_session runtime_reenable_input "$TEST_ROOT/runtime-reenabled.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'git checkout' ]] ||
+    fail 'runtime opt-in did not restore suggestions'
 
 printf 'Native Readline interaction checks passed.\n'

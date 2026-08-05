@@ -129,6 +129,9 @@ class ScreenshotFixture(dbus.service.Object):
                 "pending": None,
                 "deployment_count": len(DEPLOYMENTS),
                 "deployments": DEPLOYMENTS,
+                "personal_snapshot_count": 0,
+                "personal_snapshots": [],
+                "personal_issues": [],
                 "issues": [],
                 "layout": {"support": "supported"},
             }
@@ -173,8 +176,26 @@ class ScreenshotFixture(dbus.service.Object):
     def ListExternalBackups(self, _filesystem_uuid: str) -> tuple[bool, str]:
         return True, json.dumps({"backups": [], "issues": []})
 
+    @dbus.service.method(INTERFACE, in_signature="s", out_signature="bs")
+    def ListPersonalExternalBackups(self, _filesystem_uuid: str) -> tuple[bool, str]:
+        return True, json.dumps({"backups": [], "issues": []})
+
     @dbus.service.signal(INTERFACE, signature="ss")
     def SnapshotCreated(self, _snapshot_name: str, _created_by: str) -> None:
+        return None
+
+    @dbus.service.signal(INTERFACE, signature="ss")
+    def PersonalSnapshotCreated(self, _snapshot_name: str, _created_by: str) -> None:
+        return None
+
+    @dbus.service.signal(INTERFACE, signature="s")
+    def AutomaticSnapshotCreated(self, _scope: str) -> None:
+        return None
+
+    @dbus.service.signal(INTERFACE, signature="tt")
+    def AutomaticSnapshotsDeleted(
+        self, _system_deleted: int, _personal_deleted: int
+    ) -> None:
         return None
 
 

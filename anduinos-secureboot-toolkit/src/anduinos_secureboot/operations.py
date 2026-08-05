@@ -11,7 +11,13 @@ import subprocess
 import tempfile
 from typing import Callable, Sequence
 
-from .inspect import Runner, certificate_enrolled, certificate_pending
+from .inspect import (
+    Runner,
+    certificate_enrolled,
+    certificate_pending,
+    parse_secure_boot_status,
+)
+from .model import SecureBootStatus
 
 
 ENROLLMENT_PASSWORD = "123456"
@@ -102,6 +108,21 @@ def _write_signing_config(path: Path = DKMS_CONFIG) -> None:
         temporary.unlink(missing_ok=True)
 
 
+def _firmware_enforces_secure_boot(result: OperationResult, run: Run) -> bool:
+    probe = run(["mokutil", "--sb-state"], timeout=10)
+    status = parse_secure_boot_status(probe)
+    if status is SecureBootStatus.ENABLED:
+        result.steps["firmware_state"] = StepResult("success", status.value)
+        return True
+    if status in {SecureBootStatus.DISABLED, SecureBootStatus.UNSUPPORTED}:
+        result.steps["firmware_state"] = StepResult("skipped", status.value)
+        return False
+    result.steps["firmware_state"] = StepResult(
+        "failed", "Secure Boot state could not be determined"
+    )
+    return False
+
+
 def prepare(
     run: Run = run_command,
     private_key: Path = MOK_PRIVATE_KEY,
@@ -109,6 +130,8 @@ def prepare(
     config: Path = DKMS_CONFIG,
 ) -> OperationResult:
     result = OperationResult("prepare")
+    if not _firmware_enforces_secure_boot(result, run):
+        return result
 
     if private_key.is_file() and certificate.is_file():
         result.steps["key_created"] = StepResult("skipped", "key pair already exists")
@@ -162,6 +185,8 @@ def repair_dkms(
     config: Path = DKMS_CONFIG,
 ) -> OperationResult:
     result = OperationResult("repair-dkms")
+    if not _firmware_enforces_secure_boot(result, run):
+        return result
     if private_key.is_file() and certificate.is_file():
         try:
             _write_signing_config(config)

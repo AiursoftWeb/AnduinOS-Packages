@@ -10,7 +10,10 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
-SOURCE_ROOT = ROOT / "src" / "waypoint" / "src"
+SOURCE_ROOTS = (
+    ROOT / "src" / "waypoint" / "src",
+    ROOT / "src" / "waypoint-notifier" / "src",
+)
 POT = ROOT / "po" / "anduinos-waypoint-gtk.pot"
 ZH_CN = ROOT / "po" / "zh_CN.po"
 CALL = re.compile(r"\btrf?\(\s*(\"(?:\\.|[^\"\\])*\")", re.DOTALL)
@@ -36,20 +39,23 @@ NON_LANGUAGE_LITERALS = {"", ":", "/", "+"}
 
 def rust_messages() -> dict[str, set[str]]:
     found: dict[str, set[str]] = {}
-    for source in sorted(SOURCE_ROOT.rglob("*.rs")):
-        text = source.read_text(encoding="utf-8")
-        for match in CALL.finditer(text):
-            try:
-                message = ast.literal_eval(match.group(1))
-            except (SyntaxError, ValueError) as error:
-                raise RuntimeError(f"cannot parse gettext literal in {source}: {error}") from error
-            found.setdefault(message, set()).add(str(source.relative_to(ROOT)))
+    for source_root in SOURCE_ROOTS:
+        for source in sorted(source_root.rglob("*.rs")):
+            text = source.read_text(encoding="utf-8")
+            for match in CALL.finditer(text):
+                try:
+                    message = ast.literal_eval(match.group(1))
+                except (SyntaxError, ValueError) as error:
+                    raise RuntimeError(
+                        f"cannot parse gettext literal in {source}: {error}"
+                    ) from error
+                found.setdefault(message, set()).add(str(source.relative_to(ROOT)))
     return found
 
 
 def raw_gtk_messages() -> dict[str, set[str]]:
     found: dict[str, set[str]] = {}
-    for source in sorted(SOURCE_ROOT.rglob("*.rs")):
+    for source in sorted(SOURCE_ROOTS[0].rglob("*.rs")):
         text = source.read_text(encoding="utf-8")
         for pattern in (RAW_GTK_CALL, RAW_GTK_CONSTRUCTOR, RAW_RESPONSE_LABEL):
             for match in pattern.finditer(text):

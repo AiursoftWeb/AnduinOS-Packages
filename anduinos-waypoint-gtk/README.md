@@ -6,6 +6,12 @@ architecture, scheduling model, retention controls, read-only storage views, and
 backup design direction from the MIT-licensed Waypoint project, while replacing its
 Void-specific and unsafe system integration with an AnduinOS recovery engine.
 
+System deployments (`@root`) and Personal Files history (`@home`) are separate
+recovery streams. Personal history supports manual or scheduled immutable
+snapshots, timeline retention, caller-scoped browsing, non-privileged file and
+folder recovery, independently verifiable full-stream external backups, and
+desktop notifications for successful automatic creation and retention cleanup.
+
 This directory is a new product with no legacy migration contract. Earlier
 unreleased recovery experiments remain available from repository history.
 
@@ -59,16 +65,20 @@ showed that method-level feature gates could still be observed by the D-Bus macr
 Backup media is not encrypted by Waypoint; the UI tells users to use an encrypted
 external filesystem when the system contains sensitive data.
 
-Caller-selected in-place file restoration is also not shipped. The imported GUI,
-CLI command, D-Bus method, root implementation, and now-unused `rsync` dependency
-were removed together: checking only a final pathname cannot close intermediate-
-symlink and time-of-check/time-of-use races in a privileged helper. A future file
-recovery design must export through a descriptor-confined, non-privileged channel;
-until then, Waypoint exposes only the transaction-safe whole-system restore. The
-apparently read-only upstream file-browser action is also absent: the recovery
-store is root-private and exposing its path would either fail for desktop users or
-leak historical sensitive files. The reviewed export boundary is recorded in
-[`docs/RECOVERY-SCOPE.md`](docs/RECOVERY-SCOPE.md).
+Caller-selected paths are never written by the privileged helper. Historical
+Personal Files are resolved beneath the authenticated caller's own home using
+`openat2(2)` constraints and exported as read-only Unix file descriptors over
+D-Bus. The unprivileged GTK process chooses and writes the destination. This
+does not reintroduce the removed root `rsync` path-copy implementation. The
+reviewed boundary is recorded in [`docs/RECOVERY-SCOPE.md`](docs/RECOVERY-SCOPE.md).
+
+Each automatic schedule has an opt-out “Notify when created” setting that is
+enabled by default, including for configurations written before the setting was
+introduced. A per-session unprivileged notifier receives privacy-preserving
+system-bus events and sends GNOME notifications even when the main Waypoint
+window is closed. Automatic deletion notices are aggregated by System and
+Personal Files counts; snapshot titles, paths, and filenames are never placed
+on that notification channel.
 
 ## Source layout
 
@@ -80,6 +90,7 @@ The layout follows the repository-wide package convention:
   - `waypoint-common/`: shared UI/helper configuration and platform types;
   - `waypoint/`, `waypoint-helper/`, and `waypoint-scheduler/`: the adapted
     upstream product experience and its system integration;
+  - `waypoint-notifier/`: the unprivileged desktop-session notification bridge;
 - `assets/`: packaged configuration and service defaults;
 - `data/`: desktop, D-Bus, Polkit, systemd, and icon resources;
 - `scripts/`: Debian maintainer and validation scripts;
@@ -112,7 +123,7 @@ host root or a real block-device path. Both require passwordless `sudo` and exit
 with status 77 when that test environment is unavailable.
 
 After installing an APKG-built Deb, the non-destructive caller boundary and all
-five Polkit actions can be qualified with:
+six Polkit actions can be qualified with:
 
 ```bash
 scripts/test-installed-policy.sh

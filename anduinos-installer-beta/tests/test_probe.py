@@ -43,6 +43,43 @@ class PlatformProbeTests(unittest.TestCase):
             )
         self.assertEqual(result.secure_boot, SecureBoot.ENABLED)
 
+    def test_uefi_without_secure_boot_support_is_explicit(self):
+        with tempfile.TemporaryDirectory() as directory:
+            result = probe_platform(
+                machine="x86_64",
+                efi_path=Path(directory),
+                run=lambda *args, **kwargs: completed(
+                    "This system doesn't support Secure Boot"
+                ),
+            )
+        self.assertEqual(result.firmware, Firmware.UEFI)
+        self.assertEqual(result.secure_boot, SecureBoot.UNSUPPORTED)
+
+    def test_contradictory_secure_boot_output_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(ProbeError, "unambiguous"):
+                probe_platform(
+                    machine="x86_64",
+                    efi_path=Path(directory),
+                    run=lambda *args, **kwargs: completed(
+                        "SecureBoot enabled\n"
+                        "This system doesn't support Secure Boot"
+                    ),
+                )
+
+    def test_secure_boot_probe_forces_c_locale(self):
+        captured = {}
+
+        def run(*args, **kwargs):
+            captured.update(kwargs)
+            return completed("SecureBoot disabled")
+
+        with tempfile.TemporaryDirectory() as directory:
+            probe_platform(
+                machine="x86_64", efi_path=Path(directory), run=run
+            )
+        self.assertEqual(captured["env"]["LC_ALL"], "C")
+
 
 class DiskProbeTests(unittest.TestCase):
     def test_only_returns_stably_identified_fixed_whole_disks(self):

@@ -51,6 +51,30 @@ pub struct RecoveryEngineStatus {
     pub pending: Option<PendingRecovery>,
     pub issues: Vec<serde_json::Value>,
     pub layout: serde_json::Value,
+    #[serde(default)]
+    pub personal_snapshots: Vec<PersonalSnapshot>,
+    #[serde(default)]
+    pub personal_issues: Vec<serde_json::Value>,
+}
+
+#[derive(Debug, Clone, serde::Deserialize)]
+pub struct PersonalSnapshot {
+    pub id: String,
+    pub kind: String,
+    pub state: String,
+    pub created_at: chrono::DateTime<chrono::Utc>,
+    pub title: String,
+    pub reason: String,
+    pub schedule_id: Option<String>,
+    pub pinned: bool,
+}
+
+#[derive(Debug, Clone, serde::Deserialize)]
+pub struct PersonalDirectoryEntry {
+    pub name: String,
+    pub kind: String,
+    pub size: u64,
+    pub modified_unix_seconds: i64,
 }
 
 #[derive(Debug, Clone, serde::Deserialize)]
@@ -88,6 +112,22 @@ pub struct ExternalBackupIssue {
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct ExternalBackupDiscovery {
     pub backups: Vec<ExternalBackupManifest>,
+    pub issues: Vec<ExternalBackupIssue>,
+}
+
+#[derive(Debug, Clone, serde::Deserialize)]
+pub struct PersonalBackupManifest {
+    pub backup_id: String,
+    pub created_at: chrono::DateTime<chrono::Utc>,
+    pub source: PersonalSnapshot,
+    pub stream_sha256: String,
+    pub stream_size_bytes: u64,
+    pub referenced_bytes: u64,
+}
+
+#[derive(Debug, Clone, serde::Deserialize)]
+pub struct PersonalBackupDiscovery {
+    pub backups: Vec<PersonalBackupManifest>,
     pub issues: Vec<ExternalBackupIssue>,
 }
 
@@ -217,6 +257,85 @@ impl WaypointHelperClient {
             .context("Failed to create a system recovery point")
     }
 
+    pub fn create_personal_snapshot(
+        &self,
+        title: String,
+        reason: String,
+        pinned: bool,
+    ) -> Result<PersonalSnapshot> {
+        let proxy = self.proxy()?;
+        let (success, result): (bool, String) = proxy
+            .call("CreatePersonalSnapshot", &(title, reason, pinned))
+            .context("Failed to create a Personal Files history point")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        serde_json::from_str(&result).context("Failed to parse personal snapshot")
+    }
+
+    pub fn delete_personal_snapshot(&self, id: String) -> Result<()> {
+        let proxy = self.proxy()?;
+        let (success, result): (bool, String) = proxy
+            .call("DeletePersonalSnapshot", &(id,))
+            .context("Failed to delete the Personal Files history point")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
+    }
+
+    pub fn set_personal_snapshot_pinned(
+        &self,
+        id: String,
+        pinned: bool,
+    ) -> Result<PersonalSnapshot> {
+        let proxy = self.proxy()?;
+        let (success, result): (bool, String) = proxy
+            .call("SetPersonalSnapshotPinned", &(id, pinned))
+            .context("Failed to change Personal Files history protection")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        serde_json::from_str(&result).context("Failed to parse personal snapshot")
+    }
+
+    pub fn list_personal_files(
+        &self,
+        snapshot_id: String,
+        relative_path: String,
+    ) -> Result<Vec<PersonalDirectoryEntry>> {
+        let proxy = self.proxy()?;
+        let (success, result): (bool, String) = proxy
+            .call("ListPersonalFiles", &(snapshot_id, relative_path))
+            .context("Failed to browse historical Personal Files")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        serde_json::from_str(&result).context("Failed to parse historical directory")
+    }
+
+    pub fn export_personal_file(
+        &self,
+        snapshot_id: String,
+        relative_path: String,
+    ) -> Result<std::fs::File> {
+        let proxy = self.proxy()?;
+        let descriptor: zbus::zvariant::OwnedFd = proxy
+            .call("ExportPersonalFile", &(snapshot_id, relative_path))
+            .context("Failed to export historical Personal File")?;
+        Ok(std::fs::File::from(std::os::fd::OwnedFd::from(descriptor)))
+    }
+
+    fn proxy(&self) -> Result<zbus::blocking::Proxy<'_>> {
+        zbus::blocking::Proxy::new(
+            &self.connection,
+            DBUS_SERVICE_NAME,
+            DBUS_OBJECT_PATH,
+            DBUS_INTERFACE_NAME,
+        )
+        .context("Failed to connect to the Waypoint helper")
+    }
+
     pub fn delete_deployment(&self, id: String) -> Result<(bool, String)> {
         let proxy = zbus::blocking::Proxy::new(
             &self.connection,
@@ -326,6 +445,66 @@ impl WaypointHelperClient {
             &(deployment_id, filesystem_uuid),
             "Failed to export the recovery point",
         )
+    }
+
+    pub fn list_personal_external_backups(
+        &self,
+        filesystem_uuid: String,
+    ) -> Result<PersonalBackupDiscovery> {
+        self.external_backup_call(
+            "ListPersonalExternalBackups",
+            &(filesystem_uuid,),
+            "Failed to list Personal Files backups",
+        )
+    }
+
+    pub fn export_personal_snapshot(
+        &self,
+        snapshot_id: String,
+        filesystem_uuid: String,
+    ) -> Result<PersonalBackupManifest> {
+        self.external_backup_call(
+            "ExportPersonalSnapshot",
+            &(snapshot_id, filesystem_uuid),
+            "Failed to export Personal Files history",
+        )
+    }
+
+    pub fn verify_personal_external_backup(
+        &self,
+        filesystem_uuid: String,
+        backup_id: String,
+    ) -> Result<PersonalBackupManifest> {
+        self.external_backup_call(
+            "VerifyPersonalExternalBackup",
+            &(filesystem_uuid, backup_id),
+            "Failed to verify Personal Files backup",
+        )
+    }
+
+    pub fn import_personal_external_backup(
+        &self,
+        filesystem_uuid: String,
+        backup_id: String,
+    ) -> Result<PersonalSnapshot> {
+        self.external_backup_call(
+            "ImportPersonalExternalBackup",
+            &(filesystem_uuid, backup_id),
+            "Failed to import Personal Files backup",
+        )
+    }
+
+    pub fn delete_personal_external_backup(
+        &self,
+        filesystem_uuid: String,
+        backup_id: String,
+    ) -> Result<()> {
+        let _: serde_json::Value = self.external_backup_call(
+            "DeletePersonalExternalBackup",
+            &(filesystem_uuid, backup_id),
+            "Failed to delete Personal Files backup",
+        )?;
+        Ok(())
     }
 
     pub fn verify_external_backup(

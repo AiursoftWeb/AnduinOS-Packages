@@ -6,7 +6,8 @@ use gtk::prelude::*;
 use libadwaita as adw;
 
 use crate::dbus_client::{
-    ExternalBackupDestination, ExternalBackupDiscovery, RecoveryDeployment, WaypointHelperClient,
+    ExternalBackupDestination, ExternalBackupDiscovery, PersonalBackupDiscovery, PersonalSnapshot,
+    RecoveryDeployment, WaypointHelperClient,
 };
 use crate::i18n::{tr, trf};
 
@@ -14,12 +15,14 @@ use crate::i18n::{tr, trf};
 struct DestinationBackups {
     destination: ExternalBackupDestination,
     discovery: ExternalBackupDiscovery,
+    personal_discovery: PersonalBackupDiscovery,
 }
 
 #[derive(Debug)]
 struct ViewData {
     destinations: Vec<DestinationBackups>,
     deployments: Vec<RecoveryDeployment>,
+    personal_snapshots: Vec<PersonalSnapshot>,
 }
 
 pub fn show(parent: &adw::ApplicationWindow) {
@@ -39,6 +42,9 @@ pub fn show(parent: &adw::ApplicationWindow) {
     export_button.add_css_class("suggested-action");
     export_button.set_sensitive(false);
     header.pack_start(&export_button);
+    let export_personal_button = gtk::Button::with_label(&tr("Export Personal Files…"));
+    export_personal_button.set_sensitive(false);
+    header.pack_start(&export_personal_button);
     let refresh_button = gtk::Button::from_icon_name("view-refresh-symbolic");
     refresh_button.set_tooltip_text(Some(&tr("Refresh external drives")));
     header.pack_end(&refresh_button);
@@ -75,12 +81,20 @@ pub fn show(parent: &adw::ApplicationWindow) {
     window.set_content(Some(&root));
 
     let data = std::rc::Rc::new(std::cell::RefCell::new(None::<ViewData>));
-    load(&window, &stack, &content, &export_button, &data);
+    load(
+        &window,
+        &stack,
+        &content,
+        &export_button,
+        &export_personal_button,
+        &data,
+    );
 
     let window_refresh = window.clone();
     let stack_refresh = stack.clone();
     let content_refresh = content.clone();
     let export_refresh = export_button.clone();
+    let export_personal_refresh = export_personal_button.clone();
     let data_refresh = data.clone();
     refresh_button.connect_clicked(move |_| {
         load(
@@ -88,7 +102,25 @@ pub fn show(parent: &adw::ApplicationWindow) {
             &stack_refresh,
             &content_refresh,
             &export_refresh,
+            &export_personal_refresh,
             &data_refresh,
+        );
+    });
+
+    let window_export_personal = window.clone();
+    let data_export_personal = data.clone();
+    export_personal_button.connect_clicked(move |_| {
+        let data = data_export_personal.borrow();
+        let Some(data) = data.as_ref() else {
+            return;
+        };
+        show_personal_export_dialog(
+            &window_export_personal,
+            data.personal_snapshots.clone(),
+            data.destinations
+                .iter()
+                .map(|item| item.destination.clone())
+                .collect(),
         );
     });
 
@@ -117,28 +149,36 @@ fn load(
     stack: &gtk::Stack,
     content: &gtk::Box,
     export_button: &gtk::Button,
+    export_personal_button: &gtk::Button,
     state: &std::rc::Rc<std::cell::RefCell<Option<ViewData>>>,
 ) {
     stack.set_visible_child_name("loading");
     export_button.set_sensitive(false);
+    export_personal_button.set_sensitive(false);
     clear_box(content);
     let (sender, receiver) = mpsc::channel();
     std::thread::spawn(move || {
         let result = (|| -> anyhow::Result<ViewData> {
             let client = WaypointHelperClient::new()?;
-            let deployments = client.recovery_engine_status()?.deployments;
+            let status = client.recovery_engine_status()?;
+            let deployments = status.deployments;
+            let personal_snapshots = status.personal_snapshots;
             let mut destination_backups = Vec::new();
             for destination in client.list_backup_destinations()? {
                 let discovery =
                     client.list_external_backups(destination.filesystem_uuid.clone())?;
+                let personal_discovery =
+                    client.list_personal_external_backups(destination.filesystem_uuid.clone())?;
                 destination_backups.push(DestinationBackups {
                     destination,
                     discovery,
+                    personal_discovery,
                 });
             }
             Ok(ViewData {
                 destinations: destination_backups,
                 deployments,
+                personal_snapshots,
             })
         })();
         let _ = sender.send(result);
@@ -148,6 +188,7 @@ fn load(
     let stack = stack.clone();
     let content = content.clone();
     let export_button = export_button.clone();
+    let export_personal_button = export_personal_button.clone();
     let state = state.clone();
     glib::timeout_add_local(Duration::from_millis(80), move || {
         match receiver.try_recv() {
@@ -155,6 +196,9 @@ fn load(
                 populate(&window, &content, &view_data);
                 export_button.set_sensitive(
                     !view_data.deployments.is_empty() && !view_data.destinations.is_empty(),
+                );
+                export_personal_button.set_sensitive(
+                    !view_data.personal_snapshots.is_empty() && !view_data.destinations.is_empty(),
                 );
                 *state.borrow_mut() = Some(view_data);
                 stack.set_visible_child_name("content");
@@ -362,8 +406,204 @@ fn populate(window: &adw::Window, content: &gtk::Box, data: &ViewData) {
             row.add_css_class("error");
             group.add(&row);
         }
+        let personal_heading = adw::ActionRow::new();
+        personal_heading.set_title(&tr("Personal Files Backups"));
+        personal_heading.set_subtitle(&tr("Independent full streams of @home history"));
+        group.add(&personal_heading);
+        if item.personal_discovery.backups.is_empty() {
+            let row = adw::ActionRow::new();
+            row.set_title(&tr("No Personal Files backups on this drive"));
+            group.add(&row);
+        }
+        for backup in &item.personal_discovery.backups {
+            let row = adw::ExpanderRow::new();
+            row.set_title(&backup.source.title);
+            row.set_subtitle(&trf(
+                "{0} · {1} Personal Files stream",
+                &[
+                    &backup.created_at.format("%Y-%m-%d %H:%M UTC").to_string(),
+                    &waypoint_common::format_bytes(backup.stream_size_bytes),
+                ],
+            ));
+            let identity = adw::ActionRow::new();
+            identity.set_title(&tr("Backup identity"));
+            identity.set_subtitle(&trf(
+                "{0} · source {1} · referenced {2}",
+                &[
+                    &backup.backup_id,
+                    &backup.source.id,
+                    &waypoint_common::format_bytes(backup.referenced_bytes),
+                ],
+            ));
+            row.add_row(&identity);
+            let digest = adw::ActionRow::new();
+            digest.set_title(&tr("Stream SHA-256"));
+            digest.set_subtitle(&backup.stream_sha256);
+            row.add_row(&digest);
+            let actions = gtk::Box::new(gtk::Orientation::Horizontal, 6);
+            let verify = gtk::Button::with_label(&tr("Verify"));
+            let import = gtk::Button::with_label(&tr("Import"));
+            import.add_css_class("suggested-action");
+            let delete = gtk::Button::from_icon_name("user-trash-symbolic");
+            delete.add_css_class("destructive-action");
+            actions.append(&verify);
+            actions.append(&import);
+            actions.append(&delete);
+            row.add_suffix(&actions);
+
+            let filesystem_uuid = item.destination.filesystem_uuid.clone();
+            let backup_id = backup.backup_id.clone();
+            let window_verify = window.clone();
+            verify.connect_clicked(move |_| {
+                let filesystem_uuid = filesystem_uuid.clone();
+                let backup_id = backup_id.clone();
+                run_operation(
+                    &window_verify,
+                    &tr("Verifying Personal Files Backup"),
+                    move || {
+                        let result = WaypointHelperClient::new()?
+                            .verify_personal_external_backup(filesystem_uuid, backup_id)?;
+                        Ok(trf(
+                            "The complete {0} Personal Files stream is valid.",
+                            &[&waypoint_common::format_bytes(result.stream_size_bytes)],
+                        ))
+                    },
+                );
+            });
+
+            let filesystem_uuid = item.destination.filesystem_uuid.clone();
+            let backup_id = backup.backup_id.clone();
+            let window_import = window.clone();
+            import.connect_clicked(move |_| {
+                let filesystem_uuid = filesystem_uuid.clone();
+                let backup_id = backup_id.clone();
+                run_operation(
+                    &window_import,
+                    &tr("Importing Personal Files Backup"),
+                    move || {
+                        let record = WaypointHelperClient::new()?
+                            .import_personal_external_backup(filesystem_uuid, backup_id)?;
+                        Ok(trf(
+                            "“{0}” was imported into Personal Files history.",
+                            &[&record.title],
+                        ))
+                    },
+                );
+            });
+
+            let filesystem_uuid = item.destination.filesystem_uuid.clone();
+            let backup_id = backup.backup_id.clone();
+            let window_delete = window.clone();
+            delete.connect_clicked(move |_| {
+                let filesystem_uuid = filesystem_uuid.clone();
+                let backup_id = backup_id.clone();
+                run_operation(&window_delete, &tr("Deleting Personal Files Backup"), move || {
+                    WaypointHelperClient::new()?
+                        .delete_personal_external_backup(filesystem_uuid, backup_id)?;
+                    Ok(tr("The external Personal Files backup was deleted. Refresh to update the list."))
+                });
+            });
+            group.add(&row);
+        }
+        for issue in &item.personal_discovery.issues {
+            let row = adw::ActionRow::new();
+            row.set_title(&trf("Damaged Personal Files backup: {0}", &[&issue.entry]));
+            row.set_subtitle(&issue.message);
+            row.add_css_class("error");
+            group.add(&row);
+        }
         content.append(&group);
     }
+}
+
+fn show_personal_export_dialog(
+    parent: &adw::Window,
+    snapshots: Vec<PersonalSnapshot>,
+    destinations: Vec<ExternalBackupDestination>,
+) {
+    let window = adw::Window::new();
+    window.set_title(Some(&tr("Export Personal Files History")));
+    window.set_modal(true);
+    window.set_transient_for(Some(parent));
+    window.set_default_size(560, 360);
+    let root = gtk::Box::new(gtk::Orientation::Vertical, 0);
+    root.append(&adw::HeaderBar::new());
+    let body = gtk::Box::new(gtk::Orientation::Vertical, 18);
+    body.set_margin_top(24);
+    body.set_margin_bottom(24);
+    body.set_margin_start(12);
+    body.set_margin_end(12);
+    let group = adw::PreferencesGroup::new();
+    group.set_title(&tr("Full Personal Files Backup"));
+    group.set_description(Some(&tr(
+        "The selected immutable @home history point is exported as an independent Btrfs stream.",
+    )));
+    let snapshot_model = gtk::StringList::new(
+        &snapshots
+            .iter()
+            .map(|item| item.title.as_str())
+            .collect::<Vec<_>>(),
+    );
+    let snapshot_row = adw::ComboRow::new();
+    snapshot_row.set_title(&tr("History Point"));
+    snapshot_row.set_model(Some(&snapshot_model));
+    group.add(&snapshot_row);
+    let destination_labels = destinations
+        .iter()
+        .map(|item| {
+            format!(
+                "{} · {}",
+                item.filesystem_type.to_uppercase(),
+                item.filesystem_uuid
+            )
+        })
+        .collect::<Vec<_>>();
+    let destination_model = gtk::StringList::new(
+        &destination_labels
+            .iter()
+            .map(String::as_str)
+            .collect::<Vec<_>>(),
+    );
+    let destination_row = adw::ComboRow::new();
+    destination_row.set_title(&tr("External Drive"));
+    destination_row.set_model(Some(&destination_model));
+    group.add(&destination_row);
+    body.append(&group);
+    let export = gtk::Button::with_label(&tr("Export and Verify"));
+    export.add_css_class("suggested-action");
+    export.set_halign(gtk::Align::End);
+    body.append(&export);
+    root.append(&body);
+    window.set_content(Some(&root));
+    let parent = parent.clone();
+    let export_window = window.clone();
+    export.connect_clicked(move |_| {
+        let Some(snapshot) = snapshots.get(snapshot_row.selected() as usize) else {
+            return;
+        };
+        let Some(destination) = destinations.get(destination_row.selected() as usize) else {
+            return;
+        };
+        let snapshot_id = snapshot.id.clone();
+        let filesystem_uuid = destination.filesystem_uuid.clone();
+        export_window.close();
+        run_operation(
+            &parent,
+            &tr("Exporting Personal Files History"),
+            move || {
+                let manifest = WaypointHelperClient::new()?
+                    .export_personal_snapshot(snapshot_id, filesystem_uuid)?;
+                Ok(trf(
+                    "Personal Files backup {0} was committed atomically ({1}).",
+                    &[
+                        &manifest.backup_id,
+                        &waypoint_common::format_bytes(manifest.stream_size_bytes),
+                    ],
+                ))
+            },
+        );
+    });
+    window.present();
 }
 
 fn show_export_dialog(

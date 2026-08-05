@@ -12,6 +12,7 @@ test -f "$ROOT/data/org.anduinos.Waypoint.svg"
 echo 'f6d678d9551cbeb64c4fcad189d1b34aaaad59465588eee7b504cd0c798729a3  '"$ROOT/data/org.anduinos.Waypoint.svg" \
     | sha256sum --check --status
 test -f "$ROOT/data/org.anduinos.Waypoint.metainfo.xml"
+test -f "$ROOT/data/org.anduinos.Waypoint.Notifier.desktop"
 test -x "$ROOT/compile-locales.sh"
 test -f "$ROOT/po/anduinos-waypoint-gtk.pot"
 test -f "$ROOT/data/initramfs-hook"
@@ -24,6 +25,11 @@ test -f "$ROOT/src/anduinos-recovery-engine/src/waypoint_initramfs.rs"
 test -f "$ROOT/src/anduinos-recovery-engine/src/waypoint_boot_config.rs"
 test -f "$ROOT/src/anduinos-recovery-engine/src/waypoint_confirm.rs"
 test -f "$ROOT/src/anduinos-recovery-engine/src/waypoint_apt_hook.rs"
+test -f "$ROOT/src/waypoint-notifier/src/main.rs"
+grep -Fq 'obj/anduinos-waypoint-notifier" Target="/usr/libexec/anduinos-waypoint-notifier"' \
+    "$ROOT/anduinos-waypoint-gtk.aosproj"
+grep -Fq 'Target="/etc/xdg/autostart/org.anduinos.Waypoint.Notifier.desktop"' \
+    "$ROOT/anduinos-waypoint-gtk.aosproj"
 if rg -n 'path[[:space:]]*=[[:space:]]*"src/bin/' \
     "$ROOT/src" --glob 'Cargo.toml'; then
     echo "Executable Rust sources must use the repository-standard src/*.rs layout" >&2
@@ -36,6 +42,8 @@ test -f "$ROOT/scripts/postrm.sh"
 test -f "$ROOT/docs/deployment-v1.schema.json"
 test -f "$ROOT/docs/rollback-v1.schema.json"
 test -f "$ROOT/docs/external-backup-v1.schema.json"
+test -f "$ROOT/docs/personal-snapshot-v1.schema.json"
+test -f "$ROOT/docs/personal-backup-v1.schema.json"
 test -f "$ROOT/docs/VM-QUALIFICATION.md"
 test -f "$ROOT/docs/RECOVERY-SCOPE.md"
 test -x "$ROOT/scripts/test-external-backup-loopback.sh"
@@ -78,9 +86,24 @@ fi
 
 python3 "$ROOT/scripts/check-i18n.py"
 
-rg -q '\.arg\("create-scheduled"\)' "$ROOT/src/waypoint-scheduler/src/main.rs"
+rg -q 'ScheduleScope::System => "create-scheduled"' "$ROOT/src/waypoint-scheduler/src/main.rs"
+rg -q 'ScheduleScope::Personal => "personal-create-scheduled"' "$ROOT/src/waypoint-scheduler/src/main.rs"
 rg -q 'create-scheduled\) cmd_create_scheduled' "$ROOT/src/waypoint-cli"
 rg -q 'CreateScheduledDeployment' "$ROOT/src/waypoint-cli"
+rg -q 'CreateScheduledPersonalSnapshot' "$ROOT/src/waypoint-cli"
+rg -q 'notify_on_create' "$ROOT/src/waypoint-common/src/schedules.rs"
+rg -q 'AutomaticSnapshotCreated' "$ROOT/src/waypoint-notifier/src/main.rs"
+rg -q 'AutomaticSnapshotsDeleted' "$ROOT/src/waypoint-notifier/src/main.rs"
+if rg -n 'notify-send|org\.freedesktop\.Notifications' \
+    "$ROOT/src/waypoint-helper/src" "$ROOT/src/waypoint-scheduler/src"; then
+    echo "Privileged services must not send desktop-session notifications directly" >&2
+    exit 1
+fi
+if rg -n 'RECOVERY_STORE_ROOT|/\.snapshots|ListPersonalFiles|ExportPersonalFile' \
+    "$ROOT/src/waypoint-notifier/src"; then
+    echo "The desktop notifier must not gain recovery-store or file-browsing capabilities" >&2
+    exit 1
+fi
 rg -Fq ".data[0] | booleans | tostring" "$ROOT/src/waypoint-cli"
 rg -Fq 'status) cmd_status' "$ROOT/src/waypoint-cli"
 rg -Fq 'create [--json]' "$ROOT/src/waypoint-cli"
@@ -127,6 +150,7 @@ fi
 
 rg -q 'CompareDeploymentPackages' "$ROOT/src/waypoint/src/dbus_client.rs"
 rg -q 'ApplyScheduleRetention' "$ROOT/src/waypoint-cli"
+rg -q 'ExportPersonalFile' "$ROOT/src/waypoint/src/dbus_client.rs"
 
 if rg -n 'Command::new\("(?:/usr/bin/)?(?:apt|apt-get|aptitude|pkcon)"|run_command\("(?:/usr/bin/)?(?:apt|apt-get|aptitude|pkcon)"' \
     "$ROOT/src" --glob '!target/**'; then

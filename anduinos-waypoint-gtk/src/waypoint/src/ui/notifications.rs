@@ -6,7 +6,6 @@ use crate::i18n::{tr, trf};
 /// Priority levels for notifications
 #[derive(Debug, Clone, Copy)]
 pub enum NotificationPriority {
-    Low,
     Normal,
     Urgent,
 }
@@ -14,7 +13,6 @@ pub enum NotificationPriority {
 impl NotificationPriority {
     fn to_gio_priority(self) -> gio::NotificationPriority {
         match self {
-            NotificationPriority::Low => gio::NotificationPriority::Low,
             NotificationPriority::Normal => gio::NotificationPriority::Normal,
             NotificationPriority::Urgent => gio::NotificationPriority::Urgent,
         }
@@ -78,18 +76,5 @@ pub fn notify_snapshot_restored(app: &Application, snapshot_name: &str) {
             &[snapshot_name],
         ),
         NotificationPriority::Urgent,
-    );
-}
-
-/// Send a notification about scheduled snapshot creation
-pub fn notify_scheduled_snapshot(app: &Application, snapshot_name: &str) {
-    send_notification(
-        app,
-        &tr("Automatic Recovery Point Created"),
-        &trf(
-            "Automatic recovery point “{0}” was created successfully.",
-            &[snapshot_name],
-        ),
-        NotificationPriority::Low,
     );
 }

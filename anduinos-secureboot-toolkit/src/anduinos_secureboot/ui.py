@@ -14,7 +14,7 @@ from gi.repository import Adw, GLib, Gtk  # noqa: E402
 
 from .client import run_action
 from .inspect import inspect_dkms, inspect_secure_boot
-from .model import DkmsState, SecureBootState
+from .model import DkmsState, SecureBootState, SecureBootStatus
 from .operations import ENROLLMENT_PASSWORD
 
 
@@ -184,35 +184,70 @@ def create_secure_boot_page(
         if secure_boot.enabled:
             sb_row.set_subtitle(_("Motherboard hardware protection is active"))
             set_icon("secure_boot", "emblem-ok-symbolic", "success")
+        elif secure_boot.status is SecureBootStatus.UNSUPPORTED:
+            sb_row.set_subtitle(_("Firmware does not support Secure Boot"))
+            set_icon("secure_boot", "dialog-information-symbolic", "dim-label")
+        elif secure_boot.status is SecureBootStatus.UNKNOWN:
+            sb_row.set_subtitle(_("Secure Boot state could not be determined"))
+            set_icon("secure_boot", "dialog-error-symbolic", "error")
         else:
             sb_row.set_subtitle(_("Secure Boot is disabled"))
             set_icon("secure_boot", "dialog-information-symbolic", "dim-label")
 
         has_certificate = secure_boot.key_present and secure_boot.certificate_present
         trust_ready = secure_boot.trust_ready
-        cert_row.set_subtitle(
-            _("Certificate generated locally")
-            if has_certificate
-            else _("Missing local certificate")
-        )
-        set_icon(
-            "certificate",
-            "emblem-ok-symbolic" if has_certificate else "dialog-warning-symbolic",
-            "success" if has_certificate else "warning",
-        )
-
-        if secure_boot.enrolled:
-            enroll_row.set_subtitle(_("Certificate is trusted by motherboard"))
-            set_icon("enrollment", "emblem-ok-symbolic", "success")
-        elif secure_boot.enrollment_pending:
-            enroll_row.set_subtitle(_("Pending enrollment in blue screen (MOKManager)"))
+        if secure_boot.enforcement_inactive:
+            cert_row.set_subtitle(_("Not required without firmware enforcement"))
+            set_icon("certificate", "dialog-information-symbolic", "dim-label")
+            enroll_row.set_subtitle(_("Not required without firmware enforcement"))
+            set_icon("enrollment", "dialog-information-symbolic", "dim-label")
+        elif secure_boot.status is SecureBootStatus.UNKNOWN:
+            cert_row.set_subtitle(
+                _("Not checked because Secure Boot state is unknown")
+            )
+            set_icon("certificate", "dialog-warning-symbolic", "warning")
+            enroll_row.set_subtitle(
+                _("Not checked because Secure Boot state is unknown")
+            )
             set_icon("enrollment", "dialog-warning-symbolic", "warning")
         else:
-            enroll_row.set_subtitle(_("Certificate is not trusted by motherboard"))
-            set_icon("enrollment", "dialog-error-symbolic", "error")
+            cert_row.set_subtitle(
+                _("Certificate generated locally")
+                if has_certificate
+                else _("Missing local certificate")
+            )
+            set_icon(
+                "certificate",
+                "emblem-ok-symbolic" if has_certificate else "dialog-warning-symbolic",
+                "success" if has_certificate else "warning",
+            )
+
+        if (
+            not secure_boot.enforcement_inactive
+            and secure_boot.status is not SecureBootStatus.UNKNOWN
+        ):
+            if secure_boot.enrolled:
+                enroll_row.set_subtitle(_("Certificate is trusted by motherboard"))
+                set_icon("enrollment", "emblem-ok-symbolic", "success")
+            elif secure_boot.enrollment_pending:
+                enroll_row.set_subtitle(
+                    _("Pending enrollment in blue screen (MOKManager)")
+                )
+                set_icon("enrollment", "dialog-warning-symbolic", "warning")
+            else:
+                enroll_row.set_subtitle(
+                    _("Certificate is not trusted by motherboard")
+                )
+                set_icon("enrollment", "dialog-error-symbolic", "error")
 
         signing_configuration_ready = secure_boot.configuration_present
-        if not dkms.modules and trust_ready and signing_configuration_ready:
+        if secure_boot.enforcement_inactive:
+            drivers_row.set_subtitle(_("Kernel signature enforcement is inactive"))
+            set_icon("drivers", "dialog-information-symbolic", "dim-label")
+        elif secure_boot.status is SecureBootStatus.UNKNOWN:
+            drivers_row.set_subtitle(_("Driver trust cannot be verified"))
+            set_icon("drivers", "dialog-warning-symbolic", "warning")
+        elif not dkms.modules and trust_ready and signing_configuration_ready:
             drivers_row.set_subtitle(
                 _("Secure Boot trust is ready. No third-party kernel modules are currently installed.")
             )
@@ -251,10 +286,28 @@ def create_secure_boot_page(
         reboot_note.set_visible(secure_boot.enrollment_pending)
         reboot_button.set_visible(secure_boot.enrollment_pending)
         refresh_button.set_visible(
-            secure_boot.enabled and (not secure_boot.ready or not dkms.ready)
+            secure_boot.status is SecureBootStatus.UNKNOWN
+            or (
+                secure_boot.enabled
+                and (not secure_boot.ready or not dkms.ready)
+            )
         )
 
-        if not secure_boot.enabled:
+        if secure_boot.status is SecureBootStatus.UNSUPPORTED:
+            status.set_label(
+                _(
+                    "This firmware does not provide Secure Boot. No certificate is required."
+                )
+            )
+            status.remove_css_class("title-4")
+        elif secure_boot.status is SecureBootStatus.UNKNOWN:
+            status.set_label(
+                _(
+                    "Secure Boot status could not be read. Driver trust operations are blocked until detection succeeds."
+                )
+            )
+            status.remove_css_class("title-4")
+        elif not secure_boot.enabled:
             status.set_label(_("No certificate is required while Secure Boot is disabled."))
             status.remove_css_class("title-4")
         elif secure_boot.ready and dkms.ready:
@@ -353,6 +406,7 @@ def create_secure_boot_page(
         enroll_label.set_label(_("Create & Enroll Certificate"))
         button.set_sensitive(True)
         steps = payload.get("steps", {})
+        firmware = steps.get("firmware_state", {})
         enrollment = steps.get("enrollment_queued", {}).get("status")
         key_created = steps.get("key_created", {}).get("status")
         trust_prepared = enrollment in {"success", "skipped"} and key_created in {
@@ -360,7 +414,15 @@ def create_secure_boot_page(
             "skipped",
         }
 
-        if action == "prepare" and trust_prepared:
+        if firmware.get("status") == "skipped":
+            done = Adw.MessageDialog.new(
+                page.get_root(),
+                _("Secure Boot Trust Not Required"),
+                _("Firmware signature enforcement is not active."),
+            )
+            done.add_response("ok", _("OK"))
+            done.present()
+        elif action == "prepare" and trust_prepared:
             page._hide_next = bool(payload.get("reboot_required"))
             if update_navigation:
                 update_navigation()

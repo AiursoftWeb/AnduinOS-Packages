@@ -138,7 +138,8 @@ impl<R: SecureBootToolRunner> SecureBootValidator<R> {
 
     /// Validate only the trust requirements that firmware enforces at boot.
     ///
-    /// Secure Boot disabled is a supported state and deliberately skips signature checks.
+    /// Secure Boot disabled or unsupported is explicit and skips signature checks.
+    /// An indeterminate state fails closed rather than masquerading as disabled.
     /// When it is enabled, the recovery kernel must be signed. If the target contains DKMS
     /// modules, its recorded MOK must still be the currently enrolled MOK and every module must
     /// carry that key identifier.
@@ -157,14 +158,30 @@ impl<R: SecureBootToolRunner> SecureBootValidator<R> {
                 format!("Secure Boot toolkit returned invalid state: {error}"),
             )
         })?;
-        if status.schema != 1 {
+        if status.schema != 2 {
             return Err(SecureBootError::new(
                 SecureBootErrorCode::InspectionFailed,
                 format!("Unsupported Secure Boot toolkit schema {}", status.schema),
             ));
         }
-        if !status.secure_boot.enabled {
-            return Ok(());
+        let status_enabled = matches!(status.secure_boot.status, ToolkitSecureBootStatus::Enabled);
+        if status.secure_boot.enabled != status_enabled {
+            return Err(SecureBootError::new(
+                SecureBootErrorCode::InspectionFailed,
+                "Secure Boot toolkit returned contradictory state",
+            ));
+        }
+        match status.secure_boot.status {
+            ToolkitSecureBootStatus::Disabled | ToolkitSecureBootStatus::Unsupported => {
+                return Ok(());
+            }
+            ToolkitSecureBootStatus::Unknown => {
+                return Err(SecureBootError::new(
+                    SecureBootErrorCode::InspectionFailed,
+                    "Secure Boot state could not be determined",
+                ));
+            }
+            ToolkitSecureBootStatus::Enabled => {}
         }
 
         let kernel_release = record.kernel_release.as_deref().ok_or_else(|| {
@@ -258,10 +275,20 @@ struct ToolkitStatus {
 #[derive(Debug, Deserialize)]
 struct ToolkitSecureBootState {
     enabled: bool,
+    status: ToolkitSecureBootStatus,
     key_present: bool,
     certificate_present: bool,
     enrolled: bool,
     certificate_serial: Option<String>,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq)]
+#[serde(rename_all = "lowercase")]
+enum ToolkitSecureBootStatus {
+    Enabled,
+    Disabled,
+    Unsupported,
+    Unknown,
 }
 
 fn collect_dkms_modules(root: &Path) -> Result<Vec<PathBuf>, SecureBootError> {
@@ -456,9 +483,10 @@ mod tests {
 
     fn status(enabled: bool, enrolled: bool, serial: Option<&str>) -> String {
         serde_json::json!({
-            "schema": 1,
+            "schema": 2,
             "secure_boot": {
                 "enabled": enabled,
+                "status": if enabled { "enabled" } else { "disabled" },
                 "key_present": enrolled,
                 "certificate_present": enrolled,
                 "enrolled": enrolled,
@@ -497,6 +525,50 @@ mod tests {
         )
         .verify_target(&temp.join("missing-snapshot"), &record("test", None))
         .unwrap();
+        fs::remove_dir_all(temp).unwrap();
+    }
+
+    #[test]
+    fn unsupported_secure_boot_skips_target_signature_requirements() {
+        let temp = tempfile_dir();
+        let payload = status(false, false, None).replace("\"disabled\"", "\"unsupported\"");
+        validator(
+            &temp,
+            FakeRunner::new(vec![Ok(payload)]),
+            temp.join("missing.der"),
+        )
+        .verify_target(&temp.join("missing-snapshot"), &record("test", None))
+        .unwrap();
+        fs::remove_dir_all(temp).unwrap();
+    }
+
+    #[test]
+    fn unknown_secure_boot_state_fails_closed() {
+        let temp = tempfile_dir();
+        let payload = status(false, false, None).replace("\"disabled\"", "\"unknown\"");
+        let error = validator(
+            &temp,
+            FakeRunner::new(vec![Ok(payload)]),
+            temp.join("missing.der"),
+        )
+        .verify_target(&temp.join("missing-snapshot"), &record("test", None))
+        .unwrap_err();
+        assert_eq!(error.code, SecureBootErrorCode::InspectionFailed);
+        fs::remove_dir_all(temp).unwrap();
+    }
+
+    #[test]
+    fn boolean_only_toolkit_schema_fails_closed() {
+        let temp = tempfile_dir();
+        let payload = status(false, false, None).replace("\"schema\":2", "\"schema\":1");
+        let error = validator(
+            &temp,
+            FakeRunner::new(vec![Ok(payload)]),
+            temp.join("missing.der"),
+        )
+        .verify_target(&temp.join("missing-snapshot"), &record("test", None))
+        .unwrap_err();
+        assert_eq!(error.code, SecureBootErrorCode::InspectionFailed);
         fs::remove_dir_all(temp).unwrap();
     }
 

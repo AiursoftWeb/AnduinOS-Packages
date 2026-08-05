@@ -9,6 +9,10 @@ polkit.addRule(function(action, subject) {
         return polkit.Result.AUTH_ADMIN_KEEP;
     }
 
+    if (action.id == "org.anduinos.waypoint.personal-files") {
+        return polkit.Result.AUTH_SELF_KEEP;
+    }
+
     if (action.id == "org.anduinos.waypoint.delete-snapshot" ||
         action.id == "org.anduinos.waypoint.restore-snapshot" ||
         action.id == "org.anduinos.waypoint.external-backup") {

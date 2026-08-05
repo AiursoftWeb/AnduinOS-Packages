@@ -424,7 +424,9 @@ impl ExternalBackupManager {
     }
 }
 
-fn validate_destination(destination: &BackupDestination) -> Result<(), ExternalBackupError> {
+pub(crate) fn validate_destination(
+    destination: &BackupDestination,
+) -> Result<(), ExternalBackupError> {
     let refreshed = resolve_backup_destination(&destination.filesystem_uuid)?;
     if &refreshed != destination {
         return Err(ExternalBackupError::UnsafeStorage(
@@ -451,7 +453,10 @@ fn ensure_backup_storage(destination: &BackupDestination) -> Result<(), External
     )
 }
 
-fn ensure_storage_directory(path: &Path, filesystem: &str) -> Result<(), ExternalBackupError> {
+pub(crate) fn ensure_storage_directory(
+    path: &Path,
+    filesystem: &str,
+) -> Result<(), ExternalBackupError> {
     match fs::symlink_metadata(path) {
         Ok(metadata) => validate_storage_directory(path, &metadata, filesystem),
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
@@ -461,7 +466,10 @@ fn ensure_storage_directory(path: &Path, filesystem: &str) -> Result<(), Externa
     }
 }
 
-fn create_storage_directory(path: &Path, filesystem: &str) -> Result<(), ExternalBackupError> {
+pub(crate) fn create_storage_directory(
+    path: &Path,
+    filesystem: &str,
+) -> Result<(), ExternalBackupError> {
     fs::create_dir(path)?;
     if is_posix_filesystem(filesystem) {
         fs::set_permissions(path, fs::Permissions::from_mode(0o700))?;
@@ -470,7 +478,7 @@ fn create_storage_directory(path: &Path, filesystem: &str) -> Result<(), Externa
     validate_storage_directory(path, &metadata, filesystem)
 }
 
-fn validate_storage_directory(
+pub(crate) fn validate_storage_directory(
     path: &Path,
     metadata: &fs::Metadata,
     filesystem: &str,
@@ -494,7 +502,7 @@ fn is_posix_filesystem(filesystem: &str) -> bool {
     matches!(filesystem, "btrfs" | "ext4" | "xfs")
 }
 
-fn require_space(path: &Path, required: u64) -> Result<(), ExternalBackupError> {
+pub(crate) fn require_space(path: &Path, required: u64) -> Result<(), ExternalBackupError> {
     let space = probe_filesystem_space(path)?;
     if space.available_bytes < required {
         return Err(ExternalBackupError::InsufficientSpace {
@@ -505,7 +513,7 @@ fn require_space(path: &Path, required: u64) -> Result<(), ExternalBackupError> 
     Ok(())
 }
 
-fn referenced_bytes(snapshot: &Path) -> Result<u64, ExternalBackupError> {
+pub(crate) fn referenced_bytes(snapshot: &Path) -> Result<u64, ExternalBackupError> {
     let root_id = run_btrfs_text(&[
         OsString::from("inspect-internal"),
         OsString::from("rootid"),
@@ -555,7 +563,10 @@ fn run_btrfs_text(arguments: &[OsString]) -> Result<String, ExternalBackupError>
         .map_err(|_| ExternalBackupError::CommandFailed("btrfs returned non-UTF-8 output".into()))
 }
 
-fn send_full_snapshot(snapshot: &Path, stream: &File) -> Result<(), ExternalBackupError> {
+pub(crate) fn send_full_snapshot(
+    snapshot: &Path,
+    stream: &File,
+) -> Result<(), ExternalBackupError> {
     let output = Command::new(BTRFS)
         .args(["send", "--proto", "1"])
         .arg(snapshot)
@@ -656,7 +667,7 @@ fn read_backup_at(
     Ok(manifest)
 }
 
-fn open_regular_file(path: &Path) -> Result<File, ExternalBackupError> {
+pub(crate) fn open_regular_file(path: &Path) -> Result<File, ExternalBackupError> {
     let file = OpenOptions::new()
         .read(true)
         .custom_flags(libc::O_CLOEXEC | libc::O_NOFOLLOW)
@@ -670,7 +681,7 @@ fn open_regular_file(path: &Path) -> Result<File, ExternalBackupError> {
     Ok(file)
 }
 
-fn hash_open_file(file: &mut File) -> Result<String, ExternalBackupError> {
+pub(crate) fn hash_open_file(file: &mut File) -> Result<String, ExternalBackupError> {
     file.seek(SeekFrom::Start(0))?;
     let mut hasher = Sha256::new();
     let mut buffer = [0_u8; 128 * 1024];
@@ -721,7 +732,7 @@ fn remove_known_backup_directory(directory: &Path) -> Result<(), ExternalBackupE
     Ok(())
 }
 
-fn sync_directory(path: &Path) -> Result<(), ExternalBackupError> {
+pub(crate) fn sync_directory(path: &Path) -> Result<(), ExternalBackupError> {
     OpenOptions::new()
         .read(true)
         .custom_flags(libc::O_CLOEXEC | libc::O_DIRECTORY | libc::O_NOFOLLOW)
@@ -995,7 +1006,7 @@ fn is_anduinos_system_mount(path: &Path) -> bool {
     .contains(&path)
 }
 
-fn is_sha256(value: &str) -> bool {
+pub(crate) fn is_sha256(value: &str) -> bool {
     value.len() == 64
         && value
             .bytes()

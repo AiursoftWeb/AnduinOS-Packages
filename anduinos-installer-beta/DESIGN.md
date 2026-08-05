@@ -11,7 +11,9 @@ and constructs every command itself.
 
 - Architectures: amd64 and arm64.
 - Firmware: amd64 UEFI and Legacy BIOS; arm64 standards-based UEFI/ACPI.
-- Secure Boot: detected and preserved on UEFI systems. When enabled, the
+- Secure Boot: detected and preserved on UEFI systems. Enabled, disabled and
+  explicitly unsupported firmware states are distinct plan values; missing,
+  malformed or contradictory probe output remains fatal. When enabled, the
   installer creates/imports the AnduinOS MOK using the existing one-time
   enrollment password policy (`123456`). The password is an implementation
   secret and is never serialized into an install plan.

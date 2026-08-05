@@ -200,6 +200,11 @@ The state machine uses five independent detection mechanisms:
 
 This five-layer check is what makes the state machine reliable. It does not assume anything — it verifies every link in the chain.
 
+The shared toolkit distinguishes enabled, disabled, explicitly unsupported,
+and unknown detection results. Unsupported firmware is a known non-enforcing
+state. Probe failures and contradictory output are unknown and block driver
+trust operations instead of being silently treated as disabled.
+
 ### Button visibility logic
 
 | State | Button shown | Action |

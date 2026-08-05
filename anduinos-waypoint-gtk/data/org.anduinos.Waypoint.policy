@@ -65,4 +65,16 @@
       <allow_active>auth_admin</allow_active>
     </defaults>
   </action>
+
+  <action id="org.anduinos.waypoint.personal-files">
+    <description>Browse and export historical Personal Files</description>
+    <description xml:lang="zh_CN">浏览和导出个人文件历史</description>
+    <message>Authentication is required to access historical Personal Files</message>
+    <message xml:lang="zh_CN">访问个人文件历史需要身份验证</message>
+    <defaults>
+      <allow_any>auth_self</allow_any>
+      <allow_inactive>auth_self</allow_inactive>
+      <allow_active>auth_self_keep</allow_active>
+    </defaults>
+  </action>
 </policyconfig>

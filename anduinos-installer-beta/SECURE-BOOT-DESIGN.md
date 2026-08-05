@@ -40,7 +40,7 @@ key whose target system or boot chain was never completed.
 ## State machine
 
 ```text
-Secure Boot disabled or Legacy BIOS
+Secure Boot disabled, unsupported by UEFI firmware, or Legacy BIOS
         |
         +-- no key generation, no MOK mutation
 
@@ -72,6 +72,11 @@ Secure Boot enabled
         |
         +-- mokutil --timeout -1
 ```
+
+`mokutil --sb-state` is parsed in the C locale. `SecureBoot enabled`,
+`SecureBoot disabled`, and `This system doesn't support Secure Boot` are three
+distinct explicit outcomes. Missing, malformed, or contradictory output is
+indeterminate and stops the plan before destructive work.
 
 Enrollment and pending state use an exact SHA-1 fingerprint match against the
 full `mokutil --list-enrolled` and `--list-new` output, preserving all 40 hex

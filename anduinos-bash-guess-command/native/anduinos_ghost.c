@@ -35,6 +35,13 @@ static int ghost_visible;
 static int installed;
 
 static int start_daemon(void);
+static void suspend_predictions(void);
+
+static int predictions_enabled(void)
+{
+  const char *setting = get_string_value("ANDUINOS_GUESS_COMMAND");
+  return setting == NULL || strcmp(setting, "0") != 0;
+}
 
 static void terminal_write(const char *value, size_t length)
 {
@@ -193,6 +200,8 @@ static int start_daemon(void)
   const char *binary, *shell_path, *shell_histfile;
   const char *history_setting, *persist_setting;
 
+  if (!predictions_enabled())
+    return -1;
   if (daemon_fd >= 0)
     return 0;
   binary = get_string_value("ANDUINOS_QUIETD");
@@ -488,6 +497,10 @@ static void ghost_redisplay(void)
   erase_ghost();
   if (original_redisplay != NULL)
     original_redisplay();
+  if (!predictions_enabled()) {
+    suspend_predictions();
+    return;
+  }
   if (rl_line_buffer == NULL)
     return;
 
@@ -518,6 +531,12 @@ static int accept_ghost(int count, int key)
 {
   (void)count;
   (void)key;
+  if (!predictions_enabled()) {
+    suspend_predictions();
+    if (original_right != NULL)
+      return original_right(count, key);
+    return rl_forward_char(count, key);
+  }
   if (rl_point == rl_end && suggestion != NULL && *suggestion != '\0') {
     erase_ghost();
     rl_insert_text(suggestion);
@@ -549,13 +568,37 @@ static void install_readline_hooks(void)
   }
 }
 
+static void suspend_predictions(void)
+{
+  int binding_type = 0;
+  rl_command_func_t *current;
+
+  erase_ghost();
+  if (rl_redisplay_function == ghost_redisplay && original_redisplay != NULL)
+    rl_redisplay_function = original_redisplay;
+  current = rl_function_of_keyseq("\033[C", rl_get_keymap(), &binding_type);
+  if (current == accept_ghost)
+    rl_bind_keyseq("\033[C",
+                   original_right != NULL ? original_right : rl_forward_char);
+  graceful_stop_daemon();
+  clear_suggestion();
+  free(cached_line);
+  cached_line = NULL;
+  free(last_submitted_line);
+  last_submitted_line = NULL;
+}
+
 static int ghost_startup(void)
 {
   int result = 0;
   if (original_startup_hook != NULL)
     result = original_startup_hook();
-  install_readline_hooks();
-  (void)start_daemon();
+  if (predictions_enabled()) {
+    install_readline_hooks();
+    (void)start_daemon();
+  } else {
+    suspend_predictions();
+  }
   return result;
 }
 
@@ -583,6 +626,10 @@ static int observe(int status, const char *cwd)
 
 int anduinos_ghost_builtin(WORD_LIST *list)
 {
+  if (!predictions_enabled()) {
+    suspend_predictions();
+    return EXECUTION_SUCCESS;
+  }
   install_readline_hooks();
   if (list != NULL && strcmp(list->word->word, "observe") == 0) {
     int status = 0;

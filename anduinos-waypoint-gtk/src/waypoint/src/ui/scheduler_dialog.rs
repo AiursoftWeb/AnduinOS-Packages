@@ -9,7 +9,7 @@ use gtk::{Box, Label, Orientation};
 use libadwaita as adw;
 use std::cell::RefCell;
 use std::rc::Rc;
-use waypoint_common::{Schedule, ScheduleType, SchedulesConfig};
+use waypoint_common::{Schedule, ScheduleScope, ScheduleType, SchedulesConfig};
 
 /// Create scheduler content with lazy loading option
 pub fn create_scheduler_content_lazy(parent: &adw::ApplicationWindow) -> Box {
@@ -90,25 +90,9 @@ fn create_scheduler_content_with_options(parent: &adw::ApplicationWindow, lazy_l
     let schedule_cards: Rc<RefCell<Vec<Rc<RefCell<ScheduleCard>>>>> =
         Rc::new(RefCell::new(Vec::new()));
 
-    // Create card for each schedule type
-    let schedule_types = vec![
-        ScheduleType::Hourly,
-        ScheduleType::Daily,
-        ScheduleType::Weekly,
-        ScheduleType::Monthly,
-    ];
-
-    for schedule_type in schedule_types {
-        let schedule = schedules_config
-            .get_schedule(schedule_type)
-            .cloned()
-            .unwrap_or_else(|| match schedule_type {
-                ScheduleType::Hourly => Schedule::default_hourly(),
-                ScheduleType::Daily => Schedule::default_daily(),
-                ScheduleType::Weekly => Schedule::default_weekly(),
-                ScheduleType::Monthly => Schedule::default_monthly(),
-            });
-
+    // Each scope has an independent schedule namespace. In particular this
+    // permits both hourly System recovery and hourly Personal Files history.
+    for schedule in schedules_config.schedules.clone() {
         let card = Rc::new(RefCell::new(ScheduleCard::new(schedule.clone())));
         cards_box.append(card.borrow().widget());
 
@@ -465,6 +449,36 @@ fn build_sparkline_data(
     runs
 }
 
+fn find_last_personal_snapshot(
+    snapshots: &[crate::dbus_client::PersonalSnapshot],
+    schedule: &Schedule,
+) -> Option<chrono::DateTime<chrono::Utc>> {
+    snapshots
+        .iter()
+        .filter(|snapshot| {
+            snapshot.kind == "automatic"
+                && snapshot.schedule_id.as_deref() == Some(schedule.prefix.as_str())
+        })
+        .map(|snapshot| snapshot.created_at)
+        .max()
+}
+
+fn build_personal_sparkline_data(
+    snapshots: &[crate::dbus_client::PersonalSnapshot],
+    schedule: &Schedule,
+    max_runs: usize,
+) -> Vec<bool> {
+    let mut matching = snapshots
+        .iter()
+        .filter(|snapshot| {
+            snapshot.kind == "automatic"
+                && snapshot.schedule_id.as_deref() == Some(schedule.prefix.as_str())
+        })
+        .collect::<Vec<_>>();
+    matching.sort_by_key(|snapshot| std::cmp::Reverse(snapshot.created_at));
+    matching.into_iter().take(max_runs).map(|_| true).collect()
+}
+
 /// Update schedule cards with live data (next run, last run, sparklines)
 fn update_schedule_cards_data(schedule_cards: &Rc<RefCell<Vec<Rc<RefCell<ScheduleCard>>>>>) {
     let schedule_cards_clone = schedule_cards.clone();
@@ -472,30 +486,31 @@ fn update_schedule_cards_data(schedule_cards: &Rc<RefCell<Vec<Rc<RefCell<Schedul
 
     // Fetch snapshots in background thread
     std::thread::spawn(move || {
-        let deployments = match WaypointHelperClient::new() {
+        let status = match WaypointHelperClient::new() {
             Ok(client) => match client.recovery_engine_status() {
-                Ok(status) => status.deployments,
+                Ok(status) => Some(status),
                 Err(e) => {
                     log::error!("Failed to list recovery deployments: {e}");
-                    Vec::new()
+                    None
                 }
             },
             Err(e) => {
                 log::error!("Failed to connect to helper: {e}");
-                Vec::new()
+                None
             }
         };
 
-        let _ = tx.send(deployments);
+        let _ = tx.send(status);
     });
 
     // Poll for result and update UI from main thread
     gtk::glib::timeout_add_local(std::time::Duration::from_millis(50), move || {
         match rx.try_recv() {
-            Ok(deployments) => {
+            Ok(Some(status)) => {
                 log::debug!(
-                    "Received {} recovery deployments for card update",
-                    deployments.len()
+                    "Received {} system and {} personal history points for card update",
+                    status.deployments.len(),
+                    status.personal_snapshots.len()
                 );
 
                 for card_rc in schedule_cards_clone.borrow().iter() {
@@ -518,7 +533,13 @@ fn update_schedule_cards_data(schedule_cards: &Rc<RefCell<Vec<Rc<RefCell<Schedul
                     card.set_next_run(&next_run);
 
                     // Update last run time
-                    if let Some(last_time) = find_last_snapshot(&deployments, &schedule) {
+                    let last_time = match schedule.scope {
+                        ScheduleScope::System => find_last_snapshot(&status.deployments, &schedule),
+                        ScheduleScope::Personal => {
+                            find_last_personal_snapshot(&status.personal_snapshots, &schedule)
+                        }
+                    };
+                    if let Some(last_time) = last_time {
                         let duration = chrono::Utc::now().signed_duration_since(last_time);
                         let time_str = if duration.num_days() > 0 {
                             trf("{0} days ago", &[&duration.num_days().to_string()])
@@ -542,13 +563,23 @@ fn update_schedule_cards_data(schedule_cards: &Rc<RefCell<Vec<Rc<RefCell<Schedul
                         ScheduleType::Monthly => 12,
                     };
 
-                    let sparkline_runs = build_sparkline_data(&deployments, &schedule, max_runs);
+                    let sparkline_runs = match schedule.scope {
+                        ScheduleScope::System => {
+                            build_sparkline_data(&status.deployments, &schedule, max_runs)
+                        }
+                        ScheduleScope::Personal => build_personal_sparkline_data(
+                            &status.personal_snapshots,
+                            &schedule,
+                            max_runs,
+                        ),
+                    };
                     for success in sparkline_runs {
                         card.add_sparkline_run(success);
                     }
                 }
                 gtk::glib::ControlFlow::Break
             }
+            Ok(None) => gtk::glib::ControlFlow::Break,
             Err(std::sync::mpsc::TryRecvError::Empty) => {
                 // Still waiting for data
                 gtk::glib::ControlFlow::Continue
@@ -609,7 +640,19 @@ fn load_schedules_config() -> SchedulesConfig {
     let config = WaypointConfig::new();
 
     if config.schedules_config.exists() {
-        SchedulesConfig::load_from_file(&config.schedules_config).unwrap_or_default()
+        let mut loaded =
+            SchedulesConfig::load_from_file(&config.schedules_config).unwrap_or_default();
+        // Existing installations predate Personal Files history and may also
+        // omit one of the optional System intervals. Surface missing defaults
+        // without silently enabling or rewriting anything.
+        for default in SchedulesConfig::default().schedules {
+            if !loaded.schedules.iter().any(|schedule| {
+                schedule.scope == default.scope && schedule.schedule_type == default.schedule_type
+            }) {
+                loaded.schedules.push(default);
+            }
+        }
+        loaded
     } else {
         SchedulesConfig::default()
     }

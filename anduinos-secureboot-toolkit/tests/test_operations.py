@@ -10,7 +10,49 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from anduinos_secureboot import operations  # noqa: E402
 
 
+def with_secure_boot_enabled(run):
+    def wrapped(command, **kwargs):
+        if list(command) == ["mokutil", "--sb-state"]:
+            return subprocess.CompletedProcess(
+                command, 0, "SecureBoot enabled\n", ""
+            )
+        return run(command, **kwargs)
+
+    return wrapped
+
+
 class OperationsTests(unittest.TestCase):
+    def test_prepare_skips_known_non_enforcing_firmware_states(self):
+        for output in (
+            "SecureBoot disabled\n",
+            "This system doesn't support Secure Boot\n",
+        ):
+            with self.subTest(output=output):
+                calls = []
+
+                def run(command, **kwargs):
+                    calls.append(list(command))
+                    return subprocess.CompletedProcess(command, 0, output, "")
+
+                result = operations.prepare(run)
+                self.assertTrue(result.ok)
+                self.assertEqual(
+                    result.steps["firmware_state"].status, "skipped"
+                )
+                self.assertEqual(calls, [["mokutil", "--sb-state"]])
+
+    def test_prepare_fails_closed_when_firmware_state_is_unknown(self):
+        calls = []
+
+        def run(command, **kwargs):
+            calls.append(list(command))
+            return subprocess.CompletedProcess(command, 1, "", "probe failed")
+
+        result = operations.prepare(run)
+        self.assertFalse(result.ok)
+        self.assertEqual(result.steps["firmware_state"].status, "failed")
+        self.assertEqual(calls, [["mokutil", "--sb-state"]])
+
     def test_prepare_uses_fixed_password_without_shell(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -26,7 +68,9 @@ class OperationsTests(unittest.TestCase):
                 code = 1 if command[:2] == ["mokutil", "--test-key"] else 0
                 return subprocess.CompletedProcess(command, code, "", "")
 
-            result = operations.prepare(run, private, certificate, config)
+            result = operations.prepare(
+                with_secure_boot_enabled(run), private, certificate, config
+            )
             self.assertTrue(result.ok)
             import_call = next(item for item in calls if item[0][:2] == ["mokutil", "--import"])
             self.assertEqual(import_call[1]["stdin"], "123456\n123456\n")
@@ -46,7 +90,9 @@ class OperationsTests(unittest.TestCase):
                 code = 1 if command[:2] in (["mokutil", "--test-key"], ["dkms", "autoinstall"]) else 0
                 return subprocess.CompletedProcess(command, code, "", "dkms failed" if code else "")
 
-            result = operations.prepare(run, private, certificate, config)
+            result = operations.prepare(
+                with_secure_boot_enabled(run), private, certificate, config
+            )
             self.assertFalse(result.ok)
             self.assertEqual(result.steps["enrollment_queued"].status, "success")
             self.assertEqual(result.steps["modules_rebuilt"].status, "failed")
@@ -76,7 +122,10 @@ class OperationsTests(unittest.TestCase):
                 return subprocess.CompletedProcess(command, 0, "", "")
 
             result = operations.prepare(
-                run, private, certificate, root / "dkms.conf"
+                with_secure_boot_enabled(run),
+                private,
+                certificate,
+                root / "dkms.conf",
             )
             self.assertTrue(result.ok)
             self.assertEqual(result.steps["enrollment_queued"].status, "skipped")
@@ -107,7 +156,10 @@ class OperationsTests(unittest.TestCase):
                 return subprocess.CompletedProcess(command, 0, "", "")
 
             result = operations.prepare(
-                run, private, certificate, root / "dkms.conf"
+                with_secure_boot_enabled(run),
+                private,
+                certificate,
+                root / "dkms.conf",
             )
             self.assertTrue(result.ok)
             self.assertIn(["mokutil", "--import", str(certificate)], calls)
@@ -132,7 +184,10 @@ class OperationsTests(unittest.TestCase):
                 return subprocess.CompletedProcess(command, 0, "", "")
 
             result = operations.prepare(
-                run, private, certificate, root / "dkms.conf"
+                with_secure_boot_enabled(run),
+                private,
+                certificate,
+                root / "dkms.conf",
             )
             self.assertTrue(result.ok)
             self.assertEqual(result.steps["enrollment_queued"].status, "skipped")
@@ -154,7 +209,10 @@ class OperationsTests(unittest.TestCase):
                 return subprocess.CompletedProcess(command, 0, "", "")
 
             result = operations.repair_dkms(
-                run, private, certificate, configuration
+                with_secure_boot_enabled(run),
+                private,
+                certificate,
+                configuration,
             )
             self.assertTrue(result.ok)
             self.assertEqual(configuration.read_text(), operations.CONFIG_CONTENT)

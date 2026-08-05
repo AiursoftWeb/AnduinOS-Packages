@@ -4,13 +4,17 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <name>AnduinOS Waypoint</name>
-  <summary>Create recovery points and safely return AnduinOS to an earlier state</summary>
-  <summary xml:lang="zh-CN">创建恢复点，并安全地将 AnduinOS 恢复到较早状态</summary>
+  <summary>Recover AnduinOS and restore deleted Personal Files</summary>
+  <summary xml:lang="zh-CN">恢复 AnduinOS 并找回误删的个人文件</summary>
   <description>
     <p>AnduinOS Waypoint creates immutable Btrfs system recovery points and presents their package, file, space, and timeline information in a native GTK interface.</p>
     <p>A restore creates a new writable deployment, retains a known-good fallback, and uses a verified one-shot GRUB entry. Recovery points can also be exported to and verified on supported external filesystems.</p>
+    <p>Independent Personal Files history snapshots the @home subvolume on a separate schedule. Users can browse earlier versions and recover files or folders without rolling back the operating system.</p>
+    <p>Automatic schedules can show desktop notifications after successful creation, while retention cleanup is reported as one quiet aggregate notification.</p>
     <p xml:lang="zh-CN">AnduinOS Waypoint 创建不可变的 Btrfs 系统恢复点，并通过原生 GTK 界面展示软件包、文件、空间和时间线信息。</p>
     <p xml:lang="zh-CN">恢复操作会创建新的可写部署、保留已知正常的回退部署，并使用经过验证的一次性 GRUB 启动项。恢复点还可导出到受支持的外部文件系统并进行验证。</p>
+    <p xml:lang="zh-CN">独立的个人文件历史按单独计划为 @home 子卷创建快照。用户无需回滚操作系统，即可浏览早期版本并恢复文件或文件夹。</p>
+    <p xml:lang="zh-CN">自动计划可在成功创建后显示桌面通知，保留策略清理则通过一条低干扰的汇总通知报告。</p>
   </description>
   <developer id="com.anduinos">
     <name>AnduinOS Team</name>
@@ -26,6 +30,7 @@
   </categories>
   <provides>
     <binary>anduinos-waypoint-gtk</binary>
+    <binary>anduinos-waypoint-notifier</binary>
   </provides>
   <content_rating type="oars-1.1" />
 </component>

@@ -25,6 +25,7 @@ from anduinos_driver_center.core import (  # noqa: E402
     secure_boot_state,
     xbox_state,
 )
+from anduinos_secureboot import SecureBootStatus  # noqa: E402
 
 
 class FakeRunner:
@@ -97,6 +98,26 @@ driver   : xserver-xorg-video-nouveau - distro free builtin
             )
             self.assertTrue(state.ready)
             self.assertEqual(state.certificate_serial, "aa12bb34")
+
+    def test_unsupported_secure_boot_remains_a_known_non_enforcing_state(self):
+        state = secure_boot_state(
+            FakeRunner(
+                {
+                    ("mokutil", "--sb-state"): subprocess.CompletedProcess(
+                        [], 0, "This system doesn't support Secure Boot\n", ""
+                    )
+                }
+            )
+        )
+        self.assertEqual(state.status, SecureBootStatus.UNSUPPORTED)
+        self.assertTrue(state.ready)
+        self.assertTrue(state.enforcement_inactive)
+
+    def test_failed_secure_boot_probe_blocks_driver_readiness(self):
+        state = secure_boot_state(FakeRunner())
+        self.assertEqual(state.status, SecureBootStatus.UNKNOWN)
+        self.assertFalse(state.ready)
+        self.assertFalse(state.enforcement_inactive)
 
     def test_xbox_detects_signature_mismatch_as_secure_boot_block(self):
         from anduinos_driver_center.core import SecureBootState

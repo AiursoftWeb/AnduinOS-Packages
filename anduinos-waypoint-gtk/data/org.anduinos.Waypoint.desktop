@@ -1,14 +1,14 @@
 [Desktop Entry]
 Name=AnduinOS Waypoint
-GenericName=System Recovery
-GenericName[zh_CN]=系统恢复
-Comment=Create recovery points and safely return AnduinOS to an earlier state
-Comment[zh_CN]=创建恢复点，并安全地将 AnduinOS 恢复到较早状态
+GenericName=System Recovery and File History
+GenericName[zh_CN]=系统恢复与文件历史
+Comment=Recover AnduinOS and restore deleted Personal Files
+Comment[zh_CN]=恢复 AnduinOS 并找回误删的个人文件
 Exec=anduinos-waypoint-gtk
 Icon=org.anduinos.Waypoint
 Terminal=false
 Type=Application
 Categories=GNOME;GTK;System;
-Keywords=backup;snapshot;restore;recovery;btrfs;rollback;
-Keywords[zh_CN]=备份;快照;还原;恢复;回滚;系统恢复;
+Keywords=backup;snapshot;restore;recovery;btrfs;rollback;file history;deleted files;
+Keywords[zh_CN]=备份;快照;还原;恢复;回滚;系统恢复;文件历史;误删文件;
 StartupNotify=true

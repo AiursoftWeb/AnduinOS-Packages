@@ -79,12 +79,21 @@ Firmware trust and the persistent DKMS signing configuration are separate
 states. A missing DKMS configuration must offer signing repair; it must never
 make an enrolled certificate appear unenrolled or offer enrollment again.
 
-When firmware reports Secure Boot disabled, applications must omit the Secure
-Boot management page from OOBE navigation and the Driver Center device list.
-MOK enrollment, DKMS signing configuration, and module signatures are then not
-installation prerequisites: NVIDIA, Xbox, and other driver workflows must
-remain available. The state model deliberately reports trust readiness in this
-case because firmware is not enforcing the signature chain.
+Firmware detection has four states and must never collapse command failure into
+a disabled boolean:
+
+- `enabled`: firmware enforces Secure Boot and the complete MOK chain applies;
+- `disabled`: firmware supports Secure Boot but enforcement is off;
+- `unsupported`: firmware explicitly reports that Secure Boot is unavailable;
+- `unknown`: the probe failed, timed out, returned malformed output, or reported
+  contradictory states.
+
+Disabled and unsupported are known non-enforcing states. Applications omit the
+Secure Boot management page and keep NVIDIA, Xbox, and other driver workflows
+available. Unknown fails closed: trust readiness is false, driver trust cannot
+be asserted, and applications surface the detection failure instead of treating
+it as disabled. The read-only status CLI exposes this contract as schema 2 so
+older boolean-only recovery consumers reject it safely.
 
 `client.py` is the unprivileged boundary used by applications. `ui.py` owns
 the common trust rows, product wording, fixed enrollment-code instructions,

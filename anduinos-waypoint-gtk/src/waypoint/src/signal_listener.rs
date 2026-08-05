@@ -2,12 +2,9 @@
 
 use anyhow::Result;
 use futures_util::StreamExt;
-use gtk::Application;
 use gtk::glib;
 use waypoint_common::*;
 use zbus::{Connection, MatchRule};
-
-use crate::ui::notifications;
 
 #[derive(Clone, Debug)]
 pub struct SnapshotCreatedEvent {
@@ -18,9 +15,11 @@ pub struct SnapshotCreatedEvent {
 /// Start listening for waypoint-helper D-Bus signals
 ///
 /// This function spawns an async task that listens for D-Bus signals and
-/// sends desktop notifications when snapshots are created by the scheduler.
+/// forwards creation events so an open window can refresh immediately. The
+/// separate user-session notifier owns background desktop notifications,
+/// avoiding duplicate banners while the main window is open.
 ///
-pub fn start_signal_listener(app: Application) -> std::sync::mpsc::Receiver<SnapshotCreatedEvent> {
+pub fn start_signal_listener() -> std::sync::mpsc::Receiver<SnapshotCreatedEvent> {
     // Create channels for thread-safe communication
     let (event_sender, event_receiver) = std::sync::mpsc::channel();
     let (snapshot_sender, snapshot_receiver) = std::sync::mpsc::channel();
@@ -43,10 +42,6 @@ pub fn start_signal_listener(app: Application) -> std::sync::mpsc::Receiver<Snap
             if let Ok(event) = event_receiver.try_recv() {
                 let evt = event;
                 log::debug!("Main thread received SnapshotCreated: {evt:?}");
-
-                if evt.created_by == "scheduler" {
-                    notifications::notify_scheduled_snapshot(&app, &evt.snapshot_name);
-                }
 
                 if let Err(e) = snapshot_sender_clone.send(evt) {
                     log::error!("Failed to forward recovery-point creation event: {e}");

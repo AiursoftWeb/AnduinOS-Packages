@@ -19,6 +19,26 @@ pub enum ScheduleType {
     Monthly,
 }
 
+/// Recovery histories are intentionally independent: system schedules create
+/// bootable `@root` deployments while personal schedules create `@home`
+/// history that can only export files.
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq, Eq, Hash)]
+#[serde(rename_all = "lowercase")]
+pub enum ScheduleScope {
+    #[default]
+    System,
+    Personal,
+}
+
+impl ScheduleScope {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::System => "system",
+            Self::Personal => "personal",
+        }
+    }
+}
+
 impl ScheduleType {
     pub fn as_str(&self) -> &str {
         match self {
@@ -36,6 +56,16 @@ impl ScheduleType {
 pub struct Schedule {
     /// Whether this schedule is enabled
     pub enabled: bool,
+
+    /// Independent recovery history targeted by this schedule. Missing in old
+    /// configuration means System, preserving the previous ABI.
+    #[serde(default)]
+    pub scope: ScheduleScope,
+
+    /// Whether a successful scheduled creation should be announced to active
+    /// desktop sessions. Missing in older configuration defaults to enabled.
+    #[serde(default = "default_notify_on_create")]
+    pub notify_on_create: bool,
 
     /// Type of schedule (hourly, daily, weekly, monthly)
     #[serde(rename = "type")]
@@ -83,6 +113,8 @@ impl Schedule {
     pub fn default_hourly() -> Self {
         Self {
             enabled: false,
+            scope: ScheduleScope::System,
+            notify_on_create: true,
             schedule_type: ScheduleType::Hourly,
             time: None,
             day_of_week: None,
@@ -99,6 +131,8 @@ impl Schedule {
     pub fn default_daily() -> Self {
         Self {
             enabled: false,
+            scope: ScheduleScope::System,
+            notify_on_create: true,
             schedule_type: ScheduleType::Daily,
             time: Some("02:00".to_string()),
             day_of_week: None,
@@ -115,6 +149,8 @@ impl Schedule {
     pub fn default_weekly() -> Self {
         Self {
             enabled: false,
+            scope: ScheduleScope::System,
+            notify_on_create: true,
             schedule_type: ScheduleType::Weekly,
             time: Some("03:00".to_string()),
             day_of_week: Some(0), // Sunday
@@ -131,6 +167,8 @@ impl Schedule {
     pub fn default_monthly() -> Self {
         Self {
             enabled: false,
+            scope: ScheduleScope::System,
+            notify_on_create: true,
             schedule_type: ScheduleType::Monthly,
             time: Some("04:00".to_string()),
             day_of_week: None,
@@ -140,6 +178,31 @@ impl Schedule {
             keep_count: 3,
             keep_days: 90,
             timeline_retention: Some(TimelineRetention::for_monthly()),
+        }
+    }
+
+    /// Hourly personal-file history with a broad timeline. It remains opt-in,
+    /// but is present in the shipped configuration so enabling it is one click.
+    pub fn default_personal_hourly() -> Self {
+        Self {
+            enabled: false,
+            scope: ScheduleScope::Personal,
+            notify_on_create: true,
+            schedule_type: ScheduleType::Hourly,
+            time: None,
+            day_of_week: None,
+            day_of_month: None,
+            prefix: "personal-hourly".to_string(),
+            description: "Hourly Personal Files history".to_string(),
+            keep_count: 24,
+            keep_days: 1,
+            timeline_retention: Some(TimelineRetention {
+                hourly_limit: 24,
+                daily_limit: 7,
+                weekly_limit: 4,
+                monthly_limit: 6,
+                yearly_limit: 0,
+            }),
         }
     }
 
@@ -228,6 +291,10 @@ impl Schedule {
     }
 }
 
+const fn default_notify_on_create() -> bool {
+    true
+}
+
 /// Container for all snapshot schedules
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -244,6 +311,7 @@ impl Default for SchedulesConfig {
                 Schedule::default_daily(),
                 Schedule::default_weekly(),
                 Schedule::default_monthly(),
+                Schedule::default_personal_hourly(),
             ],
         }
     }
@@ -251,8 +319,8 @@ impl Default for SchedulesConfig {
 
 impl SchedulesConfig {
     pub fn validate(&self) -> anyhow::Result<()> {
-        if self.schedules.len() > 4 {
-            anyhow::bail!("At most four recovery schedules are supported");
+        if self.schedules.len() > 8 {
+            anyhow::bail!("At most eight recovery schedules are supported");
         }
         let mut types = HashSet::new();
         let mut prefixes = HashSet::new();
@@ -260,8 +328,8 @@ impl SchedulesConfig {
             schedule
                 .validate()
                 .map_err(|error| anyhow::anyhow!(error))?;
-            if !types.insert(schedule.schedule_type.as_str()) {
-                anyhow::bail!("Recovery schedule types must be unique");
+            if !types.insert((schedule.scope, schedule.schedule_type.as_str())) {
+                anyhow::bail!("Recovery schedule types must be unique within each scope");
             }
             if !prefixes.insert(schedule.prefix.as_str()) {
                 anyhow::bail!("Recovery schedule prefixes must be unique");
@@ -339,14 +407,14 @@ impl SchedulesConfig {
     pub fn get_schedule(&self, schedule_type: ScheduleType) -> Option<&Schedule> {
         self.schedules
             .iter()
-            .find(|s| s.schedule_type == schedule_type)
+            .find(|s| s.scope == ScheduleScope::System && s.schedule_type == schedule_type)
     }
 
     /// Get mutable schedule by type
     pub fn get_schedule_mut(&mut self, schedule_type: ScheduleType) -> Option<&mut Schedule> {
         self.schedules
             .iter_mut()
-            .find(|s| s.schedule_type == schedule_type)
+            .find(|s| s.scope == ScheduleScope::System && s.schedule_type == schedule_type)
     }
 }
 
@@ -373,7 +441,7 @@ mod tests {
     #[test]
     fn test_default_schedules() {
         let config = SchedulesConfig::default();
-        assert_eq!(config.schedules.len(), 4);
+        assert_eq!(config.schedules.len(), 5);
 
         // Every default is fail-safe and requires explicit opt-in.
         let daily = config.get_schedule(ScheduleType::Daily).unwrap();
@@ -383,6 +451,17 @@ mod tests {
         // Others should be disabled
         let hourly = config.get_schedule(ScheduleType::Hourly).unwrap();
         assert!(!hourly.enabled);
+        assert!(hourly.notify_on_create);
+        let personal = config
+            .schedules
+            .iter()
+            .find(|schedule| schedule.scope == ScheduleScope::Personal)
+            .unwrap();
+        assert_eq!(personal.prefix, "personal-hourly");
+        assert_eq!(
+            personal.timeline_retention.as_ref().unwrap().monthly_limit,
+            6
+        );
     }
 
     #[test]
@@ -418,6 +497,29 @@ mod tests {
         assert!(toml.contains("[[schedule]]"));
         assert!(toml.contains("type = \"daily\""));
         assert!(toml.contains("enabled = false"));
+        assert!(toml.contains("notify_on_create = true"));
+    }
+
+    #[test]
+    fn old_configs_default_creation_notifications_to_enabled() {
+        let serialized = toml::to_string(&SchedulesConfig::default()).unwrap();
+        let old_style = serialized
+            .lines()
+            .filter(|line| !line.starts_with("notify_on_create = "))
+            .collect::<Vec<_>>()
+            .join("\n");
+        let parsed: SchedulesConfig = toml::from_str(&old_style).unwrap();
+        assert!(
+            parsed
+                .schedules
+                .iter()
+                .all(|schedule| schedule.notify_on_create)
+        );
+
+        let mut explicit = SchedulesConfig::default();
+        explicit.schedules[0].notify_on_create = false;
+        let parsed: SchedulesConfig = toml::from_str(&toml::to_string(&explicit).unwrap()).unwrap();
+        assert!(!parsed.schedules[0].notify_on_create);
     }
 
     #[test]

@@ -33,6 +33,9 @@ class ValidationTests(unittest.TestCase):
         )
         validate_plan(plan)
 
+    def test_valid_uefi_without_secure_boot_support(self):
+        validate_plan(valid_plan(secure_boot=SecureBoot.UNSUPPORTED))
+
     def test_rejects_arm64_bios(self):
         plan = valid_plan(
             architecture=Architecture.ARM64,

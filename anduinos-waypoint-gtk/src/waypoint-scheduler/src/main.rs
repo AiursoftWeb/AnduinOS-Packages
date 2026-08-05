@@ -7,7 +7,7 @@ use std::process::Command;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
-use waypoint_common::{Schedule, ScheduleType, SchedulesConfig, WaypointConfig};
+use waypoint_common::{Schedule, ScheduleScope, ScheduleType, SchedulesConfig, WaypointConfig};
 
 fn main() {
     // Initialize logging
@@ -370,8 +370,12 @@ fn create_snapshot(schedule: &Schedule) -> Result<()> {
     );
 
     // Call the packaged CLI to create a snapshot through the privileged helper.
+    let command = match schedule.scope {
+        ScheduleScope::System => "create-scheduled",
+        ScheduleScope::Personal => "personal-create-scheduled",
+    };
     let output = Command::new("/usr/bin/anduinos-waypoint-cli")
-        .arg("create-scheduled")
+        .arg(command)
         .arg(&schedule.prefix)
         .arg(&snapshot_name)
         .arg(&schedule.description)
@@ -384,7 +388,7 @@ fn create_snapshot(schedule: &Schedule) -> Result<()> {
             schedule.prefix,
             snapshot_name
         );
-        log::info!("[{}]   Scope: System", schedule.prefix);
+        log::info!("[{}]   Scope: {}", schedule.prefix, schedule.scope.as_str());
     } else {
         let stderr = String::from_utf8_lossy(&output.stderr);
         log::error!(

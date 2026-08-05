@@ -2,7 +2,7 @@ use gtk::prelude::*;
 use gtk::{Box, Button, DrawingArea, Label, Orientation, Switch};
 use std::cell::RefCell;
 use std::rc::Rc;
-use waypoint_common::{Schedule, ScheduleType};
+use waypoint_common::{Schedule, ScheduleScope, ScheduleType};
 
 use crate::i18n::{tr, trf};
 
@@ -82,7 +82,7 @@ impl ScheduleCard {
         header_box.append(&enable_switch);
 
         // Title (no icon)
-        let title_label = Label::new(Some(&Self::get_schedule_title(&schedule.schedule_type)));
+        let title_label = Label::new(Some(&Self::get_schedule_title(&schedule)));
         title_label.add_css_class("title-4");
         title_label.set_halign(gtk::Align::Start);
         header_box.append(&title_label);
@@ -187,12 +187,16 @@ impl ScheduleCard {
     }
 
     /// Get the title for a schedule type
-    fn get_schedule_title(schedule_type: &ScheduleType) -> String {
-        match schedule_type {
+    fn get_schedule_title(schedule: &Schedule) -> String {
+        let interval = match schedule.schedule_type {
             ScheduleType::Hourly => tr("Hourly Recovery Points"),
             ScheduleType::Daily => tr("Daily Recovery Points"),
             ScheduleType::Weekly => tr("Weekly Recovery Points"),
             ScheduleType::Monthly => tr("Monthly Recovery Points"),
+        };
+        match schedule.scope {
+            ScheduleScope::System => interval,
+            ScheduleScope::Personal => trf("{0} · Personal Files", &[&interval]),
         }
     }
 

@@ -9,7 +9,12 @@ import shutil
 import subprocess
 from typing import Protocol, Sequence
 
-from .model import DkmsState, ModuleState, SecureBootState
+from .model import (
+    DkmsState,
+    ModuleState,
+    SecureBootState,
+    SecureBootStatus,
+)
 
 
 MOK_PRIVATE_KEY = Path("/var/lib/shim-signed/mok/MOK.priv")
@@ -140,6 +145,37 @@ def certificate_pending(certificate: Path, runner: Runner) -> bool:
     )
 
 
+def parse_secure_boot_status(
+    result: subprocess.CompletedProcess[str],
+) -> SecureBootStatus:
+    """Parse every explicit mokutil state without guessing on failures."""
+    output = f"{result.stdout}\n{result.stderr}".lower()
+    reported_states = {
+        status
+        for status, reported in (
+            (
+                SecureBootStatus.ENABLED,
+                "secureboot enabled" in output
+                or "secure boot enabled" in output,
+            ),
+            (
+                SecureBootStatus.DISABLED,
+                "secureboot disabled" in output
+                or "secure boot disabled" in output,
+            ),
+            (
+                SecureBootStatus.UNSUPPORTED,
+                "doesn't support secure boot" in output
+                or "does not support secure boot" in output,
+            ),
+        )
+        if reported
+    }
+    if len(reported_states) == 1:
+        return reported_states.pop()
+    return SecureBootStatus.UNKNOWN
+
+
 def inspect_secure_boot(
     runner: Runner | None = None,
     private_key: Path = MOK_PRIVATE_KEY,
@@ -149,14 +185,18 @@ def inspect_secure_boot(
 ) -> SecureBootState:
     runner = runner or SubprocessRunner()
     state = runner.run(["mokutil", "--sb-state"])
-    enabled = state.returncode == 0 and "secureboot enabled" in state.stdout.lower()
+    status = parse_secure_boot_status(state)
+    enabled = status is SecureBootStatus.ENABLED
     key_present = private_key.is_file()
     certificate_present = certificate.is_file()
     enrolled = False
     pending = False
     serial = None
 
-    if certificate_present:
+    if certificate_present and status not in {
+        SecureBootStatus.UNSUPPORTED,
+        SecureBootStatus.UNKNOWN,
+    }:
         enrolled = certificate_enrolled(certificate, runner)
         serial = _certificate_serial(certificate, runner)
         pending = not enrolled and certificate_pending(certificate, runner)
@@ -173,6 +213,7 @@ def inspect_secure_boot(
         dkms_available=_command_available("dkms", runner),
         headers_available=headers_available,
         configuration_present=configuration.is_file(),
+        status=status,
     )
 
 
@@ -212,9 +253,10 @@ def inspect_dkms(
             continue
         signature = module_signature(str(path), runner)
         trusted = bool(
-            not secure_boot.enabled
+            secure_boot.enforcement_inactive
             or (
-                secure_boot.enrolled
+                secure_boot.status is SecureBootStatus.ENABLED
+                and secure_boot.enrolled
                 and signature
                 and secure_boot.certificate_serial
                 and signature == secure_boot.certificate_serial

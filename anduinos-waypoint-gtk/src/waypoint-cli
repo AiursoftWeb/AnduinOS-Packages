@@ -25,6 +25,14 @@ Recovery points:
   apply-retention                      Apply schedule-owned retention
   diff <old-uuid> <new-uuid> [--json]  Compare files in two recovery points
 
+Personal Files history:
+  personal-create [--json] <title> [description]
+                                        Snapshot the independent @home history
+  personal-list [--json]                List local Personal Files history
+  personal-files <uuid> [relative-path] [--json]
+                                        Browse your own historical home
+  personal-delete <uuid>                Delete an unprotected history point
+
 External recovery backups:
   backup-destinations [--json]         List trusted mounted filesystems
   backup-list <filesystem-uuid> [--json]
@@ -37,6 +45,13 @@ External recovery backups:
                                         Import as a fresh local recovery point
   backup-delete <filesystem-uuid> <backup-uuid>
                                         Delete one external backup
+  personal-backup-list <filesystem-uuid> [--json]
+                                        List Personal Files backup manifests
+  personal-backup-export <snapshot-uuid> <filesystem-uuid>
+                                        Export a full @home history stream
+  personal-backup-verify <filesystem-uuid> <backup-uuid>
+  personal-backup-import <filesystem-uuid> <backup-uuid>
+  personal-backup-delete <filesystem-uuid> <backup-uuid>
 
 Mutating and full-verification operations require Polkit authentication.
 No external-backup command accepts a filesystem path.
@@ -159,6 +174,82 @@ cmd_create_scheduled() {
         exit 1
     }
     pair_payload "$(call_raw CreateScheduledDeployment sss "$schedule_id" "$title" "$description")" >/dev/null
+}
+
+# Private scheduler contract for the independent Personal Files history.
+cmd_personal_create_scheduled() {
+    local schedule_id="${1:-}"
+    local title="${2:-}"
+    local description="${3:-}"
+    [[ -n "$schedule_id" && -n "$title" && -n "$description" ]] || {
+        echo "Error: internal personal-create-scheduled requires a schedule ID, title and description" >&2
+        exit 1
+    }
+    pair_payload "$(call_raw CreateScheduledPersonalSnapshot sss "$schedule_id" "$title" "$description")" >/dev/null
+}
+
+cmd_personal_create() {
+    local json_mode=false
+    if [[ "${1:-}" == "--json" ]]; then
+        json_mode=true
+        shift
+    fi
+    local title="${1:-}"
+    local description="${2:-Created from anduinos-waypoint-cli}"
+    [[ -n "$title" ]] || {
+        echo "Usage: anduinos-waypoint-cli personal-create [--json] <title> [description]" >&2
+        exit 1
+    }
+    local payload
+    payload=$(pair_payload "$(call_raw CreatePersonalSnapshot ssb "$title" "$description" false)")
+    print_json_or_summary "$payload" "$json_mode" '"Created Personal Files history point \(.id): \(.title)"'
+}
+
+cmd_personal_list() {
+    local json_mode=false
+    [[ "${1:-}" == "--json" ]] && json_mode=true
+    local status
+    status=$(recovery_status)
+    if [[ "$json_mode" == "true" ]]; then
+        jq '.personal_snapshots // []' <<<"$status"
+    else
+        jq -r '
+            if ((.personal_snapshots // []) | length) == 0 then
+              "No Personal Files history points"
+            else
+              .personal_snapshots[] |
+              "\(.id)  \(.created_at)  [\(.kind)/\(.state)]  \(.title)"
+            end
+        ' <<<"$status"
+    fi
+}
+
+cmd_personal_files() {
+    local id="${1:-}"
+    validate_uuid "$id"
+    local path="${2:-}"
+    local json_mode=false
+    [[ "${2:-}" == "--json" ]] && { path=""; json_mode=true; }
+    [[ "${3:-}" == "--json" ]] && json_mode=true
+    [[ "$path" != /* && "$path" != *".."* ]] || {
+        echo "Error: expected a safe relative path" >&2
+        exit 1
+    }
+    local payload
+    payload=$(pair_payload "$(call_raw ListPersonalFiles ss "$id" "$path")")
+    print_json_or_summary "$payload" "$json_mode" '
+        if length == 0 then "Empty directory" else
+          .[] | "\(if .kind == "directory" then "DIR " else "FILE" end)  \(.name)  \(.size)"
+        end
+    '
+}
+
+cmd_personal_delete() {
+    local id="${1:-}"
+    validate_uuid "$id"
+    confirm "Delete Personal Files history point $id?" || exit 0
+    pair_payload "$(call_raw DeletePersonalSnapshot s "$id")" >/dev/null
+    echo "Personal Files history point deleted"
 }
 
 recovery_status() {
@@ -378,6 +469,56 @@ cmd_backup_delete() {
     echo "External backup deleted"
 }
 
+cmd_personal_backup_list() {
+    local filesystem_uuid="${1:-}"
+    validate_filesystem_uuid "$filesystem_uuid"
+    local json_mode=false
+    [[ "${2:-}" == "--json" ]] && json_mode=true
+    local result
+    result=$(pair_payload "$(call_raw ListPersonalExternalBackups s "$filesystem_uuid")")
+    print_json_or_summary "$result" "$json_mode" '
+        (if (.backups | length) == 0 then "No Personal Files backups" else
+           (.backups[] | "\(.backup_id)  \(.created_at)  \(.stream_size_bytes) bytes  \(.source.title)")
+         end),
+        (.issues[]? | "DAMAGED \(.entry): \(.message)")
+    '
+}
+
+cmd_personal_backup_export() {
+    local snapshot_id="${1:-}"
+    local filesystem_uuid="${2:-}"
+    validate_uuid "$snapshot_id"
+    validate_filesystem_uuid "$filesystem_uuid"
+    pair_payload "$(call_raw ExportPersonalSnapshot ss "$snapshot_id" "$filesystem_uuid")" | jq .
+}
+
+cmd_personal_backup_verify() {
+    local filesystem_uuid="${1:-}"
+    local backup_id="${2:-}"
+    validate_filesystem_uuid "$filesystem_uuid"
+    validate_uuid "$backup_id"
+    pair_payload "$(call_raw VerifyPersonalExternalBackup ss "$filesystem_uuid" "$backup_id")" | jq .
+}
+
+cmd_personal_backup_import() {
+    local filesystem_uuid="${1:-}"
+    local backup_id="${2:-}"
+    validate_filesystem_uuid "$filesystem_uuid"
+    validate_uuid "$backup_id"
+    confirm "Verify and import Personal Files backup $backup_id?" || exit 0
+    pair_payload "$(call_raw ImportPersonalExternalBackup ss "$filesystem_uuid" "$backup_id")" | jq .
+}
+
+cmd_personal_backup_delete() {
+    local filesystem_uuid="${1:-}"
+    local backup_id="${2:-}"
+    validate_filesystem_uuid "$filesystem_uuid"
+    validate_uuid "$backup_id"
+    confirm "Delete Personal Files backup $backup_id?" || exit 0
+    pair_payload "$(call_raw DeletePersonalExternalBackup ss "$filesystem_uuid" "$backup_id")" >/dev/null
+    echo "Personal Files backup deleted"
+}
+
 require_jq
 if (($# == 0)); then
     usage
@@ -395,6 +536,7 @@ case "$command_name" in
     status) cmd_status "$@" ;;
     create) cmd_create "$@" ;;
     create-scheduled) cmd_create_scheduled "$@" ;;
+    personal-create-scheduled) cmd_personal_create_scheduled "$@" ;;
     list|ls) cmd_list "$@" ;;
     show) cmd_show "$@" ;;
     verify) cmd_verify "$@" ;;
@@ -404,12 +546,21 @@ case "$command_name" in
     delete) cmd_delete "$@" ;;
     apply-retention) cmd_apply_retention "$@" ;;
     diff|compare) cmd_diff "$@" ;;
+    personal-create) cmd_personal_create "$@" ;;
+    personal-list) cmd_personal_list "$@" ;;
+    personal-files) cmd_personal_files "$@" ;;
+    personal-delete) cmd_personal_delete "$@" ;;
     backup-destinations) cmd_backup_destinations "$@" ;;
     backup-list) cmd_backup_list "$@" ;;
     backup-export) cmd_backup_export "$@" ;;
     backup-verify) cmd_backup_verify "$@" ;;
     backup-import) cmd_backup_import "$@" ;;
     backup-delete) cmd_backup_delete "$@" ;;
+    personal-backup-list) cmd_personal_backup_list "$@" ;;
+    personal-backup-export) cmd_personal_backup_export "$@" ;;
+    personal-backup-verify) cmd_personal_backup_verify "$@" ;;
+    personal-backup-import) cmd_personal_backup_import "$@" ;;
+    personal-backup-delete) cmd_personal_backup_delete "$@" ;;
     *)
         echo "Error: unknown command '$command_name'" >&2
         usage >&2

@@ -96,6 +96,22 @@ class EnvironmentReportingTests(unittest.TestCase):
         self.assertIn("Firmware mode: UEFI", output)
         self.assertIn("Secure Boot: enabled", output)
 
+    def test_uefi_without_secure_boot_support_is_explicit(self):
+        plan = valid_plan(secure_boot=SecureBoot.UNSUPPORTED)
+        logs = []
+        step = DetectBootEnvironmentStep(
+            FakeRunner(),
+            platform_probe=lambda: PlatformProbe(
+                plan.platform.architecture,
+                plan.platform.firmware,
+                plan.platform.secure_boot,
+            ),
+        )
+        context = InstallContext(plan, logs.append)
+        step.preflight(context)
+        step.execute(context)
+        self.assertIn("Secure Boot: unsupported by firmware", "\n".join(logs))
+
     def test_target_disk_log_excludes_other_operating_systems(self):
         plan = valid_plan()
         logs = []

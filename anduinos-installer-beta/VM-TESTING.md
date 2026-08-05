@@ -30,6 +30,11 @@ fresh writable variable-store template with platform keys enrolled. Merely
 booting with UEFI firmware does **not** prove Secure Boot is enabled. Confirm
 `mokutil --sb-state` in both the live environment and installed system.
 
+Also keep one UEFI VM whose firmware explicitly lacks Secure Boot support.
+`mokutil --sb-state` must report that unsupported state, the storage page must
+remain usable, and the resulting plan must omit MOK enrollment and Secure Boot
+GRUB flags. Malformed or contradictory probe output must still stop safely.
+
 Example dry run:
 
 ```sh
