@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Check that GitLab package needs match internal package relationships."""
+"""Check that GitLab package needs match internal package relationships.
+
+Dependencies, recommendations, and suggestions on packages built in this
+repository are all build-order relationships. This is independent of their
+different runtime installation semantics in APT.
+"""
 
 from __future__ import annotations
 
@@ -79,7 +84,7 @@ def internal_relationships(
     result: dict[str, set[str]] = {}
     for package, (_directory, root) in project_map.items():
         dependencies: set[str] = set()
-        for tag in ("Dependency", "Recommend"):
+        for tag in ("Dependency", "Recommend", "Suggest"):
             for item in root.findall(f".//{tag}"):
                 value = item.get("Include", "")
                 for alternative in value.split("|"):
@@ -137,7 +142,8 @@ def verify() -> tuple[int, int]:
             errors.append(" ".join(parts))
     if errors:
         raise RuntimeError(
-            "GitLab needs differ from internal aosproj Depends/Recommends:\n"
+            "GitLab needs differ from internal aosproj "
+            "Depends/Recommends/Suggests:\n"
             + "\n".join(errors)
         )
     return len(project_map), sum(len(items) for items in relationships.values())
