@@ -12,6 +12,16 @@ PROJECT = Path(__file__).resolve().parent.parent
 PROJECT_FILE = PROJECT / "anduinos-live-settings.aosproj"
 INSTALLER_PROJECT = PROJECT.parent / "anduinos-installer-beta/anduinos-installer-beta.aosproj"
 HOOK = PROJECT / "assets/14anduinos-timezone"
+GRUB_DROP_INS = {
+    PROJECT / "assets/grub-initrd-fallback-live.conf": (
+        "/usr/lib/systemd/system/"
+        "grub-initrd-fallback.service.d/10-anduinos-live.conf"
+    ),
+    PROJECT / "assets/grub2-common-live.conf": (
+        "/usr/lib/systemd/system/"
+        "grub2-common.service.d/10-anduinos-live.conf"
+    ),
+}
 POSTINST = PROJECT / "scripts/postinst.sh"
 POSTRM = PROJECT / "scripts/postrm.sh"
 
@@ -20,10 +30,10 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
     def setUp(self):
         self.project = ET.parse(PROJECT_FILE).getroot()
 
-    def test_package_identity_dependencies_and_hook(self):
+    def test_package_identity_dependencies_and_live_policy(self):
         self.assertEqual(
-            self.project.findtext(".//PackageVersion"),
-            "2.0.1-2+$(SuiteShortName)",
+            self.project.findtext(".//PackageName"),
+            "anduinos-live-settings",
         )
         dependencies = {
             item.get("Include") for item in self.project.findall(".//Dependency")
@@ -39,6 +49,19 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
         )
         self.assertEqual(included.get("Mode"), "755")
         self.assertFalse((PROJECT / "assets/30anduinos-timezone").exists())
+
+        for source, target in GRUB_DROP_INS.items():
+            with self.subTest(source=source.name):
+                included = self.project.find(
+                    f".//IncludeFile[@Include='assets/{source.name}']"
+                )
+                self.assertIsNotNone(included)
+                self.assertEqual(included.get("Target"), target)
+                self.assertEqual(included.get("Mode"), "644")
+                self.assertEqual(
+                    source.read_text(encoding="utf-8"),
+                    "[Unit]\nConditionKernelCommandLine=!boot=casper\n",
+                )
 
     def test_installer_declares_the_live_bridge_dependency(self):
         installer = ET.parse(INSTALLER_PROJECT).getroot()

@@ -169,7 +169,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-dconf-runtime` | Core | dconf profile and dpkg trigger runtime for GNOME system defaults |
 | `anduinos-dconf-defaults` | Config | dconf / gsettings defaults for GNOME |
 | `anduinos-gnome-shell-locale` | Locale | GNOME Shell locale / text overrides |
-| `anduinos-live-settings` | Config | Live CD timezone hook (casper-bottom); removed after install |
+| `anduinos-live-settings` | Config | Casper regional hooks and Live-only systemd policy; removed before target bootloader setup |
 
 For AnduinOS 2.0 (`resolute-addon`), `anduinos-core-system` depends on Ubuntu's
 `linux-generic` metapackage so general-purpose installations retain Ubuntu's

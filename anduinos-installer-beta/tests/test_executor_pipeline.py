@@ -69,6 +69,10 @@ class ExecutorPipelineTests(unittest.TestCase):
             pipeline.index("remove-live-packages"),
             pipeline.index("configure-keyboard-layout"),
         )
+        self.assertLess(
+            pipeline.index("remove-live-packages"),
+            pipeline.index("install-bootloader"),
+        )
         self.assertNotIn("install-third-party-drivers", pipeline)
         described = tuple(
             step_id
