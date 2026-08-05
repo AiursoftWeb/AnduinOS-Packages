@@ -377,6 +377,8 @@ anduinos-timeback-machine:
 
 anduinos-waypoint-gtk:
   extends: .publish
+  needs:
+    - anduinos-secureboot-toolkit
   variables:
     PACKAGE_DIR: anduinos-waypoint-gtk
 
