@@ -1375,43 +1375,6 @@ def create_security_page():
     loc_card.add(loc_row)
     center.append(loc_card)
 
-    # ── Local Command Assistance Card ──
-    shell_card = Adw.PreferencesGroup()
-    shell_card.set_title(_('Command-line Assistance'))
-    shell_card.set_description(
-        _('Control local Bash predictions. Command history stays on this computer and is never uploaded.')
-    )
-    shell_card.set_margin_top(24)
-
-    shell_row = Adw.SwitchRow()
-    shell_row.set_title(_('Bash Command Predictions'))
-    shell_row.set_subtitle(
-        _('Show quiet command suggestions that you can accept with the Right Arrow key.')
-    )
-    shell_icon = _create_image('keyboard.svg')
-    shell_icon.set_pixel_size(32)
-    shell_row.add_prefix(shell_icon)
-    shell_row.set_active(bash_command_predictions_enabled())
-    shell_row._update_in_progress = False
-
-    def _on_shell_prediction_toggle(switch, pspec):
-        if switch._update_in_progress:
-            return
-        enabled = switch.get_active()
-        try:
-            set_bash_command_predictions_enabled(enabled)
-        except OSError:
-            switch._update_in_progress = True
-            switch.set_active(not enabled)
-            switch.set_subtitle(
-                _('Could not update your Bash configuration. Your previous setting was kept.')
-            )
-            switch._update_in_progress = False
-
-    shell_row.connect('notify::active', _on_shell_prediction_toggle)
-    shell_card.add(shell_row)
-    center.append(shell_card)
-
     # ── Power Card ──
     power_card = Adw.PreferencesGroup()
     power_card.set_title(_('Power Settings'))
@@ -1445,6 +1408,39 @@ def create_security_page():
     power_row.connect('notify::active', _on_power_toggle)
     power_card.add(power_row)
     center.append(power_card)
+
+    # ── Local Command Assistance Card ──
+    shell_card = Adw.PreferencesGroup()
+    shell_card.set_title(_('Command-line Assistance'))
+    shell_card.set_description(_('Control local bash predictions.'))
+    shell_card.set_margin_top(24)
+
+    shell_row = Adw.SwitchRow()
+    shell_row.set_title(_('Bash Command Predictions'))
+    shell_row.set_subtitle(_('Show command suggestions in bash'))
+    shell_icon = _create_image('keyboard.svg')
+    shell_icon.set_pixel_size(32)
+    shell_row.add_prefix(shell_icon)
+    shell_row.set_active(bash_command_predictions_enabled())
+    shell_row._update_in_progress = False
+
+    def _on_shell_prediction_toggle(switch, pspec):
+        if switch._update_in_progress:
+            return
+        enabled = switch.get_active()
+        try:
+            set_bash_command_predictions_enabled(enabled)
+        except OSError:
+            switch._update_in_progress = True
+            switch.set_active(not enabled)
+            switch.set_subtitle(
+                _('Could not update your Bash configuration. Your previous setting was kept.')
+            )
+            switch._update_in_progress = False
+
+    shell_row.connect('notify::active', _on_shell_prediction_toggle)
+    shell_card.add(shell_row)
+    center.append(shell_card)
 
     return page
 
