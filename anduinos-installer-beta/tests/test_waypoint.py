@@ -66,7 +66,6 @@ def context_for(
     target: Path,
     *,
     online: bool,
-    media_payload: bool = False,
 ) -> InstallContext:
     apt_get = target / "usr/bin/apt-get"
     apt_get.parent.mkdir(parents=True, exist_ok=True)
@@ -79,7 +78,6 @@ def context_for(
             "target": target,
             "chroot_environment_ready": True,
             "network_online": online,
-            "waypoint_payload_in_live_image": media_payload,
         },
     )
     context.values["test_logs"] = logs
@@ -87,15 +85,11 @@ def context_for(
 
 
 class EnsureWaypointTests(unittest.TestCase):
-    def test_retains_installation_media_payload_without_network(self):
+    def test_retains_copied_package_without_network(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             runner = StatefulPackageRunner(installed=True)
-            context = context_for(
-                target,
-                online=False,
-                media_payload=True,
-            )
+            context = context_for(target, online=False)
             step = EnsureWaypointStep(runner)
             step.execute(context)
             step.verify(context)
@@ -103,15 +97,15 @@ class EnsureWaypointTests(unittest.TestCase):
         self.assertTrue(context.values["waypoint_installed"])
         self.assertEqual(
             context.values["waypoint_source"],
-            "installation-media",
+            "copied-system",
         )
         self.assertEqual(
             context.values["waypoint_version"],
             "0.1.0-12+resolute",
         )
         logs = "\n".join(context.values["test_logs"])
-        self.assertIn("installation-media payload: present", logs)
-        self.assertIn("package source: installation-media", logs)
+        self.assertIn("package source: copied-system", logs)
+        self.assertIn("copied Live system", logs)
         self.assertFalse(
             any(command[-1] == "update" for command, _ in runner.commands)
         )

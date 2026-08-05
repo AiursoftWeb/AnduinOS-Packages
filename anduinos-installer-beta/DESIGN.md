@@ -30,8 +30,10 @@ and constructs every command itself.
 - Live system: Casper remains the image/boot transport for release one.
   `anduinos-live-settings` is a hard dependency of the installer: Casper
   applies the GRUB-selected locale and the package-owned initramfs hook applies
-  the selected timezone. The ISO manifest removes both Live components from
-  the installed target.
+  the selected timezone. A dedicated installer step purges the fixed Live-only
+  package set from the copied target; it also purges Waypoint on ext4 while
+  retaining it on Btrfs. This policy does not use Ubiquity's historical dual
+  manifest convention.
 - Software: refreshing package indexes and installing available updates is
   enabled by default. An offline index-refresh failure is a warning and skips
   the upgrade; after an upgrade transaction starts, any APT/dpkg failure is

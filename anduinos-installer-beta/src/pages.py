@@ -3221,7 +3221,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         ),
         "configure-storage": _("Configure storage and swap", lang),
         "enter-chroot": _("Prepare target environment", lang),
-        "cleanup-live-system": _("Remove live-session components", lang),
+        "remove-live-packages": _("Remove live-session components", lang),
         "configure-keyboard-layout": _("Keyboard Layout", lang),
         "install-input-method": input_method_title,
         "configure-system": _(

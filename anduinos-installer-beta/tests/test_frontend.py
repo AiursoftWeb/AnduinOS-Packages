@@ -347,7 +347,7 @@ class FrontendPlanTests(unittest.TestCase):
         self.assertIn("[upgrade-system]", simulated)
         self.assertIn("Target filesystem: btrfs", simulated)
         self.assertIn("[ensure-waypoint]", simulated)
-        self.assertIn("retain the installation-media payload", simulated)
+        self.assertIn("retain the package copied from the Live system", simulated)
         self.assertNotIn("[install-third-party-drivers]", simulated)
         step_order = [
             step for step, status, _message in statuses

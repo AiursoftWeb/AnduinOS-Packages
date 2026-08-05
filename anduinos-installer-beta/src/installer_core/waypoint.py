@@ -45,7 +45,7 @@ def _installed_package_version(
 
 @dataclass
 class EnsureWaypointStep:
-    """Retain the ISO payload or install it from APT on transitional ISOs."""
+    """Retain the copied package or install it from APT on transitional ISOs."""
 
     runner: CommandRunner
     id: str = "ensure-waypoint"
@@ -67,15 +67,8 @@ class EnsureWaypointStep:
         if not apt_get.is_file():
             raise RuntimeError("Target command is missing: /usr/bin/apt-get")
 
-        media_payload = bool(
-            context.values.get("waypoint_payload_in_live_image")
-        )
         online = context.values.get("network_online") is not False
         context.log("Waypoint target policy: required for Btrfs")
-        context.log(
-            "Waypoint installation-media payload: "
-            + ("present" if media_payload else "absent")
-        )
         context.log(
             "Waypoint repository fallback: "
             + ("available" if online else "unavailable while offline")
@@ -83,28 +76,16 @@ class EnsureWaypointStep:
 
         version = _installed_package_version(self.runner, target)
         if version is not None:
-            source = (
-                "installation-media"
-                if media_payload
-                else "copied-system"
-            )
             context.values["waypoint_installed"] = True
-            context.values["waypoint_source"] = source
+            context.values["waypoint_source"] = "copied-system"
             context.values["waypoint_version"] = version
             context.log(
                 f"Waypoint package state: installed ({version})"
             )
-            context.log(f"Waypoint package source: {source}")
-            if source == "installation-media":
-                context.log(
-                    "Retained AnduinOS Waypoint from the "
-                    "installation media"
-                )
-            else:
-                context.log(
-                    "AnduinOS Waypoint is already installed in the "
-                    "copied system"
-                )
+            context.log("Waypoint package source: copied-system")
+            context.log(
+                "Retained AnduinOS Waypoint from the copied Live system"
+            )
             return
 
         context.log("Waypoint package state: missing from target")

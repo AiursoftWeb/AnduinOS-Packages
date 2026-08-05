@@ -14,7 +14,7 @@ from typing import Any
 from .storage_graph import StorageGraph
 
 
-SCHEMA_VERSION = 7
+SCHEMA_VERSION = 8
 
 
 class Architecture(str, Enum):
@@ -57,8 +57,6 @@ class AuthenticationMode(str, Enum):
 @dataclass(frozen=True)
 class SourceSpec:
     image_path: str = "/cdrom/casper/filesystem.squashfs"
-    manifest_path: str = "/cdrom/casper/filesystem.manifest"
-    desktop_manifest_path: str = "/cdrom/casper/filesystem.manifest-desktop"
 
 
 @dataclass(frozen=True)
@@ -174,7 +172,7 @@ class InstallPlan:
         source_data = _object(root["source"], "source")
         _exact_fields(
             source_data,
-            {"image_path", "manifest_path", "desktop_manifest_path"},
+            {"image_path"},
             "source",
         )
         source = SourceSpec(**source_data)

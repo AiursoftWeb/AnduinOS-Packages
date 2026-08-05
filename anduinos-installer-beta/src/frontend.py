@@ -425,9 +425,9 @@ class DevelopmentExecutorClient:
         log(f"Target filesystem: {plan.storage.filesystem.value}")
         if plan.storage.filesystem is Filesystem.BTRFS:
             log(
-                "Waypoint policy: retain the installation-media "
-                "payload, verify it, and use the repository only as a "
-                "legacy fallback"
+                "Waypoint policy: retain the package copied from the Live "
+                "system, verify it, and use the repository only as a legacy "
+                "fallback"
             )
         else:
             log(

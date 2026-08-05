@@ -1,264 +1,146 @@
 import tempfile
 import unittest
-from dataclasses import replace
 from pathlib import Path
 
 from fakes import FakeRunner
 from helpers import valid_plan
-from installer_core.live_cleanup import CleanupLiveSystemStep
-from installer_core.model import Filesystem, SourceSpec
+from installer_core.live_cleanup import (
+    LIVE_ONLY_PACKAGES,
+    RemoveLivePackagesStep,
+)
+from installer_core.model import Filesystem
 from installer_core.steps import InstallContext
+from installer_core.waypoint import WAYPOINT_PACKAGE
 
 
-class LiveCleanupTests(unittest.TestCase):
-    def test_purges_only_manifest_difference_and_installed_self(self):
-        runner = FakeRunner()
+EXPECTED_LIVE_ONLY_PACKAGES = (
+    "casper",
+    "discover",
+    "laptop-detect",
+    "os-prober",
+    "gparted",
+    "anduinos-installer-beta",
+    "anduinos-live-settings",
+)
+
+
+def _query(target: Path, package: str) -> tuple[str, ...]:
+    return (
+        "chroot",
+        str(target),
+        "dpkg-query",
+        "--show",
+        "--showformat=${db:Status-Abbrev}",
+        package,
+    )
+
+
+def _context(
+    root: Path,
+    filesystem: Filesystem = Filesystem.BTRFS,
+) -> InstallContext:
+    return InstallContext(
+        valid_plan(filesystem=filesystem),
+        lambda _message: None,
+        values={"target": root, "chroot_environment_ready": True},
+    )
+
+
+class RemoveLivePackagesTests(unittest.TestCase):
+    def test_install_plan_source_has_no_ubiquity_manifest_contract(self):
+        plan = valid_plan()
+        payload = plan.to_dict()
+        self.assertEqual(
+            payload["source"],
+            {"image_path": "/cdrom/casper/filesystem.squashfs"},
+        )
+        payload["source"]["desktop_manifest_path"] = "/legacy"
+        with self.assertRaisesRegex(
+            ValueError, "Unknown field in source: desktop_manifest_path"
+        ):
+            type(plan).from_dict(payload)
+
+    def test_policy_is_explicit_and_waypoint_is_not_unconditional(self):
+        self.assertEqual(LIVE_ONLY_PACKAGES, EXPECTED_LIVE_ONLY_PACKAGES)
+        self.assertNotIn(WAYPOINT_PACKAGE, LIVE_ONLY_PACKAGES)
+
+    def test_btrfs_purges_installed_live_packages_and_retains_waypoint(self):
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            target = root / "target"
-            target.mkdir()
-            full = root / "filesystem.manifest"
-            desktop = root / "filesystem.manifest-desktop"
-            full.write_text(
-                "bash 1\ncasper 2\nubiquity 3\nshared-package 4\n"
-            )
-            desktop.write_text("bash 1\nshared-package 4\n")
-            plan = replace(
-                valid_plan(),
-                source=SourceSpec(
-                    image_path="/unused",
-                    manifest_path=str(full),
-                    desktop_manifest_path=str(desktop),
-                ),
-            )
-            for package in (
-                "casper",
-                "ubiquity",
-                "anduinos-installer-beta",
-            ):
-                runner.outputs[
-                    (
-                        "chroot",
-                        str(target),
-                        "dpkg-query",
-                        "--show",
-                        "--showformat=${db:Status-Abbrev}",
-                        package,
-                    )
-                ] = ("ii \n", "", 0)
-            context = InstallContext(
-                plan, lambda _message: None, values={"target": target}
-            )
-            step = CleanupLiveSystemStep(runner)
+            target = Path(directory)
+            runner = FakeRunner()
+            for package in ("casper", "anduinos-installer-beta"):
+                runner.outputs[_query(target, package)] = ("ii \n", "", 0)
+            context = _context(target)
+            step = RemoveLivePackagesStep(runner)
             step.preflight(context)
             step.execute(context)
 
         purge = next(
-            command
-            for command, _kwargs in runner.commands
-            if "purge" in command
+            command for command, _kwargs in runner.commands if "purge" in command
         )
         self.assertEqual(
-            purge[-3:],
-            ("anduinos-installer-beta", "casper", "ubiquity"),
+            purge[-2:], ("casper", "anduinos-installer-beta")
         )
-        self.assertNotIn("bash", purge)
-        self.assertNotIn("shared-package", purge)
-
-    def test_rejects_manifest_package_injection(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            full = root / "full"
-            desktop = root / "desktop"
-            full.write_text("valid 1\nbad;command 2\n")
-            desktop.write_text("valid 1\n")
-            plan = replace(
-                valid_plan(),
-                source=SourceSpec(
-                    image_path="/unused",
-                    manifest_path=str(full),
-                    desktop_manifest_path=str(desktop),
-                ),
-            )
-            context = InstallContext(
-                plan,
-                lambda _message: None,
-                values={"target": root / "target"},
-            )
-            with self.assertRaisesRegex(RuntimeError, "Invalid package"):
-                CleanupLiveSystemStep(FakeRunner()).preflight(context)
-
-    def test_rejects_desktop_package_absent_from_full_manifest(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            full = root / "full"
-            desktop = root / "desktop"
-            full.write_text("bash 1\n", encoding="utf-8")
-            desktop.write_text("bash 1\ninvented 2\n", encoding="utf-8")
-            plan = replace(
-                valid_plan(),
-                source=SourceSpec(
-                    image_path="/unused",
-                    manifest_path=str(full),
-                    desktop_manifest_path=str(desktop),
-                ),
-            )
-            context = InstallContext(plan, lambda _message: None)
-            with self.assertRaisesRegex(RuntimeError, "absent from the full"):
-                CleanupLiveSystemStep(FakeRunner()).preflight(context)
-
-    def test_rejects_live_installer_in_desktop_manifest(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            full = root / "full"
-            desktop = root / "desktop"
-            manifest = "bash 1\nanduinos-installer-beta 2\n"
-            full.write_text(manifest, encoding="utf-8")
-            desktop.write_text(manifest, encoding="utf-8")
-            plan = replace(
-                valid_plan(),
-                source=SourceSpec(
-                    image_path="/unused",
-                    manifest_path=str(full),
-                    desktop_manifest_path=str(desktop),
-                ),
-            )
-            with self.assertRaisesRegex(RuntimeError, "Live-only packages"):
-                CleanupLiveSystemStep(FakeRunner()).preflight(
-                    InstallContext(plan, lambda _message: None)
-                )
-
-    def test_btrfs_installation_retains_waypoint_live_payload(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            target = root / "target"
-            target.mkdir()
-            full = root / "full"
-            desktop = root / "desktop"
-            full.write_text(
-                "bash 1\nanduinos-waypoint-gtk 2\n",
-                encoding="utf-8",
-            )
-            desktop.write_text("bash 1\n", encoding="utf-8")
-            base = valid_plan()
-            plan = replace(
-                base,
-                source=SourceSpec(
-                    image_path="/unused",
-                    manifest_path=str(full),
-                    desktop_manifest_path=str(desktop),
-                ),
-            )
-            runner = FakeRunner()
-            logs: list[str] = []
-            context = InstallContext(plan, logs.append, values={"target": target})
-            step = CleanupLiveSystemStep(runner)
-            step.preflight(context)
-            step.execute(context)
-
-        queried = [
+        queried = {
             command[-1]
-            for command, _ in runner.commands
+            for command, _kwargs in runner.commands
             if "dpkg-query" in command
-        ]
-        self.assertTrue(context.values["waypoint_payload_in_live_image"])
-        self.assertEqual(context.values["waypoint_payload_version"], "2")
-        self.assertNotIn("anduinos-waypoint-gtk", queried)
-        combined_logs = "\n".join(logs)
-        self.assertIn("payload: present (2)", combined_logs)
-        self.assertIn("excluded from the live-package purge set", combined_logs)
+        }
+        self.assertEqual(queried, set(EXPECTED_LIVE_ONLY_PACKAGES))
+        self.assertNotIn(WAYPOINT_PACKAGE, queried)
 
-    def test_ext4_installation_purges_waypoint_live_payload(self):
+    def test_ext4_adds_waypoint_to_the_purge_candidates(self):
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            target = root / "target"
-            target.mkdir()
-            full = root / "full"
-            desktop = root / "desktop"
-            full.write_text(
-                "bash 1\nanduinos-waypoint-gtk 2\n",
-                encoding="utf-8",
-            )
-            desktop.write_text("bash 1\n", encoding="utf-8")
-            base = valid_plan(filesystem=Filesystem.EXT4)
-            plan = replace(
-                base,
-                source=SourceSpec(
-                    image_path="/unused",
-                    manifest_path=str(full),
-                    desktop_manifest_path=str(desktop),
-                ),
-            )
+            target = Path(directory)
             runner = FakeRunner()
-            query = (
-                "chroot",
-                str(target),
-                "dpkg-query",
-                "--show",
-                "--showformat=${db:Status-Abbrev}",
-                "anduinos-waypoint-gtk",
-            )
-            runner.outputs[query] = ("ii \n", "", 0)
-            logs: list[str] = []
-            context = InstallContext(plan, logs.append, values={"target": target})
-            step = CleanupLiveSystemStep(runner)
+            runner.outputs[_query(target, WAYPOINT_PACKAGE)] = ("ii \n", "", 0)
+            context = _context(target, Filesystem.EXT4)
+            step = RemoveLivePackagesStep(runner)
             step.preflight(context)
             step.execute(context)
 
         purge = next(
-            command
-            for command, _ in runner.commands
-            if "purge" in command
+            command for command, _kwargs in runner.commands if "purge" in command
         )
-        self.assertEqual(purge[-1], "anduinos-waypoint-gtk")
-        combined_logs = "\n".join(logs)
-        self.assertIn("included in the live-package purge set", combined_logs)
-        self.assertIn("removed from the ext4 target", combined_logs)
+        self.assertEqual(purge[-1], WAYPOINT_PACKAGE)
+        self.assertEqual(
+            context.values["live_package_candidates"][-1], WAYPOINT_PACKAGE
+        )
 
-    def test_rejects_waypoint_in_unconditional_desktop_manifest(self):
+    def test_missing_packages_are_a_successful_noop(self):
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            full = root / "full"
-            desktop = root / "desktop"
-            manifest = "bash 1\nanduinos-waypoint-gtk 2\n"
-            full.write_text(manifest, encoding="utf-8")
-            desktop.write_text(manifest, encoding="utf-8")
-            base = valid_plan()
-            plan = replace(
-                base,
-                source=SourceSpec(
-                    image_path="/unused",
-                    manifest_path=str(full),
-                    desktop_manifest_path=str(desktop),
-                ),
-            )
+            runner = FakeRunner()
+            context = _context(Path(directory))
+            step = RemoveLivePackagesStep(runner)
+            step.preflight(context)
+            step.execute(context)
+
+        self.assertEqual(context.values["live_packages_removed"], ())
+        self.assertFalse(
+            any("purge" in command for command, _kwargs in runner.commands)
+        )
+
+    def test_verify_rejects_any_candidate_that_remains_installed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            runner = FakeRunner()
+            context = _context(target)
+            context.values["live_package_candidates"] = LIVE_ONLY_PACKAGES
+            runner.outputs[_query(target, "gparted")] = ("ii \n", "", 0)
             with self.assertRaisesRegex(
-                RuntimeError,
-                "Conditional live packages",
+                RuntimeError, "Live-only packages remain installed: gparted"
             ):
-                CleanupLiveSystemStep(FakeRunner()).preflight(
-                    InstallContext(plan, lambda _message: None)
-                )
+                RemoveLivePackagesStep(runner).verify(context)
 
-    def test_chinese_plan_does_not_require_rime_in_desktop_manifest(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            full = root / "full"
-            desktop = root / "desktop"
-            full.write_text("bash 1\nibus-rime 2\n", encoding="utf-8")
-            desktop.write_text("bash 1\nibus-rime 2\n", encoding="utf-8")
-            base = valid_plan()
-            plan = replace(
-                base,
-                source=SourceSpec(
-                    image_path="/unused",
-                    manifest_path=str(full),
-                    desktop_manifest_path=str(desktop),
-                ),
-                regional=replace(base.regional, input_method="rime"),
-            )
-            context = InstallContext(plan, lambda _message: None)
-            CleanupLiveSystemStep(FakeRunner()).preflight(context)
-            self.assertNotIn(
-                "anduinos-rime", context.values["casper_desktop_manifest"]
-            )
+    def test_execute_requires_the_prepared_target_chroot(self):
+        context = InstallContext(
+            valid_plan(),
+            lambda _message: None,
+            values={"target": Path("/target")},
+        )
+        with self.assertRaisesRegex(RuntimeError, "chroot environment"):
+            RemoveLivePackagesStep(FakeRunner()).execute(context)
+
+
+if __name__ == "__main__":
+    unittest.main()

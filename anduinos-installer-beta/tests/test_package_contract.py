@@ -22,6 +22,13 @@ def load_package_verifier():
 
 
 class PackageContractTests(unittest.TestCase):
+    def test_package_version_matches_live_cleanup_release(self):
+        root = ET.parse(ROOT / "anduinos-installer-beta.aosproj").getroot()
+        self.assertEqual(
+            root.findtext(".//PackageVersion"),
+            "2.0.1-48+$(SuiteShortName)",
+        )
+
     def test_appstream_publishes_the_live_installer_as_an_application(self):
         root = ET.parse(ROOT / "anduinos-installer-beta.aosproj").getroot()
         application = root.find(".//AppStreamApplication")

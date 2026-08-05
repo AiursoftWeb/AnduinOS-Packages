@@ -61,6 +61,14 @@ class ExecutorPipelineTests(unittest.TestCase):
             pipeline.index("migrate-wifi-connection"),
             pipeline.index("configure-storage"),
         )
+        self.assertLess(
+            pipeline.index("enter-chroot"),
+            pipeline.index("remove-live-packages"),
+        )
+        self.assertLess(
+            pipeline.index("remove-live-packages"),
+            pipeline.index("configure-keyboard-layout"),
+        )
         self.assertNotIn("install-third-party-drivers", pipeline)
         described = tuple(
             step_id

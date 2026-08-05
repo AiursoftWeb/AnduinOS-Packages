@@ -25,7 +25,7 @@ from .execution_steps import (
     VerifyTargetDiskStep,
 )
 from .language_support import InstallLanguagePacksStep
-from .live_cleanup import CleanupLiveSystemStep
+from .live_cleanup import RemoveLivePackagesStep
 from .mirrors import SelectFastestAptMirrorStep
 from .network import DetectNetworkConnectivityStep
 from .model import Filesystem, InstallPlan
@@ -88,7 +88,7 @@ class InstallerExecutor:
             MigrateWifiConnectionStep(self.runner),
             ConfigureStorageStep(self.runner),
             EnterChrootStep(self.runner, target=self.target),
-            CleanupLiveSystemStep(self.runner),
+            RemoveLivePackagesStep(self.runner),
             ConfigureKeyboardStep(),
             SelectFastestAptMirrorStep(),
             # Establish the target-owned DKMS key before any package operation

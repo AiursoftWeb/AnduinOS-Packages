@@ -52,7 +52,7 @@ from .target_config import ConfigureStorageStep
 from .executor import InstallerExecutor
 from .system_config import ConfigureSystemStep
 from .chroot_env import EnterChrootStep, LeaveChrootStep
-from .live_cleanup import CleanupLiveSystemStep
+from .live_cleanup import RemoveLivePackagesStep
 from .language_support import InstallLanguagePacksStep
 from .boot_commands import build_boot_commands
 from .bootloader import InstallBootloaderStep
@@ -81,7 +81,7 @@ __all__ = [
     "ConfigureSystemStep",
     "EnterChrootStep",
     "LeaveChrootStep",
-    "CleanupLiveSystemStep",
+    "RemoveLivePackagesStep",
     "InstallLanguagePacksStep",
     "build_boot_commands",
     "InstallBootloaderStep",
