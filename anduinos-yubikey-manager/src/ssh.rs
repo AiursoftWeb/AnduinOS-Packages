@@ -1,6 +1,6 @@
+use crate::i18n::{i18n, i18n_fmt};
 use base64::engine::general_purpose::{STANDARD, STANDARD_NO_PAD};
 use base64::Engine;
-use crate::i18n::{i18n, i18n_fmt};
 use sha2::{Digest, Sha256};
 use std::collections::{HashMap, HashSet};
 use std::fs;
@@ -96,7 +96,10 @@ pub fn agent_status() -> AgentStatus {
         Ok(output) => AgentStatus {
             available: true,
             socket,
-            identity_count: output.lines().filter(|line| !line.trim().is_empty()).count(),
+            identity_count: output
+                .lines()
+                .filter(|line| !line.trim().is_empty())
+                .count(),
             error: None,
         },
         Err(error)
@@ -119,10 +122,7 @@ pub fn agent_status() -> AgentStatus {
     }
 }
 
-pub fn inspect_resident_ssh(
-    device: &str,
-    pin: &str,
-) -> Result<Vec<ResidentSshCredential>, String> {
+pub fn inspect_resident_ssh(device: &str, pin: &str) -> Result<Vec<ResidentSshCredential>, String> {
     if !valid_device_path(device) {
         return Err(i18n("Invalid FIDO device path."));
     }
@@ -213,7 +213,9 @@ pub fn create_resident_key(options: &CreateOptions, pin: &str) -> Result<CreateO
     validate_create_options(options)?;
     let devices = list_fido_devices()?;
     if !devices.iter().any(|device| device.path == options.device) {
-        return Err(i18n("The selected FIDO device is no longer connected. Refresh and try again."));
+        return Err(i18n(
+            "The selected FIDO device is no longer connected. Refresh and try again.",
+        ));
     }
     let parent = options
         .output_path
@@ -223,23 +225,21 @@ pub fn create_resident_key(options: &CreateOptions, pin: &str) -> Result<CreateO
         .map(PathBuf::from)
         .map(|home| home.join(".ssh"));
     if !parent.exists() && default_ssh_dir.as_deref() == Some(parent) {
-        fs::create_dir(parent)
-            .map_err(|error| {
-                i18n_fmt(
-                    &i18n("Could not create {0}: {1}"),
-                    &[&parent.to_string_lossy(), &error.to_string()],
-                )
-            })?;
+        fs::create_dir(parent).map_err(|error| {
+            i18n_fmt(
+                &i18n("Could not create {0}: {1}"),
+                &[&parent.to_string_lossy(), &error.to_string()],
+            )
+        })?;
         #[cfg(unix)]
         {
             use std::os::unix::fs::PermissionsExt;
-            fs::set_permissions(parent, fs::Permissions::from_mode(0o700))
-                .map_err(|error| {
-                    i18n_fmt(
-                        &i18n("Could not protect {0}: {1}"),
-                        &[&parent.to_string_lossy(), &error.to_string()],
-                    )
-                })?;
+            fs::set_permissions(parent, fs::Permissions::from_mode(0o700)).map_err(|error| {
+                i18n_fmt(
+                    &i18n("Could not protect {0}: {1}"),
+                    &[&parent.to_string_lossy(), &error.to_string()],
+                )
+            })?;
         }
     }
     if !parent.is_dir() {
@@ -250,7 +250,9 @@ pub fn create_resident_key(options: &CreateOptions, pin: &str) -> Result<CreateO
     }
     let public_path = PathBuf::from(format!("{}.pub", options.output_path.display()));
     if options.output_path.exists() || public_path.exists() {
-        return Err(i18n("The selected private-key or .pub file already exists. Choose another name."));
+        return Err(i18n(
+            "The selected private-key or .pub file already exists. Choose another name.",
+        ));
     }
 
     // A successful preflight proves the PIN and exact device before a
@@ -312,11 +314,15 @@ pub fn delete_resident_credential(
         return Err(i18n("Choose a valid /dev/hidrawN FIDO device."));
     }
     if !valid_credential_id(&expected.credential_id) {
-        return Err(i18n("The resident credential ID is invalid. Refresh before deleting."));
+        return Err(i18n(
+            "The resident credential ID is invalid. Refresh before deleting.",
+        ));
     }
     let devices = list_fido_devices()?;
     if !devices.iter().any(|candidate| candidate.path == device) {
-        return Err(i18n("The selected FIDO device is no longer connected. Refresh and inspect it again."));
+        return Err(i18n(
+            "The selected FIDO device is no longer connected. Refresh and inspect it again.",
+        ));
     }
 
     // This preflight both verifies the PIN and proves that the exact
@@ -441,16 +447,22 @@ pub fn validate_create_options(options: &CreateOptions) -> Result<(), String> {
             .chars()
             .any(|character| character.is_control() || character.is_whitespace())
     {
-        return Err(i18n("Application must begin with ssh:, contain no whitespace, and be at most 253 bytes."));
+        return Err(i18n(
+            "Application must begin with ssh:, contain no whitespace, and be at most 253 bytes.",
+        ));
     }
     if options.username.is_empty()
         || options.username.as_bytes().len() > 64
         || options.username.chars().any(char::is_control)
     {
-        return Err(i18n("Resident username must contain 1–64 bytes and no control characters."));
+        return Err(i18n(
+            "Resident username must contain 1–64 bytes and no control characters.",
+        ));
     }
     if options.comment.as_bytes().len() > 200 || options.comment.chars().any(char::is_control) {
-        return Err(i18n("Display label must be at most 200 bytes and contain no control characters."));
+        return Err(i18n(
+            "Display label must be at most 200 bytes and contain no control characters.",
+        ));
     }
     if !options.output_path.is_absolute() {
         return Err(i18n("The local key path must be absolute."));
@@ -484,19 +496,21 @@ fn run_with_askpass(
     args: &[String],
     pin: &str,
 ) -> Result<std::process::Output, String> {
-    let askpass = std::env::current_exe()
-        .map_err(|error| {
-            i18n_fmt(
-                &i18n("Could not locate the secure PIN helper: {0}"),
-                &[&error.to_string()],
-            )
-        })?;
+    let askpass = std::env::current_exe().map_err(|error| {
+        i18n_fmt(
+            &i18n("Could not locate the secure PIN helper: {0}"),
+            &[&error.to_string()],
+        )
+    })?;
     let mut child = Command::new(program)
         .args(args)
         .env("SSH_ASKPASS", askpass)
         .env("SSH_ASKPASS_REQUIRE", "force")
         .env("ANDUINOS_YUBIKEY_ASKPASS", "1")
-        .env("DISPLAY", std::env::var("DISPLAY").unwrap_or_else(|_| ":0".into()))
+        .env(
+            "DISPLAY",
+            std::env::var("DISPLAY").unwrap_or_else(|_| ":0".into()),
+        )
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -508,14 +522,12 @@ fn run_with_askpass(
             )
         })?;
     if let Some(mut stdin) = child.stdin.take() {
-        stdin
-            .write_all(pin.as_bytes())
-            .map_err(|error| {
-                i18n_fmt(
-                    &i18n("Could not provide the FIDO PIN: {0}"),
-                    &[&error.to_string()],
-                )
-            })?;
+        stdin.write_all(pin.as_bytes()).map_err(|error| {
+            i18n_fmt(
+                &i18n("Could not provide the FIDO PIN: {0}"),
+                &[&error.to_string()],
+            )
+        })?;
         stdin.write_all(b"\n").map_err(|error| {
             i18n_fmt(
                 &i18n("Could not provide the FIDO PIN: {0}"),
@@ -525,12 +537,7 @@ fn run_with_askpass(
     }
     child
         .wait_with_output()
-        .map_err(|error| {
-            i18n_fmt(
-                &i18n("{0} failed: {1}"),
-                &[program, &error.to_string()],
-            )
-        })
+        .map_err(|error| i18n_fmt(&i18n("{0} failed: {1}"), &[program, &error.to_string()]))
 }
 
 fn command_error_detail(output: &std::process::Output) -> String {
@@ -600,7 +607,11 @@ pub fn test_git_signing(
         )
     })?;
     let message = directory.path().join("git-signing-test");
-    fs::write(&message, b"AnduinOS YubiKey Security Center Git signing test\n").map_err(|error| {
+    fs::write(
+        &message,
+        b"AnduinOS YubiKey Security Center Git signing test\n",
+    )
+    .map_err(|error| {
         i18n_fmt(
             &i18n("Could not prepare the Git signing test: {0}"),
             &[&error.to_string()],
@@ -614,7 +625,8 @@ pub fn test_git_signing(
         let handle = handle
             .to_str()
             .ok_or_else(|| i18n("The local SSH key-handle path is invalid."))?;
-        let pin = pin.ok_or_else(|| i18n("Enter the YubiKey FIDO PIN to test this local key handle."))?;
+        let pin =
+            pin.ok_or_else(|| i18n("Enter the YubiKey FIDO PIN to test this local key handle."))?;
         let args = vec![
             "-Y".into(),
             "sign".into(),
@@ -651,14 +663,7 @@ pub fn test_git_signing(
         .ok_or_else(|| i18n("The temporary Git signature path is invalid."))?;
     run(
         "ssh-keygen",
-        &[
-            "-Y",
-            "check-novalidate",
-            "-n",
-            "git",
-            "-s",
-            signature_text,
-        ],
+        &["-Y", "check-novalidate", "-n", "git", "-s", signature_text],
         Some("AnduinOS YubiKey Security Center Git signing test\n"),
     )
     .map(|_| ())
@@ -681,27 +686,24 @@ fn with_public_key_file<T>(
     public_key: &str,
     operation: impl FnOnce(&std::path::Path) -> Result<T, String>,
 ) -> Result<T, String> {
-    let mut file = tempfile::NamedTempFile::new()
-        .map_err(|error| {
-            i18n_fmt(
-                &i18n("Could not create a temporary public-key file: {0}"),
-                &[&error.to_string()],
-            )
-        })?;
-    writeln!(file, "{public_key}")
-        .map_err(|error| {
-            i18n_fmt(
-                &i18n("Could not write the temporary public key: {0}"),
-                &[&error.to_string()],
-            )
-        })?;
-    file.flush()
-        .map_err(|error| {
-            i18n_fmt(
-                &i18n("Could not flush the temporary public key: {0}"),
-                &[&error.to_string()],
-            )
-        })?;
+    let mut file = tempfile::NamedTempFile::new().map_err(|error| {
+        i18n_fmt(
+            &i18n("Could not create a temporary public-key file: {0}"),
+            &[&error.to_string()],
+        )
+    })?;
+    writeln!(file, "{public_key}").map_err(|error| {
+        i18n_fmt(
+            &i18n("Could not write the temporary public key: {0}"),
+            &[&error.to_string()],
+        )
+    })?;
+    file.flush().map_err(|error| {
+        i18n_fmt(
+            &i18n("Could not flush the temporary public key: {0}"),
+            &[&error.to_string()],
+        )
+    })?;
     operation(file.path())
 }
 
@@ -756,7 +758,9 @@ fn extract_pem(output: &str) -> Result<Vec<u8>, String> {
 
 fn ssh_public_blob(application: &str, der: &[u8]) -> Result<(String, Vec<u8>), String> {
     const ED25519_OID: &[u8] = &[0x2b, 0x65, 0x70];
-    if der.windows(ED25519_OID.len()).any(|window| window == ED25519_OID)
+    if der
+        .windows(ED25519_OID.len())
+        .any(|window| window == ED25519_OID)
         && der.len() >= 32
     {
         let algorithm = "sk-ssh-ed25519@openssh.com";
@@ -910,14 +914,12 @@ fn run_output(
         })?;
     if let Some(input) = input {
         if let Some(mut stdin) = child.stdin.take() {
-            stdin
-                .write_all(input.as_bytes())
-                .map_err(|error| {
-                    i18n_fmt(
-                        &i18n("Could not provide the FIDO PIN: {0}"),
-                        &[&error.to_string()],
-                    )
-                })?;
+            stdin.write_all(input.as_bytes()).map_err(|error| {
+                i18n_fmt(
+                    &i18n("Could not provide the FIDO PIN: {0}"),
+                    &[&error.to_string()],
+                )
+            })?;
             stdin.write_all(b"\n").map_err(|error| {
                 i18n_fmt(
                     &i18n("Could not provide the FIDO PIN: {0}"),
@@ -928,12 +930,7 @@ fn run_output(
     }
     child
         .wait_with_output()
-        .map_err(|error| {
-            i18n_fmt(
-                &i18n("{0} failed: {1}"),
-                &[program, &error.to_string()],
-            )
-        })
+        .map_err(|error| i18n_fmt(&i18n("{0} failed: {1}"), &[program, &error.to_string()]))
 }
 
 #[cfg(test)]
@@ -1025,12 +1022,7 @@ mod tests {
 
     #[test]
     fn failed_post_delete_inspection_is_an_unknown_outcome() {
-        let outcome = finish_delete(
-            "AQID",
-            None,
-            Err("device disconnected".into()),
-        )
-        .unwrap();
+        let outcome = finish_delete("AQID", None, Err("device disconnected".into())).unwrap();
         assert!(matches!(outcome, DeleteOutcome::Unknown { .. }));
     }
 

@@ -25,19 +25,14 @@ where
             libc::_exit(1);
         }
     });
-    let process = launcher
-        .spawn(&argv)
-        .map_err(|error| error.to_string())?;
+    let process = launcher.spawn(&argv).map_err(|error| error.to_string())?;
     let stdout = process
         .stdout_pipe()
         .ok_or_else(|| "udevadm did not provide an event stream".to_string())?;
     let stream = gio::DataInputStream::new(&stdout);
     gtk::glib::spawn_future_local(async move {
         loop {
-            match stream
-                .read_line_future(gtk::glib::Priority::DEFAULT)
-                .await
-            {
+            match stream.read_line_future(gtk::glib::Priority::DEFAULT).await {
                 Ok(Some(line)) if is_udev_event_line(&line) => on_event(),
                 Ok(Some(_)) => {}
                 Ok(None) | Err(_) => break,

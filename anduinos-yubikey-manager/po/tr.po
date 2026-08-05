@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 18:03+0000\n"
+"POT-Creation-Date: 2026-08-04 17:10+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,15 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid "Git is not installed"
-msgstr "Git kurulu değil"
-
-msgid "Git is required for commit signing. Install it from Software, then return here."
-msgstr "Commit imzalamak için Git gereklidir. Yazılımlar'dan kurup buraya geri dönün."
-
-msgid "Open Software"
-msgstr "Yazılımlar'ı Aç"
 
 msgid "1 identity is currently available to SSH applications."
 msgstr "SSH uygulamaları için şu anda 1 kimlik kullanılabilir durumda."
@@ -363,6 +354,12 @@ msgstr ""
 msgid "Git signing test passed"
 msgstr "Git signing test passed"
 
+msgid "Git is not installed"
+msgstr "Git kurulu değil"
+
+msgid "Git is required for commit signing. Install it from Software, then return here."
+msgstr "Commit imzalamak için Git gereklidir. Yazılımlar'dan kurup buraya geri dönün."
+
 msgid "Home"
 msgstr "Ana Sayfa"
 
@@ -485,6 +482,9 @@ msgstr "Henüz incelenmedi · {0}"
 
 msgid "Open the official Yubico Store"
 msgstr "Resmi Yubico Mağazasını açın"
+
+msgid "Open Software"
+msgstr "Yazılımlar'ı Aç"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH, yerleşik anahtarları yükleyemedi. SSH aracı yeni yüklü bir kimlik içermiyor."
@@ -980,6 +980,9 @@ msgstr "İncelenmesi gereken {0}"
 msgid "{0} · no hardware serial"
 msgstr "{0} · donanım seri numarası yok"
 
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
 msgid "Checking Passkeys support…"
 msgstr "Geçiş anahtarı desteği denetleniyor…"
 
@@ -992,11 +995,59 @@ msgstr "Yubico Authenticator'ı aç"
 msgid "Passkeys"
 msgstr "Geçiş anahtarları"
 
-msgid "Yubico Authenticator must be installed before you can use Passkeys."
-msgstr "Geçiş anahtarlarını kullanabilmek için Yubico Authenticator yüklü olmalıdır."
+msgid "Choose the passkey option and follow the prompt to use the same YubiKey."
+msgstr "Geçiş anahtarı seçeneğini belirleyin ve aynı YubiKey’i kullanmak için istemi izleyin."
 
-msgid "{0} · {1}"
-msgstr "{0} · {1}"
+msgid "Confirm it is you"
+msgstr "Kimliğinizi doğrulayın"
+
+msgid "How to use"
+msgstr "Nasıl kullanılır"
+
+msgid "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
+msgstr "YubiKey’inizi takın, istendiğinde FIDO PIN kodunu girin ve ardından anahtara dokunun."
+
+msgid "Inspect a connected YubiKey to reveal its resident SSH keys and available actions."
+msgstr "Yerleşik SSH anahtarlarını ve kullanılabilir işlemleri göstermek için bağlı bir YubiKey’i inceleyin."
+
+msgid "Install the official Yubico Authenticator first. When installation is complete, return here and refresh this page."
+msgstr "Önce resmi Yubico Authenticator uygulamasını yükleyin. Yükleme tamamlanınca buraya dönüp bu sayfayı yenileyin."
+
+msgid "Keep a recovery method or a backup security key for important accounts."
+msgstr "Önemli hesaplar için bir kurtarma yöntemi veya yedek güvenlik anahtarı bulundurun."
+
+msgid "Manage passkeys"
+msgstr "Geçiş anahtarlarını yönet"
+
+msgid "On a supported website or app, choose to create a passkey and select your security key."
+msgstr "Desteklenen bir web sitesi veya uygulamada geçiş anahtarı oluşturmayı seçin ve güvenlik anahtarınızı belirleyin."
+
+msgid "Passkeys are passwordless sign-in credentials stored on compatible security keys. Registration and sign-in begin in a supported website or app; follow its prompts to insert your YubiKey, enter the FIDO PIN, and touch the key."
+msgstr "Geçiş anahtarları, uyumlu güvenlik anahtarlarında saklanan parolasız oturum açma kimlik bilgileridir. Kayıt ve oturum açma desteklenen bir web sitesinde veya uygulamada başlar; YubiKey’inizi takmak, FIDO PIN kodunu girmek ve anahtara dokunmak için istemleri izleyin."
+
+msgid "Protect passkeys with your YubiKey"
+msgstr "Geçiş anahtarlarını YubiKey’inizle koruyun"
+
+msgid "Register a passkey"
+msgstr "Geçiş anahtarı kaydet"
+
+msgid "Sign in next time"
+msgstr "Bir dahaki sefere oturum açın"
+
+msgid "The SSH agent makes selected keys available to SSH applications during this session."
+msgstr "SSH aracısı, seçilen anahtarları bu oturum boyunca SSH uygulamalarının kullanımına sunar."
+
+msgid "Yubico Authenticator is installed"
+msgstr "Yubico Authenticator yüklü"
+
+msgid "Yubico Authenticator is not installed"
+msgstr "Yubico Authenticator yüklü değil"
+
+msgid "Yubico Authenticator lets you view and manage passkeys stored on your YubiKey. This security center does not read, create, or delete passkeys; it only opens the installed app."
+msgstr "Yubico Authenticator, YubiKey’inizde saklanan geçiş anahtarlarını görüntülemenizi ve yönetmenizi sağlar. Bu güvenlik merkezi geçiş anahtarlarını okumaz, oluşturmaz veya silmez; yalnızca yüklü uygulamayı açar."
+
+#~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
+#~ msgstr "Geçiş anahtarlarını kullanabilmek için Yubico Authenticator yüklü olmalıdır."
 
 #~ msgid "All inspected resident credentials from this key are already in the agent"
 #~ msgstr "Bu anahtardan tüm denetlenen yerel kimlik bilgileri zaten aracıda bulunuyor"

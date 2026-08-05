@@ -148,7 +148,13 @@ does not create a repository, commit, tag, or branch.
 
 ## Passkeys delegation
 
-The Passkeys page does not read or modify YubiKey configuration. It only checks whether
-the fixed Flatpak application ID `com.yubico.yubioath` is installed and, when available,
-opens that external application. The security center never installs the Flatpak, opens
-an app store, or redirects to a website from this page.
+The Passkeys page provides educational guidance about creating and using passkeys with a
+YubiKey, plus the installation status of Yubico Authenticator. Registration and sign-in
+remain browser- or application-initiated; the page does not inspect connected hardware or
+access account data.
+
+Credential management is delegated completely. The security center does not read, create,
+delete, or modify passkeys or YubiKey configuration. It only checks whether the fixed
+Flatpak application ID `com.yubico.yubioath` is installed and, when available, opens that
+external application. It never installs the Flatpak, opens an app store, or redirects to a
+website from this page.

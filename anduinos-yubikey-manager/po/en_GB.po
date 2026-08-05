@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 18:03+0000\n"
+"POT-Creation-Date: 2026-08-04 17:10+0000\n"
 "PO-Revision-Date: 2026-07-30 14:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,15 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid "Git is not installed"
-msgstr "Git is not installed"
-
-msgid "Git is required for commit signing. Install it from Software, then return here."
-msgstr "Git is required for commit signing. Install it from Software, then return here."
-
-msgid "Open Software"
-msgstr "Open Software"
 
 msgid "1 identity is currently available to SSH applications."
 msgstr "1 identity is currently available to SSH applications."
@@ -364,6 +355,12 @@ msgstr ""
 msgid "Git signing test passed"
 msgstr "Git signing test passed"
 
+msgid "Git is not installed"
+msgstr "Git is not installed"
+
+msgid "Git is required for commit signing. Install it from Software, then return here."
+msgstr "Git is required for commit signing. Install it from Software, then return here."
+
 msgid "Home"
 msgstr "Home"
 
@@ -486,6 +483,9 @@ msgstr "Not inspected yet · {0}"
 
 msgid "Open the official Yubico Store"
 msgstr "Open the official Yubico Store"
+
+msgid "Open Software"
+msgstr "Open Software"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
@@ -981,6 +981,9 @@ msgstr "{0} to inspect"
 msgid "{0} · no hardware serial"
 msgstr "{0} · no hardware serial"
 
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
 msgid "Checking Passkeys support…"
 msgstr "Checking Passkeys support…"
 
@@ -993,11 +996,59 @@ msgstr "Open Yubico Authenticator"
 msgid "Passkeys"
 msgstr "Passkeys"
 
-msgid "Yubico Authenticator must be installed before you can use Passkeys."
-msgstr "Yubico Authenticator must be installed before you can use Passkeys."
+msgid "Choose the passkey option and follow the prompt to use the same YubiKey."
+msgstr "Choose the passkey option and follow the prompt to use the same YubiKey."
 
-msgid "{0} · {1}"
-msgstr "{0} · {1}"
+msgid "Confirm it is you"
+msgstr "Confirm it is you"
+
+msgid "How to use"
+msgstr "How to use"
+
+msgid "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
+msgstr "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
+
+msgid "Inspect a connected YubiKey to reveal its resident SSH keys and available actions."
+msgstr "Inspect a connected YubiKey to reveal its resident SSH keys and available actions."
+
+msgid "Install the official Yubico Authenticator first. When installation is complete, return here and refresh this page."
+msgstr "Install the official Yubico Authenticator first. When installation is complete, return here and refresh this page."
+
+msgid "Keep a recovery method or a backup security key for important accounts."
+msgstr "Keep a recovery method or a backup security key for important accounts."
+
+msgid "Manage passkeys"
+msgstr "Manage passkeys"
+
+msgid "On a supported website or app, choose to create a passkey and select your security key."
+msgstr "On a supported website or app, choose to create a passkey and select your security key."
+
+msgid "Passkeys are passwordless sign-in credentials stored on compatible security keys. Registration and sign-in begin in a supported website or app; follow its prompts to insert your YubiKey, enter the FIDO PIN, and touch the key."
+msgstr "Passkeys are passwordless sign-in credentials stored on compatible security keys. Registration and sign-in begin in a supported website or app; follow its prompts to insert your YubiKey, enter the FIDO PIN, and touch the key."
+
+msgid "Protect passkeys with your YubiKey"
+msgstr "Protect passkeys with your YubiKey"
+
+msgid "Register a passkey"
+msgstr "Register a passkey"
+
+msgid "Sign in next time"
+msgstr "Sign in next time"
+
+msgid "The SSH agent makes selected keys available to SSH applications during this session."
+msgstr "The SSH agent makes selected keys available to SSH applications during this session."
+
+msgid "Yubico Authenticator is installed"
+msgstr "Yubico Authenticator is installed"
+
+msgid "Yubico Authenticator is not installed"
+msgstr "Yubico Authenticator is not installed"
+
+msgid "Yubico Authenticator lets you view and manage passkeys stored on your YubiKey. This security center does not read, create, or delete passkeys; it only opens the installed app."
+msgstr "Yubico Authenticator lets you view and manage passkeys stored on your YubiKey. This security center does not read, create, or delete passkeys; it only opens the installed app."
+
+#~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
+#~ msgstr "Yubico Authenticator must be installed before you can use Passkeys."
 
 #~ msgid "All inspected resident credentials from this key are already in the agent"
 #~ msgstr "All inspected resident credentials from this key are already in the agent"

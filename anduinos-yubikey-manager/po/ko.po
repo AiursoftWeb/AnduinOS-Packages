@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 18:03+0000\n"
+"POT-Creation-Date: 2026-08-04 17:10+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,15 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-msgid "Git is not installed"
-msgstr "Git이 설치되어 있지 않습니다"
-
-msgid "Git is required for commit signing. Install it from Software, then return here."
-msgstr "커밋 서명에 Git이 필요합니다. 소프트웨어에서 설치한 후 여기로 돌아오세요."
-
-msgid "Open Software"
-msgstr "소프트웨어 열기"
 
 msgid "1 identity is currently available to SSH applications."
 msgstr "SSH 애플리케이션에서 현재 1개의 신원 정보를 사용할 수 있습니다."
@@ -363,6 +354,12 @@ msgstr ""
 msgid "Git signing test passed"
 msgstr "Git signing test passed"
 
+msgid "Git is not installed"
+msgstr "Git이 설치되어 있지 않습니다"
+
+msgid "Git is required for commit signing. Install it from Software, then return here."
+msgstr "커밋 서명에 Git이 필요합니다. 소프트웨어에서 설치한 후 여기로 돌아오세요."
+
 msgid "Home"
 msgstr "홈"
 
@@ -485,6 +482,9 @@ msgstr "아직 검사 안 됨 · {0}"
 
 msgid "Open the official Yubico Store"
 msgstr "공식 Yubico 스토어 열기"
+
+msgid "Open Software"
+msgstr "소프트웨어 열기"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH가 거주 키를 로드하지 못했습니다. SSH 에이전트에 새로 로드된 신원이 없습니다."
@@ -980,6 +980,9 @@ msgstr "검사할 항목 {0}개"
 msgid "{0} · no hardware serial"
 msgstr "{0} · 시리얼 번호 없음"
 
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
 msgid "Checking Passkeys support…"
 msgstr "패스키 지원 확인 중…"
 
@@ -992,11 +995,59 @@ msgstr "Yubico Authenticator 열기"
 msgid "Passkeys"
 msgstr "패스키"
 
-msgid "Yubico Authenticator must be installed before you can use Passkeys."
-msgstr "패스키를 사용하려면 Yubico Authenticator를 설치해야 합니다."
+msgid "Choose the passkey option and follow the prompt to use the same YubiKey."
+msgstr "패스키 옵션을 선택하고 안내에 따라 동일한 YubiKey를 사용하세요."
 
-msgid "{0} · {1}"
-msgstr "{0} · {1}"
+msgid "Confirm it is you"
+msgstr "본인 확인"
+
+msgid "How to use"
+msgstr "사용 방법"
+
+msgid "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
+msgstr "YubiKey를 삽입하고 요청 시 FIDO PIN을 입력한 다음 키를 터치하세요."
+
+msgid "Inspect a connected YubiKey to reveal its resident SSH keys and available actions."
+msgstr "연결된 YubiKey를 검사하여 저장된 SSH 키와 사용 가능한 작업을 표시합니다."
+
+msgid "Install the official Yubico Authenticator first. When installation is complete, return here and refresh this page."
+msgstr "먼저 공식 Yubico Authenticator를 설치하세요. 설치가 완료되면 여기로 돌아와 이 페이지를 새로 고치세요."
+
+msgid "Keep a recovery method or a backup security key for important accounts."
+msgstr "중요한 계정에는 복구 방법이나 백업 보안 키를 준비해 두세요."
+
+msgid "Manage passkeys"
+msgstr "패스키 관리"
+
+msgid "On a supported website or app, choose to create a passkey and select your security key."
+msgstr "지원되는 웹사이트나 앱에서 패스키 만들기를 선택하고 보안 키를 선택하세요."
+
+msgid "Passkeys are passwordless sign-in credentials stored on compatible security keys. Registration and sign-in begin in a supported website or app; follow its prompts to insert your YubiKey, enter the FIDO PIN, and touch the key."
+msgstr "패스키는 호환되는 보안 키에 저장되는 비밀번호 없는 로그인 자격 증명입니다. 등록과 로그인은 지원되는 웹사이트나 앱에서 시작합니다. 안내에 따라 YubiKey를 삽입하고 FIDO PIN을 입력한 다음 키를 터치하세요."
+
+msgid "Protect passkeys with your YubiKey"
+msgstr "YubiKey로 패스키 보호"
+
+msgid "Register a passkey"
+msgstr "패스키 등록"
+
+msgid "Sign in next time"
+msgstr "다음에 로그인"
+
+msgid "The SSH agent makes selected keys available to SSH applications during this session."
+msgstr "SSH 에이전트는 이 세션 동안 선택한 키를 SSH 애플리케이션에서 사용할 수 있게 합니다."
+
+msgid "Yubico Authenticator is installed"
+msgstr "Yubico Authenticator가 설치되어 있습니다"
+
+msgid "Yubico Authenticator is not installed"
+msgstr "Yubico Authenticator가 설치되어 있지 않습니다"
+
+msgid "Yubico Authenticator lets you view and manage passkeys stored on your YubiKey. This security center does not read, create, or delete passkeys; it only opens the installed app."
+msgstr "Yubico Authenticator를 사용하면 YubiKey에 저장된 패스키를 보고 관리할 수 있습니다. 이 보안 센터는 패스키를 읽거나 만들거나 삭제하지 않으며 설치된 앱만 엽니다."
+
+#~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
+#~ msgstr "패스키를 사용하려면 Yubico Authenticator를 설치해야 합니다."
 
 #~ msgid "All inspected resident credentials from this key are already in the agent"
 #~ msgstr "이 키에서 검사된 모든 거주 자격 증명은 이미 에이전트에 있습니다"
