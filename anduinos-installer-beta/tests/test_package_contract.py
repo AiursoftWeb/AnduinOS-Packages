@@ -26,7 +26,7 @@ class PackageContractTests(unittest.TestCase):
         root = ET.parse(ROOT / "anduinos-installer-beta.aosproj").getroot()
         self.assertEqual(
             root.findtext(".//PackageVersion"),
-            "2.0.1-51+$(SuiteShortName)",
+            "2.0.1-52+$(SuiteShortName)",
         )
 
     def test_extended_codecs_are_optional_and_owned_by_one_metapackage(self):

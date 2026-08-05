@@ -692,7 +692,12 @@ def build_network_page(shared, nav_view):
     hidden_button = Gtk.Button(
         icon_name="list-add-symbolic",
         tooltip_text=_("Connect to a hidden network", lang),
+        width_request=40,
+        height_request=40,
+        halign=Gtk.Align.CENTER,
+        valign=Gtk.Align.CENTER,
     )
+    hidden_button.add_css_class("circular")
     radio_spinner = Gtk.Spinner(
         spinning=True,
         visible=True,
@@ -703,7 +708,14 @@ def build_network_page(shared, nav_view):
         sensitive=False,
         visible=False,
     )
-    refresh_button = Gtk.Button(icon_name="view-refresh-symbolic")
+    refresh_button = Gtk.Button(
+        icon_name="view-refresh-symbolic",
+        width_request=40,
+        height_request=40,
+        halign=Gtk.Align.CENTER,
+        valign=Gtk.Align.CENTER,
+    )
+    refresh_button.add_css_class("circular")
     refresh_button.set_tooltip_text(_("Refresh Wi-Fi networks", lang))
     networks_header.append(networks_title)
     networks_header.append(hidden_button)
@@ -1217,9 +1229,10 @@ def build_network_page(shared, nav_view):
                 [
                     _("Open network", lang),
                     _("Enhanced Open (OWE)", lang),
-                    _("Personal Wi-Fi", lang),
+                    f"{_('Personal Wi-Fi', lang)} (WPA/WPA2 PSK)",
+                    f"{_('Personal Wi-Fi', lang)} (WPA3 SAE)",
                     _("WEP (legacy)", lang),
-                    _("Enterprise Wi-Fi", lang),
+                    f"{_('Enterprise Wi-Fi', lang)} (WPA/WPA2 802.1X)",
                 ]
             ),
         )
@@ -1247,14 +1260,23 @@ def build_network_page(shared, nav_view):
                 WifiSecurity.OPEN,
                 WifiSecurity.OWE,
                 WifiSecurity.PERSONAL,
+                WifiSecurity.PERSONAL,
                 WifiSecurity.WEP,
                 WifiSecurity.ENTERPRISE,
             )
             kind = kinds[security.get_selected()]
+            security_labels = (
+                "--",
+                "OWE",
+                "WPA WPA2",
+                "WPA3",
+                "WEP",
+                "WPA2 Enterprise",
+            )
             hidden = WifiNetwork(
                 ssid=ssid.get_text(),
                 signal=0,
-                security=_security_name(kind),
+                security=security_labels[security.get_selected()],
                 security_kind=kind,
             )
             _activate_network(hidden)
@@ -1277,14 +1299,14 @@ def build_network_page(shared, nav_view):
             _scan_wifi(force=False)
         return True
 
-    def _mapped_changed(_page, _property):
-        if page.get_mapped():
-            scan_requests.activate()
-            _show_radio_pending()
-            _render_connectivity()
-            _scan_wifi(force=True)
-        else:
-            scan_requests.invalidate()
+    def _page_mapped(_page):
+        scan_requests.activate()
+        _show_radio_pending()
+        _render_connectivity()
+        _scan_wifi(force=True)
+
+    def _page_unmapped(_page):
+        scan_requests.invalidate()
 
     radio_handler = radio_switch.connect("state-set", _on_radio_state_set)
     refresh_button.connect("clicked", lambda _button: _scan_wifi(force=True))
@@ -1298,7 +1320,8 @@ def build_network_page(shared, nav_view):
         ),
     )
     periodic_source = GLib.timeout_add_seconds(5, _periodic_refresh)
-    page.connect("notify::mapped", _mapped_changed)
+    page.connect("map", _page_mapped)
+    page.connect("unmap", _page_unmapped)
 
     def _cleanup_network_page(*_args):
         scan_requests.invalidate()
@@ -3920,7 +3943,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "configure-storage": _("Configure storage and swap", lang),
         "enter-chroot": _("Prepare target environment", lang),
         "remove-live-packages": _("Remove live-session components", lang),
-        "configure-keyboard-layout": _("Keyboard Layout", lang),
+        "configure-keyboard-layout": _(
+            "Configure physical keyboard layout", lang
+        ),
         "install-input-method": input_method_title,
         "install-multimedia-codecs": _(
             "Install extended multimedia format support", lang

@@ -17,7 +17,7 @@ class ConfigureKeyboardStep:
     """Configure the physical XKB layout without any network access."""
 
     id: str = "configure-keyboard-layout"
-    title: str = "Configure keyboard layout"
+    title: str = "Configure physical keyboard layout"
     failure_policy: FailurePolicy = FailurePolicy.FATAL
     progress_weight: int = 1
     destructive: bool = False

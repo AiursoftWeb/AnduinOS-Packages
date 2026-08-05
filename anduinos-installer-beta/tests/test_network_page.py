@@ -36,6 +36,16 @@ class NetworkPageRoutingTests(unittest.TestCase):
         self.assertIn("disconnect_wifi(", network_page)
         self.assertIn("Connect to a hidden network", network_page)
         self.assertIn("Use WPS", network_page)
+        self.assertIn('page.connect("map", _page_mapped)', network_page)
+        self.assertIn('page.connect("unmap", _page_unmapped)', network_page)
+        self.assertNotIn('page.connect("notify::mapped"', network_page)
+        self.assertIn("radio_spinner = Gtk.Spinner(", network_page)
+        self.assertIn("visible=False,", network_page)
+        self.assertEqual(network_page.count('add_css_class("circular")'), 2)
+        self.assertGreaterEqual(network_page.count("width_request=40"), 2)
+        self.assertIn("WPA/WPA2 PSK", network_page)
+        self.assertIn("WPA3 SAE", network_page)
+        self.assertIn("WPA/WPA2 802.1X", network_page)
 
     def test_input_method_label_explains_language_before_product(self):
         rime = input_method("rime")
