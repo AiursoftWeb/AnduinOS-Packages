@@ -76,6 +76,11 @@ and constructs every command itself.
   The UI, planner, validator and privileged executor resolve the same policy;
   none contains a language-, region-, framework- or product-specific branch.
   Physical keyboard configuration remains an independent offline step. The
+  keyboard test field feeds GTK raw hardware keycodes into a private
+  `libxkbcommon` keymap for the selected layout. It previews changes
+  immediately on Wayland and X11 without modifying the Live Session's GNOME
+  input sources; Shift, Caps Lock, AltGr, auto-repeat and Compose/dead-key
+  sequences remain inside that isolated state machine. The
   language-support step reuses installed packs or installs the exact base and
   GNOME packs derived from the selected JSON code; missing network or package
   failure produces a visible, non-fatal warning. A selected input method can

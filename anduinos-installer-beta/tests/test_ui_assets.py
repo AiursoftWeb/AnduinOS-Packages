@@ -39,6 +39,18 @@ class InstallerVisualAssetTests(unittest.TestCase):
         self.assertIn("selected_methods", source)
         self.assertIn("method.language_name", source)
 
+    def test_keyboard_tester_uses_raw_keycodes_and_private_xkb_state(self):
+        source = (ROOT / "src/pages.py").read_text(encoding="utf-8")
+        self.assertIn("XkbKeyboardPreview", source)
+        self.assertIn("Gtk.EventControllerKey()", source)
+        self.assertIn(
+            "set_propagation_phase(Gtk.PropagationPhase.CAPTURE)", source
+        )
+        self.assertIn("preview.press(keycode)", source)
+        self.assertIn("preview.release(keycode)", source)
+        self.assertNotIn("gsettings set", source)
+        self.assertNotIn("setxkbmap", source)
+
     def test_every_wizard_illustration_is_a_parseable_local_svg(self):
         expected = {
             "welcome.svg",

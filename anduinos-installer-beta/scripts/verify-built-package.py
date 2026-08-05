@@ -25,6 +25,7 @@ REQUIRED_FILES = (
     LIB / "installer_core/guided_test_plan.py",
     LIB / "installer_core/mount_namespace.py",
     LIB / "installer_core/regional_config.py",
+    LIB / "keyboard_preview.py",
     Path("usr/bin/anduinos-installer-executor"),
     Path("usr/bin/anduinos-installer-storage-probe"),
     Path("usr/share/polkit-1/actions/com.anduinos.installer-beta.policy"),
@@ -58,6 +59,7 @@ REQUIRED_DEPENDENCIES = {
     "efibootmgr",
     "util-linux",
     "polkitd",
+    "libxkbcommon0",
 }
 
 

@@ -26,7 +26,7 @@ class PackageContractTests(unittest.TestCase):
         root = ET.parse(ROOT / "anduinos-installer-beta.aosproj").getroot()
         self.assertEqual(
             root.findtext(".//PackageVersion"),
-            "2.0.1-48+$(SuiteShortName)",
+            "2.0.1-49+$(SuiteShortName)",
         )
 
     def test_appstream_publishes_the_live_installer_as_an_application(self):
@@ -101,6 +101,7 @@ class PackageContractTests(unittest.TestCase):
                 "python3",
                 "python3-unidecode",
                 "anduinos-live-settings",
+                "libxkbcommon0",
                 "parted",
                 "dosfstools",
                 "efibootmgr",

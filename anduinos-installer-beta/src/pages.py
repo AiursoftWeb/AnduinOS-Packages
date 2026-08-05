@@ -20,9 +20,10 @@ if _install_dir not in sys.path:
 
 import gi
 gi.require_version("Gtk", "4.0")
+gi.require_version("Gdk", "4.0")
 gi.require_version("Adw", "1")
 
-from gi.repository import Gtk, Adw, GLib, Gio, Pango, GObject
+from gi.repository import Gtk, Gdk, Adw, GLib, Gio, Pango, GObject
 
 from languages import (
     DEFAULT_LANGUAGE,
@@ -35,6 +36,7 @@ from languages import (
     Language as LangData,
 )
 from i18n import _, N_
+from keyboard_preview import KeyboardPreviewError, XkbKeyboardPreview
 from frontend import (
     DevelopmentExecutorClient,
     ExecutorClient,
@@ -906,7 +908,9 @@ def build_keyboard_page(shared, nav_view):
             default_idx = i
             break
 
-    # Dropdown
+    # Dropdown and an isolated XKB preview. The preview uses raw hardware
+    # keycodes, so it follows this selection rather than the desktop session's
+    # current layout and never mutates the user's GNOME input sources.
     kbd_store = Gtk.StringList()
     for _code, name in XKB_VARIANTS:
         kbd_store.append(_(name, lang))
@@ -914,16 +918,111 @@ def build_keyboard_page(shared, nav_view):
     kbd_dropdown = Gtk.DropDown(model=kbd_store)
     kbd_dropdown.set_selected(default_idx)
 
+    test_entry = Gtk.Entry(
+        placeholder_text=_("Test your keyboard here…", lang)
+    )
+    test_entry.set_icon_from_icon_name(
+        Gtk.EntryIconPosition.SECONDARY,
+        "edit-clear-symbolic",
+    )
+    preview_status = Gtk.Label(
+        halign=Gtk.Align.START,
+        xalign=0,
+    )
+    preview_status.add_css_class("dim-label")
+    preview = None
+
+    def _render_preview_status(index):
+        code, name = XKB_VARIANTS[index]
+        preview_status.set_text(f"{_(name, lang)} · {code}")
+
+    def _activate_preview(layout):
+        nonlocal preview
+        try:
+            if preview is None:
+                preview = XkbKeyboardPreview(layout)
+            else:
+                preview.set_layout(layout)
+        except KeyboardPreviewError:
+            test_entry.set_sensitive(False)
+            preview_status.set_text(f"⚠ {layout}")
+            return False
+        test_entry.set_sensitive(True)
+        return True
+
+    initial_layout = XKB_VARIANTS[default_idx][0]
+    if _activate_preview(initial_layout):
+        _render_preview_status(default_idx)
+
     def _on_kbd_changed(dd, _pspec):
         idx = dd.get_selected()
         if 0 <= idx < len(XKB_VARIANTS):
-            shared["keyboard"] = XKB_VARIANTS[idx][0]
+            layout = XKB_VARIANTS[idx][0]
+            if not _activate_preview(layout):
+                return
+            shared["keyboard"] = layout
+            _render_preview_status(idx)
 
     kbd_dropdown.connect("notify::selected", _on_kbd_changed)
 
-    # Test entry
-    test_entry = Gtk.Entry(
-        placeholder_text=_("Test your keyboard here…", lang)
+    def _insert_preview_text(text):
+        selected, start, end = test_entry.get_selection_bounds()
+        position = test_entry.get_position()
+        if selected:
+            test_entry.delete_text(start, end)
+            position = start
+        position = test_entry.insert_text(text, position)
+        test_entry.set_position(position)
+
+    key_controller = Gtk.EventControllerKey()
+    key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+
+    def _preview_key_pressed(_controller, keyval, keycode, state):
+        if preview is None:
+            return False
+        if keyval in (Gdk.KEY_BackSpace, Gdk.KEY_Escape):
+            if preview.cancel_composition():
+                return True
+        preview.sync_modifiers(
+            shift=bool(state & Gdk.ModifierType.SHIFT_MASK),
+            control=bool(state & Gdk.ModifierType.CONTROL_MASK),
+            alt=bool(state & Gdk.ModifierType.ALT_MASK),
+            super_key=bool(
+                state
+                & (
+                    Gdk.ModifierType.SUPER_MASK
+                    | Gdk.ModifierType.META_MASK
+                    | Gdk.ModifierType.HYPER_MASK
+                )
+            ),
+            caps_lock=bool(state & Gdk.ModifierType.LOCK_MASK),
+        )
+        result = preview.press(keycode)
+        if result.text:
+            _insert_preview_text(result.text)
+        return result.handled
+
+    def _preview_key_released(_controller, _keyval, keycode, _state):
+        if preview is not None:
+            preview.release(keycode)
+
+    key_controller.connect("key-pressed", _preview_key_pressed)
+    key_controller.connect("key-released", _preview_key_released)
+    test_entry.add_controller(key_controller)
+
+    focus_controller = Gtk.EventControllerFocus()
+    focus_controller.connect(
+        "leave",
+        lambda _controller: preview.reset() if preview is not None else None,
+    )
+    test_entry.add_controller(focus_controller)
+    test_entry.connect(
+        "icon-release",
+        lambda entry, position: (
+            entry.set_text("")
+            if position == Gtk.EntryIconPosition.SECONDARY
+            else None
+        ),
     )
 
     form = card(spacing=16)
@@ -933,6 +1032,7 @@ def build_keyboard_page(shared, nav_view):
     form.set_margin_bottom(12)
     form.append(_labeled(_("Keyboard Layout", lang), kbd_dropdown))
     form.append(_labeled(_("Test your keyboard here…", lang), test_entry))
+    form.append(preview_status)
 
     recommended_methods = _recommended_input_methods(shared)
     if recommended_methods:
