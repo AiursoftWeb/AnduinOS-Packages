@@ -150,6 +150,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 |---|---|---|
 | `anduinos-container` | Metapackage | Minimal container base (shell, networking, sudo, editor) |
 | `anduinos-core-system` | Metapackage | Core system foundation (kernel, networking, boot, firmware, APT, security) |
+| `anduinos-kernel-parameters` | Config | AnduinOS 2.0 desktop GRUB drop-in enabling `preempt=full` on Ubuntu's generic kernel |
 | `anduinos-desktop-apps` | Metapackage | Default application selection (browser, office, media, utilities) |
 | `anduinos-archive-keyring` | Core | GPG keys for AnduinOS APT repositories |
 | `anduinos-fonts` | Fonts | CascadiaCode, NerdFonts, Noto Sans/Serif, Twemoji |
@@ -170,6 +171,16 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-dconf-defaults` | Config | dconf / gsettings defaults for GNOME |
 | `anduinos-gnome-shell-locale` | Locale | GNOME Shell locale / text overrides |
 | `anduinos-live-settings` | Config | Live CD timezone hook (casper-bottom); removed after install |
+
+For AnduinOS 2.0 (`resolute-addon`), `anduinos-core-system` depends on Ubuntu's
+`linux-generic` metapackage so general-purpose installations retain Ubuntu's
+kernel ABI, Secure Boot signing, SRU/CVE updates, and prebuilt NVIDIA module
+ecosystem. `anduinos-desktop` additionally depends on
+`anduinos-kernel-parameters`, which appends `preempt=full` through
+`/etc/default/grub.d/50-anduinos-desktop.cfg`. The parameter package is not part
+of `anduinos-core-system` or `anduinos-container`, so server and container
+variants do not inherit this desktop latency policy. AnduinBook OEM kernel work
+is outside this package and remains a separate future hardware-enablement track.
 
 ## Build
 

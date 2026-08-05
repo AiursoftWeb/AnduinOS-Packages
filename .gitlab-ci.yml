@@ -338,6 +338,11 @@ anduinos-system-tweaks:
   variables:
     PACKAGE_DIR: anduinos-system-tweaks
 
+anduinos-kernel-parameters:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-kernel-parameters
+
 anduinos-system-tweaks-server:
   extends: .publish
   variables:
@@ -367,6 +372,8 @@ anduinos-swap-config:
 
 anduinos-waypoint-gtk:
   extends: .publish
+  needs:
+    - anduinos-secureboot-toolkit
   variables:
     PACKAGE_DIR: anduinos-waypoint-gtk
 
@@ -562,6 +569,7 @@ anduinos-desktop:
     - anduinos-templates
     - anduinos-software-properties-common
     - anduinos-no-snapd
+    - anduinos-kernel-parameters
     - anduinos-swap-config
     - anduinos-desktop-apps
   variables:
