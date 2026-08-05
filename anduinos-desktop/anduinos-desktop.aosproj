@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop</PackageName>
-    <PackageVersion>2.0.1-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS complete desktop — metapackage that pulls in all AnduinOS components</PackageDescription>
     <Section>metapackages</Section>
@@ -33,6 +33,7 @@
     <Recommend Include="anduinos-apt-config" />
     <Dependency Include="base-files" />
     <Dependency Include="anduinos-no-snapd" />
+    <Dependency Include="anduinos-kernel-parameters" Condition="'$(Suite)' == 'resolute-addon'" />
 
     <!-- Zram swap (compressed RAM) — 50% RAM, lz4. User can override via swapcontrol-gtk. -->
     <Recommend Include="anduinos-swap-config" />
