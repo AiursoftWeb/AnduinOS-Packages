@@ -28,10 +28,10 @@ and constructs every command itself.
   not enable hibernation; resume configuration and platform support remain
   separate requirements.
 - Live system: Casper remains the image/boot transport for release one.
-  `anduinos-live-settings` is a hard dependency of the installer and owns the
-  initramfs-tools hook that applies the GRUB-selected timezone. The ISO's
-  manifest difference purges both Live components so their state does not
-  leak into the installed target.
+  `anduinos-live-settings` is a hard dependency of the installer: Casper
+  applies the GRUB-selected locale and the package-owned initramfs hook applies
+  the selected timezone. The ISO manifest removes both Live components from
+  the installed target.
 - Software: refreshing package indexes and installing available updates is
   enabled by default. An offline index-refresh failure is a warning and skips
   the upgrade; after an upgrade transaction starts, any APT/dpkg failure is

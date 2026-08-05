@@ -23,7 +23,7 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
     def test_package_identity_dependencies_and_hook(self):
         self.assertEqual(
             self.project.findtext(".//PackageVersion"),
-            "2.0.1-1+$(SuiteShortName)",
+            "2.0.1-2+$(SuiteShortName)",
         )
         dependencies = {
             item.get("Include") for item in self.project.findall(".//Dependency")

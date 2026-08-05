@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.1-46+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-47+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer (beta) — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -47,8 +47,8 @@
   <ItemGroup>
     <!-- Minimal dependencies: only what the Python code actually calls -->
     <Dependency Include="python3" />
-    <!-- The native installer is a Live-ISO component. Keep the Casper
-         language/timezone bridge present whenever the installer is present. -->
+    <!-- Keep the Casper locale and package-owned timezone bridges available
+         wherever the native installer is installed, including development. -->
     <Dependency Include="anduinos-live-settings" />
     <Dependency Include="python3-unidecode" />
     <Dependency Include="python3-gi" />
