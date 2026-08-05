@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 18:03+0000\n"
+"POT-Creation-Date: 2026-08-04 17:10+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,15 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-
-msgid "Git is not installed"
-msgstr "Git nie jest zainstalowany"
-
-msgid "Git is required for commit signing. Install it from Software, then return here."
-msgstr "Git jest wymagany do podpisywania commitów. Zainstaluj go z Oprogramowania, a następnie wróć tutaj."
-
-msgid "Open Software"
-msgstr "Otwórz Oprogramowanie"
 
 msgid "1 identity is currently available to SSH applications."
 msgstr "1 tożsamość jest obecnie dostępna dla aplikacji SSH."
@@ -363,6 +354,12 @@ msgstr ""
 msgid "Git signing test passed"
 msgstr "Git signing test passed"
 
+msgid "Git is not installed"
+msgstr "Git nie jest zainstalowany"
+
+msgid "Git is required for commit signing. Install it from Software, then return here."
+msgstr "Git jest wymagany do podpisywania commitów. Zainstaluj go z Oprogramowania, a następnie wróć tutaj."
+
 msgid "Home"
 msgstr "Strona główna"
 
@@ -485,6 +482,9 @@ msgstr "Jeszcze nie sprawdzono · {0}"
 
 msgid "Open the official Yubico Store"
 msgstr "Otwórz oficjalny sklep Yubico"
+
+msgid "Open Software"
+msgstr "Otwórz Oprogramowanie"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH nie mógł załadować kluczy rezydentnych. Agent SSH nie zawiera nowo załadowanej tożsamości."
@@ -977,6 +977,9 @@ msgstr "{0} do sprawdzenia"
 msgid "{0} · no hardware serial"
 msgstr "{0} · brak numeru seryjnego sprzętu"
 
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
 msgid "Checking Passkeys support…"
 msgstr "Sprawdzanie obsługi kluczy dostępu…"
 
@@ -989,11 +992,59 @@ msgstr "Otwórz Yubico Authenticator"
 msgid "Passkeys"
 msgstr "Klucze dostępu"
 
-msgid "Yubico Authenticator must be installed before you can use Passkeys."
-msgstr "Aby używać kluczy dostępu, należy zainstalować Yubico Authenticator."
+msgid "Choose the passkey option and follow the prompt to use the same YubiKey."
+msgstr "Wybierz opcję klucza dostępu i postępuj zgodnie z instrukcją, aby użyć tego samego YubiKey."
 
-msgid "{0} · {1}"
-msgstr "{0} · {1}"
+msgid "Confirm it is you"
+msgstr "Potwierdź swoją tożsamość"
+
+msgid "How to use"
+msgstr "Jak używać"
+
+msgid "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
+msgstr "Włóż YubiKey, wprowadź kod FIDO PIN po wyświetleniu monitu, a następnie dotknij klucza."
+
+msgid "Inspect a connected YubiKey to reveal its resident SSH keys and available actions."
+msgstr "Sprawdź podłączony YubiKey, aby wyświetlić zapisane klucze SSH i dostępne działania."
+
+msgid "Install the official Yubico Authenticator first. When installation is complete, return here and refresh this page."
+msgstr "Najpierw zainstaluj oficjalną aplikację Yubico Authenticator. Po zakończeniu instalacji wróć tutaj i odśwież tę stronę."
+
+msgid "Keep a recovery method or a backup security key for important accounts."
+msgstr "Zachowaj metodę odzyskiwania lub zapasowy klucz bezpieczeństwa dla ważnych kont."
+
+msgid "Manage passkeys"
+msgstr "Zarządzaj kluczami dostępu"
+
+msgid "On a supported website or app, choose to create a passkey and select your security key."
+msgstr "W obsługiwanej witrynie lub aplikacji wybierz utworzenie klucza dostępu i wskaż swój klucz bezpieczeństwa."
+
+msgid "Passkeys are passwordless sign-in credentials stored on compatible security keys. Registration and sign-in begin in a supported website or app; follow its prompts to insert your YubiKey, enter the FIDO PIN, and touch the key."
+msgstr "Klucze dostępu to dane logowania bez hasła przechowywane na zgodnych kluczach bezpieczeństwa. Rejestracja i logowanie rozpoczynają się w obsługiwanej witrynie lub aplikacji; postępuj zgodnie z instrukcjami, aby włożyć YubiKey, wprowadzić kod FIDO PIN i dotknąć klucza."
+
+msgid "Protect passkeys with your YubiKey"
+msgstr "Chroń klucze dostępu za pomocą YubiKey"
+
+msgid "Register a passkey"
+msgstr "Zarejestruj klucz dostępu"
+
+msgid "Sign in next time"
+msgstr "Zaloguj się następnym razem"
+
+msgid "The SSH agent makes selected keys available to SSH applications during this session."
+msgstr "Agent SSH udostępnia wybrane klucze aplikacjom SSH podczas tej sesji."
+
+msgid "Yubico Authenticator is installed"
+msgstr "Yubico Authenticator jest zainstalowany"
+
+msgid "Yubico Authenticator is not installed"
+msgstr "Yubico Authenticator nie jest zainstalowany"
+
+msgid "Yubico Authenticator lets you view and manage passkeys stored on your YubiKey. This security center does not read, create, or delete passkeys; it only opens the installed app."
+msgstr "Yubico Authenticator umożliwia przeglądanie i zarządzanie kluczami dostępu zapisanymi na YubiKey. To centrum zabezpieczeń nie odczytuje, nie tworzy ani nie usuwa kluczy dostępu; otwiera jedynie zainstalowaną aplikację."
+
+#~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
+#~ msgstr "Aby używać kluczy dostępu, należy zainstalować Yubico Authenticator."
 
 #~ msgid "All inspected resident credentials from this key are already in the agent"
 #~ msgstr "Wszystkie sprawdzone poświadczenia rezydujące z tego klucza znajdują się już w agencie"

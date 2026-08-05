@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 18:03+0000\n"
+"POT-Creation-Date: 2026-08-04 17:10+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,15 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-msgid "Git is not installed"
-msgstr "Git 未安装"
-
-msgid "Git is required for commit signing. Install it from Software, then return here."
-msgstr "提交签名需要 Git。请从软件中心安装，然后返回此页面。"
-
-msgid "Open Software"
-msgstr "打开软件中心"
 
 msgid "1 identity is currently available to SSH applications."
 msgstr "当前有 1 个身份可供 SSH 应用程序使用。"
@@ -363,6 +354,12 @@ msgstr ""
 msgid "Git signing test passed"
 msgstr "Git 签名测试通过"
 
+msgid "Git is not installed"
+msgstr "Git 未安装"
+
+msgid "Git is required for commit signing. Install it from Software, then return here."
+msgstr "提交签名需要 Git。请从软件中心安装，然后返回此页面。"
+
 msgid "Home"
 msgstr "主页"
 
@@ -485,6 +482,9 @@ msgstr "尚未检查 · {0}"
 
 msgid "Open the official Yubico Store"
 msgstr "打开官方 Yubico 商店"
+
+msgid "Open Software"
+msgstr "打开软件中心"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH 无法加载驻留密钥。SSH agent 不包含新加载的身份。"
@@ -980,6 +980,9 @@ msgstr "待检查 {0}"
 msgid "{0} · no hardware serial"
 msgstr "{0} · 无硬件序列号"
 
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
 msgid "Checking Passkeys support…"
 msgstr "正在检查通行密钥支持…"
 
@@ -992,11 +995,59 @@ msgstr "打开 Yubico Authenticator"
 msgid "Passkeys"
 msgstr "通行密钥"
 
-msgid "Yubico Authenticator must be installed before you can use Passkeys."
-msgstr "必须先安装 Yubico Authenticator，才能使用通行密钥。"
+msgid "Choose the passkey option and follow the prompt to use the same YubiKey."
+msgstr "选择通行密钥选项，然后按照提示使用同一个 YubiKey。"
 
-msgid "{0} · {1}"
-msgstr "{0} · {1}"
+msgid "Confirm it is you"
+msgstr "确认是您本人"
+
+msgid "How to use"
+msgstr "如何使用"
+
+msgid "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
+msgstr "插入 YubiKey，按提示输入 FIDO PIN，然后触摸密钥。"
+
+msgid "Inspect a connected YubiKey to reveal its resident SSH keys and available actions."
+msgstr "检查已连接的 YubiKey，以显示其驻留 SSH 密钥和可用操作。"
+
+msgid "Install the official Yubico Authenticator first. When installation is complete, return here and refresh this page."
+msgstr "请先安装官方 Yubico Authenticator。安装完成后，返回此处并刷新本页。"
+
+msgid "Keep a recovery method or a backup security key for important accounts."
+msgstr "请为重要账户保留恢复方式或备用安全密钥。"
+
+msgid "Manage passkeys"
+msgstr "管理通行密钥"
+
+msgid "On a supported website or app, choose to create a passkey and select your security key."
+msgstr "在支持的网站或应用中，选择创建通行密钥，并选择您的安全密钥。"
+
+msgid "Passkeys are passwordless sign-in credentials stored on compatible security keys. Registration and sign-in begin in a supported website or app; follow its prompts to insert your YubiKey, enter the FIDO PIN, and touch the key."
+msgstr "通行密钥是存储在兼容安全密钥中的无密码登录凭据。注册和登录由支持的网站或应用发起；请按照提示插入 YubiKey、输入 FIDO PIN 并触摸密钥。"
+
+msgid "Protect passkeys with your YubiKey"
+msgstr "使用 YubiKey 保护通行密钥"
+
+msgid "Register a passkey"
+msgstr "注册通行密钥"
+
+msgid "Sign in next time"
+msgstr "下次登录"
+
+msgid "The SSH agent makes selected keys available to SSH applications during this session."
+msgstr "SSH 代理会在本次会话期间向 SSH 应用程序提供选定的密钥。"
+
+msgid "Yubico Authenticator is installed"
+msgstr "已安装 Yubico Authenticator"
+
+msgid "Yubico Authenticator is not installed"
+msgstr "未安装 Yubico Authenticator"
+
+msgid "Yubico Authenticator lets you view and manage passkeys stored on your YubiKey. This security center does not read, create, or delete passkeys; it only opens the installed app."
+msgstr "Yubico Authenticator 可用于查看和管理存储在 YubiKey 上的通行密钥。此安全中心不会读取、创建或删除通行密钥；它只负责打开已安装的应用。"
+
+#~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
+#~ msgstr "必须先安装 Yubico Authenticator，才能使用通行密钥。"
 
 #~ msgid "All inspected resident credentials from this key are already in the agent"
 #~ msgstr "此密钥的所有已检查的驻留凭据均已存在于代理中"

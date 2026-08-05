@@ -125,21 +125,13 @@ impl HomePage {
         } else {
             i18n("AnduinOS works more securely with a YubiKey")
         };
-        hero.append(&centered_label(
-            &title,
-            &["title-1"],
-            700,
-        ));
+        hero.append(&centered_label(&title, &["title-1"], 700));
         let description = if configured {
             i18n("Your security settings are ready. Connect a configured YubiKey when you need it.")
         } else {
             i18n("Sign in, authorize sudo, and protect SSH and Git identities with a physical touch.")
         };
-        hero.append(&centered_label(
-            &description,
-            &["dim-label"],
-            620,
-        ));
+        hero.append(&centered_label(&description, &["dim-label"], 620));
         let prompt = gtk::Box::builder()
             .css_classes(["card"])
             .halign(gtk::Align::Center)
@@ -198,10 +190,7 @@ impl HomePage {
         if configured {
             self.content.append(
                 &gtk::Label::builder()
-                    .label(i18n_fmt(
-                        &i18n("Protection for {0}"),
-                        &[&snapshot.username],
-                    ))
+                    .label(i18n_fmt(&i18n("Protection for {0}"), &[&snapshot.username]))
                     .css_classes(["title-2"])
                     .halign(gtk::Align::Start)
                     .build(),
@@ -296,10 +285,7 @@ impl HomePage {
         self.content.append(&hero);
 
         let heading = gtk::Label::builder()
-            .label(i18n_fmt(
-                &i18n("Protection for {0}"),
-                &[&snapshot.username],
-            ))
+            .label(i18n_fmt(&i18n("Protection for {0}"), &[&snapshot.username]))
             .css_classes(["title-2"])
             .halign(gtk::Align::Start)
             .build();
@@ -608,7 +594,9 @@ fn capability_button(
 fn configured_keys_group(snapshot: &HomeSnapshot, username: &str) -> adw::PreferencesGroup {
     let group = adw::PreferencesGroup::builder()
         .title(i18n("Configured YubiKeys"))
-        .description(i18n("These keys are trusted by this account but are not currently connected."))
+        .description(i18n(
+            "These keys are trusted by this account but are not currently connected.",
+        ))
         .build();
     let serials = snapshot
         .enrollments

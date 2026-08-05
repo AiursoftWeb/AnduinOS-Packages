@@ -48,8 +48,7 @@ mod imp {
         pub sudo_refreshing: Cell<bool>,
         pub ssh_refreshing: Cell<bool>,
         pub passkeys_refreshing: Cell<bool>,
-        pub ssh_results:
-            RefCell<HashMap<String, Result<Vec<ssh::ResidentSshCredential>, String>>>,
+        pub ssh_results: RefCell<HashMap<String, Result<Vec<ssh::ResidentSshCredential>, String>>>,
     }
 
     #[glib::object_subclass]
@@ -162,19 +161,13 @@ impl YubiKeyManagerWindow {
             .title(i18n("Git signing"))
             .icon_name("document-edit-symbolic")
             .build();
-        let passkeys = gtk::Box::builder()
-            .orientation(gtk::Orientation::Vertical)
-            .halign(gtk::Align::Center)
-            .valign(gtk::Align::Center)
-            .hexpand(true)
-            .vexpand(true)
-            .build();
+        let (passkeys_page, passkeys_status) = build_passkeys_page();
         stack.add_named(home.widget(), Some("home"));
         stack.add_named(&login, Some("login"));
         stack.add_named(&sudo, Some("sudo"));
         stack.add_named(&ssh, Some("ssh"));
         stack.add_named(&git, Some("git"));
-        stack.add_named(&passkeys, Some("passkeys"));
+        stack.add_named(&passkeys_page, Some("passkeys"));
 
         let menu = gio::Menu::new();
         menu.append(Some(&i18n("About")), Some("app.about"));
@@ -269,7 +262,7 @@ impl YubiKeyManagerWindow {
         *self.imp().sudo.borrow_mut() = Some(sudo);
         *self.imp().ssh.borrow_mut() = Some(ssh);
         *self.imp().git.borrow_mut() = Some(git);
-        *self.imp().passkeys.borrow_mut() = Some(passkeys);
+        *self.imp().passkeys.borrow_mut() = Some(passkeys_status);
 
         self.start_device_monitor();
 
@@ -494,8 +487,7 @@ impl YubiKeyManagerWindow {
         glib::spawn_future_local(async move {
             let needs_sudo_policy = selected_page == "sudo";
             let result = gio::spawn_blocking(move || {
-                let username =
-                    backend::current_user().unwrap_or_else(|_| i18n("unknown"));
+                let username = backend::current_user().unwrap_or_else(|_| i18n("unknown"));
                 let state = backend::security_state();
                 SecurityPageSnapshot {
                     devices: backend::list_yubikeys_for_security(),
@@ -616,23 +608,7 @@ impl YubiKeyManagerWindow {
             return;
         };
         clear_box(&page);
-        let loading = gtk::Box::builder()
-            .orientation(gtk::Orientation::Vertical)
-            .spacing(12)
-            .halign(gtk::Align::Center)
-            .build();
-        loading.append(
-            &gtk::Spinner::builder()
-                .spinning(true)
-                .halign(gtk::Align::Center)
-                .build(),
-        );
-        loading.append(
-            &gtk::Label::builder()
-                .label(i18n("Checking Passkeys support…"))
-                .build(),
-        );
-        page.append(&loading);
+        page.append(&passkeys_loading_status());
 
         let weak = self.downgrade();
         glib::spawn_future_local(async move {
@@ -643,9 +619,17 @@ impl YubiKeyManagerWindow {
             window.imp().passkeys_refreshing.set(false);
             clear_box(&page);
             if installed.unwrap_or(false) {
+                let status = passkeys_management_status(
+                    "emblem-ok-symbolic",
+                    &i18n("Yubico Authenticator is installed"),
+                    &i18n("Available"),
+                    "success",
+                    None,
+                );
                 let open = gtk::Button::builder()
                     .label(i18n("Open Yubico Authenticator"))
-                    .css_classes(["suggested-action"])
+                    .css_classes(["suggested-action", "pill"])
+                    .halign(gtk::Align::Start)
                     .build();
                 let weak = window.downgrade();
                 open.connect_clicked(move |_| match passkeys::launch() {
@@ -689,15 +673,18 @@ impl YubiKeyManagerWindow {
                         }
                     }
                 });
-                page.append(&open);
+                status.append(&open);
+                page.append(&status);
             } else {
-                page.append(
-                    &gtk::Label::builder()
-                        .label(passkeys_install_requirement())
-                        .justify(gtk::Justification::Center)
-                        .wrap(true)
-                        .build(),
-                );
+                page.append(&passkeys_management_status(
+                    "software-update-available-symbolic",
+                    &i18n("Yubico Authenticator is not installed"),
+                    &i18n("Unavailable"),
+                    "warning",
+                    Some(&i18n(
+                        "Install the official Yubico Authenticator first. When installation is complete, return here and refresh this page.",
+                    )),
+                ));
             }
         });
     }
@@ -792,14 +779,243 @@ fn clear_box(container: &gtk::Box) {
     }
 }
 
-fn passkeys_install_requirement() -> String {
-    i18n("Yubico Authenticator must be installed before you can use Passkeys.")
+fn build_passkeys_page() -> (gtk::ScrolledWindow, gtk::Box) {
+    let content = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(24)
+        .margin_start(24)
+        .margin_end(24)
+        .margin_top(24)
+        .margin_bottom(32)
+        .build();
+
+    let hero = gtk::FlowBox::builder()
+        .selection_mode(gtk::SelectionMode::None)
+        .max_children_per_line(2)
+        .min_children_per_line(1)
+        .column_spacing(24)
+        .row_spacing(8)
+        .homogeneous(false)
+        .css_classes(["card"])
+        .build();
+    let picture = ssh_device_picture(220, 150);
+    picture.set_margin_start(20);
+    picture.set_margin_end(20);
+    picture.set_margin_top(12);
+    picture.set_margin_bottom(12);
+    hero.insert(&picture, -1);
+    let hero_copy = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(10)
+        .margin_start(20)
+        .margin_end(28)
+        .margin_top(24)
+        .margin_bottom(24)
+        .valign(gtk::Align::Center)
+        .hexpand(true)
+        .build();
+    hero_copy.append(&passkeys_label(
+        &i18n("Protect passkeys with your YubiKey"),
+        &["title-1"],
+    ));
+    hero_copy.append(&passkeys_label(
+        &i18n(
+            "Passkeys are passwordless sign-in credentials stored on compatible security keys. Registration and sign-in begin in a supported website or app; follow its prompts to insert your YubiKey, enter the FIDO PIN, and touch the key.",
+        ),
+        &["dim-label"],
+    ));
+    hero.insert(&hero_copy, -1);
+    content.append(&hero);
+
+    content.append(&passkeys_label(&i18n("How to use"), &["title-2"]));
+    let steps = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .css_classes(["card"])
+        .build();
+    for (index, title, description) in [
+        (
+            "1",
+            i18n("Register a passkey"),
+            i18n(
+                "On a supported website or app, choose to create a passkey and select your security key.",
+            ),
+        ),
+        (
+            "2",
+            i18n("Confirm it is you"),
+            i18n("Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."),
+        ),
+        (
+            "3",
+            i18n("Sign in next time"),
+            i18n(
+                "Choose the passkey option and follow the prompt to use the same YubiKey.",
+            ),
+        ),
+    ] {
+        if steps.first_child().is_some() {
+            steps.append(&gtk::Separator::new(gtk::Orientation::Horizontal));
+        }
+        steps.append(&passkeys_step(index, &title, &description));
+    }
+    steps.append(&gtk::Separator::new(gtk::Orientation::Horizontal));
+    let recovery = gtk::Box::builder()
+        .orientation(gtk::Orientation::Horizontal)
+        .spacing(12)
+        .margin_start(18)
+        .margin_end(18)
+        .margin_top(14)
+        .margin_bottom(14)
+        .build();
+    recovery.append(
+        &gtk::Image::builder()
+            .icon_name("dialog-information-symbolic")
+            .pixel_size(20)
+            .valign(gtk::Align::Start)
+            .css_classes(["accent"])
+            .build(),
+    );
+    recovery.append(&passkeys_label(
+        &i18n("Keep a recovery method or a backup security key for important accounts."),
+        &["dim-label"],
+    ));
+    steps.append(&recovery);
+    content.append(&steps);
+
+    let management = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .css_classes(["card"])
+        .build();
+    let management_intro = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(8)
+        .margin_start(20)
+        .margin_end(20)
+        .margin_top(18)
+        .margin_bottom(18)
+        .build();
+    management_intro.append(&passkeys_label(&i18n("Manage passkeys"), &["title-2"]));
+    management_intro.append(&passkeys_label(
+        &i18n(
+            "Yubico Authenticator lets you view and manage passkeys stored on your YubiKey. This security center does not read, create, or delete passkeys; it only opens the installed app.",
+        ),
+        &["dim-label"],
+    ));
+    management.append(&management_intro);
+    management.append(&gtk::Separator::new(gtk::Orientation::Horizontal));
+    let status = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .margin_start(20)
+        .margin_end(20)
+        .margin_top(18)
+        .margin_bottom(20)
+        .build();
+    management.append(&status);
+    content.append(&management);
+
+    let clamp = adw::Clamp::builder()
+        .maximum_size(900)
+        .tightening_threshold(680)
+        .child(&content)
+        .build();
+    let root = gtk::ScrolledWindow::builder()
+        .hscrollbar_policy(gtk::PolicyType::Never)
+        .child(&clamp)
+        .build();
+    (root, status)
 }
 
-fn clear_groups(
-    page: &adw::PreferencesPage,
-    groups: &RefCell<Vec<adw::PreferencesGroup>>,
-) {
+fn passkeys_label(text: &str, classes: &[&str]) -> gtk::Label {
+    gtk::Label::builder()
+        .label(text)
+        .css_classes(classes)
+        .halign(gtk::Align::Start)
+        .wrap(true)
+        .xalign(0.0)
+        .build()
+}
+
+fn passkeys_step(index: &str, title: &str, description: &str) -> gtk::Box {
+    let row = gtk::Box::builder()
+        .orientation(gtk::Orientation::Horizontal)
+        .spacing(16)
+        .margin_start(18)
+        .margin_end(18)
+        .margin_top(16)
+        .margin_bottom(16)
+        .build();
+    row.append(
+        &gtk::Label::builder()
+            .label(index)
+            .css_classes(["title-2", "accent"])
+            .width_request(28)
+            .valign(gtk::Align::Start)
+            .build(),
+    );
+    let copy = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(4)
+        .hexpand(true)
+        .build();
+    copy.append(&passkeys_label(title, &["heading"]));
+    copy.append(&passkeys_label(description, &["dim-label"]));
+    row.append(&copy);
+    row
+}
+
+fn passkeys_loading_status() -> gtk::Box {
+    let loading = gtk::Box::builder()
+        .orientation(gtk::Orientation::Horizontal)
+        .spacing(12)
+        .build();
+    loading.append(
+        &gtk::Spinner::builder()
+            .spinning(true)
+            .valign(gtk::Align::Center)
+            .build(),
+    );
+    loading.append(&passkeys_label(
+        &i18n("Checking Passkeys support…"),
+        &["heading"],
+    ));
+    loading
+}
+
+fn passkeys_management_status(
+    icon: &str,
+    title: &str,
+    state: &str,
+    state_class: &str,
+    description: Option<&str>,
+) -> gtk::Box {
+    let status = gtk::Box::builder()
+        .orientation(gtk::Orientation::Vertical)
+        .spacing(8)
+        .build();
+    status.append(
+        &gtk::Image::builder()
+            .icon_name(icon)
+            .pixel_size(24)
+            .halign(gtk::Align::Start)
+            .css_classes([state_class])
+            .build(),
+    );
+    status.append(
+        &gtk::Label::builder()
+            .label(state)
+            .css_classes(["caption", "pill", state_class])
+            .halign(gtk::Align::Start)
+            .accessible_role(gtk::AccessibleRole::Status)
+            .build(),
+    );
+    status.append(&passkeys_label(title, &["heading"]));
+    if let Some(description) = description {
+        status.append(&passkeys_label(description, &["dim-label"]));
+    }
+    status
+}
+
+fn clear_groups(page: &adw::PreferencesPage, groups: &RefCell<Vec<adw::PreferencesGroup>>) {
     for group in groups.borrow_mut().drain(..) {
         page.remove(&group);
     }
@@ -821,10 +1037,7 @@ fn capability_badge(name: &str, state: CapabilityState) -> gtk::Label {
         CapabilityState::Disabled => (
             "—",
             "dim-label",
-            i18n_fmt(
-                &i18n("{0} is not configured for this YubiKey"),
-                &[name],
-            ),
+            i18n_fmt(&i18n("{0} is not configured for this YubiKey"), &[name]),
         ),
     };
     gtk::Label::builder()
@@ -845,7 +1058,9 @@ fn rebuild_git(
         let empty_state = adw::StatusPage::builder()
             .icon_name("software-update-available-symbolic")
             .title(i18n("Git is not installed"))
-            .description(i18n("Git is required for commit signing. Install it from Software, then return here."))
+            .description(i18n(
+                "Git is required for commit signing. Install it from Software, then return here.",
+            ))
             .margin_top(72)
             .margin_bottom(48)
             .build();
@@ -895,10 +1110,9 @@ fn rebuild_git(
                     .title(&device.description)
                     .subtitle(match inspected_count {
                         Some(0) => i18n("No resident SSH keys found"),
-                        Some(count) => i18n_fmt(
-                            &i18n("{0} SSH keys loaded"),
-                            &[&count.to_string()],
-                        ),
+                        Some(count) => {
+                            i18n_fmt(&i18n("{0} SSH keys loaded"), &[&count.to_string()])
+                        }
                         None => device.path.clone(),
                     })
                     .build();
@@ -941,11 +1155,7 @@ fn rebuild_git(
                             show_error(&parent, error);
                         }
                         if let Some(window) = weak.upgrade() {
-                            window
-                                .imp()
-                                .ssh_results
-                                .borrow_mut()
-                                .insert(path, result);
+                            window.imp().ssh_results.borrow_mut().insert(path, result);
                             window.refresh();
                         }
                     });
@@ -1047,8 +1257,8 @@ fn rebuild_git(
 
     let mut groups = vec![devices_group, key_group];
     if status.enabled() {
-        let configured_public_key = git_signing::configured_public_key(&status.values)
-            .or_else(|| {
+        let configured_public_key =
+            git_signing::configured_public_key(&status.values).or_else(|| {
                 credentials
                     .iter()
                     .find(|credential| {
@@ -1165,11 +1375,7 @@ impl YubiKeyManagerWindow {
         });
     }
 
-    fn test_git_credential(
-        &self,
-        button: &gtk::Button,
-        credential: ssh::ResidentSshCredential,
-    ) {
+    fn test_git_credential(&self, button: &gtk::Button, credential: ssh::ResidentSshCredential) {
         let Some(parent) = button.root().and_downcast::<gtk::Window>() else {
             return;
         };
@@ -1229,19 +1435,19 @@ fn rebuild_login(
         ))
         .build();
     match devices {
-        Ok(keys) if keys.is_empty() && enrollments.iter().all(|item| item.username != username) => group.add(
-            &adw::ActionRow::builder()
-                .title(i18n("Insert a YubiKey"))
-                .subtitle(i18n("A key must be connected before it can be enrolled."))
-                .build(),
-        ),
+        Ok(keys) if keys.is_empty() && enrollments.iter().all(|item| item.username != username) => {
+            group.add(
+                &adw::ActionRow::builder()
+                    .title(i18n("Insert a YubiKey"))
+                    .subtitle(i18n("A key must be connected before it can be enrolled."))
+                    .build(),
+            )
+        }
         Ok(mut keys) => {
             add_disconnected_enrollments(&mut keys, username, "gdm", enrollments);
             for key in keys {
                 let active = enrollments.iter().any(|item| {
-                    item.username == username
-                        && item.serial == key.serial
-                        && item.purpose == "gdm"
+                    item.username == username && item.serial == key.serial && item.purpose == "gdm"
                 });
                 let connected = !key.firmware.is_empty();
                 let row = adw::SwitchRow::builder()
@@ -1290,12 +1496,8 @@ fn rebuild_login(
                             } else {
                                 i18n("Updating sign-in settings…")
                             };
-                            progress_dialog::run_with_progress(
-                                &parent,
-                                &progress_message,
-                                task,
-                            )
-                            .await
+                            progress_dialog::run_with_progress(&parent, &progress_message, task)
+                                .await
                         } else {
                             gio::spawn_blocking(task)
                                 .await
@@ -1377,12 +1579,7 @@ fn rebuild_sudo(
                 } else {
                     i18n("Enabling sudo authentication…")
                 };
-                progress_dialog::run_with_progress(
-                    &parent,
-                    &progress_message,
-                    task,
-                )
-                .await
+                progress_dialog::run_with_progress(&parent, &progress_message, task).await
             } else {
                 gio::spawn_blocking(task)
                     .await
@@ -1428,9 +1625,7 @@ fn rebuild_sudo(
             add_disconnected_enrollments(&mut keys, username, "sudo", enrollments);
             for key in keys {
                 let active = enrollments.iter().any(|item| {
-                    item.username == username
-                        && item.serial == key.serial
-                        && item.purpose == "sudo"
+                    item.username == username && item.serial == key.serial && item.purpose == "sudo"
                 });
                 let connected = !key.firmware.is_empty();
                 let row = adw::SwitchRow::builder()
@@ -1481,12 +1676,8 @@ fn rebuild_sudo(
                             } else {
                                 i18n("Updating sudo settings…")
                             };
-                            progress_dialog::run_with_progress(
-                                &parent,
-                                &progress_message,
-                                task,
-                            )
-                            .await
+                            progress_dialog::run_with_progress(&parent, &progress_message, task)
+                                .await
                         } else {
                             gio::spawn_blocking(task)
                                 .await
@@ -1556,22 +1747,15 @@ fn rebuild_ssh(
         ))
         .build();
     match &fido_devices {
-        Ok(devices) if devices.is_empty() => devices_group.add(
-            &action_row_with_icon(
-                &i18n("No YubiKey connected"),
-                &i18n("Insert a YubiKey. This page will detect it when you refresh."),
-                "drive-removable-media-usb-symbolic",
-            ),
-        ),
+        Ok(devices) if devices.is_empty() => devices_group.add(&action_row_with_icon(
+            &i18n("No YubiKey connected"),
+            &i18n("Insert a YubiKey. This page will detect it when you refresh."),
+            "drive-removable-media-usb-symbolic",
+        )),
         Ok(devices) => {
             let single_device = devices.len() == 1;
             for device in devices {
-                let inspected = window
-                    .imp()
-                    .ssh_results
-                    .borrow()
-                    .get(&device.path)
-                    .cloned();
+                let inspected = window.imp().ssh_results.borrow().get(&device.path).cloned();
                 let all_loaded = matches!(
                     &inspected,
                     Some(Ok(credentials))
@@ -1711,7 +1895,9 @@ fn rebuild_ssh(
                         Ok(credentials) if credentials.is_empty() => row.add_row(
                             &adw::ActionRow::builder()
                                 .title(i18n("No resident SSH keys"))
-                                .subtitle(i18n("This YubiKey has no discoverable ssh:* credentials."))
+                                .subtitle(i18n(
+                                    "This YubiKey has no discoverable ssh:* credentials.",
+                                ))
                                 .build(),
                         ),
                         Ok(credentials) => {
@@ -1742,20 +1928,18 @@ fn rebuild_ssh(
                                 ));
                                 let git_status = git_signing::status();
                                 let used_for_git = git_status.enabled()
-                                    && git_status
-                                    .values
-                                    .signing_key
-                                    .as_deref()
-                                    .is_some_and(|configured| {
-                                        git_signing::signing_selector(
-                                            &credential.public_key,
-                                            credential.local_handle_path.as_deref(),
-                                            credential.loaded_in_agent,
-                                        )
-                                        .ok()
-                                        .as_deref()
-                                            == Some(configured)
-                                    });
+                                    && git_status.values.signing_key.as_deref().is_some_and(
+                                        |configured| {
+                                            git_signing::signing_selector(
+                                                &credential.public_key,
+                                                credential.local_handle_path.as_deref(),
+                                                credential.loaded_in_agent,
+                                            )
+                                            .ok()
+                                            .as_deref()
+                                                == Some(configured)
+                                        },
+                                    );
                                 if used_for_git {
                                     credential_row.add_suffix(&capability_badge(
                                         "Git",
@@ -1770,25 +1954,21 @@ fn rebuild_ssh(
                                 row.add_row(&credential_row);
                             }
                         }
-                        Err(error) => row.add_row(
-                            &action_row_with_icon(
-                                &i18n("Could not inspect this YubiKey"),
-                                &error,
-                                "dialog-warning-symbolic",
-                            ),
-                        ),
+                        Err(error) => row.add_row(&action_row_with_icon(
+                            &i18n("Could not inspect this YubiKey"),
+                            &error,
+                            "dialog-warning-symbolic",
+                        )),
                     }
                 }
                 devices_group.add(&row);
             }
         }
-        Err(error) => devices_group.add(
-            &action_row_with_icon(
-                &i18n("FIDO device discovery is unavailable"),
-                error,
-                "dialog-warning-symbolic",
-            ),
-        ),
+        Err(error) => devices_group.add(&action_row_with_icon(
+            &i18n("FIDO device discovery is unavailable"),
+            error,
+            "dialog-warning-symbolic",
+        )),
     }
     page.add(&devices_group);
     groups.push(devices_group);
@@ -1799,34 +1979,34 @@ fn rebuild_ssh(
             "The SSH agent makes selected keys available to SSH applications during this session.",
         ))
         .build();
-    let (agent_title, agent_description, agent_icon, agent_state, agent_class) =
-        if agent.available {
-            (
-                i18n("SSH agent is ready"),
-                if agent.identity_count == 1 {
-                    i18n("1 identity is currently available to SSH applications.")
-                } else {
-                    i18n_fmt(
-                        &i18n("{0} identities are currently available to SSH applications."),
-                        &[&agent.identity_count.to_string()],
-                    )
-                },
-                "emblem-ok-symbolic",
-                i18n("Ready"),
-                "success",
-            )
-        } else {
-            (
-                i18n("SSH agent unavailable"),
-                agent
-                    .error
-                    .clone()
-                    .unwrap_or_else(|| i18n("No SSH agent was detected")),
-                "dialog-warning-symbolic",
-                i18n("Unavailable"),
-                "warning",
-            )
-        };
+    let (agent_title, agent_description, agent_icon, agent_state, agent_class) = if agent.available
+    {
+        (
+            i18n("SSH agent is ready"),
+            if agent.identity_count == 1 {
+                i18n("1 identity is currently available to SSH applications.")
+            } else {
+                i18n_fmt(
+                    &i18n("{0} identities are currently available to SSH applications."),
+                    &[&agent.identity_count.to_string()],
+                )
+            },
+            "emblem-ok-symbolic",
+            i18n("Ready"),
+            "success",
+        )
+    } else {
+        (
+            i18n("SSH agent unavailable"),
+            agent
+                .error
+                .clone()
+                .unwrap_or_else(|| i18n("No SSH agent was detected")),
+            "dialog-warning-symbolic",
+            i18n("Unavailable"),
+            "warning",
+        )
+    };
     let agent_row = action_row_with_icon(&agent_title, &agent_description, agent_icon);
     agent_row.add_suffix(&ssh_status_badge(&agent_state, agent_class));
     if !agent.socket.is_empty() {
@@ -1859,7 +2039,9 @@ fn ssh_overview_group(
     let (title, subtitle, icon, status, status_class, pending) = match devices {
         Ok(devices) if devices.is_empty() => (
             i18n("Connect a YubiKey"),
-            i18n("Your resident SSH keys stay on the security key. Insert it to view and use them."),
+            i18n(
+                "Your resident SSH keys stay on the security key. Insert it to view and use them.",
+            ),
             "drive-removable-media-usb-symbolic",
             i18n("Waiting"),
             "dim-label",
@@ -1901,7 +2083,9 @@ fn ssh_overview_group(
                         i18n("1 resident SSH key is available from your connected YubiKey.")
                     } else {
                         i18n_fmt(
-                            &i18n("{0} resident SSH keys are available from your connected YubiKeys."),
+                            &i18n(
+                                "{0} resident SSH keys are available from your connected YubiKeys.",
+                            ),
                             &[&credential_count.to_string()],
                         )
                     },
@@ -2191,7 +2375,9 @@ async fn request_ssh_create_options(
     let device_model = gtk::StringList::new(&device_refs);
     let device_row = adw::ComboRow::builder()
         .title(i18n("YubiKey"))
-        .subtitle(i18n("The credential will be created only on this exact device"))
+        .subtitle(i18n(
+            "The credential will be created only on this exact device",
+        ))
         .model(&device_model)
         .selected(0)
         .build();
@@ -2259,7 +2445,9 @@ async fn request_ssh_create_options(
         .build();
     let advanced = adw::ExpanderRow::builder()
         .title(i18n("Advanced options"))
-        .subtitle(i18n("OpenSSH/FIDO credential metadata and local file location"))
+        .subtitle(i18n(
+            "OpenSSH/FIDO credential metadata and local file location",
+        ))
         .build();
     for child in [
         algorithm.upcast_ref::<gtk::Widget>(),
@@ -2392,7 +2580,10 @@ fn credential_actions(
     let public_key = credential.public_key.clone();
     copy.connect_clicked(move |button| {
         button.clipboard().set_text(&public_key);
-        if let Some(popover) = button.ancestor(gtk::Popover::static_type()).and_downcast::<gtk::Popover>() {
+        if let Some(popover) = button
+            .ancestor(gtk::Popover::static_type())
+            .and_downcast::<gtk::Popover>()
+        {
             popover.popdown();
         }
     });
@@ -2594,10 +2785,7 @@ async fn confirm_resident_deletion(
         .wrap(true)
         .build();
     let confirmation = adw::EntryRow::builder()
-        .title(i18n_fmt(
-            &i18n("Type {0} to confirm"),
-            &[&suffix],
-        ))
+        .title(i18n_fmt(&i18n("Type {0} to confirm"), &[&suffix]))
         .activates_default(true)
         .build();
     let group = adw::PreferencesGroup::new();
@@ -2648,7 +2836,14 @@ fn safe_pub_filename(username: &str) -> String {
             }
         })
         .collect();
-    format!("{}.pub", if stem.is_empty() { "id_security_key" } else { &stem })
+    format!(
+        "{}.pub",
+        if stem.is_empty() {
+            "id_security_key"
+        } else {
+            &stem
+        }
+    )
 }
 
 fn show_message<W: IsA<gtk::Widget>>(widget: &W, heading: &str, body: &str) {
@@ -2673,11 +2868,7 @@ fn show_error<W: IsA<gtk::Widget>>(widget: &W, message: &str) {
     show_error_with_heading(widget, &i18n("YubiKey configuration failed"), message);
 }
 
-fn show_error_with_heading<W: IsA<gtk::Widget>>(
-    widget: &W,
-    heading: &str,
-    message: &str,
-) {
+fn show_error_with_heading<W: IsA<gtk::Widget>>(widget: &W, heading: &str, message: &str) {
     let dialog = adw::AlertDialog::builder()
         .heading(heading)
         .body(message)

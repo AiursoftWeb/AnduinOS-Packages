@@ -1,6 +1,6 @@
+use crate::i18n::i18n;
 use gtk::gio;
 use gtk::prelude::*;
-use crate::i18n::i18n;
 
 /// Display a modal progress window while a blocking security-key operation runs.
 /// The task is executed on GLib's blocking thread pool so the GTK main loop remains responsive.

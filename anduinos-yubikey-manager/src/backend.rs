@@ -90,13 +90,7 @@ fn list_with_ykman() -> Result<Vec<YubiKey>, String> {
 
 fn list_with_ykman_summary() -> Result<Vec<YubiKey>, String> {
     let output = Command::new("timeout")
-        .args([
-            "--signal=TERM",
-            "--kill-after=1s",
-            "2s",
-            "ykman",
-            "list",
-        ])
+        .args(["--signal=TERM", "--kill-after=1s", "2s", "ykman", "list"])
         .stdin(Stdio::null())
         .output()
         .map_err(|error| error.to_string())?;
@@ -138,13 +132,12 @@ fn parse_ykman_list_summary(line: &str) -> Option<YubiKey> {
 
 fn list_from_sysfs() -> Result<Vec<YubiKey>, String> {
     let usb_devices = Path::new("/sys/bus/usb/devices");
-    let entries = fs::read_dir(usb_devices)
-        .map_err(|error| {
-            i18n_fmt(
-                &i18n("Could not inspect USB devices: {0}"),
-                &[&error.to_string()],
-            )
-        })?;
+    let entries = fs::read_dir(usb_devices).map_err(|error| {
+        i18n_fmt(
+            &i18n("Could not inspect USB devices: {0}"),
+            &[&error.to_string()],
+        )
+    })?;
     let mut devices = Vec::new();
     for entry in entries.flatten() {
         let path = entry.path();
@@ -208,7 +201,11 @@ fn parse_info(serial: &str, info: &str) -> YubiKey {
         .collect::<Vec<_>>()
         .join(" · ");
     YubiKey {
-        name: if name.is_empty() { i18n("YubiKey") } else { name },
+        name: if name.is_empty() {
+            i18n("YubiKey")
+        } else {
+            name
+        },
         serial: serial.into(),
         firmware,
         interfaces,
@@ -267,9 +264,9 @@ fn validate_credential(value: &str) -> Result<(), String> {
     if value.contains('\n')
         || value.contains(':')
         || value.len() < 40
-        || !value
-            .chars()
-            .all(|c| c.is_ascii_alphanumeric() || matches!(c, ',' | '_' | '-' | '=' | '+' | '/' | '.'))
+        || !value.chars().all(|c| {
+            c.is_ascii_alphanumeric() || matches!(c, ',' | '_' | '-' | '=' | '+' | '/' | '.')
+        })
         || !(2..=4).contains(&value.split(',').count())
     {
         return Err(i18n("The security key returned an invalid PAM credential."));
@@ -358,9 +355,6 @@ mod tests {
         assert_eq!(key.serial, "35411498");
         assert_eq!(key.firmware, "5.7.4");
         assert_eq!(key.interfaces, "FIDO");
-        assert!(parse_ykman_list_summary(
-            "YubiKey C Bio - FIDO Edition (5.7.4) [FIDO]"
-        )
-        .is_none());
+        assert!(parse_ykman_list_summary("YubiKey C Bio - FIDO Edition (5.7.4) [FIDO]").is_none());
     }
 }

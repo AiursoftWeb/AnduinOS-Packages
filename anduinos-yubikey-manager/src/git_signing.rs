@@ -82,7 +82,9 @@ pub fn signing_selector(
     if algorithm.starts_with("sk-") && !encoded.is_empty() {
         return Ok(format!("key::{algorithm} {encoded}"));
     }
-    Err(i18n("This is not a supported OpenSSH security-key public key."))
+    Err(i18n(
+        "This is not a supported OpenSSH security-key public key.",
+    ))
 }
 
 pub fn configured_public_key(values: &GitValues) -> Option<String> {
@@ -91,15 +93,13 @@ pub fn configured_public_key(values: &GitValues) -> Option<String> {
         return Some(public_key.to_string());
     }
     let public_path = PathBuf::from(format!("{selector}.pub"));
-    fs::read_to_string(public_path)
-        .ok()
-        .and_then(|content| {
-            content
-                .lines()
-                .find(|line| !line.trim().is_empty())
-                .map(str::trim)
-                .map(ToString::to_string)
-        })
+    fs::read_to_string(public_path).ok().and_then(|content| {
+        content
+            .lines()
+            .find(|line| !line.trim().is_empty())
+            .map(str::trim)
+            .map(ToString::to_string)
+    })
 }
 
 pub fn select_key(selector: &str) -> Result<(), String> {
@@ -168,8 +168,7 @@ fn write_values(values: &GitValues) -> Result<(), String> {
                 }
             }
             None => {
-                let output =
-                    command_output("git", &["config", "--global", "--unset-all", key])?;
+                let output = command_output("git", &["config", "--global", "--unset-all", key])?;
                 if !output.status.success() && output.status.code() != Some(5) {
                     return Err(command_error("git config", &output));
                 }

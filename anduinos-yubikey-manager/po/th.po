@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 18:03+0000\n"
+"POT-Creation-Date: 2026-08-04 17:10+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -15,15 +15,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-msgid "Git is not installed"
-msgstr "ยังไม่ได้ติดตั้ง Git"
-
-msgid "Git is required for commit signing. Install it from Software, then return here."
-msgstr "จำเป็นต้องใช้ Git เพื่อลงนามคอมมิต ติดตั้งจากซอฟต์แวร์ แล้วกลับมาที่นี่"
-
-msgid "Open Software"
-msgstr "เปิดซอฟต์แวร์"
 
 msgid "1 identity is currently available to SSH applications."
 msgstr "มีอัตลักษณ์ 1 รายการพร้อมใช้งานสำหรับแอปพลิเคชัน SSH ในขณะนี้"
@@ -362,6 +353,12 @@ msgstr ""
 msgid "Git signing test passed"
 msgstr "Git signing test passed"
 
+msgid "Git is not installed"
+msgstr "ยังไม่ได้ติดตั้ง Git"
+
+msgid "Git is required for commit signing. Install it from Software, then return here."
+msgstr "จำเป็นต้องใช้ Git เพื่อลงนามคอมมิต ติดตั้งจากซอฟต์แวร์ แล้วกลับมาที่นี่"
+
 msgid "Home"
 msgstr "หน้าแรก"
 
@@ -484,6 +481,9 @@ msgstr "ยังไม่ได้ตรวจสอบ · {0}"
 
 msgid "Open the official Yubico Store"
 msgstr "เปิดร้าน Yubico อย่างเป็นทางการ"
+
+msgid "Open Software"
+msgstr "เปิดซอฟต์แวร์"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH ไม่สามารถโหลดคีย์ที่อยู่ประจำได้ ตัวจัดการ SSH ไม่มีตัวตนใหม่ที่เพิ่งโหลด"
@@ -979,6 +979,9 @@ msgstr "{0} รายการที่รอตรวจสอบ"
 msgid "{0} · no hardware serial"
 msgstr "{0} · ไม่มีหมายเลขซีเรียลของฮาร์ดแวร์"
 
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
 msgid "Checking Passkeys support…"
 msgstr "กำลังตรวจสอบการรองรับพาสคีย์…"
 
@@ -991,11 +994,59 @@ msgstr "เปิด Yubico Authenticator"
 msgid "Passkeys"
 msgstr "พาสคีย์"
 
-msgid "Yubico Authenticator must be installed before you can use Passkeys."
-msgstr "ต้องติดตั้ง Yubico Authenticator ก่อนจึงจะใช้พาสคีย์ได้"
+msgid "Choose the passkey option and follow the prompt to use the same YubiKey."
+msgstr "เลือกตัวเลือกพาสคีย์และทำตามคำแนะนำเพื่อใช้ YubiKey อันเดิม"
 
-msgid "{0} · {1}"
-msgstr "{0} · {1}"
+msgid "Confirm it is you"
+msgstr "ยืนยันตัวตนของคุณ"
+
+msgid "How to use"
+msgstr "วิธีใช้งาน"
+
+msgid "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
+msgstr "เสียบ YubiKey ป้อน FIDO PIN เมื่อระบบถาม แล้วแตะกุญแจ"
+
+msgid "Inspect a connected YubiKey to reveal its resident SSH keys and available actions."
+msgstr "ตรวจสอบ YubiKey ที่เชื่อมต่อเพื่อแสดงคีย์ SSH แบบประจำและการทำงานที่ใช้ได้"
+
+msgid "Install the official Yubico Authenticator first. When installation is complete, return here and refresh this page."
+msgstr "ติดตั้ง Yubico Authenticator อย่างเป็นทางการก่อน เมื่อติดตั้งเสร็จแล้ว ให้กลับมาที่นี่และรีเฟรชหน้านี้"
+
+msgid "Keep a recovery method or a backup security key for important accounts."
+msgstr "เก็บวิธีกู้คืนหรือกุญแจความปลอดภัยสำรองไว้สำหรับบัญชีที่สำคัญ"
+
+msgid "Manage passkeys"
+msgstr "จัดการพาสคีย์"
+
+msgid "On a supported website or app, choose to create a passkey and select your security key."
+msgstr "บนเว็บไซต์หรือแอปที่รองรับ ให้เลือกสร้างพาสคีย์แล้วเลือกกุญแจความปลอดภัยของคุณ"
+
+msgid "Passkeys are passwordless sign-in credentials stored on compatible security keys. Registration and sign-in begin in a supported website or app; follow its prompts to insert your YubiKey, enter the FIDO PIN, and touch the key."
+msgstr "พาสคีย์คือข้อมูลรับรองการลงชื่อเข้าใช้แบบไม่ใช้รหัสผ่านที่เก็บอยู่ในกุญแจความปลอดภัยที่เข้ากันได้ การลงทะเบียนและลงชื่อเข้าใช้เริ่มจากเว็บไซต์หรือแอปที่รองรับ โปรดทำตามคำแนะนำเพื่อเสียบ YubiKey ป้อน FIDO PIN และแตะกุญแจ"
+
+msgid "Protect passkeys with your YubiKey"
+msgstr "ปกป้องพาสคีย์ด้วย YubiKey ของคุณ"
+
+msgid "Register a passkey"
+msgstr "ลงทะเบียนพาสคีย์"
+
+msgid "Sign in next time"
+msgstr "ลงชื่อเข้าใช้ครั้งถัดไป"
+
+msgid "The SSH agent makes selected keys available to SSH applications during this session."
+msgstr "เอเจนต์ SSH ทำให้คีย์ที่เลือกพร้อมใช้งานสำหรับแอปพลิเคชัน SSH ในเซสชันนี้"
+
+msgid "Yubico Authenticator is installed"
+msgstr "ติดตั้ง Yubico Authenticator แล้ว"
+
+msgid "Yubico Authenticator is not installed"
+msgstr "ยังไม่ได้ติดตั้ง Yubico Authenticator"
+
+msgid "Yubico Authenticator lets you view and manage passkeys stored on your YubiKey. This security center does not read, create, or delete passkeys; it only opens the installed app."
+msgstr "Yubico Authenticator ช่วยให้คุณดูและจัดการพาสคีย์ที่เก็บใน YubiKey ได้ ศูนย์ความปลอดภัยนี้จะไม่อ่าน สร้าง หรือลบพาสคีย์ แต่จะเปิดเฉพาะแอปที่ติดตั้งไว้เท่านั้น"
+
+#~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
+#~ msgstr "ต้องติดตั้ง Yubico Authenticator ก่อนจึงจะใช้พาสคีย์ได้"
 
 #~ msgid "All inspected resident credentials from this key are already in the agent"
 #~ msgstr "ข้อมูลประจำตัวที่ตรวจสอบแล้วทั้งหมดจากคีย์นี้ได้อยู่ในเอเจนต์แล้ว"

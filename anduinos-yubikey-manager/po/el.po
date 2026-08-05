@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 18:03+0000\n"
+"POT-Creation-Date: 2026-08-04 17:10+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,15 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid "Git is not installed"
-msgstr "Το Git δεν είναι εγκατεστημένο"
-
-msgid "Git is required for commit signing. Install it from Software, then return here."
-msgstr "Το Git απαιτείται για την υπογραφή υποβολών. Εγκαταστήστε το από το Λογισμικό και επιστρέψτε εδώ."
-
-msgid "Open Software"
-msgstr "Άνοιγμα Λογισμικού"
 
 msgid "1 identity is currently available to SSH applications."
 msgstr "1 ταυτότητα είναι διαθέσιμη αυτή τη στιγμή για εφαρμογές SSH."
@@ -363,6 +354,12 @@ msgstr ""
 msgid "Git signing test passed"
 msgstr "Git signing test passed"
 
+msgid "Git is not installed"
+msgstr "Το Git δεν είναι εγκατεστημένο"
+
+msgid "Git is required for commit signing. Install it from Software, then return here."
+msgstr "Το Git απαιτείται για την υπογραφή υποβολών. Εγκαταστήστε το από το Λογισμικό και επιστρέψτε εδώ."
+
 msgid "Home"
 msgstr "Αρχική σελίδα"
 
@@ -485,6 +482,9 @@ msgstr "Δεν έχει επιθεωρηθεί ακόμα · {0}"
 
 msgid "Open the official Yubico Store"
 msgstr "Άνοιγμα του επίσημου καταστήματος Yubico"
+
+msgid "Open Software"
+msgstr "Άνοιγμα Λογισμικού"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "Το OpenSSH δεν μπόρεσε να φορτώσει τα ενσωματωμένα κλειδιά. Το SSH agent δεν περιέχει κάποια νεοφορτωμένη ταυτότητα."
@@ -980,6 +980,9 @@ msgstr "{0} προς επιθεώρηση"
 msgid "{0} · no hardware serial"
 msgstr "{0} · χωρίς σειριακό υλικού"
 
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
 msgid "Checking Passkeys support…"
 msgstr "Έλεγχος υποστήριξης κλειδιών πρόσβασης…"
 
@@ -992,11 +995,59 @@ msgstr "Άνοιγμα Yubico Authenticator"
 msgid "Passkeys"
 msgstr "Κλειδιά πρόσβασης"
 
-msgid "Yubico Authenticator must be installed before you can use Passkeys."
-msgstr "Το Yubico Authenticator πρέπει να εγκατασταθεί πριν χρησιμοποιήσετε κλειδιά πρόσβασης."
+msgid "Choose the passkey option and follow the prompt to use the same YubiKey."
+msgstr "Επιλέξτε τη σύνδεση με κλειδί πρόσβασης και ακολουθήστε την προτροπή για να χρησιμοποιήσετε το ίδιο YubiKey."
 
-msgid "{0} · {1}"
-msgstr "{0} · {1}"
+msgid "Confirm it is you"
+msgstr "Επιβεβαιώστε την ταυτότητά σας"
+
+msgid "How to use"
+msgstr "Τρόπος χρήσης"
+
+msgid "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
+msgstr "Τοποθετήστε το YubiKey, εισαγάγετε το FIDO PIN όταν σας ζητηθεί και έπειτα αγγίξτε το κλειδί."
+
+msgid "Inspect a connected YubiKey to reveal its resident SSH keys and available actions."
+msgstr "Ελέγξτε ένα συνδεδεμένο YubiKey για να εμφανίσετε τα μόνιμα κλειδιά SSH και τις διαθέσιμες ενέργειες."
+
+msgid "Install the official Yubico Authenticator first. When installation is complete, return here and refresh this page."
+msgstr "Εγκαταστήστε πρώτα την επίσημη εφαρμογή Yubico Authenticator. Όταν ολοκληρωθεί η εγκατάσταση, επιστρέψτε εδώ και ανανεώστε τη σελίδα."
+
+msgid "Keep a recovery method or a backup security key for important accounts."
+msgstr "Διατηρήστε μια μέθοδο ανάκτησης ή ένα εφεδρικό κλειδί ασφαλείας για σημαντικούς λογαριασμούς."
+
+msgid "Manage passkeys"
+msgstr "Διαχείριση κλειδιών πρόσβασης"
+
+msgid "On a supported website or app, choose to create a passkey and select your security key."
+msgstr "Σε έναν υποστηριζόμενο ιστότοπο ή εφαρμογή, επιλέξτε τη δημιουργία κλειδιού πρόσβασης και επιλέξτε το κλειδί ασφαλείας σας."
+
+msgid "Passkeys are passwordless sign-in credentials stored on compatible security keys. Registration and sign-in begin in a supported website or app; follow its prompts to insert your YubiKey, enter the FIDO PIN, and touch the key."
+msgstr "Τα κλειδιά πρόσβασης είναι διαπιστευτήρια σύνδεσης χωρίς κωδικό πρόσβασης που αποθηκεύονται σε συμβατά κλειδιά ασφαλείας. Η εγγραφή και η σύνδεση ξεκινούν σε υποστηριζόμενο ιστότοπο ή εφαρμογή· ακολουθήστε τις οδηγίες για να τοποθετήσετε το YubiKey, να εισαγάγετε το FIDO PIN και να αγγίξετε το κλειδί."
+
+msgid "Protect passkeys with your YubiKey"
+msgstr "Προστασία κλειδιών πρόσβασης με το YubiKey"
+
+msgid "Register a passkey"
+msgstr "Εγγραφή κλειδιού πρόσβασης"
+
+msgid "Sign in next time"
+msgstr "Σύνδεση την επόμενη φορά"
+
+msgid "The SSH agent makes selected keys available to SSH applications during this session."
+msgstr "Ο πράκτορας SSH διαθέτει τα επιλεγμένα κλειδιά στις εφαρμογές SSH κατά τη διάρκεια αυτής της συνεδρίας."
+
+msgid "Yubico Authenticator is installed"
+msgstr "Το Yubico Authenticator είναι εγκατεστημένο"
+
+msgid "Yubico Authenticator is not installed"
+msgstr "Το Yubico Authenticator δεν είναι εγκατεστημένο"
+
+msgid "Yubico Authenticator lets you view and manage passkeys stored on your YubiKey. This security center does not read, create, or delete passkeys; it only opens the installed app."
+msgstr "Το Yubico Authenticator σάς επιτρέπει να βλέπετε και να διαχειρίζεστε τα κλειδιά πρόσβασης που είναι αποθηκευμένα στο YubiKey. Αυτό το κέντρο ασφαλείας δεν διαβάζει, δημιουργεί ή διαγράφει κλειδιά πρόσβασης· ανοίγει μόνο την εγκατεστημένη εφαρμογή."
+
+#~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
+#~ msgstr "Το Yubico Authenticator πρέπει να εγκατασταθεί πριν χρησιμοποιήσετε κλειδιά πρόσβασης."
 
 #~ msgid "All inspected resident credentials from this key are already in the agent"
 #~ msgstr "Όλα τα ελεγχθέντα πιστοποιητικά από αυτό το κλειδί βρίσκονται ήδη στον πράκτορα"

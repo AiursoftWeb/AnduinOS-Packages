@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 18:03+0000\n"
+"POT-Creation-Date: 2026-08-04 17:10+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,15 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
-
-msgid "Git is not installed"
-msgstr "Git nu este instalat"
-
-msgid "Git is required for commit signing. Install it from Software, then return here."
-msgstr "Git este necesar pentru semnarea commiturilor. Instalează-l din Aplicații, apoi revino aici."
-
-msgid "Open Software"
-msgstr "Deschide Aplicații"
 
 msgid "1 identity is currently available to SSH applications."
 msgstr "1 identitate este disponibilă în prezent pentru aplicațiile SSH."
@@ -363,6 +354,12 @@ msgstr ""
 msgid "Git signing test passed"
 msgstr "Git signing test passed"
 
+msgid "Git is not installed"
+msgstr "Git nu este instalat"
+
+msgid "Git is required for commit signing. Install it from Software, then return here."
+msgstr "Git este necesar pentru semnarea commiturilor. Instalează-l din Aplicații, apoi revino aici."
+
 msgid "Home"
 msgstr "Acasă"
 
@@ -485,6 +482,9 @@ msgstr "Încă neinspectat · {0}"
 
 msgid "Open the official Yubico Store"
 msgstr "Deschide Magazinul Oficial Yubico"
+
+msgid "Open Software"
+msgstr "Deschide Aplicații"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH nu a putut încărca cheile rezidente. Agentul SSH nu conține nicio identitate încărcată nou."
@@ -980,6 +980,9 @@ msgstr "{0} de inspectat"
 msgid "{0} · no hardware serial"
 msgstr "{0} · fără serial hardware"
 
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
 msgid "Checking Passkeys support…"
 msgstr "Se verifică suportul pentru chei de acces…"
 
@@ -992,11 +995,59 @@ msgstr "Deschide Yubico Authenticator"
 msgid "Passkeys"
 msgstr "Chei de acces"
 
-msgid "Yubico Authenticator must be installed before you can use Passkeys."
-msgstr "Yubico Authenticator trebuie instalat înainte de a putea utiliza cheile de acces."
+msgid "Choose the passkey option and follow the prompt to use the same YubiKey."
+msgstr "Alegeți opțiunea pentru cheia de acces și urmați instrucțiunile pentru a folosi același YubiKey."
 
-msgid "{0} · {1}"
-msgstr "{0} · {1}"
+msgid "Confirm it is you"
+msgstr "Confirmați-vă identitatea"
+
+msgid "How to use"
+msgstr "Cum se utilizează"
+
+msgid "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
+msgstr "Introduceți dispozitivul YubiKey, tastați codul PIN FIDO când vi se solicită, apoi atingeți cheia."
+
+msgid "Inspect a connected YubiKey to reveal its resident SSH keys and available actions."
+msgstr "Inspectați un YubiKey conectat pentru a afișa cheile SSH rezidente și acțiunile disponibile."
+
+msgid "Install the official Yubico Authenticator first. When installation is complete, return here and refresh this page."
+msgstr "Instalați mai întâi aplicația oficială Yubico Authenticator. După finalizarea instalării, reveniți aici și reîmprospătați pagina."
+
+msgid "Keep a recovery method or a backup security key for important accounts."
+msgstr "Păstrați o metodă de recuperare sau o cheie de securitate de rezervă pentru conturile importante."
+
+msgid "Manage passkeys"
+msgstr "Gestionați cheile de acces"
+
+msgid "On a supported website or app, choose to create a passkey and select your security key."
+msgstr "Pe un site web sau într-o aplicație compatibilă, alegeți să creați o cheie de acces și selectați cheia de securitate."
+
+msgid "Passkeys are passwordless sign-in credentials stored on compatible security keys. Registration and sign-in begin in a supported website or app; follow its prompts to insert your YubiKey, enter the FIDO PIN, and touch the key."
+msgstr "Cheile de acces sunt acreditări de conectare fără parolă, stocate pe chei de securitate compatibile. Înregistrarea și conectarea încep pe un site web sau într-o aplicație compatibilă; urmați instrucțiunile pentru a introduce YubiKey, a tasta codul PIN FIDO și a atinge cheia."
+
+msgid "Protect passkeys with your YubiKey"
+msgstr "Protejați cheile de acces cu YubiKey"
+
+msgid "Register a passkey"
+msgstr "Înregistrați o cheie de acces"
+
+msgid "Sign in next time"
+msgstr "Conectați-vă data viitoare"
+
+msgid "The SSH agent makes selected keys available to SSH applications during this session."
+msgstr "Agentul SSH pune cheile selectate la dispoziția aplicațiilor SSH în timpul acestei sesiuni."
+
+msgid "Yubico Authenticator is installed"
+msgstr "Yubico Authenticator este instalat"
+
+msgid "Yubico Authenticator is not installed"
+msgstr "Yubico Authenticator nu este instalat"
+
+msgid "Yubico Authenticator lets you view and manage passkeys stored on your YubiKey. This security center does not read, create, or delete passkeys; it only opens the installed app."
+msgstr "Yubico Authenticator vă permite să vedeți și să gestionați cheile de acces stocate pe YubiKey. Acest centru de securitate nu citește, nu creează și nu șterge chei de acces; doar deschide aplicația instalată."
+
+#~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
+#~ msgstr "Yubico Authenticator trebuie instalat înainte de a putea utiliza cheile de acces."
 
 #~ msgid "All inspected resident credentials from this key are already in the agent"
 #~ msgstr "Tote credentialele rezidente inspectate de la această cheie sunt deja în agent"

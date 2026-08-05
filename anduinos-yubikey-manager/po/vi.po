@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-yubikey-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 18:03+0000\n"
+"POT-Creation-Date: 2026-08-04 17:10+0000\n"
 "PO-Revision-Date: 2026-07-29 16:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,15 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-msgid "Git is not installed"
-msgstr "Git chưa được cài đặt"
-
-msgid "Git is required for commit signing. Install it from Software, then return here."
-msgstr "Cần có Git để ký commit. Hãy cài đặt từ Phần mềm, rồi quay lại đây."
-
-msgid "Open Software"
-msgstr "Mở Phần mềm"
 
 msgid "1 identity is currently available to SSH applications."
 msgstr "1 danh tính hiện có sẵn cho các ứng dụng SSH."
@@ -363,6 +354,12 @@ msgstr ""
 msgid "Git signing test passed"
 msgstr "Git signing test passed"
 
+msgid "Git is not installed"
+msgstr "Git chưa được cài đặt"
+
+msgid "Git is required for commit signing. Install it from Software, then return here."
+msgstr "Cần có Git để ký commit. Hãy cài đặt từ Phần mềm, rồi quay lại đây."
+
 msgid "Home"
 msgstr "Trang chủ"
 
@@ -485,6 +482,9 @@ msgstr "Chưa được kiểm tra · {0}"
 
 msgid "Open the official Yubico Store"
 msgstr "Mở cửa hàng chính thức của Yubico"
+
+msgid "Open Software"
+msgstr "Mở Phần mềm"
 
 msgid "OpenSSH could not load resident keys. The SSH agent contains no newly loaded identity."
 msgstr "OpenSSH không thể tải các khóa cư trú. Tác nhân SSH không chứa danh tính nào vừa được tải."
@@ -980,6 +980,9 @@ msgstr "{0} để kiểm tra"
 msgid "{0} · no hardware serial"
 msgstr "{0} · không có số sê-ri phần cứng"
 
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
 msgid "Checking Passkeys support…"
 msgstr "Đang kiểm tra hỗ trợ khóa truy cập…"
 
@@ -992,11 +995,59 @@ msgstr "Mở Yubico Authenticator"
 msgid "Passkeys"
 msgstr "Khóa truy cập"
 
-msgid "Yubico Authenticator must be installed before you can use Passkeys."
-msgstr "Bạn phải cài đặt Yubico Authenticator trước khi có thể sử dụng khóa truy cập."
+msgid "Choose the passkey option and follow the prompt to use the same YubiKey."
+msgstr "Chọn tùy chọn mã khóa và làm theo lời nhắc để sử dụng cùng một YubiKey."
 
-msgid "{0} · {1}"
-msgstr "{0} · {1}"
+msgid "Confirm it is you"
+msgstr "Xác nhận danh tính của bạn"
+
+msgid "How to use"
+msgstr "Cách sử dụng"
+
+msgid "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
+msgstr "Cắm YubiKey, nhập mã PIN FIDO khi được yêu cầu, rồi chạm vào khóa."
+
+msgid "Inspect a connected YubiKey to reveal its resident SSH keys and available actions."
+msgstr "Kiểm tra YubiKey đã kết nối để hiển thị các khóa SSH thường trú và thao tác hiện có."
+
+msgid "Install the official Yubico Authenticator first. When installation is complete, return here and refresh this page."
+msgstr "Trước tiên, hãy cài đặt Yubico Authenticator chính thức. Khi cài đặt xong, hãy quay lại đây và làm mới trang này."
+
+msgid "Keep a recovery method or a backup security key for important accounts."
+msgstr "Hãy giữ một phương thức khôi phục hoặc khóa bảo mật dự phòng cho các tài khoản quan trọng."
+
+msgid "Manage passkeys"
+msgstr "Quản lý mã khóa"
+
+msgid "On a supported website or app, choose to create a passkey and select your security key."
+msgstr "Trên trang web hoặc ứng dụng được hỗ trợ, hãy chọn tạo mã khóa rồi chọn khóa bảo mật của bạn."
+
+msgid "Passkeys are passwordless sign-in credentials stored on compatible security keys. Registration and sign-in begin in a supported website or app; follow its prompts to insert your YubiKey, enter the FIDO PIN, and touch the key."
+msgstr "Mã khóa là thông tin đăng nhập không cần mật khẩu được lưu trên các khóa bảo mật tương thích. Việc đăng ký và đăng nhập bắt đầu trên trang web hoặc ứng dụng được hỗ trợ; hãy làm theo lời nhắc để cắm YubiKey, nhập mã PIN FIDO và chạm vào khóa."
+
+msgid "Protect passkeys with your YubiKey"
+msgstr "Bảo vệ mã khóa bằng YubiKey"
+
+msgid "Register a passkey"
+msgstr "Đăng ký mã khóa"
+
+msgid "Sign in next time"
+msgstr "Đăng nhập vào lần sau"
+
+msgid "The SSH agent makes selected keys available to SSH applications during this session."
+msgstr "Tác nhân SSH cung cấp các khóa đã chọn cho ứng dụng SSH trong phiên này."
+
+msgid "Yubico Authenticator is installed"
+msgstr "Yubico Authenticator đã được cài đặt"
+
+msgid "Yubico Authenticator is not installed"
+msgstr "Yubico Authenticator chưa được cài đặt"
+
+msgid "Yubico Authenticator lets you view and manage passkeys stored on your YubiKey. This security center does not read, create, or delete passkeys; it only opens the installed app."
+msgstr "Yubico Authenticator cho phép bạn xem và quản lý các mã khóa lưu trên YubiKey. Trung tâm bảo mật này không đọc, tạo hoặc xóa mã khóa; trung tâm chỉ mở ứng dụng đã cài đặt."
+
+#~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
+#~ msgstr "Bạn phải cài đặt Yubico Authenticator trước khi có thể sử dụng khóa truy cập."
 
 #~ msgid "All inspected resident credentials from this key are already in the agent"
 #~ msgstr "Tất cả các thông tin xác thực cư dân đã được kiểm tra từ khóa này đều đã có trong tác nhân"

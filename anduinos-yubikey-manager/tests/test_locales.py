@@ -13,7 +13,9 @@ LOCALES = {
 }
 PLACEHOLDER = re.compile(r"\{\d+\}")
 DESKTOP_LOCALES = LOCALES - {"en_GB", "en_US"}
-RUST_I18N = re.compile(r'i18n\("((?:[^"\\]|\\.)*)"\)')
+RUST_I18N = re.compile(
+    r'i18n\s*\(\s*"((?:[^"\\]|\\.)*)"\s*,?\s*\)'
+)
 
 
 def po_entries(path: Path):
