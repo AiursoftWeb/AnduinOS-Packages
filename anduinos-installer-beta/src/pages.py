@@ -693,11 +693,21 @@ def build_network_page(shared, nav_view):
         icon_name="list-add-symbolic",
         tooltip_text=_("Connect to a hidden network", lang),
     )
-    radio_switch = Gtk.Switch(valign=Gtk.Align.CENTER, sensitive=False)
+    radio_spinner = Gtk.Spinner(
+        spinning=True,
+        visible=True,
+        valign=Gtk.Align.CENTER,
+    )
+    radio_switch = Gtk.Switch(
+        valign=Gtk.Align.CENTER,
+        sensitive=False,
+        visible=False,
+    )
     refresh_button = Gtk.Button(icon_name="view-refresh-symbolic")
     refresh_button.set_tooltip_text(_("Refresh Wi-Fi networks", lang))
     networks_header.append(networks_title)
     networks_header.append(hidden_button)
+    networks_header.append(radio_spinner)
     networks_header.append(radio_switch)
     networks_header.append(refresh_button)
     networks_card.append(networks_header)
@@ -718,6 +728,7 @@ def build_network_page(shared, nav_view):
     monitor = Gio.NetworkMonitor.get_default()
     scan_requests = LatestBackgroundRequest(GLib.idle_add)
     operation = {"cancel": None, "message": ""}
+    radio_known = {"value": False}
     profiles_by_ssid: dict[str, tuple[WifiProfile, ...]] = {}
     radio_handler = None
 
@@ -727,7 +738,7 @@ def build_network_page(shared, nav_view):
     def _set_controls_sensitive(sensitive: bool):
         refresh_button.set_sensitive(sensitive)
         hidden_button.set_sensitive(sensitive and radio_switch.get_active())
-        radio_switch.set_sensitive(sensitive)
+        radio_switch.set_sensitive(sensitive and radio_known["value"])
         for row in network_rows:
             row.set_sensitive(sensitive)
 
@@ -1094,12 +1105,24 @@ def build_network_page(shared, nav_view):
             network_rows.append(row)
 
     def _show_radio_state(enabled: bool):
+        radio_known["value"] = True
+        radio_spinner.stop()
+        radio_spinner.set_visible(False)
+        radio_switch.set_visible(True)
+        radio_switch.set_sensitive(operation["cancel"] is None)
         if radio_handler is not None:
             radio_switch.handler_block(radio_handler)
         radio_switch.set_active(enabled)
         radio_switch.set_state(enabled)
         if radio_handler is not None:
             radio_switch.handler_unblock(radio_handler)
+
+    def _show_radio_pending():
+        radio_known["value"] = False
+        radio_switch.set_sensitive(False)
+        radio_switch.set_visible(False)
+        radio_spinner.set_visible(True)
+        radio_spinner.start()
 
     def _apply_scan(result, error):
         if operation["cancel"] is not None:
@@ -1127,9 +1150,20 @@ def build_network_page(shared, nav_view):
         if operation["cancel"] is not None or not page.get_mapped():
             return
         refresh_button.set_sensitive(False)
+        try:
+            # This is a fast libnm property read (normally ~10 ms).  Apply it
+            # before starting the slower AP scan so "not read yet" can never
+            # masquerade as "Wi-Fi off" in the visible switch.
+            enabled = wifi_radio_enabled()
+            _show_radio_state(enabled)
+        except Exception as error:
+            radio_spinner.stop()
+            radio_spinner.set_visible(False)
+            radio_switch.set_visible(False)
+            _apply_scan(None, error)
+            return
 
         def work():
-            enabled = wifi_radio_enabled()
             found = scan_wifi_networks(rescan=force) if enabled else ()
             return enabled, found, saved_wifi_profiles()
 
@@ -1246,6 +1280,7 @@ def build_network_page(shared, nav_view):
     def _mapped_changed(_page, _property):
         if page.get_mapped():
             scan_requests.activate()
+            _show_radio_pending()
             _render_connectivity()
             _scan_wifi(force=True)
         else:
