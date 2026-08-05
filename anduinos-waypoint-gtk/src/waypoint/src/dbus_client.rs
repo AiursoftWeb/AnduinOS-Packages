@@ -33,6 +33,7 @@ pub struct RecoveryDeployment {
     pub created_at: chrono::DateTime<chrono::Utc>,
     pub title: String,
     pub reason: String,
+    pub schedule_id: Option<String>,
     pub kernel_release: Option<String>,
     pub pinned: bool,
 }

@@ -223,7 +223,7 @@ def build_guided_coexistence_storage_graph(
             for item in subvolumes
         )
         capabilities.extend(
-            (StorageCapability.SYSTEM_ROLLBACK, StorageCapability.TIMEBACK)
+            (StorageCapability.SYSTEM_ROLLBACK, StorageCapability.WAYPOINT)
         )
     else:
         mounts = (
@@ -382,7 +382,7 @@ def build_erase_disk_storage_graph(
             for item in subvolumes
         )
         capabilities.extend(
-            (StorageCapability.SYSTEM_ROLLBACK, StorageCapability.TIMEBACK)
+            (StorageCapability.SYSTEM_ROLLBACK, StorageCapability.WAYPOINT)
         )
     else:
         mounts = (

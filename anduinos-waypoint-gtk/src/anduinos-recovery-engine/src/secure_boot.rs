@@ -441,6 +441,7 @@ mod tests {
             created_at: Utc::now(),
             title: "test".into(),
             reason: "test".into(),
+            schedule_id: None,
             snapshot_uuid: Some("22222222-2222-2222-2222-222222222222".into()),
             snapshot_parent_uuid: None,
             kernel_release: Some(kernel.into()),

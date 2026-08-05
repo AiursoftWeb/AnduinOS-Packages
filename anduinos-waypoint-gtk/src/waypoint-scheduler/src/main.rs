@@ -372,6 +372,7 @@ fn create_snapshot(schedule: &Schedule) -> Result<()> {
     // Call the packaged CLI to create a snapshot through the privileged helper.
     let output = Command::new("/usr/bin/anduinos-waypoint-cli")
         .arg("create-scheduled")
+        .arg(&schedule.prefix)
         .arg(&snapshot_name)
         .arg(&schedule.description)
         .output()

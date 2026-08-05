@@ -97,7 +97,7 @@ pub fn read_managed_swapfile() -> Result<SwapStatus, String> {
 
 /// Filesystems supported by the compatibility swapfile editor.
 /// Btrfs is deliberately excluded because an active file in @root prevents
-/// Timeback from snapshotting that subvolume.
+/// Waypoint from snapshotting that subvolume.
 pub fn swapfile_management_support() -> Result<(bool, String), String> {
     let output = Command::new("findmnt")
         .args(["--noheadings", "--output", "FSTYPE", "--target", "/"])

@@ -112,6 +112,8 @@ pub struct DeploymentRecord {
     pub created_at: DateTime<Utc>,
     pub title: String,
     pub reason: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub schedule_id: Option<String>,
     pub snapshot_uuid: Option<String>,
     pub snapshot_parent_uuid: Option<String>,
     pub kernel_release: Option<String>,
@@ -133,6 +135,23 @@ impl DeploymentRecord {
         }
         if invalid_text(&self.reason, 500) {
             return Err(ModelError::InvalidField("reason"));
+        }
+        match (self.kind, &self.schedule_id) {
+            (DeploymentKind::Automatic, Some(schedule_id)) => {
+                if schedule_id.is_empty()
+                    || schedule_id.len() > 50
+                    || schedule_id.starts_with(['-', '.'])
+                    || !schedule_id
+                        .bytes()
+                        .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_'))
+                {
+                    return Err(ModelError::InvalidField("schedule_id"));
+                }
+            }
+            (DeploymentKind::Automatic, None) | (_, Some(_)) => {
+                return Err(ModelError::InvalidField("schedule_id"));
+            }
+            _ => {}
         }
         for (name, value) in [
             ("snapshot_uuid", self.snapshot_uuid.as_deref()),
@@ -275,6 +294,7 @@ mod tests {
             created_at: Utc::now(),
             title: "Before graphics driver update".into(),
             reason: "Manual recovery point".into(),
+            schedule_id: None,
             snapshot_uuid: Some(Uuid::new_v4().to_string()),
             snapshot_parent_uuid: None,
             kernel_release: Some("7.0.0-28-generic".into()),
@@ -346,6 +366,31 @@ mod tests {
         record.initramfs_sha256 = None;
         assert_eq!(record.validate(), Err(ModelError::IncompleteIdentity));
         assert!(!record.can_restore());
+    }
+
+    #[test]
+    fn automatic_deployments_require_a_bounded_schedule_identity() {
+        let mut record = valid_record();
+        record.kind = DeploymentKind::Automatic;
+        assert_eq!(
+            record.validate(),
+            Err(ModelError::InvalidField("schedule_id"))
+        );
+
+        record.schedule_id = Some("daily".into());
+        assert_eq!(record.validate(), Ok(()));
+
+        record.schedule_id = Some("../daily".into());
+        assert_eq!(
+            record.validate(),
+            Err(ModelError::InvalidField("schedule_id"))
+        );
+
+        record.kind = DeploymentKind::Manual;
+        assert_eq!(
+            record.validate(),
+            Err(ModelError::InvalidField("schedule_id"))
+        );
     }
 
     #[test]

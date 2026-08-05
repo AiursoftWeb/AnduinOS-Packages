@@ -782,6 +782,7 @@ mod tests {
             created_at: Utc::now(),
             title: "Test recovery point".into(),
             reason: "Rollback coordinator test".into(),
+            schedule_id: None,
             snapshot_uuid: Some("cccccccc-1111-4222-8333-dddddddddddd".into()),
             snapshot_parent_uuid: None,
             kernel_release: Some("7.0.0-test".into()),

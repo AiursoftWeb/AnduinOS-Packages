@@ -14,7 +14,7 @@ from .steps import FailurePolicy, InstallContext
 PACKAGE_RE = re.compile(r"^[a-z0-9][a-z0-9+.-]*(?::[a-z0-9]+)?$")
 VERSION_RE = re.compile(r"^[A-Za-z0-9.+:~\-]+$")
 ALWAYS_REMOVE = frozenset({"anduinos-installer-beta"})
-CONDITIONAL_LIVE_PACKAGES = frozenset({"anduinos-timeback-machine"})
+CONDITIONAL_LIVE_PACKAGES = frozenset({"anduinos-waypoint-gtk"})
 @dataclass
 class CleanupLiveSystemStep:
     runner: CommandRunner
@@ -64,13 +64,13 @@ class CleanupLiveSystemStep:
             )
         context.values["casper_full_manifest"] = full
         context.values["casper_desktop_manifest"] = desktop
-        context.values["timeback_payload_in_live_image"] = (
-            "anduinos-timeback-machine" in full
+        context.values["waypoint_payload_in_live_image"] = (
+            "anduinos-waypoint-gtk" in full
         )
-        payload_version = full.get("anduinos-timeback-machine")
-        context.values["timeback_payload_version"] = payload_version
+        payload_version = full.get("anduinos-waypoint-gtk")
+        context.values["waypoint_payload_version"] = payload_version
         context.log(
-            "Timeback Machine installation-media payload: "
+            "Waypoint installation-media payload: "
             + (
                 f"present ({payload_version})"
                 if payload_version is not None
@@ -79,12 +79,12 @@ class CleanupLiveSystemStep:
         )
         if context.plan.storage.filesystem is Filesystem.BTRFS:
             context.log(
-                "Timeback Machine cleanup policy: retain the payload for "
+                "Waypoint cleanup policy: retain the payload for "
                 "the Btrfs target"
             )
         else:
             context.log(
-                "Timeback Machine cleanup policy: purge the live payload "
+                "Waypoint cleanup policy: purge the live payload "
                 "from the ext4 target"
             )
 
@@ -102,12 +102,12 @@ class CleanupLiveSystemStep:
         if context.plan.storage.filesystem is Filesystem.BTRFS:
             candidates -= CONDITIONAL_LIVE_PACKAGES
             context.log(
-                "Timeback Machine cleanup decision: excluded from the "
+                "Waypoint cleanup decision: excluded from the "
                 "live-package purge set"
             )
-        elif "anduinos-timeback-machine" in full:
+        elif "anduinos-waypoint-gtk" in full:
             context.log(
-                "Timeback Machine cleanup decision: included in the "
+                "Waypoint cleanup decision: included in the "
                 "live-package purge set"
             )
         candidates = sorted(candidates)
@@ -144,12 +144,11 @@ class CleanupLiveSystemStep:
                 ),
                 timeout=1800,
             )
-        if "anduinos-timeback-machine" in installed:
+        if "anduinos-waypoint-gtk" in installed:
             context.log(
-                "Timeback Machine cleanup result: removed from the ext4 "
+                "Waypoint cleanup result: removed from the ext4 "
                 "target"
             )
-
     def verify(self, context: InstallContext) -> None:
         target = _target(context)
         for package in context.values.get("live_packages_removed", ()):

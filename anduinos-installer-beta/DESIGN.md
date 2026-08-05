@@ -171,7 +171,7 @@ carousel gesture or a dot click from bypassing disk selection, coexistence
 preflight, account validation or final confirmation.
 
 Visual assets are copied into `assets/icons` and shipped by this package. The
-runtime never depends on a sibling OOBE/Timeback checkout or a developer's icon
+runtime never depends on a sibling OOBE/Waypoint checkout or a developer's icon
 theme source tree. Shared colors, cards, callouts, dots and progress states live
 in `assets/style.css`; reusable GTK construction lives in `src/ui.py`. New pages
 should extend those two layers rather than defining a page-local visual system.

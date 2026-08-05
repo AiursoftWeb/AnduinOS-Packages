@@ -678,6 +678,7 @@ mod tests {
             created_at: Utc::now(),
             title: title.into(),
             reason: "Recovery test".into(),
+            schedule_id: None,
             snapshot_uuid: Some(uuid.into()),
             snapshot_parent_uuid: Some("ffffffff-1111-4222-8333-aaaaaaaaaaaa".into()),
             kernel_release: Some("test-kernel".into()),

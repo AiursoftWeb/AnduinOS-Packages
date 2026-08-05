@@ -1597,7 +1597,7 @@ def build_storage_strategy_page(shared, nav_view):
         erase_warning
         + " "
         + _(
-            "Enables shared-space subvolumes, snapshots and Timeback Machine.",
+            "Enables shared-space subvolumes, snapshots and Waypoint.",
             lang,
         ),
         "btrfs",
@@ -3196,7 +3196,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         _page_header(
             "Installing AnduinOS",
             "Please do not turn off your computer",
-            "timeback",
+            "waypoint",
             lang,
         )
     )
@@ -3236,8 +3236,8 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         ),
         "refresh-package-indexes": _("Refresh package indexes", lang),
         "upgrade-system": _("Install system updates", lang),
-        "ensure-timeback-machine": _(
-            "Ensure Timeback Machine is available", lang
+        "ensure-waypoint": _(
+            "Ensure Waypoint is available", lang
         ),
         "install-third-party-drivers": _("Install hardware drivers", lang),
         "verify-dkms-signatures": _(
@@ -3274,7 +3274,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     if not plan.software.install_updates:
         omitted_steps.update(("refresh-package-indexes", "upgrade-system"))
     if plan.storage.filesystem is not Filesystem.BTRFS:
-        omitted_steps.add("ensure-timeback-machine")
+        omitted_steps.add("ensure-waypoint")
     if not plan.software.install_third_party_drivers:
         omitted_steps.add("install-third-party-drivers")
     for step_id in omitted_steps:

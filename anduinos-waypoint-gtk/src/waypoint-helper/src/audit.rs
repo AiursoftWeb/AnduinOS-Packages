@@ -202,3 +202,27 @@ pub fn log_external_backup(
     }
     event.log();
 }
+
+/// Log a privileged operation that does not fit the snapshot create/delete/
+/// restore events above. Resource values must be validated identifiers or
+/// fixed product-owned names, never caller-selected paths.
+pub fn log_operation(
+    user_id: String,
+    process_id: u32,
+    operation: &str,
+    resource: &str,
+    success: bool,
+    error: Option<&str>,
+) {
+    let mut event = AuditEvent::new(
+        user_id,
+        process_id,
+        operation,
+        resource,
+        if success { "success" } else { "failure" },
+    );
+    if let Some(error) = error {
+        event = event.with_details(format!("error: {error}"));
+    }
+    event.log();
+}

@@ -1,3 +1,4 @@
+import hashlib
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -8,6 +9,13 @@ ICONS = ROOT / "assets" / "icons"
 
 
 class InstallerVisualAssetTests(unittest.TestCase):
+    def test_waypoint_retains_the_commissioned_timeback_artwork(self):
+        digest = hashlib.sha256((ICONS / "waypoint.svg").read_bytes()).hexdigest()
+        self.assertEqual(
+            digest,
+            "f6d678d9551cbeb64c4fcad189d1b34aaaad59465588eee7b504cd0c798729a3",
+        )
+
     def test_progress_ui_exposes_regional_steps_and_warnings(self):
         source = (ROOT / "src/pages.py").read_text(encoding="utf-8")
         self.assertIn('"configure-keyboard-layout":', source)
@@ -37,7 +45,7 @@ class InstallerVisualAssetTests(unittest.TestCase):
             "keyboard.svg",
             "updates.svg",
             "disk.svg",
-            "timeback.svg",
+            "waypoint.svg",
             "coexistence.svg",
             "secure-boot.svg",
             "account.svg",

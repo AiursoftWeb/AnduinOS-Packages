@@ -151,13 +151,14 @@ cmd_create() {
 # Private scheduler contract. Deliberately omitted from user-facing help: the
 # root-owned systemd service is its only supported caller.
 cmd_create_scheduled() {
-    local title="${1:-}"
-    local description="${2:-}"
-    [[ -n "$title" && -n "$description" ]] || {
-        echo "Error: internal create-scheduled requires a title and description" >&2
+    local schedule_id="${1:-}"
+    local title="${2:-}"
+    local description="${3:-}"
+    [[ -n "$schedule_id" && -n "$title" && -n "$description" ]] || {
+        echo "Error: internal create-scheduled requires a schedule ID, title and description" >&2
         exit 1
     }
-    pair_payload "$(call_raw CreateScheduledDeployment ss "$title" "$description")" >/dev/null
+    pair_payload "$(call_raw CreateScheduledDeployment sss "$schedule_id" "$title" "$description")" >/dev/null
 }
 
 recovery_status() {

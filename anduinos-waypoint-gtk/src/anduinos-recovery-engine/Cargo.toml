@@ -12,19 +12,19 @@ path = "src/lib.rs"
 
 [[bin]]
 name = "anduinos-waypoint-initramfs"
-path = "src/bin/initramfs.rs"
+path = "src/waypoint_initramfs.rs"
 
 [[bin]]
 name = "anduinos-waypoint-boot-config"
-path = "src/bin/boot_config.rs"
+path = "src/waypoint_boot_config.rs"
 
 [[bin]]
 name = "anduinos-waypoint-confirm"
-path = "src/bin/confirm.rs"
+path = "src/waypoint_confirm.rs"
 
 [[bin]]
 name = "anduinos-waypoint-apt-hook"
-path = "src/bin/apt_hook.rs"
+path = "src/waypoint_apt_hook.rs"
 
 [dependencies]
 chrono.workspace = true

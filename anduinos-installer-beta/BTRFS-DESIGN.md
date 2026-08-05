@@ -41,10 +41,10 @@ encryption choices.
 
 ## Default filesystem policy
 
-Btrfs is the AnduinOS default because Timeback, snapshots and shared-space
+Btrfs is the AnduinOS default because Waypoint, snapshots and shared-space
 subvolumes are operating-system capabilities, not because every workload is
 faster than ext4. ext4 remains an explicit classic alternative and does not
-receive Btrfs snapshot or Timeback semantics.
+receive Btrfs snapshot or Waypoint semantics.
 
 The default does not change solely because a device reports itself as
 rotational. Device names and rotational hints may be unreliable behind USB,
@@ -86,12 +86,12 @@ inside the snapshot boundary merely because its mount was forgotten.
 
 ## Future custom subvolume layouts
 
-Custom names and paths are supported only after the installer and Timeback can
+Custom names and paths are supported only after the installer and Waypoint can
 consume a versioned semantic-role manifest. The manifest maps filesystem and
 subvolume UUIDs to roles such as system root, user home, persistent logs,
 snapshot store, container data and virtual-machine images.
 
-Timeback compatibility is determined by rollback invariants:
+Waypoint compatibility is determined by rollback invariants:
 
 - `/`, `/usr`, `/etc`, `/var/lib/dpkg`, `/var/lib/apt`, `/var/cache/apt` and
   `/boot` share the system-root transaction boundary;
@@ -103,7 +103,7 @@ Timeback compatibility is determined by rollback invariants:
 - boot artifacts can be proven compatible with a retained deployment.
 
 A custom layout that is bootable but violates these invariants is labeled
-`Custom layout — Timeback unsupported` before installation. Cosmetic names do
+`Custom layout — Waypoint unsupported` before installation. Cosmetic names do
 not determine support, and canonical names do not override an invalid
 boundary.
 

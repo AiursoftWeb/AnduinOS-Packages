@@ -137,9 +137,9 @@ those artifacts.
 ### Filesystem default
 
 Btrfs remains the default on solid-state and rotational media because
-Timeback Machine, system snapshots and the shared-space subvolume model are
+Waypoint, system snapshots and the shared-space subvolume model are
 AnduinOS capabilities. ext4 remains an explicit classic alternative without
-Timeback or transactional system rollback.
+Waypoint or transactional system rollback.
 
 The installer must not infer filesystem policy from a device path such as
 `nvme` or `sd`. NVMe is a transport, SATA devices may be SSDs, and rotational
@@ -156,13 +156,13 @@ count, free-space pressure or failure behaviour.
 The UI and final summary distinguish three outcomes:
 
 - **AnduinOS-managed** — canonical, fully supported and eligible for
-  Timeback.
+  Waypoint.
 - **Validated custom** — bootable and updateable, but some capabilities are
   disabled because the topology does not satisfy their invariants.
 - **Invalid** — the executor refuses the layout; there is no “continue
   anyway” path around boot or data-safety requirements.
 
-Custom Btrfs names are not inherently unsupported. Timeback eligibility is
+Custom Btrfs names are not inherently unsupported. Waypoint eligibility is
 decided by semantic roles and rollback boundaries, not cosmetic names. A
 layout that moves package-manager state, boot artifacts or required
 persistent data across incompatible boundaries cannot be certified merely
@@ -397,8 +397,8 @@ Mount validation requires normalized absolute paths, rejects `..`, rejects
 duplicates and prevents target escape through symlinks. `/proc`, `/sys`,
 `/dev`, `/run` and installer staging paths are never user mount targets.
 
-Some layouts may be bootable but incompatible with Timeback. A separate
-`/var` is not Timeback-compatible if dpkg or APT state leaves the system-root
+Some layouts may be bootable but incompatible with Waypoint. A separate
+`/var` is not Waypoint-compatible if dpkg or APT state leaves the system-root
 rollback boundary. Splitting `/usr` or `/etc` is initially rejected.
 
 The installer never overlays a new operating system onto an arbitrary
@@ -411,7 +411,7 @@ Filesystem support is internal and capability-based. Each trusted driver owns
 format command construction, mount options, `fstab` generation, verification,
 minimum size, boot constraints and recovery tooling.
 
-| Driver | Initial status | Timeback | Notes |
+| Driver | Initial status | Waypoint | Notes |
 |---|---|---:|---|
 | Btrfs | supported | conditional | canonical or role-compatible layout |
 | ext4 | supported | no | simple root and conventional split mounts |
@@ -427,10 +427,10 @@ options as a custom filesystem.
 Custom mode presents two explicit policies:
 
 1. **AnduinOS-managed Btrfs** creates the canonical roles and remains
-   Timeback-compatible.
+   Waypoint-compatible.
 2. **Custom Btrfs** lets the user select or create subvolumes and assign mount
    points. The base installation is supported only if boot invariants pass;
-   Timeback is enabled only if the semantic-role validator approves the
+   Waypoint is enabled only if the semantic-role validator approves the
    rollback boundaries.
 
 The canonical release-one names remain the compatibility default. A future
@@ -443,11 +443,11 @@ role -> subvolume UUID and current path
 mount point
 rollback membership
 CoW/workload policy
-Timeback compatibility result and reason
+Waypoint compatibility result and reason
 ```
 
-This permits custom names without making Timeback guess. If a role or
-boundary is missing, the UI says `Custom layout — Timeback unsupported` before
+This permits custom names without making Waypoint guess. If a role or
+boundary is missing, the UI says `Custom layout — Waypoint unsupported` before
 installation.
 
 Btrfs-specific options such as compression and nodatacow affect the whole
@@ -458,7 +458,7 @@ created, not represented as a fictional independent subvolume mount option.
 
 Sharing an already populated Btrfs filesystem with another Linux installation
 is deferred until namespaced subvolume roles, collision handling, shared
-mount-option policy and Timeback discovery are specified and tested.
+mount-option policy and Waypoint discovery are specified and tested.
 
 ## RAID and multi-device plan
 
@@ -715,7 +715,7 @@ stable release can claim coexistence qualification.
 - Add filesystem-driver capability validation.
 - Add custom Btrfs subvolume selection/creation and the semantic role
   manifest.
-- Expose clear Timeback compatibility reasons.
+- Expose clear Waypoint compatibility reasons.
 - Keep resizing, moving and repair external.
 
 ### Storage 4 — consume existing containers and arrays

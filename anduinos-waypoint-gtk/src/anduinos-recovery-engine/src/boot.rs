@@ -469,6 +469,7 @@ mod tests {
                 created_at: Utc::now(),
                 title: "Target".into(),
                 reason: "Boot integration test".into(),
+                schedule_id: None,
                 snapshot_uuid: Some("aaaaaaaa-1111-4222-8333-bbbbbbbbbbbb".into()),
                 snapshot_parent_uuid: None,
                 kernel_release: Some("test-kernel".into()),

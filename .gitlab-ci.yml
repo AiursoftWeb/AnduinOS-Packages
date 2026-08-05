@@ -365,11 +365,6 @@ anduinos-swap-config:
   variables:
     PACKAGE_DIR: anduinos-swap-config
 
-anduinos-timeback-machine:
-  extends: .publish
-  variables:
-    PACKAGE_DIR: anduinos-timeback-machine
-
 anduinos-waypoint-gtk:
   extends: .publish
   variables:

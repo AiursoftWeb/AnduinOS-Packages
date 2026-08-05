@@ -7,6 +7,10 @@ test -f "$ROOT/src/Cargo.lock"
 test -f "$ROOT/upstream/LICENSE"
 test -f "$ROOT/upstream/README.md"
 test -f "$ROOT/data/org.anduinos.Waypoint.svg"
+# Waypoint deliberately retains the commissioned Timeback application artwork.
+# Resource identifiers may change with the product name; the artwork may not.
+echo 'f6d678d9551cbeb64c4fcad189d1b34aaaad59465588eee7b504cd0c798729a3  '"$ROOT/data/org.anduinos.Waypoint.svg" \
+    | sha256sum --check --status
 test -f "$ROOT/data/org.anduinos.Waypoint.metainfo.xml"
 test -x "$ROOT/compile-locales.sh"
 test -f "$ROOT/po/anduinos-waypoint-gtk.pot"
@@ -16,8 +20,15 @@ test -f "$ROOT/data/09_anduinos_waypoint"
 test -x "$ROOT/data/no-os-prober"
 test -f "$ROOT/data/01_anduinos_waypoint_env"
 test -f "$ROOT/data/anduinos-waypoint-confirm.service"
-test -f "$ROOT/src/anduinos-recovery-engine/src/bin/confirm.rs"
-test -f "$ROOT/src/anduinos-recovery-engine/src/bin/apt_hook.rs"
+test -f "$ROOT/src/anduinos-recovery-engine/src/waypoint_initramfs.rs"
+test -f "$ROOT/src/anduinos-recovery-engine/src/waypoint_boot_config.rs"
+test -f "$ROOT/src/anduinos-recovery-engine/src/waypoint_confirm.rs"
+test -f "$ROOT/src/anduinos-recovery-engine/src/waypoint_apt_hook.rs"
+if rg -n 'path[[:space:]]*=[[:space:]]*"src/bin/' \
+    "$ROOT/src" --glob 'Cargo.toml'; then
+    echo "Executable Rust sources must use the repository-standard src/*.rs layout" >&2
+    exit 1
+fi
 test -f "$ROOT/data/90-anduinos-waypoint"
 grep -Fq 'if [ -x /usr/libexec/anduinos-waypoint-apt-hook ]' \
     "$ROOT/data/90-anduinos-waypoint"
@@ -32,6 +43,28 @@ test -x "$ROOT/scripts/test-recovery-operations-loopback.sh"
 test -x "$ROOT/scripts/qualify-recovery-vm.sh"
 test -x "$ROOT/scripts/test-installed-policy.sh"
 test -x "$ROOT/scripts/check-i18n.py"
+test -x "$ROOT/scripts/screenshot-demo-service.py"
+python3 - "$ROOT/scripts/screenshot-demo-service.py" <<'PY'
+import sys
+
+with open(sys.argv[1], encoding="utf-8") as source:
+    compile(source.read(), sys.argv[1], "exec")
+PY
+python3 - "$ROOT/screenshots/overview.png" "$ROOT/screenshots/scheduled-recovery.png" <<'PY'
+import struct
+import sys
+
+for name in sys.argv[1:]:
+    with open(name, "rb") as stream:
+        if stream.read(8) != b"\x89PNG\r\n\x1a\n":
+            raise SystemExit(f"AppStream screenshot is not a PNG: {name}")
+        length, kind = struct.unpack(">I4s", stream.read(8))
+        if length != 13 or kind != b"IHDR":
+            raise SystemExit(f"AppStream screenshot has no valid IHDR: {name}")
+        width, height = struct.unpack(">II", stream.read(8))
+        if (width, height) != (1280, 720):
+            raise SystemExit(f"AppStream screenshot must be 1280x720: {name}")
+PY
 
 rg -q 'rm -f -- /etc/anduinos-waypoint/schedules.toml' "$ROOT/scripts/postrm.sh"
 rg -q 'systemctl enable anduinos-waypoint-confirm.service' "$ROOT/scripts/postinst.sh"

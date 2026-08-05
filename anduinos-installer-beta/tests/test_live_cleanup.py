@@ -128,7 +128,7 @@ class LiveCleanupTests(unittest.TestCase):
                     InstallContext(plan, lambda _message: None)
                 )
 
-    def test_btrfs_installation_retains_timeback_live_payload(self):
+    def test_btrfs_installation_retains_waypoint_live_payload(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             target = root / "target"
@@ -136,7 +136,7 @@ class LiveCleanupTests(unittest.TestCase):
             full = root / "full"
             desktop = root / "desktop"
             full.write_text(
-                "bash 1\nanduinos-timeback-machine 2\n",
+                "bash 1\nanduinos-waypoint-gtk 2\n",
                 encoding="utf-8",
             )
             desktop.write_text("bash 1\n", encoding="utf-8")
@@ -161,14 +161,14 @@ class LiveCleanupTests(unittest.TestCase):
             for command, _ in runner.commands
             if "dpkg-query" in command
         ]
-        self.assertTrue(context.values["timeback_payload_in_live_image"])
-        self.assertEqual(context.values["timeback_payload_version"], "2")
-        self.assertNotIn("anduinos-timeback-machine", queried)
+        self.assertTrue(context.values["waypoint_payload_in_live_image"])
+        self.assertEqual(context.values["waypoint_payload_version"], "2")
+        self.assertNotIn("anduinos-waypoint-gtk", queried)
         combined_logs = "\n".join(logs)
         self.assertIn("payload: present (2)", combined_logs)
         self.assertIn("excluded from the live-package purge set", combined_logs)
 
-    def test_ext4_installation_purges_timeback_live_payload(self):
+    def test_ext4_installation_purges_waypoint_live_payload(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             target = root / "target"
@@ -176,7 +176,7 @@ class LiveCleanupTests(unittest.TestCase):
             full = root / "full"
             desktop = root / "desktop"
             full.write_text(
-                "bash 1\nanduinos-timeback-machine 2\n",
+                "bash 1\nanduinos-waypoint-gtk 2\n",
                 encoding="utf-8",
             )
             desktop.write_text("bash 1\n", encoding="utf-8")
@@ -196,7 +196,7 @@ class LiveCleanupTests(unittest.TestCase):
                 "dpkg-query",
                 "--show",
                 "--showformat=${db:Status-Abbrev}",
-                "anduinos-timeback-machine",
+                "anduinos-waypoint-gtk",
             )
             runner.outputs[query] = ("ii \n", "", 0)
             logs: list[str] = []
@@ -210,17 +210,17 @@ class LiveCleanupTests(unittest.TestCase):
             for command, _ in runner.commands
             if "purge" in command
         )
-        self.assertEqual(purge[-1], "anduinos-timeback-machine")
+        self.assertEqual(purge[-1], "anduinos-waypoint-gtk")
         combined_logs = "\n".join(logs)
         self.assertIn("included in the live-package purge set", combined_logs)
         self.assertIn("removed from the ext4 target", combined_logs)
 
-    def test_rejects_timeback_in_unconditional_desktop_manifest(self):
+    def test_rejects_waypoint_in_unconditional_desktop_manifest(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             full = root / "full"
             desktop = root / "desktop"
-            manifest = "bash 1\nanduinos-timeback-machine 2\n"
+            manifest = "bash 1\nanduinos-waypoint-gtk 2\n"
             full.write_text(manifest, encoding="utf-8")
             desktop.write_text(manifest, encoding="utf-8")
             base = valid_plan()

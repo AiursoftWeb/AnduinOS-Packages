@@ -303,6 +303,7 @@ impl WaypointHelper {
         #[zbus(header)] hdr: zbus::message::Header<'_>,
         #[zbus(connection)] connection: &Connection,
         #[zbus(signal_context)] ctxt: zbus::SignalContext<'_>,
+        schedule_id: String,
         title: String,
         reason: String,
     ) -> (bool, String) {
@@ -326,6 +327,7 @@ impl WaypointHelper {
         }
         match OperationEngine::default().create_scheduled(
             &layout::inspect_current(),
+            &schedule_id,
             &title,
             &reason,
             |_phase, _fraction, _message| {},
@@ -394,22 +396,55 @@ impl WaypointHelper {
         id: String,
         pinned: bool,
     ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
         if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_CONFIGURE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_CONFIGURE, &error.to_string());
             return (false, format!("Authorization failed: {error}"));
         }
+        let deployment_id = id.clone();
         let id = match id.parse::<DeploymentId>() {
             Ok(id) => id,
-            Err(error) => return (false, format!("Invalid recovery point ID: {error}")),
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "set_recovery_protection",
+                    &deployment_id,
+                    false,
+                    Some(&error.to_string()),
+                );
+                return (false, format!("Invalid recovery point ID: {error}"));
+            }
         };
         match OperationEngine::default().set_pinned(&layout::inspect_current(), id, pinned) {
             Ok(record) => match serde_json::to_string(&record) {
-                Ok(json) => (true, json),
+                Ok(json) => {
+                    audit::log_operation(
+                        uid,
+                        pid,
+                        "set_recovery_protection",
+                        &deployment_id,
+                        true,
+                        None,
+                    );
+                    (true, json)
+                }
                 Err(error) => (
                     false,
                     format!("Could not serialize recovery state: {error}"),
                 ),
             },
-            Err(error) => (false, error.to_string()),
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "set_recovery_protection",
+                    &deployment_id,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
         }
     }
 
@@ -456,12 +491,27 @@ impl WaypointHelper {
         #[zbus(header)] hdr: zbus::message::Header<'_>,
         #[zbus(connection)] connection: &Connection,
     ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
         if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_RESTORE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_RESTORE, &error.to_string());
             return (false, format!("Authorization failed: {error}"));
         }
         match RollbackCoordinator::default().cancel() {
-            Ok(()) => (true, "Pending restore cancelled".into()),
-            Err(error) => (false, error.to_string()),
+            Ok(()) => {
+                audit::log_operation(uid, pid, "cancel_restore", "pending-restore", true, None);
+                (true, "Pending restore cancelled".into())
+            }
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "cancel_restore",
+                    "pending-restore",
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
         }
     }
 
@@ -755,8 +805,9 @@ impl WaypointHelper {
         #[zbus(header)] hdr: zbus::message::Header<'_>,
         #[zbus(connection)] connection: &Connection,
     ) -> (bool, String) {
-        // Check authorization
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
         if let Err(e) = check_authorization(&hdr, connection, POLKIT_ACTION_CONFIGURE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_CONFIGURE, &e.to_string());
             return (false, format!("Authorization failed: {e}"));
         }
 
@@ -764,24 +815,53 @@ impl WaypointHelper {
         let schedules =
             match waypoint_common::SchedulesConfig::load_from_file(&config.schedules_config) {
                 Ok(schedules) => schedules,
-                Err(error) => return (false, format!("Failed to load schedules: {error}")),
+                Err(error) => {
+                    audit::log_operation(
+                        uid,
+                        pid,
+                        "apply_scheduler_state",
+                        "anduinos-waypoint-scheduler.service",
+                        false,
+                        Some(&error.to_string()),
+                    );
+                    return (false, format!("Failed to load schedules: {error}"));
+                }
             };
         let (action, message) = if schedules.enabled_schedules().is_empty() {
             ("disable", "Automatic recovery disabled")
         } else {
             ("enable", "Automatic recovery enabled")
         };
-        run_command(
+        match run_command(
             "/usr/bin/systemctl",
             &[action, "--now", "anduinos-waypoint-scheduler.service"],
-        )
-        .map(|_| (true, message.to_string()))
-        .unwrap_or_else(|e| {
-            (
-                false,
-                format!("Failed to apply scheduler service state: {e}"),
-            )
-        })
+        ) {
+            Ok(()) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "apply_scheduler_state",
+                    "anduinos-waypoint-scheduler.service",
+                    true,
+                    None,
+                );
+                (true, message.to_string())
+            }
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "apply_scheduler_state",
+                    "anduinos-waypoint-scheduler.service",
+                    false,
+                    Some(&error.to_string()),
+                );
+                (
+                    false,
+                    format!("Failed to apply scheduler service state: {error}"),
+                )
+            }
+        }
     }
 
     /// Get scheduler service status
@@ -822,15 +902,25 @@ impl WaypointHelper {
         #[zbus(header)] hdr: zbus::message::Header<'_>,
         #[zbus(connection)] connection: &Connection,
     ) -> (bool, String) {
-        // Check authorization
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
         if let Err(e) = check_authorization(&hdr, connection, POLKIT_ACTION_DELETE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_DELETE, &e.to_string());
             return (false, format!("Authorization failed: {e}"));
         }
 
-        result_to_dbus_response(
+        let response = result_to_dbus_response(
             Self::apply_schedule_retention_impl(),
             "Schedule retention failed",
-        )
+        );
+        audit::log_operation(
+            uid,
+            pid,
+            "apply_schedule_retention",
+            "automatic-recovery-points",
+            response.0,
+            (!response.0).then_some(response.1.as_str()),
+        );
+        response
     }
 
     /// Compare two snapshots and return list of changed files
@@ -1009,7 +1099,7 @@ impl WaypointHelper {
             let mut matching = eligible
                 .iter()
                 .copied()
-                .filter(|record| record.title.starts_with(&format!("{}-", schedule.prefix)))
+                .filter(|record| record.schedule_id.as_deref() == Some(&schedule.prefix))
                 .collect::<Vec<_>>();
             matching.sort_by_key(|record| std::cmp::Reverse(record.created_at));
 

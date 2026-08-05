@@ -629,6 +629,7 @@ mod tests {
             created_at: Utc::now(),
             title: "Confirmation test".into(),
             reason: "Confirmation test".into(),
+            schedule_id: None,
             snapshot_uuid: Some(SNAPSHOT.into()),
             snapshot_parent_uuid: None,
             kernel_release: Some("7.0.0-test".into()),

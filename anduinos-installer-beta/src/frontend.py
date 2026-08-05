@@ -425,13 +425,13 @@ class DevelopmentExecutorClient:
         log(f"Target filesystem: {plan.storage.filesystem.value}")
         if plan.storage.filesystem is Filesystem.BTRFS:
             log(
-                "Timeback Machine policy: retain the installation-media "
+                "Waypoint policy: retain the installation-media "
                 "payload, verify it, and use the repository only as a "
                 "legacy fallback"
             )
         else:
             log(
-                "Timeback Machine policy: remove the live payload from the "
+                "Waypoint policy: remove the live payload from the "
                 "ext4 target"
             )
         for step, weight in pipeline:

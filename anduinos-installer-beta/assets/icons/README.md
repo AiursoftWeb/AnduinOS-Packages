@@ -15,7 +15,7 @@ icon theme.
 | `secure-boot.svg` | `anduinos-oobe/resources/icons/secureboot-chip.svg` |
 | `timezone.svg` | `anduinos-oobe/resources/icons/gnome-maps.svg` |
 | `review.svg` | `anduinos-oobe/resources/icons/open-book-symbolic.svg` |
-| `timeback.svg` | `anduinos-timeback-machine/data/timeback-hero.svg` |
+| `waypoint.svg` | Commissioned Timeback application artwork retained by `anduinos-waypoint-gtk/data/org.anduinos.Waypoint.svg` |
 | `language.svg` | Fluent icon theme `src/scalable/apps/preferences-desktop-locale.svg` |
 | `account.svg` | Fluent icon theme `src/scalable/apps/userinfo.svg` |
 | `advanced.svg` | User-curated storage illustration (`Desktop/disks/advanced.svg`) |
@@ -26,8 +26,10 @@ icon theme.
 | `one-single-disk.svg` | User-curated storage illustration (`Desktop/disks/one-single-disk.svg`) |
 | `select-installation-disk.svg` | User-curated storage illustration (`Desktop/disks/select_installation_disk.svg`) |
 
-The OOBE, Timeback and installer packages are part of the GPL-3.0
+The OOBE, Waypoint and installer packages are part of the GPL-3.0
 AnduinOS-Packages repository. The Fluent icon theme is also distributed under
 GPL-3.0; its upstream project is <https://github.com/vinceliuice/Fluent-icon-theme>.
 The user-curated storage illustrations were supplied specifically for this
-installer and are kept byte-for-byte in the package source.
+installer and are kept byte-for-byte in the package source. Waypoint keeps the
+commissioned Timeback application artwork byte-for-byte while using the new
+Waypoint resource name.

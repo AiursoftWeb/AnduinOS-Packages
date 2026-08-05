@@ -34,7 +34,7 @@ REQUIRED_FILES = (
     Path("usr/share/anduinos-installer-beta/languages.json"),
     Path("usr/share/anduinos-installer-beta/icons/updates.svg"),
     Path("usr/share/anduinos-installer-beta/icons/disk.svg"),
-    Path("usr/share/anduinos-installer-beta/icons/timeback.svg"),
+    Path("usr/share/anduinos-installer-beta/icons/waypoint.svg"),
     Path("usr/share/anduinos-installer-beta/icons/coexistence.svg"),
     Path("usr/share/anduinos-installer-beta/icons/account.svg"),
     Path("usr/share/anduinos-installer-beta/icons/timezone.svg"),

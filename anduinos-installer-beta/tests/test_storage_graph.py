@@ -52,7 +52,7 @@ class StorageGraphSchemaTests(unittest.TestCase):
             (
                 StorageCapability.BOOTABLE,
                 StorageCapability.SYSTEM_ROLLBACK,
-                StorageCapability.TIMEBACK,
+                StorageCapability.WAYPOINT,
             ),
         )
         self.assertEqual(

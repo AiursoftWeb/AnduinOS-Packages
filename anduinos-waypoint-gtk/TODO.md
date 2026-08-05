@@ -39,7 +39,7 @@ Items marked complete must have direct test or artifact evidence.
   - [x] Localize the desktop entry, AppStream summary and description, Polkit
     authentication prompts, desktop notifications, exported comparisons, and
     scheduler-generated recovery-point descriptions.
-- [ ] Capture new 16:9 AppStream screenshots from the branded AnduinOS build;
+- [x] Capture new 16:9 AppStream screenshots from the branded AnduinOS build;
   upstream screenshots are reference material and must not be published as if
   they depict the finished derivative.
 
@@ -72,7 +72,7 @@ Items marked complete must have direct test or artifact evidence.
 
 ## 5. Product integration
 
-- [ ] Adapt Waypoint's overview, list, comparison, scheduling, retention, quota,
+- [x] Adapt Waypoint's overview, list, comparison, scheduling, retention, quota,
   exclusion, and backup screens to the AnduinOS domain model.
   - [x] Connect the systemd scheduler to the internal
     `CreateScheduledDeployment` operation, derive schedule history from typed
@@ -108,7 +108,7 @@ Items marked complete must have direct test or artifact evidence.
   `docs/RECOVERY-SCOPE.md`.
 - [x] Integrate paired APT pre/post recovery points using fail-open hooks that
   can never make APT or dpkg fail.
-- [ ] Finish hardening and integration-testing the root D-Bus helper and systemd
+- [x] Finish hardening and integration-testing the root D-Bus helper and systemd
   services. The release build already removes legacy path-based backup methods,
   restricts callers to root/local sudo administrators, fixes privileged paths and
   environment handling, narrows the helper write sandbox, and gives external backup

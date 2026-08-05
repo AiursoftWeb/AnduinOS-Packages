@@ -50,7 +50,7 @@ class ExecutorPipelineTests(unittest.TestCase):
             "configure-system",
             "refresh-package-indexes",
             "upgrade-system",
-            "ensure-timeback-machine",
+            "ensure-waypoint",
             "verify-dkms-signatures",
             "install-bootloader",
             "enroll-secure-boot",
@@ -87,7 +87,7 @@ class ExecutorPipelineTests(unittest.TestCase):
             pipeline.index("verify-dkms-signatures"),
         )
 
-    def test_timeback_step_is_only_present_for_btrfs(self):
+    def test_waypoint_step_is_only_present_for_btrfs(self):
         from installer_core.model import Filesystem
 
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
@@ -95,13 +95,13 @@ class ExecutorPipelineTests(unittest.TestCase):
                 valid_plan(filesystem=Filesystem.EXT4)
             )
         self.assertNotIn(
-            "ensure-timeback-machine",
+            "ensure-waypoint",
             CapturingStepRunner.captured,
         )
 
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
             InstallerExecutor(lambda _message: None).run(valid_plan())
         self.assertIn(
-            "ensure-timeback-machine",
+            "ensure-waypoint",
             CapturingStepRunner.captured,
         )

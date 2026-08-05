@@ -587,6 +587,7 @@ mod tests {
             created_at,
             title: title.into(),
             reason: "Test recovery point".into(),
+            schedule_id: None,
             snapshot_uuid: Some(Uuid::new_v4().to_string()),
             snapshot_parent_uuid: None,
             kernel_release: Some("6.0-test".into()),

@@ -6,9 +6,8 @@ architecture, scheduling model, retention controls, read-only storage views, and
 backup design direction from the MIT-licensed Waypoint project, while replacing its
 Void-specific and unsafe system integration with an AnduinOS recovery engine.
 
-This directory is a new product. `anduinos-timeback-machine` is only a safety
-reference while the recovery engine is rebuilt; it is not a compatibility
-target and has never been released to AnduinOS users.
+This directory is a new product with no legacy migration contract. Earlier
+unreleased recovery experiments remain available from repository history.
 
 ## Safety boundary
 
@@ -147,10 +146,8 @@ removed, and never calls an already removed APT hook. This is a useful packaging
 and negative-layout gate; it does not replace destructive qualification on the
 exact AnduinOS Btrfs layout.
 
-The recovery engine is derived from the unreleased GPL AnduinOS Timeback
-Machine safety work. It has its own Waypoint namespace and on-disk root
-(`/.snapshots/anduinos-waypoint`); no migration compatibility is promised or
-needed. The GTK application and CLI now use the deployment model throughout,
+The recovery engine uses its own Waypoint namespace and on-disk root
+(`/.snapshots/anduinos-waypoint`). The GTK application and CLI use the deployment model throughout,
 and the imported automatic/path-based backup implementation has been removed
 from the build. The destructive qualification matrix is still required before
 release.

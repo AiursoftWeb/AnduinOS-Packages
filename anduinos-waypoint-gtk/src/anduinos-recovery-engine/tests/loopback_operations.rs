@@ -129,6 +129,7 @@ fn real_btrfs_create_verify_protect_retention_and_cleanup() {
     let first = engine
         .create_scheduled(
             &layout,
+            "loopback-hourly",
             "loopback-hourly-first",
             "Hourly automatic recovery point",
             |_, _, _| {},
@@ -139,6 +140,7 @@ fn real_btrfs_create_verify_protect_retention_and_cleanup() {
     let second = engine
         .create_scheduled(
             &layout,
+            "loopback-hourly",
             "loopback-hourly-second",
             "Hourly automatic recovery point",
             |_, _, _| {},

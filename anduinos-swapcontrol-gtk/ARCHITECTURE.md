@@ -35,8 +35,8 @@ AnduinOS 虚拟内存配置的 GTK4 GUI。它必须区分三种完全不同的�
 - 0 GiB 表示停用、移除 `/swapfile` 及其 fstab 项。
 
 AnduinOS 默认 Btrfs 根禁止创建额外 `/swapfile`。即使正确创建 NOCOW Swapfile，活跃
-文件仍会阻止包含它的 `@root` 子卷被 Timeback 快照。增加第七个 `@swap` 子卷属于
-安装器和 Timeback 的系统 ABI 变更，不能由这个 App 私自创建。
+文件仍会阻止包含它的 `@root` 子卷被 Waypoint 创建恢复点。增加第七个 `@swap` 子卷属于
+安装器和 Waypoint 的系统 ABI 变更，不能由这个 App 私自创建。
 
 ## 休眠健康状态
 

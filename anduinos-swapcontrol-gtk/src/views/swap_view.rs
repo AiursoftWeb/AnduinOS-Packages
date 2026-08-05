@@ -831,7 +831,7 @@ impl SwapView {
             } else if resize_supported {
                 i18n("Optional compatibility file; 0 GiB removes it and 20 GiB remains reserved for the system")
             } else if filesystem == "btrfs" {
-                i18n("Disabled on Btrfs because a root-subvolume swap file would prevent Timeback snapshots")
+                i18n("Disabled on Btrfs because a root-subvolume swap file would prevent Waypoint recovery points")
             } else {
                 i18n_fmt("Swap file resizing is unsupported on {0}", &[&filesystem])
             };

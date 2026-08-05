@@ -380,7 +380,7 @@ fn find_last_snapshot(
     let matching: Vec<_> = deployments
         .iter()
         .filter(|deployment| {
-            deployment.kind == "automatic" && deployment.title.starts_with(&format!("{prefix}-"))
+            deployment.kind == "automatic" && deployment.schedule_id.as_deref() == Some(prefix)
         })
         .collect();
 
@@ -423,11 +423,12 @@ fn build_sparkline_data(
         &schedule.prefix
     };
 
-    // Filter snapshots by prefix
+    // Filter recovery points by their validated schedule identity. Titles are
+    // presentation data and must never drive retention or history ownership.
     let mut scheduled_deployments: Vec<_> = deployments
         .iter()
         .filter(|deployment| {
-            deployment.kind == "automatic" && deployment.title.starts_with(&format!("{prefix}-"))
+            deployment.kind == "automatic" && deployment.schedule_id.as_deref() == Some(prefix)
         })
         .collect();
 
@@ -866,6 +867,7 @@ mod tests {
 
     fn deployment(
         kind: &str,
+        schedule_id: Option<&str>,
         title: &str,
         created_at: chrono::DateTime<chrono::Utc>,
     ) -> crate::dbus_client::RecoveryDeployment {
@@ -876,33 +878,42 @@ mod tests {
             created_at,
             title: title.to_string(),
             reason: "test".to_string(),
+            schedule_id: schedule_id.map(str::to_string),
             kernel_release: None,
             pinned: false,
         }
     }
 
     #[test]
-    fn schedule_history_uses_kind_and_title_instead_of_deployment_uuid() {
+    fn schedule_history_uses_typed_schedule_identity() {
         let now = chrono::Utc::now();
         let schedule = Schedule::default_daily();
         let prefix = schedule.prefix.clone();
         let deployments = vec![
             deployment(
                 "automatic",
+                Some(&prefix),
                 &format!("{prefix}-older"),
                 now - chrono::Duration::days(2),
             ),
             deployment(
                 "manual",
+                None,
                 &format!("{prefix}-manual"),
                 now - chrono::Duration::hours(1),
             ),
             deployment(
                 "automatic",
+                Some(&prefix),
                 &format!("{prefix}-newer"),
                 now - chrono::Duration::days(1),
             ),
-            deployment("automatic", "weekly-unrelated", now),
+            deployment(
+                "automatic",
+                Some("weekly"),
+                &format!("{prefix}-collision"),
+                now,
+            ),
         ];
 
         assert_eq!(

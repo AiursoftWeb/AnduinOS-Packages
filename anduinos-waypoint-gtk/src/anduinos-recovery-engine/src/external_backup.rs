@@ -1017,6 +1017,7 @@ mod tests {
             created_at: Utc::now(),
             title: "Before an upgrade".into(),
             reason: "Manual recovery point".into(),
+            schedule_id: None,
             snapshot_uuid: Some(Uuid::new_v4().to_string()),
             snapshot_parent_uuid: None,
             kernel_release: Some("7.0.0-28-generic".into()),
