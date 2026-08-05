@@ -8,6 +8,10 @@ gettext catalogs under `po/`.
 entry binds a language choice to its locale, representative timezone, default
 physical XKB layout and optional input-method policy. The document also owns
 the default language, locale aliases and the complete keyboard-layout chooser.
+The AnduinOS ISO builder consumes the installed copy of this same document to
+generate its GRUB language submenu and Live-session locales. The GRUB choice
+therefore provides the installer's initial language and timezone without
+maintaining a second locale-to-timezone table.
 Input-method definitions declare the user-visible product and native-language
 names, an optional desktop input source, packages, required target paths and
 any user-default files to deploy. The executor does not know the names of Rime,

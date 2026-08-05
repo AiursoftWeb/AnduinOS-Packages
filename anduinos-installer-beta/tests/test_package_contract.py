@@ -52,6 +52,10 @@ class PackageContractTests(unittest.TestCase):
 
     def test_manifest_installs_the_source_tree_and_runtime_dependencies(self):
         root = ET.parse(ROOT / "anduinos-installer-beta.aosproj").getroot()
+        self.assertEqual(
+            root.findtext(".//SuiteShortNameMap"),
+            "resolute-addon=resolute",
+        )
         folders = {
             (item.get("Include"), item.get("Target"))
             for item in root.iter("IncludeFolder")
@@ -89,6 +93,7 @@ class PackageContractTests(unittest.TestCase):
             {
                 "python3",
                 "python3-unidecode",
+                "anduinos-live-settings",
                 "parted",
                 "dosfstools",
                 "efibootmgr",

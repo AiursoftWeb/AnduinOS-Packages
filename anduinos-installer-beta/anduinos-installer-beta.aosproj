@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.1-45+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-46+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer (beta) — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -14,6 +14,7 @@
     <TargetSuites>resolute-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
     <!-- Beta: NO Conflicts, NO Replaces. This is an orphan package.
          After 3-4 months of stable testing, rename to anduinos-installer
          and add Conflicts/Replaces against the Ubuntu Ubiquity packages. -->
@@ -46,6 +47,9 @@
   <ItemGroup>
     <!-- Minimal dependencies: only what the Python code actually calls -->
     <Dependency Include="python3" />
+    <!-- The native installer is a Live-ISO component. Keep the Casper
+         language/timezone bridge present whenever the installer is present. -->
+    <Dependency Include="anduinos-live-settings" />
     <Dependency Include="python3-unidecode" />
     <Dependency Include="python3-gi" />
     <Dependency Include="gir1.2-gtk-4.0" />

@@ -432,6 +432,8 @@ anduinos-live-settings:
 
 anduinos-installer-beta:
   extends: .publish
+  needs:
+    - anduinos-live-settings
   variables:
     PACKAGE_DIR: anduinos-installer-beta
 

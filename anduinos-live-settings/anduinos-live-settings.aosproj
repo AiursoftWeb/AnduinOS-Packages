@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-live-settings</PackageName>
-    <PackageVersion>2.0.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>AnduinOS Live CD timezone and environment settings (removed after installation)</PackageDescription>
+    <PackageDescription>AnduinOS Casper live-session timezone bridge (removed after installation)</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
@@ -16,16 +16,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu"
+                           SuiteMap="noble-addon=noble resolute-addon=resolute" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Dependency Include="casper" />
+    <Dependency Include="initramfs-tools" />
   </ItemGroup>
 
   <ItemGroup>
-    <IncludeFile Include="assets/30anduinos-timezone"
-                 Target="/usr/share/initramfs-tools/scripts/casper-bottom/30anduinos-timezone"
+    <PrebuildCommand Run="python3 tests/test_package_contract.py" />
+    <IncludeFile Include="assets/14anduinos-timezone"
+                 Target="/usr/share/initramfs-tools/scripts/casper-bottom/14anduinos-timezone"
                  Mode="755" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PostInstallScript Include="scripts/postinst.sh" />
+    <PostRemoveScript Include="scripts/postrm.sh" />
   </ItemGroup>
 </Project>

@@ -27,8 +27,11 @@ and constructs every command itself.
   64 GiB. zram has the higher runtime priority. Partition capacity alone does
   not enable hibernation; resume configuration and platform support remain
   separate requirements.
-- Live system: Casper remains the image/boot transport for release one. Its
-  live-session state must not leak into the installed target.
+- Live system: Casper remains the image/boot transport for release one.
+  `anduinos-live-settings` is a hard dependency of the installer and owns the
+  initramfs-tools hook that applies the GRUB-selected timezone. The ISO's
+  manifest difference purges both Live components so their state does not
+  leak into the installed target.
 - Software: refreshing package indexes and installing available updates is
   enabled by default. An offline index-refresh failure is a warning and skips
   the upgrade; after an upgrade transaction starts, any APT/dpkg failure is
