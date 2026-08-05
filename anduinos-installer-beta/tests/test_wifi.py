@@ -1,10 +1,14 @@
 import unittest
 from pathlib import Path
 
-import gi
+try:
+    import gi
 
-gi.require_version("NM", "1.0")
-from gi.repository import GLib, NM
+    gi.require_version("NM", "1.0")
+    from gi.repository import GLib, NM
+except (ImportError, ValueError):
+    GLib = None
+    NM = None
 
 from installer_core.wifi import (
     WifiConnectionRequest,
@@ -21,6 +25,12 @@ from installer_core.wifi import (
     split_nmcli_terse,
     wifi_radio_enabled,
     validate_wifi_request,
+)
+
+
+requires_libnm = unittest.skipUnless(
+    NM is not None,
+    "NetworkManager introspection bindings are not installed",
 )
 
 
@@ -129,6 +139,7 @@ class FakeClient:
 
 
 class WifiDiscoveryTests(unittest.TestCase):
+    @requires_libnm
     def test_persist_uses_the_remote_connection_returned_by_libnm(self):
         context = GLib.MainContext.new()
 
@@ -231,6 +242,7 @@ class WifiDiscoveryTests(unittest.TestCase):
         self.assertEqual(
             classify_wifi_security("WPA2 802.1X"), WifiSecurity.ENTERPRISE
         )
+    @requires_libnm
     def test_scan_uses_libnm_cache_and_requests_a_fresh_scan(self):
         security_flags = getattr(NM, "80211ApSecurityFlags")
         ap_flags = getattr(NM, "80211ApFlags")
@@ -254,6 +266,7 @@ class WifiDiscoveryTests(unittest.TestCase):
         self.assertEqual(networks[0].security_kind, WifiSecurity.PERSONAL)
         self.assertEqual(networks[1].security_kind, WifiSecurity.OPEN)
 
+    @requires_libnm
     def test_background_refresh_reuses_networkmanagers_scan_cache(self):
         device = FakeWifiDevice("wlan0")
         self.assertEqual(
@@ -261,16 +274,19 @@ class WifiDiscoveryTests(unittest.TestCase):
         )
         self.assertEqual(device.scan_requests, 0)
 
+    @requires_libnm
     def test_radio_state_comes_directly_from_libnm(self):
         self.assertTrue(wifi_radio_enabled(_client=FakeClient(radio=True)))
         self.assertFalse(wifi_radio_enabled(_client=FakeClient(radio=False)))
 
+    @requires_libnm
     def test_radio_toggle_uses_libnm_without_spawning_a_process(self):
         client = FakeClient(radio=False)
         set_wifi_radio(True, _client=client)
         set_wifi_radio(False, _client=client)
         self.assertEqual(client.radio_changes, [True, False])
 
+    @requires_libnm
     def test_disconnect_targets_only_the_selected_adapter(self):
         wlan0 = FakeWifiDevice("wlan0")
         wlan7 = FakeWifiDevice("wlan7")
@@ -281,6 +297,7 @@ class WifiDiscoveryTests(unittest.TestCase):
         with self.assertRaises(WifiError):
             disconnect_wifi("bad device", _client=client)
 
+    @requires_libnm
     def test_personal_profiles_keep_secrets_in_memory(self):
         connection = build_nm_connection(
             WifiConnectionRequest(
@@ -307,6 +324,7 @@ class WifiDiscoveryTests(unittest.TestCase):
             wpa3.get_setting_wireless_security().get_key_mgmt(), "sae"
         )
 
+    @requires_libnm
     def test_wps_profile_has_no_password_and_requests_push_button(self):
         connection = build_nm_connection(
             WifiConnectionRequest("WPS network", WifiSecurity.PERSONAL),
@@ -317,6 +335,7 @@ class WifiDiscoveryTests(unittest.TestCase):
         self.assertNotEqual(int(security.get_wps_method()), 0)
         self.assertTrue(connection.verify())
 
+    @requires_libnm
     def test_open_owe_wep_and_enterprise_profiles_verify(self):
         open_connection = build_nm_connection(
             WifiConnectionRequest("Cafe", WifiSecurity.OPEN)
