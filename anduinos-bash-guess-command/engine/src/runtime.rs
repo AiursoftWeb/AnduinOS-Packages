@@ -4,50 +4,233 @@ use crate::{
     evaluate, Action, Artifact, ArtifactKind, Container, FileEntry, GitRef, Host, Process, Query,
     Service, WorldState,
 };
+use std::collections::BTreeSet;
+use std::ffi::{CString, OsStr, OsString};
 use std::fs;
 use std::io::{self, BufRead, Read, Write};
+use std::os::unix::ffi::OsStrExt;
+use std::os::unix::fs::OpenOptionsExt;
+#[cfg(test)]
+use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
-use std::sync::{Arc, RwLock};
+use std::sync::{
+    mpsc::{sync_channel, SyncSender, TrySendError},
+    Arc, Condvar, Mutex, RwLock,
+};
 use std::thread;
 use std::time::{Duration, Instant};
+
+const BACKGROUND_WORKERS: usize = 2;
+const BACKGROUND_QUEUE_CAPACITY: usize = 16;
+const MAX_PATH_DIRECTORIES: usize = 64;
+const MAX_PATH_ENTRIES: usize = 32_768;
+const MAX_PATH_COMMANDS: usize = 8_192;
+const PATH_SCAN_BUDGET: Duration = Duration::from_millis(100);
+const MAX_COMMAND_OUTPUT_BYTES: u64 = 2 * 1024 * 1024;
+const MAX_DOCKER_ENTITIES: usize = 4_096;
+const MAX_PROCESS_ENTITIES: usize = 8_192;
+const MAX_SERVICE_ENTITIES: usize = 8_192;
+const MAX_GIT_REFS: usize = 8_192;
+const FILE_SCAN_BUDGET: Duration = Duration::from_millis(150);
+const MAX_CONTEXT_FILE_BYTES: u64 = 1024 * 1024;
+const MAX_PROTOCOL_LINE_BYTES: usize = 64 * 1024;
+const O_CLOEXEC: i32 = 0o2_000_000;
+const O_NOFOLLOW: i32 = 0o400_000;
+const O_NONBLOCK: i32 = 0o4_000;
+
+type BackgroundJob = Box<dyn FnOnce() + Send + 'static>;
+
+#[derive(Clone, Copy)]
+struct PathScanLimits {
+    directories: usize,
+    entries: usize,
+    commands: usize,
+    duration: Duration,
+}
+
+const PATH_SCAN_LIMITS: PathScanLimits = PathScanLimits {
+    directories: MAX_PATH_DIRECTORIES,
+    entries: MAX_PATH_ENTRIES,
+    commands: MAX_PATH_COMMANDS,
+    duration: PATH_SCAN_BUDGET,
+};
+
+#[derive(Clone)]
+struct BackgroundQueue {
+    sender: SyncSender<BackgroundJob>,
+    pending: Arc<(Mutex<usize>, Condvar)>,
+}
+
+#[derive(Clone)]
+struct CommandPaths {
+    fixture_bin: Option<PathBuf>,
+}
+
+impl CommandPaths {
+    fn trusted() -> Self {
+        Self { fixture_bin: None }
+    }
+
+    fn fixtures(path: PathBuf) -> Self {
+        Self {
+            fixture_bin: Some(path),
+        }
+    }
+
+    fn resolve(&self, name: &str) -> Option<PathBuf> {
+        let path = self
+            .fixture_bin
+            .as_ref()
+            .map(|directory| directory.join(name))
+            .unwrap_or_else(|| Path::new("/usr/bin").join(name));
+        executable_for_current_user(&path).then_some(path)
+    }
+}
+
+impl BackgroundQueue {
+    fn new() -> Self {
+        let (sender, receiver) = sync_channel::<BackgroundJob>(BACKGROUND_QUEUE_CAPACITY);
+        let receiver = Arc::new(Mutex::new(receiver));
+        let pending = Arc::new((Mutex::new(0), Condvar::new()));
+        let mut started_workers = 0;
+        for index in 0..BACKGROUND_WORKERS {
+            let receiver = Arc::clone(&receiver);
+            if thread::Builder::new()
+                .name(format!("anduinos-observer-{index}"))
+                .stack_size(256 * 1024)
+                .spawn(move || loop {
+                    let job = {
+                        let Ok(receiver) = receiver.lock() else {
+                            return;
+                        };
+                        receiver.recv()
+                    };
+                    match job {
+                        Ok(job) => job(),
+                        Err(_) => return,
+                    }
+                })
+                .is_ok()
+            {
+                started_workers += 1;
+            }
+        }
+        if started_workers == 0 {
+            debug("unable to start background observers; semantic snapshots are disabled");
+        }
+        Self { sender, pending }
+    }
+
+    fn submit(&self, job: impl FnOnce() + Send + 'static) {
+        let pending = Arc::clone(&self.pending);
+        if let Ok(mut count) = pending.0.lock() {
+            *count = count.saturating_add(1);
+        } else {
+            debug("background observer accounting is unavailable; dropping refresh");
+            return;
+        }
+        let wrapped = Box::new(move || {
+            // A failed observer must not permanently prevent graceful drain.
+            let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(job));
+            finish_background_job(&pending);
+        });
+        match self.sender.try_send(wrapped) {
+            Ok(()) => {}
+            Err(TrySendError::Full(_)) => {
+                finish_background_job(&self.pending);
+                debug("background observer queue is full; dropping refresh");
+            }
+            Err(TrySendError::Disconnected(_)) => {
+                finish_background_job(&self.pending);
+                debug("background observer queue is unavailable; dropping refresh");
+            }
+        }
+    }
+
+    fn wait_for_idle(&self, timeout: Duration) -> bool {
+        let deadline = Instant::now() + timeout;
+        let (lock, changed) = &*self.pending;
+        let Ok(mut count) = lock.lock() else {
+            return false;
+        };
+        while *count != 0 {
+            let remaining = deadline.saturating_duration_since(Instant::now());
+            if remaining.is_zero() {
+                return false;
+            }
+            let Ok((next, result)) = changed.wait_timeout(count, remaining) else {
+                return false;
+            };
+            count = next;
+            if result.timed_out() && *count != 0 {
+                return false;
+            }
+        }
+        true
+    }
+}
+
+fn finish_background_job(pending: &(Mutex<usize>, Condvar)) {
+    if let Ok(mut count) = pending.0.lock() {
+        *count = count.saturating_sub(1);
+        if *count == 0 {
+            pending.1.notify_all();
+        }
+    }
+}
 
 pub struct Runtime {
     world: Arc<RwLock<WorldState>>,
     history_path: Option<PathBuf>,
     transition_path: Option<PathBuf>,
+    history_enabled: bool,
+    background: BackgroundQueue,
+    command_paths: CommandPaths,
 }
 
 impl Default for Runtime {
     fn default() -> Self {
-        let history_path = history::state_path();
-        let transition_path = history::transition_state_path();
-        let mut world = WorldState::default();
-        if let Some(path) = history_path.as_deref() {
-            world.history = history::load(path);
-        }
-        world.merge_history(history::load_bash_history());
-        if let Some(path) = transition_path.as_deref() {
-            world.transitions = history::load_transitions(path);
-        }
-        world.merge_transitions(history::load_bash_transitions());
-        let runtime = Self {
-            world: Arc::new(RwLock::new(world)),
-            history_path,
-            transition_path,
-        };
-        runtime.prewarm_docker();
-        runtime.prewarm_local_entities();
-        runtime
+        Self::new(CommandPaths::trusted())
     }
 }
 
 impl Runtime {
+    fn new(command_paths: CommandPaths) -> Self {
+        let history_enabled = history::enabled();
+        let history_path = history::state_path();
+        let transition_path = history::transition_state_path();
+        let mut world = WorldState::default();
+        if history_enabled {
+            if let Some(path) = history_path.as_deref() {
+                world.history = history::load(path);
+            }
+            world.merge_history(history::load_bash_history());
+            if let Some(path) = transition_path.as_deref() {
+                world.transitions = history::load_transitions(path);
+            }
+            world.merge_transitions(history::load_bash_transitions());
+        }
+        let runtime = Self {
+            world: Arc::new(RwLock::new(world)),
+            history_path,
+            transition_path,
+            history_enabled,
+            background: BackgroundQueue::new(),
+            command_paths,
+        };
+        runtime.prewarm_local_entities();
+        runtime
+    }
+
     pub fn with_world(world: WorldState) -> Self {
         Self {
             world: Arc::new(RwLock::new(world)),
             history_path: None,
             transition_path: None,
+            history_enabled: true,
+            background: BackgroundQueue::new(),
+            command_paths: CommandPaths::trusted(),
         }
     }
 
@@ -100,13 +283,16 @@ impl Runtime {
                     artifact_refresh,
                     learned_history,
                     learned_transition,
-                    history_snapshot,
-                    transition_snapshot,
                 ) = {
                     let Ok(mut world) = self.world.write() else {
                         return Response::Error;
                     };
-                    let learned = world.observe_command_with_cwd(&line, exit_code, now_ms, &cwd);
+                    let learned = if self.history_enabled {
+                        world.observe_command_with_cwd(&line, exit_code, now_ms, &cwd)
+                    } else {
+                        world.observe_command_without_learning(&line, exit_code, now_ms, &cwd);
+                        None
+                    };
                     let (learned_history, learned_transition) = match learned {
                         Some((history, transition)) => (Some(history), transition),
                         None => (None, None),
@@ -116,7 +302,7 @@ impl Runtime {
                         // Invalidate before refreshing. Queries during refresh
                         // must be silent instead of seeing the old generation.
                         world.docker.generation = world.docker.generation.wrapping_add(1);
-                        world.docker.refreshed_at_ms = 0;
+                        world.docker.refreshed_at_ms = now_ms;
                         world.docker.containers.clear();
                     }
                     let docker = match action {
@@ -127,25 +313,26 @@ impl Runtime {
                     };
                     let process = if action == Some(Action::ProcessList) && exit_code == 0 {
                         world.processes.generation = world.processes.generation.wrapping_add(1);
-                        world.processes.refreshed_at_ms = 0;
+                        world.processes.refreshed_at_ms = now_ms;
                         Some(world.processes.generation)
                     } else {
                         None
                     };
                     let service = if action == Some(Action::ServiceList) && exit_code == 0 {
                         world.services.generation = world.services.generation.wrapping_add(1);
-                        world.services.refreshed_at_ms = 0;
+                        world.services.refreshed_at_ms = now_ms;
                         Some(world.services.generation)
                     } else {
                         None
                     };
                     let git = if exit_code == 0
+                        && action.as_ref().is_some_and(is_git_action)
                         && (world.git.cwd != cwd
                             || action == Some(Action::GitMutation)
                             || now_ms.saturating_sub(world.git.refreshed_at_ms) > 120_000)
                     {
                         world.git.generation = world.git.generation.wrapping_add(1);
-                        world.git.refreshed_at_ms = 0;
+                        world.git.refreshed_at_ms = now_ms;
                         world.git.cwd = cwd.clone();
                         world.git.refs.clear();
                         Some((world.git.generation, cwd.clone()))
@@ -154,7 +341,7 @@ impl Runtime {
                     };
                     let hosts = if now_ms.saturating_sub(world.hosts.refreshed_at_ms) > 300_000 {
                         world.hosts.generation = world.hosts.generation.wrapping_add(1);
-                        world.hosts.refreshed_at_ms = 0;
+                        world.hosts.refreshed_at_ms = now_ms;
                         world.hosts.hosts.clear();
                         Some(world.hosts.generation)
                     } else {
@@ -165,7 +352,7 @@ impl Runtime {
                         || action.as_ref().is_some_and(action_produces_artifact)
                     {
                         world.files.generation = world.files.generation.wrapping_add(1);
-                        world.files.refreshed_at_ms = 0;
+                        world.files.refreshed_at_ms = now_ms;
                         world.files.cwd = cwd.clone();
                         world.files.entries.clear();
                         Some((world.files.generation, cwd.clone()))
@@ -176,7 +363,7 @@ impl Runtime {
                         && action.as_ref().is_some_and(action_produces_artifact)
                     {
                         world.artifacts.generation = world.artifacts.generation.wrapping_add(1);
-                        world.artifacts.refreshed_at_ms = 0;
+                        world.artifacts.refreshed_at_ms = now_ms;
                         world.artifacts.artifacts.clear();
                         action
                             .clone()
@@ -184,10 +371,6 @@ impl Runtime {
                     } else {
                         None
                     };
-                    let history_snapshot = learned_history.as_ref().map(|_| world.history.clone());
-                    let transition_snapshot = learned_transition
-                        .as_ref()
-                        .map(|_| world.transitions.clone());
                     (
                         docker,
                         process,
@@ -198,27 +381,23 @@ impl Runtime {
                         artifact,
                         learned_history,
                         learned_transition,
-                        history_snapshot,
-                        transition_snapshot,
                     )
                 };
-                if let (Some(path), Some(event), Some(snapshot)) = (
-                    &self.history_path,
-                    learned_history.as_ref(),
-                    history_snapshot.as_deref(),
-                ) {
-                    if let Err(error) = history::record(path, event, snapshot) {
-                        debug(&format!("history persistence failed: {error}"));
-                    }
+                if let (Some(path), Some(event)) = (&self.history_path, learned_history) {
+                    let path = path.clone();
+                    self.background.submit(move || {
+                        if let Err(error) = history::record(&path, &event) {
+                            debug(&format!("history persistence failed: {error}"));
+                        }
+                    });
                 }
-                if let (Some(path), Some(event), Some(snapshot)) = (
-                    &self.transition_path,
-                    learned_transition.as_ref(),
-                    transition_snapshot.as_deref(),
-                ) {
-                    if let Err(error) = history::record_transition(path, event, snapshot) {
-                        debug(&format!("transition persistence failed: {error}"));
-                    }
+                if let (Some(path), Some(event)) = (&self.transition_path, learned_transition) {
+                    let path = path.clone();
+                    self.background.submit(move || {
+                        if let Err(error) = history::record_transition(&path, &event) {
+                            debug(&format!("transition persistence failed: {error}"));
+                        }
+                    });
                 }
                 if let Some((elevated, generation)) = docker_refresh {
                     self.refresh_docker(elevated, generation);
@@ -244,14 +423,19 @@ impl Runtime {
                 Response::Ack
             }
             Request::Ping => Response::Pong,
-            Request::Quit => Response::Ack,
+            Request::Quit => {
+                let _ = self.background.wait_for_idle(Duration::from_millis(150));
+                Response::Ack
+            }
         }
     }
 
     fn refresh_docker(&self, elevated: bool, generation: u64) {
         let world = Arc::clone(&self.world);
-        thread::spawn(move || {
-            let Some(output) = query_docker(elevated, Duration::from_millis(250)) else {
+        let command_paths = self.command_paths.clone();
+        self.background.submit(move || {
+            let Some(output) = query_docker(&command_paths, elevated, Duration::from_millis(250))
+            else {
                 debug("Docker refresh failed or timed out");
                 return;
             };
@@ -271,68 +455,61 @@ impl Runtime {
         });
     }
 
-    fn prewarm_docker(&self) {
-        let world = Arc::clone(&self.world);
-        let generation = world
-            .read()
-            .map(|world| world.docker.generation)
-            .unwrap_or_default();
-        thread::spawn(move || {
-            let output = query_docker(false, Duration::from_millis(250))
-                .or_else(|| query_docker(true, Duration::from_millis(250)));
-            let Some(output) = output else {
-                return;
-            };
-            let containers = parse_docker_rows(&output);
-            let now_ms = wall_time_ms();
-            if let Ok(mut world) = world.write() {
-                if world.docker.generation != generation {
-                    return;
-                }
-                world.docker.refreshed_at_ms = now_ms;
-                world.docker.containers = containers;
-            }
-        });
-    }
-
     fn prewarm_local_entities(&self) {
         let cwd = std::env::current_dir()
             .ok()
             .map(|path| path.to_string_lossy().into_owned())
             .unwrap_or_default();
-        self.refresh_processes(0);
-        self.refresh_services(0);
+        let shell_path = std::env::var_os("PATH").unwrap_or_default();
         self.refresh_hosts(0);
+        let attempted_at_ms = wall_time_ms();
         if let Ok(mut world) = self.world.write() {
             world.git.cwd = cwd.clone();
             world.current_cwd = cwd.clone();
             world.files.cwd = cwd.clone();
+            world.hosts.refreshed_at_ms = attempted_at_ms;
+            world.files.refreshed_at_ms = attempted_at_ms;
         }
-        self.refresh_git(0, cwd.clone());
+        self.refresh_commands(0, shell_path, cwd.clone());
         self.refresh_files(0, cwd);
+    }
+
+    fn refresh_commands(&self, generation: u64, path: OsString, cwd: String) {
+        let world = Arc::clone(&self.world);
+        self.background.submit(move || {
+            let commands = scan_path_commands(&path, &cwd);
+            let refreshed_at_ms = wall_time_ms();
+            if let Ok(mut world) = world.write() {
+                if world.commands.generation != generation {
+                    return;
+                }
+                world.commands.generation = world.commands.generation.wrapping_add(1);
+                world.commands.commands = commands;
+                world.commands.refreshed_at_ms = refreshed_at_ms;
+            }
+        });
     }
 
     fn refresh_files(&self, generation: u64, cwd: String) {
         let world = Arc::clone(&self.world);
-        thread::spawn(move || {
+        self.background.submit(move || {
             let mut entries = scan_file_entries(&cwd);
             entries.sort_by(|left, right| left.name.cmp(&right.name));
             entries.dedup_by(|left, right| left.name == right.name);
             let refreshed_at_ms = wall_time_ms();
             if let Ok(mut world) = world.write() {
                 if world.files.generation != generation || world.files.cwd != cwd {
-                    return None;
+                    return;
                 }
                 world.files.entries = entries;
                 world.files.refreshed_at_ms = refreshed_at_ms;
             }
-            Some(())
         });
     }
 
     fn refresh_artifacts(&self, generation: u64, action: Action, cwd: String, observed_at_ms: u64) {
         let world = Arc::clone(&self.world);
-        thread::spawn(move || {
+        self.background.submit(move || {
             let artifacts = verify_artifacts(&action, &cwd, observed_at_ms);
             let refreshed_at_ms = wall_time_ms();
             if let Ok(mut world) = world.write() {
@@ -346,29 +523,33 @@ impl Runtime {
     }
 
     fn refresh_processes(&self, generation: u64) {
+        let Some(program) = self.command_paths.resolve("ps") else {
+            return;
+        };
         let world = Arc::clone(&self.world);
-        thread::spawn(move || {
-            let output = query_command(
-                "ps",
+        self.background.submit(move || {
+            let Some(output) = query_command(
+                &program,
                 &["-eo", "pid=,comm="],
                 None,
                 Duration::from_millis(250),
-            )?;
+            ) else {
+                return;
+            };
             let processes = parse_process_rows(&output);
             if let Ok(mut world) = world.write() {
                 if world.processes.generation != generation {
-                    return None;
+                    return;
                 }
                 world.processes.refreshed_at_ms = wall_time_ms();
                 world.processes.processes = processes;
             }
-            Some(())
         });
     }
 
     fn refresh_hosts(&self, generation: u64) {
         let world = Arc::clone(&self.world);
-        thread::spawn(move || {
+        self.background.submit(move || {
             let hosts = scan_ssh_hosts();
             if let Ok(mut world) = world.write() {
                 if world.hosts.generation != generation {
@@ -381,10 +562,13 @@ impl Runtime {
     }
 
     fn refresh_services(&self, generation: u64) {
+        let Some(program) = self.command_paths.resolve("systemctl") else {
+            return;
+        };
         let world = Arc::clone(&self.world);
-        thread::spawn(move || {
-            let output = query_command(
-                "systemctl",
+        self.background.submit(move || {
+            let Some(output) = query_command(
+                &program,
                 &[
                     "list-units",
                     "--type=service",
@@ -394,24 +578,28 @@ impl Runtime {
                 ],
                 None,
                 Duration::from_millis(300),
-            )?;
+            ) else {
+                return;
+            };
             let services = parse_service_rows(&output);
             if let Ok(mut world) = world.write() {
                 if world.services.generation != generation {
-                    return None;
+                    return;
                 }
                 world.services.refreshed_at_ms = wall_time_ms();
                 world.services.services = services;
             }
-            Some(())
         });
     }
 
     fn refresh_git(&self, generation: u64, cwd: String) {
+        let Some(program) = self.command_paths.resolve("git") else {
+            return;
+        };
         let world = Arc::clone(&self.world);
-        thread::spawn(move || {
-            let output = query_command(
-                "git",
+        self.background.submit(move || {
+            let Some(output) = query_command(
+                &program,
                 &[
                     "for-each-ref",
                     "--format=%(refname:short)",
@@ -420,31 +608,43 @@ impl Runtime {
                 ],
                 Some(&cwd),
                 Duration::from_millis(300),
-            )?;
+            ) else {
+                return;
+            };
             let refs = parse_git_refs(&output);
             if let Ok(mut world) = world.write() {
                 if world.git.generation != generation || world.git.cwd != cwd {
-                    return None;
+                    return;
                 }
                 world.git.refreshed_at_ms = wall_time_ms();
                 world.git.refs = refs;
             }
-            Some(())
         });
     }
 }
 
 pub fn serve_stdio() -> io::Result<()> {
+    serve_stdio_with_runtime(Runtime::default())
+}
+
+pub fn serve_stdio_with_fixture_bin(path: PathBuf) -> io::Result<()> {
+    serve_stdio_with_runtime(Runtime::new(CommandPaths::fixtures(path)))
+}
+
+fn serve_stdio_with_runtime(runtime: Runtime) -> io::Result<()> {
     // Build the immutable grammar indexes immediately after the helper starts,
     // before a user keystroke can enter the request pipe. Query handling then
     // stays inside the native frontend's strict per-keystroke deadline.
     crate::specs::warm();
-    let runtime = Runtime::default();
     let stdin = io::stdin();
+    let mut stdin = stdin.lock();
     let mut stdout = io::stdout().lock();
-    for request_line in stdin.lock().lines() {
-        let request_line = request_line?;
-        let request = decode_request(&request_line);
+    loop {
+        let request = match read_protocol_line(&mut stdin)? {
+            ProtocolLine::Eof => break,
+            ProtocolLine::Invalid => Err(crate::protocol::ProtocolError),
+            ProtocolLine::Valid(line) => decode_request(&line),
+        };
         let quit = matches!(request, Ok(Request::Quit));
         let response = request.map_or(Response::Error, |request| runtime.handle(request));
         stdout.write_all(encode_response(&response).as_bytes())?;
@@ -453,54 +653,85 @@ pub fn serve_stdio() -> io::Result<()> {
             break;
         }
     }
+    // EOF is the normal shell-exit path. Give already accepted persistence
+    // work the same bounded opportunity to finish as an explicit Quit.
+    let _ = runtime.background.wait_for_idle(Duration::from_millis(150));
     Ok(())
 }
 
-fn query_docker(elevated: bool, timeout: Duration) -> Option<String> {
-    let mut command = if elevated {
-        let mut command = Command::new("sudo");
-        command.args(["-n", "docker"]);
-        command
-    } else {
-        Command::new("docker")
-    };
-    let mut child = command
-        .args([
-            "container",
-            "ls",
-            "--format",
-            "{{.ID}}\\t{{.Names}}\\t{{.Image}}",
-        ])
-        .stdin(Stdio::null())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::null())
-        .spawn()
-        .ok()?;
-    let started = Instant::now();
+/// Reads one wire line without ever allocating in proportion to hostile input.
+/// Invalid input is fully drained so the following request remains aligned.
+#[derive(Debug, PartialEq, Eq)]
+enum ProtocolLine {
+    Eof,
+    Valid(String),
+    Invalid,
+}
+
+fn read_protocol_line<R: BufRead>(reader: &mut R) -> io::Result<ProtocolLine> {
+    let mut line = Vec::with_capacity(256);
+    let mut oversized = false;
     loop {
-        match child.try_wait() {
-            Ok(Some(status)) => {
-                if !status.success() {
-                    return None;
+        let (consumed, ended) = {
+            let available = reader.fill_buf()?;
+            if available.is_empty() {
+                if line.is_empty() && !oversized {
+                    return Ok(ProtocolLine::Eof);
                 }
-                let mut output = Vec::new();
-                child.stdout.take()?.read_to_end(&mut output).ok()?;
-                return String::from_utf8(output).ok();
+                return Ok(if oversized {
+                    ProtocolLine::Invalid
+                } else {
+                    String::from_utf8(line)
+                        .map(ProtocolLine::Valid)
+                        .unwrap_or(ProtocolLine::Invalid)
+                });
             }
-            Ok(None) => {}
-            Err(_) => return None,
+            let ended_at = available.iter().position(|byte| *byte == b'\n');
+            let consumed = ended_at.map_or(available.len(), |index| index + 1);
+            if !oversized {
+                if line.len().saturating_add(consumed) <= MAX_PROTOCOL_LINE_BYTES {
+                    line.extend_from_slice(&available[..consumed]);
+                } else {
+                    line.clear();
+                    oversized = true;
+                }
+            }
+            (consumed, ended_at.is_some())
+        };
+        reader.consume(consumed);
+        if ended {
+            return Ok(if oversized {
+                ProtocolLine::Invalid
+            } else {
+                String::from_utf8(line)
+                    .map(ProtocolLine::Valid)
+                    .unwrap_or(ProtocolLine::Invalid)
+            });
         }
-        if started.elapsed() >= timeout {
-            let _ = child.kill();
-            let _ = child.wait();
-            return None;
-        }
-        thread::sleep(Duration::from_millis(5));
     }
 }
 
+fn query_docker(command_paths: &CommandPaths, elevated: bool, timeout: Duration) -> Option<String> {
+    let docker = command_paths.resolve("docker")?;
+    let mut command = if elevated {
+        let sudo = command_paths.resolve("sudo")?;
+        let mut command = Command::new(sudo);
+        command.arg("-n").arg(docker);
+        command
+    } else {
+        Command::new(docker)
+    };
+    command.args([
+        "container",
+        "ls",
+        "--format",
+        "{{.ID}}\\t{{.Names}}\\t{{.Image}}",
+    ]);
+    run_command(command, timeout)
+}
+
 fn query_command(
-    program: &str,
+    program: &Path,
     args: &[&str],
     cwd: Option<&str>,
     timeout: Duration,
@@ -520,27 +751,45 @@ fn run_command(mut command: Command, timeout: Duration) -> Option<String> {
         .stderr(Stdio::null())
         .spawn()
         .ok()?;
-    let started = Instant::now();
-    loop {
-        match child.try_wait() {
-            Ok(Some(status)) => {
-                if !status.success() {
-                    return None;
-                }
-                let mut output = Vec::new();
-                child.stdout.take()?.read_to_end(&mut output).ok()?;
-                return String::from_utf8(output).ok();
-            }
-            Ok(None) => {}
-            Err(_) => return None,
-        }
-        if started.elapsed() >= timeout {
+    let stdout = child.stdout.take()?;
+    let reader = match thread::Builder::new()
+        .name("anduinos-output-reader".into())
+        .stack_size(128 * 1024)
+        .spawn(move || {
+            let mut output = Vec::new();
+            stdout
+                .take(MAX_COMMAND_OUTPUT_BYTES + 1)
+                .read_to_end(&mut output)
+                .map(|_| output)
+        }) {
+        Ok(reader) => reader,
+        Err(_) => {
             let _ = child.kill();
             let _ = child.wait();
             return None;
         }
+    };
+    let started = Instant::now();
+    let successful = loop {
+        match child.try_wait() {
+            Ok(Some(status)) => {
+                break status.success();
+            }
+            Ok(None) => {}
+            Err(_) => break false,
+        }
+        if started.elapsed() >= timeout {
+            let _ = child.kill();
+            let _ = child.wait();
+            break false;
+        }
         thread::sleep(Duration::from_millis(5));
+    };
+    let output = reader.join().ok()?.ok()?;
+    if !successful || output.len() as u64 > MAX_COMMAND_OUTPUT_BYTES {
+        return None;
     }
+    String::from_utf8(output).ok()
 }
 
 fn parse_docker_rows(output: &str) -> Vec<Container> {
@@ -563,6 +812,7 @@ fn parse_docker_rows(output: &str) -> Vec<Container> {
                 listing_rank: rank as u32,
             })
         })
+        .take(MAX_DOCKER_ENTITIES)
         .collect()
 }
 
@@ -576,6 +826,7 @@ fn parse_process_rows(output: &str) -> Vec<Process> {
                 command: fields.next()?.to_owned(),
             })
         })
+        .take(MAX_PROCESS_ENTITIES)
         .collect()
 }
 
@@ -588,6 +839,7 @@ fn parse_service_rows(output: &str) -> Vec<Service> {
                 name: name.to_owned(),
             })
         })
+        .take(MAX_SERVICE_ENTITIES)
         .collect()
 }
 
@@ -597,32 +849,112 @@ fn parse_git_refs(output: &str) -> Vec<GitRef> {
         .map(str::trim)
         .filter(|name| !name.is_empty() && !name.ends_with("/HEAD"))
         .map(str::to_owned)
+        .take(MAX_GIT_REFS)
         .collect();
     names.sort();
     names.dedup();
     names.into_iter().map(|name| GitRef { name }).collect()
 }
 
+fn scan_path_commands(path: &OsStr, cwd: &str) -> Vec<String> {
+    scan_path_commands_with_limits(path, cwd, PATH_SCAN_LIMITS)
+}
+
+fn scan_path_commands_with_limits(path: &OsStr, cwd: &str, limits: PathScanLimits) -> Vec<String> {
+    let mut commands = BTreeSet::new();
+    let mut scanned_entries = 0;
+    let started = Instant::now();
+    for directory in std::env::split_paths(path).take(limits.directories) {
+        if started.elapsed() >= limits.duration || scanned_entries >= limits.entries {
+            break;
+        }
+        let directory = if directory.is_absolute() {
+            directory
+        } else {
+            Path::new(cwd).join(directory)
+        };
+        let Ok(entries) = fs::read_dir(directory) else {
+            continue;
+        };
+        for entry in entries.filter_map(Result::ok) {
+            scanned_entries += 1;
+            if scanned_entries > limits.entries
+                || commands.len() >= limits.commands
+                || started.elapsed() >= limits.duration
+            {
+                break;
+            }
+            let Ok(name) = entry.file_name().into_string() else {
+                continue;
+            };
+            if !safe_command_name(&name) {
+                continue;
+            }
+            if executable_for_current_user(&entry.path()) {
+                commands.insert(name);
+            }
+        }
+    }
+    commands.into_iter().collect()
+}
+
+fn executable_for_current_user(path: &Path) -> bool {
+    let Ok(metadata) = fs::metadata(path) else {
+        return false;
+    };
+    if !metadata.is_file() {
+        return false;
+    }
+    let Ok(path) = CString::new(path.as_os_str().as_bytes()) else {
+        return false;
+    };
+    // SAFETY: `path` is a live NUL-terminated CString and access does not retain
+    // the pointer. X_OK evaluates the real user's permissions, ACLs and mount.
+    unsafe { access(path.as_ptr(), 1) == 0 }
+}
+
+unsafe extern "C" {
+    fn access(pathname: *const std::ffi::c_char, mode: std::ffi::c_int) -> std::ffi::c_int;
+}
+
+fn safe_command_name(name: &str) -> bool {
+    let mut bytes = name.bytes();
+    bytes
+        .next()
+        .is_some_and(|byte| byte.is_ascii_alphanumeric() || byte == b'_')
+        && bytes.all(|byte| {
+            byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'.' | b'+' | b'@' | b'-')
+        })
+}
+
 fn scan_file_entries(cwd: &str) -> Vec<FileEntry> {
     let mut entries = Vec::new();
+    let started = Instant::now();
     let mut budget = 1_024;
-    scan_directory(Path::new(cwd), "", 3, &mut budget, &mut entries);
+    scan_directory(Path::new(cwd), "", 3, &mut budget, &started, &mut entries);
 
     if let Some(home) = std::env::var_os("HOME").map(PathBuf::from) {
         let mut budget = 256;
-        scan_directory(&home, "~", 1, &mut budget, &mut entries);
+        scan_directory(&home, "~", 1, &mut budget, &started, &mut entries);
         for relative in [".ssh", ".config", ".local/bin"] {
             let mut budget = 256;
             let base = home.join(relative);
             let display = format!("~/{relative}");
-            scan_directory(&base, &display, 2, &mut budget, &mut entries);
+            scan_directory(&base, &display, 2, &mut budget, &started, &mut entries);
         }
     }
     let mut budget = 256;
-    scan_directory(Path::new("/"), "/", 1, &mut budget, &mut entries);
+    scan_directory(Path::new("/"), "/", 1, &mut budget, &started, &mut entries);
     for absolute in ["/dev", "/tmp", "/var/tmp"] {
         let mut budget = 512;
-        scan_directory(Path::new(absolute), absolute, 2, &mut budget, &mut entries);
+        scan_directory(
+            Path::new(absolute),
+            absolute,
+            2,
+            &mut budget,
+            &started,
+            &mut entries,
+        );
     }
     entries
 }
@@ -635,10 +967,10 @@ fn scan_ssh_hosts() -> Vec<Host> {
         return Vec::new();
     };
     let mut names = Vec::new();
-    if let Ok(config) = fs::read_to_string(ssh.join("config")) {
+    if let Some(config) = read_limited_text(&ssh.join("config"), MAX_CONTEXT_FILE_BYTES) {
         names.extend(parse_ssh_config_hosts(&config));
     }
-    if let Ok(known_hosts) = fs::read_to_string(ssh.join("known_hosts")) {
+    if let Some(known_hosts) = read_limited_text(&ssh.join("known_hosts"), MAX_CONTEXT_FILE_BYTES) {
         names.extend(parse_known_hosts(&known_hosts));
     }
     names.sort();
@@ -709,9 +1041,10 @@ fn scan_directory(
     display: &str,
     depth: usize,
     budget: &mut usize,
+    started: &Instant,
     out: &mut Vec<FileEntry>,
 ) {
-    if depth == 0 || *budget == 0 {
+    if depth == 0 || *budget == 0 || started.elapsed() >= FILE_SCAN_BUDGET {
         return;
     }
     let Ok(read_dir) = fs::read_dir(base) else {
@@ -720,7 +1053,7 @@ fn scan_directory(
     let mut children: Vec<_> = read_dir.filter_map(Result::ok).take(512).collect();
     children.sort_by_key(|entry| entry.file_name());
     for entry in children {
-        if *budget == 0 {
+        if *budget == 0 || started.elapsed() >= FILE_SCAN_BUDGET {
             break;
         }
         let Ok(name) = entry.file_name().into_string() else {
@@ -745,9 +1078,26 @@ fn scan_directory(
         });
         *budget -= 1;
         if directory {
-            scan_directory(&entry.path(), &visible, depth - 1, budget, out);
+            scan_directory(&entry.path(), &visible, depth - 1, budget, started, out);
         }
     }
+}
+
+fn read_limited_text(path: &Path, limit: u64) -> Option<String> {
+    let file = fs::OpenOptions::new()
+        .read(true)
+        .custom_flags(O_CLOEXEC | O_NOFOLLOW | O_NONBLOCK)
+        .open(path)
+        .ok()?;
+    if !file.metadata().ok()?.is_file() {
+        return None;
+    }
+    let mut bytes = Vec::new();
+    file.take(limit + 1).read_to_end(&mut bytes).ok()?;
+    if bytes.len() as u64 > limit {
+        return None;
+    }
+    String::from_utf8(bytes).ok()
 }
 
 fn action_produces_artifact(action: &Action) -> bool {
@@ -757,6 +1107,13 @@ fn action_produces_artifact(action: &Action) -> bool {
             | Action::MakeDirectory { .. }
             | Action::GitClone { .. }
             | Action::PythonVenv { .. }
+    )
+}
+
+fn is_git_action(action: &Action) -> bool {
+    matches!(
+        action,
+        Action::GitMutation | Action::GitStage | Action::GitCommit
     )
 }
 
@@ -871,6 +1228,36 @@ fn debug(message: &str) {
 mod tests {
     use super::*;
     use crate::protocol::Response;
+    use std::io::Cursor;
+
+    #[test]
+    fn protocol_reader_bounds_memory_and_recovers_at_the_next_line() {
+        let mut input = vec![b'x'; MAX_PROTOCOL_LINE_BYTES + 1];
+        input.extend_from_slice(b"\nP\n");
+        let mut reader = Cursor::new(input);
+        assert_eq!(
+            read_protocol_line(&mut reader).unwrap(),
+            ProtocolLine::Invalid
+        );
+        assert_eq!(
+            read_protocol_line(&mut reader).unwrap(),
+            ProtocolLine::Valid("P\n".into())
+        );
+        assert_eq!(read_protocol_line(&mut reader).unwrap(), ProtocolLine::Eof);
+    }
+
+    #[test]
+    fn protocol_reader_rejects_non_utf8_without_losing_framing() {
+        let mut reader = Cursor::new(b"\xff\nX\n".to_vec());
+        assert_eq!(
+            read_protocol_line(&mut reader).unwrap(),
+            ProtocolLine::Invalid
+        );
+        assert_eq!(
+            read_protocol_line(&mut reader).unwrap(),
+            ProtocolLine::Valid("X\n".into())
+        );
+    }
 
     #[test]
     fn query_is_pure_and_uses_the_supplied_snapshot() {
@@ -897,10 +1284,50 @@ mod tests {
     }
 
     #[test]
+    fn disabled_history_keeps_context_but_never_learns_commands() {
+        let mut runtime = Runtime::with_world(WorldState::default());
+        runtime.history_enabled = false;
+        assert_eq!(
+            runtime.handle(Request::Observe {
+                exit_code: 0,
+                now_ms: 1_000,
+                line: "personal-tool private-action".into(),
+                cwd: "/repo".into(),
+            }),
+            Response::Ack
+        );
+        let world = runtime.world.read().unwrap();
+        assert!(world.history.is_empty());
+        assert!(world.transitions.is_empty());
+        assert_eq!(world.current_cwd, "/repo");
+        assert!(world.last_event.is_some());
+    }
+
+    #[test]
     fn parser_rejects_malformed_docker_rows() {
         let rows = parse_docker_rows("abc\tgood\timage\nmissing-fields\n\tbad\timage\n");
         assert_eq!(rows.len(), 1);
         assert_eq!(rows[0].name, "good");
+    }
+
+    #[test]
+    fn external_entity_parsers_have_independent_object_caps() {
+        let docker = (0..MAX_DOCKER_ENTITIES + 10)
+            .map(|index| format!("{index:x}\tcontainer-{index}\timage\n"))
+            .collect::<String>();
+        let processes = (0..MAX_PROCESS_ENTITIES + 10)
+            .map(|index| format!("{} command\n", index + 1))
+            .collect::<String>();
+        let services = (0..MAX_SERVICE_ENTITIES + 10)
+            .map(|index| format!("service-{index}.service loaded active\n"))
+            .collect::<String>();
+        let refs = (0..MAX_GIT_REFS + 10)
+            .map(|index| format!("refs/{index}\n"))
+            .collect::<String>();
+        assert_eq!(parse_docker_rows(&docker).len(), MAX_DOCKER_ENTITIES);
+        assert_eq!(parse_process_rows(&processes).len(), MAX_PROCESS_ENTITIES);
+        assert_eq!(parse_service_rows(&services).len(), MAX_SERVICE_ENTITIES);
+        assert_eq!(parse_git_refs(&refs).len(), MAX_GIT_REFS);
     }
 
     #[test]
@@ -964,5 +1391,76 @@ mod tests {
             ),
             vec!["example.com", "10.0.0.2", "git.example.com"]
         );
+    }
+
+    #[test]
+    fn context_reader_rejects_special_files() {
+        assert!(read_limited_text(Path::new("/dev/zero"), 1_024).is_none());
+    }
+
+    #[test]
+    fn path_scanner_keeps_only_safe_executable_files_and_resolves_relative_entries() {
+        let root = std::env::temp_dir().join(format!(
+            "anduinos-quiet-commands-{}-{}",
+            std::process::id(),
+            wall_time_ms()
+        ));
+        let bin = root.join("bin");
+        fs::create_dir_all(&bin).unwrap();
+        for (name, mode) in [
+            ("dstat", 0o755),
+            ("not-executable", 0o644),
+            ("bad name", 0o755),
+        ] {
+            let path = bin.join(name);
+            fs::write(&path, "#!/bin/sh\n").unwrap();
+            let mut permissions = fs::metadata(&path).unwrap().permissions();
+            permissions.set_mode(mode);
+            fs::set_permissions(path, permissions).unwrap();
+        }
+
+        assert_eq!(
+            scan_path_commands(OsStr::new("bin"), root.to_str().unwrap()),
+            vec!["dstat"]
+        );
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn path_scanner_obeys_directory_entry_and_command_budgets() {
+        let root = std::env::temp_dir().join(format!(
+            "anduinos-quiet-command-limits-{}-{}",
+            std::process::id(),
+            wall_time_ms()
+        ));
+        let mut directories = Vec::new();
+        for directory_index in 0..4 {
+            let directory = root.join(format!("bin-{directory_index}"));
+            fs::create_dir_all(&directory).unwrap();
+            for command_index in 0..4 {
+                let path = directory.join(format!("command-{directory_index}-{command_index}"));
+                fs::write(&path, "#!/bin/sh\n").unwrap();
+                let mut permissions = fs::metadata(&path).unwrap().permissions();
+                permissions.set_mode(0o755);
+                fs::set_permissions(path, permissions).unwrap();
+            }
+            directories.push(directory);
+        }
+        let path = std::env::join_paths(&directories).unwrap();
+        let commands = scan_path_commands_with_limits(
+            &path,
+            root.to_str().unwrap(),
+            PathScanLimits {
+                directories: 2,
+                entries: 5,
+                commands: 3,
+                duration: Duration::from_secs(1),
+            },
+        );
+        assert_eq!(commands.len(), 3);
+        assert!(commands
+            .iter()
+            .all(|command| !command.starts_with("command-2-")));
+        fs::remove_dir_all(root).unwrap();
     }
 }

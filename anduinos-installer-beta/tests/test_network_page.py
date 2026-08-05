@@ -1,4 +1,5 @@
 import unittest
+from pathlib import Path
 
 from gi.repository import Gio
 
@@ -25,6 +26,17 @@ class FakeNetworkMonitor:
 
 
 class NetworkPageRoutingTests(unittest.TestCase):
+    def test_wifi_interactions_stay_inside_the_installer(self):
+        source = (Path(__file__).parents[1] / "src/pages.py").read_text()
+        network_page = source.split("def build_network_page", 1)[1].split(
+            "def build_keyboard_page", 1
+        )[0]
+        self.assertNotIn("gnome-control-center", network_page)
+        self.assertIn("connect_wifi(", network_page)
+        self.assertIn("disconnect_wifi(", network_page)
+        self.assertIn("Connect to a hidden network", network_page)
+        self.assertIn("Use WPS", network_page)
+
     def test_input_method_label_explains_language_before_product(self):
         rime = input_method("rime")
         self.assertIsNotNone(rime)

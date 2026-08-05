@@ -149,6 +149,13 @@ pub struct FileSnapshot {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct CommandSnapshot {
+    pub generation: u64,
+    pub refreshed_at_ms: u64,
+    pub commands: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct ArtifactSnapshot {
     pub generation: u64,
     pub refreshed_at_ms: u64,
@@ -161,6 +168,7 @@ pub struct WorldState {
     pub current_cwd: String,
     pub history: Vec<HistoryEntry>,
     pub transitions: Vec<TransitionEntry>,
+    pub commands: CommandSnapshot,
     pub files: FileSnapshot,
     pub artifacts: ArtifactSnapshot,
     pub docker: DockerSnapshot,
@@ -229,6 +237,17 @@ impl WorldState {
             },
             learned_transition,
         ))
+    }
+
+    pub(crate) fn observe_command_without_learning(
+        &mut self,
+        line: &str,
+        exit_code: i32,
+        at_ms: u64,
+        cwd: &str,
+    ) {
+        self.current_cwd = cwd.to_owned();
+        self.last_event = derive_event(line, exit_code, at_ms);
     }
 
     pub(crate) fn merge_history(&mut self, incoming: Vec<HistoryEntry>) {
@@ -344,9 +363,67 @@ pub(crate) fn history_safe(line: &str) -> bool {
     let Some(parsed) = parse_line(trimmed, trimmed.len()) else {
         return false;
     };
-    !parsed.tokens[..parsed.command_start]
+    if parsed.tokens[..parsed.command_start]
         .iter()
         .any(|token| token.value.contains('='))
+    {
+        return false;
+    }
+    let values = parsed.command_values();
+    let Some(command) = values.first().copied() else {
+        return false;
+    };
+    if matches!(command, "sshpass" | "pass" | "secret-tool") {
+        return false;
+    }
+    if values.windows(2).any(|pair| {
+        matches!(
+            pair,
+            ["docker" | "podman" | "nerdctl", "login"]
+                | ["npm" | "pnpm" | "yarn", "login" | "adduser"]
+                | ["gh", "auth"]
+                | ["aws", "configure"]
+        )
+    }) {
+        return false;
+    }
+    let sensitive_flags = [
+        "--password",
+        "--passwd",
+        "--passphrase",
+        "--token",
+        "--secret",
+        "--api-key",
+        "--apikey",
+        "--authorization",
+    ];
+    if values.iter().any(|value| {
+        let lower = value.to_ascii_lowercase();
+        sensitive_flags
+            .iter()
+            .any(|flag| lower == *flag || lower.starts_with(&format!("{flag}=")))
+    }) {
+        return false;
+    }
+    if command == "curl"
+        && values.iter().skip(1).any(|value| {
+            matches!(*value, "-u" | "--user" | "--proxy-user" | "-H" | "--header")
+                || value.starts_with("--user=")
+                || value.starts_with("--proxy-user=")
+                || value.starts_with("--header=")
+        })
+    {
+        return false;
+    }
+    if matches!(command, "mysql" | "mariadb")
+        && values
+            .iter()
+            .skip(1)
+            .any(|value| *value == "-p" || value.starts_with("-p"))
+    {
+        return false;
+    }
+    true
 }
 
 fn derive_event(line: &str, exit_code: i32, at_ms: u64) -> Option<CommandEvent> {

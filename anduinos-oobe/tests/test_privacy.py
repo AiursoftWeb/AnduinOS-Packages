@@ -1,5 +1,6 @@
 import pathlib
 import subprocess
+import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 from unittest import mock
@@ -90,6 +91,84 @@ class PrivacyTests(unittest.TestCase):
             "/usr/libexec/anduinos-oobe/network-service-helper",
         )
         self.assertNotIn("org.freedesktop.policykit.exec.allow_gui", annotations)
+
+    def test_bash_predictions_are_enabled_without_managed_configuration(self):
+        with tempfile.TemporaryDirectory() as root:
+            bashrc = pathlib.Path(root) / ".bashrc"
+            self.assertTrue(oobe.bash_command_predictions_enabled(bashrc))
+            self.assertFalse(
+                oobe.set_bash_command_predictions_enabled(True, bashrc)
+            )
+            self.assertFalse(bashrc.exists())
+
+    def test_disabling_bash_predictions_appends_one_managed_block(self):
+        with tempfile.TemporaryDirectory() as root:
+            bashrc = pathlib.Path(root) / ".bashrc"
+            bashrc.write_text("export PATH=\"$HOME/bin:$PATH\"\n")
+
+            self.assertTrue(
+                oobe.set_bash_command_predictions_enabled(False, bashrc)
+            )
+            self.assertFalse(oobe.bash_command_predictions_enabled(bashrc))
+            first = bashrc.read_text()
+            self.assertIn("export PATH=", first)
+            self.assertEqual(first.count(oobe.BASH_GUESS_BEGIN), 1)
+            self.assertIn("export ANDUINOS_GUESS_COMMAND=0", first)
+            self.assertFalse(
+                oobe.set_bash_command_predictions_enabled(False, bashrc)
+            )
+            self.assertEqual(bashrc.read_text(), first)
+
+    def test_enabling_removes_only_the_oobe_managed_block(self):
+        with tempfile.TemporaryDirectory() as root:
+            bashrc = pathlib.Path(root) / ".bashrc"
+            bashrc.write_text("alias keep-me='printf safe'\n")
+            bashrc.chmod(0o640)
+            oobe.set_bash_command_predictions_enabled(False, bashrc)
+
+            self.assertTrue(
+                oobe.set_bash_command_predictions_enabled(True, bashrc)
+            )
+            self.assertTrue(oobe.bash_command_predictions_enabled(bashrc))
+            self.assertEqual(bashrc.read_text(), "alias keep-me='printf safe'\n\n")
+            self.assertEqual(bashrc.stat().st_mode & 0o777, 0o640)
+
+    def test_manual_disable_is_respected_and_can_be_explicitly_overridden(self):
+        with tempfile.TemporaryDirectory() as root:
+            bashrc = pathlib.Path(root) / ".bashrc"
+            bashrc.write_text("export ANDUINOS_GUESS_COMMAND='0'\n")
+            self.assertFalse(oobe.bash_command_predictions_enabled(bashrc))
+
+            oobe.set_bash_command_predictions_enabled(True, bashrc)
+            self.assertTrue(oobe.bash_command_predictions_enabled(bashrc))
+            contents = bashrc.read_text()
+            self.assertIn("export ANDUINOS_GUESS_COMMAND='0'", contents)
+            self.assertIn("export ANDUINOS_GUESS_COMMAND=1", contents)
+
+    def test_bashrc_symlink_is_preserved(self):
+        with tempfile.TemporaryDirectory() as root:
+            target = pathlib.Path(root) / "shared-bashrc"
+            target.write_text("# shared\n")
+            bashrc = pathlib.Path(root) / ".bashrc"
+            bashrc.symlink_to(target)
+
+            oobe.set_bash_command_predictions_enabled(False, bashrc)
+            self.assertTrue(bashrc.is_symlink())
+            self.assertIn("ANDUINOS_GUESS_COMMAND=0", target.read_text())
+
+    def test_failed_atomic_replace_preserves_the_original_bashrc(self):
+        with tempfile.TemporaryDirectory() as root:
+            bashrc = pathlib.Path(root) / ".bashrc"
+            bashrc.write_text("# original\n")
+            with mock.patch.object(
+                oobe.os, "replace", side_effect=OSError("simulated failure")
+            ):
+                with self.assertRaises(OSError):
+                    oobe.set_bash_command_predictions_enabled(False, bashrc)
+            self.assertEqual(bashrc.read_text(), "# original\n")
+            self.assertEqual(
+                list(pathlib.Path(root).glob(".bashrc.anduinos-*")), []
+            )
 
 
 if __name__ == "__main__":

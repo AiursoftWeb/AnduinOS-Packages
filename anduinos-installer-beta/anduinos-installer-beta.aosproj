@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.1-50+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-51+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer (beta) — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -54,6 +54,7 @@
     <Dependency Include="python3-gi" />
     <Dependency Include="gir1.2-gtk-4.0" />
     <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="gir1.2-nm-1.0" />
     <Dependency Include="libxkbcommon0" />
     <Dependency Include="parted" />
     <Dependency Include="btrfs-progs" />
@@ -74,7 +75,7 @@
     <Dependency Include="util-linux" />
     <Dependency Include="ubuntu-drivers-common" />
     <Dependency Include="network-manager" />
-    <Dependency Include="gnome-control-center" />
+    <Dependency Include="netplan.io" />
     <Dependency Include="polkitd" />
     <Dependency Include="libglib2.0-bin" />
     <!-- The installer can download this when the user explicitly selects

@@ -94,6 +94,7 @@ fn eligible(
         .dependencies
         .iter()
         .any(|dependency| match dependency {
+            Dependency::CommandGeneration(generation) => *generation != world.commands.generation,
             Dependency::DockerGeneration(generation) => *generation != world.docker.generation,
             Dependency::AptGeneration(generation) => *generation != world.apt.generation,
             Dependency::ProcessGeneration(generation) => *generation != world.processes.generation,
@@ -114,6 +115,7 @@ fn eligible(
 
 fn score(candidate: &Candidate) -> f32 {
     let source_bonus = match candidate.source {
+        CandidateSource::Executable => 0.02,
         CandidateSource::LiveEntity => 0.08,
         CandidateSource::Workflow => 0.06,
         CandidateSource::Transition => 0.04,

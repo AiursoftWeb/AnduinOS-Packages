@@ -2,6 +2,7 @@
 
 #include "bash_readline_abi.h"
 
+#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <locale.h>
@@ -33,6 +34,8 @@ static char *last_submitted_line;
 static int ghost_visible;
 static int installed;
 
+static int start_daemon(void);
+
 static void terminal_write(const char *value, size_t length)
 {
   ssize_t ignored = write(STDOUT_FILENO, value, length);
@@ -53,23 +56,142 @@ static uint64_t now_ms(void)
   return (uint64_t)ts.tv_sec * 1000u + (uint64_t)ts.tv_nsec / 1000000u;
 }
 
-static void stop_daemon(void)
+static uint64_t monotonic_ms(void)
 {
+  struct timespec ts;
+  if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0)
+    return 0;
+  return (uint64_t)ts.tv_sec * 1000u + (uint64_t)ts.tv_nsec / 1000000u;
+}
+
+static void reap_daemon(pid_t pid, int force)
+{
+  if (pid > 0) {
+    /* The helper is private to this Bash process. A blocking reap after
+       SIGKILL is preferable to losing its pid after a one-shot WNOHANG and
+       accumulating zombies when a helper repeatedly misses its deadline. */
+    if (!force || kill(pid, SIGKILL) == 0 || errno == ESRCH) {
+      while (waitpid(pid, NULL, 0) < 0 && errno == EINTR)
+        ;
+    }
+  }
+}
+
+static void force_stop_daemon(void)
+{
+  pid_t pid = daemon_pid;
+
   if (daemon_fd >= 0)
     close(daemon_fd);
   daemon_fd = -1;
-  if (daemon_pid > 0) {
-    kill(daemon_pid, SIGTERM);
-    waitpid(daemon_pid, NULL, WNOHANG);
-  }
   daemon_pid = -1;
+  reap_daemon(pid, 1);
 }
 
+static void graceful_stop_daemon(void)
+{
+  static const char quit[] = "X\n";
+  struct pollfd descriptor;
+  uint64_t deadline;
+  pid_t pid = daemon_pid;
+  int fd = daemon_fd;
+  size_t sent = 0;
+  int exited = 0;
+
+  daemon_fd = -1;
+  daemon_pid = -1;
+  if (fd < 0) {
+    reap_daemon(pid, 1);
+    return;
+  }
+  deadline = monotonic_ms() + 200;
+  descriptor.fd = fd;
+  while (sent < sizeof(quit) - 1) {
+    ssize_t count = send(fd, quit + sent, sizeof(quit) - 1 - sent, MSG_NOSIGNAL);
+    if (count > 0) {
+      sent += (size_t)count;
+      continue;
+    }
+    if (count < 0 && (errno == EAGAIN || errno == EWOULDBLOCK)) {
+      uint64_t current = monotonic_ms();
+      int remaining = current < deadline ? (int)(deadline - current) : 0;
+      descriptor.events = POLLOUT;
+      if (remaining > 0 && poll(&descriptor, 1, remaining) > 0)
+        continue;
+    }
+    break;
+  }
+  if (sent == sizeof(quit) - 1) {
+    char response[16];
+    while (monotonic_ms() < deadline) {
+      int status;
+      pid_t waited = waitpid(pid, &status, WNOHANG);
+      if (waited == pid || (waited < 0 && errno == ECHILD)) {
+        exited = 1;
+        break;
+      }
+      descriptor.events = POLLIN;
+      (void)poll(&descriptor, 1, 5);
+      (void)recv(fd, response, sizeof(response), MSG_DONTWAIT);
+    }
+  }
+  close(fd);
+  if (!exited)
+    reap_daemon(pid, 1);
+}
+
+static void close_inherited_fds(void)
+{
+  DIR *directory;
+  struct dirent *entry;
+  int directory_fd;
+
+#if defined(__linux__)
+  if (close_range(3, ~0U, 0) == 0)
+    return;
+#endif
+
+  /* /proc is mounted on supported AnduinOS systems. Keep a conservative
+     fallback for restricted containers where close_range is unavailable. */
+  directory = opendir("/proc/self/fd");
+  if (directory != NULL) {
+    directory_fd = dirfd(directory);
+    while ((entry = readdir(directory)) != NULL) {
+      char *end = NULL;
+      long descriptor = strtol(entry->d_name, &end, 10);
+      if (end != entry->d_name && *end == '\0' && descriptor >= 3 &&
+          descriptor != directory_fd)
+        close((int)descriptor);
+    }
+    closedir(directory);
+    return;
+  }
+
+  for (int descriptor = 3; descriptor < 1024; ++descriptor)
+    close(descriptor);
+}
+
+static void prewarm_fresh_daemon(void)
+{
+  force_stop_daemon();
+  (void)start_daemon();
+}
+
+#if defined(__GNUC__) && !defined(__clang__)
+/* GCC's analyzer treats descriptors intentionally installed as the child's
+   stdin/stdout/stderr as leaks on the successful exec path. The helper must
+   retain those three descriptors; close_inherited_fds() closes everything
+   else, and the interactive test verifies that unrelated shell descriptors
+   do not reach the helper. Keep this suppression local to the exec wrapper. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wanalyzer-fd-leak"
+#endif
 static int start_daemon(void)
 {
   int sockets[2];
   pid_t child;
-  const char *binary, *shell_path;
+  const char *binary, *shell_path, *shell_histfile;
+  const char *history_setting, *persist_setting;
 
   if (daemon_fd >= 0)
     return 0;
@@ -77,7 +199,11 @@ static int start_daemon(void)
   if (binary == NULL || *binary == '\0')
     binary = "/usr/lib/anduinos-bash-guess-command/anduinos-quietd";
   shell_path = get_string_value("PATH");
-  if (access(binary, X_OK) != 0 || socketpair(AF_UNIX, SOCK_STREAM, 0, sockets) != 0)
+  shell_histfile = get_string_value("HISTFILE");
+  history_setting = get_string_value("ANDUINOS_GUESS_HISTORY");
+  persist_setting = get_string_value("ANDUINOS_GUESS_PERSIST");
+  if (access(binary, X_OK) != 0 ||
+      socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sockets) != 0)
     return -1;
 
   child = fork();
@@ -91,22 +217,60 @@ static int start_daemon(void)
     close(sockets[0]);
     if (shell_path != NULL)
       setenv("PATH", shell_path, 1);
-    dup2(sockets[1], STDIN_FILENO);
-    dup2(sockets[1], STDOUT_FILENO);
-    nullfd = open("/dev/null", O_WRONLY);
-    if (nullfd >= 0)
-      dup2(nullfd, STDERR_FILENO);
-    if (sockets[1] > STDERR_FILENO)
+    if (shell_histfile != NULL && *shell_histfile != '\0')
+      setenv("ANDUINOS_BASH_HISTFILE", shell_histfile, 1);
+    else
+      unsetenv("ANDUINOS_BASH_HISTFILE");
+    if (history_setting != NULL)
+      setenv("ANDUINOS_GUESS_HISTORY", history_setting, 1);
+    if (persist_setting != NULL)
+      setenv("ANDUINOS_GUESS_PERSIST", persist_setting, 1);
+    if (dup2(sockets[1], STDIN_FILENO) < 0) {
       close(sockets[1]);
+      _exit(127);
+    }
+    if (dup2(sockets[1], STDOUT_FILENO) < 0) {
+      close(sockets[1]);
+      close(STDIN_FILENO);
+      _exit(127);
+    }
+    nullfd = open("/dev/null", O_WRONLY | O_CLOEXEC);
+    if (nullfd < 0) {
+      close(sockets[1]);
+      close(STDIN_FILENO);
+      close(STDOUT_FILENO);
+      _exit(127);
+    }
+    if (dup2(nullfd, STDERR_FILENO) < 0) {
+      close(nullfd);
+      close(sockets[1]);
+      close(STDIN_FILENO);
+      close(STDOUT_FILENO);
+      _exit(127);
+    }
+    close_inherited_fds();
     execl(binary, binary, (char *)NULL);
     _exit(127);
   }
 
   close(sockets[1]);
+  {
+    int flags = fcntl(sockets[0], F_GETFL, 0);
+    if (flags < 0 || fcntl(sockets[0], F_SETFL, flags | O_NONBLOCK) != 0) {
+      close(sockets[0]);
+      kill(child, SIGKILL);
+      while (waitpid(child, NULL, 0) < 0 && errno == EINTR)
+        ;
+      return -1;
+    }
+  }
   daemon_fd = sockets[0];
   daemon_pid = child;
   return 0;
 }
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
 
 static char hex_digit(unsigned value)
 {
@@ -165,39 +329,80 @@ static char *hex_decode(const char *value)
 static int exchange(const char *request, char *response, size_t capacity)
 {
   struct pollfd descriptor;
+  uint64_t deadline;
   size_t sent = 0, used = 0, length = strlen(request);
   ssize_t count;
 
   if (start_daemon() != 0)
     return -1;
+  deadline = monotonic_ms() + GHOST_TIMEOUT_MS;
+  descriptor.fd = daemon_fd;
   while (sent < length) {
     count = send(daemon_fd, request + sent, length - sent, MSG_NOSIGNAL);
-    if (count <= 0) {
-      stop_daemon();
+    if (count > 0) {
+      sent += (size_t)count;
+      continue;
+    }
+    if (count < 0 && (errno == EAGAIN || errno == EWOULDBLOCK)) {
+      uint64_t current = monotonic_ms();
+      int remaining = current < deadline ? (int)(deadline - current) : 0;
+      descriptor.events = POLLOUT;
+      if (remaining > 0 && poll(&descriptor, 1, remaining) > 0)
+        continue;
+    }
+    {
+      /* Return silence for this key, but immediately leave a fresh helper
+         warming in the background. The following key must not cold-start a
+         process under the normal 8 ms query deadline. */
+      prewarm_fresh_daemon();
       return -1;
     }
-    sent += (size_t)count;
   }
 
-  descriptor.fd = daemon_fd;
   descriptor.events = POLLIN;
   while (used + 1 < capacity) {
-    if (poll(&descriptor, 1, GHOST_TIMEOUT_MS) <= 0) {
-      stop_daemon();
+    uint64_t current = monotonic_ms();
+    int remaining = current < deadline ? (int)(deadline - current) : 0;
+    if (remaining <= 0 || poll(&descriptor, 1, remaining) <= 0) {
+      prewarm_fresh_daemon();
       return -1;
     }
-    count = recv(daemon_fd, response + used, 1, 0);
-    if (count != 1) {
-      stop_daemon();
+    count = recv(daemon_fd, response + used, capacity - used - 1, 0);
+    if (count < 0 && (errno == EAGAIN || errno == EWOULDBLOCK))
+      continue;
+    if (count <= 0) {
+      prewarm_fresh_daemon();
       return -1;
     }
-    if (response[used++] == '\n') {
-      response[used] = '\0';
-      return 0;
+    {
+      char *newline = memchr(response + used, '\n', (size_t)count);
+      used += (size_t)count;
+      if (newline != NULL) {
+        newline[1] = '\0';
+        return 0;
+      }
+    }
+    if (used + 1 >= capacity) {
+      prewarm_fresh_daemon();
+      return -1;
     }
   }
-  stop_daemon();
+  prewarm_fresh_daemon();
   return -1;
+}
+
+static int format_request(char *buffer, size_t capacity, const char *format,
+                          unsigned long long timestamp, const char *first,
+                          const char *second)
+{
+  int written;
+  if (second == NULL)
+    written = snprintf(buffer, capacity, format, timestamp, first);
+  else
+    written = snprintf(buffer, capacity, format, timestamp, first, second);
+  if (written < 0 || (size_t)written >= capacity)
+    return -1;
+  return 0;
 }
 
 static void query(const char *line)
@@ -210,8 +415,11 @@ static void query(const char *line)
   encoded = hex_encode(line);
   if (encoded == NULL)
     return;
-  snprintf(request, sizeof(request), "Q\t%llu\t%s\n",
-           (unsigned long long)now_ms(), encoded);
+  if (format_request(request, sizeof(request), "Q\t%llu\t%s\n",
+                     (unsigned long long)now_ms(), encoded, NULL) != 0) {
+    free(encoded);
+    return;
+  }
   free(encoded);
   if (exchange(request, response, sizeof(response)) != 0 ||
       response[0] != 'S' || response[1] != '\t')
@@ -361,9 +569,10 @@ static int observe(int status, const char *cwd)
   line_hex = hex_encode(last_submitted_line);
   cwd_hex = hex_encode(cwd == NULL ? "" : cwd);
   if (line_hex != NULL && cwd_hex != NULL) {
-    snprintf(request, sizeof(request), "O\t%d\t%llu\t%s\t%s\n", status,
-             (unsigned long long)now_ms(), line_hex, cwd_hex);
-    result = exchange(request, response, sizeof(response));
+    int written = snprintf(request, sizeof(request), "O\t%d\t%llu\t%s\t%s\n",
+                           status, (unsigned long long)now_ms(), line_hex, cwd_hex);
+    if (written >= 0 && (size_t)written < sizeof(request))
+      result = exchange(request, response, sizeof(response));
   }
   free(line_hex);
   free(cwd_hex);
@@ -415,7 +624,7 @@ void anduinos_ghost_builtin_unload(char *name)
   rl_startup_hook = original_startup_hook;
   if (original_right != NULL)
     rl_bind_keyseq("\033[C", original_right);
-  stop_daemon();
+  graceful_stop_daemon();
   clear_suggestion();
   free(cached_line);
   cached_line = NULL;

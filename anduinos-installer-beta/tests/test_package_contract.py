@@ -26,7 +26,7 @@ class PackageContractTests(unittest.TestCase):
         root = ET.parse(ROOT / "anduinos-installer-beta.aosproj").getroot()
         self.assertEqual(
             root.findtext(".//PackageVersion"),
-            "2.0.1-50+$(SuiteShortName)",
+            "2.0.1-51+$(SuiteShortName)",
         )
 
     def test_extended_codecs_are_optional_and_owned_by_one_metapackage(self):
@@ -146,13 +146,15 @@ class PackageContractTests(unittest.TestCase):
                 "parted",
                 "dosfstools",
                 "efibootmgr",
-                "gnome-control-center",
+                "gir1.2-nm-1.0",
                 "network-manager",
+                "netplan.io",
                 "util-linux",
                 "polkitd",
             }
             <= dependencies
         )
+        self.assertNotIn("gnome-control-center", dependencies)
         self.assertIn(
             (
                 "assets/anduinos-installer-storage-probe",

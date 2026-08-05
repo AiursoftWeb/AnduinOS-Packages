@@ -30,6 +30,19 @@ if grep -Eqi 'carapace|(^|[[:space:]])complete([[:space:]]|$)' \
     "$ROOT/anduinos-bash-guess-command.aosproj"; then
     fail 'the runtime package still modifies Tab completion'
 fi
+if grep -Eq 'std::net|TcpStream|UdpSocket|AF_INET|AF_INET6|getaddrinfo|Command::new\("(curl|wget|nc)"\)' \
+    "$ROOT"/engine/src/*.rs "$ROOT"/native/*.c \
+    "$ROOT/assets/anduinos-bash-guess-command"; then
+    fail 'installed runtime contains a network client primitive'
+fi
+if grep -Eq 'download\.sh|update-command-specs\.sh' \
+    "$ROOT/anduinos-bash-guess-command.aosproj"; then
+    fail 'ordinary package builds invoke a networked development workflow'
+fi
+if grep -Eq '<(Pre|Post)(Install|Remove|Uninstall)|systemd|cron' \
+    "$ROOT/anduinos-bash-guess-command.aosproj"; then
+    fail 'package metadata installs a lifecycle hook or system service'
+fi
 
 # The opt-out path must work even when package files do not exist.
 bash --noprofile --norc -ic \

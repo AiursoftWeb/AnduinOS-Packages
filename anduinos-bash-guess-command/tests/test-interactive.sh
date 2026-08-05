@@ -26,7 +26,13 @@ else
 fi
 mkdir -p "$TEST_ROOT/home/bin" "$TEST_ROOT/home/.ssh" "$TEST_ROOT/package/bin"
 cp "$MODULE" "$TEST_ROOT/package/anduinos-ghost.so"
-cp "$DAEMON" "$TEST_ROOT/package/anduinos-quietd"
+cp "$DAEMON" "$TEST_ROOT/package/anduinos-quietd-engine"
+
+cat >"$TEST_ROOT/package/anduinos-quietd" <<EOF
+#!/usr/bin/env bash
+exec '$TEST_ROOT/package/anduinos-quietd-engine' --fixture-bin-dir '$TEST_ROOT/home/bin'
+EOF
+chmod 755 "$TEST_ROOT/package/anduinos-quietd"
 
 sed \
     -e "s|/usr/share/anduinos-bash-guess-command|$TEST_ROOT/package|g" \
@@ -35,9 +41,10 @@ sed \
 
 cat >"$TEST_ROOT/home/bin/sudo" <<EOF
 #!/usr/bin/env bash
-if [[ \${1-} == -n && \${2-} == docker ]]; then
+if [[ \${1-} == -n && \${2##*/} == docker ]]; then
+    docker=\$2
     shift 2
-    exec docker "\$@"
+    exec "\$docker" "\$@"
 fi
 printf '%s\n' "\$*" >'$TEST_ROOT/sudo.args'
 EOF
@@ -76,12 +83,16 @@ cat >"$TEST_ROOT/bashrc" <<EOF
 PS1='NATIVE_TEST> '
 PS2='NATIVE_MORE> '
 stty columns 120 rows 40
+cd '$ROOT'
 PATH='$TEST_ROOT/home/bin':\$PATH
 export ANDUINOS_QUIETD='$TEST_ROOT/package/anduinos-quietd'
 export ANDUINOS_TEST_MULTIPLE_MARKER='$TEST_ROOT/multiple-containers'
+export ANDUINOS_GUESS_PERSIST=1
 unset ANDUINOS_GUESS_COMMAND
+exec 9>'$TEST_ROOT/inherited-fd-sentinel'
 _anduinos_native_tab_complete() { COMPREPLY=(native-tab-result); }
 complete -F _anduinos_native_tab_complete nativecmd
+source '$TEST_ROOT/package/loader'
 source '$TEST_ROOT/package/loader'
 EOF
 
@@ -274,6 +285,33 @@ destructive_history_input() {
     sleep 0.2
     printf '\033[C\nexit\n'
 }
+
+loader_lifecycle_input() {
+    sleep 0.5
+    printf 'declare -p PROMPT_COMMAND >%s/prompt-command\n' "$TEST_ROOT"
+    printf 'helper=$(pgrep -P $$ -x anduinos-quietd); [[ -n $helper && ! -e /proc/$helper/fd/9 ]] && printf CLOSED >%s/fd-hygiene\n' "$TEST_ROOT"
+    sleep 0.2
+    printf 'exit\n'
+}
+
+helper_recovery_input() {
+    sleep 0.5
+    printf 'kill -KILL "$(pgrep -P $$ -x anduinos-quietd)"\n'
+    sleep 0.5
+    printf 'sudo git che'
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
+
+run_session loader_lifecycle_input "$TEST_ROOT/loader-lifecycle.typescript"
+[[ $(grep -o '_anduinos_guess_prompt_observe' "$TEST_ROOT/prompt-command" | wc -l) == 1 ]] ||
+    fail 're-sourcing the loader duplicated PROMPT_COMMAND'
+[[ $(<"$TEST_ROOT/fd-hygiene") == CLOSED ]] ||
+    fail 'the helper inherited an unrelated Bash file descriptor'
+
+run_session helper_recovery_input "$TEST_ROOT/helper-recovery.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'git checkout' ]] ||
+    fail 'the native frontend did not recover after its helper was killed'
 
 run_session accept_workflow_input "$TEST_ROOT/workflow.typescript"
 [[ $(<"$TEST_ROOT/sudo.args") == 'apt upgrade' ]] ||

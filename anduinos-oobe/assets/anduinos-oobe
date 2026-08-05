@@ -15,6 +15,7 @@ import importlib.util
 import urllib.request
 import time
 import shlex
+import stat
 import tempfile
 from importlib.machinery import SourceFileLoader
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -72,6 +73,18 @@ FLATHUB_OFFICIAL_REPO = 'https://dl.flathub.org/repo/flathub.flatpakrepo'
 FLATHUB_OFFICIAL_URL = 'https://dl.flathub.org/repo'
 FLATHUB_USTC_URL = 'https://mirrors.ustc.edu.cn/flathub'
 MDNS_HELPER = '/usr/libexec/anduinos-oobe/network-service-helper'
+BASH_GUESS_BEGIN = '# >>> AnduinOS Bash command predictions >>>'
+BASH_GUESS_END = '# <<< AnduinOS Bash command predictions <<<'
+BASH_GUESS_ASSIGNMENT = 'export ANDUINOS_GUESS_COMMAND={}'
+BASH_GUESS_BLOCK_RE = re.compile(
+    rf'(?m)^{re.escape(BASH_GUESS_BEGIN)}\n'
+    rf'{re.escape("export ANDUINOS_GUESS_COMMAND=")}[01]\n'
+    rf'^{re.escape(BASH_GUESS_END)}(?:\n|$)'
+)
+BASH_GUESS_ASSIGNMENT_RE = re.compile(
+    r'(?m)^\s*(?:export\s+)?ANDUINOS_GUESS_COMMAND\s*=\s*'
+    r'(["\']?)([01])\1\s*(?:#.*)?$'
+)
 
 # ── Icon helper ────────────────────────────────────────────────────
 _ICON_BASES = [
@@ -159,6 +172,98 @@ def set_mdns_enabled(enabled):
          'true' if enabled else 'false'],
         capture_output=True, text=True, timeout=30
     )
+
+
+def _read_bashrc(bashrc_path=None):
+    """Return (resolved path, text, mode) without following special files."""
+    path = os.path.expanduser(bashrc_path or '~/.bashrc')
+    target = os.path.realpath(path)
+    try:
+        metadata = os.stat(target)
+    except FileNotFoundError:
+        return target, '', 0o644
+    if not stat.S_ISREG(metadata.st_mode):
+        raise OSError('Bash configuration is not a regular file')
+    if metadata.st_size > 4 * 1024 * 1024:
+        raise OSError('Bash configuration is unexpectedly large')
+    with open(target, 'r', encoding='utf-8', errors='surrogateescape') as stream:
+        return target, stream.read(), stat.S_IMODE(metadata.st_mode)
+
+
+def bash_command_predictions_enabled(bashrc_path=None):
+    """Return the effective value of simple Bash prediction assignments."""
+    try:
+        _target, contents, _mode = _read_bashrc(bashrc_path)
+    except OSError:
+        return True
+    assignments = list(BASH_GUESS_ASSIGNMENT_RE.finditer(contents))
+    return not assignments or assignments[-1].group(2) != '0'
+
+
+def _append_bash_guess_block(contents, enabled):
+    if contents and not contents.endswith('\n'):
+        contents += '\n'
+    if contents and not contents.endswith('\n\n'):
+        contents += '\n'
+    return (
+        contents
+        + BASH_GUESS_BEGIN + '\n'
+        + BASH_GUESS_ASSIGNMENT.format('1' if enabled else '0') + '\n'
+        + BASH_GUESS_END + '\n'
+    )
+
+
+def set_bash_command_predictions_enabled(enabled, bashrc_path=None):
+    """Atomically update only OOBE's marked Bash prediction configuration."""
+    target, contents, mode = _read_bashrc(bashrc_path)
+    updated = BASH_GUESS_BLOCK_RE.sub('', contents)
+
+    # Enabled is the package default, so no managed setting is necessary unless
+    # it must explicitly override a simple manual `...=0` earlier in .bashrc.
+    effective = list(BASH_GUESS_ASSIGNMENT_RE.finditer(updated))
+    manual_disabled = effective and effective[-1].group(2) == '0'
+    if not enabled or manual_disabled:
+        updated = _append_bash_guess_block(updated, enabled)
+    if updated == contents:
+        return False
+
+    parent = os.path.dirname(target)
+    if not os.path.isdir(parent):
+        raise OSError('Bash configuration directory does not exist')
+    descriptor, temporary = tempfile.mkstemp(
+        prefix='.bashrc.anduinos-', dir=parent
+    )
+    try:
+        os.fchmod(descriptor, mode)
+        with os.fdopen(
+            descriptor, 'w', encoding='utf-8', errors='surrogateescape'
+        ) as stream:
+            descriptor = -1
+            stream.write(updated)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, target)
+        try:
+            directory = os.open(parent, os.O_RDONLY | os.O_DIRECTORY)
+        except OSError:
+            directory = -1
+        if directory >= 0:
+            try:
+                # Some network filesystems do not support directory fsync.
+                try:
+                    os.fsync(directory)
+                except OSError:
+                    pass
+            finally:
+                os.close(directory)
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+        try:
+            os.unlink(temporary)
+        except FileNotFoundError:
+            pass
+    return True
 
 def _read_os_pretty_name():
     """Read PRETTY_NAME from /etc/os-release, fallback to NAME=."""
@@ -1269,6 +1374,43 @@ def create_security_page():
     loc_row.connect('notify::active', _on_loc_toggle)
     loc_card.add(loc_row)
     center.append(loc_card)
+
+    # ── Local Command Assistance Card ──
+    shell_card = Adw.PreferencesGroup()
+    shell_card.set_title(_('Command-line Assistance'))
+    shell_card.set_description(
+        _('Control local Bash predictions. Command history stays on this computer and is never uploaded.')
+    )
+    shell_card.set_margin_top(24)
+
+    shell_row = Adw.SwitchRow()
+    shell_row.set_title(_('Bash Command Predictions'))
+    shell_row.set_subtitle(
+        _('Show quiet command suggestions that you can accept with the Right Arrow key.')
+    )
+    shell_icon = _create_image('keyboard.svg')
+    shell_icon.set_pixel_size(32)
+    shell_row.add_prefix(shell_icon)
+    shell_row.set_active(bash_command_predictions_enabled())
+    shell_row._update_in_progress = False
+
+    def _on_shell_prediction_toggle(switch, pspec):
+        if switch._update_in_progress:
+            return
+        enabled = switch.get_active()
+        try:
+            set_bash_command_predictions_enabled(enabled)
+        except OSError:
+            switch._update_in_progress = True
+            switch.set_active(not enabled)
+            switch.set_subtitle(
+                _('Could not update your Bash configuration. Your previous setting was kept.')
+            )
+            switch._update_in_progress = False
+
+    shell_row.connect('notify::active', _on_shell_prediction_toggle)
+    shell_card.add(shell_row)
+    center.append(shell_card)
 
     # ── Power Card ──
     power_card = Adw.PreferencesGroup()

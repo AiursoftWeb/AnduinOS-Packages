@@ -19,8 +19,8 @@ pub use candidate::{Candidate, CandidateKind, CandidateSource, Dependency, Evide
 pub use shell::{parse_line, ParsedLine, Token};
 pub use slot::{classify_slot, Slot, SlotKind};
 pub use world::{
-    Action, Artifact, ArtifactKind, CommandEvent, Container, FileEntry, GitRef, HistoryEntry, Host,
-    Process, Service, TransitionEntry, WorldState,
+    Action, Artifact, ArtifactKind, CommandEvent, CommandSnapshot, Container, FileEntry, GitRef,
+    HistoryEntry, Host, Process, Service, TransitionEntry, WorldState,
 };
 
 use arbiter::choose;
@@ -71,5 +71,32 @@ pub fn evaluate(query: Query<'_>, world: &WorldState) -> Decision {
     Decision {
         authoritative: slot.authoritative,
         suggestion: choose(query.line, &slot, world, query.now_ms, candidates),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn suggests_an_installed_command_missing_from_the_static_grammar() {
+        let mut world = WorldState::default();
+        world.commands.generation = 7;
+        world.commands.commands = vec!["dstat".into()];
+        let suggestion = suggest(
+            Query {
+                line: "sudo dsta",
+                cursor: 9,
+                now_ms: 1_000,
+            },
+            &world,
+        )
+        .unwrap();
+        assert_eq!(suggestion.insertion, "t");
+        assert_eq!(suggestion.candidate.source, CandidateSource::Executable);
+        assert_eq!(
+            suggestion.candidate.dependencies,
+            vec![Dependency::CommandGeneration(7)]
+        );
     }
 }

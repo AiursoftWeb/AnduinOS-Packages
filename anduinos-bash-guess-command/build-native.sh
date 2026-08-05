@@ -23,6 +23,7 @@ esac
 
 need_cmd "$compiler"
 need_cmd "$strip_tool"
+mkdir -p "$SCRIPT_DIR/deploy/$ARCH"
 
 "$compiler" -std=c11 -O2 -fPIC -fstack-protector-strong \
     -Wall -Wextra -Werror -I"$SCRIPT_DIR/native" \

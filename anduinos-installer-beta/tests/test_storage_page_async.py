@@ -157,6 +157,25 @@ class StoragePageAsyncTests(unittest.TestCase):
         self.assertIn("recheck_requests.start(_probe_target", source)
         self.assertIn('page.connect("unmap", _page_unmapped)', source)
 
+    def test_disk_probe_starts_only_after_the_page_is_mapped(self):
+        source = (ROOT / "src/pages.py").read_text(encoding="utf-8")
+        disk_page = source.split("def build_disk_page", 1)[1].split(
+            "# ── page 5:", 1
+        )[0]
+        mapped_handler = disk_page.split("def _page_mapped", 1)[1].split(
+            'page.connect("map", _page_mapped)', 1
+        )[0]
+
+        self.assertIn(
+            "_populate_disks(restore_selection=True)", mapped_handler
+        )
+        after_connections = disk_page.split(
+            'page.connect("unmap", _page_unmapped)', 1
+        )[1]
+        self.assertNotIn(
+            "_populate_disks(restore_selection=True)", after_connections
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

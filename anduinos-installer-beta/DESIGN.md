@@ -44,12 +44,18 @@ and constructs every command itself.
   default-off online choice owned by the `anduinos-multimedia-codecs`
   metapackage. A clean download failure is a visible warning; an inconsistent
   APT/dpkg state remains fatal.
-- Wi-Fi: the one active, persistent Live-session NetworkManager Wi-Fi profile
-  is migrated after the target image is copied. Historical connections, VPNs,
-  hotspots, unsafe files and duplicate profiles are excluded. The executor
-  never overwrites a target profile and publishes the migrated keyfile
-  atomically as root with mode 0600. Migration failure is a visible warning,
-  not an installation failure.
+- Wi-Fi: the active Live-session Wi-Fi UUID selects its exact persistent
+  `/etc/netplan/90-NM-<UUID>.yaml`, which is migrated after the target image is
+  copied. Historical connections, VPNs, hotspots and unsafe files are excluded.
+  The executor never overwrites a target Netplan and publishes a new one
+  atomically as root with mode 0600, then validates its NetworkManager mapping
+  without applying it. Migration failure is a visible warning, not an
+  installation failure. The unprivileged GTK frontend is also a native
+  libnm client: it scans and refreshes access points, connects open, OWE, WEP,
+  WPA Personal and common 802.1X networks, handles hidden SSIDs and WPS-PBC,
+  and disconnects without launching a desktop settings application. Secrets
+  remain in the installer process and libnm D-Bus payload; they are never
+  placed in a child-process argument list.
 - Mirrors: before refreshing APT, a warning-policy step concurrently probes a
   maintained HTTP+HTTPS Ubuntu mirror list, bandwidth-tests the five lowest
   latency candidates, and atomically replaces only `URIs:` fields in the

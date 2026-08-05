@@ -3,12 +3,12 @@
 Fast, offline ghost-text suggestions for interactive Bash without replacing
 Bash's line editor.
 
-The foreground consists of a roughly 10 KiB native loadable builtin and a small
-dependency-free Rust decision engine. The builtin wraps only Readline redisplay
-and Right Arrow: paste, multiline input, Enter, history search, editing modes
-and every other key remain native Bash/Readline behavior. There is no status
-bar, paste progress, mode banner, syntax highlighting, or terminal cache
-generation.
+The foreground consists of a roughly 22 KiB native loadable builtin and a small
+third-party-crate-free Rust decision engine. The builtin wraps only Readline
+redisplay and Right Arrow: paste, multiline input, Enter, history search,
+editing modes and every other key remain native Bash/Readline behavior. There
+is no status bar, paste progress, mode banner, syntax highlighting, or terminal
+cache generation.
 
 The engine is local and typed. It understands apt workflows, Docker container
 slots, process IDs, systemd services, Git refs, SSH aliases, verified command
@@ -16,6 +16,15 @@ artifacts and guarded `git clean` options.
 Slow local discovery happens in the background between prompts; a keystroke
 query only reads an immutable in-memory snapshot. Suggestions are append-only,
 single-line, control-character-free and never execute automatically.
+
+Root-command completion is not limited to the compiled grammar. The background
+observer also snapshots executable files from the current shell's startup
+`PATH`, including relative entries resolved from the startup directory, within
+fixed directory, entry, command and time budgets. This scan runs exactly once
+when the per-shell engine starts; it adds no prompt hook, watcher or periodic
+refresh, and a keystroke never performs filesystem I/O. Unsafe command names
+that cannot be appended as an unquoted shell word are ignored. Programs
+installed later become visible in a new Bash session.
 
 A compact offline index supplies safe defaults for high-value workflows plus a
 generated corpus of more than 700 CLIs and 7,500 multi-level command nodes. It
@@ -27,11 +36,14 @@ pinned Carapace release and compiled into the Rust engine; Carapace is not
 installed or launched at runtime.
 
 Existing Bash history provides immediate personal ranking across equivalent
-`sudo` wrappers. Successful commands are then learned across sessions with
-frequency, recency and current-directory weights. A bounded adjacent-command
-graph additionally learns that, in a given directory, one successful command
-usually follows another. Credential-like commands are never persisted, failed
-commands do not train transitions, and completion never executes text by itself.
+`sudo` wrappers. Successful commands are then learned in the current shell with
+frequency, recency and current-directory weights; users may explicitly opt in
+to carrying that learning across sessions. A bounded adjacent-command graph
+additionally learns that, in a given directory, one successful command usually
+follows another. Obvious credential-bearing forms are excluded from learning,
+failed commands do not train transitions, and completion never executes text by
+itself. This filter is defense in depth rather than a secret detector; users who
+do not want any command import or learning can set `ANDUINOS_GUESS_HISTORY=0`.
 Ordinary destructive commands are eligible because Right Arrow only accepts
 text and Enter remains the execution boundary. The sole narrow replay guard is
 a complete historical `dd` command writing directly to a `/dev/` device;
@@ -76,17 +88,20 @@ before the bash-completion block in `~/.bashrc`:
 export ANDUINOS_GUESS_COMMAND=0       # disable the package entirely
 export ANDUINOS_GUESS_ENGINE=0        # disable ghost text
 export ANDUINOS_GUESS_HISTORY=0       # disable history import and learning
+export ANDUINOS_GUESS_PERSIST=1       # opt in to extra cross-session state
 ```
 
 Removing the package removes the loader, native frontend and engine. The next
 Bash session is stock Readline again; no user dotfile is modified.
 
 Learning uses no database and no daemon-wide service. Each interactive Bash owns
-its small engine process. Private mode-0600 append logs live under
-`${XDG_STATE_HOME:-~/.local/state}/anduinos-bash-guess-command/` as `history-v1`
-and `transitions-v1`; each log compacts at 1 MiB and each in-memory index is
-capped at 2,000 entries. Setting `ANDUINOS_GUESS_HISTORY=0` disables both import
-and persistence.
+its small engine process. By default the engine imports only the history file
+selected by the current Bash and keeps new learning in memory for that shell;
+it does not create another command log. Setting `ANDUINOS_GUESS_PERSIST=1`
+explicitly enables private mode-0600 `history-v1` and `transitions-v1` logs under
+`${XDG_STATE_HOME:-~/.local/state}/anduinos-bash-guess-command/`. Each log
+compacts at 1 MiB and each in-memory index is capped at 2,000 entries. Setting
+`ANDUINOS_GUESS_HISTORY=0` disables import, session learning and persistence.
 
 The optional grammar-update workflow fetches only fixed, checksummed Carapace
 release archives. Package builds, installation and normal shell startup do not

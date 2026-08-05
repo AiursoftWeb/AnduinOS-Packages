@@ -169,3 +169,33 @@ exercise the public prediction entry point. A second hermetic probe containing
 only synthetic filenames identifies over 2,000 positional path slots, while a
 small audited overlay handles common path-valued flags such as `kubectl -f`,
 `curl -o`, `git -F` and `docker build -f`.
+
+Root command discovery additionally maintains a sorted, generation-checked
+snapshot of executable files in the Bash process's startup `PATH`. Discovery
+runs once in the background when the per-shell engine starts. There is no
+prompt-time refresh, filesystem watcher or protocol extension; a new Bash
+session is the refresh boundary.
+The foreground prefix lookup uses binary partitioning over the immutable
+snapshot; it never scans a directory from the Readline query path. Static
+Carapace roots remain available for cold-start grammar, while commands absent
+from Carapace, such as distribution-provided compatibility tools, can be
+suggested directly from the live executable snapshot.
+
+Version `1.0.0-30` hardens that feature set for default desktop deployment.
+The Bash loader is idempotent, each shell owns exactly one private helper, and
+failed helpers are reaped and replaced without turning the next keystroke into
+a cold-start loop. The child closes every inherited descriptor except its
+protocol stdin/stdout and `/dev/null` stderr. Wire lines, PATH scans, directory
+scans, command output, entity collections, worker count and worker queue all
+have explicit limits; foreground send and receive share one 8 ms deadline.
+
+Helper startup performs local, bounded snapshots only and never launches an
+external discovery command. `docker`, `ps`, `systemctl` and `git` probes use
+fixed `/usr/bin` paths and run only after a matching successful user workflow.
+There is no network client, service, timer, watcher or periodic job. A normal
+installation imports the Bash-selected history file but keeps new learning in
+memory. Extra mode-0600 state is created only when
+`ANDUINOS_GUESS_PERSIST=1`; concurrent shells serialize writes, logs compact at
+1 MiB, and graceful helper shutdown gives accepted writes a bounded drain
+window. Oversized or malformed protocol input is drained and rejected without
+losing the next frame.

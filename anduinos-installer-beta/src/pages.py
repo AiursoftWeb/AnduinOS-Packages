@@ -10,7 +10,6 @@ can push the next page when the user clicks "Next" / "Install".
 import threading
 import re
 import html
-import subprocess
 
 # Allow absolute imports when run directly (not as a package).
 import sys, os
@@ -51,6 +50,7 @@ from frontend import (
 from installer_core.btrfs import BTRFS_SUBVOLUMES
 from installer_core.account_security import AccountNextAction, account_next_action
 from installer_core.coexistence import CoexistenceNoticeCode
+from installer_core.executor import describe_installation_pipeline
 from installer_core.layout import MIB, build_erase_disk_layout_spec
 from installer_core.model import (
     Filesystem,
@@ -78,8 +78,21 @@ from installer_core.username_policy import (
 from installer_core.usernames import (
     suggest_username,
 )
+from installer_core.hostnames import (
+    detect_device_type,
+    generate_random_suffix,
+    suggest_hostname,
+)
 from installer_core.wifi import (
+    WifiCancelled,
+    WifiConnectionRequest,
+    WifiEapMethod,
     WifiNetwork,
+    WifiProfile,
+    WifiSecurity,
+    connect_wifi,
+    disconnect_wifi,
+    saved_wifi_profiles,
     scan_wifi_networks,
     set_wifi_radio,
     wifi_radio_enabled,
@@ -350,7 +363,7 @@ def effective_network_input_methods(
     return preferred if online else ()
 
 
-def _offline_callout(lang):
+def _offline_callout(lang, body_text=None):
     """Build the shared non-fatal offline warning used by optional downloads."""
 
     callout = Gtk.Box(
@@ -372,10 +385,9 @@ def _offline_callout(lang):
     )
     heading.add_css_class("heading")
     body = Gtk.Label(
-        label=_(
+        label=body_text or _(
             "Requires an Internet connection. The base installation "
-            "remains available when offline.",
-            lang,
+            "remains available when offline.", lang
         ),
         halign=Gtk.Align.START,
         xalign=0,
@@ -588,12 +600,11 @@ def build_welcome_page(shared, nav_view):
 # ── page 2: Network recommendation ───────────────────────────────────────
 
 def build_network_page(shared, nav_view):
-    """Recommend connectivity while keeping offline installation available."""
+    """Connect to Wi-Fi entirely inside the installer."""
 
     lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(title=_("Connect to the Internet", lang))
     page.set_tag("network")
-
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
     content.append(
         _page_header(
@@ -614,7 +625,6 @@ def build_network_page(shared, nav_view):
         margin_bottom=8,
         vexpand=True,
     )
-
     explanation = card(spacing=14)
     explanation.set_vexpand(True)
     explanation_title = Gtk.Label(
@@ -625,7 +635,6 @@ def build_network_page(shared, nav_view):
     )
     explanation_title.add_css_class("title-3")
     explanation.append(explanation_title)
-
     explanation_text = Gtk.Label(
         label=_(
             "Requires an Internet connection. The base installation "
@@ -638,49 +647,40 @@ def build_network_page(shared, nav_view):
     )
     explanation_text.add_css_class("dim-label")
     explanation.append(explanation_text)
-
     online_features = [
         _("Download and install system updates during installation", lang),
         _("Install hardware drivers", lang),
         _("Install extended multimedia format support", lang),
     ]
-    recommended_methods = _recommended_input_methods(shared)
-    if recommended_methods:
+    if _recommended_input_methods(shared):
         online_features.append(_("Install input method", lang))
     for text in online_features:
-        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        row.append(Gtk.Image.new_from_icon_name("emblem-ok-symbolic"))
-        row.append(
-            Gtk.Label(
-                label=text,
-                halign=Gtk.Align.START,
-                xalign=0,
-                wrap=True,
-            )
+        feature = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        feature.append(Gtk.Image.new_from_icon_name("emblem-ok-symbolic"))
+        feature.append(
+            Gtk.Label(label=text, halign=Gtk.Align.START, xalign=0, wrap=True)
         )
-        explanation.append(row)
+        explanation.append(feature)
 
     status_box = Gtk.Box(
         orientation=Gtk.Orientation.HORIZONTAL,
         spacing=10,
-        halign=Gtk.Align.START,
+        halign=Gtk.Align.FILL,
         valign=Gtk.Align.END,
         vexpand=True,
     )
     status_icon = Gtk.Image(pixel_size=22)
-    status_label = Gtk.Label(wrap=True, xalign=0)
+    status_label = Gtk.Label(wrap=True, xalign=0, hexpand=True)
+    cancel_operation = Gtk.Button(label=_("Cancel", lang), visible=False)
     status_box.append(status_icon)
     status_box.append(status_label)
+    status_box.append(cancel_operation)
     explanation.append(status_box)
-
     body.append(explanation)
 
-    networks = card(spacing=10)
-    networks.set_vexpand(True)
-    networks_header = Gtk.Box(
-        orientation=Gtk.Orientation.HORIZONTAL,
-        spacing=10,
-    )
+    networks_card = card(spacing=10)
+    networks_card.set_vexpand(True)
+    networks_header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
     networks_title = Gtk.Label(
         label=_("Available Wi-Fi Networks", lang),
         halign=Gtk.Align.START,
@@ -689,16 +689,18 @@ def build_network_page(shared, nav_view):
         wrap=True,
     )
     networks_title.add_css_class("title-3")
-    radio_switch = Gtk.Switch(
-        valign=Gtk.Align.CENTER,
-        sensitive=False,
+    hidden_button = Gtk.Button(
+        icon_name="list-add-symbolic",
+        tooltip_text=_("Connect to a hidden network", lang),
     )
+    radio_switch = Gtk.Switch(valign=Gtk.Align.CENTER, sensitive=False)
     refresh_button = Gtk.Button(icon_name="view-refresh-symbolic")
-    refresh_button.set_tooltip_text(_("Detect Internet connectivity", lang))
+    refresh_button.set_tooltip_text(_("Refresh Wi-Fi networks", lang))
     networks_header.append(networks_title)
+    networks_header.append(hidden_button)
     networks_header.append(radio_switch)
     networks_header.append(refresh_button)
-    networks.append(networks_header)
+    networks_card.append(networks_header)
 
     wifi_group = Adw.PreferencesGroup()
     network_rows = []
@@ -709,58 +711,366 @@ def build_network_page(shared, nav_view):
         vscrollbar_policy=Gtk.PolicyType.AUTOMATIC,
     )
     wifi_scroll.set_child(wifi_group)
-    networks.append(wifi_scroll)
-    body.append(networks)
+    networks_card.append(wifi_scroll)
+    body.append(networks_card)
+    content.append(clamp_content(body, 980))
 
-    content.append(clamp_content(body, 920))
     monitor = Gio.NetworkMonitor.get_default()
+    scan_requests = LatestBackgroundRequest(GLib.idle_add)
+    operation = {"cancel": None, "message": ""}
+    profiles_by_ssid: dict[str, tuple[WifiProfile, ...]] = {}
+    radio_handler = None
 
     def _is_online():
         return internet_connection_ready(monitor)
 
+    def _set_controls_sensitive(sensitive: bool):
+        refresh_button.set_sensitive(sensitive)
+        hidden_button.set_sensitive(sensitive and radio_switch.get_active())
+        radio_switch.set_sensitive(sensitive)
+        for row in network_rows:
+            row.set_sensitive(sensitive)
+
     def _render_connectivity():
         online = _is_online()
         shared["network_preflight_online"] = online
+        if operation["cancel"] is not None:
+            status_box.remove_css_class("installer-warning-card")
+            status_icon.remove_css_class("warning")
+            status_icon.set_from_icon_name("network-wireless-acquiring-symbolic")
+            status_label.set_label(str(operation["message"]))
+            return
         if online:
             status_box.remove_css_class("installer-warning-card")
             status_icon.remove_css_class("warning")
         else:
             status_box.add_css_class("installer-warning-card")
             status_icon.add_css_class("warning")
-        status_icon.set_from_icon_name(
-            "network-transmit-receive-symbolic"
-            if online
-            else "network-offline-symbolic"
-        )
-        status_label.set_label(
-            _("Internet connection is ready.", lang)
-            if online
-            else _(
+        try:
+            connectivity = monitor.get_connectivity()
+        except Exception:
+            connectivity = Gio.NetworkConnectivity.NONE
+        if online:
+            icon_name = "network-transmit-receive-symbolic"
+            message = _("Internet connection is ready.", lang)
+        elif connectivity == Gio.NetworkConnectivity.PORTAL:
+            icon_name = "network-wireless-hotspot-symbolic"
+            message = _(
+                "Wi-Fi is connected, but the network requires sign-in through a captive portal.",
+                lang,
+            )
+        elif connectivity in (
+            Gio.NetworkConnectivity.LOCAL,
+            Gio.NetworkConnectivity.LIMITED,
+        ):
+            icon_name = "network-no-route-symbolic"
+            message = _(
+                "The local network is connected, but Internet access is unavailable.",
+                lang,
+            )
+        else:
+            icon_name = "network-offline-symbolic"
+            message = _(
                 "Requires an Internet connection. The base installation "
                 "remains available when offline.",
                 lang,
             )
+        status_icon.set_from_icon_name(icon_name)
+        status_label.set_label(message)
+
+    def _show_error(heading: str, error: Exception):
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=heading,
+            body=str(error),
+        )
+        dialog.add_response("ok", _("OK", lang))
+        dialog.present()
+
+    def _profile_for(network: WifiNetwork):
+        candidates = profiles_by_ssid.get(network.ssid, ())
+        return next((item for item in candidates if item.active), None) or (
+            candidates[0] if candidates else None
         )
 
-    def _open_wifi_settings():
-        try:
-            subprocess.Popen(("gnome-control-center", "wifi"))
-        except OSError as error:
-            status_label.set_label(
-                _("Unavailable: {error}", lang).format(error=error)
-            )
+    def _security_name(security: WifiSecurity):
+        return {
+            WifiSecurity.OPEN: _("Open network", lang),
+            WifiSecurity.OWE: _("Enhanced Open (OWE)", lang),
+            WifiSecurity.WEP: _("WEP (legacy)", lang),
+            WifiSecurity.PERSONAL: _("Personal Wi-Fi", lang),
+            WifiSecurity.ENTERPRISE: _("Enterprise Wi-Fi", lang),
+        }[security]
 
-    def _replace_network_rows(networks: tuple[WifiNetwork, ...]):
+    def _clear_network_rows():
         for row in network_rows:
             wifi_group.remove(row)
         network_rows.clear()
-        for network in networks:
-            detail = f"{network.signal}%"
+
+    def _show_disconnect_dialog(network: WifiNetwork):
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_("Disconnect from {network}?", lang).format(
+                network=network.ssid
+            ),
+            body=_(
+                "The installer will keep the saved network profile so it can be used again.",
+                lang,
+            ),
+        )
+        dialog.add_response("cancel", _("Cancel", lang))
+        dialog.add_response("disconnect", _("Disconnect", lang))
+        dialog.set_response_appearance(
+            "disconnect", Adw.ResponseAppearance.DESTRUCTIVE
+        )
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+
+        def responded(_dialog, response):
+            if response == "disconnect":
+                _start_operation(
+                    _("Disconnecting from {network}…", lang).format(
+                        network=network.ssid
+                    ),
+                    lambda _cancel: disconnect_wifi(network.device),
+                )
+
+        dialog.connect("response", responded)
+        dialog.present()
+
+    def _request_for_network(network: WifiNetwork, **values):
+        return WifiConnectionRequest(
+            ssid=network.ssid,
+            security=network.security_kind,
+            device=network.device,
+            bssid=network.bssid,
+            security_label=network.security,
+            hidden=not bool(network.bssid),
+            **values,
+        )
+
+    def _start_connection(
+        network: WifiNetwork,
+        request: WifiConnectionRequest,
+        *,
+        wps=False,
+    ):
+        profile = None if wps else _profile_for(network)
+        message = (
+            _(
+                "Waiting for WPS on {network}. Press the WPS button on the router…",
+                lang,
+            ).format(network=network.ssid)
+            if wps
+            else _("Connecting to {network}…", lang).format(network=network.ssid)
+        )
+        _start_operation(
+            message,
+            lambda cancel: connect_wifi(
+                request,
+                wps=wps,
+                profile_uuid=profile.uuid if profile else None,
+                cancel_event=cancel,
+            ),
+        )
+
+    def _show_personal_dialog(network: WifiNetwork):
+        password = Adw.PasswordEntryRow(title=_("Password", lang))
+        form = Adw.PreferencesGroup()
+        form.add(password)
+        profile = _profile_for(network)
+        body = _security_name(network.security_kind)
+        if profile:
+            body += "\n" + _(
+                "A saved profile exists. Entering a password updates it securely.",
+                lang,
+            )
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_("Connect to {network}", lang).format(network=network.ssid),
+            body=body,
+            extra_child=form,
+        )
+        dialog.add_response("cancel", _("Cancel", lang))
+        dialog.add_response("connect", _("Connect", lang))
+        if network.security_kind is WifiSecurity.PERSONAL:
+            dialog.add_response("wps", _("Use WPS", lang))
+        dialog.set_default_response("connect")
+        dialog.set_close_response("cancel")
+
+        def responded(_dialog, response):
+            if response == "wps":
+                _start_connection(
+                    network,
+                    _request_for_network(network),
+                    wps=True,
+                )
+            elif response == "connect":
+                _start_connection(
+                    network,
+                    _request_for_network(network, password=password.get_text()),
+                )
+
+        dialog.connect("response", responded)
+        dialog.present()
+
+    def _show_enterprise_dialog(network: WifiNetwork):
+        profile = _profile_for(network)
+        eap_methods = (
+            WifiEapMethod.PEAP,
+            WifiEapMethod.TTLS,
+            WifiEapMethod.TLS,
+            WifiEapMethod.PWD,
+        )
+        form = Adw.PreferencesGroup()
+        eap = Adw.ComboRow(
+            title=_("EAP method", lang),
+            model=Gtk.StringList.new(["PEAP", "TTLS", "TLS", "PWD"]),
+        )
+        if profile and profile.eap_method:
+            for index, method in enumerate(eap_methods):
+                if method.value == profile.eap_method:
+                    eap.set_selected(index)
+                    break
+        identity = Adw.EntryRow(title=_("Identity", lang))
+        anonymous = Adw.EntryRow(title=_("Anonymous identity (optional)", lang))
+        password = Adw.PasswordEntryRow(title=_("Password", lang))
+        phase2 = Adw.ComboRow(
+            title=_("Inner authentication", lang),
+            model=Gtk.StringList.new(["MSCHAPv2", "PAP", "MSCHAP", "CHAP"]),
+        )
+        ca_cert = Adw.EntryRow(title=_("CA certificate path (optional)", lang))
+        domain = Adw.EntryRow(title=_("Domain suffix match (optional)", lang))
+        client_cert = Adw.EntryRow(title=_("Client certificate path", lang))
+        private_key = Adw.EntryRow(title=_("Private key path", lang))
+        private_key_password = Adw.PasswordEntryRow(
+            title=_("Private key password (optional)", lang)
+        )
+
+        def add_file_picker(entry):
+            button = Gtk.Button(
+                icon_name="document-open-symbolic",
+                valign=Gtk.Align.CENTER,
+                has_frame=False,
+            )
+
+            def choose_file(_button):
+                chooser = Gtk.FileDialog(title=entry.get_title(), modal=True)
+
+                def selected(dialog, result):
+                    try:
+                        selected_file = dialog.open_finish(result)
+                    except GLib.Error:
+                        return
+                    path = selected_file.get_path()
+                    if path:
+                        entry.set_text(path)
+
+                chooser.open(nav_view.get_root(), None, selected)
+
+            button.connect("clicked", choose_file)
+            entry.add_suffix(button)
+
+        for file_entry in (ca_cert, client_cert, private_key):
+            add_file_picker(file_entry)
+        for row in (
+            eap,
+            identity,
+            anonymous,
+            password,
+            phase2,
+            ca_cert,
+            domain,
+            client_cert,
+            private_key,
+            private_key_password,
+        ):
+            form.add(row)
+
+        def update_method(*_args):
+            method = eap_methods[eap.get_selected()]
+            tunneled = method in (WifiEapMethod.PEAP, WifiEapMethod.TTLS)
+            tls = method is WifiEapMethod.TLS
+            anonymous.set_visible(tunneled)
+            password.set_visible(not tls)
+            phase2.set_visible(tunneled)
+            client_cert.set_visible(tls)
+            private_key.set_visible(tls)
+            private_key_password.set_visible(tls)
+
+        eap.connect("notify::selected", update_method)
+        update_method()
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_("Connect to {network}", lang).format(network=network.ssid),
+            body=_(
+                "Enter the credentials supplied by your organization. Certificate validation is strongly recommended.",
+                lang,
+            ),
+            extra_child=form,
+        )
+        dialog.add_response("cancel", _("Cancel", lang))
+        dialog.add_response("connect", _("Connect", lang))
+        dialog.set_default_response("connect")
+        dialog.set_close_response("cancel")
+
+        def responded(_dialog, response):
+            if response != "connect":
+                return
+            method = eap_methods[eap.get_selected()]
+            inner_methods = ("mschapv2", "pap", "mschap", "chap")
+            _start_connection(
+                network,
+                _request_for_network(
+                    network,
+                    identity=identity.get_text(),
+                    anonymous_identity=anonymous.get_text(),
+                    password=password.get_text(),
+                    eap_method=method,
+                    phase2_auth=inner_methods[phase2.get_selected()],
+                    ca_certificate=ca_cert.get_text(),
+                    domain_suffix_match=domain.get_text(),
+                    client_certificate=client_cert.get_text(),
+                    private_key=private_key.get_text(),
+                    private_key_password=private_key_password.get_text(),
+                ),
+            )
+
+        dialog.connect("response", responded)
+        dialog.present()
+
+    def _activate_network(network: WifiNetwork):
+        if operation["cancel"] is not None:
+            return
+        if network.active:
+            _show_disconnect_dialog(network)
+        elif network.security_kind in (WifiSecurity.OPEN, WifiSecurity.OWE):
+            _start_connection(network, _request_for_network(network))
+        elif network.security_kind is WifiSecurity.ENTERPRISE:
+            _show_enterprise_dialog(network)
+        else:
+            _show_personal_dialog(network)
+
+    def _replace_network_rows(found: tuple[WifiNetwork, ...]):
+        _clear_network_rows()
+        if not found and radio_switch.get_active():
+            row = Adw.ActionRow(title=_("No Wi-Fi networks found.", lang))
+            wifi_group.add(row)
+            network_rows.append(row)
+        for network in found:
+            profile = _profile_for(network)
+            detail_parts = [f"{network.signal}%"]
             if network.security != "--":
-                detail += f" · {network.security}"
+                detail_parts.append(network.security)
+            if network.active:
+                detail_parts.insert(0, _("Connected", lang))
+            elif profile:
+                detail_parts.append(_("Saved", lang))
+            if network.wps_pbc:
+                detail_parts.append("WPS")
             row = Adw.ActionRow(
                 title=network.ssid,
-                subtitle=detail,
+                subtitle=" · ".join(detail_parts),
                 activatable=True,
             )
             row.add_prefix(
@@ -773,15 +1083,15 @@ def build_network_page(shared, nav_view):
                 )
             )
             if network.active:
-                row.add_suffix(
-                    Gtk.Image.new_from_icon_name("emblem-ok-symbolic")
-                )
-            row.connect("activated", lambda _row: _open_wifi_settings())
+                row.add_suffix(Gtk.Image.new_from_icon_name("emblem-ok-symbolic"))
+            elif network.security_kind not in (WifiSecurity.OPEN, WifiSecurity.OWE):
+                row.add_suffix(Gtk.Image.new_from_icon_name("system-lock-screen-symbolic"))
+            row.connect(
+                "activated",
+                lambda _row, selected=network: _activate_network(selected),
+            )
             wifi_group.add(row)
             network_rows.append(row)
-        refresh_button.set_sensitive(True)
-
-    radio_handler = None
 
     def _show_radio_state(enabled: bool):
         if radio_handler is not None:
@@ -790,74 +1100,181 @@ def build_network_page(shared, nav_view):
         radio_switch.set_state(enabled)
         if radio_handler is not None:
             radio_switch.handler_unblock(radio_handler)
-        radio_switch.set_sensitive(True)
 
-    def _apply_scan(enabled: bool, found: tuple[WifiNetwork, ...]):
+    def _apply_scan(result, error):
+        if operation["cancel"] is not None:
+            return
+        if error is not None:
+            _clear_network_rows()
+            row = Adw.ActionRow(
+                title=_("Unavailable: {error}", lang).format(error=error)
+            )
+            wifi_group.add(row)
+            network_rows.append(row)
+            _set_controls_sensitive(True)
+            return
+        enabled, found, profiles = result
+        profiles_by_ssid.clear()
+        for profile in profiles:
+            profiles_by_ssid.setdefault(profile.ssid, []).append(profile)
+        for ssid, items in tuple(profiles_by_ssid.items()):
+            profiles_by_ssid[ssid] = tuple(items)
         _show_radio_state(enabled)
         _replace_network_rows(found)
+        _set_controls_sensitive(True)
 
-    def _show_scan_error(error: Exception):
-        _replace_network_rows(())
-        row = Adw.ActionRow(
-            title=_("Unavailable: {error}", lang).format(error=error)
-        )
-        wifi_group.add(row)
-        network_rows.append(row)
-        refresh_button.set_sensitive(True)
-        if not _is_online():
-            status_label.set_label(
-                _("Requires an Internet connection. The base installation "
-                  "remains available when offline.", lang)
-            )
-        return False
-
-    def _scan_wifi():
+    def _scan_wifi(*, force=True):
+        if operation["cancel"] is not None or not page.get_mapped():
+            return
         refresh_button.set_sensitive(False)
 
-        def worker():
-            try:
-                enabled = wifi_radio_enabled()
-                found = scan_wifi_networks() if enabled else ()
-            except Exception as error:
-                GLib.idle_add(_show_scan_error, error)
-            else:
-                GLib.idle_add(_apply_scan, enabled, found)
+        def work():
+            enabled = wifi_radio_enabled()
+            found = scan_wifi_networks(rescan=force) if enabled else ()
+            return enabled, found, saved_wifi_profiles()
 
-        threading.Thread(target=worker, daemon=True).start()
+        scan_requests.start(work, _apply_scan)
 
-    def _finish_radio_change(enabled: bool, error: Exception | None):
-        if error is not None:
-            _show_scan_error(error)
-            _scan_wifi()
-            return False
-        _show_radio_state(enabled)
-        _scan_wifi()
-        return False
+    def _finish_operation(error):
+        operation["cancel"] = None
+        operation["message"] = ""
+        cancel_operation.set_visible(False)
+        _set_controls_sensitive(True)
+        if error is not None and not isinstance(error, WifiCancelled):
+            _show_error(_("Could not change the Wi-Fi connection", lang), error)
+        _render_connectivity()
+        _scan_wifi(force=True)
 
-    def _on_radio_state_set(_switch, enabled: bool):
-        radio_switch.set_sensitive(False)
-        refresh_button.set_sensitive(False)
+    def _start_operation(message, work):
+        if operation["cancel"] is not None:
+            return
+        scan_requests.invalidate()
+        cancel = threading.Event()
+        operation["cancel"] = cancel
+        operation["message"] = message
+        cancel_operation.set_visible(True)
+        cancel_operation.set_sensitive(True)
+        _set_controls_sensitive(False)
+        _render_connectivity()
 
         def worker():
             error = None
             try:
-                set_wifi_radio(enabled)
+                work(cancel)
             except Exception as exception:
                 error = exception
-            GLib.idle_add(_finish_radio_change, enabled, error)
+            GLib.idle_add(_finish_operation, error)
 
         threading.Thread(target=worker, daemon=True).start()
+
+    def _cancel_current_operation(_button):
+        cancel = operation["cancel"]
+        if cancel is not None:
+            cancel.set()
+            cancel_operation.set_sensitive(False)
+            operation["message"] = _("Cancelling Wi-Fi operation…", lang)
+            _render_connectivity()
+
+    def _show_hidden_network_dialog(_button):
+        ssid = Adw.EntryRow(title=_("Network name (SSID)", lang))
+        security = Adw.ComboRow(
+            title=_("Security", lang),
+            model=Gtk.StringList.new(
+                [
+                    _("Open network", lang),
+                    _("Enhanced Open (OWE)", lang),
+                    _("Personal Wi-Fi", lang),
+                    _("WEP (legacy)", lang),
+                    _("Enterprise Wi-Fi", lang),
+                ]
+            ),
+        )
+        form = Adw.PreferencesGroup()
+        form.add(ssid)
+        form.add(security)
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_("Connect to a hidden network", lang),
+            body=_(
+                "Enter the exact network name and choose its security type.",
+                lang,
+            ),
+            extra_child=form,
+        )
+        dialog.add_response("cancel", _("Cancel", lang))
+        dialog.add_response("continue", _("Continue", lang))
+        dialog.set_default_response("continue")
+        dialog.set_close_response("cancel")
+
+        def responded(_dialog, response):
+            if response != "continue" or not ssid.get_text():
+                return
+            kinds = (
+                WifiSecurity.OPEN,
+                WifiSecurity.OWE,
+                WifiSecurity.PERSONAL,
+                WifiSecurity.WEP,
+                WifiSecurity.ENTERPRISE,
+            )
+            kind = kinds[security.get_selected()]
+            hidden = WifiNetwork(
+                ssid=ssid.get_text(),
+                signal=0,
+                security=_security_name(kind),
+                security_kind=kind,
+            )
+            _activate_network(hidden)
+
+        dialog.connect("response", responded)
+        dialog.present()
+
+    def _on_radio_state_set(_switch, enabled: bool):
+        _start_operation(
+            _("Turning Wi-Fi on…", lang)
+            if enabled
+            else _("Turning Wi-Fi off…", lang),
+            lambda _cancel: set_wifi_radio(enabled),
+        )
         return True
 
+    def _periodic_refresh():
+        if page.get_mapped() and operation["cancel"] is None:
+            _render_connectivity()
+            _scan_wifi(force=False)
+        return True
+
+    def _mapped_changed(_page, _property):
+        if page.get_mapped():
+            scan_requests.activate()
+            _render_connectivity()
+            _scan_wifi(force=True)
+        else:
+            scan_requests.invalidate()
+
     radio_handler = radio_switch.connect("state-set", _on_radio_state_set)
-    refresh_button.connect("clicked", lambda _button: _scan_wifi())
-    monitor.connect(
+    refresh_button.connect("clicked", lambda _button: _scan_wifi(force=True))
+    hidden_button.connect("clicked", _show_hidden_network_dialog)
+    cancel_operation.connect("clicked", _cancel_current_operation)
+    monitor_handler = monitor.connect(
         "network-changed",
         lambda _monitor, _available: (
             _render_connectivity(),
-            _scan_wifi(),
+            _scan_wifi(force=False),
         ),
     )
+    periodic_source = GLib.timeout_add_seconds(5, _periodic_refresh)
+    page.connect("notify::mapped", _mapped_changed)
+
+    def _cleanup_network_page(*_args):
+        scan_requests.invalidate()
+        cancel = operation["cancel"]
+        if cancel is not None:
+            cancel.set()
+        if periodic_source:
+            GLib.source_remove(periodic_source)
+        monitor.disconnect(monitor_handler)
+
+    page.connect("destroy", _cleanup_network_page)
 
     def on_next():
         shared["network_preflight_skipped"] = not _is_online()
@@ -874,7 +1291,6 @@ def build_network_page(shared, nav_view):
     )
     page.set_child(content)
     _render_connectivity()
-    _scan_wifi()
     return page
 
 
@@ -1048,8 +1464,7 @@ def build_keyboard_page(shared, nav_view):
             form.append(choice)
         input_method_detail = Gtk.Label(
             label=_(
-                "Requires an Internet connection. The base installation "
-                "remains available when offline.",
+                "Installing an input method requires an Internet connection.",
                 lang,
             ),
             halign=Gtk.Align.START,
@@ -1057,7 +1472,14 @@ def build_keyboard_page(shared, nav_view):
             wrap=True,
         )
         input_method_detail.add_css_class("dim-label")
-        offline_callout = _offline_callout(lang)
+        offline_callout = _offline_callout(
+            lang,
+            _(
+                "No Internet connection. Input methods cannot be installed. "
+                "You can install them later when connected.",
+                lang,
+            ),
+        )
         form.append(input_method_detail)
         form.append(offline_callout)
 
@@ -1098,6 +1520,7 @@ def build_keyboard_page(shared, nav_view):
                 choice.set_active(method_id in selected)
                 choice.set_sensitive(online)
             rendering["active"] = False
+            input_method_detail.set_visible(online)
             offline_callout.set_visible(not online)
             shared["input_methods"] = selected
 
@@ -1655,9 +2078,12 @@ def build_disk_page(shared, nav_view):
         loading.set_visible(False)
         rescan.set_sensitive(True)
 
-    page.connect("map", lambda _widget: requests.activate())
+    def _page_mapped(_widget):
+        requests.activate()
+        _populate_disks(restore_selection=True)
+
+    page.connect("map", _page_mapped)
     page.connect("unmap", _page_unmapped)
-    _populate_disks(restore_selection=True)
     return page
 
 
@@ -2434,10 +2860,23 @@ def build_user_page(shared, nav_view):
     )
     box.append(sudo_without_password)
 
-    # Hostname
+    # Hostname.  Keep one device classification and random suffix for the
+    # entire installer run so navigating between pages cannot rename it.
+    hostname_device_type = shared.get("_hostname_device_type")
+    if hostname_device_type not in {"laptop", "desktop"}:
+        hostname_device_type = detect_device_type()
+        shared["_hostname_device_type"] = hostname_device_type
+    hostname_random_suffix = shared.get("_hostname_random_suffix")
+    if not isinstance(hostname_random_suffix, str):
+        hostname_random_suffix = generate_random_suffix()
+        shared["_hostname_random_suffix"] = hostname_random_suffix
+    initial_hostname = str(
+        shared.get("hostname")
+        or suggest_hostname("", hostname_device_type, hostname_random_suffix)
+    )
     host_entry = Gtk.Entry(
         placeholder_text=_("Computer Name", lang),
-        text=shared.get("hostname", "anduinos"),
+        text=initial_hostname,
     )
     host_warn = Gtk.Label(visible=False)
     host_warn.add_css_class("warning")
@@ -2445,11 +2884,34 @@ def build_user_page(shared, nav_view):
     box.append(host_warn)
 
     # Auto-transliterate full name → username until the user edits it.
+    # Likewise, follow the username with a friendly hostname until the user
+    # explicitly edits the hostname field.
     username_state = {"user_edited": False, "setting_suggestion": False}
+    hostname_state = {
+        "user_edited": bool(shared.get("_hostname_user_edited", False)),
+        "setting_suggestion": False,
+    }
 
-    def _on_username_changed(_entry):
+    def _on_username_changed(entry):
+        if not hostname_state["user_edited"]:
+            hostname_state["setting_suggestion"] = True
+            try:
+                host_entry.set_text(
+                    suggest_hostname(
+                        entry.get_text(),
+                        hostname_device_type,
+                        hostname_random_suffix,
+                    )
+                )
+            finally:
+                hostname_state["setting_suggestion"] = False
         if not username_state["setting_suggestion"]:
             username_state["user_edited"] = True
+
+    def _on_hostname_changed(_entry):
+        if not hostname_state["setting_suggestion"]:
+            hostname_state["user_edited"] = True
+            shared["_hostname_user_edited"] = True
 
     def _on_full_changed(entry):
         full = entry.get_text()
@@ -2463,6 +2925,7 @@ def build_user_page(shared, nav_view):
 
     user_entry.connect("changed", _on_username_changed)
     full_entry.connect("changed", _on_full_changed)
+    host_entry.connect("changed", _on_hostname_changed)
 
     # Validate on change
     HOST_RE = re.compile(r"^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$")
@@ -3363,6 +3826,23 @@ def build_summary_page(shared, nav_view):
 
 # ── page 10: Progress / Installation ─────────────────────────────────────
 
+def ordered_progress_steps(plan: InstallPlan, step_titles):
+    """Return localized progress rows in canonical executor order."""
+
+    pipeline = describe_installation_pipeline(plan)
+    missing_titles = tuple(
+        step_id for step_id, _weight in pipeline if step_id not in step_titles
+    )
+    if missing_titles:
+        raise RuntimeError(
+            "Missing progress titles for canonical pipeline steps: "
+            + ", ".join(missing_titles)
+        )
+    return tuple(
+        (step_id, step_titles[step_id]) for step_id, _weight in pipeline
+    )
+
+
 def build_progress_page(plan: InstallPlan, shared, nav_view):
     lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(title=_("Installing AnduinOS", lang))
@@ -3443,7 +3923,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         margin_start=12,
         margin_end=12,
     )
-    for step_id, title in step_titles.items():
+    for step_id, title in ordered_progress_steps(plan, step_titles):
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         light = Gtk.Label(label="○", width_chars=2)
         light.add_css_class("step-light")
@@ -3455,21 +3935,6 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         row.append(label)
         step_list.append(row)
         step_rows[step_id] = (row, light, label)
-
-    omitted_steps = set()
-    if not plan.software.install_updates:
-        omitted_steps.update(("refresh-package-indexes", "upgrade-system"))
-    if plan.storage.filesystem is not Filesystem.BTRFS:
-        omitted_steps.add("ensure-waypoint")
-    if not plan.software.install_third_party_drivers:
-        omitted_steps.add("install-third-party-drivers")
-    if not plan.software.install_multimedia_codecs:
-        omitted_steps.add("install-multimedia-codecs")
-    for step_id in omitted_steps:
-        _row, light, _label = step_rows[step_id]
-        light.remove_css_class("step-pending")
-        light.add_css_class("step-skipped")
-        light.set_label("–")
 
     left_title = Gtk.Label(
         label=_("Installation Steps", lang),

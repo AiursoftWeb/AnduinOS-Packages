@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-bash-guess-command</PackageName>
-    <PackageVersion>1.0.0-29</PackageVersion>
+    <PackageVersion>1.0.0-30</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Fast offline ghost-text suggestions for Bash, with semantic local context and transition-ranked history while preserving native Tab completion.</PackageDescription>
     <Section>shells</Section>
@@ -21,6 +21,8 @@
   <ItemGroup>
     <Dependency Include="bash (&gt;= 4.4)" />
     <Dependency Include="bash-completion" />
+    <Dependency Include="libc6 (&gt;= 2.39)" />
+    <Dependency Include="libgcc-s1" />
   </ItemGroup>
 
   <ItemGroup>

@@ -11,7 +11,7 @@ pub(crate) fn generate(
     now_ms: u64,
 ) -> Vec<Candidate> {
     let mut candidates = Vec::new();
-    command_name_candidates(parsed, slot, &mut candidates);
+    command_name_candidates(parsed, slot, world, &mut candidates);
     match slot.kind {
         SlotKind::Subcommand => subcommand_candidates(parsed, slot, &mut candidates),
         SlotKind::AptAction => apt_candidates(parsed, world, now_ms, &mut candidates),
@@ -33,7 +33,12 @@ pub(crate) fn generate(
     candidates
 }
 
-fn command_name_candidates(parsed: &ParsedLine, slot: &Slot, out: &mut Vec<Candidate>) {
+fn command_name_candidates(
+    parsed: &ParsedLine,
+    slot: &Slot,
+    world: &WorldState,
+    out: &mut Vec<Candidate>,
+) {
     let values = parsed.command_values();
     if !slot.allows(CandidateKind::Command)
         || values.len() != 1
@@ -46,6 +51,31 @@ fn command_name_candidates(parsed: &ParsedLine, slot: &Slot, out: &mut Vec<Candi
     let Some(first) = parsed.command_tokens().first() else {
         return;
     };
+    let wrapper = &parsed.source[..first.start];
+    let prefix = parsed.current_prefix.as_str();
+    let first_match = world
+        .commands
+        .commands
+        .partition_point(|command| command.as_str() < prefix);
+    for command in world.commands.commands[first_match..]
+        .iter()
+        .map(String::as_str)
+        .take_while(|command| command.starts_with(prefix))
+        .filter(|command| *command != prefix && specs::find(command).is_none())
+    {
+        out.push(Candidate {
+            resulting_line: format!("{wrapper}{command}"),
+            kind: CandidateKind::Command,
+            source: CandidateSource::Executable,
+            confidence: 0.86,
+            risk: Risk::Safe,
+            evidence: vec![Evidence::Executable {
+                generation: world.commands.generation,
+            }],
+            dependencies: vec![Dependency::CommandGeneration(world.commands.generation)],
+            expires_at_ms: None,
+        });
+    }
     for command in specs::command_names().filter(|command| {
         command.starts_with(&parsed.current_prefix) && *command != parsed.current_prefix
     }) {

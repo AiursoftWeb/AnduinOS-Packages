@@ -15,6 +15,7 @@ pub enum CandidateKind {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CandidateSource {
     Grammar,
+    Executable,
     LiveEntity,
     Workflow,
     Transition,
@@ -33,6 +34,7 @@ pub enum Risk {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Evidence {
     GrammarMatch,
+    Executable { generation: u64 },
     LiveEntity { generation: u64 },
     PreviousCommand(&'static str),
     SuccessfulExit,
@@ -49,6 +51,7 @@ pub enum Evidence {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Dependency {
+    CommandGeneration(u64),
     DockerGeneration(u64),
     AptGeneration(u64),
     ProcessGeneration(u64),

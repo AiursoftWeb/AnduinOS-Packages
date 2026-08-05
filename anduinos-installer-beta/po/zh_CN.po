@@ -17,6 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Installing an input method requires an Internet connection."
+msgstr "安装输入法需要互联网连接。"
+
+msgid ""
+"No Internet connection. Input methods cannot be installed. You can install "
+"them later when connected."
+msgstr "当前未连接互联网，无法安装输入法。你可以稍后联网安装。"
+
 msgid ""
 "\n"
 "\n"
@@ -963,7 +971,183 @@ msgid ""
 "Adds wider GStreamer compatibility and support for additional legacy and "
 "specialist media formats. Some components may be subject to patent or "
 "redistribution terms."
-msgstr "扩展 GStreamer 兼容性，并支持更多旧式和专业媒体格式。部分组件可能受专利或再分发条款约束。"
+msgstr ""
+"扩展 GStreamer 兼容性，并支持更多旧式和专业媒体格式。部分组件可能受专利或再分"
+"发条款约束。"
+
+#: src/pages.py
+msgid "A saved profile exists. Entering a password updates it securely."
+msgstr "已有保存的配置。输入密码将安全地更新该配置。"
+
+#: src/pages.py
+msgid "Anonymous identity (optional)"
+msgstr "匿名身份（可选）"
+
+#: src/pages.py
+msgid "CA certificate path (optional)"
+msgstr "CA 证书路径（可选）"
+
+#: src/pages.py
+msgid "Cancel"
+msgstr "取消"
+
+#: src/pages.py
+msgid "Cancelling Wi-Fi operation…"
+msgstr "正在取消 Wi-Fi 操作…"
+
+#: src/pages.py
+msgid "Client certificate path"
+msgstr "客户端证书路径"
+
+#: src/pages.py
+msgid "Connect"
+msgstr "连接"
+
+#: src/pages.py
+msgid "Continue"
+msgstr "继续"
+
+#: src/pages.py
+msgid "Connect to a hidden network"
+msgstr "连接到隐藏网络"
+
+#: src/pages.py
+#, python-brace-format
+msgid "Connect to {network}"
+msgstr "连接到 {network}"
+
+#: src/pages.py
+msgid "Connected"
+msgstr "已连接"
+
+#: src/pages.py
+#, python-brace-format
+msgid "Connecting to {network}…"
+msgstr "正在连接到 {network}…"
+
+#: src/pages.py
+msgid "Could not change the Wi-Fi connection"
+msgstr "无法更改 Wi-Fi 连接"
+
+#: src/pages.py
+msgid "Disconnect"
+msgstr "断开连接"
+
+#: src/pages.py
+#, python-brace-format
+msgid "Disconnect from {network}?"
+msgstr "要断开与 {network} 的连接吗？"
+
+#: src/pages.py
+#, python-brace-format
+msgid "Disconnecting from {network}…"
+msgstr "正在断开与 {network} 的连接…"
+
+#: src/pages.py
+msgid "Domain suffix match (optional)"
+msgstr "域名后缀匹配（可选）"
+
+#: src/pages.py
+msgid "EAP method"
+msgstr "EAP 方法"
+
+#: src/pages.py
+msgid "Enhanced Open (OWE)"
+msgstr "增强型开放网络（OWE）"
+
+#: src/pages.py
+msgid ""
+"Enter the credentials supplied by your organization. Certificate validation "
+"is strongly recommended."
+msgstr "请输入组织提供的凭据。强烈建议启用证书验证。"
+
+#: src/pages.py
+msgid "Enter the exact network name and choose its security type."
+msgstr "请输入准确的网络名称并选择其安全类型。"
+
+#: src/pages.py
+msgid "Enterprise Wi-Fi"
+msgstr "企业 Wi-Fi"
+
+#: src/pages.py
+msgid "Identity"
+msgstr "身份"
+
+#: src/pages.py
+msgid "Inner authentication"
+msgstr "内部身份验证"
+
+#: src/pages.py
+msgid "Network name (SSID)"
+msgstr "网络名称（SSID）"
+
+#: src/pages.py
+msgid "No Wi-Fi networks found."
+msgstr "未找到 Wi-Fi 网络。"
+
+#: src/pages.py
+msgid "Open network"
+msgstr "开放网络"
+
+#: src/pages.py
+msgid "Personal Wi-Fi"
+msgstr "个人 Wi-Fi"
+
+#: src/pages.py
+msgid "Private key password (optional)"
+msgstr "私钥密码（可选）"
+
+#: src/pages.py
+msgid "Private key path"
+msgstr "私钥路径"
+
+#: src/pages.py
+msgid "Refresh Wi-Fi networks"
+msgstr "刷新 Wi-Fi 网络"
+
+#: src/pages.py
+msgid "Saved"
+msgstr "已保存"
+
+#: src/pages.py
+msgid "Security"
+msgstr "安全类型"
+
+#: src/pages.py
+msgid ""
+"The installer will keep the saved network profile so it can be used again."
+msgstr "安装程序会保留已保存的网络配置，以便再次使用。"
+
+#: src/pages.py
+msgid "The local network is connected, but Internet access is unavailable."
+msgstr "已连接到本地网络，但无法访问互联网。"
+
+#: src/pages.py
+msgid "Turning Wi-Fi off…"
+msgstr "正在关闭 Wi-Fi…"
+
+#: src/pages.py
+msgid "Turning Wi-Fi on…"
+msgstr "正在开启 Wi-Fi…"
+
+#: src/pages.py
+msgid "Use WPS"
+msgstr "使用 WPS"
+
+#: src/pages.py
+msgid "WEP (legacy)"
+msgstr "WEP（旧式）"
+
+#: src/pages.py
+msgid ""
+"Wi-Fi is connected, but the network requires sign-in through a captive "
+"portal."
+msgstr "Wi-Fi 已连接，但此网络要求通过认证门户登录。"
+
+#: src/pages.py
+#, python-brace-format
+msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
+msgstr "正在等待 {network} 的 WPS。请按下路由器上的 WPS 按钮…"
 
 #~ msgid "Choose a complete installation method, not only a filesystem."
 #~ msgstr "选择完整的安装方式，而不仅仅是文件系统。"

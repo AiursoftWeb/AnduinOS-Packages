@@ -25,6 +25,11 @@ from i18n import _, N_
 from languages import default_timezone, detect_system_language
 from pages import build_all_pages
 from frontend import guided_storage_enabled
+from installer_core.hostnames import (
+    detect_device_type,
+    generate_random_suffix,
+    suggest_hostname,
+)
 from ui import load_visual_style
 
 
@@ -41,6 +46,8 @@ class InstallerApplication(Adw.Application):
     ):
         super().__init__(application_id=APP_ID)
         detected_language = detect_system_language()
+        hostname_device_type = detect_device_type()
+        hostname_random_suffix = generate_random_suffix()
         # Shared state — every page reads/writes this dict.
         self.shared_state: dict[str, object] = {
             "lang": detected_language.code,
@@ -68,7 +75,12 @@ class InstallerApplication(Adw.Application):
             "password_confirmation": "",
             "passwordless_shared": False,
             "sudo_without_password": False,
-            "hostname": "anduinos",
+            "hostname": suggest_hostname(
+                "", hostname_device_type, hostname_random_suffix
+            ),
+            "_hostname_device_type": hostname_device_type,
+            "_hostname_random_suffix": hostname_random_suffix,
+            "_hostname_user_edited": False,
             "timezone": default_timezone(detected_language.code),
             "locale": detected_language.locale,
             "installation_running": False,

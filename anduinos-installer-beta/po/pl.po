@@ -18,6 +18,16 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
+msgid "Installing an input method requires an Internet connection."
+msgstr "Instalacja metody wprowadzania wymaga połączenia z Internetem."
+
+msgid ""
+"No Internet connection. Input methods cannot be installed. You can install "
+"them later when connected."
+msgstr ""
+"Brak połączenia z Internetem. Nie można zainstalować metod wprowadzania. "
+"Można je zainstalować później po nawiązaniu połączenia."
+
 msgid ""
 "\n"
 "\n"
@@ -1030,7 +1040,189 @@ msgid ""
 "Adds wider GStreamer compatibility and support for additional legacy and "
 "specialist media formats. Some components may be subject to patent or "
 "redistribution terms."
-msgstr "Dodaje szerszą zgodność z GStreamer oraz obsługę dodatkowych starszych i specjalistycznych formatów multimedialnych. Niektóre składniki mogą podlegać patentom lub warunkom redystrybucji."
+msgstr ""
+"Dodaje szerszą zgodność z GStreamer oraz obsługę dodatkowych starszych i "
+"specjalistycznych formatów multimedialnych. Niektóre składniki mogą podlegać "
+"patentom lub warunkom redystrybucji."
+
+#: src/pages.py
+msgid "A saved profile exists. Entering a password updates it securely."
+msgstr "A saved profile exists. Entering a password updates it securely."
+
+#: src/pages.py
+msgid "Anonymous identity (optional)"
+msgstr "Anonymous identity (optional)"
+
+#: src/pages.py
+msgid "CA certificate path (optional)"
+msgstr "CA certificate path (optional)"
+
+#: src/pages.py
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/pages.py
+msgid "Cancelling Wi-Fi operation…"
+msgstr "Cancelling Wi-Fi operation…"
+
+#: src/pages.py
+msgid "Client certificate path"
+msgstr "Client certificate path"
+
+#: src/pages.py
+msgid "Connect"
+msgstr "Connect"
+
+#: src/pages.py
+msgid "Continue"
+msgstr "Continue"
+
+#: src/pages.py
+msgid "Connect to a hidden network"
+msgstr "Connect to a hidden network"
+
+#: src/pages.py
+#, python-brace-format
+msgid "Connect to {network}"
+msgstr "Connect to {network}"
+
+#: src/pages.py
+msgid "Connected"
+msgstr "Connected"
+
+#: src/pages.py
+#, python-brace-format
+msgid "Connecting to {network}…"
+msgstr "Connecting to {network}…"
+
+#: src/pages.py
+msgid "Could not change the Wi-Fi connection"
+msgstr "Could not change the Wi-Fi connection"
+
+#: src/pages.py
+msgid "Disconnect"
+msgstr "Disconnect"
+
+#: src/pages.py
+#, python-brace-format
+msgid "Disconnect from {network}?"
+msgstr "Disconnect from {network}?"
+
+#: src/pages.py
+#, python-brace-format
+msgid "Disconnecting from {network}…"
+msgstr "Disconnecting from {network}…"
+
+#: src/pages.py
+msgid "Domain suffix match (optional)"
+msgstr "Domain suffix match (optional)"
+
+#: src/pages.py
+msgid "EAP method"
+msgstr "EAP method"
+
+#: src/pages.py
+msgid "Enhanced Open (OWE)"
+msgstr "Enhanced Open (OWE)"
+
+#: src/pages.py
+msgid ""
+"Enter the credentials supplied by your organization. Certificate validation "
+"is strongly recommended."
+msgstr ""
+"Enter the credentials supplied by your organization. Certificate validation "
+"is strongly recommended."
+
+#: src/pages.py
+msgid "Enter the exact network name and choose its security type."
+msgstr "Enter the exact network name and choose its security type."
+
+#: src/pages.py
+msgid "Enterprise Wi-Fi"
+msgstr "Enterprise Wi-Fi"
+
+#: src/pages.py
+msgid "Identity"
+msgstr "Identity"
+
+#: src/pages.py
+msgid "Inner authentication"
+msgstr "Inner authentication"
+
+#: src/pages.py
+msgid "Network name (SSID)"
+msgstr "Network name (SSID)"
+
+#: src/pages.py
+msgid "No Wi-Fi networks found."
+msgstr "No Wi-Fi networks found."
+
+#: src/pages.py
+msgid "Open network"
+msgstr "Open network"
+
+#: src/pages.py
+msgid "Personal Wi-Fi"
+msgstr "Personal Wi-Fi"
+
+#: src/pages.py
+msgid "Private key password (optional)"
+msgstr "Private key password (optional)"
+
+#: src/pages.py
+msgid "Private key path"
+msgstr "Private key path"
+
+#: src/pages.py
+msgid "Refresh Wi-Fi networks"
+msgstr "Refresh Wi-Fi networks"
+
+#: src/pages.py
+msgid "Saved"
+msgstr "Saved"
+
+#: src/pages.py
+msgid "Security"
+msgstr "Security"
+
+#: src/pages.py
+msgid ""
+"The installer will keep the saved network profile so it can be used again."
+msgstr ""
+"The installer will keep the saved network profile so it can be used again."
+
+#: src/pages.py
+msgid "The local network is connected, but Internet access is unavailable."
+msgstr "The local network is connected, but Internet access is unavailable."
+
+#: src/pages.py
+msgid "Turning Wi-Fi off…"
+msgstr "Turning Wi-Fi off…"
+
+#: src/pages.py
+msgid "Turning Wi-Fi on…"
+msgstr "Turning Wi-Fi on…"
+
+#: src/pages.py
+msgid "Use WPS"
+msgstr "Use WPS"
+
+#: src/pages.py
+msgid "WEP (legacy)"
+msgstr "WEP (legacy)"
+
+#: src/pages.py
+msgid ""
+"Wi-Fi is connected, but the network requires sign-in through a captive "
+"portal."
+msgstr ""
+"Wi-Fi is connected, but the network requires sign-in through a captive "
+"portal."
+
+#: src/pages.py
+#, python-brace-format
+msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
+msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
 
 #~ msgid "Choose a complete installation method, not only a filesystem."
 #~ msgstr "Wybierz kompletną metodę instalacji, a nie tylko system plików."

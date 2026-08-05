@@ -1,4 +1,4 @@
-"""Safely migrate the active Live-session Wi-Fi connection to the target."""
+"""Safely migrate the active Live-session Wi-Fi Netplan to the target."""
 
 from __future__ import annotations
 
@@ -24,18 +24,18 @@ ACTIVE_WIFI_COMMAND = (
     "show",
     "--active",
 )
-NETWORK_MANAGER_DIRECTORY = Path("etc/NetworkManager/system-connections")
+NETPLAN_DIRECTORY = Path("etc/netplan")
 NETWORK_MANAGER_TYPES = frozenset({"802-11-wireless", "wifi"})
 UUID_RE = re.compile(
     r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-"
     r"[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 )
-MAX_PROFILE_BYTES = 1024 * 1024
+MAX_NETPLAN_BYTES = 1024 * 1024
 
 
 @dataclass(frozen=True)
 class WifiProfileSnapshot:
-    """Identity-only snapshot; secret profile bytes are not retained in RAM."""
+    """Identity-only snapshot; secret Netplan bytes are not retained."""
 
     uuid: str
     path: Path
@@ -48,9 +48,7 @@ class WifiProfileSnapshot:
 @dataclass
 class MigrateWifiConnectionStep:
     runner: CommandRunner
-    source_directory: Path = Path(
-        "/etc/NetworkManager/system-connections"
-    )
+    source_directory: Path = Path("/etc/netplan")
     source_uid: int = 0
     target_uid: int = 0
     target_gid: int = 0
@@ -61,7 +59,7 @@ class MigrateWifiConnectionStep:
     destructive: bool = False
 
     def preflight(self, context: InstallContext) -> None:
-        """Freeze safe source identities before any destructive work starts."""
+        """Freeze safe Netplan source identities before destructive work."""
 
         context.values["wifi_profile_snapshots"] = ()
         context.values["wifi_migration_preflight_warning"] = ""
@@ -97,59 +95,41 @@ class MigrateWifiConnectionStep:
         except OSError as error:
             self._skip_with_warning(
                 context,
-                "No safe persistent Live-session NetworkManager profile "
-                f"directory was found: {error}",
+                "No safe persistent Live-session Netplan directory was "
+                f"found: {error}",
             )
             return
         if (
             not stat.S_ISDIR(directory_stat.st_mode)
             or self.source_directory.is_symlink()
+            or directory_stat.st_uid != self.source_uid
+            or stat.S_IMODE(directory_stat.st_mode) & 0o022
         ):
             self._skip_with_warning(
                 context,
-                "Live-session NetworkManager profile directory is unsafe; "
-                "Wi-Fi migration will be skipped",
+                "Live-session Netplan directory is unsafe; Wi-Fi migration "
+                "will be skipped",
             )
             return
-
-        matches: dict[str, list[WifiProfileSnapshot]] = {
-            uuid: [] for uuid in active_uuids
-        }
-        try:
-            entries = tuple(os.scandir(self.source_directory))
-        except OSError as error:
-            self._skip_with_warning(
-                context,
-                f"Could not inspect Live-session Wi-Fi profiles: {error}",
-            )
-            return
-        for entry in entries:
-            snapshot = _safe_profile_snapshot(
-                Path(entry.path), self.source_uid
-            )
-            if snapshot is not None and snapshot.uuid in matches:
-                matches[snapshot.uuid].append(snapshot)
 
         snapshots: list[WifiProfileSnapshot] = []
         for uuid in active_uuids:
-            candidates = matches[uuid]
-            if len(candidates) == 1:
-                snapshots.append(candidates[0])
-            elif len(candidates) > 1:
+            path = self.source_directory / _netplan_filename(uuid)
+            snapshot = _safe_netplan_snapshot(path, uuid, self.source_uid)
+            if snapshot is None:
                 context.log(
-                    f"Multiple NetworkManager profiles claim active UUID {uuid}; "
-                    "that connection will not be migrated"
+                    f"Active Wi-Fi UUID {uuid} has no safe persistent "
+                    "Netplan profile"
                 )
-            else:
-                context.log(
-                    f"Active Wi-Fi UUID {uuid} has no safe persistent profile"
-                )
+                continue
+            snapshots.append(snapshot)
+
         context.values["wifi_profile_snapshots"] = tuple(snapshots)
         if not snapshots:
             self._skip_with_warning(
                 context,
-                "No safe persistent profile matched the active Wi-Fi "
-                "connection",
+                "No safe persistent Netplan profile matched the active "
+                "Wi-Fi connection",
             )
 
     @staticmethod
@@ -167,36 +147,33 @@ class MigrateWifiConnectionStep:
             raise RuntimeError("Wi-Fi profile preflight state is invalid")
         if not snapshots:
             context.values["migrated_wifi_profiles"] = ()
+            context.values["wifi_profiles_to_verify"] = ()
             warning = context.values.get("wifi_migration_preflight_warning")
             if warning:
                 raise StepWarning(str(warning))
             return
 
         target = _target(context)
-        target_directory = target / NETWORK_MANAGER_DIRECTORY
+        target_directory = target / NETPLAN_DIRECTORY
         _prepare_target_directory(
             target, target_directory, self.target_uid, self.target_gid
         )
-        existing_uuids = _existing_profile_uuids(target_directory)
         created: list[tuple[Path, str]] = []
+        to_verify: list[tuple[Path, str]] = []
         context.values["migrated_wifi_profiles"] = created
+        context.values["wifi_profiles_to_verify"] = to_verify
 
         for snapshot in snapshots:
-            if snapshot.uuid in existing_uuids:
-                context.log(
-                    f"Target already contains Wi-Fi UUID {snapshot.uuid}; "
-                    "the existing profile was preserved"
-                )
-                continue
-            destination = target_directory / snapshot.path.name
+            destination = target_directory / _netplan_filename(snapshot.uuid)
             if destination.exists() or destination.is_symlink():
                 context.log(
-                    f"Target NetworkManager profile {destination.name!r} "
-                    "already exists; it was preserved"
+                    f"Target Netplan profile {destination.name!r} already "
+                    "exists; it was preserved"
                 )
+                to_verify.append((destination, snapshot.uuid))
                 continue
-            payload = _read_frozen_profile(snapshot, self.source_uid)
-            _atomic_create_profile(
+            payload = _read_frozen_netplan(snapshot, self.source_uid)
+            _atomic_create_netplan(
                 destination,
                 payload,
                 snapshot.uuid,
@@ -204,33 +181,46 @@ class MigrateWifiConnectionStep:
                 self.target_gid,
             )
             created.append((destination, snapshot.uuid))
-            existing_uuids.add(snapshot.uuid)
+            to_verify.append((destination, snapshot.uuid))
             context.log(
-                f"Migrated active Wi-Fi profile {destination.name!r}"
+                f"Migrated active Wi-Fi Netplan {destination.name!r}"
             )
 
         context.values["migrated_wifi_profiles"] = tuple(created)
+        context.values["wifi_profiles_to_verify"] = tuple(to_verify)
 
     def verify(self, context: InstallContext) -> None:
+        target = _target(context)
         for path, expected_uuid in context.values.get(
-            "migrated_wifi_profiles", ()
+            "wifi_profiles_to_verify", ()
         ):
             info = path.lstat()
             if not stat.S_ISREG(info.st_mode) or path.is_symlink():
                 raise RuntimeError(
-                    f"Migrated Wi-Fi profile is not a regular file: {path}"
+                    f"Migrated Wi-Fi Netplan is not a regular file: {path}"
                 )
             if info.st_uid != self.target_uid or info.st_gid != self.target_gid:
                 raise RuntimeError(
-                    f"Migrated Wi-Fi profile has an unsafe owner: {path}"
+                    f"Migrated Wi-Fi Netplan has an unsafe owner: {path}"
                 )
             if stat.S_IMODE(info.st_mode) != 0o600:
                 raise RuntimeError(
-                    f"Migrated Wi-Fi profile has unsafe permissions: {path}"
+                    f"Migrated Wi-Fi Netplan has unsafe permissions: {path}"
                 )
-            if _profile_uuid(path.read_bytes()) != expected_uuid:
+            if path.name != _netplan_filename(expected_uuid):
                 raise RuntimeError(
-                    f"Migrated Wi-Fi profile UUID changed: {path}"
+                    f"Migrated Wi-Fi Netplan identity changed: {path}"
+                )
+            result = self.runner.run(
+                _netplan_mapping_command(target, expected_uuid),
+                check=False,
+                timeout=30,
+                log_output=False,
+            )
+            if result.returncode != 0:
+                raise RuntimeError(
+                    "Netplan could not validate migrated Wi-Fi UUID "
+                    f"{expected_uuid}"
                 )
 
     def cleanup(self, context: InstallContext) -> None:
@@ -241,14 +231,15 @@ class MigrateWifiConnectionStep:
                 if (
                     path.is_file()
                     and not path.is_symlink()
-                    and _profile_uuid(path.read_bytes()) == expected_uuid
+                    and path.name == _netplan_filename(expected_uuid)
                 ):
                     path.unlink()
             except OSError as error:
                 context.log(
-                    f"Could not remove migrated Wi-Fi profile {path}: {error}"
+                    f"Could not remove migrated Wi-Fi Netplan {path}: {error}"
                 )
         context.values["migrated_wifi_profiles"] = ()
+        context.values["wifi_profiles_to_verify"] = ()
 
 
 def _active_wifi_uuids(output: str) -> tuple[str, ...]:
@@ -267,17 +258,37 @@ def _active_wifi_uuids(output: str) -> tuple[str, ...]:
     return tuple(uuids)
 
 
-def _safe_profile_snapshot(
-    path: Path, required_uid: int
+def _netplan_filename(uuid: str) -> str:
+    if not UUID_RE.fullmatch(uuid):
+        raise ValueError("Invalid NetworkManager UUID")
+    return f"90-NM-{uuid.lower()}.yaml"
+
+
+def _netplan_mapping_command(target: Path, uuid: str) -> tuple[str, ...]:
+    return (
+        "netplan",
+        "generate",
+        "--root-dir",
+        str(target),
+        "--mapping",
+        f"NM-{uuid}",
+    )
+
+
+def _safe_netplan_snapshot(
+    path: Path, expected_uuid: str, required_uid: int
 ) -> WifiProfileSnapshot | None:
     try:
+        if path.name != _netplan_filename(expected_uuid):
+            return None
         info = path.lstat()
         if (
             not stat.S_ISREG(info.st_mode)
             or path.is_symlink()
             or info.st_uid != required_uid
             or stat.S_IMODE(info.st_mode) & 0o077
-            or info.st_size > MAX_PROFILE_BYTES
+            or info.st_size <= 0
+            or info.st_size > MAX_NETPLAN_BYTES
         ):
             return None
         payload, opened = _read_no_follow(path)
@@ -288,25 +299,29 @@ def _safe_profile_snapshot(
             or opened.st_mtime_ns != info.st_mtime_ns
         ):
             return None
-        identity = _profile_identity(payload)
-        if identity is None or identity[1] not in NETWORK_MANAGER_TYPES:
-            return None
-        uuid = identity[0]
+        payload.decode("utf-8")
         return WifiProfileSnapshot(
-            uuid, path, info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns
+            expected_uuid,
+            path,
+            info.st_dev,
+            info.st_ino,
+            info.st_size,
+            info.st_mtime_ns,
         )
-    except (OSError, RuntimeError, UnicodeError):
+    except (OSError, RuntimeError, UnicodeError, ValueError):
         return None
 
 
-def _read_frozen_profile(
+def _read_frozen_netplan(
     snapshot: WifiProfileSnapshot, required_uid: int
 ) -> bytes:
     payload, info = _read_no_follow(snapshot.path)
     if (
-        info.st_uid != required_uid
+        snapshot.path.name != _netplan_filename(snapshot.uuid)
+        or info.st_uid != required_uid
         or stat.S_IMODE(info.st_mode) & 0o077
-        or info.st_size > MAX_PROFILE_BYTES
+        or info.st_size <= 0
+        or info.st_size > MAX_NETPLAN_BYTES
         or (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns)
         != (
             snapshot.device,
@@ -314,11 +329,16 @@ def _read_frozen_profile(
             snapshot.size,
             snapshot.mtime_ns,
         )
-        or _profile_uuid(payload) != snapshot.uuid
     ):
         raise RuntimeError(
-            f"Live Wi-Fi profile changed after preflight: {snapshot.path}"
+            f"Live Wi-Fi Netplan changed after preflight: {snapshot.path}"
         )
+    try:
+        payload.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise RuntimeError(
+            f"Live Wi-Fi Netplan changed after preflight: {snapshot.path}"
+        ) from error
     return payload
 
 
@@ -326,47 +346,15 @@ def _read_no_follow(path: Path) -> tuple[bytes, os.stat_result]:
     descriptor = os.open(path, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0))
     try:
         info = os.fstat(descriptor)
-        if not stat.S_ISREG(info.st_mode) or info.st_size > MAX_PROFILE_BYTES:
-            raise RuntimeError(f"Unsafe NetworkManager profile: {path}")
+        if not stat.S_ISREG(info.st_mode) or info.st_size > MAX_NETPLAN_BYTES:
+            raise RuntimeError(f"Unsafe Netplan profile: {path}")
         with os.fdopen(descriptor, "rb", closefd=False) as stream:
-            payload = stream.read(MAX_PROFILE_BYTES + 1)
-        if len(payload) > MAX_PROFILE_BYTES:
-            raise RuntimeError(f"NetworkManager profile is too large: {path}")
+            payload = stream.read(MAX_NETPLAN_BYTES + 1)
+        if len(payload) > MAX_NETPLAN_BYTES:
+            raise RuntimeError(f"Netplan profile is too large: {path}")
         return payload, info
     finally:
         os.close(descriptor)
-
-
-def _profile_identity(payload: bytes) -> tuple[str, str] | None:
-    section = ""
-    uuid = ""
-    connection_type = ""
-    try:
-        lines = payload.decode("utf-8").splitlines()
-    except UnicodeDecodeError:
-        return None
-    for raw_line in lines:
-        line = raw_line.strip()
-        if not line or line.startswith(("#", ";")):
-            continue
-        if line.startswith("[") and line.endswith("]"):
-            section = line[1:-1].strip().lower()
-            continue
-        if section == "connection" and "=" in line:
-            key, value = line.split("=", 1)
-            key = key.strip().lower()
-            if key == "uuid":
-                uuid = value.strip().lower()
-            elif key == "type":
-                connection_type = value.strip()
-    if UUID_RE.fullmatch(uuid) and connection_type:
-        return uuid, connection_type
-    return None
-
-
-def _profile_uuid(payload: bytes) -> str | None:
-    identity = _profile_identity(payload)
-    return identity[0] if identity is not None else None
 
 
 def _prepare_target_directory(
@@ -376,36 +364,17 @@ def _prepare_target_directory(
     owner_gid: int,
 ) -> None:
     target_root = target.resolve(strict=True)
-    directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+    directory.mkdir(parents=True, exist_ok=True, mode=0o755)
     if directory.is_symlink() or not directory.is_dir():
-        raise RuntimeError(
-            "Target NetworkManager profile directory is unsafe"
-        )
+        raise RuntimeError("Target Netplan directory is unsafe")
     resolved = directory.resolve(strict=True)
     if target_root not in resolved.parents:
-        raise RuntimeError(
-            "Target NetworkManager profile directory escapes the target"
-        )
+        raise RuntimeError("Target Netplan directory escapes the target")
     os.chown(directory, owner_uid, owner_gid)
-    os.chmod(directory, 0o700)
+    os.chmod(directory, 0o755)
 
 
-def _existing_profile_uuids(directory: Path) -> set[str]:
-    uuids: set[str] = set()
-    for entry in os.scandir(directory):
-        try:
-            if not entry.is_file(follow_symlinks=False):
-                continue
-            payload, _info = _read_no_follow(Path(entry.path))
-            uuid = _profile_uuid(payload)
-            if uuid is not None:
-                uuids.add(uuid)
-        except (OSError, RuntimeError):
-            continue
-    return uuids
-
-
-def _atomic_create_profile(
+def _atomic_create_netplan(
     destination: Path,
     payload: bytes,
     uuid: str,
@@ -429,8 +398,8 @@ def _atomic_create_profile(
         os.close(descriptor)
 
     try:
-        # Hard-link publication is atomic and, unlike replace(), cannot
-        # overwrite a target file created between the earlier check and now.
+        # Hard-link publication is atomic and cannot overwrite a target file
+        # created between the earlier existence check and publication.
         os.link(temporary, destination, follow_symlinks=False)
     finally:
         temporary.unlink(missing_ok=True)
