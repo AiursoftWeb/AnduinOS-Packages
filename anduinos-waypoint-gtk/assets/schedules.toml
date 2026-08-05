@@ -1,0 +1,21 @@
+# Default schedules are deliberately disabled. Users must explicitly enable
+# automatic recovery after the AnduinOS storage layout has passed validation.
+
+[[schedule]]
+enabled = false
+type = "daily"
+time = "02:00"
+prefix = "daily"
+description = "Daily system recovery point"
+keep_count = 7
+keep_days = 7
+
+[[schedule]]
+enabled = false
+type = "weekly"
+time = "03:00"
+day_of_week = 0
+prefix = "weekly"
+description = "Weekly system recovery point"
+keep_count = 4
+keep_days = 35

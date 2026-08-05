@@ -1,0 +1,35 @@
+[package]
+name = "anduinos-recovery-engine"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Power-loss-safe AnduinOS system deployment and recovery core"
+
+[lib]
+name = "anduinos_recovery_engine"
+path = "src/lib.rs"
+
+[[bin]]
+name = "anduinos-waypoint-initramfs"
+path = "src/bin/initramfs.rs"
+
+[[bin]]
+name = "anduinos-waypoint-boot-config"
+path = "src/bin/boot_config.rs"
+
+[[bin]]
+name = "anduinos-waypoint-confirm"
+path = "src/bin/confirm.rs"
+
+[[bin]]
+name = "anduinos-waypoint-apt-hook"
+path = "src/bin/apt_hook.rs"
+
+[dependencies]
+chrono.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+libc = "0.2"
+sha2 = "0.10"
+uuid = { version = "1", features = ["serde", "v4"] }

@@ -1,0 +1,7 @@
+polkit.addRule(function(action, subject) {
+    if (subject.user == "root" &&
+        action.id.indexOf("org.anduinos.waypoint.") == 0) {
+        return polkit.Result.YES;
+    }
+});
+

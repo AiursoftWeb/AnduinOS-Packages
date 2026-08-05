@@ -1,0 +1,31 @@
+[Unit]
+Description=Confirm or reconcile an AnduinOS Waypoint restore
+Documentation=file:/usr/share/doc/anduinos-waypoint-gtk/README.md
+After=multi-user.target
+ConditionPathExists=/.snapshots/anduinos-waypoint/transactions/pending-rollback.json
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/anduinos-waypoint-confirm
+User=root
+Group=root
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateMounts=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ProtectHostname=yes
+ProtectKernelLogs=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+CapabilityBoundingSet=CAP_SYS_ADMIN
+RuntimeDirectory=anduinos-waypoint
+ReadWritePaths=-/.snapshots -/boot/grub -/boot/efi -/run/anduinos-waypoint
+
+[Install]
+WantedBy=multi-user.target

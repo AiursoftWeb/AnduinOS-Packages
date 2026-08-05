@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.anduinos.Waypoint</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>AnduinOS Waypoint</name>
+  <summary>Create recovery points and safely return AnduinOS to an earlier state</summary>
+  <summary xml:lang="zh-CN">创建恢复点，并安全地将 AnduinOS 恢复到较早状态</summary>
+  <description>
+    <p>AnduinOS Waypoint creates immutable Btrfs system recovery points and presents their package, file, space, and timeline information in a native GTK interface.</p>
+    <p>A restore creates a new writable deployment, retains a known-good fallback, and uses a verified one-shot GRUB entry. Recovery points can also be exported to and verified on supported external filesystems.</p>
+    <p xml:lang="zh-CN">AnduinOS Waypoint 创建不可变的 Btrfs 系统恢复点，并通过原生 GTK 界面展示软件包、文件、空间和时间线信息。</p>
+    <p xml:lang="zh-CN">恢复操作会创建新的可写部署、保留已知正常的回退部署，并使用经过验证的一次性 GRUB 启动项。恢复点还可导出到受支持的外部文件系统并进行验证。</p>
+  </description>
+  <developer id="com.anduinos">
+    <name>AnduinOS Team</name>
+  </developer>
+  <url type="homepage">https://www.anduinos.com/</url>
+  <url type="vcs-browser">https://github.com/AiursoftWeb/AnduinOS-Packages</url>
+  <launchable type="desktop-id">org.anduinos.Waypoint.desktop</launchable>
+  <icon type="stock">org.anduinos.Waypoint</icon>
+  <categories>
+    <category>GNOME</category>
+    <category>GTK</category>
+    <category>System</category>
+  </categories>
+  <provides>
+    <binary>anduinos-waypoint-gtk</binary>
+  </provides>
+  <content_rating type="oars-1.1" />
+</component>

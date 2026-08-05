@@ -1,0 +1,28 @@
+[Unit]
+Description=AnduinOS Waypoint privileged recovery helper
+Documentation=file:/usr/share/doc/anduinos-waypoint-gtk/README.md
+
+[Service]
+Type=dbus
+BusName=org.anduinos.Waypoint
+ExecStart=/usr/libexec/anduinos-waypoint-helper
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=read-only
+ProtectSystem=full
+# A leading '-' keeps the helper available on unsupported/non-Btrfs systems so
+# the GUI can report the layout read-only instead of failing D-Bus activation.
+ReadWritePaths=-/.snapshots -/var/lib/anduinos-waypoint -/etc -/boot/grub -/boot/efi
+RestrictAddressFamilies=AF_UNIX AF_NETLINK
+LockPersonality=true
+MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+RestrictRealtime=true
+UMask=0077
+TimeoutStopSec=15s

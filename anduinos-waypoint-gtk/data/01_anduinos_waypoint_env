@@ -1,0 +1,24 @@
+#!/bin/sh
+set -e
+
+environment=/boot/efi/EFI/anduinos/waypoint-grubenv
+[ -f "$environment" ] || exit 0
+
+efi_uuid=$(/usr/sbin/grub-probe --target=fs_uuid /boot/efi 2>/dev/null) || exit 0
+case "$efi_uuid" in
+    ''|*[!A-Fa-f0-9-]*) exit 0 ;;
+esac
+
+cat <<EOF
+# AnduinOS Waypoint one-shot selector stored on the writable EFI filesystem.
+search --no-floppy --fs-uuid --set=waypoint_esp $efi_uuid
+if [ -s (\$waypoint_esp)/EFI/anduinos/waypoint-grubenv ]; then
+  load_env -f (\$waypoint_esp)/EFI/anduinos/waypoint-grubenv
+  if [ "\${waypoint_next_entry}" ]; then
+    set default="\${waypoint_next_entry}"
+    set waypoint_next_entry=
+    save_env -f (\$waypoint_esp)/EFI/anduinos/waypoint-grubenv waypoint_next_entry
+    set boot_once=true
+  fi
+fi
+EOF

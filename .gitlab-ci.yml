@@ -57,6 +57,22 @@ swapcontrol-tests:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH
 
+waypoint-tests:
+  stage: lint
+  script:
+    - cd anduinos-waypoint-gtk
+    - bash scripts/prebuild-check.sh
+    - bash -n build.sh compile-locales.sh scripts/prebuild-check.sh scripts/postinst.sh scripts/prerm.sh scripts/postrm.sh scripts/test-external-backup-loopback.sh scripts/test-recovery-operations-loopback.sh scripts/qualify-recovery-vm.sh scripts/test-installed-policy.sh data/01_anduinos_waypoint_env data/09_anduinos_waypoint src/waypoint-cli
+    - msgfmt --check --check-format po/zh_CN.po -o /dev/null
+    - appstreamcli validate data/org.anduinos.Waypoint.metainfo.xml
+    - desktop-file-validate data/org.anduinos.Waypoint.desktop
+    - cargo fmt --manifest-path src/Cargo.toml --all -- --check
+    - cargo test --manifest-path src/Cargo.toml --workspace --locked
+    - cargo clippy --manifest-path src/Cargo.toml --workspace --all-targets --locked -- -D warnings
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
 .publish:
   stage: publish
   before_script:
@@ -381,6 +397,11 @@ anduinos-timeback-machine:
   extends: .publish
   variables:
     PACKAGE_DIR: anduinos-timeback-machine
+
+anduinos-waypoint-gtk:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-waypoint-gtk
 
 anduinos-why-ai:
   extends: .publish

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC
+ "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1.0/policyconfig.dtd">
+<policyconfig>
+  <vendor>AnduinOS</vendor>
+  <vendor_url>https://www.anduinos.com</vendor_url>
+
+  <action id="org.anduinos.waypoint.create-snapshot">
+    <description>Create an AnduinOS recovery point</description>
+    <description xml:lang="zh_CN">创建 AnduinOS 恢复点</description>
+    <message>Authentication is required to create a system recovery point</message>
+    <message xml:lang="zh_CN">创建系统恢复点需要身份验证</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+  </action>
+
+  <action id="org.anduinos.waypoint.delete-snapshot">
+    <description>Delete an AnduinOS recovery point</description>
+    <description xml:lang="zh_CN">删除 AnduinOS 恢复点</description>
+    <message>Authentication is required to delete a system recovery point</message>
+    <message xml:lang="zh_CN">删除系统恢复点需要身份验证</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="org.anduinos.waypoint.restore-snapshot">
+    <description>Restore AnduinOS from a recovery point</description>
+    <description xml:lang="zh_CN">从恢复点还原 AnduinOS</description>
+    <message>Authentication is required to schedule a system rollback</message>
+    <message xml:lang="zh_CN">安排系统回滚需要身份验证</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="org.anduinos.waypoint.configure-system">
+    <description>Configure AnduinOS recovery</description>
+    <description xml:lang="zh_CN">配置 AnduinOS 系统恢复</description>
+    <message>Authentication is required to change recovery settings</message>
+    <message xml:lang="zh_CN">更改恢复设置需要身份验证</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+  </action>
+
+  <action id="org.anduinos.waypoint.external-backup">
+    <description>Manage AnduinOS recovery backups on external storage</description>
+    <description xml:lang="zh_CN">管理外部存储上的 AnduinOS 恢复备份</description>
+    <message>Authentication is required to export, import, verify, or delete an external recovery backup</message>
+    <message xml:lang="zh_CN">导出、导入、验证或删除外部恢复备份需要身份验证</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+</policyconfig>

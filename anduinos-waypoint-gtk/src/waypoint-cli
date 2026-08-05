@@ -1,0 +1,417 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly DBUS_SERVICE="org.anduinos.Waypoint"
+readonly DBUS_PATH="/org/anduinos/Waypoint"
+readonly DBUS_INTERFACE="org.anduinos.Waypoint.Helper"
+
+usage() {
+    cat <<'EOF'
+AnduinOS Waypoint CLI
+
+Usage: anduinos-waypoint-cli <command> [arguments]
+
+Recovery points:
+  status [--json]                      Show layout and restore transaction state
+  create [--json] <title> [description]
+                                        Create a System recovery point
+  list [--json]                        List trusted local recovery points
+  show <deployment-uuid> [--json]      Show one local recovery point
+  verify <deployment-uuid> [--json]    Verify local recovery-point integrity
+  preview <deployment-uuid> [--json]   Preview a system restore
+  restore <deployment-uuid>            Prepare one-shot system restore
+  cancel-restore                       Cancel a restore before reboot
+  delete <deployment-uuid>             Delete an unprotected recovery point
+  apply-retention                      Apply schedule-owned retention
+  diff <old-uuid> <new-uuid> [--json]  Compare files in two recovery points
+
+External recovery backups:
+  backup-destinations [--json]         List trusted mounted filesystems
+  backup-list <filesystem-uuid> [--json]
+                                        List manifests without hashing streams
+  backup-export <deployment-uuid> <filesystem-uuid>
+                                        Export one full Btrfs stream
+  backup-verify <filesystem-uuid> <backup-uuid>
+                                        Hash and verify one complete stream
+  backup-import <filesystem-uuid> <backup-uuid>
+                                        Import as a fresh local recovery point
+  backup-delete <filesystem-uuid> <backup-uuid>
+                                        Delete one external backup
+
+Mutating and full-verification operations require Polkit authentication.
+No external-backup command accepts a filesystem path.
+EOF
+}
+
+require_jq() {
+    command -v jq >/dev/null 2>&1 || {
+        echo "Error: jq is required by anduinos-waypoint-cli" >&2
+        exit 1
+    }
+}
+
+check_service() {
+    busctl call --system \
+        "$DBUS_SERVICE" \
+        "$DBUS_PATH" \
+        org.freedesktop.DBus.Peer \
+        Ping >/dev/null 2>&1 || {
+        echo "Error: AnduinOS Waypoint D-Bus service is unavailable" >&2
+        exit 1
+    }
+}
+
+call_raw() {
+    local method="$1"
+    shift
+    busctl --system --json=short call \
+        "$DBUS_SERVICE" \
+        "$DBUS_PATH" \
+        "$DBUS_INTERFACE" \
+        "$method" \
+        "$@"
+}
+
+single_string() {
+    local response="$1"
+    jq -er '.data[0] | strings' <<<"$response"
+}
+
+pair_payload() {
+    local response="$1"
+    local success
+    # `jq -e` treats the valid JSON value false as a command failure. Convert
+    # the already type-checked boolean to text before `-e` evaluates it so the
+    # helper's error payload can be printed instead of being lost to `set -e`.
+    success=$(jq -er '.data[0] | booleans | tostring' <<<"$response")
+    local payload
+    payload=$(jq -er '.data[1] | strings' <<<"$response")
+    if [[ "$success" != "true" ]]; then
+        echo "Error: $payload" >&2
+        return 1
+    fi
+    printf '%s\n' "$payload"
+}
+
+validate_uuid() {
+    local value="$1"
+    [[ "$value" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]] || {
+        echo "Error: expected a canonical lowercase UUID, got '$value'" >&2
+        return 1
+    }
+}
+
+validate_filesystem_uuid() {
+    local value="$1"
+    [[ -n "$value" && ${#value} -le 128 && "$value" != .* && "$value" =~ ^[A-Za-z0-9._+-]+$ ]] || {
+        echo "Error: invalid filesystem UUID" >&2
+        return 1
+    }
+}
+
+confirm() {
+    local prompt="$1"
+    local reply
+    read -r -p "$prompt [y/N] " reply
+    [[ "$reply" =~ ^[Yy]$ ]]
+}
+
+print_json_or_summary() {
+    local json="$1"
+    local json_mode="$2"
+    local filter="$3"
+    if [[ "$json_mode" == "true" ]]; then
+        jq . <<<"$json"
+    else
+        jq -r "$filter" <<<"$json"
+    fi
+}
+
+cmd_create() {
+    local json_mode=false
+    if [[ "${1:-}" == "--json" ]]; then
+        json_mode=true
+        shift
+    fi
+    local title="${1:-}"
+    local description="${2:-Created from anduinos-waypoint-cli}"
+    [[ -n "$title" ]] || {
+        echo "Usage: anduinos-waypoint-cli create [--json] <title> [description]" >&2
+        exit 1
+    }
+    local payload
+    payload=$(pair_payload "$(call_raw CreateDeployment ssb "$title" "$description" false)")
+    if [[ "$json_mode" == "true" ]]; then
+        jq . <<<"$payload"
+    else
+        jq -r '"Created recovery point \(.id): \(.title)"' <<<"$payload"
+    fi
+}
+
+# Private scheduler contract. Deliberately omitted from user-facing help: the
+# root-owned systemd service is its only supported caller.
+cmd_create_scheduled() {
+    local title="${1:-}"
+    local description="${2:-}"
+    [[ -n "$title" && -n "$description" ]] || {
+        echo "Error: internal create-scheduled requires a title and description" >&2
+        exit 1
+    }
+    pair_payload "$(call_raw CreateScheduledDeployment ss "$title" "$description")" >/dev/null
+}
+
+recovery_status() {
+    single_string "$(call_raw GetRecoveryEngineStatus)"
+}
+
+cmd_status() {
+    local json_mode=false
+    [[ "${1:-}" == "--json" ]] && json_mode=true
+    local status
+    status=$(recovery_status)
+    if [[ "$json_mode" == "true" ]]; then
+        jq . <<<"$status"
+    else
+        jq -r '
+            "Available:       \(.available)\n" +
+            "Layout:          \(.layout.support // "unavailable")\n" +
+            "Root source:     \(.layout.root_source // "unknown")\n" +
+            "Recovery points: \(.deployment_count // 0)\n" +
+            (if .pending == null then
+               "Pending restore: none"
+             else
+               "Pending restore: \(.pending.id) [\(.pending.phase)]\n" +
+               "Target:          \(.pending.target_deployment_id)\n" +
+               "Fallback:        \(.pending.fallback_deployment_id)\n" +
+               "Apply attempts:  \(.pending.apply_attempts)" +
+               (if .pending.failure == null then "" else
+                  "\nFailure:         \(.pending.failure)"
+                end)
+             end)
+        ' <<<"$status"
+    fi
+}
+
+cmd_list() {
+    local json_mode=false
+    [[ "${1:-}" == "--json" ]] && json_mode=true
+    local status
+    status=$(recovery_status)
+    if [[ "$json_mode" == "true" ]]; then
+        jq '.deployments' <<<"$status"
+    else
+        jq -r '
+            if (.deployments | length) == 0 then
+              "No local recovery points"
+            else
+              .deployments[] |
+              "\(.id)  \(.created_at)  [\(.kind)/\(.state)]  \(.title)"
+            end
+        ' <<<"$status"
+    fi
+}
+
+cmd_show() {
+    local id="${1:-}"
+    validate_uuid "$id"
+    local json_mode=false
+    [[ "${2:-}" == "--json" ]] && json_mode=true
+    local record
+    record=$(recovery_status | jq -ec --arg id "$id" '.deployments[] | select(.id == $id)') || {
+        echo "Error: recovery point not found" >&2
+        exit 1
+    }
+    print_json_or_summary "$record" "$json_mode" '
+        "ID:          \(.id)\n" +
+        "Title:       \(.title)\n" +
+        "Created:     \(.created_at)\n" +
+        "Kind/state:  \(.kind) / \(.state)\n" +
+        "Kernel:      \(.kernel_release // "unknown")\n" +
+        "Protected:   \(.pinned)\n" +
+        "Description: \(.reason)"
+    '
+}
+
+cmd_verify() {
+    local id="${1:-}"
+    validate_uuid "$id"
+    local json_mode=false
+    [[ "${2:-}" == "--json" ]] && json_mode=true
+    local result
+    result=$(single_string "$(call_raw VerifySnapshot s "$id")")
+    if [[ "$json_mode" == "true" ]]; then
+        jq . <<<"$result"
+    else
+        jq -r '
+            if .is_valid then
+              "Recovery point integrity verified" +
+              (if (.warnings | length) > 0 then
+                 "\nWarnings:\n" + (.warnings | map("  - " + .) | join("\n"))
+               else "" end)
+            else
+              "Verification failed:\n" + (.errors | map("  - " + .) | join("\n"))
+            end
+        ' <<<"$result"
+        jq -e '.is_valid' <<<"$result" >/dev/null
+    fi
+}
+
+cmd_preview() {
+    local id="${1:-}"
+    validate_uuid "$id"
+    local json_mode=false
+    [[ "${2:-}" == "--json" ]] && json_mode=true
+    local preview
+    preview=$(pair_payload "$(call_raw PreviewRestore s "$id")")
+    print_json_or_summary "$preview" "$json_mode" '
+        "Recovery point: \(.snapshot_name)\n" +
+        "Created: \(.snapshot_timestamp)\n" +
+        "Scope: System only; Personal Files remain unchanged\n" +
+        "Restart required: true\n" +
+        "Known-good fallback: true\n" +
+        "Kernel: \(.current_kernel // "unknown") -> \(.snapshot_kernel // "unknown")\n" +
+        "Package changes: \(.total_package_changes)"
+    '
+}
+
+cmd_restore() {
+    local id="${1:-}"
+    validate_uuid "$id"
+    confirm "Prepare a one-shot System restore to $id?" || exit 0
+    pair_payload "$(call_raw ScheduleDeploymentRestore s "$id")" | jq .
+    echo "Restore prepared. Reboot when ready; the current system is retained as fallback."
+}
+
+cmd_cancel_restore() {
+    pair_payload "$(call_raw CancelDeploymentRestore)" >/dev/null
+    echo "Pending restore cancelled"
+}
+
+cmd_delete() {
+    local id="${1:-}"
+    validate_uuid "$id"
+    confirm "Delete local recovery point $id?" || exit 0
+    pair_payload "$(call_raw DeleteDeployment s "$id")" >/dev/null
+    echo "Recovery point deleted"
+}
+
+cmd_apply_retention() {
+    pair_payload "$(call_raw ApplyScheduleRetention)"
+}
+
+cmd_diff() {
+    local old="${1:-}"
+    local new="${2:-}"
+    validate_uuid "$old"
+    validate_uuid "$new"
+    local json_mode=false
+    [[ "${3:-}" == "--json" ]] && json_mode=true
+    local result
+    result=$(pair_payload "$(call_raw CompareSnapshots ss "$old" "$new")")
+    print_json_or_summary "$result" "$json_mode" '
+        if length == 0 then "No file changes" else
+          .[] | "\(.change_type): \(.path)"
+        end
+    '
+}
+
+cmd_backup_destinations() {
+    local json_mode=false
+    [[ "${1:-}" == "--json" ]] && json_mode=true
+    local result
+    result=$(pair_payload "$(call_raw ListBackupDestinations)")
+    print_json_or_summary "$result" "$json_mode" '
+        if length == 0 then "No supported mounted external filesystems" else
+          .[] | "\(.filesystem_uuid)  \(.filesystem_type)  \(.mount_point)"
+        end
+    '
+}
+
+cmd_backup_list() {
+    local filesystem_uuid="${1:-}"
+    validate_filesystem_uuid "$filesystem_uuid"
+    local json_mode=false
+    [[ "${2:-}" == "--json" ]] && json_mode=true
+    local result
+    result=$(pair_payload "$(call_raw ListExternalBackups s "$filesystem_uuid")")
+    print_json_or_summary "$result" "$json_mode" '
+        (if (.backups | length) == 0 then "No backups" else
+           (.backups[] | "\(.backup_id)  \(.created_at)  \(.stream_size_bytes) bytes  \(.source.title)")
+         end),
+        (.issues[]? | "DAMAGED \(.entry): \(.message)")
+    '
+}
+
+cmd_backup_export() {
+    local deployment_id="${1:-}"
+    local filesystem_uuid="${2:-}"
+    validate_uuid "$deployment_id"
+    validate_filesystem_uuid "$filesystem_uuid"
+    pair_payload "$(call_raw ExportDeployment ss "$deployment_id" "$filesystem_uuid")" | jq .
+}
+
+cmd_backup_verify() {
+    local filesystem_uuid="${1:-}"
+    local backup_id="${2:-}"
+    validate_filesystem_uuid "$filesystem_uuid"
+    validate_uuid "$backup_id"
+    pair_payload "$(call_raw VerifyExternalBackup ss "$filesystem_uuid" "$backup_id")" | jq .
+}
+
+cmd_backup_import() {
+    local filesystem_uuid="${1:-}"
+    local backup_id="${2:-}"
+    validate_filesystem_uuid "$filesystem_uuid"
+    validate_uuid "$backup_id"
+    confirm "Verify and import external backup $backup_id?" || exit 0
+    pair_payload "$(call_raw ImportExternalBackup ss "$filesystem_uuid" "$backup_id")" | jq .
+}
+
+cmd_backup_delete() {
+    local filesystem_uuid="${1:-}"
+    local backup_id="${2:-}"
+    validate_filesystem_uuid "$filesystem_uuid"
+    validate_uuid "$backup_id"
+    confirm "Delete external backup $backup_id?" || exit 0
+    pair_payload "$(call_raw DeleteExternalBackup ss "$filesystem_uuid" "$backup_id")" >/dev/null
+    echo "External backup deleted"
+}
+
+require_jq
+if (($# == 0)); then
+    usage
+    exit 0
+fi
+
+command_name="$1"
+shift
+case "$command_name" in
+    help|-h|--help) usage; exit 0 ;;
+esac
+check_service
+
+case "$command_name" in
+    status) cmd_status "$@" ;;
+    create) cmd_create "$@" ;;
+    create-scheduled) cmd_create_scheduled "$@" ;;
+    list|ls) cmd_list "$@" ;;
+    show) cmd_show "$@" ;;
+    verify) cmd_verify "$@" ;;
+    preview|preview-restore) cmd_preview "$@" ;;
+    restore|rollback) cmd_restore "$@" ;;
+    cancel-restore) cmd_cancel_restore "$@" ;;
+    delete) cmd_delete "$@" ;;
+    apply-retention) cmd_apply_retention "$@" ;;
+    diff|compare) cmd_diff "$@" ;;
+    backup-destinations) cmd_backup_destinations "$@" ;;
+    backup-list) cmd_backup_list "$@" ;;
+    backup-export) cmd_backup_export "$@" ;;
+    backup-verify) cmd_backup_verify "$@" ;;
+    backup-import) cmd_backup_import "$@" ;;
+    backup-delete) cmd_backup_delete "$@" ;;
+    *)
+        echo "Error: unknown command '$command_name'" >&2
+        usage >&2
+        exit 1
+        ;;
+esac

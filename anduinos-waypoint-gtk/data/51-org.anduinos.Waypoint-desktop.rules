@@ -1,0 +1,19 @@
+polkit.addRule(function(action, subject) {
+    if (action.id.indexOf("org.anduinos.waypoint.") != 0 ||
+        !subject.active || !subject.local || !subject.isInGroup("sudo")) {
+        return polkit.Result.NOT_HANDLED;
+    }
+
+    if (action.id == "org.anduinos.waypoint.create-snapshot" ||
+        action.id == "org.anduinos.waypoint.configure-system") {
+        return polkit.Result.AUTH_ADMIN_KEEP;
+    }
+
+    if (action.id == "org.anduinos.waypoint.delete-snapshot" ||
+        action.id == "org.anduinos.waypoint.restore-snapshot" ||
+        action.id == "org.anduinos.waypoint.external-backup") {
+        return polkit.Result.AUTH_ADMIN;
+    }
+
+    return polkit.Result.NOT_HANDLED;
+});
