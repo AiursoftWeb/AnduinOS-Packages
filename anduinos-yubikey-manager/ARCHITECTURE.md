@@ -145,3 +145,10 @@ key, a copy action, and GitHub Signing Key guidance.
 The signing test creates temporary data and an SSH signature in a private temporary
 directory, verifies it with OpenSSH's `git` namespace, and removes it automatically. It
 does not create a repository, commit, tag, or branch.
+
+## Passkeys delegation
+
+The Passkeys page does not read or modify YubiKey configuration. It only checks whether
+the fixed Flatpak application ID `com.yubico.yubioath` is installed and, when available,
+opens that external application. The security center never installs the Flatpak, opens
+an app store, or redirects to a website from this page.

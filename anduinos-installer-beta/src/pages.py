@@ -84,6 +84,7 @@ from installer_core.wifi import (
 )
 from slideshow import load_slides
 from ui import card, clamp_content, icon_picture, page_hero
+from async_work import LatestBackgroundRequest, ProgressPulse
 
 
 _COEXISTENCE_NOTICE_MESSAGES = {
@@ -161,6 +162,16 @@ _SHRINK_WITH_PARTITION_TOOL_MESSAGE = N_(
 # real partitions. Keep their exact geometry in the safety snapshot, but do
 # not render sub-4-MiB padding as if it were another layout item.
 _LAYOUT_FREE_SPACE_MINIMUM_BYTES = 4 * 1024**2
+
+
+def _probe_storage_workflow():
+    """Collect the complete storage snapshot without touching GTK state."""
+
+    return build_storage_workflow(
+        probe_storage_inventory(),
+        probe_platform(),
+        live_device=_find_live_device(),
+    )
 
 
 def _coexistence_notice_text(notice, lang, windows_detected):
@@ -1303,11 +1314,32 @@ def build_disk_page(shared, nav_view):
     status.set_visible(False)
     content.append(status)
 
+    loading = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=8,
+        margin_start=48,
+        margin_end=48,
+    )
+    loading_label = Gtk.Label(
+        label=_("Loading storage devices…", lang),
+        halign=Gtk.Align.CENTER,
+    )
+    loading_progress = Gtk.ProgressBar()
+    loading_progress.add_css_class("installer-progress")
+    loading.append(loading_label)
+    loading.append(loading_progress)
+    loading.set_visible(False)
+    content.append(loading)
+
     rescan = Gtk.Button(label=_("Rescan Storage", lang))
     rescan.set_halign(Gtk.Align.CENTER)
     content.append(rescan)
 
     next_button = None
+    requests = LatestBackgroundRequest(GLib.idle_add)
+    pulse = ProgressPulse(
+        loading_progress, GLib.timeout_add, GLib.source_remove
+    )
 
     def _set_next(enabled: bool):
         if next_button is not None:
@@ -1332,13 +1364,8 @@ def build_disk_page(shared, nav_view):
         status.set_visible(False)
         _set_next(True)
 
-    def _populate_disks(*, restore_selection: bool):
+    def _clear_disk_list():
         nonlocal disk_choices, disk_buttons
-        previous_id = (
-            str(shared.get("disk_stable_id") or "")
-            if restore_selection
-            else ""
-        )
         child = disk_list.get_first_child()
         while child is not None:
             following = child.get_next_sibling()
@@ -1346,32 +1373,44 @@ def build_disk_page(shared, nav_view):
             child = following
         disk_choices = []
         disk_buttons = []
-        status.set_visible(False)
-        _set_next(False)
-        try:
-            workflow = build_storage_workflow(
-                probe_storage_inventory(),
-                probe_platform(),
-                live_device=_find_live_device(),
+
+    def _finish_loading():
+        pulse.stop()
+        loading.set_visible(False)
+        rescan.set_sensitive(True)
+
+    def _apply_workflow(
+        workflow: StorageWorkflow | None,
+        error: Exception | None,
+        previous_id: str,
+        previous_size: int,
+    ):
+        nonlocal disk_choices, disk_buttons
+        _finish_loading()
+        if error is not None:
+            status.set_label(
+                _(
+                    "Storage devices could not be loaded: {error}", lang
+                ).format(error=error)
             )
-            first_button = None
-            for choice in workflow.disks:
-                button = _disk_card_button(choice, lang)
-                if first_button is None:
-                    first_button = button
-                else:
-                    button.set_group(first_button)
-                button.connect(
-                    "toggled", lambda _button: _on_disk_selected()
-                )
-                disk_list.append(button)
-                disk_buttons.append(button)
-                disk_choices.append(choice)
-        except ProbeError as error:
-            status.set_label(str(error))
             status.set_visible(True)
+            return
+
+        assert workflow is not None
+        first_button = None
+        for choice in workflow.disks:
+            button = _disk_card_button(choice, lang)
+            if first_button is None:
+                first_button = button
+            else:
+                button.set_group(first_button)
+            button.connect("toggled", lambda _button: _on_disk_selected())
+            disk_list.append(button)
+            disk_buttons.append(button)
+            disk_choices.append(choice)
 
         if not disk_choices:
+            clear_storage_target(shared)
             empty = Gtk.Label(
                 label=_("No suitable disks found.", lang),
                 margin_top=28,
@@ -1390,16 +1429,44 @@ def build_disk_page(shared, nav_view):
                 and choice is not None
                 and choice.disk.identity.stable_id == previous_id
                 and choice.disk.identity.expected_size_bytes
-                == int(shared.get("disk_size_bytes") or 0)
+                == previous_size
             ),
             None,
         )
-        if selected_index is not None:
+        if selected_index is None:
+            clear_storage_target(shared)
+        else:
             disk_buttons[selected_index].set_active(True)
 
+    def _populate_disks(*, restore_selection: bool):
+        previous_id = (
+            str(shared.get("disk_stable_id") or "")
+            if restore_selection
+            else ""
+        )
+        previous_size = (
+            int(shared.get("disk_size_bytes") or 0)
+            if restore_selection
+            else 0
+        )
+        _clear_disk_list()
+        status.set_visible(False)
+        _set_next(False)
+        rescan.set_sensitive(False)
+        loading.set_visible(True)
+        pulse.start()
+        requests.start(
+            _probe_storage_workflow,
+            lambda workflow, error: _apply_workflow(
+                workflow,
+                error,
+                previous_id,
+                previous_size,
+            ),
+        )
+
     def _rescan():
-        clear_storage_target(shared)
-        _populate_disks(restore_selection=False)
+        _populate_disks(restore_selection=True)
 
     shared["_rescan_disk_page"] = _rescan
     rescan.connect("clicked", lambda _button: _rescan())
@@ -1417,9 +1484,18 @@ def build_disk_page(shared, nav_view):
         stage=1,
     )
     next_button = nav.next_button
-    _populate_disks(restore_selection=True)
     content.append(nav)
     page.set_child(content)
+
+    def _page_unmapped(_widget):
+        requests.invalidate()
+        pulse.stop()
+        loading.set_visible(False)
+        rescan.set_sensitive(True)
+
+    page.connect("map", lambda _widget: requests.activate())
+    page.connect("unmap", _page_unmapped)
+    _populate_disks(restore_selection=True)
     return page
 
 
@@ -1784,6 +1860,20 @@ def build_advanced_storage_page(shared, nav_view):
     guidance.add_css_class("dim-label")
     guidance.add_css_class("installer-callout")
     controls.append(guidance)
+    loading = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=8,
+    )
+    loading_label = Gtk.Label(
+        label=_("Loading storage devices…", lang),
+        halign=Gtk.Align.START,
+    )
+    loading_progress = Gtk.ProgressBar(hexpand=True)
+    loading_progress.add_css_class("installer-progress")
+    loading.append(loading_label)
+    loading.append(loading_progress)
+    loading.set_visible(False)
+    controls.append(loading)
     rescan = Gtk.Button(label=_("Rescan and Reselect Disk", lang))
     rescan.set_halign(Gtk.Align.START)
     controls.append(rescan)
@@ -1800,6 +1890,10 @@ def build_advanced_storage_page(shared, nav_view):
     esp_options = []
     updating_controls = False
     next_button = None
+    requests = LatestBackgroundRequest(GLib.idle_add)
+    pulse = ProgressPulse(
+        loading_progress, GLib.timeout_add, GLib.source_remove
+    )
 
     def _set_next(enabled):
         if next_button is not None:
@@ -1875,20 +1969,34 @@ def build_advanced_storage_page(shared, nav_view):
             filesystem=Filesystem(str(shared.get("filesystem", "btrfs"))),
         )
 
-    def _load_workflow():
+    def _set_storage_controls(enabled):
+        filesystem.set_sensitive(enabled)
+        extent_dropdown.set_sensitive(enabled)
+        esp_dropdown.set_sensitive(enabled)
+
+    def _finish_loading():
+        pulse.stop()
+        loading.set_visible(False)
+
+    def _apply_workflow(result, error):
         nonlocal workflow, selected_choice, free_candidates, updating_controls
-        clear_guided_storage_selection(shared)
-        _set_next(False)
-        try:
-            workflow = build_storage_workflow(
-                probe_storage_inventory(),
-                probe_platform(),
-                live_device=_find_live_device(),
+        _finish_loading()
+        if error is not None:
+            workflow = None
+            selected_choice = None
+            guidance.set_label(
+                _(
+                    "Storage devices could not be loaded: {error}", lang
+                ).format(error=error)
             )
+            return
+        workflow = result
+        assert workflow is not None
+        try:
             candidate = workflow.disk(
                 str(shared.get("disk_stable_id") or "")
             )
-        except (ProbeError, KeyError) as error:
+        except KeyError as lookup_error:
             workflow = None
             selected_choice = None
             guidance.set_label(
@@ -1896,7 +2004,7 @@ def build_advanced_storage_page(shared, nav_view):
                     "The selected disk changed or disappeared. Return to the "
                     "disk page and select it again. {error}",
                     lang,
-                ).format(error=error)
+                ).format(error=lookup_error)
             )
             return
         if (
@@ -1923,6 +2031,7 @@ def build_advanced_storage_page(shared, nav_view):
             )
             return
         selected_choice = candidate
+        _set_storage_controls(True)
         target.set_label(
             _("Target: {disk} ({size} — {model})", lang).format(
                 disk=candidate.disk.identity.path,
@@ -1964,6 +2073,22 @@ def build_advanced_storage_page(shared, nav_view):
         updating_controls = False
         _configure_esp_options()
         _set_next(_guided_selection() is not None)
+
+    def _load_workflow():
+        nonlocal workflow, selected_choice, free_candidates, esp_options
+        clear_guided_storage_selection(shared)
+        workflow = None
+        selected_choice = None
+        free_candidates = []
+        esp_options = []
+        extent_dropdown.set_model(Gtk.StringList.new([]))
+        esp_dropdown.set_model(Gtk.StringList.new([]))
+        guidance.set_label("")
+        _set_next(False)
+        _set_storage_controls(False)
+        loading.set_visible(True)
+        pulse.start()
+        requests.start(_probe_storage_workflow, _apply_workflow)
 
     def _filesystem_changed():
         shared["filesystem"] = (
@@ -2031,9 +2156,17 @@ def build_advanced_storage_page(shared, nav_view):
     )
     next_button = nav.next_button
     _filesystem_changed()
-    _load_workflow()
     content.append(nav)
     page.set_child(content)
+
+    def _page_unmapped(_widget):
+        requests.invalidate()
+        pulse.stop()
+        loading.set_visible(False)
+
+    page.connect("map", lambda _widget: requests.activate())
+    page.connect("unmap", _page_unmapped)
+    _load_workflow()
     return page
 
 
@@ -2868,7 +3001,78 @@ def build_summary_page(shared, nav_view):
     warn.set_margin_top(24)
     content.append(warn)
 
+    recheck = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=8,
+        margin_start=48,
+        margin_end=48,
+        margin_top=12,
+    )
+    recheck_label = Gtk.Label(
+        label=_("Rechecking target disk…", lang),
+        halign=Gtk.Align.CENTER,
+    )
+    recheck_progress = Gtk.ProgressBar()
+    recheck_progress.add_css_class("installer-progress")
+    recheck.append(recheck_label)
+    recheck.append(recheck_progress)
+    recheck.set_visible(False)
+    content.append(recheck)
+
     install_button = None
+    recheck_requests = LatestBackgroundRequest(GLib.idle_add)
+    recheck_pulse = ProgressPulse(
+        recheck_progress, GLib.timeout_add, GLib.source_remove
+    )
+
+    def _finish_recheck():
+        recheck_pulse.stop()
+        recheck.set_visible(False)
+
+    def _show_plan_failure(error, *, probe_failed=False):
+        _finish_recheck()
+        assert install_button is not None
+        install_button.set_sensitive(True)
+        failure = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_("Cannot create installation plan", lang),
+            body=(
+                _(
+                    "Storage devices could not be loaded: {error}", lang
+                ).format(error=error)
+                if probe_failed
+                else str(error)
+            ),
+        )
+        failure.add_response("ok", _("OK", lang))
+        failure.present()
+
+    def _apply_recheck(result, error):
+        if error is not None:
+            _show_plan_failure(error, probe_failed=True)
+            return
+        inventory, current_platform = result
+        try:
+            plan = create_install_plan(
+                shared,
+                inventory=inventory,
+                platform=current_platform,
+            )
+        except Exception as plan_error:
+            _show_plan_failure(plan_error)
+            return
+        _finish_recheck()
+        shared["installation_running"] = True
+        nav_view.push(build_progress_page(plan, shared, nav_view))
+
+    def _start_recheck():
+        recheck.set_visible(True)
+        recheck_pulse.start()
+
+        def _probe_target():
+            return probe_storage_inventory(), probe_platform()
+
+        recheck_requests.start(_probe_target, _apply_recheck)
 
     def on_install():
         if platform_error or shared.get("installation_running"):
@@ -2945,20 +3149,7 @@ def build_summary_page(shared, nav_view):
             if response != "confirm":
                 install_button.set_sensitive(True)
                 return
-            try:
-                plan = create_install_plan(shared)
-            except Exception as error:
-                install_button.set_sensitive(True)
-                failure = Adw.MessageDialog(
-                    transient_for=nav_view.get_root(),
-                    heading=_("Cannot create installation plan", lang),
-                    body=str(error),
-                )
-                failure.add_response("ok", _("OK", lang))
-                failure.present()
-                return
-            shared["installation_running"] = True
-            nav_view.push(build_progress_page(plan, shared, nav_view))
+            _start_recheck()
 
         dialog.connect("response", _confirmed)
         dialog.present()
@@ -2982,6 +3173,14 @@ def build_summary_page(shared, nav_view):
     install_button.set_sensitive(not bool(platform_error))
     content.append(nav)
     page.set_child(content)
+
+    def _page_unmapped(_widget):
+        recheck_requests.invalidate()
+        recheck_pulse.stop()
+        recheck.set_visible(False)
+
+    page.connect("map", lambda _widget: recheck_requests.activate())
+    page.connect("unmap", _page_unmapped)
     return page
 
 
