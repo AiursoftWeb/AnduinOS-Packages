@@ -1,0 +1,33 @@
+[Unit]
+Description=Confirm or reconcile a Disk Snapshots Manager restore
+Documentation=file:/usr/share/doc/anduinos-btrfs-snapshots-manager/README.md
+After=multi-user.target
+ConditionPathExists=/.snapshots/anduinos-btrfs-snapshots-manager/transactions/pending-rollback.json
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/anduinos-btrfs-snapshots-manager-confirm
+User=root
+Group=root
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateMounts=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ProtectHostname=yes
+ProtectKernelLogs=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+CapabilityBoundingSet=CAP_SYS_ADMIN
+SystemCallFilter=~@clock @cpu-emulation @debug @module @obsolete @raw-io @reboot @swap
+RuntimeDirectory=anduinos-btrfs-snapshots-manager
+ReadWritePaths=-/.snapshots -/boot/grub -/boot/efi -/run/anduinos-btrfs-snapshots-manager
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

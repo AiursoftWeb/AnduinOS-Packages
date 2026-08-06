@@ -42,7 +42,7 @@ from .steps import (
 from .storage_steps import MountTargetStep, PrepareStorageStep
 from .system_config import ConfigureSystemStep
 from .target_config import ConfigureStorageStep
-from .waypoint import EnsureWaypointStep
+from .snapshots_manager import EnsureSnapshotsManagerStep
 from .wifi_migration import MigrateWifiConnectionStep
 from .validation import ExecutionPolicy, validate_plan_for_execution
 
@@ -111,7 +111,7 @@ class InstallerExecutor:
                 )
             )
         if plan.storage.filesystem is Filesystem.BTRFS:
-            steps.append(EnsureWaypointStep(self.runner))
+            steps.append(EnsureSnapshotsManagerStep(self.runner))
         if plan.software.install_third_party_drivers:
             steps.append(InstallThirdPartyDriversStep(self.runner))
         steps.extend(

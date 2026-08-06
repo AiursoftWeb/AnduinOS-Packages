@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Disk Snapshots Manager Notifications
+Name[zh_CN]=Disk Snapshots Manager 通知
+Comment=Show automatic recovery notifications
+Comment[zh_CN]=显示自动恢复通知
+Exec=/usr/libexec/anduinos-btrfs-snapshots-manager-notifier
+Icon=org.anduinos.BtrfsSnapshotsManager
+Terminal=false
+NoDisplay=true
+OnlyShowIn=GNOME;
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Phase=Applications

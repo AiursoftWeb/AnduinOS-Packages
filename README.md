@@ -160,7 +160,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-appearance` | App | Taskbar layout switcher (Windows 11 / Classic) |
 | `anduinos-appstore` | App | Flatpak-based app store with Flathub remote |
 | `anduinos-driver-center` | App | Focused GTK4 driver manager for graphics, Xbox controllers, and Secure Boot trust |
-| `anduinos-waypoint-gtk` | App | GTK4 Btrfs recovery points, scheduling, retention, comparison, and guarded system recovery; derived from Waypoint with an AnduinOS recovery engine |
+| `anduinos-btrfs-snapshots-manager` | App | GTK4/libadwaita manager for symmetric System and Personal Files Btrfs snapshots, automatic retention, file recovery, and guarded system rollback |
 | `anduinos-secureboot-toolkit` | Library | Shared Secure Boot, MOK enrollment, and DKMS signing health/repair backend and UI |
 | `anduinos-deskmon` | Service | Desktop monitoring / hardware info agent |
 | `anduinos-system-tweaks` | Config | System tuning (swappiness, I/O scheduler, sysctl) |

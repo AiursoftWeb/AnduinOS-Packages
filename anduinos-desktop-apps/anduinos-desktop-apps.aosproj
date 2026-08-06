@@ -15,6 +15,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Core & System -->
+    <Suggest Include="anduinos-btrfs-snapshots-manager" Condition="'$(Suite)' == 'resolute-addon'" />
     <Recommend Include="anduinos-mimeapps" />
 
     <!-- Web & Connectivity -->
@@ -58,7 +60,6 @@
     <Recommend Include="anduinos-ufwall-gtk" />
     <Recommend Include="anduinos-swapcontrol-gtk" />
     <Recommend Include="anduinos-yubikey-manager" />
-    <Suggest Include="anduinos-waypoint-gtk" Condition="'$(Suite)' == 'resolute-addon'" />
     <Recommend Include="baobab" />
     <Recommend Include="file-roller" />
     <Recommend Include="gnome-sushi" />

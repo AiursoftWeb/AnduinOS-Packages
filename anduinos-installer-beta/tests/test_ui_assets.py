@@ -9,8 +9,8 @@ ICONS = ROOT / "assets" / "icons"
 
 
 class InstallerVisualAssetTests(unittest.TestCase):
-    def test_waypoint_retains_the_commissioned_timeback_artwork(self):
-        digest = hashlib.sha256((ICONS / "waypoint.svg").read_bytes()).hexdigest()
+    def test_snapshots_manager_retains_the_anduinos_owned_artwork(self):
+        digest = hashlib.sha256((ICONS / "disk-snapshots-manager.svg").read_bytes()).hexdigest()
         self.assertEqual(
             digest,
             "f6d678d9551cbeb64c4fcad189d1b34aaaad59465588eee7b504cd0c798729a3",
@@ -59,7 +59,7 @@ class InstallerVisualAssetTests(unittest.TestCase):
             "keyboard.svg",
             "updates.svg",
             "disk.svg",
-            "waypoint.svg",
+            "disk-snapshots-manager.svg",
             "coexistence.svg",
             "secure-boot.svg",
             "account.svg",

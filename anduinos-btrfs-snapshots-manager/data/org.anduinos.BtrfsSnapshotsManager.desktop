@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=Disk Snapshots Manager
+GenericName=System Recovery and File History
+GenericName[zh_CN]=系统恢复与文件历史
+Comment=Recover AnduinOS and restore deleted Personal Files
+Comment[zh_CN]=恢复 AnduinOS 并找回误删的个人文件
+Exec=anduinos-btrfs-snapshots-manager
+Icon=org.anduinos.BtrfsSnapshotsManager
+Terminal=false
+Type=Application
+DBusActivatable=true
+Categories=GNOME;GTK;System;
+Keywords=snapshot;snapshots;restore;recovery;btrfs;rollback;backup;backups;time machine;file history;deleted files;
+Keywords[zh_CN]=快照;备份;还原;恢复;回滚;系统恢复;文件恢复;个人文件;文件历史;误删文件;btrfs;snapshot;restore;recovery;backup;
+StartupNotify=true

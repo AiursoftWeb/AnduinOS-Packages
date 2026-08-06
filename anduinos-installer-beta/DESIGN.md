@@ -33,7 +33,7 @@ and constructs every command itself.
   `anduinos-live-settings` is a hard dependency of the installer: Casper
   applies the GRUB-selected locale and the package-owned initramfs hook applies
   the selected timezone. A dedicated installer step purges the fixed Live-only
-  package set from the copied target; it also purges Waypoint on ext4 while
+  package set from the copied target; it also purges Disk Snapshots Manager on ext4 while
   retaining it on Btrfs. This policy does not use Ubiquity's historical dual
   manifest convention.
 - Software: refreshing package indexes and installing available updates is
@@ -196,7 +196,7 @@ carousel gesture or a dot click from bypassing disk selection, coexistence
 preflight, account validation or final confirmation.
 
 Visual assets are copied into `assets/icons` and shipped by this package. The
-runtime never depends on a sibling OOBE/Waypoint checkout or a developer's icon
+runtime never depends on a sibling OOBE/Disk Snapshots Manager checkout or a developer's icon
 theme source tree. Shared colors, cards, callouts, dots and progress states live
 in `assets/style.css`; reusable GTK construction lives in `src/ui.py`. New pages
 should extend those two layers rather than defining a page-local visual system.

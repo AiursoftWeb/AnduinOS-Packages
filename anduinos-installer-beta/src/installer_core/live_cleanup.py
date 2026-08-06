@@ -8,7 +8,7 @@ from pathlib import Path
 from .command import CommandRunner
 from .model import Filesystem
 from .steps import FailurePolicy, InstallContext
-from .waypoint import WAYPOINT_PACKAGE
+from .snapshots_manager import SNAPSHOTS_MANAGER_PACKAGE
 
 
 # This is deliberately installer-owned policy. It must not be derived from
@@ -41,13 +41,13 @@ class RemoveLivePackagesStep:
         target = _target(context)
         candidates = list(LIVE_ONLY_PACKAGES)
         if context.plan.storage.filesystem is Filesystem.EXT4:
-            candidates.append(WAYPOINT_PACKAGE)
+            candidates.append(SNAPSHOTS_MANAGER_PACKAGE)
             context.log(
-                "Waypoint cleanup policy: remove it from the ext4 target"
+                "Disk Snapshots Manager cleanup policy: remove it from the ext4 target"
             )
         else:
             context.log(
-                "Waypoint cleanup policy: retain it on the Btrfs target"
+                "Disk Snapshots Manager cleanup policy: retain it on the Btrfs target"
             )
 
         installed = tuple(

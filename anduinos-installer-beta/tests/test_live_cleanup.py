@@ -10,7 +10,7 @@ from installer_core.live_cleanup import (
 )
 from installer_core.model import Filesystem
 from installer_core.steps import InstallContext
-from installer_core.waypoint import WAYPOINT_PACKAGE
+from installer_core.snapshots_manager import SNAPSHOTS_MANAGER_PACKAGE
 
 
 EXPECTED_LIVE_ONLY_PACKAGES = (
@@ -60,11 +60,11 @@ class RemoveLivePackagesTests(unittest.TestCase):
         ):
             type(plan).from_dict(payload)
 
-    def test_policy_is_explicit_and_waypoint_is_not_unconditional(self):
+    def test_policy_is_explicit_and_snapshots_manager_is_not_unconditional(self):
         self.assertEqual(LIVE_ONLY_PACKAGES, EXPECTED_LIVE_ONLY_PACKAGES)
-        self.assertNotIn(WAYPOINT_PACKAGE, LIVE_ONLY_PACKAGES)
+        self.assertNotIn(SNAPSHOTS_MANAGER_PACKAGE, LIVE_ONLY_PACKAGES)
 
-    def test_btrfs_purges_installed_live_packages_and_retains_waypoint(self):
+    def test_btrfs_purges_installed_live_packages_and_retains_snapshots_manager(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             runner = FakeRunner()
@@ -87,13 +87,13 @@ class RemoveLivePackagesTests(unittest.TestCase):
             if "dpkg-query" in command
         }
         self.assertEqual(queried, set(EXPECTED_LIVE_ONLY_PACKAGES))
-        self.assertNotIn(WAYPOINT_PACKAGE, queried)
+        self.assertNotIn(SNAPSHOTS_MANAGER_PACKAGE, queried)
 
-    def test_ext4_adds_waypoint_to_the_purge_candidates(self):
+    def test_ext4_adds_snapshots_manager_to_the_purge_candidates(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             runner = FakeRunner()
-            runner.outputs[_query(target, WAYPOINT_PACKAGE)] = ("ii \n", "", 0)
+            runner.outputs[_query(target, SNAPSHOTS_MANAGER_PACKAGE)] = ("ii \n", "", 0)
             context = _context(target, Filesystem.EXT4)
             step = RemoveLivePackagesStep(runner)
             step.preflight(context)
@@ -102,9 +102,9 @@ class RemoveLivePackagesTests(unittest.TestCase):
         purge = next(
             command for command, _kwargs in runner.commands if "purge" in command
         )
-        self.assertEqual(purge[-1], WAYPOINT_PACKAGE)
+        self.assertEqual(purge[-1], SNAPSHOTS_MANAGER_PACKAGE)
         self.assertEqual(
-            context.values["live_package_candidates"][-1], WAYPOINT_PACKAGE
+            context.values["live_package_candidates"][-1], SNAPSHOTS_MANAGER_PACKAGE
         )
 
     def test_missing_packages_are_a_successful_noop(self):

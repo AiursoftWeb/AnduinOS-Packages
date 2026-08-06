@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "org.anduinos.btrfs-snapshots-manager.deployment.v1",
+  "title": "Disk Snapshots Manager deployment record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "kind",
+    "state",
+    "created_at",
+    "title",
+    "reason",
+    "snapshot_uuid",
+    "kernel_release",
+    "initramfs_sha256",
+    "boot_artifact_sha256",
+    "dpkg_status_sha256",
+    "pinned"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "parent_id": {
+      "type": ["string", "null"],
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "kind": {
+      "enum": ["factory", "manual", "automatic", "apt-pre", "apt-post", "pre-rollback", "imported"]
+    },
+    "state": {
+      "enum": [
+        "creating",
+        "ready",
+        "current",
+        "pending-rollback",
+        "booted-unconfirmed",
+        "fallback-protected",
+        "incomplete",
+        "failed-reverted",
+        "broken",
+        "deleting"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "schedule_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,49}$"
+    },
+    "snapshot_uuid": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "snapshot_parent_uuid": {
+      "type": ["string", "null"]
+    },
+    "kernel_release": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "initramfs_sha256": {
+      "oneOf": [
+        { "$ref": "#/$defs/sha256" },
+        { "type": "null" }
+      ]
+    },
+    "boot_artifact_sha256": {
+      "oneOf": [
+        { "$ref": "#/$defs/sha256" },
+        { "type": "null" }
+      ]
+    },
+    "dpkg_status_sha256": {
+      "oneOf": [
+        { "$ref": "#/$defs/sha256" },
+        { "type": "null" }
+      ]
+    },
+    "mok_certificate_sha256": {
+      "oneOf": [
+        { "$ref": "#/$defs/sha256" },
+        { "type": "null" }
+      ]
+    },
+    "pinned": {
+      "type": "boolean"
+    },
+    "failure": {
+      "type": ["string", "null"],
+      "maxLength": 2000
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "kind": { "const": "automatic" } },
+        "required": ["kind"]
+      },
+      "then": { "required": ["schedule_id"] },
+      "else": { "not": { "required": ["schedule_id"] } }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "ready",
+              "current",
+              "pending-rollback",
+              "booted-unconfirmed",
+              "fallback-protected"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "snapshot_uuid": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kernel_release": {
+            "type": "string",
+            "minLength": 1
+          },
+          "initramfs_sha256": { "$ref": "#/$defs/sha256" },
+          "boot_artifact_sha256": { "$ref": "#/$defs/sha256" },
+          "dpkg_status_sha256": { "$ref": "#/$defs/sha256" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

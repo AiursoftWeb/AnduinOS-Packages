@@ -41,10 +41,10 @@ encryption choices.
 
 ## Default filesystem policy
 
-Btrfs is the AnduinOS default because Waypoint, snapshots and shared-space
+Btrfs is the AnduinOS default because Disk Snapshots Manager, snapshots and shared-space
 subvolumes are operating-system capabilities, not because every workload is
 faster than ext4. ext4 remains an explicit classic alternative and does not
-receive Btrfs snapshot or Waypoint semantics.
+receive Btrfs snapshot or Disk Snapshots Manager semantics.
 
 The default does not change solely because a device reports itself as
 rotational. Device names and rotational hints may be unreliable behind USB,
@@ -86,12 +86,12 @@ inside the snapshot boundary merely because its mount was forgotten.
 
 ## Future custom subvolume layouts
 
-Custom names and paths are supported only after the installer and Waypoint can
+Custom names and paths are supported only after the installer and Disk Snapshots Manager can
 consume a versioned semantic-role manifest. The manifest maps filesystem and
 subvolume UUIDs to roles such as system root, user home, persistent logs,
 snapshot store, container data and virtual-machine images.
 
-Waypoint compatibility is determined by rollback invariants:
+Disk Snapshots Manager compatibility is determined by rollback invariants:
 
 - `/`, `/usr`, `/etc`, `/var/lib/dpkg`, `/var/lib/apt`, `/var/cache/apt` and
   `/boot` share the system-root transaction boundary;
@@ -103,7 +103,7 @@ Waypoint compatibility is determined by rollback invariants:
 - boot artifacts can be proven compatible with a retained deployment.
 
 A custom layout that is bootable but violates these invariants is labeled
-`Custom layout — Waypoint unsupported` before installation. Cosmetic names do
+`Custom layout — Disk Snapshots Manager unsupported` before installation. Cosmetic names do
 not determine support, and canonical names do not override an invalid
 boundary.
 

@@ -313,9 +313,9 @@ cache entered the package.
 
 Cover canonical and custom Btrfs names, ext4 split mounts, duplicate or unsafe
 mount paths, a populated non-format root, missing ESP/root roles and layouts
-that are bootable but intentionally ineligible for Waypoint. Verify that the
+that are bootable but intentionally ineligible for Disk Snapshots Manager. Verify that the
 installed semantic-role manifest agrees with `fstab`, mounted UUIDs and the
-Waypoint capability shown before installation.
+Disk Snapshots Manager capability shown before installation.
 
 ### Existing-container and array campaign
 

@@ -1,0 +1,24 @@
+[package]
+name = "anduinos-btrfs-snapshots-manager-scheduler"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Disk Snapshots Manager recovery scheduler service"
+
+[[bin]]
+name = "anduinos-btrfs-snapshots-manager-scheduler"
+path = "src/main.rs"
+
+[dependencies]
+# Workspace dependencies
+anyhow.workspace = true
+chrono.workspace = true
+log.workspace = true
+serde_json.workspace = true
+
+# Local dependencies
+snapshots-manager-common = { path = "../snapshots-manager-common" }
+
+# Additional dependencies for scheduler
+env_logger = "0.11"

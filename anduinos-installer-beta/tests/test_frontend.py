@@ -347,7 +347,7 @@ class FrontendPlanTests(unittest.TestCase):
         self.assertIn("[refresh-package-indexes]", simulated)
         self.assertIn("[upgrade-system]", simulated)
         self.assertIn("Target filesystem: btrfs", simulated)
-        self.assertIn("[ensure-waypoint]", simulated)
+        self.assertIn("[ensure-snapshots-manager]", simulated)
         self.assertIn("retain the package copied from the Live system", simulated)
         self.assertNotIn("[install-third-party-drivers]", simulated)
         step_order = [
@@ -395,7 +395,7 @@ class FrontendPlanTests(unittest.TestCase):
         self.assertNotIn("[upgrade-system]", simulated)
         self.assertIn("[install-third-party-drivers]", simulated)
         self.assertIn("[install-multimedia-codecs]", simulated)
-        self.assertNotIn("[ensure-waypoint]", simulated)
+        self.assertNotIn("[ensure-snapshots-manager]", simulated)
         self.assertIn("Target filesystem: ext4", simulated)
         self.assertIn("remove the live payload", simulated)
 

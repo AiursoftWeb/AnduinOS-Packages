@@ -1,0 +1,21 @@
+[package]
+name = "anduinos-btrfs-snapshots-manager-notifier"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Disk Snapshots Manager desktop notification listener"
+
+[[bin]]
+name = "anduinos-btrfs-snapshots-manager-notifier"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+log.workspace = true
+env_logger = "0.11"
+futures-util = "0.3"
+gettext-rs = { version = "0.7", features = ["gettext-system"] }
+tokio = { version = "1", features = ["macros", "rt", "time"] }
+snapshots-manager-common = { path = "../snapshots-manager-common" }
+zbus = { version = "4.0", default-features = false, features = ["tokio"] }

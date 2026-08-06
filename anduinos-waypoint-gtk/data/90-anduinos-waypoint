@@ -1,2 +1,0 @@
-DPkg::Pre-Invoke { "if [ -x /usr/libexec/anduinos-waypoint-apt-hook ]; then /usr/libexec/anduinos-waypoint-apt-hook pre; fi || true"; };
-DPkg::Post-Invoke { "if [ -x /usr/libexec/anduinos-waypoint-apt-hook ]; then /usr/libexec/anduinos-waypoint-apt-hook post; fi || true"; };

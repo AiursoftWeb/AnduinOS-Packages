@@ -73,8 +73,8 @@ FLATHUB_OFFICIAL_REPO = 'https://dl.flathub.org/repo/flathub.flatpakrepo'
 FLATHUB_OFFICIAL_URL = 'https://dl.flathub.org/repo'
 FLATHUB_USTC_URL = 'https://mirrors.ustc.edu.cn/flathub'
 MDNS_HELPER = '/usr/libexec/anduinos-oobe/network-service-helper'
-WAYPOINT_PACKAGE = 'anduinos-waypoint-gtk'
-WAYPOINT_EXECUTABLE = '/usr/bin/anduinos-waypoint-gtk'
+SNAPSHOTS_MANAGER_PACKAGE = 'anduinos-btrfs-snapshots-manager'
+SNAPSHOTS_MANAGER_EXECUTABLE = '/usr/bin/anduinos-btrfs-snapshots-manager'
 BASH_GUESS_BEGIN = '# >>> AnduinOS Bash command predictions >>>'
 BASH_GUESS_END = '# <<< AnduinOS Bash command predictions <<<'
 BASH_GUESS_ASSIGNMENT = 'export ANDUINOS_GUESS_COMMAND={}'
@@ -366,9 +366,9 @@ def _is_package_installed(pkg):
         return False
 
 
-def should_recommend_waypoint():
-    """Return True when Waypoint can snapshot the Btrfs root filesystem."""
-    if not _is_package_installed(WAYPOINT_PACKAGE):
+def should_recommend_snapshots_manager():
+    """Return True when Disk Snapshots Manager can protect this system."""
+    if not _is_package_installed(SNAPSHOTS_MANAGER_PACKAGE):
         return False
     try:
         result = subprocess.run(
@@ -384,15 +384,15 @@ def should_recommend_waypoint():
 
 def get_backup_recommendation():
     """Return the backup card content appropriate for this installation."""
-    if should_recommend_waypoint():
+    if should_recommend_snapshots_manager():
         return {
-            'icon': 'org.anduinos.Waypoint',
-            'title': _('Waypoint'),
+            'icon': 'disk-snapshots-manager.svg',
+            'title': _('Disk Snapshots Manager'),
             'description': _(
                 'Protect your system with automatic Btrfs snapshots and smart cleanup.'
             ),
             'button': _('Configure Automatic Snapshots'),
-            'command': [WAYPOINT_EXECUTABLE],
+            'command': [SNAPSHOTS_MANAGER_EXECUTABLE],
         }
     return {
         'icon': 'deja-dup.svg',

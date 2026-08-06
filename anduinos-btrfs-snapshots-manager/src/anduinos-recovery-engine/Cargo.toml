@@ -1,0 +1,36 @@
+[package]
+name = "anduinos-recovery-engine"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Power-loss-safe AnduinOS system deployment and recovery core"
+
+[lib]
+name = "anduinos_recovery_engine"
+path = "src/lib.rs"
+
+[[bin]]
+name = "anduinos-btrfs-snapshots-manager-initramfs"
+path = "src/btrfs_snapshots_manager_initramfs.rs"
+
+[[bin]]
+name = "anduinos-btrfs-snapshots-manager-boot-config"
+path = "src/btrfs_snapshots_manager_boot_config.rs"
+
+[[bin]]
+name = "anduinos-btrfs-snapshots-manager-confirm"
+path = "src/btrfs_snapshots_manager_confirm.rs"
+
+[[bin]]
+name = "anduinos-btrfs-snapshots-manager-apt-hook"
+path = "src/btrfs_snapshots_manager_apt_hook.rs"
+
+[dependencies]
+chrono.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+libc = "0.2"
+sha2 = "0.10"
+uuid = { version = "1", features = ["serde", "v4"] }
+toml.workspace = true

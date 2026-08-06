@@ -1,0 +1,24 @@
+#!/bin/sh
+set -e
+
+environment=/boot/efi/EFI/anduinos/btrfs-snapshots-manager-grubenv
+[ -f "$environment" ] || exit 0
+
+efi_uuid=$(/usr/sbin/grub-probe --target=fs_uuid /boot/efi 2>/dev/null) || exit 0
+case "$efi_uuid" in
+    ''|*[!A-Fa-f0-9-]*) exit 0 ;;
+esac
+
+cat <<EOF
+# Disk Snapshots Manager one-shot selector stored on the writable EFI filesystem.
+search --no-floppy --fs-uuid --set=btrfs_snapshots_manager_esp $efi_uuid
+if [ -s (\$btrfs_snapshots_manager_esp)/EFI/anduinos/btrfs-snapshots-manager-grubenv ]; then
+  load_env -f (\$btrfs_snapshots_manager_esp)/EFI/anduinos/btrfs-snapshots-manager-grubenv
+  if [ "\${btrfs_snapshots_manager_next_entry}" ]; then
+    set default="\${btrfs_snapshots_manager_next_entry}"
+    set btrfs_snapshots_manager_next_entry=
+    save_env -f (\$btrfs_snapshots_manager_esp)/EFI/anduinos/btrfs-snapshots-manager-grubenv btrfs_snapshots_manager_next_entry
+    set boot_once=true
+  fi
+fi
+EOF

@@ -425,13 +425,13 @@ class DevelopmentExecutorClient:
         log(f"Target filesystem: {plan.storage.filesystem.value}")
         if plan.storage.filesystem is Filesystem.BTRFS:
             log(
-                "Waypoint policy: retain the package copied from the Live "
+                "Disk Snapshots Manager policy: retain the package copied from the Live "
                 "system, verify it, and use the repository only as a legacy "
                 "fallback"
             )
         else:
             log(
-                "Waypoint policy: remove the live payload from the "
+                "Disk Snapshots Manager policy: remove the live payload from the "
                 "ext4 target"
             )
         for step, weight in pipeline:

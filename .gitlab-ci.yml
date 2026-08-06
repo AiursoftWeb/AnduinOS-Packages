@@ -370,12 +370,12 @@ anduinos-swap-config:
   variables:
     PACKAGE_DIR: anduinos-swap-config
 
-anduinos-waypoint-gtk:
+anduinos-btrfs-snapshots-manager:
   extends: .publish
   needs:
     - anduinos-secureboot-toolkit
   variables:
-    PACKAGE_DIR: anduinos-waypoint-gtk
+    PACKAGE_DIR: anduinos-btrfs-snapshots-manager
 
 anduinos-why-ai:
   extends: .publish
@@ -548,7 +548,7 @@ anduinos-desktop-apps:
     - anduinos-yubikey-manager
     - anduinos-exe-runner
     - anduinos-oobe
-    - anduinos-waypoint-gtk
+    - anduinos-btrfs-snapshots-manager
   variables:
     PACKAGE_DIR: anduinos-desktop-apps
 

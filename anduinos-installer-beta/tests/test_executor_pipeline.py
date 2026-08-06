@@ -50,7 +50,7 @@ class ExecutorPipelineTests(unittest.TestCase):
             "configure-system",
             "refresh-package-indexes",
             "upgrade-system",
-            "ensure-waypoint",
+            "ensure-snapshots-manager",
             "verify-dkms-signatures",
             "install-bootloader",
             "enroll-secure-boot",
@@ -121,7 +121,7 @@ class ExecutorPipelineTests(unittest.TestCase):
             "install-multimedia-codecs", CapturingStepRunner.captured
         )
 
-    def test_waypoint_step_is_only_present_for_btrfs(self):
+    def test_snapshots_manager_step_is_only_present_for_btrfs(self):
         from installer_core.model import Filesystem
 
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
@@ -129,14 +129,14 @@ class ExecutorPipelineTests(unittest.TestCase):
                 valid_plan(filesystem=Filesystem.EXT4)
             )
         self.assertNotIn(
-            "ensure-waypoint",
+            "ensure-snapshots-manager",
             CapturingStepRunner.captured,
         )
 
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
             InstallerExecutor(lambda _message: None).run(valid_plan())
         self.assertIn(
-            "ensure-waypoint",
+            "ensure-snapshots-manager",
             CapturingStepRunner.captured,
         )
 

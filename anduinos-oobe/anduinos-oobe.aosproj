@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-oobe</PackageName>
-    <PackageVersion>2.0.1-13+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-14+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS OOBE — First-run setup wizard and Welcome Center</PackageDescription>
     <Section>utils</Section>
@@ -54,7 +54,7 @@
 
   <ItemGroup>
     <PrebuildCommand Run="python3 -m py_compile assets/anduinos-oobe" />
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" />
+    <PrebuildCommand Run="LANGUAGE=C PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" />
     <PrebuildCommand Run="bash compile-locales.sh" />
   </ItemGroup>
 </Project>

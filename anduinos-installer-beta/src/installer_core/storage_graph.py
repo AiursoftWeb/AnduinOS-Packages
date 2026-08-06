@@ -54,7 +54,7 @@ class StorageGraphAction(str, Enum):
 class StorageCapability(str, Enum):
     BOOTABLE = "bootable"
     SYSTEM_ROLLBACK = "system-rollback"
-    WAYPOINT = "waypoint"
+    SNAPSHOT_MANAGEMENT = "snapshot-management"
 
 
 class MountRole(str, Enum):

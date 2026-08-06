@@ -2243,7 +2243,7 @@ def build_storage_strategy_page(shared, nav_view):
         erase_warning
         + " "
         + _(
-            "Enables shared-space subvolumes, snapshots and Waypoint.",
+            "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager.",
             lang,
         ),
         "btrfs",
@@ -3911,7 +3911,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         _page_header(
             "Installing AnduinOS",
             "Please do not turn off your computer",
-            "waypoint",
+            "disk-snapshots-manager",
             lang,
         )
     )
@@ -3962,8 +3962,8 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         ),
         "refresh-package-indexes": _("Refresh package indexes", lang),
         "upgrade-system": _("Install system updates", lang),
-        "ensure-waypoint": _(
-            "Ensure Waypoint is available", lang
+        "ensure-snapshots-manager": _(
+            "Ensure Disk Snapshots Manager is available", lang
         ),
         "install-third-party-drivers": _("Install hardware drivers", lang),
         "verify-dkms-signatures": _(

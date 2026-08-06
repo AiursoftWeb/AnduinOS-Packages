@@ -489,8 +489,8 @@ msgstr "该文件是已配置的休眠恢复目标，因此大小已锁定"
 msgid "Optional compatibility file; 0 GiB removes it and 20 GiB remains reserved for the system"
 msgstr "可选的兼容文件；0 GiB 表示移除，并始终为系统保留 20 GiB 空间"
 
-msgid "Disabled on Btrfs because a root-subvolume swap file would prevent Waypoint recovery points"
-msgstr "在 Btrfs 上已禁用，因为根子卷中的虚拟内存文件会阻止 Waypoint 创建恢复点"
+msgid "Disabled on Btrfs because a root-subvolume swap file would prevent Disk Snapshots Manager recovery points"
+msgstr "在 Btrfs 上已禁用，因为根子卷中的虚拟内存文件会阻止磁盘快照管理器创建恢复点"
 
 msgid "Swap file resizing is unsupported on {0}"
 msgstr "不支持在 {0} 上调整虚拟内存文件大小"
