@@ -29,6 +29,10 @@ freshness target, so a machine that was asleep or powered off creates a catch-up
 point on the next timer activation. The default package policy creates a system
 point before a real DPKG transaction and no post-transaction point. Both package
 boundaries and snapshot notifications are configured in Advanced Settings.
+The unprivileged desktop notification listener runs as a supervised user
+service. GNOME starts it at login, and opening the application also ensures it
+is running, so installing or upgrading the package during an existing session
+does not require signing out first.
 
 Nautilus adds “View File History…” for one local Home item and “Browse This
 Folder’s History…” for a local Home folder. The extension only activates the

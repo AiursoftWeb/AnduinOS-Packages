@@ -39,6 +39,7 @@ for keyword in 快照 备份 还原 恢复; do
         "$ROOT/data/org.anduinos.BtrfsSnapshotsManager.desktop"
 done
 test -f "$ROOT/data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop"
+test -f "$ROOT/data/anduinos-btrfs-snapshots-manager-notifier.service"
 test -f "$ROOT/data/org.anduinos.BtrfsSnapshotsManager.Session.service"
 test -f "$ROOT/data/anduinos_btrfs_snapshots_manager_file_history.py"
 test -x "$ROOT/compile-locales.sh"
@@ -58,6 +59,15 @@ grep -Fq 'obj/anduinos-btrfs-snapshots-manager-notifier" Target="/usr/libexec/an
     "$ROOT/anduinos-btrfs-snapshots-manager.aosproj"
 grep -Fq 'Target="/etc/xdg/autostart/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop"' \
     "$ROOT/anduinos-btrfs-snapshots-manager.aosproj"
+grep -Fq 'Target="/usr/lib/systemd/user/anduinos-btrfs-snapshots-manager-notifier.service"' \
+    "$ROOT/anduinos-btrfs-snapshots-manager.aosproj"
+grep -Fq 'Exec=/usr/bin/systemctl --user start --no-block anduinos-btrfs-snapshots-manager-notifier.service' \
+    "$ROOT/data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop"
+grep -Fq 'Type=dbus' "$ROOT/data/anduinos-btrfs-snapshots-manager-notifier.service"
+grep -Fq 'BusName=org.anduinos.BtrfsSnapshotsManager.Notifier' \
+    "$ROOT/data/anduinos-btrfs-snapshots-manager-notifier.service"
+grep -Fq 'Restart=on-failure' "$ROOT/data/anduinos-btrfs-snapshots-manager-notifier.service"
+grep -Fq 'ensure_notifier_running' "$ROOT/src/btrfs-snapshots-manager/src/application.rs"
 if rg -n 'path[[:space:]]*=[[:space:]]*"src/bin/' \
     "$ROOT/src" --glob 'Cargo.toml'; then
     echo "Executable Rust sources must use the repository-standard src/*.rs layout" >&2

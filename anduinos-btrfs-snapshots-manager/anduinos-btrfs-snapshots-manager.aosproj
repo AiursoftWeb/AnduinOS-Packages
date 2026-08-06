@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-btrfs-snapshots-manager</PackageName>
-    <PackageVersion>0.1.0-10+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.1.0-11+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Disk Snapshots Manager — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -87,6 +87,7 @@
     <IncludeFile Include="data/org.anduinos.BtrfsSnapshotsManager.Session.service" Target="/usr/share/dbus-1/services/org.anduinos.BtrfsSnapshotsManager.service" />
     <IncludeFile Include="data/anduinos_btrfs_snapshots_manager_file_history.py" Target="/usr/share/nautilus-python/extensions/anduinos_btrfs_snapshots_manager_file_history.py" />
     <IncludeFile Include="data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop" Target="/etc/xdg/autostart/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop" />
+    <IncludeFile Include="data/anduinos-btrfs-snapshots-manager-notifier.service" Target="/usr/lib/systemd/user/anduinos-btrfs-snapshots-manager-notifier.service" />
     <IncludeFile Include="data/anduinos-btrfs-snapshots-manager.tmpfiles" Target="/usr/lib/tmpfiles.d/anduinos-btrfs-snapshots-manager.conf" />
     <IncludeFile Include="data/90-anduinos-btrfs-snapshots-manager" Target="/etc/apt/apt.conf.d/90-anduinos-btrfs-snapshots-manager" />
     <IncludeFile Include="../LICENSE" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/copyright" />

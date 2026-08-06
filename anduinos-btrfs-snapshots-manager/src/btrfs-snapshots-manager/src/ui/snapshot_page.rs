@@ -1189,7 +1189,7 @@ fn snapshot_details(scope: SnapshotScope, item: &SnapshotItem) -> String {
             &[&snapshots_manager_common::format_bytes(size)],
         ));
     } else if !matches!(item.state.as_str(), "creating" | "deleting" | "broken") {
-        parts.push(tr("Size not calculated"));
+        parts.push("…".to_string());
     }
     if item.state != "ready" {
         parts.push(state);

@@ -1,4 +1,5 @@
 use std::cell::{Cell, RefCell};
+use std::process::Command;
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
@@ -11,6 +12,8 @@ use crate::signal_listener::SnapshotSignalMonitor;
 use crate::ui::{self, MainWindow};
 
 pub const APP_ID: &str = "org.anduinos.BtrfsSnapshotsManager";
+const NOTIFIER_UNIT: &str = "anduinos-btrfs-snapshots-manager-notifier.service";
+const NOTIFIER_START_ARGS: [&str; 4] = ["--user", "start", "--no-block", NOTIFIER_UNIT];
 
 mod imp {
     use super::*;
@@ -37,6 +40,7 @@ mod imp {
             let app = self.obj();
             app.load_css();
             app.install_actions();
+            app.ensure_notifier_running();
             *self.signal_monitor.borrow_mut() = Some(SnapshotSignalMonitor::start());
 
             app.set_accels_for_action("win.close", &["<primary>w"]);
@@ -163,6 +167,27 @@ impl SnapshotsManagerApplication {
         }
     }
 
+    fn ensure_notifier_running(&self) {
+        glib::spawn_future_local(async {
+            let result = gio::spawn_blocking(|| {
+                Command::new("/usr/bin/systemctl")
+                    .args(NOTIFIER_START_ARGS)
+                    .status()
+            })
+            .await;
+            match result {
+                Ok(Ok(status)) if status.success() => {}
+                Ok(Ok(status)) => log::warn!(
+                    "Could not start the desktop notification listener: systemctl exited with {status}"
+                ),
+                Ok(Err(error)) => {
+                    log::warn!("Could not start the desktop notification listener: {error}")
+                }
+                Err(_) => log::warn!("Starting the desktop notification listener was interrupted"),
+            }
+        });
+    }
+
     fn schedule_smoke_exit(&self) {
         if std::env::var_os("ANDUINOS_BTRFS_SNAPSHOTS_MANAGER_UI_SMOKE_TEST").is_none()
             || self.imp().smoke_exit_scheduled.replace(true)
@@ -188,5 +213,18 @@ mod tests {
     #[test]
     fn application_identity_is_stable() {
         assert_eq!(APP_ID, "org.anduinos.BtrfsSnapshotsManager");
+    }
+
+    #[test]
+    fn notifier_is_started_as_a_supervised_user_service() {
+        assert_eq!(
+            NOTIFIER_START_ARGS,
+            [
+                "--user",
+                "start",
+                "--no-block",
+                "anduinos-btrfs-snapshots-manager-notifier.service"
+            ]
+        );
     }
 }

@@ -1,0 +1,14 @@
+[Unit]
+Description=Disk Snapshots Manager desktop notification listener
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=dbus
+BusName=org.anduinos.BtrfsSnapshotsManager.Notifier
+ExecStart=/usr/libexec/anduinos-btrfs-snapshots-manager-notifier
+Restart=on-failure
+RestartSec=2s
+
+[Install]
+WantedBy=graphical-session.target

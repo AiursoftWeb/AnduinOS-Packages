@@ -59,7 +59,6 @@ NEW_TRANSLATIONS = {
     "Snapshot Actions": "快照操作",
     "Shared Data": "共享数据",
     "Size {0}": "大小 {0}",
-    "Size not calculated": "大小尚未计算",
     "Snapshot Details": "快照详情",
     "Snapshots are not available on this computer": "此计算机无法使用快照",
     "Snapshots could not be loaded": "无法加载快照",
