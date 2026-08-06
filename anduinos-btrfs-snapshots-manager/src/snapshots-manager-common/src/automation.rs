@@ -44,8 +44,8 @@ impl Default for AutomationConfig {
     fn default() -> Self {
         Self {
             schema_version: AUTOMATION_SCHEMA_VERSION,
-            system: RetentionPolicy::default(),
-            home: RetentionPolicy::default(),
+            system: RetentionPolicy::system_default(),
+            home: RetentionPolicy::home_default(),
             notifications: NotificationPolicy::default(),
         }
     }
@@ -126,6 +126,8 @@ mod tests {
         let config = AutomationConfig::default();
         assert!(config.system.is_auto_snapshot_enabled);
         assert!(config.home.is_auto_snapshot_enabled);
+        assert_eq!(config.system.snapshot_interval_hours, 24);
+        assert_eq!(config.home.snapshot_interval_hours, 2);
         assert!(!config.notifications.notify_before_scheduled);
         assert!(config.notifications.notify_after_success);
         assert!(!config.notifications.notify_after_cleanup);

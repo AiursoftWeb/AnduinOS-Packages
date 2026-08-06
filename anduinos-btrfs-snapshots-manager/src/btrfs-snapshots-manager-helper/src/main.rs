@@ -34,6 +34,51 @@ struct RateLimiter {
     window: std::time::Duration,
 }
 
+/// Atomic sliding-window quota for passwordless manual Home snapshots.
+/// Scheduled root work deliberately uses a separate entry point and does not
+/// consume this interactive-user allowance.
+#[derive(Debug, Clone)]
+struct PersonalSnapshotQuota {
+    attempts: std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<std::time::Instant>>>,
+    window: std::time::Duration,
+    allowance: usize,
+}
+
+impl PersonalSnapshotQuota {
+    fn new(allowance: usize, window: std::time::Duration) -> Self {
+        Self {
+            attempts: std::sync::Arc::new(std::sync::Mutex::new(std::collections::VecDeque::new())),
+            window,
+            allowance,
+        }
+    }
+
+    /// Reserve one machine-wide passwordless creation slot. Recording the
+    /// reservation before starting Btrfs work closes the concurrent-call race.
+    fn reserve(&self) -> bool {
+        self.reserve_at(std::time::Instant::now())
+    }
+
+    fn reserve_at(&self, now: std::time::Instant) -> bool {
+        let mut attempts = self.attempts.lock().unwrap_or_else(|poisoned| {
+            MUTEX_POISON_COUNT.fetch_add(1, Ordering::Relaxed);
+            log::error!("Personal snapshot quota mutex poisoned; recovering");
+            poisoned.into_inner()
+        });
+        while attempts
+            .front()
+            .is_some_and(|attempt| now.duration_since(*attempt) >= self.window)
+        {
+            attempts.pop_front();
+        }
+        if attempts.len() >= self.allowance {
+            return false;
+        }
+        attempts.push_back(now);
+        true
+    }
+}
+
 impl RateLimiter {
     fn new(window_seconds: u64) -> Self {
         Self {
@@ -82,6 +127,7 @@ impl RateLimiter {
 /// Main D-Bus service interface for Disk Snapshots Manager operations
 struct SnapshotsManagerHelper {
     rate_limiter: RateLimiter,
+    personal_snapshot_quota: PersonalSnapshotQuota,
     browse_leases: std::sync::Mutex<std::collections::HashMap<String, SystemBrowseLease>>,
 }
 
@@ -116,6 +162,10 @@ impl SnapshotsManagerHelper {
         Self {
             // Rate limit: 1 operation per 5 seconds per user
             rate_limiter: RateLimiter::new(5),
+            personal_snapshot_quota: PersonalSnapshotQuota::new(
+                4,
+                std::time::Duration::from_secs(60),
+            ),
             browse_leases: std::sync::Mutex::new(std::collections::HashMap::new()),
         }
     }
@@ -488,21 +538,29 @@ impl SnapshotsManagerHelper {
         pinned: bool,
     ) -> (bool, String) {
         let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
-        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_CREATE).await {
-            audit::log_auth_failure(uid, pid, POLKIT_ACTION_CREATE, &error.to_string());
+        if let Err(error) =
+            check_authorization(&hdr, connection, POLKIT_ACTION_CREATE_PERSONAL).await
+        {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_CREATE_PERSONAL, &error.to_string());
             return (false, format!("Authorization failed: {error}"));
         }
-        if let Err(wait) = self
-            .rate_limiter
-            .check_rate_limit(&uid, "create_personal_snapshot")
+        if pinned
+            && let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_DELETE).await
         {
-            return (
-                false,
-                format!(
-                    "Please wait {} seconds before creating another Home snapshot",
-                    wait.as_secs()
-                ),
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_DELETE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        if !self.personal_snapshot_quota.reserve()
+            && let Err(error) =
+                check_authorization(&hdr, connection, POLKIT_ACTION_CREATE_PERSONAL_OVERRIDE).await
+        {
+            audit::log_auth_failure(
+                uid,
+                pid,
+                POLKIT_ACTION_CREATE_PERSONAL_OVERRIDE,
+                &error.to_string(),
             );
+            return (false, format!("Authorization failed: {error}"));
         }
         match PersonalSnapshotEngine::default().create_manual(
             &layout::inspect_current(),
@@ -767,9 +825,7 @@ impl SnapshotsManagerHelper {
         snapshot_id: String,
         title: String,
     ) -> (bool, String) {
-        if let Err(error) =
-            check_authorization(&hdr, connection, POLKIT_ACTION_PERSONAL_FILES).await
-        {
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_DELETE).await {
             return (false, format!("Authorization failed: {error}"));
         }
         let id = match snapshot_id.parse::<PersonalSnapshotId>() {
@@ -784,7 +840,22 @@ impl SnapshotsManagerHelper {
         }
     }
 
-    async fn verify_personal_snapshot(&self, snapshot_id: String) -> String {
+    async fn verify_personal_snapshot(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        snapshot_id: String,
+    ) -> String {
+        if let Err(error) =
+            check_authorization(&hdr, connection, POLKIT_ACTION_PERSONAL_FILES).await
+        {
+            return serde_json::json!({
+                "is_valid": false,
+                "errors": [format!("Authorization failed: {error}")],
+                "warnings": [],
+            })
+            .to_string();
+        }
         let id = match snapshot_id.parse::<PersonalSnapshotId>() {
             Ok(id) => id,
             Err(error) => {
@@ -820,6 +891,11 @@ impl SnapshotsManagerHelper {
         snapshot_id: String,
         relative_path: String,
     ) -> (bool, String) {
+        if let Err(error) =
+            check_authorization(&hdr, connection, POLKIT_ACTION_PERSONAL_FILES).await
+        {
+            return (false, format!("Authorization failed: {error}"));
+        }
         let user_directory = match Self::caller_home_directory(&hdr, connection).await {
             Ok(value) => value,
             Err(error) => return (false, error.to_string()),
@@ -849,6 +925,9 @@ impl SnapshotsManagerHelper {
         snapshot_id: String,
         relative_path: String,
     ) -> zbus::fdo::Result<zbus::zvariant::OwnedFd> {
+        check_authorization(&hdr, connection, POLKIT_ACTION_PERSONAL_FILES)
+            .await
+            .map_err(|error| zbus::fdo::Error::AccessDenied(error.to_string()))?;
         let user_directory = Self::caller_home_directory(&hdr, connection)
             .await
             .map_err(|error| zbus::fdo::Error::Failed(error.to_string()))?;
@@ -2101,6 +2180,17 @@ fn run_command_with_output(cmd: &str, args: &[&str]) -> Result<(String, String)>
 mod tests {
     use super::*;
     use std::io::Write;
+
+    #[test]
+    fn personal_snapshot_quota_allows_four_creations_per_sliding_minute() {
+        let quota = PersonalSnapshotQuota::new(4, std::time::Duration::from_secs(60));
+        let start = std::time::Instant::now();
+        for offset in 0..4 {
+            assert!(quota.reserve_at(start + std::time::Duration::from_secs(offset)));
+        }
+        assert!(!quota.reserve_at(start + std::time::Duration::from_secs(4)));
+        assert!(quota.reserve_at(start + std::time::Duration::from_secs(60)));
+    }
 
     #[test]
     fn automatic_success_notification_uses_snapshots_manager_v2_policy() {

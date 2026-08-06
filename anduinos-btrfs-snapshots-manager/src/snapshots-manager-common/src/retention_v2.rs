@@ -49,6 +49,20 @@ impl Default for RetentionPolicy {
 }
 
 impl RetentionPolicy {
+    pub fn system_default() -> Self {
+        Self {
+            snapshot_interval_hours: 24,
+            ..Self::default()
+        }
+    }
+
+    pub fn home_default() -> Self {
+        Self {
+            snapshot_interval_hours: 2,
+            ..Self::default()
+        }
+    }
+
     pub fn validate(&self) -> Result<(), RetentionPolicyError> {
         if !(1..=24).contains(&self.snapshot_interval_hours) {
             return Err(RetentionPolicyError::InvalidSnapshotInterval);

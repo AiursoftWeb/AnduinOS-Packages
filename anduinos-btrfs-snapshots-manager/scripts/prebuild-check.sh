@@ -170,6 +170,12 @@ python3 "$ROOT/scripts/check-i18n.py"
 
 rg -q 'AutomaticScope::System' "$ROOT/src/btrfs-snapshots-manager-scheduler/src/main.rs"
 rg -q 'AutomaticScope::Home' "$ROOT/src/btrfs-snapshots-manager-scheduler/src/main.rs"
+grep -Fq 'snapshot_interval_hours = 24' "$ROOT/assets/automation.toml"
+grep -Fq 'snapshot_interval_hours = 2' "$ROOT/assets/automation.toml"
+grep -Fq 'create-personal-snapshot-override' \
+    "$ROOT/data/org.anduinos.BtrfsSnapshotsManager.policy"
+grep -Fq 'send_member="ListPersonalFiles"' \
+    "$ROOT/data/org.anduinos.BtrfsSnapshotsManager.conf"
 rg -q 'create-scheduled\) cmd_create_scheduled' "$ROOT/src/btrfs-snapshots-manager-cli"
 rg -q 'CreateScheduledDeployment' "$ROOT/src/btrfs-snapshots-manager-cli"
 rg -q 'CreateScheduledPersonalSnapshot' "$ROOT/src/btrfs-snapshots-manager-cli"

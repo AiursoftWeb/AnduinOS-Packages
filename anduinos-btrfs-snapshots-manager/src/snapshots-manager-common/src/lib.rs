@@ -64,6 +64,10 @@ pub const POLKIT_ACTION_RESTORE: &str = "org.anduinos.btrfs-snapshots-manager.re
 pub const POLKIT_ACTION_CONFIGURE: &str = "org.anduinos.btrfs-snapshots-manager.configure-system";
 pub const POLKIT_ACTION_PERSONAL_FILES: &str =
     "org.anduinos.btrfs-snapshots-manager.personal-files";
+pub const POLKIT_ACTION_CREATE_PERSONAL: &str =
+    "org.anduinos.btrfs-snapshots-manager.create-personal-snapshot";
+pub const POLKIT_ACTION_CREATE_PERSONAL_OVERRIDE: &str =
+    "org.anduinos.btrfs-snapshots-manager.create-personal-snapshot-override";
 
 /// Validate snapshot name for security and filesystem compatibility
 ///

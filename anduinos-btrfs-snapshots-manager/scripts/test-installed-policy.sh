@@ -17,6 +17,8 @@ actions=(
     org.anduinos.btrfs-snapshots-manager.restore-snapshot
     org.anduinos.btrfs-snapshots-manager.configure-system
     org.anduinos.btrfs-snapshots-manager.personal-files
+    org.anduinos.btrfs-snapshots-manager.create-personal-snapshot
+    org.anduinos.btrfs-snapshots-manager.create-personal-snapshot-override
 )
 
 for command in busctl getent jq pkaction pkcheck sudo; do
@@ -86,14 +88,9 @@ if id -nG "$caller" | tr ' ' '\n' | grep -qx sudo; then
         GetRecoveryEngineStatus >/dev/null
 fi
 
-if getent passwd nobody >/dev/null; then
-    if sudo -n -u nobody env HOME=/nonexistent \
-        busctl --system call "$SERVICE" "$OBJECT" "$INTERFACE" \
-        GetRecoveryEngineStatus >/dev/null 2>&1; then
-        echo "A non-administrator unexpectedly reached the Disk Snapshots Manager helper" >&2
-        exit 1
-    fi
-fi
+# Reading snapshot metadata is intentionally reachable by ordinary users;
+# personal file methods apply an active-session Polkit check and constrain all
+# paths to the D-Bus caller's canonical /home child inside the helper.
 
 introspection=$(busctl --system introspect "$SERVICE" "$OBJECT" "$INTERFACE")
 grep -q 'CreateScheduledDeployment' <<<"$introspection"
