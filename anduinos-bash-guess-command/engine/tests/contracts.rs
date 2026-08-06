@@ -116,7 +116,7 @@ fn personal_history_matches_across_sudo_wrappers() {
 }
 
 #[test]
-fn apt_install_uses_the_small_popularity_prior_without_foreground_io() {
+fn apt_install_uses_the_ranked_popularity_prior_without_foreground_io() {
     let world = apt_world(&[
         ("bash", true),
         ("bat", false),
@@ -128,6 +128,36 @@ fn apt_install_uses_the_small_popularity_prior_without_foreground_io() {
     let suggestion = query("sudo apt install b", 1_000, &world).unwrap();
     assert_eq!(suggestion.candidate.resulting_line, "sudo apt install btop");
     assert_eq!(suggestion.candidate.source, CandidateSource::Popularity);
+}
+
+#[test]
+fn apt_popularity_prior_has_at_least_three_thousand_unique_valid_packages() {
+    let mut packages = std::collections::HashSet::new();
+    for package in include_str!("../specs/popular-apt-packages.txt")
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty() && !line.starts_with('#'))
+    {
+        assert!(
+            package.starts_with(|character: char| {
+                character.is_ascii_lowercase() || character.is_ascii_digit()
+            }) && package.chars().all(|character| {
+                character.is_ascii_lowercase()
+                    || character.is_ascii_digit()
+                    || matches!(character, '+' | '.' | '-')
+            }),
+            "invalid Debian package name in popularity prior: {package}"
+        );
+        assert!(
+            packages.insert(package),
+            "duplicate package in popularity prior: {package}"
+        );
+    }
+    assert!(
+        packages.len() >= 3_000,
+        "popularity prior contains only {} packages",
+        packages.len()
+    );
 }
 
 #[test]

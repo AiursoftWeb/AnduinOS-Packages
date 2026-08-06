@@ -29,11 +29,12 @@ installed later become visible in a new Bash session.
 APT package names and installed state are also snapshotted once in the
 background with the distribution's own `apt-cache` and `dpkg-query` tools, then
 refreshed after a successful apt update, installation or removal. Package
-prediction uses a small checked-in list of deliberately installed popular
-tools, personal history and unique-prefix fallback. A just-failed command
-(exit 127) is direct installation intent when an identically named package
-exists. Every keystroke still performs only immutable in-memory lookup; normal
-startup and prediction never contact the network.
+prediction uses a checked-in prior of more than 3,500 popular packages ranked
+from Debian installation statistics, with deliberately installed tools given
+first priority, plus personal history and unique-prefix fallback. A just-failed
+command (exit 127) is direct installation intent when an identically named
+package exists. Every keystroke still performs only immutable in-memory lookup;
+normal startup and prediction never contact the network.
 
 A compact offline index supplies safe defaults for high-value workflows plus a
 generated corpus of more than 700 CLIs and 7,500 multi-level command nodes. It
