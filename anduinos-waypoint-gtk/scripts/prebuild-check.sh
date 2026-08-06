@@ -38,6 +38,12 @@ if rg -n 'path[[:space:]]*=[[:space:]]*"src/bin/' \
     exit 1
 fi
 test -f "$ROOT/data/90-anduinos-waypoint"
+test -f "$ROOT/assets/apt-snapshots.toml"
+grep -Fq 'snapshot_before = true' "$ROOT/assets/apt-snapshots.toml"
+grep -Fq 'snapshot_after = false' "$ROOT/assets/apt-snapshots.toml"
+rg -q 'get_apt_snapshot_policy' "$ROOT/src/waypoint-helper/src/main.rs"
+rg -q 'save_apt_snapshot_policy' "$ROOT/src/waypoint-helper/src/main.rs"
+rg -q 'create_package_changes_page' "$ROOT/src/waypoint/src/ui/preferences.rs"
 grep -Fq 'if [ -x /usr/libexec/anduinos-waypoint-apt-hook ]' \
     "$ROOT/data/90-anduinos-waypoint"
 test -f "$ROOT/scripts/postrm.sh"
@@ -102,6 +108,7 @@ for name in sys.argv[1:]:
 PY
 
 rg -q 'rm -f -- /etc/anduinos-waypoint/schedules.toml' "$ROOT/scripts/postrm.sh"
+rg -q 'rm -f -- /etc/anduinos-waypoint/apt-snapshots.toml' "$ROOT/scripts/postrm.sh"
 rg -q 'systemctl enable anduinos-waypoint-confirm.service' "$ROOT/scripts/postinst.sh"
 rg -q 'systemctl disable --now anduinos-waypoint-confirm.service' "$ROOT/scripts/prerm.sh"
 grep -Fq 'anduinos-waypoint-confirm.service" AutoEnable="false"' \

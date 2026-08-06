@@ -37,6 +37,12 @@ for method in ListBackupDestinations ExportDeployment ImportExternalBackup Delet
         exit 1
     fi
 done
+for method in GetAptSnapshotPolicy SaveAptSnapshotPolicy; do
+    if ! rg -a -q "<method name=\"$method\">" "$SCRIPT_DIR/obj/anduinos-waypoint-helper"; then
+        echo "Required APT policy D-Bus method is missing: $method" >&2
+        exit 1
+    fi
+done
 for method in CreatePersonalSnapshot CreateScheduledPersonalSnapshot ListPersonalFiles ExportPersonalFile ExportPersonalSnapshot ImportPersonalExternalBackup; do
     if ! rg -a -q "<method name=\"$method\">" "$SCRIPT_DIR/obj/anduinos-waypoint-helper"; then
         echo "Required Personal Files D-Bus method is missing: $method" >&2

@@ -99,6 +99,31 @@ impl PackageTransaction {
         self.validate()
     }
 
+    pub fn skip_pre(&mut self, now: DateTime<Utc>) -> Result<(), PackageTransactionError> {
+        if self.phase != PackageTransactionPhase::PreparingPre {
+            return Err(invalid(
+                "Only a preparing transaction can skip its pre snapshot",
+            ));
+        }
+        self.phase = PackageTransactionPhase::AwaitingPost;
+        self.updated_at = now;
+        self.validate()
+    }
+
+    pub fn complete_without_post(
+        &mut self,
+        now: DateTime<Utc>,
+    ) -> Result<(), PackageTransactionError> {
+        if self.phase != PackageTransactionPhase::AwaitingPost || self.pre_deployment_id.is_none() {
+            return Err(invalid(
+                "Only a pre-snapshot transaction can finish without post",
+            ));
+        }
+        self.phase = PackageTransactionPhase::Complete;
+        self.updated_at = now;
+        self.validate()
+    }
+
     pub fn record_post(
         &mut self,
         deployment_id: DeploymentId,
@@ -160,18 +185,14 @@ impl PackageTransaction {
                 }
             }
             PackageTransactionPhase::AwaitingPost => {
-                if self.pre_deployment_id.is_none()
-                    || self.post_deployment_id.is_some()
-                    || self.failure.is_some()
-                {
+                if self.post_deployment_id.is_some() || self.failure.is_some() {
                     return Err(invalid(
                         "An awaiting package transaction has invalid snapshot references",
                     ));
                 }
             }
             PackageTransactionPhase::Complete => {
-                if self.pre_deployment_id.is_none()
-                    || self.post_deployment_id.is_none()
+                if (self.pre_deployment_id.is_none() && self.post_deployment_id.is_none())
                     || self.failure.is_some()
                 {
                     return Err(invalid("A complete package transaction is incomplete"));
@@ -631,7 +652,7 @@ mod tests {
     }
 
     #[test]
-    fn transaction_requires_an_ordered_pre_and_post_pair() {
+    fn paired_transaction_requires_pre_before_post() {
         let mut transaction = PackageTransaction::new();
         assert!(
             transaction
@@ -646,6 +667,25 @@ mod tests {
             .unwrap();
         assert_eq!(transaction.phase, PackageTransactionPhase::Complete);
         transaction.validate().unwrap();
+    }
+
+    #[test]
+    fn transactions_support_pre_only_and_post_only() {
+        let mut pre_only = PackageTransaction::new();
+        pre_only
+            .record_pre(DeploymentId::new(), Utc::now())
+            .unwrap();
+        pre_only.complete_without_post(Utc::now()).unwrap();
+        assert!(pre_only.pre_deployment_id.is_some());
+        assert!(pre_only.post_deployment_id.is_none());
+
+        let mut post_only = PackageTransaction::new();
+        post_only.skip_pre(Utc::now()).unwrap();
+        post_only
+            .record_post(DeploymentId::new(), Utc::now())
+            .unwrap();
+        assert!(post_only.pre_deployment_id.is_none());
+        assert!(post_only.post_deployment_id.is_some());
     }
 
     #[test]

@@ -7,6 +7,11 @@ if [ ! -e /etc/anduinos-waypoint/schedules.toml ]; then
         /etc/anduinos-waypoint/schedules.toml
 fi
 
+if [ ! -e /etc/anduinos-waypoint/apt-snapshots.toml ]; then
+    install -m644 /usr/share/anduinos-waypoint/defaults/apt-snapshots.toml \
+        /etc/anduinos-waypoint/apt-snapshots.toml
+fi
+
 # GRUB cannot safely rewrite an environment block stored on Btrfs. Keep only
 # Waypoint's one-shot selector on the EFI System Partition, where GRUB can
 # clear it before entering the selected recovery entry.

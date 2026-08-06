@@ -639,6 +639,35 @@ impl WaypointHelperClient {
     }
 
     /// Save schedules TOML configuration file
+    pub fn get_apt_snapshot_policy(&self) -> Result<(bool, bool)> {
+        let proxy = zbus::blocking::Proxy::new(
+            &self.connection,
+            DBUS_SERVICE_NAME,
+            DBUS_OBJECT_PATH,
+            DBUS_INTERFACE_NAME,
+        )?;
+        proxy
+            .call("GetAptSnapshotPolicy", &())
+            .context("Failed to load APT snapshot policy")
+    }
+
+    pub fn save_apt_snapshot_policy(
+        &self,
+        snapshot_before: bool,
+        snapshot_after: bool,
+    ) -> Result<(bool, String)> {
+        let proxy = zbus::blocking::Proxy::new(
+            &self.connection,
+            DBUS_SERVICE_NAME,
+            DBUS_OBJECT_PATH,
+            DBUS_INTERFACE_NAME,
+        )?;
+        proxy
+            .call("SaveAptSnapshotPolicy", &(snapshot_before, snapshot_after))
+            .context("Failed to save APT snapshot policy")
+    }
+
+    /// Save schedules TOML configuration file
     ///
     /// Writes the schedules configuration in TOML format to the system config directory.
     /// This requires elevated privileges.

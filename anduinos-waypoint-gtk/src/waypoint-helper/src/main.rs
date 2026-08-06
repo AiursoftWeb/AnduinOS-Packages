@@ -1253,6 +1253,64 @@ impl WaypointHelper {
     }
 
     /// Save schedules TOML configuration file
+    async fn get_apt_snapshot_policy(&self) -> (bool, bool) {
+        let config = WaypointConfig::new();
+        match anduinos_recovery_engine::AptSnapshotPolicy::load_from_file(
+            &config.apt_snapshot_policy,
+        ) {
+            Ok(policy) => (policy.snapshot_before, policy.snapshot_after),
+            Err(error) => {
+                log::warn!("Could not load APT snapshot policy: {error}");
+                let policy = anduinos_recovery_engine::AptSnapshotPolicy::default();
+                (policy.snapshot_before, policy.snapshot_after)
+            }
+        }
+    }
+
+    async fn save_apt_snapshot_policy(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        snapshot_before: bool,
+        snapshot_after: bool,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_CONFIGURE).await {
+            audit::log_auth_failure(
+                uid.clone(),
+                pid,
+                POLKIT_ACTION_CONFIGURE,
+                &error.to_string(),
+            );
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let policy = anduinos_recovery_engine::AptSnapshotPolicy {
+            snapshot_before,
+            snapshot_after,
+        };
+        let path = WaypointConfig::new().apt_snapshot_policy;
+        match policy.save_to_file(&path) {
+            Ok(()) => {
+                audit::log_config_change(uid, pid, "apt-snapshots", true, None);
+                (true, "APT snapshot policy saved".into())
+            }
+            Err(error) => {
+                audit::log_config_change(
+                    uid,
+                    pid,
+                    "apt-snapshots",
+                    false,
+                    Some(&error.to_string()),
+                );
+                (
+                    false,
+                    format!("Failed to save APT snapshot policy: {error}"),
+                )
+            }
+        }
+    }
+
+    /// Save schedules TOML configuration file
     async fn save_schedules_config(
         &self,
         #[zbus(header)] hdr: zbus::message::Header<'_>,

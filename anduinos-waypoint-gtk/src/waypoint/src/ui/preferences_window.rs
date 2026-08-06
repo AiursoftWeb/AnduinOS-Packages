@@ -44,6 +44,9 @@ pub fn show_preferences_window(parent: &adw::ApplicationWindow) {
     let scope_page = create_scope_content();
     stack.add_named(&scope_page, Some("scope"));
 
+    let packages_page = create_packages_content();
+    stack.add_named(&packages_page, Some("packages"));
+
     let storage_page = create_storage_content();
     stack.add_named(&storage_page, Some("storage"));
 
@@ -64,7 +67,8 @@ pub fn show_preferences_window(parent: &adw::ApplicationWindow) {
             let page_name = match index {
                 0 => "scheduling",
                 1 => "scope",
-                2 => "storage",
+                2 => "packages",
+                3 => "storage",
                 _ => "scheduling",
             };
 
@@ -105,6 +109,7 @@ fn create_sidebar() -> ListBox {
     let items = [
         (tr("Scheduled Recovery"), "preferences-system-time-symbolic"),
         (tr("Recovery Scope"), "folder-symbolic"),
+        (tr("Package Changes"), "system-software-update-symbolic"),
         (tr("Storage"), "drive-harddisk-symbolic"),
     ];
 
@@ -121,6 +126,20 @@ fn create_sidebar() -> ListBox {
     }
 
     sidebar
+}
+
+fn create_packages_content() -> gtk::Box {
+    let container = gtk::Box::new(Orientation::Vertical, 0);
+    let scrolled = gtk::ScrolledWindow::new();
+    scrolled.set_vexpand(true);
+    scrolled.set_hexpand(true);
+    let clamp = adw::Clamp::new();
+    clamp.set_maximum_size(800);
+    let page = super::preferences::create_package_changes_page();
+    clamp.set_child(Some(&page));
+    scrolled.set_child(Some(&clamp));
+    container.append(&scrolled);
+    container
 }
 
 /// Create the fixed recovery-scope content page.

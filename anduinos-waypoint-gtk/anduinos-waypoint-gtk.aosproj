@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-waypoint-gtk</PackageName>
-    <PackageVersion>0.1.0-4+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.1.0-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Waypoint — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -77,6 +77,7 @@
     <IncludeScript Include="scripts/test-installed-policy.sh" Target="/usr/share/doc/anduinos-waypoint-gtk/test-installed-policy.sh" />
     <DpkgTrigger Include="update-initramfs" Type="activate-await" />
     <IncludeFile Include="assets/schedules.toml" Target="/usr/share/anduinos-waypoint/defaults/schedules.toml" />
+    <IncludeFile Include="assets/apt-snapshots.toml" Target="/usr/share/anduinos-waypoint/defaults/apt-snapshots.toml" />
     <IncludeFile Include="data/org.anduinos.Waypoint.policy" Target="/usr/share/polkit-1/actions/org.anduinos.Waypoint.policy" />
     <IncludeFile Include="data/50-org.anduinos.Waypoint-root.rules" Target="/usr/share/polkit-1/rules.d/50-org.anduinos.Waypoint-root.rules" />
     <IncludeFile Include="data/51-org.anduinos.Waypoint-desktop.rules" Target="/usr/share/polkit-1/rules.d/51-org.anduinos.Waypoint-desktop.rules" />

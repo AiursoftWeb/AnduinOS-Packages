@@ -57,6 +57,13 @@ unrelated disks. The helper is stopped explicitly during package replacement;
 matching its long executable name with `pkill -x` is not reliable because the
 Linux process name is truncated.
 
+APT package changes use an independent event policy in
+`/etc/anduinos-waypoint/apt-snapshots.toml`. The safe default creates one
+recovery point before DPKG changes packages and does not create a redundant
+post-change point. Both boundaries remain independently configurable from the
+Waypoint Preferences window; scheduled hourly, daily, weekly, and monthly
+recovery points are a separate mechanism.
+
 The imported path-based external-backup API is not shipped. Its replacement accepts
 only trusted deployment IDs, canonical backup UUIDs, and mounted destination
 filesystem UUIDs. The helper resolves `/dev/disk/by-uuid` itself, rejects system and

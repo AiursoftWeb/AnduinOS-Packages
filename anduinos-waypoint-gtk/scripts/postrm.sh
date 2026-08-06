@@ -5,6 +5,7 @@ if [ "${1:-}" = "purge" ]; then
     # conffile. Purge that one known configuration file, but never recursively
     # delete administrator files, runtime data, or the recovery-point store.
     rm -f -- /etc/anduinos-waypoint/schedules.toml
+    rm -f -- /etc/anduinos-waypoint/apt-snapshots.toml
     rmdir -- /etc/anduinos-waypoint 2>/dev/null || true
     rmdir -- /var/lib/anduinos-waypoint 2>/dev/null || true
 

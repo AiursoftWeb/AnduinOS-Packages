@@ -2,6 +2,7 @@ use std::fmt;
 
 use chrono::Utc;
 
+use crate::AptSnapshotPolicy;
 use crate::RECOVERY_STORE_ROOT;
 use crate::coordination::TransactionStartLock;
 use crate::layout;
@@ -141,14 +142,42 @@ impl<B: PackageHookBackend> PackageHookCoordinator<B> {
     }
 
     pub fn before_packages(&self) -> Result<PackageTransaction, PackageHookError> {
+        self.before_packages_with_policy(AptSnapshotPolicy {
+            snapshot_before: true,
+            snapshot_after: true,
+        })?
+        .ok_or_else(|| PackageHookError("APT snapshot policy disabled both recovery points".into()))
+    }
+
+    pub fn before_packages_with_policy(
+        &self,
+        policy: AptSnapshotPolicy,
+    ) -> Result<Option<PackageTransaction>, PackageHookError> {
+        if !policy.snapshot_before && !policy.snapshot_after {
+            return Ok(None);
+        }
         let mut transaction = self.backend.begin_transaction()?;
+        if !policy.snapshot_before {
+            transaction
+                .skip_pre(Utc::now())
+                .map_err(|error| PackageHookError(error.message))?;
+            self.backend.update_transaction(&transaction)?;
+            return Ok(Some(transaction));
+        }
         match self.backend.create_pre(&transaction.id.to_string()) {
             Ok(deployment) => {
                 transaction
                     .record_pre(deployment, Utc::now())
                     .map_err(|error| PackageHookError(error.message))?;
-                self.backend.update_transaction(&transaction)?;
-                Ok(transaction)
+                if policy.snapshot_after {
+                    self.backend.update_transaction(&transaction)?;
+                } else {
+                    transaction
+                        .complete_without_post(Utc::now())
+                        .map_err(|error| PackageHookError(error.message))?;
+                    self.backend.archive_transaction(&transaction)?;
+                }
+                Ok(Some(transaction))
             }
             Err(error) => {
                 self.interrupt_and_archive(&mut transaction, &error.to_string())?;
@@ -158,6 +187,35 @@ impl<B: PackageHookBackend> PackageHookCoordinator<B> {
     }
 
     pub fn after_packages(&self) -> Result<PackageTransaction, PackageHookError> {
+        self.after_packages_with_policy(AptSnapshotPolicy {
+            snapshot_before: true,
+            snapshot_after: true,
+        })?
+        .ok_or_else(|| PackageHookError("APT post snapshot is disabled".into()))
+    }
+
+    pub fn after_packages_with_policy(
+        &self,
+        policy: AptSnapshotPolicy,
+    ) -> Result<Option<PackageTransaction>, PackageHookError> {
+        if !policy.snapshot_after {
+            if let Some(mut transaction) = self.backend.pending_transaction()?
+                && transaction.phase == PackageTransactionPhase::AwaitingPost
+            {
+                if transaction.pre_deployment_id.is_some() {
+                    transaction
+                        .complete_without_post(Utc::now())
+                        .map_err(|error| PackageHookError(error.message))?;
+                    self.backend.archive_transaction(&transaction)?;
+                } else {
+                    self.interrupt_and_archive(
+                        &mut transaction,
+                        "APT post snapshot was disabled after the transaction began",
+                    )?;
+                }
+            }
+            return Ok(None);
+        }
         let mut transaction = self
             .backend
             .pending_transaction()?
@@ -180,7 +238,7 @@ impl<B: PackageHookBackend> PackageHookCoordinator<B> {
                     .record_post(deployment, Utc::now())
                     .map_err(|error| PackageHookError(error.message))?;
                 self.backend.archive_transaction(&transaction)?;
-                Ok(transaction)
+                Ok(Some(transaction))
             }
             Err(error) => {
                 self.interrupt_and_archive(&mut transaction, &error.to_string())?;
@@ -286,5 +344,65 @@ mod tests {
             backend.history.lock().unwrap()[0].phase,
             PackageTransactionPhase::Interrupted
         );
+    }
+
+    #[test]
+    fn default_policy_creates_only_pre_and_archives_immediately() {
+        let backend = FakeBackend::default();
+        let coordinator = PackageHookCoordinator::new(backend.clone());
+        let transaction = coordinator
+            .before_packages_with_policy(AptSnapshotPolicy::default())
+            .unwrap()
+            .unwrap();
+        assert_eq!(transaction.phase, PackageTransactionPhase::Complete);
+        assert!(transaction.pre_deployment_id.is_some());
+        assert!(transaction.post_deployment_id.is_none());
+        assert!(backend.pending.lock().unwrap().is_none());
+    }
+
+    #[test]
+    fn post_only_policy_does_not_require_a_pre_snapshot() {
+        let backend = FakeBackend::default();
+        let coordinator = PackageHookCoordinator::new(backend.clone());
+        let policy = AptSnapshotPolicy {
+            snapshot_before: false,
+            snapshot_after: true,
+        };
+        let pre = coordinator
+            .before_packages_with_policy(policy)
+            .unwrap()
+            .unwrap();
+        assert!(pre.pre_deployment_id.is_none());
+        let post = coordinator
+            .after_packages_with_policy(policy)
+            .unwrap()
+            .unwrap();
+        assert!(post.pre_deployment_id.is_none());
+        assert!(post.post_deployment_id.is_some());
+        assert_eq!(post.phase, PackageTransactionPhase::Complete);
+    }
+
+    #[test]
+    fn disabling_both_is_a_no_op() {
+        let backend = FakeBackend::default();
+        let coordinator = PackageHookCoordinator::new(backend.clone());
+        let policy = AptSnapshotPolicy {
+            snapshot_before: false,
+            snapshot_after: false,
+        };
+        assert!(
+            coordinator
+                .before_packages_with_policy(policy)
+                .unwrap()
+                .is_none()
+        );
+        assert!(
+            coordinator
+                .after_packages_with_policy(policy)
+                .unwrap()
+                .is_none()
+        );
+        assert!(backend.pending.lock().unwrap().is_none());
+        assert!(backend.history.lock().unwrap().is_empty());
     }
 }

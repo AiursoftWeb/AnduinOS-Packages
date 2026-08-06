@@ -6,6 +6,7 @@
 //! machine. The privileged helper must validate platform policy before it
 //! asks this crate to schedule or execute a recovery.
 
+pub mod apt_policy;
 pub mod boot;
 pub mod browse_lock;
 pub mod confirmation;
@@ -25,6 +26,8 @@ pub mod secure_boot;
 pub mod space;
 pub mod store;
 pub mod transaction;
+
+pub use apt_policy::AptSnapshotPolicy;
 
 pub const DEPLOYMENT_SCHEMA_VERSION: u32 = 1;
 pub const PERSONAL_SNAPSHOT_SCHEMA_VERSION: u32 = 1;
