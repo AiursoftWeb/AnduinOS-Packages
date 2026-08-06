@@ -17,6 +17,18 @@ POSTINST = PROJECT / "scripts/postinst.sh"
 POSTRM = PROJECT / "scripts/postrm.sh"
 
 
+def write_fake_command(directory, name, body):
+    command = directory / name
+    command.write_text(f"#!/bin/sh\n{body}\n", encoding="utf-8")
+    command.chmod(command.stat().st_mode | stat.S_IXUSR)
+    return command
+
+
+def install_fake_chroot_detectors(directory, systemd_result=1, ischroot_result=1):
+    write_fake_command(directory, "systemd-detect-virt", f"exit {systemd_result}")
+    write_fake_command(directory, "ischroot", f"exit {ischroot_result}")
+
+
 class KernelParametersPackageContractTests(unittest.TestCase):
     def setUp(self):
         self.project_text = PROJECT_FILE.read_text(encoding="utf-8")
@@ -25,7 +37,7 @@ class KernelParametersPackageContractTests(unittest.TestCase):
     def test_package_targets_only_resolute_as_architecture_all(self):
         self.assertEqual(
             self.project.findtext(".//PackageVersion"),
-            "2.0.0-2+$(SuiteShortName)",
+            "2.0.0-3+$(SuiteShortName)",
         )
         self.assertEqual(self.project.findtext(".//TargetSuites"), "resolute-addon")
         self.assertEqual(self.project.findtext(".//TargetArchitectures"), "all")
@@ -114,12 +126,12 @@ class KernelParametersPackageContractTests(unittest.TestCase):
             fake_bin = Path(temp_dir) / "bin"
             fake_bin.mkdir()
             log = fake_bin / "calls.log"
-            update_grub = fake_bin / "update-grub"
-            update_grub.write_text(
-                '#!/bin/sh\nprintf "%s\\n" update-grub >> "$UPDATE_GRUB_LOG"\n',
-                encoding="utf-8",
+            write_fake_command(
+                fake_bin,
+                "update-grub",
+                'printf "%s\\n" update-grub >> "$UPDATE_GRUB_LOG"',
             )
-            update_grub.chmod(update_grub.stat().st_mode | stat.S_IXUSR)
+            install_fake_chroot_detectors(fake_bin)
             env = {
                 **os.environ,
                 "DPKG_ROOT": str(test_root),
@@ -183,9 +195,8 @@ class KernelParametersPackageContractTests(unittest.TestCase):
             test_root = Path(temp_dir) / "root"
             fake_bin = Path(temp_dir) / "bin"
             fake_bin.mkdir()
-            update_grub = fake_bin / "update-grub"
-            update_grub.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
-            update_grub.chmod(update_grub.stat().st_mode | stat.S_IXUSR)
+            write_fake_command(fake_bin, "update-grub", "exit 0")
+            install_fake_chroot_detectors(fake_bin)
             env = {
                 **os.environ,
                 "DPKG_ROOT": str(test_root),
@@ -205,9 +216,8 @@ class KernelParametersPackageContractTests(unittest.TestCase):
             test_root = Path(temp_dir) / "root"
             fake_bin = Path(temp_dir) / "bin"
             fake_bin.mkdir()
-            update_grub = fake_bin / "update-grub"
-            update_grub.write_text("#!/bin/sh\nexit 23\n", encoding="utf-8")
-            update_grub.chmod(update_grub.stat().st_mode | stat.S_IXUSR)
+            write_fake_command(fake_bin, "update-grub", "exit 23")
+            install_fake_chroot_detectors(fake_bin)
             env = {
                 **os.environ,
                 "DPKG_ROOT": str(test_root),
@@ -219,11 +229,68 @@ class KernelParametersPackageContractTests(unittest.TestCase):
                     result = subprocess.run(["/bin/sh", script, action], env=env)
                     self.assertEqual(result.returncode, 23)
 
+    def test_chroot_defers_update_grub_and_reboot_marker(self):
+        detector_cases = (
+            ("systemd-detect-virt", 0, 1),
+            ("ischroot fallback", 1, 0),
+        )
+        script_cases = ((POSTINST, "configure"), (POSTRM, "remove"))
+
+        for detector_name, systemd_result, ischroot_result in detector_cases:
+            for script, action in script_cases:
+                with self.subTest(
+                    detector=detector_name, script=script.name, action=action
+                ), tempfile.TemporaryDirectory() as temp_dir:
+                    test_root = Path(temp_dir) / "root"
+                    legacy_policy = (
+                        test_root
+                        / "etc/default/grub.d/50-anduinos-desktop.cfg"
+                    )
+                    legacy_policy.parent.mkdir(parents=True)
+                    legacy_policy.write_text("legacy policy\n", encoding="utf-8")
+
+                    fake_bin = Path(temp_dir) / "bin"
+                    fake_bin.mkdir()
+                    log = fake_bin / "calls.log"
+                    write_fake_command(
+                        fake_bin,
+                        "update-grub",
+                        'printf "%s\\n" update-grub >> "$UPDATE_GRUB_LOG"',
+                    )
+                    install_fake_chroot_detectors(
+                        fake_bin,
+                        systemd_result=systemd_result,
+                        ischroot_result=ischroot_result,
+                    )
+                    env = {
+                        **os.environ,
+                        "DPKG_ROOT": str(test_root),
+                        "PATH": f"{fake_bin}:/usr/bin:/bin",
+                        "UPDATE_GRUB_LOG": str(log),
+                    }
+
+                    result = subprocess.run(
+                        ["/bin/sh", script, action],
+                        env=env,
+                        check=True,
+                        capture_output=True,
+                        text=True,
+                    )
+
+                    self.assertIn("chroot detected", result.stdout)
+                    self.assertFalse(log.exists())
+                    self.assertFalse((test_root / "run/reboot-required").exists())
+                    self.assertFalse(
+                        (test_root / "run/reboot-required.pkgs").exists()
+                    )
+                    self.assertFalse(legacy_policy.exists())
+
     def test_missing_update_grub_is_a_safe_no_op(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             test_root = Path(temp_dir) / "root"
             empty_bin = Path(temp_dir) / "bin"
             empty_bin.mkdir()
+            install_fake_chroot_detectors(empty_bin)
             env = {
                 **os.environ,
                 "DPKG_ROOT": str(test_root),
