@@ -136,7 +136,7 @@ impl SnapshotsManagerApplication {
             .version(env!("CARGO_PKG_VERSION"))
             .website("https://www.anduinos.com")
             .issue_url("https://github.com/AiursoftWeb/AnduinOS-Packages/issues")
-            .license_type(gtk::License::MitX11)
+            .license_type(gtk::License::Gpl30)
             .transient_for(&self.ensure_main_window())
             .modal(true)
             .build();

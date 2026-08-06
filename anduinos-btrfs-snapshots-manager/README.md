@@ -71,7 +71,10 @@ The release baseline is resolute-addon with GTK 4.10+, libadwaita 1.4+, Rust
 - `src/snapshots-manager-common/`: shared automation, retention, layout, and metadata
   types.
 
-The project is distributed under the MIT license in [LICENSE](LICENSE).
+Disk Snapshots Manager as a combined AnduinOS work is distributed under
+[GPL-3.0-or-later](../LICENSE). Portions derived from the original Waypoint
+project retain their original copyright and MIT license notice in
+[LICENSE.upstream-MIT](LICENSE.upstream-MIT).
 
 ## Development and qualification
 

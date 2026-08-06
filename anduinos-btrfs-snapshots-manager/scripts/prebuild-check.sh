@@ -4,13 +4,21 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
 test -f "$ROOT/src/Cargo.lock"
-test -f "$ROOT/LICENSE"
+test -f "$ROOT/../LICENSE"
+test -f "$ROOT/LICENSE.upstream-MIT"
 test ! -e "$ROOT/upstream"
-grep -Fq 'MIT License' "$ROOT/LICENSE"
+grep -Fq 'GNU GENERAL PUBLIC LICENSE' "$ROOT/../LICENSE"
+grep -Fq 'MIT License' "$ROOT/LICENSE.upstream-MIT"
+grep -Fq '<LicenseType>GPL-3.0-or-later</LicenseType>' \
+    "$ROOT/anduinos-btrfs-snapshots-manager.aosproj"
+grep -Fq 'license = "GPL-3.0-or-later"' "$ROOT/src/Cargo.toml"
+grep -Fq '<project_license>GPL-3.0-or-later</project_license>' \
+    "$ROOT/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml"
 retired_name='way''point'
 if rg -ni "$retired_name" "$ROOT" \
-    --glob '!LICENSE' --glob '!target/**' --glob '!obj/**' --glob '!bin/**'; then
-    echo "The retired product name remains outside the required MIT license" >&2
+    --glob '!LICENSE.upstream-MIT' --glob '!README.md' \
+    --glob '!target/**' --glob '!obj/**' --glob '!bin/**'; then
+    echo "The retired product name remains outside the required upstream license attribution" >&2
     exit 1
 fi
 test -f "$ROOT/data/org.anduinos.BtrfsSnapshotsManager.svg"

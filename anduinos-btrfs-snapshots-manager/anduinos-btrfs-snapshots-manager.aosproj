@@ -1,13 +1,13 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-btrfs-snapshots-manager</PackageName>
-    <PackageVersion>0.1.0-8+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.1.0-9+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Disk Snapshots Manager — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
-    <LicenseType>MIT</LicenseType>
+    <LicenseType>GPL-3.0-or-later</LicenseType>
     <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
     <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
     <TargetDistro>anduinos</TargetDistro>
@@ -89,7 +89,8 @@
     <IncludeFile Include="data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop" Target="/etc/xdg/autostart/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop" />
     <IncludeFile Include="data/anduinos-btrfs-snapshots-manager.tmpfiles" Target="/usr/lib/tmpfiles.d/anduinos-btrfs-snapshots-manager.conf" />
     <IncludeFile Include="data/90-anduinos-btrfs-snapshots-manager" Target="/etc/apt/apt.conf.d/90-anduinos-btrfs-snapshots-manager" />
-    <IncludeFile Include="LICENSE" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/copyright" />
+    <IncludeFile Include="../LICENSE" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/copyright" />
+    <IncludeFile Include="LICENSE.upstream-MIT" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/LICENSE.upstream-MIT" />
     <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/README.md" />
     <IncludeFile Include="docs/VM-QUALIFICATION.md" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/VM-QUALIFICATION.md" />
     <IncludeFile Include="docs/RECOVERY-SCOPE.md" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/RECOVERY-SCOPE.md" />
