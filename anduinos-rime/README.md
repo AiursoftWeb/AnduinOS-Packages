@@ -1,8 +1,11 @@
 # AnduinOS Rime
 
 This package provides the Rime Ice schema, dictionaries and Lua extensions
-used for Chinese input on AnduinOS. It depends on `ibus-rime`, but deliberately
-does not depend on `language-selector-common`.
+used for Chinese input on AnduinOS. It depends on `ibus-rime` and
+`librime-plugin-lua`, but deliberately does not depend on
+`language-selector-common`. The Lua plugin is required: the schema deliberately
+generates pinyin comments for its correction filter, which removes them from
+ordinary candidates and retains only useful pronunciation or spelling hints.
 
 This directory is the canonical source of AnduinOS Rime. Upstream Rime Ice
 updates are reviewed and imported directly into `assets/`; the package must not

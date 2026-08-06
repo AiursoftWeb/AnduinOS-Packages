@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-rime</PackageName>
-    <PackageVersion>2.0.1-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default Chinese input method (rime-ice configuration for ibus-rime)</PackageDescription>
     <Section>utils</Section>
@@ -18,6 +18,11 @@
 
   <ItemGroup>
     <Dependency Include="ibus-rime" />
+    <!-- The schema uses Lua processors, translators and filters. In
+         particular, corrector.lua removes the spelling_hints comments from
+         ordinary candidates. Without this plugin every candidate leaks its
+         internal pinyin annotation into the IBus candidate list. -->
+    <Dependency Include="librime-plugin-lua" />
   </ItemGroup>
 
   <ItemGroup>

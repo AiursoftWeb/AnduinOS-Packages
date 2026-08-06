@@ -7,6 +7,17 @@ PROJECT = Path(__file__).resolve().parent.parent
 
 
 class RimePackagePolicyTests(unittest.TestCase):
+    def test_package_depends_on_the_lua_runtime_used_by_the_schema(self):
+        project = (PROJECT / "anduinos-rime.aosproj").read_text(encoding="utf-8")
+        self.assertIn('<Dependency Include="ibus-rime" />', project)
+        self.assertIn('<Dependency Include="librime-plugin-lua" />', project)
+
+        schema = (PROJECT / "assets/rime_ice.schema.yaml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("lua_filter@corrector", schema)
+        self.assertIn("spelling_hints:", schema)
+
     def test_package_is_the_canonical_self_contained_source(self):
         project = (PROJECT / "anduinos-rime.aosproj").read_text(encoding="utf-8")
         self.assertIn('IncludeFolder Include="assets/"', project)
