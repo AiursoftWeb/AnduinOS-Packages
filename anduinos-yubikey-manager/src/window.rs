@@ -13,7 +13,6 @@ use adw::subclass::prelude::*;
 use gtk::{gdk, gio, glib};
 use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
-use std::ffi::OsStr;
 use std::rc::Rc;
 use std::time::Duration;
 use zeroize::Zeroizing;
@@ -1059,29 +1058,40 @@ fn rebuild_git(
             .icon_name("software-update-available-symbolic")
             .title(i18n("Git is not installed"))
             .description(i18n(
-                "Git is required for commit signing. Install it from Software, then return here.",
+                "Git is required for commit signing. Install it to continue.",
             ))
             .margin_top(72)
             .margin_bottom(48)
             .build();
         let install = gtk::Button::builder()
-            .label(i18n("Open Software"))
+            .label(i18n("Install Git"))
             .css_classes(["suggested-action", "pill"])
             .halign(gtk::Align::Center)
             .build();
         let weak = window.downgrade();
-        install.connect_clicked(move |_| {
-            let argv = [
-                OsStr::new("gnome-software"),
-                OsStr::new("--details-pkg=git"),
-                OsStr::new("--interaction=full"),
-            ];
-            let launcher = gio::SubprocessLauncher::new(gio::SubprocessFlags::NONE);
-            if let Err(error) = launcher.spawn(&argv) {
-                if let Some(window) = weak.upgrade() {
-                    show_error(&window, &error.to_string());
+        install.connect_clicked(move |button| {
+            button.set_sensitive(false);
+            button.set_label(&i18n("Installing Git…"));
+            let button = button.clone();
+            let weak = weak.clone();
+            glib::spawn_future_local(async move {
+                let result = gio::spawn_blocking(backend::install_git)
+                    .await
+                    .unwrap_or_else(|_| {
+                        Err(i18n("The Git installation task stopped unexpectedly."))
+                    });
+                let Some(window) = weak.upgrade() else {
+                    return;
+                };
+                match result {
+                    Ok(()) => window.refresh(),
+                    Err(error) => {
+                        button.set_label(&i18n("Install Git"));
+                        button.set_sensitive(true);
+                        show_error(&button, &error);
+                    }
                 }
-            }
+            });
         });
         empty_state.set_child(Some(&install));
         group.add(&empty_state);

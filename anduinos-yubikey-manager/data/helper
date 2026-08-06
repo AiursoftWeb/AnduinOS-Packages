@@ -302,6 +302,27 @@ def set_passwordless_sudo(username, enabled, metadata):
         raise
 
 
+def install_git():
+    """Install the one package required by the Git-signing page.
+
+    Keep the package name and apt-get arguments inside this privileged helper so
+    an unprivileged caller cannot turn the polkit action into a general package
+    installation primitive.
+    """
+    environment = os.environ.copy()
+    environment["DEBIAN_FRONTEND"] = "noninteractive"
+    result = subprocess.run(
+        ["/usr/bin/apt-get", "install", "-y", "git"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        check=False,
+        env=environment,
+    )
+    if result.returncode:
+        fail(result.stdout.strip() or "apt-get could not install Git.")
+
+
 def main():
     if os.geteuid() != 0:
         fail("This helper must run as root.")
@@ -310,6 +331,9 @@ def main():
         with open(CONFIG_DIR + "/.lock", "w", encoding="utf-8") as lock:
             fcntl.flock(lock, fcntl.LOCK_EX)
             repair_integrations(read_metadata())
+        return
+    if len(sys.argv) == 2 and sys.argv[1] == "install-git":
+        install_git()
         return
     if len(sys.argv) == 4 and sys.argv[1] == "passwordless-sudo":
         username, mode = sys.argv[2:4]
@@ -322,7 +346,7 @@ def main():
         return
     if len(sys.argv) not in (5, 6):
         fail(
-            "Usage: helper repair | "
+            "Usage: helper repair | helper install-git | "
             "helper enroll PURPOSE USER SERIAL CREDENTIAL | "
             "helper remove PURPOSE USER SERIAL"
         )

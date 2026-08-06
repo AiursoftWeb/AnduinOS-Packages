@@ -260,6 +260,10 @@ pub fn set_passwordless_sudo(username: &str, enabled: bool) -> Result<(), String
     ])
 }
 
+pub fn install_git() -> Result<(), String> {
+    run_helper(&["install-git"])
+}
+
 fn validate_credential(value: &str) -> Result<(), String> {
     if value.contains('\n')
         || value.contains(':')

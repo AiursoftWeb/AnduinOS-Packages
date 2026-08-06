@@ -3,6 +3,7 @@ import importlib.util
 from pathlib import Path
 import tempfile
 import unittest
+from unittest import mock
 
 
 def load_helper():
@@ -123,6 +124,27 @@ class HelperTests(unittest.TestCase):
             "# Managed by anduinos-yubikey-manager (sudo)",
             sudo_pam.read_text(),
         )
+
+    @mock.patch("subprocess.run")
+    def test_install_git_uses_a_fixed_noninteractive_apt_command(self, run):
+        run.return_value = mock.Mock(returncode=0, stdout="")
+
+        self.helper.install_git()
+
+        args, kwargs = run.call_args
+        self.assertEqual(args[0], ["/usr/bin/apt-get", "install", "-y", "git"])
+        self.assertEqual(kwargs["env"]["DEBIAN_FRONTEND"], "noninteractive")
+        self.assertEqual(kwargs["stderr"], self.helper.subprocess.STDOUT)
+
+    @mock.patch("subprocess.run")
+    def test_install_git_reports_apt_output_on_failure(self, run):
+        run.return_value = mock.Mock(returncode=100, stdout="apt-get details")
+        self.helper.fail = mock.Mock(side_effect=RuntimeError)
+
+        with self.assertRaises(RuntimeError):
+            self.helper.install_git()
+
+        self.helper.fail.assert_called_once_with("apt-get details")
 
 
 if __name__ == "__main__":
