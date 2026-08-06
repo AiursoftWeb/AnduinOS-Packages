@@ -4,9 +4,10 @@ mod i18n;
 mod signal_listener;
 mod ui;
 
+use adw::prelude::*;
 use gio::prelude::*;
-use gtk::prelude::*;
-use gtk::{Application, glib};
+use gtk::glib;
+use libadwaita as adw;
 
 const APP_ID: &str = "org.anduinos.Waypoint";
 
@@ -19,8 +20,9 @@ fn main() -> glib::ExitCode {
     i18n::init();
     log::info!("Starting AnduinOS Waypoint v{}", env!("CARGO_PKG_VERSION"));
 
-    // Initialize GTK
-    let app = Application::builder().application_id(APP_ID).build();
+    // AdwApplication owns GTK initialization, the Adwaita stylesheet, and the
+    // application style manager for every window in this process.
+    let app = adw::Application::builder().application_id(APP_ID).build();
 
     app.connect_startup(|app| {
         load_css();
@@ -37,7 +39,7 @@ fn main() -> glib::ExitCode {
     app.run()
 }
 
-fn install_file_history_action(app: &Application) {
+fn install_file_history_action(app: &adw::Application) {
     let parameter_type = glib::VariantTy::new("(ss)").expect("valid file-history action type");
     let action = gio::SimpleAction::new("file-history", Some(parameter_type));
     let app_weak = app.downgrade();
@@ -78,7 +80,7 @@ fn load_css() {
     );
 }
 
-fn build_ui(app: &Application) {
+fn build_ui(app: &adw::Application) {
     // Keep the list synchronized with recovery points created by the scheduler.
     let snapshot_created_rx = signal_listener::start_signal_listener();
 

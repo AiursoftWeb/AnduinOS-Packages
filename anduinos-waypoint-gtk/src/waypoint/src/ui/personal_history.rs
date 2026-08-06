@@ -191,7 +191,7 @@ struct TargetVersion {
 /// Open the focused File History surface used by the Nautilus extension. It is
 /// an application-owned top-level window, never a widget injected into
 /// Nautilus, and all historical reads still go through WaypointHelperClient.
-pub fn show_target(app: &gtk::Application, target: HistoryTarget) {
+pub fn show_target(app: &adw::Application, target: HistoryTarget) {
     let window = adw::Window::new();
     window.set_application(Some(app));
     window.set_title(Some(&match target.kind {
