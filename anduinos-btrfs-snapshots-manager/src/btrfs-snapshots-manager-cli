@@ -11,17 +11,17 @@ Disk Snapshots Manager CLI
 
 Usage: anduinos-btrfs-snapshots-manager-cli <command> [arguments]
 
-Recovery points:
+System snapshots:
   status [--json]                      Show layout and restore transaction state
   create [--json] <title> [description]
-                                        Create a System recovery point
-  list [--json]                        List trusted local recovery points
-  show <deployment-uuid> [--json]      Show one local recovery point
-  verify <deployment-uuid> [--json]    Verify local recovery-point integrity
+                                        Create a System snapshot
+  list [--json]                        List trusted local system snapshots
+  show <deployment-uuid> [--json]      Show one local system snapshot
+  verify <deployment-uuid> [--json]    Verify local system snapshot integrity
   preview <deployment-uuid> [--json]   Preview a system restore
   restore <deployment-uuid>            Prepare one-shot system restore
   cancel-restore                       Cancel a restore before reboot
-  delete <deployment-uuid>             Delete an unprotected recovery point
+  delete <deployment-uuid>             Delete an unprotected system snapshot
   apply-retention                      Apply schedule-owned retention
 
 Personal Files history:
@@ -30,7 +30,7 @@ Personal Files history:
   personal-list [--json]                List local Personal Files history
   personal-files <uuid> [relative-path] [--json]
                                         Browse your own historical home
-  personal-delete <uuid>                Delete an unprotected history point
+  personal-delete <uuid>                Delete an unprotected snapshot
 
 Mutating and full-verification operations require Polkit authentication.
 EOF
@@ -129,7 +129,7 @@ cmd_create() {
     if [[ "$json_mode" == "true" ]]; then
         jq . <<<"$payload"
     else
-        jq -r '"Created recovery point \(.id): \(.title)"' <<<"$payload"
+        jq -r '"Created system snapshot \(.id): \(.title)"' <<<"$payload"
     fi
 }
 
@@ -179,7 +179,7 @@ cmd_personal_create() {
     }
     local payload
     payload=$(pair_payload "$(call_raw CreatePersonalSnapshot ssb "$title" "$description" false)")
-    print_json_or_summary "$payload" "$json_mode" '"Created Personal Files history point \(.id): \(.title)"'
+    print_json_or_summary "$payload" "$json_mode" '"Created Home snapshot \(.id): \(.title)"'
 }
 
 cmd_personal_list() {
@@ -192,7 +192,7 @@ cmd_personal_list() {
     else
         jq -r '
             if ((.personal_snapshots // []) | length) == 0 then
-              "No Personal Files history points"
+              "No Home snapshots"
             else
               .personal_snapshots[] |
               "\(.id)  \(.created_at)  [\(.kind)/\(.state)]  \(.title)"
@@ -224,9 +224,9 @@ cmd_personal_files() {
 cmd_personal_delete() {
     local id="${1:-}"
     validate_uuid "$id"
-    confirm "Delete Personal Files history point $id?" || exit 0
+    confirm "Delete Home snapshot $id?" || exit 0
     pair_payload "$(call_raw DeletePersonalSnapshot s "$id")" >/dev/null
-    echo "Personal Files history point deleted"
+    echo "Home snapshot deleted"
 }
 
 recovery_status() {
@@ -245,7 +245,7 @@ cmd_status() {
             "Available:       \(.available)\n" +
             "Layout:          \(.layout.support // "unavailable")\n" +
             "Root source:     \(.layout.root_source // "unknown")\n" +
-            "Recovery points: \(.deployment_count // 0)\n" +
+            "System snapshots: \(.deployment_count // 0)\n" +
             (if .pending == null then
                "Pending restore: none"
              else
@@ -271,7 +271,7 @@ cmd_list() {
     else
         jq -r '
             if (.deployments | length) == 0 then
-              "No local recovery points"
+              "No local system snapshots"
             else
               .deployments[] |
               "\(.id)  \(.created_at)  [\(.kind)/\(.state)]  \(.title)"
@@ -287,7 +287,7 @@ cmd_show() {
     [[ "${2:-}" == "--json" ]] && json_mode=true
     local record
     record=$(recovery_status | jq -ec --arg id "$id" '.deployments[] | select(.id == $id)') || {
-        echo "Error: recovery point not found" >&2
+        echo "Error: system snapshot not found" >&2
         exit 1
     }
     print_json_or_summary "$record" "$json_mode" '
@@ -313,7 +313,7 @@ cmd_verify() {
     else
         jq -r '
             if .is_valid then
-              "Recovery point integrity verified" +
+              "System snapshot integrity verified" +
               (if (.warnings | length) > 0 then
                  "\nWarnings:\n" + (.warnings | map("  - " + .) | join("\n"))
                else "" end)
@@ -333,7 +333,7 @@ cmd_preview() {
     local verification status preview
     verification=$(single_string "$(call_raw VerifySnapshot s "$id")")
     jq -e '.is_valid == true' <<<"$verification" >/dev/null || {
-        jq -r '"Error: recovery point is not usable: " + (.errors | join("; "))' \
+        jq -r '"Error: system snapshot is not usable: " + (.errors | join("; "))' \
             <<<"$verification" >&2
         exit 1
     }
@@ -350,11 +350,11 @@ cmd_preview() {
           restart_required: true
         }
     ' <<<"$status") || {
-        echo "Error: recovery point not found" >&2
+        echo "Error: system snapshot not found" >&2
         exit 1
     }
     print_json_or_summary "$preview" "$json_mode" '
-        "Recovery point: \(.recovery_point)\n" +
+        "System snapshot: \(.recovery_point)\n" +
         "Created: \(.created_at)\n" +
         "Target kernel: \(.target_kernel)\n" +
         "System files and packages return to this point: true\n" +
@@ -380,9 +380,9 @@ cmd_cancel_restore() {
 cmd_delete() {
     local id="${1:-}"
     validate_uuid "$id"
-    confirm "Delete local recovery point $id?" || exit 0
+    confirm "Delete local system snapshot $id?" || exit 0
     pair_payload "$(call_raw DeleteDeployment s "$id")" >/dev/null
-    echo "Recovery point deleted"
+    echo "System snapshot deleted"
 }
 
 cmd_apply_retention() {

@@ -307,14 +307,6 @@ msgstr "文件夹历史"
 msgid "Folder · {0}"
 msgstr "文件夹 · {0}"
 
-#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
-msgid "History point {0} · Folder"
-msgstr "历史点 {0} · 文件夹"
-
-#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
-msgid "History point {0} · {1} bytes · modified {2}"
-msgstr "历史点 {0} · {1} 字节 · 修改于 {2}"
-
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Home snapshot"
 msgstr "Home snapshot"
@@ -695,6 +687,14 @@ msgstr "Snapshot Check Complete"
 msgid "Snapshot Details"
 msgstr "快照详情"
 
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · Folder"
+msgstr "快照 {0} · 文件夹"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · {1} bytes · modified {2}"
+msgstr "快照 {0} · {1} 字节 · 修改于 {2}"
+
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Snapshots are not available on this computer"
 msgstr "此计算机无法使用快照"
@@ -704,8 +704,8 @@ msgid "Snapshots could not be loaded"
 msgstr "无法加载快照"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
-msgid "Some history points could not be loaded"
-msgstr "部分历史点无法加载"
+msgid "Some snapshots could not be loaded"
+msgstr "部分快照无法加载"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "System files and packages"
@@ -772,8 +772,8 @@ msgid "This folder is empty"
 msgstr "此文件夹为空"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
-msgid "This item was not present in the available Personal Files history points."
-msgstr "可用的个人文件历史点中没有此项目。"
+msgid "This item was not present in the available Home snapshots."
+msgstr "可用的用户目录快照中没有此项目。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "This snapshot is available for recovery."

@@ -102,7 +102,7 @@ struct ScheduleRetentionSummary {
 impl ScheduleRetentionSummary {
     fn message(self) -> String {
         format!(
-            "Cleaned up {} automatic system recovery point(s) and {} Personal Files history point(s); retained {} system and {} personal point(s) for safety",
+            "Cleaned up {} automatic system snapshot(s) and {} Home snapshot(s); retained {} system and {} Home snapshot(s) for safety",
             self.system_deleted,
             self.personal_deleted,
             self.system_retained,
@@ -247,7 +247,7 @@ impl SnapshotsManagerHelper {
         created_by: &str,
     ) -> zbus::Result<()>;
 
-    /// Signal emitted when an independent Personal Files history point is created.
+    /// Signal emitted when an independent Home snapshot is created.
     #[zbus(signal)]
     async fn personal_snapshot_created(
         ctxt: &zbus::SignalContext<'_>,
@@ -351,7 +351,7 @@ impl SnapshotsManagerHelper {
         }
     }
 
-    /// Create an immutable AnduinOS system recovery point.
+    /// Create an immutable AnduinOS system snapshot.
     async fn create_deployment(
         &self,
         #[zbus(header)] hdr: zbus::message::Header<'_>,
@@ -374,7 +374,7 @@ impl SnapshotsManagerHelper {
             return (
                 false,
                 format!(
-                    "Please wait {} seconds before creating another recovery point",
+                    "Please wait {} seconds before creating another system snapshot",
                     wait.as_secs()
                 ),
             );
@@ -392,7 +392,7 @@ impl SnapshotsManagerHelper {
                     if let Err(error) =
                         Self::snapshot_created(&ctxt, &record.id.to_string(), "manual").await
                     {
-                        log::warn!("Could not emit recovery-point creation signal: {error}");
+                        log::warn!("Could not emit system snapshot creation signal: {error}");
                     }
                     if automatic_success_notification_enabled()
                         && let Err(error) =
@@ -404,7 +404,7 @@ impl SnapshotsManagerHelper {
                 }
                 Err(error) => (
                     false,
-                    format!("Could not serialize recovery point: {error}"),
+                    format!("Could not serialize system snapshot: {error}"),
                 ),
             },
             Err(error) => {
@@ -414,7 +414,7 @@ impl SnapshotsManagerHelper {
         }
     }
 
-    /// Create an automatic recovery point while preserving its schedule label.
+    /// Create an automatic system snapshot while preserving its schedule label.
     async fn create_scheduled_deployment(
         &self,
         #[zbus(header)] hdr: zbus::message::Header<'_>,
@@ -437,7 +437,7 @@ impl SnapshotsManagerHelper {
             return (
                 false,
                 format!(
-                    "Please wait {} seconds before creating another recovery point",
+                    "Please wait {} seconds before creating another system snapshot",
                     wait.as_secs()
                 ),
             );
@@ -455,7 +455,7 @@ impl SnapshotsManagerHelper {
                     if let Err(error) =
                         Self::snapshot_created(&ctxt, &record.id.to_string(), "scheduler").await
                     {
-                        log::warn!("Could not emit scheduled recovery-point signal: {error}");
+                        log::warn!("Could not emit scheduled system snapshot signal: {error}");
                     }
                     if automatic_success_notification_enabled()
                         && let Err(error) =
@@ -467,7 +467,7 @@ impl SnapshotsManagerHelper {
                 }
                 Err(error) => (
                     false,
-                    format!("Could not serialize recovery point: {error}"),
+                    format!("Could not serialize system snapshot: {error}"),
                 ),
             },
             Err(error) => {
@@ -499,7 +499,7 @@ impl SnapshotsManagerHelper {
             return (
                 false,
                 format!(
-                    "Please wait {} seconds before creating another Personal Files history point",
+                    "Please wait {} seconds before creating another Home snapshot",
                     wait.as_secs()
                 ),
             );
@@ -575,7 +575,7 @@ impl SnapshotsManagerHelper {
             return (
                 false,
                 format!(
-                    "Please wait {} seconds before creating another Personal Files history point",
+                    "Please wait {} seconds before creating another Home snapshot",
                     wait.as_secs()
                 ),
             );
@@ -631,7 +631,7 @@ impl SnapshotsManagerHelper {
         }
     }
 
-    /// Delete one unpinned Personal Files history point.
+    /// Delete one unpinned Home snapshot.
     async fn delete_personal_snapshot(
         &self,
         #[zbus(header)] hdr: zbus::message::Header<'_>,
@@ -657,7 +657,7 @@ impl SnapshotsManagerHelper {
                     true,
                     None,
                 );
-                (true, "Personal Files history point deleted".into())
+                (true, "Home snapshot deleted".into())
             }
             Err(error) => {
                 audit::log_operation(
@@ -673,7 +673,7 @@ impl SnapshotsManagerHelper {
         }
     }
 
-    /// Delete multiple unpinned Personal Files history points under one
+    /// Delete multiple unpinned Home snapshots under one
     /// explicit authorization decision.
     async fn delete_personal_snapshots(
         &self,
@@ -687,10 +687,7 @@ impl SnapshotsManagerHelper {
             return (false, format!("Authorization failed: {error}"));
         }
         if snapshot_ids.is_empty() {
-            return (
-                false,
-                "No Personal Files history points were selected".into(),
-            );
+            return (false, "No Home snapshots were selected".into());
         }
         let parsed = snapshot_ids
             .iter()
@@ -732,13 +729,13 @@ impl SnapshotsManagerHelper {
             }
         }
         if failures.is_empty() {
-            (true, "Personal Files history points deleted".into())
+            (true, "Home snapshots deleted".into())
         } else {
             (false, failures.join("\n"))
         }
     }
 
-    /// Protect or unprotect one Personal Files history point.
+    /// Protect or unprotect one Home snapshot.
     async fn set_personal_snapshot_pinned(
         &self,
         #[zbus(header)] hdr: zbus::message::Header<'_>,
@@ -879,7 +876,7 @@ impl SnapshotsManagerHelper {
         }
         let id = match deployment_id.parse::<DeploymentId>() {
             Ok(id) => id,
-            Err(error) => return (false, format!("Invalid recovery point ID: {error}")),
+            Err(error) => return (false, format!("Invalid system snapshot ID: {error}")),
         };
         if let Err(error) =
             OperationEngine::default().check_available(&layout::inspect_current(), id)
@@ -937,7 +934,7 @@ impl SnapshotsManagerHelper {
     ) -> (bool, String) {
         let id = match deployment_id.parse::<DeploymentId>() {
             Ok(id) => id,
-            Err(error) => return (false, format!("Invalid recovery point ID: {error}")),
+            Err(error) => return (false, format!("Invalid system snapshot ID: {error}")),
         };
         if let Err(error) = self
             .validate_browse_lease(&hdr, connection, &token, id)
@@ -990,7 +987,7 @@ impl SnapshotsManagerHelper {
         Ok(std::os::fd::OwnedFd::from(file).into())
     }
 
-    /// Delete an unprotected immutable system recovery point.
+    /// Delete an unprotected immutable system snapshot.
     async fn delete_deployment(
         &self,
         #[zbus(header)] hdr: zbus::message::Header<'_>,
@@ -1004,12 +1001,12 @@ impl SnapshotsManagerHelper {
         }
         let id = match deployment_id.parse::<DeploymentId>() {
             Ok(id) => id,
-            Err(error) => return (false, format!("Invalid recovery point ID: {error}")),
+            Err(error) => return (false, format!("Invalid system snapshot ID: {error}")),
         };
         match OperationEngine::default().delete(&layout::inspect_current(), id) {
             Ok(()) => {
                 audit::log_snapshot_delete(uid, pid, &deployment_id, true, None);
-                (true, "Recovery point deleted".into())
+                (true, "System snapshot deleted".into())
             }
             Err(error) => {
                 audit::log_snapshot_delete(
@@ -1024,7 +1021,7 @@ impl SnapshotsManagerHelper {
         }
     }
 
-    /// Delete multiple unprotected system recovery points under one explicit
+    /// Delete multiple unprotected system snapshots under one explicit
     /// authorization decision.
     async fn delete_deployments(
         &self,
@@ -1038,7 +1035,7 @@ impl SnapshotsManagerHelper {
             return (false, format!("Authorization failed: {error}"));
         }
         if deployment_ids.is_empty() {
-            return (false, "No system recovery points were selected".into());
+            return (false, "No system snapshots were selected".into());
         }
         let parsed = deployment_ids
             .iter()
@@ -1051,7 +1048,7 @@ impl SnapshotsManagerHelper {
             .collect::<Result<Vec<_>, _>>();
         let parsed = match parsed {
             Ok(parsed) => parsed,
-            Err(error) => return (false, format!("Invalid recovery point ID: {error}")),
+            Err(error) => return (false, format!("Invalid system snapshot ID: {error}")),
         };
         let engine = OperationEngine::default();
         let layout = layout::inspect_current();
@@ -1072,7 +1069,7 @@ impl SnapshotsManagerHelper {
             }
         }
         if failures.is_empty() {
-            (true, "System recovery points deleted".into())
+            (true, "System snapshots deleted".into())
         } else {
             (false, failures.join("\n"))
         }
@@ -1103,7 +1100,7 @@ impl SnapshotsManagerHelper {
                     false,
                     Some(&error.to_string()),
                 );
-                return (false, format!("Invalid recovery point ID: {error}"));
+                return (false, format!("Invalid system snapshot ID: {error}"));
             }
         };
         match OperationEngine::default().set_pinned(&layout::inspect_current(), id, pinned) {
@@ -1152,7 +1149,7 @@ impl SnapshotsManagerHelper {
         }
         let id = match id.parse::<DeploymentId>() {
             Ok(id) => id,
-            Err(error) => return (false, format!("Invalid recovery point ID: {error}")),
+            Err(error) => return (false, format!("Invalid system snapshot ID: {error}")),
         };
         match OperationEngine::default().rename(&layout::inspect_current(), id, &title) {
             Ok(record) => serde_json::to_string(&record)
@@ -1176,7 +1173,7 @@ impl SnapshotsManagerHelper {
         }
         let id = match deployment_id.parse::<DeploymentId>() {
             Ok(id) => id,
-            Err(error) => return (false, format!("Invalid recovery point ID: {error}")),
+            Err(error) => return (false, format!("Invalid system snapshot ID: {error}")),
         };
         match RollbackCoordinator::default().schedule(id, |_phase, _fraction, _message| {}) {
             Ok(transaction) => match serde_json::to_string(&transaction) {
@@ -1250,7 +1247,7 @@ impl SnapshotsManagerHelper {
             Err(error) => {
                 return serde_json::json!({
                     "is_valid": false,
-                    "errors": [format!("Invalid recovery point ID: {error}")],
+                    "errors": [format!("Invalid system snapshot ID: {error}")],
                     "warnings": [],
                 })
                 .to_string();
@@ -1723,7 +1720,7 @@ impl SnapshotsManagerHelper {
                 Ok(()) => deleted += 1,
                 Err(error) => {
                     retained += 1;
-                    log::info!("Retention kept recovery point {id}: {error}");
+                    log::info!("Retention kept system snapshot {id}: {error}");
                 }
             }
         }
@@ -1773,7 +1770,7 @@ impl SnapshotsManagerHelper {
                 }
                 Err(error) => {
                     personal_retained += 1;
-                    log::info!("Retention kept Personal Files history point {id}: {error}");
+                    log::info!("Retention kept Home snapshot {id}: {error}");
                 }
             }
         }

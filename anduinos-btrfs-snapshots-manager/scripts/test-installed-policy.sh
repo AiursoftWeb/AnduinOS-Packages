@@ -9,7 +9,7 @@ set -euo pipefail
 readonly SERVICE="org.anduinos.BtrfsSnapshotsManager"
 readonly OBJECT="/org/anduinos/BtrfsSnapshotsManager"
 readonly INTERFACE="org.anduinos.BtrfsSnapshotsManager.Helper"
-readonly INVALID_ID="not-a-recovery-point-id"
+readonly INVALID_ID="not-a-snapshot-id"
 
 actions=(
     org.anduinos.btrfs-snapshots-manager.create-snapshot

@@ -146,7 +146,9 @@ impl<B: PackageHookBackend> PackageHookCoordinator<B> {
             snapshot_before: true,
             snapshot_after: true,
         })?
-        .ok_or_else(|| PackageHookError("APT snapshot policy disabled both recovery points".into()))
+        .ok_or_else(|| {
+            PackageHookError("APT snapshot policy disabled both system snapshots".into())
+        })
     }
 
     pub fn before_packages_with_policy(
@@ -222,7 +224,7 @@ impl<B: PackageHookBackend> PackageHookCoordinator<B> {
             .ok_or_else(|| PackageHookError("No APT recovery transaction is pending".into()))?;
         if transaction.phase != PackageTransactionPhase::AwaitingPost {
             let error = PackageHookError(
-                "The APT recovery transaction did not complete its pre-change point".into(),
+                "The APT recovery transaction did not complete its pre-change snapshot".into(),
             );
             if !matches!(
                 transaction.phase,

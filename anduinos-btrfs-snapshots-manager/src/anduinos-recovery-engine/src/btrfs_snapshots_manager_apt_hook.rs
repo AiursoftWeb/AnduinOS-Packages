@@ -34,7 +34,7 @@ fn main() -> ExitCode {
             eprintln!("Disk Snapshots Manager package hook {operation}: disabled by policy")
         }
         Err(error) => {
-            // A recovery point is valuable, but package-manager availability is
+            // A system snapshot is valuable, but package-manager availability is
             // the stronger invariant. The apt.conf wrapper is a second
             // fail-open boundary if this program cannot be executed at all.
             eprintln!("Disk Snapshots Manager package hook warning: {error}");

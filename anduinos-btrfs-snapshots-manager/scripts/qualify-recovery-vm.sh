@@ -24,7 +24,7 @@ Usage:
   sudo $0 verify-rollback
   sudo $0 test-cancel $CONSENT
 
-prepare-rollback changes /etc inside a disposable VM, creates a recovery point,
+prepare-rollback changes /etc inside a disposable VM, creates a system snapshot,
 changes the marker again, and arms a one-shot rollback. Reboot the VM only after
 the command succeeds. Qualification state is kept on the excluded @log
 subvolume so it survives both successful rollback and automatic fallback.

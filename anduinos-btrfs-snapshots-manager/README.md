@@ -3,14 +3,14 @@
 Disk Snapshots Manager is the native GTK 4 and libadwaita recovery application
 for AnduinOS. It has two equal, explicit destinations:
 
-- **System Recovery** manages immutable recovery points of the mandatory
+- **System Recovery** manages immutable system snapshots of the mandatory
   `@root` Btrfs subvolume.
-- **Personal Files Recovery** manages immutable history points of the mandatory
+- **Personal Files Recovery** manages immutable snapshots of the mandatory
   `@home` Btrfs subvolume.
 
 Both pages use the same snapshot-list model: create now, configure automatic
 snapshots, search, enter selection mode for one authenticated batch deletion,
-and open the actions available for one point. System points can prepare a safe
+and open the actions available for one snapshot. System snapshots can prepare a safe
 rollback; Personal Files are recovered item by item and are never changed by a
 system rollback.
 
@@ -18,16 +18,16 @@ system rollback.
 
 A snapshot may be protected permanently or be eligible for Smart Cleanup.
 Manual, scheduled, and package-change snapshots participate in cleanup by
-default. The safety point created before a rollback is permanently protected.
+default. The safety snapshot created before a rollback is permanently protected.
 Smart Cleanup uses explicit time buckets: keep everything in the recent window,
 then one representative per day, week, month, and year. System and Home policies
 are independent and use a configurable one-to-24-hour freshness interval.
 
 The systemd timer remains installed and enabled even when both automatic scopes
-are off. On every run the scheduler compares the newest point with the configured
+are off. On every run the scheduler compares the newest snapshot with the configured
 freshness target, so a machine that was asleep or powered off creates a catch-up
-point on the next timer activation. The default package policy creates a system
-point before a real DPKG transaction and no post-transaction point. Both package
+snapshot on the next timer activation. The default package policy creates a system
+snapshot before a real DPKG transaction and no post-transaction snapshot. Both package
 boundaries and snapshot notifications are configured in Advanced Settings.
 The unprivileged desktop notification listener runs as a supervised user
 service. GNOME starts it at login, and opening the application also ensures it

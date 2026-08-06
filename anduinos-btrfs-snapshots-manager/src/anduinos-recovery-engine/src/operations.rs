@@ -263,7 +263,7 @@ impl<R: CommandRunner> OperationEngine<R> {
         self.create_snapshot(
             layout,
             "Before system restore",
-            "Automatically protected before restoring an earlier recovery point",
+            "Automatically protected before restoring an earlier system snapshot",
             None,
             false,
             DeploymentKind::PreRollback,
@@ -285,7 +285,7 @@ impl<R: CommandRunner> OperationEngine<R> {
         self.create_snapshot(
             layout,
             "Before package changes",
-            &format!("Automatic recovery point for package transaction {transaction_id}"),
+            &format!("Automatic system snapshot for package transaction {transaction_id}"),
             None,
             false,
             DeploymentKind::AptPre,
@@ -307,7 +307,7 @@ impl<R: CommandRunner> OperationEngine<R> {
         self.create_snapshot(
             layout,
             "After package changes",
-            &format!("Automatic recovery point for package transaction {transaction_id}"),
+            &format!("Automatic system snapshot for package transaction {transaction_id}"),
             None,
             false,
             DeploymentKind::AptPost,
@@ -426,7 +426,7 @@ impl<R: CommandRunner> OperationEngine<R> {
             if !record.state.can_transition_to(completed_state) {
                 return Err(OperationError::new(
                     OperationErrorCode::InvalidIdentity,
-                    "Recovery point cannot enter its completed state",
+                    "System snapshot cannot enter its completed state",
                 ));
             }
             record.state = completed_state;
@@ -445,7 +445,7 @@ impl<R: CommandRunner> OperationEngine<R> {
             progress(
                 OperationPhase::Cleanup,
                 0.95,
-                "Reverting the incomplete recovery point",
+                "Reverting the incomplete system snapshot",
             );
             let cleanup_error = self.cleanup_snapshot(&snapshot, &deployment_dir).err();
             record.state = DeploymentState::Incomplete;
@@ -465,7 +465,7 @@ impl<R: CommandRunner> OperationEngine<R> {
             });
         }
 
-        progress(OperationPhase::Commit, 1.0, "Recovery point created");
+        progress(OperationPhase::Commit, 1.0, "System snapshot created");
         Ok(record)
     }
 
@@ -486,7 +486,7 @@ impl<R: CommandRunner> OperationEngine<R> {
             return Err(OperationError::new(
                 OperationErrorCode::Protected,
                 format!(
-                    "Recovery point cannot transition from {:?} to {next:?}",
+                    "System snapshot cannot transition from {:?} to {next:?}",
                     record.state
                 ),
             ));
@@ -512,7 +512,7 @@ impl<R: CommandRunner> OperationEngine<R> {
         if record.state == DeploymentState::Deleting {
             return Err(OperationError::new(
                 OperationErrorCode::Protected,
-                "A deleting recovery point cannot be pinned",
+                "A deleting system snapshot cannot be pinned",
             ));
         }
         record.pinned = pinned;
@@ -536,7 +536,7 @@ impl<R: CommandRunner> OperationEngine<R> {
         if record.state == DeploymentState::Deleting {
             return Err(OperationError::new(
                 OperationErrorCode::Protected,
-                "A deleting recovery point cannot be renamed",
+                "A deleting system snapshot cannot be renamed",
             ));
         }
         record.title = title.trim().to_string();
@@ -625,7 +625,7 @@ impl<R: CommandRunner> OperationEngine<R> {
         progress(
             OperationPhase::Commit,
             1.0,
-            "Recovery point integrity verified",
+            "System snapshot integrity verified",
         );
         Ok(record)
     }
@@ -644,7 +644,7 @@ impl<R: CommandRunner> OperationEngine<R> {
         if !record.can_restore() {
             return Err(OperationError::new(
                 OperationErrorCode::InvalidIdentity,
-                "This recovery point is not available for recovery",
+                "This system snapshot is not available for recovery",
             ));
         }
         let snapshot = self.deployment_dir(id).join("root");
@@ -697,7 +697,7 @@ impl<R: CommandRunner> OperationEngine<R> {
             TransactionStartLock::acquire(&self.snapshot_root).map_err(|error| {
                 OperationError::new(
                     OperationErrorCode::Busy,
-                    format!("Could not coordinate recovery-point deletion: {error}"),
+                    format!("Could not coordinate system snapshot deletion: {error}"),
                 )
             })?;
         let _browse_lock =
@@ -726,13 +726,13 @@ impl<R: CommandRunner> OperationEngine<R> {
                 ) {
                     return Err(OperationError::new(
                         OperationErrorCode::Protected,
-                        "Automatic cleanup may delete only manual, scheduled, or package recovery points",
+                        "Automatic cleanup may delete only manual, scheduled, or package system snapshots",
                     ));
                 }
                 if record.pinned {
                     return Err(OperationError::new(
                         OperationErrorCode::Protected,
-                        "Permanently retained recovery points cannot be cleaned automatically",
+                        "Permanently retained system snapshots cannot be cleaned automatically",
                     ));
                 }
                 let discovery = DeploymentStore::new(&self.snapshot_root).discover();
@@ -750,20 +750,20 @@ impl<R: CommandRunner> OperationEngine<R> {
                 if record.can_restore() && restorable <= minimum {
                     return Err(OperationError::new(
                         OperationErrorCode::Protected,
-                        "Automatic cleanup would remove the last known-good recovery point",
+                        "Automatic cleanup would remove the last known-good system snapshot",
                     ));
                 }
             }
             if !record.can_delete() {
                 return Err(OperationError::new(
                     OperationErrorCode::Protected,
-                    "This recovery point is pinned or protects a boot transaction",
+                    "This system snapshot is pinned or protects a boot transaction",
                 ));
             }
             if !record.state.can_transition_to(DeploymentState::Deleting) {
                 return Err(OperationError::new(
                     OperationErrorCode::Protected,
-                    "This recovery point cannot enter the deleting state",
+                    "This system snapshot cannot enter the deleting state",
                 ));
             }
             record.state = DeploymentState::Deleting;
@@ -820,7 +820,7 @@ impl<R: CommandRunner> OperationEngine<R> {
         }) {
             return Err(OperationError::new(
                 OperationErrorCode::Protected,
-                "This recovery point is referenced by a pending rollback",
+                "This system snapshot is referenced by a pending rollback",
             ));
         }
         let package = PackageTransactionStore::new(&self.snapshot_root)
@@ -836,7 +836,7 @@ impl<R: CommandRunner> OperationEngine<R> {
         }) {
             return Err(OperationError::new(
                 OperationErrorCode::Protected,
-                "This recovery point is referenced by a pending package transaction",
+                "This system snapshot is referenced by a pending package transaction",
             ));
         }
         Ok(())
@@ -1330,7 +1330,7 @@ fn verify_digest(
 fn identity_mismatch(identity: &str) -> OperationError {
     OperationError::new(
         OperationErrorCode::InvalidIdentity,
-        format!("Recovery point {identity} does not match its recorded identity"),
+        format!("System snapshot {identity} does not match its recorded identity"),
     )
 }
 
@@ -1498,7 +1498,7 @@ mod tests {
             .create_manual(
                 &environment.layout(),
                 "Before experimenting",
-                "Manual recovery point",
+                "Manual system snapshot",
                 true,
                 |_, _, _| {},
             )

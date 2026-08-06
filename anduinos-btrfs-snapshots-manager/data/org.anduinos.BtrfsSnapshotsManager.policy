@@ -7,10 +7,10 @@
   <vendor_url>https://www.anduinos.com</vendor_url>
 
   <action id="org.anduinos.btrfs-snapshots-manager.create-snapshot">
-    <description>Create an AnduinOS recovery point</description>
-    <description xml:lang="zh_CN">创建 AnduinOS 恢复点</description>
-    <message>Authentication is required to create a system recovery point</message>
-    <message xml:lang="zh_CN">创建系统恢复点需要身份验证</message>
+    <description>Create an AnduinOS system snapshot</description>
+    <description xml:lang="zh_CN">创建 AnduinOS 系统快照</description>
+    <message>Authentication is required to create a system snapshot</message>
+    <message xml:lang="zh_CN">创建系统快照需要身份验证</message>
     <defaults>
       <allow_any>auth_admin</allow_any>
       <allow_inactive>auth_admin</allow_inactive>
@@ -19,10 +19,10 @@
   </action>
 
   <action id="org.anduinos.btrfs-snapshots-manager.delete-snapshot">
-    <description>Delete an AnduinOS recovery point</description>
-    <description xml:lang="zh_CN">删除 AnduinOS 恢复点</description>
-    <message>Authentication is required to delete a system recovery point</message>
-    <message xml:lang="zh_CN">删除系统恢复点需要身份验证</message>
+    <description>Delete an AnduinOS system snapshot</description>
+    <description xml:lang="zh_CN">删除 AnduinOS 系统快照</description>
+    <message>Authentication is required to delete a system snapshot</message>
+    <message xml:lang="zh_CN">删除系统快照需要身份验证</message>
     <defaults>
       <allow_any>auth_admin</allow_any>
       <allow_inactive>auth_admin</allow_inactive>

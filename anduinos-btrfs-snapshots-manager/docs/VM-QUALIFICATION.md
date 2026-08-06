@@ -36,7 +36,7 @@ closed.
 
 The helper refuses physical machines, containers, incomplete layouts, and
 implicit destructive execution. Its state lives below `/var/log` on `@log`,
-which is intentionally outside system recovery points.
+which is intentionally outside system snapshots.
 
 ## Cancellation before reboot
 
@@ -68,12 +68,12 @@ Pass criteria:
 - the selected deployment becomes `current`;
 - the pending transaction disappears only after userspace confirmation;
 - the old writable root is deleted after confirmation, not before it;
-- the fallback record remains a valid `ready` recovery point;
+- the fallback record remains a valid `ready` system snapshot;
 - `update-grub` succeeds without adding operating systems from other disks; and
 - another ordinary reboot remains on the confirmed root.
 
 Repeat this lane three times, including once after an APT upgrade creates its
-paired automatic recovery points. Also run create, verify, external export,
+paired automatic system snapshots. Also run create, verify, external export,
 external verification, import, and delete before scheduling one imported point.
 
 ## Hard power-loss matrix

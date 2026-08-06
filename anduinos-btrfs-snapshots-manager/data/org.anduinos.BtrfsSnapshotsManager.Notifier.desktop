@@ -2,8 +2,8 @@
 Type=Application
 Name=Disk Snapshots Manager Notifications
 Name[zh_CN]=Disk Snapshots Manager 通知
-Comment=Show recovery point notifications
-Comment[zh_CN]=显示恢复点通知
+Comment=Show system snapshot notifications
+Comment[zh_CN]=显示快照通知
 Exec=/usr/bin/systemctl --user start --no-block anduinos-btrfs-snapshots-manager-notifier.service
 Icon=org.anduinos.BtrfsSnapshotsManager
 Terminal=false

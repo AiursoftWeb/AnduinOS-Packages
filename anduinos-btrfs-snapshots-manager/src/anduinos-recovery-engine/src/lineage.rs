@@ -250,7 +250,7 @@ impl LineageStore {
     ) -> Result<SystemLineage, LineageError> {
         if record.snapshot_uuid.is_none() {
             return Err(LineageError::invalid(
-                "a lineage node requires a completed recovery point",
+                "a lineage node requires a completed system snapshot",
             ));
         }
         self.mutate(|lineage| {
@@ -279,9 +279,9 @@ impl LineageStore {
         })
     }
 
-    /// Register a valid recovery point whose historical relationship to the
+    /// Register a valid system snapshot whose historical relationship to the
     /// currently running system cannot be proven. External imports use this
-    /// path: merely copying a recovery point back to local storage must not
+    /// path: merely copying a system snapshot back to local storage must not
     /// claim that the machine is currently running from it.
     pub fn record_detached_recovery_point(
         &self,
@@ -289,7 +289,7 @@ impl LineageStore {
     ) -> Result<SystemLineage, LineageError> {
         if record.snapshot_uuid.is_none() {
             return Err(LineageError::invalid(
-                "a detached lineage node requires a completed recovery point",
+                "a detached lineage node requires a completed system snapshot",
             ));
         }
         self.mutate(|lineage| {
@@ -350,7 +350,7 @@ impl LineageStore {
                 || !known(transaction.fallback_deployment_id)
             {
                 return Err(LineageError::invalid(
-                    "activation recovery points are missing from the lineage",
+                    "activation system snapshots are missing from the lineage",
                 ));
             }
             let previous_head_id = lineage.current_head_id;
@@ -385,7 +385,7 @@ impl LineageStore {
                 .iter_mut()
                 .find(|node| node.recovery_point_id == recovery_point_id)
                 .ok_or_else(|| {
-                    LineageError::invalid("deleted recovery point is missing from the lineage")
+                    LineageError::invalid("deleted system snapshot is missing from the lineage")
                 })?;
             if !node.snapshot_available {
                 return Ok(false);
@@ -589,7 +589,7 @@ mod tests {
             state,
             created_at,
             title: title.into(),
-            reason: "Test recovery point".into(),
+            reason: "Test system snapshot".into(),
             schedule_id: None,
             snapshot_uuid: Some(Uuid::new_v4().to_string()),
             snapshot_parent_uuid: None,

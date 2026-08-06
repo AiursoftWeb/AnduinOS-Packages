@@ -21,6 +21,13 @@ if rg -ni "$retired_name" "$ROOT" \
     echo "The retired product name remains outside the required upstream license attribution" >&2
     exit 1
 fi
+retired_snapshot_terms='recovery[- ]points?|history[- ]points?|恢复''点|历史''点'
+if rg -ni "$retired_snapshot_terms" "$ROOT" \
+    --glob '!target/**' --glob '!obj/**' --glob '!bin/**' \
+    | grep -vF '"automatic-recovery-points"'; then
+    echo "Retired snapshot terminology remains in the product" >&2
+    exit 1
+fi
 test -f "$ROOT/data/org.anduinos.BtrfsSnapshotsManager.svg"
 # The product rename must not alter the AnduinOS-owned application artwork.
 echo 'f6d678d9551cbeb64c4fcad189d1b34aaaad59465588eee7b504cd0c798729a3  '"$ROOT/data/org.anduinos.BtrfsSnapshotsManager.svg" \
@@ -155,7 +162,7 @@ rg -q 'systemctl disable --now anduinos-btrfs-snapshots-manager-confirm.service'
 grep -Fq 'anduinos-btrfs-snapshots-manager-confirm.service" AutoEnable="false"' \
     "$ROOT/anduinos-btrfs-snapshots-manager.aosproj"
 if rg -n 'rm -r[f ]|find .*RECOVERY_STORE|/\.snapshots/anduinos-btrfs-snapshots-manager' "$ROOT/scripts/postrm.sh"; then
-    echo "Package removal must never recursively delete recovery-point data" >&2
+    echo "Package removal must never recursively delete snapshot data" >&2
     exit 1
 fi
 

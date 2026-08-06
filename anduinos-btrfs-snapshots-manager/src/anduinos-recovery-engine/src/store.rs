@@ -514,7 +514,7 @@ mod tests {
             state: DeploymentState::Ready,
             created_at,
             title: "Known-good system".into(),
-            reason: "Manual recovery point".into(),
+            reason: "Manual system snapshot".into(),
             schedule_id: None,
             snapshot_uuid: Some(Uuid::new_v4().to_string()),
             snapshot_parent_uuid: None,

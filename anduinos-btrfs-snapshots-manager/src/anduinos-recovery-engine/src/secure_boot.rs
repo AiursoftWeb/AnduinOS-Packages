@@ -187,7 +187,7 @@ impl<R: SecureBootToolRunner> SecureBootValidator<R> {
         let kernel_release = record.kernel_release.as_deref().ok_or_else(|| {
             SecureBootError::new(
                 SecureBootErrorCode::InvalidKernel,
-                "Recovery point has no kernel release",
+                "System snapshot has no kernel release",
             )
         })?;
         let kernel = snapshot_root
@@ -218,20 +218,20 @@ impl<R: SecureBootToolRunner> SecureBootValidator<R> {
         {
             return Err(SecureBootError::new(
                 SecureBootErrorCode::MissingTrust,
-                "Secure Boot is enabled, but the MOK required by this recovery point is not enrolled",
+                "Secure Boot is enabled, but the MOK required by this system snapshot is not enrolled",
             ));
         }
         let expected_mok = record.mok_certificate_sha256.as_deref().ok_or_else(|| {
             SecureBootError::new(
                 SecureBootErrorCode::MissingTrust,
-                "Recovery point contains DKMS modules but records no MOK certificate",
+                "System snapshot contains DKMS modules but records no MOK certificate",
             )
         })?;
         let current_mok = hash_regular_file(&self.current_mok_certificate)?;
         if current_mok != expected_mok {
             return Err(SecureBootError::new(
                 SecureBootErrorCode::CertificateChanged,
-                "The currently enrolled MOK differs from the certificate recorded by this recovery point",
+                "The currently enrolled MOK differs from the certificate recorded by this system snapshot",
             ));
         }
         let expected_key = normalize_key(
@@ -351,7 +351,7 @@ fn collect_dkms_modules(root: &Path) -> Result<Vec<PathBuf>, SecureBootError> {
                 if modules.len() > MAX_DKMS_MODULES {
                     return Err(SecureBootError::new(
                         SecureBootErrorCode::UnsafeFilesystem,
-                        "Recovery point contains an excessive number of DKMS modules",
+                        "System snapshot contains an excessive number of DKMS modules",
                     ));
                 }
             }

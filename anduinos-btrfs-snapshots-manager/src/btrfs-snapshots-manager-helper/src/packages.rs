@@ -1,4 +1,4 @@
-//! Bounded parsing of the dpkg state captured in a system recovery point.
+//! Bounded parsing of the dpkg state captured in a system snapshot.
 
 use anyhow::{Context, Result};
 use snapshots_manager_common::Package;

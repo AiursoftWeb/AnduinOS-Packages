@@ -93,7 +93,7 @@ pub struct PersonalDirectoryEntry {
 pub struct VerificationResult {
     /// Whether the snapshot passed all validation checks
     pub is_valid: bool,
-    /// Critical errors that make the recovery point invalid
+    /// Critical errors that make the system snapshot invalid
     pub errors: Vec<String>,
     /// Non-critical issues that don't affect validity (e.g., missing metadata)
     pub warnings: Vec<String>,
@@ -179,7 +179,7 @@ impl SnapshotsManagerHelperClient {
         )?;
         proxy
             .call("CreateDeployment", &(title, reason, pinned))
-            .context("Failed to create a system recovery point")
+            .context("Failed to create a system snapshot")
     }
 
     pub fn create_personal_snapshot(
@@ -191,7 +191,7 @@ impl SnapshotsManagerHelperClient {
         let proxy = self.proxy()?;
         let (success, result): (bool, String) = proxy
             .call("CreatePersonalSnapshot", &(title, reason, pinned))
-            .context("Failed to create a Personal Files history point")?;
+            .context("Failed to create a Home snapshot")?;
         if !success {
             anyhow::bail!(result);
         }
@@ -202,7 +202,7 @@ impl SnapshotsManagerHelperClient {
         let proxy = self.proxy()?;
         let (success, result): (bool, String) = proxy
             .call("DeletePersonalSnapshots", &(ids,))
-            .context("Failed to delete the selected Personal Files history points")?;
+            .context("Failed to delete the selected Home snapshots")?;
         if !success {
             anyhow::bail!(result);
         }
@@ -341,7 +341,7 @@ impl SnapshotsManagerHelperClient {
         let proxy = self.proxy()?;
         let (success, result): (bool, String) = proxy
             .call("DeleteDeployments", &(ids,))
-            .context("Failed to delete the selected recovery points")?;
+            .context("Failed to delete the selected system snapshots")?;
         if !success {
             anyhow::bail!(result);
         }
@@ -357,7 +357,7 @@ impl SnapshotsManagerHelperClient {
         )?;
         proxy
             .call("SetDeploymentPinned", &(id, pinned))
-            .context("Failed to change recovery-point protection")
+            .context("Failed to change system snapshot protection")
     }
 
     pub fn rename_deployment(&self, id: String, title: String) -> Result<()> {
@@ -380,7 +380,7 @@ impl SnapshotsManagerHelperClient {
         )?;
         proxy
             .call("ScheduleDeploymentRestore", &(id,))
-            .context("Failed to schedule the recovery point")
+            .context("Failed to schedule the system snapshot")
     }
 
     pub fn cancel_deployment_restore(&self) -> Result<(bool, String)> {

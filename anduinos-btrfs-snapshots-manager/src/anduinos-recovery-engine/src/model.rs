@@ -293,7 +293,7 @@ mod tests {
             state: DeploymentState::Ready,
             created_at: Utc::now(),
             title: "Before graphics driver update".into(),
-            reason: "Manual recovery point".into(),
+            reason: "Manual system snapshot".into(),
             schedule_id: None,
             snapshot_uuid: Some(Uuid::new_v4().to_string()),
             snapshot_parent_uuid: None,

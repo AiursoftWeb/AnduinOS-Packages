@@ -292,7 +292,7 @@ fn load_target_versions(
                     let row = adw::ActionRow::new();
                     row.set_title(&tr("No earlier version was found"));
                     row.set_subtitle(&tr(
-                        "This item was not present in the available Personal Files history points.",
+                        "This item was not present in the available Home snapshots.",
                     ));
                     list.append(&row);
                 } else {
@@ -302,7 +302,7 @@ fn load_target_versions(
                 }
                 if issue_count > 0 {
                     let row = adw::ActionRow::new();
-                    row.set_title(&tr("Some history points could not be loaded"));
+                    row.set_title(&tr("Some snapshots could not be loaded"));
                     row.set_subtitle(&trf(
                         "{0} damaged metadata entries were ignored",
                         &[&issue_count.to_string()],
@@ -346,11 +346,11 @@ fn append_target_version_row(
             })
             .unwrap_or_else(|| tr("Unknown date"));
         row.set_subtitle(&trf(
-            "History point {0} · {1} bytes · modified {2}",
+            "Snapshot {0} · {1} bytes · modified {2}",
             &[&created, &entry.size.to_string(), &modified],
         ));
     } else {
-        row.set_subtitle(&trf("History point {0} · Folder", &[&created]));
+        row.set_subtitle(&trf("Snapshot {0} · Folder", &[&created]));
     }
 
     let browse = gtk::Button::with_label(&tr("Browse"));

@@ -2,7 +2,7 @@
 //!
 //! This intentionally does not parse `term.log` or command output: those are
 //! human-facing and may be localized. Package state remains authoritative in
-//! the `dpkg-query` capture stored with each recovery point; APT history only
+//! the `dpkg-query` capture stored with each system snapshot; APT history only
 //! explains the transactions between two captures.
 
 use chrono::NaiveDateTime;

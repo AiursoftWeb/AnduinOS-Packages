@@ -305,14 +305,6 @@ msgstr ""
 msgid "Folder · {0}"
 msgstr ""
 
-#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
-msgid "History point {0} · Folder"
-msgstr ""
-
-#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
-msgid "History point {0} · {1} bytes · modified {2}"
-msgstr ""
-
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Home snapshot"
 msgstr ""
@@ -693,6 +685,14 @@ msgstr ""
 msgid "Snapshot Details"
 msgstr ""
 
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · Folder"
+msgstr ""
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · {1} bytes · modified {2}"
+msgstr ""
+
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Snapshots are not available on this computer"
 msgstr ""
@@ -702,7 +702,7 @@ msgid "Snapshots could not be loaded"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
-msgid "Some history points could not be loaded"
+msgid "Some snapshots could not be loaded"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -770,7 +770,7 @@ msgid "This folder is empty"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
-msgid "This item was not present in the available Personal Files history points."
+msgid "This item was not present in the available Home snapshots."
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs

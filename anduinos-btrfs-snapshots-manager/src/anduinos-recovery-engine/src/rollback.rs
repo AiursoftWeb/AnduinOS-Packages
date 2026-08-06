@@ -292,7 +292,7 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
         if self.backend.package_transaction_pending()? {
             return Err(RollbackError::new(
                 RollbackErrorCode::AlreadyPending,
-                "A package transaction is already creating recovery points",
+                "A package transaction is already creating system snapshots",
             ));
         }
         let report = self.backend.layout();
@@ -306,7 +306,7 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
         if target.state != DeploymentState::Ready {
             return Err(RollbackError::new(
                 RollbackErrorCode::InvalidTarget,
-                "Only a ready, unprotected recovery point can be scheduled",
+                "Only a ready, unprotected system snapshot can be scheduled",
             ));
         }
         let target_original_state = target.state;
@@ -780,7 +780,7 @@ mod tests {
             kind,
             state,
             created_at: Utc::now(),
-            title: "Test recovery point".into(),
+            title: "Test system snapshot".into(),
             reason: "Rollback coordinator test".into(),
             schedule_id: None,
             snapshot_uuid: Some("cccccccc-1111-4222-8333-dddddddddddd".into()),

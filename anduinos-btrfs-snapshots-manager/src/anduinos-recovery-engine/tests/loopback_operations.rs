@@ -92,12 +92,12 @@ fn real_btrfs_create_verify_protect_retention_and_cleanup() {
     let manual = engine
         .create_manual(
             &layout,
-            "Loopback manual recovery point",
+            "Loopback manual system snapshot",
             "Real Btrfs operation qualification",
             false,
             |_, _, _| {},
         )
-        .expect("a real Btrfs recovery point must be created");
+        .expect("a real Btrfs system snapshot must be created");
     assert_eq!(manual.kind, DeploymentKind::Manual);
     assert_eq!(manual.state, DeploymentState::Ready);
     let manual_root = store_root
@@ -117,7 +117,7 @@ fn real_btrfs_create_verify_protect_retention_and_cleanup() {
     );
     engine
         .verify(&layout, manual.id, |_, _, _| {})
-        .expect("an unchanged recovery point must verify");
+        .expect("an unchanged system snapshot must verify");
 
     engine.set_pinned(&layout, manual.id, true).unwrap();
     let protected = engine.delete(&layout, manual.id).unwrap_err();
@@ -131,7 +131,7 @@ fn real_btrfs_create_verify_protect_retention_and_cleanup() {
             &layout,
             "loopback-hourly",
             "loopback-hourly-first",
-            "Hourly automatic recovery point",
+            "Hourly automatic system snapshot",
             |_, _, _| {},
         )
         .unwrap();
@@ -142,7 +142,7 @@ fn real_btrfs_create_verify_protect_retention_and_cleanup() {
             &layout,
             "loopback-hourly",
             "loopback-hourly-second",
-            "Hourly automatic recovery point",
+            "Hourly automatic system snapshot",
             |_, _, _| {},
         )
         .unwrap();
