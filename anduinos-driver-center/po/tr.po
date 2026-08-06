@@ -1,0 +1,725 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-driver-center package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-driver-center 2.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-06 15:06+0800\n"
+"PO-Revision-Date: 2026-08-06 07:08+0000\n"
+"Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
+"Language: tr\n"
+"Language-Team: tr\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: src/anduinos_driver_center/app.py:73 src/anduinos_driver_center/app.py:805
+msgid "AnduinOS Driver Center"
+msgstr "AnduinOS Sürücü Merkezi"
+
+#: src/anduinos_driver_center/app.py:132
+msgid "Scan again"
+msgstr "Tekrar tarayın"
+
+#: src/anduinos_driver_center/app.py:136
+msgid "About Driver Center"
+msgstr "Sürücü Merkezi Hakkında"
+
+#: src/anduinos_driver_center/app.py:138
+msgid "Main Menu"
+msgstr "Ana Menü"
+
+#: src/anduinos_driver_center/app.py:155
+msgid "Hardware"
+msgstr "Donanım"
+
+#: src/anduinos_driver_center/app.py:179
+msgid "Scanning for drivers"
+msgstr "Sürücüler taranıyor"
+
+#: src/anduinos_driver_center/app.py:179
+msgid "Checking hardware and Secure Boot status…"
+msgstr "Donanım ve Secure Boot durumu kontrol ediliyor…"
+
+#: src/anduinos_driver_center/app.py:212
+msgid "Audio"
+msgstr "Ses"
+
+#: src/anduinos_driver_center/app.py:213
+msgid "Audio support ready"
+msgstr "Ses desteği hazır"
+
+#: src/anduinos_driver_center/app.py:213
+msgid "Support needs attention"
+msgstr "Desteğin ilgilenilmesi gerekiyor"
+
+#: src/anduinos_driver_center/app.py:221
+msgid "Printing service stopped"
+msgstr "Yazdırma hizmeti durduruldu"
+
+#: src/anduinos_driver_center/app.py:223
+msgid "Some queues are paused"
+msgstr "Bazı kuyruklar duraklatıldı"
+
+#: src/anduinos_driver_center/app.py:225
+msgid "No printers configured"
+msgstr "Yapılandırılmış yazıcı yok"
+
+#: src/anduinos_driver_center/app.py:228
+#, python-format
+msgid "%d printer configured"
+msgid_plural "%d printers configured"
+msgstr[0] "%d yazıcı yapılandırıldı"
+
+#: src/anduinos_driver_center/app.py:233
+msgid "Printers"
+msgstr "Printers"
+
+#: src/anduinos_driver_center/app.py:240
+msgid "Xbox Controller"
+msgstr "Xbox Denetleyici"
+
+#: src/anduinos_driver_center/app.py:241
+msgid "xpadneo installed"
+msgstr "xpadneo yüklü"
+
+#: src/anduinos_driver_center/app.py:241
+msgid "Optional Bluetooth driver"
+msgstr "İsteğe bağlı Bluetooth sürücüsü"
+
+#: src/anduinos_driver_center/app.py:252
+msgid "Secure Boot"
+msgstr "Secure Boot"
+
+#: src/anduinos_driver_center/app.py:253
+msgid "Trust established"
+msgstr "Güven kuruldu"
+
+#: src/anduinos_driver_center/app.py:253
+msgid "Action required"
+msgstr "İşlem gerekli"
+
+#: src/anduinos_driver_center/app.py:324
+msgid "Choose the driver used by this device. AnduinOS marks the hardware-tested recommendation."
+msgstr "Choose the driver used by this device. AnduinOS marks the hardware-tested recommendation."
+
+#: src/anduinos_driver_center/app.py:330
+msgid "Available drivers"
+msgstr "Mevcut sürücüler"
+
+#: src/anduinos_driver_center/app.py:335
+msgid "Secure Boot status or trust must be resolved before installing a third-party driver."
+msgstr "Secure Boot durumu veya güveni, üçüncü taraf bir sürücü yüklenmeden önce çözümlenmelidir."
+
+#: src/anduinos_driver_center/app.py:344
+msgid "Apply Changes"
+msgstr "Değişiklikleri Uygula"
+
+#: src/anduinos_driver_center/app.py:353
+msgid "open source"
+msgstr "açık kaynak"
+
+#: src/anduinos_driver_center/app.py:353
+msgid "proprietary"
+msgstr "tescilli"
+
+#: src/anduinos_driver_center/app.py:355
+msgid "built in"
+msgstr "yerleşik"
+
+#: src/anduinos_driver_center/app.py:376
+msgid "In use"
+msgstr "Kullanımda"
+
+#: src/anduinos_driver_center/app.py:378
+msgid "Recommended"
+msgstr "Önerilen"
+
+#: src/anduinos_driver_center/app.py:394
+msgid "Advanced driver versions"
+msgstr "Gelişmiş sürücü sürümleri"
+
+#: src/anduinos_driver_center/app.py:395
+msgid "Older, newer, and server-oriented packages"
+msgstr "Eski, yeni ve sunucu odaklı paketler"
+
+#: src/anduinos_driver_center/app.py:416
+msgid "Select another driver to apply changes."
+msgstr "Değişiklikleri uygulamak için başka bir sürücü seçin."
+
+#: src/anduinos_driver_center/app.py:451
+msgid "Xbox Controller Support"
+msgstr "Xbox Denetleyici Desteği"
+
+#: src/anduinos_driver_center/app.py:452
+msgid ""
+"xpadneo improves Bluetooth mapping, rumble, battery reporting and compatibility for modern Xbox "
+"controllers."
+msgstr ""
+"xpadneo, modern Xbox denetleyicileri için Bluetooth eşlemeyi, gürültüyü, pil raporlamayı ve "
+"uyumluluğu geliştirir."
+
+#: src/anduinos_driver_center/app.py:455
+msgid "Driver status"
+msgstr "Sürücü durumu"
+
+#: src/anduinos_driver_center/app.py:457
+msgid "Driver package"
+msgstr "Sürücü paketi"
+
+#: src/anduinos_driver_center/app.py:457
+msgid "Installed"
+msgstr "Yüklendi"
+
+#: src/anduinos_driver_center/app.py:457 src/anduinos_driver_center/app.py:498
+#: src/anduinos_driver_center/app.py:504 src/anduinos_driver_center/app.py:678
+msgid "Not installed"
+msgstr "Yüklü değil"
+
+#: src/anduinos_driver_center/app.py:466
+msgid "Module signature"
+msgstr "Modül imzası"
+
+#: src/anduinos_driver_center/app.py:467
+msgid "Trusted"
+msgstr "Güvenilir"
+
+#: src/anduinos_driver_center/app.py:467
+msgid "Needs attention"
+msgstr "Dikkat gerektiriyor"
+
+#: src/anduinos_driver_center/app.py:470
+msgid "Kernel module"
+msgstr "Çekirdek modülü"
+
+#: src/anduinos_driver_center/app.py:470
+msgid "Loaded"
+msgstr "Yüklendi"
+
+#: src/anduinos_driver_center/app.py:470
+msgid "Blocked by Secure Boot"
+msgstr "Secure Boot tarafından engellendi"
+
+#: src/anduinos_driver_center/app.py:470
+msgid "Standing by"
+msgstr "Beklemedeyiz"
+
+#: src/anduinos_driver_center/app.py:472
+msgid "Bluetooth Settings"
+msgstr "Bluetooth Ayarları"
+
+#: src/anduinos_driver_center/app.py:476
+msgid "Install Driver"
+msgstr "Sürücüyü Yükle"
+
+#: src/anduinos_driver_center/app.py:481
+msgid "Repair & Reinstall"
+msgstr "Onarım ve Yeniden Yükleme"
+
+#: src/anduinos_driver_center/app.py:490
+msgid "Audio Support"
+msgstr "Ses Desteği"
+
+#: src/anduinos_driver_center/app.py:491
+msgid ""
+"AnduinOS provides Intel SOF firmware and ALSA UCM profiles for reliable audio initialization and "
+"routing."
+msgstr ""
+"AnduinOS, güvenilir ses başlatma ve yönlendirme için Intel SOF ürün yazılımı ve ALSA UCM "
+"profilleri sağlar."
+
+#: src/anduinos_driver_center/app.py:493
+msgid "Support packages"
+msgstr "Destek paketleri"
+
+#: src/anduinos_driver_center/app.py:497
+msgid "Intel SOF firmware"
+msgstr "Intel SOF ürün yazılımı"
+
+#: src/anduinos_driver_center/app.py:503
+msgid "ALSA UCM profiles"
+msgstr "ALSA UCM profilleri"
+
+#: src/anduinos_driver_center/app.py:508
+msgid "Runtime status"
+msgstr "Çalışma zamanı durumu"
+
+#: src/anduinos_driver_center/app.py:512
+msgid "SOF firmware files"
+msgstr "SOF ürün yazılımı dosyaları"
+
+#: src/anduinos_driver_center/app.py:513 src/anduinos_driver_center/app.py:519
+msgid "Available"
+msgstr "Kullanımda"
+
+#: src/anduinos_driver_center/app.py:513 src/anduinos_driver_center/app.py:519
+msgid "Missing"
+msgstr "Eksik"
+
+#: src/anduinos_driver_center/app.py:518
+msgid "UCM configuration files"
+msgstr "UCM yapılandırma dosyaları"
+
+#: src/anduinos_driver_center/app.py:524
+msgid "SOF kernel modules"
+msgstr "SOF çekirdek modülleri"
+
+#: src/anduinos_driver_center/app.py:525
+msgid "Not currently loaded"
+msgstr "Şu anda yüklü değil"
+
+#: src/anduinos_driver_center/app.py:530
+msgid "Active audio drivers"
+msgstr "Etkin ses sürücüleri"
+
+#: src/anduinos_driver_center/app.py:531
+msgid "Not detected"
+msgstr "Algılanmadı"
+
+#: src/anduinos_driver_center/app.py:536
+msgid "Install Audio Support"
+msgstr "Ses Desteğini Yükle"
+
+#: src/anduinos_driver_center/app.py:544
+msgid "Printing Support"
+msgstr "Yazdırma Desteği"
+
+#: src/anduinos_driver_center/app.py:545
+msgid ""
+"Inspect the local print service, configured queues, and the packages that provide modern and "
+"legacy printer support."
+msgstr ""
+"Yerel yazdırma hizmetini, yapılandırılmış kuyrukları ve modern ve eski yazıcı desteği sağlayan "
+"paketleri inceleyin."
+
+#: src/anduinos_driver_center/app.py:549
+msgid "Enable Printing Support"
+msgstr "Yazdırma Desteğini Etkinleştir"
+
+#: src/anduinos_driver_center/app.py:550
+msgid "Allow local, network, and USB printing services to run."
+msgstr "Yerel, ağ ve USB yazdırma hizmetlerinin çalışmasına izin verin."
+
+#: src/anduinos_driver_center/app.py:559
+msgid "System status"
+msgstr "Sistem durumu"
+
+#: src/anduinos_driver_center/app.py:563
+msgid "CUPS service"
+msgstr "CUPS hizmeti"
+
+#: src/anduinos_driver_center/app.py:564
+msgid "Running"
+msgstr "Çalışıyor"
+
+#: src/anduinos_driver_center/app.py:564
+msgid "Stopped"
+msgstr "Durduruldu"
+
+#: src/anduinos_driver_center/app.py:569
+msgid "Start at boot"
+msgstr "Açılışta başlat"
+
+#: src/anduinos_driver_center/app.py:570
+msgid "Enabled"
+msgstr "Etkinleştirildi"
+
+#: src/anduinos_driver_center/app.py:570
+msgid "Disabled"
+msgstr "Devre Dışı"
+
+#: src/anduinos_driver_center/app.py:575
+#, python-format
+msgid "%d configured printer"
+msgid_plural "%d configured printers"
+msgstr[0] "%d yapılandırılmış yazıcı"
+
+#: src/anduinos_driver_center/app.py:581
+msgid "Configured printers"
+msgstr "Yapılandırılmış yazıcılar"
+
+#: src/anduinos_driver_center/app.py:587
+msgid "Default printer"
+msgstr "Varsayılan yazıcı"
+
+#: src/anduinos_driver_center/app.py:588
+msgid "Not set"
+msgstr "Ayarlanmadı"
+
+#: src/anduinos_driver_center/app.py:592
+msgid "No configured queues"
+msgstr "Yapılandırılmış kuyruk yok"
+
+#: src/anduinos_driver_center/app.py:597
+#, python-format
+msgid "%d queue paused"
+msgid_plural "%d queues paused"
+msgstr[0] "%d kuyruğu duraklatıldı"
+
+#: src/anduinos_driver_center/app.py:601
+msgid "All queues enabled"
+msgstr "Tüm kuyruklar etkinleştirildi"
+
+#: src/anduinos_driver_center/app.py:604
+msgid "Print queues"
+msgstr "Yazdırma kuyrukları"
+
+#: src/anduinos_driver_center/app.py:609
+msgid "Core printing"
+msgstr "Çekirdek yazdırma"
+
+#: src/anduinos_driver_center/app.py:610
+msgid "Required for the local print service and command-line clients."
+msgstr "Yerel yazdırma hizmeti ve komut satırı istemcileri için gereklidir."
+
+#: src/anduinos_driver_center/app.py:617
+msgid "Driverless printing"
+msgstr "Sürücüsüz yazdırma"
+
+#: src/anduinos_driver_center/app.py:618
+msgid "Modern IPP drivers, document filters, and capability tools."
+msgstr "Modern IPP sürücüleri, belge filtreleri ve yetenek araçları."
+
+#: src/anduinos_driver_center/app.py:625
+msgid "Network discovery"
+msgstr "Ağ keşfi"
+
+#: src/anduinos_driver_center/app.py:626
+msgid "Automatic discovery of printers advertised on the local network."
+msgstr "Yerel ağda tanıtılan yazıcıların otomatik olarak bulunması."
+
+#: src/anduinos_driver_center/app.py:633
+msgid "Optional compatibility"
+msgstr "İsteğe bağlı uyumluluk"
+
+#: src/anduinos_driver_center/app.py:634
+msgid "USB IPP, administrative authorization, legacy drivers, and network scanning."
+msgstr "USB IPP, yönetici yetkilendirmesi, eski sürücüler ve ağ taraması."
+
+#: src/anduinos_driver_center/app.py:641
+msgid "Complete printing support"
+msgstr "Tam yazdırma desteği"
+
+#: src/anduinos_driver_center/app.py:643
+msgid "Install missing printing packages"
+msgstr "Eksik yazdırma paketlerini yükleyin"
+
+#: src/anduinos_driver_center/app.py:645
+#, python-format
+msgid "%d package is missing"
+msgid_plural "%d packages are missing"
+msgstr[0] "%d paketi eksik"
+
+#: src/anduinos_driver_center/app.py:651
+msgid "Install Missing Packages"
+msgstr "Eksik Paketleri Yükle"
+
+#: src/anduinos_driver_center/app.py:728
+msgid "Printing support enabled."
+msgstr "Yazdırma desteği etkinleştirildi."
+
+#: src/anduinos_driver_center/app.py:730
+msgid "Printing support disabled."
+msgstr "Yazdırma desteği devre dışı."
+
+#: src/anduinos_driver_center/app.py:734
+msgid "Printing operation failed: "
+msgstr "Yazdırma işlemi başarısız oldu: "
+
+#: src/anduinos_driver_center/app.py:735 src/anduinos_driver_center/app.py:783
+msgid "unknown error"
+msgstr "bilinmeyen hata"
+
+#: src/anduinos_driver_center/app.py:770
+msgid "Apply"
+msgstr "Uygula"
+
+#: src/anduinos_driver_center/app.py:771
+msgid "Working…"
+msgstr "Çalışıyor…"
+
+#: src/anduinos_driver_center/app.py:783
+msgid "Driver changes completed. Restart may be required."
+msgstr "Sürücü değişiklikleri tamamlandı. Yeniden başlatma gerekli olabilir."
+
+#: src/anduinos_driver_center/app.py:783
+msgid "Driver operation failed: "
+msgstr "Sürücü işlemi başarısız oldu: "
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
+#: src/anduinos_driver_center/app.py:790
+msgid "OK"
+msgstr "Tamam"
+
+#: src/anduinos_driver_center/app.py:807
+msgid "AnduinOS Team"
+msgstr "4\tAnduinOS Takımı"
+
+#: src/anduinos_driver_center/app.py:810
+msgid "Install, inspect, and repair hardware drivers on AnduinOS."
+msgstr "AnduinOS üzerinde donanım sürücülerini yükleyin, inceleyin ve onarın."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
+msgid "Secure Boot Configuration"
+msgstr "Güvenli Önyükleme Yapılandırması"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
+msgid ""
+"Secure Boot is a motherboard security standard that ensures only trusted software loads at "
+"startup."
+msgstr ""
+"\tGüvenli Önyükleme, yalnızca güvenilir yazılımların başlangıçta yüklenmesini sağlayan bir "
+"anakart güvenlik standardıdır."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
+msgid "It protects your system from low-level malware and rootkits."
+msgstr "Sistemi düşük düzeyli kötü amaçlı yazılımlardan ve rootkitlerden korur."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
+msgid "System Trust Status"
+msgstr "Sistem Güven Durumu"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
+msgid "Create & Enroll Certificate"
+msgstr "Sertifika Oluştur ve Kaydet"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
+msgid "Repair Module Signatures"
+msgstr "Modül İmzalarını Onar"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
+msgid "Note: Use password <b>123456</b> after rebooting."
+msgstr "Not: Yeniden başlattıktan sonra <b>123456</b> şifresini kullanın."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
+msgid "Reboot & Configure Secure Boot"
+msgstr "Yeniden Başlat ve Güvenli Önyükleme Yapılandırması"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
+msgid "  Check Again  "
+msgstr "  Tekrar Kontrol Et  "
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
+msgid "Motherboard hardware protection is active"
+msgstr "Anakart donanım koruması aktif"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
+msgid "Firmware does not support Secure Boot"
+msgstr "Ürün yazılımı Secure Boot'yi desteklemiyor"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
+msgid "Secure Boot state could not be determined"
+msgstr "Secure Boot durumu belirlenemedi"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
+msgid "Secure Boot is disabled"
+msgstr "Secure Boot devre dışı"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+msgid "Not required without firmware enforcement"
+msgstr "Ürün yazılımı zorunlu kılınmadan gerekli değildir"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+msgid "Not checked because Secure Boot state is unknown"
+msgstr "Secure Boot durumu bilinmediğinden işaretlenmedi"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
+msgid "Certificate generated locally"
+msgstr "Sertifika yerel olarak oluşturuldu"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
+msgid "Missing local certificate"
+msgstr "Yerel sertifika eksik"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
+msgid "Certificate is trusted by motherboard"
+msgstr "Sertifika anakart tarafından güveniliyor"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
+msgid "Pending enrollment in blue screen (MOKManager)"
+msgstr "Mavi ekranda kaydetme bekleniyor (MOKManager)"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
+msgid "Certificate is not trusted by motherboard"
+msgstr "Sertifikaya anakart tarafından güvenilmiyor"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
+msgid "Kernel signature enforcement is inactive"
+msgstr "Çekirdek imzası uygulaması etkin değil"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
+msgid "Driver trust cannot be verified"
+msgstr "Sürücü güveni doğrulanamıyor"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
+msgid "Secure Boot trust is ready. No third-party kernel modules are currently installed."
+msgstr "Secure Boot güveni hazır. Şu anda hiçbir üçüncü taraf çekirdek modülü yüklü değil."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
+msgid "Drivers are signed and ready to load"
+msgstr "Sürücüler imzalandı ve yüklenmeye hazır"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
+msgid "Drivers are trusted, but automatic DKMS signing needs repair"
+msgstr "Sürücülere güveniliyor ancak otomatik DKMS imzalamanın onarılması gerekiyor"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
+msgid "No signed third-party drivers detected"
+msgstr "İmzalanmış üçüncü taraf sürücü tespit edilmedi"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
+msgid "Some DKMS modules need to be re-signed"
+msgstr "Bazı DKMS modüllerinin yeniden imzalanması gerekiyor"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
+msgid "Enroll Existing Certificate"
+msgstr "Mevcut Sertifikayı Kaydet"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
+msgid "Repair Automatic DKMS Signing"
+msgstr "Otomatik DKMS İmzalamayı Onar"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
+msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgstr "Bu ürün yazılımı Secure Boot sağlamaz. Sertifika gerekli değildir."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
+msgid ""
+"Secure Boot status could not be read. Driver trust operations are blocked until detection "
+"succeeds."
+msgstr "Secure Boot durumu okunamadı. Algılama başarılı olana kadar sürücü güven işlemleri engellenir."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
+msgid "No certificate is required while Secure Boot is disabled."
+msgstr "Secure Boot devre dışıyken sertifika gerekmez."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
+msgid "System Trust Established. Third-party drivers will load securely."
+msgstr "Sistem Güvenliği Kuruldu. Üçüncü taraf sürücüler güvenli şekilde yüklenecek."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
+msgid "The certificate is enrolled and current drivers are trusted."
+msgstr "Sertifika kaydedildi ve mevcut sürücülere güveniliyor."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
+msgid "Repair automatic DKMS signing before future driver updates."
+msgstr "Gelecekteki sürücü güncellemelerinden önce otomatik DKMS imzalamayı onarın."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+msgid "The certificate is enrolled, but some modules are not signed with it."
+msgstr "Sertifika kaydedildi ancak bazı modüller sertifikayla imzalanmadı."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
+msgid "A certificate is waiting for enrollment."
+msgstr "Bir sertifika kayıt için bekliyor."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
+msgid "Restart and enter password 123456 in MOKManager."
+msgstr "Yeniden başlatın ve MOKManager'ye 123456 şifresini girin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
+msgid "The local trust certificate is not yet enrolled."
+msgstr "Yerel güven sertifikası henüz kaydedilmedi."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
+msgid "You must configure this to use third-party drivers like NVIDIA."
+msgstr "NVIDIA gibi üçüncü taraf sürücülerini kullanmak için bunu yapılandırmanız gerekir."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
+msgid "The local trust certificate is missing."
+msgstr "Yerel güven sertifikası eksik."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
+msgid "  Checking...  "
+msgstr "  Kontrol ediliyor...  "
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
+msgid "Reboot Required"
+msgstr "Yeniden Başlatma Gerekli"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
+msgid "Please trust the certificate upon reboot using password 123456."
+msgstr "Yeniden başlattığınızda sertifikayı 123456 şifresiyle güvenin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
+msgid "Cancel"
+msgstr "İptal"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
+msgid "Reboot"
+msgstr "Yeniden Başlat"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
+msgid "Success! When you reboot, a blue screen will appear."
+msgstr "Başarılı! Yeniden başlattığınızda mavi bir ekran görünecek."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
+msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
+msgstr "'MOK Kaydet' → 'Devam' → 'Evet' seçeneğini belirleyin ve şifreyi girin: 123456"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
+msgid "Certificate Created"
+msgstr "Sertifika Oluşturuldu"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
+msgid "Later"
+msgstr "Daha sonra"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
+msgid "Secure Boot Trust Not Required"
+msgstr "Secure Boot Güven Gerekli Değil"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
+msgid "Firmware signature enforcement is not active."
+msgstr "Ürün yazılımı imzası uygulaması etkin değil."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
+msgid ""
+"The certificate is ready, but one or more DKMS modules could not be rebuilt. You can repair them "
+"after enrollment."
+msgstr ""
+"Sertifika hazır ancak bir veya daha fazla DKMS modülü yeniden oluşturulamadı. Kayıt olduktan "
+"sonra bunları onarabilirsiniz."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
+msgid "Configuration needs attention"
+msgstr "Yapılandırmaya dikkat edilmesi gerekiyor"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
+msgid "System Trust Established"
+msgstr "Sistem Güveni Kuruldu"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
+msgid "Driver Signature Trusted"
+msgstr "Sürücü İmzası Güveniliyor"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
+msgid "Configuration failed. Please try again."
+msgstr "Yapılandırma başarısız oldu. Lütfen tekrar deneyin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
+msgid "Please check the advanced output."
+msgstr "Lütfen gelişmiş çıktıyı kontrol edin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
+msgid "Generating & Signing..."
+msgstr "Oluşturuluyor ve İmzalanıyor..."
