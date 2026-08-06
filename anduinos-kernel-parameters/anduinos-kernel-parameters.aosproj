@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-kernel-parameters</PackageName>
-    <PackageVersion>2.0.0-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>AnduinOS desktop kernel parameters — enables full dynamic preemption on the Ubuntu generic kernel</PackageDescription>
+    <PackageDescription>AnduinOS desktop kernel parameters — enables full dynamic preemption on the Ubuntu HWE generic kernel</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Dependency Include="linux-generic" />
+    <Dependency Include="linux-generic-hwe-26.04" />
     <Dependency Include="grub2-common" />
   </ItemGroup>
 

@@ -172,9 +172,9 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-live-settings` | Config | Casper regional hooks and Live-only systemd policy; removed before target bootloader setup |
 
 For AnduinOS 2.0 (`resolute-addon`), `anduinos-core-system` depends on Ubuntu's
-`linux-generic` metapackage so general-purpose installations retain Ubuntu's
-kernel ABI, Secure Boot signing, SRU/CVE updates, and prebuilt NVIDIA module
-ecosystem. `anduinos-desktop` additionally depends on
+`linux-generic-hwe-26.04` metapackage so general-purpose installations track the
+HWE kernel ABI while retaining Secure Boot signing, SRU/CVE updates, and the
+prebuilt NVIDIA module ecosystem. `anduinos-desktop` additionally depends on
 `anduinos-kernel-parameters`, which appends `preempt=full` through
 `/etc/default/grub.d/50-anduinos-desktop.cfg`. The parameter package is not part
 of `anduinos-core-system` or `anduinos-container`, so server and container

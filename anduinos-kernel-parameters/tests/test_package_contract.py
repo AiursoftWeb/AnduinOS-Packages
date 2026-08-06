@@ -37,7 +37,7 @@ class KernelParametersPackageContractTests(unittest.TestCase):
     def test_package_targets_only_resolute_as_architecture_all(self):
         self.assertEqual(
             self.project.findtext(".//PackageVersion"),
-            "2.0.0-3+$(SuiteShortName)",
+            "2.0.0-4+$(SuiteShortName)",
         )
         self.assertEqual(self.project.findtext(".//TargetSuites"), "resolute-addon")
         self.assertEqual(self.project.findtext(".//TargetArchitectures"), "all")
@@ -52,7 +52,9 @@ class KernelParametersPackageContractTests(unittest.TestCase):
         dependencies = {
             item.get("Include") for item in self.project.findall(".//Dependency")
         }
-        self.assertEqual(dependencies, {"grub2-common", "linux-generic"})
+        self.assertEqual(
+            dependencies, {"grub2-common", "linux-generic-hwe-26.04"}
+        )
         self.assertNotIn("kernel-supports-lowlatency-bootargs", dependencies)
         self.assertEqual(self.project.findtext(".//Conflicts"), "lowlatency-kernel")
         source = self.project.find(".//DependencyCheckSource")
