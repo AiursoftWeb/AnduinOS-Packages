@@ -1,4 +1,7 @@
 from pathlib import Path
+import re
+import subprocess
+import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 
@@ -110,6 +113,58 @@ class PackageTests(unittest.TestCase):
         next_method = application.index("\n    def _device_row", guard)
         self.assertLess(guard, navigation)
         self.assertLess(navigation, next_method)
+
+    def test_every_supported_locale_is_complete_and_matches_the_ui(self):
+        expected_locales = {
+            "ar", "da", "de", "el", "en_GB", "en_US", "es", "fi", "fr",
+            "hi", "id", "it", "ja", "ko", "nl", "pl", "pt", "pt_BR",
+            "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh_CN", "zh_HK",
+            "zh_TW",
+        }
+        po_files = sorted((ROOT / "po").glob("*.po"))
+        self.assertEqual({path.stem for path in po_files}, expected_locales)
+
+        toolkit_ui = ROOT.parent / "anduinos-secureboot-toolkit" / "src" / "anduinos_secureboot" / "ui.py"
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            extracted = Path(temporary_directory) / "messages.pot"
+            subprocess.run(
+                [
+                    "xgettext", "--language=Python", "--keyword=_",
+                    "--keyword=ngettext:1,2", "--from-code=UTF-8",
+                    f"--output={extracted}",
+                    str(ROOT / "src" / "anduinos_driver_center" / "app.py"),
+                    str(toolkit_ui),
+                ],
+                check=True,
+            )
+            template_difference = subprocess.run(
+                [
+                    "msgcomm", "--less-than=2", "--omit-header",
+                    str(ROOT / "po" / "anduinos-driver-center.pot"), str(extracted),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(template_difference.stdout.strip(), "")
+
+        translated_msgid = re.compile(r'^msgid "[^"].*"$', re.MULTILINE)
+        for po_file in po_files:
+            subprocess.run(
+                ["msgfmt", "--check", "--check-format", "--output-file=/dev/null", str(po_file)],
+                check=True,
+            )
+            for selector in ("--untranslated", "--only-fuzzy"):
+                result = subprocess.run(
+                    ["msgattrib", selector, "--no-obsolete", str(po_file)],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertIsNone(
+                    translated_msgid.search(result.stdout),
+                    f"{po_file.name} contains {selector.removeprefix('--')} messages",
+                )
 
 
 if __name__ == "__main__":
