@@ -28,6 +28,31 @@ enum RecoveryScope {
     Personal,
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[repr(u8)]
+enum NotificationUrgency {
+    Low = 0,
+    Normal = 1,
+    Critical = 2,
+}
+
+#[derive(Debug, Eq, PartialEq)]
+struct RenderedNotification {
+    title: String,
+    body: String,
+    urgency: NotificationUrgency,
+}
+
+impl RenderedNotification {
+    fn new(title: String, body: String, urgency: NotificationUrgency) -> Self {
+        Self {
+            title,
+            body,
+            urgency,
+        }
+    }
+}
+
 impl RecoveryScope {
     fn parse(value: &str) -> Option<Self> {
         match value {
@@ -121,25 +146,29 @@ async fn main() -> Result<()> {
             }
             _ => None,
         };
-        let Some((title, body)) = rendered else {
+        let Some(notification) = rendered else {
             continue;
         };
-        if let Err(error) = send_notification(&notifications, &title, &body).await {
+        if let Err(error) = send_notification(&notifications, &notification).await {
             log::warn!("Could not display a Disk Snapshots Manager desktop notification: {error}");
         }
     }
     anyhow::bail!("The system D-Bus notification stream ended unexpectedly")
 }
 
-fn starting_notification(scope: RecoveryScope) -> (String, String) {
+fn starting_notification(scope: RecoveryScope) -> RenderedNotification {
     let body = match scope {
         RecoveryScope::System => tr("A scheduled system snapshot will start in 10 seconds."),
         RecoveryScope::Personal => tr("A scheduled Home snapshot will start in 10 seconds."),
     };
-    (tr("Automatic Snapshot Starting"), body)
+    RenderedNotification::new(
+        tr("Automatic Snapshot Starting"),
+        body,
+        NotificationUrgency::Normal,
+    )
 }
 
-fn failure_notification(scope: RecoveryScope) -> (String, String) {
+fn failure_notification(scope: RecoveryScope) -> RenderedNotification {
     let body = match scope {
         RecoveryScope::System => tr(
             "The scheduled system snapshot could not be created. Check Disk Snapshots Manager for details.",
@@ -148,52 +177,56 @@ fn failure_notification(scope: RecoveryScope) -> (String, String) {
             "The scheduled Home snapshot could not be created. Check Disk Snapshots Manager for details.",
         ),
     };
-    (tr("Automatic Snapshot Failed"), body)
+    RenderedNotification::new(
+        tr("Automatic Snapshot Failed"),
+        body,
+        NotificationUrgency::Critical,
+    )
 }
 
-fn creation_notification(scope: RecoveryScope, automatic: bool) -> (String, String) {
-    match (scope, automatic) {
+fn creation_notification(scope: RecoveryScope, automatic: bool) -> RenderedNotification {
+    let (title, body) = match (scope, automatic) {
         (RecoveryScope::System, true) => (
-            tr("Automatic System Recovery Point Created"),
-            tr("A scheduled system recovery point was created successfully."),
+            tr("Automatic System Snapshot Created"),
+            tr("The scheduled system snapshot was created successfully."),
         ),
         (RecoveryScope::Personal, true) => (
-            tr("Personal Files History Saved"),
-            tr("A scheduled Personal Files history point was created successfully."),
+            tr("Home Snapshot Created"),
+            tr("The scheduled Home snapshot was created successfully."),
         ),
         (RecoveryScope::System, false) => (
-            tr("System Recovery Point Created"),
-            tr("Your system recovery point was created successfully."),
+            tr("System Snapshot Created"),
+            tr("The system snapshot was created successfully."),
         ),
         (RecoveryScope::Personal, false) => (
-            tr("Personal Files History Saved"),
-            tr("Your Personal Files history point was created successfully."),
+            tr("Home Snapshot Created"),
+            tr("The Home snapshot was created successfully."),
         ),
-    }
+    };
+    RenderedNotification::new(title, body, NotificationUrgency::Normal)
 }
 
-fn cleanup_notification(system_deleted: u64, personal_deleted: u64) -> Option<(String, String)> {
+fn cleanup_notification(
+    system_deleted: u64,
+    personal_deleted: u64,
+) -> Option<RenderedNotification> {
     let body = match (system_deleted, personal_deleted) {
         (0, 0) => return None,
-        (system, 0) => format!(
-            "{} {}",
-            system,
-            tr("old system recovery point(s) were removed.")
-        ),
-        (0, personal) => format!(
-            "{} {}",
-            personal,
-            tr("old Personal Files history point(s) were removed.")
-        ),
+        (system, 0) => format!("{} {}", system, tr("old system snapshot(s) were removed.")),
+        (0, personal) => format!("{} {}", personal, tr("old Home snapshot(s) were removed.")),
         (system, personal) => format!(
             "{} {} {} {}",
             system,
-            tr("old system recovery point(s) and"),
+            tr("old system snapshot(s) and"),
             personal,
-            tr("old Personal Files history point(s) were removed.")
+            tr("old Home snapshot(s) were removed.")
         ),
     };
-    Some((tr("Smart Cleanup Completed"), body))
+    Some(RenderedNotification::new(
+        tr("Smart Cleanup Completed"),
+        body,
+        NotificationUrgency::Low,
+    ))
 }
 
 fn allow_cleanup_notification(last: &mut Option<Instant>, now: Instant) -> bool {
@@ -206,20 +239,20 @@ fn allow_cleanup_notification(last: &mut Option<Instant>, now: Instant) -> bool 
     true
 }
 
-async fn send_notification(proxy: &Proxy<'_>, title: &str, body: &str) -> Result<()> {
+async fn send_notification(proxy: &Proxy<'_>, notification: &RenderedNotification) -> Result<()> {
     let actions = Vec::<String>::new();
     let mut hints = HashMap::<String, OwnedValue>::new();
     hints.insert(
         "desktop-entry".into(),
         Str::from("org.anduinos.BtrfsSnapshotsManager").into(),
     );
-    hints.insert("urgency".into(), 0u8.into());
+    hints.insert("urgency".into(), (notification.urgency as u8).into());
     let payload = (
         APPLICATION_NAME,
         0u32,
         APPLICATION_ICON,
-        title,
-        body,
+        notification.title.as_str(),
+        notification.body.as_str(),
         actions,
         hints,
         8_000i32,
@@ -262,5 +295,38 @@ mod tests {
             &mut last,
             start + Duration::from_secs(60)
         ));
+    }
+
+    #[test]
+    fn urgency_matches_the_user_visible_event() {
+        assert_eq!(
+            starting_notification(RecoveryScope::System).urgency,
+            NotificationUrgency::Normal
+        );
+        assert_eq!(
+            creation_notification(RecoveryScope::Personal, true).urgency,
+            NotificationUrgency::Normal
+        );
+        assert_eq!(
+            failure_notification(RecoveryScope::System).urgency,
+            NotificationUrgency::Critical
+        );
+        assert_eq!(
+            cleanup_notification(1, 0)
+                .expect("one deletion produces a notification")
+                .urgency,
+            NotificationUrgency::Low
+        );
+    }
+
+    #[test]
+    fn creation_notifications_describe_snapshots_without_save_metaphors() {
+        let system = creation_notification(RecoveryScope::System, false);
+        assert_eq!(system.title, "System Snapshot Created");
+        assert_eq!(system.body, "The system snapshot was created successfully.");
+
+        let personal = creation_notification(RecoveryScope::Personal, false);
+        assert_eq!(personal.title, "Home Snapshot Created");
+        assert_eq!(personal.body, "The Home snapshot was created successfully.");
     }
 }

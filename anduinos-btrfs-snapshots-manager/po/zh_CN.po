@@ -16,14 +16,6 @@ msgid "A scheduled Home snapshot will start in 10 seconds."
 msgstr "A scheduled Home snapshot will start in 10 seconds."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "A scheduled Personal Files history point was created successfully."
-msgstr "已成功创建计划的个人文件历史点。"
-
-#: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "A scheduled system recovery point was created successfully."
-msgstr "已成功创建计划的系统恢复点。"
-
-#: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "A scheduled system snapshot will start in 10 seconds."
 msgstr "A scheduled system snapshot will start in 10 seconds."
 
@@ -80,8 +72,8 @@ msgid "Automatic Snapshots"
 msgstr "Automatic Snapshots"
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "Automatic System Recovery Point Created"
-msgstr "已创建自动系统恢复点"
+msgid "Automatic System Snapshot Created"
+msgstr "自动系统快照创建成功"
 
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Automatic System Snapshots"
@@ -327,6 +319,10 @@ msgstr "历史点 {0} · {1} 字节 · 修改于 {2}"
 msgid "Home snapshot"
 msgstr "Home snapshot"
 
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Home Snapshot Created"
+msgstr "用户目录快照创建成功"
+
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
 msgid "hour(s)"
 msgstr "小时"
@@ -460,16 +456,16 @@ msgid "Notify before a scheduled snapshot"
 msgstr "Notify before a scheduled snapshot"
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "old Personal Files history point(s) were removed."
-msgstr "个旧个人文件历史点已删除。"
+msgid "old Home snapshot(s) were removed."
+msgstr "个旧用户目录快照已删除。"
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "old system recovery point(s) and"
-msgstr "个旧系统恢复点和"
+msgid "old system snapshot(s) and"
+msgstr "个旧系统快照和"
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "old system recovery point(s) were removed."
-msgstr "个旧系统恢复点已删除。"
+msgid "old system snapshot(s) were removed."
+msgstr "个旧系统快照已删除。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Only the display name changes."
@@ -506,10 +502,6 @@ msgstr "永久保留"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Personal files"
 msgstr "个人文件"
-
-#: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "Personal Files History Saved"
-msgstr "个人文件历史已保存"
 
 #: src/btrfs-snapshots-manager/src/ui/mod.rs
 msgid "Personal Files Recovery"
@@ -723,13 +715,13 @@ msgstr "系统文件和软件包"
 msgid "System Recovery"
 msgstr "系统恢复"
 
-#: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "System Recovery Point Created"
-msgstr "系统恢复点已创建"
-
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "system snapshot"
 msgstr "system snapshot"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "System Snapshot Created"
+msgstr "系统快照创建成功"
 
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 msgid "The automatic snapshot infrastructure cannot be disabled here."
@@ -738,6 +730,10 @@ msgstr "The automatic snapshot infrastructure cannot be disabled here."
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "The current system was preserved permanently. Restart now to roll back, or cancel from the System Recovery banner."
 msgstr "当前系统已永久保留。现在重启即可回滚，也可在“系统恢复”横幅中取消。"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The Home snapshot was created successfully."
+msgstr "用户目录快照创建成功。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "The root filesystem is {0}."
@@ -748,8 +744,16 @@ msgid "The scheduled Home snapshot could not be created. Check Disk Snapshots Ma
 msgstr "The scheduled Home snapshot could not be created. Check Disk Snapshots Manager for details."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled Home snapshot was created successfully."
+msgstr "计划的用户目录快照创建成功。"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "The scheduled system snapshot could not be created. Check Disk Snapshots Manager for details."
 msgstr "The scheduled system snapshot could not be created. Check Disk Snapshots Manager for details."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled system snapshot was created successfully."
+msgstr "计划的系统快照创建成功。"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "The selected files were recovered successfully."
@@ -758,6 +762,10 @@ msgstr "所选文件已成功恢复。"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "The snapshot is created immediately."
 msgstr "The snapshot is created immediately."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The system snapshot was created successfully."
+msgstr "系统快照创建成功。"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "This folder is empty"
@@ -810,14 +818,6 @@ msgstr "警告"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Will not change"
 msgstr "不会改变"
-
-#: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "Your Personal Files history point was created successfully."
-msgstr "你的个人文件历史点已成功创建。"
-
-#: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "Your system recovery point was created successfully."
-msgstr "你的系统恢复点已成功创建。"
 
 #: src/btrfs-snapshots-manager/src/ui/mod.rs
 msgid "{0} available"

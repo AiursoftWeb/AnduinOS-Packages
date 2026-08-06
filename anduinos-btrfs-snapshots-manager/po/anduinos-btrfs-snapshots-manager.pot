@@ -14,14 +14,6 @@ msgid "A scheduled Home snapshot will start in 10 seconds."
 msgstr ""
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "A scheduled Personal Files history point was created successfully."
-msgstr ""
-
-#: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "A scheduled system recovery point was created successfully."
-msgstr ""
-
-#: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "A scheduled system snapshot will start in 10 seconds."
 msgstr ""
 
@@ -78,7 +70,7 @@ msgid "Automatic Snapshots"
 msgstr ""
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "Automatic System Recovery Point Created"
+msgid "Automatic System Snapshot Created"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -325,6 +317,10 @@ msgstr ""
 msgid "Home snapshot"
 msgstr ""
 
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Home Snapshot Created"
+msgstr ""
+
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
 msgid "hour(s)"
 msgstr ""
@@ -458,15 +454,15 @@ msgid "Notify before a scheduled snapshot"
 msgstr ""
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "old Personal Files history point(s) were removed."
+msgid "old Home snapshot(s) were removed."
 msgstr ""
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "old system recovery point(s) and"
+msgid "old system snapshot(s) and"
 msgstr ""
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "old system recovery point(s) were removed."
+msgid "old system snapshot(s) were removed."
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -503,10 +499,6 @@ msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Personal files"
-msgstr ""
-
-#: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "Personal Files History Saved"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/mod.rs
@@ -721,12 +713,12 @@ msgstr ""
 msgid "System Recovery"
 msgstr ""
 
-#: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "System Recovery Point Created"
-msgstr ""
-
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "system snapshot"
+msgstr ""
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "System Snapshot Created"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
@@ -735,6 +727,10 @@ msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "The current system was preserved permanently. Restart now to roll back, or cancel from the System Recovery banner."
+msgstr ""
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The Home snapshot was created successfully."
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -746,7 +742,15 @@ msgid "The scheduled Home snapshot could not be created. Check Disk Snapshots Ma
 msgstr ""
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled Home snapshot was created successfully."
+msgstr ""
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "The scheduled system snapshot could not be created. Check Disk Snapshots Manager for details."
+msgstr ""
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled system snapshot was created successfully."
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
@@ -755,6 +759,10 @@ msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "The snapshot is created immediately."
+msgstr ""
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The system snapshot was created successfully."
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
@@ -807,14 +815,6 @@ msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Will not change"
-msgstr ""
-
-#: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "Your Personal Files history point was created successfully."
-msgstr ""
-
-#: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid "Your system recovery point was created successfully."
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/mod.rs
