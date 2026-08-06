@@ -78,6 +78,39 @@ pub fn get_deployment_spaces(
     Ok(result)
 }
 
+pub fn get_personal_spaces(
+    snapshots: &[anduinos_recovery_engine::personal::PersonalSnapshotRecord],
+) -> std::collections::HashMap<String, SnapshotSpace> {
+    let engine = anduinos_recovery_engine::personal::PersonalSnapshotEngine::default();
+    snapshots
+        .iter()
+        .filter_map(|record| {
+            snapshot_space(&engine.snapshot_path(record.id))
+                .ok()
+                .flatten()
+                .map(|space| (record.id.to_string(), space))
+        })
+        .collect()
+}
+
+fn snapshot_space(snapshot: &Path) -> Result<Option<SnapshotSpace>> {
+    let root_id = run_btrfs(&[
+        std::ffi::OsStr::new("inspect-internal"),
+        std::ffi::OsStr::new("rootid"),
+        snapshot.as_os_str(),
+    ])?
+    .trim()
+    .parse::<u64>()
+    .context("btrfs returned an invalid subvolume ID")?;
+    let qgroups = run_btrfs(&[
+        std::ffi::OsStr::new("qgroup"),
+        std::ffi::OsStr::new("show"),
+        std::ffi::OsStr::new("--raw"),
+        snapshot.as_os_str(),
+    ])?;
+    Ok(parse_qgroup_for_subvolume(&qgroups, root_id))
+}
+
 fn run_btrfs(arguments: &[&std::ffi::OsStr]) -> Result<String> {
     let output = Command::new(BTRFS)
         .args(arguments)

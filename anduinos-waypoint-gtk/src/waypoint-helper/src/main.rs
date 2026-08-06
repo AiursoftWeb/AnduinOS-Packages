@@ -2,17 +2,13 @@
 // This binary runs with elevated privileges via D-Bus activation
 
 use anduinos_recovery_engine::{
-    RECOVERY_STORE_ROOT,
-    external_backup::{BackupId, ExternalBackupManager},
-    layout,
-    model::{DeploymentId, DeploymentKind, DeploymentRecord, DeploymentState},
+    RECOVERY_STORE_ROOT, layout,
+    model::{DeploymentId, DeploymentKind, DeploymentState},
     operations::OperationEngine,
-    personal::{
-        PersonalSnapshotEngine, PersonalSnapshotId, PersonalSnapshotKind, PersonalSnapshotState,
-    },
-    personal_backup::PersonalBackupManager,
+    personal::{PersonalSnapshotEngine, PersonalSnapshotId, PersonalSnapshotState},
     rollback::RollbackCoordinator,
     store::DeploymentStore,
+    system_browser::SystemSnapshotBrowser,
     transaction::TransactionStore,
 };
 use anyhow::{Context, Result};
@@ -86,6 +82,13 @@ impl RateLimiter {
 /// Main D-Bus service interface for Waypoint operations
 struct WaypointHelper {
     rate_limiter: RateLimiter,
+    browse_leases: std::sync::Mutex<std::collections::HashMap<String, SystemBrowseLease>>,
+}
+
+struct SystemBrowseLease {
+    pid: u32,
+    deployment_id: DeploymentId,
+    expires_at: std::time::Instant,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -113,7 +116,31 @@ impl WaypointHelper {
         Self {
             // Rate limit: 1 operation per 5 seconds per user
             rate_limiter: RateLimiter::new(5),
+            browse_leases: std::sync::Mutex::new(std::collections::HashMap::new()),
         }
+    }
+
+    async fn validate_browse_lease(
+        &self,
+        hdr: &zbus::message::Header<'_>,
+        connection: &Connection,
+        token: &str,
+        deployment_id: DeploymentId,
+    ) -> Result<()> {
+        let pid = Self::get_caller_pid(hdr, connection).await?;
+        let mut leases = self
+            .browse_leases
+            .lock()
+            .map_err(|_| anyhow::anyhow!("Browse lease store is unavailable"))?;
+        leases.retain(|_, lease| lease.expires_at > std::time::Instant::now());
+        let lease = leases
+            .get(token)
+            .context("System snapshot browser authorization expired")?;
+        anyhow::ensure!(
+            lease.pid == pid && lease.deployment_id == deployment_id,
+            "System snapshot browser authorization does not match this caller"
+        );
+        Ok(())
     }
 
     /// Get caller's user ID from D-Bus header
@@ -208,67 +235,6 @@ impl WaypointHelper {
         }
         Ok(directory.to_string())
     }
-
-    #[allow(clippy::too_many_arguments)]
-    async fn external_backup_by_id<T, F>(
-        &self,
-        hdr: &zbus::message::Header<'_>,
-        connection: &Connection,
-        filesystem_uuid: &str,
-        backup_id: &str,
-        rate_limit_key: &str,
-        audit_operation: &str,
-        operation: F,
-    ) -> (bool, String)
-    where
-        T: serde::Serialize,
-        F: FnOnce(
-            BackupId,
-        )
-            -> Result<T, anduinos_recovery_engine::external_backup::ExternalBackupError>,
-    {
-        let (uid, pid) = Self::get_caller_info(hdr, connection).await;
-        if let Err(error) =
-            check_authorization(hdr, connection, POLKIT_ACTION_EXTERNAL_BACKUP).await
-        {
-            audit::log_auth_failure(uid, pid, POLKIT_ACTION_EXTERNAL_BACKUP, &error.to_string());
-            return (false, format!("Authorization failed: {error}"));
-        }
-        if let Err(wait) = self.rate_limiter.check_rate_limit(&uid, rate_limit_key) {
-            return (
-                false,
-                format!(
-                    "Please wait {} seconds before repeating this backup operation",
-                    wait.as_secs()
-                ),
-            );
-        }
-        let id = match backup_id.parse::<BackupId>() {
-            Ok(id) => id,
-            Err(error) => return (false, format!("Invalid backup ID: {error}")),
-        };
-        let resource = format!("{backup_id}@{filesystem_uuid}");
-        match operation(id) {
-            Ok(result) => match serde_json::to_string(&result) {
-                Ok(json) => {
-                    audit::log_external_backup(uid, pid, audit_operation, &resource, true, None);
-                    (true, json)
-                }
-                Err(error) => (false, format!("Could not serialize backup result: {error}")),
-            },
-            Err(error) => {
-                audit::log_external_backup(
-                    uid,
-                    pid,
-                    audit_operation,
-                    &resource,
-                    false,
-                    Some(&error.to_string()),
-                );
-                (false, error.to_string())
-            }
-        }
-    }
 }
 
 #[interface(name = "org.anduinos.Waypoint.Helper")]
@@ -292,15 +258,26 @@ impl WaypointHelper {
     /// Privacy-preserving desktop event emitted only when the matching
     /// automatic schedule has creation notifications enabled.
     #[zbus(signal)]
-    async fn automatic_snapshot_created(
+    async fn snapshot_creation_succeeded(
+        ctxt: &zbus::SignalContext<'_>,
+        scope: &str,
+        automatic: bool,
+    ) -> zbus::Result<()>;
+
+    #[zbus(signal)]
+    async fn automatic_snapshot_starting(
         ctxt: &zbus::SignalContext<'_>,
         scope: &str,
     ) -> zbus::Result<()>;
 
-    /// Aggregated retention event. Individual snapshot identities and titles
-    /// never leave the privileged service through this notification channel.
     #[zbus(signal)]
-    async fn automatic_snapshots_deleted(
+    async fn automatic_snapshot_failed(
+        ctxt: &zbus::SignalContext<'_>,
+        scope: &str,
+    ) -> zbus::Result<()>;
+
+    #[zbus(signal)]
+    async fn automatic_cleanup_succeeded(
         ctxt: &zbus::SignalContext<'_>,
         system_deleted: u64,
         personal_deleted: u64,
@@ -318,6 +295,44 @@ impl WaypointHelper {
                 .to_string()
             },
         )
+    }
+
+    /// Private root-owned scheduler notification bridge.
+    async fn notify_automatic_snapshot_event(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        #[zbus(signal_context)] ctxt: zbus::SignalContext<'_>,
+        event: String,
+        scope: String,
+    ) -> (bool, String) {
+        let uid = match Self::get_caller_uid(&hdr, connection).await {
+            Ok(uid) => uid,
+            Err(error) => return (false, error.to_string()),
+        };
+        if uid != "0" {
+            return (
+                false,
+                "Only the root-owned scheduler may emit automation events".into(),
+            );
+        }
+        if !matches!(scope.as_str(), "system" | "personal") {
+            return (false, "Invalid automation scope".into());
+        }
+        let result = match event.as_str() {
+            "starting" => {
+                if !automatic_pre_notification_enabled() {
+                    return (true, "disabled".into());
+                }
+                Self::automatic_snapshot_starting(&ctxt, &scope).await
+            }
+            "failed" => Self::automatic_snapshot_failed(&ctxt, &scope).await,
+            _ => return (false, "Invalid automation event".into()),
+        };
+        match result {
+            Ok(()) => (true, "emitted".into()),
+            Err(error) => (false, error.to_string()),
+        }
     }
 
     /// Create an immutable AnduinOS system recovery point.
@@ -362,6 +377,12 @@ impl WaypointHelper {
                         Self::snapshot_created(&ctxt, &record.id.to_string(), "manual").await
                     {
                         log::warn!("Could not emit recovery-point creation signal: {error}");
+                    }
+                    if automatic_success_notification_enabled()
+                        && let Err(error) =
+                            Self::snapshot_creation_succeeded(&ctxt, "system", false).await
+                    {
+                        log::warn!("Could not emit manual System notification: {error}");
                     }
                     (true, json)
                 }
@@ -420,8 +441,9 @@ impl WaypointHelper {
                     {
                         log::warn!("Could not emit scheduled recovery-point signal: {error}");
                     }
-                    if schedule_notification_enabled(ScheduleScope::System, &schedule_id)
-                        && let Err(error) = Self::automatic_snapshot_created(&ctxt, "system").await
+                    if automatic_success_notification_enabled()
+                        && let Err(error) =
+                            Self::snapshot_creation_succeeded(&ctxt, "system", true).await
                     {
                         log::warn!("Could not emit automatic System notification: {error}");
                     }
@@ -487,6 +509,12 @@ impl WaypointHelper {
                             .await
                     {
                         log::warn!("Could not emit Personal Files history signal: {error}");
+                    }
+                    if automatic_success_notification_enabled()
+                        && let Err(error) =
+                            Self::snapshot_creation_succeeded(&ctxt, "personal", false).await
+                    {
+                        log::warn!("Could not emit manual Personal Files notification: {error}");
                     }
                     (true, json)
                 }
@@ -560,9 +588,9 @@ impl WaypointHelper {
                             "Could not emit scheduled Personal Files history signal: {error}"
                         );
                     }
-                    if schedule_notification_enabled(ScheduleScope::Personal, &schedule_id)
+                    if automatic_success_notification_enabled()
                         && let Err(error) =
-                            Self::automatic_snapshot_created(&ctxt, "personal").await
+                            Self::snapshot_creation_succeeded(&ctxt, "personal", true).await
                     {
                         log::warn!("Could not emit automatic Personal Files notification: {error}");
                     }
@@ -629,6 +657,71 @@ impl WaypointHelper {
         }
     }
 
+    /// Delete multiple unpinned Personal Files history points under one
+    /// explicit authorization decision.
+    async fn delete_personal_snapshots(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        snapshot_ids: Vec<String>,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_DELETE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_DELETE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        if snapshot_ids.is_empty() {
+            return (
+                false,
+                "No Personal Files history points were selected".into(),
+            );
+        }
+        let parsed = snapshot_ids
+            .iter()
+            .map(|value| {
+                value
+                    .parse::<PersonalSnapshotId>()
+                    .map(|id| (value, id))
+                    .map_err(|error| format!("{value}: {error}"))
+            })
+            .collect::<Result<Vec<_>, _>>();
+        let parsed = match parsed {
+            Ok(parsed) => parsed,
+            Err(error) => return (false, format!("Invalid personal snapshot ID: {error}")),
+        };
+        let engine = PersonalSnapshotEngine::default();
+        let layout = layout::inspect_current();
+        let mut failures = Vec::new();
+        for (value, id) in parsed {
+            match engine.delete(&layout, id) {
+                Ok(()) => audit::log_operation(
+                    uid.clone(),
+                    pid,
+                    "delete_personal_snapshot",
+                    value,
+                    true,
+                    None,
+                ),
+                Err(error) => {
+                    audit::log_operation(
+                        uid.clone(),
+                        pid,
+                        "delete_personal_snapshot",
+                        value,
+                        false,
+                        Some(&error.to_string()),
+                    );
+                    failures.push(format!("{value}: {error}"));
+                }
+            }
+        }
+        if failures.is_empty() {
+            (true, "Personal Files history points deleted".into())
+        } else {
+            (false, failures.join("\n"))
+        }
+    }
+
     /// Protect or unprotect one Personal Files history point.
     async fn set_personal_snapshot_pinned(
         &self,
@@ -654,6 +747,58 @@ impl WaypointHelper {
         }
     }
 
+    async fn rename_personal_snapshot(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        snapshot_id: String,
+        title: String,
+    ) -> (bool, String) {
+        if let Err(error) =
+            check_authorization(&hdr, connection, POLKIT_ACTION_PERSONAL_FILES).await
+        {
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match snapshot_id.parse::<PersonalSnapshotId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid personal snapshot ID: {error}")),
+        };
+        match PersonalSnapshotEngine::default().rename(&layout::inspect_current(), id, &title) {
+            Ok(record) => serde_json::to_string(&record)
+                .map(|json| (true, json))
+                .unwrap_or_else(|error| (false, error.to_string())),
+            Err(error) => (false, error.to_string()),
+        }
+    }
+
+    async fn verify_personal_snapshot(&self, snapshot_id: String) -> String {
+        let id = match snapshot_id.parse::<PersonalSnapshotId>() {
+            Ok(id) => id,
+            Err(error) => {
+                return serde_json::json!({
+                    "is_valid": false,
+                    "errors": [format!("Invalid personal snapshot ID: {error}")],
+                    "warnings": [],
+                })
+                .to_string();
+            }
+        };
+        match PersonalSnapshotEngine::default().verify(&layout::inspect_current(), id) {
+            Ok(_) => serde_json::json!({
+                "is_valid": true,
+                "errors": [],
+                "warnings": [],
+            })
+            .to_string(),
+            Err(error) => serde_json::json!({
+                "is_valid": false,
+                "errors": [error.to_string()],
+                "warnings": [],
+            })
+            .to_string(),
+        }
+    }
+
     /// List one bounded directory from the caller's own historical home.
     async fn list_personal_files(
         &self,
@@ -662,11 +807,6 @@ impl WaypointHelper {
         snapshot_id: String,
         relative_path: String,
     ) -> (bool, String) {
-        if let Err(error) =
-            check_authorization(&hdr, connection, POLKIT_ACTION_PERSONAL_FILES).await
-        {
-            return (false, format!("Authorization failed: {error}"));
-        }
         let user_directory = match Self::caller_home_directory(&hdr, connection).await {
             Ok(value) => value,
             Err(error) => return (false, error.to_string()),
@@ -696,9 +836,6 @@ impl WaypointHelper {
         snapshot_id: String,
         relative_path: String,
     ) -> zbus::fdo::Result<zbus::zvariant::OwnedFd> {
-        check_authorization(&hdr, connection, POLKIT_ACTION_PERSONAL_FILES)
-            .await
-            .map_err(|error| zbus::fdo::Error::AccessDenied(error.to_string()))?;
         let user_directory = Self::caller_home_directory(&hdr, connection)
             .await
             .map_err(|error| zbus::fdo::Error::Failed(error.to_string()))?;
@@ -708,6 +845,130 @@ impl WaypointHelper {
         let engine = PersonalSnapshotEngine::default();
         let file = engine
             .browser(&layout::inspect_current(), id, &user_directory)
+            .and_then(|browser| browser.open_file(&relative_path))
+            .map_err(|error| zbus::fdo::Error::Failed(error.to_string()))?;
+        Ok(std::os::fd::OwnedFd::from(file).into())
+    }
+
+    /// List one directory in a system snapshot. Every call requires an
+    /// active window/process-bound administrator lease.
+    async fn begin_system_snapshot_browse(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        deployment_id: String,
+    ) -> (bool, String) {
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_RESTORE).await {
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match deployment_id.parse::<DeploymentId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid recovery point ID: {error}")),
+        };
+        if let Err(error) =
+            OperationEngine::default().check_available(&layout::inspect_current(), id)
+        {
+            return (false, error.to_string());
+        }
+        let pid = match Self::get_caller_pid(&hdr, connection).await {
+            Ok(pid) => pid,
+            Err(error) => return (false, error.to_string()),
+        };
+        let token = uuid::Uuid::new_v4().to_string();
+        let lease = SystemBrowseLease {
+            pid,
+            deployment_id: id,
+            expires_at: std::time::Instant::now() + std::time::Duration::from_secs(4 * 60 * 60),
+        };
+        match self.browse_leases.lock() {
+            Ok(mut leases) => {
+                leases.insert(token.clone(), lease);
+                (true, token)
+            }
+            Err(_) => (false, "Browse lease store is unavailable".into()),
+        }
+    }
+
+    async fn end_system_snapshot_browse(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        token: String,
+    ) -> (bool, String) {
+        let pid = match Self::get_caller_pid(&hdr, connection).await {
+            Ok(pid) => pid,
+            Err(error) => return (false, error.to_string()),
+        };
+        match self.browse_leases.lock() {
+            Ok(mut leases) => match leases.get(&token) {
+                Some(lease) if lease.pid == pid => {
+                    leases.remove(&token);
+                    (true, "released".into())
+                }
+                _ => (false, "Browse lease does not belong to this caller".into()),
+            },
+            Err(_) => (false, "Browse lease store is unavailable".into()),
+        }
+    }
+
+    async fn list_system_snapshot_files(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        token: String,
+        deployment_id: String,
+        relative_path: String,
+    ) -> (bool, String) {
+        let id = match deployment_id.parse::<DeploymentId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid recovery point ID: {error}")),
+        };
+        if let Err(error) = self
+            .validate_browse_lease(&hdr, connection, &token, id)
+            .await
+        {
+            return (false, error.to_string());
+        }
+        let result = OperationEngine::default()
+            .check_available(&layout::inspect_current(), id)
+            .map_err(anyhow::Error::from)
+            .and_then(|_| {
+                SystemSnapshotBrowser::open(std::path::Path::new(RECOVERY_STORE_ROOT), id)
+                    .map_err(|error| anyhow::anyhow!(error.to_string()))
+            })
+            .and_then(|browser| {
+                browser
+                    .list(&relative_path)
+                    .map_err(|error| anyhow::anyhow!(error.to_string()))
+            });
+        match result {
+            Ok(entries) => serde_json::to_string(&entries)
+                .map(|json| (true, json))
+                .unwrap_or_else(|error| (false, error.to_string())),
+            Err(error) => (false, sanitize_error_for_client(&error)),
+        }
+    }
+
+    /// Return one regular system-snapshot file as a read-only descriptor.
+    /// The unprivileged GUI chooses and writes the destination.
+    async fn export_system_snapshot_file(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        token: String,
+        deployment_id: String,
+        relative_path: String,
+    ) -> zbus::fdo::Result<zbus::zvariant::OwnedFd> {
+        let id = deployment_id
+            .parse::<DeploymentId>()
+            .map_err(|error| zbus::fdo::Error::InvalidArgs(error.to_string()))?;
+        self.validate_browse_lease(&hdr, connection, &token, id)
+            .await
+            .map_err(|error| zbus::fdo::Error::AccessDenied(error.to_string()))?;
+        OperationEngine::default()
+            .check_available(&layout::inspect_current(), id)
+            .map_err(|error| zbus::fdo::Error::Failed(error.to_string()))?;
+        let file = SystemSnapshotBrowser::open(std::path::Path::new(RECOVERY_STORE_ROOT), id)
             .and_then(|browser| browser.open_file(&relative_path))
             .map_err(|error| zbus::fdo::Error::Failed(error.to_string()))?;
         Ok(std::os::fd::OwnedFd::from(file).into())
@@ -744,6 +1005,60 @@ impl WaypointHelper {
                 );
                 (false, error.to_string())
             }
+        }
+    }
+
+    /// Delete multiple unprotected system recovery points under one explicit
+    /// authorization decision.
+    async fn delete_deployments(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        deployment_ids: Vec<String>,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_DELETE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_DELETE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        if deployment_ids.is_empty() {
+            return (false, "No system recovery points were selected".into());
+        }
+        let parsed = deployment_ids
+            .iter()
+            .map(|value| {
+                value
+                    .parse::<DeploymentId>()
+                    .map(|id| (value, id))
+                    .map_err(|error| format!("{value}: {error}"))
+            })
+            .collect::<Result<Vec<_>, _>>();
+        let parsed = match parsed {
+            Ok(parsed) => parsed,
+            Err(error) => return (false, format!("Invalid recovery point ID: {error}")),
+        };
+        let engine = OperationEngine::default();
+        let layout = layout::inspect_current();
+        let mut failures = Vec::new();
+        for (value, id) in parsed {
+            match engine.delete(&layout, id) {
+                Ok(()) => audit::log_snapshot_delete(uid.clone(), pid, value, true, None),
+                Err(error) => {
+                    audit::log_snapshot_delete(
+                        uid.clone(),
+                        pid,
+                        value,
+                        false,
+                        Some(&error.to_string()),
+                    );
+                    failures.push(format!("{value}: {error}"));
+                }
+            }
+        }
+        if failures.is_empty() {
+            (true, "System recovery points deleted".into())
+        } else {
+            (false, failures.join("\n"))
         }
     }
 
@@ -804,6 +1119,30 @@ impl WaypointHelper {
                 );
                 (false, error.to_string())
             }
+        }
+    }
+
+    async fn rename_deployment(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        id: String,
+        title: String,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_CONFIGURE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_CONFIGURE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match id.parse::<DeploymentId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid recovery point ID: {error}")),
+        };
+        match OperationEngine::default().rename(&layout::inspect_current(), id, &title) {
+            Ok(record) => serde_json::to_string(&record)
+                .map(|json| (true, json))
+                .unwrap_or_else(|error| (false, error.to_string())),
+            Err(error) => (false, error.to_string()),
         }
     }
 
@@ -888,305 +1227,15 @@ impl WaypointHelper {
     }
 
     /// Return referenced and exclusive qgroup bytes for trusted deployments.
-    async fn get_deployment_spaces(&self, deployment_ids: Vec<String>) -> String {
-        match btrfs::get_deployment_spaces(deployment_ids) {
-            Ok(spaces) => serde_json::to_string(&spaces).unwrap_or_else(|_| "{}".to_string()),
-            Err(error) => {
-                log::warn!("Btrfs deployment accounting is unavailable: {error}");
-                "{}".to_string()
-            }
-        }
-    }
-
     /// List mounted external filesystems accepted by the trusted backup engine.
-    async fn list_backup_destinations(&self) -> (bool, String) {
-        match ExternalBackupManager.list_destinations() {
-            Ok(destinations) => match serde_json::to_string(&destinations) {
-                Ok(json) => (true, json),
-                Err(error) => (false, format!("Could not serialize destinations: {error}")),
-            },
-            Err(error) => (false, error.to_string()),
-        }
-    }
-
     /// List backup manifests by destination filesystem UUID without hashing
     /// every potentially large stream.
-    async fn list_external_backups(&self, filesystem_uuid: String) -> (bool, String) {
-        match ExternalBackupManager.discover(&filesystem_uuid) {
-            Ok(report) => match serde_json::to_string(&report) {
-                Ok(json) => (true, json),
-                Err(error) => (false, format!("Could not serialize backups: {error}")),
-            },
-            Err(error) => (false, error.to_string()),
-        }
-    }
-
     /// List independent Personal Files backup manifests on an external drive.
-    async fn list_personal_external_backups(&self, filesystem_uuid: String) -> (bool, String) {
-        match PersonalBackupManager.discover(&filesystem_uuid) {
-            Ok(report) => serde_json::to_string(&report)
-                .map(|json| (true, json))
-                .unwrap_or_else(|error| (false, error.to_string())),
-            Err(error) => (false, error.to_string()),
-        }
-    }
-
     /// Export one immutable Personal Files history point as a full Btrfs stream.
-    async fn export_personal_snapshot(
-        &self,
-        #[zbus(header)] hdr: zbus::message::Header<'_>,
-        #[zbus(connection)] connection: &Connection,
-        snapshot_id: String,
-        filesystem_uuid: String,
-    ) -> (bool, String) {
-        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
-        if let Err(error) =
-            check_authorization(&hdr, connection, POLKIT_ACTION_EXTERNAL_BACKUP).await
-        {
-            audit::log_auth_failure(uid, pid, POLKIT_ACTION_EXTERNAL_BACKUP, &error.to_string());
-            return (false, format!("Authorization failed: {error}"));
-        }
-        if let Err(wait) = self
-            .rate_limiter
-            .check_rate_limit(&uid, "export_personal_snapshot")
-        {
-            return (
-                false,
-                format!(
-                    "Please wait {} seconds before exporting another Personal Files history point",
-                    wait.as_secs()
-                ),
-            );
-        }
-        let id = match snapshot_id.parse::<PersonalSnapshotId>() {
-            Ok(id) => id,
-            Err(error) => return (false, format!("Invalid personal snapshot ID: {error}")),
-        };
-        let resource = format!("{snapshot_id}@{filesystem_uuid}");
-        match PersonalBackupManager.export(&layout::inspect_current(), id, &filesystem_uuid) {
-            Ok(manifest) => match serde_json::to_string(&manifest) {
-                Ok(json) => {
-                    audit::log_external_backup(uid, pid, "export_personal", &resource, true, None);
-                    (true, json)
-                }
-                Err(error) => (false, error.to_string()),
-            },
-            Err(error) => {
-                audit::log_external_backup(
-                    uid,
-                    pid,
-                    "export_personal",
-                    &resource,
-                    false,
-                    Some(&error.to_string()),
-                );
-                (false, error.to_string())
-            }
-        }
-    }
-
-    async fn verify_personal_external_backup(
-        &self,
-        #[zbus(header)] hdr: zbus::message::Header<'_>,
-        #[zbus(connection)] connection: &Connection,
-        filesystem_uuid: String,
-        backup_id: String,
-    ) -> (bool, String) {
-        self.external_backup_by_id(
-            &hdr,
-            connection,
-            &filesystem_uuid,
-            &backup_id,
-            "verify_personal_external_backup",
-            "verify_external_personal",
-            |id| PersonalBackupManager.verify(&filesystem_uuid, id),
-        )
-        .await
-    }
-
-    async fn import_personal_external_backup(
-        &self,
-        #[zbus(header)] hdr: zbus::message::Header<'_>,
-        #[zbus(connection)] connection: &Connection,
-        #[zbus(signal_context)] ctxt: zbus::SignalContext<'_>,
-        filesystem_uuid: String,
-        backup_id: String,
-    ) -> (bool, String) {
-        let result = self
-            .external_backup_by_id(
-                &hdr,
-                connection,
-                &filesystem_uuid,
-                &backup_id,
-                "import_personal_external_backup",
-                "import_external_personal",
-                |id| PersonalBackupManager.import(&layout::inspect_current(), &filesystem_uuid, id),
-            )
-            .await;
-        if result.0
-            && let Ok(record) = serde_json::from_str::<
-                anduinos_recovery_engine::personal::PersonalSnapshotRecord,
-            >(&result.1)
-            && let Err(error) =
-                Self::personal_snapshot_created(&ctxt, &record.id.to_string(), "external-import")
-                    .await
-        {
-            log::warn!("Could not emit imported Personal Files history signal: {error}");
-        }
-        result
-    }
-
-    async fn delete_personal_external_backup(
-        &self,
-        #[zbus(header)] hdr: zbus::message::Header<'_>,
-        #[zbus(connection)] connection: &Connection,
-        filesystem_uuid: String,
-        backup_id: String,
-    ) -> (bool, String) {
-        self.external_backup_by_id(
-            &hdr,
-            connection,
-            &filesystem_uuid,
-            &backup_id,
-            "delete_personal_external_backup",
-            "delete_external_personal",
-            |id| {
-                PersonalBackupManager
-                    .delete(&filesystem_uuid, id)
-                    .map(|()| serde_json::json!({"deleted": true}))
-            },
-        )
-        .await
-    }
-
     /// Export one trusted immutable deployment to a mounted filesystem UUID.
-    async fn export_deployment(
-        &self,
-        #[zbus(header)] hdr: zbus::message::Header<'_>,
-        #[zbus(connection)] connection: &Connection,
-        deployment_id: String,
-        filesystem_uuid: String,
-    ) -> (bool, String) {
-        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
-        if let Err(error) =
-            check_authorization(&hdr, connection, POLKIT_ACTION_EXTERNAL_BACKUP).await
-        {
-            audit::log_auth_failure(uid, pid, POLKIT_ACTION_EXTERNAL_BACKUP, &error.to_string());
-            return (false, format!("Authorization failed: {error}"));
-        }
-        if let Err(wait) = self
-            .rate_limiter
-            .check_rate_limit(&uid, "export_deployment")
-        {
-            return (
-                false,
-                format!(
-                    "Please wait {} seconds before exporting another recovery point",
-                    wait.as_secs()
-                ),
-            );
-        }
-        let id = match deployment_id.parse::<DeploymentId>() {
-            Ok(id) => id,
-            Err(error) => return (false, format!("Invalid recovery point ID: {error}")),
-        };
-        let resource = format!("{deployment_id}@{filesystem_uuid}");
-        match ExternalBackupManager.export(&layout::inspect_current(), id, &filesystem_uuid) {
-            Ok(manifest) => match serde_json::to_string(&manifest) {
-                Ok(json) => {
-                    audit::log_external_backup(uid, pid, "export_recovery", &resource, true, None);
-                    (true, json)
-                }
-                Err(error) => (false, format!("Could not serialize backup: {error}")),
-            },
-            Err(error) => {
-                audit::log_external_backup(
-                    uid,
-                    pid,
-                    "export_recovery",
-                    &resource,
-                    false,
-                    Some(&error.to_string()),
-                );
-                (false, error.to_string())
-            }
-        }
-    }
-
     /// Hash and validate one backup selected only by filesystem and backup UUID.
-    async fn verify_external_backup(
-        &self,
-        #[zbus(header)] hdr: zbus::message::Header<'_>,
-        #[zbus(connection)] connection: &Connection,
-        filesystem_uuid: String,
-        backup_id: String,
-    ) -> (bool, String) {
-        self.external_backup_by_id(
-            &hdr,
-            connection,
-            &filesystem_uuid,
-            &backup_id,
-            "verify_external_backup",
-            "verify_external_recovery",
-            |id| ExternalBackupManager.verify(&filesystem_uuid, id),
-        )
-        .await
-    }
-
     /// Receive a verified backup into a new local immutable deployment.
-    async fn import_external_backup(
-        &self,
-        #[zbus(header)] hdr: zbus::message::Header<'_>,
-        #[zbus(connection)] connection: &Connection,
-        #[zbus(signal_context)] ctxt: zbus::SignalContext<'_>,
-        filesystem_uuid: String,
-        backup_id: String,
-    ) -> (bool, String) {
-        let result = self
-            .external_backup_by_id(
-                &hdr,
-                connection,
-                &filesystem_uuid,
-                &backup_id,
-                "import_external_backup",
-                "import_external_recovery",
-                |id| ExternalBackupManager.import(&layout::inspect_current(), &filesystem_uuid, id),
-            )
-            .await;
-        if result.0
-            && let Ok(record) = serde_json::from_str::<DeploymentRecord>(&result.1)
-            && let Err(error) =
-                Self::snapshot_created(&ctxt, &record.id.to_string(), "external-import").await
-        {
-            log::warn!("Could not emit imported recovery-point signal: {error}");
-        }
-        result
-    }
-
     /// Delete only the two fixed files belonging to a validated backup UUID.
-    async fn delete_external_backup(
-        &self,
-        #[zbus(header)] hdr: zbus::message::Header<'_>,
-        #[zbus(connection)] connection: &Connection,
-        filesystem_uuid: String,
-        backup_id: String,
-    ) -> (bool, String) {
-        self.external_backup_by_id(
-            &hdr,
-            connection,
-            &filesystem_uuid,
-            &backup_id,
-            "delete_external_backup",
-            "delete_external_recovery",
-            |id| {
-                ExternalBackupManager
-                    .delete(&filesystem_uuid, id)
-                    .map(|()| serde_json::json!({ "deleted": true }))
-            },
-        )
-        .await
-    }
-
     /// Verify snapshot integrity
     async fn verify_snapshot(&self, name: String) -> String {
         // Verification is read-only, no authorization needed
@@ -1201,11 +1250,7 @@ impl WaypointHelper {
                 .to_string();
             }
         };
-        match OperationEngine::default().verify(
-            &layout::inspect_current(),
-            id,
-            |_phase, _fraction, _message| {},
-        ) {
+        match OperationEngine::default().check_available(&layout::inspect_current(), id) {
             Ok(_) => serde_json::to_string(&btrfs::VerificationResult {
                 is_valid: true,
                 errors: Vec::new(),
@@ -1230,28 +1275,6 @@ impl WaypointHelper {
     }
 
     /// Preview what will happen if a snapshot is restored
-    async fn preview_restore(
-        &self,
-        #[zbus(header)] hdr: zbus::message::Header<'_>,
-        #[zbus(connection)] connection: &Connection,
-        name: String,
-    ) -> (bool, String) {
-        if let Err(e) = check_authorization(&hdr, connection, POLKIT_ACTION_RESTORE).await {
-            return (false, format!("Authorization failed: {e}"));
-        }
-
-        match btrfs::preview_restore(&name) {
-            Ok(result) => match serde_json::to_string(&result) {
-                Ok(json) => (true, json),
-                Err(e) => (false, format!("Failed to serialize preview: {e}")),
-            },
-            Err(e) => {
-                log::error!("Failed to preview restore: {e}");
-                (false, format!("Failed to preview restore: {e}"))
-            }
-        }
-    }
-
     /// Save schedules TOML configuration file
     async fn get_apt_snapshot_policy(&self) -> (bool, bool) {
         let config = WaypointConfig::new();
@@ -1310,50 +1333,57 @@ impl WaypointHelper {
         }
     }
 
-    /// Save schedules TOML configuration file
-    async fn save_schedules_config(
+    async fn get_automation_config(&self) -> String {
+        let path = WaypointConfig::new().automation_config;
+        let config = AutomationConfig::load_from_file(&path).unwrap_or_else(|error| {
+            log::warn!("Could not load automation policy: {error}");
+            AutomationConfig::default()
+        });
+        serde_json::to_string(&config).unwrap_or_else(|error| {
+            log::error!("Could not serialize automation policy: {error}");
+            "{}".to_string()
+        })
+    }
+
+    async fn save_automation_config(
         &self,
         #[zbus(header)] hdr: zbus::message::Header<'_>,
         #[zbus(connection)] connection: &Connection,
-        toml_content: String,
+        json: String,
     ) -> (bool, String) {
-        // Get caller info for audit logging
         let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
-
-        // Check authorization
-        if let Err(e) = check_authorization(&hdr, connection, POLKIT_ACTION_CONFIGURE).await {
-            audit::log_auth_failure(uid.clone(), pid, POLKIT_ACTION_CONFIGURE, &e.to_string());
-            return (false, format!("Authorization failed: {e}"));
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_CONFIGURE).await {
+            audit::log_auth_failure(
+                uid.clone(),
+                pid,
+                POLKIT_ACTION_CONFIGURE,
+                &error.to_string(),
+            );
+            return (false, format!("Authorization failed: {error}"));
         }
-
-        // Parse and fully validate the fixed System-only schedule ABI.
-        let schedules = match toml::from_str::<SchedulesConfig>(&toml_content) {
-            Ok(schedules) => schedules,
-            Err(e) => {
-                let error_msg = e.to_string();
-                audit::log_config_change(uid, pid, "schedules", false, Some(&error_msg));
-                return (false, format!("Invalid TOML configuration: {e}"));
-            }
+        let config = match serde_json::from_str::<AutomationConfig>(&json) {
+            Ok(config) => config,
+            Err(error) => return (false, format!("Invalid automation configuration: {error}")),
         };
-
-        if let Err(error) = schedules.validate() {
-            audit::log_config_change(uid, pid, "schedules", false, Some(&error.to_string()));
-            return (false, format!("Invalid schedules configuration: {error}"));
+        if let Err(error) = config.validate() {
+            return (false, format!("Invalid automation configuration: {error}"));
         }
-        let schedules_path = WaypointConfig::default().schedules_config;
-        match schedules.save_to_file(&schedules_path) {
-            Ok(_) => {
-                audit::log_config_change(uid, pid, "schedules", true, None);
-                (true, "Schedules configuration saved".to_string())
+        match config.save_to_file(&WaypointConfig::new().automation_config) {
+            Ok(()) => {
+                audit::log_config_change(uid, pid, "automation", true, None);
+                (true, "Automation configuration saved".into())
             }
-            Err(e) => {
-                let error_msg = e.to_string();
-                audit::log_config_change(uid, pid, "schedules", false, Some(&error_msg));
-                (false, format!("Failed to save configuration: {e}"))
+            Err(error) => {
+                audit::log_config_change(uid, pid, "automation", false, Some(&error.to_string()));
+                (
+                    false,
+                    format!("Failed to save automation configuration: {error}"),
+                )
             }
         }
     }
 
+    /// Save schedules TOML configuration file
     /// Restart scheduler service
     async fn restart_scheduler(
         &self,
@@ -1366,48 +1396,33 @@ impl WaypointHelper {
             return (false, format!("Authorization failed: {e}"));
         }
 
-        let config = waypoint_common::WaypointConfig::default();
-        let schedules =
-            match waypoint_common::SchedulesConfig::load_from_file(&config.schedules_config) {
-                Ok(schedules) => schedules,
-                Err(error) => {
-                    audit::log_operation(
-                        uid,
-                        pid,
-                        "apply_scheduler_state",
-                        "anduinos-waypoint-scheduler.service",
-                        false,
-                        Some(&error.to_string()),
-                    );
-                    return (false, format!("Failed to load schedules: {error}"));
-                }
-            };
-        let (action, message) = if schedules.enabled_schedules().is_empty() {
-            ("disable", "Automatic recovery disabled")
-        } else {
-            ("enable", "Automatic recovery enabled")
-        };
         match run_command(
             "/usr/bin/systemctl",
-            &[action, "--now", "anduinos-waypoint-scheduler.service"],
+            &["enable", "--now", "anduinos-waypoint-scheduler.timer"],
         ) {
             Ok(()) => {
+                if let Err(error) = run_command(
+                    "/usr/bin/systemctl",
+                    &["start", "--no-block", "anduinos-waypoint-scheduler.service"],
+                ) {
+                    log::warn!("Could not start an immediate automation check: {error}");
+                }
                 audit::log_operation(
                     uid,
                     pid,
                     "apply_scheduler_state",
-                    "anduinos-waypoint-scheduler.service",
+                    "anduinos-waypoint-scheduler.timer",
                     true,
                     None,
                 );
-                (true, message.to_string())
+                (true, "Automatic snapshot timer is enabled".to_string())
             }
             Err(error) => {
                 audit::log_operation(
                     uid,
                     pid,
                     "apply_scheduler_state",
-                    "anduinos-waypoint-scheduler.service",
+                    "anduinos-waypoint-scheduler.timer",
                     false,
                     Some(&error.to_string()),
                 );
@@ -1423,7 +1438,7 @@ impl WaypointHelper {
     async fn get_scheduler_status(&self) -> String {
         let enabled = run_command_with_output(
             "/usr/bin/systemctl",
-            &["is-enabled", "anduinos-waypoint-scheduler.service"],
+            &["is-enabled", "anduinos-waypoint-scheduler.timer"],
         )
         .map(|(stdout, _)| stdout.trim() == "enabled")
         .unwrap_or(false);
@@ -1431,24 +1446,29 @@ impl WaypointHelper {
             return "disabled".to_string();
         }
 
-        run_command_with_output(
+        let active = run_command_with_output(
             "/usr/bin/systemctl",
-            &["is-active", "anduinos-waypoint-scheduler.service"],
+            &["is-active", "anduinos-waypoint-scheduler.timer"],
         )
-        .map(|(stdout, stderr)| {
-            if stdout.trim() == "active" {
-                "running".to_string()
-            } else if stdout.trim() == "inactive" || stdout.trim() == "failed" {
-                "stopped".to_string()
-            } else {
-                log::debug!("Unexpected systemd scheduler status: {stdout} {stderr}");
-                "unknown".to_string()
-            }
-        })
+        .map(|(stdout, _)| stdout.trim() == "active")
         .unwrap_or_else(|e| {
             log::warn!("Failed to query scheduler status: {e}");
-            "unknown".to_string()
-        })
+            false
+        });
+        if !active {
+            return "stopped".to_string();
+        }
+        run_command_with_output(
+            "/usr/bin/systemctl",
+            &[
+                "show",
+                "anduinos-waypoint-scheduler.timer",
+                "--property=NextElapseUSecRealtime",
+                "--value",
+            ],
+        )
+        .map(|(stdout, _)| format!("running · next run {}", stdout.trim()))
+        .unwrap_or_else(|_| "running".to_string())
     }
 
     /// Apply only the retention policy owned by configured automatic schedules.
@@ -1466,15 +1486,16 @@ impl WaypointHelper {
 
         let response = match Self::apply_schedule_retention_impl() {
             Ok(summary) => {
-                if (summary.system_deleted > 0 || summary.personal_deleted > 0)
-                    && let Err(error) = Self::automatic_snapshots_deleted(
+                if cleanup_success_notification_enabled()
+                    && summary.system_deleted + summary.personal_deleted > 0
+                    && let Err(error) = Self::automatic_cleanup_succeeded(
                         &ctxt,
                         summary.system_deleted,
                         summary.personal_deleted,
                     )
                     .await
                 {
-                    log::warn!("Could not emit automatic retention notification: {error}");
+                    log::warn!("Could not emit automatic cleanup notification: {error}");
                 }
                 (true, summary.message())
             }
@@ -1489,43 +1510,6 @@ impl WaypointHelper {
             (!response.0).then_some(response.1.as_str()),
         );
         response
-    }
-
-    /// Compare two snapshots and return list of changed files
-    ///
-    /// This is a read-only operation and does not require authorization
-    async fn compare_snapshots(
-        &self,
-        old_snapshot_name: String,
-        new_snapshot_name: String,
-    ) -> (bool, String) {
-        result_to_dbus_response(
-            Self::compare_snapshots_impl(&old_snapshot_name, &new_snapshot_name),
-            "Comparison failed",
-        )
-    }
-
-    /// Compare the captured dpkg state of two trusted deployments.
-    ///
-    /// This is read-only. Both identifiers and deployment identities are
-    /// verified before the helper opens either bounded dpkg status file.
-    async fn compare_deployment_packages(
-        &self,
-        old_snapshot_name: String,
-        new_snapshot_name: String,
-    ) -> (bool, String) {
-        result_to_dbus_response(
-            Self::compare_deployment_packages_impl(&old_snapshot_name, &new_snapshot_name),
-            "Package comparison failed",
-        )
-    }
-
-    /// Get quota usage for the snapshot filesystem
-    ///
-    /// Returns JSON string with quota usage information
-    /// This is a read-only operation and does not require authorization
-    async fn get_quota_usage(&self) -> (bool, String) {
-        result_to_dbus_response(Self::get_quota_usage_impl(), "Failed to get quota usage")
     }
 }
 
@@ -1621,6 +1605,20 @@ impl WaypointHelper {
             .map_err(|error| anyhow::anyhow!(error.message))?;
         let deployments = DeploymentStore::new(store_root).discover();
         let personal = PersonalSnapshotEngine::default().discover();
+        let package_counts = deployments
+            .deployments
+            .iter()
+            .filter_map(|record| {
+                let path = store_root
+                    .join("deployments")
+                    .join(record.id.to_string())
+                    .join("root/var/lib/dpkg/status");
+                packages::get_packages_from_status(&path)
+                    .ok()
+                    .map(|packages| (record.id.to_string(), packages.len()))
+            })
+            .collect::<std::collections::HashMap<_, _>>();
+        let personal_sizes = btrfs::get_personal_spaces(&personal.snapshots);
         let layout = layout::inspect_current();
         let available = layout.is_supported();
         serde_json::to_string(&serde_json::json!({
@@ -1630,8 +1628,10 @@ impl WaypointHelper {
             "pending": pending,
             "deployment_count": deployments.deployments.len(),
             "deployments": deployments.deployments,
+            "system_package_counts": package_counts,
             "personal_snapshot_count": personal.snapshots.len(),
             "personal_snapshots": personal.snapshots,
+            "personal_sizes": personal_sizes,
             "issues": deployments.issues,
             "personal_issues": personal.issues,
             "layout": layout,
@@ -1640,73 +1640,61 @@ impl WaypointHelper {
     }
 
     fn apply_schedule_retention_impl() -> Result<ScheduleRetentionSummary> {
-        use std::collections::HashSet;
-        use waypoint_common::retention::{SnapshotForRetention, apply_timeline_retention};
-
         let layout = layout::inspect_current();
         if !layout.is_supported() {
             anyhow::bail!("The complete AnduinOS Btrfs layout is required");
         }
         let config = WaypointConfig::default();
-        let schedules = SchedulesConfig::load_from_file(&config.schedules_config)
-            .context("Failed to load recovery schedules")?;
+        let automation = AutomationConfig::load_from_file(&config.automation_config)
+            .context("Failed to load automatic snapshot policy")?;
         let deployments = DeploymentStore::default().discover();
-        let eligible = deployments
+        if !deployments.issues.is_empty() {
+            anyhow::bail!("System snapshot metadata contains unresolved issues");
+        }
+        let now = chrono::Utc::now();
+        let system_candidates = deployments
             .deployments
             .iter()
-            .filter(|record| {
-                record.kind == DeploymentKind::Automatic
-                    && record.state == DeploymentState::Ready
-                    && !record.pinned
+            .map(|record| SnapshotCandidate {
+                id: record.id.to_string(),
+                created_at: record.created_at,
+                local_offset_seconds: record
+                    .created_at
+                    .with_timezone(&chrono::Local)
+                    .offset()
+                    .local_minus_utc(),
+                cleanup_policy: if record.pinned
+                    || matches!(
+                        record.kind,
+                        DeploymentKind::Factory
+                            | DeploymentKind::PreRollback
+                            | DeploymentKind::Imported
+                    ) {
+                    CleanupPolicy::KeepForever
+                } else {
+                    CleanupPolicy::Automatic
+                },
+                is_ready: record.state == DeploymentState::Ready,
+                is_busy: false,
+                is_restore_referenced: record.state.protects_from_deletion(),
             })
             .collect::<Vec<_>>();
-        let now = chrono::Utc::now();
-        let mut selected = HashSet::new();
-
-        for schedule in schedules
-            .schedules
-            .iter()
-            .filter(|schedule| schedule.enabled && schedule.scope == ScheduleScope::System)
-        {
-            let mut matching = eligible
-                .iter()
-                .copied()
-                .filter(|record| record.schedule_id.as_deref() == Some(&schedule.prefix))
-                .collect::<Vec<_>>();
-            matching.sort_by_key(|record| std::cmp::Reverse(record.created_at));
-
-            if let Some(timeline) = &schedule.timeline_retention {
-                let snapshots = matching
-                    .iter()
-                    .map(|record| SnapshotForRetention {
-                        name: record.id.to_string(),
-                        timestamp: record.created_at,
-                    })
-                    .collect::<Vec<_>>();
-                selected.extend(apply_timeline_retention(&snapshots, timeline, now));
-                continue;
-            }
-
-            for (index, record) in matching.into_iter().enumerate() {
-                let exceeds_count =
-                    schedule.keep_count > 0 && index >= schedule.keep_count as usize;
-                let exceeds_age = schedule.keep_days > 0
-                    && now.signed_duration_since(record.created_at)
-                        > chrono::Duration::days(schedule.keep_days as i64);
-                if exceeds_count || exceeds_age {
-                    selected.insert(record.id.to_string());
-                }
-            }
-        }
-
+        let system_decisions = evaluate_retention(&system_candidates, &automation.system, now)
+            .context("Failed to evaluate system snapshot retention")?;
         let engine = OperationEngine::default();
         let mut deleted = 0u64;
         let mut retained = 0u64;
-        for value in selected {
-            let id = value.parse::<DeploymentId>().map_err(|error| {
-                anyhow::anyhow!("Retention selected an invalid deployment ID: {error}")
-            })?;
-            match engine.delete_automatic(&layout, id, config.retention_min_snapshots) {
+        for decision in system_decisions
+            .iter()
+            .filter(|decision| decision.action == RetentionAction::Delete)
+        {
+            let id = decision
+                .snapshot_id
+                .parse::<DeploymentId>()
+                .map_err(|error| {
+                    anyhow::anyhow!("Retention selected an invalid deployment ID: {error}")
+                })?;
+            match engine.delete_automatic(&layout, id, 1) {
                 Ok(()) => deleted += 1,
                 Err(error) => {
                     retained += 1;
@@ -1716,68 +1704,47 @@ impl WaypointHelper {
         }
         let personal_engine = PersonalSnapshotEngine::default();
         let personal = personal_engine.discover();
-        let personal_eligible = personal
+        if !personal.issues.is_empty() {
+            anyhow::bail!("Home snapshot metadata contains unresolved issues");
+        }
+        let personal_candidates = personal
             .snapshots
             .iter()
-            .filter(|record| {
-                record.kind == PersonalSnapshotKind::Automatic
-                    && record.state == PersonalSnapshotState::Ready
-                    && !record.pinned
+            .map(|record| SnapshotCandidate {
+                id: record.id.to_string(),
+                created_at: record.created_at,
+                local_offset_seconds: record
+                    .created_at
+                    .with_timezone(&chrono::Local)
+                    .offset()
+                    .local_minus_utc(),
+                cleanup_policy: if record.pinned {
+                    CleanupPolicy::KeepForever
+                } else {
+                    CleanupPolicy::Automatic
+                },
+                is_ready: record.state == PersonalSnapshotState::Ready,
+                is_busy: false,
+                is_restore_referenced: false,
             })
             .collect::<Vec<_>>();
-        let mut personal_selected = HashSet::new();
-        for schedule in schedules
-            .schedules
-            .iter()
-            .filter(|schedule| schedule.enabled && schedule.scope == ScheduleScope::Personal)
-        {
-            let mut matching = personal_eligible
-                .iter()
-                .copied()
-                .filter(|record| record.schedule_id.as_deref() == Some(&schedule.prefix))
-                .collect::<Vec<_>>();
-            matching.sort_by_key(|record| std::cmp::Reverse(record.created_at));
-            if let Some(timeline) = &schedule.timeline_retention {
-                let snapshots = matching
-                    .iter()
-                    .map(|record| SnapshotForRetention {
-                        name: record.id.to_string(),
-                        timestamp: record.created_at,
-                    })
-                    .collect::<Vec<_>>();
-                personal_selected.extend(apply_timeline_retention(&snapshots, timeline, now));
-                continue;
-            }
-            for (index, record) in matching.into_iter().enumerate() {
-                let exceeds_count =
-                    schedule.keep_count > 0 && index >= schedule.keep_count as usize;
-                let exceeds_age = schedule.keep_days > 0
-                    && now.signed_duration_since(record.created_at)
-                        > chrono::Duration::days(schedule.keep_days as i64);
-                if exceeds_count || exceeds_age {
-                    personal_selected.insert(record.id.to_string());
-                }
-            }
-        }
-        let mut ready_personal_count = personal
-            .snapshots
-            .iter()
-            .filter(|record| record.state == PersonalSnapshotState::Ready)
-            .count();
+        let personal_decisions = evaluate_retention(&personal_candidates, &automation.home, now)
+            .context("Failed to evaluate Home snapshot retention")?;
         let mut personal_deleted = 0u64;
         let mut personal_retained = 0u64;
-        for value in personal_selected {
-            if ready_personal_count <= config.retention_min_snapshots {
-                personal_retained += 1;
-                continue;
-            }
-            let id = value.parse::<PersonalSnapshotId>().map_err(|error| {
-                anyhow::anyhow!("Retention selected an invalid personal snapshot ID: {error}")
-            })?;
+        for decision in personal_decisions
+            .iter()
+            .filter(|decision| decision.action == RetentionAction::Delete)
+        {
+            let id = decision
+                .snapshot_id
+                .parse::<PersonalSnapshotId>()
+                .map_err(|error| {
+                    anyhow::anyhow!("Retention selected an invalid personal snapshot ID: {error}")
+                })?;
             match personal_engine.delete(&layout, id) {
                 Ok(()) => {
                     personal_deleted += 1;
-                    ready_personal_count = ready_personal_count.saturating_sub(1);
                 }
                 Err(error) => {
                     personal_retained += 1;
@@ -1793,6 +1760,7 @@ impl WaypointHelper {
         })
     }
 
+    #[cfg(any())]
     fn compare_snapshots_impl(old_snapshot_name: &str, new_snapshot_name: &str) -> Result<String> {
         let old_id = old_snapshot_name
             .parse::<DeploymentId>()
@@ -1842,6 +1810,7 @@ impl WaypointHelper {
         Ok(json)
     }
 
+    #[cfg(any())]
     fn compare_deployment_packages_impl(
         old_snapshot_name: &str,
         new_snapshot_name: &str,
@@ -1881,6 +1850,7 @@ impl WaypointHelper {
     }
 
     /// Get quota usage information
+    #[cfg(any())]
     fn get_quota_usage_impl() -> Result<String> {
         use waypoint_common::QuotaUsage;
 
@@ -2045,32 +2015,39 @@ fn result_to_dbus_response(result: Result<String>, error_prefix: &str) -> (bool,
     }
 }
 
-fn schedule_notification_enabled(scope: ScheduleScope, schedule_id: &str) -> bool {
-    let path = WaypointConfig::default().schedules_config;
-    schedule_notification_enabled_at(&path, scope, schedule_id)
+fn automatic_success_notification_enabled() -> bool {
+    let path = WaypointConfig::default().automation_config;
+    automatic_success_notification_enabled_at(&path)
 }
 
-fn schedule_notification_enabled_at(
-    path: &std::path::PathBuf,
-    scope: ScheduleScope,
-    schedule_id: &str,
-) -> bool {
-    match SchedulesConfig::load_from_file(path) {
-        Ok(config) => config.schedules.iter().any(|schedule| {
-            schedule.scope == scope && schedule.prefix == schedule_id && schedule.notify_on_create
-        }),
+fn cleanup_success_notification_enabled() -> bool {
+    AutomationConfig::load_from_file(&WaypointConfig::new().automation_config)
+        .map(|config| config.notifications.notify_after_cleanup)
+        .unwrap_or(false)
+}
+
+fn automatic_pre_notification_enabled() -> bool {
+    AutomationConfig::load_from_file(&WaypointConfig::default().automation_config)
+        .map(|config| config.notifications.notify_before_scheduled)
+        .unwrap_or(NotificationPolicy::default().notify_before_scheduled)
+}
+
+fn automatic_success_notification_enabled_at(path: &std::path::PathBuf) -> bool {
+    match AutomationConfig::load_from_file(path) {
+        Ok(config) => config.notifications.notify_after_success,
         Err(error) => {
             log::warn!(
-                "Could not load automatic notification preference from {}: {error}",
+                "Could not load Waypoint notification preference from {}: {error}",
                 path.display()
             );
-            false
+            NotificationPolicy::default().notify_after_success
         }
     }
 }
 
 /// Parse btrfs receive --dump output into structured changes
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[cfg(any())]
 struct FileChange {
     change_type: String, // "Added", "Modified", "Deleted"
     path: String,
@@ -2078,6 +2055,7 @@ struct FileChange {
 
 /// File metadata for comparison
 #[derive(Debug, Clone)]
+#[cfg(any())]
 struct FileMetadata {
     kind: u8,
     size: u64,
@@ -2085,10 +2063,14 @@ struct FileMetadata {
     ctime: String,
 }
 
+#[cfg(any())]
 const MAX_FIND_OUTPUT_BYTES: u64 = 32 * 1024 * 1024;
+#[cfg(any())]
 const MAX_FILE_COMPARISON_JSON_BYTES: usize = 8 * 1024 * 1024;
+#[cfg(any())]
 const MAX_FILE_COMPARISON_ENTRIES: usize = 500_000;
 
+#[cfg(any())]
 fn bounded_find(root: &std::path::Path) -> Result<Vec<u8>> {
     use std::io::Read;
     use std::process::Stdio;
@@ -2128,6 +2110,7 @@ fn bounded_find(root: &std::path::Path) -> Result<Vec<u8>> {
 }
 
 /// Parse the NUL-delimited find output into bounded, display-safe metadata.
+#[cfg(any())]
 fn parse_find_output(output: &[u8]) -> Result<std::collections::HashMap<String, FileMetadata>> {
     let mut files = std::collections::HashMap::new();
     let mut fields = output.split(|byte| *byte == 0).collect::<Vec<_>>();
@@ -2190,6 +2173,7 @@ fn parse_find_output(output: &[u8]) -> Result<std::collections::HashMap<String, 
 }
 
 /// Compare two file lists and detect changes
+#[cfg(any())]
 fn compare_file_lists(
     old_files: &std::collections::HashMap<String, FileMetadata>,
     new_files: &std::collections::HashMap<String, FileMetadata>,
@@ -2482,7 +2466,7 @@ mod tests {
     use std::io::Write;
 
     #[test]
-    fn scheduled_notification_preference_is_scope_and_prefix_bound() {
+    fn automatic_success_notification_uses_waypoint_v2_policy() {
         let path = std::env::temp_dir().join(format!(
             "anduinos-waypoint-notification-schedule-{}-{}.toml",
             std::process::id(),
@@ -2491,30 +2475,13 @@ mod tests {
                 .unwrap()
                 .as_nanos()
         ));
-        let mut config = SchedulesConfig::default();
-        config.schedules[0].notify_on_create = false;
+        let mut config = AutomationConfig::default();
+        config.notifications.notify_after_success = false;
         config.save_to_file(&path).unwrap();
-
-        assert!(!schedule_notification_enabled_at(
-            &path,
-            ScheduleScope::System,
-            "hourly"
-        ));
-        assert!(schedule_notification_enabled_at(
-            &path,
-            ScheduleScope::System,
-            "daily"
-        ));
-        assert!(!schedule_notification_enabled_at(
-            &path,
-            ScheduleScope::Personal,
-            "daily"
-        ));
-        assert!(!schedule_notification_enabled_at(
-            &path,
-            ScheduleScope::System,
-            "missing"
-        ));
+        assert!(!automatic_success_notification_enabled_at(&path));
+        config.notifications.notify_after_success = true;
+        config.save_to_file(&path).unwrap();
+        assert!(automatic_success_notification_enabled_at(&path));
         std::fs::remove_file(path).unwrap();
     }
 
@@ -2615,6 +2582,7 @@ mod tests {
         assert_eq!(apt_history_file_rank("term.log.1.gz"), None);
     }
 
+    #[cfg(any())]
     #[test]
     fn bounded_file_scan_preserves_spaces_and_rejects_control_paths() {
         let root = std::env::temp_dir().join(format!(

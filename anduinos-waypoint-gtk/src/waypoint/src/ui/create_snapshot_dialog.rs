@@ -37,7 +37,7 @@ where
     // Create dialog
     let dialog = adw::MessageDialog::new(
         Some(parent),
-        Some(&tr("Create Recovery Point")),
+        Some(&tr("Save System State")),
         Some(&tr(
             "Give this recovery point a description to help identify it later.",
         )),
@@ -72,7 +72,7 @@ where
     dialog.set_extra_child(Some(&content));
 
     dialog.add_response("cancel", &tr("Cancel"));
-    dialog.add_response("create", &tr("Create"));
+    dialog.add_response("create", &tr("Save"));
     dialog.set_response_appearance("create", adw::ResponseAppearance::Suggested);
     dialog.set_default_response(Some("create"));
     dialog.set_close_response("cancel");

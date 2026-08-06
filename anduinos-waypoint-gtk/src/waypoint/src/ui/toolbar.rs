@@ -38,7 +38,7 @@ pub fn create_toolbar() -> (gtk::Box, Button, Button, Button) {
     // Create button with icon
     let create_btn_content = gtk::Box::new(Orientation::Horizontal, 6);
     let create_icon = gtk::Image::from_icon_name("document-save-symbolic");
-    let create_label = Label::new(Some(&tr("Create Recovery Point")));
+    let create_label = Label::new(Some(&tr("Save System State")));
     create_btn_content.append(&create_icon);
     create_btn_content.append(&create_label);
 
@@ -58,14 +58,14 @@ pub fn create_toolbar() -> (gtk::Box, Button, Button, Button) {
     // Compare button with icon
     let compare_btn_content = gtk::Box::new(Orientation::Horizontal, 6);
     let compare_icon = gtk::Image::from_icon_name("view-dual-symbolic");
-    let compare_label = Label::new(Some(&tr("Compare")));
+    let compare_label = Label::new(Some(&tr("Compare Changes")));
     compare_btn_content.append(&compare_icon);
     compare_btn_content.append(&compare_label);
 
     let compare_btn = Button::new();
     compare_btn.set_child(Some(&compare_btn_content));
     compare_btn.add_css_class("flat");
-    compare_btn.set_tooltip_text(Some(&tr("Compare recovery points")));
+    compare_btn.set_tooltip_text(Some(&tr("Compare system recovery points")));
 
     toolbar.append(&compare_btn);
 

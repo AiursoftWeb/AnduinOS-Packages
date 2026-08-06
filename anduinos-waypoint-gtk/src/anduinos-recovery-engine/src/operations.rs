@@ -1,10 +1,10 @@
 use std::ffi::OsString;
 use std::fmt;
 use std::fs::{self, File, OpenOptions};
-use std::io::{self, Read, Seek, SeekFrom, Write};
+use std::io::{self, Read, Write};
 use std::os::unix::fs::{OpenOptionsExt, PermissionsExt};
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::process::Command;
 
 use chrono::Utc;
 use sha2::{Digest, Sha256};
@@ -523,6 +523,30 @@ impl<R: CommandRunner> OperationEngine<R> {
         Ok(record)
     }
 
+    pub fn rename(
+        &self,
+        layout: &LayoutReport,
+        id: DeploymentId,
+        title: &str,
+    ) -> Result<DeploymentRecord, OperationError> {
+        ensure_supported_layout(layout)?;
+        self.ensure_store_directories()?;
+        let _lock = self.acquire_lock()?;
+        let mut record = self.load_record(id)?;
+        if record.state == DeploymentState::Deleting {
+            return Err(OperationError::new(
+                OperationErrorCode::Protected,
+                "A deleting recovery point cannot be renamed",
+            ));
+        }
+        record.title = title.trim().to_string();
+        record.validate().map_err(|error| {
+            OperationError::new(OperationErrorCode::InvalidIdentity, error.to_string())
+        })?;
+        self.write_record_atomic(&record)?;
+        Ok(record)
+    }
+
     pub fn verify<F>(
         &self,
         layout: &LayoutReport,
@@ -606,6 +630,47 @@ impl<R: CommandRunner> OperationEngine<R> {
         Ok(record)
     }
 
+    /// Fast structural availability check used by the Waypoint 2.0 list UI.
+    /// This deliberately does not hash snapshot contents.
+    pub fn check_available(
+        &self,
+        layout: &LayoutReport,
+        id: DeploymentId,
+    ) -> Result<DeploymentRecord, OperationError> {
+        ensure_supported_layout(layout)?;
+        self.ensure_store_directories()?;
+        let _lock = self.acquire_lock()?;
+        let record = self.load_record(id)?;
+        if !record.can_restore() {
+            return Err(OperationError::new(
+                OperationErrorCode::InvalidIdentity,
+                "This recovery point is not available for recovery",
+            ));
+        }
+        let snapshot = self.deployment_dir(id).join("root");
+        let expected_uuid = record.snapshot_uuid.as_deref().ok_or_else(|| {
+            OperationError::new(
+                OperationErrorCode::InvalidIdentity,
+                "Recovery metadata has no snapshot UUID",
+            )
+        })?;
+        let (actual_uuid, actual_parent_uuid) = self.snapshot_identity(&snapshot)?;
+        if actual_uuid != expected_uuid || actual_parent_uuid != record.snapshot_parent_uuid {
+            return Err(identity_mismatch("Btrfs snapshot identity"));
+        }
+        self.verify_read_only(&snapshot)?;
+        let kernel = record.kernel_release.as_deref().ok_or_else(|| {
+            OperationError::new(
+                OperationErrorCode::InvalidIdentity,
+                "Recovery metadata has no kernel release",
+            )
+        })?;
+        open_regular_file(&snapshot.join("boot").join(format!("vmlinuz-{kernel}")))?;
+        open_regular_file(&snapshot.join("boot").join(format!("initrd.img-{kernel}")))?;
+        open_regular_file(&snapshot.join("var/lib/dpkg/status"))?;
+        Ok(record)
+    }
+
     pub fn delete(&self, layout: &LayoutReport, id: DeploymentId) -> Result<(), OperationError> {
         self.delete_with_restorable_floor(layout, id, None)
     }
@@ -654,11 +719,20 @@ impl<R: CommandRunner> OperationEngine<R> {
             if let Some(minimum) = minimum_restorable_deployments {
                 if !matches!(
                     record.kind,
-                    DeploymentKind::Automatic | DeploymentKind::AptPre | DeploymentKind::AptPost
+                    DeploymentKind::Manual
+                        | DeploymentKind::Automatic
+                        | DeploymentKind::AptPre
+                        | DeploymentKind::AptPost
                 ) {
                     return Err(OperationError::new(
                         OperationErrorCode::Protected,
-                        "Automatic cleanup may delete only scheduled or package recovery points",
+                        "Automatic cleanup may delete only manual, scheduled, or package recovery points",
+                    ));
+                }
+                if record.pinned {
+                    return Err(OperationError::new(
+                        OperationErrorCode::Protected,
+                        "Permanently retained recovery points cannot be cleaned automatically",
                     ));
                 }
                 let discovery = DeploymentStore::new(&self.snapshot_root).discover();
@@ -1016,6 +1090,7 @@ impl OperationEngine<SystemCommandRunner> {
     /// The stream is accepted as an already-open descriptor, not a path. The
     /// caller must authenticate its manifest and digest before invoking this
     /// crate-private boundary.
+    #[cfg(any())]
     pub(crate) fn import_full_stream<F>(
         &self,
         layout: &LayoutReport,
@@ -1178,6 +1253,7 @@ impl OperationEngine<SystemCommandRunner> {
     }
 }
 
+#[cfg(any())]
 fn run_btrfs_receive_dump(stream: &mut File) -> Result<(), OperationError> {
     stream
         .seek(SeekFrom::Start(0))
@@ -1211,6 +1287,7 @@ fn run_btrfs_receive_dump(stream: &mut File) -> Result<(), OperationError> {
     Ok(())
 }
 
+#[cfg(any())]
 fn run_btrfs_receive(stream: &mut File, staging: &Path) -> Result<(), OperationError> {
     stream
         .seek(SeekFrom::Start(0))
@@ -1245,6 +1322,7 @@ fn run_btrfs_receive(stream: &mut File, staging: &Path) -> Result<(), OperationE
     Ok(())
 }
 
+#[cfg(any())]
 fn ensure_only_received_root(staging: &Path) -> Result<(), OperationError> {
     let entries = fs::read_dir(staging)
         .map_err(|error| io_error("Could not inspect received recovery point", error))?
@@ -1267,6 +1345,7 @@ fn ensure_only_received_root(staging: &Path) -> Result<(), OperationError> {
     Ok(())
 }
 
+#[cfg(any())]
 fn verify_imported_content(
     received: &Path,
     source: &DeploymentRecord,
@@ -1299,6 +1378,7 @@ fn verify_imported_content(
     Ok(())
 }
 
+#[cfg(any())]
 fn cleanup_import_staging(
     received: &Path,
     staging: &Path,
@@ -1343,6 +1423,7 @@ fn cleanup_import_staging(
     }
 }
 
+#[cfg(any())]
 fn command_diagnostic_suffix(stderr: &[u8]) -> String {
     let diagnostic = safe_diagnostic(stderr);
     if diagnostic.is_empty() {
@@ -1850,6 +1931,11 @@ mod tests {
             "tampered",
         )
         .unwrap();
+        // The Waypoint 2.0 UI availability check is intentionally structural
+        // and bounded; only rollback performs the stronger digest verification.
+        engine
+            .check_available(&environment.layout(), record.id)
+            .unwrap();
         let error = engine
             .verify(&environment.layout(), record.id, |_, _, _| {})
             .unwrap_err();
@@ -1961,7 +2047,7 @@ mod tests {
     }
 
     #[test]
-    fn automatic_delete_preserves_the_restorable_floor_and_manual_points() {
+    fn automatic_delete_preserves_floor_and_accepts_cleanup_eligible_manual_points() {
         let environment = TestEnvironment::new();
         let engine = OperationEngine::new(
             &environment.system_root,
@@ -1991,16 +2077,16 @@ mod tests {
                 |_, _, _| {},
             )
             .unwrap();
+        engine
+            .delete_automatic(&environment.layout(), manual.id, 1)
+            .unwrap();
         assert_eq!(
             engine
-                .delete_automatic(&environment.layout(), manual.id, 1)
+                .delete_automatic(&environment.layout(), automatic.id, 1)
                 .unwrap_err()
                 .code,
             OperationErrorCode::Protected
         );
-        engine
-            .delete_automatic(&environment.layout(), automatic.id, 1)
-            .unwrap();
     }
 
     #[test]

@@ -6,6 +6,7 @@ case "${1:-}" in
         # produces a misleading "unit does not exist" warning after dpkg has
         # already removed the package payload.
         systemctl disable --now anduinos-waypoint-confirm.service >/dev/null 2>&1 || true
+        systemctl disable --now anduinos-waypoint-scheduler.timer >/dev/null 2>&1 || true
         ;;
 esac
 

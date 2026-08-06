@@ -31,9 +31,9 @@ if rg -a -n 'ScanBackupDestinations|BackupSnapshot|RestoreFromBackup|destination
     echo "A removed caller-path privileged ABI leaked into a release binary" >&2
     exit 1
 fi
-for method in ListBackupDestinations ExportDeployment ImportExternalBackup DeleteExternalBackup CompareDeploymentPackages ApplyScheduleRetention; do
+for method in ApplyScheduleRetention BeginSystemSnapshotBrowse EndSystemSnapshotBrowse ListSystemSnapshotFiles ExportSystemSnapshotFile DeleteDeployments DeletePersonalSnapshots; do
     if ! rg -a -q "<method name=\"$method\">" "$SCRIPT_DIR/obj/anduinos-waypoint-helper"; then
-        echo "Required UUID-based backup D-Bus method is missing: $method" >&2
+        echo "Required Waypoint 2.0 D-Bus method is missing: $method" >&2
         exit 1
     fi
 done
@@ -43,20 +43,20 @@ for method in GetAptSnapshotPolicy SaveAptSnapshotPolicy; do
         exit 1
     fi
 done
-for method in CreatePersonalSnapshot CreateScheduledPersonalSnapshot ListPersonalFiles ExportPersonalFile ExportPersonalSnapshot ImportPersonalExternalBackup; do
+for method in CreatePersonalSnapshot CreateScheduledPersonalSnapshot ListPersonalFiles ExportPersonalFile; do
     if ! rg -a -q "<method name=\"$method\">" "$SCRIPT_DIR/obj/anduinos-waypoint-helper"; then
         echo "Required Personal Files D-Bus method is missing: $method" >&2
         exit 1
     fi
 done
-for signal in AutomaticSnapshotCreated AutomaticSnapshotsDeleted; do
+for signal in SnapshotCreationSucceeded AutomaticSnapshotStarting AutomaticSnapshotFailed AutomaticCleanupSucceeded; do
     if ! rg -a -q "<signal name=\"$signal\">" "$SCRIPT_DIR/obj/anduinos-waypoint-helper"; then
         echo "Required automatic notification D-Bus signal is missing: $signal" >&2
         exit 1
     fi
 done
-if rg -a -q '<method name="CleanupSnapshots">' "$SCRIPT_DIR/obj/anduinos-waypoint-helper"; then
-    echo "The obsolete generic CleanupSnapshots D-Bus method leaked into the release binary" >&2
+if rg -a -q '<method name="\(CleanupSnapshots\|CompareSnapshots\|CompareDeploymentPackages\|ListBackupDestinations\|ExportDeployment\|ImportExternalBackup\|SaveSchedulesConfig\)">' "$SCRIPT_DIR/obj/anduinos-waypoint-helper"; then
+    echo "A removed Waypoint 1.x method leaked into the release binary" >&2
     exit 1
 fi
 install -m755 "$RELEASE_DIR/anduinos-waypoint-scheduler" "$SCRIPT_DIR/obj/anduinos-waypoint-scheduler"

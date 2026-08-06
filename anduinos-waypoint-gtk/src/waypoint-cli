@@ -23,7 +23,6 @@ Recovery points:
   cancel-restore                       Cancel a restore before reboot
   delete <deployment-uuid>             Delete an unprotected recovery point
   apply-retention                      Apply schedule-owned retention
-  diff <old-uuid> <new-uuid> [--json]  Compare files in two recovery points
 
 Personal Files history:
   personal-create [--json] <title> [description]
@@ -33,28 +32,7 @@ Personal Files history:
                                         Browse your own historical home
   personal-delete <uuid>                Delete an unprotected history point
 
-External recovery backups:
-  backup-destinations [--json]         List trusted mounted filesystems
-  backup-list <filesystem-uuid> [--json]
-                                        List manifests without hashing streams
-  backup-export <deployment-uuid> <filesystem-uuid>
-                                        Export one full Btrfs stream
-  backup-verify <filesystem-uuid> <backup-uuid>
-                                        Hash and verify one complete stream
-  backup-import <filesystem-uuid> <backup-uuid>
-                                        Import as a fresh local recovery point
-  backup-delete <filesystem-uuid> <backup-uuid>
-                                        Delete one external backup
-  personal-backup-list <filesystem-uuid> [--json]
-                                        List Personal Files backup manifests
-  personal-backup-export <snapshot-uuid> <filesystem-uuid>
-                                        Export a full @home history stream
-  personal-backup-verify <filesystem-uuid> <backup-uuid>
-  personal-backup-import <filesystem-uuid> <backup-uuid>
-  personal-backup-delete <filesystem-uuid> <backup-uuid>
-
 Mutating and full-verification operations require Polkit authentication.
-No external-backup command accepts a filesystem path.
 EOF
 }
 
@@ -186,6 +164,13 @@ cmd_personal_create_scheduled() {
         exit 1
     }
     pair_payload "$(call_raw CreateScheduledPersonalSnapshot sss "$schedule_id" "$title" "$description")" >/dev/null
+}
+
+cmd_notify_automatic_event() {
+    local event="${1:-}"
+    local scope="${2:-}"
+    [[ "$event" =~ ^(starting|failed)$ && "$scope" =~ ^(system|personal)$ ]] || exit 2
+    pair_payload "$(call_raw NotifyAutomaticSnapshotEvent ss "$event" "$scope")" >/dev/null
 }
 
 cmd_personal_create() {
@@ -536,6 +521,7 @@ case "$command_name" in
     status) cmd_status "$@" ;;
     create) cmd_create "$@" ;;
     create-scheduled) cmd_create_scheduled "$@" ;;
+    notify-automatic-event) cmd_notify_automatic_event "$@" ;;
     personal-create-scheduled) cmd_personal_create_scheduled "$@" ;;
     list|ls) cmd_list "$@" ;;
     show) cmd_show "$@" ;;
@@ -545,22 +531,10 @@ case "$command_name" in
     cancel-restore) cmd_cancel_restore "$@" ;;
     delete) cmd_delete "$@" ;;
     apply-retention) cmd_apply_retention "$@" ;;
-    diff|compare) cmd_diff "$@" ;;
     personal-create) cmd_personal_create "$@" ;;
     personal-list) cmd_personal_list "$@" ;;
     personal-files) cmd_personal_files "$@" ;;
     personal-delete) cmd_personal_delete "$@" ;;
-    backup-destinations) cmd_backup_destinations "$@" ;;
-    backup-list) cmd_backup_list "$@" ;;
-    backup-export) cmd_backup_export "$@" ;;
-    backup-verify) cmd_backup_verify "$@" ;;
-    backup-import) cmd_backup_import "$@" ;;
-    backup-delete) cmd_backup_delete "$@" ;;
-    personal-backup-list) cmd_personal_backup_list "$@" ;;
-    personal-backup-export) cmd_personal_backup_export "$@" ;;
-    personal-backup-verify) cmd_personal_backup_verify "$@" ;;
-    personal-backup-import) cmd_personal_backup_import "$@" ;;
-    personal-backup-delete) cmd_personal_backup_delete "$@" ;;
     *)
         echo "Error: unknown command '$command_name'" >&2
         usage >&2

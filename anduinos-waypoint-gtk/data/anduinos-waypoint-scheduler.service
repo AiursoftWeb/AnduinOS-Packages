@@ -1,14 +1,12 @@
 [Unit]
-Description=AnduinOS Waypoint automatic recovery scheduler
+Description=AnduinOS Waypoint automatic snapshot run
 Documentation=file:/usr/share/doc/anduinos-waypoint-gtk/README.md
 After=dbus.service local-fs.target
 ConditionPathIsMountPoint=/.snapshots
 
 [Service]
-Type=simple
+Type=oneshot
 ExecStart=/usr/libexec/anduinos-waypoint-scheduler
-Restart=on-failure
-RestartSec=30s
 NoNewPrivileges=true
 PrivateTmp=true
 PrivateDevices=true
@@ -31,6 +29,3 @@ ProtectKernelLogs=true
 ProtectKernelModules=true
 ProtectKernelTunables=true
 UMask=0077
-
-[Install]
-WantedBy=multi-user.target

@@ -64,3 +64,46 @@ pub fn acquire_exclusive_deployment_lock_at(
     }
     Ok(DeploymentBrowseLock(file))
 }
+
+/// Hold a deployment stable while a browser owns descriptors beneath it.
+pub fn acquire_shared_deployment_lock_at(
+    root: &Path,
+    deployment_id: &str,
+) -> io::Result<DeploymentBrowseLock> {
+    let lock = open_deployment_lock(root, deployment_id)?;
+    if unsafe { libc::flock(lock.as_raw_fd(), libc::LOCK_SH) } != 0 {
+        return Err(io::Error::last_os_error());
+    }
+    Ok(DeploymentBrowseLock(lock))
+}
+
+fn open_deployment_lock(root: &Path, deployment_id: &str) -> io::Result<File> {
+    deployment_id.parse::<DeploymentId>().map_err(|_| {
+        io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "invalid deployment lock identifier",
+        )
+    })?;
+    let directory = root.join("browse-locks");
+    match fs::symlink_metadata(&directory) {
+        Ok(metadata) if metadata.file_type().is_dir() => {}
+        Ok(_) => {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                "deployment browse-lock path is not a real directory",
+            ));
+        }
+        Err(error) if error.kind() == io::ErrorKind::NotFound => {
+            fs::create_dir(&directory)?;
+            fs::set_permissions(&directory, fs::Permissions::from_mode(0o700))?;
+        }
+        Err(error) => return Err(error),
+    }
+    fs::OpenOptions::new()
+        .read(true)
+        .write(true)
+        .create(true)
+        .mode(0o600)
+        .custom_flags(libc::O_CLOEXEC | libc::O_NOFOLLOW)
+        .open(directory.join(format!("system-{deployment_id}.lock")))
+}

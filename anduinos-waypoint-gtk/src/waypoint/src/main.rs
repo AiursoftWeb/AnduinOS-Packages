@@ -1,13 +1,8 @@
-mod btrfs;
 mod dbus_client;
 mod file_history_request;
 mod i18n;
-mod packages;
-mod performance;
 mod signal_listener;
-mod snapshot;
 mod ui;
-mod user_preferences;
 
 use gio::prelude::*;
 use gtk::prelude::*;
@@ -70,38 +65,6 @@ fn load_css() {
     let provider = gtk::CssProvider::new();
     provider.load_from_data(
         r#"
-        .theme-circle {
-            min-width: 16px;
-            min-height: 16px;
-            border-radius: 50%;
-            padding: 0;
-            margin: 0;
-            font-size: 0;
-        }
-
-        .theme-circle > * {
-            min-width: 16px;
-            min-height: 16px;
-            border-radius: 50%;
-            padding: 0;
-            margin: 0;
-        }
-
-        .theme-circle-system {
-            background: linear-gradient(90deg, #000000 50%, #ffffff 50%);
-            border: 2px solid #000000;
-        }
-
-        .theme-circle-light {
-            background-color: #ffffff;
-            border: 2px solid #000000;
-        }
-
-        .theme-circle-dark {
-            background-color: #000000;
-            border: 2px solid #000000;
-        }
-
         .file-history-target {
             background-color: alpha(@accent_color, 0.12);
         }

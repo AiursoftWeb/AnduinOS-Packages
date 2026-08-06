@@ -55,6 +55,10 @@ pub struct RecoveryEngineStatus {
     pub personal_snapshots: Vec<PersonalSnapshot>,
     #[serde(default)]
     pub personal_issues: Vec<serde_json::Value>,
+    #[serde(default)]
+    pub system_package_counts: std::collections::HashMap<String, usize>,
+    #[serde(default)]
+    pub personal_sizes: std::collections::HashMap<String, waypoint_common::SnapshotSpace>,
 }
 
 #[derive(Debug, Clone, serde::Deserialize)]
@@ -77,6 +81,7 @@ pub struct PersonalDirectoryEntry {
     pub modified_unix_seconds: i64,
 }
 
+#[cfg(any())]
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct ExternalBackupDestination {
     pub filesystem_uuid: String,
@@ -84,6 +89,7 @@ pub struct ExternalBackupDestination {
     pub filesystem_type: String,
 }
 
+#[cfg(any())]
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct ExternalBackupSource {
     pub id: String,
@@ -93,6 +99,7 @@ pub struct ExternalBackupSource {
     pub kernel_release: Option<String>,
 }
 
+#[cfg(any())]
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct ExternalBackupManifest {
     pub backup_id: String,
@@ -103,18 +110,21 @@ pub struct ExternalBackupManifest {
     pub referenced_bytes: u64,
 }
 
+#[cfg(any())]
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct ExternalBackupIssue {
     pub entry: String,
     pub message: String,
 }
 
+#[cfg(any())]
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct ExternalBackupDiscovery {
     pub backups: Vec<ExternalBackupManifest>,
     pub issues: Vec<ExternalBackupIssue>,
 }
 
+#[cfg(any())]
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct PersonalBackupManifest {
     pub backup_id: String,
@@ -125,6 +135,7 @@ pub struct PersonalBackupManifest {
     pub referenced_bytes: u64,
 }
 
+#[cfg(any())]
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct PersonalBackupDiscovery {
     pub backups: Vec<PersonalBackupManifest>,
@@ -149,6 +160,7 @@ pub struct VerificationResult {
 ///
 /// Represents the difference between the current system state and the snapshot state
 /// for a single package.
+#[cfg(any())]
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct PackageChange {
     /// Package name
@@ -165,6 +177,7 @@ pub struct PackageChange {
 /// including package changes, kernel changes, and the fixed recovery scope.
 ///
 /// This allows users to review changes before committing to a restore operation.
+#[cfg(any())]
 #[derive(Debug, serde::Deserialize)]
 pub struct RestorePreview {
     /// Name of the snapshot being restored
@@ -284,6 +297,17 @@ impl WaypointHelperClient {
         Ok(())
     }
 
+    pub fn delete_personal_snapshots(&self, ids: Vec<String>) -> Result<()> {
+        let proxy = self.proxy()?;
+        let (success, result): (bool, String) = proxy
+            .call("DeletePersonalSnapshots", &(ids,))
+            .context("Failed to delete the selected Personal Files history points")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
+    }
+
     pub fn set_personal_snapshot_pinned(
         &self,
         id: String,
@@ -297,6 +321,25 @@ impl WaypointHelperClient {
             anyhow::bail!(result);
         }
         serde_json::from_str(&result).context("Failed to parse personal snapshot")
+    }
+
+    pub fn rename_personal_snapshot(&self, id: String, title: String) -> Result<()> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call("RenamePersonalSnapshot", &(id, title))
+            .context("Failed to rename Home snapshot")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
+    }
+
+    pub fn verify_personal_snapshot(&self, id: String) -> Result<VerificationResult> {
+        let json: String = self
+            .proxy()?
+            .call("VerifyPersonalSnapshot", &(id,))
+            .context("Failed to check Home snapshot availability")?;
+        serde_json::from_str(&json).context("Failed to parse Home snapshot check")
     }
 
     pub fn list_personal_files(
@@ -326,6 +369,63 @@ impl WaypointHelperClient {
         Ok(std::fs::File::from(std::os::fd::OwnedFd::from(descriptor)))
     }
 
+    pub fn list_system_snapshot_files(
+        &self,
+        token: String,
+        deployment_id: String,
+        relative_path: String,
+    ) -> Result<Vec<PersonalDirectoryEntry>> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call(
+                "ListSystemSnapshotFiles",
+                &(token, deployment_id, relative_path),
+            )
+            .context("Failed to browse system snapshot")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        serde_json::from_str(&result).context("Failed to parse system snapshot directory")
+    }
+
+    pub fn export_system_snapshot_file(
+        &self,
+        token: String,
+        deployment_id: String,
+        relative_path: String,
+    ) -> Result<std::fs::File> {
+        let descriptor: zbus::zvariant::OwnedFd = self
+            .proxy()?
+            .call(
+                "ExportSystemSnapshotFile",
+                &(token, deployment_id, relative_path),
+            )
+            .context("Failed to export system snapshot file")?;
+        Ok(std::fs::File::from(std::os::fd::OwnedFd::from(descriptor)))
+    }
+
+    pub fn begin_system_snapshot_browse(&self, deployment_id: String) -> Result<String> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call("BeginSystemSnapshotBrowse", &(deployment_id,))
+            .context("Failed to authorize system snapshot browser")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(result)
+    }
+
+    pub fn end_system_snapshot_browse(&self, token: String) -> Result<()> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call("EndSystemSnapshotBrowse", &(token,))
+            .context("Failed to release system snapshot browser")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
+    }
+
     fn proxy(&self) -> Result<zbus::blocking::Proxy<'_>> {
         zbus::blocking::Proxy::new(
             &self.connection,
@@ -348,6 +448,17 @@ impl WaypointHelperClient {
             .context("Failed to delete the recovery point")
     }
 
+    pub fn delete_deployments(&self, ids: Vec<String>) -> Result<()> {
+        let proxy = self.proxy()?;
+        let (success, result): (bool, String) = proxy
+            .call("DeleteDeployments", &(ids,))
+            .context("Failed to delete the selected recovery points")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
+    }
+
     pub fn set_deployment_pinned(&self, id: String, pinned: bool) -> Result<(bool, String)> {
         let proxy = zbus::blocking::Proxy::new(
             &self.connection,
@@ -358,6 +469,17 @@ impl WaypointHelperClient {
         proxy
             .call("SetDeploymentPinned", &(id, pinned))
             .context("Failed to change recovery-point protection")
+    }
+
+    pub fn rename_deployment(&self, id: String, title: String) -> Result<()> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call("RenameDeployment", &(id, title))
+            .context("Failed to rename system snapshot")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
     }
 
     pub fn schedule_deployment_restore(&self, id: String) -> Result<(bool, String)> {
@@ -384,6 +506,7 @@ impl WaypointHelperClient {
             .context("Failed to cancel the pending restore")
     }
 
+    #[cfg(any())]
     pub fn get_deployment_spaces(
         &self,
         deployment_ids: Vec<String>,
@@ -400,6 +523,7 @@ impl WaypointHelperClient {
         serde_json::from_str(&json).context("Failed to parse deployment space accounting")
     }
 
+    #[cfg(any())]
     pub fn list_backup_destinations(&self) -> Result<Vec<ExternalBackupDestination>> {
         let proxy = zbus::blocking::Proxy::new(
             &self.connection,
@@ -416,6 +540,7 @@ impl WaypointHelperClient {
         serde_json::from_str(&result).context("Failed to parse external backup destinations")
     }
 
+    #[cfg(any())]
     pub fn list_external_backups(
         &self,
         filesystem_uuid: String,
@@ -435,6 +560,7 @@ impl WaypointHelperClient {
         serde_json::from_str(&result).context("Failed to parse external backups")
     }
 
+    #[cfg(any())]
     pub fn export_deployment(
         &self,
         deployment_id: String,
@@ -447,6 +573,7 @@ impl WaypointHelperClient {
         )
     }
 
+    #[cfg(any())]
     pub fn list_personal_external_backups(
         &self,
         filesystem_uuid: String,
@@ -458,6 +585,7 @@ impl WaypointHelperClient {
         )
     }
 
+    #[cfg(any())]
     pub fn export_personal_snapshot(
         &self,
         snapshot_id: String,
@@ -470,6 +598,7 @@ impl WaypointHelperClient {
         )
     }
 
+    #[cfg(any())]
     pub fn verify_personal_external_backup(
         &self,
         filesystem_uuid: String,
@@ -482,6 +611,7 @@ impl WaypointHelperClient {
         )
     }
 
+    #[cfg(any())]
     pub fn import_personal_external_backup(
         &self,
         filesystem_uuid: String,
@@ -494,6 +624,7 @@ impl WaypointHelperClient {
         )
     }
 
+    #[cfg(any())]
     pub fn delete_personal_external_backup(
         &self,
         filesystem_uuid: String,
@@ -507,6 +638,7 @@ impl WaypointHelperClient {
         Ok(())
     }
 
+    #[cfg(any())]
     pub fn verify_external_backup(
         &self,
         filesystem_uuid: String,
@@ -519,6 +651,7 @@ impl WaypointHelperClient {
         )
     }
 
+    #[cfg(any())]
     pub fn import_external_backup(
         &self,
         filesystem_uuid: String,
@@ -531,6 +664,7 @@ impl WaypointHelperClient {
         )
     }
 
+    #[cfg(any())]
     pub fn delete_external_backup(&self, filesystem_uuid: String, backup_id: String) -> Result<()> {
         let _: serde_json::Value = self.external_backup_call(
             "DeleteExternalBackup",
@@ -540,6 +674,7 @@ impl WaypointHelperClient {
         Ok(())
     }
 
+    #[cfg(any())]
     fn external_backup_call<T, B>(&self, method: &str, body: &B, context: &'static str) -> Result<T>
     where
         T: serde::de::DeserializeOwned,
@@ -616,6 +751,7 @@ impl WaypointHelperClient {
     ///
     /// # Security
     /// Requires restore authorization via Polkit before data is returned.
+    #[cfg(any())]
     pub fn preview_restore(&self, name: String) -> Result<RestorePreview> {
         let proxy = zbus::blocking::Proxy::new(
             &self.connection,
@@ -667,6 +803,24 @@ impl WaypointHelperClient {
             .context("Failed to save APT snapshot policy")
     }
 
+    pub fn get_automation_config(&self) -> Result<waypoint_common::AutomationConfig> {
+        let json: String = self
+            .proxy()?
+            .call("GetAutomationConfig", &())
+            .context("Failed to load automatic snapshot configuration")?;
+        serde_json::from_str(&json).context("Failed to parse automatic snapshot configuration")
+    }
+
+    pub fn save_automation_config(
+        &self,
+        config: &waypoint_common::AutomationConfig,
+    ) -> Result<(bool, String)> {
+        let json = serde_json::to_string(config)?;
+        self.proxy()?
+            .call("SaveAutomationConfig", &(json,))
+            .context("Failed to save automatic snapshot configuration")
+    }
+
     /// Save schedules TOML configuration file
     ///
     /// Writes the schedules configuration in TOML format to the system config directory.
@@ -688,6 +842,7 @@ impl WaypointHelperClient {
     ///
     /// # Security
     /// Requires root privileges via Polkit authentication.
+    #[cfg(any())]
     pub fn save_schedules_config(&self, toml_content: String) -> Result<(bool, String)> {
         let proxy = zbus::blocking::Proxy::new(
             &self.connection,
@@ -772,6 +927,7 @@ impl WaypointHelperClient {
     /// will fail for large snapshots that take longer than 25 seconds to compare.
     /// This is a known limitation. For very large snapshots, use package comparison instead.
     ///
+    #[cfg(any())]
     pub fn compare_snapshots(
         &self,
         old_snapshot_name: String,
@@ -796,6 +952,7 @@ impl WaypointHelperClient {
     }
 
     /// Compare package states captured inside two trusted deployments.
+    #[cfg(any())]
     pub fn compare_deployment_packages(
         &self,
         old_snapshot_name: String,
@@ -820,6 +977,7 @@ impl WaypointHelperClient {
     }
 
     /// Get quota usage information
+    #[cfg(any())]
     pub fn get_quota_usage(&self) -> Result<waypoint_common::QuotaUsage> {
         let proxy = zbus::blocking::Proxy::new(
             &self.connection,

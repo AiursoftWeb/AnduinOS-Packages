@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-waypoint-gtk</PackageName>
-    <PackageVersion>0.1.0-5+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.1.0-6+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Waypoint — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -54,6 +54,7 @@
     <PostRemoveScript Include="scripts/postrm.sh" />
     <SystemdUnit Include="data/anduinos-waypoint-helper.service" AutoEnable="false" />
     <SystemdUnit Include="data/anduinos-waypoint-scheduler.service" AutoEnable="false" />
+    <SystemdUnit Include="data/anduinos-waypoint-scheduler.timer" AutoEnable="true" />
     <SystemdUnit Include="data/anduinos-waypoint-confirm.service" AutoEnable="false" />
   </ItemGroup>
 
@@ -76,8 +77,8 @@
     <IncludeScript Include="scripts/qualify-recovery-vm.sh" Target="/usr/share/doc/anduinos-waypoint-gtk/qualify-recovery-vm.sh" />
     <IncludeScript Include="scripts/test-installed-policy.sh" Target="/usr/share/doc/anduinos-waypoint-gtk/test-installed-policy.sh" />
     <DpkgTrigger Include="update-initramfs" Type="activate-await" />
-    <IncludeFile Include="assets/schedules.toml" Target="/usr/share/anduinos-waypoint/defaults/schedules.toml" />
     <IncludeFile Include="assets/apt-snapshots.toml" Target="/usr/share/anduinos-waypoint/defaults/apt-snapshots.toml" />
+    <IncludeFile Include="assets/automation.toml" Target="/usr/share/anduinos-waypoint/defaults/automation.toml" />
     <IncludeFile Include="data/org.anduinos.Waypoint.policy" Target="/usr/share/polkit-1/actions/org.anduinos.Waypoint.policy" />
     <IncludeFile Include="data/50-org.anduinos.Waypoint-root.rules" Target="/usr/share/polkit-1/rules.d/50-org.anduinos.Waypoint-root.rules" />
     <IncludeFile Include="data/51-org.anduinos.Waypoint-desktop.rules" Target="/usr/share/polkit-1/rules.d/51-org.anduinos.Waypoint-desktop.rules" />
@@ -96,9 +97,7 @@
     <IncludeFile Include="docs/RECOVERY-SCOPE.md" Target="/usr/share/doc/anduinos-waypoint-gtk/RECOVERY-SCOPE.md" />
     <IncludeFile Include="docs/deployment-v1.schema.json" Target="/usr/share/anduinos-waypoint/deployment-v1.schema.json" />
     <IncludeFile Include="docs/rollback-v1.schema.json" Target="/usr/share/anduinos-waypoint/rollback-v1.schema.json" />
-    <IncludeFile Include="docs/external-backup-v1.schema.json" Target="/usr/share/anduinos-waypoint/external-backup-v1.schema.json" />
     <IncludeFile Include="docs/personal-snapshot-v1.schema.json" Target="/usr/share/anduinos-waypoint/personal-snapshot-v1.schema.json" />
-    <IncludeFile Include="docs/personal-backup-v1.schema.json" Target="/usr/share/anduinos-waypoint/personal-backup-v1.schema.json" />
     <IncludeFolder Include="obj/locale" Target="/usr/share/locale" />
   </ItemGroup>
 

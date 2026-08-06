@@ -44,6 +44,12 @@ grep -Fq 'snapshot_after = false' "$ROOT/assets/apt-snapshots.toml"
 rg -q 'get_apt_snapshot_policy' "$ROOT/src/waypoint-helper/src/main.rs"
 rg -q 'save_apt_snapshot_policy' "$ROOT/src/waypoint-helper/src/main.rs"
 rg -q 'create_package_changes_page' "$ROOT/src/waypoint/src/ui/preferences.rs"
+rg -q 'ViewStack::new' "$ROOT/src/waypoint/src/ui/mod.rs"
+rg -q 'SnapshotPage::new.*SnapshotScope::System' "$ROOT/src/waypoint/src/ui/mod.rs"
+rg -q 'SnapshotPage::new.*SnapshotScope::Home' "$ROOT/src/waypoint/src/ui/mod.rs"
+rg -q 'evaluate_retention' "$ROOT/src/waypoint-helper/src/main.rs"
+rg -q 'ListSystemSnapshotFiles' "$ROOT/src/waypoint/src/dbus_client.rs"
+! rg -q 'backup-destinations|backup-export|personal-backup-export|diff\|compare' "$ROOT/src/waypoint-cli"
 grep -Fq 'if [ -x /usr/libexec/anduinos-waypoint-apt-hook ]' \
     "$ROOT/data/90-anduinos-waypoint"
 test -f "$ROOT/scripts/postrm.sh"
@@ -107,8 +113,8 @@ for name in sys.argv[1:]:
             raise SystemExit(f"AppStream screenshot must be 1280x720: {name}")
 PY
 
-rg -q 'rm -f -- /etc/anduinos-waypoint/schedules.toml' "$ROOT/scripts/postrm.sh"
 rg -q 'rm -f -- /etc/anduinos-waypoint/apt-snapshots.toml' "$ROOT/scripts/postrm.sh"
+rg -q 'rm -f -- /etc/anduinos-waypoint/automation.toml' "$ROOT/scripts/postrm.sh"
 rg -q 'systemctl enable anduinos-waypoint-confirm.service' "$ROOT/scripts/postinst.sh"
 rg -q 'systemctl disable --now anduinos-waypoint-confirm.service' "$ROOT/scripts/prerm.sh"
 grep -Fq 'anduinos-waypoint-confirm.service" AutoEnable="false"' \
@@ -120,14 +126,14 @@ fi
 
 python3 "$ROOT/scripts/check-i18n.py"
 
-rg -q 'ScheduleScope::System => "create-scheduled"' "$ROOT/src/waypoint-scheduler/src/main.rs"
-rg -q 'ScheduleScope::Personal => "personal-create-scheduled"' "$ROOT/src/waypoint-scheduler/src/main.rs"
+rg -q 'AutomaticScope::System' "$ROOT/src/waypoint-scheduler/src/main.rs"
+rg -q 'AutomaticScope::Home' "$ROOT/src/waypoint-scheduler/src/main.rs"
 rg -q 'create-scheduled\) cmd_create_scheduled' "$ROOT/src/waypoint-cli"
 rg -q 'CreateScheduledDeployment' "$ROOT/src/waypoint-cli"
 rg -q 'CreateScheduledPersonalSnapshot' "$ROOT/src/waypoint-cli"
-rg -q 'notify_on_create' "$ROOT/src/waypoint-common/src/schedules.rs"
-rg -q 'AutomaticSnapshotCreated' "$ROOT/src/waypoint-notifier/src/main.rs"
-rg -q 'AutomaticSnapshotsDeleted' "$ROOT/src/waypoint-notifier/src/main.rs"
+rg -q 'notify_after_success' "$ROOT/src/waypoint-common/src/automation.rs"
+rg -q 'SnapshotCreationSucceeded' "$ROOT/src/waypoint-notifier/src/main.rs"
+rg -q 'AutomaticCleanupSucceeded' "$ROOT/src/waypoint-notifier/src/main.rs"
 if rg -n 'notify-send|org\.freedesktop\.Notifications' \
     "$ROOT/src/waypoint-helper/src" "$ROOT/src/waypoint-scheduler/src"; then
     echo "Privileged services must not send desktop-session notifications directly" >&2
@@ -160,7 +166,7 @@ if rg -n 'affected_subvolumes|personal_files_affected|restart_required|fallback_
     exit 1
 fi
 
-if rg -n 'SnapshotAction::Browse|Browse Files|open_containing_folder' \
+if rg -n 'SnapshotAction::Browse|open_containing_folder' \
     "$ROOT/src" --glob '!target/**'; then
     echo "The root-private recovery store must not be exposed as a desktop browse path" >&2
     exit 1

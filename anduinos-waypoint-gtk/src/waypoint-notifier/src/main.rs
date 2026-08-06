@@ -5,7 +5,7 @@
 //! and calls the current user's notification service on the session bus.
 
 use std::collections::HashMap;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use anyhow::{Context, Result};
 use futures_util::StreamExt;
@@ -70,6 +70,7 @@ async fn main() -> Result<()> {
         .interface(DBUS_INTERFACE_NAME)?
         .build();
     let mut messages = MessageStream::for_match_rule(rule, &system, Some(16)).await?;
+    let mut last_cleanup_notification = None::<Instant>;
     log::info!("AnduinOS Waypoint desktop notification listener started");
 
     while let Some(message) = messages.next().await {
@@ -85,21 +86,36 @@ async fn main() -> Result<()> {
             continue;
         };
         let rendered = match member {
-            "AutomaticSnapshotCreated" => {
+            "AutomaticSnapshotStarting" => {
                 let Ok((scope,)) = message.body().deserialize::<(String,)>() else {
-                    log::warn!("Ignored a malformed automatic creation event");
                     continue;
                 };
-                RecoveryScope::parse(&scope).map(creation_notification)
+                RecoveryScope::parse(&scope).map(starting_notification)
             }
-            "AutomaticSnapshotsDeleted" => {
+            "SnapshotCreationSucceeded" => {
+                let Ok((scope, automatic)) = message.body().deserialize::<(String, bool)>() else {
+                    log::warn!("Ignored a malformed snapshot creation event");
+                    continue;
+                };
+                RecoveryScope::parse(&scope).map(|scope| creation_notification(scope, automatic))
+            }
+            "AutomaticSnapshotFailed" => {
+                let Ok((scope,)) = message.body().deserialize::<(String,)>() else {
+                    continue;
+                };
+                RecoveryScope::parse(&scope).map(failure_notification)
+            }
+            "AutomaticCleanupSucceeded" => {
                 let Ok((system_deleted, personal_deleted)) =
                     message.body().deserialize::<(u64, u64)>()
                 else {
-                    log::warn!("Ignored a malformed automatic retention event");
                     continue;
                 };
-                retention_notification(system_deleted, personal_deleted)
+                if !allow_cleanup_notification(&mut last_cleanup_notification, Instant::now()) {
+                    None
+                } else {
+                    cleanup_notification(system_deleted, personal_deleted)
+                }
             }
             _ => None,
         };
@@ -113,37 +129,79 @@ async fn main() -> Result<()> {
     anyhow::bail!("The system D-Bus notification stream ended unexpectedly")
 }
 
-fn creation_notification(scope: RecoveryScope) -> (String, String) {
-    match scope {
-        RecoveryScope::System => (
+fn starting_notification(scope: RecoveryScope) -> (String, String) {
+    let body = match scope {
+        RecoveryScope::System => tr("A scheduled system snapshot will start in 10 seconds."),
+        RecoveryScope::Personal => tr("A scheduled Home snapshot will start in 10 seconds."),
+    };
+    (tr("Automatic Snapshot Starting"), body)
+}
+
+fn failure_notification(scope: RecoveryScope) -> (String, String) {
+    let body = match scope {
+        RecoveryScope::System => {
+            tr("The scheduled system snapshot could not be created. Check Waypoint for details.")
+        }
+        RecoveryScope::Personal => {
+            tr("The scheduled Home snapshot could not be created. Check Waypoint for details.")
+        }
+    };
+    (tr("Automatic Snapshot Failed"), body)
+}
+
+fn creation_notification(scope: RecoveryScope, automatic: bool) -> (String, String) {
+    match (scope, automatic) {
+        (RecoveryScope::System, true) => (
             tr("Automatic System Recovery Point Created"),
             tr("A scheduled system recovery point was created successfully."),
         ),
-        RecoveryScope::Personal => (
+        (RecoveryScope::Personal, true) => (
             tr("Personal Files History Saved"),
             tr("A scheduled Personal Files history point was created successfully."),
+        ),
+        (RecoveryScope::System, false) => (
+            tr("System Recovery Point Created"),
+            tr("Your system recovery point was created successfully."),
+        ),
+        (RecoveryScope::Personal, false) => (
+            tr("Personal Files History Saved"),
+            tr("Your Personal Files history point was created successfully."),
         ),
     }
 }
 
-fn retention_notification(system_deleted: u64, personal_deleted: u64) -> Option<(String, String)> {
-    let title = tr("Automatic Recovery Cleanup");
+fn cleanup_notification(system_deleted: u64, personal_deleted: u64) -> Option<(String, String)> {
     let body = match (system_deleted, personal_deleted) {
         (0, 0) => return None,
-        (system, 0) => trf(
-            "Removed {0} old automatic system recovery point(s).",
-            &[&system.to_string()],
+        (system, 0) => format!(
+            "{} {}",
+            system,
+            tr("old system recovery point(s) were removed.")
         ),
-        (0, personal) => trf(
-            "Removed {0} old Personal Files history point(s).",
-            &[&personal.to_string()],
+        (0, personal) => format!(
+            "{} {}",
+            personal,
+            tr("old Personal Files history point(s) were removed.")
         ),
-        (system, personal) => trf(
-            "Removed {0} old system recovery point(s) and {1} old Personal Files history point(s).",
-            &[&system.to_string(), &personal.to_string()],
+        (system, personal) => format!(
+            "{} {} {} {}",
+            system,
+            tr("old system recovery point(s) and"),
+            personal,
+            tr("old Personal Files history point(s) were removed.")
         ),
     };
-    Some((title, body))
+    Some((tr("Smart Cleanup Completed"), body))
+}
+
+fn allow_cleanup_notification(last: &mut Option<Instant>, now: Instant) -> bool {
+    if last
+        .is_some_and(|previous| now.saturating_duration_since(previous) < Duration::from_secs(60))
+    {
+        return false;
+    }
+    *last = Some(now);
+    true
 }
 
 async fn send_notification(proxy: &Proxy<'_>, title: &str, body: &str) -> Result<()> {
@@ -175,14 +233,6 @@ fn tr(message: &str) -> String {
     gettext(message)
 }
 
-fn trf(template: &str, values: &[&str]) -> String {
-    let mut translated = tr(template);
-    for (index, value) in values.iter().enumerate() {
-        translated = translated.replace(&format!("{{{index}}}"), value);
-    }
-    translated
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -198,11 +248,17 @@ mod tests {
     }
 
     #[test]
-    fn retention_notifications_are_aggregated_and_skip_noop_cleanup() {
-        assert!(retention_notification(0, 0).is_none());
-        assert!(retention_notification(3, 0).unwrap().1.contains('3'));
-        let both = retention_notification(2, 4).unwrap().1;
-        assert!(both.contains('2'));
-        assert!(both.contains('4'));
+    fn cleanup_notifications_are_limited_to_one_per_minute() {
+        let start = Instant::now();
+        let mut last = None;
+        assert!(allow_cleanup_notification(&mut last, start));
+        assert!(!allow_cleanup_notification(
+            &mut last,
+            start + Duration::from_secs(59)
+        ));
+        assert!(allow_cleanup_notification(
+            &mut last,
+            start + Duration::from_secs(60)
+        ));
     }
 }

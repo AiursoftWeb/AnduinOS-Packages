@@ -476,6 +476,27 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
         Ok(record)
     }
 
+    pub fn rename(
+        &self,
+        layout: &LayoutReport,
+        id: PersonalSnapshotId,
+        title: &str,
+    ) -> Result<PersonalSnapshotRecord, PersonalError> {
+        ensure_supported(layout)?;
+        validate_text(title.trim(), 120, "title")?;
+        let _lock = StoreLock::acquire(&self.personal_root().join("operation.lock"))?;
+        let mut record = self.load(id)?;
+        if record.state != PersonalSnapshotState::Ready {
+            return Err(PersonalError::new(
+                PersonalErrorCode::InvalidInput,
+                "Only ready personal snapshots can be renamed",
+            ));
+        }
+        record.title = title.trim().to_string();
+        self.write_record(&record)?;
+        Ok(record)
+    }
+
     /// Adopt one read-only `home` subvolume received into the engine-owned
     /// import staging directory. External media paths never cross this API.
     pub fn adopt_imported(
@@ -638,11 +659,18 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
             .map_err(|error| personal_io("Could not open personal recovery store", error))?;
         let snapshot_relative = PathBuf::from("personal")
             .join("snapshots")
-            .join(id.to_string())
-            .join("home");
-        let snapshot_root = open_beneath(
+            .join(id.to_string());
+        let snapshot_container = open_beneath(
             store_root.as_raw_fd(),
             &snapshot_relative,
+            libc::O_RDONLY | libc::O_DIRECTORY | libc::O_CLOEXEC,
+        )?;
+        // `home` is the one intentional Btrfs subvolume boundary. Resolve its
+        // fixed name beneath the root-owned snapshot container, then prohibit
+        // any further filesystem crossing while browsing its contents.
+        let snapshot_root = open_beneath_allow_final_mount(
+            snapshot_container.as_raw_fd(),
+            Path::new("home"),
             libc::O_RDONLY | libc::O_DIRECTORY | libc::O_CLOEXEC,
         )?;
         let user_root = open_beneath(
@@ -961,18 +989,43 @@ const RESOLVE_NO_MAGICLINKS: u64 = 0x02;
 const RESOLVE_NO_SYMLINKS: u64 = 0x04;
 const RESOLVE_BENEATH: u64 = 0x08;
 
-fn open_beneath(directory_fd: RawFd, path: &Path, flags: i32) -> Result<File, PersonalError> {
+pub(crate) fn open_beneath(
+    directory_fd: RawFd,
+    path: &Path,
+    flags: i32,
+) -> Result<File, PersonalError> {
+    open_beneath_internal(directory_fd, path, flags, true)
+}
+
+pub(crate) fn open_beneath_allow_final_mount(
+    directory_fd: RawFd,
+    path: &Path,
+    flags: i32,
+) -> Result<File, PersonalError> {
+    open_beneath_internal(directory_fd, path, flags, false)
+}
+
+fn open_beneath_internal(
+    directory_fd: RawFd,
+    path: &Path,
+    flags: i32,
+    no_xdev: bool,
+) -> Result<File, PersonalError> {
     let bytes = path.as_os_str().as_bytes();
     if bytes.contains(&0) {
-        return Err(PersonalError::invalid("Personal path contains a NUL byte"));
+        return Err(PersonalError::invalid("Snapshot path contains a NUL byte"));
     }
     let mut terminated = Vec::with_capacity(bytes.len() + 1);
     terminated.extend_from_slice(bytes);
     terminated.push(0);
+    let mut resolve = RESOLVE_BENEATH | RESOLVE_NO_MAGICLINKS | RESOLVE_NO_SYMLINKS;
+    if no_xdev {
+        resolve |= RESOLVE_NO_XDEV;
+    }
     let how = OpenHow {
         flags: flags as u64,
         mode: 0,
-        resolve: RESOLVE_BENEATH | RESOLVE_NO_MAGICLINKS | RESOLVE_NO_SYMLINKS | RESOLVE_NO_XDEV,
+        resolve,
     };
     let fd = unsafe {
         libc::syscall(
@@ -985,6 +1038,13 @@ fn open_beneath(directory_fd: RawFd, path: &Path, flags: i32) -> Result<File, Pe
     };
     if fd < 0 {
         let error = io::Error::last_os_error();
+        // Some service sandboxes deliberately make newer syscalls appear
+        // unavailable. Keep the descriptor-confined security boundary on
+        // those systems by walking one normal component at a time with
+        // O_NOFOLLOW, preserving the caller's filesystem-crossing policy.
+        if error.raw_os_error() == Some(libc::ENOSYS) {
+            return open_beneath_with_openat(directory_fd, path, flags, no_xdev);
+        }
         let code = if error.kind() == io::ErrorKind::NotFound {
             PersonalErrorCode::NotFound
         } else {
@@ -992,13 +1052,81 @@ fn open_beneath(directory_fd: RawFd, path: &Path, flags: i32) -> Result<File, Pe
         };
         return Err(PersonalError::new(
             code,
-            format!("Could not resolve personal snapshot path safely: {error}"),
+            format!("Could not resolve snapshot path safely: {error}"),
         ));
     }
     Ok(unsafe { File::from_raw_fd(fd) })
 }
 
-fn list_directory_fd(fd: RawFd) -> Result<Vec<PersonalDirectoryEntry>, PersonalError> {
+fn open_beneath_with_openat(
+    directory_fd: RawFd,
+    path: &Path,
+    flags: i32,
+    no_xdev: bool,
+) -> Result<File, PersonalError> {
+    let mut components = path.components().peekable();
+    if components.peek().is_none()
+        || components
+            .clone()
+            .any(|component| !matches!(component, Component::Normal(_)))
+    {
+        return Err(PersonalError::invalid(
+            "Snapshot path must contain only normal relative components",
+        ));
+    }
+
+    let duplicate = unsafe { libc::fcntl(directory_fd, libc::F_DUPFD_CLOEXEC, 3) };
+    if duplicate < 0 {
+        return Err(personal_io(
+            "Could not duplicate snapshot root descriptor",
+            io::Error::last_os_error(),
+        ));
+    }
+    let mut current = unsafe { File::from_raw_fd(duplicate) };
+    let root_device = current
+        .metadata()
+        .map_err(|error| personal_io("Could not inspect snapshot root", error))?
+        .dev();
+
+    while let Some(Component::Normal(component)) = components.next() {
+        let name = std::ffi::CString::new(component.as_bytes())
+            .map_err(|_| PersonalError::invalid("Personal path contains a NUL byte"))?;
+        let is_last = components.peek().is_none();
+        let component_flags = if is_last {
+            flags | libc::O_NOFOLLOW
+        } else {
+            libc::O_RDONLY | libc::O_DIRECTORY | libc::O_CLOEXEC | libc::O_NOFOLLOW
+        };
+        let next_fd = unsafe { libc::openat(current.as_raw_fd(), name.as_ptr(), component_flags) };
+        if next_fd < 0 {
+            let error = io::Error::last_os_error();
+            let code = if error.kind() == io::ErrorKind::NotFound {
+                PersonalErrorCode::NotFound
+            } else {
+                PersonalErrorCode::UnsafePath
+            };
+            return Err(PersonalError::new(
+                code,
+                format!("Could not resolve snapshot path safely: {error}"),
+            ));
+        }
+        let next = unsafe { File::from_raw_fd(next_fd) };
+        let device = next
+            .metadata()
+            .map_err(|error| personal_io("Could not inspect snapshot path", error))?
+            .dev();
+        if no_xdev && device != root_device {
+            return Err(PersonalError::new(
+                PersonalErrorCode::UnsafePath,
+                "Snapshot path crosses a filesystem boundary",
+            ));
+        }
+        current = next;
+    }
+    Ok(current)
+}
+
+pub(crate) fn list_directory_fd(fd: RawFd) -> Result<Vec<PersonalDirectoryEntry>, PersonalError> {
     let duplicate = unsafe { libc::fcntl(fd, libc::F_DUPFD_CLOEXEC, 3) };
     if duplicate < 0 {
         return Err(personal_io(
@@ -1084,7 +1212,7 @@ fn list_directory_fd(fd: RawFd) -> Result<Vec<PersonalDirectoryEntry>, PersonalE
     Ok(entries)
 }
 
-fn duplicate_file(file: &File) -> Result<File, PersonalError> {
+pub(crate) fn duplicate_file(file: &File) -> Result<File, PersonalError> {
     file.try_clone()
         .map_err(|error| personal_io("Could not duplicate personal snapshot descriptor", error))
 }
@@ -1431,6 +1559,49 @@ mod tests {
         let busy = engine.delete(&supported_layout(), id).unwrap_err();
         assert_eq!(busy.code, PersonalErrorCode::Busy);
         drop(browser);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn openat_fallback_is_descriptor_confined_and_rejects_symlinks() {
+        use std::os::unix::fs::symlink;
+
+        let root = temporary_root("openat-fallback");
+        fs::create_dir_all(root.join("safe/nested")).unwrap();
+        fs::write(root.join("safe/nested/file.txt"), b"safe").unwrap();
+        symlink("/etc", root.join("safe/escape")).unwrap();
+        let root_fd = OpenOptions::new()
+            .read(true)
+            .custom_flags(libc::O_DIRECTORY | libc::O_CLOEXEC | libc::O_NOFOLLOW)
+            .open(&root)
+            .unwrap();
+
+        let file = open_beneath_with_openat(
+            root_fd.as_raw_fd(),
+            Path::new("safe/nested/file.txt"),
+            libc::O_RDONLY | libc::O_CLOEXEC,
+            true,
+        )
+        .unwrap();
+        assert_eq!(file.metadata().unwrap().len(), 4);
+        assert!(
+            open_beneath_with_openat(
+                root_fd.as_raw_fd(),
+                Path::new("safe/escape/passwd"),
+                libc::O_RDONLY | libc::O_CLOEXEC,
+                true,
+            )
+            .is_err()
+        );
+        assert!(
+            open_beneath_with_openat(
+                root_fd.as_raw_fd(),
+                Path::new("../etc/passwd"),
+                libc::O_RDONLY | libc::O_CLOEXEC,
+                true,
+            )
+            .is_err()
+        );
         fs::remove_dir_all(root).unwrap();
     }
 }

@@ -86,18 +86,18 @@ pub fn create_schedule_edit_dialog(
     naming_group.add(&preview_label);
 
     let scope_group = adw::PreferencesGroup::new();
-    scope_group.set_title(&tr("Recovery Scope"));
+    scope_group.set_title(&tr("What to protect"));
     scope_group.set_description(Some(&tr(
         "System recovery and Personal Files history are independent. Personal history can recover files without rolling back the operating system.",
     )));
     let scope_row = adw::ComboRow::new();
-    scope_row.set_title(&tr("History"));
+    scope_row.set_title(&tr("Protected area"));
     scope_row.set_subtitle(&tr(
         "Choose the independent data protected by this schedule",
     ));
     scope_row.set_model(Some(&gtk::StringList::new(&[
-        &tr("System · @root"),
-        &tr("Personal Files · @home"),
+        &tr("System files and settings"),
+        &tr("Personal files in your Home folder"),
     ])));
     scope_row.set_selected(match schedule.scope {
         ScheduleScope::System => 0,

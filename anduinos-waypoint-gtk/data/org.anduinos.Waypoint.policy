@@ -54,18 +54,6 @@
     </defaults>
   </action>
 
-  <action id="org.anduinos.waypoint.external-backup">
-    <description>Manage AnduinOS recovery backups on external storage</description>
-    <description xml:lang="zh_CN">管理外部存储上的 AnduinOS 恢复备份</description>
-    <message>Authentication is required to export, import, verify, or delete an external recovery backup</message>
-    <message xml:lang="zh_CN">导出、导入、验证或删除外部恢复备份需要身份验证</message>
-    <defaults>
-      <allow_any>auth_admin</allow_any>
-      <allow_inactive>auth_admin</allow_inactive>
-      <allow_active>auth_admin</allow_active>
-    </defaults>
-  </action>
-
   <action id="org.anduinos.waypoint.personal-files">
     <description>Browse and export historical Personal Files</description>
     <description xml:lang="zh_CN">浏览和导出个人文件历史</description>

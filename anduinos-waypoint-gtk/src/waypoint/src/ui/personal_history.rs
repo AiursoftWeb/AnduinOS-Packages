@@ -3,6 +3,7 @@ use std::io::{Read, Write};
 use std::os::unix::fs::OpenOptionsExt;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
+use std::sync::Arc;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::mpsc;
 use std::time::Duration;
@@ -17,18 +18,17 @@ use crate::i18n::{tr, trf};
 
 pub fn show(parent: &adw::ApplicationWindow) {
     let window = adw::Window::new();
-    window.set_title(Some(&tr("Personal Files History")));
+    window.set_title(Some(&tr("Saved Personal File Versions")));
     window.set_default_size(820, 680);
     window.set_modal(true);
     window.set_transient_for(Some(parent));
-
     let root = gtk::Box::new(gtk::Orientation::Vertical, 0);
     let header = adw::HeaderBar::new();
     header.set_title_widget(Some(&adw::WindowTitle::new(
-        &tr("Personal Files History"),
-        &tr("Recover deleted files without rolling back the system"),
+        &tr("Saved Personal File Versions"),
+        &tr("Choose a saved time, then find the file or folder you need"),
     )));
-    let create = gtk::Button::with_label(&tr("Create History Point"));
+    let create = gtk::Button::with_label(&tr("Save Now"));
     create.add_css_class("suggested-action");
     header.pack_start(&create);
     let refresh = gtk::Button::from_icon_name("view-refresh-symbolic");
@@ -120,6 +120,67 @@ pub fn show(parent: &adw::ApplicationWindow) {
     });
 
     window.present();
+}
+
+pub fn show_snapshot_browser(parent: &adw::ApplicationWindow, id: &str, title: &str) {
+    show_browser(parent, BrowserScope::Home, id, title, "", None);
+}
+
+pub fn show_system_snapshot_browser(parent: &adw::ApplicationWindow, id: &str, title: &str) {
+    match WaypointHelperClient::new()
+        .and_then(|client| client.begin_system_snapshot_browse(id.to_string()))
+    {
+        Ok(token) => show_browser(
+            parent,
+            BrowserScope::System(Arc::new(SystemBrowserLease::new(token))),
+            id,
+            title,
+            "",
+            None,
+        ),
+        Err(error) => {
+            let dialog = adw::MessageDialog::new(
+                Some(parent),
+                Some(&tr("Could Not Browse System Snapshot")),
+                Some(&error.to_string()),
+            );
+            dialog.add_response("close", &tr("Close"));
+            dialog.present();
+        }
+    }
+}
+
+#[derive(Clone)]
+enum BrowserScope {
+    Home,
+    System(Arc<SystemBrowserLease>),
+}
+
+struct SystemBrowserLease {
+    token: String,
+    released: std::sync::atomic::AtomicBool,
+}
+
+impl SystemBrowserLease {
+    fn new(token: String) -> Self {
+        Self {
+            token,
+            released: std::sync::atomic::AtomicBool::new(false),
+        }
+    }
+
+    fn release(&self) {
+        if !self.released.swap(true, Ordering::AcqRel) {
+            let _ = WaypointHelperClient::new()
+                .and_then(|client| client.end_system_snapshot_browse(self.token.clone()));
+        }
+    }
+}
+
+impl Drop for SystemBrowserLease {
+    fn drop(&mut self) {
+        self.release();
+    }
 }
 
 struct TargetVersion {
@@ -352,6 +413,7 @@ fn append_target_version_row(
         recover.connect_clicked(move |_| {
             choose_file_destination(
                 &recovery_window,
+                BrowserScope::Home,
                 &recovery_id,
                 &recovery_relative,
                 &recovery_name,
@@ -373,6 +435,7 @@ fn append_target_version_row(
     browse.connect_clicked(move |_| {
         show_browser(
             &browser_window,
+            BrowserScope::Home,
             &browser_id,
             &browser_title,
             &initial_path,
@@ -421,10 +484,8 @@ fn load_snapshots(window: &adw::Window, stack: &gtk::Stack, list: &gtk::ListBox)
             Ok(Ok((snapshots, issues))) => {
                 if snapshots.is_empty() {
                     let row = adw::ActionRow::new();
-                    row.set_title(&tr("No Personal Files history yet"));
-                    row.set_subtitle(&tr(
-                        "Create one now or enable the hourly personal schedule.",
-                    ));
+                    row.set_title(&tr("No saved personal file versions yet"));
+                    row.set_subtitle(&tr("Save your files now or turn on automatic protection."));
                     list.append(&row);
                 } else {
                     for snapshot in snapshots {
@@ -476,7 +537,7 @@ fn append_snapshot_row(
         snapshot.reason,
         if snapshot.pinned { " · Protected" } else { "" }
     ));
-    let browse = gtk::Button::with_label(&tr("Browse"));
+    let browse = gtk::Button::with_label(&tr("Find Files"));
     browse.set_valign(gtk::Align::Center);
     browse.add_css_class("suggested-action");
     browse.set_sensitive(snapshot.state == "ready");
@@ -504,7 +565,8 @@ fn append_snapshot_row(
     let parent = window.clone();
     let id = snapshot.id.clone();
     let title = snapshot.title.clone();
-    browse.connect_clicked(move |_| show_browser(&parent, &id, &title, "", None));
+    browse
+        .connect_clicked(move |_| show_browser(&parent, BrowserScope::Home, &id, &title, "", None));
 
     let window_pin = window.clone();
     let stack_pin = stack.clone();
@@ -570,23 +632,32 @@ fn mutate_then_reload<F>(
 }
 
 fn show_browser(
-    parent: &adw::Window,
+    parent: &impl IsA<gtk::Window>,
+    scope: BrowserScope,
     snapshot_id: &str,
     title: &str,
     initial_path: &str,
     highlighted_name: Option<String>,
 ) {
     let window = adw::Window::new();
-    window.set_title(Some(&tr("Recover Personal Files")));
+    if let BrowserScope::System(lease) = &scope {
+        let lease = lease.clone();
+        window.connect_close_request(move |_| {
+            lease.release();
+            glib::Propagation::Proceed
+        });
+    }
+    let browser_title = match scope {
+        BrowserScope::Home => tr("Recover Personal Files"),
+        BrowserScope::System(_) => tr("Browse System Snapshot"),
+    };
+    window.set_title(Some(&browser_title));
     window.set_default_size(780, 640);
     window.set_modal(true);
     window.set_transient_for(Some(parent));
     let root = gtk::Box::new(gtk::Orientation::Vertical, 0);
     let header = adw::HeaderBar::new();
-    header.set_title_widget(Some(&adw::WindowTitle::new(
-        &tr("Recover Personal Files"),
-        title,
-    )));
+    header.set_title_widget(Some(&adw::WindowTitle::new(&browser_title, title)));
     let up = gtk::Button::from_icon_name("go-up-symbolic");
     up.set_tooltip_text(Some(&tr("Parent folder")));
     header.pack_start(&up);
@@ -617,6 +688,7 @@ fn show_browser(
     let current_path = Rc::new(RefCell::new(initial_path.to_string()));
     load_directory(
         &window,
+        scope.clone(),
         snapshot_id,
         &current_path,
         &path_label,
@@ -629,6 +701,7 @@ fn show_browser(
     let path_up = current_path.clone();
     let label_up = path_label.clone();
     let list_up = list.clone();
+    let scope_up = scope.clone();
     up.connect_clicked(move |_| {
         let next = path_up
             .borrow()
@@ -636,20 +709,35 @@ fn show_browser(
             .map(|(parent, _)| parent.to_string())
             .unwrap_or_default();
         *path_up.borrow_mut() = next;
-        load_directory(&window_up, &id_up, &path_up, &label_up, &list_up, None);
+        load_directory(
+            &window_up,
+            scope_up.clone(),
+            &id_up,
+            &path_up,
+            &label_up,
+            &list_up,
+            None,
+        );
     });
 
     let window_folder = window.clone();
     let id_folder = snapshot_id.to_string();
     let path_folder = current_path.clone();
+    let scope_folder = scope.clone();
     recover_folder.connect_clicked(move |_| {
-        choose_folder_destination(&window_folder, &id_folder, &path_folder.borrow());
+        choose_folder_destination(
+            &window_folder,
+            scope_folder.clone(),
+            &id_folder,
+            &path_folder.borrow(),
+        );
     });
     window.present();
 }
 
 fn load_directory(
     window: &adw::Window,
+    scope: BrowserScope,
     snapshot_id: &str,
     current_path: &Rc<RefCell<String>>,
     path_label: &gtk::Label,
@@ -664,9 +752,10 @@ fn load_directory(
     let path = current_path.borrow().clone();
     path_label.set_text(&format!("~/{}", path));
     let (sender, receiver) = mpsc::channel();
+    let scope_worker = scope.clone();
     std::thread::spawn(move || {
-        let result =
-            WaypointHelperClient::new().and_then(|client| client.list_personal_files(id, path));
+        let result = WaypointHelperClient::new()
+            .and_then(|client| list_files(&client, &scope_worker, id, path));
         let _ = sender.send(result);
     });
     let window = window.clone();
@@ -686,6 +775,7 @@ fn load_directory(
                 for entry in entries {
                     append_file_row(
                         &window,
+                        scope.clone(),
                         &id,
                         &current_path,
                         &path_label,
@@ -709,6 +799,7 @@ fn load_directory(
 
 fn append_file_row(
     window: &adw::Window,
+    scope: BrowserScope,
     snapshot_id: &str,
     current_path: &Rc<RefCell<String>>,
     path_label: &gtk::Label,
@@ -755,18 +846,26 @@ fn append_file_row(
         action.connect_clicked(move |_| {
             let next = join_relative(&path.borrow(), &name);
             *path.borrow_mut() = next;
-            load_directory(&window, &id, &path, &label, &list, None);
+            load_directory(&window, scope.clone(), &id, &path, &label, &list, None);
         });
     } else {
         let window = window.clone();
         let id = snapshot_id.to_string();
         let relative = join_relative(&current_path.borrow(), &entry.name);
         let name = entry.name;
-        action.connect_clicked(move |_| choose_file_destination(&window, &id, &relative, &name));
+        action.connect_clicked(move |_| {
+            choose_file_destination(&window, scope.clone(), &id, &relative, &name)
+        });
     }
 }
 
-fn choose_file_destination(window: &adw::Window, snapshot_id: &str, relative: &str, name: &str) {
+fn choose_file_destination(
+    window: &adw::Window,
+    scope: BrowserScope,
+    snapshot_id: &str,
+    relative: &str,
+    name: &str,
+) {
     let dialog = gtk::FileDialog::new();
     dialog.set_title(&tr("Recover Historical File"));
     dialog.set_initial_name(Some(name));
@@ -787,13 +886,18 @@ fn choose_file_destination(window: &adw::Window, snapshot_id: &str, relative: &s
                 return;
             };
             run_restore(&window_clone, move || {
-                restore_one_file(&id, &relative, &path)
+                restore_one_file(scope, &id, &relative, &path)
             });
         },
     );
 }
 
-fn choose_folder_destination(window: &adw::Window, snapshot_id: &str, relative: &str) {
+fn choose_folder_destination(
+    window: &adw::Window,
+    scope: BrowserScope,
+    snapshot_id: &str,
+    relative: &str,
+) {
     let dialog = gtk::FileDialog::new();
     dialog.set_title(&tr("Choose Where to Recover This Folder"));
     let window_clone = window.clone();
@@ -819,7 +923,7 @@ fn choose_folder_destination(window: &adw::Window, snapshot_id: &str, relative: 
             let destination = unique_destination(&parent, leaf);
             run_restore(&window_clone, move || {
                 let client = WaypointHelperClient::new()?;
-                restore_directory(&client, &id, &relative, &destination)
+                restore_directory(&client, scope, &id, &relative, &destination)
             });
         },
     );
@@ -851,9 +955,19 @@ where
     });
 }
 
-fn restore_one_file(snapshot_id: &str, relative: &str, destination: &Path) -> anyhow::Result<()> {
+fn restore_one_file(
+    scope: BrowserScope,
+    snapshot_id: &str,
+    relative: &str,
+    destination: &Path,
+) -> anyhow::Result<()> {
     let client = WaypointHelperClient::new()?;
-    let mut source = client.export_personal_file(snapshot_id.to_string(), relative.to_string())?;
+    let mut source = export_file(
+        &client,
+        &scope,
+        snapshot_id.to_string(),
+        relative.to_string(),
+    )?;
     write_recovered_file(&mut source, destination)
 }
 
@@ -912,6 +1026,7 @@ fn create_recovery_temp_file(destination: &Path) -> anyhow::Result<(PathBuf, std
 
 fn restore_directory(
     client: &WaypointHelperClient,
+    scope: BrowserScope,
     snapshot_id: &str,
     relative: &str,
     destination: &Path,
@@ -920,6 +1035,7 @@ fn restore_directory(
     std::fs::create_dir(destination)?;
     let result = restore_directory_bounded(
         client,
+        scope,
         snapshot_id,
         relative,
         destination,
@@ -939,6 +1055,7 @@ fn restore_directory(
 
 fn restore_directory_bounded(
     client: &WaypointHelperClient,
+    scope: BrowserScope,
     snapshot_id: &str,
     relative: &str,
     destination: &Path,
@@ -951,7 +1068,12 @@ fn restore_directory_bounded(
         depth <= MAX_RECOVERY_DEPTH,
         "Historical folder exceeds the recovery depth limit"
     );
-    for entry in client.list_personal_files(snapshot_id.to_string(), relative.to_string())? {
+    for entry in list_files(
+        client,
+        &scope,
+        snapshot_id.to_string(),
+        relative.to_string(),
+    )? {
         *recovered_entries = recovered_entries.saturating_add(1);
         anyhow::ensure!(
             *recovered_entries <= MAX_RECOVERY_ENTRIES,
@@ -963,6 +1085,7 @@ fn restore_directory_bounded(
             std::fs::create_dir(&target)?;
             restore_directory_bounded(
                 client,
+                scope.clone(),
                 snapshot_id,
                 &source,
                 &target,
@@ -970,7 +1093,7 @@ fn restore_directory_bounded(
                 recovered_entries,
             )?;
         } else {
-            let mut input = client.export_personal_file(snapshot_id.to_string(), source)?;
+            let mut input = export_file(client, &scope, snapshot_id.to_string(), source)?;
             let mut output = std::fs::OpenOptions::new()
                 .write(true)
                 .create_new(true)
@@ -983,6 +1106,34 @@ fn restore_directory_bounded(
     }
     std::fs::File::open(destination)?.sync_all()?;
     Ok(())
+}
+
+fn list_files(
+    client: &WaypointHelperClient,
+    scope: &BrowserScope,
+    id: String,
+    path: String,
+) -> anyhow::Result<Vec<PersonalDirectoryEntry>> {
+    match scope {
+        BrowserScope::Home => client.list_personal_files(id, path),
+        BrowserScope::System(lease) => {
+            client.list_system_snapshot_files(lease.token.clone(), id, path)
+        }
+    }
+}
+
+fn export_file(
+    client: &WaypointHelperClient,
+    scope: &BrowserScope,
+    id: String,
+    path: String,
+) -> anyhow::Result<std::fs::File> {
+    match scope {
+        BrowserScope::Home => client.export_personal_file(id, path),
+        BrowserScope::System(lease) => {
+            client.export_system_snapshot_file(lease.token.clone(), id, path)
+        }
+    }
 }
 
 fn unique_destination(parent: &Path, leaf: &str) -> PathBuf {

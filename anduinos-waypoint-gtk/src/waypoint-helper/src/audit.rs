@@ -182,6 +182,7 @@ pub fn log_auth_failure(user_id: String, process_id: u32, operation: &str, reaso
     event.log();
 }
 
+#[cfg(any())]
 pub fn log_external_backup(
     user_id: String,
     process_id: u32,

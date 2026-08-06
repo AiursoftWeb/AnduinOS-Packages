@@ -2,14 +2,14 @@ set -eu
 
 systemd-tmpfiles --create /usr/lib/tmpfiles.d/anduinos-waypoint.conf || true
 
-if [ ! -e /etc/anduinos-waypoint/schedules.toml ]; then
-    install -m644 /usr/share/anduinos-waypoint/defaults/schedules.toml \
-        /etc/anduinos-waypoint/schedules.toml
-fi
-
 if [ ! -e /etc/anduinos-waypoint/apt-snapshots.toml ]; then
     install -m644 /usr/share/anduinos-waypoint/defaults/apt-snapshots.toml \
         /etc/anduinos-waypoint/apt-snapshots.toml
+fi
+
+if [ ! -e /etc/anduinos-waypoint/automation.toml ]; then
+    install -m644 /usr/share/anduinos-waypoint/defaults/automation.toml \
+        /etc/anduinos-waypoint/automation.toml
 fi
 
 # GRUB cannot safely rewrite an environment block stored on Btrfs. Keep only
@@ -32,6 +32,7 @@ fi
 
 systemctl daemon-reload || true
 if [ -d /run/systemd/system ]; then
+    systemctl enable --now anduinos-waypoint-scheduler.timer || true
     systemctl enable anduinos-waypoint-confirm.service || true
     systemctl start anduinos-waypoint-confirm.service || true
 fi

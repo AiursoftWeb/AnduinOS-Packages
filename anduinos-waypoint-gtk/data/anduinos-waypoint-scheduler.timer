@@ -1,0 +1,13 @@
+[Unit]
+Description=Run AnduinOS Waypoint automatic snapshots hourly
+Documentation=file:/usr/share/doc/anduinos-waypoint-gtk/README.md
+
+[Timer]
+OnBootSec=2min
+OnCalendar=hourly
+Persistent=true
+AccuracySec=1min
+Unit=anduinos-waypoint-scheduler.service
+
+[Install]
+WantedBy=timers.target

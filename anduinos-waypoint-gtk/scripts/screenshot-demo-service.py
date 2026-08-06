@@ -188,16 +188,9 @@ class ScreenshotFixture(dbus.service.Object):
     def PersonalSnapshotCreated(self, _snapshot_name: str, _created_by: str) -> None:
         return None
 
-    @dbus.service.signal(INTERFACE, signature="s")
-    def AutomaticSnapshotCreated(self, _scope: str) -> None:
+    @dbus.service.signal(INTERFACE, signature="sb")
+    def SnapshotCreationSucceeded(self, _scope: str, _automatic: bool) -> None:
         return None
-
-    @dbus.service.signal(INTERFACE, signature="tt")
-    def AutomaticSnapshotsDeleted(
-        self, _system_deleted: int, _personal_deleted: int
-    ) -> None:
-        return None
-
 
 def main() -> int:
     if os.environ.get("ANDUINOS_WAYPOINT_SCREENSHOT_DEMO") != "1":

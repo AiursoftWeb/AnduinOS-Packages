@@ -14,8 +14,7 @@ polkit.addRule(function(action, subject) {
     }
 
     if (action.id == "org.anduinos.waypoint.delete-snapshot" ||
-        action.id == "org.anduinos.waypoint.restore-snapshot" ||
-        action.id == "org.anduinos.waypoint.external-backup") {
+        action.id == "org.anduinos.waypoint.restore-snapshot") {
         return polkit.Result.AUTH_ADMIN;
     }
 

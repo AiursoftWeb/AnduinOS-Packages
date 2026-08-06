@@ -6,9 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AnduinOS Waypoint 0.1.0\n"
-"Report-Msgid-Bugs-To: https://github.com/AiursoftWeb/AnduinOS-Packages/"
-"issues\n"
-"POT-Creation-Date: 2026-08-06 02:00+0800\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-06 20:55+0800\n"
 "PO-Revision-Date: 2026-08-04 00:00+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: Simplified Chinese\n"
@@ -17,43 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#: src/waypoint-notifier/src/main.rs:119
-msgid "Automatic System Recovery Point Created"
-msgstr "已创建自动系统恢复点"
-
-#: src/waypoint-notifier/src/main.rs:120
-msgid "A scheduled system recovery point was created successfully."
-msgstr "已成功创建计划的系统恢复点。"
-
-#: src/waypoint-notifier/src/main.rs:123
-msgid "Personal Files History Saved"
-msgstr "个人文件历史已保存"
-
-#: src/waypoint-notifier/src/main.rs:124
-msgid "A scheduled Personal Files history point was created successfully."
-msgstr "已成功创建计划的个人文件历史点。"
-
-#: src/waypoint-notifier/src/main.rs:130
-msgid "Automatic Recovery Cleanup"
-msgstr "自动恢复清理"
-
-#: src/waypoint-notifier/src/main.rs:134
-#, c++-format
-msgid "Removed {0} old automatic system recovery point(s)."
-msgstr "已删除 {0} 个旧的自动系统恢复点。"
-
-#: src/waypoint-notifier/src/main.rs:138
-#, c++-format
-msgid "Removed {0} old Personal Files history point(s)."
-msgstr "已删除 {0} 个旧的个人文件历史点。"
-
-#: src/waypoint-notifier/src/main.rs:142
-#, c++-format
-msgid ""
-"Removed {0} old system recovery point(s) and {1} old Personal Files history "
-"point(s)."
-msgstr "已删除 {0} 个旧的系统恢复点和 {1} 个旧的个人文件历史点。"
 
 #: src/waypoint/src/i18n.rs:32
 msgid "Hourly automatic recovery point"
@@ -83,7 +45,6 @@ msgstr "1 分钟前"
 
 #: src/waypoint/src/snapshot.rs:40 src/waypoint/src/ui/scheduler_dialog.rs:549
 #: src/waypoint/src/ui/scheduler_dialog.rs:883
-#, c++-format
 msgid "{0} minutes ago"
 msgstr "{0} 分钟前"
 
@@ -94,7 +55,6 @@ msgstr "1 小时前"
 #: src/waypoint/src/snapshot.rs:47 src/waypoint/src/ui/analytics_dialog.rs:222
 #: src/waypoint/src/ui/scheduler_dialog.rs:547
 #: src/waypoint/src/ui/scheduler_dialog.rs:881
-#, c++-format
 msgid "{0} hours ago"
 msgstr "{0} 小时前"
 
@@ -106,7 +66,6 @@ msgstr "昨天"
 #: src/waypoint/src/ui/analytics_dialog.rs:229
 #: src/waypoint/src/ui/scheduler_dialog.rs:545
 #: src/waypoint/src/ui/scheduler_dialog.rs:879
-#, c++-format
 msgid "{0} days ago"
 msgstr "{0} 天前"
 
@@ -115,21 +74,18 @@ msgid "1 week ago"
 msgstr "1 周前"
 
 #: src/waypoint/src/snapshot.rs:56
-#, c++-format
 msgid "{0} weeks ago"
 msgstr "{0} 周前"
 
-#: src/waypoint/src/ui/about_preferences.rs:11 src/waypoint/src/ui/mod.rs:201
+#: src/waypoint/src/ui/about_preferences.rs:11
 msgid "About AnduinOS Waypoint"
 msgstr "关于 AnduinOS Waypoint"
 
-#: src/waypoint/src/ui/about_preferences.rs:44 src/waypoint/src/ui/mod.rs:75
-#: src/waypoint/src/ui/mod.rs:305
+#: src/waypoint/src/ui/about_preferences.rs:44 src/waypoint/src/ui/mod.rs:29
 msgid "AnduinOS Waypoint"
 msgstr "AnduinOS Waypoint"
 
 #: src/waypoint/src/ui/about_preferences.rs:49
-#, c++-format
 msgid "Version {0}"
 msgstr "版本 {0}"
 
@@ -159,7 +115,7 @@ msgid ""
 msgstr "创建第一个恢复点后，即可查看系统恢复统计和建议。"
 
 #: src/waypoint/src/ui/analytics_dialog.rs:68
-#: src/waypoint/src/ui/analytics_dialog.rs:77 src/waypoint/src/ui/mod.rs:171
+#: src/waypoint/src/ui/analytics_dialog.rs:77
 msgid "Analytics"
 msgstr "分析"
 
@@ -185,12 +141,10 @@ msgid "1 day ago"
 msgstr "1 天前"
 
 #: src/waypoint/src/ui/analytics_dialog.rs:204
-#, c++-format
 msgid "{0} months ago"
 msgstr "{0} 个月前"
 
 #: src/waypoint/src/ui/analytics_dialog.rs:206
-#, c++-format
 msgid "{0} years ago"
 msgstr "{0} 年前"
 
@@ -203,12 +157,10 @@ msgid "Recovery Point Frequency"
 msgstr "恢复点频率"
 
 #: src/waypoint/src/ui/analytics_dialog.rs:245
-#, c++-format
 msgid "{0} per day"
 msgstr "每天 {0} 个"
 
 #: src/waypoint/src/ui/analytics_dialog.rs:247
-#, c++-format
 msgid "1 per {0} days"
 msgstr "每 {0} 天 1 个"
 
@@ -239,7 +191,6 @@ msgid "Top 5 estimates from level-zero Btrfs qgroups"
 msgstr "基于 Btrfs 0 级 qgroup 估算的前 5 项"
 
 #: src/waypoint/src/ui/analytics_dialog.rs:318
-#, c++-format
 msgid "{0} • {1} packages"
 msgstr "{0} • {1} 个软件包"
 
@@ -252,7 +203,6 @@ msgid "Many recovery points"
 msgstr "恢复点较多"
 
 #: src/waypoint/src/ui/analytics_dialog.rs:387
-#, c++-format
 msgid ""
 "You have {0} recovery points. Consider adjusting the retention policy to "
 "clean up older automatic recovery points."
@@ -263,7 +213,6 @@ msgid "Recovery point retention looks healthy"
 msgstr "恢复点保留状态正常"
 
 #: src/waypoint/src/ui/analytics_dialog.rs:394
-#, c++-format
 msgid ""
 "{0} recovery points are stored. The retention policy appears to be working "
 "well."
@@ -274,7 +223,6 @@ msgid "Few recovery points"
 msgstr "恢复点较少"
 
 #: src/waypoint/src/ui/analytics_dialog.rs:403
-#, c++-format
 msgid ""
 "Only {0} recovery points are stored. Consider enabling an automatic recovery "
 "schedule."
@@ -285,7 +233,6 @@ msgid "Uneven reclaimable space"
 msgstr "可回收空间分布不均"
 
 #: src/waypoint/src/ui/analytics_dialog.rs:418
-#, c++-format
 msgid ""
 "Some recovery points hold about {0} times more exclusive data than average. "
 "Check the estimates below before choosing one to delete."
@@ -307,7 +254,6 @@ msgid "Frequent recovery points"
 msgstr "恢复点创建频繁"
 
 #: src/waypoint/src/ui/analytics_dialog.rs:439
-#, c++-format
 msgid ""
 "Recovery points are being created {0} times per day. Make sure this "
 "frequency matches your recovery policy."
@@ -321,15 +267,11 @@ msgstr "一切正常"
 msgid "Recovery point management is healthy. No issues were detected."
 msgstr "恢复点管理状态正常，未检测到问题。"
 
-#: src/waypoint/src/ui/comparison_dialog.rs:21 src/waypoint/src/ui/mod.rs:1065
-#: src/waypoint/src/ui/mod.rs:1171 src/waypoint/src/ui/mod.rs:1261
-#: src/waypoint/src/ui/mod.rs:1549 src/waypoint/src/ui/mod.rs:1684
-#: src/waypoint/src/ui/mod.rs:1751
+#: src/waypoint/src/ui/comparison_dialog.rs:21
 msgid "Error"
 msgstr "错误"
 
 #: src/waypoint/src/ui/comparison_dialog.rs:22
-#, c++-format
 msgid "Failed to load recovery points: {0}"
 msgstr "无法加载恢复点：{0}"
 
@@ -372,7 +314,10 @@ msgstr "选择要比较的恢复点"
 msgid "Summary"
 msgstr "摘要"
 
-#: src/waypoint/src/ui/comparison_view.rs:121 src/waypoint/src/ui/mod.rs:1877
+#: src/waypoint/src/ui/comparison_view.rs:121
+#: src/waypoint/src/ui/preferences.rs:57
+#: src/waypoint/src/ui/preferences_window.rs:112
+#: src/waypoint/src/ui/advanced_settings.rs:20
 msgid "Package Changes"
 msgstr "软件包变化"
 
@@ -402,7 +347,6 @@ msgid "Computing..."
 msgstr "正在计算……"
 
 #: src/waypoint/src/ui/comparison_view.rs:243
-#, c++-format
 msgid "{0} added, {1} removed, {2} changed"
 msgstr "新增 {0} 个，移除 {1} 个，变更 {2} 个"
 
@@ -417,7 +361,6 @@ msgid "No changes"
 msgstr "没有变化"
 
 #: src/waypoint/src/ui/comparison_view.rs:289
-#, c++-format
 msgid "{0} files changed"
 msgstr "{0} 个文件发生变化"
 
@@ -440,17 +383,14 @@ msgid ""
 msgstr "两个恢复点安装的软件包完全相同，期间没有新增、移除或更新软件包。"
 
 #: src/waypoint/src/ui/comparison_view.rs:477
-#, c++-format
 msgid "Added Packages ({0})"
 msgstr "新增软件包（{0}）"
 
 #: src/waypoint/src/ui/comparison_view.rs:498
-#, c++-format
 msgid "Removed Packages ({0})"
 msgstr "已移除软件包（{0}）"
 
 #: src/waypoint/src/ui/comparison_view.rs:519
-#, c++-format
 msgid "Updated Packages ({0})"
 msgstr "已更新软件包（{0}）"
 
@@ -507,17 +447,14 @@ msgid "Deleted Files"
 msgstr "已删除文件"
 
 #: src/waypoint/src/ui/comparison_view.rs:793
-#, c++-format
 msgid "{0} ({1})"
 msgstr "{0}（{1}）"
 
 #: src/waypoint/src/ui/comparison_view.rs:800
-#, c++-format
 msgid "{0} ({1} files)"
 msgstr "{0}（{1} 个文件）"
 
 #: src/waypoint/src/ui/comparison_view.rs:817
-#, c++-format
 msgid "… and {0} other files"
 msgstr "……以及其他 {0} 个文件"
 
@@ -536,13 +473,11 @@ msgstr "文件变化报告"
 
 #: src/waypoint/src/ui/comparison_view.rs:925
 #: src/waypoint/src/ui/comparison_view.rs:1056
-#, c++-format
 msgid "Base recovery point: {0}"
 msgstr "基准恢复点：{0}"
 
 #: src/waypoint/src/ui/comparison_view.rs:929
 #: src/waypoint/src/ui/comparison_view.rs:1060
-#, c++-format
 msgid "Compared recovery point: {0}"
 msgstr "比较恢复点：{0}"
 
@@ -552,32 +487,26 @@ msgid "Summary:"
 msgstr "摘要："
 
 #: src/waypoint/src/ui/comparison_view.rs:936
-#, c++-format
 msgid "{0} files added"
 msgstr "新增 {0} 个文件"
 
 #: src/waypoint/src/ui/comparison_view.rs:941
-#, c++-format
 msgid "{0} files modified"
 msgstr "修改 {0} 个文件"
 
 #: src/waypoint/src/ui/comparison_view.rs:946
-#, c++-format
 msgid "{0} files deleted"
 msgstr "删除 {0} 个文件"
 
 #: src/waypoint/src/ui/comparison_view.rs:954
-#, c++-format
 msgid "Added Files ({0}):"
 msgstr "新增文件（{0}）："
 
 #: src/waypoint/src/ui/comparison_view.rs:967
-#, c++-format
 msgid "Modified Files ({0}):"
 msgstr "已修改文件（{0}）："
 
 #: src/waypoint/src/ui/comparison_view.rs:980
-#, c++-format
 msgid "Deleted Files ({0}):"
 msgstr "已删除文件（{0}）："
 
@@ -598,32 +527,26 @@ msgid "Package Comparison Report"
 msgstr "软件包比较报告"
 
 #: src/waypoint/src/ui/comparison_view.rs:1067
-#, c++-format
 msgid "{0} packages added"
 msgstr "新增 {0} 个软件包"
 
 #: src/waypoint/src/ui/comparison_view.rs:1072
-#, c++-format
 msgid "{0} packages removed"
 msgstr "移除 {0} 个软件包"
 
 #: src/waypoint/src/ui/comparison_view.rs:1077
-#, c++-format
 msgid "{0} packages updated"
 msgstr "更新 {0} 个软件包"
 
 #: src/waypoint/src/ui/comparison_view.rs:1085
-#, c++-format
 msgid "Added Packages ({0}):"
 msgstr "新增软件包（{0}）："
 
 #: src/waypoint/src/ui/comparison_view.rs:1099
-#, c++-format
 msgid "Removed Packages ({0}):"
 msgstr "已移除软件包（{0}）："
 
 #: src/waypoint/src/ui/comparison_view.rs:1115
-#, c++-format
 msgid "Updated Packages ({0}):"
 msgstr "已更新软件包（{0}）："
 
@@ -636,14 +559,13 @@ msgid "Both recovery points have identical package sets."
 msgstr "两个恢复点的软件包集合完全相同。"
 
 #: src/waypoint/src/ui/create_snapshot_dialog.rs:33
-#, c++-format
 msgid "System recovery point {0}"
 msgstr "系统恢复点 {0}"
 
 #: src/waypoint/src/ui/create_snapshot_dialog.rs:40
 #: src/waypoint/src/ui/toolbar.rs:41
-msgid "Create Recovery Point"
-msgstr "创建恢复点"
+msgid "Save System State"
+msgstr "保存系统状态"
 
 #: src/waypoint/src/ui/create_snapshot_dialog.rs:42
 msgid "Give this recovery point a description to help identify it later."
@@ -666,17 +588,21 @@ msgstr "恢复点将根据当前日期和时间自动命名。"
 #: src/waypoint/src/ui/create_snapshot_dialog.rs:74
 #: src/waypoint/src/ui/dialogs.rs:20
 #: src/waypoint/src/ui/external_backups.rs:353
-#: src/waypoint/src/ui/external_backups.rs:383 src/waypoint/src/ui/mod.rs:1414
-#: src/waypoint/src/ui/mod.rs:1776
+#: src/waypoint/src/ui/external_backups.rs:383
+#: src/waypoint/src/ui/personal_overview.rs:183
+#: src/waypoint/src/ui/snapshot_page.rs:540
+#: src/waypoint/src/ui/snapshot_page.rs:599
+#: src/waypoint/src/ui/snapshot_page.rs:650
+#: src/waypoint/src/ui/snapshot_page.rs:781
 msgid "Cancel"
 msgstr "取消"
 
 #: src/waypoint/src/ui/create_snapshot_dialog.rs:75
-msgid "Create"
-msgstr "创建"
+msgid "Save"
+msgstr "保存"
 
 #: src/waypoint/src/ui/dialogs.rs:44
-#: src/waypoint/src/ui/external_backups.rs:747 src/waypoint/src/ui/mod.rs:1121
+#: src/waypoint/src/ui/external_backups.rs:747
 msgid "OK"
 msgstr "确定"
 
@@ -730,7 +656,6 @@ msgstr "创建恢复点时发生错误。"
 
 #: src/waypoint/src/ui/error_helpers.rs:84
 #: src/waypoint/src/ui/error_helpers.rs:118
-#, c++-format
 msgid "Technical details: {0}"
 msgstr "技术细节：{0}"
 
@@ -806,7 +731,6 @@ msgid "An error occurred while preparing the system restore."
 msgstr "准备系统恢复时发生错误。"
 
 #: src/waypoint/src/ui/error_helpers.rs:165
-#, c++-format
 msgid ""
 "No restore was scheduled. The current deployment remains selected.\n"
 "\n"
@@ -817,7 +741,7 @@ msgstr ""
 "技术细节：{0}"
 
 #: src/waypoint/src/ui/external_backups.rs:30
-#: src/waypoint/src/ui/external_backups.rs:38 src/waypoint/src/ui/mod.rs:177
+#: src/waypoint/src/ui/external_backups.rs:38
 msgid "External Recovery Backups"
 msgstr "外部恢复备份"
 
@@ -874,7 +798,6 @@ msgid ""
 msgstr "请连接并挂载 ext4、Btrfs、XFS、exFAT 或 NTFS3 驱动器，然后刷新。"
 
 #: src/waypoint/src/ui/external_backups.rs:257
-#, c++-format
 msgid ""
 "Mounted at {0} · backup streams are addressed by UUID, never by a caller-"
 "supplied path"
@@ -893,7 +816,6 @@ msgid "unknown"
 msgstr "未知"
 
 #: src/waypoint/src/ui/external_backups.rs:272
-#, c++-format
 msgid "{0} · {1} stream · kernel {2}"
 msgstr "{0} · {1} 备份流 · 内核 {2}"
 
@@ -903,7 +825,6 @@ msgid "Backup identity"
 msgstr "备份标识"
 
 #: src/waypoint/src/ui/external_backups.rs:286
-#, c++-format
 msgid "{0} · source {1} from {2} · referenced {3}"
 msgstr "{0} · 源恢复点 {1}，创建于 {2} · 引用空间 {3}"
 
@@ -935,7 +856,6 @@ msgid "Verifying External Backup"
 msgstr "正在验证外部备份"
 
 #: src/waypoint/src/ui/external_backups.rs:333
-#, c++-format
 msgid "The complete {0} stream matches its SHA-256 manifest."
 msgstr "完整的 {0} 备份流与其 SHA-256 清单一致。"
 
@@ -944,7 +864,6 @@ msgid "Import External Recovery Point?"
 msgstr "导入外部恢复点？"
 
 #: src/waypoint/src/ui/external_backups.rs:349
-#, c++-format
 msgid ""
 "“{0}” will be verified and copied into local recovery storage. Importing "
 "does not immediately roll back the system."
@@ -959,7 +878,6 @@ msgid "Importing Recovery Point"
 msgstr "正在导入恢复点"
 
 #: src/waypoint/src/ui/external_backups.rs:366
-#, c++-format
 msgid ""
 "“{0}” was imported as local recovery point {1}. It can now be reviewed "
 "before scheduling a restart."
@@ -988,7 +906,6 @@ msgid "The external recovery backup was deleted. Refresh to update the list."
 msgstr "外部恢复备份已删除。请刷新以更新列表。"
 
 #: src/waypoint/src/ui/external_backups.rs:404
-#, c++-format
 msgid "Damaged backup entry: {0}"
 msgstr "损坏的备份条目：{0}"
 
@@ -1005,12 +922,10 @@ msgid "No Personal Files backups on this drive"
 msgstr "此驱动器上没有个人文件备份"
 
 #: src/waypoint/src/ui/external_backups.rs:422
-#, c++-format
 msgid "{0} · {1} Personal Files stream"
 msgstr "{0} · {1} 个人文件流"
 
 #: src/waypoint/src/ui/external_backups.rs:431
-#, c++-format
 msgid "{0} · source {1} · referenced {2}"
 msgstr "{0} · 源 {1} · 引用空间 {2}"
 
@@ -1019,7 +934,6 @@ msgid "Verifying Personal Files Backup"
 msgstr "正在验证个人文件备份"
 
 #: src/waypoint/src/ui/external_backups.rs:467
-#, c++-format
 msgid "The complete {0} Personal Files stream is valid."
 msgstr "完整的 {0} 个人文件流验证有效。"
 
@@ -1028,7 +942,6 @@ msgid "Importing Personal Files Backup"
 msgstr "正在导入个人文件备份"
 
 #: src/waypoint/src/ui/external_backups.rs:487
-#, c++-format
 msgid "“{0}” was imported into Personal Files history."
 msgstr "“{0}”已导入个人文件历史。"
 
@@ -1042,7 +955,6 @@ msgid ""
 msgstr "外部个人文件备份已删除。请刷新以更新列表。"
 
 #: src/waypoint/src/ui/external_backups.rs:510
-#, c++-format
 msgid "Damaged Personal Files backup: {0}"
 msgstr "个人文件备份已损坏：{0}"
 
@@ -1079,7 +991,6 @@ msgid "Exporting Personal Files History"
 msgstr "正在导出个人文件历史"
 
 #: src/waypoint/src/ui/external_backups.rs:597
-#, c++-format
 msgid "Personal Files backup {0} was committed atomically ({1})."
 msgstr "个人文件备份 {0} 已完成写入并以原子方式提交（{1}）。"
 
@@ -1106,7 +1017,6 @@ msgid "Exporting Recovery Point"
 msgstr "正在导出恢复点"
 
 #: src/waypoint/src/ui/external_backups.rs:690
-#, c++-format
 msgid "External backup {0} was written and committed atomically ({1})."
 msgstr "外部备份 {0} 已完成写入并以原子方式提交（{1}）。"
 
@@ -1120,6 +1030,7 @@ msgstr "操作完成"
 
 #: src/waypoint/src/ui/external_backups.rs:725
 #: src/waypoint/src/ui/external_backups.rs:735
+#: src/waypoint/src/ui/snapshot_page.rs:837
 msgid "Operation Failed"
 msgstr "操作失败"
 
@@ -1138,12 +1049,10 @@ msgid ""
 msgstr "恢复服务无法加载恢复点。请尝试重新打开此应用。"
 
 #: src/waypoint/src/ui/main_window_helpers.rs:42
-#, c++-format
 msgid "System recovery is unavailable: {0}"
 msgstr "系统恢复不可用：{0}"
 
 #: src/waypoint/src/ui/main_window_helpers.rs:63
-#, c++-format
 msgid "A system restore to {0} is {1}"
 msgstr "恢复到 {0} 的系统恢复操作处于“{1}”状态"
 
@@ -1157,7 +1066,6 @@ msgstr "正在取消已安排的系统恢复…"
 
 #: src/waypoint/src/ui/main_window_helpers.rs:91
 #: src/waypoint/src/ui/main_window_helpers.rs:97
-#, c++-format
 msgid "Could not cancel the restore: {0}"
 msgstr "无法取消恢复：{0}"
 
@@ -1171,425 +1079,11 @@ msgstr "重试"
 msgid "Could not cancel the scheduled restore"
 msgstr "无法取消已安排的系统恢复"
 
-#: src/waypoint/src/ui/mod.rs:111
-msgid "Switch theme"
-msgstr "切换主题"
-
-#: src/waypoint/src/ui/mod.rs:119
-msgid "Match system theme"
-msgstr "跟随系统主题"
-
-#: src/waypoint/src/ui/mod.rs:129
-msgid "Light theme"
-msgstr "浅色主题"
-
-#: src/waypoint/src/ui/mod.rs:139
-msgid "Dark theme"
-msgstr "深色主题"
-
-#: src/waypoint/src/ui/mod.rs:183 src/waypoint/src/ui/personal_history.rs:18
-#: src/waypoint/src/ui/personal_history.rs:26
-msgid "Personal Files History"
-msgstr "个人文件历史"
-
-#: src/waypoint/src/ui/mod.rs:189 src/waypoint/src/ui/preferences_window.rs:13
-msgid "Preferences"
-msgstr "首选项"
-
-#: src/waypoint/src/ui/mod.rs:195 src/waypoint/src/ui/shortcuts_window.rs:12
-msgid "Keyboard Shortcuts"
-msgstr "键盘快捷键"
-
-#: src/waypoint/src/ui/mod.rs:221
-msgid "AnduinOS Btrfs layout required"
-msgstr "需要 AnduinOS Btrfs 布局"
-
-#: src/waypoint/src/ui/mod.rs:238
-msgid "Search recovery points…"
-msgstr "搜索恢复点…"
-
-#: src/waypoint/src/ui/mod.rs:246
-msgid "All"
-msgstr "全部"
-
-#: src/waypoint/src/ui/mod.rs:247
-msgid "Last 7 days"
-msgstr "最近 7 天"
-
-#: src/waypoint/src/ui/mod.rs:248
-msgid "Last 30 days"
-msgstr "最近 30 天"
-
-#: src/waypoint/src/ui/mod.rs:249
-msgid "Last 90 days"
-msgstr "最近 90 天"
-
-#: src/waypoint/src/ui/mod.rs:865
-msgid "Creating recovery point…"
-msgstr "正在创建恢复点…"
-
-#: src/waypoint/src/ui/mod.rs:877
-#, c++-format
-msgid ""
-"Failed to connect to the recovery service: {0}\n"
-"\n"
-"Check: systemctl status anduinos-waypoint-helper.service"
-msgstr ""
-"无法连接恢复服务：{0}\n"
-"\n"
-"请检查：systemctl status anduinos-waypoint-helper.service"
-
-#: src/waypoint/src/ui/mod.rs:880 src/waypoint/src/ui/mod.rs:1601
-#: src/waypoint/src/ui/mod.rs:2091
-msgid "Connection Error"
-msgstr "连接错误"
-
-#: src/waypoint/src/ui/mod.rs:914
-msgid "Recovery Point Creation Failed"
-msgstr "恢复点创建失败"
-
-#: src/waypoint/src/ui/mod.rs:916
-#, c++-format
-msgid "The recovery service returned invalid deployment state: {0}"
-msgstr "恢复服务返回了无效的部署状态：{0}"
-
-#: src/waypoint/src/ui/mod.rs:923
-msgid "Recovery point created"
-msgstr "恢复点已创建"
-
-#: src/waypoint/src/ui/mod.rs:1059 src/waypoint/src/ui/mod.rs:1167
-#: src/waypoint/src/ui/mod.rs:1255 src/waypoint/src/ui/mod.rs:1543
-#: src/waypoint/src/ui/mod.rs:1678
-msgid "Not Found"
-msgstr "未找到"
-
-#: src/waypoint/src/ui/mod.rs:1059 src/waypoint/src/ui/mod.rs:1167
-#: src/waypoint/src/ui/mod.rs:1255 src/waypoint/src/ui/mod.rs:1543
-#: src/waypoint/src/ui/mod.rs:1678
-msgid "Recovery point not found"
-msgstr "未找到恢复点"
-
-#: src/waypoint/src/ui/mod.rs:1066 src/waypoint/src/ui/mod.rs:1262
-#: src/waypoint/src/ui/mod.rs:1550 src/waypoint/src/ui/mod.rs:1685
-#, c++-format
-msgid "Failed to load recovery point: {0}"
-msgstr "无法加载恢复点：{0}"
-
-#: src/waypoint/src/ui/mod.rs:1097 src/waypoint/src/ui/mod.rs:1140
-msgid "Verification Failed"
-msgstr "验证失败"
-
-#: src/waypoint/src/ui/mod.rs:1098
-msgid "The verification worker stopped unexpectedly"
-msgstr "验证工作线程意外停止"
-
-#: src/waypoint/src/ui/mod.rs:1108
-msgid "✓ Recovery point is valid and intact"
-msgstr "✓ 恢复点有效且完整"
-
-#: src/waypoint/src/ui/mod.rs:1110
-msgid ""
-"\n"
-"\n"
-"Warnings:\n"
-msgstr ""
-"\n"
-"\n"
-"警告：\n"
-
-#: src/waypoint/src/ui/mod.rs:1118
-msgid "Verification Successful"
-msgstr "验证成功"
-
-#: src/waypoint/src/ui/mod.rs:1126
-msgid ""
-"✗ Recovery point verification failed\n"
-"\n"
-"Errors found:\n"
-msgstr ""
-"✗ 恢复点验证失败\n"
-"\n"
-"发现错误：\n"
-
-#: src/waypoint/src/ui/mod.rs:1132
-msgid ""
-"\n"
-"Warnings:\n"
-msgstr ""
-"\n"
-"警告：\n"
-
-#: src/waypoint/src/ui/mod.rs:1148
-msgid "Verification Error"
-msgstr "验证错误"
-
-#: src/waypoint/src/ui/mod.rs:1149
-#, c++-format
-msgid "Failed to verify recovery point: {0}"
-msgstr "无法验证恢复点：{0}"
-
-#: src/waypoint/src/ui/mod.rs:1177
-msgid "Protecting recovery point…"
-msgstr "正在保护恢复点…"
-
-#: src/waypoint/src/ui/mod.rs:1179
-msgid "Removing recovery-point protection…"
-msgstr "正在移除恢复点保护…"
-
-#: src/waypoint/src/ui/mod.rs:1209
-msgid "Recovery point protected"
-msgstr "恢复点已受保护"
-
-#: src/waypoint/src/ui/mod.rs:1211
-msgid "Recovery-point protection removed"
-msgstr "恢复点保护已移除"
-
-#: src/waypoint/src/ui/mod.rs:1224 src/waypoint/src/ui/mod.rs:1228
-#: src/waypoint/src/ui/mod.rs:1235
-msgid "Protection Failed"
-msgstr "保护操作失败"
-
-#: src/waypoint/src/ui/mod.rs:1236
-msgid "The recovery service operation ended unexpectedly"
-msgstr "恢复服务操作意外结束"
-
-#: src/waypoint/src/ui/mod.rs:1280 src/waypoint/src/ui/snapshot_row.rs:137
-msgid "Edit Note"
-msgstr "编辑备注"
-
-#: src/waypoint/src/ui/mod.rs:1319
-msgid "Note"
-msgstr "备注"
-
-#: src/waypoint/src/ui/mod.rs:1346
-msgid ""
-"Add a personal note about this recovery point…\n"
-"\n"
-"For example: “Before upgrading system packages” or “Clean install after "
-"testing”"
-msgstr ""
-"为此恢复点添加个人备注…\n"
-"\n"
-"例如：“升级系统软件包之前”或“测试后的干净安装”"
-
-#: src/waypoint/src/ui/mod.rs:1380
-msgid "Only you can read recovery-point notes"
-msgstr "只有你可以阅读恢复点备注"
-
-#: src/waypoint/src/ui/mod.rs:1387 src/waypoint/src/ui/mod.rs:1398
-#: src/waypoint/src/ui/mod.rs:1404
-#, c++-format
-msgid "{0} characters"
-msgstr "{0} 个字符"
-
-#: src/waypoint/src/ui/mod.rs:1415
-msgid "Save"
-msgstr "保存"
-
-#: src/waypoint/src/ui/mod.rs:1566
-#, c++-format
-msgid ""
-"Are you sure you want to delete “{0}”?\n"
-"\n"
-"This action cannot be undone."
-msgstr ""
-"确定要删除“{0}”吗？\n"
-"\n"
-"此操作无法撤销。"
-
-#: src/waypoint/src/ui/mod.rs:1572
-msgid "Delete Recovery Point?"
-msgstr "删除恢复点？"
-
-#: src/waypoint/src/ui/mod.rs:1574
-msgid "Delete"
-msgstr "删除"
-
-#: src/waypoint/src/ui/mod.rs:1586
-msgid "Deleting recovery point…"
-msgstr "正在删除恢复点…"
-
-#: src/waypoint/src/ui/mod.rs:1598 src/waypoint/src/ui/mod.rs:2088
-#, c++-format
-msgid "Failed to connect to recovery service: {0}"
-msgstr "无法连接恢复服务：{0}"
-
-#: src/waypoint/src/ui/mod.rs:1703
-msgid "Loading system restore preview…"
-msgstr "正在加载系统恢复预览…"
-
-#: src/waypoint/src/ui/mod.rs:1739
-msgid "Preview Failed"
-msgstr "预览失败"
-
-#: src/waypoint/src/ui/mod.rs:1741
-#, c++-format
-msgid "Failed to generate system restore preview: {0}"
-msgstr "无法生成系统恢复预览：{0}"
-
-#: src/waypoint/src/ui/mod.rs:1752
-msgid "The preview worker stopped unexpectedly"
-msgstr "预览工作线程意外停止"
-
-#: src/waypoint/src/ui/mod.rs:1767
-msgid "System Restore Preview"
-msgstr "系统恢复预览"
-
-#: src/waypoint/src/ui/mod.rs:1779
-msgid "Prepare Restore"
-msgstr "准备恢复"
-
-#: src/waypoint/src/ui/mod.rs:1800
-msgid "Selected Recovery Point"
-msgstr "所选恢复点"
-
-#: src/waypoint/src/ui/mod.rs:1803
-#, c++-format
-msgid "Created: {0}"
-msgstr "创建时间：{0}"
-
-#: src/waypoint/src/ui/mod.rs:1818
-msgid "System Changes"
-msgstr "系统变化"
-
-#: src/waypoint/src/ui/mod.rs:1823 src/waypoint/src/ui/mod.rs:1827
-#: src/waypoint/src/ui/scheduler_dialog.rs:815
-#: src/waypoint/src/ui/scheduler_dialog.rs:820
-msgid "Unknown"
-msgstr "未知"
-
-#: src/waypoint/src/ui/mod.rs:1830
-msgid "Kernel Version"
-msgstr "内核版本"
-
-#: src/waypoint/src/ui/mod.rs:1833
-#, c++-format
-msgid "{0} → {1}"
-msgstr "{0} → {1}"
-
-#: src/waypoint/src/ui/mod.rs:1838
-#, c++-format
-msgid "{0} (no change)"
-msgstr "{0}（无变化）"
-
-#: src/waypoint/src/ui/mod.rs:1848
-msgid "Recovery Scope and Safety"
-msgstr "恢复范围与安全保障"
-
-#: src/waypoint/src/ui/mod.rs:1851 src/waypoint/src/ui/preferences.rs:21
-msgid "System"
-msgstr "系统"
-
-#: src/waypoint/src/ui/mod.rs:1852
-msgid ""
-"System files, configuration, kernel, and installed packages will return to "
-"this recovery point"
-msgstr "系统文件、配置、内核和已安装软件包将恢复到此恢复点的状态"
-
-#: src/waypoint/src/ui/mod.rs:1857 src/waypoint/src/ui/preferences.rs:30
-msgid "Personal Files"
-msgstr "个人文件"
-
-#: src/waypoint/src/ui/mod.rs:1858
-msgid "Personal Files in /home will not be changed"
-msgstr "/home 中的个人文件不会被更改"
-
-#: src/waypoint/src/ui/mod.rs:1865
-msgid "Known-good Fallback"
-msgstr "已知可用的回退系统"
-
-#: src/waypoint/src/ui/mod.rs:1867
-msgid "The current system will be preserved before the one-time recovery boot"
-msgstr "在一次性恢复启动前会保留当前系统"
-
-#: src/waypoint/src/ui/mod.rs:1879
-#, c++-format
-msgid "{0} total changes"
-msgstr "共 {0} 项变化"
-
-#: src/waypoint/src/ui/mod.rs:1887
-#, c++-format
-msgid "{0} packages to install"
-msgstr "将安装 {0} 个软件包"
-
-#: src/waypoint/src/ui/mod.rs:1907 src/waypoint/src/ui/mod.rs:1940
-#: src/waypoint/src/ui/mod.rs:1973 src/waypoint/src/ui/mod.rs:2006
-#, c++-format
-msgid "… and {0} more"
-msgstr "…以及另外 {0} 项"
-
-#: src/waypoint/src/ui/mod.rs:1921
-#, c++-format
-msgid "{0} packages to remove"
-msgstr "将移除 {0} 个软件包"
-
-#: src/waypoint/src/ui/mod.rs:1954
-#, c++-format
-msgid "{0} packages to upgrade"
-msgstr "将升级 {0} 个软件包"
-
-#: src/waypoint/src/ui/mod.rs:1987
-#, c++-format
-msgid "{0} packages to downgrade"
-msgstr "将降级 {0} 个软件包"
-
-#: src/waypoint/src/ui/mod.rs:2020
-msgid "Important"
-msgstr "重要"
-
-#: src/waypoint/src/ui/mod.rs:2024
-msgid "System changes made after this recovery point will be lost"
-msgstr "此恢复点之后发生的系统更改将会丢失"
-
-#: src/waypoint/src/ui/mod.rs:2027
-msgid "Personal Files are independent and will remain unchanged"
-msgstr "个人文件相互独立，将保持不变"
-
-#: src/waypoint/src/ui/mod.rs:2035
-msgid "A restart is required to apply this system restore"
-msgstr "需要重新启动才能应用此次系统恢复"
-
-#: src/waypoint/src/ui/mod.rs:2043
-msgid "A known-good fallback recovery point will be created first"
-msgstr "将先创建一个已知可用的回退恢复点"
-
-#: src/waypoint/src/ui/mod.rs:2076
-msgid "Preparing system restore…"
-msgstr "正在准备系统恢复…"
-
-#: src/waypoint/src/ui/mod.rs:2127
-msgid "System Restore Ready"
-msgstr "系统恢复已准备就绪"
-
-#: src/waypoint/src/ui/mod.rs:2129
-msgid ""
-"A one-time system restore has been prepared. You must restart to apply it.\n"
-"\n"
-"The current system is preserved as a known-good fallback until the restored "
-"boot is confirmed.\n"
-"\n"
-"Restart now?"
-msgstr ""
-"一次性系统恢复已准备完毕。必须重新启动才能应用。\n"
-"\n"
-"在恢复后的启动得到确认之前，当前系统会作为已知可用的回退系统保留。\n"
-"\n"
-"现在重新启动吗？"
-
-#: src/waypoint/src/ui/mod.rs:2133
-msgid "Restart Later"
-msgstr "稍后重新启动"
-
-#: src/waypoint/src/ui/mod.rs:2134
-msgid "Restart Now"
-msgstr "立即重新启动"
-
 #: src/waypoint/src/ui/notifications.rs:50
 msgid "Recovery Point Created"
 msgstr "已创建恢复点"
 
 #: src/waypoint/src/ui/notifications.rs:52
-#, c++-format
 msgid "Recovery point “{0}” was created successfully."
 msgstr "已成功创建恢复点“{0}”。"
 
@@ -1598,7 +1092,6 @@ msgid "Recovery Point Deleted"
 msgstr "已删除恢复点"
 
 #: src/waypoint/src/ui/notifications.rs:64
-#, c++-format
 msgid "Recovery point “{0}” was deleted."
 msgstr "已删除恢复点“{0}”。"
 
@@ -1607,7 +1100,6 @@ msgid "System Restore Scheduled"
 msgstr "已安排系统恢复"
 
 #: src/waypoint/src/ui/notifications.rs:75
-#, c++-format
 msgid ""
 "Recovery point “{0}” will be applied at the next restart. Waypoint will keep "
 "a known-good fallback until the restored system boots successfully."
@@ -1615,162 +1107,228 @@ msgstr ""
 "下次重启时将应用恢复点“{0}”。在恢复后的系统成功启动前，Waypoint 会保留一个已"
 "知正常的回退部署。"
 
-#: src/waypoint/src/ui/personal_history.rs:27
-msgid "Recover deleted files without rolling back the system"
-msgstr "无需回滚系统即可恢复误删文件"
+#: src/waypoint/src/ui/personal_history.rs:20
+#: src/waypoint/src/ui/personal_history.rs:28
+msgid "Saved Personal File Versions"
+msgstr "已保存的个人文件版本"
 
 #: src/waypoint/src/ui/personal_history.rs:29
-msgid "Create History Point"
-msgstr "创建历史点"
+msgid "Choose a saved time, then find the file or folder you need"
+msgstr "先选择保存时间，再查找需要的文件或文件夹"
 
-#: src/waypoint/src/ui/personal_history.rs:33
+#: src/waypoint/src/ui/personal_history.rs:31
+msgid "Save Now"
+msgstr "立即保存"
+
+#: src/waypoint/src/ui/personal_history.rs:35
 msgid "Refresh Personal Files history"
 msgstr "刷新个人文件历史"
 
-#: src/waypoint/src/ui/personal_history.rs:38
+#: src/waypoint/src/ui/personal_history.rs:40
 msgid ""
 "Personal history is stored on the same disk. Keep an external backup for "
 "disk failure or theft."
 msgstr ""
 "个人文件历史存储在同一磁盘上。请保留外部备份，以应对磁盘故障或设备失窃。"
 
-#: src/waypoint/src/ui/personal_history.rs:46
+#: src/waypoint/src/ui/personal_history.rs:48
 msgid "Loading Personal Files history…"
 msgstr "正在加载个人文件历史…"
 
-#: src/waypoint/src/ui/personal_history.rs:101
+#: src/waypoint/src/ui/personal_history.rs:103
 msgid "Personal Files history point created"
 msgstr "已创建个人文件历史点"
 
-#: src/waypoint/src/ui/personal_history.rs:109
+#: src/waypoint/src/ui/personal_history.rs:111
 msgid "Could Not Create History Point"
 msgstr "无法创建历史点"
 
-#: src/waypoint/src/ui/personal_history.rs:143
-msgid "No Personal Files history yet"
-msgstr "尚无个人文件历史"
+#: src/waypoint/src/ui/personal_history.rs:151
+#: src/waypoint/src/ui/personal_history.rs:161
+msgid "File History"
+msgstr "文件历史"
 
-#: src/waypoint/src/ui/personal_history.rs:145
-msgid "Create one now or enable the hourly personal schedule."
-msgstr "立即创建一个历史点，或启用每小时个人文件计划。"
+#: src/waypoint/src/ui/personal_history.rs:152
+#: src/waypoint/src/ui/personal_history.rs:162
+msgid "Folder History"
+msgstr "文件夹历史"
 
-#: src/waypoint/src/ui/personal_history.rs:155
+#: src/waypoint/src/ui/personal_history.rs:167
+msgid "Refresh file history"
+msgstr "刷新文件历史"
+
+#: src/waypoint/src/ui/personal_history.rs:172
+msgid ""
+"Choose an earlier version to browse or recover. Your current files will not "
+"be changed automatically."
+msgstr "选择一个早期版本进行浏览或恢复。当前文件不会被自动更改。"
+
+#: src/waypoint/src/ui/personal_history.rs:180
+msgid "Looking for earlier versions…"
+msgstr "正在查找早期版本…"
+
+#: src/waypoint/src/ui/personal_history.rs:286
+msgid "No earlier version was found"
+msgstr "没有找到早期版本"
+
+#: src/waypoint/src/ui/personal_history.rs:288
+msgid ""
+"This item was not present in the available Personal Files history points."
+msgstr "可用的个人文件历史点中没有此项目。"
+
+#: src/waypoint/src/ui/personal_history.rs:298
+#: src/waypoint/src/ui/personal_history.rs:450
 msgid "Some history points could not be loaded"
 msgstr "部分历史点无法加载"
 
-#: src/waypoint/src/ui/personal_history.rs:157
-#, c++-format
+#: src/waypoint/src/ui/personal_history.rs:300
+#: src/waypoint/src/ui/personal_history.rs:452
 msgid "{0} damaged metadata entries were ignored"
 msgstr "已忽略 {0} 个损坏的元数据条目"
 
-#: src/waypoint/src/ui/personal_history.rs:168
+#: src/waypoint/src/ui/personal_history.rs:311
+#: src/waypoint/src/ui/personal_history.rs:463
 msgid "Personal History Unavailable"
 msgstr "个人文件历史不可用"
 
-#: src/waypoint/src/ui/personal_history.rs:198
-msgid "Browse"
-msgstr "浏览"
-
-#: src/waypoint/src/ui/personal_history.rs:209
-msgid "Unprotect history point"
-msgstr "取消保护历史点"
-
-#: src/waypoint/src/ui/personal_history.rs:211
-msgid "Protect history point"
-msgstr "保护历史点"
-
-#: src/waypoint/src/ui/personal_history.rs:279
-msgid "Personal History Operation Failed"
-msgstr "个人文件历史操作失败"
-
-#: src/waypoint/src/ui/personal_history.rs:293
-#: src/waypoint/src/ui/personal_history.rs:300
-msgid "Recover Personal Files"
-msgstr "恢复个人文件"
-
-#: src/waypoint/src/ui/personal_history.rs:304
-msgid "Parent folder"
-msgstr "上级文件夹"
-
-#: src/waypoint/src/ui/personal_history.rs:306
-msgid "Recover This Folder…"
-msgstr "恢复此文件夹…"
-
-#: src/waypoint/src/ui/personal_history.rs:366
-msgid "Loading folder…"
-msgstr "正在加载文件夹…"
-
-#: src/waypoint/src/ui/personal_history.rs:388
-msgid "This folder is empty"
-msgstr "此文件夹为空"
-
-#: src/waypoint/src/ui/personal_history.rs:398
-msgid "Could Not Browse History"
-msgstr "无法浏览历史"
-
-#: src/waypoint/src/ui/personal_history.rs:423
+#: src/waypoint/src/ui/personal_history.rs:344
+#: src/waypoint/src/ui/personal_history.rs:750
 msgid "Unknown date"
 msgstr "未知日期"
 
-#: src/waypoint/src/ui/personal_history.rs:425
-#, c++-format
-msgid "Folder · {0}"
-msgstr "文件夹 · {0}"
+#: src/waypoint/src/ui/personal_history.rs:346
+msgid "History point {0} · {1} bytes · modified {2}"
+msgstr "历史点 {0} · {1} 字节 · 修改于 {2}"
 
-#: src/waypoint/src/ui/personal_history.rs:427
-#, c++-format
-msgid "{0} bytes · {1}"
-msgstr "{0} 字节 · {1}"
+#: src/waypoint/src/ui/personal_history.rs:350
+msgid "History point {0} · Folder"
+msgstr "历史点 {0} · 文件夹"
 
-#: src/waypoint/src/ui/personal_history.rs:430
-msgid "Open"
-msgstr "打开"
+#: src/waypoint/src/ui/personal_history.rs:353
+msgid "Browse"
+msgstr "浏览"
 
-#: src/waypoint/src/ui/personal_history.rs:432
+#: src/waypoint/src/ui/personal_history.rs:357
+#: src/waypoint/src/ui/personal_history.rs:765
 msgid "Recover…"
 msgstr "恢复…"
 
-#: src/waypoint/src/ui/personal_history.rs:461
+#: src/waypoint/src/ui/personal_history.rs:440
+msgid "No saved personal file versions yet"
+msgstr "还没有保存的个人文件版本"
+
+#: src/waypoint/src/ui/personal_history.rs:441
+msgid "Save your files now or turn on automatic protection."
+msgstr "立即保存文件，或开启自动保护。"
+
+#: src/waypoint/src/ui/personal_history.rs:493
+msgid "Find Files"
+msgstr "查找文件"
+
+#: src/waypoint/src/ui/personal_history.rs:504
+msgid "Unprotect history point"
+msgstr "取消保护历史点"
+
+#: src/waypoint/src/ui/personal_history.rs:506
+msgid "Protect history point"
+msgstr "保护历史点"
+
+#: src/waypoint/src/ui/personal_history.rs:575
+msgid "Personal History Operation Failed"
+msgstr "个人文件历史操作失败"
+
+#: src/waypoint/src/ui/personal_history.rs:597
+msgid "Recover Personal Files"
+msgstr "恢复个人文件"
+
+#: src/waypoint/src/ui/personal_history.rs:598
+msgid "Browse System Snapshot"
+msgstr "浏览系统快照"
+
+#: src/waypoint/src/ui/personal_history.rs:144
+msgid "Could Not Browse System Snapshot"
+msgstr "无法浏览系统快照"
+
+#: src/waypoint/src/ui/personal_history.rs:608
+msgid "Parent folder"
+msgstr "上级文件夹"
+
+#: src/waypoint/src/ui/personal_history.rs:610
+msgid "Recover This Folder…"
+msgstr "恢复此文件夹…"
+
+#: src/waypoint/src/ui/personal_history.rs:682
+msgid "Loading folder…"
+msgstr "正在加载文件夹…"
+
+#: src/waypoint/src/ui/personal_history.rs:704
+msgid "This folder is empty"
+msgstr "此文件夹为空"
+
+#: src/waypoint/src/ui/personal_history.rs:723
+msgid "Could Not Browse History"
+msgstr "无法浏览历史"
+
+#: src/waypoint/src/ui/personal_history.rs:752
+msgid "Folder · {0}"
+msgstr "文件夹 · {0}"
+
+#: src/waypoint/src/ui/personal_history.rs:754
+msgid "{0} bytes · {1}"
+msgstr "{0} 字节 · {1}"
+
+#: src/waypoint/src/ui/personal_history.rs:758
+msgid "Selected file · {0}"
+msgstr "选中的文件 · {0}"
+
+#: src/waypoint/src/ui/personal_history.rs:763
+msgid "Open"
+msgstr "打开"
+
+#: src/waypoint/src/ui/personal_history.rs:802
 msgid "Recover Historical File"
 msgstr "恢复历史文件"
 
-#: src/waypoint/src/ui/personal_history.rs:474
-#: src/waypoint/src/ui/personal_history.rs:500
+#: src/waypoint/src/ui/personal_history.rs:815
+#: src/waypoint/src/ui/personal_history.rs:846
 msgid "Unsupported Destination"
 msgstr "不支持的目标位置"
 
-#: src/waypoint/src/ui/personal_history.rs:475
-#: src/waypoint/src/ui/personal_history.rs:501
+#: src/waypoint/src/ui/personal_history.rs:816
+#: src/waypoint/src/ui/personal_history.rs:847
 msgid "Choose a local filesystem destination."
 msgstr "请选择本地文件系统中的目标位置。"
 
-#: src/waypoint/src/ui/personal_history.rs:488
+#: src/waypoint/src/ui/personal_history.rs:834
 msgid "Choose Where to Recover This Folder"
 msgstr "选择此文件夹的恢复位置"
 
-#: src/waypoint/src/ui/personal_history.rs:522
+#: src/waypoint/src/ui/personal_history.rs:868
 msgid "Recovering Personal Files…"
 msgstr "正在恢复个人文件…"
 
-#: src/waypoint/src/ui/personal_history.rs:531
+#: src/waypoint/src/ui/personal_history.rs:877
 msgid "Personal Files recovered successfully"
 msgstr "个人文件恢复成功"
 
-#: src/waypoint/src/ui/personal_history.rs:535
+#: src/waypoint/src/ui/personal_history.rs:881
 msgid "Recovery Failed"
 msgstr "恢复失败"
 
-#: src/waypoint/src/ui/personal_history.rs:667
+#: src/waypoint/src/ui/personal_history.rs:1105
+#: src/waypoint/src/ui/personal_overview.rs:271
+#: src/waypoint/src/ui/snapshot_page.rs:842
+#: src/waypoint/src/ui/automation_dialog.rs:197
+#: src/waypoint/src/ui/advanced_settings.rs:171
 msgid "Close"
 msgstr "关闭"
 
 #: src/waypoint/src/ui/preferences.rs:12
-#: src/waypoint/src/ui/preferences_window.rs:107
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:89
+#: src/waypoint/src/ui/preferences_window.rs:111
 msgid "Recovery Scope"
 msgstr "恢复范围"
 
-#: src/waypoint/src/ui/preferences.rs:16
+#: src/waypoint/src/ui/preferences.rs:16 src/waypoint/src/ui/mod.rs:41
 msgid "System Recovery"
 msgstr "系统恢复"
 
@@ -1780,9 +1338,17 @@ msgid ""
 "deployment."
 msgstr "每个恢复点都包含完整且不可变的 AnduinOS 系统部署。"
 
+#: src/waypoint/src/ui/preferences.rs:21
+msgid "System"
+msgstr "系统"
+
 #: src/waypoint/src/ui/preferences.rs:22
 msgid "@root · always included"
 msgstr "@root · 始终包含"
+
+#: src/waypoint/src/ui/preferences.rs:30
+msgid "Personal Files"
+msgstr "个人文件"
 
 #: src/waypoint/src/ui/preferences.rs:32
 msgid ""
@@ -1812,42 +1378,82 @@ msgstr ""
 "日志、恢复点、交换空间、容器、虚拟机镜像和 EFI 系统分区绝不会复制到系统恢复点"
 "中。"
 
-#: src/waypoint/src/ui/preferences_window.rs:106
+#: src/waypoint/src/ui/preferences.rs:61
+msgid "APT Recovery Points"
+msgstr "APT 恢复点"
+
+#: src/waypoint/src/ui/preferences.rs:63
+msgid ""
+"These event-based recovery points are independent of automatic hourly, "
+"daily, weekly, and monthly schedules."
+msgstr ""
+"这些由软件包变更触发的恢复点独立于每小时、每天、每周和每月自动快照计划。"
+
+#: src/waypoint/src/ui/preferences.rs:67
+msgid "Before installing or updating packages"
+msgstr "安装或更新软件包前创建恢复点"
+
+#: src/waypoint/src/ui/preferences.rs:69
+msgid ""
+"Recommended · provides a recovery point if a package change causes problems"
+msgstr "推荐 · 软件包变更引发问题时可用于恢复"
+
+#: src/waypoint/src/ui/preferences.rs:76
+msgid "After installing or updating packages"
+msgstr "安装或更新软件包后创建恢复点"
+
+#: src/waypoint/src/ui/preferences.rs:78
+msgid ""
+"Optional · records the resulting package state for comparison and auditing"
+msgstr "可选 · 记录变更后的软件包状态，用于比较和审计"
+
+#: src/waypoint/src/ui/preferences.rs:84
+msgid "Could not save the APT recovery-point setting"
+msgstr "无法保存 APT 恢复点设置"
+
+#: src/waypoint/src/ui/preferences.rs:85
+msgid "The previous setting remains active."
+msgstr "先前的设置仍然有效。"
+
+#: src/waypoint/src/ui/preferences_window.rs:13
+msgid "Preferences"
+msgstr "首选项"
+
+#: src/waypoint/src/ui/preferences_window.rs:110
 msgid "Scheduled Recovery"
 msgstr "计划恢复"
 
-#: src/waypoint/src/ui/preferences_window.rs:108
+#: src/waypoint/src/ui/preferences_window.rs:113
 msgid "Storage"
 msgstr "存储"
 
-#: src/waypoint/src/ui/preferences_window.rs:184
+#: src/waypoint/src/ui/preferences_window.rs:203
 msgid "Recovery Storage"
 msgstr "恢复存储"
 
-#: src/waypoint/src/ui/preferences_window.rs:186
+#: src/waypoint/src/ui/preferences_window.rs:205
 msgid ""
 "Btrfs referenced space is not the same as space reclaimed by deleting a "
 "recovery point."
 msgstr "Btrfs 引用空间并不等同于删除恢复点后实际释放的空间。"
 
-#: src/waypoint/src/ui/preferences_window.rs:193
+#: src/waypoint/src/ui/preferences_window.rs:212
 msgid "Referenced by Btrfs subvolumes"
 msgstr "Btrfs 子卷引用空间"
 
-#: src/waypoint/src/ui/preferences_window.rs:198
+#: src/waypoint/src/ui/preferences_window.rs:217
 msgid "Currently exclusive across Btrfs qgroups"
 msgstr "当前 Btrfs qgroup 独占空间"
 
-#: src/waypoint/src/ui/preferences_window.rs:200
-#, c++-format
+#: src/waypoint/src/ui/preferences_window.rs:219
 msgid "{0} · an estimate, not a deletion guarantee"
 msgstr "{0} · 仅为估算值，不保证删除后可全部释放"
 
-#: src/waypoint/src/ui/preferences_window.rs:207
+#: src/waypoint/src/ui/preferences_window.rs:226
 msgid "Detailed accounting unavailable"
 msgstr "详细空间统计不可用"
 
-#: src/waypoint/src/ui/preferences_window.rs:209
+#: src/waypoint/src/ui/preferences_window.rs:228
 msgid ""
 "AnduinOS does not enable Btrfs quotas automatically because they add "
 "filesystem overhead."
@@ -1882,32 +1488,26 @@ msgid "Monthly Recovery Points"
 msgstr "每月恢复点"
 
 #: src/waypoint/src/ui/schedule_card.rs:199
-#, c++-format
 msgid "{0} · Personal Files"
 msgstr "{0} · 个人文件"
 
 #: src/waypoint/src/ui/schedule_card.rs:205
-#, c++-format
 msgid "Retention: timeline policy • Prefix: {0}-"
 msgstr "保留策略：时间线策略 • 前缀：{0}-"
 
 #: src/waypoint/src/ui/schedule_card.rs:207
-#, c++-format
 msgid "Retention: legacy policy • Prefix: {0}-"
 msgstr "保留策略：旧版策略 • 前缀：{0}-"
 
 #: src/waypoint/src/ui/schedule_card.rs:275
-#, c++-format
 msgid "Next run: {0}"
 msgstr "下次运行：{0}"
 
 #: src/waypoint/src/ui/schedule_card.rs:282
-#, c++-format
 msgid "Last success: {0} {1}"
 msgstr "上次成功：{0} {1}"
 
 #: src/waypoint/src/ui/schedule_edit_dialog.rs:16
-#, c++-format
 msgid "Edit {0} Schedule"
 msgstr "编辑{0}计划"
 
@@ -1919,6 +1519,10 @@ msgstr "计划"
 msgid "Naming"
 msgstr "命名"
 
+#: src/waypoint/src/ui/schedule_edit_dialog.rs:89
+msgid "What to protect"
+msgstr "要保护的内容"
+
 #: src/waypoint/src/ui/schedule_edit_dialog.rs:91
 msgid ""
 "System recovery and Personal Files history are independent. Personal history "
@@ -1927,22 +1531,23 @@ msgstr ""
 "系统恢复与个人文件历史彼此独立。个人文件历史可以恢复文件而无需回滚操作系统。"
 
 #: src/waypoint/src/ui/schedule_edit_dialog.rs:94
-msgid "History"
-msgstr "历史类型"
+msgid "Protected area"
+msgstr "保护范围"
 
 #: src/waypoint/src/ui/schedule_edit_dialog.rs:96
 msgid "Choose the independent data protected by this schedule"
 msgstr "选择此计划要保护的独立数据"
 
 #: src/waypoint/src/ui/schedule_edit_dialog.rs:99
-msgid "System · @root"
-msgstr "系统 · @root"
+msgid "System files and settings"
+msgstr "系统文件和设置"
 
 #: src/waypoint/src/ui/schedule_edit_dialog.rs:100
-msgid "Personal Files · @home"
-msgstr "个人文件 · @home"
+msgid "Personal files in your Home folder"
+msgstr "主文件夹中的个人文件"
 
 #: src/waypoint/src/ui/schedule_edit_dialog.rs:110
+#: src/waypoint/src/ui/advanced_settings.rs:30
 msgid "Notifications"
 msgstr "通知"
 
@@ -2074,7 +1679,6 @@ msgid "Keep the last N years (0 = disabled)"
 msgstr "保留最近 N 年（0 = 禁用）"
 
 #: src/waypoint/src/ui/schedule_edit_dialog.rs:373
-#, c++-format
 msgid "Preview: {0}-{1}"
 msgstr "预览：{0}-{1}"
 
@@ -2104,6 +1708,7 @@ msgstr "尚未加载"
 #: src/waypoint/src/ui/scheduler_dialog.rs:66
 #: src/waypoint/src/ui/scheduler_dialog.rs:603
 #: src/waypoint/src/ui/scheduler_dialog.rs:608
+#: src/waypoint/src/ui/advanced_settings.rs:47
 msgid "Checking…"
 msgstr "正在检查…"
 
@@ -2128,27 +1733,22 @@ msgid "Configuration error"
 msgstr "配置错误"
 
 #: src/waypoint/src/ui/scheduler_dialog.rs:328
-#, c++-format
 msgid "in {0} days"
 msgstr "{0} 天后"
 
 #: src/waypoint/src/ui/scheduler_dialog.rs:332
-#, c++-format
 msgid "tomorrow at {0}"
 msgstr "明天 {0}"
 
 #: src/waypoint/src/ui/scheduler_dialog.rs:337
-#, c++-format
 msgid "in {0} hour"
 msgstr "{0} 小时后"
 
 #: src/waypoint/src/ui/scheduler_dialog.rs:339
-#, c++-format
 msgid "in {0} hours"
 msgstr "{0} 小时后"
 
 #: src/waypoint/src/ui/scheduler_dialog.rs:342
-#, c++-format
 msgid "in {0} minutes"
 msgstr "{0} 分钟后"
 
@@ -2165,7 +1765,6 @@ msgid "Configuration Error"
 msgstr "配置错误"
 
 #: src/waypoint/src/ui/scheduler_dialog.rs:688
-#, c++-format
 msgid "Failed to serialize configuration: {0}"
 msgstr "无法序列化配置：{0}"
 
@@ -2174,7 +1773,6 @@ msgid "Save Failed"
 msgstr "保存失败"
 
 #: src/waypoint/src/ui/scheduler_dialog.rs:726
-#, c++-format
 msgid "Failed to save scheduler configuration: {0}"
 msgstr "无法保存计划任务配置：{0}"
 
@@ -2187,7 +1785,6 @@ msgid "Apply Failed"
 msgstr "应用失败"
 
 #: src/waypoint/src/ui/scheduler_dialog.rs:777
-#, c++-format
 msgid "Failed to apply automatic recovery schedule: {0}"
 msgstr "无法应用自动恢复计划：{0}"
 
@@ -2203,6 +1800,11 @@ msgstr "已停止"
 msgid "Disabled"
 msgstr "已禁用"
 
+#: src/waypoint/src/ui/scheduler_dialog.rs:815
+#: src/waypoint/src/ui/scheduler_dialog.rs:820
+msgid "Unknown"
+msgstr "未知"
+
 #: src/waypoint/src/ui/scheduler_dialog.rs:816
 #: src/waypoint/src/ui/scheduler_dialog.rs:893
 msgid "Recovery service unavailable"
@@ -2210,13 +1812,16 @@ msgstr "恢复服务不可用"
 
 #: src/waypoint/src/ui/scheduler_dialog.rs:818
 #: src/waypoint/src/ui/scheduler_dialog.rs:891
-#, c++-format
 msgid "Error: {0}"
 msgstr "错误：{0}"
 
 #: src/waypoint/src/ui/scheduler_dialog.rs:888
 msgid "No automatic recovery points yet"
 msgstr "还没有自动恢复点"
+
+#: src/waypoint/src/ui/shortcuts_window.rs:12
+msgid "Keyboard Shortcuts"
+msgstr "键盘快捷键"
 
 #: src/waypoint/src/ui/shortcuts_window.rs:37
 msgid "General"
@@ -2275,12 +1880,10 @@ msgid "This system does not use the supported AnduinOS Btrfs layout."
 msgstr "此系统未使用受支持的 AnduinOS Btrfs 布局。"
 
 #: src/waypoint/src/ui/snapshot_list.rs:162
-#, c++-format
 msgid "Showing {0} of {1} recovery points"
 msgstr "显示 {1} 个恢复点中的 {0} 个"
 
 #: src/waypoint/src/ui/snapshot_list.rs:170
-#, c++-format
 msgid "{0} recovery points"
 msgstr "{0} 个恢复点"
 
@@ -2327,22 +1930,19 @@ msgid "Protected"
 msgstr "受保护"
 
 #: src/waypoint/src/ui/snapshot_row.rs:57
-#, c++-format
 msgid "≈{0} reclaimable"
 msgstr "约可回收 {0}"
 
 #: src/waypoint/src/ui/snapshot_row.rs:61
-#, c++-format
+#: src/waypoint/src/ui/snapshot_page.rs:188
 msgid "{0} packages"
 msgstr "{0} 个软件包"
 
 #: src/waypoint/src/ui/snapshot_row.rs:67
-#, c++-format
 msgid "Kernel {0}"
 msgstr "内核 {0}"
 
 #: src/waypoint/src/ui/snapshot_row.rs:80
-#, c++-format
 msgid ""
 "{0}\n"
 "Note: {1}"
@@ -2374,6 +1974,10 @@ msgstr "更多操作"
 msgid "Verify Integrity"
 msgstr "验证完整性"
 
+#: src/waypoint/src/ui/snapshot_row.rs:137
+msgid "Edit Note"
+msgstr "编辑备注"
+
 #: src/waypoint/src/ui/snapshot_row.rs:143
 msgid "Delete Recovery Point"
 msgstr "删除恢复点"
@@ -2383,10 +1987,12 @@ msgid "Factory"
 msgstr "出厂"
 
 #: src/waypoint/src/ui/snapshot_row.rs:222
+#: src/waypoint/src/ui/snapshot_page.rs:500
 msgid "Manual"
 msgstr "手动"
 
 #: src/waypoint/src/ui/snapshot_row.rs:223
+#: src/waypoint/src/ui/snapshot_page.rs:497
 msgid "Automatic"
 msgstr "自动"
 
@@ -2447,226 +2053,632 @@ msgid "Deleting"
 msgstr "正在删除"
 
 #: src/waypoint/src/ui/toolbar.rs:61
-msgid "Compare"
-msgstr "比较"
+msgid "Compare Changes"
+msgstr "比较变化"
 
 #: src/waypoint/src/ui/toolbar.rs:68
-msgid "Compare recovery points"
-msgstr "比较恢复点"
+msgid "Compare system recovery points"
+msgstr "比较系统恢复点"
 
 #: src/waypoint/src/ui/toolbar.rs:75
 msgid "Search (Ctrl+F)"
 msgstr "搜索（Ctrl+F）"
 
-#: src/waypoint/src/ui/personal_history.rs
-msgid "File History"
-msgstr "文件历史"
+#: src/waypoint/src/ui/personal_overview.rs:26
+msgid "Your Personal Files"
+msgstr "您的个人文件"
 
-#: src/waypoint/src/ui/personal_history.rs
-msgid "Folder History"
-msgstr "文件夹历史"
+#: src/waypoint/src/ui/personal_overview.rs:28
+msgid ""
+"Save earlier versions of files in your Home folder and bring back something "
+"you changed or deleted."
+msgstr "保存主文件夹中文件的早期版本，找回被修改或删除的内容。"
 
-#: src/waypoint/src/ui/personal_history.rs
-msgid "Refresh file history"
-msgstr "刷新文件历史"
+#: src/waypoint/src/ui/personal_overview.rs:34
+msgid "Protection"
+msgstr "保护状态"
 
-#: src/waypoint/src/ui/personal_history.rs
-msgid "Choose an earlier version to browse or recover. Your current files will not be changed automatically."
-msgstr "选择一个早期版本进行浏览或恢复。当前文件不会被自动更改。"
+#: src/waypoint/src/ui/personal_overview.rs:36
+msgid "Checking personal file history…"
+msgstr "正在检查个人文件历史…"
 
-#: src/waypoint/src/ui/personal_history.rs
-msgid "Looking for earlier versions…"
-msgstr "正在查找早期版本…"
+#: src/waypoint/src/ui/personal_overview.rs:37
+msgid "This does not affect System Recovery."
+msgstr "这不会影响系统恢复。"
 
-#: src/waypoint/src/ui/personal_history.rs
-msgid "No earlier version was found"
-msgstr "没有找到早期版本"
+#: src/waypoint/src/ui/personal_overview.rs:42
+msgid "Save personal files automatically"
+msgstr "自动保存个人文件"
 
-#: src/waypoint/src/ui/personal_history.rs
-msgid "This item was not present in the available Personal Files history points."
-msgstr "可用的个人文件历史点中没有此项目。"
+#: src/waypoint/src/ui/personal_overview.rs:44
+msgid ""
+"Save every hour and keep a useful mix of hourly, daily, weekly, and monthly "
+"versions"
+msgstr "每小时保存，并合理保留每小时、每天、每周和每月版本"
 
-#: src/waypoint/src/ui/personal_history.rs
-#, c++-format
-msgid "History point {0} · {1} bytes · modified {2}"
-msgstr "历史点 {0} · {1} 字节 · 修改于 {2}"
+#: src/waypoint/src/ui/personal_overview.rs:51
+msgid "What would you like to do?"
+msgstr "您想做什么？"
 
-#: src/waypoint/src/ui/personal_history.rs
-#, c++-format
-msgid "History point {0} · Folder"
-msgstr "历史点 {0} · 文件夹"
+#: src/waypoint/src/ui/personal_overview.rs:53
+msgid "Save Personal Files Now"
+msgstr "立即保存个人文件"
 
-#: src/waypoint/src/ui/personal_history.rs
-#, c++-format
-msgid "Selected file · {0}"
-msgstr "选中的文件 · {0}"
+#: src/waypoint/src/ui/personal_overview.rs:54
+msgid "Create a saved version of everything in your Home folder"
+msgstr "为主文件夹中的所有内容创建一个保存版本"
 
-#: data/anduinos_waypoint_file_history.py
+#: src/waypoint/src/ui/personal_overview.rs:60
+msgid "Find and Recover Files"
+msgstr "查找并恢复文件"
+
+#: src/waypoint/src/ui/personal_overview.rs:61
+msgid "Browse older versions without overwriting your current files"
+msgstr "浏览旧版本，不覆盖当前文件"
+
+#: src/waypoint/src/ui/personal_overview.rs:66
+msgid "All Saved Home Versions"
+msgstr "所有 Home 保存版本"
+
+#: src/waypoint/src/ui/personal_overview.rs:67
+msgid "See every Home snapshot in one chronological list"
+msgstr "按时间顺序查看全部 Home 快照"
+
+#: src/waypoint/src/ui/personal_overview.rs:72
+msgid "Advanced Protection Settings"
+msgstr "高级保护设置"
+
+#: src/waypoint/src/ui/personal_overview.rs:73
+msgid "Change timing, retention, and notifications"
+msgstr "更改时间、保留规则和通知"
+
+#: src/waypoint/src/ui/personal_overview.rs:78
+msgid "Back Up to Another Drive"
+msgstr "备份到其他磁盘"
+
+#: src/waypoint/src/ui/personal_overview.rs:79
+msgid "Protect against disk failure, loss, or theft"
+msgstr "防范磁盘故障、设备丢失或失窃"
+
+#: src/waypoint/src/ui/personal_overview.rs:86
+msgid ""
+"Saved versions stay on this computer. Use another drive for protection if "
+"this disk fails."
+msgstr "保存的版本存放在本机。如果此磁盘损坏，请使用其他磁盘进行保护。"
+
+#: src/waypoint/src/ui/personal_overview.rs:113
+msgid "Applying automatic protection…"
+msgstr "正在应用自动保护…"
+
+#: src/waypoint/src/ui/personal_overview.rs:114
+msgid "This may ask for your password."
+msgstr "此操作可能会要求输入密码。"
+
+#: src/waypoint/src/ui/personal_overview.rs:130
+#: src/waypoint/src/ui/personal_overview.rs:314
+msgid "Automatic protection is on"
+msgstr "自动保护已开启"
+
+#: src/waypoint/src/ui/personal_overview.rs:132
+#: src/waypoint/src/ui/personal_overview.rs:316
+msgid "Automatic protection is off"
+msgstr "自动保护已关闭"
+
+#: src/waypoint/src/ui/personal_overview.rs:135
+msgid "Personal files are saved every hour."
+msgstr "个人文件每小时保存一次。"
+
+#: src/waypoint/src/ui/personal_overview.rs:137
+msgid "Use Save Personal Files Now whenever you want a saved version."
+msgstr "需要保存版本时，随时点击“立即保存个人文件”。"
+
+#: src/waypoint/src/ui/personal_overview.rs:178
+msgid "Find an older version"
+msgstr "查找旧版本"
+
+#: src/waypoint/src/ui/personal_overview.rs:180
+msgid ""
+"Choose a file, choose the folder where a deleted file used to be, or browse "
+"every saved version."
+msgstr "选择文件，选择被删文件原来所在的文件夹，或者浏览所有保存版本。"
+
+#: src/waypoint/src/ui/personal_overview.rs:184
+msgid "Browse All"
+msgstr "浏览全部"
+
+#: src/waypoint/src/ui/personal_overview.rs:185
+msgid "Choose Folder"
+msgstr "选择文件夹"
+
+#: src/waypoint/src/ui/personal_overview.rs:186
+msgid "Choose File"
+msgstr "选择文件"
+
+#: src/waypoint/src/ui/personal_overview.rs:201
+msgid "Choose a File to Recover"
+msgstr "选择要恢复的文件"
+
+#: src/waypoint/src/ui/personal_overview.rs:203
+msgid "Choose a Folder to Browse in History"
+msgstr "选择要浏览历史的文件夹"
+
+#: src/waypoint/src/ui/personal_overview.rs:268
+msgid "Could not change automatic protection"
+msgstr "无法更改自动保护"
+
+#: src/waypoint/src/ui/personal_overview.rs:320
+msgid "{0} saved version(s) · Last saved {1}"
+msgstr "{0} 个已保存版本 · 最近保存于 {1}"
+
+#: src/waypoint/src/ui/personal_overview.rs:335
+msgid "Personal files have not been saved yet"
+msgstr "个人文件尚未保存"
+
+#: src/waypoint/src/ui/personal_overview.rs:336
+msgid "Save them now or turn on automatic protection."
+msgstr "立即保存，或开启自动保护。"
+
+#: src/waypoint/src/ui/personal_overview.rs:342
+msgid "Personal file history is unavailable"
+msgstr "个人文件历史不可用"
+
+#: src/waypoint/src/ui/personal_overview.rs:354
+msgid "Saving personal files…"
+msgstr "正在保存个人文件…"
+
+#: src/waypoint/src/ui/personal_overview.rs:355
+msgid "You can continue using the computer."
+msgstr "您可以继续使用电脑。"
+
+#: src/waypoint/src/ui/personal_overview.rs:382
+msgid "Personal files saved"
+msgstr "个人文件已保存"
+
+#: src/waypoint/src/ui/personal_overview.rs:387
+msgid "Could not save personal files"
+msgstr "无法保存个人文件"
+
+#: src/waypoint/src/ui/mod.rs:47
+msgid "Personal Files Recovery"
+msgstr "Personal Files Recovery"
+
+#: src/waypoint/src/ui/mod.rs:55 src/waypoint/src/ui/advanced_settings.rs:13
+msgid "Advanced Settings"
+msgstr "Advanced Settings"
+
+#: src/waypoint/src/ui/snapshot_page.rs:23
+msgid "system snapshot"
+msgstr "system snapshot"
+
+#: src/waypoint/src/ui/snapshot_page.rs:24
+msgid "Home snapshot"
+msgstr "Home snapshot"
+
+#: src/waypoint/src/ui/snapshot_page.rs:56
+msgid "Create Snapshot Now"
+msgstr "Create Snapshot Now"
+
+#: src/waypoint/src/ui/snapshot_page.rs:58
+msgid "Create a {0} now"
+msgstr "Create a {0} now"
+
+#: src/waypoint/src/ui/snapshot_page.rs:59
+#: src/waypoint/src/ui/automation_dialog.rs:26
+msgid "Automatic Snapshots"
+msgstr "Automatic Snapshots"
+
+#: src/waypoint/src/ui/snapshot_page.rs:61
+msgid "Search snapshots"
+msgstr "Search snapshots"
+
+#: src/waypoint/src/ui/snapshot_page.rs:75
+#: src/waypoint/src/ui/snapshot_page.rs:513
+msgid "No snapshots selected"
+msgstr "No snapshots selected"
+
+#: src/waypoint/src/ui/snapshot_page.rs:78
+msgid "Delete Selected"
+msgstr "Delete Selected"
+
+#: src/waypoint/src/ui/snapshot_page.rs:89
+msgid "Loading snapshots…"
+msgstr "Loading snapshots…"
+
+#: src/waypoint/src/ui/snapshot_page.rs:93
+msgid "No snapshots yet"
+msgstr "No snapshots yet"
+
+#: src/waypoint/src/ui/snapshot_page.rs:94
+msgid "Create one now or turn on automatic snapshots."
+msgstr "Create one now or turn on automatic snapshots."
+
+#: src/waypoint/src/ui/snapshot_page.rs:98
+msgid "Snapshots are unavailable"
+msgstr "Snapshots are unavailable"
+
+#: src/waypoint/src/ui/snapshot_page.rs:329
+msgid "{0} · {1} · Kernel {2} · {3}"
+msgstr "{0} · {1} · Kernel {2} · {3}"
+
+#: src/waypoint/src/ui/snapshot_page.rs:333
+msgid "{0} · {1} · Kernel {2}"
+msgstr "{0} · {1} · Kernel {2}"
+
+#: src/waypoint/src/ui/snapshot_page.rs:337
+msgid "{0} · {1} · {2}"
+msgstr "{0} · {1} · {2}"
+
+#: src/waypoint/src/ui/snapshot_page.rs:340
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
+#: src/waypoint/src/ui/snapshot_page.rs:350
+#: src/waypoint/src/ui/snapshot_page.rs:382
+#: src/waypoint/src/ui/snapshot_page.rs:534
+msgid "Keep Forever"
+msgstr "Keep Forever"
+
+#: src/waypoint/src/ui/snapshot_page.rs:355
+msgid "Roll Back"
+msgstr "Roll Back"
+
+#: src/waypoint/src/ui/snapshot_page.rs:356
+#: src/waypoint/src/ui/snapshot_page.rs:376
+msgid "Browse Files"
+msgstr "Browse Files"
+
+#: src/waypoint/src/ui/snapshot_page.rs:375
+#: src/waypoint/src/ui/snapshot_page.rs:782
+msgid "Rename"
+msgstr "Rename"
+
+#: src/waypoint/src/ui/snapshot_page.rs:377
+msgid "Check Snapshot Availability"
+msgstr "Check Snapshot Availability"
+
+#: src/waypoint/src/ui/snapshot_page.rs:380
+msgid "Allow Smart Cleanup"
+msgstr "Allow Smart Cleanup"
+
+#: src/waypoint/src/ui/snapshot_page.rs:386
+msgid "Delete Snapshot"
+msgstr "Delete Snapshot"
+
+#: src/waypoint/src/ui/snapshot_page.rs:498
+msgid "Package Change"
+msgstr "Package Change"
+
+#: src/waypoint/src/ui/snapshot_page.rs:499
+msgid "Before Rollback"
+msgstr "Before Rollback"
+
+#: src/waypoint/src/ui/snapshot_page.rs:502
+msgid "Snapshot"
+msgstr "Snapshot"
+
+#: src/waypoint/src/ui/snapshot_page.rs:515
+msgid "{0} snapshot(s) selected"
+msgstr "{0} snapshot(s) selected"
+
+#: src/waypoint/src/ui/snapshot_page.rs:527
+msgid "Create {0}"
+msgstr "Create {0}"
+
+#: src/waypoint/src/ui/snapshot_page.rs:528
+msgid "The snapshot is created immediately."
+msgstr "The snapshot is created immediately."
+
+#: src/waypoint/src/ui/snapshot_page.rs:532
+msgid "Name (optional)"
+msgstr "Name (optional)"
+
+#: src/waypoint/src/ui/snapshot_page.rs:535
+msgid "Otherwise Smart Cleanup may remove it later."
+msgstr "Otherwise Smart Cleanup may remove it later."
+
+#: src/waypoint/src/ui/snapshot_page.rs:541
+msgid "Create"
+msgstr "创建"
+
+#: src/waypoint/src/ui/snapshot_page.rs:552
+msgid "{0} · Manual Snapshot"
+msgstr "{0} · Manual Snapshot"
+
+#: src/waypoint/src/ui/snapshot_page.rs:593
+msgid "Delete Snapshots?"
+msgstr "Delete Snapshots?"
+
+#: src/waypoint/src/ui/snapshot_page.rs:595
+msgid "Delete {0} selected snapshot(s)? This cannot be undone."
+msgstr "Delete {0} selected snapshot(s)? This cannot be undone."
+
+#: src/waypoint/src/ui/snapshot_page.rs:600
+msgid "Delete"
+msgstr "删除"
+
+#: src/waypoint/src/ui/snapshot_page.rs:645
+msgid "Roll Back to {0}?"
+msgstr "Roll Back to {0}?"
+
+#: src/waypoint/src/ui/snapshot_page.rs:647
+msgid ""
+"Waypoint will first preserve the current system. Personal files will not "
+"change. A restart is required."
+msgstr ""
+"Waypoint will first preserve the current system. Personal files will not "
+"change. A restart is required."
+
+#: src/waypoint/src/ui/snapshot_page.rs:651
+msgid "Prepare Rollback"
+msgstr "Prepare Rollback"
+
+#: src/waypoint/src/ui/snapshot_page.rs:682
+msgid "Rollback Is Ready"
+msgstr "Rollback Is Ready"
+
+#: src/waypoint/src/ui/snapshot_page.rs:684
+msgid ""
+"The current system was preserved permanently. Restart now to roll back, or "
+"cancel the pending rollback."
+msgstr ""
+"The current system was preserved permanently. Restart now to roll back, or "
+"cancel the pending rollback."
+
+#: src/waypoint/src/ui/snapshot_page.rs:687
+msgid "Cancel Rollback"
+msgstr "Cancel Rollback"
+
+#: src/waypoint/src/ui/snapshot_page.rs:688
+msgid "Restart Later"
+msgstr "Restart Later"
+
+#: src/waypoint/src/ui/snapshot_page.rs:689
+msgid "Restart Now"
+msgstr "Restart Now"
+
+#: src/waypoint/src/ui/snapshot_page.rs:746
+msgid "Snapshot Check Complete"
+msgstr "Snapshot Check Complete"
+
+#: src/waypoint/src/ui/snapshot_page.rs:748
+msgid "This snapshot is available for recovery."
+msgstr "This snapshot is available for recovery."
+
+#: src/waypoint/src/ui/snapshot_page.rs:774
+msgid "Rename Snapshot"
+msgstr "Rename Snapshot"
+
+#: src/waypoint/src/ui/snapshot_page.rs:775
+msgid "Only the display name changes."
+msgstr "Only the display name changes."
+
+#: src/waypoint/src/ui/snapshot_page.rs:778
+msgid "Name"
+msgstr "Name"
+
+#: src/waypoint/src/ui/automation_dialog.rs:19
+msgid "Automatic System Snapshots"
+msgstr "Automatic System Snapshots"
+
+#: src/waypoint/src/ui/automation_dialog.rs:20
+msgid "Automatic Home Snapshots"
+msgstr "Automatic Home Snapshots"
+
+#: src/waypoint/src/ui/automation_dialog.rs:28
+msgid "Create snapshots automatically"
+msgstr "Create snapshots automatically"
+
+#: src/waypoint/src/ui/automation_dialog.rs:30
+msgid "Smart Cleanup"
+msgstr "Smart Cleanup"
+
+#: src/waypoint/src/ui/automation_dialog.rs:32
+msgid "Keep useful hourly, daily, weekly, monthly, and yearly versions"
+msgstr "Keep useful hourly, daily, weekly, monthly, and yearly versions"
+
+#: src/waypoint/src/ui/automation_dialog.rs:39
+msgid "Keep Versions"
+msgstr "Keep Versions"
+
+#: src/waypoint/src/ui/automation_dialog.rs:40
+msgid "Newer snapshots are kept more densely."
+msgstr "Newer snapshots are kept more densely."
+
+#: src/waypoint/src/ui/automation_dialog.rs:41
+msgid "Keep every snapshot"
+msgstr "Keep every snapshot"
+
+#: src/waypoint/src/ui/automation_dialog.rs:41
+msgid "hours"
+msgstr "hours"
+
+#: src/waypoint/src/ui/automation_dialog.rs:42
+msgid "Keep one per day"
+msgstr "Keep one per day"
+
+#: src/waypoint/src/ui/automation_dialog.rs:42
+#: src/waypoint/src/ui/automation_dialog.rs:43
+#: src/waypoint/src/ui/automation_dialog.rs:44
+msgid "days"
+msgstr "days"
+
+#: src/waypoint/src/ui/automation_dialog.rs:43
+msgid "Keep one per week"
+msgstr "Keep one per week"
+
+#: src/waypoint/src/ui/automation_dialog.rs:44
+msgid "Keep one per month"
+msgstr "Keep one per month"
+
+#: src/waypoint/src/ui/automation_dialog.rs:50
+msgid "Keep one per year forever"
+msgstr "Keep one per year forever"
+
+#: src/waypoint/src/ui/automation_dialog.rs:55
+msgid "Save Automatic Snapshot Settings"
+msgstr "Save Automatic Snapshot Settings"
+
+#: src/waypoint/src/ui/automation_dialog.rs:194
+#: src/waypoint/src/ui/advanced_settings.rs:168
+msgid "Could Not Save Settings"
+msgstr "Could Not Save Settings"
+
+#: src/waypoint/src/ui/advanced_settings.rs:22
+msgid "Create a system snapshot before changes"
+msgstr "Create a system snapshot before changes"
+
+#: src/waypoint/src/ui/advanced_settings.rs:24
+msgid "Create a system snapshot after successful changes"
+msgstr "Create a system snapshot after successful changes"
+
+#: src/waypoint/src/ui/advanced_settings.rs:32
+msgid "Notify before a scheduled snapshot"
+msgstr "Notify before a scheduled snapshot"
+
+#: src/waypoint/src/ui/advanced_settings.rs:34
+msgid "Notify after an automatic snapshot succeeds"
+msgstr "Notify after an automatic snapshot succeeds"
+
+#: src/waypoint/src/ui/advanced_settings.rs:38
+msgid "Failure notifications"
+msgstr "Failure notifications"
+
+#: src/waypoint/src/ui/advanced_settings.rs:39
+msgid "Always on"
+msgstr "Always on"
+
+#: src/waypoint/src/ui/advanced_settings.rs:45
+msgid "Background Service"
+msgstr "Background Service"
+
+#: src/waypoint/src/ui/advanced_settings.rs:49
+msgid "The automatic snapshot infrastructure cannot be disabled here."
+msgstr "The automatic snapshot infrastructure cannot be disabled here."
+
+#: src/waypoint/src/ui/advanced_settings.rs:56
+msgid "Save Advanced Settings"
+msgstr "Save Advanced Settings"
+
+#: src/waypoint/src/ui/advanced_settings.rs:100
+msgid "Automatic snapshot service is available"
+msgstr "Automatic snapshot service is available"
+
+#: src/waypoint/src/ui/advanced_settings.rs:105
+msgid "Automatic snapshot service needs attention"
+msgstr "Automatic snapshot service needs attention"
+
+#: src/waypoint-notifier/src/main.rs:130
+msgid "A scheduled system snapshot will start in 10 seconds."
+msgstr "A scheduled system snapshot will start in 10 seconds."
+
+#: src/waypoint-notifier/src/main.rs:131
+msgid "A scheduled Home snapshot will start in 10 seconds."
+msgstr "A scheduled Home snapshot will start in 10 seconds."
+
+#: src/waypoint-notifier/src/main.rs:133
+msgid "Automatic Snapshot Starting"
+msgstr "Automatic Snapshot Starting"
+
+#: src/waypoint-notifier/src/main.rs:139
+msgid ""
+"The scheduled system snapshot could not be created. Check Waypoint for "
+"details."
+msgstr ""
+"The scheduled system snapshot could not be created. Check Waypoint for "
+"details."
+
+#: src/waypoint-notifier/src/main.rs:142
+msgid ""
+"The scheduled Home snapshot could not be created. Check Waypoint for details."
+msgstr ""
+"The scheduled Home snapshot could not be created. Check Waypoint for details."
+
+#: src/waypoint-notifier/src/main.rs:145
+msgid "Automatic Snapshot Failed"
+msgstr "Automatic Snapshot Failed"
+
+#: src/waypoint-notifier/src/main.rs:151
+msgid "Automatic System Recovery Point Created"
+msgstr "已创建自动系统恢复点"
+
+#: src/waypoint-notifier/src/main.rs:152
+msgid "A scheduled system recovery point was created successfully."
+msgstr "已成功创建计划的系统恢复点。"
+
+#: src/waypoint-notifier/src/main.rs:155
+msgid "Personal Files History Saved"
+msgstr "个人文件历史已保存"
+
+#: src/waypoint-notifier/src/main.rs:156
+msgid "A scheduled Personal Files history point was created successfully."
+msgstr "已成功创建计划的个人文件历史点。"
+
+#: src/waypoint-notifier/src/main.rs:162
+msgid "Automatic Recovery Cleanup"
+msgstr "自动恢复清理"
+
+#: src/waypoint-notifier/src/main.rs:166
+msgid "Removed {0} old automatic system recovery point(s)."
+msgstr "已删除 {0} 个旧的自动系统恢复点。"
+
+#: src/waypoint-notifier/src/main.rs:170
+msgid "Removed {0} old Personal Files history point(s)."
+msgstr "已删除 {0} 个旧的个人文件历史点。"
+
+#: src/waypoint-notifier/src/main.rs:174
+msgid ""
+"Removed {0} old system recovery point(s) and {1} old Personal Files history "
+"point(s)."
+msgstr "已删除 {0} 个旧的系统恢复点和 {1} 个旧的个人文件历史点。"
+
+#: data/anduinos_waypoint_file_history.py:91
 msgid "View File History…"
 msgstr "查看文件历史…"
 
-#: data/anduinos_waypoint_file_history.py
+#: data/anduinos_waypoint_file_history.py:92
 msgid "Browse earlier Personal Files versions of this item"
 msgstr "浏览此项目在个人文件历史中的早期版本"
 
-#: data/anduinos_waypoint_file_history.py
+#: data/anduinos_waypoint_file_history.py:103
 msgid "Browse This Folder’s History…"
 msgstr "浏览此文件夹的历史…"
 
-#: data/anduinos_waypoint_file_history.py
+#: data/anduinos_waypoint_file_history.py:104
 msgid "Find files that existed earlier in this Personal Files folder"
 msgstr "查找此个人文件文件夹中过去存在的文件"
 
-#~ msgid "Recovery Point: {0}"
-#~ msgstr "恢复点：{0}"
+msgid "Notify after any snapshot succeeds"
+msgstr "任何快照创建成功后通知"
 
-#~ msgid "Only {0} GB is available; at least {1} GB is required"
-#~ msgstr "仅剩 {0} GB 可用空间；至少需要 {1} GB"
+msgid "Notify after Smart Cleanup removes snapshots"
+msgstr "智能清理删除快照后通知"
 
-#~ msgid ""
-#~ "Personal Files use the separate @home subvolume. System restore never "
-#~ "changes it."
-#~ msgstr "个人文件使用独立的 @home 子卷。系统恢复绝不会更改它。"
+msgid "Limited to one notification per minute"
+msgstr "每分钟最多发送一条通知"
 
-#~ msgid "Not available yet; Personal Files remain unchanged"
-#~ msgstr "暂不可用；个人文件将保持不变"
+msgid "System Recovery Point Created"
+msgstr "系统恢复点已创建"
 
-#~ msgid "Retention: up to {0} recovery points • Prefix: {1}-"
-#~ msgstr "保留策略：最多 {0} 个恢复点 • 前缀：{1}-"
+msgid "Your system recovery point was created successfully."
+msgstr "你的系统恢复点已成功创建。"
 
-#~ msgid ""
-#~ "Scheduled recovery points always protect the complete AnduinOS system "
-#~ "deployment. Personal Files are managed separately and are never rolled "
-#~ "back by this schedule."
-#~ msgstr ""
-#~ "计划创建的恢复点始终保护完整的 AnduinOS 系统部署。个人文件单独管理，绝不会"
-#~ "被此计划回滚。"
+msgid "Your Personal Files history point was created successfully."
+msgstr "你的个人文件历史点已成功创建。"
 
-#~ msgid "@root · required"
-#~ msgstr "@root · 必需"
+msgid "Smart Cleanup Completed"
+msgstr "智能清理已完成"
 
-#~ msgid "A configuration error occurred."
-#~ msgstr "发生了配置错误。"
+msgid "old system recovery point(s) were removed."
+msgstr "个旧系统恢复点已删除。"
 
-#~ msgid ""
-#~ "AnduinOS Waypoint requires the fixed Btrfs root layout produced by the "
-#~ "AnduinOS installer. No storage changes were made."
-#~ msgstr ""
-#~ "AnduinOS Waypoint 需要由 AnduinOS 安装器创建的固定 Btrfs 根布局。未对存储"
-#~ "进行任何更改。"
+msgid "old Personal Files history point(s) were removed."
+msgstr "个旧个人文件历史点已删除。"
 
-#~ msgid "Authorization Required"
-#~ msgstr "需要授权"
+msgid "old system recovery point(s) and"
+msgstr "个旧系统恢复点和"
 
-#~ msgid "Cannot save the configuration."
-#~ msgstr "无法保存配置。"
+msgid "Every"
+msgstr "每隔"
 
-#~ msgid ""
-#~ "Close and reopen Waypoint. If the service is still unavailable, restart "
-#~ "the system.\n"
-#~ "\n"
-#~ "Technical details: {0}"
-#~ msgstr ""
-#~ "关闭并重新打开 Waypoint。如果服务仍不可用，请重启系统。\n"
-#~ "\n"
-#~ "技术细节：{0}"
-
-#~ msgid ""
-#~ "Delete an unneeded recovery point or free some disk space before "
-#~ "continuing.\n"
-#~ "\n"
-#~ "Technical details: {0}"
-#~ msgstr ""
-#~ "删除不需要的恢复点或释放一些磁盘空间后再继续。\n"
-#~ "\n"
-#~ "技术细节：{0}"
-
-#~ msgid ""
-#~ "Do not restore it. Keep the current system running and create a new "
-#~ "recovery point."
-#~ msgstr "请勿用它恢复。继续使用当前系统，并创建新的恢复点。"
-
-#~ msgid ""
-#~ "Enter your password when prompted.\n"
-#~ "\n"
-#~ "Technical details: {0}"
-#~ msgstr ""
-#~ "出现提示时请输入密码。\n"
-#~ "\n"
-#~ "技术细节：{0}"
-
-#~ msgid "Failed to Load Recovery Points"
-#~ msgstr "无法加载恢复点"
-
-#~ msgid ""
-#~ "Its deployment data may have been removed or damaged. Refresh the list "
-#~ "before taking further action."
-#~ msgstr "其部署数据可能已被删除或损坏。继续操作前请刷新列表。"
-
-#~ msgid ""
-#~ "Permission was denied while writing the configuration file. Check its "
-#~ "ownership and permissions."
-#~ msgstr "写入配置文件时权限被拒绝。请检查其所有者和权限。"
-
-#~ msgid "Recovery Points Cleaned Up"
-#~ msgstr "已清理恢复点"
-
-#~ msgid "Service Connection Error"
-#~ msgstr "服务连接错误"
-
-#~ msgid ""
-#~ "The configuration contains invalid data and may need to be reset to "
-#~ "defaults."
-#~ msgstr "配置包含无效数据，可能需要重置为默认值。"
-
-#~ msgid "The configuration file is invalid."
-#~ msgstr "配置文件无效。"
-
-#~ msgid "The recovery point did not pass integrity verification."
-#~ msgstr "恢复点未通过完整性验证。"
-
-#~ msgid "The recovery point was not found on disk."
-#~ msgstr "磁盘上未找到该恢复点。"
-
-#~ msgid "The retention policy deleted {0} older automatic recovery points."
-#~ msgstr "保留策略删除了 {0} 个较旧的自动恢复点。"
-
-#~ msgid ""
-#~ "This may be temporary. Refresh the list and try again.\n"
-#~ "\n"
-#~ "Technical details: {0}"
-#~ msgstr ""
-#~ "这可能是临时问题。请刷新列表后重试。\n"
-#~ "\n"
-#~ "技术细节：{0}"
-
-#~ msgid "This operation requires administrator authorization."
-#~ msgstr "此操作需要管理员授权。"
-
-#~ msgid "Unable to connect to the Waypoint system service."
-#~ msgstr "无法连接到 Waypoint 系统服务。"
-
-#~ msgid "Unable to retrieve the recovery point list."
-#~ msgstr "无法获取恢复点列表。"
-msgid "APT Recovery Points"
-msgstr "APT 恢复点"
-
-msgid "Before installing or updating packages"
-msgstr "安装或更新软件包前创建恢复点"
-
-msgid "Recommended · provides a recovery point if a package change causes problems"
-msgstr "推荐 · 软件包变更引发问题时可用于恢复"
-
-msgid "After installing or updating packages"
-msgstr "安装或更新软件包后创建恢复点"
-
-msgid "Optional · records the resulting package state for comparison and auditing"
-msgstr "可选 · 记录变更后的软件包状态，用于比较和审计"
-
-msgid "These event-based recovery points are independent of automatic hourly, daily, weekly, and monthly schedules."
-msgstr "这些由软件包变更触发的恢复点独立于每小时、每天、每周和每月自动快照计划。"
-msgid "Could not save the APT recovery-point setting"
-msgstr "无法保存 APT 恢复点设置"
-
-msgid "The previous setting remains active."
-msgstr "先前的设置仍然有效。"
+msgid "hour(s)"
+msgstr "小时"

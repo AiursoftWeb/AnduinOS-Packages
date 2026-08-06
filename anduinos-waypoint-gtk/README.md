@@ -2,15 +2,23 @@
 
 AnduinOS Waypoint is the next-generation Btrfs recovery experience for
 AnduinOS. It adopts the clear GTK4/libadwaita interface, information
-architecture, scheduling model, retention controls, read-only storage views, and external
-backup design direction from the MIT-licensed Waypoint project, while replacing its
-Void-specific and unsafe system integration with an AnduinOS recovery engine.
+architecture, scheduling model, retention controls, and read-only storage views
+from the MIT-licensed Waypoint project, while replacing its Void-specific and
+unsafe system integration with an AnduinOS recovery engine.
 
 System deployments (`@root`) and Personal Files history (`@home`) are separate
 recovery streams. Personal history supports manual or scheduled immutable
 snapshots, timeline retention, caller-scoped browsing, non-privileged file and
-folder recovery, independently verifiable full-stream external backups, and
-desktop notifications for successful automatic creation and retention cleanup.
+folder recovery, and desktop notifications for successful creation and optional
+retention cleanup.
+
+The main window presents these as two plain-language destinations: **System
+Recovery** for apps and system settings, and **Personal Files** for documents in
+the Home folder. The Personal Files page shows whether hourly protection is on,
+when files were last saved, and offers three direct choices: save now, find and
+recover a file, or change advanced protection settings. Recovery starts from a
+file or folder whenever possible; users do not need to understand Btrfs
+subvolume names or choose a snapshot before they know where their file is.
 
 On Nautilus 4, installing Waypoint also adds two Personal Files entry points:
 “View File History…” for one selected local file or folder, and “Browse This
@@ -61,24 +69,10 @@ APT package changes use an independent event policy in
 `/etc/anduinos-waypoint/apt-snapshots.toml`. The safe default creates one
 recovery point before DPKG changes packages and does not create a redundant
 post-change point. Both boundaries remain independently configurable from the
-Waypoint Preferences window; scheduled hourly, daily, weekly, and monthly
-recovery points are a separate mechanism.
-
-The imported path-based external-backup API is not shipped. Its replacement accepts
-only trusted deployment IDs, canonical backup UUIDs, and mounted destination
-filesystem UUIDs. The helper resolves `/dev/disk/by-uuid` itself, rejects system and
-untrusted mounts, and never accepts a destination path from the GUI. Exports are full
-Btrfs send streams committed by `fsync` plus atomic rename. Imports verify the bounded
-versioned manifest, exact stream size and SHA-256, pre-parse the stream, receive it into
-unique internal staging, and recompute the kernel, initramfs, dpkg, MOK, read-only
-subvolume, and local snapshot identities before registering a fresh deployment UUID.
-
-External backup is deliberately manual in this first trusted version. Incremental
-chains, automatic mount workers, caller-selected paths, and rsync backup formats are
-not supported. The former helper methods were removed entirely after Deb introspection
-showed that method-level feature gates could still be observed by the D-Bus macro.
-Backup media is not encrypted by Waypoint; the UI tells users to use an encrypted
-external filesystem when the system contains sensitive data.
+Waypoint Advanced Settings window. System and Home automatic snapshots have
+independent one-to-24 hour freshness targets, and Smart Cleanup applies the
+hourly, daily, weekly, monthly, and yearly retention tiers. External-drive
+backup is intentionally not part of Waypoint 2.0.
 
 Caller-selected paths are never written by the privileged helper. Historical
 Personal Files are resolved beneath the authenticated caller's own home using
@@ -94,13 +88,11 @@ containing symlinks are hidden in the first release. Waypoint repeats that
 validation before converting the URI to a bounded relative source path; the
 Nautilus process never contacts the system helper.
 
-Each automatic schedule has an opt-out “Notify when created” setting that is
-enabled by default, including for configurations written before the setting was
-introduced. A per-session unprivileged notifier receives privacy-preserving
-system-bus events and sends GNOME notifications even when the main Waypoint
-window is closed. Automatic deletion notices are aggregated by System and
-Personal Files counts; snapshot titles, paths, and filenames are never placed
-on that notification channel.
+Successful snapshot notifications are enabled by default. Cleanup completion
+notifications are optional and limited to one per minute. A per-session
+unprivileged notifier receives privacy-preserving system-bus events and sends
+GNOME notifications even when the main Waypoint window is closed; snapshot
+titles, paths, and filenames are never placed on that notification channel.
 
 ## Source layout
 
