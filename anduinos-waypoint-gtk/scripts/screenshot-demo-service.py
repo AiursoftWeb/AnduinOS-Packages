@@ -132,20 +132,19 @@ class ScreenshotFixture(dbus.service.Object):
                 "personal_snapshot_count": 0,
                 "personal_snapshots": [],
                 "personal_issues": [],
+                "system_package_counts": {
+                    deployment["id"]: 2314 + index * 7
+                    for index, deployment in enumerate(DEPLOYMENTS)
+                },
+                "personal_sizes": {},
                 "issues": [],
-                "layout": {"support": "supported"},
+                "layout": {
+                    "support": "supported",
+                    "root_filesystem": "btrfs",
+                    "issues": [],
+                },
             }
         )
-
-    @dbus.service.method(INTERFACE, in_signature="as", out_signature="s")
-    def GetDeploymentSpaces(self, deployment_ids: list[str]) -> str:
-        spaces = {}
-        for index, deployment_id in enumerate(deployment_ids):
-            spaces[str(deployment_id)] = {
-                "referenced_bytes": 8_900_000_000 - index * 420_000_000,
-                "exclusive_bytes": 1_240_000_000 - index * 130_000_000,
-            }
-        return json.dumps(spaces)
 
     @dbus.service.method(INTERFACE, in_signature="", out_signature="s")
     def GetAptHistory(self) -> str:
@@ -155,30 +154,34 @@ class ScreenshotFixture(dbus.service.Object):
     def GetSchedulerStatus(self) -> str:
         return "running"
 
-    @dbus.service.method(INTERFACE, in_signature="", out_signature="bs")
-    def GetQuotaUsage(self) -> tuple[bool, str]:
-        return True, json.dumps(
+    @dbus.service.method(INTERFACE, in_signature="", out_signature="s")
+    def GetAutomationConfig(self) -> str:
+        policy = {
+            "is_auto_snapshot_enabled": True,
+            "snapshot_interval_hours": 1,
+            "is_auto_cleanup_enabled": True,
+            "keep_all_hours": 24,
+            "keep_daily_days": 7,
+            "keep_weekly_days": 30,
+            "keep_monthly_days": 365,
+            "keep_yearly": True,
+        }
+        return json.dumps(
             {
-                "total_bytes": 512_000_000_000,
-                "used_bytes": 184_000_000_000,
-                "free_bytes": 328_000_000_000,
-                "snapshots_bytes": 13_700_000_000,
-                "quota_enabled": True,
-                "snapshots": [],
+                "schema_version": 1,
+                "system": policy,
+                "home": policy,
+                "notifications": {
+                    "notify_before_scheduled": False,
+                    "notify_after_success": True,
+                    "notify_after_cleanup": False,
+                },
             }
         )
 
-    @dbus.service.method(INTERFACE, in_signature="", out_signature="bs")
-    def ListBackupDestinations(self) -> tuple[bool, str]:
-        return True, "[]"
-
-    @dbus.service.method(INTERFACE, in_signature="s", out_signature="bs")
-    def ListExternalBackups(self, _filesystem_uuid: str) -> tuple[bool, str]:
-        return True, json.dumps({"backups": [], "issues": []})
-
-    @dbus.service.method(INTERFACE, in_signature="s", out_signature="bs")
-    def ListPersonalExternalBackups(self, _filesystem_uuid: str) -> tuple[bool, str]:
-        return True, json.dumps({"backups": [], "issues": []})
+    @dbus.service.method(INTERFACE, in_signature="", out_signature="bb")
+    def GetAptSnapshotPolicy(self) -> tuple[bool, bool]:
+        return True, False
 
     @dbus.service.signal(INTERFACE, signature="ss")
     def SnapshotCreated(self, _snapshot_name: str, _created_by: str) -> None:

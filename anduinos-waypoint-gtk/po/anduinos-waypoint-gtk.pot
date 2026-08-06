@@ -1,2653 +1,806 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-06 20:55+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Project-Id-Version: anduinos-waypoint-gtk 0.1.0\n"
+"POT-Creation-Date: 2026-08-06 00:00+0800\n"
+"PO-Revision-Date: 2026-08-06 00:00+0800\n"
+"Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
+"Language-Team: AnduinOS Team\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/waypoint/src/i18n.rs:32
-msgid "Hourly automatic recovery point"
-msgstr ""
-
-#: src/waypoint/src/i18n.rs:34
-msgid "Daily automatic recovery point"
-msgstr ""
-
-#: src/waypoint/src/i18n.rs:36
-msgid "Weekly automatic recovery point"
-msgstr ""
-
-#: src/waypoint/src/i18n.rs:39
-msgid "Monthly automatic recovery point"
-msgstr ""
-
-#: src/waypoint/src/snapshot.rs:34 src/waypoint/src/ui/analytics_dialog.rs:217
-#: src/waypoint/src/ui/scheduler_dialog.rs:551
-#: src/waypoint/src/ui/scheduler_dialog.rs:885
-msgid "Just now"
-msgstr ""
-
-#: src/waypoint/src/snapshot.rs:38
-msgid "1 minute ago"
-msgstr ""
-
-#: src/waypoint/src/snapshot.rs:40 src/waypoint/src/ui/scheduler_dialog.rs:549
-#: src/waypoint/src/ui/scheduler_dialog.rs:883
-msgid "{0} minutes ago"
-msgstr ""
-
-#: src/waypoint/src/snapshot.rs:45 src/waypoint/src/ui/analytics_dialog.rs:220
-msgid "1 hour ago"
-msgstr ""
-
-#: src/waypoint/src/snapshot.rs:47 src/waypoint/src/ui/analytics_dialog.rs:222
-#: src/waypoint/src/ui/scheduler_dialog.rs:547
-#: src/waypoint/src/ui/scheduler_dialog.rs:881
-msgid "{0} hours ago"
-msgstr ""
-
-#: src/waypoint/src/snapshot.rs:50
-msgid "Yesterday"
-msgstr ""
-
-#: src/waypoint/src/snapshot.rs:52 src/waypoint/src/ui/analytics_dialog.rs:202
-#: src/waypoint/src/ui/analytics_dialog.rs:229
-#: src/waypoint/src/ui/scheduler_dialog.rs:545
-#: src/waypoint/src/ui/scheduler_dialog.rs:879
-msgid "{0} days ago"
-msgstr ""
-
-#: src/waypoint/src/snapshot.rs:54
-msgid "1 week ago"
-msgstr ""
-
-#: src/waypoint/src/snapshot.rs:56
-msgid "{0} weeks ago"
-msgstr ""
-
-#: src/waypoint/src/ui/about_preferences.rs:11
-msgid "About AnduinOS Waypoint"
-msgstr ""
-
-#: src/waypoint/src/ui/about_preferences.rs:44 src/waypoint/src/ui/mod.rs:29
-msgid "AnduinOS Waypoint"
-msgstr ""
-
-#: src/waypoint/src/ui/about_preferences.rs:49
-msgid "Version {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/about_preferences.rs:55
-msgid ""
-"System recovery, scheduling, retention, and external backup management for "
-"AnduinOS."
-msgstr ""
-
-#: src/waypoint/src/ui/about_preferences.rs:67
-msgid "View on GitHub"
-msgstr ""
-
-#: src/waypoint/src/ui/about_preferences.rs:77
-msgid "Report an issue"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:16
-#: src/waypoint/src/ui/snapshot_list.rs:193
-msgid "No Recovery Points Yet"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:18
-msgid ""
-"Create your first recovery point to see system recovery statistics and "
-"insights."
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:68
-#: src/waypoint/src/ui/analytics_dialog.rs:77
-msgid "Analytics"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:184
-msgid "Overview"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:189
-msgid "Total Recovery Points"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:196
-msgid "Oldest Recovery Point"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:198
-msgid "Today"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:200
-#: src/waypoint/src/ui/analytics_dialog.rs:227
-msgid "1 day ago"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:204
-msgid "{0} months ago"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:206
-msgid "{0} years ago"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:215
-msgid "Newest Recovery Point"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:242
-msgid "Recovery Point Frequency"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:245
-msgid "{0} per day"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:247
-msgid "1 per {0} days"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:259
-msgid "Estimated Reclaimable Space"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:261
-msgid ""
-"Btrfs exclusive bytes are the best available deletion estimate, not a "
-"guarantee."
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:267
-msgid "Exclusive Across Recovery Points"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:273
-msgid "Average Exclusive Space"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:287
-msgid "Most Reclaimable Recovery Points"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:288
-msgid "Top 5 estimates from level-zero Btrfs qgroups"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:318
-msgid "{0} • {1} packages"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:378
-msgid "Insights and Recommendations"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:386
-msgid "Many recovery points"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:387
-msgid ""
-"You have {0} recovery points. Consider adjusting the retention policy to "
-"clean up older automatic recovery points."
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:392
-msgid "Recovery point retention looks healthy"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:394
-msgid ""
-"{0} recovery points are stored. The retention policy appears to be working "
-"well."
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:401
-msgid "Few recovery points"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:403
-msgid ""
-"Only {0} recovery points are stored. Consider enabling an automatic recovery "
-"schedule."
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:417
-msgid "Uneven reclaimable space"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:418
-msgid ""
-"Some recovery points hold about {0} times more exclusive data than average. "
-"Check the estimates below before choosing one to delete."
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:432
-msgid "Infrequent recovery points"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:433
-msgid ""
-"Recovery points are being created less than once per week. Enable an "
-"automatic schedule for better system protection."
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:438
-msgid "Frequent recovery points"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:439
-msgid ""
-"Recovery points are being created {0} times per day. Make sure this "
-"frequency matches your recovery policy."
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:448
-msgid "Everything looks good"
-msgstr ""
-
-#: src/waypoint/src/ui/analytics_dialog.rs:449
-msgid "Recovery point management is healthy. No issues were detected."
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_dialog.rs:21
-msgid "Error"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_dialog.rs:22
-msgid "Failed to load recovery points: {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_dialog.rs:31
-msgid "Not Enough Recovery Points"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_dialog.rs:33
-msgid ""
-"You need at least 2 recovery points to compare.\n"
-"\n"
-"Create more recovery points first."
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_dialog.rs:41
-#: src/waypoint/src/ui/comparison_view.rs:46
-msgid "Compare Recovery Points"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:67
-msgid "Base Recovery Point"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:70
-msgid "Select the base recovery point"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:88
-msgid "Compare To"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:91
-msgid "Select a recovery point to compare"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:114
-msgid "Summary"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:121
-#: src/waypoint/src/ui/preferences.rs:57
-#: src/waypoint/src/ui/preferences_window.rs:112
-#: src/waypoint/src/ui/advanced_settings.rs:20
-msgid "Package Changes"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:122
-msgid "Select two recovery points to compare"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:126
-msgid "File Changes"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:127
-msgid "Not available"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:138
-msgid "View Packages"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:143
-msgid "View Files"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:210
-#: src/waypoint/src/ui/comparison_view.rs:211
-msgid "Computing..."
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:243
-msgid "{0} added, {1} removed, {2} changed"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:250
-#: src/waypoint/src/ui/comparison_view.rs:258
-#: src/waypoint/src/ui/comparison_view.rs:295
-msgid "Failed to compute"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:286
-msgid "No changes"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:289
-msgid "{0} files changed"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:417
-msgid "Package Differences"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:425
-msgid "Export comparison to a text file"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:467
-msgid "Identical Package Sets"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:469
-msgid ""
-"Both recovery points have exactly the same packages installed. No packages "
-"were added, removed, or updated between them."
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:477
-msgid "Added Packages ({0})"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:498
-msgid "Removed Packages ({0})"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:519
-msgid "Updated Packages ({0})"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:552
-msgid "File Differences"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:560
-msgid "Export file changes to a text file"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:580
-msgid "Comparing file changes..."
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:587
-msgid "This may take a moment for large recovery points"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:660
-msgid "Comparison Failed"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:664
-msgid ""
-"The file comparison took too long (more than 25 seconds). This can happen "
-"with very large recovery points. Try package comparison instead."
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:667
-msgid "Failed to compare file changes between recovery points."
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:718
-msgid "No File Changes"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:719
-msgid "The recovery points contain identical files"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:742
-msgid "Added Files"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:751
-msgid "Modified Files"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:760
-msgid "Deleted Files"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:793
-msgid "{0} ({1})"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:800
-msgid "{0} ({1} files)"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:817
-msgid "… and {0} other files"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:862
-msgid "Export File Comparison"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:867
-#: src/waypoint/src/ui/comparison_view.rs:1012
-msgid "Text files"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:922
-msgid "File Changes Report"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:925
-#: src/waypoint/src/ui/comparison_view.rs:1056
-msgid "Base recovery point: {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:929
-#: src/waypoint/src/ui/comparison_view.rs:1060
-msgid "Compared recovery point: {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:932
-#: src/waypoint/src/ui/comparison_view.rs:1063
-msgid "Summary:"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:936
-msgid "{0} files added"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:941
-msgid "{0} files modified"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:946
-msgid "{0} files deleted"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:954
-msgid "Added Files ({0}):"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:967
-msgid "Modified Files ({0}):"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:980
-msgid "Deleted Files ({0}):"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:990
-msgid "No file changes detected."
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:994
-msgid "Both recovery points contain identical files."
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:1007
-msgid "Export Package Comparison"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:1053
-msgid "Package Comparison Report"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:1067
-msgid "{0} packages added"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:1072
-msgid "{0} packages removed"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:1077
-msgid "{0} packages updated"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:1085
-msgid "Added Packages ({0}):"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:1099
-msgid "Removed Packages ({0}):"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:1115
-msgid "Updated Packages ({0}):"
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:1131
-msgid "No package changes detected."
-msgstr ""
-
-#: src/waypoint/src/ui/comparison_view.rs:1135
-msgid "Both recovery points have identical package sets."
-msgstr ""
-
-#: src/waypoint/src/ui/create_snapshot_dialog.rs:33
-msgid "System recovery point {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/create_snapshot_dialog.rs:40
-#: src/waypoint/src/ui/toolbar.rs:41
-msgid "Save System State"
-msgstr ""
-
-#: src/waypoint/src/ui/create_snapshot_dialog.rs:42
-msgid "Give this recovery point a description to help identify it later."
-msgstr ""
-
-#: src/waypoint/src/ui/create_snapshot_dialog.rs:52
-msgid "Description:"
-msgstr ""
-
-#: src/waypoint/src/ui/create_snapshot_dialog.rs:58
-msgid "e.g., Before Docker installation"
-msgstr ""
-
-#: src/waypoint/src/ui/create_snapshot_dialog.rs:64
-msgid ""
-"The recovery point will be named automatically from the current date and "
-"time."
-msgstr ""
-
-#: src/waypoint/src/ui/create_snapshot_dialog.rs:74
-#: src/waypoint/src/ui/dialogs.rs:20
-#: src/waypoint/src/ui/external_backups.rs:353
-#: src/waypoint/src/ui/external_backups.rs:383
-#: src/waypoint/src/ui/personal_overview.rs:183
-#: src/waypoint/src/ui/snapshot_page.rs:540
-#: src/waypoint/src/ui/snapshot_page.rs:599
-#: src/waypoint/src/ui/snapshot_page.rs:650
-#: src/waypoint/src/ui/snapshot_page.rs:781
-msgid "Cancel"
-msgstr ""
-
-#: src/waypoint/src/ui/create_snapshot_dialog.rs:75
-msgid "Save"
-msgstr ""
-
-#: src/waypoint/src/ui/dialogs.rs:44
-#: src/waypoint/src/ui/external_backups.rs:747
-msgid "OK"
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:47
-msgid "Failed to Create Recovery Point"
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:54
-msgid "There is not enough disk space to create a recovery point."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:56
-msgid ""
-"Delete an unneeded recovery point or free some disk space, then try again."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:61
-#: src/waypoint/src/ui/error_helpers.rs:96
-#: src/waypoint/src/ui/error_helpers.rs:130
-msgid "Permission denied."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:63
-msgid ""
-"Creating a recovery point requires administrator authorization. Enter the "
-"correct password when prompted."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:71
-msgid "The supported AnduinOS Btrfs layout is unavailable."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:73
-msgid ""
-"AnduinOS Waypoint can create recovery points only on the fixed Btrfs layout "
-"produced by the AnduinOS installer."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:78
-msgid "A recovery point with this name already exists."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:79
-msgid "Choose a different recovery point name."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:83
-msgid "An error occurred while creating the recovery point."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:84
-#: src/waypoint/src/ui/error_helpers.rs:118
-msgid "Technical details: {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:92
-msgid "Failed to Delete Recovery Point"
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:98
-msgid "Deleting a recovery point requires administrator authorization."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:103
-#: src/waypoint/src/ui/error_helpers.rs:137
-msgid "Recovery point not found."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:105
-msgid "It may already have been deleted. Refresh the recovery point list."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:110
-msgid "The recovery point is currently in use or protected."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:112
-msgid ""
-"Cancel any pending restore that references it, or remove its protection "
-"before trying again."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:117
-msgid "An error occurred while deleting the recovery point."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:126
-msgid "Failed to Prepare System Restore"
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:132
-msgid "Preparing a system restore requires administrator authorization."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:139
-msgid ""
-"It may have been deleted. Refresh the recovery point list and choose another "
-"one."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:145
-msgid "Secure Boot verification failed."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:147
-msgid ""
-"The target deployment's kernel or required module-signing key could not be "
-"verified. No one-shot restore was scheduled."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:156
-msgid "Recovery boot preparation failed."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:158
-msgid ""
-"Waypoint could not verify the one-shot GRUB and initramfs recovery path. The "
-"current deployment and known-good fallback remain unchanged."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:163
-msgid "An error occurred while preparing the system restore."
-msgstr ""
-
-#: src/waypoint/src/ui/error_helpers.rs:165
-msgid ""
-"No restore was scheduled. The current deployment remains selected.\n"
-"\n"
-"Technical details: {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:30
-#: src/waypoint/src/ui/external_backups.rs:38
-msgid "External Recovery Backups"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:39
-msgid "Portable full-system recovery points"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:41
-msgid "Export Recovery Point…"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:45
-msgid "Export Personal Files…"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:49
-msgid "Refresh external drives"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:54
-msgid ""
-"External backups are not encrypted. Use an encrypted external drive for "
-"sensitive systems."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:62
-msgid "Looking for external drives…"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:64
-msgid "Only mounted filesystems with a verified device UUID are considered."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:210
-#: src/waypoint/src/ui/external_backups.rs:226
-msgid "External Backups Unavailable"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:215
-msgid "External backups are unavailable"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:227
-msgid "The background drive scan stopped unexpectedly."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:240
-msgid "No Supported External Drive"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:242
-msgid ""
-"Connect and mount an ext4, Btrfs, XFS, exFAT, or NTFS3 drive, then refresh."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:257
-msgid ""
-"Mounted at {0} · backup streams are addressed by UUID, never by a caller-"
-"supplied path"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:262
-msgid "No recovery backups on this drive"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:264
-msgid "Use “Export Recovery Point…” to create a full portable backup."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:280
-msgid "unknown"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:272
-msgid "{0} · {1} stream · kernel {2}"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:284
-#: src/waypoint/src/ui/external_backups.rs:429
-msgid "Backup identity"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:286
-msgid "{0} · source {1} from {2} · referenced {3}"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:300
-msgid "Source description"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:304
-#: src/waypoint/src/ui/external_backups.rs:440
-msgid "Stream SHA-256"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:309
-#: src/waypoint/src/ui/external_backups.rs:444
-msgid "Verify"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:310
-#: src/waypoint/src/ui/external_backups.rs:445
-msgid "Import"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:314
-msgid "Delete this external backup"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:328
-msgid "Verifying External Backup"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:333
-msgid "The complete {0} stream matches its SHA-256 manifest."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:347
-msgid "Import External Recovery Point?"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:349
-msgid ""
-"“{0}” will be verified and copied into local recovery storage. Importing "
-"does not immediately roll back the system."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:354
-msgid "Verify and Import"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:362
-msgid "Importing Recovery Point"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:366
-msgid ""
-"“{0}” was imported as local recovery point {1}. It can now be reviewed "
-"before scheduling a restart."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:380
-msgid "Delete External Backup?"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:381
-msgid ""
-"This removes the manifest and full recovery stream from the external drive. "
-"The local recovery point is not affected."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:384
-msgid "Delete Backup"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:392
-msgid "Deleting External Backup"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:395
-msgid "The external recovery backup was deleted. Refresh to update the list."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:404
-msgid "Damaged backup entry: {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:410
-msgid "Personal Files Backups"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:411
-msgid "Independent full streams of @home history"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:415
-msgid "No Personal Files backups on this drive"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:422
-msgid "{0} · {1} Personal Files stream"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:431
-msgid "{0} · source {1} · referenced {2}"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:462
-msgid "Verifying Personal Files Backup"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:467
-msgid "The complete {0} Personal Files stream is valid."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:482
-msgid "Importing Personal Files Backup"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:487
-msgid "“{0}” was imported into Personal Files history."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:500
-msgid "Deleting Personal Files Backup"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:503
-msgid ""
-"The external Personal Files backup was deleted. Refresh to update the list."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:510
-msgid "Damaged Personal Files backup: {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:525
-msgid "Export Personal Files History"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:537
-msgid "Full Personal Files Backup"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:539
-msgid ""
-"The selected immutable @home history point is exported as an independent "
-"Btrfs stream."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:548
-msgid "History Point"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:568
-#: src/waypoint/src/ui/external_backups.rs:660
-msgid "External Drive"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:572
-#: src/waypoint/src/ui/external_backups.rs:664
-msgid "Export and Verify"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:592
-msgid "Exporting Personal Files History"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:597
-msgid "Personal Files backup {0} was committed atomically ({1})."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:615
-msgid "Export Recovery Point"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:629
-msgid "Full System Backup"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:631
-msgid ""
-"The immutable System deployment is exported as one portable Btrfs stream. "
-"Personal Files are not included."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:640
-msgid "Recovery Point"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:686
-msgid "Exporting Recovery Point"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:690
-msgid "External backup {0} was written and committed atomically ({1})."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:709
-msgid "Do not disconnect the external drive or power off the computer."
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:723
-msgid "Operation Complete"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:725
-#: src/waypoint/src/ui/external_backups.rs:735
-#: src/waypoint/src/ui/snapshot_page.rs:837
-msgid "Operation Failed"
-msgstr ""
-
-#: src/waypoint/src/ui/external_backups.rs:736
-msgid "The background operation stopped unexpectedly."
-msgstr ""
-
-#: src/waypoint/src/ui/main_window_helpers.rs:33
-msgid "The required AnduinOS Btrfs mounts could not be verified"
-msgstr ""
-
-#: src/waypoint/src/ui/main_window_helpers.rs:38
-#: src/waypoint/src/ui/snapshot_list.rs:107
-msgid ""
-"The recovery service could not load recovery points. Try reopening the app."
-msgstr ""
-
-#: src/waypoint/src/ui/main_window_helpers.rs:42
-msgid "System recovery is unavailable: {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/main_window_helpers.rs:63
-msgid "A system restore to {0} is {1}"
-msgstr ""
-
-#: src/waypoint/src/ui/main_window_helpers.rs:68
-msgid "Cancel Restore"
-msgstr ""
-
-#: src/waypoint/src/ui/main_window_helpers.rs:72
-msgid "Cancelling the scheduled system restore…"
-msgstr ""
-
-#: src/waypoint/src/ui/main_window_helpers.rs:91
-#: src/waypoint/src/ui/main_window_helpers.rs:97
-msgid "Could not cancel the restore: {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/main_window_helpers.rs:92
-#: src/waypoint/src/ui/main_window_helpers.rs:100
-#: src/waypoint/src/ui/main_window_helpers.rs:106
-msgid "Try Again"
-msgstr ""
-
-#: src/waypoint/src/ui/main_window_helpers.rs:105
-msgid "Could not cancel the scheduled restore"
-msgstr ""
-
-#: src/waypoint/src/ui/notifications.rs:50
-msgid "Recovery Point Created"
-msgstr ""
-
-#: src/waypoint/src/ui/notifications.rs:52
-msgid "Recovery point “{0}” was created successfully."
-msgstr ""
-
-#: src/waypoint/src/ui/notifications.rs:63
-msgid "Recovery Point Deleted"
-msgstr ""
-
-#: src/waypoint/src/ui/notifications.rs:64
-msgid "Recovery point “{0}” was deleted."
-msgstr ""
-
-#: src/waypoint/src/ui/notifications.rs:73
-msgid "System Restore Scheduled"
-msgstr ""
-
-#: src/waypoint/src/ui/notifications.rs:75
-msgid ""
-"Recovery point “{0}” will be applied at the next restart. Waypoint will keep "
-"a known-good fallback until the restored system boots successfully."
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:20
-#: src/waypoint/src/ui/personal_history.rs:28
-msgid "Saved Personal File Versions"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:29
-msgid "Choose a saved time, then find the file or folder you need"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:31
-msgid "Save Now"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:35
-msgid "Refresh Personal Files history"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:40
-msgid ""
-"Personal history is stored on the same disk. Keep an external backup for "
-"disk failure or theft."
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:48
-msgid "Loading Personal Files history…"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:103
-msgid "Personal Files history point created"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:111
-msgid "Could Not Create History Point"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:151
-#: src/waypoint/src/ui/personal_history.rs:161
-msgid "File History"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:152
-#: src/waypoint/src/ui/personal_history.rs:162
-msgid "Folder History"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:167
-msgid "Refresh file history"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:172
-msgid ""
-"Choose an earlier version to browse or recover. Your current files will not "
-"be changed automatically."
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:180
-msgid "Looking for earlier versions…"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:286
-msgid "No earlier version was found"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:288
-msgid ""
-"This item was not present in the available Personal Files history points."
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:298
-#: src/waypoint/src/ui/personal_history.rs:450
-msgid "Some history points could not be loaded"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:300
-#: src/waypoint/src/ui/personal_history.rs:452
-msgid "{0} damaged metadata entries were ignored"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:311
-#: src/waypoint/src/ui/personal_history.rs:463
-msgid "Personal History Unavailable"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:344
-#: src/waypoint/src/ui/personal_history.rs:750
-msgid "Unknown date"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:346
-msgid "History point {0} · {1} bytes · modified {2}"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:350
-msgid "History point {0} · Folder"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:353
-msgid "Browse"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:357
-#: src/waypoint/src/ui/personal_history.rs:765
-msgid "Recover…"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:440
-msgid "No saved personal file versions yet"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:441
-msgid "Save your files now or turn on automatic protection."
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:493
-msgid "Find Files"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:504
-msgid "Unprotect history point"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:506
-msgid "Protect history point"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:575
-msgid "Personal History Operation Failed"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:597
-msgid "Recover Personal Files"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:598
-msgid "Browse System Snapshot"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:144
-msgid "Could Not Browse System Snapshot"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:608
-msgid "Parent folder"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:610
-msgid "Recover This Folder…"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:682
-msgid "Loading folder…"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:704
-msgid "This folder is empty"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:723
-msgid "Could Not Browse History"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:752
-msgid "Folder · {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:754
-msgid "{0} bytes · {1}"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:758
-msgid "Selected file · {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:763
-msgid "Open"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:802
-msgid "Recover Historical File"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:815
-#: src/waypoint/src/ui/personal_history.rs:846
-msgid "Unsupported Destination"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:816
-#: src/waypoint/src/ui/personal_history.rs:847
-msgid "Choose a local filesystem destination."
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:834
-msgid "Choose Where to Recover This Folder"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:868
-msgid "Recovering Personal Files…"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:877
-msgid "Personal Files recovered successfully"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:881
-msgid "Recovery Failed"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_history.rs:1105
-#: src/waypoint/src/ui/personal_overview.rs:271
-#: src/waypoint/src/ui/snapshot_page.rs:842
-#: src/waypoint/src/ui/automation_dialog.rs:197
-#: src/waypoint/src/ui/advanced_settings.rs:171
-msgid "Close"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:12
-#: src/waypoint/src/ui/preferences_window.rs:111
-msgid "Recovery Scope"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:16 src/waypoint/src/ui/mod.rs:41
-msgid "System Recovery"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:18
-msgid ""
-"Every recovery point contains the complete immutable AnduinOS system "
-"deployment."
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:21
-msgid "System"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:22
-msgid "@root · always included"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:30
-msgid "Personal Files"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:32
-msgid ""
-"Personal Files use an independent @home history. Browse and recover files "
-"without changing the System deployment."
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:35
-msgid "Separate Personal Files recovery"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:37
-msgid ""
-"Available from Personal Files History; System restore still leaves @home "
-"unchanged"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:46
-msgid "Always Persistent"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:48
-msgid ""
-"Logs, recovery points, swap, containers, virtual-machine images, and the EFI "
-"System Partition are never copied into a system recovery point."
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:61
-msgid "APT Recovery Points"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:63
-msgid ""
-"These event-based recovery points are independent of automatic hourly, "
-"daily, weekly, and monthly schedules."
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:67
-msgid "Before installing or updating packages"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:69
-msgid ""
-"Recommended · provides a recovery point if a package change causes problems"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:76
-msgid "After installing or updating packages"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:78
-msgid ""
-"Optional · records the resulting package state for comparison and auditing"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:84
-msgid "Could not save the APT recovery-point setting"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences.rs:85
-msgid "The previous setting remains active."
-msgstr ""
-
-#: src/waypoint/src/ui/preferences_window.rs:13
-msgid "Preferences"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences_window.rs:110
-msgid "Scheduled Recovery"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences_window.rs:113
-msgid "Storage"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences_window.rs:203
-msgid "Recovery Storage"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences_window.rs:205
-msgid ""
-"Btrfs referenced space is not the same as space reclaimed by deleting a "
-"recovery point."
-msgstr ""
-
-#: src/waypoint/src/ui/preferences_window.rs:212
-msgid "Referenced by Btrfs subvolumes"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences_window.rs:217
-msgid "Currently exclusive across Btrfs qgroups"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences_window.rs:219
-msgid "{0} · an estimate, not a deletion guarantee"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences_window.rs:226
-msgid "Detailed accounting unavailable"
-msgstr ""
-
-#: src/waypoint/src/ui/preferences_window.rs:228
-msgid ""
-"AnduinOS does not enable Btrfs quotas automatically because they add "
-"filesystem overhead."
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_card.rs:96
-msgid "Edit"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_card.rs:110
-msgid "Next run: calculating..."
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_card.rs:116
-msgid "Last success: never"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_card.rs:192
-msgid "Hourly Recovery Points"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_card.rs:193
-msgid "Daily Recovery Points"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_card.rs:194
-msgid "Weekly Recovery Points"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_card.rs:195
-msgid "Monthly Recovery Points"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_card.rs:199
-msgid "{0} · Personal Files"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_card.rs:205
-msgid "Retention: timeline policy • Prefix: {0}-"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_card.rs:207
-msgid "Retention: legacy policy • Prefix: {0}-"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_card.rs:275
-msgid "Next run: {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_card.rs:282
-msgid "Last success: {0} {1}"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:16
-msgid "Edit {0} Schedule"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:28
-msgid "Schedule"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:60
-msgid "Naming"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:89
-msgid "What to protect"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:91
-msgid ""
-"System recovery and Personal Files history are independent. Personal history "
-"can recover files without rolling back the operating system."
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:94
-msgid "Protected area"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:96
-msgid "Choose the independent data protected by this schedule"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:99
-msgid "System files and settings"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:100
-msgid "Personal files in your Home folder"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:110
-#: src/waypoint/src/ui/advanced_settings.rs:30
-msgid "Notifications"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:112
-msgid "Notify when created"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:114
-msgid ""
-"Show a desktop notification after this automatic recovery point succeeds"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:126
-msgid "Retention Policy"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:128
-msgid ""
-"Timeline-based retention keeps the most recent recovery point in each time "
-"period"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:164
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:299
-msgid "Hourly"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:165
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:307
-msgid "Daily"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:166
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:315
-msgid "Weekly"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:167
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:323
-msgid "Monthly"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:174
-msgid "Time"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:176
-msgid "Time of day to create a recovery point (24-hour format)"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:223
-msgid "Day of Week"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:224
-msgid "Which day to create weekly recovery points"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:227
-msgid "Sunday"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:228
-msgid "Monday"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:229
-msgid "Tuesday"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:230
-msgid "Wednesday"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:231
-msgid "Thursday"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:232
-msgid "Friday"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:233
-msgid "Saturday"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:250
-msgid "Day of Month"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:251
-msgid "Which day of the month to create recovery points"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:270
-msgid "Prefix"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:280
-msgid "Timeline Retention"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:282
-msgid "Keep the most recent recovery point in each time period"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:300
-msgid "Keep the last N hours (0 = disabled)"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:308
-msgid "Keep the last N days (0 = disabled)"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:316
-msgid "Keep the last N weeks (0 = disabled)"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:324
-msgid "Keep the last N months (0 = disabled)"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:331
-msgid "Yearly"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:332
-msgid "Keep the last N years (0 = disabled)"
-msgstr ""
-
-#: src/waypoint/src/ui/schedule_edit_dialog.rs:373
-msgid "Preview: {0}-{1}"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:25
-msgid ""
-"Schedules updated. Apply the service state to keep changes after restart."
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:27
-msgid "Apply Now"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:33
-msgid "Service Status"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:37
-msgid "Scheduler Service"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:48
-#: src/waypoint/src/ui/scheduler_dialog.rs:64
-msgid "Not loaded"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:50
-#: src/waypoint/src/ui/scheduler_dialog.rs:66
-#: src/waypoint/src/ui/scheduler_dialog.rs:603
-#: src/waypoint/src/ui/scheduler_dialog.rs:608
-#: src/waypoint/src/ui/advanced_settings.rs:47
-msgid "Checking…"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:62
-msgid "Last Automatic Recovery Point"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:79
-msgid "Recovery Point Schedules"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:81
-msgid "Enable multiple schedules with independent retention policies"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:218
-msgid "Schedule disabled"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:317
-msgid "Configuration error"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:328
-msgid "in {0} days"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:332
-msgid "tomorrow at {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:337
-msgid "in {0} hour"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:339
-msgid "in {0} hours"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:342
-msgid "in {0} minutes"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:344
-msgid "very soon"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:555
-msgid "Never"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:687
-msgid "Configuration Error"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:688
-msgid "Failed to serialize configuration: {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:724
-msgid "Save Failed"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:726
-msgid "Failed to save scheduler configuration: {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:769
-msgid "Automatic recovery schedule applied"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:775
-msgid "Apply Failed"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:777
-msgid "Failed to apply automatic recovery schedule: {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:812
-msgid "Running"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:813
-msgid "Stopped"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:814
-msgid "Disabled"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:815
-#: src/waypoint/src/ui/scheduler_dialog.rs:820
-msgid "Unknown"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:816
-#: src/waypoint/src/ui/scheduler_dialog.rs:893
-msgid "Recovery service unavailable"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:818
-#: src/waypoint/src/ui/scheduler_dialog.rs:891
-msgid "Error: {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/scheduler_dialog.rs:888
-msgid "No automatic recovery points yet"
-msgstr ""
-
-#: src/waypoint/src/ui/shortcuts_window.rs:12
-msgid "Keyboard Shortcuts"
-msgstr ""
-
-#: src/waypoint/src/ui/shortcuts_window.rs:37
-msgid "General"
-msgstr ""
-
-#: src/waypoint/src/ui/shortcuts_window.rs:40
-msgid "Open Search"
-msgstr ""
-
-#: src/waypoint/src/ui/shortcuts_window.rs:41
-msgid "Create a New Recovery Point"
-msgstr ""
-
-#: src/waypoint/src/ui/shortcuts_window.rs:44
-msgid "Refresh the Recovery Point List"
-msgstr ""
-
-#: src/waypoint/src/ui/shortcuts_window.rs:47
-msgid "Open Preferences"
-msgstr ""
-
-#: src/waypoint/src/ui/shortcuts_window.rs:48
-msgid "Show Keyboard Shortcuts"
-msgstr ""
-
-#: src/waypoint/src/ui/shortcuts_window.rs:49
-msgid "Close the Search Bar"
-msgstr ""
-
-#: src/waypoint/src/ui/shortcuts_window.rs:55
-msgid "Note Editing"
-msgstr ""
-
-#: src/waypoint/src/ui/shortcuts_window.rs:58
-msgid "Save Note Changes"
-msgstr ""
-
-#: src/waypoint/src/ui/shortcuts_window.rs:59
-msgid "Cancel Note Editing"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_list.rs:90
-msgid "Recovery points are unavailable"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_list.rs:95
-msgid "Recovery unavailable"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_list.rs:99
-msgid "Recovery Points Unavailable"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_list.rs:102
-msgid "This system does not use the supported AnduinOS Btrfs layout."
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_list.rs:162
-msgid "Showing {0} of {1} recovery points"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_list.rs:170
-msgid "{0} recovery points"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_list.rs:180
-msgid "At least 2 recovery points are needed to compare"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_list.rs:184
-msgid "Compare packages between recovery points"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_list.rs:195
-msgid "Recovery points let you roll back your system to a previous state"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_list.rs:202
-msgid "Create Your First Recovery Point"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_list.rs:215
-msgid "No Matching Recovery Points"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_list.rs:217
-msgid ""
-"No recovery points match your search criteria.\n"
-"\n"
-"Try adjusting your search or filter settings."
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_list.rs:245
-msgid "Pinned Recovery Points"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_list.rs:268
-msgid "All Recovery Points"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:52
-msgid "Protected"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:57
-msgid "≈{0} reclaimable"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:61
-#: src/waypoint/src/ui/snapshot_page.rs:188
-msgid "{0} packages"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:67
-msgid "Kernel {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:80
-msgid ""
-"{0}\n"
-"Note: {1}"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:100
-msgid "Unpin Recovery Point"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:102
-msgid "Pin Recovery Point"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:111
-msgid "Restore System to This Point"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:118
-msgid "This recovery point is not ready to restore"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:124
-msgid "More Actions"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:133
-msgid "Verify Integrity"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:137
-msgid "Edit Note"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:143
-msgid "Delete Recovery Point"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:221
-msgid "Factory"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:222
-#: src/waypoint/src/ui/snapshot_page.rs:500
-msgid "Manual"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:223
-#: src/waypoint/src/ui/snapshot_page.rs:497
-msgid "Automatic"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:224
-msgid "Before APT transaction"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:225
-msgid "After APT transaction"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:226
-msgid "Before system restore"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:227
-msgid "Imported"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:234
-msgid "Creating"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:235
-msgid "Ready"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:236
-msgid "Current"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:237
-msgid "Restore pending"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:238
-msgid "Awaiting boot confirmation"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:239
-msgid "Protected fallback"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:240
-msgid "Incomplete"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:241
-msgid "Restore reverted"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:242
-msgid "Damaged"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_row.rs:243
-msgid "Deleting"
-msgstr ""
-
-#: src/waypoint/src/ui/toolbar.rs:61
-msgid "Compare Changes"
-msgstr ""
-
-#: src/waypoint/src/ui/toolbar.rs:68
-msgid "Compare system recovery points"
-msgstr ""
-
-#: src/waypoint/src/ui/toolbar.rs:75
-msgid "Search (Ctrl+F)"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:26
-msgid "Your Personal Files"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:28
-msgid ""
-"Save earlier versions of files in your Home folder and bring back something "
-"you changed or deleted."
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:34
-msgid "Protection"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:36
-msgid "Checking personal file history…"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:37
-msgid "This does not affect System Recovery."
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:42
-msgid "Save personal files automatically"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:44
-msgid ""
-"Save every hour and keep a useful mix of hourly, daily, weekly, and monthly "
-"versions"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:51
-msgid "What would you like to do?"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:53
-msgid "Save Personal Files Now"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:54
-msgid "Create a saved version of everything in your Home folder"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:60
-msgid "Find and Recover Files"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:61
-msgid "Browse older versions without overwriting your current files"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:66
-msgid "All Saved Home Versions"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:67
-msgid "See every Home snapshot in one chronological list"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:72
-msgid "Advanced Protection Settings"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:73
-msgid "Change timing, retention, and notifications"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:78
-msgid "Back Up to Another Drive"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:79
-msgid "Protect against disk failure, loss, or theft"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:86
-msgid ""
-"Saved versions stay on this computer. Use another drive for protection if "
-"this disk fails."
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:113
-msgid "Applying automatic protection…"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:114
-msgid "This may ask for your password."
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:130
-#: src/waypoint/src/ui/personal_overview.rs:314
-msgid "Automatic protection is on"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:132
-#: src/waypoint/src/ui/personal_overview.rs:316
-msgid "Automatic protection is off"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:135
-msgid "Personal files are saved every hour."
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:137
-msgid "Use Save Personal Files Now whenever you want a saved version."
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:178
-msgid "Find an older version"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:180
-msgid ""
-"Choose a file, choose the folder where a deleted file used to be, or browse "
-"every saved version."
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:184
-msgid "Browse All"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:185
-msgid "Choose Folder"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:186
-msgid "Choose File"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:201
-msgid "Choose a File to Recover"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:203
-msgid "Choose a Folder to Browse in History"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:268
-msgid "Could not change automatic protection"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:320
-msgid "{0} saved version(s) · Last saved {1}"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:335
-msgid "Personal files have not been saved yet"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:336
-msgid "Save them now or turn on automatic protection."
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:342
-msgid "Personal file history is unavailable"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:354
-msgid "Saving personal files…"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:355
-msgid "You can continue using the computer."
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:382
-msgid "Personal files saved"
-msgstr ""
-
-#: src/waypoint/src/ui/personal_overview.rs:387
-msgid "Could not save personal files"
-msgstr ""
-
-#: src/waypoint/src/ui/mod.rs:47
-msgid "Personal Files Recovery"
-msgstr ""
-
-#: src/waypoint/src/ui/mod.rs:55 src/waypoint/src/ui/advanced_settings.rs:13
-msgid "Advanced Settings"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:23
-msgid "system snapshot"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:24
-msgid "Home snapshot"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:56
-msgid "Create Snapshot Now"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:58
-msgid "Create a {0} now"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:59
-#: src/waypoint/src/ui/automation_dialog.rs:26
-msgid "Automatic Snapshots"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:61
-msgid "Search snapshots"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:75
-#: src/waypoint/src/ui/snapshot_page.rs:513
-msgid "No snapshots selected"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:78
-msgid "Delete Selected"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:89
-msgid "Loading snapshots…"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:93
-msgid "No snapshots yet"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:94
-msgid "Create one now or turn on automatic snapshots."
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:98
-msgid "Snapshots are unavailable"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:329
-msgid "{0} · {1} · Kernel {2} · {3}"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:333
-msgid "{0} · {1} · Kernel {2}"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:337
-msgid "{0} · {1} · {2}"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:340
-msgid "{0} · {1}"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:350
-#: src/waypoint/src/ui/snapshot_page.rs:382
-#: src/waypoint/src/ui/snapshot_page.rs:534
-msgid "Keep Forever"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:355
-msgid "Roll Back"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:356
-#: src/waypoint/src/ui/snapshot_page.rs:376
-msgid "Browse Files"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:375
-#: src/waypoint/src/ui/snapshot_page.rs:782
-msgid "Rename"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:377
-msgid "Check Snapshot Availability"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:380
-msgid "Allow Smart Cleanup"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:386
-msgid "Delete Snapshot"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:498
-msgid "Package Change"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:499
-msgid "Before Rollback"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:502
-msgid "Snapshot"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:515
-msgid "{0} snapshot(s) selected"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:527
-msgid "Create {0}"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:528
-msgid "The snapshot is created immediately."
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:532
-msgid "Name (optional)"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:535
-msgid "Otherwise Smart Cleanup may remove it later."
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:541
-msgid "Create"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:552
-msgid "{0} · Manual Snapshot"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:593
-msgid "Delete Snapshots?"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:595
-msgid "Delete {0} selected snapshot(s)? This cannot be undone."
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:600
-msgid "Delete"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:645
-msgid "Roll Back to {0}?"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:647
-msgid ""
-"Waypoint will first preserve the current system. Personal files will not "
-"change. A restart is required."
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:651
-msgid "Prepare Rollback"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:682
-msgid "Rollback Is Ready"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:684
-msgid ""
-"The current system was preserved permanently. Restart now to roll back, or "
-"cancel the pending rollback."
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:687
-msgid "Cancel Rollback"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:688
-msgid "Restart Later"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:689
-msgid "Restart Now"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:746
-msgid "Snapshot Check Complete"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:748
-msgid "This snapshot is available for recovery."
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:774
-msgid "Rename Snapshot"
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:775
-msgid "Only the display name changes."
-msgstr ""
-
-#: src/waypoint/src/ui/snapshot_page.rs:778
-msgid "Name"
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:19
-msgid "Automatic System Snapshots"
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:20
-msgid "Automatic Home Snapshots"
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:28
-msgid "Create snapshots automatically"
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:30
-msgid "Smart Cleanup"
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:32
-msgid "Keep useful hourly, daily, weekly, monthly, and yearly versions"
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:39
-msgid "Keep Versions"
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:40
-msgid "Newer snapshots are kept more densely."
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:41
-msgid "Keep every snapshot"
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:41
-msgid "hours"
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:42
-msgid "Keep one per day"
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:42
-#: src/waypoint/src/ui/automation_dialog.rs:43
-#: src/waypoint/src/ui/automation_dialog.rs:44
-msgid "days"
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:43
-msgid "Keep one per week"
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:44
-msgid "Keep one per month"
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:50
-msgid "Keep one per year forever"
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:55
-msgid "Save Automatic Snapshot Settings"
-msgstr ""
-
-#: src/waypoint/src/ui/automation_dialog.rs:194
-#: src/waypoint/src/ui/advanced_settings.rs:168
-msgid "Could Not Save Settings"
-msgstr ""
-
-#: src/waypoint/src/ui/advanced_settings.rs:22
-msgid "Create a system snapshot before changes"
-msgstr ""
-
-#: src/waypoint/src/ui/advanced_settings.rs:24
-msgid "Create a system snapshot after successful changes"
-msgstr ""
-
-#: src/waypoint/src/ui/advanced_settings.rs:32
-msgid "Notify before a scheduled snapshot"
-msgstr ""
-
-#: src/waypoint/src/ui/advanced_settings.rs:34
-msgid "Notify after an automatic snapshot succeeds"
-msgstr ""
-
-#: src/waypoint/src/ui/advanced_settings.rs:38
-msgid "Failure notifications"
-msgstr ""
-
-#: src/waypoint/src/ui/advanced_settings.rs:39
-msgid "Always on"
-msgstr ""
-
-#: src/waypoint/src/ui/advanced_settings.rs:45
-msgid "Background Service"
-msgstr ""
-
-#: src/waypoint/src/ui/advanced_settings.rs:49
-msgid "The automatic snapshot infrastructure cannot be disabled here."
-msgstr ""
-
-#: src/waypoint/src/ui/advanced_settings.rs:56
-msgid "Save Advanced Settings"
-msgstr ""
-
-#: src/waypoint/src/ui/advanced_settings.rs:100
-msgid "Automatic snapshot service is available"
-msgstr ""
-
-#: src/waypoint/src/ui/advanced_settings.rs:105
-msgid "Automatic snapshot service needs attention"
-msgstr ""
-
-#: src/waypoint-notifier/src/main.rs:130
-msgid "A scheduled system snapshot will start in 10 seconds."
-msgstr ""
-
-#: src/waypoint-notifier/src/main.rs:131
+#: src/waypoint-notifier/src/main.rs
 msgid "A scheduled Home snapshot will start in 10 seconds."
 msgstr ""
 
-#: src/waypoint-notifier/src/main.rs:133
-msgid "Automatic Snapshot Starting"
-msgstr ""
-
-#: src/waypoint-notifier/src/main.rs:139
-msgid ""
-"The scheduled system snapshot could not be created. Check Waypoint for "
-"details."
-msgstr ""
-
-#: src/waypoint-notifier/src/main.rs:142
-msgid ""
-"The scheduled Home snapshot could not be created. Check Waypoint for details."
-msgstr ""
-
-#: src/waypoint-notifier/src/main.rs:145
-msgid "Automatic Snapshot Failed"
-msgstr ""
-
-#: src/waypoint-notifier/src/main.rs:151
-msgid "Automatic System Recovery Point Created"
-msgstr ""
-
-#: src/waypoint-notifier/src/main.rs:152
-msgid "A scheduled system recovery point was created successfully."
-msgstr ""
-
-#: src/waypoint-notifier/src/main.rs:155
-msgid "Personal Files History Saved"
-msgstr ""
-
-#: src/waypoint-notifier/src/main.rs:156
+#: src/waypoint-notifier/src/main.rs
 msgid "A scheduled Personal Files history point was created successfully."
 msgstr ""
 
-#: src/waypoint-notifier/src/main.rs:162
-msgid "Automatic Recovery Cleanup"
+#: src/waypoint-notifier/src/main.rs
+msgid "A scheduled system recovery point was created successfully."
 msgstr ""
 
-#: src/waypoint-notifier/src/main.rs:166
-msgid "Removed {0} old automatic system recovery point(s)."
+#: src/waypoint-notifier/src/main.rs
+msgid "A scheduled system snapshot will start in 10 seconds."
 msgstr ""
 
-#: src/waypoint-notifier/src/main.rs:170
-msgid "Removed {0} old Personal Files history point(s)."
+#: src/waypoint/src/ui/mod.rs
+msgid "About Waypoint"
 msgstr ""
 
-#: src/waypoint-notifier/src/main.rs:174
-msgid ""
-"Removed {0} old system recovery point(s) and {1} old Personal Files history "
-"point(s)."
+#: src/waypoint/src/ui/advanced_settings.rs src/waypoint/src/ui/mod.rs
+msgid "Advanced Settings"
 msgstr ""
 
-#: data/anduinos_waypoint_file_history.py:91
-msgid "View File History…"
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "After Package Change"
 msgstr ""
 
-#: data/anduinos_waypoint_file_history.py:92
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Allow Smart Cleanup"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "Always on"
+msgstr ""
+
+#: src/waypoint/src/application.rs
+msgid "AnduinOS Team"
+msgstr ""
+
+#: src/waypoint/src/application.rs src/waypoint/src/ui/mod.rs src/waypoint/src/ui/snapshot_page.rs
+msgid "AnduinOS Waypoint"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Automatic"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs src/waypoint/src/ui/snapshot_page.rs
+msgid "Automatic Home Snapshots"
+msgstr ""
+
+#: src/waypoint-notifier/src/main.rs
+msgid "Automatic Snapshot Failed"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "Automatic snapshot service is available"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "Automatic snapshot service needs attention"
+msgstr ""
+
+#: src/waypoint-notifier/src/main.rs
+msgid "Automatic Snapshot Starting"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs src/waypoint/src/ui/snapshot_page.rs
+msgid "Automatic Snapshots"
+msgstr ""
+
+#: src/waypoint-notifier/src/main.rs
+msgid "Automatic System Recovery Point Created"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs src/waypoint/src/ui/snapshot_page.rs
+msgid "Automatic System Snapshots"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Awaiting boot confirmation"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "Background Service"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Before Package Change"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Before Rollback"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Browse"
+msgstr ""
+
+#: data/anduinos_waypoint_file_history.py
 msgid "Browse earlier Personal Files versions of this item"
 msgstr ""
 
-#: data/anduinos_waypoint_file_history.py:103
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Browse Files"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Browse files in this snapshot"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Browse System Snapshot"
+msgstr ""
+
+#: data/anduinos_waypoint_file_history.py
 msgid "Browse This Folder’s History…"
 msgstr ""
 
-#: data/anduinos_waypoint_file_history.py:104
-msgid "Find files that existed earlier in this Personal Files folder"
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Cancel"
 msgstr ""
 
-msgid "Notify after any snapshot succeeds"
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Cancel Rollback"
 msgstr ""
 
-msgid "Notify after Smart Cleanup removes snapshots"
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Cancelling rollback…"
 msgstr ""
 
-msgid "Limited to one notification per minute"
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Check Snapshot Availability"
 msgstr ""
 
-msgid "System Recovery Point Created"
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Checking rollback safety…"
 msgstr ""
 
-msgid "Your system recovery point was created successfully."
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Checking snapshot…"
 msgstr ""
 
-msgid "Your Personal Files history point was created successfully."
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "Checking…"
 msgstr ""
 
-msgid "Smart Cleanup Completed"
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Choose a local filesystem destination."
 msgstr ""
 
-msgid "old system recovery point(s) were removed."
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Choose an earlier version to browse or recover. Your current files will not be changed automatically."
 msgstr ""
 
-msgid "old Personal Files history point(s) were removed."
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Choose Where to Recover This Folder"
 msgstr ""
 
-msgid "old system recovery point(s) and"
+#: src/waypoint/src/ui/advanced_settings.rs src/waypoint/src/ui/automation_dialog.rs src/waypoint/src/ui/personal_history.rs src/waypoint/src/ui/snapshot_page.rs
+msgid "Close"
 msgstr ""
 
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Copy This Folder…"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Could Not Browse History"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Could Not Browse System Snapshot"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs src/waypoint/src/ui/automation_dialog.rs
+msgid "Could Not Save Settings"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Create"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "Create a system snapshot after successful changes"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "Create a system snapshot before changes"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Create a {0} now"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Create one now or turn on automatic snapshots."
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Create Snapshot Now"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs
+msgid "Create snapshots automatically"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Create {0}"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Creating"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Creating snapshot…"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Current system"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Damaged"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs
+msgid "days"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Delete"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Delete Selected"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Delete Snapshot"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Delete Snapshots?"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Delete {0} selected snapshot(s)? This cannot be undone."
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Deleting"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Deleting snapshots…"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs
 msgid "Every"
 msgstr ""
 
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Factory"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "Failure notifications"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "File History"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Files Recovered"
+msgstr ""
+
+#: data/anduinos_waypoint_file_history.py
+msgid "Find files that existed earlier in this Personal Files folder"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Folder History"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Folder · {0}"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "History point {0} · Folder"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "History point {0} · {1} bytes · modified {2}"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Home snapshot"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs
 msgid "hour(s)"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs
+msgid "hours"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Imported"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Incomplete"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs
+msgid "Keep every snapshot"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Keep Forever"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs
+msgid "Keep one per day"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs
+msgid "Keep one per month"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs
+msgid "Keep one per week"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs
+msgid "Keep one per year forever"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs
+msgid "Keep useful hourly, daily, weekly, monthly, and yearly versions"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs
+msgid "Keep Versions"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Kernel"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Kernel {0}"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "Limited to one notification per minute"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Loading folder…"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Loading snapshots…"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Looking for earlier versions…"
+msgstr ""
+
+#: src/waypoint/src/ui/mod.rs
+msgid "Main Menu"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Manual"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Name"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Name (optional)"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs
+msgid "Newer snapshots are kept more densely."
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "No earlier version was found"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "No matching snapshots"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "No snapshots selected"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "No snapshots yet"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "Notifications"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "Notify after any snapshot succeeds"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "Notify after Smart Cleanup removes snapshots"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "Notify before a scheduled snapshot"
+msgstr ""
+
+#: src/waypoint-notifier/src/main.rs
+msgid "old Personal Files history point(s) were removed."
+msgstr ""
+
+#: src/waypoint-notifier/src/main.rs
+msgid "old system recovery point(s) and"
+msgstr ""
+
+#: src/waypoint-notifier/src/main.rs
+msgid "old system recovery point(s) were removed."
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Only the display name changes."
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Open"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Operation Failed"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Otherwise Smart Cleanup may remove it later."
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "Package Changes"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Parent folder"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Pending rollback"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Permanently protected"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Personal files"
+msgstr ""
+
+#: src/waypoint-notifier/src/main.rs
+msgid "Personal Files History Saved"
+msgstr ""
+
+#: src/waypoint/src/ui/mod.rs
+msgid "Personal Files Recovery"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Personal History Unavailable"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Prepare a safe system rollback"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Prepare Rollback"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Preparing safe rollback…"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Preserved permanently as a fallback"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Protected fallback"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Ready"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Recorded snapshot kernel"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Recover Historical File"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Recover Personal Files"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Recover This Folder…"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Recovering Files"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Recovering files…"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Recovery Failed"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Recover…"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Refresh file history"
+msgstr ""
+
+#: src/waypoint/src/ui/mod.rs
+msgid "Refresh snapshots"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Rename"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Rename Snapshot"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Renaming snapshot…"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Required to complete the rollback"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Restart"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Restart Later"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Restart Now"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Return to the selected snapshot"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Review what will happen before preparing the rollback."
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Roll Back"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Roll Back to {0}?"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Rollback Is Ready"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Rollback reverted"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Rollback to {0} is prepared ({1})"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "Save Advanced Settings"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs
+msgid "Save Automatic Snapshot Settings"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs src/waypoint/src/ui/automation_dialog.rs
+msgid "Saving…"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Search snapshots"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Select snapshot"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Select Snapshots"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Selected file · {0}"
+msgstr ""
+
+#: src/waypoint/src/ui/automation_dialog.rs
+msgid "Smart Cleanup"
+msgstr ""
+
+#: src/waypoint-notifier/src/main.rs
+msgid "Smart Cleanup Completed"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Snapshot"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Snapshot Actions"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Snapshot Check Complete"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Snapshots are not available on this computer"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Snapshots could not be loaded"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Some history points could not be loaded"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "System files and packages"
+msgstr ""
+
+#: src/waypoint/src/ui/mod.rs
+msgid "System Recovery"
+msgstr ""
+
+#: src/waypoint-notifier/src/main.rs
+msgid "System Recovery Point Created"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "system snapshot"
+msgstr ""
+
+#: src/waypoint/src/ui/advanced_settings.rs
+msgid "The automatic snapshot infrastructure cannot be disabled here."
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "The current system was preserved permanently. Restart now to roll back, or cancel from the System Recovery banner."
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "The root filesystem is {0}."
+msgstr ""
+
+#: src/waypoint-notifier/src/main.rs
+msgid "The scheduled Home snapshot could not be created. Check Waypoint for details."
+msgstr ""
+
+#: src/waypoint-notifier/src/main.rs
+msgid "The scheduled system snapshot could not be created. Check Waypoint for details."
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "The selected files were recovered successfully."
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "The snapshot is created immediately."
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "This folder is empty"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "This item was not present in the available Personal Files history points."
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "This snapshot is available for recovery."
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "This snapshot is not available for recovery."
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Try a different name, date, or snapshot reason."
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Unknown date"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Unknown state"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Unsupported Destination"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Updating snapshot protection…"
+msgstr ""
+
+#: data/anduinos_waypoint_file_history.py
+msgid "View File History…"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Warnings"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Waypoint requires the standard AnduinOS Btrfs layout."
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "Will not change"
+msgstr ""
+
+#: src/waypoint-notifier/src/main.rs
+msgid "Your Personal Files history point was created successfully."
+msgstr ""
+
+#: src/waypoint-notifier/src/main.rs
+msgid "Your system recovery point was created successfully."
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "{0} bytes · {1}"
+msgstr ""
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "{0} damaged metadata entries were ignored"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "{0} packages"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "{0} snapshot record(s) need attention"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "{0} snapshot(s) selected"
+msgstr ""
+
+#: src/waypoint/src/ui/snapshot_page.rs
+msgid "{0} · Manual Snapshot"
 msgstr ""

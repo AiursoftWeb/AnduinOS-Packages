@@ -1,8 +1,5 @@
-use std::sync::mpsc;
-use std::time::Duration;
-
 use adw::prelude::*;
-use gtk::prelude::*;
+use gtk::{gio, glib};
 use libadwaita as adw;
 use waypoint_common::RetentionPolicy;
 
@@ -76,12 +73,7 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
         false,
     );
     interval.set_sensitive(false);
-    let (sender, receiver) = mpsc::channel();
-    std::thread::spawn(move || {
-        let result = WaypointHelperClient::new().and_then(|client| client.get_automation_config());
-        let _ = sender.send(result);
-    });
-    let window_load = window.clone();
+    let window_load = window.downgrade();
     let enabled_load = enabled.clone();
     let cleanup_load = cleanup.clone();
     let interval_load = interval.clone();
@@ -91,9 +83,18 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
     let weekly_load = weekly.clone();
     let monthly_load = monthly.clone();
     let save_load = save.clone();
-    glib::timeout_add_local(Duration::from_millis(80), move || {
-        match receiver.try_recv() {
-            Ok(Ok(config)) => {
+    glib::spawn_future_local(async move {
+        let result = gio::spawn_blocking(|| {
+            WaypointHelperClient::new().and_then(|client| client.get_automation_config())
+        })
+        .await
+        .map_err(|_| anyhow::anyhow!("The settings query stopped unexpectedly"))
+        .and_then(|result| result);
+        let Some(window_load) = window_load.upgrade() else {
+            return;
+        };
+        match result {
+            Ok(config) => {
                 let policy = match scope {
                     SnapshotScope::System => config.system,
                     SnapshotScope::Home => config.home,
@@ -113,14 +114,10 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
                 );
                 save_load.set_sensitive(true);
                 interval_load.set_sensitive(true);
-                glib::ControlFlow::Break
             }
-            Ok(Err(problem)) => {
+            Err(problem) => {
                 show_error(&window_load, &problem.to_string());
-                glib::ControlFlow::Break
             }
-            Err(mpsc::TryRecvError::Empty) => glib::ControlFlow::Continue,
-            Err(mpsc::TryRecvError::Disconnected) => glib::ControlFlow::Break,
         }
     });
 
@@ -141,9 +138,11 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
             return;
         }
         button.set_sensitive(false);
-        let (sender, receiver) = mpsc::channel();
-        std::thread::spawn(move || {
-            let result = (|| -> anyhow::Result<()> {
+        button.set_label(&tr("Saving…"));
+        let weak_window = window_save.downgrade();
+        let weak_button = button.downgrade();
+        glib::spawn_future_local(async move {
+            let result = gio::spawn_blocking(move || -> anyhow::Result<()> {
                 let client = WaypointHelperClient::new()?;
                 let mut config = client.get_automation_config()?;
                 match scope {
@@ -159,24 +158,24 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
                     anyhow::bail!(scheduler.1);
                 }
                 Ok(())
-            })();
-            let _ = sender.send(result);
-        });
-        let button = button.clone();
-        let window = window_save.clone();
-        glib::timeout_add_local(Duration::from_millis(80), move || {
-            match receiver.try_recv() {
-                Ok(Ok(())) => {
+            })
+            .await
+            .map_err(|_| anyhow::anyhow!("The settings update stopped unexpectedly"))
+            .and_then(|result| result);
+            let Some(window) = weak_window.upgrade() else {
+                return;
+            };
+            match result {
+                Ok(()) => {
                     window.close();
-                    glib::ControlFlow::Break
                 }
-                Ok(Err(problem)) => {
-                    button.set_sensitive(true);
+                Err(problem) => {
+                    if let Some(button) = weak_button.upgrade() {
+                        button.set_label(&tr("Save Automatic Snapshot Settings"));
+                        button.set_sensitive(true);
+                    }
                     show_error(&window, &problem.to_string());
-                    glib::ControlFlow::Break
                 }
-                Err(mpsc::TryRecvError::Empty) => glib::ControlFlow::Continue,
-                Err(mpsc::TryRecvError::Disconnected) => glib::ControlFlow::Break,
             }
         });
     });

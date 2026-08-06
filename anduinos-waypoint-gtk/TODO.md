@@ -1,184 +1,67 @@
-# AnduinOS Waypoint implementation plan
+# Waypoint 2.0 engineering acceptance
 
-This is a release-gated engineering checklist, not a list of optional ideas.
-Items marked complete must have direct test or artifact evidence.
+This file records the single current product baseline. Repository history is the
+only home of removed Waypoint 1.x interfaces; no second UI is maintained.
 
-## 1. Import and package foundation
+## Application foundation
 
-- [x] Import upstream Waypoint at commit
-  `693c92ee877a13a37fbae1fb93957e138a01733d`.
-- [x] Preserve the MIT license and upstream attribution under `upstream/`.
-- [x] Commit the generated `Cargo.lock` for reproducible application builds.
-- [x] Move compiled source under `src/` and package resources into the standard
-  AnduinOS directories.
-- [x] Make `cargo fmt`, tests, strict Clippy, and APKG lint blocking CI gates.
-- [x] Produce clean amd64 and arm64 Deb packages with `apkg build` and verify
-  that their application/helper ELF architecture matches the Deb architecture.
+- [x] Use a typed `adw::Application` and typed `adw::ApplicationWindow`.
+- [x] Keep one reusable main window while allowing independent File History
+  windows for cold and warm GApplication activation.
+- [x] Centralize application/window actions and keyboard accelerators.
+- [x] Use `AdwToolbarView`, `AdwViewStack`, adaptive `AdwViewSwitcherBar`, and
+  a width breakpoint compatible with libadwaita 1.4.
+- [x] Remove timer sources when the main window is disposed and coalesce snapshot
+  signals into scope-specific refresh generations.
 
-## 2. AnduinOS platform conversion
+## Snapshot pages and behavior
 
-- [x] Replace every XBPS query and package comparison with dpkg/APT data.
-- [x] Import current and rotated APT transaction history, including bounded
-  gzip logs, without parsing localized terminal output.
-- [x] Replace runit service control with systemd service management.
-- [x] Replace `wheel` authorization with a least-privilege policy for local
-  AnduinOS administrators in the `sudo` group.
-- [x] Move D-Bus ownership to `org.anduinos.Waypoint` and Polkit actions to the
-  `org.anduinos.waypoint` namespace.
-- [x] Remove the upstream installer and all `/usr/bin` installation side effects;
-  APKG must own every installed file.
-- [x] Replace Void labels, help text, package-manager instructions, resource
-  identifiers, and user paths.
-- [x] Install the AnduinOS icon, desktop entry, and project-owned AppStream
-  metadata with a stable developer identity and OARS declaration.
-- [x] Install gettext catalogs and migrate all user-visible GTK strings to the
-  localization framework.
-  - [x] Make prebuild fail when a Rust `tr`/`trf` literal is absent from the POT
-    or has no non-empty Simplified Chinese translation, and reject common GTK
-    controls or response buttons that still contain direct language literals.
-  - [x] Localize the desktop entry, AppStream summary and description, Polkit
-    authentication prompts, desktop notifications, exported comparisons, and
-    scheduler-generated recovery-point descriptions.
-- [x] Capture new 16:9 AppStream screenshots from the branded AnduinOS build;
-  upstream screenshots are reference material and must not be published as if
-  they depict the finished derivative.
+- [x] Provide symmetric System Recovery and Personal Files Recovery lists.
+- [x] Model loading, unsupported-layout, error, empty, no-result, and content
+  states explicitly.
+- [x] Derive browse/check/rollback/delete/protect/rename availability from one
+  pure capability matrix with unit coverage.
+- [x] Keep batch selection explicit and delete all selected points through one
+  helper call and one Polkit decision.
+- [x] Preserve the rollback safety flow: target check, fixed impact summary,
+  permanent current-system fallback, Personal Files unchanged, cancel before
+  restart, and pending-state banner.
+- [x] Keep system and Home browsing descriptor-confined and recover ordinary
+  files/directories from the unprivileged process.
 
-## 3. Fixed AnduinOS storage ABI
+## Automation and settings
 
-- [x] Recognize only a mounted, internally consistent AnduinOS Btrfs layout.
-- [x] Treat `@root` as the system deployment and `@home` as an independent,
-  policy-controlled personal-data stream.
-- [x] Never recursively snapshot `@snapshots`, swap, container storage, virtual
-  machine images, or other excluded subvolumes.
-- [x] Report unsupported/non-Btrfs layouts read-only; never guess or partially
-  mutate them.
-- [x] Use versioned, atomically replaced metadata and quarantine malformed state.
-- [x] Calculate per-deployment referenced/exclusive qgroup space, label exclusive
-  bytes only as estimated reclaimability, and enforce a 2 GiB transaction reserve.
+- [x] Configure System and Home automatic snapshots independently.
+- [x] Configure a one-to-24-hour freshness target; catch-up behavior is owned by
+  the always-enabled systemd timer and scheduler.
+- [x] Hide Smart Cleanup details when cleanup is off and expose the five explicit
+  retention tiers when it is on.
+- [x] Keep package-before, package-after-success, pre-snapshot, success, and
+  cleanup notification choices in Advanced Settings with truthful service state.
+- [x] Run blocking D-Bus/configuration work away from the GTK main thread and
+  ignore callbacks after their owning window is gone.
 
-## 4. Recovery engine
+## Removed product surface
 
-- [x] Remove the upstream default-subvolume rollback implementation.
-- [x] Create immutable system recovery points and separate writable deployments.
-- [x] Build rollback as an idempotent, resumable transaction.
-- [x] Preserve a known-good fallback deployment.
-- [x] Generate a verified one-shot GRUB recovery entry and provision the
-  writable external GRUB environment block required on Btrfs.
-- [x] Perform root replacement in initramfs.
-- [x] Confirm successful userspace boot before committing the new deployment.
-- [x] Expose cancellation and truthful pending/confirmed/failed state over D-Bus.
-- [x] Verify kernel, initramfs, dpkg database, filesystem UUID, Secure Boot/MOK
-  requirements, and all referenced subvolumes before scheduling rollback.
+- [x] Remove external-drive workflows and their GUI, CLI, schemas, fixtures,
+  scripts, documentation, and unreachable engine code.
+- [x] Remove arbitrary snapshot comparison, Analytics, old Quota/Storage pages,
+  theme switching, legacy scheduler pages, and uncompiled compatibility modules.
+- [x] Keep rollback impact explanation; it is a safety confirmation, not an
+  arbitrary comparison feature.
+- [x] Keep the existing trusted D-Bus names, method signatures, Polkit action IDs,
+  recovery metadata, and boot transaction formats unchanged.
 
-## 5. Product integration
+## Release gates for 0.1.0-7
 
-- [x] Adapt Waypoint's overview, list, comparison, scheduling, retention, quota,
-  exclusion, and backup screens to the AnduinOS domain model.
-  - [x] Connect the systemd scheduler to the internal
-    `CreateScheduledDeployment` operation, derive schedule history from typed
-    automatic-deployment metadata instead of display UUIDs, and remove the
-    obsolete `ListSnapshots` compatibility method.
-  - [x] Make schedule cards and editing use recovery-point terminology and the
-    active timeline policy; keep legacy count/age fields readable in the config
-    model without exposing a misleading deprecated editor.
-  - [x] Remove the unreferenced legacy package/file comparison dialogs and the
-    obsolete path-opening validator that existed only for the removed UI.
-  - [x] Make package comparison read the two verified deployments' bounded
-    dpkg status databases in the helper instead of comparing empty GUI caches.
-  - [x] Replace the external-backup screen and privileged boundary with manual,
-    UUID-only full-stream export, discovery, verification, import, and deletion.
-  - [x] Remove the imported path-based `BackupManager`, mount watcher, backup
-    dialogs, obsolete D-Bus client calls, progress signal, and per-user backup
-    configuration from the compiled product.
-  - [x] Keep independently verifiable full streams as the release baseline;
-    authenticated incremental chains are deferred until they have atomic
-    chain-level retention and power-loss qualification. See
-    `docs/RECOVERY-SCOPE.md`.
-- [x] Keep System recovery and Personal Files history as independent policies;
-  System rollback never changes `/home`.
-- [x] Make recovery previews explain packages, kernel, personal-data scope, boot
-  fallback, and required restart.
-- [x] Remove the imported individual-file restore GUI, CLI, D-Bus method, root
-  path-copy implementation, and `rsync` dependency from the compiled product.
-- [x] Implement independent immutable `@home` history with manual and scheduled
-  creation, timeline retention, pinning, verification and safe deletion.
-- [x] Implement caller-scoped, descriptor-confined Personal Files browsing and
-  file/folder recovery; the root helper never receives a destination path.
-- [x] Export, verify, import and delete Personal Files backups as independent
-  full Btrfs streams with versioned SHA-256 manifests.
-- [x] Deliver opt-out automatic creation notifications and aggregated retention
-  cleanup notifications through an unprivileged desktop-session listener.
-- [x] Integrate paired APT pre/post recovery points using fail-open hooks that
-  can never make APT or dpkg fail.
-- [x] Finish hardening and integration-testing the root D-Bus helper and systemd
-  services. The release build already removes legacy path-based backup methods,
-  restricts callers to root/local sudo administrators, fixes privileged paths and
-  environment handling, narrows the helper write sandbox, gives external backup
-  its own non-cached administrator authorization action, and uses a cached
-  self-authentication action for descriptor-only Personal Files access.
-  - [x] Bound file-comparison scan input, entry count, and serialized D-Bus
-    output; use NUL-delimited records, reject unsafe/non-UTF-8 paths, and include
-    file kind and ctime instead of trusting size and mtime alone.
-- [x] Keep all arbitrary package installation and unrelated system-management
-  features out of this application.
+- [x] Format, workspace tests, strict Clippy, i18n coverage, prebuild guards, and
+  GTK construction/destruction smoke test pass.
+- [x] AppStream and desktop metadata describe only Waypoint 2.0.
+- [x] APKG builds the `0.1.0-7` amd64 and arm64 Debian packages.
+- [x] Install the built package, verify files/metadata/services/D-Bus activation,
+  and exercise non-destructive cold/warm GUI and File History activation.
+- [x] Leave the working tree uncommitted as requested.
 
-## 6. Qualification gates
-
-- [x] Unit-test all parsers, validation, retention, space, and state transitions.
-- [x] Integration-test D-Bus caller identity and every Polkit action.
-  - [x] Add an installed-system qualification covering the exact action set,
-    root authorization, sudo-group read access, non-administrator denial, every
-    action's safe validation path, state non-mutation, and required methods.
-- [x] Loopback-test supported and malformed Btrfs layouts.
-  - [x] Exercise full send, dump validation, chrooted receive, read-only state,
-    duplicate receive identity, and disposable-image cleanup.
-  - [x] Exercise real immutable recovery-point creation, content isolation,
-    verification, pin/delete protection, automatic-retention floors, failure
-    metadata, and failed-subvolume cleanup on a disposable Btrfs image.
-  - [x] Reject non-Btrfs, incomplete, cross-filesystem, and unavailable layout
-    reports before creating state, and prove that rejected layouts cannot pin,
-    verify, delete, or otherwise mutate an existing real Btrfs recovery point.
-- [ ] VM-test create, update, rollback, reboot, confirm, cancel, and repeated
-  rollback cycles.
-  - [x] Provide a VM-only, explicit-consent qualification helper and a
-    reproducible normal/cancellation/repeated-cycle result contract.
-- [ ] Inject power loss at every destructive transaction boundary.
-  - [x] Publish the exact apply/revert checkpoint matrix, collection commands,
-    and pass criteria without shipping a runtime fault-injection interface.
-- [x] Test full disk, missing snapshot, damaged metadata, missing kernel/initramfs,
-  GRUB generation failure, and non-Btrfs systems.
-  - [x] Exercise the real Btrfs reserve gate, unknown deployment IDs, missing
-    kernel and initramfs cleanup, and rejected nonstandard layouts on disposable
-    loopback filesystems.
-  - [x] Cover malformed and oversized metadata, missing deployment roots, and
-    every post-fallback GRUB command failure with deterministic state-machine
-    tests; verify the packaged helper remains read-only on a real ext4 host.
-- [x] Inspect Deb ownership, permissions, maintainer scripts, D-Bus activation,
-  systemd sandboxing, AppStream metadata, and uninstall behavior.
-  - [x] Unpack both APKG-built architectures; validate control scripts,
-    AppStream metadata, locales, executable modes, initramfs payload, installed
-    file ownership, and absence of the removed path-based backup ABI.
-  - [x] Reinstall the final amd64 Deb twice and verify that the new pre-removal
-    script stops the old D-Bus helper before on-demand reactivation.
-  - [x] Verify that package and recovery GRUB refresh paths isolate
-    `os-prober`, do not discover unrelated operating systems, and leave no
-    probing processes behind.
-  - [x] Exercise clean install, repeated package replacement, purge, and
-    reinstall while proving that purge removes generated configuration but
-    never recovery-point data. There is no older released Waypoint version to
-    upgrade from.
-    - [x] Preserve unknown administrator configuration and runtime data while
-      removing the generated schedule file and external GRUB environment.
-    - [x] Repeat purge with the guarded APT hook and prove that no removed hook
-      binary is executed.
-    - [x] Move confirmation-unit enable/disable into the explicit maintainer
-      scripts and repeat the lifecycle without an APKG postrm warning.
-- [ ] Install the APKG-built packages on a real Secure Boot AnduinOS machine and
-  manually validate the GUI and non-destructive workflows.
-  - [x] Install and repeatedly overwrite the amd64 Deb on a real Secure Boot
-    ext4 machine; confirm Secure Boot remains enabled, D-Bus reports the layout
-    as unsupported, the GUI presents a translated read-only unavailable state,
-    and `dpkg -V` is clean.
-  - [ ] Repeat on a clean machine using the exact installer-created AnduinOS
-    Btrfs layout; test create, export, verify, import, delete, and restore
-    previews before testing an actual rebooting rollback.
+The destructive VM and power-loss matrix remains in
+[docs/VM-QUALIFICATION.md](docs/VM-QUALIFICATION.md). It is a recovery-engine
+release qualification and is intentionally not run on this workstation.

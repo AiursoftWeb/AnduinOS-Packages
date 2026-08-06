@@ -31,10 +31,10 @@
   </action>
 
   <action id="org.anduinos.waypoint.restore-snapshot">
-    <description>Restore AnduinOS from a recovery point</description>
-    <description xml:lang="zh_CN">从恢复点还原 AnduinOS</description>
-    <message>Authentication is required to schedule a system rollback</message>
-    <message xml:lang="zh_CN">安排系统回滚需要身份验证</message>
+    <description>Access or restore an AnduinOS system snapshot</description>
+    <description xml:lang="zh_CN">访问或还原 AnduinOS 系统快照</description>
+    <message>Authentication is required to access or restore a system snapshot</message>
+    <message xml:lang="zh_CN">访问或还原系统快照需要身份验证</message>
     <defaults>
       <allow_any>auth_admin</allow_any>
       <allow_inactive>auth_admin</allow_inactive>

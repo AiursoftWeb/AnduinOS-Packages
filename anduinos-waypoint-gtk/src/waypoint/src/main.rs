@@ -1,15 +1,13 @@
+mod application;
 mod dbus_client;
 mod file_history_request;
 mod i18n;
 mod signal_listener;
 mod ui;
 
-use adw::prelude::*;
+use application::WaypointApplication;
 use gio::prelude::*;
 use gtk::glib;
-use libadwaita as adw;
-
-const APP_ID: &str = "org.anduinos.Waypoint";
 
 fn main() -> glib::ExitCode {
     // Initialize logging
@@ -20,70 +18,6 @@ fn main() -> glib::ExitCode {
     i18n::init();
     log::info!("Starting AnduinOS Waypoint v{}", env!("CARGO_PKG_VERSION"));
 
-    // AdwApplication owns GTK initialization, the Adwaita stylesheet, and the
-    // application style manager for every window in this process.
-    let app = adw::Application::builder().application_id(APP_ID).build();
-
-    app.connect_startup(|app| {
-        load_css();
-        install_file_history_action(app);
-    });
-
-    app.connect_activate(|app| {
-        if let Some(window) = app.active_window() {
-            window.present();
-        } else {
-            build_ui(app);
-        }
-    });
+    let app = WaypointApplication::new();
     app.run()
-}
-
-fn install_file_history_action(app: &adw::Application) {
-    let parameter_type = glib::VariantTy::new("(ss)").expect("valid file-history action type");
-    let action = gio::SimpleAction::new("file-history", Some(parameter_type));
-    let app_weak = app.downgrade();
-    action.connect_activate(move |_, parameter| {
-        let Some(app) = app_weak.upgrade() else {
-            return;
-        };
-        let Some((mode, uri)) = parameter.and_then(|value| value.get::<(String, String)>()) else {
-            log::warn!("Rejected malformed File History activation");
-            return;
-        };
-        match file_history_request::resolve_history_request(&mode, &uri) {
-            Ok(target) => ui::show_personal_history_target(&app, target),
-            Err(error) => {
-                // Session peers are untrusted input even though they run as the
-                // same user. Never let an invalid activation reach the helper.
-                log::warn!("Rejected File History activation: {error}");
-            }
-        }
-    });
-    app.add_action(&action);
-}
-
-fn load_css() {
-    let provider = gtk::CssProvider::new();
-    provider.load_from_data(
-        r#"
-        .file-history-target {
-            background-color: alpha(@accent_color, 0.12);
-        }
-        "#,
-    );
-
-    gtk::style_context_add_provider_for_display(
-        &gtk::gdk::Display::default().expect("Could not connect to a display."),
-        &provider,
-        gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
-    );
-}
-
-fn build_ui(app: &adw::Application) {
-    // Keep the list synchronized with recovery points created by the scheduler.
-    let snapshot_created_rx = signal_listener::start_signal_listener();
-
-    let window = ui::MainWindow::build(app, snapshot_created_rx);
-    window.present();
 }

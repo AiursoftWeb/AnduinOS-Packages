@@ -12,6 +12,18 @@ test -f "$ROOT/data/org.anduinos.Waypoint.svg"
 echo 'f6d678d9551cbeb64c4fcad189d1b34aaaad59465588eee7b504cd0c798729a3  '"$ROOT/data/org.anduinos.Waypoint.svg" \
     | sha256sum --check --status
 test -f "$ROOT/data/org.anduinos.Waypoint.metainfo.xml"
+for keyword in snapshot restore btrfs waypoint backup; do
+    grep -Eq "^Keywords=([^;]+;)*${keyword};" \
+        "$ROOT/data/org.anduinos.Waypoint.desktop"
+    grep -Eq "^Keywords\[zh_CN\]=([^;]+;)*${keyword};" \
+        "$ROOT/data/org.anduinos.Waypoint.desktop"
+    grep -Fq "<keyword>${keyword}</keyword>" \
+        "$ROOT/data/org.anduinos.Waypoint.metainfo.xml"
+done
+for keyword in 快照 备份 还原 恢复; do
+    grep -Eq "^Keywords\[zh_CN\]=([^;]+;)*${keyword};" \
+        "$ROOT/data/org.anduinos.Waypoint.desktop"
+done
 test -f "$ROOT/data/org.anduinos.Waypoint.Notifier.desktop"
 test -f "$ROOT/data/org.anduinos.Waypoint.Session.service"
 test -f "$ROOT/data/anduinos_waypoint_file_history.py"
@@ -43,28 +55,27 @@ grep -Fq 'snapshot_before = true' "$ROOT/assets/apt-snapshots.toml"
 grep -Fq 'snapshot_after = false' "$ROOT/assets/apt-snapshots.toml"
 rg -q 'get_apt_snapshot_policy' "$ROOT/src/waypoint-helper/src/main.rs"
 rg -q 'save_apt_snapshot_policy' "$ROOT/src/waypoint-helper/src/main.rs"
-rg -q 'create_package_changes_page' "$ROOT/src/waypoint/src/ui/preferences.rs"
+rg -q 'Create a system snapshot before changes' "$ROOT/src/waypoint/src/ui/advanced_settings.rs"
 rg -q 'ViewStack::new' "$ROOT/src/waypoint/src/ui/mod.rs"
 rg -q 'SnapshotPage::new.*SnapshotScope::System' "$ROOT/src/waypoint/src/ui/mod.rs"
 rg -q 'SnapshotPage::new.*SnapshotScope::Home' "$ROOT/src/waypoint/src/ui/mod.rs"
 rg -q 'evaluate_retention' "$ROOT/src/waypoint-helper/src/main.rs"
 rg -q 'ListSystemSnapshotFiles' "$ROOT/src/waypoint/src/dbus_client.rs"
-! rg -q 'backup-destinations|backup-export|personal-backup-export|diff\|compare' "$ROOT/src/waypoint-cli"
+! rg -qi 'external.?backup|backup-(destinations|export|import|delete)|CompareSnapshots' "$ROOT/src/waypoint-cli"
 grep -Fq 'if [ -x /usr/libexec/anduinos-waypoint-apt-hook ]' \
     "$ROOT/data/90-anduinos-waypoint"
 test -f "$ROOT/scripts/postrm.sh"
 test -f "$ROOT/docs/deployment-v1.schema.json"
 test -f "$ROOT/docs/rollback-v1.schema.json"
-test -f "$ROOT/docs/external-backup-v1.schema.json"
 test -f "$ROOT/docs/personal-snapshot-v1.schema.json"
-test -f "$ROOT/docs/personal-backup-v1.schema.json"
 test -f "$ROOT/docs/VM-QUALIFICATION.md"
 test -f "$ROOT/docs/RECOVERY-SCOPE.md"
-test -x "$ROOT/scripts/test-external-backup-loopback.sh"
 test -x "$ROOT/scripts/test-recovery-operations-loopback.sh"
 test -x "$ROOT/scripts/qualify-recovery-vm.sh"
 test -x "$ROOT/scripts/test-installed-policy.sh"
 test -x "$ROOT/scripts/check-i18n.py"
+test -x "$ROOT/scripts/update-i18n.py"
+test -x "$ROOT/scripts/test-gui-smoke.sh"
 test -x "$ROOT/scripts/screenshot-demo-service.py"
 python3 - "$ROOT/scripts/screenshot-demo-service.py" <<'PY'
 import sys
@@ -89,7 +100,7 @@ grep -Fq 'def get_file_items' "$ROOT/data/anduinos_waypoint_file_history.py"
 grep -Fq 'def get_background_items' "$ROOT/data/anduinos_waypoint_file_history.py"
 grep -Fq 'View File History…' "$ROOT/data/anduinos_waypoint_file_history.py"
 grep -Fq 'Browse This Folder’s History…' "$ROOT/data/anduinos_waypoint_file_history.py"
-grep -Fq 'SimpleAction::new("file-history"' "$ROOT/src/waypoint/src/main.rs"
+grep -Fq 'SimpleAction::new("file-history"' "$ROOT/src/waypoint/src/application.rs"
 grep -Fq 'Exec=/usr/bin/anduinos-waypoint-gtk --gapplication-service' \
     "$ROOT/data/org.anduinos.Waypoint.Session.service"
 if rg -n 'BusType\.SYSTEM|subprocess|os\.system|Popen|anduinos-waypoint-helper' \
@@ -160,7 +171,7 @@ if rg -n 'BackupSnapshot|RestoreFromBackup|ScanBackupDestinations|ApplyBackupRet
     exit 1
 fi
 
-if rg -n 'affected_subvolumes|personal_files_affected|restart_required|fallback_preserved|SnapshotInfo|SnapshotTarget|pub mod targets' \
+if rg -n 'affected_subvolumes|personal_files_affected|SnapshotInfo|SnapshotTarget|pub mod targets' \
     "$ROOT/src" --glob '!Cargo.lock' --glob '!target/**'; then
     echo "A removed generic/custom recovery-scope model remains in buildable source" >&2
     exit 1
@@ -188,7 +199,9 @@ if rg -n '/tmp/anduinos-waypoint.*preferences' "$ROOT/src/waypoint/src" --glob '
     exit 1
 fi
 
-rg -q 'CompareDeploymentPackages' "$ROOT/src/waypoint/src/dbus_client.rs"
+! rg -q 'CompareSnapshots|CompareDeploymentPackages|ExternalBackup' \
+    "$ROOT/src/waypoint/src" "$ROOT/src/waypoint-helper/src" \
+    "$ROOT/src/anduinos-recovery-engine/src"
 rg -q 'ApplyScheduleRetention' "$ROOT/src/waypoint-cli"
 rg -q 'ExportPersonalFile' "$ROOT/src/waypoint/src/dbus_client.rs"
 

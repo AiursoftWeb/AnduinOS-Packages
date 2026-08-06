@@ -1,186 +1,101 @@
 # AnduinOS Waypoint
 
-AnduinOS Waypoint is the next-generation Btrfs recovery experience for
-AnduinOS. It adopts the clear GTK4/libadwaita interface, information
-architecture, scheduling model, retention controls, and read-only storage views
-from the MIT-licensed Waypoint project, while replacing its Void-specific and
-unsafe system integration with an AnduinOS recovery engine.
+AnduinOS Waypoint is the native GTK 4 and libadwaita recovery application for
+AnduinOS. Waypoint 2.0 has two equal, explicit destinations:
 
-System deployments (`@root`) and Personal Files history (`@home`) are separate
-recovery streams. Personal history supports manual or scheduled immutable
-snapshots, timeline retention, caller-scoped browsing, non-privileged file and
-folder recovery, and desktop notifications for successful creation and optional
-retention cleanup.
+- **System Recovery** manages immutable recovery points of the mandatory
+  `@root` Btrfs subvolume.
+- **Personal Files Recovery** manages immutable history points of the mandatory
+  `@home` Btrfs subvolume.
 
-The main window presents these as two plain-language destinations: **System
-Recovery** for apps and system settings, and **Personal Files** for documents in
-the Home folder. The Personal Files page shows whether hourly protection is on,
-when files were last saved, and offers three direct choices: save now, find and
-recover a file, or change advanced protection settings. Recovery starts from a
-file or folder whenever possible; users do not need to understand Btrfs
-subvolume names or choose a snapshot before they know where their file is.
+Both pages use the same snapshot-list model: create now, configure automatic
+snapshots, search, enter selection mode for one authenticated batch deletion,
+and open the actions available for one point. System points can prepare a safe
+rollback; Personal Files are recovered item by item and are never changed by a
+system rollback.
 
-On Nautilus 4, installing Waypoint also adds two Personal Files entry points:
-“View File History…” for one selected local file or folder, and “Browse This
-Folder’s History…” on a folder background. The latter lets a user enter an
-older directory even after the item they need has already been deleted. The
-extension is intentionally a small unprivileged menu provider. It performs no
-snapshot I/O and activates a separate Waypoint window over the user session
-D-Bus, without placing the selected path in a process command line.
+## Product behavior
 
-This directory is a new product with no legacy migration contract. Earlier
-unreleased recovery experiments remain available from repository history.
+A snapshot may be protected permanently or be eligible for Smart Cleanup.
+Manual, scheduled, and package-change snapshots participate in cleanup by
+default. The safety point created before a rollback is permanently protected.
+Smart Cleanup uses explicit time buckets: keep everything in the recent window,
+then one representative per day, week, month, and year. System and Home policies
+are independent and use a configurable one-to-24-hour freshness interval.
+
+The systemd timer remains installed and enabled even when both automatic scopes
+are off. On every run the scheduler compares the newest point with the configured
+freshness target, so a machine that was asleep or powered off creates a catch-up
+point on the next timer activation. The default package policy creates a system
+point before a real DPKG transaction and no post-transaction point. Both package
+boundaries and snapshot notifications are configured in Advanced Settings.
+
+Nautilus adds “View File History…” for one local Home item and “Browse This
+Folder’s History…” for a local Home folder. The extension only activates the
+unprivileged GApplication action. It never contacts the system helper or puts a
+selected path on the process command line.
 
 ## Safety boundary
 
-The upstream rollback implementation is not an acceptable AnduinOS recovery
-mechanism. AnduinOS must never boot a read-only snapshot directly or rely only
-on `btrfs subvolume set-default`.
+The GTK process never performs privileged Btrfs operations. It consumes the
+existing `org.anduinos.Waypoint.Helper` D-Bus contract, while the root helper and
+Polkit policy remain the authority for creation, deletion, configuration,
+system browsing, and rollback preparation.
 
-A system rollback is releasable only when it:
+A system rollback is prepared only after the target passes availability checks.
+The recovery engine creates and protects a current-system fallback, prepares a
+verified one-shot GRUB transaction, and applies the root change from initramfs.
+The confirmation UI always states that Personal Files remain unchanged and that
+a restart is required. The GUI does not replace helper-side validation.
 
-1. validates the selected recovery point and the installed boot artifacts;
-2. creates a new writable deployment from the immutable snapshot;
-3. preserves the currently bootable deployment as a fallback;
-4. installs a verified one-shot GRUB entry without replacing normal entries;
-5. performs the root switch from initramfs;
-6. confirms a successful userspace boot; and
-7. remains recoverable after interruption or power loss at every transaction
-   boundary.
+Historical files are opened through descriptor-confined helper operations.
+System-snapshot browsing requires administrator authorization. Home browsing is
+restricted to the authenticated caller's own Home history. The helper never
+receives a caller-selected destination path; the unprivileged GTK process writes
+ordinary files and directories without following symbolic links or exporting
+special files. See [docs/RECOVERY-SCOPE.md](docs/RECOVERY-SCOPE.md).
 
-The package now contains that engine as an isolated recovery crate, a
-privileged D-Bus adapter, a verified one-shot GRUB generator, an initramfs
-root-switch binary, and a boot-confirmation service. These paths remain
-release-gated until destructive VM and power-loss qualification is complete.
-The package pre-provisions GRUB's external writable environment when an ESP is
-mounted, and the trusted scheduling path creates and verifies it again at
-runtime. This second path is required for ISO installations, whose target ESP
-was not mounted when the package was configured in the image chroot.
+## Architecture and platform baseline
 
-Waypoint's package lifecycle and recovery transactions refresh GRUB with a
-private no-op `os-prober` path. Waypoint entries are generated entirely from
-trusted deployment metadata, so installing, upgrading, removing, scheduling,
-or confirming a recovery must not inspect, mount, or add operating systems from
-unrelated disks. The helper is stopped explicitly during package replacement;
-matching its long executable name with `pkill -x` is not reliable because the
-Linux process name is truncated.
+The release baseline is resolute-addon with GTK 4.10+, libadwaita 1.4+, Rust
+`gtk4` 0.9, and `libadwaita` 0.7. Newer Adwaita APIs are intentionally not used.
 
-APT package changes use an independent event policy in
-`/etc/anduinos-waypoint/apt-snapshots.toml`. The safe default creates one
-recovery point before DPKG changes packages and does not create a redundant
-post-change point. Both boundaries remain independently configurable from the
-Waypoint Advanced Settings window. System and Home automatic snapshots have
-independent one-to-24 hour freshness targets, and Smart Cleanup applies the
-hourly, daily, weekly, monthly, and yearly retention tiers. External-drive
-backup is intentionally not part of Waypoint 2.0.
+- `src/waypoint/`: typed `adw::Application`, typed
+  `adw::ApplicationWindow`, two snapshot pages, automation/settings, and file
+  browsing/recovery.
+- `src/waypoint-helper/`: privileged D-Bus adapter and policy enforcement.
+- `src/anduinos-recovery-engine/`: GUI-independent trusted snapshot and safe
+  rollback engine.
+- `src/waypoint-scheduler/`: systemd-timer freshness and Smart Cleanup worker.
+- `src/waypoint-notifier/`: unprivileged session notification bridge.
+- `src/waypoint-common/`: shared automation, retention, layout, and metadata
+  types.
 
-Caller-selected paths are never written by the privileged helper. Historical
-Personal Files are resolved beneath the authenticated caller's own home using
-`openat2(2)` constraints and exported as read-only Unix file descriptors over
-D-Bus. The unprivileged GTK process chooses and writes the destination. This
-does not reintroduce the removed root `rsync` path-copy implementation. The
-reviewed boundary is recorded in [`docs/RECOVERY-SCOPE.md`](docs/RECOVERY-SCOPE.md).
+The original MIT-licensed Waypoint material and attribution remain under
+`upstream/`. The AnduinOS combined work is GPL-3.0-or-later.
 
-Nautilus integration is limited to a single selection or the current folder,
-and only to native regular files and directories whose canonical path is below
-the current user's home. Remote/GVfs locations, Trash, special files, and paths
-containing symlinks are hidden in the first release. Waypoint repeats that
-validation before converting the URI to a bounded relative source path; the
-Nautilus process never contacts the system helper.
+## Development and qualification
 
-Successful snapshot notifications are enabled by default. Cleanup completion
-notifications are optional and limited to one per minute. A per-session
-unprivileged notifier receives privacy-preserving system-bus events and sends
-GNOME notifications even when the main Waypoint window is closed; snapshot
-titles, paths, and filenames are never placed on that notification channel.
-
-## Source layout
-
-The layout follows the repository-wide package convention:
-
-- `src/`: Rust workspace and the CLI source;
-  - `anduinos-recovery-engine/`: GUI-independent, D-Bus-independent trusted
-    deployment metadata and early-boot rollback state machine;
-  - `waypoint-common/`: shared UI/helper configuration and platform types;
-  - `waypoint/`, `waypoint-helper/`, and `waypoint-scheduler/`: the adapted
-    upstream product experience and its system integration;
-  - `waypoint-notifier/`: the unprivileged desktop-session notification bridge;
-- `assets/`: packaged configuration and service defaults;
-- `data/`: desktop, D-Bus, Polkit, systemd, and icon resources;
-  this includes the Nautilus 4 menu provider and session D-Bus activation;
-- `scripts/`: Debian maintainer and validation scripts;
-- `screenshots/`: AppStream screenshots;
-- `upstream/`: original license, author attribution, documentation, and import
-  provenance;
-- `obj/`: generated release binaries consumed by APKG (gitignored).
-
-## Development
+Run the non-destructive engineering gates from this package directory:
 
 ```bash
 cd src
 cargo fmt --all -- --check
 cargo test --workspace --locked
 cargo clippy --workspace --all-targets --locked -- -D warnings
+cd ..
+python3 scripts/check-i18n.py
+scripts/test-gui-smoke.sh
+scripts/prebuild-check.sh
 ```
 
-The full-send receive assumptions can be checked without touching a real disk:
+`scripts/test-gui-smoke.sh` constructs and destroys the real Adw application on
+a headless GTK Broadway display with fatal GTK criticals. The loopback recovery
+test uses only a disposable sparse Btrfs image and exits 77 when its prerequisites
+are unavailable. Installed-policy qualification uses invalid mutation payloads
+and verifies that recovery state is unchanged.
 
-```bash
-scripts/test-external-backup-loopback.sh
-scripts/test-recovery-operations-loopback.sh
-```
-
-These tests create, mount, exercise, unmount, and remove sparse Btrfs images
-below `/tmp`. The recovery-operation test uses the real `btrfs` executable to
-qualify immutable point creation, verification, pin/delete protection,
-automatic-retention floors, and failed-creation cleanup. They never accept the
-host root or a real block-device path. Both require passwordless `sudo` and exit
-with status 77 when that test environment is unavailable.
-
-After installing an APKG-built Deb, the non-destructive caller boundary and all
-six Polkit actions can be qualified with:
-
-```bash
-scripts/test-installed-policy.sh
-```
-
-It uses only invalid mutation payloads, verifies that recovery state is
-unchanged, and proves that a non-administrator cannot reach the system helper.
-
-Build the package payload with:
-
-```bash
-bash build.sh amd64
-```
-
-The authoritative implementation plan and release gates are tracked in
-[`TODO.md`](TODO.md). Rebooting rollback, cancellation, fallback, and hard
-power-loss qualification are defined in
-[`docs/VM-QUALIFICATION.md`](docs/VM-QUALIFICATION.md); the included helper
-refuses to run outside a disposable VM with the exact AnduinOS Btrfs layout.
-
-APKG-built amd64 and arm64 Debs have been unpacked and architecture-audited.
-The amd64 package has also been repeatedly installed on a real Secure Boot
-machine with an ext4 root. That unsupported layout is reported read-only as
-`available=false`, package verification stays clean, D-Bus reactivation starts
-the newly installed helper, Secure Boot remains enabled, and GRUB refreshes do
-not probe unrelated operating systems. Clean install, replacement, purge, and
-reinstall have also been exercised: purge removes only generated configuration
-and the external GRUB environment, preserves unknown administrator/runtime
-files and recovery data, disables the confirmation unit before its payload is
-removed, and never calls an already removed APT hook. This is a useful packaging
-and negative-layout gate; it does not replace destructive qualification on the
-exact AnduinOS Btrfs layout.
-
-The recovery engine uses its own Waypoint namespace and on-disk root
-(`/.snapshots/anduinos-waypoint`). The GTK application and CLI use the deployment model throughout,
-and the imported automatic/path-based backup implementation has been removed
-from the build. The destructive qualification matrix is still required before
-release.
-
-## Licensing and attribution
-
-AnduinOS Waypoint as a combined work is distributed under
-GPL-3.0-or-later; see [`LICENSE`](LICENSE). The imported Waypoint source remains
-attributed under its original MIT terms in [`upstream/`](upstream/README.md).
-The MIT notice is retained in every source distribution and installed package.
+Actual rebooting rollback, cancellation after reboot, fallback boot, and
+power-loss qualification must be run only in a disposable VM with the exact
+AnduinOS Btrfs layout, following [docs/VM-QUALIFICATION.md](docs/VM-QUALIFICATION.md).
+They are deliberately not host-side package acceptance tests.

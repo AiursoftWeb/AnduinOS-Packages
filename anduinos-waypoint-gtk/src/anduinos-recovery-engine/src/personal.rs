@@ -1218,7 +1218,7 @@ pub(crate) fn duplicate_file(file: &File) -> Result<File, PersonalError> {
 }
 
 pub fn validate_relative_path(value: &str, allow_empty: bool) -> Result<(), PersonalError> {
-    if value.as_bytes().len() > MAX_RELATIVE_PATH_BYTES
+    if value.len() > MAX_RELATIVE_PATH_BYTES
         || value
             .chars()
             .any(|character| character == '\0' || character.is_control())
@@ -1487,7 +1487,7 @@ mod tests {
         assert_eq!(record.state, PersonalSnapshotState::Ready);
         let calls = runner.0.lock().unwrap();
         assert!(calls.iter().any(|call| {
-            call.get(0).and_then(|value| value.to_str()) == Some("subvolume")
+            call.first().and_then(|value| value.to_str()) == Some("subvolume")
                 && call.get(1).and_then(|value| value.to_str()) == Some("snapshot")
                 && call.get(2).and_then(|value| value.to_str()) == Some("-r")
                 && call.get(3) == Some(&home.as_os_str().to_owned())

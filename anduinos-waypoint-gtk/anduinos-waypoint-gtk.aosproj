@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-waypoint-gtk</PackageName>
-    <PackageVersion>0.1.0-6+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.1.0-7+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Waypoint — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -106,10 +106,10 @@
                           Icon="data/org.anduinos.Waypoint.svg"
                           Metainfo="data/org.anduinos.Waypoint.metainfo.xml" />
     <AppStreamScreenshot Include="screenshots/overview.png" Default="true"
-                         Caption="Review protected, manual, scheduled, and package recovery points"
+                         Caption="Review and manage System recovery points"
                          Environment="GNOME:dark" />
     <AppStreamScreenshot Include="screenshots/scheduled-recovery.png"
-                         Caption="Configure automatic recovery schedules and independent retention policies"
+                         Caption="Configure automatic snapshots and Smart Cleanup"
                          Environment="GNOME:dark" />
   </ItemGroup>
 </Project>

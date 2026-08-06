@@ -1,74 +1,67 @@
-// D-Bus signal listener for snapshot events
+use std::sync::Arc;
+use std::sync::atomic::{AtomicU64, Ordering};
+use std::time::Duration;
 
 use anyhow::Result;
 use futures_util::StreamExt;
-use gtk::glib;
-use waypoint_common::*;
+use waypoint_common::{DBUS_INTERFACE_NAME, DBUS_OBJECT_PATH};
 use zbus::{Connection, MatchRule};
 
-#[derive(Clone, Debug)]
-pub struct SnapshotCreatedEvent {
-    pub snapshot_name: String,
-    pub created_by: String,
+#[derive(Clone, Default)]
+pub struct SnapshotSignalMonitor {
+    system_generation: Arc<AtomicU64>,
+    home_generation: Arc<AtomicU64>,
 }
 
-/// Start listening for waypoint-helper D-Bus signals
-///
-/// This function spawns an async task that listens for D-Bus signals and
-/// forwards creation events so an open window can refresh immediately. The
-/// separate user-session notifier owns background desktop notifications,
-/// avoiding duplicate banners while the main window is open.
-///
-pub fn start_signal_listener() -> std::sync::mpsc::Receiver<SnapshotCreatedEvent> {
-    // Create channels for thread-safe communication
-    let (event_sender, event_receiver) = std::sync::mpsc::channel();
-    let (snapshot_sender, snapshot_receiver) = std::sync::mpsc::channel();
-
-    // Spawn a separate thread for async D-Bus signal listening
-    std::thread::spawn(move || {
-        // Run the async listener
-        let runtime = tokio::runtime::Runtime::new().unwrap();
-        runtime.block_on(async {
-            if let Err(e) = listen_for_signals(event_sender).await {
-                log::error!("Signal listener error: {e}");
-            }
-        });
-    });
-
-    // Set up receiver on main GTK thread
-    let snapshot_sender_clone = snapshot_sender.clone();
-    glib::spawn_future_local(async move {
-        loop {
-            if let Ok(event) = event_receiver.try_recv() {
-                let evt = event;
-                log::debug!("Main thread received SnapshotCreated: {evt:?}");
-
-                if let Err(e) = snapshot_sender_clone.send(evt) {
-                    log::error!("Failed to forward recovery-point creation event: {e}");
+impl SnapshotSignalMonitor {
+    pub fn start() -> Self {
+        let monitor = Self::default();
+        let worker = monitor.clone();
+        std::thread::Builder::new()
+            .name("waypoint-snapshot-signals".into())
+            .spawn(move || {
+                let runtime = match tokio::runtime::Runtime::new() {
+                    Ok(runtime) => runtime,
+                    Err(error) => {
+                        log::error!("Could not start snapshot signal runtime: {error}");
+                        return;
+                    }
+                };
+                loop {
+                    if let Err(error) = runtime.block_on(listen_for_signals(worker.clone())) {
+                        log::warn!("Snapshot signal listener disconnected: {error}");
+                    }
+                    std::thread::sleep(Duration::from_secs(2));
                 }
-            }
+            })
+            .expect("could not start snapshot signal listener thread");
+        monitor
+    }
 
-            // Sleep briefly to avoid busy waiting
-            glib::timeout_future(std::time::Duration::from_millis(100)).await;
-        }
-    });
+    pub fn system_generation(&self) -> u64 {
+        self.system_generation.load(Ordering::Acquire)
+    }
 
-    snapshot_receiver
+    pub fn home_generation(&self) -> u64 {
+        self.home_generation.load(Ordering::Acquire)
+    }
+
+    fn mark_system_changed(&self) {
+        self.system_generation.fetch_add(1, Ordering::AcqRel);
+    }
+
+    fn mark_home_changed(&self) {
+        self.home_generation.fetch_add(1, Ordering::AcqRel);
+    }
 }
 
-/// Async function to listen for waypoint-helper signals
-async fn listen_for_signals(sender: std::sync::mpsc::Sender<SnapshotCreatedEvent>) -> Result<()> {
-    // Connect to system bus
+async fn listen_for_signals(monitor: SnapshotSignalMonitor) -> Result<()> {
     let connection = Connection::system().await?;
-
-    // Create a match rule for the SnapshotCreated signal
     let rule = MatchRule::builder()
         .msg_type(zbus::message::Type::Signal)
         .interface(DBUS_INTERFACE_NAME)?
-        .member("SnapshotCreated")?
+        .path(DBUS_OBJECT_PATH)?
         .build();
-
-    // Add match rule
     let proxy = zbus::Proxy::new(
         &connection,
         "org.freedesktop.DBus",
@@ -76,31 +69,39 @@ async fn listen_for_signals(sender: std::sync::mpsc::Sender<SnapshotCreatedEvent
         "org.freedesktop.DBus",
     )
     .await?;
-
     let _: () = proxy.call("AddMatch", &(rule.to_string(),)).await?;
+    log::debug!("Snapshot signal listener connected");
 
-    log::debug!("Signal listener started for SnapshotCreated signals");
-
-    // Create a message stream
     let mut stream = zbus::MessageStream::from(&connection);
-
-    // Listen for messages
-    while let Some(msg) = stream.next().await {
-        if let Ok(msg) = msg
-            && msg.message_type() == zbus::message::Type::Signal
-            && let Some(member_name) = msg.header().member()
-            && member_name.as_str() == "SnapshotCreated"
-            && let Ok((snapshot_name, created_by)) = msg.body().deserialize::<(String, String)>()
-        {
-            log::debug!("Received SnapshotCreated signal: {snapshot_name} (by {created_by})");
-            if let Err(e) = sender.send(SnapshotCreatedEvent {
-                snapshot_name,
-                created_by,
-            }) {
-                log::error!("Failed to forward SnapshotCreated signal: {e}");
-            }
+    while let Some(message) = stream.next().await {
+        let Ok(message) = message else {
+            continue;
+        };
+        let header = message.header();
+        let Some(member) = header.member() else {
+            continue;
+        };
+        match member.as_str() {
+            "SnapshotCreated" => monitor.mark_system_changed(),
+            "PersonalSnapshotCreated" => monitor.mark_home_changed(),
+            _ => {}
         }
     }
+    anyhow::bail!("system bus signal stream ended")
+}
 
-    Ok(())
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn scope_generations_are_independent() {
+        let monitor = SnapshotSignalMonitor::default();
+        monitor.mark_system_changed();
+        assert_eq!(monitor.system_generation(), 1);
+        assert_eq!(monitor.home_generation(), 0);
+        monitor.mark_home_changed();
+        assert_eq!(monitor.system_generation(), 1);
+        assert_eq!(monitor.home_generation(), 1);
+    }
 }

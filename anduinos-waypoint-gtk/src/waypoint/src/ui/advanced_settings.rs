@@ -1,8 +1,5 @@
-use std::sync::mpsc;
-use std::time::Duration;
-
 use adw::prelude::*;
-use gtk::prelude::*;
+use gtk::{gio, glib};
 use libadwaita as adw;
 
 use crate::dbus_client::WaypointHelperClient;
@@ -74,17 +71,7 @@ pub fn show(parent: &adw::ApplicationWindow) {
         row.set_sensitive(false);
     }
     save.set_sensitive(false);
-    let (sender, receiver) = mpsc::channel();
-    std::thread::spawn(move || {
-        let result = WaypointHelperClient::new().and_then(|client| {
-            Ok((
-                client.get_apt_snapshot_policy()?,
-                client.get_automation_config()?,
-                client.get_scheduler_status()?,
-            ))
-        });
-        let _ = sender.send(result);
-    });
+    let window_load = window.downgrade();
     let status_load = status.clone();
     let before_load = before.clone();
     let after_load = after.clone();
@@ -92,9 +79,24 @@ pub fn show(parent: &adw::ApplicationWindow) {
     let after_success_load = after_success.clone();
     let after_cleanup_load = after_cleanup.clone();
     let save_load = save.clone();
-    glib::timeout_add_local(Duration::from_millis(80), move || {
-        match receiver.try_recv() {
-            Ok(Ok(((before_value, after_value), automation, scheduler))) => {
+    glib::spawn_future_local(async move {
+        let result = gio::spawn_blocking(|| {
+            WaypointHelperClient::new().and_then(|client| {
+                Ok((
+                    client.get_apt_snapshot_policy()?,
+                    client.get_automation_config()?,
+                    client.get_scheduler_status()?,
+                ))
+            })
+        })
+        .await
+        .map_err(|_| anyhow::anyhow!("The settings query stopped unexpectedly"))
+        .and_then(|result| result);
+        if window_load.upgrade().is_none() {
+            return;
+        }
+        match result {
+            Ok(((before_value, after_value), automation, scheduler)) => {
                 before_load.set_active(before_value);
                 after_load.set_active(after_value);
                 before_scheduled_load.set_active(automation.notifications.notify_before_scheduled);
@@ -112,15 +114,11 @@ pub fn show(parent: &adw::ApplicationWindow) {
                 save_load.set_sensitive(true);
                 status_load.set_title(&tr("Automatic snapshot service is available"));
                 status_load.set_subtitle(&scheduler);
-                glib::ControlFlow::Break
             }
-            Ok(Err(problem)) => {
+            Err(problem) => {
                 status_load.set_title(&tr("Automatic snapshot service needs attention"));
                 status_load.set_subtitle(&problem.to_string());
-                glib::ControlFlow::Break
             }
-            Err(mpsc::TryRecvError::Empty) => glib::ControlFlow::Continue,
-            Err(mpsc::TryRecvError::Disconnected) => glib::ControlFlow::Break,
         }
     });
 
@@ -132,9 +130,11 @@ pub fn show(parent: &adw::ApplicationWindow) {
         let notify_before = before_scheduled.is_active();
         let notify_after = after_success.is_active();
         let notify_cleanup = after_cleanup.is_active();
-        let (sender, receiver) = mpsc::channel();
-        std::thread::spawn(move || {
-            let result = (|| -> anyhow::Result<()> {
+        button.set_label(&tr("Saving…"));
+        let weak_window = window_save.downgrade();
+        let weak_button = button.downgrade();
+        glib::spawn_future_local(async move {
+            let result = gio::spawn_blocking(move || -> anyhow::Result<()> {
                 let client = WaypointHelperClient::new()?;
                 let apt = client.save_apt_snapshot_policy(apt_before, apt_after)?;
                 if !apt.0 {
@@ -153,24 +153,24 @@ pub fn show(parent: &adw::ApplicationWindow) {
                     anyhow::bail!(timer.1);
                 }
                 Ok(())
-            })();
-            let _ = sender.send(result);
-        });
-        let window = window_save.clone();
-        let button = button.clone();
-        glib::timeout_add_local(Duration::from_millis(80), move || {
-            match receiver.try_recv() {
-                Ok(Ok(())) => {
+            })
+            .await
+            .map_err(|_| anyhow::anyhow!("The settings update stopped unexpectedly"))
+            .and_then(|result| result);
+            let Some(window) = weak_window.upgrade() else {
+                return;
+            };
+            match result {
+                Ok(()) => {
                     window.close();
-                    glib::ControlFlow::Break
                 }
-                Ok(Err(problem)) => {
-                    button.set_sensitive(true);
+                Err(problem) => {
+                    if let Some(button) = weak_button.upgrade() {
+                        button.set_label(&tr("Save Advanced Settings"));
+                        button.set_sensitive(true);
+                    }
                     show_error(&window, &problem.to_string());
-                    glib::ControlFlow::Break
                 }
-                Err(mpsc::TryRecvError::Empty) => glib::ControlFlow::Continue,
-                Err(mpsc::TryRecvError::Disconnected) => glib::ControlFlow::Break,
             }
         });
     });

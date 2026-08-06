@@ -17,8 +17,6 @@ serde.workspace = true
 serde_json.workspace = true
 chrono.workspace = true
 log.workspace = true
-once_cell.workspace = true
-toml.workspace = true
 env_logger = "0.11"
 gettext-rs = { version = "0.7", features = ["gettext-system"] }
 
@@ -33,7 +31,6 @@ dirs = "5.0"
 zbus = { version = "4.0", default-features = false, features = ["blocking", "tokio"] }
 futures-util = "0.3"
 tokio = { version = "1", features = ["rt", "rt-multi-thread"] }
-fs2.workspace = true
 libc.workspace = true
 
 # Shared types

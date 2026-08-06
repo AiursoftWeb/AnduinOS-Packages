@@ -94,14 +94,6 @@ validate_uuid() {
     }
 }
 
-validate_filesystem_uuid() {
-    local value="$1"
-    [[ -n "$value" && ${#value} -le 128 && "$value" != .* && "$value" =~ ^[A-Za-z0-9._+-]+$ ]] || {
-        echo "Error: invalid filesystem UUID" >&2
-        return 1
-    }
-}
-
 confirm() {
     local prompt="$1"
     local reply
@@ -338,16 +330,37 @@ cmd_preview() {
     validate_uuid "$id"
     local json_mode=false
     [[ "${2:-}" == "--json" ]] && json_mode=true
-    local preview
-    preview=$(pair_payload "$(call_raw PreviewRestore s "$id")")
+    local verification status preview
+    verification=$(single_string "$(call_raw VerifySnapshot s "$id")")
+    jq -e '.is_valid == true' <<<"$verification" >/dev/null || {
+        jq -r '"Error: recovery point is not usable: " + (.errors | join("; "))' \
+            <<<"$verification" >&2
+        exit 1
+    }
+    status=$(recovery_status)
+    preview=$(jq -ec --arg id "$id" '
+        .deployments[] | select(.id == $id) |
+        {
+          recovery_point: .title,
+          created_at: .created_at,
+          target_kernel: (.kernel_release // "unknown"),
+          system_files_and_packages_return_to_target: true,
+          personal_files_unchanged: true,
+          current_system_preserved_as_fallback: true,
+          restart_required: true
+        }
+    ' <<<"$status") || {
+        echo "Error: recovery point not found" >&2
+        exit 1
+    }
     print_json_or_summary "$preview" "$json_mode" '
-        "Recovery point: \(.snapshot_name)\n" +
-        "Created: \(.snapshot_timestamp)\n" +
-        "Scope: System only; Personal Files remain unchanged\n" +
-        "Restart required: true\n" +
-        "Known-good fallback: true\n" +
-        "Kernel: \(.current_kernel // "unknown") -> \(.snapshot_kernel // "unknown")\n" +
-        "Package changes: \(.total_package_changes)"
+        "Recovery point: \(.recovery_point)\n" +
+        "Created: \(.created_at)\n" +
+        "Target kernel: \(.target_kernel)\n" +
+        "System files and packages return to this point: true\n" +
+        "Personal Files remain unchanged: true\n" +
+        "Current system retained as fallback: true\n" +
+        "Restart required: true"
     '
 }
 
@@ -374,134 +387,6 @@ cmd_delete() {
 
 cmd_apply_retention() {
     pair_payload "$(call_raw ApplyScheduleRetention)"
-}
-
-cmd_diff() {
-    local old="${1:-}"
-    local new="${2:-}"
-    validate_uuid "$old"
-    validate_uuid "$new"
-    local json_mode=false
-    [[ "${3:-}" == "--json" ]] && json_mode=true
-    local result
-    result=$(pair_payload "$(call_raw CompareSnapshots ss "$old" "$new")")
-    print_json_or_summary "$result" "$json_mode" '
-        if length == 0 then "No file changes" else
-          .[] | "\(.change_type): \(.path)"
-        end
-    '
-}
-
-cmd_backup_destinations() {
-    local json_mode=false
-    [[ "${1:-}" == "--json" ]] && json_mode=true
-    local result
-    result=$(pair_payload "$(call_raw ListBackupDestinations)")
-    print_json_or_summary "$result" "$json_mode" '
-        if length == 0 then "No supported mounted external filesystems" else
-          .[] | "\(.filesystem_uuid)  \(.filesystem_type)  \(.mount_point)"
-        end
-    '
-}
-
-cmd_backup_list() {
-    local filesystem_uuid="${1:-}"
-    validate_filesystem_uuid "$filesystem_uuid"
-    local json_mode=false
-    [[ "${2:-}" == "--json" ]] && json_mode=true
-    local result
-    result=$(pair_payload "$(call_raw ListExternalBackups s "$filesystem_uuid")")
-    print_json_or_summary "$result" "$json_mode" '
-        (if (.backups | length) == 0 then "No backups" else
-           (.backups[] | "\(.backup_id)  \(.created_at)  \(.stream_size_bytes) bytes  \(.source.title)")
-         end),
-        (.issues[]? | "DAMAGED \(.entry): \(.message)")
-    '
-}
-
-cmd_backup_export() {
-    local deployment_id="${1:-}"
-    local filesystem_uuid="${2:-}"
-    validate_uuid "$deployment_id"
-    validate_filesystem_uuid "$filesystem_uuid"
-    pair_payload "$(call_raw ExportDeployment ss "$deployment_id" "$filesystem_uuid")" | jq .
-}
-
-cmd_backup_verify() {
-    local filesystem_uuid="${1:-}"
-    local backup_id="${2:-}"
-    validate_filesystem_uuid "$filesystem_uuid"
-    validate_uuid "$backup_id"
-    pair_payload "$(call_raw VerifyExternalBackup ss "$filesystem_uuid" "$backup_id")" | jq .
-}
-
-cmd_backup_import() {
-    local filesystem_uuid="${1:-}"
-    local backup_id="${2:-}"
-    validate_filesystem_uuid "$filesystem_uuid"
-    validate_uuid "$backup_id"
-    confirm "Verify and import external backup $backup_id?" || exit 0
-    pair_payload "$(call_raw ImportExternalBackup ss "$filesystem_uuid" "$backup_id")" | jq .
-}
-
-cmd_backup_delete() {
-    local filesystem_uuid="${1:-}"
-    local backup_id="${2:-}"
-    validate_filesystem_uuid "$filesystem_uuid"
-    validate_uuid "$backup_id"
-    confirm "Delete external backup $backup_id?" || exit 0
-    pair_payload "$(call_raw DeleteExternalBackup ss "$filesystem_uuid" "$backup_id")" >/dev/null
-    echo "External backup deleted"
-}
-
-cmd_personal_backup_list() {
-    local filesystem_uuid="${1:-}"
-    validate_filesystem_uuid "$filesystem_uuid"
-    local json_mode=false
-    [[ "${2:-}" == "--json" ]] && json_mode=true
-    local result
-    result=$(pair_payload "$(call_raw ListPersonalExternalBackups s "$filesystem_uuid")")
-    print_json_or_summary "$result" "$json_mode" '
-        (if (.backups | length) == 0 then "No Personal Files backups" else
-           (.backups[] | "\(.backup_id)  \(.created_at)  \(.stream_size_bytes) bytes  \(.source.title)")
-         end),
-        (.issues[]? | "DAMAGED \(.entry): \(.message)")
-    '
-}
-
-cmd_personal_backup_export() {
-    local snapshot_id="${1:-}"
-    local filesystem_uuid="${2:-}"
-    validate_uuid "$snapshot_id"
-    validate_filesystem_uuid "$filesystem_uuid"
-    pair_payload "$(call_raw ExportPersonalSnapshot ss "$snapshot_id" "$filesystem_uuid")" | jq .
-}
-
-cmd_personal_backup_verify() {
-    local filesystem_uuid="${1:-}"
-    local backup_id="${2:-}"
-    validate_filesystem_uuid "$filesystem_uuid"
-    validate_uuid "$backup_id"
-    pair_payload "$(call_raw VerifyPersonalExternalBackup ss "$filesystem_uuid" "$backup_id")" | jq .
-}
-
-cmd_personal_backup_import() {
-    local filesystem_uuid="${1:-}"
-    local backup_id="${2:-}"
-    validate_filesystem_uuid "$filesystem_uuid"
-    validate_uuid "$backup_id"
-    confirm "Verify and import Personal Files backup $backup_id?" || exit 0
-    pair_payload "$(call_raw ImportPersonalExternalBackup ss "$filesystem_uuid" "$backup_id")" | jq .
-}
-
-cmd_personal_backup_delete() {
-    local filesystem_uuid="${1:-}"
-    local backup_id="${2:-}"
-    validate_filesystem_uuid "$filesystem_uuid"
-    validate_uuid "$backup_id"
-    confirm "Delete Personal Files backup $backup_id?" || exit 0
-    pair_payload "$(call_raw DeletePersonalExternalBackup ss "$filesystem_uuid" "$backup_id")" >/dev/null
-    echo "Personal Files backup deleted"
 }
 
 require_jq

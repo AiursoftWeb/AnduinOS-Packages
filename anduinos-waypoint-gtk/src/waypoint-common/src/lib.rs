@@ -16,7 +16,7 @@ pub use anduinos_layout::{
 pub use automation::{AUTOMATION_SCHEMA_VERSION, AutomationConfig, NotificationPolicy};
 pub use config::WaypointConfig;
 pub use format::{format_bytes, format_elapsed_time};
-pub use quota::{QuotaUsage, SnapshotSpace};
+pub use quota::SnapshotSpace;
 pub use retention_v2::{
     CleanupPolicy, RetentionAction, RetentionDecision, RetentionPolicy, RetentionPolicyError,
     RetentionReason, RetentionTier, SnapshotCandidate, evaluate_retention,

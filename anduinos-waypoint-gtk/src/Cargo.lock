@@ -47,7 +47,6 @@ dependencies = [
  "chrono",
  "dirs",
  "env_logger",
- "fs2",
  "futures-util",
  "gettext-rs",
  "gio",
@@ -56,11 +55,9 @@ dependencies = [
  "libadwaita",
  "libc",
  "log",
- "once_cell",
  "serde",
  "serde_json",
  "tokio",
- "toml 0.8.23",
  "waypoint-common",
  "zbus",
 ]
@@ -676,16 +673,6 @@ checksum = "843fba2746e448b37e26a819579957415c8cef339bf08564fe8b7ddbd959573c"
 dependencies = [
  "crc32fast",
  "miniz_oxide",
-]
-
-[[package]]
-name = "fs2"
-version = "0.4.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9564fc758e15025b46aa6643b1b77d047d1a56a1aea6e01002ac0c7026876213"
-dependencies = [
- "libc",
- "winapi",
 ]
 
 [[package]]

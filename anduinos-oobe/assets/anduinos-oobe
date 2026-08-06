@@ -73,6 +73,8 @@ FLATHUB_OFFICIAL_REPO = 'https://dl.flathub.org/repo/flathub.flatpakrepo'
 FLATHUB_OFFICIAL_URL = 'https://dl.flathub.org/repo'
 FLATHUB_USTC_URL = 'https://mirrors.ustc.edu.cn/flathub'
 MDNS_HELPER = '/usr/libexec/anduinos-oobe/network-service-helper'
+WAYPOINT_PACKAGE = 'anduinos-waypoint-gtk'
+WAYPOINT_EXECUTABLE = '/usr/bin/anduinos-waypoint-gtk'
 BASH_GUESS_BEGIN = '# >>> AnduinOS Bash command predictions >>>'
 BASH_GUESS_END = '# <<< AnduinOS Bash command predictions <<<'
 BASH_GUESS_ASSIGNMENT = 'export ANDUINOS_GUESS_COMMAND={}'
@@ -362,6 +364,49 @@ def _is_package_installed(pkg):
         return r.returncode == 0
     except Exception:
         return False
+
+
+def should_recommend_waypoint():
+    """Return True when Waypoint can snapshot the Btrfs root filesystem."""
+    if not _is_package_installed(WAYPOINT_PACKAGE):
+        return False
+    try:
+        result = subprocess.run(
+            ['findmnt', '--noheadings', '--output', 'FSTYPE', '--target', '/'],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        return result.returncode == 0 and result.stdout.strip().lower() == 'btrfs'
+    except Exception:
+        return False
+
+
+def get_backup_recommendation():
+    """Return the backup card content appropriate for this installation."""
+    if should_recommend_waypoint():
+        return {
+            'icon': 'org.anduinos.Waypoint',
+            'title': _('Waypoint'),
+            'description': _(
+                'Protect your system with automatic Btrfs snapshots and smart cleanup.'
+            ),
+            'button': _('Configure Automatic Snapshots'),
+            'command': [WAYPOINT_EXECUTABLE],
+        }
+    return {
+        'icon': 'deja-dup.svg',
+        'title': _('System Backup'),
+        'description': (
+            _('Use Deja Dup to protect your') + '\n'
+            + _('important files with automated,') + '\n'
+            + _('secure local or remote backups.')
+        ),
+        'button': _('Get Deja Dup'),
+        'command': [
+            'gnome-software', '--details=org.gnome.DejaDup.desktop'
+        ],
+    }
 
 
 def is_live_environment():
@@ -3732,25 +3777,23 @@ def create_sync_page():
 
     hbox.append(cloud_card)
 
-    # ── Right: Local Backups ──
+    # ── Right: Snapshots or Local Backups ──
+    recommendation = get_backup_recommendation()
     backup_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
     backup_card.add_css_class('card')
 
-    backup_icon = _create_image('deja-dup.svg')
+    backup_icon = _create_image(recommendation['icon'])
     backup_icon.set_pixel_size(48)
     backup_icon.set_halign(Gtk.Align.CENTER)
     backup_icon.set_margin_top(16)
     backup_card.append(backup_icon)
 
-    backup_title = Gtk.Label(label=_('System Backup'))
+    backup_title = Gtk.Label(label=recommendation['title'])
     backup_title.add_css_class('title-3')
     backup_title.set_halign(Gtk.Align.CENTER)
     backup_card.append(backup_title)
 
-    backup_desc = Gtk.Label(
-        label=_('Use Deja Dup to protect your') + '\n' + _('important files with automated,') + '\n' + \
-                _('secure local or remote backups.')
-    )
+    backup_desc = Gtk.Label(label=recommendation['description'])
     backup_desc.set_halign(Gtk.Align.CENTER)
     backup_desc.set_wrap(True)
     backup_desc.set_justify(Gtk.Justification.CENTER)
@@ -3759,10 +3802,13 @@ def create_sync_page():
     backup_desc.set_margin_bottom(12)
     backup_card.append(backup_desc)
 
-    backup_btn = Gtk.Button(label=_('Get Deja Dup'))
+    backup_btn = Gtk.Button(label=recommendation['button'])
     backup_btn.set_halign(Gtk.Align.CENTER)
     backup_btn.set_margin_bottom(16)
-    backup_btn.connect('clicked', lambda b: subprocess.Popen(['gnome-software', '--details=org.gnome.DejaDup.desktop']))
+    backup_btn.connect(
+        'clicked',
+        lambda _button: subprocess.Popen(recommendation['command']),
+    )
     backup_card.append(backup_btn)
 
     hbox.append(backup_card)

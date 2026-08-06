@@ -11,17 +11,12 @@ use std::collections::HashSet;
 use chrono::{DateTime, Datelike, Duration, FixedOffset, Utc};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum CleanupPolicy {
+    #[default]
     Automatic,
     KeepForever,
-}
-
-impl Default for CleanupPolicy {
-    fn default() -> Self {
-        Self::Automatic
-    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

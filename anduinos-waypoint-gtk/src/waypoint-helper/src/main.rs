@@ -255,8 +255,8 @@ impl WaypointHelper {
         created_by: &str,
     ) -> zbus::Result<()>;
 
-    /// Privacy-preserving desktop event emitted only when the matching
-    /// automatic schedule has creation notifications enabled.
+    /// Privacy-preserving desktop event emitted when successful creation
+    /// notifications are enabled for manual or automatic snapshots.
     #[zbus(signal)]
     async fn snapshot_creation_succeeded(
         ctxt: &zbus::SignalContext<'_>,
@@ -1226,16 +1226,6 @@ impl WaypointHelper {
         )
     }
 
-    /// Return referenced and exclusive qgroup bytes for trusted deployments.
-    /// List mounted external filesystems accepted by the trusted backup engine.
-    /// List backup manifests by destination filesystem UUID without hashing
-    /// every potentially large stream.
-    /// List independent Personal Files backup manifests on an external drive.
-    /// Export one immutable Personal Files history point as a full Btrfs stream.
-    /// Export one trusted immutable deployment to a mounted filesystem UUID.
-    /// Hash and validate one backup selected only by filesystem and backup UUID.
-    /// Receive a verified backup into a new local immutable deployment.
-    /// Delete only the two fixed files belonging to a validated backup UUID.
     /// Verify snapshot integrity
     async fn verify_snapshot(&self, name: String) -> String {
         // Verification is read-only, no authorization needed
@@ -1274,8 +1264,6 @@ impl WaypointHelper {
         }
     }
 
-    /// Preview what will happen if a snapshot is restored
-    /// Save schedules TOML configuration file
     async fn get_apt_snapshot_policy(&self) -> (bool, bool) {
         let config = WaypointConfig::new();
         match anduinos_recovery_engine::AptSnapshotPolicy::load_from_file(
@@ -1759,203 +1747,6 @@ impl WaypointHelper {
             personal_retained,
         })
     }
-
-    #[cfg(any())]
-    fn compare_snapshots_impl(old_snapshot_name: &str, new_snapshot_name: &str) -> Result<String> {
-        let old_id = old_snapshot_name
-            .parse::<DeploymentId>()
-            .context("Invalid old recovery point ID")?;
-        let new_id = new_snapshot_name
-            .parse::<DeploymentId>()
-            .context("Invalid new recovery point ID")?;
-        let engine = OperationEngine::default();
-        engine
-            .verify(
-                &layout::inspect_current(),
-                old_id,
-                |_phase, _fraction, _message| {},
-            )
-            .map_err(|error| anyhow::anyhow!(error.to_string()))?;
-        engine
-            .verify(
-                &layout::inspect_current(),
-                new_id,
-                |_phase, _fraction, _message| {},
-            )
-            .map_err(|error| anyhow::anyhow!(error.to_string()))?;
-
-        let config = WaypointConfig::default();
-        let old_path = config.snapshot_dir.join(old_snapshot_name).join("root");
-        let new_path = config.snapshot_dir.join(new_snapshot_name).join("root");
-
-        // Verify both snapshots exist
-        if !old_path.exists() {
-            anyhow::bail!("Old snapshot not found: {}", old_path.display());
-        }
-        if !new_path.exists() {
-            anyhow::bail!("New snapshot not found: {}", new_path.display());
-        }
-
-        let old_files = parse_find_output(&bounded_find(&old_path)?)?;
-        let new_files = parse_find_output(&bounded_find(&new_path)?)?;
-
-        // Compare and detect changes
-        let changes = compare_file_lists(&old_files, &new_files);
-
-        let json =
-            serde_json::to_string(&changes).context("Failed to serialize changes to JSON")?;
-        if json.len() > MAX_FILE_COMPARISON_JSON_BYTES {
-            anyhow::bail!("File comparison exceeds the response safety limit");
-        }
-        Ok(json)
-    }
-
-    #[cfg(any())]
-    fn compare_deployment_packages_impl(
-        old_snapshot_name: &str,
-        new_snapshot_name: &str,
-    ) -> Result<String> {
-        const MAX_COMPARISON_BYTES: usize = 8 * 1024 * 1024;
-        let old_id = old_snapshot_name
-            .parse::<DeploymentId>()
-            .context("Invalid old recovery point ID")?;
-        let new_id = new_snapshot_name
-            .parse::<DeploymentId>()
-            .context("Invalid new recovery point ID")?;
-        let engine = OperationEngine::default();
-        let report = layout::inspect_current();
-        engine
-            .verify(&report, old_id, |_phase, _fraction, _message| {})
-            .map_err(|error| anyhow::anyhow!(error.to_string()))?;
-        engine
-            .verify(&report, new_id, |_phase, _fraction, _message| {})
-            .map_err(|error| anyhow::anyhow!(error.to_string()))?;
-
-        let config = WaypointConfig::default();
-        let old_status = config
-            .snapshot_dir
-            .join(old_snapshot_name)
-            .join("root/var/lib/dpkg/status");
-        let new_status = config
-            .snapshot_dir
-            .join(new_snapshot_name)
-            .join("root/var/lib/dpkg/status");
-        let comparison = crate::packages::compare_status_files(&old_status, &new_status)?;
-        let json =
-            serde_json::to_string(&comparison).context("Failed to serialize package comparison")?;
-        if json.len() > MAX_COMPARISON_BYTES {
-            anyhow::bail!("Package comparison exceeds the response safety limit");
-        }
-        Ok(json)
-    }
-
-    /// Get quota usage information
-    #[cfg(any())]
-    fn get_quota_usage_impl() -> Result<String> {
-        use waypoint_common::QuotaUsage;
-
-        let config = WaypointConfig::default();
-        let snapshot_dir = &config.snapshot_dir;
-        let snapshot_dir_str = snapshot_dir.to_str().ok_or_else(|| {
-            anyhow::anyhow!(
-                "Snapshot directory path contains invalid UTF-8: {}",
-                snapshot_dir.display()
-            )
-        })?;
-
-        // Get qgroup information
-        let (stdout, _) = run_command_with_output(
-            "/usr/bin/btrfs",
-            &["qgroup", "show", "--raw", snapshot_dir_str],
-        )?;
-
-        // Parse qgroup output
-        // Format: qgroupid rfer excl max_rfer max_excl
-        // Sum up all level-0 qgroups (snapshots)
-        let mut total_referenced = 0u64;
-        let mut total_exclusive = 0u64;
-        let mut parsed_lines = 0;
-
-        for (line_num, line) in stdout.lines().skip(2).enumerate() {
-            // Skip header lines
-            let parts: Vec<&str> = line.split_whitespace().collect();
-            if !parts.is_empty() && parts[0].starts_with("0/") {
-                // Only count level-0 qgroups (actual snapshots)
-                if parts.len() < 3 {
-                    log::warn!(
-                        "Unexpected qgroup output format at line {}: '{}'. \
-                         Expected at least 3 fields but got {}",
-                        line_num + 3, // +3 because we skipped 2 header lines
-                        line,
-                        parts.len()
-                    );
-                    continue;
-                }
-
-                match (parts[1].parse::<u64>(), parts[2].parse::<u64>()) {
-                    (Ok(rfer), Ok(excl)) => {
-                        parsed_lines += 1;
-                        // Use checked_add to detect overflow - fail loudly rather than silently saturate
-                        total_referenced = total_referenced.checked_add(rfer)
-                            .ok_or_else(|| anyhow::anyhow!(
-                                "Quota calculation overflow: total referenced bytes exceed u64::MAX. \
-                                 Current total: {total_referenced}, attempted to add: {rfer}"
-                            ))?;
-                        total_exclusive = total_exclusive.checked_add(excl)
-                            .ok_or_else(|| anyhow::anyhow!(
-                                "Quota calculation overflow: total exclusive bytes exceed u64::MAX. \
-                                 Current total: {total_exclusive}, attempted to add: {excl}"
-                            ))?;
-                    }
-                    (Err(e1), Err(e2)) => {
-                        log::warn!(
-                            "Failed to parse qgroup values at line {}: '{}'. \
-                             Both rfer ('{}') and excl ('{}') parse failed: {}, {}",
-                            line_num + 3,
-                            line,
-                            parts[1],
-                            parts[2],
-                            e1,
-                            e2
-                        );
-                    }
-                    (Err(e), Ok(_)) => {
-                        log::warn!(
-                            "Failed to parse qgroup rfer value at line {}: '{}'. \
-                             Parse error: {}",
-                            line_num + 3,
-                            line,
-                            e
-                        );
-                    }
-                    (Ok(_), Err(e)) => {
-                        log::warn!(
-                            "Failed to parse qgroup excl value at line {}: '{}'. \
-                             Parse error: {}",
-                            line_num + 3,
-                            line,
-                            e
-                        );
-                    }
-                }
-            }
-        }
-
-        // Log if no qgroups were parsed (possible format change or quotas not enabled)
-        if parsed_lines == 0 {
-            log::info!(
-                "No level-0 qgroups found in btrfs output. \
-                 This is normal if quotas are not enabled or no snapshots exist yet."
-            );
-        }
-
-        let usage = QuotaUsage {
-            referenced: total_referenced,
-            exclusive: total_exclusive,
-        };
-
-        serde_json::to_string(&usage).context("Failed to serialize quota usage to JSON")
-    }
 }
 
 fn apt_history_file_rank(name: &str) -> Option<(u32, bool)> {
@@ -2032,7 +1823,7 @@ fn automatic_pre_notification_enabled() -> bool {
         .unwrap_or(NotificationPolicy::default().notify_before_scheduled)
 }
 
-fn automatic_success_notification_enabled_at(path: &std::path::PathBuf) -> bool {
+fn automatic_success_notification_enabled_at(path: &std::path::Path) -> bool {
     match AutomationConfig::load_from_file(path) {
         Ok(config) => config.notifications.notify_after_success,
         Err(error) => {
@@ -2043,191 +1834,6 @@ fn automatic_success_notification_enabled_at(path: &std::path::PathBuf) -> bool 
             NotificationPolicy::default().notify_after_success
         }
     }
-}
-
-/// Parse btrfs receive --dump output into structured changes
-#[derive(Debug, serde::Serialize, serde::Deserialize)]
-#[cfg(any())]
-struct FileChange {
-    change_type: String, // "Added", "Modified", "Deleted"
-    path: String,
-}
-
-/// File metadata for comparison
-#[derive(Debug, Clone)]
-#[cfg(any())]
-struct FileMetadata {
-    kind: u8,
-    size: u64,
-    mtime: String,
-    ctime: String,
-}
-
-#[cfg(any())]
-const MAX_FIND_OUTPUT_BYTES: u64 = 32 * 1024 * 1024;
-#[cfg(any())]
-const MAX_FILE_COMPARISON_JSON_BYTES: usize = 8 * 1024 * 1024;
-#[cfg(any())]
-const MAX_FILE_COMPARISON_ENTRIES: usize = 500_000;
-
-#[cfg(any())]
-fn bounded_find(root: &std::path::Path) -> Result<Vec<u8>> {
-    use std::io::Read;
-    use std::process::Stdio;
-
-    let mut child = Command::new("/usr/bin/find")
-        .arg(root)
-        .arg("-xdev")
-        .arg("-printf")
-        // NUL-separated fields preserve spaces. Non-UTF-8 or control-bearing
-        // paths are rejected by the parser instead of entering the GUI ABI.
-        .arg("%y\\0%P\\0%s\\0%T@\\0%C@\\0")
-        .env_clear()
-        .env("PATH", "/usr/sbin:/usr/bin:/sbin:/bin")
-        .env("LC_ALL", "C")
-        .stdout(Stdio::piped())
-        .stderr(Stdio::null())
-        .spawn()
-        .context("Failed to run bounded deployment scan")?;
-    let mut output = Vec::new();
-    child
-        .stdout
-        .take()
-        .context("Deployment scan has no output pipe")?
-        .take(MAX_FIND_OUTPUT_BYTES + 1)
-        .read_to_end(&mut output)
-        .context("Failed to read deployment scan")?;
-    if output.len() as u64 > MAX_FIND_OUTPUT_BYTES {
-        let _ = child.kill();
-        let _ = child.wait();
-        anyhow::bail!("Deployment file listing exceeds the safety limit");
-    }
-    let status = child.wait().context("Failed to wait for deployment scan")?;
-    if !status.success() {
-        anyhow::bail!("Deployment file scan failed");
-    }
-    Ok(output)
-}
-
-/// Parse the NUL-delimited find output into bounded, display-safe metadata.
-#[cfg(any())]
-fn parse_find_output(output: &[u8]) -> Result<std::collections::HashMap<String, FileMetadata>> {
-    let mut files = std::collections::HashMap::new();
-    let mut fields = output.split(|byte| *byte == 0).collect::<Vec<_>>();
-    if fields.last() == Some(&&b""[..]) {
-        fields.pop();
-    }
-    if fields.len() % 5 != 0 {
-        anyhow::bail!("Deployment scan returned an incomplete record");
-    }
-
-    for record in fields.chunks_exact(5) {
-        let [kind, path, size, mtime, ctime] = record else {
-            unreachable!();
-        };
-        if kind.len() != 1 || !kind[0].is_ascii_alphabetic() {
-            anyhow::bail!("Deployment scan returned an invalid file type");
-        }
-        let path = std::str::from_utf8(path).context("Deployment path is not valid UTF-8")?;
-        if path.is_empty() {
-            continue;
-        }
-        if path.len() > 4096
-            || path.starts_with('/')
-            || path.chars().any(char::is_control)
-            || path.split('/').any(|component| component == "..")
-        {
-            anyhow::bail!("Deployment scan returned an unsafe path");
-        }
-        let size = std::str::from_utf8(size)
-            .context("Deployment size is not UTF-8")?
-            .parse::<u64>()
-            .context("Deployment size is invalid")?;
-        let timestamp = |value: &[u8]| -> Result<String> {
-            let value = std::str::from_utf8(value).context("Deployment timestamp is not UTF-8")?;
-            if value.is_empty()
-                || value.len() > 64
-                || !value
-                    .bytes()
-                    .all(|byte| byte.is_ascii_digit() || matches!(byte, b'.' | b'-'))
-            {
-                anyhow::bail!("Deployment timestamp is invalid");
-            }
-            Ok(value.into())
-        };
-        let metadata = FileMetadata {
-            kind: kind[0],
-            size,
-            mtime: timestamp(mtime)?,
-            ctime: timestamp(ctime)?,
-        };
-        if files.insert(path.to_string(), metadata).is_some() {
-            anyhow::bail!("Deployment scan returned a duplicate path");
-        }
-        if files.len() > MAX_FILE_COMPARISON_ENTRIES {
-            anyhow::bail!("Deployment file count exceeds the safety limit");
-        }
-    }
-
-    Ok(files)
-}
-
-/// Compare two file lists and detect changes
-#[cfg(any())]
-fn compare_file_lists(
-    old_files: &std::collections::HashMap<String, FileMetadata>,
-    new_files: &std::collections::HashMap<String, FileMetadata>,
-) -> Vec<FileChange> {
-    let mut changes = Vec::new();
-    let mut seen_paths = std::collections::HashSet::new();
-
-    // Find added and modified files
-    for (path, new_meta) in new_files {
-        if let Some(old_meta) = old_files.get(path) {
-            // File exists in both - check if modified
-            // Compare size and mtime to detect modifications
-            if old_meta.kind != new_meta.kind
-                || old_meta.size != new_meta.size
-                || old_meta.mtime != new_meta.mtime
-                || old_meta.ctime != new_meta.ctime
-            {
-                let full_path = format!("/{}", path);
-                if seen_paths.insert(full_path.clone()) {
-                    changes.push(FileChange {
-                        change_type: "Modified".to_string(),
-                        path: full_path,
-                    });
-                }
-            }
-        } else {
-            // File only in new snapshot - added
-            let full_path = format!("/{}", path);
-            if seen_paths.insert(full_path.clone()) {
-                changes.push(FileChange {
-                    change_type: "Added".to_string(),
-                    path: full_path,
-                });
-            }
-        }
-    }
-
-    // Find deleted files
-    for path in old_files.keys() {
-        if !new_files.contains_key(path) {
-            let full_path = format!("/{}", path);
-            if seen_paths.insert(full_path.clone()) {
-                changes.push(FileChange {
-                    change_type: "Deleted".to_string(),
-                    path: full_path,
-                });
-            }
-        }
-    }
-
-    // Sort by path for consistent output
-    changes.sort_by(|a, b| a.path.cmp(&b.path));
-
-    changes
 }
 
 /// Check Polkit authorization for an action
@@ -2397,9 +2003,6 @@ async fn main() -> Result<()> {
         log::error!("anduinos-waypoint-helper must be run as root");
         std::process::exit(1);
     }
-
-    // Initialize configuration
-    btrfs::init_config();
 
     log::info!(
         "Starting Waypoint Helper service v{}",
@@ -2580,24 +2183,5 @@ mod tests {
         assert_eq!(apt_history_file_rank("history.log.0.gz"), None);
         assert_eq!(apt_history_file_rank("history.log.old.gz"), None);
         assert_eq!(apt_history_file_rank("term.log.1.gz"), None);
-    }
-
-    #[cfg(any())]
-    #[test]
-    fn bounded_file_scan_preserves_spaces_and_rejects_control_paths() {
-        let root = std::env::temp_dir().join(format!(
-            "anduinos-waypoint-file-scan-{}",
-            std::process::id()
-        ));
-        let _ = std::fs::remove_dir_all(&root);
-        std::fs::create_dir(&root).unwrap();
-        std::fs::write(root.join("name with spaces"), "content").unwrap();
-
-        let files = parse_find_output(&bounded_find(&root).unwrap()).unwrap();
-        assert!(files.contains_key("name with spaces"));
-
-        let unsafe_record = b"f\0line\nbreak\0\x31\0\x31.\x30\0\x31.\x30\0";
-        assert!(parse_find_output(unsafe_record).is_err());
-        std::fs::remove_dir_all(root).unwrap();
     }
 }

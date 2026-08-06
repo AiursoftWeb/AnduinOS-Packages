@@ -1,159 +1,97 @@
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 use std::io::{Read, Write};
 use std::os::unix::fs::OpenOptionsExt;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU64, Ordering};
-use std::sync::mpsc;
-use std::time::Duration;
 
 use adw::prelude::*;
-use gtk::prelude::*;
+use gtk::{gio, glib};
 use libadwaita as adw;
 
 use crate::dbus_client::{PersonalDirectoryEntry, PersonalSnapshot, WaypointHelperClient};
 use crate::file_history_request::{HistoryTarget, HistoryTargetKind};
 use crate::i18n::{tr, trf};
 
-pub fn show(parent: &adw::ApplicationWindow) {
-    let window = adw::Window::new();
-    window.set_title(Some(&tr("Saved Personal File Versions")));
-    window.set_default_size(820, 680);
-    window.set_modal(true);
-    window.set_transient_for(Some(parent));
-    let root = gtk::Box::new(gtk::Orientation::Vertical, 0);
-    let header = adw::HeaderBar::new();
-    header.set_title_widget(Some(&adw::WindowTitle::new(
-        &tr("Saved Personal File Versions"),
-        &tr("Choose a saved time, then find the file or folder you need"),
-    )));
-    let create = gtk::Button::with_label(&tr("Save Now"));
-    create.add_css_class("suggested-action");
-    header.pack_start(&create);
-    let refresh = gtk::Button::from_icon_name("view-refresh-symbolic");
-    refresh.set_tooltip_text(Some(&tr("Refresh Personal Files history")));
-    header.pack_end(&refresh);
-    root.append(&header);
-
-    let banner = adw::Banner::new(&tr(
-        "Personal history is stored on the same disk. Keep an external backup for disk failure or theft.",
-    ));
-    banner.set_revealed(true);
-    root.append(&banner);
-
-    let stack = gtk::Stack::new();
-    stack.set_vexpand(true);
-    let loading = adw::StatusPage::new();
-    loading.set_title(&tr("Loading Personal Files history…"));
-    loading.set_icon_name(Some("folder-documents-symbolic"));
-    stack.add_named(&loading, Some("loading"));
-
-    let scrolled = gtk::ScrolledWindow::new();
-    let clamp = adw::Clamp::new();
-    clamp.set_maximum_size(760);
-    let list = gtk::ListBox::new();
-    list.set_selection_mode(gtk::SelectionMode::None);
-    list.add_css_class("boxed-list");
-    list.set_margin_top(24);
-    list.set_margin_bottom(24);
-    list.set_margin_start(12);
-    list.set_margin_end(12);
-    clamp.set_child(Some(&list));
-    scrolled.set_child(Some(&clamp));
-    stack.add_named(&scrolled, Some("content"));
-    root.append(&stack);
-    window.set_content(Some(&root));
-
-    load_snapshots(&window, &stack, &list);
-
-    let window_refresh = window.clone();
-    let stack_refresh = stack.clone();
-    let list_refresh = list.clone();
-    refresh
-        .connect_clicked(move |_| load_snapshots(&window_refresh, &stack_refresh, &list_refresh));
-
-    let window_create = window.clone();
-    let stack_create = stack.clone();
-    let list_create = list.clone();
-    create.connect_clicked(move |button| {
-        button.set_sensitive(false);
-        let (sender, receiver) = mpsc::channel();
-        std::thread::spawn(move || {
-            let result = (|| -> anyhow::Result<()> {
-                let client = WaypointHelperClient::new()?;
-                let now = chrono::Local::now();
-                client.create_personal_snapshot(
-                    format!("Personal Files · {}", now.format("%Y-%m-%d %H:%M")),
-                    "Manual Personal Files history point".into(),
-                    false,
-                )?;
-                Ok(())
-            })();
-            let _ = sender.send(result);
-        });
-        let button = button.clone();
-        let window = window_create.clone();
-        let stack = stack_create.clone();
-        let list = list_create.clone();
-        glib::timeout_add_local(Duration::from_millis(80), move || {
-            match receiver.try_recv() {
-                Ok(Ok(())) => {
-                    button.set_sensitive(true);
-                    toast(&window, &tr("Personal Files history point created"));
-                    load_snapshots(&window, &stack, &list);
-                    glib::ControlFlow::Break
-                }
-                Ok(Err(error)) => {
-                    button.set_sensitive(true);
-                    error_dialog(
-                        &window,
-                        &tr("Could Not Create History Point"),
-                        &error.to_string(),
-                    );
-                    glib::ControlFlow::Break
-                }
-                Err(mpsc::TryRecvError::Empty) => glib::ControlFlow::Continue,
-                Err(mpsc::TryRecvError::Disconnected) => glib::ControlFlow::Break,
-            }
-        });
-    });
-
-    window.present();
-}
-
 pub fn show_snapshot_browser(parent: &adw::ApplicationWindow, id: &str, title: &str) {
     show_browser(parent, BrowserScope::Home, id, title, "", None);
 }
 
 pub fn show_system_snapshot_browser(parent: &adw::ApplicationWindow, id: &str, title: &str) {
-    match WaypointHelperClient::new()
-        .and_then(|client| client.begin_system_snapshot_browse(id.to_string()))
-    {
-        Ok(token) => show_browser(
-            parent,
-            BrowserScope::System(Arc::new(SystemBrowserLease::new(token))),
-            id,
-            title,
-            "",
-            None,
-        ),
-        Err(error) => {
-            let dialog = adw::MessageDialog::new(
-                Some(parent),
-                Some(&tr("Could Not Browse System Snapshot")),
-                Some(&error.to_string()),
-            );
-            dialog.add_response("close", &tr("Close"));
-            dialog.present();
+    let weak_parent = parent.downgrade();
+    let id = id.to_string();
+    let title = title.to_string();
+    glib::spawn_future_local(async move {
+        let id_for_authorization = id.clone();
+        let result = gio::spawn_blocking(move || {
+            WaypointHelperClient::new()
+                .and_then(|client| client.begin_system_snapshot_browse(id_for_authorization))
+        })
+        .await
+        .map_err(|_| anyhow::anyhow!("System snapshot authorization stopped unexpectedly"))
+        .and_then(|result| result);
+        let Some(parent) = weak_parent.upgrade() else {
+            return;
+        };
+        match result {
+            Ok(token) => show_browser(
+                &parent,
+                BrowserScope::System(Arc::new(SystemBrowserLease::new(token))),
+                &id,
+                &title,
+                "",
+                None,
+            ),
+            Err(error) => {
+                let dialog = adw::MessageDialog::new(
+                    Some(&parent),
+                    Some(&tr("Could Not Browse System Snapshot")),
+                    Some(&error.to_string()),
+                );
+                dialog.add_response("close", &tr("Close"));
+                dialog.present();
+            }
         }
-    }
+    });
 }
 
 #[derive(Clone)]
 enum BrowserScope {
     Home,
     System(Arc<SystemBrowserLease>),
+}
+
+impl BrowserScope {
+    fn authorize_export(
+        &self,
+        client: &WaypointHelperClient,
+        snapshot_id: &str,
+    ) -> anyhow::Result<Self> {
+        match self {
+            Self::Home => Ok(Self::Home),
+            Self::System(_) => client
+                .begin_system_snapshot_browse(snapshot_id.to_string())
+                .map(|token| Self::System(Arc::new(SystemBrowserLease::new(token)))),
+        }
+    }
+}
+
+#[derive(Clone)]
+struct BrowserUi {
+    window: glib::WeakRef<adw::Window>,
+    scope: BrowserScope,
+    snapshot_id: String,
+    current_path: Rc<RefCell<String>>,
+    path_label: gtk::Label,
+    list: gtk::ListBox,
+    generation: Rc<Cell<u64>>,
+}
+
+impl BrowserUi {
+    fn window(&self) -> Option<adw::Window> {
+        self.window.upgrade()
+    }
 }
 
 struct SystemBrowserLease {
@@ -171,8 +109,16 @@ impl SystemBrowserLease {
 
     fn release(&self) {
         if !self.released.swap(true, Ordering::AcqRel) {
-            let _ = WaypointHelperClient::new()
-                .and_then(|client| client.end_system_snapshot_browse(self.token.clone()));
+            let token = self.token.clone();
+            let _ = std::thread::Builder::new()
+                .name("waypoint-browse-release".into())
+                .spawn(move || {
+                    if let Err(error) = WaypointHelperClient::new()
+                        .and_then(|client| client.end_system_snapshot_browse(token))
+                    {
+                        log::debug!("Could not release system browser lease: {error}");
+                    }
+                });
         }
     }
 }
@@ -200,7 +146,7 @@ pub fn show_target(app: &adw::Application, target: HistoryTarget) {
     }));
     window.set_default_size(820, 680);
 
-    let root = gtk::Box::new(gtk::Orientation::Vertical, 0);
+    let toolbar = adw::ToolbarView::new();
     let header = adw::HeaderBar::new();
     let display_path = display_relative_path(&target.relative_path);
     header.set_title_widget(Some(&adw::WindowTitle::new(
@@ -213,7 +159,9 @@ pub fn show_target(app: &adw::Application, target: HistoryTarget) {
     let refresh = gtk::Button::from_icon_name("view-refresh-symbolic");
     refresh.set_tooltip_text(Some(&tr("Refresh file history")));
     header.pack_end(&refresh);
-    root.append(&header);
+    toolbar.add_top_bar(&header);
+
+    let root = gtk::Box::new(gtk::Orientation::Vertical, 0);
 
     let banner = adw::Banner::new(&tr(
         "Choose an earlier version to browse or recover. Your current files will not be changed automatically.",
@@ -243,18 +191,22 @@ pub fn show_target(app: &adw::Application, target: HistoryTarget) {
     scrolled.set_child(Some(&clamp));
     stack.add_named(&scrolled, Some("content"));
     root.append(&stack);
-    window.set_content(Some(&root));
+    toolbar.set_content(Some(&root));
+    window.set_content(Some(&toolbar));
 
-    load_target_versions(&window, &stack, &list, target.clone());
+    let generation = Rc::new(Cell::new(0_u64));
+    load_target_versions(&window, &stack, &list, target.clone(), &generation);
     let window_refresh = window.clone();
     let stack_refresh = stack.clone();
     let list_refresh = list.clone();
+    let generation_refresh = generation.clone();
     refresh.connect_clicked(move |_| {
         load_target_versions(
             &window_refresh,
             &stack_refresh,
             &list_refresh,
             target.clone(),
+            &generation_refresh,
         );
     });
     window.present();
@@ -265,13 +217,19 @@ fn load_target_versions(
     stack: &gtk::Stack,
     list: &gtk::ListBox,
     target: HistoryTarget,
+    generation: &Rc<Cell<u64>>,
 ) {
+    let request_generation = generation.get().wrapping_add(1);
+    generation.set(request_generation);
     stack.set_visible_child_name("loading");
     clear_list(list);
-    let (sender, receiver) = mpsc::channel();
     let target_for_query = target.clone();
-    std::thread::spawn(move || {
-        let result = (|| -> anyhow::Result<(Vec<TargetVersion>, usize)> {
+    let weak_window = window.downgrade();
+    let stack = stack.clone();
+    let list = list.clone();
+    let generation = generation.clone();
+    glib::spawn_future_local(async move {
+        let result = gio::spawn_blocking(move || -> anyhow::Result<(Vec<TargetVersion>, usize)> {
             let client = WaypointHelperClient::new()?;
             let status = client.recovery_engine_status()?;
             let mut versions = Vec::new();
@@ -317,16 +275,18 @@ fn load_target_versions(
             versions
                 .sort_by(|left, right| right.snapshot.created_at.cmp(&left.snapshot.created_at));
             Ok((versions, status.personal_issues.len()))
-        })();
-        let _ = sender.send(result);
-    });
-
-    let window = window.clone();
-    let stack = stack.clone();
-    let list = list.clone();
-    glib::timeout_add_local(Duration::from_millis(80), move || {
-        match receiver.try_recv() {
-            Ok(Ok((versions, issue_count))) => {
+        })
+        .await
+        .map_err(|_| anyhow::anyhow!("The file-history query stopped unexpectedly"))
+        .and_then(|result| result);
+        if generation.get() != request_generation {
+            return;
+        }
+        let Some(window) = weak_window.upgrade() else {
+            return;
+        };
+        match result {
+            Ok((versions, issue_count)) => {
                 clear_list(&list);
                 if versions.is_empty() {
                     let row = adw::ActionRow::new();
@@ -350,19 +310,15 @@ fn load_target_versions(
                     list.append(&row);
                 }
                 stack.set_visible_child_name("content");
-                glib::ControlFlow::Break
             }
-            Ok(Err(error)) => {
+            Err(error) => {
                 error_dialog(
                     &window,
                     &tr("Personal History Unavailable"),
                     &error.to_string(),
                 );
                 stack.set_visible_child_name("content");
-                glib::ControlFlow::Break
             }
-            Err(mpsc::TryRecvError::Empty) => glib::ControlFlow::Continue,
-            Err(mpsc::TryRecvError::Disconnected) => glib::ControlFlow::Break,
         }
     });
 }
@@ -464,173 +420,6 @@ fn display_relative_path(relative_path: &str) -> String {
     }
 }
 
-fn load_snapshots(window: &adw::Window, stack: &gtk::Stack, list: &gtk::ListBox) {
-    stack.set_visible_child_name("loading");
-    clear_list(list);
-    let (sender, receiver) = mpsc::channel();
-    std::thread::spawn(move || {
-        let result = WaypointHelperClient::new().and_then(|client| {
-            client
-                .recovery_engine_status()
-                .map(|status| (status.personal_snapshots, status.personal_issues))
-        });
-        let _ = sender.send(result);
-    });
-    let window = window.clone();
-    let stack = stack.clone();
-    let list = list.clone();
-    glib::timeout_add_local(Duration::from_millis(80), move || {
-        match receiver.try_recv() {
-            Ok(Ok((snapshots, issues))) => {
-                if snapshots.is_empty() {
-                    let row = adw::ActionRow::new();
-                    row.set_title(&tr("No saved personal file versions yet"));
-                    row.set_subtitle(&tr("Save your files now or turn on automatic protection."));
-                    list.append(&row);
-                } else {
-                    for snapshot in snapshots {
-                        append_snapshot_row(&window, &stack, &list, snapshot);
-                    }
-                }
-                if !issues.is_empty() {
-                    let row = adw::ActionRow::new();
-                    row.set_title(&tr("Some history points could not be loaded"));
-                    row.set_subtitle(&trf(
-                        "{0} damaged metadata entries were ignored",
-                        &[&issues.len().to_string()],
-                    ));
-                    list.append(&row);
-                }
-                stack.set_visible_child_name("content");
-                glib::ControlFlow::Break
-            }
-            Ok(Err(error)) => {
-                error_dialog(
-                    &window,
-                    &tr("Personal History Unavailable"),
-                    &error.to_string(),
-                );
-                stack.set_visible_child_name("content");
-                glib::ControlFlow::Break
-            }
-            Err(mpsc::TryRecvError::Empty) => glib::ControlFlow::Continue,
-            Err(mpsc::TryRecvError::Disconnected) => glib::ControlFlow::Break,
-        }
-    });
-}
-
-fn append_snapshot_row(
-    window: &adw::Window,
-    stack: &gtk::Stack,
-    list: &gtk::ListBox,
-    snapshot: PersonalSnapshot,
-) {
-    let row = adw::ActionRow::new();
-    row.set_title(&snapshot.title);
-    row.set_subtitle(&format!(
-        "{} · {} · {}{}",
-        snapshot
-            .created_at
-            .with_timezone(&chrono::Local)
-            .format("%Y-%m-%d %H:%M"),
-        snapshot.state,
-        snapshot.reason,
-        if snapshot.pinned { " · Protected" } else { "" }
-    ));
-    let browse = gtk::Button::with_label(&tr("Find Files"));
-    browse.set_valign(gtk::Align::Center);
-    browse.add_css_class("suggested-action");
-    browse.set_sensitive(snapshot.state == "ready");
-    row.add_suffix(&browse);
-    let protect = gtk::Button::from_icon_name(if snapshot.pinned {
-        "starred-symbolic"
-    } else {
-        "non-starred-symbolic"
-    });
-    let protect_tooltip = if snapshot.pinned {
-        tr("Unprotect history point")
-    } else {
-        tr("Protect history point")
-    };
-    protect.set_tooltip_text(Some(&protect_tooltip));
-    protect.set_valign(gtk::Align::Center);
-    row.add_suffix(&protect);
-    let delete = gtk::Button::from_icon_name("user-trash-symbolic");
-    delete.add_css_class("destructive-action");
-    delete.set_sensitive(!snapshot.pinned);
-    delete.set_valign(gtk::Align::Center);
-    row.add_suffix(&delete);
-    list.append(&row);
-
-    let parent = window.clone();
-    let id = snapshot.id.clone();
-    let title = snapshot.title.clone();
-    browse
-        .connect_clicked(move |_| show_browser(&parent, BrowserScope::Home, &id, &title, "", None));
-
-    let window_pin = window.clone();
-    let stack_pin = stack.clone();
-    let list_pin = list.clone();
-    let id_pin = snapshot.id.clone();
-    let pinned = snapshot.pinned;
-    protect.connect_clicked(move |button| {
-        button.set_sensitive(false);
-        let id = id_pin.clone();
-        mutate_then_reload(&window_pin, &stack_pin, &list_pin, move |client| {
-            client.set_personal_snapshot_pinned(id, !pinned).map(|_| ())
-        });
-    });
-
-    let window_delete = window.clone();
-    let stack_delete = stack.clone();
-    let list_delete = list.clone();
-    let id_delete = snapshot.id;
-    delete.connect_clicked(move |button| {
-        button.set_sensitive(false);
-        let id = id_delete.clone();
-        mutate_then_reload(&window_delete, &stack_delete, &list_delete, move |client| {
-            client.delete_personal_snapshot(id)
-        });
-    });
-}
-
-fn mutate_then_reload<F>(
-    window: &adw::Window,
-    stack: &gtk::Stack,
-    list: &gtk::ListBox,
-    operation: F,
-) where
-    F: FnOnce(WaypointHelperClient) -> anyhow::Result<()> + Send + 'static,
-{
-    let (sender, receiver) = mpsc::channel();
-    std::thread::spawn(move || {
-        let result = WaypointHelperClient::new().and_then(operation);
-        let _ = sender.send(result);
-    });
-    let window = window.clone();
-    let stack = stack.clone();
-    let list = list.clone();
-    glib::timeout_add_local(Duration::from_millis(80), move || {
-        match receiver.try_recv() {
-            Ok(Ok(())) => {
-                load_snapshots(&window, &stack, &list);
-                glib::ControlFlow::Break
-            }
-            Ok(Err(error)) => {
-                error_dialog(
-                    &window,
-                    &tr("Personal History Operation Failed"),
-                    &error.to_string(),
-                );
-                load_snapshots(&window, &stack, &list);
-                glib::ControlFlow::Break
-            }
-            Err(mpsc::TryRecvError::Empty) => glib::ControlFlow::Continue,
-            Err(mpsc::TryRecvError::Disconnected) => glib::ControlFlow::Break,
-        }
-    });
-}
-
 fn show_browser(
     parent: &impl IsA<gtk::Window>,
     scope: BrowserScope,
@@ -655,15 +444,20 @@ fn show_browser(
     window.set_default_size(780, 640);
     window.set_modal(true);
     window.set_transient_for(Some(parent));
-    let root = gtk::Box::new(gtk::Orientation::Vertical, 0);
+    let toolbar = adw::ToolbarView::new();
     let header = adw::HeaderBar::new();
     header.set_title_widget(Some(&adw::WindowTitle::new(&browser_title, title)));
     let up = gtk::Button::from_icon_name("go-up-symbolic");
     up.set_tooltip_text(Some(&tr("Parent folder")));
     header.pack_start(&up);
-    let recover_folder = gtk::Button::with_label(&tr("Recover This Folder…"));
+    let recover_folder = gtk::Button::with_label(&match &scope {
+        BrowserScope::Home => tr("Recover This Folder…"),
+        BrowserScope::System(_) => tr("Copy This Folder…"),
+    });
     header.pack_end(&recover_folder);
-    root.append(&header);
+    toolbar.add_top_bar(&header);
+
+    let root = gtk::Box::new(gtk::Orientation::Vertical, 0);
     let path_label = gtk::Label::new(None);
     path_label.set_text("~/");
     path_label.set_halign(gtk::Align::Start);
@@ -683,127 +477,98 @@ fn show_browser(
     list.set_margin_end(16);
     scrolled.set_child(Some(&list));
     root.append(&scrolled);
-    window.set_content(Some(&root));
+    toolbar.set_content(Some(&root));
+    window.set_content(Some(&toolbar));
 
-    let current_path = Rc::new(RefCell::new(initial_path.to_string()));
-    load_directory(
-        &window,
-        scope.clone(),
-        snapshot_id,
-        &current_path,
-        &path_label,
-        &list,
-        highlighted_name,
-    );
+    let browser = BrowserUi {
+        window: window.downgrade(),
+        scope: scope.clone(),
+        snapshot_id: snapshot_id.to_string(),
+        current_path: Rc::new(RefCell::new(initial_path.to_string())),
+        path_label,
+        list,
+        generation: Rc::new(Cell::new(0_u64)),
+    };
+    load_directory(&browser, highlighted_name);
 
-    let window_up = window.clone();
-    let id_up = snapshot_id.to_string();
-    let path_up = current_path.clone();
-    let label_up = path_label.clone();
-    let list_up = list.clone();
-    let scope_up = scope.clone();
+    let browser_up = browser.clone();
     up.connect_clicked(move |_| {
-        let next = path_up
+        let next = browser_up
+            .current_path
             .borrow()
             .rsplit_once('/')
             .map(|(parent, _)| parent.to_string())
             .unwrap_or_default();
-        *path_up.borrow_mut() = next;
-        load_directory(
-            &window_up,
-            scope_up.clone(),
-            &id_up,
-            &path_up,
-            &label_up,
-            &list_up,
-            None,
-        );
+        *browser_up.current_path.borrow_mut() = next;
+        load_directory(&browser_up, None);
     });
 
-    let window_folder = window.clone();
-    let id_folder = snapshot_id.to_string();
-    let path_folder = current_path.clone();
-    let scope_folder = scope.clone();
+    let browser_folder = browser.clone();
     recover_folder.connect_clicked(move |_| {
-        choose_folder_destination(
-            &window_folder,
-            scope_folder.clone(),
-            &id_folder,
-            &path_folder.borrow(),
-        );
+        if let Some(window) = browser_folder.window() {
+            choose_folder_destination(
+                &window,
+                browser_folder.scope.clone(),
+                &browser_folder.snapshot_id,
+                &browser_folder.current_path.borrow(),
+            );
+        }
     });
     window.present();
 }
 
-fn load_directory(
-    window: &adw::Window,
-    scope: BrowserScope,
-    snapshot_id: &str,
-    current_path: &Rc<RefCell<String>>,
-    path_label: &gtk::Label,
-    list: &gtk::ListBox,
-    highlighted_name: Option<String>,
-) {
-    clear_list(list);
+fn load_directory(browser: &BrowserUi, highlighted_name: Option<String>) {
+    let request_generation = browser.generation.get().wrapping_add(1);
+    browser.generation.set(request_generation);
+    clear_list(&browser.list);
     let loading = adw::ActionRow::new();
     loading.set_title(&tr("Loading folder…"));
-    list.append(&loading);
-    let id = snapshot_id.to_string();
-    let path = current_path.borrow().clone();
-    path_label.set_text(&format!("~/{}", path));
-    let (sender, receiver) = mpsc::channel();
-    let scope_worker = scope.clone();
-    std::thread::spawn(move || {
-        let result = WaypointHelperClient::new()
-            .and_then(|client| list_files(&client, &scope_worker, id, path));
-        let _ = sender.send(result);
-    });
-    let window = window.clone();
-    let id = snapshot_id.to_string();
-    let current_path = current_path.clone();
-    let path_label = path_label.clone();
-    let list = list.clone();
-    glib::timeout_add_local(Duration::from_millis(80), move || {
-        match receiver.try_recv() {
-            Ok(Ok(entries)) => {
-                clear_list(&list);
+    browser.list.append(&loading);
+    let id = browser.snapshot_id.clone();
+    let path = browser.current_path.borrow().clone();
+    browser
+        .path_label
+        .set_text(&browser_path(&browser.scope, &path));
+    let scope_worker = browser.scope.clone();
+    let browser = browser.clone();
+    glib::spawn_future_local(async move {
+        let result = gio::spawn_blocking(move || {
+            WaypointHelperClient::new()
+                .and_then(|client| list_files(&client, &scope_worker, id.clone(), path))
+                .map(|entries| (entries, id))
+        })
+        .await
+        .map_err(|_| anyhow::anyhow!("The snapshot folder query stopped unexpectedly"))
+        .and_then(|result| result);
+        if browser.generation.get() != request_generation {
+            return;
+        }
+        let Some(window) = browser.window() else {
+            return;
+        };
+        match result {
+            Ok((entries, id)) => {
+                clear_list(&browser.list);
                 if entries.is_empty() {
                     let row = adw::ActionRow::new();
                     row.set_title(&tr("This folder is empty"));
-                    list.append(&row);
+                    browser.list.append(&row);
                 }
                 for entry in entries {
-                    append_file_row(
-                        &window,
-                        scope.clone(),
-                        &id,
-                        &current_path,
-                        &path_label,
-                        &list,
-                        entry,
-                        highlighted_name.as_deref(),
-                    );
+                    debug_assert_eq!(browser.snapshot_id, id);
+                    append_file_row(&browser, entry, highlighted_name.as_deref());
                 }
-                glib::ControlFlow::Break
             }
-            Ok(Err(error)) => {
-                clear_list(&list);
+            Err(error) => {
+                clear_list(&browser.list);
                 error_dialog(&window, &tr("Could Not Browse History"), &error.to_string());
-                glib::ControlFlow::Break
             }
-            Err(mpsc::TryRecvError::Empty) => glib::ControlFlow::Continue,
-            Err(mpsc::TryRecvError::Disconnected) => glib::ControlFlow::Break,
         }
     });
 }
 
 fn append_file_row(
-    window: &adw::Window,
-    scope: BrowserScope,
-    snapshot_id: &str,
-    current_path: &Rc<RefCell<String>>,
-    path_label: &gtk::Label,
-    list: &gtk::ListBox,
+    browser: &BrowserUi,
     entry: PersonalDirectoryEntry,
     highlighted_name: Option<&str>,
 ) {
@@ -835,26 +600,29 @@ fn append_file_row(
     let action = gtk::Button::with_label(&action_label);
     action.set_valign(gtk::Align::Center);
     row.add_suffix(&action);
-    list.append(&row);
+    browser.list.append(&row);
     if entry.kind == "directory" {
-        let window = window.clone();
-        let id = snapshot_id.to_string();
-        let path = current_path.clone();
-        let label = path_label.clone();
-        let list = list.clone();
+        let browser = browser.clone();
         let name = entry.name;
         action.connect_clicked(move |_| {
-            let next = join_relative(&path.borrow(), &name);
-            *path.borrow_mut() = next;
-            load_directory(&window, scope.clone(), &id, &path, &label, &list, None);
+            let next = join_relative(&browser.current_path.borrow(), &name);
+            *browser.current_path.borrow_mut() = next;
+            load_directory(&browser, None);
         });
     } else {
-        let window = window.clone();
-        let id = snapshot_id.to_string();
-        let relative = join_relative(&current_path.borrow(), &entry.name);
+        let browser = browser.clone();
+        let relative = join_relative(&browser.current_path.borrow(), &entry.name);
         let name = entry.name;
         action.connect_clicked(move |_| {
-            choose_file_destination(&window, scope.clone(), &id, &relative, &name)
+            if let Some(window) = browser.window() {
+                choose_file_destination(
+                    &window,
+                    browser.scope.clone(),
+                    &browser.snapshot_id,
+                    &relative,
+                    &name,
+                );
+            }
         });
     }
 }
@@ -923,6 +691,7 @@ fn choose_folder_destination(
             let destination = unique_destination(&parent, leaf);
             run_restore(&window_clone, move || {
                 let client = WaypointHelperClient::new()?;
+                let scope = scope.authorize_export(&client, &id)?;
                 restore_directory(&client, scope, &id, &relative, &destination)
             });
         },
@@ -933,24 +702,54 @@ fn run_restore<F>(window: &adw::Window, operation: F)
 where
     F: FnOnce() -> anyhow::Result<()> + Send + 'static,
 {
-    toast(window, &tr("Recovering Personal Files…"));
-    let (sender, receiver) = mpsc::channel();
-    std::thread::spawn(move || {
-        let _ = sender.send(operation());
-    });
-    let window = window.clone();
-    glib::timeout_add_local(Duration::from_millis(80), move || {
-        match receiver.try_recv() {
-            Ok(Ok(())) => {
-                toast(&window, &tr("Personal Files recovered successfully"));
-                glib::ControlFlow::Break
+    let progress = adw::Window::builder()
+        .transient_for(window)
+        .modal(true)
+        .deletable(false)
+        .resizable(false)
+        .default_width(360)
+        .default_height(140)
+        .title(tr("Recovering Files"))
+        .build();
+    let content = gtk::Box::new(gtk::Orientation::Vertical, 16);
+    content.set_margin_top(24);
+    content.set_margin_bottom(24);
+    content.set_margin_start(28);
+    content.set_margin_end(28);
+    let spinner = gtk::Spinner::new();
+    spinner.set_spinning(true);
+    spinner.set_halign(gtk::Align::Center);
+    let label = gtk::Label::new(Some(&tr("Recovering files…")));
+    label.add_css_class("heading");
+    content.append(&spinner);
+    content.append(&label);
+    progress.set_content(Some(&content));
+    progress.present();
+
+    let weak_window = window.downgrade();
+    let weak_progress = progress.downgrade();
+    glib::spawn_future_local(async move {
+        let result = gio::spawn_blocking(operation)
+            .await
+            .map_err(|_| anyhow::anyhow!("The file recovery stopped unexpectedly"))
+            .and_then(|result| result);
+        if let Some(progress) = weak_progress.upgrade() {
+            progress.close();
+        }
+        let Some(window) = weak_window.upgrade() else {
+            return;
+        };
+        match result {
+            Ok(()) => {
+                let dialog = adw::MessageDialog::new(
+                    Some(&window),
+                    Some(&tr("Files Recovered")),
+                    Some(&tr("The selected files were recovered successfully.")),
+                );
+                dialog.add_response("close", &tr("Close"));
+                dialog.present();
             }
-            Ok(Err(error)) => {
-                error_dialog(&window, &tr("Recovery Failed"), &error.to_string());
-                glib::ControlFlow::Break
-            }
-            Err(mpsc::TryRecvError::Empty) => glib::ControlFlow::Continue,
-            Err(mpsc::TryRecvError::Disconnected) => glib::ControlFlow::Break,
+            Err(error) => error_dialog(&window, &tr("Recovery Failed"), &error.to_string()),
         }
     });
 }
@@ -962,6 +761,7 @@ fn restore_one_file(
     destination: &Path,
 ) -> anyhow::Result<()> {
     let client = WaypointHelperClient::new()?;
+    let scope = scope.authorize_export(&client, snapshot_id)?;
     let mut source = export_file(
         &client,
         &scope,
@@ -1153,6 +953,15 @@ fn unique_destination(parent: &Path, leaf: &str) -> PathBuf {
     ))
 }
 
+fn browser_path(scope: &BrowserScope, relative: &str) -> String {
+    match scope {
+        BrowserScope::Home if relative.is_empty() => "~/".into(),
+        BrowserScope::Home => format!("~/{relative}"),
+        BrowserScope::System(_) if relative.is_empty() => "/".into(),
+        BrowserScope::System(_) => format!("/{relative}"),
+    }
+}
+
 fn join_relative(parent: &str, name: &str) -> String {
     if parent.is_empty() {
         name.to_string()
@@ -1165,16 +974,6 @@ fn clear_list(list: &gtk::ListBox) {
     while let Some(child) = list.first_child() {
         list.remove(&child);
     }
-}
-
-fn toast(window: &adw::Window, message: &str) {
-    let dialog = adw::ToastOverlay::new();
-    if let Some(content) = window.content() {
-        window.set_content(None::<&gtk::Widget>);
-        dialog.set_child(Some(&content));
-        window.set_content(Some(&dialog));
-    }
-    dialog.add_toast(adw::Toast::new(message));
 }
 
 fn error_dialog(window: &adw::Window, title: &str, message: &str) {
