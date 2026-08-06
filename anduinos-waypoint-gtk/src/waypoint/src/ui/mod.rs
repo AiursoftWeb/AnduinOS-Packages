@@ -20,6 +20,7 @@ mod snapshot_row;
 mod toolbar;
 
 use crate::dbus_client::WaypointHelperClient;
+use crate::file_history_request::HistoryTarget;
 use crate::i18n::{tr, trf};
 use crate::snapshot::SnapshotManager;
 use crate::user_preferences::UserPreferencesManager;
@@ -49,6 +50,10 @@ pub struct MainWindow {
     _search_entry: SearchEntry,
     _match_label: Label,
     _date_filter: Rc<RefCell<DateFilter>>,
+}
+
+pub fn show_personal_history_target(app: &gtk::Application, target: HistoryTarget) {
+    personal_history::show_target(app, target);
 }
 
 impl MainWindow {

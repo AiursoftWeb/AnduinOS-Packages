@@ -3971,6 +3971,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         ),
         "install-bootloader": _("Install bootloader", lang),
         "enroll-secure-boot": _("Schedule MOK enrollment", lang),
+        "check-other-disk-systems": _(
+            "Check systems on other disks", lang
+        ),
         "leave-chroot": _("Finalize target environment", lang),
         "unmount-target": _("Unmount installed system", lang),
     }

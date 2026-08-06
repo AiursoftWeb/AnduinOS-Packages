@@ -54,6 +54,7 @@ class ExecutorPipelineTests(unittest.TestCase):
             "verify-dkms-signatures",
             "install-bootloader",
             "enroll-secure-boot",
+            "check-other-disk-systems",
         )
         positions = tuple(pipeline.index(step) for step in expected)
         self.assertEqual(positions, tuple(sorted(positions)))
@@ -137,4 +138,29 @@ class ExecutorPipelineTests(unittest.TestCase):
         self.assertIn(
             "ensure-waypoint",
             CapturingStepRunner.captured,
+        )
+
+    def test_other_disk_system_check_is_uefi_only_and_near_the_end(self):
+        with patch("installer_core.executor.StepRunner", CapturingStepRunner):
+            InstallerExecutor(lambda _message: None).run(valid_plan())
+        pipeline = CapturingStepRunner.captured
+        self.assertLess(
+            pipeline.index("enroll-secure-boot"),
+            pipeline.index("check-other-disk-systems"),
+        )
+        self.assertLess(
+            pipeline.index("check-other-disk-systems"),
+            pipeline.index("leave-chroot"),
+        )
+
+        from installer_core.model import Firmware, SecureBoot
+
+        bios_plan = valid_plan(
+            firmware=Firmware.BIOS,
+            secure_boot=SecureBoot.NOT_APPLICABLE,
+        )
+        with patch("installer_core.executor.StepRunner", CapturingStepRunner):
+            InstallerExecutor(lambda _message: None).run(bios_plan)
+        self.assertNotIn(
+            "check-other-disk-systems", CapturingStepRunner.captured
         )

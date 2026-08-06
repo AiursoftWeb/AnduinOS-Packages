@@ -1,8 +1,9 @@
 use std::cell::RefCell;
-use std::io::Write;
+use std::io::{Read, Write};
 use std::os::unix::fs::OpenOptionsExt;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::mpsc;
 use std::time::Duration;
 
@@ -11,6 +12,7 @@ use gtk::prelude::*;
 use libadwaita as adw;
 
 use crate::dbus_client::{PersonalDirectoryEntry, PersonalSnapshot, WaypointHelperClient};
+use crate::file_history_request::{HistoryTarget, HistoryTargetKind};
 use crate::i18n::{tr, trf};
 
 pub fn show(parent: &adw::ApplicationWindow) {
@@ -120,6 +122,285 @@ pub fn show(parent: &adw::ApplicationWindow) {
     window.present();
 }
 
+struct TargetVersion {
+    snapshot: PersonalSnapshot,
+    entry: Option<PersonalDirectoryEntry>,
+}
+
+/// Open the focused File History surface used by the Nautilus extension. It is
+/// an application-owned top-level window, never a widget injected into
+/// Nautilus, and all historical reads still go through WaypointHelperClient.
+pub fn show_target(app: &gtk::Application, target: HistoryTarget) {
+    let window = adw::Window::new();
+    window.set_application(Some(app));
+    window.set_title(Some(&match target.kind {
+        HistoryTargetKind::File => tr("File History"),
+        HistoryTargetKind::Directory => tr("Folder History"),
+    }));
+    window.set_default_size(820, 680);
+
+    let root = gtk::Box::new(gtk::Orientation::Vertical, 0);
+    let header = adw::HeaderBar::new();
+    let display_path = display_relative_path(&target.relative_path);
+    header.set_title_widget(Some(&adw::WindowTitle::new(
+        &match target.kind {
+            HistoryTargetKind::File => tr("File History"),
+            HistoryTargetKind::Directory => tr("Folder History"),
+        },
+        &display_path,
+    )));
+    let refresh = gtk::Button::from_icon_name("view-refresh-symbolic");
+    refresh.set_tooltip_text(Some(&tr("Refresh file history")));
+    header.pack_end(&refresh);
+    root.append(&header);
+
+    let banner = adw::Banner::new(&tr(
+        "Choose an earlier version to browse or recover. Your current files will not be changed automatically.",
+    ));
+    banner.set_revealed(true);
+    root.append(&banner);
+
+    let stack = gtk::Stack::new();
+    stack.set_vexpand(true);
+    let loading = adw::StatusPage::new();
+    loading.set_title(&tr("Looking for earlier versions…"));
+    loading.set_description(Some(&display_path));
+    loading.set_icon_name(Some("document-open-recent-symbolic"));
+    stack.add_named(&loading, Some("loading"));
+
+    let scrolled = gtk::ScrolledWindow::new();
+    let clamp = adw::Clamp::new();
+    clamp.set_maximum_size(760);
+    let list = gtk::ListBox::new();
+    list.set_selection_mode(gtk::SelectionMode::None);
+    list.add_css_class("boxed-list");
+    list.set_margin_top(24);
+    list.set_margin_bottom(24);
+    list.set_margin_start(12);
+    list.set_margin_end(12);
+    clamp.set_child(Some(&list));
+    scrolled.set_child(Some(&clamp));
+    stack.add_named(&scrolled, Some("content"));
+    root.append(&stack);
+    window.set_content(Some(&root));
+
+    load_target_versions(&window, &stack, &list, target.clone());
+    let window_refresh = window.clone();
+    let stack_refresh = stack.clone();
+    let list_refresh = list.clone();
+    refresh.connect_clicked(move |_| {
+        load_target_versions(
+            &window_refresh,
+            &stack_refresh,
+            &list_refresh,
+            target.clone(),
+        );
+    });
+    window.present();
+}
+
+fn load_target_versions(
+    window: &adw::Window,
+    stack: &gtk::Stack,
+    list: &gtk::ListBox,
+    target: HistoryTarget,
+) {
+    stack.set_visible_child_name("loading");
+    clear_list(list);
+    let (sender, receiver) = mpsc::channel();
+    let target_for_query = target.clone();
+    std::thread::spawn(move || {
+        let result = (|| -> anyhow::Result<(Vec<TargetVersion>, usize)> {
+            let client = WaypointHelperClient::new()?;
+            let status = client.recovery_engine_status()?;
+            let mut versions = Vec::new();
+            for snapshot in status
+                .personal_snapshots
+                .into_iter()
+                .filter(|snapshot| snapshot.state == "ready")
+            {
+                match target_for_query.kind {
+                    HistoryTargetKind::Directory => {
+                        match client.list_personal_files(
+                            snapshot.id.clone(),
+                            target_for_query.relative_path.clone(),
+                        ) {
+                            Ok(_) => versions.push(TargetVersion {
+                                snapshot,
+                                entry: None,
+                            }),
+                            Err(error) if history_query_failed(&error) => return Err(error),
+                            Err(_) => {}
+                        }
+                    }
+                    HistoryTargetKind::File => {
+                        let (parent, name) = split_file_target(&target_for_query.relative_path);
+                        let entry = match client
+                            .list_personal_files(snapshot.id.clone(), parent.to_string())
+                        {
+                            Ok(entries) => entries
+                                .into_iter()
+                                .find(|entry| entry.name == name && entry.kind != "directory"),
+                            Err(error) if history_query_failed(&error) => return Err(error),
+                            Err(_) => None,
+                        };
+                        if let Some(entry) = entry {
+                            versions.push(TargetVersion {
+                                snapshot,
+                                entry: Some(entry),
+                            });
+                        }
+                    }
+                }
+            }
+            versions
+                .sort_by(|left, right| right.snapshot.created_at.cmp(&left.snapshot.created_at));
+            Ok((versions, status.personal_issues.len()))
+        })();
+        let _ = sender.send(result);
+    });
+
+    let window = window.clone();
+    let stack = stack.clone();
+    let list = list.clone();
+    glib::timeout_add_local(Duration::from_millis(80), move || {
+        match receiver.try_recv() {
+            Ok(Ok((versions, issue_count))) => {
+                clear_list(&list);
+                if versions.is_empty() {
+                    let row = adw::ActionRow::new();
+                    row.set_title(&tr("No earlier version was found"));
+                    row.set_subtitle(&tr(
+                        "This item was not present in the available Personal Files history points.",
+                    ));
+                    list.append(&row);
+                } else {
+                    for version in versions {
+                        append_target_version_row(&window, &list, version, &target);
+                    }
+                }
+                if issue_count > 0 {
+                    let row = adw::ActionRow::new();
+                    row.set_title(&tr("Some history points could not be loaded"));
+                    row.set_subtitle(&trf(
+                        "{0} damaged metadata entries were ignored",
+                        &[&issue_count.to_string()],
+                    ));
+                    list.append(&row);
+                }
+                stack.set_visible_child_name("content");
+                glib::ControlFlow::Break
+            }
+            Ok(Err(error)) => {
+                error_dialog(
+                    &window,
+                    &tr("Personal History Unavailable"),
+                    &error.to_string(),
+                );
+                stack.set_visible_child_name("content");
+                glib::ControlFlow::Break
+            }
+            Err(mpsc::TryRecvError::Empty) => glib::ControlFlow::Continue,
+            Err(mpsc::TryRecvError::Disconnected) => glib::ControlFlow::Break,
+        }
+    });
+}
+
+fn append_target_version_row(
+    window: &adw::Window,
+    list: &gtk::ListBox,
+    version: TargetVersion,
+    target: &HistoryTarget,
+) {
+    let row = adw::ActionRow::new();
+    row.set_title(&version.snapshot.title);
+    let created = version
+        .snapshot
+        .created_at
+        .with_timezone(&chrono::Local)
+        .format("%Y-%m-%d %H:%M")
+        .to_string();
+    if let Some(entry) = &version.entry {
+        let modified = chrono::DateTime::from_timestamp(entry.modified_unix_seconds, 0)
+            .map(|time| {
+                time.with_timezone(&chrono::Local)
+                    .format("%Y-%m-%d %H:%M")
+                    .to_string()
+            })
+            .unwrap_or_else(|| tr("Unknown date"));
+        row.set_subtitle(&trf(
+            "History point {0} · {1} bytes · modified {2}",
+            &[&created, &entry.size.to_string(), &modified],
+        ));
+    } else {
+        row.set_subtitle(&trf("History point {0} · Folder", &[&created]));
+    }
+
+    let browse = gtk::Button::with_label(&tr("Browse"));
+    browse.set_valign(gtk::Align::Center);
+    row.add_suffix(&browse);
+    if target.kind == HistoryTargetKind::File {
+        let recover = gtk::Button::with_label(&tr("Recover…"));
+        recover.set_valign(gtk::Align::Center);
+        recover.add_css_class("suggested-action");
+        row.add_suffix(&recover);
+        let recovery_window = window.clone();
+        let recovery_id = version.snapshot.id.clone();
+        let recovery_relative = target.relative_path.clone();
+        let (_, recovery_name) = split_file_target(&target.relative_path);
+        let recovery_name = recovery_name.to_string();
+        recover.connect_clicked(move |_| {
+            choose_file_destination(
+                &recovery_window,
+                &recovery_id,
+                &recovery_relative,
+                &recovery_name,
+            );
+        });
+    }
+    list.append(&row);
+
+    let browser_window = window.clone();
+    let browser_id = version.snapshot.id;
+    let browser_title = version.snapshot.title;
+    let (initial_path, highlighted) = match target.kind {
+        HistoryTargetKind::File => {
+            let (parent, name) = split_file_target(&target.relative_path);
+            (parent.to_string(), Some(name.to_string()))
+        }
+        HistoryTargetKind::Directory => (target.relative_path.clone(), None),
+    };
+    browse.connect_clicked(move |_| {
+        show_browser(
+            &browser_window,
+            &browser_id,
+            &browser_title,
+            &initial_path,
+            highlighted.clone(),
+        );
+    });
+}
+
+fn split_file_target(relative_path: &str) -> (&str, &str) {
+    relative_path
+        .rsplit_once('/')
+        .map_or(("", relative_path), |(parent, name)| (parent, name))
+}
+
+fn history_query_failed(error: &anyhow::Error) -> bool {
+    let message = error.to_string();
+    message.contains("Authorization failed")
+        || message.contains("Failed to browse historical Personal Files")
+}
+
+fn display_relative_path(relative_path: &str) -> String {
+    if relative_path.is_empty() {
+        "~/".to_string()
+    } else {
+        format!("~/{relative_path}")
+    }
+}
+
 fn load_snapshots(window: &adw::Window, stack: &gtk::Stack, list: &gtk::ListBox) {
     stack.set_visible_child_name("loading");
     clear_list(list);
@@ -223,7 +504,7 @@ fn append_snapshot_row(
     let parent = window.clone();
     let id = snapshot.id.clone();
     let title = snapshot.title.clone();
-    browse.connect_clicked(move |_| show_browser(&parent, &id, &title));
+    browse.connect_clicked(move |_| show_browser(&parent, &id, &title, "", None));
 
     let window_pin = window.clone();
     let stack_pin = stack.clone();
@@ -288,7 +569,13 @@ fn mutate_then_reload<F>(
     });
 }
 
-fn show_browser(parent: &adw::Window, snapshot_id: &str, title: &str) {
+fn show_browser(
+    parent: &adw::Window,
+    snapshot_id: &str,
+    title: &str,
+    initial_path: &str,
+    highlighted_name: Option<String>,
+) {
     let window = adw::Window::new();
     window.set_title(Some(&tr("Recover Personal Files")));
     window.set_default_size(780, 640);
@@ -327,8 +614,15 @@ fn show_browser(parent: &adw::Window, snapshot_id: &str, title: &str) {
     root.append(&scrolled);
     window.set_content(Some(&root));
 
-    let current_path = Rc::new(RefCell::new(String::new()));
-    load_directory(&window, snapshot_id, &current_path, &path_label, &list);
+    let current_path = Rc::new(RefCell::new(initial_path.to_string()));
+    load_directory(
+        &window,
+        snapshot_id,
+        &current_path,
+        &path_label,
+        &list,
+        highlighted_name,
+    );
 
     let window_up = window.clone();
     let id_up = snapshot_id.to_string();
@@ -342,7 +636,7 @@ fn show_browser(parent: &adw::Window, snapshot_id: &str, title: &str) {
             .map(|(parent, _)| parent.to_string())
             .unwrap_or_default();
         *path_up.borrow_mut() = next;
-        load_directory(&window_up, &id_up, &path_up, &label_up, &list_up);
+        load_directory(&window_up, &id_up, &path_up, &label_up, &list_up, None);
     });
 
     let window_folder = window.clone();
@@ -360,6 +654,7 @@ fn load_directory(
     current_path: &Rc<RefCell<String>>,
     path_label: &gtk::Label,
     list: &gtk::ListBox,
+    highlighted_name: Option<String>,
 ) {
     clear_list(list);
     let loading = adw::ActionRow::new();
@@ -389,7 +684,15 @@ fn load_directory(
                     list.append(&row);
                 }
                 for entry in entries {
-                    append_file_row(&window, &id, &current_path, &path_label, &list, entry);
+                    append_file_row(
+                        &window,
+                        &id,
+                        &current_path,
+                        &path_label,
+                        &list,
+                        entry,
+                        highlighted_name.as_deref(),
+                    );
                 }
                 glib::ControlFlow::Break
             }
@@ -411,6 +714,7 @@ fn append_file_row(
     path_label: &gtk::Label,
     list: &gtk::ListBox,
     entry: PersonalDirectoryEntry,
+    highlighted_name: Option<&str>,
 ) {
     let row = adw::ActionRow::new();
     row.set_title(&entry.name);
@@ -421,11 +725,17 @@ fn append_file_row(
                 .to_string()
         })
         .unwrap_or_else(|| tr("Unknown date"));
-    row.set_subtitle(&if entry.kind == "directory" {
+    let subtitle = if entry.kind == "directory" {
         trf("Folder · {0}", &[&modified])
     } else {
         trf("{0} bytes · {1}", &[&entry.size.to_string(), &modified])
-    });
+    };
+    if highlighted_name == Some(entry.name.as_str()) {
+        row.add_css_class("file-history-target");
+        row.set_subtitle(&trf("Selected file · {0}", &[&subtitle]));
+    } else {
+        row.set_subtitle(&subtitle);
+    }
     let action_label = if entry.kind == "directory" {
         tr("Open")
     } else {
@@ -445,7 +755,7 @@ fn append_file_row(
         action.connect_clicked(move |_| {
             let next = join_relative(&path.borrow(), &name);
             *path.borrow_mut() = next;
-            load_directory(&window, &id, &path, &label, &list);
+            load_directory(&window, &id, &path, &label, &list, None);
         });
     } else {
         let window = window.clone();
@@ -544,16 +854,60 @@ where
 fn restore_one_file(snapshot_id: &str, relative: &str, destination: &Path) -> anyhow::Result<()> {
     let client = WaypointHelperClient::new()?;
     let mut source = client.export_personal_file(snapshot_id.to_string(), relative.to_string())?;
-    let mut output = std::fs::OpenOptions::new()
-        .write(true)
-        .create(true)
-        .truncate(true)
-        .custom_flags(libc::O_CLOEXEC | libc::O_NOFOLLOW)
-        .open(destination)?;
-    std::io::copy(&mut source, &mut output)?;
-    output.flush()?;
-    output.sync_all()?;
-    Ok(())
+    write_recovered_file(&mut source, destination)
+}
+
+fn write_recovered_file(source: &mut impl Read, destination: &Path) -> anyhow::Result<()> {
+    let parent = destination
+        .parent()
+        .filter(|value| !value.as_os_str().is_empty())
+        .unwrap_or_else(|| Path::new("."));
+    let (temporary, mut output) = create_recovery_temp_file(destination)?;
+    let result = (|| -> anyhow::Result<()> {
+        std::io::copy(source, &mut output)?;
+        output.flush()?;
+        output.sync_all()?;
+        drop(output);
+        std::fs::rename(&temporary, destination)?;
+        std::fs::File::open(parent)?.sync_all()?;
+        Ok(())
+    })();
+    if result.is_err() {
+        let _ = std::fs::remove_file(&temporary);
+    }
+    result
+}
+
+fn create_recovery_temp_file(destination: &Path) -> anyhow::Result<(PathBuf, std::fs::File)> {
+    static NEXT_TEMPORARY: AtomicU64 = AtomicU64::new(0);
+
+    let parent = destination
+        .parent()
+        .filter(|value| !value.as_os_str().is_empty())
+        .unwrap_or_else(|| Path::new("."));
+    let leaf = destination
+        .file_name()
+        .and_then(|value| value.to_str())
+        .unwrap_or("recovered-file");
+    for _ in 0..1_024 {
+        let sequence = NEXT_TEMPORARY.fetch_add(1, Ordering::Relaxed);
+        let temporary = parent.join(format!(
+            ".{leaf}.anduinos-waypoint-{}-{sequence}.tmp",
+            std::process::id()
+        ));
+        match std::fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .mode(0o600)
+            .custom_flags(libc::O_CLOEXEC | libc::O_NOFOLLOW)
+            .open(&temporary)
+        {
+            Ok(file) => return Ok((temporary, file)),
+            Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => continue,
+            Err(error) => return Err(error.into()),
+        }
+    }
+    anyhow::bail!("Could not allocate a temporary recovery file")
 }
 
 fn restore_directory(
@@ -563,14 +917,24 @@ fn restore_directory(
     destination: &Path,
 ) -> anyhow::Result<()> {
     let mut recovered_entries = 0usize;
-    restore_directory_bounded(
+    std::fs::create_dir(destination)?;
+    let result = restore_directory_bounded(
         client,
         snapshot_id,
         relative,
         destination,
         0,
         &mut recovered_entries,
-    )
+    );
+    if let Err(error) = result {
+        return match std::fs::remove_dir_all(destination) {
+            Ok(()) => Err(error),
+            Err(cleanup) => Err(anyhow::anyhow!(
+                "{error}; could not remove the incomplete recovery folder: {cleanup}"
+            )),
+        };
+    }
+    Ok(())
 }
 
 fn restore_directory_bounded(
@@ -587,7 +951,6 @@ fn restore_directory_bounded(
         depth <= MAX_RECOVERY_DEPTH,
         "Historical folder exceeds the recovery depth limit"
     );
-    std::fs::create_dir(destination)?;
     for entry in client.list_personal_files(snapshot_id.to_string(), relative.to_string())? {
         *recovered_entries = recovered_entries.saturating_add(1);
         anyhow::ensure!(
@@ -597,6 +960,7 @@ fn restore_directory_bounded(
         let source = join_relative(relative, &entry.name);
         let target = destination.join(&entry.name);
         if entry.kind == "directory" {
+            std::fs::create_dir(&target)?;
             restore_directory_bounded(
                 client,
                 snapshot_id,
@@ -671,6 +1035,7 @@ fn error_dialog(window: &adw::Window, title: &str, message: &str) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::io;
 
     #[test]
     fn relative_join_never_adds_a_leading_separator() {
@@ -694,5 +1059,78 @@ mod tests {
             root.join("Documents (Recovered 1)")
         );
         std::fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn focused_file_history_splits_root_and_nested_files() {
+        assert_eq!(split_file_target("notes.txt"), ("", "notes.txt"));
+        assert_eq!(
+            split_file_target("Documents/Reports/report.odt"),
+            ("Documents/Reports", "report.odt")
+        );
+    }
+
+    #[test]
+    fn focused_history_does_not_hide_authorization_or_transport_failures() {
+        assert!(history_query_failed(&anyhow::anyhow!(
+            "Authorization failed: dismissed"
+        )));
+        assert!(history_query_failed(&anyhow::anyhow!(
+            "Failed to browse historical Personal Files"
+        )));
+        assert!(!history_query_failed(&anyhow::anyhow!(
+            "Could not open personal path: not found"
+        )));
+    }
+
+    struct FailingReader {
+        emitted: bool,
+    }
+
+    impl Read for FailingReader {
+        fn read(&mut self, buffer: &mut [u8]) -> io::Result<usize> {
+            if self.emitted {
+                return Err(io::Error::other("injected failure"));
+            }
+            self.emitted = true;
+            let partial = b"partial";
+            buffer[..partial.len()].copy_from_slice(partial);
+            Ok(partial.len())
+        }
+    }
+
+    #[test]
+    fn failed_file_recovery_preserves_the_existing_destination() {
+        let directory = std::env::temp_dir().join(format!(
+            "waypoint-failed-file-recovery-{}",
+            chrono::Utc::now().timestamp_nanos_opt().unwrap()
+        ));
+        std::fs::create_dir(&directory).unwrap();
+        let destination = directory.join("document.txt");
+        std::fs::write(&destination, b"original").unwrap();
+
+        let result = write_recovered_file(&mut FailingReader { emitted: false }, &destination);
+
+        assert!(result.is_err());
+        assert_eq!(std::fs::read(&destination).unwrap(), b"original");
+        assert_eq!(std::fs::read_dir(&directory).unwrap().count(), 1);
+        std::fs::remove_dir_all(directory).unwrap();
+    }
+
+    #[test]
+    fn successful_file_recovery_atomically_replaces_the_destination() {
+        let directory = std::env::temp_dir().join(format!(
+            "waypoint-successful-file-recovery-{}",
+            chrono::Utc::now().timestamp_nanos_opt().unwrap()
+        ));
+        std::fs::create_dir(&directory).unwrap();
+        let destination = directory.join("document.txt");
+        std::fs::write(&destination, b"original").unwrap();
+
+        write_recovered_file(&mut &b"recovered"[..], &destination).unwrap();
+
+        assert_eq!(std::fs::read(&destination).unwrap(), b"recovered");
+        assert_eq!(std::fs::read_dir(&directory).unwrap().count(), 1);
+        std::fs::remove_dir_all(directory).unwrap();
     }
 }

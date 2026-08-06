@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-waypoint-gtk</PackageName>
-    <PackageVersion>0.1.0-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.1.0-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Waypoint — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -39,6 +39,7 @@
     <Dependency Include="anduinos-secureboot-toolkit" />
     <Dependency Include="kmod" />
     <Dependency Include="sbsigntool" />
+    <Dependency Include="python3-nautilus" />
   </ItemGroup>
 
   <ItemGroup>
@@ -81,6 +82,8 @@
     <IncludeFile Include="data/51-org.anduinos.Waypoint-desktop.rules" Target="/usr/share/polkit-1/rules.d/51-org.anduinos.Waypoint-desktop.rules" />
     <IncludeFile Include="data/org.anduinos.Waypoint.conf" Target="/usr/share/dbus-1/system.d/org.anduinos.Waypoint.conf" />
     <IncludeFile Include="data/org.anduinos.Waypoint.service" Target="/usr/share/dbus-1/system-services/org.anduinos.Waypoint.service" />
+    <IncludeFile Include="data/org.anduinos.Waypoint.Session.service" Target="/usr/share/dbus-1/services/org.anduinos.Waypoint.service" />
+    <IncludeFile Include="data/anduinos_waypoint_file_history.py" Target="/usr/share/nautilus-python/extensions/anduinos_waypoint_file_history.py" />
     <IncludeFile Include="data/org.anduinos.Waypoint.Notifier.desktop" Target="/etc/xdg/autostart/org.anduinos.Waypoint.Notifier.desktop" />
     <IncludeFile Include="data/anduinos-waypoint.tmpfiles" Target="/usr/lib/tmpfiles.d/anduinos-waypoint.conf" />
     <IncludeFile Include="data/90-anduinos-waypoint" Target="/etc/apt/apt.conf.d/90-anduinos-waypoint" />

@@ -54,6 +54,7 @@ class InspectTests(unittest.TestCase):
     def test_failed_or_contradictory_probe_is_unknown(self):
         cases = (
             subprocess.CompletedProcess([], 127, "", "mokutil not found"),
+            subprocess.CompletedProcess([], 1, "SecureBoot disabled", "probe failed"),
             subprocess.CompletedProcess(
                 [],
                 0,

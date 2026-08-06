@@ -13,6 +13,8 @@ echo 'f6d678d9551cbeb64c4fcad189d1b34aaaad59465588eee7b504cd0c798729a3  '"$ROOT/
     | sha256sum --check --status
 test -f "$ROOT/data/org.anduinos.Waypoint.metainfo.xml"
 test -f "$ROOT/data/org.anduinos.Waypoint.Notifier.desktop"
+test -f "$ROOT/data/org.anduinos.Waypoint.Session.service"
+test -f "$ROOT/data/anduinos_waypoint_file_history.py"
 test -x "$ROOT/compile-locales.sh"
 test -f "$ROOT/po/anduinos-waypoint-gtk.pot"
 test -f "$ROOT/data/initramfs-hook"
@@ -58,6 +60,31 @@ import sys
 with open(sys.argv[1], encoding="utf-8") as source:
     compile(source.read(), sys.argv[1], "exec")
 PY
+python3 - "$ROOT/data/anduinos_waypoint_file_history.py" <<'PY'
+import sys
+
+with open(sys.argv[1], encoding="utf-8") as source:
+    compile(source.read(), sys.argv[1], "exec")
+PY
+grep -Fq '<Dependency Include="python3-nautilus"' \
+    "$ROOT/anduinos-waypoint-gtk.aosproj"
+grep -Fq 'Target="/usr/share/nautilus-python/extensions/anduinos_waypoint_file_history.py"' \
+    "$ROOT/anduinos-waypoint-gtk.aosproj"
+grep -Fq 'Target="/usr/share/dbus-1/services/org.anduinos.Waypoint.service"' \
+    "$ROOT/anduinos-waypoint-gtk.aosproj"
+grep -Fq 'Gio.BusType.SESSION' "$ROOT/data/anduinos_waypoint_file_history.py"
+grep -Fq 'def get_file_items' "$ROOT/data/anduinos_waypoint_file_history.py"
+grep -Fq 'def get_background_items' "$ROOT/data/anduinos_waypoint_file_history.py"
+grep -Fq 'View File History…' "$ROOT/data/anduinos_waypoint_file_history.py"
+grep -Fq 'Browse This Folder’s History…' "$ROOT/data/anduinos_waypoint_file_history.py"
+grep -Fq 'SimpleAction::new("file-history"' "$ROOT/src/waypoint/src/main.rs"
+grep -Fq 'Exec=/usr/bin/anduinos-waypoint-gtk --gapplication-service' \
+    "$ROOT/data/org.anduinos.Waypoint.Session.service"
+if rg -n 'BusType\.SYSTEM|subprocess|os\.system|Popen|anduinos-waypoint-helper' \
+    "$ROOT/data/anduinos_waypoint_file_history.py"; then
+    echo "The Nautilus extension must not spawn or contact privileged services" >&2
+    exit 1
+fi
 python3 - "$ROOT/screenshots/overview.png" "$ROOT/screenshots/scheduled-recovery.png" <<'PY'
 import struct
 import sys

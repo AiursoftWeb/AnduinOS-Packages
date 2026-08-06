@@ -149,6 +149,8 @@ def parse_secure_boot_status(
     result: subprocess.CompletedProcess[str],
 ) -> SecureBootStatus:
     """Parse every explicit mokutil state without guessing on failures."""
+    if result.returncode != 0:
+        return SecureBootStatus.UNKNOWN
     output = f"{result.stdout}\n{result.stderr}".lower()
     reported_states = {
         status

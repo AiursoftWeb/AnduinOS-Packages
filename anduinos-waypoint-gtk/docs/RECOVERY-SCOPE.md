@@ -44,7 +44,9 @@ The shipped individual-file feature uses this boundary:
 5. The unprivileged GUI chooses the destination with the desktop file chooser
    and writes it under the caller's credentials. The helper never creates,
    overwrites, changes ownership of, or follows links in a caller-selected
-   destination.
+   destination. Single-file recovery writes a private temporary file beside
+   the destination, synchronizes it, and atomically replaces the selected name;
+   a failed stream never truncates the existing file.
 6. Folder recovery repeats those descriptor-confined operations and creates a
    fresh destination tree as the desktop user. Existing folders are never
    merged or overwritten implicitly. The feature does not claim to preserve
@@ -60,3 +62,20 @@ Required tests include symlink swaps at every component, deleted/replaced
 snapshots, oversized directories and files, special files, mount crossings,
 caller disconnects, concurrent deletion, denied authorization, and destination
 overwrite behavior under the unprivileged GUI process.
+
+## Nautilus only activates the unprivileged application
+
+The Nautilus 4 extension contributes “View File History…” for one selected
+item and “Browse This Folder’s History…” for the current folder background.
+It accepts only native `file://` locations that resolve directly beneath the
+current user's home, and hides both actions for remote/GVfs locations, Trash,
+special files, multi-selection, and paths containing symlinks.
+
+Menu construction never queries snapshots or contacts the system service. On
+activation the extension sends the mode and URI to the `file-history`
+GApplication action over the user's session D-Bus. A session service starts
+Waypoint when needed, with no selected path in `argv`. The GTK application
+canonicalizes and validates the request again, converts it to a relative
+Personal Files source, and only then uses the existing bounded listing and
+read-only descriptor API. Neither the extension nor the session activation
+service has a privileged destination-path interface.

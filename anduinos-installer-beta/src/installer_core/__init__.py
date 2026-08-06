@@ -56,6 +56,7 @@ from .live_cleanup import RemoveLivePackagesStep
 from .language_support import InstallLanguagePacksStep
 from .boot_commands import build_boot_commands
 from .bootloader import InstallBootloaderStep
+from .other_systems import CheckOtherDiskSystemsStep
 from .secure_boot import (
     EnrollSecureBootStep,
     PrepareSecureBootStep,
@@ -85,6 +86,7 @@ __all__ = [
     "InstallLanguagePacksStep",
     "build_boot_commands",
     "InstallBootloaderStep",
+    "CheckOtherDiskSystemsStep",
     "PrepareSecureBootStep",
     "EnrollSecureBootStep",
     "InstallThirdPartyDriversStep",

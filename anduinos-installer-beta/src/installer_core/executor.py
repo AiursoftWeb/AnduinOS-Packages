@@ -29,7 +29,8 @@ from .language_support import InstallLanguagePacksStep
 from .live_cleanup import RemoveLivePackagesStep
 from .mirrors import SelectFastestAptMirrorStep
 from .network import DetectNetworkConnectivityStep
-from .model import Filesystem, InstallPlan
+from .model import Filesystem, Firmware, InstallPlan
+from .other_systems import CheckOtherDiskSystemsStep
 from .regional_config import ConfigureKeyboardStep, InstallInputMethodStep
 from .steps import (
     InstallContext,
@@ -118,6 +119,12 @@ class InstallerExecutor:
                 VerifyDkmsSignaturesStep(self.runner),
                 InstallBootloaderStep(self.runner),
                 EnrollSecureBootStep(self.runner),
+            )
+        )
+        if plan.platform.firmware is Firmware.UEFI:
+            steps.append(CheckOtherDiskSystemsStep(self.runner))
+        steps.extend(
+            (
                 LeaveChrootStep(self.runner),
                 UnmountTargetStep(self.runner),
             )

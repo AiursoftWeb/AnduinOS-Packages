@@ -12,6 +12,14 @@ snapshots, timeline retention, caller-scoped browsing, non-privileged file and
 folder recovery, independently verifiable full-stream external backups, and
 desktop notifications for successful automatic creation and retention cleanup.
 
+On Nautilus 4, installing Waypoint also adds two Personal Files entry points:
+“View File History…” for one selected local file or folder, and “Browse This
+Folder’s History…” on a folder background. The latter lets a user enter an
+older directory even after the item they need has already been deleted. The
+extension is intentionally a small unprivileged menu provider. It performs no
+snapshot I/O and activates a separate Waypoint window over the user session
+D-Bus, without placing the selected path in a process command line.
+
 This directory is a new product with no legacy migration contract. Earlier
 unreleased recovery experiments remain available from repository history.
 
@@ -72,6 +80,13 @@ D-Bus. The unprivileged GTK process chooses and writes the destination. This
 does not reintroduce the removed root `rsync` path-copy implementation. The
 reviewed boundary is recorded in [`docs/RECOVERY-SCOPE.md`](docs/RECOVERY-SCOPE.md).
 
+Nautilus integration is limited to a single selection or the current folder,
+and only to native regular files and directories whose canonical path is below
+the current user's home. Remote/GVfs locations, Trash, special files, and paths
+containing symlinks are hidden in the first release. Waypoint repeats that
+validation before converting the URI to a bounded relative source path; the
+Nautilus process never contacts the system helper.
+
 Each automatic schedule has an opt-out “Notify when created” setting that is
 enabled by default, including for configurations written before the setting was
 introduced. A per-session unprivileged notifier receives privacy-preserving
@@ -93,6 +108,7 @@ The layout follows the repository-wide package convention:
   - `waypoint-notifier/`: the unprivileged desktop-session notification bridge;
 - `assets/`: packaged configuration and service defaults;
 - `data/`: desktop, D-Bus, Polkit, systemd, and icon resources;
+  this includes the Nautilus 4 menu provider and session D-Bus activation;
 - `scripts/`: Debian maintainer and validation scripts;
 - `screenshots/`: AppStream screenshots;
 - `upstream/`: original license, author attribution, documentation, and import

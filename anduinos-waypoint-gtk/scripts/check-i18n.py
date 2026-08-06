@@ -14,9 +14,11 @@ SOURCE_ROOTS = (
     ROOT / "src" / "waypoint" / "src",
     ROOT / "src" / "waypoint-notifier" / "src",
 )
+PYTHON_SOURCES = (ROOT / "data" / "anduinos_waypoint_file_history.py",)
 POT = ROOT / "po" / "anduinos-waypoint-gtk.pot"
 ZH_CN = ROOT / "po" / "zh_CN.po"
 CALL = re.compile(r"\btrf?\(\s*(\"(?:\\.|[^\"\\])*\")", re.DOTALL)
+PYTHON_CALL = re.compile(r"\b_\(\s*(\"(?:\\.|[^\"\\])*\")", re.DOTALL)
 RAW_GTK_CALL = re.compile(
     r"\b(?:set_title|set_subtitle|set_description|set_tooltip_text|"
     r"set_placeholder_text|set_heading|set_body|with_label|title|subtitle|"
@@ -50,6 +52,16 @@ def rust_messages() -> dict[str, set[str]]:
                         f"cannot parse gettext literal in {source}: {error}"
                     ) from error
                 found.setdefault(message, set()).add(str(source.relative_to(ROOT)))
+    return found
+
+
+def python_messages() -> dict[str, set[str]]:
+    found: dict[str, set[str]] = {}
+    for source in PYTHON_SOURCES:
+        text = source.read_text(encoding="utf-8")
+        for match in PYTHON_CALL.finditer(text):
+            message = ast.literal_eval(match.group(1))
+            found.setdefault(message, set()).add(str(source.relative_to(ROOT)))
     return found
 
 
@@ -109,6 +121,8 @@ def po_entries(path: Path) -> dict[str, str]:
 
 def main() -> int:
     source_messages = rust_messages()
+    for message, locations in python_messages().items():
+        source_messages.setdefault(message, set()).update(locations)
     untranslated_gtk = raw_gtk_messages()
     template = po_entries(POT)
     chinese = po_entries(ZH_CN)

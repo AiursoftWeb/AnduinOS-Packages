@@ -163,7 +163,7 @@ class InstallBootloaderStep:
             if context.plan.platform.architecture is Architecture.AMD64
             else 0xAA64
         )
-        actual_machine = _read_pe_machine(efi_loader)
+        actual_machine = read_pe_machine(efi_loader)
         if actual_machine != expected_machine:
             raise RuntimeError(
                 f"UEFI loader machine 0x{actual_machine:04x} does not match "
@@ -248,14 +248,16 @@ def _verify_grub_install_options(
         )
 
 
-def _read_pe_machine(path: Path) -> int:
-    data = path.read_bytes()
-    if len(data) < 64 or data[:2] != b"MZ":
-        raise RuntimeError(f"UEFI loader is not a PE executable: {path}")
-    pe_offset = int.from_bytes(data[0x3C:0x40], "little")
-    if (
-        pe_offset + 6 > len(data)
-        or data[pe_offset : pe_offset + 4] != b"PE\0\0"
-    ):
+def read_pe_machine(path: Path) -> int:
+    """Return the PE machine type of an EFI executable."""
+
+    with path.open("rb") as stream:
+        header = stream.read(64)
+        if len(header) < 64 or header[:2] != b"MZ":
+            raise RuntimeError(f"UEFI loader is not a PE executable: {path}")
+        pe_offset = int.from_bytes(header[0x3C:0x40], "little")
+        stream.seek(pe_offset)
+        pe_header = stream.read(6)
+    if len(pe_header) != 6 or pe_header[:4] != b"PE\0\0":
         raise RuntimeError(f"UEFI loader has an invalid PE header: {path}")
-    return int.from_bytes(data[pe_offset + 4 : pe_offset + 6], "little")
+    return int.from_bytes(pe_header[4:6], "little")

@@ -68,6 +68,10 @@ def probe_platform(
     except (FileNotFoundError, subprocess.TimeoutExpired) as error:
         raise ProbeError(f"Cannot determine Secure Boot state: {error}") from error
 
+    if result.returncode != 0:
+        raise ProbeError(
+            "mokutil failed while determining the Secure Boot state"
+        )
     output = f"{result.stdout}\n{result.stderr}".lower()
     reported_states = {
         state

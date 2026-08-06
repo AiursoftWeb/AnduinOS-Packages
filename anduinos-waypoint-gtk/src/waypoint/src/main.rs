@@ -1,5 +1,6 @@
 mod btrfs;
 mod dbus_client;
+mod file_history_request;
 mod i18n;
 mod packages;
 mod performance;
@@ -8,6 +9,7 @@ mod snapshot;
 mod ui;
 mod user_preferences;
 
+use gio::prelude::*;
 use gtk::prelude::*;
 use gtk::{Application, glib};
 
@@ -25,12 +27,43 @@ fn main() -> glib::ExitCode {
     // Initialize GTK
     let app = Application::builder().application_id(APP_ID).build();
 
-    app.connect_startup(|_| {
+    app.connect_startup(|app| {
         load_css();
+        install_file_history_action(app);
     });
 
-    app.connect_activate(build_ui);
+    app.connect_activate(|app| {
+        if let Some(window) = app.active_window() {
+            window.present();
+        } else {
+            build_ui(app);
+        }
+    });
     app.run()
+}
+
+fn install_file_history_action(app: &Application) {
+    let parameter_type = glib::VariantTy::new("(ss)").expect("valid file-history action type");
+    let action = gio::SimpleAction::new("file-history", Some(parameter_type));
+    let app_weak = app.downgrade();
+    action.connect_activate(move |_, parameter| {
+        let Some(app) = app_weak.upgrade() else {
+            return;
+        };
+        let Some((mode, uri)) = parameter.and_then(|value| value.get::<(String, String)>()) else {
+            log::warn!("Rejected malformed File History activation");
+            return;
+        };
+        match file_history_request::resolve_history_request(&mode, &uri) {
+            Ok(target) => ui::show_personal_history_target(&app, target),
+            Err(error) => {
+                // Session peers are untrusted input even though they run as the
+                // same user. Never let an invalid activation reach the helper.
+                log::warn!("Rejected File History activation: {error}");
+            }
+        }
+    });
+    app.add_action(&action);
 }
 
 fn load_css() {
@@ -67,6 +100,10 @@ fn load_css() {
         .theme-circle-dark {
             background-color: #000000;
             border: 2px solid #000000;
+        }
+
+        .file-history-target {
+            background-color: alpha(@accent_color, 0.12);
         }
         "#,
     );

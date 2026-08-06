@@ -67,6 +67,17 @@ class PlatformProbeTests(unittest.TestCase):
                     ),
                 )
 
+    def test_failed_secure_boot_probe_rejects_plausible_output(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(ProbeError, "mokutil failed"):
+                probe_platform(
+                    machine="x86_64",
+                    efi_path=Path(directory),
+                    run=lambda *args, **kwargs: completed(
+                        "SecureBoot disabled", "probe failed", returncode=1
+                    ),
+                )
+
     def test_secure_boot_probe_forces_c_locale(self):
         captured = {}
 

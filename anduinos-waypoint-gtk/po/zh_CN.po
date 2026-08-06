@@ -2458,6 +2458,65 @@ msgstr "比较恢复点"
 msgid "Search (Ctrl+F)"
 msgstr "搜索（Ctrl+F）"
 
+#: src/waypoint/src/ui/personal_history.rs
+msgid "File History"
+msgstr "文件历史"
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Folder History"
+msgstr "文件夹历史"
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Refresh file history"
+msgstr "刷新文件历史"
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Choose an earlier version to browse or recover. Your current files will not be changed automatically."
+msgstr "选择一个早期版本进行浏览或恢复。当前文件不会被自动更改。"
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "Looking for earlier versions…"
+msgstr "正在查找早期版本…"
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "No earlier version was found"
+msgstr "没有找到早期版本"
+
+#: src/waypoint/src/ui/personal_history.rs
+msgid "This item was not present in the available Personal Files history points."
+msgstr "可用的个人文件历史点中没有此项目。"
+
+#: src/waypoint/src/ui/personal_history.rs
+#, c++-format
+msgid "History point {0} · {1} bytes · modified {2}"
+msgstr "历史点 {0} · {1} 字节 · 修改于 {2}"
+
+#: src/waypoint/src/ui/personal_history.rs
+#, c++-format
+msgid "History point {0} · Folder"
+msgstr "历史点 {0} · 文件夹"
+
+#: src/waypoint/src/ui/personal_history.rs
+#, c++-format
+msgid "Selected file · {0}"
+msgstr "选中的文件 · {0}"
+
+#: data/anduinos_waypoint_file_history.py
+msgid "View File History…"
+msgstr "查看文件历史…"
+
+#: data/anduinos_waypoint_file_history.py
+msgid "Browse earlier Personal Files versions of this item"
+msgstr "浏览此项目在个人文件历史中的早期版本"
+
+#: data/anduinos_waypoint_file_history.py
+msgid "Browse This Folder’s History…"
+msgstr "浏览此文件夹的历史…"
+
+#: data/anduinos_waypoint_file_history.py
+msgid "Find files that existed earlier in this Personal Files folder"
+msgstr "查找此个人文件文件夹中过去存在的文件"
+
 #~ msgid "Recovery Point: {0}"
 #~ msgstr "恢复点：{0}"
 

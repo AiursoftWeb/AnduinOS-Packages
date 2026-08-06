@@ -142,7 +142,8 @@ class EnvironmentReportingTests(unittest.TestCase):
         output = "\n".join(logs)
         self.assertIn("Only the selected disk", output)
         self.assertIn("Other disks and their EFI System Partitions", output)
-        self.assertIn("will not be added", output)
+        self.assertIn("will be checked read-only", output)
+        self.assertIn("added to the AnduinOS GRUB menu", output)
 
 
 class UnmountTargetTests(unittest.TestCase):

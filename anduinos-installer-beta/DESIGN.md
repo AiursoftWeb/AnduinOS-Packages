@@ -224,8 +224,14 @@ rounded visual boundary and obscure whether the card itself is active.
   and manifest-driven removal of live-session packages.
 - Milestone 3C — implementation complete: amd64 BIOS+UEFI and arm64 UEFI
   bootloader installation, initramfs generation, fallback EFI loaders and
-  architecture-aware artifact verification. Destructive boot testing remains
-  part of the VM matrix milestone.
+  architecture-aware artifact verification. On UEFI only, a final independent
+  step mounts eligible ESPs on non-target disks read-only, validates canonical
+  Windows Boot Manager binaries, and writes UUID-bound chainloader entries
+  only to the installed target's GRUB configuration. A detected Windows entry
+  makes the GRUB menu visible while leaving the first AnduinOS entry as the
+  default. `os-prober`, foreign Windows volumes, foreign ESP writes and
+  firmware changes are not involved.
+  Destructive boot testing remains part of the VM matrix milestone.
 - Milestone 4 — implementation complete: signed shim/GRUB, machine-local MOK
   generation, explicit DKMS signing, idempotent enrollment scheduling and
   signed-chain verification. See

@@ -137,10 +137,11 @@ class VerifyTargetDiskStep:
                 "Other disks and their EFI System Partitions will not be "
                 "modified"
             )
-        context.log(
-            "Operating systems on other disks will not be added to the "
-            "AnduinOS GRUB menu"
-        )
+        if context.plan.platform.firmware is Firmware.UEFI:
+            context.log(
+                "UEFI Windows systems on other disks will be checked "
+                "read-only and added to the AnduinOS GRUB menu"
+            )
 
     def verify(self, context: InstallContext) -> None:
         return None
