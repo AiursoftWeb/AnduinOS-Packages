@@ -14,7 +14,7 @@ use libadwaita as adw;
 
 use crate::application::SnapshotsManagerApplication;
 use crate::file_history_request::HistoryTarget;
-use crate::i18n::tr;
+use crate::i18n::{tr, trf};
 use crate::signal_listener::SnapshotSignalMonitor;
 
 pub use snapshot_model::SnapshotScope;
@@ -35,6 +35,10 @@ mod imp {
         pub signal_source: RefCell<Option<glib::SourceId>>,
         pub last_system_generation: Cell<u64>,
         pub last_home_generation: Cell<u64>,
+        pub space_refreshing: Cell<bool>,
+        pub space_revealer: RefCell<Option<gtk::Revealer>>,
+        pub space_progress: RefCell<Option<gtk::ProgressBar>>,
+        pub space_label: RefCell<Option<gtk::Label>>,
     }
 
     #[glib::object_subclass]
@@ -53,6 +57,9 @@ mod imp {
             self.home_page.borrow_mut().take();
             self.pages.borrow_mut().take();
             self.signal_monitor.borrow_mut().take();
+            self.space_revealer.borrow_mut().take();
+            self.space_progress.borrow_mut().take();
+            self.space_label.borrow_mut().take();
         }
     }
 
@@ -115,6 +122,26 @@ impl MainWindow {
 
         let switcher_bar = adw::ViewSwitcherBar::new();
         switcher_bar.set_stack(Some(&pages));
+
+        let space_bar = gtk::Box::new(gtk::Orientation::Horizontal, 10);
+        space_bar.set_margin_top(6);
+        space_bar.set_margin_bottom(6);
+        space_bar.set_margin_start(18);
+        space_bar.set_margin_end(18);
+        let space_icon = gtk::Image::from_icon_name("drive-harddisk-symbolic");
+        space_icon.add_css_class("dim-label");
+        let space_progress = gtk::ProgressBar::new();
+        space_progress.set_hexpand(true);
+        space_progress.set_valign(gtk::Align::Center);
+        let space_label = gtk::Label::new(None);
+        space_label.add_css_class("caption");
+        space_label.add_css_class("dim-label");
+        space_bar.append(&space_icon);
+        space_bar.append(&space_progress);
+        space_bar.append(&space_label);
+        let space_revealer = gtk::Revealer::new();
+        space_revealer.set_transition_type(gtk::RevealerTransitionType::Crossfade);
+        space_revealer.set_child(Some(&space_bar));
         let refresh = gtk::Button::from_icon_name("view-refresh-symbolic");
         refresh.set_tooltip_text(Some(&tr("Refresh snapshots")));
         refresh.set_action_name(Some("win.refresh"));
@@ -133,6 +160,7 @@ impl MainWindow {
 
         let view = adw::ToolbarView::new();
         view.add_top_bar(&header);
+        view.add_bottom_bar(&space_revealer);
         view.add_bottom_bar(&switcher_bar);
         view.set_content(Some(&pages));
         let toasts = adw::ToastOverlay::new();
@@ -157,6 +185,9 @@ impl MainWindow {
         *self.imp().pages.borrow_mut() = Some(pages);
         *self.imp().system_page.borrow_mut() = Some(system);
         *self.imp().home_page.borrow_mut() = Some(home);
+        *self.imp().space_revealer.borrow_mut() = Some(space_revealer);
+        *self.imp().space_progress.borrow_mut() = Some(space_progress);
+        *self.imp().space_label.borrow_mut() = Some(space_label);
         self.install_actions();
         self.start_signal_refresh(monitor);
         self.refresh_all();
@@ -224,6 +255,7 @@ impl MainWindow {
         if let Some(page) = self.current_page() {
             page.refresh();
         }
+        self.refresh_filesystem_space();
     }
 
     fn refresh_all(&self) {
@@ -233,6 +265,48 @@ impl MainWindow {
         if let Some(page) = self.imp().home_page.borrow().as_ref() {
             page.refresh();
         }
+        self.refresh_filesystem_space();
+    }
+
+    fn refresh_filesystem_space(&self) {
+        if self.imp().space_refreshing.replace(true) {
+            return;
+        }
+        let weak = self.downgrade();
+        glib::spawn_future_local(async move {
+            let result = gio::spawn_blocking(probe_filesystem_space)
+                .await
+                .map_err(|_| "Filesystem space query stopped unexpectedly".to_string())
+                .and_then(|result| result.map_err(|error| error.to_string()));
+            let Some(window) = weak.upgrade() else {
+                return;
+            };
+            window.imp().space_refreshing.set(false);
+            match result {
+                Ok((total, available)) if total > 0 => {
+                    let used = total.saturating_sub(available);
+                    if let Some(progress) = window.imp().space_progress.borrow().as_ref() {
+                        progress.set_fraction((used as f64 / total as f64).clamp(0.0, 1.0));
+                        progress.set_tooltip_text(Some(&trf(
+                            "{0} available",
+                            &[&snapshots_manager_common::format_bytes(available)],
+                        )));
+                    }
+                    if let Some(label) = window.imp().space_label.borrow().as_ref() {
+                        label.set_label(&format!(
+                            "{} / {}",
+                            snapshots_manager_common::format_bytes(used),
+                            snapshots_manager_common::format_bytes(total)
+                        ));
+                    }
+                    if let Some(revealer) = window.imp().space_revealer.borrow().as_ref() {
+                        revealer.set_reveal_child(true);
+                    }
+                }
+                Ok(_) => log::warn!("Filesystem reported a zero total size"),
+                Err(error) => log::warn!("Could not query filesystem space: {error}"),
+            }
+        });
     }
 
     fn start_signal_refresh(&self, monitor: SnapshotSignalMonitor) {
@@ -266,5 +340,35 @@ impl MainWindow {
             glib::ControlFlow::Continue
         });
         *self.imp().signal_source.borrow_mut() = Some(source);
+    }
+}
+
+fn probe_filesystem_space() -> std::io::Result<(u64, u64)> {
+    let path = std::ffi::CString::new("/").expect("the root path contains no NUL byte");
+    let mut values = std::mem::MaybeUninit::<libc::statvfs>::uninit();
+    if unsafe { libc::statvfs(path.as_ptr(), values.as_mut_ptr()) } != 0 {
+        return Err(std::io::Error::last_os_error());
+    }
+    let values = unsafe { values.assume_init() };
+    let total = values
+        .f_blocks
+        .checked_mul(values.f_frsize)
+        .ok_or_else(|| std::io::Error::other("filesystem size overflow"))?;
+    let available = values
+        .f_bavail
+        .checked_mul(values.f_frsize)
+        .ok_or_else(|| std::io::Error::other("available space overflow"))?;
+    Ok((total, available))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn filesystem_footer_probe_reports_a_bounded_value() {
+        let (total, available) = probe_filesystem_space().unwrap();
+        assert!(total > 0);
+        assert!(available <= total);
     }
 }

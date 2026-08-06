@@ -297,6 +297,22 @@ impl SnapshotsManagerHelper {
         )
     }
 
+    /// Measure one snapshot outside the status-query path and cache the result for the GUI.
+    async fn measure_snapshot_space(&self, scope: String, id: String) -> (bool, String) {
+        let measured = tokio::task::spawn_blocking(move || {
+            btrfs::measure_snapshot_space(std::path::Path::new(RECOVERY_STORE_ROOT), &scope, &id)
+        })
+        .await;
+        match measured {
+            Ok(Ok(space)) => match serde_json::to_string(&space) {
+                Ok(json) => (true, json),
+                Err(error) => (false, format!("Could not serialize snapshot size: {error}")),
+            },
+            Ok(Err(error)) => (false, error.to_string()),
+            Err(error) => (false, format!("Snapshot size measurement stopped: {error}")),
+        }
+    }
+
     /// Private root-owned scheduler notification bridge.
     async fn notify_automatic_snapshot_event(
         &self,
@@ -1625,7 +1641,8 @@ impl SnapshotsManagerHelper {
                     .map(|packages| (record.id.to_string(), packages.len()))
             })
             .collect::<std::collections::HashMap<_, _>>();
-        let personal_sizes = btrfs::get_personal_spaces(&personal.snapshots);
+        let system_sizes = btrfs::get_system_spaces(store_root, &deployments.deployments);
+        let personal_sizes = btrfs::get_personal_spaces(store_root, &personal.snapshots);
         let layout = layout::inspect_current();
         let available = layout.is_supported();
         serde_json::to_string(&serde_json::json!({
@@ -1636,6 +1653,7 @@ impl SnapshotsManagerHelper {
             "deployment_count": deployments.deployments.len(),
             "deployments": deployments.deployments,
             "system_package_counts": package_counts,
+            "system_sizes": system_sizes,
             "personal_snapshot_count": personal.snapshots.len(),
             "personal_snapshots": personal.snapshots,
             "personal_sizes": personal_sizes,

@@ -1,18 +1,15 @@
-//! Read-only Btrfs space-accounting values.
-//!
-//! Disk Snapshots Manager deliberately does not expose quota mutation or a synthetic space
-//! limit until the recovery engine can enforce reclaimable-space reserves.
+//! Read-only, non-authoritative Btrfs space measurements for presentation.
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Serialize, Deserialize)]
 pub struct SnapshotSpace {
+    #[serde(default)]
     pub referenced_bytes: Option<u64>,
+    #[serde(default)]
     pub exclusive_bytes: Option<u64>,
-}
-
-impl SnapshotSpace {
-    pub fn estimated_reclaimable_bytes(self) -> Option<u64> {
-        self.exclusive_bytes
-    }
+    #[serde(default)]
+    pub shared_bytes: Option<u64>,
+    #[serde(default)]
+    pub measured_at_unix_seconds: Option<i64>,
 }

@@ -25,6 +25,8 @@ mod imp {
         pub available: Cell<bool>,
         pub refreshing: Cell<bool>,
         pub refresh_pending: Cell<bool>,
+        pub measuring: Cell<bool>,
+        pub measurement_attempted: RefCell<HashSet<String>>,
         pub selection_mode: Cell<bool>,
         pub controls: RefCell<Option<gtk::Box>>,
         pub search: RefCell<Option<gtk::SearchEntry>>,
@@ -54,6 +56,7 @@ mod imp {
         fn dispose(&self) {
             self.items.borrow_mut().clear();
             self.selected.borrow_mut().clear();
+            self.measurement_attempted.borrow_mut().clear();
             self.controls.borrow_mut().take();
             self.search.borrow_mut().take();
             self.create.borrow_mut().take();
@@ -398,8 +401,10 @@ impl SnapshotPage {
                 .drain(..)
                 .map(|value| {
                     let count = status.system_package_counts.get(&value.id).copied();
+                    let space = status.system_sizes.get(&value.id).copied();
                     let mut item = SnapshotItem::from(value);
                     item.summary = count.map(|count| trf("{0} packages", &[&count.to_string()]));
+                    item.space = space;
                     item
                 })
                 .collect::<Vec<_>>(),
@@ -407,22 +412,90 @@ impl SnapshotPage {
                 .personal_snapshots
                 .drain(..)
                 .map(|value| {
-                    let size = status
-                        .personal_sizes
-                        .get(&value.id)
-                        .and_then(|space| space.referenced_bytes)
-                        .map(snapshots_manager_common::format_bytes);
+                    let space = status.personal_sizes.get(&value.id).copied();
                     let mut item = SnapshotItem::from(value);
-                    item.summary = size;
+                    item.space = space;
                     item
                 })
                 .collect::<Vec<_>>(),
         };
         items.sort_by_key(|item| std::cmp::Reverse(item.created_at));
+        let current_ids = items
+            .iter()
+            .map(|item| item.id.clone())
+            .collect::<HashSet<_>>();
+        self.imp()
+            .measurement_attempted
+            .borrow_mut()
+            .retain(|id| current_ids.contains(id));
         *self.imp().items.borrow_mut() = items;
         self.imp().selected.borrow_mut().clear();
         self.set_selection_mode(false);
         self.render();
+        self.measure_missing_spaces();
+    }
+
+    fn measure_missing_spaces(&self) {
+        if self.imp().measuring.get() {
+            return;
+        }
+        let mut attempted = self.imp().measurement_attempted.borrow_mut();
+        let ids = self
+            .imp()
+            .items
+            .borrow()
+            .iter()
+            .filter(|item| {
+                item.space.is_none()
+                    && !matches!(item.state.as_str(), "creating" | "deleting" | "broken")
+                    && !attempted.contains(&item.id)
+            })
+            .map(|item| item.id.clone())
+            .collect::<Vec<_>>();
+        if ids.is_empty() {
+            return;
+        }
+        attempted.extend(ids.iter().cloned());
+        drop(attempted);
+        self.imp().measuring.set(true);
+
+        let scope = match self.imp().scope.get() {
+            SnapshotScope::System => "system",
+            SnapshotScope::Home => "home",
+        };
+        let weak = self.downgrade();
+        glib::spawn_future_local(async move {
+            let measured = gio::spawn_blocking(move || -> anyhow::Result<(usize, Vec<String>)> {
+                let client = SnapshotsManagerHelperClient::new()?;
+                let mut completed = 0;
+                let mut failures = Vec::new();
+                for id in ids {
+                    match client.measure_snapshot_space(scope, id.clone()) {
+                        Ok(_) => completed += 1,
+                        Err(error) => failures.push(format!("{id}: {error}")),
+                    }
+                }
+                Ok((completed, failures))
+            })
+            .await
+            .map_err(|_| anyhow::anyhow!("Snapshot size measurement stopped unexpectedly"))
+            .and_then(|result| result);
+            let Some(page) = weak.upgrade() else {
+                return;
+            };
+            page.imp().measuring.set(false);
+            match measured {
+                Ok((completed, failures)) => {
+                    for failure in failures {
+                        log::warn!("Could not measure snapshot size: {failure}");
+                    }
+                    if completed > 0 {
+                        page.refresh();
+                    }
+                }
+                Err(error) => log::warn!("Could not measure snapshot sizes: {error}"),
+            }
+        });
     }
 
     fn update_banners(&self, status: &RecoveryEngineStatus) {
@@ -577,6 +650,13 @@ impl SnapshotPage {
 
         let group = gio::SimpleActionGroup::new();
         let weak = self.downgrade();
+        let item_details = item.clone();
+        add_row_action(&group, "details", true, move || {
+            if let Some(page) = weak.upgrade() {
+                page.show_snapshot_details(&item_details);
+            }
+        });
+        let weak = self.downgrade();
         let item_browse = item.clone();
         add_row_action(&group, "browse", capabilities.can_browse, move || {
             if let Some(page) = weak.upgrade() {
@@ -631,6 +711,9 @@ impl SnapshotPage {
         let destructive = gio::Menu::new();
         destructive.append(Some(&tr("Delete Snapshot")), Some("snapshot.delete"));
         menu_model.append_section(None, &destructive);
+        let properties = gio::Menu::new();
+        properties.append(Some(&tr("Properties")), Some("snapshot.details"));
+        menu_model.append_section(None, &properties);
         let menu = gtk::MenuButton::builder()
             .icon_name("view-more-symbolic")
             .tooltip_text(tr("Snapshot Actions"))
@@ -639,6 +722,38 @@ impl SnapshotPage {
             .build();
         row.add_suffix(&menu);
         row
+    }
+
+    fn show_snapshot_details(&self, item: &SnapshotItem) {
+        let Some(parent) = self.parent() else {
+            return;
+        };
+        if let Some(space) = item.space {
+            show_space_details(&parent, &item.title, space);
+            return;
+        }
+
+        let scope = match self.imp().scope.get() {
+            SnapshotScope::System => "system",
+            SnapshotScope::Home => "home",
+        };
+        let id = item.id.clone();
+        let title = item.title.clone();
+        let weak = self.downgrade();
+        run_operation(
+            &parent,
+            &tr("Calculating snapshot size…"),
+            move || SnapshotsManagerHelperClient::new()?.measure_snapshot_space(scope, id),
+            move |parent, result| match result {
+                Ok(space) => {
+                    show_space_details(parent, &title, space);
+                    if let Some(page) = weak.upgrade() {
+                        page.refresh();
+                    }
+                }
+                Err(error) => show_error(parent, &error.to_string()),
+            },
+        );
     }
 
     fn browse(&self, item: &SnapshotItem) {
@@ -1068,6 +1183,14 @@ fn snapshot_details(scope: SnapshotScope, item: &SnapshotItem) -> String {
     if let Some(summary) = &item.summary {
         parts.push(summary.clone());
     }
+    if let Some(size) = item.space.and_then(|space| space.referenced_bytes) {
+        parts.push(trf(
+            "Size {0}",
+            &[&snapshots_manager_common::format_bytes(size)],
+        ));
+    } else if !matches!(item.state.as_str(), "creating" | "deleting" | "broken") {
+        parts.push(tr("Size not calculated"));
+    }
     if item.state != "ready" {
         parts.push(state);
     }
@@ -1201,6 +1324,52 @@ fn show_verification_result(parent: &adw::ApplicationWindow, result: Verificatio
         details.push_str(&result.warnings.join("\n"));
     }
     show_information(parent, &tr("Snapshot Check Complete"), &details);
+}
+
+fn show_space_details(
+    parent: &adw::ApplicationWindow,
+    snapshot_title: &str,
+    space: snapshots_manager_common::SnapshotSpace,
+) {
+    let dialog = adw::MessageDialog::new(
+        Some(parent),
+        Some(&tr("Snapshot Details")),
+        Some(snapshot_title),
+    );
+    let rows = gtk::ListBox::new();
+    rows.add_css_class("boxed-list");
+    rows.append(&space_detail_row(&tr("Total"), space.referenced_bytes));
+    rows.append(&space_detail_row(
+        &tr("Exclusive Data"),
+        space.exclusive_bytes,
+    ));
+    rows.append(&space_detail_row(&tr("Shared Data"), space.shared_bytes));
+    let measured = space
+        .measured_at_unix_seconds
+        .and_then(|seconds| chrono::DateTime::<chrono::Utc>::from_timestamp(seconds, 0))
+        .map(|time| {
+            time.with_timezone(&chrono::Local)
+                .format("%Y-%m-%d %H:%M:%S")
+                .to_string()
+        })
+        .unwrap_or_else(|| tr("Not calculated"));
+    let measured_row = adw::ActionRow::new();
+    measured_row.set_title(&tr("Measured"));
+    measured_row.set_subtitle(&measured);
+    rows.append(&measured_row);
+    dialog.set_extra_child(Some(&rows));
+    dialog.add_response("close", &tr("Close"));
+    dialog.present();
+}
+
+fn space_detail_row(title: &str, bytes: Option<u64>) -> adw::ActionRow {
+    let row = adw::ActionRow::new();
+    row.set_title(title);
+    row.set_subtitle(&bytes.map_or_else(
+        || tr("Not calculated"),
+        snapshots_manager_common::format_bytes,
+    ));
+    row
 }
 
 fn show_rollback_ready(parent: &adw::ApplicationWindow) {

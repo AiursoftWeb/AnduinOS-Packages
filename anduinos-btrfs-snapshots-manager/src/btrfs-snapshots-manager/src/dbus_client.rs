@@ -61,6 +61,8 @@ pub struct RecoveryEngineStatus {
     #[serde(default)]
     pub system_package_counts: std::collections::HashMap<String, usize>,
     #[serde(default)]
+    pub system_sizes: std::collections::HashMap<String, snapshots_manager_common::SnapshotSpace>,
+    #[serde(default)]
     pub personal_sizes: std::collections::HashMap<String, snapshots_manager_common::SnapshotSpace>,
 }
 
@@ -146,6 +148,21 @@ impl SnapshotsManagerHelperClient {
             .call("GetRecoveryEngineStatus", &())
             .context("Failed to query the recovery engine")?;
         serde_json::from_str(&json).context("Failed to parse recovery engine status")
+    }
+
+    pub fn measure_snapshot_space(
+        &self,
+        scope: &str,
+        id: String,
+    ) -> Result<snapshots_manager_common::SnapshotSpace> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call("MeasureSnapshotSpace", &(scope.to_string(), id))
+            .context("Failed to measure snapshot size")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        serde_json::from_str(&result).context("Failed to parse snapshot size")
     }
 
     pub fn create_deployment(

@@ -128,6 +128,10 @@ msgid "Browse This Folder’s History…"
 msgstr "浏览此文件夹的历史…"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Calculating snapshot size…"
+msgstr "正在计算快照大小…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Cancel"
 msgstr "取消"
 
@@ -280,6 +284,10 @@ msgid "Every"
 msgstr "每隔"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Exclusive Data"
+msgstr "独占数据"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Factory"
 msgstr "出厂"
 
@@ -400,6 +408,10 @@ msgid "Manual"
 msgstr "手动"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Measured"
+msgstr "测量时间"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Name"
 msgstr "Name"
 
@@ -426,6 +438,10 @@ msgstr "No snapshots selected"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "No snapshots yet"
 msgstr "No snapshots yet"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Not calculated"
+msgstr "尚未计算"
 
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 msgid "Notifications"
@@ -518,6 +534,10 @@ msgstr "正在准备安全回滚…"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Preserved permanently as a fallback"
 msgstr "永久保留为回退系统"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Properties"
+msgstr "属性"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Protected fallback"
@@ -651,6 +671,18 @@ msgstr "选择快照"
 msgid "Selected file · {0}"
 msgstr "选中的文件 · {0}"
 
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Shared Data"
+msgstr "共享数据"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Size not calculated"
+msgstr "大小尚未计算"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Size {0}"
+msgstr "大小 {0}"
+
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
 msgid "Smart Cleanup"
 msgstr "Smart Cleanup"
@@ -670,6 +702,10 @@ msgstr "快照操作"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Snapshot Check Complete"
 msgstr "Snapshot Check Complete"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Details"
+msgstr "快照详情"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Snapshots are not available on this computer"
@@ -744,6 +780,10 @@ msgid "This snapshot is not available for recovery."
 msgstr "此快照不能用于恢复。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Total"
+msgstr "总量"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Try a different name, date, or snapshot reason."
 msgstr "请尝试其他名称、日期或快照原因。"
 
@@ -782,6 +822,10 @@ msgstr "你的个人文件历史点已成功创建。"
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "Your system recovery point was created successfully."
 msgstr "你的系统恢复点已成功创建。"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "{0} available"
+msgstr "可用 {0}"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "{0} bytes · {1}"

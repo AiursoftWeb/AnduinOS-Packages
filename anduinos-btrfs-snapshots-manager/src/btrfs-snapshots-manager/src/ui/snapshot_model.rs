@@ -20,6 +20,7 @@ pub struct SnapshotItem {
     pub keep_forever: bool,
     pub kernel: Option<String>,
     pub summary: Option<String>,
+    pub space: Option<snapshots_manager_common::SnapshotSpace>,
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -112,6 +113,7 @@ impl From<RecoveryDeployment> for SnapshotItem {
             keep_forever: value.pinned,
             kernel: value.kernel_release,
             summary: None,
+            space: None,
         }
     }
 }
@@ -128,6 +130,7 @@ impl From<PersonalSnapshot> for SnapshotItem {
             keep_forever: value.pinned,
             kernel: None,
             summary: None,
+            space: None,
         }
     }
 }
@@ -147,6 +150,7 @@ mod tests {
             keep_forever: pinned,
             kernel: None,
             summary: None,
+            space: None,
         }
     }
 
