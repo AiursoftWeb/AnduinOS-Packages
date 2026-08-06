@@ -1,6 +1,6 @@
 use anduinos_quiet_engine::{
-    suggest, Action, CommandEvent, Container, FileEntry, GitRef, Host, Process, Query, Service,
-    Suggestion, WorldState,
+    suggest, Action, AptPackage, CandidateSource, CommandEvent, Container, FileEntry, GitRef, Host,
+    Process, Query, Service, Suggestion, WorldState,
 };
 
 fn query(line: &str, now_ms: u64, world: &WorldState) -> Option<Suggestion> {
@@ -43,6 +43,23 @@ fn docker_world(now_ms: u64) -> WorldState {
             listing_rank: 1,
         },
     ];
+    world
+}
+
+fn apt_world(packages: &[(&str, bool)]) -> WorldState {
+    let mut world = WorldState::default();
+    world.apt.generation = 7;
+    world.apt.packages = packages
+        .iter()
+        .map(|(name, installed)| AptPackage {
+            name: (*name).into(),
+            installed: *installed,
+        })
+        .collect();
+    world
+        .apt
+        .packages
+        .sort_by(|left, right| left.name.cmp(&right.name));
     world
 }
 
@@ -96,6 +113,91 @@ fn personal_history_matches_across_sudo_wrappers() {
     world.observe_command("sudo apt autoremove", 0, now - 10);
     world.observe_command("sudo apt autoremove", 0, now - 5);
     assert_eq!(query("apt auto", now, &world).unwrap().insertion, "remove");
+}
+
+#[test]
+fn apt_install_uses_the_small_popularity_prior_without_foreground_io() {
+    let world = apt_world(&[
+        ("bash", true),
+        ("bat", false),
+        ("bmon", false),
+        ("borgbackup", false),
+        ("btop", false),
+        ("build-essential", false),
+    ]);
+    let suggestion = query("sudo apt install b", 1_000, &world).unwrap();
+    assert_eq!(suggestion.candidate.resulting_line, "sudo apt install btop");
+    assert_eq!(suggestion.candidate.source, CandidateSource::Popularity);
+}
+
+#[test]
+fn apt_package_rules_prefer_missing_commands_then_personal_history() {
+    let now = 1_000_000;
+    let mut world = apt_world(&[
+        ("boring-tool", false),
+        ("btop", false),
+        ("build-essential", false),
+    ]);
+    world.observe_command("boring-tool --version", 127, now - 10);
+    assert_eq!(
+        query("apt install b", now, &world)
+            .unwrap()
+            .candidate
+            .resulting_line,
+        "apt install boring-tool"
+    );
+
+    world.last_event = None;
+    world.observe_command("sudo apt install build-essential", 0, now - 5);
+    assert_eq!(
+        query("apt install b", now, &world)
+            .unwrap()
+            .candidate
+            .resulting_line,
+        "apt install build-essential"
+    );
+
+    world
+        .apt
+        .packages
+        .iter_mut()
+        .find(|package| package.name == "build-essential")
+        .unwrap()
+        .installed = true;
+    assert_eq!(
+        query("apt install b", now, &world)
+            .unwrap()
+            .candidate
+            .resulting_line,
+        "apt install btop"
+    );
+}
+
+#[test]
+fn apt_package_rules_filter_by_action_and_complete_only_safe_fallbacks() {
+    let world = apt_world(&[
+        ("btop", true),
+        ("cold-one", false),
+        ("cold-two", false),
+        ("git", false),
+        ("git-lfs", false),
+        ("installed-tool", true),
+        ("unique-cold-package", false),
+    ]);
+    assert!(query("apt install b", 0, &world).is_none());
+    assert_eq!(
+        query("apt remove b", 0, &world)
+            .unwrap()
+            .candidate
+            .resulting_line,
+        "apt remove btop"
+    );
+    assert_eq!(
+        query("apt install unique-c", 0, &world).unwrap().insertion,
+        "old-package"
+    );
+    assert!(query("apt install cold-", 0, &world).is_none());
+    assert!(query("apt install git", 0, &world).is_none());
 }
 
 #[test]

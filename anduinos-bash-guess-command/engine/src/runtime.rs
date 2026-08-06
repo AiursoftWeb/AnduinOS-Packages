@@ -1,8 +1,8 @@
 use crate::history;
 use crate::protocol::{decode_request, encode_response, Request, Response};
 use crate::{
-    evaluate, Action, Artifact, ArtifactKind, Container, FileEntry, GitRef, Host, Process, Query,
-    Service, WorldState,
+    evaluate, Action, AptPackage, Artifact, ArtifactKind, Container, FileEntry, GitRef, Host,
+    Process, Query, Service, WorldState,
 };
 use std::collections::BTreeSet;
 use std::ffi::{CString, OsStr, OsString};
@@ -32,6 +32,7 @@ const MAX_DOCKER_ENTITIES: usize = 4_096;
 const MAX_PROCESS_ENTITIES: usize = 8_192;
 const MAX_SERVICE_ENTITIES: usize = 8_192;
 const MAX_GIT_REFS: usize = 8_192;
+const MAX_APT_PACKAGES: usize = 131_072;
 const FILE_SCAN_BUDGET: Duration = Duration::from_millis(150);
 const MAX_CONTEXT_FILE_BYTES: u64 = 1024 * 1024;
 const MAX_PROTOCOL_LINE_BYTES: usize = 64 * 1024;
@@ -275,6 +276,7 @@ impl Runtime {
             } => {
                 let (
                     docker_refresh,
+                    apt_refresh,
                     process_refresh,
                     service_refresh,
                     git_refresh,
@@ -310,6 +312,16 @@ impl Runtime {
                             Some((elevated, world.docker.generation))
                         }
                         _ => None,
+                    };
+                    let apt = if exit_code == 0
+                        && matches!(action, Some(Action::AptUpdate { .. } | Action::AptMutation))
+                    {
+                        world.apt.generation = world.apt.generation.wrapping_add(1);
+                        world.apt.refreshed_at_ms = now_ms;
+                        world.apt.packages.clear();
+                        Some(world.apt.generation)
+                    } else {
+                        None
                     };
                     let process = if action == Some(Action::ProcessList) && exit_code == 0 {
                         world.processes.generation = world.processes.generation.wrapping_add(1);
@@ -373,6 +385,7 @@ impl Runtime {
                     };
                     (
                         docker,
+                        apt,
                         process,
                         service,
                         git,
@@ -401,6 +414,9 @@ impl Runtime {
                 }
                 if let Some((elevated, generation)) = docker_refresh {
                     self.refresh_docker(elevated, generation);
+                }
+                if let Some(generation) = apt_refresh {
+                    self.refresh_apt(generation);
                 }
                 if let Some(generation) = process_refresh {
                     self.refresh_processes(generation);
@@ -472,6 +488,44 @@ impl Runtime {
         }
         self.refresh_commands(0, shell_path, cwd.clone());
         self.refresh_files(0, cwd);
+        self.refresh_apt(0);
+    }
+
+    fn refresh_apt(&self, generation: u64) {
+        let Some(apt_cache) = self.command_paths.resolve("apt-cache") else {
+            return;
+        };
+        let dpkg_query = self.command_paths.resolve("dpkg-query");
+        let world = Arc::clone(&self.world);
+        self.background.submit(move || {
+            let Some(available) = query_command(
+                &apt_cache,
+                &["--no-generate", "pkgnames"],
+                None,
+                Duration::from_millis(500),
+            ) else {
+                return;
+            };
+            let installed = dpkg_query
+                .as_deref()
+                .and_then(|program| {
+                    query_command(
+                        program,
+                        &["--show", "--showformat=${Package}\\n"],
+                        None,
+                        Duration::from_millis(500),
+                    )
+                })
+                .unwrap_or_default();
+            let packages = parse_apt_packages(&available, &installed);
+            if let Ok(mut world) = world.write() {
+                if world.apt.generation != generation {
+                    return;
+                }
+                world.apt.refreshed_at_ms = wall_time_ms();
+                world.apt.packages = packages;
+            }
+        });
     }
 
     fn refresh_commands(&self, generation: u64, path: OsString, cwd: String) {
@@ -854,6 +908,45 @@ fn parse_git_refs(output: &str) -> Vec<GitRef> {
     names.sort();
     names.dedup();
     names.into_iter().map(|name| GitRef { name }).collect()
+}
+
+fn parse_apt_packages(available: &str, installed: &str) -> Vec<AptPackage> {
+    let installed: BTreeSet<String> = installed
+        .lines()
+        .filter_map(normalize_package_name)
+        .map(str::to_owned)
+        .collect();
+    let mut names: BTreeSet<String> = available
+        .lines()
+        .filter_map(normalize_package_name)
+        .map(str::to_owned)
+        .collect();
+    names.extend(installed.iter().cloned());
+    names
+        .into_iter()
+        .take(MAX_APT_PACKAGES)
+        .map(|name| AptPackage {
+            installed: installed.contains(&name),
+            name,
+        })
+        .collect()
+}
+
+fn normalize_package_name(value: &str) -> Option<&str> {
+    let name = value
+        .trim()
+        .split_once(':')
+        .map_or(value.trim(), |(name, _)| name);
+    let mut bytes = name.bytes();
+    bytes
+        .next()
+        .is_some_and(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit())
+        .then_some(())?;
+    (name.len() <= 128
+        && bytes.all(|byte| {
+            byte.is_ascii_lowercase() || byte.is_ascii_digit() || matches!(byte, b'+' | b'-' | b'.')
+        }))
+    .then_some(name)
 }
 
 fn scan_path_commands(path: &OsStr, cwd: &str) -> Vec<String> {
@@ -1308,6 +1401,29 @@ mod tests {
         let rows = parse_docker_rows("abc\tgood\timage\nmissing-fields\n\tbad\timage\n");
         assert_eq!(rows.len(), 1);
         assert_eq!(rows[0].name, "good");
+    }
+
+    #[test]
+    fn apt_parser_sorts_deduplicates_and_marks_installed_packages() {
+        let packages =
+            parse_apt_packages("btop\nbat\nbad_name\nbtop\n", "bash:amd64\nbat\nINVALID\n");
+        assert_eq!(
+            packages,
+            vec![
+                AptPackage {
+                    name: "bash".into(),
+                    installed: true,
+                },
+                AptPackage {
+                    name: "bat".into(),
+                    installed: true,
+                },
+                AptPackage {
+                    name: "btop".into(),
+                    installed: false,
+                },
+            ]
+        );
     }
 
     #[test]

@@ -23,8 +23,10 @@ EOF
 chmod 755 "$TEST_ROOT/path-bin/dstat"
 COUNT_FILE="$TEST_ROOT/docker.count"
 ENTITY_COUNT_FILE="$TEST_ROOT/entity.count"
+APT_COUNT_FILE="$TEST_ROOT/apt.count"
 : >"$COUNT_FILE"
 : >"$ENTITY_COUNT_FILE"
+: >"$APT_COUNT_FILE"
 
 hex() {
     LC_ALL=C od -An -v -tx1 | tr -d ' \n'
@@ -48,6 +50,7 @@ coproc QUIETD_PROCESS {
     ANDUINOS_GUESS_HISTORY=0 \
     ANDUINOS_RUNTIME_DOCKER_COUNT="$COUNT_FILE" \
     ANDUINOS_RUNTIME_ENTITY_COUNT="$ENTITY_COUNT_FILE" \
+    ANDUINOS_RUNTIME_APT_COUNT="$APT_COUNT_FILE" \
         "$ENGINE" --fixture-bin-dir "$ROOT/tests/fixtures/runtime-bin"
 }
 engine_out=${QUIETD_PROCESS[0]}
@@ -56,17 +59,26 @@ engine_in=${QUIETD_PROCESS[1]}
 printf 'P\n' >&"$engine_in"
 IFS= read -r -u "$engine_out" response || fail 'daemon closed during ping'
 [[ $response == P ]] || fail 'daemon ping protocol failed'
-sleep 0.1
+for _ in {1..50}; do
+    [[ $(wc -l <"$APT_COUNT_FILE") -ge 2 ]] && break
+    sleep 0.01
+done
 [[ ! -s $COUNT_FILE && ! -s $ENTITY_COUNT_FILE ]] ||
-    fail 'starting an interactive shell executed an external discovery command'
+    fail 'startup eagerly queried an event-driven observer'
+[[ $(wc -l <"$APT_COUNT_FILE") == 2 ]] ||
+    fail 'the startup APT snapshot was not built exactly once'
 
-observe_command() {
-    local line=$1 encoded observed_at
+observe_command_with_exit() {
+    local exit_code=$1 line=$2 encoded observed_at
     encoded="$(printf %s "$line" | hex)"
     observed_at="$(now_ms)"
-    printf 'O\t0\t%s\t%s\t%s\n' "$observed_at" "$encoded" "$cwd_hex" >&"$engine_in"
+    printf 'O\t%s\t%s\t%s\t%s\n' "$exit_code" "$observed_at" "$encoded" "$cwd_hex" >&"$engine_in"
     IFS= read -r -u "$engine_out" response || fail 'daemon closed during observation'
     [[ $response == A ]] || fail "daemon did not acknowledge observation: $line"
+}
+
+observe_command() {
+    observe_command_with_exit 0 "$1"
 }
 
 observe_command 'sudo docker ps | grep mysql'
@@ -107,6 +119,20 @@ expect_suggestion 'kill 42' '42'
 expect_suggestion 'systemctl status dock' 'er.service'
 expect_suggestion 'git switch fea' 'ture-log'
 expect_suggestion 'sudo dsta' 't'
+expect_suggestion 'sudo apt install b' 'top'
+
+observe_command_with_exit 127 'boring-tool --version'
+expect_suggestion 'sudo apt install b' 'oring-tool'
+
+apt_calls_before_refresh="$(wc -l <"$APT_COUNT_FILE")"
+observe_command 'sudo apt install btop'
+for _ in {1..50}; do
+    apt_calls_after_refresh="$(wc -l <"$APT_COUNT_FILE")"
+    [[ $apt_calls_after_refresh -ge $((apt_calls_before_refresh + 2)) ]] && break
+    sleep 0.01
+done
+[[ $apt_calls_after_refresh == $((apt_calls_before_refresh + 2)) ]] ||
+    fail 'successful apt install did not refresh the package snapshot exactly once'
 
 runtime_threads=$(awk '/^Threads:/ { print $2 }' "/proc/$QUIETD_PROCESS_PID/status")
 [[ $runtime_threads -le 3 ]] ||
@@ -114,6 +140,7 @@ runtime_threads=$(awk '/^Threads:/ { print $2 }' "/proc/$QUIETD_PROCESS_PID/stat
 
 calls_before="$(wc -l <"$COUNT_FILE")"
 entity_calls_before="$(wc -l <"$ENTITY_COUNT_FILE")"
+apt_calls_before="$(wc -l <"$APT_COUNT_FILE")"
 latencies=()
 for _ in {1..100}; do
     now_ms="$(now_ms)"
@@ -125,10 +152,13 @@ for _ in {1..100}; do
 done
 calls_after="$(wc -l <"$COUNT_FILE")"
 entity_calls_after="$(wc -l <"$ENTITY_COUNT_FILE")"
+apt_calls_after="$(wc -l <"$APT_COUNT_FILE")"
 [[ $calls_after == "$calls_before" ]] ||
     fail 'foreground queries executed Docker or another refresh'
 [[ $entity_calls_after == "$entity_calls_before" ]] ||
     fail 'foreground queries executed Git, systemctl, or ps'
+[[ $apt_calls_after == "$apt_calls_before" ]] ||
+    fail 'foreground queries executed apt-cache or dpkg-query'
 mapfile -t sorted_latencies < <(printf '%s\n' "${latencies[@]}" | sort -n)
 p95=${sorted_latencies[94]}
 [[ $p95 -le 10 ]] || fail "foreground pipe round-trip p95 is ${p95}ms"

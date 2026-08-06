@@ -25,6 +25,9 @@ pub(crate) fn generate(
         SlotKind::GitRef => git_ref_candidates(parsed, slot, world, now_ms, &mut candidates),
         SlotKind::Host => host_candidates(parsed, slot, world, now_ms, &mut candidates),
         SlotKind::Path => path_candidates(parsed, slot, world, now_ms, &mut candidates),
+        SlotKind::AptPackage => {
+            apt_package_candidates(parsed, slot, world, now_ms, &mut candidates)
+        }
         _ => {}
     }
     workflow_candidates(parsed, slot, world, now_ms, &mut candidates);
@@ -251,6 +254,8 @@ fn transition_candidates(
             || entry.next == current
             || !entry.next.starts_with(current)
             || destructive_dd_device_replay(&entry.next)
+            || (slot.kind == SlotKind::AptPackage
+                && !learned_apt_package_is_eligible(parsed, &entry.next, world))
         {
             continue;
         }
@@ -285,6 +290,7 @@ fn learned_kind(slot: &Slot) -> Option<CandidateKind> {
         CandidateKind::Command,
         CandidateKind::Subcommand,
         CandidateKind::Path,
+        CandidateKind::Package,
     ]
     .into_iter()
     .find(|kind| slot.allows(*kind))
@@ -602,6 +608,8 @@ fn personal_candidates(
         CandidateKind::Command
     } else if slot.allows(CandidateKind::Subcommand) {
         CandidateKind::Subcommand
+    } else if slot.allows(CandidateKind::Package) {
+        CandidateKind::Package
     } else {
         return;
     };
@@ -615,6 +623,11 @@ fn personal_candidates(
     for entry in &world.history {
         let history_command = normalized_history_command(&entry.command);
         if history_command == current_command || !history_command.starts_with(current_command) {
+            continue;
+        }
+        if slot.kind == SlotKind::AptPackage
+            && !learned_apt_package_is_eligible(parsed, history_command, world)
+        {
             continue;
         }
         if destructive_dd_device_replay(history_command) {
@@ -677,6 +690,36 @@ fn destructive_dd_device_replay(command: &str) -> bool {
                 .strip_prefix("of=")
                 .is_some_and(|path| path.starts_with("/dev/"))
         })
+}
+
+fn learned_apt_package_is_eligible(
+    parsed: &ParsedLine,
+    candidate: &str,
+    world: &WorldState,
+) -> bool {
+    let current = parsed.command_values();
+    let Some(action) = current.get(1).copied() else {
+        return false;
+    };
+    let package_index = if parsed.trailing_space {
+        current.len()
+    } else {
+        current.len().saturating_sub(1)
+    };
+    let Some(candidate) = crate::shell::parse_line(candidate, candidate.len()) else {
+        return false;
+    };
+    let candidate_values = candidate.command_values();
+    let Some(package_name) = candidate_values.get(package_index) else {
+        return false;
+    };
+    world
+        .apt
+        .packages
+        .binary_search_by(|package| package.name.as_str().cmp(package_name))
+        .ok()
+        .map(|index| &world.apt.packages[index])
+        .is_some_and(|package| apt_package_is_eligible(action, package))
 }
 
 fn subcommand_candidates(parsed: &ParsedLine, slot: &Slot, out: &mut Vec<Candidate>) {
@@ -1042,6 +1085,138 @@ fn apt_candidates(parsed: &ParsedLine, world: &WorldState, now_ms: u64, out: &mu
             dependencies: vec![Dependency::AptGeneration(world.apt.generation)],
             expires_at_ms: Some(event.at_ms.saturating_add(120_000)),
         });
+    }
+}
+
+fn apt_package_candidates(
+    parsed: &ParsedLine,
+    slot: &Slot,
+    world: &WorldState,
+    now_ms: u64,
+    out: &mut Vec<Candidate>,
+) {
+    let values = parsed.command_values();
+    let Some(action) = values.get(1).copied() else {
+        return;
+    };
+    let eligible = |package: &&crate::world::AptPackage| apt_package_is_eligible(action, package);
+    let package_named = |name: &str| {
+        world
+            .apt
+            .packages
+            .binary_search_by(|package| package.name.as_str().cmp(name))
+            .ok()
+            .map(|index| &world.apt.packages[index])
+            .filter(eligible)
+    };
+    let base = &parsed.source[..slot.token_start];
+
+    // The immediately preceding command returning 127 is direct installation
+    // intent. Package existence is still verified against the local snapshot.
+    if let Some(event) = world
+        .last_event
+        .as_ref()
+        .filter(|event| event.exit_code == 127 && now_ms.saturating_sub(event.at_ms) <= 600_000)
+    {
+        if let Some(name) = event.normalized.split_whitespace().next().filter(|name| {
+            !name.contains('/') && name.starts_with(&slot.prefix) && *name != slot.prefix
+        }) {
+            if package_named(name).is_some() {
+                out.push(Candidate {
+                    resulting_line: format!("{base}{name}"),
+                    kind: CandidateKind::Package,
+                    source: CandidateSource::Recovery,
+                    confidence: 0.99,
+                    risk: Risk::Safe,
+                    evidence: vec![Evidence::PreviousCommand("command-not-found")],
+                    dependencies: vec![Dependency::AptGeneration(world.apt.generation)],
+                    expires_at_ms: Some(event.at_ms.saturating_add(600_000)),
+                });
+            }
+        }
+    }
+
+    if slot.prefix.is_empty() {
+        return;
+    }
+    // A complete package token is already valid. Never turn `git` into
+    // `git-lfs`; personal history may still append an explicitly learned tail.
+    if package_named(&slot.prefix).is_some() {
+        return;
+    }
+    let first = world
+        .apt
+        .packages
+        .partition_point(|package| package.name.as_str() < slot.prefix.as_str());
+    for (rank, popular) in include_str!("../specs/popular-apt-packages.txt")
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty() && !line.starts_with('#'))
+        .enumerate()
+    {
+        if !popular.starts_with(&slot.prefix) || popular == slot.prefix {
+            continue;
+        }
+        if package_named(popular).is_some() {
+            out.push(Candidate {
+                resulting_line: format!("{base}{popular}"),
+                kind: CandidateKind::Package,
+                source: CandidateSource::Popularity,
+                confidence: 0.62,
+                risk: Risk::Safe,
+                evidence: vec![Evidence::PopularityRank(rank.min(u16::MAX as usize) as u16)],
+                dependencies: vec![Dependency::AptGeneration(world.apt.generation)],
+                expires_at_ms: None,
+            });
+            return;
+        }
+    }
+
+    let mut matches = world.apt.packages[first..]
+        .iter()
+        .take_while(|package| package.name.starts_with(&slot.prefix))
+        .filter(eligible);
+    let Some(first_match) = matches.next() else {
+        return;
+    };
+    let mut completion = first_match.name.clone();
+    let mut count = 1_usize;
+    for package in matches {
+        while !package.name.starts_with(&completion) {
+            if completion.pop().is_none() {
+                break;
+            }
+        }
+        count += 1;
+    }
+    if completion == slot.prefix {
+        return;
+    }
+    out.push(Candidate {
+        resulting_line: format!("{base}{completion}"),
+        kind: CandidateKind::Package,
+        source: CandidateSource::LiveEntity,
+        confidence: if count == 1 { 0.54 } else { 0.50 },
+        risk: Risk::Safe,
+        evidence: vec![if count == 1 {
+            Evidence::UniqueMatch
+        } else {
+            Evidence::LiveEntity {
+                generation: world.apt.generation,
+            }
+        }],
+        dependencies: vec![Dependency::AptGeneration(world.apt.generation)],
+        expires_at_ms: None,
+    });
+}
+
+fn apt_package_is_eligible(action: &str, package: &crate::world::AptPackage) -> bool {
+    match action {
+        "install" => !package.installed,
+        "reinstall" | "remove" | "purge" | "autoremove" | "autopurge" | "upgrade" => {
+            package.installed
+        }
+        _ => true,
     }
 }
 

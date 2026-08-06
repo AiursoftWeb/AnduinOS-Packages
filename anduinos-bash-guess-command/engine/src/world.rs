@@ -3,6 +3,7 @@ use crate::shell::parse_line;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Action {
     AptUpdate { command: String },
+    AptMutation,
     DockerList { elevated: bool },
     DockerBuild { image: Option<String> },
     ProcessList,
@@ -109,6 +110,14 @@ pub struct AptSnapshot {
     pub generation: u64,
     pub refreshed_at_ms: u64,
     pub upgradable_packages: u32,
+    /// Sorted, bounded package names prepared by a background observer.
+    pub packages: Vec<AptPackage>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AptPackage {
+    pub name: String,
+    pub installed: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -442,6 +451,14 @@ fn derive_event(line: &str, exit_code: i32, at_ms: u64) -> Option<CommandEvent> 
         [command @ ("apt" | "apt-get"), "update", ..] => Action::AptUpdate {
             command: (*command).to_owned(),
         },
+        ["apt" | "apt-get", action, ..]
+            if matches!(
+                *action,
+                "install" | "reinstall" | "remove" | "purge" | "autoremove" | "autopurge"
+            ) =>
+        {
+            Action::AptMutation
+        }
         ["docker", "ps", ..] | ["docker", "container", "ls", ..] => Action::DockerList { elevated },
         ["docker", "build", ..] => Action::DockerBuild {
             image: option_value(&values, &["-t", "--tag"]),

@@ -10,9 +10,9 @@ editing modes and every other key remain native Bash/Readline behavior. There
 is no status bar, paste progress, mode banner, syntax highlighting, or terminal
 cache generation.
 
-The engine is local and typed. It understands apt workflows, Docker container
-slots, process IDs, systemd services, Git refs, SSH aliases, verified command
-artifacts and guarded `git clean` options.
+The engine is local and typed. It understands apt workflows and package names,
+Docker container slots, process IDs, systemd services, Git refs, SSH aliases,
+verified command artifacts and guarded `git clean` options.
 Slow local discovery happens in the background between prompts; a keystroke
 query only reads an immutable in-memory snapshot. Suggestions are append-only,
 single-line, control-character-free and never execute automatically.
@@ -25,6 +25,15 @@ when the per-shell engine starts; it adds no prompt hook, watcher or periodic
 refresh, and a keystroke never performs filesystem I/O. Unsafe command names
 that cannot be appended as an unquoted shell word are ignored. Programs
 installed later become visible in a new Bash session.
+
+APT package names and installed state are also snapshotted once in the
+background with the distribution's own `apt-cache` and `dpkg-query` tools, then
+refreshed after a successful apt update, installation or removal. Package
+prediction uses a small checked-in list of deliberately installed popular
+tools, personal history and unique-prefix fallback. A just-failed command
+(exit 127) is direct installation intent when an identically named package
+exists. Every keystroke still performs only immutable in-memory lookup; normal
+startup and prediction never contact the network.
 
 A compact offline index supplies safe defaults for high-value workflows plus a
 generated corpus of more than 700 CLIs and 7,500 multi-level command nodes. It
@@ -60,6 +69,7 @@ Examples:
 
 ```bash
 sudo apt update                   # next: sudo apt up -> upgrade
+sudo apt install b                # -> btop when available and not installed
 apt auto                          # -> your most-used matching apt action
 sudo docker ps | grep mysql       # next: docker logs -f  -> unique container
 sudo docker ps                    # next: docker e -> docker exec -it <container>

@@ -1,5 +1,6 @@
 use anduinos_quiet_engine::{
-    parse_line, suggest, Action, CommandEvent, HistoryEntry, Query, TransitionEntry, WorldState,
+    parse_line, suggest, Action, AptPackage, CommandEvent, HistoryEntry, Query, TransitionEntry,
+    WorldState,
 };
 use std::time::Instant;
 
@@ -122,5 +123,45 @@ fn bounded_full_indexes_stay_inside_the_frontend_deadline_budget() {
     assert!(
         elapsed.as_secs_f32() < 5.0,
         "1k full-index foreground queries took {elapsed:?}"
+    );
+}
+
+#[test]
+fn large_apt_snapshot_queries_are_bounded_in_memory_and_cpu() {
+    let mut world = WorldState::default();
+    world.apt.generation = 1;
+    world.apt.packages = (0..100_000)
+        .map(|index| AptPackage {
+            name: format!("package-{index:05}"),
+            installed: false,
+        })
+        .collect();
+    world.apt.packages.push(AptPackage {
+        name: "btop".into(),
+        installed: false,
+    });
+    world
+        .apt
+        .packages
+        .sort_by(|left, right| left.name.cmp(&right.name));
+
+    let line = "sudo apt install b";
+    let started = Instant::now();
+    for now_ms in 0..10_000 {
+        let suggestion = suggest(
+            Query {
+                line,
+                cursor: line.len(),
+                now_ms,
+            },
+            &world,
+        )
+        .unwrap();
+        assert_eq!(suggestion.insertion, "top");
+    }
+    let elapsed = started.elapsed();
+    assert!(
+        elapsed.as_secs_f32() < 5.0,
+        "10k large APT snapshot queries took {elapsed:?}"
     );
 }

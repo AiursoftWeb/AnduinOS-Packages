@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+[[ ${ANDUINOS_RUNTIME_APT_COUNT-} ]] || exit 90
+printf 'apt-cache\n' >>"$ANDUINOS_RUNTIME_APT_COUNT"
+[[ $* == '--no-generate pkgnames' ]] || exit 91
+printf '%s\n' bash bat bmon borgbackup boring-tool btop build-essential cold-one cold-two unique-cold-package

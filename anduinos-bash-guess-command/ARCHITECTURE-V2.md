@@ -192,9 +192,9 @@ PATH scans, directory
 scans, command output, entity collections, worker count and worker queue all
 have explicit limits; foreground send and receive share one 8 ms deadline.
 
-Helper startup performs local, bounded snapshots only and never launches an
-external discovery command. `docker`, `ps`, `systemctl` and `git` probes use
-fixed `/usr/bin` paths and run only after a matching successful user workflow.
+Helper startup performs local, bounded snapshots only. `docker`, `ps`,
+`systemctl` and `git` probes use fixed `/usr/bin` paths and run only after a
+matching successful user workflow.
 There is no network client, service, timer, watcher or periodic job. A normal
 installation imports the Bash-selected history file but keeps new learning in
 memory. Extra mode-0600 state is created only when
@@ -202,3 +202,14 @@ memory. Extra mode-0600 state is created only when
 1 MiB, and graceful helper shutdown gives accepted writes a bounded drain
 window. Oversized or malformed protocol input is drained and rejected without
 losing the next frame.
+
+Version `1.0.0-32` adds a deliberately small APT package provider. Startup uses
+the distribution's existing `/usr/bin/apt-cache` and `/usr/bin/dpkg-query` in a
+bounded background job to build a sorted available/installed snapshot; a
+successful apt update, installation or removal invalidates and asynchronously
+refreshes it. The keystroke path performs only binary lookup over that snapshot.
+Candidate choice is an auditable precedence chain: a matching command that just
+failed with exit 127, personal history, the first available and uninstalled
+entry in a checked-in popular-package list, then a unique name or advancing
+common prefix. Ordinary package tokens no longer fall into filesystem matching;
+only explicit `./`, `../`, `/` and `~/` apt install arguments are path slots.

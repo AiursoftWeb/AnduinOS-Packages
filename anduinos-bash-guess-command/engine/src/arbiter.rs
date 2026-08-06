@@ -120,6 +120,7 @@ fn score(candidate: &Candidate) -> f32 {
         CandidateSource::Workflow => 0.06,
         CandidateSource::Transition => 0.04,
         CandidateSource::Grammar => 0.0,
+        CandidateSource::Popularity => 0.0,
         CandidateSource::Personal => -0.03,
         CandidateSource::Recovery => 0.02,
         CandidateSource::Filesystem => -0.08,

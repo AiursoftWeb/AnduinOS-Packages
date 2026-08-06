@@ -16,6 +16,7 @@ pub enum SlotKind {
     GitCleanOption,
     Option,
     Path,
+    AptPackage,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -170,6 +171,24 @@ pub fn classify_slot(parsed: &ParsedLine) -> Slot {
             true,
         );
     }
+    if apt_package_position(&values, parsed.trailing_space) {
+        if apt_explicit_path(&values, &prefix) {
+            return slot(
+                SlotKind::Path,
+                prefix,
+                token_start,
+                &[CandidateKind::Path],
+                false,
+            );
+        }
+        return slot(
+            SlotKind::AptPackage,
+            prefix,
+            token_start,
+            &[CandidateKind::Package],
+            true,
+        );
+    }
     if !grammar_base.is_empty()
         && !prefix.starts_with('-')
         && specs::find_nested(grammar_base).is_some_and(|spec| {
@@ -247,6 +266,65 @@ pub fn classify_slot(parsed: &ParsedLine) -> Slot {
 
 fn grammar_command(command: &str) -> bool {
     specs::find(command).is_some_and(specs::has_actions)
+}
+
+fn apt_package_position(values: &[&str], trailing_space: bool) -> bool {
+    if !matches!(values.first(), Some(&("apt" | "apt-get"))) {
+        return false;
+    }
+    let Some(action) = values.get(1) else {
+        return false;
+    };
+    if !matches!(
+        *action,
+        "install"
+            | "reinstall"
+            | "remove"
+            | "purge"
+            | "autoremove"
+            | "autopurge"
+            | "show"
+            | "info"
+            | "policy"
+            | "download"
+            | "changelog"
+            | "depends"
+            | "rdepends"
+            | "source"
+            | "build-dep"
+            | "satisfy"
+            | "upgrade"
+    ) {
+        return false;
+    }
+    let value_options = [
+        "-a",
+        "--host-architecture",
+        "-o",
+        "--option",
+        "-P",
+        "--build-profiles",
+        "--solver",
+        "-t",
+        "--target-release",
+    ];
+    let preceding = if trailing_space {
+        values.last().copied()
+    } else {
+        values.get(values.len().saturating_sub(2)).copied()
+    };
+    if preceding.is_some_and(|value| value_options.contains(&value)) {
+        return false;
+    }
+    values.len() >= 3 || (values.len() == 2 && trailing_space)
+}
+
+fn apt_explicit_path(values: &[&str], prefix: &str) -> bool {
+    matches!(values.get(1), Some(&("install" | "reinstall")))
+        && (prefix.starts_with('/')
+            || prefix.starts_with("./")
+            || prefix.starts_with("../")
+            || prefix.starts_with("~/"))
 }
 
 fn path_position(values: &[&str], trailing_space: bool) -> bool {
@@ -549,5 +627,16 @@ mod tests {
         assert_eq!(kind("git remote g"), SlotKind::Subcommand);
         assert_eq!(kind("ls -ashl ./de"), SlotKind::Path);
         assert_eq!(kind("sha256sum ./ima"), SlotKind::Path);
+    }
+
+    #[test]
+    fn separates_apt_packages_from_explicit_local_archives() {
+        assert_eq!(kind("sudo apt install b"), SlotKind::AptPackage);
+        assert_eq!(kind("apt install curl b"), SlotKind::AptPackage);
+        assert_eq!(kind("apt remove b"), SlotKind::AptPackage);
+        assert_eq!(kind("apt install --ass"), SlotKind::Option);
+        assert_eq!(kind("apt install -t book"), SlotKind::Unknown);
+        assert_eq!(kind("apt install ./b"), SlotKind::Path);
+        assert_eq!(kind("apt reinstall /tmp/b"), SlotKind::Path);
     }
 }

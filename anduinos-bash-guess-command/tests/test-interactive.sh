@@ -61,6 +61,19 @@ fi
 EOF
 chmod 755 "$TEST_ROOT/home/bin/docker"
 
+cat >"$TEST_ROOT/home/bin/apt-cache" <<'EOF'
+#!/usr/bin/env bash
+[[ $* == '--no-generate pkgnames' ]] || exit 1
+printf '%s\n' bash bat bmon borgbackup btop build-essential
+EOF
+chmod 755 "$TEST_ROOT/home/bin/apt-cache"
+
+cat >"$TEST_ROOT/home/bin/dpkg-query" <<'EOF'
+#!/usr/bin/env bash
+printf '%s\n' bash build-essential
+EOF
+chmod 755 "$TEST_ROOT/home/bin/dpkg-query"
+
 cat >"$TEST_ROOT/home/bin/nativecmd" <<EOF
 #!/usr/bin/env bash
 printf '%s' "\$*" >'$TEST_ROOT/native-tab.args'
@@ -127,6 +140,13 @@ accept_workflow_input() {
 apt_skeleton_input() {
     sleep 0.5
     printf 'sudo apt '
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
+
+apt_package_input() {
+    sleep 0.5
+    printf 'sudo apt install b'
     sleep 0.2
     printf '\033[C\nexit\n'
 }
@@ -362,6 +382,12 @@ LC_ALL=C grep -aFq $'\033[90m' "$TEST_ROOT/workflow.typescript" ||
 run_session apt_skeleton_input "$TEST_ROOT/apt-skeleton.typescript"
 [[ $(<"$TEST_ROOT/sudo.args") == 'apt update' ]] ||
     fail 'apt command skeleton was silent'
+
+run_session apt_package_input "$TEST_ROOT/apt-package.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'apt install btop' ]] ||
+    fail 'APT package popularity snapshot did not predict btop'
+LC_ALL=C grep -aFq $'\033[90m' "$TEST_ROOT/apt-package.typescript" ||
+    fail 'the APT package suggestion was accepted but never rendered'
 
 run_session enter_native_input "$TEST_ROOT/enter.typescript"
 [[ $(<"$TEST_ROOT/sudo.args") == 'apt up' ]] ||

@@ -9,6 +9,7 @@ pub enum CandidateKind {
     Process,
     Host,
     Path,
+    Package,
     Workflow,
 }
 
@@ -19,6 +20,7 @@ pub enum CandidateSource {
     LiveEntity,
     Workflow,
     Transition,
+    Popularity,
     Personal,
     Recovery,
     Filesystem,
@@ -47,6 +49,7 @@ pub enum Evidence {
     TransitionFrequency(u32),
     SameDirectory,
     ProducedArtifact,
+    PopularityRank(u16),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
