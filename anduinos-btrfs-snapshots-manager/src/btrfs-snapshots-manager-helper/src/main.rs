@@ -335,8 +335,24 @@ impl SnapshotsManagerHelper {
         personal_deleted: u64,
     ) -> zbus::Result<()>;
 
-    /// Report the trusted deployment engine state without authorizing mutation.
+    /// Report only the state required by an unprivileged Personal Files client.
+    /// System recovery details and user-provided snapshot labels are deliberately
+    /// omitted because this method is available to every local D-Bus caller.
     async fn get_recovery_engine_status(&self) -> String {
+        Self::public_recovery_engine_status_impl(std::path::Path::new(RECOVERY_STORE_ROOT))
+            .unwrap_or_else(|error| {
+                serde_json::json!({
+                    "schema_version": 1,
+                    "available": false,
+                    "error": error.to_string(),
+                })
+                .to_string()
+            })
+    }
+
+    /// Report the complete recovery state. The system-bus policy exposes this
+    /// method only to root and members of the sudo group.
+    async fn get_privileged_recovery_engine_status(&self) -> String {
         Self::recovery_engine_status_impl(std::path::Path::new(RECOVERY_STORE_ROOT)).unwrap_or_else(
             |error| {
                 serde_json::json!({
@@ -1773,6 +1789,54 @@ impl SnapshotsManagerHelper {
         .context("Failed to serialize recovery engine status")
     }
 
+    fn public_recovery_engine_status_impl(store_root: &std::path::Path) -> Result<String> {
+        let full = Self::recovery_engine_status_impl(store_root)?;
+        let mut status: serde_json::Value =
+            serde_json::from_str(&full).context("Failed to parse recovery engine status")?;
+        Self::redact_public_recovery_status(&mut status)?;
+        serde_json::to_string(&status).context("Failed to serialize public recovery engine status")
+    }
+
+    fn redact_public_recovery_status(status: &mut serde_json::Value) -> Result<()> {
+        let object = status
+            .as_object_mut()
+            .context("Recovery engine status is not an object")?;
+
+        // These fields expose system-wide recovery history or internal layout
+        // details and are not needed to browse the caller's own Personal Files.
+        object.insert("pending".into(), serde_json::Value::Null);
+        object.insert("deployment_count".into(), serde_json::json!(0));
+        object.insert("deployments".into(), serde_json::json!([]));
+        object.insert("system_package_counts".into(), serde_json::json!({}));
+        object.insert("system_sizes".into(), serde_json::json!({}));
+        object.insert("issues".into(), serde_json::json!([]));
+        object.insert("personal_issues".into(), serde_json::json!([]));
+        object.insert("personal_sizes".into(), serde_json::json!({}));
+        object.insert("layout".into(), serde_json::json!({}));
+        object.remove("store_root");
+
+        // Personal snapshots cover the shared @home subvolume, so their IDs
+        // and timestamps must remain visible for per-caller file browsing. Do
+        // not disclose labels, filesystem identities, or failure diagnostics
+        // supplied by another desktop user.
+        if let Some(snapshots) = object
+            .get_mut("personal_snapshots")
+            .and_then(serde_json::Value::as_array_mut)
+        {
+            for snapshot in snapshots {
+                if let Some(snapshot) = snapshot.as_object_mut() {
+                    snapshot.insert("title".into(), serde_json::json!("Home snapshot"));
+                    snapshot.insert("reason".into(), serde_json::json!(""));
+                    snapshot.remove("snapshot_uuid");
+                    snapshot.remove("snapshot_parent_uuid");
+                    snapshot.remove("failure");
+                    snapshot.remove("schedule_id");
+                }
+            }
+        }
+        Ok(())
+    }
+
     fn apply_schedule_retention_impl() -> Result<ScheduleRetentionSummary> {
         let layout = layout::inspect_current();
         if !layout.is_supported() {
@@ -2264,6 +2328,60 @@ mod tests {
         assert_eq!(value["issues"], serde_json::json!([]));
 
         std::fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn public_recovery_status_omits_privileged_metadata() {
+        let root = std::env::temp_dir().join(format!(
+            "anduinos-btrfs-snapshots-manager-public-status-{}",
+            std::process::id()
+        ));
+        std::fs::create_dir_all(&root).unwrap();
+
+        let status = SnapshotsManagerHelper::public_recovery_engine_status_impl(&root).unwrap();
+        let value: serde_json::Value = serde_json::from_str(&status).unwrap();
+        assert_eq!(value["deployments"], serde_json::json!([]));
+        assert!(value["pending"].is_null());
+        assert_eq!(value["system_package_counts"], serde_json::json!({}));
+        assert_eq!(value["system_sizes"], serde_json::json!({}));
+        assert_eq!(value["layout"], serde_json::json!({}));
+        assert!(value.get("store_root").is_none());
+
+        std::fs::remove_dir_all(root).unwrap();
+
+        let mut populated = serde_json::json!({
+            "store_root": "/.snapshots/private",
+            "pending": {"target_deployment_id": "secret"},
+            "deployment_count": 1,
+            "deployments": [{"title": "secret system title"}],
+            "system_package_counts": {"secret": 42},
+            "system_sizes": {"secret": {"exclusive_bytes": 1}},
+            "issues": [{"message": "secret path"}],
+            "personal_issues": [{"message": "secret failure"}],
+            "personal_sizes": {"personal": {"exclusive_bytes": 1}},
+            "layout": {"root_source": "/dev/secret"},
+            "personal_snapshots": [{
+                "id": "personal",
+                "title": "private title",
+                "reason": "private reason",
+                "snapshot_uuid": "private-uuid",
+                "snapshot_parent_uuid": "private-parent",
+                "failure": "private failure",
+                "schedule_id": "private-schedule"
+            }]
+        });
+        SnapshotsManagerHelper::redact_public_recovery_status(&mut populated).unwrap();
+        assert_eq!(populated["personal_snapshots"][0]["title"], "Home snapshot");
+        assert_eq!(populated["personal_snapshots"][0]["reason"], "");
+        assert!(
+            populated["personal_snapshots"][0]
+                .get("snapshot_uuid")
+                .is_none()
+        );
+        assert!(populated["personal_snapshots"][0].get("failure").is_none());
+        assert_eq!(populated["deployments"], serde_json::json!([]));
+        assert_eq!(populated["layout"], serde_json::json!({}));
+        assert!(populated.get("store_root").is_none());
     }
 
     #[test]

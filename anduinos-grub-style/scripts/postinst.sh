@@ -15,7 +15,7 @@ is_chroot() {
 
 if [ "$1" = "configure" ]; then
     if is_chroot; then
-        echo "anduinos-grub-fonts: chroot detected; deferring GRUB configuration refresh."
+        echo "anduinos-grub-style: chroot detected; deferring GRUB configuration refresh."
     elif command -v update-grub >/dev/null 2>&1; then
         update-grub
     fi

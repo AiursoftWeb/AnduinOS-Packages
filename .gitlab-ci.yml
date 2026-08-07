@@ -460,16 +460,16 @@ anduinos-container:
   variables:
     PACKAGE_DIR: anduinos-container
 
-anduinos-grub-fonts:
+anduinos-grub-style:
   extends: .publish
   variables:
-    PACKAGE_DIR: anduinos-grub-fonts
+    PACKAGE_DIR: anduinos-grub-style
 
 anduinos-core-system:
   extends: .publish
   needs:
     - anduinos-container
-    - anduinos-grub-fonts
+    - anduinos-grub-style
     - anduinos-system-tweaks
   variables:
     PACKAGE_DIR: anduinos-core-system

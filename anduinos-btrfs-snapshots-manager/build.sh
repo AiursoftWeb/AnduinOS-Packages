@@ -35,7 +35,7 @@ if rg -a -n 'ScanBackupDestinations|BackupSnapshot|RestoreFromBackup|destination
     echo "A removed caller-path privileged ABI leaked into a release binary" >&2
     exit 1
 fi
-for method in ApplyScheduleRetention BeginSystemSnapshotBrowse EndSystemSnapshotBrowse ListSystemSnapshotFiles ExportSystemSnapshotFile DeleteDeployments DeletePersonalSnapshots ReconcileDeploymentRestore; do
+for method in GetPrivilegedRecoveryEngineStatus ApplyScheduleRetention BeginSystemSnapshotBrowse EndSystemSnapshotBrowse ListSystemSnapshotFiles ExportSystemSnapshotFile DeleteDeployments DeletePersonalSnapshots ReconcileDeploymentRestore; do
     if ! rg -a -q "<method name=\"$method\">" "$SCRIPT_DIR/obj/anduinos-btrfs-snapshots-manager-helper"; then
         echo "Required Disk Snapshots Manager 2.0 D-Bus method is missing: $method" >&2
         exit 1

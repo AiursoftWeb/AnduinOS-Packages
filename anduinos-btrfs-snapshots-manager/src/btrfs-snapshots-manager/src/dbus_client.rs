@@ -146,9 +146,15 @@ impl SnapshotsManagerHelperClient {
             DBUS_OBJECT_PATH,
             DBUS_INTERFACE_NAME,
         )?;
-        let json: String = proxy
-            .call("GetRecoveryEngineStatus", &())
-            .context("Failed to query the recovery engine")?;
+        // Administrators receive the complete system recovery state. The
+        // system-bus policy rejects this method for ordinary users, who then
+        // fall back to the metadata-minimized Personal Files view.
+        let json: String = match proxy.call("GetPrivilegedRecoveryEngineStatus", &()) {
+            Ok(json) => json,
+            Err(_) => proxy
+                .call("GetRecoveryEngineStatus", &())
+                .context("Failed to query the recovery engine")?,
+        };
         serde_json::from_str(&json).context("Failed to parse recovery engine status")
     }
 

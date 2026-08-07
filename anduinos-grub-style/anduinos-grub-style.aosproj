@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
-    <PackageName>anduinos-grub-fonts</PackageName>
-    <PackageVersion>2.0.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageName>anduinos-grub-style</PackageName>
+    <PackageVersion>2.0.0-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>AnduinOS HiDPI Unicode font and display defaults for the GRUB boot menu</PackageDescription>
+    <PackageDescription>AnduinOS display defaults for the GRUB boot menu</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
@@ -27,12 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <IncludeFile Include="assets/anduinos-unicode-28.pf2"
-                 Target="/usr/share/grub/anduinos/anduinos-unicode-28.pf2" />
-    <ConfFile Include="assets/20-anduinos-font.cfg"
-              Target="/etc/default/grub.d/20-anduinos-font.cfg" />
-    <IncludeFile Include="assets/copyright"
-                 Target="/usr/share/doc/anduinos-grub-fonts/copyright" />
+    <ConfFile Include="assets/20-anduinos-style.cfg"
+              Target="/etc/default/grub.d/20-anduinos-style.cfg" />
     <PostInstallScript Include="scripts/postinst.sh" />
     <PostRemoveScript Include="scripts/postrm.sh" />
   </ItemGroup>

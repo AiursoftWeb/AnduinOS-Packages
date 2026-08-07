@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import hashlib
 import os
 import stat
 import subprocess
@@ -11,18 +10,13 @@ from pathlib import Path
 
 
 PROJECT = Path(__file__).resolve().parent.parent
-PROJECT_FILE = PROJECT / "anduinos-grub-fonts.aosproj"
+PROJECT_FILE = PROJECT / "anduinos-grub-style.aosproj"
 CORE_PROJECT_FILE = PROJECT.parent / "anduinos-core-system/anduinos-core-system.aosproj"
-FONT = PROJECT / "assets/anduinos-unicode-28.pf2"
-CONFIG = PROJECT / "assets/20-anduinos-font.cfg"
-COPYRIGHT = PROJECT / "assets/copyright"
-GENERATOR = PROJECT / "generate-font.sh"
+CONFIG = PROJECT / "assets/20-anduinos-style.cfg"
 POSTINST = PROJECT / "scripts/postinst.sh"
 POSTRM = PROJECT / "scripts/postrm.sh"
 
-FONT_SHA256 = "112ceb12fb241561cb7e710b324536e9f6cb2d86d02683cf0b23bc11de9acea4"
-CONFIG_TEXT = """# Keep the GRUB menu readable on HiDPI displays.
-GRUB_FONT="/usr/share/grub/anduinos/anduinos-unicode-28.pf2"
+CONFIG_TEXT = """# Prefer a lower graphics mode while keeping GRUB's trusted default Unicode font.
 GRUB_GFXMODE="1440x900,1280x800,1280x720,1024x768,auto"
 """
 
@@ -41,17 +35,17 @@ def install_fake_chroot_detectors(
     write_fake_command(directory, "ischroot", f"exit {ischroot_result}")
 
 
-class GrubFontsPackageContractTests(unittest.TestCase):
+class GrubStylePackageContractTests(unittest.TestCase):
     def setUp(self) -> None:
         self.project = ET.parse(PROJECT_FILE).getroot()
 
     def test_package_metadata(self) -> None:
         self.assertEqual(
-            self.project.findtext(".//PackageName"), "anduinos-grub-fonts"
+            self.project.findtext(".//PackageName"), "anduinos-grub-style"
         )
         self.assertEqual(
             self.project.findtext(".//PackageVersion"),
-            "2.0.0-1+$(SuiteShortName)",
+            "2.0.0-3+$(SuiteShortName)",
         )
         self.assertEqual(self.project.findtext(".//Section"), "admin")
         self.assertEqual(
@@ -79,21 +73,7 @@ class GrubFontsPackageContractTests(unittest.TestCase):
         self.assertEqual(source.get("Url"), "https://mirror.aiursoft.com/ubuntu")
 
     def test_exact_assets_are_packaged(self) -> None:
-        included = {
-            item.get("Include"): item.get("Target")
-            for item in self.project.findall(".//IncludeFile")
-        }
-        self.assertEqual(
-            included,
-            {
-                "assets/anduinos-unicode-28.pf2": (
-                    "/usr/share/grub/anduinos/anduinos-unicode-28.pf2"
-                ),
-                "assets/copyright": (
-                    "/usr/share/doc/anduinos-grub-fonts/copyright"
-                ),
-            },
-        )
+        self.assertEqual(self.project.findall(".//IncludeFile"), [])
         config_files = {
             item.get("Include"): item.get("Target")
             for item in self.project.findall(".//ConfFile")
@@ -101,37 +81,26 @@ class GrubFontsPackageContractTests(unittest.TestCase):
         self.assertEqual(
             config_files,
             {
-                "assets/20-anduinos-font.cfg": (
-                    "/etc/default/grub.d/20-anduinos-font.cfg"
+                "assets/20-anduinos-style.cfg": (
+                    "/etc/default/grub.d/20-anduinos-style.cfg"
                 )
             },
         )
 
-    def test_pf2_is_the_expected_28_pixel_unifont(self) -> None:
-        data = FONT.read_bytes()
-        self.assertEqual(len(data), 5_423_135)
-        self.assertTrue(data.startswith(b"FILE\x00\x00\x00\x04PFF2"))
-        self.assertIn(b"Unifont Regular 28\x00", data[:128])
-        self.assertEqual(hashlib.sha256(data).hexdigest(), FONT_SHA256)
+    def test_package_boundary_stays_small(self) -> None:
+        for field in ("Conflicts", "Replaces", "Provides"):
+            self.assertIsNone(self.project.find(f".//{field}"))
+        self.assertEqual(list(PROJECT.rglob("*.pf2")), [])
+        self.assertFalse((PROJECT / "generate-font.sh").exists())
+        lifecycle = POSTINST.read_text() + POSTRM.read_text()
+        self.assertNotIn("update-initramfs", lifecycle)
+        self.assertNotIn("/boot/efi", lifecycle)
 
     def test_grub_drop_in_is_exact_and_override_friendly(self) -> None:
         self.assertEqual(CONFIG.read_text(encoding="utf-8"), CONFIG_TEXT)
         self.assertTrue(CONFIG.name.startswith("20-"))
+        self.assertNotIn("GRUB_FONT", CONFIG_TEXT)
         self.assertNotIn("GRUB_CMDLINE", CONFIG_TEXT)
-
-    def test_source_and_license_provenance_are_recorded(self) -> None:
-        generator = GENERATOR.read_text(encoding="utf-8")
-        copyright_text = COPYRIGHT.read_text(encoding="utf-8")
-        self.assertIn('EXPECTED_UNIFONT_VERSION="1:16.0.04-1build1"', generator)
-        self.assertIn('EXPECTED_GRUB_VERSION="2.14-2ubuntu2.1"', generator)
-        self.assertIn(
-            'EXPECTED_SOURCE_SHA256="0e3981ab552231b5a2a870f2b61741903'
-            'a4bf25c23ef5aeb05fdced1b3c7af4d"',
-            generator,
-        )
-        self.assertIn(f'EXPECTED_SHA256="{FONT_SHA256}"', generator)
-        self.assertIn("GNU Unifont 16.0.04", copyright_text)
-        self.assertIn("License: GPL-2+", copyright_text)
 
     def test_lifecycle_scripts_and_contract_test_are_wired(self) -> None:
         self.assertEqual(
@@ -185,7 +154,7 @@ class GrubFontsPackageContractTests(unittest.TestCase):
                 with self.subTest(script=script.name, action=action):
                     config = (
                         test_root
-                        / "etc/default/grub.d/20-anduinos-font.cfg"
+                        / "etc/default/grub.d/20-anduinos-style.cfg"
                     )
                     config.parent.mkdir(parents=True, exist_ok=True)
                     config.write_text(CONFIG_TEXT, encoding="utf-8")
@@ -255,17 +224,17 @@ class GrubFontsPackageContractTests(unittest.TestCase):
         core = ET.parse(CORE_PROJECT_FILE).getroot()
         self.assertEqual(
             core.findtext(".//PackageVersion"),
-            "2.0.0-4+$(SuiteShortName)",
+            "2.0.0-5+$(SuiteShortName)",
         )
         dependencies = [
             item
             for item in core.findall(".//Dependency")
-            if item.get("Include") == "anduinos-grub-fonts"
+            if item.get("Include") == "anduinos-grub-style"
         ]
         self.assertEqual(len(dependencies), 1)
         self.assertIsNone(dependencies[0].get("Condition"))
         self.assertEqual(
-            core.findall(".//Recommend[@Include='anduinos-grub-fonts']"), []
+            core.findall(".//Recommend[@Include='anduinos-grub-style']"), []
         )
 
 

@@ -14,9 +14,9 @@ is_chroot() {
 }
 
 if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
-    rm -f "${DPKG_ROOT:-}/etc/default/grub.d/20-anduinos-font.cfg"
+    rm -f "${DPKG_ROOT:-}/etc/default/grub.d/20-anduinos-style.cfg"
     if is_chroot; then
-        echo "anduinos-grub-fonts: chroot detected; deferring GRUB configuration refresh."
+        echo "anduinos-grub-style: chroot detected; deferring GRUB configuration refresh."
     elif command -v update-grub >/dev/null 2>&1; then
         update-grub
     fi
