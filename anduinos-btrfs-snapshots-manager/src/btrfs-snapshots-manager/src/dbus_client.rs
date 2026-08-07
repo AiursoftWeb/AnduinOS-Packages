@@ -28,6 +28,8 @@ pub struct RecoveryDeployment {
 pub struct PendingRecovery {
     pub target_deployment_id: String,
     pub phase: String,
+    #[serde(default)]
+    pub failure: Option<String>,
 }
 
 #[derive(Debug, Default, serde::Deserialize)]
@@ -393,6 +395,18 @@ impl SnapshotsManagerHelperClient {
         proxy
             .call("CancelDeploymentRestore", &())
             .context("Failed to cancel the pending restore")
+    }
+
+    pub fn reconcile_deployment_restore(&self) -> Result<(bool, String)> {
+        let proxy = zbus::blocking::Proxy::new(
+            &self.connection,
+            DBUS_SERVICE_NAME,
+            DBUS_OBJECT_PATH,
+            DBUS_INTERFACE_NAME,
+        )?;
+        proxy
+            .call("ReconcileDeploymentRestore", &())
+            .context("Failed to retry recovery confirmation")
     }
 
     /// Verify snapshot integrity and consistency

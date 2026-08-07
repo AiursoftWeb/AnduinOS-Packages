@@ -55,7 +55,7 @@ root_fstype="$(get_fstype "$root_device")" || {
 protocol_file=/etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version
 installed_protocol="$(cat "$protocol_file" 2>/dev/null)" || installed_protocol=""
 binary_protocol="$(/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs --protocol-version 2>/dev/null)" || binary_protocol=""
-if [ "$installed_protocol" != "1" ] || [ "$binary_protocol" != "$installed_protocol" ]; then
+if [ "$installed_protocol" != "2" ] || [ "$binary_protocol" != "$installed_protocol" ]; then
     fail_or_skip "the initramfs recovery protocol is incomplete or inconsistent"
     exit $?
 fi
@@ -75,6 +75,15 @@ transaction="$top_level/@snapshots/anduinos-btrfs-snapshots-manager/transactions
 if [ ! -f "$transaction" ]; then
     umount "$top_level"
     exit 0
+fi
+
+staged_confirmation=0
+if /usr/libexec/anduinos-btrfs-snapshots-manager-initramfs --stage-confirmation-artifact; then
+    staged_confirmation=1
+elif [ -n "$requested" ]; then
+    log_failure_msg "Disk Snapshots Manager could not stage its trusted confirmation engine"
+    umount "$top_level"
+    exit 1
 fi
 
 if [ -n "$requested" ]; then
@@ -98,28 +107,25 @@ if [ "$status" -ne 0 ]; then
     fi
 fi
 
-# The active root may contain an older package version. For every pending transaction, carry the
-# confirmation binary from this protocol-verified initramfs into /run and shadow any older
-# installed service for this boot. /run is moved into the real root before systemd starts.
-if [ -f "$transaction" ]; then
-    reconciler_dir=/run/anduinos-btrfs-snapshots-manager/recovery-reconciler
+# The active root may contain an older package version. Shadow its service with a transient unit
+# that executes the digest-bound confirmation engine staged on the snapshot-external recovery
+# store. Never execute payloads from /run: hardened systems commonly mount /run with noexec.
+if [ "$staged_confirmation" -eq 1 ] && [ -f "$transaction" ]; then
+    reconciler_exec=/.snapshots/anduinos-btrfs-snapshots-manager/recovery-boot/confirm
     reconciler_unit=/run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service
     reconciler_wants=/run/systemd/system/multi-user.target.wants
-    mkdir -p "$reconciler_dir" "$reconciler_wants" ||
+    mkdir -p "$reconciler_wants" ||
         panic "Disk Snapshots Manager could not prepare userspace reconciliation"
-    cp /usr/libexec/anduinos-btrfs-snapshots-manager-confirm "$reconciler_dir/confirm" ||
-        panic "Disk Snapshots Manager could not preserve its userspace recovery engine"
-    chmod 0700 "$reconciler_dir/confirm" ||
-        panic "Disk Snapshots Manager could not protect its userspace recovery engine"
     cat > "$reconciler_unit" <<EOF
 [Unit]
 Description=Reconcile a Disk Snapshots Manager recovery using the trusted initramfs engine
-After=multi-user.target
+After=local-fs.target
+RequiresMountsFor=/.snapshots /boot
 ConditionPathExists=/.snapshots/anduinos-btrfs-snapshots-manager/transactions/pending-rollback.json
 
 [Service]
 Type=oneshot
-ExecStart=$reconciler_dir/confirm
+ExecStart=$reconciler_exec
 User=root
 Group=root
 NoNewPrivileges=yes

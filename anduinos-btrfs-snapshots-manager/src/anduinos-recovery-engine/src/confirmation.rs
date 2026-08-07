@@ -607,6 +607,7 @@ mod tests {
                 "7.0.0-test",
                 "a".repeat(64),
                 "b".repeat(64),
+                "c".repeat(64),
             );
             transaction
                 .transition(RollbackPhase::Armed, Utc::now())
@@ -840,6 +841,7 @@ mod tests {
             original.kernel_release,
             original.recovery_kernel_sha256,
             original.recovery_initramfs_sha256,
+            original.recovery_confirm_sha256,
         );
         armed.transition(RollbackPhase::Armed, Utc::now()).unwrap();
         {

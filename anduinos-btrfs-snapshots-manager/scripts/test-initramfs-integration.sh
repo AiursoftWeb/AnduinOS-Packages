@@ -14,7 +14,7 @@ mkdir -p \
     "$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/transactions" \
     "$TEST_ROOT/usr/libexec"
 touch "$TEST_ROOT/root-device"
-printf '1\n' > "$TEST_ROOT/etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version"
+printf '2\n' > "$TEST_ROOT/etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version"
 printf '{}\n' > "$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/transactions/pending-rollback.json"
 
 cat > "$TEST_ROOT/scripts/functions" <<'EOF'
@@ -51,7 +51,15 @@ EOF
 cat > "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs" <<'EOF'
 #!/bin/sh
 if [ "${1:-}" = "--protocol-version" ]; then
-    printf '1\n'
+    printf '2\n'
+    exit 0
+fi
+if [ "${1:-}" = "--stage-confirmation-artifact" ]; then
+    mkdir -p "$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/recovery-boot"
+    cp "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-confirm" \
+        "$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/recovery-boot/confirm"
+    chmod 0700 \
+        "$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/recovery-boot/confirm"
     exit 0
 fi
 printf '%s\n' "${1:-no-request}" >> "$TEST_ROOT/invocations"
@@ -74,7 +82,7 @@ sed \
     -e 's#cat /proc/cmdline#cat "$TEST_ROOT/proc/cmdline"#' \
     -e 's#^protocol_file=.*#protocol_file="$TEST_ROOT/etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version"#' \
     -e 's#^top_level=.*#top_level="$TEST_ROOT/top"#' \
-    -e 's#^    reconciler_dir=.*#    reconciler_dir="$TEST_ROOT/run/anduinos-btrfs-snapshots-manager/recovery-reconciler"#' \
+    -e 's#^    reconciler_exec=.*#    reconciler_exec="$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/recovery-boot/confirm"#' \
     -e 's#^    reconciler_unit=.*#    reconciler_unit="$TEST_ROOT/run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service"#' \
     -e 's#^    reconciler_wants=.*#    reconciler_wants="$TEST_ROOT/run/systemd/system/multi-user.target.wants"#' \
     -e 's#/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs#"$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs"#g' \
@@ -98,12 +106,20 @@ run_script()
 }
 
 rm -f "$TEST_ROOT/invocations" "$TEST_ROOT/failures"
-printf 'root=/dev/ignored anduinos.btrfs_snapshots_manager=%s anduinos.btrfs_snapshots_manager_protocol=1\n' \
+printf 'root=/dev/ignored anduinos.btrfs_snapshots_manager=%s anduinos.btrfs_snapshots_manager_protocol=2\n' \
     "$ROLLBACK_ID" > "$TEST_ROOT/proc/cmdline"
 run_script btrfs
 grep -Fxq "$ROLLBACK_ID" "$TEST_ROOT/invocations"
-test -x "$TEST_ROOT/run/anduinos-btrfs-snapshots-manager/recovery-reconciler/confirm"
-grep -Fq 'recovery-reconciler/confirm' \
+test -x "$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/recovery-boot/confirm"
+grep -Fq 'recovery-boot/confirm' \
+    "$TEST_ROOT/run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service"
+! grep -Fq 'ExecStart=/run/' \
+    "$TEST_ROOT/run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service"
+grep -Fq 'After=local-fs.target' \
+    "$TEST_ROOT/run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service"
+grep -Fq 'RequiresMountsFor=/.snapshots /boot' \
+    "$TEST_ROOT/run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service"
+! grep -Fq 'After=multi-user.target' \
     "$TEST_ROOT/run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service"
 test -L "$TEST_ROOT/run/systemd/system/multi-user.target.wants/anduinos-btrfs-snapshots-manager-confirm.service"
 
@@ -117,10 +133,10 @@ rm -f "$TEST_ROOT/invocations" "$TEST_ROOT/failures"
 : > "$TEST_ROOT/proc/cmdline"
 run_script btrfs
 grep -Fxq 'no-request' "$TEST_ROOT/invocations"
-test -x "$TEST_ROOT/run/anduinos-btrfs-snapshots-manager/recovery-reconciler/confirm"
+test -x "$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/recovery-boot/confirm"
 
 rm -f "$TEST_ROOT/invocations" "$TEST_ROOT/failures"
-printf 'anduinos.btrfs_snapshots_manager=%s anduinos.btrfs_snapshots_manager_protocol=1\n' \
+printf 'anduinos.btrfs_snapshots_manager=%s anduinos.btrfs_snapshots_manager_protocol=2\n' \
     "$ROLLBACK_ID" > "$TEST_ROOT/proc/cmdline"
 if run_script ext4; then
     echo "An explicit recovery request unexpectedly ignored a non-Btrfs root" >&2
@@ -129,7 +145,7 @@ fi
 grep -Fq 'root filesystem is not Btrfs' "$TEST_ROOT/failures"
 
 rm -f "$TEST_ROOT/invocations" "$TEST_ROOT/failures"
-printf 'anduinos.btrfs_snapshots_manager=%s anduinos.btrfs_snapshots_manager_protocol=2\n' \
+printf 'anduinos.btrfs_snapshots_manager=%s anduinos.btrfs_snapshots_manager_protocol=1\n' \
     "$ROLLBACK_ID" > "$TEST_ROOT/proc/cmdline"
 if run_script btrfs; then
     echo "An incompatible explicit recovery request unexpectedly continued" >&2

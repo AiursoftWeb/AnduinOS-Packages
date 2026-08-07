@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "org.anduinos.btrfs-snapshots-manager.rollback.v2",
+  "$id": "org.anduinos.btrfs-snapshots-manager.rollback.v3",
   "title": "Disk Snapshots Manager rollback transaction",
   "type": "object",
   "additionalProperties": false,
@@ -23,11 +23,12 @@
     "kernel_release",
     "recovery_kernel_sha256",
     "recovery_initramfs_sha256",
+    "recovery_confirm_sha256",
     "grub_entry_id",
     "failure"
   ],
   "properties": {
-    "schema_version": { "const": 2 },
+    "schema_version": { "const": 3 },
     "id": { "$ref": "#/$defs/uuid" },
     "target_deployment_id": { "$ref": "#/$defs/uuid" },
     "fallback_deployment_id": { "$ref": "#/$defs/uuid" },
@@ -45,7 +46,7 @@
     },
     "created_at": { "type": "string", "format": "date-time" },
     "updated_at": { "type": "string", "format": "date-time" },
-    "recovery_protocol_version": { "const": 1 },
+    "recovery_protocol_version": { "enum": [1, 2] },
     "initramfs_attempts": { "type": "integer", "minimum": 0, "maximum": 3 },
     "initramfs_boot_id": {
       "oneOf": [{ "$ref": "#/$defs/uuid" }, { "type": "null" }]
@@ -84,6 +85,7 @@
     },
     "recovery_kernel_sha256": { "$ref": "#/$defs/sha256" },
     "recovery_initramfs_sha256": { "$ref": "#/$defs/sha256" },
+    "recovery_confirm_sha256": { "$ref": "#/$defs/sha256" },
     "grub_entry_id": {
       "type": "string",
       "pattern": "^anduinos-btrfs-snapshots-manager-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"

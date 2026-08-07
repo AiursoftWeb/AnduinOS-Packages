@@ -79,8 +79,15 @@ preflight() {
     kernel_release=$(tr -d '\n' </proc/sys/kernel/osrelease)
     initramfs="/boot/initrd.img-$kernel_release"
     [[ -f "$initramfs" ]] || die "the running kernel's initramfs is missing"
-    [[ $(/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs --protocol-version) == 1 ]] ||
+    [[ $(/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs --protocol-version) == 2 ]] ||
         die "the installed recovery engine protocol is incompatible"
+    if findmnt -n -o OPTIONS --target /run | tr ',' '\n' | grep -Fxq noexec; then
+        echo "Confirmed: /run is noexec; the recovery confirmation regression is active"
+    else
+        echo "NOTE: /run is executable; repeat the release lane once with /run mounted noexec" >&2
+    fi
+    findmnt -n -o OPTIONS --target /.snapshots | tr ',' '\n' | grep -Fxq noexec &&
+        die "the snapshot store is noexec and cannot host the bound confirmation artifact"
     command -v lsinitramfs >/dev/null || die "lsinitramfs is required"
     listing=$(lsinitramfs "$initramfs") ||
         die "the installed initramfs could not be inspected"
@@ -138,6 +145,12 @@ prepare_rollback() {
         "$(jq -er '.recovery_initramfs_sha256' <<<"$pending")" \
         "$RECOVERY_STORE/recovery-boot/initrd.img" | sha256sum --check --status ||
         die "the snapshot-external recovery initramfs does not match the transaction"
+    printf '%s  %s\n' \
+        "$(jq -er '.recovery_confirm_sha256' <<<"$pending")" \
+        "$RECOVERY_STORE/recovery-boot/confirm" | sha256sum --check --status ||
+        die "the snapshot-external confirmation engine does not match the transaction"
+    [[ -x "$RECOVERY_STORE/recovery-boot/confirm" ]] ||
+        die "the snapshot-external confirmation engine is not executable"
     state=$(jq --arg phase "armed" --argjson pending "$pending" \
         '.phase = $phase | .pending = $pending' <<<"$state")
     write_state "$state"
@@ -159,6 +172,11 @@ verify_rollback() {
     [[ "$actual" == "$expected" ]] || die "the restored marker is wrong; fallback or rollback failure occurred"
 
     status=$(status_json)
+    systemctl is-failed --quiet anduinos-btrfs-snapshots-manager-confirm.service &&
+        die "the userspace confirmation service failed"
+    journalctl -b -u anduinos-btrfs-snapshots-manager-confirm.service --no-pager |
+        grep -Fq 'status=203/EXEC' &&
+        die "the userspace confirmation engine could not be executed"
     jq -e '.pending == null' <<<"$status" >/dev/null || die "the rollback is still pending"
     jq -e --arg target "$target" \
         '.deployments[] | select(.id == $target and .state == "current")' \

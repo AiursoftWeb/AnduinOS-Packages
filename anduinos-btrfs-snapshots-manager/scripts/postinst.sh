@@ -33,6 +33,14 @@ if [ -x /usr/sbin/update-grub ]; then
         echo "Warning: Disk Snapshots Manager could not refresh the GRUB configuration" >&2
 fi
 
+# A recovery boot may have installed a one-boot unit under /run to shadow an
+# older root's packaged service. Once this package is installed, that exact
+# generated unit is stale and would continue to outrank the vendor unit even
+# after daemon-reload. Remove only our two transient paths; preserve any admin
+# overrides under /etc/systemd/system.
+rm -f -- \
+    /run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service \
+    /run/systemd/system/multi-user.target.wants/anduinos-btrfs-snapshots-manager-confirm.service
 systemctl daemon-reload || true
 if [ -d /run/systemd/system ]; then
     systemctl enable --now anduinos-btrfs-snapshots-manager-scheduler.timer || true

@@ -65,19 +65,22 @@ recovery engine and helper. If target verification or fallback preparation
 fails, no restart is scheduled. Until restart, the pending transaction can be
 cancelled through the helper.
 
-The recovery kernel and initramfs are copied from the running system into the
-snapshot-external recovery store before GRUB is armed. The initramfs must contain
-the matching recovery script, engine, and protocol marker, and both artifacts are
-hash-bound to the transaction. Recovery does not execute the possibly old kernel
-or initramfs found inside the selected snapshot. The EFI selector acts as a lease:
+The recovery kernel, initramfs, and userspace confirmation engine are copied from
+the running system into the snapshot-external recovery store before GRUB is armed.
+The initramfs must contain the matching recovery script, engine, confirmation
+binary, and protocol marker, and all three executable artifacts are hash-bound to
+the transaction. Recovery does not execute the possibly old kernel, initramfs, or
+confirmation engine found inside the selected snapshot. The EFI selector acts as a lease:
 the recovery menu entry rearms it before starting the kernel, and only terminal
 userspace reconciliation clears it.
 
-The same trusted initramfs carries the matching userspace confirmation binary.
-Whenever a transaction is pending it places that binary and a hardened transient
-unit in `/run`, which initramfs-tools moves into the active root. This shadows an
-older installed confirmation service for one boot, so restoring a snapshot made by
-an older package cannot silently downgrade the code that confirms, reverts, or fails
+Before changing the root subvolume, the trusted initramfs verifies its confirmation
+binary against the transaction and atomically stages it in the external
+`recovery-boot` directory. A hardened transient unit is carried in `/run`, but its
+`ExecStart` points to that protected external artifact; no executable payload is
+run from `/run`, which may legitimately be mounted `noexec`. This shadows an older
+installed confirmation service for one boot, so restoring a snapshot made by an
+older package cannot silently downgrade the code that confirms, reverts, or fails
 the new transaction. Nothing is written into the immutable snapshot itself.
 
 Initramfs detects the root filesystem itself and never depends on a shell variable
@@ -86,9 +89,11 @@ request that cannot enter the matching recovery protocol fails visibly. The engi
 persists its boot ID, attempt counter, and last synchronized filesystem checkpoint;
 userspace treats a requested boot that reached userspace without initramfs entry as
 a failed transaction, restores safe deployment states, and archives the diagnostic.
-An armed version-1 transaction encountered during a package upgrade is likewise
-cancelled and archived instead of being interpreted by an incompatible recovery
-protocol or left as a stale GRUB loop.
+An armed transaction from an earlier transaction schema or recovery protocol
+encountered during a package upgrade is likewise cancelled and archived instead of
+being interpreted by incompatible recovery code or left as a stale GRUB loop.
+Already-applied legacy transactions remain readable only for identity-checked
+confirmation, reversion, and terminal cleanup.
 
 Snapshot list and refresh operations only read a bounded, non-authoritative size
 cache. They never recursively scan Btrfs extents. An explicit Properties request

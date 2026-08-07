@@ -144,6 +144,10 @@ msgid "Check Snapshot Availability"
 msgstr "Check Snapshot Availability"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking recovery state…"
+msgstr "正在检查恢复状态…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Checking rollback safety…"
 msgstr "正在检查回滚安全性…"
 
@@ -516,6 +520,10 @@ msgid "Prepare Rollback"
 msgstr "Prepare Rollback"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing rollback to {0}…"
+msgstr "正在准备回滚到 {0}…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Preparing safe rollback…"
 msgstr "正在准备安全回滚…"
 
@@ -563,6 +571,10 @@ msgstr "正在恢复文件…"
 msgid "Recovery Failed"
 msgstr "恢复失败"
 
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Recovery for {0} is in an unknown state ({1})."
+msgstr "{0} 的恢复事务处于未知状态（{1}）。"
+
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Recover…"
 msgstr "恢复…"
@@ -588,6 +600,10 @@ msgid "Renaming snapshot…"
 msgstr "正在重命名快照…"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Requesting restart…"
+msgstr "正在请求重启…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Required to complete the rollback"
 msgstr "完成回滚需要重启"
 
@@ -602,6 +618,10 @@ msgstr "Restart Later"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restart Now"
 msgstr "Restart Now"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Retry Recovery"
+msgstr "重试恢复确认"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Return to the selected snapshot"
@@ -620,6 +640,10 @@ msgid "Roll Back to {0}?"
 msgstr "Roll Back to {0}?"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. The protected previous system is being restored."
+msgstr "回滚确认失败，正在恢复受保护的先前系统。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback Is Ready"
 msgstr "Rollback Is Ready"
 
@@ -628,8 +652,16 @@ msgid "Rollback reverted"
 msgstr "回滚已撤销"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Rollback to {0} is prepared ({1})"
-msgstr "已准备回滚到 {0}（{1}）"
+msgid "Rollback to {0} is being applied during startup."
+msgstr "启动期间正在应用到 {0} 的回滚。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} is ready. Restart to apply it."
+msgstr "已准备回滚到 {0}，重启后即可应用。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} was applied, but system confirmation has not completed."
+msgstr "已应用到 {0} 的回滚，但系统确认尚未完成。"
 
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 msgid "Save Advanced Settings"
@@ -742,6 +774,22 @@ msgstr "当前系统已永久保留。现在重启即可回滚，也可在“系
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "The Home snapshot was created successfully."
 msgstr "用户目录快照创建成功。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback completed, but recovery cleanup has not completed."
+msgstr "回滚已完成，但恢复清理尚未完成。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed. Recovery cleanup has not completed."
+msgstr "回滚失败，恢复清理尚未完成。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed: {0}"
+msgstr "回滚失败：{0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback was reverted, but recovery cleanup has not completed."
+msgstr "回滚已撤销，但恢复清理尚未完成。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "The root filesystem is {0}."

@@ -2,6 +2,7 @@ use std::ffi::OsStr;
 use std::fmt;
 use std::fs::{self, OpenOptions};
 use std::io::{Read, Write};
+use std::os::unix::ffi::OsStrExt;
 use std::os::unix::fs::OpenOptionsExt;
 use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
 use std::path::{Path, PathBuf};
@@ -23,6 +24,8 @@ const SYSTEM_BOOT_ROOT: &str = "/boot";
 const RECOVERY_BOOT_DIRECTORY: &str = "recovery-boot";
 const RECOVERY_KERNEL: &str = "vmlinuz";
 const RECOVERY_INITRAMFS: &str = "initrd.img";
+pub const RECOVERY_CONFIRM: &str = "confirm";
+const SYSTEM_CONFIRM_BINARY: &str = "/usr/libexec/anduinos-btrfs-snapshots-manager-confirm";
 const INITRAMFS_SCRIPT: &str = "scripts/local-premount/anduinos-btrfs-snapshots-manager";
 const INITRAMFS_BINARY: &str = "usr/libexec/anduinos-btrfs-snapshots-manager-initramfs";
 const INITRAMFS_CONFIRM_BINARY: &str = "usr/libexec/anduinos-btrfs-snapshots-manager-confirm";
@@ -55,6 +58,7 @@ pub struct RecoveryBootArtifacts {
     pub kernel_release: String,
     pub kernel_sha256: String,
     pub initramfs_sha256: String,
+    pub confirm_sha256: String,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -181,6 +185,7 @@ impl BootIntegration<SystemBootToolRunner> {
         self.provision_recovery_boot_artifacts_from(
             Path::new(KERNEL_RELEASE),
             Path::new(SYSTEM_BOOT_ROOT),
+            Path::new(SYSTEM_CONFIRM_BINARY),
         )
     }
 }
@@ -190,24 +195,30 @@ impl<R: BootToolRunner> BootIntegration<R> {
         &self,
         kernel_release_path: &Path,
         system_boot: &Path,
+        confirm_binary: &Path,
     ) -> Result<RecoveryBootArtifacts, BootError> {
         let kernel_release = read_kernel_release(kernel_release_path)?;
         let kernel = system_boot.join(format!("vmlinuz-{kernel_release}"));
         let initramfs = system_boot.join(format!("initrd.img-{kernel_release}"));
         ensure_regular_file(&kernel)?;
         ensure_regular_file(&initramfs)?;
+        ensure_regular_file(confirm_binary)?;
         self.verify_initramfs_compatibility(&initramfs)?;
 
         ensure_real_directory(&self.snapshot_root, false)?;
         let recovery_boot = self.snapshot_root.join(RECOVERY_BOOT_DIRECTORY);
         ensure_real_directory(&recovery_boot, true)?;
-        copy_regular_file_atomic(&kernel, &recovery_boot.join(RECOVERY_KERNEL))?;
-        copy_regular_file_atomic(&initramfs, &recovery_boot.join(RECOVERY_INITRAMFS))?;
+        ensure_executable_filesystem(&recovery_boot)?;
+        copy_regular_file_atomic(&kernel, &recovery_boot.join(RECOVERY_KERNEL), 0o600)?;
+        copy_regular_file_atomic(&initramfs, &recovery_boot.join(RECOVERY_INITRAMFS), 0o600)?;
+        copy_regular_file_atomic(confirm_binary, &recovery_boot.join(RECOVERY_CONFIRM), 0o700)?;
+        ensure_protected_executable(&recovery_boot.join(RECOVERY_CONFIRM))?;
 
         Ok(RecoveryBootArtifacts {
             kernel_release,
             kernel_sha256: hash_regular_file(&recovery_boot.join(RECOVERY_KERNEL))?,
             initramfs_sha256: hash_regular_file(&recovery_boot.join(RECOVERY_INITRAMFS))?,
+            confirm_sha256: hash_regular_file(&recovery_boot.join(RECOVERY_CONFIRM))?,
         })
     }
 
@@ -274,6 +285,12 @@ impl<R: BootToolRunner> BootIntegration<R> {
         ) {
             return Ok(None);
         }
+        if transaction.recovery_protocol_version != RECOVERY_PROTOCOL_VERSION {
+            return Err(BootError::new(
+                BootErrorCode::InvalidTransaction,
+                "A legacy recovery transaction cannot be armed with the current boot protocol",
+            ));
+        }
         let target = DeploymentStore::new(&self.snapshot_root)
             .load_record(transaction.target_deployment_id)
             .map_err(|error| BootError::new(BootErrorCode::InvalidDeployment, error.message))?;
@@ -286,8 +303,11 @@ impl<R: BootToolRunner> BootIntegration<R> {
         let recovery_boot = self.snapshot_root.join(RECOVERY_BOOT_DIRECTORY);
         let kernel = recovery_boot.join(RECOVERY_KERNEL);
         let initramfs = recovery_boot.join(RECOVERY_INITRAMFS);
+        let confirm = recovery_boot.join(RECOVERY_CONFIRM);
         ensure_regular_file(&kernel)?;
         ensure_regular_file(&initramfs)?;
+        ensure_protected_executable(&confirm)?;
+        ensure_executable_filesystem(&recovery_boot)?;
         verify_digest(
             &kernel,
             &transaction.recovery_kernel_sha256,
@@ -297,6 +317,11 @@ impl<R: BootToolRunner> BootIntegration<R> {
             &initramfs,
             &transaction.recovery_initramfs_sha256,
             "recovery initramfs",
+        )?;
+        verify_digest(
+            &confirm,
+            &transaction.recovery_confirm_sha256,
+            "recovery confirmation engine",
         )?;
         let kernel_path = self.grub_path(&kernel)?;
         let initramfs_path = self.grub_path(&initramfs)?;
@@ -332,6 +357,12 @@ impl<R: BootToolRunner> BootIntegration<R> {
             return Err(BootError::new(
                 BootErrorCode::InvalidTransaction,
                 "Only an armed rollback transaction can select the one-shot GRUB entry",
+            ));
+        }
+        if transaction.recovery_protocol_version != RECOVERY_PROTOCOL_VERSION {
+            return Err(BootError::new(
+                BootErrorCode::InvalidTransaction,
+                "A legacy recovery transaction cannot be selected for boot",
             ));
         }
         let selection = format!("{GRUB_NEXT_ENTRY_VARIABLE}={}", transaction.grub_entry_id);
@@ -434,7 +465,11 @@ fn read_kernel_release(path: &Path) -> Result<String, BootError> {
     Ok(value.to_string())
 }
 
-fn copy_regular_file_atomic(source: &Path, target: &Path) -> Result<(), BootError> {
+pub(crate) fn copy_regular_file_atomic(
+    source: &Path,
+    target: &Path,
+    mode: u32,
+) -> Result<(), BootError> {
     ensure_regular_file(source)?;
     let parent = target.parent().ok_or_else(|| {
         BootError::new(
@@ -455,7 +490,7 @@ fn copy_regular_file_atomic(source: &Path, target: &Path) -> Result<(), BootErro
         let mut output = OpenOptions::new()
             .write(true)
             .create_new(true)
-            .mode(0o600)
+            .mode(mode)
             .custom_flags(libc::O_CLOEXEC | libc::O_NOFOLLOW)
             .open(&temporary)?;
         std::io::copy(&mut input, &mut output)?;
@@ -478,7 +513,61 @@ fn copy_regular_file_atomic(source: &Path, target: &Path) -> Result<(), BootErro
     Ok(())
 }
 
-fn hash_regular_file(path: &Path) -> Result<String, BootError> {
+pub(crate) fn ensure_protected_executable(path: &Path) -> Result<(), BootError> {
+    ensure_regular_file(path)?;
+    let mode = fs::symlink_metadata(path)
+        .map_err(|error| {
+            BootError::new(
+                BootErrorCode::InvalidDeployment,
+                format!("Could not inspect {}: {error}", path.display()),
+            )
+        })?
+        .permissions()
+        .mode();
+    if mode & 0o111 == 0 || mode & 0o022 != 0 {
+        return Err(BootError::new(
+            BootErrorCode::InvalidDeployment,
+            format!(
+                "Recovery confirmation artifact {} is not a protected executable",
+                path.display()
+            ),
+        ));
+    }
+    Ok(())
+}
+
+fn ensure_executable_filesystem(path: &Path) -> Result<(), BootError> {
+    let path = std::ffi::CString::new(path.as_os_str().as_bytes()).map_err(|_| {
+        BootError::new(
+            BootErrorCode::UnsupportedEnvironment,
+            "Recovery artifact path contains an embedded NUL byte",
+        )
+    })?;
+    let mut values = std::mem::MaybeUninit::<libc::statvfs>::uninit();
+    if unsafe { libc::statvfs(path.as_ptr(), values.as_mut_ptr()) } != 0 {
+        return Err(BootError::new(
+            BootErrorCode::UnsupportedEnvironment,
+            format!(
+                "Could not inspect recovery artifact mount flags: {}",
+                std::io::Error::last_os_error()
+            ),
+        ));
+    }
+    let values = unsafe { values.assume_init() };
+    validate_executable_mount_flags(values.f_flag)
+}
+
+fn validate_executable_mount_flags(flags: libc::c_ulong) -> Result<(), BootError> {
+    if flags & libc::ST_NOEXEC != 0 {
+        return Err(BootError::new(
+            BootErrorCode::UnsupportedEnvironment,
+            "The snapshot store is mounted noexec and cannot host the trusted recovery confirmation engine",
+        ));
+    }
+    Ok(())
+}
+
+pub(crate) fn hash_regular_file(path: &Path) -> Result<String, BootError> {
     ensure_regular_file(path)?;
     let mut file = OpenOptions::new()
         .read(true)
@@ -693,8 +782,11 @@ mod tests {
             fs::create_dir_all(&recovery_boot).unwrap();
             let kernel = recovery_boot.join(RECOVERY_KERNEL);
             let initramfs = recovery_boot.join(RECOVERY_INITRAMFS);
+            let confirm = recovery_boot.join(RECOVERY_CONFIRM);
             fs::write(&kernel, "kernel").unwrap();
             fs::write(&initramfs, "initramfs").unwrap();
+            fs::write(&confirm, "confirm").unwrap();
+            fs::set_permissions(&confirm, fs::Permissions::from_mode(0o700)).unwrap();
             let mut transaction = RollbackTransaction::new(
                 target.id,
                 DeploymentId::new(),
@@ -702,6 +794,7 @@ mod tests {
                 "test-kernel",
                 hash_regular_file(&kernel).unwrap(),
                 hash_regular_file(&initramfs).unwrap(),
+                hash_regular_file(&confirm).unwrap(),
             );
             transaction
                 .transition(RollbackPhase::Armed, Utc::now())
@@ -750,6 +843,17 @@ mod tests {
     }
 
     #[test]
+    fn noexec_snapshot_store_is_rejected_before_a_restore_is_armed() {
+        assert!(validate_executable_mount_flags(0).is_ok());
+        assert_eq!(
+            validate_executable_mount_flags(libc::ST_NOEXEC)
+                .unwrap_err()
+                .code,
+            BootErrorCode::UnsupportedEnvironment
+        );
+    }
+
+    #[test]
     fn provisions_snapshot_external_versioned_recovery_artifacts() {
         let root = std::env::temp_dir().join(format!(
             "snapshots-manager-recovery-boot-{}",
@@ -763,6 +867,9 @@ mod tests {
         fs::write(&release, "7.0.0-test\n").unwrap();
         fs::write(boot.join("vmlinuz-7.0.0-test"), "trusted-kernel").unwrap();
         fs::write(boot.join("initrd.img-7.0.0-test"), "trusted-initramfs").unwrap();
+        let confirm = root.join("confirm");
+        fs::write(&confirm, "trusted-confirm").unwrap();
+        fs::set_permissions(&confirm, fs::Permissions::from_mode(0o755)).unwrap();
         let integration = BootIntegration::new(
             &store,
             FakeTools {
@@ -772,7 +879,7 @@ mod tests {
             },
         );
         let artifacts = integration
-            .provision_recovery_boot_artifacts_from(&release, &boot)
+            .provision_recovery_boot_artifacts_from(&release, &boot, &confirm)
             .unwrap();
         assert_eq!(artifacts.kernel_release, "7.0.0-test");
         assert_eq!(
@@ -783,8 +890,13 @@ mod tests {
             fs::read_to_string(store.join("recovery-boot/initrd.img")).unwrap(),
             "trusted-initramfs"
         );
+        assert_eq!(
+            fs::read_to_string(store.join("recovery-boot/confirm")).unwrap(),
+            "trusted-confirm"
+        );
         assert_eq!(artifacts.kernel_sha256.len(), 64);
         assert_eq!(artifacts.initramfs_sha256.len(), 64);
+        assert_eq!(artifacts.confirm_sha256.len(), 64);
         fs::remove_dir_all(root).unwrap();
     }
 
@@ -861,7 +973,7 @@ mod tests {
         assert!(entry.contains("rootflags=subvol=@root"));
         assert!(entry.contains("/vmlinuz"));
         assert!(entry.contains("/initrd.img"));
-        assert!(entry.contains("anduinos.btrfs_snapshots_manager_protocol=1"));
+        assert!(entry.contains("anduinos.btrfs_snapshots_manager_protocol=2"));
         assert!(entry.contains("set btrfs_snapshots_manager_next_entry="));
         assert!(entry.contains("save_env -f \"($btrfs_snapshots_manager_esp)"));
     }
@@ -872,6 +984,33 @@ mod tests {
         fs::write(
             environment.root.join("recovery-boot/initrd.img"),
             "tampered-initramfs",
+        )
+        .unwrap();
+        let integration = BootIntegration::new(
+            &environment.root,
+            FakeTools {
+                env: String::new(),
+                unsafe_path: false,
+                calls: Default::default(),
+            },
+        );
+        assert_eq!(
+            integration.recovery_menu_entry().unwrap_err().code,
+            BootErrorCode::InvalidDeployment
+        );
+    }
+
+    #[test]
+    fn refuses_confirmation_artifact_changed_after_the_transaction_was_armed() {
+        let environment = Environment::new();
+        fs::write(
+            environment.root.join("recovery-boot/confirm"),
+            "tampered-confirmation-engine",
+        )
+        .unwrap();
+        fs::set_permissions(
+            environment.root.join("recovery-boot/confirm"),
+            fs::Permissions::from_mode(0o700),
         )
         .unwrap();
         let integration = BootIntegration::new(

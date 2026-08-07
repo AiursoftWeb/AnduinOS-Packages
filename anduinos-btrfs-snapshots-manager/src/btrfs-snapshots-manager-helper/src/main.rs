@@ -2,7 +2,9 @@
 // This binary runs with elevated privileges via D-Bus activation
 
 use anduinos_recovery_engine::{
-    RECOVERY_STORE_ROOT, layout,
+    RECOVERY_STORE_ROOT,
+    confirmation::ConfirmationEngine,
+    layout,
     model::{DeploymentId, DeploymentKind, DeploymentState},
     operations::OperationEngine,
     personal::{PersonalSnapshotEngine, PersonalSnapshotId, PersonalSnapshotState},
@@ -1296,6 +1298,37 @@ impl SnapshotsManagerHelper {
                     uid,
                     pid,
                     "cancel_restore",
+                    "pending-restore",
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
+        }
+    }
+
+    /// Retry the identity-checked userspace reconciliation for an applied or terminal restore.
+    async fn reconcile_deployment_restore(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_RESTORE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_RESTORE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        match ConfirmationEngine::default().reconcile() {
+            Ok(outcome) => {
+                let message = format!("Recovery reconciliation completed: {outcome:?}");
+                audit::log_operation(uid, pid, "reconcile_restore", "pending-restore", true, None);
+                (true, message)
+            }
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "reconcile_restore",
                     "pending-restore",
                     false,
                     Some(&error.to_string()),

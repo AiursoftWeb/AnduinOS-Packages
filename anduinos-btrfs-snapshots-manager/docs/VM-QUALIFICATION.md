@@ -67,6 +67,9 @@ Pass criteria:
 - the pre-snapshot marker is restored;
 - the selected deployment becomes `current`;
 - the pending transaction disappears only after userspace confirmation;
+- the transient confirmation unit executes the digest-bound artifact from
+  `/.snapshots/.../recovery-boot/confirm`, never an executable under `/run`;
+- confirmation succeeds when `/run` is mounted `noexec`, with no `203/EXEC` service failure;
 - the old writable root is deleted after confirmation, not before it;
 - the fallback record remains a valid `ready` system snapshot;
 - `update-grub` succeeds without adding operating systems from other disks; and

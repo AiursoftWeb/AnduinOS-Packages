@@ -142,6 +142,10 @@ msgid "Check Snapshot Availability"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking recovery state…"
+msgstr ""
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Checking rollback safety…"
 msgstr ""
 
@@ -514,6 +518,10 @@ msgid "Prepare Rollback"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing rollback to {0}…"
+msgstr ""
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Preparing safe rollback…"
 msgstr ""
 
@@ -561,6 +569,10 @@ msgstr ""
 msgid "Recovery Failed"
 msgstr ""
 
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Recovery for {0} is in an unknown state ({1})."
+msgstr ""
+
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Recover…"
 msgstr ""
@@ -586,6 +598,10 @@ msgid "Renaming snapshot…"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Requesting restart…"
+msgstr ""
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Required to complete the rollback"
 msgstr ""
 
@@ -599,6 +615,10 @@ msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restart Now"
+msgstr ""
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Retry Recovery"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -618,6 +638,10 @@ msgid "Roll Back to {0}?"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. The protected previous system is being restored."
+msgstr ""
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback Is Ready"
 msgstr ""
 
@@ -626,7 +650,15 @@ msgid "Rollback reverted"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Rollback to {0} is prepared ({1})"
+msgid "Rollback to {0} is being applied during startup."
+msgstr ""
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} is ready. Restart to apply it."
+msgstr ""
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} was applied, but system confirmation has not completed."
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
@@ -739,6 +771,22 @@ msgstr ""
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "The Home snapshot was created successfully."
+msgstr ""
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback completed, but recovery cleanup has not completed."
+msgstr ""
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed. Recovery cleanup has not completed."
+msgstr ""
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed: {0}"
+msgstr ""
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback was reverted, but recovery cleanup has not completed."
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs

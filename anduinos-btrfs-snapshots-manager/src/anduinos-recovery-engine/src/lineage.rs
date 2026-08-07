@@ -664,6 +664,7 @@ mod tests {
             "6.0-test",
             "a".repeat(64),
             "b".repeat(64),
+            "c".repeat(64),
         );
         transaction
             .transition(RollbackPhase::Armed, Utc::now())

@@ -340,6 +340,7 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
             recovery_boot.kernel_release,
             recovery_boot.kernel_sha256,
             recovery_boot.initramfs_sha256,
+            recovery_boot.confirm_sha256,
         );
         let result = (|| {
             progress(
@@ -742,6 +743,7 @@ mod tests {
                 kernel_release: "7.0.0-test".into(),
                 kernel_sha256: "d".repeat(64),
                 initramfs_sha256: "e".repeat(64),
+                confirm_sha256: "f".repeat(64),
             })
         }
 
@@ -952,6 +954,7 @@ mod tests {
             "7.0.0-test",
             "a".repeat(64),
             "b".repeat(64),
+            "c".repeat(64),
         );
         transaction
             .transition(RollbackPhase::Armed, Utc::now())

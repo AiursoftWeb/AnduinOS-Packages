@@ -7,12 +7,15 @@ use std::process::Command;
 
 use chrono::Utc;
 
+use crate::boot::{
+    RECOVERY_CONFIRM, copy_regular_file_atomic, ensure_protected_executable, hash_regular_file,
+};
 use crate::model::{DeploymentId, DeploymentState};
 use crate::store::DeploymentStore;
 pub use crate::transaction::RecoveryCheckpoint;
 use crate::transaction::{
-    MAX_APPLY_ATTEMPTS, RollbackId, RollbackPhase, RollbackTransaction, TransactionError,
-    TransactionStore,
+    MAX_APPLY_ATTEMPTS, RECOVERY_PROTOCOL_VERSION, RollbackId, RollbackPhase, RollbackTransaction,
+    TransactionError, TransactionStore,
 };
 
 const BTRFS: &str = "/usr/bin/btrfs";
@@ -185,6 +188,54 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
         self.execute_with_observer(requested, boot_id, |_| {})
     }
 
+    /// Preserve the confirmation engine from the protocol-verified initramfs on the
+    /// snapshot-external recovery store. Userspace may restore an older root, so it
+    /// must not depend on the restored root's package contents. The current protocol
+    /// binds the exact executable digest before any root subvolume is changed.
+    pub fn stage_confirmation_artifact(&self, source: &Path) -> Result<bool, RecoveryError> {
+        ensure_real_directory(&self.top_level)?;
+        let snapshot_root = self.snapshot_root();
+        let Some(transaction) = TransactionStore::new(&snapshot_root)
+            .load_pending()
+            .map_err(transaction_error)?
+        else {
+            return Ok(false);
+        };
+        ensure_protected_executable(source).map_err(|error| {
+            RecoveryError::new(RecoveryErrorCode::InvalidTransaction, error.message)
+        })?;
+        let source_digest = hash_regular_file(source).map_err(|error| {
+            RecoveryError::new(RecoveryErrorCode::InvalidTransaction, error.message)
+        })?;
+        if transaction.recovery_protocol_version == RECOVERY_PROTOCOL_VERSION
+            && source_digest != transaction.recovery_confirm_sha256
+        {
+            return Err(RecoveryError::new(
+                RecoveryErrorCode::InvalidTransaction,
+                "The initramfs confirmation engine does not match the rollback transaction",
+            ));
+        }
+        let recovery_boot = snapshot_root.join("recovery-boot");
+        ensure_real_directory(&recovery_boot)?;
+        let target = recovery_boot.join(RECOVERY_CONFIRM);
+        copy_regular_file_atomic(source, &target, 0o700)
+            .map_err(|error| RecoveryError::new(RecoveryErrorCode::Io, error.message))?;
+        ensure_protected_executable(&target).map_err(|error| {
+            RecoveryError::new(RecoveryErrorCode::InvalidTransaction, error.message)
+        })?;
+        if transaction.recovery_protocol_version == RECOVERY_PROTOCOL_VERSION
+            && hash_regular_file(&target).map_err(|error| {
+                RecoveryError::new(RecoveryErrorCode::InvalidTransaction, error.message)
+            })? != transaction.recovery_confirm_sha256
+        {
+            return Err(RecoveryError::new(
+                RecoveryErrorCode::InvalidTransaction,
+                "The staged confirmation engine does not match the rollback transaction",
+            ));
+        }
+        Ok(true)
+    }
+
     pub fn execute_with_observer<O>(
         &self,
         requested: Option<RollbackId>,
@@ -318,6 +369,21 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
 
     fn validate_deployments(&self, transaction: &RollbackTransaction) -> Result<(), RecoveryError> {
         let root = self.snapshot_root();
+        if transaction.recovery_protocol_version == RECOVERY_PROTOCOL_VERSION {
+            let confirm = root.join("recovery-boot").join(RECOVERY_CONFIRM);
+            ensure_protected_executable(&confirm).map_err(|error| {
+                RecoveryError::new(RecoveryErrorCode::InvalidTransaction, error.message)
+            })?;
+            let digest = hash_regular_file(&confirm).map_err(|error| {
+                RecoveryError::new(RecoveryErrorCode::InvalidTransaction, error.message)
+            })?;
+            if digest != transaction.recovery_confirm_sha256 {
+                return Err(RecoveryError::new(
+                    RecoveryErrorCode::InvalidTransaction,
+                    "The recovery confirmation artifact no longer matches the rollback transaction",
+                ));
+            }
+        }
         let deployments = DeploymentStore::new(&root);
         let target = deployments
             .load_record(transaction.target_deployment_id)
@@ -725,6 +791,14 @@ mod tests {
             let snapshot_root = root.join("@snapshots/anduinos-btrfs-snapshots-manager");
             fs::create_dir_all(snapshot_root.join("metadata")).unwrap();
             fs::create_dir_all(snapshot_root.join("transactions")).unwrap();
+            fs::create_dir_all(snapshot_root.join("recovery-boot")).unwrap();
+            let confirm = snapshot_root.join("recovery-boot/confirm");
+            fs::write(&confirm, "trusted-confirmation-engine").unwrap();
+            fs::set_permissions(
+                &confirm,
+                <fs::Permissions as std::os::unix::fs::PermissionsExt>::from_mode(0o700),
+            )
+            .unwrap();
             let target = record("target", TARGET_UUID, DeploymentState::PendingRollback);
             let fallback = record(
                 "fallback",
@@ -740,6 +814,7 @@ mod tests {
                 "test-kernel",
                 "a".repeat(64),
                 "b".repeat(64),
+                hash_regular_file(&confirm).unwrap(),
             );
             transaction
                 .transition(RollbackPhase::Armed, Utc::now())
@@ -827,6 +902,70 @@ mod tests {
             RecoveryOutcome::NoAction
         );
         assert_eq!(environment.phase(), RollbackPhase::Armed);
+        assert!(environment.root.join("@root/origin").exists());
+    }
+
+    #[test]
+    fn initramfs_stages_only_the_transaction_bound_confirmation_engine() {
+        let environment = Environment::new();
+        let source = environment.root.join("initramfs-confirm");
+        fs::write(&source, "trusted-confirmation-engine").unwrap();
+        fs::set_permissions(
+            &source,
+            <fs::Permissions as std::os::unix::fs::PermissionsExt>::from_mode(0o700),
+        )
+        .unwrap();
+        let target = environment
+            .root
+            .join("@snapshots/anduinos-btrfs-snapshots-manager/recovery-boot/confirm");
+        fs::write(&target, "stale").unwrap();
+        fs::set_permissions(
+            &target,
+            <fs::Permissions as std::os::unix::fs::PermissionsExt>::from_mode(0o700),
+        )
+        .unwrap();
+
+        let engine = RecoveryEngine::new(&environment.root, FakeFilesystem::default());
+        assert!(engine.stage_confirmation_artifact(&source).unwrap());
+        assert_eq!(
+            fs::read_to_string(&target).unwrap(),
+            "trusted-confirmation-engine"
+        );
+
+        fs::write(&source, "untrusted-confirmation-engine").unwrap();
+        assert_eq!(
+            engine
+                .stage_confirmation_artifact(&source)
+                .unwrap_err()
+                .code,
+            RecoveryErrorCode::InvalidTransaction
+        );
+        assert_eq!(
+            fs::read_to_string(&target).unwrap(),
+            "trusted-confirmation-engine"
+        );
+    }
+
+    #[test]
+    fn recovery_refuses_a_tampered_staged_confirmation_engine_before_root_mutation() {
+        let environment = Environment::new();
+        let confirm = environment
+            .root
+            .join("@snapshots/anduinos-btrfs-snapshots-manager/recovery-boot/confirm");
+        fs::write(&confirm, "tampered").unwrap();
+        fs::set_permissions(
+            &confirm,
+            <fs::Permissions as std::os::unix::fs::PermissionsExt>::from_mode(0o700),
+        )
+        .unwrap();
+        let engine = RecoveryEngine::new(&environment.root, FakeFilesystem::default());
+        assert_eq!(
+            engine
+                .execute(Some(environment.transaction.id), BOOT_ONE)
+                .unwrap_err()
+                .code,
+            RecoveryErrorCode::InvalidTransaction
+        );
         assert!(environment.root.join("@root/origin").exists());
     }
 

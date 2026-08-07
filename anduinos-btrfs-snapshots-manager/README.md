@@ -48,8 +48,9 @@ system browsing, and rollback preparation.
 
 A system rollback is prepared only after the target passes availability checks.
 The recovery engine creates and protects a current-system fallback, copies the
-currently running kernel and a protocol-verified initramfs into the snapshot-external
-recovery store, and binds their hashes to the transaction. GRUB keeps selecting this
+currently running kernel, a protocol-verified initramfs, and the matching userspace
+confirmation engine into the snapshot-external recovery store, and binds all three
+hashes to the transaction. GRUB keeps selecting this
 trusted recovery image until initramfs or userspace durably completes or fails the
 transaction. Every synchronized root switch is recorded as a persistent checkpoint;
 completed and failed transactions are retained in `rollback-history` for diagnosis.

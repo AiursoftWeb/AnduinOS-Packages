@@ -11,8 +11,9 @@ use uuid::Uuid;
 
 use crate::model::DeploymentId;
 
-pub const ROLLBACK_SCHEMA_VERSION: u32 = 2;
-pub const RECOVERY_PROTOCOL_VERSION: u32 = 1;
+pub const ROLLBACK_SCHEMA_VERSION: u32 = 3;
+pub const RECOVERY_PROTOCOL_VERSION: u32 = 2;
+const LEGACY_RECOVERY_PROTOCOL_VERSION: u32 = 1;
 pub const MAX_APPLY_ATTEMPTS: u32 = 3;
 const MAX_TRANSACTION_BYTES: u64 = 1024 * 1024;
 const MAX_FAILURE_LENGTH: usize = 2000;
@@ -135,6 +136,7 @@ pub struct RollbackTransaction {
     pub kernel_release: String,
     pub recovery_kernel_sha256: String,
     pub recovery_initramfs_sha256: String,
+    pub recovery_confirm_sha256: String,
     pub grub_entry_id: String,
     pub failure: Option<String>,
 }
@@ -153,6 +155,31 @@ struct LegacyRollbackTransactionV1 {
     applying_boot_id: Option<String>,
     root_filesystem_uuid: String,
     kernel_release: String,
+    grub_entry_id: String,
+    failure: Option<String>,
+}
+
+#[derive(Deserialize)]
+struct LegacyRollbackTransactionV2 {
+    #[serde(rename = "schema_version")]
+    _schema_version: u32,
+    id: RollbackId,
+    target_deployment_id: DeploymentId,
+    fallback_deployment_id: DeploymentId,
+    phase: RollbackPhase,
+    created_at: DateTime<Utc>,
+    updated_at: DateTime<Utc>,
+    recovery_protocol_version: u32,
+    initramfs_attempts: u32,
+    initramfs_boot_id: Option<String>,
+    checkpoint: Option<RecoveryCheckpoint>,
+    checkpoint_at: Option<DateTime<Utc>>,
+    apply_attempts: u32,
+    applying_boot_id: Option<String>,
+    root_filesystem_uuid: String,
+    kernel_release: String,
+    recovery_kernel_sha256: String,
+    recovery_initramfs_sha256: String,
     grub_entry_id: String,
     failure: Option<String>,
 }
@@ -192,7 +219,7 @@ impl LegacyRollbackTransactionV1 {
             } else {
                 self.updated_at
             },
-            recovery_protocol_version: RECOVERY_PROTOCOL_VERSION,
+            recovery_protocol_version: LEGACY_RECOVERY_PROTOCOL_VERSION,
             initramfs_attempts,
             initramfs_boot_id: self.applying_boot_id.clone(),
             checkpoint,
@@ -205,6 +232,53 @@ impl LegacyRollbackTransactionV1 {
             // migrated record valid for reconciliation but impossible to arm as a v2 boot.
             recovery_kernel_sha256: "0".repeat(64),
             recovery_initramfs_sha256: "0".repeat(64),
+            recovery_confirm_sha256: "0".repeat(64),
+            grub_entry_id: self.grub_entry_id,
+            failure: if cancel_before_apply {
+                Some(
+                    "The pending rollback was safely cancelled while upgrading the recovery protocol"
+                        .into(),
+                )
+            } else {
+                self.failure
+            },
+        }
+    }
+}
+
+impl LegacyRollbackTransactionV2 {
+    fn migrate(self) -> RollbackTransaction {
+        let now = Utc::now();
+        let cancel_before_apply =
+            matches!(self.phase, RollbackPhase::Preparing | RollbackPhase::Armed);
+        RollbackTransaction {
+            schema_version: ROLLBACK_SCHEMA_VERSION,
+            id: self.id,
+            target_deployment_id: self.target_deployment_id,
+            fallback_deployment_id: self.fallback_deployment_id,
+            phase: if cancel_before_apply {
+                RollbackPhase::Failed
+            } else {
+                self.phase
+            },
+            created_at: self.created_at,
+            updated_at: if cancel_before_apply {
+                now
+            } else {
+                self.updated_at
+            },
+            recovery_protocol_version: self.recovery_protocol_version,
+            initramfs_attempts: self.initramfs_attempts,
+            initramfs_boot_id: self.initramfs_boot_id,
+            checkpoint: self.checkpoint,
+            checkpoint_at: self.checkpoint_at,
+            apply_attempts: self.apply_attempts,
+            applying_boot_id: self.applying_boot_id,
+            root_filesystem_uuid: self.root_filesystem_uuid,
+            kernel_release: self.kernel_release,
+            recovery_kernel_sha256: self.recovery_kernel_sha256,
+            recovery_initramfs_sha256: self.recovery_initramfs_sha256,
+            recovery_confirm_sha256: "0".repeat(64),
             grub_entry_id: self.grub_entry_id,
             failure: if cancel_before_apply {
                 Some(
@@ -226,6 +300,7 @@ impl RollbackTransaction {
         kernel_release: impl Into<String>,
         recovery_kernel_sha256: impl Into<String>,
         recovery_initramfs_sha256: impl Into<String>,
+        recovery_confirm_sha256: impl Into<String>,
     ) -> Self {
         let id = RollbackId::new();
         let now = Utc::now();
@@ -248,6 +323,7 @@ impl RollbackTransaction {
             kernel_release: kernel_release.into(),
             recovery_kernel_sha256: recovery_kernel_sha256.into(),
             recovery_initramfs_sha256: recovery_initramfs_sha256.into(),
+            recovery_confirm_sha256: recovery_confirm_sha256.into(),
             grub_entry_id: format!("anduinos-btrfs-snapshots-manager-{id}"),
             failure: None,
         }
@@ -405,14 +481,44 @@ impl RollbackTransaction {
         validate_kernel_release(&self.kernel_release)?;
         validate_digest(&self.recovery_kernel_sha256, "recovery kernel")?;
         validate_digest(&self.recovery_initramfs_sha256, "recovery initramfs")?;
-        if self.recovery_protocol_version != RECOVERY_PROTOCOL_VERSION {
-            return Err(TransactionError::new(
-                TransactionErrorCode::UnsupportedSchema,
-                format!(
-                    "Unsupported recovery protocol {}",
-                    self.recovery_protocol_version
-                ),
-            ));
+        validate_digest(
+            &self.recovery_confirm_sha256,
+            "recovery confirmation engine",
+        )?;
+        match self.recovery_protocol_version {
+            RECOVERY_PROTOCOL_VERSION => {
+                if [
+                    &self.recovery_kernel_sha256,
+                    &self.recovery_initramfs_sha256,
+                    &self.recovery_confirm_sha256,
+                ]
+                .iter()
+                .any(|digest| digest.bytes().all(|byte| byte == b'0'))
+                {
+                    return Err(TransactionError::new(
+                        TransactionErrorCode::InvalidRecord,
+                        "Current recovery protocol artifacts must have non-zero digests",
+                    ));
+                }
+            }
+            LEGACY_RECOVERY_PROTOCOL_VERSION => {
+                if !self
+                    .recovery_confirm_sha256
+                    .bytes()
+                    .all(|byte| byte == b'0')
+                {
+                    return Err(TransactionError::new(
+                        TransactionErrorCode::InvalidRecord,
+                        "Legacy recovery transactions cannot bind a v2 confirmation artifact",
+                    ));
+                }
+            }
+            other => {
+                return Err(TransactionError::new(
+                    TransactionErrorCode::UnsupportedSchema,
+                    format!("Unsupported recovery protocol {other}"),
+                ));
+            }
         }
         if self.grub_entry_id != format!("anduinos-btrfs-snapshots-manager-{}", self.id) {
             return Err(TransactionError::new(
@@ -643,7 +749,9 @@ impl TransactionStore {
         let transaction = match schema_version {
             1 => serde_json::from_value::<LegacyRollbackTransactionV1>(value)
                 .map(LegacyRollbackTransactionV1::migrate),
-            2 => serde_json::from_value::<RollbackTransaction>(value),
+            2 => serde_json::from_value::<LegacyRollbackTransactionV2>(value)
+                .map(LegacyRollbackTransactionV2::migrate),
+            3 => serde_json::from_value::<RollbackTransaction>(value),
             other => {
                 return Err(TransactionError::new(
                     TransactionErrorCode::UnsupportedSchema,
@@ -975,6 +1083,7 @@ mod tests {
             "7.0.0-28-generic",
             "a".repeat(64),
             "b".repeat(64),
+            "c".repeat(64),
         )
     }
 
@@ -1104,6 +1213,45 @@ mod tests {
                 .as_deref()
                 .unwrap()
                 .contains("upgrading the recovery protocol")
+        );
+    }
+
+    #[test]
+    fn applied_v2_transaction_is_migrated_for_safe_userspace_reconciliation() {
+        let environment = TestStore::new();
+        let mut current = transaction();
+        current
+            .transition(RollbackPhase::Armed, Utc::now())
+            .unwrap();
+        let boot_id = "bbbbbbbb-1111-4222-8333-cccccccccccc";
+        current.record_initramfs_entry(boot_id, Utc::now()).unwrap();
+        current.begin_apply(boot_id, Utc::now()).unwrap();
+        current
+            .transition(RollbackPhase::BootedUnconfirmed, Utc::now())
+            .unwrap();
+        let mut legacy = serde_json::to_value(&current).unwrap();
+        let object = legacy.as_object_mut().unwrap();
+        object.insert("schema_version".into(), 2.into());
+        object.insert("recovery_protocol_version".into(), 1.into());
+        object.remove("recovery_confirm_sha256");
+        fs::write(
+            environment.root.join("transactions/pending-rollback.json"),
+            serde_json::to_vec(&legacy).unwrap(),
+        )
+        .unwrap();
+
+        let migrated = environment.store().load_pending().unwrap().unwrap();
+        assert_eq!(migrated.schema_version, ROLLBACK_SCHEMA_VERSION);
+        assert_eq!(migrated.phase, RollbackPhase::BootedUnconfirmed);
+        assert_eq!(
+            migrated.recovery_protocol_version,
+            LEGACY_RECOVERY_PROTOCOL_VERSION
+        );
+        assert!(
+            migrated
+                .recovery_confirm_sha256
+                .bytes()
+                .all(|byte| byte == b'0')
         );
     }
 

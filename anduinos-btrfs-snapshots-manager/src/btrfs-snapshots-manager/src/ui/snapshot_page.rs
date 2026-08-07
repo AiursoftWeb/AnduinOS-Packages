@@ -6,11 +6,21 @@ use adw::subclass::prelude::*;
 use gtk::{gio, glib};
 use libadwaita as adw;
 
-use crate::dbus_client::{RecoveryEngineStatus, SnapshotsManagerHelperClient, VerificationResult};
+use crate::dbus_client::{
+    PendingRecovery, RecoveryEngineStatus, SnapshotsManagerHelperClient, VerificationResult,
+};
 use crate::i18n::{tr, trf};
 
 use super::personal_history;
 use super::snapshot_model::{PagePresentation, SnapshotCapabilities, SnapshotItem, SnapshotScope};
+
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+pub(super) enum PendingBannerAction {
+    #[default]
+    None,
+    Cancel,
+    Reconcile,
+}
 
 mod imp {
     use super::*;
@@ -41,6 +51,7 @@ mod imp {
         pub error: RefCell<Option<adw::StatusPage>>,
         pub issue_banner: RefCell<Option<adw::Banner>>,
         pub pending_banner: RefCell<Option<adw::Banner>>,
+        pub(super) pending_banner_action: Cell<PendingBannerAction>,
     }
 
     #[glib::object_subclass]
@@ -143,12 +154,15 @@ impl SnapshotPage {
         issue_banner.set_revealed(false);
         self.append(&issue_banner);
         let pending_banner = adw::Banner::new("");
-        pending_banner.set_button_label(Some(&tr("Cancel Rollback")));
         pending_banner.set_revealed(false);
         let weak = self.downgrade();
         pending_banner.connect_button_clicked(move |_| {
             if let Some(page) = weak.upgrade() {
-                page.cancel_pending_rollback();
+                match page.imp().pending_banner_action.get() {
+                    PendingBannerAction::Cancel => page.cancel_pending_rollback(),
+                    PendingBannerAction::Reconcile => page.reconcile_pending_rollback(),
+                    PendingBannerAction::None => {}
+                }
             }
         });
         self.append(&pending_banner);
@@ -445,15 +459,28 @@ impl SnapshotPage {
                         .find(|item| item.id == pending.target_deployment_id)
                         .map(|item| item.title.as_str())
                         .unwrap_or(&pending.target_deployment_id);
-                    banner.set_title(&trf(
-                        "Rollback to {0} is prepared ({1})",
-                        &[target, &pending.phase],
-                    ));
+                    let presentation = pending_banner_presentation(target, pending);
+                    banner.set_title(&presentation.title);
+                    self.imp().pending_banner_action.set(presentation.action);
+                    let button = match presentation.action {
+                        PendingBannerAction::Cancel => Some(tr("Cancel Rollback")),
+                        PendingBannerAction::Reconcile => Some(tr("Retry Recovery")),
+                        PendingBannerAction::None => None,
+                    };
+                    banner.set_button_label(button.as_deref());
                     banner.set_revealed(true);
                 } else {
+                    self.imp()
+                        .pending_banner_action
+                        .set(PendingBannerAction::None);
+                    banner.set_button_label(None);
                     banner.set_revealed(false);
                 }
             } else {
+                self.imp()
+                    .pending_banner_action
+                    .set(PendingBannerAction::None);
+                banner.set_button_label(None);
                 banner.set_revealed(false);
             }
         }
@@ -1055,6 +1082,32 @@ impl SnapshotPage {
         );
     }
 
+    fn reconcile_pending_rollback(&self) {
+        let Some(parent) = self.parent() else {
+            return;
+        };
+        let weak = self.downgrade();
+        run_operation(
+            &parent,
+            &tr("Checking recovery state…"),
+            move || {
+                let result = SnapshotsManagerHelperClient::new()?.reconcile_deployment_restore()?;
+                if !result.0 {
+                    anyhow::bail!(result.1);
+                }
+                Ok(())
+            },
+            move |parent, result| match result {
+                Ok(()) => {
+                    if let Some(page) = weak.upgrade() {
+                        page.refresh();
+                    }
+                }
+                Err(problem) => show_error(parent, &problem.to_string()),
+            },
+        );
+    }
+
     fn run_mutation<F>(&self, title: &str, operation: F)
     where
         F: FnOnce() -> anyhow::Result<()> + Send + 'static,
@@ -1193,6 +1246,69 @@ fn impact_row(title: &str, subtitle: &str, icon: &str) -> adw::ActionRow {
     row
 }
 
+#[derive(Debug, Eq, PartialEq)]
+struct PendingBannerPresentation {
+    title: String,
+    action: PendingBannerAction,
+}
+
+fn pending_banner_presentation(
+    target: &str,
+    pending: &PendingRecovery,
+) -> PendingBannerPresentation {
+    let (title, action) = match pending.phase.as_str() {
+        "preparing" => (
+            trf("Preparing rollback to {0}…", &[target]),
+            PendingBannerAction::Cancel,
+        ),
+        "armed" => (
+            trf("Rollback to {0} is ready. Restart to apply it.", &[target]),
+            PendingBannerAction::Cancel,
+        ),
+        "applying" => (
+            trf(
+                "Rollback to {0} is being applied during startup.",
+                &[target],
+            ),
+            PendingBannerAction::None,
+        ),
+        "booted-unconfirmed" => (
+            trf(
+                "Rollback to {0} was applied, but system confirmation has not completed.",
+                &[target],
+            ),
+            PendingBannerAction::Reconcile,
+        ),
+        "reverting" => (
+            tr("Rollback confirmation failed. The protected previous system is being restored."),
+            PendingBannerAction::None,
+        ),
+        "reverted" => (
+            tr("The rollback was reverted, but recovery cleanup has not completed."),
+            PendingBannerAction::Reconcile,
+        ),
+        "confirmed" => (
+            tr("The rollback completed, but recovery cleanup has not completed."),
+            PendingBannerAction::Reconcile,
+        ),
+        "failed" => (
+            pending.failure.as_deref().map_or_else(
+                || tr("The rollback failed. Recovery cleanup has not completed."),
+                |failure| trf("The rollback failed: {0}", &[failure]),
+            ),
+            PendingBannerAction::Reconcile,
+        ),
+        phase => (
+            trf(
+                "Recovery for {0} is in an unknown state ({1}).",
+                &[target, phase],
+            ),
+            PendingBannerAction::None,
+        ),
+    };
+    PendingBannerPresentation { title, action }
+}
+
 fn run_operation<F, T, C>(parent: &adw::ApplicationWindow, title: &str, operation: F, complete: C)
 where
     F: FnOnce() -> anyhow::Result<T> + Send + 'static,
@@ -1317,15 +1433,56 @@ fn show_rollback_ready(parent: &adw::ApplicationWindow) {
     let weak = parent.downgrade();
     dialog.connect_response(None, move |_, response| {
         if response == "restart"
-            && let Err(problem) = std::process::Command::new("/usr/bin/systemctl")
-                .arg("reboot")
-                .spawn()
             && let Some(parent) = weak.upgrade()
         {
-            show_error(&parent, &problem.to_string());
+            run_operation(
+                &parent,
+                &tr("Requesting restart…"),
+                request_system_reboot,
+                |parent, result| {
+                    if let Err(problem) = result {
+                        show_error(parent, &problem.to_string());
+                    }
+                },
+            );
         }
     });
     dialog.present();
+}
+
+fn request_system_reboot() -> anyhow::Result<()> {
+    request_system_reboot_with(std::path::Path::new("/usr/bin/systemctl"))
+}
+
+fn request_system_reboot_with(program: &std::path::Path) -> anyhow::Result<()> {
+    let output = std::process::Command::new(program)
+        .arg("reboot")
+        .output()
+        .map_err(|error| anyhow::anyhow!("Could not start the system restart request: {error}"))?;
+    if output.status.success() {
+        return Ok(());
+    }
+    let bytes = if output.stderr.is_empty() {
+        &output.stdout
+    } else {
+        &output.stderr
+    };
+    let diagnostic = String::from_utf8_lossy(bytes)
+        .chars()
+        .map(|character| {
+            if character.is_control() {
+                ' '
+            } else {
+                character
+            }
+        })
+        .take(2000)
+        .collect::<String>();
+    let diagnostic = diagnostic.trim();
+    if diagnostic.is_empty() {
+        anyhow::bail!("The system restart request was refused ({})", output.status);
+    }
+    anyhow::bail!("The system restart request was refused: {diagnostic}")
 }
 
 fn show_error(parent: &adw::ApplicationWindow, message: &str) {
@@ -1336,4 +1493,84 @@ fn show_information(parent: &adw::ApplicationWindow, title: &str, message: &str)
     let dialog = adw::MessageDialog::new(Some(parent), Some(title), Some(message));
     dialog.add_response("close", &tr("Close"));
     dialog.present();
+}
+
+#[cfg(test)]
+mod tests {
+    use std::os::unix::fs::PermissionsExt;
+
+    use super::*;
+
+    fn pending(phase: &str) -> PendingRecovery {
+        PendingRecovery {
+            target_deployment_id: "target".into(),
+            phase: phase.into(),
+            failure: None,
+        }
+    }
+
+    #[test]
+    fn rollback_can_only_be_cancelled_before_early_boot() {
+        for phase in ["preparing", "armed"] {
+            assert_eq!(
+                pending_banner_presentation("LKG", &pending(phase)).action,
+                PendingBannerAction::Cancel
+            );
+        }
+        for phase in [
+            "applying",
+            "booted-unconfirmed",
+            "reverting",
+            "reverted",
+            "confirmed",
+            "failed",
+        ] {
+            assert!(
+                pending_banner_presentation("LKG", &pending(phase)).action
+                    != PendingBannerAction::Cancel,
+                "phase {phase} unexpectedly allowed cancellation"
+            );
+        }
+    }
+
+    #[test]
+    fn completed_or_unconfirmed_phases_offer_safe_reconciliation() {
+        for phase in ["booted-unconfirmed", "reverted", "confirmed", "failed"] {
+            assert_eq!(
+                pending_banner_presentation("LKG", &pending(phase)).action,
+                PendingBannerAction::Reconcile,
+                "phase {phase} did not offer reconciliation"
+            );
+        }
+    }
+
+    #[test]
+    fn booted_unconfirmed_is_not_presented_as_merely_prepared() {
+        let presentation = pending_banner_presentation("LKG", &pending("booted-unconfirmed"));
+        assert!(presentation.title.contains("confirmation"));
+        assert!(!presentation.title.contains("prepared"));
+    }
+
+    #[test]
+    fn reboot_request_waits_for_and_reports_command_failure() {
+        assert!(request_system_reboot_with(std::path::Path::new("/usr/bin/true")).is_ok());
+
+        let script = std::env::temp_dir().join(format!(
+            "snapshots-manager-reboot-test-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::write(
+            &script,
+            "#!/bin/sh\nprintf 'Operation denied due to active block inhibitor\\n' >&2\nexit 1\n",
+        )
+        .unwrap();
+        std::fs::set_permissions(&script, std::fs::Permissions::from_mode(0o700)).unwrap();
+        let error = request_system_reboot_with(&script).unwrap_err();
+        assert!(error.to_string().contains("active block inhibitor"));
+        std::fs::remove_file(script).unwrap();
+    }
 }

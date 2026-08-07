@@ -96,11 +96,16 @@ rg -q 'ListSystemSnapshotFiles' "$ROOT/src/btrfs-snapshots-manager/src/dbus_clie
 grep -Fq 'if [ -x /usr/libexec/anduinos-btrfs-snapshots-manager-apt-hook ]' \
     "$ROOT/data/90-anduinos-btrfs-snapshots-manager"
 test -f "$ROOT/scripts/postrm.sh"
+grep -Fq '/run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service' \
+    "$ROOT/scripts/postinst.sh"
+grep -Fq '/run/systemd/system/multi-user.target.wants/anduinos-btrfs-snapshots-manager-confirm.service' \
+    "$ROOT/scripts/postinst.sh"
 test -f "$ROOT/docs/deployment-v1.schema.json"
-test -f "$ROOT/docs/rollback-v2.schema.json"
+test -f "$ROOT/docs/rollback-v3.schema.json"
 test -f "$ROOT/docs/personal-snapshot-v1.schema.json"
 test -f "$ROOT/docs/VM-QUALIFICATION.md"
 test -f "$ROOT/docs/RECOVERY-SCOPE.md"
+grep -Fq 'export RUST_MIN_STACK="${RUST_MIN_STACK:-33554432}"' "$ROOT/build.sh"
 test -x "$ROOT/scripts/test-recovery-operations-loopback.sh"
 test -x "$ROOT/scripts/qualify-recovery-vm.sh"
 test -x "$ROOT/scripts/test-initramfs-integration.sh"
