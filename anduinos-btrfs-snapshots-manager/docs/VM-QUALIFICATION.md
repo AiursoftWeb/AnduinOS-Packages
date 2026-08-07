@@ -8,6 +8,11 @@ The loopback tests qualify real Btrfs operations without rebooting. They cannot
 qualify GRUB, initramfs root replacement, userspace confirmation, automatic
 fallback, Secure Boot, or power loss. Those properties require this matrix.
 
+Use the test IDs, evidence template, current status, and sign-off rules in
+[ROLLBACK-RELEASE-TEST-PLAN.md](ROLLBACK-RELEASE-TEST-PLAN.md). Restore the clean
+hypervisor snapshot between lanes. After a rebooting lane, collect and review its
+evidence before preparing another rollback.
+
 ## Baseline
 
 1. Install the APKG-built amd64 Deb in a UEFI VM. Enable virtual Secure Boot for
@@ -52,7 +57,7 @@ Pass criteria:
 - normal boot remains selected; and
 - rebooting does not change the current root.
 
-## Normal rollback and confirmation
+## Normal rollback and confirmation (`RRP2-VM-001`)
 
 ```bash
 sudo /usr/share/doc/anduinos-btrfs-snapshots-manager/qualify-recovery-vm.sh \
@@ -79,7 +84,7 @@ Repeat this lane three times, including once after an APT upgrade creates its
 pre-transaction automatic system snapshot. Also exercise create, verify, browse,
 single-file recovery, and delete before scheduling another local snapshot.
 
-## Docker autoremove regression
+## Docker autoremove regression (`RRP2-VM-002`)
 
 This is the release regression for a package database and executable disappearing
 after a purported rollback. Restore `snapshots-manager-clean`, install the distro
@@ -101,7 +106,7 @@ the exact package version and executable return, the selected deployment is
 confirmed `current`, the pending transaction is gone, and its terminal history
 contains at least one initramfs entry and the final synchronized checkpoint.
 
-## Hard power-loss matrix
+## Hard power-loss matrix (`RRP2-VM-005`)
 
 The initramfs binary prints `SNAPSHOTS-MANAGER-CHECKPOINT <name>` only after the
 corresponding state and filesystem boundary has been synchronized. Capture the
@@ -154,7 +159,7 @@ transaction with the “without entering the initramfs” diagnostic, return tar
 fallback metadata to `ready`, clear the EFI recovery lease, and preserve the JSON
 under `rollback-history`. It must never report a successful rollback.
 
-## Failure lanes
+## Failure and fallback lanes (`RRP2-VM-003`, `RRP2-VM-004`)
 
 From fresh hypervisor snapshots, separately qualify a full filesystem, missing
 recovery root, damaged metadata, missing kernel, missing initramfs, forced GRUB

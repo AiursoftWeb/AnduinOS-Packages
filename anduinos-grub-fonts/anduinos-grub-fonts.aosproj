@@ -1,0 +1,39 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-grub-fonts</PackageName>
+    <PackageVersion>2.0.0-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS HiDPI Unicode font and display defaults for the GRUB boot menu</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-2.0-or-later</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <PrebuildCommand Run="python3 tests/test_package_contract.py" />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource
+        Url="https://mirror.aiursoft.com/ubuntu"
+        SuiteMap="noble-addon=noble resolute-addon=resolute" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Dependency Include="grub2-common" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IncludeFile Include="assets/anduinos-unicode-28.pf2"
+                 Target="/usr/share/grub/anduinos/anduinos-unicode-28.pf2" />
+    <ConfFile Include="assets/20-anduinos-font.cfg"
+              Target="/etc/default/grub.d/20-anduinos-font.cfg" />
+    <IncludeFile Include="assets/copyright"
+                 Target="/usr/share/doc/anduinos-grub-fonts/copyright" />
+    <PostInstallScript Include="scripts/postinst.sh" />
+    <PostRemoveScript Include="scripts/postrm.sh" />
+  </ItemGroup>
+</Project>

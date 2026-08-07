@@ -4180,12 +4180,14 @@ class OobeWindow(Adw.ApplicationWindow):
             factories.append(lambda: create_nvidia_page(_nav, _update_nav))
         if not is_virtual_machine():
             factories.append(lambda: create_xbox_page(_nav, _update_nav))
+        # Let Chinese users switch Flathub to the local mirror before offering
+        # Bottles, so the large Flatpak download uses the faster source.
+        if is_chinese_locale():
+            factories.append(lambda: create_flathub_mirror_page())
         # Bottles (Wine) is x86-only — no Flatpak on aarch64 and emulation
         # of x86 Windows apps on ARM is not "with ease".
         if not is_arm64():
             factories.append(lambda: create_exe_sandbox_page(_nav))
-        if is_chinese_locale():
-            factories.append(lambda: create_flathub_mirror_page())
 
         factories.extend([
             lambda: create_shortcuts_page(),

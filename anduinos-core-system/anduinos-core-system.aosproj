@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-core-system</PackageName>
-    <PackageVersion>2.0.0-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS core system foundation metapackage — essential system services, networking, hardware support, and administration tools. This is the base layer for all AnduinOS variants (Desktop, Server, IoT).</PackageDescription>
     <Section>metapackages</Section>
@@ -29,6 +29,7 @@
     <Dependency Include="grub-efi-amd64 | grub-pc" Condition="'$(Arch)' == 'amd64'" />
     <Dependency Include="grub-efi-arm64" Condition="'$(Arch)' == 'arm64'" />
     <Dependency Include="grub2-common" />
+    <Dependency Include="anduinos-grub-fonts" />
     <Dependency Include="init" />
     <Dependency Include="systemd-sysv" />
     <Dependency Include="linux-base" />

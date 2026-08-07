@@ -95,6 +95,15 @@ being interpreted by incompatible recovery code or left as a stale GRUB loop.
 Already-applied legacy transactions remain readable only for identity-checked
 confirmation, reversion, and terminal cleanup.
 
+Release claims for this boundary require numbered evidence rather than an
+informal successful boot. The release ledger in
+[ROLLBACK-RELEASE-TEST-PLAN.md](ROLLBACK-RELEASE-TEST-PLAN.md) records normal
+protocol-2 confirmation, legacy reconciliation, automatic fallback, Secure Boot,
+and every hard-power-loss checkpoint. A restored package or executable proves
+only that initramfs activated the target root; terminal `confirmed` history,
+userspace service success, an empty one-shot selector, and cleanup of staging
+roots are separate pass conditions.
+
 Snapshot list and refresh operations only read a bounded, non-authoritative size
 cache. They never recursively scan Btrfs extents. An explicit Properties request
 may read an already available level-zero qgroup; it does not enable quotas or force

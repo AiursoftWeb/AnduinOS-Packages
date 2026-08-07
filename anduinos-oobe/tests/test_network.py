@@ -119,6 +119,44 @@ class NetworkTests(unittest.TestCase):
         self.assertIn("create_appearance_page", offline[2].__code__.co_names)
         self.assertIn("create_appearance_page", online[1].__code__.co_names)
 
+    def test_chinese_flathub_mirror_precedes_bottles_offer(self):
+        window = types.SimpleNamespace(
+            is_oobe=True,
+            _update_nav_buttons=lambda: None,
+            _finish_oobe=lambda: None,
+        )
+
+        with (
+            mock.patch.object(
+                oobe, "internet_connection_ready", return_value=True
+            ),
+            mock.patch.object(oobe, "has_nvidia_gpu", return_value=False),
+            mock.patch.object(oobe, "is_virtual_machine", return_value=True),
+            mock.patch.object(oobe, "is_arm64", return_value=False),
+            mock.patch.object(oobe, "is_chinese_locale", return_value=True),
+            mock.patch.object(
+                oobe.subprocess,
+                "run",
+                return_value=subprocess.CompletedProcess([], 1, "", ""),
+            ),
+        ):
+            factories = oobe.OobeWindow._get_page_factories(
+                window, navigate_next=lambda: None
+            )
+
+        factory_names = [factory.__code__.co_names for factory in factories]
+        mirror_index = next(
+            index
+            for index, names in enumerate(factory_names)
+            if "create_flathub_mirror_page" in names
+        )
+        bottles_index = next(
+            index
+            for index, names in enumerate(factory_names)
+            if "create_exe_sandbox_page" in names
+        )
+        self.assertLess(mirror_index, bottles_index)
+
     def test_navigation_refresh_waits_until_controls_are_ready(self):
         building_window = types.SimpleNamespace(_nav_ready=False)
 
@@ -151,7 +189,7 @@ class NetworkTests(unittest.TestCase):
         carousel.set_interactive.assert_called_once_with(False)
         back_btn.set_visible.assert_called_once_with(True)
         next_btn.set_visible.assert_called_once_with(False)
-        next_btn.set_label.assert_called_once_with("Next →")
+        next_btn.set_label.assert_called_once_with(oobe._("Next →"))
         next_btn.remove_css_class.assert_called_once_with("suggested-action")
 
     def test_continue_offline_physically_removes_online_pages(self):

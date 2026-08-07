@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-btrfs-snapshots-manager</PackageName>
-    <PackageVersion>0.1.0-16+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.1.0-17+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Disk Snapshots Manager — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -96,6 +96,7 @@
     <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/README.md" />
     <IncludeFile Include="docs/VM-QUALIFICATION.md" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/VM-QUALIFICATION.md" />
     <IncludeFile Include="docs/RECOVERY-SCOPE.md" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/RECOVERY-SCOPE.md" />
+    <IncludeFile Include="docs/ROLLBACK-RELEASE-TEST-PLAN.md" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/ROLLBACK-RELEASE-TEST-PLAN.md" />
     <IncludeFile Include="docs/deployment-v1.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/deployment-v1.schema.json" />
     <IncludeFile Include="docs/rollback-v3.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/rollback-v3.schema.json" />
     <IncludeFile Include="docs/personal-snapshot-v1.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/personal-snapshot-v1.schema.json" />
