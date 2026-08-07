@@ -18,6 +18,8 @@ POSTRM = PROJECT / "scripts/postrm.sh"
 
 CONFIG_TEXT = """# Prefer a lower graphics mode while keeping GRUB's trusted default Unicode font.
 GRUB_GFXMODE="1440x900,1280x800,1280x720,1024x768,auto"
+# Let Linux and Plymouth select their own platform-appropriate video mode.
+GRUB_GFXPAYLOAD_LINUX="auto"
 """
 
 
@@ -45,7 +47,7 @@ class GrubStylePackageContractTests(unittest.TestCase):
         )
         self.assertEqual(
             self.project.findtext(".//PackageVersion"),
-            "2.0.0-3+$(SuiteShortName)",
+            "2.0.0-4+$(SuiteShortName)",
         )
         self.assertEqual(self.project.findtext(".//Section"), "admin")
         self.assertEqual(
@@ -101,6 +103,7 @@ class GrubStylePackageContractTests(unittest.TestCase):
         self.assertTrue(CONFIG.name.startswith("20-"))
         self.assertNotIn("GRUB_FONT", CONFIG_TEXT)
         self.assertNotIn("GRUB_CMDLINE", CONFIG_TEXT)
+        self.assertIn('GRUB_GFXPAYLOAD_LINUX="auto"', CONFIG_TEXT)
 
     def test_lifecycle_scripts_and_contract_test_are_wired(self) -> None:
         self.assertEqual(

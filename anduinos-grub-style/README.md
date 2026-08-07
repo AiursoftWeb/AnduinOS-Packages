@@ -2,7 +2,8 @@
 
 This package owns the installed system's GRUB presentation defaults. Its policy
 is deliberately small: prefer a readable graphics-mode fallback list and leave
-GRUB's trusted default Unicode font untouched.
+GRUB's trusted default Unicode font untouched. The Linux graphics payload uses
+`auto` so Plymouth does not inherit the boot menu's lower resolution.
 
 ## Installed files
 
