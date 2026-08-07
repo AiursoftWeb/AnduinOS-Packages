@@ -3,6 +3,14 @@ stages:
   - publish
   - meta
 
+verify-ci-package-needs:
+  stage: lint
+  script:
+    - python3 lib/verify-ci-package-needs.py
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
 lint-all:
   stage: lint
   before_script:
@@ -10,7 +18,6 @@ lint-all:
     - export PATH="$PATH:$HOME/.dotnet/tools"
     - apkg --version
   script:
-    - python3 lib/verify-ci-package-needs.py
     - |
       failed=0
       for dir in */; do
@@ -444,7 +451,7 @@ anduinos-installer-beta:
     PACKAGE_DIR: anduinos-installer-beta
 
 # ── Onion-layer metapackages ─────────────────────────────────────────────
-# anduinos-core-system: no internal deps (pure Ubuntu packages)
+# anduinos-core-system: depends on the container, GRUB fonts, and system tweaks
 # anduinos-desktop-core: depends on core-system
 # anduinos-appstore:       Flatpak + GNOME Software (optional for servers)
 
@@ -453,10 +460,16 @@ anduinos-container:
   variables:
     PACKAGE_DIR: anduinos-container
 
+anduinos-grub-fonts:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-grub-fonts
+
 anduinos-core-system:
   extends: .publish
   needs:
     - anduinos-container
+    - anduinos-grub-fonts
     - anduinos-system-tweaks
   variables:
     PACKAGE_DIR: anduinos-core-system
