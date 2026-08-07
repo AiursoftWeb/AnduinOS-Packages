@@ -11,32 +11,41 @@ import subprocess
 import os
 import sys
 import threading
-import importlib.util
 import urllib.request
 import time
 import shlex
 import stat
 import tempfile
-from importlib.machinery import SourceFileLoader
 from concurrent.futures import ThreadPoolExecutor, as_completed
-
-def _get_appearance_module():
-    paths = [
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../anduinos-appearance/src/anduinos-appearance'),
-        '/usr/bin/anduinos-appearance'
-    ]
-    for p in paths:
-        if os.path.exists(p):
-            try:
-                app_mod = SourceFileLoader("anduinos_appearance", p).load_module()
-                return app_mod
-            except Exception:
-                pass
-    return None
 import re
 import json
 import gettext
 import warnings
+
+# The installed anduinos-appearance package owns all taskbar layout behavior.
+# Keep a source-tree fallback for local development and repository tests.
+try:
+    from anduinos_appearance import (
+        apply_style_and_position,
+        detect_current,
+        draw_preview,
+    )
+except ModuleNotFoundError:
+    _appearance_src = os.path.abspath(os.path.join(
+        os.path.dirname(__file__), '..', '..',
+        'anduinos-appearance', 'src'))
+    if _appearance_src not in sys.path:
+        sys.path.insert(0, _appearance_src)
+    from anduinos_appearance import (
+        apply_style_and_position,
+        detect_current,
+        draw_preview,
+    )
+
+OOBE_LAYOUT_STYLES = {
+    'modern': 'eleven',
+    'classic': 'classic',
+}
 
 # The installed package provides this module. Keep a source-tree fallback so
 # OOBE's unit tests and local development use the exact same implementation.
@@ -571,68 +580,6 @@ def _apply_theme(dark):
     settings.set_string('color-scheme', scheme)
 
 
-def _apply_layout(style):
-    """Apply taskbar layout via dconf. style in ('modern', 'classic')."""
-    ARC = '/org/gnome/shell/extensions/arcmenu'
-    DTP = '/org/gnome/shell/extensions/dash-to-panel'
-
-    # Map to internal style names used by the appearance code
-    internal = 'eleven' if style == 'modern' else 'classic'
-    pos = 'bottom'
-
-    MENU_CONFIG = {
-        ('classic', 'bottom'): ('arcmenu', 'BottomLeft'),
-        ('eleven', 'bottom'): ('11', 'BottomCentered'),
-    }
-
-    POSITIONS = {'bottom': 'BOTTOM'}
-
-    if internal == 'eleven':
-        elements = [
-            {"element": "activitiesButton", "visible": True, "position": "stackedTL"},
-            {"element": "showAppsButton", "visible": False, "position": "stackedTL"},
-            {"element": "leftBox", "visible": True, "position": "stackedTL"},
-            {"element": "centerBox", "visible": True, "position": "stackedBR"},
-            {"element": "taskbar", "visible": True, "position": "centerMonitor"},
-            {"element": "rightBox", "visible": True, "position": "stackedBR"},
-            {"element": "systemMenu", "visible": True, "position": "stackedBR"},
-            {"element": "dateMenu", "visible": True, "position": "stackedBR"},
-            {"element": "desktopButton", "visible": True, "position": "stackedBR"},
-        ]
-    else:
-        elements = [
-            {"element": "centerBox", "visible": True, "position": "stackedTL"},
-            {"element": "taskbar", "visible": True, "position": "stackedTL"},
-            {"element": "showAppsButton", "visible": False, "position": "stackedTL"},
-            {"element": "activitiesButton", "visible": True, "position": "stackedBR"},
-            {"element": "leftBox", "visible": True, "position": "stackedBR"},
-            {"element": "rightBox", "visible": True, "position": "stackedBR"},
-            {"element": "systemMenu", "visible": True, "position": "stackedBR"},
-            {"element": "dateMenu", "visible": True, "position": "stackedBR"},
-            {"element": "desktopButton", "visible": True, "position": "stackedBR"},
-        ]
-
-    monitors = ["0", "1", "2"]
-    pep = json.dumps({m: elements for m in monitors})
-    pp = json.dumps({m: 'BOTTOM' for m in monitors})
-    ps = json.dumps({m: 48 for m in monitors})
-    menu_layout, force_menu = MENU_CONFIG[(internal, pos)]
-
-    try:
-        subprocess.run(['dconf', 'write', f'{DTP}/dot-position', "'BOTTOM'"], check=True)
-        subprocess.run(['dconf', 'write', f'{DTP}/panel-positions', f"'{pp}'"], check=True)
-        subprocess.run(['dconf', 'write', f'{DTP}/panel-sizes', f"'{ps}'"], check=True)
-        subprocess.run(['dconf', 'write', f'{DTP}/panel-element-positions', f"'{pep}'"], check=True)
-        subprocess.run(['dconf', 'write', f'{ARC}/force-menu-location', f"'{force_menu}'"], check=True)
-        subprocess.run(['dconf', 'write', f'{ARC}/menu-layout', f"'{menu_layout}'"], check=True)
-        if internal == 'eleven':
-            subprocess.run(['dconf', 'write', f'{DTP}/group-apps', 'true'], check=True)
-            subprocess.run(['dconf', 'write', f'{DTP}/group-apps-use-launchers', 'true'], check=True)
-    except subprocess.CalledProcessError:
-        pass
-    subprocess.run(['dconf', 'update'], check=False)
-
-
 # ═══════════════════════════════════════════════════════════════════
 # BREATHING LOGO WIDGET
 # ═══════════════════════════════════════════════════════════════════
@@ -1139,42 +1086,28 @@ def create_appearance_page():
     layout_title_group.set_margin_bottom(12)
     center.append(layout_title_group)
 
-    # Detect current layout
-    try:
-        r = subprocess.run(['dconf', 'read', '/org/gnome/shell/extensions/arcmenu/menu-layout'],
-                           capture_output=True, text=True, timeout=5)
-        ml = r.stdout.strip()
-        current_style = 'modern'
-        if 'arcmenu' in ml:
-            r2 = subprocess.run(
-                ['dconf', 'read',
-                 '/org/gnome/shell/extensions/dash-to-panel/panel-element-positions'],
-                capture_output=True, text=True, timeout=5)
-            current_style = 'classic' if 'centerMonitor' not in r2.stdout else 'modern'
-    except Exception:
-        current_style = 'modern'
+    # OOBE presents the hybrid Seperated style as a modern, centered layout.
+    detected_style, _detected_position = detect_current()
+    current_style = 'classic' if detected_style == 'classic' else 'modern'
 
     state = {'style': current_style}
 
-    # Optional Preview from anduinos-appearance
-    app_mod = _get_appearance_module()
-    preview = None
-    if app_mod and hasattr(app_mod, 'draw_preview'):
-        preview_card = Gtk.Frame()
-        preview_card.add_css_class('card')
-        preview_card.set_margin_bottom(24)
-        preview_card.set_margin_start(24)
-        preview_card.set_margin_end(24)
-        preview = Gtk.DrawingArea()
-        preview.set_size_request(340, 110)
-        
-        def _do_draw(area, cr, w, h):
-            style_str = 'eleven' if state['style'] == 'modern' else 'classic'
-            app_mod.draw_preview(area, cr, w, h, style_str, 'bottom')
-            
-        preview.set_draw_func(_do_draw)
-        preview_card.set_child(preview)
-        center.append(preview_card)
+    preview_card = Gtk.Frame()
+    preview_card.add_css_class('card')
+    preview_card.set_margin_bottom(24)
+    preview_card.set_margin_start(24)
+    preview_card.set_margin_end(24)
+    preview = Gtk.DrawingArea()
+    preview.set_size_request(340, 110)
+
+    def _do_draw(area, cr, w, h):
+        draw_preview(
+            area, cr, w, h,
+            OOBE_LAYOUT_STYLES[state['style']], 'bottom')
+
+    preview.set_draw_func(_do_draw)
+    preview_card.set_child(preview)
+    center.append(preview_card)
 
     layout_group = Adw.PreferencesGroup()
     layout_group.set_margin_start(24)
@@ -1203,14 +1136,15 @@ def create_appearance_page():
 
     def _on_layout_click(btn, style):
         if btn.get_active():
-            if style == 'modern':
-                btn_classic.set_active(False)
-            else:
-                btn_modern.set_active(False)
-            state['style'] = style
-            if preview:
+            if apply_style_and_position(OOBE_LAYOUT_STYLES[style], 'bottom'):
+                if style == 'modern':
+                    btn_classic.set_active(False)
+                else:
+                    btn_modern.set_active(False)
+                state['style'] = style
                 preview.queue_draw()
-            _apply_layout(style)
+            else:
+                btn.set_active(False)
         elif not btn_modern.get_active() and not btn_classic.get_active():
             btn.set_active(True)
 
@@ -1238,11 +1172,13 @@ def create_appearance_page():
     
     def _on_activities_toggle(switch, pspec):
         v = 'true' if switch.get_active() else 'false'
-        subprocess.run(['dconf', 'write', '/org/gnome/shell/extensions/arcmenu/show-activities-button', v])
+        result = subprocess.run(
+            ['dconf', 'write',
+             '/org/gnome/shell/extensions/arcmenu/show-activities-button', v])
         # Force Dash-to-Panel to refresh so the change takes effect immediately
-        if app_mod and hasattr(app_mod, 'apply_style_and_position'):
-            style = 'eleven' if state['style'] == 'modern' else state['style']
-            app_mod.apply_style_and_position(style, 'bottom')
+        if result.returncode == 0:
+            style, position = detect_current()
+            apply_style_and_position(style, position)
 
     activities_row.connect('notify::active', _on_activities_toggle)
     layout_group.add(activities_row)

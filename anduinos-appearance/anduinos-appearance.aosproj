@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-appearance</PackageName>
-    <PackageVersion>2.0.1-4+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Appearance — toggle between Windows 11 and Classic taskbar layouts</PackageDescription>
     <Section>utils</Section>
@@ -33,6 +33,9 @@
 
   <ItemGroup>
     <IncludeScript Include="src/anduinos-appearance" Target="/usr/bin/anduinos-appearance" />
+    <IncludeFile Include="src/anduinos_appearance/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_appearance/__init__.py" />
+    <IncludeFile Include="src/anduinos_appearance/layout.py" Target="/usr/lib/python3/dist-packages/anduinos_appearance/layout.py" />
+    <IncludeFile Include="src/anduinos_appearance/preview.py" Target="/usr/lib/python3/dist-packages/anduinos_appearance/preview.py" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
   </ItemGroup>
 
@@ -43,6 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PrebuildCommand Run="PYTHONPATH=src python3 -m unittest discover -s tests -v" />
     <PrebuildCommand Run="bash compile-locales.sh" />
   </ItemGroup>
 </Project>

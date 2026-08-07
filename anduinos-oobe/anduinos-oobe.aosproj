@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-oobe</PackageName>
-    <PackageVersion>2.0.1-15+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-16+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS OOBE — First-run setup wizard and Welcome Center</PackageDescription>
     <Section>utils</Section>
@@ -30,7 +30,7 @@
     <Dependency Include="ufw" />
     <Dependency Include="flatpak" />
     <Dependency Include="pkexec" />
-    <Dependency Include="anduinos-appearance" />
+    <Dependency Include="anduinos-appearance (&gt;= 2.0.1-5)" />
     <Dependency Include="network-manager" />
     <Dependency Include="anduinos-secureboot-toolkit" />
     <Dependency Include="ubuntu-drivers-common" />
