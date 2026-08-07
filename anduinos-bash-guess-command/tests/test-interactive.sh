@@ -30,6 +30,7 @@ cp "$DAEMON" "$TEST_ROOT/package/anduinos-quietd-engine"
 
 cat >"$TEST_ROOT/package/anduinos-quietd" <<EOF
 #!/usr/bin/env bash
+export ANDUINOS_TEST_MULTIPLE_MARKER='$TEST_ROOT/multiple-containers'
 exec '$TEST_ROOT/package/anduinos-quietd-engine' --fixture-bin-dir '$TEST_ROOT/home/bin'
 EOF
 chmod 755 "$TEST_ROOT/package/anduinos-quietd"
@@ -91,10 +92,13 @@ Host production-api
 EOF
 printf 'EXPLICIT_PATH_PREFIX\n' >"$TEST_ROOT/home/.bash_alpha"
 mkdir -p "$TEST_ROOT/home/demo-directory"
+printf "printf IMPORTED_HISTORY >'%s/imported-history'\n" \
+    "$TEST_ROOT" >"$TEST_ROOT/home/import.bash_history"
 
 cat >"$TEST_ROOT/bashrc" <<EOF
 PS1='NATIVE_TEST> '
 PS2='NATIVE_MORE> '
+HISTFILE='/dev/null'
 stty columns 120 rows 40
 cd '$ROOT'
 PATH='$TEST_ROOT/home/bin':\$PATH
@@ -115,6 +119,9 @@ cat >>"$TEST_ROOT/late-disabled-bashrc" <<'EOF'
 # bash-completion has already sourced the package loader.
 export ANDUINOS_GUESS_COMMAND=0
 EOF
+
+sed "s|HISTFILE='/dev/null'|HISTFILE='$TEST_ROOT/home/import.bash_history'|" \
+    "$TEST_ROOT/bashrc" >"$TEST_ROOT/import-history-bashrc"
 
 run_session_with_rcfile() {
     local producer=$1 transcript=$2 rcfile=$3
@@ -229,6 +236,13 @@ learn_history_input() {
 recall_history_input() {
     sleep 0.5
     printf 'printf PERSONAL_'
+    sleep 0.2
+    printf '\033[C\nexit\n'
+}
+
+import_bash_history_input() {
+    sleep 0.5
+    printf 'printf IMPORTED_'
     sleep 0.2
     printf '\033[C\nexit\n'
 }
@@ -363,11 +377,36 @@ runtime_reenable_input() {
     printf '\033[C\nexit\n'
 }
 
+resize_input() {
+    local shell_pid= tty_path= columns
+    sleep 0.5
+    for _ in {1..20}; do
+        shell_pid=$(pgrep -n -f "bash --noprofile --rcfile $TEST_ROOT/bashrc -i" || :)
+        if [[ -n $shell_pid ]]; then
+            tty_path=$(readlink "/proc/$shell_pid/fd/0" 2>/dev/null || :)
+            [[ $tty_path == /dev/pts/* ]] && break
+        fi
+        sleep 0.05
+    done
+    [[ $tty_path == /dev/pts/* ]] || return 1
+    for columns in 95 140 80 120; do
+        stty -F "$tty_path" rows 40 cols "$columns"
+        sleep 0.1
+    done
+    printf 'printf RESIZE_OK >%s/resize-ok\nexit\n' "$TEST_ROOT"
+}
+
 run_session loader_lifecycle_input "$TEST_ROOT/loader-lifecycle.typescript"
 [[ $(grep -o '_anduinos_guess_prompt_observe' "$TEST_ROOT/prompt-command" | wc -l) == 1 ]] ||
     fail 're-sourcing the loader duplicated PROMPT_COMMAND'
 [[ $(<"$TEST_ROOT/fd-hygiene") == CLOSED ]] ||
     fail 'the helper inherited an unrelated Bash file descriptor'
+
+run_session_with_rcfile import_bash_history_input \
+    "$TEST_ROOT/bash-history-import.typescript" \
+    "$TEST_ROOT/import-history-bashrc"
+[[ $(<"$TEST_ROOT/imported-history") == IMPORTED_HISTORY ]] ||
+    fail 'the native frontend did not pass Bash HISTFILE to its helper'
 
 run_session helper_recovery_input "$TEST_ROOT/helper-recovery.typescript"
 [[ $(<"$TEST_ROOT/sudo.args") == 'git checkout' ]] ||
@@ -480,6 +519,12 @@ run_session dd_empty_output_input "$TEST_ROOT/dd-empty-output.typescript"
 run_session destructive_history_input "$TEST_ROOT/destructive-history.typescript"
 [[ $(<"$TEST_ROOT/sudo.args") == 'rm -rf /nonexistent-anduinos-ghost-test' ]] ||
     fail 'ordinary destructive command text remained blocked from history completion'
+
+run_session resize_input "$TEST_ROOT/resize.typescript"
+[[ $(<"$TEST_ROOT/resize-ok") == RESIZE_OK ]] ||
+    fail 'terminal resizing corrupted the editable command line'
+[[ $(LC_ALL=C grep -aoF $'\033[J' "$TEST_ROOT/resize.typescript" | wc -l) -ge 4 ]] ||
+    fail 'custom redisplay did not clear stale prompt text after SIGWINCH'
 
 # Keep opt-out lifecycle probes last: they deliberately toggle the master switch
 # and must not influence the persistent ranking exercised above.

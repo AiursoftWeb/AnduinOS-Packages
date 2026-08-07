@@ -31,8 +31,12 @@ static pid_t daemon_pid = -1;
 static char *suggestion;
 static char *cached_line;
 static char *last_submitted_line;
+static char *configured_histfile;
+static unsigned short last_terminal_columns;
 static int ghost_visible;
 static int installed;
+
+extern char **environ;
 
 static int start_daemon(void);
 static void suspend_predictions(void);
@@ -178,6 +182,68 @@ static void close_inherited_fds(void)
     close(descriptor);
 }
 
+static int environment_name_is(const char *entry, const char *name)
+{
+  size_t length = strlen(name);
+  return strncmp(entry, name, length) == 0 && entry[length] == '=';
+}
+
+static char *environment_entry(const char *name, const char *value)
+{
+  char *entry = NULL;
+  if (value != NULL && asprintf(&entry, "%s=%s", name, value) < 0)
+    return NULL;
+  return entry;
+}
+
+static char **daemon_environment(const char *path, const char *histfile,
+                                 const char *history_setting,
+                                 const char *persist_setting,
+                                 char **owned, size_t owned_capacity)
+{
+  size_t source_count = 0, target_count = 0, owned_count = 0;
+  char **result;
+
+  while (environ != NULL && environ[source_count] != NULL)
+    ++source_count;
+  result = calloc(source_count + owned_capacity + 1, sizeof(*result));
+  if (result == NULL)
+    return NULL;
+  for (size_t index = 0; index < source_count; ++index) {
+    const char *entry = environ[index];
+    if (environment_name_is(entry, "PATH") ||
+        environment_name_is(entry, "ANDUINOS_BASH_HISTFILE") ||
+        environment_name_is(entry, "ANDUINOS_GUESS_COMMAND") ||
+        environment_name_is(entry, "ANDUINOS_GUESS_HISTORY") ||
+        environment_name_is(entry, "ANDUINOS_GUESS_PERSIST"))
+      continue;
+    result[target_count++] = environ[index];
+  }
+
+#define ADD_ENVIRONMENT(name, value)                                           \
+  do {                                                                          \
+    if ((value) != NULL) {                                                       \
+      char *entry = environment_entry((name), (value));                          \
+      if (entry == NULL) {                                                       \
+        for (size_t index = 0; index < owned_count; ++index)                     \
+          free(owned[index]);                                                    \
+        free(result);                                                            \
+        return NULL;                                                             \
+      }                                                                          \
+      owned[owned_count++] = entry;                                              \
+      result[target_count++] = entry;                                            \
+    }                                                                            \
+  } while (0)
+
+  ADD_ENVIRONMENT("PATH", path);
+  ADD_ENVIRONMENT("ANDUINOS_BASH_HISTFILE", histfile);
+  ADD_ENVIRONMENT("ANDUINOS_GUESS_HISTORY", history_setting);
+  ADD_ENVIRONMENT("ANDUINOS_GUESS_PERSIST", persist_setting);
+#undef ADD_ENVIRONMENT
+  result[target_count] = NULL;
+  return result;
+}
+
 static void prewarm_fresh_daemon(void)
 {
   force_stop_daemon();
@@ -197,6 +263,8 @@ static int start_daemon(void)
 {
   int sockets[2];
   pid_t child;
+  char *owned_environment[4] = {0};
+  char **child_environment;
   const char *binary, *shell_path, *shell_histfile;
   const char *history_setting, *persist_setting;
 
@@ -208,32 +276,34 @@ static int start_daemon(void)
   if (binary == NULL || *binary == '\0')
     binary = "/usr/lib/anduinos-bash-guess-command/anduinos-quietd";
   shell_path = get_string_value("PATH");
-  shell_histfile = get_string_value("HISTFILE");
+  shell_histfile = configured_histfile;
   history_setting = get_string_value("ANDUINOS_GUESS_HISTORY");
   persist_setting = get_string_value("ANDUINOS_GUESS_PERSIST");
-  if (access(binary, X_OK) != 0 ||
-      socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sockets) != 0)
+  child_environment = daemon_environment(
+      shell_path, shell_histfile, history_setting, persist_setting,
+      owned_environment, sizeof(owned_environment) / sizeof(owned_environment[0]));
+  if (child_environment == NULL)
     return -1;
+  if (access(binary, X_OK) != 0 ||
+      socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sockets) != 0) {
+    for (size_t index = 0; index < 4; ++index)
+      free(owned_environment[index]);
+    free(child_environment);
+    return -1;
+  }
 
   child = fork();
   if (child < 0) {
     close(sockets[0]);
     close(sockets[1]);
+    for (size_t index = 0; index < 4; ++index)
+      free(owned_environment[index]);
+    free(child_environment);
     return -1;
   }
   if (child == 0) {
     int nullfd;
     close(sockets[0]);
-    if (shell_path != NULL)
-      setenv("PATH", shell_path, 1);
-    if (shell_histfile != NULL && *shell_histfile != '\0')
-      setenv("ANDUINOS_BASH_HISTFILE", shell_histfile, 1);
-    else
-      unsetenv("ANDUINOS_BASH_HISTFILE");
-    if (history_setting != NULL)
-      setenv("ANDUINOS_GUESS_HISTORY", history_setting, 1);
-    if (persist_setting != NULL)
-      setenv("ANDUINOS_GUESS_PERSIST", persist_setting, 1);
     if (dup2(sockets[1], STDIN_FILENO) < 0) {
       close(sockets[1]);
       _exit(127);
@@ -258,11 +328,17 @@ static int start_daemon(void)
       _exit(127);
     }
     close_inherited_fds();
-    execl(binary, binary, (char *)NULL);
+    {
+      char *const arguments[] = {(char *)binary, NULL};
+      execve(binary, arguments, child_environment);
+    }
     _exit(127);
   }
 
   close(sockets[1]);
+  for (size_t index = 0; index < 4; ++index)
+    free(owned_environment[index]);
+  free(child_environment);
   {
     int flags = fcntl(sockets[0], F_GETFL, 0);
     if (flags < 0 || fcntl(sockets[0], F_SETFL, flags | O_NONBLOCK) != 0) {
@@ -444,11 +520,11 @@ static void query(const char *line)
     clear_suggestion();
 }
 
-static int display_width(const char *text)
+static int display_width_bytes(const char *text, size_t length)
 {
   mbstate_t state = {0};
   const char *cursor = text;
-  size_t remaining = strlen(text), consumed;
+  size_t remaining = length, consumed;
   int total = 0, width;
   wchar_t character;
   while (remaining > 0) {
@@ -465,6 +541,11 @@ static int display_width(const char *text)
     remaining -= consumed;
   }
   return total;
+}
+
+static int display_width(const char *text)
+{
+  return display_width_bytes(text, strlen(text));
 }
 
 static int fits_one_row(const char *line, int suffix_width)
@@ -488,12 +569,54 @@ static void erase_ghost(void)
   }
 }
 
+static void clear_resize_artifacts(void)
+{
+  struct winsize terminal;
+  int line_width, cursor_width, rows_above;
+  char movement[32];
+  int movement_length;
+
+  if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &terminal) != 0 ||
+      terminal.ws_col == 0)
+    return;
+  if (last_terminal_columns == 0) {
+    last_terminal_columns = terminal.ws_col;
+    return;
+  }
+  if (last_terminal_columns == terminal.ws_col)
+    return;
+  last_terminal_columns = terminal.ws_col;
+
+  /* Readline treats any replacement rl_redisplay_function as a complete
+     custom renderer. On SIGWINCH it resets its logical display state, but it
+     does not clear the physical line before invoking us. Clear the reflowed
+     prompt/input first so the delegated stock renderer does not append a new
+     prompt after the old one. */
+  line_width = rl_line_buffer != NULL && rl_point > 0
+                   ? display_width_bytes(rl_line_buffer, (size_t)rl_point)
+                   : 0;
+  cursor_width = rl_visible_prompt_length + (line_width > 0 ? line_width : 0);
+  rows_above = cursor_width > 0
+                   ? (cursor_width - 1) / (int)terminal.ws_col
+                   : 0;
+  terminal_write("\r", 1);
+  if (rows_above > 0) {
+    movement_length =
+        snprintf(movement, sizeof(movement), "\033[%dA", rows_above);
+    if (movement_length > 0)
+      terminal_write(movement, (size_t)movement_length);
+  }
+  terminal_write("\033[J", 3);
+  ghost_visible = 0;
+}
+
 static void ghost_redisplay(void)
 {
   int width;
   char movement[32];
   int movement_length;
 
+  clear_resize_artifacts();
   erase_ghost();
   if (original_redisplay != NULL)
     original_redisplay();
@@ -624,13 +747,75 @@ static int observe(int status, const char *cwd)
   return result;
 }
 
+static void diagnose(const char *line)
+{
+  struct winsize terminal = {0};
+  int binding_type = -1;
+  rl_command_func_t *right =
+      rl_function_of_keyseq("\033[C", rl_get_keymap(), &binding_type);
+  int columns = ioctl(STDOUT_FILENO, TIOCGWINSZ, &terminal) == 0
+                    ? (int)terminal.ws_col
+                    : 0;
+
+  printf("enabled=%d installed=%d daemon_pid=%ld daemon_fd=%d\n",
+         predictions_enabled(), installed, (long)daemon_pid, daemon_fd);
+  printf("redisplay_hook=%d startup_hook=%d right_hook=%d right_type=%d "
+         "prompt_width=%d columns=%d\n",
+         rl_redisplay_function == ghost_redisplay,
+         rl_startup_hook == ghost_startup,
+         right == accept_ghost, binding_type,
+         rl_visible_prompt_length, columns);
+  printf("HISTFILE=%s configured_histfile=%s history=%s engine=%s\n",
+         get_string_value("HISTFILE") != NULL
+             ? get_string_value("HISTFILE")
+             : "<unset>",
+         configured_histfile != NULL ? configured_histfile : "<unset>",
+         get_string_value("ANDUINOS_GUESS_HISTORY") != NULL
+             ? get_string_value("ANDUINOS_GUESS_HISTORY")
+             : "<default>",
+         get_string_value("ANDUINOS_QUIETD") != NULL
+             ? get_string_value("ANDUINOS_QUIETD")
+             : "<default>");
+  if (line == NULL || *line == '\0')
+    return;
+  query(line);
+  printf("query=%s suggestion=%s fits=%d daemon_pid=%ld daemon_fd=%d\n",
+         line, suggestion != NULL ? suggestion : "<none>",
+         suggestion != NULL
+             ? fits_one_row(line, display_width(suggestion))
+             : 0,
+         (long)daemon_pid, daemon_fd);
+}
+
 int anduinos_ghost_builtin(WORD_LIST *list)
 {
   if (!predictions_enabled()) {
     suspend_predictions();
     return EXECUTION_SUCCESS;
   }
+  if (list != NULL && strcmp(list->word->word, "configure-history") == 0) {
+    const char *value = list->next != NULL ? list->next->word->word : "";
+    char *copy = *value != '\0' ? strdup(value) : NULL;
+    if (*value == '\0' || copy != NULL) {
+      int changed =
+          (configured_histfile == NULL) != (copy == NULL) ||
+          (configured_histfile != NULL && copy != NULL &&
+           strcmp(configured_histfile, copy) != 0);
+      free(configured_histfile);
+      configured_histfile = copy;
+      if (changed && daemon_fd >= 0)
+        force_stop_daemon();
+    }
+    install_readline_hooks();
+    (void)start_daemon();
+    return EXECUTION_SUCCESS;
+  }
   install_readline_hooks();
+  if (list != NULL && strcmp(list->word->word, "diagnose") == 0) {
+    list = list->next;
+    diagnose(list != NULL ? list->word->word : NULL);
+    return EXECUTION_SUCCESS;
+  }
   if (list != NULL && strcmp(list->word->word, "observe") == 0) {
     int status = 0;
     const char *cwd = "";
@@ -677,11 +862,15 @@ void anduinos_ghost_builtin_unload(char *name)
   cached_line = NULL;
   free(last_submitted_line);
   last_submitted_line = NULL;
+  free(configured_histfile);
+  configured_histfile = NULL;
+  last_terminal_columns = 0;
   installed = 0;
 }
 
 char *anduinos_ghost_doc[] = {
   "Internal frontend for quiet Bash ghost-text suggestions.",
+  "Use 'anduinos_ghost diagnose LINE' to inspect the current frontend state.",
   (char *)NULL
 };
 
@@ -690,6 +879,6 @@ struct builtin anduinos_ghost_struct = {
   anduinos_ghost_builtin,
   BUILTIN_ENABLED,
   anduinos_ghost_doc,
-  "anduinos_ghost [observe STATUS CWD]",
+  "anduinos_ghost [observe STATUS CWD | configure-history PATH | diagnose LINE]",
   0
 };

@@ -17,6 +17,7 @@ if [[ ${ANDUINOS_GUESS_ENGINE:-1} != 0 &&
       -x $_anduinos_guess_lib/anduinos-quietd ]]; then
     if enable -f "$_anduinos_guess_lib/anduinos-ghost.so" anduinos_ghost \
         2>/dev/null; then
+        anduinos_ghost configure-history "${HISTFILE-}"
         _anduinos_guess_prompt_observe() {
             local _anduinos_guess_status=$?
             anduinos_ghost observe "$_anduinos_guess_status" "$PWD"
