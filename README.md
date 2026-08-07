@@ -171,15 +171,68 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-gnome-shell-locale` | Locale | GNOME Shell locale / text overrides |
 | `anduinos-live-settings` | Config | Casper regional hooks and Live-only systemd policy; removed before target bootloader setup |
 
-For AnduinOS 2.0 (`resolute-addon`), `anduinos-core-system` depends on Ubuntu's
-`linux-generic-hwe-26.04` metapackage so general-purpose installations track the
-HWE kernel ABI while retaining Secure Boot signing, SRU/CVE updates, and the
-prebuilt NVIDIA module ecosystem. `anduinos-desktop` additionally depends on
-`anduinos-kernel-parameters`, which appends `preempt=full` through
-`/etc/default/grub.d/50-anduinos-desktop.cfg`. The parameter package is not part
-of `anduinos-core-system` or `anduinos-container`, so server and container
-variants do not inherit this desktop latency policy. AnduinBook OEM kernel work
-is outside this package and remains a separate future hardware-enablement track.
+### Kernel ownership contract (Resolute)
+
+AnduinOS supports the Resolute kernel path. The canonical owner of kernel
+availability is `anduinos-core-system`, which has a hard dependency on Ubuntu's
+`linux-generic-hwe-26.04` metapackage. The installed desktop reaches it through
+this mandatory chain:
+
+```
+anduinos-desktop
+  -> anduinos-desktop-core
+    -> anduinos-core-system
+      -> linux-generic-hwe-26.04
+        -> linux-image-generic-hwe-26.04
+        -> linux-headers-generic-hwe-26.04
+```
+
+This dependency chain, rather than an ISO build script, must install and retain
+the kernel. ISO builders must not directly install the split image or headers
+metapackages and must not add a parallel dependency on `linux-generic`. The
+native installer copies the packaged Live filesystem, retains the kernel
+packages in the target, regenerates the initramfs and bootloader configuration,
+and verifies that at least one kernel has a matching initramfs.
+
+`anduinos-kernel-parameters` has a separate responsibility: it owns the desktop
+boot policy, not the kernel binary. It installs
+`/etc/default/grub.d/99-anduinos-desktop.cfg`, appends `preempt=full`, conflicts
+with `lowlatency-kernel`, refreshes GRUB on a real installed system, and marks a
+reboot as required. Its maintainer scripts defer GRUB work inside a chroot. The
+package also depends on `linux-generic-hwe-26.04` so that installing the policy
+standalone cannot leave it paired with an unsupported kernel track.
+
+`anduinos-desktop` recommends `anduinos-kernel-parameters` on Resolute. The
+official ISO is built with recommends enabled, so both
+`anduinos-core-system` and `anduinos-kernel-parameters` remain installed in the
+final desktop system. Keeping the policy as a recommendation is intentional:
+server and container variants inherit the core HWE kernel contract without
+inheriting the desktop latency policy. Removing the parameter package removes
+`preempt=full`; it must not make the system's HWE kernel autoremovable because
+`anduinos-core-system` still owns that hard dependency.
+
+Systems upgraded from older images may still have `linux-generic` as an
+automatically installed, now-unused metapackage because older AnduinOS packages
+depended on it while the ISO separately installed the split HWE image and
+headers metapackages. The expected migration is to install
+`linux-generic-hwe-26.04`, leave the running kernel intact, and allow APT to
+offer only the obsolete Generic metapackage for later autoremove. Package
+maintainer scripts must not purge kernels or rewrite the user's APT manual/auto
+marks to force convergence.
+
+Future changes must preserve these invariants:
+
+- `anduinos-core-system` keeps a hard dependency on the supported HWE kernel
+  metapackage.
+- `anduinos-kernel-parameters` remains a separable desktop policy package.
+- ISO construction obtains the kernel through the AnduinOS package graph.
+- Installed-system cleanup never treats kernel packages as Live-only payloads.
+- Migration between kernel tracks is expressed through dependencies and is
+  validated with APT upgrade and autoremove simulations; it is never
+  implemented by maintainer-script package purges.
+
+AnduinBook OEM kernel work is outside this contract and remains a separate
+future hardware-enablement track.
 
 ## Build
 
