@@ -17,7 +17,7 @@ if [ -s (\$btrfs_snapshots_manager_esp)/EFI/anduinos/btrfs-snapshots-manager-gru
   if [ "\${btrfs_snapshots_manager_next_entry}" ]; then
     set default="\${btrfs_snapshots_manager_next_entry}"
     set btrfs_snapshots_manager_next_entry=
-    save_env -f (\$btrfs_snapshots_manager_esp)/EFI/anduinos/btrfs-snapshots-manager-grubenv btrfs_snapshots_manager_next_entry
+    save_env -f "(\$btrfs_snapshots_manager_esp)/EFI/anduinos/btrfs-snapshots-manager-grubenv" btrfs_snapshots_manager_next_entry
     set boot_once=true
   fi
 fi

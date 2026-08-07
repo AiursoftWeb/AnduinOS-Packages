@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "org.anduinos.btrfs-snapshots-manager.rollback.v2",
+  "title": "Disk Snapshots Manager rollback transaction",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "target_deployment_id",
+    "fallback_deployment_id",
+    "phase",
+    "created_at",
+    "updated_at",
+    "recovery_protocol_version",
+    "initramfs_attempts",
+    "initramfs_boot_id",
+    "checkpoint",
+    "checkpoint_at",
+    "apply_attempts",
+    "applying_boot_id",
+    "root_filesystem_uuid",
+    "kernel_release",
+    "recovery_kernel_sha256",
+    "recovery_initramfs_sha256",
+    "grub_entry_id",
+    "failure"
+  ],
+  "properties": {
+    "schema_version": { "const": 2 },
+    "id": { "$ref": "#/$defs/uuid" },
+    "target_deployment_id": { "$ref": "#/$defs/uuid" },
+    "fallback_deployment_id": { "$ref": "#/$defs/uuid" },
+    "phase": {
+      "enum": [
+        "preparing",
+        "armed",
+        "applying",
+        "booted-unconfirmed",
+        "reverting",
+        "reverted",
+        "confirmed",
+        "failed"
+      ]
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "recovery_protocol_version": { "const": 1 },
+    "initramfs_attempts": { "type": "integer", "minimum": 0, "maximum": 3 },
+    "initramfs_boot_id": {
+      "oneOf": [{ "$ref": "#/$defs/uuid" }, { "type": "null" }]
+    },
+    "checkpoint": {
+      "type": ["string", "null"],
+      "enum": [
+        null,
+        "initramfs-entered",
+        "validating",
+        "apply-started",
+        "writable-target-created",
+        "current-root-protected",
+        "target-root-activated",
+        "booted-unconfirmed-recorded",
+        "revert-started",
+        "restored-root-moved-aside",
+        "fallback-root-activated",
+        "discarded-root-deleted",
+        "reverted-recorded"
+      ]
+    },
+    "checkpoint_at": {
+      "oneOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }]
+    },
+    "apply_attempts": { "type": "integer", "minimum": 0, "maximum": 3 },
+    "applying_boot_id": {
+      "oneOf": [{ "$ref": "#/$defs/uuid" }, { "type": "null" }]
+    },
+    "root_filesystem_uuid": { "$ref": "#/$defs/uuid" },
+    "kernel_release": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9._+-]+$"
+    },
+    "recovery_kernel_sha256": { "$ref": "#/$defs/sha256" },
+    "recovery_initramfs_sha256": { "$ref": "#/$defs/sha256" },
+    "grub_entry_id": {
+      "type": "string",
+      "pattern": "^anduinos-btrfs-snapshots-manager-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "failure": { "type": ["string", "null"], "minLength": 1, "maxLength": 2000 }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "initramfs_attempts": { "const": 0 } } },
+      "then": {
+        "properties": {
+          "initramfs_boot_id": { "type": "null" },
+          "checkpoint": { "type": "null" },
+          "checkpoint_at": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "phase": {
+            "enum": ["applying", "booted-unconfirmed", "reverting", "reverted", "confirmed"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "apply_attempts": { "minimum": 1 },
+          "applying_boot_id": { "$ref": "#/$defs/uuid" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "phase": { "const": "failed" } } },
+      "then": { "properties": { "failure": { "type": "string", "minLength": 1 } } }
+    }
+  ],
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

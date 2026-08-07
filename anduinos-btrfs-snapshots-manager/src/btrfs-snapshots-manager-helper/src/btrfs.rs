@@ -1,13 +1,15 @@
 //! Btrfs space measurements and their non-authoritative cache.
 //!
-//! Measuring one snapshot requires walking its files and extents with FIEMAP. Status queries
-//! therefore read only this cache; the GUI explicitly asks the helper to fill missing entries in
-//! the background. The cache is never used for recovery or deletion decisions.
+//! Status queries read only this cache. An explicit Properties request may refresh one entry from
+//! an existing level-zero qgroup; quota accounting is never enabled or synchronized here. The
+//! helper deliberately does not walk snapshot files or extents, and the cache is never used for
+//! recovery or deletion decisions.
 
 use anduinos_recovery_engine::{
     model::{DeploymentId, DeploymentRecord},
     operations::SystemCommandRunner,
     personal::{PersonalSnapshotEngine, PersonalSnapshotId, PersonalSnapshotRecord},
+    space::parse_qgroup_for_subvolume,
     store::DeploymentStore,
 };
 use anyhow::{Context, Result, bail};
@@ -66,14 +68,39 @@ pub fn measure_snapshot_space(store_root: &Path, scope: &str, id: &str) -> Resul
         bail!("Snapshot path is not a real directory");
     }
 
-    let output = run_btrfs(&[
-        std::ffi::OsStr::new("filesystem"),
-        std::ffi::OsStr::new("du"),
+    let identity = run_btrfs(&[
+        std::ffi::OsStr::new("subvolume"),
+        std::ffi::OsStr::new("show"),
         std::ffi::OsStr::new("--raw"),
-        std::ffi::OsStr::new("--summarize"),
         snapshot.as_os_str(),
     ])?;
-    let mut space = parse_filesystem_du(&output).context("btrfs returned no space measurement")?;
+    let subvolume_id =
+        parse_subvolume_id(&identity).context("Btrfs did not report the snapshot subvolume ID")?;
+    let output = run_btrfs(&[
+        std::ffi::OsStr::new("qgroup"),
+        std::ffi::OsStr::new("show"),
+        std::ffi::OsStr::new("--raw"),
+        // Restrict output to qgroups that affect this subvolume. In particular, do not use
+        // --sync or enumerate every qgroup on a large filesystem for a Properties dialog.
+        std::ffi::OsStr::new("-f"),
+        snapshot.as_os_str(),
+    ])
+    .context(
+        "Snapshot size is unavailable because Btrfs quota accounting is disabled or unavailable",
+    )?;
+    let measured = parse_qgroup_for_subvolume(&output, subvolume_id)
+        .context("Btrfs quota accounting has no entry for this snapshot")?;
+    let referenced = measured.referenced_bytes;
+    let exclusive = measured.exclusive_bytes;
+    let shared = referenced
+        .zip(exclusive)
+        .and_then(|(referenced, exclusive)| referenced.checked_sub(exclusive));
+    let mut space = SnapshotSpace {
+        referenced_bytes: referenced,
+        exclusive_bytes: exclusive,
+        shared_bytes: shared,
+        measured_at_unix_seconds: None,
+    };
     space.measured_at_unix_seconds = Some(Utc::now().timestamp());
     write_cache(store_root, scope, id, &space)?;
     Ok(space)
@@ -193,25 +220,11 @@ fn write_cache(store_root: &Path, scope: &str, id: &str, space: &SnapshotSpace) 
     result
 }
 
-fn parse_filesystem_du(output: &str) -> Option<SnapshotSpace> {
-    output.lines().rev().find_map(|line| {
-        let fields = line.split_whitespace().collect::<Vec<_>>();
-        if fields.len() < 3 {
-            return None;
-        }
-        let (Ok(total), Ok(exclusive), Ok(shared)) = (
-            fields[0].parse::<u64>(),
-            fields[1].parse::<u64>(),
-            fields[2].parse::<u64>(),
-        ) else {
-            return None;
-        };
-        Some(SnapshotSpace {
-            referenced_bytes: Some(total),
-            exclusive_bytes: Some(exclusive),
-            shared_bytes: Some(shared),
-            measured_at_unix_seconds: None,
-        })
+fn parse_subvolume_id(output: &str) -> Option<u64> {
+    output.lines().find_map(|line| {
+        line.trim()
+            .strip_prefix("Subvolume ID:")
+            .and_then(|value| value.trim().parse().ok())
     })
 }
 
@@ -238,21 +251,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn parses_raw_filesystem_du_with_a_spaced_path() {
-        let space = parse_filesystem_du(
-            "     Total   Exclusive  Set shared  Filename\n\
-             18943447040 80666624 11177463808 /path/with spaces\n",
-        )
-        .unwrap();
-        assert_eq!(space.referenced_bytes, Some(18_943_447_040));
-        assert_eq!(space.exclusive_bytes, Some(80_666_624));
-        assert_eq!(space.shared_bytes, Some(11_177_463_808));
-        assert_eq!(space.measured_at_unix_seconds, None);
-    }
-
-    #[test]
-    fn rejects_the_filesystem_du_header_without_values() {
-        assert!(parse_filesystem_du("Total Exclusive Set shared Filename\n").is_none());
+    fn parses_raw_subvolume_identity() {
+        assert_eq!(
+            parse_subvolume_id("Name: root\nSubvolume ID: 1234\nUUID: test\n"),
+            Some(1234)
+        );
     }
 
     #[test]

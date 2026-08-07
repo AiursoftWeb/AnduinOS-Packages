@@ -1,22 +1,44 @@
 use std::ffi::OsStr;
 use std::fmt;
-use std::fs;
+use std::fs::{self, OpenOptions};
+use std::io::{Read, Write};
+use std::os::unix::fs::OpenOptionsExt;
 use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+use sha2::{Digest, Sha256};
+
 use crate::RECOVERY_STORE_ROOT;
 use crate::model::DeploymentState;
 use crate::store::DeploymentStore;
-use crate::transaction::{RollbackPhase, TransactionStore};
+use crate::transaction::{RECOVERY_PROTOCOL_VERSION, RollbackPhase, TransactionStore};
 
 const GRUB_MKRELPATH: &str = "/usr/bin/grub-mkrelpath";
 const GRUB_EDITENV: &str = "/usr/bin/grub-editenv";
 const MOUNTPOINT: &str = "/usr/bin/mountpoint";
+const LSINITRAMFS: &str = "/usr/bin/lsinitramfs";
+const KERNEL_RELEASE: &str = "/proc/sys/kernel/osrelease";
+const SYSTEM_BOOT_ROOT: &str = "/boot";
+const RECOVERY_BOOT_DIRECTORY: &str = "recovery-boot";
+const RECOVERY_KERNEL: &str = "vmlinuz";
+const RECOVERY_INITRAMFS: &str = "initrd.img";
+const INITRAMFS_SCRIPT: &str = "scripts/local-premount/anduinos-btrfs-snapshots-manager";
+const INITRAMFS_BINARY: &str = "usr/libexec/anduinos-btrfs-snapshots-manager-initramfs";
+const INITRAMFS_CONFIRM_BINARY: &str = "usr/libexec/anduinos-btrfs-snapshots-manager-confirm";
+const INITRAMFS_PROTOCOL: &str = "etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version";
+const INITRAMFS_REQUIRED_TOOLS: [&str; 5] = [
+    "usr/bin/cat",
+    "usr/bin/chmod",
+    "usr/bin/cp",
+    "usr/bin/ln",
+    "usr/bin/mkdir",
+];
 pub const GRUB_EXTERNAL_ENVIRONMENT: &str =
     "/boot/efi/EFI/anduinos/btrfs-snapshots-manager-grubenv";
 pub const GRUB_NEXT_ENTRY_VARIABLE: &str = "btrfs_snapshots_manager_next_entry";
 const MAX_TOOL_OUTPUT: usize = 4096;
+const MAX_INITRAMFS_LISTING: usize = 16 * 1024 * 1024;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum BootErrorCode {
@@ -26,6 +48,13 @@ pub enum BootErrorCode {
     UnsupportedEnvironment,
     UnsafeOutput,
     CommandFailed,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct RecoveryBootArtifacts {
+    pub kernel_release: String,
+    pub kernel_sha256: String,
+    pub initramfs_sha256: String,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -78,7 +107,12 @@ impl BootToolRunner for SystemBootToolRunner {
                 format!("{} exited with {}", program.display(), output.status),
             ));
         }
-        if output.stdout.len() > MAX_TOOL_OUTPUT {
+        let maximum_output = if program == Path::new(LSINITRAMFS) {
+            MAX_INITRAMFS_LISTING
+        } else {
+            MAX_TOOL_OUTPUT
+        };
+        if output.stdout.len() > maximum_output {
             return Err(BootError::new(
                 BootErrorCode::UnsafeOutput,
                 format!("{} returned excessive output", program.display()),
@@ -142,9 +176,66 @@ impl BootIntegration<SystemBootToolRunner> {
         protect_environment_file(environment)?;
         self.verify_external_environment_block()
     }
+
+    pub fn provision_recovery_boot_artifacts(&self) -> Result<RecoveryBootArtifacts, BootError> {
+        self.provision_recovery_boot_artifacts_from(
+            Path::new(KERNEL_RELEASE),
+            Path::new(SYSTEM_BOOT_ROOT),
+        )
+    }
 }
 
 impl<R: BootToolRunner> BootIntegration<R> {
+    fn provision_recovery_boot_artifacts_from(
+        &self,
+        kernel_release_path: &Path,
+        system_boot: &Path,
+    ) -> Result<RecoveryBootArtifacts, BootError> {
+        let kernel_release = read_kernel_release(kernel_release_path)?;
+        let kernel = system_boot.join(format!("vmlinuz-{kernel_release}"));
+        let initramfs = system_boot.join(format!("initrd.img-{kernel_release}"));
+        ensure_regular_file(&kernel)?;
+        ensure_regular_file(&initramfs)?;
+        self.verify_initramfs_compatibility(&initramfs)?;
+
+        ensure_real_directory(&self.snapshot_root, false)?;
+        let recovery_boot = self.snapshot_root.join(RECOVERY_BOOT_DIRECTORY);
+        ensure_real_directory(&recovery_boot, true)?;
+        copy_regular_file_atomic(&kernel, &recovery_boot.join(RECOVERY_KERNEL))?;
+        copy_regular_file_atomic(&initramfs, &recovery_boot.join(RECOVERY_INITRAMFS))?;
+
+        Ok(RecoveryBootArtifacts {
+            kernel_release,
+            kernel_sha256: hash_regular_file(&recovery_boot.join(RECOVERY_KERNEL))?,
+            initramfs_sha256: hash_regular_file(&recovery_boot.join(RECOVERY_INITRAMFS))?,
+        })
+    }
+
+    fn verify_initramfs_compatibility(&self, initramfs: &Path) -> Result<(), BootError> {
+        let output = self
+            .runner
+            .output(Path::new(LSINITRAMFS), &[initramfs.as_os_str()])?;
+        for required in [
+            INITRAMFS_SCRIPT,
+            INITRAMFS_BINARY,
+            INITRAMFS_CONFIRM_BINARY,
+            INITRAMFS_PROTOCOL,
+        ]
+        .into_iter()
+        .chain(INITRAMFS_REQUIRED_TOOLS)
+        {
+            if !output.lines().any(|line| line.trim() == required) {
+                return Err(BootError::new(
+                    BootErrorCode::UnsupportedEnvironment,
+                    format!(
+                        "The current initramfs does not contain recovery protocol {RECOVERY_PROTOCOL_VERSION}: missing {required}"
+                    ),
+                ));
+            }
+        }
+        Ok(())
+    }
+
     pub fn new(snapshot_root: impl Into<PathBuf>, runner: R) -> Self {
         Self {
             snapshot_root: snapshot_root.into(),
@@ -192,25 +283,21 @@ impl<R: BootToolRunner> BootIntegration<R> {
                 "GRUB recovery target is not pending rollback",
             ));
         }
-        if target.kernel_release.as_deref() != Some(&transaction.kernel_release) {
-            return Err(BootError::new(
-                BootErrorCode::InvalidDeployment,
-                "GRUB recovery kernel does not match the transaction",
-            ));
-        }
-        let root = self
-            .snapshot_root
-            .join("deployments")
-            .join(transaction.target_deployment_id.to_string())
-            .join("root");
-        let kernel = root
-            .join("boot")
-            .join(format!("vmlinuz-{}", transaction.kernel_release));
-        let initramfs = root
-            .join("boot")
-            .join(format!("initrd.img-{}", transaction.kernel_release));
+        let recovery_boot = self.snapshot_root.join(RECOVERY_BOOT_DIRECTORY);
+        let kernel = recovery_boot.join(RECOVERY_KERNEL);
+        let initramfs = recovery_boot.join(RECOVERY_INITRAMFS);
         ensure_regular_file(&kernel)?;
         ensure_regular_file(&initramfs)?;
+        verify_digest(
+            &kernel,
+            &transaction.recovery_kernel_sha256,
+            "recovery kernel",
+        )?;
+        verify_digest(
+            &initramfs,
+            &transaction.recovery_initramfs_sha256,
+            "recovery initramfs",
+        )?;
         let kernel_path = self.grub_path(&kernel)?;
         let initramfs_path = self.grub_path(&initramfs)?;
         let id = transaction.id.to_string();
@@ -221,9 +308,12 @@ impl<R: BootToolRunner> BootIntegration<R> {
              \tinsmod btrfs\n\
              \tsearch --no-floppy --fs-uuid --set=root {fs_uuid}\n\
              \techo 'Starting AnduinOS system recovery…'\n\
-             \tlinux {kernel_path} root=UUID={fs_uuid} ro rootflags=subvol=@root anduinos.btrfs_snapshots_manager={id}\n\
+             \tset btrfs_snapshots_manager_next_entry='{entry_id}'\n\
+             \tsave_env -f \"($btrfs_snapshots_manager_esp)/EFI/anduinos/btrfs-snapshots-manager-grubenv\" btrfs_snapshots_manager_next_entry\n\
+             \tlinux {kernel_path} root=UUID={fs_uuid} ro rootflags=subvol=@root anduinos.btrfs_snapshots_manager={id} anduinos.btrfs_snapshots_manager_protocol={protocol}\n\
              \tinitrd {initramfs_path}\n\
-             }}\n"
+             }}\n",
+            protocol = transaction.recovery_protocol_version
         )))
     }
 
@@ -318,6 +408,112 @@ fn ensure_regular_file(path: &Path) -> Result<(), BootError> {
                 "Recovery boot artifact {} is not a regular file",
                 path.display()
             ),
+        ))
+    }
+}
+
+fn read_kernel_release(path: &Path) -> Result<String, BootError> {
+    let value = fs::read_to_string(path).map_err(|error| {
+        BootError::new(
+            BootErrorCode::UnsupportedEnvironment,
+            format!("Could not read the running kernel release: {error}"),
+        )
+    })?;
+    let value = value.trim();
+    if value.is_empty()
+        || value.len() > 128
+        || !value
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || b"._+-".contains(&byte))
+    {
+        return Err(BootError::new(
+            BootErrorCode::UnsupportedEnvironment,
+            "The running kernel release is unsafe",
+        ));
+    }
+    Ok(value.to_string())
+}
+
+fn copy_regular_file_atomic(source: &Path, target: &Path) -> Result<(), BootError> {
+    ensure_regular_file(source)?;
+    let parent = target.parent().ok_or_else(|| {
+        BootError::new(
+            BootErrorCode::UnsupportedEnvironment,
+            "Recovery artifact has no parent directory",
+        )
+    })?;
+    let temporary = parent.join(format!(
+        ".{}.{}.tmp",
+        target.file_name().unwrap_or_default().to_string_lossy(),
+        uuid::Uuid::new_v4().hyphenated()
+    ));
+    let result = (|| -> std::io::Result<()> {
+        let mut input = OpenOptions::new()
+            .read(true)
+            .custom_flags(libc::O_CLOEXEC | libc::O_NOFOLLOW)
+            .open(source)?;
+        let mut output = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .mode(0o600)
+            .custom_flags(libc::O_CLOEXEC | libc::O_NOFOLLOW)
+            .open(&temporary)?;
+        std::io::copy(&mut input, &mut output)?;
+        output.flush()?;
+        output.sync_all()?;
+        fs::rename(&temporary, target)?;
+        OpenOptions::new()
+            .read(true)
+            .custom_flags(libc::O_CLOEXEC | libc::O_DIRECTORY | libc::O_NOFOLLOW)
+            .open(parent)?
+            .sync_all()
+    })();
+    if let Err(error) = result {
+        let _ = fs::remove_file(&temporary);
+        return Err(BootError::new(
+            BootErrorCode::CommandFailed,
+            format!("Could not provision {}: {error}", target.display()),
+        ));
+    }
+    Ok(())
+}
+
+fn hash_regular_file(path: &Path) -> Result<String, BootError> {
+    ensure_regular_file(path)?;
+    let mut file = OpenOptions::new()
+        .read(true)
+        .custom_flags(libc::O_CLOEXEC | libc::O_NOFOLLOW)
+        .open(path)
+        .map_err(|error| {
+            BootError::new(
+                BootErrorCode::InvalidDeployment,
+                format!("Could not open {}: {error}", path.display()),
+            )
+        })?;
+    let mut hasher = Sha256::new();
+    let mut buffer = [0_u8; 128 * 1024];
+    loop {
+        let count = file.read(&mut buffer).map_err(|error| {
+            BootError::new(
+                BootErrorCode::InvalidDeployment,
+                format!("Could not hash {}: {error}", path.display()),
+            )
+        })?;
+        if count == 0 {
+            break;
+        }
+        hasher.update(&buffer[..count]);
+    }
+    Ok(format!("{:x}", hasher.finalize()))
+}
+
+fn verify_digest(path: &Path, expected: &str, name: &str) -> Result<(), BootError> {
+    if hash_regular_file(path)? == expected {
+        Ok(())
+    } else {
+        Err(BootError::new(
+            BootErrorCode::InvalidDeployment,
+            format!("The provisioned {name} no longer matches the rollback transaction"),
         ))
     }
 }
@@ -439,6 +635,12 @@ mod tests {
             if program == Path::new(GRUB_EDITENV) {
                 return Ok(self.env.clone());
             }
+            if program == Path::new(LSINITRAMFS) {
+                return Ok(format!(
+                    "{INITRAMFS_SCRIPT}\n{INITRAMFS_BINARY}\n{INITRAMFS_CONFIRM_BINARY}\n{INITRAMFS_PROTOCOL}\n{}\n",
+                    INITRAMFS_REQUIRED_TOOLS.join("\n")
+                ));
+            }
             let path = Path::new(arguments[0]);
             if self.unsafe_path {
                 Ok("/safe\nlinux /injected".into())
@@ -487,18 +689,19 @@ mod tests {
                 serde_json::to_vec(&target).unwrap(),
             )
             .unwrap();
-            let boot = root
-                .join("deployments")
-                .join(target.id.to_string())
-                .join("root/boot");
-            fs::create_dir_all(&boot).unwrap();
-            fs::write(boot.join("vmlinuz-test-kernel"), "kernel").unwrap();
-            fs::write(boot.join("initrd.img-test-kernel"), "initramfs").unwrap();
+            let recovery_boot = root.join(RECOVERY_BOOT_DIRECTORY);
+            fs::create_dir_all(&recovery_boot).unwrap();
+            let kernel = recovery_boot.join(RECOVERY_KERNEL);
+            let initramfs = recovery_boot.join(RECOVERY_INITRAMFS);
+            fs::write(&kernel, "kernel").unwrap();
+            fs::write(&initramfs, "initramfs").unwrap();
             let mut transaction = RollbackTransaction::new(
                 target.id,
                 DeploymentId::new(),
                 "dddddddd-1111-4222-8333-eeeeeeeeeeee",
                 "test-kernel",
+                hash_regular_file(&kernel).unwrap(),
+                hash_regular_file(&initramfs).unwrap(),
             );
             transaction
                 .transition(RollbackPhase::Armed, Utc::now())
@@ -544,6 +747,45 @@ mod tests {
                 .code,
             BootErrorCode::UnsafeOutput
         );
+    }
+
+    #[test]
+    fn provisions_snapshot_external_versioned_recovery_artifacts() {
+        let root = std::env::temp_dir().join(format!(
+            "snapshots-manager-recovery-boot-{}",
+            uuid::Uuid::new_v4()
+        ));
+        let store = root.join("store");
+        let boot = root.join("boot");
+        fs::create_dir_all(&store).unwrap();
+        fs::create_dir_all(&boot).unwrap();
+        let release = root.join("osrelease");
+        fs::write(&release, "7.0.0-test\n").unwrap();
+        fs::write(boot.join("vmlinuz-7.0.0-test"), "trusted-kernel").unwrap();
+        fs::write(boot.join("initrd.img-7.0.0-test"), "trusted-initramfs").unwrap();
+        let integration = BootIntegration::new(
+            &store,
+            FakeTools {
+                env: String::new(),
+                unsafe_path: false,
+                calls: Default::default(),
+            },
+        );
+        let artifacts = integration
+            .provision_recovery_boot_artifacts_from(&release, &boot)
+            .unwrap();
+        assert_eq!(artifacts.kernel_release, "7.0.0-test");
+        assert_eq!(
+            fs::read_to_string(store.join("recovery-boot/vmlinuz")).unwrap(),
+            "trusted-kernel"
+        );
+        assert_eq!(
+            fs::read_to_string(store.join("recovery-boot/initrd.img")).unwrap(),
+            "trusted-initramfs"
+        );
+        assert_eq!(artifacts.kernel_sha256.len(), 64);
+        assert_eq!(artifacts.initramfs_sha256.len(), 64);
+        fs::remove_dir_all(root).unwrap();
     }
 
     #[test]
@@ -617,8 +859,33 @@ mod tests {
             environment.transaction.id
         )));
         assert!(entry.contains("rootflags=subvol=@root"));
-        assert!(entry.contains("/vmlinuz-test-kernel"));
-        assert!(entry.contains("/initrd.img-test-kernel"));
+        assert!(entry.contains("/vmlinuz"));
+        assert!(entry.contains("/initrd.img"));
+        assert!(entry.contains("anduinos.btrfs_snapshots_manager_protocol=1"));
+        assert!(entry.contains("set btrfs_snapshots_manager_next_entry="));
+        assert!(entry.contains("save_env -f \"($btrfs_snapshots_manager_esp)"));
+    }
+
+    #[test]
+    fn refuses_recovery_artifacts_changed_after_the_transaction_was_armed() {
+        let environment = Environment::new();
+        fs::write(
+            environment.root.join("recovery-boot/initrd.img"),
+            "tampered-initramfs",
+        )
+        .unwrap();
+        let integration = BootIntegration::new(
+            &environment.root,
+            FakeTools {
+                env: String::new(),
+                unsafe_path: false,
+                calls: Default::default(),
+            },
+        );
+        assert_eq!(
+            integration.recovery_menu_entry().unwrap_err().code,
+            BootErrorCode::InvalidDeployment
+        );
     }
 
     #[test]

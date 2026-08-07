@@ -120,6 +120,10 @@ msgid "Browse This Folder’s History…"
 msgstr "浏览此文件夹的历史…"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Btrfs quota accounting is disabled or unavailable. Disk Snapshots Manager will not start a quota rescan automatically."
+msgstr "Btrfs 配额统计已禁用或不可用。Disk Snapshots Manager 不会自动启动配额重新扫描。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Calculating snapshot size…"
 msgstr "正在计算快照大小…"
 
@@ -686,6 +690,10 @@ msgstr "Snapshot Check Complete"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Snapshot Details"
 msgstr "快照详情"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Size Unavailable"
+msgstr "无法获取快照大小"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Snapshot {0} · Folder"

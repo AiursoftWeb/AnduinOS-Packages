@@ -13,6 +13,10 @@ fn main() -> ExitCode {
             eprintln!("Disk Snapshots Manager automatic fallback recorded");
             ExitCode::SUCCESS
         }
+        Ok(ConfirmationOutcome::FailedRecorded) => {
+            eprintln!("Disk Snapshots Manager recorded a safely failed recovery attempt");
+            ExitCode::SUCCESS
+        }
         Err(error) => {
             eprintln!("Disk Snapshots Manager confirmation failed: {error}");
             ExitCode::FAILURE

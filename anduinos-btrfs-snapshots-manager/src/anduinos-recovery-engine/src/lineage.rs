@@ -657,8 +657,14 @@ mod tests {
             Some(first.id)
         );
 
-        let mut transaction =
-            RollbackTransaction::new(first.id, second.id, Uuid::new_v4().to_string(), "6.0-test");
+        let mut transaction = RollbackTransaction::new(
+            first.id,
+            second.id,
+            Uuid::new_v4().to_string(),
+            "6.0-test",
+            "a".repeat(64),
+            "b".repeat(64),
+        );
         transaction
             .transition(RollbackPhase::Armed, Utc::now())
             .unwrap();

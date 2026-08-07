@@ -253,7 +253,7 @@ impl MainWindow {
 
     fn refresh_current(&self) {
         if let Some(page) = self.current_page() {
-            page.refresh_and_remeasure_spaces();
+            page.refresh();
         }
         self.refresh_filesystem_space();
     }

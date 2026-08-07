@@ -62,6 +62,8 @@ fi
 install -m755 "$RELEASE_DIR/anduinos-btrfs-snapshots-manager-scheduler" "$SCRIPT_DIR/obj/anduinos-btrfs-snapshots-manager-scheduler"
 install -m755 "$RELEASE_DIR/anduinos-btrfs-snapshots-manager-notifier" "$SCRIPT_DIR/obj/anduinos-btrfs-snapshots-manager-notifier"
 install -m755 "$RELEASE_DIR/anduinos-btrfs-snapshots-manager-initramfs" "$SCRIPT_DIR/obj/anduinos-btrfs-snapshots-manager-initramfs"
+bash "$SCRIPT_DIR/scripts/test-recovery-artifacts.sh" \
+    "$SCRIPT_DIR/obj/anduinos-btrfs-snapshots-manager-initramfs"
 install -m755 "$RELEASE_DIR/anduinos-btrfs-snapshots-manager-boot-config" "$SCRIPT_DIR/obj/anduinos-btrfs-snapshots-manager-boot-config"
 install -m755 "$RELEASE_DIR/anduinos-btrfs-snapshots-manager-confirm" "$SCRIPT_DIR/obj/anduinos-btrfs-snapshots-manager-confirm"
 install -m755 "$RELEASE_DIR/anduinos-btrfs-snapshots-manager-apt-hook" "$SCRIPT_DIR/obj/anduinos-btrfs-snapshots-manager-apt-hook"

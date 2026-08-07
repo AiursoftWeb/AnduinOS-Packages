@@ -9,6 +9,7 @@ use chrono::Utc;
 
 use crate::model::{DeploymentId, DeploymentState};
 use crate::store::DeploymentStore;
+pub use crate::transaction::RecoveryCheckpoint;
 use crate::transaction::{
     MAX_APPLY_ATTEMPTS, RollbackId, RollbackPhase, RollbackTransaction, TransactionError,
     TransactionStore,
@@ -22,37 +23,7 @@ pub enum RecoveryOutcome {
     NoAction,
     Applied,
     Reverted,
-}
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum RecoveryCheckpoint {
-    ApplyStarted,
-    WritableTargetCreated,
-    CurrentRootProtected,
-    TargetRootActivated,
-    BootedUnconfirmedRecorded,
-    RevertStarted,
-    RestoredRootMovedAside,
-    FallbackRootActivated,
-    DiscardedRootDeleted,
-    RevertedRecorded,
-}
-
-impl RecoveryCheckpoint {
-    pub fn as_str(self) -> &'static str {
-        match self {
-            Self::ApplyStarted => "apply-started",
-            Self::WritableTargetCreated => "writable-target-created",
-            Self::CurrentRootProtected => "current-root-protected",
-            Self::TargetRootActivated => "target-root-activated",
-            Self::BootedUnconfirmedRecorded => "booted-unconfirmed-recorded",
-            Self::RevertStarted => "revert-started",
-            Self::RestoredRootMovedAside => "restored-root-moved-aside",
-            Self::FallbackRootActivated => "fallback-root-activated",
-            Self::DiscardedRootDeleted => "discarded-root-deleted",
-            Self::RevertedRecorded => "reverted-recorded",
-        }
-    }
+    FailedSafe,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -236,38 +207,97 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
             | RollbackPhase::Failed => Ok(RecoveryOutcome::NoAction),
             RollbackPhase::Armed => {
                 if requested != Some(transaction.id) {
+                    if transaction.initramfs_attempts > 0
+                        && transaction.initramfs_boot_id.as_deref() != Some(boot_id)
+                    {
+                        transaction
+                            .record_failure(
+                                "A requested recovery boot entered initramfs but did not begin applying the target",
+                                Utc::now(),
+                            )
+                            .map_err(transaction_error)?;
+                        store.update(&transaction).map_err(transaction_error)?;
+                        return Ok(RecoveryOutcome::FailedSafe);
+                    }
                     return Ok(RecoveryOutcome::NoAction);
                 }
-                self.validate_deployments(&transaction)?;
+                if transaction.initramfs_attempts >= MAX_APPLY_ATTEMPTS {
+                    transaction
+                        .record_failure(
+                            "The recovery initramfs entry attempt limit was reached before applying the target",
+                            Utc::now(),
+                        )
+                        .map_err(transaction_error)?;
+                    store.update(&transaction).map_err(transaction_error)?;
+                    return Ok(RecoveryOutcome::FailedSafe);
+                }
+                transaction
+                    .record_initramfs_entry(boot_id, Utc::now())
+                    .map_err(transaction_error)?;
+                store.update(&transaction).map_err(transaction_error)?;
+                checkpoint(RecoveryCheckpoint::InitramfsEntered);
+                persist_checkpoint(
+                    &store,
+                    &mut transaction,
+                    RecoveryCheckpoint::Validating,
+                    &mut checkpoint,
+                )?;
+                if let Err(error) = self.validate_deployments(&transaction) {
+                    transaction
+                        .record_failure(error.message.clone(), Utc::now())
+                        .map_err(transaction_error)?;
+                    store.update(&transaction).map_err(transaction_error)?;
+                    return Err(error);
+                }
                 transaction
                     .begin_apply(boot_id, Utc::now())
                     .map_err(transaction_error)?;
                 store.update(&transaction).map_err(transaction_error)?;
                 checkpoint(RecoveryCheckpoint::ApplyStarted);
-                self.apply(&transaction, &mut checkpoint)?;
+                self.apply(&store, &mut transaction, &mut checkpoint)?;
                 transaction
                     .transition(RollbackPhase::BootedUnconfirmed, Utc::now())
                     .map_err(transaction_error)?;
-                store.update(&transaction).map_err(transaction_error)?;
-                checkpoint(RecoveryCheckpoint::BootedUnconfirmedRecorded);
+                persist_checkpoint(
+                    &store,
+                    &mut transaction,
+                    RecoveryCheckpoint::BootedUnconfirmedRecorded,
+                    &mut checkpoint,
+                )?;
                 Ok(RecoveryOutcome::Applied)
             }
             RollbackPhase::Applying => {
                 if requested == Some(transaction.id)
                     && transaction.apply_attempts < MAX_APPLY_ATTEMPTS
+                    && transaction.initramfs_attempts < MAX_APPLY_ATTEMPTS
                 {
+                    transaction
+                        .record_initramfs_entry(boot_id, Utc::now())
+                        .map_err(transaction_error)?;
+                    store.update(&transaction).map_err(transaction_error)?;
+                    checkpoint(RecoveryCheckpoint::InitramfsEntered);
+                    persist_checkpoint(
+                        &store,
+                        &mut transaction,
+                        RecoveryCheckpoint::Validating,
+                        &mut checkpoint,
+                    )?;
                     self.validate_deployments(&transaction)?;
                     transaction
                         .begin_apply(boot_id, Utc::now())
                         .map_err(transaction_error)?;
                     store.update(&transaction).map_err(transaction_error)?;
                     checkpoint(RecoveryCheckpoint::ApplyStarted);
-                    self.apply(&transaction, &mut checkpoint)?;
+                    self.apply(&store, &mut transaction, &mut checkpoint)?;
                     transaction
                         .transition(RollbackPhase::BootedUnconfirmed, Utc::now())
                         .map_err(transaction_error)?;
-                    store.update(&transaction).map_err(transaction_error)?;
-                    checkpoint(RecoveryCheckpoint::BootedUnconfirmedRecorded);
+                    persist_checkpoint(
+                        &store,
+                        &mut transaction,
+                        RecoveryCheckpoint::BootedUnconfirmedRecorded,
+                        &mut checkpoint,
+                    )?;
                     Ok(RecoveryOutcome::Applied)
                 } else {
                     self.revert_transaction(&store, &mut transaction, &mut checkpoint)
@@ -338,7 +368,8 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
 
     fn apply(
         &self,
-        transaction: &RollbackTransaction,
+        store: &TransactionStore,
+        transaction: &mut RollbackTransaction,
         checkpoint: &mut impl FnMut(RecoveryCheckpoint),
     ) -> Result<(), RecoveryError> {
         let root = self.top_level.join("@root");
@@ -355,17 +386,32 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
                 (true, false, false) => {
                     self.filesystem.snapshot(&target, &new)?;
                     self.filesystem.sync(&self.top_level)?;
-                    checkpoint(RecoveryCheckpoint::WritableTargetCreated);
+                    persist_checkpoint(
+                        store,
+                        transaction,
+                        RecoveryCheckpoint::WritableTargetCreated,
+                        checkpoint,
+                    )?;
                 }
                 (true, false, true) => {
                     self.filesystem.rename(&root, &old)?;
                     self.filesystem.sync(&self.top_level)?;
-                    checkpoint(RecoveryCheckpoint::CurrentRootProtected);
+                    persist_checkpoint(
+                        store,
+                        transaction,
+                        RecoveryCheckpoint::CurrentRootProtected,
+                        checkpoint,
+                    )?;
                 }
                 (false, true, true) => {
                     self.filesystem.rename(&new, &root)?;
                     self.filesystem.sync(&self.top_level)?;
-                    checkpoint(RecoveryCheckpoint::TargetRootActivated);
+                    persist_checkpoint(
+                        store,
+                        transaction,
+                        RecoveryCheckpoint::TargetRootActivated,
+                        checkpoint,
+                    )?;
                 }
                 (true, true, false) => return Ok(()),
                 state => return Err(unsafe_state("apply", state)),
@@ -386,8 +432,12 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
         transaction
             .transition(RollbackPhase::Reverting, Utc::now())
             .map_err(transaction_error)?;
-        store.update(transaction).map_err(transaction_error)?;
-        checkpoint(RecoveryCheckpoint::RevertStarted);
+        persist_checkpoint(
+            store,
+            transaction,
+            RecoveryCheckpoint::RevertStarted,
+            checkpoint,
+        )?;
         self.finish_revert(store, transaction, checkpoint)
     }
 
@@ -397,18 +447,23 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
         transaction: &mut RollbackTransaction,
         checkpoint: &mut impl FnMut(RecoveryCheckpoint),
     ) -> Result<RecoveryOutcome, RecoveryError> {
-        self.revert(transaction, checkpoint)?;
+        self.revert(store, transaction, checkpoint)?;
         transaction
             .transition(RollbackPhase::Reverted, Utc::now())
             .map_err(transaction_error)?;
-        store.update(transaction).map_err(transaction_error)?;
-        checkpoint(RecoveryCheckpoint::RevertedRecorded);
+        persist_checkpoint(
+            store,
+            transaction,
+            RecoveryCheckpoint::RevertedRecorded,
+            checkpoint,
+        )?;
         Ok(RecoveryOutcome::Reverted)
     }
 
     fn revert(
         &self,
-        transaction: &RollbackTransaction,
+        store: &TransactionStore,
+        transaction: &mut RollbackTransaction,
         checkpoint: &mut impl FnMut(RecoveryCheckpoint),
     ) -> Result<(), RecoveryError> {
         let root = self.top_level.join("@root");
@@ -425,22 +480,42 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
                 (true, false, true) => {
                     self.filesystem.delete(&new)?;
                     self.filesystem.sync(&self.top_level)?;
-                    checkpoint(RecoveryCheckpoint::DiscardedRootDeleted);
+                    persist_checkpoint(
+                        store,
+                        transaction,
+                        RecoveryCheckpoint::DiscardedRootDeleted,
+                        checkpoint,
+                    )?;
                 }
                 (false, true, true) => {
                     self.filesystem.rename(&old, &root)?;
                     self.filesystem.sync(&self.top_level)?;
-                    checkpoint(RecoveryCheckpoint::FallbackRootActivated);
+                    persist_checkpoint(
+                        store,
+                        transaction,
+                        RecoveryCheckpoint::FallbackRootActivated,
+                        checkpoint,
+                    )?;
                 }
                 (true, true, false) => {
                     self.filesystem.rename(&root, &new)?;
                     self.filesystem.sync(&self.top_level)?;
-                    checkpoint(RecoveryCheckpoint::RestoredRootMovedAside);
+                    persist_checkpoint(
+                        store,
+                        transaction,
+                        RecoveryCheckpoint::RestoredRootMovedAside,
+                        checkpoint,
+                    )?;
                 }
                 (false, true, false) => {
                     self.filesystem.rename(&old, &root)?;
                     self.filesystem.sync(&self.top_level)?;
-                    checkpoint(RecoveryCheckpoint::FallbackRootActivated);
+                    persist_checkpoint(
+                        store,
+                        transaction,
+                        RecoveryCheckpoint::FallbackRootActivated,
+                        checkpoint,
+                    )?;
                 }
                 state => return Err(unsafe_state("revert", state)),
             }
@@ -462,6 +537,20 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
             .join(id.to_string())
             .join("root")
     }
+}
+
+fn persist_checkpoint(
+    store: &TransactionStore,
+    transaction: &mut RollbackTransaction,
+    value: RecoveryCheckpoint,
+    observer: &mut impl FnMut(RecoveryCheckpoint),
+) -> Result<(), RecoveryError> {
+    transaction
+        .record_checkpoint(value, Utc::now())
+        .map_err(transaction_error)?;
+    store.update(transaction).map_err(transaction_error)?;
+    observer(value);
+    Ok(())
 }
 
 fn run_btrfs(arguments: &[OsString]) -> Result<Vec<u8>, RecoveryError> {
@@ -649,6 +738,8 @@ mod tests {
                 fallback.id,
                 "eeeeeeee-1111-4222-8333-ffffffffffff",
                 "test-kernel",
+                "a".repeat(64),
+                "b".repeat(64),
             );
             transaction
                 .transition(RollbackPhase::Armed, Utc::now())
@@ -740,6 +831,35 @@ mod tests {
     }
 
     #[test]
+    fn exhausted_armed_entries_fail_safely_instead_of_looping_forever() {
+        let environment = Environment::new();
+        let snapshot_root = environment
+            .root
+            .join("@snapshots/anduinos-btrfs-snapshots-manager");
+        let store = TransactionStore::new(&snapshot_root);
+        let mut transaction = store.load_pending().unwrap().unwrap();
+        for boot_id in [BOOT_ONE, BOOT_TWO, "33333333-3333-4333-8333-333333333333"] {
+            transaction
+                .record_initramfs_entry(boot_id, Utc::now())
+                .unwrap();
+        }
+        store.update(&transaction).unwrap();
+
+        let engine = RecoveryEngine::new(&environment.root, FakeFilesystem::default());
+        assert_eq!(
+            engine
+                .execute(
+                    Some(environment.transaction.id),
+                    "44444444-4444-4444-8444-444444444444",
+                )
+                .unwrap(),
+            RecoveryOutcome::FailedSafe
+        );
+        assert_eq!(environment.phase(), RollbackPhase::Failed);
+        assert!(environment.root.join("@root/origin").exists());
+    }
+
+    #[test]
     fn applies_target_and_preserves_old_root() {
         let environment = Environment::new();
         let engine = RecoveryEngine::new(&environment.root, FakeFilesystem::default());
@@ -773,6 +893,8 @@ mod tests {
         assert_eq!(
             checkpoints,
             [
+                RecoveryCheckpoint::InitramfsEntered,
+                RecoveryCheckpoint::Validating,
                 RecoveryCheckpoint::ApplyStarted,
                 RecoveryCheckpoint::WritableTargetCreated,
                 RecoveryCheckpoint::CurrentRootProtected,
@@ -801,6 +923,40 @@ mod tests {
         assert!(environment.root.join("@root/origin").exists());
         assert!(!environment.root.join("@root/target").exists());
         assert_eq!(environment.phase(), RollbackPhase::Reverted);
+    }
+
+    #[test]
+    fn exhausted_initramfs_entries_revert_instead_of_looping_forever() {
+        let environment = Environment::new();
+        let snapshot_root = environment
+            .root
+            .join("@snapshots/anduinos-btrfs-snapshots-manager");
+        let store = TransactionStore::new(&snapshot_root);
+        let mut transaction = store.load_pending().unwrap().unwrap();
+        transaction
+            .record_initramfs_entry(BOOT_ONE, Utc::now())
+            .unwrap();
+        transaction.begin_apply(BOOT_ONE, Utc::now()).unwrap();
+        transaction
+            .record_initramfs_entry(BOOT_TWO, Utc::now())
+            .unwrap();
+        transaction
+            .record_initramfs_entry("33333333-3333-4333-8333-333333333333", Utc::now())
+            .unwrap();
+        store.update(&transaction).unwrap();
+
+        let engine = RecoveryEngine::new(&environment.root, FakeFilesystem::default());
+        assert_eq!(
+            engine
+                .execute(
+                    Some(environment.transaction.id),
+                    "44444444-4444-4444-8444-444444444444",
+                )
+                .unwrap(),
+            RecoveryOutcome::Reverted
+        );
+        assert_eq!(environment.phase(), RollbackPhase::Reverted);
+        assert!(environment.root.join("@root/origin").exists());
     }
 
     #[test]

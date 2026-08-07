@@ -97,12 +97,14 @@ grep -Fq 'if [ -x /usr/libexec/anduinos-btrfs-snapshots-manager-apt-hook ]' \
     "$ROOT/data/90-anduinos-btrfs-snapshots-manager"
 test -f "$ROOT/scripts/postrm.sh"
 test -f "$ROOT/docs/deployment-v1.schema.json"
-test -f "$ROOT/docs/rollback-v1.schema.json"
+test -f "$ROOT/docs/rollback-v2.schema.json"
 test -f "$ROOT/docs/personal-snapshot-v1.schema.json"
 test -f "$ROOT/docs/VM-QUALIFICATION.md"
 test -f "$ROOT/docs/RECOVERY-SCOPE.md"
 test -x "$ROOT/scripts/test-recovery-operations-loopback.sh"
 test -x "$ROOT/scripts/qualify-recovery-vm.sh"
+test -x "$ROOT/scripts/test-initramfs-integration.sh"
+test -x "$ROOT/scripts/test-recovery-artifacts.sh"
 test -x "$ROOT/scripts/test-installed-policy.sh"
 test -x "$ROOT/scripts/check-i18n.py"
 test -x "$ROOT/scripts/update-i18n.py"
@@ -167,6 +169,8 @@ if rg -n 'rm -r[f ]|find .*RECOVERY_STORE|/\.snapshots/anduinos-btrfs-snapshots-
 fi
 
 python3 "$ROOT/scripts/check-i18n.py"
+bash "$ROOT/scripts/test-initramfs-integration.sh"
+bash "$ROOT/scripts/test-recovery-artifacts.sh"
 
 rg -q 'AutomaticScope::System' "$ROOT/src/btrfs-snapshots-manager-scheduler/src/main.rs"
 rg -q 'AutomaticScope::Home' "$ROOT/src/btrfs-snapshots-manager-scheduler/src/main.rs"

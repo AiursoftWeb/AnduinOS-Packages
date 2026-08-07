@@ -73,8 +73,30 @@ Pass criteria:
 - another ordinary reboot remains on the confirmed root.
 
 Repeat this lane three times, including once after an APT upgrade creates its
-paired automatic system snapshots. Also run create, verify, external export,
-external verification, import, and delete before scheduling one imported point.
+pre-transaction automatic system snapshot. Also exercise create, verify, browse,
+single-file recovery, and delete before scheduling another local snapshot.
+
+## Docker autoremove regression
+
+This is the release regression for a package database and executable disappearing
+after a purported rollback. Restore `snapshots-manager-clean`, install the distro
+`docker.io` package, and run:
+
+```bash
+sudo apt-get install docker.io
+sudo /usr/share/doc/anduinos-btrfs-snapshots-manager/qualify-recovery-vm.sh \
+    prepare-docker-autoremove I_UNDERSTAND_THIS_WILL_ROLL_BACK_THE_VM
+sudo reboot
+sudo /usr/share/doc/anduinos-btrfs-snapshots-manager/qualify-recovery-vm.sh \
+    verify-docker-autoremove
+```
+
+The preparation command creates the selected snapshot before running
+`apt-get autoremove --yes docker.io`, proves that both the installed package and
+`/usr/bin/docker` are absent, then arms the rollback. The lane passes only when
+the exact package version and executable return, the selected deployment is
+confirmed `current`, the pending transaction is gone, and its terminal history
+contains at least one initramfs entry and the final synchronized checkpoint.
 
 ## Hard power-loss matrix
 
@@ -86,6 +108,8 @@ Do not use an orderly shutdown.
 
 | Apply boundary | Expected result after powering on twice |
 | --- | --- |
+| `initramfs-entered` | The durable entry proves the premount hook ran; retry remains bounded |
+| `validating` | No root has moved; retry validates again or fails safely |
 | `apply-started` | A bootable target or protected fallback; never a missing `@root` |
 | `writable-target-created` | Automatic fallback completes and removes the unused target root |
 | `current-root-protected` | Automatic fallback restores the protected current root |
@@ -107,6 +131,7 @@ After every interrupted lane, collect:
 
 ```bash
 /usr/bin/anduinos-btrfs-snapshots-manager-cli status --json
+sudo jq . /.snapshots/anduinos-btrfs-snapshots-manager/transactions/pending-rollback.json
 sudo btrfs subvolume list /
 sudo grub-editenv /boot/efi/EFI/anduinos/btrfs-snapshots-manager-grubenv list
 sudo journalctl -b -1 -b 0 -u anduinos-btrfs-snapshots-manager-confirm.service --no-pager
@@ -118,6 +143,13 @@ transaction is eventually removed, exactly one deployment is `current`, the
 interrupted target is `failed-reverted`, the fallback is `current`, and no
 staging or legacy-compatible `@root.snapshots-manager-*` subvolume is orphaned. Preserve the console and
 JSON logs as release evidence.
+
+Also qualify a deliberately broken premount hook in a disposable clone: leave the
+recovery kernel command-line request intact but prevent the hook from invoking the
+engine. If userspace is reached, confirmation must record a terminal `failed`
+transaction with the “without entering the initramfs” diagnostic, return target and
+fallback metadata to `ready`, clear the EFI recovery lease, and preserve the JSON
+under `rollback-history`. It must never report a successful rollback.
 
 ## Failure lanes
 

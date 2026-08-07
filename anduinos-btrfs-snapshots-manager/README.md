@@ -47,10 +47,18 @@ Polkit policy remain the authority for creation, deletion, configuration,
 system browsing, and rollback preparation.
 
 A system rollback is prepared only after the target passes availability checks.
-The recovery engine creates and protects a current-system fallback, prepares a
-verified one-shot GRUB transaction, and applies the root change from initramfs.
+The recovery engine creates and protects a current-system fallback, copies the
+currently running kernel and a protocol-verified initramfs into the snapshot-external
+recovery store, and binds their hashes to the transaction. GRUB keeps selecting this
+trusted recovery image until initramfs or userspace durably completes or fails the
+transaction. Every synchronized root switch is recorded as a persistent checkpoint;
+completed and failed transactions are retained in `rollback-history` for diagnosis.
 The confirmation UI always states that Personal Files remain unchanged and that
 a restart is required. The GUI does not replace helper-side validation.
+
+Snapshot list refreshes never run recursive Btrfs extent accounting. Cached size
+information is non-authoritative; an explicit Properties request reads an existing
+level-zero qgroup and reports size as unavailable when quota accounting is disabled.
 
 Historical files are opened through descriptor-confined helper operations.
 System-snapshot browsing requires administrator authorization. Home browsing is
@@ -88,6 +96,8 @@ cargo test --workspace --locked
 cargo clippy --workspace --all-targets --locked -- -D warnings
 cd ..
 python3 scripts/check-i18n.py
+scripts/test-initramfs-integration.sh
+scripts/test-recovery-artifacts.sh
 scripts/test-gui-smoke.sh
 scripts/prebuild-check.sh
 ```

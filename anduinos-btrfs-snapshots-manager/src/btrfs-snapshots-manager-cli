@@ -252,7 +252,10 @@ cmd_status() {
                "Pending restore: \(.pending.id) [\(.pending.phase)]\n" +
                "Target:          \(.pending.target_deployment_id)\n" +
                "Fallback:        \(.pending.fallback_deployment_id)\n" +
-               "Apply attempts:  \(.pending.apply_attempts)" +
+               "Protocol:        \(.pending.recovery_protocol_version)\n" +
+               "Initramfs tries: \(.pending.initramfs_attempts)\n" +
+               "Apply attempts:  \(.pending.apply_attempts)\n" +
+               "Checkpoint:      \(.pending.checkpoint // "not entered")" +
                (if .pending.failure == null then "" else
                   "\nFailure:         \(.pending.failure)"
                 end)

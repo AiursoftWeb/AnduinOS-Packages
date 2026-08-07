@@ -16,16 +16,59 @@ esac
 
 . /scripts/functions
 
-[ "${FSTYPE:-}" = "btrfs" ] || exit 0
+requested=""
+requested_protocol=""
+for argument in $(cat /proc/cmdline); do
+    case "$argument" in
+    anduinos.btrfs_snapshots_manager=*) requested="${argument#anduinos.btrfs_snapshots_manager=}" ;;
+    anduinos.btrfs_snapshots_manager_protocol=*)
+        requested_protocol="${argument#anduinos.btrfs_snapshots_manager_protocol=}" ;;
+    esac
+done
 
-root_device="$(resolve_device "${ROOT:-}")" || exit 0
-[ -b "$root_device" ] || exit 0
+fail_or_skip()
+{
+    if [ -n "$requested" ]; then
+        log_failure_msg "Disk Snapshots Manager recovery did not start: $1"
+        return 1
+    fi
+    return 0
+}
+
+root_device="$(resolve_device "${ROOT:-}")" || {
+    fail_or_skip "the root device could not be resolved"
+    exit $?
+}
+[ -b "$root_device" ] || {
+    fail_or_skip "the resolved root device is unavailable"
+    exit $?
+}
+root_fstype="$(get_fstype "$root_device")" || {
+    fail_or_skip "the root filesystem type could not be detected"
+    exit $?
+}
+[ "$root_fstype" = "btrfs" ] || {
+    fail_or_skip "the root filesystem is not Btrfs"
+    exit $?
+}
+
+protocol_file=/etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version
+installed_protocol="$(cat "$protocol_file" 2>/dev/null)" || installed_protocol=""
+binary_protocol="$(/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs --protocol-version 2>/dev/null)" || binary_protocol=""
+if [ "$installed_protocol" != "1" ] || [ "$binary_protocol" != "$installed_protocol" ]; then
+    fail_or_skip "the initramfs recovery protocol is incomplete or inconsistent"
+    exit $?
+fi
+if [ -n "$requested" ] && [ "$requested_protocol" != "$installed_protocol" ]; then
+    fail_or_skip "the requested recovery protocol is incompatible"
+    exit $?
+fi
 
 top_level=/run/anduinos-btrfs-snapshots-manager/top
 mkdir -p "$top_level"
 if ! mount -t btrfs -o rw,subvolid=5 "$root_device" "$top_level"; then
-    log_warning_msg "Disk Snapshots Manager could not inspect the Btrfs top level"
-    exit 0
+    fail_or_skip "the Btrfs top level could not be mounted"
+    exit $?
 fi
 
 transaction="$top_level/@snapshots/anduinos-btrfs-snapshots-manager/transactions/pending-rollback.json"
@@ -33,13 +76,6 @@ if [ ! -f "$transaction" ]; then
     umount "$top_level"
     exit 0
 fi
-
-requested=""
-for argument in $(cat /proc/cmdline); do
-    case "$argument" in
-    anduinos.btrfs_snapshots_manager=*) requested="${argument#anduinos.btrfs_snapshots_manager=}" ;;
-    esac
-done
 
 if [ -n "$requested" ]; then
     if /usr/libexec/anduinos-btrfs-snapshots-manager-initramfs "$requested"; then
@@ -60,6 +96,60 @@ if [ "$status" -ne 0 ]; then
     if [ ! -d "$top_level/@root" ]; then
         panic "Disk Snapshots Manager cannot find a bootable @root subvolume"
     fi
+fi
+
+# The active root may contain an older package version. For every pending transaction, carry the
+# confirmation binary from this protocol-verified initramfs into /run and shadow any older
+# installed service for this boot. /run is moved into the real root before systemd starts.
+if [ -f "$transaction" ]; then
+    reconciler_dir=/run/anduinos-btrfs-snapshots-manager/recovery-reconciler
+    reconciler_unit=/run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service
+    reconciler_wants=/run/systemd/system/multi-user.target.wants
+    mkdir -p "$reconciler_dir" "$reconciler_wants" ||
+        panic "Disk Snapshots Manager could not prepare userspace reconciliation"
+    cp /usr/libexec/anduinos-btrfs-snapshots-manager-confirm "$reconciler_dir/confirm" ||
+        panic "Disk Snapshots Manager could not preserve its userspace recovery engine"
+    chmod 0700 "$reconciler_dir/confirm" ||
+        panic "Disk Snapshots Manager could not protect its userspace recovery engine"
+    cat > "$reconciler_unit" <<EOF
+[Unit]
+Description=Reconcile a Disk Snapshots Manager recovery using the trusted initramfs engine
+After=multi-user.target
+ConditionPathExists=/.snapshots/anduinos-btrfs-snapshots-manager/transactions/pending-rollback.json
+
+[Service]
+Type=oneshot
+ExecStart=$reconciler_dir/confirm
+User=root
+Group=root
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateMounts=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ProtectHostname=yes
+ProtectKernelLogs=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+CapabilityBoundingSet=CAP_SYS_ADMIN
+SystemCallFilter=~@clock @cpu-emulation @debug @module @obsolete @raw-io @reboot @swap
+RuntimeDirectory=anduinos-btrfs-snapshots-manager
+ReadWritePaths=-/.snapshots -/boot/grub -/boot/efi -/run/anduinos-btrfs-snapshots-manager
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    chmod 0600 "$reconciler_unit" ||
+        panic "Disk Snapshots Manager could not protect its userspace reconciliation unit"
+    ln -sf ../anduinos-btrfs-snapshots-manager-confirm.service \
+        "$reconciler_wants/anduinos-btrfs-snapshots-manager-confirm.service" ||
+        panic "Disk Snapshots Manager could not activate userspace reconciliation"
 fi
 
 if ! umount "$top_level"; then

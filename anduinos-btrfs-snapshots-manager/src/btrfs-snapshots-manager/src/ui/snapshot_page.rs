@@ -25,10 +25,6 @@ mod imp {
         pub available: Cell<bool>,
         pub refreshing: Cell<bool>,
         pub refresh_pending: Cell<bool>,
-        pub force_measurement_pending: Cell<bool>,
-        pub measuring: Cell<bool>,
-        pub forced_measurement_queued: Cell<bool>,
-        pub measurement_attempted: RefCell<HashSet<String>>,
         pub selection_mode: Cell<bool>,
         pub controls: RefCell<Option<gtk::Box>>,
         pub search: RefCell<Option<gtk::SearchEntry>>,
@@ -58,7 +54,6 @@ mod imp {
         fn dispose(&self) {
             self.items.borrow_mut().clear();
             self.selected.borrow_mut().clear();
-            self.measurement_attempted.borrow_mut().clear();
             self.controls.borrow_mut().take();
             self.search.borrow_mut().take();
             self.create.borrow_mut().take();
@@ -335,19 +330,8 @@ impl SnapshotPage {
     }
 
     pub fn refresh(&self) {
-        self.refresh_with_space_measurement(false);
-    }
-
-    pub fn refresh_and_remeasure_spaces(&self) {
-        self.refresh_with_space_measurement(true);
-    }
-
-    fn refresh_with_space_measurement(&self, force_measurement: bool) {
         if self.imp().refreshing.replace(true) {
             self.imp().refresh_pending.set(true);
-            if force_measurement {
-                self.imp().force_measurement_pending.set(true);
-            }
             return;
         }
         if self.imp().items.borrow().is_empty()
@@ -369,17 +353,16 @@ impl SnapshotPage {
             };
             page.imp().refreshing.set(false);
             match loaded {
-                Ok(status) => page.apply_status(status, force_measurement),
+                Ok(status) => page.apply_status(status),
                 Err(problem) => page.show_load_error(&problem.to_string()),
             }
             if page.imp().refresh_pending.replace(false) {
-                let force_measurement = page.imp().force_measurement_pending.replace(false);
-                page.refresh_with_space_measurement(force_measurement);
+                page.refresh();
             }
         });
     }
 
-    fn apply_status(&self, mut status: RecoveryEngineStatus, force_measurement: bool) {
+    fn apply_status(&self, mut status: RecoveryEngineStatus) {
         self.imp().available.set(status.available);
         if !status.available {
             let description = status
@@ -434,116 +417,10 @@ impl SnapshotPage {
                 .collect::<Vec<_>>(),
         };
         items.sort_by_key(|item| std::cmp::Reverse(item.created_at));
-        let current_ids = items
-            .iter()
-            .map(|item| item.id.clone())
-            .collect::<HashSet<_>>();
-        self.imp()
-            .measurement_attempted
-            .borrow_mut()
-            .retain(|id| current_ids.contains(id));
         *self.imp().items.borrow_mut() = items;
         self.imp().selected.borrow_mut().clear();
         self.set_selection_mode(false);
         self.render();
-        self.measure_snapshot_spaces(force_measurement);
-    }
-
-    fn measure_snapshot_spaces(&self, force: bool) {
-        if self.imp().measuring.get() {
-            if force {
-                self.imp().forced_measurement_queued.set(true);
-            }
-            return;
-        }
-        let mut attempted = self.imp().measurement_attempted.borrow_mut();
-        let ids = self
-            .imp()
-            .items
-            .borrow()
-            .iter()
-            .filter(|item| {
-                should_measure_snapshot_space(
-                    force,
-                    item.space.is_some(),
-                    &item.state,
-                    attempted.contains(&item.id),
-                )
-            })
-            .map(|item| item.id.clone())
-            .collect::<Vec<_>>();
-        if ids.is_empty() {
-            return;
-        }
-        attempted.extend(ids.iter().cloned());
-        drop(attempted);
-        self.imp().measuring.set(true);
-
-        let scope = match self.imp().scope.get() {
-            SnapshotScope::System => "system",
-            SnapshotScope::Home => "home",
-        };
-        let measure = move || -> anyhow::Result<(usize, Vec<String>)> {
-            let client = SnapshotsManagerHelperClient::new()?;
-            let mut completed = 0;
-            let mut failures = Vec::new();
-            for id in ids {
-                match client.measure_snapshot_space(scope, id.clone()) {
-                    Ok(_) => completed += 1,
-                    Err(error) => failures.push(format!("{id}: {error}")),
-                }
-            }
-            Ok((completed, failures))
-        };
-
-        if force && let Some(parent) = self.parent() {
-            let weak = self.downgrade();
-            run_operation(
-                &parent,
-                &tr("Calculating snapshot size…"),
-                measure,
-                move |_, measured| {
-                    if let Some(page) = weak.upgrade() {
-                        page.finish_space_measurement(measured);
-                    }
-                },
-            );
-            return;
-        }
-
-        let weak = self.downgrade();
-        glib::spawn_future_local(async move {
-            let measured = gio::spawn_blocking(measure)
-                .await
-                .map_err(|_| anyhow::anyhow!("Snapshot size measurement stopped unexpectedly"))
-                .and_then(|result| result);
-            let Some(page) = weak.upgrade() else {
-                return;
-            };
-            page.finish_space_measurement(measured);
-        });
-    }
-
-    fn finish_space_measurement(&self, measured: anyhow::Result<(usize, Vec<String>)>) {
-        self.imp().measuring.set(false);
-        let completed = match measured {
-            Ok((completed, failures)) => {
-                for failure in failures {
-                    log::warn!("Could not measure snapshot size: {failure}");
-                }
-                completed
-            }
-            Err(error) => {
-                log::warn!("Could not measure snapshot sizes: {error}");
-                0
-            }
-        };
-
-        if self.imp().forced_measurement_queued.replace(false) {
-            self.refresh_and_remeasure_spaces();
-        } else if completed > 0 {
-            self.refresh();
-        }
     }
 
     fn update_banners(&self, status: &RecoveryEngineStatus) {
@@ -799,7 +676,13 @@ impl SnapshotPage {
                         page.refresh();
                     }
                 }
-                Err(error) => show_error(parent, &error.to_string()),
+                Err(_) => show_information(
+                    parent,
+                    &tr("Snapshot Size Unavailable"),
+                    &tr(
+                        "Btrfs quota accounting is disabled or unavailable. Disk Snapshots Manager will not start a quota rescan automatically.",
+                    ),
+                ),
             },
         );
     }
@@ -1193,41 +1076,6 @@ impl SnapshotPage {
                 Err(problem) => show_error(parent, &problem.to_string()),
             },
         );
-    }
-}
-
-fn should_measure_snapshot_space(
-    force: bool,
-    has_cached_space: bool,
-    state: &str,
-    previously_attempted: bool,
-) -> bool {
-    !matches!(state, "creating" | "deleting" | "broken")
-        && (force || (!has_cached_space && !previously_attempted))
-}
-
-#[cfg(test)]
-mod tests {
-    use super::should_measure_snapshot_space;
-
-    #[test]
-    fn forced_refresh_remeasures_cached_snapshots() {
-        assert!(should_measure_snapshot_space(true, true, "ready", true));
-    }
-
-    #[test]
-    fn background_refresh_only_measures_missing_unattempted_snapshots() {
-        assert!(should_measure_snapshot_space(false, false, "ready", false));
-        assert!(!should_measure_snapshot_space(false, true, "ready", false));
-        assert!(!should_measure_snapshot_space(false, false, "ready", true));
-    }
-
-    #[test]
-    fn unstable_or_broken_snapshots_are_never_measured() {
-        for state in ["creating", "deleting", "broken"] {
-            assert!(!should_measure_snapshot_space(true, false, state, false));
-            assert!(!should_measure_snapshot_space(false, false, state, false));
-        }
     }
 }
 

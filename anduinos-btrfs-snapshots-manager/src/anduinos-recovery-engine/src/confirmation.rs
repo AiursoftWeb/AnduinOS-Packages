@@ -6,12 +6,13 @@ use std::process::Command;
 
 use chrono::Utc;
 
+use crate::boot::BootIntegration;
 use crate::layout::{self, LayoutReport};
 use crate::lineage::{ActivationOutcome, LineageStore};
 use crate::model::{DeploymentId, DeploymentRecord, DeploymentState};
 use crate::operations::OperationEngine;
 use crate::store::DeploymentStore;
-use crate::transaction::{RollbackPhase, RollbackTransaction, TransactionStore};
+use crate::transaction::{RollbackId, RollbackPhase, RollbackTransaction, TransactionStore};
 
 const BTRFS: &str = "/usr/bin/btrfs";
 const MOUNT: &str = "/usr/bin/mount";
@@ -21,6 +22,7 @@ const COMMAND_PATH: &str =
     "/usr/libexec/anduinos-btrfs-snapshots-manager/no-os-prober:/usr/sbin:/usr/bin:/sbin:/bin";
 const BOOT_ID: &str = "/proc/sys/kernel/random/boot_id";
 const KERNEL_RELEASE: &str = "/proc/sys/kernel/osrelease";
+const KERNEL_COMMAND_LINE: &str = "/proc/cmdline";
 const TOP_LEVEL: &str = "/run/anduinos-btrfs-snapshots-manager/top";
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -28,6 +30,7 @@ pub enum ConfirmationOutcome {
     NoAction,
     Confirmed,
     RevertedRecorded,
+    FailedRecorded,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -66,6 +69,7 @@ pub trait ConfirmationBackend {
     fn deployment(&self, id: DeploymentId) -> Result<DeploymentRecord, ConfirmationError>;
     fn boot_id(&self) -> Result<String, ConfirmationError>;
     fn kernel_release(&self) -> Result<String, ConfirmationError>;
+    fn requested_rollback(&self) -> Result<Option<RollbackId>, ConfirmationError>;
     fn current_snapshot_parent_uuid(&self) -> Result<String, ConfirmationError>;
     fn transition(
         &self,
@@ -78,6 +82,11 @@ pub trait ConfirmationBackend {
     ) -> Result<(), ConfirmationError>;
     fn delete_old_root(&self, transaction: &RollbackTransaction) -> Result<(), ConfirmationError>;
     fn remove_transaction(&self) -> Result<(), ConfirmationError>;
+    fn archive_transaction(
+        &self,
+        transaction: &RollbackTransaction,
+    ) -> Result<(), ConfirmationError>;
+    fn clear_once(&self) -> Result<(), ConfirmationError>;
     fn regenerate_grub(&self) -> Result<(), ConfirmationError>;
     fn record_lineage_activation(
         &self,
@@ -126,6 +135,16 @@ impl ConfirmationBackend for SystemConfirmationBackend {
             ));
         }
         Ok(value.into())
+    }
+
+    fn requested_rollback(&self) -> Result<Option<RollbackId>, ConfirmationError> {
+        let command_line = fs::read_to_string(KERNEL_COMMAND_LINE).map_err(|error| {
+            ConfirmationError::new(
+                ConfirmationErrorCode::IdentityMismatch,
+                format!("Could not read the kernel command line: {error}"),
+            )
+        })?;
+        parse_requested_rollback(&command_line)
     }
 
     fn current_snapshot_parent_uuid(&self) -> Result<String, ConfirmationError> {
@@ -218,6 +237,23 @@ impl ConfirmationBackend for SystemConfirmationBackend {
             .map_err(transaction_error)
     }
 
+    fn archive_transaction(
+        &self,
+        transaction: &RollbackTransaction,
+    ) -> Result<(), ConfirmationError> {
+        TransactionStore::default()
+            .archive(transaction)
+            .map_err(transaction_error)
+    }
+
+    fn clear_once(&self) -> Result<(), ConfirmationError> {
+        BootIntegration::default()
+            .clear_pending_once()
+            .map_err(|error| {
+                ConfirmationError::new(ConfirmationErrorCode::CommandFailed, error.message)
+            })
+    }
+
     fn regenerate_grub(&self) -> Result<(), ConfirmationError> {
         run_command(Path::new(UPDATE_GRUB), &[]).map(|_| ())
     }
@@ -263,6 +299,17 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
             return Ok(ConfirmationOutcome::NoAction);
         };
         match transaction.phase {
+            RollbackPhase::Armed if self.backend.requested_rollback()? == Some(transaction.id) => {
+                transaction
+                    .record_failure(
+                        "The recovery boot reached userspace without entering the initramfs recovery engine",
+                        Utc::now(),
+                    )
+                    .map_err(transaction_error)?;
+                self.backend.update_transaction(&transaction)?;
+                self.finish_failed(&transaction)?;
+                Ok(ConfirmationOutcome::FailedRecorded)
+            }
             RollbackPhase::BootedUnconfirmed => {
                 self.verify_running_target(&transaction)?;
                 transaction
@@ -279,6 +326,10 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
             RollbackPhase::Reverted => {
                 self.finish_reverted(&transaction)?;
                 Ok(ConfirmationOutcome::RevertedRecorded)
+            }
+            RollbackPhase::Failed => {
+                self.finish_failed(&transaction)?;
+                Ok(ConfirmationOutcome::FailedRecorded)
             }
             _ => Ok(ConfirmationOutcome::NoAction),
         }
@@ -329,6 +380,8 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
         self.backend
             .record_lineage_activation(transaction, ActivationOutcome::Confirmed)?;
         self.backend.delete_old_root(transaction)?;
+        self.backend.clear_once()?;
+        self.backend.archive_transaction(transaction)?;
         self.backend.remove_transaction()?;
         self.backend.regenerate_grub()?;
         Ok(())
@@ -343,10 +396,53 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
             .transition(transaction.fallback_deployment_id, DeploymentState::Current)?;
         self.backend
             .record_lineage_activation(transaction, ActivationOutcome::Reverted)?;
+        self.backend.clear_once()?;
+        self.backend.archive_transaction(transaction)?;
         self.backend.remove_transaction()?;
         self.backend.regenerate_grub()?;
         Ok(())
     }
+
+    fn finish_failed(&self, transaction: &RollbackTransaction) -> Result<(), ConfirmationError> {
+        let target = self.backend.deployment(transaction.target_deployment_id)?;
+        if target.state == DeploymentState::PendingRollback {
+            self.backend.transition(target.id, DeploymentState::Ready)?;
+        }
+        let fallback = self
+            .backend
+            .deployment(transaction.fallback_deployment_id)?;
+        if fallback.state == DeploymentState::FallbackProtected {
+            self.backend
+                .transition(fallback.id, DeploymentState::Ready)?;
+        }
+        self.backend.clear_once()?;
+        self.backend.archive_transaction(transaction)?;
+        self.backend.remove_transaction()?;
+        self.backend.regenerate_grub()?;
+        Ok(())
+    }
+}
+
+fn parse_requested_rollback(command_line: &str) -> Result<Option<RollbackId>, ConfirmationError> {
+    let mut requested = None;
+    for argument in command_line.split_whitespace() {
+        let Some(value) = argument.strip_prefix("anduinos.btrfs_snapshots_manager=") else {
+            continue;
+        };
+        let id = value.parse::<RollbackId>().map_err(|_| {
+            ConfirmationError::new(
+                ConfirmationErrorCode::InvalidTransaction,
+                "The kernel command line contains an invalid rollback ID",
+            )
+        })?;
+        if id.to_string() != value || requested.replace(id).is_some() {
+            return Err(ConfirmationError::new(
+                ConfirmationErrorCode::InvalidTransaction,
+                "The kernel command line contains an ambiguous rollback request",
+            ));
+        }
+    }
+    Ok(requested)
 }
 
 fn ensure_supported_root(report: &LayoutReport) -> Result<(), ConfirmationError> {
@@ -492,6 +588,8 @@ mod tests {
         records: HashMap<DeploymentId, DeploymentRecord>,
         boot_id: String,
         parent_uuid: String,
+        requested: Option<RollbackId>,
+        archived: Vec<RollbackTransaction>,
         calls: Vec<String>,
     }
 
@@ -507,9 +605,14 @@ mod tests {
                 fallback.id,
                 "eeeeeeee-1111-4222-8333-ffffffffffff",
                 "7.0.0-test",
+                "a".repeat(64),
+                "b".repeat(64),
             );
             transaction
                 .transition(RollbackPhase::Armed, Utc::now())
+                .unwrap();
+            transaction
+                .record_initramfs_entry(BOOT, Utc::now())
                 .unwrap();
             transaction.begin_apply(BOOT, Utc::now()).unwrap();
             transaction
@@ -525,6 +628,8 @@ mod tests {
                         records,
                         boot_id: BOOT.into(),
                         parent_uuid: SNAPSHOT.into(),
+                        requested: None,
+                        archived: Vec::new(),
                         calls: Vec::new(),
                     })),
                 },
@@ -556,6 +661,11 @@ mod tests {
         fn kernel_release(&self) -> Result<String, ConfirmationError> {
             self.call("kernel");
             Ok("7.0.0-test".into())
+        }
+
+        fn requested_rollback(&self) -> Result<Option<RollbackId>, ConfirmationError> {
+            self.call("requested-rollback");
+            Ok(self.inner.lock().unwrap().requested)
         }
 
         fn current_snapshot_parent_uuid(&self) -> Result<String, ConfirmationError> {
@@ -601,6 +711,24 @@ mod tests {
         fn remove_transaction(&self) -> Result<(), ConfirmationError> {
             self.call("remove-transaction");
             self.inner.lock().unwrap().transaction = None;
+            Ok(())
+        }
+
+        fn archive_transaction(
+            &self,
+            transaction: &RollbackTransaction,
+        ) -> Result<(), ConfirmationError> {
+            self.call("archive-transaction");
+            self.inner
+                .lock()
+                .unwrap()
+                .archived
+                .push(transaction.clone());
+            Ok(())
+        }
+
+        fn clear_once(&self) -> Result<(), ConfirmationError> {
+            self.call("clear-once");
             Ok(())
         }
 
@@ -700,6 +828,62 @@ mod tests {
             inner.records[&transaction.target_deployment_id].state,
             DeploymentState::PendingRollback
         );
+    }
+
+    #[test]
+    fn requested_recovery_that_reaches_userspace_without_initramfs_is_failed_and_archived() {
+        let (backend, original) = FakeBackend::booted();
+        let mut armed = RollbackTransaction::new(
+            original.target_deployment_id,
+            original.fallback_deployment_id,
+            original.root_filesystem_uuid,
+            original.kernel_release,
+            original.recovery_kernel_sha256,
+            original.recovery_initramfs_sha256,
+        );
+        armed.transition(RollbackPhase::Armed, Utc::now()).unwrap();
+        {
+            let mut inner = backend.inner.lock().unwrap();
+            inner.requested = Some(armed.id);
+            inner.transaction = Some(armed.clone());
+        }
+
+        assert_eq!(
+            ConfirmationEngine::new(backend.clone())
+                .reconcile()
+                .unwrap(),
+            ConfirmationOutcome::FailedRecorded
+        );
+        let inner = backend.inner.lock().unwrap();
+        assert!(inner.transaction.is_none());
+        assert_eq!(inner.archived.len(), 1);
+        assert_eq!(inner.archived[0].phase, RollbackPhase::Failed);
+        assert!(
+            inner.archived[0]
+                .failure
+                .as_deref()
+                .unwrap()
+                .contains("without entering the initramfs")
+        );
+        assert_eq!(
+            inner.records[&armed.target_deployment_id].state,
+            DeploymentState::Ready
+        );
+        assert_eq!(
+            inner.records[&armed.fallback_deployment_id].state,
+            DeploymentState::Ready
+        );
+        let archived = inner
+            .calls
+            .iter()
+            .position(|call| call == "archive-transaction")
+            .unwrap();
+        let removed = inner
+            .calls
+            .iter()
+            .position(|call| call == "remove-transaction")
+            .unwrap();
+        assert!(archived < removed);
     }
 
     #[test]

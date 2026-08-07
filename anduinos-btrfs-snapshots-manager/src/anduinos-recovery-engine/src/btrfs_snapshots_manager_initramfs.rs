@@ -2,12 +2,16 @@ use std::process::ExitCode;
 use std::str::FromStr;
 
 use anduinos_recovery_engine::recovery::{RecoveryCheckpoint, RecoveryEngine, RecoveryOutcome};
-use anduinos_recovery_engine::transaction::RollbackId;
+use anduinos_recovery_engine::transaction::{RECOVERY_PROTOCOL_VERSION, RollbackId};
 
 const BOOT_ID: &str = "/proc/sys/kernel/random/boot_id";
 
 fn main() -> ExitCode {
     let arguments = std::env::args().skip(1).collect::<Vec<_>>();
+    if arguments.as_slice() == ["--protocol-version"] {
+        println!("{RECOVERY_PROTOCOL_VERSION}");
+        return ExitCode::SUCCESS;
+    }
     let requested = match arguments.as_slice() {
         [] => None,
         [id] => match parse_id(id) {
@@ -43,6 +47,10 @@ fn main() -> ExitCode {
         }
         Ok(RecoveryOutcome::Reverted) => {
             eprintln!("Disk Snapshots Manager restored the protected fallback root");
+            ExitCode::SUCCESS
+        }
+        Ok(RecoveryOutcome::FailedSafe) => {
+            eprintln!("Disk Snapshots Manager recorded a safely failed recovery attempt");
             ExitCode::SUCCESS
         }
         Err(error) => {

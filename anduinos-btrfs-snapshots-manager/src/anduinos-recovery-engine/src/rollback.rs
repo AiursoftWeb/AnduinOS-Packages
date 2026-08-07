@@ -9,7 +9,7 @@ use std::process::Command;
 use chrono::Utc;
 
 use crate::RECOVERY_STORE_ROOT;
-use crate::boot::BootIntegration;
+use crate::boot::{BootIntegration, RecoveryBootArtifacts};
 use crate::coordination::TransactionStartLock;
 use crate::layout::{self, LayoutReport};
 use crate::model::{DeploymentId, DeploymentRecord, DeploymentState};
@@ -20,6 +20,7 @@ use crate::transaction::{RollbackPhase, RollbackTransaction, TransactionStore};
 
 const BLKID: &str = "/usr/sbin/blkid";
 const UPDATE_GRUB: &str = "/usr/sbin/update-grub";
+const GRUB_SCRIPT_CHECK: &str = "/usr/bin/grub-script-check";
 const COMMAND_PATH: &str =
     "/usr/libexec/anduinos-btrfs-snapshots-manager/no-os-prober:/usr/sbin:/usr/bin:/sbin:/bin";
 const GRUB_CONFIG: &str = "/boot/grub/grub.cfg";
@@ -107,6 +108,7 @@ pub trait RollbackBackend {
     ) -> Result<DeploymentRecord, RollbackError>;
     fn root_filesystem_uuid(&self, report: &LayoutReport) -> Result<String, RollbackError>;
     fn verify_one_shot_support(&self) -> Result<(), RollbackError>;
+    fn provision_recovery_boot_artifacts(&self) -> Result<RecoveryBootArtifacts, RollbackError>;
     fn create_transaction(&self, transaction: &RollbackTransaction) -> Result<(), RollbackError>;
     fn update_transaction(&self, transaction: &RollbackTransaction) -> Result<(), RollbackError>;
     fn remove_transaction(&self) -> Result<(), RollbackError>;
@@ -199,6 +201,12 @@ impl RollbackBackend for SystemRollbackBackend {
             .map_err(|error| RollbackError::new(RollbackErrorCode::BootIntegration, error.message))
     }
 
+    fn provision_recovery_boot_artifacts(&self) -> Result<RecoveryBootArtifacts, RollbackError> {
+        BootIntegration::default()
+            .provision_recovery_boot_artifacts()
+            .map_err(|error| RollbackError::new(RollbackErrorCode::BootIntegration, error.message))
+    }
+
     fn create_transaction(&self, transaction: &RollbackTransaction) -> Result<(), RollbackError> {
         let _start_lock = TransactionStartLock::acquire(RECOVERY_STORE_ROOT).map_err(|error| {
             RollbackError::new(
@@ -238,7 +246,12 @@ impl RollbackBackend for SystemRollbackBackend {
     }
 
     fn verify_grub_entry(&self, transaction: &RollbackTransaction) -> Result<(), RollbackError> {
-        verify_grub_config(Path::new(GRUB_CONFIG), transaction)
+        verify_grub_config(Path::new(GRUB_CONFIG), transaction)?;
+        run_command(
+            Path::new(GRUB_SCRIPT_CHECK),
+            &[Path::new(GRUB_CONFIG).as_os_str()],
+        )
+        .map(|_| ())
     }
 
     fn arm_once(&self) -> Result<String, RollbackError> {
@@ -310,14 +323,9 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
             ));
         }
         let target_original_state = target.state;
-        let kernel = target.kernel_release.clone().ok_or_else(|| {
-            RollbackError::new(
-                RollbackErrorCode::InvalidTarget,
-                "Recovery target has no kernel identity",
-            )
-        })?;
         let root_uuid = self.backend.root_filesystem_uuid(&report)?;
         self.backend.verify_one_shot_support()?;
+        let recovery_boot = self.backend.provision_recovery_boot_artifacts()?;
 
         progress(
             RollbackProgressPhase::ProtectCurrent,
@@ -325,7 +333,14 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
             "Protecting the current system",
         );
         let fallback = self.backend.create_fallback()?;
-        let mut transaction = RollbackTransaction::new(target.id, fallback.id, root_uuid, kernel);
+        let mut transaction = RollbackTransaction::new(
+            target.id,
+            fallback.id,
+            root_uuid,
+            recovery_boot.kernel_release,
+            recovery_boot.kernel_sha256,
+            recovery_boot.initramfs_sha256,
+        );
         let result = (|| {
             progress(
                 RollbackProgressPhase::RecordTransaction,
@@ -719,6 +734,17 @@ mod tests {
             self.hit("verify-one-shot")
         }
 
+        fn provision_recovery_boot_artifacts(
+            &self,
+        ) -> Result<RecoveryBootArtifacts, RollbackError> {
+            self.hit("provision-recovery-boot")?;
+            Ok(RecoveryBootArtifacts {
+                kernel_release: "7.0.0-test".into(),
+                kernel_sha256: "d".repeat(64),
+                initramfs_sha256: "e".repeat(64),
+            })
+        }
+
         fn create_transaction(
             &self,
             transaction: &RollbackTransaction,
@@ -924,6 +950,8 @@ mod tests {
             DeploymentId::new(),
             "aaaaaaaa-1111-4222-8333-bbbbbbbbbbbb",
             "7.0.0-test",
+            "a".repeat(64),
+            "b".repeat(64),
         );
         transaction
             .transition(RollbackPhase::Armed, Utc::now())
