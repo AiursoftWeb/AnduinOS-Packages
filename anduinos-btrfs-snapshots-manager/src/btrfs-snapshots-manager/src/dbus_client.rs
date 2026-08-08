@@ -101,6 +101,34 @@ pub struct VerificationResult {
     pub warnings: Vec<String>,
 }
 
+#[derive(Debug, Clone, Default, serde::Deserialize)]
+pub struct BtrfsFilesystemStatus {
+    #[serde(default)]
+    pub available: bool,
+    #[serde(default)]
+    pub source: String,
+    #[serde(default)]
+    pub total_bytes: Option<u64>,
+    #[serde(default)]
+    pub used_bytes: Option<u64>,
+    #[serde(default)]
+    pub data_profile: String,
+    #[serde(default)]
+    pub metadata_profile: String,
+    #[serde(default)]
+    pub compression: String,
+    #[serde(default)]
+    pub discard: String,
+    #[serde(default)]
+    pub quota: String,
+    #[serde(default)]
+    pub scrub: String,
+    #[serde(default)]
+    pub balance: String,
+    #[serde(default)]
+    pub error: Option<String>,
+}
+
 /// Blocking D-Bus client for btrfs-snapshots-manager-helper privileged service
 ///
 /// Provides methods to create, delete, restore, and verify btrfs snapshots through
@@ -558,5 +586,25 @@ impl SnapshotsManagerHelperClient {
             .context("Failed to call GetSchedulerStatus")?;
 
         Ok(status)
+    }
+
+    pub fn get_btrfs_filesystem_status(&self) -> Result<BtrfsFilesystemStatus> {
+        let json: String = self
+            .proxy()?
+            .call("GetBtrfsFilesystemStatus", &())
+            .context("Failed to query Btrfs filesystem status")?;
+        serde_json::from_str(&json).context("Failed to parse Btrfs filesystem status")
+    }
+
+    pub fn run_btrfs_maintenance_action(&self, action: &str) -> Result<String> {
+        let (success, message): (bool, String) = self
+            .proxy()?
+            .call("RunBtrfsMaintenanceAction", &(action.to_string(),))
+            .context("Failed to start Btrfs maintenance")?;
+        if success {
+            Ok(message)
+        } else {
+            anyhow::bail!(message)
+        }
     }
 }

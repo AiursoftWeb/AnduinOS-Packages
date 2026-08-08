@@ -1405,6 +1405,86 @@ impl SnapshotsManagerHelper {
         }
     }
 
+    /// Return a bounded, read-only summary of the Btrfs filesystem and native
+    /// maintenance state. The GUI must treat this as live status, not as its own
+    /// persisted state machine.
+    async fn get_btrfs_filesystem_status(&self) -> String {
+        match tokio::task::spawn_blocking(btrfs::filesystem_status).await {
+            Ok(Ok(status)) => serde_json::to_string(&status).unwrap_or_else(|error| {
+                serde_json::json!({
+                    "schema_version": 1,
+                    "available": false,
+                    "error": format!("Could not serialize Btrfs status: {error}"),
+                })
+                .to_string()
+            }),
+            Ok(Err(error)) => serde_json::json!({
+                "schema_version": 1,
+                "available": false,
+                "error": error.to_string(),
+            })
+            .to_string(),
+            Err(error) => serde_json::json!({
+                "schema_version": 1,
+                "available": false,
+                "error": format!("Btrfs status query stopped: {error}"),
+            })
+            .to_string(),
+        }
+    }
+
+    /// Run one fixed Btrfs configuration or maintenance action. The action is
+    /// an enum-like token; no caller-provided path or command argument reaches
+    /// the privileged process.
+    async fn run_btrfs_maintenance_action(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        action: String,
+    ) -> (bool, String) {
+        let layout_report = layout::inspect_current();
+        if !layout_report.is_supported() {
+            return (
+                false,
+                format!(
+                    "Btrfs maintenance requires the standard AnduinOS layout: {}",
+                    layout_report.issues.join("; ")
+                ),
+            );
+        }
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_CONFIGURE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_CONFIGURE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let operation = match action.as_str() {
+            "quota-enable" => btrfs::set_quota_enabled(true),
+            "quota-disable" => btrfs::set_quota_enabled(false),
+            "scrub-start" => btrfs::start_scrub(),
+            "scrub-cancel" => btrfs::cancel_scrub(),
+            "balance-start" => btrfs::start_filtered_balance(),
+            "balance-cancel" => btrfs::cancel_balance(),
+            "defrag-home" => tokio::task::spawn_blocking(btrfs::defragment_home)
+                .await
+                .map_err(|error| anyhow::anyhow!("Defragmentation task stopped: {error}"))
+                .and_then(|result| result),
+            _ => return (false, "Unknown Btrfs maintenance action".into()),
+        };
+        let response = match operation {
+            Ok(message) => (true, message),
+            Err(error) => (false, error.to_string()),
+        };
+        audit::log_operation(
+            uid,
+            pid,
+            "btrfs_maintenance",
+            &action,
+            response.0,
+            (!response.0).then_some(response.1.as_str()),
+        );
+        response
+    }
+
     async fn get_apt_snapshot_policy(&self) -> (bool, bool) {
         let config = SnapshotsManagerConfig::new();
         match anduinos_recovery_engine::AptSnapshotPolicy::load_from_file(

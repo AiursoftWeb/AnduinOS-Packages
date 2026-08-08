@@ -12,6 +12,8 @@ pub fn show(parent: &adw::ApplicationWindow) {
     window.set_modal(true);
     window.set_default_size(580, 620);
     let page = adw::PreferencesPage::new();
+    page.set_title(&tr("Snapshots"));
+    page.set_icon_name(Some("camera-photo-symbolic"));
 
     let packages = adw::PreferencesGroup::new();
     packages.set_title(&tr("Package Changes"));
@@ -60,6 +62,8 @@ pub fn show(parent: &adw::ApplicationWindow) {
     save_group.add(&save);
     page.add(&save_group);
     window.add(&page);
+    window.add(&super::btrfs_settings::filesystem_page(&window));
+    window.add(&super::btrfs_settings::maintenance_page(&window));
 
     for row in [
         &before,

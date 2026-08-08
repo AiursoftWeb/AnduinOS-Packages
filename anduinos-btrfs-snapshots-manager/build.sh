@@ -41,7 +41,7 @@ for method in GetPrivilegedRecoveryEngineStatus ApplyScheduleRetention BeginSyst
         exit 1
     fi
 done
-for method in GetAptSnapshotPolicy SaveAptSnapshotPolicy; do
+for method in GetAptSnapshotPolicy SaveAptSnapshotPolicy GetBtrfsFilesystemStatus RunBtrfsMaintenanceAction; do
     if ! rg -a -q "<method name=\"$method\">" "$SCRIPT_DIR/obj/anduinos-btrfs-snapshots-manager-helper"; then
         echo "Required APT policy D-Bus method is missing: $method" >&2
         exit 1

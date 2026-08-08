@@ -87,6 +87,12 @@ grep -Fq 'snapshot_after = false' "$ROOT/assets/apt-snapshots.toml"
 rg -q 'get_apt_snapshot_policy' "$ROOT/src/btrfs-snapshots-manager-helper/src/main.rs"
 rg -q 'save_apt_snapshot_policy' "$ROOT/src/btrfs-snapshots-manager-helper/src/main.rs"
 rg -q 'Create a system snapshot before changes' "$ROOT/src/btrfs-snapshots-manager/src/ui/advanced_settings.rs"
+rg -q 'filesystem_page' "$ROOT/src/btrfs-snapshots-manager/src/ui/advanced_settings.rs"
+rg -q 'maintenance_page' "$ROOT/src/btrfs-snapshots-manager/src/ui/advanced_settings.rs"
+grep -Fq 'send_member="GetBtrfsFilesystemStatus"' \
+    "$ROOT/data/org.anduinos.BtrfsSnapshotsManager.conf"
+grep -Fq 'send_member="RunBtrfsMaintenanceAction"' \
+    "$ROOT/data/org.anduinos.BtrfsSnapshotsManager.conf"
 rg -q 'ViewStack::new' "$ROOT/src/btrfs-snapshots-manager/src/ui/mod.rs"
 rg -q 'SnapshotPage::new.*SnapshotScope::System' "$ROOT/src/btrfs-snapshots-manager/src/ui/mod.rs"
 rg -q 'SnapshotPage::new.*SnapshotScope::Home' "$ROOT/src/btrfs-snapshots-manager/src/ui/mod.rs"

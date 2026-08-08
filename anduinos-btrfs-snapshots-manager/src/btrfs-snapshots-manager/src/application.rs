@@ -197,6 +197,7 @@ impl SnapshotsManagerApplication {
         let weak = self.downgrade();
         glib::idle_add_local_once(move || {
             if let Some(app) = weak.upgrade() {
+                app.ensure_main_window().show_advanced_settings();
                 for window in app.windows() {
                     window.close();
                 }

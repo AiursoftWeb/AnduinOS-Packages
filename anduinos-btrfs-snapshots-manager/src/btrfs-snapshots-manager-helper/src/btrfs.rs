@@ -28,6 +28,256 @@ const MAX_BTRFS_OUTPUT_BYTES: usize = 16 * 1024 * 1024;
 const MAX_CACHE_BYTES: u64 = 64 * 1024;
 static MEASUREMENT_LOCK: Mutex<()> = Mutex::new(());
 
+const ROOT_MOUNT: &str = "/";
+
+#[derive(Debug, serde::Serialize)]
+pub struct FilesystemStatus {
+    pub schema_version: u32,
+    pub available: bool,
+    pub source: String,
+    pub total_bytes: Option<u64>,
+    pub used_bytes: Option<u64>,
+    pub data_profile: String,
+    pub metadata_profile: String,
+    pub compression: String,
+    pub discard: String,
+    pub quota: String,
+    pub scrub: String,
+    pub balance: String,
+}
+
+pub fn filesystem_status() -> Result<FilesystemStatus> {
+    let (source, mount_options) = root_btrfs_mount()?;
+    let usage = run_btrfs(&[
+        std::ffi::OsStr::new("filesystem"),
+        std::ffi::OsStr::new("usage"),
+        std::ffi::OsStr::new("--raw"),
+        std::ffi::OsStr::new(ROOT_MOUNT),
+    ])?;
+    let quota = run_btrfs_allow_failure(&["quota", "status", ROOT_MOUNT]);
+    let scrub = run_btrfs_allow_failure(&["scrub", "status", "-R", ROOT_MOUNT]);
+    let balance = run_btrfs_allow_failure(&["balance", "status", ROOT_MOUNT]);
+    Ok(FilesystemStatus {
+        schema_version: 1,
+        available: true,
+        source,
+        total_bytes: usage_value(&usage, "Device size:"),
+        used_bytes: usage_value(&usage, "Used:"),
+        data_profile: block_group_profile(&usage, "Data,").unwrap_or_else(|| "unknown".into()),
+        metadata_profile: block_group_profile(&usage, "Metadata,")
+            .unwrap_or_else(|| "unknown".into()),
+        compression: compression_option(&mount_options),
+        discard: mount_options
+            .iter()
+            .find(|option| option.starts_with("discard"))
+            .cloned()
+            .unwrap_or_else(|| "off".into()),
+        quota: quota_status(&quota.stdout, quota.success),
+        scrub: scrub_status(&scrub.stdout, &scrub.stderr, scrub.success),
+        balance: balance_status(&balance.stdout, &balance.stderr, balance.success),
+    })
+}
+
+pub fn set_quota_enabled(enabled: bool) -> Result<String> {
+    if enabled {
+        run_btrfs_mutating(&["quota", "enable", ROOT_MOUNT])?;
+        Ok("Btrfs quota accounting is enabled and its initial scan has started".into())
+    } else {
+        run_btrfs_mutating(&["quota", "disable", ROOT_MOUNT])?;
+        Ok("Btrfs quota accounting is disabled".into())
+    }
+}
+
+pub fn start_scrub() -> Result<String> {
+    run_btrfs_mutating(&["scrub", "start", ROOT_MOUNT])?;
+    Ok("The integrity check has started in the background".into())
+}
+
+pub fn cancel_scrub() -> Result<String> {
+    run_btrfs_mutating(&["scrub", "cancel", ROOT_MOUNT])?;
+    Ok("The integrity check was cancelled".into())
+}
+
+pub fn start_filtered_balance() -> Result<String> {
+    run_btrfs_mutating(&[
+        "balance",
+        "start",
+        "--background",
+        "-dusage=50",
+        "-musage=50",
+        ROOT_MOUNT,
+    ])?;
+    Ok("A limited space rebalance has started in the background".into())
+}
+
+pub fn cancel_balance() -> Result<String> {
+    run_btrfs_mutating(&["balance", "cancel", ROOT_MOUNT])?;
+    Ok("The space rebalance was cancelled".into())
+}
+
+pub fn defragment_home() -> Result<String> {
+    run_btrfs_mutating(&["filesystem", "defragment", "-r", "-czstd", "/home"])?;
+    Ok("Home file defragmentation completed".into())
+}
+
+struct CommandResult {
+    success: bool,
+    stdout: String,
+    stderr: String,
+}
+
+fn root_btrfs_mount() -> Result<(String, Vec<String>)> {
+    let mountinfo = fs::read_to_string("/proc/self/mountinfo")?;
+    parse_root_btrfs_mount(&mountinfo)
+}
+
+fn parse_root_btrfs_mount(mountinfo: &str) -> Result<(String, Vec<String>)> {
+    for line in mountinfo.lines() {
+        let Some((left, right)) = line.split_once(" - ") else {
+            continue;
+        };
+        let left_fields = left.split_whitespace().collect::<Vec<_>>();
+        let right_fields = right.split_whitespace().collect::<Vec<_>>();
+        if left_fields.get(4) == Some(&ROOT_MOUNT) && right_fields.first() == Some(&"btrfs") {
+            let source = right_fields
+                .get(1)
+                .copied()
+                .unwrap_or("unknown")
+                .to_string();
+            let options = left_fields
+                .get(5)
+                .into_iter()
+                .chain(right_fields.get(2))
+                .flat_map(|value| value.split(','))
+                .map(str::to_string)
+                .collect();
+            return Ok((source, options));
+        }
+    }
+    bail!("The system root is not mounted from Btrfs")
+}
+
+fn usage_value(output: &str, label: &str) -> Option<u64> {
+    output.lines().find_map(|line| {
+        let value = line.trim().strip_prefix(label)?.trim();
+        value.split_whitespace().next()?.parse().ok()
+    })
+}
+
+fn block_group_profile(output: &str, prefix: &str) -> Option<String> {
+    output.lines().find_map(|line| {
+        let rest = line.trim().strip_prefix(prefix)?;
+        Some(rest.split(':').next()?.trim().to_string())
+    })
+}
+
+fn mount_option(options: &[String], prefix: &str) -> Option<String> {
+    options
+        .iter()
+        .find_map(|option| option.strip_prefix(prefix).map(str::to_string))
+}
+
+fn compression_option(options: &[String]) -> String {
+    if let Some(compression) = mount_option(options, "compress-force=") {
+        format!("{compression} (forced)")
+    } else {
+        mount_option(options, "compress=").unwrap_or_else(|| "off".into())
+    }
+}
+
+fn quota_status(stdout: &str, success: bool) -> String {
+    if !success {
+        return "unavailable".into();
+    }
+    if stdout.lines().any(|line| line.trim() == "Enabled: yes") {
+        if stdout.to_ascii_lowercase().contains("rescan") {
+            "scanning".into()
+        } else {
+            "enabled".into()
+        }
+    } else {
+        "disabled".into()
+    }
+}
+
+fn scrub_status(stdout: &str, stderr: &str, success: bool) -> String {
+    let combined = format!("{stdout}\n{stderr}").to_ascii_lowercase();
+    if combined.contains("status: running") {
+        "running".into()
+    } else if combined.contains("no stats available") {
+        "never-run".into()
+    } else if success {
+        let uncorrectable = metric(stdout, "uncorrectable_errors:").unwrap_or(0);
+        let corrected = metric(stdout, "corrected_errors:").unwrap_or(0);
+        if uncorrectable > 0 {
+            format!("finished-with-errors:{uncorrectable}")
+        } else if corrected > 0 {
+            format!("finished-repaired:{corrected}")
+        } else {
+            "finished-clean".into()
+        }
+    } else {
+        "unavailable".into()
+    }
+}
+
+fn balance_status(stdout: &str, stderr: &str, success: bool) -> String {
+    let combined = format!("{stdout}\n{stderr}").to_ascii_lowercase();
+    if combined.contains("is running") {
+        "running".into()
+    } else if combined.contains("is paused") {
+        "paused".into()
+    } else if combined.contains("no balance found") || combined.contains("not in progress") {
+        "idle".into()
+    } else if success {
+        "idle".into()
+    } else {
+        "unavailable".into()
+    }
+}
+
+fn metric(output: &str, label: &str) -> Option<u64> {
+    output.lines().find_map(|line| {
+        line.trim()
+            .strip_prefix(label)?
+            .trim()
+            .split_whitespace()
+            .next()?
+            .parse()
+            .ok()
+    })
+}
+
+fn run_btrfs_allow_failure(arguments: &[&str]) -> CommandResult {
+    match Command::new(BTRFS)
+        .args(arguments)
+        .env_clear()
+        .env("PATH", "/usr/sbin:/usr/bin:/sbin:/bin")
+        .env("LC_ALL", "C")
+        .output()
+    {
+        Ok(output) => CommandResult {
+            success: output.status.success(),
+            stdout: String::from_utf8_lossy(&output.stdout).into_owned(),
+            stderr: String::from_utf8_lossy(&output.stderr).into_owned(),
+        },
+        Err(error) => CommandResult {
+            success: false,
+            stdout: String::new(),
+            stderr: error.to_string(),
+        },
+    }
+}
+
+fn run_btrfs_mutating(arguments: &[&str]) -> Result<()> {
+    let result = run_btrfs_allow_failure(arguments);
+    if result.success {
+        Ok(())
+    } else {
+        bail!("Btrfs operation failed: {}", result.stderr.trim())
+    }
+}
+
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct VerificationResult {
     pub is_valid: bool,
@@ -284,6 +534,72 @@ mod tests {
         assert_eq!(
             parse_subvolume_id("Name: root\nSubvolume ID: 1234\nUUID: test\n"),
             Some(1234)
+        );
+    }
+
+    #[test]
+    fn parses_root_btrfs_source_and_behavior_options() {
+        let mountinfo = concat!(
+            "27 22 0:24 / / rw,relatime - ext4 /dev/sda1 rw\n",
+            "35 22 0:31 /@ / rw,relatime,ssd,discard=async,space_cache=v2,subvolid=256,subvol=/@ ",
+            "- btrfs /dev/nvme0n1p3 rw,compress=zstd:3\n",
+        );
+        let (source, options) = parse_root_btrfs_mount(mountinfo).unwrap();
+        assert_eq!(source, "/dev/nvme0n1p3");
+        assert_eq!(mount_option(&options, "compress="), Some("zstd:3".into()));
+        assert_eq!(compression_option(&options), "zstd:3");
+        assert!(options.contains(&"discard=async".to_string()));
+
+        assert_eq!(
+            compression_option(&["compress-force=zstd:5".into()]),
+            "zstd:5 (forced)"
+        );
+    }
+
+    #[test]
+    fn parses_raw_usage_and_profiles() {
+        let usage = concat!(
+            "Overall:\n",
+            "    Device size: 987698823168\n",
+            "    Used: 188516794368\n",
+            "Data,single: Size:190060691456, Used:185263587328\n",
+            "Metadata,DUP: Size:3221225472, Used:1626554368\n",
+        );
+        assert_eq!(usage_value(usage, "Device size:"), Some(987_698_823_168));
+        assert_eq!(usage_value(usage, "Used:"), Some(188_516_794_368));
+        assert_eq!(block_group_profile(usage, "Data,"), Some("single".into()));
+        assert_eq!(block_group_profile(usage, "Metadata,"), Some("DUP".into()));
+    }
+
+    #[test]
+    fn renders_native_quota_scrub_and_balance_states() {
+        assert_eq!(
+            quota_status("Quotas on /:\n  Enabled: no\n", true),
+            "disabled"
+        );
+        assert_eq!(
+            quota_status("Quotas on /:\n  Enabled: yes\n", true),
+            "enabled"
+        );
+        assert_eq!(quota_status("", false), "unavailable");
+
+        let clean = "uncorrectable_errors: 0\ncorrected_errors: 0\n";
+        assert_eq!(scrub_status(clean, "", true), "finished-clean");
+        assert_eq!(
+            scrub_status("uncorrectable_errors: 2\n", "", true),
+            "finished-with-errors:2"
+        );
+        assert_eq!(scrub_status("", "status: running", false), "running");
+        assert_eq!(scrub_status("no stats available", "", true), "never-run");
+
+        assert_eq!(
+            balance_status("Balance on '/' is running", "", true),
+            "running"
+        );
+        assert_eq!(balance_status("", "No balance found on '/'", false), "idle");
+        assert_eq!(
+            balance_status("", "Operation not permitted", false),
+            "unavailable"
         );
     }
 

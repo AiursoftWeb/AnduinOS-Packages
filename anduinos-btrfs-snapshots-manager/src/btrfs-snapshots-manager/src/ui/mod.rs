@@ -1,5 +1,6 @@
 mod advanced_settings;
 mod automation_dialog;
+mod btrfs_settings;
 mod personal_history;
 mod snapshot_model;
 mod snapshot_page;
