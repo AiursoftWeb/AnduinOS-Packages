@@ -28,7 +28,9 @@ HOSTNAME_RE = re.compile(
     r"^(?=.{1,63}$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
 )
 LOCALE_RE = re.compile(r"^[A-Za-z]{2,3}(?:_[A-Z]{2})?\.UTF-8$")
-TIMEZONE_RE = re.compile(r"^[A-Za-z0-9._+-]+(?:/[A-Za-z0-9._+-]+)+$")
+TIMEZONE_RE = re.compile(
+    r"^(?:UTC|[A-Za-z0-9._+-]+(?:/[A-Za-z0-9._+-]+)+)$"
+)
 WHOLE_DISK_RE = re.compile(
     r"^/dev/(?:sd[a-z]+|vd[a-z]+|xvd[a-z]+|nvme\d+n\d+|mmcblk\d+)$"
 )

@@ -3315,7 +3315,10 @@ def build_timezone_page(shared, nav_view):
 
 def _load_timezones():
     """Read timezone list from the system."""
-    zones = []
+    # UTC is not listed in zone.tab because it is not tied to a country.
+    # Keep it as a prominent explicit choice for servers and other systems
+    # that should not use a regional timezone.
+    zones = ["UTC"]
     try:
         with open("/usr/share/zoneinfo/zone.tab", encoding="utf-8") as f:
             for line in f:
@@ -3331,7 +3334,7 @@ def _load_timezones():
                  "Europe/London", "Europe/Berlin", "Europe/Paris",
                  "Asia/Shanghai", "Asia/Tokyo", "Asia/Seoul",
                  "Australia/Sydney"]
-    return sorted(zones)
+    return ["UTC", *sorted(set(zones) - {"UTC"})]
 
 
 # ── page 9: Summary ──────────────────────────────────────────────────────
