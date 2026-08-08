@@ -16,7 +16,7 @@ mkdir -p obj/usr/bin
 if [ "$ARCH" == "arm64" ]; then
     need_cmd aarch64-linux-gnu-gcc
     need_cmd aarch64-linux-gnu-pkg-config
-    aarch64-linux-gnu-gcc -O2 \
+    aarch64-linux-gnu-gcc -O2 -Wall -Wextra -Werror \
         $(aarch64-linux-gnu-pkg-config --cflags glib-2.0 gio-2.0) \
         src/theme-sync.c \
         -o obj/usr/bin/anduinos-theme-sync \
@@ -24,7 +24,7 @@ if [ "$ARCH" == "arm64" ]; then
 else
     need_cmd gcc
     need_cmd pkg-config
-    gcc -O2 \
+    gcc -O2 -Wall -Wextra -Werror \
         $(pkg-config --cflags glib-2.0 gio-2.0) \
         src/theme-sync.c \
         -o obj/usr/bin/anduinos-theme-sync \
