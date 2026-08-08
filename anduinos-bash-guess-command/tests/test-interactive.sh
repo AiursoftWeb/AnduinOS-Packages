@@ -167,6 +167,24 @@ enter_native_input() {
     printf 'exit\n'
 }
 
+end_accept_input() {
+    sleep 0.5
+    printf 'sudo apt update\n'
+    sleep 0.2
+    printf 'sudo apt up'
+    sleep 0.2
+    printf '\033[4~\nexit\n'
+}
+
+end_midline_input() {
+    sleep 0.5
+    printf 'sudo apt update\n'
+    sleep 0.2
+    printf 'sudo apt up'
+    sleep 0.2
+    printf '\033[D\033[4~\nexit\n'
+}
+
 docker_input() {
     sleep 0.5
     printf 'sudo docker ps\n'
@@ -431,6 +449,14 @@ LC_ALL=C grep -aFq $'\033[90m' "$TEST_ROOT/apt-package.typescript" ||
 run_session enter_native_input "$TEST_ROOT/enter.typescript"
 [[ $(<"$TEST_ROOT/sudo.args") == 'apt up' ]] ||
     fail 'Enter accepted ghost text instead of executing the typed line'
+
+run_session end_accept_input "$TEST_ROOT/end-accept.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'apt upgrade' ]] ||
+    fail 'End did not accept a visible suggestion at the end of the line'
+
+run_session end_midline_input "$TEST_ROOT/end-midline.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'apt up' ]] ||
+    fail 'End accepted ghost text while moving a mid-line cursor'
 
 run_session docker_input "$TEST_ROOT/docker.typescript"
 [[ $(<"$TEST_ROOT/sudo.args") == 'docker exec -it kind_bassi' ]] ||

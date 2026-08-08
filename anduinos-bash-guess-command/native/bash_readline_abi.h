@@ -46,6 +46,7 @@ extern rl_command_func_t *rl_function_of_keyseq(const char *, Keymap, int *);
 extern int rl_bind_keyseq(const char *, rl_command_func_t *);
 extern int rl_insert_text(const char *);
 extern int rl_forward_char(int, int);
+extern int rl_end_of_line(int, int);
 extern char *get_string_value(const char *);
 
 #endif

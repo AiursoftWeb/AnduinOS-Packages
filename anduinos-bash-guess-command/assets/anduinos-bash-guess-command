@@ -10,7 +10,7 @@
 
 _anduinos_guess_lib=/usr/lib/anduinos-bash-guess-command
 
-# The native module only wraps Readline redisplay and Right Arrow. Failure is
+# The native module only wraps Readline redisplay, Right Arrow and End. Failure is
 # silent and leaves an entirely stock Bash session.
 if [[ ${ANDUINOS_GUESS_ENGINE:-1} != 0 &&
       -r $_anduinos_guess_lib/anduinos-ghost.so &&

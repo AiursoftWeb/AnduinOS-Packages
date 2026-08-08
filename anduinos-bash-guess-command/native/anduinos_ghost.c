@@ -23,6 +23,10 @@
 #define GHOST_MAX_LINE 32768
 #define GHOST_TIMEOUT_MS 8
 
+static const char *const end_key_sequences[] = {
+  "\033OF", "\033[4~", "\033[F", "\033[8~"
+};
+
 static rl_voidfunc_t *original_redisplay;
 static rl_command_func_t *original_right;
 static rl_hook_func_t *original_startup_hook;
@@ -673,6 +677,23 @@ static int accept_ghost(int count, int key)
   return rl_forward_char(count, key);
 }
 
+static int accept_ghost_end(int count, int key)
+{
+  if (!predictions_enabled()) {
+    suspend_predictions();
+    return rl_end_of_line(count, key);
+  }
+  if (rl_point == rl_end && suggestion != NULL && *suggestion != '\0') {
+    erase_ghost();
+    rl_insert_text(suggestion);
+    free(cached_line);
+    cached_line = NULL;
+    clear_suggestion();
+    return 0;
+  }
+  return rl_end_of_line(count, key);
+}
+
 static void install_readline_hooks(void)
 {
   int binding_type = 0;
@@ -689,6 +710,16 @@ static void install_readline_hooks(void)
       original_right = current;
     rl_bind_keyseq("\033[C", accept_ghost);
   }
+  for (size_t index = 0;
+       index < sizeof(end_key_sequences) / sizeof(end_key_sequences[0]);
+       ++index) {
+    current = rl_function_of_keyseq(end_key_sequences[index],
+                                    rl_get_keymap(), &binding_type);
+    /* Preserve user macros and custom End bindings. Only wrap sequences that
+       currently have Readline's standard end-of-line behavior. */
+    if (current == rl_end_of_line)
+      rl_bind_keyseq(end_key_sequences[index], accept_ghost_end);
+  }
 }
 
 static void suspend_predictions(void)
@@ -703,6 +734,14 @@ static void suspend_predictions(void)
   if (current == accept_ghost)
     rl_bind_keyseq("\033[C",
                    original_right != NULL ? original_right : rl_forward_char);
+  for (size_t index = 0;
+       index < sizeof(end_key_sequences) / sizeof(end_key_sequences[0]);
+       ++index) {
+    current = rl_function_of_keyseq(end_key_sequences[index],
+                                    rl_get_keymap(), &binding_type);
+    if (current == accept_ghost_end)
+      rl_bind_keyseq(end_key_sequences[index], rl_end_of_line);
+  }
   graceful_stop_daemon();
   clear_suggestion();
   free(cached_line);
@@ -856,6 +895,16 @@ void anduinos_ghost_builtin_unload(char *name)
   rl_startup_hook = original_startup_hook;
   if (original_right != NULL)
     rl_bind_keyseq("\033[C", original_right);
+  for (size_t index = 0;
+       index < sizeof(end_key_sequences) / sizeof(end_key_sequences[0]);
+       ++index) {
+    int binding_type = 0;
+    rl_command_func_t *current =
+        rl_function_of_keyseq(end_key_sequences[index], rl_get_keymap(),
+                              &binding_type);
+    if (current == accept_ghost_end)
+      rl_bind_keyseq(end_key_sequences[index], rl_end_of_line);
+  }
   graceful_stop_daemon();
   clear_suggestion();
   free(cached_line);

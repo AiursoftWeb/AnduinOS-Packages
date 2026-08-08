@@ -5,7 +5,7 @@ Bash's line editor.
 
 The foreground consists of a roughly 22 KiB native loadable builtin and a small
 third-party-crate-free Rust decision engine. The builtin wraps only Readline
-redisplay and Right Arrow: paste, multiline input, Enter, history search,
+redisplay, Right Arrow and End: paste, multiline input, Enter, history search,
 editing modes and every other key remain native Bash/Readline behavior. There
 is no status bar, paste progress, mode banner, syntax highlighting, or terminal
 cache generation.
@@ -54,9 +54,9 @@ follows another. Obvious credential-bearing forms are excluded from learning,
 failed commands do not train transitions, and completion never executes text by
 itself. This filter is defense in depth rather than a secret detector; users who
 do not want any command import or learning can set `ANDUINOS_GUESS_HISTORY=0`.
-Ordinary destructive commands are eligible because Right Arrow only accepts
-text and Enter remains the execution boundary. The sole narrow replay guard is
-a complete historical `dd` command writing directly to a `/dev/` device;
+Ordinary destructive commands are eligible because Right Arrow and End only
+accept text and Enter remains the execution boundary. The sole narrow replay
+guard is a complete historical `dd` command writing directly to a `/dev/` device;
 manually typed `dd` paths still complete normally.
 
 Bounded directory snapshots cover the current tree plus useful home locations
@@ -87,7 +87,8 @@ git switch fea                    # -> a live matching branch
 git clean . -                     # -> --dry-run
 ```
 
-Right Arrow accepts the visible suggestion only when the cursor is at the end.
+Right Arrow or End accepts the visible suggestion only when the cursor is
+already at the end. Elsewhere, End retains its native move-to-end behavior.
 Enter always executes exactly the visible line. Tab completion is never
 registered or modified by this package and remains owned by Bash and the
 system's existing completion scripts.
