@@ -546,6 +546,7 @@ anduinos-oobe:
   needs:
     - anduinos-appearance
     - anduinos-secureboot-toolkit
+    - anduinos-driver-center
   variables:
     PACKAGE_DIR: anduinos-oobe
 
