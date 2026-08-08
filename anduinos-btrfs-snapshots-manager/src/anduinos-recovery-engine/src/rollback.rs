@@ -12,7 +12,9 @@ use crate::RECOVERY_STORE_ROOT;
 use crate::boot::{BootIntegration, RecoveryBootArtifacts};
 use crate::coordination::TransactionStartLock;
 use crate::layout::{self, LayoutReport};
-use crate::model::{DeploymentId, DeploymentRecord, DeploymentState};
+#[cfg(test)]
+use crate::model::DeploymentState;
+use crate::model::{DeploymentId, DeploymentRecord};
 use crate::operations::OperationEngine;
 use crate::package_transaction::PackageTransactionStore;
 use crate::secure_boot::SecureBootValidator;
@@ -101,11 +103,6 @@ pub trait RollbackBackend {
     fn package_transaction_pending(&self) -> Result<bool, RollbackError>;
     fn verify_target(&self, id: DeploymentId) -> Result<DeploymentRecord, RollbackError>;
     fn create_fallback(&self) -> Result<DeploymentRecord, RollbackError>;
-    fn transition(
-        &self,
-        id: DeploymentId,
-        state: DeploymentState,
-    ) -> Result<DeploymentRecord, RollbackError>;
     fn root_filesystem_uuid(&self, report: &LayoutReport) -> Result<String, RollbackError>;
     fn verify_one_shot_support(&self) -> Result<(), RollbackError>;
     fn provision_recovery_boot_artifacts(&self) -> Result<RecoveryBootArtifacts, RollbackError>;
@@ -161,16 +158,6 @@ impl RollbackBackend for SystemRollbackBackend {
     fn create_fallback(&self) -> Result<DeploymentRecord, RollbackError> {
         OperationEngine::default()
             .create_pre_rollback(&self.layout(), |_phase, _fraction, _message| {})
-            .map_err(|error| RollbackError::new(RollbackErrorCode::StateCommit, error.message))
-    }
-
-    fn transition(
-        &self,
-        id: DeploymentId,
-        state: DeploymentState,
-    ) -> Result<DeploymentRecord, RollbackError> {
-        OperationEngine::default()
-            .transition_deployment(&self.layout(), id, state)
             .map_err(|error| RollbackError::new(RollbackErrorCode::StateCommit, error.message))
     }
 
@@ -316,13 +303,12 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
             ));
         }
         let target = self.backend.verify_target(target_id)?;
-        if target.state != DeploymentState::Ready {
+        if !target.can_restore() {
             return Err(RollbackError::new(
                 RollbackErrorCode::InvalidTarget,
-                "Only a ready, unprotected system snapshot can be scheduled",
+                "Only a complete, healthy system snapshot can be scheduled",
             ));
         }
-        let target_original_state = target.state;
         let root_uuid = self.backend.root_filesystem_uuid(&report)?;
         self.backend.verify_one_shot_support()?;
         let recovery_boot = self.backend.provision_recovery_boot_artifacts()?;
@@ -349,8 +335,6 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
                 "Recording the restore transaction",
             );
             self.backend.create_transaction(&transaction)?;
-            self.backend
-                .transition(target.id, DeploymentState::PendingRollback)?;
 
             progress(
                 RollbackProgressPhase::ConfigureBoot,
@@ -384,8 +368,7 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
                 0.95,
                 "Cancelling the incomplete restore",
             );
-            let cleanup =
-                self.cleanup_failed_schedule(target.id, target_original_state, fallback.id);
+            let cleanup = self.cleanup_failed_schedule();
             return match cleanup {
                 Ok(()) => Err(error),
                 Err(cleanup) => Err(RollbackError::new(
@@ -415,28 +398,15 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
         }
         self.backend.clear_once()?;
         self.backend.remove_transaction()?;
-        self.backend
-            .transition(transaction.target_deployment_id, DeploymentState::Ready)?;
-        self.backend
-            .transition(transaction.fallback_deployment_id, DeploymentState::Ready)?;
         self.backend.regenerate_grub()?;
         Ok(())
     }
 
-    fn cleanup_failed_schedule(
-        &self,
-        target: DeploymentId,
-        target_state: DeploymentState,
-        fallback: DeploymentId,
-    ) -> Result<(), RollbackError> {
+    fn cleanup_failed_schedule(&self) -> Result<(), RollbackError> {
         let mut problems = Vec::new();
         for result in [
             self.backend.clear_once(),
             self.backend.remove_transaction(),
-            self.backend.transition(target, target_state).map(|_| ()),
-            self.backend
-                .transition(fallback, DeploymentState::Ready)
-                .map(|_| ()),
             self.backend.regenerate_grub(),
         ] {
             if let Err(error) = result {
@@ -693,37 +663,13 @@ mod tests {
 
         fn create_fallback(&self) -> Result<DeploymentRecord, RollbackError> {
             self.hit("create-fallback")?;
-            let fallback = record(
-                DeploymentKind::PreRollback,
-                DeploymentState::FallbackProtected,
-            );
+            let fallback = record(DeploymentKind::PreRollback, DeploymentState::Ready);
             self.inner
                 .lock()
                 .unwrap()
                 .records
                 .insert(fallback.id, fallback.clone());
             Ok(fallback)
-        }
-
-        fn transition(
-            &self,
-            id: DeploymentId,
-            state: DeploymentState,
-        ) -> Result<DeploymentRecord, RollbackError> {
-            self.hit(&format!("transition-{state:?}"))?;
-            let mut inner = self.inner.lock().unwrap();
-            let record = inner
-                .records
-                .get_mut(&id)
-                .ok_or_else(|| RollbackError::new(RollbackErrorCode::InvalidTarget, "missing"))?;
-            if record.state != state && !record.state.can_transition_to(state) {
-                return Err(RollbackError::new(
-                    RollbackErrorCode::StateCommit,
-                    "invalid test transition",
-                ));
-            }
-            record.state = state;
-            Ok(record.clone())
         }
 
         fn root_filesystem_uuid(&self, _report: &LayoutReport) -> Result<String, RollbackError> {
@@ -846,13 +792,10 @@ mod tests {
             .unwrap();
         assert_eq!(transaction.phase, RollbackPhase::Armed);
         let inner = backend.inner.lock().unwrap();
-        assert_eq!(
-            inner.records[&target].state,
-            DeploymentState::PendingRollback
-        );
+        assert_eq!(inner.records[&target].state, DeploymentState::Ready);
         assert_eq!(
             inner.records[&transaction.fallback_deployment_id].state,
-            DeploymentState::FallbackProtected
+            DeploymentState::Ready
         );
         let arm = inner
             .calls
@@ -882,7 +825,6 @@ mod tests {
     fn every_post_fallback_failure_clears_boot_and_restores_safe_metadata() {
         for failure in [
             "create-transaction",
-            "transition-PendingRollback",
             "regenerate-grub",
             "verify-grub",
             "update-transaction",
@@ -927,6 +869,23 @@ mod tests {
             inner.records[&transaction.fallback_deployment_id].state,
             DeploymentState::Ready
         );
+    }
+
+    #[test]
+    fn the_same_healthy_snapshot_can_be_scheduled_repeatedly() {
+        let (backend, target) = FakeBackend::new();
+        let coordinator = RollbackCoordinator::new(backend.clone());
+        coordinator
+            .schedule(target, |_phase, _fraction, _message| {})
+            .unwrap();
+        coordinator.cancel().unwrap();
+        coordinator
+            .schedule(target, |_phase, _fraction, _message| {})
+            .unwrap();
+
+        let inner = backend.inner.lock().unwrap();
+        assert_eq!(inner.records[&target].state, DeploymentState::Ready);
+        assert!(inner.pending.is_some());
     }
 
     #[test]

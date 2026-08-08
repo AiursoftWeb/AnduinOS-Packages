@@ -24,7 +24,7 @@ only home of removed product interfaces; no second UI is maintained.
 - [x] Keep batch selection explicit and delete all selected points through one
   helper call and one Polkit decision.
 - [x] Preserve the rollback safety flow: target check, fixed impact summary,
-  permanent current-system fallback, Personal Files unchanged, cancel before
+  transaction-protected current-system fallback, Personal Files unchanged, cancel before
   restart, and pending-state banner.
 - [x] Keep system and Home browsing descriptor-confined and recover ordinary
   files/directories from the unprivileged process.

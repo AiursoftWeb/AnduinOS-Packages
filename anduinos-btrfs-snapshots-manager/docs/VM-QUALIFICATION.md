@@ -53,7 +53,7 @@ sudo /usr/share/doc/anduinos-btrfs-snapshots-manager/qualify-recovery-vm.sh \
 Pass criteria:
 
 - the pending transaction and one-shot GRUB variable are cleared;
-- both target and fallback records return to `ready`;
+- both target and fallback records remain `ready`;
 - normal boot remains selected; and
 - rebooting does not change the current root.
 
@@ -70,7 +70,7 @@ sudo /usr/share/doc/anduinos-btrfs-snapshots-manager/qualify-recovery-vm.sh veri
 Pass criteria:
 
 - the pre-snapshot marker is restored;
-- the selected deployment becomes `current`;
+- the selected deployment remains `ready` and can be selected for another rollback;
 - the pending transaction disappears only after userspace confirmation;
 - the transient confirmation unit executes the digest-bound artifact from
   `/.snapshots/.../recovery-boot/confirm`, never an executable under `/run`;
@@ -80,9 +80,12 @@ Pass criteria:
 - `update-grub` succeeds without adding operating systems from other disks; and
 - another ordinary reboot remains on the confirmed root.
 
-Repeat this lane three times, including once after an APT upgrade creates its
-pre-transaction automatic system snapshot. Also exercise create, verify, browse,
-single-file recovery, and delete before scheduling another local snapshot.
+Repeat this lane three times, including twice against the exact same deployment
+ID without recreating it, and once after an APT upgrade creates its
+pre-transaction automatic system snapshot. The repeated-ID run is the release
+gate for kiosk, lab, and shared-machine golden images. Also exercise create,
+verify, browse, single-file recovery, and delete before scheduling another local
+snapshot.
 
 ## Docker autoremove regression (`RRP2-VM-002`)
 
@@ -102,8 +105,8 @@ sudo /usr/share/doc/anduinos-btrfs-snapshots-manager/qualify-recovery-vm.sh \
 The preparation command creates the selected snapshot before running
 `apt-get autoremove --yes docker.io`, proves that both the installed package and
 `/usr/bin/docker` are absent, then arms the rollback. The lane passes only when
-the exact package version and executable return, the selected deployment is
-confirmed `current`, the pending transaction is gone, and its terminal history
+the exact package version and executable return, the selected deployment remains
+reusable as `ready`, the pending transaction is gone, and its terminal history
 contains at least one initramfs entry and the final synchronized checkpoint.
 
 ## Hard power-loss matrix (`RRP2-VM-005`)
@@ -133,7 +136,7 @@ Power on, then hard-stop again at each revert checkpoint:
 | `restored-root-moved-aside` | Fallback is activated; no root is lost |
 | `fallback-root-activated` | Discarded restored root is cleaned up |
 | `discarded-root-deleted` | Reverted state is committed |
-| `reverted-recorded` | Userspace records fallback as `current` and clears the transaction |
+| `reverted-recorded` | Userspace records the terminal revert, leaves fallback `ready`, and clears the transaction |
 
 After every interrupted lane, collect:
 
@@ -147,8 +150,8 @@ sudo journalctl -b -1 -b 0 -k --no-pager | grep -F SNAPSHOTS-MANAGER-CHECKPOINT
 ```
 
 The lane passes only if the machine boots without manual repair, the pending
-transaction is eventually removed, exactly one deployment is `current`, the
-interrupted target is `failed-reverted`, the fallback is `current`, and no
+transaction is eventually removed, target and fallback deployment records are
+both `ready`, terminal history records the failed/reverted outcome, and no
 staging or legacy-compatible `@root.snapshots-manager-*` subvolume is orphaned. Preserve the console and
 JSON logs as release evidence.
 

@@ -53,13 +53,15 @@ pub enum DeploymentKind {
 #[serde(rename_all = "kebab-case")]
 pub enum DeploymentState {
     Creating,
+    #[serde(
+        alias = "current",
+        alias = "pending-rollback",
+        alias = "booted-unconfirmed",
+        alias = "fallback-protected",
+        alias = "failed-reverted"
+    )]
     Ready,
-    Current,
-    PendingRollback,
-    BootedUnconfirmed,
-    FallbackProtected,
     Incomplete,
-    FailedReverted,
     Broken,
     Deleting,
 }
@@ -69,35 +71,10 @@ impl DeploymentState {
         use DeploymentState::*;
         matches!(
             (self, next),
-            (
-                Creating,
-                Ready | FallbackProtected | Incomplete | Broken | Deleting
-            ) | (
-                Ready,
-                PendingRollback | FallbackProtected | Deleting | Broken
-            ) | (Current, FallbackProtected | Broken)
-                | (
-                    PendingRollback,
-                    BootedUnconfirmed | Ready | FailedReverted | Broken
-                )
-                | (BootedUnconfirmed, Current | FailedReverted | Broken)
-                | (
-                    FallbackProtected,
-                    Ready | Current | PendingRollback | Broken
-                )
+            (Creating, Ready | Incomplete | Broken | Deleting)
+                | (Ready, Deleting | Broken)
                 | (Incomplete, Deleting | Broken)
-                | (FailedReverted, Ready | Deleting | Broken)
                 | (Broken, Deleting)
-        )
-    }
-
-    pub fn protects_from_deletion(self) -> bool {
-        matches!(
-            self,
-            Self::Current
-                | Self::PendingRollback
-                | Self::BootedUnconfirmed
-                | Self::FallbackProtected
         )
     }
 }
@@ -204,12 +181,7 @@ impl DeploymentRecord {
     }
 
     pub fn can_restore(&self) -> bool {
-        self.validate().is_ok()
-            && self.failure.is_none()
-            && matches!(
-                self.state,
-                DeploymentState::Ready | DeploymentState::FallbackProtected
-            )
+        self.validate().is_ok() && self.failure.is_none() && self.state == DeploymentState::Ready
     }
 
     pub fn can_delete(&self) -> bool {
@@ -219,20 +191,12 @@ impl DeploymentRecord {
                 DeploymentState::Creating
                     | DeploymentState::Ready
                     | DeploymentState::Incomplete
-                    | DeploymentState::FailedReverted
                     | DeploymentState::Broken
             )
     }
 
     fn requires_complete_identity(&self) -> bool {
-        matches!(
-            self.state,
-            DeploymentState::Ready
-                | DeploymentState::Current
-                | DeploymentState::PendingRollback
-                | DeploymentState::BootedUnconfirmed
-                | DeploymentState::FallbackProtected
-        )
+        self.state == DeploymentState::Ready
     }
 }
 
@@ -331,11 +295,8 @@ mod tests {
     }
 
     #[test]
-    fn protected_and_pinned_deployments_cannot_be_deleted() {
+    fn pinned_or_unfinished_deployments_cannot_be_deleted() {
         let mut record = valid_record();
-        record.state = DeploymentState::Current;
-        assert!(!record.can_delete());
-        record.state = DeploymentState::Ready;
         record.pinned = true;
         assert!(!record.can_delete());
         record.pinned = false;
@@ -397,14 +358,27 @@ mod tests {
     fn state_machine_rejects_dangerous_shortcuts() {
         assert!(DeploymentState::Creating.can_transition_to(DeploymentState::Ready));
         assert!(DeploymentState::Creating.can_transition_to(DeploymentState::Deleting));
-        assert!(DeploymentState::Ready.can_transition_to(DeploymentState::PendingRollback));
-        assert!(
-            DeploymentState::PendingRollback.can_transition_to(DeploymentState::BootedUnconfirmed)
+        assert!(DeploymentState::Ready.can_transition_to(DeploymentState::Deleting));
+        assert!(DeploymentState::Ready.can_transition_to(DeploymentState::Broken));
+        assert!(!DeploymentState::Broken.can_transition_to(DeploymentState::Ready));
+    }
+
+    #[test]
+    fn legacy_transaction_and_identity_states_normalize_to_ready() {
+        for legacy in [
+            "current",
+            "pending-rollback",
+            "booted-unconfirmed",
+            "fallback-protected",
+            "failed-reverted",
+        ] {
+            let state: DeploymentState = serde_json::from_str(&format!("\"{legacy}\"")).unwrap();
+            assert_eq!(state, DeploymentState::Ready, "{legacy}");
+        }
+        assert_eq!(
+            serde_json::to_string(&DeploymentState::Ready).unwrap(),
+            "\"ready\""
         );
-        assert!(DeploymentState::BootedUnconfirmed.can_transition_to(DeploymentState::Current));
-        assert!(!DeploymentState::Ready.can_transition_to(DeploymentState::Current));
-        assert!(!DeploymentState::Current.can_transition_to(DeploymentState::Deleting));
-        assert!(!DeploymentState::Broken.can_transition_to(DeploymentState::Current));
     }
 
     #[test]

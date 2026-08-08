@@ -649,18 +649,18 @@ mod tests {
     }
 
     #[test]
-    fn deployment_state_transition_is_atomic_and_idempotent() {
+    fn deployment_storage_state_transition_is_atomic_and_idempotent() {
         let store = TestStore::new();
         let record = valid_record(Utc::now());
         store.write(&record);
 
         let updated = DeploymentStore::new(&store.0)
-            .transition(record.id, DeploymentState::PendingRollback)
+            .transition(record.id, DeploymentState::Broken)
             .unwrap();
-        assert_eq!(updated.state, DeploymentState::PendingRollback);
+        assert_eq!(updated.state, DeploymentState::Broken);
         assert_eq!(
             DeploymentStore::new(&store.0)
-                .transition(record.id, DeploymentState::PendingRollback)
+                .transition(record.id, DeploymentState::Broken)
                 .unwrap(),
             updated
         );
@@ -669,7 +669,7 @@ mod tests {
                 .load_record(record.id)
                 .unwrap()
                 .state,
-            DeploymentState::PendingRollback
+            DeploymentState::Broken
         );
     }
 

@@ -1,5 +1,6 @@
 use std::cell::{Cell, RefCell};
 use std::collections::HashSet;
+use std::rc::Rc;
 
 use adw::prelude::*;
 use adw::subclass::prelude::*;
@@ -13,6 +14,8 @@ use crate::i18n::{tr, trf};
 
 use super::personal_history;
 use super::snapshot_model::{PagePresentation, SnapshotCapabilities, SnapshotItem, SnapshotScope};
+
+const ROLLBACK_RESTART_COUNTDOWN_SECONDS: u32 = 60;
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub(super) enum PendingBannerAction {
@@ -703,13 +706,7 @@ impl SnapshotPage {
                         page.refresh();
                     }
                 }
-                Err(_) => show_information(
-                    parent,
-                    &tr("Snapshot Size Unavailable"),
-                    &tr(
-                        "Btrfs quota accounting is disabled or unavailable. Disk Snapshots Manager will not start a quota rescan automatically.",
-                    ),
-                ),
+                Err(problem) => show_error(parent, &problem.to_string()),
             },
         );
     }
@@ -980,7 +977,7 @@ impl SnapshotPage {
             Some(&parent),
             Some(&trf("Roll Back to {0}?", &[&item.title])),
             Some(&tr(
-                "Review what will happen before preparing the rollback.",
+                "Preparing the rollback will arm recovery immediately and automatically restart this computer within 60 seconds. Save your work before continuing.",
             )),
         );
         let list = gtk::ListBox::new();
@@ -1004,17 +1001,17 @@ impl SnapshotPage {
         ));
         list.append(&impact_row(
             &tr("Current system"),
-            &tr("Preserved permanently as a fallback"),
-            "view-pin-symbolic",
+            &tr("Protected while the rollback is pending"),
+            "security-high-symbolic",
         ));
         list.append(&impact_row(
             &tr("Restart"),
-            &tr("Required to complete the rollback"),
+            &tr("Automatic 60-second countdown after preparation"),
             "system-reboot-symbolic",
         ));
         dialog.set_extra_child(Some(&list));
         dialog.add_response("cancel", &tr("Cancel"));
-        dialog.add_response("rollback", &tr("Prepare Rollback"));
+        dialog.add_response("rollback", &tr("Prepare and Restart"));
         dialog.set_response_appearance("rollback", adw::ResponseAppearance::Destructive);
         let weak = self.downgrade();
         let id = item.id.clone();
@@ -1196,23 +1193,13 @@ fn localized_reason(item: &SnapshotItem) -> String {
 }
 
 fn snapshot_state(item: &SnapshotItem) -> String {
-    if item.keep_forever
-        || matches!(
-            item.state.as_str(),
-            "current" | "pending-rollback" | "booted-unconfirmed" | "fallback-protected"
-        )
-    {
+    if item.keep_forever {
         return tr("Permanently protected");
     }
     match item.state.as_str() {
         "ready" => tr("Ready"),
         "creating" => tr("Creating"),
-        "current" => tr("Current system"),
-        "pending-rollback" => tr("Pending rollback"),
-        "booted-unconfirmed" => tr("Awaiting boot confirmation"),
-        "fallback-protected" => tr("Protected fallback"),
         "incomplete" => tr("Incomplete"),
-        "failed-reverted" => tr("Rollback reverted"),
         "broken" => tr("Damaged"),
         "deleting" => tr("Deleting"),
         _ => tr("Unknown state"),
@@ -1220,19 +1207,14 @@ fn snapshot_state(item: &SnapshotItem) -> String {
 }
 
 fn snapshot_icon(item: &SnapshotItem) -> &'static str {
-    if item.keep_forever
-        || matches!(
-            item.state.as_str(),
-            "current" | "pending-rollback" | "booted-unconfirmed" | "fallback-protected"
-        )
-    {
+    if item.keep_forever {
         "view-pin-symbolic"
     } else {
         match item.state.as_str() {
             "ready" => "emblem-ok-symbolic",
             "creating" | "deleting" => "content-loading-symbolic",
             "broken" => "dialog-error-symbolic",
-            "incomplete" | "failed-reverted" => "dialog-warning-symbolic",
+            "incomplete" => "dialog-warning-symbolic",
             _ => "document-open-recent-symbolic",
         }
     }
@@ -1413,7 +1395,7 @@ fn space_detail_row(title: &str, bytes: Option<u64>) -> adw::ActionRow {
     let row = adw::ActionRow::new();
     row.set_title(title);
     row.set_subtitle(&bytes.map_or_else(
-        || tr("Not calculated"),
+        || tr("Unable to calculate"),
         snapshots_manager_common::format_bytes,
     ));
     row
@@ -1422,32 +1404,82 @@ fn space_detail_row(title: &str, bytes: Option<u64>) -> adw::ActionRow {
 fn show_rollback_ready(parent: &adw::ApplicationWindow) {
     let dialog = adw::MessageDialog::new(
         Some(parent),
-        Some(&tr("Rollback Is Ready")),
+        Some(&tr("Restart Required — Rollback Armed")),
         Some(&tr(
-            "The current system was preserved permanently. Restart now to roll back, or cancel from the System Recovery banner.",
+            "Rollback is armed. To prevent new system changes from being lost, this computer will restart automatically when the 60-second countdown ends. Save any open personal files now.",
         )),
     );
-    dialog.add_response("later", &tr("Restart Later"));
-    dialog.add_response("restart", &tr("Restart Now"));
-    dialog.set_response_appearance("restart", adw::ResponseAppearance::Suggested);
+    dialog.add_response(
+        "restart",
+        &restart_countdown_label(ROLLBACK_RESTART_COUNTDOWN_SECONDS),
+    );
+    dialog.set_response_appearance("restart", adw::ResponseAppearance::Destructive);
+    // Once recovery is armed there is deliberately no defer path. Closing the
+    // warning is equivalent to requesting the required restart immediately.
+    dialog.set_close_response("restart");
+
+    let reboot_requested = Rc::new(Cell::new(false));
     let weak = parent.downgrade();
+    let response_reboot_requested = reboot_requested.clone();
     dialog.connect_response(None, move |_, response| {
         if response == "restart"
+            && !response_reboot_requested.replace(true)
             && let Some(parent) = weak.upgrade()
         {
-            run_operation(
-                &parent,
-                &tr("Requesting restart…"),
-                request_system_reboot,
-                |parent, result| {
-                    if let Err(problem) = result {
-                        show_error(parent, &problem.to_string());
-                    }
-                },
-            );
+            request_system_reboot_from_ui(&parent);
         }
     });
+
+    let remaining = Rc::new(Cell::new(ROLLBACK_RESTART_COUNTDOWN_SECONDS));
+    let countdown_remaining = remaining.clone();
+    let countdown_dialog = dialog.downgrade();
+    let countdown_parent = parent.downgrade();
+    let countdown_reboot_requested = reboot_requested.clone();
+    glib::timeout_add_seconds_local(1, move || {
+        if countdown_reboot_requested.get() {
+            return glib::ControlFlow::Break;
+        }
+
+        let seconds = countdown_remaining.get().saturating_sub(1);
+        countdown_remaining.set(seconds);
+        if seconds == 0 {
+            countdown_reboot_requested.set(true);
+            if let Some(dialog) = countdown_dialog.upgrade() {
+                dialog.close();
+            }
+            if let Some(parent) = countdown_parent.upgrade() {
+                request_system_reboot_from_ui(&parent);
+            } else {
+                std::thread::spawn(|| {
+                    let _ = request_system_reboot();
+                });
+            }
+            return glib::ControlFlow::Break;
+        }
+
+        if let Some(dialog) = countdown_dialog.upgrade() {
+            dialog.set_response_label("restart", &restart_countdown_label(seconds));
+        }
+        glib::ControlFlow::Continue
+    });
     dialog.present();
+}
+
+fn restart_countdown_label(seconds: u32) -> String {
+    trf("Restart Now ({0} s)", &[&seconds.to_string()])
+}
+
+fn request_system_reboot_from_ui(parent: &adw::ApplicationWindow) {
+    run_operation(
+        parent,
+        &tr("Requesting restart…"),
+        request_system_reboot,
+        |parent, result| {
+            if let Err(problem) = result {
+                show_error(parent, &problem.to_string());
+            }
+        },
+    );
 }
 
 fn request_system_reboot() -> anyhow::Result<()> {
@@ -1572,5 +1604,12 @@ mod tests {
         let error = request_system_reboot_with(&script).unwrap_err();
         assert!(error.to_string().contains("active block inhibitor"));
         std::fs::remove_file(script).unwrap();
+    }
+
+    #[test]
+    fn armed_rollback_uses_a_sixty_second_restart_countdown() {
+        assert_eq!(ROLLBACK_RESTART_COUNTDOWN_SECONDS, 60);
+        assert!(restart_countdown_label(60).contains("60"));
+        assert!(restart_countdown_label(1).contains('1'));
     }
 }

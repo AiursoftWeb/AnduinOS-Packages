@@ -1864,9 +1864,7 @@ impl SnapshotsManagerHelper {
                 cleanup_policy: if record.pinned
                     || matches!(
                         record.kind,
-                        DeploymentKind::Factory
-                            | DeploymentKind::PreRollback
-                            | DeploymentKind::Imported
+                        DeploymentKind::Factory | DeploymentKind::Imported
                     ) {
                     CleanupPolicy::KeepForever
                 } else {
@@ -1874,7 +1872,9 @@ impl SnapshotsManagerHelper {
                 },
                 is_ready: record.state == DeploymentState::Ready,
                 is_busy: false,
-                is_restore_referenced: record.state.protects_from_deletion(),
+                // Active rollback references are enforced authoritatively by
+                // OperationEngine at deletion time; they are not snapshot states.
+                is_restore_referenced: false,
             })
             .collect::<Vec<_>>();
         let system_decisions = evaluate_retention(&system_candidates, &automation.system, now)

@@ -10,7 +10,9 @@ use chrono::Utc;
 use crate::boot::{
     RECOVERY_CONFIRM, copy_regular_file_atomic, ensure_protected_executable, hash_regular_file,
 };
-use crate::model::{DeploymentId, DeploymentState};
+use crate::model::DeploymentId;
+#[cfg(test)]
+use crate::model::DeploymentState;
 use crate::store::DeploymentStore;
 pub use crate::transaction::RecoveryCheckpoint;
 use crate::transaction::{
@@ -390,10 +392,10 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
             .map_err(|error| {
                 RecoveryError::new(RecoveryErrorCode::InvalidDeployment, error.message)
             })?;
-        if target.state != DeploymentState::PendingRollback || target.failure.is_some() {
+        if !target.can_restore() {
             return Err(RecoveryError::new(
                 RecoveryErrorCode::InvalidDeployment,
-                "Rollback target is not in the pending-rollback state",
+                "Rollback target is not a complete, healthy snapshot",
             ));
         }
         let fallback = deployments
@@ -401,10 +403,10 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
             .map_err(|error| {
                 RecoveryError::new(RecoveryErrorCode::InvalidDeployment, error.message)
             })?;
-        if fallback.state != DeploymentState::FallbackProtected || fallback.failure.is_some() {
+        if !fallback.can_restore() || fallback.kind != crate::model::DeploymentKind::PreRollback {
             return Err(RecoveryError::new(
                 RecoveryErrorCode::InvalidDeployment,
-                "Rollback fallback is not protected",
+                "Rollback fallback is not a complete safety snapshot",
             ));
         }
         let target_root = self.deployment_root(transaction.target_deployment_id);
@@ -799,12 +801,9 @@ mod tests {
                 <fs::Permissions as std::os::unix::fs::PermissionsExt>::from_mode(0o700),
             )
             .unwrap();
-            let target = record("target", TARGET_UUID, DeploymentState::PendingRollback);
-            let fallback = record(
-                "fallback",
-                FALLBACK_UUID,
-                DeploymentState::FallbackProtected,
-            );
+            let target = record("target", TARGET_UUID, DeploymentState::Ready);
+            let mut fallback = record("fallback", FALLBACK_UUID, DeploymentState::Ready);
+            fallback.kind = crate::model::DeploymentKind::PreRollback;
             write_deployment(&snapshot_root, &target, "target");
             write_deployment(&snapshot_root, &fallback, "fallback");
             let mut transaction = RollbackTransaction::new(

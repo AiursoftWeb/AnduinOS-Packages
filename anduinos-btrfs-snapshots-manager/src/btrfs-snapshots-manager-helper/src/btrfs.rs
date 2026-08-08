@@ -1,9 +1,9 @@
 //! Btrfs space measurements and their non-authoritative cache.
 //!
-//! Status queries read only this cache. An explicit Properties request may refresh one entry from
-//! an existing level-zero qgroup; quota accounting is never enabled or synchronized here. The
-//! helper deliberately does not walk snapshot files or extents, and the cache is never used for
-//! recovery or deletion decisions.
+//! Status queries read only this cache. An explicit Properties request first reads an existing
+//! level-zero qgroup and falls back to a targeted `btrfs filesystem du` measurement when quota
+//! accounting is off. Quotas are never enabled or synchronized here, and the cache is never used
+//! for recovery or deletion decisions.
 
 use anduinos_recovery_engine::{
     model::{DeploymentId, DeploymentRecord},
@@ -76,7 +76,7 @@ pub fn measure_snapshot_space(store_root: &Path, scope: &str, id: &str) -> Resul
     ])?;
     let subvolume_id =
         parse_subvolume_id(&identity).context("Btrfs did not report the snapshot subvolume ID")?;
-    let output = run_btrfs(&[
+    let qgroup_output = run_btrfs(&[
         std::ffi::OsStr::new("qgroup"),
         std::ffi::OsStr::new("show"),
         std::ffi::OsStr::new("--raw"),
@@ -84,26 +84,40 @@ pub fn measure_snapshot_space(store_root: &Path, scope: &str, id: &str) -> Resul
         // --sync or enumerate every qgroup on a large filesystem for a Properties dialog.
         std::ffi::OsStr::new("-f"),
         snapshot.as_os_str(),
-    ])
-    .context(
-        "Snapshot size is unavailable because Btrfs quota accounting is disabled or unavailable",
-    )?;
-    let measured = parse_qgroup_for_subvolume(&output, subvolume_id)
-        .context("Btrfs quota accounting has no entry for this snapshot")?;
-    let referenced = measured.referenced_bytes;
-    let exclusive = measured.exclusive_bytes;
-    let shared = referenced
-        .zip(exclusive)
-        .and_then(|(referenced, exclusive)| referenced.checked_sub(exclusive));
-    let mut space = SnapshotSpace {
-        referenced_bytes: referenced,
-        exclusive_bytes: exclusive,
-        shared_bytes: shared,
-        measured_at_unix_seconds: None,
+    ]);
+    let mut space = match qgroup_output
+        .ok()
+        .and_then(|output| parse_qgroup_for_subvolume(&output, subvolume_id))
+    {
+        Some(measured) => {
+            let referenced = measured.referenced_bytes;
+            let exclusive = measured.exclusive_bytes;
+            SnapshotSpace {
+                referenced_bytes: referenced,
+                exclusive_bytes: exclusive,
+                shared_bytes: referenced
+                    .zip(exclusive)
+                    .and_then(|(referenced, exclusive)| referenced.checked_sub(exclusive)),
+                measured_at_unix_seconds: None,
+            }
+        }
+        None => measure_snapshot_space_without_quotas(&snapshot)?,
     };
     space.measured_at_unix_seconds = Some(Utc::now().timestamp());
     write_cache(store_root, scope, id, &space)?;
     Ok(space)
+}
+
+fn measure_snapshot_space_without_quotas(snapshot: &Path) -> Result<SnapshotSpace> {
+    let output = run_btrfs(&[
+        std::ffi::OsStr::new("filesystem"),
+        std::ffi::OsStr::new("du"),
+        std::ffi::OsStr::new("-s"),
+        std::ffi::OsStr::new("--raw"),
+        snapshot.as_os_str(),
+    ])
+    .context("Could not calculate snapshot space without Btrfs quota accounting")?;
+    parse_filesystem_du(&output).context("Btrfs did not report snapshot space usage")
 }
 
 fn snapshot_path(store_root: &Path, scope: &str, id: &str) -> Result<PathBuf> {
@@ -228,6 +242,21 @@ fn parse_subvolume_id(output: &str) -> Option<u64> {
     })
 }
 
+fn parse_filesystem_du(output: &str) -> Option<SnapshotSpace> {
+    output.lines().find_map(|line| {
+        let mut fields = line.split_whitespace();
+        let referenced_bytes = fields.next()?.parse::<u64>().ok()?;
+        let exclusive_bytes = fields.next().and_then(|value| value.parse::<u64>().ok());
+        let shared_bytes = fields.next().and_then(|value| value.parse::<u64>().ok());
+        Some(SnapshotSpace {
+            referenced_bytes: Some(referenced_bytes),
+            exclusive_bytes,
+            shared_bytes,
+            measured_at_unix_seconds: None,
+        })
+    })
+}
+
 fn run_btrfs(arguments: &[&std::ffi::OsStr]) -> Result<String> {
     let output = Command::new(BTRFS)
         .args(arguments)
@@ -256,6 +285,22 @@ mod tests {
             parse_subvolume_id("Name: root\nSubvolume ID: 1234\nUUID: test\n"),
             Some(1234)
         );
+    }
+
+    #[test]
+    fn parses_quota_free_filesystem_du_fields_independently() {
+        let complete = parse_filesystem_du(
+            "     Total   Exclusive  Set shared  Filename\n33762402304 0 21135024128 /snapshot\n",
+        )
+        .unwrap();
+        assert_eq!(complete.referenced_bytes, Some(33_762_402_304));
+        assert_eq!(complete.exclusive_bytes, Some(0));
+        assert_eq!(complete.shared_bytes, Some(21_135_024_128));
+
+        let partial = parse_filesystem_du("100 unavailable unavailable /snapshot\n").unwrap();
+        assert_eq!(partial.referenced_bytes, Some(100));
+        assert_eq!(partial.exclusive_bytes, None);
+        assert_eq!(partial.shared_bytes, None);
     }
 
     #[test]

@@ -74,7 +74,8 @@ impl SystemLineage {
     fn migrate(deployments: &[DeploymentRecord]) -> Self {
         let current_head_id = deployments
             .iter()
-            .find(|record| record.state == DeploymentState::Current)
+            .filter(|record| record.can_restore() && record.kind != DeploymentKind::Imported)
+            .max_by_key(|record| record.created_at)
             .map(|record| record.id);
         let nodes = deployments
             .iter()
@@ -613,8 +614,13 @@ mod tests {
     #[test]
     fn legacy_points_are_migrated_without_inventing_relationships() {
         let (root, store) = setup();
-        let current = record("Current origin", DeploymentState::Current, Utc::now());
-        let older = record("Older", DeploymentState::Ready, Utc::now());
+        let now = Utc::now();
+        let current = record("Current origin", DeploymentState::Ready, now);
+        let older = record(
+            "Older",
+            DeploymentState::Ready,
+            now - chrono::Duration::seconds(1),
+        );
         let lineage = store
             .ensure_initialized(&[older.clone(), current.clone()])
             .unwrap();
@@ -629,7 +635,7 @@ mod tests {
     #[test]
     fn new_points_form_an_exact_chain_and_activation_creates_a_branch() {
         let (root, store) = setup();
-        let origin = record("Origin", DeploymentState::Current, Utc::now());
+        let origin = record("Origin", DeploymentState::Ready, Utc::now());
         store
             .ensure_initialized(std::slice::from_ref(&origin))
             .unwrap();
@@ -693,7 +699,7 @@ mod tests {
     #[test]
     fn detached_import_does_not_claim_to_be_the_running_head() {
         let (root, store) = setup();
-        let origin = record("Current origin", DeploymentState::Current, Utc::now());
+        let origin = record("Current origin", DeploymentState::Ready, Utc::now());
         store
             .ensure_initialized(std::slice::from_ref(&origin))
             .unwrap();

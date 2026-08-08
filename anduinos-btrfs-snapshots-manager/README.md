@@ -18,7 +18,8 @@ system rollback.
 
 A snapshot may be protected permanently or be eligible for Smart Cleanup.
 Manual, scheduled, and package-change snapshots participate in cleanup by
-default. The safety snapshot created before a rollback is permanently protected.
+default. A safety snapshot created before a rollback is protected while its
+transaction is pending; afterward it can be deleted manually or by Smart Cleanup.
 Smart Cleanup uses explicit time buckets: keep everything in the recent window,
 then one representative per day, week, month, and year. System and Home policies
 are independent and use a configurable one-to-24-hour freshness interval.
@@ -47,6 +48,12 @@ Polkit policy remain the authority for creation, deletion, configuration,
 system browsing, and rollback preparation.
 
 A system rollback is prepared only after the target passes availability checks.
+Every complete healthy system snapshot stays `ready` before, during, and after a
+rollback, so the same golden image can be restored repeatedly by kiosks, labs,
+and shared-machine fleets. Deployment metadata records only storage lifecycle;
+rollback progress and outcomes live exclusively in the transaction ledger. Old
+transaction-shaped deployment states are accepted as `ready` when upgrading and
+never disable the Restore action.
 The recovery engine creates and protects a current-system fallback, copies the
 currently running kernel, a protocol-verified initramfs, and the matching userspace
 confirmation engine into the snapshot-external recovery store, and binds all three
@@ -55,11 +62,15 @@ trusted recovery image until initramfs or userspace durably completes or fails t
 transaction. Every synchronized root switch is recorded as a persistent checkpoint;
 completed and failed transactions are retained in `rollback-history` for diagnosis.
 The confirmation UI always states that Personal Files remain unchanged and that
-a restart is required. The GUI does not replace helper-side validation.
+preparing a rollback arms an automatic 60-second restart countdown. Once armed,
+the application offers only an immediate restart; it never presents a defer option
+that could invite new writes to the soon-to-be-replaced system root. The GUI does
+not replace helper-side validation.
 
-Snapshot list refreshes never run recursive Btrfs extent accounting. Cached size
-information is non-authoritative; an explicit Properties request reads an existing
-level-zero qgroup and reports size as unavailable when quota accounting is disabled.
+Snapshot list refreshes never run Btrfs extent accounting. Cached size information
+is non-authoritative; an explicit Properties request reads an existing level-zero
+qgroup or, when quotas are off, measures only the selected snapshot with
+`btrfs filesystem du`. Each available field is shown independently.
 
 Historical files are opened through descriptor-confined helper operations.
 System-snapshot browsing requires administrator authorization. Home browsing is

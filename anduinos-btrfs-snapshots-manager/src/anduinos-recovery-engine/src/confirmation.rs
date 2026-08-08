@@ -9,8 +9,9 @@ use chrono::Utc;
 use crate::boot::BootIntegration;
 use crate::layout::{self, LayoutReport};
 use crate::lineage::{ActivationOutcome, LineageStore};
-use crate::model::{DeploymentId, DeploymentRecord, DeploymentState};
-use crate::operations::OperationEngine;
+#[cfg(test)]
+use crate::model::DeploymentState;
+use crate::model::{DeploymentId, DeploymentRecord};
 use crate::store::DeploymentStore;
 use crate::transaction::{RollbackId, RollbackPhase, RollbackTransaction, TransactionStore};
 
@@ -71,11 +72,6 @@ pub trait ConfirmationBackend {
     fn kernel_release(&self) -> Result<String, ConfirmationError>;
     fn requested_rollback(&self) -> Result<Option<RollbackId>, ConfirmationError>;
     fn current_snapshot_parent_uuid(&self) -> Result<String, ConfirmationError>;
-    fn transition(
-        &self,
-        id: DeploymentId,
-        state: DeploymentState,
-    ) -> Result<DeploymentRecord, ConfirmationError>;
     fn update_transaction(
         &self,
         transaction: &RollbackTransaction,
@@ -158,18 +154,6 @@ impl ConfirmationBackend for SystemConfirmationBackend {
             ],
         )?;
         parse_parent_uuid(&output)
-    }
-
-    fn transition(
-        &self,
-        id: DeploymentId,
-        state: DeploymentState,
-    ) -> Result<DeploymentRecord, ConfirmationError> {
-        OperationEngine::default()
-            .transition_deployment(&layout::inspect_current(), id, state)
-            .map_err(|error| {
-                ConfirmationError::new(ConfirmationErrorCode::StateCommit, error.message)
-            })
     }
 
     fn update_transaction(
@@ -368,15 +352,6 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
     }
 
     fn finish_confirmed(&self, transaction: &RollbackTransaction) -> Result<(), ConfirmationError> {
-        let target = self.backend.deployment(transaction.target_deployment_id)?;
-        if target.state == DeploymentState::PendingRollback {
-            self.backend
-                .transition(target.id, DeploymentState::BootedUnconfirmed)?;
-        }
-        self.backend
-            .transition(target.id, DeploymentState::Current)?;
-        self.backend
-            .transition(transaction.fallback_deployment_id, DeploymentState::Ready)?;
         self.backend
             .record_lineage_activation(transaction, ActivationOutcome::Confirmed)?;
         self.backend.delete_old_root(transaction)?;
@@ -388,12 +363,6 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
     }
 
     fn finish_reverted(&self, transaction: &RollbackTransaction) -> Result<(), ConfirmationError> {
-        self.backend.transition(
-            transaction.target_deployment_id,
-            DeploymentState::FailedReverted,
-        )?;
-        self.backend
-            .transition(transaction.fallback_deployment_id, DeploymentState::Current)?;
         self.backend
             .record_lineage_activation(transaction, ActivationOutcome::Reverted)?;
         self.backend.clear_once()?;
@@ -404,17 +373,6 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
     }
 
     fn finish_failed(&self, transaction: &RollbackTransaction) -> Result<(), ConfirmationError> {
-        let target = self.backend.deployment(transaction.target_deployment_id)?;
-        if target.state == DeploymentState::PendingRollback {
-            self.backend.transition(target.id, DeploymentState::Ready)?;
-        }
-        let fallback = self
-            .backend
-            .deployment(transaction.fallback_deployment_id)?;
-        if fallback.state == DeploymentState::FallbackProtected {
-            self.backend
-                .transition(fallback.id, DeploymentState::Ready)?;
-        }
         self.backend.clear_once()?;
         self.backend.archive_transaction(transaction)?;
         self.backend.remove_transaction()?;
@@ -595,11 +553,8 @@ mod tests {
 
     impl FakeBackend {
         fn booted() -> (Self, RollbackTransaction) {
-            let target = record(DeploymentKind::Manual, DeploymentState::PendingRollback);
-            let fallback = record(
-                DeploymentKind::PreRollback,
-                DeploymentState::FallbackProtected,
-            );
+            let target = record(DeploymentKind::Manual, DeploymentState::Ready);
+            let fallback = record(DeploymentKind::PreRollback, DeploymentState::Ready);
             let mut transaction = RollbackTransaction::new(
                 target.id,
                 fallback.id,
@@ -672,24 +627,6 @@ mod tests {
         fn current_snapshot_parent_uuid(&self) -> Result<String, ConfirmationError> {
             self.call("parent-uuid");
             Ok(self.inner.lock().unwrap().parent_uuid.clone())
-        }
-
-        fn transition(
-            &self,
-            id: DeploymentId,
-            state: DeploymentState,
-        ) -> Result<DeploymentRecord, ConfirmationError> {
-            self.call(&format!("transition-{state:?}"));
-            let mut inner = self.inner.lock().unwrap();
-            let record = inner.records.get_mut(&id).unwrap();
-            if record.state != state && !record.state.can_transition_to(state) {
-                return Err(ConfirmationError::new(
-                    ConfirmationErrorCode::StateCommit,
-                    "invalid test transition",
-                ));
-            }
-            record.state = state;
-            Ok(record.clone())
         }
 
         fn update_transaction(
@@ -784,7 +721,7 @@ mod tests {
         assert!(inner.transaction.is_none());
         assert_eq!(
             inner.records[&transaction.target_deployment_id].state,
-            DeploymentState::Current
+            DeploymentState::Ready
         );
         assert_eq!(
             inner.records[&transaction.fallback_deployment_id].state,
@@ -827,7 +764,7 @@ mod tests {
         );
         assert_eq!(
             inner.records[&transaction.target_deployment_id].state,
-            DeploymentState::PendingRollback
+            DeploymentState::Ready
         );
     }
 
@@ -909,7 +846,7 @@ mod tests {
         assert!(backend.inner.lock().unwrap().transaction.is_none());
         assert_eq!(
             backend.inner.lock().unwrap().records[&transaction.target_deployment_id].state,
-            DeploymentState::Current
+            DeploymentState::Ready
         );
     }
 
@@ -935,11 +872,11 @@ mod tests {
         let inner = backend.inner.lock().unwrap();
         assert_eq!(
             inner.records[&transaction.target_deployment_id].state,
-            DeploymentState::FailedReverted
+            DeploymentState::Ready
         );
         assert_eq!(
             inner.records[&transaction.fallback_deployment_id].state,
-            DeploymentState::Current
+            DeploymentState::Ready
         );
     }
 }

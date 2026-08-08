@@ -36,30 +36,17 @@ pub struct SnapshotCapabilities {
 impl SnapshotCapabilities {
     pub fn for_item(scope: SnapshotScope, item: &SnapshotItem) -> Self {
         let stable = !matches!(item.state.as_str(), "creating" | "deleting");
-        let forced_permanent = matches!(
-            item.state.as_str(),
-            "current" | "pending-rollback" | "booted-unconfirmed" | "fallback-protected"
-        ) || item.kind == "pre-rollback";
         match scope {
             SnapshotScope::System => {
-                let browsable = matches!(
-                    item.state.as_str(),
-                    "ready"
-                        | "current"
-                        | "pending-rollback"
-                        | "booted-unconfirmed"
-                        | "fallback-protected"
-                );
-                let deletable_state = matches!(
-                    item.state.as_str(),
-                    "ready" | "incomplete" | "failed-reverted" | "broken"
-                );
+                let browsable = item.state == "ready";
+                let deletable_state =
+                    matches!(item.state.as_str(), "ready" | "incomplete" | "broken");
                 Self {
                     can_browse: browsable,
                     can_verify: stable,
                     can_restore: item.state == "ready",
-                    can_delete: deletable_state && !item.keep_forever && !forced_permanent,
-                    can_pin: item.state == "ready" && !forced_permanent,
+                    can_delete: deletable_state && !item.keep_forever,
+                    can_pin: item.state == "ready",
                     can_rename: stable,
                 }
             }
@@ -167,26 +154,24 @@ mod tests {
     }
 
     #[test]
-    fn protected_system_states_cannot_mutate_or_restore() {
-        for state in [
-            "current",
-            "pending-rollback",
-            "booted-unconfirmed",
-            "fallback-protected",
-        ] {
-            let capabilities =
-                SnapshotCapabilities::for_item(SnapshotScope::System, &item(state, false));
-            assert!(capabilities.can_browse, "{state}");
-            assert!(capabilities.can_verify, "{state}");
-            assert!(!capabilities.can_restore, "{state}");
-            assert!(!capabilities.can_delete, "{state}");
-            assert!(!capabilities.can_pin, "{state}");
-        }
+    fn ready_system_snapshot_is_always_reusable() {
+        let capabilities =
+            SnapshotCapabilities::for_item(SnapshotScope::System, &item("ready", false));
+        assert!(capabilities.can_restore);
+    }
+
+    #[test]
+    fn completed_rollback_fallback_is_an_ordinary_deletable_snapshot() {
+        let mut fallback = item("ready", false);
+        fallback.kind = "pre-rollback".into();
+        let capabilities = SnapshotCapabilities::for_item(SnapshotScope::System, &fallback);
+        assert!(capabilities.can_delete);
+        assert!(capabilities.can_pin);
     }
 
     #[test]
     fn damaged_snapshots_can_be_checked_and_safely_removed() {
-        for state in ["broken", "incomplete", "failed-reverted"] {
+        for state in ["broken", "incomplete"] {
             let capabilities =
                 SnapshotCapabilities::for_item(SnapshotScope::System, &item(state, false));
             assert!(capabilities.can_verify, "{state}");

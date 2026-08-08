@@ -11,6 +11,7 @@ use std::process::Command;
 use sha2::{Digest, Sha256};
 
 use crate::RECOVERY_STORE_ROOT;
+#[cfg(test)]
 use crate::model::DeploymentState;
 use crate::store::DeploymentStore;
 use crate::transaction::{RECOVERY_PROTOCOL_VERSION, RollbackPhase, TransactionStore};
@@ -294,10 +295,10 @@ impl<R: BootToolRunner> BootIntegration<R> {
         let target = DeploymentStore::new(&self.snapshot_root)
             .load_record(transaction.target_deployment_id)
             .map_err(|error| BootError::new(BootErrorCode::InvalidDeployment, error.message))?;
-        if target.state != DeploymentState::PendingRollback || target.failure.is_some() {
+        if !target.can_restore() {
             return Err(BootError::new(
                 BootErrorCode::InvalidDeployment,
-                "GRUB recovery target is not pending rollback",
+                "GRUB recovery target is not a complete, healthy snapshot",
             ));
         }
         let recovery_boot = self.snapshot_root.join(RECOVERY_BOOT_DIRECTORY);
@@ -758,7 +759,7 @@ mod tests {
                 id: DeploymentId::new(),
                 parent_id: None,
                 kind: DeploymentKind::Manual,
-                state: DeploymentState::PendingRollback,
+                state: DeploymentState::Ready,
                 created_at: Utc::now(),
                 title: "Target".into(),
                 reason: "Boot integration test".into(),

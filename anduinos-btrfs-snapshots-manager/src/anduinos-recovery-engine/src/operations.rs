@@ -263,11 +263,11 @@ impl<R: CommandRunner> OperationEngine<R> {
         self.create_snapshot(
             layout,
             "Before system restore",
-            "Automatically protected before restoring an earlier system snapshot",
+            "Safety snapshot created before restoring an earlier system snapshot",
             None,
             false,
             DeploymentKind::PreRollback,
-            DeploymentState::FallbackProtected,
+            DeploymentState::Ready,
             progress,
         )
     }
@@ -723,10 +723,11 @@ impl<R: CommandRunner> OperationEngine<R> {
                         | DeploymentKind::Automatic
                         | DeploymentKind::AptPre
                         | DeploymentKind::AptPost
+                        | DeploymentKind::PreRollback
                 ) {
                     return Err(OperationError::new(
                         OperationErrorCode::Protected,
-                        "Automatic cleanup may delete only manual, scheduled, or package system snapshots",
+                        "Automatic cleanup may delete only ordinary system snapshots",
                     ));
                 }
                 if record.pinned {
@@ -1729,6 +1730,12 @@ mod tests {
                 false,
                 |_, _, _| {},
             )
+            .unwrap();
+        let fallback = engine
+            .create_pre_rollback(&environment.layout(), |_, _, _| {})
+            .unwrap();
+        engine
+            .delete_automatic(&environment.layout(), fallback.id, 1)
             .unwrap();
         engine
             .delete_automatic(&environment.layout(), manual.id, 1)

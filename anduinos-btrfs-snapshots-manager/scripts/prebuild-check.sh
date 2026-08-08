@@ -90,6 +90,25 @@ rg -q 'Create a system snapshot before changes' "$ROOT/src/btrfs-snapshots-manag
 rg -q 'ViewStack::new' "$ROOT/src/btrfs-snapshots-manager/src/ui/mod.rs"
 rg -q 'SnapshotPage::new.*SnapshotScope::System' "$ROOT/src/btrfs-snapshots-manager/src/ui/mod.rs"
 rg -q 'SnapshotPage::new.*SnapshotScope::Home' "$ROOT/src/btrfs-snapshots-manager/src/ui/mod.rs"
+rg -q 'ROLLBACK_RESTART_COUNTDOWN_SECONDS: u32 = 60' \
+    "$ROOT/src/btrfs-snapshots-manager/src/ui/snapshot_page.rs"
+if rg -n 'Restart Later|add_response\("later"' \
+    "$ROOT/src/btrfs-snapshots-manager/src/ui/snapshot_page.rs"; then
+    echo "An armed rollback must never offer a deferred restart" >&2
+    exit 1
+fi
+if rg -n 'DeploymentState::(Current|PendingRollback|BootedUnconfirmed|FallbackProtected|FailedReverted)' \
+    "$ROOT/src" --glob '*.rs'; then
+    echo "Rollback transaction phases must not be stored as deployment states" >&2
+    exit 1
+fi
+rg -q 'the_same_healthy_snapshot_can_be_scheduled_repeatedly' \
+    "$ROOT/src/anduinos-recovery-engine/src/rollback.rs"
+if rg -n 'forced_permanent|item\.kind == "pre-rollback"' \
+    "$ROOT/src/btrfs-snapshots-manager/src/ui" --glob '*.rs'; then
+    echo "Completed rollback fallback snapshots must not be permanently locked by the UI" >&2
+    exit 1
+fi
 rg -q 'evaluate_retention' "$ROOT/src/btrfs-snapshots-manager-helper/src/main.rs"
 rg -q 'ListSystemSnapshotFiles' "$ROOT/src/btrfs-snapshots-manager/src/dbus_client.rs"
 ! rg -qi 'external.?backup|backup-(destinations|export|import|delete)|CompareSnapshots' "$ROOT/src/btrfs-snapshots-manager-cli"

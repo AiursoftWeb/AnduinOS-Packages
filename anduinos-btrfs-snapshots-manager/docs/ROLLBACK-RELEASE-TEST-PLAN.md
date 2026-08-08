@@ -23,13 +23,14 @@ authoritative for destructive, fallback, Secure Boot, and power-loss lanes.
 | `RRP2-BUILD-001` | P0 | amd64 and arm64 APKG release build | Passed 2026-08-07 | Both Debs produced; prebuild and recovery artifact checks passed |
 | `RRP2-UNIT-001` | P0 | Workspace, shell, initramfs, i18n, and zero-warning checks | Passed 2026-08-07 | Test output and `-D warnings` check |
 | `RRP2-BTRFS-001` | P0 | Real operations on a disposable Btrfs loopback image | Passed 2026-08-07 | Both privileged loopback cases passed |
-| `RRP2-UPGRADE-001` | P0 | Applied schema-2/protocol-1 transaction upgraded and reconciled by protocol 2 | Passed 2026-08-07 | Transaction `35fb6a1c-897b-4e27-b29c-9e5f9ad49952` archived `confirmed`; target `current`; fallback `ready` |
+| `RRP2-UPGRADE-001` | P0 | Applied schema-2/protocol-1 transaction upgraded and reconciled by protocol 2 | Passed 2026-08-07 | Transaction `35fb6a1c-897b-4e27-b29c-9e5f9ad49952` archived `confirmed`; target and fallback normalize to `ready` |
 | `RRP2-HOST-001` | P0 acceptance | Fresh protocol-2 LKG, remove `docker.io`, App rollback, reboot, confirm | Pending | Checklist and evidence bundle below |
 | `RRP2-VM-001` | P0 | Normal rollback and confirmation with `/run` mounted `noexec` | Pending | VM state, transaction JSON, service journal, GRUB state |
 | `RRP2-VM-002` | P0 | Docker autoremove regression | Pending | Exact package version and executable restored; terminal transaction confirmed |
-| `RRP2-VM-003` | P0 | Confirmation failure followed by automatic fallback | Pending | Two successful boots, fallback `current`, target `failed-reverted`, no orphan roots |
+| `RRP2-VM-003` | P0 | Confirmation failure followed by automatic fallback | Pending | Two successful boots, both snapshots `ready`, terminal history reverted, no orphan roots |
 | `RRP2-VM-004` | P0 | Secure Boot enabled, disabled, and unsupported lanes | Pending | Toolkit state and pass/fail-closed results |
 | `RRP2-VM-005` | P0 | Apply and revert hard-power-loss checkpoint matrix | Pending | Serial console, checkpoint logs, state and subvolume evidence for every row |
+| `RRP2-VM-006` | P0 | Restore the exact same golden-image deployment on two consecutive cycles | Pending | Same deployment ID accepted twice, both transactions confirmed, target remains `ready` |
 | `RRP2-UI-001` | P0 | Reboot inhibitor and phase-aware pending banner | Automated checks passed; interactive observation pending in `RRP2-HOST-001` | Error is visible when reboot is refused; no invalid cancel action after early boot |
 
 `RRP2-HOST-001` is useful acceptance evidence on the affected machine, but it
@@ -57,10 +58,12 @@ Procedure:
    `/usr/bin/docker` is absent.
 4. In the App, select the exact manual LKG by title, timestamp, and ID. Do not
    select the newer automatic `Before package changes` snapshot.
-5. Prepare the rollback and choose **Restart Now**. If a logind/systemd inhibitor
-   refuses the request, the App must display the diagnostic. Record it, close the
-   inhibitor, and restart through the desktop power UI without cancelling the
-   armed transaction.
+5. Prepare the rollback. Verify that the armed dialog has no defer action, clearly
+   warns about the automatic restart, counts down from 60 seconds, and offers only
+   **Restart Now**. Let the countdown expire in one run and use **Restart Now** in
+   another. If a logind/systemd inhibitor refuses the request, the App must display
+   the diagnostic. Record it, close the inhibitor, and restart through the desktop
+   power UI without cancelling the armed transaction.
 6. Allow the GRUB one-shot selector to enter the recovery entry. Do not manually
    select normal boot.
 7. After the graphical session is fully online, collect the evidence bundle
@@ -70,7 +73,8 @@ Pass criteria:
 
 - the exact prior `docker.io` version and `/usr/bin/docker` return;
 - CLI status reports `pending: null` and no issues;
-- the target deployment is `current` and the protected fallback is `ready`;
+- the target deployment and protected fallback are both `ready`;
+- the same target remains selectable for another rollback after confirmation;
 - terminal history is `confirmed` under transaction schema 3 and protocol 2;
 - the confirmation service executed successfully with no `203/EXEC`;
 - its executable was the digest-bound external `recovery-boot/confirm`, not a
@@ -156,6 +160,7 @@ Release-blocking:
 - [ ] Run the automatic fallback lane `RRP2-VM-003` without manual root repair.
 - [ ] Complete Secure Boot lanes `RRP2-VM-004`.
 - [ ] Complete and review every apply/revert interruption in `RRP2-VM-005`.
+- [ ] Restore one unchanged golden-image deployment twice for `RRP2-VM-006`.
 - [ ] Attach all records to the release and obtain an explicit recovery sign-off.
 
 Follow-up hardening after the release gate is satisfied:

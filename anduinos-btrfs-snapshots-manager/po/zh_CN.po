@@ -47,6 +47,10 @@ msgstr "AnduinOS 团队"
 msgid "Automatic"
 msgstr "自动"
 
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic 60-second countdown after preparation"
+msgstr "准备完成后自动开始 60 秒重启倒计时"
+
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Automatic Home Snapshots"
 msgstr "Automatic Home Snapshots"
@@ -78,10 +82,6 @@ msgstr "自动系统快照创建成功"
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Automatic System Snapshots"
 msgstr "Automatic System Snapshots"
-
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Awaiting boot confirmation"
-msgstr "等待启动确认"
 
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 msgid "Background Service"
@@ -118,10 +118,6 @@ msgstr "浏览系统快照"
 #: data/anduinos_btrfs_snapshots_manager_file_history.py
 msgid "Browse This Folder’s History…"
 msgstr "浏览此文件夹的历史…"
-
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Btrfs quota accounting is disabled or unavailable. Disk Snapshots Manager will not start a quota rescan automatically."
-msgstr "Btrfs 配额统计已禁用或不可用。Disk Snapshots Manager 不会自动启动配额重新扫描。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Calculating snapshot size…"
@@ -492,10 +488,6 @@ msgid "Parent folder"
 msgstr "上级文件夹"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Pending rollback"
-msgstr "等待回滚"
-
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Permanently protected"
 msgstr "永久保留"
 
@@ -516,8 +508,8 @@ msgid "Prepare a safe system rollback"
 msgstr "准备安全的系统回滚"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Prepare Rollback"
-msgstr "Prepare Rollback"
+msgid "Prepare and Restart"
+msgstr "准备并重启"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Preparing rollback to {0}…"
@@ -528,16 +520,16 @@ msgid "Preparing safe rollback…"
 msgstr "正在准备安全回滚…"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Preserved permanently as a fallback"
-msgstr "永久保留为回退系统"
+msgid "Preparing the rollback will arm recovery immediately and automatically restart this computer within 60 seconds. Save your work before continuing."
+msgstr "准备回滚后，恢复事务将立即生效，并在 60 秒内自动重启此计算机。继续前请保存工作。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Properties"
 msgstr "属性"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Protected fallback"
-msgstr "受保护的回退点"
+msgid "Protected while the rollback is pending"
+msgstr "在回滚事务进行期间受保护"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Ready"
@@ -604,20 +596,16 @@ msgid "Requesting restart…"
 msgstr "正在请求重启…"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Required to complete the rollback"
-msgstr "完成回滚需要重启"
-
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restart"
 msgstr "重启"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Restart Later"
-msgstr "Restart Later"
+msgid "Restart Now ({0} s)"
+msgstr "立即重启（{0} 秒）"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Restart Now"
-msgstr "Restart Now"
+msgid "Restart Required — Rollback Armed"
+msgstr "必须重启 — 回滚已就绪"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Retry Recovery"
@@ -626,10 +614,6 @@ msgstr "重试恢复确认"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Return to the selected snapshot"
 msgstr "恢复到所选快照的状态"
-
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Review what will happen before preparing the rollback."
-msgstr "准备回滚前，请确认将发生的更改。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Roll Back"
@@ -644,12 +628,8 @@ msgid "Rollback confirmation failed. The protected previous system is being rest
 msgstr "回滚确认失败，正在恢复受保护的先前系统。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Rollback Is Ready"
-msgstr "Rollback Is Ready"
-
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Rollback reverted"
-msgstr "回滚已撤销"
+msgid "Rollback is armed. To prevent new system changes from being lost, this computer will restart automatically when the 60-second countdown ends. Save any open personal files now."
+msgstr "回滚事务已就绪。为防止新的系统更改丢失，此计算机将在 60 秒倒计时结束后自动重启。请立即保存所有打开的个人文件。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback to {0} is being applied during startup."
@@ -723,10 +703,6 @@ msgstr "Snapshot Check Complete"
 msgid "Snapshot Details"
 msgstr "快照详情"
 
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Snapshot Size Unavailable"
-msgstr "无法获取快照大小"
-
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Snapshot {0} · Folder"
 msgstr "快照 {0} · 文件夹"
@@ -766,10 +742,6 @@ msgstr "系统快照创建成功"
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 msgid "The automatic snapshot infrastructure cannot be disabled here."
 msgstr "The automatic snapshot infrastructure cannot be disabled here."
-
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "The current system was preserved permanently. Restart now to roll back, or cancel from the System Recovery banner."
-msgstr "当前系统已永久保留。现在重启即可回滚，也可在“系统恢复”横幅中取消。"
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "The Home snapshot was created successfully."
@@ -846,6 +818,10 @@ msgstr "总量"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Try a different name, date, or snapshot reason."
 msgstr "请尝试其他名称、日期或快照原因。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unable to calculate"
+msgstr "无法统计"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Unknown date"

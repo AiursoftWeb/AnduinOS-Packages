@@ -8,7 +8,7 @@
   <summary xml:lang="zh-CN">恢复 AnduinOS 并找回误删的个人文件</summary>
   <description>
     <p>Disk Snapshots Manager creates immutable Btrfs system snapshots for the AnduinOS system and independent snapshots for Personal Files.</p>
-    <p>A system rollback validates the selected snapshot, preserves the current system as a permanent fallback, and prepares a verified one-shot GRUB entry. Personal Files are explicitly unchanged.</p>
+    <p>A system rollback validates the selected snapshot, protects a current-system fallback while the transaction is pending, and prepares a verified one-shot GRUB entry. Personal Files are explicitly unchanged.</p>
     <p>Independent Home snapshots capture the @home subvolume on a separate schedule. Users can browse earlier versions and recover files or folders without rolling back the operating system.</p>
     <p>Nautilus provides File History actions for one selected home item and for a folder background, opening a focused Disk Snapshots Manager window for earlier versions and deleted files.</p>
     <p>Automatic schedules can show desktop notifications after successful creation, while retention cleanup is reported as one quiet aggregate notification.</p>

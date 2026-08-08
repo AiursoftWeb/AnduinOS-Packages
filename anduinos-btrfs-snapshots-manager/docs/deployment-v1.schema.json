@@ -38,12 +38,7 @@
       "enum": [
         "creating",
         "ready",
-        "current",
-        "pending-rollback",
-        "booted-unconfirmed",
-        "fallback-protected",
         "incomplete",
-        "failed-reverted",
         "broken",
         "deleting"
       ]
@@ -124,13 +119,7 @@
       "if": {
         "properties": {
           "state": {
-            "enum": [
-              "ready",
-              "current",
-              "pending-rollback",
-              "booted-unconfirmed",
-              "fallback-protected"
-            ]
+            "const": "ready"
           }
         }
       },

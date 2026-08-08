@@ -45,6 +45,10 @@ msgstr ""
 msgid "Automatic"
 msgstr ""
 
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic 60-second countdown after preparation"
+msgstr ""
+
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Automatic Home Snapshots"
 msgstr ""
@@ -75,10 +79,6 @@ msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Automatic System Snapshots"
-msgstr ""
-
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Awaiting boot confirmation"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
@@ -115,10 +115,6 @@ msgstr ""
 
 #: data/anduinos_btrfs_snapshots_manager_file_history.py
 msgid "Browse This Folder’s History…"
-msgstr ""
-
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Btrfs quota accounting is disabled or unavailable. Disk Snapshots Manager will not start a quota rescan automatically."
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -490,10 +486,6 @@ msgid "Parent folder"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Pending rollback"
-msgstr ""
-
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Permanently protected"
 msgstr ""
 
@@ -514,7 +506,7 @@ msgid "Prepare a safe system rollback"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Prepare Rollback"
+msgid "Prepare and Restart"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -526,7 +518,7 @@ msgid "Preparing safe rollback…"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Preserved permanently as a fallback"
+msgid "Preparing the rollback will arm recovery immediately and automatically restart this computer within 60 seconds. Save your work before continuing."
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -534,7 +526,7 @@ msgid "Properties"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Protected fallback"
+msgid "Protected while the rollback is pending"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -602,19 +594,15 @@ msgid "Requesting restart…"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Required to complete the rollback"
-msgstr ""
-
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restart"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Restart Later"
+msgid "Restart Now ({0} s)"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Restart Now"
+msgid "Restart Required — Rollback Armed"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -623,10 +611,6 @@ msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Return to the selected snapshot"
-msgstr ""
-
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Review what will happen before preparing the rollback."
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -642,11 +626,7 @@ msgid "Rollback confirmation failed. The protected previous system is being rest
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Rollback Is Ready"
-msgstr ""
-
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Rollback reverted"
+msgid "Rollback is armed. To prevent new system changes from being lost, this computer will restart automatically when the 60-second countdown ends. Save any open personal files now."
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -721,10 +701,6 @@ msgstr ""
 msgid "Snapshot Details"
 msgstr ""
 
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "Snapshot Size Unavailable"
-msgstr ""
-
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Snapshot {0} · Folder"
 msgstr ""
@@ -763,10 +739,6 @@ msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 msgid "The automatic snapshot infrastructure cannot be disabled here."
-msgstr ""
-
-#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid "The current system was preserved permanently. Restart now to roll back, or cancel from the System Recovery banner."
 msgstr ""
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
@@ -843,6 +815,10 @@ msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Try a different name, date, or snapshot reason."
+msgstr ""
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unable to calculate"
 msgstr ""
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs

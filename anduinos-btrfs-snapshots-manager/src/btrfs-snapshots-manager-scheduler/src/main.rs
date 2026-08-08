@@ -120,10 +120,7 @@ fn snapshot_satisfies_freshness(snapshot: &serde_json::Value, scope: AutomaticSc
             matches!(
                 kind,
                 Some("manual" | "automatic" | "apt-pre" | "apt-post" | "pre-rollback")
-            ) && matches!(
-                state,
-                Some("ready" | "pending-rollback" | "fallback-protected")
-            )
+            ) && matches!(state, Some("ready"))
         }
         AutomaticScope::Home => {
             matches!(kind, Some("manual" | "automatic")) && state == Some("ready")

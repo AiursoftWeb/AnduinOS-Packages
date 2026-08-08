@@ -179,8 +179,8 @@ verify_rollback() {
         die "the userspace confirmation engine could not be executed"
     jq -e '.pending == null' <<<"$status" >/dev/null || die "the rollback is still pending"
     jq -e --arg target "$target" \
-        '.deployments[] | select(.id == $target and .state == "current")' \
-        <<<"$status" >/dev/null || die "the restored deployment was not confirmed as current"
+        '.deployments[] | select(.id == $target and .state == "ready")' \
+        <<<"$status" >/dev/null || die "the restored deployment is not reusable and ready"
     local transaction_id archive
     transaction_id=$(jq -er '.pending.id' <<<"$state")
     archive="$RECOVERY_STORE/rollback-history/$transaction_id.json"
@@ -253,8 +253,8 @@ verify_docker_autoremove() {
     status=$(status_json)
     jq -e '.pending == null' <<<"$status" >/dev/null || die "the Docker rollback is still pending"
     jq -e --arg target "$target" \
-        '.deployments[] | select(.id == $target and .state == "current")' \
-        <<<"$status" >/dev/null || die "the Docker rollback target is not current"
+        '.deployments[] | select(.id == $target and .state == "ready")' \
+        <<<"$status" >/dev/null || die "the Docker rollback target is not reusable and ready"
     transaction_id=$(jq -er '.pending.id' <<<"$state")
     archive="$RECOVERY_STORE/rollback-history/$transaction_id.json"
     jq -e '.phase == "confirmed" and .checkpoint == "booted-unconfirmed-recorded"' \
