@@ -152,7 +152,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-kernel-parameters` | Config | AnduinOS 2.0 desktop GRUB drop-in enabling `preempt=full` on Ubuntu's generic kernel |
 | `anduinos-desktop-apps` | Metapackage | Default application selection (browser, office, media, utilities) |
 | `anduinos-archive-keyring` | Core | GPG keys for AnduinOS APT repositories |
-| `anduinos-fonts` | Fonts | CascadiaCode, NerdFonts, Noto Sans/Serif, Twemoji |
+| `anduinos-fonts` | Fonts | Cascadia Code, Nerd Fonts Symbols, Noto Sans/Serif, Twemoji |
 | `anduinos-theme` | Metapackage | AnduinOS theme stack (Fluent GTK + Fluent icons + fonts + wallpapers) |
 | `anduinos-fluent-gtk-theme` | Theme | Fluent UI GTK theme |
 | `anduinos-fluent-icon-theme` | Theme | Fluent UI Icon theme |

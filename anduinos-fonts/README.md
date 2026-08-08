@@ -24,7 +24,7 @@ Plus `fonts-noto-color-emoji` (CBDT/CBLC bitmap) from Ubuntu repos as fallback.
 |---|---|---|---|---|
 | Simplified Chinese | `zh-CN` | Noto Sans CJK SC | Noto Serif CJK SC | Noto Sans Mono CJK SC |
 | Traditional Chinese (TW) | `zh-TW` | Noto Sans CJK TC | Noto Serif CJK TC | Noto Sans Mono CJK TC |
-| Traditional Chinese (HK) | `zh-HK` | Noto Sans CJK HK | Noto Serif CJK TC | Noto Sans Mono CJK HK |
+| Traditional Chinese (HK) | `zh-HK` | Noto Sans CJK HK | Noto Serif CJK HK | Noto Sans Mono CJK HK |
 | Japanese | `ja` | Noto Sans CJK JP | Noto Serif CJK JP | Noto Sans Mono CJK JP |
 | Korean | `ko` | Noto Sans CJK KR | Noto Serif CJK KR | Noto Sans Mono CJK KR |
 | Thai | `th` | Noto Sans Thai | Noto Serif Thai | Cascadia Code (default) |
@@ -47,6 +47,23 @@ All apps:
 No per-app workarounds needed — COLRv1 works everywhere.
 
 Font source: [TCOTC/twemoji-colr](https://github.com/TCOTC/twemoji-colr) (follows [jdecked/twemoji](https://github.com/jdecked/twemoji) releases).
+
+## Licensing
+
+This package is a collection of independently licensed works. AnduinOS
+packaging and configuration files are GPL-3.0-only; the bundled fonts retain
+their upstream licenses:
+
+- Cascadia Code and Noto Sans/Serif: SIL Open Font License 1.1
+- Nerd Fonts Symbols Only: composite work under MIT, OFL-1.1,
+  CC-BY-4.0, Apache-2.0, Unlicense, and source-specific permissive terms
+- Twemoji font software: MIT
+- Twemoji artwork: Creative Commons Attribution 4.0 International
+
+The authoritative copyright notices, upstream sources, attribution, and full
+license texts are in [`COPYRIGHT`](COPYRIGHT). The binary package installs the
+same information at `/usr/share/doc/anduinos-fonts/copyright` together with
+the individual upstream license files.
 
 ## Adding a new language
 
