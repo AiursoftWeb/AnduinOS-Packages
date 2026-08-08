@@ -30,10 +30,7 @@ fs2 = "0.4"
 libc = "0.2"
 
 [profile.release]
-opt-level = 3
-# Reliability and cross-architecture reproducibility matter more than marginal
-# whole-program optimization for this privileged desktop utility. Fat LTO with a
-# single codegen unit exhausts LLVM worker stacks on supported APKG builders.
-lto = false
+opt-level = 2
+lto = "off"
 codegen-units = 16
 strip = true

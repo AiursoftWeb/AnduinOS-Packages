@@ -5,10 +5,6 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$SCRIPT_DIR/../lib/build-guards.sh"
 ARCH="${1:-amd64}"
 MANIFEST="$SCRIPT_DIR/src/Cargo.toml"
-# Release LTO requires a deeper rustc worker stack than the platform default on
-# some supported builders. Keep this deterministic inside APKG instead of
-# relying on an interactive shell's environment.
-export RUST_MIN_STACK="${RUST_MIN_STACK:-33554432}"
 
 need_cmd cargo
 need_cmd msgfmt gettext
