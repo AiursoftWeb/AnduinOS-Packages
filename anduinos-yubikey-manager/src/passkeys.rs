@@ -2,6 +2,8 @@ use std::io;
 use std::process::{Child, Command};
 
 pub const APP_ID: &str = "com.yubico.yubioath";
+pub const FLATPAK_REF_URI: &str =
+    "flatpak+https://dl.flathub.org/repo/appstream/com.yubico.yubioath.flatpakref";
 
 pub fn is_installed() -> bool {
     is_installed_with(|program, arguments| {

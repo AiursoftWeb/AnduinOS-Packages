@@ -156,5 +156,6 @@ access account data.
 Credential management is delegated completely. The security center does not read, create,
 delete, or modify passkeys or YubiKey configuration. It only checks whether the fixed
 Flatpak application ID `com.yubico.yubioath` is installed and, when available, opens that
-external application. It never installs the Flatpak, opens an app store, or redirects to a
-website from this page.
+external application. When it is unavailable, the page can open the application's official
+Flathub `.flatpakref` through the system `flatpak+https` handler, which opens
+GNOME Software directly. The security center never installs the Flatpak itself.

@@ -675,7 +675,7 @@ impl YubiKeyManagerWindow {
                 status.append(&open);
                 page.append(&status);
             } else {
-                page.append(&passkeys_management_status(
+                let status = passkeys_management_status(
                     "software-update-available-symbolic",
                     &i18n("Yubico Authenticator is not installed"),
                     &i18n("Unavailable"),
@@ -683,7 +683,22 @@ impl YubiKeyManagerWindow {
                     Some(&i18n(
                         "Install the official Yubico Authenticator first. When installation is complete, return here and refresh this page.",
                     )),
-                ));
+                );
+                let store = gtk::Button::builder()
+                    .label(i18n("View in App Store"))
+                    .icon_name("external-link-symbolic")
+                    .css_classes(["suggested-action", "pill"])
+                    .halign(gtk::Align::Start)
+                    .build();
+                store.connect_clicked(move |button| {
+                    let parent = button.root().and_downcast::<gtk::Window>();
+                    glib::spawn_future_local(async move {
+                        let launcher = gtk::UriLauncher::new(passkeys::FLATPAK_REF_URI);
+                        let _ = launcher.launch_future(parent.as_ref()).await;
+                    });
+                });
+                status.append(&store);
+                page.append(&status);
             }
         });
     }
