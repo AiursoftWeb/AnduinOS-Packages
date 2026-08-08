@@ -7,725 +7,789 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-driver-center 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-06 15:06+0800\n"
+"POT-Creation-Date: 2026-08-08 10:54+0000\n"
 "PO-Revision-Date: 2026-08-06 07:08+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
-"Language: fi\n"
 "Language-Team: fi\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: src/anduinos_driver_center/app.py:73 src/anduinos_driver_center/app.py:805
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:74
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:1006
 msgid "AnduinOS Driver Center"
 msgstr "AnduinOS-ohjainkeskus"
 
-#: src/anduinos_driver_center/app.py:132
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:137
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:435
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:597
 msgid "Scan again"
 msgstr "Skannaa uudelleen"
 
-#: src/anduinos_driver_center/app.py:136
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:141
 msgid "About Driver Center"
 msgstr "Tietoja Driver Centeristä"
 
-#: src/anduinos_driver_center/app.py:138
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:143
 msgid "Main Menu"
 msgstr "Päävalikko"
 
-#: src/anduinos_driver_center/app.py:155
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:160
 msgid "Hardware"
 msgstr "Laitteisto"
 
-#: src/anduinos_driver_center/app.py:179
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:184
 msgid "Scanning for drivers"
 msgstr "Ohjainten haku"
 
-#: src/anduinos_driver_center/app.py:179
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:184
 msgid "Checking hardware and Secure Boot status…"
 msgstr "Tarkistetaan laitteistoa ja Secure Boot:n tilaa…"
 
-#: src/anduinos_driver_center/app.py:212
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:217
 msgid "Audio"
 msgstr "Ääni"
 
-#: src/anduinos_driver_center/app.py:213
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:218
 msgid "Audio support ready"
 msgstr "Äänituki valmiina"
 
-#: src/anduinos_driver_center/app.py:213
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:218
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:232
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:258
 msgid "Support needs attention"
 msgstr "Tuki vaatii huomiota"
 
-#: src/anduinos_driver_center/app.py:221
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:227
 msgid "Printing service stopped"
 msgstr "Tulostuspalvelu pysäytetty"
 
-#: src/anduinos_driver_center/app.py:223
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:229
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:893
+msgid "Printing support disabled."
+msgstr "Tulostustuki poistettu käytöstä."
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:234
 msgid "Some queues are paused"
 msgstr "Jotkut jonot on keskeytetty"
 
-#: src/anduinos_driver_center/app.py:225
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:236
 msgid "No printers configured"
 msgstr "Tulostimia ei ole määritetty"
 
-#: src/anduinos_driver_center/app.py:228
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:239
 #, python-format
 msgid "%d printer configured"
 msgid_plural "%d printers configured"
 msgstr[0] "%d-tulostin määritetty"
 msgstr[1] "%d-tulostimet määritetty"
 
-#: src/anduinos_driver_center/app.py:233
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:244
 msgid "Printers"
 msgstr "Tulostimet"
 
-#: src/anduinos_driver_center/app.py:240
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:251
 msgid "Xbox Controller"
 msgstr "Xbox-ohjain"
 
-#: src/anduinos_driver_center/app.py:241
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:253
 msgid "xpadneo installed"
 msgstr "xpadneo asennettu"
 
-#: src/anduinos_driver_center/app.py:241
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:256
 msgid "Optional Bluetooth driver"
 msgstr "Valinnainen Bluetooth-ohjain"
 
-#: src/anduinos_driver_center/app.py:252
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:271
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:364
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:555
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:560
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:565
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:576
 msgid "Secure Boot"
 msgstr "Secure Boot"
 
-#: src/anduinos_driver_center/app.py:253
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:272
 msgid "Trust established"
 msgstr "Luottamus perustettu"
 
-#: src/anduinos_driver_center/app.py:253
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:272
 msgid "Action required"
 msgstr "Tarvitaan toimenpiteitä"
 
-#: src/anduinos_driver_center/app.py:324
-msgid "Choose the driver used by this device. AnduinOS marks the hardware-tested recommendation."
-msgstr "Valitse tämän laitteen käyttämä ohjain. AnduinOS on laitteistotestattu suositus."
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:351
+msgid ""
+"Choose the driver used by this device. AnduinOS marks the hardware-tested "
+"recommendation."
+msgstr ""
+"Valitse tämän laitteen käyttämä ohjain. AnduinOS on laitteistotestattu "
+"suositus."
 
-#: src/anduinos_driver_center/app.py:330
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:357
 msgid "Available drivers"
 msgstr "Käytettävissä olevat ohjaimet"
 
-#: src/anduinos_driver_center/app.py:335
-msgid "Secure Boot status or trust must be resolved before installing a third-party driver."
-msgstr "Secure Boot-tila tai luottamus on ratkaistava ennen kolmannen osapuolen ohjaimen asentamista."
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:362
+msgid ""
+"Secure Boot status or trust must be resolved before installing a third-party "
+"driver."
+msgstr ""
+"Secure Boot-tila tai luottamus on ratkaistava ennen kolmannen osapuolen "
+"ohjaimen asentamista."
 
-#: src/anduinos_driver_center/app.py:344
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:372
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:448
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:461
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:782
 msgid "Apply Changes"
 msgstr "Ota muutokset käyttöön"
 
-#: src/anduinos_driver_center/app.py:353
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:381
 msgid "open source"
 msgstr "avoin lähdekoodi"
 
-#: src/anduinos_driver_center/app.py:353
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:381
 msgid "proprietary"
 msgstr "omaisuutta"
 
-#: src/anduinos_driver_center/app.py:355
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:383
 msgid "built in"
 msgstr "sisäänrakennettu"
 
-#: src/anduinos_driver_center/app.py:376
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:407
 msgid "In use"
 msgstr "Käytössä"
 
-#: src/anduinos_driver_center/app.py:378
-msgid "Recommended"
-msgstr "Suositeltava"
-
-#: src/anduinos_driver_center/app.py:394
-msgid "Advanced driver versions"
-msgstr "Edistyneet ohjainversiot"
-
-#: src/anduinos_driver_center/app.py:395
-msgid "Older, newer, and server-oriented packages"
-msgstr "Vanhemmat, uudemmat ja palvelinkeskeiset paketit"
-
-#: src/anduinos_driver_center/app.py:416
-msgid "Select another driver to apply changes."
-msgstr "Ota muutokset käyttöön valitsemalla toinen ohjain."
-
-#: src/anduinos_driver_center/app.py:451
-msgid "Xbox Controller Support"
-msgstr "Xbox-ohjaimen tuki"
-
-#: src/anduinos_driver_center/app.py:452
-msgid ""
-"xpadneo improves Bluetooth mapping, rumble, battery reporting and compatibility for modern Xbox "
-"controllers."
-msgstr ""
-"xpadneo parantaa Bluetooth-kartoitusta, rumble-toimintoa, akun raportointia ja yhteensopivuutta "
-"nykyaikaisten Xbox-ohjaimien kanssa."
-
-#: src/anduinos_driver_center/app.py:455
-msgid "Driver status"
-msgstr "Ajurin tila"
-
-#: src/anduinos_driver_center/app.py:457
-msgid "Driver package"
-msgstr "Ohjainpaketti"
-
-#: src/anduinos_driver_center/app.py:457
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:410
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:535
 msgid "Installed"
 msgstr "Asennettu"
 
-#: src/anduinos_driver_center/app.py:457 src/anduinos_driver_center/app.py:498
-#: src/anduinos_driver_center/app.py:504 src/anduinos_driver_center/app.py:678
-msgid "Not installed"
-msgstr "Ei asennettu"
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:412
+msgid "Recommended"
+msgstr "Suositeltava"
 
-#: src/anduinos_driver_center/app.py:466
-msgid "Module signature"
-msgstr "Moduulin allekirjoitus"
-
-#: src/anduinos_driver_center/app.py:467
-msgid "Trusted"
-msgstr "Luotettu"
-
-#: src/anduinos_driver_center/app.py:467
-msgid "Needs attention"
-msgstr "Vaatii huomiota"
-
-#: src/anduinos_driver_center/app.py:470
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:434
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:445
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:460
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:625
 msgid "Kernel module"
 msgstr "Ydinmoduuli"
 
-#: src/anduinos_driver_center/app.py:470
-msgid "Loaded"
-msgstr "Ladattu"
-
-#: src/anduinos_driver_center/app.py:470
-msgid "Blocked by Secure Boot"
-msgstr "Estetty: Secure Boot"
-
-#: src/anduinos_driver_center/app.py:470
-msgid "Standing by"
-msgstr "Valmiustilassa"
-
-#: src/anduinos_driver_center/app.py:472
-msgid "Bluetooth Settings"
-msgstr "Bluetooth-asetukset"
-
-#: src/anduinos_driver_center/app.py:476
-msgid "Install Driver"
-msgstr "Asenna ohjain"
-
-#: src/anduinos_driver_center/app.py:481
-msgid "Repair & Reinstall"
-msgstr "Korjaa ja asenna uudelleen"
-
-#: src/anduinos_driver_center/app.py:490
-msgid "Audio Support"
-msgstr "Äänituki"
-
-#: src/anduinos_driver_center/app.py:491
-msgid ""
-"AnduinOS provides Intel SOF firmware and ALSA UCM profiles for reliable audio initialization and "
-"routing."
-msgstr ""
-"AnduinOS tarjoaa Intel SOF -laiteohjelmiston ja ALSA UCM -profiilit luotettavaa äänen alustusta "
-"ja reititystä varten."
-
-#: src/anduinos_driver_center/app.py:493
-msgid "Support packages"
-msgstr "Tukipaketit"
-
-#: src/anduinos_driver_center/app.py:497
-msgid "Intel SOF firmware"
-msgstr "Intel SOF -laiteohjelmisto"
-
-#: src/anduinos_driver_center/app.py:503
-msgid "ALSA UCM profiles"
-msgstr "ALSA UCM -profiilit"
-
-#: src/anduinos_driver_center/app.py:508
-msgid "Runtime status"
-msgstr "Ajonaikainen tila"
-
-#: src/anduinos_driver_center/app.py:512
-msgid "SOF firmware files"
-msgstr "SOF-laiteohjelmistotiedostot"
-
-#: src/anduinos_driver_center/app.py:513 src/anduinos_driver_center/app.py:519
-msgid "Available"
-msgstr "Käytettävissä"
-
-#: src/anduinos_driver_center/app.py:513 src/anduinos_driver_center/app.py:519
-msgid "Missing"
-msgstr "Puuttuu"
-
-#: src/anduinos_driver_center/app.py:518
-msgid "UCM configuration files"
-msgstr "UCM-määritystiedostot"
-
-#: src/anduinos_driver_center/app.py:524
-msgid "SOF kernel modules"
-msgstr "SOF-ydinmoduulit"
-
-#: src/anduinos_driver_center/app.py:525
-msgid "Not currently loaded"
-msgstr "Ei tällä hetkellä ladattu"
-
-#: src/anduinos_driver_center/app.py:530
-msgid "Active audio drivers"
-msgstr "Aktiiviset ääniohjaimet"
-
-#: src/anduinos_driver_center/app.py:531
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:434
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:460
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:551
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:595
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:703
 msgid "Not detected"
 msgstr "Ei havaittu"
 
-#: src/anduinos_driver_center/app.py:536
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:446
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:984
+msgid "Driver operation failed: "
+msgstr "Ohjaimen toiminta epäonnistui: "
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:448
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:571
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:590
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:653
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:683
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:691
+msgid "Repair & Reinstall"
+msgstr "Korjaa ja asenna uudelleen"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:469
+msgid "Advanced driver versions"
+msgstr "Edistyneet ohjainversiot"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:470
+msgid "Older, newer, and server-oriented packages"
+msgstr "Vanhemmat, uudemmat ja palvelinkeskeiset paketit"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:491
+msgid "Select another driver to apply changes."
+msgstr "Ota muutokset käyttöön valitsemalla toinen ohjain."
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:526
+msgid "Xbox Controller Support"
+msgstr "Xbox-ohjaimen tuki"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:527
+msgid ""
+"xpadneo improves Bluetooth mapping, rumble, battery reporting and "
+"compatibility for modern Xbox controllers."
+msgstr ""
+"xpadneo parantaa Bluetooth-kartoitusta, rumble-toimintoa, akun raportointia "
+"ja yhteensopivuutta nykyaikaisten Xbox-ohjaimien kanssa."
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:530
+msgid "Driver status"
+msgstr "Ajurin tila"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:534
+msgid "Driver package"
+msgstr "Ohjainpaketti"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:535
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:619
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:662
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:670
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:834
+msgid "Not installed"
+msgstr "Ei asennettu"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:537
+msgid "Install Driver"
+msgstr "Asenna ohjain"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:543
+msgid "Trusted"
+msgstr "Luotettu"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:554
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
+msgid "Secure Boot state could not be determined"
+msgstr "Secure Boot-tilaa ei voitu määrittää"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:559
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
+msgid "Pending enrollment in blue screen (MOKManager)"
+msgstr "Odottaa rekisteröintiä sinisellä ruudulla (MOKManager)"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:564
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
+msgid "Certificate is not trusted by motherboard"
+msgstr "Emolevy ei luota varmenteeseen"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:569
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
+msgid "Some DKMS modules need to be re-signed"
+msgstr "Jotkut DKMS-moduulit on allekirjoitettava uudelleen"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:580
+msgid "Module signature"
+msgstr "Moduulin allekirjoitus"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:588
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:681
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:689
+msgid "Missing"
+msgstr "Puuttuu"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:600
+msgid "Loaded"
+msgstr "Ladattu"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:605
+msgid "Standing by"
+msgstr "Valmiustilassa"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:632
+msgid "Bluetooth Settings"
+msgstr "Bluetooth-asetukset"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:640
+msgid "Audio Support"
+msgstr "Äänituki"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:641
+msgid ""
+"AnduinOS provides Intel SOF firmware and ALSA UCM profiles for reliable "
+"audio initialization and routing."
+msgstr ""
+"AnduinOS tarjoaa Intel SOF -laiteohjelmiston ja ALSA UCM -profiilit "
+"luotettavaa äänen alustusta ja reititystä varten."
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:643
+msgid "Support packages"
+msgstr "Tukipaketit"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:651
 msgid "Install Audio Support"
 msgstr "Asenna äänituki"
 
-#: src/anduinos_driver_center/app.py:544
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:661
+msgid "Intel SOF firmware"
+msgstr "Intel SOF -laiteohjelmisto"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:669
+msgid "ALSA UCM profiles"
+msgstr "ALSA UCM -profiilit"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:676
+msgid "Runtime status"
+msgstr "Ajonaikainen tila"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:680
+msgid "SOF firmware files"
+msgstr "SOF-laiteohjelmistotiedostot"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:681
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:689
+msgid "Available"
+msgstr "Käytettävissä"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:688
+msgid "UCM configuration files"
+msgstr "UCM-määritystiedostot"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:696
+msgid "SOF kernel modules"
+msgstr "SOF-ydinmoduulit"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:697
+msgid "Not currently loaded"
+msgstr "Ei tällä hetkellä ladattu"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:702
+msgid "Active audio drivers"
+msgstr "Aktiiviset ääniohjaimet"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:711
 msgid "Printing Support"
 msgstr "Tulostustuki"
 
-#: src/anduinos_driver_center/app.py:545
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:712
 msgid ""
-"Inspect the local print service, configured queues, and the packages that provide modern and "
-"legacy printer support."
+"Inspect the local print service, configured queues, and the packages that "
+"provide modern and legacy printer support."
 msgstr ""
-"Tarkista paikallinen tulostuspalvelu, määritetyt jonot ja paketit, jotka tarjoavat nykyaikaisen "
-"ja vanhan tulostintuen."
+"Tarkista paikallinen tulostuspalvelu, määritetyt jonot ja paketit, jotka "
+"tarjoavat nykyaikaisen ja vanhan tulostintuen."
 
-#: src/anduinos_driver_center/app.py:549
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:716
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:733
 msgid "Enable Printing Support"
 msgstr "Ota käyttöön tulostustuki"
 
-#: src/anduinos_driver_center/app.py:550
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:717
 msgid "Allow local, network, and USB printing services to run."
 msgstr "Salli paikallisten, verkko- ja USB-tulostuspalvelujen suorittaminen."
 
-#: src/anduinos_driver_center/app.py:559
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:726
 msgid "System status"
 msgstr "Järjestelmän tila"
 
-#: src/anduinos_driver_center/app.py:563
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:730
 msgid "CUPS service"
 msgstr "CUPS-palvelu"
 
-#: src/anduinos_driver_center/app.py:564
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:731
 msgid "Running"
 msgstr "Juokse"
 
-#: src/anduinos_driver_center/app.py:564
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:731
 msgid "Stopped"
 msgstr "Pysäytetty"
 
-#: src/anduinos_driver_center/app.py:569
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:743
 msgid "Start at boot"
 msgstr "Aloita käynnistyksestä"
 
-#: src/anduinos_driver_center/app.py:570
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:744
 msgid "Enabled"
 msgstr "Päällä"
 
-#: src/anduinos_driver_center/app.py:570
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:744
 msgid "Disabled"
 msgstr "Poistettu käytöstä"
 
-#: src/anduinos_driver_center/app.py:575
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:749
 #, python-format
 msgid "%d configured printer"
 msgid_plural "%d configured printers"
 msgstr[0] "%d määritetty tulostin"
 msgstr[1] "%d-konfiguroidut tulostimet"
 
-#: src/anduinos_driver_center/app.py:581
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:755
 msgid "Configured printers"
 msgstr "Määritetyt tulostimet"
 
-#: src/anduinos_driver_center/app.py:587
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:761
 msgid "Default printer"
 msgstr "Oletustulostin"
 
-#: src/anduinos_driver_center/app.py:588
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:762
 msgid "Not set"
 msgstr "Ei asetettu"
 
-#: src/anduinos_driver_center/app.py:592
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:766
 msgid "No configured queues"
 msgstr "Ei määritettyjä jonoja"
 
-#: src/anduinos_driver_center/app.py:597
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:771
 #, python-format
 msgid "%d queue paused"
 msgid_plural "%d queues paused"
 msgstr[0] "%d-jono keskeytetty"
 msgstr[1] "%d-jonot keskeytetty"
 
-#: src/anduinos_driver_center/app.py:601
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:775
 msgid "All queues enabled"
 msgstr "Kaikki jonot käytössä"
 
-#: src/anduinos_driver_center/app.py:604
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:779
 msgid "Print queues"
 msgstr "Tulostusjonot"
 
-#: src/anduinos_driver_center/app.py:609
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:790
 msgid "Core printing"
 msgstr "Ydintulostus"
 
-#: src/anduinos_driver_center/app.py:610
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:791
 msgid "Required for the local print service and command-line clients."
 msgstr "Vaaditaan paikalliselle tulostuspalvelulle ja komentoriviasiakkaille."
 
-#: src/anduinos_driver_center/app.py:617
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:798
 msgid "Driverless printing"
 msgstr "Ohjaimeton tulostus"
 
-#: src/anduinos_driver_center/app.py:618
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:799
 msgid "Modern IPP drivers, document filters, and capability tools."
 msgstr "Nykyaikaiset IPP-ajurit, asiakirjasuodattimet ja ominaisuustyökalut."
 
-#: src/anduinos_driver_center/app.py:625
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:806
 msgid "Network discovery"
 msgstr "Verkon etsintä"
 
-#: src/anduinos_driver_center/app.py:626
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:807
 msgid "Automatic discovery of printers advertised on the local network."
-msgstr "Paikallisessa verkossa mainostettujen tulostimien automaattinen etsintä."
+msgstr ""
+"Paikallisessa verkossa mainostettujen tulostimien automaattinen etsintä."
 
-#: src/anduinos_driver_center/app.py:633
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:814
 msgid "Optional compatibility"
 msgstr "Valinnainen yhteensopivuus"
 
-#: src/anduinos_driver_center/app.py:634
-msgid "USB IPP, administrative authorization, legacy drivers, and network scanning."
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:815
+msgid ""
+"USB IPP, administrative authorization, legacy drivers, and network scanning."
 msgstr "USB IPP, hallinnollinen valtuutus, vanhat ohjaimet ja verkkoskannaus."
 
-#: src/anduinos_driver_center/app.py:641
-msgid "Complete printing support"
-msgstr "Täydellinen tulostustuki"
-
-#: src/anduinos_driver_center/app.py:643
-msgid "Install missing printing packages"
-msgstr "Asenna puuttuvat tulostuspaketit"
-
-#: src/anduinos_driver_center/app.py:645
-#, python-format
-msgid "%d package is missing"
-msgid_plural "%d packages are missing"
-msgstr[0] "%d-paketti puuttuu"
-msgstr[1] "%d-paketit puuttuvat"
-
-#: src/anduinos_driver_center/app.py:651
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:838
 msgid "Install Missing Packages"
 msgstr "Asenna puuttuvat paketit"
 
-#: src/anduinos_driver_center/app.py:728
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:891
 msgid "Printing support enabled."
 msgstr "Tulostustuki käytössä."
 
-#: src/anduinos_driver_center/app.py:730
-msgid "Printing support disabled."
-msgstr "Tulostustuki poistettu käytöstä."
-
-#: src/anduinos_driver_center/app.py:734
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:897
 msgid "Printing operation failed: "
 msgstr "Tulostus epäonnistui: "
 
-#: src/anduinos_driver_center/app.py:735 src/anduinos_driver_center/app.py:783
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:898
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:984
 msgid "unknown error"
 msgstr "tuntematon virhe"
 
-#: src/anduinos_driver_center/app.py:770
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:971
 msgid "Apply"
 msgstr "Käytä"
 
-#: src/anduinos_driver_center/app.py:771
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:972
 msgid "Working…"
 msgstr "Toimii…"
 
-#: src/anduinos_driver_center/app.py:783
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:984
 msgid "Driver changes completed. Restart may be required."
-msgstr "Ohjaimen muutokset suoritettu. Uudelleenkäynnistys saattaa olla tarpeen."
+msgstr ""
+"Ohjaimen muutokset suoritettu. Uudelleenkäynnistys saattaa olla tarpeen."
 
-#: src/anduinos_driver_center/app.py:783
-msgid "Driver operation failed: "
-msgstr "Ohjaimen toiminta epäonnistui: "
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
-#: src/anduinos_driver_center/app.py:790
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:991
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
 msgid "OK"
 msgstr "OK"
 
-#: src/anduinos_driver_center/app.py:807
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:1008
 msgid "AnduinOS Team"
 msgstr "4\tAnduinOS-tiimi"
 
-#: src/anduinos_driver_center/app.py:810
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:1011
 msgid "Install, inspect, and repair hardware drivers on AnduinOS."
 msgstr "Asenna, tarkasta ja korjaa AnduinOS:n laitteisto-ohjaimet."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
 msgid "Secure Boot Configuration"
 msgstr "Secure Boot -määritys"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
 msgid ""
-"Secure Boot is a motherboard security standard that ensures only trusted software loads at "
-"startup."
+"Secure Boot is a motherboard security standard that ensures only trusted "
+"software loads at startup."
 msgstr ""
-"\tSecure Boot on emolevun tietoturvakäytäntö, joka varmistaa, että vain luotettava ohjelmisto "
-"ladataan käynnistyksen yhteydessä."
+"\tSecure Boot on emolevun tietoturvakäytäntö, joka varmistaa, että vain "
+"luotettava ohjelmisto ladataan käynnistyksen yhteydessä."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
 msgid "It protects your system from low-level malware and rootkits."
-msgstr "Se suojaa järjestelmääsi matalan tason haittaohjelmilta ja rootkit-ohjelmilta."
+msgstr ""
+"Se suojaa järjestelmääsi matalan tason haittaohjelmilta ja rootkit-"
+"ohjelmilta."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
 msgid "System Trust Status"
 msgstr "Järjestelmän luottamuksen tila"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
 msgid "Create & Enroll Certificate"
 msgstr "Luo ja rekisteröi sertifikaatti"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
 msgid "Repair Module Signatures"
 msgstr "Korjaa moduulin allekirjoitukset"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
 msgid "Note: Use password <b>123456</b> after rebooting."
 msgstr "Huom: Käytä salasanaa <b>123456</b> uudelleenkäynnistyksen jälkeen."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
 msgid "Reboot & Configure Secure Boot"
 msgstr "Uudelleenkäynnistys ja Secure Boot -määritys"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
 msgid "  Check Again  "
 msgstr "  Tarkista uudelleen  "
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
 msgid "Motherboard hardware protection is active"
 msgstr "Emolevyn laitteiston suojaus on aktiivinen"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
 msgid "Firmware does not support Secure Boot"
 msgstr "Laiteohjelmisto ei tue Secure Boot"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
-msgid "Secure Boot state could not be determined"
-msgstr "Secure Boot-tilaa ei voitu määrittää"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
 msgid "Secure Boot is disabled"
 msgstr "Secure Boot ei ole käytössä"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
 msgid "Not required without firmware enforcement"
 msgstr "Ei vaadita ilman laiteohjelmiston valvontaa"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
 msgid "Not checked because Secure Boot state is unknown"
 msgstr "Ei valittu, koska Secure Boot-tila on tuntematon"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
 msgid "Certificate generated locally"
 msgstr "Sertifikaatti luotu paikallisesti"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
 msgid "Missing local certificate"
 msgstr "Puuttuva paikallinen sertifikaatti"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
 msgid "Certificate is trusted by motherboard"
 msgstr "Emolevyn laitteisto luottaa sertifikaattiin"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
-msgid "Pending enrollment in blue screen (MOKManager)"
-msgstr "Odottaa rekisteröintiä sinisellä ruudulla (MOKManager)"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
-msgid "Certificate is not trusted by motherboard"
-msgstr "Emolevy ei luota varmenteeseen"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
 msgid "Kernel signature enforcement is inactive"
 msgstr "Ytimen allekirjoituksen valvonta ei ole aktiivinen"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
 msgid "Driver trust cannot be verified"
 msgstr "Ohjaimen luottamusta ei voida varmistaa"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
-msgid "Secure Boot trust is ready. No third-party kernel modules are currently installed."
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
+msgid ""
+"Secure Boot trust is ready. No third-party kernel modules are currently "
+"installed."
 msgstr ""
-"Secure Boot luottamus on valmis. Kolmannen osapuolen ydinmoduuleja ei ole tällä hetkellä "
-"asennettu."
+"Secure Boot luottamus on valmis. Kolmannen osapuolen ydinmoduuleja ei ole "
+"tällä hetkellä asennettu."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
 msgid "Drivers are signed and ready to load"
 msgstr "Ajurit on allekirjoitettu ja valmiina ladattavaksi"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
 msgid "Drivers are trusted, but automatic DKMS signing needs repair"
-msgstr "Ohjaimet ovat luotettavia, mutta automaattinen DKMS-allekirjoitus vaatii korjausta"
+msgstr ""
+"Ohjaimet ovat luotettavia, mutta automaattinen DKMS-allekirjoitus vaatii "
+"korjausta"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
 msgid "No signed third-party drivers detected"
 msgstr "Ei allekirjoitettuja kolmannen osapuolen ajureita havaittu"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
-msgid "Some DKMS modules need to be re-signed"
-msgstr "Jotkut DKMS-moduulit on allekirjoitettava uudelleen"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
 msgid "Enroll Existing Certificate"
 msgstr "Rekisteröi olemassa oleva sertifikaatti"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
 msgid "Repair Automatic DKMS Signing"
 msgstr "Korjaa automaattinen DKMS allekirjoitus"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
 msgid "This firmware does not provide Secure Boot. No certificate is required."
 msgstr "Tämä laiteohjelmisto ei tarjoa Secure Boot:tä. Varmennetta ei vaadita."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
 msgid ""
-"Secure Boot status could not be read. Driver trust operations are blocked until detection "
-"succeeds."
-msgstr "Secure Boot-tilaa ei voitu lukea. Ohjaimen luottamustoiminnot estetään, kunnes tunnistus onnistuu."
+"Secure Boot status could not be read. Driver trust operations are blocked "
+"until detection succeeds."
+msgstr ""
+"Secure Boot-tilaa ei voitu lukea. Ohjaimen luottamustoiminnot estetään, "
+"kunnes tunnistus onnistuu."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
 msgid "No certificate is required while Secure Boot is disabled."
 msgstr "Varmennetta ei vaadita, kun Secure Boot on poistettu käytöstä."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
 msgid "System Trust Established. Third-party drivers will load securely."
-msgstr "Järjestelmän luottamus vakiintunut. Kolmannen osapuolen ajurit latautuvat turvallisesti."
+msgstr ""
+"Järjestelmän luottamus vakiintunut. Kolmannen osapuolen ajurit latautuvat "
+"turvallisesti."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
 msgid "The certificate is enrolled and current drivers are trusted."
 msgstr "Varmenne on rekisteröity ja nykyiset ohjaimet ovat luotettavia."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
 msgid "Repair automatic DKMS signing before future driver updates."
-msgstr "Korjaa automaattinen DKMS-allekirjoitus ennen tulevia ohjainpäivityksiä."
+msgstr ""
+"Korjaa automaattinen DKMS-allekirjoitus ennen tulevia ohjainpäivityksiä."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
 msgid "The certificate is enrolled, but some modules are not signed with it."
-msgstr "Varmenne on rekisteröity, mutta joitain moduuleja ei ole allekirjoitettu sillä."
+msgstr ""
+"Varmenne on rekisteröity, mutta joitain moduuleja ei ole allekirjoitettu "
+"sillä."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
 msgid "A certificate is waiting for enrollment."
 msgstr "Varmenne odottaa rekisteröintiä."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
 msgid "Restart and enter password 123456 in MOKManager."
 msgstr "Käynnistä uudelleen ja kirjoita salasana 123456 kohtaan MOKManager."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
 msgid "The local trust certificate is not yet enrolled."
 msgstr "Paikallista luottamussertifikaattia ei ole vielä rekisteröity."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
 msgid "You must configure this to use third-party drivers like NVIDIA."
-msgstr "Sinun on määritettävä tämä käyttääksesi kolmannen osapuolen ajureita kuten NVIDIA."
+msgstr ""
+"Sinun on määritettävä tämä käyttääksesi kolmannen osapuolen ajureita kuten "
+"NVIDIA."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
 msgid "The local trust certificate is missing."
 msgstr "Paikallinen luottamussertifikaatti puuttuu."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
 msgid "  Checking...  "
 msgstr "  Tarkistetaan...  "
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
 msgid "Reboot Required"
 msgstr "Uudelleenkäynnistys vaaditaan"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
 msgid "Please trust the certificate upon reboot using password 123456."
-msgstr "Luota sertifikaattiin uudelleenkäynnistyksen yhteydessä käyttämällä salasanaa 123456."
+msgstr ""
+"Luota sertifikaattiin uudelleenkäynnistyksen yhteydessä käyttämällä "
+"salasanaa 123456."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
 msgid "Cancel"
 msgstr "Peruuta"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
 msgid "Reboot"
 msgstr "Uudelleenkäynnistys"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
 msgid "Success! When you reboot, a blue screen will appear."
 msgstr "Onnistui! Kun uudelleenkäynnistät, sininen ruutu ilmestyy."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
 msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
-msgstr "Valitse 'Rekisteröi MOK' → 'Jatka' → 'Kyllä', ja syötä salasana: 123456"
+msgstr ""
+"Valitse 'Rekisteröi MOK' → 'Jatka' → 'Kyllä', ja syötä salasana: 123456"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
 msgid "Certificate Created"
 msgstr "Sertifikaatti luotu"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
 msgid "Later"
 msgstr "Myöhemmin"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
 msgid "Secure Boot Trust Not Required"
 msgstr "Secure Boot Luottamusta ei vaadita"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
 msgid "Firmware signature enforcement is not active."
 msgstr "Laiteohjelmiston allekirjoituksen valvonta ei ole aktiivinen."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
 msgid ""
-"The certificate is ready, but one or more DKMS modules could not be rebuilt. You can repair them "
-"after enrollment."
+"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
+"You can repair them after enrollment."
 msgstr ""
-"Varmenne on valmis, mutta yhtä tai useampaa DKMS-moduulia ei voitu rakentaa uudelleen. Voit "
-"korjata ne ilmoittautumisen jälkeen."
+"Varmenne on valmis, mutta yhtä tai useampaa DKMS-moduulia ei voitu rakentaa "
+"uudelleen. Voit korjata ne ilmoittautumisen jälkeen."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
 msgid "Configuration needs attention"
 msgstr "Kokoonpano vaatii huomiota"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
 msgid "System Trust Established"
 msgstr "Järjestelmän luottamus perustettu"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
 msgid "Driver Signature Trusted"
 msgstr "Ajamin allekirjoituksen luotettu"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
 msgid "Configuration failed. Please try again."
 msgstr "Määritys epäonnistui. Yritä uudelleen."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
 msgid "Please check the advanced output."
 msgstr "Tarkista lisätulosteet."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
 msgid "Generating & Signing..."
 msgstr "Luodaan ja allekirjoitetaan..."
+
+#~ msgid "Needs attention"
+#~ msgstr "Vaatii huomiota"
+
+#~ msgid "Blocked by Secure Boot"
+#~ msgstr "Estetty: Secure Boot"
+
+#~ msgid "Complete printing support"
+#~ msgstr "Täydellinen tulostustuki"
+
+#~ msgid "Install missing printing packages"
+#~ msgstr "Asenna puuttuvat tulostuspaketit"
+
+#, python-format
+#~ msgid "%d package is missing"
+#~ msgid_plural "%d packages are missing"
+#~ msgstr[0] "%d-paketti puuttuu"
+#~ msgstr[1] "%d-paketit puuttuvat"

@@ -53,8 +53,6 @@ try:
     from anduinos_secureboot.ui import create_secure_boot_page as _shared_secure_boot_page
     from anduinos_secureboot import inspect_secure_boot as _inspect_secure_boot
     from anduinos_secureboot.client import run_action as _run_secure_boot_action
-    from anduinos_secureboot.inspect import SubprocessRunner as _SecureBootRunner
-    from anduinos_secureboot.inspect import module_signature as _module_signature
 except ModuleNotFoundError:
     _toolkit_src = os.path.abspath(os.path.join(
         os.path.dirname(__file__), '..', '..',
@@ -64,8 +62,20 @@ except ModuleNotFoundError:
     from anduinos_secureboot.ui import create_secure_boot_page as _shared_secure_boot_page
     from anduinos_secureboot import inspect_secure_boot as _inspect_secure_boot
     from anduinos_secureboot.client import run_action as _run_secure_boot_action
-    from anduinos_secureboot.inspect import SubprocessRunner as _SecureBootRunner
-    from anduinos_secureboot.inspect import module_signature as _module_signature
+
+# Driver Center owns hardware/package health. OOBE consumes that read-only
+# model so both frontends make the same distinction between an installed
+# package, an available module, firmware trust, and a loaded module.
+_driver_center_src = os.path.abspath(os.path.join(
+    os.path.dirname(__file__), '..', '..',
+    'anduinos-driver-center', 'src'))
+if os.path.isdir(_driver_center_src) and _driver_center_src not in sys.path:
+    sys.path.insert(0, _driver_center_src)
+from anduinos_driver_center.core import (
+    XboxStatus as _XboxStatus,
+    graphics_devices as _graphics_devices,
+    xbox_state as _inspect_xbox,
+)
 
 warnings.filterwarnings('ignore', category=DeprecationWarning, module='gi')
 
@@ -82,6 +92,7 @@ FLATHUB_OFFICIAL_REPO = 'https://dl.flathub.org/repo/flathub.flatpakrepo'
 FLATHUB_OFFICIAL_URL = 'https://dl.flathub.org/repo'
 FLATHUB_USTC_URL = 'https://mirrors.ustc.edu.cn/flathub'
 MDNS_HELPER = '/usr/libexec/anduinos-oobe/network-service-helper'
+DRIVER_CENTER_HELPER = '/usr/libexec/anduinos-driver-center/driver-helper'
 SNAPSHOTS_MANAGER_PACKAGE = 'anduinos-btrfs-snapshots-manager'
 SNAPSHOTS_MANAGER_EXECUTABLE = '/usr/bin/anduinos-btrfs-snapshots-manager'
 BASH_GUESS_BEGIN = '# >>> AnduinOS Bash command predictions >>>'
@@ -373,6 +384,27 @@ def _is_package_installed(pkg):
         return r.returncode == 0
     except Exception:
         return False
+
+
+def _has_installed_nvidia_driver():
+    """Detect a configured NVIDIA metapackage without claiming it is active."""
+    try:
+        result = subprocess.run(
+            [
+                'dpkg-query', '-W',
+                '-f=${binary:Package}\t${db:Status-Abbrev}\n',
+                'nvidia-driver-*',
+            ],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+    except Exception:
+        return False
+    return any(
+        '\t' in line and line.split('\t', 1)[1].startswith('ii ')
+        for line in result.stdout.splitlines()
+    )
 
 
 def should_recommend_snapshots_manager():
@@ -1487,7 +1519,7 @@ def create_update_page(navigate_next, update_nav=None):
     textview.set_monospace(True)
     textview.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
     buffer = textview.get_buffer()
-    
+
     scroll.set_child(textview)
     expander.set_child(scroll)
     center.append(expander)
@@ -2109,18 +2141,49 @@ def create_nvidia_page(navigate_next, update_nav=None):
     title.set_margin_top(12)
     center.append(title)
 
-    driver_version = None
-    try:
-        r = subprocess.run(['nvidia-smi', '--query-gpu=driver_version', '--format=csv,noheader'],
-                           capture_output=True, text=True, timeout=5)
-        if r.returncode == 0:
-            driver_version = r.stdout.strip().split('\n')[0]
-    except Exception:
-        pass
+    graphics = _graphics_devices()
+    nvidia_device = next(
+        (device for device in graphics if 'nvidia' in device.vendor.lower()),
+        None,
+    )
+    active_package = next(
+        (
+            option.package for option in (nvidia_device.options if nvidia_device else ())
+            if option.active and option.package.startswith('nvidia-driver-')
+        ),
+        None,
+    )
+    installed_packages = [
+        option.package for option in (nvidia_device.options if nvidia_device else ())
+        if option.installed and option.package.startswith('nvidia-driver-')
+    ]
+    recommended_package = next(
+        (
+            option.package for option in (nvidia_device.options if nvidia_device else ())
+            if option.recommended and option.package.startswith('nvidia-driver-')
+        ),
+        None,
+    )
+    repair_package = active_package or (
+        recommended_package if recommended_package in installed_packages else None
+    ) or (installed_packages[0] if len(installed_packages) == 1 else None)
+    driver_package_installed = bool(installed_packages)
+    driver_healthy = bool(
+        nvidia_device
+        and nvidia_device.active_driver_healthy
+        and active_package
+    )
+    driver_version = (
+        nvidia_device.active_driver_version if driver_healthy else None
+    )
 
-    if driver_version:
+    if driver_healthy:
         sub = Gtk.Label(
             label=_('NVIDIA proprietary driver is already installed. (Version: {})').format(driver_version)
+        )
+    elif driver_package_installed:
+        sub = Gtk.Label(
+            label=_('✗ Installation encountered an issue.')
         )
     else:
         sub = Gtk.Label(
@@ -2165,8 +2228,10 @@ def create_nvidia_page(navigate_next, update_nav=None):
     skip_btn = Gtk.Button(label=_('  Do It Later  '))
     skip_btn.connect('clicked', lambda b: navigate_next())
 
-    if driver_version:
+    if driver_healthy:
         install_btn = Gtk.Button(label=_('  Check for Driver Updates  '))
+    elif driver_package_installed:
+        install_btn = Gtk.Button(label=_('Repair & Reinstall'))
     else:
         install_btn = Gtk.Button(label=_('  One-Click NVIDIA Driver Install  '))
     install_btn.add_css_class('suggested-action')
@@ -2189,6 +2254,12 @@ def create_nvidia_page(navigate_next, update_nav=None):
     textview.set_monospace(True)
     textview.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
     buffer = textview.get_buffer()
+
+    def _append_text(value):
+        end_iter = buffer.get_end_iter()
+        buffer.insert(end_iter, value)
+        mark = buffer.create_mark(None, buffer.get_end_iter(), False)
+        textview.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
     
     scroll.set_child(textview)
     expander.set_child(scroll)
@@ -2211,21 +2282,19 @@ def create_nvidia_page(navigate_next, update_nav=None):
 
         def _do_install():
             try:
-                bash_cmd = 'rm -f /var/lib/apt/lists/*_InRelease /var/lib/apt/lists/*_Release /var/lib/apt/lists/*_Packages /var/lib/apt/lists/*_Sources /var/lib/apt/lists/*_Translation*; apt-get update; ubuntu-drivers install || true; NVIDIA_PKGS=$(dpkg-query -f '"'"'${Package}\n'"'"' -W 2>/dev/null | grep -E "nvidia|linux-modules-nvidia"); if [ -n "$NVIDIA_PKGS" ]; then DEBIAN_FRONTEND=noninteractive apt-get install --only-upgrade -y $NVIDIA_PKGS; fi'
+                helper_arguments = (
+                    ['repair-nvidia', repair_package]
+                    if driver_package_installed and not driver_healthy and repair_package
+                    else ['install-recommended']
+                )
                 proc = subprocess.Popen(
-                    ['pkexec', 'sh', '-c', bash_cmd],
+                    ['pkexec', DRIVER_CENTER_HELPER, *helper_arguments],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     text=True,
                     bufsize=1
                 )
                 
-                def _append_text(t):
-                    end_iter = buffer.get_end_iter()
-                    buffer.insert(end_iter, t)
-                    mark = buffer.create_mark(None, buffer.get_end_iter(), False)
-                    textview.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
-                    
                 for line in iter(proc.stdout.readline, ''):
                     GLib.idle_add(lambda l=line: _append_text(l))
                 proc.stdout.close()
@@ -2234,7 +2303,9 @@ def create_nvidia_page(navigate_next, update_nav=None):
                 if proc.returncode == 0:
                     def _set_success():
                         status_label.set_label(
-                            _('✓ Driver installed successfully!') + '\n' + _('A reboot is recommended to apply changes.'))
+                            _('✓ Driver installed successfully!')
+                            + '\n'
+                            + _('A reboot is recommended to apply changes.'))
                         progress_bar.set_visible(False)
                         btn.set_visible(False)
                         skip_btn.set_visible(False)
@@ -2271,8 +2342,40 @@ def create_nvidia_page(navigate_next, update_nav=None):
     return page
 
 
+# Every non-ready state maps to one concrete recovery action.  This pure
+# policy is shared by initial rendering, refreshes, and behavior tests.
+def _xbox_recovery_action(trust, xbox):
+    if xbox.status is _XboxStatus.NOT_INSTALLED:
+        if not trust.state_known:
+            return 'refresh'
+        if trust.enabled and trust.enrollment_pending:
+            return 'reboot'
+        if trust.enabled and not trust.enrolled:
+            return 'trust'
+        return 'install'
+    return {
+        _XboxStatus.MODULE_MISSING: 'reinstall',
+        _XboxStatus.SECURE_BOOT_UNKNOWN: 'refresh',
+        _XboxStatus.ENROLLMENT_PENDING: 'reboot',
+        _XboxStatus.TRUST_SETUP_REQUIRED: 'trust',
+        _XboxStatus.SIGNATURE_MISMATCH: 'reinstall',
+        _XboxStatus.LOAD_STATE_UNKNOWN: 'refresh',
+        _XboxStatus.LOADED: None,
+        _XboxStatus.READY: None,
+    }[xbox.status]
+
+
+def _secure_boot_trust_prepared(payload):
+    steps = payload.get('steps', {})
+    return (
+        steps.get('key_created', {}).get('status') in {'success', 'skipped'}
+        and steps.get('enrollment_queued', {}).get('status')
+        in {'success', 'skipped'}
+    )
+
+
 # ═══════════════════════════════════════════════════════════════════
-# PAGE 5: EXE SANDBOX — 无缝兼容
+# PAGE 5: XBOX CONTROLLER — shared health and recovery model
 # ═══════════════════════════════════════════════════════════════════
 
 def create_xbox_page(navigate_next, update_nav=None):
@@ -2315,20 +2418,14 @@ def create_xbox_page(navigate_next, update_nav=None):
     current_cert_serial = None
     modinfo_sig_key = None
     is_loaded = False
+    module_available = False
+    xbox_status = _XboxStatus.NOT_INSTALLED
 
     def _refresh_xbox_checks():
         nonlocal is_installed, sb_enabled, sb_state_known
         nonlocal sb_enforcement_inactive, has_cert, is_trusted
         nonlocal current_cert_serial, modinfo_sig_key, is_loaded
-
-        try:
-            package = subprocess.run(
-                ['dpkg-query', '-W', '-f=${db:Status-Abbrev}',
-                 'anduinos-xbox-controller-driver'],
-                capture_output=True, text=True, timeout=5)
-            is_installed = package.returncode == 0 and package.stdout.startswith('ii ')
-        except Exception:
-            is_installed = False
+        nonlocal module_available, xbox_status
 
         trust = _inspect_secure_boot()
         sb_enabled = trust.enabled
@@ -2337,23 +2434,15 @@ def create_xbox_page(navigate_next, update_nav=None):
         has_cert = trust.key_present and trust.certificate_present
         is_trusted = trust.enrolled if sb_enabled and has_cert else sb_enforcement_inactive
         current_cert_serial = trust.certificate_serial
+        xbox = _inspect_xbox(trust)
+        is_installed = xbox.installed
+        module_available = xbox.module_available
+        modinfo_sig_key = xbox.signature_key
+        is_loaded = xbox.module_loaded
+        xbox_status = xbox.status
+        return trust, xbox
 
-        modinfo_sig_key = None
-        if is_installed:
-            modinfo_sig_key = _module_signature('hid-xpadneo', _SecureBootRunner())
-
-        is_loaded = False
-        if is_installed:
-            try:
-                modules = subprocess.run(
-                    ['lsmod'], capture_output=True, text=True, timeout=5)
-                is_loaded = modules.returncode == 0 and any(
-                    line.split(maxsplit=1)[0] in {'hid_xpadneo', 'xpadneo'}
-                    for line in modules.stdout.splitlines() if line.strip())
-            except Exception:
-                pass
-
-    _refresh_xbox_checks()
+    current_trust, current_xbox = _refresh_xbox_checks()
 
     r3 = None
     icon3 = None
@@ -2412,11 +2501,14 @@ def create_xbox_page(navigate_next, update_nav=None):
         icon2 = _create_image('dialog-error-symbolic')
         icon2.set_pixel_size(16)
 
-        if not sb_state_known:
-            r2.set_subtitle(_("Secure Boot state could not be determined"))
-            icon2.add_css_class('error')
-        elif not is_installed:
+        if not is_installed:
             r2.set_subtitle(_("Driver not installed, signature missing"))
+            icon2.add_css_class('error')
+        elif not module_available:
+            r2.set_subtitle(f'{_("Kernel module")}: {_("Not detected")}')
+            icon2.add_css_class('error')
+        elif not sb_state_known:
+            r2.set_subtitle(_("Secure Boot state could not be determined"))
             icon2.add_css_class('error')
         else:
             if not modinfo_sig_key:
@@ -2446,27 +2538,32 @@ def create_xbox_page(navigate_next, update_nav=None):
         icon3 = _create_image('emblem-ok-symbolic')
         icon3.set_pixel_size(16)
 
-        if is_loaded:
+        if xbox_status is _XboxStatus.LOADED:
             r3.set_subtitle(_("Driver loaded and active. Ready to play!"))
             icon3.add_css_class('success')
+        elif xbox_status is _XboxStatus.READY:
+            r3.set_subtitle(_("Driver standing by. Waiting for controller connection..."))
+            icon3.add_css_class('success')
+        elif xbox_status is _XboxStatus.MODULE_MISSING:
+            r3.set_subtitle(f'{_("Kernel module")}: {_("Not detected")}')
+            icon3.set_from_icon_name('dialog-error-symbolic')
+            icon3.add_css_class('error')
+        elif xbox_status is _XboxStatus.LOAD_STATE_UNKNOWN:
+            r3.set_subtitle(_("Driver trust cannot be verified"))
+            icon3.set_from_icon_name('dialog-warning-symbolic')
+            icon3.add_css_class('warning')
+        elif xbox_status is _XboxStatus.ENROLLMENT_PENDING:
+            r3.set_subtitle(_("A certificate is waiting for enrollment."))
+            icon3.set_from_icon_name('dialog-warning-symbolic')
+            icon3.add_css_class('warning')
         else:
-            is_blocked = False
-            if not sb_state_known:
-                is_blocked = True
-            elif sb_enabled and (not is_trusted or modinfo_sig_key != current_cert_serial):
-                is_blocked = True
-
-            if is_blocked:
-                r3.set_subtitle(
-                    _("Driver trust cannot be verified")
-                    if not sb_state_known
-                    else _("Driver cannot load due to missing signature trust")
-                )
-                icon3.set_from_icon_name('dialog-error-symbolic')
-                icon3.add_css_class('error')
-            else:
-                r3.set_subtitle(_("Driver standing by. Waiting for controller connection..."))
-                icon3.add_css_class('success')
+            r3.set_subtitle(
+                _("Driver trust cannot be verified")
+                if xbox_status is _XboxStatus.SECURE_BOOT_UNKNOWN
+                else _("Driver cannot load due to missing signature trust")
+            )
+            icon3.set_from_icon_name('dialog-error-symbolic')
+            icon3.add_css_class('error')
 
         r3.add_suffix(icon3)
         list_group.add(r3)
@@ -2506,13 +2603,10 @@ def create_xbox_page(navigate_next, update_nav=None):
     tools_box.append(pair_btn)
     tools_box.append(test_btn)
     
-    is_ready_to_play = False
-    if is_installed:
-        if sb_enabled:
-            if is_trusted and modinfo_sig_key == current_cert_serial:
-                is_ready_to_play = True
-        elif sb_enforcement_inactive:
-            is_ready_to_play = True
+    is_ready_to_play = xbox_status in {
+        _XboxStatus.LOADED,
+        _XboxStatus.READY,
+    }
     tools_box.set_visible(is_ready_to_play)
 
 
@@ -2520,49 +2614,57 @@ def create_xbox_page(navigate_next, update_nav=None):
     install_btn = Gtk.Button(label=_('  Install Xbox Driver  '))
     install_btn.add_css_class('suggested-action')
 
-    reinstall_btn = Gtk.Button(label=_('  Fix & Reinstall Driver  '))
+    reinstall_btn = Gtk.Button(label=_('Repair Module Signatures'))
     reinstall_btn.add_css_class('suggested-action')
     reinstall_btn.set_visible(False)
 
-    # ── Smart button visibility ──
-    install_btn.set_visible(False)
-    reinstall_btn.set_visible(False)
-    page._suggest_next = True
-    status_label.set_label('')
+    trust_btn = Gtk.Button(label=_('Create & Enroll Certificate'))
+    trust_btn.add_css_class('suggested-action')
+    trust_btn.set_visible(False)
 
-    if not is_installed:
-        if not sb_state_known:
-            install_btn.set_visible(True)
-            install_btn.set_sensitive(False)
+    reboot_btn = Gtk.Button(label=_('Reboot & Configure Secure Boot'))
+    reboot_btn.add_css_class('suggested-action')
+    reboot_btn.set_visible(False)
+
+    def _apply_recovery(trust, xbox, refresh_button=None):
+        action = _xbox_recovery_action(trust, xbox)
+        install_btn.set_visible(action == 'install')
+        reinstall_btn.set_visible(action == 'reinstall')
+        trust_btn.set_visible(action == 'trust')
+        reboot_btn.set_visible(action == 'reboot')
+        for action_button in (install_btn, reinstall_btn, trust_btn, reboot_btn):
+            action_button.set_sensitive(True)
+        page._suggest_next = action is None
+
+        warnings_by_status = {
+            _XboxStatus.MODULE_MISSING: f'{_("Kernel module")}: {_("Not detected")}',
+            _XboxStatus.SECURE_BOOT_UNKNOWN: _('Driver trust cannot be verified'),
+            _XboxStatus.ENROLLMENT_PENDING: _('A certificate is waiting for enrollment.'),
+            _XboxStatus.TRUST_SETUP_REQUIRED: _('The local trust certificate is not yet enrolled.'),
+            _XboxStatus.SIGNATURE_MISMATCH: _('⚠️ The driver signature does not match your system certificate. Click Fix & Reinstall to repair the driver.'),
+            _XboxStatus.LOAD_STATE_UNKNOWN: _('Driver trust cannot be verified'),
+        }
+        warning = warnings_by_status.get(xbox.status, '')
+        if xbox.status is _XboxStatus.NOT_INSTALLED:
+            if action == 'refresh':
+                warning = _("Secure Boot state could not be determined")
+            elif action == 'reboot':
+                warning = _('A certificate is waiting for enrollment.')
+            elif action == 'trust':
+                warning = _('The local trust certificate is not yet enrolled.')
+        if warning:
             status_label.set_markup(
-                '<span foreground="#ffcc00">'
-                + _("Secure Boot state could not be determined")
-                + '\n'
-                + _("Driver installation is blocked until detection succeeds.")
-                + '</span>'
+                '<span foreground="#ffcc00">' + warning + '</span>'
             )
-            page._suggest_next = False
-        elif sb_enabled and not is_trusted:
-            install_btn.set_visible(True)
-            install_btn.set_sensitive(False)
-            status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ Secure Boot is enabled but the custom certificate is not yet enrolled.') + '\n' + _('Please configure Secure Boot in the previous step before installing this driver.') + '</span>')
-            page._suggest_next = False
         else:
-            install_btn.set_visible(True)
-            install_btn.set_sensitive(True)
-            page._suggest_next = False
-    else:
-        if not sb_state_known:
-            status_label.set_markup(
-                '<span foreground="#ffcc00">'
-                + _("Driver trust cannot be verified")
-                + '</span>'
-            )
-            page._suggest_next = False
-        elif sb_enabled and is_trusted and modinfo_sig_key != current_cert_serial:
-            reinstall_btn.set_visible(True)
-            status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ The driver signature does not match your system certificate. Click Fix & Reinstall to repair the driver.') + '</span>')
-            page._suggest_next = False
+            status_label.set_label('')
+        tools_box.set_visible(action is None)
+        if refresh_button is not None:
+            refresh_button.set_visible(action == 'refresh')
+            refresh_button.set_sensitive(True)
+            refresh_button.set_label(_('  Check Again  '))
+
+    _apply_recovery(current_trust, current_xbox)
 
     expander = Gtk.Expander(label=_('Advanced Output'))
     expander.set_margin_top(12)
@@ -2581,7 +2683,13 @@ def create_xbox_page(navigate_next, update_nav=None):
     textview.set_monospace(True)
     textview.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
     buffer = textview.get_buffer()
-    
+
+    def _append_xbox_output(value):
+        end_iter = buffer.get_end_iter()
+        buffer.insert(end_iter, value)
+        mark = buffer.create_mark(None, buffer.get_end_iter(), False)
+        textview.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
+
     scroll.set_child(textview)
     expander.set_child(scroll)
     center.append(expander)
@@ -2602,67 +2710,24 @@ def create_xbox_page(navigate_next, update_nav=None):
 
         def _do_install():
             try:
-                conf_script = f"""
-rm -f /var/lib/apt/lists/*_InRelease /var/lib/apt/lists/*_Release /var/lib/apt/lists/*_Packages /var/lib/apt/lists/*_Sources /var/lib/apt/lists/*_Translation*
-apt update
-apt install -y anduinos-xbox-controller-driver
-"""
                 proc = subprocess.Popen(
-                    ['pkexec', 'bash', '-c', conf_script],
+                    ['pkexec', DRIVER_CENTER_HELPER, 'install-xbox'],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     text=True,
                     bufsize=1
                 )
                 
-                def _append_text(t):
-                    end_iter = buffer.get_end_iter()
-                    buffer.insert(end_iter, t)
-                    mark = buffer.create_mark(None, buffer.get_end_iter(), False)
-                    textview.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
-                    
                 for line in iter(proc.stdout.readline, ''):
-                    GLib.idle_add(lambda l=line: _append_text(l))
+                    GLib.idle_add(lambda l=line: _append_xbox_output(l))
                 proc.stdout.close()
                 proc.wait()
                 
                 if proc.returncode == 0:
                     def _set_success():
-                        nonlocal r3, icon3, is_installed
-                        is_installed = True
-                        status_label.set_label(_('✓ Xbox controller driver installed successfully!'))
-                        r1.set_subtitle(_("The xpadneo driver is currently installed"))
-                        icon1.set_from_icon_name('emblem-ok-symbolic')
-                        icon1.remove_css_class('error')
-                        icon1.add_css_class('success')
-
-                        if sb_enabled:
-                            r2.set_subtitle(_("Signed with current trusted certificate"))
-                            icon2.set_from_icon_name('emblem-ok-symbolic')
-                            icon2.remove_css_class('error')
-                            icon2.add_css_class('success')
-
-                        if r3 is None:
-                            r3 = Adw.ActionRow(title=_("Controller Status"))
-                            icon3 = _create_image('emblem-ok-symbolic')
-                            icon3.set_pixel_size(16)
-                            r3.add_suffix(icon3)
-                            list_group.add(r3)
-                        icon3.remove_css_class('error')
-                        icon3.add_css_class('success')
-                        icon3.set_from_icon_name('emblem-ok-symbolic')
-                        r3.set_subtitle(_("Driver standing by. Waiting for controller connection...") + "\n" + _("(Reboot recommended)"))
-
                         progress_bar.set_visible(False)
-                        btn.set_visible(False)
-                        tools_box.set_visible(sb_state_known)
-                        page._suggest_next = sb_state_known
-                        xb_refresh_btn.set_visible(not sb_state_known)
-                        if not sb_state_known:
-                            status_label.set_label(
-                                _("Driver trust cannot be verified")
-                            )
-                        if update_nav: update_nav()
+                        status_label.set_label(_('  Checking...  '))
+                        _on_xb_refresh(xb_refresh_btn)
                     GLib.idle_add(_set_success)
                 else:
                     def _set_fail():
@@ -2701,22 +2766,25 @@ apt install -y anduinos-xbox-controller-driver
 
         def _do_reinstall():
             try:
-                code, payload = _run_secure_boot_action('repair-dkms')
-                detail = json.dumps(payload, indent=2, ensure_ascii=False) + '\n'
-
-                def _append_result():
-                    end_iter = buffer.get_end_iter()
-                    buffer.insert(end_iter, detail)
-
-                GLib.idle_add(_append_result)
-                if code == 0:
+                proc = subprocess.Popen(
+                    ['pkexec', DRIVER_CENTER_HELPER, 'repair-xbox'],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    bufsize=1,
+                )
+                for line in iter(proc.stdout.readline, ''):
+                    GLib.idle_add(lambda value=line: _append_xbox_output(value))
+                proc.stdout.close()
+                proc.wait()
+                if proc.returncode == 0:
                     GLib.idle_add(lambda: (
                         progress_bar.set_visible(False),
                         _on_xb_refresh(xb_refresh_btn)
                     ))
                 else:
                     GLib.idle_add(lambda: (
-                        status_label.set_label(_('✗ Repair failed.') + "\n" + _('Please check the advanced output.')),
+                        status_label.set_label(_('✗ Installation encountered an issue.') + "\n" + _('Please check the advanced output.')),
                         progress_bar.set_visible(False),
                         btn.set_sensitive(True)
                     ))
@@ -2730,8 +2798,63 @@ apt install -y anduinos-xbox-controller-driver
         threading.Thread(target=_do_reinstall, daemon=True).start()
 
     reinstall_btn.connect('clicked', _on_reinstall)
+
+    def _on_configure_trust(btn):
+        btn.set_sensitive(False)
+        progress_bar.set_visible(True)
+        progress_bar.pulse()
+        status_label.set_label(_('Secure Boot Configuration'))
+
+        def _worker():
+            try:
+                code, payload = _run_secure_boot_action('prepare')
+                detail = json.dumps(payload, indent=2, ensure_ascii=False) + '\n'
+                GLib.idle_add(lambda: _append_xbox_output(detail))
+                if code == 0 or _secure_boot_trust_prepared(payload):
+                    GLib.idle_add(lambda: (
+                        progress_bar.set_visible(False),
+                        btn.set_sensitive(True),
+                        _on_xb_refresh(xb_refresh_btn),
+                    ))
+                else:
+                    GLib.idle_add(lambda: (
+                        status_label.set_label(_('✗ Installation encountered an issue.') + "\n" + _('Please check the advanced output.')),
+                        progress_bar.set_visible(False),
+                        btn.set_sensitive(True),
+                    ))
+            except Exception as error:
+                GLib.idle_add(lambda error=error: (
+                    status_label.set_label(_('✗ Error: ') + str(error)),
+                    progress_bar.set_visible(False),
+                    btn.set_sensitive(True),
+                ))
+
+        threading.Thread(target=_worker, daemon=True).start()
+
+    trust_btn.connect('clicked', _on_configure_trust)
+
+    def _confirm_reboot(_btn):
+        dialog = Adw.MessageDialog.new(
+            page.get_root(),
+            _('Reboot Required'),
+            _('Restart and enter password 123456 in MOKManager.'),
+        )
+        dialog.add_response('cancel', _('Cancel'))
+        dialog.add_response('reboot', _('Reboot'))
+        dialog.set_response_appearance('reboot', Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.connect(
+            'response',
+            lambda _dialog, response: subprocess.Popen(
+                ['gnome-session-quit', '--reboot', '--no-prompt']
+            ) if response == 'reboot' else None,
+        )
+        dialog.present()
+
+    reboot_btn.connect('clicked', _confirm_reboot)
     btn_box.append(install_btn)
     btn_box.append(reinstall_btn)
+    btn_box.append(trust_btn)
+    btn_box.append(reboot_btn)
     center.append(btn_box)
     center.append(tools_box)
 
@@ -2744,7 +2867,7 @@ apt install -y anduinos-xbox-controller-driver
         button.set_sensitive(False)
         button.set_label(_('  Checking...  '))
         def _worker():
-            _refresh_xbox_checks()
+            trust, xbox = _refresh_xbox_checks()
             def _apply():
                 nonlocal r3, icon3
 
@@ -2778,12 +2901,16 @@ apt install -y anduinos-xbox-controller-driver
                     icon2.remove_css_class('success')
                     icon2.remove_css_class('error')
                     icon2.remove_css_class('warning')
-                    if not sb_state_known:
-                        r2.set_subtitle(_("Secure Boot state could not be determined"))
+                    if not is_installed:
+                        r2.set_subtitle(_("Driver not installed, signature missing"))
                         icon2.set_from_icon_name('dialog-error-symbolic')
                         icon2.add_css_class('error')
-                    elif not is_installed:
-                        r2.set_subtitle(_("Driver not installed, signature missing"))
+                    elif not module_available:
+                        r2.set_subtitle(f'{_("Kernel module")}: {_("Not detected")}')
+                        icon2.set_from_icon_name('dialog-error-symbolic')
+                        icon2.add_css_class('error')
+                    elif not sb_state_known:
+                        r2.set_subtitle(_("Secure Boot state could not be determined"))
                         icon2.set_from_icon_name('dialog-error-symbolic')
                         icon2.add_css_class('error')
                     elif not modinfo_sig_key:
@@ -2814,86 +2941,51 @@ apt install -y anduinos-xbox-controller-driver
                         list_group.add(r3)
                     icon3.remove_css_class('success')
                     icon3.remove_css_class('error')
-                    if is_loaded:
+                    icon3.remove_css_class('warning')
+                    if xbox_status is _XboxStatus.LOADED:
                         r3.set_subtitle(_("Driver loaded and active. Ready to play!"))
                         icon3.set_from_icon_name('emblem-ok-symbolic')
                         icon3.add_css_class('success')
+                    elif xbox_status is _XboxStatus.READY:
+                        r3.set_subtitle(_("Driver standing by. Waiting for controller connection..."))
+                        icon3.set_from_icon_name('emblem-ok-symbolic')
+                        icon3.add_css_class('success')
+                    elif xbox_status is _XboxStatus.MODULE_MISSING:
+                        r3.set_subtitle(f'{_("Kernel module")}: {_("Not detected")}')
+                        icon3.set_from_icon_name('dialog-error-symbolic')
+                        icon3.add_css_class('error')
+                    elif xbox_status is _XboxStatus.LOAD_STATE_UNKNOWN:
+                        r3.set_subtitle(_("Driver trust cannot be verified"))
+                        icon3.set_from_icon_name('dialog-warning-symbolic')
+                        icon3.add_css_class('warning')
+                    elif xbox_status is _XboxStatus.ENROLLMENT_PENDING:
+                        r3.set_subtitle(_("A certificate is waiting for enrollment."))
+                        icon3.set_from_icon_name('dialog-warning-symbolic')
+                        icon3.add_css_class('warning')
                     else:
-                        is_blocked = False
-                        if not sb_state_known:
-                            is_blocked = True
-                        elif sb_enabled and (not is_trusted or modinfo_sig_key != current_cert_serial):
-                            is_blocked = True
-                        if is_blocked:
-                            r3.set_subtitle(
-                                _("Driver trust cannot be verified")
-                                if not sb_state_known
-                                else _("Driver cannot load due to missing signature trust")
-                            )
-                            icon3.set_from_icon_name('dialog-error-symbolic')
-                            icon3.add_css_class('error')
-                        else:
-                            r3.set_subtitle(_("Driver standing by. Waiting for controller connection..."))
-                            icon3.set_from_icon_name('emblem-ok-symbolic')
-                            icon3.add_css_class('success')
+                        r3.set_subtitle(
+                            _("Driver trust cannot be verified")
+                            if xbox_status is _XboxStatus.SECURE_BOOT_UNKNOWN
+                            else _("Driver cannot load due to missing signature trust")
+                        )
+                        icon3.set_from_icon_name('dialog-error-symbolic')
+                        icon3.add_css_class('error')
 
                 # is_ready_to_play
-                _ready = False
-                if is_installed:
-                    if sb_enabled:
-                        if is_trusted and modinfo_sig_key == current_cert_serial:
-                            _ready = True
-                    elif sb_enforcement_inactive:
-                        _ready = True
+                _ready = xbox_status in {
+                    _XboxStatus.LOADED,
+                    _XboxStatus.READY,
+                }
                 tools_box.set_visible(_ready)
 
-                # install / reinstall button visibility
-                install_btn.set_visible(False)
-                reinstall_btn.set_visible(False)
-                page._suggest_next = True
-                status_label.set_label('')
-
-                if not is_installed:
-                    if not sb_state_known:
-                        install_btn.set_visible(True)
-                        install_btn.set_sensitive(False)
-                        status_label.set_markup(
-                            '<span foreground="#ffcc00">'
-                            + _("Secure Boot state could not be determined")
-                            + '\n'
-                            + _("Driver installation is blocked until detection succeeds.")
-                            + '</span>'
-                        )
-                        page._suggest_next = False
-                    elif sb_enabled and not is_trusted:
-                        install_btn.set_visible(True)
-                        install_btn.set_sensitive(False)
-                        status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ Secure Boot is enabled but the custom certificate is not yet enrolled.') + '\n' + _('Please reboot to enroll the certificate before installing this driver.') + '</span>')
-                        page._suggest_next = False
-                    else:
-                        install_btn.set_visible(True)
-                        install_btn.set_sensitive(True)
-                        page._suggest_next = False
-                elif not sb_state_known:
-                    status_label.set_markup(
-                        '<span foreground="#ffcc00">'
-                        + _("Driver trust cannot be verified")
-                        + '</span>'
-                    )
-                    page._suggest_next = False
-                elif sb_enabled and is_trusted and modinfo_sig_key != current_cert_serial:
-                    reinstall_btn.set_visible(True)
-                    status_label.set_markup('<span foreground="#ffcc00">' + _('⚠️ The driver signature does not match your system certificate. Click Fix & Reinstall to repair the driver.') + '</span>')
-                    page._suggest_next = False
-
-                xb_refresh_btn.set_visible(not _ready)
-                button.set_sensitive(True)
-                button.set_label(_('  Check Again  '))
+                _apply_recovery(trust, xbox, button)
             GLib.idle_add(_apply)
         threading.Thread(target=_worker, daemon=True).start()
 
     xb_refresh_btn.connect('clicked', _on_xb_refresh)
-    xb_refresh_btn.set_visible(not is_ready_to_play)
+    xb_refresh_btn.set_visible(
+        _xbox_recovery_action(current_trust, current_xbox) == 'refresh'
+    )
     center.append(xb_refresh_btn)
 
     return page

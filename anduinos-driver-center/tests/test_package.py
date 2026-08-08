@@ -35,6 +35,7 @@ class PackageTests(unittest.TestCase):
         helper = (ROOT / "scripts/driver-helper").read_text()
         self.assertIn('["install-audio"]', application)
         self.assertIn('case ["install-audio"]:', helper)
+        self.assertIn('case ["repair-audio"]:', helper)
         self.assertIn(
             'AUDIO_PACKAGES = ("firmware-sof-anduinos", "alsa-ucm-conf-anduinos")',
             helper,
@@ -52,6 +53,29 @@ class PackageTests(unittest.TestCase):
         self.assertIn('["install-printing-support"]', application)
         self.assertIn('Adw.SwitchRow(', application)
         self.assertIn('"set-printing-enabled"', application)
+        self.assertIn('"resume-print-queues"', application)
+
+    def test_warning_rows_require_a_recovery_action(self):
+        application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
+        self.assertIn("Warning row has no recovery action", application)
+        self.assertIn("Warning banner has no recovery action", application)
+        self.assertNotIn("blocked_by_secure_boot", application)
+        self.assertNotIn("repair.set_sensitive(secure_boot.ready)", application)
+        self.assertEqual(application.count("Adw.Banner("), 1)
+
+    def test_xpadneo_package_scripts_propagate_real_dkms_failures(self):
+        package = ROOT.parent / "anduinos-xbox-controller-driver"
+        postinst = (package / "scripts/postinst.sh").read_text()
+        prerm = (package / "scripts/prerm.sh").read_text()
+        self.assertNotIn("|| true", postinst)
+        self.assertNotIn("|| true", prerm)
+        self.assertIn('dkms build -m "$PKG_NAME"', postinst)
+        self.assertIn('dkms install -m "$PKG_NAME"', postinst)
+        self.assertIn('dkms status -m "$PKG_NAME" -v "$VERSION"', postinst)
+        self.assertIn('-k "$KERNEL_RELEASE"', postinst)
+        self.assertIn('*": installed"*)', postinst)
+        self.assertIn('dkms status -m "$PKG_NAME" -v "$VERSION"', prerm)
+        self.assertNotIn('/var/lib/dkms/', prerm)
 
     def test_refresh_preserves_the_selected_hardware_page(self):
         application = (ROOT / "src/anduinos_driver_center/app.py").read_text()

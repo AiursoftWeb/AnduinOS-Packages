@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
+from enum import Enum
 from pathlib import Path
 import os
 import re
@@ -81,6 +82,7 @@ class DriverOption:
     free: bool = False
     builtin: bool = False
     installed: bool = False
+    active: bool = False
 
 
 @dataclass(frozen=True)
@@ -89,6 +91,11 @@ class HardwareDevice:
     vendor: str
     model: str
     modalias: str = ""
+    active_driver: str | None = None
+    driver_state_known: bool = False
+    active_driver_healthy: bool | None = None
+    active_driver_version: str | None = None
+    active_driver_error: str | None = None
     options: tuple[DriverOption, ...] = field(default_factory=tuple)
 
     @property
@@ -103,13 +110,26 @@ class HardwareDevice:
         return model or vendor or "Graphics device"
 
 
+class XboxStatus(str, Enum):
+    NOT_INSTALLED = "not-installed"
+    MODULE_MISSING = "module-missing"
+    SECURE_BOOT_UNKNOWN = "secure-boot-unknown"
+    ENROLLMENT_PENDING = "enrollment-pending"
+    TRUST_SETUP_REQUIRED = "trust-setup-required"
+    SIGNATURE_MISMATCH = "signature-mismatch"
+    LOAD_STATE_UNKNOWN = "load-state-unknown"
+    LOADED = "loaded"
+    READY = "ready"
+
+
 @dataclass(frozen=True)
 class XboxState:
+    status: XboxStatus
     installed: bool
+    module_available: bool
     module_loaded: bool
     signature_key: str | None
     signature_matches: bool
-    blocked_by_secure_boot: bool
 
 
 @dataclass(frozen=True)
@@ -175,6 +195,14 @@ class PrintingState:
     @property
     def missing_packages(self) -> tuple[PackageState, ...]:
         return tuple(package for package in self.packages if not package.installed)
+
+    @property
+    def missing_required_packages(self) -> tuple[PackageState, ...]:
+        return tuple(
+            package
+            for package in self.core_packages + self.driverless_packages
+            if not package.installed
+        )
 
 
 def package_is_installed(package: str, runner: Runner) -> bool:
@@ -341,6 +369,113 @@ def _parse_driver_line(line: str, runner: Runner) -> DriverOption | None:
     )
 
 
+def _active_graphics_driver(
+    identifier: str, runner: Runner
+) -> tuple[bool, str | None]:
+    """Return the kernel driver bound to the PCI device in an ubuntu-drivers path."""
+    matches = list(re.finditer(
+        r"(?<![0-9a-fA-F])(?:[0-9a-fA-F]{4}:)?[0-9a-fA-F]{2}:"
+        r"[0-9a-fA-F]{2}\.[0-7](?=$|/)",
+        identifier,
+    ))
+    if not matches:
+        return False, None
+    slot = matches[-1].group(0)
+    result = runner.run(["lspci", "-k", "-s", slot])
+    if result.returncode != 0:
+        return False, None
+    for line in result.stdout.splitlines():
+        if "Kernel driver in use:" in line:
+            driver = line.split(":", 1)[1].strip()
+            return True, driver or None
+    return True, None
+
+
+def _active_driver_health(
+    active_driver: str | None,
+    driver_state_known: bool,
+    runner: Runner,
+) -> tuple[bool | None, str | None, str | None]:
+    """Verify the bound graphics driver without loading or switching modules."""
+    if not driver_state_known:
+        return None, None, "Kernel driver binding could not be determined"
+    if not active_driver:
+        return False, None, "No kernel driver is bound to this device"
+    if not active_driver.lower().replace("_", "-").startswith("nvidia"):
+        return True, None, None
+
+    module = runner.run(["modinfo", "-F", "version", "nvidia"])
+    module_version = module.stdout.strip().splitlines()[0] if (
+        module.returncode == 0 and module.stdout.strip()
+    ) else None
+    if not module_version:
+        detail = (module.stderr or module.stdout).strip()
+        return False, None, detail or "NVIDIA kernel module metadata is unavailable"
+
+    userspace = runner.run(
+        [
+            "nvidia-smi",
+            "--query-gpu=driver_version",
+            "--format=csv,noheader",
+        ],
+        timeout=10,
+    )
+    userspace_version = userspace.stdout.strip().splitlines()[0] if (
+        userspace.returncode == 0 and userspace.stdout.strip()
+    ) else None
+    if not userspace_version:
+        detail = (userspace.stderr or userspace.stdout).strip()
+        return False, module_version, detail or "nvidia-smi could not communicate with the driver"
+    if userspace_version != module_version:
+        return (
+            False,
+            module_version,
+            f"NVIDIA version mismatch: kernel {module_version}, userspace {userspace_version}",
+        )
+    return True, module_version, None
+
+
+def _options_with_active_driver(
+    options: list[DriverOption],
+    active_driver: str | None,
+    active_driver_version: str | None = None,
+) -> tuple[DriverOption, ...]:
+    """Map a bound kernel driver to one installed ubuntu-drivers package."""
+    if not active_driver:
+        return tuple(options)
+
+    normalized = active_driver.lower().replace("_", "-")
+    if normalized.startswith("nvidia"):
+        candidates = [
+            option
+            for option in options
+            if option.installed and option.package.startswith("nvidia-driver-")
+        ]
+        if active_driver_version:
+            series = active_driver_version.split(".", 1)[0]
+            matching_series = [
+                option
+                for option in candidates
+                if option.package.startswith(f"nvidia-driver-{series}-")
+                or option.package == f"nvidia-driver-{series}"
+            ]
+            if matching_series:
+                candidates = matching_series
+    else:
+        package = f"xserver-xorg-video-{normalized}"
+        candidates = [option for option in options if option.package == package]
+
+    # Package presence cannot distinguish two co-installed NVIDIA variants.
+    # Refuse to guess which metapackage owns the running module.
+    if len(candidates) != 1:
+        return tuple(options)
+    active_package = candidates[0].package
+    return tuple(
+        replace(option, active=option.package == active_package)
+        for option in options
+    )
+
+
 def parse_ubuntu_driver_devices(output: str, runner: Runner) -> list[HardwareDevice]:
     devices: list[HardwareDevice] = []
     block: dict[str, str] = {}
@@ -350,13 +485,26 @@ def parse_ubuntu_driver_devices(output: str, runner: Runner) -> list[HardwareDev
         nonlocal block, options
         if block or options:
             identifier = block.get("path") or block.get("modalias") or f"device-{len(devices)}"
+            driver_state_known, active_driver = _active_graphics_driver(
+                identifier, runner
+            )
+            driver_healthy, driver_version, driver_error = _active_driver_health(
+                active_driver, driver_state_known, runner
+            )
             devices.append(
                 HardwareDevice(
                     identifier=identifier,
                     vendor=block.get("vendor", ""),
                     model=block.get("model", ""),
                     modalias=block.get("modalias", ""),
-                    options=tuple(options),
+                    active_driver=active_driver,
+                    driver_state_known=driver_state_known,
+                    active_driver_healthy=driver_healthy,
+                    active_driver_version=driver_version,
+                    active_driver_error=driver_error,
+                    options=_options_with_active_driver(
+                        options, active_driver, driver_version
+                    ),
                 )
             )
         block = {}
@@ -394,9 +542,16 @@ def xbox_state(
 ) -> XboxState:
     runner = runner or SubprocessRunner()
     installed = package_is_installed("anduinos-xbox-controller-driver", runner)
-    signature = module_signature("hid-xpadneo", runner) if installed else None
+    module = runner.run(["modinfo", "-F", "filename", "hid-xpadneo"])
+    module_available = bool(
+        installed and module.returncode == 0 and module.stdout.strip()
+    )
+    signature = (
+        module_signature("hid-xpadneo", runner) if module_available else None
+    )
     modules = runner.run(["lsmod"])
-    loaded = modules.returncode == 0 and any(
+    load_state_known = modules.returncode == 0
+    loaded = load_state_known and any(
         line.split(maxsplit=1)[0] in {"hid_xpadneo", "xpadneo"}
         for line in modules.stdout.splitlines()
         if line.strip()
@@ -405,11 +560,32 @@ def xbox_state(
         signature and secure_boot.certificate_serial
         and signature == secure_boot.certificate_serial
     )
-    blocked = bool(
-        installed and secure_boot.enabled
-        and (not secure_boot.enrolled or not matches)
+    if not installed:
+        status = XboxStatus.NOT_INSTALLED
+    elif not module_available:
+        status = XboxStatus.MODULE_MISSING
+    elif not secure_boot.state_known:
+        status = XboxStatus.SECURE_BOOT_UNKNOWN
+    elif secure_boot.enabled and secure_boot.enrollment_pending:
+        status = XboxStatus.ENROLLMENT_PENDING
+    elif secure_boot.enabled and not secure_boot.enrolled:
+        status = XboxStatus.TRUST_SETUP_REQUIRED
+    elif secure_boot.enabled and not matches:
+        status = XboxStatus.SIGNATURE_MISMATCH
+    elif not load_state_known:
+        status = XboxStatus.LOAD_STATE_UNKNOWN
+    elif loaded:
+        status = XboxStatus.LOADED
+    else:
+        status = XboxStatus.READY
+    return XboxState(
+        status,
+        installed,
+        module_available,
+        loaded,
+        signature,
+        matches,
     )
-    return XboxState(installed, loaded, signature, matches, blocked)
 
 
 def dkms_state(

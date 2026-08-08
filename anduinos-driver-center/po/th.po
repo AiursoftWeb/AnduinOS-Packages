@@ -7,721 +7,764 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-driver-center 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-06 15:06+0800\n"
+"POT-Creation-Date: 2026-08-08 10:54+0000\n"
 "PO-Revision-Date: 2026-08-06 07:08+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
-"Language: th\n"
 "Language-Team: th\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: src/anduinos_driver_center/app.py:73 src/anduinos_driver_center/app.py:805
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:74
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:1006
 msgid "AnduinOS Driver Center"
 msgstr "ศูนย์ไดรเวอร์ AnduinOS"
 
-#: src/anduinos_driver_center/app.py:132
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:137
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:435
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:597
 msgid "Scan again"
 msgstr "สแกนอีกครั้ง"
 
-#: src/anduinos_driver_center/app.py:136
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:141
 msgid "About Driver Center"
 msgstr "เกี่ยวกับศูนย์ไดร์เวอร์"
 
-#: src/anduinos_driver_center/app.py:138
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:143
 msgid "Main Menu"
 msgstr "เมนูหลัก"
 
-#: src/anduinos_driver_center/app.py:155
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:160
 msgid "Hardware"
 msgstr "ฮาร์ดแวร์"
 
-#: src/anduinos_driver_center/app.py:179
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:184
 msgid "Scanning for drivers"
 msgstr "กำลังสแกนหาไดรเวอร์"
 
-#: src/anduinos_driver_center/app.py:179
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:184
 msgid "Checking hardware and Secure Boot status…"
 msgstr "กำลังตรวจสอบฮาร์ดแวร์และสถานะ Secure Boot..."
 
-#: src/anduinos_driver_center/app.py:212
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:217
 msgid "Audio"
 msgstr "เสียง"
 
-#: src/anduinos_driver_center/app.py:213
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:218
 msgid "Audio support ready"
 msgstr "รองรับเสียงแล้ว"
 
-#: src/anduinos_driver_center/app.py:213
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:218
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:232
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:258
 msgid "Support needs attention"
 msgstr "ฝ่ายสนับสนุนจำเป็นต้องได้รับการดูแล"
 
-#: src/anduinos_driver_center/app.py:221
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:227
 msgid "Printing service stopped"
 msgstr "หยุดบริการการพิมพ์แล้ว"
 
-#: src/anduinos_driver_center/app.py:223
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:229
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:893
+msgid "Printing support disabled."
+msgstr "ปิดใช้งานการสนับสนุนการพิมพ์แล้ว"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:234
 msgid "Some queues are paused"
 msgstr "บางคิวถูกหยุดชั่วคราว"
 
-#: src/anduinos_driver_center/app.py:225
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:236
 msgid "No printers configured"
 msgstr "ไม่มีการกำหนดค่าเครื่องพิมพ์"
 
-#: src/anduinos_driver_center/app.py:228
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:239
 #, python-format
 msgid "%d printer configured"
 msgid_plural "%d printers configured"
 msgstr[0] "กำหนดค่าเครื่องพิมพ์ %d แล้ว"
 
-#: src/anduinos_driver_center/app.py:233
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:244
 msgid "Printers"
 msgstr "เครื่องพิมพ์"
 
-#: src/anduinos_driver_center/app.py:240
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:251
 msgid "Xbox Controller"
 msgstr "ตัวควบคุม Xbox"
 
-#: src/anduinos_driver_center/app.py:241
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:253
 msgid "xpadneo installed"
 msgstr "ติดตั้ง xpadneo แล้ว"
 
-#: src/anduinos_driver_center/app.py:241
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:256
 msgid "Optional Bluetooth driver"
 msgstr "ไดรเวอร์บลูทูธเสริม"
 
-#: src/anduinos_driver_center/app.py:252
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:271
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:364
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:555
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:560
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:565
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:576
 msgid "Secure Boot"
 msgstr "Secure Boot"
 
-#: src/anduinos_driver_center/app.py:253
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:272
 msgid "Trust established"
 msgstr "ก่อตั้งความน่าเชื่อถือแล้ว"
 
-#: src/anduinos_driver_center/app.py:253
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:272
 msgid "Action required"
 msgstr "จำเป็นต้องดำเนินการ"
 
-#: src/anduinos_driver_center/app.py:324
-msgid "Choose the driver used by this device. AnduinOS marks the hardware-tested recommendation."
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:351
+msgid ""
+"Choose the driver used by this device. AnduinOS marks the hardware-tested "
+"recommendation."
 msgstr "เลือกไดรเวอร์ที่ใช้โดยอุปกรณ์นี้ AnduinOS ถือเป็นคำแนะนำที่ผ่านการทดสอบด้วยฮาร์ดแวร์"
 
-#: src/anduinos_driver_center/app.py:330
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:357
 msgid "Available drivers"
 msgstr "ไดรเวอร์ที่มีอยู่"
 
-#: src/anduinos_driver_center/app.py:335
-msgid "Secure Boot status or trust must be resolved before installing a third-party driver."
-msgstr "สถานะหรือความน่าเชื่อถือของ Secure Boot ต้องได้รับการแก้ไขก่อนที่จะติดตั้งไดรเวอร์ของบริษัทอื่น"
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:362
+msgid ""
+"Secure Boot status or trust must be resolved before installing a third-party "
+"driver."
+msgstr ""
+"สถานะหรือความน่าเชื่อถือของ Secure Boot ต้องได้รับการแก้ไขก่อนที่จะติดตั้งไดรเวอร์ของบริษัทอื่น"
 
-#: src/anduinos_driver_center/app.py:344
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:372
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:448
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:461
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:782
 msgid "Apply Changes"
 msgstr "ใช้การเปลี่ยนแปลง"
 
-#: src/anduinos_driver_center/app.py:353
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:381
 msgid "open source"
 msgstr "โอเพ่นซอร์ส"
 
-#: src/anduinos_driver_center/app.py:353
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:381
 msgid "proprietary"
 msgstr "กรรมสิทธิ์"
 
-#: src/anduinos_driver_center/app.py:355
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:383
 msgid "built in"
 msgstr "ในตัว"
 
-#: src/anduinos_driver_center/app.py:376
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:407
 msgid "In use"
 msgstr "ใช้งานอยู่"
 
-#: src/anduinos_driver_center/app.py:378
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:410
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:535
+msgid "Installed"
+msgstr "ติดตั้งแล้ว"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:412
 msgid "Recommended"
 msgstr "แนะนำ"
 
-#: src/anduinos_driver_center/app.py:394
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:434
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:445
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:460
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:625
+msgid "Kernel module"
+msgstr "โมดูลเคอร์เนล"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:434
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:460
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:551
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:595
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:703
+msgid "Not detected"
+msgstr "ตรวจไม่พบ"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:446
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:984
+msgid "Driver operation failed: "
+msgstr "การทำงานของไดรเวอร์ล้มเหลว: "
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:448
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:571
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:590
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:653
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:683
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:691
+msgid "Repair & Reinstall"
+msgstr "ซ่อมแซมและติดตั้งใหม่"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:469
 msgid "Advanced driver versions"
 msgstr "เวอร์ชันไดรเวอร์ขั้นสูง"
 
-#: src/anduinos_driver_center/app.py:395
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:470
 msgid "Older, newer, and server-oriented packages"
 msgstr "แพ็คเกจที่เก่ากว่า ใหม่กว่า และเน้นเซิร์ฟเวอร์"
 
-#: src/anduinos_driver_center/app.py:416
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:491
 msgid "Select another driver to apply changes."
 msgstr "เลือกไดรเวอร์อื่นเพื่อใช้การเปลี่ยนแปลง"
 
-#: src/anduinos_driver_center/app.py:451
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:526
 msgid "Xbox Controller Support"
 msgstr "การรองรับคอนโทรลเลอร์ Xbox"
 
-#: src/anduinos_driver_center/app.py:452
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:527
 msgid ""
-"xpadneo improves Bluetooth mapping, rumble, battery reporting and compatibility for modern Xbox "
-"controllers."
+"xpadneo improves Bluetooth mapping, rumble, battery reporting and "
+"compatibility for modern Xbox controllers."
 msgstr ""
 "xpadneo ปรับปรุงการแมป Bluetooth, เสียงดังก้อง, การรายงานแบตเตอรี่ "
 "และความเข้ากันได้สำหรับคอนโทรลเลอร์ Xbox สมัยใหม่"
 
-#: src/anduinos_driver_center/app.py:455
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:530
 msgid "Driver status"
 msgstr "สถานะของไดรเวอร์"
 
-#: src/anduinos_driver_center/app.py:457
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:534
 msgid "Driver package"
 msgstr "แพ็คเกจไดรเวอร์"
 
-#: src/anduinos_driver_center/app.py:457
-msgid "Installed"
-msgstr "ติดตั้งแล้ว"
-
-#: src/anduinos_driver_center/app.py:457 src/anduinos_driver_center/app.py:498
-#: src/anduinos_driver_center/app.py:504 src/anduinos_driver_center/app.py:678
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:535
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:619
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:662
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:670
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:834
 msgid "Not installed"
 msgstr "ไม่ได้ติดตั้ง"
 
-#: src/anduinos_driver_center/app.py:466
-msgid "Module signature"
-msgstr "ลายเซ็นโมดูล"
-
-#: src/anduinos_driver_center/app.py:467
-msgid "Trusted"
-msgstr "เชื่อถือได้"
-
-#: src/anduinos_driver_center/app.py:467
-msgid "Needs attention"
-msgstr "ต้องการความสนใจ"
-
-#: src/anduinos_driver_center/app.py:470
-msgid "Kernel module"
-msgstr "โมดูลเคอร์เนล"
-
-#: src/anduinos_driver_center/app.py:470
-msgid "Loaded"
-msgstr "โหลดแล้ว"
-
-#: src/anduinos_driver_center/app.py:470
-msgid "Blocked by Secure Boot"
-msgstr "บล็อกโดย Secure Boot"
-
-#: src/anduinos_driver_center/app.py:470
-msgid "Standing by"
-msgstr "ยืนเคียงข้าง"
-
-#: src/anduinos_driver_center/app.py:472
-msgid "Bluetooth Settings"
-msgstr "การตั้งค่าบลูทูธ"
-
-#: src/anduinos_driver_center/app.py:476
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:537
 msgid "Install Driver"
 msgstr "ติดตั้งไดร์เวอร์"
 
-#: src/anduinos_driver_center/app.py:481
-msgid "Repair & Reinstall"
-msgstr "ซ่อมแซมและติดตั้งใหม่"
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:543
+msgid "Trusted"
+msgstr "เชื่อถือได้"
 
-#: src/anduinos_driver_center/app.py:490
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:554
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
+msgid "Secure Boot state could not be determined"
+msgstr "ไม่สามารถระบุสถานะ Secure Boot ได้"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:559
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
+msgid "Pending enrollment in blue screen (MOKManager)"
+msgstr "\\รกำลังรอการลงทะเบียนในหน้าจอสีน้ำเงิน (MOKManager)"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:564
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
+msgid "Certificate is not trusted by motherboard"
+msgstr "เมนบอร์ดไม่น่าเชื่อถือใบรับรอง"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:569
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
+msgid "Some DKMS modules need to be re-signed"
+msgstr "โมดูล DKMS บางโมดูลจำเป็นต้องลงนามใหม่"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:580
+msgid "Module signature"
+msgstr "ลายเซ็นโมดูล"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:588
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:681
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:689
+msgid "Missing"
+msgstr "หายไป"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:600
+msgid "Loaded"
+msgstr "โหลดแล้ว"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:605
+msgid "Standing by"
+msgstr "ยืนเคียงข้าง"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:632
+msgid "Bluetooth Settings"
+msgstr "การตั้งค่าบลูทูธ"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:640
 msgid "Audio Support"
 msgstr "รองรับระบบเสียง"
 
-#: src/anduinos_driver_center/app.py:491
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:641
 msgid ""
-"AnduinOS provides Intel SOF firmware and ALSA UCM profiles for reliable audio initialization and "
-"routing."
+"AnduinOS provides Intel SOF firmware and ALSA UCM profiles for reliable "
+"audio initialization and routing."
 msgstr ""
 "AnduinOS มีเฟิร์มแวร์ Intel SOF และโปรไฟล์ ALSA UCM "
 "สำหรับการเริ่มต้นและการกำหนดเส้นทางเสียงที่เชื่อถือได้"
 
-#: src/anduinos_driver_center/app.py:493
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:643
 msgid "Support packages"
 msgstr "แพ็คเกจสนับสนุน"
 
-#: src/anduinos_driver_center/app.py:497
-msgid "Intel SOF firmware"
-msgstr "เฟิร์มแวร์ Intel SOF"
-
-#: src/anduinos_driver_center/app.py:503
-msgid "ALSA UCM profiles"
-msgstr "โปรไฟล์ ALSA UCM"
-
-#: src/anduinos_driver_center/app.py:508
-msgid "Runtime status"
-msgstr "สถานะรันไทม์"
-
-#: src/anduinos_driver_center/app.py:512
-msgid "SOF firmware files"
-msgstr "ไฟล์เฟิร์มแวร์ SOF"
-
-#: src/anduinos_driver_center/app.py:513 src/anduinos_driver_center/app.py:519
-msgid "Available"
-msgstr "พร้อมใช้งาน"
-
-#: src/anduinos_driver_center/app.py:513 src/anduinos_driver_center/app.py:519
-msgid "Missing"
-msgstr "หายไป"
-
-#: src/anduinos_driver_center/app.py:518
-msgid "UCM configuration files"
-msgstr "ไฟล์การกำหนดค่า UCM"
-
-#: src/anduinos_driver_center/app.py:524
-msgid "SOF kernel modules"
-msgstr "โมดูลเคอร์เนล SOF"
-
-#: src/anduinos_driver_center/app.py:525
-msgid "Not currently loaded"
-msgstr "ยังไม่ได้โหลดในขณะนี้"
-
-#: src/anduinos_driver_center/app.py:530
-msgid "Active audio drivers"
-msgstr "ไดรเวอร์เสียงที่ใช้งานอยู่"
-
-#: src/anduinos_driver_center/app.py:531
-msgid "Not detected"
-msgstr "ตรวจไม่พบ"
-
-#: src/anduinos_driver_center/app.py:536
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:651
 msgid "Install Audio Support"
 msgstr "ติดตั้งการสนับสนุนด้านเสียง"
 
-#: src/anduinos_driver_center/app.py:544
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:661
+msgid "Intel SOF firmware"
+msgstr "เฟิร์มแวร์ Intel SOF"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:669
+msgid "ALSA UCM profiles"
+msgstr "โปรไฟล์ ALSA UCM"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:676
+msgid "Runtime status"
+msgstr "สถานะรันไทม์"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:680
+msgid "SOF firmware files"
+msgstr "ไฟล์เฟิร์มแวร์ SOF"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:681
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:689
+msgid "Available"
+msgstr "พร้อมใช้งาน"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:688
+msgid "UCM configuration files"
+msgstr "ไฟล์การกำหนดค่า UCM"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:696
+msgid "SOF kernel modules"
+msgstr "โมดูลเคอร์เนล SOF"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:697
+msgid "Not currently loaded"
+msgstr "ยังไม่ได้โหลดในขณะนี้"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:702
+msgid "Active audio drivers"
+msgstr "ไดรเวอร์เสียงที่ใช้งานอยู่"
+
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:711
 msgid "Printing Support"
 msgstr "รองรับการพิมพ์"
 
-#: src/anduinos_driver_center/app.py:545
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:712
 msgid ""
-"Inspect the local print service, configured queues, and the packages that provide modern and "
-"legacy printer support."
+"Inspect the local print service, configured queues, and the packages that "
+"provide modern and legacy printer support."
 msgstr ""
 "ตรวจสอบบริการการพิมพ์ในเครื่อง คิวที่กำหนดค่า "
 "และแพ็คเกจที่ให้การสนับสนุนเครื่องพิมพ์สมัยใหม่และรุ่นเก่า"
 
-#: src/anduinos_driver_center/app.py:549
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:716
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:733
 msgid "Enable Printing Support"
 msgstr "เปิดใช้งานการสนับสนุนการพิมพ์"
 
-#: src/anduinos_driver_center/app.py:550
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:717
 msgid "Allow local, network, and USB printing services to run."
 msgstr "อนุญาตให้บริการการพิมพ์ภายใน เครือข่าย และ USB ทำงาน"
 
-#: src/anduinos_driver_center/app.py:559
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:726
 msgid "System status"
 msgstr "สถานะของระบบ"
 
-#: src/anduinos_driver_center/app.py:563
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:730
 msgid "CUPS service"
 msgstr "บริการถ้วย"
 
-#: src/anduinos_driver_center/app.py:564
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:731
 msgid "Running"
 msgstr "กำลังดำเนินการ"
 
-#: src/anduinos_driver_center/app.py:564
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:731
 msgid "Stopped"
 msgstr "หยุดแล้ว"
 
-#: src/anduinos_driver_center/app.py:569
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:743
 msgid "Start at boot"
 msgstr "เริ่มต้นที่บูต"
 
-#: src/anduinos_driver_center/app.py:570
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:744
 msgid "Enabled"
 msgstr "เปิดใช้งานแล้ว"
 
-#: src/anduinos_driver_center/app.py:570
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:744
 msgid "Disabled"
 msgstr "ปิดใช้งาน"
 
-#: src/anduinos_driver_center/app.py:575
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:749
 #, python-format
 msgid "%d configured printer"
 msgid_plural "%d configured printers"
 msgstr[0] "%d กำหนดค่าเครื่องพิมพ์"
 
-#: src/anduinos_driver_center/app.py:581
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:755
 msgid "Configured printers"
 msgstr "กำหนดค่าเครื่องพิมพ์แล้ว"
 
-#: src/anduinos_driver_center/app.py:587
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:761
 msgid "Default printer"
 msgstr "เครื่องพิมพ์เริ่มต้น"
 
-#: src/anduinos_driver_center/app.py:588
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:762
 msgid "Not set"
 msgstr "ไม่ได้ตั้งค่า"
 
-#: src/anduinos_driver_center/app.py:592
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:766
 msgid "No configured queues"
 msgstr "ไม่มีคิวที่กำหนดค่าไว้"
 
-#: src/anduinos_driver_center/app.py:597
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:771
 #, python-format
 msgid "%d queue paused"
 msgid_plural "%d queues paused"
 msgstr[0] "คิว %d หยุดชั่วคราว"
 
-#: src/anduinos_driver_center/app.py:601
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:775
 msgid "All queues enabled"
 msgstr "เปิดใช้งานคิวทั้งหมดแล้ว"
 
-#: src/anduinos_driver_center/app.py:604
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:779
 msgid "Print queues"
 msgstr "พิมพ์คิว"
 
-#: src/anduinos_driver_center/app.py:609
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:790
 msgid "Core printing"
 msgstr "การพิมพ์หลัก"
 
-#: src/anduinos_driver_center/app.py:610
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:791
 msgid "Required for the local print service and command-line clients."
 msgstr "จำเป็นสำหรับบริการการพิมพ์ในเครื่องและไคลเอ็นต์บรรทัดคำสั่ง"
 
-#: src/anduinos_driver_center/app.py:617
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:798
 msgid "Driverless printing"
 msgstr "การพิมพ์แบบไร้ไดรเวอร์"
 
-#: src/anduinos_driver_center/app.py:618
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:799
 msgid "Modern IPP drivers, document filters, and capability tools."
 msgstr "ไดรเวอร์ IPP ที่ทันสมัย ตัวกรองเอกสาร และเครื่องมือความสามารถ"
 
-#: src/anduinos_driver_center/app.py:625
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:806
 msgid "Network discovery"
 msgstr "การค้นพบเครือข่าย"
 
-#: src/anduinos_driver_center/app.py:626
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:807
 msgid "Automatic discovery of printers advertised on the local network."
 msgstr "ค้นพบเครื่องพิมพ์ที่โฆษณาบนเครือข่ายท้องถิ่นโดยอัตโนมัติ"
 
-#: src/anduinos_driver_center/app.py:633
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:814
 msgid "Optional compatibility"
 msgstr "ความเข้ากันได้เสริม"
 
-#: src/anduinos_driver_center/app.py:634
-msgid "USB IPP, administrative authorization, legacy drivers, and network scanning."
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:815
+msgid ""
+"USB IPP, administrative authorization, legacy drivers, and network scanning."
 msgstr "USB IPP, การอนุญาตผู้ดูแลระบบ, ไดรเวอร์รุ่นเก่า และการสแกนเครือข่าย"
 
-#: src/anduinos_driver_center/app.py:641
-msgid "Complete printing support"
-msgstr "รองรับการพิมพ์อย่างสมบูรณ์"
-
-#: src/anduinos_driver_center/app.py:643
-msgid "Install missing printing packages"
-msgstr "ติดตั้งแพ็คเกจการพิมพ์ที่ขาดหายไป"
-
-#: src/anduinos_driver_center/app.py:645
-#, python-format
-msgid "%d package is missing"
-msgid_plural "%d packages are missing"
-msgstr[0] "แพ็คเกจ %d หายไป"
-
-#: src/anduinos_driver_center/app.py:651
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:838
 msgid "Install Missing Packages"
 msgstr "ติดตั้งแพ็คเกจที่หายไป"
 
-#: src/anduinos_driver_center/app.py:728
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:891
 msgid "Printing support enabled."
 msgstr "เปิดใช้งานการสนับสนุนการพิมพ์แล้ว"
 
-#: src/anduinos_driver_center/app.py:730
-msgid "Printing support disabled."
-msgstr "ปิดใช้งานการสนับสนุนการพิมพ์แล้ว"
-
-#: src/anduinos_driver_center/app.py:734
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:897
 msgid "Printing operation failed: "
 msgstr "การดำเนินการพิมพ์ล้มเหลว: "
 
-#: src/anduinos_driver_center/app.py:735 src/anduinos_driver_center/app.py:783
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:898
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:984
 msgid "unknown error"
 msgstr "ข้อผิดพลาดที่ไม่รู้จัก"
 
-#: src/anduinos_driver_center/app.py:770
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:971
 msgid "Apply"
 msgstr "สมัคร"
 
-#: src/anduinos_driver_center/app.py:771
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:972
 msgid "Working…"
 msgstr "ทำงาน..."
 
-#: src/anduinos_driver_center/app.py:783
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:984
 msgid "Driver changes completed. Restart may be required."
 msgstr "การเปลี่ยนแปลงไดรเวอร์เสร็จสมบูรณ์ อาจจำเป็นต้องรีสตาร์ท"
 
-#: src/anduinos_driver_center/app.py:783
-msgid "Driver operation failed: "
-msgstr "การทำงานของไดรเวอร์ล้มเหลว: "
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
-#: src/anduinos_driver_center/app.py:790
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:991
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
 msgid "OK"
 msgstr "ตกลง"
 
-#: src/anduinos_driver_center/app.py:807
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:1008
 msgid "AnduinOS Team"
 msgstr "ทีม AnduinOS"
 
-#: src/anduinos_driver_center/app.py:810
+#: anduinos-driver-center/src/anduinos_driver_center/app.py:1011
 msgid "Install, inspect, and repair hardware drivers on AnduinOS."
 msgstr "ติดตั้ง ตรวจสอบ และซ่อมแซมไดรเวอร์ฮาร์ดแวร์บน AnduinOS"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
 msgid "Secure Boot Configuration"
 msgstr "การกำหนดค่า Secure Boot"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
 msgid ""
-"Secure Boot is a motherboard security standard that ensures only trusted software loads at "
-"startup."
+"Secure Boot is a motherboard security standard that ensures only trusted "
+"software loads at startup."
 msgstr ""
 "Secure Boot "
 "เป็นมาตรฐานความปลอดภัยของเมนบอร์ดที่รับประกันว่าเฉพาะซอฟต์แวร์ที่ได้รับอนุญาตเท่านั้นที่จะโหลดในขณะเริ่มต้นเครื่อง"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
 msgid "It protects your system from low-level malware and rootkits."
 msgstr "มันปกป้องระบบของคุณจากมัลแวร์ระดับต่ำและรูทคิต"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
 msgid "System Trust Status"
 msgstr "สถานะความไว้วางใจของระบบ"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
 msgid "Create & Enroll Certificate"
 msgstr "สร้างและลงทะเบียนใบรับรอง"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
 msgid "Repair Module Signatures"
 msgstr "ซ่อมแซมลายเซ็นโมดูล"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
 msgid "Note: Use password <b>123456</b> after rebooting."
 msgstr "หมายเหตุ: ใช้รหัสผ่าน <b>123456</b> หลังจาก รีสตาร์ทเครื่อง"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
 msgid "Reboot & Configure Secure Boot"
 msgstr "รีสตาร์ท & กำหนดค่า Secure Boot"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
 msgid "  Check Again  "
 msgstr "  ตรวจสอบอีกครั้ง  "
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
 msgid "Motherboard hardware protection is active"
 msgstr "การป้องกันฮาร์ดแวร์ของเมนบอร์ดกำลังทำงานอยู่"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
 msgid "Firmware does not support Secure Boot"
 msgstr "เฟิร์มแวร์ไม่รองรับ Secure Boot"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
-msgid "Secure Boot state could not be determined"
-msgstr "ไม่สามารถระบุสถานะ Secure Boot ได้"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
 msgid "Secure Boot is disabled"
 msgstr "Secure Boot ถูกปิดใช้งาน"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
 msgid "Not required without firmware enforcement"
 msgstr "ไม่จำเป็นหากไม่มีการบังคับใช้เฟิร์มแวร์"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
 msgid "Not checked because Secure Boot state is unknown"
 msgstr "ไม่ได้ตรวจสอบเนื่องจากไม่ทราบสถานะ Secure Boot"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
 msgid "Certificate generated locally"
 msgstr "สร้างใบรับรองภายในเครื่อง"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
 msgid "Missing local certificate"
 msgstr "ขาดใบรับรองในเครื่อง"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
 msgid "Certificate is trusted by motherboard"
 msgstr "ใบรับรองได้รับความไว้วางใจจากเมนบอร์ด"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
-msgid "Pending enrollment in blue screen (MOKManager)"
-msgstr "\\รกำลังรอการลงทะเบียนในหน้าจอสีน้ำเงิน (MOKManager)"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
-msgid "Certificate is not trusted by motherboard"
-msgstr "เมนบอร์ดไม่น่าเชื่อถือใบรับรอง"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
 msgid "Kernel signature enforcement is inactive"
 msgstr "การบังคับใช้ลายเซ็นเคอร์เนลไม่ได้ใช้งาน"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
 msgid "Driver trust cannot be verified"
 msgstr "ไม่สามารถตรวจสอบความน่าเชื่อถือของผู้ขับขี่ได้"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
-msgid "Secure Boot trust is ready. No third-party kernel modules are currently installed."
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
+msgid ""
+"Secure Boot trust is ready. No third-party kernel modules are currently "
+"installed."
 msgstr "ความไว้วางใจ Secure Boot พร้อมแล้ว ไม่มีการติดตั้งโมดูลเคอร์เนลของบริษัทอื่นในปัจจุบัน"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
 msgid "Drivers are signed and ready to load"
 msgstr "ไดรเวอร์ลงนามเรียบร้อยแล้วและพร้อมโหลด"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
 msgid "Drivers are trusted, but automatic DKMS signing needs repair"
 msgstr "ไดรเวอร์เชื่อถือได้ แต่การเซ็นชื่อ DKMS อัตโนมัติจำเป็นต้องได้รับการซ่อมแซม"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
 msgid "No signed third-party drivers detected"
 msgstr "ไม่พบไดรเวอร์บุคคลที่สามที่มีการลงนาม"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
-msgid "Some DKMS modules need to be re-signed"
-msgstr "โมดูล DKMS บางโมดูลจำเป็นต้องลงนามใหม่"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
 msgid "Enroll Existing Certificate"
 msgstr "ลงทะเบียนใบรับรองที่มีอยู่"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
 msgid "Repair Automatic DKMS Signing"
 msgstr "ซ่อมแซมการลงนาม DKMS อัตโนมัติ"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
 msgid "This firmware does not provide Secure Boot. No certificate is required."
 msgstr "เฟิร์มแวร์นี้ไม่มี Secure Boot ไม่จำเป็นต้องมีใบรับรอง"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
 msgid ""
-"Secure Boot status could not be read. Driver trust operations are blocked until detection "
-"succeeds."
+"Secure Boot status could not be read. Driver trust operations are blocked "
+"until detection succeeds."
 msgstr ""
 "ไม่สามารถอ่านสถานะ Secure Boot ได้ "
 "การดำเนินการที่เชื่อถือได้ของไดรเวอร์จะถูกบล็อกจนกว่าการตรวจจับจะสำเร็จ"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
 msgid "No certificate is required while Secure Boot is disabled."
 msgstr "ไม่จำเป็นต้องมีใบรับรองในขณะที่ Secure Boot ถูกปิดใช้งาน"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
 msgid "System Trust Established. Third-party drivers will load securely."
 msgstr "ความไว้วางใจของระบบได้รับการจัดตั้งแล้ว ไดรเวอร์บุคคลที่สามจะโหลดอย่างปลอดภัย"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
 msgid "The certificate is enrolled and current drivers are trusted."
 msgstr "ลงทะเบียนใบรับรองแล้วและไดรเวอร์ปัจจุบันเชื่อถือได้"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
 msgid "Repair automatic DKMS signing before future driver updates."
 msgstr "ซ่อมแซมการเซ็นชื่อ DKMS อัตโนมัติก่อนการอัปเดตไดรเวอร์ในอนาคต"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
 msgid "The certificate is enrolled, but some modules are not signed with it."
 msgstr "ลงทะเบียนใบรับรองแล้ว แต่บางโมดูลไม่ได้ลงนามด้วย"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
 msgid "A certificate is waiting for enrollment."
 msgstr "ใบรับรองกำลังรอการลงทะเบียน"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
 msgid "Restart and enter password 123456 in MOKManager."
 msgstr "รีสตาร์ทและป้อนรหัสผ่าน 123456 ใน MOKManager"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
 msgid "The local trust certificate is not yet enrolled."
 msgstr "ใบรับรองความน่าเชื่อถือในเครื่องยังไม่ได้ลงทะเบียน"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
 msgid "You must configure this to use third-party drivers like NVIDIA."
 msgstr "คุณต้องกำหนดค่าสิ่งนี้เพื่อใช้ไดรเวอร์บุคคลที่สาม เช่น NVIDIA"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
 msgid "The local trust certificate is missing."
 msgstr "ใบรับรองความน่าเชื่อถือในเครื่องหายไป"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
 msgid "  Checking...  "
 msgstr "  กำลังตรวจสอบ...  "
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
 msgid "Reboot Required"
 msgstr "จำเป็นต้องรีสตาร์ท"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
 msgid "Please trust the certificate upon reboot using password 123456."
 msgstr "กรุณาไว้วางใจใบรับรองเมื่อรีสตาร์ทโดยใช้รหัสผ่าน 123456"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
 msgid "Cancel"
 msgstr "ยกเลิก"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
 msgid "Reboot"
 msgstr "รีสตาร์ท"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
 msgid "Success! When you reboot, a blue screen will appear."
 msgstr "สำเร็จ! เมื่อคุณรีสตาร์ท หน้าจอสีน้ำเงินจะปรากฏขึ้น"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
 msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
 msgstr "เลือก 'Enroll MOK' → 'Continue' → 'Yes' และป้อนรหัสผ่าน: 123456"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
 msgid "Certificate Created"
 msgstr "สร้างใบรับรองแล้ว"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
 msgid "Later"
 msgstr "ต่อมา"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
 msgid "Secure Boot Trust Not Required"
 msgstr "Secure Boot ไม่จำเป็นต้องเชื่อถือ"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
 msgid "Firmware signature enforcement is not active."
 msgstr "การบังคับใช้ลายเซ็นเฟิร์มแวร์ไม่ทำงาน"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
 msgid ""
-"The certificate is ready, but one or more DKMS modules could not be rebuilt. You can repair them "
-"after enrollment."
+"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
+"You can repair them after enrollment."
 msgstr ""
 "ใบรับรองพร้อมแล้ว แต่โมดูล DKMS อย่างน้อยหนึ่งโมดูลไม่สามารถสร้างขึ้นใหม่ได้ "
 "คุณสามารถซ่อมแซมได้หลังจากการลงทะเบียน"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
 msgid "Configuration needs attention"
 msgstr "การกำหนดค่าจำเป็นต้องได้รับการดูแล"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
 msgid "System Trust Established"
 msgstr "ก่อตั้งความน่าเชื่อถือของระบบแล้ว"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
 msgid "Driver Signature Trusted"
 msgstr "ลายเซ็นไดรเวอร์ได้รับการไว้วางใจ"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
 msgid "Configuration failed. Please try again."
 msgstr "การกำหนดค่าล้มเหลว กรุณาลองใหม่อีกครั้ง"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
 msgid "Please check the advanced output."
 msgstr "โปรดตรวจสอบเอาต์พุตขั้นสูง"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
 msgid "Generating & Signing..."
 msgstr "กำลังสร้าง & ลงนาม..."
+
+#~ msgid "Needs attention"
+#~ msgstr "ต้องการความสนใจ"
+
+#~ msgid "Blocked by Secure Boot"
+#~ msgstr "บล็อกโดย Secure Boot"
+
+#~ msgid "Complete printing support"
+#~ msgstr "รองรับการพิมพ์อย่างสมบูรณ์"
+
+#~ msgid "Install missing printing packages"
+#~ msgstr "ติดตั้งแพ็คเกจการพิมพ์ที่ขาดหายไป"
+
+#, python-format
+#~ msgid "%d package is missing"
+#~ msgid_plural "%d packages are missing"
+#~ msgstr[0] "แพ็คเกจ %d หายไป"

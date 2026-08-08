@@ -23,6 +23,7 @@ from anduinos_driver_center.core import (  # noqa: E402
     parse_ubuntu_driver_devices,
     printing_state,
     secure_boot_state,
+    XboxStatus,
     xbox_state,
 )
 from anduinos_secureboot import SecureBootStatus  # noqa: E402
@@ -80,6 +81,144 @@ driver   : xserver-xorg-video-nouveau - distro free builtin
         self.assertTrue(devices[0].options[1].free)
         self.assertTrue(devices[0].options[1].builtin)
 
+    def test_graphics_marks_only_bound_nvidia_driver_as_active(self):
+        path = "/sys/devices/pci0000:00/0000:00:01.0/0000:01:00.0"
+        output = f"""== {path} ==
+modalias : pci:v000010DEd00002584
+vendor   : NVIDIA Corporation
+model    : GA107 [GeForce RTX 3050 6GB]
+driver   : nvidia-driver-595-open - distro non-free recommended
+driver   : xserver-xorg-video-nouveau - distro free builtin
+"""
+        responses = {
+            ("lspci", "-k", "-s", "0000:01:00.0"):
+                subprocess.CompletedProcess(
+                    [],
+                    0,
+                    "01:00.0 VGA compatible controller: NVIDIA GA107\n"
+                    "\tKernel driver in use: nvidia\n"
+                    "\tKernel modules: nouveau, nvidia\n",
+                    "",
+                ),
+            ("modinfo", "-F", "version", "nvidia"):
+                subprocess.CompletedProcess([], 0, "595.41.02\n", ""),
+            (
+                "nvidia-smi",
+                "--query-gpu=driver_version",
+                "--format=csv,noheader",
+            ): subprocess.CompletedProcess([], 0, "595.41.02\n", ""),
+        }
+        devices = parse_ubuntu_driver_devices(
+            output,
+            FakeRunner(
+                responses,
+                installed={
+                    "nvidia-driver-595-open",
+                    "xserver-xorg-video-nouveau",
+                },
+            ),
+        )
+
+        self.assertEqual(devices[0].active_driver, "nvidia")
+        self.assertTrue(devices[0].options[0].installed)
+        self.assertTrue(devices[0].options[0].active)
+        self.assertTrue(devices[0].options[1].installed)
+        self.assertFalse(devices[0].options[1].active)
+        self.assertTrue(devices[0].active_driver_healthy)
+        self.assertEqual(devices[0].active_driver_version, "595.41.02")
+
+    def test_graphics_reports_bound_nvidia_with_broken_userspace_as_unhealthy(self):
+        path = "/sys/devices/pci0000:00/0000:01:00.0"
+        output = f"""== {path} ==
+vendor   : NVIDIA Corporation
+model    : NVIDIA GPU
+driver   : nvidia-driver-595-open - distro non-free recommended
+"""
+        responses = {
+            ("lspci", "-k", "-s", "0000:01:00.0"):
+                subprocess.CompletedProcess(
+                    [], 0, "\tKernel driver in use: nvidia\n", ""
+                ),
+            ("modinfo", "-F", "version", "nvidia"):
+                subprocess.CompletedProcess([], 0, "595.41.02\n", ""),
+            (
+                "nvidia-smi",
+                "--query-gpu=driver_version",
+                "--format=csv,noheader",
+            ): subprocess.CompletedProcess(
+                [], 9, "", "Failed to initialize NVML: Driver/library version mismatch\n"
+            ),
+        }
+        device = parse_ubuntu_driver_devices(
+            output,
+            FakeRunner(responses, installed={"nvidia-driver-595-open"}),
+        )[0]
+        self.assertEqual(device.active_driver, "nvidia")
+        self.assertTrue(device.options[0].active)
+        self.assertFalse(device.active_driver_healthy)
+        self.assertEqual(device.active_driver_version, "595.41.02")
+        self.assertIn("version mismatch", device.active_driver_error)
+
+    def test_graphics_marks_nouveau_active_when_it_owns_the_device(self):
+        path = "/sys/devices/pci0000:00/0000:01:00.0"
+        output = f"""== {path} ==
+modalias : pci:v000010DEd00002584
+vendor   : NVIDIA Corporation
+model    : GA107 [GeForce RTX 3050 6GB]
+driver   : nvidia-driver-595-open - distro non-free recommended
+driver   : xserver-xorg-video-nouveau - distro free builtin
+"""
+        responses = {
+            ("lspci", "-k", "-s", "0000:01:00.0"):
+                subprocess.CompletedProcess(
+                    [], 0, "\tKernel driver in use: nouveau\n", ""
+                ),
+        }
+        devices = parse_ubuntu_driver_devices(
+            output,
+            FakeRunner(
+                responses,
+                installed={
+                    "nvidia-driver-595-open",
+                    "xserver-xorg-video-nouveau",
+                },
+            ),
+        )
+
+        self.assertEqual(devices[0].active_driver, "nouveau")
+        self.assertFalse(devices[0].options[0].active)
+        self.assertTrue(devices[0].options[1].active)
+
+    def test_graphics_does_not_guess_between_installed_nvidia_variants(self):
+        path = "/sys/devices/pci0000:00/0000:01:00.0"
+        output = f"""== {path} ==
+modalias : pci:v000010DEd00002584
+vendor   : NVIDIA Corporation
+model    : GA107 [GeForce RTX 3050 6GB]
+driver   : nvidia-driver-595-open - distro non-free recommended
+driver   : nvidia-driver-595-server-open - distro non-free
+"""
+        responses = {
+            ("lspci", "-k", "-s", "0000:01:00.0"):
+                subprocess.CompletedProcess(
+                    [], 0, "\tKernel driver in use: nvidia\n", ""
+                ),
+        }
+        devices = parse_ubuntu_driver_devices(
+            output,
+            FakeRunner(
+                responses,
+                installed={
+                    "nvidia-driver-595-open",
+                    "nvidia-driver-595-server-open",
+                },
+            ),
+        )
+
+        self.assertEqual(devices[0].active_driver, "nvidia")
+        self.assertTrue(devices[0].driver_state_known)
+        self.assertFalse(any(option.active for option in devices[0].options))
+
     def test_secure_boot_requires_key_certificate_and_enrollment(self):
         with tempfile.TemporaryDirectory() as directory:
             private = Path(directory) / "MOK.priv"
@@ -119,11 +258,13 @@ driver   : xserver-xorg-video-nouveau - distro free builtin
         self.assertFalse(state.ready)
         self.assertFalse(state.enforcement_inactive)
 
-    def test_xbox_detects_signature_mismatch_as_secure_boot_block(self):
+    def test_xbox_distinguishes_signature_mismatch_from_missing_module(self):
         from anduinos_driver_center.core import SecureBootState
 
         secure = SecureBootState(True, True, True, True, "aa12")
         responses = {
+            ("modinfo", "-F", "filename", "hid-xpadneo"):
+                subprocess.CompletedProcess([], 0, "/lib/modules/hid-xpadneo.ko\n", ""),
             ("modinfo", "hid-xpadneo"): subprocess.CompletedProcess([], 0, "sig_key: BB:34\n", ""),
             ("lsmod",): subprocess.CompletedProcess([], 0, "hid_xpadneo 40960 0\n", ""),
         }
@@ -133,8 +274,107 @@ driver   : xserver-xorg-video-nouveau - distro free builtin
         )
         self.assertTrue(state.installed)
         self.assertTrue(state.module_loaded)
+        self.assertTrue(state.module_available)
         self.assertFalse(state.signature_matches)
-        self.assertTrue(state.blocked_by_secure_boot)
+        self.assertEqual(state.status, XboxStatus.SIGNATURE_MISMATCH)
+
+    def test_xbox_reports_module_missing_for_current_kernel(self):
+        from anduinos_driver_center.core import SecureBootState
+
+        secure = SecureBootState(True, True, True, True, "aa12")
+        state = xbox_state(
+            secure,
+            FakeRunner(installed={"anduinos-xbox-controller-driver"}),
+        )
+
+        self.assertTrue(state.installed)
+        self.assertFalse(state.module_available)
+        self.assertEqual(state.status, XboxStatus.MODULE_MISSING)
+
+    def test_xbox_reports_pending_enrollment_separately(self):
+        from anduinos_driver_center.core import SecureBootState
+
+        secure = SecureBootState(
+            True,
+            True,
+            True,
+            False,
+            "aa12",
+            enrollment_pending=True,
+        )
+        responses = {
+            ("modinfo", "-F", "filename", "hid-xpadneo"):
+                subprocess.CompletedProcess([], 0, "/lib/modules/hid-xpadneo.ko\n", ""),
+            ("modinfo", "hid-xpadneo"):
+                subprocess.CompletedProcess([], 0, "sig_key: AA:12\n", ""),
+            ("lsmod",): subprocess.CompletedProcess([], 0, "", ""),
+        }
+        state = xbox_state(
+            secure,
+            FakeRunner(responses, installed={"anduinos-xbox-controller-driver"}),
+        )
+
+        self.assertTrue(state.signature_matches)
+        self.assertEqual(state.status, XboxStatus.ENROLLMENT_PENDING)
+
+    def test_xbox_reports_unknown_secure_boot_probe_without_claiming_block(self):
+        from anduinos_driver_center.core import SecureBootState
+
+        secure = SecureBootState(
+            False,
+            True,
+            True,
+            False,
+            None,
+            status=SecureBootStatus.UNKNOWN,
+        )
+        responses = {
+            ("modinfo", "-F", "filename", "hid-xpadneo"):
+                subprocess.CompletedProcess([], 0, "/lib/modules/hid-xpadneo.ko\n", ""),
+            ("modinfo", "hid-xpadneo"):
+                subprocess.CompletedProcess([], 0, "sig_key: AA:12\n", ""),
+            ("lsmod",): subprocess.CompletedProcess([], 0, "", ""),
+        }
+        state = xbox_state(
+            secure,
+            FakeRunner(responses, installed={"anduinos-xbox-controller-driver"}),
+        )
+
+        self.assertEqual(state.status, XboxStatus.SECURE_BOOT_UNKNOWN)
+
+    def test_xbox_reports_failed_load_state_probe_separately(self):
+        from anduinos_driver_center.core import SecureBootState
+
+        secure = SecureBootState(False, False, False, False, None)
+        responses = {
+            ("modinfo", "-F", "filename", "hid-xpadneo"):
+                subprocess.CompletedProcess([], 0, "/lib/modules/hid-xpadneo.ko\n", ""),
+        }
+        state = xbox_state(
+            secure,
+            FakeRunner(responses, installed={"anduinos-xbox-controller-driver"}),
+        )
+
+        self.assertEqual(state.status, XboxStatus.LOAD_STATE_UNKNOWN)
+
+    def test_xbox_treats_available_unloaded_module_as_ready_on_demand(self):
+        from anduinos_driver_center.core import SecureBootState
+
+        secure = SecureBootState(True, True, True, True, "aa12")
+        responses = {
+            ("modinfo", "-F", "filename", "hid-xpadneo"):
+                subprocess.CompletedProcess([], 0, "/lib/modules/hid-xpadneo.ko\n", ""),
+            ("modinfo", "hid-xpadneo"):
+                subprocess.CompletedProcess([], 0, "sig_key: AA:12\n", ""),
+            ("lsmod",): subprocess.CompletedProcess([], 0, "", ""),
+        }
+        state = xbox_state(
+            secure,
+            FakeRunner(responses, installed={"anduinos-xbox-controller-driver"}),
+        )
+
+        self.assertFalse(state.module_loaded)
+        self.assertEqual(state.status, XboxStatus.READY)
 
     def test_disabled_secure_boot_never_blocks_unsigned_driver_workflows(self):
         from anduinos_driver_center.core import SecureBootState
@@ -148,6 +388,8 @@ driver   : xserver-xorg-video-nouveau - distro free builtin
             configuration_present=False,
         )
         responses = {
+            ("modinfo", "-F", "filename", "hid-xpadneo"):
+                subprocess.CompletedProcess([], 0, "/lib/modules/hid-xpadneo.ko\n", ""),
             ("modinfo", "hid-xpadneo"): subprocess.CompletedProcess(
                 [], 0, "sig_key: BB:34\n", ""
             ),
@@ -161,7 +403,7 @@ driver   : xserver-xorg-video-nouveau - distro free builtin
         )
         self.assertTrue(secure.ready)
         self.assertFalse(secure.enrollment_required)
-        self.assertFalse(state.blocked_by_secure_boot)
+        self.assertEqual(state.status, XboxStatus.READY)
 
     def test_dkms_health_reports_modules_signed_by_a_different_key(self):
         from anduinos_driver_center.core import SecureBootState
@@ -274,6 +516,7 @@ driver   : xserver-xorg-video-nouveau - distro free builtin
         self.assertEqual(state.core_packages[0].version, "2.4.16-1ubuntu1.3")
         self.assertTrue(state.core_ready)
         self.assertFalse(state.queues_ready)
+        self.assertEqual(state.missing_required_packages, ())
 
     def test_printing_handles_missing_service_and_no_queues(self):
         state = printing_state(FakeRunner())
@@ -283,6 +526,7 @@ driver   : xserver-xorg-video-nouveau - distro free builtin
         self.assertIsNone(state.default_printer)
         self.assertFalse(state.core_ready)
         self.assertEqual(len(state.missing_packages), 12)
+        self.assertEqual(len(state.missing_required_packages), 6)
 
 
 if __name__ == "__main__":

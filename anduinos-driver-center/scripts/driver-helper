@@ -39,6 +39,10 @@ PRINTING_AUTOSTART_UNITS = (
     "cups-browsed.service",
 )
 PACKAGE_PATTERN = re.compile(r"^[a-z0-9][a-z0-9+.-]+$")
+BINARY_PACKAGE_PATTERN = re.compile(r"^[a-z0-9][a-z0-9+.-]+(?::[a-z0-9][a-z0-9-]*)?$")
+NVIDIA_DRIVER_PATTERN = re.compile(
+    r"^nvidia-driver-(?P<series>[0-9]+)(?P<variant>(?:-[a-z0-9]+)*)$"
+)
 
 
 def run(command: list[str], *, stdin: str | None = None) -> None:
@@ -65,13 +69,112 @@ def apt_update() -> None:
     run(["apt-get", "update"])
 
 
+def package_is_installed(package: str) -> bool:
+    result = subprocess.run(
+        ["dpkg-query", "-W", "-f=${db:Status-Abbrev}", package],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return result.returncode == 0 and result.stdout.startswith("ii ")
+
+
+def installed_nvidia_packages() -> list[str]:
+    result = subprocess.run(
+        [
+            "dpkg-query",
+            "-W",
+            "-f=${binary:Package}\t${db:Status-Abbrev}\n",
+            "nvidia-*",
+            "libnvidia-*",
+            "linux-modules-nvidia-*",
+            "linux-objects-nvidia-*",
+            "linux-signatures-nvidia-*",
+            "xserver-xorg-video-nvidia-*",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    packages = []
+    for line in result.stdout.splitlines():
+        fields = line.split("\t", 1)
+        if len(fields) == 2 and fields[1].startswith("ii "):
+            package = fields[0]
+            if BINARY_PACKAGE_PATTERN.fullmatch(package):
+                packages.append(package)
+    return sorted(set(packages))
+
+
+def nvidia_repair_packages(package: str, kernel_release: str) -> list[str]:
+    """Return only installed packages belonging to the selected driver family."""
+    match = NVIDIA_DRIVER_PATTERN.fullmatch(package)
+    if not match:
+        raise ValueError("The selected package is not an NVIDIA driver metapackage")
+    series = match.group("series")
+    family = series + match.group("variant")
+    series_token = re.compile(rf"(?:^|-){re.escape(series)}(?:-|$)")
+    variant_specific = (
+        "nvidia-driver-",
+        "nvidia-dkms-",
+        "nvidia-kernel-source-",
+    )
+    kernel_specific = (
+        "linux-modules-nvidia-",
+        "linux-objects-nvidia-",
+        "linux-signatures-nvidia-",
+    )
+    selected: list[str] = []
+    for binary_package in installed_nvidia_packages():
+        name = binary_package.split(":", 1)[0]
+        if name.startswith(variant_specific):
+            if name == package or name.endswith(f"-{family}"):
+                selected.append(binary_package)
+            continue
+        if name.startswith(kernel_specific):
+            prefix_matches = any(
+                name.startswith(f"{prefix}{family}-") for prefix in kernel_specific
+            )
+            if prefix_matches and kernel_release in name:
+                selected.append(binary_package)
+            continue
+        if series_token.search(name):
+            selected.append(binary_package)
+    return sorted(set(selected))
+
+
+def repair_nvidia_stack(package: str) -> None:
+    kernel_release = os.uname().release
+    packages = nvidia_repair_packages(package, kernel_release)
+    if not packages:
+        raise RuntimeError("no installed packages from the selected NVIDIA family were found")
+    run(["apt-get", "install", "-y", "--reinstall", *packages])
+    run(["depmod", "-a", kernel_release])
+    # Static inspection only: loading a graphics module in the live desktop can
+    # terminate the compositor. Activation is deliberately deferred to reboot.
+    run(["modinfo", "-k", kernel_release, "nvidia"])
+
+
 def install_driver(package: str) -> None:
     if package not in available_driver_packages():
         raise ValueError("The selected package is not offered by ubuntu-drivers")
+    repair_existing = package_is_installed(package)
     apt_update()
     # Let ubuntu-drivers perform family/version switching instead of treating
     # a driver metapackage like an unrelated APT package.
     run(["ubuntu-drivers", "install", package])
+    if repair_existing:
+        repair_nvidia_stack(package)
+
+
+def repair_nvidia_driver(package: str) -> None:
+    if package not in available_driver_packages():
+        raise ValueError("The selected package is not offered by ubuntu-drivers")
+    if not package_is_installed(package):
+        raise ValueError("The selected NVIDIA driver is not installed")
+    apt_update()
+    run(["ubuntu-drivers", "install", package])
+    repair_nvidia_stack(package)
 
 
 def install_recommended() -> None:
@@ -81,16 +184,26 @@ def install_recommended() -> None:
 
 def install_xbox(reinstall: bool = False) -> None:
     apt_update()
+    kernel_release = os.uname().release
     command = ["apt-get", "install", "-y"]
     if reinstall:
         command.append("--reinstall")
-    command.append(XBOX_PACKAGE)
+    command.extend([f"linux-headers-{kernel_release}", XBOX_PACKAGE])
     run(command)
+    # The package's maintainer script historically tolerated DKMS failures.
+    # Verify the current running kernel explicitly so a false success can never
+    # be reported to the UI.
+    run(["dkms", "autoinstall", "-k", kernel_release])
+    run(["depmod", "-a", kernel_release])
+    run(["modinfo", "-k", kernel_release, "hid-xpadneo"])
 
 
-def install_audio() -> None:
+def install_audio(reinstall: bool = False) -> None:
     apt_update()
-    run(["apt-get", "install", "-y", *AUDIO_PACKAGES])
+    command = ["apt-get", "install", "-y"]
+    if reinstall:
+        command.append("--reinstall")
+    run([*command, *AUDIO_PACKAGES])
 
 
 def install_printing_support() -> None:
@@ -108,6 +221,18 @@ def set_printing_enabled(enabled: bool) -> None:
         run(["systemctl", "mask", "--now", *PRINTING_UNITS])
 
 
+def resume_print_queues() -> None:
+    result = subprocess.run(
+        ["lpstat", "-p"], capture_output=True, text=True, check=False
+    )
+    if result.returncode and "No destinations added" not in result.stderr:
+        raise RuntimeError(f"lpstat exited with status {result.returncode}")
+    for line in result.stdout.splitlines():
+        match = re.match(r"^printer\s+([A-Za-z0-9][A-Za-z0-9._-]*)\s+(.+)$", line)
+        if match and " disabled " in f" {match.group(2).lower()} ":
+            run(["cupsenable", match.group(1)])
+
+
 def main(arguments: list[str]) -> int:
     if os.geteuid() != 0:
         print("This helper must be run through polkit.", file=sys.stderr)
@@ -118,18 +243,24 @@ def main(arguments: list[str]) -> int:
                 install_driver(package)
             case ["install-recommended"]:
                 install_recommended()
+            case ["repair-nvidia", package]:
+                repair_nvidia_driver(package)
             case ["install-xbox"]:
                 install_xbox()
             case ["repair-xbox"]:
                 install_xbox(reinstall=True)
             case ["install-audio"]:
                 install_audio()
+            case ["repair-audio"]:
+                install_audio(reinstall=True)
             case ["install-printing-support"]:
                 install_printing_support()
             case ["set-printing-enabled", "true"]:
                 set_printing_enabled(True)
             case ["set-printing-enabled", "false"]:
                 set_printing_enabled(False)
+            case ["resume-print-queues"]:
+                resume_print_queues()
             case _:
                 print("Unknown or incomplete action.", file=sys.stderr)
                 return 64

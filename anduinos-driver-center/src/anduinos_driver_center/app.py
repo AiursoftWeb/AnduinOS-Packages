@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import subprocess
 import threading
+from typing import Callable
 
 import gi
 
@@ -14,7 +15,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
-from .core import AudioState, DkmsState, HardwareDevice, PackageState, PrintingState, SecureBootState, XboxState, scan_system
+from .core import AudioState, DkmsState, HardwareDevice, PackageState, PrintingState, SecureBootState, XboxState, XboxStatus, scan_system
 
 try:
     from anduinos_secureboot.ui import create_secure_boot_page
@@ -98,6 +99,10 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             .in-use-pill {
                 color: @success_color;
                 background-color: alpha(@success_color, 0.15);
+            }
+            .installed-pill {
+                color: @window_fg_color;
+                background-color: alpha(@window_fg_color, 0.10);
             }
             list.navigation-list {
                 background: transparent;
@@ -218,7 +223,13 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
         printer_count = len(printing.printers)
         if not printing.service_running:
-            printing_subtitle = _("Printing service stopped")
+            printing_subtitle = (
+                _("Printing service stopped")
+                if printing.startup_enabled
+                else _("Printing support disabled.")
+            )
+        elif printing.missing_required_packages:
+            printing_subtitle = _("Support needs attention")
         elif printing.disabled_printers:
             printing_subtitle = _("Some queues are paused")
         elif not printing.printers:
@@ -238,7 +249,15 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
         xbox_row = self._device_row(
             "input-gaming-symbolic", _("Xbox Controller"),
-            _("xpadneo installed") if xbox.installed else _("Optional Bluetooth driver"),
+            (
+                _("xpadneo installed")
+                if xbox.status in {XboxStatus.LOADED, XboxStatus.READY}
+                else (
+                    _("Optional Bluetooth driver")
+                    if xbox.status is XboxStatus.NOT_INSTALLED
+                    else _("Support needs attention")
+                )
+            ),
         )
         xbox_row.page_name = "xbox"
         self.device_list.append(xbox_row)
@@ -293,6 +312,14 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             self._selected_page_name = row.page_name
             self.stack.set_visible_child_name(row.page_name)
 
+    def _select_page(self, page_name: str) -> None:
+        row = self.device_list.get_row_at_index(0)
+        while row:
+            if getattr(row, "page_name", None) == page_name:
+                self.device_list.select_row(row)
+                return
+            row = self.device_list.get_row_at_index(row.get_index() + 1)
+
     def _page_shell(
         self, title: str, description: str, illustration: str | None = None
     ) -> tuple[Gtk.ScrolledWindow, Gtk.Box]:
@@ -330,16 +357,17 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         group = Adw.PreferencesGroup(title=_("Available drivers"))
         content.append(group)
         if not secure_boot.ready:
-            warning = Adw.Banner(
-                title=_(
+            warning = self._warning_banner(
+                _(
                     "Secure Boot status or trust must be resolved before installing a third-party driver."
-                )
+                ),
+                _("Secure Boot"),
+                lambda: self._select_page("secure-boot"),
             )
-            warning.set_revealed(True)
             content.append(warning)
         selection: dict[str, str | None] = {"package": None}
-        installed_package = next(
-            (option.package for option in device.options if option.installed), None
+        active_package = next(
+            (option.package for option in device.options if option.active), None
         )
         button = Gtk.Button(label=_("Apply Changes"))
         button.add_css_class("suggested-action")
@@ -359,23 +387,29 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 check.set_group(first_check)
             else:
                 first_check = check
-            if option.installed or (selection["package"] is None and option.recommended):
-                check.set_active(True)
-                selection["package"] = option.package
             check.connect(
                 "toggled",
                 self._driver_selected,
                 selection,
                 option.package,
-                installed_package,
+                active_package,
                 secure_boot.ready,
                 button,
             )
+            if option.active or (
+                active_package is None
+                and selection["package"] is None
+                and option.recommended
+            ):
+                check.set_active(True)
             row.add_prefix(check)
-            if option.installed:
+            if option.active:
                 row.add_suffix(_pill(_("In use"), "in-use-pill"))
-            elif option.recommended:
-                row.add_suffix(_pill(_("Recommended"), "recommended-pill"))
+            else:
+                if option.installed:
+                    row.add_suffix(_pill(_("Installed"), "installed-pill"))
+                if option.recommended:
+                    row.add_suffix(_pill(_("Recommended"), "recommended-pill"))
             return row
 
         primary = [
@@ -383,10 +417,51 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             if option.installed or option.recommended or option.builtin
         ]
         advanced = [option for option in device.options if option not in primary]
-        primary.sort(key=lambda option: (not option.installed, not option.recommended, option.package))
+        primary.sort(
+            key=lambda option: (
+                not option.active,
+                not option.installed,
+                not option.recommended,
+                option.package,
+            )
+        )
         advanced.sort(key=lambda option: option.package, reverse=True)
         for option in primary:
             group.add(build_row(option))
+
+        if not device.driver_state_known:
+            warning = self._warning_banner(
+                f'{_("Kernel module")}: {_("Not detected")}',
+                _("Scan again"),
+                self.refresh,
+            )
+            content.append(warning)
+        elif (
+            device.active_driver
+            and device.active_driver.lower().replace("_", "-").startswith("nvidia")
+            and device.active_driver_healthy is False
+        ):
+            warning = self._warning_banner(
+                f'{_("Kernel module")}: nvidia · '
+                f'{_("Driver operation failed: ")}'
+                f'{device.active_driver_error or "nvidia-smi"}',
+                _("Repair & Reinstall") if active_package else _("Apply Changes"),
+                (
+                    lambda: self._run_action(
+                        button, ["repair-nvidia", active_package]
+                    )
+                    if active_package
+                    else lambda: button.emit("clicked")
+                ),
+            )
+            content.append(warning)
+        elif active_package is None:
+            warning = self._warning_banner(
+                f'{_("Kernel module")}: {device.active_driver or _("Not detected")}',
+                _("Apply Changes"),
+                lambda: button.emit("clicked"),
+            )
+            content.append(warning)
 
         if advanced:
             advanced_group = Adw.PreferencesGroup()
@@ -436,14 +511,14 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         radio: Gtk.CheckButton,
         selection: dict[str, str | None],
         package: str,
-        installed_package: str | None,
+        active_package: str | None,
         secure_boot_ready: bool,
         apply_button: Gtk.Button,
     ) -> None:
         if radio.get_active():
             selection["package"] = package
             apply_button.set_sensitive(
-                secure_boot_ready and package != installed_package
+                secure_boot_ready and package != active_package
             )
 
     def _xbox_page(self, state: XboxState, secure_boot: SecureBootState) -> Gtk.Widget:
@@ -454,34 +529,109 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         )
         group = Adw.PreferencesGroup(title=_("Driver status"))
         content.append(group)
-        self._add_state_row(group, _("Driver package"), _("Installed") if state.installed else _("Not installed"), state.installed)
+        self._add_state_row(
+            group,
+            _("Driver package"),
+            _("Installed") if state.installed else _("Not installed"),
+            state.installed,
+            _("Install Driver") if not state.installed else None,
+            (lambda button: self._run_action(button, ["install-xbox"]))
+            if not state.installed else None,
+        )
         if not secure_boot.enforcement_inactive:
-            signature_ready = bool(
-                secure_boot.state_known
-                and state.signature_matches
-                and secure_boot.enrolled
-            )
+            signature_good: bool | None = True
+            signature_text = _("Trusted")
+            signature_action = None
+            signature_action_label = None
+            if state.status in {
+                XboxStatus.NOT_INSTALLED,
+                XboxStatus.MODULE_MISSING,
+            }:
+                signature_good = None
+                signature_text = _("Not detected")
+            elif state.status is XboxStatus.SECURE_BOOT_UNKNOWN:
+                signature_good = False
+                signature_text = _("Secure Boot state could not be determined")
+                signature_action_label = _("Secure Boot")
+                signature_action = lambda _button: self._select_page("secure-boot")
+            elif state.status is XboxStatus.ENROLLMENT_PENDING:
+                signature_good = False
+                signature_text = _("Pending enrollment in blue screen (MOKManager)")
+                signature_action_label = _("Secure Boot")
+                signature_action = lambda _button: self._select_page("secure-boot")
+            elif state.status is XboxStatus.TRUST_SETUP_REQUIRED:
+                signature_good = False
+                signature_text = _("Certificate is not trusted by motherboard")
+                signature_action_label = _("Secure Boot")
+                signature_action = lambda _button: self._select_page("secure-boot")
+            elif state.status is XboxStatus.SIGNATURE_MISMATCH:
+                signature_good = False
+                signature_text = _("Some DKMS modules need to be re-signed")
+                if secure_boot.configuration_present:
+                    signature_action_label = _("Repair & Reinstall")
+                    signature_action = lambda button: self._run_action(
+                        button, ["repair-xbox"]
+                    )
+                else:
+                    signature_action_label = _("Secure Boot")
+                    signature_action = lambda _button: self._select_page("secure-boot")
             self._add_state_row(
                 group,
                 _("Module signature"),
-                _("Trusted") if signature_ready else _("Needs attention"),
-                signature_ready,
+                signature_text,
+                signature_good,
+                signature_action_label,
+                signature_action,
             )
-        self._add_state_row(group, _("Kernel module"), _("Loaded") if state.module_loaded else (_("Blocked by Secure Boot") if state.blocked_by_secure_boot else _("Standing by")), not state.blocked_by_secure_boot)
+
+        if state.status is XboxStatus.MODULE_MISSING:
+            module_text = _("Missing")
+            module_good: bool | None = False
+            module_action_label = _("Repair & Reinstall")
+            module_action = lambda button: self._run_action(
+                button, ["repair-xbox"]
+            )
+        elif state.status is XboxStatus.LOAD_STATE_UNKNOWN:
+            module_text = _("Not detected")
+            module_good = False
+            module_action_label = _("Scan again")
+            module_action = lambda _button: self.refresh()
+        elif state.status is XboxStatus.LOADED:
+            module_text = _("Loaded")
+            module_good = True
+            module_action_label = None
+            module_action = None
+        elif state.module_available:
+            module_text = _("Standing by")
+            module_good = (
+                None
+                if state.status in {
+                    XboxStatus.SECURE_BOOT_UNKNOWN,
+                    XboxStatus.ENROLLMENT_PENDING,
+                    XboxStatus.TRUST_SETUP_REQUIRED,
+                    XboxStatus.SIGNATURE_MISMATCH,
+                }
+                else True
+            )
+            module_action_label = None
+            module_action = None
+        else:
+            module_text = _("Not installed")
+            module_good = None
+            module_action_label = None
+            module_action = None
+        self._add_state_row(
+            group,
+            _("Kernel module"),
+            module_text,
+            module_good,
+            module_action_label,
+            module_action,
+        )
         actions = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10, halign=Gtk.Align.END)
         bluetooth = Gtk.Button(label=_("Bluetooth Settings"))
         bluetooth.connect("clicked", lambda _b: subprocess.Popen(["gnome-control-center", "bluetooth"]))
         actions.append(bluetooth)
-        if not state.installed:
-            install = Gtk.Button(label=_("Install Driver")); install.add_css_class("suggested-action")
-            install.set_sensitive(secure_boot.ready)
-            install.connect("clicked", lambda btn: self._run_action(btn, ["install-xbox"]))
-            actions.append(install)
-        elif state.blocked_by_secure_boot or (secure_boot.enabled and not state.signature_matches):
-            repair = Gtk.Button(label=_("Repair & Reinstall")); repair.add_css_class("suggested-action")
-            repair.set_sensitive(secure_boot.ready)
-            repair.connect("clicked", lambda btn: self._run_action(btn, ["repair-xbox"]))
-            actions.append(repair)
         content.append(actions)
         return page
 
@@ -492,17 +642,35 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         )
         packages = Adw.PreferencesGroup(title=_("Support packages"))
         content.append(packages)
+        audio_action = (
+            ["install-audio"]
+            if not state.packages_installed
+            else ["repair-audio"]
+        )
+        audio_action_label = (
+            _("Install Audio Support")
+            if not state.packages_installed
+            else _("Repair & Reinstall")
+        )
+
+        def repair_audio(button: Gtk.Button) -> None:
+            self._run_action(button, audio_action)
+
         self._add_state_row(
             packages,
             _("Intel SOF firmware"),
             state.sof_package.version if state.sof_package.installed else _("Not installed"),
             state.sof_package.installed,
+            audio_action_label if not state.sof_package.installed else None,
+            repair_audio if not state.sof_package.installed else None,
         )
         self._add_state_row(
             packages,
             _("ALSA UCM profiles"),
             state.ucm_package.version if state.ucm_package.installed else _("Not installed"),
             state.ucm_package.installed,
+            audio_action_label if not state.ucm_package.installed else None,
+            repair_audio if not state.ucm_package.installed else None,
         )
 
         runtime = Adw.PreferencesGroup(title=_("Runtime status"))
@@ -512,12 +680,16 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             _("SOF firmware files"),
             _("Available") if state.firmware_present else _("Missing"),
             state.firmware_present,
+            _("Repair & Reinstall") if not state.firmware_present else None,
+            repair_audio if not state.firmware_present else None,
         )
         self._add_state_row(
             runtime,
             _("UCM configuration files"),
             _("Available") if state.ucm_profiles_present else _("Missing"),
             state.ucm_profiles_present,
+            _("Repair & Reinstall") if not state.ucm_profiles_present else None,
+            repair_audio if not state.ucm_profiles_present else None,
         )
         self._add_state_row(
             runtime,
@@ -532,11 +704,6 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             True if state.active_drivers else None,
         )
 
-        if not state.packages_installed:
-            button = Gtk.Button(label=_("Install Audio Support"), halign=Gtk.Align.END)
-            button.add_css_class("suggested-action")
-            button.connect("clicked", lambda btn: self._run_action(btn, ["install-audio"]))
-            content.append(button)
         return page
 
     def _printing_page(self, state: PrintingState) -> Gtk.Widget:
@@ -562,13 +729,20 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             overview,
             _("CUPS service"),
             _("Running") if state.service_running else _("Stopped"),
-            state.service_running,
+            state.service_running if state.startup_enabled else None,
+            _("Enable Printing Support")
+            if state.startup_enabled and not state.service_running else None,
+            (
+                lambda button: self._run_action(
+                    button, ["set-printing-enabled", "true"]
+                )
+            ) if state.startup_enabled and not state.service_running else None,
         )
         self._add_state_row(
             overview,
             _("Start at boot"),
             _("Enabled") if state.startup_enabled else _("Disabled"),
-            state.startup_enabled,
+            True if state.startup_enabled else None,
         )
         printer_count = len(state.printers)
         printer_summary = gettext.ngettext(
@@ -601,7 +775,14 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             queue_summary = _("All queues enabled")
             queue_good = True
         self._add_state_row(
-            overview, _("Print queues"), queue_summary, queue_good
+            overview,
+            _("Print queues"),
+            queue_summary,
+            queue_good,
+            _("Apply Changes") if queue_good is False else None,
+            (
+                lambda button: self._run_action(button, ["resume-print-queues"])
+            ) if queue_good is False else None,
         )
 
         content.append(
@@ -636,31 +817,6 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 required=False,
             )
         )
-        if state.missing_packages:
-            missing = len(state.missing_packages)
-            action_group = Adw.PreferencesGroup(title=_("Complete printing support"))
-            action_row = Adw.ActionRow(
-                title=_("Install missing printing packages"),
-                subtitle=gettext.ngettext(
-                    "%d package is missing",
-                    "%d packages are missing",
-                    missing,
-                ) % missing,
-            )
-            install = Gtk.Button(
-                label=_("Install Missing Packages"),
-                valign=Gtk.Align.CENTER,
-            )
-            install.add_css_class("suggested-action")
-            install.connect(
-                "clicked",
-                lambda btn: self._run_action(
-                    btn, ["install-printing-support"]
-                ),
-            )
-            action_row.add_suffix(install)
-            action_group.add(action_row)
-            content.append(action_group)
         return page
 
     def _printing_package_group(
@@ -679,6 +835,13 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 package.installed if required else (
                     True if package.installed else None
                 ),
+                _("Install Missing Packages")
+                if required and not package.installed else None,
+                (
+                    lambda button: self._run_action(
+                        button, ["install-printing-support"]
+                    )
+                ) if required and not package.installed else None,
             )
         return group
 
@@ -740,6 +903,15 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         return GLib.SOURCE_REMOVE
 
     def _secure_boot_page(self, state: SecureBootState, dkms: DkmsState) -> Gtk.Widget:
+        initial_state_applied = False
+
+        def secure_boot_state_changed() -> None:
+            nonlocal initial_state_applied
+            if not initial_state_applied:
+                initial_state_applied = True
+                return
+            GLib.idle_add(self.refresh)
+
         def icon_factory(name: str) -> Gtk.Image:
             image = Gtk.Image()
             path = _resource_path(name)
@@ -752,17 +924,46 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         return create_secure_boot_page(
             translate=_,
             icon_factory=icon_factory,
-            state_changed=lambda: None,
+            state_changed=secure_boot_state_changed,
             initial_state=(state, dkms),
         )
 
-    def _add_state_row(self, group: Adw.PreferencesGroup, title: str, subtitle: str, good: bool | None) -> None:
+    def _add_state_row(
+        self,
+        group: Adw.PreferencesGroup,
+        title: str,
+        subtitle: str,
+        good: bool | None,
+        action_label: str | None = None,
+        action: Callable[[Gtk.Button], None] | None = None,
+    ) -> None:
+        if good is False and (not action_label or action is None):
+            raise ValueError(f"Warning row has no recovery action: {title}")
         row = Adw.ActionRow(title=title, subtitle=subtitle)
         if good is None:
             row.add_suffix(_status_icon("dialog-information-symbolic", "dim-label"))
         else:
             row.add_suffix(_status_icon("emblem-ok-symbolic" if good else "dialog-warning-symbolic", "success" if good else "warning"))
+        if action_label and action:
+            button = Gtk.Button(label=action_label, valign=Gtk.Align.CENTER)
+            button.add_css_class("suggested-action")
+            button.connect("clicked", lambda clicked: action(clicked))
+            row.add_suffix(button)
         group.add(row)
+
+    def _warning_banner(
+        self,
+        title: str,
+        action_label: str,
+        action: Callable[[], None],
+    ) -> Adw.Banner:
+        if not action_label:
+            raise ValueError(f"Warning banner has no recovery action: {title}")
+        banner = Adw.Banner(title=title)
+        banner.set_button_label(action_label)
+        banner.connect("button-clicked", lambda _banner: action())
+        banner.set_revealed(True)
+        return banner
 
     def _run_action(self, button: Gtk.Button, arguments: list[str], stdin: str | None = None) -> None:
         if not arguments: return
