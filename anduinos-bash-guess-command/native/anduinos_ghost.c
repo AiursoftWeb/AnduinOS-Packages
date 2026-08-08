@@ -36,6 +36,7 @@ static char *suggestion;
 static char *cached_line;
 static char *last_submitted_line;
 static char *configured_histfile;
+static unsigned short last_terminal_rows;
 static unsigned short last_terminal_columns;
 static int ghost_visible;
 static int installed;
@@ -584,11 +585,14 @@ static void clear_resize_artifacts(void)
       terminal.ws_col == 0)
     return;
   if (last_terminal_columns == 0) {
+    last_terminal_rows = terminal.ws_row;
     last_terminal_columns = terminal.ws_col;
     return;
   }
-  if (last_terminal_columns == terminal.ws_col)
+  if (last_terminal_rows == terminal.ws_row &&
+      last_terminal_columns == terminal.ws_col)
     return;
+  last_terminal_rows = terminal.ws_row;
   last_terminal_columns = terminal.ws_col;
 
   /* Readline treats any replacement rl_redisplay_function as a complete
@@ -913,6 +917,7 @@ void anduinos_ghost_builtin_unload(char *name)
   last_submitted_line = NULL;
   free(configured_histfile);
   configured_histfile = NULL;
+  last_terminal_rows = 0;
   last_terminal_columns = 0;
   installed = 0;
 }

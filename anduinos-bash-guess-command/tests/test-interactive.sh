@@ -414,6 +414,25 @@ resize_input() {
     printf 'printf RESIZE_OK >%s/resize-ok\nexit\n' "$TEST_ROOT"
 }
 
+resize_rows_input() {
+    local shell_pid= tty_path= rows
+    sleep 0.5
+    for _ in {1..20}; do
+        shell_pid=$(pgrep -n -f "bash --noprofile --rcfile $TEST_ROOT/bashrc -i" || :)
+        if [[ -n $shell_pid ]]; then
+            tty_path=$(readlink "/proc/$shell_pid/fd/0" 2>/dev/null || :)
+            [[ $tty_path == /dev/pts/* ]] && break
+        fi
+        sleep 0.05
+    done
+    [[ $tty_path == /dev/pts/* ]] || return 1
+    for rows in 41 39 42 40; do
+        stty -F "$tty_path" rows "$rows" cols 120
+        sleep 0.1
+    done
+    printf 'printf RESIZE_ROWS_OK >%s/resize-rows-ok\nexit\n' "$TEST_ROOT"
+}
+
 run_session loader_lifecycle_input "$TEST_ROOT/loader-lifecycle.typescript"
 [[ $(grep -o '_anduinos_guess_prompt_observe' "$TEST_ROOT/prompt-command" | wc -l) == 1 ]] ||
     fail 're-sourcing the loader duplicated PROMPT_COMMAND'
@@ -551,6 +570,15 @@ run_session resize_input "$TEST_ROOT/resize.typescript"
     fail 'terminal resizing corrupted the editable command line'
 [[ $(LC_ALL=C grep -aoF $'\033[J' "$TEST_ROOT/resize.typescript" | wc -l) -ge 4 ]] ||
     fail 'custom redisplay did not clear stale prompt text after SIGWINCH'
+
+run_session resize_rows_input "$TEST_ROOT/resize-rows.typescript"
+[[ $(<"$TEST_ROOT/resize-rows-ok") == RESIZE_ROWS_OK ]] ||
+    fail 'row-only terminal resizing corrupted the editable command line'
+[[ $(LC_ALL=C grep -aoF $'\033[J' "$TEST_ROOT/resize-rows.typescript" | wc -l) -ge 4 ]] ||
+    fail 'custom redisplay did not clear stale prompt text after row-only SIGWINCH'
+if LC_ALL=C grep -aFq 'NATIVE_TEST> NATIVE_TEST> ' "$TEST_ROOT/resize-rows.typescript"; then
+    fail 'row-only terminal resizing left duplicate prompts visible'
+fi
 
 # Keep opt-out lifecycle probes last: they deliberately toggle the master switch
 # and must not influence the persistent ranking exercised above.
