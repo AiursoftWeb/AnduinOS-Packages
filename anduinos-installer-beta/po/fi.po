@@ -119,6 +119,34 @@ msgstr ""
 "Kaikki valitussa osiossa oleva tuhoutuu; sitä ei valita koskaan "
 "automaattisesti."
 
+msgid "Battery power is too low for a safe installation."
+msgstr "Akun varaustaso on liian alhainen turvalliseen asennukseen."
+
+msgid "Charge to at least 80% before starting the installation."
+msgstr "Lataa akku vähintään 80 prosenttiin ennen asennuksen aloittamista."
+
+msgid "Continue Anyway"
+msgstr "Jatka silti"
+
+msgid "Current battery level: {percent}%"
+msgstr "Akun nykyinen varaustaso: {percent}%"
+
+msgid "External power is connected."
+msgstr "Ulkoinen virtalähde on kytketty."
+
+msgid "External power is not connected."
+msgstr "Ulkoista virtalähdettä ei ole kytketty."
+
+msgid "I understand the risks and insist on installing with low battery."
+msgstr ""
+"Ymmärrän riskit ja haluan asentaa akun alhaisesta varaustasosta huolimatta."
+
+msgid "Low battery"
+msgstr "Akku vähissä"
+
+msgid "Recheck"
+msgstr "Tarkista uudelleen"
+
 msgid "AnduinOS Installer"
 msgstr "AnduinOS-asentaja"
 
@@ -300,7 +328,8 @@ msgid "Empty disk — no partitions"
 msgstr "Tyhjä levy — ei osioita"
 
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
-msgstr "Ota käyttöön jaetun tilan alinvoluutit, hetkikuvat ja Disk Snapshots Manager."
+msgstr ""
+"Ota käyttöön jaetun tilan alinvoluutit, hetkikuvat ja Disk Snapshots Manager."
 
 msgid "English (UK)"
 msgstr "Englanti (UK)"
@@ -1210,6 +1239,3 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
-
-#~ msgid "Choose a complete installation method, not only a filesystem."
-#~ msgstr "Valitse täysi asennustapa, ei vain tiedostojärjestelmä."

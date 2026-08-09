@@ -117,6 +117,33 @@ msgstr ""
 "또는 지울 전체 파티션을 명시적으로 선택할 수 있습니다. 선택된 파티션의 모든 "
 "데이터가 파괴되며, 자동으로 선택되지 않습니다."
 
+msgid "Battery power is too low for a safe installation."
+msgstr "안전하게 설치하기에는 배터리 잔량이 너무 낮습니다."
+
+msgid "Charge to at least 80% before starting the installation."
+msgstr "설치를 시작하기 전에 배터리를 80% 이상 충전하세요."
+
+msgid "Continue Anyway"
+msgstr "그래도 계속"
+
+msgid "Current battery level: {percent}%"
+msgstr "현재 배터리 잔량: {percent}%"
+
+msgid "External power is connected."
+msgstr "외부 전원이 연결되어 있습니다."
+
+msgid "External power is not connected."
+msgstr "외부 전원이 연결되어 있지 않습니다."
+
+msgid "I understand the risks and insist on installing with low battery."
+msgstr "위험을 이해했으며 배터리가 부족한 상태에서 설치를 계속하겠습니다."
+
+msgid "Low battery"
+msgstr "배터리 부족"
+
+msgid "Recheck"
+msgstr "다시 확인"
+
 msgid "AnduinOS Installer"
 msgstr "AnduinOS 설치 관리자"
 
@@ -1200,6 +1227,3 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
-
-#~ msgid "Choose a complete installation method, not only a filesystem."
-#~ msgstr "파일시스템이 아닌 전체 설치 방법을 선택하세요."

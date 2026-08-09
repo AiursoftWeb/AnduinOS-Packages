@@ -121,6 +121,33 @@ msgstr ""
 "para apagar. Tudo nessa partição selecionada será destruído; ela nunca é "
 "selecionada automaticamente."
 
+msgid "Battery power is too low for a safe installation."
+msgstr "O nível da bateria está muito baixo para uma instalação segura."
+
+msgid "Charge to at least 80% before starting the installation."
+msgstr "Carregue a bateria até pelo menos 80% antes de iniciar a instalação."
+
+msgid "Continue Anyway"
+msgstr "Continuar mesmo assim"
+
+msgid "Current battery level: {percent}%"
+msgstr "Nível atual da bateria: {percent}%"
+
+msgid "External power is connected."
+msgstr "A alimentação externa está conectada."
+
+msgid "External power is not connected."
+msgstr "A alimentação externa não está conectada."
+
+msgid "I understand the risks and insist on installing with low battery."
+msgstr "Compreendo os riscos e insisto em instalar com a bateria fraca."
+
+msgid "Low battery"
+msgstr "Bateria fraca"
+
+msgid "Recheck"
+msgstr "Verificar novamente"
+
 msgid "AnduinOS Installer"
 msgstr "Instalador do AnduinOS"
 
@@ -306,7 +333,9 @@ msgid "Empty disk — no partitions"
 msgstr "Disco vazio — sem partições"
 
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
-msgstr "Habilita subvolumes de espaço compartilhado, instantâneos e Disk Snapshots Manager."
+msgstr ""
+"Habilita subvolumes de espaço compartilhado, instantâneos e Disk Snapshots "
+"Manager."
 
 msgid "English (UK)"
 msgstr "Inglês (Reino Unido)"
@@ -1222,8 +1251,3 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
-
-#~ msgid "Choose a complete installation method, not only a filesystem."
-#~ msgstr ""
-#~ "Escolha um método de instalação completo, não apenas um sistema de "
-#~ "arquivos."

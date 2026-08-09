@@ -58,6 +58,7 @@ from installer_core.model import (
     InstallPlan,
     SecureBoot,
 )
+from installer_core.power import PowerProbeResult, probe_power_supply
 from installer_core.probe import ProbeError, probe_platform
 from installer_core.storage_ui import (
     GuidedStoragePreview,
@@ -319,6 +320,69 @@ def should_show_network_page(shared, monitor=None) -> bool:
     )
 
 
+_LOW_BATTERY_OVERRIDE_KEY = "_low_battery_risk_overridden"
+_POWER_PROBE_RESULT_KEY = "_power_probe_result"
+
+
+def low_battery_warning_needed(shared, result: PowerProbeResult) -> bool:
+    """Return whether this session still needs the explicit risk page."""
+
+    return result.requires_warning and not bool(
+        shared.get(_LOW_BATTERY_OVERRIDE_KEY)
+    )
+
+
+def confirm_low_battery_override(shared, confirmed: bool) -> bool:
+    """Remember an override only after an explicit confirmation."""
+
+    if not confirmed:
+        return False
+    shared[_LOW_BATTERY_OVERRIDE_KEY] = True
+    return True
+
+
+def recheck_power_requirement(shared, power_probe=None):
+    """Refresh the session snapshot and report whether warning is still needed."""
+
+    result = (power_probe or probe_power_supply)()
+    shared[_POWER_PROBE_RESULT_KEY] = result
+    return result, low_battery_warning_needed(shared, result)
+
+
+def _build_network_or_keyboard_page(shared, nav_view):
+    if should_show_network_page(shared):
+        return build_network_page(shared, nav_view)
+    return build_keyboard_page(shared, nav_view)
+
+
+def _replace_navigation_page(nav_view, current_page, next_page):
+    """Replace a conditional page so Back cannot reveal it again."""
+
+    stack = nav_view.get_navigation_stack()
+    pages = []
+    for index in range(stack.get_n_items()):
+        candidate = stack.get_item(index)
+        if candidate is not current_page:
+            pages.append(candidate)
+    pages.append(next_page)
+    nav_view.replace(pages)
+
+
+def build_post_welcome_page(
+    shared, nav_view, *, result: PowerProbeResult | None = None
+):
+    """Apply power safety before preserving the existing network routing."""
+
+    if result is None:
+        result, warning_needed = recheck_power_requirement(shared)
+    else:
+        shared[_POWER_PROBE_RESULT_KEY] = result
+        warning_needed = low_battery_warning_needed(shared, result)
+    if warning_needed:
+        return build_low_battery_page(shared, nav_view, result)
+    return _build_network_or_keyboard_page(shared, nav_view)
+
+
 def _recommended_input_methods(shared):
     """Return the selected locale's ordered input-method recommendations."""
 
@@ -555,12 +619,7 @@ def build_welcome_page(shared, nav_view):
 
     def on_next():
         try:
-            next_page = (
-                build_network_page(shared, nav_view)
-                if should_show_network_page(shared)
-                else build_keyboard_page(shared, nav_view)
-            )
-            nav_view.push(next_page)
+            nav_view.push(build_post_welcome_page(shared, nav_view))
         except Exception as e:
             import traceback
             traceback.print_exc()
@@ -593,6 +652,146 @@ def build_welcome_page(shared, nav_view):
             break
     _update_welcome(initial_language)
 
+    page.set_child(content)
+    return page
+
+
+# ── conditional page: low-battery safety ────────────────────────────────
+
+def build_low_battery_page(shared, nav_view, result: PowerProbeResult):
+    """Require charging or a deliberate, session-only risk override."""
+
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
+    page = Adw.NavigationPage(title=_("Low battery", lang))
+    page.set_tag("low-battery")
+
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    content.append(
+        _page_header(
+            "Low battery",
+            "Charge to at least 80% before starting the installation.",
+            "battery-caution-symbolic",
+            lang,
+        )
+    )
+
+    body = card(spacing=14)
+    body.set_vexpand(True)
+    body.set_margin_top(28)
+    body.set_margin_bottom(20)
+    body.set_margin_start(32)
+    body.set_margin_end(32)
+
+    warning = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=14,
+    )
+    warning.add_css_class("installer-warning-card")
+    warning_icon = Gtk.Image.new_from_icon_name("battery-caution-symbolic")
+    warning_icon.set_pixel_size(36)
+    warning_icon.add_css_class("warning")
+    warning.append(warning_icon)
+
+    status_copy = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=5,
+        hexpand=True,
+    )
+    status_heading = Gtk.Label(
+        label=_("Battery power is too low for a safe installation.", lang),
+        halign=Gtk.Align.START,
+        xalign=0,
+        wrap=True,
+    )
+    status_heading.add_css_class("heading")
+    capacity_label = Gtk.Label(
+        halign=Gtk.Align.START,
+        xalign=0,
+        wrap=True,
+    )
+    power_label = Gtk.Label(
+        halign=Gtk.Align.START,
+        xalign=0,
+        wrap=True,
+    )
+    capacity_label.add_css_class("dim-label")
+    power_label.add_css_class("dim-label")
+    status_copy.append(status_heading)
+    status_copy.append(capacity_label)
+    status_copy.append(power_label)
+    warning.append(status_copy)
+    body.append(warning)
+
+    recheck_button = Gtk.Button(label=_("Recheck", lang))
+    recheck_button.set_halign(Gtk.Align.START)
+    body.append(recheck_button)
+
+    risk_confirmation = Gtk.CheckButton(
+        label=_(
+            "I understand the risks and insist on installing with low battery.",
+            lang,
+        )
+    )
+    body.append(risk_confirmation)
+    content.append(clamp_content(body, maximum_size=720))
+
+    navigation = None
+
+    def _render_status(current: PowerProbeResult):
+        capacity_label.set_label(
+            _("Current battery level: {percent}%", lang).format(
+                percent=current.capacity_percent
+            )
+        )
+        power_label.set_label(
+            _(
+                "External power is connected."
+                if current.external_power
+                else "External power is not connected.",
+                lang,
+            )
+        )
+        risk_confirmation.set_active(False)
+        if navigation is not None:
+            navigation.next_button.set_sensitive(False)
+
+    def _continue_after_power_check():
+        _replace_navigation_page(
+            nav_view,
+            page,
+            _build_network_or_keyboard_page(shared, nav_view),
+        )
+
+    def _on_recheck():
+        current, warning_needed = recheck_power_requirement(shared)
+        if warning_needed:
+            _render_status(current)
+        else:
+            _continue_after_power_check()
+
+    def _on_continue():
+        if confirm_low_battery_override(
+            shared, risk_confirmation.get_active()
+        ):
+            _continue_after_power_check()
+
+    recheck_button.connect("clicked", lambda _button: _on_recheck())
+    navigation = _nav_box(
+        lang,
+        on_back=lambda: nav_view.pop(),
+        on_next=_on_continue,
+        next_label="Continue Anyway",
+        next_sensitive=False,
+        stage=0,
+    )
+    risk_confirmation.connect(
+        "toggled",
+        lambda button: navigation.next_button.set_sensitive(
+            button.get_active()
+        ),
+    )
+    content.append(navigation)
+    _render_status(result)
     page.set_child(content)
     return page
 
