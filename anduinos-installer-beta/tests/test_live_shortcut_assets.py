@@ -1,3 +1,4 @@
+import hashlib
 import unittest
 from pathlib import Path
 
@@ -15,7 +16,7 @@ class LiveShortcutAssetTests(unittest.TestCase):
         self.assertIn('"$HOME"/*', script)
         self.assertNotIn("/etc/skel", script)
 
-    def test_shortcut_uses_its_packaged_box_icon_and_is_marked_trusted(self):
+    def test_shortcut_uses_its_packaged_installer_icon_and_is_marked_trusted(self):
         launcher = (
             PACKAGE / "assets/anduinos-installer-beta.desktop"
         ).read_text()
@@ -27,6 +28,10 @@ class LiveShortcutAssetTests(unittest.TestCase):
         self.assertIn("StartupWMClass=com.anduinos.InstallerBeta", launcher)
         self.assertTrue(icon.is_file())
         self.assertIn("<svg", icon.read_text())
+        self.assertEqual(
+            hashlib.sha256(icon.read_bytes()).hexdigest(),
+            "e7cdeda4aefe9162136ed3598fbd71ad86e4b4a41c43c4cb794634fe6386ecac",
+        )
         self.assertIn(
             "/usr/share/applications/anduinos-installer-beta.desktop",
             script,
@@ -114,6 +119,16 @@ class LiveShortcutAssetTests(unittest.TestCase):
         )
         self.assertTrue(
             (PACKAGE / "assets/icons/welcome.svg").is_file()
+        )
+        self.assertEqual(
+            hashlib.sha256(
+                (PACKAGE / "assets/icons/welcome.svg").read_bytes()
+            ).hexdigest(),
+            "9e851413861005d2e37e34f60c59ef7776c4c9df8930d2228a11cac77528a692",
+        )
+        self.assertNotEqual(
+            (PACKAGE / "assets/icons/welcome.svg").read_bytes(),
+            (PACKAGE / "assets/anduinos-installer-beta.svg").read_bytes(),
         )
         self.assertNotIn(
             'Gtk.Image.new_from_icon_name("computer-symbolic")',

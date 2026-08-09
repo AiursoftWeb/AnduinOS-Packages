@@ -6,7 +6,7 @@ icon theme.
 
 | Packaged file | Source |
 | --- | --- |
-| `welcome.svg` | `anduinos-oobe/resources/icons/anduinos-oobe.svg` |
+| `welcome.svg` | `anduinos-oobe/data/anduinos-oobe.svg` |
 | `keyboard.svg` | `anduinos-oobe/resources/icons/keyboard.svg` |
 | `network.svg` | Package-local Wi-Fi illustration derived from the Fluent network glyph |
 | `updates.svg` | `anduinos-oobe/resources/icons/yast-upgrade.svg` |

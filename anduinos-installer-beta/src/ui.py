@@ -124,6 +124,7 @@ def page_hero(title: str, subtitle: str, icon: str) -> Gtk.Box:
     copy.append(subtitle_label)
     hero.append(emblem)
     hero.append(copy)
+    hero._icon_box = emblem
     hero._title_label = title_label
     hero._subtitle_label = subtitle_label
     return hero

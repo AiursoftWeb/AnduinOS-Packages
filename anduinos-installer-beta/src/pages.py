@@ -10,6 +10,7 @@ can push the next page when the user clicks "Next" / "Install".
 import threading
 import re
 import html
+import subprocess
 
 # Allow absolute imports when run directly (not as a package).
 import sys, os
@@ -257,7 +258,7 @@ def _page_subtitle(key: str, lang: str) -> Gtk.Label:
 
 def _nav_box(lang, on_back, on_next, next_label=N_("Next"),
              next_sensitive=True, next_destructive=False, stage=0,
-             show_back=True):
+             show_back=True, shared=None, page_tag=""):
     """Persistent-looking bottom bar with guarded navigation and progress."""
     box = Gtk.CenterBox()
     box.add_css_class("wizard-navigation")
@@ -273,14 +274,17 @@ def _nav_box(lang, on_back, on_next, next_label=N_("Next"),
         valign=Gtk.Align.CENTER,
     )
     dots.add_css_class("wizard-dots")
-    for index in range(5):
-        dot = Gtk.Box()
-        dot.add_css_class("wizard-dot")
-        if index < stage:
-            dot.add_css_class("wizard-dot-complete")
-        elif index == stage:
-            dot.add_css_class("wizard-dot-active")
-        dots.append(dot)
+    if shared is not None and page_tag:
+        _wizard_progress_controller(shared).register(dots, page_tag)
+    else:
+        for index in range(5):
+            dot = Gtk.Box()
+            dot.add_css_class("wizard-dot")
+            if index < stage:
+                dot.add_css_class("wizard-dot-complete")
+            elif index == stage:
+                dot.add_css_class("wizard-dot-active")
+            dots.append(dot)
     box.set_center_widget(dots)
 
     css = ["destructive-action"] if next_destructive else ["suggested-action"]
@@ -322,14 +326,129 @@ def should_show_network_page(shared, monitor=None) -> bool:
 
 _LOW_BATTERY_OVERRIDE_KEY = "_low_battery_risk_overridden"
 _POWER_PROBE_RESULT_KEY = "_power_probe_result"
+_SECURE_BOOT_PAGE_TITLE = "AnduinOS supports Secure Boot"
+_SECURE_BOOT_PAGE_SUBTITLE = (
+    "Get additional protection before installing AnduinOS."
+)
+_SECURE_BOOT_REBOOT_LABEL = "Restart to UEFI Firmware Settings"
+_SECURE_BOOT_SKIP_LABEL = "Skip"
+_SECURE_BOOT_REBOOT_ERROR_TITLE = (
+    "Could not open UEFI firmware settings"
+)
+_POWER_SAFE_MESSAGE = (
+    "Battery power is sufficient or reliable power is connected. "
+    "You can continue with the installation."
+)
+_POWER_SAFE_TITLE = "Power ready"
+_POWER_SAFE_SUBTITLE = "Power conditions are safe for installation."
+_POWER_WARNING_SUBTITLE = (
+    "Connect reliable external power and charge above 25%, or charge above "
+    "45% while unplugged."
+)
+
+_UNCONDITIONAL_PAGE_ROUTE = (
+    "welcome",
+    "keyboard",
+    "software",
+    "disk",
+    "storage-strategy",
+    "user",
+    "timezone",
+    "summary",
+    "progress",
+)
+
+
+class _WizardProgressController:
+    """Keep every footer synchronized with one actual planned page route."""
+
+    def __init__(self, shared):
+        self.shared = shared
+        self.views = []
+
+    def register(self, dots, page_tag):
+        self.views.append((dots, page_tag))
+        self.refresh()
+
+    def refresh(self):
+        route = _planned_page_route(self.shared)
+        self.shared["_planned_page_route"] = route
+        for dots, page_tag in self.views:
+            child = dots.get_first_child()
+            while child is not None:
+                next_child = child.get_next_sibling()
+                dots.remove(child)
+                child = next_child
+            try:
+                current = route.index(page_tag)
+            except ValueError:
+                continue
+            for index, tag in enumerate(route):
+                dot = Gtk.Box(tooltip_text=tag.replace("-", " ").title())
+                dot.add_css_class("wizard-dot")
+                if index < current:
+                    dot.add_css_class("wizard-dot-complete")
+                elif index == current:
+                    dot.add_css_class("wizard-dot-active")
+                dots.append(dot)
+
+
+def _wizard_progress_controller(shared):
+    controller = shared.get("_wizard_progress_controller")
+    if not isinstance(controller, _WizardProgressController):
+        controller = _WizardProgressController(shared)
+        shared["_wizard_progress_controller"] = controller
+    return controller
+
+
+def _ensure_initial_page_route(shared):
+    """Freeze hardware/connectivity conditionals before drawing page dots."""
+
+    if shared.get("_page_route_initialized"):
+        return
+    power = probe_power_supply()
+    shared[_POWER_PROBE_RESULT_KEY] = power
+    try:
+        shared["_platform_probe_result"] = probe_platform()
+    except ProbeError:
+        # Keep the recommendation in the route; normal validation will still
+        # surface the failed platform probe before any installation action.
+        shared["_platform_probe_result"] = None
+    shared["_network_page_planned"] = should_show_network_page(shared)
+    shared["_page_route_initialized"] = True
+
+
+def _planned_page_route(shared):
+    _ensure_initial_page_route(shared)
+    route = ["welcome"]
+    power = shared.get(_POWER_PROBE_RESULT_KEY)
+    if bool(shared.get("development_mode")) or (
+        isinstance(power, PowerProbeResult) and power.requires_warning
+    ):
+        route.append("low-battery")
+    platform = shared.get("_platform_probe_result")
+    if bool(shared.get("development_mode")) or not (
+        platform is not None
+        and platform.secure_boot is SecureBoot.ENABLED
+    ):
+        route.append("secure-boot-recommendation")
+    if bool(shared.get("_network_page_planned")):
+        route.append("network")
+    route.extend(_UNCONDITIONAL_PAGE_ROUTE[1:5])
+    if shared.get("storage_strategy") == (
+        StorageStrategy.ADVANCED_COEXISTENCE.value
+    ):
+        route.append("advanced-storage")
+    route.extend(_UNCONDITIONAL_PAGE_ROUTE[5:])
+    return tuple(route)
 
 
 def low_battery_warning_needed(shared, result: PowerProbeResult) -> bool:
-    """Return whether this session still needs the explicit risk page."""
+    """Return whether this session still needs the safety/demo page."""
 
-    return result.requires_warning and not bool(
-        shared.get(_LOW_BATTERY_OVERRIDE_KEY)
-    )
+    return (
+        result.requires_warning or bool(shared.get("development_mode"))
+    ) and not bool(shared.get(_LOW_BATTERY_OVERRIDE_KEY))
 
 
 def confirm_low_battery_override(shared, confirmed: bool) -> bool:
@@ -349,23 +468,100 @@ def recheck_power_requirement(shared, power_probe=None):
     return result, low_battery_warning_needed(shared, result)
 
 
+def _start_power_auto_refresh(page, refresh):
+    """Refresh on UPower changes and every minute while the page is visible."""
+
+    state = {"timer": 0, "proxies": []}
+
+    def _refresh_timer():
+        refresh()
+        return True
+
+    def _upower_proxy(bus, path, interface):
+        return Gio.DBusProxy.new_sync(
+            bus,
+            Gio.DBusProxyFlags.NONE,
+            None,
+            "org.freedesktop.UPower",
+            path,
+            interface,
+            None,
+        )
+
+    def _start(_page):
+        if state["timer"] or state["proxies"]:
+            return
+        state["timer"] = GLib.timeout_add_seconds(60, _refresh_timer)
+        try:
+            bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
+            root = _upower_proxy(
+                bus,
+                "/org/freedesktop/UPower",
+                "org.freedesktop.UPower",
+            )
+            result = root.call_sync(
+                "EnumerateDevices",
+                None,
+                Gio.DBusCallFlags.NONE,
+                5000,
+                None,
+            )
+            paths = list(result.unpack()[0]) if result is not None else []
+            display_path = "/org/freedesktop/UPower/devices/DisplayDevice"
+            if display_path not in paths:
+                paths.append(display_path)
+            proxies = [root]
+            proxies.extend(
+                _upower_proxy(bus, path, "org.freedesktop.UPower.Device")
+                for path in paths
+            )
+            for proxy in proxies:
+                handler = proxy.connect(
+                    "g-properties-changed",
+                    lambda *_args: refresh(),
+                )
+                state["proxies"].append((proxy, handler))
+        except GLib.Error:
+            # The minute timer remains a reliable fallback without UPower.
+            state["proxies"].clear()
+
+    def _stop(_page):
+        timer = state["timer"]
+        state["timer"] = 0
+        if timer:
+            GLib.source_remove(timer)
+        for proxy, handler in state["proxies"]:
+            proxy.disconnect(handler)
+        state["proxies"].clear()
+
+    page.connect("map", _start)
+    page.connect("unmap", _stop)
+
+
 def _build_network_or_keyboard_page(shared, nav_view):
-    if should_show_network_page(shared):
+    _ensure_initial_page_route(shared)
+    if bool(shared.get("_network_page_planned")):
         return build_network_page(shared, nav_view)
     return build_keyboard_page(shared, nav_view)
 
 
-def _replace_navigation_page(nav_view, current_page, next_page):
-    """Replace a conditional page so Back cannot reveal it again."""
+def secure_boot_recommendation_needed(shared, platform=None) -> bool:
+    """Show the recommendation unless Secure Boot is known to be enabled."""
 
-    stack = nav_view.get_navigation_stack()
-    pages = []
-    for index in range(stack.get_n_items()):
-        candidate = stack.get_item(index)
-        if candidate is not current_page:
-            pages.append(candidate)
-    pages.append(next_page)
-    nav_view.replace(pages)
+    if bool(shared.get("development_mode")):
+        return True
+    if platform is None:
+        _ensure_initial_page_route(shared)
+        platform = shared.get("_platform_probe_result")
+    if platform is None:
+        platform = probe_platform()
+    return platform.secure_boot is not SecureBoot.ENABLED
+
+
+def _build_secure_boot_or_network_page(shared, nav_view, *, platform=None):
+    if secure_boot_recommendation_needed(shared, platform):
+        return build_secure_boot_page(shared, nav_view)
+    return _build_network_or_keyboard_page(shared, nav_view)
 
 
 def build_post_welcome_page(
@@ -374,13 +570,18 @@ def build_post_welcome_page(
     """Apply power safety before preserving the existing network routing."""
 
     if result is None:
-        result, warning_needed = recheck_power_requirement(shared)
+        _ensure_initial_page_route(shared)
+        result = shared.get(_POWER_PROBE_RESULT_KEY)
+        if not isinstance(result, PowerProbeResult):
+            result, warning_needed = recheck_power_requirement(shared)
+        else:
+            warning_needed = low_battery_warning_needed(shared, result)
     else:
         shared[_POWER_PROBE_RESULT_KEY] = result
         warning_needed = low_battery_warning_needed(shared, result)
     if warning_needed:
         return build_low_battery_page(shared, nav_view, result)
-    return _build_network_or_keyboard_page(shared, nav_view)
+    return _build_secure_boot_or_network_page(shared, nav_view)
 
 
 def _recommended_input_methods(shared):
@@ -638,6 +839,8 @@ def build_welcome_page(shared, nav_view):
         on_next=on_next,
         stage=0,
         show_back=False,
+        shared=shared,
+        page_tag="welcome",
     )
     navigation_widgets["back"] = navigation.back_button
     navigation_widgets["next"] = navigation.next_button
@@ -666,14 +869,13 @@ def build_low_battery_page(shared, nav_view, result: PowerProbeResult):
     page.set_tag("low-battery")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(
-        _page_header(
-            "Low battery",
-            "Charge to at least 80% before starting the installation.",
-            "battery-caution-symbolic",
-            lang,
-        )
+    hero = _page_header(
+        "Low battery",
+        "Charge to at least 80% before starting the installation.",
+        "battery-caution-symbolic",
+        lang,
     )
+    content.append(hero)
 
     body = card(spacing=14)
     body.set_vexpand(True)
@@ -736,13 +938,48 @@ def build_low_battery_page(shared, nav_view, result: PowerProbeResult):
     content.append(clamp_content(body, maximum_size=720))
 
     navigation = None
+    current_result = {"value": result}
 
     def _render_status(current: PowerProbeResult):
-        capacity_label.set_label(
-            _("Current battery level: {percent}%", lang).format(
-                percent=current.capacity_percent
+        current_result["value"] = current
+        safe = not current.requires_warning
+        page.set_title(_(_POWER_SAFE_TITLE if safe else "Low battery", lang))
+        hero._title_label.set_label(
+            _(_POWER_SAFE_TITLE if safe else "Low battery", lang)
+        )
+        hero._subtitle_label.set_label(
+            _(_POWER_SAFE_SUBTITLE if safe else _POWER_WARNING_SUBTITLE, lang)
+        )
+        old_hero_icon = hero._icon_box.get_first_child()
+        if old_hero_icon is not None:
+            hero._icon_box.remove(old_hero_icon)
+        hero._icon_box.append(
+            icon_picture(
+                "emblem-ok-symbolic" if safe else "battery-caution-symbolic",
+                62,
             )
         )
+        status_heading.set_label(
+            _(_POWER_SAFE_MESSAGE, lang)
+            if safe
+            else _("Battery power is too low for a safe installation.", lang)
+        )
+        warning_icon.set_from_icon_name(
+            "emblem-ok-symbolic" if safe else "battery-caution-symbolic"
+        )
+        if safe:
+            warning_icon.remove_css_class("warning")
+            warning_icon.add_css_class("success")
+        else:
+            warning_icon.remove_css_class("success")
+            warning_icon.add_css_class("warning")
+        capacity_label.set_visible(current.capacity_percent is not None)
+        if current.capacity_percent is not None:
+            capacity_label.set_label(
+                _("Current battery level: {percent}%", lang).format(
+                    percent=current.capacity_percent
+                )
+            )
         power_label.set_label(
             _(
                 "External power is connected."
@@ -751,28 +988,28 @@ def build_low_battery_page(shared, nav_view, result: PowerProbeResult):
                 lang,
             )
         )
+        risk_confirmation.set_visible(not safe)
         risk_confirmation.set_active(False)
         if navigation is not None:
-            navigation.next_button.set_sensitive(False)
+            navigation.next_button.set_label(
+                _("Next" if safe else "Continue Anyway", lang)
+            )
+            navigation.next_button.set_sensitive(safe)
 
     def _continue_after_power_check():
-        _replace_navigation_page(
-            nav_view,
-            page,
-            _build_network_or_keyboard_page(shared, nav_view),
+        nav_view.push(
+            _build_secure_boot_or_network_page(shared, nav_view)
         )
 
     def _on_recheck():
-        current, warning_needed = recheck_power_requirement(shared)
-        if warning_needed:
-            _render_status(current)
-        else:
-            _continue_after_power_check()
+        current, _warning_needed = recheck_power_requirement(shared)
+        _render_status(current)
 
     def _on_continue():
-        if confirm_low_battery_override(
-            shared, risk_confirmation.get_active()
-        ):
+        if not current_result["value"].requires_warning:
+            _continue_after_power_check()
+            return
+        if confirm_low_battery_override(shared, risk_confirmation.get_active()):
             _continue_after_power_check()
 
     recheck_button.connect("clicked", lambda _button: _on_recheck())
@@ -783,6 +1020,8 @@ def build_low_battery_page(shared, nav_view, result: PowerProbeResult):
         next_label="Continue Anyway",
         next_sensitive=False,
         stage=0,
+        shared=shared,
+        page_tag="low-battery",
     )
     risk_confirmation.connect(
         "toggled",
@@ -792,6 +1031,121 @@ def build_low_battery_page(shared, nav_view, result: PowerProbeResult):
     )
     content.append(navigation)
     _render_status(result)
+    _start_power_auto_refresh(page, _on_recheck)
+    page.set_child(content)
+    return page
+
+
+# ── conditional page: Secure Boot recommendation ────────────────────────
+
+def reboot_to_firmware_settings(run=subprocess.run) -> tuple[bool, str]:
+    """Ask systemd to reboot directly into the UEFI firmware interface."""
+
+    try:
+        result = run(
+            ["systemctl", "reboot", "--firmware-setup"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired) as error:
+        return False, str(error)
+    if result.returncode == 0:
+        return True, ""
+    return False, (result.stderr or result.stdout).strip() or (
+        "The firmware settings could not be opened on this computer."
+    )
+
+
+def build_secure_boot_page(shared, nav_view):
+    """Recommend enabling Secure Boot before network configuration."""
+
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
+    page = Adw.NavigationPage(title=_(_SECURE_BOOT_PAGE_TITLE, lang))
+    page.set_tag("secure-boot-recommendation")
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    content.append(
+        _page_header(
+            _SECURE_BOOT_PAGE_TITLE,
+            _SECURE_BOOT_PAGE_SUBTITLE,
+            "secure-boot",
+            lang,
+        )
+    )
+
+    body = card(spacing=16)
+    body.set_vexpand(True)
+    body.set_margin_top(28)
+    body.set_margin_bottom(20)
+    body.set_margin_start(32)
+    body.set_margin_end(32)
+
+    for message in (
+        "Secure Boot is a UEFI security feature that verifies trusted, "
+        "digitally signed software while your computer starts.",
+        "AnduinOS has comprehensive Secure Boot support. Secure Boot is not "
+        "currently enabled on this computer, and we recommend enabling it "
+        "for additional protection.",
+        "To enable it, open the UEFI firmware settings and look under Boot, "
+        "Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn "
+        "Secure Boot on. Firmware wording varies by manufacturer.",
+    ):
+        label = Gtk.Label(
+            label=_(message, lang),
+            halign=Gtk.Align.START,
+            xalign=0,
+            wrap=True,
+        )
+        label.add_css_class("dim-label")
+        body.append(label)
+
+    def _continue():
+        nav_view.push(_build_network_or_keyboard_page(shared, nav_view))
+
+    def _show_reboot_error(message):
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_(_SECURE_BOOT_REBOOT_ERROR_TITLE, lang),
+            body=message,
+        )
+        dialog.add_response("ok", _("OK", lang))
+        dialog.present()
+
+    def _restart_to_firmware():
+        succeeded, error = reboot_to_firmware_settings()
+        if not succeeded:
+            _show_reboot_error(error)
+
+    page_actions = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=12,
+        halign=Gtk.Align.CENTER,
+        margin_top=8,
+    )
+    restart_button = _nav_btn(
+        _SECURE_BOOT_REBOOT_LABEL,
+        lang,
+        _restart_to_firmware,
+        css_classes=["suggested-action"],
+    )
+    skip_button = _nav_btn(_SECURE_BOOT_SKIP_LABEL, lang, _continue)
+    page_actions.append(restart_button)
+    page_actions.append(skip_button)
+    body.append(page_actions)
+    content.append(clamp_content(body, maximum_size=720))
+
+    navigation = _nav_box(
+        lang,
+        on_back=lambda: nav_view.pop(),
+        on_next=_continue,
+        next_label=_SECURE_BOOT_SKIP_LABEL,
+        stage=0,
+        shared=shared,
+        page_tag="secure-boot-recommendation",
+    )
+    navigation.next_button.remove_css_class("suggested-action")
+    content.append(navigation)
     page.set_child(content)
     return page
 
@@ -1544,6 +1898,8 @@ def build_network_page(shared, nav_view):
             on_next=on_next,
             next_label="Continue Installation",
             stage=0,
+            shared=shared,
+            page_tag="network",
         )
     )
     page.set_child(content)
@@ -1808,7 +2164,10 @@ def build_keyboard_page(shared, nav_view):
         nav_view.pop()
 
     content.append(
-        _nav_box(lang, on_back=on_back, on_next=on_next, stage=0)
+        _nav_box(
+            lang, on_back=on_back, on_next=on_next, stage=0,
+            shared=shared, page_tag="keyboard"
+        )
     )
     page.set_child(content)
     return page
@@ -1972,7 +2331,10 @@ def build_software_page(shared, nav_view):
         nav_view.pop()
 
     content.append(
-        _nav_box(lang, on_back=on_back, on_next=on_next, stage=0)
+        _nav_box(
+            lang, on_back=on_back, on_next=on_next, stage=0,
+            shared=shared, page_tag="software"
+        )
     )
     page.set_child(content)
     return page
@@ -2324,6 +2686,8 @@ def build_disk_page(shared, nav_view):
         on_next=on_next,
         next_sensitive=False,
         stage=1,
+        shared=shared,
+        page_tag="disk",
     )
     next_button = nav.next_button
     content.append(nav)
@@ -2506,6 +2870,7 @@ def build_storage_strategy_page(shared, nav_view):
 
     def _show_strategy(strategy):
         apply_storage_strategy(shared, strategy)
+        _wizard_progress_controller(shared).refresh()
         if strategy is StorageStrategy.ADVANCED_COEXISTENCE:
             _set_warning(
                 _(
@@ -2587,6 +2952,8 @@ def build_storage_strategy_page(shared, nav_view):
         on_next=on_next,
         next_sensitive=_selected_strategy() is not None,
         stage=1,
+        shared=shared,
+        page_tag="storage-strategy",
     )
     next_button = nav.next_button
     content.append(nav)
@@ -2998,6 +3365,8 @@ def build_advanced_storage_page(shared, nav_view):
         on_next=on_next,
         next_sensitive=False,
         stage=1,
+        shared=shared,
+        page_tag="advanced-storage",
     )
     next_button = nav.next_button
     _filesystem_changed()
@@ -3376,6 +3745,8 @@ def build_user_page(shared, nav_view):
         on_next=on_next,
         next_sensitive=False,
         stage=2,
+        shared=shared,
+        page_tag="user",
     )
     nxt_btn = nav.next_button
     content.append(nav)
@@ -3506,7 +3877,10 @@ def build_timezone_page(shared, nav_view):
         nav_view.pop()
 
     content.append(
-        _nav_box(lang, on_back=on_back, on_next=on_next, stage=2)
+        _nav_box(
+            lang, on_back=on_back, on_next=on_next, stage=2,
+            shared=shared, page_tag="timezone"
+        )
     )
     page.set_child(content)
     return page
@@ -4068,6 +4442,8 @@ def build_summary_page(shared, nav_view):
         ),
         next_destructive=not development_mode,
         stage=3,
+        shared=shared,
+        page_tag="summary",
     )
     install_button = nav.next_button
     install_button.set_sensitive(not bool(platform_error))
@@ -4456,6 +4832,8 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         on_next=lambda: None,
         stage=4,
         show_back=False,
+        shared=shared,
+        page_tag="progress",
     )
     progress_footer.next_button.set_visible(False)
     content.append(progress_footer)

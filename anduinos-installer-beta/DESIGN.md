@@ -172,9 +172,13 @@ artwork and does not depend on the OOBE package.
 
 ## Interface architecture
 
-The GTK interface uses a five-chapter visual model. Several guarded pages may
-belong to one chapter, so the chapter indicator communicates progress without
-pretending that every storage branch has the same number of screens.
+The GTK interface uses an exact planned-page progress model. Every dot in the
+persistent navigation bar corresponds one-to-one with a page that the current
+installation route will actually show. Power, Secure Boot and network probes
+freeze their conditional pages before the welcome footer is drawn. The storage
+route is recomputed as soon as the user selects erase or coexistence, which is
+the earliest point at which that branch can be known; every already-created
+footer is updated from the same controller.
 
 | Chapter | Pages |
 | --- | --- |
@@ -189,7 +193,7 @@ and a persistent bottom navigation bar. The default 960 x 680 window must fit
 inside a 1024 x 768 live session without hiding navigation. Long or conditional
 content scrolls inside the middle region; the hero and navigation do not.
 
-The chapter dots are indicators, not arbitrary navigation controls. Forward
+The page dots are indicators, not arbitrary navigation controls. Forward
 movement continues to use the existing page-specific validation callbacks, and
 the navigation view remains the sole owner of the back stack. This prevents a
 carousel gesture or a dot click from bypassing disk selection, coexistence

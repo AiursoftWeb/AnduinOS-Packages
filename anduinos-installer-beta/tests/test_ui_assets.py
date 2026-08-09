@@ -16,6 +16,20 @@ class InstallerVisualAssetTests(unittest.TestCase):
             "f6d678d9551cbeb64c4fcad189d1b34aaaad59465588eee7b504cd0c798729a3",
         )
 
+    def test_secure_boot_page_uses_the_oobe_circuit_board_artwork(self):
+        digest = hashlib.sha256(
+            (ICONS / "secure-boot.svg").read_bytes()
+        ).hexdigest()
+        self.assertEqual(
+            digest,
+            "7ade745cee9037160c5dcc5bb06837a15ad93681a74729283707a7d69b348778",
+        )
+        pages = (ROOT / "src/pages.py").read_text(encoding="utf-8")
+        secure_boot_page = pages.split("def build_secure_boot_page", 1)[1]
+        secure_boot_page = secure_boot_page.split("def build_network_page", 1)[0]
+        self.assertIn('            "secure-boot",', secure_boot_page)
+        self.assertNotIn('"security-high-symbolic"', secure_boot_page)
+
     def test_progress_ui_exposes_regional_steps_and_warnings(self):
         source = (ROOT / "src/pages.py").read_text(encoding="utf-8")
         self.assertIn('"configure-keyboard-layout":', source)
