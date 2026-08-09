@@ -3,7 +3,7 @@
 use std::process::Command;
 
 use anyhow::{Context, Result};
-use chrono::{DateTime, Duration, Local, Utc};
+use chrono::Local;
 use snapshots_manager_common::{AutomationConfig, SnapshotsManagerConfig};
 
 fn main() {
@@ -19,37 +19,13 @@ fn run_once() -> Result<()> {
     let config = AutomationConfig::load_from_file(&path)
         .with_context(|| format!("Could not load {}", path.display()))?;
     let mut failures = Vec::new();
-    let status = if config.system.is_auto_snapshot_enabled || config.home.is_auto_snapshot_enabled {
-        Some(load_recovery_status()?)
-    } else {
-        None
-    };
-    let now = Utc::now();
     if config.system.is_auto_snapshot_enabled
-        && automatic_snapshot_due(
-            status.as_ref().expect("enabled automation has status"),
-            AutomaticScope::System,
-            config.system.snapshot_interval_hours,
-            now,
-        )
-        && let Err(error) = create_snapshot(
-            AutomaticScope::System,
-            config.notifications.notify_before_scheduled,
-        )
+        && let Err(error) = create_snapshot(AutomaticScope::System)
     {
         failures.push(format!("System: {error:#}"));
     }
     if config.home.is_auto_snapshot_enabled
-        && automatic_snapshot_due(
-            status.as_ref().expect("enabled automation has status"),
-            AutomaticScope::Home,
-            config.home.snapshot_interval_hours,
-            now,
-        )
-        && let Err(error) = create_snapshot(
-            AutomaticScope::Home,
-            config.notifications.notify_before_scheduled,
-        )
+        && let Err(error) = create_snapshot(AutomaticScope::Home)
     {
         failures.push(format!("Home: {error:#}"));
     }
@@ -71,64 +47,7 @@ enum AutomaticScope {
     Home,
 }
 
-fn load_recovery_status() -> Result<serde_json::Value> {
-    let output = Command::new("/usr/bin/anduinos-btrfs-snapshots-manager-cli")
-        .args(["status", "--json"])
-        .output()
-        .context("Could not query Disk Snapshots Manager recovery status")?;
-    if !output.status.success() {
-        anyhow::bail!("{}", String::from_utf8_lossy(&output.stderr).trim());
-    }
-    serde_json::from_slice(&output.stdout)
-        .context("Disk Snapshots Manager returned invalid recovery status")
-}
-
-fn automatic_snapshot_due(
-    status: &serde_json::Value,
-    scope: AutomaticScope,
-    interval_hours: u32,
-    now: DateTime<Utc>,
-) -> bool {
-    let collection = match scope {
-        AutomaticScope::System => "deployments",
-        AutomaticScope::Home => "personal_snapshots",
-    };
-    let latest = status
-        .get(collection)
-        .and_then(serde_json::Value::as_array)
-        .into_iter()
-        .flatten()
-        .filter(|snapshot| snapshot_satisfies_freshness(snapshot, scope))
-        .filter_map(|snapshot| {
-            snapshot
-                .get("created_at")
-                .and_then(serde_json::Value::as_str)
-        })
-        .filter_map(|created| DateTime::parse_from_rfc3339(created).ok())
-        .map(|created| created.with_timezone(&Utc))
-        .max();
-    latest.is_none_or(|created| {
-        now.signed_duration_since(created) >= Duration::hours(i64::from(interval_hours))
-    })
-}
-
-fn snapshot_satisfies_freshness(snapshot: &serde_json::Value, scope: AutomaticScope) -> bool {
-    let kind = snapshot.get("kind").and_then(serde_json::Value::as_str);
-    let state = snapshot.get("state").and_then(serde_json::Value::as_str);
-    match scope {
-        AutomaticScope::System => {
-            matches!(
-                kind,
-                Some("manual" | "automatic" | "apt-pre" | "apt-post" | "pre-rollback")
-            ) && matches!(state, Some("ready"))
-        }
-        AutomaticScope::Home => {
-            matches!(kind, Some("manual" | "automatic")) && state == Some("ready")
-        }
-    }
-}
-
-fn create_snapshot(scope: AutomaticScope, notify_before: bool) -> Result<()> {
+fn create_snapshot(scope: AutomaticScope) -> Result<()> {
     let now = Local::now();
     let (command, schedule_id, title, description) = match scope {
         AutomaticScope::System => (
@@ -151,12 +70,6 @@ fn create_snapshot(scope: AutomaticScope, notify_before: bool) -> Result<()> {
         AutomaticScope::System => "system",
         AutomaticScope::Home => "personal",
     };
-    if notify_before {
-        let _ = Command::new("/usr/bin/anduinos-btrfs-snapshots-manager-cli")
-            .args(["notify-automatic-event", "starting", scope_name])
-            .status();
-        std::thread::sleep(std::time::Duration::from_secs(10));
-    }
     let output = Command::new("/usr/bin/anduinos-btrfs-snapshots-manager-cli")
         .args([command, schedule_id, &title, description])
         .output()
@@ -189,81 +102,5 @@ mod tests {
     fn both_product_scopes_are_distinct() {
         assert!(matches!(AutomaticScope::System, AutomaticScope::System));
         assert!(matches!(AutomaticScope::Home, AutomaticScope::Home));
-    }
-
-    #[test]
-    fn each_scope_obeys_its_own_hourly_interval() {
-        let now = DateTime::parse_from_rfc3339("2026-08-06T12:00:00Z")
-            .unwrap()
-            .with_timezone(&Utc);
-        let status = serde_json::json!({
-            "deployments": [{
-                "kind": "automatic",
-                "state": "ready",
-                "schedule_id": "btrfs-snapshots-manager-v2-system",
-                "created_at": "2026-08-06T10:00:01Z"
-            }],
-            "personal_snapshots": [{
-                "kind": "automatic",
-                "state": "ready",
-                "schedule_id": "btrfs-snapshots-manager-v2-home",
-                "created_at": "2026-08-06T11:00:00Z"
-            }]
-        });
-        assert!(!automatic_snapshot_due(
-            &status,
-            AutomaticScope::System,
-            2,
-            now
-        ));
-        assert!(automatic_snapshot_due(
-            &status,
-            AutomaticScope::Home,
-            1,
-            now
-        ));
-    }
-
-    #[test]
-    fn missing_automatic_snapshot_is_due_immediately() {
-        assert!(automatic_snapshot_due(
-            &serde_json::json!({}),
-            AutomaticScope::System,
-            24,
-            Utc::now()
-        ));
-    }
-
-    #[test]
-    fn recent_manual_snapshot_satisfies_freshness_but_import_does_not() {
-        let now = DateTime::parse_from_rfc3339("2026-08-06T12:00:00Z")
-            .unwrap()
-            .with_timezone(&Utc);
-        let manual = serde_json::json!({
-            "deployments": [{
-                "kind": "manual",
-                "state": "ready",
-                "created_at": "2026-08-06T11:30:00Z"
-            }]
-        });
-        assert!(!automatic_snapshot_due(
-            &manual,
-            AutomaticScope::System,
-            1,
-            now
-        ));
-        let imported = serde_json::json!({
-            "deployments": [{
-                "kind": "imported",
-                "state": "ready",
-                "created_at": "2026-08-06T11:30:00Z"
-            }]
-        });
-        assert!(automatic_snapshot_due(
-            &imported,
-            AutomaticScope::System,
-            1,
-            now
-        ));
     }
 }

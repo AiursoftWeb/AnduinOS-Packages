@@ -15,7 +15,7 @@ use std::os::unix::fs::{MetadataExt, OpenOptionsExt, PermissionsExt};
 use std::path::{Component, Path, PathBuf};
 use std::str::FromStr;
 
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Duration, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -173,6 +173,12 @@ pub struct PersonalDiscoveryIssue {
     pub message: String,
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum ScheduledPersonalSnapshotOutcome {
+    Created(Box<PersonalSnapshotRecord>),
+    NotDue,
+}
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum PersonalErrorCode {
     UnsupportedLayout,
@@ -277,6 +283,57 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
         )
     }
 
+    /// Advisory freshness check for pre-notifications. Creation must still go
+    /// through `create_scheduled_if_due` for the lock-protected final decision.
+    pub fn scheduled_snapshot_due(
+        &self,
+        interval_hours: u32,
+        now: DateTime<Utc>,
+    ) -> Result<bool, PersonalError> {
+        validate_snapshot_interval(interval_hours)?;
+        Ok(scheduled_snapshot_due(
+            &self.discover().snapshots,
+            interval_hours,
+            now,
+        ))
+    }
+
+    /// Create scheduled Personal Files history only when the freshness target
+    /// has expired. The due check and snapshot creation share the same store
+    /// lock so duplicate timer activations are harmless.
+    pub fn create_scheduled_if_due(
+        &self,
+        layout: &LayoutReport,
+        schedule_id: &str,
+        title: &str,
+        reason: &str,
+        interval_hours: u32,
+        now: DateTime<Utc>,
+    ) -> Result<ScheduledPersonalSnapshotOutcome, PersonalError> {
+        validate_snapshot_interval(interval_hours)?;
+        ensure_supported(layout)?;
+        validate_text(title, 120, "title")?;
+        validate_text(reason, 500, "reason")?;
+        validate_label(schedule_id)?;
+        self.ensure_directories()?;
+        let operation_lock = StoreLock::acquire(&self.personal_root().join("operation.lock"))?;
+        let discovery = self.discover();
+        if !scheduled_snapshot_due(&discovery.snapshots, interval_hours, now) {
+            return Ok(ScheduledPersonalSnapshotOutcome::NotDue);
+        }
+        self.ensure_space()?;
+        self.create_locked(
+            title,
+            reason,
+            Some(schedule_id),
+            false,
+            PersonalSnapshotKind::Automatic,
+            operation_lock,
+        )
+        .map(Box::new)
+        .map(ScheduledPersonalSnapshotOutcome::Created)
+    }
+
     fn create(
         &self,
         layout: &LayoutReport,
@@ -294,8 +351,19 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
         }
         self.ensure_space()?;
         self.ensure_directories()?;
-        let _operation_lock = StoreLock::acquire(&self.personal_root().join("operation.lock"))?;
+        let operation_lock = StoreLock::acquire(&self.personal_root().join("operation.lock"))?;
+        self.create_locked(title, reason, schedule_id, pinned, kind, operation_lock)
+    }
 
+    fn create_locked(
+        &self,
+        title: &str,
+        reason: &str,
+        schedule_id: Option<&str>,
+        pinned: bool,
+        kind: PersonalSnapshotKind,
+        _operation_lock: StoreLock,
+    ) -> Result<PersonalSnapshotRecord, PersonalError> {
         let id = PersonalSnapshotId::new();
         let mut record = PersonalSnapshotRecord {
             schema_version: PERSONAL_SNAPSHOT_SCHEMA_VERSION,
@@ -1269,6 +1337,37 @@ fn validate_label(value: &str) -> Result<(), PersonalError> {
     Ok(())
 }
 
+fn validate_snapshot_interval(interval_hours: u32) -> Result<(), PersonalError> {
+    if (1..=24).contains(&interval_hours) {
+        Ok(())
+    } else {
+        Err(PersonalError::invalid(
+            "Snapshot interval must be between 1 and 24 hours",
+        ))
+    }
+}
+
+fn scheduled_snapshot_due(
+    snapshots: &[PersonalSnapshotRecord],
+    interval_hours: u32,
+    now: DateTime<Utc>,
+) -> bool {
+    let latest = snapshots
+        .iter()
+        .filter(|record| {
+            record.state == PersonalSnapshotState::Ready
+                && matches!(
+                    record.kind,
+                    PersonalSnapshotKind::Manual | PersonalSnapshotKind::Automatic
+                )
+        })
+        .map(|record| record.created_at)
+        .max();
+    latest.is_none_or(|created| {
+        now.signed_duration_since(created) >= Duration::hours(i64::from(interval_hours))
+    })
+}
+
 fn validate_text(value: &str, maximum: usize, field: &str) -> Result<(), PersonalError> {
     if value.trim().is_empty()
         || value.chars().count() > maximum
@@ -1391,7 +1490,14 @@ mod tests {
             arguments: &[OsString],
         ) -> Result<CommandOutput, OperationError> {
             self.0.lock().unwrap().push(arguments.to_vec());
-            let text = if arguments.first().and_then(|value| value.to_str()) == Some("subvolume")
+            let is_subvolume =
+                arguments.first().and_then(|value| value.to_str()) == Some("subvolume");
+            let text = if is_subvolume
+                && arguments.get(1).and_then(|value| value.to_str()) == Some("snapshot")
+            {
+                fs::create_dir(Path::new(&arguments[4])).unwrap();
+                ""
+            } else if is_subvolume
                 && arguments.get(1).and_then(|value| value.to_str()) == Some("show")
             {
                 "UUID: aaaaaaaa-1111-4222-8333-aaaaaaaaaaaa\nParent UUID: bbbbbbbb-1111-4222-8333-aaaaaaaaaaaa\n"
@@ -1493,6 +1599,62 @@ mod tests {
                 && call.get(3) == Some(&home.as_os_str().to_owned())
         }));
         drop(calls);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn scheduled_personal_creation_enforces_freshness_inside_the_store_lock() {
+        let root = temporary_root("scheduled-create");
+        let home = root.join("home");
+        let store = root.join("store");
+        fs::create_dir(&home).unwrap();
+        fs::create_dir(&store).unwrap();
+        let engine = PersonalSnapshotEngine::new(&home, &store, RecordingRunner::default());
+        let first = engine
+            .create_scheduled_if_due(
+                &supported_layout(),
+                "home-every-two-hours",
+                "Automatic Home snapshot",
+                "Scheduled",
+                2,
+                Utc::now(),
+            )
+            .unwrap();
+        let ScheduledPersonalSnapshotOutcome::Created(first) = first else {
+            panic!("the first scheduled run must create a snapshot");
+        };
+
+        let mut imported = (*first).clone();
+        imported.kind = PersonalSnapshotKind::Imported;
+        assert!(scheduled_snapshot_due(
+            &[imported],
+            2,
+            first.created_at + Duration::minutes(2)
+        ));
+
+        let duplicate = engine
+            .create_scheduled_if_due(
+                &supported_layout(),
+                "home-every-two-hours",
+                "Automatic Home snapshot",
+                "Scheduled",
+                2,
+                first.created_at + Duration::minutes(2),
+            )
+            .unwrap();
+        assert_eq!(duplicate, ScheduledPersonalSnapshotOutcome::NotDue);
+
+        let next = engine
+            .create_scheduled_if_due(
+                &supported_layout(),
+                "home-every-two-hours",
+                "Automatic Home snapshot",
+                "Scheduled",
+                2,
+                first.created_at + Duration::hours(2),
+            )
+            .unwrap();
+        assert!(matches!(next, ScheduledPersonalSnapshotOutcome::Created(_)));
         fs::remove_dir_all(root).unwrap();
     }
 

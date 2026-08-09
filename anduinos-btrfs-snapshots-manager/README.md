@@ -25,9 +25,10 @@ then one representative per day, week, month, and year. System and Home policies
 are independent and use a configurable one-to-24-hour freshness interval.
 
 The systemd timer remains installed and enabled even when both automatic scopes
-are off. On every run the scheduler compares the newest snapshot with the configured
-freshness target, so a machine that was asleep or powered off creates a catch-up
-snapshot on the next timer activation. The default package policy creates a system
+are off. On every run the privileged helper compares the newest snapshot with the
+configured freshness target under the same storage lock used for creation, so a
+machine that was asleep or powered off creates at most one catch-up snapshot on the
+next timer activation. The default package policy creates a system
 snapshot before a real DPKG transaction and no post-transaction snapshot. Both package
 boundaries and snapshot notifications are configured in Advanced Settings.
 The unprivileged desktop notification listener runs as a supervised user

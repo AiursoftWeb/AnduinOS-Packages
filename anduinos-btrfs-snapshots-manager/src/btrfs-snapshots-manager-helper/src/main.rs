@@ -6,8 +6,11 @@ use anduinos_recovery_engine::{
     confirmation::ConfirmationEngine,
     layout,
     model::{DeploymentId, DeploymentKind, DeploymentState},
-    operations::OperationEngine,
-    personal::{PersonalSnapshotEngine, PersonalSnapshotId, PersonalSnapshotState},
+    operations::{OperationEngine, ScheduledSnapshotOutcome},
+    personal::{
+        PersonalSnapshotEngine, PersonalSnapshotId, PersonalSnapshotState,
+        ScheduledPersonalSnapshotOutcome,
+    },
     rollback::RollbackCoordinator,
     store::DeploymentStore,
     system_browser::SystemSnapshotBrowser,
@@ -510,14 +513,36 @@ impl SnapshotsManagerHelper {
                 ),
             );
         }
-        match OperationEngine::default().create_scheduled(
+        let config = match AutomationConfig::load_from_file(
+            &SnapshotsManagerConfig::new().automation_config,
+        ) {
+            Ok(config) => config,
+            Err(error) => return (false, format!("Could not load automation policy: {error}")),
+        };
+        if !config.system.is_auto_snapshot_enabled {
+            return (true, serde_json::json!({ "created": false }).to_string());
+        }
+        let engine = OperationEngine::default();
+        if config.notifications.notify_before_scheduled
+            && engine
+                .scheduled_snapshot_due(config.system.snapshot_interval_hours, chrono::Utc::now())
+                .unwrap_or(false)
+        {
+            if let Err(error) = Self::automatic_snapshot_starting(&ctxt, "system").await {
+                log::warn!("Could not emit scheduled System pre-notification: {error}");
+            }
+            std::thread::sleep(std::time::Duration::from_secs(10));
+        }
+        match engine.create_scheduled_if_due(
             &layout::inspect_current(),
             &schedule_id,
             &title,
             &reason,
+            config.system.snapshot_interval_hours,
+            chrono::Utc::now(),
             |_phase, _fraction, _message| {},
         ) {
-            Ok(record) => match serde_json::to_string(&record) {
+            Ok(ScheduledSnapshotOutcome::Created(record)) => match serde_json::to_string(&record) {
                 Ok(json) => {
                     audit::log_snapshot_create(uid, pid, &record.id.to_string(), true, None);
                     if let Err(error) =
@@ -538,6 +563,9 @@ impl SnapshotsManagerHelper {
                     format!("Could not serialize system snapshot: {error}"),
                 ),
             },
+            Ok(ScheduledSnapshotOutcome::NotDue) => {
+                (true, serde_json::json!({ "created": false }).to_string())
+            }
             Err(error) => {
                 audit::log_snapshot_create(uid, pid, &title, false, Some(&error.to_string()));
                 (false, error.to_string())
@@ -656,43 +684,75 @@ impl SnapshotsManagerHelper {
                 ),
             );
         }
-        match PersonalSnapshotEngine::default().create_scheduled(
+        let config = match AutomationConfig::load_from_file(
+            &SnapshotsManagerConfig::new().automation_config,
+        ) {
+            Ok(config) => config,
+            Err(error) => return (false, format!("Could not load automation policy: {error}")),
+        };
+        if !config.home.is_auto_snapshot_enabled {
+            return (true, serde_json::json!({ "created": false }).to_string());
+        }
+        let engine = PersonalSnapshotEngine::default();
+        if config.notifications.notify_before_scheduled
+            && engine
+                .scheduled_snapshot_due(config.home.snapshot_interval_hours, chrono::Utc::now())
+                .unwrap_or(false)
+        {
+            if let Err(error) = Self::automatic_snapshot_starting(&ctxt, "personal").await {
+                log::warn!("Could not emit scheduled Home pre-notification: {error}");
+            }
+            std::thread::sleep(std::time::Duration::from_secs(10));
+        }
+        match engine.create_scheduled_if_due(
             &layout::inspect_current(),
             &schedule_id,
             &title,
             &reason,
+            config.home.snapshot_interval_hours,
+            chrono::Utc::now(),
         ) {
-            Ok(record) => match serde_json::to_string(&record) {
-                Ok(json) => {
-                    audit::log_operation(
-                        uid,
-                        pid,
-                        "create_scheduled_personal_snapshot",
-                        &record.id.to_string(),
-                        true,
-                        None,
-                    );
-                    if let Err(error) =
-                        Self::personal_snapshot_created(&ctxt, &record.id.to_string(), "scheduler")
-                            .await
-                    {
-                        log::warn!(
-                            "Could not emit scheduled Personal Files history signal: {error}"
+            Ok(ScheduledPersonalSnapshotOutcome::Created(record)) => {
+                match serde_json::to_string(&record) {
+                    Ok(json) => {
+                        audit::log_operation(
+                            uid,
+                            pid,
+                            "create_scheduled_personal_snapshot",
+                            &record.id.to_string(),
+                            true,
+                            None,
                         );
+                        if let Err(error) = Self::personal_snapshot_created(
+                            &ctxt,
+                            &record.id.to_string(),
+                            "scheduler",
+                        )
+                        .await
+                        {
+                            log::warn!(
+                                "Could not emit scheduled Personal Files history signal: {error}"
+                            );
+                        }
+                        if automatic_success_notification_enabled()
+                            && let Err(error) =
+                                Self::snapshot_creation_succeeded(&ctxt, "personal", true).await
+                        {
+                            log::warn!(
+                                "Could not emit automatic Personal Files notification: {error}"
+                            );
+                        }
+                        (true, json)
                     }
-                    if automatic_success_notification_enabled()
-                        && let Err(error) =
-                            Self::snapshot_creation_succeeded(&ctxt, "personal", true).await
-                    {
-                        log::warn!("Could not emit automatic Personal Files notification: {error}");
-                    }
-                    (true, json)
+                    Err(error) => (
+                        false,
+                        format!("Could not serialize personal snapshot: {error}"),
+                    ),
                 }
-                Err(error) => (
-                    false,
-                    format!("Could not serialize personal snapshot: {error}"),
-                ),
-            },
+            }
+            Ok(ScheduledPersonalSnapshotOutcome::NotDue) => {
+                (true, serde_json::json!({ "created": false }).to_string())
+            }
             Err(error) => {
                 audit::log_operation(
                     uid,

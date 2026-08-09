@@ -6,7 +6,7 @@ use std::os::unix::fs::{OpenOptionsExt, PermissionsExt};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
-use chrono::Utc;
+use chrono::{DateTime, Duration, Utc};
 use sha2::{Digest, Sha256};
 use uuid::Uuid;
 
@@ -35,6 +35,12 @@ pub enum OperationPhase {
     CaptureIdentity,
     Commit,
     Cleanup,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum ScheduledSnapshotOutcome {
+    Created(Box<DeploymentRecord>),
+    NotDue,
 }
 
 impl OperationPhase {
@@ -252,6 +258,65 @@ impl<R: CommandRunner> OperationEngine<R> {
         )
     }
 
+    /// Advisory freshness check for user-facing pre-notifications. Callers
+    /// must still use `create_scheduled_if_due`, which repeats this decision
+    /// under the operation lock before mutating recovery storage.
+    pub fn scheduled_snapshot_due(
+        &self,
+        interval_hours: u32,
+        now: DateTime<Utc>,
+    ) -> Result<bool, OperationError> {
+        validate_snapshot_interval(interval_hours)?;
+        let deployments = DeploymentStore::new(&self.snapshot_root).discover();
+        Ok(scheduled_snapshot_due(
+            &deployments.deployments,
+            interval_hours,
+            now,
+        ))
+    }
+
+    /// Create a scheduled snapshot only when no eligible ready system snapshot
+    /// satisfies the requested freshness interval. Discovery and creation are
+    /// performed under the same operation lock so duplicate timer activations
+    /// cannot both pass the freshness check.
+    #[allow(clippy::too_many_arguments)]
+    pub fn create_scheduled_if_due<F>(
+        &self,
+        layout: &LayoutReport,
+        schedule_id: &str,
+        title: &str,
+        reason: &str,
+        interval_hours: u32,
+        now: DateTime<Utc>,
+        progress: F,
+    ) -> Result<ScheduledSnapshotOutcome, OperationError>
+    where
+        F: FnMut(OperationPhase, f64, &str),
+    {
+        validate_snapshot_interval(interval_hours)?;
+        ensure_supported_layout(layout)?;
+        self.ensure_store_directories()?;
+        let operation_lock = self.acquire_lock()?;
+        let deployments = DeploymentStore::new(&self.snapshot_root).discover();
+        if !scheduled_snapshot_due(&deployments.deployments, interval_hours, now) {
+            return Ok(ScheduledSnapshotOutcome::NotDue);
+        }
+        self.ensure_transaction_reserve()?;
+        self.create_snapshot_locked(
+            title,
+            reason,
+            Some(schedule_id),
+            false,
+            DeploymentKind::Automatic,
+            DeploymentState::Ready,
+            progress,
+            operation_lock,
+            deployments,
+        )
+        .map(Box::new)
+        .map(ScheduledSnapshotOutcome::Created)
+    }
+
     pub fn create_pre_rollback<F>(
         &self,
         layout: &LayoutReport,
@@ -339,8 +404,37 @@ impl<R: CommandRunner> OperationEngine<R> {
         ensure_supported_layout(layout)?;
         self.ensure_transaction_reserve()?;
         self.ensure_store_directories()?;
-        let _lock = self.acquire_lock()?;
+        let operation_lock = self.acquire_lock()?;
         let deployments = DeploymentStore::new(&self.snapshot_root).discover();
+        self.create_snapshot_locked(
+            title,
+            reason,
+            schedule_id,
+            pinned,
+            kind,
+            completed_state,
+            progress,
+            operation_lock,
+            deployments,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn create_snapshot_locked<F>(
+        &self,
+        title: &str,
+        reason: &str,
+        schedule_id: Option<&str>,
+        pinned: bool,
+        kind: DeploymentKind,
+        completed_state: DeploymentState,
+        mut progress: F,
+        _operation_lock: OperationLock,
+        deployments: crate::store::DiscoveryReport,
+    ) -> Result<DeploymentRecord, OperationError>
+    where
+        F: FnMut(OperationPhase, f64, &str),
+    {
         let lineage_store = LineageStore::new(&self.snapshot_root);
         let lineage = lineage_store
             .ensure_initialized(&deployments.deployments)
@@ -1123,6 +1217,42 @@ fn validate_transaction_label(value: &str) -> Result<(), OperationError> {
     Ok(())
 }
 
+fn validate_snapshot_interval(interval_hours: u32) -> Result<(), OperationError> {
+    if (1..=24).contains(&interval_hours) {
+        Ok(())
+    } else {
+        Err(OperationError::new(
+            OperationErrorCode::InvalidInput,
+            "Snapshot interval must be between 1 and 24 hours",
+        ))
+    }
+}
+
+fn scheduled_snapshot_due(
+    deployments: &[DeploymentRecord],
+    interval_hours: u32,
+    now: DateTime<Utc>,
+) -> bool {
+    let latest = deployments
+        .iter()
+        .filter(|record| {
+            record.state == DeploymentState::Ready
+                && matches!(
+                    record.kind,
+                    DeploymentKind::Manual
+                        | DeploymentKind::Automatic
+                        | DeploymentKind::AptPre
+                        | DeploymentKind::AptPost
+                        | DeploymentKind::PreRollback
+                )
+        })
+        .map(|record| record.created_at)
+        .max();
+    latest.is_none_or(|created| {
+        now.signed_duration_since(created) >= Duration::hours(i64::from(interval_hours))
+    })
+}
+
 fn ensure_existing_directory(path: &Path) -> Result<(), OperationError> {
     let metadata = fs::symlink_metadata(path)
         .map_err(|error| io_error(&format!("Could not inspect {}", path.display()), error))?;
@@ -1530,6 +1660,81 @@ mod tests {
     }
 
     #[test]
+    fn scheduled_system_creation_enforces_freshness_inside_the_operation_lock() {
+        let environment = TestEnvironment::new();
+        let engine = OperationEngine::new(
+            &environment.system_root,
+            &environment.snapshot_root,
+            FakeRunner::new(false),
+        );
+        let first = engine
+            .create_scheduled_if_due(
+                &environment.layout(),
+                "system-daily",
+                "Automatic system snapshot",
+                "Scheduled",
+                24,
+                Utc::now(),
+                |_, _, _| {},
+            )
+            .unwrap();
+        let ScheduledSnapshotOutcome::Created(first) = first else {
+            panic!("the first scheduled run must create a snapshot");
+        };
+
+        for kind in [
+            DeploymentKind::Manual,
+            DeploymentKind::Automatic,
+            DeploymentKind::AptPre,
+            DeploymentKind::AptPost,
+            DeploymentKind::PreRollback,
+        ] {
+            let mut fresh = (*first).clone();
+            fresh.kind = kind;
+            assert!(!scheduled_snapshot_due(
+                &[fresh],
+                24,
+                first.created_at + Duration::minutes(2)
+            ));
+        }
+        for kind in [DeploymentKind::Factory, DeploymentKind::Imported] {
+            let mut ignored = (*first).clone();
+            ignored.kind = kind;
+            assert!(scheduled_snapshot_due(
+                &[ignored],
+                24,
+                first.created_at + Duration::minutes(2)
+            ));
+        }
+
+        let duplicate = engine
+            .create_scheduled_if_due(
+                &environment.layout(),
+                "system-daily",
+                "Automatic system snapshot",
+                "Scheduled",
+                24,
+                first.created_at + Duration::minutes(2),
+                |_, _, _| {},
+            )
+            .unwrap();
+        assert_eq!(duplicate, ScheduledSnapshotOutcome::NotDue);
+
+        let next = engine
+            .create_scheduled_if_due(
+                &environment.layout(),
+                "system-daily",
+                "Automatic system snapshot",
+                "Scheduled",
+                24,
+                first.created_at + Duration::hours(24),
+                |_, _, _| {},
+            )
+            .unwrap();
+        assert!(matches!(next, ScheduledSnapshotOutcome::Created(_)));
+    }
+
+    #[test]
     fn creates_typed_package_recovery_points() {
         let environment = TestEnvironment::new();
         let engine = OperationEngine::new(
@@ -1880,6 +2085,18 @@ mod tests {
             )
             .unwrap_err();
         assert_eq!(error.code, OperationErrorCode::Busy);
+        let scheduled_error = engine
+            .create_scheduled_if_due(
+                &environment.layout(),
+                "system-daily",
+                "Concurrent automatic snapshot",
+                "Must be rejected",
+                24,
+                Utc::now(),
+                |_, _, _| {},
+            )
+            .unwrap_err();
+        assert_eq!(scheduled_error.code, OperationErrorCode::Busy);
     }
 
     #[test]
