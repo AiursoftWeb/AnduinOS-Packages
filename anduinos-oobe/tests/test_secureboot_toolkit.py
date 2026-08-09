@@ -71,23 +71,20 @@ class SecureBootToolkitTests(unittest.TestCase):
         self.assertIn("_('Skip')", hardware)
         self.assertIn("open_btn.add_css_class('suggested-action')", hardware)
 
-    def test_open_driver_center_launches_without_elevation_then_navigates(self):
-        navigate_next = mock.Mock()
+    def test_open_driver_center_launches_without_elevation_and_stays(self):
         with mock.patch.object(OOBE.subprocess, "Popen") as popen:
-            error = OOBE._open_driver_center(navigate_next)
+            error = OOBE._open_driver_center()
 
         self.assertIsNone(error)
         popen.assert_called_once_with(["/usr/bin/anduinos-driver-center"])
-        navigate_next.assert_called_once_with()
 
     def test_open_driver_center_failure_stays_on_page_with_localized_error(self):
-        navigate_next = mock.Mock()
         with mock.patch.object(
             OOBE.subprocess,
             "Popen",
             side_effect=FileNotFoundError("missing executable"),
         ):
-            error = OOBE._open_driver_center(navigate_next)
+            error = OOBE._open_driver_center()
 
         self.assertEqual(
             error,
@@ -95,7 +92,6 @@ class SecureBootToolkitTests(unittest.TestCase):
                 "missing executable"
             ),
         )
-        navigate_next.assert_not_called()
 
     def test_skip_navigates_without_starting_driver_center(self):
         navigate_next = mock.Mock()

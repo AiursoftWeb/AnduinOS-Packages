@@ -2050,13 +2050,12 @@ def create_secureboot_page(navigate_next, update_nav=None):
 # PAGE 4: HARDWARE DRIVERS — Driver Center entry point
 # ═══════════════════════════════════════════════════════════════════
 
-def _open_driver_center(navigate_next):
-    """Launch Driver Center without elevation and advance on success."""
+def _open_driver_center():
+    """Launch Driver Center without elevation."""
     try:
         subprocess.Popen([DRIVER_CENTER_EXECUTABLE])
     except Exception as error:
         return _('Could not open AnduinOS Driver Center: {}').format(error)
-    navigate_next()
     return None
 
 
@@ -2131,7 +2130,7 @@ def create_hardware_drivers_page(navigate_next, update_nav=None):
     open_btn.add_css_class('suggested-action')
 
     def _on_open(_button):
-        error = _open_driver_center(navigate_next)
+        error = _open_driver_center()
         status_label.set_label(error or '')
 
     open_btn.connect('clicked', _on_open)
