@@ -52,7 +52,6 @@ OOBE_LAYOUT_STYLES = {
 try:
     from anduinos_secureboot.ui import create_secure_boot_page as _shared_secure_boot_page
     from anduinos_secureboot import inspect_secure_boot as _inspect_secure_boot
-    from anduinos_secureboot.client import run_action as _run_secure_boot_action
 except ModuleNotFoundError:
     _toolkit_src = os.path.abspath(os.path.join(
         os.path.dirname(__file__), '..', '..',
@@ -61,21 +60,6 @@ except ModuleNotFoundError:
         sys.path.insert(0, _toolkit_src)
     from anduinos_secureboot.ui import create_secure_boot_page as _shared_secure_boot_page
     from anduinos_secureboot import inspect_secure_boot as _inspect_secure_boot
-    from anduinos_secureboot.client import run_action as _run_secure_boot_action
-
-# Driver Center owns hardware/package health. OOBE consumes that read-only
-# model so both frontends make the same distinction between an installed
-# package, an available module, firmware trust, and a loaded module.
-_driver_center_src = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), '..', '..',
-    'anduinos-driver-center', 'src'))
-if os.path.isdir(_driver_center_src) and _driver_center_src not in sys.path:
-    sys.path.insert(0, _driver_center_src)
-from anduinos_driver_center.core import (
-    XboxStatus as _XboxStatus,
-    graphics_devices as _graphics_devices,
-    xbox_state as _inspect_xbox,
-)
 
 warnings.filterwarnings('ignore', category=DeprecationWarning, module='gi')
 
@@ -92,7 +76,7 @@ FLATHUB_OFFICIAL_REPO = 'https://dl.flathub.org/repo/flathub.flatpakrepo'
 FLATHUB_OFFICIAL_URL = 'https://dl.flathub.org/repo'
 FLATHUB_USTC_URL = 'https://mirrors.ustc.edu.cn/flathub'
 MDNS_HELPER = '/usr/libexec/anduinos-oobe/network-service-helper'
-DRIVER_CENTER_HELPER = '/usr/libexec/anduinos-driver-center/driver-helper'
+DRIVER_CENTER_EXECUTABLE = '/usr/bin/anduinos-driver-center'
 SNAPSHOTS_MANAGER_PACKAGE = 'anduinos-btrfs-snapshots-manager'
 SNAPSHOTS_MANAGER_EXECUTABLE = '/usr/bin/anduinos-btrfs-snapshots-manager'
 BASH_GUESS_BEGIN = '# >>> AnduinOS Bash command predictions >>>'
@@ -304,32 +288,9 @@ def _read_os_pretty_name():
         return 'AnduinOS'
 
 
-def has_nvidia_gpu():
-    if os.environ.get('NVIDIA_PAGE') == 'true':
-        return True
-    try:
-        r = subprocess.run(['lspci'], capture_output=True, text=True, timeout=10)
-        if 'NVIDIA' in r.stdout or 'nvidia' in r.stdout.lower():
-            return True
-    except Exception:
-        pass
-    return False
-
-
 def is_arm64():
     """True on aarch64 platforms (Snapdragon, Apple Silicon, etc.)."""
     return os.uname().machine == 'aarch64'
-
-
-def is_virtual_machine():
-    if os.environ.get('XBOX_PAGE') == 'true':
-        return False
-    try:
-        r = subprocess.run(['systemd-detect-virt'], capture_output=True, text=True, timeout=5)
-        output = r.stdout.strip().lower()
-        return output != 'none' and output != ''
-    except Exception:
-        return False
 
 
 def has_second_disk():
@@ -384,27 +345,6 @@ def _is_package_installed(pkg):
         return r.returncode == 0
     except Exception:
         return False
-
-
-def _has_installed_nvidia_driver():
-    """Detect a configured NVIDIA metapackage without claiming it is active."""
-    try:
-        result = subprocess.run(
-            [
-                'dpkg-query', '-W',
-                '-f=${binary:Package}\t${db:Status-Abbrev}\n',
-                'nvidia-driver-*',
-            ],
-            capture_output=True,
-            text=True,
-            timeout=5,
-        )
-    except Exception:
-        return False
-    return any(
-        '\t' in line and line.split('\t', 1)[1].startswith('ii ')
-        for line in result.stdout.splitlines()
-    )
 
 
 def should_recommend_snapshots_manager():
@@ -2106,12 +2046,28 @@ def create_secureboot_page(navigate_next, update_nav=None):
     )
 
 
-# PAGE 4: NVIDIA — 性能释放 (conditional)
+# ═══════════════════════════════════════════════════════════════════
+# PAGE 4: HARDWARE DRIVERS — Driver Center entry point
 # ═══════════════════════════════════════════════════════════════════
 
-def create_nvidia_page(navigate_next, update_nav=None):
+def _open_driver_center(navigate_next):
+    """Launch Driver Center without elevation and advance on success."""
+    try:
+        subprocess.Popen([DRIVER_CENTER_EXECUTABLE])
+    except Exception as error:
+        return _('Could not open AnduinOS Driver Center: {}').format(error)
+    navigate_next()
+    return None
+
+
+def _skip_hardware_drivers(navigate_next):
+    navigate_next()
+
+
+def create_hardware_drivers_page(navigate_next, update_nav=None):
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    page._requires_internet = True
+    page._hide_next = True
+    page._suggest_next = False
     page.set_valign(Gtk.Align.FILL)
     page.set_halign(Gtk.Align.FILL)
     page.set_margin_start(48)
@@ -2119,876 +2075,72 @@ def create_nvidia_page(navigate_next, update_nav=None):
     page.set_margin_top(24)
     page.set_margin_bottom(24)
     page.set_spacing(0)
-    
-    page._suggest_next = False
 
     center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     center.set_valign(Gtk.Align.CENTER)
     center.set_vexpand(True)
     page.append(center)
 
-    # Green-tinted icon
-    icon = _create_image('nvidia.svg')
-    icon.set_pixel_size(72)
-    icon.set_halign(Gtk.Align.CENTER)
-    center.append(icon)
+    icon_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24)
+    icon_box.set_halign(Gtk.Align.CENTER)
+    for icon_name in ('nvidia.svg', 'input-gaming.svg'):
+        icon = _create_image(icon_name)
+        icon.set_pixel_size(72)
+        icon_box.append(icon)
+    center.append(icon_box)
 
-    title = Gtk.Label(label=_('Unleash Your Graphics Hardware'))
+    title = Gtk.Label(label=_('Configure Hardware Drivers?'))
     title.add_css_class('title-1')
     title.set_halign(Gtk.Align.CENTER)
     title.set_wrap(True)
     title.set_justify(Gtk.Justification.CENTER)
     title.set_margin_top(12)
     center.append(title)
-
-    graphics = _graphics_devices()
-    nvidia_device = next(
-        (device for device in graphics if 'nvidia' in device.vendor.lower()),
-        None,
-    )
-    active_package = next(
-        (
-            option.package for option in (nvidia_device.options if nvidia_device else ())
-            if option.active and option.package.startswith('nvidia-driver-')
-        ),
-        None,
-    )
-    installed_packages = [
-        option.package for option in (nvidia_device.options if nvidia_device else ())
-        if option.installed and option.package.startswith('nvidia-driver-')
-    ]
-    recommended_package = next(
-        (
-            option.package for option in (nvidia_device.options if nvidia_device else ())
-            if option.recommended and option.package.startswith('nvidia-driver-')
-        ),
-        None,
-    )
-    repair_package = active_package or (
-        recommended_package if recommended_package in installed_packages else None
-    ) or (installed_packages[0] if len(installed_packages) == 1 else None)
-    driver_package_installed = bool(installed_packages)
-    driver_healthy = bool(
-        nvidia_device
-        and nvidia_device.active_driver_healthy
-        and active_package
-    )
-    driver_version = (
-        nvidia_device.active_driver_version if driver_healthy else None
-    )
-
-    if driver_healthy:
-        sub = Gtk.Label(
-            label=_('NVIDIA proprietary driver is already installed. (Version: {})').format(driver_version)
-        )
-    elif driver_package_installed:
-        sub = Gtk.Label(
-            label=_('✗ Installation encountered an issue.')
-        )
-    else:
-        sub = Gtk.Label(
-            label=_('An NVIDIA dedicated graphics card was detected in your system.')
-        )
-    sub.add_css_class('dim-label')
-    sub.set_halign(Gtk.Align.CENTER)
-    sub.set_wrap(True)
-    sub.set_justify(Gtk.Justification.CENTER)
-    sub.set_margin_top(12)
-    center.append(sub)
 
     body = Gtk.Label(
-        label=_('For ultimate smoothness in gaming, 3D rendering, and high-framerate desktop') + '\n' + _('experiences, we recommend installing the proprietary driver.')
+        label=_(
+            'Open AnduinOS Driver Center now to manage graphics cards, '
+            'Xbox controllers, and other hardware.'
+        )
     )
+    body.add_css_class('dim-label')
     body.set_halign(Gtk.Align.CENTER)
     body.set_wrap(True)
     body.set_justify(Gtk.Justification.CENTER)
-    body.set_margin_top(24)
-    body.set_margin_bottom(24)
+    body.set_margin_top(12)
     center.append(body)
 
-    # Status
     status_label = Gtk.Label()
-    status_label.add_css_class('dim-label')
+    status_label.add_css_class('error')
     status_label.set_halign(Gtk.Align.CENTER)
     status_label.set_wrap(True)
-    status_label.set_margin_bottom(12)
+    status_label.set_justify(Gtk.Justification.CENTER)
+    status_label.set_margin_top(12)
     center.append(status_label)
 
-    progress_bar = Gtk.ProgressBar()
-    progress_bar.set_visible(False)
-    progress_bar.set_margin_start(48)
-    progress_bar.set_margin_end(48)
-    center.append(progress_bar)
-
-    # Buttons
     btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
     btn_box.set_halign(Gtk.Align.CENTER)
     btn_box.set_margin_top(24)
 
-    skip_btn = Gtk.Button(label=_('  Do It Later  '))
-    skip_btn.connect('clicked', lambda b: navigate_next())
+    skip_btn = Gtk.Button(label=_('Skip'))
+    skip_btn.connect(
+        'clicked', lambda _button: _skip_hardware_drivers(navigate_next)
+    )
 
-    if driver_healthy:
-        install_btn = Gtk.Button(label=_('  Check for Driver Updates  '))
-    elif driver_package_installed:
-        install_btn = Gtk.Button(label=_('Repair & Reinstall'))
-    else:
-        install_btn = Gtk.Button(label=_('  One-Click NVIDIA Driver Install  '))
-    install_btn.add_css_class('suggested-action')
+    open_btn = Gtk.Button(label=_('Open Driver Center'))
+    open_btn.add_css_class('suggested-action')
 
-    # Advanced Output Expander
-    expander = Gtk.Expander(label=_('Advanced Output'))
-    expander.set_margin_top(12)
-    expander.set_margin_start(48)
-    expander.set_margin_end(48)
-    expander.set_halign(Gtk.Align.FILL)
-    
-    scroll = Gtk.ScrolledWindow()
-    scroll.set_min_content_height(150)
-    scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-    
-    textview = Gtk.TextView()
-    textview.set_editable(False)
-    textview.set_cursor_visible(False)
-    textview.add_css_class('card')
-    textview.set_monospace(True)
-    textview.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
-    buffer = textview.get_buffer()
+    def _on_open(_button):
+        error = _open_driver_center(navigate_next)
+        status_label.set_label(error or '')
 
-    def _append_text(value):
-        end_iter = buffer.get_end_iter()
-        buffer.insert(end_iter, value)
-        mark = buffer.create_mark(None, buffer.get_end_iter(), False)
-        textview.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
-    
-    scroll.set_child(textview)
-    expander.set_child(scroll)
-    center.append(expander)
-
-    def _on_install(btn):
-        btn.set_sensitive(False)
-        skip_btn.set_sensitive(False)
-        progress_bar.set_visible(True)
-        progress_bar.pulse()
-        status_label.set_label(_('Installing NVIDIA driver…') + '\n' + _('This may take several minutes.'))
-
-        def _pulse():
-            if progress_bar.is_visible():
-                progress_bar.pulse()
-                return True
-            return False
-
-        GLib.timeout_add(100, _pulse)
-
-        def _do_install():
-            try:
-                helper_arguments = (
-                    ['repair-nvidia', repair_package]
-                    if driver_package_installed and not driver_healthy and repair_package
-                    else ['install-recommended']
-                )
-                proc = subprocess.Popen(
-                    ['pkexec', DRIVER_CENTER_HELPER, *helper_arguments],
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
-                    text=True,
-                    bufsize=1
-                )
-                
-                for line in iter(proc.stdout.readline, ''):
-                    GLib.idle_add(lambda l=line: _append_text(l))
-                proc.stdout.close()
-                proc.wait()
-                
-                if proc.returncode == 0:
-                    def _set_success():
-                        status_label.set_label(
-                            _('✓ Driver installed successfully!')
-                            + '\n'
-                            + _('A reboot is recommended to apply changes.'))
-                        progress_bar.set_visible(False)
-                        btn.set_visible(False)
-                        skip_btn.set_visible(False)
-                        page._suggest_next = True
-                        if update_nav: update_nav()
-                    GLib.idle_add(_set_success)
-                else:
-                    def _set_fail():
-                        status_label.set_label(
-                            _('✗ Installation encountered an issue.') + '\n' + _('You can install drivers later from Settings.'))
-                        progress_bar.set_visible(False)
-                        btn.set_sensitive(True)
-                        skip_btn.set_sensitive(True)
-                        page._suggest_next = True
-                        if update_nav: update_nav()
-                    GLib.idle_add(_set_fail)
-            except Exception as e:
-                def _set_ex():
-                    status_label.set_label(_('✗ Installation failed: ') + str(e))
-                    progress_bar.set_visible(False)
-                    btn.set_sensitive(True)
-                    skip_btn.set_sensitive(True)
-                    page._suggest_next = True
-                    if update_nav: update_nav()
-                GLib.idle_add(_set_ex)
-
-        threading.Thread(target=_do_install, daemon=True).start()
-
-    install_btn.connect('clicked', _on_install)
+    open_btn.connect('clicked', _on_open)
     btn_box.append(skip_btn)
-    btn_box.append(install_btn)
+    btn_box.append(open_btn)
     center.append(btn_box)
 
     return page
 
-
-# Every non-ready state maps to one concrete recovery action.  This pure
-# policy is shared by initial rendering, refreshes, and behavior tests.
-def _xbox_recovery_action(trust, xbox):
-    if xbox.status is _XboxStatus.NOT_INSTALLED:
-        if not trust.state_known:
-            return 'refresh'
-        if trust.enabled and trust.enrollment_pending:
-            return 'reboot'
-        if trust.enabled and not trust.enrolled:
-            return 'trust'
-        return 'install'
-    return {
-        _XboxStatus.MODULE_MISSING: 'reinstall',
-        _XboxStatus.SECURE_BOOT_UNKNOWN: 'refresh',
-        _XboxStatus.ENROLLMENT_PENDING: 'reboot',
-        _XboxStatus.TRUST_SETUP_REQUIRED: 'trust',
-        _XboxStatus.SIGNATURE_MISMATCH: 'reinstall',
-        _XboxStatus.LOAD_STATE_UNKNOWN: 'refresh',
-        _XboxStatus.LOADED: None,
-        _XboxStatus.READY: None,
-    }[xbox.status]
-
-
-def _secure_boot_trust_prepared(payload):
-    steps = payload.get('steps', {})
-    return (
-        steps.get('key_created', {}).get('status') in {'success', 'skipped'}
-        and steps.get('enrollment_queued', {}).get('status')
-        in {'success', 'skipped'}
-    )
-
-
-# ═══════════════════════════════════════════════════════════════════
-# PAGE 5: XBOX CONTROLLER — shared health and recovery model
-# ═══════════════════════════════════════════════════════════════════
-
-def create_xbox_page(navigate_next, update_nav=None):
-    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    page._requires_internet = True
-    page.set_valign(Gtk.Align.FILL)
-    page.set_halign(Gtk.Align.FILL)
-    page.set_margin_start(48)
-    page.set_margin_end(48)
-    page.set_margin_top(24)
-    page.set_margin_bottom(24)
-    page.set_spacing(0)
-    
-    page._suggest_next = False
-
-    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    center.set_valign(Gtk.Align.CENTER)
-    center.set_vexpand(True)
-    page.append(center)
-
-    icon = _create_image('input-gaming.svg')
-    icon.set_pixel_size(72)
-    icon.set_halign(Gtk.Align.CENTER)
-    center.append(icon)
-
-    title = Gtk.Label(label=_('Xbox Controller Support'))
-    title.add_css_class('title-1')
-    title.set_halign(Gtk.Align.CENTER)
-    title.set_wrap(True)
-    title.set_justify(Gtk.Justification.CENTER)
-    title.set_margin_top(12)
-    center.append(title)
-
-    is_installed = False
-    sb_enabled = False
-    sb_state_known = False
-    sb_enforcement_inactive = False
-    has_cert = False
-    is_trusted = False
-    current_cert_serial = None
-    modinfo_sig_key = None
-    is_loaded = False
-    module_available = False
-    xbox_status = _XboxStatus.NOT_INSTALLED
-
-    def _refresh_xbox_checks():
-        nonlocal is_installed, sb_enabled, sb_state_known
-        nonlocal sb_enforcement_inactive, has_cert, is_trusted
-        nonlocal current_cert_serial, modinfo_sig_key, is_loaded
-        nonlocal module_available, xbox_status
-
-        trust = _inspect_secure_boot()
-        sb_enabled = trust.enabled
-        sb_state_known = trust.state_known
-        sb_enforcement_inactive = trust.enforcement_inactive
-        has_cert = trust.key_present and trust.certificate_present
-        is_trusted = trust.enrolled if sb_enabled and has_cert else sb_enforcement_inactive
-        current_cert_serial = trust.certificate_serial
-        xbox = _inspect_xbox(trust)
-        is_installed = xbox.installed
-        module_available = xbox.module_available
-        modinfo_sig_key = xbox.signature_key
-        is_loaded = xbox.module_loaded
-        xbox_status = xbox.status
-        return trust, xbox
-
-    current_trust, current_xbox = _refresh_xbox_checks()
-
-    r3 = None
-    icon3 = None
-
-    if is_installed:
-        sub = Gtk.Label(
-            label=_('Xbox controller driver (xpadneo) is already installed.')
-        )
-    else:
-        sub = Gtk.Label(
-            label=_('Enjoy seamless Xbox controller support with rumble and accurate inputs.')
-        )
-    sub.add_css_class('dim-label')
-    sub.set_halign(Gtk.Align.CENTER)
-    sub.set_wrap(True)
-    sub.set_justify(Gtk.Justification.CENTER)
-    sub.set_margin_top(12)
-    center.append(sub)
-
-    if is_installed:
-        body_text = _('AnduinOS provides native support for Xbox controllers via Bluetooth.') + '\n' + \
-                    _('The advanced xpadneo driver is already set up and ready for gaming.')
-    else:
-        body_text = _('AnduinOS provides native support for Xbox controllers via Bluetooth.') + '\n' + \
-                    _('For advanced features like rumble and accurate mapping, we recommend installing the xpadneo driver.')
-
-    body = Gtk.Label(label=body_text)
-    body.set_halign(Gtk.Align.CENTER)
-    body.set_wrap(True)
-    body.set_justify(Gtk.Justification.CENTER)
-    body.set_margin_top(24)
-    body.set_margin_bottom(12)
-    center.append(body)
-
-    list_group = Adw.PreferencesGroup()
-    list_group.set_margin_top(12)
-    list_group.set_margin_bottom(12)
-    list_group.set_margin_start(48)
-    list_group.set_margin_end(48)
-    center.append(list_group)
-
-    r1 = Adw.ActionRow(title=_("Xbox Controller Driver Installed"))
-    icon1 = _create_image('emblem-ok-symbolic' if is_installed else 'dialog-error-symbolic')
-    if is_installed:
-        r1.set_subtitle(_("The xpadneo driver is currently installed"))
-        icon1.add_css_class('success')
-    else:
-        r1.set_subtitle(_("The driver is not installed"))
-        icon1.add_css_class('error')
-    icon1.set_pixel_size(16)
-    r1.add_suffix(icon1)
-    list_group.add(r1)
-
-    if not sb_enforcement_inactive:
-        r2 = Adw.ActionRow(title=_("Driver Signature Trusted"))
-        icon2 = _create_image('dialog-error-symbolic')
-        icon2.set_pixel_size(16)
-
-        if not is_installed:
-            r2.set_subtitle(_("Driver not installed, signature missing"))
-            icon2.add_css_class('error')
-        elif not module_available:
-            r2.set_subtitle(f'{_("Kernel module")}: {_("Not detected")}')
-            icon2.add_css_class('error')
-        elif not sb_state_known:
-            r2.set_subtitle(_("Secure Boot state could not be determined"))
-            icon2.add_css_class('error')
-        else:
-            if not modinfo_sig_key:
-                r2.set_subtitle(_("Driver is NOT signed"))
-                icon2.add_css_class('error')
-            else:
-                if modinfo_sig_key == current_cert_serial:
-                    if is_trusted:
-                        r2.set_subtitle(_("Signed with current trusted certificate"))
-                        icon2.set_from_icon_name('emblem-ok-symbolic')
-                        icon2.add_css_class('success')
-                    else:
-                        r2.set_subtitle(_("Signed with current certificate, but not enrolled"))
-                        icon2.set_from_icon_name('dialog-warning-symbolic')
-                        icon2.add_css_class('warning')
-                else:
-                    r2.set_subtitle(_("Signed with an unknown or outdated certificate"))
-                    icon2.set_from_icon_name('dialog-warning-symbolic')
-                    icon2.add_css_class('warning')
-                    
-        r2.add_suffix(icon2)
-        list_group.add(r2)
-
-    if is_installed:
-        r3 = Adw.ActionRow(title=_("Controller Status"))
-
-        icon3 = _create_image('emblem-ok-symbolic')
-        icon3.set_pixel_size(16)
-
-        if xbox_status is _XboxStatus.LOADED:
-            r3.set_subtitle(_("Driver loaded and active. Ready to play!"))
-            icon3.add_css_class('success')
-        elif xbox_status is _XboxStatus.READY:
-            r3.set_subtitle(_("Driver standing by. Waiting for controller connection..."))
-            icon3.add_css_class('success')
-        elif xbox_status is _XboxStatus.MODULE_MISSING:
-            r3.set_subtitle(f'{_("Kernel module")}: {_("Not detected")}')
-            icon3.set_from_icon_name('dialog-error-symbolic')
-            icon3.add_css_class('error')
-        elif xbox_status is _XboxStatus.LOAD_STATE_UNKNOWN:
-            r3.set_subtitle(_("Driver trust cannot be verified"))
-            icon3.set_from_icon_name('dialog-warning-symbolic')
-            icon3.add_css_class('warning')
-        elif xbox_status is _XboxStatus.ENROLLMENT_PENDING:
-            r3.set_subtitle(_("A certificate is waiting for enrollment."))
-            icon3.set_from_icon_name('dialog-warning-symbolic')
-            icon3.add_css_class('warning')
-        else:
-            r3.set_subtitle(
-                _("Driver trust cannot be verified")
-                if xbox_status is _XboxStatus.SECURE_BOOT_UNKNOWN
-                else _("Driver cannot load due to missing signature trust")
-            )
-            icon3.set_from_icon_name('dialog-error-symbolic')
-            icon3.add_css_class('error')
-
-        r3.add_suffix(icon3)
-        list_group.add(r3)
-
-    status_label = Gtk.Label()
-    status_label.add_css_class('dim-label')
-    status_label.set_halign(Gtk.Align.CENTER)
-    status_label.set_wrap(True)
-    status_label.set_margin_bottom(12)
-    center.append(status_label)
-
-    progress_bar = Gtk.ProgressBar()
-    progress_bar.set_visible(False)
-    progress_bar.set_margin_start(48)
-    progress_bar.set_margin_end(48)
-    center.append(progress_bar)
-
-    btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-    btn_box.set_halign(Gtk.Align.CENTER)
-    btn_box.set_margin_top(24)
-
-    tools_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-    tools_box.set_halign(Gtk.Align.CENTER)
-    tools_box.set_margin_top(12)
-    
-    pair_btn = Gtk.Button(label=_('Pair your controller'))
-    pair_btn.connect('clicked', lambda b: subprocess.Popen(['gnome-control-center', 'bluetooth']))
-    test_btn = Gtk.Button(label=_('Test your controller'))
-    def _open_tester(b):
-        import shutil
-        if shutil.which('firefox'):
-            subprocess.Popen(['firefox', 'https://hardwaretester.com/gamepad'])
-        else:
-            subprocess.Popen(['xdg-open', 'https://hardwaretester.com/gamepad'])
-    test_btn.connect('clicked', _open_tester)
-    
-    tools_box.append(pair_btn)
-    tools_box.append(test_btn)
-    
-    is_ready_to_play = xbox_status in {
-        _XboxStatus.LOADED,
-        _XboxStatus.READY,
-    }
-    tools_box.set_visible(is_ready_to_play)
-
-
-
-    install_btn = Gtk.Button(label=_('  Install Xbox Driver  '))
-    install_btn.add_css_class('suggested-action')
-
-    reinstall_btn = Gtk.Button(label=_('Repair Module Signatures'))
-    reinstall_btn.add_css_class('suggested-action')
-    reinstall_btn.set_visible(False)
-
-    trust_btn = Gtk.Button(label=_('Create & Enroll Certificate'))
-    trust_btn.add_css_class('suggested-action')
-    trust_btn.set_visible(False)
-
-    reboot_btn = Gtk.Button(label=_('Reboot & Configure Secure Boot'))
-    reboot_btn.add_css_class('suggested-action')
-    reboot_btn.set_visible(False)
-
-    def _apply_recovery(trust, xbox, refresh_button=None):
-        action = _xbox_recovery_action(trust, xbox)
-        install_btn.set_visible(action == 'install')
-        reinstall_btn.set_visible(action == 'reinstall')
-        trust_btn.set_visible(action == 'trust')
-        reboot_btn.set_visible(action == 'reboot')
-        for action_button in (install_btn, reinstall_btn, trust_btn, reboot_btn):
-            action_button.set_sensitive(True)
-        page._suggest_next = action is None
-
-        warnings_by_status = {
-            _XboxStatus.MODULE_MISSING: f'{_("Kernel module")}: {_("Not detected")}',
-            _XboxStatus.SECURE_BOOT_UNKNOWN: _('Driver trust cannot be verified'),
-            _XboxStatus.ENROLLMENT_PENDING: _('A certificate is waiting for enrollment.'),
-            _XboxStatus.TRUST_SETUP_REQUIRED: _('The local trust certificate is not yet enrolled.'),
-            _XboxStatus.SIGNATURE_MISMATCH: _('⚠️ The driver signature does not match your system certificate. Click Fix & Reinstall to repair the driver.'),
-            _XboxStatus.LOAD_STATE_UNKNOWN: _('Driver trust cannot be verified'),
-        }
-        warning = warnings_by_status.get(xbox.status, '')
-        if xbox.status is _XboxStatus.NOT_INSTALLED:
-            if action == 'refresh':
-                warning = _("Secure Boot state could not be determined")
-            elif action == 'reboot':
-                warning = _('A certificate is waiting for enrollment.')
-            elif action == 'trust':
-                warning = _('The local trust certificate is not yet enrolled.')
-        if warning:
-            status_label.set_markup(
-                '<span foreground="#ffcc00">' + warning + '</span>'
-            )
-        else:
-            status_label.set_label('')
-        tools_box.set_visible(action is None)
-        if refresh_button is not None:
-            refresh_button.set_visible(action == 'refresh')
-            refresh_button.set_sensitive(True)
-            refresh_button.set_label(_('  Check Again  '))
-
-    _apply_recovery(current_trust, current_xbox)
-
-    expander = Gtk.Expander(label=_('Advanced Output'))
-    expander.set_margin_top(12)
-    expander.set_margin_start(48)
-    expander.set_margin_end(48)
-    expander.set_halign(Gtk.Align.FILL)
-    
-    scroll = Gtk.ScrolledWindow()
-    scroll.set_min_content_height(150)
-    scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-    
-    textview = Gtk.TextView()
-    textview.set_editable(False)
-    textview.set_cursor_visible(False)
-    textview.add_css_class('card')
-    textview.set_monospace(True)
-    textview.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
-    buffer = textview.get_buffer()
-
-    def _append_xbox_output(value):
-        end_iter = buffer.get_end_iter()
-        buffer.insert(end_iter, value)
-        mark = buffer.create_mark(None, buffer.get_end_iter(), False)
-        textview.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
-
-    scroll.set_child(textview)
-    expander.set_child(scroll)
-    center.append(expander)
-
-    def _on_install(btn):
-        btn.set_sensitive(False)
-        progress_bar.set_visible(True)
-        progress_bar.pulse()
-        status_label.set_label(_('Installing Xbox controller driver…') + "\n" + _('This may take a minute.'))
-
-        def _pulse():
-            if progress_bar.is_visible():
-                progress_bar.pulse()
-                return True
-            return False
-
-        GLib.timeout_add(100, _pulse)
-
-        def _do_install():
-            try:
-                proc = subprocess.Popen(
-                    ['pkexec', DRIVER_CENTER_HELPER, 'install-xbox'],
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
-                    text=True,
-                    bufsize=1
-                )
-                
-                for line in iter(proc.stdout.readline, ''):
-                    GLib.idle_add(lambda l=line: _append_xbox_output(l))
-                proc.stdout.close()
-                proc.wait()
-                
-                if proc.returncode == 0:
-                    def _set_success():
-                        progress_bar.set_visible(False)
-                        status_label.set_label(_('  Checking...  '))
-                        _on_xb_refresh(xb_refresh_btn)
-                    GLib.idle_add(_set_success)
-                else:
-                    def _set_fail():
-                        status_label.set_label(_('✗ Installation encountered an issue.') + "\n" + _('Please check the advanced output.'))
-                        progress_bar.set_visible(False)
-                        btn.set_sensitive(True)
-                        page._suggest_next = True
-                        if update_nav: update_nav()
-                    GLib.idle_add(_set_fail)
-            except Exception as e:
-                def _set_ex():
-                    status_label.set_label(_('✗ Installation failed: ') + str(e))
-                    progress_bar.set_visible(False)
-                    btn.set_sensitive(True)
-                    page._suggest_next = True
-                    if update_nav: update_nav()
-                GLib.idle_add(_set_ex)
-
-        threading.Thread(target=_do_install, daemon=True).start()
-
-    install_btn.connect('clicked', _on_install)
-
-    def _on_reinstall(btn):
-        btn.set_sensitive(False)
-        progress_bar.set_visible(True)
-        progress_bar.pulse()
-        status_label.set_label(_('Repairing driver signature…') + "\n" + _('This may take a minute.'))
-
-        def _pulse():
-            if progress_bar.is_visible():
-                progress_bar.pulse()
-                return True
-            return False
-
-        GLib.timeout_add(100, _pulse)
-
-        def _do_reinstall():
-            try:
-                proc = subprocess.Popen(
-                    ['pkexec', DRIVER_CENTER_HELPER, 'repair-xbox'],
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
-                    text=True,
-                    bufsize=1,
-                )
-                for line in iter(proc.stdout.readline, ''):
-                    GLib.idle_add(lambda value=line: _append_xbox_output(value))
-                proc.stdout.close()
-                proc.wait()
-                if proc.returncode == 0:
-                    GLib.idle_add(lambda: (
-                        progress_bar.set_visible(False),
-                        _on_xb_refresh(xb_refresh_btn)
-                    ))
-                else:
-                    GLib.idle_add(lambda: (
-                        status_label.set_label(_('✗ Installation encountered an issue.') + "\n" + _('Please check the advanced output.')),
-                        progress_bar.set_visible(False),
-                        btn.set_sensitive(True)
-                    ))
-            except Exception as e:
-                GLib.idle_add(lambda e=e: (
-                    status_label.set_label(_('✗ Error: ') + str(e)),
-                    progress_bar.set_visible(False),
-                    btn.set_sensitive(True)
-                ))
-
-        threading.Thread(target=_do_reinstall, daemon=True).start()
-
-    reinstall_btn.connect('clicked', _on_reinstall)
-
-    def _on_configure_trust(btn):
-        btn.set_sensitive(False)
-        progress_bar.set_visible(True)
-        progress_bar.pulse()
-        status_label.set_label(_('Secure Boot Configuration'))
-
-        def _worker():
-            try:
-                code, payload = _run_secure_boot_action('prepare')
-                detail = json.dumps(payload, indent=2, ensure_ascii=False) + '\n'
-                GLib.idle_add(lambda: _append_xbox_output(detail))
-                if code == 0 or _secure_boot_trust_prepared(payload):
-                    GLib.idle_add(lambda: (
-                        progress_bar.set_visible(False),
-                        btn.set_sensitive(True),
-                        _on_xb_refresh(xb_refresh_btn),
-                    ))
-                else:
-                    GLib.idle_add(lambda: (
-                        status_label.set_label(_('✗ Installation encountered an issue.') + "\n" + _('Please check the advanced output.')),
-                        progress_bar.set_visible(False),
-                        btn.set_sensitive(True),
-                    ))
-            except Exception as error:
-                GLib.idle_add(lambda error=error: (
-                    status_label.set_label(_('✗ Error: ') + str(error)),
-                    progress_bar.set_visible(False),
-                    btn.set_sensitive(True),
-                ))
-
-        threading.Thread(target=_worker, daemon=True).start()
-
-    trust_btn.connect('clicked', _on_configure_trust)
-
-    def _confirm_reboot(_btn):
-        dialog = Adw.MessageDialog.new(
-            page.get_root(),
-            _('Reboot Required'),
-            _('Restart and enter password 123456 in MOKManager.'),
-        )
-        dialog.add_response('cancel', _('Cancel'))
-        dialog.add_response('reboot', _('Reboot'))
-        dialog.set_response_appearance('reboot', Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect(
-            'response',
-            lambda _dialog, response: subprocess.Popen(
-                ['gnome-session-quit', '--reboot', '--no-prompt']
-            ) if response == 'reboot' else None,
-        )
-        dialog.present()
-
-    reboot_btn.connect('clicked', _confirm_reboot)
-    btn_box.append(install_btn)
-    btn_box.append(reinstall_btn)
-    btn_box.append(trust_btn)
-    btn_box.append(reboot_btn)
-    center.append(btn_box)
-    center.append(tools_box)
-
-    # ── "Check Again" refresh button ──
-    xb_refresh_btn = Gtk.Button(label=_('  Check Again  '))
-    xb_refresh_btn.set_halign(Gtk.Align.CENTER)
-    xb_refresh_btn.set_margin_top(12)
-
-    def _on_xb_refresh(button):
-        button.set_sensitive(False)
-        button.set_label(_('  Checking...  '))
-        def _worker():
-            trust, xbox = _refresh_xbox_checks()
-            def _apply():
-                nonlocal r3, icon3
-
-                # sub label
-                if is_installed:
-                    sub.set_label(_('Xbox controller driver (xpadneo) is already installed.'))
-                else:
-                    sub.set_label(_('Enjoy seamless Xbox controller support with rumble and accurate inputs.'))
-
-                # body label
-                if is_installed:
-                    body.set_label(_('AnduinOS provides native support for Xbox controllers via Bluetooth.') + '\n' +
-                                   _('The advanced xpadneo driver is already set up and ready for gaming.'))
-                else:
-                    body.set_label(_('AnduinOS provides native support for Xbox controllers via Bluetooth.') + '\n' +
-                                   _('For advanced features like rumble and accurate mapping, we recommend installing the xpadneo driver.'))
-
-                # r1 — Driver Installed
-                icon1.set_from_icon_name('emblem-ok-symbolic' if is_installed else 'dialog-error-symbolic')
-                icon1.remove_css_class('success')
-                icon1.remove_css_class('error')
-                if is_installed:
-                    r1.set_subtitle(_("The xpadneo driver is currently installed"))
-                    icon1.add_css_class('success')
-                else:
-                    r1.set_subtitle(_("The driver is not installed"))
-                    icon1.add_css_class('error')
-
-                # r2 — Signature Trusted (enabled or indeterminate state)
-                if not sb_enforcement_inactive:
-                    icon2.remove_css_class('success')
-                    icon2.remove_css_class('error')
-                    icon2.remove_css_class('warning')
-                    if not is_installed:
-                        r2.set_subtitle(_("Driver not installed, signature missing"))
-                        icon2.set_from_icon_name('dialog-error-symbolic')
-                        icon2.add_css_class('error')
-                    elif not module_available:
-                        r2.set_subtitle(f'{_("Kernel module")}: {_("Not detected")}')
-                        icon2.set_from_icon_name('dialog-error-symbolic')
-                        icon2.add_css_class('error')
-                    elif not sb_state_known:
-                        r2.set_subtitle(_("Secure Boot state could not be determined"))
-                        icon2.set_from_icon_name('dialog-error-symbolic')
-                        icon2.add_css_class('error')
-                    elif not modinfo_sig_key:
-                        r2.set_subtitle(_("Driver is NOT signed"))
-                        icon2.set_from_icon_name('dialog-error-symbolic')
-                        icon2.add_css_class('error')
-                    elif modinfo_sig_key == current_cert_serial:
-                        if is_trusted:
-                            r2.set_subtitle(_("Signed with current trusted certificate"))
-                            icon2.set_from_icon_name('emblem-ok-symbolic')
-                            icon2.add_css_class('success')
-                        else:
-                            r2.set_subtitle(_("Signed with current certificate, but not enrolled"))
-                            icon2.set_from_icon_name('dialog-warning-symbolic')
-                            icon2.add_css_class('warning')
-                    else:
-                        r2.set_subtitle(_("Signed with an unknown or outdated certificate"))
-                        icon2.set_from_icon_name('dialog-warning-symbolic')
-                        icon2.add_css_class('warning')
-
-                # r3 — Controller Status (lazy-create if first install after page load)
-                if is_installed:
-                    if r3 is None:
-                        r3 = Adw.ActionRow(title=_("Controller Status"))
-                        icon3 = _create_image('emblem-ok-symbolic')
-                        icon3.set_pixel_size(16)
-                        r3.add_suffix(icon3)
-                        list_group.add(r3)
-                    icon3.remove_css_class('success')
-                    icon3.remove_css_class('error')
-                    icon3.remove_css_class('warning')
-                    if xbox_status is _XboxStatus.LOADED:
-                        r3.set_subtitle(_("Driver loaded and active. Ready to play!"))
-                        icon3.set_from_icon_name('emblem-ok-symbolic')
-                        icon3.add_css_class('success')
-                    elif xbox_status is _XboxStatus.READY:
-                        r3.set_subtitle(_("Driver standing by. Waiting for controller connection..."))
-                        icon3.set_from_icon_name('emblem-ok-symbolic')
-                        icon3.add_css_class('success')
-                    elif xbox_status is _XboxStatus.MODULE_MISSING:
-                        r3.set_subtitle(f'{_("Kernel module")}: {_("Not detected")}')
-                        icon3.set_from_icon_name('dialog-error-symbolic')
-                        icon3.add_css_class('error')
-                    elif xbox_status is _XboxStatus.LOAD_STATE_UNKNOWN:
-                        r3.set_subtitle(_("Driver trust cannot be verified"))
-                        icon3.set_from_icon_name('dialog-warning-symbolic')
-                        icon3.add_css_class('warning')
-                    elif xbox_status is _XboxStatus.ENROLLMENT_PENDING:
-                        r3.set_subtitle(_("A certificate is waiting for enrollment."))
-                        icon3.set_from_icon_name('dialog-warning-symbolic')
-                        icon3.add_css_class('warning')
-                    else:
-                        r3.set_subtitle(
-                            _("Driver trust cannot be verified")
-                            if xbox_status is _XboxStatus.SECURE_BOOT_UNKNOWN
-                            else _("Driver cannot load due to missing signature trust")
-                        )
-                        icon3.set_from_icon_name('dialog-error-symbolic')
-                        icon3.add_css_class('error')
-
-                # is_ready_to_play
-                _ready = xbox_status in {
-                    _XboxStatus.LOADED,
-                    _XboxStatus.READY,
-                }
-                tools_box.set_visible(_ready)
-
-                _apply_recovery(trust, xbox, button)
-            GLib.idle_add(_apply)
-        threading.Thread(target=_worker, daemon=True).start()
-
-    xb_refresh_btn.connect('clicked', _on_xb_refresh)
-    xb_refresh_btn.set_visible(
-        _xbox_recovery_action(current_trust, current_xbox) == 'refresh'
-    )
-    center.append(xb_refresh_btn)
-
-    return page
 
 def create_exe_sandbox_page(navigate_next):
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -4206,10 +3358,9 @@ class OobeWindow(Adw.ApplicationWindow):
         except Exception:
             pass
 
-        if has_nvidia_gpu():
-            factories.append(lambda: create_nvidia_page(_nav, _update_nav))
-        if not is_virtual_machine():
-            factories.append(lambda: create_xbox_page(_nav, _update_nav))
+        factories.append(
+            lambda: create_hardware_drivers_page(_nav, _update_nav)
+        )
         # Let Chinese users switch Flathub to the local mirror before offering
         # Bottles, so the large Flatpak download uses the faster source.
         if is_chinese_locale():

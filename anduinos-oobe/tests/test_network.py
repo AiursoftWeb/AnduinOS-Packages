@@ -97,8 +97,6 @@ class NetworkTests(unittest.TestCase):
                 mock.patch.object(
                     oobe, "internet_connection_ready", return_value=online
                 ),
-                mock.patch.object(oobe, "has_nvidia_gpu", return_value=False),
-                mock.patch.object(oobe, "is_virtual_machine", return_value=True),
                 mock.patch.object(oobe, "is_arm64", return_value=True),
                 mock.patch.object(oobe, "is_chinese_locale", return_value=False),
                 mock.patch.object(
@@ -130,8 +128,6 @@ class NetworkTests(unittest.TestCase):
             mock.patch.object(
                 oobe, "internet_connection_ready", return_value=True
             ),
-            mock.patch.object(oobe, "has_nvidia_gpu", return_value=False),
-            mock.patch.object(oobe, "is_virtual_machine", return_value=True),
             mock.patch.object(oobe, "is_arm64", return_value=False),
             mock.patch.object(oobe, "is_chinese_locale", return_value=True),
             mock.patch.object(
@@ -156,6 +152,80 @@ class NetworkTests(unittest.TestCase):
             if "create_exe_sandbox_page" in names
         )
         self.assertLess(mirror_index, bottles_index)
+
+    def test_hardware_drivers_page_follows_secure_boot_when_shown(self):
+        window = types.SimpleNamespace(
+            is_oobe=True,
+            _update_nav_buttons=lambda: None,
+            _finish_oobe=lambda: None,
+        )
+        with (
+            mock.patch.object(
+                oobe, "internet_connection_ready", return_value=True
+            ),
+            mock.patch.object(
+                oobe,
+                "_inspect_secure_boot",
+                return_value=types.SimpleNamespace(enforcement_inactive=False),
+            ),
+            mock.patch.object(oobe, "is_arm64", return_value=True),
+            mock.patch.object(oobe, "is_chinese_locale", return_value=False),
+        ):
+            factories = oobe.OobeWindow._get_page_factories(
+                window, navigate_next=lambda: None
+            )
+
+        factory_names = [factory.__code__.co_names for factory in factories]
+        update_index = next(
+            index for index, names in enumerate(factory_names)
+            if "create_update_page" in names
+        )
+        secure_boot_index = next(
+            index for index, names in enumerate(factory_names)
+            if "create_secureboot_page" in names
+        )
+        hardware_index = next(
+            index for index, names in enumerate(factory_names)
+            if "create_hardware_drivers_page" in names
+        )
+        self.assertEqual(secure_boot_index, update_index + 1)
+        self.assertEqual(hardware_index, secure_boot_index + 1)
+
+    def test_hardware_drivers_page_follows_update_without_secure_boot(self):
+        window = types.SimpleNamespace(
+            is_oobe=True,
+            _update_nav_buttons=lambda: None,
+            _finish_oobe=lambda: None,
+        )
+        with (
+            mock.patch.object(
+                oobe, "internet_connection_ready", return_value=True
+            ),
+            mock.patch.object(
+                oobe,
+                "_inspect_secure_boot",
+                return_value=types.SimpleNamespace(enforcement_inactive=True),
+            ),
+            mock.patch.object(oobe, "is_arm64", return_value=True),
+            mock.patch.object(oobe, "is_chinese_locale", return_value=False),
+        ):
+            factories = oobe.OobeWindow._get_page_factories(
+                window, navigate_next=lambda: None
+            )
+
+        factory_names = [factory.__code__.co_names for factory in factories]
+        self.assertFalse(any(
+            "create_secureboot_page" in names for names in factory_names
+        ))
+        update_index = next(
+            index for index, names in enumerate(factory_names)
+            if "create_update_page" in names
+        )
+        hardware_index = next(
+            index for index, names in enumerate(factory_names)
+            if "create_hardware_drivers_page" in names
+        )
+        self.assertEqual(hardware_index, update_index + 1)
 
     def test_navigation_refresh_waits_until_controls_are_ready(self):
         building_window = types.SimpleNamespace(_nav_ready=False)
@@ -213,9 +283,9 @@ class NetworkTests(unittest.TestCase):
 
         local_before = Clamp(Page())
         update = Clamp(Page(requires_internet=True))
-        local_after = Clamp(Page())
+        hardware_drivers = Clamp(Page())
         apps = Clamp(Page(requires_internet=True))
-        pages = [local_before, update, local_after, apps]
+        pages = [local_before, update, hardware_drivers, apps]
         events = []
         window = types.SimpleNamespace(
             offline_mode=False,
@@ -229,8 +299,8 @@ class NetworkTests(unittest.TestCase):
         oobe.OobeWindow._continue_offline(window)
 
         self.assertTrue(window.offline_mode)
-        self.assertEqual(window._pages, [local_before, local_after])
-        self.assertEqual(window.carousel.pages, [local_before, local_after])
+        self.assertEqual(window._pages, [local_before, hardware_drivers])
+        self.assertEqual(window.carousel.pages, [local_before, hardware_drivers])
         self.assertEqual(events, ["updated", "next"])
 
 

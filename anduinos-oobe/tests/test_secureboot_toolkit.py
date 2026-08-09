@@ -2,18 +2,12 @@ from pathlib import Path
 from importlib.machinery import SourceFileLoader
 import re
 import subprocess
-import sys
 import unittest
+from unittest import mock
 import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
-REPOSITORY = ROOT.parent
-sys.path.insert(0, str(REPOSITORY / "anduinos-secureboot-toolkit" / "src"))
-sys.path.insert(0, str(REPOSITORY / "anduinos-driver-center" / "src"))
-from anduinos_driver_center.core import XboxState, XboxStatus  # noqa: E402
-from anduinos_secureboot import SecureBootState, SecureBootStatus  # noqa: E402
-
 OOBE = SourceFileLoader(
     "anduinos_oobe_behavior", str(ROOT / "assets/anduinos-oobe")
 ).load_module()
@@ -29,121 +23,94 @@ class SecureBootToolkitTests(unittest.TestCase):
         self.assertNotIn("['openssl'", application)
         self.assertNotIn("['modinfo'", application)
 
-    def test_oobe_omits_only_known_non_enforcing_secure_boot_states(self):
+    def test_hardware_page_follows_optional_secure_boot_page(self):
         application = (ROOT / "assets/anduinos-oobe").read_text(encoding="utf-8")
         guard = application.index(
             "if not _inspect_secure_boot().enforcement_inactive:"
         )
-        page = application.index("factories.append(lambda: create_secureboot_page", guard)
-        next_hardware_page = application.index("if has_nvidia_gpu():", guard)
-        self.assertLess(guard, page)
-        self.assertLess(page, next_hardware_page)
+        secure_boot_page = application.index(
+            "factories.append(lambda: create_secureboot_page", guard
+        )
+        hardware_page = application.index(
+            "lambda: create_hardware_drivers_page", secure_boot_page
+        )
+        self.assertLess(guard, secure_boot_page)
+        self.assertLess(secure_boot_page, hardware_page)
 
-    def test_xbox_driver_workflow_fails_closed_on_unknown_state(self):
+    def test_old_hardware_workflows_are_removed_from_oobe(self):
         application = (ROOT / "assets/anduinos-oobe").read_text(encoding="utf-8")
-        self.assertIn("if not trust.state_known:", application)
-        self.assertIn("_XboxStatus.SECURE_BOOT_UNKNOWN", application)
-        self.assertIn("return 'refresh'", application)
-
-    def test_oobe_reuses_driver_center_xbox_health_model(self):
-        application = (ROOT / "assets/anduinos-oobe").read_text(encoding="utf-8")
-        self.assertIn("XboxStatus as _XboxStatus", application)
-        self.assertIn("xbox = _inspect_xbox(trust)", application)
-        for status in (
-            "MODULE_MISSING",
-            "SECURE_BOOT_UNKNOWN",
-            "ENROLLMENT_PENDING",
-            "TRUST_SETUP_REQUIRED",
-            "SIGNATURE_MISMATCH",
-            "LOAD_STATE_UNKNOWN",
-            "LOADED",
-            "READY",
+        for removed in (
+            "def create_nvidia_page",
+            "def create_xbox_page",
+            "def _xbox_recovery_action",
+            "XboxStatus as _XboxStatus",
+            "graphics_devices as _graphics_devices",
+            "xbox_state as _inspect_xbox",
+            "DRIVER_CENTER_HELPER",
+            "repair-nvidia",
+            "install-xbox",
+            "repair-xbox",
+            "def has_nvidia_gpu",
+            "def is_virtual_machine",
         ):
-            self.assertIn(f"_XboxStatus.{status}", application)
+            with self.subTest(removed=removed):
+                self.assertNotIn(removed, application)
 
-    def test_every_xbox_warning_has_an_enabled_recovery_path(self):
-        application = (ROOT / "assets/anduinos-oobe").read_text(encoding="utf-8")
-        self.assertIn("def _xbox_recovery_action", application)
-        self.assertIn("_apply_recovery(trust, xbox, button)", application)
-        self.assertNotIn("install_btn.set_sensitive(False)", application[
-            application.index("def create_xbox_page"):
-            application.index("def create_exe_sandbox_page")
-        ])
-        self.assertEqual(
-            application.count("xb_refresh_btn.connect('clicked', _on_xb_refresh)"),
-            1,
-        )
-
-    def test_every_non_ready_xbox_state_has_one_recovery_action(self):
-        trust = SecureBootState(True, True, True, True, "aa12")
-        expected = {
-            XboxStatus.MODULE_MISSING: "reinstall",
-            XboxStatus.SECURE_BOOT_UNKNOWN: "refresh",
-            XboxStatus.ENROLLMENT_PENDING: "reboot",
-            XboxStatus.TRUST_SETUP_REQUIRED: "trust",
-            XboxStatus.SIGNATURE_MISMATCH: "reinstall",
-            XboxStatus.LOAD_STATE_UNKNOWN: "refresh",
-            XboxStatus.LOADED: None,
-            XboxStatus.READY: None,
-        }
-        for status, action in expected.items():
-            with self.subTest(status=status):
-                xbox = XboxState(status, True, True, False, "aa12", True)
-                self.assertEqual(OOBE._xbox_recovery_action(trust, xbox), action)
-
-    def test_not_installed_xbox_recovery_respects_trust_state(self):
-        xbox = XboxState(XboxStatus.NOT_INSTALLED, False, False, False, None, False)
-        states = (
-            (
-                SecureBootState(
-                    False, False, False, False, None,
-                    status=SecureBootStatus.UNKNOWN,
-                ),
-                "refresh",
-            ),
-            (SecureBootState(True, True, True, False, "aa", True), "reboot"),
-            (SecureBootState(True, True, True, False, "aa"), "trust"),
-            (SecureBootState(False, False, False, False, None), "install"),
-        )
-        for trust, action in states:
-            with self.subTest(action=action):
-                self.assertEqual(OOBE._xbox_recovery_action(trust, xbox), action)
-
-    def test_partial_secure_boot_success_is_not_reported_as_total_failure(self):
-        payload = {
-            "steps": {
-                "key_created": {"status": "success"},
-                "enrollment_queued": {"status": "success"},
-                "modules_rebuilt": {"status": "failed"},
-            }
-        }
-        self.assertTrue(OOBE._secure_boot_trust_prepared(payload))
-
-    def test_driver_operations_use_restricted_helper_and_do_not_fake_success(self):
+    def test_hardware_page_uses_both_icons_and_custom_navigation(self):
         application = (ROOT / "assets/anduinos-oobe").read_text(encoding="utf-8")
         hardware = application[
-            application.index("def create_nvidia_page"):
+            application.index("def create_hardware_drivers_page"):
             application.index("def create_exe_sandbox_page")
         ]
-        self.assertNotIn("ubuntu-drivers install || true", hardware)
-        self.assertNotIn("['pkexec', 'sh', '-c'", hardware)
-        self.assertIn("['pkexec', DRIVER_CENTER_HELPER, *helper_arguments]", hardware)
-        self.assertIn("['pkexec', DRIVER_CENTER_HELPER, 'install-xbox']", hardware)
-        self.assertIn("['pkexec', DRIVER_CENTER_HELPER, 'repair-xbox']", hardware)
-        self.assertIn("_('  Checking...  ')", hardware)
+        self.assertIn("'nvidia.svg'", hardware)
+        self.assertIn("'input-gaming.svg'", hardware)
+        self.assertIn("page._hide_next = True", hardware)
+        self.assertNotIn("page._requires_internet", hardware)
+        self.assertIn("_('Open Driver Center')", hardware)
+        self.assertIn("_('Skip')", hardware)
+        self.assertIn("open_btn.add_css_class('suggested-action')", hardware)
 
-    def test_oobe_declares_shared_and_hardware_dependencies(self):
+    def test_open_driver_center_launches_without_elevation_then_navigates(self):
+        navigate_next = mock.Mock()
+        with mock.patch.object(OOBE.subprocess, "Popen") as popen:
+            error = OOBE._open_driver_center(navigate_next)
+
+        self.assertIsNone(error)
+        popen.assert_called_once_with(["/usr/bin/anduinos-driver-center"])
+        navigate_next.assert_called_once_with()
+
+    def test_open_driver_center_failure_stays_on_page_with_localized_error(self):
+        navigate_next = mock.Mock()
+        with mock.patch.object(
+            OOBE.subprocess,
+            "Popen",
+            side_effect=FileNotFoundError("missing executable"),
+        ):
+            error = OOBE._open_driver_center(navigate_next)
+
+        self.assertEqual(
+            error,
+            OOBE._("Could not open AnduinOS Driver Center: {}").format(
+                "missing executable"
+            ),
+        )
+        navigate_next.assert_not_called()
+
+    def test_skip_navigates_without_starting_driver_center(self):
+        navigate_next = mock.Mock()
+        with mock.patch.object(OOBE.subprocess, "Popen") as popen:
+            OOBE._skip_hardware_drivers(navigate_next)
+
+        popen.assert_not_called()
+        navigate_next.assert_called_once_with()
+
+    def test_oobe_declares_only_shared_hardware_dependencies(self):
         project = ET.parse(ROOT / "anduinos-oobe.aosproj").getroot()
         dependencies = {item.get("Include") for item in project.iter("Dependency")}
-        self.assertTrue(
-            {
-                "anduinos-secureboot-toolkit",
-                "anduinos-driver-center (>= 2.0.0-8)",
-                "ubuntu-drivers-common",
-                "pciutils",
-            }
-            <= dependencies
-        )
+        self.assertIn("anduinos-secureboot-toolkit", dependencies)
+        self.assertIn("anduinos-driver-center (>= 2.0.0-8)", dependencies)
+        self.assertNotIn("ubuntu-drivers-common", dependencies)
+        self.assertNotIn("pciutils", dependencies)
 
     def test_all_oobe_catalogs_are_complete_and_format_safe(self):
         translated_msgid = re.compile(r'^msgid "[^"].*"$', re.MULTILINE)
