@@ -149,6 +149,7 @@ class EnvironmentReportingTests(unittest.TestCase):
 class UnmountTargetTests(unittest.TestCase):
     def test_unmounts_children_first_and_clears_state(self):
         runner = FakeRunner()
+        waits = []
         context = InstallContext(
             valid_plan(),
             lambda _message: None,
@@ -158,12 +159,17 @@ class UnmountTargetTests(unittest.TestCase):
                 "target_root_mounted": True,
             },
         )
-        step = UnmountTargetStep(runner)
+        step = UnmountTargetStep(runner, wait=waits.append)
+        step.preflight(context)
         step.execute(context)
         step.verify(context)
+        self.assertIn("sync", runner.required)
+        self.assertEqual(waits, [3])
         self.assertEqual(
             [item[0] for item in runner.commands],
             [
+                ("sync",),
+                ("sync",),
                 ("umount", "/target-test/boot/efi"),
                 ("umount", "/target-test"),
                 ("swapon", "--show=NAME", "--noheadings", "--raw"),
@@ -184,9 +190,41 @@ class UnmountTargetTests(unittest.TestCase):
             },
         )
 
-        UnmountTargetStep(runner).execute(context)
+        UnmountTargetStep(runner, wait=lambda _seconds: None).execute(context)
 
         self.assertIn(
             ("swapoff", "/dev/nvme0n1p3"),
             [item[0] for item in runner.commands],
+        )
+
+    def test_sync_failure_stops_before_unmount(self):
+        class FailingSecondSyncRunner(FakeRunner):
+            def run(self, command, **kwargs):
+                result = super().run(command, **kwargs)
+                sync_count = sum(
+                    item[0] == ("sync",) for item in self.commands
+                )
+                if tuple(command) == ("sync",) and sync_count == 2:
+                    raise RuntimeError("sync failed")
+                return result
+
+        runner = FailingSecondSyncRunner()
+        context = InstallContext(
+            valid_plan(),
+            lambda _message: None,
+            values={
+                "target": Path("/target-test"),
+                "target_efi_mounted": True,
+                "target_root_mounted": True,
+            },
+        )
+
+        with self.assertRaisesRegex(RuntimeError, "sync failed"):
+            UnmountTargetStep(
+                runner, wait=lambda _seconds: None
+            ).execute(context)
+
+        self.assertEqual(
+            [item[0] for item in runner.commands],
+            [("sync",), ("sync",)],
         )

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from time import sleep
+from typing import Callable
 
 from .command import CommandRunner
 from .preflight import (
@@ -194,6 +196,7 @@ class CopySystemStep:
 @dataclass
 class UnmountTargetStep:
     runner: CommandRunner
+    wait: Callable[[float], None] = sleep
     id: str = "unmount-target"
     title: str = "Unmount target filesystems"
     failure_policy: FailurePolicy = FailurePolicy.FATAL
@@ -201,10 +204,13 @@ class UnmountTargetStep:
     destructive: bool = False
 
     def preflight(self, context: InstallContext) -> None:
-        self.runner.require_commands(("umount", "swapon", "swapoff"))
+        self.runner.require_commands(("sync", "umount", "swapon", "swapoff"))
 
     def execute(self, context: InstallContext) -> None:
         target = _target(context)
+        self.runner.run(("sync",), timeout=300)
+        self.wait(3)
+        self.runner.run(("sync",), timeout=300)
         if context.values.get("target_efi_mounted"):
             self.runner.run(("umount", str(target / "boot/efi")), timeout=30)
             context.values["target_efi_mounted"] = False
