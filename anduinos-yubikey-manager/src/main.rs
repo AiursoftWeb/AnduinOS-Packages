@@ -9,6 +9,7 @@ mod model;
 mod passkeys;
 mod progress_dialog;
 mod ssh;
+mod ssh_config;
 mod window;
 
 use adw::prelude::*;

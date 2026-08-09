@@ -8,6 +8,7 @@ use crate::model::{Enrollment, YubiKey};
 use crate::passkeys;
 use crate::progress_dialog;
 use crate::ssh;
+use crate::ssh_config;
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use gtk::{gdk, gio, glib};
@@ -571,7 +572,13 @@ impl YubiKeyManagerWindow {
             let result = progress_dialog::run_with_progress(
                 &parent,
                 &i18n("Checking SSH support…"),
-                || Ok((ssh::agent_status(), ssh::list_fido_devices())),
+                || {
+                    Ok((
+                        ssh::agent_status(),
+                        ssh::list_fido_devices(),
+                        ssh_config::inspect(),
+                    ))
+                },
             )
             .await;
             let Some(window) = weak.upgrade() else {
@@ -580,9 +587,9 @@ impl YubiKeyManagerWindow {
             window.imp().ssh_refreshing.set(false);
             clear_groups(&page, &window.imp().ssh_groups);
             match result {
-                Ok((agent, devices)) => {
+                Ok((agent, devices, persistence)) => {
                     *window.imp().ssh_groups.borrow_mut() =
-                        rebuild_ssh(&window, &page, agent, devices);
+                        rebuild_ssh(&window, &page, agent, devices, persistence);
                 }
                 Err(error) => {
                     let group = adw::PreferencesGroup::new();
@@ -1759,6 +1766,7 @@ fn rebuild_ssh(
     page: &adw::PreferencesPage,
     agent: ssh::AgentStatus,
     fido_devices: Result<Vec<ssh::FidoDevice>, String>,
+    persistence: Result<ssh_config::PersistenceSnapshot, String>,
 ) -> Vec<adw::PreferencesGroup> {
     let mut groups = Vec::new();
     let overview_group = ssh_overview_group(window, &fido_devices);
@@ -2041,10 +2049,198 @@ fn rebuild_ssh(
     page.add(&agent_group);
     groups.push(agent_group);
 
+    let persistence_group = ssh_persistence_group(window, persistence);
+    page.add(&persistence_group);
+    groups.push(persistence_group);
+
     let create_group = rebuild_ssh_create(window, &fido_devices);
     page.add(&create_group);
     groups.push(create_group);
     groups
+}
+
+fn ssh_persistence_group(
+    window: &YubiKeyManagerWindow,
+    snapshot: Result<ssh_config::PersistenceSnapshot, String>,
+) -> adw::PreferencesGroup {
+    let group = adw::PreferencesGroup::builder()
+        .title(i18n("SSH connection persistence"))
+        .description(i18n(
+            "After the first YubiKey authentication, later SSH sessions can reuse the connection. The last session remains available in the background for 10 minutes.",
+        ))
+        .build();
+
+    let (active, sensitive, subtitle, warning, config_path, managed_path) = match &snapshot {
+        Ok(snapshot) => match &snapshot.state {
+            ssh_config::PersistenceState::Enabled => (
+                true,
+                true,
+                i18n("Enabled · idle connections remain available for 10 minutes"),
+                None,
+                snapshot.config_path.to_string_lossy().into_owned(),
+                snapshot.managed_path.to_string_lossy().into_owned(),
+            ),
+            ssh_config::PersistenceState::Disabled => (
+                false,
+                true,
+                i18n("Disabled · each new connection authenticates separately"),
+                None,
+                snapshot.config_path.to_string_lossy().into_owned(),
+                snapshot.managed_path.to_string_lossy().into_owned(),
+            ),
+            ssh_config::PersistenceState::NeedsAttention(reason) => (
+                false,
+                false,
+                i18n("Needs attention · review the SSH configuration before continuing"),
+                Some(reason.clone()),
+                snapshot.config_path.to_string_lossy().into_owned(),
+                snapshot.managed_path.to_string_lossy().into_owned(),
+            ),
+        },
+        Err(error) => (
+            false,
+            false,
+            i18n("Needs attention · the SSH configuration could not be located"),
+            Some(error.clone()),
+            i18n("Main SSH configuration unavailable"),
+            i18n("Managed SSH configuration unavailable"),
+        ),
+    };
+
+    let row = adw::SwitchRow::builder()
+        .title(i18n("Reuse SSH connections in the background"))
+        .subtitle(&subtitle)
+        .active(active)
+        .sensitive(sensitive)
+        .build();
+    row.add_css_class(if warning.is_some() {
+        "warning"
+    } else if active {
+        "success"
+    } else {
+        "dim-label"
+    });
+    if warning.is_some() {
+        row.add_suffix(&ssh_status_badge(&i18n("Needs attention"), "warning"));
+    }
+
+    if sensitive {
+        let busy = Rc::new(Cell::new(false));
+        let weak = window.downgrade();
+        row.connect_active_notify(move |switch| {
+            if busy.get() {
+                return;
+            }
+            busy.set(true);
+            switch.set_sensitive(false);
+            let requested = switch.is_active();
+            let switch_clone = switch.clone();
+            let busy = busy.clone();
+            let weak = weak.clone();
+            glib::spawn_future_local(async move {
+                let result = gio::spawn_blocking(move || ssh_config::set_enabled(requested))
+                    .await
+                    .unwrap_or_else(|_| {
+                        Err(i18n("The SSH persistence update stopped unexpectedly."))
+                    });
+                let remain_sensitive = match result {
+                    Ok(updated) => {
+                        switch_clone.remove_css_class("success");
+                        switch_clone.remove_css_class("dim-label");
+                        match updated.state {
+                            ssh_config::PersistenceState::Enabled => {
+                                switch_clone.set_subtitle(&i18n(
+                                    "Enabled · idle connections remain available for 10 minutes",
+                                ));
+                                switch_clone.add_css_class("success");
+                                true
+                            }
+                            ssh_config::PersistenceState::Disabled => {
+                                switch_clone.set_subtitle(&i18n(
+                                    "Disabled · each new connection authenticates separately",
+                                ));
+                                switch_clone.add_css_class("dim-label");
+                                true
+                            }
+                            ssh_config::PersistenceState::NeedsAttention(reason) => {
+                                switch_clone.set_active(!requested);
+                                switch_clone.set_subtitle(&i18n(
+                                    "Needs attention · review the SSH configuration before continuing",
+                                ));
+                                switch_clone.add_css_class("warning");
+                                show_error_with_heading(
+                                    &switch_clone,
+                                    &i18n("Could not update SSH connection persistence"),
+                                    &reason,
+                                );
+                                false
+                            }
+                        }
+                    }
+                    Err(error) => {
+                        switch_clone.set_active(!requested);
+                        show_error_with_heading(
+                            &switch_clone,
+                            &i18n("Could not update SSH connection persistence"),
+                            &error,
+                        );
+                        true
+                    }
+                };
+                switch_clone.set_sensitive(remain_sensitive);
+                busy.set(false);
+                if let Some(window) = weak.upgrade() {
+                    window.imp().ssh_refreshing.set(false);
+                }
+            });
+        });
+    }
+    group.add(&row);
+
+    if let Some(reason) = warning {
+        group.add(&action_row_with_icon(
+            &i18n("Manual review required"),
+            &reason,
+            "dialog-warning-symbolic",
+        ));
+    }
+
+    let note = adw::ActionRow::builder()
+        .title(i18n("What this setting changes"))
+        .subtitle(i18n(
+            "Only new SSH connections are affected. Turning this off does not stop existing background connections. Earlier host-specific OpenSSH settings still take priority.",
+        ))
+        .build();
+    note.add_prefix(
+        &gtk::Image::builder()
+            .icon_name("dialog-information-symbolic")
+            .build(),
+    );
+    group.add(&note);
+
+    let preview = adw::ExpanderRow::builder()
+        .title(i18n("Managed configuration preview"))
+        .subtitle(i18n_fmt(
+            &i18n("{0} includes {1}"),
+            &[&config_path, &managed_path],
+        ))
+        .expanded(false)
+        .build();
+    let preview_row = adw::ActionRow::new();
+    let preview_label = gtk::Label::builder()
+        .label(ssh_config::CONFIG_PREVIEW)
+        .selectable(true)
+        .xalign(0.0)
+        .halign(gtk::Align::Fill)
+        .hexpand(true)
+        .margin_top(8)
+        .margin_bottom(8)
+        .css_classes(["monospace"])
+        .build();
+    preview_row.add_suffix(&preview_label);
+    preview.add_row(&preview_row);
+    group.add(&preview);
+    group
 }
 
 fn ssh_overview_group(

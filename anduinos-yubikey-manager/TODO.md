@@ -22,8 +22,9 @@ Phase 4 is partially implemented. Permanent resident-credential deletion now
 uses an explicitly selected device and credential ID, destructive
 confirmation, protected PIN entry, and post-delete re-enumeration. **Remove
 from agent remains a separate, non-destructive action.** Labels, agent
-lifecycle, destination constraints, SSH config integration, and automatic
-loading remain future work.
+lifecycle, destination constraints, arbitrary SSH host editing, rollback
+assistance, and automatic loading remain future work. A fixed, user-controlled
+10-minute SSH connection-persistence preset is implemented independently.
 
 Git SSH signing now has a self-contained implementation:
 
@@ -110,7 +111,23 @@ be presented as changing the YubiKey credential.
 - Test forwarded-agent scenarios, host-key changes, unsupported agents, and
   configurations containing wildcards or jump hosts.
 
-### 5. `~/.ssh/config` integration
+### 5. `~/.ssh/config` integration — fixed persistence preset implemented
+
+The first deliberately narrow integration is complete:
+
+- The SSH page offers a default-off switch for a fixed global
+  `ControlMaster auto`, `ControlPath ~/.ssh/cm-%r@%h:%p`, and
+  `ControlPersist 10m` preset.
+- The app owns one exact `.inc` fragment and one marked `Host *`/`Include`
+  block. It preserves earlier host-specific OpenSSH values and never claims or
+  removes handwritten equivalent settings.
+- Writes use restrictive permissions, same-directory temporary files,
+  `ssh -G` validation, concurrent-edit detection, atomic replacement, and
+  rollback when a multi-file enable/disable operation cannot finish safely.
+- Modified, duplicated, incomplete, symlinked, or additionally included
+  managed content is reported as needing manual attention.
+
+General SSH configuration work remains future scope:
 
 - Default to a preview-only assistant; do not rewrite a user's full SSH
   configuration.
@@ -150,7 +167,8 @@ be presented as changing the YubiKey credential.
 3. Implement permanent deletion behind the confirmation and verification
    flow, with backend tests before UI exposure.
 4. Add destination constraints.
-5. Add preview-first SSH config integration and rollback.
+5. Extend the fixed persistence preview into general preview-first SSH config
+   integration and a user-facing rollback assistant.
 6. Add opt-in automatic loading last, after multi-device and agent-restart
    behavior is covered by tests.
 
