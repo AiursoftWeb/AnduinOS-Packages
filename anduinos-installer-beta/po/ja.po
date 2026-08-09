@@ -121,6 +121,35 @@ msgstr ""
 "択されたパーティション内のすべてのデータは破壊されますが、自動的に選択される"
 "ことはありません。"
 
+msgid "Battery power is too low for a safe installation."
+msgstr "安全にインストールするにはバッテリー残量が少なすぎます。"
+
+msgid "Charge to at least 80% before starting the installation."
+msgstr "インストールを開始する前に、80%以上まで充電してください。"
+
+msgid "Continue Anyway"
+msgstr "このまま続行"
+
+msgid "Current battery level: {percent}%"
+msgstr "現在のバッテリー残量: {percent}%"
+
+msgid "External power is connected."
+msgstr "外部電源に接続されています。"
+
+msgid "External power is not connected."
+msgstr "外部電源に接続されていません。"
+
+msgid "I understand the risks and insist on installing with low battery."
+msgstr ""
+"リスクを理解したうえで、バッテリー残量が少ない状態でのインストールを続行しま"
+"す。"
+
+msgid "Low battery"
+msgstr "バッテリー残量低下"
+
+msgid "Recheck"
+msgstr "再確認"
+
 msgid "AnduinOS Installer"
 msgstr "AnduinOS インストーラー"
 
@@ -305,8 +334,8 @@ msgstr "空のディスク — パーティションなし"
 
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
 msgstr ""
-"共有スペース サブボリューム、スナップショット、および Disk Snapshots Manager を有効にしま"
-"す。"
+"共有スペース サブボリューム、スナップショット、および Disk Snapshots Manager "
+"を有効にします。"
 
 msgid "English (UK)"
 msgstr "英語 (UK)"
@@ -1219,7 +1248,3 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
-
-#~ msgid "Choose a complete installation method, not only a filesystem."
-#~ msgstr ""
-#~ "ファイルシステムだけでなく、完全なインストール方法を選択してください。"

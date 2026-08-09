@@ -120,6 +120,34 @@ msgstr ""
 "Крім того, ви можете явно вибрати один цілий розділ для стирання. Усе у "
 "цьому вибраному розділі буде знищено; він ніколи не обирається автоматично."
 
+msgid "Battery power is too low for a safe installation."
+msgstr "Рівень заряду акумулятора надто низький для безпечного встановлення."
+
+msgid "Charge to at least 80% before starting the installation."
+msgstr "Перед початком встановлення зарядіть акумулятор щонайменше до 80%."
+
+msgid "Continue Anyway"
+msgstr "Усе одно продовжити"
+
+msgid "Current battery level: {percent}%"
+msgstr "Поточний рівень заряду: {percent}%"
+
+msgid "External power is connected."
+msgstr "Зовнішнє живлення підключено."
+
+msgid "External power is not connected."
+msgstr "Зовнішнє живлення не підключено."
+
+msgid "I understand the risks and insist on installing with low battery."
+msgstr ""
+"Я розумію ризики й наполягаю на встановленні за низького заряду акумулятора."
+
+msgid "Low battery"
+msgstr "Низький заряд акумулятора"
+
+msgid "Recheck"
+msgstr "Перевірити знову"
+
 msgid "AnduinOS Installer"
 msgstr "Встановлювач AnduinOS"
 
@@ -306,7 +334,9 @@ msgid "Empty disk — no partitions"
 msgstr "Порожній диск — немає розділів"
 
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
-msgstr "Увімкнути підтомови спільного простору, миттєві знімки та Disk Snapshots Manager."
+msgstr ""
+"Увімкнути підтомови спільного простору, миттєві знімки та Disk Snapshots "
+"Manager."
 
 msgid "English (UK)"
 msgstr "Англійська (Велика Британія)"
@@ -1218,6 +1248,3 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
-
-#~ msgid "Choose a complete installation method, not only a filesystem."
-#~ msgstr "Оберіть повний метод встановлення, а не лише файлову систему."
