@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-09 14:41+0000\n"
+"POT-Creation-Date: 2026-08-09 15:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: id <LL@li.org>\n"
@@ -572,20 +572,20 @@ msgid "This may take a few minutes."
 msgstr "Ini mungkin memakan waktu beberapa menit."
 
 #: anduinos-oobe/assets/anduinos-oobe:2299
-msgid "You can now double-click .exe files to run them."
-msgstr "Sekarang Anda dapat mengeklik dua kali file .exe untuk menjalankannya."
-
-#: anduinos-oobe/assets/anduinos-oobe:2299
 msgid "✓ Sandbox deployed successfully!"
 msgstr "✓ Sandbox berhasil diterapkan!"
 
-#: anduinos-oobe/assets/anduinos-oobe:2308
-msgid "You can install Bottles later from the App Store."
-msgstr "Anda dapat menginstal Bottles nanti dari Toko Aplikasi."
+#: anduinos-oobe/assets/anduinos-oobe:2299
+msgid "You can now double-click .exe files to run them."
+msgstr "Sekarang Anda dapat mengeklik dua kali file .exe untuk menjalankannya."
 
 #: anduinos-oobe/assets/anduinos-oobe:2308
 msgid "✗ Deployment failed."
 msgstr "✗ Penerapan gagal."
+
+#: anduinos-oobe/assets/anduinos-oobe:2308
+msgid "You can install Bottles later from the App Store."
+msgstr "Anda dapat menginstal Bottles nanti dari Toko Aplikasi."
 
 #: anduinos-oobe/assets/anduinos-oobe:2316
 msgid "✗ Error: "
@@ -739,12 +739,12 @@ msgid "Productive From Day One"
 msgstr "Produktif Sejak Hari Pertama"
 
 #: anduinos-oobe/assets/anduinos-oobe:2734
-msgid "Click any app to open its details in the App Store."
-msgstr "Klik aplikasi mana saja untuk membuka detailnya di Toko Aplikasi."
-
-#: anduinos-oobe/assets/anduinos-oobe:2734
 msgid "Essential productivity and entertainment tools, hand-picked for you."
 msgstr "Alat produktivitas dan hiburan esensial, dipilih khusus untuk Anda."
+
+#: anduinos-oobe/assets/anduinos-oobe:2734
+msgid "Click any app to open its details in the App Store."
+msgstr "Klik aplikasi mana saja untuk membuka detailnya di Toko Aplikasi."
 
 #: anduinos-oobe/assets/anduinos-oobe:2746
 msgid "WeChat"
@@ -938,12 +938,12 @@ msgid "We do not collect your usage habits."
 msgstr "Kami tidak mengumpulkan kebiasaan penggunaan Anda."
 
 #: anduinos-oobe/assets/anduinos-oobe:3034
-msgid "There are no pervasive advertisements."
-msgstr "Tidak ada iklan yang pervasif."
-
-#: anduinos-oobe/assets/anduinos-oobe:3034
 msgid "We do not upload your search history."
 msgstr "Kami tidak mengunggah riwayat pencarian Anda."
+
+#: anduinos-oobe/assets/anduinos-oobe:3034
+msgid "There are no pervasive advertisements."
+msgstr "Tidak ada iklan yang pervasif."
 
 #: anduinos-oobe/assets/anduinos-oobe:3045
 msgid "In an era ruled by algorithms and surveillance,"
@@ -1106,6 +1106,291 @@ msgstr "Selamat Datang di AnduinOS"
 msgid "AnduinOS Team"
 msgstr "Tim AnduinOS"
 
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
+msgid "Secure Boot Configuration"
+msgstr "Konfigurasi Secure Boot"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
+msgid ""
+"Secure Boot is a motherboard security standard that ensures only trusted "
+"software loads at startup."
+msgstr ""
+"Secure Boot adalah standar keamanan motherboard yang memastikan hanya "
+"perangkat lunak tepercaya yang dimuat saat startup."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
+msgid "It protects your system from low-level malware and rootkits."
+msgstr "Ia melindungi sistem Anda dari malware tingkat rendah dan rootkit."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
+msgid "System Trust Status"
+msgstr "Status Kepercayaan Sistem"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
+msgid "Create & Enroll Certificate"
+msgstr "Buat & Daftarkan Sertifikat"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
+msgid "Repair Module Signatures"
+msgstr "Tanda Tangan Modul Perbaikan"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
+msgid "Note: Use password <b>123456</b> after rebooting."
+msgstr ""
+"Catatan: Gunakan kata sandi <b>123456</b> setelah melakukan pemutakhiran "
+"ulang."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
+msgid "Reboot & Configure Secure Boot"
+msgstr "Pemutakhiran ulang & Konfigurasikan Secure Boot"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
+msgid "  Check Again  "
+msgstr "  Periksa Lagi  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
+msgid "Motherboard hardware protection is active"
+msgstr "Perlindungan perangkat keras motherboard aktif"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
+msgid "Firmware does not support Secure Boot"
+msgstr ""
+"Firmware tidak mendukung Secure Boot\n"
+"Status "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
+msgid "Secure Boot state could not be determined"
+msgstr "Secure Boot tidak dapat ditentukan"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
+msgid "Secure Boot is disabled"
+msgstr "Secure Boot dinonaktifkan"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+msgid "Not required without firmware enforcement"
+msgstr "Tidak diperlukan tanpa penegakan firmware"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+msgid "Not checked because Secure Boot state is unknown"
+msgstr "Tidak dicentang karena status Secure Boot tidak diketahui"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
+msgid "Certificate generated locally"
+msgstr "Sertifikat dihasilkan secara lokal"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
+msgid "Missing local certificate"
+msgstr "Tidak ada sertifikat lokal"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
+msgid "Certificate is trusted by motherboard"
+msgstr "Sertifikat dipercaya oleh motherboard"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
+msgid "Pending enrollment in blue screen (MOKManager)"
+msgstr "Menunggu pendaftaran di layar biru (MOKManager)"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
+msgid "Certificate is not trusted by motherboard"
+msgstr "Sertifikat tidak dipercaya oleh motherboard"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
+msgid "Kernel signature enforcement is inactive"
+msgstr "Penegakan tanda tangan kernel tidak aktif"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
+msgid "Driver trust cannot be verified"
+msgstr "Kepercayaan pengemudi tidak dapat diverifikasi"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
+msgid ""
+"Secure Boot trust is ready. No third-party kernel modules are currently "
+"installed."
+msgstr ""
+"Secure Boot kepercayaan sudah siap. Tidak ada modul kernel pihak ketiga yang "
+"diinstal saat ini."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
+msgid "Drivers are signed and ready to load"
+msgstr "Driver ditandatangani dan siap dimuat"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
+msgid "Drivers are trusted, but automatic DKMS signing needs repair"
+msgstr ""
+"Driver dapat dipercaya, tetapi penandatanganan otomatis DKMS perlu diperbaiki"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
+msgid "No signed third-party drivers detected"
+msgstr "Driver pihak ketiga yang ditandatangani tidak terdeteksi"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
+msgid "Some DKMS modules need to be re-signed"
+msgstr "Beberapa modul DKMS perlu ditandatangani ulang"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
+msgid "Enroll Existing Certificate"
+msgstr "Daftarkan Sertifikat yang Ada"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
+msgid "Repair Automatic DKMS Signing"
+msgstr "Perbaiki Penandatanganan DKMS Otomatis"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
+msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgstr ""
+"Firmware ini tidak menyediakan Secure Boot. Tidak diperlukan sertifikat."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
+msgid ""
+"Secure Boot status could not be read. Driver trust operations are blocked "
+"until detection succeeds."
+msgstr ""
+"Status Secure Boot tidak dapat dibaca. Operasi kepercayaan pengemudi "
+"diblokir hingga deteksi berhasil."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
+msgid "No certificate is required while Secure Boot is disabled."
+msgstr "Tidak diperlukan sertifikat saat Secure Boot dinonaktifkan."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
+msgid "System Trust Established. Third-party drivers will load securely."
+msgstr ""
+"Kepercayaan Sistem Terbentuk. Driver pihak ketiga akan dimuat secara aman."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
+msgid "The certificate is enrolled and current drivers are trusted."
+msgstr "Sertifikat terdaftar dan driver saat ini dipercaya."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
+msgid "Repair automatic DKMS signing before future driver updates."
+msgstr ""
+"Perbaiki penandatanganan DKMS otomatis sebelum pembaruan driver di masa "
+"mendatang."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+msgid "The certificate is enrolled, but some modules are not signed with it."
+msgstr ""
+"Sertifikat telah didaftarkan, namun beberapa modul tidak ditandatangani "
+"dengannya."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
+msgid "A certificate is waiting for enrollment."
+msgstr "Sertifikat sedang menunggu pendaftaran."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
+msgid "Restart and enter password 123456 in MOKManager."
+msgstr "Mulai ulang dan masukkan kata sandi 123456 di MOKManager."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
+msgid "The local trust certificate is not yet enrolled."
+msgstr "Sertifikat perwalian lokal belum terdaftar."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
+msgid "You must configure this to use third-party drivers like NVIDIA."
+msgstr ""
+"Anda harus mengonfigurasi ini untuk menggunakan driver pihak ketiga seperti "
+"NVIDIA."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
+msgid "The local trust certificate is missing."
+msgstr "Sertifikat kepercayaan lokal tidak ada."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
+msgid "  Checking...  "
+msgstr "  Memeriksa...  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
+msgid "Reboot Required"
+msgstr "Pemutakhiran Ulang Diperlukan"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
+msgid "Please trust the certificate upon reboot using password 123456."
+msgstr ""
+"Silakan percayai sertifikat saat booting ulang menggunakan kata sandi 123456."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
+msgid "Cancel"
+msgstr "Batalkan"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
+msgid "Reboot"
+msgstr "Pemutakhiran ulang"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
+msgid "Success! When you reboot, a blue screen will appear."
+msgstr "Berhasil! Saat Anda booting ulang, layar biru akan muncul."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
+msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
+msgstr ""
+"Pilih 'Enroll MOK' → 'Lanjutkan' → 'Ya', dan masukkan kata sandi: 123456"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
+msgid "Certificate Created"
+msgstr "Sertifikat Dibuat"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
+msgid "Later"
+msgstr "Nanti"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
+msgid "Secure Boot Trust Not Required"
+msgstr "Secure Boot Kepercayaan Tidak Diperlukan"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
+msgid "Firmware signature enforcement is not active."
+msgstr "Penegakan tanda tangan firmware tidak aktif."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
+msgid "OK"
+msgstr "OK"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
+msgid ""
+"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
+"You can repair them after enrollment."
+msgstr ""
+"Sertifikat sudah siap, tetapi satu atau lebih modul DKMS tidak dapat dibuat "
+"ulang. Anda dapat memperbaikinya setelah pendaftaran."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
+msgid "Configuration needs attention"
+msgstr "Konfigurasi perlu diperhatikan"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
+msgid "System Trust Established"
+msgstr "Kepercayaan Sistem Terbentuk"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
+msgid "Driver Signature Trusted"
+msgstr "Tanda Tangan Driver Terpercaya"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
+msgid "Configuration failed. Please try again."
+msgstr "Konfigurasi gagal. Silakan coba lagi."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
+msgid "Please check the advanced output."
+msgstr "Silakan periksa output lanjutan."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
+msgid "Generating & Signing..."
+msgstr "Menghasilkan & Menandatangani..."
+
 #~ msgid "Unleash Your Graphics Hardware"
 #~ msgstr "Goncangkan Perangkat Keras Grafis Anda"
 
@@ -1186,9 +1471,6 @@ msgstr "Tim AnduinOS"
 #~ msgid "The driver is not installed"
 #~ msgstr "Driver belum terinstal"
 
-#~ msgid "Driver Signature Trusted"
-#~ msgstr "Tanda Tangan Driver Terpercaya"
-
 #~ msgid "Driver not installed, signature missing"
 #~ msgstr "Driver belum terinstal, tanda tangan hilang"
 
@@ -1197,9 +1479,6 @@ msgstr "Tim AnduinOS"
 
 #~ msgid "Not detected"
 #~ msgstr "Tidak terdeteksi"
-
-#~ msgid "Secure Boot state could not be determined"
-#~ msgstr "Secure Boot tidak dapat ditentukan"
 
 #~ msgid "Driver is NOT signed"
 #~ msgstr "Driver TIDAK ditandatangani"
@@ -1222,12 +1501,6 @@ msgstr "Tim AnduinOS"
 #~ msgid "Driver standing by. Waiting for controller connection..."
 #~ msgstr "Driver siap siaga. Menunggu koneksi pengontrol..."
 
-#~ msgid "Driver trust cannot be verified"
-#~ msgstr "Kepercayaan pengemudi tidak dapat diverifikasi"
-
-#~ msgid "A certificate is waiting for enrollment."
-#~ msgstr "Sertifikat sedang menunggu pendaftaran."
-
 #~ msgid "Driver cannot load due to missing signature trust"
 #~ msgstr "Driver tidak dapat dimuat karena kurangnya kepercayaan tanda tangan"
 
@@ -1240,18 +1513,6 @@ msgstr "Tim AnduinOS"
 #~ msgid "  Install Xbox Driver  "
 #~ msgstr "Instal Driver Xbox"
 
-#~ msgid "Repair Module Signatures"
-#~ msgstr "Tanda Tangan Modul Perbaikan"
-
-#~ msgid "Create & Enroll Certificate"
-#~ msgstr "Buat & Daftarkan Sertifikat"
-
-#~ msgid "Reboot & Configure Secure Boot"
-#~ msgstr "Pemutakhiran ulang & Konfigurasikan Secure Boot"
-
-#~ msgid "The local trust certificate is not yet enrolled."
-#~ msgstr "Sertifikat perwalian lokal belum terdaftar."
-
 #~ msgid ""
 #~ "⚠️ The driver signature does not match your system certificate. Click Fix "
 #~ "& Reinstall to repair the driver."
@@ -1259,205 +1520,14 @@ msgstr "Tim AnduinOS"
 #~ "⚠️ Tanda tangan driver tidak cocok dengan sertifikat sistem Anda. Klik "
 #~ "Perbaiki & Instal Ulang untuk memperbaiki driver."
 
-#~ msgid "  Check Again  "
-#~ msgstr "  Periksa Lagi  "
-
 #~ msgid "Installing Xbox controller driver…"
 #~ msgstr "Menginstal driver kontroler Xbox…"
 
 #~ msgid "This may take a minute."
 #~ msgstr "Ini mungkin memakan waktu sebentar."
 
-#~ msgid "  Checking...  "
-#~ msgstr "  Memeriksa...  "
-
-#~ msgid "Please check the advanced output."
-#~ msgstr "Silakan periksa output lanjutan."
-
 #~ msgid "Repairing driver signature…"
 #~ msgstr "Memperbaiki tanda tangan driver…"
-
-#~ msgid "Secure Boot Configuration"
-#~ msgstr "Konfigurasi Secure Boot"
-
-#~ msgid "Reboot Required"
-#~ msgstr "Pemutakhiran Ulang Diperlukan"
-
-#~ msgid "Restart and enter password 123456 in MOKManager."
-#~ msgstr "Mulai ulang dan masukkan kata sandi 123456 di MOKManager."
-
-#~ msgid "Cancel"
-#~ msgstr "Batalkan"
-
-#~ msgid "Reboot"
-#~ msgstr "Pemutakhiran ulang"
-
-#~ msgid ""
-#~ "Secure Boot is a motherboard security standard that ensures only trusted "
-#~ "software loads at startup."
-#~ msgstr ""
-#~ "Secure Boot adalah standar keamanan motherboard yang memastikan hanya "
-#~ "perangkat lunak tepercaya yang dimuat saat startup."
-
-#~ msgid "It protects your system from low-level malware and rootkits."
-#~ msgstr "Ia melindungi sistem Anda dari malware tingkat rendah dan rootkit."
-
-#~ msgid "System Trust Status"
-#~ msgstr "Status Kepercayaan Sistem"
-
-#~ msgid "Note: Use password <b>123456</b> after rebooting."
-#~ msgstr ""
-#~ "Catatan: Gunakan kata sandi <b>123456</b> setelah melakukan pemutakhiran "
-#~ "ulang."
-
-#~ msgid "Motherboard hardware protection is active"
-#~ msgstr "Perlindungan perangkat keras motherboard aktif"
-
-#~ msgid "Firmware does not support Secure Boot"
-#~ msgstr ""
-#~ "Firmware tidak mendukung Secure Boot\n"
-#~ "Status "
-
-#~ msgid "Secure Boot is disabled"
-#~ msgstr "Secure Boot dinonaktifkan"
-
-#~ msgid "Not required without firmware enforcement"
-#~ msgstr "Tidak diperlukan tanpa penegakan firmware"
-
-#~ msgid "Not checked because Secure Boot state is unknown"
-#~ msgstr "Tidak dicentang karena status Secure Boot tidak diketahui"
-
-#~ msgid "Certificate generated locally"
-#~ msgstr "Sertifikat dihasilkan secara lokal"
-
-#~ msgid "Missing local certificate"
-#~ msgstr "Tidak ada sertifikat lokal"
-
-#~ msgid "Certificate is trusted by motherboard"
-#~ msgstr "Sertifikat dipercaya oleh motherboard"
-
-#~ msgid "Pending enrollment in blue screen (MOKManager)"
-#~ msgstr "Menunggu pendaftaran di layar biru (MOKManager)"
-
-#~ msgid "Certificate is not trusted by motherboard"
-#~ msgstr "Sertifikat tidak dipercaya oleh motherboard"
-
-#~ msgid "Kernel signature enforcement is inactive"
-#~ msgstr "Penegakan tanda tangan kernel tidak aktif"
-
-#~ msgid ""
-#~ "Secure Boot trust is ready. No third-party kernel modules are currently "
-#~ "installed."
-#~ msgstr ""
-#~ "Secure Boot kepercayaan sudah siap. Tidak ada modul kernel pihak ketiga "
-#~ "yang diinstal saat ini."
-
-#~ msgid "Drivers are signed and ready to load"
-#~ msgstr "Driver ditandatangani dan siap dimuat"
-
-#~ msgid "Drivers are trusted, but automatic DKMS signing needs repair"
-#~ msgstr ""
-#~ "Driver dapat dipercaya, tetapi penandatanganan otomatis DKMS perlu "
-#~ "diperbaiki"
-
-#~ msgid "No signed third-party drivers detected"
-#~ msgstr "Driver pihak ketiga yang ditandatangani tidak terdeteksi"
-
-#~ msgid "Some DKMS modules need to be re-signed"
-#~ msgstr "Beberapa modul DKMS perlu ditandatangani ulang"
-
-#~ msgid "Enroll Existing Certificate"
-#~ msgstr "Daftarkan Sertifikat yang Ada"
-
-#~ msgid "Repair Automatic DKMS Signing"
-#~ msgstr "Perbaiki Penandatanganan DKMS Otomatis"
-
-#~ msgid ""
-#~ "This firmware does not provide Secure Boot. No certificate is required."
-#~ msgstr ""
-#~ "Firmware ini tidak menyediakan Secure Boot. Tidak diperlukan sertifikat."
-
-#~ msgid ""
-#~ "Secure Boot status could not be read. Driver trust operations are blocked "
-#~ "until detection succeeds."
-#~ msgstr ""
-#~ "Status Secure Boot tidak dapat dibaca. Operasi kepercayaan pengemudi "
-#~ "diblokir hingga deteksi berhasil."
-
-#~ msgid "No certificate is required while Secure Boot is disabled."
-#~ msgstr "Tidak diperlukan sertifikat saat Secure Boot dinonaktifkan."
-
-#~ msgid "System Trust Established. Third-party drivers will load securely."
-#~ msgstr ""
-#~ "Kepercayaan Sistem Terbentuk. Driver pihak ketiga akan dimuat secara aman."
-
-#~ msgid "The certificate is enrolled and current drivers are trusted."
-#~ msgstr "Sertifikat terdaftar dan driver saat ini dipercaya."
-
-#~ msgid "Repair automatic DKMS signing before future driver updates."
-#~ msgstr ""
-#~ "Perbaiki penandatanganan DKMS otomatis sebelum pembaruan driver di masa "
-#~ "mendatang."
-
-#~ msgid ""
-#~ "The certificate is enrolled, but some modules are not signed with it."
-#~ msgstr ""
-#~ "Sertifikat telah didaftarkan, namun beberapa modul tidak ditandatangani "
-#~ "dengannya."
-
-#~ msgid "You must configure this to use third-party drivers like NVIDIA."
-#~ msgstr ""
-#~ "Anda harus mengonfigurasi ini untuk menggunakan driver pihak ketiga "
-#~ "seperti NVIDIA."
-
-#~ msgid "The local trust certificate is missing."
-#~ msgstr "Sertifikat kepercayaan lokal tidak ada."
-
-#~ msgid "Please trust the certificate upon reboot using password 123456."
-#~ msgstr ""
-#~ "Silakan percayai sertifikat saat booting ulang menggunakan kata sandi "
-#~ "123456."
-
-#~ msgid "Success! When you reboot, a blue screen will appear."
-#~ msgstr "Berhasil! Saat Anda booting ulang, layar biru akan muncul."
-
-#~ msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
-#~ msgstr ""
-#~ "Pilih 'Enroll MOK' → 'Lanjutkan' → 'Ya', dan masukkan kata sandi: 123456"
-
-#~ msgid "Certificate Created"
-#~ msgstr "Sertifikat Dibuat"
-
-#~ msgid "Later"
-#~ msgstr "Nanti"
-
-#~ msgid "Secure Boot Trust Not Required"
-#~ msgstr "Secure Boot Kepercayaan Tidak Diperlukan"
-
-#~ msgid "Firmware signature enforcement is not active."
-#~ msgstr "Penegakan tanda tangan firmware tidak aktif."
-
-#~ msgid "OK"
-#~ msgstr "OK"
-
-#~ msgid ""
-#~ "The certificate is ready, but one or more DKMS modules could not be "
-#~ "rebuilt. You can repair them after enrollment."
-#~ msgstr ""
-#~ "Sertifikat sudah siap, tetapi satu atau lebih modul DKMS tidak dapat "
-#~ "dibuat ulang. Anda dapat memperbaikinya setelah pendaftaran."
-
-#~ msgid "Configuration needs attention"
-#~ msgstr "Konfigurasi perlu diperhatikan"
-
-#~ msgid "System Trust Established"
-#~ msgstr "Kepercayaan Sistem Terbentuk"
-
-#~ msgid "Configuration failed. Please try again."
-#~ msgstr "Konfigurasi gagal. Silakan coba lagi."
-
-#~ msgid "Generating & Signing..."
-#~ msgstr "Menghasilkan & Menandatangani..."
 
 #~ msgid "A reboot is recommended to apply changes."
 #~ msgstr "Pemutakhiran ulang direkomendasikan untuk menerapkan perubahan."

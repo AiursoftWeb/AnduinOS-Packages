@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-09 14:41+0000\n"
+"POT-Creation-Date: 2026-08-09 15:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: ro <LL@li.org>\n"
@@ -578,20 +578,20 @@ msgid "This may take a few minutes."
 msgstr "Acest lucru poate dura câteva minute."
 
 #: anduinos-oobe/assets/anduinos-oobe:2299
-msgid "You can now double-click .exe files to run them."
-msgstr "Acum puteți da dublu-clic pe fișierele .exe pentru a le rula."
-
-#: anduinos-oobe/assets/anduinos-oobe:2299
 msgid "✓ Sandbox deployed successfully!"
 msgstr "✓ Driverul controller-ului Xbox a fost instalat cu succes!"
 
-#: anduinos-oobe/assets/anduinos-oobe:2308
-msgid "You can install Bottles later from the App Store."
-msgstr "Puteți instala Bottles mai târziu din Magazinul de Aplicații."
+#: anduinos-oobe/assets/anduinos-oobe:2299
+msgid "You can now double-click .exe files to run them."
+msgstr "Acum puteți da dublu-clic pe fișierele .exe pentru a le rula."
 
 #: anduinos-oobe/assets/anduinos-oobe:2308
 msgid "✗ Deployment failed."
 msgstr "✗ Instalarea a întâmpinat o problemă."
+
+#: anduinos-oobe/assets/anduinos-oobe:2308
+msgid "You can install Bottles later from the App Store."
+msgstr "Puteți instala Bottles mai târziu din Magazinul de Aplicații."
 
 #: anduinos-oobe/assets/anduinos-oobe:2316
 msgid "✗ Error: "
@@ -745,16 +745,16 @@ msgid "Productive From Day One"
 msgstr "Productiv din prima zi"
 
 #: anduinos-oobe/assets/anduinos-oobe:2734
-msgid "Click any app to open its details in the App Store."
-msgstr ""
-"Dați clic pe orice aplicație pentru a-i deschide detaliile în Magazinul de "
-"Aplicații."
-
-#: anduinos-oobe/assets/anduinos-oobe:2734
 msgid "Essential productivity and entertainment tools, hand-picked for you."
 msgstr ""
 "Untelte esențiale de productivitate și divertisment, selectate special "
 "pentru dumneavoastră."
+
+#: anduinos-oobe/assets/anduinos-oobe:2734
+msgid "Click any app to open its details in the App Store."
+msgstr ""
+"Dați clic pe orice aplicație pentru a-i deschide detaliile în Magazinul de "
+"Aplicații."
 
 #: anduinos-oobe/assets/anduinos-oobe:2746
 msgid "WeChat"
@@ -948,12 +948,12 @@ msgid "We do not collect your usage habits."
 msgstr "Nu colectăm obiceiurile dumneavoastră de utilizare."
 
 #: anduinos-oobe/assets/anduinos-oobe:3034
-msgid "There are no pervasive advertisements."
-msgstr "No publicitate invazivă."
-
-#: anduinos-oobe/assets/anduinos-oobe:3034
 msgid "We do not upload your search history."
 msgstr "Nu încărcăm istoricul dumneavoastră de căutare."
+
+#: anduinos-oobe/assets/anduinos-oobe:3034
+msgid "There are no pervasive advertisements."
+msgstr "No publicitate invazivă."
 
 #: anduinos-oobe/assets/anduinos-oobe:3045
 msgid "In an era ruled by algorithms and surveillance,"
@@ -1114,6 +1114,290 @@ msgstr "Bun venit în AnduinOS"
 msgid "AnduinOS Team"
 msgstr "Echipa AnduinOS"
 
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
+msgid "Secure Boot Configuration"
+msgstr "Configurare Secure Boot"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
+msgid ""
+"Secure Boot is a motherboard security standard that ensures only trusted "
+"software loads at startup."
+msgstr ""
+"\tSecure Boot este un standard de securitate al plăcii de bază care asigură "
+"că doar software-ul de încredere se încarcă la pornire."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
+msgid "It protects your system from low-level malware and rootkits."
+msgstr ""
+"Vi protejează sistemul împotriva malware-ului la nivel scăzut și a rootkit-"
+"urilor."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
+msgid "System Trust Status"
+msgstr "Statusul Încrederii Sistemului"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
+msgid "Create & Enroll Certificate"
+msgstr "Creează și Înscrie Certificatul"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
+msgid "Repair Module Signatures"
+msgstr "Semnăturile modulelor de reparații"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
+msgid "Note: Use password <b>123456</b> after rebooting."
+msgstr "Notă: Utilizați parola <b>123456</b> după repornire."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
+msgid "Reboot & Configure Secure Boot"
+msgstr "Restartare și Configurare Secure Boot"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
+msgid "  Check Again  "
+msgstr "  Verifică din nou  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
+msgid "Motherboard hardware protection is active"
+msgstr "Protecția hardware a plăcii de bază este activă"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
+msgid "Firmware does not support Secure Boot"
+msgstr ""
+"Firmware-ul nu acceptă Secure Boot\n"
+"Starea "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
+msgid "Secure Boot state could not be determined"
+msgstr "Secure Boot nu a putut fi determinată"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
+msgid "Secure Boot is disabled"
+msgstr "Secure Boot este dezactivat"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+msgid "Not required without firmware enforcement"
+msgstr "Nu este necesar fără aplicarea firmware-ului"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+msgid "Not checked because Secure Boot state is unknown"
+msgstr "Nu este verificat deoarece starea Secure Boot este necunoscută"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
+msgid "Certificate generated locally"
+msgstr "Certificat generat local"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
+msgid "Missing local certificate"
+msgstr "Lipsește certificatul local"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
+msgid "Certificate is trusted by motherboard"
+msgstr "Certificatul este de încredere pentru placa de bază"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
+msgid "Pending enrollment in blue screen (MOKManager)"
+msgstr "Așteaptă înscrierea în ecranul albastru (MOKManager)"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
+msgid "Certificate is not trusted by motherboard"
+msgstr "Certificatul nu este de încredere de către placa de bază"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
+msgid "Kernel signature enforcement is inactive"
+msgstr "Aplicarea semnăturii kernel este inactivă"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
+msgid "Driver trust cannot be verified"
+msgstr "Încrederea șoferului nu poate fi verificată"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
+msgid ""
+"Secure Boot trust is ready. No third-party kernel modules are currently "
+"installed."
+msgstr ""
+"Secure Boot încrederea este gata. În prezent, nu sunt instalate module "
+"kernel terțe."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
+msgid "Drivers are signed and ready to load"
+msgstr "Driverele sunt semnate și gata de încărcare"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
+msgid "Drivers are trusted, but automatic DKMS signing needs repair"
+msgstr ""
+"Driverele sunt de încredere, dar semnarea automată DKMS necesită reparații"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
+msgid "No signed third-party drivers detected"
+msgstr "Nu s-au detectat drivere terțe semnate"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
+msgid "Some DKMS modules need to be re-signed"
+msgstr "Unele module DKMS trebuie resemnate"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
+msgid "Enroll Existing Certificate"
+msgstr "Înregistrați certificatul existent"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
+msgid "Repair Automatic DKMS Signing"
+msgstr "Reparați semnarea automată DKMS"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
+msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgstr ""
+"Acest firmware nu oferă Secure Boot. Nu este necesar niciun certificat.\n"
+"Starea "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
+msgid ""
+"Secure Boot status could not be read. Driver trust operations are blocked "
+"until detection succeeds."
+msgstr ""
+"Secure Boot nu a putut fi citită. Operațiunile de încredere în șofer sunt "
+"blocate până când detectarea reușește."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
+msgid "No certificate is required while Secure Boot is disabled."
+msgstr ""
+"Nu este necesar niciun certificat în timp ce Secure Boot este dezactivat."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
+msgid "System Trust Established. Third-party drivers will load securely."
+msgstr ""
+"Încrederea sistemului stabilită. Driverele terțe se vor încărca în siguranță."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
+msgid "The certificate is enrolled and current drivers are trusted."
+msgstr "Certificatul este înregistrat și șoferii actuali sunt de încredere."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
+msgid "Repair automatic DKMS signing before future driver updates."
+msgstr ""
+"Reparați semnarea automată DKMS înainte de viitoarele actualizări ale "
+"driverului."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+msgid "The certificate is enrolled, but some modules are not signed with it."
+msgstr "Certificatul este înscris, dar unele module nu sunt semnate cu acesta."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
+msgid "A certificate is waiting for enrollment."
+msgstr "Se așteaptă un certificat pentru înscriere."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
+msgid "Restart and enter password 123456 in MOKManager."
+msgstr "Reporniți și introduceți parola 123456 în MOKManager."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
+msgid "The local trust certificate is not yet enrolled."
+msgstr "Certificatul de încredere local nu este încă înregistrat."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
+msgid "You must configure this to use third-party drivers like NVIDIA."
+msgstr "Și continuați cu configurarea sistemului în timp ce se descarcă."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
+msgid "The local trust certificate is missing."
+msgstr "Lipsește certificatul de încredere local."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
+msgid "  Checking...  "
+msgstr "  Se verifică...  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
+msgid "Reboot Required"
+msgstr "Restartare necesară"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
+msgid "Please trust the certificate upon reboot using password 123456."
+msgstr ""
+"Vă rugăm să aveți încredere în certificat la repornire folosind parola "
+"123456."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
+msgid "Cancel"
+msgstr "Anulează"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
+msgid "Reboot"
+msgstr "Restartează"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
+msgid "Success! When you reboot, a blue screen will appear."
+msgstr "Succes! Când reporniți, va apărea un ecran albastru."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
+msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
+msgstr ""
+"Selectați 'Înscrie MOK' → 'Continuă' → 'Da', și introduceți parola: 123456"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
+msgid "Certificate Created"
+msgstr "Certificat creat"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
+msgid "Later"
+msgstr "Mai târziu"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
+msgid "Secure Boot Trust Not Required"
+msgstr "Secure Boot Încrederea nu este necesară"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
+msgid "Firmware signature enforcement is not active."
+msgstr "Aplicarea semnăturii firmware nu este activă."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
+msgid "OK"
+msgstr "OK"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
+msgid ""
+"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
+"You can repair them after enrollment."
+msgstr ""
+"Certificatul este gata, dar unul sau mai multe module DKMS nu au putut fi "
+"reconstruite. Le puteți repara după înscriere."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
+msgid "Configuration needs attention"
+msgstr "Configurația necesită atenție"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
+msgid "System Trust Established"
+msgstr "Încrederea în sistem a fost stabilită"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
+msgid "Driver Signature Trusted"
+msgstr "Semnătura șoferului este de încredere"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
+msgid "Configuration failed. Please try again."
+msgstr "Configurarea a eșuat. Vă rugăm să încercați din nou."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
+msgid "Please check the advanced output."
+msgstr "Vă rugăm să verificați ieșirea avansată."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
+msgid "Generating & Signing..."
+msgstr "Se generează și semnează..."
+
 #~ msgid "Unleash Your Graphics Hardware"
 #~ msgstr "Eliberează puterea hardware-ului tău grafic"
 
@@ -1193,9 +1477,6 @@ msgstr "Echipa AnduinOS"
 #~ msgid "The driver is not installed"
 #~ msgstr "Driver-ul nu este instalat"
 
-#~ msgid "Driver Signature Trusted"
-#~ msgstr "Semnătura șoferului este de încredere"
-
 #~ msgid "Driver not installed, signature missing"
 #~ msgstr "Șoferul nu este instalat, semnătura lipsește"
 
@@ -1204,9 +1485,6 @@ msgstr "Echipa AnduinOS"
 
 #~ msgid "Not detected"
 #~ msgstr "Nu a fost detectat"
-
-#~ msgid "Secure Boot state could not be determined"
-#~ msgstr "Secure Boot nu a putut fi determinată"
 
 #~ msgid "Driver is NOT signed"
 #~ msgstr "Șoferul NU este semnat"
@@ -1229,12 +1507,6 @@ msgstr "Echipa AnduinOS"
 #~ msgid "Driver standing by. Waiting for controller connection..."
 #~ msgstr "Șoferul așteaptă. Se așteaptă conectarea controllerului..."
 
-#~ msgid "Driver trust cannot be verified"
-#~ msgstr "Încrederea șoferului nu poate fi verificată"
-
-#~ msgid "A certificate is waiting for enrollment."
-#~ msgstr "Se așteaptă un certificat pentru înscriere."
-
 #~ msgid "Driver cannot load due to missing signature trust"
 #~ msgstr ""
 #~ "Șoferul nu se poate încărca din cauza lipsei încrederii în semnătură"
@@ -1248,18 +1520,6 @@ msgstr "Echipa AnduinOS"
 #~ msgid "  Install Xbox Driver  "
 #~ msgstr "Instalează driverele Xbox"
 
-#~ msgid "Repair Module Signatures"
-#~ msgstr "Semnăturile modulelor de reparații"
-
-#~ msgid "Create & Enroll Certificate"
-#~ msgstr "Creează și Înscrie Certificatul"
-
-#~ msgid "Reboot & Configure Secure Boot"
-#~ msgstr "Restartare și Configurare Secure Boot"
-
-#~ msgid "The local trust certificate is not yet enrolled."
-#~ msgstr "Certificatul de încredere local nu este încă înregistrat."
-
 #~ msgid ""
 #~ "⚠️ The driver signature does not match your system certificate. Click Fix "
 #~ "& Reinstall to repair the driver."
@@ -1267,204 +1527,14 @@ msgstr "Echipa AnduinOS"
 #~ "⚠️ Semnătura driverului nu corespunde cu certificatul sistemului dvs. "
 #~ "Faceți clic pe Reparare & Reinstalare pentru a repara driverul."
 
-#~ msgid "  Check Again  "
-#~ msgstr "  Verifică din nou  "
-
 #~ msgid "Installing Xbox controller driver…"
 #~ msgstr "Se instalează driverul pentru controller-ul Xbox…"
 
 #~ msgid "This may take a minute."
 #~ msgstr "Acest lucru poate dura un minut."
 
-#~ msgid "  Checking...  "
-#~ msgstr "  Se verifică...  "
-
-#~ msgid "Please check the advanced output."
-#~ msgstr "Vă rugăm să verificați ieșirea avansată."
-
 #~ msgid "Repairing driver signature…"
 #~ msgstr "Se repară semnătura driverului…"
-
-#~ msgid "Secure Boot Configuration"
-#~ msgstr "Configurare Secure Boot"
-
-#~ msgid "Reboot Required"
-#~ msgstr "Restartare necesară"
-
-#~ msgid "Restart and enter password 123456 in MOKManager."
-#~ msgstr "Reporniți și introduceți parola 123456 în MOKManager."
-
-#~ msgid "Cancel"
-#~ msgstr "Anulează"
-
-#~ msgid "Reboot"
-#~ msgstr "Restartează"
-
-#~ msgid ""
-#~ "Secure Boot is a motherboard security standard that ensures only trusted "
-#~ "software loads at startup."
-#~ msgstr ""
-#~ "\tSecure Boot este un standard de securitate al plăcii de bază care "
-#~ "asigură că doar software-ul de încredere se încarcă la pornire."
-
-#~ msgid "It protects your system from low-level malware and rootkits."
-#~ msgstr ""
-#~ "Vi protejează sistemul împotriva malware-ului la nivel scăzut și a "
-#~ "rootkit-urilor."
-
-#~ msgid "System Trust Status"
-#~ msgstr "Statusul Încrederii Sistemului"
-
-#~ msgid "Note: Use password <b>123456</b> after rebooting."
-#~ msgstr "Notă: Utilizați parola <b>123456</b> după repornire."
-
-#~ msgid "Motherboard hardware protection is active"
-#~ msgstr "Protecția hardware a plăcii de bază este activă"
-
-#~ msgid "Firmware does not support Secure Boot"
-#~ msgstr ""
-#~ "Firmware-ul nu acceptă Secure Boot\n"
-#~ "Starea "
-
-#~ msgid "Secure Boot is disabled"
-#~ msgstr "Secure Boot este dezactivat"
-
-#~ msgid "Not required without firmware enforcement"
-#~ msgstr "Nu este necesar fără aplicarea firmware-ului"
-
-#~ msgid "Not checked because Secure Boot state is unknown"
-#~ msgstr "Nu este verificat deoarece starea Secure Boot este necunoscută"
-
-#~ msgid "Certificate generated locally"
-#~ msgstr "Certificat generat local"
-
-#~ msgid "Missing local certificate"
-#~ msgstr "Lipsește certificatul local"
-
-#~ msgid "Certificate is trusted by motherboard"
-#~ msgstr "Certificatul este de încredere pentru placa de bază"
-
-#~ msgid "Pending enrollment in blue screen (MOKManager)"
-#~ msgstr "Așteaptă înscrierea în ecranul albastru (MOKManager)"
-
-#~ msgid "Certificate is not trusted by motherboard"
-#~ msgstr "Certificatul nu este de încredere de către placa de bază"
-
-#~ msgid "Kernel signature enforcement is inactive"
-#~ msgstr "Aplicarea semnăturii kernel este inactivă"
-
-#~ msgid ""
-#~ "Secure Boot trust is ready. No third-party kernel modules are currently "
-#~ "installed."
-#~ msgstr ""
-#~ "Secure Boot încrederea este gata. În prezent, nu sunt instalate module "
-#~ "kernel terțe."
-
-#~ msgid "Drivers are signed and ready to load"
-#~ msgstr "Driverele sunt semnate și gata de încărcare"
-
-#~ msgid "Drivers are trusted, but automatic DKMS signing needs repair"
-#~ msgstr ""
-#~ "Driverele sunt de încredere, dar semnarea automată DKMS necesită reparații"
-
-#~ msgid "No signed third-party drivers detected"
-#~ msgstr "Nu s-au detectat drivere terțe semnate"
-
-#~ msgid "Some DKMS modules need to be re-signed"
-#~ msgstr "Unele module DKMS trebuie resemnate"
-
-#~ msgid "Enroll Existing Certificate"
-#~ msgstr "Înregistrați certificatul existent"
-
-#~ msgid "Repair Automatic DKMS Signing"
-#~ msgstr "Reparați semnarea automată DKMS"
-
-#~ msgid ""
-#~ "This firmware does not provide Secure Boot. No certificate is required."
-#~ msgstr ""
-#~ "Acest firmware nu oferă Secure Boot. Nu este necesar niciun certificat.\n"
-#~ "Starea "
-
-#~ msgid ""
-#~ "Secure Boot status could not be read. Driver trust operations are blocked "
-#~ "until detection succeeds."
-#~ msgstr ""
-#~ "Secure Boot nu a putut fi citită. Operațiunile de încredere în șofer sunt "
-#~ "blocate până când detectarea reușește."
-
-#~ msgid "No certificate is required while Secure Boot is disabled."
-#~ msgstr ""
-#~ "Nu este necesar niciun certificat în timp ce Secure Boot este dezactivat."
-
-#~ msgid "System Trust Established. Third-party drivers will load securely."
-#~ msgstr ""
-#~ "Încrederea sistemului stabilită. Driverele terțe se vor încărca în "
-#~ "siguranță."
-
-#~ msgid "The certificate is enrolled and current drivers are trusted."
-#~ msgstr "Certificatul este înregistrat și șoferii actuali sunt de încredere."
-
-#~ msgid "Repair automatic DKMS signing before future driver updates."
-#~ msgstr ""
-#~ "Reparați semnarea automată DKMS înainte de viitoarele actualizări ale "
-#~ "driverului."
-
-#~ msgid ""
-#~ "The certificate is enrolled, but some modules are not signed with it."
-#~ msgstr ""
-#~ "Certificatul este înscris, dar unele module nu sunt semnate cu acesta."
-
-#~ msgid "You must configure this to use third-party drivers like NVIDIA."
-#~ msgstr "Și continuați cu configurarea sistemului în timp ce se descarcă."
-
-#~ msgid "The local trust certificate is missing."
-#~ msgstr "Lipsește certificatul de încredere local."
-
-#~ msgid "Please trust the certificate upon reboot using password 123456."
-#~ msgstr ""
-#~ "Vă rugăm să aveți încredere în certificat la repornire folosind parola "
-#~ "123456."
-
-#~ msgid "Success! When you reboot, a blue screen will appear."
-#~ msgstr "Succes! Când reporniți, va apărea un ecran albastru."
-
-#~ msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
-#~ msgstr ""
-#~ "Selectați 'Înscrie MOK' → 'Continuă' → 'Da', și introduceți parola: 123456"
-
-#~ msgid "Certificate Created"
-#~ msgstr "Certificat creat"
-
-#~ msgid "Later"
-#~ msgstr "Mai târziu"
-
-#~ msgid "Secure Boot Trust Not Required"
-#~ msgstr "Secure Boot Încrederea nu este necesară"
-
-#~ msgid "Firmware signature enforcement is not active."
-#~ msgstr "Aplicarea semnăturii firmware nu este activă."
-
-#~ msgid "OK"
-#~ msgstr "OK"
-
-#~ msgid ""
-#~ "The certificate is ready, but one or more DKMS modules could not be "
-#~ "rebuilt. You can repair them after enrollment."
-#~ msgstr ""
-#~ "Certificatul este gata, dar unul sau mai multe module DKMS nu au putut fi "
-#~ "reconstruite. Le puteți repara după înscriere."
-
-#~ msgid "Configuration needs attention"
-#~ msgstr "Configurația necesită atenție"
-
-#~ msgid "System Trust Established"
-#~ msgstr "Încrederea în sistem a fost stabilită"
-
-#~ msgid "Configuration failed. Please try again."
-#~ msgstr "Configurarea a eșuat. Vă rugăm să încercați din nou."
-
-#~ msgid "Generating & Signing..."
-#~ msgstr "Se generează și semnează..."
 
 #~ msgid "A reboot is recommended to apply changes."
 #~ msgstr "Se recomandă un restart pentru a aplica modificările."

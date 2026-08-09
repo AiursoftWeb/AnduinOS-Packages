@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-09 14:41+0000\n"
+"POT-Creation-Date: 2026-08-09 15:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: vi <LL@li.org>\n"
@@ -579,20 +579,20 @@ msgid "This may take a few minutes."
 msgstr "Việc này có thể mất vài phút."
 
 #: anduinos-oobe/assets/anduinos-oobe:2299
-msgid "You can now double-click .exe files to run them."
-msgstr "Bây giờ bạn có thể nhấp đúp vào các tệp .exe để chạy chúng."
-
-#: anduinos-oobe/assets/anduinos-oobe:2299
 msgid "✓ Sandbox deployed successfully!"
 msgstr "✓ Đã triển khai hộp cát thành công!"
 
-#: anduinos-oobe/assets/anduinos-oobe:2308
-msgid "You can install Bottles later from the App Store."
-msgstr "Bạn có thể cài đặt Bottles sau này từ Cửa hàng Ứng dụng."
+#: anduinos-oobe/assets/anduinos-oobe:2299
+msgid "You can now double-click .exe files to run them."
+msgstr "Bây giờ bạn có thể nhấp đúp vào các tệp .exe để chạy chúng."
 
 #: anduinos-oobe/assets/anduinos-oobe:2308
 msgid "✗ Deployment failed."
 msgstr "✗ Triển khai không thành công."
+
+#: anduinos-oobe/assets/anduinos-oobe:2308
+msgid "You can install Bottles later from the App Store."
+msgstr "Bạn có thể cài đặt Bottles sau này từ Cửa hàng Ứng dụng."
 
 #: anduinos-oobe/assets/anduinos-oobe:2316
 msgid "✗ Error: "
@@ -747,14 +747,14 @@ msgid "Productive From Day One"
 msgstr "Hiệu quả ngay từ ngày đầu tiên"
 
 #: anduinos-oobe/assets/anduinos-oobe:2734
-msgid "Click any app to open its details in the App Store."
-msgstr ""
-"Nhấp vào bất kỳ ứng dụng nào để xem chi tiết của nó trong Cửa hàng Ứng dụng."
-
-#: anduinos-oobe/assets/anduinos-oobe:2734
 msgid "Essential productivity and entertainment tools, hand-picked for you."
 msgstr ""
 "Công cụ năng suất và giải trí thiết yếu, được chọn lọc kỹ lưỡng cho bạn."
+
+#: anduinos-oobe/assets/anduinos-oobe:2734
+msgid "Click any app to open its details in the App Store."
+msgstr ""
+"Nhấp vào bất kỳ ứng dụng nào để xem chi tiết của nó trong Cửa hàng Ứng dụng."
 
 #: anduinos-oobe/assets/anduinos-oobe:2746
 msgid "WeChat"
@@ -947,12 +947,12 @@ msgid "We do not collect your usage habits."
 msgstr "Chúng tôi không thu thập thói quen sử dụng của bạn."
 
 #: anduinos-oobe/assets/anduinos-oobe:3034
-msgid "There are no pervasive advertisements."
-msgstr "Không có quảng cáo lan tràn."
-
-#: anduinos-oobe/assets/anduinos-oobe:3034
 msgid "We do not upload your search history."
 msgstr "Chúng tôi không tải lên lịch sử tìm kiếm của bạn."
+
+#: anduinos-oobe/assets/anduinos-oobe:3034
+msgid "There are no pervasive advertisements."
+msgstr "Không có quảng cáo lan tràn."
 
 #: anduinos-oobe/assets/anduinos-oobe:3045
 msgid "In an era ruled by algorithms and surveillance,"
@@ -1114,6 +1114,284 @@ msgstr "Chào mừng đến với AnduinOS"
 msgid "AnduinOS Team"
 msgstr "Đội ngũ AnduinOS"
 
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
+msgid "Secure Boot Configuration"
+msgstr "Cấu hình Secure Boot"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
+msgid ""
+"Secure Boot is a motherboard security standard that ensures only trusted "
+"software loads at startup."
+msgstr ""
+"\tSecure Boot là tiêu chuẩn bảo mật bo mạch chủ đảm bảo chỉ phần mềm đáng "
+"tin cậy được tải khi khởi động."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
+msgid "It protects your system from low-level malware and rootkits."
+msgstr "Nó bảo vệ hệ thống của bạn khỏi mã độc cấp thấp và rootkit."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
+msgid "System Trust Status"
+msgstr "Tình trạng Tin cậy Hệ thống"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
+msgid "Create & Enroll Certificate"
+msgstr "Tạo & Đăng ký Chứng chỉ"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
+msgid "Repair Module Signatures"
+msgstr "Chữ ký mô-đun sửa chữa"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
+msgid "Note: Use password <b>123456</b> after rebooting."
+msgstr "Lưu ý: Sử dụng mật khẩu <b>123456</b> sau khi khởi động lại."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
+msgid "Reboot & Configure Secure Boot"
+msgstr "Khởi động lại & Cấu hình Secure Boot"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
+msgid "  Check Again  "
+msgstr "  Kiểm tra lại  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
+msgid "Motherboard hardware protection is active"
+msgstr "Bảo cứng bo mạch chủ đang hoạt động"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
+msgid "Firmware does not support Secure Boot"
+msgstr "Phần sụn không hỗ trợ Secure Boot"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
+msgid "Secure Boot state could not be determined"
+msgstr "Không thể xác định trạng thái Secure Boot"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
+msgid "Secure Boot is disabled"
+msgstr "Secure Boot bị tắt"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+msgid "Not required without firmware enforcement"
+msgstr "Không bắt buộc nếu không thực thi chương trình cơ sở"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+msgid "Not checked because Secure Boot state is unknown"
+msgstr "Không được kiểm tra vì trạng thái Secure Boot không xác định"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
+msgid "Certificate generated locally"
+msgstr "Chứng chỉ được tạo cục bộ"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
+msgid "Missing local certificate"
+msgstr "Thiếu chứng chỉ cục bộ"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
+msgid "Certificate is trusted by motherboard"
+msgstr "Bo mạch chủ tin cậy chứng chỉ này"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
+msgid "Pending enrollment in blue screen (MOKManager)"
+msgstr "Chờ đăng ký trong màn hình xanh (MOKManager)"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
+msgid "Certificate is not trusted by motherboard"
+msgstr "Chứng chỉ không được bo mạch chủ tin cậy"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
+msgid "Kernel signature enforcement is inactive"
+msgstr "Thực thi chữ ký hạt nhân không hoạt động"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
+msgid "Driver trust cannot be verified"
+msgstr "Không thể xác minh độ tin cậy của trình điều khiển"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
+msgid ""
+"Secure Boot trust is ready. No third-party kernel modules are currently "
+"installed."
+msgstr ""
+"Niềm tin Secure Boot đã sẵn sàng. Hiện tại không có mô-đun hạt nhân của bên "
+"thứ ba nào được cài đặt."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
+msgid "Drivers are signed and ready to load"
+msgstr "Trình điều khiển đã được ký và sẵn sàng tải"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
+msgid "Drivers are trusted, but automatic DKMS signing needs repair"
+msgstr "Trình điều khiển được tin cậy nhưng việc ký DKMS tự động cần sửa chữa"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
+msgid "No signed third-party drivers detected"
+msgstr "Không phát hiện trình điều khiển bên thứ ba đã ký"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
+msgid "Some DKMS modules need to be re-signed"
+msgstr "Một số mô-đun DKMS cần được ký lại"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
+msgid "Enroll Existing Certificate"
+msgstr "Đăng ký chứng chỉ hiện có"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
+msgid "Repair Automatic DKMS Signing"
+msgstr "Sửa chữa chữ ký DKMS tự động"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
+msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgstr ""
+"Phần sụn này không cung cấp Secure Boot. Không có giấy chứng nhận được yêu "
+"cầu."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
+msgid ""
+"Secure Boot status could not be read. Driver trust operations are blocked "
+"until detection succeeds."
+msgstr ""
+"Không thể đọc được trạng thái Secure Boot. Hoạt động tin cậy của trình điều "
+"khiển bị chặn cho đến khi phát hiện thành công."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
+msgid "No certificate is required while Secure Boot is disabled."
+msgstr "Không cần chứng chỉ khi Secure Boot bị tắt."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
+msgid "System Trust Established. Third-party drivers will load securely."
+msgstr ""
+"Nhật ký tin cậy hệ thống đã được thiết lập. Trình điều khiển bên thứ ba sẽ "
+"tải an toàn."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
+msgid "The certificate is enrolled and current drivers are trusted."
+msgstr "Chứng chỉ đã được đăng ký và trình điều khiển hiện tại được tin cậy."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
+msgid "Repair automatic DKMS signing before future driver updates."
+msgstr ""
+"Sửa chữa ký DKMS tự động trước khi cập nhật trình điều khiển trong tương lai."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+msgid "The certificate is enrolled, but some modules are not signed with it."
+msgstr "Chứng chỉ đã được đăng ký nhưng một số mô-đun chưa được ký với nó."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
+msgid "A certificate is waiting for enrollment."
+msgstr "Chứng chỉ đang chờ đăng ký."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
+msgid "Restart and enter password 123456 in MOKManager."
+msgstr "Khởi động lại và nhập mật khẩu 123456 vào MOKManager."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
+msgid "The local trust certificate is not yet enrolled."
+msgstr "Chứng chỉ tin cậy cục bộ chưa được đăng ký."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
+msgid "You must configure this to use third-party drivers like NVIDIA."
+msgstr ""
+"Bạn phải cấu hình cái này để sử dụng các trình điều khiển bên thứ ba như "
+"NVIDIA."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
+msgid "The local trust certificate is missing."
+msgstr "Chứng chỉ tin cậy cục bộ bị thiếu."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
+msgid "  Checking...  "
+msgstr "  Đang kiểm tra...  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
+msgid "Reboot Required"
+msgstr "Yêu cầu khởi động lại"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
+msgid "Please trust the certificate upon reboot using password 123456."
+msgstr ""
+"Vui lòng tin tưởng chứng chỉ này khi khởi động lại bằng mật khẩu 123456."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
+msgid "Cancel"
+msgstr "Hủy bỏ"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
+msgid "Reboot"
+msgstr "Khởi động lại"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
+msgid "Success! When you reboot, a blue screen will appear."
+msgstr "Thành công! Khi bạn khởi động lại, một màn hình xanh sẽ xuất hiện."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
+msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
+msgstr "Chọn 'Enroll MOK' → 'Continue' → 'Yes', và nhập mật khẩu: 123456"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
+msgid "Certificate Created"
+msgstr "Chứng chỉ đã được tạo"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
+msgid "Later"
+msgstr "Sau đó"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
+msgid "Secure Boot Trust Not Required"
+msgstr "Secure Boot Không cần tin cậy"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
+msgid "Firmware signature enforcement is not active."
+msgstr "Thực thi chữ ký chương trình cơ sở không hoạt động."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
+msgid "OK"
+msgstr "Được"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
+msgid ""
+"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
+"You can repair them after enrollment."
+msgstr ""
+"Chứng chỉ đã sẵn sàng nhưng không thể xây dựng lại một hoặc nhiều mô-đun "
+"DKMS. Bạn có thể sửa chữa chúng sau khi đăng ký."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
+msgid "Configuration needs attention"
+msgstr "Cấu hình cần chú ý"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
+msgid "System Trust Established"
+msgstr "Đã thành lập hệ thống tin cậy"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
+msgid "Driver Signature Trusted"
+msgstr "Chữ ký trình điều khiển được tin cậy"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
+msgid "Configuration failed. Please try again."
+msgstr "Cấu hình không thành công. Vui lòng thử lại."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
+msgid "Please check the advanced output."
+msgstr "Vui lòng kiểm tra đầu ra nâng cao."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
+msgid "Generating & Signing..."
+msgstr "Đang tạo & Ký..."
+
 #~ msgid "Unleash Your Graphics Hardware"
 #~ msgstr "Khơi phá sức mạnh phần cứng đồ họa của bạn"
 
@@ -1197,9 +1475,6 @@ msgstr "Đội ngũ AnduinOS"
 #~ msgid "The driver is not installed"
 #~ msgstr "Trình điều khiển chưa được cài đặt"
 
-#~ msgid "Driver Signature Trusted"
-#~ msgstr "Chữ ký trình điều khiển được tin cậy"
-
 #~ msgid "Driver not installed, signature missing"
 #~ msgstr "Chưa cài đặt trình điều khiển, thiếu chữ ký"
 
@@ -1208,9 +1483,6 @@ msgstr "Đội ngũ AnduinOS"
 
 #~ msgid "Not detected"
 #~ msgstr "Không được phát hiện"
-
-#~ msgid "Secure Boot state could not be determined"
-#~ msgstr "Không thể xác định trạng thái Secure Boot"
 
 #~ msgid "Driver is NOT signed"
 #~ msgstr "Trình điều khiển KHÔNG được ký số"
@@ -1233,12 +1505,6 @@ msgstr "Đội ngũ AnduinOS"
 #~ msgid "Driver standing by. Waiting for controller connection..."
 #~ msgstr "Trình điều khiển đang chờ. Đang đợi kết nối bộ điều khiển..."
 
-#~ msgid "Driver trust cannot be verified"
-#~ msgstr "Không thể xác minh độ tin cậy của trình điều khiển"
-
-#~ msgid "A certificate is waiting for enrollment."
-#~ msgstr "Chứng chỉ đang chờ đăng ký."
-
 #~ msgid "Driver cannot load due to missing signature trust"
 #~ msgstr "Không thể tải trình điều khiển do thiếu sự tin cậy của chữ ký"
 
@@ -1251,18 +1517,6 @@ msgstr "Đội ngũ AnduinOS"
 #~ msgid "  Install Xbox Driver  "
 #~ msgstr "Cài đặt trình điều khiển Xbox"
 
-#~ msgid "Repair Module Signatures"
-#~ msgstr "Chữ ký mô-đun sửa chữa"
-
-#~ msgid "Create & Enroll Certificate"
-#~ msgstr "Tạo & Đăng ký Chứng chỉ"
-
-#~ msgid "Reboot & Configure Secure Boot"
-#~ msgstr "Khởi động lại & Cấu hình Secure Boot"
-
-#~ msgid "The local trust certificate is not yet enrolled."
-#~ msgstr "Chứng chỉ tin cậy cục bộ chưa được đăng ký."
-
 #~ msgid ""
 #~ "⚠️ The driver signature does not match your system certificate. Click Fix "
 #~ "& Reinstall to repair the driver."
@@ -1270,199 +1524,14 @@ msgstr "Đội ngũ AnduinOS"
 #~ "⚠️ Chữ ký trình điều khiển không khớp với chứng chỉ hệ thống của bạn. Nhấp "
 #~ "vào Sửa & Cài đặt lại để khắc phục trình điều khiển."
 
-#~ msgid "  Check Again  "
-#~ msgstr "  Kiểm tra lại  "
-
 #~ msgid "Installing Xbox controller driver…"
 #~ msgstr "Đang cài đặt trình điều khiển bộ điều khiển Xbox…"
 
 #~ msgid "This may take a minute."
 #~ msgstr "Việc này có thể mất một phút."
 
-#~ msgid "  Checking...  "
-#~ msgstr "  Đang kiểm tra...  "
-
-#~ msgid "Please check the advanced output."
-#~ msgstr "Vui lòng kiểm tra đầu ra nâng cao."
-
 #~ msgid "Repairing driver signature…"
 #~ msgstr "Đang sửa chữa chữ ký trình điều khiển…"
-
-#~ msgid "Secure Boot Configuration"
-#~ msgstr "Cấu hình Secure Boot"
-
-#~ msgid "Reboot Required"
-#~ msgstr "Yêu cầu khởi động lại"
-
-#~ msgid "Restart and enter password 123456 in MOKManager."
-#~ msgstr "Khởi động lại và nhập mật khẩu 123456 vào MOKManager."
-
-#~ msgid "Cancel"
-#~ msgstr "Hủy bỏ"
-
-#~ msgid "Reboot"
-#~ msgstr "Khởi động lại"
-
-#~ msgid ""
-#~ "Secure Boot is a motherboard security standard that ensures only trusted "
-#~ "software loads at startup."
-#~ msgstr ""
-#~ "\tSecure Boot là tiêu chuẩn bảo mật bo mạch chủ đảm bảo chỉ phần mềm đáng "
-#~ "tin cậy được tải khi khởi động."
-
-#~ msgid "It protects your system from low-level malware and rootkits."
-#~ msgstr "Nó bảo vệ hệ thống của bạn khỏi mã độc cấp thấp và rootkit."
-
-#~ msgid "System Trust Status"
-#~ msgstr "Tình trạng Tin cậy Hệ thống"
-
-#~ msgid "Note: Use password <b>123456</b> after rebooting."
-#~ msgstr "Lưu ý: Sử dụng mật khẩu <b>123456</b> sau khi khởi động lại."
-
-#~ msgid "Motherboard hardware protection is active"
-#~ msgstr "Bảo cứng bo mạch chủ đang hoạt động"
-
-#~ msgid "Firmware does not support Secure Boot"
-#~ msgstr "Phần sụn không hỗ trợ Secure Boot"
-
-#~ msgid "Secure Boot is disabled"
-#~ msgstr "Secure Boot bị tắt"
-
-#~ msgid "Not required without firmware enforcement"
-#~ msgstr "Không bắt buộc nếu không thực thi chương trình cơ sở"
-
-#~ msgid "Not checked because Secure Boot state is unknown"
-#~ msgstr "Không được kiểm tra vì trạng thái Secure Boot không xác định"
-
-#~ msgid "Certificate generated locally"
-#~ msgstr "Chứng chỉ được tạo cục bộ"
-
-#~ msgid "Missing local certificate"
-#~ msgstr "Thiếu chứng chỉ cục bộ"
-
-#~ msgid "Certificate is trusted by motherboard"
-#~ msgstr "Bo mạch chủ tin cậy chứng chỉ này"
-
-#~ msgid "Pending enrollment in blue screen (MOKManager)"
-#~ msgstr "Chờ đăng ký trong màn hình xanh (MOKManager)"
-
-#~ msgid "Certificate is not trusted by motherboard"
-#~ msgstr "Chứng chỉ không được bo mạch chủ tin cậy"
-
-#~ msgid "Kernel signature enforcement is inactive"
-#~ msgstr "Thực thi chữ ký hạt nhân không hoạt động"
-
-#~ msgid ""
-#~ "Secure Boot trust is ready. No third-party kernel modules are currently "
-#~ "installed."
-#~ msgstr ""
-#~ "Niềm tin Secure Boot đã sẵn sàng. Hiện tại không có mô-đun hạt nhân của "
-#~ "bên thứ ba nào được cài đặt."
-
-#~ msgid "Drivers are signed and ready to load"
-#~ msgstr "Trình điều khiển đã được ký và sẵn sàng tải"
-
-#~ msgid "Drivers are trusted, but automatic DKMS signing needs repair"
-#~ msgstr ""
-#~ "Trình điều khiển được tin cậy nhưng việc ký DKMS tự động cần sửa chữa"
-
-#~ msgid "No signed third-party drivers detected"
-#~ msgstr "Không phát hiện trình điều khiển bên thứ ba đã ký"
-
-#~ msgid "Some DKMS modules need to be re-signed"
-#~ msgstr "Một số mô-đun DKMS cần được ký lại"
-
-#~ msgid "Enroll Existing Certificate"
-#~ msgstr "Đăng ký chứng chỉ hiện có"
-
-#~ msgid "Repair Automatic DKMS Signing"
-#~ msgstr "Sửa chữa chữ ký DKMS tự động"
-
-#~ msgid ""
-#~ "This firmware does not provide Secure Boot. No certificate is required."
-#~ msgstr ""
-#~ "Phần sụn này không cung cấp Secure Boot. Không có giấy chứng nhận được "
-#~ "yêu cầu."
-
-#~ msgid ""
-#~ "Secure Boot status could not be read. Driver trust operations are blocked "
-#~ "until detection succeeds."
-#~ msgstr ""
-#~ "Không thể đọc được trạng thái Secure Boot. Hoạt động tin cậy của trình "
-#~ "điều khiển bị chặn cho đến khi phát hiện thành công."
-
-#~ msgid "No certificate is required while Secure Boot is disabled."
-#~ msgstr "Không cần chứng chỉ khi Secure Boot bị tắt."
-
-#~ msgid "System Trust Established. Third-party drivers will load securely."
-#~ msgstr ""
-#~ "Nhật ký tin cậy hệ thống đã được thiết lập. Trình điều khiển bên thứ ba "
-#~ "sẽ tải an toàn."
-
-#~ msgid "The certificate is enrolled and current drivers are trusted."
-#~ msgstr ""
-#~ "Chứng chỉ đã được đăng ký và trình điều khiển hiện tại được tin cậy."
-
-#~ msgid "Repair automatic DKMS signing before future driver updates."
-#~ msgstr ""
-#~ "Sửa chữa ký DKMS tự động trước khi cập nhật trình điều khiển trong tương "
-#~ "lai."
-
-#~ msgid ""
-#~ "The certificate is enrolled, but some modules are not signed with it."
-#~ msgstr "Chứng chỉ đã được đăng ký nhưng một số mô-đun chưa được ký với nó."
-
-#~ msgid "You must configure this to use third-party drivers like NVIDIA."
-#~ msgstr ""
-#~ "Bạn phải cấu hình cái này để sử dụng các trình điều khiển bên thứ ba như "
-#~ "NVIDIA."
-
-#~ msgid "The local trust certificate is missing."
-#~ msgstr "Chứng chỉ tin cậy cục bộ bị thiếu."
-
-#~ msgid "Please trust the certificate upon reboot using password 123456."
-#~ msgstr ""
-#~ "Vui lòng tin tưởng chứng chỉ này khi khởi động lại bằng mật khẩu 123456."
-
-#~ msgid "Success! When you reboot, a blue screen will appear."
-#~ msgstr "Thành công! Khi bạn khởi động lại, một màn hình xanh sẽ xuất hiện."
-
-#~ msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
-#~ msgstr "Chọn 'Enroll MOK' → 'Continue' → 'Yes', và nhập mật khẩu: 123456"
-
-#~ msgid "Certificate Created"
-#~ msgstr "Chứng chỉ đã được tạo"
-
-#~ msgid "Later"
-#~ msgstr "Sau đó"
-
-#~ msgid "Secure Boot Trust Not Required"
-#~ msgstr "Secure Boot Không cần tin cậy"
-
-#~ msgid "Firmware signature enforcement is not active."
-#~ msgstr "Thực thi chữ ký chương trình cơ sở không hoạt động."
-
-#~ msgid "OK"
-#~ msgstr "Được"
-
-#~ msgid ""
-#~ "The certificate is ready, but one or more DKMS modules could not be "
-#~ "rebuilt. You can repair them after enrollment."
-#~ msgstr ""
-#~ "Chứng chỉ đã sẵn sàng nhưng không thể xây dựng lại một hoặc nhiều mô-đun "
-#~ "DKMS. Bạn có thể sửa chữa chúng sau khi đăng ký."
-
-#~ msgid "Configuration needs attention"
-#~ msgstr "Cấu hình cần chú ý"
-
-#~ msgid "System Trust Established"
-#~ msgstr "Đã thành lập hệ thống tin cậy"
-
-#~ msgid "Configuration failed. Please try again."
-#~ msgstr "Cấu hình không thành công. Vui lòng thử lại."
-
-#~ msgid "Generating & Signing..."
-#~ msgstr "Đang tạo & Ký..."
 
 #~ msgid "A reboot is recommended to apply changes."
 #~ msgstr "Nên khởi động lại để áp dụng các thay đổi."

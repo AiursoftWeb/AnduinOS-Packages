@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-09 14:41+0000\n"
+"POT-Creation-Date: 2026-08-09 15:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: fi <LL@li.org>\n"
@@ -576,20 +576,20 @@ msgid "This may take a few minutes."
 msgstr "Tämä voi kestää muutaman minuutin."
 
 #: anduinos-oobe/assets/anduinos-oobe:2299
-msgid "You can now double-click .exe files to run them."
-msgstr "Voit nyt kaksoisnapsauttaa .exe-tiedostoja suoriaksesi ne."
-
-#: anduinos-oobe/assets/anduinos-oobe:2299
 msgid "✓ Sandbox deployed successfully!"
 msgstr "✓ Sandboxesa viedty onnistuneesti!"
 
-#: anduinos-oobe/assets/anduinos-oobe:2308
-msgid "You can install Bottles later from the App Store."
-msgstr "Voit asentaa Bottlesin myöhemmin Sovelluskaupasta."
+#: anduinos-oobe/assets/anduinos-oobe:2299
+msgid "You can now double-click .exe files to run them."
+msgstr "Voit nyt kaksoisnapsauttaa .exe-tiedostoja suoriaksesi ne."
 
 #: anduinos-oobe/assets/anduinos-oobe:2308
 msgid "✗ Deployment failed."
 msgstr "✗ Vienti epäonnistui."
+
+#: anduinos-oobe/assets/anduinos-oobe:2308
+msgid "You can install Bottles later from the App Store."
+msgstr "Voit asentaa Bottlesin myöhemmin Sovelluskaupasta."
 
 #: anduinos-oobe/assets/anduinos-oobe:2316
 msgid "✗ Error: "
@@ -743,13 +743,13 @@ msgid "Productive From Day One"
 msgstr "Tuottava jo ensimmäisestä päivästä lähtien"
 
 #: anduinos-oobe/assets/anduinos-oobe:2734
+msgid "Essential productivity and entertainment tools, hand-picked for you."
+msgstr "Välttämättömät tuotanto- ja viihdetuotteet, huolella valittu sinulle."
+
+#: anduinos-oobe/assets/anduinos-oobe:2734
 msgid "Click any app to open its details in the App Store."
 msgstr ""
 "Napsauta mitä tahansa sovellusta avataksesi sen tiedot Sovelluskaupassa."
-
-#: anduinos-oobe/assets/anduinos-oobe:2734
-msgid "Essential productivity and entertainment tools, hand-picked for you."
-msgstr "Välttämättömät tuotanto- ja viihdetuotteet, huolella valittu sinulle."
 
 #: anduinos-oobe/assets/anduinos-oobe:2746
 msgid "WeChat"
@@ -944,12 +944,12 @@ msgid "We do not collect your usage habits."
 msgstr "Emme kerää käyttötapojasi."
 
 #: anduinos-oobe/assets/anduinos-oobe:3034
-msgid "There are no pervasive advertisements."
-msgstr "Ei laajasti levinneitä mainoksia."
-
-#: anduinos-oobe/assets/anduinos-oobe:3034
 msgid "We do not upload your search history."
 msgstr "Emme lataa hakuhistoriaasi ylös."
+
+#: anduinos-oobe/assets/anduinos-oobe:3034
+msgid "There are no pervasive advertisements."
+msgstr "Ei laajasti levinneitä mainoksia."
 
 #: anduinos-oobe/assets/anduinos-oobe:3045
 msgid "In an era ruled by algorithms and surveillance,"
@@ -1108,6 +1108,290 @@ msgstr "3\tAnduinOS-tervetuloa"
 msgid "AnduinOS Team"
 msgstr "4\tAnduinOS-tiimi"
 
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
+msgid "Secure Boot Configuration"
+msgstr "Secure Boot -määritys"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
+msgid ""
+"Secure Boot is a motherboard security standard that ensures only trusted "
+"software loads at startup."
+msgstr ""
+"\tSecure Boot on emolevun tietoturvakäytäntö, joka varmistaa, että vain "
+"luotettava ohjelmisto ladataan käynnistyksen yhteydessä."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
+msgid "It protects your system from low-level malware and rootkits."
+msgstr ""
+"Se suojaa järjestelmääsi matalan tason haittaohjelmilta ja rootkit-"
+"ohjelmilta."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
+msgid "System Trust Status"
+msgstr "Järjestelmän luottamuksen tila"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
+msgid "Create & Enroll Certificate"
+msgstr "Luo ja rekisteröi sertifikaatti"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
+msgid "Repair Module Signatures"
+msgstr "Korjaa moduulin allekirjoitukset"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
+msgid "Note: Use password <b>123456</b> after rebooting."
+msgstr "Huom: Käytä salasanaa <b>123456</b> uudelleenkäynnistyksen jälkeen."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
+msgid "Reboot & Configure Secure Boot"
+msgstr "Uudelleenkäynnistys ja Secure Boot -määritys"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
+msgid "  Check Again  "
+msgstr "  Tarkista uudelleen  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
+msgid "Motherboard hardware protection is active"
+msgstr "Emolevyn laitteiston suojaus on aktiivinen"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
+msgid "Firmware does not support Secure Boot"
+msgstr "Laiteohjelmisto ei tue Secure Boot"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
+msgid "Secure Boot state could not be determined"
+msgstr "Secure Boot-tilaa ei voitu määrittää"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
+msgid "Secure Boot is disabled"
+msgstr "Secure Boot ei ole käytössä"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+msgid "Not required without firmware enforcement"
+msgstr "Ei vaadita ilman laiteohjelmiston valvontaa"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+msgid "Not checked because Secure Boot state is unknown"
+msgstr "Ei valittu, koska Secure Boot-tila on tuntematon"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
+msgid "Certificate generated locally"
+msgstr "Sertifikaatti luotu paikallisesti"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
+msgid "Missing local certificate"
+msgstr "Puuttuva paikallinen sertifikaatti"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
+msgid "Certificate is trusted by motherboard"
+msgstr "Emolevyn laitteisto luottaa sertifikaattiin"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
+msgid "Pending enrollment in blue screen (MOKManager)"
+msgstr "Odottaa rekisteröintiä sinisellä ruudulla (MOKManager)"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
+msgid "Certificate is not trusted by motherboard"
+msgstr "Emolevy ei luota varmenteeseen"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
+msgid "Kernel signature enforcement is inactive"
+msgstr "Ytimen allekirjoituksen valvonta ei ole aktiivinen"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
+msgid "Driver trust cannot be verified"
+msgstr "Ohjaimen luottamusta ei voida varmistaa"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
+msgid ""
+"Secure Boot trust is ready. No third-party kernel modules are currently "
+"installed."
+msgstr ""
+"Secure Boot luottamus on valmis. Kolmannen osapuolen ydinmoduuleja ei ole "
+"tällä hetkellä asennettu."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
+msgid "Drivers are signed and ready to load"
+msgstr "Ajurit on allekirjoitettu ja valmiina ladattavaksi"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
+msgid "Drivers are trusted, but automatic DKMS signing needs repair"
+msgstr ""
+"Ohjaimet ovat luotettavia, mutta automaattinen DKMS-allekirjoitus vaatii "
+"korjausta"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
+msgid "No signed third-party drivers detected"
+msgstr "Ei allekirjoitettuja kolmannen osapuolen ajureita havaittu"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
+msgid "Some DKMS modules need to be re-signed"
+msgstr "Jotkut DKMS-moduulit on allekirjoitettava uudelleen"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
+msgid "Enroll Existing Certificate"
+msgstr "Rekisteröi olemassa oleva sertifikaatti"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
+msgid "Repair Automatic DKMS Signing"
+msgstr "Korjaa automaattinen DKMS allekirjoitus"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
+msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgstr "Tämä laiteohjelmisto ei tarjoa Secure Boot:tä. Varmennetta ei vaadita."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
+msgid ""
+"Secure Boot status could not be read. Driver trust operations are blocked "
+"until detection succeeds."
+msgstr ""
+"Secure Boot-tilaa ei voitu lukea. Ohjaimen luottamustoiminnot estetään, "
+"kunnes tunnistus onnistuu."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
+msgid "No certificate is required while Secure Boot is disabled."
+msgstr "Varmennetta ei vaadita, kun Secure Boot on poistettu käytöstä."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
+msgid "System Trust Established. Third-party drivers will load securely."
+msgstr ""
+"Järjestelmän luottamus vakiintunut. Kolmannen osapuolen ajurit latautuvat "
+"turvallisesti."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
+msgid "The certificate is enrolled and current drivers are trusted."
+msgstr "Varmenne on rekisteröity ja nykyiset ohjaimet ovat luotettavia."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
+msgid "Repair automatic DKMS signing before future driver updates."
+msgstr ""
+"Korjaa automaattinen DKMS-allekirjoitus ennen tulevia ohjainpäivityksiä."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+msgid "The certificate is enrolled, but some modules are not signed with it."
+msgstr ""
+"Varmenne on rekisteröity, mutta joitain moduuleja ei ole allekirjoitettu "
+"sillä."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
+msgid "A certificate is waiting for enrollment."
+msgstr "Varmenne odottaa rekisteröintiä."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
+msgid "Restart and enter password 123456 in MOKManager."
+msgstr "Käynnistä uudelleen ja kirjoita salasana 123456 kohtaan MOKManager."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
+msgid "The local trust certificate is not yet enrolled."
+msgstr "Paikallista luottamussertifikaattia ei ole vielä rekisteröity."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
+msgid "You must configure this to use third-party drivers like NVIDIA."
+msgstr ""
+"Sinun on määritettävä tämä käyttääksesi kolmannen osapuolen ajureita kuten "
+"NVIDIA."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
+msgid "The local trust certificate is missing."
+msgstr "Paikallinen luottamussertifikaatti puuttuu."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
+msgid "  Checking...  "
+msgstr "  Tarkistetaan...  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
+msgid "Reboot Required"
+msgstr "Uudelleenkäynnistys vaaditaan"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
+msgid "Please trust the certificate upon reboot using password 123456."
+msgstr ""
+"Luota sertifikaattiin uudelleenkäynnistyksen yhteydessä käyttämällä "
+"salasanaa 123456."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
+msgid "Cancel"
+msgstr "Peruuta"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
+msgid "Reboot"
+msgstr "Uudelleenkäynnistys"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
+msgid "Success! When you reboot, a blue screen will appear."
+msgstr "Onnistui! Kun uudelleenkäynnistät, sininen ruutu ilmestyy."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
+msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
+msgstr ""
+"Valitse 'Rekisteröi MOK' → 'Jatka' → 'Kyllä', ja syötä salasana: 123456"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
+msgid "Certificate Created"
+msgstr "Sertifikaatti luotu"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
+msgid "Later"
+msgstr "Myöhemmin"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
+msgid "Secure Boot Trust Not Required"
+msgstr "Secure Boot Luottamusta ei vaadita"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
+msgid "Firmware signature enforcement is not active."
+msgstr "Laiteohjelmiston allekirjoituksen valvonta ei ole aktiivinen."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
+msgid "OK"
+msgstr "OK"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
+msgid ""
+"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
+"You can repair them after enrollment."
+msgstr ""
+"Varmenne on valmis, mutta yhtä tai useampaa DKMS-moduulia ei voitu rakentaa "
+"uudelleen. Voit korjata ne ilmoittautumisen jälkeen."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
+msgid "Configuration needs attention"
+msgstr "Kokoonpano vaatii huomiota"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
+msgid "System Trust Established"
+msgstr "Järjestelmän luottamus perustettu"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
+msgid "Driver Signature Trusted"
+msgstr "Ajamin allekirjoituksen luotettu"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
+msgid "Configuration failed. Please try again."
+msgstr "Määritys epäonnistui. Yritä uudelleen."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
+msgid "Please check the advanced output."
+msgstr "Tarkista lisätulosteet."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
+msgid "Generating & Signing..."
+msgstr "Luodaan ja allekirjoitetaan..."
+
 #~ msgid "Unleash Your Graphics Hardware"
 #~ msgstr "Vapauta grafiikkakarttasi teho"
 
@@ -1188,9 +1472,6 @@ msgstr "4\tAnduinOS-tiimi"
 #~ msgid "The driver is not installed"
 #~ msgstr "Ajuria ei ole asennettu"
 
-#~ msgid "Driver Signature Trusted"
-#~ msgstr "Ajamin allekirjoituksen luotettu"
-
 #~ msgid "Driver not installed, signature missing"
 #~ msgstr "Ajuria ei ole asennettu, allekirjoitus puuttuu"
 
@@ -1199,9 +1480,6 @@ msgstr "4\tAnduinOS-tiimi"
 
 #~ msgid "Not detected"
 #~ msgstr "Ei havaittu"
-
-#~ msgid "Secure Boot state could not be determined"
-#~ msgstr "Secure Boot-tilaa ei voitu määrittää"
 
 #~ msgid "Driver is NOT signed"
 #~ msgstr "Ajuria EI ole allekirjoitettu"
@@ -1225,12 +1503,6 @@ msgstr "4\tAnduinOS-tiimi"
 #~ msgid "Driver standing by. Waiting for controller connection..."
 #~ msgstr "Ajuri odottaa. Odottaa ohjaimen yhteyttä..."
 
-#~ msgid "Driver trust cannot be verified"
-#~ msgstr "Ohjaimen luottamusta ei voida varmistaa"
-
-#~ msgid "A certificate is waiting for enrollment."
-#~ msgstr "Varmenne odottaa rekisteröintiä."
-
 #~ msgid "Driver cannot load due to missing signature trust"
 #~ msgstr "Ajuria ei voi ladata puuttuvan allekirjoitusluottamuksen vuoksi"
 
@@ -1243,18 +1515,6 @@ msgstr "4\tAnduinOS-tiimi"
 #~ msgid "  Install Xbox Driver  "
 #~ msgstr "Asenna Xbox-ajuri"
 
-#~ msgid "Repair Module Signatures"
-#~ msgstr "Korjaa moduulin allekirjoitukset"
-
-#~ msgid "Create & Enroll Certificate"
-#~ msgstr "Luo ja rekisteröi sertifikaatti"
-
-#~ msgid "Reboot & Configure Secure Boot"
-#~ msgstr "Uudelleenkäynnistys ja Secure Boot -määritys"
-
-#~ msgid "The local trust certificate is not yet enrolled."
-#~ msgstr "Paikallista luottamussertifikaattia ei ole vielä rekisteröity."
-
 #~ msgid ""
 #~ "⚠️ The driver signature does not match your system certificate. Click Fix "
 #~ "& Reinstall to repair the driver."
@@ -1262,203 +1522,14 @@ msgstr "4\tAnduinOS-tiimi"
 #~ "⚠️ Ajurin allekirjoitus ei vastaa järjestelmäsertifikaattiasi. Napsauta "
 #~ "Korjaa ja asenna uudelleen korjatakseen ajurin."
 
-#~ msgid "  Check Again  "
-#~ msgstr "  Tarkista uudelleen  "
-
 #~ msgid "Installing Xbox controller driver…"
 #~ msgstr "Asennetaan Xbox-ohjaimen ajuria…"
 
 #~ msgid "This may take a minute."
 #~ msgstr "Tämä voi kestää minuutin."
 
-#~ msgid "  Checking...  "
-#~ msgstr "  Tarkistetaan...  "
-
-#~ msgid "Please check the advanced output."
-#~ msgstr "Tarkista lisätulosteet."
-
 #~ msgid "Repairing driver signature…"
 #~ msgstr "Korjataan ajurin allekirjoitusta…"
-
-#~ msgid "Secure Boot Configuration"
-#~ msgstr "Secure Boot -määritys"
-
-#~ msgid "Reboot Required"
-#~ msgstr "Uudelleenkäynnistys vaaditaan"
-
-#~ msgid "Restart and enter password 123456 in MOKManager."
-#~ msgstr "Käynnistä uudelleen ja kirjoita salasana 123456 kohtaan MOKManager."
-
-#~ msgid "Cancel"
-#~ msgstr "Peruuta"
-
-#~ msgid "Reboot"
-#~ msgstr "Uudelleenkäynnistys"
-
-#~ msgid ""
-#~ "Secure Boot is a motherboard security standard that ensures only trusted "
-#~ "software loads at startup."
-#~ msgstr ""
-#~ "\tSecure Boot on emolevun tietoturvakäytäntö, joka varmistaa, että vain "
-#~ "luotettava ohjelmisto ladataan käynnistyksen yhteydessä."
-
-#~ msgid "It protects your system from low-level malware and rootkits."
-#~ msgstr ""
-#~ "Se suojaa järjestelmääsi matalan tason haittaohjelmilta ja rootkit-"
-#~ "ohjelmilta."
-
-#~ msgid "System Trust Status"
-#~ msgstr "Järjestelmän luottamuksen tila"
-
-#~ msgid "Note: Use password <b>123456</b> after rebooting."
-#~ msgstr "Huom: Käytä salasanaa <b>123456</b> uudelleenkäynnistyksen jälkeen."
-
-#~ msgid "Motherboard hardware protection is active"
-#~ msgstr "Emolevyn laitteiston suojaus on aktiivinen"
-
-#~ msgid "Firmware does not support Secure Boot"
-#~ msgstr "Laiteohjelmisto ei tue Secure Boot"
-
-#~ msgid "Secure Boot is disabled"
-#~ msgstr "Secure Boot ei ole käytössä"
-
-#~ msgid "Not required without firmware enforcement"
-#~ msgstr "Ei vaadita ilman laiteohjelmiston valvontaa"
-
-#~ msgid "Not checked because Secure Boot state is unknown"
-#~ msgstr "Ei valittu, koska Secure Boot-tila on tuntematon"
-
-#~ msgid "Certificate generated locally"
-#~ msgstr "Sertifikaatti luotu paikallisesti"
-
-#~ msgid "Missing local certificate"
-#~ msgstr "Puuttuva paikallinen sertifikaatti"
-
-#~ msgid "Certificate is trusted by motherboard"
-#~ msgstr "Emolevyn laitteisto luottaa sertifikaattiin"
-
-#~ msgid "Pending enrollment in blue screen (MOKManager)"
-#~ msgstr "Odottaa rekisteröintiä sinisellä ruudulla (MOKManager)"
-
-#~ msgid "Certificate is not trusted by motherboard"
-#~ msgstr "Emolevy ei luota varmenteeseen"
-
-#~ msgid "Kernel signature enforcement is inactive"
-#~ msgstr "Ytimen allekirjoituksen valvonta ei ole aktiivinen"
-
-#~ msgid ""
-#~ "Secure Boot trust is ready. No third-party kernel modules are currently "
-#~ "installed."
-#~ msgstr ""
-#~ "Secure Boot luottamus on valmis. Kolmannen osapuolen ydinmoduuleja ei ole "
-#~ "tällä hetkellä asennettu."
-
-#~ msgid "Drivers are signed and ready to load"
-#~ msgstr "Ajurit on allekirjoitettu ja valmiina ladattavaksi"
-
-#~ msgid "Drivers are trusted, but automatic DKMS signing needs repair"
-#~ msgstr ""
-#~ "Ohjaimet ovat luotettavia, mutta automaattinen DKMS-allekirjoitus vaatii "
-#~ "korjausta"
-
-#~ msgid "No signed third-party drivers detected"
-#~ msgstr "Ei allekirjoitettuja kolmannen osapuolen ajureita havaittu"
-
-#~ msgid "Some DKMS modules need to be re-signed"
-#~ msgstr "Jotkut DKMS-moduulit on allekirjoitettava uudelleen"
-
-#~ msgid "Enroll Existing Certificate"
-#~ msgstr "Rekisteröi olemassa oleva sertifikaatti"
-
-#~ msgid "Repair Automatic DKMS Signing"
-#~ msgstr "Korjaa automaattinen DKMS allekirjoitus"
-
-#~ msgid ""
-#~ "This firmware does not provide Secure Boot. No certificate is required."
-#~ msgstr ""
-#~ "Tämä laiteohjelmisto ei tarjoa Secure Boot:tä. Varmennetta ei vaadita."
-
-#~ msgid ""
-#~ "Secure Boot status could not be read. Driver trust operations are blocked "
-#~ "until detection succeeds."
-#~ msgstr ""
-#~ "Secure Boot-tilaa ei voitu lukea. Ohjaimen luottamustoiminnot estetään, "
-#~ "kunnes tunnistus onnistuu."
-
-#~ msgid "No certificate is required while Secure Boot is disabled."
-#~ msgstr "Varmennetta ei vaadita, kun Secure Boot on poistettu käytöstä."
-
-#~ msgid "System Trust Established. Third-party drivers will load securely."
-#~ msgstr ""
-#~ "Järjestelmän luottamus vakiintunut. Kolmannen osapuolen ajurit latautuvat "
-#~ "turvallisesti."
-
-#~ msgid "The certificate is enrolled and current drivers are trusted."
-#~ msgstr "Varmenne on rekisteröity ja nykyiset ohjaimet ovat luotettavia."
-
-#~ msgid "Repair automatic DKMS signing before future driver updates."
-#~ msgstr ""
-#~ "Korjaa automaattinen DKMS-allekirjoitus ennen tulevia ohjainpäivityksiä."
-
-#~ msgid ""
-#~ "The certificate is enrolled, but some modules are not signed with it."
-#~ msgstr ""
-#~ "Varmenne on rekisteröity, mutta joitain moduuleja ei ole allekirjoitettu "
-#~ "sillä."
-
-#~ msgid "You must configure this to use third-party drivers like NVIDIA."
-#~ msgstr ""
-#~ "Sinun on määritettävä tämä käyttääksesi kolmannen osapuolen ajureita "
-#~ "kuten NVIDIA."
-
-#~ msgid "The local trust certificate is missing."
-#~ msgstr "Paikallinen luottamussertifikaatti puuttuu."
-
-#~ msgid "Please trust the certificate upon reboot using password 123456."
-#~ msgstr ""
-#~ "Luota sertifikaattiin uudelleenkäynnistyksen yhteydessä käyttämällä "
-#~ "salasanaa 123456."
-
-#~ msgid "Success! When you reboot, a blue screen will appear."
-#~ msgstr "Onnistui! Kun uudelleenkäynnistät, sininen ruutu ilmestyy."
-
-#~ msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
-#~ msgstr ""
-#~ "Valitse 'Rekisteröi MOK' → 'Jatka' → 'Kyllä', ja syötä salasana: 123456"
-
-#~ msgid "Certificate Created"
-#~ msgstr "Sertifikaatti luotu"
-
-#~ msgid "Later"
-#~ msgstr "Myöhemmin"
-
-#~ msgid "Secure Boot Trust Not Required"
-#~ msgstr "Secure Boot Luottamusta ei vaadita"
-
-#~ msgid "Firmware signature enforcement is not active."
-#~ msgstr "Laiteohjelmiston allekirjoituksen valvonta ei ole aktiivinen."
-
-#~ msgid "OK"
-#~ msgstr "OK"
-
-#~ msgid ""
-#~ "The certificate is ready, but one or more DKMS modules could not be "
-#~ "rebuilt. You can repair them after enrollment."
-#~ msgstr ""
-#~ "Varmenne on valmis, mutta yhtä tai useampaa DKMS-moduulia ei voitu "
-#~ "rakentaa uudelleen. Voit korjata ne ilmoittautumisen jälkeen."
-
-#~ msgid "Configuration needs attention"
-#~ msgstr "Kokoonpano vaatii huomiota"
-
-#~ msgid "System Trust Established"
-#~ msgstr "Järjestelmän luottamus perustettu"
-
-#~ msgid "Configuration failed. Please try again."
-#~ msgstr "Määritys epäonnistui. Yritä uudelleen."
-
-#~ msgid "Generating & Signing..."
-#~ msgstr "Luodaan ja allekirjoitetaan..."
 
 #~ msgid "A reboot is recommended to apply changes."
 #~ msgstr ""

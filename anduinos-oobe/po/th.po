@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-09 14:41+0000\n"
+"POT-Creation-Date: 2026-08-09 15:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: th <LL@li.org>\n"
@@ -560,20 +560,20 @@ msgid "This may take a few minutes."
 msgstr "ขั้นตอนนี้อาจใช้เวลาสักครู่"
 
 #: anduinos-oobe/assets/anduinos-oobe:2299
-msgid "You can now double-click .exe files to run them."
-msgstr "ตอนนี้คุณสามารถดับเบิลคลิกไฟล์ .exe เพื่อรันได้"
-
-#: anduinos-oobe/assets/anduinos-oobe:2299
 msgid "✓ Sandbox deployed successfully!"
 msgstr "✓ ติดตั้ง sandbox สำเร็จแล้ว!"
 
-#: anduinos-oobe/assets/anduinos-oobe:2308
-msgid "You can install Bottles later from the App Store."
-msgstr "คุณสามารถติดตั้ง Bottles ภายหลังได้จาก App Store"
+#: anduinos-oobe/assets/anduinos-oobe:2299
+msgid "You can now double-click .exe files to run them."
+msgstr "ตอนนี้คุณสามารถดับเบิลคลิกไฟล์ .exe เพื่อรันได้"
 
 #: anduinos-oobe/assets/anduinos-oobe:2308
 msgid "✗ Deployment failed."
 msgstr "✗ การติดตั้งล้มเหลว"
+
+#: anduinos-oobe/assets/anduinos-oobe:2308
+msgid "You can install Bottles later from the App Store."
+msgstr "คุณสามารถติดตั้ง Bottles ภายหลังได้จาก App Store"
 
 #: anduinos-oobe/assets/anduinos-oobe:2316
 msgid "✗ Error: "
@@ -724,12 +724,12 @@ msgid "Productive From Day One"
 msgstr "มีประสิทธิผลตั้งแต่แรกวัน"
 
 #: anduinos-oobe/assets/anduinos-oobe:2734
-msgid "Click any app to open its details in the App Store."
-msgstr "คลิกแอปพลิเคชันใดก็ได้เพื่อดูรายละเอียดเพิ่มเติมใน App Store"
-
-#: anduinos-oobe/assets/anduinos-oobe:2734
 msgid "Essential productivity and entertainment tools, hand-picked for you."
 msgstr "เครื่องมือผลิตผลงานและความบันเทิงที่จำเป็น เลือกสรรมาเพื่อคุณโดยเฉพาะ"
+
+#: anduinos-oobe/assets/anduinos-oobe:2734
+msgid "Click any app to open its details in the App Store."
+msgstr "คลิกแอปพลิเคชันใดก็ได้เพื่อดูรายละเอียดเพิ่มเติมใน App Store"
 
 #: anduinos-oobe/assets/anduinos-oobe:2746
 msgid "WeChat"
@@ -920,12 +920,12 @@ msgid "We do not collect your usage habits."
 msgstr "เราไม่เก็บรวบรวมพฤติกรรมการใช้งานของคุณ"
 
 #: anduinos-oobe/assets/anduinos-oobe:3034
-msgid "There are no pervasive advertisements."
-msgstr "ไม่มีโฆษณาที่รุกล้ำ"
-
-#: anduinos-oobe/assets/anduinos-oobe:3034
 msgid "We do not upload your search history."
 msgstr "เราไม่อัปโหลดประวัติการค้นหาของคุณ"
+
+#: anduinos-oobe/assets/anduinos-oobe:3034
+msgid "There are no pervasive advertisements."
+msgstr "ไม่มีโฆษณาที่รุกล้ำ"
 
 #: anduinos-oobe/assets/anduinos-oobe:3045
 msgid "In an era ruled by algorithms and surveillance,"
@@ -1081,6 +1081,274 @@ msgstr "ยินดีต้อนรับสู่ AnduinOS"
 msgid "AnduinOS Team"
 msgstr "ทีม AnduinOS"
 
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
+msgid "Secure Boot Configuration"
+msgstr "การกำหนดค่า Secure Boot"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
+msgid ""
+"Secure Boot is a motherboard security standard that ensures only trusted "
+"software loads at startup."
+msgstr ""
+"Secure Boot "
+"เป็นมาตรฐานความปลอดภัยของเมนบอร์ดที่รับประกันว่าเฉพาะซอฟต์แวร์ที่ได้รับอนุญาตเท่านั้นที่จะโหลดในขณะเริ่มต้นเครื่อง"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
+msgid "It protects your system from low-level malware and rootkits."
+msgstr "มันปกป้องระบบของคุณจากมัลแวร์ระดับต่ำและรูทคิต"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
+msgid "System Trust Status"
+msgstr "สถานะความไว้วางใจของระบบ"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
+msgid "Create & Enroll Certificate"
+msgstr "สร้างและลงทะเบียนใบรับรอง"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
+msgid "Repair Module Signatures"
+msgstr "ซ่อมแซมลายเซ็นโมดูล"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
+msgid "Note: Use password <b>123456</b> after rebooting."
+msgstr "หมายเหตุ: ใช้รหัสผ่าน <b>123456</b> หลังจาก รีสตาร์ทเครื่อง"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
+msgid "Reboot & Configure Secure Boot"
+msgstr "รีสตาร์ท & กำหนดค่า Secure Boot"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
+msgid "  Check Again  "
+msgstr "  ตรวจสอบอีกครั้ง  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
+msgid "Motherboard hardware protection is active"
+msgstr "การป้องกันฮาร์ดแวร์ของเมนบอร์ดกำลังทำงานอยู่"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
+msgid "Firmware does not support Secure Boot"
+msgstr "เฟิร์มแวร์ไม่รองรับ Secure Boot"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
+msgid "Secure Boot state could not be determined"
+msgstr "ไม่สามารถระบุสถานะ Secure Boot ได้"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
+msgid "Secure Boot is disabled"
+msgstr "Secure Boot ถูกปิดใช้งาน"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+msgid "Not required without firmware enforcement"
+msgstr "ไม่จำเป็นหากไม่มีการบังคับใช้เฟิร์มแวร์"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+msgid "Not checked because Secure Boot state is unknown"
+msgstr "ไม่ได้ตรวจสอบเนื่องจากไม่ทราบสถานะ Secure Boot"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
+msgid "Certificate generated locally"
+msgstr "สร้างใบรับรองภายในเครื่อง"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
+msgid "Missing local certificate"
+msgstr "ขาดใบรับรองในเครื่อง"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
+msgid "Certificate is trusted by motherboard"
+msgstr "ใบรับรองได้รับความไว้วางใจจากเมนบอร์ด"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
+msgid "Pending enrollment in blue screen (MOKManager)"
+msgstr "\\รกำลังรอการลงทะเบียนในหน้าจอสีน้ำเงิน (MOKManager)"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
+msgid "Certificate is not trusted by motherboard"
+msgstr "เมนบอร์ดไม่น่าเชื่อถือใบรับรอง"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
+msgid "Kernel signature enforcement is inactive"
+msgstr "การบังคับใช้ลายเซ็นเคอร์เนลไม่ได้ใช้งาน"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
+msgid "Driver trust cannot be verified"
+msgstr "ไม่สามารถตรวจสอบความน่าเชื่อถือของผู้ขับขี่ได้"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
+msgid ""
+"Secure Boot trust is ready. No third-party kernel modules are currently "
+"installed."
+msgstr "ความไว้วางใจ Secure Boot พร้อมแล้ว ไม่มีการติดตั้งโมดูลเคอร์เนลของบริษัทอื่นในปัจจุบัน"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
+msgid "Drivers are signed and ready to load"
+msgstr "ไดรเวอร์ลงนามเรียบร้อยแล้วและพร้อมโหลด"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
+msgid "Drivers are trusted, but automatic DKMS signing needs repair"
+msgstr "ไดรเวอร์เชื่อถือได้ แต่การเซ็นชื่อ DKMS อัตโนมัติจำเป็นต้องได้รับการซ่อมแซม"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
+msgid "No signed third-party drivers detected"
+msgstr "ไม่พบไดรเวอร์บุคคลที่สามที่มีการลงนาม"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
+msgid "Some DKMS modules need to be re-signed"
+msgstr "โมดูล DKMS บางโมดูลจำเป็นต้องลงนามใหม่"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
+msgid "Enroll Existing Certificate"
+msgstr "ลงทะเบียนใบรับรองที่มีอยู่"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
+msgid "Repair Automatic DKMS Signing"
+msgstr "ซ่อมแซมการลงนาม DKMS อัตโนมัติ"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
+msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgstr "เฟิร์มแวร์นี้ไม่มี Secure Boot ไม่จำเป็นต้องมีใบรับรอง"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
+msgid ""
+"Secure Boot status could not be read. Driver trust operations are blocked "
+"until detection succeeds."
+msgstr ""
+"ไม่สามารถอ่านสถานะ Secure Boot ได้ "
+"การดำเนินการที่เชื่อถือได้ของไดรเวอร์จะถูกบล็อกจนกว่าการตรวจจับจะสำเร็จ"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
+msgid "No certificate is required while Secure Boot is disabled."
+msgstr "ไม่จำเป็นต้องมีใบรับรองในขณะที่ Secure Boot ถูกปิดใช้งาน"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
+msgid "System Trust Established. Third-party drivers will load securely."
+msgstr "ความไว้วางใจของระบบได้รับการจัดตั้งแล้ว ไดรเวอร์บุคคลที่สามจะโหลดอย่างปลอดภัย"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
+msgid "The certificate is enrolled and current drivers are trusted."
+msgstr "ลงทะเบียนใบรับรองแล้วและไดรเวอร์ปัจจุบันเชื่อถือได้"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
+msgid "Repair automatic DKMS signing before future driver updates."
+msgstr "ซ่อมแซมการเซ็นชื่อ DKMS อัตโนมัติก่อนการอัปเดตไดรเวอร์ในอนาคต"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+msgid "The certificate is enrolled, but some modules are not signed with it."
+msgstr "ลงทะเบียนใบรับรองแล้ว แต่บางโมดูลไม่ได้ลงนามด้วย"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
+msgid "A certificate is waiting for enrollment."
+msgstr "ใบรับรองกำลังรอการลงทะเบียน"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
+msgid "Restart and enter password 123456 in MOKManager."
+msgstr "รีสตาร์ทและป้อนรหัสผ่าน 123456 ใน MOKManager"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
+msgid "The local trust certificate is not yet enrolled."
+msgstr "ใบรับรองความน่าเชื่อถือในเครื่องยังไม่ได้ลงทะเบียน"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
+msgid "You must configure this to use third-party drivers like NVIDIA."
+msgstr "คุณต้องกำหนดค่าสิ่งนี้เพื่อใช้ไดรเวอร์บุคคลที่สาม เช่น NVIDIA"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
+msgid "The local trust certificate is missing."
+msgstr "ใบรับรองความน่าเชื่อถือในเครื่องหายไป"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
+msgid "  Checking...  "
+msgstr "  กำลังตรวจสอบ...  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
+msgid "Reboot Required"
+msgstr "จำเป็นต้องรีสตาร์ท"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
+msgid "Please trust the certificate upon reboot using password 123456."
+msgstr "กรุณาไว้วางใจใบรับรองเมื่อรีสตาร์ทโดยใช้รหัสผ่าน 123456"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
+msgid "Reboot"
+msgstr "รีสตาร์ท"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
+msgid "Success! When you reboot, a blue screen will appear."
+msgstr "สำเร็จ! เมื่อคุณรีสตาร์ท หน้าจอสีน้ำเงินจะปรากฏขึ้น"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
+msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
+msgstr "เลือก 'Enroll MOK' → 'Continue' → 'Yes' และป้อนรหัสผ่าน: 123456"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
+msgid "Certificate Created"
+msgstr "สร้างใบรับรองแล้ว"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
+msgid "Later"
+msgstr "ต่อมา"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
+msgid "Secure Boot Trust Not Required"
+msgstr "Secure Boot ไม่จำเป็นต้องเชื่อถือ"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
+msgid "Firmware signature enforcement is not active."
+msgstr "การบังคับใช้ลายเซ็นเฟิร์มแวร์ไม่ทำงาน"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
+msgid "OK"
+msgstr "ตกลง"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
+msgid ""
+"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
+"You can repair them after enrollment."
+msgstr ""
+"ใบรับรองพร้อมแล้ว แต่โมดูล DKMS อย่างน้อยหนึ่งโมดูลไม่สามารถสร้างขึ้นใหม่ได้ "
+"คุณสามารถซ่อมแซมได้หลังจากการลงทะเบียน"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
+msgid "Configuration needs attention"
+msgstr "การกำหนดค่าจำเป็นต้องได้รับการดูแล"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
+msgid "System Trust Established"
+msgstr "ก่อตั้งความน่าเชื่อถือของระบบแล้ว"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
+msgid "Driver Signature Trusted"
+msgstr "ลายเซ็นไดรเวอร์ได้รับการไว้วางใจ"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
+msgid "Configuration failed. Please try again."
+msgstr "การกำหนดค่าล้มเหลว กรุณาลองใหม่อีกครั้ง"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
+msgid "Please check the advanced output."
+msgstr "โปรดตรวจสอบเอาต์พุตขั้นสูง"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
+msgid "Generating & Signing..."
+msgstr "กำลังสร้าง & ลงนาม..."
+
 #~ msgid "Unleash Your Graphics Hardware"
 #~ msgstr "ปลดปล่อยศักยภาพฮาร์ดแวร์กราฟิกของคุณ"
 
@@ -1155,9 +1423,6 @@ msgstr "ทีม AnduinOS"
 #~ msgid "The driver is not installed"
 #~ msgstr "ไม่ได้ติดตั้งไดรเวอร์"
 
-#~ msgid "Driver Signature Trusted"
-#~ msgstr "ลายเซ็นไดรเวอร์ได้รับการไว้วางใจ"
-
 #~ msgid "Driver not installed, signature missing"
 #~ msgstr "ไม่มีการติดตั้งไดรเกอร์ ลายเซ็นหายไป"
 
@@ -1166,9 +1431,6 @@ msgstr "ทีม AnduinOS"
 
 #~ msgid "Not detected"
 #~ msgstr "ตรวจไม่พบ"
-
-#~ msgid "Secure Boot state could not be determined"
-#~ msgstr "ไม่สามารถระบุสถานะ Secure Boot ได้"
 
 #~ msgid "Driver is NOT signed"
 #~ msgstr "ไดรเวอร์ไม่ได้ลงนาม"
@@ -1191,12 +1453,6 @@ msgstr "ทีม AnduinOS"
 #~ msgid "Driver standing by. Waiting for controller connection..."
 #~ msgstr "ไดรเวอร์กำลังรออยู่ กำลังรอการเชื่อมต่อคอนโทรลเลอร์..."
 
-#~ msgid "Driver trust cannot be verified"
-#~ msgstr "ไม่สามารถตรวจสอบความน่าเชื่อถือของผู้ขับขี่ได้"
-
-#~ msgid "A certificate is waiting for enrollment."
-#~ msgstr "ใบรับรองกำลังรอการลงทะเบียน"
-
 #~ msgid "Driver cannot load due to missing signature trust"
 #~ msgstr "ไม่สามารถโหลดไดรเวอร์ได้เนื่องจากขาดความไว้วางใจในลายเซ็น"
 
@@ -1209,26 +1465,11 @@ msgstr "ทีม AnduinOS"
 #~ msgid "  Install Xbox Driver  "
 #~ msgstr "ติดตั้งไดรเวอร์ Xbox"
 
-#~ msgid "Repair Module Signatures"
-#~ msgstr "ซ่อมแซมลายเซ็นโมดูล"
-
-#~ msgid "Create & Enroll Certificate"
-#~ msgstr "สร้างและลงทะเบียนใบรับรอง"
-
-#~ msgid "Reboot & Configure Secure Boot"
-#~ msgstr "รีสตาร์ท & กำหนดค่า Secure Boot"
-
-#~ msgid "The local trust certificate is not yet enrolled."
-#~ msgstr "ใบรับรองความน่าเชื่อถือในเครื่องยังไม่ได้ลงทะเบียน"
-
 #~ msgid ""
 #~ "⚠️ The driver signature does not match your system certificate. Click Fix "
 #~ "& Reinstall to repair the driver."
 #~ msgstr ""
 #~ "⚠️ ลายเซ็นไดรเวอร์ไม่ตรงกับใบรับรองระบบของคุณ คลิก แก้ไข & ติดตั้งใหม่ เพื่อซ่อมแซมไดรเวอร์"
-
-#~ msgid "  Check Again  "
-#~ msgstr "  ตรวจสอบอีกครั้ง  "
 
 #~ msgid "Installing Xbox controller driver…"
 #~ msgstr "กำลังติดตั้งไดรเวอร์คอนโทรลเลอร์ Xbox…"
@@ -1236,178 +1477,8 @@ msgstr "ทีม AnduinOS"
 #~ msgid "This may take a minute."
 #~ msgstr "ขั้นตอนนี้ใช้เวลาหนึ่งนาที"
 
-#~ msgid "  Checking...  "
-#~ msgstr "  กำลังตรวจสอบ...  "
-
-#~ msgid "Please check the advanced output."
-#~ msgstr "โปรดตรวจสอบเอาต์พุตขั้นสูง"
-
 #~ msgid "Repairing driver signature…"
 #~ msgstr "กำลังซ่อมแซมลายเซ็นไดรเวอร์…"
-
-#~ msgid "Secure Boot Configuration"
-#~ msgstr "การกำหนดค่า Secure Boot"
-
-#~ msgid "Reboot Required"
-#~ msgstr "จำเป็นต้องรีสตาร์ท"
-
-#~ msgid "Restart and enter password 123456 in MOKManager."
-#~ msgstr "รีสตาร์ทและป้อนรหัสผ่าน 123456 ใน MOKManager"
-
-#~ msgid "Cancel"
-#~ msgstr "ยกเลิก"
-
-#~ msgid "Reboot"
-#~ msgstr "รีสตาร์ท"
-
-#~ msgid ""
-#~ "Secure Boot is a motherboard security standard that ensures only trusted "
-#~ "software loads at startup."
-#~ msgstr ""
-#~ "Secure Boot "
-#~ "เป็นมาตรฐานความปลอดภัยของเมนบอร์ดที่รับประกันว่าเฉพาะซอฟต์แวร์ที่ได้รับอนุญาตเท่านั้นที่จะโหลดในขณะเริ่มต้นเครื่อง"
-
-#~ msgid "It protects your system from low-level malware and rootkits."
-#~ msgstr "มันปกป้องระบบของคุณจากมัลแวร์ระดับต่ำและรูทคิต"
-
-#~ msgid "System Trust Status"
-#~ msgstr "สถานะความไว้วางใจของระบบ"
-
-#~ msgid "Note: Use password <b>123456</b> after rebooting."
-#~ msgstr "หมายเหตุ: ใช้รหัสผ่าน <b>123456</b> หลังจาก รีสตาร์ทเครื่อง"
-
-#~ msgid "Motherboard hardware protection is active"
-#~ msgstr "การป้องกันฮาร์ดแวร์ของเมนบอร์ดกำลังทำงานอยู่"
-
-#~ msgid "Firmware does not support Secure Boot"
-#~ msgstr "เฟิร์มแวร์ไม่รองรับ Secure Boot"
-
-#~ msgid "Secure Boot is disabled"
-#~ msgstr "Secure Boot ถูกปิดใช้งาน"
-
-#~ msgid "Not required without firmware enforcement"
-#~ msgstr "ไม่จำเป็นหากไม่มีการบังคับใช้เฟิร์มแวร์"
-
-#~ msgid "Not checked because Secure Boot state is unknown"
-#~ msgstr "ไม่ได้ตรวจสอบเนื่องจากไม่ทราบสถานะ Secure Boot"
-
-#~ msgid "Certificate generated locally"
-#~ msgstr "สร้างใบรับรองภายในเครื่อง"
-
-#~ msgid "Missing local certificate"
-#~ msgstr "ขาดใบรับรองในเครื่อง"
-
-#~ msgid "Certificate is trusted by motherboard"
-#~ msgstr "ใบรับรองได้รับความไว้วางใจจากเมนบอร์ด"
-
-#~ msgid "Pending enrollment in blue screen (MOKManager)"
-#~ msgstr "\\รกำลังรอการลงทะเบียนในหน้าจอสีน้ำเงิน (MOKManager)"
-
-#~ msgid "Certificate is not trusted by motherboard"
-#~ msgstr "เมนบอร์ดไม่น่าเชื่อถือใบรับรอง"
-
-#~ msgid "Kernel signature enforcement is inactive"
-#~ msgstr "การบังคับใช้ลายเซ็นเคอร์เนลไม่ได้ใช้งาน"
-
-#~ msgid ""
-#~ "Secure Boot trust is ready. No third-party kernel modules are currently "
-#~ "installed."
-#~ msgstr ""
-#~ "ความไว้วางใจ Secure Boot พร้อมแล้ว ไม่มีการติดตั้งโมดูลเคอร์เนลของบริษัทอื่นในปัจจุบัน"
-
-#~ msgid "Drivers are signed and ready to load"
-#~ msgstr "ไดรเวอร์ลงนามเรียบร้อยแล้วและพร้อมโหลด"
-
-#~ msgid "Drivers are trusted, but automatic DKMS signing needs repair"
-#~ msgstr "ไดรเวอร์เชื่อถือได้ แต่การเซ็นชื่อ DKMS อัตโนมัติจำเป็นต้องได้รับการซ่อมแซม"
-
-#~ msgid "No signed third-party drivers detected"
-#~ msgstr "ไม่พบไดรเวอร์บุคคลที่สามที่มีการลงนาม"
-
-#~ msgid "Some DKMS modules need to be re-signed"
-#~ msgstr "โมดูล DKMS บางโมดูลจำเป็นต้องลงนามใหม่"
-
-#~ msgid "Enroll Existing Certificate"
-#~ msgstr "ลงทะเบียนใบรับรองที่มีอยู่"
-
-#~ msgid "Repair Automatic DKMS Signing"
-#~ msgstr "ซ่อมแซมการลงนาม DKMS อัตโนมัติ"
-
-#~ msgid ""
-#~ "This firmware does not provide Secure Boot. No certificate is required."
-#~ msgstr "เฟิร์มแวร์นี้ไม่มี Secure Boot ไม่จำเป็นต้องมีใบรับรอง"
-
-#~ msgid ""
-#~ "Secure Boot status could not be read. Driver trust operations are blocked "
-#~ "until detection succeeds."
-#~ msgstr ""
-#~ "ไม่สามารถอ่านสถานะ Secure Boot ได้ "
-#~ "การดำเนินการที่เชื่อถือได้ของไดรเวอร์จะถูกบล็อกจนกว่าการตรวจจับจะสำเร็จ"
-
-#~ msgid "No certificate is required while Secure Boot is disabled."
-#~ msgstr "ไม่จำเป็นต้องมีใบรับรองในขณะที่ Secure Boot ถูกปิดใช้งาน"
-
-#~ msgid "System Trust Established. Third-party drivers will load securely."
-#~ msgstr "ความไว้วางใจของระบบได้รับการจัดตั้งแล้ว ไดรเวอร์บุคคลที่สามจะโหลดอย่างปลอดภัย"
-
-#~ msgid "The certificate is enrolled and current drivers are trusted."
-#~ msgstr "ลงทะเบียนใบรับรองแล้วและไดรเวอร์ปัจจุบันเชื่อถือได้"
-
-#~ msgid "Repair automatic DKMS signing before future driver updates."
-#~ msgstr "ซ่อมแซมการเซ็นชื่อ DKMS อัตโนมัติก่อนการอัปเดตไดรเวอร์ในอนาคต"
-
-#~ msgid ""
-#~ "The certificate is enrolled, but some modules are not signed with it."
-#~ msgstr "ลงทะเบียนใบรับรองแล้ว แต่บางโมดูลไม่ได้ลงนามด้วย"
-
-#~ msgid "You must configure this to use third-party drivers like NVIDIA."
-#~ msgstr "คุณต้องกำหนดค่าสิ่งนี้เพื่อใช้ไดรเวอร์บุคคลที่สาม เช่น NVIDIA"
-
-#~ msgid "The local trust certificate is missing."
-#~ msgstr "ใบรับรองความน่าเชื่อถือในเครื่องหายไป"
-
-#~ msgid "Please trust the certificate upon reboot using password 123456."
-#~ msgstr "กรุณาไว้วางใจใบรับรองเมื่อรีสตาร์ทโดยใช้รหัสผ่าน 123456"
-
-#~ msgid "Success! When you reboot, a blue screen will appear."
-#~ msgstr "สำเร็จ! เมื่อคุณรีสตาร์ท หน้าจอสีน้ำเงินจะปรากฏขึ้น"
-
-#~ msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
-#~ msgstr "เลือก 'Enroll MOK' → 'Continue' → 'Yes' และป้อนรหัสผ่าน: 123456"
-
-#~ msgid "Certificate Created"
-#~ msgstr "สร้างใบรับรองแล้ว"
-
-#~ msgid "Later"
-#~ msgstr "ต่อมา"
-
-#~ msgid "Secure Boot Trust Not Required"
-#~ msgstr "Secure Boot ไม่จำเป็นต้องเชื่อถือ"
-
-#~ msgid "Firmware signature enforcement is not active."
-#~ msgstr "การบังคับใช้ลายเซ็นเฟิร์มแวร์ไม่ทำงาน"
-
-#~ msgid "OK"
-#~ msgstr "ตกลง"
-
-#~ msgid ""
-#~ "The certificate is ready, but one or more DKMS modules could not be "
-#~ "rebuilt. You can repair them after enrollment."
-#~ msgstr ""
-#~ "ใบรับรองพร้อมแล้ว แต่โมดูล DKMS อย่างน้อยหนึ่งโมดูลไม่สามารถสร้างขึ้นใหม่ได้ "
-#~ "คุณสามารถซ่อมแซมได้หลังจากการลงทะเบียน"
-
-#~ msgid "Configuration needs attention"
-#~ msgstr "การกำหนดค่าจำเป็นต้องได้รับการดูแล"
-
-#~ msgid "System Trust Established"
-#~ msgstr "ก่อตั้งความน่าเชื่อถือของระบบแล้ว"
-
-#~ msgid "Configuration failed. Please try again."
-#~ msgstr "การกำหนดค่าล้มเหลว กรุณาลองใหม่อีกครั้ง"
-
-#~ msgid "Generating & Signing..."
-#~ msgstr "กำลังสร้าง & ลงนาม..."
 
 #~ msgid "A reboot is recommended to apply changes."
 #~ msgstr "แนะนำให้รีสตาร์ทระบบเพื่อให้นำการเปลี่ยนแปลงไปใช้งาน"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-09 14:41+0000\n"
+"POT-Creation-Date: 2026-08-09 15:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: tr <LL@li.org>\n"
@@ -577,20 +577,20 @@ msgid "This may take a few minutes."
 msgstr "Bu birkaç dakika sürebilir."
 
 #: anduinos-oobe/assets/anduinos-oobe:2299
-msgid "You can now double-click .exe files to run them."
-msgstr ".exe dosyalarını çalıştırmak için artık çift tıklamanız yeterli."
-
-#: anduinos-oobe/assets/anduinos-oobe:2299
 msgid "✓ Sandbox deployed successfully!"
 msgstr "✓ Kum havuzu başarıyla dağıtıldı!"
 
-#: anduinos-oobe/assets/anduinos-oobe:2308
-msgid "You can install Bottles later from the App Store."
-msgstr "Bottles'i daha sonra Uygulama Mağazası'ndan kurabilirsiniz."
+#: anduinos-oobe/assets/anduinos-oobe:2299
+msgid "You can now double-click .exe files to run them."
+msgstr ".exe dosyalarını çalıştırmak için artık çift tıklamanız yeterli."
 
 #: anduinos-oobe/assets/anduinos-oobe:2308
 msgid "✗ Deployment failed."
 msgstr "✗ Dağıtım başarısız oldu."
+
+#: anduinos-oobe/assets/anduinos-oobe:2308
+msgid "You can install Bottles later from the App Store."
+msgstr "Bottles'i daha sonra Uygulama Mağazası'ndan kurabilirsiniz."
 
 #: anduinos-oobe/assets/anduinos-oobe:2316
 msgid "✗ Error: "
@@ -744,14 +744,14 @@ msgid "Productive From Day One"
 msgstr "İlk Günden Verimli"
 
 #: anduinos-oobe/assets/anduinos-oobe:2734
+msgid "Essential productivity and entertainment tools, hand-picked for you."
+msgstr "Özenle seçilmiş temel üretkenlik ve eğlence araçları."
+
+#: anduinos-oobe/assets/anduinos-oobe:2734
 msgid "Click any app to open its details in the App Store."
 msgstr ""
 "Uygulama Mağazası'nda detaylarını görmek için herhangi bir uygulamaya "
 "tıklayın."
-
-#: anduinos-oobe/assets/anduinos-oobe:2734
-msgid "Essential productivity and entertainment tools, hand-picked for you."
-msgstr "Özenle seçilmiş temel üretkenlik ve eğlence araçları."
 
 #: anduinos-oobe/assets/anduinos-oobe:2746
 msgid "WeChat"
@@ -944,12 +944,12 @@ msgid "We do not collect your usage habits."
 msgstr "Kullanım alışkanlıklarınızı toplamıyoruz."
 
 #: anduinos-oobe/assets/anduinos-oobe:3034
-msgid "There are no pervasive advertisements."
-msgstr "Yaygın reklamlar yok."
-
-#: anduinos-oobe/assets/anduinos-oobe:3034
 msgid "We do not upload your search history."
 msgstr "Arama geçmişinizi yüklemiyoruz."
+
+#: anduinos-oobe/assets/anduinos-oobe:3034
+msgid "There are no pervasive advertisements."
+msgstr "Yaygın reklamlar yok."
 
 #: anduinos-oobe/assets/anduinos-oobe:3045
 msgid "In an era ruled by algorithms and surveillance,"
@@ -1110,6 +1110,284 @@ msgstr "3\tAnduinOS Hoş Geldiniz"
 msgid "AnduinOS Team"
 msgstr "4\tAnduinOS Takımı"
 
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
+msgid "Secure Boot Configuration"
+msgstr "Güvenli Önyükleme Yapılandırması"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
+msgid ""
+"Secure Boot is a motherboard security standard that ensures only trusted "
+"software loads at startup."
+msgstr ""
+"\tGüvenli Önyükleme, yalnızca güvenilir yazılımların başlangıçta "
+"yüklenmesini sağlayan bir anakart güvenlik standardıdır."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
+msgid "It protects your system from low-level malware and rootkits."
+msgstr ""
+"Sistemi düşük düzeyli kötü amaçlı yazılımlardan ve rootkitlerden korur."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
+msgid "System Trust Status"
+msgstr "Sistem Güven Durumu"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
+msgid "Create & Enroll Certificate"
+msgstr "Sertifika Oluştur ve Kaydet"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
+msgid "Repair Module Signatures"
+msgstr "Modül İmzalarını Onar"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
+msgid "Note: Use password <b>123456</b> after rebooting."
+msgstr "Not: Yeniden başlattıktan sonra <b>123456</b> şifresini kullanın."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
+msgid "Reboot & Configure Secure Boot"
+msgstr "Yeniden Başlat ve Güvenli Önyükleme Yapılandırması"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
+msgid "  Check Again  "
+msgstr "  Tekrar Kontrol Et  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
+msgid "Motherboard hardware protection is active"
+msgstr "Anakart donanım koruması aktif"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
+msgid "Firmware does not support Secure Boot"
+msgstr "Ürün yazılımı Secure Boot'yi desteklemiyor"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
+msgid "Secure Boot state could not be determined"
+msgstr "Secure Boot durumu belirlenemedi"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
+msgid "Secure Boot is disabled"
+msgstr "Secure Boot devre dışı"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+msgid "Not required without firmware enforcement"
+msgstr "Ürün yazılımı zorunlu kılınmadan gerekli değildir"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+msgid "Not checked because Secure Boot state is unknown"
+msgstr "Secure Boot durumu bilinmediğinden işaretlenmedi"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
+msgid "Certificate generated locally"
+msgstr "Sertifika yerel olarak oluşturuldu"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
+msgid "Missing local certificate"
+msgstr "Yerel sertifika eksik"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
+msgid "Certificate is trusted by motherboard"
+msgstr "Sertifika anakart tarafından güveniliyor"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
+msgid "Pending enrollment in blue screen (MOKManager)"
+msgstr "Mavi ekranda kaydetme bekleniyor (MOKManager)"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
+msgid "Certificate is not trusted by motherboard"
+msgstr "Sertifikaya anakart tarafından güvenilmiyor"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
+msgid "Kernel signature enforcement is inactive"
+msgstr "Çekirdek imzası uygulaması etkin değil"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
+msgid "Driver trust cannot be verified"
+msgstr "Sürücü güveni doğrulanamıyor"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
+msgid ""
+"Secure Boot trust is ready. No third-party kernel modules are currently "
+"installed."
+msgstr ""
+"Secure Boot güveni hazır. Şu anda hiçbir üçüncü taraf çekirdek modülü yüklü "
+"değil."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
+msgid "Drivers are signed and ready to load"
+msgstr "Sürücüler imzalandı ve yüklenmeye hazır"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
+msgid "Drivers are trusted, but automatic DKMS signing needs repair"
+msgstr ""
+"Sürücülere güveniliyor ancak otomatik DKMS imzalamanın onarılması gerekiyor"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
+msgid "No signed third-party drivers detected"
+msgstr "İmzalanmış üçüncü taraf sürücü tespit edilmedi"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
+msgid "Some DKMS modules need to be re-signed"
+msgstr "Bazı DKMS modüllerinin yeniden imzalanması gerekiyor"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
+msgid "Enroll Existing Certificate"
+msgstr "Mevcut Sertifikayı Kaydet"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
+msgid "Repair Automatic DKMS Signing"
+msgstr "Otomatik DKMS İmzalamayı Onar"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
+msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgstr "Bu ürün yazılımı Secure Boot sağlamaz. Sertifika gerekli değildir."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
+msgid ""
+"Secure Boot status could not be read. Driver trust operations are blocked "
+"until detection succeeds."
+msgstr ""
+"Secure Boot durumu okunamadı. Algılama başarılı olana kadar sürücü güven "
+"işlemleri engellenir."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
+msgid "No certificate is required while Secure Boot is disabled."
+msgstr "Secure Boot devre dışıyken sertifika gerekmez."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
+msgid "System Trust Established. Third-party drivers will load securely."
+msgstr ""
+"Sistem Güvenliği Kuruldu. Üçüncü taraf sürücüler güvenli şekilde yüklenecek."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
+msgid "The certificate is enrolled and current drivers are trusted."
+msgstr "Sertifika kaydedildi ve mevcut sürücülere güveniliyor."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
+msgid "Repair automatic DKMS signing before future driver updates."
+msgstr ""
+"Gelecekteki sürücü güncellemelerinden önce otomatik DKMS imzalamayı onarın."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+msgid "The certificate is enrolled, but some modules are not signed with it."
+msgstr "Sertifika kaydedildi ancak bazı modüller sertifikayla imzalanmadı."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
+msgid "A certificate is waiting for enrollment."
+msgstr "Bir sertifika kayıt için bekliyor."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
+msgid "Restart and enter password 123456 in MOKManager."
+msgstr "Yeniden başlatın ve MOKManager'ye 123456 şifresini girin."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
+msgid "The local trust certificate is not yet enrolled."
+msgstr "Yerel güven sertifikası henüz kaydedilmedi."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
+msgid "You must configure this to use third-party drivers like NVIDIA."
+msgstr ""
+"NVIDIA gibi üçüncü taraf sürücülerini kullanmak için bunu yapılandırmanız "
+"gerekir."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
+msgid "The local trust certificate is missing."
+msgstr "Yerel güven sertifikası eksik."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
+msgid "  Checking...  "
+msgstr "  Kontrol ediliyor...  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
+msgid "Reboot Required"
+msgstr "Yeniden Başlatma Gerekli"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
+msgid "Please trust the certificate upon reboot using password 123456."
+msgstr "Yeniden başlattığınızda sertifikayı 123456 şifresiyle güvenin."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
+msgid "Cancel"
+msgstr "İptal"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
+msgid "Reboot"
+msgstr "Yeniden Başlat"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
+msgid "Success! When you reboot, a blue screen will appear."
+msgstr "Başarılı! Yeniden başlattığınızda mavi bir ekran görünecek."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
+msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
+msgstr ""
+"'MOK Kaydet' → 'Devam' → 'Evet' seçeneğini belirleyin ve şifreyi girin: "
+"123456"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
+msgid "Certificate Created"
+msgstr "Sertifika Oluşturuldu"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
+msgid "Later"
+msgstr "Daha sonra"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
+msgid "Secure Boot Trust Not Required"
+msgstr "Secure Boot Güven Gerekli Değil"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
+msgid "Firmware signature enforcement is not active."
+msgstr "Ürün yazılımı imzası uygulaması etkin değil."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
+msgid "OK"
+msgstr "Tamam"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
+msgid ""
+"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
+"You can repair them after enrollment."
+msgstr ""
+"Sertifika hazır ancak bir veya daha fazla DKMS modülü yeniden "
+"oluşturulamadı. Kayıt olduktan sonra bunları onarabilirsiniz."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
+msgid "Configuration needs attention"
+msgstr "Yapılandırmaya dikkat edilmesi gerekiyor"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
+msgid "System Trust Established"
+msgstr "Sistem Güveni Kuruldu"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
+msgid "Driver Signature Trusted"
+msgstr "Sürücü İmzası Güveniliyor"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
+msgid "Configuration failed. Please try again."
+msgstr "Yapılandırma başarısız oldu. Lütfen tekrar deneyin."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
+msgid "Please check the advanced output."
+msgstr "Lütfen gelişmiş çıktıyı kontrol edin."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
+msgid "Generating & Signing..."
+msgstr "Oluşturuluyor ve İmzalanıyor..."
+
 #~ msgid "Unleash Your Graphics Hardware"
 #~ msgstr "Grafik Donanımınızı Ortaya Çıkarın"
 
@@ -1190,9 +1468,6 @@ msgstr "4\tAnduinOS Takımı"
 #~ msgid "The driver is not installed"
 #~ msgstr "Sürücü yüklü değil"
 
-#~ msgid "Driver Signature Trusted"
-#~ msgstr "Sürücü İmzası Güveniliyor"
-
 #~ msgid "Driver not installed, signature missing"
 #~ msgstr "Sürücü yüklü değil, imza eksik"
 
@@ -1201,9 +1476,6 @@ msgstr "4\tAnduinOS Takımı"
 
 #~ msgid "Not detected"
 #~ msgstr "Algılanmadı"
-
-#~ msgid "Secure Boot state could not be determined"
-#~ msgstr "Secure Boot durumu belirlenemedi"
 
 #~ msgid "Driver is NOT signed"
 #~ msgstr "Sürücü İMZALANMAMIŞ"
@@ -1226,12 +1498,6 @@ msgstr "4\tAnduinOS Takımı"
 #~ msgid "Driver standing by. Waiting for controller connection..."
 #~ msgstr "Sürücü bekliyor. Kontrolcü bağlantısı bekleniyor..."
 
-#~ msgid "Driver trust cannot be verified"
-#~ msgstr "Sürücü güveni doğrulanamıyor"
-
-#~ msgid "A certificate is waiting for enrollment."
-#~ msgstr "Bir sertifika kayıt için bekliyor."
-
 #~ msgid "Driver cannot load due to missing signature trust"
 #~ msgstr "Eksik imza güvenliği nedeniyle sürücü yüklenemiyor"
 
@@ -1244,18 +1510,6 @@ msgstr "4\tAnduinOS Takımı"
 #~ msgid "  Install Xbox Driver  "
 #~ msgstr "Xbox Sürücüsünü Yükle"
 
-#~ msgid "Repair Module Signatures"
-#~ msgstr "Modül İmzalarını Onar"
-
-#~ msgid "Create & Enroll Certificate"
-#~ msgstr "Sertifika Oluştur ve Kaydet"
-
-#~ msgid "Reboot & Configure Secure Boot"
-#~ msgstr "Yeniden Başlat ve Güvenli Önyükleme Yapılandırması"
-
-#~ msgid "The local trust certificate is not yet enrolled."
-#~ msgstr "Yerel güven sertifikası henüz kaydedilmedi."
-
 #~ msgid ""
 #~ "⚠️ The driver signature does not match your system certificate. Click Fix "
 #~ "& Reinstall to repair the driver."
@@ -1263,199 +1517,14 @@ msgstr "4\tAnduinOS Takımı"
 #~ "⚠️ Sürücü imzası sistem sertifikanızla eşleşmiyor. Sürücüyü onarmak için "
 #~ "Düzelt ve Yeniden Yükle'yi tıklayın."
 
-#~ msgid "  Check Again  "
-#~ msgstr "  Tekrar Kontrol Et  "
-
 #~ msgid "Installing Xbox controller driver…"
 #~ msgstr "Xbox denetleyici sürücüsü yükleniyor…"
 
 #~ msgid "This may take a minute."
 #~ msgstr "Bu bir dakika sürebilir."
 
-#~ msgid "  Checking...  "
-#~ msgstr "  Kontrol ediliyor...  "
-
-#~ msgid "Please check the advanced output."
-#~ msgstr "Lütfen gelişmiş çıktıyı kontrol edin."
-
 #~ msgid "Repairing driver signature…"
 #~ msgstr "Sürücü imzası onarılıyor…"
-
-#~ msgid "Secure Boot Configuration"
-#~ msgstr "Güvenli Önyükleme Yapılandırması"
-
-#~ msgid "Reboot Required"
-#~ msgstr "Yeniden Başlatma Gerekli"
-
-#~ msgid "Restart and enter password 123456 in MOKManager."
-#~ msgstr "Yeniden başlatın ve MOKManager'ye 123456 şifresini girin."
-
-#~ msgid "Cancel"
-#~ msgstr "İptal"
-
-#~ msgid "Reboot"
-#~ msgstr "Yeniden Başlat"
-
-#~ msgid ""
-#~ "Secure Boot is a motherboard security standard that ensures only trusted "
-#~ "software loads at startup."
-#~ msgstr ""
-#~ "\tGüvenli Önyükleme, yalnızca güvenilir yazılımların başlangıçta "
-#~ "yüklenmesini sağlayan bir anakart güvenlik standardıdır."
-
-#~ msgid "It protects your system from low-level malware and rootkits."
-#~ msgstr ""
-#~ "Sistemi düşük düzeyli kötü amaçlı yazılımlardan ve rootkitlerden korur."
-
-#~ msgid "System Trust Status"
-#~ msgstr "Sistem Güven Durumu"
-
-#~ msgid "Note: Use password <b>123456</b> after rebooting."
-#~ msgstr "Not: Yeniden başlattıktan sonra <b>123456</b> şifresini kullanın."
-
-#~ msgid "Motherboard hardware protection is active"
-#~ msgstr "Anakart donanım koruması aktif"
-
-#~ msgid "Firmware does not support Secure Boot"
-#~ msgstr "Ürün yazılımı Secure Boot'yi desteklemiyor"
-
-#~ msgid "Secure Boot is disabled"
-#~ msgstr "Secure Boot devre dışı"
-
-#~ msgid "Not required without firmware enforcement"
-#~ msgstr "Ürün yazılımı zorunlu kılınmadan gerekli değildir"
-
-#~ msgid "Not checked because Secure Boot state is unknown"
-#~ msgstr "Secure Boot durumu bilinmediğinden işaretlenmedi"
-
-#~ msgid "Certificate generated locally"
-#~ msgstr "Sertifika yerel olarak oluşturuldu"
-
-#~ msgid "Missing local certificate"
-#~ msgstr "Yerel sertifika eksik"
-
-#~ msgid "Certificate is trusted by motherboard"
-#~ msgstr "Sertifika anakart tarafından güveniliyor"
-
-#~ msgid "Pending enrollment in blue screen (MOKManager)"
-#~ msgstr "Mavi ekranda kaydetme bekleniyor (MOKManager)"
-
-#~ msgid "Certificate is not trusted by motherboard"
-#~ msgstr "Sertifikaya anakart tarafından güvenilmiyor"
-
-#~ msgid "Kernel signature enforcement is inactive"
-#~ msgstr "Çekirdek imzası uygulaması etkin değil"
-
-#~ msgid ""
-#~ "Secure Boot trust is ready. No third-party kernel modules are currently "
-#~ "installed."
-#~ msgstr ""
-#~ "Secure Boot güveni hazır. Şu anda hiçbir üçüncü taraf çekirdek modülü "
-#~ "yüklü değil."
-
-#~ msgid "Drivers are signed and ready to load"
-#~ msgstr "Sürücüler imzalandı ve yüklenmeye hazır"
-
-#~ msgid "Drivers are trusted, but automatic DKMS signing needs repair"
-#~ msgstr ""
-#~ "Sürücülere güveniliyor ancak otomatik DKMS imzalamanın onarılması "
-#~ "gerekiyor"
-
-#~ msgid "No signed third-party drivers detected"
-#~ msgstr "İmzalanmış üçüncü taraf sürücü tespit edilmedi"
-
-#~ msgid "Some DKMS modules need to be re-signed"
-#~ msgstr "Bazı DKMS modüllerinin yeniden imzalanması gerekiyor"
-
-#~ msgid "Enroll Existing Certificate"
-#~ msgstr "Mevcut Sertifikayı Kaydet"
-
-#~ msgid "Repair Automatic DKMS Signing"
-#~ msgstr "Otomatik DKMS İmzalamayı Onar"
-
-#~ msgid ""
-#~ "This firmware does not provide Secure Boot. No certificate is required."
-#~ msgstr "Bu ürün yazılımı Secure Boot sağlamaz. Sertifika gerekli değildir."
-
-#~ msgid ""
-#~ "Secure Boot status could not be read. Driver trust operations are blocked "
-#~ "until detection succeeds."
-#~ msgstr ""
-#~ "Secure Boot durumu okunamadı. Algılama başarılı olana kadar sürücü güven "
-#~ "işlemleri engellenir."
-
-#~ msgid "No certificate is required while Secure Boot is disabled."
-#~ msgstr "Secure Boot devre dışıyken sertifika gerekmez."
-
-#~ msgid "System Trust Established. Third-party drivers will load securely."
-#~ msgstr ""
-#~ "Sistem Güvenliği Kuruldu. Üçüncü taraf sürücüler güvenli şekilde "
-#~ "yüklenecek."
-
-#~ msgid "The certificate is enrolled and current drivers are trusted."
-#~ msgstr "Sertifika kaydedildi ve mevcut sürücülere güveniliyor."
-
-#~ msgid "Repair automatic DKMS signing before future driver updates."
-#~ msgstr ""
-#~ "Gelecekteki sürücü güncellemelerinden önce otomatik DKMS imzalamayı "
-#~ "onarın."
-
-#~ msgid ""
-#~ "The certificate is enrolled, but some modules are not signed with it."
-#~ msgstr "Sertifika kaydedildi ancak bazı modüller sertifikayla imzalanmadı."
-
-#~ msgid "You must configure this to use third-party drivers like NVIDIA."
-#~ msgstr ""
-#~ "NVIDIA gibi üçüncü taraf sürücülerini kullanmak için bunu yapılandırmanız "
-#~ "gerekir."
-
-#~ msgid "The local trust certificate is missing."
-#~ msgstr "Yerel güven sertifikası eksik."
-
-#~ msgid "Please trust the certificate upon reboot using password 123456."
-#~ msgstr "Yeniden başlattığınızda sertifikayı 123456 şifresiyle güvenin."
-
-#~ msgid "Success! When you reboot, a blue screen will appear."
-#~ msgstr "Başarılı! Yeniden başlattığınızda mavi bir ekran görünecek."
-
-#~ msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
-#~ msgstr ""
-#~ "'MOK Kaydet' → 'Devam' → 'Evet' seçeneğini belirleyin ve şifreyi girin: "
-#~ "123456"
-
-#~ msgid "Certificate Created"
-#~ msgstr "Sertifika Oluşturuldu"
-
-#~ msgid "Later"
-#~ msgstr "Daha sonra"
-
-#~ msgid "Secure Boot Trust Not Required"
-#~ msgstr "Secure Boot Güven Gerekli Değil"
-
-#~ msgid "Firmware signature enforcement is not active."
-#~ msgstr "Ürün yazılımı imzası uygulaması etkin değil."
-
-#~ msgid "OK"
-#~ msgstr "Tamam"
-
-#~ msgid ""
-#~ "The certificate is ready, but one or more DKMS modules could not be "
-#~ "rebuilt. You can repair them after enrollment."
-#~ msgstr ""
-#~ "Sertifika hazır ancak bir veya daha fazla DKMS modülü yeniden "
-#~ "oluşturulamadı. Kayıt olduktan sonra bunları onarabilirsiniz."
-
-#~ msgid "Configuration needs attention"
-#~ msgstr "Yapılandırmaya dikkat edilmesi gerekiyor"
-
-#~ msgid "System Trust Established"
-#~ msgstr "Sistem Güveni Kuruldu"
-
-#~ msgid "Configuration failed. Please try again."
-#~ msgstr "Yapılandırma başarısız oldu. Lütfen tekrar deneyin."
-
-#~ msgid "Generating & Signing..."
-#~ msgstr "Oluşturuluyor ve İmzalanıyor..."
 
 #~ msgid "A reboot is recommended to apply changes."
 #~ msgstr "Değişikliklerin uygulanması için yeniden başlatma önerilir."

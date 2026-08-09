@@ -2,6 +2,7 @@ from pathlib import Path
 from importlib.machinery import SourceFileLoader
 import re
 import subprocess
+import tempfile
 import unittest
 from unittest import mock
 import xml.etree.ElementTree as ET
@@ -111,6 +112,43 @@ class SecureBootToolkitTests(unittest.TestCase):
         self.assertIn("anduinos-driver-center (>= 2.0.0-8)", dependencies)
         self.assertNotIn("ubuntu-drivers-common", dependencies)
         self.assertNotIn("pciutils", dependencies)
+
+    def test_oobe_catalog_matches_oobe_and_secure_boot_ui(self):
+        toolkit_ui = (
+            ROOT.parent
+            / "anduinos-secureboot-toolkit"
+            / "src"
+            / "anduinos_secureboot"
+            / "ui.py"
+        )
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            extracted = Path(temporary_directory) / "messages.pot"
+            subprocess.run(
+                [
+                    "xgettext",
+                    "--language=Python",
+                    "--keyword=_",
+                    "--keyword=ngettext:1,2",
+                    "--from-code=UTF-8",
+                    f"--output={extracted}",
+                    str(ROOT / "assets" / "anduinos-oobe"),
+                    str(toolkit_ui),
+                ],
+                check=True,
+            )
+            template_difference = subprocess.run(
+                [
+                    "msgcomm",
+                    "--less-than=2",
+                    "--omit-header",
+                    str(ROOT / "po" / "anduinos-oobe.pot"),
+                    str(extracted),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(template_difference.stdout.strip(), "")
 
     def test_all_oobe_catalogs_are_complete_and_format_safe(self):
         translated_msgid = re.compile(r'^msgid "[^"].*"$', re.MULTILINE)

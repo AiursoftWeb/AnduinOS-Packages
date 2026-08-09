@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-09 14:41+0000\n"
+"POT-Creation-Date: 2026-08-09 15:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: hi <LL@li.org>\n"
@@ -562,20 +562,20 @@ msgid "This may take a few minutes."
 msgstr "इसमें कुछ मिनट लग सकते हैं।"
 
 #: anduinos-oobe/assets/anduinos-oobe:2299
-msgid "You can now double-click .exe files to run them."
-msgstr "अब आप .exe फ़ाइलों को चलाने के लिए डबल-क्लिक कर सकते हैं।"
-
-#: anduinos-oobe/assets/anduinos-oobe:2299
 msgid "✓ Sandbox deployed successfully!"
 msgstr "✓ सैंडबॉक्स सफलतापूर्वक तैनात किया गया!"
 
-#: anduinos-oobe/assets/anduinos-oobe:2308
-msgid "You can install Bottles later from the App Store."
-msgstr "आप बाद में ऐप स्टोर से Bottles इंस्टॉल कर सकते हैं।"
+#: anduinos-oobe/assets/anduinos-oobe:2299
+msgid "You can now double-click .exe files to run them."
+msgstr "अब आप .exe फ़ाइलों को चलाने के लिए डबल-क्लिक कर सकते हैं।"
 
 #: anduinos-oobe/assets/anduinos-oobe:2308
 msgid "✗ Deployment failed."
 msgstr "✗ तैनाती विफल रही।"
+
+#: anduinos-oobe/assets/anduinos-oobe:2308
+msgid "You can install Bottles later from the App Store."
+msgstr "आप बाद में ऐप स्टोर से Bottles इंस्टॉल कर सकते हैं।"
 
 #: anduinos-oobe/assets/anduinos-oobe:2316
 msgid "✗ Error: "
@@ -726,12 +726,12 @@ msgid "Productive From Day One"
 msgstr "पहले दिन से उत्पादक"
 
 #: anduinos-oobe/assets/anduinos-oobe:2734
-msgid "Click any app to open its details in the App Store."
-msgstr "ऐप स्टोर में उसका विवरण देखने के लिए किसी भी ऐप पर क्लिक करें।"
-
-#: anduinos-oobe/assets/anduinos-oobe:2734
 msgid "Essential productivity and entertainment tools, hand-picked for you."
 msgstr "आवश्यक उत्पादकता और मनोरंजन उपकरण, आपके लिए हस्त-चयनित।"
+
+#: anduinos-oobe/assets/anduinos-oobe:2734
+msgid "Click any app to open its details in the App Store."
+msgstr "ऐप स्टोर में उसका विवरण देखने के लिए किसी भी ऐप पर क्लिक करें।"
 
 #: anduinos-oobe/assets/anduinos-oobe:2746
 msgid "WeChat"
@@ -922,12 +922,12 @@ msgid "We do not collect your usage habits."
 msgstr "हम आपके उपयोग की आदतों को एकत्र नहीं करते हैं।"
 
 #: anduinos-oobe/assets/anduinos-oobe:3034
-msgid "There are no pervasive advertisements."
-msgstr "कोई व्यापक विज्ञापन नहीं हैं।"
-
-#: anduinos-oobe/assets/anduinos-oobe:3034
 msgid "We do not upload your search history."
 msgstr "हम आपकी खोज इतिहास अपलोड नहीं करते हैं।"
+
+#: anduinos-oobe/assets/anduinos-oobe:3034
+msgid "There are no pervasive advertisements."
+msgstr "कोई व्यापक विज्ञापन नहीं हैं।"
 
 #: anduinos-oobe/assets/anduinos-oobe:3045
 msgid "In an era ruled by algorithms and surveillance,"
@@ -1084,6 +1084,278 @@ msgstr "एंडुइनओएस स्वागत"
 msgid "AnduinOS Team"
 msgstr "एंडुइनओएस टीम"
 
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
+msgid "Secure Boot Configuration"
+msgstr "सुरक्षित बूट विन्यास"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
+msgid ""
+"Secure Boot is a motherboard security standard that ensures only trusted "
+"software loads at startup."
+msgstr ""
+"\tसीयोर बुट एक मदरबोर्ड सुरक्षा मानक है जो सुनिश्चित करता है कि स्टार्टअप पर केवल "
+"विश्वसनीय सॉफ़्टवेयर लोड हो।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
+msgid "It protects your system from low-level malware and rootkits."
+msgstr "यह आपके सिस्टम को लो-लेवल मैलवेयर और रूटकिट से सुरक्षित रखता है।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
+msgid "System Trust Status"
+msgstr "सिस्टम विश्वास स्थिति"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
+msgid "Create & Enroll Certificate"
+msgstr "प्रमाण पत्र बनाएं और एनरोल करें"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
+msgid "Repair Module Signatures"
+msgstr "मरम्मत मॉड्यूल हस्ताक्षर"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
+msgid "Note: Use password <b>123456</b> after rebooting."
+msgstr "नोट: पुनः आरंभ करने के बाद <b>123456</b> पासवर्ड का उपयोग करें।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
+msgid "Reboot & Configure Secure Boot"
+msgstr "पुनः आरंभ करें & सुरक्षित बूट विन्यास करें"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
+msgid "  Check Again  "
+msgstr "  पुनः जाँचें  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
+msgid "Motherboard hardware protection is active"
+msgstr "मदरबोर्ड हार्डवेयर सुरक्षा सक्रिय है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
+msgid "Firmware does not support Secure Boot"
+msgstr "फ़र्मवेयर Secure Boot का समर्थन नहीं करता है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
+msgid "Secure Boot state could not be determined"
+msgstr "Secure Boot स्थिति निर्धारित नहीं की जा सकी"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
+msgid "Secure Boot is disabled"
+msgstr "Secure Boot अक्षम है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+msgid "Not required without firmware enforcement"
+msgstr "फर्मवेयर प्रवर्तन के बिना आवश्यक नहीं है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+msgid "Not checked because Secure Boot state is unknown"
+msgstr "जाँच नहीं की गई क्योंकि Secure Boot स्थिति अज्ञात है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
+msgid "Certificate generated locally"
+msgstr "स्थानीय रूप से उत्पन्न प्रमाण पत्र"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
+msgid "Missing local certificate"
+msgstr "स्थानीय प्रमाण पत्र अनुपलब्ध है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
+msgid "Certificate is trusted by motherboard"
+msgstr "प्रमाण पत्र मदरबोर्ड द्वारा विश्वसनीय है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
+msgid "Pending enrollment in blue screen (MOKManager)"
+msgstr "नीले स्क्रीन (MOKManager) में एनरोल की प्रतीक्षा है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
+msgid "Certificate is not trusted by motherboard"
+msgstr "प्रमाणपत्र मदरबोर्ड द्वारा विश्वसनीय नहीं है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
+msgid "Kernel signature enforcement is inactive"
+msgstr "कर्नेल हस्ताक्षर प्रवर्तन निष्क्रिय है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
+msgid "Driver trust cannot be verified"
+msgstr "ड्राइवर का विश्वास सत्यापित नहीं किया जा सकता"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
+msgid ""
+"Secure Boot trust is ready. No third-party kernel modules are currently "
+"installed."
+msgstr ""
+"Secure Boot ट्रस्ट तैयार है। वर्तमान में कोई तृतीय-पक्ष कर्नेल मॉड्यूल स्थापित नहीं है।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
+msgid "Drivers are signed and ready to load"
+msgstr "ड्राइवर साइन किए गए हैं और लोड करने के लिए तैयार हैं"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
+msgid "Drivers are trusted, but automatic DKMS signing needs repair"
+msgstr "ड्राइवर विश्वसनीय हैं, लेकिन स्वचालित DKMS हस्ताक्षर को मरम्मत की आवश्यकता है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
+msgid "No signed third-party drivers detected"
+msgstr "कोई साइन किया गया थर्ड-पार्टी ड्राइवर नहीं पाया गया"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
+msgid "Some DKMS modules need to be re-signed"
+msgstr "कुछ DKMS मॉड्यूल को फिर से हस्ताक्षरित करने की आवश्यकता है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
+msgid "Enroll Existing Certificate"
+msgstr "मौजूदा प्रमाणपत्र नामांकित करें"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
+msgid "Repair Automatic DKMS Signing"
+msgstr "स्वचालित DKMS हस्ताक्षर की मरम्मत करें"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
+msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgstr ""
+"यह फर्मवेयर Secure Boot प्रदान नहीं करता है। किसी प्रमाणपत्र की आवश्यकता नहीं है."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
+msgid ""
+"Secure Boot status could not be read. Driver trust operations are blocked "
+"until detection succeeds."
+msgstr ""
+"Secure Boot स्थिति पढ़ी नहीं जा सकी. जब तक पता नहीं चल जाता तब तक ड्राइवर ट्रस्ट "
+"संचालन अवरुद्ध रहता है।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
+msgid "No certificate is required while Secure Boot is disabled."
+msgstr "Secure Boot अक्षम होने पर किसी प्रमाणपत्र की आवश्यकता नहीं है।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
+msgid "System Trust Established. Third-party drivers will load securely."
+msgstr "सिस्टम विश्वास स्थापित हुआ। थर्ड-पार्टी ड्राइवर सुरक्षित रूप से लोड होंगे।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
+msgid "The certificate is enrolled and current drivers are trusted."
+msgstr "प्रमाणपत्र नामांकित है और वर्तमान ड्राइवर विश्वसनीय हैं।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
+msgid "Repair automatic DKMS signing before future driver updates."
+msgstr "भविष्य के ड्राइवर अपडेट से पहले स्वचालित DKMS साइनिंग की मरम्मत करें।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+msgid "The certificate is enrolled, but some modules are not signed with it."
+msgstr "प्रमाणपत्र नामांकित है, लेकिन कुछ मॉड्यूल इसके साथ हस्ताक्षरित नहीं हैं।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
+msgid "A certificate is waiting for enrollment."
+msgstr "एक प्रमाणपत्र नामांकन के लिए प्रतीक्षा कर रहा है।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
+msgid "Restart and enter password 123456 in MOKManager."
+msgstr "पुनरारंभ करें और MOKManager में पासवर्ड 123456 दर्ज करें।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
+msgid "The local trust certificate is not yet enrolled."
+msgstr "स्थानीय ट्रस्ट प्रमाणपत्र अभी तक नामांकित नहीं है।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
+msgid "You must configure this to use third-party drivers like NVIDIA."
+msgstr ""
+"आपको NVIDIA जैसे थर्ड-पार्टी ड्राइवर का उपयोग करने के लिए इसे विन्यास करना होगा।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
+msgid "The local trust certificate is missing."
+msgstr "स्थानीय ट्रस्ट प्रमाणपत्र गुम है।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
+msgid "  Checking...  "
+msgstr "  जाँच रहे हैं...  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
+msgid "Reboot Required"
+msgstr "पुनः आरंभ की आवश्यकता है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
+msgid "Please trust the certificate upon reboot using password 123456."
+msgstr ""
+"पुनः आरंभ करने पर कृपया पासवर्ड 123456 का उपयोग करके प्रमाण पत्र को विश्वसनीय बनाएं।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
+msgid "Cancel"
+msgstr "रद्द करें"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
+msgid "Reboot"
+msgstr "पुनः आरंभ करें"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
+msgid "Success! When you reboot, a blue screen will appear."
+msgstr "सफल! जब आप पुनः आरंभ करेंगे, तो एक नीली स्क्रीन दिखाई देगी।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
+msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
+msgstr "'Enroll MOK' → 'Continue' → 'Yes' चुनें, और पासवर्ड दर्ज करें: 123456"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
+msgid "Certificate Created"
+msgstr "प्रमाण पत्र बनाया गया"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
+msgid "Later"
+msgstr "बाद में"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
+msgid "Secure Boot Trust Not Required"
+msgstr "Secure Boot विश्वास की आवश्यकता नहीं है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
+msgid "Firmware signature enforcement is not active."
+msgstr "फ़र्मवेयर हस्ताक्षर प्रवर्तन सक्रिय नहीं है।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
+msgid "OK"
+msgstr "ठीक है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
+msgid ""
+"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
+"You can repair them after enrollment."
+msgstr ""
+"प्रमाणपत्र तैयार है, लेकिन एक या अधिक DKMS मॉड्यूल का पुनर्निर्माण नहीं किया जा सका। "
+"नामांकन के बाद आप उनकी मरम्मत करा सकते हैं."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
+msgid "Configuration needs attention"
+msgstr "कॉन्फ़िगरेशन पर ध्यान देने की आवश्यकता है"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
+msgid "System Trust Established"
+msgstr "सिस्टम ट्रस्ट की स्थापना"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
+msgid "Driver Signature Trusted"
+msgstr "ड्राइवर हस्ताक्षर विश्वसनीय"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
+msgid "Configuration failed. Please try again."
+msgstr "विन्यास विफल रहा। कृपया पुनः प्रयास करें।"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
+msgid "Please check the advanced output."
+msgstr "kripya adhyaksh avarthaman ko jaanchen."
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
+msgid "Generating & Signing..."
+msgstr "उत्पन्न किया जा रहा है & साइन किया जा रहा है..."
+
 #~ msgid "Unleash Your Graphics Hardware"
 #~ msgstr "अपने ग्राफिक्स हार्डवेयर को मुक्त करें"
 
@@ -1159,9 +1431,6 @@ msgstr "एंडुइनओएस टीम"
 #~ msgid "The driver is not installed"
 #~ msgstr "driver sthapit nahi hai"
 
-#~ msgid "Driver Signature Trusted"
-#~ msgstr "ड्राइवर हस्ताक्षर विश्वसनीय"
-
 #~ msgid "Driver not installed, signature missing"
 #~ msgstr "ड्राइवर स्थापित नहीं, हस्ताक्षर अनुपस्थित"
 
@@ -1170,9 +1439,6 @@ msgstr "एंडुइनओएस टीम"
 
 #~ msgid "Not detected"
 #~ msgstr "पता नहीं चला"
-
-#~ msgid "Secure Boot state could not be determined"
-#~ msgstr "Secure Boot स्थिति निर्धारित नहीं की जा सकी"
 
 #~ msgid "Driver is NOT signed"
 #~ msgstr "ड्राइवर हस्ताक्षरित नहीं है"
@@ -1195,12 +1461,6 @@ msgstr "एंडुइनओएस टीम"
 #~ msgid "Driver standing by. Waiting for controller connection..."
 #~ msgstr "ड्राइवर प्रतीक्षा में है। कंट्रोलर कनेक्शन का इंतजार..."
 
-#~ msgid "Driver trust cannot be verified"
-#~ msgstr "ड्राइवर का विश्वास सत्यापित नहीं किया जा सकता"
-
-#~ msgid "A certificate is waiting for enrollment."
-#~ msgstr "एक प्रमाणपत्र नामांकन के लिए प्रतीक्षा कर रहा है।"
-
 #~ msgid "Driver cannot load due to missing signature trust"
 #~ msgstr "हस्ताक्षर विश्वसनीयता अनुपस्थित होने के कारण ड्राइवर लोड नहीं हो सकता"
 
@@ -1213,18 +1473,6 @@ msgstr "एंडुइनओएस टीम"
 #~ msgid "  Install Xbox Driver  "
 #~ msgstr "Xbox ड्राइवर इंस्टॉल करें"
 
-#~ msgid "Repair Module Signatures"
-#~ msgstr "मरम्मत मॉड्यूल हस्ताक्षर"
-
-#~ msgid "Create & Enroll Certificate"
-#~ msgstr "प्रमाण पत्र बनाएं और एनरोल करें"
-
-#~ msgid "Reboot & Configure Secure Boot"
-#~ msgstr "पुनः आरंभ करें & सुरक्षित बूट विन्यास करें"
-
-#~ msgid "The local trust certificate is not yet enrolled."
-#~ msgstr "स्थानीय ट्रस्ट प्रमाणपत्र अभी तक नामांकित नहीं है।"
-
 #~ msgid ""
 #~ "⚠️ The driver signature does not match your system certificate. Click Fix "
 #~ "& Reinstall to repair the driver."
@@ -1232,190 +1480,14 @@ msgstr "एंडुइनओएस टीम"
 #~ "⚠️ ड्राइवर सिग्नेचर आपके सिस्टम सर्टिफिकेट से मेल नहीं खाता। ड्राइवर की मरम्मत के लिए "
 #~ "Fix & Reinstall पर क्लिक करें।"
 
-#~ msgid "  Check Again  "
-#~ msgstr "  पुनः जाँचें  "
-
 #~ msgid "Installing Xbox controller driver…"
 #~ msgstr "Xbox नियंत्रण ड्राइवर इंस्टॉल किया जा रहा है…"
 
 #~ msgid "This may take a minute."
 #~ msgstr "इसमें एक मिनट लग सकता है।"
 
-#~ msgid "  Checking...  "
-#~ msgstr "  जाँच रहे हैं...  "
-
-#~ msgid "Please check the advanced output."
-#~ msgstr "kripya adhyaksh avarthaman ko jaanchen."
-
 #~ msgid "Repairing driver signature…"
 #~ msgstr "ड्राइवर सिग्नेचर की मरम्मत हो रही है…"
-
-#~ msgid "Secure Boot Configuration"
-#~ msgstr "सुरक्षित बूट विन्यास"
-
-#~ msgid "Reboot Required"
-#~ msgstr "पुनः आरंभ की आवश्यकता है"
-
-#~ msgid "Restart and enter password 123456 in MOKManager."
-#~ msgstr "पुनरारंभ करें और MOKManager में पासवर्ड 123456 दर्ज करें।"
-
-#~ msgid "Cancel"
-#~ msgstr "रद्द करें"
-
-#~ msgid "Reboot"
-#~ msgstr "पुनः आरंभ करें"
-
-#~ msgid ""
-#~ "Secure Boot is a motherboard security standard that ensures only trusted "
-#~ "software loads at startup."
-#~ msgstr ""
-#~ "\tसीयोर बुट एक मदरबोर्ड सुरक्षा मानक है जो सुनिश्चित करता है कि स्टार्टअप पर केवल "
-#~ "विश्वसनीय सॉफ़्टवेयर लोड हो।"
-
-#~ msgid "It protects your system from low-level malware and rootkits."
-#~ msgstr "यह आपके सिस्टम को लो-लेवल मैलवेयर और रूटकिट से सुरक्षित रखता है।"
-
-#~ msgid "System Trust Status"
-#~ msgstr "सिस्टम विश्वास स्थिति"
-
-#~ msgid "Note: Use password <b>123456</b> after rebooting."
-#~ msgstr "नोट: पुनः आरंभ करने के बाद <b>123456</b> पासवर्ड का उपयोग करें।"
-
-#~ msgid "Motherboard hardware protection is active"
-#~ msgstr "मदरबोर्ड हार्डवेयर सुरक्षा सक्रिय है"
-
-#~ msgid "Firmware does not support Secure Boot"
-#~ msgstr "फ़र्मवेयर Secure Boot का समर्थन नहीं करता है"
-
-#~ msgid "Secure Boot is disabled"
-#~ msgstr "Secure Boot अक्षम है"
-
-#~ msgid "Not required without firmware enforcement"
-#~ msgstr "फर्मवेयर प्रवर्तन के बिना आवश्यक नहीं है"
-
-#~ msgid "Not checked because Secure Boot state is unknown"
-#~ msgstr "जाँच नहीं की गई क्योंकि Secure Boot स्थिति अज्ञात है"
-
-#~ msgid "Certificate generated locally"
-#~ msgstr "स्थानीय रूप से उत्पन्न प्रमाण पत्र"
-
-#~ msgid "Missing local certificate"
-#~ msgstr "स्थानीय प्रमाण पत्र अनुपलब्ध है"
-
-#~ msgid "Certificate is trusted by motherboard"
-#~ msgstr "प्रमाण पत्र मदरबोर्ड द्वारा विश्वसनीय है"
-
-#~ msgid "Pending enrollment in blue screen (MOKManager)"
-#~ msgstr "नीले स्क्रीन (MOKManager) में एनरोल की प्रतीक्षा है"
-
-#~ msgid "Certificate is not trusted by motherboard"
-#~ msgstr "प्रमाणपत्र मदरबोर्ड द्वारा विश्वसनीय नहीं है"
-
-#~ msgid "Kernel signature enforcement is inactive"
-#~ msgstr "कर्नेल हस्ताक्षर प्रवर्तन निष्क्रिय है"
-
-#~ msgid ""
-#~ "Secure Boot trust is ready. No third-party kernel modules are currently "
-#~ "installed."
-#~ msgstr ""
-#~ "Secure Boot ट्रस्ट तैयार है। वर्तमान में कोई तृतीय-पक्ष कर्नेल मॉड्यूल स्थापित नहीं है।"
-
-#~ msgid "Drivers are signed and ready to load"
-#~ msgstr "ड्राइवर साइन किए गए हैं और लोड करने के लिए तैयार हैं"
-
-#~ msgid "Drivers are trusted, but automatic DKMS signing needs repair"
-#~ msgstr "ड्राइवर विश्वसनीय हैं, लेकिन स्वचालित DKMS हस्ताक्षर को मरम्मत की आवश्यकता है"
-
-#~ msgid "No signed third-party drivers detected"
-#~ msgstr "कोई साइन किया गया थर्ड-पार्टी ड्राइवर नहीं पाया गया"
-
-#~ msgid "Some DKMS modules need to be re-signed"
-#~ msgstr "कुछ DKMS मॉड्यूल को फिर से हस्ताक्षरित करने की आवश्यकता है"
-
-#~ msgid "Enroll Existing Certificate"
-#~ msgstr "मौजूदा प्रमाणपत्र नामांकित करें"
-
-#~ msgid "Repair Automatic DKMS Signing"
-#~ msgstr "स्वचालित DKMS हस्ताक्षर की मरम्मत करें"
-
-#~ msgid ""
-#~ "This firmware does not provide Secure Boot. No certificate is required."
-#~ msgstr ""
-#~ "यह फर्मवेयर Secure Boot प्रदान नहीं करता है। किसी प्रमाणपत्र की आवश्यकता नहीं है."
-
-#~ msgid ""
-#~ "Secure Boot status could not be read. Driver trust operations are blocked "
-#~ "until detection succeeds."
-#~ msgstr ""
-#~ "Secure Boot स्थिति पढ़ी नहीं जा सकी. जब तक पता नहीं चल जाता तब तक ड्राइवर ट्रस्ट "
-#~ "संचालन अवरुद्ध रहता है।"
-
-#~ msgid "No certificate is required while Secure Boot is disabled."
-#~ msgstr "Secure Boot अक्षम होने पर किसी प्रमाणपत्र की आवश्यकता नहीं है।"
-
-#~ msgid "System Trust Established. Third-party drivers will load securely."
-#~ msgstr "सिस्टम विश्वास स्थापित हुआ। थर्ड-पार्टी ड्राइवर सुरक्षित रूप से लोड होंगे।"
-
-#~ msgid "The certificate is enrolled and current drivers are trusted."
-#~ msgstr "प्रमाणपत्र नामांकित है और वर्तमान ड्राइवर विश्वसनीय हैं।"
-
-#~ msgid "Repair automatic DKMS signing before future driver updates."
-#~ msgstr "भविष्य के ड्राइवर अपडेट से पहले स्वचालित DKMS साइनिंग की मरम्मत करें।"
-
-#~ msgid ""
-#~ "The certificate is enrolled, but some modules are not signed with it."
-#~ msgstr "प्रमाणपत्र नामांकित है, लेकिन कुछ मॉड्यूल इसके साथ हस्ताक्षरित नहीं हैं।"
-
-#~ msgid "You must configure this to use third-party drivers like NVIDIA."
-#~ msgstr ""
-#~ "आपको NVIDIA जैसे थर्ड-पार्टी ड्राइवर का उपयोग करने के लिए इसे विन्यास करना होगा।"
-
-#~ msgid "The local trust certificate is missing."
-#~ msgstr "स्थानीय ट्रस्ट प्रमाणपत्र गुम है।"
-
-#~ msgid "Please trust the certificate upon reboot using password 123456."
-#~ msgstr ""
-#~ "पुनः आरंभ करने पर कृपया पासवर्ड 123456 का उपयोग करके प्रमाण पत्र को विश्वसनीय बनाएं।"
-
-#~ msgid "Success! When you reboot, a blue screen will appear."
-#~ msgstr "सफल! जब आप पुनः आरंभ करेंगे, तो एक नीली स्क्रीन दिखाई देगी।"
-
-#~ msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
-#~ msgstr "'Enroll MOK' → 'Continue' → 'Yes' चुनें, और पासवर्ड दर्ज करें: 123456"
-
-#~ msgid "Certificate Created"
-#~ msgstr "प्रमाण पत्र बनाया गया"
-
-#~ msgid "Later"
-#~ msgstr "बाद में"
-
-#~ msgid "Secure Boot Trust Not Required"
-#~ msgstr "Secure Boot विश्वास की आवश्यकता नहीं है"
-
-#~ msgid "Firmware signature enforcement is not active."
-#~ msgstr "फ़र्मवेयर हस्ताक्षर प्रवर्तन सक्रिय नहीं है।"
-
-#~ msgid "OK"
-#~ msgstr "ठीक है"
-
-#~ msgid ""
-#~ "The certificate is ready, but one or more DKMS modules could not be "
-#~ "rebuilt. You can repair them after enrollment."
-#~ msgstr ""
-#~ "प्रमाणपत्र तैयार है, लेकिन एक या अधिक DKMS मॉड्यूल का पुनर्निर्माण नहीं किया जा सका। "
-#~ "नामांकन के बाद आप उनकी मरम्मत करा सकते हैं."
-
-#~ msgid "Configuration needs attention"
-#~ msgstr "कॉन्फ़िगरेशन पर ध्यान देने की आवश्यकता है"
-
-#~ msgid "System Trust Established"
-#~ msgstr "सिस्टम ट्रस्ट की स्थापना"
-
-#~ msgid "Configuration failed. Please try again."
-#~ msgstr "विन्यास विफल रहा। कृपया पुनः प्रयास करें।"
-
-#~ msgid "Generating & Signing..."
-#~ msgstr "उत्पन्न किया जा रहा है & साइन किया जा रहा है..."
 
 #~ msgid "A reboot is recommended to apply changes."
 #~ msgstr "परिवर्तन लागू करने के लिए पुनः आरंभ करने की सिफारिश की जाती है।"

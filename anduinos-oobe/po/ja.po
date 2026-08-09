@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-09 14:41+0000\n"
+"POT-Creation-Date: 2026-08-09 15:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -573,20 +573,20 @@ msgid "This may take a few minutes."
 msgstr "これには数分かかる場合があります。"
 
 #: anduinos-oobe/assets/anduinos-oobe:2299
-msgid "You can now double-click .exe files to run them."
-msgstr ".exe ファイルをダブルクリックして実行できるようになりました。"
-
-#: anduinos-oobe/assets/anduinos-oobe:2299
 msgid "✓ Sandbox deployed successfully!"
 msgstr "✓ サンドボックスが正常に展開されました！"
 
-#: anduinos-oobe/assets/anduinos-oobe:2308
-msgid "You can install Bottles later from the App Store."
-msgstr "Bottles は後から App Store からインストールできます。"
+#: anduinos-oobe/assets/anduinos-oobe:2299
+msgid "You can now double-click .exe files to run them."
+msgstr ".exe ファイルをダブルクリックして実行できるようになりました。"
 
 #: anduinos-oobe/assets/anduinos-oobe:2308
 msgid "✗ Deployment failed."
 msgstr "✗ 展開に失敗しました。"
+
+#: anduinos-oobe/assets/anduinos-oobe:2308
+msgid "You can install Bottles later from the App Store."
+msgstr "Bottles は後から App Store からインストールできます。"
 
 #: anduinos-oobe/assets/anduinos-oobe:2316
 msgid "✗ Error: "
@@ -740,12 +740,12 @@ msgid "Productive From Day One"
 msgstr "初日から生産性アップ"
 
 #: anduinos-oobe/assets/anduinos-oobe:2734
-msgid "Click any app to open its details in the App Store."
-msgstr "アプリをクリックすると、App Store で詳細を表示できます。"
-
-#: anduinos-oobe/assets/anduinos-oobe:2734
 msgid "Essential productivity and entertainment tools, hand-picked for you."
 msgstr "厳選された、基本的な生産性とエンターテインメントのツール。"
+
+#: anduinos-oobe/assets/anduinos-oobe:2734
+msgid "Click any app to open its details in the App Store."
+msgstr "アプリをクリックすると、App Store で詳細を表示できます。"
 
 #: anduinos-oobe/assets/anduinos-oobe:2746
 msgid "WeChat"
@@ -936,12 +936,12 @@ msgid "We do not collect your usage habits."
 msgstr "利用習慣を収集することはありません。"
 
 #: anduinos-oobe/assets/anduinos-oobe:3034
-msgid "There are no pervasive advertisements."
-msgstr "広範囲にわたる広告はありません。"
-
-#: anduinos-oobe/assets/anduinos-oobe:3034
 msgid "We do not upload your search history."
 msgstr "検索履歴をアップロードすることはありません。"
+
+#: anduinos-oobe/assets/anduinos-oobe:3034
+msgid "There are no pervasive advertisements."
+msgstr "広範囲にわたる広告はありません。"
 
 #: anduinos-oobe/assets/anduinos-oobe:3045
 msgid "In an era ruled by algorithms and surveillance,"
@@ -1101,6 +1101,284 @@ msgstr "AnduinOS ウェルカム"
 msgid "AnduinOS Team"
 msgstr "AnduinOS チーム"
 
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
+msgid "Secure Boot Configuration"
+msgstr "セキュアブート設定"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
+msgid ""
+"Secure Boot is a motherboard security standard that ensures only trusted "
+"software loads at startup."
+msgstr ""
+"\tSecure Bootは、起動時に信頼できるソフトウェアのみがロードされることを保証す"
+"るマザーボードのセキュリティ標準です。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
+msgid "It protects your system from low-level malware and rootkits."
+msgstr "低レベルのマルウェアやルートキットからシステムを保護します。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
+msgid "System Trust Status"
+msgstr "システム信頼ステータス"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
+msgid "Create & Enroll Certificate"
+msgstr "証明書の作成と登録"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
+msgid "Repair Module Signatures"
+msgstr "修復モジュールの署名"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
+msgid "Note: Use password <b>123456</b> after rebooting."
+msgstr "注意：再起動後にパスワード <b>123456</b> を使用してください。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
+msgid "Reboot & Configure Secure Boot"
+msgstr "再起動してセキュアブートを設定"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
+msgid "  Check Again  "
+msgstr "  再確認  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
+msgid "Motherboard hardware protection is active"
+msgstr "マザーボードのハードウェア保護が有効です"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
+msgid "Firmware does not support Secure Boot"
+msgstr "ファームウェアは Secure Boot をサポートしていません"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
+msgid "Secure Boot state could not be determined"
+msgstr "Secure Boot 状態を特定できませんでした"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
+msgid "Secure Boot is disabled"
+msgstr "Secure Boot は無効です"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+msgid "Not required without firmware enforcement"
+msgstr "ファームウェアを適用しない場合は必要ありません"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+msgid "Not checked because Secure Boot state is unknown"
+msgstr "Secure Boot の状態が不明なためチェックされません"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
+msgid "Certificate generated locally"
+msgstr "証明書はローカルで生成されました"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
+msgid "Missing local certificate"
+msgstr "ローカル証明書が見つかりません"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
+msgid "Certificate is trusted by motherboard"
+msgstr "マザーボードによって証明書が信頼されています"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
+msgid "Pending enrollment in blue screen (MOKManager)"
+msgstr "ブルー画面（MOKManager）での登録待ち"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
+msgid "Certificate is not trusted by motherboard"
+msgstr "証明書はマザーボードによって信頼されていません"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
+msgid "Kernel signature enforcement is inactive"
+msgstr "カーネル署名の強制は非アクティブです"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
+msgid "Driver trust cannot be verified"
+msgstr "ドライバーの信頼性を検証できません"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
+msgid ""
+"Secure Boot trust is ready. No third-party kernel modules are currently "
+"installed."
+msgstr ""
+"Secure Boot 信頼の準備ができました。現在、サードパーティのカーネル モジュール"
+"はインストールされていません。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
+msgid "Drivers are signed and ready to load"
+msgstr "ドライバーは署名済みで読み込み準備が完了しています"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
+msgid "Drivers are trusted, but automatic DKMS signing needs repair"
+msgstr "ドライバーは信頼されていますが、自動 DKMS 署名を修復する必要があります"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
+msgid "No signed third-party drivers detected"
+msgstr "署名済みサードパーティ製ドライバーは検出されませんでした"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
+msgid "Some DKMS modules need to be re-signed"
+msgstr "一部の DKMS モジュールは再署名する必要があります"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
+msgid "Enroll Existing Certificate"
+msgstr "既存の証明書を登録します"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
+msgid "Repair Automatic DKMS Signing"
+msgstr "自動 DKMS 署名を修復します"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
+msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgstr ""
+"このファームウェアは Secure Boot を提供しません。証明書は必要ありません。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
+msgid ""
+"Secure Boot status could not be read. Driver trust operations are blocked "
+"until detection succeeds."
+msgstr ""
+"Secure Boot ステータスを読み取れませんでした。ドライバーの信頼操作は、検出が"
+"成功するまでブロックされます。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
+msgid "No certificate is required while Secure Boot is disabled."
+msgstr "Secure Boot が無効になっている間は証明書は必要ありません。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
+msgid "System Trust Established. Third-party drivers will load securely."
+msgstr ""
+"システムの信頼が確立されました。サードパーティ製ドライバーは安全にロードされ"
+"ます。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
+msgid "The certificate is enrolled and current drivers are trusted."
+msgstr "証明書は登録されており、現在のドライバーは信頼されています。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
+msgid "Repair automatic DKMS signing before future driver updates."
+msgstr "今後のドライバー更新の前に、自動 DKMS 署名を修復します。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+msgid "The certificate is enrolled, but some modules are not signed with it."
+msgstr ""
+"証明書は登録されていますが、一部のモジュールは証明書で署名されていません。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
+msgid "A certificate is waiting for enrollment."
+msgstr "証明書は登録を待機しています。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
+msgid "Restart and enter password 123456 in MOKManager."
+msgstr "再起動し、MOKManager にパスワード 123456 を入力します。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
+msgid "The local trust certificate is not yet enrolled."
+msgstr "ローカル信頼証明書はまだ登録されていません。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
+msgid "You must configure this to use third-party drivers like NVIDIA."
+msgstr ""
+"NVIDIA などのサードパーティ製ドライバーを使用するには、これを設定する必要があ"
+"ります。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
+msgid "The local trust certificate is missing."
+msgstr "ローカルの信頼証明書がありません。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
+msgid "  Checking...  "
+msgstr "  確認中...  "
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
+msgid "Reboot Required"
+msgstr "再起動が必要です"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
+msgid "Please trust the certificate upon reboot using password 123456."
+msgstr "再起動時にパスワード 123456 を使用して証明書を信頼してください。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
+msgid "Reboot"
+msgstr "再起動"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
+msgid "Success! When you reboot, a blue screen will appear."
+msgstr "成功！再起動すると、青い画面が表示されます。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
+msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
+msgstr ""
+"「MOK の登録」→「続行」→「はい」を選択し、パスワード：123456 を入力してくださ"
+"い"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
+msgid "Certificate Created"
+msgstr "証明書が作成されました"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
+msgid "Later"
+msgstr "後で"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
+msgid "Secure Boot Trust Not Required"
+msgstr "Secure Boot 信頼は必要ありません"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
+msgid "Firmware signature enforcement is not active."
+msgstr "ファームウェア署名の強制はアクティブではありません。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
+msgid "OK"
+msgstr "OK"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
+msgid ""
+"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
+"You can repair them after enrollment."
+msgstr ""
+"証明書の準備はできていますが、1 つ以上の DKMS モジュールを再構築できませんで"
+"した。登録後に修復することもできます。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
+msgid "Configuration needs attention"
+msgstr "構成には注意が必要です"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
+msgid "System Trust Established"
+msgstr "システム信頼が確立されました"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
+msgid "Driver Signature Trusted"
+msgstr "ドライバの署名は信頼されています"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
+msgid "Configuration failed. Please try again."
+msgstr "設定に失敗しました。もう一度お試しください。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
+msgid "Please check the advanced output."
+msgstr "詳細出力をご確認ください。"
+
+#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
+msgid "Generating & Signing..."
+msgstr "生成および署名中..."
+
 #~ msgid "Unleash Your Graphics Hardware"
 #~ msgstr "グラフィックスハードウェアの性能を最大限に引き出す"
 
@@ -1186,9 +1464,6 @@ msgstr "AnduinOS チーム"
 #~ msgid "The driver is not installed"
 #~ msgstr "ドライバがインストールされていません"
 
-#~ msgid "Driver Signature Trusted"
-#~ msgstr "ドライバの署名は信頼されています"
-
 #~ msgid "Driver not installed, signature missing"
 #~ msgstr "ドライバがインストールされておらず、署名がありません"
 
@@ -1197,9 +1472,6 @@ msgstr "AnduinOS チーム"
 
 #~ msgid "Not detected"
 #~ msgstr "検出されませんでした"
-
-#~ msgid "Secure Boot state could not be determined"
-#~ msgstr "Secure Boot 状態を特定できませんでした"
 
 #~ msgid "Driver is NOT signed"
 #~ msgstr "ドライバに署名されていません"
@@ -1222,12 +1494,6 @@ msgstr "AnduinOS チーム"
 #~ msgid "Driver standing by. Waiting for controller connection..."
 #~ msgstr "ドライバは待機中です。コントローラーの接続を待っています..."
 
-#~ msgid "Driver trust cannot be verified"
-#~ msgstr "ドライバーの信頼性を検証できません"
-
-#~ msgid "A certificate is waiting for enrollment."
-#~ msgstr "証明書は登録を待機しています。"
-
 #~ msgid "Driver cannot load due to missing signature trust"
 #~ msgstr "署名の信頼関係が不足しているため、ドライバを読み込めません"
 
@@ -1240,18 +1506,6 @@ msgstr "AnduinOS チーム"
 #~ msgid "  Install Xbox Driver  "
 #~ msgstr "Xbox ドライバーをインストール"
 
-#~ msgid "Repair Module Signatures"
-#~ msgstr "修復モジュールの署名"
-
-#~ msgid "Create & Enroll Certificate"
-#~ msgstr "証明書の作成と登録"
-
-#~ msgid "Reboot & Configure Secure Boot"
-#~ msgstr "再起動してセキュアブートを設定"
-
-#~ msgid "The local trust certificate is not yet enrolled."
-#~ msgstr "ローカル信頼証明書はまだ登録されていません。"
-
 #~ msgid ""
 #~ "⚠️ The driver signature does not match your system certificate. Click Fix "
 #~ "& Reinstall to repair the driver."
@@ -1259,197 +1513,14 @@ msgstr "AnduinOS チーム"
 #~ "⚠️ ドライバー署名がシステムの証明書と一致しません。[修復して再インストー"
 #~ "ル] をクリックしてドライバーを修復してください。"
 
-#~ msgid "  Check Again  "
-#~ msgstr "  再確認  "
-
 #~ msgid "Installing Xbox controller driver…"
 #~ msgstr "Xbox コントローラードライバーをインストールしています…"
 
 #~ msgid "This may take a minute."
 #~ msgstr "これには数分かかる場合があります。"
 
-#~ msgid "  Checking...  "
-#~ msgstr "  確認中...  "
-
-#~ msgid "Please check the advanced output."
-#~ msgstr "詳細出力をご確認ください。"
-
 #~ msgid "Repairing driver signature…"
 #~ msgstr "ドライバー署名を修復しています…"
-
-#~ msgid "Secure Boot Configuration"
-#~ msgstr "セキュアブート設定"
-
-#~ msgid "Reboot Required"
-#~ msgstr "再起動が必要です"
-
-#~ msgid "Restart and enter password 123456 in MOKManager."
-#~ msgstr "再起動し、MOKManager にパスワード 123456 を入力します。"
-
-#~ msgid "Cancel"
-#~ msgstr "キャンセル"
-
-#~ msgid "Reboot"
-#~ msgstr "再起動"
-
-#~ msgid ""
-#~ "Secure Boot is a motherboard security standard that ensures only trusted "
-#~ "software loads at startup."
-#~ msgstr ""
-#~ "\tSecure Bootは、起動時に信頼できるソフトウェアのみがロードされることを保"
-#~ "証するマザーボードのセキュリティ標準です。"
-
-#~ msgid "It protects your system from low-level malware and rootkits."
-#~ msgstr "低レベルのマルウェアやルートキットからシステムを保護します。"
-
-#~ msgid "System Trust Status"
-#~ msgstr "システム信頼ステータス"
-
-#~ msgid "Note: Use password <b>123456</b> after rebooting."
-#~ msgstr "注意：再起動後にパスワード <b>123456</b> を使用してください。"
-
-#~ msgid "Motherboard hardware protection is active"
-#~ msgstr "マザーボードのハードウェア保護が有効です"
-
-#~ msgid "Firmware does not support Secure Boot"
-#~ msgstr "ファームウェアは Secure Boot をサポートしていません"
-
-#~ msgid "Secure Boot is disabled"
-#~ msgstr "Secure Boot は無効です"
-
-#~ msgid "Not required without firmware enforcement"
-#~ msgstr "ファームウェアを適用しない場合は必要ありません"
-
-#~ msgid "Not checked because Secure Boot state is unknown"
-#~ msgstr "Secure Boot の状態が不明なためチェックされません"
-
-#~ msgid "Certificate generated locally"
-#~ msgstr "証明書はローカルで生成されました"
-
-#~ msgid "Missing local certificate"
-#~ msgstr "ローカル証明書が見つかりません"
-
-#~ msgid "Certificate is trusted by motherboard"
-#~ msgstr "マザーボードによって証明書が信頼されています"
-
-#~ msgid "Pending enrollment in blue screen (MOKManager)"
-#~ msgstr "ブルー画面（MOKManager）での登録待ち"
-
-#~ msgid "Certificate is not trusted by motherboard"
-#~ msgstr "証明書はマザーボードによって信頼されていません"
-
-#~ msgid "Kernel signature enforcement is inactive"
-#~ msgstr "カーネル署名の強制は非アクティブです"
-
-#~ msgid ""
-#~ "Secure Boot trust is ready. No third-party kernel modules are currently "
-#~ "installed."
-#~ msgstr ""
-#~ "Secure Boot 信頼の準備ができました。現在、サードパーティのカーネル モ"
-#~ "ジュールはインストールされていません。"
-
-#~ msgid "Drivers are signed and ready to load"
-#~ msgstr "ドライバーは署名済みで読み込み準備が完了しています"
-
-#~ msgid "Drivers are trusted, but automatic DKMS signing needs repair"
-#~ msgstr ""
-#~ "ドライバーは信頼されていますが、自動 DKMS 署名を修復する必要があります"
-
-#~ msgid "No signed third-party drivers detected"
-#~ msgstr "署名済みサードパーティ製ドライバーは検出されませんでした"
-
-#~ msgid "Some DKMS modules need to be re-signed"
-#~ msgstr "一部の DKMS モジュールは再署名する必要があります"
-
-#~ msgid "Enroll Existing Certificate"
-#~ msgstr "既存の証明書を登録します"
-
-#~ msgid "Repair Automatic DKMS Signing"
-#~ msgstr "自動 DKMS 署名を修復します"
-
-#~ msgid ""
-#~ "This firmware does not provide Secure Boot. No certificate is required."
-#~ msgstr ""
-#~ "このファームウェアは Secure Boot を提供しません。証明書は必要ありません。"
-
-#~ msgid ""
-#~ "Secure Boot status could not be read. Driver trust operations are blocked "
-#~ "until detection succeeds."
-#~ msgstr ""
-#~ "Secure Boot ステータスを読み取れませんでした。ドライバーの信頼操作は、検出"
-#~ "が成功するまでブロックされます。"
-
-#~ msgid "No certificate is required while Secure Boot is disabled."
-#~ msgstr "Secure Boot が無効になっている間は証明書は必要ありません。"
-
-#~ msgid "System Trust Established. Third-party drivers will load securely."
-#~ msgstr ""
-#~ "システムの信頼が確立されました。サードパーティ製ドライバーは安全にロードさ"
-#~ "れます。"
-
-#~ msgid "The certificate is enrolled and current drivers are trusted."
-#~ msgstr "証明書は登録されており、現在のドライバーは信頼されています。"
-
-#~ msgid "Repair automatic DKMS signing before future driver updates."
-#~ msgstr "今後のドライバー更新の前に、自動 DKMS 署名を修復します。"
-
-#~ msgid ""
-#~ "The certificate is enrolled, but some modules are not signed with it."
-#~ msgstr ""
-#~ "証明書は登録されていますが、一部のモジュールは証明書で署名されていません。"
-
-#~ msgid "You must configure this to use third-party drivers like NVIDIA."
-#~ msgstr ""
-#~ "NVIDIA などのサードパーティ製ドライバーを使用するには、これを設定する必要"
-#~ "があります。"
-
-#~ msgid "The local trust certificate is missing."
-#~ msgstr "ローカルの信頼証明書がありません。"
-
-#~ msgid "Please trust the certificate upon reboot using password 123456."
-#~ msgstr "再起動時にパスワード 123456 を使用して証明書を信頼してください。"
-
-#~ msgid "Success! When you reboot, a blue screen will appear."
-#~ msgstr "成功！再起動すると、青い画面が表示されます。"
-
-#~ msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
-#~ msgstr ""
-#~ "「MOK の登録」→「続行」→「はい」を選択し、パスワード：123456 を入力してく"
-#~ "ださい"
-
-#~ msgid "Certificate Created"
-#~ msgstr "証明書が作成されました"
-
-#~ msgid "Later"
-#~ msgstr "後で"
-
-#~ msgid "Secure Boot Trust Not Required"
-#~ msgstr "Secure Boot 信頼は必要ありません"
-
-#~ msgid "Firmware signature enforcement is not active."
-#~ msgstr "ファームウェア署名の強制はアクティブではありません。"
-
-#~ msgid "OK"
-#~ msgstr "OK"
-
-#~ msgid ""
-#~ "The certificate is ready, but one or more DKMS modules could not be "
-#~ "rebuilt. You can repair them after enrollment."
-#~ msgstr ""
-#~ "証明書の準備はできていますが、1 つ以上の DKMS モジュールを再構築できません"
-#~ "でした。登録後に修復することもできます。"
-
-#~ msgid "Configuration needs attention"
-#~ msgstr "構成には注意が必要です"
-
-#~ msgid "System Trust Established"
-#~ msgstr "システム信頼が確立されました"
-
-#~ msgid "Configuration failed. Please try again."
-#~ msgstr "設定に失敗しました。もう一度お試しください。"
-
-#~ msgid "Generating & Signing..."
-#~ msgstr "生成および署名中..."
 
 #~ msgid "A reboot is recommended to apply changes."
 #~ msgstr "変更を反映するには再起動を推奨します。"
