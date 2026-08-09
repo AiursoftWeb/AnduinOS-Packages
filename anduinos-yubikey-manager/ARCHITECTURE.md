@@ -119,6 +119,36 @@ OpenSSH PIN prompts use the application binary as a private askpass helper. The 
 through an inherited pipe and zeroizing memory; it is never placed in argv, environment
 values, terminal transcripts, logs, or temporary files.
 
+## SSH connection persistence
+
+The SSH page exposes an independent, default-off connection-persistence switch. It is
+available even when no YubiKey or SSH agent is detected because it manages only the
+current desktop user's OpenSSH client configuration. Enabling it does not connect to a
+server, load a key, change an authenticator touch policy, or use `pkexec`.
+
+The fixed preset uses `ControlMaster auto`, `ControlPath ~/.ssh/cm-%r@%h:%p`, and
+`ControlPersist 10m`. The directives live in
+`~/.ssh/config.d/anduinos-yubikey-manager.inc`; one explicitly marked `Host *` and
+`Include config.d/anduinos-yubikey-manager.inc` block is appended to `~/.ssh/config`.
+OpenSSH keeps the first value obtained for each option, so host-specific values that
+appear earlier in the user's configuration continue to take priority over these global
+defaults.
+
+Configuration reads and `ssh -G` validation run on GLib's blocking pool. New directories
+and files use modes 0700 and 0600 respectively. Existing ownership, restrictive modes,
+non-managed bytes, and original permissions are preserved. Candidate files are written
+and synchronized in the destination directory, rechecked against the original snapshot,
+validated without making a network connection, and atomically renamed. A concurrent
+edit aborts the operation instead of being overwritten.
+
+The switch recognizes only its exact marker block and exact managed fragment. Duplicate
+or incomplete markers, modified content, unsafe paths, symlinks, or an additional
+`Include` that could load the fragment produce a needs-attention state and are never
+silently repaired. Disabling removes only the marked block, then deletes the exact
+fragment only when no other include may reference it. It neither searches for equivalent
+handwritten settings nor terminates existing ControlMaster processes; an already-running
+master exits according to its existing idle timeout.
+
 ## Git SSH commit signing
 
 The Git Signing page is self-contained. It lists connected authenticators and can inspect
