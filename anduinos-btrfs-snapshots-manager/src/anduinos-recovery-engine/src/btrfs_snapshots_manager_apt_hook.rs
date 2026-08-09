@@ -30,9 +30,7 @@ fn main() -> ExitCode {
             "Disk Snapshots Manager package hook {operation}: transaction {} is {:?}",
             transaction.id, transaction.phase
         ),
-        Ok(None) => {
-            eprintln!("Disk Snapshots Manager package hook {operation}: disabled by policy")
-        }
+        Ok(None) => {}
         Err(error) => {
             // A system snapshot is valuable, but package-manager availability is
             // the stronger invariant. The apt.conf wrapper is a second
