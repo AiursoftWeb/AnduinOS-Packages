@@ -26,6 +26,7 @@ use zbus::{Connection, ConnectionBuilder, interface};
 mod audit;
 mod btrfs;
 mod packages;
+mod systemd_worker;
 
 /// Global counter for mutex poisoning events (for monitoring)
 static MUTEX_POISON_COUNT: AtomicUsize = AtomicUsize::new(0);

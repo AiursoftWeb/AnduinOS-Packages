@@ -28,8 +28,9 @@ use std::sync::{
 use std::thread;
 use std::time::Instant;
 
+use crate::systemd_worker;
+
 const BTRFS: &str = "/usr/bin/btrfs";
-const SYSTEMD_RUN: &str = "/usr/bin/systemd-run";
 const MAX_BTRFS_OUTPUT_BYTES: usize = 16 * 1024 * 1024;
 const MAX_CACHE_BYTES: u64 = 64 * 1024;
 static MEASUREMENT_LOCK: Mutex<()> = Mutex::new(());
@@ -103,10 +104,40 @@ pub struct DefragDetails {
     pub error: Option<String>,
 }
 
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+enum TaskPhase {
+    #[default]
+    Idle,
+    Starting,
+    Running,
+    Cancelling,
+    Finished,
+    Cancelled,
+    Failed,
+}
+
+impl TaskPhase {
+    const fn as_wire_name(self) -> &'static str {
+        match self {
+            Self::Idle => "idle",
+            Self::Starting => "starting",
+            Self::Running => "running",
+            Self::Cancelling => "cancelling",
+            Self::Finished => "finished",
+            Self::Cancelled => "cancelled",
+            Self::Failed => "failed",
+        }
+    }
+
+    const fn is_active(self) -> bool {
+        matches!(self, Self::Starting | Self::Running | Self::Cancelling)
+    }
+}
+
 #[derive(Debug, Default)]
 struct ManagedTaskState {
     generation: u64,
-    status: String,
+    phase: TaskPhase,
     started: Option<Instant>,
     elapsed_seconds: Option<u64>,
     first_count: Option<u64>,
@@ -245,7 +276,7 @@ pub fn start_filtered_balance() -> Result<String> {
         let mut task = BALANCE_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
         *task = ManagedTaskState {
             generation,
-            status: "starting".into(),
+            phase: TaskPhase::Starting,
             started: Some(Instant::now()),
             ..ManagedTaskState::default()
         };
@@ -257,7 +288,7 @@ pub fn start_filtered_balance() -> Result<String> {
     {
         BALANCE_TASK_RUNNING.store(false, Ordering::Release);
         let mut task = BALANCE_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
-        task.status = "failed".into();
+        task.phase = TaskPhase::Failed;
         task.error = Some(format!("Failed to start the space rebalance task: {error}"));
         bail!("Failed to start the space rebalance task: {error}");
     }
@@ -268,17 +299,17 @@ pub fn start_filtered_balance() -> Result<String> {
 pub fn cancel_balance() -> Result<String> {
     let was_starting = {
         let mut task = BALANCE_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
-        let was_starting = task.status == "starting";
+        let was_starting = task.phase == TaskPhase::Starting;
         task.cancel_requested = true;
-        if matches!(task.status.as_str(), "starting" | "running") {
-            task.status = "cancelling".into();
+        if matches!(task.phase, TaskPhase::Starting | TaskPhase::Running) {
+            task.phase = TaskPhase::Cancelling;
         }
         was_starting
     };
     let cancel_generation = BALANCE_CANCEL_GENERATION
         .fetch_add(1, Ordering::AcqRel)
         .saturating_add(1);
-    let result = run_btrfs_host_worker(
+    let result = systemd_worker::run_btrfs(
         &format!("anduinos-btrfs-balance-cancel-{cancel_generation}"),
         &["balance", "cancel", ROOT_MOUNT],
     );
@@ -300,19 +331,19 @@ fn run_balance_task(generation: u64) {
             return;
         }
         if task.cancel_requested {
-            task.status = "cancelled".into();
+            task.phase = TaskPhase::Cancelled;
             task.elapsed_seconds = task.started.map(|started| started.elapsed().as_secs());
             BALANCE_TASK_RUNNING.store(false, Ordering::Release);
             return;
         }
-        task.status = "running".into();
+        task.phase = TaskPhase::Running;
     }
     // The main helper intentionally runs with ProtectSystem=strict. A Btrfs
     // balance needs a writable view of the root mount even though it only
     // issues fixed ioctls. Run that one fixed command in a short-lived,
     // separately sandboxed systemd unit instead of weakening the broad D-Bus
     // helper's filesystem protection.
-    let result = run_btrfs_host_worker(
+    let result = systemd_worker::run_btrfs(
         &format!("anduinos-btrfs-balance-{generation}"),
         &["balance", "start", "-dusage=50", "-musage=50", ROOT_MOUNT],
     );
@@ -330,11 +361,11 @@ fn run_balance_task(generation: u64) {
         task.percent_remaining = Some(0);
     }
     if cancelled {
-        task.status = "cancelled".into();
+        task.phase = TaskPhase::Cancelled;
     } else if result.success {
-        task.status = "finished".into();
+        task.phase = TaskPhase::Finished;
     } else {
-        task.status = "failed".into();
+        task.phase = TaskPhase::Failed;
         task.error = Some(format_btrfs_error(&result.stderr));
     }
     BALANCE_TASK_RUNNING.store(false, Ordering::Release);
@@ -356,7 +387,7 @@ pub fn start_defragment_home() -> Result<String> {
         let mut task = DEFRAG_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
         *task = ManagedTaskState {
             generation,
-            status: "starting".into(),
+            phase: TaskPhase::Starting,
             started: Some(Instant::now()),
             ..ManagedTaskState::default()
         };
@@ -368,7 +399,7 @@ pub fn start_defragment_home() -> Result<String> {
     {
         DEFRAG_TASK_RUNNING.store(false, Ordering::Release);
         let mut task = DEFRAG_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
-        task.status = "failed".into();
+        task.phase = TaskPhase::Failed;
         task.error = Some(format!(
             "Failed to start Home file defragmentation: {error}"
         ));
@@ -381,11 +412,11 @@ pub fn start_defragment_home() -> Result<String> {
 pub fn cancel_defragment_home() -> Result<String> {
     let pid = {
         let mut task = DEFRAG_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
-        if !matches!(task.status.as_str(), "starting" | "running" | "cancelling") {
+        if !task.phase.is_active() {
             bail!("Home file defragmentation is not running");
         }
         task.cancel_requested = true;
-        task.status = "cancelling".into();
+        task.phase = TaskPhase::Cancelling;
         task.pid
     };
 
@@ -417,7 +448,7 @@ fn run_defrag_task(generation: u64) {
         Err(error) => {
             finish_defrag_task(
                 generation,
-                "failed",
+                TaskPhase::Failed,
                 Some(format!("Could not start Btrfs defragmentation: {error}")),
             );
             return;
@@ -427,10 +458,10 @@ fn run_defrag_task(generation: u64) {
     let cancel_immediately = {
         let mut task = DEFRAG_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
         if task.generation == generation {
-            task.status = if task.cancel_requested {
-                "cancelling".into()
+            task.phase = if task.cancel_requested {
+                TaskPhase::Cancelling
             } else {
-                "running".into()
+                TaskPhase::Running
             };
             task.pid = Some(child.id());
         }
@@ -473,21 +504,25 @@ fn run_defrag_task(generation: u64) {
         .unwrap_or_else(|lock| lock.into_inner())
         .cancel_requested;
     match exit_status {
-        Ok(_) if cancelled => finish_defrag_task(generation, "cancelled", None),
-        Ok(status) if status.success() => finish_defrag_task(generation, "finished", None),
-        Ok(_) => finish_defrag_task(generation, "failed", Some(format_btrfs_error(&stderr))),
+        Ok(_) if cancelled => finish_defrag_task(generation, TaskPhase::Cancelled, None),
+        Ok(status) if status.success() => finish_defrag_task(generation, TaskPhase::Finished, None),
+        Ok(_) => finish_defrag_task(
+            generation,
+            TaskPhase::Failed,
+            Some(format_btrfs_error(&stderr)),
+        ),
         Err(error) => finish_defrag_task(
             generation,
-            "failed",
+            TaskPhase::Failed,
             Some(format!("Could not wait for Btrfs defragmentation: {error}")),
         ),
     }
 }
 
-fn finish_defrag_task(generation: u64, status: &str, error: Option<String>) {
+fn finish_defrag_task(generation: u64, phase: TaskPhase, error: Option<String>) {
     let mut task = DEFRAG_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
     if task.generation == generation {
-        task.status = status.into();
+        task.phase = phase;
         task.elapsed_seconds = task.started.map(|started| started.elapsed().as_secs());
         task.first_count = Some(DEFRAG_ITEMS_PROCESSED.load(Ordering::Acquire));
         task.error = error;
@@ -723,15 +758,15 @@ fn balance_task_status(
         .elapsed_seconds
         .or_else(|| task.started.map(|started| started.elapsed().as_secs()));
     let native_running = matches!(native_status, "running" | "paused");
-    let managed_active = matches!(task.status.as_str(), "starting" | "running" | "cancelling");
+    let managed_active = task.phase.is_active();
     let status = if native_running {
-        if task.status == "cancelling" {
+        if task.phase == TaskPhase::Cancelling {
             "cancelling".into()
         } else {
             native_status.into()
         }
     } else if managed_active || task.generation > 0 {
-        task.status.clone()
+        task.phase.as_wire_name().into()
     } else {
         native_status.into()
     };
@@ -765,18 +800,11 @@ fn defrag_task_status() -> (String, DefragDetails) {
         .elapsed_seconds
         .or_else(|| task.started.map(|started| started.elapsed().as_secs()));
     (
-        if task.status.is_empty() {
-            "idle".into()
-        } else {
-            task.status.clone()
-        },
+        task.phase.as_wire_name().into(),
         DefragDetails {
             generation: task.generation,
             elapsed_seconds,
-            items_processed: if matches!(
-                task.status.as_str(),
-                "starting" | "running" | "cancelling"
-            ) {
+            items_processed: if task.phase.is_active() {
                 DEFRAG_ITEMS_PROCESSED.load(Ordering::Acquire)
             } else {
                 task.first_count.unwrap_or(0)
@@ -824,49 +852,6 @@ fn run_btrfs_allow_failure(arguments: &[&str]) -> CommandResult {
             success: false,
             stdout: String::new(),
             stderr: error.to_string(),
-        },
-    }
-}
-
-fn run_btrfs_host_worker(unit_name: &str, arguments: &[&str]) -> CommandResult {
-    match Command::new(SYSTEMD_RUN)
-        .args([
-            "--quiet",
-            "--wait",
-            "--pipe",
-            "--collect",
-            "--property=Type=exec",
-            "--property=NoNewPrivileges=yes",
-            "--property=PrivateNetwork=yes",
-            "--property=ProtectSystem=full",
-            "--property=ProtectHome=read-only",
-            "--property=ProtectKernelTunables=yes",
-            "--property=ProtectKernelModules=yes",
-            "--property=ProtectControlGroups=yes",
-            "--property=RestrictAddressFamilies=AF_UNIX AF_NETLINK",
-            "--property=CapabilityBoundingSet=CAP_SYS_ADMIN",
-            "--property=LockPersonality=yes",
-            "--property=MemoryDenyWriteExecute=yes",
-            "--property=RestrictSUIDSGID=yes",
-            "--property=UMask=0077",
-        ])
-        .arg(format!("--unit={unit_name}"))
-        .arg(BTRFS)
-        .args(arguments)
-        .env_clear()
-        .env("PATH", "/usr/sbin:/usr/bin:/sbin:/bin")
-        .env("LC_ALL", "C")
-        .output()
-    {
-        Ok(output) => CommandResult {
-            success: output.status.success(),
-            stdout: String::from_utf8_lossy(&output.stdout).into_owned(),
-            stderr: String::from_utf8_lossy(&output.stderr).into_owned(),
-        },
-        Err(error) => CommandResult {
-            success: false,
-            stdout: String::new(),
-            stderr: format!("Could not start the isolated Btrfs worker: {error}"),
         },
     }
 }
@@ -1130,6 +1115,23 @@ fn run_btrfs(arguments: &[&std::ffi::OsStr]) -> Result<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn managed_task_phases_keep_the_existing_wire_protocol() {
+        let phases = [
+            (TaskPhase::Idle, "idle", false),
+            (TaskPhase::Starting, "starting", true),
+            (TaskPhase::Running, "running", true),
+            (TaskPhase::Cancelling, "cancelling", true),
+            (TaskPhase::Finished, "finished", false),
+            (TaskPhase::Cancelled, "cancelled", false),
+            (TaskPhase::Failed, "failed", false),
+        ];
+        for (phase, wire_name, active) in phases {
+            assert_eq!(phase.as_wire_name(), wire_name);
+            assert_eq!(phase.is_active(), active);
+        }
+    }
 
     #[test]
     fn parses_raw_subvolume_identity() {
