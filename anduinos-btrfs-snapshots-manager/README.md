@@ -16,11 +16,11 @@ system rollback.
 
 ## Product behavior
 
-A snapshot may be protected permanently or be eligible for Smart Cleanup.
+A snapshot may be protected permanently or be eligible for automatic cleanup.
 Manual, scheduled, and package-change snapshots participate in cleanup by
 default. A safety snapshot created before a rollback is protected while its
-transaction is pending; afterward it can be deleted manually or by Smart Cleanup.
-Smart Cleanup uses explicit time buckets: keep everything in the recent window,
+transaction is pending; afterward it can be deleted manually or by automatic cleanup.
+Automatic cleanup uses explicit time buckets: keep everything in the recent window,
 then one representative per day, week, month, and year. System and Home policies
 are independent and use a configurable one-to-24-hour freshness interval.
 
@@ -91,7 +91,7 @@ The release baseline is resolute-addon with GTK 4.10+, libadwaita 1.4+, Rust
 - `src/btrfs-snapshots-manager-helper/`: privileged D-Bus adapter and policy enforcement.
 - `src/anduinos-recovery-engine/`: GUI-independent trusted snapshot and safe
   rollback engine.
-- `src/btrfs-snapshots-manager-scheduler/`: systemd-timer freshness and Smart Cleanup worker.
+- `src/btrfs-snapshots-manager-scheduler/`: systemd-timer freshness and automatic cleanup worker.
 - `src/btrfs-snapshots-manager-notifier/`: unprivileged session notification bridge.
 - `src/snapshots-manager-common/`: shared automation, retention, layout, and metadata
   types.

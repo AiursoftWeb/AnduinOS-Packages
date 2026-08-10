@@ -17,16 +17,33 @@ use chrono::Utc;
 use snapshots_manager_common::SnapshotSpace;
 use std::collections::HashMap;
 use std::fs::{self, OpenOptions};
-use std::io::Write;
+use std::io::{BufRead, BufReader, Read, Write};
 use std::os::unix::fs::{DirBuilderExt, OpenOptionsExt};
 use std::path::{Path, PathBuf};
-use std::process::Command;
-use std::sync::Mutex;
+use std::process::{Command, Stdio};
+use std::sync::{
+    LazyLock, Mutex,
+    atomic::{AtomicBool, AtomicU64, Ordering},
+};
+use std::thread;
+use std::time::Instant;
 
 const BTRFS: &str = "/usr/bin/btrfs";
+const SYSTEMD_RUN: &str = "/usr/bin/systemd-run";
 const MAX_BTRFS_OUTPUT_BYTES: usize = 16 * 1024 * 1024;
 const MAX_CACHE_BYTES: u64 = 64 * 1024;
 static MEASUREMENT_LOCK: Mutex<()> = Mutex::new(());
+static SCRUB_TASK_RUNNING: AtomicBool = AtomicBool::new(false);
+static BALANCE_TASK_RUNNING: AtomicBool = AtomicBool::new(false);
+static BALANCE_GENERATION: AtomicU64 = AtomicU64::new(0);
+static BALANCE_CANCEL_GENERATION: AtomicU64 = AtomicU64::new(0);
+static BALANCE_TASK: LazyLock<Mutex<ManagedTaskState>> =
+    LazyLock::new(|| Mutex::new(ManagedTaskState::default()));
+static DEFRAG_TASK_RUNNING: AtomicBool = AtomicBool::new(false);
+static DEFRAG_GENERATION: AtomicU64 = AtomicU64::new(0);
+static DEFRAG_ITEMS_PROCESSED: AtomicU64 = AtomicU64::new(0);
+static DEFRAG_TASK: LazyLock<Mutex<ManagedTaskState>> =
+    LazyLock::new(|| Mutex::new(ManagedTaskState::default()));
 
 const ROOT_MOUNT: &str = "/";
 
@@ -43,7 +60,62 @@ pub struct FilesystemStatus {
     pub discard: String,
     pub quota: String,
     pub scrub: String,
+    pub scrub_details: ScrubDetails,
     pub balance: String,
+    pub balance_details: BalanceDetails,
+    pub defrag: String,
+    pub defrag_details: DefragDetails,
+}
+
+#[derive(Debug, Default, serde::Serialize)]
+pub struct ScrubDetails {
+    pub started_at: Option<String>,
+    pub duration: Option<String>,
+    pub time_left: Option<String>,
+    pub total_bytes: Option<u64>,
+    pub bytes_scrubbed: Option<u64>,
+    pub rate_bytes_per_second: Option<u64>,
+    pub read_errors: u64,
+    pub checksum_errors: u64,
+    pub verify_errors: u64,
+    pub superblock_errors: u64,
+    pub uncorrectable_errors: u64,
+    pub unverified_errors: u64,
+    pub corrected_errors: u64,
+}
+
+#[derive(Debug, Default, serde::Serialize)]
+pub struct BalanceDetails {
+    pub generation: u64,
+    pub elapsed_seconds: Option<u64>,
+    pub chunks_balanced: Option<u64>,
+    pub chunks_total: Option<u64>,
+    pub chunks_considered: Option<u64>,
+    pub percent_remaining: Option<u64>,
+    pub error: Option<String>,
+}
+
+#[derive(Debug, Default, serde::Serialize)]
+pub struct DefragDetails {
+    pub generation: u64,
+    pub elapsed_seconds: Option<u64>,
+    pub items_processed: u64,
+    pub error: Option<String>,
+}
+
+#[derive(Debug, Default)]
+struct ManagedTaskState {
+    generation: u64,
+    status: String,
+    started: Option<Instant>,
+    elapsed_seconds: Option<u64>,
+    first_count: Option<u64>,
+    total_count: Option<u64>,
+    considered_count: Option<u64>,
+    percent_remaining: Option<u64>,
+    error: Option<String>,
+    pid: Option<u32>,
+    cancel_requested: bool,
 }
 
 pub fn filesystem_status() -> Result<FilesystemStatus> {
@@ -55,10 +127,25 @@ pub fn filesystem_status() -> Result<FilesystemStatus> {
         std::ffi::OsStr::new(ROOT_MOUNT),
     ])?;
     let quota = run_btrfs_allow_failure(&["quota", "status", ROOT_MOUNT]);
-    let scrub = run_btrfs_allow_failure(&["scrub", "status", "-R", ROOT_MOUNT]);
+    // The summary provides aggregate byte progress while -R provides the
+    // individual error counters needed for a useful diagnostic result.
+    let scrub_summary = run_btrfs_allow_failure(&["scrub", "status", "--raw", ROOT_MOUNT]);
+    let scrub_raw = run_btrfs_allow_failure(&["scrub", "status", "-R", ROOT_MOUNT]);
     let balance = run_btrfs_allow_failure(&["balance", "status", ROOT_MOUNT]);
+    let scrub_details = parse_scrub_details(&scrub_summary.stdout, &scrub_raw.stdout);
+    let scrub = scrub_status(
+        &scrub_summary.stdout,
+        &scrub_summary.stderr,
+        scrub_summary.success,
+        &scrub_details,
+    );
+    let native_balance_status = balance_status(&balance.stdout, &balance.stderr, balance.success);
+    let native_balance_progress = parse_balance_progress(&balance.stdout);
+    let (balance, balance_details) =
+        balance_task_status(&native_balance_status, native_balance_progress);
+    let (defrag, defrag_details) = defrag_task_status();
     Ok(FilesystemStatus {
-        schema_version: 1,
+        schema_version: 3,
         available: true,
         source,
         total_bytes: usage_value(&usage, "Device size:"),
@@ -73,8 +160,12 @@ pub fn filesystem_status() -> Result<FilesystemStatus> {
             .cloned()
             .unwrap_or_else(|| "off".into()),
         quota: quota_status(&quota.stdout, quota.success),
-        scrub: scrub_status(&scrub.stdout, &scrub.stderr, scrub.success),
-        balance: balance_status(&balance.stdout, &balance.stderr, balance.success),
+        scrub,
+        scrub_details,
+        balance,
+        balance_details,
+        defrag,
+        defrag_details,
     })
 }
 
@@ -89,8 +180,49 @@ pub fn set_quota_enabled(enabled: bool) -> Result<String> {
 }
 
 pub fn start_scrub() -> Result<String> {
-    run_btrfs_mutating(&["scrub", "start", ROOT_MOUNT])?;
-    Ok("The integrity check has started in the background".into())
+    if SCRUB_TASK_RUNNING
+        .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+        .is_err()
+    {
+        bail!("An integrity check is already running");
+    }
+
+    if let Err(error) = thread::Builder::new().name("btrfs-scrub".into()).spawn(|| {
+        match run_scrub_foreground() {
+            Ok(()) => log::info!("Btrfs integrity check finished"),
+            Err(error) => log::error!("Btrfs integrity check failed: {error:#}"),
+        }
+        SCRUB_TASK_RUNNING.store(false, Ordering::Release);
+    }) {
+        SCRUB_TASK_RUNNING.store(false, Ordering::Release);
+        bail!("Failed to start the integrity check task: {error}");
+    }
+
+    Ok("The integrity check has started".into())
+}
+
+fn run_scrub_foreground() -> Result<()> {
+    // Keep btrfs-progs attached to the privileged helper for the whole run.
+    // A background scrub launched from the hardened systemd service can lose
+    // its userspace monitor as soon as the launcher exits and be marked
+    // aborted before reading any extents. `-B` makes this D-Bus operation
+    // complete only after this exact scrub has reached a terminal state. The
+    // read-only scrub mode verifies every allocated extent without requiring
+    // write access to the system root inside the hardened service namespace.
+    let result = run_btrfs_allow_failure(&["scrub", "start", "-B", "-R", "-r", "-f", ROOT_MOUNT]);
+    let combined = format!("{}\n{}", result.stdout, result.stderr).to_ascii_lowercase();
+    if result.success
+        || combined.contains("status: canceled")
+        || combined.contains("status: cancelled")
+        || combined.contains("status: aborted")
+    {
+        Ok(())
+    } else {
+        bail!(
+            "Btrfs integrity check failed: {}",
+            result.stderr.trim().trim_start_matches("ERROR: ")
+        )
+    }
 }
 
 pub fn cancel_scrub() -> Result<String> {
@@ -99,25 +231,269 @@ pub fn cancel_scrub() -> Result<String> {
 }
 
 pub fn start_filtered_balance() -> Result<String> {
-    run_btrfs_mutating(&[
-        "balance",
-        "start",
-        "--background",
-        "-dusage=50",
-        "-musage=50",
-        ROOT_MOUNT,
-    ])?;
-    Ok("A limited space rebalance has started in the background".into())
+    if BALANCE_TASK_RUNNING
+        .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+        .is_err()
+    {
+        bail!("A space rebalance is already running");
+    }
+
+    let generation = BALANCE_GENERATION
+        .fetch_add(1, Ordering::AcqRel)
+        .saturating_add(1);
+    {
+        let mut task = BALANCE_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+        *task = ManagedTaskState {
+            generation,
+            status: "starting".into(),
+            started: Some(Instant::now()),
+            ..ManagedTaskState::default()
+        };
+    }
+
+    if let Err(error) = thread::Builder::new()
+        .name("btrfs-balance".into())
+        .spawn(move || run_balance_task(generation))
+    {
+        BALANCE_TASK_RUNNING.store(false, Ordering::Release);
+        let mut task = BALANCE_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+        task.status = "failed".into();
+        task.error = Some(format!("Failed to start the space rebalance task: {error}"));
+        bail!("Failed to start the space rebalance task: {error}");
+    }
+
+    Ok("The limited space rebalance has started".into())
 }
 
 pub fn cancel_balance() -> Result<String> {
-    run_btrfs_mutating(&["balance", "cancel", ROOT_MOUNT])?;
+    let was_starting = {
+        let mut task = BALANCE_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+        let was_starting = task.status == "starting";
+        task.cancel_requested = true;
+        if matches!(task.status.as_str(), "starting" | "running") {
+            task.status = "cancelling".into();
+        }
+        was_starting
+    };
+    let cancel_generation = BALANCE_CANCEL_GENERATION
+        .fetch_add(1, Ordering::AcqRel)
+        .saturating_add(1);
+    let result = run_btrfs_host_worker(
+        &format!("anduinos-btrfs-balance-cancel-{cancel_generation}"),
+        &["balance", "cancel", ROOT_MOUNT],
+    );
+    let combined = format!("{}\n{}", result.stdout, result.stderr).to_ascii_lowercase();
+    if !result.success
+        && !(was_starting
+            && (combined.contains("no balance found") || combined.contains("not in progress")))
+    {
+        bail!("Btrfs operation failed: {}", result.stderr.trim());
+    }
     Ok("The space rebalance was cancelled".into())
 }
 
-pub fn defragment_home() -> Result<String> {
-    run_btrfs_mutating(&["filesystem", "defragment", "-r", "-czstd", "/home"])?;
-    Ok("Home file defragmentation completed".into())
+fn run_balance_task(generation: u64) {
+    {
+        let mut task = BALANCE_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+        if task.generation != generation {
+            BALANCE_TASK_RUNNING.store(false, Ordering::Release);
+            return;
+        }
+        if task.cancel_requested {
+            task.status = "cancelled".into();
+            task.elapsed_seconds = task.started.map(|started| started.elapsed().as_secs());
+            BALANCE_TASK_RUNNING.store(false, Ordering::Release);
+            return;
+        }
+        task.status = "running".into();
+    }
+    // The main helper intentionally runs with ProtectSystem=strict. A Btrfs
+    // balance needs a writable view of the root mount even though it only
+    // issues fixed ioctls. Run that one fixed command in a short-lived,
+    // separately sandboxed systemd unit instead of weakening the broad D-Bus
+    // helper's filesystem protection.
+    let result = run_btrfs_host_worker(
+        &format!("anduinos-btrfs-balance-{generation}"),
+        &["balance", "start", "-dusage=50", "-musage=50", ROOT_MOUNT],
+    );
+
+    let mut task = BALANCE_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+    if task.generation != generation {
+        BALANCE_TASK_RUNNING.store(false, Ordering::Release);
+        return;
+    }
+    task.elapsed_seconds = task.started.map(|started| started.elapsed().as_secs());
+    let cancelled = task.cancel_requested;
+    if let Some(progress) = parse_balance_completion(&result.stdout) {
+        task.first_count = progress.chunks_balanced;
+        task.total_count = progress.chunks_total;
+        task.percent_remaining = Some(0);
+    }
+    if cancelled {
+        task.status = "cancelled".into();
+    } else if result.success {
+        task.status = "finished".into();
+    } else {
+        task.status = "failed".into();
+        task.error = Some(format_btrfs_error(&result.stderr));
+    }
+    BALANCE_TASK_RUNNING.store(false, Ordering::Release);
+}
+
+pub fn start_defragment_home() -> Result<String> {
+    if DEFRAG_TASK_RUNNING
+        .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+        .is_err()
+    {
+        bail!("Home file defragmentation is already running");
+    }
+
+    DEFRAG_ITEMS_PROCESSED.store(0, Ordering::Release);
+    let generation = DEFRAG_GENERATION
+        .fetch_add(1, Ordering::AcqRel)
+        .saturating_add(1);
+    {
+        let mut task = DEFRAG_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+        *task = ManagedTaskState {
+            generation,
+            status: "starting".into(),
+            started: Some(Instant::now()),
+            ..ManagedTaskState::default()
+        };
+    }
+
+    if let Err(error) = thread::Builder::new()
+        .name("btrfs-defrag-home".into())
+        .spawn(move || run_defrag_task(generation))
+    {
+        DEFRAG_TASK_RUNNING.store(false, Ordering::Release);
+        let mut task = DEFRAG_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+        task.status = "failed".into();
+        task.error = Some(format!(
+            "Failed to start Home file defragmentation: {error}"
+        ));
+        bail!("Failed to start Home file defragmentation: {error}");
+    }
+
+    Ok("Home file defragmentation has started".into())
+}
+
+pub fn cancel_defragment_home() -> Result<String> {
+    let pid = {
+        let mut task = DEFRAG_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+        if !matches!(task.status.as_str(), "starting" | "running" | "cancelling") {
+            bail!("Home file defragmentation is not running");
+        }
+        task.cancel_requested = true;
+        task.status = "cancelling".into();
+        task.pid
+    };
+
+    if let Some(pid) = pid {
+        // The PID comes only from the child process spawned by this helper and
+        // is never accepted from D-Bus callers.
+        let result = unsafe { libc::kill(pid as i32, libc::SIGTERM) };
+        if result != 0 {
+            bail!(
+                "Could not cancel Home file defragmentation: {}",
+                std::io::Error::last_os_error()
+            );
+        }
+    }
+    Ok("Home file defragmentation is being cancelled".into())
+}
+
+fn run_defrag_task(generation: u64) {
+    let mut child = match Command::new(BTRFS)
+        .args(["-v", "filesystem", "defragment", "-r", "-czstd", "/home"])
+        .env_clear()
+        .env("PATH", "/usr/sbin:/usr/bin:/sbin:/bin")
+        .env("LC_ALL", "C")
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+    {
+        Ok(child) => child,
+        Err(error) => {
+            finish_defrag_task(
+                generation,
+                "failed",
+                Some(format!("Could not start Btrfs defragmentation: {error}")),
+            );
+            return;
+        }
+    };
+
+    let cancel_immediately = {
+        let mut task = DEFRAG_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+        if task.generation == generation {
+            task.status = if task.cancel_requested {
+                "cancelling".into()
+            } else {
+                "running".into()
+            };
+            task.pid = Some(child.id());
+        }
+        task.cancel_requested
+    };
+    if cancel_immediately {
+        // Cancellation can arrive while the child is still being spawned.
+        // Honor it before beginning the wait so a fast click never gets lost.
+        let _ = unsafe { libc::kill(child.id() as i32, libc::SIGTERM) };
+    }
+
+    let stdout_reader = child.stdout.take().map(|stdout| {
+        thread::spawn(move || {
+            for line in BufReader::new(stdout).lines().map_while(Result::ok) {
+                if !line.trim().is_empty() {
+                    DEFRAG_ITEMS_PROCESSED.fetch_add(1, Ordering::AcqRel);
+                }
+            }
+        })
+    });
+    let stderr_reader = child.stderr.take().map(|stderr| {
+        thread::spawn(move || {
+            let mut message = String::new();
+            let _ = stderr
+                .take(MAX_BTRFS_OUTPUT_BYTES as u64)
+                .read_to_string(&mut message);
+            message
+        })
+    });
+
+    let exit_status = child.wait();
+    if let Some(reader) = stdout_reader {
+        let _ = reader.join();
+    }
+    let stderr = stderr_reader
+        .and_then(|reader| reader.join().ok())
+        .unwrap_or_default();
+    let cancelled = DEFRAG_TASK
+        .lock()
+        .unwrap_or_else(|lock| lock.into_inner())
+        .cancel_requested;
+    match exit_status {
+        Ok(_) if cancelled => finish_defrag_task(generation, "cancelled", None),
+        Ok(status) if status.success() => finish_defrag_task(generation, "finished", None),
+        Ok(_) => finish_defrag_task(generation, "failed", Some(format_btrfs_error(&stderr))),
+        Err(error) => finish_defrag_task(
+            generation,
+            "failed",
+            Some(format!("Could not wait for Btrfs defragmentation: {error}")),
+        ),
+    }
+}
+
+fn finish_defrag_task(generation: u64, status: &str, error: Option<String>) {
+    let mut task = DEFRAG_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+    if task.generation == generation {
+        task.status = status.into();
+        task.elapsed_seconds = task.started.map(|started| started.elapsed().as_secs());
+        task.first_count = Some(DEFRAG_ITEMS_PROCESSED.load(Ordering::Acquire));
+        task.error = error;
+        task.pid = None;
+    }
+    DEFRAG_TASK_RUNNING.store(false, Ordering::Release);
 }
 
 struct CommandResult {
@@ -200,19 +576,33 @@ fn quota_status(stdout: &str, success: bool) -> String {
     }
 }
 
-fn scrub_status(stdout: &str, stderr: &str, success: bool) -> String {
+fn scrub_status(stdout: &str, stderr: &str, success: bool, details: &ScrubDetails) -> String {
     let combined = format!("{stdout}\n{stderr}").to_ascii_lowercase();
-    if combined.contains("status: running") {
+    if combined.contains("status: running")
+        // btrfs-progs creates the progress pipe before its status file is
+        // populated. During those first seconds it prints "no stats
+        // available" together with live progress fields. Treat that as
+        // running so the UI cannot mistake a newly started scrub for an old
+        // completed run.
+        || combined.contains("bytes scrubbed:")
+        || combined.contains("time left:")
+    {
         "running".into()
+    } else if combined.contains("status: canceled")
+        || combined.contains("status: cancelled")
+        || combined.contains("status: aborted")
+    {
+        "cancelled".into()
     } else if combined.contains("no stats available") {
         "never-run".into()
     } else if success {
-        let uncorrectable = metric(stdout, "uncorrectable_errors:").unwrap_or(0);
-        let corrected = metric(stdout, "corrected_errors:").unwrap_or(0);
-        if uncorrectable > 0 {
-            format!("finished-with-errors:{uncorrectable}")
-        } else if corrected > 0 {
-            format!("finished-repaired:{corrected}")
+        let errors = details.unrepaired_error_count();
+        if errors > 0 {
+            format!("finished-with-errors:{errors}")
+        } else if details.corrected_errors > 0 {
+            format!("finished-repaired:{}", details.corrected_errors)
+        } else if details.detected_error_count() > 0 {
+            format!("finished-with-errors:{}", details.detected_error_count())
         } else {
             "finished-clean".into()
         }
@@ -221,18 +611,187 @@ fn scrub_status(stdout: &str, stderr: &str, success: bool) -> String {
     }
 }
 
+impl ScrubDetails {
+    fn detected_error_count(&self) -> u64 {
+        self.read_errors
+            .saturating_add(self.checksum_errors)
+            .saturating_add(self.verify_errors)
+            .saturating_add(self.superblock_errors)
+    }
+
+    fn unrepaired_error_count(&self) -> u64 {
+        self.uncorrectable_errors
+            .saturating_add(self.unverified_errors)
+    }
+}
+
+fn parse_scrub_details(summary: &str, raw: &str) -> ScrubDetails {
+    ScrubDetails {
+        started_at: text_metric(summary, "Scrub started:"),
+        duration: text_metric(summary, "Duration:"),
+        time_left: text_metric(summary, "Time left:"),
+        total_bytes: metric(summary, "Total to scrub:"),
+        bytes_scrubbed: metric(summary, "Bytes scrubbed:"),
+        rate_bytes_per_second: metric(summary, "Rate:"),
+        read_errors: metric(raw, "read_errors:").unwrap_or(0),
+        checksum_errors: metric(raw, "csum_errors:").unwrap_or(0),
+        verify_errors: metric(raw, "verify_errors:").unwrap_or(0),
+        superblock_errors: metric(raw, "super_errors:").unwrap_or(0),
+        uncorrectable_errors: metric(raw, "uncorrectable_errors:").unwrap_or(0),
+        unverified_errors: metric(raw, "unverified_errors:").unwrap_or(0),
+        corrected_errors: metric(raw, "corrected_errors:").unwrap_or(0),
+    }
+}
+
+fn text_metric(output: &str, label: &str) -> Option<String> {
+    output.lines().find_map(|line| {
+        let value = line.trim().strip_prefix(label)?.trim();
+        (!value.is_empty()).then(|| value.to_string())
+    })
+}
+
 fn balance_status(stdout: &str, stderr: &str, success: bool) -> String {
     let combined = format!("{stdout}\n{stderr}").to_ascii_lowercase();
     if combined.contains("is running") {
         "running".into()
     } else if combined.contains("is paused") {
         "paused".into()
-    } else if combined.contains("no balance found") || combined.contains("not in progress") {
-        "idle".into()
-    } else if success {
+    } else if success
+        || combined.contains("no balance found")
+        || combined.contains("not in progress")
+    {
         "idle".into()
     } else {
         "unavailable".into()
+    }
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+struct BalanceProgress {
+    chunks_balanced: Option<u64>,
+    chunks_total: Option<u64>,
+    chunks_considered: Option<u64>,
+    percent_remaining: Option<u64>,
+}
+
+fn parse_balance_progress(output: &str) -> BalanceProgress {
+    let Some(line) = output
+        .lines()
+        .find(|line| line.contains(" chunks balanced"))
+    else {
+        return BalanceProgress::default();
+    };
+    let Some((balanced, rest)) = line.trim().split_once(" out of about ") else {
+        return BalanceProgress::default();
+    };
+    let Some((total, suffix)) = rest.split_once(" chunks balanced") else {
+        return BalanceProgress::default();
+    };
+    BalanceProgress {
+        chunks_balanced: balanced.trim().parse().ok(),
+        chunks_total: total.trim().parse().ok(),
+        chunks_considered: suffix
+            .split_once('(')
+            .and_then(|(_, value)| value.split_once(" considered)"))
+            .and_then(|(value, _)| value.trim().parse().ok()),
+        percent_remaining: suffix
+            .split_once("% left")
+            .and_then(|(value, _)| value.split_whitespace().last())
+            .and_then(|value| value.parse().ok()),
+    }
+}
+
+fn parse_balance_completion(output: &str) -> Option<BalanceProgress> {
+    let line = output.lines().find(|line| line.contains("relocate "))?;
+    let (_, counts) = line.split_once("relocate ")?;
+    let (balanced, total) = counts.split_once(" out of ")?;
+    let total = total.split_whitespace().next()?;
+    Some(BalanceProgress {
+        chunks_balanced: balanced.trim().parse().ok(),
+        chunks_total: total.trim().parse().ok(),
+        percent_remaining: Some(0),
+        ..BalanceProgress::default()
+    })
+}
+
+fn balance_task_status(
+    native_status: &str,
+    native_progress: BalanceProgress,
+) -> (String, BalanceDetails) {
+    let task = BALANCE_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+    let elapsed_seconds = task
+        .elapsed_seconds
+        .or_else(|| task.started.map(|started| started.elapsed().as_secs()));
+    let native_running = matches!(native_status, "running" | "paused");
+    let managed_active = matches!(task.status.as_str(), "starting" | "running" | "cancelling");
+    let status = if native_running {
+        if task.status == "cancelling" {
+            "cancelling".into()
+        } else {
+            native_status.into()
+        }
+    } else if managed_active || task.generation > 0 {
+        task.status.clone()
+    } else {
+        native_status.into()
+    };
+    let progress = if native_running {
+        native_progress
+    } else {
+        BalanceProgress {
+            chunks_balanced: task.first_count,
+            chunks_total: task.total_count,
+            chunks_considered: task.considered_count,
+            percent_remaining: task.percent_remaining,
+        }
+    };
+    (
+        status,
+        BalanceDetails {
+            generation: task.generation,
+            elapsed_seconds,
+            chunks_balanced: progress.chunks_balanced,
+            chunks_total: progress.chunks_total,
+            chunks_considered: progress.chunks_considered,
+            percent_remaining: progress.percent_remaining,
+            error: task.error.clone(),
+        },
+    )
+}
+
+fn defrag_task_status() -> (String, DefragDetails) {
+    let task = DEFRAG_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+    let elapsed_seconds = task
+        .elapsed_seconds
+        .or_else(|| task.started.map(|started| started.elapsed().as_secs()));
+    (
+        if task.status.is_empty() {
+            "idle".into()
+        } else {
+            task.status.clone()
+        },
+        DefragDetails {
+            generation: task.generation,
+            elapsed_seconds,
+            items_processed: if matches!(
+                task.status.as_str(),
+                "starting" | "running" | "cancelling"
+            ) {
+                DEFRAG_ITEMS_PROCESSED.load(Ordering::Acquire)
+            } else {
+                task.first_count.unwrap_or(0)
+            },
+            error: task.error.clone(),
+        },
+    )
+}
+
+fn format_btrfs_error(stderr: &str) -> String {
+    let message = stderr.trim().trim_start_matches("ERROR: ").trim();
+    if message.is_empty() {
+        "Btrfs did not provide an error message".into()
+    } else {
+        message.into()
     }
 }
 
@@ -240,9 +799,9 @@ fn metric(output: &str, label: &str) -> Option<u64> {
     output.lines().find_map(|line| {
         line.trim()
             .strip_prefix(label)?
-            .trim()
             .split_whitespace()
             .next()?
+            .trim_end_matches("/s")
             .parse()
             .ok()
     })
@@ -265,6 +824,49 @@ fn run_btrfs_allow_failure(arguments: &[&str]) -> CommandResult {
             success: false,
             stdout: String::new(),
             stderr: error.to_string(),
+        },
+    }
+}
+
+fn run_btrfs_host_worker(unit_name: &str, arguments: &[&str]) -> CommandResult {
+    match Command::new(SYSTEMD_RUN)
+        .args([
+            "--quiet",
+            "--wait",
+            "--pipe",
+            "--collect",
+            "--property=Type=exec",
+            "--property=NoNewPrivileges=yes",
+            "--property=PrivateNetwork=yes",
+            "--property=ProtectSystem=full",
+            "--property=ProtectHome=read-only",
+            "--property=ProtectKernelTunables=yes",
+            "--property=ProtectKernelModules=yes",
+            "--property=ProtectControlGroups=yes",
+            "--property=RestrictAddressFamilies=AF_UNIX AF_NETLINK",
+            "--property=CapabilityBoundingSet=CAP_SYS_ADMIN",
+            "--property=LockPersonality=yes",
+            "--property=MemoryDenyWriteExecute=yes",
+            "--property=RestrictSUIDSGID=yes",
+            "--property=UMask=0077",
+        ])
+        .arg(format!("--unit={unit_name}"))
+        .arg(BTRFS)
+        .args(arguments)
+        .env_clear()
+        .env("PATH", "/usr/sbin:/usr/bin:/sbin:/bin")
+        .env("LC_ALL", "C")
+        .output()
+    {
+        Ok(output) => CommandResult {
+            success: output.status.success(),
+            stdout: String::from_utf8_lossy(&output.stdout).into_owned(),
+            stderr: String::from_utf8_lossy(&output.stderr).into_owned(),
+        },
+        Err(error) => CommandResult {
+            success: false,
+            stdout: String::new(),
+            stderr: format!("Could not start the isolated Btrfs worker: {error}"),
         },
     }
 }
@@ -583,14 +1185,31 @@ mod tests {
         );
         assert_eq!(quota_status("", false), "unavailable");
 
-        let clean = "uncorrectable_errors: 0\ncorrected_errors: 0\n";
-        assert_eq!(scrub_status(clean, "", true), "finished-clean");
+        let clean_details = ScrubDetails::default();
         assert_eq!(
-            scrub_status("uncorrectable_errors: 2\n", "", true),
+            scrub_status("Status: finished\n", "", true, &clean_details),
+            "finished-clean"
+        );
+        let broken_details = ScrubDetails {
+            uncorrectable_errors: 2,
+            ..ScrubDetails::default()
+        };
+        assert_eq!(
+            scrub_status("Status: finished\n", "", true, &broken_details),
             "finished-with-errors:2"
         );
-        assert_eq!(scrub_status("", "status: running", false), "running");
-        assert_eq!(scrub_status("no stats available", "", true), "never-run");
+        assert_eq!(
+            scrub_status("", "status: running", false, &clean_details),
+            "running"
+        );
+        assert_eq!(
+            scrub_status("no stats available", "", true, &clean_details),
+            "never-run"
+        );
+        assert_eq!(
+            scrub_status("Status: aborted\n", "", true, &clean_details),
+            "cancelled"
+        );
 
         assert_eq!(
             balance_status("Balance on '/' is running", "", true),
@@ -601,6 +1220,66 @@ mod tests {
             balance_status("", "Operation not permitted", false),
             "unavailable"
         );
+    }
+
+    #[test]
+    fn parses_live_scrub_progress_and_error_counters() {
+        let summary = concat!(
+            "Scrub started:    Mon Aug 10 03:55:45 2026\n",
+            "Status:           running\n",
+            "Duration:         0:00:10\n",
+            "Time left:        0:00:26\n",
+            "Total to scrub:   98885677056\n",
+            "Bytes scrubbed:   26921783296  (27.23%)\n",
+            "Rate:             2692178329/s\n",
+        );
+        let raw = concat!(
+            "read_errors: 3\n",
+            "csum_errors: 2\n",
+            "verify_errors: 1\n",
+            "super_errors: 4\n",
+            "uncorrectable_errors: 1\n",
+            "unverified_errors: 2\n",
+            "corrected_errors: 7\n",
+        );
+        let details = parse_scrub_details(summary, raw);
+        assert_eq!(details.total_bytes, Some(98_885_677_056));
+        assert_eq!(details.bytes_scrubbed, Some(26_921_783_296));
+        assert_eq!(details.rate_bytes_per_second, Some(2_692_178_329));
+        assert_eq!(details.time_left.as_deref(), Some("0:00:26"));
+        assert_eq!(details.checksum_errors, 2);
+        assert_eq!(details.corrected_errors, 7);
+        assert_eq!(details.unrepaired_error_count(), 3);
+        assert_eq!(scrub_status(summary, "", true, &details), "running");
+    }
+
+    #[test]
+    fn parses_live_and_completed_balance_progress() {
+        let live = parse_balance_progress(
+            "Balance on '/' is running\n3 out of about 20 chunks balanced (7 considered), 85% left\n",
+        );
+        assert_eq!(live.chunks_balanced, Some(3));
+        assert_eq!(live.chunks_total, Some(20));
+        assert_eq!(live.chunks_considered, Some(7));
+        assert_eq!(live.percent_remaining, Some(85));
+
+        let completed = parse_balance_completion("Done, had to relocate 4 out of 128 chunks\n")
+            .expect("completion line should parse");
+        assert_eq!(completed.chunks_balanced, Some(4));
+        assert_eq!(completed.chunks_total, Some(128));
+        assert_eq!(completed.percent_remaining, Some(0));
+    }
+
+    #[test]
+    fn treats_initial_progress_pipe_as_running_before_status_file_exists() {
+        let summary = concat!(
+            "no stats available\n",
+            "Time left:        0:00:00\n",
+            "Total to scrub:   96748163072\n",
+            "Bytes scrubbed:   0  (0.00%)\n",
+        );
+        let details = parse_scrub_details(summary, "");
+        assert_eq!(scrub_status(summary, "", true, &details), "running");
     }
 
     #[test]

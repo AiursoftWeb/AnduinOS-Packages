@@ -32,7 +32,7 @@ pub fn show(parent: &adw::ApplicationWindow) {
     let after_success = adw::SwitchRow::new();
     after_success.set_title(&tr("Notify after any snapshot succeeds"));
     let after_cleanup = adw::SwitchRow::new();
-    after_cleanup.set_title(&tr("Notify after Smart Cleanup removes snapshots"));
+    after_cleanup.set_title(&tr("Notify after automatic cleanup removes snapshots"));
     after_cleanup.set_subtitle(&tr("Limited to one notification per minute"));
     notifications.add(&before_scheduled);
     notifications.add(&after_success);

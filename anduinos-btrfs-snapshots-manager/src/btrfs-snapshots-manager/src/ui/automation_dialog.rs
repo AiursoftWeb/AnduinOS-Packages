@@ -20,14 +20,14 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
     let page = adw::PreferencesPage::new();
 
     let automatic = adw::PreferencesGroup::new();
-    automatic.set_title(&tr("Automatic Snapshots"));
     let enabled = adw::SwitchRow::new();
-    enabled.set_title(&tr("Create snapshots automatically"));
-    let interval = spin_row(&tr("Every"), &tr("hour(s)"), 1, 24);
+    enabled.set_title(&tr("Automatic snapshots"));
+    enabled.set_subtitle(&tr("Create snapshots on a schedule."));
+    let interval = spin_row(&tr("Take a snapshot every"), &tr("Hours"), 1, 24);
     let cleanup = adw::SwitchRow::new();
-    cleanup.set_title(&tr("Smart Cleanup"));
+    cleanup.set_title(&tr("Automatic cleanup"));
     cleanup.set_subtitle(&tr(
-        "Keep useful hourly, daily, weekly, monthly, and yearly versions",
+        "Older snapshots are kept less frequently to save disk space.",
     ));
     automatic.add(&enabled);
     automatic.add(&interval);
@@ -36,30 +36,30 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
         .bind_property("active", &interval, "visible")
         .sync_create()
         .build();
-    page.add(&automatic);
-
-    let retention = adw::PreferencesGroup::new();
-    retention.set_title(&tr("Keep Versions"));
-    retention.set_description(Some(&tr("Newer snapshots are kept more densely.")));
-    let all = spin_row(&tr("Keep every snapshot"), &tr("hours"), 1, 168);
-    let daily = spin_row(&tr("Keep one per day"), &tr("days"), 1, 90);
-    let weekly = spin_row(&tr("Keep one per week"), &tr("days"), 7, 365);
-    let monthly = spin_row(&tr("Keep one per month"), &tr("days"), 30, 3650);
-    retention.add(&all);
-    retention.add(&daily);
-    retention.add(&weekly);
-    retention.add(&monthly);
+    let retention = adw::ExpanderRow::new();
+    retention.set_title(&tr("Advanced retention settings"));
+    retention.set_subtitle(&tr("See exactly how older snapshots are kept"));
+    let all = spin_row(&tr("Keep all snapshots for"), &tr("Hours"), 1, 168);
+    let daily = spin_row(&tr("Then keep one per day for"), &tr("Days"), 1, 90);
+    let weekly = spin_row(&tr("Then keep one per week for"), &tr("Days"), 7, 365);
+    let monthly = spin_row(&tr("Then keep one per month for"), &tr("Days"), 30, 3650);
+    retention.add_row(&all);
+    retention.add_row(&daily);
+    retention.add_row(&weekly);
+    retention.add_row(&monthly);
     let yearly = adw::SwitchRow::new();
-    yearly.set_title(&tr("Keep one per year forever"));
-    retention.add(&yearly);
-    page.add(&retention);
+    yearly.set_title(&tr("Then keep one per year"));
+    yearly.set_subtitle(&tr("Forever"));
+    retention.add_row(&yearly);
+    automatic.add(&retention);
+    page.add(&automatic);
     cleanup
         .bind_property("active", &retention, "visible")
         .sync_create()
         .build();
 
     let save_group = adw::PreferencesGroup::new();
-    let save = gtk::Button::with_label(&tr("Save Automatic Snapshot Settings"));
+    let save = gtk::Button::with_label(&tr("Save"));
     save.add_css_class("suggested-action");
     save.set_halign(gtk::Align::End);
     save.set_sensitive(false);
@@ -171,7 +171,7 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
                 }
                 Err(problem) => {
                     if let Some(button) = weak_button.upgrade() {
-                        button.set_label(&tr("Save Automatic Snapshot Settings"));
+                        button.set_label(&tr("Save"));
                         button.set_sensitive(true);
                     }
                     show_error(&window, &problem.to_string());

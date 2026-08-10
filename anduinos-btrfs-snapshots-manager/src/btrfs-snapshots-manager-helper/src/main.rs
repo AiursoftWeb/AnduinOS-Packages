@@ -345,7 +345,7 @@ impl SnapshotsManagerHelper {
         Self::public_recovery_engine_status_impl(std::path::Path::new(RECOVERY_STORE_ROOT))
             .unwrap_or_else(|error| {
                 serde_json::json!({
-                    "schema_version": 1,
+                    "schema_version": 2,
                     "available": false,
                     "error": error.to_string(),
                 })
@@ -1465,27 +1465,27 @@ impl SnapshotsManagerHelper {
         }
     }
 
-    /// Return a bounded, read-only summary of the Btrfs filesystem and native
-    /// maintenance state. The GUI must treat this as live status, not as its own
-    /// persisted state machine.
+    /// Return a bounded, read-only summary of the Btrfs filesystem and live
+    /// maintenance state. Managed task details exist only in this process and
+    /// are never persisted by the helper or GUI.
     async fn get_btrfs_filesystem_status(&self) -> String {
         match tokio::task::spawn_blocking(btrfs::filesystem_status).await {
             Ok(Ok(status)) => serde_json::to_string(&status).unwrap_or_else(|error| {
                 serde_json::json!({
-                    "schema_version": 1,
+                    "schema_version": 3,
                     "available": false,
                     "error": format!("Could not serialize Btrfs status: {error}"),
                 })
                 .to_string()
             }),
             Ok(Err(error)) => serde_json::json!({
-                "schema_version": 1,
+                "schema_version": 3,
                 "available": false,
                 "error": error.to_string(),
             })
             .to_string(),
             Err(error) => serde_json::json!({
-                "schema_version": 1,
+                "schema_version": 3,
                 "available": false,
                 "error": format!("Btrfs status query stopped: {error}"),
             })
@@ -1524,10 +1524,8 @@ impl SnapshotsManagerHelper {
             "scrub-cancel" => btrfs::cancel_scrub(),
             "balance-start" => btrfs::start_filtered_balance(),
             "balance-cancel" => btrfs::cancel_balance(),
-            "defrag-home" => tokio::task::spawn_blocking(btrfs::defragment_home)
-                .await
-                .map_err(|error| anyhow::anyhow!("Defragmentation task stopped: {error}"))
-                .and_then(|result| result),
+            "defrag-home" => btrfs::start_defragment_home(),
+            "defrag-home-cancel" => btrfs::cancel_defragment_home(),
             _ => return (false, "Unknown Btrfs maintenance action".into()),
         };
         let response = match operation {

@@ -124,7 +124,75 @@ pub struct BtrfsFilesystemStatus {
     #[serde(default)]
     pub scrub: String,
     #[serde(default)]
+    pub scrub_details: BtrfsScrubDetails,
+    #[serde(default)]
     pub balance: String,
+    #[serde(default)]
+    pub balance_details: BtrfsBalanceDetails,
+    #[serde(default)]
+    pub defrag: String,
+    #[serde(default)]
+    pub defrag_details: BtrfsDefragDetails,
+    #[serde(default)]
+    pub error: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, serde::Deserialize)]
+pub struct BtrfsScrubDetails {
+    #[serde(default)]
+    pub started_at: Option<String>,
+    #[serde(default)]
+    pub duration: Option<String>,
+    #[serde(default)]
+    pub time_left: Option<String>,
+    #[serde(default)]
+    pub total_bytes: Option<u64>,
+    #[serde(default)]
+    pub bytes_scrubbed: Option<u64>,
+    #[serde(default)]
+    pub rate_bytes_per_second: Option<u64>,
+    #[serde(default)]
+    pub read_errors: u64,
+    #[serde(default)]
+    pub checksum_errors: u64,
+    #[serde(default)]
+    pub verify_errors: u64,
+    #[serde(default)]
+    pub superblock_errors: u64,
+    #[serde(default)]
+    pub uncorrectable_errors: u64,
+    #[serde(default)]
+    pub unverified_errors: u64,
+    #[serde(default)]
+    pub corrected_errors: u64,
+}
+
+#[derive(Debug, Clone, Default, serde::Deserialize)]
+pub struct BtrfsBalanceDetails {
+    #[serde(default)]
+    pub generation: u64,
+    #[serde(default)]
+    pub elapsed_seconds: Option<u64>,
+    #[serde(default)]
+    pub chunks_balanced: Option<u64>,
+    #[serde(default)]
+    pub chunks_total: Option<u64>,
+    #[serde(default)]
+    pub chunks_considered: Option<u64>,
+    #[serde(default)]
+    pub percent_remaining: Option<u64>,
+    #[serde(default)]
+    pub error: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, serde::Deserialize)]
+pub struct BtrfsDefragDetails {
+    #[serde(default)]
+    pub generation: u64,
+    #[serde(default)]
+    pub elapsed_seconds: Option<u64>,
+    #[serde(default)]
+    pub items_processed: u64,
     #[serde(default)]
     pub error: Option<String>,
 }

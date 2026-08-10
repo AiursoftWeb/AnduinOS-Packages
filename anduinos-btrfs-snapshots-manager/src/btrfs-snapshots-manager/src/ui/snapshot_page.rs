@@ -657,7 +657,7 @@ impl SnapshotPage {
         );
         menu_model.append(
             Some(&if item.keep_forever {
-                tr("Allow Smart Cleanup")
+                tr("Allow automatic cleanup")
             } else {
                 tr("Keep Forever")
             }),
@@ -773,7 +773,7 @@ impl SnapshotPage {
         name.set_title(&tr("Name (optional)"));
         let keep = adw::SwitchRow::new();
         keep.set_title(&tr("Keep Forever"));
-        keep.set_subtitle(&tr("Otherwise Smart Cleanup may remove it later."));
+        keep.set_subtitle(&tr("Otherwise automatic cleanup may remove it later."));
         list.append(&name);
         list.append(&keep);
         dialog.set_extra_child(Some(&list));

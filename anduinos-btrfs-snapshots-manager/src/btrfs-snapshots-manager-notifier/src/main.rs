@@ -223,7 +223,7 @@ fn cleanup_notification(
         ),
     };
     Some(RenderedNotification::new(
-        tr("Smart Cleanup Completed"),
+        tr("Automatic Cleanup Complete"),
         body,
         NotificationUrgency::Low,
     ))

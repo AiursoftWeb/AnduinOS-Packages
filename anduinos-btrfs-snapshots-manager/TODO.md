@@ -34,7 +34,7 @@ only home of removed product interfaces; no second UI is maintained.
 - [x] Configure System and Home automatic snapshots independently.
 - [x] Configure a one-to-24-hour freshness target; catch-up behavior is owned by
   the always-enabled systemd timer and scheduler.
-- [x] Hide Smart Cleanup details when cleanup is off and expose the five explicit
+- [x] Hide automatic cleanup details when cleanup is off and expose the five explicit
   retention tiers when it is on.
 - [x] Keep package-before, package-after-success, pre-snapshot, success, and
   cleanup notification choices in Advanced Settings with truthful service state.

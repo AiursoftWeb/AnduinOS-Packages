@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-btrfs-snapshots-manager</PackageName>
-    <PackageVersion>0.1.0-28+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.1.0-29+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Disk Snapshots Manager — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -111,7 +111,7 @@
                          Caption="Review and manage System snapshots"
                          Environment="GNOME:dark" />
     <AppStreamScreenshot Include="screenshots/scheduled-recovery.png"
-                         Caption="Configure automatic snapshots and Smart Cleanup"
+                         Caption="Configure automatic snapshots and automatic cleanup"
                          Environment="GNOME:dark" />
   </ItemGroup>
 </Project>

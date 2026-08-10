@@ -32,7 +32,7 @@ fn run_once() -> Result<()> {
     if (config.system.is_auto_cleanup_enabled || config.home.is_auto_cleanup_enabled)
         && let Err(error) = apply_retention_cleanup()
     {
-        failures.push(format!("Smart Cleanup: {error:#}"));
+        failures.push(format!("Automatic cleanup: {error:#}"));
     }
     if failures.is_empty() {
         Ok(())
@@ -87,7 +87,7 @@ fn apply_retention_cleanup() -> Result<()> {
     let output = Command::new("/usr/bin/anduinos-btrfs-snapshots-manager-cli")
         .arg("apply-retention")
         .output()
-        .context("Could not start Smart Cleanup")?;
+        .context("Could not start automatic cleanup")?;
     if !output.status.success() {
         anyhow::bail!("{}", String::from_utf8_lossy(&output.stderr).trim())
     }
