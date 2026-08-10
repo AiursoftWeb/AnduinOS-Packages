@@ -161,8 +161,5 @@ application/x-raw-disk-image=gnome-disk-image-mounter.desktop;
 application/vnd.debian.binary-package=gnome-software.desktop;
 
 # Windows Executables with AnduinOS EXE Runner (prevent Bottles takeover)
-application/x-ms-dos-executable=anduinos-exe-runner.desktop;
-application/x-msi=anduinos-exe-runner.desktop;
-application/x-executable=anduinos-exe-runner.desktop;
-application/x-msdownload=anduinos-exe-runner.desktop;
-application/exe=anduinos-exe-runner.desktop;
+application/x-msdownload=com.anduinos.ExeRunner.desktop;
+application/x-msi=com.anduinos.ExeRunner.desktop;

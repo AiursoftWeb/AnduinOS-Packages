@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-exe-runner</PackageName>
-    <PackageVersion>2.0.1-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Windows Executable Runner - Seamlessly run Windows .exe files via Bottles</PackageDescription>
     <Section>utils</Section>
@@ -23,6 +23,7 @@
     <Dependency Include="gir1.2-gtk-4.0" />
     <Dependency Include="gir1.2-adw-1" />
     <Dependency Include="flatpak" />
+    <Recommend Include="icoextract-thumbnailer" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AppStreamApplication Include="data/anduinos-exe-runner.desktop" Icon="data/anduinos-exe-runner.svg" />
+    <AppStreamApplication Include="data/com.anduinos.ExeRunner.desktop" Icon="data/anduinos-exe-runner.svg" />
     <AppStreamScreenshot Include="screenshots/native-recommendation.png" Default="true" Caption="Get safer native alternatives for specialized Windows tools" Environment="GNOME:dark" />
   </ItemGroup>
 </Project>
