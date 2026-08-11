@@ -10,8 +10,16 @@ from typing import Callable
 
 import gi
 
-gi.require_version("Fwupd", "2.0")
-from gi.repository import Fwupd, GLib  # noqa: E402
+from gi.repository import GLib  # noqa: E402
+
+try:
+    gi.require_version("Fwupd", "2.0")
+    from gi.repository import Fwupd  # noqa: E402
+except (ImportError, ValueError):
+    # Package prebuilds run before the target package dependencies are
+    # installed.  Keep the data model and injected-client tests importable in
+    # that environment; a real manager still requires the fwupd typelib.
+    Fwupd = None
 
 
 # These values are part of the stable fwupd D-Bus ABI.  fwupd 1.9 did not
@@ -31,6 +39,23 @@ REMOTE_FLAG_ENABLED = 1 << 0
 # requests (replug, unlock, do-not-power-off), and can display disk-encryption
 # warnings.  These feature bits are stable across fwupd 1.9 and 2.x.
 CLIENT_FEATURE_FLAGS = (1 << 2) | (1 << 4) | (1 << 5)
+# FwupdUpdateState is also part of the stable fwupd D-Bus ABI.
+UPDATE_STATE_NEEDS_REBOOT = 4
+
+
+def _fwupd_bindings():
+    if Fwupd is None:
+        raise RuntimeError(
+            "The Fwupd 2.0 typelib is required for firmware management"
+        )
+    return Fwupd
+
+
+def _zero_fwupd_flags(name: str):
+    """Return a typed zero when fwupd is present, otherwise an integer zero."""
+    if Fwupd is None:
+        return 0
+    return getattr(Fwupd, name)(0)
 
 
 @dataclass(frozen=True)
@@ -163,7 +188,9 @@ class FirmwareManager:
         self._progress_changed = progress_changed
         self._operation_done = operation_done
         self._request_received = request_received
-        self._client = client or Fwupd.Client.new()
+        self._client = (
+            client if client is not None else _fwupd_bindings().Client.new()
+        )
         self._device_objects: dict[str, object] = {}
         self._release_objects: dict[str, object] = {}
         self._generation = 0
@@ -189,7 +216,8 @@ class FirmwareManager:
         try:
             client.connect_finish(result)
             client.set_user_agent_for_package("anduinos-driver-center", "2.0.0")
-            client.set_feature_flags(Fwupd.FeatureFlags(CLIENT_FEATURE_FLAGS))
+            bindings = _fwupd_bindings()
+            client.set_feature_flags(bindings.FeatureFlags(CLIENT_FEATURE_FLAGS))
         except GLib.Error as error:
             self.snapshot = replace(
                 self.snapshot,
@@ -259,7 +287,7 @@ class FirmwareManager:
             self._device_objects = context["objects"]
             self._release_objects = context["releases"]
             restart_pending = any(
-                entry.state == int(Fwupd.UpdateState.NEEDS_REBOOT)
+                entry.state == UPDATE_STATE_NEEDS_REBOOT
                 for entry in history
             )
             self.snapshot = replace(
@@ -354,6 +382,8 @@ class FirmwareManager:
 
     @staticmethod
     def _is_empty_result(error: GLib.Error) -> bool:
+        if Fwupd is None:
+            return False
         return any(
             error.matches(Fwupd.error_quark(), code)
             for code in (
@@ -409,7 +439,7 @@ class FirmwareManager:
         try:
             self._client.refresh_remote_async(
                 remote,
-                Fwupd.ClientDownloadFlags(0),
+                _zero_fwupd_flags("ClientDownloadFlags"),
                 None,
                 refreshed,
             )
@@ -482,8 +512,8 @@ class FirmwareManager:
             self._client.install_release_async(
                 device,
                 release,
-                Fwupd.InstallFlags(0),
-                Fwupd.ClientDownloadFlags(0),
+                _zero_fwupd_flags("InstallFlags"),
+                _zero_fwupd_flags("ClientDownloadFlags"),
                 None,
                 installed,
             )
@@ -492,7 +522,7 @@ class FirmwareManager:
             self._client.install_release_async(
                 device,
                 release,
-                Fwupd.InstallFlags(0),
+                _zero_fwupd_flags("InstallFlags"),
                 None,
                 installed,
             )

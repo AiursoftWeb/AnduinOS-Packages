@@ -18,7 +18,7 @@ from anduinos_driver_center.firmware import (  # noqa: E402
     history_from_object,
     plain_text,
 )
-from gi.repository import Fwupd, GLib  # noqa: E402
+from gi.repository import GLib  # noqa: E402
 
 
 class FakeRelease:
@@ -90,9 +90,9 @@ class PartialFailureClient(FakeClient):
     def install_release_finish(self, _result):
         if len(self.install_calls) == 2:
             raise GLib.Error.new_literal(
-                Fwupd.error_quark(),
+                GLib.quark_from_string("test-fwupd-error"),
                 "second device failed",
-                int(Fwupd.Error.INTERNAL),
+                1,
             )
         return True
 
