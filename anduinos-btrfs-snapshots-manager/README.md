@@ -39,7 +39,9 @@ temperature, SSD endurance, cumulative NVMe reads and writes, power history,
 and the relevant NVMe, SATA SSD, or mechanical-disk reliability counters only
 for physical drives backing the current root Btrfs filesystem. Unsupported,
 disabled, partial, and failed S.M.A.R.T. reports remain visibly distinct instead
-of being treated as healthy zero values.
+of being treated as healthy zero values. External storage queries have hard
+deadlines, and concurrent clients share a short-lived result instead of spawning
+duplicate privileged device probes.
 The unprivileged desktop notification listener runs as a supervised user
 service. GNOME starts it at login, and opening the application also ensures it
 is running, so installing or upgrading the package during an existing session

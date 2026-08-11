@@ -22,7 +22,7 @@ env_logger = "0.11"
 
 # D-Bus service and Polkit authorization
 zbus = { version = "4.0", features = ["tokio"] }
-tokio = { version = "1", features = ["rt-multi-thread", "macros", "signal"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "signal", "sync"] }
 
 # System utilities
 libc = "0.2"

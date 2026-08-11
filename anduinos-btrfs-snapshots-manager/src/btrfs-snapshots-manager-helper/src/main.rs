@@ -136,6 +136,27 @@ struct SnapshotsManagerHelper {
     rate_limiter: RateLimiter,
     personal_snapshot_quota: PersonalSnapshotQuota,
     browse_leases: std::sync::Mutex<std::collections::HashMap<String, SystemBrowseLease>>,
+    smart_query: tokio::sync::Mutex<SmartQueryCache>,
+}
+
+const SMART_QUERY_CACHE_TTL: std::time::Duration = std::time::Duration::from_secs(30);
+
+#[derive(Default)]
+struct SmartQueryCache {
+    value: Option<(std::time::Instant, String)>,
+}
+
+impl SmartQueryCache {
+    fn current(&self, now: std::time::Instant) -> Option<String> {
+        self.value
+            .as_ref()
+            .filter(|(created_at, _)| now.duration_since(*created_at) < SMART_QUERY_CACHE_TTL)
+            .map(|(_, value)| value.clone())
+    }
+
+    fn store(&mut self, value: String, now: std::time::Instant) {
+        self.value = Some((now, value));
+    }
 }
 
 struct SystemBrowseLease {
@@ -174,6 +195,7 @@ impl SnapshotsManagerHelper {
                 std::time::Duration::from_secs(60),
             ),
             browse_leases: std::sync::Mutex::new(std::collections::HashMap::new()),
+            smart_query: tokio::sync::Mutex::new(SmartQueryCache::default()),
         }
     }
 
@@ -1496,12 +1518,18 @@ impl SnapshotsManagerHelper {
     }
 
     /// Return a bounded read-only summary of the important S.M.A.R.T. fields
-    /// for devices discovered by smartctl itself.
+    /// for physical devices backing the root Btrfs filesystem.
     async fn get_smart_disk_health(&self) -> String {
-        match tokio::task::spawn_blocking(smart::disk_health).await {
+        // Holding this asynchronous mutex across the query provides single-flight
+        // behavior without consuming blocking worker threads for duplicate calls.
+        let mut cache = self.smart_query.lock().await;
+        if let Some(value) = cache.current(std::time::Instant::now()) {
+            return value;
+        }
+        let value = match tokio::task::spawn_blocking(smart::disk_health).await {
             Ok(Ok(status)) => serde_json::to_string(&status).unwrap_or_else(|error| {
                 serde_json::json!({
-                    "schema_version": 1,
+                    "schema_version": 2,
                     "available": false,
                     "devices": [],
                     "error": format!("Could not serialize S.M.A.R.T. status: {error}"),
@@ -1509,20 +1537,22 @@ impl SnapshotsManagerHelper {
                 .to_string()
             }),
             Ok(Err(error)) => serde_json::json!({
-                "schema_version": 1,
+                "schema_version": 2,
                 "available": false,
                 "devices": [],
                 "error": error.to_string(),
             })
             .to_string(),
             Err(error) => serde_json::json!({
-                "schema_version": 1,
+                "schema_version": 2,
                 "available": false,
                 "devices": [],
                 "error": format!("S.M.A.R.T. status query stopped: {error}"),
             })
             .to_string(),
-        }
+        };
+        cache.store(value.clone(), std::time::Instant::now());
+        value
     }
 
     /// Run one fixed Btrfs configuration or maintenance action. The action is
@@ -2447,6 +2477,18 @@ fn run_command_with_output(cmd: &str, args: &[&str]) -> Result<(String, String)>
 mod tests {
     use super::*;
     use std::io::Write;
+
+    #[test]
+    fn smart_query_cache_reuses_only_fresh_results() {
+        let mut cache = SmartQueryCache::default();
+        let created_at = std::time::Instant::now();
+        cache.store("first".into(), created_at);
+        assert_eq!(
+            cache.current(created_at + SMART_QUERY_CACHE_TTL / 2),
+            Some("first".into())
+        );
+        assert_eq!(cache.current(created_at + SMART_QUERY_CACHE_TTL), None);
+    }
 
     #[test]
     fn personal_snapshot_quota_allows_four_creations_per_sliding_minute() {

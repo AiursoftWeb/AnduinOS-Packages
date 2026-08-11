@@ -6,13 +6,20 @@
 use anyhow::{Context, Result, bail};
 use serde_json::Value;
 use std::collections::{BTreeSet, HashMap, HashSet};
-use std::process::Command;
+use std::process::{Command, Output, Stdio};
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::time::{Duration, Instant};
 
 const BTRFS: &str = "/usr/bin/btrfs";
 const LSBLK: &str = "/usr/bin/lsblk";
 const SMARTCTL: &str = "/usr/sbin/smartctl";
 const MAX_SMARTCTL_OUTPUT_BYTES: usize = 2 * 1024 * 1024;
 const MAX_DEVICES: usize = 64;
+const STORAGE_TOPOLOGY_COMMAND_TIMEOUT: Duration = Duration::from_secs(5);
+const SMARTCTL_COMMAND_TIMEOUT: Duration = Duration::from_secs(10);
+const SMART_QUERY_TIMEOUT: Duration = Duration::from_secs(30);
+const CHILD_POLL_INTERVAL: Duration = Duration::from_millis(20);
+static TIMED_OUT_STORAGE_COMMAND_PENDING: AtomicBool = AtomicBool::new(false);
 
 #[derive(Debug, serde::Serialize)]
 pub struct SmartHealthStatus {
@@ -59,8 +66,9 @@ pub struct SmartDiskHealth {
 }
 
 pub fn disk_health() -> Result<SmartHealthStatus> {
-    let members = root_btrfs_members()?;
-    let topology = block_topology()?;
+    let deadline = Instant::now() + SMART_QUERY_TIMEOUT;
+    let members = root_btrfs_members(deadline)?;
+    let topology = block_topology(deadline)?;
     let system_devices = physical_devices(&members, &topology);
     if system_devices.len() > MAX_DEVICES {
         bail!("The root Btrfs filesystem has too many storage devices");
@@ -68,14 +76,21 @@ pub fn disk_health() -> Result<SmartHealthStatus> {
 
     let mut devices = Vec::with_capacity(system_devices.len());
     for name in system_devices {
-        let result = run_smartctl(&[
-            "--info",
-            "--health",
-            "--attributes",
-            "--capabilities",
-            "--json",
-            &name,
-        ]);
+        let result = remaining_timeout(deadline, SMARTCTL_COMMAND_TIMEOUT)
+            .context("The S.M.A.R.T. query reached its overall time limit")
+            .and_then(|timeout| {
+                run_smartctl(
+                    &[
+                        "--info",
+                        "--health",
+                        "--attributes",
+                        "--capabilities",
+                        "--json",
+                        &name,
+                    ],
+                    timeout,
+                )
+            });
         devices.push(match result {
             Ok(value) => parse_disk(&value, &name, "Unknown"),
             Err(error) => SmartDiskHealth {
@@ -106,11 +121,13 @@ struct BlockTopology {
     parents: HashMap<String, Vec<String>>,
 }
 
-fn root_btrfs_members() -> Result<Vec<String>> {
+fn root_btrfs_members(deadline: Instant) -> Result<Vec<String>> {
     let output = run_text_command(
         BTRFS,
         &["filesystem", "show", "--raw", "/"],
         "Failed to inspect the root Btrfs filesystem",
+        remaining_timeout(deadline, STORAGE_TOPOLOGY_COMMAND_TIMEOUT)
+            .context("The storage topology query reached its overall time limit")?,
     )?;
     let members = parse_btrfs_members(&output);
     if members.is_empty() {
@@ -119,7 +136,7 @@ fn root_btrfs_members() -> Result<Vec<String>> {
     Ok(members)
 }
 
-fn block_topology() -> Result<BlockTopology> {
+fn block_topology(deadline: Instant) -> Result<BlockTopology> {
     let output = run_text_command(
         LSBLK,
         &[
@@ -130,18 +147,25 @@ fn block_topology() -> Result<BlockTopology> {
             "PATH,TYPE,PKNAME",
         ],
         "Failed to inspect the system storage topology",
+        remaining_timeout(deadline, STORAGE_TOPOLOGY_COMMAND_TIMEOUT)
+            .context("The storage topology query reached its overall time limit")?,
     )?;
     Ok(parse_block_topology(&output))
 }
 
-fn run_text_command(command: &str, arguments: &[&str], description: &str) -> Result<String> {
-    let output = Command::new(command)
+fn run_text_command(
+    command: &str,
+    arguments: &[&str],
+    description: &str,
+    timeout: Duration,
+) -> Result<String> {
+    let mut command = Command::new(command);
+    command
         .args(arguments)
         .env_clear()
         .env("PATH", "/usr/sbin:/usr/bin:/sbin:/bin")
-        .env("LC_ALL", "C")
-        .output()
-        .with_context(|| description.to_string())?;
+        .env("LC_ALL", "C");
+    let output = command_output_with_timeout(&mut command, timeout, description)?;
     if output.stdout.len() > MAX_SMARTCTL_OUTPUT_BYTES
         || output.stderr.len() > MAX_SMARTCTL_OUTPUT_BYTES
     {
@@ -232,14 +256,14 @@ fn resolve_physical_devices(
     }
 }
 
-fn run_smartctl(arguments: &[&str]) -> Result<Value> {
-    let output = Command::new(SMARTCTL)
+fn run_smartctl(arguments: &[&str], timeout: Duration) -> Result<Value> {
+    let mut command = Command::new(SMARTCTL);
+    command
         .args(arguments)
         .env_clear()
         .env("PATH", "/usr/sbin:/usr/bin:/sbin:/bin")
-        .env("LC_ALL", "C")
-        .output()
-        .context("Failed to execute smartctl")?;
+        .env("LC_ALL", "C");
+    let output = command_output_with_timeout(&mut command, timeout, "smartctl")?;
     if output.stdout.len() > MAX_SMARTCTL_OUTPUT_BYTES
         || output.stderr.len() > MAX_SMARTCTL_OUTPUT_BYTES
     {
@@ -252,6 +276,60 @@ fn run_smartctl(arguments: &[&str]) -> Result<Value> {
     // smartctl uses a bitmask exit status for both command errors and health
     // findings. Valid JSON remains authoritative even when the status is not 0.
     Ok(value)
+}
+
+fn remaining_timeout(deadline: Instant, per_command_limit: Duration) -> Option<Duration> {
+    deadline
+        .checked_duration_since(Instant::now())
+        .filter(|remaining| !remaining.is_zero())
+        .map(|remaining| remaining.min(per_command_limit))
+}
+
+fn command_output_with_timeout(
+    command: &mut Command,
+    timeout: Duration,
+    description: &str,
+) -> Result<Output> {
+    if TIMED_OUT_STORAGE_COMMAND_PENDING.load(Ordering::Acquire) {
+        bail!("A previous timed-out storage command is still terminating");
+    }
+    let mut child = command
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .with_context(|| format!("Failed to execute {description}"))?;
+    let deadline = Instant::now() + timeout;
+    loop {
+        if child
+            .try_wait()
+            .with_context(|| format!("Failed while waiting for {description}"))?
+            .is_some()
+        {
+            return child
+                .wait_with_output()
+                .with_context(|| format!("Failed to collect output from {description}"));
+        }
+        let now = Instant::now();
+        if now >= deadline {
+            let _ = child.kill();
+            TIMED_OUT_STORAGE_COMMAND_PENDING.store(true, Ordering::Release);
+            // A drive command may be stuck in uninterruptible kernel I/O. Reap
+            // it off-thread so the D-Bus request still returns at its deadline.
+            // Until it is actually reaped, the global latch prevents any new
+            // storage probe from accumulating behind the broken device.
+            let _ = std::thread::Builder::new()
+                .name("smart-command-reaper".into())
+                .spawn(move || {
+                    let _ = child.wait_with_output();
+                    TIMED_OUT_STORAGE_COMMAND_PENDING.store(false, Ordering::Release);
+                });
+            bail!(
+                "{description} timed out after {:.1} seconds",
+                timeout.as_secs_f64()
+            );
+        }
+        std::thread::sleep(CHILD_POLL_INTERVAL.min(deadline - now));
+    }
 }
 
 fn safe_device_path(device: &str) -> bool {
@@ -492,6 +570,29 @@ fn smartctl_error(value: &Value) -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn external_storage_commands_are_hard_bounded() {
+        let started = Instant::now();
+        let mut command = Command::new("/bin/sleep");
+        command.arg("5");
+        let error = command_output_with_timeout(
+            &mut command,
+            Duration::from_millis(40),
+            "test storage command",
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("timed out"));
+        assert!(started.elapsed() < Duration::from_secs(1));
+    }
+
+    #[test]
+    fn per_command_timeout_never_exceeds_the_overall_deadline() {
+        let deadline = Instant::now() + Duration::from_millis(50);
+        let timeout = remaining_timeout(deadline, Duration::from_secs(10)).unwrap();
+        assert!(timeout <= Duration::from_millis(50));
+        assert!(remaining_timeout(Instant::now(), Duration::from_secs(10)).is_none());
+    }
 
     #[test]
     fn accepts_only_bounded_device_paths_below_dev() {
