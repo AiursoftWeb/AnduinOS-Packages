@@ -182,6 +182,10 @@ def install_recommended() -> None:
     run(["ubuntu-drivers", "install"])
 
 
+def refresh_driver_info() -> None:
+    apt_update()
+
+
 def install_xbox(reinstall: bool = False) -> None:
     apt_update()
     kernel_release = os.uname().release
@@ -243,6 +247,8 @@ def main(arguments: list[str]) -> int:
                 install_driver(package)
             case ["install-recommended"]:
                 install_recommended()
+            case ["refresh-driver-info"]:
+                refresh_driver_info()
             case ["repair-nvidia", package]:
                 repair_nvidia_driver(package)
             case ["install-xbox"]:

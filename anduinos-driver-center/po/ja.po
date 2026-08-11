@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-driver-center 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-08 10:54+0000\n"
+"POT-Creation-Date: 2026-08-11 16:11+0800\n"
 "PO-Revision-Date: 2026-08-06 07:08+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: ja\n"
@@ -18,120 +18,336 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:74
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:1006
+#: src/anduinos_driver_center/app.py:113 src/anduinos_driver_center/app.py:211
+#: src/anduinos_driver_center/app.py:283 src/anduinos_driver_center/app.py:2238
 msgid "AnduinOS Driver Center"
 msgstr "AnduinOS ドライバー センター"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:137
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:435
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:597
+#: src/anduinos_driver_center/app.py:230 src/anduinos_driver_center/app.py:328
+#: src/anduinos_driver_center/app.py:330
+msgid "Home"
+msgstr "ホーム"
+
+#: src/anduinos_driver_center/app.py:233 src/anduinos_driver_center/app.py:793
+#: src/anduinos_driver_center/app.py:1064
+#: src/anduinos_driver_center/app.py:1630
+#: src/anduinos_driver_center/app.py:1792
 msgid "Scan again"
 msgstr "再度スキャンしてください"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:141
+#: src/anduinos_driver_center/app.py:238
 msgid "About Driver Center"
 msgstr "ドライバー センターについて"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:143
+#: src/anduinos_driver_center/app.py:240
 msgid "Main Menu"
 msgstr "メインメニュー"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:160
-msgid "Hardware"
-msgstr "ハードウェア"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:184
+#: src/anduinos_driver_center/app.py:285
 msgid "Scanning for drivers"
 msgstr "ドライバーをスキャンしています"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:184
+#: src/anduinos_driver_center/app.py:286
 msgid "Checking hardware and Secure Boot status…"
 msgstr "ハードウェアと Secure Boot ステータスをチェックしています…"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:217
+#: src/anduinos_driver_center/app.py:328 src/anduinos_driver_center/app.py:869
+#: src/anduinos_driver_center/app.py:1208
+#: src/anduinos_driver_center/app.py:1921
+msgid "System status"
+msgstr "システムステータス"
+
+#: src/anduinos_driver_center/app.py:347 src/anduinos_driver_center/app.py:351
 msgid "Audio"
 msgstr "オーディオ"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:218
+#: src/anduinos_driver_center/app.py:348 src/anduinos_driver_center/app.py:933
 msgid "Audio support ready"
 msgstr "オーディオサポートの準備完了"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:218
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:232
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:258
+#: src/anduinos_driver_center/app.py:348 src/anduinos_driver_center/app.py:363
+#: src/anduinos_driver_center/app.py:390 src/anduinos_driver_center/app.py:487
+#: src/anduinos_driver_center/app.py:836 src/anduinos_driver_center/app.py:839
+#: src/anduinos_driver_center/app.py:903 src/anduinos_driver_center/app.py:933
+#: src/anduinos_driver_center/app.py:963 src/anduinos_driver_center/app.py:988
+#: src/anduinos_driver_center/app.py:1004
 msgid "Support needs attention"
 msgstr "サポートには注意が必要です"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:227
+#: src/anduinos_driver_center/app.py:358
 msgid "Printing service stopped"
 msgstr "印刷サービスが停止しました"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:229
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:893
+#: src/anduinos_driver_center/app.py:360 src/anduinos_driver_center/app.py:947
+#: src/anduinos_driver_center/app.py:2088
 msgid "Printing support disabled."
 msgstr "印刷サポートが無効になっています。"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:234
+#: src/anduinos_driver_center/app.py:365
 msgid "Some queues are paused"
 msgstr "一部のキューが一時停止されています"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:236
+#: src/anduinos_driver_center/app.py:367 src/anduinos_driver_center/app.py:958
 msgid "No printers configured"
 msgstr "プリンターが構成されていません"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:239
+#: src/anduinos_driver_center/app.py:370 src/anduinos_driver_center/app.py:953
 #, python-format
 msgid "%d printer configured"
 msgid_plural "%d printers configured"
 msgstr[0] "%d プリンターが構成されました"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:244
+#: src/anduinos_driver_center/app.py:375 src/anduinos_driver_center/app.py:378
 msgid "Printers"
 msgstr "プリンター"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:251
+#: src/anduinos_driver_center/app.py:383 src/anduinos_driver_center/app.py:395
 msgid "Xbox Controller"
 msgstr "Xbox コントローラー"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:253
+#: src/anduinos_driver_center/app.py:385 src/anduinos_driver_center/app.py:986
 msgid "xpadneo installed"
 msgstr "xpadneo がインストールされました"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:256
+#: src/anduinos_driver_center/app.py:388 src/anduinos_driver_center/app.py:987
 msgid "Optional Bluetooth driver"
 msgstr "オプションの Bluetooth ドライバー"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:271
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:364
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:555
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:560
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:565
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:576
+#: src/anduinos_driver_center/app.py:404 src/anduinos_driver_center/app.py:408
+#: src/anduinos_driver_center/app.py:798 src/anduinos_driver_center/app.py:802
+#: src/anduinos_driver_center/app.py:1002
+#: src/anduinos_driver_center/app.py:1096
+#: src/anduinos_driver_center/app.py:1559
+#: src/anduinos_driver_center/app.py:1750
+#: src/anduinos_driver_center/app.py:1755
+#: src/anduinos_driver_center/app.py:1760
+#: src/anduinos_driver_center/app.py:1771
 msgid "Secure Boot"
 msgstr "Secure Boot"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:272
+#: src/anduinos_driver_center/app.py:405 src/anduinos_driver_center/app.py:1004
 msgid "Trust established"
 msgstr "信頼が確立されました"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:272
+#: src/anduinos_driver_center/app.py:405 src/anduinos_driver_center/app.py:789
+#: src/anduinos_driver_center/app.py:796 src/anduinos_driver_center/app.py:883
+#: src/anduinos_driver_center/app.py:1003
 msgid "Action required"
 msgstr "アクションが必要です"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:351
+#: src/anduinos_driver_center/app.py:415 src/anduinos_driver_center/app.py:419
+#: src/anduinos_driver_center/app.py:1016
+#: src/anduinos_driver_center/app.py:1163
+msgid "Device Firmware"
+msgstr "デバイスのファームウェア"
+
+#: src/anduinos_driver_center/app.py:485 src/anduinos_driver_center/app.py:1193
+msgid "Checking for updates…"
+msgstr "アップデートをチェック中…"
+
+#: src/anduinos_driver_center/app.py:489 src/anduinos_driver_center/app.py:511
+#: src/anduinos_driver_center/app.py:635
+msgid "Shutdown Required"
+msgstr "シャットダウンが必要です"
+
+#: src/anduinos_driver_center/app.py:491 src/anduinos_driver_center/app.py:513
+#: src/anduinos_driver_center/app.py:831 src/anduinos_driver_center/app.py:898
+#: src/anduinos_driver_center/app.py:1043
+#: src/anduinos_driver_center/app.py:1460
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
+msgid "Reboot Required"
+msgstr "再起動が必要です"
+
+#: src/anduinos_driver_center/app.py:495 src/anduinos_driver_center/app.py:517
+#: src/anduinos_driver_center/app.py:618
+#, python-format
+msgid "%d firmware update available"
+msgid_plural "%d firmware updates available"
+msgstr[0] "%d ファームウェア アップデートが利用可能"
+
+#: src/anduinos_driver_center/app.py:500
+msgid "No supported devices"
+msgstr "サポートされているデバイスはありません"
+
+#: src/anduinos_driver_center/app.py:501
+msgid "Firmware is up to date"
+msgstr "ファームウェアは最新です"
+
+#: src/anduinos_driver_center/app.py:507
+msgid "Checking…"
+msgstr "確認中…"
+
+#: src/anduinos_driver_center/app.py:507
+msgid "Contacting the firmware service"
+msgstr "ファームウェアサービスへのお問い合わせ"
+
+#: src/anduinos_driver_center/app.py:509 src/anduinos_driver_center/app.py:932
+#: src/anduinos_driver_center/app.py:962 src/anduinos_driver_center/app.py:984
+#: src/anduinos_driver_center/app.py:1429
+msgid "Needs attention"
+msgstr "注意が必要です"
+
+#: src/anduinos_driver_center/app.py:511 src/anduinos_driver_center/app.py:592
+#: src/anduinos_driver_center/app.py:1442
+msgid "Shutdown required after installation"
+msgstr "インストール後にシャットダウンが必要"
+
+#: src/anduinos_driver_center/app.py:513
+msgid "Restart to finish the firmware update"
+msgstr "再起動してファームウェアのアップデートを完了します"
+
+#: src/anduinos_driver_center/app.py:521 src/anduinos_driver_center/app.py:819
+#: src/anduinos_driver_center/app.py:893 src/anduinos_driver_center/app.py:1040
+#: src/anduinos_driver_center/app.py:1259
+#: src/anduinos_driver_center/app.py:1393
+msgid "Update available"
+msgstr "更新があります"
+
+#: src/anduinos_driver_center/app.py:523 src/anduinos_driver_center/app.py:884
+#: src/anduinos_driver_center/app.py:1629
+#: src/anduinos_driver_center/app.py:1655
+#: src/anduinos_driver_center/app.py:1746
+#: src/anduinos_driver_center/app.py:1790
+#: src/anduinos_driver_center/app.py:1898
+msgid "Not detected"
+msgstr "検出されませんでした"
+
+#: src/anduinos_driver_center/app.py:523 src/anduinos_driver_center/app.py:1331
+msgid "No supported firmware devices"
+msgstr "サポートされているファームウェア デバイスがありません"
+
+#: src/anduinos_driver_center/app.py:526
+#, python-format
+msgid "%d device is up to date"
+msgid_plural "%d devices are up to date"
+msgstr[0] "%d デバイスは最新です"
+
+#: src/anduinos_driver_center/app.py:530 src/anduinos_driver_center/app.py:844
+#: src/anduinos_driver_center/app.py:908 src/anduinos_driver_center/app.py:932
+#: src/anduinos_driver_center/app.py:950 src/anduinos_driver_center/app.py:983
+#: src/anduinos_driver_center/app.py:1046
+#: src/anduinos_driver_center/app.py:1259
+msgid "Ready"
+msgstr "準備完了"
+
+#: src/anduinos_driver_center/app.py:559
+msgid "Scheduling firmware update…"
+msgstr "ファームウェアのアップデートをスケジュールしています…"
+
+#: src/anduinos_driver_center/app.py:560
+msgid "Downloading firmware…"
+msgstr "ファームウェアをダウンロード中…"
+
+#: src/anduinos_driver_center/app.py:561
+msgid "Installing firmware…"
+msgstr "ファームウェアをインストール中…"
+
+#: src/anduinos_driver_center/app.py:562
+msgid "Verifying firmware…"
+msgstr "ファームウェアを検証中…"
+
+#: src/anduinos_driver_center/app.py:563
+msgid "Waiting for authentication…"
+msgstr "認証を待っています…"
+
+#: src/anduinos_driver_center/app.py:564
+msgid "Waiting for user action…"
+msgstr "ユーザーのアクションを待っています…"
+
+#: src/anduinos_driver_center/app.py:568
+msgid "Updating firmware…"
+msgstr "ファームウェアを更新中…"
+
+#: src/anduinos_driver_center/app.py:589 src/anduinos_driver_center/app.py:2093
+#: src/anduinos_driver_center/app.py:2215
+msgid "unknown error"
+msgstr "不明なエラー"
+
+#: src/anduinos_driver_center/app.py:594 src/anduinos_driver_center/app.py:1444
+msgid "Restart required after installation"
+msgstr "インストール後に再起動が必要"
+
+#: src/anduinos_driver_center/app.py:598 src/anduinos_driver_center/app.py:671
+#: src/anduinos_driver_center/app.py:677
+msgid "Firmware operation failed"
+msgstr "ファームウェア操作に失敗しました"
+
+#: src/anduinos_driver_center/app.py:601 src/anduinos_driver_center/app.py:2223
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
+msgid "OK"
+msgstr "OK"
+
+#: src/anduinos_driver_center/app.py:612
+msgid "Firmware metadata refreshed."
+msgstr "ファームウェアのメタデータが更新されました。"
+
+#: src/anduinos_driver_center/app.py:623
+msgid "No firmware updates are available."
+msgstr "利用可能なファームウェアのアップデートはありません。"
+
+#: src/anduinos_driver_center/app.py:630
+msgid "Firmware update completed."
+msgstr "ファームウェアのアップデートが完了しました。"
+
+#: src/anduinos_driver_center/app.py:635
+msgid "Restart Required"
+msgstr "再起動が必要です"
+
+#: src/anduinos_driver_center/app.py:638
 msgid ""
-"Choose the driver used by this device. AnduinOS marks the hardware-tested "
-"recommendation."
+"The firmware update has been prepared. Save your work and shut down the "
+"computer to finish installing it."
+msgstr "ファームウェアの更新が準備できました。作業内容を保存し、コンピューターをシャットダウンしてインストールを完了してください。"
+
+#: src/anduinos_driver_center/app.py:643
+msgid ""
+"The firmware update has been prepared. Save your work and restart the "
+"computer to finish installing it."
 msgstr ""
-"このデバイスで使用されるドライバーを選択してください。 AnduinOS は、ハード"
-"ウェアでテストされた推奨事項を示します。"
+"ファームウェアアップデートの準備が完了しました。作業内容を保存し、コンピュー"
+"タを再起動してインストールを完了します。"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:357
-msgid "Available drivers"
-msgstr "利用可能なドライバー"
+#: src/anduinos_driver_center/app.py:648
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
+msgid "Later"
+msgstr "後で"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:362
+#: src/anduinos_driver_center/app.py:651
+msgid "Shut Down Now"
+msgstr "今すぐシャットダウン"
+
+#: src/anduinos_driver_center/app.py:651
+msgid "Restart Now"
+msgstr "今すぐ再起動してください"
+
+#: src/anduinos_driver_center/app.py:757 src/anduinos_driver_center/app.py:1351
+#: src/anduinos_driver_center/app.py:1376
+#: src/anduinos_driver_center/app.py:1605
+#: src/anduinos_driver_center/app.py:1730
+msgid "Installed"
+msgstr "インストール済み"
+
+#: src/anduinos_driver_center/app.py:759 src/anduinos_driver_center/app.py:1876
+#: src/anduinos_driver_center/app.py:1884
+msgid "Available"
+msgstr "利用可能"
+
+#: src/anduinos_driver_center/app.py:791 src/anduinos_driver_center/app.py:849
+#: src/anduinos_driver_center/app.py:1054
+#: src/anduinos_driver_center/app.py:1725
+msgid "Driver status"
+msgstr "ドライバーのステータス"
+
+#: src/anduinos_driver_center/app.py:792 src/anduinos_driver_center/app.py:1641
+#: src/anduinos_driver_center/app.py:2215
+msgid "Driver operation failed: "
+msgstr "ドライバーの操作が失敗しました: "
+
+#: src/anduinos_driver_center/app.py:800 src/anduinos_driver_center/app.py:1557
 msgid ""
 "Secure Boot status or trust must be resolved before installing a third-party "
 "driver."
@@ -139,84 +355,392 @@ msgstr ""
 "Secure Boot ステータスまたは信頼は、サードパーティ製ドライバーをインストール"
 "する前に解決する必要があります。"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:372
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:448
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:461
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:782
-msgid "Apply Changes"
-msgstr "変更を適用"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:381
-msgid "open source"
-msgstr "オープンソース"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:381
-msgid "proprietary"
-msgstr "独自仕様"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:383
-msgid "built in"
-msgstr "内蔵"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:407
-msgid "In use"
-msgstr "使用中"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:410
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:535
-msgid "Installed"
-msgstr "インストール済み"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:412
+#: src/anduinos_driver_center/app.py:805 src/anduinos_driver_center/app.py:888
+#: src/anduinos_driver_center/app.py:1037
+#: src/anduinos_driver_center/app.py:1607
 msgid "Recommended"
 msgstr "推奨"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:434
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:445
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:460
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:625
-msgid "Kernel module"
-msgstr "カーネルモジュール"
+#: src/anduinos_driver_center/app.py:809 src/anduinos_driver_center/app.py:1546
+msgid ""
+"Choose the driver used by this device. AnduinOS marks the hardware-tested "
+"recommendation."
+msgstr ""
+"このデバイスで使用されるドライバーを選択してください。 AnduinOS は、ハード"
+"ウェアでテストされた推奨事項を示します。"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:434
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:460
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:551
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:595
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:703
-msgid "Not detected"
-msgstr "検出されませんでした"
+#: src/anduinos_driver_center/app.py:811 src/anduinos_driver_center/app.py:823
+#: src/anduinos_driver_center/app.py:1088
+#: src/anduinos_driver_center/app.py:1522
+#: src/anduinos_driver_center/app.py:1567
+#: src/anduinos_driver_center/app.py:1643
+#: src/anduinos_driver_center/app.py:1656
+#: src/anduinos_driver_center/app.py:1977
+msgid "Apply Changes"
+msgstr "変更を適用"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:446
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:984
-msgid "Driver operation failed: "
-msgstr "ドライバーの操作が失敗しました: "
+#: src/anduinos_driver_center/app.py:834 src/anduinos_driver_center/app.py:2213
+msgid "Driver changes completed. Restart may be required."
+msgstr "ドライバーの変更が完了しました。再起動が必要になる場合があります。"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:448
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:571
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:590
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:653
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:683
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:691
-msgid "Repair & Reinstall"
-msgstr "修復と再インストール"
+#: src/anduinos_driver_center/app.py:840 src/anduinos_driver_center/app.py:919
+#: src/anduinos_driver_center/app.py:1027
+#: src/anduinos_driver_center/app.py:1552
+msgid "Available drivers"
+msgstr "利用可能なドライバー"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:469
-msgid "Advanced driver versions"
-msgstr "高度なドライバーのバージョン"
+#: src/anduinos_driver_center/app.py:851 src/anduinos_driver_center/app.py:912
+msgid "No additional drivers are needed."
+msgstr "追加のドライバーは必要ありません。"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:470
-msgid "Older, newer, and server-oriented packages"
-msgstr "古いパッケージ、新しいパッケージ、サーバー指向のパッケージ"
+#: src/anduinos_driver_center/app.py:931 src/anduinos_driver_center/app.py:1835
+msgid "Audio Support"
+msgstr "オーディオのサポート"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:491
-msgid "Select another driver to apply changes."
-msgstr "変更を適用するには別のドライバーを選択してください。"
+#: src/anduinos_driver_center/app.py:946 src/anduinos_driver_center/app.py:1939
+msgid "Disabled"
+msgstr "無効"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:526
+#: src/anduinos_driver_center/app.py:968 src/anduinos_driver_center/app.py:1906
+msgid "Printing Support"
+msgstr "印刷サポート"
+
+#: src/anduinos_driver_center/app.py:982 src/anduinos_driver_center/app.py:1721
 msgid "Xbox Controller Support"
 msgstr "Xbox コントローラーサポート"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:527
+#: src/anduinos_driver_center/app.py:984 src/anduinos_driver_center/app.py:1730
+#: src/anduinos_driver_center/app.py:1814
+#: src/anduinos_driver_center/app.py:1857
+#: src/anduinos_driver_center/app.py:1865
+#: src/anduinos_driver_center/app.py:2029
+msgid "Not installed"
+msgstr "インストールされていません"
+
+#: src/anduinos_driver_center/app.py:1003
+#: src/anduinos_driver_center/app.py:1738
+msgid "Trusted"
+msgstr "信頼できる"
+
+#: src/anduinos_driver_center/app.py:1056
+msgid "Check for Driver Updates"
+msgstr "ドライバーの更新を確認"
+
+#: src/anduinos_driver_center/app.py:1058
+msgid "Refresh software sources and compare the recommended driver version."
+msgstr "ソフトウェアソースを更新し、推奨ドライバーのバージョンを比較します。"
+
+#: src/anduinos_driver_center/app.py:1070
+msgid "Driver information updated."
+msgstr "ドライバー情報を更新しました。"
+
+#: src/anduinos_driver_center/app.py:1079
+#: src/anduinos_driver_center/app.py:1524
+msgid ""
+"AnduinOS will update software sources and install the drivers recommended "
+"for this hardware."
+msgstr ""
+"AnduinOS はソフトウェアソースを更新し、このハードウェアに推奨されるドライバー"
+"をインストールします。"
+
+#: src/anduinos_driver_center/app.py:1165
+msgid ""
+"Keep system firmware and supported hardware up to date through the Linux "
+"Vendor Firmware Service."
+msgstr ""
+"Linux Vendor Firmware Service を通じて、システム ファームウェアとサポートされ"
+"るハードウェアを最新の状態に保ちます。"
+
+#: src/anduinos_driver_center/app.py:1176
+msgid "Firmware operation failed: "
+msgstr "ファームウェア操作が失敗しました:"
+
+#: src/anduinos_driver_center/app.py:1177
+#: src/anduinos_driver_center/app.py:1286
+msgid "Check Again"
+msgstr "もう一度確認してください"
+
+#: src/anduinos_driver_center/app.py:1183
+msgid "Firmware operation"
+msgstr "ファームウェアの動作"
+
+#: src/anduinos_driver_center/app.py:1210
+msgid "Firmware service"
+msgstr "ファームウェアサービス"
+
+#: src/anduinos_driver_center/app.py:1214
+msgid "Not available"
+msgstr "利用できません"
+
+#: src/anduinos_driver_center/app.py:1228
+msgid "Not refreshed in this session"
+msgstr "このセッションでは更新されません"
+
+#: src/anduinos_driver_center/app.py:1231
+msgid "Firmware metadata"
+msgstr "ファームウェアのメタデータ"
+
+#: src/anduinos_driver_center/app.py:1240
+msgid "Supported devices"
+msgstr "サポートされているデバイス"
+
+#: src/anduinos_driver_center/app.py:1242
+#, python-format
+msgid "%d device detected"
+msgid_plural "%d devices detected"
+msgstr[0] "%d デバイスが検出されました"
+
+#: src/anduinos_driver_center/app.py:1252
+msgid "Available firmware updates"
+msgstr "利用可能なファームウェアアップデート"
+
+#: src/anduinos_driver_center/app.py:1254
+#, python-format
+msgid "%d update available"
+msgid_plural "%d updates available"
+msgstr[0] "%d アップデートが利用可能"
+
+#: src/anduinos_driver_center/app.py:1266
+msgid "Firmware actions"
+msgstr "ファームウェアのアクション"
+
+#: src/anduinos_driver_center/app.py:1268
+msgid "Refresh Firmware Metadata"
+msgstr "ファームウェアメタデータの更新"
+
+#: src/anduinos_driver_center/app.py:1269
+msgid "Download the latest metadata from enabled firmware sources."
+msgstr "有効なファームウェア ソースから最新のメタデータをダウンロードします。"
+
+#: src/anduinos_driver_center/app.py:1272
+msgid "Refresh"
+msgstr "リフレッシュ"
+
+#: src/anduinos_driver_center/app.py:1282
+msgid "Check for Firmware Updates"
+msgstr "ファームウェアのアップデートを確認する"
+
+#: src/anduinos_driver_center/app.py:1283
+msgid "Compare connected devices with the available metadata."
+msgstr "接続されているデバイスを利用可能なメタデータと比較します。"
+
+#: src/anduinos_driver_center/app.py:1297
+msgid "Update All Firmware"
+msgstr "すべてのファームウェアをアップデートする"
+
+#: src/anduinos_driver_center/app.py:1299
+#, python-format
+msgid "Install %d available update."
+msgid_plural "Install all %d available updates."
+msgstr[0] "利用可能なすべての %d アップデートをインストールします。"
+
+#: src/anduinos_driver_center/app.py:1305
+msgid "Update All"
+msgstr "すべて更新"
+
+#: src/anduinos_driver_center/app.py:1320
+msgid "Firmware Devices"
+msgstr "ファームウェアデバイス"
+
+#: src/anduinos_driver_center/app.py:1322
+msgid "Expand a device to inspect installed and available firmware versions."
+msgstr ""
+"デバイスを展開して、インストールされているファームウェアのバージョンと利用可"
+"能なファームウェアのバージョンを検査します。"
+
+#: src/anduinos_driver_center/app.py:1332
+msgid "The firmware service did not report any manageable devices."
+msgstr "ファームウェア サービスは管理可能なデバイスを報告しませんでした。"
+
+#: src/anduinos_driver_center/app.py:1338
+msgid "Firmware Update History"
+msgstr "ファームウェア更新履歴"
+
+#: src/anduinos_driver_center/app.py:1339
+msgid "Results reported by the fwupd service."
+msgstr "結果は fwupd サービスによって報告されます。"
+
+#: src/anduinos_driver_center/app.py:1347
+msgid "Unknown time"
+msgstr "不明な時間"
+
+#: src/anduinos_driver_center/app.py:1362
+msgid "No firmware update history"
+msgstr "ファームウェアの更新履歴がありません"
+
+#: src/anduinos_driver_center/app.py:1363
+msgid "Completed firmware operations will appear here."
+msgstr "完了したファームウェア操作がここに表示されます。"
+
+#: src/anduinos_driver_center/app.py:1376
+#: src/anduinos_driver_center/app.py:1388
+#: src/anduinos_driver_center/app.py:1404
+#: src/anduinos_driver_center/app.py:1415
+#: src/anduinos_driver_center/app.py:1462
+#: src/anduinos_driver_center/app.py:1478
+#: src/anduinos_driver_center/app.py:1479
+msgid "Unknown"
+msgstr "不明"
+
+#: src/anduinos_driver_center/app.py:1387
+msgid "Current version"
+msgstr "現在のバージョン"
+
+#: src/anduinos_driver_center/app.py:1394
+#: src/anduinos_driver_center/app.py:1507
+msgid "Update"
+msgstr "アップデート"
+
+#: src/anduinos_driver_center/app.py:1403
+msgid "Available version"
+msgstr "利用可能なバージョン"
+
+#: src/anduinos_driver_center/app.py:1408
+msgid "Low"
+msgstr "低い"
+
+#: src/anduinos_driver_center/app.py:1409
+msgid "Medium"
+msgstr "中"
+
+#: src/anduinos_driver_center/app.py:1410
+msgid "High"
+msgstr "高"
+
+#: src/anduinos_driver_center/app.py:1411
+msgid "Critical"
+msgstr "クリティカル"
+
+#: src/anduinos_driver_center/app.py:1414
+msgid "Update urgency"
+msgstr "更新の緊急性"
+
+#: src/anduinos_driver_center/app.py:1425
+msgid "Release notes"
+msgstr "リリースノート"
+
+#: src/anduinos_driver_center/app.py:1432
+msgid "Firmware status"
+msgstr "ファームウェアのステータス"
+
+#: src/anduinos_driver_center/app.py:1436
+msgid "Up to date"
+msgstr "最新の状態"
+
+#: src/anduinos_driver_center/app.py:1440
+msgid "Connect the computer to AC power"
+msgstr "コンピューターをAC電源に接続します"
+
+#: src/anduinos_driver_center/app.py:1448
+msgid "Installation requirements"
+msgstr "インストール要件"
+
+#: src/anduinos_driver_center/app.py:1457
+msgid "Pending"
+msgstr "保留中"
+
+#: src/anduinos_driver_center/app.py:1458
+msgid "Success"
+msgstr "成功"
+
+#: src/anduinos_driver_center/app.py:1459
+#: src/anduinos_driver_center/app.py:1461
+msgid "Failed"
+msgstr "失敗しました"
+
+#: src/anduinos_driver_center/app.py:1475
+#, python-format
+msgid "Install firmware for %(device)s from %(current)s to %(available)s?"
+msgstr ""
+"%(device)s のファームウェアを %(current)s から %(available)s にインストールし"
+"ますか?"
+
+#: src/anduinos_driver_center/app.py:1483
+#, python-format
+msgid "Install %d available firmware update?"
+msgid_plural "Install all %d available firmware updates?"
+msgstr[0] ""
+"%d の利用可能なファームウェア アップデートをすべてインストールしますか?"
+
+#: src/anduinos_driver_center/app.py:1489
+msgid "Keep the computer connected to AC power."
+msgstr "コンピューターを AC 電源に接続したままにしてください。"
+
+#: src/anduinos_driver_center/app.py:1493
+msgid ""
+"This update may invalidate full-disk encryption secrets. Make sure you have "
+"the volume recovery key before continuing."
+msgstr "この更新により、ディスク全体の暗号化シークレットが無効になる可能性があります。続行する前に、ボリュームの回復キーがあることを確認してください。"
+
+#: src/anduinos_driver_center/app.py:1498
+msgid "A restart may be required to finish installation."
+msgstr "インストールを完了するには再起動が必要な場合があります。"
+
+#: src/anduinos_driver_center/app.py:1499
+msgid "Do not disconnect devices or turn off the computer."
+msgstr ""
+"デバイスを取り外したり、コンピューターの電源を切ったりしないでください。"
+
+#: src/anduinos_driver_center/app.py:1503
+msgid "Install Firmware Update"
+msgstr "ファームウェアアップデートのインストール"
+
+#: src/anduinos_driver_center/app.py:1506
+#: src/anduinos_driver_center/app.py:1528
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: src/anduinos_driver_center/app.py:1529
+#: src/anduinos_driver_center/app.py:2173
+msgid "Apply"
+msgstr "適用する"
+
+#: src/anduinos_driver_center/app.py:1576
+msgid "open source"
+msgstr "オープンソース"
+
+#: src/anduinos_driver_center/app.py:1576
+msgid "proprietary"
+msgstr "独自仕様"
+
+#: src/anduinos_driver_center/app.py:1578
+msgid "built in"
+msgstr "内蔵"
+
+#: src/anduinos_driver_center/app.py:1602
+msgid "In use"
+msgstr "使用中"
+
+#: src/anduinos_driver_center/app.py:1629
+#: src/anduinos_driver_center/app.py:1640
+#: src/anduinos_driver_center/app.py:1655
+#: src/anduinos_driver_center/app.py:1820
+msgid "Kernel module"
+msgstr "カーネルモジュール"
+
+#: src/anduinos_driver_center/app.py:1643
+#: src/anduinos_driver_center/app.py:1766
+#: src/anduinos_driver_center/app.py:1785
+#: src/anduinos_driver_center/app.py:1848
+#: src/anduinos_driver_center/app.py:1878
+#: src/anduinos_driver_center/app.py:1886
+msgid "Repair & Reinstall"
+msgstr "修復と再インストール"
+
+#: src/anduinos_driver_center/app.py:1664
+msgid "Advanced driver versions"
+msgstr "高度なドライバーのバージョン"
+
+#: src/anduinos_driver_center/app.py:1665
+msgid "Older, newer, and server-oriented packages"
+msgstr "古いパッケージ、新しいパッケージ、サーバー指向のパッケージ"
+
+#: src/anduinos_driver_center/app.py:1686
+msgid "Select another driver to apply changes."
+msgstr "変更を適用するには別のドライバーを選択してください。"
+
+#: src/anduinos_driver_center/app.py:1722
 msgid ""
 "xpadneo improves Bluetooth mapping, rumble, battery reporting and "
 "compatibility for modern Xbox controllers."
@@ -224,77 +748,57 @@ msgstr ""
 "xpadneo は、Bluetooth マッピング、ランブル、バッテリー レポート、最新の Xbox "
 "コントローラーとの互換性を改善します。"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:530
-msgid "Driver status"
-msgstr "ドライバーのステータス"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:534
+#: src/anduinos_driver_center/app.py:1729
 msgid "Driver package"
 msgstr "ドライバー パッケージ"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:535
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:619
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:662
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:670
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:834
-msgid "Not installed"
-msgstr "インストールされていません"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:537
+#: src/anduinos_driver_center/app.py:1732
 msgid "Install Driver"
 msgstr "ドライバーのインストール"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:543
-msgid "Trusted"
-msgstr "信頼できる"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:554
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
+#: src/anduinos_driver_center/app.py:1749
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
 msgid "Secure Boot state could not be determined"
 msgstr "Secure Boot 状態を特定できませんでした"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:559
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
+#: src/anduinos_driver_center/app.py:1754
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
 msgid "Pending enrollment in blue screen (MOKManager)"
 msgstr "ブルー画面（MOKManager）での登録待ち"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:564
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
+#: src/anduinos_driver_center/app.py:1759
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
 msgid "Certificate is not trusted by motherboard"
 msgstr "証明書はマザーボードによって信頼されていません"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:569
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
+#: src/anduinos_driver_center/app.py:1764
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
 msgid "Some DKMS modules need to be re-signed"
 msgstr "一部の DKMS モジュールは再署名する必要があります"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:580
+#: src/anduinos_driver_center/app.py:1775
 msgid "Module signature"
 msgstr "モジュール署名"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:588
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:681
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:689
+#: src/anduinos_driver_center/app.py:1783
+#: src/anduinos_driver_center/app.py:1876
+#: src/anduinos_driver_center/app.py:1884
 msgid "Missing"
 msgstr "がありません"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:600
+#: src/anduinos_driver_center/app.py:1795
 msgid "Loaded"
 msgstr "読み込み済み"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:605
+#: src/anduinos_driver_center/app.py:1800
 msgid "Standing by"
 msgstr "スタンバイ"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:632
+#: src/anduinos_driver_center/app.py:1827
 msgid "Bluetooth Settings"
 msgstr "Bluetooth 設定"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:640
-msgid "Audio Support"
-msgstr "オーディオのサポート"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:641
+#: src/anduinos_driver_center/app.py:1836
 msgid ""
 "AnduinOS provides Intel SOF firmware and ALSA UCM profiles for reliable "
 "audio initialization and routing."
@@ -302,56 +806,47 @@ msgstr ""
 "AnduinOS は、信頼性の高いオーディオの初期化とルーティングのための Intel SOF "
 "ファームウェアと ALSA UCM プロファイルを提供します。"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:643
+#: src/anduinos_driver_center/app.py:1838
 msgid "Support packages"
 msgstr "サポートパッケージ"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:651
+#: src/anduinos_driver_center/app.py:1846
 msgid "Install Audio Support"
 msgstr "オーディオ サポートのインストール"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:661
+#: src/anduinos_driver_center/app.py:1856
 msgid "Intel SOF firmware"
 msgstr "インテル SOF ファームウェア"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:669
+#: src/anduinos_driver_center/app.py:1864
 msgid "ALSA UCM profiles"
 msgstr "ALSA UCM プロファイル"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:676
+#: src/anduinos_driver_center/app.py:1871
 msgid "Runtime status"
 msgstr "実行時ステータス"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:680
+#: src/anduinos_driver_center/app.py:1875
 msgid "SOF firmware files"
 msgstr "SOF ファームウェア ファイル"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:681
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:689
-msgid "Available"
-msgstr "利用可能"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:688
+#: src/anduinos_driver_center/app.py:1883
 msgid "UCM configuration files"
 msgstr "UCM 構成ファイル"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:696
+#: src/anduinos_driver_center/app.py:1891
 msgid "SOF kernel modules"
 msgstr "SOF カーネル モジュール"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:697
+#: src/anduinos_driver_center/app.py:1892
 msgid "Not currently loaded"
 msgstr "現在ロードされていません"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:702
+#: src/anduinos_driver_center/app.py:1897
 msgid "Active audio drivers"
 msgstr "アクティブなオーディオ ドライバー"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:711
-msgid "Printing Support"
-msgstr "印刷サポート"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:712
+#: src/anduinos_driver_center/app.py:1907
 msgid ""
 "Inspect the local print service, configured queues, and the packages that "
 "provide modern and legacy printer support."
@@ -359,164 +854,134 @@ msgstr ""
 "ローカル印刷サービス、構成されたキュー、および最新および従来のプリンター サ"
 "ポートを提供するパッケージを検査します。"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:716
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:733
+#: src/anduinos_driver_center/app.py:1911
+#: src/anduinos_driver_center/app.py:1928
 msgid "Enable Printing Support"
 msgstr "印刷サポートを有効にする"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:717
+#: src/anduinos_driver_center/app.py:1912
 msgid "Allow local, network, and USB printing services to run."
 msgstr "ローカル、ネットワーク、および USB 印刷サービスの実行を許可します。"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:726
-msgid "System status"
-msgstr "システムステータス"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:730
+#: src/anduinos_driver_center/app.py:1925
 msgid "CUPS service"
 msgstr "CUPS サービス"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:731
+#: src/anduinos_driver_center/app.py:1926
 msgid "Running"
 msgstr "実行中"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:731
+#: src/anduinos_driver_center/app.py:1926
 msgid "Stopped"
 msgstr "停止しました"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:743
+#: src/anduinos_driver_center/app.py:1938
 msgid "Start at boot"
 msgstr "起動時に開始"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:744
+#: src/anduinos_driver_center/app.py:1939
 msgid "Enabled"
 msgstr "有効化済み"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:744
-msgid "Disabled"
-msgstr "無効"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:749
+#: src/anduinos_driver_center/app.py:1944
 #, python-format
 msgid "%d configured printer"
 msgid_plural "%d configured printers"
 msgstr[0] "%d で構成されたプリンター"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:755
+#: src/anduinos_driver_center/app.py:1950
 msgid "Configured printers"
 msgstr "構成されたプリンター"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:761
+#: src/anduinos_driver_center/app.py:1956
 msgid "Default printer"
 msgstr "デフォルトのプリンター"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:762
+#: src/anduinos_driver_center/app.py:1957
 msgid "Not set"
 msgstr "未設定"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:766
+#: src/anduinos_driver_center/app.py:1961
 msgid "No configured queues"
 msgstr "キューが設定されていません"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:771
+#: src/anduinos_driver_center/app.py:1966
 #, python-format
 msgid "%d queue paused"
 msgid_plural "%d queues paused"
 msgstr[0] "%d キューが一時停止されました"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:775
+#: src/anduinos_driver_center/app.py:1970
 msgid "All queues enabled"
 msgstr "すべてのキューが有効になりました"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:779
+#: src/anduinos_driver_center/app.py:1974
 msgid "Print queues"
 msgstr "印刷キュー"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:790
+#: src/anduinos_driver_center/app.py:1985
 msgid "Core printing"
 msgstr "コア印刷"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:791
+#: src/anduinos_driver_center/app.py:1986
 msgid "Required for the local print service and command-line clients."
 msgstr "ローカル印刷サービスおよびコマンドライン クライアントに必要です。"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:798
+#: src/anduinos_driver_center/app.py:1993
 msgid "Driverless printing"
 msgstr "ドライバーレス印刷"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:799
+#: src/anduinos_driver_center/app.py:1994
 msgid "Modern IPP drivers, document filters, and capability tools."
 msgstr "最新の IPP ドライバー、ドキュメント フィルター、および機能ツール。"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:806
+#: src/anduinos_driver_center/app.py:2001
 msgid "Network discovery"
 msgstr "ネットワーク検出"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:807
+#: src/anduinos_driver_center/app.py:2002
 msgid "Automatic discovery of printers advertised on the local network."
 msgstr "ローカル ネットワーク上でアドバタイズされたプリンターの自動検出。"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:814
+#: src/anduinos_driver_center/app.py:2009
 msgid "Optional compatibility"
 msgstr "オプションの互換性"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:815
+#: src/anduinos_driver_center/app.py:2010
 msgid ""
 "USB IPP, administrative authorization, legacy drivers, and network scanning."
 msgstr ""
 "USB IPP、管理者認証、レガシー ドライバー、およびネットワーク スキャン。"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:838
+#: src/anduinos_driver_center/app.py:2033
 msgid "Install Missing Packages"
 msgstr "不足しているパッケージをインストールする"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:891
+#: src/anduinos_driver_center/app.py:2086
 msgid "Printing support enabled."
 msgstr "印刷サポートが有効になりました。"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:897
+#: src/anduinos_driver_center/app.py:2092
 msgid "Printing operation failed: "
 msgstr "印刷操作が失敗しました: "
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:898
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:984
-msgid "unknown error"
-msgstr "不明なエラー"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:971
-msgid "Apply"
-msgstr "適用する"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:972
+#: src/anduinos_driver_center/app.py:2174
 msgid "Working…"
 msgstr "作業中…"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:984
-msgid "Driver changes completed. Restart may be required."
-msgstr "ドライバーの変更が完了しました。再起動が必要になる場合があります。"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:991
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
-msgid "OK"
-msgstr "OK"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:1008
+#: src/anduinos_driver_center/app.py:2240
 msgid "AnduinOS Team"
 msgstr "AnduinOS チーム"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:1011
+#: src/anduinos_driver_center/app.py:2243
 msgid "Install, inspect, and repair hardware drivers on AnduinOS."
 msgstr "AnduinOS にハードウェア ドライバーをインストール、検査、修復します。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
 msgid "Secure Boot Configuration"
 msgstr "セキュアブート設定"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
 msgid ""
 "Secure Boot is a motherboard security standard that ensures only trusted "
 "software loads at startup."
@@ -524,82 +989,82 @@ msgstr ""
 "\tSecure Bootは、起動時に信頼できるソフトウェアのみがロードされることを保証す"
 "るマザーボードのセキュリティ標準です。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
 msgid "It protects your system from low-level malware and rootkits."
 msgstr "低レベルのマルウェアやルートキットからシステムを保護します。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
 msgid "System Trust Status"
 msgstr "システム信頼ステータス"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
 msgid "Create & Enroll Certificate"
 msgstr "証明書の作成と登録"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
 msgid "Repair Module Signatures"
 msgstr "修復モジュールの署名"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
 msgid "Note: Use password <b>123456</b> after rebooting."
 msgstr "注意：再起動後にパスワード <b>123456</b> を使用してください。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
 msgid "Reboot & Configure Secure Boot"
 msgstr "再起動してセキュアブートを設定"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
 msgid "  Check Again  "
 msgstr "  再確認  "
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
 msgid "Motherboard hardware protection is active"
 msgstr "マザーボードのハードウェア保護が有効です"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
 msgid "Firmware does not support Secure Boot"
 msgstr "ファームウェアは Secure Boot をサポートしていません"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
 msgid "Secure Boot is disabled"
 msgstr "Secure Boot は無効です"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
 msgid "Not required without firmware enforcement"
 msgstr "ファームウェアを適用しない場合は必要ありません"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
 msgid "Not checked because Secure Boot state is unknown"
 msgstr "Secure Boot の状態が不明なためチェックされません"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
 msgid "Certificate generated locally"
 msgstr "証明書はローカルで生成されました"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
 msgid "Missing local certificate"
 msgstr "ローカル証明書が見つかりません"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
 msgid "Certificate is trusted by motherboard"
 msgstr "マザーボードによって証明書が信頼されています"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
 msgid "Kernel signature enforcement is inactive"
 msgstr "カーネル署名の強制は非アクティブです"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
 msgid "Driver trust cannot be verified"
 msgstr "ドライバーの信頼性を検証できません"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
 msgid ""
 "Secure Boot trust is ready. No third-party kernel modules are currently "
 "installed."
@@ -607,34 +1072,34 @@ msgstr ""
 "Secure Boot 信頼の準備ができました。現在、サードパーティのカーネル モジュール"
 "はインストールされていません。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
 msgid "Drivers are signed and ready to load"
 msgstr "ドライバーは署名済みで読み込み準備が完了しています"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
 msgid "Drivers are trusted, but automatic DKMS signing needs repair"
 msgstr "ドライバーは信頼されていますが、自動 DKMS 署名を修復する必要があります"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
 msgid "No signed third-party drivers detected"
 msgstr "署名済みサードパーティ製ドライバーは検出されませんでした"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
 msgid "Enroll Existing Certificate"
 msgstr "既存の証明書を登録します"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
 msgid "Repair Automatic DKMS Signing"
 msgstr "自動 DKMS 署名を修復します"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
 msgid "This firmware does not provide Secure Boot. No certificate is required."
 msgstr ""
 "このファームウェアは Secure Boot を提供しません。証明書は必要ありません。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
 msgid ""
 "Secure Boot status could not be read. Driver trust operations are blocked "
 "until detection succeeds."
@@ -642,99 +1107,87 @@ msgstr ""
 "Secure Boot ステータスを読み取れませんでした。ドライバーの信頼操作は、検出が"
 "成功するまでブロックされます。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
 msgid "No certificate is required while Secure Boot is disabled."
 msgstr "Secure Boot が無効になっている間は証明書は必要ありません。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
 msgid "System Trust Established. Third-party drivers will load securely."
 msgstr ""
 "システムの信頼が確立されました。サードパーティ製ドライバーは安全にロードされ"
 "ます。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
 msgid "The certificate is enrolled and current drivers are trusted."
 msgstr "証明書は登録されており、現在のドライバーは信頼されています。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
 msgid "Repair automatic DKMS signing before future driver updates."
 msgstr "今後のドライバー更新の前に、自動 DKMS 署名を修復します。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
 msgid "The certificate is enrolled, but some modules are not signed with it."
 msgstr ""
 "証明書は登録されていますが、一部のモジュールは証明書で署名されていません。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
 msgid "A certificate is waiting for enrollment."
 msgstr "証明書は登録を待機しています。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
 msgid "Restart and enter password 123456 in MOKManager."
 msgstr "再起動し、MOKManager にパスワード 123456 を入力します。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
 msgid "The local trust certificate is not yet enrolled."
 msgstr "ローカル信頼証明書はまだ登録されていません。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
 msgid "You must configure this to use third-party drivers like NVIDIA."
 msgstr ""
 "NVIDIA などのサードパーティ製ドライバーを使用するには、これを設定する必要があ"
 "ります。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
 msgid "The local trust certificate is missing."
 msgstr "ローカルの信頼証明書がありません。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
 msgid "  Checking...  "
 msgstr "  確認中...  "
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
-msgid "Reboot Required"
-msgstr "再起動が必要です"
-
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
 msgid "Please trust the certificate upon reboot using password 123456."
 msgstr "再起動時にパスワード 123456 を使用して証明書を信頼してください。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
-msgid "Cancel"
-msgstr "キャンセル"
-
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
 msgid "Reboot"
 msgstr "再起動"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
 msgid "Success! When you reboot, a blue screen will appear."
 msgstr "成功！再起動すると、青い画面が表示されます。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
 msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
 msgstr ""
 "「MOK の登録」→「続行」→「はい」を選択し、パスワード：123456 を入力してくださ"
 "い"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
 msgid "Certificate Created"
 msgstr "証明書が作成されました"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
-msgid "Later"
-msgstr "後で"
-
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
 msgid "Secure Boot Trust Not Required"
 msgstr "Secure Boot 信頼は必要ありません"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
 msgid "Firmware signature enforcement is not active."
 msgstr "ファームウェア署名の強制はアクティブではありません。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
 msgid ""
 "The certificate is ready, but one or more DKMS modules could not be rebuilt. "
 "You can repair them after enrollment."
@@ -742,32 +1195,73 @@ msgstr ""
 "証明書の準備はできていますが、1 つ以上の DKMS モジュールを再構築できませんで"
 "した。登録後に修復することもできます。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
 msgid "Configuration needs attention"
 msgstr "構成には注意が必要です"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
 msgid "System Trust Established"
 msgstr "システム信頼が確立されました"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
 msgid "Driver Signature Trusted"
 msgstr "ドライバの署名は信頼されています"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
 msgid "Configuration failed. Please try again."
 msgstr "設定に失敗しました。もう一度お試しください。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
 msgid "Please check the advanced output."
 msgstr "詳細出力をご確認ください。"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
 msgid "Generating & Signing..."
 msgstr "生成および署名中..."
 
-#~ msgid "Needs attention"
-#~ msgstr "注意が必要です"
+#~ msgid "Download the latest metadata from enabled firmware remotes."
+#~ msgstr ""
+#~ "有効なファームウェア リモートから最新のメタデータをダウンロードします。"
+
+#~ msgid "Driver Center"
+#~ msgstr "ドライバー センターについて"
+
+#~ msgid "Secure Boot needs attention"
+#~ msgstr "サポートには注意が必要です"
+
+#~ msgid "Establish system trust before installing a third-party driver."
+#~ msgstr ""
+#~ "Secure Boot ステータスまたは信頼は、サードパーティ製ドライバーをインストー"
+#~ "ルする前に解決する必要があります。"
+
+#, python-format
+#~ msgid "%d recommended driver is available"
+#~ msgid_plural "%d recommended drivers are available"
+#~ msgstr[0] "FIDO デバイスの検出が利用できません"
+
+#~ msgid "Install Recommended Drivers"
+#~ msgstr "ドライバーのインストール"
+
+#~ msgid "Driver changes are ready"
+#~ msgstr "ドライバの署名は信頼されています"
+
+#~ msgid "A graphics driver needs attention"
+#~ msgstr "構成には注意が必要です"
+
+#~ msgid "Your drivers are ready"
+#~ msgstr "ドライバの署名は信頼されています"
+
+#~ msgid "Recommended changes"
+#~ msgstr "推奨"
+
+#~ msgid "Install Recommended Drivers?"
+#~ msgstr "ドライバーのインストール"
+
+#~ msgid "Install"
+#~ msgstr "インストール済み"
+
+#~ msgid "Hardware"
+#~ msgstr "ハードウェア"
 
 #~ msgid "Blocked by Secure Boot"
 #~ msgstr "Secure Boot によってブロックされました"

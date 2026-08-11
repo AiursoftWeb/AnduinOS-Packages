@@ -11,11 +11,15 @@ msgstr ""
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "A critical threshold is failing now"
+msgstr "当前有一项关键指标未达到阈值"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "A limited balance improves allocation layout. It does not check file integrity or guarantee that visible free space will increase."
 msgstr "空间优化会改善磁盘空间的分配方式，但不会检查文件完整性，也不保证可用空间一定增加。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "A limited balance only relocates data and metadata block groups that are at most 50% full."
 msgstr "空间优化只迁移使用率不超过 50% 的数据和元数据块组。"
 
@@ -27,11 +31,15 @@ msgstr "A scheduled Home snapshot will start in 10 seconds."
 msgid "A scheduled system snapshot will start in 10 seconds."
 msgstr "A scheduled system snapshot will start in 10 seconds."
 
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "A threshold was exceeded in the past"
+msgstr "过去曾有一项指标超过阈值"
+
 #: src/btrfs-snapshots-manager/src/ui/mod.rs
 msgid "About Disk Snapshots Manager"
 msgstr "关于 Disk Snapshots Manager"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "About {0} remaining"
 msgstr "预计还需 {0}"
 
@@ -50,6 +58,10 @@ msgstr "Advanced Settings"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "After Package Change"
 msgstr "软件包变更后"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "All system drives look healthy"
+msgstr "所有系统盘状态良好"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Allow automatic cleanup"
@@ -70,6 +82,14 @@ msgstr "自动应用于新写入的数据"
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "At a Glance"
 msgstr "概览"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Attention"
+msgstr "需留意"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Attribute thresholds"
+msgstr "指标阈值"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Automatic"
@@ -123,13 +143,25 @@ msgstr "自动系统快照创建成功"
 msgid "Automatic System Snapshots"
 msgstr "Automatic System Snapshots"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Available spare capacity"
+msgstr "可用备用容量"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Available spare is below its threshold"
+msgstr "可用备用容量已低于阈值"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Average rate: {0}/s"
 msgstr "平均速度：{0}/秒"
 
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 msgid "Background Service"
 msgstr "Background Service"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Based on the manufacturer endurance counter"
+msgstr "根据制造商提供的耐久度计数估算"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Before Package Change"
@@ -139,11 +171,11 @@ msgstr "软件包变更前"
 msgid "Before Rollback"
 msgstr "Before Rollback"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Block groups completed: {0} of about {1}"
 msgstr "已完成块组：{0} / 约 {1}"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Block groups considered: {0}"
 msgstr "已检查块组：{0}"
 
@@ -171,31 +203,31 @@ msgstr "浏览系统快照"
 msgid "Browse This Folder’s History…"
 msgstr "浏览此文件夹的历史…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Btrfs could not complete Home file defragmentation."
 msgstr "Btrfs 无法完成用户目录碎片整理。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Btrfs could not complete the limited balance."
 msgstr "Btrfs 无法完成此次空间优化。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Btrfs did not provide a completed balance result."
 msgstr "Btrfs 未提供完整的空间优化结果。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Btrfs did not provide a completed defragmentation result."
 msgstr "Btrfs 未提供完整的碎片整理结果。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Btrfs did not provide a completed scrub result."
 msgstr "Btrfs 未提供完整的 Scrub 结果。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Btrfs did not start a new integrity check"
 msgstr "Btrfs 未能启动新的完整性检查"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "Btrfs did not start a new maintenance task"
 msgstr "Btrfs 未能启动新的维护任务"
 
@@ -203,23 +235,23 @@ msgstr "Btrfs 未能启动新的维护任务"
 msgid "Btrfs does not provide an on/off real-time deduplication switch. Tools such as duperemove and BEES use different strategies, resource limits, and scan scopes. Disk Snapshots Manager will not silently install or run one without a complete policy."
 msgstr "Btrfs 不提供可直接开关的实时重复数据删除。duperemove 和 BEES 等工具具有不同的策略、资源限制和扫描范围。Disk Snapshots Manager 不会在缺少完整策略时静默安装或运行这些工具。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Btrfs examined {0} block groups and relocated {1}."
 msgstr "Btrfs 检查了 {0} 个块组，并迁移了其中 {1} 个。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Btrfs finished relocating underused data and metadata block groups."
 msgstr "Btrfs 已完成低利用率数据和元数据块组的迁移。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Btrfs finished rewriting eligible file extents below /home with ZSTD compression."
 msgstr "Btrfs 已使用 ZSTD 压缩重写 /home 下适合处理的文件区段。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Btrfs found errors that could not be repaired. Back up important files and investigate the storage device."
 msgstr "Btrfs 发现了无法修复的错误。请备份重要文件并进一步检查存储设备。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "Btrfs maintenance status is unavailable"
 msgstr "无法获取 Btrfs 维护状态"
 
@@ -227,7 +259,7 @@ msgstr "无法获取 Btrfs 维护状态"
 msgid "Btrfs operation failed"
 msgstr "Btrfs 操作失败"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Btrfs repaired {0} damaged copies using valid redundant data."
 msgstr "Btrfs 使用有效的冗余数据修复了 {0} 个损坏副本。"
 
@@ -247,7 +279,7 @@ msgstr "正在计算快照大小…"
 msgid "Cancel"
 msgstr "取消"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Cancel Check"
 msgstr "取消检查"
 
@@ -259,7 +291,7 @@ msgstr "Cancel Rollback"
 msgid "Cancelling rollback…"
 msgstr "正在取消回滚…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "Cancelling…"
 msgstr "正在取消…"
 
@@ -267,7 +299,7 @@ msgstr "正在取消…"
 msgid "Change…"
 msgstr "更改…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Check file system integrity"
 msgstr "检查文件系统完整性"
 
@@ -275,11 +307,11 @@ msgstr "检查文件系统完整性"
 msgid "Check Snapshot Availability"
 msgstr "Check Snapshot Availability"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Checked: {0}"
 msgstr "已检查：{0}"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Checking File System Integrity"
 msgstr "正在检查文件系统完整性"
 
@@ -295,11 +327,15 @@ msgstr "正在检查回滚安全性…"
 msgid "Checking snapshot…"
 msgstr "正在检查快照…"
 
-#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Checking system storage…"
+msgstr "正在检查系统存储…"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Checking…"
 msgstr "正在检查…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Checksum errors: {0}"
 msgstr "校验和错误：{0}"
 
@@ -315,7 +351,7 @@ msgstr "选择一个早期版本进行浏览或恢复。当前文件不会被自
 msgid "Choose Where to Recover This Folder"
 msgstr "选择此文件夹的恢复位置"
 
-#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs src/btrfs-snapshots-manager/src/ui/personal_history.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs src/btrfs-snapshots-manager/src/ui/personal_history.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Close"
 msgstr "关闭"
 
@@ -327,7 +363,7 @@ msgstr "基于内容的重复数据删除"
 msgid "Copy This Folder…"
 msgstr "复制此文件夹…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Corrected errors: {0}"
 msgstr "已修复错误：{0}"
 
@@ -399,27 +435,27 @@ msgstr "天"
 msgid "Deduplication needs an engine"
 msgstr "重复数据删除需要专用引擎"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Defragment"
 msgstr "整理碎片"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Defragment Home files"
 msgstr "整理用户目录文件"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Defragment Home files?"
 msgstr "整理用户目录文件？"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Defragmentation can increase disk usage when files share data with snapshots or reflinks."
 msgstr "如果文件与快照或 reflink 共享数据，碎片整理可能会增加磁盘占用。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Defragmentation rewrites file extents and can increase disk usage by breaking shared snapshot or reflink data."
 msgstr "碎片整理会重写文件区段，可能打破快照或 reflink 的数据共享并增加磁盘占用。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Defragment…"
 msgstr "整理碎片…"
 
@@ -451,7 +487,15 @@ msgstr "正在删除"
 msgid "Deleting snapshots…"
 msgstr "正在删除快照…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Device reliability is degraded"
+msgstr "设备可靠性已经下降"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Device report"
+msgstr "设备报告"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Diagnostic counters"
 msgstr "诊断计数"
 
@@ -463,13 +507,21 @@ msgstr "禁用"
 msgid "Disable quota accounting?"
 msgstr "禁用配额统计？"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "Disabled"
 msgstr "已禁用"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Disable…"
 msgstr "禁用…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disk Health"
+msgstr "磁盘健康"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disk health is unavailable"
+msgstr "无法获取磁盘健康信息"
 
 #: src/btrfs-snapshots-manager/src/application.rs src/btrfs-snapshots-manager/src/ui/mod.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Disk Snapshots Manager"
@@ -479,11 +531,11 @@ msgstr "Disk Snapshots Manager"
 msgid "Disk Snapshots Manager requires the standard AnduinOS Btrfs layout."
 msgstr "Disk Snapshots Manager 需要标准的 AnduinOS Btrfs 布局。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Duration: {0}"
 msgstr "用时：{0}"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "Elapsed: {0}"
 msgstr "已用时：{0}"
 
@@ -507,11 +559,19 @@ msgstr "已启用 · 正在进行初始扫描"
 msgid "Enable…"
 msgstr "启用…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Error log entries"
+msgstr "错误日志条目"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Errors detected so far: {0}"
 msgstr "目前检测到错误：{0}"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Estimated SSD life remaining"
+msgstr "预计 SSD 剩余寿命"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Examining underused data and metadata block groups…"
 msgstr "正在检查低利用率的数据和元数据块组…"
 
@@ -523,6 +583,10 @@ msgstr "独占数据"
 msgid "Factory"
 msgstr "出厂"
 
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Failing"
+msgstr "存在故障"
+
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 msgid "Failure notifications"
 msgstr "Failure notifications"
@@ -531,7 +595,7 @@ msgstr "Failure notifications"
 msgid "File History"
 msgstr "文件历史"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "File Layout"
 msgstr "文件布局"
 
@@ -567,23 +631,27 @@ msgstr "永久"
 msgid "Four copies on separate devices · damaged copies can be repaired automatically"
 msgstr "在不同硬盘保存四份 · 副本损坏时可以自动修复"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Healthy"
+msgstr "健康"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Home Defragmentation Cancelled"
 msgstr "用户目录碎片整理已取消"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Home Defragmentation Complete"
 msgstr "用户目录碎片整理完成"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Home Defragmentation Failed"
 msgstr "用户目录碎片整理失败"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Home Defragmentation Result Unavailable"
 msgstr "无法获取用户目录碎片整理结果"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Home file defragmentation was cancelled before it finished."
 msgstr "用户目录碎片整理在完成前已取消。"
 
@@ -607,31 +675,39 @@ msgstr "已导入"
 msgid "Incomplete"
 msgstr "不完整"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/information.rs src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Information"
+msgstr "信息"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Integrity"
 msgstr "完整性"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Integrity Check Cancelled"
 msgstr "完整性检查已取消"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Integrity Check Complete"
 msgstr "完整性检查完成"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Integrity Check Complete — Repairs Made"
 msgstr "完整性检查完成 — 已修复错误"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Integrity Check Result Unavailable"
 msgstr "无法获取完整性检查结果"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Integrity Problems Found"
 msgstr "发现完整性问题"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Interface CRC errors"
+msgstr "接口 CRC 错误"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Items processed: {0}"
 msgstr "已处理项目：{0}"
 
@@ -675,7 +751,7 @@ msgstr "正在查找早期版本…"
 msgid "Main Menu"
 msgstr "主菜单"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Maintenance"
 msgstr "维护"
 
@@ -686,6 +762,10 @@ msgstr "手动"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Measured"
 msgstr "测量时间"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Media errors"
+msgstr "介质错误"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Mirrored and striped across devices · redundant copies are available for repair"
@@ -703,13 +783,17 @@ msgstr "Name (optional)"
 msgid "No earlier version was found"
 msgstr "没有找到早期版本"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "No errors detected so far"
 msgstr "目前未检测到错误"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "No file system integrity errors were found in allocated data and metadata."
 msgstr "在已分配的数据和元数据中未发现文件系统完整性错误。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "No important S.M.A.R.T. warning signs were detected"
+msgstr "未检测到重要的 S.M.A.R.T. 警告迹象"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "No matching snapshots"
@@ -722,6 +806,14 @@ msgstr "No snapshots selected"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "No snapshots yet"
 msgstr "No snapshots yet"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "No system storage device found"
+msgstr "未找到系统存储设备"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "None (0x00)"
+msgstr "无（0x00）"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Not calculated"
@@ -747,6 +839,14 @@ msgstr "自动清理移除快照后通知"
 msgid "Notify before a scheduled snapshot"
 msgstr "Notify before a scheduled snapshot"
 
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "NVMe critical warning"
+msgstr "NVMe 关键警告"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Offline uncorrectable sectors"
+msgstr "离线扫描无法修复的扇区"
+
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "old Home snapshot(s) were removed."
 msgstr "个旧用户目录快照已删除。"
@@ -767,13 +867,25 @@ msgstr "较旧的快照会逐渐降低保留频率，以节省磁盘空间。"
 msgid "One copy · damage can be detected, but there is no spare copy for repair"
 msgstr "只存一份 · 可以检测损坏，但没有备用副本用于修复"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "One or more reliability indicators should be reviewed"
+msgstr "有一项或多项可靠性指标需要检查"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Only /home · snapshot storage is excluded"
 msgstr "仅限 /home · 不处理快照存储"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Only block groups at most 50% full will be relocated. The operation can use significant disk bandwidth but can be cancelled safely."
 msgstr "仅移动使用率不超过 50% 的块组。此操作可能占用大量磁盘带宽，但可以安全取消。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Only partial S.M.A.R.T. data was returned"
+msgstr "磁盘仅返回了部分 S.M.A.R.T. 数据"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Only physical drives backing the current root Btrfs file system are shown."
+msgstr "仅显示承载当前根 Btrfs 文件系统的物理磁盘。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Only the display name changes."
@@ -791,6 +903,10 @@ msgstr "操作失败"
 msgid "Otherwise automatic cleanup may remove it later."
 msgstr "否则，自动清理以后可能会移除它。"
 
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Overall health"
+msgstr "整体健康状态"
+
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 msgid "Package Changes"
 msgstr "软件包变化"
@@ -799,13 +915,21 @@ msgstr "软件包变化"
 msgid "Parent folder"
 msgstr "上级文件夹"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "Paused"
 msgstr "已暂停"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Pending sectors"
+msgstr "待处理扇区"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Permanently protected"
 msgstr "永久保留"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Persistent memory is read-only"
+msgstr "持久内存已变为只读"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Personal files"
@@ -818,6 +942,14 @@ msgstr "Personal Files Recovery"
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Personal History Unavailable"
 msgstr "个人文件历史不可用"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Power cycles"
+msgstr "通电次数"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Powered on"
+msgstr "累计通电时间"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Prepare a safe system rollback"
@@ -851,35 +983,43 @@ msgstr "在回滚事务进行期间受保护"
 msgid "Quota accounting provides shared and exclusive sizes for subvolumes, but its initial scan can take time."
 msgstr "配额统计可以提供子卷的共享和独占大小，但初始扫描可能需要一些时间。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Read errors: {0}"
 msgstr "读取错误：{0}"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Reading allocated Btrfs data and metadata…"
 msgstr "正在读取已分配的 Btrfs 数据和元数据…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reading the most important reliability indicators"
+msgstr "正在读取最重要的可靠性指标"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Ready"
 msgstr "就绪"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Ready to check"
 msgstr "可以开始检查"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "Ready to defragment Home files"
 msgstr "可以开始整理用户目录文件"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "Ready to optimize allocation"
 msgstr "可以开始优化空间分配"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reallocated sectors"
+msgstr "已重映射扇区"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Reclaim underused block groups"
 msgstr "回收低利用率块组"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Recommended about once a month"
 msgstr "建议大约每月运行一次"
 
@@ -939,6 +1079,10 @@ msgstr "Rename Snapshot"
 msgid "Renaming snapshot…"
 msgstr "正在重命名快照…"
 
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reported uncorrectable errors"
+msgstr "已报告的不可修复错误"
+
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Requesting restart…"
 msgstr "正在请求重启…"
@@ -963,7 +1107,11 @@ msgstr "重试恢复确认"
 msgid "Return to the selected snapshot"
 msgstr "恢复到所选快照的状态"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Review the highlighted indicators on {0} system drive(s)"
+msgstr "请检查 {0} 块系统盘中突出显示的指标"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Rewriting Home file extents with ZSTD compression…"
 msgstr "正在使用 ZSTD 压缩重写用户目录文件区段…"
 
@@ -995,9 +1143,25 @@ msgstr "已准备回滚到 {0}，重启后即可应用。"
 msgid "Rollback to {0} was applied, but system confirmation has not completed."
 msgstr "已应用到 {0} 的回滚，但系统确认尚未完成。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "Running…"
 msgstr "正在运行…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. could not be read from this device"
+msgstr "无法从此设备读取 S.M.A.R.T. 数据"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. is not available for this device"
+msgstr "此设备不支持 S.M.A.R.T."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. is supported but disabled on this device"
+msgstr "此设备支持 S.M.A.R.T.，但当前未启用"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. reports an imminent or current drive failure"
+msgstr "S.M.A.R.T. 报告磁盘即将发生故障或当前已有故障"
 
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
 msgid "Save"
@@ -1011,15 +1175,15 @@ msgstr "Save Advanced Settings"
 msgid "Saving…"
 msgstr "正在保存…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Scanning data and metadata…"
 msgstr "正在扫描数据和元数据…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Scrub reads allocated data and metadata, verifies checksums, and reports damage without modifying file data."
 msgstr "Scrub 会读取已分配的数据和元数据、验证校验和，并在不修改文件数据的情况下报告损坏。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Scrub verifies allocated Btrfs data and metadata. It does not test unused space or predict sudden drive failure."
 msgstr "Scrub 会验证已分配的 Btrfs 数据和元数据，但不会测试未使用空间，也无法预测硬盘突然故障。"
 
@@ -1091,31 +1255,39 @@ msgstr "此计算机无法使用快照"
 msgid "Snapshots could not be loaded"
 msgstr "无法加载快照"
 
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Solid-state drive"
+msgstr "固态硬盘"
+
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Some snapshots could not be loaded"
 msgstr "部分快照无法加载"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Some system drives need attention"
+msgstr "部分系统盘需要留意"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Space Accounting"
 msgstr "空间统计"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Space Allocation"
 msgstr "空间分配"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Space Optimization Cancelled"
 msgstr "空间优化已取消"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Space Optimization Complete"
 msgstr "空间优化完成"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Space Optimization Failed"
 msgstr "空间优化失败"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Space Optimization Result Unavailable"
 msgstr "无法获取空间优化结果"
 
@@ -1123,31 +1295,35 @@ msgstr "无法获取空间优化结果"
 msgid "Space usage"
 msgstr "空间使用情况"
 
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Spin retry count"
+msgstr "主轴重试次数"
+
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "SSD space reclamation"
 msgstr "SSD 空间回收"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Start a limited balance?"
 msgstr "开始优化空间？"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Start Balance"
 msgstr "开始优化"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Start Scrub"
 msgstr "开始 Scrub"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Starting the integrity check…"
 msgstr "正在启动完整性检查…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "Starting…"
 msgstr "正在启动…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Status unavailable"
 msgstr "状态不可用"
 
@@ -1158,6 +1334,10 @@ msgstr "存储行为"
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Storage layout: {0}"
 msgstr "存储方式：{0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Storage media is read-only"
+msgstr "存储介质已变为只读"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Striped across devices with one parity block for recovery"
@@ -1175,9 +1355,13 @@ msgstr "数据分散存储在多块硬盘 · 没有备用副本用于修复"
 msgid "Subvolume quota accounting"
 msgstr "子卷配额统计"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Superblock errors: {0}"
 msgstr "超级块错误：{0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "System Drive Health"
+msgstr "系统盘健康"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "System files and packages"
@@ -1203,19 +1387,35 @@ msgstr "系统存储"
 msgid "Take a snapshot every"
 msgstr "每隔以下时间创建一个快照"
 
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Temperature"
+msgstr "温度"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Temperature is outside the safe range"
+msgstr "温度超出安全范围"
+
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 msgid "The automatic snapshot infrastructure cannot be disabled here."
 msgstr "The automatic snapshot infrastructure cannot be disabled here."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The device reported an unknown warning bit"
+msgstr "设备报告了未知的警告位"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The drive did not provide a conclusive health result"
+msgstr "磁盘未提供明确的健康检查结果"
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "The Home snapshot was created successfully."
 msgstr "用户目录快照创建成功。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "The integrity check was cancelled before it finished."
 msgstr "完整性检查在完成前已取消。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "The limited balance was cancelled safely before it finished."
 msgstr "空间优化已在完成前安全取消。"
 
@@ -1263,6 +1463,14 @@ msgstr "所选文件已成功恢复。"
 msgid "The snapshot is created immediately."
 msgstr "The snapshot is created immediately."
 
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The system drive looks healthy"
+msgstr "系统盘状态良好"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The system drive needs attention"
+msgstr "系统盘需要留意"
+
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "The system snapshot was created successfully."
 msgstr "系统快照创建成功。"
@@ -1291,7 +1499,7 @@ msgstr "此文件夹为空"
 msgid "This item was not present in the available Home snapshots."
 msgstr "可用的用户目录快照中没有此项目。"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "This rewrites files below /home using ZSTD compression. It does not enter /.snapshots, but shared extents with existing snapshots may become private and consume more space."
 msgstr "此操作会使用 ZSTD 压缩重写 /home 下的文件。它不会进入 /.snapshots，但与现有快照共享的区段可能变为独占并占用更多空间。"
 
@@ -1307,9 +1515,25 @@ msgstr "此快照不能用于恢复。"
 msgid "Three copies on separate devices · damaged copies can be repaired automatically"
 msgstr "在不同硬盘保存三份 · 副本损坏时可以自动修复"
 
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Time above critical temperature"
+msgstr "超过临界温度的累计时间"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Time above warning temperature"
+msgstr "超过警告温度的累计时间"
+
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Total"
 msgstr "总量"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Total data read"
+msgstr "累计读取量"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Total data written"
+msgstr "累计写入量"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Transparent compression"
@@ -1331,13 +1555,17 @@ msgstr "同一硬盘保存两份 · 单份损坏时可以自动修复"
 msgid "Unable to calculate"
 msgstr "无法统计"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "Unavailable"
 msgstr "不可用"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Uncorrectable errors: {0}"
 msgstr "无法修复的错误：{0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unknown"
+msgstr "未知"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Unknown date"
@@ -1347,11 +1575,19 @@ msgstr "未知日期"
 msgid "Unknown state"
 msgstr "未知状态"
 
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unknown storage device"
+msgstr "未知存储设备"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unsafe shutdowns"
+msgstr "非正常关机次数"
+
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Unsupported Destination"
 msgstr "不支持的目标位置"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Unverified errors: {0}"
 msgstr "未验证错误：{0}"
 
@@ -1359,11 +1595,11 @@ msgstr "未验证错误：{0}"
 msgid "Updating snapshot protection…"
 msgstr "正在更新快照保护状态…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Useful after deleting large amounts of data"
 msgstr "删除大量数据后可能有用"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Verification errors: {0}"
 msgstr "验证错误：{0}"
 
@@ -1371,23 +1607,27 @@ msgstr "验证错误：{0}"
 msgid "View File History…"
 msgstr "查看文件历史…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "View Progress"
 msgstr "查看进度"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Volatile memory backup failed"
+msgstr "易失性内存备份失败"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "Waiting for Btrfs status…"
 msgstr "正在等待 Btrfs 状态…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "Waiting for Btrfs to start…"
 msgstr "正在等待 Btrfs 启动任务…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Waiting for scrub status…"
 msgstr "正在等待 Scrub 状态…"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Waiting for the new scrub to start…"
 msgstr "正在等待新的 Scrub 启动…"
 
@@ -1403,7 +1643,7 @@ msgstr "为什么？"
 msgid "Will not change"
 msgstr "不会改变"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Working…"
 msgstr "正在处理…"
 
@@ -1419,7 +1659,15 @@ msgstr "{0} 字节 · {1}"
 msgid "{0} damaged metadata entries were ignored"
 msgstr "已忽略 {0} 个损坏的元数据条目"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} hours · about {1} days"
+msgstr "{0} 小时 · 约 {1} 天"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} minutes"
+msgstr "{0} 分钟"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "{0} of {1} checked"
 msgstr "已检查 {0}，共 {1}"
 
@@ -1431,6 +1679,10 @@ msgstr "已使用 {0}，共 {1}"
 msgid "{0} packages"
 msgstr "{0} 个软件包"
 
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} RPM"
+msgstr "{0} 转/分钟"
+
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "{0} snapshot record(s) need attention"
 msgstr "有 {0} 条快照记录需要处理"
@@ -1438,6 +1690,10 @@ msgstr "有 {0} 条快照记录需要处理"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "{0} snapshot(s) selected"
 msgstr "{0} snapshot(s) selected"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} °C"
+msgstr "{0} °C"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "{0} · Manual Snapshot"
@@ -1447,10 +1703,18 @@ msgstr "{0} · Manual Snapshot"
 msgid "{0} · new writes"
 msgstr "{0} · 新写入数据"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0}%"
+msgstr "{0}%"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "{0}% complete"
 msgstr "已完成 {0}%"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0}% · warning threshold {1}%"
+msgstr "{0}% · 警告阈值 {1}%"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "{0}/s"
 msgstr "{0}/秒"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-driver-center 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-08 10:54+0000\n"
+"POT-Creation-Date: 2026-08-11 16:11+0800\n"
 "PO-Revision-Date: 2026-08-06 07:08+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: hi\n"
@@ -18,121 +18,339 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:74
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:1006
+#: src/anduinos_driver_center/app.py:113 src/anduinos_driver_center/app.py:211
+#: src/anduinos_driver_center/app.py:283 src/anduinos_driver_center/app.py:2238
 msgid "AnduinOS Driver Center"
 msgstr "AnduinOS ड्राइवर केंद्र"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:137
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:435
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:597
+#: src/anduinos_driver_center/app.py:230 src/anduinos_driver_center/app.py:328
+#: src/anduinos_driver_center/app.py:330
+msgid "Home"
+msgstr "होम"
+
+#: src/anduinos_driver_center/app.py:233 src/anduinos_driver_center/app.py:793
+#: src/anduinos_driver_center/app.py:1064
+#: src/anduinos_driver_center/app.py:1630
+#: src/anduinos_driver_center/app.py:1792
 msgid "Scan again"
 msgstr "पुनः स्कैन करें"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:141
+#: src/anduinos_driver_center/app.py:238
 msgid "About Driver Center"
 msgstr "ड्राइवर सेंटर के बारे में"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:143
+#: src/anduinos_driver_center/app.py:240
 msgid "Main Menu"
 msgstr "मुख्य मेनू"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:160
-msgid "Hardware"
-msgstr "हार्डवेयर"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:184
+#: src/anduinos_driver_center/app.py:285
 msgid "Scanning for drivers"
 msgstr "ड्राइवरों के लिए स्कैनिंग"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:184
+#: src/anduinos_driver_center/app.py:286
 msgid "Checking hardware and Secure Boot status…"
 msgstr "हार्डवेयर और Secure Boot स्थिति की जाँच हो रही है..."
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:217
+#: src/anduinos_driver_center/app.py:328 src/anduinos_driver_center/app.py:869
+#: src/anduinos_driver_center/app.py:1208
+#: src/anduinos_driver_center/app.py:1921
+msgid "System status"
+msgstr "सिस्टम स्थिति"
+
+#: src/anduinos_driver_center/app.py:347 src/anduinos_driver_center/app.py:351
 msgid "Audio"
 msgstr "ऑडियो"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:218
+#: src/anduinos_driver_center/app.py:348 src/anduinos_driver_center/app.py:933
 msgid "Audio support ready"
 msgstr "ऑडियो समर्थन तैयार"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:218
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:232
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:258
+#: src/anduinos_driver_center/app.py:348 src/anduinos_driver_center/app.py:363
+#: src/anduinos_driver_center/app.py:390 src/anduinos_driver_center/app.py:487
+#: src/anduinos_driver_center/app.py:836 src/anduinos_driver_center/app.py:839
+#: src/anduinos_driver_center/app.py:903 src/anduinos_driver_center/app.py:933
+#: src/anduinos_driver_center/app.py:963 src/anduinos_driver_center/app.py:988
+#: src/anduinos_driver_center/app.py:1004
 msgid "Support needs attention"
 msgstr "समर्थन पर ध्यान देने की आवश्यकता है"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:227
+#: src/anduinos_driver_center/app.py:358
 msgid "Printing service stopped"
 msgstr "मुद्रण सेवा बंद हो गई"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:229
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:893
+#: src/anduinos_driver_center/app.py:360 src/anduinos_driver_center/app.py:947
+#: src/anduinos_driver_center/app.py:2088
 msgid "Printing support disabled."
 msgstr "मुद्रण समर्थन अक्षम।"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:234
+#: src/anduinos_driver_center/app.py:365
 msgid "Some queues are paused"
 msgstr "कुछ कतारें रुकी हुई हैं"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:236
+#: src/anduinos_driver_center/app.py:367 src/anduinos_driver_center/app.py:958
 msgid "No printers configured"
 msgstr "कोई प्रिंटर कॉन्फ़िगर नहीं किया गया"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:239
+#: src/anduinos_driver_center/app.py:370 src/anduinos_driver_center/app.py:953
 #, python-format
 msgid "%d printer configured"
 msgid_plural "%d printers configured"
 msgstr[0] "%d प्रिंटर कॉन्फ़िगर किया गया"
 msgstr[1] "%d प्रिंटर कॉन्फ़िगर किया गया"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:244
+#: src/anduinos_driver_center/app.py:375 src/anduinos_driver_center/app.py:378
 msgid "Printers"
 msgstr "प्रिंटर"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:251
+#: src/anduinos_driver_center/app.py:383 src/anduinos_driver_center/app.py:395
 msgid "Xbox Controller"
 msgstr "Xbox नियंत्रक"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:253
+#: src/anduinos_driver_center/app.py:385 src/anduinos_driver_center/app.py:986
 msgid "xpadneo installed"
 msgstr "xpadneo स्थापित"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:256
+#: src/anduinos_driver_center/app.py:388 src/anduinos_driver_center/app.py:987
 msgid "Optional Bluetooth driver"
 msgstr "वैकल्पिक ब्लूटूथ ड्राइवर"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:271
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:364
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:555
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:560
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:565
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:576
+#: src/anduinos_driver_center/app.py:404 src/anduinos_driver_center/app.py:408
+#: src/anduinos_driver_center/app.py:798 src/anduinos_driver_center/app.py:802
+#: src/anduinos_driver_center/app.py:1002
+#: src/anduinos_driver_center/app.py:1096
+#: src/anduinos_driver_center/app.py:1559
+#: src/anduinos_driver_center/app.py:1750
+#: src/anduinos_driver_center/app.py:1755
+#: src/anduinos_driver_center/app.py:1760
+#: src/anduinos_driver_center/app.py:1771
 msgid "Secure Boot"
 msgstr "Secure Boot"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:272
+#: src/anduinos_driver_center/app.py:405 src/anduinos_driver_center/app.py:1004
 msgid "Trust established"
 msgstr "ट्रस्ट की स्थापना"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:272
+#: src/anduinos_driver_center/app.py:405 src/anduinos_driver_center/app.py:789
+#: src/anduinos_driver_center/app.py:796 src/anduinos_driver_center/app.py:883
+#: src/anduinos_driver_center/app.py:1003
 msgid "Action required"
 msgstr "कार्रवाई आवश्यक है"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:351
+#: src/anduinos_driver_center/app.py:415 src/anduinos_driver_center/app.py:419
+#: src/anduinos_driver_center/app.py:1016
+#: src/anduinos_driver_center/app.py:1163
+msgid "Device Firmware"
+msgstr "डिवाइस फ़र्मवेयर"
+
+#: src/anduinos_driver_center/app.py:485 src/anduinos_driver_center/app.py:1193
+msgid "Checking for updates…"
+msgstr "अपडेट की जांच की जा रही है..."
+
+#: src/anduinos_driver_center/app.py:489 src/anduinos_driver_center/app.py:511
+#: src/anduinos_driver_center/app.py:635
+msgid "Shutdown Required"
+msgstr "शटडाउन आवश्यक"
+
+#: src/anduinos_driver_center/app.py:491 src/anduinos_driver_center/app.py:513
+#: src/anduinos_driver_center/app.py:831 src/anduinos_driver_center/app.py:898
+#: src/anduinos_driver_center/app.py:1043
+#: src/anduinos_driver_center/app.py:1460
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
+msgid "Reboot Required"
+msgstr "पुनः आरंभ की आवश्यकता है"
+
+#: src/anduinos_driver_center/app.py:495 src/anduinos_driver_center/app.py:517
+#: src/anduinos_driver_center/app.py:618
+#, python-format
+msgid "%d firmware update available"
+msgid_plural "%d firmware updates available"
+msgstr[0] "%d फर्मवेयर अपडेट उपलब्ध हैं"
+msgstr[1] "%d फर्मवेयर अपडेट उपलब्ध हैं"
+
+#: src/anduinos_driver_center/app.py:500
+msgid "No supported devices"
+msgstr "कोई समर्थित डिवाइस नहीं"
+
+#: src/anduinos_driver_center/app.py:501
+msgid "Firmware is up to date"
+msgstr "फ़र्मवेयर अद्यतित है"
+
+#: src/anduinos_driver_center/app.py:507
+msgid "Checking…"
+msgstr "जाँच हो रही है..."
+
+#: src/anduinos_driver_center/app.py:507
+msgid "Contacting the firmware service"
+msgstr "फ़र्मवेयर सेवा से संपर्क करना"
+
+#: src/anduinos_driver_center/app.py:509 src/anduinos_driver_center/app.py:932
+#: src/anduinos_driver_center/app.py:962 src/anduinos_driver_center/app.py:984
+#: src/anduinos_driver_center/app.py:1429
+msgid "Needs attention"
+msgstr "ध्यान देने की आवश्यकता"
+
+#: src/anduinos_driver_center/app.py:511 src/anduinos_driver_center/app.py:592
+#: src/anduinos_driver_center/app.py:1442
+msgid "Shutdown required after installation"
+msgstr "स्थापना के बाद शटडाउन आवश्यक है"
+
+#: src/anduinos_driver_center/app.py:513
+msgid "Restart to finish the firmware update"
+msgstr "फ़र्मवेयर अद्यतन समाप्त करने के लिए पुनरारंभ करें"
+
+#: src/anduinos_driver_center/app.py:521 src/anduinos_driver_center/app.py:819
+#: src/anduinos_driver_center/app.py:893 src/anduinos_driver_center/app.py:1040
+#: src/anduinos_driver_center/app.py:1259
+#: src/anduinos_driver_center/app.py:1393
+msgid "Update available"
+msgstr "अपडेट उपलब्ध है"
+
+#: src/anduinos_driver_center/app.py:523 src/anduinos_driver_center/app.py:884
+#: src/anduinos_driver_center/app.py:1629
+#: src/anduinos_driver_center/app.py:1655
+#: src/anduinos_driver_center/app.py:1746
+#: src/anduinos_driver_center/app.py:1790
+#: src/anduinos_driver_center/app.py:1898
+msgid "Not detected"
+msgstr "पता नहीं चला"
+
+#: src/anduinos_driver_center/app.py:523 src/anduinos_driver_center/app.py:1331
+msgid "No supported firmware devices"
+msgstr "कोई समर्थित फ़र्मवेयर डिवाइस नहीं"
+
+#: src/anduinos_driver_center/app.py:526
+#, python-format
+msgid "%d device is up to date"
+msgid_plural "%d devices are up to date"
+msgstr[0] "%d डिवाइस अद्यतित हैं"
+msgstr[1] "%d डिवाइस अद्यतित हैं"
+
+#: src/anduinos_driver_center/app.py:530 src/anduinos_driver_center/app.py:844
+#: src/anduinos_driver_center/app.py:908 src/anduinos_driver_center/app.py:932
+#: src/anduinos_driver_center/app.py:950 src/anduinos_driver_center/app.py:983
+#: src/anduinos_driver_center/app.py:1046
+#: src/anduinos_driver_center/app.py:1259
+msgid "Ready"
+msgstr "तैयार"
+
+#: src/anduinos_driver_center/app.py:559
+msgid "Scheduling firmware update…"
+msgstr "फ़र्मवेयर अपडेट शेड्यूल किया जा रहा है..."
+
+#: src/anduinos_driver_center/app.py:560
+msgid "Downloading firmware…"
+msgstr "फ़र्मवेयर डाउनलोड हो रहा है…"
+
+#: src/anduinos_driver_center/app.py:561
+msgid "Installing firmware…"
+msgstr "फ़र्मवेयर इंस्टॉल किया जा रहा है..."
+
+#: src/anduinos_driver_center/app.py:562
+msgid "Verifying firmware…"
+msgstr "फ़र्मवेयर सत्यापित किया जा रहा है..."
+
+#: src/anduinos_driver_center/app.py:563
+msgid "Waiting for authentication…"
+msgstr "प्रमाणीकरण की प्रतीक्षा की जा रही है..."
+
+#: src/anduinos_driver_center/app.py:564
+msgid "Waiting for user action…"
+msgstr "उपयोगकर्ता की कार्रवाई की प्रतीक्षा की जा रही है..."
+
+#: src/anduinos_driver_center/app.py:568
+msgid "Updating firmware…"
+msgstr "फ़र्मवेयर अपडेट हो रहा है…"
+
+#: src/anduinos_driver_center/app.py:589 src/anduinos_driver_center/app.py:2093
+#: src/anduinos_driver_center/app.py:2215
+msgid "unknown error"
+msgstr "अज्ञात त्रुटि"
+
+#: src/anduinos_driver_center/app.py:594 src/anduinos_driver_center/app.py:1444
+msgid "Restart required after installation"
+msgstr "स्थापना के बाद पुनरारंभ आवश्यक है"
+
+#: src/anduinos_driver_center/app.py:598 src/anduinos_driver_center/app.py:671
+#: src/anduinos_driver_center/app.py:677
+msgid "Firmware operation failed"
+msgstr "फ़र्मवेयर ऑपरेशन विफल रहा"
+
+#: src/anduinos_driver_center/app.py:601 src/anduinos_driver_center/app.py:2223
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
+msgid "OK"
+msgstr "ठीक है"
+
+#: src/anduinos_driver_center/app.py:612
+msgid "Firmware metadata refreshed."
+msgstr "फ़र्मवेयर मेटाडेटा ताज़ा किया गया।"
+
+#: src/anduinos_driver_center/app.py:623
+msgid "No firmware updates are available."
+msgstr "कोई फ़र्मवेयर अपडेट उपलब्ध नहीं है."
+
+#: src/anduinos_driver_center/app.py:630
+msgid "Firmware update completed."
+msgstr "फ़र्मवेयर अद्यतन पूर्ण हुआ."
+
+#: src/anduinos_driver_center/app.py:635
+msgid "Restart Required"
+msgstr "पुनरारंभ आवश्यक"
+
+#: src/anduinos_driver_center/app.py:638
 msgid ""
-"Choose the driver used by this device. AnduinOS marks the hardware-tested "
-"recommendation."
+"The firmware update has been prepared. Save your work and shut down the "
+"computer to finish installing it."
+msgstr "फ़र्मवेयर अपडेट तैयार हो गया है। अपना काम सहेजें और इंस्टॉलेशन पूरा करने के लिए कंप्यूटर बंद करें।"
+
+#: src/anduinos_driver_center/app.py:643
+msgid ""
+"The firmware update has been prepared. Save your work and restart the "
+"computer to finish installing it."
 msgstr ""
-"इस डिवाइस द्वारा उपयोग किया जाने वाला ड्राइवर चुनें। AnduinOS हार्डवेयर-परीक्षणित "
-"अनुशंसा को चिह्नित करता है।"
+"फ़र्मवेयर अद्यतन तैयार किया गया है. अपना कार्य सहेजें और इसे स्थापित करने के लिए कंप्यूटर को "
+"पुनरारंभ करें।"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:357
-msgid "Available drivers"
-msgstr "उपलब्ध ड्राइवर"
+#: src/anduinos_driver_center/app.py:648
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
+msgid "Later"
+msgstr "बाद में"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:362
+#: src/anduinos_driver_center/app.py:651
+msgid "Shut Down Now"
+msgstr "अभी बंद करो"
+
+#: src/anduinos_driver_center/app.py:651
+msgid "Restart Now"
+msgstr "अभी पुनः प्रारंभ करें"
+
+#: src/anduinos_driver_center/app.py:757 src/anduinos_driver_center/app.py:1351
+#: src/anduinos_driver_center/app.py:1376
+#: src/anduinos_driver_center/app.py:1605
+#: src/anduinos_driver_center/app.py:1730
+msgid "Installed"
+msgstr "स्थापित"
+
+#: src/anduinos_driver_center/app.py:759 src/anduinos_driver_center/app.py:1876
+#: src/anduinos_driver_center/app.py:1884
+msgid "Available"
+msgstr "उपलब्ध"
+
+#: src/anduinos_driver_center/app.py:791 src/anduinos_driver_center/app.py:849
+#: src/anduinos_driver_center/app.py:1054
+#: src/anduinos_driver_center/app.py:1725
+msgid "Driver status"
+msgstr "ड्राइवर स्थिति"
+
+#: src/anduinos_driver_center/app.py:792 src/anduinos_driver_center/app.py:1641
+#: src/anduinos_driver_center/app.py:2215
+msgid "Driver operation failed: "
+msgstr "ड्राइवर संचालन विफल: "
+
+#: src/anduinos_driver_center/app.py:800 src/anduinos_driver_center/app.py:1557
 msgid ""
 "Secure Boot status or trust must be resolved before installing a third-party "
 "driver."
@@ -140,84 +358,391 @@ msgstr ""
 "Secure Boot स्थिति या विश्वास को तृतीय-पक्ष ड्राइवर स्थापित करने से पहले हल किया जाना "
 "चाहिए।"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:372
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:448
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:461
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:782
-msgid "Apply Changes"
-msgstr "परिवर्तन लागू करें"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:381
-msgid "open source"
-msgstr "खुला स्रोत"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:381
-msgid "proprietary"
-msgstr "मालिकाना"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:383
-msgid "built in"
-msgstr "में निर्मित"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:407
-msgid "In use"
-msgstr "प्रयोग में है"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:410
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:535
-msgid "Installed"
-msgstr "स्थापित"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:412
+#: src/anduinos_driver_center/app.py:805 src/anduinos_driver_center/app.py:888
+#: src/anduinos_driver_center/app.py:1037
+#: src/anduinos_driver_center/app.py:1607
 msgid "Recommended"
 msgstr "अनुशंसित"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:434
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:445
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:460
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:625
-msgid "Kernel module"
-msgstr "कर्नेल मॉड्यूल"
+#: src/anduinos_driver_center/app.py:809 src/anduinos_driver_center/app.py:1546
+msgid ""
+"Choose the driver used by this device. AnduinOS marks the hardware-tested "
+"recommendation."
+msgstr ""
+"इस डिवाइस द्वारा उपयोग किया जाने वाला ड्राइवर चुनें। AnduinOS हार्डवेयर-परीक्षणित "
+"अनुशंसा को चिह्नित करता है।"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:434
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:460
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:551
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:595
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:703
-msgid "Not detected"
-msgstr "पता नहीं चला"
+#: src/anduinos_driver_center/app.py:811 src/anduinos_driver_center/app.py:823
+#: src/anduinos_driver_center/app.py:1088
+#: src/anduinos_driver_center/app.py:1522
+#: src/anduinos_driver_center/app.py:1567
+#: src/anduinos_driver_center/app.py:1643
+#: src/anduinos_driver_center/app.py:1656
+#: src/anduinos_driver_center/app.py:1977
+msgid "Apply Changes"
+msgstr "परिवर्तन लागू करें"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:446
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:984
-msgid "Driver operation failed: "
-msgstr "ड्राइवर संचालन विफल: "
+#: src/anduinos_driver_center/app.py:834 src/anduinos_driver_center/app.py:2213
+msgid "Driver changes completed. Restart may be required."
+msgstr "ड्राइवर परिवर्तन पूर्ण। पुनरारंभ की आवश्यकता हो सकती है."
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:448
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:571
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:590
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:653
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:683
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:691
-msgid "Repair & Reinstall"
-msgstr "मरम्मत एवं पुनः स्थापित करें"
+#: src/anduinos_driver_center/app.py:840 src/anduinos_driver_center/app.py:919
+#: src/anduinos_driver_center/app.py:1027
+#: src/anduinos_driver_center/app.py:1552
+msgid "Available drivers"
+msgstr "उपलब्ध ड्राइवर"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:469
-msgid "Advanced driver versions"
-msgstr "उन्नत ड्राइवर संस्करण"
+#: src/anduinos_driver_center/app.py:851 src/anduinos_driver_center/app.py:912
+msgid "No additional drivers are needed."
+msgstr "किसी अतिरिक्त ड्राइवर की आवश्यकता नहीं है।"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:470
-msgid "Older, newer, and server-oriented packages"
-msgstr "पुराने, नए और सर्वर-उन्मुख पैकेज"
+#: src/anduinos_driver_center/app.py:931 src/anduinos_driver_center/app.py:1835
+msgid "Audio Support"
+msgstr "ऑडियो समर्थन"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:491
-msgid "Select another driver to apply changes."
-msgstr "परिवर्तन लागू करने के लिए किसी अन्य ड्राइवर का चयन करें।"
+#: src/anduinos_driver_center/app.py:946 src/anduinos_driver_center/app.py:1939
+msgid "Disabled"
+msgstr "अक्षम"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:526
+#: src/anduinos_driver_center/app.py:968 src/anduinos_driver_center/app.py:1906
+msgid "Printing Support"
+msgstr "मुद्रण समर्थन"
+
+#: src/anduinos_driver_center/app.py:982 src/anduinos_driver_center/app.py:1721
 msgid "Xbox Controller Support"
 msgstr "Xbox नियंत्रण समर्थन"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:527
+#: src/anduinos_driver_center/app.py:984 src/anduinos_driver_center/app.py:1730
+#: src/anduinos_driver_center/app.py:1814
+#: src/anduinos_driver_center/app.py:1857
+#: src/anduinos_driver_center/app.py:1865
+#: src/anduinos_driver_center/app.py:2029
+msgid "Not installed"
+msgstr "स्थापित नहीं है"
+
+#: src/anduinos_driver_center/app.py:1003
+#: src/anduinos_driver_center/app.py:1738
+msgid "Trusted"
+msgstr "विश्वसनीय"
+
+#: src/anduinos_driver_center/app.py:1056
+msgid "Check for Driver Updates"
+msgstr "ड्राइवर अपडेट की जाँच करें"
+
+#: src/anduinos_driver_center/app.py:1058
+msgid "Refresh software sources and compare the recommended driver version."
+msgstr "सॉफ़्टवेयर स्रोतों को रीफ़्रेश करें और सुझाए गए ड्राइवर संस्करण की तुलना करें।"
+
+#: src/anduinos_driver_center/app.py:1070
+msgid "Driver information updated."
+msgstr "ड्राइवर जानकारी अपडेट कर दी गई है।"
+
+#: src/anduinos_driver_center/app.py:1079
+#: src/anduinos_driver_center/app.py:1524
+msgid ""
+"AnduinOS will update software sources and install the drivers recommended "
+"for this hardware."
+msgstr ""
+"AnduinOS सॉफ़्टवेयर स्रोतों को अपडेट करेगा और इस हार्डवेयर के लिए सुझाए गए ड्राइवर इंस्टॉल "
+"करेगा।"
+
+#: src/anduinos_driver_center/app.py:1165
+msgid ""
+"Keep system firmware and supported hardware up to date through the Linux "
+"Vendor Firmware Service."
+msgstr ""
+"Linux Vendor Firmware Service के माध्यम से सिस्टम फ़र्मवेयर और समर्थित हार्डवेयर को "
+"अद्यतन रखें।"
+
+#: src/anduinos_driver_center/app.py:1176
+msgid "Firmware operation failed: "
+msgstr "फ़र्मवेयर ऑपरेशन विफल:"
+
+#: src/anduinos_driver_center/app.py:1177
+#: src/anduinos_driver_center/app.py:1286
+msgid "Check Again"
+msgstr "दोबारा जांचें"
+
+#: src/anduinos_driver_center/app.py:1183
+msgid "Firmware operation"
+msgstr "फ़र्मवेयर ऑपरेशन"
+
+#: src/anduinos_driver_center/app.py:1210
+msgid "Firmware service"
+msgstr "फ़र्मवेयर सेवा"
+
+#: src/anduinos_driver_center/app.py:1214
+msgid "Not available"
+msgstr "उपलब्ध नहीं है"
+
+#: src/anduinos_driver_center/app.py:1228
+msgid "Not refreshed in this session"
+msgstr "इस सत्र में ताज़ा नहीं किया गया"
+
+#: src/anduinos_driver_center/app.py:1231
+msgid "Firmware metadata"
+msgstr "फ़र्मवेयर मेटाडेटा"
+
+#: src/anduinos_driver_center/app.py:1240
+msgid "Supported devices"
+msgstr "समर्थित उपकरण"
+
+#: src/anduinos_driver_center/app.py:1242
+#, python-format
+msgid "%d device detected"
+msgid_plural "%d devices detected"
+msgstr[0] "%d डिवाइस का पता चला"
+msgstr[1] "%d डिवाइस का पता चला"
+
+#: src/anduinos_driver_center/app.py:1252
+msgid "Available firmware updates"
+msgstr "उपलब्ध फ़र्मवेयर अपडेट"
+
+#: src/anduinos_driver_center/app.py:1254
+#, python-format
+msgid "%d update available"
+msgid_plural "%d updates available"
+msgstr[0] "%d अपडेट उपलब्ध हैं"
+msgstr[1] "%d अपडेट उपलब्ध हैं"
+
+#: src/anduinos_driver_center/app.py:1266
+msgid "Firmware actions"
+msgstr "फ़र्मवेयर क्रियाएँ"
+
+#: src/anduinos_driver_center/app.py:1268
+msgid "Refresh Firmware Metadata"
+msgstr "फ़र्मवेयर मेटाडेटा ताज़ा करें"
+
+#: src/anduinos_driver_center/app.py:1269
+msgid "Download the latest metadata from enabled firmware sources."
+msgstr "सक्षम फर्मवेयर स्रोतों से नवीनतम मेटाडेटा डाउनलोड करें।"
+
+#: src/anduinos_driver_center/app.py:1272
+msgid "Refresh"
+msgstr "ताज़ा करें"
+
+#: src/anduinos_driver_center/app.py:1282
+msgid "Check for Firmware Updates"
+msgstr "फ़र्मवेयर अद्यतनों की जाँच करें"
+
+#: src/anduinos_driver_center/app.py:1283
+msgid "Compare connected devices with the available metadata."
+msgstr "उपलब्ध मेटाडेटा के साथ कनेक्टेड डिवाइस की तुलना करें।"
+
+#: src/anduinos_driver_center/app.py:1297
+msgid "Update All Firmware"
+msgstr "सभी फ़र्मवेयर अपडेट करें"
+
+#: src/anduinos_driver_center/app.py:1299
+#, python-format
+msgid "Install %d available update."
+msgid_plural "Install all %d available updates."
+msgstr[0] "सभी %d उपलब्ध अपडेट इंस्टॉल करें।"
+msgstr[1] "सभी %d उपलब्ध अपडेट इंस्टॉल करें।"
+
+#: src/anduinos_driver_center/app.py:1305
+msgid "Update All"
+msgstr "सभी को अद्यतन करें"
+
+#: src/anduinos_driver_center/app.py:1320
+msgid "Firmware Devices"
+msgstr "फ़र्मवेयर उपकरण"
+
+#: src/anduinos_driver_center/app.py:1322
+msgid "Expand a device to inspect installed and available firmware versions."
+msgstr ""
+"स्थापित और उपलब्ध फ़र्मवेयर संस्करणों का निरीक्षण करने के लिए डिवाइस का विस्तार करें।"
+
+#: src/anduinos_driver_center/app.py:1332
+msgid "The firmware service did not report any manageable devices."
+msgstr "फ़र्मवेयर सेवा ने किसी भी प्रबंधनीय डिवाइस की सूचना नहीं दी।"
+
+#: src/anduinos_driver_center/app.py:1338
+msgid "Firmware Update History"
+msgstr "फ़र्मवेयर अद्यतन इतिहास"
+
+#: src/anduinos_driver_center/app.py:1339
+msgid "Results reported by the fwupd service."
+msgstr "fwupd सेवा द्वारा रिपोर्ट किए गए परिणाम।"
+
+#: src/anduinos_driver_center/app.py:1347
+msgid "Unknown time"
+msgstr "अज्ञात समय"
+
+#: src/anduinos_driver_center/app.py:1362
+msgid "No firmware update history"
+msgstr "कोई फ़र्मवेयर अद्यतन इतिहास नहीं"
+
+#: src/anduinos_driver_center/app.py:1363
+msgid "Completed firmware operations will appear here."
+msgstr "पूर्ण फर्मवेयर ऑपरेशन यहां दिखाई देंगे।"
+
+#: src/anduinos_driver_center/app.py:1376
+#: src/anduinos_driver_center/app.py:1388
+#: src/anduinos_driver_center/app.py:1404
+#: src/anduinos_driver_center/app.py:1415
+#: src/anduinos_driver_center/app.py:1462
+#: src/anduinos_driver_center/app.py:1478
+#: src/anduinos_driver_center/app.py:1479
+msgid "Unknown"
+msgstr "अज्ञात"
+
+#: src/anduinos_driver_center/app.py:1387
+msgid "Current version"
+msgstr "वर्तमान संस्करण"
+
+#: src/anduinos_driver_center/app.py:1394
+#: src/anduinos_driver_center/app.py:1507
+msgid "Update"
+msgstr "अद्यतन करें"
+
+#: src/anduinos_driver_center/app.py:1403
+msgid "Available version"
+msgstr "उपलब्ध संस्करण"
+
+#: src/anduinos_driver_center/app.py:1408
+msgid "Low"
+msgstr "नीचा"
+
+#: src/anduinos_driver_center/app.py:1409
+msgid "Medium"
+msgstr "मध्यम"
+
+#: src/anduinos_driver_center/app.py:1410
+msgid "High"
+msgstr "ऊँचा"
+
+#: src/anduinos_driver_center/app.py:1411
+msgid "Critical"
+msgstr "गंभीर"
+
+#: src/anduinos_driver_center/app.py:1414
+msgid "Update urgency"
+msgstr "अत्यावश्यकता अद्यतन करें"
+
+#: src/anduinos_driver_center/app.py:1425
+msgid "Release notes"
+msgstr "नोट जारी करें"
+
+#: src/anduinos_driver_center/app.py:1432
+msgid "Firmware status"
+msgstr "फ़र्मवेयर स्थिति"
+
+#: src/anduinos_driver_center/app.py:1436
+msgid "Up to date"
+msgstr "अप टू डेट"
+
+#: src/anduinos_driver_center/app.py:1440
+msgid "Connect the computer to AC power"
+msgstr "कंप्यूटर को AC पॉवर से कनेक्ट करें"
+
+#: src/anduinos_driver_center/app.py:1448
+msgid "Installation requirements"
+msgstr "स्थापना आवश्यकताएँ"
+
+#: src/anduinos_driver_center/app.py:1457
+msgid "Pending"
+msgstr "लंबित"
+
+#: src/anduinos_driver_center/app.py:1458
+msgid "Success"
+msgstr "सफलता"
+
+#: src/anduinos_driver_center/app.py:1459
+#: src/anduinos_driver_center/app.py:1461
+msgid "Failed"
+msgstr "असफल"
+
+#: src/anduinos_driver_center/app.py:1475
+#, python-format
+msgid "Install firmware for %(device)s from %(current)s to %(available)s?"
+msgstr "%(device)s के लिए %(current)s से %(available)s तक फर्मवेयर स्थापित करें?"
+
+#: src/anduinos_driver_center/app.py:1483
+#, python-format
+msgid "Install %d available firmware update?"
+msgid_plural "Install all %d available firmware updates?"
+msgstr[0] "सभी %d उपलब्ध फ़र्मवेयर अद्यतन स्थापित करें?"
+msgstr[1] "सभी %d उपलब्ध फ़र्मवेयर अद्यतन स्थापित करें?"
+
+#: src/anduinos_driver_center/app.py:1489
+msgid "Keep the computer connected to AC power."
+msgstr "कंप्यूटर को एसी पावर से कनेक्ट रखें।"
+
+#: src/anduinos_driver_center/app.py:1493
+msgid ""
+"This update may invalidate full-disk encryption secrets. Make sure you have "
+"the volume recovery key before continuing."
+msgstr "यह अपडेट पूर्ण-डिस्क एन्क्रिप्शन रहस्यों को अमान्य कर सकता है। आगे बढ़ने से पहले सुनिश्चित करें कि आपके पास वॉल्यूम पुनर्प्राप्ति कुंजी है।"
+
+#: src/anduinos_driver_center/app.py:1498
+msgid "A restart may be required to finish installation."
+msgstr "स्थापना समाप्त करने के लिए पुनरारंभ की आवश्यकता हो सकती है।"
+
+#: src/anduinos_driver_center/app.py:1499
+msgid "Do not disconnect devices or turn off the computer."
+msgstr "डिवाइसों को डिस्कनेक्ट न करें या कंप्यूटर बंद न करें।"
+
+#: src/anduinos_driver_center/app.py:1503
+msgid "Install Firmware Update"
+msgstr "फ़र्मवेयर अद्यतन स्थापित करें"
+
+#: src/anduinos_driver_center/app.py:1506
+#: src/anduinos_driver_center/app.py:1528
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
+msgid "Cancel"
+msgstr "रद्द करें"
+
+#: src/anduinos_driver_center/app.py:1529
+#: src/anduinos_driver_center/app.py:2173
+msgid "Apply"
+msgstr "लागू करें"
+
+#: src/anduinos_driver_center/app.py:1576
+msgid "open source"
+msgstr "खुला स्रोत"
+
+#: src/anduinos_driver_center/app.py:1576
+msgid "proprietary"
+msgstr "मालिकाना"
+
+#: src/anduinos_driver_center/app.py:1578
+msgid "built in"
+msgstr "में निर्मित"
+
+#: src/anduinos_driver_center/app.py:1602
+msgid "In use"
+msgstr "प्रयोग में है"
+
+#: src/anduinos_driver_center/app.py:1629
+#: src/anduinos_driver_center/app.py:1640
+#: src/anduinos_driver_center/app.py:1655
+#: src/anduinos_driver_center/app.py:1820
+msgid "Kernel module"
+msgstr "कर्नेल मॉड्यूल"
+
+#: src/anduinos_driver_center/app.py:1643
+#: src/anduinos_driver_center/app.py:1766
+#: src/anduinos_driver_center/app.py:1785
+#: src/anduinos_driver_center/app.py:1848
+#: src/anduinos_driver_center/app.py:1878
+#: src/anduinos_driver_center/app.py:1886
+msgid "Repair & Reinstall"
+msgstr "मरम्मत एवं पुनः स्थापित करें"
+
+#: src/anduinos_driver_center/app.py:1664
+msgid "Advanced driver versions"
+msgstr "उन्नत ड्राइवर संस्करण"
+
+#: src/anduinos_driver_center/app.py:1665
+msgid "Older, newer, and server-oriented packages"
+msgstr "पुराने, नए और सर्वर-उन्मुख पैकेज"
+
+#: src/anduinos_driver_center/app.py:1686
+msgid "Select another driver to apply changes."
+msgstr "परिवर्तन लागू करने के लिए किसी अन्य ड्राइवर का चयन करें।"
+
+#: src/anduinos_driver_center/app.py:1722
 msgid ""
 "xpadneo improves Bluetooth mapping, rumble, battery reporting and "
 "compatibility for modern Xbox controllers."
@@ -225,77 +750,57 @@ msgstr ""
 "xpadneo आधुनिक Xbox नियंत्रकों के लिए ब्लूटूथ मैपिंग, रंबल, बैटरी रिपोर्टिंग और संगतता में "
 "सुधार करता है।"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:530
-msgid "Driver status"
-msgstr "ड्राइवर स्थिति"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:534
+#: src/anduinos_driver_center/app.py:1729
 msgid "Driver package"
 msgstr "ड्राइवर पैकेज"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:535
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:619
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:662
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:670
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:834
-msgid "Not installed"
-msgstr "स्थापित नहीं है"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:537
+#: src/anduinos_driver_center/app.py:1732
 msgid "Install Driver"
 msgstr "ड्राइवर स्थापित करें"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:543
-msgid "Trusted"
-msgstr "विश्वसनीय"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:554
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
+#: src/anduinos_driver_center/app.py:1749
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
 msgid "Secure Boot state could not be determined"
 msgstr "Secure Boot स्थिति निर्धारित नहीं की जा सकी"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:559
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
+#: src/anduinos_driver_center/app.py:1754
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
 msgid "Pending enrollment in blue screen (MOKManager)"
 msgstr "नीले स्क्रीन (MOKManager) में एनरोल की प्रतीक्षा है"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:564
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
+#: src/anduinos_driver_center/app.py:1759
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
 msgid "Certificate is not trusted by motherboard"
 msgstr "प्रमाणपत्र मदरबोर्ड द्वारा विश्वसनीय नहीं है"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:569
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
+#: src/anduinos_driver_center/app.py:1764
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
 msgid "Some DKMS modules need to be re-signed"
 msgstr "कुछ DKMS मॉड्यूल को फिर से हस्ताक्षरित करने की आवश्यकता है"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:580
+#: src/anduinos_driver_center/app.py:1775
 msgid "Module signature"
 msgstr "मॉड्यूल हस्ताक्षर"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:588
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:681
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:689
+#: src/anduinos_driver_center/app.py:1783
+#: src/anduinos_driver_center/app.py:1876
+#: src/anduinos_driver_center/app.py:1884
 msgid "Missing"
 msgstr "गुम"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:600
+#: src/anduinos_driver_center/app.py:1795
 msgid "Loaded"
 msgstr "लोड किया गया"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:605
+#: src/anduinos_driver_center/app.py:1800
 msgid "Standing by"
 msgstr "खड़े होकर"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:632
+#: src/anduinos_driver_center/app.py:1827
 msgid "Bluetooth Settings"
 msgstr "ब्लूटूथ सेटिंग्स"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:640
-msgid "Audio Support"
-msgstr "ऑडियो समर्थन"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:641
+#: src/anduinos_driver_center/app.py:1836
 msgid ""
 "AnduinOS provides Intel SOF firmware and ALSA UCM profiles for reliable "
 "audio initialization and routing."
@@ -303,56 +808,47 @@ msgstr ""
 "AnduinOS विश्वसनीय ऑडियो आरंभीकरण और रूटिंग के लिए इंटेल SOF फर्मवेयर और ALSA UCM "
 "प्रोफाइल प्रदान करता है।"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:643
+#: src/anduinos_driver_center/app.py:1838
 msgid "Support packages"
 msgstr "समर्थन पैकेज"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:651
+#: src/anduinos_driver_center/app.py:1846
 msgid "Install Audio Support"
 msgstr "ऑडियो समर्थन स्थापित करें"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:661
+#: src/anduinos_driver_center/app.py:1856
 msgid "Intel SOF firmware"
 msgstr "Intel SOF फ़र्मवेयर"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:669
+#: src/anduinos_driver_center/app.py:1864
 msgid "ALSA UCM profiles"
 msgstr "ALSA UCM प्रोफ़ाइल"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:676
+#: src/anduinos_driver_center/app.py:1871
 msgid "Runtime status"
 msgstr "रनटाइम स्थिति"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:680
+#: src/anduinos_driver_center/app.py:1875
 msgid "SOF firmware files"
 msgstr "SOF फ़र्मवेयर फ़ाइलें"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:681
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:689
-msgid "Available"
-msgstr "उपलब्ध"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:688
+#: src/anduinos_driver_center/app.py:1883
 msgid "UCM configuration files"
 msgstr "UCM कॉन्फ़िगरेशन फ़ाइलें"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:696
+#: src/anduinos_driver_center/app.py:1891
 msgid "SOF kernel modules"
 msgstr "SOF कर्नेल मॉड्यूल"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:697
+#: src/anduinos_driver_center/app.py:1892
 msgid "Not currently loaded"
 msgstr "अभी लोड नहीं हुआ है"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:702
+#: src/anduinos_driver_center/app.py:1897
 msgid "Active audio drivers"
 msgstr "सक्रिय ऑडियो ड्राइवर"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:711
-msgid "Printing Support"
-msgstr "मुद्रण समर्थन"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:712
+#: src/anduinos_driver_center/app.py:1907
 msgid ""
 "Inspect the local print service, configured queues, and the packages that "
 "provide modern and legacy printer support."
@@ -360,165 +856,135 @@ msgstr ""
 "स्थानीय प्रिंट सेवा, कॉन्फ़िगर की गई कतारों और आधुनिक और पुराने प्रिंटर समर्थन प्रदान करने "
 "वाले पैकेजों का निरीक्षण करें।"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:716
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:733
+#: src/anduinos_driver_center/app.py:1911
+#: src/anduinos_driver_center/app.py:1928
 msgid "Enable Printing Support"
 msgstr "मुद्रण समर्थन सक्षम करें"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:717
+#: src/anduinos_driver_center/app.py:1912
 msgid "Allow local, network, and USB printing services to run."
 msgstr "स्थानीय, नेटवर्क और USB प्रिंटिंग सेवाओं को चलने दें।"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:726
-msgid "System status"
-msgstr "सिस्टम स्थिति"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:730
+#: src/anduinos_driver_center/app.py:1925
 msgid "CUPS service"
 msgstr "कप सेवा"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:731
+#: src/anduinos_driver_center/app.py:1926
 msgid "Running"
 msgstr "चल रहा है"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:731
+#: src/anduinos_driver_center/app.py:1926
 msgid "Stopped"
 msgstr "रुक गया"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:743
+#: src/anduinos_driver_center/app.py:1938
 msgid "Start at boot"
 msgstr "बूट पर प्रारंभ करें"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:744
+#: src/anduinos_driver_center/app.py:1939
 msgid "Enabled"
 msgstr "सक्रिय"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:744
-msgid "Disabled"
-msgstr "अक्षम"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:749
+#: src/anduinos_driver_center/app.py:1944
 #, python-format
 msgid "%d configured printer"
 msgid_plural "%d configured printers"
 msgstr[0] "%d कॉन्फ़िगर प्रिंटर"
 msgstr[1] "%d कॉन्फ़िगर किए गए प्रिंटर"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:755
+#: src/anduinos_driver_center/app.py:1950
 msgid "Configured printers"
 msgstr "कॉन्फ़िगर किए गए प्रिंटर"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:761
+#: src/anduinos_driver_center/app.py:1956
 msgid "Default printer"
 msgstr "डिफ़ॉल्ट प्रिंटर"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:762
+#: src/anduinos_driver_center/app.py:1957
 msgid "Not set"
 msgstr "सेट नहीं है"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:766
+#: src/anduinos_driver_center/app.py:1961
 msgid "No configured queues"
 msgstr "कोई कॉन्फ़िगर कतार नहीं"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:771
+#: src/anduinos_driver_center/app.py:1966
 #, python-format
 msgid "%d queue paused"
 msgid_plural "%d queues paused"
 msgstr[0] "%d कतार रोक दी गई"
 msgstr[1] "%d कतारें रोक दी गईं"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:775
+#: src/anduinos_driver_center/app.py:1970
 msgid "All queues enabled"
 msgstr "सभी कतारें सक्षम"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:779
+#: src/anduinos_driver_center/app.py:1974
 msgid "Print queues"
 msgstr "प्रिंट कतारें"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:790
+#: src/anduinos_driver_center/app.py:1985
 msgid "Core printing"
 msgstr "कोर प्रिंटिंग"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:791
+#: src/anduinos_driver_center/app.py:1986
 msgid "Required for the local print service and command-line clients."
 msgstr "स्थानीय प्रिंट सेवा और कमांड-लाइन क्लाइंट के लिए आवश्यक।"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:798
+#: src/anduinos_driver_center/app.py:1993
 msgid "Driverless printing"
 msgstr "ड्राइवर रहित मुद्रण"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:799
+#: src/anduinos_driver_center/app.py:1994
 msgid "Modern IPP drivers, document filters, and capability tools."
 msgstr "आधुनिक IPP ड्राइवर, दस्तावेज़ फ़िल्टर और क्षमता उपकरण।"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:806
+#: src/anduinos_driver_center/app.py:2001
 msgid "Network discovery"
 msgstr "नेटवर्क खोज"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:807
+#: src/anduinos_driver_center/app.py:2002
 msgid "Automatic discovery of printers advertised on the local network."
 msgstr "स्थानीय नेटवर्क पर विज्ञापित प्रिंटरों की स्वचालित खोज।"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:814
+#: src/anduinos_driver_center/app.py:2009
 msgid "Optional compatibility"
 msgstr "वैकल्पिक अनुकूलता"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:815
+#: src/anduinos_driver_center/app.py:2010
 msgid ""
 "USB IPP, administrative authorization, legacy drivers, and network scanning."
 msgstr "USB IPP, प्रशासनिक प्राधिकरण, लीगेसी ड्राइवर और नेटवर्क स्कैनिंग।"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:838
+#: src/anduinos_driver_center/app.py:2033
 msgid "Install Missing Packages"
 msgstr "गुम पैकेज स्थापित करें"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:891
+#: src/anduinos_driver_center/app.py:2086
 msgid "Printing support enabled."
 msgstr "मुद्रण समर्थन सक्षम।"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:897
+#: src/anduinos_driver_center/app.py:2092
 msgid "Printing operation failed: "
 msgstr "मुद्रण कार्रवाई विफल: "
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:898
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:984
-msgid "unknown error"
-msgstr "अज्ञात त्रुटि"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:971
-msgid "Apply"
-msgstr "लागू करें"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:972
+#: src/anduinos_driver_center/app.py:2174
 msgid "Working…"
 msgstr "कार्य कर रहा है..."
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:984
-msgid "Driver changes completed. Restart may be required."
-msgstr "ड्राइवर परिवर्तन पूर्ण। पुनरारंभ की आवश्यकता हो सकती है."
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:991
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
-msgid "OK"
-msgstr "ठीक है"
-
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:1008
+#: src/anduinos_driver_center/app.py:2240
 msgid "AnduinOS Team"
 msgstr "एंडुइनओएस टीम"
 
-#: anduinos-driver-center/src/anduinos_driver_center/app.py:1011
+#: src/anduinos_driver_center/app.py:2243
 msgid "Install, inspect, and repair hardware drivers on AnduinOS."
 msgstr "AnduinOS पर हार्डवेयर ड्राइवर स्थापित करें, निरीक्षण करें और मरम्मत करें।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
 msgid "Secure Boot Configuration"
 msgstr "सुरक्षित बूट विन्यास"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
 msgid ""
 "Secure Boot is a motherboard security standard that ensures only trusted "
 "software loads at startup."
@@ -526,116 +992,116 @@ msgstr ""
 "\tसीयोर बुट एक मदरबोर्ड सुरक्षा मानक है जो सुनिश्चित करता है कि स्टार्टअप पर केवल "
 "विश्वसनीय सॉफ़्टवेयर लोड हो।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
 msgid "It protects your system from low-level malware and rootkits."
 msgstr "यह आपके सिस्टम को लो-लेवल मैलवेयर और रूटकिट से सुरक्षित रखता है।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
 msgid "System Trust Status"
 msgstr "सिस्टम विश्वास स्थिति"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
 msgid "Create & Enroll Certificate"
 msgstr "प्रमाण पत्र बनाएं और एनरोल करें"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
 msgid "Repair Module Signatures"
 msgstr "मरम्मत मॉड्यूल हस्ताक्षर"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
 msgid "Note: Use password <b>123456</b> after rebooting."
 msgstr "नोट: पुनः आरंभ करने के बाद <b>123456</b> पासवर्ड का उपयोग करें।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
 msgid "Reboot & Configure Secure Boot"
 msgstr "पुनः आरंभ करें & सुरक्षित बूट विन्यास करें"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
 msgid "  Check Again  "
 msgstr "  पुनः जाँचें  "
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
 msgid "Motherboard hardware protection is active"
 msgstr "मदरबोर्ड हार्डवेयर सुरक्षा सक्रिय है"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
 msgid "Firmware does not support Secure Boot"
 msgstr "फ़र्मवेयर Secure Boot का समर्थन नहीं करता है"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
 msgid "Secure Boot is disabled"
 msgstr "Secure Boot अक्षम है"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
 msgid "Not required without firmware enforcement"
 msgstr "फर्मवेयर प्रवर्तन के बिना आवश्यक नहीं है"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
 msgid "Not checked because Secure Boot state is unknown"
 msgstr "जाँच नहीं की गई क्योंकि Secure Boot स्थिति अज्ञात है"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
 msgid "Certificate generated locally"
 msgstr "स्थानीय रूप से उत्पन्न प्रमाण पत्र"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
 msgid "Missing local certificate"
 msgstr "स्थानीय प्रमाण पत्र अनुपलब्ध है"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
 msgid "Certificate is trusted by motherboard"
 msgstr "प्रमाण पत्र मदरबोर्ड द्वारा विश्वसनीय है"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
 msgid "Kernel signature enforcement is inactive"
 msgstr "कर्नेल हस्ताक्षर प्रवर्तन निष्क्रिय है"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
 msgid "Driver trust cannot be verified"
 msgstr "ड्राइवर का विश्वास सत्यापित नहीं किया जा सकता"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
 msgid ""
 "Secure Boot trust is ready. No third-party kernel modules are currently "
 "installed."
 msgstr ""
 "Secure Boot ट्रस्ट तैयार है। वर्तमान में कोई तृतीय-पक्ष कर्नेल मॉड्यूल स्थापित नहीं है।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
 msgid "Drivers are signed and ready to load"
 msgstr "ड्राइवर साइन किए गए हैं और लोड करने के लिए तैयार हैं"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
 msgid "Drivers are trusted, but automatic DKMS signing needs repair"
 msgstr "ड्राइवर विश्वसनीय हैं, लेकिन स्वचालित DKMS हस्ताक्षर को मरम्मत की आवश्यकता है"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
 msgid "No signed third-party drivers detected"
 msgstr "कोई साइन किया गया थर्ड-पार्टी ड्राइवर नहीं पाया गया"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
 msgid "Enroll Existing Certificate"
 msgstr "मौजूदा प्रमाणपत्र नामांकित करें"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
 msgid "Repair Automatic DKMS Signing"
 msgstr "स्वचालित DKMS हस्ताक्षर की मरम्मत करें"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
 msgid "This firmware does not provide Secure Boot. No certificate is required."
 msgstr ""
 "यह फर्मवेयर Secure Boot प्रदान नहीं करता है। किसी प्रमाणपत्र की आवश्यकता नहीं है."
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
 msgid ""
 "Secure Boot status could not be read. Driver trust operations are blocked "
 "until detection succeeds."
@@ -643,94 +1109,82 @@ msgstr ""
 "Secure Boot स्थिति पढ़ी नहीं जा सकी. जब तक पता नहीं चल जाता तब तक ड्राइवर ट्रस्ट "
 "संचालन अवरुद्ध रहता है।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
 msgid "No certificate is required while Secure Boot is disabled."
 msgstr "Secure Boot अक्षम होने पर किसी प्रमाणपत्र की आवश्यकता नहीं है।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
 msgid "System Trust Established. Third-party drivers will load securely."
 msgstr "सिस्टम विश्वास स्थापित हुआ। थर्ड-पार्टी ड्राइवर सुरक्षित रूप से लोड होंगे।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
 msgid "The certificate is enrolled and current drivers are trusted."
 msgstr "प्रमाणपत्र नामांकित है और वर्तमान ड्राइवर विश्वसनीय हैं।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
 msgid "Repair automatic DKMS signing before future driver updates."
 msgstr "भविष्य के ड्राइवर अपडेट से पहले स्वचालित DKMS साइनिंग की मरम्मत करें।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
 msgid "The certificate is enrolled, but some modules are not signed with it."
 msgstr "प्रमाणपत्र नामांकित है, लेकिन कुछ मॉड्यूल इसके साथ हस्ताक्षरित नहीं हैं।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
 msgid "A certificate is waiting for enrollment."
 msgstr "एक प्रमाणपत्र नामांकन के लिए प्रतीक्षा कर रहा है।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
 msgid "Restart and enter password 123456 in MOKManager."
 msgstr "पुनरारंभ करें और MOKManager में पासवर्ड 123456 दर्ज करें।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
 msgid "The local trust certificate is not yet enrolled."
 msgstr "स्थानीय ट्रस्ट प्रमाणपत्र अभी तक नामांकित नहीं है।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
 msgid "You must configure this to use third-party drivers like NVIDIA."
 msgstr ""
 "आपको NVIDIA जैसे थर्ड-पार्टी ड्राइवर का उपयोग करने के लिए इसे विन्यास करना होगा।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
 msgid "The local trust certificate is missing."
 msgstr "स्थानीय ट्रस्ट प्रमाणपत्र गुम है।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
 msgid "  Checking...  "
 msgstr "  जाँच रहे हैं...  "
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
-msgid "Reboot Required"
-msgstr "पुनः आरंभ की आवश्यकता है"
-
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
 msgid "Please trust the certificate upon reboot using password 123456."
 msgstr ""
 "पुनः आरंभ करने पर कृपया पासवर्ड 123456 का उपयोग करके प्रमाण पत्र को विश्वसनीय बनाएं।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
-msgid "Cancel"
-msgstr "रद्द करें"
-
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
 msgid "Reboot"
 msgstr "पुनः आरंभ करें"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
 msgid "Success! When you reboot, a blue screen will appear."
 msgstr "सफल! जब आप पुनः आरंभ करेंगे, तो एक नीली स्क्रीन दिखाई देगी।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
 msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
 msgstr "'Enroll MOK' → 'Continue' → 'Yes' चुनें, और पासवर्ड दर्ज करें: 123456"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
 msgid "Certificate Created"
 msgstr "प्रमाण पत्र बनाया गया"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
-msgid "Later"
-msgstr "बाद में"
-
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
 msgid "Secure Boot Trust Not Required"
 msgstr "Secure Boot विश्वास की आवश्यकता नहीं है"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
 msgid "Firmware signature enforcement is not active."
 msgstr "फ़र्मवेयर हस्ताक्षर प्रवर्तन सक्रिय नहीं है।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
 msgid ""
 "The certificate is ready, but one or more DKMS modules could not be rebuilt. "
 "You can repair them after enrollment."
@@ -738,32 +1192,73 @@ msgstr ""
 "प्रमाणपत्र तैयार है, लेकिन एक या अधिक DKMS मॉड्यूल का पुनर्निर्माण नहीं किया जा सका। "
 "नामांकन के बाद आप उनकी मरम्मत करा सकते हैं."
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
 msgid "Configuration needs attention"
 msgstr "कॉन्फ़िगरेशन पर ध्यान देने की आवश्यकता है"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
 msgid "System Trust Established"
 msgstr "सिस्टम ट्रस्ट की स्थापना"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
 msgid "Driver Signature Trusted"
 msgstr "ड्राइवर हस्ताक्षर विश्वसनीय"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
 msgid "Configuration failed. Please try again."
 msgstr "विन्यास विफल रहा। कृपया पुनः प्रयास करें।"
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
 msgid "Please check the advanced output."
 msgstr "kripya adhyaksh avarthaman ko jaanchen."
 
-#: anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
 msgid "Generating & Signing..."
 msgstr "उत्पन्न किया जा रहा है & साइन किया जा रहा है..."
 
-#~ msgid "Needs attention"
-#~ msgstr "ध्यान देने की आवश्यकता"
+#~ msgid "Download the latest metadata from enabled firmware remotes."
+#~ msgstr "सक्षम फ़र्मवेयर रिमोट से नवीनतम मेटाडेटा डाउनलोड करें।"
+
+#~ msgid "Driver Center"
+#~ msgstr "ड्राइवर सेंटर के बारे में"
+
+#~ msgid "Secure Boot needs attention"
+#~ msgstr "समर्थन पर ध्यान देने की आवश्यकता है"
+
+#~ msgid "Establish system trust before installing a third-party driver."
+#~ msgstr ""
+#~ "Secure Boot स्थिति या विश्वास को तृतीय-पक्ष ड्राइवर स्थापित करने से पहले हल किया "
+#~ "जाना चाहिए।"
+
+#, python-format
+#~ msgid "%d recommended driver is available"
+#~ msgid_plural "%d recommended drivers are available"
+#~ msgstr[0] "फिडो डिवाइस खोज अनुपलब्ध है"
+#~ msgstr[1] "फिडो डिवाइस खोज अनुपलब्ध है"
+
+#~ msgid "Install Recommended Drivers"
+#~ msgstr "ड्राइवर स्थापित करें"
+
+#~ msgid "Driver changes are ready"
+#~ msgstr "ड्राइवर हस्ताक्षर विश्वसनीय"
+
+#~ msgid "A graphics driver needs attention"
+#~ msgstr "कॉन्फ़िगरेशन पर ध्यान देने की आवश्यकता है"
+
+#~ msgid "Your drivers are ready"
+#~ msgstr "ड्राइवर हस्ताक्षर विश्वसनीय"
+
+#~ msgid "Recommended changes"
+#~ msgstr "अनुशंसित"
+
+#~ msgid "Install Recommended Drivers?"
+#~ msgstr "ड्राइवर स्थापित करें"
+
+#~ msgid "Install"
+#~ msgstr "स्थापित"
+
+#~ msgid "Hardware"
+#~ msgstr "हार्डवेयर"
 
 #~ msgid "Blocked by Secure Boot"
 #~ msgstr "Secure Boot द्वारा अवरोधित"

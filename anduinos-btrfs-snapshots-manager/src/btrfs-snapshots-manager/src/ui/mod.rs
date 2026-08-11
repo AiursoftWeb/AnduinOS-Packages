@@ -1,6 +1,7 @@
 mod advanced_settings;
 mod automation_dialog;
 mod btrfs_settings;
+mod information;
 mod personal_history;
 mod snapshot_model;
 mod snapshot_page;
@@ -19,6 +20,9 @@ use crate::i18n::{tr, trf};
 use crate::signal_listener::SnapshotSignalMonitor;
 
 pub use snapshot_model::SnapshotScope;
+
+pub(super) const AUXILIARY_WINDOW_DEFAULT_WIDTH: i32 = 680;
+pub(super) const AUXILIARY_WINDOW_DEFAULT_HEIGHT: i32 = 900;
 
 pub fn show_personal_history_target(app: &SnapshotsManagerApplication, target: HistoryTarget) {
     personal_history::show_target(app.upcast_ref(), target);
@@ -94,6 +98,10 @@ impl MainWindow {
         advanced_settings::show(self.upcast_ref());
     }
 
+    pub fn show_information(&self) {
+        information::show(self.upcast_ref());
+    }
+
     fn setup_ui(&self, monitor: SnapshotSignalMonitor) {
         let pages = adw::ViewStack::new();
         pages.set_vexpand(true);
@@ -148,6 +156,7 @@ impl MainWindow {
         refresh.set_action_name(Some("win.refresh"));
         let menu_model = gio::Menu::new();
         menu_model.append(Some(&tr("Advanced Settings")), Some("app.preferences"));
+        menu_model.append(Some(&tr("Information")), Some("app.information"));
         menu_model.append(Some(&tr("About Disk Snapshots Manager")), Some("app.about"));
         let menu = gtk::MenuButton::builder()
             .icon_name("open-menu-symbolic")
@@ -371,5 +380,12 @@ mod tests {
         let (total, available) = probe_filesystem_space().unwrap();
         assert!(total > 0);
         assert!(available <= total);
+    }
+
+    #[test]
+    fn auxiliary_windows_use_a_tall_portrait_default_size() {
+        assert_eq!(AUXILIARY_WINDOW_DEFAULT_WIDTH, 680);
+        assert_eq!(AUXILIARY_WINDOW_DEFAULT_HEIGHT, 900);
+        assert!(AUXILIARY_WINDOW_DEFAULT_HEIGHT > AUXILIARY_WINDOW_DEFAULT_WIDTH);
     }
 }

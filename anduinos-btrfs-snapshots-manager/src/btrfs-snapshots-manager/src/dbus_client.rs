@@ -197,6 +197,82 @@ pub struct BtrfsDefragDetails {
     pub error: Option<String>,
 }
 
+#[derive(Debug, Clone, Default, serde::Deserialize)]
+pub struct SmartHealthStatus {
+    #[serde(default)]
+    pub available: bool,
+    #[serde(default)]
+    pub devices: Vec<SmartDiskHealth>,
+    #[serde(default)]
+    pub error: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, serde::Deserialize)]
+pub struct SmartDiskHealth {
+    #[serde(default)]
+    pub device: String,
+    #[serde(default)]
+    pub model: String,
+    #[serde(default)]
+    pub protocol: String,
+    #[serde(default)]
+    pub capacity_bytes: Option<u64>,
+    #[serde(default)]
+    pub smart_available: bool,
+    #[serde(default)]
+    pub smart_enabled: bool,
+    #[serde(default)]
+    pub assessment: String,
+    #[serde(default)]
+    pub rotation_rate_rpm: Option<u64>,
+    #[serde(default)]
+    pub temperature_celsius: Option<i64>,
+    #[serde(default)]
+    pub power_on_hours: Option<u64>,
+    #[serde(default)]
+    pub power_cycles: Option<u64>,
+    #[serde(default)]
+    pub lifetime_used_percent: Option<u64>,
+    #[serde(default)]
+    pub critical_warning: Option<u64>,
+    #[serde(default)]
+    pub available_spare_percent: Option<u64>,
+    #[serde(default)]
+    pub available_spare_threshold_percent: Option<u64>,
+    #[serde(default)]
+    pub bytes_read: Option<u64>,
+    #[serde(default)]
+    pub bytes_written: Option<u64>,
+    #[serde(default)]
+    pub unsafe_shutdowns: Option<u64>,
+    #[serde(default)]
+    pub error_log_entries: Option<u64>,
+    #[serde(default)]
+    pub warning_temperature_minutes: Option<u64>,
+    #[serde(default)]
+    pub critical_temperature_minutes: Option<u64>,
+    #[serde(default)]
+    pub reallocated_sectors: Option<u64>,
+    #[serde(default)]
+    pub pending_sectors: Option<u64>,
+    #[serde(default)]
+    pub offline_uncorrectable: Option<u64>,
+    #[serde(default)]
+    pub reported_uncorrectable: Option<u64>,
+    #[serde(default)]
+    pub interface_crc_errors: Option<u64>,
+    #[serde(default)]
+    pub spin_retry_count: Option<u64>,
+    #[serde(default)]
+    pub media_errors: Option<u64>,
+    #[serde(default)]
+    pub threshold_exceeded_in_past: bool,
+    #[serde(default)]
+    pub threshold_failing_now: bool,
+    #[serde(default)]
+    pub error: Option<String>,
+}
+
 /// Blocking D-Bus client for btrfs-snapshots-manager-helper privileged service
 ///
 /// Provides methods to create, delete, restore, and verify btrfs snapshots through
@@ -662,6 +738,14 @@ impl SnapshotsManagerHelperClient {
             .call("GetBtrfsFilesystemStatus", &())
             .context("Failed to query Btrfs filesystem status")?;
         serde_json::from_str(&json).context("Failed to parse Btrfs filesystem status")
+    }
+
+    pub fn get_smart_disk_health(&self) -> Result<SmartHealthStatus> {
+        let json: String = self
+            .proxy()?
+            .call("GetSmartDiskHealth", &())
+            .context("Failed to query S.M.A.R.T. disk health")?;
+        serde_json::from_str(&json).context("Failed to parse S.M.A.R.T. disk health")
     }
 
     pub fn run_btrfs_maintenance_action(&self, action: &str) -> Result<String> {

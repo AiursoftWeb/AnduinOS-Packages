@@ -1,9 +1,22 @@
 # AnduinOS Driver Center
 
 A focused GTK4/libadwaita application for inspecting, installing, and repairing
-hardware drivers. It replaces the only broadly useful part of
+hardware drivers and updating device firmware. It replaces the only broadly useful part of
 `software-properties-gtk` without inheriting Ubuntu's repository, update,
 authentication, and release-upgrade user interfaces.
+
+The responsive home page summarizes automatic driver recommendations and the
+health of graphics, audio, printing, Xbox controller, and Secure Boot support.
+It compares installed and candidate versions of the recommended graphics
+driver, can refresh package information, and exposes the equivalent of
+`ubuntu-drivers install` through the same restricted privileged helper used by
+the individual hardware pages.
+
+The firmware page uses the fwupd client API directly to list supported devices,
+refresh enabled metadata sources, inspect available releases, install one or
+all updates, report live progress and device requests, prompt for required
+restarts, and show the daemon's update history. Firmware authorization and
+signature verification remain owned by fwupd rather than the driver helper.
 
 The audio page reports the installed Intel SOF firmware and ALSA UCM packages,
 deployed support files, loaded SOF modules, and active PCI audio drivers.

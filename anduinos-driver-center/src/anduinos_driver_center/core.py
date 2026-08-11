@@ -82,6 +82,9 @@ class DriverOption:
     free: bool = False
     builtin: bool = False
     installed: bool = False
+    installed_version: str | None = None
+    candidate_version: str | None = None
+    update_available: bool = False
     active: bool = False
 
 
@@ -108,6 +111,16 @@ class HardwareDevice:
         if vendor and model and not model.lower().startswith(vendor.lower()):
             return f"{vendor} {model}"
         return model or vendor or "Graphics device"
+
+
+@dataclass(frozen=True)
+class GraphicsScan:
+    devices: tuple[HardwareDevice, ...] = field(default_factory=tuple)
+    error: str | None = None
+
+    @property
+    def successful(self) -> bool:
+        return self.error is None
 
 
 class XboxStatus(str, Enum):
@@ -217,6 +230,31 @@ def package_state(package: str, runner: Runner) -> PackageState:
     result = runner.run(["dpkg-query", "-W", "-f=${Version}", package])
     version = result.stdout.strip() if result.returncode == 0 else None
     return PackageState(package, True, version or None)
+
+
+def package_candidate_version(package: str, runner: Runner) -> str | None:
+    result = runner.run(["apt-cache", "policy", package])
+    if result.returncode != 0:
+        return None
+    for line in result.stdout.splitlines():
+        label, separator, value = line.strip().partition(":")
+        if separator and label == "Candidate":
+            candidate = value.strip()
+            return None if candidate == "(none)" else candidate or None
+    return None
+
+
+def package_update_available(
+    installed: str | None,
+    candidate: str | None,
+    runner: Runner,
+) -> bool:
+    if not installed or not candidate or installed == candidate:
+        return False
+    result = runner.run(
+        ["dpkg", "--compare-versions", installed, "lt", candidate]
+    )
+    return result.returncode == 0
 
 
 def _directory_contains_files(directory: Path, suffix: str | None = None) -> bool:
@@ -359,13 +397,23 @@ def _parse_driver_line(line: str, runner: Runner) -> DriverOption | None:
     if not separator or not re.fullmatch(r"[a-z0-9][a-z0-9+.-]+", package):
         return None
     words = set(flags.lower().split())
+    recommended = "recommended" in words
+    installed = package_state(package, runner)
+    candidate = (
+        package_candidate_version(package, runner) if recommended else None
+    )
     return DriverOption(
         package=package,
         description=flags,
-        recommended="recommended" in words,
+        recommended=recommended,
         free="free" in words and "non-free" not in words,
         builtin="builtin" in words,
-        installed=package_is_installed(package, runner),
+        installed=installed.installed,
+        installed_version=installed.version,
+        candidate_version=candidate,
+        update_available=package_update_available(
+            installed.version, candidate, runner
+        ),
     )
 
 
@@ -528,12 +576,22 @@ def parse_ubuntu_driver_devices(output: str, runner: Runner) -> list[HardwareDev
     return [device for device in devices if device.options]
 
 
-def graphics_devices(runner: Runner | None = None) -> list[HardwareDevice]:
+def graphics_scan(runner: Runner | None = None) -> GraphicsScan:
     runner = runner or SubprocessRunner()
     result = runner.run(["ubuntu-drivers", "devices"], timeout=30)
     if result.returncode != 0:
-        return []
-    return parse_ubuntu_driver_devices(result.stdout, runner)
+        detail = (result.stderr or result.stdout).strip()
+        return GraphicsScan(
+            error=detail or "ubuntu-drivers could not inspect this hardware"
+        )
+    return GraphicsScan(
+        devices=tuple(parse_ubuntu_driver_devices(result.stdout, runner))
+    )
+
+
+def graphics_devices(runner: Runner | None = None) -> list[HardwareDevice]:
+    """Compatibility wrapper for callers that only need successfully found devices."""
+    return list(graphics_scan(runner).devices)
 
 
 def xbox_state(
@@ -596,11 +654,20 @@ def dkms_state(
     return _inspect_dkms(secure_boot, runner, module_directory)
 
 
-def scan_system(runner: Runner | None = None) -> tuple[list[HardwareDevice], SecureBootState, XboxState, DkmsState, AudioState, PrintingState]:
+def scan_system(
+    runner: Runner | None = None,
+) -> tuple[
+    GraphicsScan,
+    SecureBootState,
+    XboxState,
+    DkmsState,
+    AudioState,
+    PrintingState,
+]:
     runner = runner or SubprocessRunner()
     secure_boot = secure_boot_state(runner)
     return (
-        graphics_devices(runner),
+        graphics_scan(runner),
         secure_boot,
         xbox_state(secure_boot, runner),
         dkms_state(secure_boot, runner),

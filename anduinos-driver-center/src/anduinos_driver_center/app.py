@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import subprocess
 import threading
+import time
 from typing import Callable
 
 import gi
@@ -15,7 +16,23 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
-from .core import AudioState, DkmsState, HardwareDevice, PackageState, PrintingState, SecureBootState, XboxState, XboxStatus, scan_system
+from .core import (
+    AudioState,
+    DkmsState,
+    GraphicsScan,
+    HardwareDevice,
+    PackageState,
+    PrintingState,
+    SecureBootState,
+    XboxState,
+    XboxStatus,
+    scan_system,
+)
+from .firmware import (
+    FirmwareDevice,
+    FirmwareManager,
+    FirmwareSnapshot,
+)
 
 try:
     from anduinos_secureboot.ui import create_secure_boot_page
@@ -28,6 +45,19 @@ except ModuleNotFoundError:
 
 APP_ID = "com.anduinos.DriverCenter"
 HELPER = "/usr/libexec/anduinos-driver-center/driver-helper"
+HELPER_SUCCESS_MESSAGE = "Driver operation completed successfully."
+
+
+def _command_output_summary(output: str, marker: str) -> str | None:
+    """Return the last output line emitted by one command in the helper log."""
+    lines = [line.strip() for line in output.splitlines() if line.strip()]
+    marker_indexes = [index for index, line in enumerate(lines) if line == marker]
+    if not marker_indexes:
+        return None
+    command_output = lines[marker_indexes[-1] + 1:]
+    if command_output and command_output[-1] == HELPER_SUCCESS_MESSAGE:
+        command_output.pop()
+    return command_output[-1] if command_output else None
 LOCALE_DIR = "/usr/share/locale"
 gettext.bindtextdomain("anduinos-driver-center", LOCALE_DIR)
 gettext.textdomain("anduinos-driver-center")
@@ -69,20 +99,40 @@ def _illustration(name: str) -> Gtk.Picture:
     return picture
 
 
+def _large_app_icon(width: int = 260, height: int = 180) -> Gtk.Image:
+    icon = Gtk.Image.new_from_icon_name(APP_ID)
+    icon.set_pixel_size(144)
+    icon.set_size_request(width, height)
+    icon.set_halign(Gtk.Align.CENTER)
+    icon.set_valign(Gtk.Align.CENTER)
+    return icon
+
+
 class DriverCenterWindow(Adw.ApplicationWindow):
     def __init__(self, app: Adw.Application):
         super().__init__(application=app, title=_("AnduinOS Driver Center"))
-        self.set_default_size(900, 620)
-        self.set_size_request(720, 500)
+        self.set_default_size(1000, 700)
+        self.set_size_request(720, 520)
         self._graphics: list[HardwareDevice] = []
         self._secure_boot: SecureBootState | None = None
         self._xbox: XboxState | None = None
         self._dkms: DkmsState | None = None
         self._audio: AudioState | None = None
         self._printing: PrintingState | None = None
+        self._graphics_scan = GraphicsScan()
         self._selected_package: str | None = None
-        self._selected_page_name: str | None = None
+        self._selected_page_name: str | None = "home"
         self._rebuilding_navigation = False
+        self._firmware_row: Gtk.ListBoxRow | None = None
+        self._firmware_progress: Gtk.ProgressBar | None = None
+        self._firmware_progress_label: Gtk.Label | None = None
+        self._firmware_request_label: Gtk.Label | None = None
+        self._firmware_manager = FirmwareManager(
+            self._firmware_state_changed,
+            self._firmware_progress_changed,
+            self._firmware_operation_done,
+            self._firmware_request_received,
+        )
 
         css = Gtk.CssProvider()
         css.load_from_data(
@@ -103,6 +153,23 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             .installed-pill {
                 color: @window_fg_color;
                 background-color: alpha(@window_fg_color, 0.10);
+            }
+            .success-pill {
+                color: @success_color;
+                background-color: alpha(@success_color, 0.14);
+            }
+            .warning-pill {
+                color: @warning_color;
+                background-color: alpha(@warning_color, 0.14);
+            }
+            .overview-card {
+                padding: 0;
+            }
+            .overview-card:hover {
+                background-color: alpha(@accent_color, 0.10);
+            }
+            .hero-card {
+                padding: 0;
             }
             list.navigation-list {
                 background: transparent;
@@ -132,9 +199,39 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             self.get_display(), css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
-        toolbar = Adw.ToolbarView()
+        self.split = Adw.OverlaySplitView()
+        self.split.set_min_sidebar_width(220)
+        self.split.set_max_sidebar_width(290)
+        self.split.set_sidebar_width_fraction(0.28)
+        self.set_content(self.split)
+
+        sidebar_header = Adw.HeaderBar()
+        sidebar_header.set_show_end_title_buttons(False)
+        sidebar_header.set_title_widget(
+            Adw.WindowTitle.new(_("AnduinOS Driver Center"), "AnduinOS")
+        )
+        sidebar_toolbar = Adw.ToolbarView()
+        sidebar_toolbar.add_top_bar(sidebar_header)
+
+        self.sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.sidebar.set_margin_top(12)
+        self.sidebar.set_margin_bottom(12)
+        self.sidebar.set_margin_start(12)
+        self.sidebar.set_margin_end(12)
+        self.device_list = Gtk.ListBox(selection_mode=Gtk.SelectionMode.SINGLE)
+        self.device_list.add_css_class("navigation-list")
+        self.device_list.connect("row-selected", self._row_selected)
+        self.sidebar.append(self.device_list)
+        sidebar_toolbar.set_content(self.sidebar)
+        self.split.set_sidebar(sidebar_toolbar)
+
+        content_toolbar = Adw.ToolbarView()
         header = Adw.HeaderBar()
-        self.refresh_button = Gtk.Button(icon_name="view-refresh-symbolic", tooltip_text=_("Scan again"))
+        self.page_title = Adw.WindowTitle.new(_("Home"), "")
+        header.set_title_widget(self.page_title)
+        self.refresh_button = Gtk.Button(
+            icon_name="view-refresh-symbolic", tooltip_text=_("Scan again")
+        )
         self.refresh_button.connect("clicked", lambda _button: self.refresh())
         header.pack_end(self.refresh_button)
         menu = Gio.Menu()
@@ -143,34 +240,36 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         menu_button.set_tooltip_text(_("Main Menu"))
         menu_button.set_menu_model(menu)
         header.pack_end(menu_button)
-        toolbar.add_top_bar(header)
-
-        self.split = Adw.OverlaySplitView()
-        self.split.set_min_sidebar_width(260)
-        self.split.set_max_sidebar_width(330)
-        self.split.set_sidebar_width_fraction(0.32)
-        toolbar.set_content(self.split)
-        self.set_content(toolbar)
-
-        self.sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        self.sidebar.set_margin_top(18)
-        self.sidebar.set_margin_bottom(18)
-        self.sidebar.set_margin_start(12)
-        self.sidebar.set_margin_end(12)
-        title = Gtk.Label(label=_("Hardware"), xalign=0)
-        title.add_css_class("title-3")
-        self.sidebar.append(title)
-        self.device_list = Gtk.ListBox(selection_mode=Gtk.SelectionMode.SINGLE)
-        self.device_list.add_css_class("navigation-list")
-        self.device_list.connect("row-selected", self._row_selected)
-        self.sidebar.append(self.device_list)
-        self.split.set_sidebar(self.sidebar)
+        self.sidebar_toggle = Gtk.ToggleButton(icon_name="sidebar-show-symbolic")
+        self.sidebar_toggle.connect(
+            "toggled",
+            lambda button: self.split.set_show_sidebar(button.get_active()),
+        )
+        header.pack_start(self.sidebar_toggle)
+        content_toolbar.add_top_bar(header)
 
         self.stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
         self.stack.set_vexpand(True)
-        self.split.set_content(self.stack)
+        content_toolbar.set_content(self.stack)
+        self.split.set_content(content_toolbar)
+        self.split.connect("notify::show-sidebar", self._sync_sidebar_controls)
+        self.split.connect("notify::collapsed", self._sync_sidebar_controls)
+        self._sync_sidebar_controls()
+
+        compact = Adw.Breakpoint.new(
+            Adw.BreakpointCondition.parse("max-width: 700px")
+        )
+        compact.add_setter(self.split, "collapsed", True)
+        compact.add_setter(self.split, "show-sidebar", False)
+        self.add_breakpoint(compact)
         self._show_loading()
         self.refresh()
+        self._firmware_manager.start()
+
+    def _sync_sidebar_controls(self, *_args) -> None:
+        self.sidebar_toggle.set_visible(self.split.get_collapsed())
+        if self.sidebar_toggle.get_active() != self.split.get_show_sidebar():
+            self.sidebar_toggle.set_active(self.split.get_show_sidebar())
 
     def _clear(self, widget: Gtk.Widget) -> None:
         child = widget.get_first_child()
@@ -181,7 +280,11 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
     def _show_loading(self) -> None:
         self._clear(self.stack)
-        status = Adw.StatusPage(title=_("Scanning for drivers"), description=_("Checking hardware and Secure Boot status…"))
+        self.page_title.set_title(_("AnduinOS Driver Center"))
+        status = Adw.StatusPage(
+            title=_("Scanning for drivers"),
+            description=_("Checking hardware and Secure Boot status…"),
+        )
         spinner = Gtk.Spinner(spinning=True)
         spinner.set_size_request(48, 48)
         status.set_child(spinner)
@@ -190,6 +293,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
     def refresh(self) -> None:
         self.refresh_button.set_sensitive(False)
+        self.device_list.set_sensitive(False)
         self._rebuilding_navigation = True
         self._show_loading()
 
@@ -199,17 +303,43 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
         threading.Thread(target=worker, daemon=True).start()
 
-    def _apply_scan(self, graphics: list[HardwareDevice], secure_boot: SecureBootState, xbox: XboxState, dkms: DkmsState, audio: AudioState, printing: PrintingState) -> bool:
-        self._graphics, self._secure_boot, self._xbox, self._dkms, self._audio, self._printing = graphics, secure_boot, xbox, dkms, audio, printing
+    def _apply_scan(
+        self,
+        graphics_scan: GraphicsScan,
+        secure_boot: SecureBootState,
+        xbox: XboxState,
+        dkms: DkmsState,
+        audio: AudioState,
+        printing: PrintingState,
+    ) -> bool:
+        graphics = list(graphics_scan.devices)
+        self._graphics_scan = graphics_scan
+        self._graphics = graphics
+        self._secure_boot = secure_boot
+        self._xbox = xbox
+        self._dkms = dkms
+        self._audio = audio
+        self._printing = printing
         self.refresh_button.set_sensitive(True)
+        self.device_list.set_sensitive(True)
         self._clear(self.device_list)
         self._clear(self.stack)
+
+        home_row = self._device_row("go-home-symbolic", _("Home"), _("System status"))
+        home_row.page_name = "home"
+        home_row.page_title = _("Home")
+        self.device_list.append(home_row)
+        self.stack.add_named(
+            self._home_page(graphics_scan, secure_boot, xbox, audio, printing),
+            "home",
+        )
 
         for index, device in enumerate(graphics):
             label = device.title
             subtitle = device.vendor
             row = self._device_row("video-display-symbolic", label, subtitle)
             row.page_name = f"graphics-{index}"
+            row.page_title = device.title
             self.device_list.append(row)
             self.stack.add_named(self._graphics_page(device, secure_boot), row.page_name)
 
@@ -218,6 +348,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             _("Audio support ready") if audio.ready else _("Support needs attention"),
         )
         audio_row.page_name = "audio"
+        audio_row.page_title = _("Audio")
         self.device_list.append(audio_row)
         self.stack.add_named(self._audio_page(audio), "audio")
 
@@ -244,6 +375,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             "printer-symbolic", _("Printers"), printing_subtitle
         )
         printing_row.page_name = "printing"
+        printing_row.page_title = _("Printers")
         self.device_list.append(printing_row)
         self.stack.add_named(self._printing_page(printing), "printing")
 
@@ -260,6 +392,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             ),
         )
         xbox_row.page_name = "xbox"
+        xbox_row.page_title = _("Xbox Controller")
         self.device_list.append(xbox_row)
         self.stack.add_named(self._xbox_page(xbox, secure_boot), "xbox")
 
@@ -272,8 +405,21 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 _("Trust established") if secure_boot.ready else _("Action required"),
             )
             secure_row.page_name = "secure-boot"
+            secure_row.page_title = _("Secure Boot")
             self.device_list.append(secure_row)
             self.stack.add_named(self._secure_boot_page(secure_boot, dkms), "secure-boot")
+
+        firmware_snapshot = self._firmware_manager.snapshot
+        firmware_row = self._device_row(
+            "application-x-firmware-symbolic",
+            _("Device Firmware"),
+            self._firmware_navigation_summary(firmware_snapshot),
+        )
+        firmware_row.page_name = "firmware"
+        firmware_row.page_title = _("Device Firmware")
+        self._firmware_row = firmware_row
+        self.device_list.append(firmware_row)
+        self.stack.add_named(self._firmware_page(firmware_snapshot), "firmware")
 
         selected = None
         row = self.device_list.get_row_at_index(0)
@@ -303,6 +449,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         labels.append(name); labels.append(detail)
         box.append(icon); box.append(labels)
         row.set_child(box)
+        row.subtitle_label = detail
         return row
 
     def _row_selected(self, _list: Gtk.ListBox, row: Gtk.ListBoxRow | None) -> None:
@@ -311,6 +458,9 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         if row and hasattr(row, "page_name"):
             self._selected_page_name = row.page_name
             self.stack.set_visible_child_name(row.page_name)
+            self.page_title.set_title(getattr(row, "page_title", row.page_name))
+            if self.split.get_collapsed():
+                self.split.set_show_sidebar(False)
 
     def _select_page(self, page_name: str) -> None:
         row = self.device_list.get_row_at_index(0)
@@ -319,6 +469,212 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 self.device_list.select_row(row)
                 return
             row = self.device_list.get_row_at_index(row.get_index() + 1)
+
+    def _replace_stack_page(self, name: str, page: Gtk.Widget) -> None:
+        old_page = self.stack.get_child_by_name(name)
+        if old_page is None:
+            return
+        was_visible = self.stack.get_visible_child_name() == name
+        self.stack.remove(old_page)
+        self.stack.add_named(page, name)
+        if was_visible:
+            self.stack.set_visible_child_name(name)
+
+    def _firmware_navigation_summary(self, state: FirmwareSnapshot) -> str:
+        if state.loading and not state.devices:
+            return _("Checking for updates…")
+        if state.error:
+            return _("Support needs attention")
+        if state.shutdown_required:
+            return _("Shutdown Required")
+        if state.restart_required:
+            return _("Reboot Required")
+        update_count = len(state.updates)
+        if update_count:
+            return gettext.ngettext(
+                "%d firmware update available",
+                "%d firmware updates available",
+                update_count,
+            ) % update_count
+        if not state.devices:
+            return _("No supported devices")
+        return _("Firmware is up to date")
+
+    def _firmware_card_state(
+        self, state: FirmwareSnapshot
+    ) -> tuple[str, str, str]:
+        if state.loading and not state.devices:
+            return _("Checking…"), _("Contacting the firmware service"), "installed-pill"
+        if state.error:
+            return _("Needs attention"), state.error, "warning-pill"
+        if state.shutdown_required:
+            return _("Shutdown Required"), _("Shutdown required after installation"), "warning-pill"
+        if state.restart_required:
+            return _("Reboot Required"), _("Restart to finish the firmware update"), "warning-pill"
+        update_count = len(state.updates)
+        if update_count:
+            subtitle = gettext.ngettext(
+                "%d firmware update available",
+                "%d firmware updates available",
+                update_count,
+            ) % update_count
+            return _("Update available"), subtitle, "recommended-pill"
+        if not state.devices:
+            return _("Not detected"), _("No supported firmware devices"), "installed-pill"
+        device_count = len(state.devices)
+        subtitle = gettext.ngettext(
+            "%d device is up to date",
+            "%d devices are up to date",
+            device_count,
+        ) % device_count
+        return _("Ready"), subtitle, "success-pill"
+
+    def _firmware_state_changed(self, state: FirmwareSnapshot) -> None:
+        if self._firmware_row is not None:
+            self._firmware_row.subtitle_label.set_label(
+                self._firmware_navigation_summary(state)
+            )
+        if self.stack.get_child_by_name("firmware") is not None:
+            self._replace_stack_page("firmware", self._firmware_page(state))
+        if (
+            self.stack.get_child_by_name("home") is not None
+            and self._secure_boot is not None
+            and self._xbox is not None
+            and self._audio is not None
+            and self._printing is not None
+        ):
+            self._replace_stack_page(
+                "home",
+                self._home_page(
+                    self._graphics_scan,
+                    self._secure_boot,
+                    self._xbox,
+                    self._audio,
+                    self._printing,
+                ),
+            )
+
+    def _firmware_progress_changed(self, status: int, percentage: int) -> None:
+        status_messages = {
+            7: _("Scheduling firmware update…"),
+            8: _("Downloading firmware…"),
+            5: _("Installing firmware…"),
+            6: _("Verifying firmware…"),
+            11: _("Waiting for authentication…"),
+            14: _("Waiting for user action…"),
+        }
+        if self._firmware_progress_label is not None:
+            self._firmware_progress_label.set_label(
+                status_messages.get(status, _("Updating firmware…"))
+            )
+        if self._firmware_progress is not None:
+            self._firmware_progress.set_fraction(max(0, min(percentage, 100)) / 100)
+            self._firmware_progress.set_text(f"{percentage}%")
+
+    def _firmware_request_received(self, message: str) -> None:
+        if self._firmware_request_label is not None:
+            self._firmware_request_label.set_label(message)
+            self._firmware_request_label.set_visible(True)
+        self._toast(message)
+
+    def _firmware_operation_done(
+        self,
+        action: str,
+        success: bool,
+        message: str | None,
+        restart_required: bool,
+        shutdown_required: bool,
+    ) -> None:
+        if not success:
+            body = message or _("unknown error")
+            if action == "update" and (restart_required or shutdown_required):
+                body += "\n\n" + (
+                    _("Shutdown required after installation")
+                    if shutdown_required
+                    else _("Restart required after installation")
+                )
+            dialog = Adw.MessageDialog(
+                transient_for=self,
+                heading=_("Firmware operation failed"),
+                body=body,
+            )
+            dialog.add_response("ok", _("OK"))
+            if action == "update" and (restart_required or shutdown_required):
+                dialog.connect(
+                    "response",
+                    lambda *_args: self._firmware_restart_dialog(
+                        shutdown_required
+                    ),
+                )
+            dialog.present()
+            return
+        if action == "refresh":
+            self._toast(_("Firmware metadata refreshed."))
+            return
+        if action == "check":
+            update_count = len(self._firmware_manager.snapshot.updates)
+            self._toast(
+                gettext.ngettext(
+                    "%d firmware update available",
+                    "%d firmware updates available",
+                    update_count,
+                ) % update_count
+                if update_count
+                else _("No firmware updates are available.")
+            )
+            return
+        if action == "update" and (restart_required or shutdown_required):
+            self._firmware_restart_dialog(shutdown_required)
+            return
+        if action == "update":
+            self._toast(_("Firmware update completed."))
+
+    def _firmware_restart_dialog(self, shutdown_required: bool) -> None:
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Shutdown Required") if shutdown_required else _("Restart Required"),
+            body=(
+                _(
+                    "The firmware update has been prepared. Save your work and shut "
+                    "down the computer to finish installing it."
+                )
+                if shutdown_required
+                else _(
+                    "The firmware update has been prepared. Save your work and restart "
+                    "the computer to finish installing it."
+                )
+            ),
+        )
+        dialog.add_response("later", _("Later"))
+        dialog.add_response(
+            "restart",
+            _("Shut Down Now") if shutdown_required else _("Restart Now"),
+        )
+        dialog.set_default_response("later")
+        dialog.set_response_appearance("restart", Adw.ResponseAppearance.SUGGESTED)
+        dialog.connect(
+            "response",
+            lambda _dialog, response: self._firmware_power_action(shutdown_required)
+            if response == "restart"
+            else None,
+        )
+        dialog.present()
+
+    def _firmware_power_action(self, shutdown_required: bool) -> None:
+        try:
+            process = Gio.Subprocess.new(
+                ["systemctl", "poweroff" if shutdown_required else "reboot"],
+                Gio.SubprocessFlags.NONE,
+            )
+            process.wait_check_async(None, self._firmware_power_action_done)
+        except GLib.Error as error:
+            self._toast(_("Firmware operation failed") + ": " + str(error))
+
+    def _firmware_power_action_done(self, process, result) -> None:
+        try:
+            process.wait_check_finish(result)
+        except GLib.Error as error:
+            self._toast(_("Firmware operation failed") + ": " + str(error))
 
     def _page_shell(
         self, title: str, description: str, illustration: str | None = None
@@ -344,6 +700,845 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         content.append(hero)
         clamp.set_child(content); scroll.set_child(clamp)
         return scroll, content
+
+    @staticmethod
+    def _recommended_driver(device: HardwareDevice):
+        return next((option for option in device.options if option.recommended), None)
+
+    def _home_page(
+        self,
+        graphics_scan: GraphicsScan,
+        secure_boot: SecureBootState,
+        xbox: XboxState,
+        audio: AudioState,
+        printing: PrintingState,
+    ) -> Gtk.Widget:
+        scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
+        content.set_margin_top(24)
+        content.set_margin_bottom(32)
+        content.set_margin_start(24)
+        content.set_margin_end(24)
+        clamp = Adw.Clamp(maximum_size=980, tightening_threshold=760)
+        clamp.set_child(content)
+        scroll.set_child(clamp)
+
+        recommendations = [
+            (device, option)
+            for device in graphics_scan.devices
+            if (option := self._recommended_driver(device)) is not None
+        ]
+        missing = [item for item in recommendations if not item[1].installed]
+        updates = [item for item in recommendations if item[1].update_available]
+        waiting_for_restart = [
+            item
+            for item in recommendations
+            if item[1].installed
+            and not item[1].update_available
+            and not item[1].active
+            and item[0].driver_state_known
+            and not (
+                item[0].active_driver
+                and item[0].active_driver.lower().replace("_", "-").startswith("nvidia")
+            )
+        ]
+        unhealthy = [
+            device
+            for device in graphics_scan.devices
+            if device.active_driver_healthy is False
+        ]
+
+        def graphics_page_name(device: HardwareDevice) -> str:
+            return f"graphics-{graphics_scan.devices.index(device)}"
+
+        def version_summary(option) -> str:
+            details = [option.package]
+            if option.installed_version:
+                details.append(f'{_("Installed")}: {option.installed_version}')
+            if option.candidate_version:
+                details.append(f'{_("Available")}: {option.candidate_version}')
+            return " · ".join(details)
+
+        hero = Gtk.FlowBox(
+            selection_mode=Gtk.SelectionMode.NONE,
+            max_children_per_line=2,
+            min_children_per_line=1,
+            column_spacing=24,
+            row_spacing=12,
+            homogeneous=False,
+        )
+        hero.add_css_class("card")
+        hero.add_css_class("hero-card")
+        artwork = _large_app_icon()
+        artwork.set_margin_start(20)
+        artwork.set_margin_end(20)
+        artwork.set_margin_top(12)
+        artwork.set_margin_bottom(12)
+        hero.insert(artwork, -1)
+
+        details = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        details.set_margin_start(20)
+        details.set_margin_end(28)
+        details.set_margin_top(28)
+        details.set_margin_bottom(28)
+        details.set_valign(Gtk.Align.CENTER)
+        details.set_hexpand(True)
+
+        action: Gtk.Button | None = None
+        if graphics_scan.error:
+            badge_text = _("Action required")
+            badge_class = "warning-pill"
+            title = _("Driver status")
+            description = _("Driver operation failed: ") + graphics_scan.error
+            action = Gtk.Button(label=_("Scan again"))
+            action.connect("clicked", lambda _button: self.refresh())
+        elif (missing or updates) and not secure_boot.ready:
+            badge_text = _("Action required")
+            badge_class = "warning-pill"
+            title = _("Secure Boot")
+            description = _(
+                "Secure Boot status or trust must be resolved before installing a third-party driver."
+            )
+            action = Gtk.Button(label=_("Secure Boot"))
+            action.connect("clicked", lambda _button: self._select_page("secure-boot"))
+        elif missing:
+            badge_text = _("Recommended")
+            badge_class = "recommended-pill"
+            title = missing[0][0].title
+            description = _(
+                "Choose the driver used by this device. AnduinOS marks the hardware-tested recommendation."
+            )
+            action = Gtk.Button(label=_("Apply Changes"))
+            action.add_css_class("suggested-action")
+            action.add_css_class("pill")
+            action.connect(
+                "clicked",
+                lambda button: self._confirm_recommended_install(button),
+            )
+        elif updates:
+            badge_text = _("Update available")
+            badge_class = "recommended-pill"
+            title = updates[0][0].title
+            description = version_summary(updates[0][1])
+            action = Gtk.Button(label=_("Apply Changes"))
+            action.add_css_class("suggested-action")
+            action.add_css_class("pill")
+            action.connect(
+                "clicked",
+                lambda button: self._confirm_recommended_install(button),
+            )
+        elif waiting_for_restart:
+            badge_text = _("Reboot Required")
+            badge_class = "warning-pill"
+            title = waiting_for_restart[0][0].title
+            description = _("Driver changes completed. Restart may be required.")
+        elif unhealthy:
+            badge_text = _("Support needs attention")
+            badge_class = "warning-pill"
+            title = unhealthy[0].title
+            description = unhealthy[0].active_driver_error or _("Support needs attention")
+            action = Gtk.Button(label=_("Available drivers"))
+            target = graphics_page_name(unhealthy[0])
+            action.connect("clicked", lambda _button: self._select_page(target))
+        else:
+            badge_text = _("Ready")
+            badge_class = "success-pill"
+            title = (
+                graphics_scan.devices[0].title
+                if graphics_scan.devices
+                else _("Driver status")
+            )
+            description = _("No additional drivers are needed.")
+
+        badge = _pill(badge_text, badge_class)
+        badge.set_halign(Gtk.Align.START)
+        details.append(badge)
+        heading = Gtk.Label(label=title, xalign=0, wrap=True)
+        heading.add_css_class("title-1")
+        details.append(heading)
+        intro = Gtk.Label(label=description, xalign=0, wrap=True)
+        intro.add_css_class("dim-label")
+        details.append(intro)
+        if action:
+            action.set_halign(Gtk.Align.START)
+            action.set_margin_top(8)
+            details.append(action)
+        hero.insert(details, -1)
+        content.append(hero)
+
+        section_title = Gtk.Label(label=_("System status"), xalign=0)
+        section_title.add_css_class("title-2")
+        content.append(section_title)
+
+        cards = Gtk.FlowBox(
+            selection_mode=Gtk.SelectionMode.NONE,
+            max_children_per_line=2,
+            min_children_per_line=1,
+            column_spacing=16,
+            row_spacing=16,
+            homogeneous=True,
+        )
+
+        if graphics_scan.error:
+            graphics_state = _("Action required")
+            graphics_subtitle = _("Not detected")
+            graphics_class = "warning-pill"
+            graphics_target = None
+        elif missing:
+            graphics_state = _("Recommended")
+            graphics_subtitle = missing[0][0].title
+            graphics_class = "recommended-pill"
+            graphics_target = graphics_page_name(missing[0][0])
+        elif updates:
+            graphics_state = _("Update available")
+            graphics_subtitle = version_summary(updates[0][1])
+            graphics_class = "recommended-pill"
+            graphics_target = graphics_page_name(updates[0][0])
+        elif waiting_for_restart:
+            graphics_state = _("Reboot Required")
+            graphics_subtitle = waiting_for_restart[0][0].title
+            graphics_class = "warning-pill"
+            graphics_target = graphics_page_name(waiting_for_restart[0][0])
+        elif unhealthy:
+            graphics_state = _("Support needs attention")
+            graphics_subtitle = unhealthy[0].title
+            graphics_class = "warning-pill"
+            graphics_target = graphics_page_name(unhealthy[0])
+        else:
+            graphics_state = _("Ready")
+            graphics_subtitle = (
+                graphics_scan.devices[0].title
+                if graphics_scan.devices
+                else _("No additional drivers are needed.")
+            )
+            graphics_class = "success-pill"
+            graphics_target = "graphics-0" if graphics_scan.devices else None
+        cards.insert(
+            self._overview_card(
+                "video-display-symbolic",
+                _("Available drivers"),
+                graphics_state,
+                graphics_subtitle,
+                graphics_class,
+                graphics_target,
+            ),
+            -1,
+        )
+
+        cards.insert(
+            self._overview_card(
+                "audio-card-symbolic",
+                _("Audio Support"),
+                _("Ready") if audio.ready else _("Needs attention"),
+                _("Audio support ready") if audio.ready else _("Support needs attention"),
+                "success-pill" if audio.ready else "warning-pill",
+                "audio",
+            ),
+            -1,
+        )
+
+        printing_ready = (
+            printing.service_running
+            and not printing.missing_required_packages
+            and not printing.disabled_printers
+        )
+        if not printing.startup_enabled:
+            printing_state = _("Disabled")
+            printing_subtitle = _("Printing support disabled.")
+            printing_class = "installed-pill"
+        elif printing_ready:
+            printing_state = _("Ready")
+            printing_subtitle = (
+                gettext.ngettext(
+                    "%d printer configured",
+                    "%d printers configured",
+                    len(printing.printers),
+                ) % len(printing.printers)
+                if printing.printers
+                else _("No printers configured")
+            )
+            printing_class = "success-pill"
+        else:
+            printing_state = _("Needs attention")
+            printing_subtitle = _("Support needs attention")
+            printing_class = "warning-pill"
+        cards.insert(
+            self._overview_card(
+                "printer-symbolic",
+                _("Printing Support"),
+                printing_state,
+                printing_subtitle,
+                printing_class,
+                "printing",
+            ),
+            -1,
+        )
+
+        xbox_ready = xbox.status in {XboxStatus.LOADED, XboxStatus.READY}
+        xbox_optional = xbox.status is XboxStatus.NOT_INSTALLED
+        cards.insert(
+            self._overview_card(
+                "input-gaming-symbolic",
+                _("Xbox Controller Support"),
+                _("Ready") if xbox_ready else (
+                    _("Not installed") if xbox_optional else _("Needs attention")
+                ),
+                _("xpadneo installed") if xbox_ready else (
+                    _("Optional Bluetooth driver") if xbox_optional
+                    else _("Support needs attention")
+                ),
+                "success-pill" if xbox_ready else (
+                    "installed-pill" if xbox_optional else "warning-pill"
+                ),
+                "xbox",
+            ),
+            -1,
+        )
+
+        if not secure_boot.enforcement_inactive:
+            cards.insert(
+                self._overview_card(
+                    "security-high-symbolic",
+                    _("Secure Boot"),
+                    _("Trusted") if secure_boot.ready else _("Action required"),
+                    _("Trust established") if secure_boot.ready else _("Support needs attention"),
+                    "success-pill" if secure_boot.ready else "warning-pill",
+                    "secure-boot",
+                ),
+                -1,
+            )
+        firmware_state, firmware_subtitle, firmware_class = (
+            self._firmware_card_state(self._firmware_manager.snapshot)
+        )
+        cards.insert(
+            self._overview_card(
+                "application-x-firmware-symbolic",
+                _("Device Firmware"),
+                firmware_state,
+                firmware_subtitle,
+                firmware_class,
+                "firmware",
+            ),
+            -1,
+        )
+        content.append(cards)
+
+        if recommendations:
+            group = Adw.PreferencesGroup(title=_("Available drivers"))
+            for device, option in recommendations:
+                row = Adw.ActionRow(
+                    title=device.title,
+                    subtitle=version_summary(option),
+                )
+                icon = Gtk.Image.new_from_icon_name("video-display-symbolic")
+                icon.set_pixel_size(24)
+                row.add_prefix(icon)
+                if not option.installed:
+                    state = _("Recommended")
+                    state_class = "recommended-pill"
+                elif option.update_available:
+                    state = _("Update available")
+                    state_class = "recommended-pill"
+                elif (device, option) in waiting_for_restart:
+                    state = _("Reboot Required")
+                    state_class = "warning-pill"
+                else:
+                    state = _("Ready")
+                    state_class = "success-pill"
+                row.add_suffix(
+                    _pill(state, state_class)
+                )
+                group.add(row)
+            content.append(group)
+
+        actions = Adw.PreferencesGroup(title=_("Driver status"))
+        refresh_row = Adw.ActionRow(
+            title=_("Check for Driver Updates"),
+            subtitle=_(
+                "Refresh software sources and compare the recommended driver version."
+            ),
+        )
+        refresh_icon = Gtk.Image.new_from_icon_name("view-refresh-symbolic")
+        refresh_icon.set_pixel_size(24)
+        refresh_row.add_prefix(refresh_icon)
+        refresh_button = Gtk.Button(label=_("Scan again"), valign=Gtk.Align.CENTER)
+        refresh_button.connect(
+            "clicked",
+            lambda button: self._run_action(
+                button,
+                ["refresh-driver-info"],
+                success_message=_("Driver information updated."),
+            ),
+        )
+        refresh_row.add_suffix(refresh_button)
+        actions.add(refresh_row)
+
+        install_row = Adw.ActionRow(
+            title="ubuntu-drivers install",
+            subtitle=_(
+                "AnduinOS will update software sources and install the drivers "
+                "recommended for this hardware."
+            ),
+        )
+        install_icon = Gtk.Image.new_from_icon_name("system-run-symbolic")
+        install_icon.set_pixel_size(24)
+        install_row.add_prefix(install_icon)
+        if secure_boot.ready:
+            install_button = Gtk.Button(
+                label=_("Apply Changes"), valign=Gtk.Align.CENTER
+            )
+            install_button.add_css_class("suggested-action")
+            install_button.connect(
+                "clicked", self._confirm_recommended_install
+            )
+        else:
+            install_button = Gtk.Button(
+                label=_("Secure Boot"), valign=Gtk.Align.CENTER
+            )
+            install_button.connect(
+                "clicked", lambda _button: self._select_page("secure-boot")
+            )
+        install_row.add_suffix(install_button)
+        actions.add(install_row)
+        content.append(actions)
+
+        return scroll
+
+    def _overview_card(
+        self,
+        icon_name: str,
+        title: str,
+        state: str,
+        subtitle: str,
+        state_class: str,
+        target: str | None,
+    ) -> Gtk.Widget:
+        content = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=14)
+        content.set_margin_start(18)
+        content.set_margin_end(18)
+        content.set_margin_top(16)
+        content.set_margin_bottom(16)
+        content.set_size_request(290, -1)
+        icon = Gtk.Image.new_from_icon_name(icon_name)
+        icon.set_pixel_size(28)
+        icon.set_valign(Gtk.Align.START)
+        icon.add_css_class("accent")
+        content.append(icon)
+
+        labels = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+        labels.set_hexpand(True)
+        title_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        heading = Gtk.Label(label=title, xalign=0, wrap=True)
+        heading.add_css_class("heading")
+        heading.set_hexpand(True)
+        title_row.append(heading)
+        title_row.append(_pill(state, state_class))
+        labels.append(title_row)
+        detail = Gtk.Label(label=subtitle, xalign=0, wrap=True)
+        detail.add_css_class("caption")
+        detail.add_css_class("dim-label")
+        labels.append(detail)
+        content.append(labels)
+
+        if target:
+            arrow = Gtk.Image.new_from_icon_name("go-next-symbolic")
+            arrow.add_css_class("dim-label")
+            content.append(arrow)
+            card = Gtk.Button(has_frame=False)
+            card.add_css_class("card")
+            card.add_css_class("overview-card")
+            card.set_hexpand(True)
+            card.set_child(content)
+            card.connect("clicked", lambda _button: self._select_page(target))
+            return card
+
+        card = Gtk.Box()
+        card.add_css_class("card")
+        card.set_hexpand(True)
+        card.append(content)
+        return card
+
+    def _firmware_page(self, state: FirmwareSnapshot) -> Gtk.Widget:
+        page, content = self._page_shell(
+            _("Device Firmware"),
+            _(
+                "Keep system firmware and supported hardware up to date through "
+                "the Linux Vendor Firmware Service."
+            ),
+        )
+        self._firmware_progress = None
+        self._firmware_progress_label = None
+        self._firmware_request_label = None
+
+        if state.error:
+            content.append(
+                self._warning_banner(
+                    _("Firmware operation failed: ") + state.error,
+                    _("Check Again"),
+                    self._firmware_manager.check_updates,
+                )
+            )
+
+        if state.busy or state.loading:
+            progress_group = Adw.PreferencesGroup(title=_("Firmware operation"))
+            progress_box = Gtk.Box(
+                orientation=Gtk.Orientation.VERTICAL,
+                spacing=8,
+            )
+            progress_box.set_margin_top(12)
+            progress_box.set_margin_bottom(12)
+            progress_box.set_margin_start(12)
+            progress_box.set_margin_end(12)
+            self._firmware_progress_label = Gtk.Label(
+                label=_("Checking for updates…"), xalign=0
+            )
+            self._firmware_progress = Gtk.ProgressBar(show_text=True)
+            self._firmware_request_label = Gtk.Label(
+                xalign=0, wrap=True, visible=False
+            )
+            self._firmware_request_label.add_css_class("warning")
+            progress_box.append(self._firmware_progress_label)
+            progress_box.append(self._firmware_progress)
+            progress_box.append(self._firmware_request_label)
+            progress_row = Adw.PreferencesRow()
+            progress_row.set_child(progress_box)
+            progress_group.add(progress_row)
+            content.append(progress_group)
+
+        overview = Adw.PreferencesGroup(title=_("System status"))
+        service_row = Adw.ActionRow(
+            title=_("Firmware service"),
+            subtitle=(
+                f'fwupd {state.daemon_version}'
+                if state.connected and state.daemon_version
+                else _("Not available")
+            ),
+        )
+        service_row.add_suffix(
+            _status_icon(
+                "emblem-ok-symbolic" if state.connected else "dialog-warning-symbolic",
+                "success" if state.connected else "warning",
+            )
+        )
+        overview.add(service_row)
+
+        checked = (
+            time.strftime("%Y-%m-%d %H:%M", time.localtime(state.last_refresh))
+            if state.last_refresh
+            else _("Not refreshed in this session")
+        )
+        checked_row = Adw.ActionRow(
+            title=_("Firmware metadata"), subtitle=checked
+        )
+        checked_row.add_suffix(
+            _status_icon("dialog-information-symbolic", "dim-label")
+        )
+        overview.add(checked_row)
+
+        device_count = len(state.devices)
+        devices_row = Adw.ActionRow(
+            title=_("Supported devices"),
+            subtitle=gettext.ngettext(
+                "%d device detected", "%d devices detected", device_count
+            ) % device_count,
+        )
+        devices_row.add_suffix(
+            _status_icon("dialog-information-symbolic", "dim-label")
+        )
+        overview.add(devices_row)
+
+        update_count = len(state.updates)
+        updates_row = Adw.ActionRow(
+            title=_("Available firmware updates"),
+            subtitle=gettext.ngettext(
+                "%d update available", "%d updates available", update_count
+            ) % update_count,
+        )
+        updates_row.add_suffix(
+            _pill(
+                _("Update available") if update_count else _("Ready"),
+                "recommended-pill" if update_count else "success-pill",
+            )
+        )
+        overview.add(updates_row)
+        content.append(overview)
+
+        actions = Adw.PreferencesGroup(title=_("Firmware actions"))
+        refresh_row = Adw.ActionRow(
+            title=_("Refresh Firmware Metadata"),
+            subtitle=_("Download the latest metadata from enabled firmware sources."),
+        )
+        refresh_button = Gtk.Button(
+            label=_("Refresh"), valign=Gtk.Align.CENTER
+        )
+        refresh_button.set_sensitive(state.connected and not state.busy)
+        refresh_button.connect(
+            "clicked", lambda _button: self._firmware_manager.refresh_metadata()
+        )
+        refresh_row.add_suffix(refresh_button)
+        actions.add(refresh_row)
+
+        check_row = Adw.ActionRow(
+            title=_("Check for Firmware Updates"),
+            subtitle=_("Compare connected devices with the available metadata."),
+        )
+        check_button = Gtk.Button(
+            label=_("Check Again"), valign=Gtk.Align.CENTER
+        )
+        check_button.set_sensitive(state.connected and not state.busy)
+        check_button.connect(
+            "clicked", lambda _button: self._firmware_manager.check_updates()
+        )
+        check_row.add_suffix(check_button)
+        actions.add(check_row)
+
+        if update_count:
+            update_all_row = Adw.ActionRow(
+                title=_("Update All Firmware"),
+                subtitle=gettext.ngettext(
+                    "Install %d available update.",
+                    "Install all %d available updates.",
+                    update_count,
+                ) % update_count,
+            )
+            update_all_button = Gtk.Button(
+                label=_("Update All"), valign=Gtk.Align.CENTER
+            )
+            update_all_button.add_css_class("suggested-action")
+            update_all_button.set_sensitive(not state.busy)
+            update_all_button.connect(
+                "clicked",
+                lambda _button: self._confirm_firmware_update(
+                    [device.device_id for device in state.updates]
+                ),
+            )
+            update_all_row.add_suffix(update_all_button)
+            actions.add(update_all_row)
+        content.append(actions)
+
+        devices = Adw.PreferencesGroup(
+            title=_("Firmware Devices"),
+            description=_(
+                "Expand a device to inspect installed and available firmware versions."
+            ),
+        )
+        if state.devices:
+            for device in state.devices:
+                devices.add(self._firmware_device_row(device, state.busy))
+        else:
+            devices.add(
+                Adw.ActionRow(
+                    title=_("No supported firmware devices"),
+                    subtitle=_("The firmware service did not report any manageable devices."),
+                )
+            )
+        content.append(devices)
+
+        history = Adw.PreferencesGroup(
+            title=_("Firmware Update History"),
+            description=_("Results reported by the fwupd service."),
+        )
+        if state.history:
+            for entry in state.history[:20]:
+                state_text, state_class = self._firmware_history_state(entry.state)
+                timestamp = (
+                    time.strftime("%Y-%m-%d %H:%M", time.localtime(entry.timestamp))
+                    if entry.timestamp
+                    else _("Unknown time")
+                )
+                details = [timestamp]
+                if entry.version:
+                    details.append(f'{_("Installed")}: {entry.version}')
+                if entry.error:
+                    details.append(entry.error)
+                row = Adw.ActionRow(
+                    title=entry.name, subtitle=" · ".join(details)
+                )
+                row.add_suffix(_pill(state_text, state_class))
+                history.add(row)
+        else:
+            history.add(
+                Adw.ActionRow(
+                    title=_("No firmware update history"),
+                    subtitle=_("Completed firmware operations will appear here."),
+                )
+            )
+        content.append(history)
+        return page
+
+    def _firmware_device_row(
+        self, device: FirmwareDevice, busy: bool
+    ) -> Adw.ExpanderRow:
+        subtitle_parts = []
+        if device.vendor:
+            subtitle_parts.append(device.vendor)
+        subtitle_parts.append(
+            f'{_("Installed")}: {device.version or _("Unknown")}'
+        )
+        row = Adw.ExpanderRow(
+            title=device.name,
+            subtitle=" · ".join(subtitle_parts),
+        )
+        icon = Gtk.Image.new_from_icon_name("application-x-firmware-symbolic")
+        icon.set_pixel_size(24)
+        row.add_prefix(icon)
+
+        current = Adw.ActionRow(
+            title=_("Current version"),
+            subtitle=device.version or _("Unknown"),
+        )
+        row.add_row(current)
+
+        if device.release:
+            row.add_suffix(_pill(_("Update available"), "recommended-pill"))
+            update_button = Gtk.Button(label=_("Update"), valign=Gtk.Align.CENTER)
+            update_button.add_css_class("suggested-action")
+            update_button.set_sensitive(not busy)
+            update_button.connect(
+                "clicked",
+                lambda _button: self._confirm_firmware_update([device.device_id]),
+            )
+            row.add_suffix(update_button)
+            available = Adw.ActionRow(
+                title=_("Available version"),
+                subtitle=device.release.version or _("Unknown"),
+            )
+            row.add_row(available)
+            urgency_names = {
+                1: _("Low"),
+                2: _("Medium"),
+                3: _("High"),
+                4: _("Critical"),
+            }
+            urgency = Adw.ActionRow(
+                title=_("Update urgency"),
+                subtitle=urgency_names.get(device.release.urgency, _("Unknown")),
+            )
+            row.add_row(urgency)
+            release_notes = []
+            for notes in (device.release.summary, device.release.description):
+                if notes and notes not in release_notes:
+                    release_notes.append(notes)
+            for notes in release_notes:
+                row.add_row(
+                    Adw.ActionRow(
+                        title=_("Release notes"), subtitle=notes
+                    )
+                )
+        elif device.update_error:
+            row.add_suffix(_pill(_("Needs attention"), "warning-pill"))
+            row.add_row(
+                Adw.ActionRow(
+                    title=_("Firmware status"), subtitle=device.update_error
+                )
+            )
+        else:
+            row.add_suffix(_pill(_("Up to date"), "success-pill"))
+
+        requirements = []
+        if device.require_ac:
+            requirements.append(_("Connect the computer to AC power"))
+        if device.needs_shutdown:
+            requirements.append(_("Shutdown required after installation"))
+        elif device.needs_reboot:
+            requirements.append(_("Restart required after installation"))
+        if requirements:
+            row.add_row(
+                Adw.ActionRow(
+                    title=_("Installation requirements"),
+                    subtitle=" · ".join(requirements),
+                )
+            )
+        return row
+
+    @staticmethod
+    def _firmware_history_state(state: int) -> tuple[str, str]:
+        return {
+            1: (_("Pending"), "installed-pill"),
+            2: (_("Success"), "success-pill"),
+            3: (_("Failed"), "warning-pill"),
+            4: (_("Reboot Required"), "warning-pill"),
+            5: (_("Failed"), "warning-pill"),
+        }.get(state, (_("Unknown"), "installed-pill"))
+
+    def _confirm_firmware_update(self, device_ids: list[str]) -> None:
+        selected = [
+            device
+            for device in self._firmware_manager.snapshot.updates
+            if device.device_id in device_ids
+        ]
+        if not selected:
+            return
+        if len(selected) == 1:
+            device = selected[0]
+            body = _(
+                "Install firmware for %(device)s from %(current)s to %(available)s?"
+            ) % {
+                "device": device.name,
+                "current": device.version or _("Unknown"),
+                "available": device.release.version if device.release else _("Unknown"),
+            }
+        else:
+            body = gettext.ngettext(
+                "Install %d available firmware update?",
+                "Install all %d available firmware updates?",
+                len(selected),
+            ) % len(selected)
+        requirements = []
+        if any(device.require_ac for device in selected):
+            requirements.append(_("Keep the computer connected to AC power."))
+        if any(device.affects_fde for device in selected):
+            requirements.append(
+                _(
+                    "This update may invalidate full-disk encryption secrets. Make "
+                    "sure you have the volume recovery key before continuing."
+                )
+            )
+        if any(device.needs_reboot or device.needs_shutdown for device in selected):
+            requirements.append(_("A restart may be required to finish installation."))
+        requirements.append(_("Do not disconnect devices or turn off the computer."))
+        body = body + "\n\n" + "\n".join(requirements)
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Install Firmware Update"),
+            body=body,
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("update", _("Update"))
+        dialog.set_close_response("cancel")
+        dialog.set_default_response("update")
+        dialog.set_response_appearance("update", Adw.ResponseAppearance.SUGGESTED)
+        dialog.connect(
+            "response",
+            lambda _dialog, response: self._firmware_manager.install(device_ids)
+            if response == "update"
+            else None,
+        )
+        dialog.present()
+
+    def _confirm_recommended_install(self, button: Gtk.Button) -> None:
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Apply Changes"),
+            body=_(
+                "AnduinOS will update software sources and install the drivers "
+                "recommended for this hardware."
+            ),
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("install", _("Apply"))
+        dialog.set_close_response("cancel")
+        dialog.set_default_response("install")
+        dialog.set_response_appearance("install", Adw.ResponseAppearance.SUGGESTED)
+        dialog.connect(
+            "response",
+            lambda _dialog, response: self._run_action(
+                button,
+                ["install-recommended"],
+                success_output_marker="+ ubuntu-drivers install",
+            ) if response == "install" else None,
+        )
+        dialog.present()
 
     def _graphics_page(self, device: HardwareDevice, secure_boot: SecureBootState) -> Gtk.Widget:
         scroll, content = self._page_shell(
@@ -965,7 +2160,14 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         banner.set_revealed(True)
         return banner
 
-    def _run_action(self, button: Gtk.Button, arguments: list[str], stdin: str | None = None) -> None:
+    def _run_action(
+        self,
+        button: Gtk.Button,
+        arguments: list[str],
+        stdin: str | None = None,
+        success_message: str | None = None,
+        success_output_marker: str | None = None,
+    ) -> None:
         if not arguments: return
         button.set_sensitive(False)
         original = button.get_label() or _("Apply")
@@ -974,14 +2176,44 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             try:
                 result = subprocess.run(["pkexec", HELPER, *arguments], input=stdin, capture_output=True, text=True, timeout=1800, check=False)
                 message = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else result.stderr.strip()
-                GLib.idle_add(self._action_done, button, original, result.returncode, message)
+                resolved_success_message = success_message
+                if result.returncode == 0 and success_output_marker:
+                    resolved_success_message = _command_output_summary(
+                        result.stdout, success_output_marker
+                    ) or success_message
+                GLib.idle_add(
+                    self._action_done,
+                    button,
+                    original,
+                    result.returncode,
+                    message,
+                    resolved_success_message,
+                )
             except Exception as error:
-                GLib.idle_add(self._action_done, button, original, 1, str(error))
+                GLib.idle_add(
+                    self._action_done,
+                    button,
+                    original,
+                    1,
+                    str(error),
+                    success_message,
+                )
         threading.Thread(target=worker, daemon=True).start()
 
-    def _action_done(self, button: Gtk.Button, original: str, code: int, message: str) -> bool:
+    def _action_done(
+        self,
+        button: Gtk.Button,
+        original: str,
+        code: int,
+        message: str,
+        success_message: str | None = None,
+    ) -> bool:
         button.set_label(original); button.set_sensitive(True)
-        self._toast(_("Driver changes completed. Restart may be required.") if code == 0 else (_("Driver operation failed: ") + (message or _("unknown error"))))
+        self._toast(
+            (success_message or _("Driver changes completed. Restart may be required."))
+            if code == 0
+            else (_("Driver operation failed: ") + (message or _("unknown error")))
+        )
         if code == 0: self.refresh()
         return GLib.SOURCE_REMOVE
 

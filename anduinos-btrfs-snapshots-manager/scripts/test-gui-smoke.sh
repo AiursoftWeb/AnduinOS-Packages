@@ -44,10 +44,12 @@ if [[ -z "$broadway_pid" ]]; then
     exit 77
 fi
 
-GDK_BACKEND=broadway \
-BROADWAY_DISPLAY=":$display_number" \
-G_DEBUG=fatal-criticals \
-ANDUINOS_BTRFS_SNAPSHOTS_MANAGER_UI_SMOKE_TEST=1 \
-timeout 15s "$BINARY"
+for surface in advanced information; do
+    GDK_BACKEND=broadway \
+    BROADWAY_DISPLAY=":$display_number" \
+    G_DEBUG=fatal-criticals \
+    ANDUINOS_BTRFS_SNAPSHOTS_MANAGER_UI_SMOKE_TEST="$surface" \
+    timeout 15s "$BINARY"
+done
 
 echo "GTK construction/destruction smoke test passed"

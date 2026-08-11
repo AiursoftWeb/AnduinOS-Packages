@@ -10,7 +10,10 @@ pub fn show(parent: &adw::ApplicationWindow) {
     window.set_title(Some(&tr("Advanced Settings")));
     window.set_transient_for(Some(parent));
     window.set_modal(true);
-    window.set_default_size(580, 620);
+    window.set_default_size(
+        super::AUXILIARY_WINDOW_DEFAULT_WIDTH,
+        super::AUXILIARY_WINDOW_DEFAULT_HEIGHT,
+    );
     let page = adw::PreferencesPage::new();
     page.set_title(&tr("Snapshots"));
     page.set_icon_name(Some("camera-photo-symbolic"));
@@ -62,7 +65,6 @@ pub fn show(parent: &adw::ApplicationWindow) {
     save_group.add(&save);
     page.add(&save_group);
     window.add(&page);
-    window.add(&super::btrfs_settings::filesystem_page(&window));
     window.add(&super::btrfs_settings::maintenance_page(&window));
 
     for row in [

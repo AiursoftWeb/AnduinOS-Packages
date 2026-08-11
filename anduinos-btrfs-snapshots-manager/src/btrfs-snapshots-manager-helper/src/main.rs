@@ -26,6 +26,7 @@ use zbus::{Connection, ConnectionBuilder, interface};
 mod audit;
 mod btrfs;
 mod packages;
+mod smart;
 mod systemd_worker;
 
 /// Global counter for mutex poisoning events (for monitoring)
@@ -1489,6 +1490,36 @@ impl SnapshotsManagerHelper {
                 "schema_version": 3,
                 "available": false,
                 "error": format!("Btrfs status query stopped: {error}"),
+            })
+            .to_string(),
+        }
+    }
+
+    /// Return a bounded read-only summary of the important S.M.A.R.T. fields
+    /// for devices discovered by smartctl itself.
+    async fn get_smart_disk_health(&self) -> String {
+        match tokio::task::spawn_blocking(smart::disk_health).await {
+            Ok(Ok(status)) => serde_json::to_string(&status).unwrap_or_else(|error| {
+                serde_json::json!({
+                    "schema_version": 1,
+                    "available": false,
+                    "devices": [],
+                    "error": format!("Could not serialize S.M.A.R.T. status: {error}"),
+                })
+                .to_string()
+            }),
+            Ok(Err(error)) => serde_json::json!({
+                "schema_version": 1,
+                "available": false,
+                "devices": [],
+                "error": error.to_string(),
+            })
+            .to_string(),
+            Err(error) => serde_json::json!({
+                "schema_version": 1,
+                "available": false,
+                "devices": [],
+                "error": format!("S.M.A.R.T. status query stopped: {error}"),
             })
             .to_string(),
         }

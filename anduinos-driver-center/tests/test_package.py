@@ -93,13 +93,22 @@ class PackageTests(unittest.TestCase):
         self.assertNotIn("NoDisplay=true", desktop)
 
     def test_driver_illustrations_are_parseable_local_svg_files(self):
-        expected = {"nvidia.svg", "input-gaming.svg", "secureboot-chip.svg"}
+        expected = {
+            "nvidia.svg",
+            "input-gaming.svg",
+            "secureboot-chip.svg",
+        }
         actual = {path.name for path in (ROOT / "resources").glob("*.svg")}
         self.assertEqual(actual, expected)
         for path in (ROOT / "resources").glob("*.svg"):
             root = ET.parse(path).getroot()
             self.assertTrue(root.tag.endswith("svg"))
             self.assertNotIn("data:image", path.read_text())
+
+    def test_home_page_reuses_the_desktop_application_icon(self):
+        application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
+        self.assertIn("Gtk.Image.new_from_icon_name(APP_ID)", application)
+        self.assertNotIn('driver-overview.svg', application)
 
     def test_polkit_only_authorizes_the_fixed_helper(self):
         tree = ET.parse(ROOT / "data/com.anduinos.DriverCenter.policy")
@@ -112,6 +121,46 @@ class PackageTests(unittest.TestCase):
             "/usr/libexec/anduinos-driver-center/driver-helper",
         )
         self.assertNotIn("org.freedesktop.policykit.exec.allow_gui", annotations)
+
+    def test_home_page_uses_the_restricted_recommended_install_action(self):
+        application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
+        helper = (ROOT / "scripts/driver-helper").read_text()
+        self.assertIn('home_row.page_name = "home"', application)
+        self.assertIn('["install-recommended"]', application)
+        self.assertIn('case ["install-recommended"]:', helper)
+        self.assertIn('["refresh-driver-info"]', application)
+        self.assertIn('case ["refresh-driver-info"]:', helper)
+        self.assertIn('title="ubuntu-drivers install"', application)
+        self.assertIn(
+            'success_output_marker="+ ubuntu-drivers install"', application
+        )
+
+    def test_firmware_management_uses_fwupd_below_secure_boot(self):
+        application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
+        firmware = (ROOT / "src/anduinos_driver_center/firmware.py").read_text()
+        project = (ROOT / "anduinos-driver-center.aosproj").read_text()
+        secure_boot = application.index('secure_row.page_name = "secure-boot"')
+        firmware_row = application.index('firmware_row.page_name = "firmware"')
+        self.assertLess(secure_boot, firmware_row)
+        self.assertIn('<Dependency Include="fwupd" />', project)
+        self.assertIn('<Dependency Include="gir1.2-fwupd-2.0" />', project)
+        self.assertIn('Include="src/anduinos_driver_center/firmware.py"', project)
+        self.assertIn("get_devices_async", firmware)
+        self.assertIn("get_upgrades_async", firmware)
+        self.assertIn("refresh_remote_async", firmware)
+        self.assertIn("install_release_async", firmware)
+        self.assertIn("get_history_async", firmware)
+        self.assertIn("set_feature_flags", firmware)
+        self.assertIn('connect("device-changed"', firmware)
+        self.assertIn("DEVICE_FLAG_AFFECTS_FDE", firmware)
+        self.assertIn("device-request", firmware)
+        self.assertIn('_("Update All Firmware")', application)
+        self.assertIn('_("Firmware Update History")', application)
+        self.assertIn('_("Restart Now")', application)
+        self.assertIn("device.affects_fde", application)
+        self.assertIn("device.release.description", application)
+        self.assertIn("wait_check_async", application)
+        self.assertNotIn('case ["install-firmware"', (ROOT / "scripts/driver-helper").read_text())
 
     def test_helper_does_not_execute_shell_fragments(self):
         helper = (ROOT / "scripts/driver-helper").read_text()

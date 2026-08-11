@@ -108,6 +108,10 @@ grep -q 'DeleteDeployments' <<<"$introspection"
 grep -q 'DeletePersonalSnapshots' <<<"$introspection"
 grep -q 'ListPersonalFiles' <<<"$introspection"
 grep -q 'ExportPersonalFile' <<<"$introspection"
+grep -q 'GetSmartDiskHealth' <<<"$introspection"
+busctl --system --json=short call \
+    "$SERVICE" "$OBJECT" "$INTERFACE" GetSmartDiskHealth |
+    jq -e '.data[0] | fromjson | has("devices")' >/dev/null
 if grep -Eq 'CleanupSnapshots|CompareSnapshots|CompareDeploymentPackages|ListBackupDestinations|ExportDeployment|ImportExternalBackup|SaveSchedulesConfig' <<<"$introspection"; then
     echo "A removed Disk Snapshots Manager 1.x method is still installed" >&2
     exit 1

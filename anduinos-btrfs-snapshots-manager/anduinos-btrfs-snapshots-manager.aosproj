@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-btrfs-snapshots-manager</PackageName>
-    <PackageVersion>0.1.0-29+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.1.0-34+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Disk Snapshots Manager — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -40,6 +40,7 @@
     <Dependency Include="kmod" />
     <Dependency Include="sbsigntool" />
     <Dependency Include="python3-nautilus" />
+    <Dependency Include="smartmontools" />
   </ItemGroup>
 
   <ItemGroup>

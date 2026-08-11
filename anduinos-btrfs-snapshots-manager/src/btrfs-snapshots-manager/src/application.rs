@@ -103,6 +103,17 @@ impl SnapshotsManagerApplication {
         });
         self.add_action(&preferences);
 
+        let information = gio::SimpleAction::new("information", None);
+        let weak = self.downgrade();
+        information.connect_activate(move |_, _| {
+            if let Some(app) = weak.upgrade() {
+                let window = app.ensure_main_window();
+                window.present();
+                window.show_information();
+            }
+        });
+        self.add_action(&information);
+
         let about = gio::SimpleAction::new("about", None);
         let weak = self.downgrade();
         about.connect_activate(move |_, _| {
@@ -189,15 +200,21 @@ impl SnapshotsManagerApplication {
     }
 
     fn schedule_smoke_exit(&self) {
-        if std::env::var_os("ANDUINOS_BTRFS_SNAPSHOTS_MANAGER_UI_SMOKE_TEST").is_none()
-            || self.imp().smoke_exit_scheduled.replace(true)
-        {
+        let Some(surface) = std::env::var_os("ANDUINOS_BTRFS_SNAPSHOTS_MANAGER_UI_SMOKE_TEST")
+        else {
+            return;
+        };
+        if self.imp().smoke_exit_scheduled.replace(true) {
             return;
         }
         let weak = self.downgrade();
         glib::idle_add_local_once(move || {
             if let Some(app) = weak.upgrade() {
-                app.ensure_main_window().show_advanced_settings();
+                if surface == "information" {
+                    app.ensure_main_window().show_information();
+                } else {
+                    app.ensure_main_window().show_advanced_settings();
+                }
                 for window in app.windows() {
                     window.close();
                 }

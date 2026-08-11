@@ -1,15 +1,15 @@
 [Desktop Entry]
 Name=AnduinOS Driver Center
 Name[zh_CN]=AnduinOS 驱动中心
-Comment=Install and repair hardware drivers
-Comment[zh_CN]=安装和修复硬件驱动程序
+Comment=Manage hardware drivers and device firmware
+Comment[zh_CN]=管理硬件驱动程序和设备固件
 Exec=anduinos-driver-center
 Icon=com.anduinos.DriverCenter
 Terminal=false
 Type=Application
 Categories=Settings;HardwareSettings;
-Keywords=driver;nvidia;graphics;xbox;secure boot;hardware;
-Keywords[zh_CN]=驱动;显卡;英伟达;手柄;安全启动;硬件;
+Keywords=driver;firmware;fwupd;nvidia;graphics;xbox;secure boot;hardware;
+Keywords[zh_CN]=驱动;固件;fwupd;显卡;英伟达;手柄;安全启动;硬件;
 StartupNotify=true
 StartupWMClass=com.anduinos.DriverCenter
 DBusActivatable=false

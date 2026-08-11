@@ -20,6 +20,7 @@ from anduinos_driver_center.core import (  # noqa: E402
     audio_state,
     normalize_key,
     dkms_state,
+    graphics_scan,
     parse_ubuntu_driver_devices,
     printing_state,
     secure_boot_state,
@@ -80,6 +81,64 @@ driver   : xserver-xorg-video-nouveau - distro free builtin
         self.assertTrue(devices[0].options[0].installed)
         self.assertTrue(devices[0].options[1].free)
         self.assertTrue(devices[0].options[1].builtin)
+
+    def test_graphics_scan_distinguishes_no_devices_from_probe_failure(self):
+        no_devices = graphics_scan(
+            FakeRunner(
+                {
+                    ("ubuntu-drivers", "devices"): subprocess.CompletedProcess(
+                        [], 0, "", ""
+                    )
+                }
+            )
+        )
+        failed = graphics_scan(
+            FakeRunner(
+                {
+                    ("ubuntu-drivers", "devices"): subprocess.CompletedProcess(
+                        [], 1, "", "hardware database unavailable"
+                    )
+                }
+            )
+        )
+        self.assertTrue(no_devices.successful)
+        self.assertEqual(no_devices.devices, ())
+        self.assertIsNone(no_devices.error)
+        self.assertFalse(failed.successful)
+        self.assertEqual(failed.devices, ())
+        self.assertEqual(failed.error, "hardware database unavailable")
+
+    def test_recommended_driver_reports_an_available_package_update(self):
+        output = """== /sys/devices/pci0000:00/0000:01:00.0 ==
+vendor   : NVIDIA Corporation
+model    : NVIDIA GPU
+driver   : nvidia-driver-595-open - distro non-free recommended
+"""
+        responses = {
+            ("apt-cache", "policy", "nvidia-driver-595-open"):
+                subprocess.CompletedProcess(
+                    [],
+                    0,
+                    "Installed: 595.58.03-0ubuntu1\n"
+                    "Candidate: 595.84-0ubuntu0.26.04.1\n",
+                    "",
+                ),
+            (
+                "dpkg", "--compare-versions",
+                "595.58.03-0ubuntu1", "lt", "595.84-0ubuntu0.26.04.1",
+            ): subprocess.CompletedProcess([], 0, "", ""),
+        }
+        option = parse_ubuntu_driver_devices(
+            output,
+            FakeRunner(
+                responses,
+                installed={"nvidia-driver-595-open"},
+                versions={"nvidia-driver-595-open": "595.58.03-0ubuntu1"},
+            ),
+        )[0].options[0]
+        self.assertEqual(option.installed_version, "595.58.03-0ubuntu1")
+        self.assertEqual(option.candidate_version, "595.84-0ubuntu0.26.04.1")
+        self.assertTrue(option.update_available)
 
     def test_graphics_marks_only_bound_nvidia_driver_as_active(self):
         path = "/sys/devices/pci0000:00/0000:00:01.0/0000:01:00.0"

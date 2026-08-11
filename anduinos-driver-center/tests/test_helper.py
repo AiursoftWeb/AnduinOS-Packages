@@ -12,6 +12,20 @@ loader.exec_module(driver_helper)
 
 
 class HelperTests(unittest.TestCase):
+    def test_recommended_install_updates_sources_and_delegates_to_ubuntu_drivers(self):
+        with (
+            patch.object(driver_helper, "apt_update") as update,
+            patch.object(driver_helper, "run") as run,
+        ):
+            driver_helper.install_recommended()
+        update.assert_called_once_with()
+        run.assert_called_once_with(["ubuntu-drivers", "install"])
+
+    def test_refresh_driver_info_only_updates_software_sources(self):
+        with patch.object(driver_helper, "apt_update") as update:
+            driver_helper.refresh_driver_info()
+        update.assert_called_once_with()
+
     def test_rejects_package_not_reported_by_ubuntu_drivers(self):
         with patch.object(driver_helper, "available_driver_packages", return_value={"nvidia-driver-595-open"}):
             with self.assertRaises(ValueError):

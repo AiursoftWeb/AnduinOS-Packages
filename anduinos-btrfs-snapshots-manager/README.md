@@ -31,6 +31,15 @@ machine that was asleep or powered off creates at most one catch-up snapshot on 
 next timer activation. The default package policy creates a system
 snapshot before a real DPKG transaction and no post-transaction snapshot. Both package
 boundaries and snapshot notifications are configured in Advanced Settings.
+Advanced Settings now groups only snapshot policy and Btrfs maintenance. The
+separate Information window groups mounted-file-system details with a read-only
+Disk Health page. Disk Health uses the package's direct `smartmontools`
+dependency and presents a bounded summary of overall S.M.A.R.T. health,
+temperature, SSD endurance, cumulative NVMe reads and writes, power history,
+and the relevant NVMe, SATA SSD, or mechanical-disk reliability counters only
+for physical drives backing the current root Btrfs filesystem. Unsupported,
+disabled, partial, and failed S.M.A.R.T. reports remain visibly distinct instead
+of being treated as healthy zero values.
 The unprivileged desktop notification listener runs as a supervised user
 service. GNOME starts it at login, and opening the application also ensures it
 is running, so installing or upgrading the package during an existing session
