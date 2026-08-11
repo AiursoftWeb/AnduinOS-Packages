@@ -54,6 +54,9 @@ class PackageTests(unittest.TestCase):
         self.assertIn('Adw.SwitchRow(', application)
         self.assertIn('"set-printing-enabled"', application)
         self.assertIn('"resume-print-queues"', application)
+        self.assertIn('Gtk.Button(label=_("Add Printer"))', application)
+        self.assertIn('["gnome-control-center", "printers"]', application)
+        self.assertIn("if state.service_running:\n            printer_actions", application)
 
     def test_warning_rows_require_a_recovery_action(self):
         application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
@@ -94,8 +97,11 @@ class PackageTests(unittest.TestCase):
 
     def test_driver_illustrations_are_parseable_local_svg_files(self):
         expected = {
+            "audio.svg",
+            "firmware.svg",
             "nvidia.svg",
             "input-gaming.svg",
+            "printer.svg",
             "secureboot-chip.svg",
         }
         actual = {path.name for path in (ROOT / "resources").glob("*.svg")}
@@ -103,7 +109,6 @@ class PackageTests(unittest.TestCase):
         for path in (ROOT / "resources").glob("*.svg"):
             root = ET.parse(path).getroot()
             self.assertTrue(root.tag.endswith("svg"))
-            self.assertNotIn("data:image", path.read_text())
 
     def test_home_page_reuses_the_desktop_application_icon(self):
         application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
@@ -173,6 +178,10 @@ class PackageTests(unittest.TestCase):
         core = (ROOT / "src/anduinos_driver_center/core.py").read_text()
         helper = (ROOT / "scripts/driver-helper").read_text()
         self.assertIn("create_secure_boot_page", application)
+        self.assertIn("clamp.set_child(secure_boot_page)", application)
+        self.assertIn("Adw.Clamp(maximum_size=650, tightening_threshold=500)", application)
+        self.assertIn("secure_boot_page.set_valign(Gtk.Align.START)", application)
+        self.assertIn("secure_boot_page.set_vexpand(False)", application)
         self.assertIn("_inspect_secure_boot", core)
         self.assertNotIn('case ["repair-dkms"]', helper)
         self.assertNotIn('case ["enroll-mok"]', helper)

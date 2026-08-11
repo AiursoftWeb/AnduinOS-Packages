@@ -1,0 +1,15 @@
+<svg width="128" height="128" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="headband" x1="10" y1="8" x2="54" y2="45" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#77767b"/><stop offset="1" stop-color="#3d3846"/>
+    </linearGradient>
+    <linearGradient id="ear-cup" x1="7" y1="29" x2="55" y2="55" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffad72"/><stop offset="1" stop-color="#e66100"/>
+    </linearGradient>
+  </defs>
+  <path d="M11 34v-6C11 16.4 20.4 7 32 7s21 9.4 21 21v6" fill="none" stroke="url(#headband)" stroke-width="8" stroke-linecap="round"/>
+  <path d="M15 29h3a7 7 0 0 1 7 7v14a7 7 0 0 1-7 7h-3a8 8 0 0 1-8-8V37a8 8 0 0 1 8-8zm34 0h-3a7 7 0 0 0-7 7v14a7 7 0 0 0 7 7h3a8 8 0 0 0 8-8V37a8 8 0 0 0-8-8z" fill="url(#ear-cup)"/>
+  <path d="M17 35v16M47 35v16" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".55"/>
+  <path d="M26 39v6m4-10v14m4-18v22m4-14v6" fill="none" stroke="#3584e4" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="32" cy="42" r="3" fill="#62a0ea"/>
+</svg>

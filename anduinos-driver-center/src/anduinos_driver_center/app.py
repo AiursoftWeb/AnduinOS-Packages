@@ -1165,6 +1165,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 "Keep system firmware and supported hardware up to date through "
                 "the Linux Vendor Firmware Service."
             ),
+            "firmware.svg",
         )
         self._firmware_progress = None
         self._firmware_progress_label = None
@@ -1834,6 +1835,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         page, content = self._page_shell(
             _("Audio Support"),
             _("AnduinOS provides Intel SOF firmware and ALSA UCM profiles for reliable audio initialization and routing."),
+            "audio.svg",
         )
         packages = Adw.PreferencesGroup(title=_("Support packages"))
         content.append(packages)
@@ -1905,6 +1907,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         page, content = self._page_shell(
             _("Printing Support"),
             _("Inspect the local print service, configured queues, and the packages that provide modern and legacy printer support."),
+            "printer.svg",
         )
         availability = Adw.PreferencesGroup()
         enable_printing = Adw.SwitchRow(
@@ -1917,6 +1920,23 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         )
         availability.add(enable_printing)
         content.append(availability)
+
+        if state.service_running:
+            printer_actions = Gtk.Box(
+                orientation=Gtk.Orientation.HORIZONTAL,
+                spacing=10,
+                halign=Gtk.Align.END,
+            )
+            add_printer = Gtk.Button(label=_("Add Printer"))
+            add_printer.add_css_class("suggested-action")
+            add_printer.connect(
+                "clicked",
+                lambda _button: subprocess.Popen(
+                    ["gnome-control-center", "printers"]
+                ),
+            )
+            printer_actions.append(add_printer)
+            content.append(printer_actions)
 
         overview = Adw.PreferencesGroup(title=_("System status"))
         content.append(overview)
@@ -2116,12 +2136,19 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 image.set_from_icon_name(name)
             return image
 
-        return create_secure_boot_page(
+        secure_boot_page = create_secure_boot_page(
             translate=_,
             icon_factory=icon_factory,
             state_changed=secure_boot_state_changed,
             initial_state=(state, dkms),
         )
+        secure_boot_page.set_valign(Gtk.Align.START)
+        secure_boot_page.set_vexpand(False)
+        scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        clamp = Adw.Clamp(maximum_size=650, tightening_threshold=500)
+        clamp.set_child(secure_boot_page)
+        scroll.set_child(clamp)
+        return scroll
 
     def _add_state_row(
         self,
