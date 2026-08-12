@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-core</PackageName>
-    <PackageVersion>2.0.1-4+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS desktop core metapackage — pure upstream GNOME desktop environment with multimedia, printing, and input method support. No AnduinOS branding.</PackageDescription>
     <Section>metapackages</Section>
@@ -71,6 +71,9 @@
          Graphics & GPU
          ============================================================ -->
     <Dependency Include="mesa-vulkan-drivers" />
+    <!-- VMware desktop integration provides dynamic display resizing,
+         clipboard sharing, and drag-and-drop support. -->
+    <Recommend Include="open-vm-tools-desktop" Condition="'$(Arch)' == 'amd64'" />
 
     <!-- ============================================================
          Input Method (IBus core framework only; language-specific engines
