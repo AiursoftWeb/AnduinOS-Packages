@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from .command import CommandRunner
+from .command import CommandError, CommandRunner
 from .model import Filesystem
 from .steps import FailurePolicy, InstallContext
 from .snapshots_manager import SNAPSHOTS_MANAGER_PACKAGE
@@ -23,6 +23,12 @@ LIVE_ONLY_PACKAGES = (
     "anduinos-live-settings",
 )
 
+VMWARE_GUEST_PACKAGES = (
+    "open-vm-tools-desktop",
+    "open-vm-tools",
+    "xserver-xorg-video-vmware",
+)
+
 
 @dataclass
 class RemoveLivePackagesStep:
@@ -35,7 +41,7 @@ class RemoveLivePackagesStep:
 
     def preflight(self, context: InstallContext) -> None:
         context.validate_plan()
-        self.runner.require_commands(("chroot",))
+        self.runner.require_commands(("chroot", "systemd-detect-virt"))
 
     def execute(self, context: InstallContext) -> None:
         target = _target(context)
@@ -50,6 +56,24 @@ class RemoveLivePackagesStep:
                 "Disk Snapshots Manager cleanup policy: retain it on the Btrfs target"
             )
 
+        virtualization = _detect_virtualization(self.runner)
+        context.values["install_virtualization"] = virtualization
+        if virtualization == "vmware":
+            context.log(
+                "VMware guest cleanup policy: retain VMware guest packages"
+            )
+        elif virtualization is None:
+            context.log(
+                "VMware guest cleanup policy: virtualization detection was "
+                "inconclusive; retain VMware guest packages"
+            )
+        else:
+            candidates.extend(VMWARE_GUEST_PACKAGES)
+            context.log(
+                "VMware guest cleanup policy: remove VMware guest packages "
+                f"from the {virtualization} target"
+            )
+
         installed = tuple(
             package
             for package in candidates
@@ -58,10 +82,10 @@ class RemoveLivePackagesStep:
         context.values["live_package_candidates"] = tuple(candidates)
         context.values["live_packages_removed"] = installed
         if not installed:
-            context.log("No Live-only packages are installed in the target")
+            context.log("No cleanup candidate packages are installed in the target")
             return
 
-        context.log("Removing Live-only packages: " + ", ".join(installed))
+        context.log("Removing target packages: " + ", ".join(installed))
         self.runner.run(
             (
                 "chroot",
@@ -72,6 +96,20 @@ class RemoveLivePackagesStep:
                 "--yes",
                 "purge",
                 *installed,
+            ),
+            timeout=1800,
+        )
+        context.log("Removing orphaned target packages and configuration")
+        self.runner.run(
+            (
+                "chroot",
+                str(target),
+                "/usr/bin/env",
+                "DEBIAN_FRONTEND=noninteractive",
+                "apt-get",
+                "--yes",
+                "autoremove",
+                "--purge",
             ),
             timeout=1800,
         )
@@ -116,6 +154,23 @@ def _is_installed(
         timeout=10,
     )
     return result.returncode == 0 and result.stdout.startswith("ii ")
+
+
+def _detect_virtualization(runner: CommandRunner) -> str | None:
+    try:
+        result = runner.run(
+            ("systemd-detect-virt", "--vm"),
+            check=False,
+            timeout=10,
+        )
+    except CommandError:
+        return None
+    virtualization = result.stdout.strip().casefold()
+    if result.returncode == 0 and virtualization:
+        return virtualization
+    if result.returncode == 1 and virtualization == "none":
+        return "physical"
+    return None
 
 
 def _target(context: InstallContext) -> Path:

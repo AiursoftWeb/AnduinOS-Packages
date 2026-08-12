@@ -33,9 +33,10 @@ and constructs every command itself.
   `anduinos-live-settings` is a hard dependency of the installer: Casper
   applies the GRUB-selected locale and the package-owned initramfs hook applies
   the selected timezone. A dedicated installer step purges the fixed Live-only
-  package set from the copied target; it also purges Disk Snapshots Manager on ext4 while
-  retaining it on Btrfs. This policy does not use Ubiquity's historical dual
-  manifest convention.
+  package set from the copied target. It retains Disk Snapshots Manager on
+  Btrfs but purges it on ext4, removes VMware guest integration from
+  non-VMware targets, and purges orphaned packages. This policy does not use
+  Ubiquity's historical dual manifest convention.
 - Software: refreshing package indexes and installing available updates is
   enabled by default. An offline index-refresh failure is a warning and skips
   the upgrade; after an upgrade transaction starts, any APT/dpkg failure is
