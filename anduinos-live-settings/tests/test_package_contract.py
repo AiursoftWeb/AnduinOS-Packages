@@ -38,7 +38,10 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
         dependencies = {
             item.get("Include") for item in self.project.findall(".//Dependency")
         }
-        self.assertEqual(dependencies, {"casper", "initramfs-tools"})
+        self.assertEqual(
+            dependencies,
+            {"casper", "initramfs-tools", "openssh-server"},
+        )
         included = self.project.find(
             ".//IncludeFile[@Include='assets/14anduinos-timezone']"
         )

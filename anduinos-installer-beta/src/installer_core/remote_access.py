@@ -59,13 +59,15 @@ class ProvisionRemoteAccessStep:
             timeout=30,
         )
 
-        # The package-owned preset is the single source of truth. Resetting
-        # the copied target also discards a Live user's temporary SSH toggle.
+        # This is a newly created target, never an upgrade of an existing
+        # machine. Reset both units explicitly so a Live-session toggle cannot
+        # leak into the installation. Do not ship a global preset: preset-all
+        # must never disconnect an administrator's established SSH service.
         self.runner.run(
             (
                 "systemctl",
                 f"--root={target}",
-                "preset",
+                "disable",
                 *SSH_UNITS,
             ),
             timeout=30,

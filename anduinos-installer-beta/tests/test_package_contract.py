@@ -46,7 +46,7 @@ class PackageContractTests(unittest.TestCase):
         self.assertIn(f'= "/{state}";', backend_config)
         self.assertNotIn(f'os.unlink("/{policy}")', prerm)
 
-    def test_secure_shell_is_a_declarative_desktop_capability(self):
+    def test_secure_shell_is_a_live_composition_not_an_upgrade_dependency(self):
         package_root = ROOT.parent
         desktop = ET.parse(
             package_root
@@ -58,6 +58,11 @@ class PackageContractTests(unittest.TestCase):
             / "anduinos-core-system"
             / "anduinos-core-system.aosproj"
         ).getroot()
+        live = ET.parse(
+            package_root
+            / "anduinos-live-settings"
+            / "anduinos-live-settings.aosproj"
+        ).getroot()
 
         dependencies = {
             item.get("Include") for item in desktop.iter("Dependency")
@@ -65,22 +70,27 @@ class PackageContractTests(unittest.TestCase):
         recommendations = {
             item.get("Include") for item in desktop.iter("Recommend")
         }
+        suggestions = {
+            item.get("Include") for item in desktop.iter("Suggest")
+        }
+        live_dependencies = {
+            item.get("Include") for item in live.iter("Dependency")
+        }
         self.assertNotIn("openssh-server", dependencies)
-        self.assertIn("openssh-server", recommendations)
+        self.assertNotIn("openssh-server", recommendations)
+        self.assertIn("openssh-server", suggestions)
+        self.assertIn("openssh-server", live_dependencies)
 
         preset = (
             package_root
             / "anduinos-core-system/assets/20-anduinos-security.preset"
         )
-        self.assertEqual(
-            preset.read_text(encoding="utf-8").splitlines()[-2:],
-            ["disable ssh.service", "disable ssh.socket"],
-        )
+        self.assertFalse(preset.exists())
         files = {
             (item.get("Include"), item.get("Target"))
             for item in core.iter("IncludeFile")
         }
-        self.assertIn(
+        self.assertNotIn(
             (
                 "assets/20-anduinos-security.preset",
                 "/usr/lib/systemd/system-preset/20-anduinos-security.preset",

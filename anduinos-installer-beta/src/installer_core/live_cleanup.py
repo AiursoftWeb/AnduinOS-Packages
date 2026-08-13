@@ -29,6 +29,11 @@ VMWARE_GUEST_PACKAGES = (
     "xserver-xorg-video-vmware",
 )
 
+# These packages enter the copied filesystem through Live-only composition,
+# but are capabilities of the installed desktop. Mark them as explicitly
+# retained before purging the Live bridge and running autoremove.
+PERSISTENT_TARGET_PACKAGES = ("openssh-server",)
+
 
 @dataclass
 class RemoveLivePackagesStep:
@@ -45,6 +50,23 @@ class RemoveLivePackagesStep:
 
     def execute(self, context: InstallContext) -> None:
         target = _target(context)
+        retained = tuple(
+            package
+            for package in PERSISTENT_TARGET_PACKAGES
+            if _is_installed(self.runner, target, package)
+        )
+        for package in retained:
+            self.runner.run(
+                ("chroot", str(target), "apt-mark", "manual", package),
+                timeout=30,
+            )
+        context.values["persistent_target_packages"] = retained
+        if retained:
+            context.log(
+                "Retaining installed-system packages: "
+                + ", ".join(retained)
+            )
+
         candidates = list(LIVE_ONLY_PACKAGES)
         if context.plan.storage.filesystem is Filesystem.EXT4:
             candidates.append(SNAPSHOTS_MANAGER_PACKAGE)
@@ -127,6 +149,18 @@ class RemoveLivePackagesStep:
         if remaining:
             raise RuntimeError(
                 "Live-only packages remain installed: " + ", ".join(remaining)
+            )
+        retained = context.values.get("persistent_target_packages")
+        if not isinstance(retained, tuple):
+            raise RuntimeError("Persistent-package retention did not execute")
+        missing = tuple(
+            package
+            for package in retained
+            if not _is_installed(self.runner, target, package)
+        )
+        if missing:
+            raise RuntimeError(
+                "Installed-system packages were removed: " + ", ".join(missing)
             )
         self.runner.run(
             ("chroot", str(target), "dpkg", "--audit"), timeout=60

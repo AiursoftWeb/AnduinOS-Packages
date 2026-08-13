@@ -130,7 +130,7 @@ class ProvisionRemoteAccessTests(unittest.TestCase):
             (
                 "systemctl",
                 f"--root={target}",
-                "preset",
+                "disable",
                 "ssh.service",
                 "ssh.socket",
             ),

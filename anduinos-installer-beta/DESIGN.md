@@ -27,16 +27,19 @@ and constructs every command itself.
   immutable plan. Plans are canonical: the privileged executor rejects
   upper-case, non-ASCII, dotted, underscored, edge-hyphen or over-63-byte
   hostnames instead of normalizing untrusted input.
-- Secure Shell: the desktop metapackage recommends `openssh-server` so GNOME
-  Settings' Secure Shell panel works in the standard desktop composition while
-  the server remains removable. A core-system systemd preset declares both
-  `ssh.service` and `ssh.socket` disabled by default. The ISO builder scrubs
-  every build-time SSH host key as machine identity; after copying the Live
-  system, a fatal installer step removes any Live-session keys again, generates
-  target-owned keys, validates `sshd`, and reapplies the preset after all target
-  package transactions. When UFW is installed, its OpenSSH application rule is
-  prepared without starting a listener, so a later explicit GNOME opt-in works
-  with the firewall enabled. The installer never permits empty SSH passwords.
+- Secure Shell: the desktop metapackage only suggests `openssh-server`, so an
+  existing desktop upgrade never installs or starts a new network listener.
+  The Live-only `anduinos-live-settings` composition carries the server for new
+  installations, and the installer retains it when removing Live packages.
+  The ISO builder disables both SSH units and scrubs every build-time SSH host
+  key as machine identity. After copying the Live system, a fatal installer
+  step removes any Live-session keys again, generates target-owned keys,
+  validates `sshd`, and explicitly disables both units on the newly created
+  target after all package transactions. No global systemd preset is shipped,
+  so `preset-all` cannot disconnect an existing administrator. When UFW is
+  installed, its OpenSSH application rule is prepared without starting a
+  listener, so a later explicit GNOME opt-in works with the firewall enabled.
+  The installer never permits empty SSH passwords.
 - Account access policy: release installations always create a
   password-protected account. A separate Advanced Options page exposes three
   independent, default-off choices: passwordless sudo, GDM automatic login,

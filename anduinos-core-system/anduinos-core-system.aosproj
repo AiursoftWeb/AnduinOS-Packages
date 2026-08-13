@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-core-system</PackageName>
-    <PackageVersion>2.0.0-6+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0-7+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS core system foundation metapackage — essential system services, networking, hardware support, and administration tools. This is the base layer for all AnduinOS variants (Desktop, Server, IoT).</PackageDescription>
     <Section>metapackages</Section>
@@ -196,12 +196,4 @@
     <Recommend Include="cracklib-runtime" />
   </ItemGroup>
 
-  <ItemGroup>
-    <!-- Distribution security policy: remote access is available to desktop
-         compositions, but no SSH listener is enabled until an administrator
-         explicitly enables it. The Ubuntu GNOME build manages both units. -->
-    <IncludeFile Include="assets/20-anduinos-security.preset"
-                 Target="/usr/lib/systemd/system-preset/20-anduinos-security.preset"
-                 Mode="644" />
-  </ItemGroup>
 </Project>

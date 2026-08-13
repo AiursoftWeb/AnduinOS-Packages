@@ -6,6 +6,7 @@ from fakes import FakeRunner
 from helpers import valid_plan
 from installer_core.live_cleanup import (
     LIVE_ONLY_PACKAGES,
+    PERSISTENT_TARGET_PACKAGES,
     RemoveLivePackagesStep,
     VMWARE_GUEST_PACKAGES,
 )
@@ -67,6 +68,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
     def test_policy_is_explicit_and_snapshots_manager_is_not_unconditional(self):
         self.assertEqual(LIVE_ONLY_PACKAGES, EXPECTED_LIVE_ONLY_PACKAGES)
         self.assertNotIn(SNAPSHOTS_MANAGER_PACKAGE, LIVE_ONLY_PACKAGES)
+        self.assertEqual(PERSISTENT_TARGET_PACKAGES, ("openssh-server",))
         self.assertEqual(
             VMWARE_GUEST_PACKAGES,
             (
@@ -98,8 +100,59 @@ class RemoveLivePackagesTests(unittest.TestCase):
             for command, _kwargs in runner.commands
             if "dpkg-query" in command
         }
-        self.assertEqual(queried, set(EXPECTED_LIVE_ONLY_PACKAGES))
+        self.assertEqual(
+            queried,
+            set(EXPECTED_LIVE_ONLY_PACKAGES) | {"openssh-server"},
+        )
         self.assertNotIn(SNAPSHOTS_MANAGER_PACKAGE, queried)
+
+    def test_marks_live_composed_openssh_as_a_persistent_target_package(self):
+        messages = []
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            runner = FakeRunner()
+            runner.outputs[_query(target, "openssh-server")] = (
+                "ii \n",
+                "",
+                0,
+            )
+            runner.outputs[_query(target, "anduinos-live-settings")] = (
+                "ii \n",
+                "",
+                0,
+            )
+            context = InstallContext(
+                valid_plan(),
+                messages.append,
+                values={
+                    "target": target,
+                    "chroot_environment_ready": True,
+                },
+            )
+            RemoveLivePackagesStep(runner).execute(context)
+
+        commands = [command for command, _kwargs in runner.commands]
+        mark = (
+            "chroot",
+            str(target),
+            "apt-mark",
+            "manual",
+            "openssh-server",
+        )
+        purge_index = next(
+            index
+            for index, command in enumerate(commands)
+            if "purge" in command and "autoremove" not in command
+        )
+        self.assertLess(commands.index(mark), purge_index)
+        self.assertEqual(
+            context.values["persistent_target_packages"],
+            ("openssh-server",),
+        )
+        self.assertIn(
+            "Retaining installed-system packages: openssh-server",
+            messages,
+        )
 
     def test_vmware_target_retains_all_vmware_guest_packages(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -224,6 +277,21 @@ class RemoveLivePackagesTests(unittest.TestCase):
             runner.outputs[_query(target, "gparted")] = ("ii \n", "", 0)
             with self.assertRaisesRegex(
                 RuntimeError, "Live-only packages remain installed: gparted"
+            ):
+                RemoveLivePackagesStep(runner).verify(context)
+
+    def test_verify_rejects_autoremove_of_a_persistent_target_package(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            runner = FakeRunner()
+            context = _context(target)
+            context.values["live_package_candidates"] = LIVE_ONLY_PACKAGES
+            context.values["persistent_target_packages"] = (
+                "openssh-server",
+            )
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "Installed-system packages were removed: openssh-server",
             ):
                 RemoveLivePackagesStep(runner).verify(context)
 

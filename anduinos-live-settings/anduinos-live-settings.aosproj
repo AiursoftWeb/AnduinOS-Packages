@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-live-settings</PackageName>
-    <PackageVersion>2.0.1-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Casper live-session policy and regional settings (removed after installation)</PackageDescription>
     <Section>admin</Section>
@@ -25,6 +25,10 @@
          complementary timezone hook for the same Live-session contract. -->
     <Dependency Include="casper" />
     <Dependency Include="initramfs-tools" />
+    <!-- Secure Shell is payload for newly installed desktops, not an upgrade
+         dependency of every existing desktop. The native installer removes
+         this Live-only package while deliberately retaining openssh-server. -->
+    <Dependency Include="openssh-server" />
   </ItemGroup>
 
   <ItemGroup>
