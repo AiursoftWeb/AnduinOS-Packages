@@ -71,9 +71,6 @@ msgstr "{disk} 上のすべてのデータは完全に消去されます。"
 msgid "Account security"
 msgstr "アカウントセキュリティ"
 
-msgid "Administrator access would be locked"
-msgstr "管理者アクセスがロックされます"
-
 msgid "Advanced Storage"
 msgstr "高度なストレージ設定"
 
@@ -174,15 +171,6 @@ msgid ""
 msgstr ""
 "AnduinOSは、選択された未割り当て領域のみを使用します。インストーラーは既存の"
 "ファイルシステムを縮小または移動しません。"
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"ユーザーとして実行されている任意のプログラムは、認証なしで完全な管理者権限を"
-"取得できます。ログインパスワードはまだサインインを保護しますが、sudo は保護さ"
-"れません。続行してもよろしいですか？"
 
 msgid "Arabic"
 msgstr "アラビア語"
@@ -314,9 +302,6 @@ msgstr "開発シミュレーションが完了しました"
 msgid "Discover AnduinOS"
 msgstr "AnduinOS を発見する"
 
-msgid "Do not require a password for sudo commands"
-msgstr "sudo コマンドにパスワードを要求しない"
-
 msgid "Download and install system updates during installation"
 msgstr "インストール中にシステムアップデートのダウンロードとインストールを行う"
 
@@ -421,9 +406,6 @@ msgstr "ヒンディー語 (インド)"
 msgid "How should AnduinOS use this disk?"
 msgstr "AnduinOSはこのディスクをどのように使用すべきですか？"
 
-msgid "I Understand the Risk, Continue"
-msgstr "リスクを理解します、続行する"
-
 msgid "Indonesian"
 msgstr "インドネシア語"
 
@@ -441,9 +423,6 @@ msgstr "並列インストール"
 
 msgid "Install alongside"
 msgstr "並列インストール"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "並列インストールにはパスワードで保護されたアカウントが必要です。"
 
 msgid "Install bootloader"
 msgstr "ブートローダーをインストール"
@@ -581,9 +560,6 @@ msgstr "パスワード"
 msgid "Password must be at least 6 characters."
 msgstr "パスワードは6文字以上である必要があります。"
 
-msgid "Passwordless sudo is unsafe"
-msgstr "パスワードなしの sudo は安全ではありません"
-
 msgid "Platform"
 msgstr "プラットフォーム"
 
@@ -652,12 +628,6 @@ msgstr "再起動してセキュアブートキーを登録"
 
 msgid "Restart is disabled in development protection mode"
 msgstr "開発保護モードでは再起動が無効化されています"
-
-msgid "Return and Set a Password"
-msgstr "パスワードを設定に戻って設定する"
-
-msgid "Return to Make Changes"
-msgstr "変更を加えるために戻る"
 
 msgid "Reuse {path} ({size})"
 msgstr "{path} ({size}) を再利用する"
@@ -814,19 +784,6 @@ msgstr ""
 "選択したディスクのトポロジーが変更されました。ディスクとインストール方法を再"
 "確認してください。"
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"システムはこのアカウントに自動的にサインインし、パスワードなしで完全な管理者"
-"権限を取得することを許可します。物理的にアクセスできる誰でも、およびこのユー"
-"ザーとして実行されている任意のプログラムは、システムを完全に制御できます。こ"
-"れはキオスク、一時的な仮想マシン、またはその他の管理された環境でのみ使用して"
-"ください。"
-
 msgid "The two passwords do not match."
 msgstr "2つのパスワードが一致しません。"
 
@@ -834,25 +791,11 @@ msgid "Third-party drivers"
 msgstr "サードパーティ製ドライバー"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"このアカウントにはログインパスワードがありませんが、sudo は依然としてパスワー"
-"ドを要求します。root アカウントはデフォルトでロックされているため、管理者タス"
-"クを実行できません。アカウントのパスワードを設定するか、パスワードなしの "
-"sudo を有効にしてください。"
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "この高度なパスは既存のパーティションを保持しますが、選択したディスクのパー"
 "ティションテーブルとマシンのEFIブート状態を変更します。"
-
-msgid "This configuration is very unsafe"
-msgstr "この設定は非常に安全ではありません"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -958,9 +901,6 @@ msgid ""
 msgstr ""
 "EFI/AnduinOSのみを書き込み、EFI/BOOTを上書きせず、検証済みのAnduinOS NVRAMエ"
 "ントリを要求します。"
-
-msgid "automatic login"
-msgstr "自動ログイン"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr "マシン固有の MOK を作成; 再起動後にパスワード 123456 で登録"
@@ -1248,3 +1188,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "パスワードが必要です。"
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "管理コマンドの実行時にパスワードを要求しなくなります。"
+
+msgid "Advanced Options"
+msgstr "詳細オプション"
+
+msgid "Allow SSH login with the account password"
+msgstr "アカウントのパスワードによる SSH ログインを許可する"
+
+msgid "Automatic desktop login"
+msgstr "デスクトップへの自動ログイン"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "ローカル管理者アカウントのサインイン方法と、システム変更の承認方法を選択します。"
+
+msgid "Choose optional access and sign-in policies"
+msgstr "アクセスとサインインに関するオプションのポリシーを選択します"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "このコンピューターがリモートの Secure Shell 接続を受け入れるかどうかを選択します。"
+
+msgid "Configure Secure Shell"
+msgstr "Secure Shell を設定"
+
+msgid "Local Access"
+msgstr "ローカルアクセス"
+
+msgid "Log in to the desktop automatically"
+msgstr "デスクトップに自動的にログインする"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "コンピューターの起動時に、このアカウントのデスクトップを自動的に開きます。"
+
+msgid "Remote Access"
+msgstr "リモートアクセス"
+
+msgid "Run sudo commands without a password"
+msgstr "パスワードなしで sudo コマンドを実行する"
+
+msgid "SSH password login"
+msgstr "SSH パスワードログイン"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Secure Shell を起動し、ネットワーク経由でこのアカウントのパスワードを受け付けます。"
+
+msgid "This will reduce the security of the installed system."
+msgstr "インストールされたシステムのセキュリティが低下します。"
+
+msgid "disabled"
+msgstr "無効"
+
+msgid "enabled"
+msgstr "有効"

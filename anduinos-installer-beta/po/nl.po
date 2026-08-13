@@ -70,9 +70,6 @@ msgstr "ALLE GEGEVENS op {disk} worden permanent gewist."
 msgid "Account security"
 msgstr "Accountveiligheid"
 
-msgid "Administrator access would be locked"
-msgstr "Toegang voor beheerders wordt geblokkeerd"
-
 msgid "Advanced Storage"
 msgstr "Uitgebreide opslag"
 
@@ -171,15 +168,6 @@ msgid ""
 msgstr ""
 "AnduinOS zal alleen de geselecteerde niet-toegewezen ruimte gebruiken. De "
 "installer zal een bestaand bestandssysteem niet verkleinen of verplaatsen."
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"Ieder programma dat als uw gebruiker draait, kan volledige beheerdersrechten "
-"krijgen zonder authenticatie. Uw inlogwachtwoord beschermt nog steeds de "
-"aanmelding, maar niet sudo. Weet u zeker dat u doorgaat?"
 
 msgid "Arabic"
 msgstr "Araabisch"
@@ -310,9 +298,6 @@ msgstr "Ontwikkelingssimulatie voltooid"
 msgid "Discover AnduinOS"
 msgstr "AnduinOS ontdekken"
 
-msgid "Do not require a password for sudo commands"
-msgstr "Geen wachtwoord vereisen voor sudo-opdrachten"
-
 msgid "Download and install system updates during installation"
 msgstr "Systeemupdates downloaden en installeren tijdens de installatie"
 
@@ -417,9 +402,6 @@ msgstr "Hindi (India)"
 msgid "How should AnduinOS use this disk?"
 msgstr "Hoe moet AnduinOS deze schijf gebruiken?"
 
-msgid "I Understand the Risk, Continue"
-msgstr "Ik begrijp het risico, ga door"
-
 msgid "Indonesian"
 msgstr "Indonesisch"
 
@@ -437,10 +419,6 @@ msgstr "Installeren naast bestaand systeem"
 
 msgid "Install alongside"
 msgstr "Installeren naast bestaand systeem"
-
-msgid "Install alongside requires a password-protected account."
-msgstr ""
-"Installeren naast bestaand systeem vereist een wachtwoordbeveiligd account."
 
 msgid "Install bootloader"
 msgstr "Installeer opstartlader"
@@ -578,9 +556,6 @@ msgstr "Wachtwoord"
 msgid "Password must be at least 6 characters."
 msgstr "Het wachtwoord moet minimaal 6 tekens lang zijn."
 
-msgid "Passwordless sudo is unsafe"
-msgstr "Wachtwoordloos sudo is onveilig"
-
 msgid "Platform"
 msgstr "Platform"
 
@@ -650,12 +625,6 @@ msgstr "Herstart en Secure Boot-sleutel registreren"
 
 msgid "Restart is disabled in development protection mode"
 msgstr "Herstarten is uitgeschakeld in ontwikkelbeschermingsmodus"
-
-msgid "Return and Set a Password"
-msgstr "Keer terug en stel een wachtwoord in"
-
-msgid "Return to Make Changes"
-msgstr "Keer terug om wijzigingen aan te brengen"
 
 msgid "Reuse {path} ({size})"
 msgstr "Hergebruik {path} ({size})"
@@ -815,34 +784,11 @@ msgstr ""
 "De geselecteerde schijftopologie is gewijzigd. Bekijk de schijf en "
 "installatiemethode opnieuw."
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"Het systeem zal automatisch inloggen op dit account en volledige "
-"beheerdersrechten toestaan zonder wachtwoord. Iedereen met fysieke toegang, "
-"en elk programma dat als deze gebruiker draait, kan het systeem volledig "
-"beheersen. Gebruik dit alleen voor een kiosk, tijdelijke virtuele machine of "
-"andere gecontroleerde omgeving."
-
 msgid "The two passwords do not match."
 msgstr "De twee wachtwoorden komen niet overeen."
 
 msgid "Third-party drivers"
 msgstr "Stuurprogramma's van derden"
-
-msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"Dit account heeft geen inlogwachtwoord, maar sudo vereist er nog steeds een. "
-"Omdat het root-account standaard is geblokkeerd, kunt u geen beheertaken "
-"uitvoeren. Stel een accountwachtwoord in of schakel wachtwoordloos sudo in."
 
 msgid ""
 "This advanced path preserves existing partitions but changes the selected "
@@ -851,9 +797,6 @@ msgstr ""
 "Deze geavanceerde methode behoudt bestaande partities, maar wijzigt de "
 "partitietabel van de geselecteerde schijf en de EFI-bootstatus van de "
 "machine."
-
-msgid "This configuration is very unsafe"
-msgstr "Deze configuratie is zeer onveilig"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -960,9 +903,6 @@ msgid ""
 msgstr ""
 "Schrijf alleen EFI/AnduinOS, overschrijf EFI/BOOT niet en vereis een "
 "geverifieerde AnduinOS NVRAM-invoer."
-
-msgid "automatic login"
-msgstr "automatisch inloggen"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
@@ -1251,3 +1191,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "Een wachtwoord is vereist."
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Beheeropdrachten vragen niet langer om uw wachtwoord."
+
+msgid "Advanced Options"
+msgstr "Geavanceerde opties"
+
+msgid "Allow SSH login with the account password"
+msgstr "SSH-aanmelding met het accountwachtwoord toestaan"
+
+msgid "Automatic desktop login"
+msgstr "Automatisch aanmelden bij het bureaublad"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Kies hoe het lokale beheerdersaccount zich aanmeldt en systeemwijzigingen autoriseert."
+
+msgid "Choose optional access and sign-in policies"
+msgstr "Kies optionele beleidsregels voor toegang en aanmelden"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "Kies of deze computer externe Secure Shell-verbindingen accepteert."
+
+msgid "Configure Secure Shell"
+msgstr "Secure Shell configureren"
+
+msgid "Local Access"
+msgstr "Lokale toegang"
+
+msgid "Log in to the desktop automatically"
+msgstr "Automatisch aanmelden bij het bureaublad"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Het bureaublad van dit account automatisch openen wanneer de computer opstart."
+
+msgid "Remote Access"
+msgstr "Toegang op afstand"
+
+msgid "Run sudo commands without a password"
+msgstr "sudo-opdrachten uitvoeren zonder wachtwoord"
+
+msgid "SSH password login"
+msgstr "SSH-aanmelding met wachtwoord"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Secure Shell starten en het wachtwoord van dit account via het netwerk accepteren."
+
+msgid "This will reduce the security of the installed system."
+msgstr "Dit verlaagt de beveiliging van het geïnstalleerde systeem."
+
+msgid "disabled"
+msgstr "uitgeschakeld"
+
+msgid "enabled"
+msgstr "ingeschakeld"

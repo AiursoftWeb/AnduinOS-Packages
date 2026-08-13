@@ -72,9 +72,6 @@ msgstr "Όλα τα ΔΕΔΟΜΕΝΑ στο {disk} θα διαγραφούν ο�
 msgid "Account security"
 msgstr "Ασφάλεια λογαριασμού"
 
-msgid "Administrator access would be locked"
-msgstr "Θα κλειδωνόταν η πρόσβαση διαχειριστή"
-
 msgid "Advanced Storage"
 msgstr "Για προχωρημένους χρήστες — Αποθήκευση"
 
@@ -175,16 +172,6 @@ msgid ""
 msgstr ""
 "Το AnduinOS θα χρησιμοποιήσει μόνο τον επιλεγμένο μη κατανεμημένο χώρο. Ο "
 "εγκαταστάτης δεν θα συρρικνώσει ή μετακινήσει ένα υπάρχον σύστημα αρχείων."
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"Οποιοδήποτε πρόγραμμα που εκτελείται ως ο χρήστης σας μπορεί να αποκτήσει "
-"πλήρη δικαιώματα διαχειριστή χωρίς εγγραφή. Ο κωδικός σύνδεσής σας "
-"εξακολουθεί να προστατεύει την είσοδο, αλλά δεν θα προστατεύσει το sudo. "
-"Είστε σίγουρος ότι θέλετε να συνεχίσετε;"
 
 msgid "Arabic"
 msgstr "Αραβικά"
@@ -318,9 +305,6 @@ msgstr "Ολοκληρώθηκε η προσομοίωση ανάπτυξης"
 msgid "Discover AnduinOS"
 msgstr "Ανακαλύψτε το AnduinOS"
 
-msgid "Do not require a password for sudo commands"
-msgstr "Μην απαιτείτε κωδικό για εντολές sudo"
-
 msgid "Download and install system updates during installation"
 msgstr "Λήψη και εγκατάσταση ενημερώσεων συστήματος κατά την εγκατάσταση"
 
@@ -426,9 +410,6 @@ msgstr "Χίντι (Ινδία)"
 msgid "How should AnduinOS use this disk?"
 msgstr "Πώς θα χρησιμοποιήσει ο AnduinOS αυτόν τον δίσκο;"
 
-msgid "I Understand the Risk, Continue"
-msgstr "Καταλαβαίνω τον Κίνδυνο, Συνέχεια"
-
 msgid "Indonesian"
 msgstr "Ινδονησιακά"
 
@@ -446,10 +427,6 @@ msgstr "Εγκατάσταση Παράλληλα"
 
 msgid "Install alongside"
 msgstr "Εγκατάσταση παράλληλα"
-
-msgid "Install alongside requires a password-protected account."
-msgstr ""
-"Η εγκατάσταση παράλληλα απαιτεί λογαριασμό με προστασία κωδικού πρόσβασης."
 
 msgid "Install bootloader"
 msgstr "Εγκατάσταση bootloader"
@@ -588,9 +565,6 @@ msgstr "Κωδικός"
 msgid "Password must be at least 6 characters."
 msgstr "Ο κωδικός πρέπει να αποτελείται από τουλάχιστον 6 χαρακτήρες."
 
-msgid "Passwordless sudo is unsafe"
-msgstr "Το sudo χωρίς κωδικό είναι ασφαλές"
-
 msgid "Platform"
 msgstr "Πλατφόρμα"
 
@@ -661,12 +635,6 @@ msgstr "Επανεκκίνηση και Εγγραφή Κλειδιού Secure B
 msgid "Restart is disabled in development protection mode"
 msgstr ""
 "Η επανεκκίνηση είναι απενεργοποιημένη στη λειτουργία προστασίας ανάπτυξης"
-
-msgid "Return and Set a Password"
-msgstr "Επιστροφή και Ορισμός Κωδικού"
-
-msgid "Return to Make Changes"
-msgstr "Επιστροφή για Αλλαγές"
 
 msgid "Reuse {path} ({size})"
 msgstr "Επαναχρήση {path} ({size})"
@@ -824,36 +792,11 @@ msgstr ""
 "Η τοπολογία του επιλεγμένου δίσκου άλλαξε. Εξετάστε ξανά τον δίσκο και τη "
 "μέθοδο εγκατάστασης."
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"Το σύστημα θα συνδεθεί αυτόματα σε αυτόν τον λογαριασμό και θα του επιτρέψει "
-"να αποκτήσει πλήρη δικαιώματα διαχειριστή χωρίς κωδικό. Οποιοσδήποτε με "
-"φυσική πρόσβαση, και οποιοδήποτε πρόγραμμα που εκτελείται ως αυτός ο "
-"χρήστης, μπορεί να ελέγξει πλήρως το σύστημα. Χρησιμοποιήστε το μόνο για ένα "
-"kiosk, προσωρινή εικονική μηχανή ή άλλο ελεγχόμενο περιβάλλον."
-
 msgid "The two passwords do not match."
 msgstr "Τα δύο κωδικά πρόσβασης δεν ταιριάζουν."
 
 msgid "Third-party drivers"
 msgstr "Οδηγοί τρίτων"
-
-msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"Αυτός ο λογαριασμός δεν διαθέτει κωδικό σύνδεσης, αλλά το sudo θα απαιτούσε "
-"εξακολουθεί έναν. Επειδή ο λογαριασμός root είναι κλειδωμένος από "
-"προεπιλογή, δεν θα μπορούσατε να εκτελέσετε εργασίες διαχειριστή. Ορίστε "
-"έναν κωδικό πρόσβασης για τον λογαριασμό ή ενεργοποιήστε το sudo χωρίς "
-"κωδικό πρόσβασης."
 
 msgid ""
 "This advanced path preserves existing partitions but changes the selected "
@@ -862,9 +805,6 @@ msgstr ""
 "Αυτή η προηγμένη διαδρομή διατηρεί τις υπάρχουσες παρτίτες αλλά αλλάζει τον "
 "πίνακα παρτίτων του επιλεγμένου δίσκου και την κατάσταση εκκίνησης EFI της "
 "μηχανής."
-
-msgid "This configuration is very unsafe"
-msgstr "Αυτή η διαμόρφωση είναι πολύ μη ασφαλής"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -972,9 +912,6 @@ msgid ""
 msgstr ""
 "Εγγραφή μόνο EFI/AnduinOS, χωρίς υπεργραφή του EFI/BOOT και με απαίτηση "
 "επαληθευμένης εγγραφής NVRAM AnduinOS."
-
-msgid "automatic login"
-msgstr "αυτόματη είσοδος"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
@@ -1265,3 +1202,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "Απαιτείται κωδικός πρόσβασης."
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Οι εντολές διαχείρισης δεν θα ζητούν πλέον τον κωδικό πρόσβασής σας."
+
+msgid "Advanced Options"
+msgstr "Προχωρημένες επιλογές"
+
+msgid "Allow SSH login with the account password"
+msgstr "Να επιτρέπεται σύνδεση SSH με τον κωδικό πρόσβασης του λογαριασμού"
+
+msgid "Automatic desktop login"
+msgstr "Αυτόματη σύνδεση στην επιφάνεια εργασίας"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Επιλέξτε πώς συνδέεται ο τοπικός λογαριασμός διαχειριστή και εγκρίνει αλλαγές στο σύστημα."
+
+msgid "Choose optional access and sign-in policies"
+msgstr "Επιλέξτε προαιρετικές πολιτικές πρόσβασης και σύνδεσης"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "Επιλέξτε αν αυτός ο υπολογιστής θα δέχεται απομακρυσμένες συνδέσεις Secure Shell."
+
+msgid "Configure Secure Shell"
+msgstr "Ρύθμιση Secure Shell"
+
+msgid "Local Access"
+msgstr "Τοπική πρόσβαση"
+
+msgid "Log in to the desktop automatically"
+msgstr "Αυτόματη σύνδεση στην επιφάνεια εργασίας"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Αυτόματο άνοιγμα της επιφάνειας εργασίας αυτού του λογαριασμού κατά την εκκίνηση του υπολογιστή."
+
+msgid "Remote Access"
+msgstr "Απομακρυσμένη πρόσβαση"
+
+msgid "Run sudo commands without a password"
+msgstr "Εκτέλεση εντολών sudo χωρίς κωδικό πρόσβασης"
+
+msgid "SSH password login"
+msgstr "Σύνδεση SSH με κωδικό πρόσβασης"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Εκκίνηση του Secure Shell και αποδοχή του κωδικού αυτού του λογαριασμού μέσω δικτύου."
+
+msgid "This will reduce the security of the installed system."
+msgstr "Αυτό θα μειώσει την ασφάλεια του εγκατεστημένου συστήματος."
+
+msgid "disabled"
+msgstr "απενεργοποιημένο"
+
+msgid "enabled"
+msgstr "ενεργοποιημένο"

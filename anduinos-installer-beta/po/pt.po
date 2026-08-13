@@ -71,9 +71,6 @@ msgstr "TODOS OS DADOS em {disk} serão apagados permanentemente."
 msgid "Account security"
 msgstr "Segurança da conta"
 
-msgid "Administrator access would be locked"
-msgstr "Acesso de administrador ficaria bloqueado"
-
 msgid "Advanced Storage"
 msgstr "Armazenamento Avançado"
 
@@ -172,16 +169,6 @@ msgid ""
 msgstr ""
 "AnduinOS utilizará apenas o espaço não alocado selecionado. O instalador não "
 "reduzirá nem moverá um sistema de ficheiros existente."
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"Qualquer programa executado como o seu utilizador pode obter privilégios "
-"completos de administrador sem autenticação. A palavra-passe de início de "
-"sessão ainda protege o acesso, mas não protegerá o sudo. Tem a certeza de "
-"que deseja continuar?"
 
 msgid "Arabic"
 msgstr "Árabe"
@@ -313,9 +300,6 @@ msgstr "Simulação de desenvolvimento concluída"
 msgid "Discover AnduinOS"
 msgstr "Descubra o AnduinOS"
 
-msgid "Do not require a password for sudo commands"
-msgstr "Não exigir palavra-passe para comandos sudo"
-
 msgid "Download and install system updates during installation"
 msgstr ""
 "Efetuar download e instalar atualizações do sistema durante a instalação"
@@ -421,9 +405,6 @@ msgstr "Hindi (Índia)"
 msgid "How should AnduinOS use this disk?"
 msgstr "Como deve o AnduinOS utilizar este disco?"
 
-msgid "I Understand the Risk, Continue"
-msgstr "Compreendo o Risco, Continuar"
-
 msgid "Indonesian"
 msgstr "Indonésio"
 
@@ -441,9 +422,6 @@ msgstr "Instalar em conjunto"
 
 msgid "Install alongside"
 msgstr "Instalar em conjunto"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "Instalar em conjunto requer uma conta protegida por palavra-passe."
 
 msgid "Install bootloader"
 msgstr "Instalar gestor de arranque"
@@ -581,9 +559,6 @@ msgstr "Palavra-passe"
 msgid "Password must be at least 6 characters."
 msgstr "A palavra-passe deve ter pelo menos 6 caracteres."
 
-msgid "Passwordless sudo is unsafe"
-msgstr "O sudo sem palavra-passe é inseguro"
-
 msgid "Platform"
 msgstr "Plataforma"
 
@@ -654,12 +629,6 @@ msgstr "Reiniciar e Inscrever Chave do Secure Boot"
 msgid "Restart is disabled in development protection mode"
 msgstr ""
 "A reinicialização está desativada no modo de proteção de desenvolvimento"
-
-msgid "Return and Set a Password"
-msgstr "Voltar e Definir uma Palavra-passe"
-
-msgid "Return to Make Changes"
-msgstr "Voltar para Efetuar Alterações"
 
 msgid "Reuse {path} ({size})"
 msgstr "Reutilizar {path} ({size})"
@@ -815,19 +784,6 @@ msgstr ""
 "A topologia do disco selecionado mudou. Revise o disco e o método de "
 "instalação novamente."
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"O sistema irá iniciar sessão nesta conta automaticamente e permitir-lhe-á "
-"obter privilégios completos de administrador sem palavra-passe. Qualquer "
-"pessoa com acesso físico, e qualquer programa executado como este "
-"utilizador, pode controlar completamente o sistema. Utilize isto apenas para "
-"um quiosque, máquina virtual temporária ou outro ambiente controlado."
-
 msgid "The two passwords do not match."
 msgstr "As duas palavras-passe não coincidem."
 
@@ -835,25 +791,11 @@ msgid "Third-party drivers"
 msgstr "Controladores de terceiros"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"Esta conta não tem palavra-passe de início de sessão, mas o sudo ainda a "
-"exigiria. Como a conta root está bloqueada por predefinição, seria incapaz "
-"de executar tarefas de administrador. Defina uma palavra-passe de conta ou "
-"ative o sudo sem palavra-passe."
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "Esta opção avançada preserva as partições existentes, mas altera a tabela de "
 "partições do disco selecionado e o estado de inicialização EFI da máquina."
-
-msgid "This configuration is very unsafe"
-msgstr "Esta configuração é muito insegura"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -958,9 +900,6 @@ msgid ""
 msgstr ""
 "Escrever apenas no EFI/AnduinOS, não sobrescrever o EFI/BOOT e exigir uma "
 "entrada NVRAM do AnduinOS verificada."
-
-msgid "automatic login"
-msgstr "início de sessão automático"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
@@ -1250,3 +1189,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "É necessária uma palavra-passe."
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Os comandos administrativos deixarão de pedir a sua palavra-passe."
+
+msgid "Advanced Options"
+msgstr "Opções avançadas"
+
+msgid "Allow SSH login with the account password"
+msgstr "Permitir início de sessão SSH com a palavra-passe da conta"
+
+msgid "Automatic desktop login"
+msgstr "Início de sessão automático no ambiente de trabalho"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Escolha como a conta de administrador local inicia sessão e autoriza alterações ao sistema."
+
+msgid "Choose optional access and sign-in policies"
+msgstr "Escolha políticas opcionais de acesso e início de sessão"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "Escolha se este computador aceita ligações Secure Shell remotas."
+
+msgid "Configure Secure Shell"
+msgstr "Configurar Secure Shell"
+
+msgid "Local Access"
+msgstr "Acesso local"
+
+msgid "Log in to the desktop automatically"
+msgstr "Iniciar sessão automaticamente no ambiente de trabalho"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Abrir automaticamente o ambiente de trabalho desta conta ao iniciar o computador."
+
+msgid "Remote Access"
+msgstr "Acesso remoto"
+
+msgid "Run sudo commands without a password"
+msgstr "Executar comandos sudo sem palavra-passe"
+
+msgid "SSH password login"
+msgstr "Início de sessão SSH com palavra-passe"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Iniciar o Secure Shell e aceitar a palavra-passe desta conta através da rede."
+
+msgid "This will reduce the security of the installed system."
+msgstr "Isto reduzirá a segurança do sistema instalado."
+
+msgid "disabled"
+msgstr "desativado"
+
+msgid "enabled"
+msgstr "ativado"

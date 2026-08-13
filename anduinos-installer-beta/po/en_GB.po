@@ -70,9 +70,6 @@ msgstr "ALL DATA on {disk} will be permanently erased."
 msgid "Account security"
 msgstr "Account security"
 
-msgid "Administrator access would be locked"
-msgstr "Administrator access would be locked"
-
 msgid "Advanced Storage"
 msgstr "Advanced Storage"
 
@@ -170,15 +167,6 @@ msgid ""
 msgstr ""
 "AnduinOS will use only the selected unallocated space. The installer will "
 "not shrink or move an existing filesystem."
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
 
 msgid "Arabic"
 msgstr "Arabic"
@@ -309,9 +297,6 @@ msgstr "Development simulation completed"
 msgid "Discover AnduinOS"
 msgstr "Discover AnduinOS"
 
-msgid "Do not require a password for sudo commands"
-msgstr "Do not require a password for sudo commands"
-
 msgid "Download and install system updates during installation"
 msgstr "Download and install system updates during installation"
 
@@ -413,9 +398,6 @@ msgstr "Hindi (India)"
 msgid "How should AnduinOS use this disk?"
 msgstr "How should AnduinOS use this disk?"
 
-msgid "I Understand the Risk, Continue"
-msgstr "I Understand the Risk, Continue"
-
 msgid "Indonesian"
 msgstr "Indonesian"
 
@@ -433,9 +415,6 @@ msgstr "Install Alongside"
 
 msgid "Install alongside"
 msgstr "Install alongside"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "Install alongside requires a password-protected account."
 
 msgid "Install bootloader"
 msgstr "Install bootloader"
@@ -573,9 +552,6 @@ msgstr "Password"
 msgid "Password must be at least 6 characters."
 msgstr "Password must be at least 6 characters."
 
-msgid "Passwordless sudo is unsafe"
-msgstr "Passwordless sudo is unsafe"
-
 msgid "Platform"
 msgstr "Platform"
 
@@ -645,12 +621,6 @@ msgstr "Restart and Enroll Secure Boot Key"
 
 msgid "Restart is disabled in development protection mode"
 msgstr "Restart is disabled in development protection mode"
-
-msgid "Return and Set a Password"
-msgstr "Return and Set a Password"
-
-msgid "Return to Make Changes"
-msgstr "Return to Make Changes"
 
 msgid "Reuse {path} ({size})"
 msgstr "Reuse {path} ({size})"
@@ -803,19 +773,6 @@ msgstr ""
 "The selected disk topology changed. Review the disk and installation method "
 "again."
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-
 msgid "The two passwords do not match."
 msgstr "The two passwords do not match."
 
@@ -823,25 +780,11 @@ msgid "Third-party drivers"
 msgstr "Third-party drivers"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
-
-msgid "This configuration is very unsafe"
-msgstr "This configuration is very unsafe"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -946,9 +889,6 @@ msgid ""
 msgstr ""
 "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
 "AnduinOS NVRAM entry."
-
-msgid "automatic login"
-msgstr "automatic login"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr "create a machine-local MOK; enroll after reboot with password 123456"
@@ -1236,3 +1176,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "A password is required."
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Administrative commands will no longer ask for your password."
+
+msgid "Advanced Options"
+msgstr "Advanced Options"
+
+msgid "Allow SSH login with the account password"
+msgstr "Allow SSH login with the account password"
+
+msgid "Automatic desktop login"
+msgstr "Automatic desktop login"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Choose how the local administrator account signs in and authorizes system changes."
+
+msgid "Choose optional access and sign-in policies"
+msgstr "Choose optional access and sign-in policies"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "Choose whether this computer accepts remote Secure Shell connections."
+
+msgid "Configure Secure Shell"
+msgstr "Configure Secure Shell"
+
+msgid "Local Access"
+msgstr "Local Access"
+
+msgid "Log in to the desktop automatically"
+msgstr "Log in to the desktop automatically"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Open this account's desktop automatically when the computer starts."
+
+msgid "Remote Access"
+msgstr "Remote Access"
+
+msgid "Run sudo commands without a password"
+msgstr "Run sudo commands without a password"
+
+msgid "SSH password login"
+msgstr "SSH password login"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Start Secure Shell and accept this account password over the network."
+
+msgid "This will reduce the security of the installed system."
+msgstr "This will reduce the security of the installed system."
+
+msgid "disabled"
+msgstr "disabled"
+
+msgid "enabled"
+msgstr "enabled"

@@ -72,9 +72,6 @@ msgstr "ВСІ ДАНІ на {disk} буде остаточно видалено
 msgid "Account security"
 msgstr "Безпека облікового запису"
 
-msgid "Administrator access would be locked"
-msgstr "Доступ адміністратора буде заблоковано"
-
 msgid "Advanced Storage"
 msgstr "Розширені налаштування сховища"
 
@@ -172,15 +169,6 @@ msgid ""
 msgstr ""
 "AnduinOS використовуватиме лише вибране вільне місце. Інсталятор не буде "
 "зменшувати або переміщувати існуючу файлову систему."
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"Будь-яка програма, запущена від вашого імені, може отримати повні права "
-"адміністратора без автентифікації. Ваш пароль входу захищає вхід у систему, "
-"але не захистить sudo. Ви впевнені, що хочете продовжити?"
 
 msgid "Arabic"
 msgstr "Арабська"
@@ -315,9 +303,6 @@ msgstr "Імітацію розробки завершено"
 msgid "Discover AnduinOS"
 msgstr "Дізнайтеся більше про AnduinOS"
 
-msgid "Do not require a password for sudo commands"
-msgstr "Не вимагати пароль для команд sudo"
-
 msgid "Download and install system updates during installation"
 msgstr "Завантажити та встановити оновлення системи під час встановлення"
 
@@ -422,9 +407,6 @@ msgstr "Хінді (Індія)"
 msgid "How should AnduinOS use this disk?"
 msgstr "Як AnduinOS має використовувати цей диск?"
 
-msgid "I Understand the Risk, Continue"
-msgstr "Я розумію ризики, продовжити"
-
 msgid "Indonesian"
 msgstr "Індонезійська"
 
@@ -442,9 +424,6 @@ msgstr "Встановити поруч"
 
 msgid "Install alongside"
 msgstr "Встановити поруч"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "Для встановлення поруч потрібен обліковий запис із захистом паролем."
 
 msgid "Install bootloader"
 msgstr "Встановити завантажувач"
@@ -582,9 +561,6 @@ msgstr "Пароль"
 msgid "Password must be at least 6 characters."
 msgstr "Пароль має містити щонайменше 6 символів."
 
-msgid "Passwordless sudo is unsafe"
-msgstr "Судо без пароля є небезпечним"
-
 msgid "Platform"
 msgstr "Платформа"
 
@@ -654,12 +630,6 @@ msgstr "Перезавантажити та зареєструвати ключ 
 
 msgid "Restart is disabled in development protection mode"
 msgstr "Перезавантаження відключено в режимі захисту розробки"
-
-msgid "Return and Set a Password"
-msgstr "Повернутися та встановити пароль"
-
-msgid "Return to Make Changes"
-msgstr "Повернутися для внесення змін"
 
 msgid "Reuse {path} ({size})"
 msgstr "Використати повторно {path} ({size})"
@@ -815,19 +785,6 @@ msgstr ""
 "\\\tТопологія вибраного диска змінилася. Перевірте диск та метод "
 "встановлення ще раз."
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"Система автоматично увійде в цей обліковий запис і дозволить отримувати "
-"повні права адміністратора без пароля. Будь-хто з фізичним доступом, а також "
-"будь-яка програма, запущена від цього користувача, може повністю керувати "
-"системою. Використовуйте це лише для кіоску, тимчасової віртуальної машини "
-"або іншого контрольованого середовища."
-
 msgid "The two passwords do not match."
 msgstr "Два паролі не збігаються."
 
@@ -835,25 +792,11 @@ msgid "Third-party drivers"
 msgstr "Сторонні драйвери"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"Цей обліковий запис не має пароля для входу, але sudo все одно вимагатиме "
-"пароль. Оскільки обліковий запис root за замовчуванням заблоковано, ви не "
-"зможете виконувати завдання адміністратора. Встановіть пароль облікового "
-"запису або увімкніть sudo без пароля."
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "\\\tЦей розширений шлях зберігає існуючі розділи, але змінює таблицю "
 "розділів вибраного диска та стан завантаження EFI машини."
-
-msgid "This configuration is very unsafe"
-msgstr "Ця конфігурація є дуже небезпечною"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -958,9 +901,6 @@ msgid ""
 msgstr ""
 "Записувати лише EFI/AnduinOS, не перезаписувати EFI/BOOT та вимагати "
 "перевіреного запису AnduinOS у NVRAM."
-
-msgid "automatic login"
-msgstr "автоматичний вхід"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
@@ -1248,3 +1188,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "Потрібен пароль."
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Адміністративні команди більше не запитуватимуть пароль."
+
+msgid "Advanced Options"
+msgstr "Додаткові параметри"
+
+msgid "Allow SSH login with the account password"
+msgstr "Дозволити вхід через SSH із паролем облікового запису"
+
+msgid "Automatic desktop login"
+msgstr "Автоматичний вхід до стільниці"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Виберіть спосіб входу локального облікового запису адміністратора та підтвердження системних змін."
+
+msgid "Choose optional access and sign-in policies"
+msgstr "Виберіть додаткові правила доступу та входу"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "Виберіть, чи прийматиме цей комп’ютер віддалені з’єднання Secure Shell."
+
+msgid "Configure Secure Shell"
+msgstr "Налаштувати Secure Shell"
+
+msgid "Local Access"
+msgstr "Локальний доступ"
+
+msgid "Log in to the desktop automatically"
+msgstr "Автоматично входити до стільниці"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Автоматично відкривати стільницю цього облікового запису під час запуску комп’ютера."
+
+msgid "Remote Access"
+msgstr "Віддалений доступ"
+
+msgid "Run sudo commands without a password"
+msgstr "Виконувати команди sudo без пароля"
+
+msgid "SSH password login"
+msgstr "Вхід через SSH із паролем"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Запустити Secure Shell і приймати пароль цього облікового запису через мережу."
+
+msgid "This will reduce the security of the installed system."
+msgstr "Це знизить безпеку встановленої системи."
+
+msgid "disabled"
+msgstr "вимкнено"
+
+msgid "enabled"
+msgstr "увімкнено"

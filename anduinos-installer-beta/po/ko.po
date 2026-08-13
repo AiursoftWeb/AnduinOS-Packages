@@ -69,9 +69,6 @@ msgstr "{disk}의 모든 데이터가 영구적으로 삭제됩니다."
 msgid "Account security"
 msgstr "계정 보안"
 
-msgid "Administrator access would be locked"
-msgstr "관리자 접근이 잠깁니다"
-
 msgid "Advanced Storage"
 msgstr "고급 스토리지"
 
@@ -168,15 +165,6 @@ msgid ""
 msgstr ""
 "AnduinOS는 선택된 미할당 공간만 사용합니다. 설치 관리자는 기존 파일 시스템을 "
 "축소하거나 이동하지 않습니다."
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"사용자 권한으로 실행 중인 모든 프로그램은 인증 없이 전체 관리자 권한을 획득"
-"할 수 있습니다. 로그인 비밀번호는 여전히 로그인 시 보호를 제공하지만 sudo는 "
-"보호하지 않습니다. 계속하시겠습니까?"
 
 msgid "Arabic"
 msgstr "아랍어"
@@ -306,9 +294,6 @@ msgstr "개발 시뮬레이션 완료"
 msgid "Discover AnduinOS"
 msgstr "AnduinOS 알아보기"
 
-msgid "Do not require a password for sudo commands"
-msgstr "sudo 명령어에 비밀번호 요구 안 함"
-
 msgid "Download and install system updates during installation"
 msgstr "설치 중 시스템 업데이트 다운로드 및 설치"
 
@@ -409,9 +394,6 @@ msgstr "힌디어(인도)"
 msgid "How should AnduinOS use this disk?"
 msgstr "AnduinOS에서 이 디스크를 어떻게 사용하시겠습니까?"
 
-msgid "I Understand the Risk, Continue"
-msgstr "위험을 인지하고 계속하기"
-
 msgid "Indonesian"
 msgstr "인도네시아어"
 
@@ -429,9 +411,6 @@ msgstr "기존 시스템과 함께 설치"
 
 msgid "Install alongside"
 msgstr "기존 시스템과 함께 설치"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "기존 시스템과 함께 설치를 위해서는 암호로 보호된 계정이 필요합니다."
 
 msgid "Install bootloader"
 msgstr "부트 로더 설치"
@@ -569,9 +548,6 @@ msgstr "비밀번호"
 msgid "Password must be at least 6 characters."
 msgstr "비밀번호는 최소 6자 이상이어야 합니다."
 
-msgid "Passwordless sudo is unsafe"
-msgstr "비밀번호 없는 sudo는 안전하지 않습니다"
-
 msgid "Platform"
 msgstr "플랫폼"
 
@@ -640,12 +616,6 @@ msgstr "재시작 및 보안 부팅 키 등록"
 
 msgid "Restart is disabled in development protection mode"
 msgstr "개발 보호 모드에서는 재부팅이 비활성화되어 있습니다"
-
-msgid "Return and Set a Password"
-msgstr "돌아가서 비밀번호 설정하기"
-
-msgid "Return to Make Changes"
-msgstr "변경 사항을 위해 돌아가기"
 
 msgid "Reuse {path} ({size})"
 msgstr "{path} ({size}) 재사용"
@@ -798,18 +768,6 @@ msgstr ""
 "선택한 디스크 토폴로지가 변경되었습니다. 디스크 및 설치 방법을 다시 검토하십"
 "시오."
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"시스템이 이 계정으로 자동으로 로그인하고 비밀번호 없이 전체 관리자 권한을 획"
-"득할 수 있도록 허용합니다. 물리적 접근 권한이 있는 사람과 이 사용자로 실행되"
-"는 모든 프로그램은 시스템을 완전히 제어할 수 있습니다. 이 기능은 키오스크, 임"
-"시 가상 머신 또는 기타 통제된 환경에서만 사용하세요."
-
 msgid "The two passwords do not match."
 msgstr "두 비밀번호가 일치하지 않습니다."
 
@@ -817,24 +775,11 @@ msgid "Third-party drivers"
 msgstr "타사 드라이버"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"이 계정에는 로그인 비밀번호가 없습니다. 그러나 sudo는 여전히 비밀번호를 필요"
-"로 합니다. 루트 계정은 기본적으로 잠겨 있으므로 관리자 작업을 수행할 수 없습"
-"니다. 계정 비밀번호를 설정하거나 비밀번호 없는 sudo를 활성화하세요."
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "이 고급 경로는 기존 파티션을 유지하지만 선택한 디스크의 파티션 테이블과 기계"
 "의 EFI 부팅 상태를 변경합니다."
-
-msgid "This configuration is very unsafe"
-msgstr "이 구성은 매우 안전하지 않습니다"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -939,9 +884,6 @@ msgid ""
 msgstr ""
 "EFI/AnduinOS만 작성하고 EFI/BOOT는 덮어쓰지 않으며, 검증된 AnduinOS NVRAM 항"
 "목을 요구합니다."
-
-msgid "automatic login"
-msgstr "자동 로그인"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr "머신 로컬 MOK 생성; 재부팅 후 비밀번호 123456로 등록"
@@ -1227,3 +1169,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "암호가 필요합니다."
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "관리 명령을 실행할 때 더 이상 암호를 묻지 않습니다."
+
+msgid "Advanced Options"
+msgstr "고급 옵션"
+
+msgid "Allow SSH login with the account password"
+msgstr "계정 암호를 사용한 SSH 로그인 허용"
+
+msgid "Automatic desktop login"
+msgstr "데스크톱 자동 로그인"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "로컬 관리자 계정의 로그인 방식과 시스템 변경 승인 방식을 선택합니다."
+
+msgid "Choose optional access and sign-in policies"
+msgstr "선택적 접근 및 로그인 정책 선택"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "이 컴퓨터가 원격 Secure Shell 연결을 허용할지 선택합니다."
+
+msgid "Configure Secure Shell"
+msgstr "Secure Shell 구성"
+
+msgid "Local Access"
+msgstr "로컬 접근"
+
+msgid "Log in to the desktop automatically"
+msgstr "데스크톱에 자동으로 로그인"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "컴퓨터가 시작될 때 이 계정의 데스크톱을 자동으로 엽니다."
+
+msgid "Remote Access"
+msgstr "원격 접근"
+
+msgid "Run sudo commands without a password"
+msgstr "암호 없이 sudo 명령 실행"
+
+msgid "SSH password login"
+msgstr "SSH 암호 로그인"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Secure Shell을 시작하고 네트워크를 통해 이 계정의 암호를 허용합니다."
+
+msgid "This will reduce the security of the installed system."
+msgstr "설치된 시스템의 보안이 저하됩니다."
+
+msgid "disabled"
+msgstr "비활성화됨"
+
+msgid "enabled"
+msgstr "활성화됨"

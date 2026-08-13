@@ -70,9 +70,6 @@ msgstr "سيتم مسح جميع البيانات على {disk} بشكل دائ�
 msgid "Account security"
 msgstr "أمان الحساب"
 
-msgid "Administrator access would be locked"
-msgstr "سيتم قفل وصول المسؤول"
-
 msgid "Advanced Storage"
 msgstr "التخزين المتقدم"
 
@@ -169,15 +166,6 @@ msgid ""
 msgstr ""
 "سوف يستخدم AnduinOS فقط المساحة غير المخصصة المحددة. لن يقوم المثبت بتصغير "
 "أو نقل نظام ملفات موجود."
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"يمكن لأي برنامج يعمل باسم مستخدمك الحصول على امتيازات مسؤول كاملة دون "
-"مصادقة. لا تزال كلمة مرور تسجيل الدخول تحمي عملية تسجيل الدخول، لكنها لن "
-"تحمي sudo. هل أنت متأكد من أنك تريد المتابعة؟"
 
 msgid "Arabic"
 msgstr "العربية"
@@ -305,9 +293,6 @@ msgstr "اكتملت محاكاة التطوير"
 msgid "Discover AnduinOS"
 msgstr "اكتشف AnduinOS"
 
-msgid "Do not require a password for sudo commands"
-msgstr "لا تتطلب كلمة مرور لأوامر sudo"
-
 msgid "Download and install system updates during installation"
 msgstr "تحميل وتثبيت تحديثات النظام أثناء التثبيت"
 
@@ -410,9 +395,6 @@ msgstr "الهندية (الهند)"
 msgid "How should AnduinOS use this disk?"
 msgstr "كيف يجب أن تستخدم AnduinOS هذا القرص؟"
 
-msgid "I Understand the Risk, Continue"
-msgstr "أفهم المخاطر، المتابعة"
-
 msgid "Indonesian"
 msgstr "الإندونيسية"
 
@@ -430,9 +412,6 @@ msgstr "التثبيت بجانب نظام التشغيل الحالي"
 
 msgid "Install alongside"
 msgstr "التثبيت بجانب"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "يتطلب التثبيت بجانب نظام تشغيل آخر حسابًا محميًا بكلمة مرور."
 
 msgid "Install bootloader"
 msgstr "تثبيت محمل الإقلاع"
@@ -569,9 +548,6 @@ msgstr "كلمة المرور"
 msgid "Password must be at least 6 characters."
 msgstr "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل."
 
-msgid "Passwordless sudo is unsafe"
-msgstr "استخدام sudo بدون كلمة مرور غير آمن"
-
 msgid "Platform"
 msgstr "المنصة"
 
@@ -640,12 +616,6 @@ msgstr "إعادة التشغيل وتسجيل مفتاح الإقلاع الآ�
 
 msgid "Restart is disabled in development protection mode"
 msgstr "تم تعطيل إعادة التشغيل في وضع حماية التطوير"
-
-msgid "Return and Set a Password"
-msgstr "العودة وإعداد كلمة مرور"
-
-msgid "Return to Make Changes"
-msgstr "العودة لإجراء تغييرات"
 
 msgid "Reuse {path} ({size})"
 msgstr "إعادة استخدام {path} ({size})"
@@ -793,18 +763,6 @@ msgid ""
 "again."
 msgstr "تغير هيكلية القرص المحددة. راجع القرص وطريقة التثبيت مرة أخرى."
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"سيتصل النظام تلقائيًا بهذه الحساب ويسمح له بالحصول على امتيازات مسؤول كاملة "
-"دون كلمة مرور. يمكن لأي شخص لديه وصول مادي، وأي برنامج يعمل باسم هذا "
-"المستخدم، التحكم الكامل في النظام. استخدم هذا فقط لـ kiosk أو آلة افتراضية "
-"مؤقتة أو بيئة أخرى خاضعة للرقابة."
-
 msgid "The two passwords do not match."
 msgstr "كلمتا المرور غير متطابقتين."
 
@@ -812,24 +770,11 @@ msgid "Third-party drivers"
 msgstr "برامج تشغيل الجهات الخارجية"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"لا يحتوي هذا الحساب على كلمة مرور تسجيل الدخول، لكن الأمر sudo سيظل يتطلب "
-"واحدة. نظرًا لأن حساب root مقفول افتراضيًا، لن تتمكن من تنفيذ مهام المسؤول. قم "
-"بتعيين كلمة مرور للحساب أو فعّل sudo بدون كلمة مرور."
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "يحافظ هذا المسار المتقدم على التقسيمات الحالية لكنه يغير جدول تقسيمات القرص "
 "المحدد وحالة تشغيل EFI للجهاز."
-
-msgid "This configuration is very unsafe"
-msgstr "هذه الإعدادات غير آمنة للغاية"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -934,9 +879,6 @@ msgid ""
 msgstr ""
 "اكتب EFI/AnduinOS فقط، ولا تجاوز EFI/BOOT، وتطلب إدخال NVRAM موثق لـ "
 "AnduinOS."
-
-msgid "automatic login"
-msgstr "تسجيل الدخول التلقائي"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr "إنشاء MOK محلي للآلة؛ تسجيل بعد إعادة التشغيل بكلمة المرور 123456"
@@ -1222,3 +1164,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "كلمة مرور مطلوبة."
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "لن تطلب الأوامر الإدارية كلمة مرورك بعد الآن."
+
+msgid "Advanced Options"
+msgstr "خيارات متقدمة"
+
+msgid "Allow SSH login with the account password"
+msgstr "السماح بتسجيل الدخول عبر SSH باستخدام كلمة مرور الحساب"
+
+msgid "Automatic desktop login"
+msgstr "تسجيل الدخول التلقائي إلى سطح المكتب"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "اختر كيفية تسجيل دخول حساب المسؤول المحلي وتفويض تغييرات النظام."
+
+msgid "Choose optional access and sign-in policies"
+msgstr "اختر سياسات اختيارية للوصول وتسجيل الدخول"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "اختر ما إذا كان هذا الكمبيوتر يقبل اتصالات Secure Shell البعيدة."
+
+msgid "Configure Secure Shell"
+msgstr "تهيئة Secure Shell"
+
+msgid "Local Access"
+msgstr "الوصول المحلي"
+
+msgid "Log in to the desktop automatically"
+msgstr "تسجيل الدخول إلى سطح المكتب تلقائيًا"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "فتح سطح مكتب هذا الحساب تلقائيًا عند بدء تشغيل الكمبيوتر."
+
+msgid "Remote Access"
+msgstr "الوصول عن بُعد"
+
+msgid "Run sudo commands without a password"
+msgstr "تشغيل أوامر sudo دون كلمة مرور"
+
+msgid "SSH password login"
+msgstr "تسجيل الدخول إلى SSH بكلمة مرور"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "تشغيل Secure Shell وقبول كلمة مرور هذا الحساب عبر الشبكة."
+
+msgid "This will reduce the security of the installed system."
+msgstr "سيؤدي ذلك إلى تقليل أمان النظام المثبت."
+
+msgid "disabled"
+msgstr "معطّل"
+
+msgid "enabled"
+msgstr "مفعّل"

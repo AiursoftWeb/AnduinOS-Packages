@@ -47,9 +47,6 @@ msgstr ""
 msgid "Account security"
 msgstr ""
 
-msgid "Administrator access would be locked"
-msgstr ""
-
 msgid "Advanced Storage"
 msgstr ""
 
@@ -114,9 +111,6 @@ msgid "AnduinOS will use only the selected unallocated space on {disk}. Existing
 msgstr ""
 
 msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
-msgstr ""
-
-msgid "Any program running as your user can obtain full administrator privileges without authentication. Your login password still protects sign-in, but it will not protect sudo. Are you sure you want to continue?"
 msgstr ""
 
 msgid "Arabic"
@@ -224,9 +218,6 @@ msgstr ""
 msgid "Discover AnduinOS"
 msgstr ""
 
-msgid "Do not require a password for sudo commands"
-msgstr ""
-
 msgid "Download and install system updates during installation"
 msgstr ""
 
@@ -308,9 +299,6 @@ msgstr ""
 msgid "How should AnduinOS use this disk?"
 msgstr ""
 
-msgid "I Understand the Risk, Continue"
-msgstr ""
-
 msgid "Indonesian"
 msgstr ""
 
@@ -327,9 +315,6 @@ msgid "Install Alongside"
 msgstr ""
 
 msgid "Install alongside"
-msgstr ""
-
-msgid "Install alongside requires a password-protected account."
 msgstr ""
 
 msgid "Install bootloader"
@@ -452,9 +437,6 @@ msgstr ""
 msgid "Password must be at least 6 characters."
 msgstr ""
 
-msgid "Passwordless sudo is unsafe"
-msgstr ""
-
 msgid "Platform"
 msgstr ""
 
@@ -519,12 +501,6 @@ msgid "Restart and Enroll Secure Boot Key"
 msgstr ""
 
 msgid "Restart is disabled in development protection mode"
-msgstr ""
-
-msgid "Return and Set a Password"
-msgstr ""
-
-msgid "Return to Make Changes"
 msgstr ""
 
 msgid "Reuse {path} ({size})"
@@ -638,22 +614,13 @@ msgstr ""
 msgid "The selected disk topology changed. Review the disk and installation method again."
 msgstr ""
 
-msgid "The system will sign in to this account automatically and allow it to obtain full administrator privileges without a password. Anyone with physical access, and any program running as this user, can completely control the system. Use this only for a kiosk, temporary virtual machine, or another controlled environment."
-msgstr ""
-
 msgid "The two passwords do not match."
 msgstr ""
 
 msgid "Third-party drivers"
 msgstr ""
 
-msgid "This account has no login password, but sudo would still require one. Because the root account is locked by default, you would be unable to perform administrator tasks. Set an account password or enable passwordless sudo."
-msgstr ""
-
 msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
-msgstr ""
-
-msgid "This configuration is very unsafe"
 msgstr ""
 
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
@@ -738,9 +705,6 @@ msgid "Windows detected"
 msgstr ""
 
 msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
-msgstr ""
-
-msgid "automatic login"
 msgstr ""
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
@@ -1002,4 +966,61 @@ msgstr ""
 #: src/pages.py
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
+msgstr ""
+
+msgid "A password is required."
+msgstr ""
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr ""
+
+msgid "Advanced Options"
+msgstr ""
+
+msgid "Allow SSH login with the account password"
+msgstr ""
+
+msgid "Automatic desktop login"
+msgstr ""
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr ""
+
+msgid "Choose optional access and sign-in policies"
+msgstr ""
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr ""
+
+msgid "Configure Secure Shell"
+msgstr ""
+
+msgid "Local Access"
+msgstr ""
+
+msgid "Log in to the desktop automatically"
+msgstr ""
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr ""
+
+msgid "Remote Access"
+msgstr ""
+
+msgid "Run sudo commands without a password"
+msgstr ""
+
+msgid "SSH password login"
+msgstr ""
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr ""
+
+msgid "This will reduce the security of the installed system."
+msgstr ""
+
+msgid "disabled"
+msgstr ""
+
+msgid "enabled"
 msgstr ""

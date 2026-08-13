@@ -72,9 +72,6 @@ msgstr "TOATE DATELE de pe {disk} vor fi șterse definitiv."
 msgid "Account security"
 msgstr "Securitatea contului"
 
-msgid "Administrator access would be locked"
-msgstr "Accesul de administrator ar fi blocat"
-
 msgid "Advanced Storage"
 msgstr "Stocare avansată"
 
@@ -172,16 +169,6 @@ msgid ""
 msgstr ""
 "AnduinOS va folosi doar spațiul nealocat selectat. Programul de instalare nu "
 "va reduce sau muta un sistem de fișiere existent."
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"Orice program care rulează ca utilizatorul dvs. poate obține privilegii "
-"complete de administrator fără autentificare. Parola de conectare vă "
-"protejează încă la intrare, dar nu va proteja sudo. Sigur doriți să "
-"continuați?"
 
 msgid "Arabic"
 msgstr "Arabă"
@@ -314,9 +301,6 @@ msgstr "Simularea de dezvoltare s-a încheiat"
 msgid "Discover AnduinOS"
 msgstr "Explorează AnduinOS"
 
-msgid "Do not require a password for sudo commands"
-msgstr "Nu cere parolă pentru comenzile sudo"
-
 msgid "Download and install system updates during installation"
 msgstr "Descarcă și instalează actualizările sistemului în timpul instalării"
 
@@ -420,9 +404,6 @@ msgstr "Hindi (India)"
 msgid "How should AnduinOS use this disk?"
 msgstr "Cum ar trebui ca AnduinOS să utilizeze acest disc?"
 
-msgid "I Understand the Risk, Continue"
-msgstr "Înțeleg riscul, continuă"
-
 msgid "Indonesian"
 msgstr "Indoneziană"
 
@@ -440,10 +421,6 @@ msgstr "Instalează alături de sistemul existent"
 
 msgid "Install alongside"
 msgstr "Instalează alături de sistemul existent"
-
-msgid "Install alongside requires a password-protected account."
-msgstr ""
-"Instalarea alături de sistemul existent necesită un cont protejat cu parolă."
 
 msgid "Install bootloader"
 msgstr "Instalează bootloader-ul"
@@ -581,9 +558,6 @@ msgstr "Parolă"
 msgid "Password must be at least 6 characters."
 msgstr "Parola trebuie să aibă cel puțin 6 caractere."
 
-msgid "Passwordless sudo is unsafe"
-msgstr "sudo fără parolă este nesigur"
-
 msgid "Platform"
 msgstr "Platformă"
 
@@ -653,12 +627,6 @@ msgstr "Repornire și înregistrare cheie Secure Boot"
 
 msgid "Restart is disabled in development protection mode"
 msgstr "Repornirea este dezactivată în modul de protecție pentru dezvoltare"
-
-msgid "Return and Set a Password"
-msgstr "Întoarce-te și setează o parolă"
-
-msgid "Return to Make Changes"
-msgstr "Întoarce-te pentru a face modificări"
 
 msgid "Reuse {path} ({size})"
 msgstr "Reutilizare {path} ({size})"
@@ -815,19 +783,6 @@ msgstr ""
 "Topologia discului selectat s-a schimbat. Revizuiți discul și metoda de "
 "instalare din nou."
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"Sistemul se va autentifica automat în acest cont și îi va permite să obțină "
-"privilegii complete de administrator fără parolă. Orice persoană cu acces "
-"fizic și orice program care rulează ca acest utilizator poate controla "
-"complet sistemul. Folosiți această opțiune doar pentru un kiosk, o mașină "
-"virtuală temporară sau alt mediu controlat."
-
 msgid "The two passwords do not match."
 msgstr "Cele două parole nu se potrivesc."
 
@@ -835,25 +790,11 @@ msgid "Third-party drivers"
 msgstr "Drivere terțe"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"Acest cont nu are o parolă de autentificare, dar sudo ar cere în continuare "
-"una. Deoarece contul root este blocat implicit, nu ați putea executa sarcini "
-"de administrator. Stabiliți o parolă pentru cont sau activați sudo fără "
-"parolă."
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "Această cale avansată păstrează partițiile existente, dar modifică tabela de "
 "partiții a discului selectat și starea de boot EFI a mașinii."
-
-msgid "This configuration is very unsafe"
-msgstr "Această configurație este foarte nesigură"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -958,9 +899,6 @@ msgid ""
 msgstr ""
 "Scrie doar EFI/AnduinOS, nu suprascrie EFI/BOOT și necesită o intrare NVRAM "
 "AnduinOS verificată."
-
-msgid "automatic login"
-msgstr "conectare automată"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
@@ -1249,3 +1187,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "Este necesară o parolă."
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Comenzile administrative nu vor mai solicita parola."
+
+msgid "Advanced Options"
+msgstr "Opțiuni avansate"
+
+msgid "Allow SSH login with the account password"
+msgstr "Permite autentificarea SSH cu parola contului"
+
+msgid "Automatic desktop login"
+msgstr "Autentificare automată pe desktop"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Alegeți cum se autentifică contul de administrator local și cum autorizează modificările sistemului."
+
+msgid "Choose optional access and sign-in policies"
+msgstr "Alegeți politici opționale de acces și autentificare"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "Alegeți dacă acest computer acceptă conexiuni Secure Shell la distanță."
+
+msgid "Configure Secure Shell"
+msgstr "Configurează Secure Shell"
+
+msgid "Local Access"
+msgstr "Acces local"
+
+msgid "Log in to the desktop automatically"
+msgstr "Autentificare automată pe desktop"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Deschide automat desktopul acestui cont la pornirea computerului."
+
+msgid "Remote Access"
+msgstr "Acces la distanță"
+
+msgid "Run sudo commands without a password"
+msgstr "Rulează comenzi sudo fără parolă"
+
+msgid "SSH password login"
+msgstr "Autentificare SSH cu parolă"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Pornește Secure Shell și acceptă parola acestui cont prin rețea."
+
+msgid "This will reduce the security of the installed system."
+msgstr "Aceasta va reduce securitatea sistemului instalat."
+
+msgid "disabled"
+msgstr "dezactivat"
+
+msgid "enabled"
+msgstr "activat"

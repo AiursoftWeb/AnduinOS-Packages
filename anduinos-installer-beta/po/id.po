@@ -68,9 +68,6 @@ msgstr "SEMUA DATA pada {disk} akan dihapus secara permanen."
 msgid "Account security"
 msgstr "Keamanan akun"
 
-msgid "Administrator access would be locked"
-msgstr "Akses administrator akan dikunci"
-
 msgid "Advanced Storage"
 msgstr "Penyimpanan Lanjutan"
 
@@ -171,16 +168,6 @@ msgid ""
 msgstr ""
 "AnduinOS hanya akan menggunakan ruang yang belum dialokasikan yang dipilih. "
 "Pemasang tidak akan mengecilkan atau memindahkan sistem berkas yang ada."
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"Program apa pun yang berjalan sebagai pengguna Anda dapat memperoleh hak "
-"administrator penuh tanpa autentikasi. Kata sandi login Anda masih "
-"melindungi masuk, tetapi tidak akan melindungi sudo. Apakah Anda yakin ingin "
-"melanjutkan?"
 
 msgid "Arabic"
 msgstr "Arab"
@@ -311,9 +298,6 @@ msgstr "Simulasi pengembangan selesai"
 msgid "Discover AnduinOS"
 msgstr "Jelajahi AnduinOS"
 
-msgid "Do not require a password for sudo commands"
-msgstr "Jangan memerlukan kata sandi untuk perintah sudo"
-
 msgid "Download and install system updates during installation"
 msgstr "Unduh dan instal pembaruan sistem selama instalasi"
 
@@ -416,9 +400,6 @@ msgstr "India (Hindi)"
 msgid "How should AnduinOS use this disk?"
 msgstr "Bagaimana AnduinOS harus menggunakan disk ini?"
 
-msgid "I Understand the Risk, Continue"
-msgstr "Saya Memahami Risikonya, Lanjutkan"
-
 msgid "Indonesian"
 msgstr "Indonesia"
 
@@ -436,9 +417,6 @@ msgstr "Instal Bersama Sistem yang Ada"
 
 msgid "Install alongside"
 msgstr "Instal bersama sistem yang ada"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "Instalasi bersama memerlukan akun yang dilindungi kata sandi."
 
 msgid "Install bootloader"
 msgstr "Instal bootloader"
@@ -576,9 +554,6 @@ msgstr "Kata Sandi"
 msgid "Password must be at least 6 characters."
 msgstr "Kata sandi harus minimal 6 karakter."
 
-msgid "Passwordless sudo is unsafe"
-msgstr "Sudo tanpa kata sandi tidak aman"
-
 msgid "Platform"
 msgstr "Platform"
 
@@ -647,12 +622,6 @@ msgstr "Restart dan Daftarkan Kunci Secure Boot"
 
 msgid "Restart is disabled in development protection mode"
 msgstr "Restart dinonaktifkan dalam mode perlindungan pengembangan"
-
-msgid "Return and Set a Password"
-msgstr "Kembali dan Atur Kata Sandi"
-
-msgid "Return to Make Changes"
-msgstr "Kembali untuk Melakukan Perubahan"
 
 msgid "Reuse {path} ({size})"
 msgstr "Gunakan kembali {path} ({size})"
@@ -806,19 +775,6 @@ msgid ""
 msgstr ""
 "Topologi disk yang dipilih berubah. Tinjau kembali disk dan metode instalasi."
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"Sistem akan masuk ke akun ini secara otomatis dan mengizinkannya untuk "
-"memperoleh hak administrator penuh tanpa kata sandi. Siapa pun dengan akses "
-"fisik, dan program apa pun yang berjalan sebagai pengguna ini, dapat "
-"sepenuhnya mengendalikan sistem. Gunakan ini hanya untuk kios, mesin virtual "
-"sementara, atau lingkungan terkendali lainnya."
-
 msgid "The two passwords do not match."
 msgstr "Kedua kata sandi tidak cocok."
 
@@ -826,25 +782,11 @@ msgid "Third-party drivers"
 msgstr "Driver pihak ketiga"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"Akun ini tidak memiliki kata sandi masuk, tetapi sudo masih memerlukan satu. "
-"Karena akun root dikunci secara default, Anda tidak akan dapat melakukan "
-"tugas-tugas administrator. Tetapkan kata sandi akun atau aktifkan sudo tanpa "
-"kata sandi."
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "Jalur lanjutan ini mempertahankan partisi yang ada tetapi mengubah tabel "
 "partisi disk yang dipilih dan status boot EFI mesin."
-
-msgid "This configuration is very unsafe"
-msgstr "Konfigurasi ini sangat tidak aman"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -949,9 +891,6 @@ msgid ""
 msgstr ""
 "Tulis hanya EFI/AnduinOS, jangan timpa EFI/BOOT, dan memerlukan entri NVRAM "
 "AnduinOS yang terverifikasi."
-
-msgid "automatic login"
-msgstr "login otomatis"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
@@ -1240,3 +1179,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "Kata sandi diperlukan."
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Perintah administratif tidak akan lagi meminta kata sandi Anda."
+
+msgid "Advanced Options"
+msgstr "Opsi Lanjutan"
+
+msgid "Allow SSH login with the account password"
+msgstr "Izinkan masuk SSH dengan kata sandi akun"
+
+msgid "Automatic desktop login"
+msgstr "Masuk desktop otomatis"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Pilih cara akun administrator lokal masuk dan mengotorisasi perubahan sistem."
+
+msgid "Choose optional access and sign-in policies"
+msgstr "Pilih kebijakan akses dan masuk opsional"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "Pilih apakah komputer ini menerima koneksi Secure Shell jarak jauh."
+
+msgid "Configure Secure Shell"
+msgstr "Konfigurasikan Secure Shell"
+
+msgid "Local Access"
+msgstr "Akses Lokal"
+
+msgid "Log in to the desktop automatically"
+msgstr "Masuk ke desktop secara otomatis"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Buka desktop akun ini secara otomatis saat komputer dinyalakan."
+
+msgid "Remote Access"
+msgstr "Akses Jarak Jauh"
+
+msgid "Run sudo commands without a password"
+msgstr "Jalankan perintah sudo tanpa kata sandi"
+
+msgid "SSH password login"
+msgstr "Masuk SSH dengan kata sandi"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Jalankan Secure Shell dan terima kata sandi akun ini melalui jaringan."
+
+msgid "This will reduce the security of the installed system."
+msgstr "Ini akan mengurangi keamanan sistem yang terpasang."
+
+msgid "disabled"
+msgstr "dinonaktifkan"
+
+msgid "enabled"
+msgstr "diaktifkan"

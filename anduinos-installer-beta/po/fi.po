@@ -70,9 +70,6 @@ msgstr "{disk}-levyn KAIKKI TIEDOT poistetaan pysyvästi."
 msgid "Account security"
 msgstr "Tilin turvallisuus"
 
-msgid "Administrator access would be locked"
-msgstr "Ylläpitäjän pääsy lukittuisi"
-
 msgid "Advanced Storage"
 msgstr "Edistynyt tallennustila"
 
@@ -171,16 +168,6 @@ msgid ""
 msgstr ""
 "AnduinOS käyttää vain valittua varaamatonta tilaa. Asennusohjelma ei "
 "pienennä tai siirrä olemassa olevaa tiedostojärjestelmää."
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"Mikä tahansa käyttäjänäsi suorittava ohjelma voi saada täydet "
-"järjestelmänvalvojan oikeudet ilman todennusta. Kirjautumissalasana suojaa "
-"edelleen sisäänkirjautumista, mutta se ei suojaa sudoa. Haluatko varmasti "
-"jatkaa?"
 
 msgid "Arabic"
 msgstr "Arabia"
@@ -309,9 +296,6 @@ msgstr "Kehityssimulaatio suoritettu"
 msgid "Discover AnduinOS"
 msgstr "Tutustu AnduinOS:aan"
 
-msgid "Do not require a password for sudo commands"
-msgstr "Älä vaadi salasanaa sudo-komentoihin"
-
 msgid "Download and install system updates during installation"
 msgstr "Lataa ja asenna järjestelmäpäivitykset asennuksen aikana"
 
@@ -415,9 +399,6 @@ msgstr "Hindi (Intia)"
 msgid "How should AnduinOS use this disk?"
 msgstr "Miten AnduinOS:n tulisi käyttää tätä levyä?"
 
-msgid "I Understand the Risk, Continue"
-msgstr "Ymmärrän riskin, jatka"
-
 msgid "Indonesian"
 msgstr "Indonesia"
 
@@ -435,9 +416,6 @@ msgstr "Asenna rinnakkain"
 
 msgid "Install alongside"
 msgstr "Asenna rinnakkain"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "Rinnakkaisasennus vaatii salasanalla suojatun tilin."
 
 msgid "Install bootloader"
 msgstr "Asenna käynnistyslataaja"
@@ -575,9 +553,6 @@ msgstr "Salasana"
 msgid "Password must be at least 6 characters."
 msgstr "Salasanan on oltava vähintään 6 merkkiä pitkä."
 
-msgid "Passwordless sudo is unsafe"
-msgstr "Salasanasoton sudo on epäturvallinen"
-
 msgid "Platform"
 msgstr "Alusta"
 
@@ -646,12 +621,6 @@ msgstr "Käynnistä uudelleen ja rekisteröi Secure Boot -avain"
 
 msgid "Restart is disabled in development protection mode"
 msgstr "Uudelleenkäynnistys on poistettu käytöstä kehityssuojaustilassa"
-
-msgid "Return and Set a Password"
-msgstr "Palaa ja aseta salasana"
-
-msgid "Return to Make Changes"
-msgstr "Palaa tekemään muutoksia"
 
 msgid "Reuse {path} ({size})"
 msgstr "Käytä uudelleen polkua {path} ({size})"
@@ -806,19 +775,6 @@ msgid ""
 msgstr ""
 "Valitun levyn topologia muuttui. Tarkista levy ja asennustapa uudelleen."
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"Järjestelmä kirjautuu tähän tiliin automaattisesti ja sallii sen saavan "
-"täydet järjestelmänvalvojan oikeudet ilman salasanaa. Kuka tahansa, jolla on "
-"fyysinen pääsy, ja mikä tahansa tämän käyttäjänä suorittava ohjelma voi "
-"hallita järjestelmää täysin. Käytä tätä vain kioskissa, tilapäisessä "
-"virtuaalikoneessa tai toisessa kontrolloidussa ympäristössä."
-
 msgid "The two passwords do not match."
 msgstr "Kaksi salasanaa eivät täsmää."
 
@@ -826,24 +782,11 @@ msgid "Third-party drivers"
 msgstr "Kolmannen osapuolen ohjaimet"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"Tässä tilissä ei ole kirjautumis salasanaa, mutta sudo vaatii silti yhden. "
-"Koska root-tili on oletuksena lukittu, et voi suorittaa ylläpitotehtäviä. "
-"Aseta tiliin salasana tai ota käyttöön salasanaton sudo."
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "Tämä edistynyt vaihtoehto säilyttää olemassa olevat osiot, mutta muuttaa "
 "valitun levyn osiotaulukon ja tietokoneen EFI-käynnistystilan."
-
-msgid "This configuration is very unsafe"
-msgstr "Tämä konfiguraatio on erittäin epäturvallinen"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -948,9 +891,6 @@ msgid ""
 msgstr ""
 "Kirjoita vain EFI/AnduinOS, älä ylikirjoita EFI/BOOT ja vaadi vahvistettu "
 "AnduinOS NVRAM-merkintä."
-
-msgid "automatic login"
-msgstr "automaattinen kirjautuminen"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
@@ -1239,3 +1179,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "Salasana vaaditaan."
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Ylläpitokomennot eivät enää kysy salasanaasi."
+
+msgid "Advanced Options"
+msgstr "Lisäasetukset"
+
+msgid "Allow SSH login with the account password"
+msgstr "Salli SSH-kirjautuminen tilin salasanalla"
+
+msgid "Automatic desktop login"
+msgstr "Automaattinen työpöydälle kirjautuminen"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Valitse, miten paikallinen ylläpitäjätili kirjautuu sisään ja valtuuttaa järjestelmämuutokset."
+
+msgid "Choose optional access and sign-in policies"
+msgstr "Valitse valinnaiset käyttö- ja kirjautumiskäytännöt"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "Valitse, hyväksyykö tämä tietokone Secure Shell -etäyhteyksiä."
+
+msgid "Configure Secure Shell"
+msgstr "Määritä Secure Shell"
+
+msgid "Local Access"
+msgstr "Paikallinen käyttö"
+
+msgid "Log in to the desktop automatically"
+msgstr "Kirjaudu työpöydälle automaattisesti"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Avaa tämän tilin työpöytä automaattisesti tietokoneen käynnistyessä."
+
+msgid "Remote Access"
+msgstr "Etäkäyttö"
+
+msgid "Run sudo commands without a password"
+msgstr "Suorita sudo-komentoja ilman salasanaa"
+
+msgid "SSH password login"
+msgstr "SSH-kirjautuminen salasanalla"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Käynnistä Secure Shell ja hyväksy tämän tilin salasana verkon kautta."
+
+msgid "This will reduce the security of the installed system."
+msgstr "Tämä heikentää asennetun järjestelmän turvallisuutta."
+
+msgid "disabled"
+msgstr "poistettu käytöstä"
+
+msgid "enabled"
+msgstr "käytössä"

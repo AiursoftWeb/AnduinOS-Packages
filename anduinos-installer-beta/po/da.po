@@ -70,9 +70,6 @@ msgstr "ALLE DATA på {disk} vil blive permanent slettet."
 msgid "Account security"
 msgstr "Kontosikkerhed"
 
-msgid "Administrator access would be locked"
-msgstr "Administratoradgang ville blive låst"
-
 msgid "Advanced Storage"
 msgstr "Avanceret lager"
 
@@ -170,16 +167,6 @@ msgid ""
 msgstr ""
 "AnduinOS vil kun bruge det valgte ubenævnte plads. Installatøren vil ikke "
 "reducere eller flytte et eksisterende filsystem."
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"ethvert program, der kører som din bruger, kan opnå fulde "
-"administratorrettigheder uden godkendelse. Din login-adgangskode beskytter "
-"stadig login, men den beskytter ikke sudo. Er du sikker på, at du vil "
-"fortsætte?"
 
 msgid "Arabic"
 msgstr "Arabisk"
@@ -310,9 +297,6 @@ msgstr "Udviklingssimulation fuldført"
 msgid "Discover AnduinOS"
 msgstr "Udforsk AnduinOS"
 
-msgid "Do not require a password for sudo commands"
-msgstr "Krav ikke en adgangskode til sudo-kommandoer"
-
 msgid "Download and install system updates during installation"
 msgstr "Download og installer systemopdateringer under installationen"
 
@@ -413,9 +397,6 @@ msgstr "Hindi (Indien)"
 msgid "How should AnduinOS use this disk?"
 msgstr "Hvordan skal AnduinOS bruge denne disk?"
 
-msgid "I Understand the Risk, Continue"
-msgstr "Jeg forstår risikoen, fortsæt"
-
 msgid "Indonesian"
 msgstr "Indonesisk"
 
@@ -433,9 +414,6 @@ msgstr "Installer ved siden af"
 
 msgid "Install alongside"
 msgstr "Installer ved siden af"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "Installation ved siden af kræver en adgangskodebeskyttet konto."
 
 msgid "Install bootloader"
 msgstr "Installer bootloader"
@@ -573,9 +551,6 @@ msgstr "Adgangskode"
 msgid "Password must be at least 6 characters."
 msgstr "Adgangskoden skal være på mindst 6 tegn."
 
-msgid "Passwordless sudo is unsafe"
-msgstr "Sudo uden adgangskode er usikkert"
-
 msgid "Platform"
 msgstr "Platform"
 
@@ -645,12 +620,6 @@ msgstr "Genstart og tilmeld Secure Boot-nøgle"
 
 msgid "Restart is disabled in development protection mode"
 msgstr "Genstart er deaktiveret i udviklingsbeskyttelsesmodus"
-
-msgid "Return and Set a Password"
-msgstr "Tilbage og indstil en adgangskode"
-
-msgid "Return to Make Changes"
-msgstr "Tilbage for at foretage ændringer"
 
 msgid "Reuse {path} ({size})"
 msgstr "Gendan {path} ({size})"
@@ -805,19 +774,6 @@ msgstr ""
 "Topologien på den valgte disk er ændret. Gennemgå disken og "
 "installationsmetoden igen."
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"Systemet vil logge ind på denne konto automatisk og tillade den at opnå "
-"fulde administratorrettigheder uden adgangskode. Enhver med fysisk adgang, "
-"og ethvert program, der kører som denne bruger, kan helt kontrollere "
-"systemet. Brug dette kun til en kiosk, midlertidig virtuel maskine eller et "
-"andet kontrolleret miljø."
-
 msgid "The two passwords do not match."
 msgstr "De to adgangskoder matcher ikke."
 
@@ -825,24 +781,11 @@ msgid "Third-party drivers"
 msgstr "Tredjepartsdrivere"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"Denne konto har ingen login-adgangskode, men sudo vil stadig kræve en. Da "
-"root-kontoen som standard er låst, kan du ikke udføre administratoropgaver. "
-"Angiv en adgangskode til kontoen eller aktiver passwordless sudo."
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "Denne avancerede sti bevarer eksisterende partitioner, men ændrer den valgte "
 "disks partitionstabel og maskinens EFI-boot-tilstand."
-
-msgid "This configuration is very unsafe"
-msgstr "Denne konfiguration er meget usikker"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -949,9 +892,6 @@ msgid ""
 msgstr ""
 "Skriv kun EFI/AnduinOS, overskriv ikke EFI/BOOT, og kræv en verificeret "
 "AnduinOS NVRAM-post."
-
-msgid "automatic login"
-msgstr "automatisk login"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
@@ -1240,3 +1180,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "Der kræves en adgangskode."
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Administrative kommandoer vil ikke længere bede om din adgangskode."
+
+msgid "Advanced Options"
+msgstr "Avancerede indstillinger"
+
+msgid "Allow SSH login with the account password"
+msgstr "Tillad SSH-login med kontoens adgangskode"
+
+msgid "Automatic desktop login"
+msgstr "Automatisk login på skrivebordet"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Vælg, hvordan den lokale administratorkonto logger ind og godkender systemændringer."
+
+msgid "Choose optional access and sign-in policies"
+msgstr "Vælg valgfrie politikker for adgang og login"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "Vælg, om denne computer skal acceptere eksterne Secure Shell-forbindelser."
+
+msgid "Configure Secure Shell"
+msgstr "Konfigurer Secure Shell"
+
+msgid "Local Access"
+msgstr "Lokal adgang"
+
+msgid "Log in to the desktop automatically"
+msgstr "Log automatisk ind på skrivebordet"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Åbn automatisk denne kontos skrivebord, når computeren starter."
+
+msgid "Remote Access"
+msgstr "Fjernadgang"
+
+msgid "Run sudo commands without a password"
+msgstr "Kør sudo-kommandoer uden en adgangskode"
+
+msgid "SSH password login"
+msgstr "SSH-login med adgangskode"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Start Secure Shell, og accepter denne kontos adgangskode over netværket."
+
+msgid "This will reduce the security of the installed system."
+msgstr "Dette reducerer sikkerheden på det installerede system."
+
+msgid "disabled"
+msgstr "deaktiveret"
+
+msgid "enabled"
+msgstr "aktiveret"

@@ -67,9 +67,6 @@ msgstr "{disk} पर मौजूद सभी डेटा स्थायी 
 msgid "Account security"
 msgstr "अकाउंट सुरक्षा"
 
-msgid "Administrator access would be locked"
-msgstr "प्रशासक पहुंच लॉक हो जाएगी"
-
 msgid "Advanced Storage"
 msgstr "उन्नत स्टोरेज"
 
@@ -168,15 +165,6 @@ msgid ""
 msgstr ""
 "AnduinOS केवल चयनित अविभाजित स्थान का उपयोग करेगा। इंस्टॉलर किसी मौजूदा फ़ाइल सिस्टम "
 "को छोटा या स्थानांतरित नहीं करेगा।"
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"आपके उपयोगकर्ता के रूप में चल रहा कोई भी प्रोग्राम प्रमाणीकरण के बिना पूर्ण व्यवस्थापक "
-"विशेषाधिकार प्राप्त कर सकता है। आपका लॉगिन पासवर्ड अभी भी साइन-इन की रक्षा करता है, "
-"लेकिन यह sudo की रक्षा नहीं करेगा। क्या आप वास्तव में जारी रखना चाहते हैं?"
 
 msgid "Arabic"
 msgstr "अरबी"
@@ -305,9 +293,6 @@ msgstr "विकास अनुकरण पूर्ण हुआ"
 msgid "Discover AnduinOS"
 msgstr "AnduinOS खोजें"
 
-msgid "Do not require a password for sudo commands"
-msgstr "sudo कमांड के लिए पासवर्ड की आवश्यकता न रखें"
-
 msgid "Download and install system updates during installation"
 msgstr "इंस्टालेशन के दौरान सिस्टम अपडेट डाउनलोड और इंस्टॉल करें"
 
@@ -406,9 +391,6 @@ msgstr "हिन्दी (भारत)"
 msgid "How should AnduinOS use this disk?"
 msgstr "AnduinOS को इस डिस्क का उपयोग कैसे करना चाहिए?"
 
-msgid "I Understand the Risk, Continue"
-msgstr "मुझे जोखिम का पता है, जारी रखें"
-
 msgid "Indonesian"
 msgstr "इंडोनेशियाई"
 
@@ -426,9 +408,6 @@ msgstr "साथ में इंस्टॉल करें"
 
 msgid "Install alongside"
 msgstr "साथ में इंस्टॉल करें"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "साथ में इंस्टॉल करने के लिए पासवर्ड-सुरक्षित खाता आवश्यक है।"
 
 msgid "Install bootloader"
 msgstr "बूटलोडर इंस्टॉल करें"
@@ -566,9 +545,6 @@ msgstr "पासवर्ड"
 msgid "Password must be at least 6 characters."
 msgstr "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।"
 
-msgid "Passwordless sudo is unsafe"
-msgstr "पासवर्ड रहित sudo असुरक्षित है"
-
 msgid "Platform"
 msgstr "प्लेटफ़ॉर्म"
 
@@ -636,12 +612,6 @@ msgstr "रीस्टार्ट करें और सिक्योर �
 
 msgid "Restart is disabled in development protection mode"
 msgstr "विकास सुरक्षा मोड में रीस्टार्ट अक्षम है"
-
-msgid "Return and Set a Password"
-msgstr "वापस जाएं और पासवर्ड सेट करें"
-
-msgid "Return to Make Changes"
-msgstr "परिवर्तन करने के लिए वापस जाएं"
 
 msgid "Reuse {path} ({size})"
 msgstr "{path} ({size}) का पुन: उपयोग करें"
@@ -792,18 +762,6 @@ msgid ""
 msgstr ""
 "चयनित डिस्क की टोपोलॉजी बदल गई। डिस्क और इंस्टालेशन विधि को फिर से समीक्षा करें।"
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"सिस्टम इस अकाउंट में स्वचालित रूप से साइन इन करेगा और इसे पासवर्ड के बिना पूर्ण व्यवस्थापक "
-"विशेषाधिकार प्राप्त करने की अनुमति देगा। भौतिक पहुँच रखने वाला कोई भी व्यक्ति, और इस "
-"उपयोगकर्ता के रूप में चल रहा कोई भी प्रोग्राम, सिस्टम का पूर्ण नियंत्रण कर सकता है। इसका "
-"उपयोग केवल कियोस्क, अस्थायी वर्चुअल मशीन, या अन्य नियंत्रित पर्यावरण के लिए करें।"
-
 msgid "The two passwords do not match."
 msgstr "दोनों पासवर्ड मेल नहीं खाते।"
 
@@ -811,24 +769,11 @@ msgid "Third-party drivers"
 msgstr "थर्ड-पार्टी ड्राइवर"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"इस खाते में कोई लॉगिन पासवर्ड नहीं है, लेकिन sudo के लिए अभी भी एक की आवश्यकता होगी। "
-"चूंकि रूट खात को डिफ़ॉल्ट रूप से लॉक किया गया है, आप प्रशासक कार्यों का पालन करने में "
-"असमर्थ होंगे। एक खाते पासवर्ड सेट करें या पासवर्ड रहित sudo सक्षम करें।"
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "यह उन्नत पथ मौजूदा पार्टिशनों को बनाए रखता है लेकिन चयनित डिस्क की पार्टिशन टेबल और "
 "मशीन की EFI बूट स्थिति को बदल देता है।"
-
-msgid "This configuration is very unsafe"
-msgstr "यह कॉन्फ़िगरेशन बहुत असुरक्षित है"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -933,9 +878,6 @@ msgid ""
 msgstr ""
 "केवल EFI/AnduinOS लिखें, EFI/BOOT को अधिलेखित न करें, और सत्यापित AnduinOS NVRAM "
 "प्रविष्टि की आवश्यकता हो।"
-
-msgid "automatic login"
-msgstr "स्वचालित लॉगिन"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr "एक मशीन-लोकल MOK बनाएं; रीबूट के बाद पासवर्ड 123456 के साथ पंजीकृत करें"
@@ -1221,3 +1163,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "पासवर्ड आवश्यक है।"
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "प्रशासनिक कमांड अब आपका पासवर्ड नहीं माँगेंगे।"
+
+msgid "Advanced Options"
+msgstr "उन्नत विकल्प"
+
+msgid "Allow SSH login with the account password"
+msgstr "खाते के पासवर्ड से SSH लॉगिन की अनुमति दें"
+
+msgid "Automatic desktop login"
+msgstr "स्वचालित डेस्कटॉप लॉगिन"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "चुनें कि स्थानीय प्रशासक खाता कैसे साइन इन करे और सिस्टम बदलावों को अधिकृत करे।"
+
+msgid "Choose optional access and sign-in policies"
+msgstr "वैकल्पिक पहुँच और साइन-इन नीतियाँ चुनें"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "चुनें कि यह कंप्यूटर दूरस्थ Secure Shell कनेक्शन स्वीकार करे या नहीं।"
+
+msgid "Configure Secure Shell"
+msgstr "Secure Shell कॉन्फ़िगर करें"
+
+msgid "Local Access"
+msgstr "स्थानीय पहुँच"
+
+msgid "Log in to the desktop automatically"
+msgstr "डेस्कटॉप में स्वचालित रूप से लॉग इन करें"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "कंप्यूटर शुरू होने पर इस खाते का डेस्कटॉप स्वचालित रूप से खोलें।"
+
+msgid "Remote Access"
+msgstr "दूरस्थ पहुँच"
+
+msgid "Run sudo commands without a password"
+msgstr "बिना पासवर्ड के sudo कमांड चलाएँ"
+
+msgid "SSH password login"
+msgstr "SSH पासवर्ड लॉगिन"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Secure Shell शुरू करें और नेटवर्क पर इस खाते का पासवर्ड स्वीकार करें।"
+
+msgid "This will reduce the security of the installed system."
+msgstr "इससे इंस्टॉल किए गए सिस्टम की सुरक्षा कम हो जाएगी।"
+
+msgid "disabled"
+msgstr "अक्षम"
+
+msgid "enabled"
+msgstr "सक्षम"

@@ -68,9 +68,6 @@ msgstr "ข้อมูลทั้งหมดบน {disk} จะถูกล�
 msgid "Account security"
 msgstr "ความปลอดภัยของบัญชี"
 
-msgid "Administrator access would be locked"
-msgstr "การเข้าถึงของผู้ดูแลระบบจะถูกปิดใช้งาน"
-
 msgid "Advanced Storage"
 msgstr "พื้นที่จัดเก็บข้อมูลขั้นสูง"
 
@@ -166,15 +163,6 @@ msgid ""
 msgstr ""
 "AnduinOS จะใช้พื้นที่ที่ยังไม่ได้จัดสรรที่เลือกไว้เท่านั้น "
 "โปรแกรมติดตั้งจะไม่ย่อขนาดหรือย้ายระบบไฟล์ที่มีอยู่"
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"โปรแกรมใดๆ ที่ทำงานในฐานะผู้ใช้ของคุณสามารถรับสิทธิ์ผู้ดูแลระบบเต็มรูปแบบได้โดยไม่ต้องยืนยันตัวตน "
-"รหัสผ่านเข้าสู่ระบบของคุณยังคงป้องกันขั้นตอนการเข้าสู่ระบบ แต่จะไม่ป้องกัน sudo "
-"คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?"
 
 msgid "Arabic"
 msgstr "ภาษาอาหรับ"
@@ -302,9 +290,6 @@ msgstr "การจำลองการพัฒนาเสร็จสิ้
 msgid "Discover AnduinOS"
 msgstr "สำรวจ AnduinOS"
 
-msgid "Do not require a password for sudo commands"
-msgstr "ไม่ต้องใช้รหัสผ่านสำหรับคำสั่ง sudo"
-
 msgid "Download and install system updates during installation"
 msgstr "ดาวน์โหลดและติดตั้งอัปเดตระบบระหว่างการติดตั้ง"
 
@@ -402,9 +387,6 @@ msgstr "ภาษาฮินดี (อินเดีย)"
 msgid "How should AnduinOS use this disk?"
 msgstr "AnduinOS ควรใช้งานดิสก์นี้อย่างไร?"
 
-msgid "I Understand the Risk, Continue"
-msgstr "ฉันเข้าใจความเสี่ยงแล้ว ดำเนินการต่อ"
-
 msgid "Indonesian"
 msgstr "ภาษาอินโดนีเซีย"
 
@@ -422,9 +404,6 @@ msgstr "ติดตั้งพร้อมกัน"
 
 msgid "Install alongside"
 msgstr "ติดตั้งพร้อมกัน"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "การติดตั้งพร้อมกันจำเป็นต้องมีบัญชีที่ป้องกันด้วยรหัสผ่าน"
 
 msgid "Install bootloader"
 msgstr "ติดตั้ง bootloader"
@@ -561,9 +540,6 @@ msgstr "รหัสผ่าน"
 msgid "Password must be at least 6 characters."
 msgstr "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
 
-msgid "Passwordless sudo is unsafe"
-msgstr "sudo โดยไม่ต้องใช้รหัสผ่านนั้นไม่ปลอดภัย"
-
 msgid "Platform"
 msgstr "แพลตฟอร์ม"
 
@@ -631,12 +607,6 @@ msgstr "เริ่มระบบใหม่และลงทะเบีย
 
 msgid "Restart is disabled in development protection mode"
 msgstr "การเริ่มระบบใหม่ถูกปิดใช้งานในโหมดป้องกันการพัฒนา"
-
-msgid "Return and Set a Password"
-msgstr "กลับและตั้งรหัสผ่าน"
-
-msgid "Return to Make Changes"
-msgstr "กลับไปแก้ไขการเปลี่ยนแปลง"
 
 msgid "Reuse {path} ({size})"
 msgstr "นำ {path} ({size}) กลับมาใช้งานอีกครั้ง"
@@ -785,18 +755,6 @@ msgid ""
 "again."
 msgstr "โครงสร้างของดิสก์ที่เลือกเปลี่ยนแปลงไป กรุณาตรวจสอบดิสก์และวิธีการติดตั้งอีกครั้ง"
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"ระบบจะเข้าสู่ระบบบัญชีนี้โดยอัตโนมัติและอนุญาตให้รับสิทธิ์ผู้ดูแลระบบเต็มรูปแบบโดยไม่ต้องใช้รหัสผ่าน "
-"ใครก็ตามที่สามารถเข้าถึงทางกายภาพและโปรแกรมใดๆ "
-"ที่ทำงานในฐานะผู้ใช้รายนี้สามารถควบคุมระบบได้อย่างสมบูรณ์ ใช้สิ่งนี้เฉพาะสำหรับ kiosk "
-"เครื่องเสมือนชั่วคราว หรือสภาพแวดล้อมที่มีการควบคุมเท่านั้น"
-
 msgid "The two passwords do not match."
 msgstr "รหัสผ่านทั้งสองไม่ตรงกัน"
 
@@ -804,24 +762,11 @@ msgid "Third-party drivers"
 msgstr "ไดรเวอร์บุคคลที่สาม"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"\\ต์บัญชีนี้ไม่มีรหัสผ่านสำหรับการเข้าสู่ระบบ แต่การใช้คำสั่ง sudo ยังคงต้องการรหัสผ่าน "
-"เนื่องจากบัญชี root ถูกปิดใช้งานโดยค่าเริ่มต้น คุณจึงไม่สามารถดำเนินการของผู้ดูแลระบบได้ "
-"ตั้งรหัสผ่านสำหรับบัญชีหรือเปิดใช้งาน sudo โดยไม่ต้องใช้รหัสผ่าน"
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "เส้นทางขั้นสูงนี้จะรักษาพาร์ติชันที่มีอยู่ไว้ "
 "แต่จะเปลี่ยนแปลงตารางพาร์ติชันของดิสก์ที่เลือกและสถานะการบูต EFI ของเครื่อง"
-
-msgid "This configuration is very unsafe"
-msgstr "การกำหนดค่านี้ไม่ปลอดภัยอย่างยิ่ง"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -925,9 +870,6 @@ msgid ""
 msgstr ""
 "เขียนเฉพาะ EFI/AnduinOS ห้ามเขียนทับ EFI/BOOT และต้องมีรายการ AnduinOS ใน NVRAM "
 "ที่ผ่านการตรวจสอบแล้ว"
-
-msgid "automatic login"
-msgstr "เข้าสู่ระบบอัตโนมัติ"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr "สร้าง MOK เฉพาะเครื่อง; ลงทะเบียนหลังจากเริ่มระบบใหม่ด้วยรหัสผ่าน 123456"
@@ -1211,3 +1153,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "จำเป็นต้องใช้รหัสผ่าน"
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "คำสั่งดูแลระบบจะไม่ขอรหัสผ่านของคุณอีกต่อไป"
+
+msgid "Advanced Options"
+msgstr "ตัวเลือกขั้นสูง"
+
+msgid "Allow SSH login with the account password"
+msgstr "อนุญาตให้เข้าสู่ระบบ SSH ด้วยรหัสผ่านของบัญชี"
+
+msgid "Automatic desktop login"
+msgstr "เข้าสู่ระบบเดสก์ท็อปโดยอัตโนมัติ"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "เลือกวิธีที่บัญชีผู้ดูแลระบบภายในเครื่องใช้เข้าสู่ระบบและอนุญาตการเปลี่ยนแปลงระบบ"
+
+msgid "Choose optional access and sign-in policies"
+msgstr "เลือกนโยบายการเข้าถึงและการเข้าสู่ระบบเพิ่มเติม"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "เลือกว่าคอมพิวเตอร์เครื่องนี้จะยอมรับการเชื่อมต่อ Secure Shell จากระยะไกลหรือไม่"
+
+msgid "Configure Secure Shell"
+msgstr "กำหนดค่า Secure Shell"
+
+msgid "Local Access"
+msgstr "การเข้าถึงภายในเครื่อง"
+
+msgid "Log in to the desktop automatically"
+msgstr "เข้าสู่ระบบเดสก์ท็อปโดยอัตโนมัติ"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "เปิดเดสก์ท็อปของบัญชีนี้โดยอัตโนมัติเมื่อคอมพิวเตอร์เริ่มทำงาน"
+
+msgid "Remote Access"
+msgstr "การเข้าถึงจากระยะไกล"
+
+msgid "Run sudo commands without a password"
+msgstr "เรียกใช้คำสั่ง sudo โดยไม่ใช้รหัสผ่าน"
+
+msgid "SSH password login"
+msgstr "เข้าสู่ระบบ SSH ด้วยรหัสผ่าน"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "เริ่ม Secure Shell และยอมรับรหัสผ่านของบัญชีนี้ผ่านเครือข่าย"
+
+msgid "This will reduce the security of the installed system."
+msgstr "การดำเนินการนี้จะลดความปลอดภัยของระบบที่ติดตั้ง"
+
+msgid "disabled"
+msgstr "ปิดใช้งาน"
+
+msgid "enabled"
+msgstr "เปิดใช้งาน"

@@ -64,9 +64,6 @@ msgstr "{disk} 上的所有数据将被永久擦除。"
 msgid "Account security"
 msgstr "账户安全"
 
-msgid "Administrator access would be locked"
-msgstr "管理员访问权限将被锁定"
-
 msgid "Advanced Storage"
 msgstr "高级存储"
 
@@ -158,14 +155,6 @@ msgid ""
 "not shrink or move an existing filesystem."
 msgstr ""
 "AnduinOS 将仅使用选定的未分配空间。安装程序不会缩小或移动现有的文件系统。"
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"任何以您的用户身份运行的程序都可以在无需验证的情况下获得完整的管理员权限。您"
-"的登录密码仍然可以保护登录，但无法保护 sudo。您确定要继续吗？"
 
 msgid "Arabic"
 msgstr "阿拉伯语"
@@ -290,9 +279,6 @@ msgstr "开发模拟已完成"
 msgid "Discover AnduinOS"
 msgstr "探索 AnduinOS"
 
-msgid "Do not require a password for sudo commands"
-msgstr "sudo 命令无需密码"
-
 msgid "Download and install system updates during installation"
 msgstr "在安装期间下载并安装系统更新"
 
@@ -388,9 +374,6 @@ msgstr "印地语（印度）"
 msgid "How should AnduinOS use this disk?"
 msgstr "AnduinOS 应如何使用此磁盘？"
 
-msgid "I Understand the Risk, Continue"
-msgstr "我了解风险，继续"
-
 msgid "Indonesian"
 msgstr "印度尼西亚语"
 
@@ -408,9 +391,6 @@ msgstr "与现有系统并列安装"
 
 msgid "Install alongside"
 msgstr "与现有系统并列安装"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "并列安装需要受密码保护的用户账户。"
 
 msgid "Install bootloader"
 msgstr "安装引导加载程序"
@@ -544,9 +524,6 @@ msgstr "密码"
 msgid "Password must be at least 6 characters."
 msgstr "密码长度必须至少为 6 个字符。"
 
-msgid "Passwordless sudo is unsafe"
-msgstr "无密码 sudo 是不安全的"
-
 msgid "Platform"
 msgstr "平台"
 
@@ -614,12 +591,6 @@ msgstr "重启并注册安全启动密钥"
 
 msgid "Restart is disabled in development protection mode"
 msgstr "在开发保护模式下已禁用重启"
-
-msgid "Return and Set a Password"
-msgstr "返回并设置密码"
-
-msgid "Return to Make Changes"
-msgstr "返回以进行修改"
 
 msgid "Reuse {path} ({size})"
 msgstr "重用 {path} ({size})"
@@ -766,17 +737,6 @@ msgid ""
 "again."
 msgstr "所选磁盘的拓扑结构已更改。请重新检查磁盘和安装方法。"
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"系统将自动登录到此账户，并允许其在无需密码的情况下获得完整的管理员权限。任何"
-"拥有物理访问权限的人员以及任何以该用户身份运行的程序都可以完全控制系统。仅将"
-"此用于信息亭、临时虚拟机或其他受控环境。"
-
 msgid "The two passwords do not match."
 msgstr "两个密码不匹配。"
 
@@ -784,22 +744,10 @@ msgid "Third-party drivers"
 msgstr "第三方驱动程序"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"此账户没有登录密码，但使用 sudo 仍需要密码。由于 root 账户默认处于锁定状态，"
-"您将无法执行管理任务。请设置账户密码或启用无密码 sudo。"
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "此高级路径会保留现有分区，但会更改所选磁盘的分区表和机器的 EFI 引导状态。"
-
-msgid "This configuration is very unsafe"
-msgstr "此配置非常不安全"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -901,9 +849,6 @@ msgid ""
 msgstr ""
 "仅写入 EFI/AnduinOS，不要覆盖 EFI/BOOT，并且需要已验证的 AnduinOS NVRAM 条"
 "目。"
-
-msgid "automatic login"
-msgstr "自动登录"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr "创建本地 MOK；重启后使用密码 123456 注册"
@@ -1181,3 +1126,60 @@ msgstr "Wi-Fi 已连接，但此网络要求通过认证门户登录。"
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "正在等待 {network} 的 WPS。请按下路由器上的 WPS 按钮…"
+
+msgid "A password is required."
+msgstr "必须设置密码。"
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "管理命令将不再要求输入您的密码。"
+
+msgid "Advanced Options"
+msgstr "高级选项"
+
+msgid "Allow SSH login with the account password"
+msgstr "允许使用账户密码登录 SSH"
+
+msgid "Automatic desktop login"
+msgstr "自动登录桌面"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "选择本地管理员账户的登录方式以及授权系统更改的方式。"
+
+msgid "Choose optional access and sign-in policies"
+msgstr "选择可选的访问和登录策略"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "选择此计算机是否接受远程 Secure Shell 连接。"
+
+msgid "Configure Secure Shell"
+msgstr "配置 Secure Shell"
+
+msgid "Local Access"
+msgstr "本地访问"
+
+msgid "Log in to the desktop automatically"
+msgstr "自动登录桌面"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "计算机启动时自动打开此账户的桌面。"
+
+msgid "Remote Access"
+msgstr "远程访问"
+
+msgid "Run sudo commands without a password"
+msgstr "执行 sudo 命令时无需密码"
+
+msgid "SSH password login"
+msgstr "SSH 密码登录"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "启动 Secure Shell，并通过网络接受此账户的密码。"
+
+msgid "This will reduce the security of the installed system."
+msgstr "这会降低已安装系统的安全性。"
+
+msgid "disabled"
+msgstr "已禁用"
+
+msgid "enabled"
+msgstr "已启用"

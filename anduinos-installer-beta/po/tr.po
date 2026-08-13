@@ -69,9 +69,6 @@ msgstr "{disk} üzerindeki TÜM VERİLER kalıcı olarak silinecektir."
 msgid "Account security"
 msgstr "Hesap güvenliği"
 
-msgid "Administrator access would be locked"
-msgstr "Yönetici erişimi kilitlenecek"
-
 msgid "Advanced Storage"
 msgstr "Gelişmiş Depolama"
 
@@ -169,16 +166,6 @@ msgid ""
 msgstr ""
 "AnduinOS yalnızca seçili tahsis edilmemiş alanı kullanacak. Kurucu mevcut "
 "bir dosya sistemini küçültmeyecek veya taşımayağıktır."
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"Kullanıcınız olarak çalışan herhangi bir program, kimlik doğrulama olmadan "
-"tam yönetici ayrıcalıklarını elde edebilir. Giriş şifreniz oturum açmayı "
-"korumaya devam eder, ancak sudo'yu korumaz. Devam etmek istediğinizden emin "
-"misiniz?"
 
 msgid "Arabic"
 msgstr "Arapça"
@@ -309,9 +296,6 @@ msgstr "Geliştirme simülasyonu tamamlandı"
 msgid "Discover AnduinOS"
 msgstr "AnduinOS'u Keşfet"
 
-msgid "Do not require a password for sudo commands"
-msgstr "Sudo komutları için şifre istenmesin"
-
 msgid "Download and install system updates during installation"
 msgstr "Kurulum sırasında sistem güncellemelerini indir ve kur"
 
@@ -415,9 +399,6 @@ msgstr "Hintçe (Hindistan)"
 msgid "How should AnduinOS use this disk?"
 msgstr "AnduinOS bu diski nasıl kullanmalı?"
 
-msgid "I Understand the Risk, Continue"
-msgstr "Riski Anlıyorum, Devam Et"
-
 msgid "Indonesian"
 msgstr "Endonezce"
 
@@ -435,9 +416,6 @@ msgstr "Yan Yana Kur"
 
 msgid "Install alongside"
 msgstr "yan yana kur"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "Yan yana kurulum, parola korumalı bir hesap gerektirir."
 
 msgid "Install bootloader"
 msgstr "Önyükleme yükleyicisini kur"
@@ -575,9 +553,6 @@ msgstr "Şifre"
 msgid "Password must be at least 6 characters."
 msgstr "Şifre en az 6 karakter olmalıdır."
 
-msgid "Passwordless sudo is unsafe"
-msgstr "Şifresiz sudo güvensizdir"
-
 msgid "Platform"
 msgstr "Platform"
 
@@ -647,12 +622,6 @@ msgstr "Yeniden Başlat ve Güvenli Önyükleme Anahtarını Kaydet"
 
 msgid "Restart is disabled in development protection mode"
 msgstr "Yeniden başlatma geliştirme koruma modunda devre dışı bırakılmıştır"
-
-msgid "Return and Set a Password"
-msgstr "Geri Dön ve Şifre Belirleyin"
-
-msgid "Return to Make Changes"
-msgstr "Değişiklik Yapmak İçin Geri Dön"
 
 msgid "Reuse {path} ({size})"
 msgstr "{path} ({size}) yeniden kullan"
@@ -807,19 +776,6 @@ msgstr ""
 "Seçili diskin topolojisi değişti. Diski ve kurulum yöntemini tekrar gözden "
 "geçirin."
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"Sistem bu hesaba otomatik olarak giriş yapacak ve şifresiz tam yönetici "
-"ayrıcalıkları elde etmesine izin verecektir. Fiziksel erişimi olan herkes ve "
-"bu kullanıcı olarak çalışan herhangi bir program, sistemi tamamen kontrol "
-"edebilir. Bunu yalnızca bir kioska, geçici sanal makineye veya başka bir "
-"kontrollü ortama kullanın."
-
 msgid "The two passwords do not match."
 msgstr "İki şifre eşleşmiyor."
 
@@ -827,25 +783,11 @@ msgid "Third-party drivers"
 msgstr "Üçüncü taraf sürücüler"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"Bu hesabın giriş şifresi yok, ancak sudo yine de bir şifre gerektirecektir. "
-"Kök (root) hesap varsayılan olarak kilitli olduğu için yönetici görevlerini "
-"gerçekleştiremeyeceksiniz. Bir hesap şifresi belirleyin veya şifresiz "
-"sudo'yu etkinleştirin."
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "Bu gelişmiş yol, mevcut bölümleri korur ancak seçili diskin bölüm tablosunu "
 "ve makinenin EFI önyüklenme durumunu değiştirir."
-
-msgid "This configuration is very unsafe"
-msgstr "Bu yapılandırma çok güvensizdir"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -950,9 +892,6 @@ msgid ""
 msgstr ""
 "Sadece EFI/AnduinOS'u yazın, EFI/BOOT'u üzerine yazmayın ve doğrulanmış bir "
 "AnduinOS NVRAM girdisi gerektirin."
-
-msgid "automatic login"
-msgstr "otomatik giriş"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
@@ -1240,3 +1179,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "Parola gereklidir."
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Yönetim komutları artık parolanızı sormayacak."
+
+msgid "Advanced Options"
+msgstr "Gelişmiş Seçenekler"
+
+msgid "Allow SSH login with the account password"
+msgstr "Hesap parolasıyla SSH oturumuna izin ver"
+
+msgid "Automatic desktop login"
+msgstr "Otomatik masaüstü oturumu"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Yerel yönetici hesabının nasıl oturum açacağını ve sistem değişikliklerini nasıl yetkilendireceğini seçin."
+
+msgid "Choose optional access and sign-in policies"
+msgstr "İsteğe bağlı erişim ve oturum açma ilkelerini seçin"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "Bu bilgisayarın uzak Secure Shell bağlantılarını kabul edip etmeyeceğini seçin."
+
+msgid "Configure Secure Shell"
+msgstr "Secure Shell’i Yapılandır"
+
+msgid "Local Access"
+msgstr "Yerel Erişim"
+
+msgid "Log in to the desktop automatically"
+msgstr "Masaüstünde otomatik oturum aç"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Bilgisayar başladığında bu hesabın masaüstünü otomatik olarak aç."
+
+msgid "Remote Access"
+msgstr "Uzaktan Erişim"
+
+msgid "Run sudo commands without a password"
+msgstr "sudo komutlarını parola olmadan çalıştır"
+
+msgid "SSH password login"
+msgstr "SSH parola oturumu"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Secure Shell’i başlat ve bu hesabın parolasını ağ üzerinden kabul et."
+
+msgid "This will reduce the security of the installed system."
+msgstr "Bu, kurulu sistemin güvenliğini azaltacaktır."
+
+msgid "disabled"
+msgstr "devre dışı"
+
+msgid "enabled"
+msgstr "etkin"

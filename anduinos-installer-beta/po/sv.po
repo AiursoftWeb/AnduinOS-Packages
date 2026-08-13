@@ -70,9 +70,6 @@ msgstr "ALLA DATA på {disk} kommer att raderas permanent."
 msgid "Account security"
 msgstr "Kontosäkerhet"
 
-msgid "Administrator access would be locked"
-msgstr "Administratörstillgång skulle låsas"
-
 msgid "Advanced Storage"
 msgstr "Avancerat lagring"
 
@@ -170,16 +167,6 @@ msgid ""
 msgstr ""
 "AnduinOS kommer endast att använda det valda oanvända utrymmet. "
 "Installationsprogrammet krymper eller flyttar inte ett befintligt filsystem."
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"Alla program som körs som din användare kan erhålla fulla "
-"administratörsrättigheter utan autentisering. Ditt inloggningslösenord "
-"skyddar fortfarande inloggningen, men det kommer inte att skydda sudo. Är du "
-"säker på att du vill fortsätta?"
 
 msgid "Arabic"
 msgstr "Arabiska"
@@ -310,9 +297,6 @@ msgstr "Utvecklingssimulering slutförd"
 msgid "Discover AnduinOS"
 msgstr "Utmana AnduinOS"
 
-msgid "Do not require a password for sudo commands"
-msgstr "Krav inte ett lösenord för sudo-kommandon"
-
 msgid "Download and install system updates during installation"
 msgstr "Ladda ner och installera systemuppdateringar under installationen"
 
@@ -415,9 +399,6 @@ msgstr "Hindi (Indien)"
 msgid "How should AnduinOS use this disk?"
 msgstr "Hur ska AnduinOS använda denna skiva?"
 
-msgid "I Understand the Risk, Continue"
-msgstr "Jag förstår risken, fortsätt"
-
 msgid "Indonesian"
 msgstr "Indonesiska"
 
@@ -435,9 +416,6 @@ msgstr "Installera sida vid sida"
 
 msgid "Install alongside"
 msgstr "Installera sida vid sida"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "Installation sida vid sida kräver ett lösenordsskyddat konto."
 
 msgid "Install bootloader"
 msgstr "Installera startprogram"
@@ -575,9 +553,6 @@ msgstr "Lösenord"
 msgid "Password must be at least 6 characters."
 msgstr "Lösenordet måste vara minst 6 tecken långt."
 
-msgid "Passwordless sudo is unsafe"
-msgstr "Sudo utan lösenord är osäkert"
-
 msgid "Platform"
 msgstr "Plattform"
 
@@ -647,12 +622,6 @@ msgstr "Starta om och registrera Secure Boot-nyckel"
 
 msgid "Restart is disabled in development protection mode"
 msgstr "Omstart är inaktiverad i utvecklingsskyddsläge"
-
-msgid "Return and Set a Password"
-msgstr "Gå tillbaka och ange ett lösenord"
-
-msgid "Return to Make Changes"
-msgstr "Gå tillbaka för att göra ändringar"
 
 msgid "Reuse {path} ({size})"
 msgstr "Återanvänd {path} ({size})"
@@ -806,19 +775,6 @@ msgstr ""
 "Topologin på den valda disken har ändrats. Granska disken och "
 "installationsmetoden igen."
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"Systemet kommer att logga in på detta konto automatiskt och tillåta det att "
-"erhålla fulla administratörsrättigheter utan ett lösenord. Vem som helst med "
-"fysisk åtkomst, och alla program som körs som denna användare, kan helt "
-"kontrollera systemet. Använd detta endast för en kiosk, tillfällig virtuell "
-"maskin eller annan kontrollerad miljö."
-
 msgid "The two passwords do not match."
 msgstr "De två lösenorden matchar inte."
 
@@ -826,25 +782,11 @@ msgid "Third-party drivers"
 msgstr "Tredjepartsdrivrutiner"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"Detta konto har inget inloggningslösenord, men sudo skulle fortfarande kräva "
-"ett. Eftersom root-kontot är låst som standard skulle du inte kunna utföra "
-"administratörsuppgifter. Ställ in ett kontolösenord eller aktivera sudo utan "
-"lösenord."
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "Denna avancerade metod bevarar befintliga partitioner men ändrar den valda "
 "diskens partitionstabell och datorns EFI-startläge."
-
-msgid "This configuration is very unsafe"
-msgstr "Denna konfiguration är mycket osäker"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -950,9 +892,6 @@ msgid ""
 msgstr ""
 "Skriv endast EFI/AnduinOS, skriv inte över EFI/BOOT och kräv en verifierad "
 "AnduinOS NVRAM-post."
-
-msgid "automatic login"
-msgstr "automatisk inloggning"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr "skapa en maskinlokal MOK; registrera efter omstart med lösenord 123456"
@@ -1240,3 +1179,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "Ett lösenord krävs."
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Administrativa kommandon kommer inte längre att fråga efter ditt lösenord."
+
+msgid "Advanced Options"
+msgstr "Avancerade alternativ"
+
+msgid "Allow SSH login with the account password"
+msgstr "Tillåt SSH-inloggning med kontots lösenord"
+
+msgid "Automatic desktop login"
+msgstr "Automatisk skrivbordsinloggning"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Välj hur det lokala administratörskontot loggar in och godkänner systemändringar."
+
+msgid "Choose optional access and sign-in policies"
+msgstr "Välj valfria principer för åtkomst och inloggning"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "Välj om den här datorn ska acceptera fjärranslutningar med Secure Shell."
+
+msgid "Configure Secure Shell"
+msgstr "Konfigurera Secure Shell"
+
+msgid "Local Access"
+msgstr "Lokal åtkomst"
+
+msgid "Log in to the desktop automatically"
+msgstr "Logga in på skrivbordet automatiskt"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Öppna automatiskt det här kontots skrivbord när datorn startar."
+
+msgid "Remote Access"
+msgstr "Fjärråtkomst"
+
+msgid "Run sudo commands without a password"
+msgstr "Kör sudo-kommandon utan lösenord"
+
+msgid "SSH password login"
+msgstr "SSH-inloggning med lösenord"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Starta Secure Shell och acceptera det här kontots lösenord över nätverket."
+
+msgid "This will reduce the security of the installed system."
+msgstr "Detta minskar säkerheten för det installerade systemet."
+
+msgid "disabled"
+msgstr "inaktiverat"
+
+msgid "enabled"
+msgstr "aktiverat"

@@ -69,9 +69,6 @@ msgstr "TẤT CẢ DỮ LIỆU trên {disk} sẽ bị xóa vĩnh viễn."
 msgid "Account security"
 msgstr "Bảo mật tài khoản"
 
-msgid "Administrator access would be locked"
-msgstr "Truy cập quản trị sẽ bị khóa"
-
 msgid "Advanced Storage"
 msgstr "Bộ nhớ nâng cao"
 
@@ -170,16 +167,6 @@ msgid ""
 msgstr ""
 "AnduinOS sẽ chỉ sử dụng phần dung lượng chưa được phân bổ đã chọn. Trình cài "
 "đặt sẽ không thu nhỏ hoặc di chuyển hệ thống tệp hiện có."
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"Bất kỳ chương trình nào chạy dưới quyền người dùng của bạn đều có thể giành "
-"được đặc quyền quản trị viên đầy đủ mà không cần xác thực. Mật khẩu đăng "
-"nhập của bạn vẫn bảo vệ việc đăng nhập, nhưng sẽ không bảo vệ sudo. Bạn có "
-"chắc chắn muốn tiếp tục không?"
 
 msgid "Arabic"
 msgstr "Tiếng Ả Rập"
@@ -310,9 +297,6 @@ msgstr "Mô phỏng phát triển đã hoàn tất"
 msgid "Discover AnduinOS"
 msgstr "Khám phá AnduinOS"
 
-msgid "Do not require a password for sudo commands"
-msgstr "Không yêu cầu mật khẩu cho các lệnh sudo"
-
 msgid "Download and install system updates during installation"
 msgstr "Tải xuống và cài đặt bản cập nhật hệ thống trong quá trình cài đặt"
 
@@ -416,9 +400,6 @@ msgstr "Tiếng Hindi (Ấn Độ)"
 msgid "How should AnduinOS use this disk?"
 msgstr "AnduinOS nên sử dụng đĩa này như thế nào?"
 
-msgid "I Understand the Risk, Continue"
-msgstr "Tôi hiểu rủi ro, tiếp tục"
-
 msgid "Indonesian"
 msgstr "Tiếng Indonesia"
 
@@ -436,9 +417,6 @@ msgstr "Cài đặt song song"
 
 msgid "Install alongside"
 msgstr "Cài đặt song song"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "Cài đặt song song yêu cầu tài khoản được bảo vệ bằng mật khẩu."
 
 msgid "Install bootloader"
 msgstr "Cài đặt trình khởi động"
@@ -576,9 +554,6 @@ msgstr "Mật khẩu"
 msgid "Password must be at least 6 characters."
 msgstr "Mật khẩu phải có ít nhất 6 ký tự."
 
-msgid "Passwordless sudo is unsafe"
-msgstr "Sudo không mật khẩu là không an toàn"
-
 msgid "Platform"
 msgstr "Nền tảng"
 
@@ -647,12 +622,6 @@ msgstr "Khởi động lại và Đăng ký Khóa Secure Boot"
 
 msgid "Restart is disabled in development protection mode"
 msgstr "Khởi động lại bị vô hiệu hóa trong chế độ bảo vệ phát triển"
-
-msgid "Return and Set a Password"
-msgstr "Quay lại và Đặt mật khẩu"
-
-msgid "Return to Make Changes"
-msgstr "Quay lại để thực hiện thay đổi"
 
 msgid "Reuse {path} ({size})"
 msgstr "Tái sử dụng {path} ({size})"
@@ -807,19 +776,6 @@ msgid ""
 msgstr ""
 "Cấu trúc đĩa đã chọn bị thay đổi. Xem xét lại đĩa và phương pháp cài đặt."
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"Hệ thống sẽ tự động đăng nhập vào tài khoản này và cho phép nó giành được "
-"đặc quyền quản trị viên đầy đủ mà không cần mật khẩu. Bất kỳ ai có quyền "
-"truy cập vật lý và bất kỳ chương trình nào chạy dưới quyền người dùng này "
-"đều có thể kiểm soát hoàn toàn hệ thống. Chỉ sử dụng điều này cho kiosk, máy "
-"ảo tạm thời hoặc môi trường được kiểm soát khác."
-
 msgid "The two passwords do not match."
 msgstr "Hai mật khẩu không khớp nhau."
 
@@ -827,25 +783,11 @@ msgid "Third-party drivers"
 msgstr "Trình điều khiển bên thứ ba"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"Tài khoản này không có mật khẩu đăng nhập, nhưng lệnh sudo vẫn yêu cầu mật "
-"khẩu. Vì tài khoản root mặc định bị khóa, bạn sẽ không thể thực hiện các tác "
-"vụ của quản trị viên. Hãy đặt mật khẩu cho tài khoản hoặc kích hoạt sudo "
-"không cần mật khẩu."
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "Path nâng cao này bảo toàn các phân vùng hiện có nhưng thay đổi bảng phân "
 "vùng của ổ đĩa đã chọn và trạng thái khởi động EFI của máy."
-
-msgid "This configuration is very unsafe"
-msgstr "Cấu hình này rất không an toàn"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -950,9 +892,6 @@ msgid ""
 msgstr ""
 "Chỉ ghi EFI/AnduinOS, không ghi đè lên EFI/BOOT và yêu cầu mục NVRAM "
 "AnduinOS đã được xác minh."
-
-msgid "automatic login"
-msgstr "đăng nhập tự động"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
@@ -1241,3 +1180,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "Cần có mật khẩu."
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Các lệnh quản trị sẽ không còn hỏi mật khẩu của bạn."
+
+msgid "Advanced Options"
+msgstr "Tùy chọn nâng cao"
+
+msgid "Allow SSH login with the account password"
+msgstr "Cho phép đăng nhập SSH bằng mật khẩu tài khoản"
+
+msgid "Automatic desktop login"
+msgstr "Tự động đăng nhập màn hình nền"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Chọn cách tài khoản quản trị viên cục bộ đăng nhập và cho phép thay đổi hệ thống."
+
+msgid "Choose optional access and sign-in policies"
+msgstr "Chọn chính sách truy cập và đăng nhập tùy chọn"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "Chọn có cho phép máy tính này chấp nhận kết nối Secure Shell từ xa hay không."
+
+msgid "Configure Secure Shell"
+msgstr "Cấu hình Secure Shell"
+
+msgid "Local Access"
+msgstr "Truy cập cục bộ"
+
+msgid "Log in to the desktop automatically"
+msgstr "Tự động đăng nhập vào màn hình nền"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Tự động mở màn hình nền của tài khoản này khi máy tính khởi động."
+
+msgid "Remote Access"
+msgstr "Truy cập từ xa"
+
+msgid "Run sudo commands without a password"
+msgstr "Chạy lệnh sudo mà không cần mật khẩu"
+
+msgid "SSH password login"
+msgstr "Đăng nhập SSH bằng mật khẩu"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Khởi động Secure Shell và chấp nhận mật khẩu của tài khoản này qua mạng."
+
+msgid "This will reduce the security of the installed system."
+msgstr "Điều này sẽ làm giảm tính bảo mật của hệ thống đã cài đặt."
+
+msgid "disabled"
+msgstr "đã tắt"
+
+msgid "enabled"
+msgstr "đã bật"

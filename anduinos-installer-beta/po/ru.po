@@ -73,9 +73,6 @@ msgstr "ВСЕ ДАННЫЕ на {disk} будут безвозвратно уд
 msgid "Account security"
 msgstr "Безопасность учетной записи"
 
-msgid "Administrator access would be locked"
-msgstr "Доступ администратора будет заблокирован"
-
 msgid "Advanced Storage"
 msgstr "Расширенные настройки хранилища"
 
@@ -175,15 +172,6 @@ msgid ""
 msgstr ""
 "AnduinOS будет использовать только выбранное неразмеченное пространство. "
 "Установщик не будет уменьшать или перемещать существующую файловую систему."
-
-msgid ""
-"Any program running as your user can obtain full administrator privileges "
-"without authentication. Your login password still protects sign-in, but it "
-"will not protect sudo. Are you sure you want to continue?"
-msgstr ""
-"Любая программа, запущенная от вашего имени, может получить полные права "
-"администратора без аутентификации. Ваш пароль входа по-прежнему защищает "
-"вход в систему, но не защитит sudo. Вы уверены, что хотите продолжить?"
 
 msgid "Arabic"
 msgstr "Арабский"
@@ -316,9 +304,6 @@ msgstr "Моделирование разработки завершено"
 msgid "Discover AnduinOS"
 msgstr "Познакомьтесь с AnduinOS"
 
-msgid "Do not require a password for sudo commands"
-msgstr "Не требовать пароль для команд sudo"
-
 msgid "Download and install system updates during installation"
 msgstr "Скачать и установить обновления системы во время установки"
 
@@ -421,9 +406,6 @@ msgstr "Хинди (Индия)"
 msgid "How should AnduinOS use this disk?"
 msgstr "Как AnduinOS должен использовать этот диск?"
 
-msgid "I Understand the Risk, Continue"
-msgstr "Я понимаю риск, продолжить"
-
 msgid "Indonesian"
 msgstr "Индонезийский"
 
@@ -441,9 +423,6 @@ msgstr "Установить рядом"
 
 msgid "Install alongside"
 msgstr "Установить рядом"
-
-msgid "Install alongside requires a password-protected account."
-msgstr "Для установки рядом требуется учетная запись, защищенная паролем."
 
 msgid "Install bootloader"
 msgstr "Установка загрузчика"
@@ -581,9 +560,6 @@ msgstr "Пароль"
 msgid "Password must be at least 6 characters."
 msgstr "Пароль должен содержать не менее 6 символов."
 
-msgid "Passwordless sudo is unsafe"
-msgstr "Использование sudo без пароля небезопасно"
-
 msgid "Platform"
 msgstr "Платформа"
 
@@ -653,12 +629,6 @@ msgstr "Перезагрузка и регистрация ключа Secure Boo
 
 msgid "Restart is disabled in development protection mode"
 msgstr "Перезагрузка отключена в режиме защиты разработки"
-
-msgid "Return and Set a Password"
-msgstr "Вернуться и установить пароль"
-
-msgid "Return to Make Changes"
-msgstr "Вернуться для внесения изменений"
 
 msgid "Reuse {path} ({size})"
 msgstr "Использовать повторно {path} ({size})"
@@ -816,19 +786,6 @@ msgstr ""
 "Топология выбранного диска изменилась. Проверьте диск и метод установки еще "
 "раз."
 
-msgid ""
-"The system will sign in to this account automatically and allow it to obtain "
-"full administrator privileges without a password. Anyone with physical "
-"access, and any program running as this user, can completely control the "
-"system. Use this only for a kiosk, temporary virtual machine, or another "
-"controlled environment."
-msgstr ""
-"Система будет автоматически входить в эту учетную запись и позволять ей "
-"получать полные права администратора без пароля. Любой, имеющий физический "
-"доступ, и любая программа, запущенная от имени этого пользователя, могут "
-"полностью контролировать систему. Используйте это только для киоска, "
-"временной виртуальной машины или другой контролируемой среды."
-
 msgid "The two passwords do not match."
 msgstr "Пароли не совпадают."
 
@@ -836,26 +793,11 @@ msgid "Third-party drivers"
 msgstr "Сторонние драйверы"
 
 msgid ""
-"This account has no login password, but sudo would still require one. "
-"Because the root account is locked by default, you would be unable to "
-"perform administrator tasks. Set an account password or enable passwordless "
-"sudo."
-msgstr ""
-"Для этой учётной записи не установлен пароль входа, но для выполнения команд "
-"от имени суперпользователя (sudo) он всё равно потребуется. Поскольку "
-"учётная запись root по умолчанию заблокирована, вы не сможете выполнять "
-"задачи администратора. Установите пароль для учётной записи или разрешите "
-"использование sudo без пароля."
-
-msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr ""
 "Этот расширенный путь сохраняет существующие разделы, но изменяет таблицу "
 "разделов выбранного диска и состояние загрузки EFI машины."
-
-msgid "This configuration is very unsafe"
-msgstr "Эта конфигурация очень небезопасна"
 
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
@@ -965,9 +907,6 @@ msgid ""
 msgstr ""
 "Записать только EFI/AnduinOS, не перезаписывать EFI/BOOT и требовать "
 "проверенный загрузочный раздел AnduinOS в NVRAM."
-
-msgid "automatic login"
-msgstr "автоматический вход"
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
@@ -1256,3 +1195,60 @@ msgstr ""
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+msgid "A password is required."
+msgstr "Требуется пароль."
+
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Команды администрирования больше не будут запрашивать пароль."
+
+msgid "Advanced Options"
+msgstr "Дополнительные параметры"
+
+msgid "Allow SSH login with the account password"
+msgstr "Разрешить вход по SSH с паролем учётной записи"
+
+msgid "Automatic desktop login"
+msgstr "Автоматический вход в рабочий стол"
+
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Выберите способ входа локальной учётной записи администратора и подтверждения системных изменений."
+
+msgid "Choose optional access and sign-in policies"
+msgstr "Выберите дополнительные правила доступа и входа"
+
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "Выберите, будет ли этот компьютер принимать удалённые подключения Secure Shell."
+
+msgid "Configure Secure Shell"
+msgstr "Настроить Secure Shell"
+
+msgid "Local Access"
+msgstr "Локальный доступ"
+
+msgid "Log in to the desktop automatically"
+msgstr "Автоматически входить в рабочий стол"
+
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Автоматически открывать рабочий стол этой учётной записи при запуске компьютера."
+
+msgid "Remote Access"
+msgstr "Удалённый доступ"
+
+msgid "Run sudo commands without a password"
+msgstr "Выполнять команды sudo без пароля"
+
+msgid "SSH password login"
+msgstr "Вход по SSH с паролем"
+
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Запустить Secure Shell и принимать пароль этой учётной записи по сети."
+
+msgid "This will reduce the security of the installed system."
+msgstr "Это снизит безопасность установленной системы."
+
+msgid "disabled"
+msgstr "отключено"
+
+msgid "enabled"
+msgstr "включено"
