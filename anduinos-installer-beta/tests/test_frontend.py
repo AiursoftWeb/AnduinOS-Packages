@@ -13,6 +13,7 @@ from frontend import (
     _run_privileged_parted,
     apply_storage_strategy,
     bind_storage_target,
+    clear_plaintext_passwords,
     clear_storage_target,
     create_install_plan,
     guided_storage_enabled,
@@ -196,6 +197,48 @@ class FrontendPlanTests(unittest.TestCase):
         self.assertEqual(cleared, [True])
         self.assertNotIn("plaintext-secret", repr(plan))
         self.assertEqual(plan.identity.password_hash, "$6$salt$hash")
+
+    def test_normalizes_rfc_hostname_before_creating_the_plan(self):
+        values = state()
+        values["hostname"] = "TT-VIEW-71"
+        disk = DiskIdentity(
+            "/dev/sda", "serial:test", 64 * 1024**3, "Test", "test"
+        )
+        platform = PlatformProbe(
+            Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED
+        )
+        with (
+            patch("frontend.hash_password", return_value="$6$salt$hash"),
+            patch(
+                "frontend.probe_storage_inventory",
+                return_value=inventory_for(disk),
+            ),
+            patch("frontend.probe_platform", return_value=platform),
+        ):
+            plan = create_install_plan(values)
+        self.assertEqual(plan.identity.hostname, "tt-view-71")
+
+    def test_confirmation_preview_keeps_password_until_explicit_clear(self):
+        values = state()
+        disk = DiskIdentity(
+            "/dev/sda", "serial:test", 64 * 1024**3, "Test", "test"
+        )
+        platform = PlatformProbe(
+            Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED
+        )
+        with patch("frontend.hash_password", return_value="$6$salt$hash"):
+            plan = create_install_plan(
+                values,
+                inventory=inventory_for(disk),
+                platform=platform,
+                clear_passwords=False,
+            )
+        self.assertEqual(values["password"], "plaintext-secret")
+        self.assertEqual(plan.identity.password_hash, "$6$salt$hash")
+
+        clear_plaintext_passwords(values)
+        self.assertEqual(values["password"], "")
+        self.assertEqual(values["password_confirmation"], "")
 
     def test_rejects_mismatched_password_confirmation(self):
         values = state()

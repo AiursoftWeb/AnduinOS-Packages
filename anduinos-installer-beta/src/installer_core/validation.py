@@ -17,6 +17,7 @@ from .model import (
     SCHEMA_VERSION,
     SecureBoot,
 )
+from .hostnames import is_canonical_hostname
 from .storage_graph_planning import validate_storage_graph
 from .swap_policy import MINIMUM_DISK_SWAP_MIB, MINIMUM_ROOT_MIB
 from .username_policy import RESERVED_USERNAMES, is_valid_username
@@ -24,9 +25,6 @@ from .username_policy import RESERVED_USERNAMES, is_valid_username
 
 MINIMUM_DISK_BYTES = 24 * 1024**3
 MINIMUM_ROOT_BYTES = MINIMUM_ROOT_MIB * 1024**2
-HOSTNAME_RE = re.compile(
-    r"^(?=.{1,63}$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
-)
 LOCALE_RE = re.compile(r"^[A-Za-z]{2,3}(?:_[A-Z]{2})?\.UTF-8$")
 TIMEZONE_RE = re.compile(
     r"^(?:UTC|[A-Za-z0-9._+-]+(?:/[A-Za-z0-9._+-]+)+)$"
@@ -161,7 +159,7 @@ def validate_plan(
         errors.append("Reserved username")
     elif not is_valid_username(identity.username):
         errors.append("Invalid username")
-    if not HOSTNAME_RE.fullmatch(identity.hostname):
+    if not is_canonical_hostname(identity.hostname):
         errors.append("Invalid hostname")
     if (
         not identity.full_name.strip()

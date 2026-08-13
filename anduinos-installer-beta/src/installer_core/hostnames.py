@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 import secrets
 from collections.abc import Callable
+from enum import Enum
 from pathlib import Path
 
 
@@ -19,6 +20,76 @@ _DESKTOP_CHASSIS_TYPES = frozenset(
 )
 _HOSTNAME_COMPONENT_RE = re.compile(r"[^a-z0-9]+")
 _RANDOM_SUFFIX_RE = re.compile(r"^[0-9a-f]{4}$")
+_HOSTNAME_INPUT_RE = re.compile(
+    r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?",
+    re.ASCII,
+)
+_CANONICAL_HOSTNAME_RE = re.compile(
+    r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?",
+    re.ASCII,
+)
+
+
+class HostnameErrorCode(str, Enum):
+    REQUIRED = "required"
+    TOO_LONG = "too-long"
+    EDGE_HYPHEN = "edge-hyphen"
+    INVALID_CHARACTERS = "invalid-characters"
+
+
+class HostnameError(ValueError):
+    """One stable reason why raw user input cannot become a hostname."""
+
+    def __init__(self, code: HostnameErrorCode):
+        self.code = code
+        super().__init__(
+            {
+                HostnameErrorCode.REQUIRED: "Computer name is required",
+                HostnameErrorCode.TOO_LONG: (
+                    "Computer name must be 63 ASCII characters or fewer"
+                ),
+                HostnameErrorCode.EDGE_HYPHEN: (
+                    "Computer name cannot begin or end with a hyphen"
+                ),
+                HostnameErrorCode.INVALID_CHARACTERS: (
+                    "Computer name must contain only ASCII letters, numbers, "
+                    "and hyphens"
+                ),
+            }[code]
+        )
+
+
+def normalize_hostname(value: str) -> str:
+    """Validate RFC-style user input and return systemd-canonical lowercase."""
+
+    if not isinstance(value, str) or not value:
+        raise HostnameError(HostnameErrorCode.REQUIRED)
+    try:
+        encoded = value.encode("ascii")
+    except UnicodeEncodeError as error:
+        raise HostnameError(HostnameErrorCode.INVALID_CHARACTERS) from error
+    if len(encoded) > 63:
+        raise HostnameError(HostnameErrorCode.TOO_LONG)
+    if value.startswith("-") or value.endswith("-"):
+        raise HostnameError(HostnameErrorCode.EDGE_HYPHEN)
+    if _HOSTNAME_INPUT_RE.fullmatch(value) is None:
+        raise HostnameError(HostnameErrorCode.INVALID_CHARACTERS)
+    return value.lower()
+
+
+def is_valid_hostname_input(value: str) -> bool:
+    try:
+        normalize_hostname(value)
+    except HostnameError:
+        return False
+    return True
+
+
+def is_canonical_hostname(value: str) -> bool:
+    return (
+        isinstance(value, str)
+        and _CANONICAL_HOSTNAME_RE.fullmatch(value) is not None
+    )
 
 
 def generate_random_suffix(

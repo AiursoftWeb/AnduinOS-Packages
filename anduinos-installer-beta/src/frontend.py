@@ -177,7 +177,9 @@ def _human_size(size_bytes: int) -> str:
     return f"{size_bytes} B"
 
 
-def _clear_plaintext_passwords(state: dict[str, object]) -> None:
+def clear_plaintext_passwords(state: dict[str, object]) -> None:
+    """Erase account secrets from both shared state and the visible entries."""
+
     state["password"] = ""
     state["password_confirmation"] = ""
     clear_ui = state.pop("_clear_password_ui", None)
@@ -190,19 +192,22 @@ def create_install_plan(
     *,
     inventory: StorageInventory | None = None,
     platform: PlatformProbe | None = None,
+    clear_passwords: bool = True,
 ) -> InstallPlan:
     try:
         storage_mode = InstallMode(
             str(state.get("storage_mode", InstallMode.ERASE_DISK.value))
         )
     except ValueError as error:
-        _clear_plaintext_passwords(state)
+        if clear_passwords:
+            clear_plaintext_passwords(state)
         raise FrontendPlanError("Unsupported storage mode") from error
     if storage_mode not in {
         InstallMode.ERASE_DISK,
         InstallMode.GUIDED_COEXISTENCE,
     }:
-        _clear_plaintext_passwords(state)
+        if clear_passwords:
+            clear_plaintext_passwords(state)
         raise FrontendPlanError("Unsupported storage mode")
 
     password = str(state.get("password") or "")
@@ -225,8 +230,11 @@ def create_install_plan(
             password_hash = hash_password(password)
         state["passwordless_shared"] = passwordless
     finally:
-        # Plaintext exists only while the account page and this call need it.
-        _clear_plaintext_passwords(state)
+        # One-shot callers clear immediately. The GTK confirmation flow keeps
+        # the entries only until the user accepts the already validated plan,
+        # so cancelling the confirmation does not force password re-entry.
+        if clear_passwords:
+            clear_plaintext_passwords(state)
 
     selected_path = str(state.get("disk") or "")
     selected_id = str(state.get("disk_stable_id") or "")

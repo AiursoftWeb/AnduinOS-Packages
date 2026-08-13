@@ -162,6 +162,35 @@ class InstallerVisualAssetTests(unittest.TestCase):
             with self.subTest(fragment=fragment):
                 self.assertIn(fragment, summary)
 
+    def test_hostname_uses_shared_normalization_without_a_page_local_regex(self):
+        pages = (ROOT / "src/pages.py").read_text()
+        account = pages.split("def build_user_page", 1)[1]
+        account = account.split("def _labeled", 1)[0]
+        self.assertIn("normalize_hostname(host)", account)
+        self.assertIn("normalize_hostname(host_entry.get_text())", account)
+        self.assertNotIn("HOST_RE", account)
+
+    def test_final_plan_is_built_before_destructive_confirmation(self):
+        pages = (ROOT / "src/pages.py").read_text()
+        summary = pages.split("def build_summary_page", 1)[1]
+        summary = summary.split("def ordered_progress_steps", 1)[0]
+        apply_recheck = summary.split("def _apply_recheck", 1)[1]
+        apply_recheck = apply_recheck.split("def _start_recheck", 1)[0]
+        self.assertIn("create_install_plan(", apply_recheck)
+        self.assertIn("clear_passwords=False", apply_recheck)
+        self.assertIn("_show_install_confirmation(plan)", apply_recheck)
+
+        confirmation = summary.split(
+            "def _show_install_confirmation", 1
+        )[1].split("def on_install", 1)[0]
+        self.assertIn("plan.identity.hostname", confirmation)
+        self.assertIn("clear_plaintext_passwords(shared)", confirmation)
+        self.assertIn("build_progress_page(plan, shared, nav_view)", confirmation)
+        self.assertNotIn("_start_recheck()", confirmation)
+
+        on_install = summary.split("def on_install", 1)[1]
+        self.assertIn("_start_recheck()", on_install)
+
 
 if __name__ == "__main__":
     unittest.main()

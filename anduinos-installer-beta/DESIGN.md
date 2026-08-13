@@ -21,6 +21,12 @@ and constructs every command itself.
   and RAID are post-release-one work defined in
   [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
 - Filesystems: Btrfs by default, ext4 as an alternative.
+- Machine identity: the account page accepts one RFC-style ASCII hostname
+  label, including upper-case input, digits and internal hyphens. The planner
+  converts it to a lower-case systemd static hostname before constructing the
+  immutable plan. Plans are canonical: the privileged executor rejects
+  upper-case, non-ASCII, dotted, underscored, edge-hyphen or over-63-byte
+  hostnames instead of normalizing untrusted input.
 - Swap: a dynamically sized whole-GiB disk swap partition plus the installed
   system's existing 50%-of-RAM LZ4 zram policy. Disk swap is never below 2 GiB
   and never reduces the planned root filesystem below 20 GiB. When space
@@ -242,12 +248,13 @@ rounded visual boundary and obscure whether the card itself is active.
   signed-chain verification. See
   [`SECURE-BOOT-DESIGN.md`](SECURE-BOOT-DESIGN.md).
 - Milestone 5A — implementation complete: GTK state is converted once into an
-  immutable, versioned plan; plaintext passwords are erased after hashing; the
-  destructive summary and final disk confirmation expose the exact platform,
-  disk identity, planned partition layout, filesystem, swap and Secure Boot
-  intent. Dynamic swap includes a compact expandable formula showing the
-  current RAM, disk budget, hibernation target, fallback target and chosen
-  size; a root-only helper
+  immutable, versioned plan before the destructive confirmation is displayed;
+  plaintext passwords are erased when that validated plan is accepted and are
+  never serialized. The destructive summary and final disk confirmation
+  expose the exact platform, disk identity, planned partition layout,
+  filesystem, swap and Secure Boot intent. Dynamic swap includes a compact
+  expandable formula showing the current RAM, disk budget, hibernation target,
+  fallback target and chosen size; a root-only helper
   streams executor progress while shutdown, sleep and window-close paths are
   inhibited. The obsolete prototype backend is no longer shipped.
 - Milestone 5B — test infrastructure complete, execution pending: the

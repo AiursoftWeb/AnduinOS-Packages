@@ -23,6 +23,7 @@ from .model import (
     SourceSpec,
     StorageSpec,
 )
+from .hostnames import normalize_hostname
 from .probe import PlatformProbe
 from .storage_graph_planning import build_erase_disk_storage_graph
 from .storage_inventory import DiskTopologyBinding
@@ -67,7 +68,7 @@ def build_plan(
             secure_boot=platform.secure_boot,
         ),
         identity=IdentitySpec(
-            hostname=str(choices.get("hostname") or ""),
+            hostname=normalize_hostname(str(choices.get("hostname") or "")),
             username=str(choices.get("username") or ""),
             full_name=str(choices.get("full_name") or ""),
             authentication=(

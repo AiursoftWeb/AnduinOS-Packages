@@ -45,6 +45,7 @@ from frontend import (
     bind_storage_target,
     clear_guided_storage_selection,
     clear_storage_target,
+    clear_plaintext_passwords,
     create_install_plan,
     probe_storage_inventory,
 )
@@ -81,8 +82,10 @@ from installer_core.usernames import (
     suggest_username,
 )
 from installer_core.hostnames import (
+    HostnameError,
     detect_device_type,
     generate_random_suffix,
+    normalize_hostname,
     suggest_hostname,
 )
 from installer_core.wifi import (
@@ -3506,8 +3509,11 @@ def build_user_page(shared, nav_view):
     )
     host_warn = Gtk.Label(visible=False)
     host_warn.add_css_class("warning")
+    host_canonical = Gtk.Label(visible=False, halign=Gtk.Align.START)
+    host_canonical.add_css_class("dim-label")
     box.append(_labeled(_("Computer Name", lang), host_entry))
     box.append(host_warn)
+    box.append(host_canonical)
 
     # Auto-transliterate full name → username until the user edits it.
     # Likewise, follow the username with a friendly hostname until the user
@@ -3553,9 +3559,6 @@ def build_user_page(shared, nav_view):
     full_entry.connect("changed", _on_full_changed)
     host_entry.connect("changed", _on_hostname_changed)
 
-    # Validate on change
-    HOST_RE = re.compile(r"^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$")
-
     def _validate():
         uname = user_entry.get_text()
         pword = pass_entry.get_text()
@@ -3596,13 +3599,20 @@ def build_user_page(shared, nav_view):
             pass_warn.set_visible(False)
             valid["pass"] = len(pword) >= 6
 
-        if host and not HOST_RE.match(host):
+        try:
+            canonical_hostname = normalize_hostname(host)
+        except HostnameError:
             host_warn.set_label(_("Computer name contains invalid characters.", lang))
-            host_warn.set_visible(True)
+            host_warn.set_visible(bool(host))
+            host_canonical.set_visible(False)
             valid["host"] = False
         else:
             host_warn.set_visible(False)
-            valid["host"] = bool(host)
+            host_canonical.set_label(
+                f"{_('Computer Name', lang)}: {canonical_hostname}"
+            )
+            host_canonical.set_visible(canonical_hostname != host)
+            valid["host"] = True
 
         all_valid = valid["name"] and valid["pass"] and valid["host"]
         nxt_btn.set_sensitive(all_valid)
@@ -3633,12 +3643,15 @@ def build_user_page(shared, nav_view):
     content.append(account_scroll)
 
     def _save_account_state():
+        canonical_hostname = normalize_hostname(host_entry.get_text())
+        if canonical_hostname != host_entry.get_text():
+            host_entry.set_text(canonical_hostname)
         shared["username"] = user_entry.get_text()
         shared["password"] = pass_entry.get_text()
         shared["password_confirmation"] = confirm_entry.get_text()
         shared["passwordless_shared"] = not pass_entry.get_text()
         shared["sudo_without_password"] = sudo_without_password.get_active()
-        shared["hostname"] = host_entry.get_text()
+        shared["hostname"] = canonical_hostname
 
     def _continue_to_timezone():
         _save_account_state()
@@ -4331,13 +4344,13 @@ def build_summary_page(shared, nav_view):
                 shared,
                 inventory=inventory,
                 platform=current_platform,
+                clear_passwords=False,
             )
         except Exception as plan_error:
             _show_plan_failure(plan_error)
             return
         _finish_recheck()
-        shared["installation_running"] = True
-        nav_view.push(build_progress_page(plan, shared, nav_view))
+        _show_install_confirmation(plan)
 
     def _start_recheck():
         recheck.set_visible(True)
@@ -4348,13 +4361,10 @@ def build_summary_page(shared, nav_view):
 
         recheck_requests.start(_probe_target, _apply_recheck)
 
-    def on_install():
-        if platform_error or shared.get("installation_running"):
-            return
+    def _show_install_confirmation(plan):
         assert install_button is not None
-        install_button.set_sensitive(False)
-        disk = str(shared.get("disk", "?"))
-        stable_id = str(shared.get("disk_stable_id", "?"))
+        disk = plan.storage.disk.path
+        stable_id = plan.storage.disk.stable_id
         if development_mode:
             confirmation_heading = N_("Validate this installation plan?")
             confirmation_action = N_("Validate Plan (No Installation)")
@@ -4391,6 +4401,8 @@ def build_summary_page(shared, nav_view):
                 + _("Stable identity: {stable_id}\n\n", lang).format(
                     stable_id=stable_id
                 )
+                + f"{_('Computer Name', lang)}: "
+                + f"{plan.identity.hostname}\n\n"
                 + (
                     _("The privileged executor is disabled.", lang)
                     if development_mode
@@ -4423,10 +4435,19 @@ def build_summary_page(shared, nav_view):
             if response != "confirm":
                 install_button.set_sensitive(True)
                 return
-            _start_recheck()
+            clear_plaintext_passwords(shared)
+            shared["installation_running"] = True
+            nav_view.push(build_progress_page(plan, shared, nav_view))
 
         dialog.connect("response", _confirmed)
         dialog.present()
+
+    def on_install():
+        if platform_error or shared.get("installation_running"):
+            return
+        assert install_button is not None
+        install_button.set_sensitive(False)
+        _start_recheck()
 
     def on_back():
         nav_view.pop()
