@@ -31,7 +31,8 @@ class GuidedVmTestPlanTests(unittest.TestCase):
             plan.identity.authentication,
             AuthenticationMode.PASSWORDLESS_SHARED,
         )
-        self.assertTrue(plan.identity.sudo_without_password)
+        self.assertTrue(plan.access.sudo_without_password)
+        self.assertTrue(plan.access.automatic_login)
         self.assertFalse(plan.identity.password_hash)
         self.assertFalse(plan.software.install_updates)
         self.assertFalse(plan.software.install_third_party_drivers)

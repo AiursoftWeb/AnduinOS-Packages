@@ -2,6 +2,7 @@
 
 from .layout import PartitionLayout, PartitionSpec, build_erase_disk_layout
 from .model import (
+    AccessSpec,
     Architecture,
     AuthenticationMode,
     Filesystem,
@@ -22,6 +23,7 @@ from .steps import (
 from .validation import PlanValidationError, validate_plan
 
 __all__ = [
+    "AccessSpec",
     "Architecture",
     "AuthenticationMode",
     "FailurePolicy",

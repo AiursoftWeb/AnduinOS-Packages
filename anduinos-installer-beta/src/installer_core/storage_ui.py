@@ -12,6 +12,7 @@ from .coexistence import (
     analyze_guided_coexistence,
 )
 from .model import (
+    AccessSpec,
     SCHEMA_VERSION,
     AuthenticationMode,
     BootSpec,
@@ -332,7 +333,10 @@ def _preview_plan(
             username="preview",
             full_name="Storage Preview",
             authentication=AuthenticationMode.PASSWORDLESS_SHARED,
+        ),
+        access=AccessSpec(
             sudo_without_password=True,
+            automatic_login=True,
         ),
         regional=RegionalSpec(
             locale=DEFAULT_LOCALE,

@@ -66,8 +66,9 @@ def state():
         "full_name": "Alice Example",
         "password": "plaintext-secret",
         "password_confirmation": "plaintext-secret",
-        "passwordless_shared": False,
         "sudo_without_password": False,
+        "automatic_login": False,
+        "ssh_password_login": False,
         "hostname": "anduinos",
         "timezone": "Asia/Singapore",
         "install_updates": True,
@@ -248,43 +249,28 @@ class FrontendPlanTests(unittest.TestCase):
         self.assertEqual(values["password"], "")
         self.assertEqual(values["password_confirmation"], "")
 
-    def test_passwordless_plan_never_hashes_or_carries_a_password(self):
+    def test_empty_password_is_rejected_even_with_unsafe_options(self):
         values = state()
         values["password"] = ""
         values["password_confirmation"] = ""
-        values["passwordless_shared"] = True
         values["sudo_without_password"] = True
-        disk = DiskIdentity(
-            "/dev/sda", "serial:test", 64 * 1024**3, "Test", "test"
-        )
-        platform = PlatformProbe(
-            Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED
-        )
+        values["automatic_login"] = True
+        values["ssh_password_login"] = True
         with (
             patch(
                 "frontend.hash_password",
                 side_effect=AssertionError("must not hash an empty password"),
             ),
-            patch(
-                "frontend.probe_storage_inventory",
-                return_value=inventory_for(disk),
-            ),
-            patch("frontend.probe_platform", return_value=platform),
+            self.assertRaisesRegex(FrontendPlanError, "password is required"),
         ):
-            plan = create_install_plan(values)
-        self.assertEqual(plan.identity.authentication.value, "passwordless-shared")
-        self.assertEqual(plan.identity.password_hash, "")
-        self.assertTrue(plan.identity.sudo_without_password)
+            create_install_plan(values)
+        self.assertEqual(values["password"], "")
+        self.assertEqual(values["password_confirmation"], "")
 
-    def test_empty_password_without_passwordless_sudo_is_rejected(self):
+    def test_missing_password_confirmation_is_rejected(self):
         values = state()
-        values["password"] = ""
         values["password_confirmation"] = ""
-        values["passwordless_shared"] = False
-        values["sudo_without_password"] = False
-        with self.assertRaisesRegex(
-            FrontendPlanError, "requires passwordless sudo"
-        ):
+        with self.assertRaisesRegex(FrontendPlanError, "password is required"):
             create_install_plan(values)
         self.assertEqual(values["password"], "")
         self.assertEqual(values["password_confirmation"], "")

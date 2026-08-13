@@ -21,10 +21,21 @@ class HelperTests(unittest.TestCase):
         self.helper = load_helper()
         self.helper.SUDOERS_DIR = str(self.root / "sudoers.d")
         self.helper.MANAGED_SUDOERS = str(
-            self.root / "sudoers.d" / "90-anduinos-yubikey-manager"
+            self.root / "sudoers.d" / "90-anduinos-passwordless-admin"
+        )
+        self.helper.SUDO_STATE = str(
+            self.root / "var/lib/anduinos-passwordless-sudo/users"
         )
         self.helper.METADATA = str(self.root / "enrollments.json")
         Path(self.helper.SUDOERS_DIR).mkdir()
+        gdm_pam = self.root / "gdm-password"
+        sudo_pam = self.root / "sudo"
+        gdm_pam.write_text("@include common-auth\n", encoding="utf-8")
+        sudo_pam.write_text("@include common-auth\n", encoding="utf-8")
+        self.helper.PAM_CONFIG = {
+            "gdm": (str(gdm_pam), str(self.root / "gdm-mappings")),
+            "sudo": (str(sudo_pam), str(self.root / "sudo-mappings")),
+        }
         self.helper.validate_sudoers = lambda: None
         self.helper.validate_user = lambda _username: None
         self.helper.has_usable_password = lambda _username: True
@@ -49,7 +60,8 @@ class HelperTests(unittest.TestCase):
             "alice ALL=(ALL:ALL) NOPASSWD: /usr/bin/apt\n"
             "bob ALL=(ALL:ALL) NOPASSWD: ALL\n",
         )
-        self.assertEqual(metadata["passwordless_sudo_users"], [])
+        self.assertEqual(metadata["passwordless_sudo_users"], ["bob"])
+        self.assertEqual(Path(self.helper.SUDO_STATE).read_text(), "bob\n")
 
     def test_enable_writes_a_visudo_compatible_dropin_shape(self):
         metadata = {"enrollments": []}
@@ -61,6 +73,7 @@ class HelperTests(unittest.TestCase):
         )
         self.assertEqual(managed.stat().st_mode & 0o777, 0o440)
         self.assertEqual(metadata["passwordless_sudo_users"], ["alice"])
+        self.assertEqual(Path(self.helper.SUDO_STATE).read_text(), "alice\n")
 
     def test_enable_preserves_another_managed_user(self):
         managed = Path(self.helper.MANAGED_SUDOERS)
@@ -81,6 +94,87 @@ class HelperTests(unittest.TestCase):
             metadata["passwordless_sudo_users"],
             ["alice", "bob"],
         )
+        self.assertEqual(
+            Path(self.helper.SUDO_STATE).read_text(),
+            "alice\nbob\n",
+        )
+
+    def test_installer_policy_is_visible_and_can_be_disabled(self):
+        managed = Path(self.helper.MANAGED_SUDOERS)
+        managed.write_text(
+            "alice ALL=(ALL:ALL) NOPASSWD: ALL\n",
+            encoding="utf-8",
+        )
+        metadata = {"enrollments": [], "passwordless_sudo_users": []}
+
+        self.helper.repair_integrations(metadata)
+        self.assertEqual(metadata["passwordless_sudo_users"], ["alice"])
+        self.assertEqual(Path(self.helper.SUDO_STATE).read_text(), "alice\n")
+
+        self.helper.set_passwordless_sudo("alice", False, metadata)
+        self.assertEqual(managed.read_text(), "")
+        self.assertEqual(metadata["passwordless_sudo_users"], [])
+        self.assertEqual(Path(self.helper.SUDO_STATE).read_text(), "")
+
+    def test_state_ignores_dropins_that_sudo_ignores(self):
+        ignored = Path(self.helper.SUDOERS_DIR) / "editor.backup"
+        ignored.write_text(
+            "alice ALL=(ALL:ALL) NOPASSWD: ALL\n",
+            encoding="utf-8",
+        )
+        effective = Path(self.helper.SUDOERS_DIR) / "local-admins"
+        effective.write_text(
+            "bob ALL=(ALL:ALL) NOPASSWD: ALL\n",
+            encoding="utf-8",
+        )
+
+        self.assertEqual(
+            self.helper.read_effective_passwordless_users(), ["bob"]
+        )
+
+    def test_failed_validation_restores_shared_policy_and_state(self):
+        managed = Path(self.helper.MANAGED_SUDOERS)
+        managed.write_text(
+            "bob ALL=(ALL:ALL) NOPASSWD: ALL\n",
+            encoding="utf-8",
+        )
+        managed.chmod(0o440)
+        state = Path(self.helper.SUDO_STATE)
+        state.parent.mkdir(parents=True)
+        state.write_text("bob\n", encoding="utf-8")
+        state.chmod(0o644)
+        checks = 0
+
+        def reject_changed_policy():
+            nonlocal checks
+            checks += 1
+            if checks == 2:
+                raise RuntimeError("visudo rejected changed policy")
+
+        self.helper.validate_sudoers = reject_changed_policy
+        metadata = {"enrollments": [], "passwordless_sudo_users": ["bob"]}
+
+        with self.assertRaisesRegex(RuntimeError, "visudo rejected"):
+            self.helper.set_passwordless_sudo("alice", True, metadata)
+
+        self.assertEqual(
+            managed.read_text(), "bob ALL=(ALL:ALL) NOPASSWD: ALL\n"
+        )
+        self.assertEqual(managed.stat().st_mode & 0o777, 0o440)
+        self.assertEqual(state.read_text(), "bob\n")
+        self.assertEqual(state.stat().st_mode & 0o777, 0o644)
+
+    def test_shared_policy_symlink_is_rejected_without_touching_target(self):
+        victim = self.root / "victim"
+        victim.write_text("keep\n", encoding="utf-8")
+        Path(self.helper.MANAGED_SUDOERS).symlink_to(victim)
+        metadata = {"enrollments": [], "passwordless_sudo_users": []}
+
+        with self.assertRaises(SystemExit):
+            self.helper.set_passwordless_sudo("alice", True, metadata)
+
+        self.assertEqual(victim.read_text(), "keep\n")
+        self.assertTrue(Path(self.helper.MANAGED_SUDOERS).is_symlink())
 
     def test_repair_rebuilds_mappings_and_pam_from_metadata(self):
         gdm_pam = self.root / "gdm-password"

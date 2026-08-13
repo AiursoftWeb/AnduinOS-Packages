@@ -213,10 +213,37 @@ fn parse_info(serial: &str, info: &str) -> YubiKey {
 }
 
 pub fn security_state() -> EnrollmentFile {
-    fs::read_to_string(config::METADATA)
+    let mut state = fs::read_to_string(config::METADATA)
         .ok()
         .and_then(|data| serde_json::from_str::<EnrollmentFile>(&data).ok())
-        .unwrap_or_default()
+        .unwrap_or_default();
+    if let Ok(snapshot) = fs::read_to_string(config::PASSWORDLESS_SUDO_STATE) {
+        if let Some(users) = parse_passwordless_sudo_state(&snapshot) {
+            state.passwordless_sudo_users = users;
+        }
+    }
+    state
+}
+
+fn parse_passwordless_sudo_state(snapshot: &str) -> Option<Vec<String>> {
+    let mut users = Vec::new();
+    for username in snapshot.lines() {
+        let mut characters = username.chars();
+        let first = characters.next()?;
+        if username.len() > 32
+            || !(first.is_ascii_lowercase() || first == '_')
+            || !characters.all(|character| {
+                character.is_ascii_lowercase()
+                    || character.is_ascii_digit()
+                    || matches!(character, '_' | '-')
+            })
+            || users.iter().any(|item| item == username)
+        {
+            return None;
+        }
+        users.push(username.to_string());
+    }
+    Some(users)
 }
 
 pub fn register_credential(purpose: &str, username: &str, serial: &str) -> Result<(), String> {
@@ -360,5 +387,16 @@ mod tests {
         assert_eq!(key.firmware, "5.7.4");
         assert_eq!(key.interfaces, "FIDO");
         assert!(parse_ykman_list_summary("YubiKey C Bio - FIDO Edition (5.7.4) [FIDO]").is_none());
+    }
+
+    #[test]
+    fn parses_root_owned_passwordless_sudo_snapshot() {
+        assert_eq!(
+            parse_passwordless_sudo_state("alice\nbob-admin\n"),
+            Some(vec!["alice".into(), "bob-admin".into()])
+        );
+        assert_eq!(parse_passwordless_sudo_state(""), Some(Vec::new()));
+        assert_eq!(parse_passwordless_sudo_state("Alice\n"), None);
+        assert_eq!(parse_passwordless_sudo_state("alice\nalice\n"), None);
     }
 }

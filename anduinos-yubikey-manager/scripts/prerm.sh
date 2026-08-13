@@ -45,7 +45,10 @@ for path in ("/etc/pam.d/gdm-password", "/etc/pam.d/sudo"):
         if os.path.exists(temporary):
             os.unlink(temporary)
 
-managed_sudoers = "/etc/sudoers.d/90-anduinos-yubikey-manager"
-if os.path.isfile(managed_sudoers) and not os.path.islink(managed_sudoers):
-    os.unlink(managed_sudoers)
+# The neutral passwordless-sudo policy is shared with the installer and is
+# persistent system state, not package-owned YubiKey state. Only remove the
+# unpublished legacy helper path; never disable the shared policy here.
+legacy_sudoers = "/etc/sudoers.d/90-anduinos-yubikey-manager"
+if os.path.isfile(legacy_sudoers) and not os.path.islink(legacy_sudoers):
+    os.unlink(legacy_sudoers)
 PY

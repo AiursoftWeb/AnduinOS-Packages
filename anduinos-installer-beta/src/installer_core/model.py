@@ -14,7 +14,7 @@ from typing import Any
 from .storage_graph import StorageGraph
 
 
-SCHEMA_VERSION = 11
+SCHEMA_VERSION = 12
 
 
 class Architecture(str, Enum):
@@ -92,9 +92,15 @@ class IdentitySpec:
     username: str
     full_name: str
     authentication: AuthenticationMode = AuthenticationMode.PASSWORD
-    sudo_without_password: bool = False
     # A crypt-compatible hash, never a plaintext password.
     password_hash: str = field(default="", repr=False)
+
+
+@dataclass(frozen=True)
+class AccessSpec:
+    sudo_without_password: bool = False
+    automatic_login: bool = False
+    ssh_password_login: bool = False
 
 
 @dataclass(frozen=True)
@@ -140,6 +146,7 @@ class InstallPlan:
     storage: StorageSpec
     platform: PlatformSpec
     identity: IdentitySpec
+    access: AccessSpec
     regional: RegionalSpec
     software: SoftwareSpec = field(default_factory=SoftwareSpec)
     swap: SwapSpec = field(default_factory=SwapSpec)
@@ -167,6 +174,7 @@ class InstallPlan:
                 "storage",
                 "platform",
                 "identity",
+                "access",
                 "regional",
                 "software",
                 "swap",
@@ -231,7 +239,6 @@ class InstallPlan:
                 "username",
                 "full_name",
                 "authentication",
-                "sudo_without_password",
                 "password_hash",
             },
             "identity",
@@ -244,6 +251,18 @@ class InstallPlan:
                 ),
             }
         )
+
+        access_data = _object(root["access"], "access")
+        _exact_fields(
+            access_data,
+            {
+                "sudo_without_password",
+                "automatic_login",
+                "ssh_password_login",
+            },
+            "access",
+        )
+        access = AccessSpec(**access_data)
 
         regional_data = _object(root["regional"], "regional")
         _exact_fields(
@@ -310,6 +329,7 @@ class InstallPlan:
             storage=storage,
             platform=platform,
             identity=identity,
+            access=access,
             regional=regional,
             software=software,
             swap=swap,

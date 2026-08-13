@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import os
 import re
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -12,6 +14,10 @@ from .steps import FailurePolicy, InstallContext
 
 
 MACHINE_ID_RE = re.compile(r"^[0-9a-f]{32}$")
+PASSWORDLESS_SUDOERS = Path("etc/sudoers.d/90-anduinos-passwordless-admin")
+PASSWORDLESS_SUDO_STATE = Path("var/lib/anduinos-passwordless-sudo/users")
+
+
 @dataclass
 class ConfigureSystemStep:
     runner: CommandRunner
@@ -72,22 +78,45 @@ class ConfigureSystemStep:
                 input_text=f"{identity.username}:{identity.password_hash}\n",
                 timeout=30,
             )
-            _write_gdm_autologin(target, identity.username, enabled=False)
             context.log("Account login: password authentication")
-            context.log("GDM automatic login: disabled")
         else:
             self.runner.run(
                 ("chroot", str(target), "passwd", "--delete", identity.username),
                 timeout=30,
             )
-            _write_gdm_autologin(target, identity.username, enabled=True)
             context.log("Account login: passwordless shared account")
+
+        _write_gdm_autologin(
+            target,
+            identity.username,
+            enabled=context.plan.access.automatic_login,
+        )
+        if context.plan.access.automatic_login:
             context.log(
                 f"GDM automatic login: enabled for {identity.username}"
             )
+        else:
+            context.log("GDM automatic login: disabled")
 
-        if identity.sudo_without_password:
-            sudoers = _write_passwordless_sudo(target, identity.username)
+        sudoers_backup = _snapshot_file(_passwordless_sudo_path(target))
+        state_backup = _snapshot_file(_passwordless_sudo_state_path(target))
+        self.runner.run(
+            (
+                "chroot",
+                str(target),
+                "visudo",
+                "--check",
+                "--file",
+                "/etc/sudoers",
+            ),
+            timeout=30,
+        )
+        try:
+            _set_passwordless_sudo(
+                target,
+                identity.username,
+                enabled=context.plan.access.sudo_without_password,
+            )
             self.runner.run(
                 (
                     "chroot",
@@ -95,13 +124,18 @@ class ConfigureSystemStep:
                     "visudo",
                     "--check",
                     "--file",
-                    f"/{sudoers.relative_to(target)}",
+                    "/etc/sudoers",
                 ),
                 timeout=30,
             )
+        except BaseException:
+            _restore_file(_passwordless_sudo_path(target), sudoers_backup)
+            _restore_file(_passwordless_sudo_state_path(target), state_backup)
+            raise
+
+        if context.plan.access.sudo_without_password:
             context.log("Sudo authentication: password not required")
         else:
-            _remove_passwordless_sudo(target)
             context.log("Sudo authentication: account password required")
         self.runner.run(
             ("chroot", str(target), "passwd", "--lock", "root"),
@@ -169,23 +203,52 @@ class ConfigureSystemStep:
         if "sudo" not in group:
             raise RuntimeError("User is not a member of sudo")
         sudoers = _passwordless_sudo_path(target)
+        sudo_state = _passwordless_sudo_state_path(target)
         gdm = target / "etc/gdm3/custom.conf"
         gdm_text = gdm.read_text(encoding="utf-8") if gdm.is_file() else ""
-        if plan.identity.sudo_without_password:
-            if not sudoers.is_file() or sudoers.stat().st_mode & 0o777 != 0o440:
+        if plan.access.sudo_without_password:
+            if (
+                sudoers.is_symlink()
+                or not sudoers.is_file()
+                or sudoers.stat().st_mode & 0o777 != 0o440
+            ):
                 raise RuntimeError("Passwordless sudo policy is missing or unsafe")
             expected = (
                 f"{plan.identity.username} ALL=(ALL:ALL) NOPASSWD: ALL\n"
             )
             if sudoers.read_text(encoding="utf-8") != expected:
                 raise RuntimeError("Passwordless sudo policy verification failed")
+            if (
+                sudo_state.is_symlink()
+                or not sudo_state.is_file()
+                or sudo_state.stat().st_mode & 0o777 != 0o644
+                or sudo_state.read_text(encoding="utf-8")
+                != f"{plan.identity.username}\n"
+            ):
+                raise RuntimeError("Passwordless sudo state verification failed")
         elif sudoers.exists():
             raise RuntimeError("Unexpected passwordless sudo policy")
+        elif (
+            sudo_state.is_symlink()
+            or not sudo_state.is_file()
+            or sudo_state.stat().st_mode & 0o777 != 0o644
+            or sudo_state.read_text(encoding="utf-8") != ""
+        ):
+            raise RuntimeError("Unexpected passwordless sudo state")
 
-        expects_autologin = (
-            plan.identity.authentication
-            is AuthenticationMode.PASSWORDLESS_SHARED
+        self.runner.run(
+            (
+                "chroot",
+                str(target),
+                "visudo",
+                "--check",
+                "--file",
+                "/etc/sudoers",
+            ),
+            timeout=30,
         )
+
+        expects_autologin = plan.access.automatic_login
         if expects_autologin:
             if (
                 "AutomaticLoginEnable=true" not in gdm_text
@@ -220,23 +283,72 @@ def _write_hostname(target: Path, hostname: str) -> None:
 
 
 def _passwordless_sudo_path(target: Path) -> Path:
-    return target / "etc/sudoers.d/90-anduinos-passwordless-admin"
+    return target / PASSWORDLESS_SUDOERS
 
 
-def _write_passwordless_sudo(target: Path, username: str) -> Path:
+def _passwordless_sudo_state_path(target: Path) -> Path:
+    return target / PASSWORDLESS_SUDO_STATE
+
+
+def _set_passwordless_sudo(
+    target: Path, username: str, *, enabled: bool
+) -> None:
     path = _passwordless_sudo_path(target)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        f"{username} ALL=(ALL:ALL) NOPASSWD: ALL\n", encoding="utf-8"
-    )
-    path.chmod(0o440)
-    return path
-
-
-def _remove_passwordless_sudo(target: Path) -> None:
-    path = _passwordless_sudo_path(target)
-    if path.exists() or path.is_symlink():
+    if enabled:
+        _atomic_write(
+            path,
+            f"{username} ALL=(ALL:ALL) NOPASSWD: ALL\n",
+            0o440,
+        )
+    elif path.exists() or path.is_symlink():
+        if path.is_symlink() or not path.is_file():
+            raise RuntimeError("Passwordless sudo policy path is unsafe")
         path.unlink()
+    _atomic_write(
+        _passwordless_sudo_state_path(target),
+        f"{username}\n" if enabled else "",
+        0o644,
+    )
+
+
+def _snapshot_file(path: Path) -> tuple[bytes, int] | None:
+    if path.is_symlink() or (path.exists() and not path.is_file()):
+        raise RuntimeError(f"Unsafe policy path: {path}")
+    if not path.exists():
+        return None
+    return path.read_bytes(), path.stat().st_mode & 0o777
+
+
+def _restore_file(path: Path, snapshot: tuple[bytes, int] | None) -> None:
+    if snapshot is None:
+        if path.exists() or path.is_symlink():
+            path.unlink()
+        return
+    content, mode = snapshot
+    _atomic_write(path, content.decode("utf-8"), mode)
+
+
+def _atomic_write(path: Path, content: str, mode: int) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o755)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{path.name}.", dir=path.parent
+    )
+    temporary = Path(temporary_name)
+    try:
+        os.fchmod(descriptor, mode)
+        with os.fdopen(descriptor, "w", encoding="utf-8") as output:
+            output.write(content)
+            output.flush()
+            os.fsync(output.fileno())
+        temporary.replace(path)
+        directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
 
 
 def _write_gdm_autologin(

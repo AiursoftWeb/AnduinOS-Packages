@@ -212,23 +212,12 @@ def create_install_plan(
 
     password = str(state.get("password") or "")
     confirmation = str(state.get("password_confirmation") or "")
-    passwordless = not password and not confirmation
     try:
-        if passwordless:
-            if not bool(state.get("sudo_without_password")):
-                raise FrontendPlanError(
-                    "An account without a password requires passwordless sudo"
-                )
-            if storage_mode is InstallMode.GUIDED_COEXISTENCE:
-                raise FrontendPlanError(
-                    "Install alongside requires a password-protected account"
-                )
-            password_hash = ""
-        else:
-            if password != confirmation:
-                raise FrontendPlanError("The two passwords do not match")
-            password_hash = hash_password(password)
-        state["passwordless_shared"] = passwordless
+        if not password or not confirmation:
+            raise FrontendPlanError("A password is required")
+        if password != confirmation:
+            raise FrontendPlanError("The two passwords do not match")
+        password_hash = hash_password(password)
     finally:
         # One-shot callers clear immediately. The GTK confirmation flow keeps
         # the entries only until the user accepts the already validated plan,

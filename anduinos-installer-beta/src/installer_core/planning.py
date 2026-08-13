@@ -8,6 +8,7 @@ from dataclasses import replace
 from languages import DEFAULT_LOCALE, Language, language_for_locale
 
 from .model import (
+    AccessSpec,
     BootSpec,
     AuthenticationMode,
     Filesystem,
@@ -71,15 +72,19 @@ def build_plan(
             hostname=normalize_hostname(str(choices.get("hostname") or "")),
             username=str(choices.get("username") or ""),
             full_name=str(choices.get("full_name") or ""),
-            authentication=(
-                AuthenticationMode.PASSWORDLESS_SHARED
-                if choices.get("passwordless_shared")
-                else AuthenticationMode.PASSWORD
-            ),
+            authentication=AuthenticationMode.PASSWORD,
+            password_hash=password_hash,
+        ),
+        access=AccessSpec(
             sudo_without_password=bool(
                 choices.get("sudo_without_password", False)
             ),
-            password_hash=password_hash,
+            automatic_login=bool(
+                choices.get("automatic_login", False)
+            ),
+            ssh_password_login=bool(
+                choices.get("ssh_password_login", False)
+            ),
         ),
         regional=RegionalSpec(
             locale=locale,

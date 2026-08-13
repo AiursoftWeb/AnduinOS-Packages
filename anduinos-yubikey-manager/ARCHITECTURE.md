@@ -25,14 +25,20 @@ purpose, username, YubiKey serial number, and public FIDO credential. Removing o
 association preserves every other user, purpose, and key.
 
 Passwordless sudo is effective before PAM and therefore takes precedence over YubiKey
-authentication. The helper recognizes only full current-user `NOPASSWD: ALL` rules,
-preserves scoped and other-user rules, and validates the complete configuration with
-`visudo` before and after every change. A passwordless account cannot disable NOPASSWD
-until at least one sudo credential is enrolled.
+authentication. The installer and Security Center share the neutral
+`/etc/sudoers.d/90-anduinos-passwordless-admin` policy and the root-owned, mode 0644
+`/var/lib/anduinos-passwordless-sudo/users` state snapshot. The snapshot contains only
+validated usernames, lets the unprivileged UI remain passive, and is regenerated from
+effective full-user rules by the privileged helper. The helper recognizes only full
+current-user `NOPASSWD: ALL` rules, preserves scoped and other-user rules, writes
+atomically, and validates the complete configuration with `visudo` before and after
+every change. A passwordless account cannot disable NOPASSWD until at least one sudo
+credential is enrolled.
 
 Package upgrades preserve all authentication state. The pre-removal script exits before
-cleanup for `upgrade` and `failed-upgrade`, and detaches managed PAM and sudoers entries
-only for an actual removal or deconfiguration. The restricted helper's `repair` action
+cleanup for `upgrade` and `failed-upgrade`, and detaches only YubiKey-owned PAM entries
+for an actual removal or deconfiguration. The shared passwordless-sudo policy survives
+Security Center removal. The restricted helper's `repair` action
 can reconstruct PAM mapping files, passwordless-sudo ownership, and integration lines
 from validated enrollment metadata without requiring users to touch or re-enroll their
 YubiKeys. The package post-install script invokes that repair path after upgrades so

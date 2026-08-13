@@ -60,13 +60,12 @@ def validate_plan_for_execution(
         allow_guided_compilation=True,
     )
     if (
-        plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
-        and policy is ExecutionPolicy.RELEASE
+        policy is ExecutionPolicy.RELEASE
         and plan.identity.authentication
         is AuthenticationMode.PASSWORDLESS_SHARED
     ):
         raise PlanValidationError(
-            ["Install alongside requires a password-protected account"]
+            ["Release installation requires a password-protected account"]
         )
 
 
@@ -180,13 +179,28 @@ def validate_plan(
             errors.append("Passwordless shared account must not carry a password")
     else:
         errors.append("Invalid account authentication mode")
-    if type(identity.sudo_without_password) is not bool:
+    access = plan.access
+    if type(access.sudo_without_password) is not bool:
         errors.append("Passwordless sudo policy must be boolean")
+    if type(access.automatic_login) is not bool:
+        errors.append("Automatic-login policy must be boolean")
+    if type(access.ssh_password_login) is not bool:
+        errors.append("SSH password-login policy must be boolean")
     if (
         identity.authentication is AuthenticationMode.PASSWORDLESS_SHARED
-        and identity.sudo_without_password is not True
+        and access.sudo_without_password is not True
     ):
         errors.append("Passwordless shared account requires passwordless sudo")
+    if (
+        identity.authentication is AuthenticationMode.PASSWORDLESS_SHARED
+        and access.automatic_login is not True
+    ):
+        errors.append("Passwordless shared account requires automatic login")
+    if (
+        identity.authentication is AuthenticationMode.PASSWORDLESS_SHARED
+        and access.ssh_password_login
+    ):
+        errors.append("SSH password login requires a password-protected account")
 
     regional = plan.regional
     if not LOCALE_RE.fullmatch(regional.locale):

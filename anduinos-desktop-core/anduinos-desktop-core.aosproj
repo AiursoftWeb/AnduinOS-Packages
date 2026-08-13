@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-core</PackageName>
-    <PackageVersion>2.0.1-6+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-7+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS desktop core metapackage — pure upstream GNOME desktop environment with multimedia, printing, and input method support. No AnduinOS branding.</PackageDescription>
     <Section>metapackages</Section>
@@ -106,6 +106,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- ============================================================
+         Recommends: GNOME system settings integrations
+         Ubuntu's GNOME build controls ssh.socket from the Secure Shell
+         panel. Keep the server removable without breaking the desktop.
+         ============================================================ -->
+    <Recommend Include="openssh-server" />
+
     <!-- ============================================================
          Recommends: Brand session (preferred, removable)
          ============================================================ -->

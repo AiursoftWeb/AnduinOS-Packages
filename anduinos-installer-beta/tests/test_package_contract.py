@@ -22,6 +22,72 @@ def load_package_verifier():
 
 
 class PackageContractTests(unittest.TestCase):
+    def test_passwordless_sudo_contract_matches_security_center(self):
+        package_root = ROOT.parent
+        installer = (
+            ROOT / "src/installer_core/system_config.py"
+        ).read_text(encoding="utf-8")
+        helper = (
+            package_root / "anduinos-yubikey-manager/data/helper"
+        ).read_text(encoding="utf-8")
+        backend_config = (
+            package_root / "anduinos-yubikey-manager/src/config.rs"
+        ).read_text(encoding="utf-8")
+        prerm = (
+            package_root / "anduinos-yubikey-manager/scripts/prerm.sh"
+        ).read_text(encoding="utf-8")
+
+        policy = "etc/sudoers.d/90-anduinos-passwordless-admin"
+        state = "var/lib/anduinos-passwordless-sudo/users"
+        self.assertIn(f'Path("{policy}")', installer)
+        self.assertIn(f'Path("{state}")', installer)
+        self.assertIn(f'SUDOERS_DIR + "/{Path(policy).name}"', helper)
+        self.assertIn(f'SUDO_STATE = "/{state}"', helper)
+        self.assertIn(f'= "/{state}";', backend_config)
+        self.assertNotIn(f'os.unlink("/{policy}")', prerm)
+
+    def test_secure_shell_is_a_declarative_desktop_capability(self):
+        package_root = ROOT.parent
+        desktop = ET.parse(
+            package_root
+            / "anduinos-desktop-core"
+            / "anduinos-desktop-core.aosproj"
+        ).getroot()
+        core = ET.parse(
+            package_root
+            / "anduinos-core-system"
+            / "anduinos-core-system.aosproj"
+        ).getroot()
+
+        dependencies = {
+            item.get("Include") for item in desktop.iter("Dependency")
+        }
+        recommendations = {
+            item.get("Include") for item in desktop.iter("Recommend")
+        }
+        self.assertNotIn("openssh-server", dependencies)
+        self.assertIn("openssh-server", recommendations)
+
+        preset = (
+            package_root
+            / "anduinos-core-system/assets/20-anduinos-security.preset"
+        )
+        self.assertEqual(
+            preset.read_text(encoding="utf-8").splitlines()[-2:],
+            ["disable ssh.service", "disable ssh.socket"],
+        )
+        files = {
+            (item.get("Include"), item.get("Target"))
+            for item in core.iter("IncludeFile")
+        }
+        self.assertIn(
+            (
+                "assets/20-anduinos-security.preset",
+                "/usr/lib/systemd/system-preset/20-anduinos-security.preset",
+            ),
+            files,
+        )
+
     def test_extended_codecs_are_optional_and_owned_by_one_metapackage(self):
         package_root = ROOT.parent
         desktop = ET.parse(

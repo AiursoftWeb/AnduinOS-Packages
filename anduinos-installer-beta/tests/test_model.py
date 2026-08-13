@@ -59,6 +59,20 @@ class InstallPlanTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Missing field in software"):
             InstallPlan.from_dict(value)
 
+    def test_access_policy_is_strict_and_round_trips(self):
+        plan = valid_plan(
+            sudo_without_password=True,
+            automatic_login=True,
+            ssh_password_login=True,
+        )
+        restored = InstallPlan.from_dict(plan.to_dict())
+        self.assertEqual(restored.access, plan.access)
+
+        value = plan.to_dict()
+        del value["access"]["automatic_login"]
+        with self.assertRaisesRegex(ValueError, "Missing field in access"):
+            InstallPlan.from_dict(value)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -51,6 +51,7 @@ class ExecutorPipelineTests(unittest.TestCase):
             "refresh-package-indexes",
             "upgrade-system",
             "ensure-snapshots-manager",
+            "provision-remote-access",
             "verify-dkms-signatures",
             "install-bootloader",
             "enroll-secure-boot",

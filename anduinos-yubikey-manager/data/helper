@@ -19,7 +19,8 @@ PAM_CONFIG = {
     "sudo": ("/etc/pam.d/sudo", SUDO_MAPPING),
 }
 SUDOERS_DIR = "/etc/sudoers.d"
-MANAGED_SUDOERS = SUDOERS_DIR + "/90-anduinos-yubikey-manager"
+MANAGED_SUDOERS = SUDOERS_DIR + "/90-anduinos-passwordless-admin"
+SUDO_STATE = "/var/lib/anduinos-passwordless-sudo/users"
 USER_RE = re.compile(r"^[a-z_][a-z0-9_-]{0,31}$")
 SERIAL_RE = re.compile(r"^(?:[0-9]{1,12}|usb-[A-Za-z0-9._-]{1,64})$")
 CREDENTIAL_RE = re.compile(
@@ -34,6 +35,7 @@ def fail(message):
 
 def atomic_write(path, content, mode):
     directory = os.path.dirname(path)
+    os.makedirs(directory, mode=0o755, exist_ok=True)
     fd, temporary = tempfile.mkstemp(prefix=".yubikey-", dir=directory)
     try:
         os.fchmod(fd, mode)
@@ -45,6 +47,11 @@ def atomic_write(path, content, mode):
     finally:
         if os.path.exists(temporary):
             os.unlink(temporary)
+
+
+def require_safe_optional_file(path):
+    if os.path.islink(path) or (os.path.exists(path) and not os.path.isfile(path)):
+        fail("A managed security policy path is unsafe.")
 
 
 def read_metadata():
@@ -160,6 +167,7 @@ def sudo_enrolled(metadata, username):
 
 
 def read_managed_passwordless_users():
+    require_safe_optional_file(MANAGED_SUDOERS)
     try:
         with open(MANAGED_SUDOERS, encoding="utf-8") as source:
             lines = source.read().splitlines()
@@ -181,7 +189,49 @@ def read_managed_passwordless_users():
     return users
 
 
+def sudoers_dropin_paths():
+    try:
+        names = os.listdir(SUDOERS_DIR)
+    except FileNotFoundError:
+        return
+    for name in sorted(names):
+        # Match sudo's @includedir policy: editor backups and names containing
+        # a dot are ignored and therefore cannot contribute effective rules.
+        if "." in name or name.endswith("~"):
+            continue
+        path = os.path.join(SUDOERS_DIR, name)
+        if os.path.islink(path) or not os.path.isfile(path):
+            continue
+        yield path
+
+
+def read_effective_passwordless_users():
+    users = set()
+    rule = re.compile(
+        r"^\s*([a-z_][a-z0-9_-]{0,31})\s+ALL\s*=\s*"
+        r"\(ALL(?::ALL)?\)\s+NOPASSWD\s*:\s*ALL\s*$"
+    )
+    for path in sudoers_dropin_paths():
+        with open(path, encoding="utf-8") as source:
+            for line in source:
+                match = rule.fullmatch(line.rstrip("\n"))
+                if match:
+                    users.add(match.group(1))
+    return sorted(users)
+
+
+def write_passwordless_state(users):
+    atomic_write(
+        SUDO_STATE,
+        "".join(f"{username}\n" for username in sorted(set(users))),
+        0o644,
+    )
+
+
 def repair_integrations(metadata):
+    read_managed_passwordless_users()
+    require_safe_optional_file(SUDO_STATE)
+    validate_sudoers()
     entries = metadata["enrollments"]
     for purpose, (_, mapping_path) in PAM_CONFIG.items():
         mappings = {}
@@ -204,7 +254,9 @@ def repair_integrations(metadata):
         )
         atomic_write(mapping_path, mapping_text, 0o600)
         ensure_pam(purpose, bool(mappings))
-    metadata["passwordless_sudo_users"] = read_managed_passwordless_users()
+    passwordless_users = read_effective_passwordless_users()
+    metadata["passwordless_sudo_users"] = passwordless_users
+    write_passwordless_state(passwordless_users)
     atomic_write(
         METADATA,
         json.dumps(metadata, indent=2, sort_keys=True) + "\n",
@@ -226,6 +278,8 @@ def validate_sudoers():
 
 def set_passwordless_sudo(username, enabled, metadata):
     validate_user(username)
+    require_safe_optional_file(MANAGED_SUDOERS)
+    require_safe_optional_file(SUDO_STATE)
     if not enabled and not has_usable_password(username) and not sudo_enrolled(metadata, username):
         fail(
             "This account has no usable password. Enroll at least one sudo YubiKey "
@@ -242,8 +296,15 @@ def set_passwordless_sudo(username, enabled, metadata):
                 )
         else:
             backups[METADATA] = None
-        passwordless_users = set(metadata.get("passwordless_sudo_users", []))
-        passwordless_users.update(read_managed_passwordless_users())
+        if os.path.exists(SUDO_STATE):
+            with open(SUDO_STATE, encoding="utf-8") as source:
+                backups[SUDO_STATE] = (
+                    source.read(),
+                    os.stat(SUDO_STATE).st_mode & 0o777,
+                )
+        else:
+            backups[SUDO_STATE] = None
+        passwordless_users = set(read_managed_passwordless_users())
         if enabled:
             passwordless_users.add(username)
             if os.path.exists(MANAGED_SUDOERS):
@@ -269,10 +330,7 @@ def set_passwordless_sudo(username, enabled, metadata):
                 rf"^\s*{escaped}\s+ALL\s*=\s*\(ALL(?::ALL)?\)\s+"
                 r"NOPASSWD\s*:\s*ALL\s*$"
             )
-            for name in os.listdir(SUDOERS_DIR):
-                path = os.path.join(SUDOERS_DIR, name)
-                if os.path.islink(path) or not os.path.isfile(path):
-                    continue
+            for path in sudoers_dropin_paths():
                 with open(path, encoding="utf-8") as source:
                     original = source.read()
                 lines = original.splitlines()
@@ -286,7 +344,9 @@ def set_passwordless_sudo(username, enabled, metadata):
                     backups[path][1],
                 )
         validate_sudoers()
-        metadata["passwordless_sudo_users"] = sorted(passwordless_users)
+        effective_users = read_effective_passwordless_users()
+        write_passwordless_state(effective_users)
+        metadata["passwordless_sudo_users"] = effective_users
         atomic_write(
             METADATA,
             json.dumps(metadata, indent=2, sort_keys=True) + "\n",

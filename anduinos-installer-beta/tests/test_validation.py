@@ -8,7 +8,11 @@ from installer_core.model import (
     MokPasswordPolicy,
     SecureBoot,
 )
-from installer_core.validation import PlanValidationError, validate_plan
+from installer_core.validation import (
+    PlanValidationError,
+    validate_plan,
+    validate_plan_for_execution,
+)
 
 from helpers import valid_plan
 
@@ -171,12 +175,19 @@ class ValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(PlanValidationError, "must not carry"):
             validate_plan(plan)
 
+    def test_release_execution_rejects_passwordless_erase_installation(self):
+        plan = valid_plan(authentication=AuthenticationMode.PASSWORDLESS_SHARED)
+        with self.assertRaisesRegex(
+            PlanValidationError, "password-protected account"
+        ):
+            validate_plan_for_execution(plan)
+
     def test_passwordless_shared_plan_requires_nopasswd_sudo(self):
         plan = valid_plan(authentication=AuthenticationMode.PASSWORDLESS_SHARED)
         plan = dataclasses.replace(
             plan,
-            identity=dataclasses.replace(
-                plan.identity, sudo_without_password=False
+            access=dataclasses.replace(
+                plan.access, sudo_without_password=False
             ),
         )
         with self.assertRaisesRegex(PlanValidationError, "requires"):

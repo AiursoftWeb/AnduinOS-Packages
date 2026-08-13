@@ -17,6 +17,14 @@ class PackagingTests(unittest.TestCase):
         self.assertIn("/usr/lib/anduinos-yubikey-manager/helper repair", script)
         self.assertIn('"configure"', script)
 
+    def test_removal_preserves_shared_passwordless_sudo_policy(self):
+        script = Path("scripts/prerm.sh").read_text(encoding="utf-8")
+        self.assertIn("90-anduinos-yubikey-manager", script)
+        self.assertNotIn(
+            'managed_sudoers = "/etc/sudoers.d/90-anduinos-passwordless-admin"',
+            script,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

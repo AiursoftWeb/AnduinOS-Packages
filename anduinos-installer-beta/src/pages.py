@@ -50,7 +50,6 @@ from frontend import (
     probe_storage_inventory,
 )
 from installer_core.btrfs import BTRFS_SUBVOLUMES
-from installer_core.account_security import AccountNextAction, account_next_action
 from installer_core.coexistence import CoexistenceNoticeCode
 from installer_core.executor import describe_installation_pipeline
 from installer_core.layout import MIB, build_erase_disk_layout_spec
@@ -3443,11 +3442,6 @@ def build_user_page(shared, nav_view):
 
     # Validation state
     valid = {"name": True, "pass": True, "host": True}
-    guided_account = (
-        shared.get("storage_mode")
-        == InstallMode.GUIDED_COEXISTENCE.value
-    )
-
     box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL,
                   spacing=8, margin_start=48, margin_end=48,
                   margin_top=12, vexpand=True)
@@ -3483,11 +3477,6 @@ def build_user_page(shared, nav_view):
     box.append(_labeled(_("Password", lang), pass_entry))
     box.append(_labeled(_("Confirm Password", lang), confirm_entry))
     box.append(pass_warn)
-
-    sudo_without_password = Gtk.CheckButton(
-        label=_("Do not require a password for sudo commands", lang)
-    )
-    box.append(sudo_without_password)
 
     # Hostname.  Keep one device classification and random suffix for the
     # entire installer run so navigating between pages cannot rename it.
@@ -3573,20 +3562,10 @@ def build_user_page(shared, nav_view):
             name_warn.set_visible(False)
             valid["name"] = bool(uname)
 
-        if not pword and not confirmation:
-            if guided_account:
-                pass_warn.set_label(
-                    _(
-                        "Install alongside requires a password-protected "
-                        "account.",
-                        lang,
-                    )
-                )
-                pass_warn.set_visible(True)
-                valid["pass"] = False
-            else:
-                pass_warn.set_visible(False)
-                valid["pass"] = True
+        if not pword or not confirmation:
+            pass_warn.set_label(_("A password is required.", lang))
+            pass_warn.set_visible(True)
+            valid["pass"] = False
         elif pword != confirmation:
             pass_warn.set_label(_("The two passwords do not match.", lang))
             pass_warn.set_visible(True)
@@ -3621,13 +3600,6 @@ def build_user_page(shared, nav_view):
     pass_entry.connect("changed", lambda _e: _validate())
     confirm_entry.connect("changed", lambda _e: _validate())
 
-    def _set_sudo_without_password(button):
-        enabled = button.get_active()
-        shared["sudo_without_password"] = enabled
-        _validate()
-
-    sudo_without_password.connect("toggled", _set_sudo_without_password)
-
     def _clear_password_ui():
         pass_entry.set_text("")
         confirm_entry.set_text("")
@@ -3649,105 +3621,14 @@ def build_user_page(shared, nav_view):
         shared["username"] = user_entry.get_text()
         shared["password"] = pass_entry.get_text()
         shared["password_confirmation"] = confirm_entry.get_text()
-        shared["passwordless_shared"] = not pass_entry.get_text()
-        shared["sudo_without_password"] = sudo_without_password.get_active()
         shared["hostname"] = canonical_hostname
 
-    def _continue_to_timezone():
+    def _continue_to_advanced_options():
         _save_account_state()
-        nav_view.push(build_timezone_page(shared, nav_view))
-
-    def _show_message(heading_key, body_key):
-        dialog = Adw.MessageDialog(
-            transient_for=nav_view.get_root(),
-            heading=_(heading_key, lang),
-            body=_(body_key, lang),
-        )
-        dialog.add_response("back", _("Return to Make Changes", lang))
-        dialog.set_default_response("back")
-        dialog.set_close_response("back")
-        dialog.present()
-
-    def _confirm_unsafe_sudo(passwordless):
-        warning_heading = (
-            N_("This configuration is very unsafe")
-            if passwordless
-            else N_("Passwordless sudo is unsafe")
-        )
-        warning_body = (
-            N_(
-                "The system will sign in to this account automatically and "
-                "allow it to obtain full administrator privileges without a "
-                "password. Anyone with physical access, and any program "
-                "running as this user, can completely control the system. "
-                "Use this only for a kiosk, temporary virtual machine, or "
-                "another controlled environment."
-            )
-            if passwordless
-            else N_(
-                "Any program running as your user can obtain full "
-                "administrator privileges without authentication. Your login "
-                "password still protects sign-in, but it will not protect "
-                "sudo. Are you sure you want to continue?"
-            )
-        )
-        dialog = Adw.MessageDialog(
-            transient_for=nav_view.get_root(),
-            heading=_(warning_heading, lang),
-            body=_(warning_body, lang),
-        )
-        dialog.add_response(
-            "back",
-            _(
-                "Return and Set a Password"
-                if passwordless
-                else "Return to Make Changes",
-                lang,
-            ),
-        )
-        dialog.add_response("continue", _("I Understand the Risk, Continue", lang))
-        dialog.set_response_appearance(
-            "continue", Adw.ResponseAppearance.DESTRUCTIVE
-        )
-        dialog.set_default_response("back")
-        dialog.set_close_response("back")
-        dialog.connect(
-            "response",
-            lambda _dialog, response: (
-                _continue_to_timezone()
-                if response == "continue"
-                else None
-            ),
-        )
-        dialog.present()
+        nav_view.push(build_advanced_options_page(shared, nav_view))
 
     def on_next():
-        action = account_next_action(
-            pass_entry.get_text(),
-            confirm_entry.get_text(),
-            sudo_without_password.get_active(),
-        )
-        if action is AccountNextAction.BLOCK_LOCKOUT:
-            _show_message(
-                N_("Administrator access would be locked"),
-                N_(
-                    "This account has no login password, but sudo would still "
-                    "require one. Because the root account is locked by "
-                    "default, you would be unable to perform administrator "
-                    "tasks. Set an account password or enable passwordless "
-                    "sudo."
-                ),
-            )
-            return
-        if action in {
-            AccountNextAction.CONFIRM_PASSWORDLESS_SUDO,
-            AccountNextAction.CONFIRM_SUDO,
-        }:
-            _confirm_unsafe_sudo(
-                action is AccountNextAction.CONFIRM_PASSWORDLESS_SUDO
-            )
-            return
-        _continue_to_timezone()
+        _continue_to_advanced_options()
 
     def on_back():
         nav_view.pop()
@@ -3777,7 +3658,144 @@ def _labeled(label_text, widget):
     return g
 
 
-# ── page 8: Timezone ─────────────────────────────────────────────────────
+# ── page 8: Advanced options ─────────────────────────────────────────────
+
+def build_advanced_options_page(shared, nav_view):
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
+    page = Adw.NavigationPage(title=_("Advanced Options", lang))
+    page.set_tag("advanced-options")
+
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    content.append(
+        _page_header(
+            "Advanced Options",
+            "Choose optional access and sign-in policies",
+            "advanced",
+            lang,
+        )
+    )
+
+    box = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=18,
+        margin_start=48,
+        margin_end=48,
+        margin_top=20,
+        margin_bottom=12,
+        vexpand=True,
+    )
+
+    local_group = Adw.PreferencesGroup(
+        title=_("Local Access", lang),
+        description=_(
+            "Choose how the local administrator account signs in and "
+            "authorizes system changes.",
+            lang,
+        ),
+    )
+    remote_group = Adw.PreferencesGroup(
+        title=_("Remote Access", lang),
+        description=_(
+            "Choose whether this computer accepts remote Secure Shell "
+            "connections.",
+            lang,
+        ),
+    )
+
+    choices = []
+
+    def _choice_row(group, title, subtitle, icon_name, state_key):
+        row = Adw.SwitchRow(
+            title=_(title, lang),
+            subtitle=_(subtitle, lang),
+        )
+        icon = icon_picture(icon_name, 40)
+        row.add_prefix(icon)
+        row.set_active(bool(shared.get(state_key, False)))
+        group.add(row)
+        choices.append((row, state_key))
+
+    _choice_row(
+        local_group,
+        N_("Run sudo commands without a password"),
+        N_("Administrative commands will no longer ask for your password."),
+        "sudo-no-pass",
+        "sudo_without_password",
+    )
+    _choice_row(
+        local_group,
+        N_("Log in to the desktop automatically"),
+        N_(
+            "Open this account's desktop automatically when the computer "
+            "starts."
+        ),
+        "login-directly",
+        "automatic_login",
+    )
+    _choice_row(
+        remote_group,
+        N_("Allow SSH login with the account password"),
+        N_(
+            "Start Secure Shell and accept this account password over the "
+            "network."
+        ),
+        "allow-ssh",
+        "ssh_password_login",
+    )
+    box.append(local_group)
+    box.append(remote_group)
+
+    warning = Gtk.Label(
+        label=_("This will reduce the security of the installed system.", lang),
+        visible=False,
+        halign=Gtk.Align.START,
+        wrap=True,
+        xalign=0,
+        margin_start=4,
+    )
+    warning.add_css_class("caption")
+    warning.add_css_class("warning")
+    box.append(warning)
+
+    def _update_security_warning():
+        warning.set_visible(any(row.get_active() for row, _key in choices))
+
+    def _on_choice_toggled(row, _pspec, state_key):
+        shared[state_key] = row.get_active()
+        _update_security_warning()
+
+    for row, key in choices:
+        row.connect("notify::active", _on_choice_toggled, key)
+    _update_security_warning()
+
+    options_scroll = Gtk.ScrolledWindow(
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+        vexpand=True,
+    )
+    options_scroll.set_child(clamp_content(box, 760))
+    content.append(options_scroll)
+
+    def on_next():
+        nav_view.push(build_timezone_page(shared, nav_view))
+
+    def on_back():
+        nav_view.pop()
+
+    content.append(
+        _nav_box(
+            lang,
+            on_back=on_back,
+            on_next=on_next,
+            stage=2,
+            shared=shared,
+            page_tag="advanced-options",
+        )
+    )
+    page.set_child(content)
+    return page
+
+
+# ── page 9: Timezone ─────────────────────────────────────────────────────
 
 def build_timezone_page(shared, nav_view):
     lang = shared.get("lang", DEFAULT_LANGUAGE)
@@ -3923,7 +3941,7 @@ def _load_timezones():
     return ["UTC", *sorted(set(zones) - {"UTC"})]
 
 
-# ── page 9: Summary ──────────────────────────────────────────────────────
+# ── page 10: Summary ─────────────────────────────────────────────────────
 
 def build_summary_page(shared, nav_view):
     lang = shared.get("lang", DEFAULT_LANGUAGE)
@@ -4052,15 +4070,23 @@ def build_summary_page(shared, nav_view):
         f"{escape(shared.get('full_name', '?'))} "
         f"({escape(shared.get('username', '?'))})",
         f"<b>{_('Account security', lang)}:</b> "
-        + (
-            _("automatic login", lang)
-            if shared.get("passwordless_shared", False)
-            else _("password required for login", lang)
-        )
+        + _("password required for login", lang)
         + (
             _("; sudo does not require a password", lang)
             if shared.get("sudo_without_password", False)
             else _("; sudo requires the account password", lang)
+        ),
+        f"<b>{_('Automatic desktop login', lang)}:</b> "
+        + (
+            _("enabled", lang)
+            if shared.get("automatic_login", False)
+            else _("disabled", lang)
+        ),
+        f"<b>{_('SSH password login', lang)}:</b> "
+        + (
+            _("enabled", lang)
+            if shared.get("ssh_password_login", False)
+            else _("disabled", lang)
         ),
         f"<b>{_('Computer Name', lang)}:</b> "
         f"{escape(shared.get('hostname', '?'))}",
@@ -4565,6 +4591,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             "Ensure Disk Snapshots Manager is available", lang
         ),
         "install-third-party-drivers": _("Install hardware drivers", lang),
+        "provision-remote-access": _("Security", lang),
         "verify-dkms-signatures": _(
             "Verify kernel module signatures", lang
         ),

@@ -1,6 +1,7 @@
 from dataclasses import replace
 
 from installer_core.model import (
+    AccessSpec,
     Architecture,
     AuthenticationMode,
     BootSpec,
@@ -46,6 +47,8 @@ def valid_plan(
     install_multimedia_codecs: bool = False,
     authentication: AuthenticationMode = AuthenticationMode.PASSWORD,
     sudo_without_password: bool | None = None,
+    automatic_login: bool | None = None,
+    ssh_password_login: bool = False,
     disk: DiskIdentity | None = None,
 ) -> InstallPlan:
     mok_policy = (
@@ -82,16 +85,24 @@ def valid_plan(
             username="alice",
             full_name="Alice Example",
             authentication=authentication,
-            sudo_without_password=(
-                authentication is AuthenticationMode.PASSWORDLESS_SHARED
-                if sudo_without_password is None
-                else sudo_without_password
-            ),
             password_hash=(
                 ""
                 if authentication is AuthenticationMode.PASSWORDLESS_SHARED
                 else "$y$j9T$example$example"
             ),
+        ),
+        access=AccessSpec(
+            sudo_without_password=(
+                authentication is AuthenticationMode.PASSWORDLESS_SHARED
+                if sudo_without_password is None
+                else sudo_without_password
+            ),
+            automatic_login=(
+                authentication is AuthenticationMode.PASSWORDLESS_SHARED
+                if automatic_login is None
+                else automatic_login
+            ),
+            ssh_password_login=ssh_password_login,
         ),
         regional=RegionalSpec(
             locale="en_US.UTF-8",

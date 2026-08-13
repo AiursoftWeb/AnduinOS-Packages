@@ -106,8 +106,12 @@ class GuidedExecutorGateTests(unittest.TestCase):
             identity=replace(
                 plan.identity,
                 authentication=AuthenticationMode.PASSWORDLESS_SHARED,
-                sudo_without_password=True,
                 password_hash="",
+            ),
+            access=replace(
+                plan.access,
+                sudo_without_password=True,
+                automatic_login=True,
             ),
         )
         with self.assertRaisesRegex(

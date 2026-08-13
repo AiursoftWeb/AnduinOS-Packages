@@ -33,6 +33,8 @@ class PlanningTests(unittest.TestCase):
             "install_third_party_drivers": True,
             "install_multimedia_codecs": True,
             "sudo_without_password": True,
+            "automatic_login": True,
+            "ssh_password_login": True,
         }
         disk = DiskIdentity("/dev/sda", "serial:test", 64 * 1024**3)
         platform = PlatformProbe(
@@ -57,7 +59,9 @@ class PlanningTests(unittest.TestCase):
         self.assertFalse(plan.software.install_updates)
         self.assertTrue(plan.software.install_third_party_drivers)
         self.assertTrue(plan.software.install_multimedia_codecs)
-        self.assertTrue(plan.identity.sudo_without_password)
+        self.assertTrue(plan.access.sudo_without_password)
+        self.assertTrue(plan.access.automatic_login)
+        self.assertTrue(plan.access.ssh_password_login)
         self.assertIsNotNone(plan.storage.graph)
         self.assertEqual(plan.storage.swap_size_mib, 9 * 1024)
 

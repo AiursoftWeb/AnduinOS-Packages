@@ -27,6 +27,28 @@ and constructs every command itself.
   immutable plan. Plans are canonical: the privileged executor rejects
   upper-case, non-ASCII, dotted, underscored, edge-hyphen or over-63-byte
   hostnames instead of normalizing untrusted input.
+- Secure Shell: the desktop metapackage recommends `openssh-server` so GNOME
+  Settings' Secure Shell panel works in the standard desktop composition while
+  the server remains removable. A core-system systemd preset declares both
+  `ssh.service` and `ssh.socket` disabled by default. The ISO builder scrubs
+  every build-time SSH host key as machine identity; after copying the Live
+  system, a fatal installer step removes any Live-session keys again, generates
+  target-owned keys, validates `sshd`, and reapplies the preset after all target
+  package transactions. When UFW is installed, its OpenSSH application rule is
+  prepared without starting a listener, so a later explicit GNOME opt-in works
+  with the firewall enabled. The installer never permits empty SSH passwords.
+- Account access policy: release installations always create a
+  password-protected account. A separate Advanced Options page exposes three
+  independent, default-off choices: passwordless sudo, GDM automatic login,
+  and enabling `ssh.socket` with account-password authentication. Automatic
+  login follows Ubiquity's GDM model and retains the account password. SSH
+  opt-in also enforces `PermitEmptyPasswords no` and `PermitRootLogin no`.
+  Passwordless sudo is written atomically to
+  `/etc/sudoers.d/90-anduinos-passwordless-admin`, validated against the full
+  sudoers configuration before and after mutation, and published through the
+  root-owned, world-readable
+  `/var/lib/anduinos-passwordless-sudo/users` state snapshot. The YubiKey
+  Security Center consumes and maintains the same policy contract.
 - Swap: a dynamically sized whole-GiB disk swap partition plus the installed
   system's existing 50%-of-RAM LZ4 zram policy. Disk swap is never below 2 GiB
   and never reduces the planned root filesystem below 20 GiB. When space

@@ -73,8 +73,9 @@ class InstallerApplication(Adw.Application):
             "full_name": "",
             "password": "",
             "password_confirmation": "",
-            "passwordless_shared": False,
             "sudo_without_password": False,
+            "automatic_login": False,
+            "ssh_password_login": False,
             "hostname": suggest_hostname(
                 "", hostname_device_type, hostname_random_suffix
             ),

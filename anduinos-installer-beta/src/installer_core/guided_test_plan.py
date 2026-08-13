@@ -7,6 +7,7 @@ from dataclasses import replace
 from languages import DEFAULT_KEYBOARD, DEFAULT_LOCALE, DEFAULT_TIMEZONE
 
 from .model import (
+    AccessSpec,
     SCHEMA_VERSION,
     AuthenticationMode,
     BootSpec,
@@ -62,7 +63,10 @@ def build_guided_vm_test_plan(
             username=username,
             full_name=full_name,
             authentication=AuthenticationMode.PASSWORDLESS_SHARED,
+        ),
+        access=AccessSpec(
             sudo_without_password=True,
+            automatic_login=True,
         ),
         regional=RegionalSpec(
             locale=locale,

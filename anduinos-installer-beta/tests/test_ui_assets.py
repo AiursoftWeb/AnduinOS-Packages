@@ -9,6 +9,42 @@ ICONS = ROOT / "assets" / "icons"
 
 
 class InstallerVisualAssetTests(unittest.TestCase):
+    def test_account_flows_through_secure_default_advanced_options(self):
+        pages = (ROOT / "src/pages.py").read_text(encoding="utf-8")
+        main = (ROOT / "src/main.py").read_text(encoding="utf-8")
+        user_page = pages.split("def build_user_page", 1)[1].split(
+            "def _labeled", 1
+        )[0]
+        advanced_page = pages.split(
+            "def build_advanced_options_page", 1
+        )[1].split("def build_timezone_page", 1)[0]
+        self.assertIn("build_advanced_options_page", user_page)
+        self.assertIn('_("A password is required.", lang)', user_page)
+        self.assertNotIn("passwordless_shared", user_page)
+        for key in (
+            "sudo_without_password",
+            "automatic_login",
+            "ssh_password_login",
+        ):
+            self.assertIn(f'"{key}": False', main)
+            self.assertIn(f'"{key}"', advanced_page)
+        self.assertEqual(advanced_page.count("_choice_row("), 4)
+        self.assertIn("Adw.PreferencesGroup(", advanced_page)
+        self.assertIn("Adw.SwitchRow(", advanced_page)
+        self.assertIn('row.connect("notify::active"', advanced_page)
+        self.assertNotIn("Gtk.CheckButton(", advanced_page)
+        self.assertIn("icon_picture(icon_name, 40)", advanced_page)
+        for icon_name in ("sudo-no-pass", "login-directly", "allow-ssh"):
+            self.assertIn(f'"{icon_name}"', advanced_page)
+        self.assertIn("_update_security_warning()", advanced_page)
+        self.assertIn('warning.add_css_class("caption")', advanced_page)
+        self.assertNotIn("(unsafe)", advanced_page)
+        self.assertNotIn(
+            "These options reduce the security of the installed system",
+            advanced_page,
+        )
+        self.assertNotIn("enabled (unsafe)", pages)
+
     def test_snapshots_manager_retains_the_anduinos_owned_artwork(self):
         digest = hashlib.sha256((ICONS / "disk-snapshots-manager.svg").read_bytes()).hexdigest()
         self.assertEqual(
@@ -80,6 +116,9 @@ class InstallerVisualAssetTests(unittest.TestCase):
             "timezone.svg",
             "review.svg",
             "advanced.svg",
+            "allow-ssh.svg",
+            "login-directly.svg",
+            "sudo-no-pass.svg",
             "btrfs.svg",
             "ext4.svg",
             "flashing-disk.svg",

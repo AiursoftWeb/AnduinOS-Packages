@@ -32,6 +32,7 @@ from .network import DetectNetworkConnectivityStep
 from .model import Filesystem, Firmware, InstallPlan
 from .other_systems import CheckOtherDiskSystemsStep
 from .regional_config import ConfigureKeyboardStep, InstallInputMethodStep
+from .remote_access import ProvisionRemoteAccessStep
 from .steps import (
     InstallContext,
     InstallResult,
@@ -114,6 +115,10 @@ class InstallerExecutor:
             steps.append(EnsureSnapshotsManagerStep(self.runner))
         if plan.software.install_third_party_drivers:
             steps.append(InstallThirdPartyDriversStep(self.runner))
+        # Run after every target package transaction. This gives the installed
+        # machine fresh SSH host identity and reapplies the package-owned,
+        # default-off remote-access policy as the final network-service state.
+        steps.append(ProvisionRemoteAccessStep(self.runner))
         steps.extend(
             (
                 VerifyDkmsSignaturesStep(self.runner),

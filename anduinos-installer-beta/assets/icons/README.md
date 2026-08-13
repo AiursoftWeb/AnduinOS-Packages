@@ -19,6 +19,9 @@ icon theme.
 | `language.svg` | Fluent icon theme `src/scalable/apps/preferences-desktop-locale.svg` |
 | `account.svg` | Fluent icon theme `src/scalable/apps/userinfo.svg` |
 | `advanced.svg` | User-curated storage illustration (`Desktop/disks/advanced.svg`) |
+| `sudo-no-pass.svg` | User-supplied advanced-option artwork (`Desktop/sudo-no-pass.svg`) |
+| `login-directly.svg` | User-supplied advanced-option artwork (`Desktop/login-directly.svg`) |
+| `allow-ssh.svg` | User-supplied advanced-option artwork (`Desktop/allow-ssh.svg`) |
 | `btrfs.svg` | User-curated storage illustration (`Desktop/disks/btrfs.svg`) |
 | `ext4.svg` | User-curated storage illustration (`Desktop/disks/ext4.svg`) |
 | `flashing-disk.svg` | User-curated storage illustration (`Desktop/disks/flashing-disk.svg`) |
@@ -31,4 +34,4 @@ Manager is distributed under MIT. The Fluent icon theme is also distributed
 under GPL-3.0; its upstream project is
 <https://github.com/vinceliuice/Fluent-icon-theme>. The AnduinOS-owned and
 user-curated illustrations were supplied specifically for these applications
-and are kept byte-for-byte in the package source.
+and are kept as package-local source assets.
