@@ -4591,7 +4591,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             "Ensure Disk Snapshots Manager is available", lang
         ),
         "install-third-party-drivers": _("Install hardware drivers", lang),
-        "provision-remote-access": _("Security", lang),
+        "provision-remote-access": _("Configure Secure Shell", lang),
         "verify-dkms-signatures": _(
             "Verify kernel module signatures", lang
         ),

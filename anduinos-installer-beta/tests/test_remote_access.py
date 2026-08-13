@@ -92,6 +92,7 @@ class ProvisionRemoteAccessTests(unittest.TestCase):
             runner.outputs[package_query(target, "ufw")] = ("ii ", "", 0)
             context = context_for(target, messages)
             step = ProvisionRemoteAccessStep(runner)
+            self.assertEqual(step.title, "Configure Secure Shell")
 
             step.preflight(context)
             step.execute(context)

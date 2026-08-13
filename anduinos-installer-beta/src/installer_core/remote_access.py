@@ -22,7 +22,7 @@ PASSWORD_LOGIN_DROP_IN = "00-anduinos-installer.conf"
 class ProvisionRemoteAccessStep:
     runner: CommandRunner
     id: str = "provision-remote-access"
-    title: str = "Provision Secure Shell access"
+    title: str = "Configure Secure Shell"
     failure_policy: FailurePolicy = FailurePolicy.FATAL
     progress_weight: int = 2
     destructive: bool = False
