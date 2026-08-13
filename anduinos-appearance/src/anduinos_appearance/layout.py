@@ -23,11 +23,16 @@ MENU_CONFIG = {
     ("seperated", "right"): ("arcmenu", "TopRight"),
 }
 
-MENU_HEIGHT = {
-    "eleven": 650,
-    "classic": 785,
+MIN_MENU_HEIGHT = 650
+MAX_MENU_HEIGHT = 785
+MIN_SCREEN_HEIGHT = 768
+MAX_SCREEN_HEIGHT = 1080
+
+MENU_MAX_HEIGHT = {
+    "eleven": MIN_MENU_HEIGHT,
+    "classic": MAX_MENU_HEIGHT,
     # Seperated uses the same ArcMenu layout as Classic.
-    "seperated": 785,
+    "seperated": MAX_MENU_HEIGHT,
 }
 
 POSITIONS = {
@@ -170,6 +175,52 @@ def _panel_sizes(monitors: list[str]) -> str:
     return json.dumps(sizes)
 
 
+def _smallest_monitor_height() -> int | None:
+    """Return the smallest monitor's logical height when GDK is available."""
+    try:
+        import gi
+
+        gi.require_version("Gdk", "4.0")
+        from gi.repository import Gdk
+
+        display = Gdk.Display.get_default()
+        if display is None:
+            return None
+
+        monitors = display.get_monitors()
+        heights = [
+            monitors.get_item(index).get_geometry().height
+            for index in range(monitors.get_n_items())
+        ]
+        return min(heights) if heights else None
+    except (ImportError, ValueError, AttributeError):
+        return None
+
+
+def calculate_menu_height(style: str, screen_height: int | None = None) -> int:
+    """Calculate an ArcMenu height that fits the smallest display.
+
+    Classic-sized menus grow linearly from 650 px at a 768 px-tall display to
+    785 px at 1080 px. Values outside that range are clamped. Eleven keeps its
+    intentional 650 px maximum.
+    """
+    if screen_height is None:
+        screen_height = _smallest_monitor_height()
+
+    if screen_height is None:
+        adaptive_height = MENU_MAX_HEIGHT[style]
+    else:
+        height_range = MAX_MENU_HEIGHT - MIN_MENU_HEIGHT
+        screen_range = MAX_SCREEN_HEIGHT - MIN_SCREEN_HEIGHT
+        progress = (screen_height - MIN_SCREEN_HEIGHT) / screen_range
+        adaptive_height = round(MIN_MENU_HEIGHT + height_range * progress)
+        adaptive_height = max(
+            MIN_MENU_HEIGHT, min(MAX_MENU_HEIGHT, adaptive_height)
+        )
+
+    return min(MENU_MAX_HEIGHT[style], adaptive_height)
+
+
 def apply_style_and_position(style: str, position: str) -> bool:
     """Apply one complete taskbar style and position through dconf."""
     menu_layout, force_menu = MENU_CONFIG[(style, position)]
@@ -180,6 +231,7 @@ def apply_style_and_position(style: str, position: str) -> bool:
         {monitor: panel_position for monitor in monitors}
     )
     panel_sizes = _panel_sizes(monitors)
+    menu_height = calculate_menu_height(style)
 
     try:
         subprocess.run(
@@ -204,7 +256,7 @@ def apply_style_and_position(style: str, position: str) -> bool:
             check=True,
         )
         subprocess.run(
-            ["dconf", "write", f"{ARC}/menu-height", str(MENU_HEIGHT[style])],
+            ["dconf", "write", f"{ARC}/menu-height", str(menu_height)],
             check=True,
         )
         subprocess.run(
