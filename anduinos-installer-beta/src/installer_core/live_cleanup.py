@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .command import CommandError, CommandRunner
-from .model import Filesystem
+from .model import Architecture, Filesystem
 from .steps import FailurePolicy, InstallContext
 from .snapshots_manager import SNAPSHOTS_MANAGER_PACKAGE
 
@@ -33,6 +33,29 @@ VMWARE_GUEST_PACKAGES = (
 # but are capabilities of the installed desktop. Mark them as explicitly
 # retained before purging the Live bridge and running autoremove.
 PERSISTENT_TARGET_PACKAGES = ("openssh-server",)
+
+# This is a post-autoremove composition contract, not an apt-mark exception.
+# The persistent anduinos-core-system metapackage owns these packages so boot
+# maintenance remains available after the removable Live installer is purged.
+REQUIRED_BOOT_PACKAGES = {
+    Architecture.AMD64: (
+        "anduinos-core-system",
+        "grub-common",
+        "grub2-common",
+        "grub-pc-bin",
+        "grub-efi-amd64-bin",
+        "grub-efi-amd64-signed",
+        "shim-signed",
+    ),
+    Architecture.ARM64: (
+        "anduinos-core-system",
+        "grub-common",
+        "grub2-common",
+        "grub-efi-arm64-bin",
+        "grub-efi-arm64-signed",
+        "shim-signed",
+    ),
+}
 
 
 @dataclass
@@ -161,6 +184,19 @@ class RemoveLivePackagesStep:
         if missing:
             raise RuntimeError(
                 "Installed-system packages were removed: " + ", ".join(missing)
+            )
+        required_boot_packages = REQUIRED_BOOT_PACKAGES[
+            context.plan.platform.architecture
+        ]
+        missing_boot_packages = tuple(
+            package
+            for package in required_boot_packages
+            if not _is_installed(self.runner, target, package)
+        )
+        if missing_boot_packages:
+            raise RuntimeError(
+                "Installed-system boot packages are missing after cleanup: "
+                + ", ".join(missing_boot_packages)
             )
         self.runner.run(
             ("chroot", str(target), "dpkg", "--audit"), timeout=60

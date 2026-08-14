@@ -7,10 +7,11 @@ from helpers import valid_plan
 from installer_core.live_cleanup import (
     LIVE_ONLY_PACKAGES,
     PERSISTENT_TARGET_PACKAGES,
+    REQUIRED_BOOT_PACKAGES,
     RemoveLivePackagesStep,
     VMWARE_GUEST_PACKAGES,
 )
-from installer_core.model import Filesystem
+from installer_core.model import Architecture, Filesystem
 from installer_core.steps import InstallContext
 from installer_core.snapshots_manager import SNAPSHOTS_MANAGER_PACKAGE
 
@@ -69,6 +70,29 @@ class RemoveLivePackagesTests(unittest.TestCase):
         self.assertEqual(LIVE_ONLY_PACKAGES, EXPECTED_LIVE_ONLY_PACKAGES)
         self.assertNotIn(SNAPSHOTS_MANAGER_PACKAGE, LIVE_ONLY_PACKAGES)
         self.assertEqual(PERSISTENT_TARGET_PACKAGES, ("openssh-server",))
+        self.assertEqual(
+            REQUIRED_BOOT_PACKAGES[Architecture.AMD64],
+            (
+                "anduinos-core-system",
+                "grub-common",
+                "grub2-common",
+                "grub-pc-bin",
+                "grub-efi-amd64-bin",
+                "grub-efi-amd64-signed",
+                "shim-signed",
+            ),
+        )
+        self.assertEqual(
+            REQUIRED_BOOT_PACKAGES[Architecture.ARM64],
+            (
+                "anduinos-core-system",
+                "grub-common",
+                "grub2-common",
+                "grub-efi-arm64-bin",
+                "grub-efi-arm64-signed",
+                "shim-signed",
+            ),
+        )
         self.assertEqual(
             VMWARE_GUEST_PACKAGES,
             (
@@ -292,6 +316,27 @@ class RemoveLivePackagesTests(unittest.TestCase):
             with self.assertRaisesRegex(
                 RuntimeError,
                 "Installed-system packages were removed: openssh-server",
+            ):
+                RemoveLivePackagesStep(runner).verify(context)
+
+    def test_verify_rejects_missing_declarative_boot_package(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            runner = FakeRunner()
+            context = _context(target)
+            context.values["live_package_candidates"] = ()
+            context.values["persistent_target_packages"] = ()
+            for package in REQUIRED_BOOT_PACKAGES[Architecture.AMD64]:
+                if package != "grub-pc-bin":
+                    runner.outputs[_query(target, package)] = (
+                        "ii \n",
+                        "",
+                        0,
+                    )
+
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "boot packages are missing after cleanup: grub-pc-bin",
             ):
                 RemoveLivePackagesStep(runner).verify(context)
 

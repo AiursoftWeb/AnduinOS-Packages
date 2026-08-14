@@ -17,6 +17,12 @@ and constructs every command itself.
   installer creates/imports the AnduinOS MOK using the existing one-time
   enrollment password policy (`123456`). The password is an implementation
   secret and is never serialized into an install plan.
+- Boot package ownership: `anduinos-core-system`, which remains installed on
+  the target, owns the architecture-matched GRUB platform modules, signed UEFI
+  payload and shim. On amd64 it deliberately retains both `i386-pc` and
+  `x86_64-efi` modules for the erase-installation dual-firmware contract. The
+  removable Live installer may use these tools but is never their sole owner,
+  so orphan cleanup cannot remove boot maintenance from the installed system.
 - Storage mode: erase one complete disk. Guided coexistence, custom layouts
   and RAID are post-release-one work defined in
   [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).

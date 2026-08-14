@@ -28,6 +28,10 @@ def prepare_target(target: Path) -> None:
         path = target / executable
         path.parent.mkdir(parents=True, exist_ok=True)
         path.touch()
+    for platform in ("i386-pc", "x86_64-efi", "arm64-efi"):
+        module_info = target / f"usr/lib/grub/{platform}/modinfo.sh"
+        module_info.parent.mkdir(parents=True, exist_ok=True)
+        module_info.touch()
     (target / "boot/efi").mkdir(parents=True)
 
 
@@ -184,6 +188,26 @@ class InstallBootloaderTests(unittest.TestCase):
                 [command for command, _kwargs in runner.commands],
                 [("chroot", str(target), "grub-install", "--help")],
             )
+
+    def test_rejects_missing_platform_modules_before_running_commands(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_target(target)
+            (target / "usr/lib/grub/i386-pc/modinfo.sh").unlink()
+            runner = self.compatible_runner(target)
+            context = InstallContext(
+                valid_plan(),
+                lambda _message: None,
+                {"target": target, "target_efi_mounted": True},
+            )
+
+            with self.assertRaisesRegex(
+                RuntimeError,
+                r"GRUB platform modules.*i386-pc/modinfo\.sh",
+            ):
+                InstallBootloaderStep(runner).execute(context)
+
+            self.assertEqual(runner.commands, [])
 
     def test_guided_boot_preserves_shared_esp_and_verifies_nvram(self):
         with tempfile.TemporaryDirectory() as directory:

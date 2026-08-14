@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-core-system</PackageName>
-    <PackageVersion>2.0.0-7+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0-8+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS core system foundation metapackage — essential system services, networking, hardware support, and administration tools. This is the base layer for all AnduinOS variants (Desktop, Server, IoT).</PackageDescription>
     <Section>metapackages</Section>
@@ -28,6 +28,17 @@
     <Dependency Include="grub-common" />
     <Dependency Include="grub-efi-amd64 | grub-pc" Condition="'$(Arch)' == 'amd64'" />
     <Dependency Include="grub-efi-arm64" Condition="'$(Arch)' == 'arm64'" />
+    <!-- Installed amd64 systems deliberately carry both platform module sets:
+         the installer writes both Legacy BIOS and UEFI boot paths so moving a
+         disk between firmware modes remains supported. The non-conflicting
+         -bin packages, signed UEFI payload and shim are persistent system
+         capabilities, not temporary dependencies of the Live installer. -->
+    <Dependency Include="grub-pc-bin" Condition="'$(Arch)' == 'amd64'" />
+    <Dependency Include="grub-efi-amd64-bin" Condition="'$(Arch)' == 'amd64'" />
+    <Dependency Include="grub-efi-amd64-signed" Condition="'$(Arch)' == 'amd64'" />
+    <Dependency Include="grub-efi-arm64-bin" Condition="'$(Arch)' == 'arm64'" />
+    <Dependency Include="grub-efi-arm64-signed" Condition="'$(Arch)' == 'arm64'" />
+    <Dependency Include="shim-signed" />
     <Dependency Include="grub2-common" />
     <Dependency Include="anduinos-grub-style" />
     <Dependency Include="init" />

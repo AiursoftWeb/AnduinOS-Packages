@@ -22,6 +22,32 @@ def load_package_verifier():
 
 
 class PackageContractTests(unittest.TestCase):
+    def test_core_system_owns_complete_architecture_boot_stacks(self):
+        package_root = ROOT.parent
+        core = ET.parse(
+            package_root
+            / "anduinos-core-system"
+            / "anduinos-core-system.aosproj"
+        ).getroot()
+        dependencies = {
+            (item.get("Include"), item.get("Condition"))
+            for item in core.iter("Dependency")
+        }
+
+        amd64 = "'$(Arch)' == 'amd64'"
+        arm64 = "'$(Arch)' == 'arm64'"
+        self.assertTrue(
+            {
+                ("grub-pc-bin", amd64),
+                ("grub-efi-amd64-bin", amd64),
+                ("grub-efi-amd64-signed", amd64),
+                ("grub-efi-arm64-bin", arm64),
+                ("grub-efi-arm64-signed", arm64),
+                ("shim-signed", None),
+            }
+            <= dependencies
+        )
+
     def test_passwordless_sudo_contract_matches_security_center(self):
         package_root = ROOT.parent
         installer = (

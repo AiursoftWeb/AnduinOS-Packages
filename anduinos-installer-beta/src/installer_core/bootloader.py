@@ -18,6 +18,13 @@ from .steps import FailurePolicy, InstallContext
 from .storage_planning import GuidedCoexistenceExecutionPlan
 
 
+GRUB_PLATFORM_MODULES = {
+    "i386-pc": Path("usr/lib/grub/i386-pc/modinfo.sh"),
+    "x86_64-efi": Path("usr/lib/grub/x86_64-efi/modinfo.sh"),
+    "arm64-efi": Path("usr/lib/grub/arm64-efi/modinfo.sh"),
+}
+
+
 @dataclass
 class InstallBootloaderStep:
     runner: CommandRunner
@@ -63,6 +70,7 @@ class InstallBootloaderStep:
             commands = build_boot_commands(context.plan, str(target))
             installs = commands.installs
         context.values["boot_command_plan"] = commands
+        _verify_grub_platform_modules(target, installs)
         _verify_grub_install_options(self.runner, target, installs)
         devices = context.values.get("partition_devices", {})
         context.log(
@@ -245,6 +253,33 @@ def _verify_grub_install_options(
         raise RuntimeError(
             "Target grub-install does not support planned option(s): "
             + ", ".join(unsupported)
+        )
+
+
+def _verify_grub_platform_modules(
+    target: Path,
+    installs: tuple[tuple[str, ...], ...],
+) -> None:
+    planned_targets = {
+        argument.split("=", 1)[1]
+        for command in installs
+        for argument in command
+        if argument.startswith("--target=")
+    }
+    unknown = sorted(planned_targets - GRUB_PLATFORM_MODULES.keys())
+    if unknown:
+        raise RuntimeError(
+            "Unsupported GRUB platform target(s): " + ", ".join(unknown)
+        )
+    missing = tuple(
+        target / GRUB_PLATFORM_MODULES[platform]
+        for platform in sorted(planned_targets)
+        if not (target / GRUB_PLATFORM_MODULES[platform]).is_file()
+    )
+    if missing:
+        raise RuntimeError(
+            "Target GRUB platform modules are missing: "
+            + ", ".join(str(path) for path in missing)
         )
 
 
