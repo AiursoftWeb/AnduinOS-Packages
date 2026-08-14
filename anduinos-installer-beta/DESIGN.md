@@ -39,7 +39,10 @@ and constructs every command itself.
   so `preset-all` cannot disconnect an existing administrator. When UFW is
   installed, its OpenSSH application rule is prepared without starting a
   listener, so a later explicit GNOME opt-in works with the firewall enabled.
-  The installer never permits empty SSH passwords.
+  During offline validation, the installer creates `/run/sshd` inside the
+  target's isolated tmpfs because the normal boot-time tmpfiles pass has not
+  happened yet. The directory is discarded with the chroot environment. The
+  installer never permits empty SSH passwords.
 - Account access policy: release installations always create a
   password-protected account. A separate Advanced Options page exposes three
   independent, default-off choices: passwordless sudo, GDM automatic login,

@@ -24,6 +24,7 @@ def context_for(
     target: Path, messages=None, *, ssh_password_login: bool = False
 ) -> InstallContext:
     log_messages = messages if messages is not None else []
+    (target / "run").mkdir(exist_ok=True)
     plan = valid_plan()
     plan = replace(
         plan,
@@ -66,6 +67,28 @@ class InspectingUfwRunner(FakeRunner):
         return super().run(command, **kwargs)
 
 
+class RuntimeCheckingRunner(FakeRunner):
+    def __init__(self, target: Path):
+        super().__init__()
+        self.target = target
+
+    def run(self, command, **kwargs):
+        if tuple(command) == (
+            "chroot",
+            str(self.target),
+            "sshd",
+            "-t",
+        ):
+            runtime_directory = self.target / "run/sshd"
+            if (
+                runtime_directory.is_symlink()
+                or not runtime_directory.is_dir()
+                or runtime_directory.stat().st_mode & 0o777 != 0o755
+            ):
+                raise RuntimeError("sshd runtime directory is not ready")
+        return super().run(command, **kwargs)
+
+
 class ProvisionRemoteAccessTests(unittest.TestCase):
     def test_replaces_live_identity_and_applies_safe_desktop_defaults(self):
         messages = []
@@ -99,6 +122,12 @@ class ProvisionRemoteAccessTests(unittest.TestCase):
             self.assertFalse(stale_private.exists())
             self.assertFalse(stale_public.exists())
             self.assertFalse(policy.exists())
+            runtime_directory = target / "run/sshd"
+            self.assertTrue(runtime_directory.is_dir())
+            self.assertEqual(
+                runtime_directory.stat().st_mode & 0o777,
+                0o755,
+            )
             self.assertTrue(runner.ufw_was_disabled_during_write)
             self.assertEqual(ufw_config.read_text(), "ENABLED=yes\n")
 
@@ -168,6 +197,25 @@ class ProvisionRemoteAccessTests(unittest.TestCase):
         self.assertNotIn(
             ("chroot", str(target), "ufw", "allow", "OpenSSH"),
             commands,
+        )
+
+    def test_prepares_runtime_directory_before_sshd_validation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            (target / "etc/ssh").mkdir(parents=True)
+            runner = RuntimeCheckingRunner(target)
+            runner.outputs[package_query(target, "openssh-server")] = (
+                "ii ",
+                "",
+                0,
+            )
+            runner.outputs[package_query(target, "ufw")] = ("", "", 1)
+
+            ProvisionRemoteAccessStep(runner).execute(context_for(target))
+
+        self.assertIn(
+            ("chroot", str(target), "sshd", "-t"),
+            [command for command, _kwargs in runner.commands],
         )
 
     def test_password_login_writes_safe_policy_and_enables_socket_only(self):
@@ -274,6 +322,23 @@ class ProvisionRemoteAccessTests(unittest.TestCase):
 
             self.assertTrue(runner.ufw_was_disabled_during_write)
             self.assertEqual(ufw_config.read_text(), "ENABLED=yes\n")
+
+    def test_rejects_unsafe_sshd_runtime_path(self):
+        runner = FakeRunner()
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            (target / "etc/ssh").mkdir(parents=True)
+            context = context_for(target)
+            (target / "run/sshd").symlink_to(target / "outside")
+            runner.outputs[package_query(target, "openssh-server")] = (
+                "ii ",
+                "",
+                0,
+            )
+            runner.outputs[package_query(target, "ufw")] = ("", "", 1)
+
+            with self.assertRaisesRegex(RuntimeError, "runtime.*symlink"):
+                ProvisionRemoteAccessStep(runner).execute(context)
 
     def test_rejects_generated_private_keys_with_broad_permissions(self):
         runner = FakeRunner()

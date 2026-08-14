@@ -16,6 +16,7 @@ OPENSSH_SERVER_PACKAGE = "openssh-server"
 UFW_PACKAGE = "ufw"
 SSH_UNITS = ("ssh.service", "ssh.socket")
 PASSWORD_LOGIN_DROP_IN = "00-anduinos-installer.conf"
+SSHD_RUNTIME_DIRECTORY = Path("run/sshd")
 
 
 @dataclass
@@ -50,6 +51,7 @@ class ProvisionRemoteAccessStep:
             ("chroot", str(target), "ssh-keygen", "-A"),
             timeout=120,
         )
+        _prepare_sshd_runtime_directory(target)
         _configure_password_login(
             target,
             enabled=context.plan.access.ssh_password_login,
@@ -194,6 +196,22 @@ def _remove_host_keys(target: Path) -> tuple[Path, ...]:
         elif path.exists():
             raise RuntimeError(f"Unexpected SSH host-key path: {path}")
     return tuple(removed)
+
+
+def _prepare_sshd_runtime_directory(target: Path) -> None:
+    """Provide the volatile directory normally created during system boot."""
+
+    run_directory = target / "run"
+    if run_directory.is_symlink() or not run_directory.is_dir():
+        raise RuntimeError("The target runtime filesystem is not available")
+
+    runtime_directory = target / SSHD_RUNTIME_DIRECTORY
+    if runtime_directory.is_symlink():
+        raise RuntimeError("Unexpected SSH runtime directory symlink")
+    if runtime_directory.exists() and not runtime_directory.is_dir():
+        raise RuntimeError("Unexpected SSH runtime directory")
+    runtime_directory.mkdir(mode=0o755, exist_ok=True)
+    runtime_directory.chmod(0o755)
 
 
 def _password_login_path(target: Path) -> Path:
