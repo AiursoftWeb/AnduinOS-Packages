@@ -40,6 +40,7 @@ static unsigned short last_terminal_rows;
 static unsigned short last_terminal_columns;
 static int ghost_visible;
 static int installed;
+static int readline_initialized;
 
 extern char **environ;
 
@@ -702,6 +703,16 @@ static void install_readline_hooks(void)
 {
   int binding_type = 0;
   rl_command_func_t *current;
+
+  /* Loading a Bash builtin from .bashrc happens before Readline prepares its
+     first interactive line. Replacing rl_redisplay_function that early makes
+     Readline treat the session as having a complete custom renderer and skips
+     terminal features such as bracketed-paste negotiation. ghost_startup()
+     is the sole transition that marks Readline ready; keep this guard so a
+     future builtin subcommand cannot accidentally reintroduce that ordering
+     bug. */
+  if (!readline_initialized)
+    return;
   if (original_redisplay == NULL && rl_redisplay_function != ghost_redisplay)
     original_redisplay = rl_redisplay_function;
   if (original_redisplay == NULL)
@@ -759,6 +770,10 @@ static int ghost_startup(void)
   int result = 0;
   if (original_startup_hook != NULL)
     result = original_startup_hook();
+
+  /* Readline has now parsed inputrc and prepared its terminal modes. Install
+     the narrow renderer/key wrappers only after preserving that native state. */
+  readline_initialized = 1;
   if (predictions_enabled()) {
     install_readline_hooks();
     (void)start_daemon();
@@ -849,11 +864,9 @@ int anduinos_ghost_builtin(WORD_LIST *list)
       if (changed && daemon_fd >= 0)
         force_stop_daemon();
     }
-    install_readline_hooks();
     (void)start_daemon();
     return EXECUTION_SUCCESS;
   }
-  install_readline_hooks();
   if (list != NULL && strcmp(list->word->word, "diagnose") == 0) {
     list = list->next;
     diagnose(list != NULL ? list->word->word : NULL);
@@ -880,10 +893,8 @@ int anduinos_ghost_builtin_load(char *name)
   if (installed)
     return 1;
   setlocale(LC_CTYPE, "");
-  original_redisplay = rl_redisplay_function;
   original_startup_hook = rl_startup_hook;
   rl_startup_hook = ghost_startup;
-  install_readline_hooks();
   installed = 1;
   return 1;
 }
@@ -919,6 +930,7 @@ void anduinos_ghost_builtin_unload(char *name)
   configured_histfile = NULL;
   last_terminal_rows = 0;
   last_terminal_columns = 0;
+  readline_initialized = 0;
   installed = 0;
 }
 
