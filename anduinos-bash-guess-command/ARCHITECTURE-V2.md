@@ -34,6 +34,10 @@ slot.
 - Suggestions strictly extend the visible input at the cursor.
 - Suggestions contain no newline, carriage return, NUL, or control byte.
 - Enter never accepts invisible text; acceptance belongs to the frontend.
+- Loading and disabling predictions preserve every user-selected Readline
+  variable, including bracketed paste.
+- Readline hooks are installed only from its startup hook, after Readline has
+  parsed inputrc and prepared native terminal modes.
 - Entity candidates depend on a matching snapshot generation and expiry.
 - A crash or unavailable snapshot produces silence, never impaired Bash input.
 
@@ -71,6 +75,10 @@ parsing, history, modes and all other editing remain owned by native Readline.
 The renderer suppresses suggestions that would wrap, and every frontend error
 fails to a stock Bash session. PTY contracts require normal multi-command paste,
 visible ghost text, exact Enter behavior and the absence of editor UI banners.
+The loadable builtin registers a startup hook during Bash initialization but
+does not replace the renderer or key bindings until Readline invokes that hook.
+This ordering preserves native terminal negotiation and explicit inputrc
+choices, including both enabled and disabled bracketed-paste modes.
 
 Version `1.0.0-17` adds an in-process command skeleton layer for common Docker,
 Git, systemctl, kubectl, Cargo, .NET and Node workflows. Empty subcommand slots
@@ -213,3 +221,12 @@ failed with exit 127, personal history, the first available and uninstalled
 entry in a checked-in popular-package list, then a unique name or advancing
 common prefix. Ordinary package tokens no longer fall into filesystem matching;
 only explicit `./`, `../`, `/` and `~/` apt install arguments are path slots.
+
+Version `1.0.0-38` makes Readline initialization an explicit frontend lifecycle
+boundary. Loading from bashrc now registers only the startup hook; renderer and
+key wrappers are deferred until Readline has parsed inputrc and prepared the
+terminal. This preserves the native bracketed-paste and active-region defaults
+as well as explicit user opt-ins and opt-outs. A standalone PTY contract compares
+the complete `bind -v` state with an unmodified Bash baseline, verifies terminal
+bracketed-paste negotiation, and exercises multiline paste without requiring the
+semantic Rust engine.
