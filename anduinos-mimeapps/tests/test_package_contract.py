@@ -7,6 +7,7 @@ PROJECT = Path(__file__).resolve().parents[1]
 PROJECT_FILE = PROJECT / "anduinos-mimeapps.aosproj"
 MIMEAPPS_FILE = PROJECT / "assets/anduinos-mimeapps.list"
 EXE_RUNNER = "com.anduinos.ExeRunner.desktop;"
+TEXT_EDITOR = "org.gnome.TextEditor.desktop;"
 EXPECTED_WINDOWS_MIME_TYPES = {
     "application/x-msdownload",
     "application/vnd.microsoft.portable-executable",
@@ -18,7 +19,7 @@ class MimeAppsPackageContractTests(unittest.TestCase):
     def test_package_revision_and_contract_test_are_wired(self):
         project = ET.parse(PROJECT_FILE).getroot()
         self.assertEqual(
-            "2.0.1-3+$(SuiteShortName)",
+            "2.0.1-4+$(SuiteShortName)",
             project.findtext(".//PackageVersion"),
         )
         command = project.find(".//PrebuildCommand")
@@ -46,6 +47,23 @@ class MimeAppsPackageContractTests(unittest.TestCase):
             if desktop == EXE_RUNNER
         }
         self.assertEqual(EXPECTED_WINDOWS_MIME_TYPES, actual)
+
+    def test_plain_text_and_markdown_default_to_text_editor(self):
+        associations = {}
+        for raw_line in MIMEAPPS_FILE.read_text(encoding="utf-8").splitlines():
+            line = raw_line.strip()
+            if (
+                not line
+                or line.startswith("#")
+                or (line.startswith("[") and line.endswith("]"))
+            ):
+                continue
+            mime_type, separator, desktop = line.partition("=")
+            self.assertTrue(separator, raw_line)
+            associations[mime_type] = desktop
+
+        self.assertEqual(TEXT_EDITOR, associations["text/plain"])
+        self.assertEqual(TEXT_EDITOR, associations["text/markdown"])
 
 
 if __name__ == "__main__":
