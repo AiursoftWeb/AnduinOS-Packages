@@ -328,14 +328,33 @@ def should_show_network_page(shared, monitor=None) -> bool:
 
 _LOW_BATTERY_OVERRIDE_KEY = "_low_battery_risk_overridden"
 _POWER_PROBE_RESULT_KEY = "_power_probe_result"
-_SECURE_BOOT_PAGE_TITLE = "AnduinOS supports Secure Boot"
-_SECURE_BOOT_PAGE_SUBTITLE = (
+_SECURE_BOOT_PAGE_TITLE = N_("AnduinOS supports Secure Boot")
+_SECURE_BOOT_PAGE_SUBTITLE = N_(
     "Get additional protection before installing AnduinOS."
 )
-_SECURE_BOOT_REBOOT_LABEL = "Restart to UEFI Firmware Settings"
-_SECURE_BOOT_SKIP_LABEL = "Skip"
-_SECURE_BOOT_REBOOT_ERROR_TITLE = (
+_SECURE_BOOT_REBOOT_LABEL = N_("Restart to UEFI Firmware Settings")
+_SECURE_BOOT_SKIP_LABEL = N_("Skip")
+_SECURE_BOOT_REBOOT_ERROR_TITLE = N_(
     "Could not open UEFI firmware settings"
+)
+_SECURE_BOOT_FIRMWARE_ERROR = N_(
+    "The firmware settings could not be opened on this computer."
+)
+_SECURE_BOOT_BODY_MESSAGES = (
+    N_(
+        "Secure Boot is a UEFI security feature that verifies trusted, "
+        "digitally signed software while your computer starts."
+    ),
+    N_(
+        "AnduinOS has comprehensive Secure Boot support. Secure Boot is not "
+        "currently enabled on this computer, and we recommend enabling it "
+        "for additional protection."
+    ),
+    N_(
+        "To enable it, open the UEFI firmware settings and look under Boot, "
+        "Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn "
+        "Secure Boot on. Firmware wording varies by manufacturer."
+    ),
 )
 _POWER_SAFE_MESSAGE = (
     "Battery power is sufficient or reliable power is connected. "
@@ -1056,7 +1075,7 @@ def reboot_to_firmware_settings(run=subprocess.run) -> tuple[bool, str]:
     if result.returncode == 0:
         return True, ""
     return False, (result.stderr or result.stdout).strip() or (
-        "The firmware settings could not be opened on this computer."
+        _SECURE_BOOT_FIRMWARE_ERROR
     )
 
 
@@ -1083,16 +1102,7 @@ def build_secure_boot_page(shared, nav_view):
     body.set_margin_start(32)
     body.set_margin_end(32)
 
-    for message in (
-        "Secure Boot is a UEFI security feature that verifies trusted, "
-        "digitally signed software while your computer starts.",
-        "AnduinOS has comprehensive Secure Boot support. Secure Boot is not "
-        "currently enabled on this computer, and we recommend enabling it "
-        "for additional protection.",
-        "To enable it, open the UEFI firmware settings and look under Boot, "
-        "Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn "
-        "Secure Boot on. Firmware wording varies by manufacturer.",
-    ):
+    for message in _SECURE_BOOT_BODY_MESSAGES:
         label = Gtk.Label(
             label=_(message, lang),
             halign=Gtk.Align.START,
@@ -1109,7 +1119,7 @@ def build_secure_boot_page(shared, nav_view):
         dialog = Adw.MessageDialog(
             transient_for=nav_view.get_root(),
             heading=_(_SECURE_BOOT_REBOOT_ERROR_TITLE, lang),
-            body=message,
+            body=_(message, lang),
         )
         dialog.add_response("ok", _("OK", lang))
         dialog.present()
