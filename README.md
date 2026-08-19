@@ -261,22 +261,6 @@ All external sources must be checked **at least once per month** to keep package
 
 ---
 
-### Operational notes (postmortem, keep and follow)
-
-- **Installer pre-exec inhibitor should stay in the same privilege boundary as the executor.**  
-  If `systemd-inhibit` is started before `sudo`, a failed polkit/logind authorization can block installation before the helper ever launches.  
-  In practice: build the command as `sudo --non-interactive systemd-inhibit ... <executor>` for non-root users, or bare `systemd-inhibit ... <executor>` when already root.
-- **Use absolute executable paths for wrapped privilege commands.**  
-  Prefer `/usr/bin/systemd-inhibit` and `/usr/bin/sudo` to avoid PATH drift in installer runtime.
-- **Test both privilege paths in unit tests.**  
-  Keep explicit assertions for:
-  - non-root: `sudo -> systemd-inhibit -> executor`
-  - root: `systemd-inhibit -> executor`
-- **AppImage MIME registration should be narrow and dedicated.**  
-  Avoid claiming generic executable MIME types (`application/x-executable`, `application/x-pie-executable`) in `gnome-mimeapps.list`; create/ship a dedicated `com.anduinos.AppImageRunner.desktop` and bind only:
-  - `application/vnd.appimage`
-  - `application/x-iso9660-appimage`
-
 ### A. Quick Checklist (5 min triage)
 
 Run through this table each month. If anything has changed upstream, follow the detailed steps in the matching section below.
