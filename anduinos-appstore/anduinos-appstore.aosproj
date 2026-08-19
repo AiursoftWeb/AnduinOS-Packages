@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-appstore</PackageName>
-    <PackageVersion>2.0.0-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.0-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS app store metapackage — GNOME Software with Flatpak support. Install this if you want a graphical app store and Flatpak sandboxed applications.</PackageDescription>
     <Section>metapackages</Section>
@@ -20,7 +20,8 @@
     <Recommend Include="gnome-software" />
     <Recommend Include="gnome-software-plugin-flatpak" />
     <Recommend Include="gnome-software-plugin-fwupd" Condition="'$(Suite)' == 'resolute-addon'" />
-    <Recommend Include="flatseal" Condition="'$(Suite)' == 'resolute-addon'" />
+    <!-- Don NOT preinstall flatseal because a lot of users don't need it and make them confused. Users can install it manually if they want to. -->
+    <!-- <Recommend Include="flatseal" Condition="'$(Suite)' == 'resolute-addon'" /> -->
   </ItemGroup>
 
   <ItemGroup>
