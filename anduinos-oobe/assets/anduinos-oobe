@@ -1058,7 +1058,7 @@ def create_appearance_page():
     layout_title_group.set_margin_bottom(12)
     center.append(layout_title_group)
 
-    # OOBE presents the hybrid Seperated style as a modern, centered layout.
+    # OOBE presents Eleven as Modern and keeps Classic as Classic.
     detected_style, _detected_position = detect_current()
     current_style = 'classic' if detected_style == 'classic' else 'modern'
 

@@ -44,6 +44,9 @@ class LayoutTests(unittest.TestCase):
         self.assertTrue(result)
         self.assert_write(commands, f"{layout.ARC}/menu-height", "650")
         self.assert_write(commands, f"{layout.ARC}/menu-layout", "'11'")
+        self.assertIn(
+            ["dconf", "reset", f"{layout.ARC}/menu-arrow-rise"], commands
+        )
         self.assert_write(commands, f"{layout.DTP}/group-apps", "true")
         self.assert_write(
             commands, f"{layout.DTP}/group-apps-use-launchers", "true"
@@ -55,6 +58,9 @@ class LayoutTests(unittest.TestCase):
         self.assertTrue(result)
         self.assert_write(commands, f"{layout.ARC}/menu-height", "785")
         self.assert_write(commands, f"{layout.ARC}/menu-layout", "'arcmenu'")
+        self.assert_write(
+            commands, f"{layout.ARC}/menu-arrow-rise", "(true, -8)"
+        )
         self.assertNotIn(
             ["dconf", "write", f"{layout.DTP}/group-apps", "true"], commands
         )
@@ -64,6 +70,9 @@ class LayoutTests(unittest.TestCase):
 
         self.assertTrue(result)
         self.assert_write(commands, f"{layout.ARC}/menu-height", "785")
+        self.assert_write(
+            commands, f"{layout.ARC}/menu-arrow-rise", "(true, -8)"
+        )
 
     def test_classic_menu_height_scales_with_screen_height(self):
         self.assertEqual(layout.calculate_menu_height("classic", 600), 650)

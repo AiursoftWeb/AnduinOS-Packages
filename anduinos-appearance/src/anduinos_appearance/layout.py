@@ -268,8 +268,22 @@ def apply_style_and_position(style: str, position: str) -> bool:
             check=True,
         )
         if style == "eleven":
+            subprocess.run(
+                ["dconf", "reset", f"{ARC}/menu-arrow-rise"],
+                check=True,
+            )
             write_group_apps(True)
             write_use_launchers(True)
+        else:
+            subprocess.run(
+                [
+                    "dconf",
+                    "write",
+                    f"{ARC}/menu-arrow-rise",
+                    "(true, -8)",
+                ],
+                check=True,
+            )
         return True
     except (OSError, subprocess.CalledProcessError):
         return False
