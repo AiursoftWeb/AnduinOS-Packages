@@ -274,8 +274,7 @@ Run through this table each month. If anything has changed upstream, follow the 
 | 5 | **SOF firmware** | `firmware-sof-anduinos/download.sh:5` (`SOF_VERSION`) + upstream [sof-releases] | Update version → section C |
 | 6 | **Xbox Controller Driver** | `anduinos-xbox-controller-driver/download.sh` (`COMMIT_ID`) + [xpadneo-mirror] | Update commit → section B |
 | 7 | **GNOME Shell version map** | `lib/gnome-versions.sh:3-7` — compare with Ubuntu's `gnome-shell` package for each supported suite | Update map → section D |
-| 8 | **Fluent upstream versions** | [Fluent-gtk-theme] and [Fluent-icon-theme] GitHub releases — determine latest upstream version | Update version → section B |
-| 9 | **GNOME Shell extensions** | Run a CI build — the resolver fetches the latest compatible version dynamically | Update version → section D |
+| 8 | **GNOME Shell extensions** | Run a CI build — the resolver fetches the latest compatible version dynamically | Update version → section D |
 
 [sof-releases]: https://github.com/thesofproject/sof-bin/releases
 [alsa-repo]: https://github.com/alsa-project/alsa-ucm-conf
