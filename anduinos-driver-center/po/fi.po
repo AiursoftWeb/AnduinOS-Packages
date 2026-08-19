@@ -19,7 +19,8 @@ msgstr ""
 "Generated-By: Babel 2.17.0\n"
 
 #: src/anduinos_driver_center/app.py:113 src/anduinos_driver_center/app.py:211
-#: src/anduinos_driver_center/app.py:283 src/anduinos_driver_center/app.py:2238
+#: src/anduinos_driver_center/app.py:283
+#: src/anduinos_driver_center/app.py:2238
 msgid "AnduinOS Driver Center"
 msgstr "AnduinOS-ohjainkeskus"
 
@@ -95,8 +96,8 @@ msgstr "Tulostimia ei ole määritetty"
 #, python-format
 msgid "%d printer configured"
 msgid_plural "%d printers configured"
-msgstr[0] "%d-tulostin määritetty"
-msgstr[1] "%d-tulostimet määritetty"
+msgstr[0] "%d tulostin määritelty"
+msgstr[1] "%d tulostinta määritelty"
 
 #: src/anduinos_driver_center/app.py:375 src/anduinos_driver_center/app.py:378
 msgid "Printers"
@@ -126,7 +127,8 @@ msgstr "Valinnainen Bluetooth-ohjain"
 msgid "Secure Boot"
 msgstr "Secure Boot"
 
-#: src/anduinos_driver_center/app.py:405 src/anduinos_driver_center/app.py:1004
+#: src/anduinos_driver_center/app.py:405
+#: src/anduinos_driver_center/app.py:1004
 msgid "Trust established"
 msgstr "Luottamus perustettu"
 
@@ -142,7 +144,8 @@ msgstr "Tarvitaan toimenpiteitä"
 msgid "Device Firmware"
 msgstr "Laitteen laiteohjelmisto"
 
-#: src/anduinos_driver_center/app.py:485 src/anduinos_driver_center/app.py:1193
+#: src/anduinos_driver_center/app.py:485
+#: src/anduinos_driver_center/app.py:1193
 msgid "Checking for updates…"
 msgstr "Tarkistetaan päivityksiä…"
 
@@ -164,8 +167,8 @@ msgstr "Uudelleenkäynnistys vaaditaan"
 #, python-format
 msgid "%d firmware update available"
 msgid_plural "%d firmware updates available"
-msgstr[0] "%d-laiteohjelmistopäivitykset saatavilla"
-msgstr[1] "%d-laiteohjelmistopäivitykset saatavilla"
+msgstr[0] "%d laiteohjelmistopäivitys saatavilla"
+msgstr[1] "%d laiteohjelmistopäivitystä saatavilla"
 
 #: src/anduinos_driver_center/app.py:500
 msgid "No supported devices"
@@ -199,7 +202,8 @@ msgid "Restart to finish the firmware update"
 msgstr "Käynnistä laiteohjelmiston päivitys loppuun"
 
 #: src/anduinos_driver_center/app.py:521 src/anduinos_driver_center/app.py:819
-#: src/anduinos_driver_center/app.py:893 src/anduinos_driver_center/app.py:1040
+#: src/anduinos_driver_center/app.py:893
+#: src/anduinos_driver_center/app.py:1040
 #: src/anduinos_driver_center/app.py:1259
 #: src/anduinos_driver_center/app.py:1393
 msgid "Update available"
@@ -214,7 +218,8 @@ msgstr "Päivitys saatavilla"
 msgid "Not detected"
 msgstr "Ei havaittu"
 
-#: src/anduinos_driver_center/app.py:523 src/anduinos_driver_center/app.py:1331
+#: src/anduinos_driver_center/app.py:523
+#: src/anduinos_driver_center/app.py:1331
 msgid "No supported firmware devices"
 msgstr "Ei tuettuja laiteohjelmistolaitteita"
 
@@ -222,8 +227,8 @@ msgstr "Ei tuettuja laiteohjelmistolaitteita"
 #, python-format
 msgid "%d device is up to date"
 msgid_plural "%d devices are up to date"
-msgstr[0] "%d-laitteet ovat ajan tasalla"
-msgstr[1] "%d-laitteet ovat ajan tasalla"
+msgstr[0] "%d laite on ajan tasalla"
+msgstr[1] "%d laitetta on ajan tasalla"
 
 #: src/anduinos_driver_center/app.py:530 src/anduinos_driver_center/app.py:844
 #: src/anduinos_driver_center/app.py:908 src/anduinos_driver_center/app.py:932
@@ -261,12 +266,14 @@ msgstr "Odotetaan käyttäjän toimia…"
 msgid "Updating firmware…"
 msgstr "Päivitetään laiteohjelmistoa…"
 
-#: src/anduinos_driver_center/app.py:589 src/anduinos_driver_center/app.py:2093
+#: src/anduinos_driver_center/app.py:589
+#: src/anduinos_driver_center/app.py:2093
 #: src/anduinos_driver_center/app.py:2215
 msgid "unknown error"
 msgstr "tuntematon virhe"
 
-#: src/anduinos_driver_center/app.py:594 src/anduinos_driver_center/app.py:1444
+#: src/anduinos_driver_center/app.py:594
+#: src/anduinos_driver_center/app.py:1444
 msgid "Restart required after installation"
 msgstr "Uudelleenkäynnistys vaaditaan asennuksen jälkeen"
 
@@ -275,7 +282,8 @@ msgstr "Uudelleenkäynnistys vaaditaan asennuksen jälkeen"
 msgid "Firmware operation failed"
 msgstr "Laiteohjelmiston toiminta epäonnistui"
 
-#: src/anduinos_driver_center/app.py:601 src/anduinos_driver_center/app.py:2223
+#: src/anduinos_driver_center/app.py:601
+#: src/anduinos_driver_center/app.py:2223
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
@@ -304,7 +312,9 @@ msgstr "Uudelleenkäynnistys vaaditaan"
 msgid ""
 "The firmware update has been prepared. Save your work and shut down the "
 "computer to finish installing it."
-msgstr "Laiteohjelmistopäivitys on valmisteltu. Tallenna työsi ja sammuta tietokone viimeistelläksesi asennuksen."
+msgstr ""
+"Laiteohjelmistopäivitys on valmisteltu. Tallenna työsi ja sammuta tietokone "
+"viimeistelläksesi asennuksen."
 
 #: src/anduinos_driver_center/app.py:643
 msgid ""
@@ -327,14 +337,16 @@ msgstr "Sammuta nyt"
 msgid "Restart Now"
 msgstr "Käynnistä nyt uudelleen"
 
-#: src/anduinos_driver_center/app.py:757 src/anduinos_driver_center/app.py:1351
+#: src/anduinos_driver_center/app.py:757
+#: src/anduinos_driver_center/app.py:1351
 #: src/anduinos_driver_center/app.py:1376
 #: src/anduinos_driver_center/app.py:1605
 #: src/anduinos_driver_center/app.py:1730
 msgid "Installed"
 msgstr "Asennettu"
 
-#: src/anduinos_driver_center/app.py:759 src/anduinos_driver_center/app.py:1876
+#: src/anduinos_driver_center/app.py:759
+#: src/anduinos_driver_center/app.py:1876
 #: src/anduinos_driver_center/app.py:1884
 msgid "Available"
 msgstr "Käytettävissä"
@@ -345,15 +357,17 @@ msgstr "Käytettävissä"
 msgid "Driver status"
 msgstr "Ajurin tila"
 
-#: src/anduinos_driver_center/app.py:792 src/anduinos_driver_center/app.py:1641
+#: src/anduinos_driver_center/app.py:792
+#: src/anduinos_driver_center/app.py:1641
 #: src/anduinos_driver_center/app.py:2215
 msgid "Driver operation failed: "
 msgstr "Ohjaimen toiminta epäonnistui: "
 
-#: src/anduinos_driver_center/app.py:800 src/anduinos_driver_center/app.py:1557
+#: src/anduinos_driver_center/app.py:800
+#: src/anduinos_driver_center/app.py:1557
 msgid ""
-"Secure Boot status or trust must be resolved before installing a third-party "
-"driver."
+"Secure Boot status or trust must be resolved before installing a third-party"
+" driver."
 msgstr ""
 "Secure Boot-tila tai luottamus on ratkaistava ennen kolmannen osapuolen "
 "ohjaimen asentamista."
@@ -364,7 +378,8 @@ msgstr ""
 msgid "Recommended"
 msgstr "Suositeltava"
 
-#: src/anduinos_driver_center/app.py:809 src/anduinos_driver_center/app.py:1546
+#: src/anduinos_driver_center/app.py:809
+#: src/anduinos_driver_center/app.py:1546
 msgid ""
 "Choose the driver used by this device. AnduinOS marks the hardware-tested "
 "recommendation."
@@ -382,7 +397,8 @@ msgstr ""
 msgid "Apply Changes"
 msgstr "Ota muutokset käyttöön"
 
-#: src/anduinos_driver_center/app.py:834 src/anduinos_driver_center/app.py:2213
+#: src/anduinos_driver_center/app.py:834
+#: src/anduinos_driver_center/app.py:2213
 msgid "Driver changes completed. Restart may be required."
 msgstr ""
 "Ohjaimen muutokset suoritettu. Uudelleenkäynnistys saattaa olla tarpeen."
@@ -397,23 +413,28 @@ msgstr "Käytettävissä olevat ohjaimet"
 msgid "No additional drivers are needed."
 msgstr "Muita ajureita ei tarvita."
 
-#: src/anduinos_driver_center/app.py:931 src/anduinos_driver_center/app.py:1835
+#: src/anduinos_driver_center/app.py:931
+#: src/anduinos_driver_center/app.py:1835
 msgid "Audio Support"
 msgstr "Äänituki"
 
-#: src/anduinos_driver_center/app.py:946 src/anduinos_driver_center/app.py:1939
+#: src/anduinos_driver_center/app.py:946
+#: src/anduinos_driver_center/app.py:1939
 msgid "Disabled"
 msgstr "Poistettu käytöstä"
 
-#: src/anduinos_driver_center/app.py:968 src/anduinos_driver_center/app.py:1906
+#: src/anduinos_driver_center/app.py:968
+#: src/anduinos_driver_center/app.py:1906
 msgid "Printing Support"
 msgstr "Tulostustuki"
 
-#: src/anduinos_driver_center/app.py:982 src/anduinos_driver_center/app.py:1721
+#: src/anduinos_driver_center/app.py:982
+#: src/anduinos_driver_center/app.py:1721
 msgid "Xbox Controller Support"
 msgstr "Xbox-ohjaimen tuki"
 
-#: src/anduinos_driver_center/app.py:984 src/anduinos_driver_center/app.py:1730
+#: src/anduinos_driver_center/app.py:984
+#: src/anduinos_driver_center/app.py:1730
 #: src/anduinos_driver_center/app.py:1814
 #: src/anduinos_driver_center/app.py:1857
 #: src/anduinos_driver_center/app.py:1865
@@ -457,7 +478,8 @@ msgstr ""
 
 #: src/anduinos_driver_center/app.py:1176
 msgid "Firmware operation failed: "
-msgstr "Laiteohjelmiston toiminta epäonnistui:"
+msgstr "Laiteohjelmiston toiminta epäonnistui: "
+
 
 #: src/anduinos_driver_center/app.py:1177
 #: src/anduinos_driver_center/app.py:1286
@@ -492,8 +514,8 @@ msgstr "Tuetut laitteet"
 #, python-format
 msgid "%d device detected"
 msgid_plural "%d devices detected"
-msgstr[0] "%d-laitteet havaittu"
-msgstr[1] "%d-laitteet havaittu"
+msgstr[0] "%d laite havaittu"
+msgstr[1] "%d laitetta havaittu"
 
 #: src/anduinos_driver_center/app.py:1252
 msgid "Available firmware updates"
@@ -503,8 +525,8 @@ msgstr "Saatavilla olevat laiteohjelmistopäivitykset"
 #, python-format
 msgid "%d update available"
 msgid_plural "%d updates available"
-msgstr[0] "%d-päivitykset saatavilla"
-msgstr[1] "%d-päivitykset saatavilla"
+msgstr[0] "%d päivitys saatavilla"
+msgstr[1] "%d päivitystä saatavilla"
 
 #: src/anduinos_driver_center/app.py:1266
 msgid "Firmware actions"
@@ -538,8 +560,8 @@ msgstr "Päivitä kaikki laiteohjelmistot"
 #, python-format
 msgid "Install %d available update."
 msgid_plural "Install all %d available updates."
-msgstr[0] "Asenna kaikki %d saatavilla olevat päivitykset."
-msgstr[1] "Asenna kaikki %d saatavilla olevat päivitykset."
+msgstr[0] "Asenna %d saatavilla oleva päivitys."
+msgstr[1] "Asenna kaikki %d saatavilla olevaa päivitystä."
 
 #: src/anduinos_driver_center/app.py:1305
 msgid "Update All"
@@ -667,8 +689,9 @@ msgstr ""
 #, python-format
 msgid "Install %d available firmware update?"
 msgid_plural "Install all %d available firmware updates?"
-msgstr[0] "Asennetaan kaikki %d saatavilla olevat laiteohjelmistopäivitykset?"
-msgstr[1] "Asennetaan kaikki %d saatavilla olevat laiteohjelmistopäivitykset?"
+msgstr[0] "Asennetaanko %d saatavilla oleva laiteohjelmistopäivitys?"
+msgstr[1] ""
+"Asennetaanko kaikki %d saatavilla olevaa laiteohjelmistopäivitystä?"
 
 #: src/anduinos_driver_center/app.py:1489
 msgid "Keep the computer connected to AC power."
@@ -678,7 +701,9 @@ msgstr "Pidä tietokone kytkettynä verkkovirtaan."
 msgid ""
 "This update may invalidate full-disk encryption secrets. Make sure you have "
 "the volume recovery key before continuing."
-msgstr "Tämä päivitys voi mitätöidä koko levyn salauksen salaisuudet. Varmista ennen jatkamista, että sinulla on taltion palautusavain."
+msgstr ""
+"Tämä päivitys voi mitätöidä koko levyn salauksen salaisuudet. Varmista ennen"
+" jatkamista, että sinulla on taltion palautusavain."
 
 #: src/anduinos_driver_center/app.py:1498
 msgid "A restart may be required to finish installation."
@@ -894,8 +919,8 @@ msgstr "Päällä"
 #, python-format
 msgid "%d configured printer"
 msgid_plural "%d configured printers"
-msgstr[0] "%d määritetty tulostin"
-msgstr[1] "%d-konfiguroidut tulostimet"
+msgstr[0] "%d määritelty tulostin"
+msgstr[1] "%d määriteltyä tulostinta"
 
 #: src/anduinos_driver_center/app.py:1950
 msgid "Configured printers"
@@ -917,8 +942,8 @@ msgstr "Ei määritettyjä jonoja"
 #, python-format
 msgid "%d queue paused"
 msgid_plural "%d queues paused"
-msgstr[0] "%d-jono keskeytetty"
-msgstr[1] "%d-jonot keskeytetty"
+msgstr[0] "%d jono keskeytetty"
+msgstr[1] "%d jonoa keskeytetty"
 
 #: src/anduinos_driver_center/app.py:1970
 msgid "All queues enabled"
@@ -980,7 +1005,7 @@ msgstr "Toimii…"
 
 #: src/anduinos_driver_center/app.py:2240
 msgid "AnduinOS Team"
-msgstr "4\tAnduinOS-tiimi"
+msgstr "AnduinOS-tiimi"
 
 #: src/anduinos_driver_center/app.py:2243
 msgid "Install, inspect, and repair hardware drivers on AnduinOS."
@@ -995,7 +1020,7 @@ msgid ""
 "Secure Boot is a motherboard security standard that ensures only trusted "
 "software loads at startup."
 msgstr ""
-"\tSecure Boot on emolevun tietoturvakäytäntö, joka varmistaa, että vain "
+"Secure Boot on emolevun tietoturvakäytäntö, joka varmistaa, että vain "
 "luotettava ohjelmisto ladataan käynnistyksen yhteydessä."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
@@ -1108,8 +1133,10 @@ msgid "Repair Automatic DKMS Signing"
 msgstr "Korjaa automaattinen DKMS allekirjoitus"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
-msgid "This firmware does not provide Secure Boot. No certificate is required."
-msgstr "Tämä laiteohjelmisto ei tarjoa Secure Boot:tä. Varmennetta ei vaadita."
+msgid ""
+"This firmware does not provide Secure Boot. No certificate is required."
+msgstr ""
+"Tämä laiteohjelmisto ei tarjoa Secure Boot:tä. Varmennetta ei vaadita."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
 msgid ""
@@ -1204,8 +1231,8 @@ msgstr "Laiteohjelmiston allekirjoituksen valvonta ei ole aktiivinen."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
 msgid ""
-"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
-"You can repair them after enrollment."
+"The certificate is ready, but one or more DKMS modules could not be rebuilt."
+" You can repair them after enrollment."
 msgstr ""
 "Varmenne on valmis, mutta yhtä tai useampaa DKMS-moduulia ei voitu rakentaa "
 "uudelleen. Voit korjata ne ilmoittautumisen jälkeen."
@@ -1234,10 +1261,13 @@ msgstr "Tarkista lisätulosteet."
 msgid "Generating & Signing..."
 msgstr "Luodaan ja allekirjoitetaan..."
 
+#: src/anduinos_driver_center/app.py:1929
+msgid "Add Printer"
+msgstr "Lisää tulostin"
+
 #~ msgid "Download the latest metadata from enabled firmware remotes."
 #~ msgstr ""
-#~ "Lataa uusimmat metatiedot käytössä olevista "
-#~ "laiteohjelmistokaukosäätimistä."
+#~ "Lataa uusimmat metatiedot käytössä olevista laiteohjelmistokaukosäätimistä."
 
 #~ msgid "Driver Center"
 #~ msgstr "Tietoja Driver Centeristä"
@@ -1294,7 +1324,3 @@ msgstr "Luodaan ja allekirjoitetaan..."
 #~ msgid_plural "%d packages are missing"
 #~ msgstr[0] "%d-paketti puuttuu"
 #~ msgstr[1] "%d-paketit puuttuvat"
-
-#: src/anduinos_driver_center/app.py:1929
-msgid "Add Printer"
-msgstr "Lisää tulostin"

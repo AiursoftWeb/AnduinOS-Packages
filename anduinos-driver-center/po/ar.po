@@ -15,12 +15,12 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
 "Generated-By: Babel 2.17.0\n"
 
 #: src/anduinos_driver_center/app.py:113 src/anduinos_driver_center/app.py:211
-#: src/anduinos_driver_center/app.py:283 src/anduinos_driver_center/app.py:2238
+#: src/anduinos_driver_center/app.py:283
+#: src/anduinos_driver_center/app.py:2238
 msgid "AnduinOS Driver Center"
 msgstr "مركز السائق AnduinOS"
 
@@ -96,12 +96,12 @@ msgstr "لم يتم تكوين أي طابعات"
 #, python-format
 msgid "%d printer configured"
 msgid_plural "%d printers configured"
-msgstr[0] "تم تكوين الطابعة %d"
-msgstr[1] "تم تكوين طابعات %d"
-msgstr[2] "تم تكوين طابعات %d"
-msgstr[3] "تم تكوين طابعات %d"
-msgstr[4] "تم تكوين طابعات %d"
-msgstr[5] "تم تكوين طابعات %d"
+msgstr[0] "%d طابعات مُهيأة"
+msgstr[1] "طابعة واحدة %d مُهيأة"
+msgstr[2] "طابتان %d مُهيأتان"
+msgstr[3] "%d طابعات مُهيأة"
+msgstr[4] "%d طابعة مُهيأة"
+msgstr[5] "%d طابعة مُهيأة"
 
 #: src/anduinos_driver_center/app.py:375 src/anduinos_driver_center/app.py:378
 msgid "Printers"
@@ -131,7 +131,8 @@ msgstr "برنامج تشغيل Bluetooth اختياري"
 msgid "Secure Boot"
 msgstr "Secure Boot"
 
-#: src/anduinos_driver_center/app.py:405 src/anduinos_driver_center/app.py:1004
+#: src/anduinos_driver_center/app.py:405
+#: src/anduinos_driver_center/app.py:1004
 msgid "Trust established"
 msgstr "تم إنشاء الثقة"
 
@@ -147,7 +148,8 @@ msgstr "مطلوب اتخاذ إجراء"
 msgid "Device Firmware"
 msgstr "البرامج الثابتة للجهاز"
 
-#: src/anduinos_driver_center/app.py:485 src/anduinos_driver_center/app.py:1193
+#: src/anduinos_driver_center/app.py:485
+#: src/anduinos_driver_center/app.py:1193
 msgid "Checking for updates…"
 msgstr "جارٍ التحقق من وجود تحديثات…"
 
@@ -169,12 +171,12 @@ msgstr "إعادة التشغيل مطلوبة"
 #, python-format
 msgid "%d firmware update available"
 msgid_plural "%d firmware updates available"
-msgstr[0] "تتوفر تحديثات البرامج الثابتة %d"
-msgstr[1] "تتوفر تحديثات البرامج الثابتة %d"
-msgstr[2] "تتوفر تحديثات البرامج الثابتة %d"
-msgstr[3] "تتوفر تحديثات البرامج الثابتة %d"
-msgstr[4] "تتوفر تحديثات البرامج الثابتة %d"
-msgstr[5] "تتوفر تحديثات البرامج الثابتة %d"
+msgstr[0] "%d تحديث للبرنامج الثابت متاح"
+msgstr[1] "تحديث واحد %d للبرنامج الثابت متاح"
+msgstr[2] "تحديثان %d للبرنامج الثابت متاحتان"
+msgstr[3] "%d تحديثات للبرنامج الثابت متاحة"
+msgstr[4] "%d تحديثًا للبرنامج الثابت متاحًا"
+msgstr[5] "%d تحديثًا للبرنامج الثابت متاحًا"
 
 #: src/anduinos_driver_center/app.py:500
 msgid "No supported devices"
@@ -208,7 +210,8 @@ msgid "Restart to finish the firmware update"
 msgstr "أعد التشغيل لإنهاء تحديث البرنامج الثابت"
 
 #: src/anduinos_driver_center/app.py:521 src/anduinos_driver_center/app.py:819
-#: src/anduinos_driver_center/app.py:893 src/anduinos_driver_center/app.py:1040
+#: src/anduinos_driver_center/app.py:893
+#: src/anduinos_driver_center/app.py:1040
 #: src/anduinos_driver_center/app.py:1259
 #: src/anduinos_driver_center/app.py:1393
 msgid "Update available"
@@ -223,7 +226,8 @@ msgstr "يتوفر تحديث"
 msgid "Not detected"
 msgstr "لم يتم الكشف عنه"
 
-#: src/anduinos_driver_center/app.py:523 src/anduinos_driver_center/app.py:1331
+#: src/anduinos_driver_center/app.py:523
+#: src/anduinos_driver_center/app.py:1331
 msgid "No supported firmware devices"
 msgstr "لا توجد أجهزة البرامج الثابتة المدعومة"
 
@@ -231,12 +235,12 @@ msgstr "لا توجد أجهزة البرامج الثابتة المدعومة"
 #, python-format
 msgid "%d device is up to date"
 msgid_plural "%d devices are up to date"
-msgstr[0] "أجهزة %d محدثة"
-msgstr[1] "أجهزة %d محدثة"
-msgstr[2] "أجهزة %d محدثة"
-msgstr[3] "أجهزة %d محدثة"
-msgstr[4] "أجهزة %d محدثة"
-msgstr[5] "أجهزة %d محدثة"
+msgstr[0] "%d أجهزة محدثة حتى الآن"
+msgstr[1] "جهاز %d واحد محدث حتى الآن"
+msgstr[2] "جهازان %d محدثان حتى الآن"
+msgstr[3] "%d أجهزة محدثة حتى الآن"
+msgstr[4] "%d جهازًا محدثًا حتى الآن"
+msgstr[5] "%d جهازًا محدثًا حتى الآن"
 
 #: src/anduinos_driver_center/app.py:530 src/anduinos_driver_center/app.py:844
 #: src/anduinos_driver_center/app.py:908 src/anduinos_driver_center/app.py:932
@@ -274,12 +278,14 @@ msgstr "في انتظار إجراء المستخدم..."
 msgid "Updating firmware…"
 msgstr "جارٍ تحديث البرامج الثابتة…"
 
-#: src/anduinos_driver_center/app.py:589 src/anduinos_driver_center/app.py:2093
+#: src/anduinos_driver_center/app.py:589
+#: src/anduinos_driver_center/app.py:2093
 #: src/anduinos_driver_center/app.py:2215
 msgid "unknown error"
 msgstr "خطأ غير معروف"
 
-#: src/anduinos_driver_center/app.py:594 src/anduinos_driver_center/app.py:1444
+#: src/anduinos_driver_center/app.py:594
+#: src/anduinos_driver_center/app.py:1444
 msgid "Restart required after installation"
 msgstr "إعادة التشغيل المطلوبة بعد التثبيت"
 
@@ -288,7 +294,8 @@ msgstr "إعادة التشغيل المطلوبة بعد التثبيت"
 msgid "Firmware operation failed"
 msgstr "فشلت عملية البرامج الثابتة"
 
-#: src/anduinos_driver_center/app.py:601 src/anduinos_driver_center/app.py:2223
+#: src/anduinos_driver_center/app.py:601
+#: src/anduinos_driver_center/app.py:2223
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
@@ -317,14 +324,17 @@ msgstr "إعادة التشغيل مطلوبة"
 msgid ""
 "The firmware update has been prepared. Save your work and shut down the "
 "computer to finish installing it."
-msgstr "تم إعداد تحديث البرنامج الثابت. احفظ عملك وأوقف تشغيل الكمبيوتر لإنهاء تثبيته."
+msgstr ""
+"تم إعداد تحديث البرنامج الثابت. احفظ عملك وأوقف تشغيل الكمبيوتر لإنهاء "
+"تثبيته."
 
 #: src/anduinos_driver_center/app.py:643
 msgid ""
 "The firmware update has been prepared. Save your work and restart the "
 "computer to finish installing it."
 msgstr ""
-"تم إعداد تحديث البرنامج الثابت. احفظ عملك وأعد تشغيل الكمبيوتر لإنهاء تثبيته."
+"تم إعداد تحديث البرنامج الثابت. احفظ عملك وأعد تشغيل الكمبيوتر لإنهاء "
+"تثبيته."
 
 #: src/anduinos_driver_center/app.py:648
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
@@ -339,14 +349,16 @@ msgstr "اغلاق الآن"
 msgid "Restart Now"
 msgstr "أعد التشغيل الآن"
 
-#: src/anduinos_driver_center/app.py:757 src/anduinos_driver_center/app.py:1351
+#: src/anduinos_driver_center/app.py:757
+#: src/anduinos_driver_center/app.py:1351
 #: src/anduinos_driver_center/app.py:1376
 #: src/anduinos_driver_center/app.py:1605
 #: src/anduinos_driver_center/app.py:1730
 msgid "Installed"
 msgstr "مثبت"
 
-#: src/anduinos_driver_center/app.py:759 src/anduinos_driver_center/app.py:1876
+#: src/anduinos_driver_center/app.py:759
+#: src/anduinos_driver_center/app.py:1876
 #: src/anduinos_driver_center/app.py:1884
 msgid "Available"
 msgstr "متاح"
@@ -357,15 +369,17 @@ msgstr "متاح"
 msgid "Driver status"
 msgstr "حالة السائق"
 
-#: src/anduinos_driver_center/app.py:792 src/anduinos_driver_center/app.py:1641
+#: src/anduinos_driver_center/app.py:792
+#: src/anduinos_driver_center/app.py:1641
 #: src/anduinos_driver_center/app.py:2215
 msgid "Driver operation failed: "
 msgstr "فشل تشغيل برنامج التشغيل: "
 
-#: src/anduinos_driver_center/app.py:800 src/anduinos_driver_center/app.py:1557
+#: src/anduinos_driver_center/app.py:800
+#: src/anduinos_driver_center/app.py:1557
 msgid ""
-"Secure Boot status or trust must be resolved before installing a third-party "
-"driver."
+"Secure Boot status or trust must be resolved before installing a third-party"
+" driver."
 msgstr ""
 "يجب حل حالة Secure Boot أو الثقة قبل تثبيت برنامج تشغيل تابع لجهة خارجية."
 
@@ -375,7 +389,8 @@ msgstr ""
 msgid "Recommended"
 msgstr "موصى به"
 
-#: src/anduinos_driver_center/app.py:809 src/anduinos_driver_center/app.py:1546
+#: src/anduinos_driver_center/app.py:809
+#: src/anduinos_driver_center/app.py:1546
 msgid ""
 "Choose the driver used by this device. AnduinOS marks the hardware-tested "
 "recommendation."
@@ -393,7 +408,8 @@ msgstr ""
 msgid "Apply Changes"
 msgstr "تطبيق التغييرات"
 
-#: src/anduinos_driver_center/app.py:834 src/anduinos_driver_center/app.py:2213
+#: src/anduinos_driver_center/app.py:834
+#: src/anduinos_driver_center/app.py:2213
 msgid "Driver changes completed. Restart may be required."
 msgstr "اكتملت تغييرات برنامج التشغيل. قد تكون هناك حاجة لإعادة التشغيل."
 
@@ -407,23 +423,28 @@ msgstr "برامج التشغيل المتوفرة"
 msgid "No additional drivers are needed."
 msgstr "لا حاجة إلى برامج تشغيل إضافية."
 
-#: src/anduinos_driver_center/app.py:931 src/anduinos_driver_center/app.py:1835
+#: src/anduinos_driver_center/app.py:931
+#: src/anduinos_driver_center/app.py:1835
 msgid "Audio Support"
 msgstr "دعم الصوت"
 
-#: src/anduinos_driver_center/app.py:946 src/anduinos_driver_center/app.py:1939
+#: src/anduinos_driver_center/app.py:946
+#: src/anduinos_driver_center/app.py:1939
 msgid "Disabled"
 msgstr "معطل"
 
-#: src/anduinos_driver_center/app.py:968 src/anduinos_driver_center/app.py:1906
+#: src/anduinos_driver_center/app.py:968
+#: src/anduinos_driver_center/app.py:1906
 msgid "Printing Support"
 msgstr "دعم الطباعة"
 
-#: src/anduinos_driver_center/app.py:982 src/anduinos_driver_center/app.py:1721
+#: src/anduinos_driver_center/app.py:982
+#: src/anduinos_driver_center/app.py:1721
 msgid "Xbox Controller Support"
 msgstr "دعم جهاز تحكم Xbox"
 
-#: src/anduinos_driver_center/app.py:984 src/anduinos_driver_center/app.py:1730
+#: src/anduinos_driver_center/app.py:984
+#: src/anduinos_driver_center/app.py:1730
 #: src/anduinos_driver_center/app.py:1814
 #: src/anduinos_driver_center/app.py:1857
 #: src/anduinos_driver_center/app.py:1865
@@ -462,12 +483,13 @@ msgid ""
 "Keep system firmware and supported hardware up to date through the Linux "
 "Vendor Firmware Service."
 msgstr ""
-"حافظ على تحديث البرامج الثابتة للنظام والأجهزة المدعومة من خلال Linux Vendor "
-"Firmware Service."
+"حافظ على تحديث البرامج الثابتة للنظام والأجهزة المدعومة من خلال Linux Vendor"
+" Firmware Service."
 
 #: src/anduinos_driver_center/app.py:1176
 msgid "Firmware operation failed: "
-msgstr "فشل تشغيل البرامج الثابتة:"
+msgstr "فشل تشغيل البرامج الثابتة: "
+
 
 #: src/anduinos_driver_center/app.py:1177
 #: src/anduinos_driver_center/app.py:1286
@@ -502,12 +524,12 @@ msgstr "الأجهزة المدعومة"
 #, python-format
 msgid "%d device detected"
 msgid_plural "%d devices detected"
-msgstr[0] "تم اكتشاف أجهزة %d"
-msgstr[1] "تم اكتشاف أجهزة %d"
-msgstr[2] "تم اكتشاف أجهزة %d"
-msgstr[3] "تم اكتشاف أجهزة %d"
-msgstr[4] "تم اكتشاف أجهزة %d"
-msgstr[5] "تم اكتشاف أجهزة %d"
+msgstr[0] "لم يُكتشف أي جهاز (%d)"
+msgstr[1] "تم اكتشاف جهاز واحد (%d)"
+msgstr[2] "تم اكتشاف جهازين (%d)"
+msgstr[3] "تم اكتشاف %d أجهزة"
+msgstr[4] "تم اكتشاف %d جهازًا"
+msgstr[5] "تم اكتشاف %d جهاز"
 
 #: src/anduinos_driver_center/app.py:1252
 msgid "Available firmware updates"
@@ -517,12 +539,12 @@ msgstr "تحديثات البرامج الثابتة المتاحة"
 #, python-format
 msgid "%d update available"
 msgid_plural "%d updates available"
-msgstr[0] "تتوفر تحديثات %d"
-msgstr[1] "تتوفر تحديثات %d"
-msgstr[2] "تتوفر تحديثات %d"
-msgstr[3] "تتوفر تحديثات %d"
-msgstr[4] "تتوفر تحديثات %d"
-msgstr[5] "تتوفر تحديثات %d"
+msgstr[0] "%d تحديثات متاحة"
+msgstr[1] "تحديث واحد %d متاح"
+msgstr[2] "تحديثان %d متاحتان"
+msgstr[3] "%d تحديثات متاحة"
+msgstr[4] "%d تحديثًا متاحًا"
+msgstr[5] "%d تحديثًا متاحًا"
 
 #: src/anduinos_driver_center/app.py:1266
 msgid "Firmware actions"
@@ -556,12 +578,12 @@ msgstr "تحديث كافة البرامج الثابتة"
 #, python-format
 msgid "Install %d available update."
 msgid_plural "Install all %d available updates."
-msgstr[0] "قم بتثبيت كافة التحديثات المتوفرة لـ %d."
-msgstr[1] "قم بتثبيت كافة التحديثات المتوفرة لـ %d."
-msgstr[2] "قم بتثبيت كافة التحديثات المتوفرة لـ %d."
-msgstr[3] "قم بتثبيت كافة التحديثات المتوفرة لـ %d."
-msgstr[4] "قم بتثبيت كافة التحديثات المتوفرة لـ %d."
-msgstr[5] "قم بتثبيت كافة التحديثات المتوفرة لـ %d."
+msgstr[0] "تثبيت %d تحديثات متاحة."
+msgstr[1] "تثبيت %d تحديث واحد متاح."
+msgstr[2] "تثبيت %d تحديثين متاحين."
+msgstr[3] "تثبيت %d تحديثات متاحة."
+msgstr[4] "تثبيت %d تحديثًا متاحًا."
+msgstr[5] "تثبيت %d تحديثًا متاحًا."
 
 #: src/anduinos_driver_center/app.py:1305
 msgid "Update All"
@@ -679,18 +701,19 @@ msgstr "فشل"
 #, python-format
 msgid "Install firmware for %(device)s from %(current)s to %(available)s?"
 msgstr ""
-"هل تريد تثبيت البرامج الثابتة لـ %(device)s من %(current)s إلى %(available)s؟"
+"هل تريد تثبيت البرامج الثابتة لـ %(device)s من %(current)s إلى "
+"%(available)s؟"
 
 #: src/anduinos_driver_center/app.py:1483
 #, python-format
 msgid "Install %d available firmware update?"
 msgid_plural "Install all %d available firmware updates?"
-msgstr[0] "هل تريد تثبيت كافة تحديثات البرامج الثابتة المتوفرة لـ %d؟"
-msgstr[1] "هل تريد تثبيت كافة تحديثات البرامج الثابتة المتوفرة لـ %d؟"
-msgstr[2] "هل تريد تثبيت كافة تحديثات البرامج الثابتة المتوفرة لـ %d؟"
-msgstr[3] "هل تريد تثبيت كافة تحديثات البرامج الثابتة المتوفرة لـ %d؟"
-msgstr[4] "هل تريد تثبيت كافة تحديثات البرامج الثابتة المتوفرة لـ %d؟"
-msgstr[5] "هل تريد تثبيت كافة تحديثات البرامج الثابتة المتوفرة لـ %d؟"
+msgstr[0] "هل تريد تثبيت %d تحديثات البرامج الثابتة المتاحة؟"
+msgstr[1] "هل تريد تثبيت تحديث واحد %d للبرنامج الثابت متاح؟"
+msgstr[2] "هل تريد تثبيت تحديثين %d للبرنامج الثابت متاحتين؟"
+msgstr[3] "هل تريد تثبيت %d تحديثات البرامج الثابتة المتاحة؟"
+msgstr[4] "هل تريد تثبيت %d تحديثًا للبرنامج الثابت متاحًا؟"
+msgstr[5] "هل تريد تثبيت %d تحديثًا للبرنامج الثابت متاحًا؟"
 
 #: src/anduinos_driver_center/app.py:1489
 msgid "Keep the computer connected to AC power."
@@ -700,7 +723,9 @@ msgstr "أبقِ الكمبيوتر متصلاً بمصدر طاقة التيا�
 msgid ""
 "This update may invalidate full-disk encryption secrets. Make sure you have "
 "the volume recovery key before continuing."
-msgstr "قد يؤدي هذا التحديث إلى إبطال أسرار تشفير القرص بالكامل. تأكد من أن لديك مفتاح استرداد وحدة التخزين قبل المتابعة."
+msgstr ""
+"قد يؤدي هذا التحديث إلى إبطال أسرار تشفير القرص بالكامل. تأكد من أن لديك "
+"مفتاح استرداد وحدة التخزين قبل المتابعة."
 
 #: src/anduinos_driver_center/app.py:1498
 msgid "A restart may be required to finish installation."
@@ -880,8 +905,8 @@ msgid ""
 "Inspect the local print service, configured queues, and the packages that "
 "provide modern and legacy printer support."
 msgstr ""
-"افحص خدمة الطباعة المحلية، وقوائم الانتظار التي تم تكوينها، والحزم التي توفر "
-"الدعم الحديث والقديم للطابعة."
+"افحص خدمة الطباعة المحلية، وقوائم الانتظار التي تم تكوينها، والحزم التي توفر"
+" الدعم الحديث والقديم للطابعة."
 
 #: src/anduinos_driver_center/app.py:1911
 #: src/anduinos_driver_center/app.py:1928
@@ -916,12 +941,12 @@ msgstr "مفعّل"
 #, python-format
 msgid "%d configured printer"
 msgid_plural "%d configured printers"
-msgstr[0] "الطابعة التي تم تكوينها %d"
-msgstr[1] "الطابعات التي تم تكوينها %d"
-msgstr[2] "الطابعات التي تم تكوينها %d"
-msgstr[3] "الطابعات التي تم تكوينها %d"
-msgstr[4] "الطابعات التي تم تكوينها %d"
-msgstr[5] "الطابعات التي تم تكوينها %d"
+msgstr[0] "%d طابعات مُهيأة"
+msgstr[1] "طابعة واحدة %d مُهيأة"
+msgstr[2] "طابتان %d مُهيأتان"
+msgstr[3] "%d طابعات مُهيأة"
+msgstr[4] "%d طابعة مُهيأة"
+msgstr[5] "%d طابعة مُهيأة"
 
 #: src/anduinos_driver_center/app.py:1950
 msgid "Configured printers"
@@ -943,12 +968,12 @@ msgstr "لا توجد قوائم انتظار تم تكوينها"
 #, python-format
 msgid "%d queue paused"
 msgid_plural "%d queues paused"
-msgstr[0] "قائمة الانتظار %d متوقفة مؤقتًا"
-msgstr[1] "توقفت قوائم الانتظار %d مؤقتًا"
-msgstr[2] "توقفت قوائم الانتظار %d مؤقتًا"
-msgstr[3] "توقفت قوائم الانتظار %d مؤقتًا"
-msgstr[4] "توقفت قوائم الانتظار %d مؤقتًا"
-msgstr[5] "توقفت قوائم الانتظار %d مؤقتًا"
+msgstr[0] "%d قائمة انتظار مُوقفة مؤقتاً"
+msgstr[1] "قائمة انتظار واحدة %d مُوقفة مؤقتاً"
+msgstr[2] "قارنتان انتظار %d مُوقفتان مؤقتاً"
+msgstr[3] "%d قوائم انتظار مُوقفة مؤقتاً"
+msgstr[4] "%d قائمة انتظار مُوقفة مؤقتاً"
+msgstr[5] "%d قائمة انتظار مُوقفة مؤقتاً"
 
 #: src/anduinos_driver_center/app.py:1970
 msgid "All queues enabled"
@@ -1024,8 +1049,8 @@ msgid ""
 "Secure Boot is a motherboard security standard that ensures only trusted "
 "software loads at startup."
 msgstr ""
-"\tالتمهيد الآمن هو معيار أمان للوحة الأم يضمن تحميل البرامج الموثوقة فقط عند "
-"بدء التشغيل."
+"التمهيد الآمن هو معيار أمان للوحة الأم يضمن تحميل البرامج الموثوقة فقط عند"
+" بدء التشغيل."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
 msgid "It protects your system from low-level malware and rootkits."
@@ -1132,7 +1157,8 @@ msgid "Repair Automatic DKMS Signing"
 msgstr "إصلاح التوقيع التلقائي DKMS"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
-msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgid ""
+"This firmware does not provide Secure Boot. No certificate is required."
 msgstr "لا توفر هذه البرامج الثابتة Secure Boot. لا توجد شهادة مطلوبة."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
@@ -1157,7 +1183,8 @@ msgstr "تم تسجيل الشهادة وبرامج التشغيل الحالي�
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
 msgid "Repair automatic DKMS signing before future driver updates."
-msgstr "قم بإصلاح التوقيع التلقائي DKMS قبل تحديثات برنامج التشغيل المستقبلية."
+msgstr ""
+"قم بإصلاح التوقيع التلقائي DKMS قبل تحديثات برنامج التشغيل المستقبلية."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
 msgid "The certificate is enrolled, but some modules are not signed with it."
@@ -1218,8 +1245,8 @@ msgstr "فرض توقيع البرنامج الثابت غير نشط."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
 msgid ""
-"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
-"You can repair them after enrollment."
+"The certificate is ready, but one or more DKMS modules could not be rebuilt."
+" You can repair them after enrollment."
 msgstr ""
 "الشهادة جاهزة، ولكن لا يمكن إعادة بناء وحدة واحدة أو أكثر من وحدات DKMS. "
 "يمكنك إصلاحها بعد التسجيل."
@@ -1247,6 +1274,10 @@ msgstr "يرجى التحقق من الإخراج المتقدم."
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
 msgid "Generating & Signing..."
 msgstr "جاري الإنشاء والتوقيع..."
+
+#: src/anduinos_driver_center/app.py:1929
+msgid "Add Printer"
+msgstr "إضافة طابعة"
 
 #~ msgid "Download the latest metadata from enabled firmware remotes."
 #~ msgstr ""
@@ -1315,7 +1346,3 @@ msgstr "جاري الإنشاء والتوقيع..."
 #~ msgstr[3] "حزم %d مفقودة"
 #~ msgstr[4] "حزم %d مفقودة"
 #~ msgstr[5] "حزم %d مفقودة"
-
-#: src/anduinos_driver_center/app.py:1929
-msgid "Add Printer"
-msgstr "إضافة طابعة"

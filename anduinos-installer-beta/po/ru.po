@@ -15,8 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 msgid "Installing an input method requires an Internet connection."
 msgstr "Для установки метода ввода требуется подключение к Интернету."
@@ -31,23 +30,18 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"A real installation will create a machine-local MOK. After reboot, choose "
-"Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
 msgstr ""
 "\n"
 "\n"
-"При реальной установке будет создан локальный для машины MOK. После "
-"перезагрузки выберите в MOKManager Enroll MOK → Continue → Yes и введите "
-"пароль 123456."
+"При реальной установке будет создан локальный для машины MOK. После перезагрузки выберите в MOKManager Enroll MOK → Continue → Yes и введите пароль 123456."
 
 msgid ""
 "\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: "
-"123456"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
 msgstr ""
 "\n"
-"На синем экране MOKManager выберите Enroll MOK → Continue → Yes, пароль: "
-"123456"
+"На синем экране MOKManager выберите Enroll MOK → Continue → Yes, пароль: 123456"
 
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr ""
@@ -77,11 +71,11 @@ msgid "Advanced Storage"
 msgstr "Расширенные настройки хранилища"
 
 msgid ""
-"Advanced coexistence can affect EFI firmware state and may trigger BitLocker "
-"recovery. It never shrinks or repairs Windows volumes."
+"Advanced coexistence can affect EFI firmware state and may trigger BitLocker"
+" recovery. It never shrinks or repairs Windows volumes."
 msgstr ""
-"Расширенный режим сосуществования может повлиять на состояние прошивки EFI и "
-"вызвать восстановление BitLocker. Он никогда не сжимает и не ремонтирует "
+"Расширенный режим сосуществования может повлиять на состояние прошивки EFI и"
+" вызвать восстановление BitLocker. Он никогда не сжимает и не ремонтирует "
 "томы Windows."
 
 msgid "Advanced — keep existing systems"
@@ -158,12 +152,10 @@ msgid "AnduinOS Installer (Development)"
 msgstr "Установщик AnduinOS (Разработка)"
 
 msgid ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing "
-"partitions will be preserved.\n"
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
 msgstr ""
-"AnduinOS будет использовать только выбранное неразмеченное пространство на "
-"{disk}. Существующие разделы будут сохранены.\n"
+"AnduinOS будет использовать только выбранное неразмеченное пространство на {disk}. Существующие разделы будут сохранены.\n"
 "\n"
 
 msgid ""
@@ -237,7 +229,8 @@ msgstr "Имя компьютера содержит недопустимые с
 
 msgid "Configure account, region, timezone, and machine identity"
 msgstr ""
-"Настройка учетной записи, региона, часового пояса и идентификатора компьютера"
+"Настройка учетной записи, региона, часового пояса и идентификатора "
+"компьютера"
 
 msgid "Configure storage and swap"
 msgstr "Настройка хранилища и файла подкачки"
@@ -264,8 +257,8 @@ msgid ""
 "Create and format a dedicated AnduinOS EFI System Partition inside the "
 "selected space."
 msgstr ""
-"Создайте и отформатируйте выделенный раздел EFI системы AnduinOS в выбранном "
-"пространстве."
+"Создайте и отформатируйте выделенный раздел EFI системы AnduinOS в выбранном"
+" пространстве."
 
 msgid "Create your user account"
 msgstr "Создайте учетную запись пользователя"
@@ -290,12 +283,10 @@ msgid "Detect firmware and Secure Boot"
 msgstr "Определение прошивки и Secure Boot"
 
 msgid ""
-"Development mode will simulate installation to {disk}. No disk data will be "
-"changed.\n"
+"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
 "\n"
 msgstr ""
-"Режим разработки смоделирует установку на {disk}. Данные диска не будут "
-"изменены.\n"
+"Режим разработки смоделирует установку на {disk}. Данные диска не будут изменены.\n"
 "\n"
 
 msgid "Development simulation completed"
@@ -320,7 +311,8 @@ msgid "Empty disk — no partitions"
 msgstr "Пустой диск — нет разделов"
 
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
-msgstr "Включает подтома общего пространства, снимки и Disk Snapshots Manager."
+msgstr ""
+"Включает подтома общего пространства, снимки и Disk Snapshots Manager."
 
 msgid "English (UK)"
 msgstr "Английский (Великобритания)"
@@ -344,15 +336,15 @@ msgid ""
 "Existing Windows, recovery and data partitions remain outside the write set "
 "and will be preserved."
 msgstr ""
-"Существующие разделы Windows, восстановления и данных останутся за пределами "
-"набора для записи и будут сохранены."
+"Существующие разделы Windows, восстановления и данных останутся за пределами"
+" набора для записи и будут сохранены."
 
 msgid ""
 "Existing partitions were detected. The first two choices delete them; "
 "Advanced is the preservation path."
 msgstr ""
-"Обнаружены существующие разделы. Первые два варианта удаляют их; расширенный "
-"режим обеспечивает сохранение."
+"Обнаружены существующие разделы. Первые два варианта удаляют их; расширенный"
+" режим обеспечивает сохранение."
 
 msgid ""
 "Existing partitions will be preserved. New AnduinOS partitions will be "
@@ -392,8 +384,8 @@ msgid ""
 "disk. This disk cannot continue in guided mode."
 msgstr ""
 "Для управляемого сосуществования требуется загрузка системы в режиме UEFI и "
-"целевой диск с таблицей разделов GPT. Этот диск не может продолжать работу в "
-"управляемом режиме."
+"целевой диск с таблицей разделов GPT. Этот диск не может продолжать работу в"
+" управляемом режиме."
 
 msgid ""
 "Guided storage selection is missing. Rescan and select the target again."
@@ -455,8 +447,8 @@ msgid "Installation Steps"
 msgstr "Шаги установки"
 
 msgid ""
-"Installation cannot continue with this selection. There is no force-continue "
-"option around storage safety checks."
+"Installation cannot continue with this selection. There is no force-continue"
+" option around storage safety checks."
 msgstr ""
 "Установка не может продолжиться с этим выбором. Не существует опции "
 "принудительного продолжения обхода проверок безопасности хранилища."
@@ -739,16 +731,16 @@ msgstr ""
 "для установки."
 
 msgid ""
-"The existing EFI System Partition is only a candidate. Health and free-space "
-"checks must pass before it can be reused, and it will never be formatted."
+"The existing EFI System Partition is only a candidate. Health and free-space"
+" checks must pass before it can be reused, and it will never be formatted."
 msgstr ""
 "Существующий раздел системы EFI является лишь кандидатом. Перед повторным "
-"использованием должны быть пройдены проверки состояния и свободного места, и "
-"он никогда не будет отформатирован."
+"использованием должны быть пройдены проверки состояния и свободного места, и"
+" он никогда не будет отформатирован."
 
 msgid ""
-"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot "
-"state, or installed system was changed."
+"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
+" state, or installed system was changed."
 msgstr ""
 "План установки действителен. Диск, файловая система, загрузчик, состояние "
 "Secure Boot или установленная система не были изменены."
@@ -762,15 +754,15 @@ msgid ""
 "must be completed in Windows."
 msgstr ""
 "Установщик не будет монтировать, восстанавливать или оценивать безопасность "
-"томов Windows в состоянии гибернации или быстрого запуска. Любое необходимое "
-"обслуживание Windows должно быть выполнено в самой Windows."
+"томов Windows в состоянии гибернации или быстрого запуска. Любое необходимое"
+" обслуживание Windows должно быть выполнено в самой Windows."
 
 msgid "The privileged executor is disabled."
 msgstr "Привилегированный исполнитель отключен."
 
 msgid ""
-"The selected disk changed or disappeared. Return to the disk page and select "
-"it again. {error}"
+"The selected disk changed or disappeared. Return to the disk page and select"
+" it again. {error}"
 msgstr ""
 "Выбранный диск изменился или исчез. Вернитесь на страницу дисков и выберите "
 "его снова. {error}"
@@ -870,11 +862,11 @@ msgid "Username"
 msgstr "Имя пользователя"
 
 msgid ""
-"Username must start with a lowercase ASCII letter and contain only lowercase "
-"ASCII letters or digits (maximum 16 characters)."
+"Username must start with a lowercase ASCII letter and contain only lowercase"
+" ASCII letters or digits (maximum 16 characters)."
 msgstr ""
-"Username must start with a lowercase ASCII letter and contain only lowercase "
-"ASCII letters or digits (maximum 16 characters)."
+"Имя пользователя должно начинаться со строчной буквы ASCII и содержать "
+"только строчные буквы или цифры (не более 16 символов)."
 
 msgid "Uses a traditional single root filesystem."
 msgstr ""
@@ -1019,27 +1011,29 @@ msgstr ""
 
 #: src/pages.py
 msgid "A saved profile exists. Entering a password updates it securely."
-msgstr "A saved profile exists. Entering a password updates it securely."
+msgstr ""
+"Сохраненный профиль уже существует. Ввод пароля позволит обновить его в "
+"безопасном режиме."
 
 #: src/pages.py
 msgid "Anonymous identity (optional)"
-msgstr "Anonymous identity (optional)"
+msgstr "Анонимный идентификатор (необязательно)"
 
 #: src/pages.py
 msgid "CA certificate path (optional)"
-msgstr "CA certificate path (optional)"
+msgstr "Путь к сертификату ЦС (необязательно)"
 
 #: src/pages.py
 msgid "Cancel"
-msgstr "Cancel"
+msgstr "Отмена"
 
 #: src/pages.py
 msgid "Cancelling Wi-Fi operation…"
-msgstr "Cancelling Wi-Fi operation…"
+msgstr "Отмена операции Wi-Fi…"
 
 #: src/pages.py
 msgid "Client certificate path"
-msgstr "Client certificate path"
+msgstr "Путь к сертификату клиента"
 
 #: src/pages.py
 msgid "Connect"
@@ -1047,16 +1041,16 @@ msgstr "Connect"
 
 #: src/pages.py
 msgid "Continue"
-msgstr "Continue"
+msgstr "Продолжить"
 
 #: src/pages.py
 msgid "Connect to a hidden network"
-msgstr "Connect to a hidden network"
+msgstr "Подключиться к скрытой сети"
 
 #: src/pages.py
 #, python-brace-format
 msgid "Connect to {network}"
-msgstr "Connect to {network}"
+msgstr "Подключиться к сети {network}"
 
 #: src/pages.py
 msgid "Connected"
@@ -1065,11 +1059,11 @@ msgstr "Connected"
 #: src/pages.py
 #, python-brace-format
 msgid "Connecting to {network}…"
-msgstr "Connecting to {network}…"
+msgstr "Подключение к сети {network}…"
 
 #: src/pages.py
 msgid "Could not change the Wi-Fi connection"
-msgstr "Could not change the Wi-Fi connection"
+msgstr "Не удалось изменить подключение Wi-Fi"
 
 #: src/pages.py
 msgid "Disconnect"
@@ -1078,40 +1072,40 @@ msgstr "Disconnect"
 #: src/pages.py
 #, python-brace-format
 msgid "Disconnect from {network}?"
-msgstr "Disconnect from {network}?"
+msgstr "Отключиться от сети {network}?"
 
 #: src/pages.py
 #, python-brace-format
 msgid "Disconnecting from {network}…"
-msgstr "Disconnecting from {network}…"
+msgstr "Отключение от сети {network}…"
 
 #: src/pages.py
 msgid "Domain suffix match (optional)"
-msgstr "Domain suffix match (optional)"
+msgstr "Совпадение суффикса домена (необязательно)"
 
 #: src/pages.py
 msgid "EAP method"
-msgstr "EAP method"
+msgstr "Метод EAP"
 
 #: src/pages.py
 msgid "Enhanced Open (OWE)"
-msgstr "Enhanced Open (OWE)"
+msgstr "Улучшенная открытая сеть (OWE)"
 
 #: src/pages.py
 msgid ""
 "Enter the credentials supplied by your organization. Certificate validation "
 "is strongly recommended."
 msgstr ""
-"Enter the credentials supplied by your organization. Certificate validation "
-"is strongly recommended."
+"Введите учетные данные, предоставленные вашей организацией. Настоятельно "
+"рекомендуется проверка сертификата."
 
 #: src/pages.py
 msgid "Enter the exact network name and choose its security type."
-msgstr "Enter the exact network name and choose its security type."
+msgstr "Введите точное имя сети и выберите тип её защиты."
 
 #: src/pages.py
 msgid "Enterprise Wi-Fi"
-msgstr "Enterprise Wi-Fi"
+msgstr "Корпоративный Wi-Fi"
 
 #: src/pages.py
 msgid "Identity"
@@ -1119,35 +1113,35 @@ msgstr "Identity"
 
 #: src/pages.py
 msgid "Inner authentication"
-msgstr "Inner authentication"
+msgstr "Внутренняя аутентификация"
 
 #: src/pages.py
 msgid "Network name (SSID)"
-msgstr "Network name (SSID)"
+msgstr "Имя сети (SSID)"
 
 #: src/pages.py
 msgid "No Wi-Fi networks found."
-msgstr "No Wi-Fi networks found."
+msgstr "Сети Wi-Fi не найдены."
 
 #: src/pages.py
 msgid "Open network"
-msgstr "Open network"
+msgstr "Открытая сеть"
 
 #: src/pages.py
 msgid "Personal Wi-Fi"
-msgstr "Personal Wi-Fi"
+msgstr "Личная сеть Wi-Fi"
 
 #: src/pages.py
 msgid "Private key password (optional)"
-msgstr "Private key password (optional)"
+msgstr "Пароль закрытого ключа (необязательно)"
 
 #: src/pages.py
 msgid "Private key path"
-msgstr "Private key path"
+msgstr "Путь к закрытому ключу"
 
 #: src/pages.py
 msgid "Refresh Wi-Fi networks"
-msgstr "Refresh Wi-Fi networks"
+msgstr "Обновить список сетей Wi-Fi"
 
 #: src/pages.py
 msgid "Saved"
@@ -1161,40 +1155,41 @@ msgstr "Security"
 msgid ""
 "The installer will keep the saved network profile so it can be used again."
 msgstr ""
-"The installer will keep the saved network profile so it can be used again."
+"Установщик сохранит профиль сети, чтобы его можно было использовать снова."
 
 #: src/pages.py
 msgid "The local network is connected, but Internet access is unavailable."
-msgstr "The local network is connected, but Internet access is unavailable."
+msgstr "Подключено к локальной сети, но доступ в Интернет отсутствует."
 
 #: src/pages.py
 msgid "Turning Wi-Fi off…"
-msgstr "Turning Wi-Fi off…"
+msgstr "Отключение Wi-Fi…"
 
 #: src/pages.py
 msgid "Turning Wi-Fi on…"
-msgstr "Turning Wi-Fi on…"
+msgstr "Включение Wi-Fi…"
 
 #: src/pages.py
 msgid "Use WPS"
-msgstr "Use WPS"
+msgstr "Использовать WPS"
 
 #: src/pages.py
 msgid "WEP (legacy)"
-msgstr "WEP (legacy)"
+msgstr "WEP (устаревший)"
 
 #: src/pages.py
 msgid ""
 "Wi-Fi is connected, but the network requires sign-in through a captive "
 "portal."
 msgstr ""
-"Wi-Fi is connected, but the network requires sign-in through a captive "
-"portal."
+"Wi-Fi подключён, но для доступа к сети требуется авторизация через страницу "
+"входа."
 
 #: src/pages.py
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
-msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+msgstr ""
+"Ожидание WPS для сети {network}. Нажмите кнопку WPS на маршрутизаторе…"
 
 msgid "A password is required."
 msgstr "Требуется пароль."
@@ -1211,14 +1206,20 @@ msgstr "Разрешить вход по SSH с паролем учётной з
 msgid "Automatic desktop login"
 msgstr "Автоматический вход в рабочий стол"
 
-msgid "Choose how the local administrator account signs in and authorizes system changes."
-msgstr "Выберите способ входа локальной учётной записи администратора и подтверждения системных изменений."
+msgid ""
+"Choose how the local administrator account signs in and authorizes system "
+"changes."
+msgstr ""
+"Выберите способ входа локальной учётной записи администратора и "
+"подтверждения системных изменений."
 
 msgid "Choose optional access and sign-in policies"
 msgstr "Выберите дополнительные правила доступа и входа"
 
 msgid "Choose whether this computer accepts remote Secure Shell connections."
-msgstr "Выберите, будет ли этот компьютер принимать удалённые подключения Secure Shell."
+msgstr ""
+"Выберите, будет ли этот компьютер принимать удалённые подключения Secure "
+"Shell."
 
 msgid "Configure Secure Shell"
 msgstr "Настроить Secure Shell"
@@ -1230,7 +1231,9 @@ msgid "Log in to the desktop automatically"
 msgstr "Автоматически входить в рабочий стол"
 
 msgid "Open this account's desktop automatically when the computer starts."
-msgstr "Автоматически открывать рабочий стол этой учётной записи при запуске компьютера."
+msgstr ""
+"Автоматически открывать рабочий стол этой учётной записи при запуске "
+"компьютера."
 
 msgid "Remote Access"
 msgstr "Удалённый доступ"
@@ -1242,7 +1245,8 @@ msgid "SSH password login"
 msgstr "Вход по SSH с паролем"
 
 msgid "Start Secure Shell and accept this account password over the network."
-msgstr "Запустить Secure Shell и принимать пароль этой учётной записи по сети."
+msgstr ""
+"Запустить Secure Shell и принимать пароль этой учётной записи по сети."
 
 msgid "This will reduce the security of the installed system."
 msgstr "Это снизит безопасность установленной системы."

@@ -15,8 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 msgid "Installing an input method requires an Internet connection."
 msgstr "Instalacja metody wprowadzania wymaga połączenia z Internetem."
@@ -31,23 +30,18 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"A real installation will create a machine-local MOK. After reboot, choose "
-"Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
 msgstr ""
 "\n"
 "\n"
-"Prawdziwa instalacja utworzy lokalny dla maszyny klucz MOK. Po ponownym "
-"uruchomieniu wybierz Enroll MOK → Continue → Yes w MOKManager i wpisz hasło "
-"123456."
+"Prawdziwa instalacja utworzy lokalny dla maszyny klucz MOK. Po ponownym uruchomieniu wybierz Enroll MOK → Continue → Yes w MOKManager i wpisz hasło 123456."
 
 msgid ""
 "\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: "
-"123456"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
 msgstr ""
 "\n"
-"Na niebieskim ekranie MOKManager wybierz Enroll MOK → Continue → Yes, hasło: "
-"123456"
+"Na niebieskim ekranie MOKManager wybierz Enroll MOK → Continue → Yes, hasło: 123456"
 
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr ""
@@ -77,8 +71,8 @@ msgid "Advanced Storage"
 msgstr "Zaawansowane ustawienia pamięci masowej"
 
 msgid ""
-"Advanced coexistence can affect EFI firmware state and may trigger BitLocker "
-"recovery. It never shrinks or repairs Windows volumes."
+"Advanced coexistence can affect EFI firmware state and may trigger BitLocker"
+" recovery. It never shrinks or repairs Windows volumes."
 msgstr ""
 "Zaawansowana współistnienie może wpłynąć na stan firmwaru EFI i spowodować "
 "uruchomienie odzyskiwania BitLocker. Nigdy nie zmniejsza ani nie naprawia "
@@ -159,12 +153,10 @@ msgid "AnduinOS Installer (Development)"
 msgstr "Instalator AnduinOS (Wersja deweloperska)"
 
 msgid ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing "
-"partitions will be preserved.\n"
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
 msgstr ""
-"AnduinOS użyje tylko wybranego niewykorzystanego miejsca na dysku {disk}. "
-"Istniejące partycje zostaną zachowane.\n"
+"AnduinOS użyje tylko wybranego niewykorzystanego miejsca na dysku {disk}. Istniejące partycje zostaną zachowane.\n"
 "\n"
 
 msgid ""
@@ -185,8 +177,8 @@ msgid ""
 "hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
 "measurements and boot order can change."
 msgstr ""
-"Zanim kontynuujesz: ukończ aktualizacje systemu Windows, wyłącz szybki start "
-"i hibernację oraz wykonaj kopię zapasową klucza odzyskiwania BitLocker. "
+"Zanim kontynuujesz: ukończ aktualizacje systemu Windows, wyłącz szybki start"
+" i hibernację oraz wykonaj kopię zapasową klucza odzyskiwania BitLocker. "
 "Ustawienia EFI, Secure Boot, pomiary TPM i kolejność rozruchu mogą się "
 "zmienić."
 
@@ -292,12 +284,10 @@ msgid "Detect firmware and Secure Boot"
 msgstr "Wykrywanie firmware'u i Secure Boot"
 
 msgid ""
-"Development mode will simulate installation to {disk}. No disk data will be "
-"changed.\n"
+"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
 "\n"
 msgstr ""
-"Instalacja w trybie deweloperskim zostanie zsymulowana na dysku {disk}. Dane "
-"na dysku nie zostaną zmienione.\n"
+"Instalacja w trybie deweloperskim zostanie zsymulowana na dysku {disk}. Dane na dysku nie zostaną zmienione.\n"
 "\n"
 
 msgid "Development simulation completed"
@@ -323,8 +313,8 @@ msgstr "Pusty dysk — brak partycji"
 
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
 msgstr ""
-"Włącza podwoluminy w przestrzeni współdzielonej, migawki oraz Disk Snapshots "
-"Manager Machine."
+"Włącza podwoluminy w przestrzeni współdzielonej, migawki oraz Disk Snapshots"
+" Manager Machine."
 
 msgid "English (UK)"
 msgstr "Angielski (Wielka Brytania)"
@@ -355,8 +345,8 @@ msgid ""
 "Existing partitions were detected. The first two choices delete them; "
 "Advanced is the preservation path."
 msgstr ""
-"Wykryto istniejące partycje. Dwie pierwsze opcje je usuwają; zaawansowana to "
-"ścieżka zachowania."
+"Wykryto istniejące partycje. Dwie pierwsze opcje je usuwają; zaawansowana to"
+" ścieżka zachowania."
 
 msgid ""
 "Existing partitions will be preserved. New AnduinOS partitions will be "
@@ -396,14 +386,14 @@ msgid ""
 "disk. This disk cannot continue in guided mode."
 msgstr ""
 "Kierowana współegzystencja wymaga systemu uruchomionego w trybie UEFI oraz "
-"dysku docelowego z partycją GPT. Nie można kontynuować na tym dysku w trybie "
-"kierowanym."
+"dysku docelowego z partycją GPT. Nie można kontynuować na tym dysku w trybie"
+" kierowanym."
 
 msgid ""
 "Guided storage selection is missing. Rescan and select the target again."
 msgstr ""
-"Brak opcji kierowanego doboru pamięci masowej. Przeskanuj ponownie i wybierz "
-"cel jeszcze raz."
+"Brak opcji kierowanego doboru pamięci masowej. Przeskanuj ponownie i wybierz"
+" cel jeszcze raz."
 
 msgid "Hindi (India)"
 msgstr "Hindi (Indie)"
@@ -460,8 +450,8 @@ msgid "Installation Steps"
 msgstr "Etap instalacji"
 
 msgid ""
-"Installation cannot continue with this selection. There is no force-continue "
-"option around storage safety checks."
+"Installation cannot continue with this selection. There is no force-continue"
+" option around storage safety checks."
 msgstr ""
 "Instalacji nie można kontynuować z tym wyborem. Nie ma opcji wymuszenia "
 "kontynuacji omijającej kontrole bezpieczeństwa pamięci masowej."
@@ -746,16 +736,16 @@ msgstr ""
 "instalacji."
 
 msgid ""
-"The existing EFI System Partition is only a candidate. Health and free-space "
-"checks must pass before it can be reused, and it will never be formatted."
+"The existing EFI System Partition is only a candidate. Health and free-space"
+" checks must pass before it can be reused, and it will never be formatted."
 msgstr ""
 "Istniejąca partycja systemu EFI jest tylko kandydatem. Muszą przejść "
 "kontrole stanu i wolnej przestrzeni, zanim będzie można ją ponownie użyć, i "
 "nigdy nie zostanie sformatowana."
 
 msgid ""
-"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot "
-"state, or installed system was changed."
+"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
+" state, or installed system was changed."
 msgstr ""
 "Plan instalacji jest poprawny. Nie zostały zmienione: dysk, system plików, "
 "menedżer rozruchu, stan Secure Boot ani zainstalowany system."
@@ -776,8 +766,8 @@ msgid "The privileged executor is disabled."
 msgstr "Uprzywilejowany executor jest wyłączony."
 
 msgid ""
-"The selected disk changed or disappeared. Return to the disk page and select "
-"it again. {error}"
+"The selected disk changed or disappeared. Return to the disk page and select"
+" it again. {error}"
 msgstr ""
 "Wybrany dysk uległ zmianie lub zniknął. Wróć do strony dysku i wybierz go "
 "ponownie. {error}"
@@ -861,7 +851,8 @@ msgstr ""
 "to jedyna ścieżka współistnienia z systemem Windows."
 
 msgid "Use only existing unallocated space on the selected disk."
-msgstr "Stosuj tylko istniejącą niezarezerwowaną przestrzeń na wybranym dysku."
+msgstr ""
+"Stosuj tylko istniejącą niezarezerwowaną przestrzeń na wybranym dysku."
 
 msgid "User"
 msgstr "Użytkownik"
@@ -873,11 +864,11 @@ msgid "Username"
 msgstr "Nazwa użytkownika"
 
 msgid ""
-"Username must start with a lowercase ASCII letter and contain only lowercase "
-"ASCII letters or digits (maximum 16 characters)."
+"Username must start with a lowercase ASCII letter and contain only lowercase"
+" ASCII letters or digits (maximum 16 characters)."
 msgstr ""
-"Username must start with a lowercase ASCII letter and contain only lowercase "
-"ASCII letters or digits (maximum 16 characters)."
+"Nazwa użytkownika musi zaczynać się od małej litery ASCII i zawierać "
+"wyłącznie małe litery ASCII lub cyfry (maksymalnie 16 znaków)."
 
 msgid "Uses a traditional single root filesystem."
 msgstr "Korzysta z tradycyjnego pojedynczego systemu plików korzeniowych."
@@ -912,8 +903,8 @@ msgstr ""
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
-"utwórz lokalny dla maszyny klucz MOK; zarejestruj po ponownym uruchomieniu z "
-"hasłem 123456"
+"utwórz lokalny dla maszyny klucz MOK; zarejestruj po ponownym uruchomieniu z"
+" hasłem 123456"
 
 msgid "detect and install (may include non-free software)"
 msgstr ""
@@ -941,7 +932,7 @@ msgid "single ext4 root filesystem"
 msgstr "jedno główne drzewo plików ext4"
 
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
-msgstr "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / Bezpieczny rozruch: {secure_boot}"
 
 msgid "{count}: {paths}"
 msgstr "{count}: {paths}"
@@ -1018,32 +1009,33 @@ msgid ""
 "redistribution terms."
 msgstr ""
 "Dodaje szerszą zgodność z GStreamer oraz obsługę dodatkowych starszych i "
-"specjalistycznych formatów multimedialnych. Niektóre składniki mogą podlegać "
-"patentom lub warunkom redystrybucji."
+"specjalistycznych formatów multimedialnych. Niektóre składniki mogą podlegać"
+" patentom lub warunkom redystrybucji."
 
 #: src/pages.py
 msgid "A saved profile exists. Entering a password updates it securely."
-msgstr "A saved profile exists. Entering a password updates it securely."
+msgstr ""
+"Istnieje zapisany profil. Wprowadzenie hasła aktualizuje go bezpiecznie."
 
 #: src/pages.py
 msgid "Anonymous identity (optional)"
-msgstr "Anonymous identity (optional)"
+msgstr "Tożsamość anonimowa (opcjonalnie)"
 
 #: src/pages.py
 msgid "CA certificate path (optional)"
-msgstr "CA certificate path (optional)"
+msgstr "Ścieżka certyfikatu CA (opcjonalnie)"
 
 #: src/pages.py
 msgid "Cancel"
-msgstr "Cancel"
+msgstr "Anuluj"
 
 #: src/pages.py
 msgid "Cancelling Wi-Fi operation…"
-msgstr "Cancelling Wi-Fi operation…"
+msgstr "Anulowanie operacji Wi-Fi…"
 
 #: src/pages.py
 msgid "Client certificate path"
-msgstr "Client certificate path"
+msgstr "Ścieżka certyfikatu klienta"
 
 #: src/pages.py
 msgid "Connect"
@@ -1051,16 +1043,16 @@ msgstr "Connect"
 
 #: src/pages.py
 msgid "Continue"
-msgstr "Continue"
+msgstr "Kontynuuj"
 
 #: src/pages.py
 msgid "Connect to a hidden network"
-msgstr "Connect to a hidden network"
+msgstr "Połącz z ukrytą siecią"
 
 #: src/pages.py
 #, python-brace-format
 msgid "Connect to {network}"
-msgstr "Connect to {network}"
+msgstr "Połącz z siecią {network}"
 
 #: src/pages.py
 msgid "Connected"
@@ -1069,11 +1061,11 @@ msgstr "Connected"
 #: src/pages.py
 #, python-brace-format
 msgid "Connecting to {network}…"
-msgstr "Connecting to {network}…"
+msgstr "Łączenie z siecią {network}…"
 
 #: src/pages.py
 msgid "Could not change the Wi-Fi connection"
-msgstr "Could not change the Wi-Fi connection"
+msgstr "Nie można zmienić połączenia Wi-Fi."
 
 #: src/pages.py
 msgid "Disconnect"
@@ -1082,40 +1074,40 @@ msgstr "Disconnect"
 #: src/pages.py
 #, python-brace-format
 msgid "Disconnect from {network}?"
-msgstr "Disconnect from {network}?"
+msgstr "Rozłączyć się z siecią {network}?"
 
 #: src/pages.py
 #, python-brace-format
 msgid "Disconnecting from {network}…"
-msgstr "Disconnecting from {network}…"
+msgstr "Rozłączanie z siecią {network}…"
 
 #: src/pages.py
 msgid "Domain suffix match (optional)"
-msgstr "Domain suffix match (optional)"
+msgstr "Dopasowanie sufiksu domeny (opcjonalnie)"
 
 #: src/pages.py
 msgid "EAP method"
-msgstr "EAP method"
+msgstr "Metoda EAP"
 
 #: src/pages.py
 msgid "Enhanced Open (OWE)"
-msgstr "Enhanced Open (OWE)"
+msgstr "Rozszerzone połączenie otwarte (OWE)"
 
 #: src/pages.py
 msgid ""
 "Enter the credentials supplied by your organization. Certificate validation "
 "is strongly recommended."
 msgstr ""
-"Enter the credentials supplied by your organization. Certificate validation "
-"is strongly recommended."
+"Wprowadź poświadczenia dostarczone przez Twoją organizację. Zaleca się "
+"weryfikację certyfikatu."
 
 #: src/pages.py
 msgid "Enter the exact network name and choose its security type."
-msgstr "Enter the exact network name and choose its security type."
+msgstr "Wpisz dokładną nazwę sieci i wybierz jej typ zabezpieczeń."
 
 #: src/pages.py
 msgid "Enterprise Wi-Fi"
-msgstr "Enterprise Wi-Fi"
+msgstr "Sieć Wi-Fi dla firm"
 
 #: src/pages.py
 msgid "Identity"
@@ -1123,35 +1115,35 @@ msgstr "Identity"
 
 #: src/pages.py
 msgid "Inner authentication"
-msgstr "Inner authentication"
+msgstr "Wewnętrzne uwierzytelnianie"
 
 #: src/pages.py
 msgid "Network name (SSID)"
-msgstr "Network name (SSID)"
+msgstr "Nazwa sieci (SSID)"
 
 #: src/pages.py
 msgid "No Wi-Fi networks found."
-msgstr "No Wi-Fi networks found."
+msgstr "Nie znaleziono sieci Wi-Fi."
 
 #: src/pages.py
 msgid "Open network"
-msgstr "Open network"
+msgstr "Sieć otwarta"
 
 #: src/pages.py
 msgid "Personal Wi-Fi"
-msgstr "Personal Wi-Fi"
+msgstr "Osobista sieć Wi-Fi"
 
 #: src/pages.py
 msgid "Private key password (optional)"
-msgstr "Private key password (optional)"
+msgstr "Hasło klucza prywatnego (opcjonalnie)"
 
 #: src/pages.py
 msgid "Private key path"
-msgstr "Private key path"
+msgstr "Ścieżka klucza prywatnego"
 
 #: src/pages.py
 msgid "Refresh Wi-Fi networks"
-msgstr "Refresh Wi-Fi networks"
+msgstr "Odśwież sieci Wi-Fi"
 
 #: src/pages.py
 msgid "Saved"
@@ -1165,40 +1157,43 @@ msgstr "Security"
 msgid ""
 "The installer will keep the saved network profile so it can be used again."
 msgstr ""
-"The installer will keep the saved network profile so it can be used again."
+"Instalator zachowa zapisany profil sieciowy, aby można go było ponownie "
+"użyć."
 
 #: src/pages.py
 msgid "The local network is connected, but Internet access is unavailable."
-msgstr "The local network is connected, but Internet access is unavailable."
+msgstr ""
+"Lokalna sieć jest połączona, ale dostęp do Internetu jest niedostępny."
 
 #: src/pages.py
 msgid "Turning Wi-Fi off…"
-msgstr "Turning Wi-Fi off…"
+msgstr "Wyłączanie Wi-Fi…"
 
 #: src/pages.py
 msgid "Turning Wi-Fi on…"
-msgstr "Turning Wi-Fi on…"
+msgstr "Włączanie Wi-Fi…"
 
 #: src/pages.py
 msgid "Use WPS"
-msgstr "Use WPS"
+msgstr "Użyj WPS"
 
 #: src/pages.py
 msgid "WEP (legacy)"
-msgstr "WEP (legacy)"
+msgstr "WEP (starsza wersja)"
 
 #: src/pages.py
 msgid ""
 "Wi-Fi is connected, but the network requires sign-in through a captive "
 "portal."
 msgstr ""
-"Wi-Fi is connected, but the network requires sign-in through a captive "
-"portal."
+"Wi-Fi jest połączone, ale sieć wymaga zalogowania się przez portal "
+"logowania."
 
 #: src/pages.py
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
-msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+msgstr ""
+"Oczekiwanie na WPS w sieci {network}. Naciśnij przycisk WPS na routerze…"
 
 msgid "A password is required."
 msgstr "Wymagane jest hasło."
@@ -1215,14 +1210,19 @@ msgstr "Zezwalaj na logowanie SSH przy użyciu hasła konta"
 msgid "Automatic desktop login"
 msgstr "Automatyczne logowanie do pulpitu"
 
-msgid "Choose how the local administrator account signs in and authorizes system changes."
-msgstr "Wybierz sposób logowania lokalnego konta administratora i zatwierdzania zmian w systemie."
+msgid ""
+"Choose how the local administrator account signs in and authorizes system "
+"changes."
+msgstr ""
+"Wybierz sposób logowania lokalnego konta administratora i zatwierdzania "
+"zmian w systemie."
 
 msgid "Choose optional access and sign-in policies"
 msgstr "Wybierz opcjonalne zasady dostępu i logowania"
 
 msgid "Choose whether this computer accepts remote Secure Shell connections."
-msgstr "Wybierz, czy ten komputer ma akceptować zdalne połączenia Secure Shell."
+msgstr ""
+"Wybierz, czy ten komputer ma akceptować zdalne połączenia Secure Shell."
 
 msgid "Configure Secure Shell"
 msgstr "Konfiguracja Secure Shell"

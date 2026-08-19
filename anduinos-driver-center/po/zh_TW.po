@@ -96,7 +96,7 @@ msgstr "未配置印表機"
 #, python-format
 msgid "%d printer configured"
 msgid_plural "%d printers configured"
-msgstr[0] "%d 部印表機已設定"
+msgstr[0] "%d 部已配置的印表機"
 
 #: src/anduinos_driver_center/app.py:375 src/anduinos_driver_center/app.py:378
 msgid "Printers"
@@ -354,7 +354,8 @@ msgstr "駕駛狀態"
 #: src/anduinos_driver_center/app.py:1642
 #: src/anduinos_driver_center/app.py:2242
 msgid "Driver operation failed: "
-msgstr "驅動程式操作失敗："
+msgstr "驅動程式操作失敗： "
+
 
 #: src/anduinos_driver_center/app.py:800
 #: src/anduinos_driver_center/app.py:1558
@@ -462,7 +463,8 @@ msgstr "透過 Linux Vendor Firmware Service 讓系統韌體和支援的硬體�
 
 #: src/anduinos_driver_center/app.py:1177
 msgid "Firmware operation failed: "
-msgstr "韌體操作失敗："
+msgstr "韌體操作失敗： "
+
 
 #: src/anduinos_driver_center/app.py:1178
 #: src/anduinos_driver_center/app.py:1287
@@ -497,7 +499,7 @@ msgstr "支援的設備"
 #, python-format
 msgid "%d device detected"
 msgid_plural "%d devices detected"
-msgstr[0] "偵測到 %d 個裝置"
+msgstr[0] "%d 個裝置已偵測到"
 
 #: src/anduinos_driver_center/app.py:1253
 msgid "Available firmware updates"
@@ -884,7 +886,7 @@ msgstr "已啟用"
 #, python-format
 msgid "%d configured printer"
 msgid_plural "%d configured printers"
-msgstr[0] "%d 部已設定的印表機"
+msgstr[0] "%d 部已配置的印表機"
 
 #: src/anduinos_driver_center/app.py:1970
 msgid "Configured printers"
@@ -959,7 +961,8 @@ msgstr "已啟用列印支援。"
 
 #: src/anduinos_driver_center/app.py:2112
 msgid "Printing operation failed: "
-msgstr "列印操作失敗："
+msgstr "列印操作失敗： "
+
 
 #: src/anduinos_driver_center/app.py:2201
 msgid "Working…"
@@ -981,7 +984,7 @@ msgstr "Secure Boot 設定"
 msgid ""
 "Secure Boot is a motherboard security standard that ensures only trusted "
 "software loads at startup."
-msgstr "\tSecure Boot 是主機板的資安標準，可確保僅有受信任的軟體在啟動時載入。"
+msgstr "Secure Boot 是主機板的資安標準，可確保僅有受信任的軟體在啟動時載入。"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
 msgid "It protects your system from low-level malware and rootkits."

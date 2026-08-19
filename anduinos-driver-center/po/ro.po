@@ -15,12 +15,12 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
-"20)) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);\n"
 "Generated-By: Babel 2.17.0\n"
 
 #: src/anduinos_driver_center/app.py:113 src/anduinos_driver_center/app.py:211
-#: src/anduinos_driver_center/app.py:283 src/anduinos_driver_center/app.py:2238
+#: src/anduinos_driver_center/app.py:283
+#: src/anduinos_driver_center/app.py:2238
 msgid "AnduinOS Driver Center"
 msgstr "AnduinOS Centru de șoferi"
 
@@ -96,9 +96,9 @@ msgstr "Nu au fost configurate imprimante"
 #, python-format
 msgid "%d printer configured"
 msgid_plural "%d printers configured"
-msgstr[0] "%d imprimanta configurată"
-msgstr[1] "%d Imprimante configurate"
-msgstr[2] "%d Imprimante configurate"
+msgstr[0] "%d imprimantă configurată"
+msgstr[1] "%d imprimante configurate"
+msgstr[2] "%d de imprimante configurate"
 
 #: src/anduinos_driver_center/app.py:375 src/anduinos_driver_center/app.py:378
 msgid "Printers"
@@ -128,7 +128,8 @@ msgstr "Driver Bluetooth opțional"
 msgid "Secure Boot"
 msgstr "Secure Boot"
 
-#: src/anduinos_driver_center/app.py:405 src/anduinos_driver_center/app.py:1004
+#: src/anduinos_driver_center/app.py:405
+#: src/anduinos_driver_center/app.py:1004
 msgid "Trust established"
 msgstr "Încredere stabilită"
 
@@ -144,7 +145,8 @@ msgstr "Acțiune necesară"
 msgid "Device Firmware"
 msgstr "Firmware-ul dispozitivului"
 
-#: src/anduinos_driver_center/app.py:485 src/anduinos_driver_center/app.py:1193
+#: src/anduinos_driver_center/app.py:485
+#: src/anduinos_driver_center/app.py:1193
 msgid "Checking for updates…"
 msgstr "Se verifică actualizările..."
 
@@ -166,9 +168,9 @@ msgstr "Restartare necesară"
 #, python-format
 msgid "%d firmware update available"
 msgid_plural "%d firmware updates available"
-msgstr[0] "Actualizări de firmware %d disponibile"
-msgstr[1] "Actualizări de firmware %d disponibile"
-msgstr[2] "Actualizări de firmware %d disponibile"
+msgstr[0] "%d actualizare de firmware disponibilă"
+msgstr[1] "%d actualizări de firmware disponibile"
+msgstr[2] "%d de actualizări de firmware disponibile"
 
 #: src/anduinos_driver_center/app.py:500
 msgid "No supported devices"
@@ -202,7 +204,8 @@ msgid "Restart to finish the firmware update"
 msgstr "Reporniți pentru a finaliza actualizarea firmware-ului"
 
 #: src/anduinos_driver_center/app.py:521 src/anduinos_driver_center/app.py:819
-#: src/anduinos_driver_center/app.py:893 src/anduinos_driver_center/app.py:1040
+#: src/anduinos_driver_center/app.py:893
+#: src/anduinos_driver_center/app.py:1040
 #: src/anduinos_driver_center/app.py:1259
 #: src/anduinos_driver_center/app.py:1393
 msgid "Update available"
@@ -217,7 +220,8 @@ msgstr "Actualizare disponibilă"
 msgid "Not detected"
 msgstr "Nu a fost detectat"
 
-#: src/anduinos_driver_center/app.py:523 src/anduinos_driver_center/app.py:1331
+#: src/anduinos_driver_center/app.py:523
+#: src/anduinos_driver_center/app.py:1331
 msgid "No supported firmware devices"
 msgstr "Nu există dispozitive cu firmware acceptate"
 
@@ -225,9 +229,9 @@ msgstr "Nu există dispozitive cu firmware acceptate"
 #, python-format
 msgid "%d device is up to date"
 msgid_plural "%d devices are up to date"
-msgstr[0] "Dispozitivele %d sunt la zi"
-msgstr[1] "Dispozitivele %d sunt la zi"
-msgstr[2] "Dispozitivele %d sunt la zi"
+msgstr[0] "%d dispozitiv este actualizat"
+msgstr[1] "%d dispozitive sunt actualizate"
+msgstr[2] "%d de dispozitive sunt actualizate"
 
 #: src/anduinos_driver_center/app.py:530 src/anduinos_driver_center/app.py:844
 #: src/anduinos_driver_center/app.py:908 src/anduinos_driver_center/app.py:932
@@ -265,12 +269,14 @@ msgstr "Se așteaptă acțiunea utilizatorului..."
 msgid "Updating firmware…"
 msgstr "Se actualizează firmware-ul..."
 
-#: src/anduinos_driver_center/app.py:589 src/anduinos_driver_center/app.py:2093
+#: src/anduinos_driver_center/app.py:589
+#: src/anduinos_driver_center/app.py:2093
 #: src/anduinos_driver_center/app.py:2215
 msgid "unknown error"
 msgstr "eroare necunoscută"
 
-#: src/anduinos_driver_center/app.py:594 src/anduinos_driver_center/app.py:1444
+#: src/anduinos_driver_center/app.py:594
+#: src/anduinos_driver_center/app.py:1444
 msgid "Restart required after installation"
 msgstr "Este necesară repornirea după instalare"
 
@@ -279,7 +285,8 @@ msgstr "Este necesară repornirea după instalare"
 msgid "Firmware operation failed"
 msgstr "Operarea cu firmware-ul a eșuat"
 
-#: src/anduinos_driver_center/app.py:601 src/anduinos_driver_center/app.py:2223
+#: src/anduinos_driver_center/app.py:601
+#: src/anduinos_driver_center/app.py:2223
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
@@ -308,7 +315,9 @@ msgstr "Este necesară repornirea"
 msgid ""
 "The firmware update has been prepared. Save your work and shut down the "
 "computer to finish installing it."
-msgstr "Actualizarea firmware-ului a fost pregătită. Salvați-vă lucrul și opriți computerul pentru a finaliza instalarea."
+msgstr ""
+"Actualizarea firmware-ului a fost pregătită. Salvați-vă lucrul și opriți "
+"computerul pentru a finaliza instalarea."
 
 #: src/anduinos_driver_center/app.py:643
 msgid ""
@@ -331,14 +340,16 @@ msgstr "Închide acum"
 msgid "Restart Now"
 msgstr "Reporniți acum"
 
-#: src/anduinos_driver_center/app.py:757 src/anduinos_driver_center/app.py:1351
+#: src/anduinos_driver_center/app.py:757
+#: src/anduinos_driver_center/app.py:1351
 #: src/anduinos_driver_center/app.py:1376
 #: src/anduinos_driver_center/app.py:1605
 #: src/anduinos_driver_center/app.py:1730
 msgid "Installed"
 msgstr "Instalat"
 
-#: src/anduinos_driver_center/app.py:759 src/anduinos_driver_center/app.py:1876
+#: src/anduinos_driver_center/app.py:759
+#: src/anduinos_driver_center/app.py:1876
 #: src/anduinos_driver_center/app.py:1884
 msgid "Available"
 msgstr "Disponibil"
@@ -349,15 +360,17 @@ msgstr "Disponibil"
 msgid "Driver status"
 msgstr "Starea șoferului"
 
-#: src/anduinos_driver_center/app.py:792 src/anduinos_driver_center/app.py:1641
+#: src/anduinos_driver_center/app.py:792
+#: src/anduinos_driver_center/app.py:1641
 #: src/anduinos_driver_center/app.py:2215
 msgid "Driver operation failed: "
 msgstr "Operarea driverului a eșuat: "
 
-#: src/anduinos_driver_center/app.py:800 src/anduinos_driver_center/app.py:1557
+#: src/anduinos_driver_center/app.py:800
+#: src/anduinos_driver_center/app.py:1557
 msgid ""
-"Secure Boot status or trust must be resolved before installing a third-party "
-"driver."
+"Secure Boot status or trust must be resolved before installing a third-party"
+" driver."
 msgstr ""
 "Secure Boot trebuie rezolvate înainte de a instala un driver terță parte."
 
@@ -367,7 +380,8 @@ msgstr ""
 msgid "Recommended"
 msgstr "Recomandat"
 
-#: src/anduinos_driver_center/app.py:809 src/anduinos_driver_center/app.py:1546
+#: src/anduinos_driver_center/app.py:809
+#: src/anduinos_driver_center/app.py:1546
 msgid ""
 "Choose the driver used by this device. AnduinOS marks the hardware-tested "
 "recommendation."
@@ -385,7 +399,8 @@ msgstr ""
 msgid "Apply Changes"
 msgstr "Aplicați modificări"
 
-#: src/anduinos_driver_center/app.py:834 src/anduinos_driver_center/app.py:2213
+#: src/anduinos_driver_center/app.py:834
+#: src/anduinos_driver_center/app.py:2213
 msgid "Driver changes completed. Restart may be required."
 msgstr ""
 "Modificările driverului au fost finalizate. Este posibil să fie necesară "
@@ -401,23 +416,28 @@ msgstr "Drivere disponibile"
 msgid "No additional drivers are needed."
 msgstr "Nu sunt necesare drivere suplimentare."
 
-#: src/anduinos_driver_center/app.py:931 src/anduinos_driver_center/app.py:1835
+#: src/anduinos_driver_center/app.py:931
+#: src/anduinos_driver_center/app.py:1835
 msgid "Audio Support"
 msgstr "Suport audio"
 
-#: src/anduinos_driver_center/app.py:946 src/anduinos_driver_center/app.py:1939
+#: src/anduinos_driver_center/app.py:946
+#: src/anduinos_driver_center/app.py:1939
 msgid "Disabled"
 msgstr "Dezactivat"
 
-#: src/anduinos_driver_center/app.py:968 src/anduinos_driver_center/app.py:1906
+#: src/anduinos_driver_center/app.py:968
+#: src/anduinos_driver_center/app.py:1906
 msgid "Printing Support"
 msgstr "Suport pentru imprimare"
 
-#: src/anduinos_driver_center/app.py:982 src/anduinos_driver_center/app.py:1721
+#: src/anduinos_driver_center/app.py:982
+#: src/anduinos_driver_center/app.py:1721
 msgid "Xbox Controller Support"
 msgstr "Suport pentru controller Xbox"
 
-#: src/anduinos_driver_center/app.py:984 src/anduinos_driver_center/app.py:1730
+#: src/anduinos_driver_center/app.py:984
+#: src/anduinos_driver_center/app.py:1730
 #: src/anduinos_driver_center/app.py:1814
 #: src/anduinos_driver_center/app.py:1857
 #: src/anduinos_driver_center/app.py:1865
@@ -463,7 +483,8 @@ msgstr ""
 
 #: src/anduinos_driver_center/app.py:1176
 msgid "Firmware operation failed: "
-msgstr "Operarea cu firmware-ul a eșuat:"
+msgstr "Operarea cu firmware-ul a eșuat: "
+
 
 #: src/anduinos_driver_center/app.py:1177
 #: src/anduinos_driver_center/app.py:1286
@@ -498,9 +519,9 @@ msgstr "Dispozitive acceptate"
 #, python-format
 msgid "%d device detected"
 msgid_plural "%d devices detected"
-msgstr[0] "Dispozitive %d detectate"
-msgstr[1] "Dispozitive %d detectate"
-msgstr[2] "Dispozitive %d detectate"
+msgstr[0] "%d dispozitiv detectat"
+msgstr[1] "%d dispozitive detectate"
+msgstr[2] "%d de dispozitive detectate"
 
 #: src/anduinos_driver_center/app.py:1252
 msgid "Available firmware updates"
@@ -510,9 +531,9 @@ msgstr "Actualizări de firmware disponibile"
 #, python-format
 msgid "%d update available"
 msgid_plural "%d updates available"
-msgstr[0] "%d actualizări disponibile"
+msgstr[0] "%d actualizare disponibilă"
 msgstr[1] "%d actualizări disponibile"
-msgstr[2] "%d actualizări disponibile"
+msgstr[2] "%d de actualizări disponibile"
 
 #: src/anduinos_driver_center/app.py:1266
 msgid "Firmware actions"
@@ -546,9 +567,9 @@ msgstr "Actualizați tot firmware-ul"
 #, python-format
 msgid "Install %d available update."
 msgid_plural "Install all %d available updates."
-msgstr[0] "Instalați toate actualizările disponibile pentru %d."
-msgstr[1] "Instalați toate actualizările disponibile pentru %d."
-msgstr[2] "Instalați toate actualizările disponibile pentru %d."
+msgstr[0] "Instalați %d actualizare disponibilă."
+msgstr[1] "Instalați toate cele %d actualizări disponibile."
+msgstr[2] "Instalați toate cele %d de actualizări disponibile."
 
 #: src/anduinos_driver_center/app.py:1305
 msgid "Update All"
@@ -674,9 +695,9 @@ msgstr ""
 #, python-format
 msgid "Install %d available firmware update?"
 msgid_plural "Install all %d available firmware updates?"
-msgstr[0] "Instalați toate actualizările de firmware disponibile pentru %d?"
-msgstr[1] "Instalați toate actualizările de firmware disponibile pentru %d?"
-msgstr[2] "Instalați toate actualizările de firmware disponibile pentru %d?"
+msgstr[0] "Instalați %d actualizare disponibilă de firmware?"
+msgstr[1] "Instalați toate cele %d actualizări disponibile de firmware?"
+msgstr[2] "Instalați toate cele %d de actualizări disponibile de firmware?"
 
 #: src/anduinos_driver_center/app.py:1489
 msgid "Keep the computer connected to AC power."
@@ -686,7 +707,9 @@ msgstr "Țineți computerul conectat la curent alternativ."
 msgid ""
 "This update may invalidate full-disk encryption secrets. Make sure you have "
 "the volume recovery key before continuing."
-msgstr "Această actualizare poate invalida secretele criptării complete a discului. Asigurați-vă că aveți cheia de recuperare a volumului înainte de a continua."
+msgstr ""
+"Această actualizare poate invalida secretele criptării complete a discului. "
+"Asigurați-vă că aveți cheia de recuperare a volumului înainte de a continua."
 
 #: src/anduinos_driver_center/app.py:1498
 msgid "A restart may be required to finish installation."
@@ -713,7 +736,7 @@ msgstr "Aplicați"
 
 #: src/anduinos_driver_center/app.py:1576
 msgid "open source"
-msgstr "open source"
+msgstr "sursă deschisă"
 
 #: src/anduinos_driver_center/app.py:1576
 msgid "proprietary"
@@ -818,8 +841,8 @@ msgid ""
 "AnduinOS provides Intel SOF firmware and ALSA UCM profiles for reliable "
 "audio initialization and routing."
 msgstr ""
-"AnduinOS oferă firmware Intel SOF și profile ALSA UCM pentru inițializare și "
-"rutare audio fiabile."
+"AnduinOS oferă firmware Intel SOF și profile ALSA UCM pentru inițializare și"
+" rutare audio fiabile."
 
 #: src/anduinos_driver_center/app.py:1838
 msgid "Support packages"
@@ -904,7 +927,7 @@ msgid "%d configured printer"
 msgid_plural "%d configured printers"
 msgstr[0] "%d imprimantă configurată"
 msgstr[1] "%d imprimante configurate"
-msgstr[2] "%d imprimante configurate"
+msgstr[2] "%d de imprimante configurate"
 
 #: src/anduinos_driver_center/app.py:1950
 msgid "Configured printers"
@@ -926,9 +949,9 @@ msgstr "Nu există cozi configurate"
 #, python-format
 msgid "%d queue paused"
 msgid_plural "%d queues paused"
-msgstr[0] "%d coada întreruptă"
-msgstr[1] "%d cozile întrerupte"
-msgstr[2] "%d cozile întrerupte"
+msgstr[0] "%d coadă întreruptă"
+msgstr[1] "%d cozi întrerupte"
+msgstr[2] "%d de cozi întrerupte"
 
 #: src/anduinos_driver_center/app.py:1970
 msgid "All queues enabled"
@@ -953,7 +976,8 @@ msgstr "Imprimare fără driver"
 
 #: src/anduinos_driver_center/app.py:1994
 msgid "Modern IPP drivers, document filters, and capability tools."
-msgstr "Drivere IPP moderne, filtre de documente și instrumente de capacitate."
+msgstr ""
+"Drivere IPP moderne, filtre de documente și instrumente de capacitate."
 
 #: src/anduinos_driver_center/app.py:2001
 msgid "Network discovery"
@@ -970,7 +994,8 @@ msgstr "Compatibilitate opțională"
 #: src/anduinos_driver_center/app.py:2010
 msgid ""
 "USB IPP, administrative authorization, legacy drivers, and network scanning."
-msgstr "USB IPP, autorizare administrativă, drivere vechi și scanare în rețea."
+msgstr ""
+"USB IPP, autorizare administrativă, drivere vechi și scanare în rețea."
 
 #: src/anduinos_driver_center/app.py:2033
 msgid "Install Missing Packages"
@@ -1005,7 +1030,7 @@ msgid ""
 "Secure Boot is a motherboard security standard that ensures only trusted "
 "software loads at startup."
 msgstr ""
-"\tSecure Boot este un standard de securitate al plăcii de bază care asigură "
+"Secure Boot este un standard de securitate al plăcii de bază care asigură "
 "că doar software-ul de încredere se încarcă la pornire."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
@@ -1049,9 +1074,8 @@ msgstr "Protecția hardware a plăcii de bază este activă"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
 msgid "Firmware does not support Secure Boot"
-msgstr ""
-"Firmware-ul nu acceptă Secure Boot\n"
-"Starea "
+msgstr "Firmware-ul nu acceptă Secure Boot"
+
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
 msgid "Secure Boot is disabled"
@@ -1119,10 +1143,11 @@ msgid "Repair Automatic DKMS Signing"
 msgstr "Reparați semnarea automată DKMS"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
-msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgid ""
+"This firmware does not provide Secure Boot. No certificate is required."
 msgstr ""
-"Acest firmware nu oferă Secure Boot. Nu este necesar niciun certificat.\n"
-"Starea "
+"Acest firmware nu oferă Secure Boot. Nu este necesar niciun certificat."
+
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
 msgid ""
@@ -1140,7 +1165,8 @@ msgstr ""
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
 msgid "System Trust Established. Third-party drivers will load securely."
 msgstr ""
-"Încrederea sistemului stabilită. Driverele terțe se vor încărca în siguranță."
+"Încrederea sistemului stabilită. Driverele terțe se vor încărca în "
+"siguranță."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
 msgid "The certificate is enrolled and current drivers are trusted."
@@ -1154,7 +1180,8 @@ msgstr ""
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
 msgid "The certificate is enrolled, but some modules are not signed with it."
-msgstr "Certificatul este înscris, dar unele module nu sunt semnate cu acesta."
+msgstr ""
+"Certificatul este înscris, dar unele module nu sunt semnate cu acesta."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
 msgid "A certificate is waiting for enrollment."
@@ -1214,8 +1241,8 @@ msgstr "Aplicarea semnăturii firmware nu este activă."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
 msgid ""
-"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
-"You can repair them after enrollment."
+"The certificate is ready, but one or more DKMS modules could not be rebuilt."
+" You can repair them after enrollment."
 msgstr ""
 "Certificatul este gata, dar unul sau mai multe module DKMS nu au putut fi "
 "reconstruite. Le puteți repara după înscriere."
@@ -1244,10 +1271,13 @@ msgstr "Vă rugăm să verificați ieșirea avansată."
 msgid "Generating & Signing..."
 msgstr "Se generează și semnează..."
 
+#: src/anduinos_driver_center/app.py:1929
+msgid "Add Printer"
+msgstr "Adaugă imprimantă"
+
 #~ msgid "Download the latest metadata from enabled firmware remotes."
 #~ msgstr ""
-#~ "Descărcați cele mai recente metadate de pe telecomenzile firmware "
-#~ "activate."
+#~ "Descărcați cele mai recente metadate de pe telecomenzile firmware activate."
 
 #~ msgid "Driver Center"
 #~ msgstr "Despre Driver Center"
@@ -1307,7 +1337,3 @@ msgstr "Se generează și semnează..."
 #~ msgstr[0] "%d lipsește"
 #~ msgstr[1] "Pachetele %d lipsesc"
 #~ msgstr[2] "Pachetele %d lipsesc"
-
-#: src/anduinos_driver_center/app.py:1929
-msgid "Add Printer"
-msgstr "Adaugă imprimantă"

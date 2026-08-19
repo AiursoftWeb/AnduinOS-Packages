@@ -96,7 +96,7 @@ msgstr "ไม่มีการกำหนดค่าเครื่องพ
 #, python-format
 msgid "%d printer configured"
 msgid_plural "%d printers configured"
-msgstr[0] "กำหนดค่าเครื่องพิมพ์แล้ว %d เครื่อง"
+msgstr[0] "กำหนดค่าเครื่องพิมพ์ %d เครื่องแล้ว"
 
 #: src/anduinos_driver_center/app.py:375 src/anduinos_driver_center/app.py:378
 msgid "Printers"
@@ -166,7 +166,7 @@ msgstr "จำเป็นต้องรีสตาร์ท"
 #, python-format
 msgid "%d firmware update available"
 msgid_plural "%d firmware updates available"
-msgstr[0] "มีการอัปเดตเฟิร์มแวร์ %d รายการ"
+msgstr[0] "%d การอัปเดตเฟิร์มแวร์พร้อมใช้งาน"
 
 #: src/anduinos_driver_center/app.py:500
 msgid "No supported devices"
@@ -225,7 +225,7 @@ msgstr "ไม่มีอุปกรณ์เฟิร์มแวร์ที
 #, python-format
 msgid "%d device is up to date"
 msgid_plural "%d devices are up to date"
-msgstr[0] "อุปกรณ์ %d เครื่องเป็นเวอร์ชันล่าสุดแล้ว"
+msgstr[0] "%d อุปกรณ์เป็นเวอร์ชันล่าสุดแล้ว"
 
 #: src/anduinos_driver_center/app.py:530 src/anduinos_driver_center/app.py:844
 #: src/anduinos_driver_center/app.py:908 src/anduinos_driver_center/app.py:932
@@ -473,7 +473,8 @@ msgstr ""
 
 #: src/anduinos_driver_center/app.py:1177
 msgid "Firmware operation failed: "
-msgstr "การทำงานของเฟิร์มแวร์ล้มเหลว:"
+msgstr "การทำงานของเฟิร์มแวร์ล้มเหลว: "
+
 
 #: src/anduinos_driver_center/app.py:1178
 #: src/anduinos_driver_center/app.py:1287
@@ -508,7 +509,7 @@ msgstr "อุปกรณ์ที่รองรับ"
 #, python-format
 msgid "%d device detected"
 msgid_plural "%d devices detected"
-msgstr[0] "ตรวจพบอุปกรณ์ %d เครื่อง"
+msgstr[0] "%d อุปกรณ์ที่ตรวจพบ"
 
 #: src/anduinos_driver_center/app.py:1253
 msgid "Available firmware updates"
@@ -518,7 +519,7 @@ msgstr "การอัพเดตเฟิร์มแวร์ที่มี
 #, python-format
 msgid "%d update available"
 msgid_plural "%d updates available"
-msgstr[0] "มีการอัปเดต %d รายการ"
+msgstr[0] "%d การอัปเดตพร้อมใช้งาน"
 
 #: src/anduinos_driver_center/app.py:1267
 msgid "Firmware actions"
@@ -904,7 +905,7 @@ msgstr "เปิดใช้งานแล้ว"
 #, python-format
 msgid "%d configured printer"
 msgid_plural "%d configured printers"
-msgstr[0] "เครื่องพิมพ์ที่กำหนดค่าแล้ว %d เครื่อง"
+msgstr[0] "%d เครื่องพิมพ์ที่กำหนดค่าแล้ว"
 
 #: src/anduinos_driver_center/app.py:1970
 msgid "Configured printers"
@@ -926,7 +927,7 @@ msgstr "ไม่มีคิวที่กำหนดค่าไว้"
 #, python-format
 msgid "%d queue paused"
 msgid_plural "%d queues paused"
-msgstr[0] "คิวหยุดชั่วคราว %d คิว"
+msgstr[0] "%d คิวหยุดชั่วคราว"
 
 #: src/anduinos_driver_center/app.py:1990
 msgid "All queues enabled"

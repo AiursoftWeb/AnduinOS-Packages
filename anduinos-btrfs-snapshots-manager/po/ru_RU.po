@@ -1,0 +1,1887 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-btrfs-snapshots-manager 0.1.0\n"
+"POT-Creation-Date: 2026-08-06 00:00+0800\n"
+"PO-Revision-Date: 2026-08-06 00:00+0800\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "A critical threshold is failing now"
+msgstr "Сейчас нарушено критическое пороговое значение"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid ""
+"A limited balance improves allocation layout. It does not check file "
+"integrity or guarantee that visible free space will increase."
+msgstr ""
+"Ограниченная балансировка улучшает распределение пространства. Она не "
+"проверяет целостность файлов и не гарантирует увеличение видимого свободного"
+" места."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"A limited balance only relocates data and metadata block groups that are at "
+"most 50% full."
+msgstr ""
+"Ограниченная балансировка перемещает только группы блоков данных и "
+"метаданных, заполненные не более чем на 50 %."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "A scheduled Home snapshot will start in 10 seconds."
+msgstr "Запланированный снимок домашней папки начнётся через 10 секунд."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "A scheduled system snapshot will start in 10 seconds."
+msgstr "Запланированный системный снимок начнётся через 10 секунд."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "A threshold was exceeded in the past"
+msgstr "Ранее был превышен порог"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "About Disk Snapshots Manager"
+msgstr "О программе «Диспетчер снимков дисков»"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "About {0} remaining"
+msgstr "Осталось примерно {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Actual file contents"
+msgstr "Фактическое содержимое файлов"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Advanced retention settings"
+msgstr "Расширенные настройки хранения"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Advanced Settings"
+msgstr "Расширенные настройки"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "After Package Change"
+msgstr "После изменения пакета"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "All system drives look healthy"
+msgstr "Все системные диски в порядке"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Allow automatic cleanup"
+msgstr "Разрешить автоматическую очистку"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Always on"
+msgstr "Всегда включено"
+
+#: src/btrfs-snapshots-manager/src/application.rs
+msgid "AnduinOS Team"
+msgstr "Команда AnduinOS"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Applied automatically to newly written data"
+msgstr "Применяется автоматически к новым записываемым данным"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "At a Glance"
+msgstr "Обзор"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Attention"
+msgstr "Внимание"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Attribute thresholds"
+msgstr "Пороги атрибутов"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic"
+msgstr "Автоматически"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic 60-second countdown after preparation"
+msgstr "Автоматический 60-секундный обратный отсчёт после подготовки"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic cleanup"
+msgstr "Автоматическая очистка"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Cleanup Complete"
+msgstr "Автоматическая очистка завершена"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic Home Snapshots"
+msgstr "Автоматические снимки домашней папки"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Snapshot Failed"
+msgstr "Не удалось создать автоматический снимок"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Automatic snapshot service is available"
+msgstr "Сервис автоматических снимков доступен"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Automatic snapshot service needs attention"
+msgstr "Служба автоматических снимков требует внимания"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Snapshot Starting"
+msgstr "Запуск автоматического снимка"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots"
+msgstr "Автоматическое создание снимков"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic Snapshots"
+msgstr "Автоматические снимки"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic System Snapshot Created"
+msgstr "Автоматический системный снимок создан"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic System Snapshots"
+msgstr "Автоматические системные снимки"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Available spare capacity"
+msgstr "Доступная резервная емкость"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Available spare is below its threshold"
+msgstr "Доступный резерв ниже порога"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Average rate: {0}/s"
+msgstr "Средняя скорость: {0}/с"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Background Service"
+msgstr "Фоновая служба"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Based on the manufacturer endurance counter"
+msgstr "На основе счетчика износа от производителя"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Before Package Change"
+msgstr "Перед изменением пакета"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Before Rollback"
+msgstr "Перед откатом"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Block groups completed: {0} of about {1}"
+msgstr "Завершено групп блоков: {0} из примерно {1}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Block groups considered: {0}"
+msgstr "Рассмотрено групп блоков: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Browse"
+msgstr "Просмотреть"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Browse earlier Personal Files versions of this item"
+msgstr "Просмотреть более ранние версии этого элемента в личных файлах"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Browse Files"
+msgstr "Просмотреть файлы"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Browse files in this snapshot"
+msgstr "Просмотреть файлы в этом снимке"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Browse System Snapshot"
+msgstr "Просмотреть системный снимок"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Browse This Folder’s History…"
+msgstr "Просмотреть историю этой папки…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Btrfs could not complete Home file defragmentation."
+msgstr "Btrfs не удалось завершить дефрагментацию файлов домашней папки."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs could not complete the limited balance."
+msgstr "Btrfs не удалось завершить ограниченную балансировку."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs did not provide a completed balance result."
+msgstr "Btrfs не предоставил завершённый результат балансировки."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Btrfs did not provide a completed defragmentation result."
+msgstr "Btrfs не предоставил завершённый результат дефрагментации."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs did not provide a completed scrub result."
+msgstr "Btrfs не предоставил завершённый результат проверки целостности."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs did not start a new integrity check"
+msgstr "Btrfs не запустил новую проверку целостности"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Btrfs did not start a new maintenance task"
+msgstr "Btrfs не запустил новую задачу обслуживания"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Btrfs does not provide an on/off real-time deduplication switch. Tools such "
+"as duperemove and BEES use different strategies, resource limits, and scan "
+"scopes. Disk Snapshots Manager will not silently install or run one without "
+"a complete policy."
+msgstr ""
+"Btrfs не предоставляет переключателя для включения и выключения дедупликации"
+" в реальном времени. Инструменты, такие как duperemove и BEES, используют "
+"различные стратегии, ограничения ресурсов и области сканирования. Диспетчер "
+"снимков дисков не будет устанавливать или запускать их молча без полной "
+"политики."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs examined {0} block groups and relocated {1}."
+msgstr "Проверено групп блоков: {0}; перемещено: {1}."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs finished relocating underused data and metadata block groups."
+msgstr ""
+"Btrfs завершила перемещение слабо заполненных групп блоков данных и "
+"метаданных."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"Btrfs finished rewriting eligible file extents below /home with ZSTD "
+"compression."
+msgstr ""
+"Btrfs завершил перезапись экстентов файлов в папке /home с использованием "
+"сжатия ZSTD."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"Btrfs found errors that could not be repaired. Back up important files and "
+"investigate the storage device."
+msgstr ""
+"В Btrfs обнаружены ошибки, которые не удалось исправить. Создайте резервную "
+"копию важных файлов и проверьте устройство хранения данных."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Btrfs maintenance status is unavailable"
+msgstr "Статус обслуживания Btrfs недоступен"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+msgid "Btrfs operation failed"
+msgstr "Операция Btrfs завершилась ошибкой"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs repaired {0} damaged copies using valid redundant data."
+msgstr ""
+"Btrfs восстановила повреждённые копии ({0}), используя исправные избыточные "
+"данные."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+msgid "Btrfs request completed"
+msgstr "Btrfs-запрос выполнен"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Btrfs will scan existing subvolumes in the background. Size statistics may "
+"remain incomplete until the scan finishes."
+msgstr ""
+"Btrfs просканирует существующие субтомы в фоновом режиме. Статистика "
+"использования пространства может оставаться неполной до завершения "
+"сканирования."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Calculating snapshot size…"
+msgstr "Подсчёт размера снимка…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancel"
+msgstr "Отмена"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Cancel Check"
+msgstr "Отменить проверку"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancel Rollback"
+msgstr "Отменить откат"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancelling rollback…"
+msgstr "Отмена отката…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Cancelling…"
+msgstr "Отмена…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Change…"
+msgstr "Изменить…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Check file system integrity"
+msgstr "Проверить целостность файловой системы"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Check Snapshot Availability"
+msgstr "Проверить наличие снимков"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checked: {0}"
+msgstr "Проверено: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checking File System Integrity"
+msgstr "Проверка целостности файловой системы"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking recovery state…"
+msgstr "Проверка состояния восстановления…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking rollback safety…"
+msgstr "Проверка безопасности отката…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking snapshot…"
+msgstr "Проверка снимка…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Checking system storage…"
+msgstr "Проверка системного хранилища…"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checking…"
+msgstr "Проверка…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checksum errors: {0}"
+msgstr "Ошибки контрольных сумм: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Choose a local filesystem destination."
+msgstr "Выберите локальный путь назначения в файловой системе."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid ""
+"Choose an earlier version to browse or recover. Your current files will not "
+"be changed automatically."
+msgstr ""
+"Выберите более раннюю версию для просмотра или восстановления. Текущие файлы"
+" не будут изменены автоматически."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Choose Where to Recover This Folder"
+msgstr "Выберите место для восстановления этой папки"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Close"
+msgstr "Закрыть"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Content-based deduplication"
+msgstr "Дедупликация на основе содержимого"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Copy This Folder…"
+msgstr "Скопировать эту папку…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Corrected errors: {0}"
+msgstr "Исправлено ошибок: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Could Not Browse History"
+msgstr "Не удалось просмотреть историю"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Could Not Browse System Snapshot"
+msgstr "Не удалось просмотреть системный снимок"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Could Not Save Settings"
+msgstr "Не удалось сохранить настройки"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create"
+msgstr "Создать"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Create a system snapshot after successful changes"
+msgstr "Создавать снимок системы после успешных изменений"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Create a system snapshot before changes"
+msgstr "Создавать снимок системы перед изменениями"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create a {0} now"
+msgstr "Создать {0} сейчас"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create one now or turn on automatic snapshots."
+msgstr "Создайте снимок сейчас или включите автоматическое создание снимков."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create Snapshot Now"
+msgstr "Создать снимок сейчас"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Create snapshots on a schedule."
+msgstr "Создавать снимки по расписанию."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create {0}"
+msgstr "Создать {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Creating"
+msgstr "Создание"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Creating snapshot…"
+msgstr "Создание снимка…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Current system"
+msgstr "Текущая система"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Damaged"
+msgstr "Повреждён"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Days"
+msgstr "дней"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Deduplication needs an engine"
+msgstr "Для дедупликации требуется движок"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Defragment"
+msgstr "Дефрагментировать"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Defragment Home files"
+msgstr "Дефрагментировать файлы домашней папки"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Defragment Home files?"
+msgstr "Дефрагментировать файлы домашней папки?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"Defragmentation can increase disk usage when files share data with snapshots"
+" or reflinks."
+msgstr ""
+"Дефрагментация может увеличить использование диска, если файлы разделяют "
+"данные со снимками или reflink-ссылками."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"Defragmentation rewrites file extents and can increase disk usage by "
+"breaking shared snapshot or reflink data."
+msgstr ""
+"Дефрагментация перезаписывает экстенты файлов и может увеличить "
+"использование диска из-за разрыва общих данных снимков или reflink."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Defragment…"
+msgstr "Дефрагментировать…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete"
+msgstr "Удалить"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Selected"
+msgstr "Удалить выбранные"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Snapshot"
+msgstr "Удалить снимок"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Snapshots?"
+msgstr "Удалить снимки?"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete {0} selected snapshot(s)? This cannot be undone."
+msgstr "Удалить {0} выбранных снимков? Это действие нельзя отменить."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting"
+msgstr "Удаление"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting snapshots…"
+msgstr "Удаление снимков…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Device reliability is degraded"
+msgstr "Надёжность устройства снижена"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Device report"
+msgstr "Отчёт об устройстве"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Diagnostic counters"
+msgstr "Диагностические счётчики"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable"
+msgstr "Отключить"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable quota accounting?"
+msgstr "Отключить учёт квот?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disabled"
+msgstr "Отключено"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable…"
+msgstr "Отключить…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disk Health"
+msgstr "Состояние диска"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disk health is unavailable"
+msgstr "Состояние диска недоступно"
+
+#: src/btrfs-snapshots-manager/src/application.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Disk Snapshots Manager"
+msgstr "Диспетчер снимков дисков"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Disk Snapshots Manager requires the standard AnduinOS Btrfs layout."
+msgstr ""
+"Диспетчер снимков дисков требует стандартной структуры Btrfs AnduinOS."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Duration: {0}"
+msgstr "Длительность: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Elapsed: {0}"
+msgstr "Прошло времени: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable"
+msgstr "Включить"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable quota accounting?"
+msgstr "Включить учёт квот?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enabled"
+msgstr "Включено"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enabled · initial scan in progress"
+msgstr "Включено · выполняется начальное сканирование"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable…"
+msgstr "Включить…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Error log entries"
+msgstr "Записи журнала ошибок"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Errors detected so far: {0}"
+msgstr "Обнаруженные ошибки: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Estimated SSD life remaining"
+msgstr "Ожидаемый остаточный срок службы SSD"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Examining underused data and metadata block groups…"
+msgstr "Анализ слабо заполненных групп блоков данных и метаданных…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Exclusive Data"
+msgstr "Эксклюзивные данные"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory"
+msgstr "Заводской"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Failing"
+msgstr "Неисправен"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Failure notifications"
+msgstr "Уведомления об ошибках"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "File History"
+msgstr "История файлов"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "File Layout"
+msgstr "Расположение файлов"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "File System"
+msgstr "Файловая система"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "File system structure (directories, file names, and more)"
+msgstr "Структура файловой системы (каталоги, имена файлов и т. д.)"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Files Recovered"
+msgstr "Файлы восстановлены"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Find files that existed earlier in this Personal Files folder"
+msgstr "Найти файлы, которые ранее существовали в этой папке «Личные файлы»"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Folder History"
+msgstr "История папки"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Folder · {0}"
+msgstr "Папка · {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Forever"
+msgstr "Всегда"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Four copies on separate devices · damaged copies can be repaired "
+"automatically"
+msgstr ""
+"Четыре копии на разных устройствах · повреждённые копии могут быть "
+"восстановлены автоматически"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Healthy"
+msgstr "Здоров"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Cancelled"
+msgstr "Дефрагментация домашней папки отменена"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Complete"
+msgstr "Дефрагментация домашней папки завершена"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Failed"
+msgstr "Не удалось выполнить дефрагментацию домашней папки"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Result Unavailable"
+msgstr "Результат дефрагментации домашней папки недоступен"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home file defragmentation was cancelled before it finished."
+msgstr "Дефрагментация файлов домашней папки была отменена до завершения."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Home snapshot"
+msgstr "Снимок домашней папки"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Home Snapshot Created"
+msgstr "Снимок домашней папки создан"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Hours"
+msgstr "часов"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Imported"
+msgstr "Импортировано"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Incomplete"
+msgstr "Неполная"
+
+#: src/btrfs-snapshots-manager/src/ui/information.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Information"
+msgstr "Информация"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Integrity"
+msgstr "Целостность"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Cancelled"
+msgstr "Проверка целостности отменена"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Complete"
+msgstr "Проверка целостности завершена"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Complete — Repairs Made"
+msgstr "Проверка целостности завершена — выполнены исправления"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Result Unavailable"
+msgstr "Результат проверки целостности недоступен"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Problems Found"
+msgstr "Обнаружены проблемы с целостностью"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Interface CRC errors"
+msgstr "Ошибки интерфейса CRC"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Items processed: {0}"
+msgstr "Обработано элементов: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Keep all snapshots for"
+msgstr "Сохранять все снимки в течение"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Keep Forever"
+msgstr "Сохранить навсегда"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Kernel"
+msgstr "Ядро"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Kernel {0}"
+msgstr "Ядро {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Limited to one notification per minute"
+msgstr "Ограничено одним уведомлением в минуту"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Live information reported by the mounted Btrfs file system."
+msgstr ""
+"Актуальная информация, предоставленная подключённой файловой системой Btrfs."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Loading folder…"
+msgstr "Загрузка папки…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Loading snapshots…"
+msgstr "Загрузка снимков…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Looking for earlier versions…"
+msgstr "Поиск более ранних версий…"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Main Menu"
+msgstr "Главное меню"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Maintenance"
+msgstr "Обслуживание"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Manual"
+msgstr "Вручную"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Measured"
+msgstr "Измерено"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Media errors"
+msgstr "Ошибки носителя"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Mirrored and striped across devices · redundant copies are available for "
+"repair"
+msgstr ""
+"Зеркалирование и распределение на устройствах · избыточные копии доступны "
+"для восстановления"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Name"
+msgstr "Имя"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Name (optional)"
+msgstr "Имя (необязательно)"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "No earlier version was found"
+msgstr "Ранее созданная версия не найдена"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "No errors detected so far"
+msgstr "Ошибок не обнаружено"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"No file system integrity errors were found in allocated data and metadata."
+msgstr ""
+"В выделенных данных и метаданных не обнаружено ошибок целостности файловой "
+"системы."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "No important S.M.A.R.T. warning signs were detected"
+msgstr "Важные предупреждения S.M.A.R.T. не обнаружены"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No matching snapshots"
+msgstr "Совпадающих снимков не найдено"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No snapshots selected"
+msgstr "Снимки не выбраны"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No snapshots yet"
+msgstr "Снимков пока нет"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "No system storage device found"
+msgstr "Системное устройство хранения данных не найдено"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "None (0x00)"
+msgstr "Нет (0x00)"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Not calculated"
+msgstr "Не рассчитано"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Not managed here · Btrfs requires a separate deduplication engine"
+msgstr "Не управляется здесь · Btrfs требует отдельного движка дедупликации"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notifications"
+msgstr "Уведомления"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify after any snapshot succeeds"
+msgstr "Уведомлять об успешном создании любого снимка"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify after automatic cleanup removes snapshots"
+msgstr "Уведомлять после удаления снимков при автоматической очистке"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify before a scheduled snapshot"
+msgstr "Уведомлять перед запланированным снимком"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "NVMe critical warning"
+msgstr "Критическое предупреждение NVMe"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Offline uncorrectable sectors"
+msgstr "Неисправимые сектора в автономном режиме"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old Home snapshot(s) were removed."
+msgstr "устаревшие снимки домашней папки были удалены."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old system snapshot(s) and"
+msgstr "устаревшие системные снимки и"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old system snapshot(s) were removed."
+msgstr "устаревшие системные снимки были удалены."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Older snapshots are kept less frequently to save disk space."
+msgstr "Старые снимки сохраняются реже, чтобы сэкономить место на диске."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"One copy · damage can be detected, but there is no spare copy for repair"
+msgstr ""
+"Одна копия · повреждение может быть обнаружено, но для восстановления нет "
+"резервной копии"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "One or more reliability indicators should be reviewed"
+msgstr "Необходимо проверить один или несколько индикаторов надёжности"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Only /home · snapshot storage is excluded"
+msgstr "Только /home · хранилище снимков исключено"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid ""
+"Only block groups at most 50% full will be relocated. The operation can use "
+"significant disk bandwidth but can be cancelled safely."
+msgstr ""
+"Будут перемещены только группы блоков, заполненные не более чем на 50 %. "
+"Операция может потреблять значительную пропускную способность диска, но её "
+"можно безопасно отменить."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Only partial S.M.A.R.T. data was returned"
+msgstr "Получены только частичные данные S.M.A.R.T."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid ""
+"Only physical drives backing the current root Btrfs file system are shown."
+msgstr ""
+"Отображаются только физические диски, на которых размещена текущая корневая "
+"файловая система Btrfs."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Only the display name changes."
+msgstr "Изменяется только отображаемое имя."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Open"
+msgstr "Открыть"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Operation Failed"
+msgstr "Операция не удалась"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Otherwise automatic cleanup may remove it later."
+msgstr "В противном случае автоматическая очистка может удалить его позже."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Overall health"
+msgstr "Общее состояние"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Package Changes"
+msgstr "Изменения пакетов"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Parent folder"
+msgstr "Родительская папка"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Paused"
+msgstr "Приостановлено"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Pending sectors"
+msgstr "Сектора, ожидающие переназначения"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Permanently protected"
+msgstr "Защищено навсегда"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Persistent memory is read-only"
+msgstr "Персистентная память доступна только для чтения"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Personal files"
+msgstr "Личные файлы"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Personal Files Recovery"
+msgstr "Восстановление личных файлов"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Personal History Unavailable"
+msgstr "История недоступна"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Power cycles"
+msgstr "Циклы включения"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Powered on"
+msgstr "Включено"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Prepare a safe system rollback"
+msgstr "Подготовить безопасный откат системы"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Prepare and Restart"
+msgstr "Подготовить и перезагрузить"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing rollback to {0}…"
+msgstr "Подготовка отката к {0}…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing safe rollback…"
+msgstr "Подготовка безопасного отката…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Preparing the rollback will arm recovery immediately and automatically "
+"restart this computer within 60 seconds. Save your work before continuing."
+msgstr ""
+"Подготовка отката активизирует восстановление и автоматически перезагрузит "
+"этот компьютер в течение 60 секунд. Сохраните свою работу перед "
+"продолжением."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Properties"
+msgstr "Свойства"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Protected while the rollback is pending"
+msgstr "Защищен во время ожидания отката"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Quota accounting provides shared and exclusive sizes for subvolumes, but its"
+" initial scan can take time."
+msgstr ""
+"Учёт квот предоставляет общие и эксклюзивные размеры субтомов, но "
+"первоначальное сканирование может занять некоторое время."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Read errors: {0}"
+msgstr "Ошибки чтения: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Reading allocated Btrfs data and metadata…"
+msgstr "Чтение выделенных данных и метаданных Btrfs…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reading the most important reliability indicators"
+msgstr "Чтение ключевых показателей надёжности"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Ready"
+msgstr "Готово"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Ready to check"
+msgstr "Готово к проверке"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Ready to defragment Home files"
+msgstr "Готово к дефрагментации файлов домашней папки"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Ready to optimize allocation"
+msgstr "Готово к оптимизации распределения"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reallocated sectors"
+msgstr "Переназначенные сектора"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Reclaim underused block groups"
+msgstr "Освободить пространство в слабо заполненных группах блоков"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Recommended about once a month"
+msgstr "Рекомендуется выполнять примерно раз в месяц"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Recorded snapshot kernel"
+msgstr "Ядро, записанное в снимке"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover Historical File"
+msgstr "Восстановить предыдущую версию файла"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover Personal Files"
+msgstr "Восстановить личные файлы"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover This Folder…"
+msgstr "Восстановить эту папку…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovering Files"
+msgstr "Восстановление файлов"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovering files…"
+msgstr "Восстановление файлов…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovery Failed"
+msgstr "Не удалось восстановить"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Recovery for {0} is in an unknown state ({1})."
+msgstr "Состояние восстановления для {0} неизвестно ({1})."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover…"
+msgstr "Восстановить…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Refresh file history"
+msgstr "Обновить историю файлов"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Refresh snapshots"
+msgstr "Обновить снимки"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rename"
+msgstr "Переименовать"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rename Snapshot"
+msgstr "Переименовать снимок"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Renaming snapshot…"
+msgstr "Переименование снимка…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reported uncorrectable errors"
+msgstr "Обнаружены неисправимые ошибки"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Requesting restart…"
+msgstr "Запрос на перезагрузку…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart"
+msgstr "Перезагрузить"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart Now ({0} s)"
+msgstr "Перезагрузить сейчас ({0} с.)"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart Required — Rollback Armed"
+msgstr "Требуется перезагрузка — откат активирован"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Retry Recovery"
+msgstr "Повторить восстановление"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Return to the selected snapshot"
+msgstr "Вернуться к выбранному снимку"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Review the highlighted indicators on {0} system drive(s)"
+msgstr "Проверьте выделенные показатели системных дисков: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Rewriting Home file extents with ZSTD compression…"
+msgstr ""
+"Перезапись экстентов файлов домашней папки с использованием сжатия ZSTD…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll Back"
+msgstr "Откатить"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll Back to {0}?"
+msgstr "Откатиться к {0}?"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback confirmation failed. The protected previous system is being "
+"restored."
+msgstr ""
+"Подтверждение отката не удалось. Восстанавливается защищённая предыдущая "
+"система."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback is armed. To prevent new system changes from being lost, this "
+"computer will restart automatically when the 60-second countdown ends. Save "
+"any open personal files now."
+msgstr ""
+"Откат активирован. Чтобы предотвратить потерю новых изменений системы, этот "
+"компьютер автоматически перезагрузится по окончании 60-секундного обратного "
+"отсчёта. Сохраните открытые личные файлы сейчас."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} is being applied during startup."
+msgstr "Откат к {0} выполняется во время запуска."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} is ready. Restart to apply it."
+msgstr "Откат к {0} готов. Перезагрузите систему для его применения."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback to {0} was applied, but system confirmation has not completed."
+msgstr "Откат к {0} выполнен, но системное подтверждение не завершено."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Running…"
+msgstr "Выполняется…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. could not be read from this device"
+msgstr "S.M.A.R.T. не удалось прочитать с этого устройства"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. is not available for this device"
+msgstr "S.M.A.R.T. недоступен для этого устройства"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. is supported but disabled on this device"
+msgstr "S.M.A.R.T. поддерживается, но отключён на этом устройстве"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. reports an imminent or current drive failure"
+msgstr "S.M.A.R.T. сообщает о скором или текущем отказе диска"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Save"
+msgstr "Сохранить"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Save Advanced Settings"
+msgstr "Сохранить расширенные настройки"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Saving…"
+msgstr "Сохранение…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Scanning data and metadata…"
+msgstr "Сканирование данных и метаданных…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"Scrub reads allocated data and metadata, verifies checksums, and reports "
+"damage without modifying file data."
+msgstr ""
+"Проверка целостности (scrub) читает выделенные данные и метаданные, "
+"проверяет контрольные суммы и сообщает об ошибках без изменения файлов."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"Scrub verifies allocated Btrfs data and metadata. It does not test unused "
+"space or predict sudden drive failure."
+msgstr ""
+"Проверка целостности (scrub) проверяет выделенные данные и метаданные Btrfs."
+" Она не тестирует неиспользуемое пространство и не предсказывает внезапный "
+"отказ диска."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Search snapshots"
+msgstr "Поиск снимков"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "See exactly how older snapshots are kept"
+msgstr "Узнать, как именно сохраняются старые снимки"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Select snapshot"
+msgstr "Выбрать снимок"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Select Snapshots"
+msgstr "Выбрать снимки"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Selected file · {0}"
+msgstr "Выбранный файл · {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Shared and exclusive size statistics and any subvolume limits will be "
+"removed. Snapshots themselves are not deleted."
+msgstr ""
+"Статистика общих и эксклюзивных размеров, а также любые ограничения субтомов"
+" будут удалены. Сами снимки не удаляются."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Shared Data"
+msgstr "Общие данные"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Size {0}"
+msgstr "Размер {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot"
+msgstr "Снимок"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Actions"
+msgstr "Действия со снимком"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Check Complete"
+msgstr "Проверка снимков завершена"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Details"
+msgstr "Сведения о снимке"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · Folder"
+msgstr "Снимок {0} · Папка"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · {1} bytes · modified {2}"
+msgstr "Снимок {0} · {1} байт · изменён {2}"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Snapshots"
+msgstr "Снимки"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshots are not available on this computer"
+msgstr "На этом компьютере снимки недоступны"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshots could not be loaded"
+msgstr "Не удалось загрузить снимки"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Solid-state drive"
+msgstr "SSD-накопитель"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Some snapshots could not be loaded"
+msgstr "Не удалось загрузить некоторые снимки"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Some system drives need attention"
+msgstr "Некоторым системным дискам требуется внимание"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Space Accounting"
+msgstr "Учёт пространства"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Space Allocation"
+msgstr "Распределение пространства"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Cancelled"
+msgstr "Оптимизация пространства отменена"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Complete"
+msgstr "Оптимизация пространства завершена"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Failed"
+msgstr "Оптимизация пространства не удалась"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Result Unavailable"
+msgstr "Результат оптимизации пространства недоступен"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Space usage"
+msgstr "Использование пространства"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Spin retry count"
+msgstr "Количество повторных попыток раскрутки"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "SSD space reclamation"
+msgstr "Освобождение места на SSD"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Start a limited balance?"
+msgstr "Запустить ограниченную балансировку?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Start Balance"
+msgstr "Запустить балансировку"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Start Scrub"
+msgstr "Запустить проверку"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Starting the integrity check…"
+msgstr "Запуск проверки целостности…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Starting…"
+msgstr "Запуск…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Status unavailable"
+msgstr "Статус недоступен"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Storage Behavior"
+msgstr "Поведение хранилища"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Storage layout: {0}"
+msgstr "Расположение данных: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Storage media is read-only"
+msgstr "Носитель хранения данных доступен только для чтения"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices with one parity block for recovery"
+msgstr ""
+"Чередование данных между устройствами с одним блоком чётности для "
+"восстановления"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices with two parity blocks for recovery"
+msgstr ""
+"Чередование данных между устройствами с двумя блоками чётности для "
+"восстановления"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices · no redundant copy is available for repair"
+msgstr ""
+"Чередование данных между устройствами · избыточной копии для восстановления "
+"нет"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Subvolume quota accounting"
+msgstr "Учёт квот субтомов"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Superblock errors: {0}"
+msgstr "Ошибки суперблока: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "System Drive Health"
+msgstr "Состояние системного диска"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "System files and packages"
+msgstr "Системные файлы и пакеты"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "System Recovery"
+msgstr "Восстановление системы"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "system snapshot"
+msgstr "системный снимок"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "System Snapshot Created"
+msgstr "Системный снимок создан"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "System storage"
+msgstr "Системное хранилище"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Take a snapshot every"
+msgstr "Снимок каждые"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Temperature"
+msgstr "Температура"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Temperature is outside the safe range"
+msgstr "Температура выходит за пределы безопасного диапазона"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "The automatic snapshot infrastructure cannot be disabled here."
+msgstr "Инфраструктуру автоматических снимков нельзя отключить здесь."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The device reported an unknown warning bit"
+msgstr "Устройство сообщило о неизвестном бите предупреждения"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The drive did not provide a conclusive health result"
+msgstr "Диск не предоставил однозначных данных о состоянии"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The Home snapshot was created successfully."
+msgstr "Снимок домашней папки успешно создан."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "The integrity check was cancelled before it finished."
+msgstr "Проверка целостности была отменена до завершения."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "The limited balance was cancelled safely before it finished."
+msgstr "Ограниченная балансировка была безопасно отменена до завершения."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback completed, but recovery cleanup has not completed."
+msgstr "Откат выполнен, но очистка после восстановления не завершена."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed. Recovery cleanup has not completed."
+msgstr "Откат не удался. Очистка после восстановления не завершена."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed: {0}"
+msgstr "Откат не удался: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback was reverted, but recovery cleanup has not completed."
+msgstr "Откат был отменён, но очистка после восстановления не завершена."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The root filesystem is {0}."
+msgstr "Корневая файловая система — {0}."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid ""
+"The scheduled Home snapshot could not be created. Check Disk Snapshots "
+"Manager for details."
+msgstr ""
+"Не удалось создать запланированный снимок домашней папки. Подробности см. в "
+"Диспетчере снимков дисков."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled Home snapshot was created successfully."
+msgstr "Запланированный снимок домашней папки успешно создан."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid ""
+"The scheduled system snapshot could not be created. Check Disk Snapshots "
+"Manager for details."
+msgstr ""
+"Не удалось создать запланированный системный снимок. Подробности см. в "
+"Диспетчере снимков дисков."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled system snapshot was created successfully."
+msgstr "Запланированный системный снимок успешно создан."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "The selected files were recovered successfully."
+msgstr "Выбранные файлы успешно восстановлены."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The snapshot is created immediately."
+msgstr "Снимок создается немедленно."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The system drive looks healthy"
+msgstr "Системный диск в порядке"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The system drive needs attention"
+msgstr "Системному диску требуется внимание"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The system snapshot was created successfully."
+msgstr "Системный снимок успешно создан."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per day for"
+msgstr "Затем сохранять один в день в течение"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per month for"
+msgstr "Затем сохранять один в месяц в течение"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per week for"
+msgstr "Затем сохранять один в неделю в течение"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per year"
+msgstr "Затем сохранять один в год"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "This folder is empty"
+msgstr "Эта папка пуста"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "This item was not present in the available Home snapshots."
+msgstr "Этот элемент отсутствовал в доступных снимках домашней папки."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"This rewrites files below /home using ZSTD compression. It does not enter "
+"/.snapshots, but shared extents with existing snapshots may become private "
+"and consume more space."
+msgstr ""
+"Это действие перезаписывает файлы в папке /home с использованием сжатия "
+"ZSTD. В папку /.snapshots не заходит, но общие экстенты с существующими "
+"снимками могут стать частными и занять больше места."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "This snapshot is available for recovery."
+msgstr "Этот снимок доступен для восстановления."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "This snapshot is not available for recovery."
+msgstr "Этот снимок недоступен для восстановления."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Three copies on separate devices · damaged copies can be repaired "
+"automatically"
+msgstr ""
+"Три копии на разных устройствах · повреждённые копии могут быть "
+"восстановлены автоматически"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Time above critical temperature"
+msgstr "Время работы при температуре выше критической"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Time above warning temperature"
+msgstr "Время работы при температуре выше порога предупреждения"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Total"
+msgstr "Всего"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Total data read"
+msgstr "Всего прочитанных данных"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Total data written"
+msgstr "Всего записанных данных"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Transparent compression"
+msgstr "Прозрачное сжатие"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Try a different name, date, or snapshot reason."
+msgstr "Попробуйте использовать другое имя, дату или причину создания снимка."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Two copies on separate devices · a damaged copy can be repaired "
+"automatically"
+msgstr ""
+"Две копии на разных устройствах · повреждённая копия может быть "
+"восстановлена автоматически"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Two copies on this device · a damaged copy can be repaired automatically"
+msgstr ""
+"Две копии на этом устройстве · повреждённая копия может быть восстановлена "
+"автоматически"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unable to calculate"
+msgstr "Не удалось вычислить"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unavailable"
+msgstr "Недоступно"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Uncorrectable errors: {0}"
+msgstr "Неисправимые ошибки: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unknown"
+msgstr "Неизвестно"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Unknown date"
+msgstr "Неизвестная дата"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unknown state"
+msgstr "Неизвестное состояние"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unknown storage device"
+msgstr "Неизвестное устройство хранения данных"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unsafe shutdowns"
+msgstr "Ненормальные завершения работы"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Unsupported Destination"
+msgstr "Неподдерживаемое место назначения"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Unverified errors: {0}"
+msgstr "Неверифицированные ошибки: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Updating snapshot protection…"
+msgstr "Обновление защиты снимка…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Useful after deleting large amounts of data"
+msgstr "Полезно после удаления большого количества данных"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Verification errors: {0}"
+msgstr "Ошибки проверки: {0}"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "View File History…"
+msgstr "Просмотреть историю файла…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "View Progress"
+msgstr "Просмотреть ход выполнения"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Volatile memory backup failed"
+msgstr "Не удалось выполнить резервное копирование оперативной памяти"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Waiting for Btrfs status…"
+msgstr "Ожидание статуса Btrfs…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Waiting for Btrfs to start…"
+msgstr "Ожидание запуска Btrfs…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Waiting for scrub status…"
+msgstr "Ожидание статуса проверки целостности…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Waiting for the new scrub to start…"
+msgstr "Ожидание запуска новой проверки целостности…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Warnings"
+msgstr "Предупреждения"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Why?"
+msgstr "Почему?"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Will not change"
+msgstr "Не изменится"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Working…"
+msgstr "Работает…"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "{0} available"
+msgstr "{0} доступно"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "{0} bytes · {1}"
+msgstr "{0} байт · {1}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "{0} damaged metadata entries were ignored"
+msgstr "{0} записей повреждённых метаданных было проигнорировано"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} hours · about {1} days"
+msgstr "{0} ч. · около {1} дн."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} minutes"
+msgstr "{0} минут"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0} of {1} checked"
+msgstr "{0} из {1} проверено"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "{0} of {1} used"
+msgstr "{0} из {1} использовано"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} packages"
+msgstr "{0} пакетов"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} RPM"
+msgstr "{0} RPM"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} snapshot record(s) need attention"
+msgstr "{0} записей снимков требуют внимания"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} snapshot(s) selected"
+msgstr "{0} выбранных снимков"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} °C"
+msgstr "{0} °C"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} · Manual Snapshot"
+msgstr "{0} · ручной снимок"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "{0} · new writes"
+msgstr "{0} · новые записи"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0}%"
+msgstr "{0} %"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0}% complete"
+msgstr "{0}% завершено"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0}% · warning threshold {1}%"
+msgstr "{0}% · порог предупреждения {1}%"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0}/s"
+msgstr "{0}/с"

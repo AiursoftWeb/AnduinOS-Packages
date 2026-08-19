@@ -1,0 +1,1862 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-btrfs-snapshots-manager 0.1.0\n"
+"POT-Creation-Date: 2026-08-06 00:00+0800\n"
+"PO-Revision-Date: 2026-08-06 00:00+0800\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "A critical threshold is failing now"
+msgstr "เกณฑ์สำคัญกำลังล้มเหลวในขณะนี้"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid ""
+"A limited balance improves allocation layout. It does not check file "
+"integrity or guarantee that visible free space will increase."
+msgstr ""
+"การปรับสมดุลแบบจำกัดช่วยปรับปรุงการจัดสรรพื้นที่ "
+"แต่ไม่ตรวจสอบความสมบูรณ์ของไฟล์ "
+"หรือรับประกันว่าพื้นที่ว่างที่มองเห็นได้จะเพิ่มขึ้น"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"A limited balance only relocates data and metadata block groups that are at "
+"most 50% full."
+msgstr ""
+"การปรับสมดุลแบบจำกัดจะย้ายเฉพาะกลุ่มบล็อกข้อมูลและข้อมูลเมตาที่เต็มไม่เกิน "
+"50% เท่านั้น"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "A scheduled Home snapshot will start in 10 seconds."
+msgstr "การสแนปชอต Home ตามกำหนดเวลาจะเริ่มต้นในอีก 10 วินาที"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "A scheduled system snapshot will start in 10 seconds."
+msgstr "การสแนปชอตระบบตามกำหนดเวลาจะเริ่มต้นในอีก 10 วินาที"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "A threshold was exceeded in the past"
+msgstr "เกินเกณฑ์ในอดีต"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "About Disk Snapshots Manager"
+msgstr "เกี่ยวกับ Disk Snapshots Manager"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "About {0} remaining"
+msgstr "เหลือประมาณ {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Actual file contents"
+msgstr "เนื้อหาไฟล์จริง"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Advanced retention settings"
+msgstr "การตั้งค่าการเก็บรักษาขั้นสูง"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Advanced Settings"
+msgstr "การตั้งค่าขั้นสูง"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "After Package Change"
+msgstr "หลังการเปลี่ยนแปลงแพ็กเกจ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "All system drives look healthy"
+msgstr "ไดรฟ์ระบบทั้งหมดดูมีสุขภาพดี"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Allow automatic cleanup"
+msgstr "อนุญาตให้ทำความสะอาดอัตโนมัติ"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Always on"
+msgstr "เปิดใช้งานเสมอ"
+
+#: src/btrfs-snapshots-manager/src/application.rs
+msgid "AnduinOS Team"
+msgstr "ทีม AnduinOS"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Applied automatically to newly written data"
+msgstr "ใช้กับข้อมูลที่เขียนใหม่โดยอัตโนมัติ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "At a Glance"
+msgstr "ภาพรวม"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Attention"
+msgstr "ต้องให้ความสนใจ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Attribute thresholds"
+msgstr "เกณฑ์ของแอตทริบิวต์"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic"
+msgstr "อัตโนมัติ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic 60-second countdown after preparation"
+msgstr "การนับถอยหลังอัตโนมัติ 60 วินาทีหลังจากเตรียมเสร็จสิ้น"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic cleanup"
+msgstr "การทำความสะอาดอัตโนมัติ"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Cleanup Complete"
+msgstr "การทำความสะอาดอัตโนมัติเสร็จสิ้นแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic Home Snapshots"
+msgstr "สแนปชอต Home อัตโนมัติ"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Snapshot Failed"
+msgstr "การสร้างสแนปชอตอัตโนมัติล้มเหลว"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Automatic snapshot service is available"
+msgstr "บริการสแนปชอตอัตโนมัติพร้อมใช้งาน"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Automatic snapshot service needs attention"
+msgstr "บริการสแนปชอตอัตโนมัติต้องการความสนใจ"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Snapshot Starting"
+msgstr "กำลังเริ่มสแนปชอตอัตโนมัติ"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots"
+msgstr "สแนปชอตอัตโนมัติ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic Snapshots"
+msgstr "สแนปชอตอัตโนมัติ"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic System Snapshot Created"
+msgstr "สร้างสแนปชอตระบบอัตโนมัติแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic System Snapshots"
+msgstr "สแนปชอตระบบอัตโนมัติ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Available spare capacity"
+msgstr "พื้นที่สำรองที่พร้อมใช้งาน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Available spare is below its threshold"
+msgstr "พื้นที่สำรองที่พร้อมใช้งานต่ำกว่าเกณฑ์ที่กำหนด"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Average rate: {0}/s"
+msgstr "อัตราเฉลี่ย: {0}/วินาที"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Background Service"
+msgstr "บริการพื้นหลัง"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Based on the manufacturer endurance counter"
+msgstr "อิงจากตัวนับอายุการใช้งานของโรงงานผู้ผลิต"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Before Package Change"
+msgstr "ก่อนการเปลี่ยนแปลงแพ็กเกจ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Before Rollback"
+msgstr "ก่อนการย้อนกลับ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Block groups completed: {0} of about {1}"
+msgstr "กลุ่มบล็อกที่เสร็จสิ้น: {0} จากประมาณ {1}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Block groups considered: {0}"
+msgstr "กลุ่มบล็อกที่พิจารณา: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Browse"
+msgstr "เรียกดู"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Browse earlier Personal Files versions of this item"
+msgstr "เรียกดูเวอร์ชันก่อนหน้าของไฟล์ส่วนบุคคลรายการนี้"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Browse Files"
+msgstr "เรียกดูไฟล์"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Browse files in this snapshot"
+msgstr "เรียกดูไฟล์ในสแนปชอตนี้"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Browse System Snapshot"
+msgstr "เรียกดูสแนปชอตระบบ"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Browse This Folder’s History…"
+msgstr "เรียกดูประวัติโฟลเดอร์นี้…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Btrfs could not complete Home file defragmentation."
+msgstr "Btrfs ไม่สามารถจัดเรียงข้อมูลไฟล์ Home ให้เสร็จสิ้นได้"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs could not complete the limited balance."
+msgstr "Btrfs ไม่สามารถดำเนินการปรับสมดุลแบบจำกัดให้เสร็จสิ้นได้"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs did not provide a completed balance result."
+msgstr "Btrfs ไม่ได้ให้ผลลัพธ์การปรับสมดุลที่เสร็จสมบูรณ์"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Btrfs did not provide a completed defragmentation result."
+msgstr "Btrfs ไม่ได้ให้ผลลัพธ์การจัดเรียงข้อมูลที่เสร็จสมบูรณ์"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs did not provide a completed scrub result."
+msgstr "Btrfs ไม่ได้ให้ผลลัพธ์การตรวจสอบความสมบูรณ์ที่เสร็จสมบูรณ์"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs did not start a new integrity check"
+msgstr "Btrfs ไม่ได้เริ่มการตรวจสอบความสมบูรณ์ใหม่"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Btrfs did not start a new maintenance task"
+msgstr "Btrfs ไม่ได้เริ่มงานบำรุงรักษาใหม่"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Btrfs does not provide an on/off real-time deduplication switch. Tools such "
+"as duperemove and BEES use different strategies, resource limits, and scan "
+"scopes. Disk Snapshots Manager will not silently install or run one without "
+"a complete policy."
+msgstr ""
+"Btrfs ไม่ได้มีสวิตช์เปิด/ปิดสำหรับการลดข้อมูลซ้ำซ้อนแบบเรียลไทม์ "
+"เครื่องมือเช่น duperemove และ BEES ใช้กลยุทธ์ ขีดจำกัดทรัพยากร "
+"และขอบเขตการสแกนที่แตกต่างกัน Disk Snapshots Manager "
+"จะไม่ติดตั้งหรือเรียกใช้เครื่องมือเหล่านี้โดยอัตโนมัติหากไม่มีนโยบายที่สมบูรณ์"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs examined {0} block groups and relocated {1}."
+msgstr "Btrfs ตรวจสอบกลุ่มบล็อก {0} กลุ่มและย้ายตำแหน่งแล้ว {1} กลุ่ม"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs finished relocating underused data and metadata block groups."
+msgstr "Btrfs ย้ายกลุ่มบล็อกข้อมูลและข้อมูลเมตาที่ใช้งานน้อยเสร็จสิ้นแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"Btrfs finished rewriting eligible file extents below /home with ZSTD "
+"compression."
+msgstr ""
+"Btrfs เขียนเอ็กซ์เทนต์ของไฟล์ที่เข้าเกณฑ์ภายใต้ /home ใหม่ด้วยการบีบอัด ZSTD"
+" เสร็จสิ้นแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"Btrfs found errors that could not be repaired. Back up important files and "
+"investigate the storage device."
+msgstr ""
+"Btrfs พบข้อผิดพลาดที่ไม่สามารถซ่อมแซมได้ "
+"โปรดสำรองไฟล์สำคัญและตรวจสอบอุปกรณ์จัดเก็บข้อมูล"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Btrfs maintenance status is unavailable"
+msgstr "สถานะการบำรุงรักษา Btrfs ไม่พร้อมใช้งาน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+msgid "Btrfs operation failed"
+msgstr "การดำเนินการ Btrfs ล้มเหลว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs repaired {0} damaged copies using valid redundant data."
+msgstr "Btrfs ซ่อมแซมสำเนาที่เสียหาย {0} สำเนาโดยใช้ข้อมูลสำรองที่ถูกต้อง"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+msgid "Btrfs request completed"
+msgstr "คำขอ Btrfs เสร็จสิ้นแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Btrfs will scan existing subvolumes in the background. Size statistics may "
+"remain incomplete until the scan finishes."
+msgstr ""
+"Btrfs จะสแกนซับวอลุ่มที่มีอยู่เดิมในพื้นหลัง "
+"สถิติขนาดอาจไม่สมบูรณ์จนกว่าการสแกนจะเสร็จสิ้น"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Calculating snapshot size…"
+msgstr "กำลังคำนวณขนาดสแนปชอต…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Cancel Check"
+msgstr "ยกเลิกการตรวจสอบ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancel Rollback"
+msgstr "ยกเลิกการย้อนกลับ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancelling rollback…"
+msgstr "กำลังยกเลิกการย้อนกลับ…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Cancelling…"
+msgstr "กำลังยกเลิก…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Change…"
+msgstr "เปลี่ยน…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Check file system integrity"
+msgstr "ตรวจสอบความสมบูรณ์ของระบบไฟล์"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Check Snapshot Availability"
+msgstr "ตรวจสอบความพร้อมของสแนปชอต"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checked: {0}"
+msgstr "ตรวจสอบแล้ว: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checking File System Integrity"
+msgstr "กำลังตรวจสอบความสมบูรณ์ของระบบไฟล์"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking recovery state…"
+msgstr "กำลังตรวจสอบสถานะการกู้คืน…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking rollback safety…"
+msgstr "กำลังตรวจสอบความปลอดภัยในการย้อนกลับ…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking snapshot…"
+msgstr "กำลังตรวจสอบสแนปชอต…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Checking system storage…"
+msgstr "กำลังตรวจสอบพื้นที่จัดเก็บข้อมูลของระบบ…"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checking…"
+msgstr "กำลังตรวจสอบ…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checksum errors: {0}"
+msgstr "ข้อผิดพลาดของค่าตรวจสอบ: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Choose a local filesystem destination."
+msgstr "เลือกปลายทางระบบไฟล์ท้องถิ่น"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid ""
+"Choose an earlier version to browse or recover. Your current files will not "
+"be changed automatically."
+msgstr ""
+"เลือกเวอร์ชันก่อนหน้าเพื่อเรียกดูหรือกู้คืน "
+"ไฟล์ปัจจุบันของคุณจะไม่ถูกเปลี่ยนแปลงโดยอัตโนมัติ"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Choose Where to Recover This Folder"
+msgstr "เลือกตำแหน่งที่จะกู้คืนโฟลเดอร์นี้"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Close"
+msgstr "ปิด"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Content-based deduplication"
+msgstr "การลดข้อมูลซ้ำซ้อนตามเนื้อหา"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Copy This Folder…"
+msgstr "คัดลอกโฟลเดอร์นี้…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Corrected errors: {0}"
+msgstr "แก้ไขข้อผิดพลาดแล้ว: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Could Not Browse History"
+msgstr "ไม่สามารถเรียกดูประวัติได้"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Could Not Browse System Snapshot"
+msgstr "ไม่สามารถเรียกดูสแนปชอตระบบได้"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Could Not Save Settings"
+msgstr "ไม่สามารถบันทึกการตั้งค่าได้"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create"
+msgstr "สร้าง"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Create a system snapshot after successful changes"
+msgstr "สร้างสแนปชอตระบบหลังการเปลี่ยนแปลงสำเร็จ"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Create a system snapshot before changes"
+msgstr "สร้างสแนปชอตระบบก่อนการเปลี่ยนแปลง"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create a {0} now"
+msgstr "สร้าง {0} ตอนนี้"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create one now or turn on automatic snapshots."
+msgstr "สร้างสแนปชอตหนึ่งรายการตอนนี้ หรือเปิดใช้งานสแนปชอตอัตโนมัติ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create Snapshot Now"
+msgstr "สร้างสแนปชอตตอนนี้"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Create snapshots on a schedule."
+msgstr "สร้างสแนปชอตตามกำหนดเวลา"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create {0}"
+msgstr "สร้าง {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Creating"
+msgstr "กำลังสร้าง"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Creating snapshot…"
+msgstr "กำลังสร้างสแนปชอต…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Current system"
+msgstr "ระบบปัจจุบัน"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Damaged"
+msgstr "เสียหาย"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Days"
+msgstr "วัน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Deduplication needs an engine"
+msgstr "การลดข้อมูลซ้ำซ้อนต้องการเครื่องมือทำงาน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Defragment"
+msgstr "จัดเรียงข้อมูล"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Defragment Home files"
+msgstr "จัดเรียงข้อมูลไฟล์ Home"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Defragment Home files?"
+msgstr "ต้องการจัดเรียงข้อมูลไฟล์ Home หรือไม่?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"Defragmentation can increase disk usage when files share data with snapshots"
+" or reflinks."
+msgstr ""
+"การจัดเรียงข้อมูลอาจทำให้การใช้พื้นที่ดิสก์เพิ่มขึ้น "
+"เมื่อไฟล์ใช้ข้อมูลร่วมกับสแนปชอตหรือ reflink"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"Defragmentation rewrites file extents and can increase disk usage by "
+"breaking shared snapshot or reflink data."
+msgstr ""
+"การจัดเรียงข้อมูลจะเขียนเอ็กซ์เทนต์ของไฟล์ใหม่และอาจเพิ่มการใช้พื้นที่ดิสก์โดยทำให้ข้อมูลสแนปชอตหรือ"
+" reflink ที่ใช้ร่วมกันแยกออกจากกัน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Defragment…"
+msgstr "จัดเรียงข้อมูล…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete"
+msgstr "ลบ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Selected"
+msgstr "ลบที่เลือก"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Snapshot"
+msgstr "ลบสแนปชอต"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Snapshots?"
+msgstr "ต้องการลบสแนปชอตหรือไม่?"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete {0} selected snapshot(s)? This cannot be undone."
+msgstr ""
+"ต้องการลบสแนปชอตที่เลือก {0} รายการหรือไม่? "
+"การดำเนินการนี้ไม่สามารถย้อนกลับได้"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting"
+msgstr "กำลังลบ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting snapshots…"
+msgstr "กำลังลบสแนปชอต…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Device reliability is degraded"
+msgstr "ความน่าเชื่อถือของอุปกรณ์ลดลง"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Device report"
+msgstr "รายงานอุปกรณ์"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Diagnostic counters"
+msgstr "ตัวนับการวินิจฉัย"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable"
+msgstr "ปิดใช้งาน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable quota accounting?"
+msgstr "ต้องการปิดใช้งานการคำนวณโควตาหรือไม่?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disabled"
+msgstr "ปิดใช้งานแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable…"
+msgstr "ปิดใช้งาน…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disk Health"
+msgstr "สถานะดิสก์"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disk health is unavailable"
+msgstr "ไม่สามารถดูสถานะดิสก์ได้"
+
+#: src/btrfs-snapshots-manager/src/application.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Disk Snapshots Manager"
+msgstr "โปรแกรมจัดการสแนปชอตดิสก์"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Disk Snapshots Manager requires the standard AnduinOS Btrfs layout."
+msgstr "Disk Snapshots Manager ต้องการเลย์เอาต์ Btrfs มาตรฐานของ AnduinOS"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Duration: {0}"
+msgstr "ระยะเวลา: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Elapsed: {0}"
+msgstr "เวลาที่ผ่านไป: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable"
+msgstr "เปิดใช้งาน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable quota accounting?"
+msgstr "ต้องการเปิดใช้งานการคำนวณโควตาหรือไม่?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enabled"
+msgstr "เปิดใช้งานแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enabled · initial scan in progress"
+msgstr "เปิดใช้งานแล้ว · กำลังดำเนินการสแกนเริ่มต้น"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable…"
+msgstr "เปิดใช้งาน…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Error log entries"
+msgstr "รายการข้อผิดพลาด"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Errors detected so far: {0}"
+msgstr "พบข้อผิดพลาดจนถึงขณะนี้: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Estimated SSD life remaining"
+msgstr "อายุการใช้งาน SSD ที่เหลือโดยประมาณ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Examining underused data and metadata block groups…"
+msgstr "กำลังตรวจสอบกลุ่มบล็อกข้อมูลและข้อมูลเมตาที่ใช้งานน้อยอยู่…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Exclusive Data"
+msgstr "ข้อมูลแบบเอกสิทธิ์"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory"
+msgstr "โรงงาน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Failing"
+msgstr "กำลังล้มเหลว"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Failure notifications"
+msgstr "การแจ้งเตือนเมื่อล้มเหลว"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "File History"
+msgstr "ประวัติไฟล์"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "File Layout"
+msgstr "เลย์เอาต์ไฟล์"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "File System"
+msgstr "ระบบไฟล์"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "File system structure (directories, file names, and more)"
+msgstr "โครงสร้างระบบไฟล์ (ไดเรกทอรี ชื่อไฟล์ และอื่นๆ)"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Files Recovered"
+msgstr "ไฟล์ที่กู้คืนแล้ว"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Find files that existed earlier in this Personal Files folder"
+msgstr "ค้นหาไฟล์ที่มีอยู่ในโฟลเดอร์ ไฟล์ส่วนบุคคล นี้ก่อนหน้านี้"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Folder History"
+msgstr "ประวัติโฟลเดอร์"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Folder · {0}"
+msgstr "โฟลเดอร์ · {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Forever"
+msgstr "ตลอดไป"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Four copies on separate devices · damaged copies can be repaired "
+"automatically"
+msgstr ""
+"สำเนา 4 ชุดบนอุปกรณ์แยกกัน · สามารถซ่อมแซมสำเนาที่เสียหายได้โดยอัตโนมัติ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Healthy"
+msgstr "สถานะดี"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Cancelled"
+msgstr "การจัดเรียงข้อมูล Home ถูกยกเลิก"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Complete"
+msgstr "การจัดเรียงข้อมูล Home เสร็จสิ้นแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Failed"
+msgstr "การจัดเรียงข้อมูล Home ล้มเหลว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Result Unavailable"
+msgstr "ผลลัพธ์การจัดเรียงข้อมูล Home ไม่พร้อมใช้งาน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home file defragmentation was cancelled before it finished."
+msgstr "การจัดเรียงข้อมูลไฟล์ Home ถูกยกเลิกก่อนเสร็จสิ้น"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Home snapshot"
+msgstr "สแนปชอต Home"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Home Snapshot Created"
+msgstr "สร้างสแนปชอต Home แล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Hours"
+msgstr "ชั่วโมง"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Imported"
+msgstr "นำเข้าแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Incomplete"
+msgstr "ไม่สมบูรณ์"
+
+#: src/btrfs-snapshots-manager/src/ui/information.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Information"
+msgstr "ข้อมูล"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Integrity"
+msgstr "ความสมบูรณ์"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Cancelled"
+msgstr "การตรวจสอบความสมบูรณ์ถูกยกเลิก"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Complete"
+msgstr "การตรวจสอบความสมบูรณ์เสร็จสิ้นแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Complete — Repairs Made"
+msgstr "การตรวจสอบความสมบูรณ์เสร็จสิ้น — มีการซ่อมแซมแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Result Unavailable"
+msgstr "ผลลัพธ์การตรวจสอบความสมบูรณ์ไม่พร้อมใช้งาน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Problems Found"
+msgstr "พบปัญหาความสมบูรณ์"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Interface CRC errors"
+msgstr "ข้อผิดพลาด CRC ของอินเทอร์เฟซ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Items processed: {0}"
+msgstr "รายการที่ประมวลผล: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Keep all snapshots for"
+msgstr "เก็บสแนปชอตทั้งหมดเป็นเวลา"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Keep Forever"
+msgstr "เก็บตลอดไป"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Kernel"
+msgstr "เคอร์เนล"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Kernel {0}"
+msgstr "เคอร์เนล {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Limited to one notification per minute"
+msgstr "จำกัดการแจ้งเตือนไม่เกินหนึ่งครั้งต่อนาที"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Live information reported by the mounted Btrfs file system."
+msgstr "ข้อมูลสดที่รายงานโดยระบบไฟล์ Btrfs ที่ติดตั้งแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Loading folder…"
+msgstr "กำลังโหลดโฟลเดอร์…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Loading snapshots…"
+msgstr "กำลังโหลดสแนปชอต…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Looking for earlier versions…"
+msgstr "กำลังค้นหาเวอร์ชันก่อนหน้า…"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Main Menu"
+msgstr "เมนูหลัก"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Maintenance"
+msgstr "การบำรุงรักษา"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Manual"
+msgstr "ด้วยตนเอง"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Measured"
+msgstr "วัดแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Media errors"
+msgstr "ข้อผิดพลาดของสื่อ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Mirrored and striped across devices · redundant copies are available for "
+"repair"
+msgstr "ทำมิเรอร์และจัดแถบข้ามอุปกรณ์ · มีสำเนาสำรองสำหรับการซ่อมแซม"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Name"
+msgstr "ชื่อ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Name (optional)"
+msgstr "ชื่อ (ไม่บังคับ)"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "No earlier version was found"
+msgstr "ไม่พบเวอร์ชันก่อนหน้า"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "No errors detected so far"
+msgstr "ไม่พบข้อผิดพลาดจนถึงขณะนี้"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"No file system integrity errors were found in allocated data and metadata."
+msgstr ""
+"ไม่พบข้อผิดพลาดด้านความสมบูรณ์ของระบบไฟล์ในข้อมูลและข้อมูลเมตาที่จัดสรรไว้"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "No important S.M.A.R.T. warning signs were detected"
+msgstr "ไม่พบสัญญาณเตือน S.M.A.R.T. ที่สำคัญ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No matching snapshots"
+msgstr "ไม่พบสแนปชอตที่ตรงกัน"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No snapshots selected"
+msgstr "ไม่ได้เลือกสแนปชอต"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No snapshots yet"
+msgstr "ยังไม่มีสแนปชอต"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "No system storage device found"
+msgstr "ไม่พบอุปกรณ์จัดเก็บข้อมูลของระบบ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "None (0x00)"
+msgstr "ไม่มี (0x00)"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Not calculated"
+msgstr "ยังไม่มีการคำนวณ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Not managed here · Btrfs requires a separate deduplication engine"
+msgstr "ไม่จัดการที่นี่ · Btrfs ต้องการเครื่องมือลดข้อมูลซ้ำซ้อนแยกต่างหาก"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notifications"
+msgstr "การแจ้งเตือน"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify after any snapshot succeeds"
+msgstr "แจ้งเตือนเมื่อการสร้างสแนปชอตใดๆ สำเร็จแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify after automatic cleanup removes snapshots"
+msgstr "แจ้งเตือนเมื่อการทำความสะอาดอัตโนมัติลบสแนปชอตแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify before a scheduled snapshot"
+msgstr "แจ้งเตือนก่อนการสร้างสแนปชอตตามกำหนดเวลา"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "NVMe critical warning"
+msgstr "คำเตือนวิกฤตของ NVMe"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Offline uncorrectable sectors"
+msgstr "เซกเตอร์ที่แก้ไขไม่ได้แบบออฟไลน์"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old Home snapshot(s) were removed."
+msgstr "ลบสแนปชอต Home เก่าแล้ว"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old system snapshot(s) and"
+msgstr "สแนปชอตระบบเก่าและ"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old system snapshot(s) were removed."
+msgstr "ลบสแนปชอตระบบเก่าแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Older snapshots are kept less frequently to save disk space."
+msgstr "สแนปชอตที่เก่ากว่าจะถูกเก็บไว้น้อยครั้งลงเพื่อประหยัดพื้นที่ดิสก์"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"One copy · damage can be detected, but there is no spare copy for repair"
+msgstr ""
+"หนึ่งสำเนา · สามารถตรวจจับความเสียหายได้ แต่ไม่มีสำเนาสำรองสำหรับการซ่อมแซม"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "One or more reliability indicators should be reviewed"
+msgstr "ควรตรวจสอบตัวบ่งชี้ความน่าเชื่อถืออย่างน้อยหนึ่งรายการ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Only /home · snapshot storage is excluded"
+msgstr "เฉพาะ /home · การจัดเก็บสแนปชอตถูกยกเว้น"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid ""
+"Only block groups at most 50% full will be relocated. The operation can use "
+"significant disk bandwidth but can be cancelled safely."
+msgstr ""
+"จะย้ายเฉพาะกลุ่มบล็อกที่เต็มไม่เกิน 50% เท่านั้น "
+"การดำเนินการนี้อาจใช้แบนด์วิดท์ดิสก์จำนวนมาก แต่สามารถยกเลิกได้อย่างปลอดภัย"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Only partial S.M.A.R.T. data was returned"
+msgstr "ข้อมูล S.M.A.R.T. ที่ส่งกลับมามีเพียงบางส่วนเท่านั้น"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid ""
+"Only physical drives backing the current root Btrfs file system are shown."
+msgstr "แสดงเฉพาะไดรฟ์กายภาพที่รองรับระบบไฟล์ Btrfs รากปัจจุบันเท่านั้น"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Only the display name changes."
+msgstr "เฉพาะชื่อที่แสดงจะเปลี่ยนแปลงเท่านั้น"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Open"
+msgstr "เปิด"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Operation Failed"
+msgstr "การดำเนินการล้มเหลว"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Otherwise automatic cleanup may remove it later."
+msgstr "มิฉะนั้น การทำความสะอาดอัตโนมัติอาจลบมันออกในภายหลัง"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Overall health"
+msgstr "สุขภาพโดยรวม"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Package Changes"
+msgstr "การเปลี่ยนแปลงแพ็กเกจ"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Parent folder"
+msgstr "โฟลเดอร์หลัก"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Paused"
+msgstr "หยุดชั่วคราว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Pending sectors"
+msgstr "เซกเตอร์ที่รอดำเนินการ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Permanently protected"
+msgstr "ได้รับการป้องกันอย่างถาวร"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Persistent memory is read-only"
+msgstr "หน่วยความจำถาวรเป็นแบบอ่านอย่างเดียว"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Personal files"
+msgstr "ไฟล์ส่วนบุคคล"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Personal Files Recovery"
+msgstr "การกู้คืนไฟล์ส่วนบุคคล"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Personal History Unavailable"
+msgstr "ประวัติส่วนบุคคลไม่พร้อมใช้งาน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Power cycles"
+msgstr "การเปิดและปิดเครื่อง"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Powered on"
+msgstr "เปิดใช้งานแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Prepare a safe system rollback"
+msgstr "เตรียมการย้อนกลับระบบอย่างปลอดภัย"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Prepare and Restart"
+msgstr "เตรียมและรีสตาร์ท"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing rollback to {0}…"
+msgstr "กำลังเตรียมการย้อนกลับไปยัง {0}…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing safe rollback…"
+msgstr "กำลังเตรียมการย้อนกลับอย่างปลอดภัย…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Preparing the rollback will arm recovery immediately and automatically "
+"restart this computer within 60 seconds. Save your work before continuing."
+msgstr ""
+"การเตรียมการย้อนกลับจะเปิดใช้งานการกู้คืนทันทีและรีสตาร์ทคอมพิวเตอร์เครื่องนี้โดยอัตโนมัติภายใน"
+" 60 วินาที โปรดบันทึกงานของคุณก่อนดำเนินการต่อ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Properties"
+msgstr "คุณสมบัติ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Protected while the rollback is pending"
+msgstr "ได้รับการป้องกันระหว่างรอการย้อนกลับ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Quota accounting provides shared and exclusive sizes for subvolumes, but its"
+" initial scan can take time."
+msgstr ""
+"การคำนวณโควตาให้ขนาดที่ใช้ร่วมกันและแบบเอกสิทธิ์สำหรับซับวอลุ่ม "
+"แต่การสแกนเริ่มต้นอาจใช้เวลาสักครู่"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Read errors: {0}"
+msgstr "ข้อผิดพลาดในการอ่าน: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Reading allocated Btrfs data and metadata…"
+msgstr "กำลังอ่านข้อมูลและข้อมูลเมตาของ Btrfs ที่จัดสรรไว้…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reading the most important reliability indicators"
+msgstr "กำลังอ่านตัวบ่งชี้ความน่าเชื่อถือที่สำคัญที่สุด"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Ready"
+msgstr "พร้อมใช้งาน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Ready to check"
+msgstr "พร้อมสำหรับการตรวจสอบ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Ready to defragment Home files"
+msgstr "พร้อมจัดเรียงข้อมูลไฟล์ Home"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Ready to optimize allocation"
+msgstr "พร้อมที่จะเพิ่มประสิทธิภาพการจัดสรรพื้นที่"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reallocated sectors"
+msgstr "เซกเตอร์ที่ถูกจัดสรรใหม่"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Reclaim underused block groups"
+msgstr "เรียกคืนพื้นที่ของกลุ่มบล็อกที่ใช้งานน้อย"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Recommended about once a month"
+msgstr "แนะนำประมาณเดือนละครั้ง"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Recorded snapshot kernel"
+msgstr "บันทึกสแนปชอตเคอร์เนล"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover Historical File"
+msgstr "กู้คืนไฟล์ย้อนหลัง"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover Personal Files"
+msgstr "กู้คืนไฟล์ส่วนบุคคล"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover This Folder…"
+msgstr "กู้คืนโฟลเดอร์นี้…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovering Files"
+msgstr "กำลังกู้คืนไฟล์"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovering files…"
+msgstr "กำลังกู้คืนไฟล์..."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovery Failed"
+msgstr "การกู้คืนล้มเหลว"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Recovery for {0} is in an unknown state ({1})."
+msgstr "สถานะการกู้คืนสำหรับ {0} ไม่ทราบ ({1})"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover…"
+msgstr "กู้คืน…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Refresh file history"
+msgstr "รีเฟรชประวัติไฟล์"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Refresh snapshots"
+msgstr "รีเฟรชสแนปชอต"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rename"
+msgstr "เปลี่ยนชื่อ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rename Snapshot"
+msgstr "เปลี่ยนชื่อสแนปชอต"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Renaming snapshot…"
+msgstr "กำลังเปลี่ยนชื่อสแนปชอต…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reported uncorrectable errors"
+msgstr "รายงานข้อผิดพลาดที่แก้ไขไม่ได้"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Requesting restart…"
+msgstr "กำลังร้องขอการรีสตาร์ท…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart"
+msgstr "รีสตาร์ท"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart Now ({0} s)"
+msgstr "รีสตาร์ททันที ({0} วินาที)"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart Required — Rollback Armed"
+msgstr "จำเป็นต้องรีสตาร์ท — การย้อนกลับพร้อมดำเนินการแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Retry Recovery"
+msgstr "ลองกู้คืนอีกครั้ง"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Return to the selected snapshot"
+msgstr "กลับไปยังสแนปชอตที่เลือก"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Review the highlighted indicators on {0} system drive(s)"
+msgstr "ตรวจสอบตัวบ่งชี้ที่เน้นในไดรฟ์ระบบ {0} ตัว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Rewriting Home file extents with ZSTD compression…"
+msgstr "กำลังเขียนเอ็กซ์เทนต์ของไฟล์ Home ใหม่ด้วยการบีบอัด ZSTD…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll Back"
+msgstr "ย้อนกลับ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll Back to {0}?"
+msgstr "ต้องการย้อนกลับไปยัง {0} หรือไม่?"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback confirmation failed. The protected previous system is being "
+"restored."
+msgstr ""
+"การยืนยันการย้อนกลับล้มเหลว ระบบก่อนหน้าที่ได้รับการป้องกันกำลังถูกกู้คืน"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback is armed. To prevent new system changes from being lost, this "
+"computer will restart automatically when the 60-second countdown ends. Save "
+"any open personal files now."
+msgstr ""
+"การย้อนกลับพร้อมดำเนินการแล้ว "
+"เพื่อป้องกันไม่ให้ความเปลี่ยนแปลงของระบบใหม่สูญหาย "
+"เครื่องคอมพิวเตอร์นี้จะรีสตาร์ทโดยอัตโนมัติเมื่อสิ้นสุดการนับถอยหลัง 60 "
+"วินาที โปรดบันทึกไฟล์ส่วนบุคคลที่เปิดค้างไว้ทั้งหมดทันที"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} is being applied during startup."
+msgstr "การย้อนกลับไปยัง {0} กำลังดำเนินการระหว่างเริ่มต้นระบบ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} is ready. Restart to apply it."
+msgstr "การย้อนกลับไปยัง {0} พร้อมแล้ว รีสตาร์ทเพื่อใช้การเปลี่ยนแปลง"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback to {0} was applied, but system confirmation has not completed."
+msgstr ""
+"การย้อนกลับไปยัง {0} ได้ดำเนินการแล้ว แต่การยืนยันจากระบบยังไม่เสร็จสมบูรณ์"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Running…"
+msgstr "กำลังดำเนินการ…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. could not be read from this device"
+msgstr "S.M.A.R.T. ไม่สามารถอ่านจากอุปกรณ์นี้ได้"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. is not available for this device"
+msgstr "S.M.A.R.T. ไม่พร้อมใช้งานสำหรับอุปกรณ์นี้"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. is supported but disabled on this device"
+msgstr "S.M.A.R.T. ถูกรองรับแต่ถูกปิดใช้งานในอุปกรณ์นี้"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. reports an imminent or current drive failure"
+msgstr "S.M.A.R.T. รายงานว่าไดรฟ์ใกล้จะล้มเหลวหรือกำลังล้มเหลวอยู่ในขณะนี้"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Save"
+msgstr "บันทึก"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Save Advanced Settings"
+msgstr "บันทึกการตั้งค่าขั้นสูง"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Saving…"
+msgstr "กำลังบันทึก…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Scanning data and metadata…"
+msgstr "กำลังสแกนข้อมูลและข้อมูลเมตา…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"Scrub reads allocated data and metadata, verifies checksums, and reports "
+"damage without modifying file data."
+msgstr ""
+"การตรวจสอบความสมบูรณ์จะอ่านข้อมูลและข้อมูลเมตาที่จัดสรรไว้ ตรวจสอบค่าตรวจสอบ"
+" (checksums) และรายงานความเสียหาย โดยไม่มีการแก้ไขข้อมูลไฟล์"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"Scrub verifies allocated Btrfs data and metadata. It does not test unused "
+"space or predict sudden drive failure."
+msgstr ""
+"การตรวจสอบความสมบูรณ์จะตรวจสอบข้อมูลและข้อมูลเมตาของ Btrfs ที่จัดสรรไว้ "
+"โดยไม่ทดสอบพื้นที่ที่ไม่ได้ใช้หรือทำนายความล้มเหลวของไดรฟ์อย่างกะทันหัน"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Search snapshots"
+msgstr "ค้นหาสแนปชอต"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "See exactly how older snapshots are kept"
+msgstr "ดูรายละเอียดว่าสแนปชอตที่เก่ากว่าถูกเก็บรักษาไว้อย่างไร"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Select snapshot"
+msgstr "เลือกสแนปชอต"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Select Snapshots"
+msgstr "เลือกสแนปชอต"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Selected file · {0}"
+msgstr "ไฟล์ที่เลือก · {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Shared and exclusive size statistics and any subvolume limits will be "
+"removed. Snapshots themselves are not deleted."
+msgstr ""
+"สถิติขนาดที่ใช้ร่วมกันและแบบเอกสิทธิ์ รวมถึงขีดจำกัดของซับโวลุ่มใดๆ "
+"จะถูกลบออก สแนปชอตเองจะไม่ถูกลบ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Shared Data"
+msgstr "ข้อมูลที่ใช้ร่วมกัน"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Size {0}"
+msgstr "ขนาด {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot"
+msgstr "สแนปชอต"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Actions"
+msgstr "การดำเนินการของสแนปชอต"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Check Complete"
+msgstr "การตรวจสอบสแนปชอตเสร็จสมบูรณ์แล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Details"
+msgstr "รายละเอียดสแนปชอต"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · Folder"
+msgstr "สแนปชอต {0} · โฟลเดอร์"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · {1} bytes · modified {2}"
+msgstr "สแนปชอต {0} · {1} ไบต์ · แก้ไขเมื่อ {2}"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Snapshots"
+msgstr "สแนปชอต"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshots are not available on this computer"
+msgstr "สแนปชอตไม่พร้อมใช้งานบนคอมพิวเตอร์เครื่องนี้"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshots could not be loaded"
+msgstr "ไม่สามารถโหลดสแนปชอตได้"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Solid-state drive"
+msgstr "ไดรฟ์หน่วยความจำสถานะของแข็ง"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Some snapshots could not be loaded"
+msgstr "ไม่สามารถโหลดสแนปชอตบางรายการได้"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Some system drives need attention"
+msgstr "ไดรฟ์ระบบบางตัวต้องการความสนใจ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Space Accounting"
+msgstr "การคำนวณพื้นที่"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Space Allocation"
+msgstr "การจัดสรรพื้นที่"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Cancelled"
+msgstr "การเพิ่มประสิทธิภาพพื้นที่ถูกยกเลิก"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Complete"
+msgstr "การเพิ่มประสิทธิภาพพื้นที่เสร็จสิ้นแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Failed"
+msgstr "การเพิ่มประสิทธิภาพพื้นที่ล้มเหลว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Result Unavailable"
+msgstr "ผลลัพธ์การเพิ่มประสิทธิภาพพื้นที่ไม่พร้อมใช้งาน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Space usage"
+msgstr "การใช้พื้นที่"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Spin retry count"
+msgstr "จำนวนครั้งที่ลองหมุนใหม่"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "SSD space reclamation"
+msgstr "การคืนพื้นที่ SSD"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Start a limited balance?"
+msgstr "ต้องการเริ่มการปรับสมดุลแบบจำกัดหรือไม่?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Start Balance"
+msgstr "เริ่มการปรับสมดุล"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Start Scrub"
+msgstr "เริ่มการตรวจสอบความสมบูรณ์"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Starting the integrity check…"
+msgstr "กำลังเริ่มการตรวจสอบความสมบูรณ์…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Starting…"
+msgstr "กำลังเริ่มต้น…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Status unavailable"
+msgstr "สถานะไม่พร้อมใช้งาน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Storage Behavior"
+msgstr "พฤติกรรมการจัดเก็บข้อมูล"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Storage layout: {0}"
+msgstr "เลย์เอาต์การจัดเก็บข้อมูล: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Storage media is read-only"
+msgstr "สื่อจัดเก็บข้อมูลเป็นแบบอ่านอย่างเดียว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices with one parity block for recovery"
+msgstr "จัดแถบข้ามอุปกรณ์พร้อมบล็อกพาริตี 1 บล็อกสำหรับการกู้คืน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices with two parity blocks for recovery"
+msgstr "จัดแถบข้ามอุปกรณ์พร้อมบล็อกพาริตี 2 บล็อกสำหรับการกู้คืน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices · no redundant copy is available for repair"
+msgstr "จัดแถบข้ามอุปกรณ์ · ไม่มีสำเนาสำรองสำหรับการซ่อมแซม"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Subvolume quota accounting"
+msgstr "การคำนวณโควตาของซับโวลุ่ม"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Superblock errors: {0}"
+msgstr "ข้อผิดพลาดของซุปเปอร์บล็อก: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "System Drive Health"
+msgstr "สุขภาพไดรฟ์ระบบ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "System files and packages"
+msgstr "ไฟล์และแพ็กเกจของระบบ"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "System Recovery"
+msgstr "การกู้คืนระบบ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "system snapshot"
+msgstr "สแนปชอตระบบ"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "System Snapshot Created"
+msgstr "สร้างสแนปชอตระบบแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "System storage"
+msgstr "พื้นที่จัดเก็บข้อมูลของระบบ"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Take a snapshot every"
+msgstr "สร้างสแนปชอตทุก"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Temperature"
+msgstr "อุณหภูมิ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Temperature is outside the safe range"
+msgstr "อุณหภูมิอยู่นอกช่วงที่ปลอดภัย"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "The automatic snapshot infrastructure cannot be disabled here."
+msgstr "ไม่สามารถปิดใช้งานโครงสร้างพื้นฐานสแนปชอตอัตโนมัติได้ที่นี่"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The device reported an unknown warning bit"
+msgstr "อุปกรณ์รายงานบิตคำเตือนที่ไม่รู้จัก"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The drive did not provide a conclusive health result"
+msgstr "ไดรฟ์ไม่ได้ให้ผลลัพธ์สุขภาพที่ชัดเจน"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The Home snapshot was created successfully."
+msgstr "สร้างสแนปชอต Home สำเร็จแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "The integrity check was cancelled before it finished."
+msgstr "การตรวจสอบความสมบูรณ์ถูกยกเลิกก่อนเสร็จสิ้น"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "The limited balance was cancelled safely before it finished."
+msgstr "การปรับสมดุลแบบจำกัดถูกยกเลิกอย่างปลอดภัยก่อนที่กระบวนการจะเสร็จสิ้น"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback completed, but recovery cleanup has not completed."
+msgstr ""
+"การย้อนกลับเสร็จสมบูรณ์แล้ว แต่การทำความสะอาดหลังการกู้คืนยังไม่เสร็จสิ้น"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed. Recovery cleanup has not completed."
+msgstr "การย้อนกลับล้มเหลว การทำความสะอาดหลังการกู้คืนยังไม่เสร็จสิ้น"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed: {0}"
+msgstr "การย้อนกลับล้มเหลว: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback was reverted, but recovery cleanup has not completed."
+msgstr ""
+"การย้อนกลับถูกยกเลิกแล้ว แต่การทำความสะอาดหลังการกู้คืนยังไม่เสร็จสิ้น"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The root filesystem is {0}."
+msgstr "ระบบไฟล์รากคือ {0}."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid ""
+"The scheduled Home snapshot could not be created. Check Disk Snapshots "
+"Manager for details."
+msgstr ""
+"ไม่สามารถสร้างสแนปชอต Home ตามกำหนดเวลาได้ โปรดตรวจสอบ Disk Snapshots "
+"Manager เพื่อดูรายละเอียด"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled Home snapshot was created successfully."
+msgstr "สร้างสแนปชอต Home ตามกำหนดเวลาสำเร็จแล้ว"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid ""
+"The scheduled system snapshot could not be created. Check Disk Snapshots "
+"Manager for details."
+msgstr ""
+"ไม่สามารถสร้างสแนปชอตระบบตามกำหนดเวลาได้ โปรดตรวจสอบ Disk Snapshots Manager "
+"เพื่อดูรายละเอียด"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled system snapshot was created successfully."
+msgstr "สร้างสแนปชอตระบบตามกำหนดเวลาสำเร็จแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "The selected files were recovered successfully."
+msgstr "กู้คืนไฟล์ที่เลือกสำเร็จแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The snapshot is created immediately."
+msgstr "สแนปชอตถูกสร้างขึ้นทันที"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The system drive looks healthy"
+msgstr "ไดรฟ์ระบบดูมีสุขภาพดี"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The system drive needs attention"
+msgstr "ไดรฟ์ระบบต้องการความสนใจ"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The system snapshot was created successfully."
+msgstr "สร้างสแนปชอตระบบสำเร็จแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per day for"
+msgstr "จากนั้นเก็บหนึ่งรายการต่อวันเป็นเวลา"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per month for"
+msgstr "จากนั้นเก็บหนึ่งรายการต่อเดือนเป็นเวลา"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per week for"
+msgstr "จากนั้นเก็บหนึ่งรายการต่อสัปดาห์เป็นเวลา"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per year"
+msgstr "จากนั้นเก็บหนึ่งรายการต่อปี"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "This folder is empty"
+msgstr "โฟลเดอร์นี้ว่างเปล่า"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "This item was not present in the available Home snapshots."
+msgstr "ไม่พบรายการนี้ในสแนปชอต Home ที่มีอยู่"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"This rewrites files below /home using ZSTD compression. It does not enter "
+"/.snapshots, but shared extents with existing snapshots may become private "
+"and consume more space."
+msgstr ""
+"การดำเนินการนี้จะเขียนไฟล์ภายใต้ /home ใหม่โดยใช้การบีบอัด ZSTD จะไม่เข้าสู่"
+" /.snapshots "
+"แต่เอ็กซ์เทนต์ข้อมูลที่ใช้ร่วมกับสแนปชอตที่มีอยู่อาจกลายเป็นส่วนตัวและใช้พื้นที่มากขึ้น"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "This snapshot is available for recovery."
+msgstr "สแนปชอตนี้อยู่ในสถานะพร้อมสำหรับการกู้คืน"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "This snapshot is not available for recovery."
+msgstr "สแนปชอตนี้ไม่พร้อมใช้งานสำหรับการกู้คืน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Three copies on separate devices · damaged copies can be repaired "
+"automatically"
+msgstr ""
+"สำเนา 3 ชุดบนอุปกรณ์แยกกัน · สามารถซ่อมแซมสำเนาที่เสียหายได้โดยอัตโนมัติ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Time above critical temperature"
+msgstr "เวลาที่อุณหภูมิสูงกว่าระดับวิกฤต"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Time above warning temperature"
+msgstr "เวลาที่อุณหภูมิสูงกว่าระดับเตือน"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Total"
+msgstr "ทั้งหมด"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Total data read"
+msgstr "ข้อมูลทั้งหมดที่อ่าน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Total data written"
+msgstr "ข้อมูลทั้งหมดที่เขียน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Transparent compression"
+msgstr "การบีบอัดแบบโปร่งใส"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Try a different name, date, or snapshot reason."
+msgstr "ลองใช้ชื่อ วันที่ หรือเหตุผลในการสร้างสแนปชอตรูปแบบอื่น"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Two copies on separate devices · a damaged copy can be repaired "
+"automatically"
+msgstr ""
+"สำเนา 2 ชุดบนอุปกรณ์แยกกัน · สามารถซ่อมแซมสำเนาที่เสียหายได้โดยอัตโนมัติ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Two copies on this device · a damaged copy can be repaired automatically"
+msgstr "สำเนา 2 ชุดบนอุปกรณ์นี้ · สามารถซ่อมแซมสำเนาที่เสียหายได้โดยอัตโนมัติ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unable to calculate"
+msgstr "ไม่สามารถคำนวณได้"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unavailable"
+msgstr "ไม่พร้อมใช้งาน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Uncorrectable errors: {0}"
+msgstr "ข้อผิดพลาดที่แก้ไขไม่ได้: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unknown"
+msgstr "ไม่ทราบ"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Unknown date"
+msgstr "วันที่ไม่ทราบ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unknown state"
+msgstr "สถานะไม่ทราบ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unknown storage device"
+msgstr "อุปกรณ์จัดเก็บข้อมูลที่ไม่รู้จัก"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unsafe shutdowns"
+msgstr "การปิดระบบที่ไม่ปลอดภัย"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Unsupported Destination"
+msgstr "ปลายทางที่ไม่รองรับ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Unverified errors: {0}"
+msgstr "ข้อผิดพลาดที่ยังไม่ได้รับการยืนยัน: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Updating snapshot protection…"
+msgstr "กำลังอัปเดตการป้องกันสแนปชอต…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Useful after deleting large amounts of data"
+msgstr "มีประโยชน์หลังจากลบข้อมูลจำนวนมาก"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Verification errors: {0}"
+msgstr "ข้อผิดพลาดในการตรวจสอบ: {0}"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "View File History…"
+msgstr "ดูประวัติไฟล์…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "View Progress"
+msgstr "ดูความคืบหน้า"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Volatile memory backup failed"
+msgstr "การสำรองข้อมูลหน่วยความจำชั่วคราวล้มเหลว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Waiting for Btrfs status…"
+msgstr "กำลังรอสถานะ Btrfs…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Waiting for Btrfs to start…"
+msgstr "กำลังรอให้ Btrfs เริ่มต้น…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Waiting for scrub status…"
+msgstr "กำลังรอสถานะการตรวจสอบความสมบูรณ์…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Waiting for the new scrub to start…"
+msgstr "กำลังรอให้การตรวจสอบความสมบูรณ์เริ่มต้นใหม่..."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Warnings"
+msgstr "คำเตือน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Why?"
+msgstr "ทำไม?"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Will not change"
+msgstr "จะไม่มีการเปลี่ยนแปลง"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Working…"
+msgstr "กำลังทำงาน…"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "{0} available"
+msgstr "{0} พร้อมใช้งาน"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "{0} bytes · {1}"
+msgstr "{0} ไบต์ · {1}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "{0} damaged metadata entries were ignored"
+msgstr "{0} รายการของข้อมูลเมตาที่เสียหายถูกละเว้น"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} hours · about {1} days"
+msgstr "{0} ชั่วโมง · ประมาณ {1} วัน"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} minutes"
+msgstr "{0} นาที"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0} of {1} checked"
+msgstr "{0} จาก {1} รายการได้รับการตรวจสอบแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "{0} of {1} used"
+msgstr "{0} จาก {1} ที่ใช้แล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} packages"
+msgstr "{0} แพ็กเกจ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} RPM"
+msgstr "{0} RPM"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} snapshot record(s) need attention"
+msgstr "{0} รายการสแนปชอตต้องการความสนใจ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} snapshot(s) selected"
+msgstr "{0} สแนปชอตที่เลือก"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} °C"
+msgstr "{0} °C"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} · Manual Snapshot"
+msgstr "{0} · สแนปชอตด้วยตนเอง"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "{0} · new writes"
+msgstr "{0} · การเขียนใหม่"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0}%"
+msgstr "{0}%"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0}% complete"
+msgstr "{0}% เสร็จสิ้นแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0}% · warning threshold {1}%"
+msgstr "{0}% · เกณฑ์คำเตือน {1}%"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0}/s"
+msgstr "{0}/วินาที"

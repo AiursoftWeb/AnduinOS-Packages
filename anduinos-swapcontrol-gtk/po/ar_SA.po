@@ -1,304 +1,548 @@
+#
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/window.rs:76
 msgid "About"
 msgstr "حول"
 
+#: src/views/swap_view.rs:300
 msgid "Accept threshold percent"
 msgstr "نسبة العتبة المقبولة (%)"
 
+#: src/views/zram_view.rs:247
 msgid "Advanced options"
 msgstr "خيارات متقدمة"
 
+#: src/views/stress_test_view.rs:225 src/views/swap_view.rs:225
 msgid "Advanced settings"
 msgstr "إعدادات متقدمة"
 
+#: src/views/zram_view.rs:348
 msgid "Algorithm"
 msgstr "خوارزمية"
 
+#: src/views/swap_view.rs:334
 msgid "Apply Settings"
 msgstr "تطبيق الإعدادات"
 
+#: src/views/swap_view.rs:667
 msgid "Applying settings…"
 msgstr "تطبيق الإعدادات"
 
+#: src/views/dashboard_view.rs:370
 msgid "Auth needed"
 msgstr "المصادقة مطلوبة"
 
+#: src/views/dashboard_view.rs:413
 msgid "Buf"
 msgstr "المؤقت"
 
+#: src/views/dashboard_view.rs:390
 msgid "Buffers"
 msgstr "المخازن المؤقتة"
 
+#: src/views/dashboard_view.rs:414
 msgid "Cache"
 msgstr "المخزن المؤقت"
 
+#: src/views/dashboard_view.rs:395
 msgid "Cached"
 msgstr "تم التخزين المؤقت"
 
+#: src/views/zram_view.rs:378
 msgid "Cancel"
 msgstr "إلغاء"
 
+#: src/views/stress_test_view.rs:318
 msgid "Cancel Test"
 msgstr "إلغاء"
 
+#: src/views/stress_test_view.rs:601
 msgid "Cancelled by user."
 msgstr "إلغى بواسطة المستخدم."
 
+#: src/views/dashboard_view.rs:193
 msgid "Channels"
 msgstr "القنوات"
 
+#: src/views/stress_test_view.rs:613
 msgid "Completed successfully — memory pressure test passed."
 msgstr "اكتمل بنجاح — اجتاز اختبار ضغط الذاكرة."
 
+#: src/views/swap_view.rs:183
 msgid ""
 "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
 "Zswap, not both."
 msgstr ""
-"Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
-"Zswap, not both."
+"ضغط صفحات الذاكرة الافتراضية في مجموعة ذاكرة وصول عشوائي — أسرع من الذاكرة "
+"الافتراضية على القرص. استخدم Zram أو Zswap، وليس كليهما."
 
+#: src/views/zram_view.rs:73
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "جهاز كتلة ذاكرة وصول عشوائي مضغوط — تبديل سريع في الذاكرة"
 
+#: src/views/swap_view.rs:266
 msgid "Compression algorithm"
 msgstr "خوارزمية الضغط"
 
+#: src/views/zram_view.rs:379
 msgid "Create"
 msgstr "إنشاء"
 
+#: src/views/zram_view.rs:110 src/views/zram_view.rs:190
 msgid "Create Zram Device"
 msgstr "إنشاء جهاز Zram"
 
+#: src/window.rs:110
 msgid "Dashboard"
 msgstr "لوحة التحكم"
 
+#: src/views/zram_view.rs:562
 msgid "Destroy Zram Device"
 msgstr "تدمير جهاز Zram"
 
+#: src/views/zram_view.rs:439
 msgid "Device Created"
 msgstr "تم إنشاء الجهاز"
 
+#: src/views/dashboard_view.rs:498
 msgid "Disabled"
 msgstr "معطل"
 
+#: src/views/swap_view.rs:521
 msgid "Disabling Zswap..."
 msgstr "جارٍ تعطيل مساحة التبادل..."
 
-msgid "Disabling swap will break hibernation. Continue?"
-msgstr "سيؤدي تعطيل مساحة التبادل إلى تعطيل وضع السكون. هل تريد المتابعة؟"
-
+#: src/views/swap_view.rs:577
 msgid "Disabling swap…"
 msgstr "جارٍ تعطيل مساحة التبادل..."
 
-msgid "Disk Swap"
-msgstr "تبديل القرص الصلب"
-
+#: src/views/swap_view.rs:97
 msgid "Disk Swap Configuration"
 msgstr "إعدادات الذاكرة الافتراضية للقرص"
 
+#: src/views/dashboard_view.rs:609
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
 msgstr ""
-"Disk swap is active with memory compression — your system is well-protected "
-"against memory pressure."
+"الذاكرة الافتراضية للقرص نشطة مع ضغط الذاكرة — نظامك محمي جيدًا ضد ضغط "
+"الذاكرة."
 
+#: src/views/stress_test_view.rs:605 src/views/stress_test_view.rs:617
 msgid "Duration:"
 msgstr "المدة:"
 
+#: src/views/dashboard_view.rs:604
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
 msgstr ""
-"Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
-"swap and dramatically reduces I/O under memory pressure."
+"فعّل Zram للحصول على مساحة تبادل مضغوطة سريعة في الذاكرة العشوائية — إنها "
+"أسرع 10 مرات من مساحة التبادل على القرص وتقلل بشكل كبير من عمليات "
+"الإدخال/الإخراج تحت ضغط الذاكرة."
 
+#: src/views/swap_view.rs:519
 msgid "Enabling Zswap..."
 msgstr "جارٍ تمكين مساحة التبادل..."
 
+#: src/views/swap_view.rs:579
 msgid "Enabling swap…"
 msgstr "جارٍ تمكين مساحة التبادل..."
 
+#: src/views/stress_test_view.rs:609 src/views/swap_view.rs:505
+#: src/views/zram_view.rs:182
 msgid "Error"
 msgstr "خطأ"
 
+#: src/views/dashboard_view.rs:400 src/views/dashboard_view.rs:415
 msgid "Free"
 msgstr "المتاحة"
 
+#: src/views/stress_test_view.rs:250 src/views/stress_test_view.rs:251
+#: src/views/stress_test_view.rs:401
 msgid "Growth speed"
 msgstr "سرعة النمو"
 
+#: src/views/dashboard_view.rs:269
 msgid "Hibernation"
 msgstr "السبات"
 
+#: src/views/swap_view.rs:597 src/views/swap_view.rs:704
 msgid "Hibernation Warning"
 msgstr "تحذير السكون"
 
+#: src/views/dashboard_view.rs:512 src/views/swap_view.rs:810
 msgid "Inactive"
 msgstr "غير نشط"
 
+#: src/views/swap_view.rs:156 src/views/swap_view.rs:170
 msgid "Loading..."
 msgstr "جارٍ التحميل..."
 
+#: src/views/stress_test_view.rs:232
 msgid "Maximum hold time"
 msgstr "الحد الأقصى لوقت الانتظار"
 
+#: src/views/swap_view.rs:282
 msgid "Maximum pool percent"
 msgstr "الحد الأقصى لنسبة المجموعة"
 
+#: src/views/dashboard_view.rs:134
 msgid "Memory Overview"
 msgstr "نظرة عامة على الذاكرة"
 
+#: src/views/zram_view.rs:119
 msgid "No Zram Devices"
 msgstr "أجهزة زرام"
 
+#: src/views/dashboard_view.rs:456
 msgid "No device"
 msgstr "لا يوجد جهاز"
 
+#: src/views/dashboard_view.rs:587
 msgid "No disk swap detected"
 msgstr "لم يتم الكشف عن ذاكرة افتراضية"
 
+#: src/views/dashboard_view.rs:603
 msgid "No memory acceleration enabled"
 msgstr "لم يتم تمكين تسريع الذاكرة"
 
+#: src/views/dashboard_view.rs:541
 msgid "None"
 msgstr "لا شيء"
 
+#: src/views/dashboard_view.rs:525 src/views/dashboard_view.rs:533
 msgid "Off"
 msgstr "إيقاف"
 
+#: src/views/dashboard_view.rs:532
 msgid "On"
 msgstr "مفعّل"
 
+#: src/views/swap_view.rs:301
 msgid ""
 "Only store pages that compress to ≤ this % of original. Higher = more pages "
 "cached. Recommended: 90%"
 msgstr ""
-"Only store pages that compress to ≤ this % of original. Higher = more pages "
-"cached. Recommended: 90%"
+"لا تخزّن إلا الصفحات التي يمكن ضغطها إلى نسبة ≤ هذه القيمة من حجمها الأصلي. "
+"كلما ارتفعت القيمة، زاد عدد الصفحات المخزنة مؤقتًا. القيمة الموصى بها: 90%"
 
+#: src/views/dashboard_view.rs:608
 msgid "Optimal memory configuration"
 msgstr "تكوين الذاكرة الأمثل"
 
+#: src/views/stress_test_view.rs:602 src/views/stress_test_view.rs:614
 msgid "Peak allocated:"
 msgstr "الحد الأقصى المخصص:"
 
+#: src/views/zram_view.rs:367
 msgid "Priority"
 msgstr "الأولوية"
 
+#: src/views/stress_test_view.rs:209
 msgid "RAM"
 msgstr "ذاكرة الوصول العشوائي"
 
+#: src/views/zram_view.rs:545
 msgid "Remove"
 msgstr "إزالة"
 
+#: src/views/stress_test_view.rs:360
 msgid "Run Again"
 msgstr "تشغيل مرة أخرى"
 
+#: src/views/stress_test_view.rs:279
 msgid "Run Stress Test"
 msgstr "تشغيل اختبار الإجهاد"
 
+#: src/views/swap_view.rs:307
 msgid "Shrinker"
 msgstr "ضاغط الذاكرة"
 
+#: src/views/zram_view.rs:269
 msgid "Size (MiB)"
 msgstr "الحجم (ميغابايت MiB)"
 
+#: src/views/dashboard_view.rs:192
 msgid "Speed"
 msgstr "السرعة"
 
+#: src/views/stress_test_view.rs:100 src/window.rs:114
 msgid "Stress Test"
 msgstr "اختبار الإجهاد"
 
+#: src/views/dashboard_view.rs:252 src/views/dashboard_view.rs:266
+#: src/window.rs:112
 msgid "Swap"
 msgstr "الذاكرة الافتراضية Swap"
 
+#: src/window.rs:59
 msgid "Swap Control"
 msgstr "التحكم في الذاكرة الافتراضية"
 
-msgid "Swap file size"
-msgstr "حجم الملف الافتراضي"
-
+#: src/views/swap_view.rs:147
 msgid "Swap usage"
 msgstr "استخدام الذاكرة الافتراضية"
 
+#: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
 msgid "Swappiness"
 msgstr "قيمة التبديل"
 
+#: src/views/dashboard_view.rs:598
 msgid "Swappiness not optimized for Zram"
 msgstr "درجة الاستبدال غير محسّنة لـ Zram"
 
+#: src/views/stress_test_view.rs:206
 msgid "Target Pressure"
 msgstr "ضغط الهدف"
 
+#: src/views/stress_test_view.rs:345
 msgid "Test Complete"
 msgstr "اكتمل الاختبار"
 
+#: src/views/dashboard_view.rs:190
 msgid "Total RAM"
 msgstr "إجمالي الذاكرة العشوائية"
 
+#: src/views/dashboard_view.rs:191
 msgid "Type"
 msgstr "النوع"
 
+#: src/views/dashboard_view.rs:385 src/views/dashboard_view.rs:412
 msgid "Used"
 msgstr "المستخدم"
 
+#: src/views/dashboard_view.rs:588
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
 msgstr ""
-"When RAM is full the kernel may kill applications. Enable disk swap for a "
-"reliable safety net."
+"عند امتلاء ذاكرة الوصول العشوائي (RAM)، قد تقوم نواة النظام بإيقاف "
+"التطبيقات. فعّل الذاكرة الافتراضية على القرص للحصول على شبكة أمان موثوقة."
 
+#: src/views/dashboard_view.rs:244 src/views/dashboard_view.rs:268
+#: src/window.rs:111
 msgid "Zram"
 msgstr "زرَام"
 
+#: src/views/zram_view.rs:66
 msgid "Zram Devices"
 msgstr "أجهزة زرام"
 
+#: src/views/dashboard_view.rs:592
 msgid "Zram and Zswap are both active"
 msgstr "كلا من Zram و Zswap نشطان"
 
+#: src/views/dashboard_view.rs:593
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
+"pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
+" one of them."
 msgstr ""
-"Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
+"يتعارض Zram وZswap أحدهما مع الآخر، إذ ينشئ كل منهما مخزونًا خاصًا به من "
+"ذاكرة RAM المضغوطة. يؤدي تشغيلهما معًا إلى إهدار موارد وحدة المعالجة "
+"المركزية وقد يسبب تخبّطًا شديدًا في الذاكرة. عطّل أحدهما."
 
+#: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
+#: src/views/swap_view.rs:185
 msgid "Zswap"
 msgstr "زسواب"
 
+#: src/views/stress_test_view.rs:212
 msgid "default"
 msgstr "الافتراضي"
 
+#: src/views/swap_view.rs:267
 msgid ""
-"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires "
-"zswap restart."
+"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires"
+" zswap restart."
 msgstr ""
 "lz4 = سريع (موصى به)، zstd = أفضل نسبة ضغط، lzo = قديم. يتطلب التغيير إعادة "
 "تشغيل zswap."
 
+#: src/views/stress_test_view.rs:211
 msgid "range"
 msgstr "النطاق"
 
+#: src/views/stress_test_view.rs:233
 msgid "seconds"
 msgstr "ثانية"
 
+#: src/views/swap_view.rs:118
 msgid "with Zram"
 msgstr "مع Zram"
 
+#: src/views/dashboard_view.rs:154
 msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr ""
 "مع تفعيل Zram — تفضيل ذاكرة RAM المضغوطة السريعة على ذاكرة التخزين المؤقت "
 "للقرص"
+
+#: src/views/dashboard_view.rs:547
+msgid "Ready"
+msgstr "جاهز"
+
+#: src/views/dashboard_view.rs:549
+msgid "Unsupported"
+msgstr "غير مدعوم"
+
+#: src/views/dashboard_view.rs:551
+msgid "Not configured"
+msgstr "غير مُعدّ"
+
+#: src/views/dashboard_view.rs:553
+msgid "Resume target missing"
+msgstr "هدف الاستئناف غير موجود"
+
+#: src/views/dashboard_view.rs:555
+msgid "Resume target inactive"
+msgstr "هدف الاستئناف غير نشط"
+
+#: src/views/dashboard_view.rs:557
+msgid "Swap too small"
+msgstr "مساحة الذاكرة الافتراضية صغيرة جدًا"
+
+#: src/views/dashboard_view.rs:559
+msgid "Not ready"
+msgstr "غير جاهز"
+
+#: src/views/swap_view.rs:104
+msgid ""
+"Review installer-managed swap partitions and manage the legacy supplementary"
+" swap file"
+msgstr ""
+"راجع مساحات التبادل المُدارة من قِبل المثبّت وأدر ملف الذاكرة الافتراضية "
+"الإضافي التقليدي"
+
+#: src/views/swap_view.rs:155
+msgid "Swap partition"
+msgstr "مساحة تبادل"
+
+#: src/views/swap_view.rs:169
+msgid "Additional swap file"
+msgstr "ملف الذاكرة الافتراضية الإضافي"
+
+#: src/views/swap_view.rs:195
+msgid "Additional swap file size"
+msgstr "حجم ملف الذاكرة الافتراضية الإضافي"
+
+#: src/views/swap_view.rs:196
+msgid "0 GiB means no supplementary swap file"
+msgstr "0 GiB تعني عدم وجود ملف ذاكرة افتراضية إضافي"
+
+#: src/views/swap_view.rs:598
+msgid ""
+"This swap file is the configured resume target. Disabling it will break "
+"hibernation. Continue?"
+msgstr ""
+"هذا ملف الذاكرة الافتراضية هو هدف الاستئناف المُعد مسبقًا. تعطيله سيكسر ميزة"
+" السبات. هل تريد المتابعة؟"
+
+#: src/views/swap_view.rs:705
+msgid ""
+"This swap file is the configured resume target. Its physical offset would "
+"change, so resize is blocked until hibernation is disabled."
+msgstr ""
+"هذا ملف الذاكرة الافتراضية هو هدف الاستئناف المُعد مسبقًا. سيتغير إزاحته "
+"الفيزيائية، لذا يتم حظر تغيير الحجم حتى يتم تعطيل السبات."
+
+#: src/views/swap_view.rs:722
+msgid "unknown"
+msgstr "غير معروف"
+
+#: src/views/swap_view.rs:738
+msgid "No swap partition — a legacy swap file can be managed below"
+msgstr ""
+"لا توجد مساحة تبادل — يمكن إدارة ملف الذاكرة الافتراضية التقليدي أدناه"
+
+#: src/views/swap_view.rs:207
+msgid "Remove incompatible file"
+msgstr "إزالة ملف غير متوافق"
+
+#: src/views/swap_view.rs:377
+msgid "Removing incompatible swap file…"
+msgstr "جارٍ إزالة ملف الذاكرة الافتراضية غير المتوافق..."
+
+#: src/views/swap_view.rs:790
+msgid "Present but inactive"
+msgstr "موجود لكنه غير نشط"
+
+#: src/views/swap_view.rs:792
+msgid "Not created — choose a size below to add one"
+msgstr "لم يتم الإنشاء — اختر حجمًا أدناه لإضافته"
+
+#: src/views/swap_view.rs:794
+msgid "Not created — at least 20 GiB must remain free"
+msgstr "لم يتم الإنشاء — يجب أن تظل مساحة حرة متاحة لا تقل عن 20 GiB"
+
+#: src/views/swap_view.rs:830
+msgid ""
+"Resize is locked because this file is the configured hibernation resume "
+"target"
+msgstr "تم قفل تغيير الحجم لأن هذا الملف هو هدف استئناف السبات المُعد مسبقًا"
+
+#: src/views/swap_view.rs:832
+msgid ""
+"Optional compatibility file; 0 GiB removes it and 20 GiB remains reserved "
+"for the system"
+msgstr "ملف توافق اختياري؛ يُزال عند تعيين 0 GiB، وتبقى 20 GiB محجوزة للنظام"
+
+#: src/views/swap_view.rs:834
+msgid ""
+"Disabled on Btrfs because a root-subvolume swap file would prevent Disk "
+"Snapshots Manager recovery points"
+msgstr ""
+"معطل على Btrfs لأن ملف الذاكرة الافتراضية في مجلد الجذر الفرعي سيمنع نقاط "
+"استعادة مدير لقطات القرص"
+
+#: src/views/zram_view.rs:120
+msgid ""
+"Create a compressed RAM swap device for faster memory pressure handling."
+msgstr "أنشئ جهاز تبادل ذاكرة مضغوطًا (Zram) لمعالجة ضغط الذاكرة بشكل أسرع."
+
+#: src/views/stress_test_view.rs:171
+msgid "Ensure important work is saved before running this test."
+msgstr "تأكد من حفظ العمل الهام قبل تشغيل هذا الاختبار."
+
+#: src/views/swap_view.rs:283
+msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
+msgstr ""
+"الحد الأقصى لنسبة مئوية من ذاكرة الوصول العشوائي قد تشغله مجموعة الضغط. موصى"
+" به: 20٪"
+
+#: src/views/dashboard_view.rs:141
+msgid "Real-time RAM, swap, and compression subsystem status"
+msgstr "حالة فرعي الذاكرة العشوائية والتبديل والضغط في الوقت الفعلي"
+
+#: src/views/swap_view.rs:308
+msgid "Reclaim pool pages under memory pressure. Recommended: ON"
+msgstr "استرداد صفحات المسبح تحت ضغط الذاكرة. الموصى به: تشغيل"
+
+#: src/views/stress_test_view.rs:107
+msgid "Simulate memory pressure to test swap and OOM behavior"
+msgstr "محاكاة ضغط الذاكرة لاختبار سلوك التبديل وOOM"
+
+#: src/views/stress_test_view.rs:161
+msgid "Warning: This will consume system memory and may cause instability"
+msgstr "تحذير: سيستهلك هذا ذاكرة النظام وقد يسبب عدم استقرار"
+
+#: src/views/zram_view.rs:440
+msgid "Zram configuration saved. The device will be created shortly."
+msgstr "تم حفظ إعدادات Zram. سيتم إنشاء الجهاز قريبًا."
+
+#~ msgid "Disabling swap will break hibernation. Continue?"
+#~ msgstr "سيؤدي تعطيل مساحة التبادل إلى تعطيل وضع السكون. هل تريد المتابعة؟"
+
+#~ msgid "Disk Swap"
+#~ msgstr "تبديل القرص الصلب"
+
+#~ msgid "Swap file size"
+#~ msgstr "حجم الملف الافتراضي"
 
 #~ msgid "<i>Recommended swappiness: {0} ({1})</i>"
 #~ msgstr "<i>درجة الاستبدال الموصى بها: {0} ({1})</i>"
@@ -318,11 +562,8 @@ msgstr ""
 
 #~ msgid "Disk-based swap file — the last line of defense when RAM is full"
 #~ msgstr ""
-#~ "ملف الذاكرة الافتراضية القائم على القرص — خط الدفاع الأخير عندما تمتلئ "
-#~ "ذاكرة الوصول العشوائي"
-
-#~ msgid "Ensure important work is saved before running this test."
-#~ msgstr "تأكد من حفظ العمل الهام قبل تشغيل هذا الاختبار."
+#~ "ملف الذاكرة الافتراضية القائم على القرص — خط الدفاع الأخير عندما تمتلئ ذاكرة"
+#~ " الوصول العشوائي"
 
 #~ msgid "Hello {0}, you have {1} messages"
 #~ msgstr "مرحباً {0}، لديك {1} رسائل"
@@ -332,23 +573,6 @@ msgstr ""
 
 #~ msgid "Idle ({0} GiB available)"
 #~ msgstr "خامل ({0} جيجابايت متاح)"
-
-#~ msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
-#~ msgstr ""
-#~ "الحد الأقصى لنسبة مئوية من ذاكرة الوصول العشوائي قد تشغله مجموعة الضغط. "
-#~ "موصى به: 20٪"
-
-#~ msgid "Real-time RAM, swap, and compression subsystem status"
-#~ msgstr "حالة فرعي الذاكرة العشوائية والتبديل والضغط في الوقت الفعلي"
-
-#~ msgid "Reclaim pool pages under memory pressure. Recommended: ON"
-#~ msgstr "استرداد صفحات المسبح تحت ضغط الذاكرة. الموصى به: تشغيل"
-
-#~ msgid "Simulate memory pressure to test swap and OOM behavior"
-#~ msgstr "محاكاة ضغط الذاكرة لاختبار سلوك التبديل وOOM"
-
-#~ msgid "Warning: This will consume system memory and may cause instability"
-#~ msgstr "تحذير: سيستهلك هذا ذاكرة النظام وقد يسبب عدم استقرار"
 
 #~ msgid "{0} · pool {1}%"
 #~ msgstr "{0} · تجمع {1}%"
@@ -393,35 +617,30 @@ msgstr ""
 #~ "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
 
 #~ msgid ""
-#~ "Create a compressed RAM swap device for faster memory pressure handling."
-#~ msgstr ""
-#~ "Create a compressed RAM swap device for faster memory pressure handling."
-
-#~ msgid ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
 #~ msgstr ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
 
 #~ msgid ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer "
-#~ "(recommended: {0})"
+#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
+#~ " {0})"
 #~ msgstr ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer "
-#~ "(recommended: {0})"
+#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
+#~ " {0})"
 
 #~ msgid ""
-#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to "
-#~ "prefer fast compressed RAM swap — dropping file cache when zram is "
-#~ "available wastes I/O performance."
+#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
+#~ " fast compressed RAM swap — dropping file cache when zram is available "
+#~ "wastes I/O performance."
 #~ msgstr ""
-#~ "Zram نشط لكن درجة الاستبدال هي {0} بدلاً من {1}. اضبطها على {1} لتفضيل "
-#~ "ذاكرة الاستبدال المضغوطة السريعة — فإن إسقاط ذاكرة التخزين المؤقت للملفات "
-#~ "عند توفر zram يُهدر أداء I/O."
+#~ "Zram نشط لكن درجة الاستبدال هي {0} بدلاً من {1}. اضبطها على {1} لتفضيل ذاكرة"
+#~ " الاستبدال المضغوطة السريعة — فإن إسقاط ذاكرة التخزين المؤقت للملفات عند "
+#~ "توفر zram يُهدر أداء I/O."
 
 #~ msgid ""
-#~ "How aggressively the kernel swaps — with Zram active, set to {0} to "
-#~ "prefer fast compressed RAM over disk cache (recommended: {0})"
+#~ "How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
+#~ "fast compressed RAM over disk cache (recommended: {0})"
 #~ msgstr ""
 #~ "مدى عدوانية نواة النظام في عملية الاستبدال — مع تفعيل Zram، اضبط على {0} "
-#~ "لتفضيل ذاكرة RAM المضغوطة السريعة على ذاكرة التخزين المؤقت للقرص (موصى "
-#~ "به: {0})"
+#~ "لتفضيل ذاكرة RAM المضغوطة السريعة على ذاكرة التخزين المؤقت للقرص (موصى به: "
+#~ "{0})"

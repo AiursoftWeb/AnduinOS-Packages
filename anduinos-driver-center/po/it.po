@@ -19,7 +19,8 @@ msgstr ""
 "Generated-By: Babel 2.17.0\n"
 
 #: src/anduinos_driver_center/app.py:113 src/anduinos_driver_center/app.py:211
-#: src/anduinos_driver_center/app.py:283 src/anduinos_driver_center/app.py:2238
+#: src/anduinos_driver_center/app.py:283
+#: src/anduinos_driver_center/app.py:2238
 msgid "AnduinOS Driver Center"
 msgstr "AnduinOS Centro driver"
 
@@ -104,7 +105,7 @@ msgstr "Stampanti"
 
 #: src/anduinos_driver_center/app.py:383 src/anduinos_driver_center/app.py:395
 msgid "Xbox Controller"
-msgstr "Xbox Controller"
+msgstr "Controller Xbox"
 
 #: src/anduinos_driver_center/app.py:385 src/anduinos_driver_center/app.py:986
 msgid "xpadneo installed"
@@ -126,7 +127,8 @@ msgstr "Driver Bluetooth opzionale"
 msgid "Secure Boot"
 msgstr "Secure Boot"
 
-#: src/anduinos_driver_center/app.py:405 src/anduinos_driver_center/app.py:1004
+#: src/anduinos_driver_center/app.py:405
+#: src/anduinos_driver_center/app.py:1004
 msgid "Trust established"
 msgstr "Fiducia stabilita"
 
@@ -142,7 +144,8 @@ msgstr "Azione richiesta"
 msgid "Device Firmware"
 msgstr "Firmware del dispositivo"
 
-#: src/anduinos_driver_center/app.py:485 src/anduinos_driver_center/app.py:1193
+#: src/anduinos_driver_center/app.py:485
+#: src/anduinos_driver_center/app.py:1193
 msgid "Checking for updates…"
 msgstr "Controllo aggiornamenti…"
 
@@ -164,8 +167,8 @@ msgstr "Riavvio necessario"
 #, python-format
 msgid "%d firmware update available"
 msgid_plural "%d firmware updates available"
-msgstr[0] "Aggiornamenti firmware %d disponibili"
-msgstr[1] "Aggiornamenti firmware %d disponibili"
+msgstr[0] "%d aggiornamento del firmware disponibile"
+msgstr[1] "%d aggiornamenti del firmware disponibili"
 
 #: src/anduinos_driver_center/app.py:500
 msgid "No supported devices"
@@ -199,7 +202,8 @@ msgid "Restart to finish the firmware update"
 msgstr "Riavviare per completare l'aggiornamento del firmware"
 
 #: src/anduinos_driver_center/app.py:521 src/anduinos_driver_center/app.py:819
-#: src/anduinos_driver_center/app.py:893 src/anduinos_driver_center/app.py:1040
+#: src/anduinos_driver_center/app.py:893
+#: src/anduinos_driver_center/app.py:1040
 #: src/anduinos_driver_center/app.py:1259
 #: src/anduinos_driver_center/app.py:1393
 msgid "Update available"
@@ -214,7 +218,8 @@ msgstr "Aggiornamento disponibile"
 msgid "Not detected"
 msgstr "Non rilevato"
 
-#: src/anduinos_driver_center/app.py:523 src/anduinos_driver_center/app.py:1331
+#: src/anduinos_driver_center/app.py:523
+#: src/anduinos_driver_center/app.py:1331
 msgid "No supported firmware devices"
 msgstr "Nessun dispositivo firmware supportato"
 
@@ -222,8 +227,8 @@ msgstr "Nessun dispositivo firmware supportato"
 #, python-format
 msgid "%d device is up to date"
 msgid_plural "%d devices are up to date"
-msgstr[0] "I dispositivi %d sono aggiornati"
-msgstr[1] "I dispositivi %d sono aggiornati"
+msgstr[0] "%d dispositivo è aggiornato"
+msgstr[1] "%d dispositivi sono aggiornati"
 
 #: src/anduinos_driver_center/app.py:530 src/anduinos_driver_center/app.py:844
 #: src/anduinos_driver_center/app.py:908 src/anduinos_driver_center/app.py:932
@@ -261,12 +266,14 @@ msgstr "In attesa dell'azione dell'utente..."
 msgid "Updating firmware…"
 msgstr "Aggiornamento del firmware…"
 
-#: src/anduinos_driver_center/app.py:589 src/anduinos_driver_center/app.py:2093
+#: src/anduinos_driver_center/app.py:589
+#: src/anduinos_driver_center/app.py:2093
 #: src/anduinos_driver_center/app.py:2215
 msgid "unknown error"
 msgstr "errore sconosciuto"
 
-#: src/anduinos_driver_center/app.py:594 src/anduinos_driver_center/app.py:1444
+#: src/anduinos_driver_center/app.py:594
+#: src/anduinos_driver_center/app.py:1444
 msgid "Restart required after installation"
 msgstr "Riavvio richiesto dopo l'installazione"
 
@@ -275,7 +282,8 @@ msgstr "Riavvio richiesto dopo l'installazione"
 msgid "Firmware operation failed"
 msgstr "L'operazione del firmware non è riuscita"
 
-#: src/anduinos_driver_center/app.py:601 src/anduinos_driver_center/app.py:2223
+#: src/anduinos_driver_center/app.py:601
+#: src/anduinos_driver_center/app.py:2223
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
@@ -304,7 +312,9 @@ msgstr "Riavvio richiesto"
 msgid ""
 "The firmware update has been prepared. Save your work and shut down the "
 "computer to finish installing it."
-msgstr "L'aggiornamento firmware è stato preparato. Salva il lavoro e spegni il computer per completare l'installazione."
+msgstr ""
+"L'aggiornamento firmware è stato preparato. Salva il lavoro e spegni il "
+"computer per completare l'installazione."
 
 #: src/anduinos_driver_center/app.py:643
 msgid ""
@@ -327,14 +337,16 @@ msgstr "Spegni adesso"
 msgid "Restart Now"
 msgstr "Riavvia ora"
 
-#: src/anduinos_driver_center/app.py:757 src/anduinos_driver_center/app.py:1351
+#: src/anduinos_driver_center/app.py:757
+#: src/anduinos_driver_center/app.py:1351
 #: src/anduinos_driver_center/app.py:1376
 #: src/anduinos_driver_center/app.py:1605
 #: src/anduinos_driver_center/app.py:1730
 msgid "Installed"
 msgstr "7 Installato"
 
-#: src/anduinos_driver_center/app.py:759 src/anduinos_driver_center/app.py:1876
+#: src/anduinos_driver_center/app.py:759
+#: src/anduinos_driver_center/app.py:1876
 #: src/anduinos_driver_center/app.py:1884
 msgid "Available"
 msgstr "DISPONIBILE"
@@ -345,17 +357,20 @@ msgstr "DISPONIBILE"
 msgid "Driver status"
 msgstr "Stato del conducente"
 
-#: src/anduinos_driver_center/app.py:792 src/anduinos_driver_center/app.py:1641
+#: src/anduinos_driver_center/app.py:792
+#: src/anduinos_driver_center/app.py:1641
 #: src/anduinos_driver_center/app.py:2215
 msgid "Driver operation failed: "
 msgstr "Operazione del driver non riuscita: "
 
-#: src/anduinos_driver_center/app.py:800 src/anduinos_driver_center/app.py:1557
+#: src/anduinos_driver_center/app.py:800
+#: src/anduinos_driver_center/app.py:1557
 msgid ""
-"Secure Boot status or trust must be resolved before installing a third-party "
-"driver."
+"Secure Boot status or trust must be resolved before installing a third-party"
+" driver."
 msgstr ""
-"Secure Boot deve essere risolto prima di installare un driver di terze parti."
+"Secure Boot deve essere risolto prima di installare un driver di terze "
+"parti."
 
 #: src/anduinos_driver_center/app.py:805 src/anduinos_driver_center/app.py:888
 #: src/anduinos_driver_center/app.py:1037
@@ -363,7 +378,8 @@ msgstr ""
 msgid "Recommended"
 msgstr "Consigliato"
 
-#: src/anduinos_driver_center/app.py:809 src/anduinos_driver_center/app.py:1546
+#: src/anduinos_driver_center/app.py:809
+#: src/anduinos_driver_center/app.py:1546
 msgid ""
 "Choose the driver used by this device. AnduinOS marks the hardware-tested "
 "recommendation."
@@ -381,7 +397,8 @@ msgstr ""
 msgid "Apply Changes"
 msgstr "Applica modifiche"
 
-#: src/anduinos_driver_center/app.py:834 src/anduinos_driver_center/app.py:2213
+#: src/anduinos_driver_center/app.py:834
+#: src/anduinos_driver_center/app.py:2213
 msgid "Driver changes completed. Restart may be required."
 msgstr "Modifiche al driver completate. Potrebbe essere necessario riavviare."
 
@@ -395,23 +412,28 @@ msgstr "Driver disponibili"
 msgid "No additional drivers are needed."
 msgstr "Non sono necessari driver aggiuntivi."
 
-#: src/anduinos_driver_center/app.py:931 src/anduinos_driver_center/app.py:1835
+#: src/anduinos_driver_center/app.py:931
+#: src/anduinos_driver_center/app.py:1835
 msgid "Audio Support"
 msgstr "Supporto audio"
 
-#: src/anduinos_driver_center/app.py:946 src/anduinos_driver_center/app.py:1939
+#: src/anduinos_driver_center/app.py:946
+#: src/anduinos_driver_center/app.py:1939
 msgid "Disabled"
 msgstr "Disabilitato"
 
-#: src/anduinos_driver_center/app.py:968 src/anduinos_driver_center/app.py:1906
+#: src/anduinos_driver_center/app.py:968
+#: src/anduinos_driver_center/app.py:1906
 msgid "Printing Support"
 msgstr "Supporto stampa"
 
-#: src/anduinos_driver_center/app.py:982 src/anduinos_driver_center/app.py:1721
+#: src/anduinos_driver_center/app.py:982
+#: src/anduinos_driver_center/app.py:1721
 msgid "Xbox Controller Support"
 msgstr "Supporto controller Xbox"
 
-#: src/anduinos_driver_center/app.py:984 src/anduinos_driver_center/app.py:1730
+#: src/anduinos_driver_center/app.py:984
+#: src/anduinos_driver_center/app.py:1730
 #: src/anduinos_driver_center/app.py:1814
 #: src/anduinos_driver_center/app.py:1857
 #: src/anduinos_driver_center/app.py:1865
@@ -431,7 +453,8 @@ msgstr "Controlla aggiornamenti dei driver"
 #: src/anduinos_driver_center/app.py:1058
 msgid "Refresh software sources and compare the recommended driver version."
 msgstr ""
-"Aggiorna le sorgenti software e confronta la versione consigliata del driver."
+"Aggiorna le sorgenti software e confronta la versione consigliata del "
+"driver."
 
 #: src/anduinos_driver_center/app.py:1070
 msgid "Driver information updated."
@@ -456,7 +479,8 @@ msgstr ""
 
 #: src/anduinos_driver_center/app.py:1176
 msgid "Firmware operation failed: "
-msgstr "Operazione firmware non riuscita:"
+msgstr "Operazione firmware non riuscita: "
+
 
 #: src/anduinos_driver_center/app.py:1177
 #: src/anduinos_driver_center/app.py:1286
@@ -491,8 +515,8 @@ msgstr "Dispositivi supportati"
 #, python-format
 msgid "%d device detected"
 msgid_plural "%d devices detected"
-msgstr[0] "Dispositivi %d rilevati"
-msgstr[1] "Dispositivi %d rilevati"
+msgstr[0] "Rilevato %d dispositivo"
+msgstr[1] "Rilevati %d dispositivi"
 
 #: src/anduinos_driver_center/app.py:1252
 msgid "Available firmware updates"
@@ -502,8 +526,8 @@ msgstr "Aggiornamenti firmware disponibili"
 #, python-format
 msgid "%d update available"
 msgid_plural "%d updates available"
-msgstr[0] "Aggiornamenti %d disponibili"
-msgstr[1] "Aggiornamenti %d disponibili"
+msgstr[0] "%d aggiornamento disponibile"
+msgstr[1] "%d aggiornamenti disponibili"
 
 #: src/anduinos_driver_center/app.py:1266
 msgid "Firmware actions"
@@ -537,8 +561,8 @@ msgstr "Aggiorna tutto il firmware"
 #, python-format
 msgid "Install %d available update."
 msgid_plural "Install all %d available updates."
-msgstr[0] "Installa tutti gli aggiornamenti disponibili per %d."
-msgstr[1] "Installa tutti gli aggiornamenti disponibili per %d."
+msgstr[0] "Installa l'aggiornamento %d disponibile."
+msgstr[1] "Istalla tutti gli aggiornamenti %d disponibili."
 
 #: src/anduinos_driver_center/app.py:1305
 msgid "Update All"
@@ -663,8 +687,8 @@ msgstr "Installare il firmware per %(device)s da %(current)s a %(available)s?"
 #, python-format
 msgid "Install %d available firmware update?"
 msgid_plural "Install all %d available firmware updates?"
-msgstr[0] "Installare tutti gli aggiornamenti firmware disponibili per %d?"
-msgstr[1] "Installare tutti gli aggiornamenti firmware disponibili per %d?"
+msgstr[0] "Installare %d aggiornamento firmware disponibile?"
+msgstr[1] "Installare tutti gli aggiornamenti firmware %d disponibili?"
 
 #: src/anduinos_driver_center/app.py:1489
 msgid "Keep the computer connected to AC power."
@@ -674,7 +698,10 @@ msgstr "Mantenere il computer collegato all'alimentazione CA."
 msgid ""
 "This update may invalidate full-disk encryption secrets. Make sure you have "
 "the volume recovery key before continuing."
-msgstr "Questo aggiornamento può invalidare i segreti della crittografia completa del disco. Assicurati di avere la chiave di ripristino del volume prima di continuare."
+msgstr ""
+"Questo aggiornamento può invalidare i segreti della crittografia completa "
+"del disco. Assicurati di avere la chiave di ripristino del volume prima di "
+"continuare."
 
 #: src/anduinos_driver_center/app.py:1498
 msgid "A restart may be required to finish installation."
@@ -701,7 +728,7 @@ msgstr "Applica"
 
 #: src/anduinos_driver_center/app.py:1576
 msgid "open source"
-msgstr "open source"
+msgstr "a codice sorgente aperto"
 
 #: src/anduinos_driver_center/app.py:1576
 msgid "proprietary"
@@ -994,7 +1021,7 @@ msgid ""
 "Secure Boot is a motherboard security standard that ensures only trusted "
 "software loads at startup."
 msgstr ""
-"\tSecure Boot è uno standard di sicurezza della scheda madre che garantisce "
+"Secure Boot è uno standard di sicurezza della scheda madre che garantisce "
 "che solo il software attendibile venga caricato all'avvio."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
@@ -1036,9 +1063,8 @@ msgstr "La protezione hardware della scheda madre è attiva"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
 msgid "Firmware does not support Secure Boot"
-msgstr ""
-"Il firmware non supporta Secure Boot\n"
-"Impossibile determinare lo stato "
+msgstr "Il firmware non supporta Secure Boot"
+
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
 msgid "Secure Boot is disabled"
@@ -1106,11 +1132,11 @@ msgid "Repair Automatic DKMS Signing"
 msgstr "Ripara la firma automatica DKMS"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
-msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgid ""
+"This firmware does not provide Secure Boot. No certificate is required."
 msgstr ""
-"Questo firmware non fornisce Secure Boot. Non è richiesto alcun "
-"certificato.\n"
-"Impossibile leggere lo stato "
+"Questo firmware non fornisce Secure Boot. Non è richiesto alcun certificato."
+
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
 msgid ""
@@ -1200,8 +1226,8 @@ msgstr "L'imposizione della firma del firmware non è attiva."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
 msgid ""
-"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
-"You can repair them after enrollment."
+"The certificate is ready, but one or more DKMS modules could not be rebuilt."
+" You can repair them after enrollment."
 msgstr ""
 "Il certificato è pronto, ma non è stato possibile ricostruire uno o più "
 "moduli DKMS. Puoi ripararli dopo la registrazione."
@@ -1229,6 +1255,10 @@ msgstr "Controlla l'output avanzato."
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
 msgid "Generating & Signing..."
 msgstr "Generazione e firma in corso..."
+
+#: src/anduinos_driver_center/app.py:1929
+msgid "Add Printer"
+msgstr "Aggiungi stampante"
 
 #~ msgid "Download the latest metadata from enabled firmware remotes."
 #~ msgstr "Scarica i metadati più recenti dai telecomandi firmware abilitati."
@@ -1292,7 +1322,3 @@ msgstr "Generazione e firma in corso..."
 #~ "%d\n"
 #~ "Mancano i pacchetti "
 #~ msgstr[1] "%d"
-
-#: src/anduinos_driver_center/app.py:1929
-msgid "Add Printer"
-msgstr "Aggiungi stampante"

@@ -166,7 +166,7 @@ msgstr "需要重新啟動"
 #, python-format
 msgid "%d firmware update available"
 msgid_plural "%d firmware updates available"
-msgstr[0] "有 %d 個可用的韌體更新"
+msgstr[0] "%d 個可用的韌體更新"
 
 #: src/anduinos_driver_center/app.py:500
 msgid "No supported devices"
@@ -225,7 +225,7 @@ msgstr "沒有受支援的韌體設備"
 #, python-format
 msgid "%d device is up to date"
 msgid_plural "%d devices are up to date"
-msgstr[0] "%d 個裝置已是最新狀態"
+msgstr[0] "%d 個裝置已是最新版本"
 
 #: src/anduinos_driver_center/app.py:530 src/anduinos_driver_center/app.py:844
 #: src/anduinos_driver_center/app.py:908 src/anduinos_driver_center/app.py:932
@@ -354,7 +354,8 @@ msgstr "駕駛狀態"
 #: src/anduinos_driver_center/app.py:1642
 #: src/anduinos_driver_center/app.py:2242
 msgid "Driver operation failed: "
-msgstr "驅動程式操作失敗："
+msgstr "驅動程式操作失敗： "
+
 
 #: src/anduinos_driver_center/app.py:800
 #: src/anduinos_driver_center/app.py:1558
@@ -462,7 +463,8 @@ msgstr "透過 Linux Vendor Firmware Service 讓系統韌體和支援的硬體�
 
 #: src/anduinos_driver_center/app.py:1177
 msgid "Firmware operation failed: "
-msgstr "韌體操作失敗："
+msgstr "韌體操作失敗： "
+
 
 #: src/anduinos_driver_center/app.py:1178
 #: src/anduinos_driver_center/app.py:1287
@@ -497,7 +499,7 @@ msgstr "支援的設備"
 #, python-format
 msgid "%d device detected"
 msgid_plural "%d devices detected"
-msgstr[0] "已偵測到 %d 個裝置"
+msgstr[0] "%d 個裝置已偵測到"
 
 #: src/anduinos_driver_center/app.py:1253
 msgid "Available firmware updates"
@@ -507,7 +509,7 @@ msgstr "可用的韌體更新"
 #, python-format
 msgid "%d update available"
 msgid_plural "%d updates available"
-msgstr[0] "有 %d 個可用更新"
+msgstr[0] "%d 個可用更新"
 
 #: src/anduinos_driver_center/app.py:1267
 msgid "Firmware actions"
@@ -906,7 +908,7 @@ msgstr "沒有配置佇列"
 #, python-format
 msgid "%d queue paused"
 msgid_plural "%d queues paused"
-msgstr[0] "已暫停 %d 個佇列"
+msgstr[0] "%d 個佇列已暫停"
 
 #: src/anduinos_driver_center/app.py:1990
 msgid "All queues enabled"
@@ -959,7 +961,8 @@ msgstr "已啟用列印支援。"
 
 #: src/anduinos_driver_center/app.py:2112
 msgid "Printing operation failed: "
-msgstr "列印操作失敗："
+msgstr "列印操作失敗： "
+
 
 #: src/anduinos_driver_center/app.py:2201
 msgid "Working…"

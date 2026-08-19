@@ -1,3 +1,4 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: ufwall-gtk\n"
@@ -68,33 +69,32 @@ msgstr "Оба"
 msgid "Cancel"
 msgstr "Отмена"
 
-#, fuzzy
 msgid "Local Network Discovery"
-msgstr "Multicast DNS для обнаружения в локальной сети"
+msgstr "Обнаружение в локальной сети"
 
 msgid "Control multicast DNS discovery and .local name resolution."
-msgstr ""
+msgstr "Управление обнаружением через mDNS и разрешением имён .local."
 
 msgid "Local Network Discovery (mDNS)"
-msgstr ""
+msgstr "Обнаружение в локальной сети (mDNS)"
 
 msgid "Checking service status…"
-msgstr ""
+msgstr "Проверка состояния службы…"
 
 msgid "Network Discovery Error"
-msgstr ""
+msgstr "Ошибка обнаружения сети"
 
 msgid "Avahi is not installed."
-msgstr ""
+msgstr "Avahi не установлен."
 
 msgid "Avahi is running; .local names and service discovery are available."
-msgstr ""
+msgstr "Avahi запущен; имена .local и обнаружение служб доступны."
 
 msgid "Avahi is enabled but not currently running."
-msgstr ""
+msgstr "Avahi включен, но в настоящее время не запущен."
 
 msgid "Avahi is blocked; .local names and service discovery are unavailable."
-msgstr ""
+msgstr "Avahi заблокирован; имена .local и обнаружение служб недоступны."
 
 msgid "Comment"
 msgstr "Комментарий"
@@ -286,11 +286,13 @@ msgid "There are no rules configured yet."
 msgstr "Правила ещё не настроены."
 
 msgid "This will delete all custom rules. This action cannot be undone."
-msgstr "Это удалит все пользовательские правила. Это действие нельзя отменить."
+msgstr ""
+"Это удалит все пользовательские правила. Это действие нельзя отменить."
 
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
-msgstr "Это предотвратит отправку пакетов от удалённого узла на ваш компьютер."
+msgstr ""
+"Это предотвратит отправку пакетов от удалённого узла на ваш компьютер."
 
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."

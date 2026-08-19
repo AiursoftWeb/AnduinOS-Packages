@@ -19,7 +19,8 @@ msgstr ""
 "Generated-By: Babel 2.17.0\n"
 
 #: src/anduinos_driver_center/app.py:113 src/anduinos_driver_center/app.py:211
-#: src/anduinos_driver_center/app.py:283 src/anduinos_driver_center/app.py:2238
+#: src/anduinos_driver_center/app.py:283
+#: src/anduinos_driver_center/app.py:2238
 msgid "AnduinOS Driver Center"
 msgstr "Pusat Pengemudi AnduinOS"
 
@@ -95,7 +96,7 @@ msgstr "Tidak ada printer yang dikonfigurasi"
 #, python-format
 msgid "%d printer configured"
 msgid_plural "%d printers configured"
-msgstr[0] "pencetak %d dikonfigurasi"
+msgstr[0] "%d printer dikonfigurasi"
 msgstr[1] "%d printer dikonfigurasi"
 
 #: src/anduinos_driver_center/app.py:375 src/anduinos_driver_center/app.py:378
@@ -126,7 +127,8 @@ msgstr "Driver Bluetooth opsional"
 msgid "Secure Boot"
 msgstr "Secure Boot"
 
-#: src/anduinos_driver_center/app.py:405 src/anduinos_driver_center/app.py:1004
+#: src/anduinos_driver_center/app.py:405
+#: src/anduinos_driver_center/app.py:1004
 msgid "Trust established"
 msgstr "Kepercayaan terjalin"
 
@@ -142,7 +144,8 @@ msgstr "Diperlukan tindakan"
 msgid "Device Firmware"
 msgstr "Firmware Perangkat"
 
-#: src/anduinos_driver_center/app.py:485 src/anduinos_driver_center/app.py:1193
+#: src/anduinos_driver_center/app.py:485
+#: src/anduinos_driver_center/app.py:1193
 msgid "Checking for updates…"
 msgstr "Memeriksa pembaruan…"
 
@@ -164,8 +167,8 @@ msgstr "Pemutakhiran Ulang Diperlukan"
 #, python-format
 msgid "%d firmware update available"
 msgid_plural "%d firmware updates available"
-msgstr[0] "Pembaruan firmware %d tersedia"
-msgstr[1] "Pembaruan firmware %d tersedia"
+msgstr[0] "%d pembaruan firmware tersedia"
+msgstr[1] "%d pembaruan firmware tersedia"
 
 #: src/anduinos_driver_center/app.py:500
 msgid "No supported devices"
@@ -199,7 +202,8 @@ msgid "Restart to finish the firmware update"
 msgstr "Mulai ulang untuk menyelesaikan pembaruan firmware"
 
 #: src/anduinos_driver_center/app.py:521 src/anduinos_driver_center/app.py:819
-#: src/anduinos_driver_center/app.py:893 src/anduinos_driver_center/app.py:1040
+#: src/anduinos_driver_center/app.py:893
+#: src/anduinos_driver_center/app.py:1040
 #: src/anduinos_driver_center/app.py:1259
 #: src/anduinos_driver_center/app.py:1393
 msgid "Update available"
@@ -214,7 +218,8 @@ msgstr "Pembaruan tersedia"
 msgid "Not detected"
 msgstr "Tidak terdeteksi"
 
-#: src/anduinos_driver_center/app.py:523 src/anduinos_driver_center/app.py:1331
+#: src/anduinos_driver_center/app.py:523
+#: src/anduinos_driver_center/app.py:1331
 msgid "No supported firmware devices"
 msgstr "Tidak ada perangkat firmware yang didukung"
 
@@ -222,8 +227,8 @@ msgstr "Tidak ada perangkat firmware yang didukung"
 #, python-format
 msgid "%d device is up to date"
 msgid_plural "%d devices are up to date"
-msgstr[0] "Perangkat %d sudah yang terbaru"
-msgstr[1] "Perangkat %d sudah yang terbaru"
+msgstr[0] "%d perangkat sudah diperbarui"
+msgstr[1] "%d perangkat sudah diperbarui"
 
 #: src/anduinos_driver_center/app.py:530 src/anduinos_driver_center/app.py:844
 #: src/anduinos_driver_center/app.py:908 src/anduinos_driver_center/app.py:932
@@ -261,12 +266,14 @@ msgstr "Menunggu tindakan pengguna…"
 msgid "Updating firmware…"
 msgstr "Memperbarui firmware…"
 
-#: src/anduinos_driver_center/app.py:589 src/anduinos_driver_center/app.py:2093
+#: src/anduinos_driver_center/app.py:589
+#: src/anduinos_driver_center/app.py:2093
 #: src/anduinos_driver_center/app.py:2215
 msgid "unknown error"
 msgstr "kesalahan tidak diketahui"
 
-#: src/anduinos_driver_center/app.py:594 src/anduinos_driver_center/app.py:1444
+#: src/anduinos_driver_center/app.py:594
+#: src/anduinos_driver_center/app.py:1444
 msgid "Restart required after installation"
 msgstr "Restart diperlukan setelah instalasi"
 
@@ -275,7 +282,8 @@ msgstr "Restart diperlukan setelah instalasi"
 msgid "Firmware operation failed"
 msgstr "Operasi firmware gagal"
 
-#: src/anduinos_driver_center/app.py:601 src/anduinos_driver_center/app.py:2223
+#: src/anduinos_driver_center/app.py:601
+#: src/anduinos_driver_center/app.py:2223
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
@@ -304,15 +312,17 @@ msgstr "Diperlukan Mulai Ulang"
 msgid ""
 "The firmware update has been prepared. Save your work and shut down the "
 "computer to finish installing it."
-msgstr "Pembaruan firmware telah disiapkan. Simpan pekerjaan Anda dan matikan komputer untuk menyelesaikan pemasangan."
+msgstr ""
+"Pembaruan firmware telah disiapkan. Simpan pekerjaan Anda dan matikan "
+"komputer untuk menyelesaikan pemasangan."
 
 #: src/anduinos_driver_center/app.py:643
 msgid ""
 "The firmware update has been prepared. Save your work and restart the "
 "computer to finish installing it."
 msgstr ""
-"Pembaruan firmware telah disiapkan. Simpan pekerjaan Anda dan nyalakan ulang "
-"komputer untuk menyelesaikan instalasinya."
+"Pembaruan firmware telah disiapkan. Simpan pekerjaan Anda dan nyalakan ulang"
+" komputer untuk menyelesaikan instalasinya."
 
 #: src/anduinos_driver_center/app.py:648
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
@@ -327,14 +337,16 @@ msgstr "Matikan Sekarang"
 msgid "Restart Now"
 msgstr "Mulai Ulang Sekarang"
 
-#: src/anduinos_driver_center/app.py:757 src/anduinos_driver_center/app.py:1351
+#: src/anduinos_driver_center/app.py:757
+#: src/anduinos_driver_center/app.py:1351
 #: src/anduinos_driver_center/app.py:1376
 #: src/anduinos_driver_center/app.py:1605
 #: src/anduinos_driver_center/app.py:1730
 msgid "Installed"
 msgstr "Terinstal"
 
-#: src/anduinos_driver_center/app.py:759 src/anduinos_driver_center/app.py:1876
+#: src/anduinos_driver_center/app.py:759
+#: src/anduinos_driver_center/app.py:1876
 #: src/anduinos_driver_center/app.py:1884
 msgid "Available"
 msgstr "Tersedia"
@@ -345,15 +357,17 @@ msgstr "Tersedia"
 msgid "Driver status"
 msgstr "Status pengemudi"
 
-#: src/anduinos_driver_center/app.py:792 src/anduinos_driver_center/app.py:1641
+#: src/anduinos_driver_center/app.py:792
+#: src/anduinos_driver_center/app.py:1641
 #: src/anduinos_driver_center/app.py:2215
 msgid "Driver operation failed: "
 msgstr "Operasi driver gagal: "
 
-#: src/anduinos_driver_center/app.py:800 src/anduinos_driver_center/app.py:1557
+#: src/anduinos_driver_center/app.py:800
+#: src/anduinos_driver_center/app.py:1557
 msgid ""
-"Secure Boot status or trust must be resolved before installing a third-party "
-"driver."
+"Secure Boot status or trust must be resolved before installing a third-party"
+" driver."
 msgstr ""
 "Secure Boot status atau kepercayaan harus diselesaikan sebelum menginstal "
 "driver pihak ketiga."
@@ -364,7 +378,8 @@ msgstr ""
 msgid "Recommended"
 msgstr "Direkomendasikan"
 
-#: src/anduinos_driver_center/app.py:809 src/anduinos_driver_center/app.py:1546
+#: src/anduinos_driver_center/app.py:809
+#: src/anduinos_driver_center/app.py:1546
 msgid ""
 "Choose the driver used by this device. AnduinOS marks the hardware-tested "
 "recommendation."
@@ -382,7 +397,8 @@ msgstr ""
 msgid "Apply Changes"
 msgstr "Terapkan Perubahan"
 
-#: src/anduinos_driver_center/app.py:834 src/anduinos_driver_center/app.py:2213
+#: src/anduinos_driver_center/app.py:834
+#: src/anduinos_driver_center/app.py:2213
 msgid "Driver changes completed. Restart may be required."
 msgstr "Perubahan driver selesai. Mulai ulang mungkin diperlukan."
 
@@ -396,23 +412,28 @@ msgstr "Driver yang tersedia"
 msgid "No additional drivers are needed."
 msgstr "Tidak diperlukan driver tambahan."
 
-#: src/anduinos_driver_center/app.py:931 src/anduinos_driver_center/app.py:1835
+#: src/anduinos_driver_center/app.py:931
+#: src/anduinos_driver_center/app.py:1835
 msgid "Audio Support"
 msgstr "Dukungan Audio"
 
-#: src/anduinos_driver_center/app.py:946 src/anduinos_driver_center/app.py:1939
+#: src/anduinos_driver_center/app.py:946
+#: src/anduinos_driver_center/app.py:1939
 msgid "Disabled"
 msgstr "Nonaktif"
 
-#: src/anduinos_driver_center/app.py:968 src/anduinos_driver_center/app.py:1906
+#: src/anduinos_driver_center/app.py:968
+#: src/anduinos_driver_center/app.py:1906
 msgid "Printing Support"
 msgstr "Dukungan Pencetakan"
 
-#: src/anduinos_driver_center/app.py:982 src/anduinos_driver_center/app.py:1721
+#: src/anduinos_driver_center/app.py:982
+#: src/anduinos_driver_center/app.py:1721
 msgid "Xbox Controller Support"
 msgstr "Dukungan Kontroler Xbox"
 
-#: src/anduinos_driver_center/app.py:984 src/anduinos_driver_center/app.py:1730
+#: src/anduinos_driver_center/app.py:984
+#: src/anduinos_driver_center/app.py:1730
 #: src/anduinos_driver_center/app.py:1814
 #: src/anduinos_driver_center/app.py:1857
 #: src/anduinos_driver_center/app.py:1865
@@ -458,7 +479,8 @@ msgstr ""
 
 #: src/anduinos_driver_center/app.py:1176
 msgid "Firmware operation failed: "
-msgstr "Operasi firmware gagal:"
+msgstr "Operasi firmware gagal: "
+
 
 #: src/anduinos_driver_center/app.py:1177
 #: src/anduinos_driver_center/app.py:1286
@@ -493,8 +515,8 @@ msgstr "Perangkat yang didukung"
 #, python-format
 msgid "%d device detected"
 msgid_plural "%d devices detected"
-msgstr[0] "Perangkat %d terdeteksi"
-msgstr[1] "Perangkat %d terdeteksi"
+msgstr[0] "%d perangkat terdeteksi"
+msgstr[1] "%d perangkat terdeteksi"
 
 #: src/anduinos_driver_center/app.py:1252
 msgid "Available firmware updates"
@@ -504,8 +526,8 @@ msgstr "Pembaruan firmware yang tersedia"
 #, python-format
 msgid "%d update available"
 msgid_plural "%d updates available"
-msgstr[0] "Pembaruan %d tersedia"
-msgstr[1] "Pembaruan %d tersedia"
+msgstr[0] "%d pembaruan tersedia"
+msgstr[1] "%d pembaruan tersedia"
 
 #: src/anduinos_driver_center/app.py:1266
 msgid "Firmware actions"
@@ -539,8 +561,8 @@ msgstr "Perbarui Semua Firmware"
 #, python-format
 msgid "Install %d available update."
 msgid_plural "Install all %d available updates."
-msgstr[0] "Instal semua pembaruan %d yang tersedia."
-msgstr[1] "Instal semua pembaruan %d yang tersedia."
+msgstr[0] "Instal %d pembaruan yang tersedia."
+msgstr[1] "Instal semua %d pembaruan yang tersedia."
 
 #: src/anduinos_driver_center/app.py:1305
 msgid "Update All"
@@ -665,8 +687,8 @@ msgstr "Instal firmware untuk %(device)s dari %(current)s ke %(available)s?"
 #, python-format
 msgid "Install %d available firmware update?"
 msgid_plural "Install all %d available firmware updates?"
-msgstr[0] "Instal semua pembaruan firmware %d yang tersedia?"
-msgstr[1] "Instal semua pembaruan firmware %d yang tersedia?"
+msgstr[0] "Instal %d pembaruan firmware yang tersedia?"
+msgstr[1] "Instal semua %d pembaruan firmware yang tersedia?"
 
 #: src/anduinos_driver_center/app.py:1489
 msgid "Keep the computer connected to AC power."
@@ -676,7 +698,9 @@ msgstr "Jaga agar komputer tetap terhubung ke daya AC."
 msgid ""
 "This update may invalidate full-disk encryption secrets. Make sure you have "
 "the volume recovery key before continuing."
-msgstr "Pembaruan ini dapat membatalkan rahasia enkripsi seluruh disk. Pastikan Anda memiliki kunci pemulihan volume sebelum melanjutkan."
+msgstr ""
+"Pembaruan ini dapat membatalkan rahasia enkripsi seluruh disk. Pastikan Anda"
+" memiliki kunci pemulihan volume sebelum melanjutkan."
 
 #: src/anduinos_driver_center/app.py:1498
 msgid "A restart may be required to finish installation."
@@ -856,8 +880,8 @@ msgid ""
 "Inspect the local print service, configured queues, and the packages that "
 "provide modern and legacy printer support."
 msgstr ""
-"Periksa layanan pencetakan lokal, antrian yang dikonfigurasi, dan paket yang "
-"menyediakan dukungan printer modern dan lama."
+"Periksa layanan pencetakan lokal, antrian yang dikonfigurasi, dan paket yang"
+" menyediakan dukungan printer modern dan lama."
 
 #: src/anduinos_driver_center/app.py:1911
 #: src/anduinos_driver_center/app.py:1928
@@ -915,8 +939,8 @@ msgstr "Tidak ada antrian yang dikonfigurasi"
 #, python-format
 msgid "%d queue paused"
 msgid_plural "%d queues paused"
-msgstr[0] "Antrian %d dijeda"
-msgstr[1] "Antrian %d dijeda"
+msgstr[0] "%d antrian dijeda"
+msgstr[1] "%d antrian dijeda"
 
 #: src/anduinos_driver_center/app.py:1970
 msgid "All queues enabled"
@@ -1037,9 +1061,8 @@ msgstr "Perlindungan perangkat keras motherboard aktif"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
 msgid "Firmware does not support Secure Boot"
-msgstr ""
-"Firmware tidak mendukung Secure Boot\n"
-"Status "
+msgstr "Firmware tidak mendukung Secure Boot"
+
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
 msgid "Secure Boot is disabled"
@@ -1080,8 +1103,8 @@ msgid ""
 "Secure Boot trust is ready. No third-party kernel modules are currently "
 "installed."
 msgstr ""
-"Secure Boot kepercayaan sudah siap. Tidak ada modul kernel pihak ketiga yang "
-"diinstal saat ini."
+"Secure Boot kepercayaan sudah siap. Tidak ada modul kernel pihak ketiga yang"
+" diinstal saat ini."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
@@ -1092,7 +1115,8 @@ msgstr "Driver ditandatangani dan siap dimuat"
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
 msgid "Drivers are trusted, but automatic DKMS signing needs repair"
 msgstr ""
-"Driver dapat dipercaya, tetapi penandatanganan otomatis DKMS perlu diperbaiki"
+"Driver dapat dipercaya, tetapi penandatanganan otomatis DKMS perlu "
+"diperbaiki"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
 msgid "No signed third-party drivers detected"
@@ -1107,7 +1131,8 @@ msgid "Repair Automatic DKMS Signing"
 msgstr "Perbaiki Penandatanganan DKMS Otomatis"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
-msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgid ""
+"This firmware does not provide Secure Boot. No certificate is required."
 msgstr ""
 "Firmware ini tidak menyediakan Secure Boot. Tidak diperlukan sertifikat."
 
@@ -1174,7 +1199,8 @@ msgstr "  Memeriksa...  "
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
 msgid "Please trust the certificate upon reboot using password 123456."
 msgstr ""
-"Silakan percayai sertifikat saat booting ulang menggunakan kata sandi 123456."
+"Silakan percayai sertifikat saat booting ulang menggunakan kata sandi "
+"123456."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
 msgid "Reboot"
@@ -1203,8 +1229,8 @@ msgstr "Penegakan tanda tangan firmware tidak aktif."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
 msgid ""
-"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
-"You can repair them after enrollment."
+"The certificate is ready, but one or more DKMS modules could not be rebuilt."
+" You can repair them after enrollment."
 msgstr ""
 "Sertifikat sudah siap, tetapi satu atau lebih modul DKMS tidak dapat dibuat "
 "ulang. Anda dapat memperbaikinya setelah pendaftaran."
@@ -1232,6 +1258,10 @@ msgstr "Silakan periksa output lanjutan."
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
 msgid "Generating & Signing..."
 msgstr "Menghasilkan & Menandatangani..."
+
+#: src/anduinos_driver_center/app.py:1929
+msgid "Add Printer"
+msgstr "Tambahkan Printer"
 
 #~ msgid "Download the latest metadata from enabled firmware remotes."
 #~ msgstr "Unduh metadata terbaru dari remote firmware yang diaktifkan."
@@ -1291,7 +1321,3 @@ msgstr "Menghasilkan & Menandatangani..."
 #~ msgid_plural "%d packages are missing"
 #~ msgstr[0] "Paket %d hilang"
 #~ msgstr[1] "Paket %d hilang"
-
-#: src/anduinos_driver_center/app.py:1929
-msgid "Add Printer"
-msgstr "Tambahkan Printer"

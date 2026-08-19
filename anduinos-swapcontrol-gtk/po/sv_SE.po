@@ -1,303 +1,553 @@
+#
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/window.rs:76
 msgid "About"
 msgstr "Om"
 
+#: src/views/swap_view.rs:300
 msgid "Accept threshold percent"
 msgstr "Acceptgräns (%)"
 
+#: src/views/zram_view.rs:247
 msgid "Advanced options"
 msgstr "Avancerade alternativ"
 
+#: src/views/stress_test_view.rs:225 src/views/swap_view.rs:225
 msgid "Advanced settings"
 msgstr "Avancerade inställningar"
 
+#: src/views/zram_view.rs:348
 msgid "Algorithm"
 msgstr "Algoritm"
 
+#: src/views/swap_view.rs:334
 msgid "Apply Settings"
 msgstr "Tillämpa inställningar"
 
+#: src/views/swap_view.rs:667
 msgid "Applying settings…"
 msgstr "Tillämpa inställningar"
 
+#: src/views/dashboard_view.rs:370
 msgid "Auth needed"
 msgstr "Autentisering krävs"
 
+#: src/views/dashboard_view.rs:413
 msgid "Buf"
 msgstr "Buf"
 
+#: src/views/dashboard_view.rs:390
 msgid "Buffers"
 msgstr "Buffer"
 
+#: src/views/dashboard_view.rs:414
 msgid "Cache"
 msgstr "Cache"
 
+#: src/views/dashboard_view.rs:395
 msgid "Cached"
 msgstr "Cached"
 
+#: src/views/zram_view.rs:378
 msgid "Cancel"
 msgstr "Avbryt"
 
+#: src/views/stress_test_view.rs:318
 msgid "Cancel Test"
 msgstr "Avbryt"
 
+#: src/views/stress_test_view.rs:601
 msgid "Cancelled by user."
 msgstr "Avbruten av användaren."
 
+#: src/views/dashboard_view.rs:193
 msgid "Channels"
 msgstr "Kanaler"
 
+#: src/views/stress_test_view.rs:613
 msgid "Completed successfully — memory pressure test passed."
 msgstr "Slutförd med framgång – test av minnesbelastning klarat."
 
+#: src/views/swap_view.rs:183
 msgid ""
 "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
 "Zswap, not both."
 msgstr ""
-"Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
-"Zswap, not both."
+"Komprimera swap-sidor i en RAM-pool – snabbare än diskbyte. Använd Zram "
+"eller Zswap, inte båda."
 
+#: src/views/zram_view.rs:73
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "Komprimerad RAM-blockenhet – snabb in-memory-swap"
 
+#: src/views/swap_view.rs:266
 msgid "Compression algorithm"
 msgstr "Komprimeringsalgoritm"
 
+#: src/views/zram_view.rs:379
 msgid "Create"
 msgstr "Skapa"
 
+#: src/views/zram_view.rs:110 src/views/zram_view.rs:190
 msgid "Create Zram Device"
 msgstr "Skapa Zram-enhet"
 
+#: src/window.rs:110
 msgid "Dashboard"
 msgstr "Instrumentpanel"
 
+#: src/views/zram_view.rs:562
 msgid "Destroy Zram Device"
 msgstr "Ta bort Zram-enhet"
 
+#: src/views/zram_view.rs:439
 msgid "Device Created"
 msgstr "Enhet skapad"
 
+#: src/views/dashboard_view.rs:498
 msgid "Disabled"
 msgstr "Inaktiverad"
 
+#: src/views/swap_view.rs:521
 msgid "Disabling Zswap..."
 msgstr "Inaktiverar swap…"
 
-msgid "Disabling swap will break hibernation. Continue?"
-msgstr "Inaktivering av swap kommer att bryta viloläge. Vill du fortsätta?"
-
+#: src/views/swap_view.rs:577
 msgid "Disabling swap…"
 msgstr "Inaktiverar swap…"
 
-msgid "Disk Swap"
-msgstr "Virtualt minne på disk"
-
+#: src/views/swap_view.rs:97
 msgid "Disk Swap Configuration"
 msgstr "Konfiguration av virtuell minne"
 
+#: src/views/dashboard_view.rs:609
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
 msgstr ""
-"Disk swap is active with memory compression — your system is well-protected "
-"against memory pressure."
+"Växlingsutrymme på disk är aktivt med minneskomprimering – ditt system är "
+"väl skyddat mot minnesbrist."
 
+#: src/views/stress_test_view.rs:605 src/views/stress_test_view.rs:617
 msgid "Duration:"
 msgstr "Varaktighet:"
 
+#: src/views/dashboard_view.rs:604
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
 msgstr ""
-"Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
-"swap and dramatically reduces I/O under memory pressure."
+"Aktivera Zram för snabbt komprimerat växlingsutrymme i RAM-minnet – det är "
+"10× snabbare än växlingsutrymme på disk och minskar kraftigt antalet "
+"I/O-operationer vid minnesbrist."
 
+#: src/views/swap_view.rs:519
 msgid "Enabling Zswap..."
 msgstr "Aktiverar swap…"
 
+#: src/views/swap_view.rs:579
 msgid "Enabling swap…"
 msgstr "Aktiverar swap…"
 
+#: src/views/stress_test_view.rs:609 src/views/swap_view.rs:505
+#: src/views/zram_view.rs:182
 msgid "Error"
 msgstr "Fel"
 
+#: src/views/dashboard_view.rs:400 src/views/dashboard_view.rs:415
 msgid "Free"
 msgstr "Ledigt"
 
+#: src/views/stress_test_view.rs:250 src/views/stress_test_view.rs:251
+#: src/views/stress_test_view.rs:401
 msgid "Growth speed"
 msgstr "Tillväxt hastighet"
 
+#: src/views/dashboard_view.rs:269
 msgid "Hibernation"
 msgstr "Dvala"
 
+#: src/views/swap_view.rs:597 src/views/swap_view.rs:704
 msgid "Hibernation Warning"
 msgstr "Varning för viloläge"
 
+#: src/views/dashboard_view.rs:512 src/views/swap_view.rs:810
 msgid "Inactive"
 msgstr "Inaktiv"
 
+#: src/views/swap_view.rs:156 src/views/swap_view.rs:170
 msgid "Loading..."
 msgstr "Laddar..."
 
+#: src/views/stress_test_view.rs:232
 msgid "Maximum hold time"
 msgstr "Maximal väntetid"
 
+#: src/views/swap_view.rs:282
 msgid "Maximum pool percent"
 msgstr "Maximal poolprocent"
 
+#: src/views/dashboard_view.rs:134
 msgid "Memory Overview"
 msgstr "Minnesöversikt"
 
+#: src/views/zram_view.rs:119
 msgid "No Zram Devices"
 msgstr "Zram-enheter"
 
+#: src/views/dashboard_view.rs:456
 msgid "No device"
 msgstr "Ingen enhet"
 
+#: src/views/dashboard_view.rs:587
 msgid "No disk swap detected"
 msgstr "Ingen virtuell minnesbyte upptäckt"
 
+#: src/views/dashboard_view.rs:603
 msgid "No memory acceleration enabled"
 msgstr "Ingen minnesacceleration aktiverad"
 
+#: src/views/dashboard_view.rs:541
 msgid "None"
 msgstr "Ingen"
 
+#: src/views/dashboard_view.rs:525 src/views/dashboard_view.rs:533
 msgid "Off"
 msgstr "Av"
 
+#: src/views/dashboard_view.rs:532
 msgid "On"
 msgstr "På"
 
+#: src/views/swap_view.rs:301
 msgid ""
 "Only store pages that compress to ≤ this % of original. Higher = more pages "
 "cached. Recommended: 90%"
 msgstr ""
-"Only store pages that compress to ≤ this % of original. Higher = more pages "
-"cached. Recommended: 90%"
+"Spara endast sidor som komprimeras till ≤ denna procentandel av originalet. "
+"Högre värde = fler sidor lagras i cache. Rekommenderat: 90 %"
 
+#: src/views/dashboard_view.rs:608
 msgid "Optimal memory configuration"
 msgstr "Optimal minneskonfiguration"
 
+#: src/views/stress_test_view.rs:602 src/views/stress_test_view.rs:614
 msgid "Peak allocated:"
 msgstr "Maximalt allokerat:"
 
+#: src/views/zram_view.rs:367
 msgid "Priority"
 msgstr "Prioritet"
 
+#: src/views/stress_test_view.rs:209
 msgid "RAM"
 msgstr "RAM"
 
+#: src/views/zram_view.rs:545
 msgid "Remove"
 msgstr "Ta bort"
 
+#: src/views/stress_test_view.rs:360
 msgid "Run Again"
 msgstr "Kör igen"
 
+#: src/views/stress_test_view.rs:279
 msgid "Run Stress Test"
 msgstr "Kör stress-test"
 
+#: src/views/swap_view.rs:307
 msgid "Shrinker"
 msgstr "Minneskomprimerare"
 
+#: src/views/zram_view.rs:269
 msgid "Size (MiB)"
 msgstr "Storlek (MiB)"
 
+#: src/views/dashboard_view.rs:192
 msgid "Speed"
 msgstr "Hastighet"
 
+#: src/views/stress_test_view.rs:100 src/window.rs:114
 msgid "Stress Test"
 msgstr "Stress-test"
 
+#: src/views/dashboard_view.rs:252 src/views/dashboard_view.rs:266
+#: src/window.rs:112
 msgid "Swap"
 msgstr "Swap"
 
+#: src/window.rs:59
 msgid "Swap Control"
 msgstr "Virtuellt minneskontroll"
 
-msgid "Swap file size"
-msgstr "Storlek på virtuellt minne"
-
+#: src/views/swap_view.rs:147
 msgid "Swap usage"
 msgstr "Användning av virtuellt minne"
 
+#: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
 msgid "Swappiness"
 msgstr "Swappiness"
 
+#: src/views/dashboard_view.rs:598
 msgid "Swappiness not optimized for Zram"
 msgstr "Swappiness är inte optimerad för Zram"
 
+#: src/views/stress_test_view.rs:206
 msgid "Target Pressure"
 msgstr "Målbelastning"
 
+#: src/views/stress_test_view.rs:345
 msgid "Test Complete"
 msgstr "Testet är klart"
 
+#: src/views/dashboard_view.rs:190
 msgid "Total RAM"
 msgstr "Totalt RAM-minne"
 
+#: src/views/dashboard_view.rs:191
 msgid "Type"
 msgstr "Typ"
 
+#: src/views/dashboard_view.rs:385 src/views/dashboard_view.rs:412
 msgid "Used"
 msgstr "Använt"
 
+#: src/views/dashboard_view.rs:588
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
 msgstr ""
-"When RAM is full the kernel may kill applications. Enable disk swap for a "
-"reliable safety net."
+"När RAM-minnet är fullt kan kärnan avsluta program. Aktivera växlingsutrymme"
+" på disk som en tillförlitlig säkerhetsmarginal."
 
+#: src/views/dashboard_view.rs:244 src/views/dashboard_view.rs:268
+#: src/window.rs:111
 msgid "Zram"
 msgstr "Zram"
 
+#: src/views/zram_view.rs:66
 msgid "Zram Devices"
 msgstr "Zram-enheter"
 
+#: src/views/dashboard_view.rs:592
 msgid "Zram and Zswap are both active"
 msgstr "Zram och Zswap är båda aktiva"
 
+#: src/views/dashboard_view.rs:593
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
+"pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
+" one of them."
 msgstr ""
-"Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
+"Zram och Zswap är ömsesidigt uteslutande – var och en skapar sin egen "
+"komprimerade RAM-pool. Att köra båda slösar CPU-resurser och kan orsaka "
+"allvarliga prestandaproblem genom ständig minnesväxling. Inaktivera en av "
+"dem."
 
+#: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
+#: src/views/swap_view.rs:185
 msgid "Zswap"
 msgstr "Zswap"
 
+#: src/views/stress_test_view.rs:212
 msgid "default"
 msgstr "standard"
 
+#: src/views/swap_view.rs:267
 msgid ""
-"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires "
-"zswap restart."
+"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires"
+" zswap restart."
 msgstr ""
 "lz4 = snabb (rekommenderas), zstd = bäst kompressionsgrad, lzo = äldre "
 "standard. Ändring kräver omstart av zswap."
 
+#: src/views/stress_test_view.rs:211
 msgid "range"
 msgstr "intervall"
 
+#: src/views/stress_test_view.rs:233
 msgid "seconds"
 msgstr "sekunder"
 
+#: src/views/swap_view.rs:118
 msgid "with Zram"
 msgstr "med Zram"
 
+#: src/views/dashboard_view.rs:154
 msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr ""
 "med aktiv Zram — föredra snabb komprimerad RAM framför diskenhetens cache"
+
+#: src/views/dashboard_view.rs:547
+msgid "Ready"
+msgstr "Klar"
+
+#: src/views/dashboard_view.rs:549
+msgid "Unsupported"
+msgstr "Ej stödd"
+
+#: src/views/dashboard_view.rs:551
+msgid "Not configured"
+msgstr "Ej konfigurerad"
+
+#: src/views/dashboard_view.rs:553
+msgid "Resume target missing"
+msgstr "Återställningsmål saknas"
+
+#: src/views/dashboard_view.rs:555
+msgid "Resume target inactive"
+msgstr "Återställningsmål inaktivt"
+
+#: src/views/dashboard_view.rs:557
+msgid "Swap too small"
+msgstr "Swap för liten"
+
+#: src/views/dashboard_view.rs:559
+msgid "Not ready"
+msgstr "Ej klar"
+
+#: src/views/swap_view.rs:104
+msgid ""
+"Review installer-managed swap partitions and manage the legacy supplementary"
+" swap file"
+msgstr ""
+"Granska installerarhanterade swap-partitioner och hantera den äldre "
+"kompletterande swapfilen"
+
+#: src/views/swap_view.rs:155
+msgid "Swap partition"
+msgstr "Swap-partition"
+
+#: src/views/swap_view.rs:169
+msgid "Additional swap file"
+msgstr "Ytterligare swapfil"
+
+#: src/views/swap_view.rs:195
+msgid "Additional swap file size"
+msgstr "Ytterligare swapfilens storlek"
+
+#: src/views/swap_view.rs:196
+msgid "0 GiB means no supplementary swap file"
+msgstr "0 GiB innebär att ingen ytterligare swapfil finns"
+
+#: src/views/swap_view.rs:598
+msgid ""
+"This swap file is the configured resume target. Disabling it will break "
+"hibernation. Continue?"
+msgstr ""
+"Den här swapfilen är det konfigurerade återställningsmålet. Inaktivering av "
+"den kommer att störa dvalan. Vill du fortsätta?"
+
+#: src/views/swap_view.rs:705
+msgid ""
+"This swap file is the configured resume target. Its physical offset would "
+"change, so resize is blocked until hibernation is disabled."
+msgstr ""
+"Den här swapfilen är det konfigurerade återställningsmålet. Dess fysiska "
+"förskjutning skulle ändras, så ändring av storlek är låst tills dvala "
+"inaktiveras."
+
+#: src/views/swap_view.rs:722
+msgid "unknown"
+msgstr "okänt"
+
+#: src/views/swap_view.rs:738
+msgid "No swap partition — a legacy swap file can be managed below"
+msgstr "Ingen swap-partition – en äldre swapfil kan hanteras nedan"
+
+#: src/views/swap_view.rs:207
+msgid "Remove incompatible file"
+msgstr "Ta bort inkompatibel fil"
+
+#: src/views/swap_view.rs:377
+msgid "Removing incompatible swap file…"
+msgstr "Tar bort inkompatibel swapfil…"
+
+#: src/views/swap_view.rs:790
+msgid "Present but inactive"
+msgstr "Finns men är inaktiv"
+
+#: src/views/swap_view.rs:792
+msgid "Not created — choose a size below to add one"
+msgstr "Ej skapad – välj en storlek nedan för att lägga till en"
+
+#: src/views/swap_view.rs:794
+msgid "Not created — at least 20 GiB must remain free"
+msgstr "Ej skapad – minst 20 GiB måste vara ledigt"
+
+#: src/views/swap_view.rs:830
+msgid ""
+"Resize is locked because this file is the configured hibernation resume "
+"target"
+msgstr ""
+"Ändring av storlek är låst eftersom denna fil är det konfigurerade "
+"återställningsmålet för dvala"
+
+#: src/views/swap_view.rs:832
+msgid ""
+"Optional compatibility file; 0 GiB removes it and 20 GiB remains reserved "
+"for the system"
+msgstr ""
+"Valfri kompatibilitetsfil; 0 GiB tar bort den och 20 GiB förblir reserverat "
+"för systemet"
+
+#: src/views/swap_view.rs:834
+msgid ""
+"Disabled on Btrfs because a root-subvolume swap file would prevent Disk "
+"Snapshots Manager recovery points"
+msgstr ""
+"Inaktiverad på Btrfs eftersom en swapfil i rotvolymen skulle hindra "
+"återställningspunkter i Disk Snapshots Manager"
+
+#: src/views/zram_view.rs:120
+msgid ""
+"Create a compressed RAM swap device for faster memory pressure handling."
+msgstr ""
+"Skapa en komprimerad RAM-swapenhet för snabbare hantering av minnesbrist."
+
+#: src/views/stress_test_view.rs:171
+msgid "Ensure important work is saved before running this test."
+msgstr "Säkerställ att viktigt arbete är sparat innan du kör detta test."
+
+#: src/views/swap_view.rs:283
+msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
+msgstr ""
+"Max % av RAM som den komprimerade poolen får uppta. Rekommenderas: 20%"
+
+#: src/views/dashboard_view.rs:141
+msgid "Real-time RAM, swap, and compression subsystem status"
+msgstr "Status för minne, swap och komprimering i realtid"
+
+#: src/views/swap_view.rs:308
+msgid "Reclaim pool pages under memory pressure. Recommended: ON"
+msgstr "Hämta tillbaka poolminnessidor vid minnespress. Rekommenderas: PÅ"
+
+#: src/views/stress_test_view.rs:107
+msgid "Simulate memory pressure to test swap and OOM behavior"
+msgstr "Simulera minnespress för att testa virtuell minne och OOM-beteende"
+
+#: src/views/stress_test_view.rs:161
+msgid "Warning: This will consume system memory and may cause instability"
+msgstr ""
+"Varning: Detta kommer att förbruka systemminnet och kan orsaka instabilitet"
+
+#: src/views/zram_view.rs:440
+msgid "Zram configuration saved. The device will be created shortly."
+msgstr "Zram-konfigurationen sparad. Enheten skapas inom kort."
+
+#~ msgid "Disabling swap will break hibernation. Continue?"
+#~ msgstr "Inaktivering av swap kommer att bryta viloläge. Vill du fortsätta?"
+
+#~ msgid "Disk Swap"
+#~ msgstr "Virtualt minne på disk"
+
+#~ msgid "Swap file size"
+#~ msgstr "Storlek på virtuellt minne"
 
 #~ msgid "<i>Recommended swappiness: {0} ({1})</i>"
 #~ msgstr "<i>Rekommenderad swappiness: {0} ({1})</i>"
@@ -319,9 +569,6 @@ msgstr ""
 #~ "Diskbaserad virtuell minnesfil — sista försvarslinjen när RAM-minnet är "
 #~ "fullt"
 
-#~ msgid "Ensure important work is saved before running this test."
-#~ msgstr "Säkerställ att viktigt arbete är sparat innan du kör detta test."
-
 #~ msgid "Hello {0}, you have {1} messages"
 #~ msgstr "Hej {0}, du har {1} meddelanden"
 
@@ -330,24 +577,6 @@ msgstr ""
 
 #~ msgid "Idle ({0} GiB available)"
 #~ msgstr "Inaktiv ({0} GiB tillgängligt)"
-
-#~ msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
-#~ msgstr ""
-#~ "Max % av RAM som den komprimerade poolen får uppta. Rekommenderas: 20%"
-
-#~ msgid "Real-time RAM, swap, and compression subsystem status"
-#~ msgstr "Status för minne, swap och komprimering i realtid"
-
-#~ msgid "Reclaim pool pages under memory pressure. Recommended: ON"
-#~ msgstr "Hämta tillbaka poolminnessidor vid minnespress. Rekommenderas: PÅ"
-
-#~ msgid "Simulate memory pressure to test swap and OOM behavior"
-#~ msgstr "Simulera minnespress för att testa virtuell minne och OOM-beteende"
-
-#~ msgid "Warning: This will consume system memory and may cause instability"
-#~ msgstr ""
-#~ "Varning: Detta kommer att förbruka systemminnet och kan orsaka "
-#~ "instabilitet"
 
 #~ msgid "{0} · pool {1}%"
 #~ msgstr "{0} · pool {1}%"
@@ -393,35 +622,30 @@ msgstr ""
 #~ "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
 
 #~ msgid ""
-#~ "Create a compressed RAM swap device for faster memory pressure handling."
-#~ msgstr ""
-#~ "Create a compressed RAM swap device for faster memory pressure handling."
-
-#~ msgid ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
 #~ msgstr ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
 
 #~ msgid ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer "
-#~ "(recommended: {0})"
+#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
+#~ " {0})"
 #~ msgstr ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer "
-#~ "(recommended: {0})"
+#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
+#~ " {0})"
 
 #~ msgid ""
-#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to "
-#~ "prefer fast compressed RAM swap — dropping file cache when zram is "
-#~ "available wastes I/O performance."
+#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
+#~ " fast compressed RAM swap — dropping file cache when zram is available "
+#~ "wastes I/O performance."
 #~ msgstr ""
-#~ "Zram är aktivt men swappiness är {0} istället för {1}. Ställ in den på "
-#~ "{1} för att föredra snabbt komprimerat RAM-virtuellt minne — att kasta "
-#~ "filcachen när Zram finns tillgängligt slöser med I/O-prestanda."
+#~ "Zram är aktivt men swappiness är {0} istället för {1}. Ställ in den på {1} "
+#~ "för att föredra snabbt komprimerat RAM-virtuellt minne — att kasta filcachen"
+#~ " när Zram finns tillgängligt slöser med I/O-prestanda."
 
 #~ msgid ""
-#~ "How aggressively the kernel swaps — with Zram active, set to {0} to "
-#~ "prefer fast compressed RAM over disk cache (recommended: {0})"
+#~ "How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
+#~ "fast compressed RAM over disk cache (recommended: {0})"
 #~ msgstr ""
-#~ "Hur aggressivt kärnan använder virtuellt minne — med aktiv Zram, ställ in "
-#~ "på {0} för att föredra snabb komprimerad RAM framför diskenhetens cache "
+#~ "Hur aggressivt kärnan använder virtuellt minne — med aktiv Zram, ställ in på"
+#~ " {0} för att föredra snabb komprimerad RAM framför diskenhetens cache "
 #~ "(rekommenderat: {0})"

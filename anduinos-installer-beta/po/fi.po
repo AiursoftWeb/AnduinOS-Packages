@@ -24,32 +24,29 @@ msgid ""
 "No Internet connection. Input methods cannot be installed. You can install "
 "them later when connected."
 msgstr ""
-"Ei internetyhteyttä. Syöttötapoja ei voi asentaa. Voit asentaa ne myöhemmin, "
-"kun verkkoyhteys on käytettävissä."
+"Ei internetyhteyttä. Syöttötapoja ei voi asentaa. Voit asentaa ne myöhemmin,"
+" kun verkkoyhteys on käytettävissä."
 
 msgid ""
 "\n"
 "\n"
-"A real installation will create a machine-local MOK. After reboot, choose "
-"Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
 msgstr ""
 "\n"
 "\n"
-"Oikea asennus luo konekohtaisen MOK-avaimen. Käynnistämisen jälkeen valitse "
-"Enroll MOK → Continue → Yes ohjelmasta MOKManager ja syötä salasana 123456."
+"Oikea asennus luo konekohtaisen MOK-avaimen. Käynnistämisen jälkeen valitse Enroll MOK → Continue → Yes ohjelmasta MOKManager ja syötä salasana 123456."
 
 msgid ""
 "\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: "
-"123456"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
 msgstr ""
 "\n"
-"Valitse siniseltä MOKManager-näkymältä Enroll MOK → Continue → Yes, "
-"salasana: 123456"
+"Valitse siniseltä MOKManager-näkymältä Enroll MOK → Continue → Yes, salasana: 123456"
 
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr ""
-"4 GiB levyvaihtotila (prioriteetti 10) + 50 % RAM LZ4 zram (prioriteetti 100)"
+"4 GiB levyvaihtotila (prioriteetti 10) + 50 % RAM LZ4 zram (prioriteetti "
+"100)"
 
 msgid "; sudo does not require a password"
 msgstr "; sudo ei vaadi salasanaa"
@@ -61,8 +58,8 @@ msgid ""
 "A partition on this disk is mounted. Unmount it and rescan storage before "
 "continuing."
 msgstr ""
-"Tälle levylle on liitetty osio. Irrota se ja skannaa tallennustila uudelleen "
-"ennen jatkamista."
+"Tälle levylle on liitetty osio. Irrota se ja skannaa tallennustila uudelleen"
+" ennen jatkamista."
 
 msgid "ALL DATA on {disk} will be permanently erased."
 msgstr "{disk}-levyn KAIKKI TIEDOT poistetaan pysyvästi."
@@ -74,11 +71,11 @@ msgid "Advanced Storage"
 msgstr "Edistynyt tallennustila"
 
 msgid ""
-"Advanced coexistence can affect EFI firmware state and may trigger BitLocker "
-"recovery. It never shrinks or repairs Windows volumes."
+"Advanced coexistence can affect EFI firmware state and may trigger BitLocker"
+" recovery. It never shrinks or repairs Windows volumes."
 msgstr ""
-"Edistynyt rinnakkaiskäyttö voi vaikuttaa EFI-laitteiston tilaan ja aktivoida "
-"BitLocker-palautuksen. Se ei koskaan pienennä tai korjaa Windows-osioita."
+"Edistynyt rinnakkaiskäyttö voi vaikuttaa EFI-laitteiston tilaan ja aktivoida"
+" BitLocker-palautuksen. Se ei koskaan pienennä tai korjaa Windows-osioita."
 
 msgid "Advanced — keep existing systems"
 msgstr "Edistynyt – säilytä olemassa olevat järjestelmät"
@@ -154,12 +151,10 @@ msgid "AnduinOS Installer (Development)"
 msgstr "AnduinOS-asentaja (Kehitysversio)"
 
 msgid ""
-"AnduinOS will use only the selected unallocated space on {disk}. Existing "
-"partitions will be preserved.\n"
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
 msgstr ""
-"AnduinOS käyttää vain valitun varaamattoman tilan levyltä {disk}. Olemassa "
-"olevat osiot säilytetään.\n"
+"AnduinOS käyttää vain valitun varaamattoman tilan levyltä {disk}. Olemassa olevat osiot säilytetään.\n"
 "\n"
 
 msgid ""
@@ -180,8 +175,8 @@ msgid ""
 "hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
 "measurements and boot order can change."
 msgstr ""
-"Jatkaaksesi: suorita Windows-päivitykset loppuun, poista nopea käynnistys ja "
-"valmiustila käytöstä sekä varuskopioida BitLockerin palautusavain. EFI, "
+"Jatkaaksesi: suorita Windows-päivitykset loppuun, poista nopea käynnistys ja"
+" valmiustila käytöstä sekä varuskopioida BitLockerin palautusavain. EFI, "
 "Secure Boot, TPM-mittaukset ja käynnistysjärjestys voivat muuttua."
 
 msgid "BitLocker detected"
@@ -283,8 +278,7 @@ msgid "Detect firmware and Secure Boot"
 msgstr "Tunnista laiteohjelmisto ja Secure Boot"
 
 msgid ""
-"Development mode will simulate installation to {disk}. No disk data will be "
-"changed.\n"
+"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
 "\n"
 msgstr ""
 "Kehitystila simuloi asennusta levylle {disk}. Levydataa ei muuteta.\n"
@@ -313,7 +307,8 @@ msgstr "Tyhjä levy — ei osioita"
 
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
 msgstr ""
-"Ota käyttöön jaetun tilan alinvoluutit, hetkikuvat ja Disk Snapshots Manager."
+"Ota käyttöön jaetun tilan alinvoluutit, hetkikuvat ja Disk Snapshots "
+"Manager."
 
 msgid "English (UK)"
 msgstr "Englanti (UK)"
@@ -353,8 +348,8 @@ msgid ""
 "AnduinOS firmware boot entry may be updated."
 msgstr ""
 "Olemassa olevat osiot säilytetään. Uudet AnduinOS-osiot luodaan vain "
-"valitulla varaamattomalla alueella; EFI-valmistajan tiedostoja ja AnduinOS:n "
-"firmware-aloitusmerkintää voidaan päivittää."
+"valitulla varaamattomalla alueella; EFI-valmistajan tiedostoja ja AnduinOS:n"
+" firmware-aloitusmerkintää voidaan päivittää."
 
 msgid "Filesystem"
 msgstr "Tiedostojärjestelmä"
@@ -448,8 +443,8 @@ msgid "Installation Steps"
 msgstr "Asennuksen vaiheet"
 
 msgid ""
-"Installation cannot continue with this selection. There is no force-continue "
-"option around storage safety checks."
+"Installation cannot continue with this selection. There is no force-continue"
+" option around storage safety checks."
 msgstr ""
 "Asennusta ei voi jatkaa tällä valinnalla. Pakotetun jatkamisen vaihtoehtoa "
 "ei ole saatavilla tallennustilan turvallisuustarkistusten ohittamiseksi."
@@ -608,7 +603,8 @@ msgid ""
 "Requires an Internet connection. The base installation remains available "
 "when offline."
 msgstr ""
-"Vaatii internet-yhteyden. Perusasennus pysyy saatavilla ilman verkkoyhteyttä."
+"Vaatii internet-yhteyden. Perusasennus pysyy saatavilla ilman "
+"verkkoyhteyttä."
 
 msgid "Rescan Storage"
 msgstr "Tarkista tallennustila uudelleen"
@@ -729,16 +725,16 @@ msgstr ""
 "Mitään tilaa tällä levyllä ei ole myönnetty asennusta varten."
 
 msgid ""
-"The existing EFI System Partition is only a candidate. Health and free-space "
-"checks must pass before it can be reused, and it will never be formatted."
+"The existing EFI System Partition is only a candidate. Health and free-space"
+" checks must pass before it can be reused, and it will never be formatted."
 msgstr ""
 "Olemassa oleva EFI-järjestelmäosio on vain ehdokas. Sen uudelleenkäyttö "
-"edellyttää, että kunto- ja vapaan tilan tarkastukset menevät läpi, eikä sitä "
-"ikinä formatoida."
+"edellyttää, että kunto- ja vapaan tilan tarkastukset menevät läpi, eikä sitä"
+" ikinä formatoida."
 
 msgid ""
-"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot "
-"state, or installed system was changed."
+"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
+" state, or installed system was changed."
 msgstr ""
 "Asennussuunnitelma on kelvollinen. Levyä, tiedostojärjestelmää, "
 "käynnistyslataajaa, Secure Boot -tilaa tai asennettua järjestelmää ei "
@@ -760,11 +756,11 @@ msgid "The privileged executor is disabled."
 msgstr "Etuvoikeuksilla varustettu suoritin on poistettu käytöstä."
 
 msgid ""
-"The selected disk changed or disappeared. Return to the disk page and select "
-"it again. {error}"
+"The selected disk changed or disappeared. Return to the disk page and select"
+" it again. {error}"
 msgstr ""
-"Valittu levy muuttui tai katosi. Palaa levyyn liittyvälle sivulle ja valitse "
-"se uudelleen. {error}"
+"Valittu levy muuttui tai katosi. Palaa levyyn liittyvälle sivulle ja valitse"
+" se uudelleen. {error}"
 
 msgid "The selected disk size changed. Return and select it again."
 msgstr "Valitun levyn koko muuttui. Palaa ja valitse se uudelleen."
@@ -855,11 +851,11 @@ msgid "Username"
 msgstr "Käyttäjänimi"
 
 msgid ""
-"Username must start with a lowercase ASCII letter and contain only lowercase "
-"ASCII letters or digits (maximum 16 characters)."
+"Username must start with a lowercase ASCII letter and contain only lowercase"
+" ASCII letters or digits (maximum 16 characters)."
 msgstr ""
-"Username must start with a lowercase ASCII letter and contain only lowercase "
-"ASCII letters or digits (maximum 16 characters)."
+"Käyttäjänimen on alettava pienellä ASCII-kirjaimella ja sisältävä vain "
+"pieniä ASCII-kirjaimia tai numeroita (enintään 16 merkkiä)."
 
 msgid "Uses a traditional single root filesystem."
 msgstr "Käyttää perinteistä yksittäistä juuritasojen tiedostojärjestelmää."
@@ -894,8 +890,8 @@ msgstr ""
 
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
-"luo konekohtainen MOK; rekisteröi uudelleenkäynnistyksen jälkeen salasanalla "
-"123456"
+"luo konekohtainen MOK; rekisteröi uudelleenkäynnistyksen jälkeen salasanalla"
+" 123456"
 
 msgid "detect and install (may include non-free software)"
 msgstr "tunnista ja asenna (voi sisältää ei-vapaata ohjelmistoa)"
@@ -1003,27 +999,28 @@ msgstr ""
 
 #: src/pages.py
 msgid "A saved profile exists. Entering a password updates it securely."
-msgstr "A saved profile exists. Entering a password updates it securely."
+msgstr ""
+"Tallennettu profiili on olemassa. Salasanantulo päivittää sen turvallisesti."
 
 #: src/pages.py
 msgid "Anonymous identity (optional)"
-msgstr "Anonymous identity (optional)"
+msgstr "Anonyymi identiteetti (valinnainen)"
 
 #: src/pages.py
 msgid "CA certificate path (optional)"
-msgstr "CA certificate path (optional)"
+msgstr "CA-varmenteellon polku (valinnainen)"
 
 #: src/pages.py
 msgid "Cancel"
-msgstr "Cancel"
+msgstr "Peruuta"
 
 #: src/pages.py
 msgid "Cancelling Wi-Fi operation…"
-msgstr "Cancelling Wi-Fi operation…"
+msgstr "Perutaan Wi-Fi-toiminto…"
 
 #: src/pages.py
 msgid "Client certificate path"
-msgstr "Client certificate path"
+msgstr "Asiakasvarmenteen polku"
 
 #: src/pages.py
 msgid "Connect"
@@ -1031,16 +1028,16 @@ msgstr "Connect"
 
 #: src/pages.py
 msgid "Continue"
-msgstr "Continue"
+msgstr "Jatka"
 
 #: src/pages.py
 msgid "Connect to a hidden network"
-msgstr "Connect to a hidden network"
+msgstr "Yhdistä piilotettuun verkkoon"
 
 #: src/pages.py
 #, python-brace-format
 msgid "Connect to {network}"
-msgstr "Connect to {network}"
+msgstr "Yhdistä verkoon {network}"
 
 #: src/pages.py
 msgid "Connected"
@@ -1049,11 +1046,11 @@ msgstr "Connected"
 #: src/pages.py
 #, python-brace-format
 msgid "Connecting to {network}…"
-msgstr "Connecting to {network}…"
+msgstr "Yhdistetään verkoon {network}…"
 
 #: src/pages.py
 msgid "Could not change the Wi-Fi connection"
-msgstr "Could not change the Wi-Fi connection"
+msgstr "Wi-Fi-yhteyttä ei voitu muuttaa."
 
 #: src/pages.py
 msgid "Disconnect"
@@ -1062,40 +1059,40 @@ msgstr "Disconnect"
 #: src/pages.py
 #, python-brace-format
 msgid "Disconnect from {network}?"
-msgstr "Disconnect from {network}?"
+msgstr "Irrotaanko verkosta {network}?"
 
 #: src/pages.py
 #, python-brace-format
 msgid "Disconnecting from {network}…"
-msgstr "Disconnecting from {network}…"
+msgstr "Irrotetaan verkosta {network}…"
 
 #: src/pages.py
 msgid "Domain suffix match (optional)"
-msgstr "Domain suffix match (optional)"
+msgstr "Aluepääteen osumatunnus (valinnainen)"
 
 #: src/pages.py
 msgid "EAP method"
-msgstr "EAP method"
+msgstr "EAP-menetelmä"
 
 #: src/pages.py
 msgid "Enhanced Open (OWE)"
-msgstr "Enhanced Open (OWE)"
+msgstr "Tehokas avoin (OWE)"
 
 #: src/pages.py
 msgid ""
 "Enter the credentials supplied by your organization. Certificate validation "
 "is strongly recommended."
 msgstr ""
-"Enter the credentials supplied by your organization. Certificate validation "
-"is strongly recommended."
+"Syötä organisaatiosi toimittamat tunnistetiedot. Suosittelemme varmenteiden "
+"tarkistamista vahvasti."
 
 #: src/pages.py
 msgid "Enter the exact network name and choose its security type."
-msgstr "Enter the exact network name and choose its security type."
+msgstr "Syötä verkon tarkka nimi ja valitse sen turvatyyppi."
 
 #: src/pages.py
 msgid "Enterprise Wi-Fi"
-msgstr "Enterprise Wi-Fi"
+msgstr "Yritysten Wi-Fi"
 
 #: src/pages.py
 msgid "Identity"
@@ -1103,35 +1100,35 @@ msgstr "Identity"
 
 #: src/pages.py
 msgid "Inner authentication"
-msgstr "Inner authentication"
+msgstr "Sisäinen todennus"
 
 #: src/pages.py
 msgid "Network name (SSID)"
-msgstr "Network name (SSID)"
+msgstr "Verkon nimi (SSID)"
 
 #: src/pages.py
 msgid "No Wi-Fi networks found."
-msgstr "No Wi-Fi networks found."
+msgstr "Wi-Fi-verkkoja ei löytynyt."
 
 #: src/pages.py
 msgid "Open network"
-msgstr "Open network"
+msgstr "Avoin verkko"
 
 #: src/pages.py
 msgid "Personal Wi-Fi"
-msgstr "Personal Wi-Fi"
+msgstr "Oma Wi-Fi"
 
 #: src/pages.py
 msgid "Private key password (optional)"
-msgstr "Private key password (optional)"
+msgstr "Yksityisavaimen salasana (valinnainen)"
 
 #: src/pages.py
 msgid "Private key path"
-msgstr "Private key path"
+msgstr "Yksityisavaimen polku"
 
 #: src/pages.py
 msgid "Refresh Wi-Fi networks"
-msgstr "Refresh Wi-Fi networks"
+msgstr "Päivitä Wi-Fi-verkot"
 
 #: src/pages.py
 msgid "Saved"
@@ -1145,40 +1142,43 @@ msgstr "Security"
 msgid ""
 "The installer will keep the saved network profile so it can be used again."
 msgstr ""
-"The installer will keep the saved network profile so it can be used again."
+"Asentaja säilyttää tallennetun verkkoasetuksen, jotta sitä voidaan käyttää "
+"uudelleen."
 
 #: src/pages.py
 msgid "The local network is connected, but Internet access is unavailable."
-msgstr "The local network is connected, but Internet access is unavailable."
+msgstr ""
+"Paikallinen verkko on yhdistetty, mutta Internet-yhteys ei ole saatavilla."
 
 #: src/pages.py
 msgid "Turning Wi-Fi off…"
-msgstr "Turning Wi-Fi off…"
+msgstr "Kytketään Wi-Fi pois päältä…"
 
 #: src/pages.py
 msgid "Turning Wi-Fi on…"
-msgstr "Turning Wi-Fi on…"
+msgstr "Kytketään Wi-Fi päälle…"
 
 #: src/pages.py
 msgid "Use WPS"
-msgstr "Use WPS"
+msgstr "Käytä WPS:ää"
 
 #: src/pages.py
 msgid "WEP (legacy)"
-msgstr "WEP (legacy)"
+msgstr "WEP (perinteinen)"
 
 #: src/pages.py
 msgid ""
 "Wi-Fi is connected, but the network requires sign-in through a captive "
 "portal."
 msgstr ""
-"Wi-Fi is connected, but the network requires sign-in through a captive "
-"portal."
+"Wi-Fi on yhdistetty, mutta verkko vaatii kirjautumisen lukittuaan verkkoon "
+"(captive portal)."
 
 #: src/pages.py
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
-msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+msgstr ""
+"Odotetaan WPS:ää verkossa {network}. Paina reitittimen WPS-painiketta…"
 
 msgid "A password is required."
 msgstr "Salasana vaaditaan."
@@ -1195,8 +1195,12 @@ msgstr "Salli SSH-kirjautuminen tilin salasanalla"
 msgid "Automatic desktop login"
 msgstr "Automaattinen työpöydälle kirjautuminen"
 
-msgid "Choose how the local administrator account signs in and authorizes system changes."
-msgstr "Valitse, miten paikallinen ylläpitäjätili kirjautuu sisään ja valtuuttaa järjestelmämuutokset."
+msgid ""
+"Choose how the local administrator account signs in and authorizes system "
+"changes."
+msgstr ""
+"Valitse, miten paikallinen ylläpitäjätili kirjautuu sisään ja valtuuttaa "
+"järjestelmämuutokset."
 
 msgid "Choose optional access and sign-in policies"
 msgstr "Valitse valinnaiset käyttö- ja kirjautumiskäytännöt"
