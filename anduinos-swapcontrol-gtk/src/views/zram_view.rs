@@ -87,7 +87,7 @@ impl ZramView {
                 &gtk::Label::builder()
                     .use_markup(true)
                     .label(&i18n_fmt(
-                        "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>",
+                        &i18n("<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"),
                         &[&rec_mb.to_string(), &format!("{:.0}", ram_gb)],
                     ))
                     .css_classes(["caption"])
@@ -516,12 +516,21 @@ impl ZramView {
                     let stats_text = if used_mb > 1.0 {
                         if orig_mb > 1.0 {
                             let saved = (1.0 - compr_mb / orig_mb) * 100.0;
-                            format!("{:.0} MiB used · saved {:.0}%", used_mb, saved)
+                            i18n_fmt(
+                                &i18n("{0} MiB used · saved {1}%"),
+                                &[&format!("{:.0}", used_mb), &format!("{:.0}", saved)],
+                            )
                         } else {
-                            format!("{:.0} MiB used (stats reset)", used_mb)
+                            i18n_fmt(
+                                &i18n("{0} MiB used (stats reset)"),
+                                &[&format!("{:.0}", used_mb)],
+                            )
                         }
                     } else {
-                        format!("Idle — {:.0} MiB available", size_mb)
+                        i18n_fmt(
+                            &i18n("Idle — {0} MiB available"),
+                            &[&format!("{:.0}", size_mb)],
+                        )
                     };
 
                     let frac = if dev.size_bytes > 0 {
@@ -560,9 +569,11 @@ impl ZramView {
                                 utils::show_confirm(
                                     &parent,
                                     &i18n("Destroy Zram Device"),
-                                    &format!(
-                                        "This will immediately remove {} and flush its contents to disk swap. Continue?",
-                                        path_clone
+                                    &i18n_fmt(
+                                        &i18n(
+                                            "This will immediately remove {0} and flush its contents to disk swap. Continue?",
+                                        ),
+                                        &[&path_clone],
                                     ),
                                     move || {
                                         if let Some(v) = weak_self2.upgrade() {

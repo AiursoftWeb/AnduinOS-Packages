@@ -119,13 +119,13 @@ impl SwapView {
             } else {
                 let total_ram = sysctl::read_total_ram().unwrap_or(32 * 1024 * 1024 * 1024);
                 let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
-                i18n_fmt("for {0} GiB RAM", &[&format!("{:.0}", ram_gb)])
+                i18n_fmt(&i18n("for {0} GiB RAM"), &[&format!("{:.0}", ram_gb)])
             };
             inner.append(
                 &gtk::Label::builder()
                     .use_markup(true)
                     .label(&i18n_fmt(
-                        "<i>Recommended swappiness: {0} ({1})</i>",
+                        &i18n("<i>Recommended swappiness: {0} ({1})</i>"),
                         &[&sw.to_string(), &sw_reason],
                     ))
                     .css_classes(["caption"])
@@ -228,10 +228,10 @@ impl SwapView {
         let rec_sw = sysctl::recommended_swappiness();
         let has_zram_for_sw = !zram::read_zram_devices().is_empty();
         let sw_subtitle = if has_zram_for_sw {
-            i18n_fmt("How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})", &[&rec_sw.to_string()])
+            i18n_fmt(&i18n("How aggressively the kernel swaps — with Zram active, set to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"), &[&rec_sw.to_string()])
         } else {
             i18n_fmt(
-                "How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})",
+                &i18n("How aggressively the kernel swaps — lower = stay in RAM longer (recommended: {0})"),
                 &[&rec_sw.to_string()],
             )
         };
@@ -670,11 +670,11 @@ impl SwapView {
                     // leave unrelated settings partially applied on failure.
                     if size_changed {
                         if let Err(e) = swapfile::resize_swapfile(sz) {
-                            return Err(format!("Resize: {}", e));
+                            return Err(format!("{}: {}", i18n("Resize"), e));
                         }
                     }
                     if let Err(e) = sysctl::set_swappiness(sw) {
-                        errs.push(format!("Swappiness: {}", e));
+                        errs.push(format!("{}: {}", i18n("Swappiness"), e));
                     }
                     // Only touch zswap persistence when the user actually changed
                     // zswap-specific parameters. Plain swapfile/swappiness changes
@@ -683,7 +683,7 @@ impl SwapView {
                         if let Err(e) =
                             persist::persist_zswap(zswap_enabled, &comp, pool, thresh, shrinker)
                         {
-                            errs.push(format!("Zswap: {}", e));
+                            errs.push(format!("{}: {}", i18n("Zswap"), e));
                         }
                     }
                     if errs.is_empty() {
@@ -751,7 +751,7 @@ impl SwapView {
                     .collect::<Vec<_>>()
                     .join(", ");
                 row.set_subtitle(&i18n_fmt(
-                    "{0} — installer-managed; size cannot be changed while the system is running",
+                    &i18n("{0} — installer-managed; size cannot be changed while the system is running"),
                     &[&details],
                 ));
             }
@@ -769,7 +769,7 @@ impl SwapView {
             row.set_sensitive(managed.active || (filesystem_supported && managed.size_bytes > 0));
             if managed.active {
                 row.set_subtitle(&i18n_fmt(
-                    "Active — {0} GiB used / {1} GiB total",
+                    &i18n("Active — {0} GiB used / {1} GiB total"),
                     &[
                         &format!(
                             "{:.1}",
@@ -783,7 +783,7 @@ impl SwapView {
                 ));
             } else if managed.size_bytes > 0 && !filesystem_supported {
                 row.set_subtitle(&i18n_fmt(
-                    "Present but inactive — activation is disabled on {0}",
+                    &i18n("Present but inactive — activation is disabled on {0}"),
                     &[&filesystem],
                 ));
             } else if managed.size_bytes > 0 {
@@ -794,7 +794,7 @@ impl SwapView {
                 row.set_subtitle(&i18n("Not created — at least 20 GiB must remain free"));
             } else {
                 row.set_subtitle(&i18n_fmt(
-                    "Unavailable on {0}; the swap partition remains active",
+                    &i18n("Unavailable on {0}; the swap partition remains active"),
                     &[&filesystem],
                 ));
             }
@@ -833,7 +833,10 @@ impl SwapView {
             } else if filesystem == "btrfs" {
                 i18n("Disabled on Btrfs because a root-subvolume swap file would prevent Disk Snapshots Manager recovery points")
             } else {
-                i18n_fmt("Swap file resizing is unsupported on {0}", &[&filesystem])
+                i18n_fmt(
+                    &i18n("Swap file resizing is unsupported on {0}"),
+                    &[&filesystem],
+                )
             };
             row.set_subtitle(&subtitle);
         }

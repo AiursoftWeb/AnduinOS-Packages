@@ -30,6 +30,7 @@
   <ItemGroup>
     <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
     <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
+    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-localization-source.py" />
     <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-network-service-helper.py" />
   </ItemGroup>
 

@@ -6,7 +6,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
 
-use crate::i18n::i18n;
+use crate::i18n::{i18n, i18n_fmt};
 use crate::swap::{stress, sysctl};
 
 mod imp {
@@ -672,9 +672,14 @@ impl StressTestView {
         let swap_gb = swap_used as f64 / (1024.0 * 1024.0 * 1024.0);
 
         if let Some(l) = self.imp().mem_stats_label.borrow().as_ref() {
-            l.set_text(&format!(
-                "RAM: {:.1} GiB total · {:.1} GiB used · {:.1} GiB avail\nSwap used: {:.1} GiB",
-                total_gb, used_gb, avail_gb, swap_gb
+            l.set_text(&i18n_fmt(
+                &i18n("RAM: {0} GiB total · {1} GiB used · {2} GiB avail\nSwap used: {3} GiB"),
+                &[
+                    &format!("{:.1}", total_gb),
+                    &format!("{:.1}", used_gb),
+                    &format!("{:.1}", avail_gb),
+                    &format!("{:.1}", swap_gb),
+                ],
             ));
         }
     }

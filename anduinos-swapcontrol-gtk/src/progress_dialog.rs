@@ -1,5 +1,7 @@
 use gtk::prelude::*;
 
+use crate::i18n::{i18n, i18n_fmt};
+
 /// Show a modal "in progress" dialog over `parent`, with a spinning indicator and message.
 /// Runs `task` on a background thread so the UI stays responsive.
 /// Returns the task result when done, then closes the dialog.
@@ -19,7 +21,7 @@ where
         .resizable(false)
         .default_width(360)
         .default_height(120)
-        .title("Swap Control")
+        .title(&i18n("Swap Control"))
         .build();
 
     let box_ = gtk::Box::builder()
@@ -53,7 +55,7 @@ where
     // Run work on background thread — GTK main loop stays free
     let result = tokio::task::spawn_blocking(task)
         .await
-        .map_err(|e| format!("Task panicked: {}", e))?;
+        .map_err(|e| i18n_fmt(&i18n("Task panicked: {0}"), &[&e.to_string()]))?;
 
     dialog.close();
     result

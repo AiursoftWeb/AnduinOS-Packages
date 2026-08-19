@@ -1,3 +1,4 @@
+use crate::i18n::{i18n, i18n_fmt};
 use crate::swap::types::{SwapDeviceKind, SwapInventory, SwapStatus};
 use std::fs;
 use std::process::Command;
@@ -35,7 +36,7 @@ fn parse_proc_swaps(content: &str) -> Vec<SwapStatus> {
 /// Read every active disk-backed swap device without conflating partitions and files.
 pub fn read_swap_inventory() -> Result<SwapInventory, String> {
     let content = fs::read_to_string(crate::config::PROC_SWAPS)
-        .map_err(|e| format!("Cannot read /proc/swaps: {e}"))?;
+        .map_err(|e| i18n_fmt(&i18n("Cannot read /proc/swaps: {0}"), &[&e.to_string()]))?;
     let devices = parse_proc_swaps(&content);
     let mut managed_swapfile = devices
         .iter()
@@ -102,9 +103,14 @@ pub fn swapfile_management_support() -> Result<(bool, String), String> {
     let output = Command::new("findmnt")
         .args(["--noheadings", "--output", "FSTYPE", "--target", "/"])
         .output()
-        .map_err(|e| format!("Cannot inspect the root filesystem: {e}"))?;
+        .map_err(|e| {
+            i18n_fmt(
+                &i18n("Cannot inspect the root filesystem: {0}"),
+                &[&e.to_string()],
+            )
+        })?;
     if !output.status.success() {
-        return Err("Cannot inspect the root filesystem".to_string());
+        return Err(i18n("Cannot inspect the root filesystem"));
     }
     let filesystem = String::from_utf8_lossy(&output.stdout).trim().to_string();
     let supported = matches!(filesystem.as_str(), "ext2" | "ext3" | "ext4" | "xfs");

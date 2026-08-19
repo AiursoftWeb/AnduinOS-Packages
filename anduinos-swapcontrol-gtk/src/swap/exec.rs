@@ -1,5 +1,7 @@
 use std::process::Command;
 
+use crate::i18n::{i18n, i18n_fmt};
+
 const HELPER: &str = "/usr/lib/anduinos-swapcontrol/helper";
 
 /// Run a privileged command via the swapcontrol helper (single polkit entry point).
@@ -13,7 +15,7 @@ pub fn run_helper(subcmd: &str, args: &[&str]) -> Result<String, String> {
         .env("LANGUAGE", "C")
         .args(&cmd_args)
         .output()
-        .map_err(|e| format!("Failed to execute pkexec: {e}"))?;
+        .map_err(|e| i18n_fmt(&i18n("Failed to execute pkexec: {0}"), &[&e.to_string()]))?;
 
     if output.status.success() {
         Ok(String::from_utf8_lossy(&output.stdout).to_string())
@@ -21,7 +23,7 @@ pub fn run_helper(subcmd: &str, args: &[&str]) -> Result<String, String> {
         let stderr = String::from_utf8_lossy(&output.stderr);
         let stdout = String::from_utf8_lossy(&output.stdout);
         if output.status.code() == Some(126) {
-            Err("Authentication cancelled".to_string())
+            Err(i18n("Authentication cancelled"))
         } else {
             let msg = if stderr.is_empty() {
                 stdout.to_string()
@@ -47,7 +49,7 @@ pub fn write_sysfs(path: &str, value: &str) -> Result<String, String> {
         .stdout(Stdio::null())
         .stderr(Stdio::piped())
         .spawn()
-        .map_err(|e| format!("Failed to execute pkexec: {e}"))?;
+        .map_err(|e| i18n_fmt(&i18n("Failed to execute pkexec: {0}"), &[&e.to_string()]))?;
 
     if let Some(mut stdin) = child.stdin.take() {
         let _ = stdin.write_all(value.as_bytes());
@@ -56,14 +58,14 @@ pub fn write_sysfs(path: &str, value: &str) -> Result<String, String> {
 
     let output = child
         .wait_with_output()
-        .map_err(|e| format!("Failed to wait on pkexec: {e}"))?;
+        .map_err(|e| i18n_fmt(&i18n("Failed to wait on pkexec: {0}"), &[&e.to_string()]))?;
 
     if output.status.success() {
         Ok(String::new())
     } else {
         let stderr = String::from_utf8_lossy(&output.stderr);
         if output.status.code() == Some(126) {
-            Err("Authentication cancelled".to_string())
+            Err(i18n("Authentication cancelled"))
         } else {
             Err(stderr.trim().to_string())
         }

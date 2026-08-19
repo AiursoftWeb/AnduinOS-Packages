@@ -99,17 +99,17 @@ def create_secure_boot_page(
     rows: dict[str, tuple[Adw.ActionRow, Gtk.Widget]] = {}
 
     def add_row(key: str, title_text: str) -> None:
-        row = Adw.ActionRow(title=_(title_text))
+        row = Adw.ActionRow(title=title_text)
         icon = _default_icon("dialog-information-symbolic")
         icon.set_pixel_size(16)
         row.add_suffix(icon)
         group.add(row)
         rows[key] = row, icon
 
-    add_row("secure_boot", "Secure Boot Enabled")
-    add_row("certificate", "Local MOK Certificate")
-    add_row("enrollment", "UEFI Firmware Trust")
-    add_row("drivers", "Third-party Drivers")
+    add_row("secure_boot", _("Secure Boot Enabled"))
+    add_row("certificate", _("Local MOK Certificate"))
+    add_row("enrollment", _("UEFI Firmware Trust"))
+    add_row("drivers", _("Third-party Drivers"))
 
     status = Gtk.Label()
     status.set_justify(Gtk.Justification.CENTER)

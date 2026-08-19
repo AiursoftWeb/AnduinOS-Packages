@@ -278,7 +278,11 @@ impl UfwallWindow {
                 }
             }
             Err(e) => {
-                show_error(self, &i18n("Error"), &format!("Failed to read firewall status: {}", e));
+                show_error(
+                    self,
+                    &i18n("Error"),
+                    &format!("{}: {}", i18n("Failed to read firewall status"), e),
+                );
             }
         }
         
@@ -290,7 +294,11 @@ impl UfwallWindow {
                 }
             }
             Err(e) => {
-                show_error(self, &i18n("Error"), &format!("Failed to read profiles: {}", e));
+                show_error(
+                    self,
+                    &i18n("Error"),
+                    &format!("{}: {}", i18n("Failed to read profiles"), e),
+                );
             }
         }
     }

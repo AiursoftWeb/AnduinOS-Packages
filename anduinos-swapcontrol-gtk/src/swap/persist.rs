@@ -11,6 +11,7 @@
 
 use super::exec;
 use crate::config;
+use crate::i18n::{i18n, i18n_fmt};
 use std::path::Path;
 
 /// Path to the old GUI-generated systemd unit (pre-2.1 migration).
@@ -27,13 +28,13 @@ fn remove_legacy_unit(path: &str) -> Result<(), String> {
 
     exec::run_helper("rm", &["-f", path])
         .map(|_| ())
-        .map_err(|e| format!("Failed to remove legacy unit {path}: {e}"))
+        .map_err(|e| i18n_fmt(&i18n("Failed to remove legacy unit {0}: {1}"), &[&path, &e]))
 }
 
 fn run_systemctl(args: &[&str]) -> Result<(), String> {
     exec::run_helper("systemctl", args)
         .map(|_| ())
-        .map_err(|e| format!("systemctl {} failed: {e}", args.join(" ")))
+        .map_err(|e| i18n_fmt(&i18n("systemctl {0} failed: {1}"), &[&args.join(" "), &e]))
 }
 
 // ─── Zram persistence ───────────────────────────────────────────────────────
@@ -70,10 +71,8 @@ pub fn persist_zram(devices: &[(u64, String, i32)]) -> Result<String, String> {
     // ── Activate ────────────────────────────────────────────────────────
     let has_vendor_service = Path::new(config::VENDOR_ZRAM_SERVICE).exists();
     if !has_vendor_service {
-        return Err(format!(
-            "The package 'anduinos-swap-config' is not installed.\n\n\
-             Zram changes cannot be applied or persisted without it.\n\
-             Install 'anduinos-swap-config' to manage zram from this GUI."
+        return Err(i18n(
+            "The package 'anduinos-swap-config' is not installed.\n\nZram changes cannot be applied or persisted without it.\nInstall 'anduinos-swap-config' to manage zram from this GUI.",
         ));
     }
 
@@ -86,9 +85,9 @@ pub fn persist_zram(devices: &[(u64, String, i32)]) -> Result<String, String> {
     run_systemctl(&["restart", "anduinos-zram.service"])?;
 
     if devices.is_empty() {
-        Ok("Zram persistence disabled".to_string())
+        Ok(i18n("Zram persistence disabled"))
     } else {
-        Ok("Zram persistence enabled".to_string())
+        Ok(i18n("Zram persistence enabled"))
     }
 }
 
@@ -131,10 +130,8 @@ pub fn persist_zswap(
 
     let has_vendor_service = Path::new(config::VENDOR_ZSWAP_SERVICE).exists();
     if !has_vendor_service {
-        return Err(format!(
-            "The package 'anduinos-swap-config' is not installed.\n\n\
-             Zswap changes cannot be applied or persisted without it.\n\
-             Install 'anduinos-swap-config' to manage zswap from this GUI."
+        return Err(i18n(
+            "The package 'anduinos-swap-config' is not installed.\n\nZswap changes cannot be applied or persisted without it.\nInstall 'anduinos-swap-config' to manage zswap from this GUI.",
         ));
     }
 
@@ -146,8 +143,8 @@ pub fn persist_zswap(
     run_systemctl(&["restart", "anduinos-zswap.service"])?;
 
     if enabled {
-        Ok("Zswap persistence enabled".to_string())
+        Ok(i18n("Zswap persistence enabled"))
     } else {
-        Ok("Zswap persistence disabled".to_string())
+        Ok(i18n("Zswap persistence disabled"))
     }
 }

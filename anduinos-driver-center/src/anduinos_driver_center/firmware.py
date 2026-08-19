@@ -138,7 +138,7 @@ def release_from_object(release) -> FirmwareRelease:
 def history_from_object(device) -> FirmwareHistoryEntry:
     return FirmwareHistoryEntry(
         device_id=device.get_id() or "",
-        name=device.get_name() or "Firmware device",
+        name=device.get_name() or "",
         version=device.get_version(),
         state=int(device.get_update_state()),
         error=device.get_update_error(),
@@ -150,7 +150,7 @@ def device_from_object(device, release=None) -> FirmwareDevice:
     flags = int(device.get_flags())
     return FirmwareDevice(
         device_id=device.get_id() or "",
-        name=device.get_name() or "Firmware device",
+        name=device.get_name() or "",
         vendor=device.get_vendor(),
         version=device.get_version(),
         summary=plain_text(device.get_summary()),

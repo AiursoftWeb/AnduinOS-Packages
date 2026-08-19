@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 use std::process::{Command, Stdio};
 use std::io::{BufRead, BufReader};
 
+use crate::i18n::i18n;
+
 include!("connection_stat.rs");
 
 pub struct TrafficMonitor {}
@@ -29,7 +31,12 @@ impl TrafficMonitor {
                 .spawn() {
                     Ok(c) => c,
                     Err(e) => {
-                        let _ = sender.send_blocking(Err(format!("Failed to start ufwall-auditor: {}. Is it installed?", e)));
+                        let _ = sender.send_blocking(Err(format!(
+                            "{}: {}. {}",
+                            i18n("Failed to start ufwall-auditor"),
+                            e,
+                            i18n("Is it installed?")
+                        )));
                         return;
                     }
                 };

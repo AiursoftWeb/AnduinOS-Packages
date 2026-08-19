@@ -105,7 +105,7 @@ class StylePage(Adw.PreferencesPage):
         pos_box.set_column_spacing(6)
         pos_box.set_margin_top(12)
         for pos_label in ['bottom', 'top', 'left', 'right']:
-            btn = Gtk.ToggleButton(label=_(POS_LABELS[pos_label]))
+            btn = Gtk.ToggleButton(label=POS_LABELS[pos_label])
             btn.connect('toggled', self._on_pos_toggled, pos_label)
             pos_box.append(btn)
             self.pos_btns[pos_label] = btn
@@ -148,7 +148,7 @@ class StylePage(Adw.PreferencesPage):
             self.win._sync_all_highlights()
             self._sync_group_visibility()
             self.win._refresh_previews()
-            self.win._toast(_('✓ Applied — {style} | {pos}').format(style=self._label(style), pos=_(POS_LABELS[self.win.current_position])))
+            self.win._toast(_('✓ Applied — {style} | {pos}').format(style=self._label(style), pos=POS_LABELS[self.win.current_position]))
         else:
             self.win._toast(_('✗ Failed to apply style'))
 
@@ -183,7 +183,7 @@ class StylePage(Adw.PreferencesPage):
             self.win.current_position = pos
             self._highlight_pos()
             self.win._refresh_previews()
-            self.win._toast(_('✓ Applied — {style} | {pos}').format(style=self._label(self.win.current_style), pos=_(POS_LABELS[pos])))
+            self.win._toast(_('✓ Applied — {style} | {pos}').format(style=self._label(self.win.current_style), pos=POS_LABELS[pos]))
         else:
             self.win._toast(_('✗ Failed to apply position'))
 
@@ -246,7 +246,7 @@ class PanelWidgetsPage(Adw.PreferencesPage):
 
         for key, (label, uuid) in WIDGETS.items():
             row = Adw.SwitchRow()
-            row.set_title(_(label))
+            row.set_title(label)
             row.set_subtitle(uuid)
             row.set_active(_ext_is_enabled(uuid))
             row.connect('notify::active', self._on_toggle, uuid, label)
@@ -339,15 +339,15 @@ class AdvancedPage(Adw.PreferencesPage):
         ext.set_description(_('Open the preference windows of the panel extensions.'))
 
         ext_defs = [
-            ('ArcMenu', 'arcmenu@arcmenu.com'),
-            ('Dash-to-Panel', 'dash-to-panel@jderose9.github.com'),
-            ('Simple Weather', 'simple-weather@romanlefler.com'),
-            ('Network Stats', 'network-stats@gnome.noroadsleft.xyz'),
+            (_('ArcMenu'), 'arcmenu@arcmenu.com'),
+            (_('Dash-to-Panel'), 'dash-to-panel@jderose9.github.com'),
+            (_('Simple Weather'), 'simple-weather@romanlefler.com'),
+            (_('Network Stats'), 'network-stats@gnome.noroadsleft.xyz'),
         ]
         self._ext_rows = []
-        for title_key, uuid in ext_defs:
+        for title, uuid in ext_defs:
             row = Adw.ActionRow()
-            row.set_title(_(title_key))
+            row.set_title(title)
             btn = Gtk.Button(label=_('Open'))
             btn.set_valign(Gtk.Align.CENTER)
             btn.connect('clicked', lambda b, u=uuid: subprocess.Popen(

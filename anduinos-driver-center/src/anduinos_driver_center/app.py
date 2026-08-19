@@ -1353,7 +1353,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 if entry.error:
                     details.append(entry.error)
                 row = Adw.ActionRow(
-                    title=entry.name, subtitle=" · ".join(details)
+                    title=entry.name or _("Firmware device"),
+                    subtitle=" · ".join(details),
                 )
                 row.add_suffix(_pill(state_text, state_class))
                 history.add(row)
@@ -1377,7 +1378,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             f'{_("Installed")}: {device.version or _("Unknown")}'
         )
         row = Adw.ExpanderRow(
-            title=device.name,
+            title=device.name or _("Firmware device"),
             subtitle=" · ".join(subtitle_parts),
         )
         icon = Gtk.Image.new_from_icon_name("application-x-firmware-symbolic")
@@ -1475,7 +1476,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             body = _(
                 "Install firmware for %(device)s from %(current)s to %(available)s?"
             ) % {
-                "device": device.name,
+                "device": device.name or _("Firmware device"),
                 "current": device.version or _("Unknown"),
                 "available": device.release.version if device.release else _("Unknown"),
             }

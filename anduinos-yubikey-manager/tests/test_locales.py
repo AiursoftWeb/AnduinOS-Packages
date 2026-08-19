@@ -14,7 +14,8 @@ LOCALES = {
 PLACEHOLDER = re.compile(r"\{\d+\}")
 DESKTOP_LOCALES = LOCALES - {"en_GB", "en_US"}
 RUST_I18N = re.compile(
-    r'i18n\s*\(\s*"((?:[^"\\]|\\.)*)"\s*,?\s*\)'
+    r'i18n\s*\(\s*"((?:[^"\\]|\\.)*)"\s*,?\s*\)',
+    re.DOTALL,
 )
 
 
@@ -51,7 +52,8 @@ class LocaleCatalogTests(unittest.TestCase):
         for source in (ROOT / "src").glob("**/*.rs"):
             content = source.read_text(encoding="utf-8")
             for match in RUST_I18N.finditer(content):
-                source_messages.add(ast.literal_eval(f'"{match.group(1)}"'))
+                rust_literal = re.sub(r"\\\r?\n\s*", "", match.group(1))
+                source_messages.add(ast.literal_eval(f'"{rust_literal}"'))
         pot_messages = {
             msgid
             for msgid, _ in po_entries(

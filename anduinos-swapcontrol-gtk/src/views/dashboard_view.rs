@@ -156,13 +156,13 @@ impl DashboardView {
                 let total_ram =
                     crate::swap::sysctl::read_total_ram().unwrap_or(32 * 1024 * 1024 * 1024);
                 let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
-                i18n_fmt("for {0} GiB RAM", &[&format!("{:.0}", ram_gb)])
+                i18n_fmt(&i18n("for {0} GiB RAM"), &[&format!("{:.0}", ram_gb)])
             };
             self.append(
                 &gtk::Label::builder()
                     .use_markup(true)
                     .label(&i18n_fmt(
-                        "<i>Recommended swappiness: {0} ({1})</i>",
+                        &i18n("<i>Recommended swappiness: {0} ({1})</i>"),
                         &[&sw.to_string(), &reason],
                     ))
                     .css_classes(["caption"])
@@ -470,14 +470,19 @@ impl DashboardView {
                     if saved > 0.0 {
                         bar.set_fraction(
                             frac,
-                            &i18n_fmt("{0} · saved {1}%", &[&bar_str, &format!("{:.0}", saved)]),
+                            &i18n_fmt(
+                                &i18n("{0} · saved {1}%"),
+                                &[&bar_str, &format!("{:.0}", saved)],
+                            ),
                         );
                     } else {
                         bar.set_fraction(frac, &bar_str);
                     }
                 } else {
-                    let bar_str =
-                        i18n_fmt("Idle ({0} GiB available)", &[&format!("{:.1}", total_gb)]);
+                    let bar_str = i18n_fmt(
+                        &i18n("Idle ({0} GiB available)"),
+                        &[&format!("{:.1}", total_gb)],
+                    );
                     bar.set_fraction(0.0, &bar_str);
                 }
             }
@@ -490,7 +495,7 @@ impl DashboardView {
                     bar.set_fraction(
                         cfg.max_pool_percent as f64 / 100.0,
                         &i18n_fmt(
-                            "{0} · pool {1}%",
+                            &i18n("{0} · pool {1}%"),
                             &[&cfg.compressor, &cfg.max_pool_percent.to_string()],
                         ),
                     );
@@ -596,7 +601,7 @@ impl DashboardView {
                 let rec = sysctl::recommended_swappiness();
                 let card = build_rec_card((0.93, 0.73, 0.0),
                     &i18n("Swappiness not optimized for Zram"),
-                    &i18n_fmt("Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance.", &[&swappiness.to_string(), &rec.to_string()]));
+                    &i18n_fmt(&i18n("Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer fast compressed RAM swap — dropping file cache when zram is available wastes I/O performance."), &[&swappiness.to_string(), &rec.to_string()]));
                 rec_box.append(&card);
             } else if !has_zram && !zswap_on {
                 let card = build_rec_card((0.93, 0.55, 0.0),

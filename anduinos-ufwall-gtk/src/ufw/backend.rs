@@ -15,6 +15,8 @@ use std::net;
 use std::path::Path;
 use std::process::Command;
 
+use crate::i18n::i18n;
+
 use super::types::*;
 
 const UFW_APPS_DIR: &str = "/etc/ufw/applications.d";
@@ -32,18 +34,18 @@ pub fn read_status() -> Result<UfwStatus, UfwError> {
         .args(["/usr/sbin/ufw", "status", "numbered"])
         .output()
         .map_err(|e| UfwError {
-            message: format!("Failed to run pkexec ufw status: {e}"),
+            message: format!("{}: {e}", i18n("Failed to run pkexec ufw status")),
         })?;
 
     if !output.status.success() {
         let stderr = String::from_utf8_lossy(&output.stderr);
         if output.status.code() == Some(126) {
             return Err(UfwError {
-                message: "Authentication cancelled".to_string(),
+                message: i18n("Authentication cancelled"),
             });
         }
         return Err(UfwError {
-            message: format!("pkexec failed: {}", stderr.trim()),
+            message: format!("{}: {}", i18n("pkexec failed"), stderr.trim()),
         });
     }
 
@@ -377,20 +379,24 @@ pub fn set_mdns_enabled(enabled: bool) -> Result<String, UfwError> {
         .args([NETWORK_SERVICE_HELPER, "set-mdns-enabled", value])
         .output()
         .map_err(|error| UfwError {
-            message: format!("Failed to execute network service helper: {error}"),
+            message: format!(
+                "{}: {error}",
+                i18n("Failed to execute network service helper")
+            ),
         })?;
     if output.status.success() {
         Ok(String::from_utf8_lossy(&output.stdout).to_string())
     } else if output.status.code() == Some(126) {
         Err(UfwError {
-            message: "Authentication cancelled".to_string(),
+            message: i18n("Authentication cancelled"),
         })
     } else {
         let stderr = String::from_utf8_lossy(&output.stderr);
         let stdout = String::from_utf8_lossy(&output.stdout);
         Err(UfwError {
             message: format!(
-                "Network service command failed: {}",
+                "{}: {}",
+                i18n("Network service command failed"),
                 if stderr.trim().is_empty() {
                     stdout.trim()
                 } else {
@@ -519,7 +525,7 @@ pub fn allow_app(ports: &str) -> Result<String, UfwError> {
     let port_list: Vec<&str> = ports.split('|').map(|s| s.trim()).filter(|s| !s.is_empty()).collect();
     if port_list.is_empty() {
         return Err(UfwError {
-            message: "No ports defined for this profile".to_string(),
+            message: i18n("No ports defined for this profile"),
         });
     }
     let mut last_result = Ok(String::new());
@@ -537,7 +543,7 @@ pub fn delete_app(ports: &str) -> Result<String, UfwError> {
     let port_list: Vec<&str> = ports.split('|').map(|s| s.trim()).filter(|s| !s.is_empty()).collect();
     if port_list.is_empty() {
         return Err(UfwError {
-            message: "No ports defined for this profile".to_string(),
+            message: i18n("No ports defined for this profile"),
         });
     }
     let mut last_result = Ok(String::new());
@@ -604,7 +610,7 @@ fn systemctl_value(arguments: &[&str]) -> Result<String, UfwError> {
         .args(arguments)
         .output()
         .map_err(|error| UfwError {
-            message: format!("Failed to inspect system service: {error}"),
+            message: format!("{}: {error}", i18n("Failed to inspect system service")),
         })?;
     // is-active/is-enabled intentionally return non-zero for valid inactive,
     // disabled, and masked states, so their stdout remains authoritative.
@@ -623,7 +629,7 @@ fn run_pkexec_ufw(args: &[&str]) -> Result<String, UfwError> {
         .args(&cmd_args)
         .output()
         .map_err(|e| UfwError {
-            message: format!("Failed to execute pkexec: {e}"),
+            message: format!("{}: {e}", i18n("Failed to execute pkexec")),
         })?;
 
     if output.status.success() {
@@ -634,12 +640,13 @@ fn run_pkexec_ufw(args: &[&str]) -> Result<String, UfwError> {
         // pkexec returns 126 when user dismisses the dialog
         if output.status.code() == Some(126) {
             Err(UfwError {
-                message: "Authentication cancelled".to_string(),
+                message: i18n("Authentication cancelled"),
             })
         } else {
             Err(UfwError {
                 message: format!(
-                    "UFW command failed: {}",
+                    "{}: {}",
+                    i18n("UFW command failed"),
                     if stderr.is_empty() {
                         stdout.to_string()
                     } else {

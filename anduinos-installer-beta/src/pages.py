@@ -356,13 +356,13 @@ _SECURE_BOOT_BODY_MESSAGES = (
         "Secure Boot on. Firmware wording varies by manufacturer."
     ),
 )
-_POWER_SAFE_MESSAGE = (
+_POWER_SAFE_MESSAGE = N_(
     "Battery power is sufficient or reliable power is connected. "
     "You can continue with the installation."
 )
-_POWER_SAFE_TITLE = "Power ready"
-_POWER_SAFE_SUBTITLE = "Power conditions are safe for installation."
-_POWER_WARNING_SUBTITLE = (
+_POWER_SAFE_TITLE = N_("Power ready")
+_POWER_SAFE_SUBTITLE = N_("Power conditions are safe for installation.")
+_POWER_WARNING_SUBTITLE = N_(
     "Connect reliable external power and charge above 25%, or charge above "
     "45% while unplugged."
 )

@@ -2489,8 +2489,7 @@ fn rebuild_ssh_create(
     let group = adw::PreferencesGroup::builder()
         .title(i18n("Add another SSH key"))
         .description(i18n(
-            "Optional: create a new resident key only when you need another SSH identity. \
-             Its private key never leaves the selected YubiKey.",
+            "Optional: create a new resident key only when you need another SSH identity. Its private key never leaves the selected YubiKey.",
         ))
         .build();
     let row = action_row_with_icon(
