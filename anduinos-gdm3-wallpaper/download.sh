@@ -9,7 +9,7 @@ source "$SCRIPT_DIR/../lib/build-guards.sh"
 need_cmd git
 need_cmd sassc
 
-FLUENT_GTK_COMMIT="9fc5291"
+FLUENT_GTK_COMMIT="7a49a46"
 OUT_DIR="$SCRIPT_DIR/deploy/fluent-gnome-shell"
 
 rm -rf "$OUT_DIR" /tmp/Fluent-gtk-theme-gdm
