@@ -322,8 +322,18 @@ class FrontendPlanTests(unittest.TestCase):
             )
 
         command = popen.call_args.args[0]
-        self.assertEqual(command[0], "systemd-inhibit")
-        self.assertEqual(command[-3:], ["sudo", "--non-interactive", "/test/executor"])
+        self.assertEqual(
+            command,
+            [
+                "/usr/bin/sudo",
+                "--non-interactive",
+                "/usr/bin/systemd-inhibit",
+                "--what=shutdown:sleep:idle",
+                "--mode=block",
+                "--why=Installing AnduinOS",
+                "/test/executor",
+            ],
+        )
         self.assertTrue(process.stdin.closed)
         self.assertEqual(process.stdin.value.count("\n"), 1)
         self.assertNotIn("plaintext-secret", process.stdin.value)
@@ -338,6 +348,41 @@ class FrontendPlanTests(unittest.TestCase):
         )
         self.assertTrue(succeeded)
         self.assertEqual(error, "")
+
+    def test_root_executor_acquires_inhibitor_without_nested_sudo(self):
+        class FakeProcess:
+            def __init__(self):
+                self.stdin = io.StringIO()
+                self.stdout = io.StringIO('{"event":"complete","error":""}\n')
+                self.stderr = io.StringIO("")
+
+            def wait(self):
+                return 0
+
+        process = FakeProcess()
+        process.stdin.close = lambda: None
+        with (
+            patch("frontend.os.geteuid", return_value=0),
+            patch("frontend.subprocess.Popen", return_value=process) as popen,
+        ):
+            succeeded, error = ExecutorClient("/test/executor").run(
+                self.make_plan(),
+                lambda _message: None,
+                lambda *_args: None,
+            )
+
+        self.assertTrue(succeeded)
+        self.assertEqual(error, "")
+        self.assertEqual(
+            popen.call_args.args[0],
+            [
+                "/usr/bin/systemd-inhibit",
+                "--what=shutdown:sleep:idle",
+                "--mode=block",
+                "--why=Installing AnduinOS",
+                "/test/executor",
+            ],
+        )
 
     def test_development_client_never_starts_a_process(self):
         logs = []

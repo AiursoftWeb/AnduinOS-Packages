@@ -325,16 +325,21 @@ class ExecutorClient:
             validate_plan(plan)
         except Exception as error:
             return False, str(error)
-        helper_command = [self.helper]
-        if os.geteuid() != 0:
-            helper_command = ["sudo", "--non-interactive", *helper_command]
-        command = [
-            "systemd-inhibit",
+        inhibited_helper = [
+            "/usr/bin/systemd-inhibit",
             "--what=shutdown:sleep:idle",
             "--mode=block",
             "--why=Installing AnduinOS",
-            *helper_command,
+            self.helper,
         ]
+        # The inhibitor protects the privileged executor's destructive
+        # lifetime, so acquire it inside the same privilege boundary. Asking
+        # the unprivileged GTK process for a block inhibitor is unreliable when
+        # its helper was launched outside the graphical session scope and can
+        # fail with a non-interactive polkit challenge before sudo is reached.
+        command = inhibited_helper
+        if os.geteuid() != 0:
+            command = ["/usr/bin/sudo", "--non-interactive", *inhibited_helper]
         try:
             process = subprocess.Popen(
                 command,
