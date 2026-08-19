@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-mimeapps</PackageName>
-    <PackageVersion>2.0.1-4+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.1-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default applications configuration</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <IncludeFile Include="assets/anduinos-mimeapps.list" Target="/usr/share/applications/gnome-mimeapps.list" />
+    <IncludeFile Include="assets/com.anduinos.AppImageRunner.desktop" Target="/usr/share/applications/com.anduinos.AppImageRunner.desktop" />
   </ItemGroup>
 
   <ItemGroup>
