@@ -101,7 +101,7 @@ msgstr "Tạo thiết bị Zram"
 msgid "Dashboard"
 msgstr "Bảng điều khiển"
 
-#: src/views/zram_view.rs:562
+#: src/views/zram_view.rs:571
 msgid "Destroy Zram Device"
 msgstr "Hủy thiết bị Zram"
 
@@ -109,7 +109,7 @@ msgstr "Hủy thiết bị Zram"
 msgid "Device Created"
 msgstr "Thiết bị đã được tạo"
 
-#: src/views/dashboard_view.rs:498
+#: src/views/dashboard_view.rs:503
 msgid "Disabled"
 msgstr "Đã tắt"
 
@@ -125,7 +125,7 @@ msgstr "Đang tắt swap…"
 msgid "Disk Swap Configuration"
 msgstr "Cấu hình bộ nhớ ảo"
 
-#: src/views/dashboard_view.rs:609
+#: src/views/dashboard_view.rs:614
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
@@ -137,7 +137,7 @@ msgstr ""
 msgid "Duration:"
 msgstr "Thời gian:"
 
-#: src/views/dashboard_view.rs:604
+#: src/views/dashboard_view.rs:609
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
@@ -175,7 +175,7 @@ msgstr "Ngủ đông"
 msgid "Hibernation Warning"
 msgstr "Cảnh báo chế độ ngủ đông"
 
-#: src/views/dashboard_view.rs:512 src/views/swap_view.rs:810
+#: src/views/dashboard_view.rs:517 src/views/swap_view.rs:810
 msgid "Inactive"
 msgstr "Không hoạt động"
 
@@ -203,23 +203,23 @@ msgstr "Thiết bị Zram"
 msgid "No device"
 msgstr "Không có thiết bị"
 
-#: src/views/dashboard_view.rs:587
+#: src/views/dashboard_view.rs:592
 msgid "No disk swap detected"
 msgstr "Không phát hiện bộ nhớ ảo"
 
-#: src/views/dashboard_view.rs:603
+#: src/views/dashboard_view.rs:608
 msgid "No memory acceleration enabled"
 msgstr "Không kích hoạt tăng tốc bộ nhớ nào"
 
-#: src/views/dashboard_view.rs:541
+#: src/views/dashboard_view.rs:546
 msgid "None"
 msgstr "Không có"
 
-#: src/views/dashboard_view.rs:525 src/views/dashboard_view.rs:533
+#: src/views/dashboard_view.rs:530 src/views/dashboard_view.rs:538
 msgid "Off"
 msgstr "Tắt"
 
-#: src/views/dashboard_view.rs:532
+#: src/views/dashboard_view.rs:537
 msgid "On"
 msgstr "Bật"
 
@@ -231,7 +231,7 @@ msgstr ""
 "Chỉ lưu các trang nén xuống ≤ % này so với kích thước gốc. Giá trị cao hơn ="
 " nhiều trang được đệm hơn. Khuyến nghị: 90%"
 
-#: src/views/dashboard_view.rs:608
+#: src/views/dashboard_view.rs:613
 msgid "Optimal memory configuration"
 msgstr "Cấu hình bộ nhớ tối ưu"
 
@@ -247,7 +247,7 @@ msgstr "Ưu tiên"
 msgid "RAM"
 msgstr "RAM"
 
-#: src/views/zram_view.rs:545
+#: src/views/zram_view.rs:554
 msgid "Remove"
 msgstr "Xóa"
 
@@ -280,7 +280,7 @@ msgstr "Kiểm tra căng thẳng"
 msgid "Swap"
 msgstr "Bộ nhớ ảo Swap"
 
-#: src/window.rs:59
+#: src/progress_dialog.rs:24 src/window.rs:59
 msgid "Swap Control"
 msgstr "Kiểm soát bộ nhớ ảo"
 
@@ -289,10 +289,11 @@ msgid "Swap usage"
 msgstr "Sử dụng bộ nhớ ảo"
 
 #: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
+#: src/views/swap_view.rs:677
 msgid "Swappiness"
 msgstr "Độ ưu tiên bộ nhớ ảo"
 
-#: src/views/dashboard_view.rs:598
+#: src/views/dashboard_view.rs:603
 msgid "Swappiness not optimized for Zram"
 msgstr "Hệ số hoán đổi chưa được tối ưu cho Zram"
 
@@ -316,7 +317,7 @@ msgstr "Loại"
 msgid "Used"
 msgstr "Đã sử dụng"
 
-#: src/views/dashboard_view.rs:588
+#: src/views/dashboard_view.rs:593
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
@@ -333,11 +334,11 @@ msgstr "Zram"
 msgid "Zram Devices"
 msgstr "Thiết bị Zram"
 
-#: src/views/dashboard_view.rs:592
+#: src/views/dashboard_view.rs:597
 msgid "Zram and Zswap are both active"
 msgstr "Zram và Zswap đều đang hoạt động"
 
-#: src/views/dashboard_view.rs:593
+#: src/views/dashboard_view.rs:598
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
 "pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
@@ -348,7 +349,7 @@ msgstr ""
 " nghiêm trọng. Hãy tắt một trong hai."
 
 #: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
-#: src/views/swap_view.rs:185
+#: src/views/swap_view.rs:185 src/views/swap_view.rs:686
 msgid "Zswap"
 msgstr "Zswap"
 
@@ -380,31 +381,31 @@ msgstr "khi có Zram"
 msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr "khi Zram đang hoạt động — ưu tiên RAM nén nhanh hơn bộ đệm đĩa"
 
-#: src/views/dashboard_view.rs:547
+#: src/views/dashboard_view.rs:552
 msgid "Ready"
 msgstr "Sẵn sàng"
 
-#: src/views/dashboard_view.rs:549
+#: src/views/dashboard_view.rs:554
 msgid "Unsupported"
 msgstr "Không được hỗ trợ"
 
-#: src/views/dashboard_view.rs:551
+#: src/views/dashboard_view.rs:556
 msgid "Not configured"
 msgstr "Chưa cấu hình"
 
-#: src/views/dashboard_view.rs:553
+#: src/views/dashboard_view.rs:558
 msgid "Resume target missing"
 msgstr "Mục tiêu tiếp tục ngủ đông bị thiếu"
 
-#: src/views/dashboard_view.rs:555
+#: src/views/dashboard_view.rs:560
 msgid "Resume target inactive"
 msgstr "Mục tiêu tiếp tục ngủ đông không hoạt động"
 
-#: src/views/dashboard_view.rs:557
+#: src/views/dashboard_view.rs:562
 msgid "Swap too small"
 msgstr "Bộ nhớ ảo quá nhỏ"
 
-#: src/views/dashboard_view.rs:559
+#: src/views/dashboard_view.rs:564
 msgid "Not ready"
 msgstr "Chưa sẵn sàng"
 
@@ -537,6 +538,223 @@ msgstr ""
 msgid "Zram configuration saved. The device will be created shortly."
 msgstr "Cấu hình Zram đã được lưu. Thiết bị sẽ được tạo sau một lúc."
 
+#: src/views/dashboard_view.rs:165 src/views/swap_view.rs:128
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Đề xuất hệ số hoán đổi: {0} ({1})</i>"
+
+#: src/views/zram_view.rs:90
+msgid "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
+msgstr "<i>Đề xuất: {0} MiB, lz4, độ ưu tiên 100 (cho {1} GiB RAM)</i>"
+
+#: src/views/swap_view.rs:772
+msgid "Active — {0} GiB used / {1} GiB total"
+msgstr "Đang hoạt động — Đã sử dụng {0} GiB / Tổng {1} GiB"
+
+#: src/swap/exec.rs:26 src/swap/exec.rs:68
+msgid "Authentication cancelled"
+msgstr "Xác thực đã bị hủy"
+
+#: src/swap/swapfile.rs:113
+msgid "Cannot inspect the root filesystem"
+msgstr "Không thể kiểm tra hệ thống tệp gốc"
+
+#: src/swap/swapfile.rs:108
+msgid "Cannot inspect the root filesystem: {0}"
+msgstr "Không thể kiểm tra hệ thống tệp gốc: {0}"
+
+#: src/swap/sysctl.rs:79
+msgid "Cannot parse MemTotal: {0}"
+msgstr "Không thể phân tích MemTotal: {0}"
+
+#: src/swap/sysctl.rs:43
+msgid "Cannot parse swappiness: {0}"
+msgstr "Không thể phân tích hệ số hoán đổi: {0}"
+
+#: src/swap/zswap.rs:59
+msgid "Cannot parse {0} as u8: {1}"
+msgstr "Không thể phân tích {0} thành u8: {1}"
+
+#: src/swap/sysctl.rs:70
+msgid "Cannot read /proc/meminfo: {0}"
+msgstr "Không thể đọc /proc/meminfo: {0}"
+
+#: src/swap/swapfile.rs:39
+msgid "Cannot read /proc/swaps: {0}"
+msgstr "Không thể đọc /proc/swaps: {0}"
+
+#: src/swap/sysctl.rs:36 src/swap/zswap.rs:47
+msgid "Cannot read {0}: {1}"
+msgstr "Không thể đọc {0}: {1}"
+
+#: src/swap/exec.rs:18 src/swap/exec.rs:52
+msgid "Failed to execute pkexec: {0}"
+msgstr "Không thể thực thi pkexec: {0}"
+
+#: src/swap/persist.rs:31
+msgid "Failed to remove legacy unit {0}: {1}"
+msgstr "Không thể xóa đơn vị cũ {0}: {1}"
+
+#: src/swap/sysctl.rs:129
+msgid "Failed to set swappiness: {0} / {1}"
+msgstr "Không thể đặt hệ số hoán đổi: {0} / {1}"
+
+#: src/swap/exec.rs:61
+msgid "Failed to wait on pkexec: {0}"
+msgstr "Không thể chờ pkexec: {0}"
+
+#: src/i18n.rs:24
+msgid "Hello {0}, you have {1} messages"
+msgstr "Xin chào {0}, bạn có {1} tin nhắn"
+
+#: src/views/swap_view.rs:234
+msgid ""
+"How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
+" {0})"
+msgstr ""
+"Mức độ tích cực mà nhân hoán đổi — thấp hơn = giữ lâu hơn trong RAM (khuyến "
+"nghị: {0})"
+
+#: src/views/swap_view.rs:231
+msgid ""
+"How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
+"fast compressed RAM over disk cache (recommended: {0})"
+msgstr ""
+"Mức độ tích cực mà nhân hoán đổi — khi Zram đang hoạt động, đặt thành {0} để"
+" ưu tiên RAM nén nhanh hơn bộ đệm đĩa (khuyến nghị: {0})"
+
+#: src/views/dashboard_view.rs:483
+msgid "Idle ({0} GiB available)"
+msgstr "Đang chờ ({0} GiB khả dụng)"
+
+#: src/views/zram_view.rs:531
+msgid "Idle — {0} MiB available"
+msgstr "Đang chờ — {0} MiB khả dụng"
+
+#: src/swap/sysctl.rs:83
+msgid "MemTotal not found"
+msgstr "Không tìm thấy MemTotal"
+
+#: src/views/swap_view.rs:786
+msgid "Present but inactive — activation is disabled on {0}"
+msgstr "Tồn tại nhưng không hoạt động — kích hoạt đã bị vô hiệu hóa trên {0}"
+
+#: src/views/stress_test_view.rs:676
+msgid ""
+"RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
+"Swap used: {3} GiB"
+msgstr ""
+"RAM: Tổng {0} GiB · Đã dùng {1} GiB · Còn trống {2} GiB\n"
+"Swap đã dùng: {3} GiB"
+
+#: src/views/swap_view.rs:673
+msgid "Resize"
+msgstr "Đổi kích thước"
+
+#: src/views/swap_view.rs:837
+msgid "Swap file resizing is unsupported on {0}"
+msgstr "Việc thay đổi kích thước tệp swap không được hỗ trợ trên {0}"
+
+#: src/progress_dialog.rs:58
+msgid "Task panicked: {0}"
+msgstr "Nhiệm vụ bị lỗi: {0}"
+
+#: src/swap/persist.rs:74
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zram changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zram from this GUI."
+msgstr ""
+"Gói 'anduinos-swap-config' chưa được cài đặt.\n"
+"\n"
+"Không thể áp dụng hoặc lưu các thay đổi Zram nếu thiếu gói này.\n"
+"Cài đặt 'anduinos-swap-config' để quản lý zram từ giao diện này."
+
+#: src/swap/persist.rs:133
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zswap changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zswap from this GUI."
+msgstr ""
+"Gói 'anduinos-swap-config' chưa được cài đặt.\n"
+"\n"
+"Không thể áp dụng hoặc lưu các thay đổi Zswap nếu thiếu gói này.\n"
+"Cài đặt 'anduinos-swap-config' để quản lý zswap từ giao diện này."
+
+#: src/views/zram_view.rs:573
+msgid ""
+"This will immediately remove {0} and flush its contents to disk swap. "
+"Continue?"
+msgstr ""
+"Thao tác này sẽ ngay lập tức gỡ {0} và ghi đè nội dung của nó vào vùng hoán "
+"đổi trên đĩa. Tiếp tục?"
+
+#: src/views/swap_view.rs:797
+msgid "Unavailable on {0}; the swap partition remains active"
+msgstr "Không khả dụng trên {0}; phân vùng hoán đổi vẫn đang hoạt động"
+
+#: src/views/dashboard_view.rs:604
+msgid ""
+"Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
+" fast compressed RAM swap — dropping file cache when zram is available "
+"wastes I/O performance."
+msgstr ""
+"Zram đang hoạt động nhưng hệ số hoán đổi là {0} thay vì {1}. Hãy đặt thành "
+"{1} để ưu tiên bộ nhớ ảo RAM nén tốc độ cao — việc thả bộ đệm tệp khi zram "
+"khả dụng sẽ làm giảm hiệu suất I/O."
+
+#: src/swap/persist.rs:88
+msgid "Zram persistence disabled"
+msgstr "Đã tắt tính năng lưu trữ zram"
+
+#: src/swap/persist.rs:90
+msgid "Zram persistence enabled"
+msgstr "Đã bật lưu trạng thái Zram"
+
+#: src/swap/persist.rs:148
+msgid "Zswap persistence disabled"
+msgstr "Tắt lưu trạng thái Zswap"
+
+#: src/swap/persist.rs:146
+msgid "Zswap persistence enabled"
+msgstr "Bật lưu trạng thái Zswap"
+
+#: src/views/dashboard_view.rs:159 src/views/swap_view.rs:122
+msgid "for {0} GiB RAM"
+msgstr "cho {0} GiB RAM"
+
+#: src/swap/sysctl.rs:133
+msgid "swappiness updated"
+msgstr "Đã cập nhật hệ số hoán đổi"
+
+#: src/swap/persist.rs:37
+msgid "systemctl {0} failed: {1}"
+msgstr "Lỗi systemctl {0}: {1}"
+
+#: src/views/zram_view.rs:525
+msgid "{0} MiB used (stats reset)"
+msgstr "Đã sử dụng {0} MiB (đã đặt lại thống kê)"
+
+#: src/views/zram_view.rs:520
+msgid "{0} MiB used · saved {1}%"
+msgstr "Đã sử dụng {0} MiB · đã tiết kiệm {1}%"
+
+#: src/views/dashboard_view.rs:498
+msgid "{0} · pool {1}%"
+msgstr "{0} · bộ nhớ {1}%"
+
+#: src/views/dashboard_view.rs:474
+msgid "{0} · saved {1}%"
+msgstr "{0} · đã tiết kiệm {1}%"
+
+#: src/views/swap_view.rs:754
+msgid ""
+"{0} — installer-managed; size cannot be changed while the system is running"
+msgstr ""
+"{0} — do trình cài đặt quản lý; kích thước không thể thay đổi khi hệ thống "
+"đang chạy"
+
 #~ msgid "Disabling swap will break hibernation. Continue?"
 #~ msgstr "Tắt swap sẽ làm hỏng chế độ ngủ đông. Tiếp tục?"
 
@@ -545,12 +763,6 @@ msgstr "Cấu hình Zram đã được lưu. Thiết bị sẽ được tạo sa
 
 #~ msgid "Swap file size"
 #~ msgstr "Kích thước bộ nhớ ảo"
-
-#~ msgid "<i>Recommended swappiness: {0} ({1})</i>"
-#~ msgstr "<i>Đề xuất hệ số hoán đổi: {0} ({1})</i>"
-
-#~ msgid "Active — {0} GiB used / {1} GiB total"
-#~ msgstr "Đang hoạt động — Đã sử dụng {0} GiB / Tổng {1} GiB"
 
 #~ msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
 #~ msgstr "<i>Đề xuất: {0} GiB bộ nhớ ảo, hệ số hoán đổi {1} ({2})</i>"
@@ -564,20 +776,8 @@ msgstr "Cấu hình Zram đã được lưu. Thiết bị sẽ được tạo sa
 #~ msgid "Disk-based swap file — the last line of defense when RAM is full"
 #~ msgstr "Tệp đổi chỗ dựa trên đĩa — đường phòng thủ cuối cùng khi RAM đã đầy"
 
-#~ msgid "Hello {0}, you have {1} messages"
-#~ msgstr "Xin chào {0}, bạn có {1} tin nhắn"
-
 #~ msgid "Hibernation not detected — recommended: {0} GiB"
 #~ msgstr "Không phát hiện được hibernation — khuyến nghị: {0} GiB"
-
-#~ msgid "Idle ({0} GiB available)"
-#~ msgstr "Đang chờ ({0} GiB khả dụng)"
-
-#~ msgid "{0} · pool {1}%"
-#~ msgstr "{0} · bộ nhớ {1}%"
-
-#~ msgid "{0} · saved {1}%"
-#~ msgstr "{0} · đã tiết kiệm {1}%"
 
 #~ msgid "Active"
 #~ msgstr "Hoạt động"
@@ -622,26 +822,3 @@ msgstr "Cấu hình Zram đã được lưu. Thiết bị sẽ được tạo sa
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
 #~ msgstr ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
-#~ " {0})"
-#~ msgstr ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
-#~ " {0})"
-
-#~ msgid ""
-#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
-#~ " fast compressed RAM swap — dropping file cache when zram is available "
-#~ "wastes I/O performance."
-#~ msgstr ""
-#~ "Zram đang hoạt động nhưng hệ số hoán đổi là {0} thay vì {1}. Hãy đặt thành "
-#~ "{1} để ưu tiên bộ nhớ ảo RAM nén tốc độ cao — việc thả bộ đệm tệp khi zram "
-#~ "khả dụng sẽ làm giảm hiệu suất I/O."
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
-#~ "fast compressed RAM over disk cache (recommended: {0})"
-#~ msgstr ""
-#~ "Mức độ tích cực mà nhân hoán đổi — khi Zram đang hoạt động, đặt thành {0} để"
-#~ " ưu tiên RAM nén nhanh hơn bộ đệm đĩa (khuyến nghị: {0})"

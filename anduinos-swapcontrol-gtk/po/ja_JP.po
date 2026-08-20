@@ -100,7 +100,7 @@ msgstr "Zramデバイスの作成"
 msgid "Dashboard"
 msgstr "ダッシュボード"
 
-#: src/views/zram_view.rs:562
+#: src/views/zram_view.rs:571
 msgid "Destroy Zram Device"
 msgstr "Zramデバイスの破棄"
 
@@ -108,7 +108,7 @@ msgstr "Zramデバイスの破棄"
 msgid "Device Created"
 msgstr "デバイスが作成されました"
 
-#: src/views/dashboard_view.rs:498
+#: src/views/dashboard_view.rs:503
 msgid "Disabled"
 msgstr "無効"
 
@@ -124,7 +124,7 @@ msgstr "スワップを無効にしています..."
 msgid "Disk Swap Configuration"
 msgstr "仮想メモリのディスク構成"
 
-#: src/views/dashboard_view.rs:609
+#: src/views/dashboard_view.rs:614
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
@@ -134,7 +134,7 @@ msgstr "ディスクスワップとメモリ圧縮が有効です。システム
 msgid "Duration:"
 msgstr "期間："
 
-#: src/views/dashboard_view.rs:604
+#: src/views/dashboard_view.rs:609
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
@@ -172,7 +172,7 @@ msgstr "冬眠"
 msgid "Hibernation Warning"
 msgstr "休止状態警告"
 
-#: src/views/dashboard_view.rs:512 src/views/swap_view.rs:810
+#: src/views/dashboard_view.rs:517 src/views/swap_view.rs:810
 msgid "Inactive"
 msgstr "非アクティブ"
 
@@ -200,23 +200,23 @@ msgstr "Zram デバイス"
 msgid "No device"
 msgstr "デバイスなし"
 
-#: src/views/dashboard_view.rs:587
+#: src/views/dashboard_view.rs:592
 msgid "No disk swap detected"
 msgstr "スワップの検出はありません"
 
-#: src/views/dashboard_view.rs:603
+#: src/views/dashboard_view.rs:608
 msgid "No memory acceleration enabled"
 msgstr "メモリアクセラレーションが有効ではありません。"
 
-#: src/views/dashboard_view.rs:541
+#: src/views/dashboard_view.rs:546
 msgid "None"
 msgstr "なし"
 
-#: src/views/dashboard_view.rs:525 src/views/dashboard_view.rs:533
+#: src/views/dashboard_view.rs:530 src/views/dashboard_view.rs:538
 msgid "Off"
 msgstr "オフ"
 
-#: src/views/dashboard_view.rs:532
+#: src/views/dashboard_view.rs:537
 msgid "On"
 msgstr "オン"
 
@@ -226,7 +226,7 @@ msgid ""
 "cached. Recommended: 90%"
 msgstr "元のサイズのこの % 以下に圧縮されるページのみを保存します。値が大きいほどキャッシュされるページ数が増加します。推奨: 90%"
 
-#: src/views/dashboard_view.rs:608
+#: src/views/dashboard_view.rs:613
 msgid "Optimal memory configuration"
 msgstr "最適なメモリ構成"
 
@@ -242,7 +242,7 @@ msgstr "優先度"
 msgid "RAM"
 msgstr "RAM"
 
-#: src/views/zram_view.rs:545
+#: src/views/zram_view.rs:554
 msgid "Remove"
 msgstr "削除"
 
@@ -275,7 +275,7 @@ msgstr "ストレステスト"
 msgid "Swap"
 msgstr "スワップ"
 
-#: src/window.rs:59
+#: src/progress_dialog.rs:24 src/window.rs:59
 msgid "Swap Control"
 msgstr "仮想メモリ制御"
 
@@ -284,10 +284,11 @@ msgid "Swap usage"
 msgstr "スワップ領域の使用状況"
 
 #: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
+#: src/views/swap_view.rs:677
 msgid "Swappiness"
 msgstr "スワッピング度"
 
-#: src/views/dashboard_view.rs:598
+#: src/views/dashboard_view.rs:603
 msgid "Swappiness not optimized for Zram"
 msgstr "Zram 用にスワップネスが最適化されていません"
 
@@ -311,7 +312,7 @@ msgstr "タイプ"
 msgid "Used"
 msgstr "使用中"
 
-#: src/views/dashboard_view.rs:588
+#: src/views/dashboard_view.rs:593
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
@@ -327,11 +328,11 @@ msgstr "Zram"
 msgid "Zram Devices"
 msgstr "Zram デバイス"
 
-#: src/views/dashboard_view.rs:592
+#: src/views/dashboard_view.rs:597
 msgid "Zram and Zswap are both active"
 msgstr "ZramとZswapが両方とも有効です"
 
-#: src/views/dashboard_view.rs:593
+#: src/views/dashboard_view.rs:598
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
 "pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
@@ -341,7 +342,7 @@ msgstr ""
 "を無駄遣いし、深刻なメモリスラッシングを引き起こす可能性があります。どちらかを無効にしてください。"
 
 #: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
-#: src/views/swap_view.rs:185
+#: src/views/swap_view.rs:185 src/views/swap_view.rs:686
 msgid "Zswap"
 msgstr "Zswap"
 
@@ -371,31 +372,31 @@ msgstr "Zram 有効時"
 msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr "Zram がアクティブの場合 — ディスクキャッシュよりも高速な圧縮 RAM を優先します"
 
-#: src/views/dashboard_view.rs:547
+#: src/views/dashboard_view.rs:552
 msgid "Ready"
 msgstr "準備完了"
 
-#: src/views/dashboard_view.rs:549
+#: src/views/dashboard_view.rs:554
 msgid "Unsupported"
 msgstr "サポートされていない"
 
-#: src/views/dashboard_view.rs:551
+#: src/views/dashboard_view.rs:556
 msgid "Not configured"
 msgstr "未設定"
 
-#: src/views/dashboard_view.rs:553
+#: src/views/dashboard_view.rs:558
 msgid "Resume target missing"
 msgstr "再開ターゲットがありません"
 
-#: src/views/dashboard_view.rs:555
+#: src/views/dashboard_view.rs:560
 msgid "Resume target inactive"
 msgstr "再開ターゲットが無効です"
 
-#: src/views/dashboard_view.rs:557
+#: src/views/dashboard_view.rs:562
 msgid "Swap too small"
 msgstr "スワップ領域が小さすぎます"
 
-#: src/views/dashboard_view.rs:559
+#: src/views/dashboard_view.rs:564
 msgid "Not ready"
 msgstr "準備が整っていません"
 
@@ -515,6 +516,216 @@ msgstr "警告: システムメモリを消費し、システムが不安定に�
 msgid "Zram configuration saved. The device will be created shortly."
 msgstr "Zram の構成が保存されました。デバイスは間もなく作成されます。"
 
+#: src/views/dashboard_view.rs:165 src/views/swap_view.rs:128
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>推奨スワップネス: {0} ({1})</i>"
+
+#: src/views/zram_view.rs:90
+msgid "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
+msgstr "<i>推奨: {0} MiB, lz4, 優先度 100 ({1} GiB RAM 向け)</i>"
+
+#: src/views/swap_view.rs:772
+msgid "Active — {0} GiB used / {1} GiB total"
+msgstr "有効 — {0} GiB使用中 / {1} GiB合計"
+
+#: src/swap/exec.rs:26 src/swap/exec.rs:68
+msgid "Authentication cancelled"
+msgstr "認証がキャンセルされました"
+
+#: src/swap/swapfile.rs:113
+msgid "Cannot inspect the root filesystem"
+msgstr "ルートファイルシステムをインスペクトできません"
+
+#: src/swap/swapfile.rs:108
+msgid "Cannot inspect the root filesystem: {0}"
+msgstr "ルートファイルシステムをインスペクトできません: {0}"
+
+#: src/swap/sysctl.rs:79
+msgid "Cannot parse MemTotal: {0}"
+msgstr "MemTotal を解析できません: {0}"
+
+#: src/swap/sysctl.rs:43
+msgid "Cannot parse swappiness: {0}"
+msgstr "swappiness を解析できません: {0}"
+
+#: src/swap/zswap.rs:59
+msgid "Cannot parse {0} as u8: {1}"
+msgstr "{0} を u8 として解析できません: {1}"
+
+#: src/swap/sysctl.rs:70
+msgid "Cannot read /proc/meminfo: {0}"
+msgstr "/proc/meminfo を読み取れません: {0}"
+
+#: src/swap/swapfile.rs:39
+msgid "Cannot read /proc/swaps: {0}"
+msgstr "/proc/swaps を読み取れません: {0}"
+
+#: src/swap/sysctl.rs:36 src/swap/zswap.rs:47
+msgid "Cannot read {0}: {1}"
+msgstr "{0} を読み取れません: {1}"
+
+#: src/swap/exec.rs:18 src/swap/exec.rs:52
+msgid "Failed to execute pkexec: {0}"
+msgstr "pkexec の実行に失敗しました: {0}"
+
+#: src/swap/persist.rs:31
+msgid "Failed to remove legacy unit {0}: {1}"
+msgstr "レガシーユニット {0} の削除に失敗しました: {1}"
+
+#: src/swap/sysctl.rs:129
+msgid "Failed to set swappiness: {0} / {1}"
+msgstr "swappiness を設定できませんでした: {0} / {1}"
+
+#: src/swap/exec.rs:61
+msgid "Failed to wait on pkexec: {0}"
+msgstr "pkexec の待機に失敗しました: {0}"
+
+#: src/i18n.rs:24
+msgid "Hello {0}, you have {1} messages"
+msgstr "こんにちは {0}、{1} メッセージあります"
+
+#: src/views/swap_view.rs:234
+msgid ""
+"How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
+" {0})"
+msgstr "カーネルがどの程度積極的にスワップを行うか — 低い値ほど RAM に留まる時間が長くなります（推奨: {0}）"
+
+#: src/views/swap_view.rs:231
+msgid ""
+"How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
+"fast compressed RAM over disk cache (recommended: {0})"
+msgstr ""
+"カーネルがどの程度積極的にスワップを行うか — Zram がアクティブの場合、ディスクキャッシュよりも高速な圧縮 RAM を優先するには {0} "
+"に設定してください（推奨: {0}）"
+
+#: src/views/dashboard_view.rs:483
+msgid "Idle ({0} GiB available)"
+msgstr "アイドル中（{0} GiB 使用可能）"
+
+#: src/views/zram_view.rs:531
+msgid "Idle — {0} MiB available"
+msgstr "アイドル中 — {0} MiB 使用可能"
+
+#: src/swap/sysctl.rs:83
+msgid "MemTotal not found"
+msgstr "MemTotal が見つかりません"
+
+#: src/views/swap_view.rs:786
+msgid "Present but inactive — activation is disabled on {0}"
+msgstr "存在しますが非アクティブです — {0} ではアクティベーションが無効化されています"
+
+#: src/views/stress_test_view.rs:676
+msgid ""
+"RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
+"Swap used: {3} GiB"
+msgstr ""
+"RAM: 合計 {0} GiB · 使用中 {1} GiB · 空き {2} GiB\n"
+"Swap 使用中: {3} GiB"
+
+#: src/views/swap_view.rs:673
+msgid "Resize"
+msgstr "サイズ変更"
+
+#: src/views/swap_view.rs:837
+msgid "Swap file resizing is unsupported on {0}"
+msgstr "スワップファイルのリサイズは {0} ではサポートされていません"
+
+#: src/progress_dialog.rs:58
+msgid "Task panicked: {0}"
+msgstr "タスクがパニックしました: {0}"
+
+#: src/swap/persist.rs:74
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zram changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zram from this GUI."
+msgstr ""
+"パッケージ 'anduinos-swap-config' がインストールされていません。\n"
+"\n"
+"これがないと Zram の変更を適用・永続化できません。\n"
+"この GUI から zram を管理するには 'anduinos-swap-config' をインストールしてください。"
+
+#: src/swap/persist.rs:133
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zswap changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zswap from this GUI."
+msgstr ""
+"パッケージ 'anduinos-swap-config' がインストールされていません。\n"
+"\n"
+"これがないと、Zswap の変更を適用または永続化できません。\n"
+"この GUI から zswap を管理するには 'anduinos-swap-config' をインストールしてください。"
+
+#: src/views/zram_view.rs:573
+msgid ""
+"This will immediately remove {0} and flush its contents to disk swap. "
+"Continue?"
+msgstr "{0} が即座に削除され、その内容はディスクスワップにフラッシュされます。続行しますか？"
+
+#: src/views/swap_view.rs:797
+msgid "Unavailable on {0}; the swap partition remains active"
+msgstr "{0} では利用できません; スワップパーティションはアクティブのままです"
+
+#: src/views/dashboard_view.rs:604
+msgid ""
+"Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
+" fast compressed RAM swap — dropping file cache when zram is available "
+"wastes I/O performance."
+msgstr ""
+"Zram がアクティブですが、スワップネスが {0} ではなく {1} です。高速な圧縮 RAM スワップを優先するには {1} "
+"に設定してください。zram が利用可能な場合にファイルキャッシュを破棄すると、I/O パフォーマンスが無駄になります。"
+
+#: src/swap/persist.rs:88
+msgid "Zram persistence disabled"
+msgstr "Zram の永続化を無効にしました"
+
+#: src/swap/persist.rs:90
+msgid "Zram persistence enabled"
+msgstr "Zram の永続化が有効になりました"
+
+#: src/swap/persist.rs:148
+msgid "Zswap persistence disabled"
+msgstr "Zswap の永続化が無効です"
+
+#: src/swap/persist.rs:146
+msgid "Zswap persistence enabled"
+msgstr "Zswap の永続化を有効にしました"
+
+#: src/views/dashboard_view.rs:159 src/views/swap_view.rs:122
+msgid "for {0} GiB RAM"
+msgstr "{0} GiB RAM 向け"
+
+#: src/swap/sysctl.rs:133
+msgid "swappiness updated"
+msgstr "スワップネスを更新しました"
+
+#: src/swap/persist.rs:37
+msgid "systemctl {0} failed: {1}"
+msgstr "systemctl {0} が失敗しました: {1}"
+
+#: src/views/zram_view.rs:525
+msgid "{0} MiB used (stats reset)"
+msgstr "{0} MiB 使用中（統計がリセットされました）"
+
+#: src/views/zram_view.rs:520
+msgid "{0} MiB used · saved {1}%"
+msgstr "{0} MiB 使用中 · 節約 {1}%"
+
+#: src/views/dashboard_view.rs:498
+msgid "{0} · pool {1}%"
+msgstr "{0} · プール {1}%"
+
+#: src/views/dashboard_view.rs:474
+msgid "{0} · saved {1}%"
+msgstr "{0} · 節約 {1}%"
+
+#: src/views/swap_view.rs:754
+msgid ""
+"{0} — installer-managed; size cannot be changed while the system is running"
+msgstr "{0} — インストーラ管理; システム実行中はサイズを変更できません"
+
 #~ msgid "Disabling swap will break hibernation. Continue?"
 #~ msgstr "スワップ（仮想メモリ）を無効にすると、ハイバネーション機能が使用できなくなります。続行しますか？"
 
@@ -523,12 +734,6 @@ msgstr "Zram の構成が保存されました。デバイスは間もなく作�
 
 #~ msgid "Swap file size"
 #~ msgstr "仮想メモリファイルサイズ"
-
-#~ msgid "<i>Recommended swappiness: {0} ({1})</i>"
-#~ msgstr "<i>推奨スワップネス: {0} ({1})</i>"
-
-#~ msgid "Active — {0} GiB used / {1} GiB total"
-#~ msgstr "有効 — {0} GiB使用中 / {1} GiB合計"
 
 #~ msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
 #~ msgstr "<i>推奨: {0} GiB の仮想メモリ, スワップネス {1} ({2})</i>"
@@ -542,20 +747,8 @@ msgstr "Zram の構成が保存されました。デバイスは間もなく作�
 #~ msgid "Disk-based swap file — the last line of defense when RAM is full"
 #~ msgstr "ディスクベースの仮想メモリファイル — RAMが一杯になった際の最後の砦"
 
-#~ msgid "Hello {0}, you have {1} messages"
-#~ msgstr "こんにちは {0}、{1} メッセージあります"
-
 #~ msgid "Hibernation not detected — recommended: {0} GiB"
 #~ msgstr "ハイバネーションが検出されませんでした — 推奨: {0} GiB"
-
-#~ msgid "Idle ({0} GiB available)"
-#~ msgstr "アイドル中（{0} GiB 使用可能）"
-
-#~ msgid "{0} · pool {1}%"
-#~ msgstr "{0} · プール {1}%"
-
-#~ msgid "{0} · saved {1}%"
-#~ msgstr "{0} · 節約 {1}%"
 
 #~ msgid "Active"
 #~ msgstr "有効"
@@ -596,25 +789,3 @@ msgstr "Zram の構成が保存されました。デバイスは間もなく作�
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
 #~ msgstr ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
-#~ " {0})"
-#~ msgstr ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
-#~ " {0})"
-
-#~ msgid ""
-#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
-#~ " fast compressed RAM swap — dropping file cache when zram is available "
-#~ "wastes I/O performance."
-#~ msgstr ""
-#~ "Zram がアクティブですが、スワップネスが {0} ではなく {1} です。高速な圧縮 RAM スワップを優先するには {1} "
-#~ "に設定してください。zram が利用可能な場合にファイルキャッシュを破棄すると、I/O パフォーマンスが無駄になります。"
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
-#~ "fast compressed RAM over disk cache (recommended: {0})"
-#~ msgstr ""
-#~ "カーネルがどの程度積極的にスワップを行うか — Zram がアクティブの場合、ディスクキャッシュよりも高速な圧縮 RAM を優先するには {0} "
-#~ "に設定してください（推奨: {0}）"

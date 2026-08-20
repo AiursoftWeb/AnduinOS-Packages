@@ -53,11 +53,11 @@ msgstr "이 공개 키를 GitHub에 서명 키로 추가하세요."
 msgid "Administrator access"
 msgstr "관리자 액세스"
 
-#: src/window.rs:2668
+#: src/window.rs:2667
 msgid "Advanced options"
 msgstr "고급 옵션"
 
-#: src/window.rs:2620
+#: src/window.rs:2619
 msgid "Algorithm"
 msgstr "알고리즘"
 
@@ -101,7 +101,7 @@ msgstr "AnduinOS YubiKey 보안 센터"
 msgid "AnduinOS works more securely with a YubiKey"
 msgstr "YubiKey와 함께 AnduinOS를 더 안전하게 사용하세요"
 
-#: src/window.rs:2626
+#: src/window.rs:2625
 msgid "Application"
 msgstr "애플리케이션"
 
@@ -127,7 +127,7 @@ msgstr "로컬 키 핸들을 통해 사용 가능"
 msgid "Buy a YubiKey"
 msgstr "YubiKey 구매하기"
 
-#: src/window.rs:2699 src/window.rs:2756 src/window.rs:3028
+#: src/window.rs:2698 src/window.rs:2755 src/window.rs:3027
 msgid "Cancel"
 msgstr "취소"
 
@@ -147,7 +147,7 @@ msgstr "연결된 YubiKey 확인 중"
 msgid "Choose a YubiKey-backed SSH key"
 msgstr "YubiKey 기반 SSH 키 선택"
 
-#: src/window.rs:2640
+#: src/window.rs:2639
 msgid "Choose a local key-handle file"
 msgstr "로컬 키 핸들 파일 선택"
 
@@ -167,7 +167,7 @@ msgstr "유효한 출력 폴더를 선택하세요."
 msgid "Choose an SSH key for Git signing."
 msgstr "Git 서명에 사용할 SSH 키를 선택하세요."
 
-#: src/window.rs:2651
+#: src/window.rs:2650
 msgid "Choose local SSH key-handle path"
 msgstr "로컬 SSH 키 핸들 경로 선택"
 
@@ -182,7 +182,7 @@ msgid ""
 "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
 msgstr "{0}의 잠금을 해제할 수 있는 YubiKey를 선택하세요. 비밀번호 로그인은 계속 사용할 수 있습니다."
 
-#: src/window.rs:3075 src/window.rs:3097
+#: src/window.rs:3074 src/window.rs:3096
 msgid "Close"
 msgstr "닫기"
 
@@ -206,7 +206,7 @@ msgstr "설정된 YubiKey"
 msgid "Configured for {0} · Not connected"
 msgstr "{0}에 대해 설정됨 · 연결 안 됨"
 
-#: src/window.rs:2506
+#: src/window.rs:2505
 msgid "Connect a FIDO security key first"
 msgstr "먼저 FIDO 보안 키를 연결하세요"
 
@@ -230,15 +230,15 @@ msgstr "연결됨"
 msgid "Connected YubiKeys"
 msgstr "연결된 YubiKey"
 
-#: src/window.rs:2700
+#: src/window.rs:2699
 msgid "Continue"
 msgstr "계속하기"
 
-#: src/window.rs:3029
+#: src/window.rs:3028
 msgid "Continue to PIN"
 msgstr "PIN 계속하기"
 
-#: src/window.rs:1326 src/window.rs:2779
+#: src/window.rs:1326 src/window.rs:2778
 msgid "Copy public key"
 msgstr "공개 키 복사"
 
@@ -258,7 +258,7 @@ msgstr "임시 Git 서명 데이터를 생성할 수 없습니다: {0}"
 msgid "Could not create {0}: {1}"
 msgstr "{0}을(를) 생성할 수 없습니다: {1}"
 
-#: src/window.rs:2840
+#: src/window.rs:2839
 msgid "Could not export the public key: {0}"
 msgstr "공개 키를 내보낼 수 없습니다: {0}"
 
@@ -298,7 +298,7 @@ msgstr "{0}을(를) 보호할 수 없습니다: {1}"
 msgid "Could not provide the FIDO PIN: {0}"
 msgstr "FIDO PIN을 제공할 수 없습니다: {0}"
 
-#: src/backend.rs:298
+#: src/backend.rs:325
 msgid "Could not request administrator access: {0}"
 msgstr "관리자 접근 권한을 요청할 수 없습니다: {0}"
 
@@ -318,23 +318,23 @@ msgstr "보안 키를 업데이트할 수 없습니다"
 msgid "Could not write the temporary public key: {0}"
 msgstr "임시 공개 키를 쓸 수 없습니다: {0}"
 
-#: src/window.rs:2534
+#: src/window.rs:2533
 msgid "Create"
 msgstr "생성"
 
-#: src/window.rs:2508
+#: src/window.rs:2507
 msgid "Create a resident SSH credential on a selected device"
 msgstr "선택된 장치에 거주형 SSH 자격 증명 생성"
 
-#: src/window.rs:2693
+#: src/window.rs:2692
 msgid "Create a resident SSH key"
 msgstr "거주형 SSH 키 생성"
 
-#: src/window.rs:2502
+#: src/window.rs:2501
 msgid "Create…"
 msgstr "생성…"
 
-#: src/window.rs:2963
+#: src/window.rs:2962
 msgid "Deletion result is unknown"
 msgstr "삭제 결과를 알 수 없습니다"
 
@@ -363,19 +363,19 @@ msgstr ""
 "등록 중에는 다른 모든 보안 키를 연결 해제하세요. 선택한 키가 깜박입니다. 계속하려면 해당 키를 터치하세요. 여러 키는 한 번에 하나씩"
 " 등록할 수 있습니다."
 
-#: src/window.rs:2611
+#: src/window.rs:2610
 msgid "ECDSA-SK (recommended compatibility)"
 msgstr "ECDSA-SK (권장되는 호환성)"
 
-#: src/window.rs:2621
+#: src/window.rs:2620
 msgid "ECDSA-SK works with the widest range of YubiKeys"
 msgstr "ECDSA-SK는 가장 넓은 범위의 YubiKey와 함께 작동합니다"
 
-#: src/window.rs:2498
+#: src/window.rs:2497
 msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
 msgstr "ECDSA-SK · 거주형 · 터치 필요 · 안전한 호환성 기본값"
 
-#: src/window.rs:2612
+#: src/window.rs:2611
 msgid "Ed25519-SK (newer YubiKeys)"
 msgstr "Ed25519-SK (신규 YubiKey)"
 
@@ -423,23 +423,23 @@ msgstr "FIDO PIN을 입력하세요. YubiKey가 깜빡이면 터치하세요."
 msgid "Enter the YubiKey FIDO PIN to test this local key handle."
 msgstr "이 로컬 키 핸들을 테스트하려면 YubiKey FIDO PIN을 입력하세요."
 
-#: src/window.rs:2532 src/window.rs:2921
+#: src/window.rs:2531 src/window.rs:2920
 msgid "Enter the selected YubiKey FIDO PIN"
 msgstr "선택한 YubiKey FIDO PIN 입력"
 
-#: src/window.rs:2780
+#: src/window.rs:2779
 msgid "Export .pub"
 msgstr ".pub 내보내기"
 
-#: src/window.rs:2822
+#: src/window.rs:2821
 msgid "Export SSH public key"
 msgstr "SSH 공개 키 내보내기"
 
-#: src/window.rs:2746
+#: src/window.rs:2745
 msgid "FIDO PIN"
 msgstr "FIDO PIN"
 
-#: src/window.rs:1200 src/window.rs:2001 src/window.rs:2507
+#: src/window.rs:1200 src/window.rs:2001 src/window.rs:2506
 msgid "FIDO device discovery is unavailable"
 msgstr "FIDO 장치 탐색을 사용할 수 없습니다"
 
@@ -455,7 +455,7 @@ msgstr "YubiKey 검사 완료"
 msgid "Firmware {0}"
 msgstr "펌웨어 {0}"
 
-#: src/backend.rs:234
+#: src/backend.rs:261
 msgid ""
 "For safe enrollment, disconnect every other security key and leave only the "
 "selected YubiKey connected."
@@ -585,11 +585,11 @@ msgstr "로드됨"
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "SSH 키 로딩 중... YubiKey가 깜빡이면 터치하세요."
 
-#: src/window.rs:2634
+#: src/window.rs:2633
 msgid "Local key handle path"
 msgstr "로컬 키 핸들 경로"
 
-#: src/window.rs:2606
+#: src/window.rs:2605
 msgid "Local key label"
 msgstr "로컬 키 라벨"
 
@@ -601,7 +601,7 @@ msgstr "SSH 에이전트와 연결된 YubiKey를 찾는 중입니다."
 msgid "Needs attention"
 msgstr "주의 필요"
 
-#: src/window.rs:2497
+#: src/window.rs:2496
 msgid "New hardware-backed SSH key"
 msgstr "새 하드웨어 기반 SSH 키"
 
@@ -702,7 +702,7 @@ msgid ""
 msgstr ""
 "OpenSSH가 성공을 보고했지만 새로운 거주 자격 증명이 감지되지 않았습니다. YubiKey를 확인하기 전까지 재시도하지 마십시오."
 
-#: src/window.rs:2669
+#: src/window.rs:2668
 msgid "OpenSSH/FIDO credential metadata and local file location"
 msgstr "OpenSSH/FIDO 자격 증명 메타데이터 및 로컬 파일 위치"
 
@@ -710,15 +710,15 @@ msgstr "OpenSSH/FIDO 자격 증명 메타데이터 및 로컬 파일 위치"
 msgid "Passwordless"
 msgstr "비밀번호 없이 사용"
 
-#: src/window.rs:2923
+#: src/window.rs:2922
 msgid "Permanently delete"
 msgstr "영구 삭제"
 
-#: src/window.rs:2783
+#: src/window.rs:2782
 msgid "Permanently delete from YubiKey…"
 msgstr "YubiKey에서 영구 삭제…"
 
-#: src/window.rs:3022
+#: src/window.rs:3021
 msgid "Permanently delete this resident SSH credential?"
 msgstr "이 거주 SSH 자격 증명을 영구적으로 삭제하시겠습니까?"
 
@@ -760,27 +760,27 @@ msgstr "{0} 보호 준비 완료"
 msgid "Refresh connected YubiKeys"
 msgstr "연결된 YubiKey 새로 고침"
 
-#: src/window.rs:2782
+#: src/window.rs:2781
 msgid "Remove from agent"
 msgstr "에이전트에서 제거"
 
-#: src/window.rs:2883
+#: src/window.rs:2882
 msgid "Removing this key from the SSH agent…"
 msgstr "SSH 에이전트에서 이 키를 제거하는 중…"
 
-#: src/window.rs:2663
+#: src/window.rs:2662
 msgid "Require verification for every signature"
 msgstr "모든 서명마다 확인 필요"
 
-#: src/window.rs:2664
+#: src/window.rs:2663
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "이 키가 서명할 때마다 FIDO PIN 필요"
 
-#: src/window.rs:2562
+#: src/window.rs:2561
 msgid "Resident SSH key created"
 msgstr "거주 SSH 키 생성됨"
 
-#: src/window.rs:2956
+#: src/window.rs:2955
 msgid "Resident credential permanently deleted"
 msgstr "거주 자격 증명이 영구적으로 삭제되었습니다"
 
@@ -788,7 +788,7 @@ msgstr "거주 자격 증명이 영구적으로 삭제되었습니다"
 msgid "Resident keys loaded"
 msgstr "거주 키 로드됨"
 
-#: src/window.rs:2630
+#: src/window.rs:2629
 msgid "Resident username"
 msgstr "거주 사용자 이름"
 
@@ -816,7 +816,7 @@ msgstr "SSH 에이전트 사용 불가"
 msgid "SSH commit signing"
 msgstr "SSH 커밋 서명"
 
-#: src/window.rs:2798
+#: src/window.rs:2797
 msgid "SSH key actions"
 msgstr "SSH 키 작업"
 
@@ -832,7 +832,7 @@ msgstr "SSH 키"
 msgid "SSH_AUTH_SOCK is not set"
 msgstr "SSH_AUTH_SOCK이(가) 설정되지 않음"
 
-#: src/window.rs:2694
+#: src/window.rs:2693
 msgid ""
 "Safe defaults use ECDSA-SK, require touch, and store a discoverable "
 "credential on the selected YubiKey."
@@ -861,7 +861,7 @@ msgstr "물리적 터치로 로그인, sudo 권한 부여, SSH 및 Git 신원 �
 msgid "Sign-in"
 msgstr "로그인"
 
-#: src/window.rs:2864
+#: src/window.rs:2863
 msgid "Signing test passed"
 msgstr "서명 테스트 통과"
 
@@ -877,11 +877,11 @@ msgstr "Test"
 msgid "Test Git signing"
 msgstr "Git 서명 테스트"
 
-#: src/window.rs:1345 src/window.rs:2781
+#: src/window.rs:1345 src/window.rs:2780
 msgid "Test signing"
 msgstr "테스트 서명"
 
-#: src/backend.rs:228
+#: src/backend.rs:255
 msgid ""
 "The FIDO enrollment tool is not installed. Install the libpam-u2f package, "
 "then try again."
@@ -891,13 +891,13 @@ msgstr "FIDO 등록 도구가 설치되어 있지 않습니다. libpam-u2f 패�
 msgid "The PIN is sent directly to ssh-add and is never stored."
 msgstr "PIN은 ssh-add로 직접 전송되며 저장되지 않습니다."
 
-#: src/window.rs:2533
+#: src/window.rs:2532
 msgid ""
 "The PIN is sent through a private pipe to OpenSSH. It is never stored or "
 "placed in command arguments."
 msgstr "PIN은 OpenSSH로 전용 파이프를 통해 전송됩니다. PIN은 저장되거나 명령줄 인자에 포함되지 않습니다."
 
-#: src/window.rs:2865
+#: src/window.rs:2864
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "SSH 에이전트가 이 키로 데이터를 성공적으로 서명하고 확인했습니다."
 
@@ -905,7 +905,7 @@ msgstr "SSH 에이전트가 이 키로 데이터를 성공적으로 서명하고
 msgid "The YubiKey operation stopped unexpectedly."
 msgstr "YubiKey 작업이 예기치 않게 중지되었습니다."
 
-#: src/window.rs:2599
+#: src/window.rs:2598
 msgid "The credential will be created only on this exact device"
 msgstr "자격 증명은 이 정확한 장치에서만 생성됩니다."
 
@@ -921,7 +921,7 @@ msgstr ""
 msgid "The enrollment task failed."
 msgstr "등록 작업이 실패했습니다."
 
-#: src/window.rs:2957
+#: src/window.rs:2956
 msgid ""
 "The exact resident credential is no longer present on the selected YubiKey. "
 "Local .pub or key-handle files and any SSH-agent entry were not removed."
@@ -946,7 +946,7 @@ msgstr "로컬 SSH 키 핸들 경로가 유효한 UTF-8이 아닙니다."
 msgid "The local key path must be absolute."
 msgstr "로컬 키 경로는 절대 경로여야 합니다."
 
-#: src/window.rs:2564
+#: src/window.rs:2563
 msgid ""
 "The non-exportable private key remains protected by the selected YubiKey.\n"
 "\n"
@@ -972,7 +972,7 @@ msgstr ""
 "\n"
 "키는 SSH 에이전트에 자동으로 로드되지 않습니다."
 
-#: src/backend.rs:307
+#: src/backend.rs:334
 msgid "The operation was cancelled or denied."
 msgstr "작업이 취소되거나 거부되었습니다."
 
@@ -1017,7 +1017,7 @@ msgstr ""
 "{1}\n"
 "생성을 재시도하지 마십시오. 키를 확인하고 작성된 로컬 파일을 보존하십시오."
 
-#: src/backend.rs:276 src/backend.rs:285
+#: src/backend.rs:303 src/backend.rs:312
 msgid "The security key returned an invalid PAM credential."
 msgstr "보안 키에서 잘못된 PAM 자격 증명을 반환했습니다."
 
@@ -1076,7 +1076,7 @@ msgid ""
 "These keys are trusted by this account but are not currently connected."
 msgstr "이 키는 이 계정에서 신뢰하지만 현재 연결되어 있지 않습니다."
 
-#: src/window.rs:2922
+#: src/window.rs:2921
 msgid ""
 "This PIN authorizes permanent deletion of the exact credential shown in the "
 "previous step. It is never stored."
@@ -1090,7 +1090,7 @@ msgstr "이 YubiKey에는 탐색 가능한 ssh:* 자격 증명이 없습니다."
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "이것은 지원되지 않는 OpenSSH 보안 키 공개 키입니다."
 
-#: src/window.rs:3023
+#: src/window.rs:3022
 msgid ""
 "This removes the private credential from the selected YubiKey and cannot be "
 "undone. It does not remove local files or an identity already loaded in the "
@@ -1118,11 +1118,11 @@ msgid ""
 "signature…"
 msgstr "YubiKey를 터치하십시오. 임시 Git 형식 SSH 서명을 생성하고 확인하는 중…"
 
-#: src/window.rs:2857
+#: src/window.rs:2856
 msgid "Touch the YubiKey. Testing SSH signing and verification…"
 msgstr "YubiKey를 터치하십시오. SSH 서명 및 확인을 테스트하는 중…"
 
-#: src/window.rs:2545
+#: src/window.rs:2544
 msgid ""
 "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not "
 "remove the key."
@@ -1144,7 +1144,7 @@ msgstr "계속하려면 보안 키를 터치하세요."
 msgid "Try Again"
 msgstr "다시 시도"
 
-#: src/window.rs:3009
+#: src/window.rs:3008
 msgid "Type {0} to confirm"
 msgstr "확인하려면 {0} 입력"
 
@@ -1152,7 +1152,7 @@ msgstr "확인하려면 {0} 입력"
 msgid "Unavailable"
 msgstr "사용 불가"
 
-#: src/backend.rs:224
+#: src/backend.rs:251
 msgid "Unknown authentication purpose."
 msgstr "인증 목적이 알려지지 않았습니다."
 
@@ -1172,7 +1172,7 @@ msgstr "현재 사용자 잠금 해제"
 msgid "Unlock your account with a touch"
 msgstr "터치로 계정 잠금 해제"
 
-#: src/ssh.rs:735 src/window.rs:1251 src/window.rs:2467 src/window.rs:2988
+#: src/ssh.rs:735 src/window.rs:1251 src/window.rs:2467 src/window.rs:2987
 msgid "Unnamed SSH credential"
 msgstr "이름 없는 SSH 자격 증명"
 
@@ -1196,7 +1196,7 @@ msgstr "sudo 설정 업데이트 중…"
 msgid "Use YubiKey to unlock sudo"
 msgstr "YubiKey를 사용하여 sudo 잠금 해제"
 
-#: src/window.rs:2935
+#: src/window.rs:2934
 msgid ""
 "Verifying and permanently deleting the selected resident credential. Do not "
 "unplug the YubiKey…"
@@ -1240,11 +1240,11 @@ msgid ""
 " it."
 msgstr "보안 설정이 준비되었습니다. 필요할 때 설정된 YubiKey를 연결하세요."
 
-#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1755 src/window.rs:2598
+#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1755 src/window.rs:2597
 msgid "YubiKey"
 msgstr "YubiKey"
 
-#: src/window.rs:3089
+#: src/window.rs:3088
 msgid "YubiKey configuration failed"
 msgstr "YubiKey 구성에 실패했습니다"
 
@@ -1264,7 +1264,7 @@ msgstr "하드웨어 일련번호가 없는 YubiKey"
 msgid "YubiKey · Serial {0}"
 msgstr "YubiKey · 일련번호 {0}"
 
-#: src/window.rs:2994
+#: src/window.rs:2993
 msgid ""
 "YubiKey: {0}\n"
 "Device: {1}\n"
@@ -1308,7 +1308,7 @@ msgstr "sudo 인증 정책"
 msgid "unknown"
 msgstr "알 수 없음"
 
-#: src/window.rs:2520
+#: src/window.rs:2519
 msgid "user"
 msgstr "사용자"
 
@@ -1701,6 +1701,14 @@ msgstr "이 설정으로 변경되는 내용"
 #: src/window.rs:2224
 msgid "{0} includes {1}"
 msgstr "{0} includes {1}"
+
+#: src/window.rs:2491
+msgid ""
+"Optional: create a new resident key only when you need another SSH identity."
+" Its private key never leaves the selected YubiKey."
+msgstr ""
+"선택 사항: 다른 SSH ID가 필요한 경우에만 새로운 resident key를 생성하세요. 이 private key는 선택한 "
+"YubiKey를 절대 떠나지 않습니다."
 
 #~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
 #~ msgstr "패스키를 사용하려면 Yubico Authenticator를 설치해야 합니다."

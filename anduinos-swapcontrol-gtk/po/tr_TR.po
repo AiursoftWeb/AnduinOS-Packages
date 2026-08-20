@@ -101,7 +101,7 @@ msgstr "Zram Aygıtı Oluştur"
 msgid "Dashboard"
 msgstr "Gösterge Paneli"
 
-#: src/views/zram_view.rs:562
+#: src/views/zram_view.rs:571
 msgid "Destroy Zram Device"
 msgstr "Zram Cihazını Yık"
 
@@ -109,7 +109,7 @@ msgstr "Zram Cihazını Yık"
 msgid "Device Created"
 msgstr "Cihaz Oluşturuldu"
 
-#: src/views/dashboard_view.rs:498
+#: src/views/dashboard_view.rs:503
 msgid "Disabled"
 msgstr "Devre Dışı"
 
@@ -125,7 +125,7 @@ msgstr "Swap devre dışı bırakılıyor…"
 msgid "Disk Swap Configuration"
 msgstr "Sanal Bellek Yapılandırması"
 
-#: src/views/dashboard_view.rs:609
+#: src/views/dashboard_view.rs:614
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
@@ -137,7 +137,7 @@ msgstr ""
 msgid "Duration:"
 msgstr "Süre:"
 
-#: src/views/dashboard_view.rs:604
+#: src/views/dashboard_view.rs:609
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
@@ -176,7 +176,7 @@ msgstr "Uykuya Dalma"
 msgid "Hibernation Warning"
 msgstr "Uyku Modu Uyarısı"
 
-#: src/views/dashboard_view.rs:512 src/views/swap_view.rs:810
+#: src/views/dashboard_view.rs:517 src/views/swap_view.rs:810
 msgid "Inactive"
 msgstr "Etkin Değil"
 
@@ -204,23 +204,23 @@ msgstr "Zram Cihazları"
 msgid "No device"
 msgstr "Cihaz yok"
 
-#: src/views/dashboard_view.rs:587
+#: src/views/dashboard_view.rs:592
 msgid "No disk swap detected"
 msgstr "Sanal bellek takası algılanmadı"
 
-#: src/views/dashboard_view.rs:603
+#: src/views/dashboard_view.rs:608
 msgid "No memory acceleration enabled"
 msgstr "Hiçbir bellek hızlandırma etkin değil"
 
-#: src/views/dashboard_view.rs:541
+#: src/views/dashboard_view.rs:546
 msgid "None"
 msgstr "Hiçbiri"
 
-#: src/views/dashboard_view.rs:525 src/views/dashboard_view.rs:533
+#: src/views/dashboard_view.rs:530 src/views/dashboard_view.rs:538
 msgid "Off"
 msgstr "Kapalı"
 
-#: src/views/dashboard_view.rs:532
+#: src/views/dashboard_view.rs:537
 msgid "On"
 msgstr "Açık"
 
@@ -233,7 +233,7 @@ msgstr ""
 "sakla. Daha yüksek değer, daha fazla sayfanın önbelleğe alınması demektir. "
 "Önerilen: %90"
 
-#: src/views/dashboard_view.rs:608
+#: src/views/dashboard_view.rs:613
 msgid "Optimal memory configuration"
 msgstr "Optimal bellek yapılandırması"
 
@@ -249,7 +249,7 @@ msgstr "Öncelik"
 msgid "RAM"
 msgstr "RAM"
 
-#: src/views/zram_view.rs:545
+#: src/views/zram_view.rs:554
 msgid "Remove"
 msgstr "Kaldır"
 
@@ -282,7 +282,7 @@ msgstr "Stres Testi"
 msgid "Swap"
 msgstr "Takas"
 
-#: src/window.rs:59
+#: src/progress_dialog.rs:24 src/window.rs:59
 msgid "Swap Control"
 msgstr "Sanal Bellek Denetimi"
 
@@ -291,10 +291,11 @@ msgid "Swap usage"
 msgstr "Sanal bellek kullanımı"
 
 #: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
+#: src/views/swap_view.rs:677
 msgid "Swappiness"
 msgstr "Takaslanma"
 
-#: src/views/dashboard_view.rs:598
+#: src/views/dashboard_view.rs:603
 msgid "Swappiness not optimized for Zram"
 msgstr "Takaslanma Zram için optimize edilmedi"
 
@@ -318,7 +319,7 @@ msgstr "Tip"
 msgid "Used"
 msgstr "Kullanılan"
 
-#: src/views/dashboard_view.rs:588
+#: src/views/dashboard_view.rs:593
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
@@ -335,11 +336,11 @@ msgstr "Zram"
 msgid "Zram Devices"
 msgstr "Zram Cihazları"
 
-#: src/views/dashboard_view.rs:592
+#: src/views/dashboard_view.rs:597
 msgid "Zram and Zswap are both active"
 msgstr "Zram ve Zswap aynı anda etkin"
 
-#: src/views/dashboard_view.rs:593
+#: src/views/dashboard_view.rs:598
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
 "pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
@@ -350,7 +351,7 @@ msgstr ""
 "çalkalanmasına neden olabilir. Bunlardan birini devre dışı bırakın."
 
 #: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
-#: src/views/swap_view.rs:185
+#: src/views/swap_view.rs:185 src/views/swap_view.rs:686
 msgid "Zswap"
 msgstr "Zswap"
 
@@ -383,31 +384,31 @@ msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr ""
 "Zram etkin — disk önbelleği yerine hızlı sıkıştırılmış RAM'i tercih edin"
 
-#: src/views/dashboard_view.rs:547
+#: src/views/dashboard_view.rs:552
 msgid "Ready"
 msgstr "Hazır"
 
-#: src/views/dashboard_view.rs:549
+#: src/views/dashboard_view.rs:554
 msgid "Unsupported"
 msgstr "Desteklenmiyor"
 
-#: src/views/dashboard_view.rs:551
+#: src/views/dashboard_view.rs:556
 msgid "Not configured"
 msgstr "Yapılandırılmadı"
 
-#: src/views/dashboard_view.rs:553
+#: src/views/dashboard_view.rs:558
 msgid "Resume target missing"
 msgstr "Uyanma hedefi eksik"
 
-#: src/views/dashboard_view.rs:555
+#: src/views/dashboard_view.rs:560
 msgid "Resume target inactive"
 msgstr "Uyanma hedefi etkin değil"
 
-#: src/views/dashboard_view.rs:557
+#: src/views/dashboard_view.rs:562
 msgid "Swap too small"
 msgstr "Takas çok küçük"
 
-#: src/views/dashboard_view.rs:559
+#: src/views/dashboard_view.rs:564
 msgid "Not ready"
 msgstr "Hazır değil"
 
@@ -542,6 +543,224 @@ msgstr ""
 msgid "Zram configuration saved. The device will be created shortly."
 msgstr "Zram yapılandırması kaydedildi. Aygıt yakında oluşturulacak."
 
+#: src/views/dashboard_view.rs:165 src/views/swap_view.rs:128
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Önerilen takaslanma: {0} ({1})</i>"
+
+#: src/views/zram_view.rs:90
+msgid "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
+msgstr "<i>Önerilen: {0} MiB, lz4, öncelik 100 ({1} GiB RAM için)</i>"
+
+#: src/views/swap_view.rs:772
+msgid "Active — {0} GiB used / {1} GiB total"
+msgstr "Aktif — {0} GiB kullanılıyor / {1} GiB toplam"
+
+#: src/swap/exec.rs:26 src/swap/exec.rs:68
+msgid "Authentication cancelled"
+msgstr "Kimlik doğrulama iptal edildi"
+
+#: src/swap/swapfile.rs:113
+msgid "Cannot inspect the root filesystem"
+msgstr "Kök dosya sistemi incelenemiyor"
+
+#: src/swap/swapfile.rs:108
+msgid "Cannot inspect the root filesystem: {0}"
+msgstr "Kök dosya sistemi incelenemiyor: {0}"
+
+#: src/swap/sysctl.rs:79
+msgid "Cannot parse MemTotal: {0}"
+msgstr "MemTotal çözümlenemiyor: {0}"
+
+#: src/swap/sysctl.rs:43
+msgid "Cannot parse swappiness: {0}"
+msgstr "Takaslanma ayarı çözümlenemedi: {0}"
+
+#: src/swap/zswap.rs:59
+msgid "Cannot parse {0} as u8: {1}"
+msgstr "{0}, u8 olarak ayrıştırılamadı: {1}"
+
+#: src/swap/sysctl.rs:70
+msgid "Cannot read /proc/meminfo: {0}"
+msgstr "/proc/meminfo okunamıyor: {0}"
+
+#: src/swap/swapfile.rs:39
+msgid "Cannot read /proc/swaps: {0}"
+msgstr "/proc/swaps okunamıyor: {0}"
+
+#: src/swap/sysctl.rs:36 src/swap/zswap.rs:47
+msgid "Cannot read {0}: {1}"
+msgstr "{0} okunamıyor: {1}"
+
+#: src/swap/exec.rs:18 src/swap/exec.rs:52
+msgid "Failed to execute pkexec: {0}"
+msgstr "pkexec çalıştırılamadı: {0}"
+
+#: src/swap/persist.rs:31
+msgid "Failed to remove legacy unit {0}: {1}"
+msgstr "Eski birim kaldırılmadı: {0}: {1}"
+
+#: src/swap/sysctl.rs:129
+msgid "Failed to set swappiness: {0} / {1}"
+msgstr "Takaslanma ayarı yapılamadı: {0} / {1}"
+
+#: src/swap/exec.rs:61
+msgid "Failed to wait on pkexec: {0}"
+msgstr "pkexec beklenemedi: {0}"
+
+#: src/i18n.rs:24
+msgid "Hello {0}, you have {1} messages"
+msgstr "Merhaba {0}, {1} mesajınız var"
+
+#: src/views/swap_view.rs:234
+msgid ""
+"How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
+" {0})"
+msgstr ""
+"Çekirdeğin ne kadar agresif bir şekilde takas yaptığını belirler — düşük = "
+"RAM'de daha uzun süre kal (önerilen: {0})"
+
+#: src/views/swap_view.rs:231
+msgid ""
+"How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
+"fast compressed RAM over disk cache (recommended: {0})"
+msgstr ""
+"Çekirdeğin ne kadar agresif bir şekilde takas yaptığını belirler; Zram "
+"etkinse, disk önbelleği yerine hızlı sıkıştırılmış RAM'i tercih etmek için "
+"{0} olarak ayarlayın (önerilen: {0})"
+
+#: src/views/dashboard_view.rs:483
+msgid "Idle ({0} GiB available)"
+msgstr "Boşta ({0} GiB kullanılabilir)"
+
+#: src/views/zram_view.rs:531
+msgid "Idle — {0} MiB available"
+msgstr "Boşta — {0} MiB kullanılabilir"
+
+#: src/swap/sysctl.rs:83
+msgid "MemTotal not found"
+msgstr "MemTotal bulunamadı"
+
+#: src/views/swap_view.rs:786
+msgid "Present but inactive — activation is disabled on {0}"
+msgstr "Mevcut ancak etkisiz — etkinleştirme {0} üzerinde devre dışı"
+
+#: src/views/stress_test_view.rs:676
+msgid ""
+"RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
+"Swap used: {3} GiB"
+msgstr ""
+"RAM: {0} GiB toplam · {1} GiB kullanıldı · {2} GiB kullanılabilir\n"
+"Takas kullanımı: {3} GiB"
+
+#: src/views/swap_view.rs:673
+msgid "Resize"
+msgstr "Boyutlandır"
+
+#: src/views/swap_view.rs:837
+msgid "Swap file resizing is unsupported on {0}"
+msgstr "Takas dosyası boyutlandırma {0} üzerinde desteklenmiyor"
+
+#: src/progress_dialog.rs:58
+msgid "Task panicked: {0}"
+msgstr "Görev panik yaptı: {0}"
+
+#: src/swap/persist.rs:74
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zram changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zram from this GUI."
+msgstr ""
+"'anduinos-swap-config' paketi yüklü değil.\n"
+"\n"
+"Olmadığı sürece Zram değişiklikleri uygulanamaz veya kalıcı hale getirilemez.\n"
+"Bu arayüz üzerinden zram'i yönetmek için 'anduinos-swap-config' paketini yükleyin."
+
+#: src/swap/persist.rs:133
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zswap changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zswap from this GUI."
+msgstr ""
+"'anduinos-swap-config' paketi yüklü değil.\n"
+"\n"
+"Bu olmadan Zswap değişiklikleri uygulanamaz veya kalıcı hale getirilemez.\n"
+"Zswap'ı bu arayüzden yönetmek için 'anduinos-swap-config' paketini yükleyin."
+
+#: src/views/zram_view.rs:573
+msgid ""
+"This will immediately remove {0} and flush its contents to disk swap. "
+"Continue?"
+msgstr ""
+"Bu işlem {0} öğesini hemen kaldıracak ve içeriğini disk takasına "
+"aktaracaktır. Devam edilsin mi?"
+
+#: src/views/swap_view.rs:797
+msgid "Unavailable on {0}; the swap partition remains active"
+msgstr "{0} üzerinde kullanılamıyor; takas bölümü aktif kalıyor"
+
+#: src/views/dashboard_view.rs:604
+msgid ""
+"Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
+" fast compressed RAM swap — dropping file cache when zram is available "
+"wastes I/O performance."
+msgstr ""
+"Zram etkin ancak takaslanma {1} yerine {0}. Hızlı sıkıştırılmış RAM takasını"
+" tercih etmek için bunu {1} olarak ayarlayın; Zram mevcutken dosya "
+"önbelleğinin düşürülmesi, I/O performansını boşa harcar."
+
+#: src/swap/persist.rs:88
+msgid "Zram persistence disabled"
+msgstr "Zram kalıcılığı devre dışı"
+
+#: src/swap/persist.rs:90
+msgid "Zram persistence enabled"
+msgstr "Zram kalıcılığı etkinleştirildi"
+
+#: src/swap/persist.rs:148
+msgid "Zswap persistence disabled"
+msgstr "Zswap kalıcılığı devre dışı"
+
+#: src/swap/persist.rs:146
+msgid "Zswap persistence enabled"
+msgstr "Zswap kalıcılığı etkinleştirildi"
+
+#: src/views/dashboard_view.rs:159 src/views/swap_view.rs:122
+msgid "for {0} GiB RAM"
+msgstr "{0} GiB RAM için"
+
+#: src/swap/sysctl.rs:133
+msgid "swappiness updated"
+msgstr "swappiness güncellendi"
+
+#: src/swap/persist.rs:37
+msgid "systemctl {0} failed: {1}"
+msgstr "systemctl {0} başarısız: {1}"
+
+#: src/views/zram_view.rs:525
+msgid "{0} MiB used (stats reset)"
+msgstr "{0} MiB kullanıldı (istatistikler sıfırlandı)"
+
+#: src/views/zram_view.rs:520
+msgid "{0} MiB used · saved {1}%"
+msgstr "{0} MiB kullanıldı · %{1} tasarruf edildi"
+
+#: src/views/dashboard_view.rs:498
+msgid "{0} · pool {1}%"
+msgstr "{0} · havuz %{1}"
+
+#: src/views/dashboard_view.rs:474
+msgid "{0} · saved {1}%"
+msgstr "{0} · %{1} kaydedildi"
+
+#: src/views/swap_view.rs:754
+msgid ""
+"{0} — installer-managed; size cannot be changed while the system is running"
+msgstr ""
+"{0} — kurulum programı tarafından yönetiliyor; sistem çalışırken boyut "
+"değiştirilemez"
+
 #~ msgid "Disabling swap will break hibernation. Continue?"
 #~ msgstr ""
 #~ "Sanal belleği devre dışı bırakmak uyku modunu bozacak. Devam edilsin mi?"
@@ -552,14 +771,8 @@ msgstr "Zram yapılandırması kaydedildi. Aygıt yakında oluşturulacak."
 #~ msgid "Swap file size"
 #~ msgstr "Sanal bellek dosyası boyutu"
 
-#~ msgid "<i>Recommended swappiness: {0} ({1})</i>"
-#~ msgstr "<i>Önerilen takaslanma: {0} ({1})</i>"
-
 #~ msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
 #~ msgstr "<i>Önerilen: {0} GiB sanal bellek, takaslanma {1} ({2})</i>"
-
-#~ msgid "Active — {0} GiB used / {1} GiB total"
-#~ msgstr "Aktif — {0} GiB kullanılıyor / {1} GiB toplam"
 
 #~ msgid "Creating Zram device…"
 #~ msgstr "Zram cihazı oluşturuluyor…"
@@ -570,20 +783,8 @@ msgstr "Zram yapılandırması kaydedildi. Aygıt yakında oluşturulacak."
 #~ msgid "Disk-based swap file — the last line of defense when RAM is full"
 #~ msgstr "Disk tabanlı sanal bellek dosyası — RAM dolduğunda son savunma hattı"
 
-#~ msgid "Hello {0}, you have {1} messages"
-#~ msgstr "Merhaba {0}, {1} mesajınız var"
-
 #~ msgid "Hibernation not detected — recommended: {0} GiB"
 #~ msgstr "Dinlenme modu algılanamadı — önerilen: {0} GiB"
-
-#~ msgid "Idle ({0} GiB available)"
-#~ msgstr "Boşta ({0} GiB kullanılabilir)"
-
-#~ msgid "{0} · pool {1}%"
-#~ msgstr "{0} · havuz %{1}"
-
-#~ msgid "{0} · saved {1}%"
-#~ msgstr "{0} · %{1} kaydedildi"
 
 #~ msgid "Active"
 #~ msgstr "Aktif"
@@ -628,27 +829,3 @@ msgstr "Zram yapılandırması kaydedildi. Aygıt yakında oluşturulacak."
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
 #~ msgstr ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
-#~ " {0})"
-#~ msgstr ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
-#~ " {0})"
-
-#~ msgid ""
-#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
-#~ " fast compressed RAM swap — dropping file cache when zram is available "
-#~ "wastes I/O performance."
-#~ msgstr ""
-#~ "Zram etkin ancak takaslanma {1} yerine {0}. Hızlı sıkıştırılmış RAM takasını"
-#~ " tercih etmek için bunu {1} olarak ayarlayın; Zram mevcutken dosya "
-#~ "önbelleğinin düşürülmesi, I/O performansını boşa harcar."
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
-#~ "fast compressed RAM over disk cache (recommended: {0})"
-#~ msgstr ""
-#~ "Çekirdeğin ne kadar agresif bir şekilde takas yaptığını belirler; Zram "
-#~ "etkinse, disk önbelleği yerine hızlı sıkıştırılmış RAM'i tercih etmek için "
-#~ "{0} olarak ayarlayın (önerilen: {0})"

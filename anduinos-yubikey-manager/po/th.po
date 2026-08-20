@@ -16,75 +16,98 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: src/window.rs:2020
 msgid "1 identity is currently available to SSH applications."
 msgstr "มีอัตลักษณ์ 1 รายการพร้อมใช้งานสำหรับแอปพลิเคชัน SSH ในขณะนี้"
 
+#: src/window.rs:2304
 msgid "1 resident SSH key is available from your connected YubiKey."
 msgstr ""
 "มีคีย์ SSH แบบ resident 1 รายการพร้อมใช้งานจาก YubiKey ที่เชื่อมต่ออยู่"
 
+#: src/window.rs:1814
 msgid "1 resident SSH key · {0}"
 msgstr "คีย์ SSH แบบ resident 1 รายการ · {0}"
 
+#: src/window.rs:1474 src/window.rs:1652
 msgid "A key must be connected before it can be enrolled."
 msgstr "จำเป็นต้องเชื่อมต่อคีย์ก่อนจึงจะลงทะเบียนได้"
 
+#: src/window.rs:173
 msgid "About"
 msgstr "เกี่ยวกับ"
 
+#: src/home.rs:381 src/home.rs:402
 msgid "Account password"
 msgstr "รหัสผ่านบัญชี"
 
+#: src/window.rs:2490
 msgid "Add another SSH key"
 msgstr "เพิ่มคีย์ SSH อีกรายการ"
 
+#: src/window.rs:1314
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "เพิ่มคีย์สาธารณะนี้ลงใน GitHub ในฐานะคีย์สำหรับการลงนาม"
 
+#: src/home.rs:336 src/home.rs:389
 msgid "Administrator access"
 msgstr "สิทธิ์ผู้ดูแลระบบ"
 
+#: src/window.rs:2667
 msgid "Advanced options"
 msgstr "ตัวเลือกขั้นสูง"
 
+#: src/window.rs:2619
 msgid "Algorithm"
 msgstr "อัลกอริทึม"
 
+#: src/window.rs:1582
 msgid "Allow sudo without authentication"
 msgstr "อนุญาตให้ใช้ sudo โดยไม่ต้องตรวจสอบสิทธิ์"
 
+#: src/window.rs:1672
 msgid "Allowed for sudo · not currently connected"
 msgstr "อนุญาตสำหรับ sudo · ไม่ได้เชื่อมต่ออยู่ในขณะนี้"
 
+#: src/window.rs:1674
 msgid "Allowed to authorize sudo"
 msgstr "ได้รับอนุญาตให้รับรองความถูกต้องของ sudo"
 
+#: src/window.rs:1494
 msgid "Allowed to unlock this user"
 msgstr "ได้รับอนุญาตให้ปลดล็อกผู้ใช้รายนี้"
 
+#: src/window.rs:1492
 msgid "Allowed to unlock this user · not currently connected"
 msgstr "ได้รับอนุญาตให้ปลดล็อกผู้ใช้รายนี้ · ไม่ได้เชื่อมต่ออยู่ในขณะนี้"
 
+#: src/window.rs:1902
 msgid "Already loaded"
 msgstr "โหลดแล้ว"
 
+#: src/window.rs:1639
 msgid "An enrolled YubiKey or the account password can authorize sudo."
 msgstr ""
 "YubiKey ที่ลงทะเบียนไว้หรือรหัสผ่านบัญชีสามารถใช้เพื่อรับรองความถูกต้องของ "
 "sudo ได้"
 
+#: src/application.rs:68
 msgid "AnduinOS Team"
 msgstr "ทีม AnduinOS"
 
+#: src/application.rs:66 src/progress_dialog.rs:23 src/window.rs:96
 msgid "AnduinOS YubiKey Security Center"
 msgstr "ศูนย์ความปลอดภัย AnduinOS YubiKey"
 
+#: src/home.rs:126
 msgid "AnduinOS works more securely with a YubiKey"
 msgstr "AnduinOS จะทำงานได้อย่างปลอดภัยยิ่งขึ้นเมื่อใช้ร่วมกับ YubiKey"
 
+#: src/window.rs:2625
 msgid "Application"
 msgstr "แอปพลิเคชัน"
 
+#: src/ssh.rs:450
 msgid ""
 "Application must begin with ssh:, contain no whitespace, and be at most 253 "
 "bytes."
@@ -92,51 +115,67 @@ msgstr ""
 "แอปพลิเคชันต้องเริ่มต้นด้วย ssh:, ห้ามมีช่องว่าง และต้องมีขนาดไม่เกิน 253 "
 "ไบต์"
 
+#: src/home.rs:411 src/window.rs:631
 msgid "Available"
 msgstr "พร้อมใช้งาน"
 
+#: src/window.rs:1255
 msgid "Available through SSH agent"
 msgstr "ใช้ได้ผ่าน SSH agent"
 
+#: src/window.rs:1253
 msgid "Available through local key handle"
 msgstr "ใช้ได้ผ่าน local key handle"
 
+#: src/home.rs:172
 msgid "Buy a YubiKey"
 msgstr "ซื้อ YubiKey"
 
+#: src/window.rs:2698 src/window.rs:2755 src/window.rs:3027
 msgid "Cancel"
 msgstr "ยกเลิก"
 
+#: src/window.rs:562
 msgid "Checking SSH keys…"
 msgstr "กำลังตรวจสอบคีย์ SSH…"
 
+#: src/window.rs:574
 msgid "Checking SSH support…"
 msgstr "กำลังตรวจสอบการรองรับ SSH…"
 
+#: src/home.rs:65 src/window.rs:478
 msgid "Checking connected YubiKeys"
 msgstr "กำลังตรวจสอบ YubiKey ที่เชื่อมต่ออยู่"
 
+#: src/home.rs:428
 msgid "Choose a YubiKey-backed SSH key"
 msgstr "เลือกคีย์ SSH ที่รองรับด้วย YubiKey"
 
+#: src/window.rs:2639
 msgid "Choose a local key-handle file"
 msgstr "เลือกไฟล์ handle คีย์ท้องถิ่น"
 
+#: src/ssh.rs:441
 msgid "Choose a supported OpenSSH security-key algorithm."
 msgstr "เลือกอัลกอริทึมคีย์ความปลอดภัย OpenSSH ที่รองรับ"
 
+#: src/ssh.rs:314 src/ssh.rs:438
 msgid "Choose a valid /dev/hidrawN FIDO device."
 msgstr "เลือกอุปกรณ์ FIDO /dev/hidrawN ที่ถูกต้อง"
 
+#: src/ssh.rs:223
 msgid "Choose a valid output folder."
 msgstr "เลือกโฟลเดอร์เอาต์พุตที่ถูกต้อง"
 
+#: src/git_signing.rs:107
 msgid "Choose an SSH key for Git signing."
 msgstr "เลือกคีย์ SSH สำหรับการลงนาม Git"
 
+#: src/window.rs:2650
 msgid "Choose local SSH key-handle path"
 msgstr "เลือกเส้นทาง handle คีย์ SSH ท้องถิ่น"
 
+#: src/window.rs:1218
 msgid ""
 "Choose one SSH key. The selection takes effect immediately for this user's "
 "Git commits."
@@ -144,142 +183,187 @@ msgstr ""
 "เลือกคีย์ SSH หนึ่งคีย์ การเลือกจะมีผลทันทีสำหรับการส่งโค้ด (Git commits) "
 "ของผู้ใช้รายนี้"
 
+#: src/window.rs:1465
 msgid ""
 "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
 msgstr ""
 "เลือก YubiKey ใดบ้างที่สามารถปลดล็อก {0} ได้ "
 "การเข้าสู่ระบบด้วยรหัสผ่านยังคงใช้ได้"
 
+#: src/window.rs:3074 src/window.rs:3096
 msgid "Close"
 msgstr "ปิด"
 
+#: src/ssh.rs:570
 msgid "Command exited with"
 msgstr "คำสั่งสิ้นสุดด้วย"
 
+#: src/ssh.rs:560 src/window.rs:655
 msgid "Command exited with {0}"
 msgstr "คำสั่งสิ้นสุดด้วย {0}"
 
+#: src/window.rs:1217
 msgid "Commit signing"
 msgstr "การลงนามในคอมมิต"
 
+#: src/home.rs:596
 msgid "Configured YubiKeys"
 msgstr "YubiKey ที่กำหนดค่าแล้ว"
 
+#: src/home.rs:627
 msgid "Configured for {0} · Not connected"
 msgstr "กำหนดค่าสำหรับ {0} · ไม่ได้เชื่อมต่อ"
 
+#: src/window.rs:2505
 msgid "Connect a FIDO security key first"
 msgstr "เชื่อมต่อคีย์ความปลอดภัย FIDO ก่อน"
 
+#: src/window.rs:2262
 msgid "Connect a YubiKey"
 msgstr "เชื่อมต่อ YubiKey"
 
+#: src/home.rs:158
 msgid "Connect a YubiKey to get started"
 msgstr "เชื่อมต่อ YubiKey เพื่อเริ่มต้นใช้งาน"
 
+#: src/home.rs:124
 msgid "Connect your YubiKey"
 msgstr "เชื่อมต่อ YubiKey ของคุณ"
 
+#: src/home.rs:243 src/home.rs:315
 msgid "Connected"
 msgstr "เชื่อมต่อแล้ว"
 
+#: src/home.rs:300
 msgid "Connected YubiKeys"
 msgstr "YubiKey ที่เชื่อมต่ออยู่"
 
+#: src/window.rs:2699
 msgid "Continue"
 msgstr "ดำเนินการต่อ"
 
+#: src/window.rs:3028
 msgid "Continue to PIN"
 msgstr "ดำเนินการต่อเพื่อใช้ PIN"
 
+#: src/window.rs:1326 src/window.rs:2778
 msgid "Copy public key"
 msgstr "คัดลอกกุญแจสาธารณะ"
 
+#: src/window.rs:597
 msgid "Could not check SSH keys"
 msgstr "ไม่สามารถตรวจสอบคีย์ SSH ได้"
 
+#: src/ssh.rs:691
 msgid "Could not create a temporary public-key file: {0}"
 msgstr "ไม่สามารถสร้างไฟล์กุญแจสาธารณะชั่วคราว: {0}"
 
+#: src/ssh.rs:605
 msgid "Could not create temporary Git signing data: {0}"
 msgstr "ไม่สามารถสร้างข้อมูลการลงนาม Git ชั่วคราว: {0}"
 
+#: src/ssh.rs:230 src/ssh_config.rs:443
 msgid "Could not create {0}: {1}"
 msgstr "ไม่สามารถสร้าง {0}: {1}"
 
+#: src/window.rs:2839
 msgid "Could not export the public key: {0}"
 msgstr "ไม่สามารถส่งออกกุญแจสาธารณะ: {0}"
 
+#: src/window.rs:2337
 msgid "Could not find security keys"
 msgstr "ไม่พบคีย์ความปลอดภัย"
 
+#: src/ssh.rs:703
 msgid "Could not flush the temporary public key: {0}"
 msgstr "ไม่สามารถล้างข้อมูลกุญแจสาธารณะชั่วคราว: {0}"
 
+#: src/backend.rs:137
 msgid "Could not inspect USB devices: {0}"
 msgstr "ไม่สามารถตรวจสอบอุปกรณ์ USB: {0}"
 
+#: src/window.rs:1991
 msgid "Could not inspect this YubiKey"
 msgstr "ไม่สามารถตรวจสอบ YubiKey นี้ได้"
 
+#: src/window.rs:540 src/window.rs:1554 src/window.rs:1734
 msgid "Could not list YubiKeys"
 msgstr "ไม่สามารถแสดงรายการ YubiKeys ได้"
 
+#: src/ssh.rs:501
 msgid "Could not locate the secure PIN helper: {0}"
 msgstr "ไม่สามารถค้นหาผู้ช่วย PIN ความปลอดภัย: {0}"
 
+#: src/ssh.rs:616
 msgid "Could not prepare the Git signing test: {0}"
 msgstr "ไม่สามารถเตรียมการทดสอบการลงนาม Git: {0}"
 
+#: src/ssh.rs:239 src/ssh_config.rs:445
 msgid "Could not protect {0}: {1}"
 msgstr "ไม่สามารถป้องกัน {0}: {1}"
 
+#: src/ssh.rs:527 src/ssh.rs:533 src/ssh.rs:919 src/ssh.rs:925
 msgid "Could not provide the FIDO PIN: {0}"
 msgstr "ไม่สามารถให้รหัส FIDO PIN: {0}"
 
+#: src/backend.rs:325
 msgid "Could not request administrator access: {0}"
 msgstr "ไม่สามารถขอสิทธิ์ผู้ดูแลระบบ: {0}"
 
+#: src/backend.rs:13 src/git_signing.rs:190 src/ssh.rs:911
 msgid "Could not run {0}: {1}"
 msgstr "ไม่สามารถรัน {0}: {1}"
 
+#: src/ssh.rs:520
 msgid "Could not start {0}: {1}"
 msgstr "ไม่สามารถเริ่มต้น {0}: {1}"
 
+#: src/home.rs:101
 msgid "Could not update security keys"
 msgstr "ไม่สามารถอัปเดตคีย์ความปลอดภัยได้"
 
+#: src/ssh.rs:697
 msgid "Could not write the temporary public key: {0}"
 msgstr "ไม่สามารถเขียนกุญแจสาธารณะชั่วคราว: {0}"
 
+#: src/window.rs:2533
 msgid "Create"
 msgstr "สร้าง"
 
+#: src/window.rs:2507
 msgid "Create a resident SSH credential on a selected device"
 msgstr "สร้างข้อมูลประจำตัว SSH แบบ resident บนอุปกรณ์ที่เลือก"
 
+#: src/window.rs:2692
 msgid "Create a resident SSH key"
 msgstr "สร้างคีย์ SSH แบบ resident"
 
+#: src/window.rs:2501
 msgid "Create…"
 msgstr "สร้าง…"
 
+#: src/window.rs:2962
 msgid "Deletion result is unknown"
 msgstr "ผลลัพธ์การลบไม่ทราบสถานะ"
 
+#: src/window.rs:1586
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr "ปิดใช้งาน · sudo ต้องยืนยันตัวตนด้วย YubiKey หรือรหัสผ่านบัญชี"
 
+#: src/window.rs:2321
 msgid "Discover SSH keys on your YubiKeys"
 msgstr "ค้นหาคีย์ SSH บน YubiKey ของคุณ"
 
+#: src/ssh.rs:463
 msgid ""
 "Display label must be at most 200 bytes and contain no control characters."
 msgstr "ป้ายชื่อแสดงต้องมีความยาวไม่เกิน 200 ไบต์และไม่มีการควบคุมตัวอักษร"
 
+#: src/window.rs:1222
 msgid "Do not sign new commits by default"
 msgstr "ไม่ลงนามในคอมมิตใหม่โดยค่าเริ่มต้น"
 
+#: src/window.rs:1563
 msgid ""
 "During enrollment, disconnect all other security keys. The selected key will"
 " blink; touch it to continue. Multiple keys can be enrolled one at a time."
@@ -288,44 +372,56 @@ msgstr ""
 "คีย์ที่เลือกจะกระพริบ; สัมผัสเพื่อดำเนินการต่อ "
 "สามารถลงทะเบียนคีย์ได้ทีละหนึ่งตัว"
 
+#: src/window.rs:2610
 msgid "ECDSA-SK (recommended compatibility)"
 msgstr "ECDSA-SK (ความเข้ากันได้แนะนำ)"
 
+#: src/window.rs:2620
 msgid "ECDSA-SK works with the widest range of YubiKeys"
 msgstr "ECDSA-SK ทำงานกับ YubiKeys ที่หลากหลายที่สุด"
 
+#: src/window.rs:2497
 msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
 msgstr ""
 "ECDSA-SK · resident · ต้องสัมผัส · ค่าเริ่มต้นความเข้ากันได้อย่างปลอดภัย"
 
+#: src/window.rs:2611
 msgid "Ed25519-SK (newer YubiKeys)"
 msgstr "Ed25519-SK (YubiKeys รุ่นใหม่)"
 
+#: src/home.rs:374 src/home.rs:393 src/home.rs:421
 msgid "Enabled"
 msgstr "เปิดใช้งานแล้ว"
 
+#: src/window.rs:1584
 msgid ""
 "Enabled · programs can obtain administrator privileges without confirmation"
 msgstr "เปิดใช้งาน · โปรแกรมสามารถรับสิทธิ์ผู้ดูแลระบบโดยไม่ต้องยืนยัน"
 
+#: src/window.rs:1610
 msgid "Enabling passwordless sudo…"
 msgstr "กำลังเปิดใช้งาน sudo แบบไม่มีรหัสผ่าน…"
 
+#: src/window.rs:1612
 msgid "Enabling sudo authentication…"
 msgstr "กำลังเปิดใช้งานการตรวจสอบสิทธิ์ sudo…"
 
+#: src/window.rs:1670
 msgid "Enrolled · inactive while sudo authentication is bypassed"
 msgstr "ลงทะเบียนแล้ว · ไม่ใช้งานขณะข้ามการตรวจสอบสิทธิ์ sudo"
 
+#: src/window.rs:1562
 msgid "Enrollment safety"
 msgstr "ความปลอดภัยในการลงทะเบียน"
 
+#: src/window.rs:735
 msgid ""
 "Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
 msgstr ""
 "ใส่รหัส PIN FIDO สำหรับ {0} แตะที่อุปกรณ์หากไฟกระพริบ รหัส PIN "
 "จะไม่ถูกเก็บไว้"
 
+#: src/window.rs:1419
 msgid ""
 "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No "
 "commit will be created."
@@ -333,36 +429,47 @@ msgstr ""
 "ใส่รหัส PIN ของ FIDO แล้วแตะ YubiKey ที่เลือกเมื่อไฟกระพริบ "
 "จะไม่มีการสร้างคอมมิตใดๆ"
 
+#: src/window.rs:1172
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "ใส่ PIN ของ FIDO แตะ YubiKey หากมันกระพริบ"
 
+#: src/ssh.rs:629
 msgid "Enter the YubiKey FIDO PIN to test this local key handle."
 msgstr "ป้อน PIN FIDO ของ YubiKey เพื่อทดสอบตัวระบุคีย์ภายในเครื่องนี้"
 
+#: src/window.rs:2531 src/window.rs:2920
 msgid "Enter the selected YubiKey FIDO PIN"
 msgstr "ใส่ PIN ของ YubiKey FIDO ที่เลือก"
 
+#: src/window.rs:2779
 msgid "Export .pub"
 msgstr "ส่งออก .pub"
 
+#: src/window.rs:2821
 msgid "Export SSH public key"
 msgstr "ส่งออกคีย์สาธารณะ SSH"
 
+#: src/window.rs:2745
 msgid "FIDO PIN"
 msgstr "PIN ของ FIDO"
 
+#: src/window.rs:1200 src/window.rs:2001 src/window.rs:2506
 msgid "FIDO device discovery is unavailable"
 msgstr "การค้นพบอุปกรณ์ FIDO ไม่พร้อมใช้งาน"
 
+#: src/backend.rs:162
 msgid "FIDO security key"
 msgstr "คีย์ความปลอดภัย FIDO"
 
+#: src/window.rs:2323
 msgid "Finish inspecting your YubiKeys"
 msgstr "เสร็จสิ้นการตรวจสอบ YubiKey ของคุณ"
 
+#: src/home.rs:663
 msgid "Firmware {0}"
 msgstr "เฟิร์มแวร์ {0}"
 
+#: src/backend.rs:261
 msgid ""
 "For safe enrollment, disconnect every other security key and leave only the "
 "selected YubiKey connected."
@@ -370,12 +477,15 @@ msgstr ""
 "เพื่อความปลอดภัยในการลงทะเบียน โปรดถอดคีย์ความปลอดภัยอื่นๆ ทั้งหมดออก "
 "และเหลือเพียง YubiKey ที่เลือกไว้เชื่อมต่อกับเครื่อง"
 
+#: src/home.rs:419 src/window.rs:112 src/window.rs:161 src/window.rs:239
 msgid "Git signing"
 msgstr "การลงนาม Git"
 
+#: src/window.rs:1311
 msgid "Git signing is enabled"
 msgstr "เปิดใช้งานการลงนาม Git แล้ว"
 
+#: src/ssh.rs:642
 msgid ""
 "Git signing test failed:\n"
 "{0}"
@@ -383,147 +493,195 @@ msgstr ""
 "การทดสอบการลงนาม Git ล้มเหลว:\n"
 "{0}"
 
+#: src/window.rs:1446
 msgid "Git signing test passed"
 msgstr "การทดสอบการลงนาม Git ผ่าน"
 
+#: src/window.rs:1081
 msgid "Git is not installed"
 msgstr "ยังไม่ได้ติดตั้ง Git"
 
+#: src/window.rs:1103
 msgid "The Git installation task stopped unexpectedly."
 msgstr "งานติดตั้ง Git หยุดทำงานอย่างกะทันหัน"
 
+#: src/window.rs:1082
 msgid "Git is required for commit signing. Install it to continue."
 msgstr "จำเป็นต้องใช้ Git สำหรับการลงนามคอมมิต กรุณาติดตั้งเพื่อดำเนินการต่อ"
 
+#: src/window.rs:108 src/window.rs:179 src/window.rs:235
 msgid "Home"
 msgstr "หน้าแรก"
 
+#: src/window.rs:1473 src/window.rs:1651
 msgid "Insert a YubiKey"
 msgstr "เสียบ YubiKey"
 
+#: src/window.rs:1129
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "เสียบ YubiKey แล้วกดปุ่มรีเฟรช"
 
+#: src/window.rs:1785
 msgid "Insert a YubiKey. This page will detect it when you refresh."
 msgstr "เสียบ YubiKey หน้าต่างนี้จะตรวจจับเมื่อคุณรีเฟรช"
 
+#: src/window.rs:738 src/window.rs:1840
 msgid "Inspect"
 msgstr "ตรวจสอบ"
 
+#: src/window.rs:2391
 msgid "Inspect YubiKey"
 msgstr "ตรวจสอบ YubiKey"
 
+#: src/window.rs:727
 msgid "Inspect YubiKey {0} of {1}"
 msgstr "ตรวจสอบ YubiKey {0} จากทั้งหมด {1}"
 
+#: src/window.rs:1838
 msgid "Inspect again"
 msgstr "ตรวจสอบอีกครั้ง"
 
+#: src/window.rs:2393
 msgid "Inspect all keys"
 msgstr "ตรวจสอบคีย์ทั้งหมด"
 
+#: src/window.rs:724
 msgid "Inspect this YubiKey"
 msgstr "ตรวจสอบ YubiKey นี้"
 
+#: src/window.rs:1831
 msgid "Inspected"
 msgstr "ตรวจสอบแล้ว"
 
+#: src/window.rs:1821
 msgid "Inspection needs attention · {0}"
 msgstr "การตรวจสอบต้องการความสนใจ · {0}"
 
+#: src/ssh.rs:127
 msgid "Invalid FIDO device path."
 msgstr "เส้นทางอุปกรณ์ FIDO ไม่ถูกต้อง"
 
+#: src/window.rs:1777
 msgid "Keys stored on your YubiKeys"
 msgstr "คีย์ที่เก็บไว้ใน YubiKey ของคุณ"
 
+#: src/window.rs:1173 src/window.rs:1880
 msgid "Load"
 msgstr "โหลด"
 
+#: src/window.rs:1171
 msgid "Load SSH keys"
 msgstr "โหลดคีย์ SSH"
 
+#: src/window.rs:1864
 msgid "Load all"
 msgstr "โหลดทั้งหมด"
 
+#: src/window.rs:1157
 msgid "Load keys"
 msgstr "โหลดคีย์"
 
+#: src/window.rs:1878
 msgid "Load resident SSH keys"
 msgstr "โหลดคีย์ SSH แบบถาวร"
 
+#: src/window.rs:1866
 msgid "Load this YubiKey's resident SSH keys into the agent"
 msgstr "โหลดคีย์ SSH แบบ resident ของ YubiKey นี้อินโตเอเจนต์"
 
+#: src/window.rs:1257
 msgid "Load this resident key into the SSH agent before signing"
 msgstr "โหลดคีย์ resident นี้เข้าสู่ SSH agent ก่อนทำการลงนาม"
 
+#: src/window.rs:1923
 msgid "Loaded"
 msgstr "โหลดแล้ว"
 
+#: src/window.rs:1182
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "กำลังโหลดคีย์ SSH… แตะ YubiKey หากมันกระพริบ"
 
+#: src/window.rs:2633
 msgid "Local key handle path"
 msgstr "เส้นทางที่จัดการคีย์ในเครื่อง"
 
+#: src/window.rs:2605
 msgid "Local key label"
 msgstr "ป้ายกำกับคีย์ในเครื่อง"
 
+#: src/window.rs:563
 msgid "Looking for your SSH agent and connected YubiKeys."
 msgstr "กำลังค้นหา SSH agent และ YubiKey ที่เชื่อมต่ออยู่"
 
+#: src/window.rs:1832 src/window.rs:2124
 msgid "Needs attention"
 msgstr "ต้องการความสนใจ"
 
+#: src/window.rs:2496
 msgid "New hardware-backed SSH key"
 msgstr "คีย์ SSH แบบฮาร์ดแวร์ใหม่"
 
+#: src/window.rs:1128
 msgid "No FIDO security key detected"
 msgstr "ไม่พบคีย์ความปลอดภัย FIDO"
 
+#: src/window.rs:2037
 msgid "No SSH agent was detected"
 msgstr "ไม่พบเอเจนต์ SSH"
 
+#: src/window.rs:1784
 msgid "No YubiKey connected"
 msgstr "ไม่ได้เชื่อมต่อ YubiKey"
 
+#: src/home.rs:653
 msgid "No hardware serial"
 msgstr "ไม่มีหมายเลขซีเรียลฮาร์ดแวร์"
 
+#: src/window.rs:1930
 msgid "No resident SSH keys"
 msgstr "ไม่มีคีย์ SSH แบบ resident"
 
+#: src/window.rs:1144
 msgid "No resident SSH keys found"
 msgstr "ไม่พบคีย์ SSH แบบ resident"
 
+#: src/window.rs:1811
 msgid "No resident SSH keys found · {0}"
 msgstr "ไม่พบคีย์ SSH แบบ resident · {0}"
 
+#: src/window.rs:2302
 msgid "No resident SSH keys were found on the connected YubiKeys."
 msgstr "ไม่พบคีย์ SSH แบบ resident บน YubiKey ที่เชื่อมต่ออยู่"
 
+#: src/window.rs:1221
 msgid "No signing"
 msgstr "ไม่มีการลงนาม"
 
+#: src/home.rs:376 src/home.rs:395 src/home.rs:423
 msgid "Not configured"
 msgstr "ไม่ได้กำหนดค่า"
 
+#: src/window.rs:1833
 msgid "Not inspected"
 msgstr "ยังไม่ได้ตรวจสอบ"
 
+#: src/window.rs:1823
 msgid "Not inspected yet · {0}"
 msgstr "ยังไม่ได้ตรวจสอบ · {0}"
 
+#: src/home.rs:174
 msgid "Open the official Yubico Store"
 msgstr "เปิดร้าน Yubico อย่างเป็นทางการ"
 
+#: src/window.rs:1089 src/window.rs:1111
 msgid "Install Git"
 msgstr "ติดตั้ง Git"
 
+#: src/window.rs:1096
 msgid "Installing Git…"
 msgstr "กำลังติดตั้ง Git…"
 
+#: src/ssh.rs:571
 msgid ""
 "OpenSSH could not load resident keys. The SSH agent contains no newly loaded"
 " identity."
@@ -531,6 +689,7 @@ msgstr ""
 "OpenSSH ไม่สามารถโหลดคีย์ที่อยู่ประจำได้ ตัวจัดการ SSH "
 "ไม่มีตัวตนใหม่ที่เพิ่งโหลด"
 
+#: src/ssh.rs:574
 msgid ""
 "OpenSSH could not load resident keys:\n"
 "{0}"
@@ -538,6 +697,7 @@ msgstr ""
 "OpenSSH ไม่สามารถโหลดคีย์ที่อยู่ประจำได้:\n"
 "{0}"
 
+#: src/ssh.rs:287
 msgid ""
 "OpenSSH did not create a resident key:\n"
 "{0}"
@@ -545,6 +705,7 @@ msgstr ""
 "OpenSSH ไม่ได้สร้างคีย์ที่อยู่ประจำ:\n"
 "{0}"
 
+#: src/ssh.rs:270
 msgid ""
 "OpenSSH finished creating the key, but the YubiKey could not be verified afterward: {0}\n"
 "Do not immediately retry; inspect the key first to avoid creating a duplicate."
@@ -552,6 +713,7 @@ msgstr ""
 "OpenSSH สร้างคีย์เสร็จสมบูรณ์แล้ว แต่ไม่สามารถตรวจสอบ YubiKey ได้หลังจากนั้น: {0}\n"
 "อย่าลองใหม่ทันที; ตรวจสอบคีย์ก่อนเพื่อหลีกเลี่ยงการสร้างคีย์ซ้ำ"
 
+#: src/ssh.rs:292
 msgid ""
 "OpenSSH reported success, but no new resident credential was detected. Do "
 "not retry until you inspect the YubiKey."
@@ -559,27 +721,35 @@ msgstr ""
 "OpenSSH รายงานความสำเร็จ แต่ไม่พบข้อมูลรับรองที่อยู่ประจำใหม่ "
 "อย่าลองทำซ้ำจนกว่าคุณจะตรวจสอบ YubiKey"
 
+#: src/window.rs:2668
 msgid "OpenSSH/FIDO credential metadata and local file location"
 msgstr "เมตาเดต้าของข้อมูลรับรอง OpenSSH/FIDO และตำแหน่งไฟล์ท้องถิ่น"
 
+#: src/home.rs:391
 msgid "Passwordless"
 msgstr "ไม่ต้องใช้รหัสผ่าน"
 
+#: src/window.rs:2922
 msgid "Permanently delete"
 msgstr "ลบอย่างถาวร"
 
+#: src/window.rs:2782
 msgid "Permanently delete from YubiKey…"
 msgstr "ลบอย่างถาวรจาก YubiKey…"
 
+#: src/window.rs:3021
 msgid "Permanently delete this resident SSH credential?"
 msgstr "ต้องการลบข้อมูลประจำตัว SSH แบบถาวรนี้อย่างถาวรหรือไม่?"
 
+#: src/home.rs:342
 msgid "Protect authentication and commit signing"
 msgstr "ป้องกันการทำลายความถูกต้องและลายเซ็นการยืนยัน (commit signing)"
 
+#: src/home.rs:193 src/home.rs:288
 msgid "Protection for {0}"
 msgstr "การป้องกันสำหรับ {0}"
 
+#: src/window.rs:2325
 msgid ""
 "Read the resident SSH keys already stored on your YubiKeys. You will enter "
 "each key's FIDO PIN and may need to touch it."
@@ -587,78 +757,103 @@ msgstr ""
 "อ่านคีย์ SSH แบบ resident ที่เก็บไว้บน YubiKey ของคุณแล้ว คุณจะต้องใส่รหัส "
 "PIN FIDO ของแต่ละคีย์และอาจต้องแตะที่อุปกรณ์"
 
+#: src/window.rs:748
 msgid "Reading SSH keys from {0}… Touch it if it flashes."
 msgstr "กำลังอ่านคีย์ SSH จาก {0}… แตะที่อุปกรณ์หากไฟกระพริบ"
 
+#: src/window.rs:479
 msgid "Reading account security settings…"
 msgstr "กำลังอ่านการตั้งค่าความปลอดภัยของบัญชี…"
 
+#: src/window.rs:2028 src/window.rs:2314
 msgid "Ready"
 msgstr "พร้อมใช้งาน"
 
+#: src/home.rs:366
 msgid "Ready to inspect"
 msgstr "พร้อมสำหรับการตรวจสอบ"
 
+#: src/home.rs:266
 msgid "Ready to protect {0}"
 msgstr "พร้อมที่จะปกป้อง {0}"
 
+#: src/window.rs:184
 msgid "Refresh connected YubiKeys"
 msgstr "รีเฟรช YubiKeys ที่เชื่อมต่อ"
 
+#: src/window.rs:2781
 msgid "Remove from agent"
 msgstr "ลบออกจากตัวจัดการ"
 
+#: src/window.rs:2882
 msgid "Removing this key from the SSH agent…"
 msgstr "กำลังลบคีย์นี้จากตัวจัดการ SSH…"
 
+#: src/window.rs:2662
 msgid "Require verification for every signature"
 msgstr "ต้องการการตรวจสอบสำหรับทุกลายเซ็น"
 
+#: src/window.rs:2663
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "ต้องใช้ PIN ของ FIDO ทุกครั้งที่คีย์นี้ลงนาม"
 
+#: src/window.rs:2561
 msgid "Resident SSH key created"
 msgstr "สร้างคีย์ SSH ที่อยู่ประจำเสร็จสิ้น"
 
+#: src/window.rs:2955
 msgid "Resident credential permanently deleted"
 msgstr "ลบข้อมูลประจำตัวแบบถาวรอย่างถาวรแล้ว"
 
+#: src/window.rs:1907
 msgid "Resident keys loaded"
 msgstr "โหลดคีย์ที่อยู่ประจำแล้ว"
 
+#: src/window.rs:2629
 msgid "Resident username"
 msgstr "ชื่อผู้ใช้ที่อยู่ประจำ"
 
+#: src/ssh.rs:458
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr "ชื่อผู้ใช้ที่อยู่ประจำต้องมีขนาด 1–64 ไบต์และไม่มีตัวควบคุม"
 
+#: src/home.rs:341
 msgid "SSH & Git"
 msgstr "SSH และ Git"
 
+#: src/window.rs:2010
 msgid "SSH agent"
 msgstr "ตัวจัดการ SSH"
 
+#: src/window.rs:2018
 msgid "SSH agent is ready"
 msgstr "SSH agent พร้อมใช้งานแล้ว"
 
+#: src/window.rs:2033
 msgid "SSH agent unavailable"
 msgstr "ตัวจัดการ SSH ไม่พร้อมใช้งาน"
 
+#: src/home.rs:426
 msgid "SSH commit signing"
 msgstr "ลายเซ็นการยืนยัน (commit signing) ของ SSH"
 
+#: src/window.rs:2797
 msgid "SSH key actions"
 msgstr "การดำเนินการของคีย์ SSH"
 
+#: src/window.rs:2461
 msgid "SSH key for {0}"
 msgstr "คีย์ SSH สำหรับ {0}"
 
+#: src/home.rs:410 src/window.rs:111 src/window.rs:157 src/window.rs:238
 msgid "SSH keys"
 msgstr "คีย์ SSH"
 
+#: src/ssh.rs:92
 msgid "SSH_AUTH_SOCK is not set"
 msgstr "SSH_AUTH_SOCK ไม่ได้ตั้งค่า"
 
+#: src/window.rs:2693
 msgid ""
 "Safe defaults use ECDSA-SK, require touch, and store a discoverable "
 "credential on the selected YubiKey."
@@ -666,15 +861,19 @@ msgstr ""
 "ค่าเริ่มต้นที่ปลอดภัยใช้ ECDSA-SK ต้องการการสัมผัส "
 "และเก็บข้อมูลรับรองที่ค้นพบได้บน YubiKey ที่เลือก"
 
+#: src/home.rs:337
 msgid "Secure sudo authorization"
 msgstr "การอนุญาต sudo อย่างปลอดภัย"
 
+#: src/window.rs:126
 msgid "Security Center"
 msgstr "ศูนย์ความปลอดภัย"
 
+#: src/home.rs:655
 msgid "Serial {0}"
 msgstr "หมายเลขซีเรียล {0}"
 
+#: src/home.rs:132
 msgid ""
 "Sign in, authorize sudo, and protect SSH and Git identities with a physical "
 "touch."
@@ -682,24 +881,31 @@ msgstr ""
 "เข้าสู่ระบบ อนุญาต sudo และปกป้องตัวตนของ SSH และ Git "
 "ด้วยปุ่มสัมผัสทางกายภาพ"
 
+#: src/home.rs:331 src/home.rs:372 src/home.rs:614
 msgid "Sign-in"
 msgstr "เข้าสู่ระบบ"
 
+#: src/window.rs:2863
 msgid "Signing test passed"
 msgstr "การทดสอบการลงนามผ่าน"
 
+#: src/ssh.rs:584 src/ssh.rs:593 src/ssh.rs:650
 msgid "Temporary public-key path is invalid."
 msgstr "เส้นทางคีย์สาธารณะชั่วคราวไม่ถูกต้อง"
 
+#: src/window.rs:1420
 msgid "Test"
 msgstr "Test"
 
+#: src/window.rs:1418
 msgid "Test Git signing"
 msgstr "ทดสอบการลงนาม Git"
 
+#: src/window.rs:1345 src/window.rs:2780
 msgid "Test signing"
 msgstr "การทดสอบลายเซ็น"
 
+#: src/backend.rs:255
 msgid ""
 "The FIDO enrollment tool is not installed. Install the libpam-u2f package, "
 "then try again."
@@ -707,9 +913,11 @@ msgstr ""
 "เครื่องมือลงทะเบียน FIDO ยังไม่ได้ติดตั้ง กรุณาติดตั้งแพ็กเกจ libpam-u2f "
 "แล้วลองอีกครั้ง"
 
+#: src/window.rs:1879
 msgid "The PIN is sent directly to ssh-add and is never stored."
 msgstr "PIN จะถูกส่งไปยัง ssh-add โดยตรงและจะไม่ถูกเก็บไว้"
 
+#: src/window.rs:2532
 msgid ""
 "The PIN is sent through a private pipe to OpenSSH. It is never stored or "
 "placed in command arguments."
@@ -717,15 +925,19 @@ msgstr ""
 "PIN จะถูกส่งผ่านท่อส่วนตัวไปยัง OpenSSH "
 "โดยไม่มีการเก็บรักษาหรือใส่ในอาร์กิวเมนต์ของคำสั่ง"
 
+#: src/window.rs:2864
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "เอเจนต์ SSH ได้ลงนามและยืนยันข้อมูลด้วยคีย์นี้สำเร็จแล้ว"
 
+#: src/progress_dialog.rs:57
 msgid "The YubiKey operation stopped unexpectedly."
 msgstr "การดำเนินการ YubiKey หยุดทำงานอย่างกะทันหัน"
 
+#: src/window.rs:2598
 msgid "The credential will be created only on this exact device"
 msgstr "ข้อมูลประจำตัวจะถูกสร้างขึ้นเฉพาะบนอุปกรณ์นี้เท่านั้น"
 
+#: src/ssh.rs:368
 msgid ""
 "The deletion command finished, but the selected YubiKey could not be inspected afterward: {0}\n"
 "The credential may or may not have been deleted. Do not retry. Reconnect and inspect the YubiKey first."
@@ -733,29 +945,36 @@ msgstr ""
 "คำสั่งลบเสร็จสิ้น แต่ไม่สามารถตรวจสอบ YubiKey ที่เลือกได้ในภายหลัง: {0}\n"
 "ข้อมูลประจำตัวอาจถูกลบหรือไม่ก็ได้ กรุณาลองใหม่ ให้เชื่อมต่อและตรวจสอบ YubiKey ก่อน"
 
+#: src/window.rs:541 src/window.rs:1536 src/window.rs:1716
 msgid "The enrollment task failed."
 msgstr "งานลงทะเบียนล้มเหลว"
 
+#: src/window.rs:2956
 msgid ""
 "The exact resident credential is no longer present on the selected YubiKey. "
 "Local .pub or key-handle files and any SSH-agent entry were not removed."
 msgstr ""
-"ข้อมูลประจำตัวแบบถาวรที่ระบุไม่ได้อยู่ใน YubiKey ที่เลือกอีกต่อไป ไฟล์ "
-".pub หรือไฟล์ key-handle ในเครื่อง และรายการใน SSH agent ยังไม่ได้ถูกลบออก"
+"ข้อมูลประจำตัวแบบถาวรที่ระบุไม่ได้อยู่ใน YubiKey ที่เลือกอีกต่อไป ไฟล์ .pub "
+"หรือไฟล์ key-handle ในเครื่อง และรายการใน SSH agent ยังไม่ได้ถูกลบออก"
 
+#: src/window.rs:1903
 msgid ""
 "The inspected resident SSH credentials are already available in this agent."
 msgstr "ข้อมูลประจำตัว SSH แบบถาวรที่ตรวจสอบแล้วมีอยู่ในเอเจนต์นี้แล้ว"
 
+#: src/ssh.rs:627
 msgid "The local SSH key-handle path is invalid."
 msgstr "เส้นทางคีย์แฮนเดิล SSH ท้องถิ่นไม่ถูกต้อง"
 
+#: src/git_signing.rs:76
 msgid "The local SSH key-handle path is not valid UTF-8."
 msgstr "เส้นทางคีย์ SSH ท้องถิ่นไม่ใช่ UTF-8 ที่ถูกต้อง"
 
+#: src/ssh.rs:468
 msgid "The local key path must be absolute."
 msgstr "เส้นทางคีย์ท้องถิ่นต้องเป็นแบบสมบูรณ์ (absolute)"
 
+#: src/window.rs:2563
 msgid ""
 "The non-exportable private key remains protected by the selected YubiKey.\n"
 "\n"
@@ -781,28 +1000,36 @@ msgstr ""
 "\n"
 "คีย์จะไม่ถูกโหลดอัตโนมัติเข้าสู่ SSH agent"
 
+#: src/backend.rs:334
 msgid "The operation was cancelled or denied."
 msgstr "การดำเนินการถูกยกเลิกหรือปฏิเสธ"
 
+#: src/ssh.rs:247
 msgid "The output folder does not exist: {0}"
 msgstr "ไม่มีโฟลเดอร์เอาต์พุต: {0}"
 
+#: src/ssh.rs:317
 msgid "The resident credential ID is invalid. Refresh before deleting."
 msgstr "รหัสข้อมูลประจำตัวแบบถาวรไม่ถูกต้อง กรุณารีเฟรชก่อนลบ"
 
+#: src/ssh.rs:744
 msgid "The resident credential did not return a public key."
 msgstr "ข้อมูลประจำตัวแบบถาวรไม่ได้คืนค่าคีย์สาธารณะ"
 
+#: src/ssh.rs:382
 msgid ""
 "The resident credential is still present. Deletion was not completed: {0}"
 msgstr "ข้อมูลประจำตัวแบบถาวรยังคงอยู่ การลบไม่เสร็จสมบูรณ์: {0}"
 
+#: src/ssh.rs:749
 msgid "The resident credential returned an incomplete public key."
 msgstr "ข้อมูลประจำตัวแบบถาวรคืนค่าคีย์สาธารณะที่ไม่สมบูรณ์"
 
+#: src/ssh.rs:756
 msgid "The resident credential returned malformed PEM data."
 msgstr "ข้อมูลประจำตัวแบบถาวรคืนค่าข้อมูล PEM ที่มีรูปแบบไม่ถูกต้อง"
 
+#: src/ssh.rs:296
 msgid ""
 "The resident credential {0} exists on the YubiKey, but its local handle "
 "files are incomplete. Do not retry creation."
@@ -810,6 +1037,7 @@ msgstr ""
 "ข้อมูลประจำตัวแบบถาวร {0} มีอยู่บน YubiKey แต่ไฟล์แฮนเดิลในเครื่องไม่สมบูรณ์"
 " อย่าลองสร้างใหม่"
 
+#: src/ssh.rs:282
 msgid ""
 "The resident credential {0} was created on the YubiKey, but OpenSSH did not complete successfully:\n"
 "{1}\n"
@@ -819,19 +1047,23 @@ msgstr ""
 "{1}\n"
 "อย่าลองสร้างใหม่ ตรวจสอบคีย์และเก็บไฟล์ท้องถิ่นที่เขียนไว้"
 
+#: src/backend.rs:303 src/backend.rs:312
 msgid "The security key returned an invalid PAM credential."
 msgstr "คีย์ความปลอดภัยคืนค่าข้อมูลประจำตัว PAM ที่ไม่ถูกต้อง"
 
+#: src/ssh.rs:323
 msgid ""
 "The selected FIDO device is no longer connected. Refresh and inspect it "
 "again."
 msgstr ""
 "อุปกรณ์ FIDO ที่เลือกไม่ได้เชื่อมต่ออีกต่อไป กรุณารีเฟรชและตรวจสอบอีกครั้ง"
 
+#: src/ssh.rs:216
 msgid ""
 "The selected FIDO device is no longer connected. Refresh and try again."
 msgstr "อุปกรณ์ FIDO ที่เลือกไม่ได้เชื่อมต่อแล้ว กรุณารีเฟรชและลองอีกครั้ง"
 
+#: src/window.rs:1447
 msgid ""
 "The selected credential created a valid Git-format SSH signature. No "
 "repository or commit was changed."
@@ -839,40 +1071,48 @@ msgstr ""
 "ข้อมูลประจำตัวที่เลือกสร้างลายเซ็น SSH รูปแบบ Git ที่ถูกต้อง "
 "โดยไม่มีการเปลี่ยนแปลงรีโพสิทอรีหรือคอมมิตใด ๆ"
 
+#: src/ssh.rs:253
 msgid ""
 "The selected private-key or .pub file already exists. Choose another name."
 msgstr "ไฟล์คีย์ส่วนตัวหรือ .pub ที่เลือกมีอยู่แล้ว กรุณาเลือกชื่ออื่น"
 
+#: src/ssh.rs:338
 msgid ""
 "The selected resident credential changed since it was inspected. Nothing was"
 " deleted; refresh and verify the key."
 msgstr ""
-"ข้อมูลประจำตัวแบบถาวรที่เลือกมีการเปลี่ยนแปลงตั้งแต่ถูกตรวจสอบ "
-"ไม่มีการลบใด ๆ กรุณารีเฟรชและตรวจสอบคีย์"
+"ข้อมูลประจำตัวแบบถาวรที่เลือกมีการเปลี่ยนแปลงตั้งแต่ถูกตรวจสอบ ไม่มีการลบใด "
+"ๆ กรุณารีเฟรชและตรวจสอบคีย์"
 
+#: src/ssh.rs:335
 msgid ""
 "The selected resident credential is no longer present on this YubiKey. "
 "Nothing was deleted."
 msgstr ""
-"ข้อมูลประจำตัวแบบถาวรที่เลือกไม่ได้อยู่ใน YubiKey นี้อีกต่อไป "
-"ไม่มีการลบใด ๆ"
+"ข้อมูลประจำตัวแบบถาวรที่เลือกไม่ได้อยู่ใน YubiKey นี้อีกต่อไป ไม่มีการลบใด ๆ"
 
+#: src/ssh.rs:672
 msgid "The signature was created but could not be verified: {0}"
 msgstr "ลายเซ็นถูกสร้างแล้วแต่ไม่สามารถตรวจสอบได้: {0}"
 
+#: src/window.rs:1618
 msgid "The sudo policy task failed."
 msgstr "งานนโยบาย sudo ล้มเหลว"
 
+#: src/ssh.rs:663
 msgid "The temporary Git signature path is invalid."
 msgstr "เส้นทางลายเซ็น Git ชั่วคราวไม่ถูกต้อง"
 
+#: src/ssh.rs:622
 msgid "The temporary Git signing path is invalid."
 msgstr "เส้นทางชั่วคราวสำหรับการลงนาม Git ไม่ถูกต้อง"
 
+#: src/home.rs:597
 msgid ""
 "These keys are trusted by this account but are not currently connected."
 msgstr "คีย์เหล่านี้ได้รับไว้วางใจจากบัญชีนี้แต่ไม่ได้เชื่อมต่ออยู่ในขณะนี้"
 
+#: src/window.rs:2921
 msgid ""
 "This PIN authorizes permanent deletion of the exact credential shown in the "
 "previous step. It is never stored."
@@ -880,12 +1120,15 @@ msgstr ""
 "PIN นี้อนุญาตให้ลบข้อมูลประจำตัวที่แสดงในขั้นตอนก่อนหน้าอย่างถาวร "
 "จะไม่มีการเก็บ PIN ไว้"
 
+#: src/window.rs:1931
 msgid "This YubiKey has no discoverable ssh:* credentials."
 msgstr "YubiKey นี้ไม่มีข้อมูลประจำตัว ssh:* ที่ค้นพบได้"
 
+#: src/git_signing.rs:85
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "นี่ไม่ใช่คีย์สาธารณะ OpenSSH security-key ที่รองรับ"
 
+#: src/window.rs:3022
 msgid ""
 "This removes the private credential from the selected YubiKey and cannot be "
 "undone. It does not remove local files or an identity already loaded in the "
@@ -895,97 +1138,124 @@ msgstr ""
 "และไม่สามารถย้อนกลับได้ ไม่มีการลบไฟล์ในเครื่องหรือตัวตนที่โหลดอยู่ใน SSH "
 "agent แล้ว"
 
+#: src/window.rs:1579
 msgid "This setting applies only to the current user."
 msgstr "การตั้งค่านี้ใช้กับผู้ใช้ปัจจุบันเท่านั้น"
 
+#: src/home.rs:66
 msgid "This will only take a moment."
 msgstr "กระบวนการนี้จะใช้เวลาเพียงครู่เดียว"
 
+#: src/window.rs:1888
 msgid ""
 "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr "แตะ YubiKey เมื่อได้รับแจ้ง กำลังโหลดคีย์แบบถาวรเข้าเอเจนต์ SSH…"
 
+#: src/window.rs:1433
 msgid ""
 "Touch the YubiKey. Creating and verifying a temporary Git-format SSH "
 "signature…"
 msgstr "แตะ YubiKey กำลังสร้างและตรวจสอบลายเซ็น SSH รูปแบบ Git ชั่วคราว…"
 
+#: src/window.rs:2856
 msgid "Touch the YubiKey. Testing SSH signing and verification…"
 msgstr "แตะ YubiKey กำลังทดสอบการลงนามและยืนยัน SSH…"
 
+#: src/window.rs:2544
 msgid ""
 "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not "
 "remove the key."
 msgstr ""
 "แตะ YubiKey ที่เลือก กำลังสร้างคีย์ SSH แบบถาวรบน {0}… กรุณาอย่าถอดคีย์ออก"
 
+#: src/window.rs:1496
 msgid "Touch this key when prompted to enroll it"
 msgstr "แตะคีย์นี้เมื่อได้รับการร้องขอเพื่อลงทะเบียน"
 
+#: src/window.rs:1676
 msgid "Touch this key when prompted to enroll it for sudo"
 msgstr "แตะคีย์นี้เมื่อได้รับการร้องขอเพื่อลงทะเบียนสำหรับ sudo"
 
+#: src/window.rs:1527 src/window.rs:1707
 msgid "Touch your security key to continue."
 msgstr "แตะกุญแจความปลอดภัยของคุณเพื่อดำเนินการต่อ"
 
+#: src/home.rs:93
 msgid "Try Again"
 msgstr "ลองอีกครั้ง"
 
+#: src/window.rs:3008
 msgid "Type {0} to confirm"
 msgstr "พิมพ์ {0} เพื่อยืนยัน"
 
+#: src/window.rs:688 src/window.rs:2039 src/window.rs:2340
 msgid "Unavailable"
 msgstr "ไม่สามารถใช้งานได้"
 
+#: src/backend.rs:251
 msgid "Unknown authentication purpose."
 msgstr "วัตถุประสงค์ในการยืนยันตัวตนไม่ทราบแน่ชัด"
 
+#: src/window.rs:109 src/window.rs:149 src/window.rs:236
 msgid "Unlock GDM"
 msgstr "ปลดล็อก GDM"
 
+#: src/window.rs:110 src/window.rs:153 src/window.rs:237
 msgid "Unlock sudo"
 msgstr "ปลดล็อก sudo"
 
+#: src/window.rs:1463
 msgid "Unlock the current user"
 msgstr "ปลดล็อกผู้ใช้ปัจจุบัน"
 
+#: src/home.rs:332
 msgid "Unlock your account with a touch"
 msgstr "ปลดล็อกบัญชีของคุณด้วยการสัมผัส"
 
+#: src/ssh.rs:735 src/window.rs:1251 src/window.rs:2467 src/window.rs:2987
 msgid "Unnamed SSH credential"
 msgstr "ข้อมูลประจำตัว SSH ที่ไม่มีชื่อ"
 
+#: src/ssh.rs:782
 msgid "Unsupported resident SSH public-key algorithm."
 msgstr "ไม่รองรับอัลกอริทึมคีย์สาธารณะ SSH แบบเรสซิเดนต์"
 
+#: src/window.rs:1397
 msgid "Updating Git commit signing…"
 msgstr "กำลังอัปเดตการลงนามคอมมิต Git…"
 
+#: src/window.rs:1529
 msgid "Updating sign-in settings…"
 msgstr "กำลังอัปเดตการตั้งค่าการเข้าสู่ระบบ…"
 
+#: src/window.rs:1709
 msgid "Updating sudo settings…"
 msgstr "กำลังอัปเดตการตั้งค่า sudo…"
 
+#: src/window.rs:1635
 msgid "Use YubiKey to unlock sudo"
 msgstr "ใช้ YubiKey เพื่อปลดล็อก sudo"
 
+#: src/window.rs:2934
 msgid ""
 "Verifying and permanently deleting the selected resident credential. Do not "
 "unplug the YubiKey…"
 msgstr ""
-"กำลังตรวจสอบและลบข้อมูลประจำตัวแบบถาวรที่เลือกอย่างถาวร อย่าถอดสาย "
-"YubiKey…"
+"กำลังตรวจสอบและลบข้อมูลประจำตัวแบบถาวรที่เลือกอย่างถาวร อย่าถอดสาย YubiKey…"
 
+#: src/window.rs:695
 msgid "View in App Store"
 msgstr "ดูในร้านค้าแอป"
 
+#: src/window.rs:2267
 msgid "Waiting"
 msgstr "กำลังรอ"
 
+#: src/home.rs:156
 msgid "Waiting for a configured YubiKey"
 msgstr "กำลังรอ YubiKey ที่กำหนดค่าแล้ว"
 
+#: src/window.rs:1637
 msgid ""
 "You may enroll keys now, but sudo bypasses PAM while passwordless access is "
 "enabled."
@@ -993,12 +1263,15 @@ msgstr ""
 "คุณสามารถลงทะเบียนคีย์ได้ตอนนี้ แต่ sudo จะข้าม PAM "
 "เมื่อเปิดใช้งานการเข้าถึงแบบไม่ต้องใช้รหัสผ่าน"
 
+#: src/window.rs:2297
 msgid "Your YubiKeys are inspected"
 msgstr "YubiKey ของคุณได้รับการตรวจสอบแล้ว"
 
+#: src/window.rs:2299
 msgid "Your hardware-backed SSH keys"
 msgstr "คีย์ SSH ที่รองรับด้วยฮาร์ดแวร์ของคุณ"
 
+#: src/window.rs:2263
 msgid ""
 "Your resident SSH keys stay on the security key. Insert it to view and use "
 "them."
@@ -1006,6 +1279,7 @@ msgstr ""
 "คีย์ SSH แบบ resident ของคุณจะอยู่บนคีย์ความปลอดภัย "
 "เสียบอุปกรณ์เพื่อดูและใช้งาน"
 
+#: src/home.rs:130
 msgid ""
 "Your security settings are ready. Connect a configured YubiKey when you need"
 " it."
@@ -1013,24 +1287,31 @@ msgstr ""
 "การตั้งค่าความปลอดภัยของคุณพร้อมใช้งานแล้ว เชื่อมต่อ YubiKey "
 "ที่กำหนดค่าไว้เมื่อคุณต้องการใช้งาน"
 
+#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1755 src/window.rs:2597
 msgid "YubiKey"
 msgstr "YubiKey"
 
+#: src/window.rs:3088
 msgid "YubiKey configuration failed"
 msgstr "การกำหนดค่า YubiKey ล้มเหลว"
 
+#: src/home.rs:251
 msgid "YubiKey connected"
 msgstr "เชื่อมต่อ YubiKey แล้ว"
 
+#: src/home.rs:379 src/home.rs:400
 msgid "YubiKey or account password"
 msgstr "YubiKey หรือรหัสผ่านบัญชี"
 
+#: src/home.rs:622
 msgid "YubiKey without hardware serial"
 msgstr "YubiKey โดยไม่มีหมายเลขซีเรียลฮาร์ดแวร์"
 
+#: src/home.rs:624
 msgid "YubiKey · Serial {0}"
 msgstr "YubiKey · ซีเรียล {0}"
 
+#: src/window.rs:2993
 msgid ""
 "YubiKey: {0}\n"
 "Device: {1}\n"
@@ -1046,12 +1327,15 @@ msgstr ""
 "อัลกอริทึม: {4}\n"
 "ลายนิ้วมือ: {5}"
 
+#: src/window.rs:1124
 msgid "YubiKeys"
 msgstr "YubiKeys"
 
+#: src/window.rs:1955
 msgid "agent"
 msgstr "เอเจนต์"
 
+#: src/ssh.rs:386
 msgid ""
 "fido2-token reported success, but the resident credential is still present. "
 "Do not retry until you refresh and inspect the YubiKey."
@@ -1059,96 +1343,126 @@ msgstr ""
 "fido2-token รายงานความสำเร็จ แต่ข้อมูลประจำตัวแบบถาวรยังคงอยู่ "
 "อย่าลองใหม่จนกว่าจะรีเฟรชและตรวจสอบ YubiKey"
 
+#: src/home.rs:398
 msgid "sudo authentication is bypassed"
 msgstr "การตรวจสอบสิทธิ์ sudo ถูกละเว้น"
 
+#: src/window.rs:1578
 msgid "sudo authentication policy"
 msgstr "นโยบายการยืนยันตัวตน sudo"
 
+#: src/window.rs:330 src/window.rs:490
 msgid "unknown"
 msgstr "ไม่ทราบแน่ชัด"
 
+#: src/window.rs:2519
 msgid "user"
 msgstr "ผู้ใช้"
 
+#: src/window.rs:1146
 msgid "{0} SSH keys loaded"
 msgstr "โหลดคีย์ SSH {0} คีย์แล้ว"
 
+#: src/home.rs:254
 msgid "{0} YubiKeys connected"
 msgstr "เชื่อมต่อ YubiKey แล้ว {0} ตัว"
 
+#: src/backend.rs:18 src/git_signing.rs:200 src/ssh.rs:886
 msgid "{0} exited with {1}"
 msgstr "{0} สิ้นสุดด้วย {1}"
 
+#: src/ssh.rs:540 src/ssh.rs:933
 msgid "{0} failed: {1}"
 msgstr "{0} ล้มเหลว: {1}"
 
+#: src/window.rs:2023
 msgid "{0} identities are currently available to SSH applications."
 msgstr "มีอัตลักษณ์ {0} รายการพร้อมใช้งานสำหรับแอปพลิเคชัน SSH ในขณะนี้"
 
+#: src/window.rs:1056
 msgid "{0} is enabled for this YubiKey"
 msgstr "เปิดใช้งาน {0} สำหรับ YubiKey นี้"
 
+#: src/window.rs:1061
 msgid "{0} is not configured for this YubiKey"
 msgstr "{0} ยังไม่ได้กำหนดค่าสำหรับ YubiKey นี้"
 
+#: src/window.rs:1911
 msgid "{0} new SSH identities were added to the agent."
 msgstr "เพิ่มอัตลักษณ์ SSH ใหม่ {0} รายการลงในเอเจนต์แล้ว"
 
+#: src/window.rs:1909
 msgid "{0} new SSH identity was added to the agent."
 msgstr "เพิ่มอัตลักษณ์ SSH ใหม่ {0} รายการลงในเอเจนต์แล้ว"
 
+#: src/window.rs:2307
 msgid "{0} resident SSH keys are available from your connected YubiKeys."
 msgstr ""
 "มีคีย์ SSH แบบ resident {0} รายการพร้อมใช้งานจาก YubiKey ที่เชื่อมต่ออยู่"
 
+#: src/window.rs:1817
 msgid "{0} resident SSH keys · {1}"
 msgstr "คีย์ SSH แบบ resident {0} รายการ · {1}"
 
+#: src/home.rs:362
 msgid "{0} resident credentials inspected"
 msgstr "ตรวจสอบข้อมูลประจำตัวที่เก็บในตัวแล้ว {0} รายการ"
 
+#: src/window.rs:2328
 msgid "{0} to inspect"
 msgstr "{0} รายการที่รอตรวจสอบ"
 
+#: src/window.rs:1487 src/window.rs:1665
 msgid "{0} · no hardware serial"
 msgstr "{0} · ไม่มีหมายเลขซีเรียลของฮาร์ดแวร์"
 
+#: src/window.rs:1489 src/window.rs:1667
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
 
+#: src/window.rs:999
 msgid "Checking Passkeys support…"
 msgstr "กำลังตรวจสอบการรองรับพาสคีย์…"
 
+#: src/window.rs:653 src/window.rs:661 src/window.rs:666 src/window.rs:667
+#: src/window.rs:676
 msgid "Could not open Yubico Authenticator"
 msgstr "ไม่สามารถเปิด Yubico Authenticator"
 
+#: src/window.rs:636
 msgid "Open Yubico Authenticator"
 msgstr "เปิด Yubico Authenticator"
 
+#: src/window.rs:113 src/window.rs:240
 msgid "Passkeys"
 msgstr "พาสคีย์"
 
+#: src/window.rs:872
 msgid ""
 "Choose the passkey option and follow the prompt to use the same YubiKey."
 msgstr "เลือกตัวเลือกพาสคีย์และทำตามคำแนะนำเพื่อใช้ YubiKey อันเดิม"
 
+#: src/window.rs:866
 msgid "Confirm it is you"
 msgstr "ยืนยันตัวตนของคุณ"
 
+#: src/window.rs:851
 msgid "How to use"
 msgstr "วิธีใช้งาน"
 
+#: src/window.rs:867
 msgid ""
 "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
 msgstr "เสียบ YubiKey ป้อน FIDO PIN เมื่อระบบถาม แล้วแตะกุญแจ"
 
+#: src/window.rs:1778
 msgid ""
 "Inspect a connected YubiKey to reveal its resident SSH keys and available "
 "actions."
 msgstr ""
 "ตรวจสอบ YubiKey ที่เชื่อมต่อเพื่อแสดงคีย์ SSH แบบประจำและการทำงานที่ใช้ได้"
 
+#: src/window.rs:690
 msgid ""
 "Install the official Yubico Authenticator first. When installation is "
 "complete, return here and refresh this page."
@@ -1156,13 +1470,16 @@ msgstr ""
 "ติดตั้ง Yubico Authenticator อย่างเป็นทางการก่อน เมื่อติดตั้งเสร็จแล้ว "
 "ให้กลับมาที่นี่และรีเฟรชหน้านี้"
 
+#: src/window.rs:900
 msgid ""
 "Keep a recovery method or a backup security key for important accounts."
 msgstr "เก็บวิธีกู้คืนหรือกุญแจความปลอดภัยสำรองไว้สำหรับบัญชีที่สำคัญ"
 
+#: src/window.rs:918
 msgid "Manage passkeys"
 msgstr "จัดการพาสคีย์"
 
+#: src/window.rs:860
 msgid ""
 "On a supported website or app, choose to create a passkey and select your "
 "security key."
@@ -1170,6 +1487,7 @@ msgstr ""
 "บนเว็บไซต์หรือแอปที่รองรับ "
 "ให้เลือกสร้างพาสคีย์แล้วเลือกกุญแจความปลอดภัยของคุณ"
 
+#: src/window.rs:843
 msgid ""
 "Passkeys are passwordless sign-in credentials stored on compatible security "
 "keys. Registration and sign-in begin in a supported website or app; follow "
@@ -1179,27 +1497,34 @@ msgstr ""
 " การลงทะเบียนและลงชื่อเข้าใช้เริ่มจากเว็บไซต์หรือแอปที่รองรับ "
 "โปรดทำตามคำแนะนำเพื่อเสียบ YubiKey ป้อน FIDO PIN และแตะกุญแจ"
 
+#: src/window.rs:839
 msgid "Protect passkeys with your YubiKey"
 msgstr "ปกป้องพาสคีย์ด้วย YubiKey ของคุณ"
 
+#: src/window.rs:859
 msgid "Register a passkey"
 msgstr "ลงทะเบียนพาสคีย์"
 
+#: src/window.rs:871
 msgid "Sign in next time"
 msgstr "ลงชื่อเข้าใช้ครั้งถัดไป"
 
+#: src/window.rs:2011
 msgid ""
 "The SSH agent makes selected keys available to SSH applications during this "
 "session."
 msgstr ""
 "เอเจนต์ SSH ทำให้คีย์ที่เลือกพร้อมใช้งานสำหรับแอปพลิเคชัน SSH ในเซสชันนี้"
 
+#: src/window.rs:630
 msgid "Yubico Authenticator is installed"
 msgstr "ติดตั้ง Yubico Authenticator แล้ว"
 
+#: src/window.rs:687
 msgid "Yubico Authenticator is not installed"
 msgstr "ยังไม่ได้ติดตั้ง Yubico Authenticator"
 
+#: src/window.rs:920
 msgid ""
 "Yubico Authenticator lets you view and manage passkeys stored on your "
 "YubiKey. This security center does not read, create, or delete passkeys; it "
@@ -1209,9 +1534,11 @@ msgstr ""
 "ศูนย์ความปลอดภัยนี้จะไม่อ่าน สร้าง หรือลบพาสคีย์ "
 "แต่จะเปิดเฉพาะแอปที่ติดตั้งไว้เท่านั้น"
 
+#: src/ssh_config.rs:185 src/ssh_config.rs:233
 msgid "A file already exists at the managed SSH configuration path: {0}"
 msgstr "มีไฟล์อยู่แล้วที่เส้นทางค่ากำหนด SSH ที่จัดการ: {0}"
 
+#: src/window.rs:2068
 msgid ""
 "After the first YubiKey authentication, later SSH sessions can reuse the "
 "connection. The last session remains available in the background for 10 "
@@ -1221,67 +1548,88 @@ msgstr ""
 "ในเวลาต่อมาสามารถนำการเชื่อมต่อกลับมาใช้ใหม่ได้ "
 "เซสชันล่าสุดจะยังคงพร้อมใช้งานในพื้นหลังเป็นเวลา 10 นาที"
 
+#: src/ssh_config.rs:530
 msgid "Could not create a temporary file in {0}: {1}"
 msgstr "ไม่สามารถสร้างไฟล์ชั่วคราวใน {0}: {1}"
 
+#: src/ssh_config.rs:414 src/ssh_config.rs:450 src/ssh_config.rs:463
 msgid "Could not inspect {0}: {1}"
 msgstr "ไม่สามารถตรวจสอบ {0}: {1}"
 
+#: src/ssh_config.rs:540
 msgid "Could not protect the temporary SSH configuration in {0}: {1}"
 msgstr "ไม่สามารถป้องกันค่ากำหนด SSH ชั่วคราวใน {0}: {1}"
 
+#: src/ssh_config.rs:477 src/ssh_config.rs:577
 msgid "Could not read {0}: {1}"
 msgstr "ไม่สามารถอ่าน {0}: {1}"
 
+#: src/ssh_config.rs:692
 msgid "Could not remove {0}: {1}"
 msgstr "ไม่สามารถลบ {0}: {1}"
 
+#: src/ssh_config.rs:570
 msgid "Could not replace {0}: {1}"
 msgstr "ไม่สามารถแทนที่ {0}: {1}"
 
+#: src/ssh_config.rs:702
 msgid "Could not synchronize {0}: {1}"
 msgstr "ไม่สามารถซิงโครไนซ์ {0}: {1}"
 
+#: src/window.rs:2173 src/window.rs:2184
 msgid "Could not update SSH connection persistence"
 msgstr "ไม่สามารถอัปเดตความคงอยู่ของการเชื่อมต่อ SSH ได้"
 
+#: src/ssh_config.rs:599
 msgid "Could not validate the SSH configuration: {0}"
 msgstr "ไม่สามารถตรวจสอบความถูกต้องของค่ากำหนด SSH: {0}"
 
+#: src/ssh_config.rs:551
 msgid "Could not write the temporary SSH configuration in {0}: {1}"
 msgstr "ไม่สามารถเขียนค่ากำหนด SSH ชั่วคราวใน {0}: {1}"
 
+#: src/window.rs:2086 src/window.rs:2159
 msgid "Disabled · each new connection authenticates separately"
 msgstr "ปิดใช้งาน · การเชื่อมต่อใหม่แต่ละครั้งจะทำการตรวจสอบสิทธิ์แยกกัน"
 
+#: src/window.rs:2078 src/window.rs:2152
 msgid "Enabled · idle connections remain available for 10 minutes"
 msgstr ""
 "เปิดใช้งาน · การเชื่อมต่อที่ไม่ได้ใช้งานจะยังคงพร้อมใช้งานเป็นเวลา 10 นาที"
 
+#: src/ssh_config.rs:100
 msgid "HOME does not point to a valid folder: {0}"
 msgstr "HOME ไม่ได้ชี้ไปยังโฟลเดอร์ที่ถูกต้อง: {0}"
 
+#: src/ssh_config.rs:97
 msgid "HOME is not set. The SSH configuration cannot be located."
 msgstr "ไม่มีการตั้งค่า HOME ไม่สามารถระบุตำแหน่งค่ากำหนด SSH ได้"
 
+#: src/window.rs:2105
 msgid "Main SSH configuration unavailable"
 msgstr "ค่ากำหนด SSH หลักไม่พร้อมใช้งาน"
 
+#: src/window.rs:2106
 msgid "Managed SSH configuration unavailable"
 msgstr "ค่ากำหนด SSH ที่จัดการไม่พร้อมใช้งาน"
 
+#: src/window.rs:2222
 msgid "Managed configuration preview"
 msgstr "ตัวอย่างค่ากำหนดที่จัดการ"
 
+#: src/window.rs:2202
 msgid "Manual review required"
 msgstr "จำเป็นต้องตรวจสอบด้วยตนเอง"
 
+#: src/window.rs:2094 src/window.rs:2167
 msgid "Needs attention · review the SSH configuration before continuing"
 msgstr "ต้องดำเนินการ · ตรวจสอบการกำหนดค่า SSH ก่อนดำเนินการต่อ"
 
+#: src/window.rs:2103
 msgid "Needs attention · the SSH configuration could not be located"
 msgstr "ต้องดำเนินการ · ไม่พบการกำหนดค่า SSH"
 
+#: src/window.rs:2210
 msgid ""
 "Only new SSH connections are affected. Turning this off does not stop "
 "existing background connections. Earlier host-specific OpenSSH settings "
@@ -1291,29 +1639,36 @@ msgstr ""
 "การปิดการตั้งค่านี้จะไม่ยุติการเชื่อมต่อเบื้องหลังที่มีอยู่ และการตั้งค่า "
 "OpenSSH เฉพาะโฮสต์ที่อยู่ก่อนหน้ายังคงมีลำดับความสำคัญสูงกว่า"
 
+#: src/ssh_config.rs:608
 msgid "OpenSSH rejected the generated configuration."
 msgstr "OpenSSH ปฏิเสธค่ากำหนดที่สร้างขึ้น"
 
+#: src/ssh_config.rs:611
 msgid "OpenSSH rejected the generated configuration: {0}"
 msgstr "OpenSSH ปฏิเสธค่ากำหนดที่สร้างขึ้น: {0}"
 
+#: src/window.rs:2111
 msgid "Reuse SSH connections in the background"
 msgstr "นำการเชื่อมต่อ SSH กลับมาใช้อีกครั้งในพื้นหลัง"
 
+#: src/window.rs:2067
 msgid "SSH connection persistence"
 msgstr "ความคงอยู่ของการเชื่อมต่อ SSH"
 
+#: src/ssh_config.rs:334
 msgid ""
 "The SSH configuration changed during rollback. No further changes were made."
 msgstr ""
 "ค่ากำหนด SSH มีการเปลี่ยนแปลงระหว่างการย้อนกลับ "
 "ไม่มีการเปลี่ยนแปลงเพิ่มเติมใด ๆ"
 
+#: src/ssh_config.rs:85 src/ssh_config.rs:560
 msgid ""
 "The SSH configuration changed while it was being updated. Refresh and try "
 "again."
 msgstr "ค่ากำหนด SSH มีการเปลี่ยนแปลงขณะกำลังอัปเดต กรุณารีเฟรชและลองอีกครั้ง"
 
+#: src/ssh_config.rs:385
 msgid ""
 "The SSH configuration contains duplicate or incomplete application markers. "
 "Remove or repair the marked block manually."
@@ -1321,32 +1676,41 @@ msgstr ""
 "ค่ากำหนด SSH มีมาร์คเกอร์แอปพลิเคชันซ้ำหรือไม่สมบูรณ์ "
 "กรุณาลบหรือซ่อมแซมบล็อกที่ระบุด้วยตนเอง"
 
+#: src/ssh_config.rs:144 src/ssh_config.rs:219 src/ssh_config.rs:284
 msgid ""
 "The SSH configuration is not valid UTF-8 and cannot be safely managed: {0}"
 msgstr ""
 "ค่ากำหนด SSH ไม่ใช่ UTF-8 ที่ถูกต้องและไม่สามารถจัดการได้อย่างปลอดภัย: {0}"
 
+#: src/ssh_config.rs:507
 msgid "The SSH configuration is writable by another user: {0}"
 msgstr "ค่ากำหนด SSH สามารถเขียนได้โดยผู้ใช้รายอื่น: {0}"
 
+#: src/ssh_config.rs:527
 msgid "The SSH configuration path is invalid."
 msgstr "เส้นทางค่ากำหนด SSH ไม่ถูกต้อง"
 
+#: src/ssh_config.rs:471
 msgid "The SSH configuration path is not a safe, regular file: {0}"
 msgstr "เส้นทางการกำหนดค่า SSH ไม่ใช่ไฟล์ปกติที่ปลอดภัย: {0}"
 
+#: src/ssh_config.rs:505
 msgid "The SSH directory is writable by another user: {0}"
 msgstr "ไดเรกทอรี SSH สามารถเขียนได้โดยผู้ใช้รายอื่น: {0}"
 
+#: src/ssh_config.rs:422 src/ssh_config.rs:434
 msgid "The SSH path is not a safe, regular directory: {0}"
 msgstr "เส้นทาง SSH ไม่ใช่ไดเรกทอรีปกติที่ปลอดภัย: {0}"
 
+#: src/ssh_config.rs:498
 msgid "The SSH path is not owned by the current user: {0}"
 msgstr "เส้นทาง SSH ไม่ได้เป็นของผู้ใช้ปัจจุบัน: {0}"
 
+#: src/window.rs:2144
 msgid "The SSH persistence update stopped unexpectedly."
 msgstr "การอัปเดตความคงอยู่ของ SSH หยุดทำงานอย่างกะทันหัน"
 
+#: src/ssh_config.rs:392
 msgid ""
 "The application-managed block in the SSH configuration was changed. Restore "
 "or remove the marked block manually."
@@ -1354,28 +1718,35 @@ msgstr ""
 "บล็อกที่แอปพลิเคชันจัดการในค่ากำหนด SSH มีการเปลี่ยนแปลง "
 "กรุณากู้คืนหรือลบบล็อกที่ระบุด้วยตนเอง"
 
+#: src/ssh_config.rs:579
 msgid ""
 "The generated SSH persistence configuration did not match the expected "
 "preset."
 msgstr "ค่ากำหนดความคงอยู่ของ SSH ที่สร้างขึ้นไม่ตรงกับค่าเริ่มต้นที่คาดหวัง"
 
+#: src/ssh_config.rs:278
 msgid ""
 "The managed SSH block exists but the main configuration is missing: {0}"
 msgstr "บล็อก SSH ที่จัดการมีอยู่ แต่ค่ากำหนดหลักหายไป: {0}"
 
+#: src/ssh_config.rs:289
 msgid "The managed SSH block is no longer present. Refresh and try again."
 msgstr "บล็อก SSH ที่จัดการไม่พบอีกต่อไป กรุณารีเฟรชและลองอีกครั้ง"
 
+#: src/ssh_config.rs:315 src/ssh_config.rs:683
 msgid "The managed SSH configuration changed while it was being removed: {0}"
 msgstr "ค่ากำหนด SSH ที่จัดการมีการเปลี่ยนแปลงขณะกำลังลบ: {0}"
 
+#: src/ssh_config.rs:170
 msgid "The managed SSH configuration is missing: {0}"
 msgstr "ค่ากำหนด SSH ที่จัดการไม่พบ: {0}"
 
+#: src/ssh_config.rs:166
 msgid ""
 "The managed SSH configuration was changed outside this application: {0}"
 msgstr "ค่ากำหนด SSH ที่จัดการมีการเปลี่ยนแปลงนอกแอปพลิเคชันนี้: {0}"
 
+#: src/ssh_config.rs:158
 msgid ""
 "The managed SSH file is also referenced outside the application-managed "
 "block. Remove the extra Include before using this setting."
@@ -1383,6 +1754,7 @@ msgstr ""
 "ไฟล์ SSH ที่จัดการถูกอ้างอิงอยู่นอกบล็อกที่แอปพลิเคชันจัดการเช่นกัน กรุณาลบ "
 "Include เพิ่มเติมออกก่อนใช้การตั้งค่านี้"
 
+#: src/ssh_config.rs:177
 msgid ""
 "The managed SSH file is referenced outside the application-managed block. "
 "Remove that Include before using this setting."
@@ -1390,11 +1762,21 @@ msgstr ""
 "ไฟล์ SSH ที่จัดการถูกอ้างอิงอยู่นอกบล็อกที่แอปพลิเคชันจัดการ กรุณาลบ Include"
 " นั้นออกก่อนใช้การตั้งค่านี้"
 
+#: src/window.rs:2209
 msgid "What this setting changes"
 msgstr "การตั้งค่านี้มีการเปลี่ยนแปลงอะไรบ้าง"
 
+#: src/window.rs:2224
 msgid "{0} includes {1}"
 msgstr "{0} includes {1}"
+
+#: src/window.rs:2491
+msgid ""
+"Optional: create a new resident key only when you need another SSH identity."
+" Its private key never leaves the selected YubiKey."
+msgstr ""
+"ทางเลือก: สร้างคีย์พำนักใหม่เฉพาะเมื่อคุณต้องการตัวตน SSH อื่นเท่านั้น "
+"คีย์ส่วนตัวของมันจะไม่ออกจาก YubiKey ที่เลือก"
 
 #~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
 #~ msgstr "ต้องติดตั้ง Yubico Authenticator ก่อนจึงจะใช้พาสคีย์ได้"

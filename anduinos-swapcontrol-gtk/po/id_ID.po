@@ -101,7 +101,7 @@ msgstr "Buat Perangkat Zram"
 msgid "Dashboard"
 msgstr "Dasbor"
 
-#: src/views/zram_view.rs:562
+#: src/views/zram_view.rs:571
 msgid "Destroy Zram Device"
 msgstr "Hancurkan Perangkat Zram"
 
@@ -109,7 +109,7 @@ msgstr "Hancurkan Perangkat Zram"
 msgid "Device Created"
 msgstr "Perangkat Dibuat"
 
-#: src/views/dashboard_view.rs:498
+#: src/views/dashboard_view.rs:503
 msgid "Disabled"
 msgstr "Nonaktif"
 
@@ -125,7 +125,7 @@ msgstr "Menonaktifkan swap…"
 msgid "Disk Swap Configuration"
 msgstr "Konfigurasi Memori Virtual"
 
-#: src/views/dashboard_view.rs:609
+#: src/views/dashboard_view.rs:614
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
@@ -137,7 +137,7 @@ msgstr ""
 msgid "Duration:"
 msgstr "Durasi:"
 
-#: src/views/dashboard_view.rs:604
+#: src/views/dashboard_view.rs:609
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
@@ -176,7 +176,7 @@ msgstr "Hibernasi"
 msgid "Hibernation Warning"
 msgstr "Peringatan Hibernasi"
 
-#: src/views/dashboard_view.rs:512 src/views/swap_view.rs:810
+#: src/views/dashboard_view.rs:517 src/views/swap_view.rs:810
 msgid "Inactive"
 msgstr "Tidak Aktif"
 
@@ -204,23 +204,23 @@ msgstr "Perangkat Zram"
 msgid "No device"
 msgstr "Tidak ada perangkat"
 
-#: src/views/dashboard_view.rs:587
+#: src/views/dashboard_view.rs:592
 msgid "No disk swap detected"
 msgstr "Tidak terdeteksi penukaran disk"
 
-#: src/views/dashboard_view.rs:603
+#: src/views/dashboard_view.rs:608
 msgid "No memory acceleration enabled"
 msgstr "Tidak ada akselerasi memori yang diaktifkan"
 
-#: src/views/dashboard_view.rs:541
+#: src/views/dashboard_view.rs:546
 msgid "None"
 msgstr "Tidak ada"
 
-#: src/views/dashboard_view.rs:525 src/views/dashboard_view.rs:533
+#: src/views/dashboard_view.rs:530 src/views/dashboard_view.rs:538
 msgid "Off"
 msgstr "Mati"
 
-#: src/views/dashboard_view.rs:532
+#: src/views/dashboard_view.rs:537
 msgid "On"
 msgstr "On"
 
@@ -232,7 +232,7 @@ msgstr ""
 "Hanya simpan halaman yang terkompresi hingga ≤ % ini dari ukuran asli. Lebih"
 " tinggi = lebih banyak halaman di-cache. Disarankan: 90%"
 
-#: src/views/dashboard_view.rs:608
+#: src/views/dashboard_view.rs:613
 msgid "Optimal memory configuration"
 msgstr "Konfigurasi memori optimal"
 
@@ -248,7 +248,7 @@ msgstr "Prioritas"
 msgid "RAM"
 msgstr "RAM"
 
-#: src/views/zram_view.rs:545
+#: src/views/zram_view.rs:554
 msgid "Remove"
 msgstr "Hapus"
 
@@ -281,7 +281,7 @@ msgstr "Tes Beban"
 msgid "Swap"
 msgstr "Swap"
 
-#: src/window.rs:59
+#: src/progress_dialog.rs:24 src/window.rs:59
 msgid "Swap Control"
 msgstr "Kontrol Memori Virtual"
 
@@ -290,10 +290,11 @@ msgid "Swap usage"
 msgstr "Penggunaan Memori Virtual"
 
 #: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
+#: src/views/swap_view.rs:677
 msgid "Swappiness"
 msgstr "Swappiness"
 
-#: src/views/dashboard_view.rs:598
+#: src/views/dashboard_view.rs:603
 msgid "Swappiness not optimized for Zram"
 msgstr "Swappiness tidak dioptimalkan untuk Zram"
 
@@ -317,7 +318,7 @@ msgstr "Tipe"
 msgid "Used"
 msgstr "Digunakan"
 
-#: src/views/dashboard_view.rs:588
+#: src/views/dashboard_view.rs:593
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
@@ -334,11 +335,11 @@ msgstr "Zram"
 msgid "Zram Devices"
 msgstr "Perangkat Zram"
 
-#: src/views/dashboard_view.rs:592
+#: src/views/dashboard_view.rs:597
 msgid "Zram and Zswap are both active"
 msgstr "Zram dan Zswap keduanya aktif"
 
-#: src/views/dashboard_view.rs:593
+#: src/views/dashboard_view.rs:598
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
 "pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
@@ -349,7 +350,7 @@ msgstr ""
 "memori yang parah. Nonaktifkan salah satunya."
 
 #: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
-#: src/views/swap_view.rs:185
+#: src/views/swap_view.rs:185 src/views/swap_view.rs:686
 msgid "Zswap"
 msgstr "Zswap"
 
@@ -382,31 +383,31 @@ msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr ""
 "dengan Zram aktif — utamakan RAM terkompresi yang cepat daripada cache disk"
 
-#: src/views/dashboard_view.rs:547
+#: src/views/dashboard_view.rs:552
 msgid "Ready"
 msgstr "Siap"
 
-#: src/views/dashboard_view.rs:549
+#: src/views/dashboard_view.rs:554
 msgid "Unsupported"
 msgstr "Tidak Didukung"
 
-#: src/views/dashboard_view.rs:551
+#: src/views/dashboard_view.rs:556
 msgid "Not configured"
 msgstr "Tidak dikonfigurasi"
 
-#: src/views/dashboard_view.rs:553
+#: src/views/dashboard_view.rs:558
 msgid "Resume target missing"
 msgstr "Target hibernasi tidak ditemukan"
 
-#: src/views/dashboard_view.rs:555
+#: src/views/dashboard_view.rs:560
 msgid "Resume target inactive"
 msgstr "Target hibernasi tidak aktif"
 
-#: src/views/dashboard_view.rs:557
+#: src/views/dashboard_view.rs:562
 msgid "Swap too small"
 msgstr "Swap terlalu kecil"
 
-#: src/views/dashboard_view.rs:559
+#: src/views/dashboard_view.rs:564
 msgid "Not ready"
 msgstr "Tidak Siap"
 
@@ -541,6 +542,223 @@ msgstr ""
 msgid "Zram configuration saved. The device will be created shortly."
 msgstr "Konfigurasi Zram disimpan. Perangkat akan dibuat sebentar lagi."
 
+#: src/views/dashboard_view.rs:165 src/views/swap_view.rs:128
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Swappiness yang direkomendasikan: {0} ({1})</i>"
+
+#: src/views/zram_view.rs:90
+msgid "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
+msgstr "<i>Disarankan: {0} MiB, lz4, prioritas 100 (untuk RAM {1} GiB)</i>"
+
+#: src/views/swap_view.rs:772
+msgid "Active — {0} GiB used / {1} GiB total"
+msgstr "Aktif — {0} GiB digunakan / {1} GiB total"
+
+#: src/swap/exec.rs:26 src/swap/exec.rs:68
+msgid "Authentication cancelled"
+msgstr "Autentikasi dibatalkan"
+
+#: src/swap/swapfile.rs:113
+msgid "Cannot inspect the root filesystem"
+msgstr "Tidak dapat memeriksa sistem berkas root"
+
+#: src/swap/swapfile.rs:108
+msgid "Cannot inspect the root filesystem: {0}"
+msgstr "Tidak dapat memeriksa sistem file root: {0}"
+
+#: src/swap/sysctl.rs:79
+msgid "Cannot parse MemTotal: {0}"
+msgstr "Tidak dapat mem-parse MemTotal: {0}"
+
+#: src/swap/sysctl.rs:43
+msgid "Cannot parse swappiness: {0}"
+msgstr "Tidak dapat mem-parse swappiness: {0}"
+
+#: src/swap/zswap.rs:59
+msgid "Cannot parse {0} as u8: {1}"
+msgstr "Tidak dapat mengurai {0} sebagai u8: {1}"
+
+#: src/swap/sysctl.rs:70
+msgid "Cannot read /proc/meminfo: {0}"
+msgstr "Tidak dapat membaca /proc/meminfo: {0}"
+
+#: src/swap/swapfile.rs:39
+msgid "Cannot read /proc/swaps: {0}"
+msgstr "Tidak dapat membaca /proc/swaps: {0}"
+
+#: src/swap/sysctl.rs:36 src/swap/zswap.rs:47
+msgid "Cannot read {0}: {1}"
+msgstr "Tidak dapat membaca {0}: {1}"
+
+#: src/swap/exec.rs:18 src/swap/exec.rs:52
+msgid "Failed to execute pkexec: {0}"
+msgstr "Gagal menjalankan pkexec: {0}"
+
+#: src/swap/persist.rs:31
+msgid "Failed to remove legacy unit {0}: {1}"
+msgstr "Gagal menghapus unit lama {0}: {1}"
+
+#: src/swap/sysctl.rs:129
+msgid "Failed to set swappiness: {0} / {1}"
+msgstr "Gagal mengatur swappiness: {0} / {1}"
+
+#: src/swap/exec.rs:61
+msgid "Failed to wait on pkexec: {0}"
+msgstr "Gagal menunggu pkexec: {0}"
+
+#: src/i18n.rs:24
+msgid "Hello {0}, you have {1} messages"
+msgstr "Halo {0}, Anda memiliki {1} pesan"
+
+#: src/views/swap_view.rs:234
+msgid ""
+"How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
+" {0})"
+msgstr ""
+"Seberapa agresif kernel melakukan pertukaran — lebih rendah = tetap di RAM "
+"lebih lama (direkomendasikan: {0})"
+
+#: src/views/swap_view.rs:231
+msgid ""
+"How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
+"fast compressed RAM over disk cache (recommended: {0})"
+msgstr ""
+"Seberapa agresif kernel melakukan pertukaran — dengan Zram aktif, atur ke "
+"{0} untuk lebih menyukai RAM terkompresi cepat daripada cache disk "
+"(direkomendasikan: {0})"
+
+#: src/views/dashboard_view.rs:483
+msgid "Idle ({0} GiB available)"
+msgstr "Siap sedia ({0} GiB tersedia)"
+
+#: src/views/zram_view.rs:531
+msgid "Idle — {0} MiB available"
+msgstr "Siap sedia — {0} MiB tersedia"
+
+#: src/swap/sysctl.rs:83
+msgid "MemTotal not found"
+msgstr "MemTotal tidak ditemukan"
+
+#: src/views/swap_view.rs:786
+msgid "Present but inactive — activation is disabled on {0}"
+msgstr "Ada tetapi tidak aktif — aktivasi dinonaktifkan di {0}"
+
+#: src/views/stress_test_view.rs:676
+msgid ""
+"RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
+"Swap used: {3} GiB"
+msgstr ""
+"RAM: {0} GiB total · {1} GiB terpakai · {2} GiB tersedia\n"
+"Swap terpakai: {3} GiB"
+
+#: src/views/swap_view.rs:673
+msgid "Resize"
+msgstr "Ubah Ukuran"
+
+#: src/views/swap_view.rs:837
+msgid "Swap file resizing is unsupported on {0}"
+msgstr "Penyesuaian ukuran file swap tidak didukung di {0}"
+
+#: src/progress_dialog.rs:58
+msgid "Task panicked: {0}"
+msgstr "Task mengalami panic: {0}"
+
+#: src/swap/persist.rs:74
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zram changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zram from this GUI."
+msgstr ""
+"Paket 'anduinos-swap-config' tidak terpasang.\n"
+"\n"
+"Perubahan zram tidak dapat diterapkan atau disimpan tanpanya.\n"
+"Pasang 'anduinos-swap-config' untuk mengelola zram dari GUI ini."
+
+#: src/swap/persist.rs:133
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zswap changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zswap from this GUI."
+msgstr ""
+"Paket 'anduinos-swap-config' tidak terpasang.\n"
+"\n"
+"Perubahan zswap tidak dapat diterapkan atau disimpan tanpanya.\n"
+"Pasang 'anduinos-swap-config' untuk mengelola zswap dari GUI ini."
+
+#: src/views/zram_view.rs:573
+msgid ""
+"This will immediately remove {0} and flush its contents to disk swap. "
+"Continue?"
+msgstr ""
+"Ini akan segera menghapus {0} dan mengosongkan isinya ke disk swap. "
+"Lanjutkan?"
+
+#: src/views/swap_view.rs:797
+msgid "Unavailable on {0}; the swap partition remains active"
+msgstr "Tidak tersedia di {0}; partisi swap tetap aktif"
+
+#: src/views/dashboard_view.rs:604
+msgid ""
+"Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
+" fast compressed RAM swap — dropping file cache when zram is available "
+"wastes I/O performance."
+msgstr ""
+"Zram aktif tetapi swappiness adalah {0} bukan {1}. Atur ke {1} untuk lebih "
+"menyukai pertukaran RAM terkompresi cepat — membuang cache file saat zram "
+"tersedia akan membuang kinerja I/O."
+
+#: src/swap/persist.rs:88
+msgid "Zram persistence disabled"
+msgstr "Persistensi zram dinonaktifkan"
+
+#: src/swap/persist.rs:90
+msgid "Zram persistence enabled"
+msgstr "Persistensi zram diaktifkan"
+
+#: src/swap/persist.rs:148
+msgid "Zswap persistence disabled"
+msgstr "Persistensi Zswap dinonaktifkan"
+
+#: src/swap/persist.rs:146
+msgid "Zswap persistence enabled"
+msgstr "Persistensi Zswap diaktifkan"
+
+#: src/views/dashboard_view.rs:159 src/views/swap_view.rs:122
+msgid "for {0} GiB RAM"
+msgstr "untuk RAM {0} GiB"
+
+#: src/swap/sysctl.rs:133
+msgid "swappiness updated"
+msgstr "swappiness diperbarui"
+
+#: src/swap/persist.rs:37
+msgid "systemctl {0} failed: {1}"
+msgstr "systemctl {0} gagal: {1}"
+
+#: src/views/zram_view.rs:525
+msgid "{0} MiB used (stats reset)"
+msgstr "{0} MiB digunakan (statistik direset)"
+
+#: src/views/zram_view.rs:520
+msgid "{0} MiB used · saved {1}%"
+msgstr "{0} MiB terpakai · {1}% dihemat"
+
+#: src/views/dashboard_view.rs:498
+msgid "{0} · pool {1}%"
+msgstr "{0} · kumpulan {1}%"
+
+#: src/views/dashboard_view.rs:474
+msgid "{0} · saved {1}%"
+msgstr "{0} · disimpan {1}%"
+
+#: src/views/swap_view.rs:754
+msgid ""
+"{0} — installer-managed; size cannot be changed while the system is running"
+msgstr ""
+"{0} — dikelola installer; ukuran tidak dapat diubah saat sistem berjalan"
+
 #~ msgid "Disabling swap will break hibernation. Continue?"
 #~ msgstr "Menonaktifkan swap akan mengganggu hibernasi. Lanjutkan?"
 
@@ -550,14 +768,8 @@ msgstr "Konfigurasi Zram disimpan. Perangkat akan dibuat sebentar lagi."
 #~ msgid "Swap file size"
 #~ msgstr "Ukuran memori virtual"
 
-#~ msgid "<i>Recommended swappiness: {0} ({1})</i>"
-#~ msgstr "<i>Swappiness yang direkomendasikan: {0} ({1})</i>"
-
 #~ msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
 #~ msgstr "<i>Direkomendasikan: Virtual Memory {0} GiB, swappiness {1} ({2})</i>"
-
-#~ msgid "Active — {0} GiB used / {1} GiB total"
-#~ msgstr "Aktif — {0} GiB digunakan / {1} GiB total"
 
 #~ msgid "Creating Zram device…"
 #~ msgstr "Membuat perangkat Zram…"
@@ -568,20 +780,8 @@ msgstr "Konfigurasi Zram disimpan. Perangkat akan dibuat sebentar lagi."
 #~ msgid "Disk-based swap file — the last line of defense when RAM is full"
 #~ msgstr "File swap berbasis disk — garis pertahanan terakhir saat RAM penuh"
 
-#~ msgid "Hello {0}, you have {1} messages"
-#~ msgstr "Halo {0}, Anda memiliki {1} pesan"
-
 #~ msgid "Hibernation not detected — recommended: {0} GiB"
 #~ msgstr "Hibernasi tidak terdeteksi — yang direkomendasikan: {0} GiB"
-
-#~ msgid "Idle ({0} GiB available)"
-#~ msgstr "Siap sedia ({0} GiB tersedia)"
-
-#~ msgid "{0} · pool {1}%"
-#~ msgstr "{0} · kumpulan {1}%"
-
-#~ msgid "{0} · saved {1}%"
-#~ msgstr "{0} · disimpan {1}%"
 
 #~ msgid "Active"
 #~ msgstr "Aktif"
@@ -627,27 +827,3 @@ msgstr "Konfigurasi Zram disimpan. Perangkat akan dibuat sebentar lagi."
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
 #~ msgstr ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
-#~ " {0})"
-#~ msgstr ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
-#~ " {0})"
-
-#~ msgid ""
-#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
-#~ " fast compressed RAM swap — dropping file cache when zram is available "
-#~ "wastes I/O performance."
-#~ msgstr ""
-#~ "Zram aktif tetapi swappiness adalah {0} bukan {1}. Atur ke {1} untuk lebih "
-#~ "menyukai pertukaran RAM terkompresi cepat — membuang cache file saat zram "
-#~ "tersedia akan membuang kinerja I/O."
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
-#~ "fast compressed RAM over disk cache (recommended: {0})"
-#~ msgstr ""
-#~ "Seberapa agresif kernel melakukan pertukaran — dengan Zram aktif, atur ke "
-#~ "{0} untuk lebih menyukai RAM terkompresi cepat daripada cache disk "
-#~ "(direkomendasikan: {0})"

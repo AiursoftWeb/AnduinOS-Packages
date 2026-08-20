@@ -102,7 +102,7 @@ msgstr "Crea dispositivo Zram"
 msgid "Dashboard"
 msgstr "Pannello di controllo"
 
-#: src/views/zram_view.rs:562
+#: src/views/zram_view.rs:571
 msgid "Destroy Zram Device"
 msgstr "Elimina dispositivo Zram"
 
@@ -110,7 +110,7 @@ msgstr "Elimina dispositivo Zram"
 msgid "Device Created"
 msgstr "Dispositivo creato"
 
-#: src/views/dashboard_view.rs:498
+#: src/views/dashboard_view.rs:503
 msgid "Disabled"
 msgstr "Disabilitato"
 
@@ -126,7 +126,7 @@ msgstr "Disabilitazione dello swap in corso…"
 msgid "Disk Swap Configuration"
 msgstr "Configurazione memoria virtuale"
 
-#: src/views/dashboard_view.rs:609
+#: src/views/dashboard_view.rs:614
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
@@ -138,7 +138,7 @@ msgstr ""
 msgid "Duration:"
 msgstr "Durata:"
 
-#: src/views/dashboard_view.rs:604
+#: src/views/dashboard_view.rs:609
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
@@ -177,7 +177,7 @@ msgstr "Ibernazione"
 msgid "Hibernation Warning"
 msgstr "Avviso diibernazione"
 
-#: src/views/dashboard_view.rs:512 src/views/swap_view.rs:810
+#: src/views/dashboard_view.rs:517 src/views/swap_view.rs:810
 msgid "Inactive"
 msgstr "Inattivo"
 
@@ -205,23 +205,23 @@ msgstr "Dispositivi Zram"
 msgid "No device"
 msgstr "Nessun dispositivo"
 
-#: src/views/dashboard_view.rs:587
+#: src/views/dashboard_view.rs:592
 msgid "No disk swap detected"
 msgstr "Nessuna memoria virtuale rilevata"
 
-#: src/views/dashboard_view.rs:603
+#: src/views/dashboard_view.rs:608
 msgid "No memory acceleration enabled"
 msgstr "Nessuna accelerazione della memoria abilitata"
 
-#: src/views/dashboard_view.rs:541
+#: src/views/dashboard_view.rs:546
 msgid "None"
 msgstr "Nessuno"
 
-#: src/views/dashboard_view.rs:525 src/views/dashboard_view.rs:533
+#: src/views/dashboard_view.rs:530 src/views/dashboard_view.rs:538
 msgid "Off"
 msgstr "Spento"
 
-#: src/views/dashboard_view.rs:532
+#: src/views/dashboard_view.rs:537
 msgid "On"
 msgstr "Acceso"
 
@@ -234,7 +234,7 @@ msgstr ""
 "dimensioni originali. Un valore più alto consente di memorizzare più pagine "
 "nella cache. Valore consigliato: 90%"
 
-#: src/views/dashboard_view.rs:608
+#: src/views/dashboard_view.rs:613
 msgid "Optimal memory configuration"
 msgstr "Configurazione della memoria ottimale"
 
@@ -250,7 +250,7 @@ msgstr "Priorità"
 msgid "RAM"
 msgstr "RAM"
 
-#: src/views/zram_view.rs:545
+#: src/views/zram_view.rs:554
 msgid "Remove"
 msgstr "Rimuovi"
 
@@ -283,7 +283,7 @@ msgstr "Test di stress"
 msgid "Swap"
 msgstr "Swap"
 
-#: src/window.rs:59
+#: src/progress_dialog.rs:24 src/window.rs:59
 msgid "Swap Control"
 msgstr "Controllo memoria virtuale"
 
@@ -292,10 +292,11 @@ msgid "Swap usage"
 msgstr "Utilizzo della memoria virtuale"
 
 #: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
+#: src/views/swap_view.rs:677
 msgid "Swappiness"
 msgstr "Swappiness"
 
-#: src/views/dashboard_view.rs:598
+#: src/views/dashboard_view.rs:603
 msgid "Swappiness not optimized for Zram"
 msgstr "Swappiness non ottimizzato per Zram"
 
@@ -319,7 +320,7 @@ msgstr "Tipo"
 msgid "Used"
 msgstr "Utilizzato"
 
-#: src/views/dashboard_view.rs:588
+#: src/views/dashboard_view.rs:593
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
@@ -336,11 +337,11 @@ msgstr "Zram"
 msgid "Zram Devices"
 msgstr "Dispositivi Zram"
 
-#: src/views/dashboard_view.rs:592
+#: src/views/dashboard_view.rs:597
 msgid "Zram and Zswap are both active"
 msgstr "Zram e Zswap sono entrambi attivi"
 
-#: src/views/dashboard_view.rs:593
+#: src/views/dashboard_view.rs:598
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
 "pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
@@ -351,7 +352,7 @@ msgstr ""
 "grave thrashing della memoria. Disabilitane uno."
 
 #: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
-#: src/views/swap_view.rs:185
+#: src/views/swap_view.rs:185 src/views/swap_view.rs:686
 msgid "Zswap"
 msgstr "Zswap"
 
@@ -384,31 +385,31 @@ msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr ""
 "con Zram attivo — preferire la RAM compressa veloce alla cache su disco"
 
-#: src/views/dashboard_view.rs:547
+#: src/views/dashboard_view.rs:552
 msgid "Ready"
 msgstr "Pronto"
 
-#: src/views/dashboard_view.rs:549
+#: src/views/dashboard_view.rs:554
 msgid "Unsupported"
 msgstr "Non supportato"
 
-#: src/views/dashboard_view.rs:551
+#: src/views/dashboard_view.rs:556
 msgid "Not configured"
 msgstr "Non configurato"
 
-#: src/views/dashboard_view.rs:553
+#: src/views/dashboard_view.rs:558
 msgid "Resume target missing"
 msgstr "Target di ripristino mancante"
 
-#: src/views/dashboard_view.rs:555
+#: src/views/dashboard_view.rs:560
 msgid "Resume target inactive"
 msgstr "Target di ripristino non attivo"
 
-#: src/views/dashboard_view.rs:557
+#: src/views/dashboard_view.rs:562
 msgid "Swap too small"
 msgstr "Swap troppo piccolo"
 
-#: src/views/dashboard_view.rs:559
+#: src/views/dashboard_view.rs:564
 msgid "Not ready"
 msgstr "Non pronto"
 
@@ -550,6 +551,224 @@ msgstr ""
 msgid "Zram configuration saved. The device will be created shortly."
 msgstr "Configurazione Zram salvata. Il dispositivo verrà creato a breve."
 
+#: src/views/dashboard_view.rs:165 src/views/swap_view.rs:128
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Swappiness consigliata: {0} ({1})</i>"
+
+#: src/views/zram_view.rs:90
+msgid "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
+msgstr "<i>Consigliato: {0} MiB, lz4, priorità 100 (per {1} GiB di RAM)</i>"
+
+#: src/views/swap_view.rs:772
+msgid "Active — {0} GiB used / {1} GiB total"
+msgstr "Attivo: {0} GiB usati / {1} GiB totali"
+
+#: src/swap/exec.rs:26 src/swap/exec.rs:68
+msgid "Authentication cancelled"
+msgstr "Autenticazione annullata"
+
+#: src/swap/swapfile.rs:113
+msgid "Cannot inspect the root filesystem"
+msgstr "Impossibile ispezionare il file system di root"
+
+#: src/swap/swapfile.rs:108
+msgid "Cannot inspect the root filesystem: {0}"
+msgstr "Impossibile ispezionare il file system di root: {0}"
+
+#: src/swap/sysctl.rs:79
+msgid "Cannot parse MemTotal: {0}"
+msgstr "Impossibile analizzare MemTotal: {0}"
+
+#: src/swap/sysctl.rs:43
+msgid "Cannot parse swappiness: {0}"
+msgstr "Impossibile analizzare la swappiness: {0}"
+
+#: src/swap/zswap.rs:59
+msgid "Cannot parse {0} as u8: {1}"
+msgstr "Impossibile analizzare {0} come u8: {1}"
+
+#: src/swap/sysctl.rs:70
+msgid "Cannot read /proc/meminfo: {0}"
+msgstr "Impossibile leggere /proc/meminfo: {0}"
+
+#: src/swap/swapfile.rs:39
+msgid "Cannot read /proc/swaps: {0}"
+msgstr "Impossibile leggere /proc/swaps: {0}"
+
+#: src/swap/sysctl.rs:36 src/swap/zswap.rs:47
+msgid "Cannot read {0}: {1}"
+msgstr "Impossibile leggere {0}: {1}"
+
+#: src/swap/exec.rs:18 src/swap/exec.rs:52
+msgid "Failed to execute pkexec: {0}"
+msgstr "Esecuzione di pkexec non riuscita: {0}"
+
+#: src/swap/persist.rs:31
+msgid "Failed to remove legacy unit {0}: {1}"
+msgstr "Rimozione unit legacy {0} non riuscita: {1}"
+
+#: src/swap/sysctl.rs:129
+msgid "Failed to set swappiness: {0} / {1}"
+msgstr "Impossibile impostare la swappiness: {0} / {1}"
+
+#: src/swap/exec.rs:61
+msgid "Failed to wait on pkexec: {0}"
+msgstr "Attesa su pkexec non riuscita: {0}"
+
+#: src/i18n.rs:24
+msgid "Hello {0}, you have {1} messages"
+msgstr "Ciao {0}, hai {1} messaggi"
+
+#: src/views/swap_view.rs:234
+msgid ""
+"How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
+" {0})"
+msgstr ""
+"Quanto aggressivamente il kernel usa la swap — un valore più basso = resta "
+"in RAM più a lungo (consigliato: {0})"
+
+#: src/views/swap_view.rs:231
+msgid ""
+"How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
+"fast compressed RAM over disk cache (recommended: {0})"
+msgstr ""
+"Quanto aggressivamente il kernel usa la swap — con Zram attivo, impostare su"
+" {0} per preferire la RAM compressa veloce alla cache su disco (consigliato:"
+" {0})"
+
+#: src/views/dashboard_view.rs:483
+msgid "Idle ({0} GiB available)"
+msgstr "Inattivo ({0} GiB disponibili)"
+
+#: src/views/zram_view.rs:531
+msgid "Idle — {0} MiB available"
+msgstr "Inattivo — {0} MiB disponibili"
+
+#: src/swap/sysctl.rs:83
+msgid "MemTotal not found"
+msgstr "MemTotal non trovato"
+
+#: src/views/swap_view.rs:786
+msgid "Present but inactive — activation is disabled on {0}"
+msgstr "Presente ma inattivo — l'attivazione è disabilitata su {0}"
+
+#: src/views/stress_test_view.rs:676
+msgid ""
+"RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
+"Swap used: {3} GiB"
+msgstr ""
+"RAM: {0} GiB totali · {1} GiB usati · {2} GiB disponibili\n"
+"Swap in uso: {3} GiB"
+
+#: src/views/swap_view.rs:673
+msgid "Resize"
+msgstr "Ridimensiona"
+
+#: src/views/swap_view.rs:837
+msgid "Swap file resizing is unsupported on {0}"
+msgstr "Il ridimensionamento del file di swap non è supportato su {0}"
+
+#: src/progress_dialog.rs:58
+msgid "Task panicked: {0}"
+msgstr "Il task è andato in panico: {0}"
+
+#: src/swap/persist.rs:74
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zram changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zram from this GUI."
+msgstr ""
+"Il pacchetto 'anduinos-swap-config' non è installato.\n"
+"\n"
+"Le modifiche a Zram non possono essere applicate o rese permanenti senza di esso.\n"
+"Installa 'anduinos-swap-config' per gestire Zram da questa GUI."
+
+#: src/swap/persist.rs:133
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zswap changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zswap from this GUI."
+msgstr ""
+"Il pacchetto 'anduinos-swap-config' non è installato.\n"
+"\n"
+"Le modifiche a Zswap non possono essere applicate o persistite senza di esso.\n"
+"Installa 'anduinos-swap-config' per gestire Zswap da questa GUI."
+
+#: src/views/zram_view.rs:573
+msgid ""
+"This will immediately remove {0} and flush its contents to disk swap. "
+"Continue?"
+msgstr ""
+"Questo rimuoverà immediatamente {0} e scaricherà il suo contenuto nella swap"
+" su disco. Continuare?"
+
+#: src/views/swap_view.rs:797
+msgid "Unavailable on {0}; the swap partition remains active"
+msgstr "Non disponibile su {0}; la partizione di swap rimane attiva"
+
+#: src/views/dashboard_view.rs:604
+msgid ""
+"Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
+" fast compressed RAM swap — dropping file cache when zram is available "
+"wastes I/O performance."
+msgstr ""
+"Zram è attivo ma la swappiness è {0} invece di {1}. Impostala su {1} per "
+"preferire la swap RAM compressa veloce — scaricare la cache dei file quando "
+"Zram è disponibile spreca le prestazioni I/O."
+
+#: src/swap/persist.rs:88
+msgid "Zram persistence disabled"
+msgstr "Persistenza Zram disabilitata"
+
+#: src/swap/persist.rs:90
+msgid "Zram persistence enabled"
+msgstr "Persistenza Zram abilitata"
+
+#: src/swap/persist.rs:148
+msgid "Zswap persistence disabled"
+msgstr "Persistenza Zswap disabilitata"
+
+#: src/swap/persist.rs:146
+msgid "Zswap persistence enabled"
+msgstr "Persistenza di Zswap attivata"
+
+#: src/views/dashboard_view.rs:159 src/views/swap_view.rs:122
+msgid "for {0} GiB RAM"
+msgstr "per {0} GiB di RAM"
+
+#: src/swap/sysctl.rs:133
+msgid "swappiness updated"
+msgstr "Swappiness aggiornata"
+
+#: src/swap/persist.rs:37
+msgid "systemctl {0} failed: {1}"
+msgstr "systemctl {0} non riuscito: {1}"
+
+#: src/views/zram_view.rs:525
+msgid "{0} MiB used (stats reset)"
+msgstr "{0} MiB utilizzati (statistiche azzerate)"
+
+#: src/views/zram_view.rs:520
+msgid "{0} MiB used · saved {1}%"
+msgstr "{0} MiB utilizzati · salvato {1}%"
+
+#: src/views/dashboard_view.rs:498
+msgid "{0} · pool {1}%"
+msgstr "{0} · pool {1}%"
+
+#: src/views/dashboard_view.rs:474
+msgid "{0} · saved {1}%"
+msgstr "{0} · salvato {1}%"
+
+#: src/views/swap_view.rs:754
+msgid ""
+"{0} — installer-managed; size cannot be changed while the system is running"
+msgstr ""
+"{0} — gestito dall'installatore; la dimensione non può essere modificata "
+"mentre il sistema è in esecuzione"
+
 #~ msgid "Disabling swap will break hibernation. Continue?"
 #~ msgstr ""
 #~ "La disabilitazione dello swap comprometterà l'ibernazione. Continuare?"
@@ -560,14 +779,8 @@ msgstr "Configurazione Zram salvata. Il dispositivo verrà creato a breve."
 #~ msgid "Swap file size"
 #~ msgstr "Dimensione memoria virtuale"
 
-#~ msgid "<i>Recommended swappiness: {0} ({1})</i>"
-#~ msgstr "<i>Swappiness consigliata: {0} ({1})</i>"
-
 #~ msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
 #~ msgstr "<i>Consigliato: {0} GiB di memoria virtuale, swappiness {1} ({2})</i>"
-
-#~ msgid "Active — {0} GiB used / {1} GiB total"
-#~ msgstr "Attivo: {0} GiB usati / {1} GiB totali"
 
 #~ msgid "Creating Zram device…"
 #~ msgstr "Creazione del dispositivo Zram…"
@@ -578,20 +791,8 @@ msgstr "Configurazione Zram salvata. Il dispositivo verrà creato a breve."
 #~ msgid "Disk-based swap file — the last line of defense when RAM is full"
 #~ msgstr "File di swap su disco: l'ultima linea di difesa quando la RAM è piena"
 
-#~ msgid "Hello {0}, you have {1} messages"
-#~ msgstr "Ciao {0}, hai {1} messaggi"
-
 #~ msgid "Hibernation not detected — recommended: {0} GiB"
 #~ msgstr "Ibernazione non rilevata — consigliato: {0} GiB"
-
-#~ msgid "Idle ({0} GiB available)"
-#~ msgstr "Inattivo ({0} GiB disponibili)"
-
-#~ msgid "{0} · pool {1}%"
-#~ msgstr "{0} · pool {1}%"
-
-#~ msgid "{0} · saved {1}%"
-#~ msgstr "{0} · salvato {1}%"
 
 #~ msgid "Active"
 #~ msgstr "Attivo"
@@ -636,27 +837,3 @@ msgstr "Configurazione Zram salvata. Il dispositivo verrà creato a breve."
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
 #~ msgstr ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
-#~ " {0})"
-#~ msgstr ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
-#~ " {0})"
-
-#~ msgid ""
-#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
-#~ " fast compressed RAM swap — dropping file cache when zram is available "
-#~ "wastes I/O performance."
-#~ msgstr ""
-#~ "Zram è attivo ma la swappiness è {0} invece di {1}. Impostala su {1} per "
-#~ "preferire la swap RAM compressa veloce — scaricare la cache dei file quando "
-#~ "Zram è disponibile spreca le prestazioni I/O."
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
-#~ "fast compressed RAM over disk cache (recommended: {0})"
-#~ msgstr ""
-#~ "Quanto aggressivamente il kernel usa la swap — con Zram attivo, impostare su"
-#~ " {0} per preferire la RAM compressa veloce alla cache su disco (consigliato:"
-#~ " {0})"

@@ -99,7 +99,7 @@ msgstr "Zram 장치 생성"
 msgid "Dashboard"
 msgstr "대시보드"
 
-#: src/views/zram_view.rs:562
+#: src/views/zram_view.rs:571
 msgid "Destroy Zram Device"
 msgstr "Zram 장치 파괴"
 
@@ -107,7 +107,7 @@ msgstr "Zram 장치 파괴"
 msgid "Device Created"
 msgstr "장치 생성됨"
 
-#: src/views/dashboard_view.rs:498
+#: src/views/dashboard_view.rs:503
 msgid "Disabled"
 msgstr "비활성화됨"
 
@@ -123,7 +123,7 @@ msgstr "스왑 비활성화 중..."
 msgid "Disk Swap Configuration"
 msgstr "가상 메모리 설정"
 
-#: src/views/dashboard_view.rs:609
+#: src/views/dashboard_view.rs:614
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
@@ -133,7 +133,7 @@ msgstr "디스크 스왑과 메모리 압축이 활성화되어 있습니다. �
 msgid "Duration:"
 msgstr "지속 시간:"
 
-#: src/views/dashboard_view.rs:604
+#: src/views/dashboard_view.rs:609
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
@@ -170,7 +170,7 @@ msgstr "면제"
 msgid "Hibernation Warning"
 msgstr "휴면 경고"
 
-#: src/views/dashboard_view.rs:512 src/views/swap_view.rs:810
+#: src/views/dashboard_view.rs:517 src/views/swap_view.rs:810
 msgid "Inactive"
 msgstr "비활성"
 
@@ -198,23 +198,23 @@ msgstr "Zram 장치"
 msgid "No device"
 msgstr "디바이스 없음"
 
-#: src/views/dashboard_view.rs:587
+#: src/views/dashboard_view.rs:592
 msgid "No disk swap detected"
 msgstr "디스크 가상 메모리 감지 안됨"
 
-#: src/views/dashboard_view.rs:603
+#: src/views/dashboard_view.rs:608
 msgid "No memory acceleration enabled"
 msgstr "메모리 가속화가 활성화되지 않음"
 
-#: src/views/dashboard_view.rs:541
+#: src/views/dashboard_view.rs:546
 msgid "None"
 msgstr "없음"
 
-#: src/views/dashboard_view.rs:525 src/views/dashboard_view.rs:533
+#: src/views/dashboard_view.rs:530 src/views/dashboard_view.rs:538
 msgid "Off"
 msgstr "끄기"
 
-#: src/views/dashboard_view.rs:532
+#: src/views/dashboard_view.rs:537
 msgid "On"
 msgstr "활성화"
 
@@ -224,7 +224,7 @@ msgid ""
 "cached. Recommended: 90%"
 msgstr "원본의 이 % 이하로 압축되는 페이지만 저장합니다. 높을수록 더 많은 페이지가 캐시됩니다. 권장: 90%"
 
-#: src/views/dashboard_view.rs:608
+#: src/views/dashboard_view.rs:613
 msgid "Optimal memory configuration"
 msgstr "최적의 메모리 구성"
 
@@ -240,7 +240,7 @@ msgstr "우선순위"
 msgid "RAM"
 msgstr "RAM"
 
-#: src/views/zram_view.rs:545
+#: src/views/zram_view.rs:554
 msgid "Remove"
 msgstr "제거"
 
@@ -273,7 +273,7 @@ msgstr "스트레스 테스트"
 msgid "Swap"
 msgstr "스왑"
 
-#: src/window.rs:59
+#: src/progress_dialog.rs:24 src/window.rs:59
 msgid "Swap Control"
 msgstr "가상 메모리 제어"
 
@@ -282,10 +282,11 @@ msgid "Swap usage"
 msgstr "가상 메모리 사용량"
 
 #: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
+#: src/views/swap_view.rs:677
 msgid "Swappiness"
 msgstr "스와핑 성향"
 
-#: src/views/dashboard_view.rs:598
+#: src/views/dashboard_view.rs:603
 msgid "Swappiness not optimized for Zram"
 msgstr "Zram에 대한 swappiness 최적화 안 됨"
 
@@ -309,7 +310,7 @@ msgstr "유형"
 msgid "Used"
 msgstr "사용됨"
 
-#: src/views/dashboard_view.rs:588
+#: src/views/dashboard_view.rs:593
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
@@ -324,11 +325,11 @@ msgstr "zram"
 msgid "Zram Devices"
 msgstr "Zram 장치"
 
-#: src/views/dashboard_view.rs:592
+#: src/views/dashboard_view.rs:597
 msgid "Zram and Zswap are both active"
 msgstr "Zram 및 Zswap이 모두 활성화됨"
 
-#: src/views/dashboard_view.rs:593
+#: src/views/dashboard_view.rs:598
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
 "pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
@@ -338,7 +339,7 @@ msgstr ""
 "스러싱이 발생할 수 있습니다. 둘 중 하나를 비활성화하세요."
 
 #: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
-#: src/views/swap_view.rs:185
+#: src/views/swap_view.rs:185 src/views/swap_view.rs:686
 msgid "Zswap"
 msgstr "즈스왑"
 
@@ -368,31 +369,31 @@ msgstr "Zram 사용"
 msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr "Zram 활성화 — 디스크 캐시보다 빠른 압축된 RAM 우선 사용"
 
-#: src/views/dashboard_view.rs:547
+#: src/views/dashboard_view.rs:552
 msgid "Ready"
 msgstr "준비됨"
 
-#: src/views/dashboard_view.rs:549
+#: src/views/dashboard_view.rs:554
 msgid "Unsupported"
 msgstr "지원되지 않음"
 
-#: src/views/dashboard_view.rs:551
+#: src/views/dashboard_view.rs:556
 msgid "Not configured"
 msgstr "설정되지 않음"
 
-#: src/views/dashboard_view.rs:553
+#: src/views/dashboard_view.rs:558
 msgid "Resume target missing"
 msgstr "최대 절전 모드 복귀 대상 누락"
 
-#: src/views/dashboard_view.rs:555
+#: src/views/dashboard_view.rs:560
 msgid "Resume target inactive"
 msgstr "최대 절전 모드 복귀 대상 비활성"
 
-#: src/views/dashboard_view.rs:557
+#: src/views/dashboard_view.rs:562
 msgid "Swap too small"
 msgstr "스왑 크기가 너무 작습니다"
 
-#: src/views/dashboard_view.rs:559
+#: src/views/dashboard_view.rs:564
 msgid "Not ready"
 msgstr "준비되지 않음"
 
@@ -513,6 +514,215 @@ msgstr "경고: 시스템 메모리를 소모하며 불안정성을 유발할 �
 msgid "Zram configuration saved. The device will be created shortly."
 msgstr "Zram 구성이 저장되었습니다. 장치가 곧 생성됩니다."
 
+#: src/views/dashboard_view.rs:165 src/views/swap_view.rs:128
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>권장 swappiness: {0} ({1})</i>"
+
+#: src/views/zram_view.rs:90
+msgid "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
+msgstr "<i>권장: {0} MiB, lz4, 우선순위 100 ({1} GiB RAM 기준)</i>"
+
+#: src/views/swap_view.rs:772
+msgid "Active — {0} GiB used / {1} GiB total"
+msgstr "활성 상태 — {0}GiB 사용 / {1}GiB 전체"
+
+#: src/swap/exec.rs:26 src/swap/exec.rs:68
+msgid "Authentication cancelled"
+msgstr "인증이 취소되었습니다"
+
+#: src/swap/swapfile.rs:113
+msgid "Cannot inspect the root filesystem"
+msgstr "루트 파일시스템을 검사할 수 없습니다"
+
+#: src/swap/swapfile.rs:108
+msgid "Cannot inspect the root filesystem: {0}"
+msgstr "루트 파일시스템을 검사할 수 없습니다: {0}"
+
+#: src/swap/sysctl.rs:79
+msgid "Cannot parse MemTotal: {0}"
+msgstr "MemTotal을(를) 구문 분석할 수 없습니다: {0}"
+
+#: src/swap/sysctl.rs:43
+msgid "Cannot parse swappiness: {0}"
+msgstr "swappiness를(을) 구문 분석할 수 없습니다: {0}"
+
+#: src/swap/zswap.rs:59
+msgid "Cannot parse {0} as u8: {1}"
+msgstr "{0}을(를) u8로 해석할 수 없음: {1}"
+
+#: src/swap/sysctl.rs:70
+msgid "Cannot read /proc/meminfo: {0}"
+msgstr "/proc/meminfo 읽기 실패: {0}"
+
+#: src/swap/swapfile.rs:39
+msgid "Cannot read /proc/swaps: {0}"
+msgstr "/proc/swaps 읽기 실패: {0}"
+
+#: src/swap/sysctl.rs:36 src/swap/zswap.rs:47
+msgid "Cannot read {0}: {1}"
+msgstr "{0}을(를) 읽을 수 없음: {1}"
+
+#: src/swap/exec.rs:18 src/swap/exec.rs:52
+msgid "Failed to execute pkexec: {0}"
+msgstr "pkexec 실행 실패: {0}"
+
+#: src/swap/persist.rs:31
+msgid "Failed to remove legacy unit {0}: {1}"
+msgstr "레거시 유닛 {0} 제거 실패: {1}"
+
+#: src/swap/sysctl.rs:129
+msgid "Failed to set swappiness: {0} / {1}"
+msgstr "swappiness 설정 실패: {0} / {1}"
+
+#: src/swap/exec.rs:61
+msgid "Failed to wait on pkexec: {0}"
+msgstr "pkexec 대기 실패: {0}"
+
+#: src/i18n.rs:24
+msgid "Hello {0}, you have {1} messages"
+msgstr "안녕하세요 {0}님, {1}개의 메시지가 있습니다"
+
+#: src/views/swap_view.rs:234
+msgid ""
+"How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
+" {0})"
+msgstr "커널의 스왑 강도 — 낮을수록 RAM에 머무는 시간이 길어짐 (권장: {0})"
+
+#: src/views/swap_view.rs:231
+msgid ""
+"How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
+"fast compressed RAM over disk cache (recommended: {0})"
+msgstr ""
+"커널의 스왑 강도 — Zram 활성화 시 디스크 캐시보다 빠른 압축된 RAM을 우선 사용하도록 {0}(으)로 설정 (권장: {0})"
+
+#: src/views/dashboard_view.rs:483
+msgid "Idle ({0} GiB available)"
+msgstr "대기 중 (사용 가능 {0} GiB)"
+
+#: src/views/zram_view.rs:531
+msgid "Idle — {0} MiB available"
+msgstr "대기 중 — 사용 가능 {0} MiB"
+
+#: src/swap/sysctl.rs:83
+msgid "MemTotal not found"
+msgstr "MemTotal을(를) 찾을 수 없습니다"
+
+#: src/views/swap_view.rs:786
+msgid "Present but inactive — activation is disabled on {0}"
+msgstr "존재하지만 비활성화됨 — {0}에서 활성화가 비활성화됨"
+
+#: src/views/stress_test_view.rs:676
+msgid ""
+"RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
+"Swap used: {3} GiB"
+msgstr ""
+"RAM: 총 {0} GiB · 사용 {1} GiB · 사용 가능 {2} GiB\n"
+"스왑 사용: {3} GiB"
+
+#: src/views/swap_view.rs:673
+msgid "Resize"
+msgstr "크기 조정"
+
+#: src/views/swap_view.rs:837
+msgid "Swap file resizing is unsupported on {0}"
+msgstr "{0}에서는 스왑 파일 크기 조정을 지원하지 않습니다"
+
+#: src/progress_dialog.rs:58
+msgid "Task panicked: {0}"
+msgstr "태스크 패닉: {0}"
+
+#: src/swap/persist.rs:74
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zram changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zram from this GUI."
+msgstr ""
+"'anduinos-swap-config' 패키지가 설치되어 있지 않습니다.\n"
+"\n"
+"이 패키지가 없으면 Zram 변경 사항을 적용하거나 영구적으로 저장할 수 없습니다.\n"
+"이 GUI에서 zram을 관리하려면 'anduinos-swap-config'를 설치하세요."
+
+#: src/swap/persist.rs:133
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zswap changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zswap from this GUI."
+msgstr ""
+"패키지 'anduinos-swap-config'가 설치되어 있지 않습니다.\n"
+"\n"
+"이 패키지가 없으면 Zswap 변경 사항을 적용하거나 영구적으로 저장할 수 없습니다.\n"
+"이 GUI에서 zswap을 관리하려면 'anduinos-swap-config'를 설치하세요."
+
+#: src/views/zram_view.rs:573
+msgid ""
+"This will immediately remove {0} and flush its contents to disk swap. "
+"Continue?"
+msgstr "{0}을(를) 즉시 제거하고 그 내용을 디스크 스왑으로 플러시합니다. 계속하시겠습니까?"
+
+#: src/views/swap_view.rs:797
+msgid "Unavailable on {0}; the swap partition remains active"
+msgstr "{0}에서 사용할 수 없음; 스왑 파티션은 활성화된 상태로 유지됨"
+
+#: src/views/dashboard_view.rs:604
+msgid ""
+"Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
+" fast compressed RAM swap — dropping file cache when zram is available "
+"wastes I/O performance."
+msgstr ""
+"Zram이 활성화되어 있지만 swappiness가 {1}이 아닌 {0}(으)로 설정됨. {1}(으)로 설정하여 빠른 압축된 RAM 스왑을"
+" 우선 사용하세요. Zram 사용 가능 시 파일 캐시 버림은 I/O 성능을 낭비합니다."
+
+#: src/swap/persist.rs:88
+msgid "Zram persistence disabled"
+msgstr "Zram 영속화 비활성화됨"
+
+#: src/swap/persist.rs:90
+msgid "Zram persistence enabled"
+msgstr "Zram 영속성 활성화됨"
+
+#: src/swap/persist.rs:148
+msgid "Zswap persistence disabled"
+msgstr "Zswap 영속성 비활성화됨"
+
+#: src/swap/persist.rs:146
+msgid "Zswap persistence enabled"
+msgstr "Zswap 영속성 활성화됨"
+
+#: src/views/dashboard_view.rs:159 src/views/swap_view.rs:122
+msgid "for {0} GiB RAM"
+msgstr "{0} GiB RAM 기준"
+
+#: src/swap/sysctl.rs:133
+msgid "swappiness updated"
+msgstr "swappiness 업데이트됨"
+
+#: src/swap/persist.rs:37
+msgid "systemctl {0} failed: {1}"
+msgstr "systemctl {0} 실패: {1}"
+
+#: src/views/zram_view.rs:525
+msgid "{0} MiB used (stats reset)"
+msgstr "{0} MiB 사용 (통계 초기화됨)"
+
+#: src/views/zram_view.rs:520
+msgid "{0} MiB used · saved {1}%"
+msgstr "{0} MiB 사용 · {1}% 절약"
+
+#: src/views/dashboard_view.rs:498
+msgid "{0} · pool {1}%"
+msgstr "{0} · 풀 {1}%"
+
+#: src/views/dashboard_view.rs:474
+msgid "{0} · saved {1}%"
+msgstr "{0} · {1}% 저장"
+
+#: src/views/swap_view.rs:754
+msgid ""
+"{0} — installer-managed; size cannot be changed while the system is running"
+msgstr "{0} — 설치 프로그램 관리 중; 시스템 실행 중에는 크기를 변경할 수 없음"
+
 #~ msgid "Disabling swap will break hibernation. Continue?"
 #~ msgstr "스왑을 비활성화하면 절전 기능이 중단됩니다. 계속하시겠습니까?"
 
@@ -521,12 +731,6 @@ msgstr "Zram 구성이 저장되었습니다. 장치가 곧 생성됩니다."
 
 #~ msgid "Swap file size"
 #~ msgstr "가상 메모리 크기"
-
-#~ msgid "<i>Recommended swappiness: {0} ({1})</i>"
-#~ msgstr "<i>권장 swappiness: {0} ({1})</i>"
-
-#~ msgid "Active — {0} GiB used / {1} GiB total"
-#~ msgstr "활성 상태 — {0}GiB 사용 / {1}GiB 전체"
 
 #~ msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
 #~ msgstr "<i>권장: {0} GiB 가상 메모리, swappiness {1} ({2})</i>"
@@ -540,20 +744,8 @@ msgstr "Zram 구성이 저장되었습니다. 장치가 곧 생성됩니다."
 #~ msgid "Disk-based swap file — the last line of defense when RAM is full"
 #~ msgstr "디스크 기반 가상 메모리 파일 — RAM이 가득 찼을 때의 최후의 방어선"
 
-#~ msgid "Hello {0}, you have {1} messages"
-#~ msgstr "안녕하세요 {0}님, {1}개의 메시지가 있습니다"
-
 #~ msgid "Hibernation not detected — recommended: {0} GiB"
 #~ msgstr "최면 모드 감지되지 않음 — 권장: {0} GiB"
-
-#~ msgid "Idle ({0} GiB available)"
-#~ msgstr "대기 중 (사용 가능 {0} GiB)"
-
-#~ msgid "{0} · pool {1}%"
-#~ msgstr "{0} · 풀 {1}%"
-
-#~ msgid "{0} · saved {1}%"
-#~ msgstr "{0} · {1}% 저장"
 
 #~ msgid "Active"
 #~ msgstr "활성"
@@ -594,24 +786,3 @@ msgstr "Zram 구성이 저장되었습니다. 장치가 곧 생성됩니다."
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
 #~ msgstr ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
-#~ " {0})"
-#~ msgstr ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
-#~ " {0})"
-
-#~ msgid ""
-#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
-#~ " fast compressed RAM swap — dropping file cache when zram is available "
-#~ "wastes I/O performance."
-#~ msgstr ""
-#~ "Zram이 활성화되어 있지만 swappiness가 {1}이 아닌 {0}(으)로 설정됨. {1}(으)로 설정하여 빠른 압축된 RAM 스왑을"
-#~ " 우선 사용하세요. Zram 사용 가능 시 파일 캐시 버림은 I/O 성능을 낭비합니다."
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
-#~ "fast compressed RAM over disk cache (recommended: {0})"
-#~ msgstr ""
-#~ "커널의 스왑 강도 — Zram 활성화 시 디스크 캐시보다 빠른 압축된 RAM을 우선 사용하도록 {0}(으)로 설정 (권장: {0})"

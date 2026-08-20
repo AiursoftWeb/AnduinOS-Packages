@@ -101,7 +101,7 @@ msgstr "Luo Zram-laitteen"
 msgid "Dashboard"
 msgstr "Työkalupaneeli"
 
-#: src/views/zram_view.rs:562
+#: src/views/zram_view.rs:571
 msgid "Destroy Zram Device"
 msgstr "Tuhoa Zram-laite"
 
@@ -109,7 +109,7 @@ msgstr "Tuhoa Zram-laite"
 msgid "Device Created"
 msgstr "Laite luotu"
 
-#: src/views/dashboard_view.rs:498
+#: src/views/dashboard_view.rs:503
 msgid "Disabled"
 msgstr "Poistettu käytöstä"
 
@@ -125,7 +125,7 @@ msgstr "Vaihtotiedostoa käytöstä poistetaan…"
 msgid "Disk Swap Configuration"
 msgstr "Virtuaali muistin vaihtotiedoston asetus"
 
-#: src/views/dashboard_view.rs:609
+#: src/views/dashboard_view.rs:614
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
@@ -137,7 +137,7 @@ msgstr ""
 msgid "Duration:"
 msgstr "Kesto:"
 
-#: src/views/dashboard_view.rs:604
+#: src/views/dashboard_view.rs:609
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
@@ -176,7 +176,7 @@ msgstr "Talviunta"
 msgid "Hibernation Warning"
 msgstr "Levon varoitus"
 
-#: src/views/dashboard_view.rs:512 src/views/swap_view.rs:810
+#: src/views/dashboard_view.rs:517 src/views/swap_view.rs:810
 msgid "Inactive"
 msgstr "Epäaktiivinen"
 
@@ -204,23 +204,23 @@ msgstr "Zram-laitteet"
 msgid "No device"
 msgstr "Ei laitetta"
 
-#: src/views/dashboard_view.rs:587
+#: src/views/dashboard_view.rs:592
 msgid "No disk swap detected"
 msgstr "Levynväliaistetta ei havaittu"
 
-#: src/views/dashboard_view.rs:603
+#: src/views/dashboard_view.rs:608
 msgid "No memory acceleration enabled"
 msgstr "Muistin kiihdytys ei ole käytössä"
 
-#: src/views/dashboard_view.rs:541
+#: src/views/dashboard_view.rs:546
 msgid "None"
 msgstr "Ei mitään"
 
-#: src/views/dashboard_view.rs:525 src/views/dashboard_view.rs:533
+#: src/views/dashboard_view.rs:530 src/views/dashboard_view.rs:538
 msgid "Off"
 msgstr "Pois"
 
-#: src/views/dashboard_view.rs:532
+#: src/views/dashboard_view.rs:537
 msgid "On"
 msgstr "Päällä"
 
@@ -232,7 +232,7 @@ msgstr ""
 "Tallenna vain sivut, jotka pakautuvat ≤ tämän % alkuperäisestä. Suurempi = "
 "enemmän sivuja välimuistissa. Suositus: 90 %"
 
-#: src/views/dashboard_view.rs:608
+#: src/views/dashboard_view.rs:613
 msgid "Optimal memory configuration"
 msgstr "Optimaalinen muistikonfiguraatio"
 
@@ -248,7 +248,7 @@ msgstr "Ensisijainen"
 msgid "RAM"
 msgstr "RAM"
 
-#: src/views/zram_view.rs:545
+#: src/views/zram_view.rs:554
 msgid "Remove"
 msgstr "Poista"
 
@@ -281,7 +281,7 @@ msgstr "Rasitustesti"
 msgid "Swap"
 msgstr "Swappaus"
 
-#: src/window.rs:59
+#: src/progress_dialog.rs:24 src/window.rs:59
 msgid "Swap Control"
 msgstr "Virtuaali-muistion"
 
@@ -290,10 +290,11 @@ msgid "Swap usage"
 msgstr "Virtuaali muistin käyttö"
 
 #: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
+#: src/views/swap_view.rs:677
 msgid "Swappiness"
 msgstr "Vaihtuvuus"
 
-#: src/views/dashboard_view.rs:598
+#: src/views/dashboard_view.rs:603
 msgid "Swappiness not optimized for Zram"
 msgstr "Suvappisuutta ei ole optimoitu Zramia varten"
 
@@ -317,7 +318,7 @@ msgstr "Tyyppi"
 msgid "Used"
 msgstr "Käytetty"
 
-#: src/views/dashboard_view.rs:588
+#: src/views/dashboard_view.rs:593
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
@@ -334,11 +335,11 @@ msgstr "Zram"
 msgid "Zram Devices"
 msgstr "Zram-laitteet"
 
-#: src/views/dashboard_view.rs:592
+#: src/views/dashboard_view.rs:597
 msgid "Zram and Zswap are both active"
 msgstr "Zram ja Zswap ovat molemmat käytössä"
 
-#: src/views/dashboard_view.rs:593
+#: src/views/dashboard_view.rs:598
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
 "pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
@@ -349,7 +350,7 @@ msgstr ""
 "muistivaihtelua. Poista toinen niistä käytöstä."
 
 #: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
-#: src/views/swap_view.rs:185
+#: src/views/swap_view.rs:185 src/views/swap_view.rs:686
 msgid "Zswap"
 msgstr "Zswap"
 
@@ -383,31 +384,31 @@ msgstr ""
 "kun Zram on aktiivinen — suosikaan nopeaa pakattua RAM-muistia "
 "levyvälimuistin sijaan"
 
-#: src/views/dashboard_view.rs:547
+#: src/views/dashboard_view.rs:552
 msgid "Ready"
 msgstr "Valmis"
 
-#: src/views/dashboard_view.rs:549
+#: src/views/dashboard_view.rs:554
 msgid "Unsupported"
 msgstr "Ei tueta"
 
-#: src/views/dashboard_view.rs:551
+#: src/views/dashboard_view.rs:556
 msgid "Not configured"
 msgstr "Ei määritetty"
 
-#: src/views/dashboard_view.rs:553
+#: src/views/dashboard_view.rs:558
 msgid "Resume target missing"
 msgstr "Herätyskohde puuttuu"
 
-#: src/views/dashboard_view.rs:555
+#: src/views/dashboard_view.rs:560
 msgid "Resume target inactive"
 msgstr "Herätyskohde ei ole aktiivinen"
 
-#: src/views/dashboard_view.rs:557
+#: src/views/dashboard_view.rs:562
 msgid "Swap too small"
 msgstr "Vaihto liian pieni"
 
-#: src/views/dashboard_view.rs:559
+#: src/views/dashboard_view.rs:564
 msgid "Not ready"
 msgstr "Ei valmis"
 
@@ -541,6 +542,228 @@ msgstr ""
 msgid "Zram configuration saved. The device will be created shortly."
 msgstr "Zram-asetukset tallennettu. Laite luodaan hetken kuluttua."
 
+#: src/views/dashboard_view.rs:165 src/views/swap_view.rs:128
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Suositeltu suvappisuus: {0} ({1})</i>"
+
+#: src/views/zram_view.rs:90
+msgid "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
+msgstr "<i>Suositus: {0} MiB, lz4, prioriteetti 100 ({1} GiB RAM)</i>"
+
+#: src/views/swap_view.rs:772
+msgid "Active — {0} GiB used / {1} GiB total"
+msgstr "Aktiivinen — {0} GiB käytetty / {1} GiB yhteensä"
+
+#: src/swap/exec.rs:26 src/swap/exec.rs:68
+msgid "Authentication cancelled"
+msgstr "Todennus peruutettu"
+
+#: src/swap/swapfile.rs:113
+msgid "Cannot inspect the root filesystem"
+msgstr "Ensihaajajärjestelmää ei voi tarkastella"
+
+#: src/swap/swapfile.rs:108
+msgid "Cannot inspect the root filesystem: {0}"
+msgstr "Juuri-tiedostojärjestelmää ei voida tarkastella: {0}"
+
+#: src/swap/sysctl.rs:79
+msgid "Cannot parse MemTotal: {0}"
+msgstr "MemTotal: {0} -muotoa ei voi jäsentää"
+
+#: src/swap/sysctl.rs:43
+msgid "Cannot parse swappiness: {0}"
+msgstr "Suvappisuutta ei voi jäsentää: {0}"
+
+#: src/swap/zswap.rs:59
+msgid "Cannot parse {0} as u8: {1}"
+msgstr "Tulkinta arvoa {0} tyyppiksi u8 epäonnistui: {1}"
+
+#: src/swap/sysctl.rs:70
+msgid "Cannot read /proc/meminfo: {0}"
+msgstr "Tiedostoa /proc/meminfo ei voi lukea: {0}"
+
+#: src/swap/swapfile.rs:39
+msgid "Cannot read /proc/swaps: {0}"
+msgstr "Ei voi lukea tiedostoa /proc/swaps: {0}"
+
+#: src/swap/sysctl.rs:36 src/swap/zswap.rs:47
+msgid "Cannot read {0}: {1}"
+msgstr "Tiedostoa {0} ei voi lukea: {1}"
+
+#: src/swap/exec.rs:18 src/swap/exec.rs:52
+msgid "Failed to execute pkexec: {0}"
+msgstr "pkexec-komennon suoritus epäonnistui: {0}"
+
+#: src/swap/persist.rs:31
+msgid "Failed to remove legacy unit {0}: {1}"
+msgstr "Legacy-yksikön {0} poisto epäonnistui: {1}"
+
+#: src/swap/sysctl.rs:129
+msgid "Failed to set swappiness: {0} / {1}"
+msgstr "Suappauksen asettaminen epäonnistui: {0} / {1}"
+
+#: src/swap/exec.rs:61
+msgid "Failed to wait on pkexec: {0}"
+msgstr "Odottaminen pkexec-prosessin valmiiksi epäonnistui: {0}"
+
+#: src/i18n.rs:24
+msgid "Hello {0}, you have {1} messages"
+msgstr "Moi {0}, sinulla on {1} viestiä"
+
+#: src/views/swap_view.rs:234
+msgid ""
+"How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
+" {0})"
+msgstr ""
+"Kuinka agressiivisesti ydin vaihtaa muistia — pienempi = pidempään RAM-"
+"muistissa (suositus: {0})"
+
+#: src/views/swap_view.rs:231
+msgid ""
+"How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
+"fast compressed RAM over disk cache (recommended: {0})"
+msgstr ""
+"Mitä aggressiivisesti ydin vaihtaa muistia — kun Zram on aktiivinen, aseta "
+"arvoon {0}, jotta nopeaa pakattua RAM-muistia käytetään mieluummin kuin "
+"levyvälimuistia (suositus: {0})"
+
+#: src/views/dashboard_view.rs:483
+msgid "Idle ({0} GiB available)"
+msgstr "Tyhjäkäynti ({0} GiB käytettävissä)"
+
+#: src/views/zram_view.rs:531
+msgid "Idle — {0} MiB available"
+msgstr "Tyhjäkäynti — {0} MiB käytettävissä"
+
+#: src/swap/sysctl.rs:83
+msgid "MemTotal not found"
+msgstr "MemTotalia ei löytynyt"
+
+#: src/views/swap_view.rs:786
+msgid "Present but inactive — activation is disabled on {0}"
+msgstr ""
+"Olemassa, mutta ei aktiivinen — aktivointi on poistettu käytöstä alustalla "
+"{0}"
+
+#: src/views/stress_test_view.rs:676
+msgid ""
+"RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
+"Swap used: {3} GiB"
+msgstr ""
+"RAM: {0} GiB yhteensä · {1} GiB käytössä · {2} GiB käytettävissä\n"
+"Virtuaalimuistia käytetty: {3} GiB"
+
+#: src/views/swap_view.rs:673
+msgid "Resize"
+msgstr "Muuta kokoa"
+
+#: src/views/swap_view.rs:837
+msgid "Swap file resizing is unsupported on {0}"
+msgstr "Vaihtotiedoston kokoonmuutosta ei tueta järjestelmässä {0}"
+
+#: src/progress_dialog.rs:58
+msgid "Task panicked: {0}"
+msgstr "Tehtävä kaatui: {0}"
+
+#: src/swap/persist.rs:74
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zram changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zram from this GUI."
+msgstr ""
+"Pakettia 'anduinos-swap-config' ei ole asennettu.\n"
+"\n"
+"Zram-muutoksia ei voi soveltaa tai tallentaa ilman sitä.\n"
+"Asenna 'anduinos-swap-config' hallitaksesi zramia tässä käyttöliittymässä."
+
+#: src/swap/persist.rs:133
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zswap changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zswap from this GUI."
+msgstr ""
+"Pakettia 'anduinos-swap-config' ei ole asennettu.\n"
+"\n"
+"Zswap-muutoksia ei voi soveltaa tai tallentaa ilman sitä.\n"
+"Asenna 'anduinos-swap-config', hallitaaksesi zswapia tästä GUI:sta."
+
+#: src/views/zram_view.rs:573
+msgid ""
+"This will immediately remove {0} and flush its contents to disk swap. "
+"Continue?"
+msgstr ""
+"Tämä poistaa {0} välittömästi ja tyhjentää sen sisällön levymuistiin. "
+"Jatketaanko?"
+
+#: src/views/swap_view.rs:797
+msgid "Unavailable on {0}; the swap partition remains active"
+msgstr ""
+"Ei saatavilla alustalla {0}; virtuaalimuistin osio on edelleen aktiivinen"
+
+#: src/views/dashboard_view.rs:604
+msgid ""
+"Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
+" fast compressed RAM swap — dropping file cache when zram is available "
+"wastes I/O performance."
+msgstr ""
+"Zram on aktiivinen, mutta suvappisuus on {0} sen sijaan että olisi {1}. "
+"Aseta se arvoon {1}, jotta nopeaa pakattua RAM-virtuaalimuistia käytetään "
+"mieluummin — tiedostovälimuistin hylkääminen zramin ollessa käytettävissä "
+"heikentää I/O-suorituskykyä."
+
+#: src/swap/persist.rs:88
+msgid "Zram persistence disabled"
+msgstr "Zram-pysyvyys poistettu käytöstä"
+
+#: src/swap/persist.rs:90
+msgid "Zram persistence enabled"
+msgstr "Zram-jatkuvuus otettu käyttöön"
+
+#: src/swap/persist.rs:148
+msgid "Zswap persistence disabled"
+msgstr "Zswap-pysyvyys poistettu käytöstä"
+
+#: src/swap/persist.rs:146
+msgid "Zswap persistence enabled"
+msgstr "Zswap-pysyvyys otettu käyttöön"
+
+#: src/views/dashboard_view.rs:159 src/views/swap_view.rs:122
+msgid "for {0} GiB RAM"
+msgstr "{0} GiB RAM"
+
+#: src/swap/sysctl.rs:133
+msgid "swappiness updated"
+msgstr "Suvappisuus päivitetty"
+
+#: src/swap/persist.rs:37
+msgid "systemctl {0} failed: {1}"
+msgstr "systemctl {0} epäonnistui: {1}"
+
+#: src/views/zram_view.rs:525
+msgid "{0} MiB used (stats reset)"
+msgstr "{0} MiB käytössä (tilastot nollattu)"
+
+#: src/views/zram_view.rs:520
+msgid "{0} MiB used · saved {1}%"
+msgstr "{0} MiB käytössä · säästetty {1}%"
+
+#: src/views/dashboard_view.rs:498
+msgid "{0} · pool {1}%"
+msgstr "{0} · pooli {1}%"
+
+#: src/views/dashboard_view.rs:474
+msgid "{0} · saved {1}%"
+msgstr "{0} · säästetty {1}%"
+
+#: src/views/swap_view.rs:754
+msgid ""
+"{0} — installer-managed; size cannot be changed while the system is running"
+msgstr ""
+"{0} — asennusohjelman hallitsema; kokoa ei voi muuttaa, kun järjestelmä on "
+"käynnissä"
+
 #~ msgid "Disabling swap will break hibernation. Continue?"
 #~ msgstr ""
 #~ "Vaihtotiedoston poistaminen käytöstä rikoo lepotilan. Haluatko jatkaa?"
@@ -551,14 +774,8 @@ msgstr "Zram-asetukset tallennettu. Laite luodaan hetken kuluttua."
 #~ msgid "Swap file size"
 #~ msgstr "Virtuaalimuistin koko"
 
-#~ msgid "<i>Recommended swappiness: {0} ({1})</i>"
-#~ msgstr "<i>Suositeltu suvappisuus: {0} ({1})</i>"
-
 #~ msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
 #~ msgstr "<i>Suositus: {0} GiB virtuaalimuistia, suvappisuus {1} ({2})</i>"
-
-#~ msgid "Active — {0} GiB used / {1} GiB total"
-#~ msgstr "Aktiivinen — {0} GiB käytetty / {1} GiB yhteensä"
 
 #~ msgid "Creating Zram device…"
 #~ msgstr "Luodaan Zram-laitetta…"
@@ -571,20 +788,8 @@ msgstr "Zram-asetukset tallennettu. Laite luodaan hetken kuluttua."
 #~ "Levypohjainen virtuaali muistitiedosto — viimeinen turva, kun RAM-muisti on "
 #~ "täynnä"
 
-#~ msgid "Hello {0}, you have {1} messages"
-#~ msgstr "Moi {0}, sinulla on {1} viestiä"
-
 #~ msgid "Hibernation not detected — recommended: {0} GiB"
 #~ msgstr "Lepotila ei havaittu — suositus: {0} GiB"
-
-#~ msgid "Idle ({0} GiB available)"
-#~ msgstr "Tyhjäkäynti ({0} GiB käytettävissä)"
-
-#~ msgid "{0} · pool {1}%"
-#~ msgstr "{0} · pooli {1}%"
-
-#~ msgid "{0} · saved {1}%"
-#~ msgstr "{0} · säästetty {1}%"
 
 #~ msgid "Active"
 #~ msgstr "Aktiivinen"
@@ -629,28 +834,3 @@ msgstr "Zram-asetukset tallennettu. Laite luodaan hetken kuluttua."
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
 #~ msgstr ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
-#~ " {0})"
-#~ msgstr ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
-#~ " {0})"
-
-#~ msgid ""
-#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
-#~ " fast compressed RAM swap — dropping file cache when zram is available "
-#~ "wastes I/O performance."
-#~ msgstr ""
-#~ "Zram on aktiivinen, mutta suvappisuus on {0} sen sijaan että olisi {1}. "
-#~ "Aseta se arvoon {1}, jotta nopeaa pakattua RAM-virtuaalimuistia käytetään "
-#~ "mieluummin — tiedostovälimuistin hylkääminen zramin ollessa käytettävissä "
-#~ "heikentää I/O-suorituskykyä."
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
-#~ "fast compressed RAM over disk cache (recommended: {0})"
-#~ msgstr ""
-#~ "Mitä aggressiivisesti ydin vaihtaa muistia — kun Zram on aktiivinen, aseta "
-#~ "arvoon {0}, jotta nopeaa pakattua RAM-muistia käytetään mieluummin kuin "
-#~ "levyvälimuistia (suositus: {0})"

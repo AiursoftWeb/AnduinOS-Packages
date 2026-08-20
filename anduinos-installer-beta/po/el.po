@@ -17,9 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: src/pages.py:2092
 msgid "Installing an input method requires an Internet connection."
 msgstr "Η εγκατάσταση μιας μεθόδου εισαγωγής απαιτεί σύνδεση στο διαδίκτυο."
 
+#: src/pages.py:2103
 msgid ""
 "No Internet connection. Input methods cannot be installed. You can install "
 "them later when connected."
@@ -27,6 +29,7 @@ msgstr ""
 "Δεν υπάρχει σύνδεση στο διαδίκτυο. Δεν είναι δυνατή η εγκατάσταση μεθόδων "
 "εισαγωγής. Μπορείτε να τις εγκαταστήσετε αργότερα, όταν συνδεθείτε."
 
+#: src/pages.py:4933
 msgid ""
 "\n"
 "\n"
@@ -36,6 +39,7 @@ msgstr ""
 "\n"
 "Μια πραγματική εγκατάσταση θα δημιουργήσει ένα τοπικό στην συσκευή MOK. Μετά την επανεκκίνηση, επιλέξτε Enroll MOK → Continue → Yes στο MOKManager και πληκτρολογήστε τον κωδικό 123456."
 
+#: src/pages.py:4944
 msgid ""
 "\n"
 "On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
@@ -43,17 +47,21 @@ msgstr ""
 "\n"
 "Στην μπλε οθόνη του MOKManager επιλέξτε Enroll MOK → Continue → Yes, κωδικός: 123456"
 
+#: src/pages.py:4275
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr ""
 "Ανταλλαγή δίσκου 4 GiB (προτεραιότητα 10) + zram LZ4 μνήμης RAM 50% "
 "(προτεραιότητα 100)"
 
+#: src/pages.py:4085
 msgid "; sudo does not require a password"
 msgstr "; η εντολή sudo δεν απαιτεί κωδικό πρόσβασης"
 
+#: src/pages.py:4087
 msgid "; sudo requires the account password"
 msgstr "; η εντολή sudo απαιτεί τον κωδικό του λογαριασμού"
 
+#: src/pages.py:129
 msgid ""
 "A partition on this disk is mounted. Unmount it and rescan storage before "
 "continuing."
@@ -61,15 +69,19 @@ msgstr ""
 "Μια διαμέριση σε αυτόν τον δίσκο είναι προσαρτημένη. Αποσυνδέστε την και "
 "ξαναδιαβάστε την αποθηκευτική μονάδα πριν συνεχίσετε."
 
+#: src/pages.py:2899
 msgid "ALL DATA on {disk} will be permanently erased."
 msgstr "Όλα τα ΔΕΔΟΜΕΝΑ στο {disk} θα διαγραφούν οριστικά."
 
+#: src/pages.py:4082
 msgid "Account security"
 msgstr "Ασφάλεια λογαριασμού"
 
+#: src/pages.py:2980
 msgid "Advanced Storage"
 msgstr "Για προχωρημένους χρήστες — Αποθήκευση"
 
+#: src/pages.py:2889
 msgid ""
 "Advanced coexistence can affect EFI firmware state and may trigger BitLocker"
 " recovery. It never shrinks or repairs Windows volumes."
@@ -78,12 +90,15 @@ msgstr ""
 " ενδέχεται να ενεργοποιήσει την ανάκτηση BitLocker. Ποτέ δεν συρρικνώνει ή "
 "επισκευάζει τόμους Windows."
 
+#: src/pages.py:2838
 msgid "Advanced — keep existing systems"
 msgstr "Για προχωρημένους — διατήρηση των υπάρχοντων συστημάτων"
 
+#: src/pages.py:2985
 msgid "Advanced: Install Alongside"
 msgstr "Για προχωρημένους: Εγκατάσταση δίπλα σε άλλο σύστημα"
 
+#: src/pages.py:164
 msgid ""
 "After changing partitions or unmounting a volume, rescan storage and select "
 "the target again."
@@ -91,6 +106,7 @@ msgstr ""
 "Μετά την αλλαγή των διαμερίσεων ή την αποσύνδεση ενός τόμου, ξαναδιαβάστε "
 "την αποθηκευτική μονάδα και επιλέξτε ξανά τον προορισμό."
 
+#: src/pages.py:4801
 msgid ""
 "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
 "then enter password 123456."
@@ -98,6 +114,7 @@ msgstr ""
 "Μετά την επανεκκίνηση, θα ανοίξει το MOKManager. Επιλέξτε Enroll MOK → "
 "Continue → Yes και στη συνέχεια πληκτρολογήστε τον κωδικό 123456."
 
+#: src/pages.py:4432
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -105,6 +122,7 @@ msgstr ""
 "Όλα τα διαμερίσματα και τα δεδομένα στον {disk} θα καταστραφούν.\n"
 "\n"
 
+#: src/pages.py:155
 msgid ""
 "Alternatively, you may explicitly select one entire partition to erase. "
 "Everything in that selected partition will be destroyed; it is never "
@@ -114,44 +132,57 @@ msgstr ""
 " Όλα τα δεδομένα στην επιλεγμένη διαμέριση θα καταστραφούν· ποτέ δεν "
 "επιλέγεται αυτόματα."
 
+#: src/pages.py:924 src/pages.py:986
 msgid "Battery power is too low for a safe installation."
 msgstr "Η στάθμη της μπαταρίας είναι πολύ χαμηλή για ασφαλή εγκατάσταση."
 
+#: src/pages.py:895
 msgid "Charge to at least 80% before starting the installation."
 msgstr ""
 "Φορτίστε τη μπαταρία τουλάχιστον στο 80% πριν ξεκινήσετε την εγκατάσταση."
 
+#: src/pages.py:1041 src/pages.py:1016
 msgid "Continue Anyway"
 msgstr "Συνέχεια ούτως ή άλλως"
 
+#: src/pages.py:1000
 msgid "Current battery level: {percent}%"
 msgstr "Τρέχουσα στάθμη μπαταρίας: {percent}%"
 
+#: src/pages.py:1006
 msgid "External power is connected."
 msgstr "Η εξωτερική τροφοδοσία είναι συνδεδεμένη."
 
+#: src/pages.py:1008
 msgid "External power is not connected."
 msgstr "Η εξωτερική τροφοδοσία δεν είναι συνδεδεμένη."
 
+#: src/pages.py:954
 msgid "I understand the risks and insist on installing with low battery."
 msgstr ""
 "Κατανοώ τους κινδύνους και επιμένω να γίνει εγκατάσταση με χαμηλή μπαταρία."
 
+#: src/pages.py:894 src/pages.py:889 src/pages.py:967 src/pages.py:969
 msgid "Low battery"
 msgstr "Χαμηλή μπαταρία"
 
+#: src/pages.py:948
 msgid "Recheck"
 msgstr "Επανέλεγχος"
 
+#: src/pages.py:731 src/pages.py:815
 msgid "AnduinOS Installer"
 msgstr "Εγκαταστάτης AnduinOS"
 
+#: src/main.py:110
 msgid "AnduinOS Installer (Beta)"
 msgstr "Εγκαταστάτης AnduinOS (Beta)"
 
+#: src/main.py:108
 msgid "AnduinOS Installer (Development)"
 msgstr "Εγκαταστάτης AnduinOS (Ανάπτυξη)"
 
+#: src/pages.py:4425
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
@@ -159,6 +190,7 @@ msgstr ""
 "Το AnduinOS θα χρησιμοποιήσει μόνο τον επιλεγμένο μη κατανεμημένο χώρο στον {disk}. Οι υπάρχουσες διαμερίσεις θα διατηρηθούν.\n"
 "\n"
 
+#: src/pages.py:133
 msgid ""
 "AnduinOS will use only the selected unallocated space. The installer will "
 "not shrink or move an existing filesystem."
@@ -166,12 +198,15 @@ msgstr ""
 "Το AnduinOS θα χρησιμοποιήσει μόνο τον επιλεγμένο μη κατανεμημένο χώρο. Ο "
 "εγκαταστάτης δεν θα συρρικνώσει ή μετακινήσει ένα υπάρχον σύστημα αρχείων."
 
+#: data/languages.json:keyboard_layouts
 msgid "Arabic"
 msgstr "Αραβικά"
 
+#: src/pages.py:268 src/pages.py:4461 src/pages.py:817
 msgid "Back"
 msgstr "Πίσω"
 
+#: src/pages.py:3014
 msgid ""
 "Before continuing: finish Windows updates, disable Fast Startup and "
 "hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
@@ -183,9 +218,11 @@ msgstr ""
 "ρυθμίσεις EFI, Secure Boot, οι μετρήσεις TPM και η σειρά εκκίνησης ενδέχεται"
 " να αλλάξουν."
 
+#: src/pages.py:2470
 msgid "BitLocker detected"
 msgstr "Ανιχνεύθηκε BitLocker"
 
+#: src/pages.py:146
 msgid ""
 "BitLocker storage will be preserved. The installer will not unlock, resize, "
 "repair or otherwise modify it."
@@ -194,67 +231,89 @@ msgstr ""
 "αλλάξει το μέγεθος, επισκευάσει ή τροποποιήσει με οποιοδήποτε άλλο τρόπο "
 "αυτή."
 
+#: src/pages.py:4186
 msgid "Boot policy"
 msgstr "Πολιτική εκκίνησης"
 
+#: src/pages.py:3055
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (προτεινόμενο)"
 
+#: src/pages.py:2817
 msgid "Btrfs — recommended"
 msgstr "Btrfs — συνιστάται"
 
+#: src/pages.py:4361
 msgid "Cannot create installation plan"
 msgstr "Δεν είναι δυνατή η δημιουργία πλάνου εγκατάστασης"
 
+#: src/pages.py:2727
 msgid "Choose Installation Method"
 msgstr "Επιλογή μεθόδου εγκατάστασης"
 
+#: src/pages.py:2498
 msgid "Choose one target disk. Storage settings come next."
 msgstr "Επιλέξτε έναν δίσκο προορισμού. Ακολουθούν οι ρυθμίσεις αποθήκευσης."
 
+#: src/pages.py:2199
 msgid "Choose optional software to install"
 msgstr "Επιλέξτε προαιρετικό λογισμικό για εγκατάσταση"
 
+#: src/pages.py:813
 msgid "Choose your language to begin installation"
 msgstr "Επιλέξτε τη γλώσσα σας για να ξεκινήσει η εγκατάσταση"
 
+#: src/pages.py:3819
 msgid "Choose your location to set the system clock"
 msgstr "Επιλέξτε την τοποθεσία σας για να ορίσετε το ρολόι του συστήματος"
 
+#: src/pages.py:4838
 msgid "Complete"
 msgstr "Ολοκληρώθηκε"
 
+#: src/pages.py:3506 src/pages.py:3513 src/pages.py:4101 src/pages.py:3601
+#: src/pages.py:4440
 msgid "Computer Name"
 msgstr "Όνομα Υπολογιστή"
 
+#: src/pages.py:3594
 msgid "Computer name contains invalid characters."
 msgstr "Το όνομα του υπολογιστή περιέχει μη έγκυρους χαρακτήρες."
 
+#: src/pages.py:4589
 msgid "Configure account, region, timezone, and machine identity"
 msgstr ""
 "Διαμόρφωση λογαριασμού, περιοχής, ζώνης ώρας και ταυτότητας υπολογιστή"
 
+#: src/pages.py:4578
 msgid "Configure storage and swap"
 msgstr "Διαμόρφωση αποθήκευσης και ανταλλαγής"
 
+#: src/pages.py:3480 src/pages.py:3488
 msgid "Confirm Password"
 msgstr "Επιβεβαίωση Κωδικού"
 
+#: src/pages.py:1939
 msgid "Confirm your keyboard layout"
 msgstr "Επιβεβαιώστε τη διάταξη του πληκτρολογίου σας"
 
+#: src/main.py:153 src/pages.py:1911
 msgid "Continue Installation"
 msgstr "Συνέχεια Εγκατάστασης"
 
+#: src/pages.py:4574
 msgid "Copy AnduinOS system"
 msgstr "Αντιγραφή συστήματος AnduinOS"
 
+#: src/pages.py:4675
 msgid "Copy Log"
 msgstr "Αντιγραφή Καταγραφής"
 
+#: src/pages.py:3146
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
 msgstr "Δημιουργία νέου τμήματος EFI συστήματος AnduinOS 1 GiB"
 
+#: src/pages.py:4163
 msgid ""
 "Create and format a dedicated AnduinOS EFI System Partition inside the "
 "selected space."
@@ -262,12 +321,15 @@ msgstr ""
 "Δημιουργία και μορφοποίηση ενός αφιερωμένου τμήματος EFI συστήματος AnduinOS"
 " μέσα στον επιλεγμένο χώρο."
 
+#: src/pages.py:3447
 msgid "Create your user account"
 msgstr "Δημιουργία του λογαριασμού χρήστη σας"
 
+#: src/pages.py:2412
 msgid "Current disk layout"
 msgstr "Τρέχουσα διάταξη δίσκου"
 
+#: src/pages.py:3979
 msgid ""
 "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
 "executor or disk command can run."
@@ -275,15 +337,19 @@ msgstr ""
 "ΛΕΙΤΟΥΡΓΙΑ ΑΝΑΠΤΥΞΗΣ — το πλάνο θα επικυρωθεί και θα προσομοιωθεί. Κανένας "
 "εκτελεστής με δικαιώματα ή εντολή δίσκου δεν μπορεί να εκτελεστεί."
 
+#: data/languages.json:keyboard_layouts
 msgid "Danish"
 msgstr "Δανικά"
 
+#: src/pages.py:4569
 msgid "Detect Internet connectivity"
 msgstr "Ανίχνευση σύνδεσης στο Διαδίκτυο"
 
+#: src/pages.py:4566
 msgid "Detect firmware and Secure Boot"
 msgstr "Ανίχνευση firmware και Secure Boot"
 
+#: src/pages.py:4419
 msgid ""
 "Development mode will simulate installation to {disk}. No disk data will be changed.\n"
 "\n"
@@ -291,51 +357,66 @@ msgstr ""
 "Η λειτουργία ανάπτυξης θα προσομοιώσει την εγκατάσταση στον {disk}. Τα δεδομένα του δίσκου δεν θα αλλάξουν.\n"
 "\n"
 
+#: src/pages.py:4923
 msgid "Development simulation completed"
 msgstr "Ολοκληρώθηκε η προσομοίωση ανάπτυξης"
 
+#: src/pages.py:4832
 msgid "Discover AnduinOS"
 msgstr "Ανακαλύψτε το AnduinOS"
 
+#: src/pages.py:1216 src/pages.py:2218
 msgid "Download and install system updates during installation"
 msgstr "Λήψη και εγκατάσταση ενημερώσεων συστήματος κατά την εγκατάσταση"
 
+#: data/languages.json:keyboard_layouts
 msgid "Dutch"
 msgstr "Ολλανδικά"
 
+#: src/pages.py:3073
 msgid "EFI System Partition"
 msgstr "Τομέας Συστήματος EFI"
 
+#: src/pages.py:4184
 msgid "EFI policy"
 msgstr "Πολιτική EFI"
 
+#: src/pages.py:2455
 msgid "Empty disk — no partitions"
 msgstr "Κενός δίσκος — χωρίς διαμερίσματα"
 
+#: src/pages.py:2821
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
 msgstr ""
 "Ενεργοποιεί υποτόμους κοινόχρηστου χώρου, στιγμιότυπα και το Disk Snapshots "
 "Manager."
 
+#: data/languages.json:keyboard_layouts
 msgid "English (UK)"
 msgstr "Αγγλικά (Ηνωμένο Βασίλειο)"
 
+#: data/languages.json:keyboard_layouts
 msgid "English (US)"
 msgstr "Αγγλικά (ΗΠΑ)"
 
+#: src/pages.py:4601
 msgid "Ensure Disk Snapshots Manager is available"
 msgstr "Βεβαιωθείτε ότι το Disk Snapshots Manager είναι διαθέσιμο"
 
+#: src/pages.py:4412
 msgid "Erase Disk and Install"
 msgstr "Διαγραφή Δίσκου και Εγκατάσταση"
 
+#: src/pages.py:2813 src/pages.py:4226
 msgid "Erase every partition and all data on the selected disk."
 msgstr ""
 "Διαγραφή όλων των τομέων και όλων των δεδομένων στον επιλεγμένο δίσκο."
 
+#: src/pages.py:4411
 msgid "Erase the entire selected disk?"
 msgstr "Διαγραφή ολόκληρου του επιλεγμένου δίσκου;"
 
+#: src/pages.py:137
 msgid ""
 "Existing Windows, recovery and data partitions remain outside the write set "
 "and will be preserved."
@@ -343,6 +424,7 @@ msgstr ""
 "Οι υπάρχοντες τομείς του Windows, ανάκτησης και δεδομένων παραμένουν εκτός "
 "του συνόλου εγγραφής και θα διατηρηθούν."
 
+#: src/pages.py:2945
 msgid ""
 "Existing partitions were detected. The first two choices delete them; "
 "Advanced is the preservation path."
@@ -350,6 +432,7 @@ msgstr ""
 "Ανιχνεύτηκαν υπάρχοντες τομείς. Οι δύο πρώτες επιλογές τους διαγράφουν· η "
 "Προχωρημένη είναι η διαδρομή διατήρησης."
 
+#: src/pages.py:4446
 msgid ""
 "Existing partitions will be preserved. New AnduinOS partitions will be "
 "created only in the selected unallocated extent; EFI vendor files and the "
@@ -359,30 +442,39 @@ msgstr ""
 "μόνο στην επιλεγμένη μη δεσμευμένη έκταση· τα αρχεία προμηθευτή EFI και η "
 "καταχώρηση εκκίνησης firmware του AnduinOS ενδέχεται να ενημερωθούν."
 
+#: src/pages.py:3052 src/pages.py:4049
 msgid "Filesystem"
 msgstr "Σύστημα αρχείων"
 
+#: src/pages.py:4613
 msgid "Finalize target environment"
 msgstr "Τελικοποίηση περιβάλλοντος προορισμού"
 
+#: data/languages.json:keyboard_layouts
 msgid "Finnish"
 msgstr "Φινλανδικά"
 
+#: src/pages.py:4182
 msgid "Formats"
 msgstr "Μορφοποιήσεις"
 
+#: data/languages.json:keyboard_layouts
 msgid "French"
 msgstr "Γαλλικά"
 
+#: src/pages.py:3462 src/pages.py:3464
 msgid "Full Name"
 msgstr "Πλήρες Όνομα"
 
+#: data/languages.json:keyboard_layouts
 msgid "German"
 msgstr "Γερμανικά"
 
+#: data/languages.json:keyboard_layouts
 msgid "Greek"
 msgstr "Ελληνικά"
 
+#: src/pages.py:111
 msgid ""
 "Guided coexistence requires a system booted in UEFI mode and a GPT target "
 "disk. This disk cannot continue in guided mode."
@@ -391,66 +483,86 @@ msgstr ""
 " και έναν δίσκο στόχο GPT. Αυτός ο δίσκος δεν μπορεί να συνεχίσει σε "
 "καθοδηγούμενη λειτουργία."
 
+#: src/pages.py:4131
 msgid ""
 "Guided storage selection is missing. Rescan and select the target again."
 msgstr ""
 "Λείπει η καθοδηγούμενη επιλογή αποθήκευσης. Κάντε ξανασάρωση και επιλέξτε "
 "τον στόχο ξανά."
 
+#: data/languages.json:keyboard_layouts
 msgid "Hindi (India)"
 msgstr "Χίντι (Ινδία)"
 
+#: src/pages.py:2741
 msgid "How should AnduinOS use this disk?"
 msgstr "Πώς θα χρησιμοποιήσει ο AnduinOS αυτόν τον δίσκο;"
 
+#: data/languages.json:keyboard_layouts
 msgid "Indonesian"
 msgstr "Ινδονησιακά"
 
+#: src/pages.py:4498
 msgid "Install"
 msgstr "Εγκατάσταση"
 
+#: src/pages.py:4559 src/pages.py:1221 src/pages.py:4125
 msgid "Install input method"
 msgstr "Εγκατάσταση μεθόδου εισαγωγής"
 
+#: src/pages.py:625
 msgid "Install {language} input method: {name}"
 msgstr "Εγκατάσταση μεθόδου εισαγωγής {language}: {name}"
 
+#: src/pages.py:4409 src/pages.py:4496
 msgid "Install Alongside"
 msgstr "Εγκατάσταση Παράλληλα"
 
+#: src/pages.py:4169
 msgid "Install alongside"
 msgstr "Εγκατάσταση παράλληλα"
 
+#: src/pages.py:4608
 msgid "Install bootloader"
 msgstr "Εγκατάσταση bootloader"
 
+#: src/pages.py:4611
 msgid "Check systems on other disks"
 msgstr "Έλεγχος συστημάτων σε άλλους δίσκους"
 
+#: src/pages.py:1217 src/pages.py:4603
 msgid "Install hardware drivers"
 msgstr "Εγκατάσταση οδηγών υλικού"
 
+#: src/pages.py:4408
 msgid "Install in the selected free space?"
 msgstr "Εγκατάσταση στην επιλεγμένη ελεύθερη θέση;"
 
+#: src/pages.py:4596
 msgid "Ensure required language packs are installed"
 msgstr "Διασφάλιση εγκατάστασης των απαιτούμενων πακέτων γλώσσας"
 
+#: src/pages.py:4599
 msgid "Install system updates"
 msgstr "Εγκατάσταση ενημερώσεων συστήματος"
 
+#: src/pages.py:2229
 msgid "Install third-party drivers for this device"
 msgstr "Εγκατάσταση οδηγών τρίτων για αυτή τη συσκευή"
 
+#: src/pages.py:5093 src/pages.py:5095 src/pages.py:4940 src/pages.py:4950
 msgid "Installation Complete"
 msgstr "Η Εγκατάσταση Ολοκληρώθηκε"
 
+#: src/pages.py:4970
 msgid "Installation Failed"
 msgstr "Αποτυχία Εγκατάστασης"
 
+#: src/pages.py:4639
 msgid "Installation Steps"
 msgstr "Βήματα Εγκατάστασης"
 
+#: src/pages.py:160
 msgid ""
 "Installation cannot continue with this selection. There is no force-continue"
 " option around storage safety checks."
@@ -458,63 +570,83 @@ msgstr ""
 "Η εγκατάσταση δεν μπορεί να συνεχιστεί με αυτήν την επιλογή. Δεν υπάρχει "
 "επιλογή αναγκαστικής συνέχισης γύρω από τους ελέγχους ασφαλείας αποθήκευσης."
 
+#: src/pages.py:4919 src/pages.py:4985
 msgid "Installation complete"
 msgstr "Η εγκατάσταση ολοκληρώθηκε"
 
+#: src/pages.py:4968
 msgid "Installation failed"
 msgstr "Η εγκατάσταση απέτυχε"
 
+#: src/main.py:145
 msgid "Installation in progress"
 msgstr "Η εγκατάσταση βρίσκεται σε εξέλιξη"
 
+#: src/pages.py:4547 src/pages.py:4541
 msgid "Installing AnduinOS"
 msgstr "Εγκατάσταση AnduinOS"
 
+#: data/languages.json:keyboard_layouts
 msgid "Italian"
 msgstr "Ιταλικά"
 
+#: data/languages.json:keyboard_layouts
 msgid "Japanese (JIS keyboard)"
 msgstr "Ιαπωνικά (πληκτρολόγιο JIS)"
 
+#: src/pages.py:4040
 msgid "Keyboard"
 msgstr "Πληκτρολόγιο"
 
+#: src/pages.py:1938 src/pages.py:1932 src/pages.py:2075
 msgid "Keyboard Layout"
 msgstr "Διάταξη Πληκτρολογίου"
 
+#: src/pages.py:4582
 msgid "Configure physical keyboard layout"
 msgstr "Διαμόρφωση διάταξης φυσικού πληκτρολογίου"
 
+#: data/languages.json:keyboard_layouts
 msgid "Korean"
 msgstr "Κορεατικά"
 
+#: src/pages.py:4039
 msgid "Language"
 msgstr "Γλώσσα"
 
+#: src/pages.py:2472
 msgid "Live USB — excluded"
 msgstr "Ζωντανός USB — αποκλείεται"
 
+#: src/pages.py:4573
 msgid "Mount target filesystems"
 msgstr "Συναρμολόγηση συστημάτων αρχείων προορισμού"
 
+#: src/pages.py:851
 msgid "Navigation error"
 msgstr "Σφάλμα πλοήγησης"
 
+#: src/pages.py:4180 src/pages.py:4229
 msgid "New partitions"
 msgstr "Νέες διαμοιρασμοί"
 
+#: src/pages.py:261 src/pages.py:818 src/pages.py:1016
 msgid "Next"
 msgstr "Επόμενο"
 
+#: src/pages.py:4756
 msgid "Next slide"
 msgstr "Επόμενη διαφάνεια"
 
+#: src/pages.py:2389
 msgid "No partition table"
 msgstr "Δεν υπάρχει πίνακας διαμερισμάτων"
 
+#: src/pages.py:2631
 msgid "No suitable disks found."
 msgstr "Δεν βρέθηκαν κατάλληλοι δίσκοι."
 
+#: src/pages.py:170
 msgid ""
 "No suitable unallocated space was found. To protect your data, create "
 "unallocated space with Windows Disk Management, then boot the installer "
@@ -525,6 +657,7 @@ msgstr ""
 "Windows, στη συνέχεια εκκινήστε ξανά τον εγκαταστάτη και σκανάρετε ξανά το "
 "δίσκο."
 
+#: src/pages.py:175
 msgid ""
 "No suitable unallocated space was found. To protect your data, create "
 "unallocated space with a partitioning tool, then boot the installer again "
@@ -534,81 +667,108 @@ msgstr ""
 "δεδομένα σας, δημιουργήστε μη κατειλημμένο χώρο με ένα εργαλείο διαμόρφωσης,"
 " στη συνέχεια εκκινήστε ξανά τον εγκαταστάτη και σκανάρετε ξανά το δίσκο."
 
+#: data/languages.json:keyboard_layouts
 msgid "Norwegian"
 msgstr "Νορβηγικά"
 
+#: src/pages.py:1124 src/pages.py:1375 src/pages.py:4370 src/pages.py:854
 msgid "OK"
 msgstr "Εντάξει"
 
+#: src/pages.py:4835
 msgid "Output"
 msgstr "Έξοδος"
 
+#: src/pages.py:4973 src/pages.py:5028
 msgid "Output • Error"
 msgstr "Έξοδος • Σφάλμα"
 
+#: src/pages.py:5023
 msgid "Output • {count} warning(s)"
 msgstr "Έξοδος • {count} προειδοποίηση(ες)"
 
+#: src/pages.py:2453
 msgid "Partition details unavailable"
 msgstr "Μη διαθέσιμες λεπτομέρειες διαμερίσματος"
 
+#: src/pages.py:3476 src/pages.py:3487 src/pages.py:1466 src/pages.py:1525
 msgid "Password"
 msgstr "Κωδικός"
 
+#: src/pages.py:3584
 msgid "Password must be at least 6 characters."
 msgstr "Ο κωδικός πρέπει να αποτελείται από τουλάχιστον 6 χαρακτήρες."
 
+#: src/pages.py:4048
 msgid "Platform"
 msgstr "Πλατφόρμα"
 
+#: src/pages.py:4548
 msgid "Please do not turn off your computer"
 msgstr "Παρακαλώ μην απενεργοποιήσετε τον υπολογιστή σας"
 
+#: src/pages.py:3965
 msgid "Please review your choices before proceeding"
 msgstr "Παρακαλώ ελέγξτε τις επιλογές σας πριν προχωρήσετε"
 
+#: data/languages.json:keyboard_layouts
 msgid "Polish"
 msgstr "Πολωνικά"
 
+#: data/languages.json:keyboard_layouts
 msgid "Portuguese"
 msgstr "Πορτογαλικά"
 
+#: data/languages.json:keyboard_layouts
 msgid "Portuguese (Brazil)"
 msgstr "Πορτογαλικά (Βραζιλία)"
 
+#: src/pages.py:4594
 msgid "Prepare Secure Boot"
 msgstr "Προετοιμασία Secure Boot"
 
+#: src/pages.py:4572
 msgid "Prepare installation disk"
 msgstr "Προετοιμασία δίσκου εγκατάστασης"
 
+#: src/pages.py:4579
 msgid "Prepare target environment"
 msgstr "Προετοιμασία περιβάλλοντος προορισμού"
 
+#: src/pages.py:4871
 msgid "Preparing installation…"
 msgstr "Προετοιμασία εγκατάστασης…"
 
+#: src/pages.py:4175
 msgid "Preserved partitions"
 msgstr "Διατηρηθέντες διαμοιρασμοί"
 
+#: src/pages.py:4750
 msgid "Previous slide"
 msgstr "Προηγούμενη διαφάνεια"
 
+#: src/pages.py:3964 src/pages.py:3958
 msgid "Ready to Install"
 msgstr "Έτοιμο για Εγκατάσταση"
 
+#: src/pages.py:4811
 msgid "Reboot Now"
 msgstr "Επανεκκίνηση Τώρα"
 
+#: src/pages.py:4598
 msgid "Refresh package indexes"
 msgstr "Ανανέωση δεικτών πακέτων"
 
+#: src/pages.py:4580
 msgid "Remove live-session components"
 msgstr "Αφαίρεση συνιστωσών ζωντανής συνεδρίας"
 
+#: src/pages.py:4951 src/pages.py:4942
 msgid "Remove the installation media and restart your computer"
 msgstr "Αφαιρέστε τα μέσα εγκατάστασης και επανεκκινήστε τον υπολογιστή σας"
 
+#: src/pages.py:1177 src/pages.py:1205 src/pages.py:2220 src/pages.py:675
+#: src/pages.py:1362 src/pages.py:2233
 msgid ""
 "Requires an Internet connection. The base installation remains available "
 "when offline."
@@ -616,22 +776,28 @@ msgstr ""
 "Απαιτείται σύνδεση στο Διαδίκτυο. Η βασική εγκατάσταση παραμένει διαθέσιμη "
 "χωρίς σύνδεση."
 
+#: src/pages.py:2550
 msgid "Rescan Storage"
 msgstr "Επανασάρωση Αποθήκευσης"
 
+#: src/pages.py:3101
 msgid "Rescan and Reselect Disk"
 msgstr "Επανασάρωση και επαναεπιλογή δίσκου"
 
+#: src/pages.py:4809
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "Επανεκκίνηση και Εγγραφή Κλειδιού Secure Boot"
 
+#: src/pages.py:4960
 msgid "Restart is disabled in development protection mode"
 msgstr ""
 "Η επανεκκίνηση είναι απενεργοποιημένη στη λειτουργία προστασίας ανάπτυξης"
 
+#: src/pages.py:3150
 msgid "Reuse {path} ({size})"
 msgstr "Επαναχρήση {path} ({size})"
 
+#: src/pages.py:4155
 msgid ""
 "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
 "before writing."
@@ -639,48 +805,63 @@ msgstr ""
 "Επαναχρήση {path}; ποτέ μην τον μορφοποιήσετε· ελέγξτε την υγεία του FAT, "
 "την ταυτότητα και 64 MiB ελεύθερου χώρου πριν τη γραφή."
 
+#: data/languages.json:keyboard_layouts
 msgid "Romanian"
 msgstr "Ρουμανικά"
 
+#: data/languages.json:keyboard_layouts
 msgid "Russian"
 msgstr "Ρωσικά"
 
+#: src/pages.py:4679
 msgid "Save Log"
 msgstr "Αποθήκευση Καταγραφής"
 
+#: src/pages.py:4609
 msgid "Schedule MOK enrollment"
 msgstr "Προγραμματισμός εγγραφής MOK"
 
+#: src/pages.py:3831
 msgid "Search timezones…"
 msgstr "\\"
 
+#: src/pages.py:4069
 msgid "Secure Boot enrollment"
 msgstr "Εγγραφή ασφαλούς εκκίνησης"
 
+#: src/pages.py:2497 src/pages.py:2491
 msgid "Select Installation Disk"
 msgstr "Επιλέξτε δίσκο εγκατάστασης"
 
+#: src/pages.py:3818 src/pages.py:3812
 msgid "Select Timezone"
 msgstr "Επιλογή ζώνης ώρας"
 
+#: src/pages.py:4592
 msgid "Select fastest package mirror"
 msgstr "Επιλογή ταχύτερου καθρέφτη πακέτου"
 
+#: src/pages.py:3884
 msgid "Selected timezone"
 msgstr "Επιλεγμένη ζώνη ώρας"
 
+#: src/pages.py:4170
 msgid "Selected unallocated space"
 msgstr "Επιλεγμένος μη δεσμευμένος χώρος"
 
+#: src/pages.py:2239
 msgid "Some drivers are proprietary or otherwise non-free software."
 msgstr "Ορισμένοι οδηγοί είναι ιδιόκτητο ή αλλιώς μη ελεύθερο λογισμικό."
 
+#: data/languages.json:keyboard_layouts
 msgid "Spanish"
 msgstr "Ισπανικά"
 
+#: src/pages.py:4046
 msgid "Stable disk identity"
 msgstr "Σταθερή ταυτότητα δίσκου"
 
+#: src/pages.py:4437
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -688,36 +869,47 @@ msgstr ""
 "Σταθερό αναγνωριστικό: {stable_id}\n"
 "\n"
 
+#: src/pages.py:2380
 msgid "Storage Device"
 msgstr "Συσκευή αποθήκευσης"
 
+#: src/pages.py:4168 src/pages.py:4224
 msgid "Storage mode"
 msgstr "Λειτουργία αποθήκευσης"
 
+#: src/pages.py:4050
 msgid "Subvolumes"
 msgstr "Υποόγκοι"
 
+#: src/pages.py:4268
 msgid "Swap"
 msgstr "Εναλλαγή"
 
+#: data/languages.json:keyboard_layouts
 msgid "Swedish"
 msgstr "Σουηδικά"
 
+#: src/pages.py:4051
 msgid "System updates"
 msgstr "Ενημερώσεις συστήματος"
 
+#: src/pages.py:4042
 msgid "Target Disk"
 msgstr "Δίσκος Στόχος"
 
+#: src/pages.py:2993 src/pages.py:3260
 msgid "Target: {disk} ({size} — {model})"
 msgstr "Στόχος: {disk} ({size} — {model})"
 
+#: src/pages.py:1964 src/pages.py:2076
 msgid "Test your keyboard here…"
 msgstr "Δοκιμάστε το πληκτρολόγιό σας εδώ…"
 
+#: data/languages.json:keyboard_layouts
 msgid "Thai"
 msgstr "Ταϊλανδικά"
 
+#: src/pages.py:120
 msgid ""
 "The GPT disk or one of its partitions has no unique stable identifier. "
 "Guided coexistence cannot safely authorize preservation or writes on this "
@@ -727,6 +919,7 @@ msgstr ""
 "αναγνωριστικό. Η καθοδηγούμενη συνύπαρξη δεν μπορεί να εξουσιοδοτήσει με "
 "ασφάλεια τη διατήρηση ή εγγραφές σε αυτόν τον δίσκο."
 
+#: src/pages.py:115
 msgid ""
 "The complete partition map and free-space geometry could not be read "
 "consistently. No space on this disk is authorized for installation."
@@ -735,6 +928,7 @@ msgstr ""
 " ελεύθερου χώρου με συνεπή τρόπο. Κανένας χώρος σε αυτόν τον δίσκο δεν είναι"
 " εξουσιοδοτημένος για εγκατάσταση."
 
+#: src/pages.py:141
 msgid ""
 "The existing EFI System Partition is only a candidate. Health and free-space"
 " checks must pass before it can be reused, and it will never be formatted."
@@ -743,6 +937,7 @@ msgstr ""
 "ελεύθερου χώρου πρέπει να περάσουν πριν μπορέσει να επαναχρησιμοποιηθεί, και"
 " ποτέ δεν θα μορφοποιηθεί."
 
+#: src/pages.py:4926
 msgid ""
 "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
 " state, or installed system was changed."
@@ -751,10 +946,12 @@ msgstr ""
 "αρχείων, προγραμματιστής εκκίνησης, κατάσταση Secure Boot ή εγκατεστημένο "
 "σύστημα."
 
+#: src/main.py:147
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr ""
 "Ο εγκαταστάτης δεν μπορεί να κλείσει ενώ τροποποιεί τον δίσκο προορισμού."
 
+#: src/pages.py:150
 msgid ""
 "The installer will not mount, repair or infer the safety of Windows volumes "
 "from hibernation or Fast Startup state. Any required Windows maintenance "
@@ -765,9 +962,11 @@ msgstr ""
 " Οποιαδήποτε απαιτούμενη συντήρηση Windows πρέπει να ολοκληρωθεί στο "
 "Windows."
 
+#: src/pages.py:4443
 msgid "The privileged executor is disabled."
 msgstr "Ο προνομιούχος εκτελεστής είναι απενεργοποιημένος."
 
+#: src/pages.py:3228
 msgid ""
 "The selected disk changed or disappeared. Return to the disk page and select"
 " it again. {error}"
@@ -775,10 +974,12 @@ msgstr ""
 "Ο επιλεγμένος δίσκος άλλαξε ή εξαφανίστηκε. Επιστρέψτε στη σελίδα του δίσκου"
 " και επιλέξτε τον ξανά. {error}"
 
+#: src/pages.py:3241
 msgid "The selected disk size changed. Return and select it again."
 msgstr ""
 "Το μέγεθος του επιλεγμένου δίσκου άλλαξε. Επιστρέψτε και επιλέξτε τον ξανά."
 
+#: src/pages.py:3251
 msgid ""
 "The selected disk topology changed. Review the disk and installation method "
 "again."
@@ -786,12 +987,15 @@ msgstr ""
 "Η τοπολογία του επιλεγμένου δίσκου άλλαξε. Εξετάστε ξανά τον δίσκο και τη "
 "μέθοδο εγκατάστασης."
 
+#: src/pages.py:3580
 msgid "The two passwords do not match."
 msgstr "Τα δύο κωδικά πρόσβασης δεν ταιριάζουν."
 
+#: src/pages.py:4057
 msgid "Third-party drivers"
 msgstr "Οδηγοί τρίτων"
 
+#: src/pages.py:3021
 msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
@@ -800,6 +1004,7 @@ msgstr ""
 "πίνακα παρτίτων του επιλεγμένου δίσκου και την κατάσταση εκκίνησης EFI της "
 "μηχανής."
 
+#: src/pages.py:125
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
 "topology that guided coexistence does not support."
@@ -807,6 +1012,7 @@ msgstr ""
 "Αυτός ο δίσκος περιέχει έναν ενεργό mapper, array ή άλλη ενσωματωμένη "
 "τοπολογία συσκευών blokk που η καθοδηγούμενη συνύπαρξη δεν υποστηρίζει."
 
+#: src/pages.py:2935
 msgid ""
 "This disk is too small for whole-disk installation. Advanced may continue "
 "only if suitable unallocated space exists."
@@ -815,40 +1021,52 @@ msgstr ""
 "προηγμένη μπορεί να συνεχιστεί μόνο αν υπάρχει κατάλληλος μη εκχωρημένος "
 "χώρος."
 
+#: src/pages.py:4454
 msgid "This installer does not shrink or preserve other systems."
 msgstr ""
 "Αυτό το πρόγραμμα εγκατάστασης δεν συρρικνώνει ή διατηρεί άλλα συστήματα."
 
+#: src/pages.py:4103
 msgid "Timezone"
 msgstr "Ζώνη ώρας"
 
+#: src/pages.py:2474
 msgid "Too small"
 msgstr "Πολύ μικρό"
 
+#: data/languages.json:keyboard_layouts
 msgid "Turkish"
 msgstr "Τουρκικά"
 
+#: data/languages.json:keyboard_layouts
 msgid "Ukrainian"
 msgstr "Ουκρανικά"
 
+#: src/pages.py:3065
 msgid "Unallocated space"
 msgstr "Μη κατανεμημένος χώρος"
 
+#: src/pages.py:2445
 msgid "Unallocated · {size}"
 msgstr "Μη κατανεμημένο · {size}"
 
+#: src/pages.py:4014 src/pages.py:1710
 msgid "Unavailable: {error}"
 msgstr "Μη διαθέσιμο: {error}"
 
+#: src/pages.py:2432
 msgid "Unknown filesystem"
 msgstr "Άγνωστο σύστημα αρχείων"
 
+#: src/pages.py:4614
 msgid "Unmount installed system"
 msgstr "Αποσύνδεση εγκατεστημένου συστήματος"
 
+#: src/pages.py:2198 src/pages.py:1196 src/pages.py:2192
 msgid "Updates and Drivers"
 msgstr "Ενημερώσεις και Οδηγοί"
 
+#: src/pages.py:2840
 msgid ""
 "Use already-unallocated space and preserve existing partitions. This is the "
 "only Windows coexistence path."
@@ -856,19 +1074,24 @@ msgstr ""
 "Χρήση ήδη μη κατανεμημένου χώρου και διατήρηση των υφιστάμενων τμημάτων. "
 "Αυτή είναι η μοναδική διαδρομή συμβίωσης με Windows."
 
+#: src/pages.py:2986
 msgid "Use only existing unallocated space on the selected disk."
 msgstr ""
 "Χρήση μόνο του υπάρχοντος μη κατανεμημένου χώρου στον επιλεγμένο δίσκο."
 
+#: src/pages.py:4079
 msgid "User"
 msgstr "Χρήστης"
 
+#: src/pages.py:3446 src/pages.py:3440
 msgid "User Account"
 msgstr "Λογαριασμός Χρήστη"
 
+#: src/pages.py:3468 src/pages.py:3472
 msgid "Username"
 msgstr "Όνομα χρήστη"
 
+#: src/pages.py:3568
 msgid ""
 "Username must start with a lowercase ASCII letter and contain only lowercase"
 " ASCII letters or digits (maximum 16 characters)."
@@ -876,30 +1099,39 @@ msgstr ""
 "Το όνομα χρήστη πρέπει να ξεκινά με ένα πεζό γράμμα ASCII και να περιέχει "
 "μόνο πεζά γράμματα ASCII ή ψηφία (έως 16 χαρακτήρες)."
 
+#: src/pages.py:2832
 msgid "Uses a traditional single root filesystem."
 msgstr "Χρησιμοποιεί ένα παραδοσιακό μονό σύστημα αρχείων ρίζας."
 
+#: src/pages.py:4406
 msgid "Validate Plan (No Installation)"
 msgstr "Έλεγχος σχεδίου (χωρίς εγκατάσταση)"
 
+#: src/pages.py:4405
 msgid "Validate this installation plan?"
 msgstr "Επαλήθευση αυτού του σχεδίου εγκατάστασης;"
 
+#: src/pages.py:4606
 msgid "Verify kernel module signatures"
 msgstr "Επαλήθευση υπογραφών μονάδων πυρήνα"
 
+#: src/pages.py:4571
 msgid "Verify target disk isolation"
 msgstr "Επαλήθευση απομόνωσης δίσκου προορισμού"
 
+#: data/languages.json:keyboard_layouts
 msgid "Vietnamese"
 msgstr "Βιετναμέζικα"
 
+#: src/pages.py:811
 msgid "Welcome to AnduinOS"
 msgstr "Καλώς ήρθατε στο AnduinOS"
 
+#: src/pages.py:2468
 msgid "Windows detected"
 msgstr "Ανιχνεύθηκαν τα Windows"
 
+#: src/pages.py:4188
 msgid ""
 "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
 "AnduinOS NVRAM entry."
@@ -907,58 +1139,75 @@ msgstr ""
 "Εγγραφή μόνο EFI/AnduinOS, χωρίς υπεργραφή του EFI/BOOT και με απαίτηση "
 "επαληθευμένης εγγραφής NVRAM AnduinOS."
 
+#: src/pages.py:4072
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
 "δημιουργία τοπικού MOK για τον υπολογιστή· εγγραφή μετά την επανεκκίνηση με "
 "κωδικό 123456"
 
+#: src/pages.py:4059
 msgid "detect and install (may include non-free software)"
 msgstr ""
 "ανίχνευση και εγκατάσταση ( ενδέχεται να περιλαμβάνει μη ελεύθερο λογισμικό "
 ")"
 
+#: src/pages.py:4121 src/pages.py:4055 src/pages.py:4061 src/pages.py:4067
 msgid "do not install"
 msgstr "να μην εγκατασταθεί"
 
+#: src/pages.py:4053 src/pages.py:4065
 msgid "download and install"
 msgstr "λήψη και εγκατάσταση"
 
+#: src/pages.py:3055
 msgid "ext4 (classic)"
 msgstr "ext4 (κλασικό)"
 
+#: src/pages.py:2829
 msgid "ext4 — classic"
 msgstr "ext4 — κλασικό"
 
+#: src/pages.py:4077
 msgid "not required"
 msgstr "δεν απαιτείται"
 
+#: src/pages.py:4083
 msgid "password required for login"
 msgstr "απαιτείται κωδικός πρόσβασης για είσοδο"
 
+#: src/pages.py:4024
 msgid "single ext4 root filesystem"
 msgstr "μοναδικό αρχείο συστήματος ext4"
 
+#: src/pages.py:4005
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / Ασφαλής εκκίνηση: {secure_boot}"
 
+#: src/pages.py:4176
 msgid "{count}: {paths}"
 msgstr "{count}: {paths}"
 
+#: src/pages.py:4139
 msgid "{name}: {start}–{end} MiB"
 msgstr "{name}: {start}–{end} MiB"
 
+#: src/pages.py:4147
 msgid "{path} as {filesystem}"
 msgstr "{path} ως {filesystem}"
 
+#: src/pages.py:4171
 msgid "{size} at {offset}"
 msgstr "{size} στη θέση {offset}"
 
+#: src/pages.py:3288
 msgid "{size} unallocated at {offset}"
 msgstr "{size} μη εκχωρημένος χώρος στη θέση {offset}"
 
+#: src/pages.py:5031
 msgid "{step} failed"
 msgstr "{step} απέτυχε"
 
+#: src/pages.py:4303
 msgid ""
 "⚠ Only the selected unallocated space will be partitioned and formatted. "
 "Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
@@ -971,6 +1220,7 @@ msgstr ""
 "να αλλάξουν. Αυτό το πρόγραμμα εγκατάστασης δεν θα συρρικνώσει τα Windows "
 "για εσάς."
 
+#: src/pages.py:4311
 msgid ""
 "⚠ This will erase ALL data on the selected disk. This action cannot be "
 "undone."
@@ -978,39 +1228,43 @@ msgstr ""
 "⚠ Αυτό θα διαγράψει ΟΛΑ τα δεδομένα στον επιλεγμένο δίσκο. Αυτή η ενέργεια "
 "δεν μπορεί να αναιρεθεί."
 
-#: src/pages.py
+#: src/pages.py:1176 src/pages.py:667 src/pages.py:1171
 msgid "Connect to the Internet"
 msgstr "Σύνδεση στο διαδίκτυο"
 
-#: src/pages.py
+#: src/pages.py:1343
 msgid "Internet connection is ready."
 msgstr "Η σύνδεση στο διαδίκτυο είναι έτοιμη."
 
-#: src/pages.py
+#: src/pages.py:1250
 msgid "Available Wi-Fi Networks"
 msgstr "Διαθέσιμα δίκτυα Wi-Fi"
 
+#: src/pages.py:4576
 msgid "Preserve connected Wi-Fi network"
 msgstr "Διατήρηση του συνδεδεμένου δικτύου Wi-Fi"
 
+#: src/pages.py:2540 src/pages.py:3092
 msgid "Loading storage devices…"
 msgstr "Φόρτωση συσκευών αποθήκευσης…"
 
+#: src/pages.py:4335
 msgid "Rechecking target disk…"
 msgstr "Επανέλεγχος δίσκου προορισμού…"
 
+#: src/pages.py:2609 src/pages.py:3213 src/pages.py:4364
 msgid "Storage devices could not be loaded: {error}"
 msgstr "Δεν ήταν δυνατή η φόρτωση των συσκευών αποθήκευσης: {error}"
 
-#: src/pages.py
+#: src/pages.py:1218 src/pages.py:4586 src/pages.py:2252
 msgid "Install extended multimedia format support"
 msgstr "Εγκατάσταση εκτεταμένης υποστήριξης μορφών πολυμέσων"
 
-#: src/pages.py
+#: src/pages.py:4063
 msgid "Extended multimedia formats"
 msgstr "Εκτεταμένες μορφές πολυμέσων"
 
-#: src/pages.py
+#: src/pages.py:2256
 msgid ""
 "Adds wider GStreamer compatibility and support for additional legacy and "
 "specialist media formats. Some components may be subject to patent or "
@@ -1020,89 +1274,90 @@ msgstr ""
 "παλαιότερες και εξειδικευμένες μορφές πολυμέσων. Ορισμένα στοιχεία ενδέχεται"
 " να υπόκεινται σε όρους ευρεσιτεχνιών ή αναδιανομής."
 
-#: src/pages.py
+#: src/pages.py:1473
 msgid "A saved profile exists. Entering a password updates it securely."
 msgstr ""
 "Υπάρχει αποθηκευμένο προφίλ. Η εισαγωγή κωδικού πρόσβασης το ενημερώνει με "
 "ασφάλεια."
 
-#: src/pages.py
+#: src/pages.py:1524
 msgid "Anonymous identity (optional)"
 msgstr "Ανώνυμη ταυτότητα (προαιρετικό)"
 
-#: src/pages.py
+#: src/pages.py:1530
 msgid "CA certificate path (optional)"
 msgstr "Διαδρομή πιστοποιητικού CA (προαιρετικό)"
 
-#: src/pages.py
+#: src/pages.py:1239 src/pages.py:1409 src/pages.py:1482 src/pages.py:1600
+#: src/pages.py:1816
 msgid "Cancel"
 msgstr "Ακύρωση"
 
-#: src/pages.py
+#: src/pages.py:1786
 msgid "Cancelling Wi-Fi operation…"
 msgstr "Ακύρωση λειτουργίας Wi-Fi…"
 
-#: src/pages.py
+#: src/pages.py:1532
 msgid "Client certificate path"
 msgstr "Διαδρομή πιστοποιητικού πελάτη"
 
-#: src/pages.py
+#: src/pages.py:1483 src/pages.py:1601
 msgid "Connect"
 msgstr "Connect"
 
-#: src/pages.py
+#: src/pages.py:1817
 msgid "Continue"
 msgstr "Συνέχεια"
 
-#: src/pages.py
+#: src/pages.py:1259 src/pages.py:1809
 msgid "Connect to a hidden network"
 msgstr "Σύνδεση σε κρυφό δίκτυο"
 
-#: src/pages.py
+#: src/pages.py:1478 src/pages.py:1593
 #, python-brace-format
 msgid "Connect to {network}"
 msgstr "Σύνδεση στο {network}"
 
-#: src/pages.py
+#: src/pages.py:1654
 msgid "Connected"
 msgstr "Connected"
 
-#: src/pages.py
+#: src/pages.py:1453
 #, python-brace-format
 msgid "Connecting to {network}…"
 msgstr "Σύνδεση στο δίκτυο {network}…"
 
-#: src/pages.py
+#: src/pages.py:1755
 msgid "Could not change the Wi-Fi connection"
 msgstr "Δεν ήταν δυνατή η αλλαγή της σύνδεσης Wi-Fi."
 
-#: src/pages.py
+#: src/pages.py:1410
 msgid "Disconnect"
 msgstr "Disconnect"
 
-#: src/pages.py
+#: src/pages.py:1401
 #, python-brace-format
 msgid "Disconnect from {network}?"
 msgstr "Αποσύνδεση από το δίκτυο {network};"
 
-#: src/pages.py
+#: src/pages.py:1420
 #, python-brace-format
 msgid "Disconnecting from {network}…"
 msgstr "Αποσύνδεση από το δίκτυο {network}…"
 
-#: src/pages.py
+#: src/pages.py:1531
 msgid "Domain suffix match (optional)"
 msgstr "Αναζήτηση κατάληξης τομέα (προαιρετικό)"
 
-#: src/pages.py
+#: src/pages.py:1515
 msgid "EAP method"
 msgstr "Μέθοδος EAP"
 
-#: src/pages.py
+#: src/pages.py:1387 src/pages.py:1796
 msgid "Enhanced Open (OWE)"
 msgstr "Ενισχυμένο Ανοιχτό (OWE)"
 
-#: src/pages.py
+#: src/pages.py:1595
 msgid ""
 "Enter the credentials supplied by your organization. Certificate validation "
 "is strongly recommended."
@@ -1110,89 +1365,89 @@ msgstr ""
 "Εισάγετε τα διαπιστευτήρια που σας παρέχει ο οργανισμός σας. Η επικύρωση "
 "πιστοποιητικού συνιστάται έντονα."
 
-#: src/pages.py
+#: src/pages.py:1811
 msgid "Enter the exact network name and choose its security type."
 msgstr ""
 "Εισάγετε το ακριβές όνομα δικτύου και επιλέξτε τον τύπο ασφαλείας του."
 
-#: src/pages.py
+#: src/pages.py:1390 src/pages.py:1800
 msgid "Enterprise Wi-Fi"
 msgstr "Επιχειρηματικό Wi-Fi"
 
-#: src/pages.py
+#: src/pages.py:1523
 msgid "Identity"
 msgstr "Identity"
 
-#: src/pages.py
+#: src/pages.py:1527
 msgid "Inner authentication"
 msgstr "Εσωτερική πιστοποίηση"
 
-#: src/pages.py
+#: src/pages.py:1790
 msgid "Network name (SSID)"
 msgstr "Όνομα δικτύου (SSID)"
 
-#: src/pages.py
+#: src/pages.py:1645
 msgid "No Wi-Fi networks found."
 msgstr "Δεν βρέθηκαν δίκτυα Wi-Fi."
 
-#: src/pages.py
+#: src/pages.py:1386 src/pages.py:1795
 msgid "Open network"
 msgstr "Ανοιχτό δίκτυο"
 
-#: src/pages.py
+#: src/pages.py:1389 src/pages.py:1797 src/pages.py:1798
 msgid "Personal Wi-Fi"
 msgstr "Ατομικό Wi-Fi"
 
-#: src/pages.py
+#: src/pages.py:1535
 msgid "Private key password (optional)"
 msgstr "Κωδικός πρόσβασης ιδιωτικού κλειδιού (προαιρετικό)"
 
-#: src/pages.py
+#: src/pages.py:1533
 msgid "Private key path"
 msgstr "Διαδρομή ιδιωτικού κλειδιού"
 
-#: src/pages.py
+#: src/pages.py:1284
 msgid "Refresh Wi-Fi networks"
 msgstr "Ανανέωση δικτύων Wi-Fi"
 
-#: src/pages.py
+#: src/pages.py:1656
 msgid "Saved"
 msgstr "Saved"
 
-#: src/pages.py
+#: src/pages.py:1792
 msgid "Security"
 msgstr "Security"
 
-#: src/pages.py
+#: src/pages.py:1405
 msgid ""
 "The installer will keep the saved network profile so it can be used again."
 msgstr ""
 "Ο εγκαταστάτης θα διατηρήσει το αποθηκευμένο προφίλ δικτύου ώστε να μπορεί "
 "να χρησιμοποιηθεί ξανά."
 
-#: src/pages.py
+#: src/pages.py:1356
 msgid "The local network is connected, but Internet access is unavailable."
 msgstr ""
 "Το τοπικό δίκτυο είναι συνδεδεμένο, αλλά η πρόσβαση στο Διαδίκτυο δεν είναι "
 "διαθέσιμη."
 
-#: src/pages.py
+#: src/pages.py:1856
 msgid "Turning Wi-Fi off…"
 msgstr "Απενεργοποίηση Wi-Fi…"
 
-#: src/pages.py
+#: src/pages.py:1854
 msgid "Turning Wi-Fi on…"
 msgstr "Ενεργοποίηση Wi-Fi…"
 
-#: src/pages.py
+#: src/pages.py:1485
 msgid "Use WPS"
 msgstr "Χρήση WPS"
 
-#: src/pages.py
+#: src/pages.py:1388 src/pages.py:1799
 msgid "WEP (legacy)"
 msgstr "WEP (παλαιού τύπου)"
 
-#: src/pages.py
+#: src/pages.py:1347
 msgid ""
 "Wi-Fi is connected, but the network requires sign-in through a captive "
 "portal."
@@ -1200,27 +1455,33 @@ msgstr ""
 "Το Wi-Fi είναι συνδεδεμένο, αλλά το δίκτυο απαιτεί σύνδεση μέσω port "
 "αγκυροβόλησης."
 
-#: src/pages.py
+#: src/pages.py:1449
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr ""
 "Αναμονή για WPS στο δίκτυο {network}. Πατήστε το κουμπί WPS στο δρομολογητή…"
 
+#: src/pages.py:3576
 msgid "A password is required."
 msgstr "Απαιτείται κωδικός πρόσβασης."
 
+#: src/pages.py:3731
 msgid "Administrative commands will no longer ask for your password."
 msgstr "Οι εντολές διαχείρισης δεν θα ζητούν πλέον τον κωδικό πρόσβασής σας."
 
+#: src/pages.py:3681 src/pages.py:3675
 msgid "Advanced Options"
 msgstr "Προχωρημένες επιλογές"
 
+#: src/pages.py:3747
 msgid "Allow SSH login with the account password"
 msgstr "Να επιτρέπεται σύνδεση SSH με τον κωδικό πρόσβασης του λογαριασμού"
 
+#: src/pages.py:4089
 msgid "Automatic desktop login"
 msgstr "Αυτόματη σύνδεση στην επιφάνεια εργασίας"
 
+#: src/pages.py:3701
 msgid ""
 "Choose how the local administrator account signs in and authorizes system "
 "changes."
@@ -1228,47 +1489,138 @@ msgstr ""
 "Επιλέξτε πώς συνδέεται ο τοπικός λογαριασμός διαχειριστή και εγκρίνει "
 "αλλαγές στο σύστημα."
 
+#: src/pages.py:3682
 msgid "Choose optional access and sign-in policies"
 msgstr "Επιλέξτε προαιρετικές πολιτικές πρόσβασης και σύνδεσης"
 
+#: src/pages.py:3709
 msgid "Choose whether this computer accepts remote Secure Shell connections."
 msgstr ""
 "Επιλέξτε αν αυτός ο υπολογιστής θα δέχεται απομακρυσμένες συνδέσεις Secure "
 "Shell."
 
+#: src/pages.py:4604
 msgid "Configure Secure Shell"
 msgstr "Ρύθμιση Secure Shell"
 
+#: src/pages.py:3699
 msgid "Local Access"
 msgstr "Τοπική πρόσβαση"
 
+#: src/pages.py:3737
 msgid "Log in to the desktop automatically"
 msgstr "Αυτόματη σύνδεση στην επιφάνεια εργασίας"
 
+#: src/pages.py:3739
 msgid "Open this account's desktop automatically when the computer starts."
 msgstr ""
 "Αυτόματο άνοιγμα της επιφάνειας εργασίας αυτού του λογαριασμού κατά την "
 "εκκίνηση του υπολογιστή."
 
+#: src/pages.py:3707
 msgid "Remote Access"
 msgstr "Απομακρυσμένη πρόσβαση"
 
+#: src/pages.py:3730
 msgid "Run sudo commands without a password"
 msgstr "Εκτέλεση εντολών sudo χωρίς κωδικό πρόσβασης"
 
+#: src/pages.py:4095
 msgid "SSH password login"
 msgstr "Σύνδεση SSH με κωδικό πρόσβασης"
 
+#: src/pages.py:3749
 msgid "Start Secure Shell and accept this account password over the network."
 msgstr ""
 "Εκκίνηση του Secure Shell και αποδοχή του κωδικού αυτού του λογαριασμού μέσω"
 " δικτύου."
 
+#: src/pages.py:3759
 msgid "This will reduce the security of the installed system."
 msgstr "Αυτό θα μειώσει την ασφάλεια του εγκατεστημένου συστήματος."
 
+#: src/pages.py:4093 src/pages.py:4099
 msgid "disabled"
 msgstr "απενεργοποιημένο"
 
+#: src/pages.py:4091 src/pages.py:4097
 msgid "enabled"
 msgstr "ενεργοποιημένο"
+
+#: src/pages.py:349
+msgid ""
+"AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently"
+" enabled on this computer, and we recommend enabling it for additional "
+"protection."
+msgstr ""
+"Το AnduinOS υποστηρίζει πλήρως το Secure Boot. Το Secure Boot δεν είναι προς"
+" το παρόν ενεργοποιημένο σε αυτόν τον υπολογιστή και σας συνιστούμε να το "
+"ενεργοποιήσετε για επιπλέον προστασία."
+
+#: src/pages.py:331
+msgid "AnduinOS supports Secure Boot"
+msgstr "Το AnduinOS υποστηρίζει Secure Boot"
+
+#: src/pages.py:360
+msgid ""
+"Battery power is sufficient or reliable power is connected. You can continue"
+" with the installation."
+msgstr ""
+"Η μπαταρία έχει αρκετή φορτίωση ή υπάρχει συνδεδεμένη αξιόπιστη τροφοδοσία "
+"ρεύματος. Μπορείτε να συνεχίσετε με την εγκατάσταση."
+
+#: src/pages.py:366
+msgid ""
+"Connect reliable external power and charge above 25%, or charge above 45% "
+"while unplugged."
+msgstr ""
+"Συνδέστε αξιόπιστη εξωτερική τροφοδοσία και φορτίστε πάνω από 25%, ή "
+"φορτίστε πάνω από 45% ενώ δεν είστε συνδεδεμένοι."
+
+#: src/pages.py:338
+msgid "Could not open UEFI firmware settings"
+msgstr "Δεν ήταν δυνατή η άνοιξη των ρυθμίσεων firmware UEFI"
+
+#: src/pages.py:333
+msgid "Get additional protection before installing AnduinOS."
+msgstr "Λάβετε επιπλέον προστασία πριν εγκαταστήσετε το AnduinOS."
+
+#: src/pages.py:364
+msgid "Power conditions are safe for installation."
+msgstr "Οι συνθήκες τροφοδοσίας είναι ασφαλείς για την εγκατάσταση."
+
+#: src/pages.py:363
+msgid "Power ready"
+msgstr "Τροφοδοσία έτοιμη"
+
+#: src/pages.py:335
+msgid "Restart to UEFI Firmware Settings"
+msgstr "Επανεκκίνηση στις ρυθμίσεις Firmware UEFI"
+
+#: src/pages.py:345
+msgid ""
+"Secure Boot is a UEFI security feature that verifies trusted, digitally "
+"signed software while your computer starts."
+msgstr ""
+"Το Secure Boot είναι μια λειτουργία ασφαλείας UEFI που επαληθεύει αξιόπιστο,"
+" ψηφιακά υπογεγραμμένο λογισμικό κατά την εκκίνηση του υπολογιστή."
+
+#: src/pages.py:336
+msgid "Skip"
+msgstr "Παράλειψη"
+
+#: src/pages.py:341
+msgid "The firmware settings could not be opened on this computer."
+msgstr ""
+"Δεν ήταν δυνατή η άνοιξη των ρυθμίσεων firmware σε αυτόν τον υπολογιστή."
+
+#: src/pages.py:354
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Για να το ενεργοποιήσετε, ανοίξτε τις ρυθμίσεις firmware UEFI και αναζητήστε"
+" κάτω από Boot, Security ή Secure Boot. Επιλέξτε Microsoft & 3rd-party CA ή "
+"ενεργοποιήστε το Secure Boot. Η ορολογία του firmware διαφέρει ανά "
+"κατασκευαστή."

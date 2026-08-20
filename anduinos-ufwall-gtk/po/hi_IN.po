@@ -6,392 +6,638 @@ msgstr ""
 "POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/widgets/add_rule_dialog.rs:155
 msgid "0 = append at end"
 msgstr "0 = अंत में जोड़ें"
 
+#: src/window.rs:81
 msgid "About"
 msgstr "के बारे में"
 
+#: src/widgets/add_rule_dialog.rs:93
 msgid "Action"
 msgstr "कार्रवाई"
 
+#: src/views/status_view.rs:396
 msgid "Active"
 msgstr "सक्रिय"
 
+#: src/widgets/add_rule_dialog.rs:170
 msgid "Add"
 msgstr "जोड़ें"
 
+#: src/views/rules_view.rs:93 src/widgets/add_rule_dialog.rs:57
 msgid "Add Rule"
 msgstr "नियम जोड़ें"
 
+#: src/widgets/add_rule_dialog.rs:110
 msgid "Advanced"
 msgstr "उन्नत"
 
+#: src/views/network_audit_view.rs:200 src/views/network_audit_view.rs:208
 msgid "All"
 msgstr "सभी"
 
+#: src/views/profiles_view.rs:92 src/views/status_view.rs:127
+#: src/views/status_view.rs:136 src/widgets/add_rule_dialog.rs:96
 msgid "Allow"
 msgstr "अनुमति दें"
 
+#: src/views/profiles_view.rs:77
 msgid "Allow applications with predefined rules."
 msgstr "पूर्वनिर्धारित नियमों वाले अनुप्रयोगों की अनुमति दें।"
 
+#: src/views/profiles_view.rs:76
 msgid "Application Profiles"
 msgstr "एप्लिकेशन प्रोफ़ाइलें"
 
+#: src/window.rs:117
 msgid "Audit"
 msgstr "audit"
 
+#: src/views/network_audit_view.rs:277
 msgid "Auditor Error"
 msgstr "ऑडिटर त्रुटि"
 
+#: src/views/network_audit_view.rs:504
 msgid "Block"
 msgstr "ब्लॉक करें"
 
+#: src/views/network_audit_view.rs:500
 msgid "Block Connection?"
 msgstr "कनेक्शन ब्लॉक करें?"
 
+#: src/views/network_audit_view.rs:493
 msgid "Block inbound traffic from"
 msgstr "Inbound ट्रैफ़िक को ब्लॉक करें"
 
+#: src/views/network_audit_view.rs:495
 msgid "Block outbound traffic to"
 msgstr "Outbound ट्रैफ़िक को ब्लॉक करें"
 
+#: src/views/dashboard_view.rs:96
 msgid "Blocked Events"
 msgstr "अवरुद्ध घटनाएँ"
 
+#: src/views/network_audit_view.rs:551
 msgid "Blocked Successfully"
 msgstr "सफलतापूर्वक ब्लॉक किया गया"
 
+#: src/widgets/add_rule_dialog.rs:124
 msgid "Both"
 msgstr "दोनों"
 
+#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "रद्द करें"
 
+#: src/views/status_view.rs:103
 msgid "Local Network Discovery"
 msgstr "स्थानीय नेटवर्क खोज"
 
+#: src/views/status_view.rs:104
 msgid "Control multicast DNS discovery and .local name resolution."
 msgstr "मल्टीकास्ट DNS खोज और .local नाम रिज़ॉल्यूशन नियंत्रित करें।"
 
+#: src/views/status_view.rs:110
 msgid "Local Network Discovery (mDNS)"
 msgstr "स्थानीय नेटवर्क खोज (mDNS)"
 
+#: src/views/status_view.rs:111
 msgid "Checking service status…"
 msgstr "सेवा स्थिति की जाँच हो रही है…"
 
+#: src/views/status_view.rs:216 src/views/status_view.rs:332
 msgid "Network Discovery Error"
 msgstr "नेटवर्क खोज त्रुटि"
 
+#: src/views/status_view.rs:351
 msgid "Avahi is not installed."
 msgstr "Avahi स्थापित नहीं है।"
 
+#: src/views/status_view.rs:353
 msgid "Avahi is running; .local names and service discovery are available."
 msgstr "Avahi चल रहा है; .local नाम और सेवा खोज उपलब्ध हैं।"
 
+#: src/views/status_view.rs:357
 msgid "Avahi is enabled but not currently running."
 msgstr "Avahi सक्षम है लेकिन वर्तमान में चल रहा नहीं है।"
 
+#: src/views/status_view.rs:359
 msgid "Avahi is blocked; .local names and service discovery are unavailable."
 msgstr "Avahi अवरुद्ध है; .local नाम और सेवा खोज अनुपलब्ध हैं।"
 
+#: src/widgets/add_rule_dialog.rs:149
 msgid "Comment"
 msgstr "टिप्पणी"
 
+#: src/widgets/add_rule_dialog.rs:72
 msgid "Custom"
 msgstr "कस्टम"
 
+#: src/views/dashboard_view.rs:56 src/window.rs:116
 msgid "Dashboard"
 msgstr "डैशबोर्ड"
 
+#: src/views/status_view.rs:119
 msgid "Default Policies"
 msgstr "डिफ़ॉल्ट नीतियाँ"
 
+#: src/widgets/rule_row.rs:90
 msgid "Delete"
 msgstr "हटाएँ"
 
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:122
 msgid "Delete All"
 msgstr "सभी हटाएँ"
 
+#: src/views/rules_view.rs:118
 msgid "Delete All Rules?"
 msgstr "क्या सभी नियम हटाएँ?"
 
+#: src/widgets/rule_row.rs:86
 msgid "Delete Rule"
 msgstr "नियम हटाएँ"
 
+#: src/widgets/rule_row.rs:87
 msgid "Delete rule"
 msgstr "नियम हटाएँ"
 
+#: src/views/status_view.rs:126 src/views/status_view.rs:135
+#: src/widgets/add_rule_dialog.rs:95
 msgid "Deny"
 msgstr "अस्वीकार करें"
 
+#: src/widgets/add_rule_dialog.rs:135
 msgid "Destination IP"
 msgstr "गंतव्य आईपी"
 
+#: src/widgets/add_rule_dialog.rs:114
 msgid "Direction"
 msgstr "दिशा"
 
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:137 src/views/status_view.rs:185
+#: src/widgets/add_rule_dialog.rs:338 src/widgets/rule_row.rs:119
+#: src/window.rs:283 src/window.rs:299
 msgid "Error"
 msgstr "त्रुटि"
 
+#: src/views/network_audit_view.rs:554
 msgid "Failed to Block"
 msgstr "ब्लॉक करने में विफल रहा"
 
+#: src/views/status_view.rs:95 src/window.rs:64
 msgid "Firewall"
 msgstr "फ़ायरवॉल"
 
+#: src/views/rules_view.rs:70
 msgid "Firewall Rules"
 msgstr "फ़ायरवॉल नियम"
 
+#: src/views/status_view.rs:156
 msgid "Full"
 msgstr "पूर्ण"
 
+#: src/views/status_view.rs:155
 msgid "High"
 msgstr "उच्च"
 
+#: src/widgets/add_rule_dialog.rs:116
 msgid "In"
 msgstr "अंदर"
 
+#: src/views/status_view.rs:96 src/views/status_view.rs:396
 msgid "Inactive"
 msgstr "असक्रिय"
 
+#: src/views/network_audit_view.rs:201
 msgid "Inbound"
 msgstr "Inbound"
 
+#: src/views/status_view.rs:124
 msgid "Incoming"
 msgstr "आने वाला"
 
+#: src/widgets/add_rule_dialog.rs:154
 msgid "Insert Before Rule"
 msgstr "नियम से पहले सम्मिलित करें"
 
+#: src/widgets/add_rule_dialog.rs:144
 msgid "Interface"
 msgstr "इंटरफ़ेस"
 
+#: src/widgets/add_rule_dialog.rs:98
 msgid "Limit"
 msgstr "सीमा"
 
+#: src/views/dashboard_view.rs:129
 msgid "Listening Ports"
 msgstr "सुन रहे पोर्ट"
 
+#: src/views/status_view.rs:150
 msgid "Log Level"
 msgstr "लॉग स्तर"
 
+#: src/views/status_view.rs:146
 msgid "Logging"
 msgstr "लॉगिंग"
 
+#: src/views/status_view.rs:153
 msgid "Low"
 msgstr "कम"
 
+#: src/views/status_view.rs:154
 msgid "Medium"
 msgstr "मध्यम"
 
+#: src/views/network_audit_view.rs:58
 msgid "Monitoring Network Activity"
 msgstr "नेटवर्क गतिविधि की निगरानी"
 
+#: src/views/profiles_view.rs:119
 msgid "No Profiles"
 msgstr "कोई प्रोफ़ाइल नहीं"
 
+#: src/views/rules_view.rs:75
 msgid "No Rules"
 msgstr "कोई नियम नहीं"
 
+#: src/views/profiles_view.rs:120
 msgid "No application profiles found"
 msgstr "कोई एप्लिकेशन प्रोफ़ाइल नहीं मिली"
 
+#: src/views/dashboard_view.rs:247
 msgid "No blocked connections in recent events"
 msgstr "हाल की घटनाओं में कोई अवरुद्ध कनेक्शन नहीं"
 
+#: src/views/dashboard_view.rs:296
 msgid "No blocked ports in recent events"
 msgstr "हाल की घटनाओं में कोई अवरुद्ध पोर्ट नहीं"
 
+#: src/views/dashboard_view.rs:344
 msgid "No listening ports detected"
 msgstr "कोई सुन रहे पोर्ट नहीं मिले"
 
+#: src/views/status_view.rs:152
 msgid "Off"
 msgstr "बंद"
 
+#: src/widgets/add_rule_dialog.rs:117
 msgid "Out"
 msgstr "बाहर"
 
+#: src/views/network_audit_view.rs:202
 msgid "Outbound"
 msgstr "Outbound"
 
+#: src/views/status_view.rs:133
 msgid "Outgoing"
 msgstr "आउटगोइंग"
 
+#: src/views/network_audit_view.rs:217
 msgid "Pause list updates"
 msgstr "सूची अपडेट रोकें"
 
+#: src/views/profiles_view.rs:87
 msgid "Port / Protocol"
 msgstr "पोर्ट / प्रोटोकॉल"
 
+#: src/widgets/add_rule_dialog.rs:89
 msgid "Port / Service Name"
 msgstr "पोर्ट / सेवा का नाम"
 
+#: src/window.rs:120
 msgid "Profiles"
 msgstr "प्रोफ़ाइलें"
 
+#: src/widgets/add_rule_dialog.rs:122
 msgid "Protocol"
 msgstr "प्रोटोकॉल"
 
+#: src/views/profiles_view.rs:82
 msgid "Quick Allow Port"
 msgstr "पोर्ट को जल्दी अनुमति दें"
 
+#: src/views/dashboard_view.rs:135
 msgid "Recent Blocked Events"
 msgstr "हाल ही में अवरुद्ध घटनाएँ"
 
+#: src/views/dashboard_view.rs:78
 msgid "Recent Events Parsed"
 msgstr "हाल के घटनाओं का विश्लेषण"
 
+#: src/views/dashboard_view.rs:154
 msgid "Refresh"
 msgstr "रिफ़्रेश"
 
+#: src/views/status_view.rs:128 src/views/status_view.rs:137
+#: src/widgets/add_rule_dialog.rs:97
 msgid "Reject"
 msgstr "अस्वीकार करें"
 
+#: src/views/network_audit_view.rs:195
 msgid "Resolve Domains"
 msgstr "डोमेन रिज़ॉल्व करें"
 
+#: src/views/network_audit_view.rs:551
 msgid "Rule added to block"
 msgstr "ब्लॉक करने के लिए नियम जोड़ा गया"
 
+#: src/window.rs:119
 msgid "Rules"
 msgstr "नियम"
 
+#: src/widgets/add_rule_dialog.rs:265
 msgid "Save"
 msgstr "सहेजें"
 
+#: src/views/network_audit_view.rs:186
 msgid "Search Process or IP..."
 msgstr "प्रक्रिया या IP खोजें..."
 
+#: src/views/rules_view.rs:62
 msgid "Search rules..."
 msgstr "नियम खोजें..."
 
+#: src/widgets/add_rule_dialog.rs:70
 msgid "Service"
 msgstr "सेवा"
 
+#: src/views/dashboard_view.rs:139
 msgid "Show"
 msgstr "दिखाएँ"
 
+#: src/widgets/add_rule_dialog.rs:131
 msgid "Source IP"
 msgstr "स्रोत IP"
 
+#: src/views/status_view.rs:84 src/window.rs:118
 msgid "Status"
 msgstr "स्थिति"
 
+#: src/views/network_audit_view.rs:209 src/widgets/add_rule_dialog.rs:125
 msgid "TCP"
 msgstr "TCP"
 
+#: src/views/rules_view.rs:76
 msgid "There are no rules configured yet."
 msgstr "अभी तक कोई नियम कॉन्फ़िगर नहीं किए गए हैं।"
 
+#: src/views/rules_view.rs:119
 msgid "This will delete all custom rules. This action cannot be undone."
 msgstr ""
 "यह सभी कस्टम नियमों को हटा देगा। इस कार्रवाई को पूर्ववत नहीं किया जा सकता।"
 
+#: src/views/network_audit_view.rs:493
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr "यह दूरस्थ होस्ट को आपके मशीन पर कोई पैकेट भेजने से रोक देगा।"
 
+#: src/views/network_audit_view.rs:495
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr "यह आपकी मशीन को दूरस्थ होस्ट पर कोई पैकेट भेजने से रोक देगा।"
 
+#: src/views/dashboard_view.rs:117
 msgid "Top Blocked Connections"
 msgstr "सबसे अधिक ब्लॉक किए गए कनेक्शन"
 
+#: src/views/dashboard_view.rs:123
 msgid "Top Blocked Ports"
 msgstr "शीर्ष अवरुद्ध पोर्ट"
 
+#: src/views/network_audit_view.rs:210 src/widgets/add_rule_dialog.rs:126
 msgid "UDP"
 msgstr "यूडीपी"
 
+#: src/views/profiles_view.rs:83
 msgid "e.g. 80,443/tcp or 8080"
 msgstr "जैसे 80,443/tcp या 8080"
 
+#: data/app_profiles/qbittorrent:3 data/app_profiles/transmission:3
 msgid "BitTorrent client"
 msgstr "BitTorrent क्लाइंट"
 
+#: data/app_profiles/cups:3
 msgid "Common UNIX Printing System server"
 msgstr "कॉमन यूनिक्स प्रिंटिंग सिस्टम सर्वर"
 
+#: data/app_profiles/syncthing:3
 msgid "Continuous file synchronization"
 msgstr "निरंतर फ़ाइल सिंकनाइज़ेशन"
 
+#: data/app_profiles/docker:3
 msgid "Docker container runtime API"
 msgstr "डॉकर कंटेनर रनटाइम API"
 
+#: data/app_profiles/dns:3
 msgid "Domain Name System server"
 msgstr "डोमेन नेम सिस्टम सर्वर"
 
+#: data/app_profiles/xmpp:3
 msgid "Extensible Messaging and Presence Protocol"
 msgstr "एक्सटेंसिबल मेसेजिंग और प्रेजेंस प्रोटोकॉल"
 
+#: data/app_profiles/ftp:3
 msgid "File Transfer Protocol"
 msgstr "फ़ाइल ट्रांसफर प्रोटोकॉल"
 
+#: data/app_profiles/dropbox:3
 msgid "File synchronization service"
 msgstr "फ़ाइल सिंकनाइज़ेशन सेवा"
 
+#: data/app_profiles/http:3
 msgid "Hypertext Transfer Protocol for web servers"
 msgstr "वेब सर्वरों के लिए हाइपरटेक्स्ट ट्रांसफर प्रोटोकॉल"
 
+#: data/app_profiles/redis:3
 msgid "In-memory data structure store"
 msgstr "इन-मेमोरी डेटा स्ट्रक्चर स्टोर"
 
+#: data/app_profiles/imap:3
 msgid "Internet Message Access Protocol for email"
 msgstr "ईमेल के लिए इंटरनेट मैसेज एक्सेस प्रोटोकॉल"
 
+#: data/app_profiles/ldap:3
 msgid "Lightweight Directory Access Protocol"
 msgstr "लाइटवेट डायरेक्टरी एक्सेस प्रोटोकॉल"
 
+#: data/app_profiles/jellyfin:3
 msgid "Media streaming server"
 msgstr "मीडिया स्ट्रीमिंग सर्वर"
 
+#: data/app_profiles/wireguard:3
 msgid "Modern VPN tunnel"
 msgstr "आधुनिक VPN टनल"
 
+#: data/app_profiles/mdns:3
 msgid "Multicast DNS for local network discovery"
 msgstr "स्थानीय नेटवर्क खोज के लिए मल्टीकास्ट DNS"
 
+#: data/app_profiles/mysql:3
 msgid "MySQL database server"
 msgstr "MySQL डेटाबेस सर्वर"
 
+#: data/app_profiles/nfs:3
 msgid "Network File System"
 msgstr "नेटवर्क फ़ाइल सिस्टम"
 
+#: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
 msgstr "पोर्ट / प्रोटोकॉल"
 
+#: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
 msgstr "NoSQL दस्तावेज़ डेटाबेस"
 
+#: data/app_profiles/kdeconnect:3
 msgid "Phone and desktop integration"
 msgstr "फोन और डेस्कटॉप एकीकरण"
 
+#: data/app_profiles/plex:3
 msgid "Plex media streaming server"
 msgstr "Plex मीडिया स्ट्रीमिंग सर्वर"
 
+#: data/app_profiles/pop3:3
 msgid "Post Office Protocol for email retrieval"
 msgstr "ईमेल पुनर्प्राप्ति के लिए पोस्ट ऑफिस प्रोटोकॉल"
 
+#: data/app_profiles/postgresql:3
 msgid "PostgreSQL database server"
 msgstr "PostgreSQL डेटाबेस सर्वर"
 
+#: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
 msgstr "पोर्ट / प्रोटोकॉल"
 
+#: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
 msgstr "वेब सर्वरों के लिए सुरक्षित HTTP"
 
+#: data/app_profiles/openssh:3
 msgid "Secure shell remote access"
 msgstr "सुरक्षित शेल रिमोट एक्सेस"
 
+#: data/app_profiles/smtp:3
 msgid "Simple Mail Transfer Protocol"
 msgstr "सिंपल मेल ट्रांसफर प्रोटोकॉल"
 
+#: data/app_profiles/vnc:3
 msgid "Virtual Network Computing remote desktop"
 msgstr "वर्चुअल नेटवर्क कंप्यूटिंग रिमोट डेस्कटॉप"
 
+#: data/app_profiles/samba:3
 msgid "Windows file and printer sharing"
 msgstr "विंडोज़ फ़ाइल और प्रिंटर शेयरिंग"
+
+#: src/views/network_audit_view.rs:534
+msgid "Audit Block"
+msgstr "ऑडिट ब्लॉक"
+
+#: src/ufw/backend.rs:44 src/ufw/backend.rs:391 src/ufw/backend.rs:643
+msgid "Authentication cancelled"
+msgstr "प्रमाणीकरण रद्द कर दिया गया"
+
+#: src/views/network_audit_view.rs:160
+msgid "Download"
+msgstr "डाउनलोड"
+
+#: src/ufw/backend.rs:384
+msgid "Failed to execute network service helper"
+msgstr "नेटवर्क सेवा सहायक चलाए जाने में विफलता"
+
+#: src/ufw/backend.rs:632
+msgid "Failed to execute pkexec"
+msgstr "pkexec निष्पादित करने में विफल"
+
+#: src/ufw/backend.rs:613
+msgid "Failed to inspect system service"
+msgstr "सिस्टम सेवा की जांच करने में विफलता"
+
+#: src/window.rs:284
+msgid "Failed to read firewall status"
+msgstr "फ़ायरवॉल स्थिति पढ़ने में विफल"
+
+#: src/window.rs:300
+msgid "Failed to read profiles"
+msgstr "प्रोफ़ाइल पढ़ने में विफल"
+
+#: src/ufw/stats.rs:39
+msgid "Failed to run journalctl"
+msgstr "journalctl चलाए जाने में विफलता"
+
+#: src/ufw/backend.rs:37
+msgid "Failed to run pkexec ufw status"
+msgstr "pkexec ufw status चलाए जाने में विफलता"
+
+#: src/ufw/stats.rs:151
+msgid "Failed to run ss"
+msgstr "ss चलाए जाने में विफलता"
+
+#: src/ufw/traffic_monitor.rs:36
+msgid "Failed to start ufwall-auditor"
+msgstr "ufwall-auditor शुरू करने में विफल"
+
+#: src/ufw/traffic_monitor.rs:38
+msgid "Is it installed?"
+msgstr "क्या यह इंस्टॉल है?"
+
+#: src/views/network_audit_view.rs:166
+msgid "Max"
+msgstr "अधिकतम"
+
+#: src/views/network_audit_view.rs:84
+msgid ""
+"Network Traffic\n"
+"Red line: Upload speed\n"
+"Green line: Download speed"
+msgstr ""
+"नेटवर्क ट्रैफ़िक\n"
+"लाल रेखा: अपलोड गति\n"
+"हरा रेखा: डाउनलोड गति"
+
+#: src/ufw/backend.rs:399
+msgid "Network service command failed"
+msgstr "नेटवर्क सेवा कमांड विफल रहा"
+
+#: src/views/network_audit_view.rs:371
+msgid "No Active Connections"
+msgstr "कोई सक्रिय कनेक्शन नहीं"
+
+#: src/views/network_audit_view.rs:361
+msgid "No Inbound Connections"
+msgstr "कोई इनबाउंड कनेक्शन नहीं"
+
+#: src/views/network_audit_view.rs:366
+msgid "No Outbound Connections"
+msgstr "कोई आउटबाउंड कनेक्शन नहीं"
+
+#: src/views/network_audit_view.rs:367
+msgid "No applications are sending data to the internet."
+msgstr "कोई भी ऐप्लिकेशन इंटरनेट पर डेटा नहीं भेज रहा है।"
+
+#: src/views/network_audit_view.rs:362
+msgid "No external devices are connecting to your open ports."
+msgstr "कोई बाहरी डिवाइस आपके खुले पोर्ट से कनेक्ट नहीं हो रहा है।"
+
+#: src/views/network_audit_view.rs:372
+msgid "No network activity detected."
+msgstr "कोई नेटवर्क गतिविधि नहीं मिली।"
+
+#: src/ufw/backend.rs:528 src/ufw/backend.rs:546
+msgid "No ports defined for this profile"
+msgstr "इस प्रोफ़ाइल के लिए कोई पोर्ट परिभाषित नहीं है"
+
+#: src/ufw/backend.rs:649
+msgid "UFW command failed"
+msgstr "UFW कमांड विफल रहा"
+
+#: src/views/network_audit_view.rs:152
+msgid "Upload"
+msgstr "अपलोड"
+
+#: src/ufw/backend.rs:48
+msgid "pkexec failed"
+msgstr "pkexec विफल रहा"

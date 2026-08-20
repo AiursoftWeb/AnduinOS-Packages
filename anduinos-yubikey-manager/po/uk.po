@@ -17,74 +17,97 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+#: src/window.rs:2020
 msgid "1 identity is currently available to SSH applications."
 msgstr "Зараз для застосунків SSH доступна 1 ідентичність."
 
+#: src/window.rs:2304
 msgid "1 resident SSH key is available from your connected YubiKey."
 msgstr "З підключеного YubiKey доступний 1 резидентний ключ SSH."
 
+#: src/window.rs:1814
 msgid "1 resident SSH key · {0}"
 msgstr "1 резидентний ключ SSH · {0}"
 
+#: src/window.rs:1474 src/window.rs:1652
 msgid "A key must be connected before it can be enrolled."
 msgstr "Перед реєстрацією ключ повинен бути підключений."
 
+#: src/window.rs:173
 msgid "About"
 msgstr "Про програму"
 
+#: src/home.rs:381 src/home.rs:402
 msgid "Account password"
 msgstr "Пароль облікового запису"
 
+#: src/window.rs:2490
 msgid "Add another SSH key"
 msgstr "Додати інший ключ SSH"
 
+#: src/window.rs:1314
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "Додайте цей відкритий ключ до GitHub як підписуючий ключ."
 
+#: src/home.rs:336 src/home.rs:389
 msgid "Administrator access"
 msgstr "Доступ адміністратора"
 
+#: src/window.rs:2667
 msgid "Advanced options"
 msgstr "Розширені параметри"
 
+#: src/window.rs:2619
 msgid "Algorithm"
 msgstr "Алгоритм"
 
+#: src/window.rs:1582
 msgid "Allow sudo without authentication"
 msgstr "Дозволити sudo без аутентифікації"
 
+#: src/window.rs:1672
 msgid "Allowed for sudo · not currently connected"
 msgstr "Дозволено для sudo · наразі не підключено"
 
+#: src/window.rs:1674
 msgid "Allowed to authorize sudo"
 msgstr "Має право авторизувати sudo"
 
+#: src/window.rs:1494
 msgid "Allowed to unlock this user"
 msgstr "Має право розблокувати цього користувача"
 
+#: src/window.rs:1492
 msgid "Allowed to unlock this user · not currently connected"
 msgstr "Має право розблокувати цього користувача · наразі не підключено"
 
+#: src/window.rs:1902
 msgid "Already loaded"
 msgstr "Вже завантажено"
 
+#: src/window.rs:1639
 msgid "An enrolled YubiKey or the account password can authorize sudo."
 msgstr ""
 "Зареєстрований YubiKey або пароль облікового запису можуть авторизувати "
 "sudo."
 
+#: src/application.rs:68
 msgid "AnduinOS Team"
 msgstr "Команда AnduinOS"
 
+#: src/application.rs:66 src/progress_dialog.rs:23 src/window.rs:96
 msgid "AnduinOS YubiKey Security Center"
 msgstr "Центр безпеки AnduinOS для YubiKey"
 
+#: src/home.rs:126
 msgid "AnduinOS works more securely with a YubiKey"
 msgstr "AnduinOS працює безпечніше з YubiKey"
 
+#: src/window.rs:2625
 msgid "Application"
 msgstr "Додаток"
 
+#: src/ssh.rs:450
 msgid ""
 "Application must begin with ssh:, contain no whitespace, and be at most 253 "
 "bytes."
@@ -92,51 +115,67 @@ msgstr ""
 "Назва додатку має починатися з ssh:, не містити пробілів та мати довжину не "
 "більше 253 байт."
 
+#: src/home.rs:411 src/window.rs:631
 msgid "Available"
 msgstr "Доступно"
 
+#: src/window.rs:1255
 msgid "Available through SSH agent"
 msgstr "Доступний через агента SSH"
 
+#: src/window.rs:1253
 msgid "Available through local key handle"
 msgstr "Доступний через локальний дескриптор ключа"
 
+#: src/home.rs:172
 msgid "Buy a YubiKey"
 msgstr "Купити YubiKey"
 
+#: src/window.rs:2698 src/window.rs:2755 src/window.rs:3027
 msgid "Cancel"
 msgstr "Скасувати"
 
+#: src/window.rs:562
 msgid "Checking SSH keys…"
 msgstr "Перевірка ключів SSH…"
 
+#: src/window.rs:574
 msgid "Checking SSH support…"
 msgstr "Перевірка підтримки SSH…"
 
+#: src/home.rs:65 src/window.rs:478
 msgid "Checking connected YubiKeys"
 msgstr "Перевірка підключених YubiKey"
 
+#: src/home.rs:428
 msgid "Choose a YubiKey-backed SSH key"
 msgstr "Оберіть SSH-ключ із підтримкою YubiKey"
 
+#: src/window.rs:2639
 msgid "Choose a local key-handle file"
 msgstr "Оберіть локальний файл ключа-ідентифікатора"
 
+#: src/ssh.rs:441
 msgid "Choose a supported OpenSSH security-key algorithm."
 msgstr "Оберіть підтримуваний алгоритм безпеки OpenSSH для ключів."
 
+#: src/ssh.rs:314 src/ssh.rs:438
 msgid "Choose a valid /dev/hidrawN FIDO device."
 msgstr "Оберіть дійсний FIDO-пристрій /dev/hidrawN."
 
+#: src/ssh.rs:223
 msgid "Choose a valid output folder."
 msgstr "Оберіть дійсну вихідну папку."
 
+#: src/git_signing.rs:107
 msgid "Choose an SSH key for Git signing."
 msgstr "Оберіть SSH-ключ для підпису Git."
 
+#: src/window.rs:2650
 msgid "Choose local SSH key-handle path"
 msgstr "Оберіть локальний шлях до файлу ключа SSH"
 
+#: src/window.rs:1218
 msgid ""
 "Choose one SSH key. The selection takes effect immediately for this user's "
 "Git commits."
@@ -144,146 +183,191 @@ msgstr ""
 "Оберіть один SSH-ключ. Вибір набуває чинності негайно для комітів Git цього "
 "користувача."
 
+#: src/window.rs:1465
 msgid ""
 "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
 msgstr ""
 "Оберіть, які YubiKeys можуть розблоковувати {0}. Вхід за паролем залишається"
 " доступним."
 
+#: src/window.rs:3074 src/window.rs:3096
 msgid "Close"
 msgstr "Закрити"
 
+#: src/ssh.rs:570
 msgid "Command exited with"
 msgstr "Команда завершилася з кодом"
 
+#: src/ssh.rs:560 src/window.rs:655
 msgid "Command exited with {0}"
 msgstr "Команда завершилася з кодом {0}"
 
+#: src/window.rs:1217
 msgid "Commit signing"
 msgstr "Підпис комітів"
 
+#: src/home.rs:596
 msgid "Configured YubiKeys"
 msgstr "Налаштовані YubiKey"
 
+#: src/home.rs:627
 msgid "Configured for {0} · Not connected"
 msgstr "Налаштовано для {0} · Не підключено"
 
+#: src/window.rs:2505
 msgid "Connect a FIDO security key first"
 msgstr "Спочатку підключіть FIDO-ключ безпеки"
 
+#: src/window.rs:2262
 msgid "Connect a YubiKey"
 msgstr "Підключіть YubiKey"
 
+#: src/home.rs:158
 msgid "Connect a YubiKey to get started"
 msgstr "Підключіть YubiKey, щоб розпочати"
 
+#: src/home.rs:124
 msgid "Connect your YubiKey"
 msgstr "Підключіть свій YubiKey"
 
+#: src/home.rs:243 src/home.rs:315
 msgid "Connected"
 msgstr "Підключено"
 
+#: src/home.rs:300
 msgid "Connected YubiKeys"
 msgstr "Підключені YubiKey"
 
+#: src/window.rs:2699
 msgid "Continue"
 msgstr "Продовжити"
 
+#: src/window.rs:3028
 msgid "Continue to PIN"
 msgstr "Продовжити до PIN-коду"
 
+#: src/window.rs:1326 src/window.rs:2778
 msgid "Copy public key"
 msgstr "Копіювати відкритий ключ"
 
+#: src/window.rs:597
 msgid "Could not check SSH keys"
 msgstr "Не вдалося перевірити ключі SSH"
 
+#: src/ssh.rs:691
 msgid "Could not create a temporary public-key file: {0}"
 msgstr "Не вдалося створити тимчасовий файл відкритого ключа: {0}"
 
+#: src/ssh.rs:605
 msgid "Could not create temporary Git signing data: {0}"
 msgstr "Не вдалося створити тимчасові дані для підпису Git: {0}"
 
+#: src/ssh.rs:230 src/ssh_config.rs:443
 msgid "Could not create {0}: {1}"
 msgstr "Не вдалося створити {0}: {1}"
 
+#: src/window.rs:2839
 msgid "Could not export the public key: {0}"
 msgstr "Не вдалося експортувати відкритий ключ: {0}"
 
+#: src/window.rs:2337
 msgid "Could not find security keys"
 msgstr "Не вдалося знайти ключі безпеки"
 
+#: src/ssh.rs:703
 msgid "Could not flush the temporary public key: {0}"
 msgstr "Не вдалося очистити тимчасовий відкритий ключ: {0}"
 
+#: src/backend.rs:137
 msgid "Could not inspect USB devices: {0}"
 msgstr "Не вдалося перевірити USB-пристрої: {0}"
 
+#: src/window.rs:1991
 msgid "Could not inspect this YubiKey"
 msgstr "Не вдалося перевірити цей YubiKey"
 
+#: src/window.rs:540 src/window.rs:1554 src/window.rs:1734
 msgid "Could not list YubiKeys"
 msgstr "Не вдалося отримати список YubiKeys"
 
+#: src/ssh.rs:501
 msgid "Could not locate the secure PIN helper: {0}"
 msgstr "Не вдалося знайти довідник для безпечного PIN-коду: {0}"
 
+#: src/ssh.rs:616
 msgid "Could not prepare the Git signing test: {0}"
 msgstr "Не вдалося підготувати тестове підписання Git: {0}"
 
+#: src/ssh.rs:239 src/ssh_config.rs:445
 msgid "Could not protect {0}: {1}"
 msgstr "Не вдалося захистити {0}: {1}"
 
+#: src/ssh.rs:527 src/ssh.rs:533 src/ssh.rs:919 src/ssh.rs:925
 msgid "Could not provide the FIDO PIN: {0}"
 msgstr "Не вдалося надати FIDO PIN: {0}"
 
+#: src/backend.rs:325
 msgid "Could not request administrator access: {0}"
 msgstr "Не вдалося запросити доступ адміністратора: {0}"
 
+#: src/backend.rs:13 src/git_signing.rs:190 src/ssh.rs:911
 msgid "Could not run {0}: {1}"
 msgstr "Не вдалося запустити {0}: {1}"
 
+#: src/ssh.rs:520
 msgid "Could not start {0}: {1}"
 msgstr "Не вдалося запустити {0}: {1}"
 
+#: src/home.rs:101
 msgid "Could not update security keys"
 msgstr "Не вдалося оновити ключі безпеки"
 
+#: src/ssh.rs:697
 msgid "Could not write the temporary public key: {0}"
 msgstr "Не вдалося записати тимчасовий відкритий ключ: {0}"
 
+#: src/window.rs:2533
 msgid "Create"
 msgstr "Створити"
 
+#: src/window.rs:2507
 msgid "Create a resident SSH credential on a selected device"
 msgstr "Створити резидентні SSH-облікові дані на вибраному пристрої"
 
+#: src/window.rs:2692
 msgid "Create a resident SSH key"
 msgstr "Створити резидентний SSH-ключ"
 
+#: src/window.rs:2501
 msgid "Create…"
 msgstr "Створити…"
 
+#: src/window.rs:2962
 msgid "Deletion result is unknown"
 msgstr "Результат видалення невідомий"
 
+#: src/window.rs:1586
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr ""
 "Вимкнено · sudo має аутентифікуватися за допомогою YubiKey або пароля "
 "облікового запису"
 
+#: src/window.rs:2321
 msgid "Discover SSH keys on your YubiKeys"
 msgstr "Знайдіть ключі SSH на ваших YubiKeys"
 
+#: src/ssh.rs:463
 msgid ""
 "Display label must be at most 200 bytes and contain no control characters."
 msgstr ""
 "Мітка відображення повинна містити не більше 200 байт і не містити керуючих "
 "символів."
 
+#: src/window.rs:1222
 msgid "Do not sign new commits by default"
 msgstr "За замовчуванням не підписувати нові коміти"
 
+#: src/window.rs:1563
 msgid ""
 "During enrollment, disconnect all other security keys. The selected key will"
 " blink; touch it to continue. Multiple keys can be enrolled one at a time."
@@ -292,47 +376,59 @@ msgstr ""
 "миготіти; торкніться його, щоб продовжити. Кілька ключів можна зареєструвати"
 " по одному."
 
+#: src/window.rs:2610
 msgid "ECDSA-SK (recommended compatibility)"
 msgstr "ECDSA-SK (рекомендована сумісність)"
 
+#: src/window.rs:2620
 msgid "ECDSA-SK works with the widest range of YubiKeys"
 msgstr "ECDSA-SK працює з найширшим діапазоном YubiKeys"
 
+#: src/window.rs:2497
 msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
 msgstr ""
 "ECDSA-SK · резидентний · потрібне торкання · безпечні параметри сумісності "
 "за замовчуванням"
 
+#: src/window.rs:2611
 msgid "Ed25519-SK (newer YubiKeys)"
 msgstr "Ed25519-SK (новіші YubiKeys)"
 
+#: src/home.rs:374 src/home.rs:393 src/home.rs:421
 msgid "Enabled"
 msgstr "Увімкнено"
 
+#: src/window.rs:1584
 msgid ""
 "Enabled · programs can obtain administrator privileges without confirmation"
 msgstr ""
 "Увімкнено · програми можуть отримувати привілеї адміністратора без "
 "підтвердження"
 
+#: src/window.rs:1610
 msgid "Enabling passwordless sudo…"
 msgstr "Увімкнення sudo без пароля…"
 
+#: src/window.rs:1612
 msgid "Enabling sudo authentication…"
 msgstr "Увімкнення автентифікації sudo…"
 
+#: src/window.rs:1670
 msgid "Enrolled · inactive while sudo authentication is bypassed"
 msgstr "Зареєстровано · неактивний, поки обходиться автентифікація sudo"
 
+#: src/window.rs:1562
 msgid "Enrollment safety"
 msgstr "Безпека реєстрації"
 
+#: src/window.rs:735
 msgid ""
 "Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
 msgstr ""
 "Введіть FIDO-PIN для {0}. Торкніться його, якщо він блимає. PIN-код ніколи "
 "не зберігається."
 
+#: src/window.rs:1419
 msgid ""
 "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No "
 "commit will be created."
@@ -340,38 +436,49 @@ msgstr ""
 "Введіть PIN-код FIDO, а потім торкніться обраного YubiKey, коли він блимає. "
 "Коміт не буде створено."
 
+#: src/window.rs:1172
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "Введіть PIN-код FIDO. Торкніться YubiKey, якщо він блимає."
 
+#: src/ssh.rs:629
 msgid "Enter the YubiKey FIDO PIN to test this local key handle."
 msgstr ""
 "Введіть PIN-код FIDO YubiKey, щоб протестувати цей локальний дескриптор "
 "ключа."
 
+#: src/window.rs:2531 src/window.rs:2920
 msgid "Enter the selected YubiKey FIDO PIN"
 msgstr "Введіть вибраний PIN-код FIDO YubiKey"
 
+#: src/window.rs:2779
 msgid "Export .pub"
 msgstr "Експортувати .pub"
 
+#: src/window.rs:2821
 msgid "Export SSH public key"
 msgstr "Експортувати відкритий ключ SSH"
 
+#: src/window.rs:2745
 msgid "FIDO PIN"
 msgstr "PIN-код FIDO"
 
+#: src/window.rs:1200 src/window.rs:2001 src/window.rs:2506
 msgid "FIDO device discovery is unavailable"
 msgstr "Пошук пристрою FIDO недоступний"
 
+#: src/backend.rs:162
 msgid "FIDO security key"
 msgstr "Ключ безпеки FIDO"
 
+#: src/window.rs:2323
 msgid "Finish inspecting your YubiKeys"
 msgstr "Завершити перевірку ваших YubiKeys"
 
+#: src/home.rs:663
 msgid "Firmware {0}"
 msgstr "Прошивка {0}"
 
+#: src/backend.rs:261
 msgid ""
 "For safe enrollment, disconnect every other security key and leave only the "
 "selected YubiKey connected."
@@ -379,12 +486,15 @@ msgstr ""
 "Для безпечної реєстрації від’єднайте всі інші ключі безпеки та залиште "
 "підключеним лише вибраний YubiKey."
 
+#: src/home.rs:419 src/window.rs:112 src/window.rs:161 src/window.rs:239
 msgid "Git signing"
 msgstr "Підпис Git"
 
+#: src/window.rs:1311
 msgid "Git signing is enabled"
 msgstr "Підпис Git увімкнено"
 
+#: src/ssh.rs:642
 msgid ""
 "Git signing test failed:\n"
 "{0}"
@@ -392,147 +502,195 @@ msgstr ""
 "Тест підпису Git не вдалося виконати:\n"
 "{0}"
 
+#: src/window.rs:1446
 msgid "Git signing test passed"
 msgstr "Тест підпису Git пройдено"
 
+#: src/window.rs:1081
 msgid "Git is not installed"
 msgstr "Git не встановлено"
 
+#: src/window.rs:1103
 msgid "The Git installation task stopped unexpectedly."
 msgstr "Процес встановлення Git несподівано припинився."
 
+#: src/window.rs:1082
 msgid "Git is required for commit signing. Install it to continue."
 msgstr "Для підпису комітів потрібен Git. Встановіть його, щоб продовжити."
 
+#: src/window.rs:108 src/window.rs:179 src/window.rs:235
 msgid "Home"
 msgstr "Головна"
 
+#: src/window.rs:1473 src/window.rs:1651
 msgid "Insert a YubiKey"
 msgstr "Вставте YubiKey"
 
+#: src/window.rs:1129
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "Вставте YubiKey, а потім натисніть «Оновити»."
 
+#: src/window.rs:1785
 msgid "Insert a YubiKey. This page will detect it when you refresh."
 msgstr "Вставте YubiKey. Ця сторінка виявить його після оновлення."
 
+#: src/window.rs:738 src/window.rs:1840
 msgid "Inspect"
 msgstr "Переглянути"
 
+#: src/window.rs:2391
 msgid "Inspect YubiKey"
 msgstr "Перевірити YubiKey"
 
+#: src/window.rs:727
 msgid "Inspect YubiKey {0} of {1}"
 msgstr "Перевірити YubiKey {0} з {1}"
 
+#: src/window.rs:1838
 msgid "Inspect again"
 msgstr "Перевірити ще раз"
 
+#: src/window.rs:2393
 msgid "Inspect all keys"
 msgstr "Перевірити всі ключі"
 
+#: src/window.rs:724
 msgid "Inspect this YubiKey"
 msgstr "Перевірити цей YubiKey"
 
+#: src/window.rs:1831
 msgid "Inspected"
 msgstr "Перевірено"
 
+#: src/window.rs:1821
 msgid "Inspection needs attention · {0}"
 msgstr "Потребує уваги · {0}"
 
+#: src/ssh.rs:127
 msgid "Invalid FIDO device path."
 msgstr "Неправильний шлях до пристрою FIDO."
 
+#: src/window.rs:1777
 msgid "Keys stored on your YubiKeys"
 msgstr "Ключі, збережені на ваших YubiKeys"
 
+#: src/window.rs:1173 src/window.rs:1880
 msgid "Load"
 msgstr "Завантажити"
 
+#: src/window.rs:1171
 msgid "Load SSH keys"
 msgstr "Завантажити SSH-ключі"
 
+#: src/window.rs:1864
 msgid "Load all"
 msgstr "Завантажити все"
 
+#: src/window.rs:1157
 msgid "Load keys"
 msgstr "Завантажити ключі"
 
+#: src/window.rs:1878
 msgid "Load resident SSH keys"
 msgstr "Завантажити локальні ключі SSH"
 
+#: src/window.rs:1866
 msgid "Load this YubiKey's resident SSH keys into the agent"
 msgstr "Завантажити резидентні ключі SSH цього YubiKey у агент"
 
+#: src/window.rs:1257
 msgid "Load this resident key into the SSH agent before signing"
 msgstr "Завантажте цей резидентний ключ у агент SSH перед підписом"
 
+#: src/window.rs:1923
 msgid "Loaded"
 msgstr "Завантажено"
 
+#: src/window.rs:1182
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "Завантаження SSH-ключів… Торкніться YubiKey, якщо він блимає."
 
+#: src/window.rs:2633
 msgid "Local key handle path"
 msgstr "Шлях до дескриптора локального ключа"
 
+#: src/window.rs:2605
 msgid "Local key label"
 msgstr "Мітка локального ключа"
 
+#: src/window.rs:563
 msgid "Looking for your SSH agent and connected YubiKeys."
 msgstr "Шукаємо вашого агента SSH та підключені YubiKeys."
 
+#: src/window.rs:1832 src/window.rs:2124
 msgid "Needs attention"
 msgstr "Потребує уваги"
 
+#: src/window.rs:2496
 msgid "New hardware-backed SSH key"
 msgstr "Новий апаратний ключ SSH"
 
+#: src/window.rs:1128
 msgid "No FIDO security key detected"
 msgstr "Не виявлено ключ безпеки FIDO"
 
+#: src/window.rs:2037
 msgid "No SSH agent was detected"
 msgstr "Не виявлено агента SSH"
 
+#: src/window.rs:1784
 msgid "No YubiKey connected"
 msgstr "YubiKey не підключено"
 
+#: src/home.rs:653
 msgid "No hardware serial"
 msgstr "Відсутній апаратний серійний номер"
 
+#: src/window.rs:1930
 msgid "No resident SSH keys"
 msgstr "Немає резидентних ключів SSH"
 
+#: src/window.rs:1144
 msgid "No resident SSH keys found"
 msgstr "Резидентних SSH-ключів не знайдено"
 
+#: src/window.rs:1811
 msgid "No resident SSH keys found · {0}"
 msgstr "Резидентні ключі SSH не знайдено · {0}"
 
+#: src/window.rs:2302
 msgid "No resident SSH keys were found on the connected YubiKeys."
 msgstr "На підключених YubiKeys не знайдено жодного резидентного ключа SSH."
 
+#: src/window.rs:1221
 msgid "No signing"
 msgstr "Без підпису"
 
+#: src/home.rs:376 src/home.rs:395 src/home.rs:423
 msgid "Not configured"
 msgstr "Не налаштовано"
 
+#: src/window.rs:1833
 msgid "Not inspected"
 msgstr "Не перевірено"
 
+#: src/window.rs:1823
 msgid "Not inspected yet · {0}"
 msgstr "Ще не перевірено · {0}"
 
+#: src/home.rs:174
 msgid "Open the official Yubico Store"
 msgstr "Відкрити офіційний магазин Yubico"
 
+#: src/window.rs:1089 src/window.rs:1111
 msgid "Install Git"
 msgstr "Встановити Git"
 
+#: src/window.rs:1096
 msgid "Installing Git…"
 msgstr "Встановлення Git…"
 
+#: src/ssh.rs:571
 msgid ""
 "OpenSSH could not load resident keys. The SSH agent contains no newly loaded"
 " identity."
@@ -540,6 +698,7 @@ msgstr ""
 "OpenSSH не вдалося завантажити resident-ключі. У агенті SSH немає "
 "новозавантаженої ідентичності."
 
+#: src/ssh.rs:574
 msgid ""
 "OpenSSH could not load resident keys:\n"
 "{0}"
@@ -547,6 +706,7 @@ msgstr ""
 "OpenSSH не вдалося завантажити резидентні ключі:\n"
 "{0}"
 
+#: src/ssh.rs:287
 msgid ""
 "OpenSSH did not create a resident key:\n"
 "{0}"
@@ -554,6 +714,7 @@ msgstr ""
 "OpenSSH не створив резидентний ключ:\n"
 "{0}"
 
+#: src/ssh.rs:270
 msgid ""
 "OpenSSH finished creating the key, but the YubiKey could not be verified afterward: {0}\n"
 "Do not immediately retry; inspect the key first to avoid creating a duplicate."
@@ -561,6 +722,7 @@ msgstr ""
 "OpenSSH завершив створення ключа, але потім не вдалося перевірити YubiKey: {0}\n"
 "Не намагайтеся повторити одразу; спочатку перевірте ключ, щоб уникнути створення дубліката."
 
+#: src/ssh.rs:292
 msgid ""
 "OpenSSH reported success, but no new resident credential was detected. Do "
 "not retry until you inspect the YubiKey."
@@ -568,28 +730,36 @@ msgstr ""
 "OpenSSH повідомив про успіх, але нові облікові дані resident не виявлено. Не"
 " намагайтеся повторити, доки не перевірите YubiKey."
 
+#: src/window.rs:2668
 msgid "OpenSSH/FIDO credential metadata and local file location"
 msgstr ""
 "Метадані облікових даних OpenSSH/FIDO та розташування локального файлу"
 
+#: src/home.rs:391
 msgid "Passwordless"
 msgstr "Без пароля"
 
+#: src/window.rs:2922
 msgid "Permanently delete"
 msgstr "Остаточне видалення"
 
+#: src/window.rs:2782
 msgid "Permanently delete from YubiKey…"
 msgstr "Остаточно видалити з YubiKey…"
 
+#: src/window.rs:3021
 msgid "Permanently delete this resident SSH credential?"
 msgstr "Остаточно видалити ці резидентні облікові дані SSH?"
 
+#: src/home.rs:342
 msgid "Protect authentication and commit signing"
 msgstr "Захист автентифікації та підпису комітів"
 
+#: src/home.rs:193 src/home.rs:288
 msgid "Protection for {0}"
 msgstr "Захист для {0}"
 
+#: src/window.rs:2325
 msgid ""
 "Read the resident SSH keys already stored on your YubiKeys. You will enter "
 "each key's FIDO PIN and may need to touch it."
@@ -597,80 +767,105 @@ msgstr ""
 "Прочитайте резидентні ключі SSH, які вже збережено на ваших YubiKeys. Вам "
 "потрібно буде ввести FIDO-PIN для кожного ключа і, можливо, торкнутися його."
 
+#: src/window.rs:748
 msgid "Reading SSH keys from {0}… Touch it if it flashes."
 msgstr "Читання ключів SSH з {0}… Торкніться його, якщо він блимає."
 
+#: src/window.rs:479
 msgid "Reading account security settings…"
 msgstr "Читання параметрів безпеки облікового запису…"
 
+#: src/window.rs:2028 src/window.rs:2314
 msgid "Ready"
 msgstr "Готово"
 
+#: src/home.rs:366
 msgid "Ready to inspect"
 msgstr "Готовий до перевірки"
 
+#: src/home.rs:266
 msgid "Ready to protect {0}"
 msgstr "Готовий захищати {0}"
 
+#: src/window.rs:184
 msgid "Refresh connected YubiKeys"
 msgstr "Оновити підключені YubiKeys"
 
+#: src/window.rs:2781
 msgid "Remove from agent"
 msgstr "Видалити з агента"
 
+#: src/window.rs:2882
 msgid "Removing this key from the SSH agent…"
 msgstr "Видалення цього ключа з агента SSH…"
 
+#: src/window.rs:2662
 msgid "Require verification for every signature"
 msgstr "Вимагати перевірку для кожного підпису"
 
+#: src/window.rs:2663
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "Кожен раз, коли цей ключ підписує, вимагається PIN FIDO"
 
+#: src/window.rs:2561
 msgid "Resident SSH key created"
 msgstr "Створено ключ SSH resident"
 
+#: src/window.rs:2955
 msgid "Resident credential permanently deleted"
 msgstr "Резидентні облікові дані остаточно видалено"
 
+#: src/window.rs:1907
 msgid "Resident keys loaded"
 msgstr "Завантажено resident-ключі"
 
+#: src/window.rs:2629
 msgid "Resident username"
 msgstr "Ім'я користувача resident"
 
+#: src/ssh.rs:458
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr ""
 "Ім'я користувача resident має містити 1–64 байти і не містити контрольних "
 "символів."
 
+#: src/home.rs:341
 msgid "SSH & Git"
 msgstr "SSH та Git"
 
+#: src/window.rs:2010
 msgid "SSH agent"
 msgstr "Агент SSH"
 
+#: src/window.rs:2018
 msgid "SSH agent is ready"
 msgstr "Агент SSH готовий"
 
+#: src/window.rs:2033
 msgid "SSH agent unavailable"
 msgstr "Агент SSH недоступний"
 
+#: src/home.rs:426
 msgid "SSH commit signing"
 msgstr "Підпис комітів через SSH"
 
+#: src/window.rs:2797
 msgid "SSH key actions"
 msgstr "Дії з ключем SSH"
 
+#: src/window.rs:2461
 msgid "SSH key for {0}"
 msgstr "Ключ SSH для {0}"
 
+#: src/home.rs:410 src/window.rs:111 src/window.rs:157 src/window.rs:238
 msgid "SSH keys"
 msgstr "SSH-ключі"
 
+#: src/ssh.rs:92
 msgid "SSH_AUTH_SOCK is not set"
 msgstr "SSH_AUTH_SOCK не встановлено"
 
+#: src/window.rs:2693
 msgid ""
 "Safe defaults use ECDSA-SK, require touch, and store a discoverable "
 "credential on the selected YubiKey."
@@ -678,15 +873,19 @@ msgstr ""
 "Безпечні значення за замовчуванням використовують ECDSA-SK, вимагають дотику"
 " та зберігають облікові дані, які можна виявити, на вибраному YubiKey."
 
+#: src/home.rs:337
 msgid "Secure sudo authorization"
 msgstr "Безпечна авторизація sudo"
 
+#: src/window.rs:126
 msgid "Security Center"
 msgstr "Центр безпеки"
 
+#: src/home.rs:655
 msgid "Serial {0}"
 msgstr "Серійний номер {0}"
 
+#: src/home.rs:132
 msgid ""
 "Sign in, authorize sudo, and protect SSH and Git identities with a physical "
 "touch."
@@ -694,24 +893,31 @@ msgstr ""
 "Увійдіть, авторизуйте sudo та захищайте ідентичності SSH і Git фізичним "
 "дотиком."
 
+#: src/home.rs:331 src/home.rs:372 src/home.rs:614
 msgid "Sign-in"
 msgstr "Вхід у систему"
 
+#: src/window.rs:2863
 msgid "Signing test passed"
 msgstr "Тест підпису пройшено"
 
+#: src/ssh.rs:584 src/ssh.rs:593 src/ssh.rs:650
 msgid "Temporary public-key path is invalid."
 msgstr "Тимчасовий шлях до відкритого ключа є недійсним."
 
+#: src/window.rs:1420
 msgid "Test"
 msgstr "Test"
 
+#: src/window.rs:1418
 msgid "Test Git signing"
 msgstr "Тест підпису Git"
 
+#: src/window.rs:1345 src/window.rs:2780
 msgid "Test signing"
 msgstr "Тестове підписання"
 
+#: src/backend.rs:255
 msgid ""
 "The FIDO enrollment tool is not installed. Install the libpam-u2f package, "
 "then try again."
@@ -719,10 +925,12 @@ msgstr ""
 "Інструмент реєстрації FIDO не встановлено. Встановіть пакет libpam-u2f і "
 "повторіть спробу."
 
+#: src/window.rs:1879
 msgid "The PIN is sent directly to ssh-add and is never stored."
 msgstr ""
 "PIN-код надсилається безпосередньо до ssh-add і ніколи не зберігається."
 
+#: src/window.rs:2532
 msgid ""
 "The PIN is sent through a private pipe to OpenSSH. It is never stored or "
 "placed in command arguments."
@@ -730,15 +938,19 @@ msgstr ""
 "PIN-код надсилається через приватний канал до OpenSSH. Він ніколи не "
 "зберігається і не передається як аргумент команди."
 
+#: src/window.rs:2864
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "Агент SSH успішно підписав і перевірив дані за допомогою цього ключа."
 
+#: src/progress_dialog.rs:57
 msgid "The YubiKey operation stopped unexpectedly."
 msgstr "Операція YubiKey була несподівано припинена."
 
+#: src/window.rs:2598
 msgid "The credential will be created only on this exact device"
 msgstr "Облікові дані буде створено лише на цьому конкретному пристрої"
 
+#: src/ssh.rs:368
 msgid ""
 "The deletion command finished, but the selected YubiKey could not be inspected afterward: {0}\n"
 "The credential may or may not have been deleted. Do not retry. Reconnect and inspect the YubiKey first."
@@ -746,9 +958,11 @@ msgstr ""
 "Команда видалення завершена, але обраний YubiKey не вдалося перевірити після цього: {0}\n"
 "Облікові дані могли бути видалені чи ні. Не повторюйте спробу. Спочатку підключіться та перевірте YubiKey."
 
+#: src/window.rs:541 src/window.rs:1536 src/window.rs:1716
 msgid "The enrollment task failed."
 msgstr "Завдання реєстрації не виконано."
 
+#: src/window.rs:2956
 msgid ""
 "The exact resident credential is no longer present on the selected YubiKey. "
 "Local .pub or key-handle files and any SSH-agent entry were not removed."
@@ -757,19 +971,24 @@ msgstr ""
 "Локальні файли .pub або файли ключів-ідентифікаторів, а також запис у SSH-"
 "агенті не були видалені."
 
+#: src/window.rs:1903
 msgid ""
 "The inspected resident SSH credentials are already available in this agent."
 msgstr "Перевірені локальні облікові дані SSH вже доступні в цьому агенті."
 
+#: src/ssh.rs:627
 msgid "The local SSH key-handle path is invalid."
 msgstr "Локальний шлях до дескриптора ключа SSH є недійсним."
 
+#: src/git_signing.rs:76
 msgid "The local SSH key-handle path is not valid UTF-8."
 msgstr "Локальний шлях до дескриптора ключа SSH не є дійсним UTF-8."
 
+#: src/ssh.rs:468
 msgid "The local key path must be absolute."
 msgstr "Шлях до локального ключа має бути абсолютним."
 
+#: src/window.rs:2563
 msgid ""
 "The non-exportable private key remains protected by the selected YubiKey.\n"
 "\n"
@@ -795,30 +1014,38 @@ msgstr ""
 "\n"
 "Ключ не завантажується автоматично до SSH-агента."
 
+#: src/backend.rs:334
 msgid "The operation was cancelled or denied."
 msgstr "Операцію скасовано або відхилено."
 
+#: src/ssh.rs:247
 msgid "The output folder does not exist: {0}"
 msgstr "Папка для виводу не існує: {0}"
 
+#: src/ssh.rs:317
 msgid "The resident credential ID is invalid. Refresh before deleting."
 msgstr ""
 "Ідентифікатор резидентних облікових даних недійсний. Оновіть перед "
 "видаленням."
 
+#: src/ssh.rs:744
 msgid "The resident credential did not return a public key."
 msgstr "Резидентні облікові дані не повернули відкритий ключ."
 
+#: src/ssh.rs:382
 msgid ""
 "The resident credential is still present. Deletion was not completed: {0}"
 msgstr "Резидентні облікові дані все ще присутні. Видалення не завершено: {0}"
 
+#: src/ssh.rs:749
 msgid "The resident credential returned an incomplete public key."
 msgstr "Резидентні облікові дані повернули неповний відкритий ключ."
 
+#: src/ssh.rs:756
 msgid "The resident credential returned malformed PEM data."
 msgstr "Резидентні облікові дані повернули пошкоджені дані PEM."
 
+#: src/ssh.rs:296
 msgid ""
 "The resident credential {0} exists on the YubiKey, but its local handle "
 "files are incomplete. Do not retry creation."
@@ -826,6 +1053,7 @@ msgstr ""
 "Резидентні облікові дані {0} існують на YubiKey, але їхні локальні файли "
 "дескрипторів є неповними. Не повторюйте спробу створення."
 
+#: src/ssh.rs:282
 msgid ""
 "The resident credential {0} was created on the YubiKey, but OpenSSH did not complete successfully:\n"
 "{1}\n"
@@ -835,20 +1063,24 @@ msgstr ""
 "{1}\n"
 "Не намагайтеся повторити створення. Перевірте ключ і збережіть будь-які локальні файли, які були записані."
 
+#: src/backend.rs:303 src/backend.rs:312
 msgid "The security key returned an invalid PAM credential."
 msgstr "Ключ безпеки повернув недійсні облікові дані PAM."
 
+#: src/ssh.rs:323
 msgid ""
 "The selected FIDO device is no longer connected. Refresh and inspect it "
 "again."
 msgstr ""
 "Обраний FIDO-пристрій більше не підключено. Оновіть та перевірте його знову."
 
+#: src/ssh.rs:216
 msgid ""
 "The selected FIDO device is no longer connected. Refresh and try again."
 msgstr ""
 "Обраний пристрій FIDO більше не підключено. Оновіть і повторіть спробу."
 
+#: src/window.rs:1447
 msgid ""
 "The selected credential created a valid Git-format SSH signature. No "
 "repository or commit was changed."
@@ -856,10 +1088,12 @@ msgstr ""
 "Обрані облікові дані створили дійсний підпис SSH у форматі Git. Жодне "
 "сховище чи коміт не було змінено."
 
+#: src/ssh.rs:253
 msgid ""
 "The selected private-key or .pub file already exists. Choose another name."
 msgstr "Файл приватного ключа або .pub вже існує. Оберіть іншу назву."
 
+#: src/ssh.rs:338
 msgid ""
 "The selected resident credential changed since it was inspected. Nothing was"
 " deleted; refresh and verify the key."
@@ -867,6 +1101,7 @@ msgstr ""
 "Обрані резидентні облікові дані змінилися після їх перевірки. Нічого не було"
 " видалено; оновіть та перевірте ключ."
 
+#: src/ssh.rs:335
 msgid ""
 "The selected resident credential is no longer present on this YubiKey. "
 "Nothing was deleted."
@@ -874,22 +1109,28 @@ msgstr ""
 "Обрані резидентні облікові дані більше не присутні на цьому YubiKey. Нічого "
 "не було видалено."
 
+#: src/ssh.rs:672
 msgid "The signature was created but could not be verified: {0}"
 msgstr "Підпис було створено, але не вдалося його перевірити: {0}"
 
+#: src/window.rs:1618
 msgid "The sudo policy task failed."
 msgstr "Завдання політики sudo не виконано."
 
+#: src/ssh.rs:663
 msgid "The temporary Git signature path is invalid."
 msgstr "Тимчасовий шлях до підпису Git є недійсним."
 
+#: src/ssh.rs:622
 msgid "The temporary Git signing path is invalid."
 msgstr "Тимчасовий шлях до підпису Git є недійсним."
 
+#: src/home.rs:597
 msgid ""
 "These keys are trusted by this account but are not currently connected."
 msgstr "Ці ключі довірені цьому обліковому запису, але наразі не підключені."
 
+#: src/window.rs:2921
 msgid ""
 "This PIN authorizes permanent deletion of the exact credential shown in the "
 "previous step. It is never stored."
@@ -897,12 +1138,15 @@ msgstr ""
 "Цей PIN-код дозволяє остаточно видалити точні облікові дані, показані на "
 "попередньому кроці. Він ніколи не зберігається."
 
+#: src/window.rs:1931
 msgid "This YubiKey has no discoverable ssh:* credentials."
 msgstr "Цей YubiKey не має об’єднаних ssh:* облікових даних."
 
+#: src/git_signing.rs:85
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "Це відкритий ключ OpenSSH security-key, який не підтримується."
 
+#: src/window.rs:3022
 msgid ""
 "This removes the private credential from the selected YubiKey and cannot be "
 "undone. It does not remove local files or an identity already loaded in the "
@@ -912,18 +1156,22 @@ msgstr ""
 "скасовано. Це не видаляє локальні файли або особу, вже завантажену в SSH-"
 "агенті."
 
+#: src/window.rs:1579
 msgid "This setting applies only to the current user."
 msgstr "Цей параметр застосовується лише до поточного користувача."
 
+#: src/home.rs:66
 msgid "This will only take a moment."
 msgstr "Це займе лише мить."
 
+#: src/window.rs:1888
 msgid ""
 "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr ""
 "Доторкніться до YubiKey після відповідного повідомлення. Завантаження "
 "резидентних ключів в агент SSH…"
 
+#: src/window.rs:1433
 msgid ""
 "Touch the YubiKey. Creating and verifying a temporary Git-format SSH "
 "signature…"
@@ -931,9 +1179,11 @@ msgstr ""
 "Доторкніться до YubiKey. Створення та перевірка тимчасового підпису SSH у "
 "форматі Git…"
 
+#: src/window.rs:2856
 msgid "Touch the YubiKey. Testing SSH signing and verification…"
 msgstr "Доторкніться до YubiKey. Тестування підписання та перевірки SSH…"
 
+#: src/window.rs:2544
 msgid ""
 "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not "
 "remove the key."
@@ -941,60 +1191,78 @@ msgstr ""
 "Доторкніться до обраного YubiKey. Створення резидентного ключа SSH на {0}… "
 "Не виймайте ключ."
 
+#: src/window.rs:1496
 msgid "Touch this key when prompted to enroll it"
 msgstr ""
 "Доторкніться до цього ключа після відповідного повідомлення для реєстрації"
 
+#: src/window.rs:1676
 msgid "Touch this key when prompted to enroll it for sudo"
 msgstr ""
 "Доторкніться до цього ключа після відповідного повідомлення для реєстрації "
 "для sudo"
 
+#: src/window.rs:1527 src/window.rs:1707
 msgid "Touch your security key to continue."
 msgstr "Доторкніться до ключа безпеки, щоб продовжити."
 
+#: src/home.rs:93
 msgid "Try Again"
 msgstr "Спробувати ще раз"
 
+#: src/window.rs:3008
 msgid "Type {0} to confirm"
 msgstr "Введіть {0} для підтвердження"
 
+#: src/window.rs:688 src/window.rs:2039 src/window.rs:2340
 msgid "Unavailable"
 msgstr "Недоступно"
 
+#: src/backend.rs:251
 msgid "Unknown authentication purpose."
 msgstr "Невідома мета автентифікації."
 
+#: src/window.rs:109 src/window.rs:149 src/window.rs:236
 msgid "Unlock GDM"
 msgstr "Розблокувати GDM"
 
+#: src/window.rs:110 src/window.rs:153 src/window.rs:237
 msgid "Unlock sudo"
 msgstr "Розблокувати sudo"
 
+#: src/window.rs:1463
 msgid "Unlock the current user"
 msgstr "Розблокувати поточного користувача"
 
+#: src/home.rs:332
 msgid "Unlock your account with a touch"
 msgstr "Розблокуйте свій обліковий запис дотиком"
 
+#: src/ssh.rs:735 src/window.rs:1251 src/window.rs:2467 src/window.rs:2987
 msgid "Unnamed SSH credential"
 msgstr "Облікові дані SSH без назви"
 
+#: src/ssh.rs:782
 msgid "Unsupported resident SSH public-key algorithm."
 msgstr "Непідтримуваний резидентний алгоритм відкритого ключа SSH."
 
+#: src/window.rs:1397
 msgid "Updating Git commit signing…"
 msgstr "Оновлення підпису комітів Git…"
 
+#: src/window.rs:1529
 msgid "Updating sign-in settings…"
 msgstr "Оновлення параметрів входу…"
 
+#: src/window.rs:1709
 msgid "Updating sudo settings…"
 msgstr "Оновлення параметрів sudo…"
 
+#: src/window.rs:1635
 msgid "Use YubiKey to unlock sudo"
 msgstr "Використовуйте YubiKey для розблокування sudo"
 
+#: src/window.rs:2934
 msgid ""
 "Verifying and permanently deleting the selected resident credential. Do not "
 "unplug the YubiKey…"
@@ -1002,15 +1270,19 @@ msgstr ""
 "Перевірка та остаточно видалення обраних резидентних облікових даних. Не "
 "від’єднуйте YubiKey…"
 
+#: src/window.rs:695
 msgid "View in App Store"
 msgstr "Переглянути в магазині застосунків"
 
+#: src/window.rs:2267
 msgid "Waiting"
 msgstr "Очікування"
 
+#: src/home.rs:156
 msgid "Waiting for a configured YubiKey"
 msgstr "Очікування налаштованого YubiKey"
 
+#: src/window.rs:1637
 msgid ""
 "You may enroll keys now, but sudo bypasses PAM while passwordless access is "
 "enabled."
@@ -1018,12 +1290,15 @@ msgstr ""
 "Ви можете зареєструвати ключі зараз, але sudo обходить PAM, коли увімкнено "
 "доступ без пароля."
 
+#: src/window.rs:2297
 msgid "Your YubiKeys are inspected"
 msgstr "Ваші YubiKeys перевірено"
 
+#: src/window.rs:2299
 msgid "Your hardware-backed SSH keys"
 msgstr "Ваші апаратні ключі SSH"
 
+#: src/window.rs:2263
 msgid ""
 "Your resident SSH keys stay on the security key. Insert it to view and use "
 "them."
@@ -1031,6 +1306,7 @@ msgstr ""
 "Ваші резидентні ключі SSH залишаються на ключі безпеки. Вставте його, щоб "
 "переглянути та використовувати їх."
 
+#: src/home.rs:130
 msgid ""
 "Your security settings are ready. Connect a configured YubiKey when you need"
 " it."
@@ -1038,24 +1314,31 @@ msgstr ""
 "Ваші параметри безпеки готові. Підключіть налаштований YubiKey, коли він "
 "знадобиться."
 
+#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1755 src/window.rs:2597
 msgid "YubiKey"
 msgstr "YubiKey"
 
+#: src/window.rs:3088
 msgid "YubiKey configuration failed"
 msgstr "Не вдалося налаштувати YubiKey"
 
+#: src/home.rs:251
 msgid "YubiKey connected"
 msgstr "YubiKey підключено"
 
+#: src/home.rs:379 src/home.rs:400
 msgid "YubiKey or account password"
 msgstr "YubiKey або пароль облікового запису"
 
+#: src/home.rs:622
 msgid "YubiKey without hardware serial"
 msgstr "YubiKey без апаратного серійного номера"
 
+#: src/home.rs:624
 msgid "YubiKey · Serial {0}"
 msgstr "YubiKey · Серійний номер {0}"
 
+#: src/window.rs:2993
 msgid ""
 "YubiKey: {0}\n"
 "Device: {1}\n"
@@ -1071,12 +1354,15 @@ msgstr ""
 "Алгоритм: {4}\n"
 "Відбиток: {5}"
 
+#: src/window.rs:1124
 msgid "YubiKeys"
 msgstr "YubiKey"
 
+#: src/window.rs:1955
 msgid "agent"
 msgstr "агент"
 
+#: src/ssh.rs:386
 msgid ""
 "fido2-token reported success, but the resident credential is still present. "
 "Do not retry until you refresh and inspect the YubiKey."
@@ -1084,93 +1370,122 @@ msgstr ""
 "fido2-token повідомив про успіх, але резидентні облікові дані все ще "
 "присутні. Не повторюйте спробу, доки не оновите та не перевірите YubiKey."
 
+#: src/home.rs:398
 msgid "sudo authentication is bypassed"
 msgstr "Автентифікацію sudo пропущено"
 
+#: src/window.rs:1578
 msgid "sudo authentication policy"
 msgstr "політика автентифікації sudo"
 
+#: src/window.rs:330 src/window.rs:490
 msgid "unknown"
 msgstr "невідомо"
 
+#: src/window.rs:2519
 msgid "user"
 msgstr "користувач"
 
+#: src/window.rs:1146
 msgid "{0} SSH keys loaded"
 msgstr "Завантажено {0} SSH-ключів"
 
+#: src/home.rs:254
 msgid "{0} YubiKeys connected"
 msgstr "Підключено {0} YubiKey"
 
+#: src/backend.rs:18 src/git_signing.rs:200 src/ssh.rs:886
 msgid "{0} exited with {1}"
 msgstr "{0} завершився з кодом {1}"
 
+#: src/ssh.rs:540 src/ssh.rs:933
 msgid "{0} failed: {1}"
 msgstr "Не вдалося виконати {0}: {1}"
 
+#: src/window.rs:2023
 msgid "{0} identities are currently available to SSH applications."
 msgstr "Зараз для застосунків SSH доступно {0} ідентичностей."
 
+#: src/window.rs:1056
 msgid "{0} is enabled for this YubiKey"
 msgstr "{0} увімкнено для цього YubiKey"
 
+#: src/window.rs:1061
 msgid "{0} is not configured for this YubiKey"
 msgstr "{0} не налаштовано для цього YubiKey"
 
+#: src/window.rs:1911
 msgid "{0} new SSH identities were added to the agent."
 msgstr "До агента додано {0} нових SSH-ідентичностей."
 
+#: src/window.rs:1909
 msgid "{0} new SSH identity was added to the agent."
 msgstr "До агента додано одну нову SSH-ідентичність ({0})."
 
+#: src/window.rs:2307
 msgid "{0} resident SSH keys are available from your connected YubiKeys."
 msgstr "З підключених YubiKeys доступно {0} резидентних ключів SSH."
 
+#: src/window.rs:1817
 msgid "{0} resident SSH keys · {1}"
 msgstr "{0} резидентних ключів SSH · {1}"
 
+#: src/home.rs:362
 msgid "{0} resident credentials inspected"
 msgstr "Перевірено {0} резидентних облікових даних"
 
+#: src/window.rs:2328
 msgid "{0} to inspect"
 msgstr "{0} для перевірки"
 
+#: src/window.rs:1487 src/window.rs:1665
 msgid "{0} · no hardware serial"
 msgstr "{0} · немає серійного номера апаратного забезпечення"
 
+#: src/window.rs:1489 src/window.rs:1667
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
 
+#: src/window.rs:999
 msgid "Checking Passkeys support…"
 msgstr "Перевірка підтримки ключів доступу…"
 
+#: src/window.rs:653 src/window.rs:661 src/window.rs:666 src/window.rs:667
+#: src/window.rs:676
 msgid "Could not open Yubico Authenticator"
 msgstr "Не вдалося відкрити Yubico Authenticator"
 
+#: src/window.rs:636
 msgid "Open Yubico Authenticator"
 msgstr "Відкрити Yubico Authenticator"
 
+#: src/window.rs:113 src/window.rs:240
 msgid "Passkeys"
 msgstr "Ключі доступу"
 
+#: src/window.rs:872
 msgid ""
 "Choose the passkey option and follow the prompt to use the same YubiKey."
 msgstr ""
 "Виберіть варіант із ключем доступу та дотримуйтесь підказки, щоб використати"
 " той самий YubiKey."
 
+#: src/window.rs:866
 msgid "Confirm it is you"
 msgstr "Підтвердьте свою особу"
 
+#: src/window.rs:851
 msgid "How to use"
 msgstr "Як користуватися"
 
+#: src/window.rs:867
 msgid ""
 "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
 msgstr ""
 "Вставте YubiKey, введіть FIDO PIN, коли з’явиться запит, а потім торкніться "
 "ключа."
 
+#: src/window.rs:1778
 msgid ""
 "Inspect a connected YubiKey to reveal its resident SSH keys and available "
 "actions."
@@ -1178,6 +1493,7 @@ msgstr ""
 "Перевірте підключений YubiKey, щоб показати збережені ключі SSH і доступні "
 "дії."
 
+#: src/window.rs:690
 msgid ""
 "Install the official Yubico Authenticator first. When installation is "
 "complete, return here and refresh this page."
@@ -1185,15 +1501,18 @@ msgstr ""
 "Спочатку встановіть офіційний Yubico Authenticator. Після завершення "
 "встановлення поверніться сюди й оновіть сторінку."
 
+#: src/window.rs:900
 msgid ""
 "Keep a recovery method or a backup security key for important accounts."
 msgstr ""
 "Збережіть спосіб відновлення або резервний ключ безпеки для важливих "
 "облікових записів."
 
+#: src/window.rs:918
 msgid "Manage passkeys"
 msgstr "Керування ключами доступу"
 
+#: src/window.rs:860
 msgid ""
 "On a supported website or app, choose to create a passkey and select your "
 "security key."
@@ -1201,6 +1520,7 @@ msgstr ""
 "На підтримуваному сайті або в застосунку виберіть створення ключа доступу та"
 " вкажіть свій ключ безпеки."
 
+#: src/window.rs:843
 msgid ""
 "Passkeys are passwordless sign-in credentials stored on compatible security "
 "keys. Registration and sign-in begin in a supported website or app; follow "
@@ -1211,26 +1531,33 @@ msgstr ""
 " застосунку; дотримуйтесь підказок, щоб вставити YubiKey, ввести FIDO PIN і "
 "торкнутися ключа."
 
+#: src/window.rs:839
 msgid "Protect passkeys with your YubiKey"
 msgstr "Захистіть ключі доступу за допомогою YubiKey"
 
+#: src/window.rs:859
 msgid "Register a passkey"
 msgstr "Зареєструвати ключ доступу"
 
+#: src/window.rs:871
 msgid "Sign in next time"
 msgstr "Увійти наступного разу"
 
+#: src/window.rs:2011
 msgid ""
 "The SSH agent makes selected keys available to SSH applications during this "
 "session."
 msgstr "Агент SSH надає вибрані ключі застосункам SSH протягом цього сеансу."
 
+#: src/window.rs:630
 msgid "Yubico Authenticator is installed"
 msgstr "Yubico Authenticator встановлено"
 
+#: src/window.rs:687
 msgid "Yubico Authenticator is not installed"
 msgstr "Yubico Authenticator не встановлено"
 
+#: src/window.rs:920
 msgid ""
 "Yubico Authenticator lets you view and manage passkeys stored on your "
 "YubiKey. This security center does not read, create, or delete passkeys; it "
@@ -1240,9 +1567,11 @@ msgstr ""
 "керувати ними. Цей центр безпеки не читає, не створює й не видаляє ключі "
 "доступу; він лише відкриває встановлений застосунок."
 
+#: src/ssh_config.rs:185 src/ssh_config.rs:233
 msgid "A file already exists at the managed SSH configuration path: {0}"
 msgstr "У керованому шляху конфігурації SSH вже існує файл: {0}"
 
+#: src/window.rs:2068
 msgid ""
 "After the first YubiKey authentication, later SSH sessions can reuse the "
 "connection. The last session remains available in the background for 10 "
@@ -1252,67 +1581,88 @@ msgstr ""
 "використовувати з’єднання. Останній сеанс залишається доступним у фоновому "
 "режимі протягом 10 хвилин."
 
+#: src/ssh_config.rs:530
 msgid "Could not create a temporary file in {0}: {1}"
 msgstr "Не вдалося створити тимчасовий файл у {0}: {1}"
 
+#: src/ssh_config.rs:414 src/ssh_config.rs:450 src/ssh_config.rs:463
 msgid "Could not inspect {0}: {1}"
 msgstr "Не вдалося перевірити {0}: {1}"
 
+#: src/ssh_config.rs:540
 msgid "Could not protect the temporary SSH configuration in {0}: {1}"
 msgstr "Не вдалося захистити тимчасову конфігурацію SSH у {0}: {1}"
 
+#: src/ssh_config.rs:477 src/ssh_config.rs:577
 msgid "Could not read {0}: {1}"
 msgstr "Не вдалося прочитати {0}: {1}"
 
+#: src/ssh_config.rs:692
 msgid "Could not remove {0}: {1}"
 msgstr "Не вдалося видалити {0}: {1}"
 
+#: src/ssh_config.rs:570
 msgid "Could not replace {0}: {1}"
 msgstr "Не вдалося замінити {0}: {1}"
 
+#: src/ssh_config.rs:702
 msgid "Could not synchronize {0}: {1}"
 msgstr "Не вдалося синхронізувати {0}: {1}"
 
+#: src/window.rs:2173 src/window.rs:2184
 msgid "Could not update SSH connection persistence"
 msgstr "Не вдалося оновити постійність з’єднання SSH"
 
+#: src/ssh_config.rs:599
 msgid "Could not validate the SSH configuration: {0}"
 msgstr "Не вдалося перевірити конфігурацію SSH: {0}"
 
+#: src/ssh_config.rs:551
 msgid "Could not write the temporary SSH configuration in {0}: {1}"
 msgstr "Не вдалося записати тимчасову конфігурацію SSH у {0}: {1}"
 
+#: src/window.rs:2086 src/window.rs:2159
 msgid "Disabled · each new connection authenticates separately"
 msgstr "Вимкнено · кожне нове з’єднання аутентифікується окремо"
 
+#: src/window.rs:2078 src/window.rs:2152
 msgid "Enabled · idle connections remain available for 10 minutes"
 msgstr ""
 "Увімкнено · неактивні з’єднання залишаються доступними протягом 10 хвилин"
 
+#: src/ssh_config.rs:100
 msgid "HOME does not point to a valid folder: {0}"
 msgstr "HOME не вказує на дійсну папку: {0}"
 
+#: src/ssh_config.rs:97
 msgid "HOME is not set. The SSH configuration cannot be located."
 msgstr "Змінна HOME не встановлена. Конфігурацію SSH не вдалося знайти."
 
+#: src/window.rs:2105
 msgid "Main SSH configuration unavailable"
 msgstr "Основна конфігурація SSH недоступна"
 
+#: src/window.rs:2106
 msgid "Managed SSH configuration unavailable"
 msgstr "Керована конфігурація SSH недоступна"
 
+#: src/window.rs:2222
 msgid "Managed configuration preview"
 msgstr "Передперегляд керованої конфігурації"
 
+#: src/window.rs:2202
 msgid "Manual review required"
 msgstr "Потрібний ручний огляд"
 
+#: src/window.rs:2094 src/window.rs:2167
 msgid "Needs attention · review the SSH configuration before continuing"
 msgstr "Потребує уваги · перевірте конфігурацію SSH, перш ніж продовжити"
 
+#: src/window.rs:2103
 msgid "Needs attention · the SSH configuration could not be located"
 msgstr "Потребує уваги · конфігурацію SSH не вдалося знайти"
 
+#: src/window.rs:2210
 msgid ""
 "Only new SSH connections are affected. Turning this off does not stop "
 "existing background connections. Earlier host-specific OpenSSH settings "
@@ -1322,22 +1672,28 @@ msgstr ""
 "існуючі фонові з’єднання. Раніше налаштовані параметри OpenSSH для "
 "конкретних хостів мають пріоритет."
 
+#: src/ssh_config.rs:608
 msgid "OpenSSH rejected the generated configuration."
 msgstr "OpenSSH відхилила згенеровану конфігурацію."
 
+#: src/ssh_config.rs:611
 msgid "OpenSSH rejected the generated configuration: {0}"
 msgstr "OpenSSH відхилила згенеровану конфігурацію: {0}"
 
+#: src/window.rs:2111
 msgid "Reuse SSH connections in the background"
 msgstr "Повторно використовувати з’єднання SSH у фоновому режимі"
 
+#: src/window.rs:2067
 msgid "SSH connection persistence"
 msgstr "Постійність з’єднання SSH"
 
+#: src/ssh_config.rs:334
 msgid ""
 "The SSH configuration changed during rollback. No further changes were made."
 msgstr "Конфігурацію SSH змінено під час відкату. Інших змін не внесено."
 
+#: src/ssh_config.rs:85 src/ssh_config.rs:560
 msgid ""
 "The SSH configuration changed while it was being updated. Refresh and try "
 "again."
@@ -1345,6 +1701,7 @@ msgstr ""
 "Конфігурацію SSH змінено під час її оновлення. Оновіть сторінку та повторіть"
 " спробу."
 
+#: src/ssh_config.rs:385
 msgid ""
 "The SSH configuration contains duplicate or incomplete application markers. "
 "Remove or repair the marked block manually."
@@ -1352,32 +1709,41 @@ msgstr ""
 "Конфігурація SSH містить дублікати або неповні маркери додатка. Видаліть або"
 " відремонтуйте позначений блок вручну."
 
+#: src/ssh_config.rs:144 src/ssh_config.rs:219 src/ssh_config.rs:284
 msgid ""
 "The SSH configuration is not valid UTF-8 and cannot be safely managed: {0}"
 msgstr ""
 "Конфігурація SSH не є валідним UTF-8, і її неможливо безпечно керувати: {0}"
 
+#: src/ssh_config.rs:507
 msgid "The SSH configuration is writable by another user: {0}"
 msgstr "Конфігурація SSH доступна для запису іншому користувачеві: {0}"
 
+#: src/ssh_config.rs:527
 msgid "The SSH configuration path is invalid."
 msgstr "Шлях до конфігурації SSH є недійсним."
 
+#: src/ssh_config.rs:471
 msgid "The SSH configuration path is not a safe, regular file: {0}"
 msgstr "Шлях до конфігурації SSH не є безпечним звичайним файлом: {0}"
 
+#: src/ssh_config.rs:505
 msgid "The SSH directory is writable by another user: {0}"
 msgstr "Теку директорію SSH можна записувати іншому користувачеві: {0}"
 
+#: src/ssh_config.rs:422 src/ssh_config.rs:434
 msgid "The SSH path is not a safe, regular directory: {0}"
 msgstr "Шлях SSH не є безпечною звичайною директорією: {0}"
 
+#: src/ssh_config.rs:498
 msgid "The SSH path is not owned by the current user: {0}"
 msgstr "Шлях SSH не належить поточному користувачеві: {0}"
 
+#: src/window.rs:2144
 msgid "The SSH persistence update stopped unexpectedly."
 msgstr "Оновлення постійності SSH несподівано припинилося."
 
+#: src/ssh_config.rs:392
 msgid ""
 "The application-managed block in the SSH configuration was changed. Restore "
 "or remove the marked block manually."
@@ -1385,6 +1751,7 @@ msgstr ""
 "Блок конфігурації SSH, керований додатком, було змінено. Відновіть або "
 "видаліть позначений блок вручну."
 
+#: src/ssh_config.rs:579
 msgid ""
 "The generated SSH persistence configuration did not match the expected "
 "preset."
@@ -1392,25 +1759,31 @@ msgstr ""
 "Згенеровану конфігурацію постійного зберігання SSH не вдалося зіставити з "
 "очікуваним пресетом."
 
+#: src/ssh_config.rs:278
 msgid ""
 "The managed SSH block exists but the main configuration is missing: {0}"
 msgstr "Керований блок SSH існує, але основна конфігурація відсутня: {0}"
 
+#: src/ssh_config.rs:289
 msgid "The managed SSH block is no longer present. Refresh and try again."
 msgstr ""
 "Керований блок SSH більше не присутній. Оновіть сторінку та повторіть "
 "спробу."
 
+#: src/ssh_config.rs:315 src/ssh_config.rs:683
 msgid "The managed SSH configuration changed while it was being removed: {0}"
 msgstr "Керовану конфігурацію SSH змінено під час її видалення: {0}"
 
+#: src/ssh_config.rs:170
 msgid "The managed SSH configuration is missing: {0}"
 msgstr "Керована конфігурація SSH відсутня: {0}"
 
+#: src/ssh_config.rs:166
 msgid ""
 "The managed SSH configuration was changed outside this application: {0}"
 msgstr "Керовану конфігурацію SSH змінено поза цим додатком: {0}"
 
+#: src/ssh_config.rs:158
 msgid ""
 "The managed SSH file is also referenced outside the application-managed "
 "block. Remove the extra Include before using this setting."
@@ -1418,6 +1791,7 @@ msgstr ""
 "Керований файл SSH також згадується поза блоком, керованим додатком. "
 "Видаліть додатковий Include перед використанням цього налаштування."
 
+#: src/ssh_config.rs:177
 msgid ""
 "The managed SSH file is referenced outside the application-managed block. "
 "Remove that Include before using this setting."
@@ -1425,11 +1799,22 @@ msgstr ""
 "Керований файл SSH згадується поза блоком, керованим додатком. Видаліть цей "
 "Include перед використанням цього налаштування."
 
+#: src/window.rs:2209
 msgid "What this setting changes"
 msgstr "Що змінює цей параметр"
 
+#: src/window.rs:2224
 msgid "{0} includes {1}"
 msgstr "{0} includes {1}"
+
+#: src/window.rs:2491
+msgid ""
+"Optional: create a new resident key only when you need another SSH identity."
+" Its private key never leaves the selected YubiKey."
+msgstr ""
+"Необов'язково: створюйте новий резидентний ключ лише тоді, коли вам потрібна"
+" інша SSH-ідентичність. Його приватний ключ ніколи не залишає вибрану "
+"YubiKey."
 
 #~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
 #~ msgstr ""

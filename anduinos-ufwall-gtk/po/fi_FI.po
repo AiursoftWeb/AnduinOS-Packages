@@ -6,393 +6,639 @@ msgstr ""
 "POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/widgets/add_rule_dialog.rs:155
 msgid "0 = append at end"
 msgstr "0 = lisää loppuun"
 
+#: src/window.rs:81
 msgid "About"
 msgstr "Tietoja"
 
+#: src/widgets/add_rule_dialog.rs:93
 msgid "Action"
 msgstr "Toiminto"
 
+#: src/views/status_view.rs:396
 msgid "Active"
 msgstr "Aktiivinen"
 
+#: src/widgets/add_rule_dialog.rs:170
 msgid "Add"
 msgstr "Lisää"
 
+#: src/views/rules_view.rs:93 src/widgets/add_rule_dialog.rs:57
 msgid "Add Rule"
 msgstr "Lisää sääntö"
 
+#: src/widgets/add_rule_dialog.rs:110
 msgid "Advanced"
 msgstr "Tarkemmat asetukset"
 
+#: src/views/network_audit_view.rs:200 src/views/network_audit_view.rs:208
 msgid "All"
 msgstr "Kaikki"
 
+#: src/views/profiles_view.rs:92 src/views/status_view.rs:127
+#: src/views/status_view.rs:136 src/widgets/add_rule_dialog.rs:96
 msgid "Allow"
 msgstr "Salli"
 
+#: src/views/profiles_view.rs:77
 msgid "Allow applications with predefined rules."
 msgstr "Salli sovellukset, joilla on ennalta määritellyt säännöt."
 
+#: src/views/profiles_view.rs:76
 msgid "Application Profiles"
 msgstr "Sovellusprofiilit"
 
+#: src/window.rs:117
 msgid "Audit"
 msgstr "Rekisteri"
 
+#: src/views/network_audit_view.rs:277
 msgid "Auditor Error"
 msgstr "Tarkastajan virhe"
 
+#: src/views/network_audit_view.rs:504
 msgid "Block"
 msgstr "Estä"
 
+#: src/views/network_audit_view.rs:500
 msgid "Block Connection?"
 msgstr "Estä yhteys?"
 
+#: src/views/network_audit_view.rs:493
 msgid "Block inbound traffic from"
 msgstr "Estä saapuva liikenne kohteesta"
 
+#: src/views/network_audit_view.rs:495
 msgid "Block outbound traffic to"
 msgstr "Estä lähtevä liikanne kohteeseen"
 
+#: src/views/dashboard_view.rs:96
 msgid "Blocked Events"
 msgstr "Estetyt tapahtumat"
 
+#: src/views/network_audit_view.rs:551
 msgid "Blocked Successfully"
 msgstr "Estetty onnistuneesti"
 
+#: src/widgets/add_rule_dialog.rs:124
 msgid "Both"
 msgstr "Molemmat"
 
+#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "Peruuta"
 
+#: src/views/status_view.rs:103
 msgid "Local Network Discovery"
 msgstr "Paikallisen verkon havaitseminen"
 
+#: src/views/status_view.rs:104
 msgid "Control multicast DNS discovery and .local name resolution."
 msgstr "Hallitse multicast DNS -etsintää ja .local-nimien ratkaisemista."
 
+#: src/views/status_view.rs:110
 msgid "Local Network Discovery (mDNS)"
 msgstr "Paikallisen verkon havaitseminen (mDNS)"
 
+#: src/views/status_view.rs:111
 msgid "Checking service status…"
 msgstr "Tarkistetaan palvelun tilaa…"
 
+#: src/views/status_view.rs:216 src/views/status_view.rs:332
 msgid "Network Discovery Error"
 msgstr "Verkon havaitsemisvirhe"
 
+#: src/views/status_view.rs:351
 msgid "Avahi is not installed."
 msgstr "Avahia ei ole asennettu."
 
+#: src/views/status_view.rs:353
 msgid "Avahi is running; .local names and service discovery are available."
 msgstr "Avahi on käynnissä; .local-nimet ja palvelunetsintä ovat saatavilla."
 
+#: src/views/status_view.rs:357
 msgid "Avahi is enabled but not currently running."
 msgstr "Avahi on käytössä, mutta ei tällä hetkellä käynnissä."
 
+#: src/views/status_view.rs:359
 msgid "Avahi is blocked; .local names and service discovery are unavailable."
 msgstr ""
 "Avahi on estetty; .local-nimet ja palvelunetsintä eivät ole saatavilla."
 
+#: src/widgets/add_rule_dialog.rs:149
 msgid "Comment"
 msgstr "Kommentti"
 
+#: src/widgets/add_rule_dialog.rs:72
 msgid "Custom"
 msgstr "Mukautettu"
 
+#: src/views/dashboard_view.rs:56 src/window.rs:116
 msgid "Dashboard"
 msgstr "Kojelauta"
 
+#: src/views/status_view.rs:119
 msgid "Default Policies"
 msgstr "Oletuspolitiikat"
 
+#: src/widgets/rule_row.rs:90
 msgid "Delete"
 msgstr "Poista"
 
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:122
 msgid "Delete All"
 msgstr "Poista kaikki"
 
+#: src/views/rules_view.rs:118
 msgid "Delete All Rules?"
 msgstr "Haluatko poistaa kaikki säännöt?"
 
+#: src/widgets/rule_row.rs:86
 msgid "Delete Rule"
 msgstr "Poista sääntö"
 
+#: src/widgets/rule_row.rs:87
 msgid "Delete rule"
 msgstr "Poista sääntö"
 
+#: src/views/status_view.rs:126 src/views/status_view.rs:135
+#: src/widgets/add_rule_dialog.rs:95
 msgid "Deny"
 msgstr "Estä"
 
+#: src/widgets/add_rule_dialog.rs:135
 msgid "Destination IP"
 msgstr "Kohde-IP"
 
+#: src/widgets/add_rule_dialog.rs:114
 msgid "Direction"
 msgstr "Suunta"
 
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:137 src/views/status_view.rs:185
+#: src/widgets/add_rule_dialog.rs:338 src/widgets/rule_row.rs:119
+#: src/window.rs:283 src/window.rs:299
 msgid "Error"
 msgstr "Virhe"
 
+#: src/views/network_audit_view.rs:554
 msgid "Failed to Block"
 msgstr "Estäminen epäonnistui"
 
+#: src/views/status_view.rs:95 src/window.rs:64
 msgid "Firewall"
 msgstr "Palomuuri"
 
+#: src/views/rules_view.rs:70
 msgid "Firewall Rules"
 msgstr "Palomuurisäännöt"
 
+#: src/views/status_view.rs:156
 msgid "Full"
 msgstr "Täysi"
 
+#: src/views/status_view.rs:155
 msgid "High"
 msgstr "Korkea"
 
+#: src/widgets/add_rule_dialog.rs:116
 msgid "In"
 msgstr "Sisään"
 
+#: src/views/status_view.rs:96 src/views/status_view.rs:396
 msgid "Inactive"
 msgstr "Epäaktiivinen"
 
+#: src/views/network_audit_view.rs:201
 msgid "Inbound"
 msgstr "Saapuva"
 
+#: src/views/status_view.rs:124
 msgid "Incoming"
 msgstr "Saapuva"
 
+#: src/widgets/add_rule_dialog.rs:154
 msgid "Insert Before Rule"
 msgstr "Lisää ennen sääntöä"
 
+#: src/widgets/add_rule_dialog.rs:144
 msgid "Interface"
 msgstr "Liitäntä"
 
+#: src/widgets/add_rule_dialog.rs:98
 msgid "Limit"
 msgstr "Rajoitus"
 
+#: src/views/dashboard_view.rs:129
 msgid "Listening Ports"
 msgstr "Kuuntelevat portit"
 
+#: src/views/status_view.rs:150
 msgid "Log Level"
 msgstr "Lokitaso"
 
+#: src/views/status_view.rs:146
 msgid "Logging"
 msgstr "Lokitus"
 
+#: src/views/status_view.rs:153
 msgid "Low"
 msgstr "Matala"
 
+#: src/views/status_view.rs:154
 msgid "Medium"
 msgstr "Keskitaso"
 
+#: src/views/network_audit_view.rs:58
 msgid "Monitoring Network Activity"
 msgstr "Valvotaan verkkotoimintaa"
 
+#: src/views/profiles_view.rs:119
 msgid "No Profiles"
 msgstr "Ei profiileja"
 
+#: src/views/rules_view.rs:75
 msgid "No Rules"
 msgstr "Ei sääntöjä"
 
+#: src/views/profiles_view.rs:120
 msgid "No application profiles found"
 msgstr "Sovellusprofiileja ei löytynyt"
 
+#: src/views/dashboard_view.rs:247
 msgid "No blocked connections in recent events"
 msgstr "Estettyjä yhteyksiä ei ole viimeisimmissä tapahtumissa"
 
+#: src/views/dashboard_view.rs:296
 msgid "No blocked ports in recent events"
 msgstr "Äskettäisissä tapahtumissa ei ole estettyjä portteja"
 
+#: src/views/dashboard_view.rs:344
 msgid "No listening ports detected"
 msgstr "Kuuntelevia portteja ei havaittu"
 
+#: src/views/status_view.rs:152
 msgid "Off"
 msgstr "Pois päältä"
 
+#: src/widgets/add_rule_dialog.rs:117
 msgid "Out"
 msgstr "Ulos"
 
+#: src/views/network_audit_view.rs:202
 msgid "Outbound"
 msgstr "Lähtevä"
 
+#: src/views/status_view.rs:133
 msgid "Outgoing"
 msgstr "Menevä"
 
+#: src/views/network_audit_view.rs:217
 msgid "Pause list updates"
 msgstr "Keskeytä luettelon päivitykset"
 
+#: src/views/profiles_view.rs:87
 msgid "Port / Protocol"
 msgstr "Portti / Protokolla"
 
+#: src/widgets/add_rule_dialog.rs:89
 msgid "Port / Service Name"
 msgstr "Portti / Palvelun nimi"
 
+#: src/window.rs:120
 msgid "Profiles"
 msgstr "Profiilit"
 
+#: src/widgets/add_rule_dialog.rs:122
 msgid "Protocol"
 msgstr "Protokolla"
 
+#: src/views/profiles_view.rs:82
 msgid "Quick Allow Port"
 msgstr "Salli portti nopeasti"
 
+#: src/views/dashboard_view.rs:135
 msgid "Recent Blocked Events"
 msgstr "Viimeisimmät estetyt tapahtumat"
 
+#: src/views/dashboard_view.rs:78
 msgid "Recent Events Parsed"
 msgstr "Viimeisimmät tapahtumat analysoidut"
 
+#: src/views/dashboard_view.rs:154
 msgid "Refresh"
 msgstr "Päivitä"
 
+#: src/views/status_view.rs:128 src/views/status_view.rs:137
+#: src/widgets/add_rule_dialog.rs:97
 msgid "Reject"
 msgstr "Hylkää"
 
+#: src/views/network_audit_view.rs:195
 msgid "Resolve Domains"
 msgstr "Nimeä alueet"
 
+#: src/views/network_audit_view.rs:551
 msgid "Rule added to block"
 msgstr "Sääntö lisätty estoon"
 
+#: src/window.rs:119
 msgid "Rules"
 msgstr "Säännöt"
 
+#: src/widgets/add_rule_dialog.rs:265
 msgid "Save"
 msgstr "Tallenna"
 
+#: src/views/network_audit_view.rs:186
 msgid "Search Process or IP..."
 msgstr "Hae prosessia tai IP-osoitetta..."
 
+#: src/views/rules_view.rs:62
 msgid "Search rules..."
 msgstr "Hae sääntöjä..."
 
+#: src/widgets/add_rule_dialog.rs:70
 msgid "Service"
 msgstr "Palvelu"
 
+#: src/views/dashboard_view.rs:139
 msgid "Show"
 msgstr "Näytä"
 
+#: src/widgets/add_rule_dialog.rs:131
 msgid "Source IP"
 msgstr "Lähde-IP"
 
+#: src/views/status_view.rs:84 src/window.rs:118
 msgid "Status"
 msgstr "Tila"
 
+#: src/views/network_audit_view.rs:209 src/widgets/add_rule_dialog.rs:125
 msgid "TCP"
 msgstr "TCP"
 
+#: src/views/rules_view.rs:76
 msgid "There are no rules configured yet."
 msgstr "Sääntöjä ei ole vielä määritetty."
 
+#: src/views/rules_view.rs:119
 msgid "This will delete all custom rules. This action cannot be undone."
 msgstr ""
 "Tämä poistaa kaikki mukautetut säännöt. Tätä toimintoa ei voi peruuttaa."
 
+#: src/views/network_audit_view.rs:493
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr "Tämä estää etäkoneen lähettämästä paketteja koneeseesi."
 
+#: src/views/network_audit_view.rs:495
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr "Tämä estää konettasi lähettämästä paketteja etäkoneelle."
 
+#: src/views/dashboard_view.rs:117
 msgid "Top Blocked Connections"
 msgstr "Eniten estetyt yhteydet"
 
+#: src/views/dashboard_view.rs:123
 msgid "Top Blocked Ports"
 msgstr "Estetyt portit"
 
+#: src/views/network_audit_view.rs:210 src/widgets/add_rule_dialog.rs:126
 msgid "UDP"
 msgstr "UDP"
 
+#: src/views/profiles_view.rs:83
 msgid "e.g. 80,443/tcp or 8080"
 msgstr "esim. 80,443/tcp tai 8080"
 
+#: data/app_profiles/qbittorrent:3 data/app_profiles/transmission:3
 msgid "BitTorrent client"
 msgstr "Bittorrent-asiakasohjelma"
 
+#: data/app_profiles/cups:3
 msgid "Common UNIX Printing System server"
 msgstr "Unixin yleinen tulostusjärjestelmän palvelin"
 
+#: data/app_profiles/syncthing:3
 msgid "Continuous file synchronization"
 msgstr "Jatkuva tiedostojen synkronointi"
 
+#: data/app_profiles/docker:3
 msgid "Docker container runtime API"
 msgstr "Docker-säiliön ajoajan API"
 
+#: data/app_profiles/dns:3
 msgid "Domain Name System server"
 msgstr "Nimipalvelun nimipalvelin"
 
+#: data/app_profiles/xmpp:3
 msgid "Extensible Messaging and Presence Protocol"
 msgstr "Extensible Messaging and Presence Protocol"
 
+#: data/app_profiles/ftp:3
 msgid "File Transfer Protocol"
 msgstr "Tiedonsiirtoprotokolla (FTP)"
 
+#: data/app_profiles/dropbox:3
 msgid "File synchronization service"
 msgstr "Tiedostojen synkronointipalvelu"
 
+#: data/app_profiles/http:3
 msgid "Hypertext Transfer Protocol for web servers"
 msgstr "Hypertextins siirtoprotokolla verkkopalvelimia varten"
 
+#: data/app_profiles/redis:3
 msgid "In-memory data structure store"
 msgstr "Muistissa toimivien tietorakenteiden tallennusjärjestelmä"
 
+#: data/app_profiles/imap:3
 msgid "Internet Message Access Protocol for email"
 msgstr "Internet Message Access Protocol sähköpostia varten"
 
+#: data/app_profiles/ldap:3
 msgid "Lightweight Directory Access Protocol"
 msgstr "Kevyt hakemiston päästöprotokolla (LDAP)"
 
+#: data/app_profiles/jellyfin:3
 msgid "Media streaming server"
 msgstr "Median suoratoistopalvelin"
 
+#: data/app_profiles/wireguard:3
 msgid "Modern VPN tunnel"
 msgstr "Nykyinen VPN-tunneli"
 
+#: data/app_profiles/mdns:3
 msgid "Multicast DNS for local network discovery"
 msgstr "Multicast DNS paikallisen verkon etsintää varten"
 
+#: data/app_profiles/mysql:3
 msgid "MySQL database server"
 msgstr "MySQL-tietokantapalvelin"
 
+#: data/app_profiles/nfs:3
 msgid "Network File System"
 msgstr "Tiedostojen verkkojärjestelmä (NFS)"
 
+#: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
 msgstr "Portti / Protokolla"
 
+#: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
 msgstr "NoSQL-asiakirjatietokanta"
 
+#: data/app_profiles/kdeconnect:3
 msgid "Phone and desktop integration"
 msgstr "Puhelimen ja työpöydän integraatio"
 
+#: data/app_profiles/plex:3
 msgid "Plex media streaming server"
 msgstr "Plex-mediasuoratoistopalvelin"
 
+#: data/app_profiles/pop3:3
 msgid "Post Office Protocol for email retrieval"
 msgstr "Post Office Protocol sähköpostin noutamista varten"
 
+#: data/app_profiles/postgresql:3
 msgid "PostgreSQL database server"
 msgstr "PostgreSQL-tietokantapalvelin"
 
+#: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
 msgstr "Portti / Protokolla"
 
+#: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
 msgstr "Suojattu HTTP verkkopalvelimia varten"
 
+#: data/app_profiles/openssh:3
 msgid "Secure shell remote access"
 msgstr "Suojattu kuori-pääsy etänä"
 
+#: data/app_profiles/smtp:3
 msgid "Simple Mail Transfer Protocol"
 msgstr "Simple Mail Transfer Protocol"
 
+#: data/app_profiles/vnc:3
 msgid "Virtual Network Computing remote desktop"
 msgstr "Virtual Network Computing -kauko työpöytä"
 
+#: data/app_profiles/samba:3
 msgid "Windows file and printer sharing"
 msgstr "Windows-tiedostojen ja tulostinten jako"
+
+#: src/views/network_audit_view.rs:534
+msgid "Audit Block"
+msgstr "Tarkastus: Estetty"
+
+#: src/ufw/backend.rs:44 src/ufw/backend.rs:391 src/ufw/backend.rs:643
+msgid "Authentication cancelled"
+msgstr "Todennus peruutettu"
+
+#: src/views/network_audit_view.rs:160
+msgid "Download"
+msgstr "Lataus"
+
+#: src/ufw/backend.rs:384
+msgid "Failed to execute network service helper"
+msgstr "Verkkopalvelun apiohjelman suoritus epäonnistui"
+
+#: src/ufw/backend.rs:632
+msgid "Failed to execute pkexec"
+msgstr "pkexeciä ei voitu suorittaa"
+
+#: src/ufw/backend.rs:613
+msgid "Failed to inspect system service"
+msgstr "Järjestelmäpalvelun tarkastus epäonnistui"
+
+#: src/window.rs:284
+msgid "Failed to read firewall status"
+msgstr "Tulleen palomuurin tilaa ei voitu lukea"
+
+#: src/window.rs:300
+msgid "Failed to read profiles"
+msgstr "Profiilien lukeminen epäonnistui"
+
+#: src/ufw/stats.rs:39
+msgid "Failed to run journalctl"
+msgstr "journalctl-komennon suoritus epäonnistui"
+
+#: src/ufw/backend.rs:37
+msgid "Failed to run pkexec ufw status"
+msgstr "pkexec ufw status -komentoa ei voitu suorittaa"
+
+#: src/ufw/stats.rs:151
+msgid "Failed to run ss"
+msgstr "ss-komennon suoritus epäonnistui"
+
+#: src/ufw/traffic_monitor.rs:36
+msgid "Failed to start ufwall-auditor"
+msgstr "ufwall-auditorin käynnistys epäonnistui"
+
+#: src/ufw/traffic_monitor.rs:38
+msgid "Is it installed?"
+msgstr "Onko se asennettu?"
+
+#: src/views/network_audit_view.rs:166
+msgid "Max"
+msgstr "Maksimi"
+
+#: src/views/network_audit_view.rs:84
+msgid ""
+"Network Traffic\n"
+"Red line: Upload speed\n"
+"Green line: Download speed"
+msgstr ""
+"Verkkoliikenne\n"
+"Punainen viiva: lähetysnopeus\n"
+"Vihreä viiva: latausnopeus"
+
+#: src/ufw/backend.rs:399
+msgid "Network service command failed"
+msgstr "Verkkopalvelukomento epäonnistui"
+
+#: src/views/network_audit_view.rs:371
+msgid "No Active Connections"
+msgstr "Ei aktiivisia yhteyksiä"
+
+#: src/views/network_audit_view.rs:361
+msgid "No Inbound Connections"
+msgstr "Ei saapuvia yhteyksiä"
+
+#: src/views/network_audit_view.rs:366
+msgid "No Outbound Connections"
+msgstr "Ei lähteviä yhteyksiä"
+
+#: src/views/network_audit_view.rs:367
+msgid "No applications are sending data to the internet."
+msgstr "Yksikään sovellus ei lähetä tietoja internetiin."
+
+#: src/views/network_audit_view.rs:362
+msgid "No external devices are connecting to your open ports."
+msgstr "Ei ulkoisia laitteita, jotka yhdistyvät avoimiin portteihisi."
+
+#: src/views/network_audit_view.rs:372
+msgid "No network activity detected."
+msgstr "Verkkotoimintaa ei havaittu."
+
+#: src/ufw/backend.rs:528 src/ufw/backend.rs:546
+msgid "No ports defined for this profile"
+msgstr "Tälle profiilille ei ole määritetty portteja"
+
+#: src/ufw/backend.rs:649
+msgid "UFW command failed"
+msgstr "UFW-komento epäonnistui"
+
+#: src/views/network_audit_view.rs:152
+msgid "Upload"
+msgstr "Lähetys"
+
+#: src/ufw/backend.rs:48
+msgid "pkexec failed"
+msgstr "pkexec epäonnistui"

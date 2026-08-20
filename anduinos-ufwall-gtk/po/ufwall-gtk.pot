@@ -45,7 +45,7 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: src/views/network_audit_view.rs:190 src/views/network_audit_view.rs:198
+#: src/views/network_audit_view.rs:200 src/views/network_audit_view.rs:208
 msgid "All"
 msgstr ""
 
@@ -66,23 +66,23 @@ msgstr ""
 msgid "Audit"
 msgstr ""
 
-#: src/views/network_audit_view.rs:267
+#: src/views/network_audit_view.rs:277
 msgid "Auditor Error"
 msgstr ""
 
-#: src/views/network_audit_view.rs:485
+#: src/views/network_audit_view.rs:504
 msgid "Block"
 msgstr ""
 
-#: src/views/network_audit_view.rs:481
+#: src/views/network_audit_view.rs:500
 msgid "Block Connection?"
 msgstr ""
 
-#: src/views/network_audit_view.rs:474
+#: src/views/network_audit_view.rs:493
 msgid "Block inbound traffic from"
 msgstr ""
 
-#: src/views/network_audit_view.rs:476
+#: src/views/network_audit_view.rs:495
 msgid "Block outbound traffic to"
 msgstr ""
 
@@ -90,7 +90,7 @@ msgstr ""
 msgid "Blocked Events"
 msgstr ""
 
-#: src/views/network_audit_view.rs:528
+#: src/views/network_audit_view.rs:551
 msgid "Blocked Successfully"
 msgstr ""
 
@@ -98,7 +98,7 @@ msgstr ""
 msgid "Both"
 msgstr ""
 
-#: src/views/network_audit_view.rs:484 src/views/rules_view.rs:121
+#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
 #: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr ""
@@ -191,11 +191,11 @@ msgstr ""
 #: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
 #: src/views/rules_view.rs:137 src/views/status_view.rs:185
 #: src/widgets/add_rule_dialog.rs:338 src/widgets/rule_row.rs:119
-#: src/window.rs:281 src/window.rs:293
+#: src/window.rs:283 src/window.rs:299
 msgid "Error"
 msgstr ""
 
-#: src/views/network_audit_view.rs:531
+#: src/views/network_audit_view.rs:554
 msgid "Failed to Block"
 msgstr ""
 
@@ -223,7 +223,7 @@ msgstr ""
 msgid "Inactive"
 msgstr ""
 
-#: src/views/network_audit_view.rs:191
+#: src/views/network_audit_view.rs:201
 msgid "Inbound"
 msgstr ""
 
@@ -299,7 +299,7 @@ msgstr ""
 msgid "Out"
 msgstr ""
 
-#: src/views/network_audit_view.rs:192
+#: src/views/network_audit_view.rs:202
 msgid "Outbound"
 msgstr ""
 
@@ -307,7 +307,7 @@ msgstr ""
 msgid "Outgoing"
 msgstr ""
 
-#: src/views/network_audit_view.rs:207
+#: src/views/network_audit_view.rs:217
 msgid "Pause list updates"
 msgstr ""
 
@@ -348,11 +348,11 @@ msgstr ""
 msgid "Reject"
 msgstr ""
 
-#: src/views/network_audit_view.rs:185
+#: src/views/network_audit_view.rs:195
 msgid "Resolve Domains"
 msgstr ""
 
-#: src/views/network_audit_view.rs:528
+#: src/views/network_audit_view.rs:551
 msgid "Rule added to block"
 msgstr ""
 
@@ -364,7 +364,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: src/views/network_audit_view.rs:176
+#: src/views/network_audit_view.rs:186
 msgid "Search Process or IP..."
 msgstr ""
 
@@ -388,7 +388,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: src/widgets/add_rule_dialog.rs:125
+#: src/views/network_audit_view.rs:209 src/widgets/add_rule_dialog.rs:125
 msgid "TCP"
 msgstr ""
 
@@ -400,12 +400,12 @@ msgstr ""
 msgid "This will delete all custom rules. This action cannot be undone."
 msgstr ""
 
-#: src/views/network_audit_view.rs:474
+#: src/views/network_audit_view.rs:493
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr ""
 
-#: src/views/network_audit_view.rs:476
+#: src/views/network_audit_view.rs:495
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr ""
@@ -418,7 +418,7 @@ msgstr ""
 msgid "Top Blocked Ports"
 msgstr ""
 
-#: src/widgets/add_rule_dialog.rs:126
+#: src/views/network_audit_view.rs:210 src/widgets/add_rule_dialog.rs:126
 msgid "UDP"
 msgstr ""
 
@@ -540,4 +540,111 @@ msgstr ""
 
 #: data/app_profiles/samba:3
 msgid "Windows file and printer sharing"
+msgstr ""
+
+#: src/views/network_audit_view.rs:534
+msgid "Audit Block"
+msgstr ""
+
+#: src/ufw/backend.rs:44 src/ufw/backend.rs:391 src/ufw/backend.rs:643
+msgid "Authentication cancelled"
+msgstr ""
+
+#: src/views/network_audit_view.rs:160
+msgid "Download"
+msgstr ""
+
+#: src/ufw/backend.rs:384
+msgid "Failed to execute network service helper"
+msgstr ""
+
+#: src/ufw/backend.rs:632
+msgid "Failed to execute pkexec"
+msgstr ""
+
+#: src/ufw/backend.rs:613
+msgid "Failed to inspect system service"
+msgstr ""
+
+#: src/window.rs:284
+msgid "Failed to read firewall status"
+msgstr ""
+
+#: src/window.rs:300
+msgid "Failed to read profiles"
+msgstr ""
+
+#: src/ufw/stats.rs:39
+msgid "Failed to run journalctl"
+msgstr ""
+
+#: src/ufw/backend.rs:37
+msgid "Failed to run pkexec ufw status"
+msgstr ""
+
+#: src/ufw/stats.rs:151
+msgid "Failed to run ss"
+msgstr ""
+
+#: src/ufw/traffic_monitor.rs:36
+msgid "Failed to start ufwall-auditor"
+msgstr ""
+
+#: src/ufw/traffic_monitor.rs:38
+msgid "Is it installed?"
+msgstr ""
+
+#: src/views/network_audit_view.rs:166
+msgid "Max"
+msgstr ""
+
+#: src/views/network_audit_view.rs:84
+msgid ""
+"Network Traffic\n"
+"Red line: Upload speed\n"
+"Green line: Download speed"
+msgstr ""
+
+#: src/ufw/backend.rs:399
+msgid "Network service command failed"
+msgstr ""
+
+#: src/views/network_audit_view.rs:371
+msgid "No Active Connections"
+msgstr ""
+
+#: src/views/network_audit_view.rs:361
+msgid "No Inbound Connections"
+msgstr ""
+
+#: src/views/network_audit_view.rs:366
+msgid "No Outbound Connections"
+msgstr ""
+
+#: src/views/network_audit_view.rs:367
+msgid "No applications are sending data to the internet."
+msgstr ""
+
+#: src/views/network_audit_view.rs:362
+msgid "No external devices are connecting to your open ports."
+msgstr ""
+
+#: src/views/network_audit_view.rs:372
+msgid "No network activity detected."
+msgstr ""
+
+#: src/ufw/backend.rs:528 src/ufw/backend.rs:546
+msgid "No ports defined for this profile"
+msgstr ""
+
+#: src/ufw/backend.rs:649
+msgid "UFW command failed"
+msgstr ""
+
+#: src/views/network_audit_view.rs:152
+msgid "Upload"
+msgstr ""
+
+#: src/ufw/backend.rs:48
+msgid "pkexec failed"
 msgstr ""

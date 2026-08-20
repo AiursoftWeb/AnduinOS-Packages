@@ -34,7 +34,7 @@ msgstr "ルールを追加"
 msgid "Advanced"
 msgstr "詳細設定"
 
-#: src/views/network_audit_view.rs:190 src/views/network_audit_view.rs:198
+#: src/views/network_audit_view.rs:200 src/views/network_audit_view.rs:208
 msgid "All"
 msgstr "すべて"
 
@@ -55,23 +55,23 @@ msgstr "アプリケーションプロファイル"
 msgid "Audit"
 msgstr "監査"
 
-#: src/views/network_audit_view.rs:267
+#: src/views/network_audit_view.rs:277
 msgid "Auditor Error"
 msgstr "審査官エラー"
 
-#: src/views/network_audit_view.rs:485
+#: src/views/network_audit_view.rs:504
 msgid "Block"
 msgstr "ブロック"
 
-#: src/views/network_audit_view.rs:481
+#: src/views/network_audit_view.rs:500
 msgid "Block Connection?"
 msgstr "接続をブロックしますか？"
 
-#: src/views/network_audit_view.rs:474
+#: src/views/network_audit_view.rs:493
 msgid "Block inbound traffic from"
 msgstr "次のホストからの着信トラフィックをブロックする"
 
-#: src/views/network_audit_view.rs:476
+#: src/views/network_audit_view.rs:495
 msgid "Block outbound traffic to"
 msgstr "次のホストへの送信トラフィックをブロックする"
 
@@ -79,7 +79,7 @@ msgstr "次のホストへの送信トラフィックをブロックする"
 msgid "Blocked Events"
 msgstr "ブロックされたイベント"
 
-#: src/views/network_audit_view.rs:528
+#: src/views/network_audit_view.rs:551
 msgid "Blocked Successfully"
 msgstr "正常にブロックされました"
 
@@ -87,7 +87,7 @@ msgstr "正常にブロックされました"
 msgid "Both"
 msgstr "両方"
 
-#: src/views/network_audit_view.rs:484 src/views/rules_view.rs:121
+#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
 #: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "キャンセル"
@@ -180,11 +180,11 @@ msgstr "方向"
 #: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
 #: src/views/rules_view.rs:137 src/views/status_view.rs:185
 #: src/widgets/add_rule_dialog.rs:338 src/widgets/rule_row.rs:119
-#: src/window.rs:281 src/window.rs:293
+#: src/window.rs:283 src/window.rs:299
 msgid "Error"
 msgstr "エラー"
 
-#: src/views/network_audit_view.rs:531
+#: src/views/network_audit_view.rs:554
 msgid "Failed to Block"
 msgstr "ブロックに失敗しました"
 
@@ -212,7 +212,7 @@ msgstr "入力"
 msgid "Inactive"
 msgstr "無効"
 
-#: src/views/network_audit_view.rs:191
+#: src/views/network_audit_view.rs:201
 msgid "Inbound"
 msgstr "着信"
 
@@ -288,7 +288,7 @@ msgstr "オフ"
 msgid "Out"
 msgstr "アウト"
 
-#: src/views/network_audit_view.rs:192
+#: src/views/network_audit_view.rs:202
 msgid "Outbound"
 msgstr "送信"
 
@@ -296,7 +296,7 @@ msgstr "送信"
 msgid "Outgoing"
 msgstr "送信"
 
-#: src/views/network_audit_view.rs:207
+#: src/views/network_audit_view.rs:217
 msgid "Pause list updates"
 msgstr "リスト更新を一時停止"
 
@@ -337,11 +337,11 @@ msgstr "更新"
 msgid "Reject"
 msgstr "拒否"
 
-#: src/views/network_audit_view.rs:185
+#: src/views/network_audit_view.rs:195
 msgid "Resolve Domains"
 msgstr "ドメインを解決"
 
-#: src/views/network_audit_view.rs:528
+#: src/views/network_audit_view.rs:551
 msgid "Rule added to block"
 msgstr "ルールがブロックリストに追加されました"
 
@@ -353,7 +353,7 @@ msgstr "ルール"
 msgid "Save"
 msgstr "保存"
 
-#: src/views/network_audit_view.rs:176
+#: src/views/network_audit_view.rs:186
 msgid "Search Process or IP..."
 msgstr "プロセスまたはIPを検索..."
 
@@ -377,7 +377,7 @@ msgstr "送信元 IP"
 msgid "Status"
 msgstr "ステータス"
 
-#: src/widgets/add_rule_dialog.rs:125
+#: src/views/network_audit_view.rs:209 src/widgets/add_rule_dialog.rs:125
 msgid "TCP"
 msgstr "TCP"
 
@@ -389,12 +389,12 @@ msgstr "まだルールが設定されていません。"
 msgid "This will delete all custom rules. This action cannot be undone."
 msgstr "これにより、すべてのカスタムルールが削除されます。この操作は元に戻すことができません。"
 
-#: src/views/network_audit_view.rs:474
+#: src/views/network_audit_view.rs:493
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr "リモートホストからお使いのマシンへのパケット送信をすべて防止します。"
 
-#: src/views/network_audit_view.rs:476
+#: src/views/network_audit_view.rs:495
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr "お使いのマシンからリモートホストへのパケット送信をすべて防止します。"
@@ -407,7 +407,7 @@ msgstr "ブロックされた上位接続"
 msgid "Top Blocked Ports"
 msgstr "ブロックされた上位ポート"
 
-#: src/widgets/add_rule_dialog.rs:126
+#: src/views/network_audit_view.rs:210 src/widgets/add_rule_dialog.rs:126
 msgid "UDP"
 msgstr "UDP"
 
@@ -530,3 +530,113 @@ msgstr "Virtual Network Computingによるリモートデスクトップ"
 #: data/app_profiles/samba:3
 msgid "Windows file and printer sharing"
 msgstr "Windowsのファイルおよびプリンター共有"
+
+#: src/views/network_audit_view.rs:534
+msgid "Audit Block"
+msgstr "監査ブロック"
+
+#: src/ufw/backend.rs:44 src/ufw/backend.rs:391 src/ufw/backend.rs:643
+msgid "Authentication cancelled"
+msgstr "認証がキャンセルされました"
+
+#: src/views/network_audit_view.rs:160
+msgid "Download"
+msgstr "受信"
+
+#: src/ufw/backend.rs:384
+msgid "Failed to execute network service helper"
+msgstr "ネットワークサービスヘルパーの実行に失敗しました"
+
+#: src/ufw/backend.rs:632
+msgid "Failed to execute pkexec"
+msgstr "pkexecの実行に失敗しました"
+
+#: src/ufw/backend.rs:613
+msgid "Failed to inspect system service"
+msgstr "システムサービスの確認に失敗しました"
+
+#: src/window.rs:284
+msgid "Failed to read firewall status"
+msgstr "ファイアウォールの状態を読み取れませんでした"
+
+#: src/window.rs:300
+msgid "Failed to read profiles"
+msgstr "プロファイルの読み取りに失敗しました"
+
+#: src/ufw/stats.rs:39
+msgid "Failed to run journalctl"
+msgstr "journalctl の実行に失敗しました"
+
+#: src/ufw/backend.rs:37
+msgid "Failed to run pkexec ufw status"
+msgstr "pkexec ufw status の実行に失敗しました"
+
+#: src/ufw/stats.rs:151
+msgid "Failed to run ss"
+msgstr "ss の実行に失敗しました"
+
+#: src/ufw/traffic_monitor.rs:36
+msgid "Failed to start ufwall-auditor"
+msgstr "ufwall-auditor の開始に失敗しました"
+
+#: src/ufw/traffic_monitor.rs:38
+msgid "Is it installed?"
+msgstr "インストールされていますか？"
+
+#: src/views/network_audit_view.rs:166
+msgid "Max"
+msgstr "最大"
+
+#: src/views/network_audit_view.rs:84
+msgid ""
+"Network Traffic\n"
+"Red line: Upload speed\n"
+"Green line: Download speed"
+msgstr ""
+"ネットワークトラフィック\n"
+"赤線: 送信速度\n"
+"緑線: 受信速度"
+
+#: src/ufw/backend.rs:399
+msgid "Network service command failed"
+msgstr "ネットワークサービスのコマンドが失敗しました"
+
+#: src/views/network_audit_view.rs:371
+msgid "No Active Connections"
+msgstr "アクティブな接続はありません"
+
+#: src/views/network_audit_view.rs:361
+msgid "No Inbound Connections"
+msgstr "受信接続はありません"
+
+#: src/views/network_audit_view.rs:366
+msgid "No Outbound Connections"
+msgstr "送信接続はありません"
+
+#: src/views/network_audit_view.rs:367
+msgid "No applications are sending data to the internet."
+msgstr "インターネットにデータを送信しているアプリケーションはありません。"
+
+#: src/views/network_audit_view.rs:362
+msgid "No external devices are connecting to your open ports."
+msgstr "開いているポートに外部デバイスが接続していません。"
+
+#: src/views/network_audit_view.rs:372
+msgid "No network activity detected."
+msgstr "ネットワークアクティビティが検出されませんでした。"
+
+#: src/ufw/backend.rs:528 src/ufw/backend.rs:546
+msgid "No ports defined for this profile"
+msgstr "このプロファイルにはポートが定義されていません"
+
+#: src/ufw/backend.rs:649
+msgid "UFW command failed"
+msgstr "UFW コマンドに失敗しました"
+
+#: src/views/network_audit_view.rs:152
+msgid "Upload"
+msgstr "アップロード"
+
+#: src/ufw/backend.rs:48
+msgid "pkexec failed"
+msgstr "pkexec に失敗しました"

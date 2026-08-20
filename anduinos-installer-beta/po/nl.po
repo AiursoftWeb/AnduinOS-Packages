@@ -17,11 +17,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: src/pages.py:2092
 msgid "Installing an input method requires an Internet connection."
 msgstr ""
 "Voor het installeren van een invoermethode is een internetverbinding "
 "vereist."
 
+#: src/pages.py:2103
 msgid ""
 "No Internet connection. Input methods cannot be installed. You can install "
 "them later when connected."
@@ -29,6 +31,7 @@ msgstr ""
 "Geen internetverbinding. Invoermethoden kunnen niet worden geïnstalleerd. U "
 "kunt ze later installeren wanneer u verbonden bent."
 
+#: src/pages.py:4933
 msgid ""
 "\n"
 "\n"
@@ -38,6 +41,7 @@ msgstr ""
 "\n"
 "Een echte installatie zal een machine-lokale MOK maken. Na herstart, kies in MOKManager Enroll MOK → Doorgaan → Ja en voer het wachtwoord 123456 in."
 
+#: src/pages.py:4944
 msgid ""
 "\n"
 "On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
@@ -45,15 +49,19 @@ msgstr ""
 "\n"
 "Kies op het blauwe MOKManager-scherm Enroll MOK → Doorgaan → Ja, wachtwoord: 123456"
 
+#: src/pages.py:4275
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr "4 GiB schijfswap (prioriteit 10) + 50% RAM LZ4 zram (prioriteit 100)"
 
+#: src/pages.py:4085
 msgid "; sudo does not require a password"
 msgstr "; sudo vereist geen wachtwoord"
 
+#: src/pages.py:4087
 msgid "; sudo requires the account password"
 msgstr "; sudo vereist het accountwachtwoord"
 
+#: src/pages.py:129
 msgid ""
 "A partition on this disk is mounted. Unmount it and rescan storage before "
 "continuing."
@@ -61,15 +69,19 @@ msgstr ""
 "Een partitie op deze schijf is gemonteerd. Demonteer deze en scan de opslag "
 "opnieuw voordat u doorgaat."
 
+#: src/pages.py:2899
 msgid "ALL DATA on {disk} will be permanently erased."
 msgstr "ALLE GEGEVENS op {disk} worden permanent gewist."
 
+#: src/pages.py:4082
 msgid "Account security"
 msgstr "Accountveiligheid"
 
+#: src/pages.py:2980
 msgid "Advanced Storage"
 msgstr "Uitgebreide opslag"
 
+#: src/pages.py:2889
 msgid ""
 "Advanced coexistence can affect EFI firmware state and may trigger BitLocker"
 " recovery. It never shrinks or repairs Windows volumes."
@@ -77,12 +89,15 @@ msgstr ""
 "Uitgebreid co-existentie kan de EFI-firmwarestatus beïnvloeden en BitLocker-"
 "herstel activeren. Het verkleint of herstelt Windows-volumes nooit."
 
+#: src/pages.py:2838
 msgid "Advanced — keep existing systems"
 msgstr "Uitgebreid — bestaande systemen behouden"
 
+#: src/pages.py:2985
 msgid "Advanced: Install Alongside"
 msgstr "Uitgebreid: Installeren naast bestaand systeem"
 
+#: src/pages.py:164
 msgid ""
 "After changing partitions or unmounting a volume, rescan storage and select "
 "the target again."
@@ -90,6 +105,7 @@ msgstr ""
 "Schakel na het wijzigen van partities of het demonteren van een volume de "
 "opslag opnieuw in en selecteer opnieuw het doel."
 
+#: src/pages.py:4801
 msgid ""
 "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
 "then enter password 123456."
@@ -97,6 +113,7 @@ msgstr ""
 "Nadat u opnieuw opstart, wordt MOKManager geopend. Kies Enroll MOK → "
 "Doorgaan → Ja en voer vervolgens wachtwoord 123456 in."
 
+#: src/pages.py:4432
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -104,6 +121,7 @@ msgstr ""
 "Alle partities en gegevens op {disk} worden vernietigd.\n"
 "\n"
 
+#: src/pages.py:155
 msgid ""
 "Alternatively, you may explicitly select one entire partition to erase. "
 "Everything in that selected partition will be destroyed; it is never "
@@ -113,43 +131,56 @@ msgstr ""
 " Alles in die geselecteerde partitie zal worden vernietigd; deze wordt nooit"
 " automatisch geselecteerd."
 
+#: src/pages.py:924 src/pages.py:986
 msgid "Battery power is too low for a safe installation."
 msgstr "Het batterijniveau is te laag voor een veilige installatie."
 
+#: src/pages.py:895
 msgid "Charge to at least 80% before starting the installation."
 msgstr "Laad de batterij op tot minstens 80% voordat u de installatie start."
 
+#: src/pages.py:1041 src/pages.py:1016
 msgid "Continue Anyway"
 msgstr "Toch doorgaan"
 
+#: src/pages.py:1000
 msgid "Current battery level: {percent}%"
 msgstr "Huidig batterijniveau: {percent}%"
 
+#: src/pages.py:1006
 msgid "External power is connected."
 msgstr "Externe voeding is aangesloten."
 
+#: src/pages.py:1008
 msgid "External power is not connected."
 msgstr "Externe voeding is niet aangesloten."
 
+#: src/pages.py:954
 msgid "I understand the risks and insist on installing with low battery."
 msgstr ""
 "Ik begrijp de risico’s en wil toch installeren met een laag batterijniveau."
 
+#: src/pages.py:894 src/pages.py:889 src/pages.py:967 src/pages.py:969
 msgid "Low battery"
 msgstr "Batterij bijna leeg"
 
+#: src/pages.py:948
 msgid "Recheck"
 msgstr "Opnieuw controleren"
 
+#: src/pages.py:731 src/pages.py:815
 msgid "AnduinOS Installer"
 msgstr "AnduinOS-installatieprogramma"
 
+#: src/main.py:110
 msgid "AnduinOS Installer (Beta)"
 msgstr "AnduinOS-installatieprogramma (beta)"
 
+#: src/main.py:108
 msgid "AnduinOS Installer (Development)"
 msgstr "AnduinOS-installatieprogramma (ontwikkeling)"
 
+#: src/pages.py:4425
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
@@ -157,6 +188,7 @@ msgstr ""
 "AnduinOS zal alleen de geselecteerde niet-toegewezen ruimte op {disk} gebruiken. Bestaande partities worden behouden.\n"
 "\n"
 
+#: src/pages.py:133
 msgid ""
 "AnduinOS will use only the selected unallocated space. The installer will "
 "not shrink or move an existing filesystem."
@@ -164,12 +196,15 @@ msgstr ""
 "AnduinOS zal alleen de geselecteerde niet-toegewezen ruimte gebruiken. De "
 "installer zal een bestaand bestandssysteem niet verkleinen of verplaatsen."
 
+#: data/languages.json:keyboard_layouts
 msgid "Arabic"
 msgstr "Araabisch"
 
+#: src/pages.py:268 src/pages.py:4461 src/pages.py:817
 msgid "Back"
 msgstr "Terug"
 
+#: src/pages.py:3014
 msgid ""
 "Before continuing: finish Windows updates, disable Fast Startup and "
 "hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
@@ -179,9 +214,11 @@ msgstr ""
 "Slaapstand uit, en maak een back-up van de BitLocker-herstelcode. EFI, "
 "Secure Boot, TPM-metingen en opstartvolgorde kunnen wijzigen."
 
+#: src/pages.py:2470
 msgid "BitLocker detected"
 msgstr "BitLocker gedetecteerd"
 
+#: src/pages.py:146
 msgid ""
 "BitLocker storage will be preserved. The installer will not unlock, resize, "
 "repair or otherwise modify it."
@@ -189,66 +226,88 @@ msgstr ""
 "BitLocker-opslag wordt behouden. De installer zal deze niet ontgrendelen, "
 "verkleinen, repareren of op een andere manier wijzigen."
 
+#: src/pages.py:4186
 msgid "Boot policy"
 msgstr "Opstartbeleid"
 
+#: src/pages.py:3055
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (aanbevolen)"
 
+#: src/pages.py:2817
 msgid "Btrfs — recommended"
 msgstr "Btrfs — aanbevolen"
 
+#: src/pages.py:4361
 msgid "Cannot create installation plan"
 msgstr "Kan geen installatieplan maken"
 
+#: src/pages.py:2727
 msgid "Choose Installation Method"
 msgstr "Kies installatiemethode"
 
+#: src/pages.py:2498
 msgid "Choose one target disk. Storage settings come next."
 msgstr "Kies één doel-schijf. De opslaginstellingen volgen daarna."
 
+#: src/pages.py:2199
 msgid "Choose optional software to install"
 msgstr "Kies optionele software om te installeren"
 
+#: src/pages.py:813
 msgid "Choose your language to begin installation"
 msgstr "Kies uw taal om de installatie te starten"
 
+#: src/pages.py:3819
 msgid "Choose your location to set the system clock"
 msgstr "Kies uw locatie om de systeemklok in te stellen"
 
+#: src/pages.py:4838
 msgid "Complete"
 msgstr "Klaar"
 
+#: src/pages.py:3506 src/pages.py:3513 src/pages.py:4101 src/pages.py:3601
+#: src/pages.py:4440
 msgid "Computer Name"
 msgstr "Computernaam"
 
+#: src/pages.py:3594
 msgid "Computer name contains invalid characters."
 msgstr "De computernaam bevat ongeldige tekens."
 
+#: src/pages.py:4589
 msgid "Configure account, region, timezone, and machine identity"
 msgstr "Stel account, regio, tijdzone en machine-identiteit in"
 
+#: src/pages.py:4578
 msgid "Configure storage and swap"
 msgstr "Configureer opslag en swap"
 
+#: src/pages.py:3480 src/pages.py:3488
 msgid "Confirm Password"
 msgstr "Bevestig wachtwoord"
 
+#: src/pages.py:1939
 msgid "Confirm your keyboard layout"
 msgstr "Bevestig uw toetsenbordindeling"
 
+#: src/main.py:153 src/pages.py:1911
 msgid "Continue Installation"
 msgstr "Ga door met installatie"
 
+#: src/pages.py:4574
 msgid "Copy AnduinOS system"
 msgstr "Kopieer AnduinOS-systeem"
 
+#: src/pages.py:4675
 msgid "Copy Log"
 msgstr "Logboek kopiëren"
 
+#: src/pages.py:3146
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
 msgstr "Maak een nieuwe AnduinOS EFI-systeempartitie van 1 GiB aan"
 
+#: src/pages.py:4163
 msgid ""
 "Create and format a dedicated AnduinOS EFI System Partition inside the "
 "selected space."
@@ -256,12 +315,15 @@ msgstr ""
 "Maak en formatteer een speciale AnduinOS EFI-systeempartitie binnen de "
 "geselecteerde ruimte."
 
+#: src/pages.py:3447
 msgid "Create your user account"
 msgstr "Maak uw gebruikersaccount aan"
 
+#: src/pages.py:2412
 msgid "Current disk layout"
 msgstr "Huidige schijfindeling"
 
+#: src/pages.py:3979
 msgid ""
 "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
 "executor or disk command can run."
@@ -269,15 +331,19 @@ msgstr ""
 "ONTWIKKELMODUS — het plan zal gevalideerd en gesimuleerd worden. Er kan geen"
 " bevoorrechte uitvoerder of schijfopdracht worden uitgevoerd."
 
+#: data/languages.json:keyboard_layouts
 msgid "Danish"
 msgstr "Deens"
 
+#: src/pages.py:4569
 msgid "Detect Internet connectivity"
 msgstr "Internetverbinding detecteren"
 
+#: src/pages.py:4566
 msgid "Detect firmware and Secure Boot"
 msgstr "Detecteer firmware en Secure Boot"
 
+#: src/pages.py:4419
 msgid ""
 "Development mode will simulate installation to {disk}. No disk data will be changed.\n"
 "\n"
@@ -285,49 +351,64 @@ msgstr ""
 "De ontwikkelmodus simuleert de installatie naar {disk}. Schijfgegevens worden niet gewijzigd.\n"
 "\n"
 
+#: src/pages.py:4923
 msgid "Development simulation completed"
 msgstr "Ontwikkelingssimulatie voltooid"
 
+#: src/pages.py:4832
 msgid "Discover AnduinOS"
 msgstr "AnduinOS ontdekken"
 
+#: src/pages.py:1216 src/pages.py:2218
 msgid "Download and install system updates during installation"
 msgstr "Systeemupdates downloaden en installeren tijdens de installatie"
 
+#: data/languages.json:keyboard_layouts
 msgid "Dutch"
 msgstr "Nederlands"
 
+#: src/pages.py:3073
 msgid "EFI System Partition"
 msgstr "EFI-systeempartitie"
 
+#: src/pages.py:4184
 msgid "EFI policy"
 msgstr "EFI-beleid"
 
+#: src/pages.py:2455
 msgid "Empty disk — no partitions"
 msgstr "Lege schijf — geen partities"
 
+#: src/pages.py:2821
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
 msgstr ""
 "Schakelt gedeelde subvolumes, momentopnamen en Disk Snapshots Manager in."
 
+#: data/languages.json:keyboard_layouts
 msgid "English (UK)"
 msgstr "Engels (VK)"
 
+#: data/languages.json:keyboard_layouts
 msgid "English (US)"
 msgstr "Engels (VS)"
 
+#: src/pages.py:4601
 msgid "Ensure Disk Snapshots Manager is available"
 msgstr "Zorg dat Disk Snapshots Manager beschikbaar is"
 
+#: src/pages.py:4412
 msgid "Erase Disk and Install"
 msgstr "Wis schijf en installeer"
 
+#: src/pages.py:2813 src/pages.py:4226
 msgid "Erase every partition and all data on the selected disk."
 msgstr "Wis elke partitie en alle gegevens op het geselecteerde station."
 
+#: src/pages.py:4411
 msgid "Erase the entire selected disk?"
 msgstr "De gehele geselecteerde schijf wissen?"
 
+#: src/pages.py:137
 msgid ""
 "Existing Windows, recovery and data partitions remain outside the write set "
 "and will be preserved."
@@ -335,6 +416,7 @@ msgstr ""
 "Bestaande Windows-, herstel- en gegevenspartities blijven buiten de "
 "schrijfgroep en worden behouden."
 
+#: src/pages.py:2945
 msgid ""
 "Existing partitions were detected. The first two choices delete them; "
 "Advanced is the preservation path."
@@ -342,6 +424,7 @@ msgstr ""
 "Er zijn bestaande partities gedetecteerd. De eerste twee opties verwijderen "
 "ze; Geavanceerd is het pad voor behoud."
 
+#: src/pages.py:4446
 msgid ""
 "Existing partitions will be preserved. New AnduinOS partitions will be "
 "created only in the selected unallocated extent; EFI vendor files and the "
@@ -352,30 +435,39 @@ msgstr ""
 "leveranciersbestanden en het AnduinOS-firmware-opstartitem kunnen worden "
 "bijgewerkt."
 
+#: src/pages.py:3052 src/pages.py:4049
 msgid "Filesystem"
 msgstr "Bestandsysteem"
 
+#: src/pages.py:4613
 msgid "Finalize target environment"
 msgstr "Doelomgeving finaliseren"
 
+#: data/languages.json:keyboard_layouts
 msgid "Finnish"
 msgstr "Fins"
 
+#: src/pages.py:4182
 msgid "Formats"
 msgstr "Formateert"
 
+#: data/languages.json:keyboard_layouts
 msgid "French"
 msgstr "Frans"
 
+#: src/pages.py:3462 src/pages.py:3464
 msgid "Full Name"
 msgstr "Volledige naam"
 
+#: data/languages.json:keyboard_layouts
 msgid "German"
 msgstr "Duits"
 
+#: data/languages.json:keyboard_layouts
 msgid "Greek"
 msgstr "Grieks"
 
+#: src/pages.py:111
 msgid ""
 "Guided coexistence requires a system booted in UEFI mode and a GPT target "
 "disk. This disk cannot continue in guided mode."
@@ -384,66 +476,86 @@ msgstr ""
 "en een GPT-doelschijf. Deze schijf kan niet doorgaan in de geguideerde "
 "modus."
 
+#: src/pages.py:4131
 msgid ""
 "Guided storage selection is missing. Rescan and select the target again."
 msgstr ""
 "De geselecteerde opslag is ontbrekend. Scan opnieuw en selecteer het doel "
 "opnieuw."
 
+#: data/languages.json:keyboard_layouts
 msgid "Hindi (India)"
 msgstr "Hindi (India)"
 
+#: src/pages.py:2741
 msgid "How should AnduinOS use this disk?"
 msgstr "Hoe moet AnduinOS deze schijf gebruiken?"
 
+#: data/languages.json:keyboard_layouts
 msgid "Indonesian"
 msgstr "Indonesisch"
 
+#: src/pages.py:4498
 msgid "Install"
 msgstr "Installeren"
 
+#: src/pages.py:4559 src/pages.py:1221 src/pages.py:4125
 msgid "Install input method"
 msgstr "Invoermethode installeren"
 
+#: src/pages.py:625
 msgid "Install {language} input method: {name}"
 msgstr "Invoermethode voor {language} installeren: {name}"
 
+#: src/pages.py:4409 src/pages.py:4496
 msgid "Install Alongside"
 msgstr "Installeren naast bestaand systeem"
 
+#: src/pages.py:4169
 msgid "Install alongside"
 msgstr "Installeren naast bestaand systeem"
 
+#: src/pages.py:4608
 msgid "Install bootloader"
 msgstr "Installeer opstartlader"
 
+#: src/pages.py:4611
 msgid "Check systems on other disks"
 msgstr "Systemen op andere schijven controleren"
 
+#: src/pages.py:1217 src/pages.py:4603
 msgid "Install hardware drivers"
 msgstr "Installeer hardwarestuurprogramma's"
 
+#: src/pages.py:4408
 msgid "Install in the selected free space?"
 msgstr "Installeren in de geselecteerde vrije ruimte?"
 
+#: src/pages.py:4596
 msgid "Ensure required language packs are installed"
 msgstr "Zorg dat de vereiste taalpakketten zijn geïnstalleerd"
 
+#: src/pages.py:4599
 msgid "Install system updates"
 msgstr "Installeer systeemupdates"
 
+#: src/pages.py:2229
 msgid "Install third-party drivers for this device"
 msgstr "Installeer stuurprogramma's van derden voor dit apparaat"
 
+#: src/pages.py:5093 src/pages.py:5095 src/pages.py:4940 src/pages.py:4950
 msgid "Installation Complete"
 msgstr "Installatie voltooid"
 
+#: src/pages.py:4970
 msgid "Installation Failed"
 msgstr "Installatie mislukt"
 
+#: src/pages.py:4639
 msgid "Installation Steps"
 msgstr "Installatiestappen"
 
+#: src/pages.py:160
 msgid ""
 "Installation cannot continue with this selection. There is no force-continue"
 " option around storage safety checks."
@@ -451,63 +563,83 @@ msgstr ""
 "De installatie kan niet doorgaan met deze selectie. Er is geen optie om de "
 "controles voor opslagveiligheid te forceren."
 
+#: src/pages.py:4919 src/pages.py:4985
 msgid "Installation complete"
 msgstr "Installatie voltooid"
 
+#: src/pages.py:4968
 msgid "Installation failed"
 msgstr "Installatie mislukt"
 
+#: src/main.py:145
 msgid "Installation in progress"
 msgstr "Installatie bezig"
 
+#: src/pages.py:4547 src/pages.py:4541
 msgid "Installing AnduinOS"
 msgstr "AnduinOS installeren"
 
+#: data/languages.json:keyboard_layouts
 msgid "Italian"
 msgstr "Italiaans"
 
+#: data/languages.json:keyboard_layouts
 msgid "Japanese (JIS keyboard)"
 msgstr "Japans (JIS-toetsenbord)"
 
+#: src/pages.py:4040
 msgid "Keyboard"
 msgstr "Toetsenbord"
 
+#: src/pages.py:1938 src/pages.py:1932 src/pages.py:2075
 msgid "Keyboard Layout"
 msgstr "Toetsenbordindeling"
 
+#: src/pages.py:4582
 msgid "Configure physical keyboard layout"
 msgstr "Fysieke toetsenbordindeling configureren"
 
+#: data/languages.json:keyboard_layouts
 msgid "Korean"
 msgstr "Koreaans"
 
+#: src/pages.py:4039
 msgid "Language"
 msgstr "Taal"
 
+#: src/pages.py:2472
 msgid "Live USB — excluded"
 msgstr "Live-USB — uitgesloten"
 
+#: src/pages.py:4573
 msgid "Mount target filesystems"
 msgstr "Monteer doelbestandsystemen"
 
+#: src/pages.py:851
 msgid "Navigation error"
 msgstr "Navigatiefout"
 
+#: src/pages.py:4180 src/pages.py:4229
 msgid "New partitions"
 msgstr "Nieuwe partities"
 
+#: src/pages.py:261 src/pages.py:818 src/pages.py:1016
 msgid "Next"
 msgstr "Volgende"
 
+#: src/pages.py:4756
 msgid "Next slide"
 msgstr "Volgende dia"
 
+#: src/pages.py:2389
 msgid "No partition table"
 msgstr "Geen partitietabel"
 
+#: src/pages.py:2631
 msgid "No suitable disks found."
 msgstr "Geen geschikte schijven gevonden."
 
+#: src/pages.py:170
 msgid ""
 "No suitable unallocated space was found. To protect your data, create "
 "unallocated space with Windows Disk Management, then boot the installer "
@@ -517,6 +649,7 @@ msgstr ""
 "beschermen, maakt u niet-toegewezen ruimte aan met het Windows-schijfbeheer,"
 " start u de installatieprogramma opnieuw op en scant u de schijf opnieuw."
 
+#: src/pages.py:175
 msgid ""
 "No suitable unallocated space was found. To protect your data, create "
 "unallocated space with a partitioning tool, then boot the installer again "
@@ -526,81 +659,108 @@ msgstr ""
 "beschermen, maakt u niet-toegewezen ruimte aan met een partitiewerktool, "
 "start u het installatieprogramma opnieuw op en scant u de schijf opnieuw."
 
+#: data/languages.json:keyboard_layouts
 msgid "Norwegian"
 msgstr "Noors"
 
+#: src/pages.py:1124 src/pages.py:1375 src/pages.py:4370 src/pages.py:854
 msgid "OK"
 msgstr "OK"
 
+#: src/pages.py:4835
 msgid "Output"
 msgstr "Uitvoer"
 
+#: src/pages.py:4973 src/pages.py:5028
 msgid "Output • Error"
 msgstr "Uitvoer • Fout"
 
+#: src/pages.py:5023
 msgid "Output • {count} warning(s)"
 msgstr "Uitvoer • {count} waarschuwing(en)"
 
+#: src/pages.py:2453
 msgid "Partition details unavailable"
 msgstr "Partitiegegevens niet beschikbaar"
 
+#: src/pages.py:3476 src/pages.py:3487 src/pages.py:1466 src/pages.py:1525
 msgid "Password"
 msgstr "Wachtwoord"
 
+#: src/pages.py:3584
 msgid "Password must be at least 6 characters."
 msgstr "Het wachtwoord moet minimaal 6 tekens lang zijn."
 
+#: src/pages.py:4048
 msgid "Platform"
 msgstr "Platform"
 
+#: src/pages.py:4548
 msgid "Please do not turn off your computer"
 msgstr "Schakel uw computer niet uit"
 
+#: src/pages.py:3965
 msgid "Please review your choices before proceeding"
 msgstr "Controleer uw keuzes voordat u doorgaat"
 
+#: data/languages.json:keyboard_layouts
 msgid "Polish"
 msgstr "Pools"
 
+#: data/languages.json:keyboard_layouts
 msgid "Portuguese"
 msgstr "Portugees"
 
+#: data/languages.json:keyboard_layouts
 msgid "Portuguese (Brazil)"
 msgstr "Portugees (Brazilië)"
 
+#: src/pages.py:4594
 msgid "Prepare Secure Boot"
 msgstr "Voorbereiden Secure Boot"
 
+#: src/pages.py:4572
 msgid "Prepare installation disk"
 msgstr "Voorbereiden installatieschijf"
 
+#: src/pages.py:4579
 msgid "Prepare target environment"
 msgstr "Voorbereiden doelomgeving"
 
+#: src/pages.py:4871
 msgid "Preparing installation…"
 msgstr "Installatie voorbereiden…"
 
+#: src/pages.py:4175
 msgid "Preserved partitions"
 msgstr "Bewaarde partities"
 
+#: src/pages.py:4750
 msgid "Previous slide"
 msgstr "Vorige dia"
 
+#: src/pages.py:3964 src/pages.py:3958
 msgid "Ready to Install"
 msgstr "Klaar om te installeren"
 
+#: src/pages.py:4811
 msgid "Reboot Now"
 msgstr "Nu herstarten"
 
+#: src/pages.py:4598
 msgid "Refresh package indexes"
 msgstr "Pakketindexen vernieuwen"
 
+#: src/pages.py:4580
 msgid "Remove live-session components"
 msgstr "Live-sessiecomponenten verwijderen"
 
+#: src/pages.py:4951 src/pages.py:4942
 msgid "Remove the installation media and restart your computer"
 msgstr "Verwijder het installatiemedium en start uw computer opnieuw op"
 
+#: src/pages.py:1177 src/pages.py:1205 src/pages.py:2220 src/pages.py:675
+#: src/pages.py:1362 src/pages.py:2233
 msgid ""
 "Requires an Internet connection. The base installation remains available "
 "when offline."
@@ -608,21 +768,27 @@ msgstr ""
 "Vereist een internetverbinding. De basisinstallatie blijft beschikbaar "
 "wanneer offline."
 
+#: src/pages.py:2550
 msgid "Rescan Storage"
 msgstr "Opslag opnieuw scannen"
 
+#: src/pages.py:3101
 msgid "Rescan and Reselect Disk"
 msgstr "Schijf opnieuw scannen en opnieuw selecteren"
 
+#: src/pages.py:4809
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "Herstart en Secure Boot-sleutel registreren"
 
+#: src/pages.py:4960
 msgid "Restart is disabled in development protection mode"
 msgstr "Herstarten is uitgeschakeld in ontwikkelbeschermingsmodus"
 
+#: src/pages.py:3150
 msgid "Reuse {path} ({size})"
 msgstr "Hergebruik {path} ({size})"
 
+#: src/pages.py:4155
 msgid ""
 "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
 "before writing."
@@ -630,49 +796,64 @@ msgstr ""
 "Hergebruik {path}; formatteer deze nooit; controleer de FAT-gezondheid, "
 "identiteit en 64 MiB vrije ruimte voordat u schrijft."
 
+#: data/languages.json:keyboard_layouts
 msgid "Romanian"
 msgstr "Roemeens"
 
+#: data/languages.json:keyboard_layouts
 msgid "Russian"
 msgstr "Russisch"
 
+#: src/pages.py:4679
 msgid "Save Log"
 msgstr "Doelschijfisolatie verifiëren"
 
+#: src/pages.py:4609
 msgid "Schedule MOK enrollment"
 msgstr "MOK-registratie plannen"
 
+#: src/pages.py:3831
 msgid "Search timezones…"
 msgstr "Tijdzones zoeken…"
 
+#: src/pages.py:4069
 msgid "Secure Boot enrollment"
 msgstr "Secure Boot-registratie"
 
+#: src/pages.py:2497 src/pages.py:2491
 msgid "Select Installation Disk"
 msgstr "Selecteer installatieschijf"
 
+#: src/pages.py:3818 src/pages.py:3812
 msgid "Select Timezone"
 msgstr "Selecteer tijdzone"
 
+#: src/pages.py:4592
 msgid "Select fastest package mirror"
 msgstr "Selecteer snelste pakketmirror"
 
+#: src/pages.py:3884
 msgid "Selected timezone"
 msgstr "Geselecteerde tijdzone"
 
+#: src/pages.py:4170
 msgid "Selected unallocated space"
 msgstr "Geselecteerde niet-toegewezen ruimte"
 
+#: src/pages.py:2239
 msgid "Some drivers are proprietary or otherwise non-free software."
 msgstr ""
 "Sommige stuurprogramma's zijn proprietair of anderszins niet-vrije software."
 
+#: data/languages.json:keyboard_layouts
 msgid "Spanish"
 msgstr "Spaans"
 
+#: src/pages.py:4046
 msgid "Stable disk identity"
 msgstr "Stabiele schijfidentiteit"
 
+#: src/pages.py:4437
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -680,36 +861,47 @@ msgstr ""
 "Stabiele identiteit: {stable_id}\n"
 "\n"
 
+#: src/pages.py:2380
 msgid "Storage Device"
 msgstr "Opslagapparaat"
 
+#: src/pages.py:4168 src/pages.py:4224
 msgid "Storage mode"
 msgstr "Opslagmodus"
 
+#: src/pages.py:4050
 msgid "Subvolumes"
 msgstr "Subvolumes"
 
+#: src/pages.py:4268
 msgid "Swap"
 msgstr "Swap"
 
+#: data/languages.json:keyboard_layouts
 msgid "Swedish"
 msgstr "Zweeds"
 
+#: src/pages.py:4051
 msgid "System updates"
 msgstr "Systeemupdates"
 
+#: src/pages.py:4042
 msgid "Target Disk"
 msgstr "Doelschijf"
 
+#: src/pages.py:2993 src/pages.py:3260
 msgid "Target: {disk} ({size} — {model})"
 msgstr "Doel: {disk} ({size} — {model})"
 
+#: src/pages.py:1964 src/pages.py:2076
 msgid "Test your keyboard here…"
 msgstr "Test hier uw toetsenbord…"
 
+#: data/languages.json:keyboard_layouts
 msgid "Thai"
 msgstr "Taals"
 
+#: src/pages.py:120
 msgid ""
 "The GPT disk or one of its partitions has no unique stable identifier. "
 "Guided coexistence cannot safely authorize preservation or writes on this "
@@ -719,6 +911,7 @@ msgstr ""
 "identifier. Gecontroleerde co-existentie kan dit schijf niet veilig "
 "autoriseren voor behoud of schrijven."
 
+#: src/pages.py:115
 msgid ""
 "The complete partition map and free-space geometry could not be read "
 "consistently. No space on this disk is authorized for installation."
@@ -727,6 +920,7 @@ msgstr ""
 "worden gelezen. Geen enkele ruimte op deze schijf is geautoriseerd voor "
 "installatie."
 
+#: src/pages.py:141
 msgid ""
 "The existing EFI System Partition is only a candidate. Health and free-space"
 " checks must pass before it can be reused, and it will never be formatted."
@@ -735,6 +929,7 @@ msgstr ""
 "gezondheid en vrije ruimte moeten slagen voordat het opnieuw kan worden "
 "gebruikt, en het zal nooit worden opgemaakt."
 
+#: src/pages.py:4926
 msgid ""
 "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
 " state, or installed system was changed."
@@ -742,11 +937,13 @@ msgstr ""
 "Het installatieplan is geldig. Er is geen schijf, bestandssysteem, "
 "opstartlader, Secure Boot-status of geïnstalleerd systeem gewijzigd."
 
+#: src/main.py:147
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr ""
 "Het installatieprogramma kan niet worden gesloten terwijl het de doelschijf "
 "aan het wijzigen is."
 
+#: src/pages.py:150
 msgid ""
 "The installer will not mount, repair or infer the safety of Windows volumes "
 "from hibernation or Fast Startup state. Any required Windows maintenance "
@@ -756,9 +953,11 @@ msgstr ""
 "ervan afleiden vanuit hibernatie- of Fast Startup-status. Eventuele "
 "benodigde Windows-onderhoudstaken moeten in Windows worden uitgevoerd."
 
+#: src/pages.py:4443
 msgid "The privileged executor is disabled."
 msgstr "De bevoorrechte uitvoerder is uitgeschakeld."
 
+#: src/pages.py:3228
 msgid ""
 "The selected disk changed or disappeared. Return to the disk page and select"
 " it again. {error}"
@@ -766,11 +965,13 @@ msgstr ""
 "Het geselecteerde schijf is gewijzigd of verdwenen. Ga terug naar de schijf-"
 "pagina en selecteer het opnieuw. {error}"
 
+#: src/pages.py:3241
 msgid "The selected disk size changed. Return and select it again."
 msgstr ""
 "De geselecteerde schijfgrootte is gewijzigd. Ga terug en selecteer deze "
 "opnieuw."
 
+#: src/pages.py:3251
 msgid ""
 "The selected disk topology changed. Review the disk and installation method "
 "again."
@@ -778,12 +979,15 @@ msgstr ""
 "De geselecteerde schijftopologie is gewijzigd. Bekijk de schijf en "
 "installatiemethode opnieuw."
 
+#: src/pages.py:3580
 msgid "The two passwords do not match."
 msgstr "De twee wachtwoorden komen niet overeen."
 
+#: src/pages.py:4057
 msgid "Third-party drivers"
 msgstr "Stuurprogramma's van derden"
 
+#: src/pages.py:3021
 msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
@@ -792,6 +996,7 @@ msgstr ""
 "partitietabel van de geselecteerde schijf en de EFI-bootstatus van de "
 "machine."
 
+#: src/pages.py:125
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
 "topology that guided coexistence does not support."
@@ -799,6 +1004,7 @@ msgstr ""
 "Deze schijf bevat een actieve mapper, array of andere geneste block-"
 "devicetopologie die niet wordt ondersteund door begeleid medebestaan."
 
+#: src/pages.py:2935
 msgid ""
 "This disk is too small for whole-disk installation. Advanced may continue "
 "only if suitable unallocated space exists."
@@ -807,39 +1013,51 @@ msgstr ""
 "Geavanceerd kan alleen doorgaan als er voldoende ontoegewezen ruimte "
 "beschikbaar is."
 
+#: src/pages.py:4454
 msgid "This installer does not shrink or preserve other systems."
 msgstr "Dit installatieprogramma verkleint of behoudt geen andere systemen."
 
+#: src/pages.py:4103
 msgid "Timezone"
 msgstr "Tijdzone"
 
+#: src/pages.py:2474
 msgid "Too small"
 msgstr "Te klein"
 
+#: data/languages.json:keyboard_layouts
 msgid "Turkish"
 msgstr "Turks"
 
+#: data/languages.json:keyboard_layouts
 msgid "Ukrainian"
 msgstr "Oekraïens"
 
+#: src/pages.py:3065
 msgid "Unallocated space"
 msgstr "Ontoegewezen ruimte"
 
+#: src/pages.py:2445
 msgid "Unallocated · {size}"
 msgstr "Niet toegewezen · {size}"
 
+#: src/pages.py:4014 src/pages.py:1710
 msgid "Unavailable: {error}"
 msgstr "Niet beschikbaar: {error}"
 
+#: src/pages.py:2432
 msgid "Unknown filesystem"
 msgstr "Onbekend bestandssysteem"
 
+#: src/pages.py:4614
 msgid "Unmount installed system"
 msgstr "Uitgemonteerd geïnstalleerd systeem"
 
+#: src/pages.py:2198 src/pages.py:1196 src/pages.py:2192
 msgid "Updates and Drivers"
 msgstr "Updates en stuurprogramma's"
 
+#: src/pages.py:2840
 msgid ""
 "Use already-unallocated space and preserve existing partitions. This is the "
 "only Windows coexistence path."
@@ -847,19 +1065,24 @@ msgstr ""
 "Gebruik al ontoegewezen ruimte en behoud bestaande partities. Dit is de "
 "enige methode voor medebestaan met Windows."
 
+#: src/pages.py:2986
 msgid "Use only existing unallocated space on the selected disk."
 msgstr ""
 "Gebruik alleen bestaande niet-toegewezen ruimte op de geselecteerde schijf."
 
+#: src/pages.py:4079
 msgid "User"
 msgstr "Gebruiker"
 
+#: src/pages.py:3446 src/pages.py:3440
 msgid "User Account"
 msgstr "Gebruikersaccount"
 
+#: src/pages.py:3468 src/pages.py:3472
 msgid "Username"
 msgstr "Gebruikersnaam"
 
+#: src/pages.py:3568
 msgid ""
 "Username must start with a lowercase ASCII letter and contain only lowercase"
 " ASCII letters or digits (maximum 16 characters)."
@@ -867,30 +1090,39 @@ msgstr ""
 "De gebruikersnaam moet beginnen met een kleine ASCII-letter en mag alleen "
 "uit kleine ASCII-letters of cijfers bestaan (maximaal 16 tekens)."
 
+#: src/pages.py:2832
 msgid "Uses a traditional single root filesystem."
 msgstr "Gebruikt een traditioneel enkel root-bestandssysteem."
 
+#: src/pages.py:4406
 msgid "Validate Plan (No Installation)"
 msgstr "Plan valideren (geen installatie)"
 
+#: src/pages.py:4405
 msgid "Validate this installation plan?"
 msgstr "Dit installatieplan valideren?"
 
+#: src/pages.py:4606
 msgid "Verify kernel module signatures"
 msgstr "Kernmodule-handtekeningen verifiëren"
 
+#: src/pages.py:4571
 msgid "Verify target disk isolation"
 msgstr "Verifieer isolatie doelmedium"
 
+#: data/languages.json:keyboard_layouts
 msgid "Vietnamese"
 msgstr "Vietnamees"
 
+#: src/pages.py:811
 msgid "Welcome to AnduinOS"
 msgstr "Welkom bij AnduinOS"
 
+#: src/pages.py:2468
 msgid "Windows detected"
 msgstr "Windows gedetecteerd"
 
+#: src/pages.py:4188
 msgid ""
 "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
 "AnduinOS NVRAM entry."
@@ -898,55 +1130,72 @@ msgstr ""
 "Schrijf alleen EFI/AnduinOS, overschrijf EFI/BOOT niet en vereis een "
 "geverifieerde AnduinOS NVRAM-invoer."
 
+#: src/pages.py:4072
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
 "machine-lokale MOK maken; registreren na herstart met wachtwoord 123456"
 
+#: src/pages.py:4059
 msgid "detect and install (may include non-free software)"
 msgstr "detecteren en installeren (kan niet-vrije software bevatten)"
 
+#: src/pages.py:4121 src/pages.py:4055 src/pages.py:4061 src/pages.py:4067
 msgid "do not install"
 msgstr "niet installeren"
 
+#: src/pages.py:4053 src/pages.py:4065
 msgid "download and install"
 msgstr "downloaden en installeren"
 
+#: src/pages.py:3055
 msgid "ext4 (classic)"
 msgstr "ext4 (klassiek)"
 
+#: src/pages.py:2829
 msgid "ext4 — classic"
 msgstr "ext4 — klassiek"
 
+#: src/pages.py:4077
 msgid "not required"
 msgstr "niet vereist"
 
+#: src/pages.py:4083
 msgid "password required for login"
 msgstr "wachtwoord vereist voor inloggen"
 
+#: src/pages.py:4024
 msgid "single ext4 root filesystem"
 msgstr "één ext4-rootbestandssysteem"
 
+#: src/pages.py:4005
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / Veilig opstarten: {secure_boot}"
 
+#: src/pages.py:4176
 msgid "{count}: {paths}"
 msgstr "{count}: {paths}"
 
+#: src/pages.py:4139
 msgid "{name}: {start}–{end} MiB"
 msgstr "{name}: {start}–{end} MiB"
 
+#: src/pages.py:4147
 msgid "{path} as {filesystem}"
 msgstr "{path} als {filesystem}"
 
+#: src/pages.py:4171
 msgid "{size} at {offset}"
 msgstr "{size} op {offset}"
 
+#: src/pages.py:3288
 msgid "{size} unallocated at {offset}"
 msgstr "{size} niet-toegewezen op {offset}"
 
+#: src/pages.py:5031
 msgid "{step} failed"
 msgstr "{step} mislukt"
 
+#: src/pages.py:4303
 msgid ""
 "⚠ Only the selected unallocated space will be partitioned and formatted. "
 "Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
@@ -958,6 +1207,7 @@ msgstr ""
 "bestanden en het AnduinOS firmware-opstartrubriek kunnen wijzigen. Deze "
 "installatieprogramma zal Windows niet voor je verkleinen."
 
+#: src/pages.py:4311
 msgid ""
 "⚠ This will erase ALL data on the selected disk. This action cannot be "
 "undone."
@@ -965,39 +1215,43 @@ msgstr ""
 "⚠ Dit wist ALLE gegevens op de geselecteerde schijf. Deze actie kan niet "
 "ongedaan worden gemaakt."
 
-#: src/pages.py
+#: src/pages.py:1176 src/pages.py:667 src/pages.py:1171
 msgid "Connect to the Internet"
 msgstr "Verbinding maken met internet"
 
-#: src/pages.py
+#: src/pages.py:1343
 msgid "Internet connection is ready."
 msgstr "De internetverbinding is gereed."
 
-#: src/pages.py
+#: src/pages.py:1250
 msgid "Available Wi-Fi Networks"
 msgstr "Beschikbare Wi-Fi-netwerken"
 
+#: src/pages.py:4576
 msgid "Preserve connected Wi-Fi network"
 msgstr "Verbonden wifi-netwerk behouden"
 
+#: src/pages.py:2540 src/pages.py:3092
 msgid "Loading storage devices…"
 msgstr "Opslagapparaten laden…"
 
+#: src/pages.py:4335
 msgid "Rechecking target disk…"
 msgstr "Doelschijf opnieuw controleren…"
 
+#: src/pages.py:2609 src/pages.py:3213 src/pages.py:4364
 msgid "Storage devices could not be loaded: {error}"
 msgstr "Opslagapparaten konden niet worden geladen: {error}"
 
-#: src/pages.py
+#: src/pages.py:1218 src/pages.py:4586 src/pages.py:2252
 msgid "Install extended multimedia format support"
 msgstr "Uitgebreide ondersteuning voor multimediaformaten installeren"
 
-#: src/pages.py
+#: src/pages.py:4063
 msgid "Extended multimedia formats"
 msgstr "Uitgebreide multimediaformaten"
 
-#: src/pages.py
+#: src/pages.py:2256
 msgid ""
 "Adds wider GStreamer compatibility and support for additional legacy and "
 "specialist media formats. Some components may be subject to patent or "
@@ -1007,89 +1261,90 @@ msgstr ""
 "en gespecialiseerde mediaformaten toe. Op sommige onderdelen kunnen octrooi-"
 " of herdistributievoorwaarden van toepassing zijn."
 
-#: src/pages.py
+#: src/pages.py:1473
 msgid "A saved profile exists. Entering a password updates it securely."
 msgstr ""
 "Een opgeslagen profiel bestaat. Als u een wachtwoord invoert, wordt dit "
 "veilig bijgewerkt."
 
-#: src/pages.py
+#: src/pages.py:1524
 msgid "Anonymous identity (optional)"
 msgstr "Anonieme identiteit (optioneel)"
 
-#: src/pages.py
+#: src/pages.py:1530
 msgid "CA certificate path (optional)"
 msgstr "CA-certificaatpad (optioneel)"
 
-#: src/pages.py
+#: src/pages.py:1239 src/pages.py:1409 src/pages.py:1482 src/pages.py:1600
+#: src/pages.py:1816
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: src/pages.py
+#: src/pages.py:1786
 msgid "Cancelling Wi-Fi operation…"
 msgstr "Wi-Fi-bewerking annuleren…"
 
-#: src/pages.py
+#: src/pages.py:1532
 msgid "Client certificate path"
 msgstr "Pad naar clientcertificaat"
 
-#: src/pages.py
+#: src/pages.py:1483 src/pages.py:1601
 msgid "Connect"
 msgstr "Connect"
 
-#: src/pages.py
+#: src/pages.py:1817
 msgid "Continue"
 msgstr "Doorgaan"
 
-#: src/pages.py
+#: src/pages.py:1259 src/pages.py:1809
 msgid "Connect to a hidden network"
 msgstr "Verbinden met een verborgen netwerk"
 
-#: src/pages.py
+#: src/pages.py:1478 src/pages.py:1593
 #, python-brace-format
 msgid "Connect to {network}"
 msgstr "Verbinden met {network}"
 
-#: src/pages.py
+#: src/pages.py:1654
 msgid "Connected"
 msgstr "Connected"
 
-#: src/pages.py
+#: src/pages.py:1453
 #, python-brace-format
 msgid "Connecting to {network}…"
 msgstr "Verbinding maken met {network}…"
 
-#: src/pages.py
+#: src/pages.py:1755
 msgid "Could not change the Wi-Fi connection"
 msgstr "Kon de Wi-Fi-verbinding niet wijzigen"
 
-#: src/pages.py
+#: src/pages.py:1410
 msgid "Disconnect"
 msgstr "Disconnect"
 
-#: src/pages.py
+#: src/pages.py:1401
 #, python-brace-format
 msgid "Disconnect from {network}?"
 msgstr "Verbinding met {network} verbreken?"
 
-#: src/pages.py
+#: src/pages.py:1420
 #, python-brace-format
 msgid "Disconnecting from {network}…"
 msgstr "Verbinding met {network} verbreken…"
 
-#: src/pages.py
+#: src/pages.py:1531
 msgid "Domain suffix match (optional)"
 msgstr "Overeenkomst met domeinachtervoegsel (optioneel)"
 
-#: src/pages.py
+#: src/pages.py:1515
 msgid "EAP method"
 msgstr "EAP-methode"
 
-#: src/pages.py
+#: src/pages.py:1387 src/pages.py:1796
 msgid "Enhanced Open (OWE)"
 msgstr "Verbeterd open (OWE)"
 
-#: src/pages.py
+#: src/pages.py:1595
 msgid ""
 "Enter the credentials supplied by your organization. Certificate validation "
 "is strongly recommended."
@@ -1097,88 +1352,88 @@ msgstr ""
 "Voer de aanmeldgegevens in die door uw organisatie zijn verstrekt. "
 "Certificaatvalidatie wordt sterk aanbevolen."
 
-#: src/pages.py
+#: src/pages.py:1811
 msgid "Enter the exact network name and choose its security type."
 msgstr "Voer de exacte netwerknaam in en kies het beveiligingstype."
 
-#: src/pages.py
+#: src/pages.py:1390 src/pages.py:1800
 msgid "Enterprise Wi-Fi"
 msgstr "Bedrijfs-Wi-Fi"
 
-#: src/pages.py
+#: src/pages.py:1523
 msgid "Identity"
 msgstr "Identity"
 
-#: src/pages.py
+#: src/pages.py:1527
 msgid "Inner authentication"
 msgstr "Interne authenticatie"
 
-#: src/pages.py
+#: src/pages.py:1790
 msgid "Network name (SSID)"
 msgstr "Netwerknaam (SSID)"
 
-#: src/pages.py
+#: src/pages.py:1645
 msgid "No Wi-Fi networks found."
 msgstr "Geen Wi-Fi-netwerken gevonden."
 
-#: src/pages.py
+#: src/pages.py:1386 src/pages.py:1795
 msgid "Open network"
 msgstr "Open netwerk"
 
-#: src/pages.py
+#: src/pages.py:1389 src/pages.py:1797 src/pages.py:1798
 msgid "Personal Wi-Fi"
 msgstr "Persoonlijke Wi-Fi"
 
-#: src/pages.py
+#: src/pages.py:1535
 msgid "Private key password (optional)"
 msgstr "Wachtwoord privésleutel (optioneel)"
 
-#: src/pages.py
+#: src/pages.py:1533
 msgid "Private key path"
 msgstr "Pad naar privésleutel"
 
-#: src/pages.py
+#: src/pages.py:1284
 msgid "Refresh Wi-Fi networks"
 msgstr "Wi-Fi-netwerken vernieuwen"
 
-#: src/pages.py
+#: src/pages.py:1656
 msgid "Saved"
 msgstr "Saved"
 
-#: src/pages.py
+#: src/pages.py:1792
 msgid "Security"
 msgstr "Security"
 
-#: src/pages.py
+#: src/pages.py:1405
 msgid ""
 "The installer will keep the saved network profile so it can be used again."
 msgstr ""
 "Het installatieprogramma behoudt het opgeslagen netwerkprofiel, zodat dit "
 "opnieuw kan worden gebruikt."
 
-#: src/pages.py
+#: src/pages.py:1356
 msgid "The local network is connected, but Internet access is unavailable."
 msgstr ""
 "Het lokale netwerk is verbonden, maar er is geen internetverbinding "
 "beschikbaar."
 
-#: src/pages.py
+#: src/pages.py:1856
 msgid "Turning Wi-Fi off…"
 msgstr "Wi-Fi wordt uitgeschakeld…"
 
-#: src/pages.py
+#: src/pages.py:1854
 msgid "Turning Wi-Fi on…"
 msgstr "Wi-Fi wordt ingeschakeld…"
 
-#: src/pages.py
+#: src/pages.py:1485
 msgid "Use WPS"
 msgstr "WPS gebruiken"
 
-#: src/pages.py
+#: src/pages.py:1388 src/pages.py:1799
 msgid "WEP (legacy)"
 msgstr "WEP (verouderd)"
 
-#: src/pages.py
+#: src/pages.py:1347
 msgid ""
 "Wi-Fi is connected, but the network requires sign-in through a captive "
 "portal."
@@ -1186,26 +1441,32 @@ msgstr ""
 "Wi-Fi is verbonden, maar het netwerk vereist inloggen via een captive "
 "portal."
 
-#: src/pages.py
+#: src/pages.py:1449
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Wachten op WPS voor {network}. Druk op de WPS-knop van de router…"
 
+#: src/pages.py:3576
 msgid "A password is required."
 msgstr "Een wachtwoord is vereist."
 
+#: src/pages.py:3731
 msgid "Administrative commands will no longer ask for your password."
 msgstr "Beheeropdrachten vragen niet langer om uw wachtwoord."
 
+#: src/pages.py:3681 src/pages.py:3675
 msgid "Advanced Options"
 msgstr "Geavanceerde opties"
 
+#: src/pages.py:3747
 msgid "Allow SSH login with the account password"
 msgstr "SSH-aanmelding met het accountwachtwoord toestaan"
 
+#: src/pages.py:4089
 msgid "Automatic desktop login"
 msgstr "Automatisch aanmelden bij het bureaublad"
 
+#: src/pages.py:3701
 msgid ""
 "Choose how the local administrator account signs in and authorizes system "
 "changes."
@@ -1213,45 +1474,135 @@ msgstr ""
 "Kies hoe het lokale beheerdersaccount zich aanmeldt en systeemwijzigingen "
 "autoriseert."
 
+#: src/pages.py:3682
 msgid "Choose optional access and sign-in policies"
 msgstr "Kies optionele beleidsregels voor toegang en aanmelden"
 
+#: src/pages.py:3709
 msgid "Choose whether this computer accepts remote Secure Shell connections."
 msgstr "Kies of deze computer externe Secure Shell-verbindingen accepteert."
 
+#: src/pages.py:4604
 msgid "Configure Secure Shell"
 msgstr "Secure Shell configureren"
 
+#: src/pages.py:3699
 msgid "Local Access"
 msgstr "Lokale toegang"
 
+#: src/pages.py:3737
 msgid "Log in to the desktop automatically"
 msgstr "Automatisch aanmelden bij het bureaublad"
 
+#: src/pages.py:3739
 msgid "Open this account's desktop automatically when the computer starts."
 msgstr ""
 "Het bureaublad van dit account automatisch openen wanneer de computer "
 "opstart."
 
+#: src/pages.py:3707
 msgid "Remote Access"
 msgstr "Toegang op afstand"
 
+#: src/pages.py:3730
 msgid "Run sudo commands without a password"
 msgstr "sudo-opdrachten uitvoeren zonder wachtwoord"
 
+#: src/pages.py:4095
 msgid "SSH password login"
 msgstr "SSH-aanmelding met wachtwoord"
 
+#: src/pages.py:3749
 msgid "Start Secure Shell and accept this account password over the network."
 msgstr ""
 "Secure Shell starten en het wachtwoord van dit account via het netwerk "
 "accepteren."
 
+#: src/pages.py:3759
 msgid "This will reduce the security of the installed system."
 msgstr "Dit verlaagt de beveiliging van het geïnstalleerde systeem."
 
+#: src/pages.py:4093 src/pages.py:4099
 msgid "disabled"
 msgstr "uitgeschakeld"
 
+#: src/pages.py:4091 src/pages.py:4097
 msgid "enabled"
 msgstr "ingeschakeld"
+
+#: src/pages.py:349
+msgid ""
+"AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently"
+" enabled on this computer, and we recommend enabling it for additional "
+"protection."
+msgstr ""
+"AnduinOS heeft uitgebreide ondersteuning voor Secure Boot. Secure Boot is "
+"momenteel niet ingeschakeld op deze computer. We raden aan deze in te "
+"schakelen voor extra bescherming."
+
+#: src/pages.py:331
+msgid "AnduinOS supports Secure Boot"
+msgstr "AnduinOS ondersteunt Secure Boot"
+
+#: src/pages.py:360
+msgid ""
+"Battery power is sufficient or reliable power is connected. You can continue"
+" with the installation."
+msgstr ""
+"De batterijlading is voldoende of er is betrouwbare stroom aangesloten. U "
+"kunt doorgaan met de installatie."
+
+#: src/pages.py:366
+msgid ""
+"Connect reliable external power and charge above 25%, or charge above 45% "
+"while unplugged."
+msgstr ""
+"Sluit een betrouwbare externe stroombron aan en laad op tot boven 25%, of "
+"laad op tot boven 45% terwijl de computer niet is aangesloten."
+
+#: src/pages.py:338
+msgid "Could not open UEFI firmware settings"
+msgstr "UEFI-firmwareinstellingen konden niet worden geopend"
+
+#: src/pages.py:333
+msgid "Get additional protection before installing AnduinOS."
+msgstr "Voeg extra bescherming toe voordat u AnduinOS installeert."
+
+#: src/pages.py:364
+msgid "Power conditions are safe for installation."
+msgstr "De stroomvoorziening is veilig voor installatie."
+
+#: src/pages.py:363
+msgid "Power ready"
+msgstr "Stroomstatus in orde"
+
+#: src/pages.py:335
+msgid "Restart to UEFI Firmware Settings"
+msgstr "Herstarten naar UEFI firmware-instellingen"
+
+#: src/pages.py:345
+msgid ""
+"Secure Boot is a UEFI security feature that verifies trusted, digitally "
+"signed software while your computer starts."
+msgstr ""
+"Secure Boot is een UEFI-beveiligingsfunctie die vertrouwde, digitaal "
+"ondertekende software controleert tijdens het opstarten van uw computer."
+
+#: src/pages.py:336
+msgid "Skip"
+msgstr "Overslaan"
+
+#: src/pages.py:341
+msgid "The firmware settings could not be opened on this computer."
+msgstr "De firmwareinstellingen konden niet worden geopend op deze computer."
+
+#: src/pages.py:354
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Om dit in te schakelen, opent u de UEFI-firmwareinstellingen en zoekt u "
+"onder Boot, Security of Secure Boot. Selecteer Microsoft & 3rd-party CA of "
+"schakel Secure Boot in. De formulering in de firmware verschilt per "
+"fabrikant."

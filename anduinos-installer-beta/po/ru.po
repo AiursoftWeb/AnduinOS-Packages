@@ -17,9 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+#: src/pages.py:2092
 msgid "Installing an input method requires an Internet connection."
 msgstr "Для установки метода ввода требуется подключение к Интернету."
 
+#: src/pages.py:2103
 msgid ""
 "No Internet connection. Input methods cannot be installed. You can install "
 "them later when connected."
@@ -27,6 +29,7 @@ msgstr ""
 "Нет подключения к Интернету. Невозможно установить методы ввода. Их можно "
 "установить позже после подключения."
 
+#: src/pages.py:4933
 msgid ""
 "\n"
 "\n"
@@ -36,6 +39,7 @@ msgstr ""
 "\n"
 "При реальной установке будет создан локальный для машины MOK. После перезагрузки выберите в MOKManager Enroll MOK → Continue → Yes и введите пароль 123456."
 
+#: src/pages.py:4944
 msgid ""
 "\n"
 "On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
@@ -43,17 +47,21 @@ msgstr ""
 "\n"
 "На синем экране MOKManager выберите Enroll MOK → Continue → Yes, пароль: 123456"
 
+#: src/pages.py:4275
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr ""
 "Файл подкачки на диске 4 ГиБ (приоритет 10) + zram LZ4 в RAM 50% (приоритет "
 "100)"
 
+#: src/pages.py:4085
 msgid "; sudo does not require a password"
 msgstr "; sudo не требует пароля"
 
+#: src/pages.py:4087
 msgid "; sudo requires the account password"
 msgstr "; sudo требует пароль учетной записи"
 
+#: src/pages.py:129
 msgid ""
 "A partition on this disk is mounted. Unmount it and rescan storage before "
 "continuing."
@@ -61,15 +69,19 @@ msgstr ""
 "На этом диске смонтирован раздел. Отмонтируйте его и повторно просканируйте "
 "хранилище перед продолжением."
 
+#: src/pages.py:2899
 msgid "ALL DATA on {disk} will be permanently erased."
 msgstr "ВСЕ ДАННЫЕ на {disk} будут безвозвратно удалены."
 
+#: src/pages.py:4082
 msgid "Account security"
 msgstr "Безопасность учетной записи"
 
+#: src/pages.py:2980
 msgid "Advanced Storage"
 msgstr "Расширенные настройки хранилища"
 
+#: src/pages.py:2889
 msgid ""
 "Advanced coexistence can affect EFI firmware state and may trigger BitLocker"
 " recovery. It never shrinks or repairs Windows volumes."
@@ -78,12 +90,15 @@ msgstr ""
 " вызвать восстановление BitLocker. Он никогда не сжимает и не ремонтирует "
 "томы Windows."
 
+#: src/pages.py:2838
 msgid "Advanced — keep existing systems"
 msgstr "Расширенный — сохранить существующие системы"
 
+#: src/pages.py:2985
 msgid "Advanced: Install Alongside"
 msgstr "Расширенный: Установить рядом"
 
+#: src/pages.py:164
 msgid ""
 "After changing partitions or unmounting a volume, rescan storage and select "
 "the target again."
@@ -91,6 +106,7 @@ msgstr ""
 "После изменения разделов или отмонтирования тома повторно просканируйте "
 "хранилище и снова выберите целевой носитель."
 
+#: src/pages.py:4801
 msgid ""
 "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
 "then enter password 123456."
@@ -98,6 +114,7 @@ msgstr ""
 "После перезагрузки откроется MOKManager. Выберите Enroll MOK → Continue → "
 "Yes, затем введите пароль 123456."
 
+#: src/pages.py:4432
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -105,6 +122,7 @@ msgstr ""
 "Все разделы и данные на {disk} будут уничтожены.\n"
 "\n"
 
+#: src/pages.py:155
 msgid ""
 "Alternatively, you may explicitly select one entire partition to erase. "
 "Everything in that selected partition will be destroyed; it is never "
@@ -114,43 +132,56 @@ msgstr ""
 "удаления. Всё содержимое выбранного раздела будет уничтожено; он никогда не "
 "выбирается автоматически."
 
+#: src/pages.py:924 src/pages.py:986
 msgid "Battery power is too low for a safe installation."
 msgstr "Заряд аккумулятора слишком низкий для безопасной установки."
 
+#: src/pages.py:895
 msgid "Charge to at least 80% before starting the installation."
 msgstr "Перед началом установки зарядите аккумулятор как минимум до 80%."
 
+#: src/pages.py:1041 src/pages.py:1016
 msgid "Continue Anyway"
 msgstr "Всё равно продолжить"
 
+#: src/pages.py:1000
 msgid "Current battery level: {percent}%"
 msgstr "Текущий заряд аккумулятора: {percent}%"
 
+#: src/pages.py:1006
 msgid "External power is connected."
 msgstr "Внешнее питание подключено."
 
+#: src/pages.py:1008
 msgid "External power is not connected."
 msgstr "Внешнее питание не подключено."
 
+#: src/pages.py:954
 msgid "I understand the risks and insist on installing with low battery."
 msgstr ""
 "Я понимаю риски и настаиваю на установке при низком заряде аккумулятора."
 
+#: src/pages.py:894 src/pages.py:889 src/pages.py:967 src/pages.py:969
 msgid "Low battery"
 msgstr "Низкий заряд аккумулятора"
 
+#: src/pages.py:948
 msgid "Recheck"
 msgstr "Проверить снова"
 
+#: src/pages.py:731 src/pages.py:815
 msgid "AnduinOS Installer"
 msgstr "Установщик AnduinOS"
 
+#: src/main.py:110
 msgid "AnduinOS Installer (Beta)"
 msgstr "Установщик AnduinOS (Бета)"
 
+#: src/main.py:108
 msgid "AnduinOS Installer (Development)"
 msgstr "Установщик AnduinOS (Разработка)"
 
+#: src/pages.py:4425
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
@@ -158,6 +189,7 @@ msgstr ""
 "AnduinOS будет использовать только выбранное неразмеченное пространство на {disk}. Существующие разделы будут сохранены.\n"
 "\n"
 
+#: src/pages.py:133
 msgid ""
 "AnduinOS will use only the selected unallocated space. The installer will "
 "not shrink or move an existing filesystem."
@@ -165,12 +197,15 @@ msgstr ""
 "AnduinOS будет использовать только выбранное неразмеченное пространство. "
 "Установщик не будет уменьшать или перемещать существующую файловую систему."
 
+#: data/languages.json:keyboard_layouts
 msgid "Arabic"
 msgstr "Арабский"
 
+#: src/pages.py:268 src/pages.py:4461 src/pages.py:817
 msgid "Back"
 msgstr "Назад"
 
+#: src/pages.py:3014
 msgid ""
 "Before continuing: finish Windows updates, disable Fast Startup and "
 "hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
@@ -181,9 +216,11 @@ msgstr ""
 "BitLocker. EFI, Secure Boot, измерения TPM и порядок загрузки могут "
 "измениться."
 
+#: src/pages.py:2470
 msgid "BitLocker detected"
 msgstr "Обнаружен BitLocker"
 
+#: src/pages.py:146
 msgid ""
 "BitLocker storage will be preserved. The installer will not unlock, resize, "
 "repair or otherwise modify it."
@@ -191,68 +228,90 @@ msgstr ""
 "Hранилище BitLocker будет сохранено. Установщик не будет разблокировать, "
 "изменять размер, восстанавливать или иным образом изменять его."
 
+#: src/pages.py:4186
 msgid "Boot policy"
 msgstr "Политика загрузки"
 
+#: src/pages.py:3055
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (рекомендуется)"
 
+#: src/pages.py:2817
 msgid "Btrfs — recommended"
 msgstr "Btrfs — рекомендуется"
 
+#: src/pages.py:4361
 msgid "Cannot create installation plan"
 msgstr "Не удалось создать план установки"
 
+#: src/pages.py:2727
 msgid "Choose Installation Method"
 msgstr "Выберите метод установки"
 
+#: src/pages.py:2498
 msgid "Choose one target disk. Storage settings come next."
 msgstr "Выберите один целевой диск. Далее будут настройки хранилища."
 
+#: src/pages.py:2199
 msgid "Choose optional software to install"
 msgstr "Выберите дополнительное программное обеспечение для установки"
 
+#: src/pages.py:813
 msgid "Choose your language to begin installation"
 msgstr "Выберите язык для начала установки"
 
+#: src/pages.py:3819
 msgid "Choose your location to set the system clock"
 msgstr "Выберите ваше местоположение для настройки системных часов"
 
+#: src/pages.py:4838
 msgid "Complete"
 msgstr "Завершено"
 
+#: src/pages.py:3506 src/pages.py:3513 src/pages.py:4101 src/pages.py:3601
+#: src/pages.py:4440
 msgid "Computer Name"
 msgstr "Имя компьютера"
 
+#: src/pages.py:3594
 msgid "Computer name contains invalid characters."
 msgstr "Имя компьютера содержит недопустимые символы."
 
+#: src/pages.py:4589
 msgid "Configure account, region, timezone, and machine identity"
 msgstr ""
 "Настройка учетной записи, региона, часового пояса и идентификатора "
 "компьютера"
 
+#: src/pages.py:4578
 msgid "Configure storage and swap"
 msgstr "Настройка хранилища и файла подкачки"
 
+#: src/pages.py:3480 src/pages.py:3488
 msgid "Confirm Password"
 msgstr "Подтвердите пароль"
 
+#: src/pages.py:1939
 msgid "Confirm your keyboard layout"
 msgstr "Подтвердите раскладку клавиатуры"
 
+#: src/main.py:153 src/pages.py:1911
 msgid "Continue Installation"
 msgstr "Продолжить установку"
 
+#: src/pages.py:4574
 msgid "Copy AnduinOS system"
 msgstr "Копирование системы AnduinOS"
 
+#: src/pages.py:4675
 msgid "Copy Log"
 msgstr "Копировать журнал"
 
+#: src/pages.py:3146
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
 msgstr "Создать новый раздел EFI системы AnduinOS размером 1 Гбайт"
 
+#: src/pages.py:4163
 msgid ""
 "Create and format a dedicated AnduinOS EFI System Partition inside the "
 "selected space."
@@ -260,12 +319,15 @@ msgstr ""
 "Создайте и отформатируйте выделенный раздел EFI системы AnduinOS в выбранном"
 " пространстве."
 
+#: src/pages.py:3447
 msgid "Create your user account"
 msgstr "Создайте учетную запись пользователя"
 
+#: src/pages.py:2412
 msgid "Current disk layout"
 msgstr "Текущая разметка диска"
 
+#: src/pages.py:3979
 msgid ""
 "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
 "executor or disk command can run."
@@ -273,15 +335,19 @@ msgstr ""
 "РЕЖИМ РАЗРАБОТКИ — план будет проверен и смоделирован. Ни один "
 "привилегированный исполнитель или команда диска не может быть выполнена."
 
+#: data/languages.json:keyboard_layouts
 msgid "Danish"
 msgstr "Датский"
 
+#: src/pages.py:4569
 msgid "Detect Internet connectivity"
 msgstr "Определить подключение к Интернету"
 
+#: src/pages.py:4566
 msgid "Detect firmware and Secure Boot"
 msgstr "Определение прошивки и Secure Boot"
 
+#: src/pages.py:4419
 msgid ""
 "Development mode will simulate installation to {disk}. No disk data will be changed.\n"
 "\n"
@@ -289,49 +355,64 @@ msgstr ""
 "Режим разработки смоделирует установку на {disk}. Данные диска не будут изменены.\n"
 "\n"
 
+#: src/pages.py:4923
 msgid "Development simulation completed"
 msgstr "Моделирование разработки завершено"
 
+#: src/pages.py:4832
 msgid "Discover AnduinOS"
 msgstr "Познакомьтесь с AnduinOS"
 
+#: src/pages.py:1216 src/pages.py:2218
 msgid "Download and install system updates during installation"
 msgstr "Скачать и установить обновления системы во время установки"
 
+#: data/languages.json:keyboard_layouts
 msgid "Dutch"
 msgstr "Нидерландский"
 
+#: src/pages.py:3073
 msgid "EFI System Partition"
 msgstr "Раздел системы EFI"
 
+#: src/pages.py:4184
 msgid "EFI policy"
 msgstr "Политика EFI"
 
+#: src/pages.py:2455
 msgid "Empty disk — no partitions"
 msgstr "Пустой диск — нет разделов"
 
+#: src/pages.py:2821
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
 msgstr ""
 "Включает подтома общего пространства, снимки и Disk Snapshots Manager."
 
+#: data/languages.json:keyboard_layouts
 msgid "English (UK)"
 msgstr "Английский (Великобритания)"
 
+#: data/languages.json:keyboard_layouts
 msgid "English (US)"
 msgstr "Английский (США)"
 
+#: src/pages.py:4601
 msgid "Ensure Disk Snapshots Manager is available"
 msgstr "Убедитесь, что Disk Snapshots Manager доступен"
 
+#: src/pages.py:4412
 msgid "Erase Disk and Install"
 msgstr "Стереть диск и установить"
 
+#: src/pages.py:2813 src/pages.py:4226
 msgid "Erase every partition and all data on the selected disk."
 msgstr "Стереть все разделы и все данные на выбранном диске."
 
+#: src/pages.py:4411
 msgid "Erase the entire selected disk?"
 msgstr "Стереть весь выбранный диск?"
 
+#: src/pages.py:137
 msgid ""
 "Existing Windows, recovery and data partitions remain outside the write set "
 "and will be preserved."
@@ -339,6 +420,7 @@ msgstr ""
 "Существующие разделы Windows, восстановления и данных останутся за пределами"
 " набора для записи и будут сохранены."
 
+#: src/pages.py:2945
 msgid ""
 "Existing partitions were detected. The first two choices delete them; "
 "Advanced is the preservation path."
@@ -346,6 +428,7 @@ msgstr ""
 "Обнаружены существующие разделы. Первые два варианта удаляют их; расширенный"
 " режим обеспечивает сохранение."
 
+#: src/pages.py:4446
 msgid ""
 "Existing partitions will be preserved. New AnduinOS partitions will be "
 "created only in the selected unallocated extent; EFI vendor files and the "
@@ -355,30 +438,39 @@ msgstr ""
 "только в выбранном нераспределённом пространстве; файлы поставщика EFI и "
 "загрузочный прошивки AnduinOS могут быть обновлены."
 
+#: src/pages.py:3052 src/pages.py:4049
 msgid "Filesystem"
 msgstr "Файловая система"
 
+#: src/pages.py:4613
 msgid "Finalize target environment"
 msgstr "Завершение настройки целевой среды"
 
+#: data/languages.json:keyboard_layouts
 msgid "Finnish"
 msgstr "Финский"
 
+#: src/pages.py:4182
 msgid "Formats"
 msgstr "Форматирует"
 
+#: data/languages.json:keyboard_layouts
 msgid "French"
 msgstr "Французский"
 
+#: src/pages.py:3462 src/pages.py:3464
 msgid "Full Name"
 msgstr "Полное имя"
 
+#: data/languages.json:keyboard_layouts
 msgid "German"
 msgstr "Немецкий"
 
+#: data/languages.json:keyboard_layouts
 msgid "Greek"
 msgstr "Греческий"
 
+#: src/pages.py:111
 msgid ""
 "Guided coexistence requires a system booted in UEFI mode and a GPT target "
 "disk. This disk cannot continue in guided mode."
@@ -387,65 +479,85 @@ msgstr ""
 "целевой диск с таблицей разделов GPT. Этот диск не может продолжать работу в"
 " управляемом режиме."
 
+#: src/pages.py:4131
 msgid ""
 "Guided storage selection is missing. Rescan and select the target again."
 msgstr ""
 "Выбор хранилища отсутствует. Повторите сканирование и выберите цель снова."
 
+#: data/languages.json:keyboard_layouts
 msgid "Hindi (India)"
 msgstr "Хинди (Индия)"
 
+#: src/pages.py:2741
 msgid "How should AnduinOS use this disk?"
 msgstr "Как AnduinOS должен использовать этот диск?"
 
+#: data/languages.json:keyboard_layouts
 msgid "Indonesian"
 msgstr "Индонезийский"
 
+#: src/pages.py:4498
 msgid "Install"
 msgstr "Установить"
 
+#: src/pages.py:4559 src/pages.py:1221 src/pages.py:4125
 msgid "Install input method"
 msgstr "Установить метод ввода"
 
+#: src/pages.py:625
 msgid "Install {language} input method: {name}"
 msgstr "Установить метод ввода для языка {language}: {name}"
 
+#: src/pages.py:4409 src/pages.py:4496
 msgid "Install Alongside"
 msgstr "Установить рядом"
 
+#: src/pages.py:4169
 msgid "Install alongside"
 msgstr "Установить рядом"
 
+#: src/pages.py:4608
 msgid "Install bootloader"
 msgstr "Установка загрузчика"
 
+#: src/pages.py:4611
 msgid "Check systems on other disks"
 msgstr "Проверить системы на других дисках"
 
+#: src/pages.py:1217 src/pages.py:4603
 msgid "Install hardware drivers"
 msgstr "Установка драйверов оборудования"
 
+#: src/pages.py:4408
 msgid "Install in the selected free space?"
 msgstr "Установить в выбранное свободное место?"
 
+#: src/pages.py:4596
 msgid "Ensure required language packs are installed"
 msgstr "Убедиться, что необходимые языковые пакеты установлены"
 
+#: src/pages.py:4599
 msgid "Install system updates"
 msgstr "Установка обновлений системы"
 
+#: src/pages.py:2229
 msgid "Install third-party drivers for this device"
 msgstr "Установить сторонние драйверы для этого устройства"
 
+#: src/pages.py:5093 src/pages.py:5095 src/pages.py:4940 src/pages.py:4950
 msgid "Installation Complete"
 msgstr "Установка завершена"
 
+#: src/pages.py:4970
 msgid "Installation Failed"
 msgstr "Ошибка установки"
 
+#: src/pages.py:4639
 msgid "Installation Steps"
 msgstr "Шаги установки"
 
+#: src/pages.py:160
 msgid ""
 "Installation cannot continue with this selection. There is no force-continue"
 " option around storage safety checks."
@@ -453,63 +565,83 @@ msgstr ""
 "Установка не может продолжиться с этим выбором. Не существует опции "
 "принудительного продолжения обхода проверок безопасности хранилища."
 
+#: src/pages.py:4919 src/pages.py:4985
 msgid "Installation complete"
 msgstr "Установка завершена"
 
+#: src/pages.py:4968
 msgid "Installation failed"
 msgstr "Ошибка установки"
 
+#: src/main.py:145
 msgid "Installation in progress"
 msgstr "Идет установка"
 
+#: src/pages.py:4547 src/pages.py:4541
 msgid "Installing AnduinOS"
 msgstr "Установка AnduinOS"
 
+#: data/languages.json:keyboard_layouts
 msgid "Italian"
 msgstr "Итальянский"
 
+#: data/languages.json:keyboard_layouts
 msgid "Japanese (JIS keyboard)"
 msgstr "Японская (клавиатура JIS)"
 
+#: src/pages.py:4040
 msgid "Keyboard"
 msgstr "Клавиатура"
 
+#: src/pages.py:1938 src/pages.py:1932 src/pages.py:2075
 msgid "Keyboard Layout"
 msgstr "Раскладка клавиатуры"
 
+#: src/pages.py:4582
 msgid "Configure physical keyboard layout"
 msgstr "Настроить физическую раскладку клавиатуры"
 
+#: data/languages.json:keyboard_layouts
 msgid "Korean"
 msgstr "Корейский"
 
+#: src/pages.py:4039
 msgid "Language"
 msgstr "Язык"
 
+#: src/pages.py:2472
 msgid "Live USB — excluded"
 msgstr "Живая USB — исключено"
 
+#: src/pages.py:4573
 msgid "Mount target filesystems"
 msgstr "Подключение целевых файловых систем"
 
+#: src/pages.py:851
 msgid "Navigation error"
 msgstr "Ошибка навигации"
 
+#: src/pages.py:4180 src/pages.py:4229
 msgid "New partitions"
 msgstr "Новые разделы"
 
+#: src/pages.py:261 src/pages.py:818 src/pages.py:1016
 msgid "Next"
 msgstr "Далее"
 
+#: src/pages.py:4756
 msgid "Next slide"
 msgstr "Следующий слайд"
 
+#: src/pages.py:2389
 msgid "No partition table"
 msgstr "Нет таблицы разделов"
 
+#: src/pages.py:2631
 msgid "No suitable disks found."
 msgstr "Подходящие диски не найдены."
 
+#: src/pages.py:170
 msgid ""
 "No suitable unallocated space was found. To protect your data, create "
 "unallocated space with Windows Disk Management, then boot the installer "
@@ -519,6 +651,7 @@ msgstr ""
 "создайте неразмеченное пространство с помощью управления дисками Windows, "
 "затем перезагрузитесь в установщик и снова просканируйте диск."
 
+#: src/pages.py:175
 msgid ""
 "No suitable unallocated space was found. To protect your data, create "
 "unallocated space with a partitioning tool, then boot the installer again "
@@ -528,81 +661,108 @@ msgstr ""
 "создайте неразмеченное пространство с помощью инструмента разметки диска, "
 "затем перезагрузитесь в установщик и снова просканируйте диск."
 
+#: data/languages.json:keyboard_layouts
 msgid "Norwegian"
 msgstr "Норвежский"
 
+#: src/pages.py:1124 src/pages.py:1375 src/pages.py:4370 src/pages.py:854
 msgid "OK"
 msgstr "ОК"
 
+#: src/pages.py:4835
 msgid "Output"
 msgstr "Вывод"
 
+#: src/pages.py:4973 src/pages.py:5028
 msgid "Output • Error"
 msgstr "Вывод • Ошибка"
 
+#: src/pages.py:5023
 msgid "Output • {count} warning(s)"
 msgstr "Вывод • {count} предупреждение(й)"
 
+#: src/pages.py:2453
 msgid "Partition details unavailable"
 msgstr "Сведения о разделе недоступны"
 
+#: src/pages.py:3476 src/pages.py:3487 src/pages.py:1466 src/pages.py:1525
 msgid "Password"
 msgstr "Пароль"
 
+#: src/pages.py:3584
 msgid "Password must be at least 6 characters."
 msgstr "Пароль должен содержать не менее 6 символов."
 
+#: src/pages.py:4048
 msgid "Platform"
 msgstr "Платформа"
 
+#: src/pages.py:4548
 msgid "Please do not turn off your computer"
 msgstr "Пожалуйста, не выключайте компьютер"
 
+#: src/pages.py:3965
 msgid "Please review your choices before proceeding"
 msgstr "Пожалуйста, проверьте ваши выборы перед продолжением"
 
+#: data/languages.json:keyboard_layouts
 msgid "Polish"
 msgstr "Польский"
 
+#: data/languages.json:keyboard_layouts
 msgid "Portuguese"
 msgstr "Португальский"
 
+#: data/languages.json:keyboard_layouts
 msgid "Portuguese (Brazil)"
 msgstr "Португальский (Бразилия)"
 
+#: src/pages.py:4594
 msgid "Prepare Secure Boot"
 msgstr "Подготовка Secure Boot"
 
+#: src/pages.py:4572
 msgid "Prepare installation disk"
 msgstr "Подготовка диска установки"
 
+#: src/pages.py:4579
 msgid "Prepare target environment"
 msgstr "Подготовка целевой среды"
 
+#: src/pages.py:4871
 msgid "Preparing installation…"
 msgstr "Подготовка к установке…"
 
+#: src/pages.py:4175
 msgid "Preserved partitions"
 msgstr "Сохраненные разделы"
 
+#: src/pages.py:4750
 msgid "Previous slide"
 msgstr "Предыдущий слайд"
 
+#: src/pages.py:3964 src/pages.py:3958
 msgid "Ready to Install"
 msgstr "Готово к установке"
 
+#: src/pages.py:4811
 msgid "Reboot Now"
 msgstr "Перезагрузить сейчас"
 
+#: src/pages.py:4598
 msgid "Refresh package indexes"
 msgstr "Обновление индексов пакетов"
 
+#: src/pages.py:4580
 msgid "Remove live-session components"
 msgstr "Удаление компонентов живой сессии"
 
+#: src/pages.py:4951 src/pages.py:4942
 msgid "Remove the installation media and restart your computer"
 msgstr "Извлеките установочный носитель и перезагрузите компьютер"
 
+#: src/pages.py:1177 src/pages.py:1205 src/pages.py:2220 src/pages.py:675
+#: src/pages.py:1362 src/pages.py:2233
 msgid ""
 "Requires an Internet connection. The base installation remains available "
 "when offline."
@@ -610,21 +770,27 @@ msgstr ""
 "Требуется подключение к Интернету. Базовая установка остается доступной в "
 "автономном режиме."
 
+#: src/pages.py:2550
 msgid "Rescan Storage"
 msgstr "Повторное сканирование хранилища"
 
+#: src/pages.py:3101
 msgid "Rescan and Reselect Disk"
 msgstr "Повторное сканирование и повторный выбор диска"
 
+#: src/pages.py:4809
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "Перезагрузка и регистрация ключа Secure Boot"
 
+#: src/pages.py:4960
 msgid "Restart is disabled in development protection mode"
 msgstr "Перезагрузка отключена в режиме защиты разработки"
 
+#: src/pages.py:3150
 msgid "Reuse {path} ({size})"
 msgstr "Использовать повторно {path} ({size})"
 
+#: src/pages.py:4155
 msgid ""
 "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
 "before writing."
@@ -632,50 +798,65 @@ msgstr ""
 "Использовать повторно {path}; не форматировать; перед записью проверить "
 "состояние FAT, идентификатор и наличие 64 МБ свободного места."
 
+#: data/languages.json:keyboard_layouts
 msgid "Romanian"
 msgstr "Румынский"
 
+#: data/languages.json:keyboard_layouts
 msgid "Russian"
 msgstr "Русский"
 
+#: src/pages.py:4679
 msgid "Save Log"
 msgstr "Сохранить журнал"
 
+#: src/pages.py:4609
 msgid "Schedule MOK enrollment"
 msgstr "Планирование регистрации MOK"
 
+#: src/pages.py:3831
 msgid "Search timezones…"
 msgstr "Поиск часовых поясов…"
 
+#: src/pages.py:4069
 msgid "Secure Boot enrollment"
 msgstr "Регистрация Secure Boot"
 
+#: src/pages.py:2497 src/pages.py:2491
 msgid "Select Installation Disk"
 msgstr "Выбор диска для установки"
 
+#: src/pages.py:3818 src/pages.py:3812
 msgid "Select Timezone"
 msgstr "Выбор часового пояса"
 
+#: src/pages.py:4592
 msgid "Select fastest package mirror"
 msgstr "Выбор самого быстрого зеркала пакетов"
 
+#: src/pages.py:3884
 msgid "Selected timezone"
 msgstr "Выбранный часовой пояс"
 
+#: src/pages.py:4170
 msgid "Selected unallocated space"
 msgstr "Выделенное неразмеченное пространство"
 
+#: src/pages.py:2239
 msgid "Some drivers are proprietary or otherwise non-free software."
 msgstr ""
 "Некоторые драйверы являются проприетарными или иным образом нелицензионным "
 "программным обеспечением."
 
+#: data/languages.json:keyboard_layouts
 msgid "Spanish"
 msgstr "Испанский"
 
+#: src/pages.py:4046
 msgid "Stable disk identity"
 msgstr "Стабильный идентификатор диска"
 
+#: src/pages.py:4437
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -683,36 +864,47 @@ msgstr ""
 "Стабильный идентификатор: {stable_id}\n"
 "\n"
 
+#: src/pages.py:2380
 msgid "Storage Device"
 msgstr "Устройство хранения данных"
 
+#: src/pages.py:4168 src/pages.py:4224
 msgid "Storage mode"
 msgstr "Режим хранения"
 
+#: src/pages.py:4050
 msgid "Subvolumes"
 msgstr "Подтома"
 
+#: src/pages.py:4268
 msgid "Swap"
 msgstr "Файл подкачки"
 
+#: data/languages.json:keyboard_layouts
 msgid "Swedish"
 msgstr "Шведский"
 
+#: src/pages.py:4051
 msgid "System updates"
 msgstr "Обновления системы"
 
+#: src/pages.py:4042
 msgid "Target Disk"
 msgstr "Целевой диск"
 
+#: src/pages.py:2993 src/pages.py:3260
 msgid "Target: {disk} ({size} — {model})"
 msgstr "Цель: {disk} ({size} — {model})"
 
+#: src/pages.py:1964 src/pages.py:2076
 msgid "Test your keyboard here…"
 msgstr "Протестируйте клавиатуру здесь…"
 
+#: data/languages.json:keyboard_layouts
 msgid "Thai"
 msgstr "Тайский"
 
+#: src/pages.py:120
 msgid ""
 "The GPT disk or one of its partitions has no unique stable identifier. "
 "Guided coexistence cannot safely authorize preservation or writes on this "
@@ -722,6 +914,7 @@ msgstr ""
 "идентификатора. Автоматическое сосуществование не может безопасно "
 "авторизовать сохранение или запись на этом диске."
 
+#: src/pages.py:115
 msgid ""
 "The complete partition map and free-space geometry could not be read "
 "consistently. No space on this disk is authorized for installation."
@@ -730,6 +923,7 @@ msgstr ""
 "свободного пространства. Никакое пространство на этом диске не авторизовано "
 "для установки."
 
+#: src/pages.py:141
 msgid ""
 "The existing EFI System Partition is only a candidate. Health and free-space"
 " checks must pass before it can be reused, and it will never be formatted."
@@ -738,6 +932,7 @@ msgstr ""
 "использованием должны быть пройдены проверки состояния и свободного места, и"
 " он никогда не будет отформатирован."
 
+#: src/pages.py:4926
 msgid ""
 "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
 " state, or installed system was changed."
@@ -745,9 +940,11 @@ msgstr ""
 "План установки действителен. Диск, файловая система, загрузчик, состояние "
 "Secure Boot или установленная система не были изменены."
 
+#: src/main.py:147
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr "Установщик нельзя закрыть во время изменения целевого диска."
 
+#: src/pages.py:150
 msgid ""
 "The installer will not mount, repair or infer the safety of Windows volumes "
 "from hibernation or Fast Startup state. Any required Windows maintenance "
@@ -757,9 +954,11 @@ msgstr ""
 "томов Windows в состоянии гибернации или быстрого запуска. Любое необходимое"
 " обслуживание Windows должно быть выполнено в самой Windows."
 
+#: src/pages.py:4443
 msgid "The privileged executor is disabled."
 msgstr "Привилегированный исполнитель отключен."
 
+#: src/pages.py:3228
 msgid ""
 "The selected disk changed or disappeared. Return to the disk page and select"
 " it again. {error}"
@@ -767,10 +966,12 @@ msgstr ""
 "Выбранный диск изменился или исчез. Вернитесь на страницу дисков и выберите "
 "его снова. {error}"
 
+#: src/pages.py:3241
 msgid "The selected disk size changed. Return and select it again."
 msgstr ""
 "Размер выбранного диска изменился. Вернитесь назад и выберите его снова."
 
+#: src/pages.py:3251
 msgid ""
 "The selected disk topology changed. Review the disk and installation method "
 "again."
@@ -778,12 +979,15 @@ msgstr ""
 "Топология выбранного диска изменилась. Проверьте диск и метод установки еще "
 "раз."
 
+#: src/pages.py:3580
 msgid "The two passwords do not match."
 msgstr "Пароли не совпадают."
 
+#: src/pages.py:4057
 msgid "Third-party drivers"
 msgstr "Сторонние драйверы"
 
+#: src/pages.py:3021
 msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
@@ -791,6 +995,7 @@ msgstr ""
 "Этот расширенный путь сохраняет существующие разделы, но изменяет таблицу "
 "разделов выбранного диска и состояние загрузки EFI машины."
 
+#: src/pages.py:125
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
 "topology that guided coexistence does not support."
@@ -799,6 +1004,7 @@ msgstr ""
 "блочных устройств, которые не поддерживаются режимом совместного "
 "использования с помощью мастера."
 
+#: src/pages.py:2935
 msgid ""
 "This disk is too small for whole-disk installation. Advanced may continue "
 "only if suitable unallocated space exists."
@@ -807,39 +1013,51 @@ msgstr ""
 "продолжить работу только при наличии подходящего нераспределенного "
 "пространства."
 
+#: src/pages.py:4454
 msgid "This installer does not shrink or preserve other systems."
 msgstr "Этот установщик не уменьшает и не сохраняет другие системы."
 
+#: src/pages.py:4103
 msgid "Timezone"
 msgstr "Часовой пояс"
 
+#: src/pages.py:2474
 msgid "Too small"
 msgstr "Слишком маленький"
 
+#: data/languages.json:keyboard_layouts
 msgid "Turkish"
 msgstr "Турецкий"
 
+#: data/languages.json:keyboard_layouts
 msgid "Ukrainian"
 msgstr "Украинский"
 
+#: src/pages.py:3065
 msgid "Unallocated space"
 msgstr "Нераспределённое пространство"
 
+#: src/pages.py:2445
 msgid "Unallocated · {size}"
 msgstr "Не распределено · {size}"
 
+#: src/pages.py:4014 src/pages.py:1710
 msgid "Unavailable: {error}"
 msgstr "Недоступно: {error}"
 
+#: src/pages.py:2432
 msgid "Unknown filesystem"
 msgstr "Неизвестная файловая система"
 
+#: src/pages.py:4614
 msgid "Unmount installed system"
 msgstr "Отключение установленной системы"
 
+#: src/pages.py:2198 src/pages.py:1196 src/pages.py:2192
 msgid "Updates and Drivers"
 msgstr "Обновления и драйверы"
 
+#: src/pages.py:2840
 msgid ""
 "Use already-unallocated space and preserve existing partitions. This is the "
 "only Windows coexistence path."
@@ -847,20 +1065,25 @@ msgstr ""
 "Использовать уже неразмеченное пространство и сохранить существующие "
 "разделы. Это единственный вариант сосуществования с Windows."
 
+#: src/pages.py:2986
 msgid "Use only existing unallocated space on the selected disk."
 msgstr ""
 "Использовать только существующее неразмеченное пространство на выбранном "
 "диске."
 
+#: src/pages.py:4079
 msgid "User"
 msgstr "Пользователь"
 
+#: src/pages.py:3446 src/pages.py:3440
 msgid "User Account"
 msgstr "Учетная запись пользователя"
 
+#: src/pages.py:3468 src/pages.py:3472
 msgid "Username"
 msgstr "Имя пользователя"
 
+#: src/pages.py:3568
 msgid ""
 "Username must start with a lowercase ASCII letter and contain only lowercase"
 " ASCII letters or digits (maximum 16 characters)."
@@ -868,31 +1091,40 @@ msgstr ""
 "Имя пользователя должно начинаться со строчной буквы ASCII и содержать "
 "только строчные буквы или цифры (не более 16 символов)."
 
+#: src/pages.py:2832
 msgid "Uses a traditional single root filesystem."
 msgstr ""
 "Использует традиционную файловую систему с единственным корневым каталогом."
 
+#: src/pages.py:4406
 msgid "Validate Plan (No Installation)"
 msgstr "Проверить план (без установки)"
 
+#: src/pages.py:4405
 msgid "Validate this installation plan?"
 msgstr "Проверить этот план установки?"
 
+#: src/pages.py:4606
 msgid "Verify kernel module signatures"
 msgstr "Проверка подписей модулей ядра"
 
+#: src/pages.py:4571
 msgid "Verify target disk isolation"
 msgstr "Проверка изоляции целевого диска"
 
+#: data/languages.json:keyboard_layouts
 msgid "Vietnamese"
 msgstr "Вьетнамский"
 
+#: src/pages.py:811
 msgid "Welcome to AnduinOS"
 msgstr "Добро пожаловать в AnduinOS"
 
+#: src/pages.py:2468
 msgid "Windows detected"
 msgstr "Обнаружена Windows"
 
+#: src/pages.py:4188
 msgid ""
 "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
 "AnduinOS NVRAM entry."
@@ -900,56 +1132,73 @@ msgstr ""
 "Записать только EFI/AnduinOS, не перезаписывать EFI/BOOT и требовать "
 "проверенный загрузочный раздел AnduinOS в NVRAM."
 
+#: src/pages.py:4072
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr ""
 "создать локальный для машины MOK; зарегистрировать после перезагрузки с "
 "паролем 123456"
 
+#: src/pages.py:4059
 msgid "detect and install (may include non-free software)"
 msgstr "обнаружить и установить (может включать нелицензионное ПО)"
 
+#: src/pages.py:4121 src/pages.py:4055 src/pages.py:4061 src/pages.py:4067
 msgid "do not install"
 msgstr "не устанавливать"
 
+#: src/pages.py:4053 src/pages.py:4065
 msgid "download and install"
 msgstr "скачать и установить"
 
+#: src/pages.py:3055
 msgid "ext4 (classic)"
 msgstr "ext4 (классическая)"
 
+#: src/pages.py:2829
 msgid "ext4 — classic"
 msgstr "ext4 — классическая"
 
+#: src/pages.py:4077
 msgid "not required"
 msgstr "не требуется"
 
+#: src/pages.py:4083
 msgid "password required for login"
 msgstr "требуется пароль для входа"
 
+#: src/pages.py:4024
 msgid "single ext4 root filesystem"
 msgstr "одна файловая система ext4 корня"
 
+#: src/pages.py:4005
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / Безопасная загрузка: {secure_boot}"
 
+#: src/pages.py:4176
 msgid "{count}: {paths}"
 msgstr "{count}: {paths}"
 
+#: src/pages.py:4139
 msgid "{name}: {start}–{end} MiB"
 msgstr "{name}: {start}–{end} МБ"
 
+#: src/pages.py:4147
 msgid "{path} as {filesystem}"
 msgstr "{path} как {filesystem}"
 
+#: src/pages.py:4171
 msgid "{size} at {offset}"
 msgstr "{size} на смещении {offset}"
 
+#: src/pages.py:3288
 msgid "{size} unallocated at {offset}"
 msgstr "{size} не распределено на смещении {offset}"
 
+#: src/pages.py:5031
 msgid "{step} failed"
 msgstr "Шаг {step} не выполнен"
 
+#: src/pages.py:4303
 msgid ""
 "⚠ Only the selected unallocated space will be partitioned and formatted. "
 "Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
@@ -961,45 +1210,50 @@ msgstr ""
 "загрузки прошивки AnduinOS могут измениться. Этот установщик не уменьшит "
 "раздел Windows за вас."
 
+#: src/pages.py:4311
 msgid ""
 "⚠ This will erase ALL data on the selected disk. This action cannot be "
 "undone."
 msgstr ""
 "⚠ Это удалит ВСЕ данные на выбранном диске. Это действие нельзя отменить."
 
-#: src/pages.py
+#: src/pages.py:1176 src/pages.py:667 src/pages.py:1171
 msgid "Connect to the Internet"
 msgstr "Подключиться к Интернету"
 
-#: src/pages.py
+#: src/pages.py:1343
 msgid "Internet connection is ready."
 msgstr "Подключение к Интернету готово."
 
-#: src/pages.py
+#: src/pages.py:1250
 msgid "Available Wi-Fi Networks"
 msgstr "Доступные сети Wi-Fi"
 
+#: src/pages.py:4576
 msgid "Preserve connected Wi-Fi network"
 msgstr "Сохранить подключённую сеть Wi-Fi"
 
+#: src/pages.py:2540 src/pages.py:3092
 msgid "Loading storage devices…"
 msgstr "Загрузка накопителей…"
 
+#: src/pages.py:4335
 msgid "Rechecking target disk…"
 msgstr "Повторная проверка целевого диска…"
 
+#: src/pages.py:2609 src/pages.py:3213 src/pages.py:4364
 msgid "Storage devices could not be loaded: {error}"
 msgstr "Не удалось загрузить накопители: {error}"
 
-#: src/pages.py
+#: src/pages.py:1218 src/pages.py:4586 src/pages.py:2252
 msgid "Install extended multimedia format support"
 msgstr "Установить расширенную поддержку мультимедийных форматов"
 
-#: src/pages.py
+#: src/pages.py:4063
 msgid "Extended multimedia formats"
 msgstr "Расширенные мультимедийные форматы"
 
-#: src/pages.py
+#: src/pages.py:2256
 msgid ""
 "Adds wider GStreamer compatibility and support for additional legacy and "
 "specialist media formats. Some components may be subject to patent or "
@@ -1009,89 +1263,90 @@ msgstr ""
 "специализированных медиаформатов. На некоторые компоненты могут "
 "распространяться патенты или условия повторного распространения."
 
-#: src/pages.py
+#: src/pages.py:1473
 msgid "A saved profile exists. Entering a password updates it securely."
 msgstr ""
 "Сохраненный профиль уже существует. Ввод пароля позволит обновить его в "
 "безопасном режиме."
 
-#: src/pages.py
+#: src/pages.py:1524
 msgid "Anonymous identity (optional)"
 msgstr "Анонимный идентификатор (необязательно)"
 
-#: src/pages.py
+#: src/pages.py:1530
 msgid "CA certificate path (optional)"
 msgstr "Путь к сертификату ЦС (необязательно)"
 
-#: src/pages.py
+#: src/pages.py:1239 src/pages.py:1409 src/pages.py:1482 src/pages.py:1600
+#: src/pages.py:1816
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/pages.py
+#: src/pages.py:1786
 msgid "Cancelling Wi-Fi operation…"
 msgstr "Отмена операции Wi-Fi…"
 
-#: src/pages.py
+#: src/pages.py:1532
 msgid "Client certificate path"
 msgstr "Путь к сертификату клиента"
 
-#: src/pages.py
+#: src/pages.py:1483 src/pages.py:1601
 msgid "Connect"
 msgstr "Connect"
 
-#: src/pages.py
+#: src/pages.py:1817
 msgid "Continue"
 msgstr "Продолжить"
 
-#: src/pages.py
+#: src/pages.py:1259 src/pages.py:1809
 msgid "Connect to a hidden network"
 msgstr "Подключиться к скрытой сети"
 
-#: src/pages.py
+#: src/pages.py:1478 src/pages.py:1593
 #, python-brace-format
 msgid "Connect to {network}"
 msgstr "Подключиться к сети {network}"
 
-#: src/pages.py
+#: src/pages.py:1654
 msgid "Connected"
 msgstr "Connected"
 
-#: src/pages.py
+#: src/pages.py:1453
 #, python-brace-format
 msgid "Connecting to {network}…"
 msgstr "Подключение к сети {network}…"
 
-#: src/pages.py
+#: src/pages.py:1755
 msgid "Could not change the Wi-Fi connection"
 msgstr "Не удалось изменить подключение Wi-Fi"
 
-#: src/pages.py
+#: src/pages.py:1410
 msgid "Disconnect"
 msgstr "Disconnect"
 
-#: src/pages.py
+#: src/pages.py:1401
 #, python-brace-format
 msgid "Disconnect from {network}?"
 msgstr "Отключиться от сети {network}?"
 
-#: src/pages.py
+#: src/pages.py:1420
 #, python-brace-format
 msgid "Disconnecting from {network}…"
 msgstr "Отключение от сети {network}…"
 
-#: src/pages.py
+#: src/pages.py:1531
 msgid "Domain suffix match (optional)"
 msgstr "Совпадение суффикса домена (необязательно)"
 
-#: src/pages.py
+#: src/pages.py:1515
 msgid "EAP method"
 msgstr "Метод EAP"
 
-#: src/pages.py
+#: src/pages.py:1387 src/pages.py:1796
 msgid "Enhanced Open (OWE)"
 msgstr "Улучшенная открытая сеть (OWE)"
 
-#: src/pages.py
+#: src/pages.py:1595
 msgid ""
 "Enter the credentials supplied by your organization. Certificate validation "
 "is strongly recommended."
@@ -1099,85 +1354,85 @@ msgstr ""
 "Введите учетные данные, предоставленные вашей организацией. Настоятельно "
 "рекомендуется проверка сертификата."
 
-#: src/pages.py
+#: src/pages.py:1811
 msgid "Enter the exact network name and choose its security type."
 msgstr "Введите точное имя сети и выберите тип её защиты."
 
-#: src/pages.py
+#: src/pages.py:1390 src/pages.py:1800
 msgid "Enterprise Wi-Fi"
 msgstr "Корпоративный Wi-Fi"
 
-#: src/pages.py
+#: src/pages.py:1523
 msgid "Identity"
 msgstr "Identity"
 
-#: src/pages.py
+#: src/pages.py:1527
 msgid "Inner authentication"
 msgstr "Внутренняя аутентификация"
 
-#: src/pages.py
+#: src/pages.py:1790
 msgid "Network name (SSID)"
 msgstr "Имя сети (SSID)"
 
-#: src/pages.py
+#: src/pages.py:1645
 msgid "No Wi-Fi networks found."
 msgstr "Сети Wi-Fi не найдены."
 
-#: src/pages.py
+#: src/pages.py:1386 src/pages.py:1795
 msgid "Open network"
 msgstr "Открытая сеть"
 
-#: src/pages.py
+#: src/pages.py:1389 src/pages.py:1797 src/pages.py:1798
 msgid "Personal Wi-Fi"
 msgstr "Личная сеть Wi-Fi"
 
-#: src/pages.py
+#: src/pages.py:1535
 msgid "Private key password (optional)"
 msgstr "Пароль закрытого ключа (необязательно)"
 
-#: src/pages.py
+#: src/pages.py:1533
 msgid "Private key path"
 msgstr "Путь к закрытому ключу"
 
-#: src/pages.py
+#: src/pages.py:1284
 msgid "Refresh Wi-Fi networks"
 msgstr "Обновить список сетей Wi-Fi"
 
-#: src/pages.py
+#: src/pages.py:1656
 msgid "Saved"
 msgstr "Saved"
 
-#: src/pages.py
+#: src/pages.py:1792
 msgid "Security"
 msgstr "Security"
 
-#: src/pages.py
+#: src/pages.py:1405
 msgid ""
 "The installer will keep the saved network profile so it can be used again."
 msgstr ""
 "Установщик сохранит профиль сети, чтобы его можно было использовать снова."
 
-#: src/pages.py
+#: src/pages.py:1356
 msgid "The local network is connected, but Internet access is unavailable."
 msgstr "Подключено к локальной сети, но доступ в Интернет отсутствует."
 
-#: src/pages.py
+#: src/pages.py:1856
 msgid "Turning Wi-Fi off…"
 msgstr "Отключение Wi-Fi…"
 
-#: src/pages.py
+#: src/pages.py:1854
 msgid "Turning Wi-Fi on…"
 msgstr "Включение Wi-Fi…"
 
-#: src/pages.py
+#: src/pages.py:1485
 msgid "Use WPS"
 msgstr "Использовать WPS"
 
-#: src/pages.py
+#: src/pages.py:1388 src/pages.py:1799
 msgid "WEP (legacy)"
 msgstr "WEP (устаревший)"
 
-#: src/pages.py
+#: src/pages.py:1347
 msgid ""
 "Wi-Fi is connected, but the network requires sign-in through a captive "
 "portal."
@@ -1185,27 +1440,33 @@ msgstr ""
 "Wi-Fi подключён, но для доступа к сети требуется авторизация через страницу "
 "входа."
 
-#: src/pages.py
+#: src/pages.py:1449
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr ""
 "Ожидание WPS для сети {network}. Нажмите кнопку WPS на маршрутизаторе…"
 
+#: src/pages.py:3576
 msgid "A password is required."
 msgstr "Требуется пароль."
 
+#: src/pages.py:3731
 msgid "Administrative commands will no longer ask for your password."
 msgstr "Команды администрирования больше не будут запрашивать пароль."
 
+#: src/pages.py:3681 src/pages.py:3675
 msgid "Advanced Options"
 msgstr "Дополнительные параметры"
 
+#: src/pages.py:3747
 msgid "Allow SSH login with the account password"
 msgstr "Разрешить вход по SSH с паролем учётной записи"
 
+#: src/pages.py:4089
 msgid "Automatic desktop login"
 msgstr "Автоматический вход в рабочий стол"
 
+#: src/pages.py:3701
 msgid ""
 "Choose how the local administrator account signs in and authorizes system "
 "changes."
@@ -1213,46 +1474,136 @@ msgstr ""
 "Выберите способ входа локальной учётной записи администратора и "
 "подтверждения системных изменений."
 
+#: src/pages.py:3682
 msgid "Choose optional access and sign-in policies"
 msgstr "Выберите дополнительные правила доступа и входа"
 
+#: src/pages.py:3709
 msgid "Choose whether this computer accepts remote Secure Shell connections."
 msgstr ""
 "Выберите, будет ли этот компьютер принимать удалённые подключения Secure "
 "Shell."
 
+#: src/pages.py:4604
 msgid "Configure Secure Shell"
 msgstr "Настроить Secure Shell"
 
+#: src/pages.py:3699
 msgid "Local Access"
 msgstr "Локальный доступ"
 
+#: src/pages.py:3737
 msgid "Log in to the desktop automatically"
 msgstr "Автоматически входить в рабочий стол"
 
+#: src/pages.py:3739
 msgid "Open this account's desktop automatically when the computer starts."
 msgstr ""
 "Автоматически открывать рабочий стол этой учётной записи при запуске "
 "компьютера."
 
+#: src/pages.py:3707
 msgid "Remote Access"
 msgstr "Удалённый доступ"
 
+#: src/pages.py:3730
 msgid "Run sudo commands without a password"
 msgstr "Выполнять команды sudo без пароля"
 
+#: src/pages.py:4095
 msgid "SSH password login"
 msgstr "Вход по SSH с паролем"
 
+#: src/pages.py:3749
 msgid "Start Secure Shell and accept this account password over the network."
 msgstr ""
 "Запустить Secure Shell и принимать пароль этой учётной записи по сети."
 
+#: src/pages.py:3759
 msgid "This will reduce the security of the installed system."
 msgstr "Это снизит безопасность установленной системы."
 
+#: src/pages.py:4093 src/pages.py:4099
 msgid "disabled"
 msgstr "отключено"
 
+#: src/pages.py:4091 src/pages.py:4097
 msgid "enabled"
 msgstr "включено"
+
+#: src/pages.py:349
+msgid ""
+"AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently"
+" enabled on this computer, and we recommend enabling it for additional "
+"protection."
+msgstr ""
+"AnduinOS полностью поддерживает Secure Boot. В настоящее время Secure Boot "
+"не включён на этом компьютере, и мы рекомендуем включить его для "
+"дополнительной защиты."
+
+#: src/pages.py:331
+msgid "AnduinOS supports Secure Boot"
+msgstr "AnduinOS поддерживает Secure Boot"
+
+#: src/pages.py:360
+msgid ""
+"Battery power is sufficient or reliable power is connected. You can continue"
+" with the installation."
+msgstr ""
+"Заряда батареи достаточно или подключён надёжный источник питания. Вы можете"
+" продолжить установку."
+
+#: src/pages.py:366
+msgid ""
+"Connect reliable external power and charge above 25%, or charge above 45% "
+"while unplugged."
+msgstr ""
+"Подключите надежный внешний источник питания и зарядите устройство до 25% "
+"или выше, либо до 45% или выше при отключении от сети."
+
+#: src/pages.py:338
+msgid "Could not open UEFI firmware settings"
+msgstr "Не удалось открыть настройки прошивки UEFI"
+
+#: src/pages.py:333
+msgid "Get additional protection before installing AnduinOS."
+msgstr "Получите дополнительную защиту перед установкой AnduinOS."
+
+#: src/pages.py:364
+msgid "Power conditions are safe for installation."
+msgstr "Условия питания безопасны для установки."
+
+#: src/pages.py:363
+msgid "Power ready"
+msgstr "Питание готово"
+
+#: src/pages.py:335
+msgid "Restart to UEFI Firmware Settings"
+msgstr "Перезагрузить в настройки прошивки UEFI"
+
+#: src/pages.py:345
+msgid ""
+"Secure Boot is a UEFI security feature that verifies trusted, digitally "
+"signed software while your computer starts."
+msgstr ""
+"Secure Boot — это функция безопасности UEFI, которая проверяет доверенное "
+"программное обеспечение с цифровой подписью при запуске компьютера."
+
+#: src/pages.py:336
+msgid "Skip"
+msgstr "Пропустить"
+
+#: src/pages.py:341
+msgid "The firmware settings could not be opened on this computer."
+msgstr "Не удалось открыть параметры прошивки на этом компьютере."
+
+#: src/pages.py:354
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Для включения откройте параметры прошивки UEFI и найдите раздел Boot, "
+"Security или Secure Boot. Выберите Microsoft & 3rd-party CA или включите "
+"Secure Boot. Формулировки в прошивке могут различаться в зависимости от "
+"производителя."

@@ -53,11 +53,11 @@ msgstr "Thêm khóa công khai này vào GitHub dưới dạng Khóa Ký Tên."
 msgid "Administrator access"
 msgstr "Quyền truy cập quản trị viên"
 
-#: src/window.rs:2668
+#: src/window.rs:2667
 msgid "Advanced options"
 msgstr "Tùy chọn nâng cao"
 
-#: src/window.rs:2620
+#: src/window.rs:2619
 msgid "Algorithm"
 msgstr "Giải thuật"
 
@@ -102,7 +102,7 @@ msgstr "Tâm bảo mật YubiKey của AnduinOS"
 msgid "AnduinOS works more securely with a YubiKey"
 msgstr "AnduinOS hoạt động an toàn hơn với YubiKey"
 
-#: src/window.rs:2626
+#: src/window.rs:2625
 msgid "Application"
 msgstr "Application"
 
@@ -130,7 +130,7 @@ msgstr "Có sẵn thông qua local key handle"
 msgid "Buy a YubiKey"
 msgstr "Mua YubiKey"
 
-#: src/window.rs:2699 src/window.rs:2756 src/window.rs:3028
+#: src/window.rs:2698 src/window.rs:2755 src/window.rs:3027
 msgid "Cancel"
 msgstr "Hủy bỏ"
 
@@ -150,7 +150,7 @@ msgstr "Đang kiểm tra các YubiKey đã kết nối"
 msgid "Choose a YubiKey-backed SSH key"
 msgstr "Chọn khóa SSH được hỗ trợ bởi YubiKey"
 
-#: src/window.rs:2640
+#: src/window.rs:2639
 msgid "Choose a local key-handle file"
 msgstr "Chọn một tệp handle khóa cục bộ"
 
@@ -170,7 +170,7 @@ msgstr "Chọn một thư mục đầu ra hợp lệ."
 msgid "Choose an SSH key for Git signing."
 msgstr "Chọn một khóa SSH để ký Git."
 
-#: src/window.rs:2651
+#: src/window.rs:2650
 msgid "Choose local SSH key-handle path"
 msgstr "Chọn đường dẫn handle khóa SSH cục bộ"
 
@@ -189,7 +189,7 @@ msgstr ""
 "Chọn những YubiKey nào có thể mở khóa {0}. Đăng nhập bằng mật khẩu vẫn khả "
 "dụng."
 
-#: src/window.rs:3075 src/window.rs:3097
+#: src/window.rs:3074 src/window.rs:3096
 msgid "Close"
 msgstr "Đóng"
 
@@ -213,7 +213,7 @@ msgstr "Các YubiKey đã cấu hình"
 msgid "Configured for {0} · Not connected"
 msgstr "Đã cấu hình cho {0} · Chưa kết nối"
 
-#: src/window.rs:2506
+#: src/window.rs:2505
 msgid "Connect a FIDO security key first"
 msgstr "Kết nối một khóa bảo mật FIDO trước"
 
@@ -237,15 +237,15 @@ msgstr "Đã kết nối"
 msgid "Connected YubiKeys"
 msgstr "Các YubiKey đã kết nối"
 
-#: src/window.rs:2700
+#: src/window.rs:2699
 msgid "Continue"
 msgstr "Tiếp tục"
 
-#: src/window.rs:3029
+#: src/window.rs:3028
 msgid "Continue to PIN"
 msgstr "Tiếp tục đến PIN"
 
-#: src/window.rs:1326 src/window.rs:2779
+#: src/window.rs:1326 src/window.rs:2778
 msgid "Copy public key"
 msgstr "Sao chép khóa công khai"
 
@@ -265,7 +265,7 @@ msgstr "Không thể tạo dữ liệu ký Git tạm thời: {0}"
 msgid "Could not create {0}: {1}"
 msgstr "Không thể tạo {0}: {1}"
 
-#: src/window.rs:2840
+#: src/window.rs:2839
 msgid "Could not export the public key: {0}"
 msgstr "Không thể xuất khóa công khai: {0}"
 
@@ -305,7 +305,7 @@ msgstr "Không thể bảo vệ {0}: {1}"
 msgid "Could not provide the FIDO PIN: {0}"
 msgstr "Không thể cung cấp PIN FIDO: {0}"
 
-#: src/backend.rs:298
+#: src/backend.rs:325
 msgid "Could not request administrator access: {0}"
 msgstr "Không thể yêu cầu quyền quản trị viên: {0}"
 
@@ -325,23 +325,23 @@ msgstr "Không thể cập nhật khóa bảo mật"
 msgid "Could not write the temporary public key: {0}"
 msgstr "Không thể ghi khóa công khai tạm thời: {0}"
 
-#: src/window.rs:2534
+#: src/window.rs:2533
 msgid "Create"
 msgstr "Tạo"
 
-#: src/window.rs:2508
+#: src/window.rs:2507
 msgid "Create a resident SSH credential on a selected device"
 msgstr "Tạo thông tin xác thực SSH cư trú trên thiết bị đã chọn"
 
-#: src/window.rs:2693
+#: src/window.rs:2692
 msgid "Create a resident SSH key"
 msgstr "Tạo khóa SSH cư trú"
 
-#: src/window.rs:2502
+#: src/window.rs:2501
 msgid "Create…"
 msgstr "Tạo…"
 
-#: src/window.rs:2963
+#: src/window.rs:2962
 msgid "Deletion result is unknown"
 msgstr "Kết quả xóa không xác định"
 
@@ -371,19 +371,19 @@ msgstr ""
 "chọn sẽ nhấp nháy; chạm vào nó để tiếp tục. Nhiều khóa có thể được đăng ký "
 "lần lượt một cái tại một thời điểm."
 
-#: src/window.rs:2611
+#: src/window.rs:2610
 msgid "ECDSA-SK (recommended compatibility)"
 msgstr "ECDSA-SK (khuyến nghị tương thích)"
 
-#: src/window.rs:2621
+#: src/window.rs:2620
 msgid "ECDSA-SK works with the widest range of YubiKeys"
 msgstr "ECDSA-SK hoạt động với phạm vi rộng nhất các YubiKey"
 
-#: src/window.rs:2498
+#: src/window.rs:2497
 msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
 msgstr "ECDSA-SK · cư trú · yêu cầu chạm · mặc định tương thích an toàn"
 
-#: src/window.rs:2612
+#: src/window.rs:2611
 msgid "Ed25519-SK (newer YubiKeys)"
 msgstr "Ed25519-SK (YubiKey mới hơn)"
 
@@ -438,23 +438,23 @@ msgid "Enter the YubiKey FIDO PIN to test this local key handle."
 msgstr ""
 "Nhập mã PIN FIDO của YubiKey để kiểm tra mã định danh khóa cục bộ này."
 
-#: src/window.rs:2532 src/window.rs:2921
+#: src/window.rs:2531 src/window.rs:2920
 msgid "Enter the selected YubiKey FIDO PIN"
 msgstr "Nhập mã PIN FIDO của YubiKey đã chọn"
 
-#: src/window.rs:2780
+#: src/window.rs:2779
 msgid "Export .pub"
 msgstr "Xuất .pub"
 
-#: src/window.rs:2822
+#: src/window.rs:2821
 msgid "Export SSH public key"
 msgstr "Xuất khóa công khai SSH"
 
-#: src/window.rs:2746
+#: src/window.rs:2745
 msgid "FIDO PIN"
 msgstr "Mã PIN FIDO"
 
-#: src/window.rs:1200 src/window.rs:2001 src/window.rs:2507
+#: src/window.rs:1200 src/window.rs:2001 src/window.rs:2506
 msgid "FIDO device discovery is unavailable"
 msgstr "Tính năng phát hiện thiết bị FIDO không khả dụng"
 
@@ -470,7 +470,7 @@ msgstr "Hoàn thành việc kiểm tra YubiKey của bạn"
 msgid "Firmware {0}"
 msgstr "Micro phần cứng {0}"
 
-#: src/backend.rs:234
+#: src/backend.rs:261
 msgid ""
 "For safe enrollment, disconnect every other security key and leave only the "
 "selected YubiKey connected."
@@ -602,11 +602,11 @@ msgstr "Đã tải"
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "Đang tải khóa SSH… Chạm vào YubiKey nếu nó nhấp nháy."
 
-#: src/window.rs:2634
+#: src/window.rs:2633
 msgid "Local key handle path"
 msgstr "Đường dẫn xử lý khóa cục bộ"
 
-#: src/window.rs:2606
+#: src/window.rs:2605
 msgid "Local key label"
 msgstr "Nhãn khóa cục bộ"
 
@@ -618,7 +618,7 @@ msgstr "Đang tìm kiếm tác nhân SSH và YubiKey đã kết nối của bạ
 msgid "Needs attention"
 msgstr "Cần chú ý"
 
-#: src/window.rs:2497
+#: src/window.rs:2496
 msgid "New hardware-backed SSH key"
 msgstr "Khoá SSH được hỗ trợ bởi phần cứng mới"
 
@@ -722,7 +722,7 @@ msgstr ""
 "OpenSSH báo cáo thành công, nhưng không phát hiện thông tin xác thực cư trú "
 "mới. Không thử lại cho đến khi bạn kiểm tra YubiKey."
 
-#: src/window.rs:2669
+#: src/window.rs:2668
 msgid "OpenSSH/FIDO credential metadata and local file location"
 msgstr "Metadata thông tin xác thực OpenSSH/FIDO và vị trí tệp cục bộ"
 
@@ -730,15 +730,15 @@ msgstr "Metadata thông tin xác thực OpenSSH/FIDO và vị trí tệp cục b
 msgid "Passwordless"
 msgstr "Không cần mật khẩu"
 
-#: src/window.rs:2923
+#: src/window.rs:2922
 msgid "Permanently delete"
 msgstr "Xóa vĩnh viễn"
 
-#: src/window.rs:2783
+#: src/window.rs:2782
 msgid "Permanently delete from YubiKey…"
 msgstr "Xóa vĩnh viễn khỏi YubiKey…"
 
-#: src/window.rs:3022
+#: src/window.rs:3021
 msgid "Permanently delete this resident SSH credential?"
 msgstr "Xóa vĩnh viễn thông tin đăng nhập SSH cư trú này?"
 
@@ -782,27 +782,27 @@ msgstr "Sẵn sàng để bảo vệ {0}"
 msgid "Refresh connected YubiKeys"
 msgstr "Làm mới các YubiKey đã kết nối"
 
-#: src/window.rs:2782
+#: src/window.rs:2781
 msgid "Remove from agent"
 msgstr "Gỡ khỏi tác nhân"
 
-#: src/window.rs:2883
+#: src/window.rs:2882
 msgid "Removing this key from the SSH agent…"
 msgstr "Đang gỡ khóa này khỏi tác nhân SSH…"
 
-#: src/window.rs:2663
+#: src/window.rs:2662
 msgid "Require verification for every signature"
 msgstr "Yêu cầu xác minh cho mọi chữ ký"
 
-#: src/window.rs:2664
+#: src/window.rs:2663
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "Yêu cầu mã PIN FIDO mỗi lần khóa này ký"
 
-#: src/window.rs:2562
+#: src/window.rs:2561
 msgid "Resident SSH key created"
 msgstr "Đã tạo khóa SSH cư trú"
 
-#: src/window.rs:2956
+#: src/window.rs:2955
 msgid "Resident credential permanently deleted"
 msgstr "Thông tin đăng nhập cư trú đã bị xóa vĩnh viễn"
 
@@ -810,7 +810,7 @@ msgstr "Thông tin đăng nhập cư trú đã bị xóa vĩnh viễn"
 msgid "Resident keys loaded"
 msgstr "Đã tải các khóa cư trú"
 
-#: src/window.rs:2630
+#: src/window.rs:2629
 msgid "Resident username"
 msgstr "Tên người dùng cư trú"
 
@@ -839,7 +839,7 @@ msgstr "Tác nhân SSH không khả dụng"
 msgid "SSH commit signing"
 msgstr "Ký commit SSH"
 
-#: src/window.rs:2798
+#: src/window.rs:2797
 msgid "SSH key actions"
 msgstr "Hành động trên khóa SSH"
 
@@ -855,7 +855,7 @@ msgstr "Khóa SSH"
 msgid "SSH_AUTH_SOCK is not set"
 msgstr "SSH_AUTH_SOCK chưa được đặt"
 
-#: src/window.rs:2694
+#: src/window.rs:2693
 msgid ""
 "Safe defaults use ECDSA-SK, require touch, and store a discoverable "
 "credential on the selected YubiKey."
@@ -887,7 +887,7 @@ msgstr ""
 msgid "Sign-in"
 msgstr "Đăng nhập"
 
-#: src/window.rs:2864
+#: src/window.rs:2863
 msgid "Signing test passed"
 msgstr "Đã vượt qua kiểm tra ký"
 
@@ -903,11 +903,11 @@ msgstr "Test"
 msgid "Test Git signing"
 msgstr "Kiểm tra ký Git"
 
-#: src/window.rs:1345 src/window.rs:2781
+#: src/window.rs:1345 src/window.rs:2780
 msgid "Test signing"
 msgstr "Ký thử nghiệm"
 
-#: src/backend.rs:228
+#: src/backend.rs:255
 msgid ""
 "The FIDO enrollment tool is not installed. Install the libpam-u2f package, "
 "then try again."
@@ -919,7 +919,7 @@ msgstr ""
 msgid "The PIN is sent directly to ssh-add and is never stored."
 msgstr "PIN được gửi trực tiếp đến ssh-add và không bao giờ được lưu trữ."
 
-#: src/window.rs:2533
+#: src/window.rs:2532
 msgid ""
 "The PIN is sent through a private pipe to OpenSSH. It is never stored or "
 "placed in command arguments."
@@ -927,7 +927,7 @@ msgstr ""
 "PIN được gửi qua một đường ống riêng tư đến OpenSSH. Nó không bao giờ được "
 "lưu trữ hoặc đặt trong các đối số lệnh."
 
-#: src/window.rs:2865
+#: src/window.rs:2864
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "Tác nhân SSH đã ký và xác minh dữ liệu với khóa này thành công."
 
@@ -935,7 +935,7 @@ msgstr "Tác nhân SSH đã ký và xác minh dữ liệu với khóa này thàn
 msgid "The YubiKey operation stopped unexpectedly."
 msgstr "Thao tác trên YubiKey bị dừng lại bất ngờ."
 
-#: src/window.rs:2599
+#: src/window.rs:2598
 msgid "The credential will be created only on this exact device"
 msgstr "Thông tin xác thực sẽ chỉ được tạo trên thiết bị chính xác này"
 
@@ -951,7 +951,7 @@ msgstr ""
 msgid "The enrollment task failed."
 msgstr "Nhiệm vụ đăng ký thất bại."
 
-#: src/window.rs:2957
+#: src/window.rs:2956
 msgid ""
 "The exact resident credential is no longer present on the selected YubiKey. "
 "Local .pub or key-handle files and any SSH-agent entry were not removed."
@@ -978,7 +978,7 @@ msgstr "Đường dẫn mã định danh khóa SSH cục bộ không phải là 
 msgid "The local key path must be absolute."
 msgstr "Đường dẫn khóa cục bộ phải là đường dẫn tuyệt đối."
 
-#: src/window.rs:2564
+#: src/window.rs:2563
 msgid ""
 "The non-exportable private key remains protected by the selected YubiKey.\n"
 "\n"
@@ -1004,7 +1004,7 @@ msgstr ""
 "\n"
 "Khóa không được tải tự động vào tác nhân SSH."
 
-#: src/backend.rs:307
+#: src/backend.rs:334
 msgid "The operation was cancelled or denied."
 msgstr "Thao tác đã bị hủy hoặc từ chối."
 
@@ -1052,7 +1052,7 @@ msgstr ""
 "{1}\n"
 "Vui lòng không thử tạo lại. Hãy kiểm tra khóa và lưu trữ bất kỳ tệp cục bộ nào đã được ghi."
 
-#: src/backend.rs:276 src/backend.rs:285
+#: src/backend.rs:303 src/backend.rs:312
 msgid "The security key returned an invalid PAM credential."
 msgstr "Khóa bảo mật trả về thông tin xác thực PAM không hợp lệ."
 
@@ -1119,7 +1119,7 @@ msgid ""
 "These keys are trusted by this account but are not currently connected."
 msgstr "Các khóa này được tài khoản tin cậy nhưng hiện chưa kết nối."
 
-#: src/window.rs:2922
+#: src/window.rs:2921
 msgid ""
 "This PIN authorizes permanent deletion of the exact credential shown in the "
 "previous step. It is never stored."
@@ -1136,7 +1136,7 @@ msgstr ""
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "Đây không phải là khóa công khai OpenSSH security-key được hỗ trợ."
 
-#: src/window.rs:3023
+#: src/window.rs:3022
 msgid ""
 "This removes the private credential from the selected YubiKey and cannot be "
 "undone. It does not remove local files or an identity already loaded in the "
@@ -1168,11 +1168,11 @@ msgid ""
 msgstr ""
 "Chạm vào YubiKey. Đang tạo và xác minh chữ ký SSH định dạng Git tạm thời…"
 
-#: src/window.rs:2857
+#: src/window.rs:2856
 msgid "Touch the YubiKey. Testing SSH signing and verification…"
 msgstr "Chạm vào YubiKey. Đang kiểm tra việc ký và xác minh SSH…"
 
-#: src/window.rs:2545
+#: src/window.rs:2544
 msgid ""
 "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not "
 "remove the key."
@@ -1196,7 +1196,7 @@ msgstr "Chạm vào khóa bảo mật của bạn để tiếp tục."
 msgid "Try Again"
 msgstr "Thử lại"
 
-#: src/window.rs:3009
+#: src/window.rs:3008
 msgid "Type {0} to confirm"
 msgstr "Gõ {0} để xác nhận"
 
@@ -1204,7 +1204,7 @@ msgstr "Gõ {0} để xác nhận"
 msgid "Unavailable"
 msgstr "Không khả dụng"
 
-#: src/backend.rs:224
+#: src/backend.rs:251
 msgid "Unknown authentication purpose."
 msgstr "Mục đích xác thực không xác định."
 
@@ -1224,7 +1224,7 @@ msgstr "Mở khóa người dùng hiện tại"
 msgid "Unlock your account with a touch"
 msgstr "Mở khóa tài khoản của bạn bằng một chạm"
 
-#: src/ssh.rs:735 src/window.rs:1251 src/window.rs:2467 src/window.rs:2988
+#: src/ssh.rs:735 src/window.rs:1251 src/window.rs:2467 src/window.rs:2987
 msgid "Unnamed SSH credential"
 msgstr "Tín danh SSH không tên"
 
@@ -1248,7 +1248,7 @@ msgstr "Đang cập nhật cài đặt sudo…"
 msgid "Use YubiKey to unlock sudo"
 msgstr "Sử dụng YubiKey để mở khóa sudo"
 
-#: src/window.rs:2935
+#: src/window.rs:2934
 msgid ""
 "Verifying and permanently deleting the selected resident credential. Do not "
 "unplug the YubiKey…"
@@ -1299,11 +1299,11 @@ msgid ""
 msgstr ""
 "Cài đặt bảo mật của bạn đã sẵn sàng. Kết nối YubiKey đã cấu hình khi cần."
 
-#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1755 src/window.rs:2598
+#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1755 src/window.rs:2597
 msgid "YubiKey"
 msgstr "YubiKey"
 
-#: src/window.rs:3089
+#: src/window.rs:3088
 msgid "YubiKey configuration failed"
 msgstr "Cấu hình YubiKey thất bại"
 
@@ -1323,7 +1323,7 @@ msgstr "YubiKey không có số sê-ri phần cứng"
 msgid "YubiKey · Serial {0}"
 msgstr "YubiKey · Số sê-ri {0}"
 
-#: src/window.rs:2994
+#: src/window.rs:2993
 msgid ""
 "YubiKey: {0}\n"
 "Device: {1}\n"
@@ -1367,7 +1367,7 @@ msgstr "chính sách xác thực sudo"
 msgid "unknown"
 msgstr "không xác định"
 
-#: src/window.rs:2520
+#: src/window.rs:2519
 msgid "user"
 msgstr "nhà phát triển"
 
@@ -1788,6 +1788,14 @@ msgstr "Cài đặt này thay đổi những gì"
 #: src/window.rs:2224
 msgid "{0} includes {1}"
 msgstr "{0} includes {1}"
+
+#: src/window.rs:2491
+msgid ""
+"Optional: create a new resident key only when you need another SSH identity."
+" Its private key never leaves the selected YubiKey."
+msgstr ""
+"Tùy chọn: chỉ tạo một khóa cư dân mới khi bạn cần một danh tính SSH khác. "
+"Khóa riêng tư của nó sẽ không bao giờ rời khỏi YubiKey đã chọn."
 
 #~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
 #~ msgstr ""

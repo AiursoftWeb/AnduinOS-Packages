@@ -17,14 +17,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+#: src/pages.py:2092
 msgid "Installing an input method requires an Internet connection."
 msgstr "入力メソッドのインストールにはインターネット接続が必要です。"
 
+#: src/pages.py:2103
 msgid ""
 "No Internet connection. Input methods cannot be installed. You can install "
 "them later when connected."
 msgstr "インターネットに接続されていません。入力メソッドをインストールできません。接続後にインストールできます。"
 
+#: src/pages.py:4933
 msgid ""
 "\n"
 "\n"
@@ -34,6 +37,7 @@ msgstr ""
 "\n"
 "実際のインストールでは、マシン固有の MOK が作成されます。再起動後、MOKManager で [MOK の登録] → [続行] → [はい] を選択し、パスワードとして 123456 を入力してください。"
 
+#: src/pages.py:4944
 msgid ""
 "\n"
 "On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
@@ -41,29 +45,37 @@ msgstr ""
 "\n"
 "青い MOKManager画面で [MOK の登録] → [続行] → [はい] を選択し、パスワードは 123456 です"
 
+#: src/pages.py:4275
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
 msgstr "4 GiB ディスクスワップ (優先度 10) + RAMの50%を占める LZ4 zram (優先度 100)"
 
+#: src/pages.py:4085
 msgid "; sudo does not require a password"
 msgstr "; sudo はパスワードを要求しません"
 
+#: src/pages.py:4087
 msgid "; sudo requires the account password"
 msgstr "; sudo はアカウントパスワードを要求します"
 
+#: src/pages.py:129
 msgid ""
 "A partition on this disk is mounted. Unmount it and rescan storage before "
 "continuing."
 msgstr "このディスク上のパーティションがマウントされています。続行する前に、アンマウントしてストレージを再スキャンしてください。"
 
+#: src/pages.py:2899
 msgid "ALL DATA on {disk} will be permanently erased."
 msgstr "{disk} 上のすべてのデータは完全に消去されます。"
 
+#: src/pages.py:4082
 msgid "Account security"
 msgstr "アカウントセキュリティ"
 
+#: src/pages.py:2980
 msgid "Advanced Storage"
 msgstr "高度なストレージ設定"
 
+#: src/pages.py:2889
 msgid ""
 "Advanced coexistence can affect EFI firmware state and may trigger BitLocker"
 " recovery. It never shrinks or repairs Windows volumes."
@@ -71,23 +83,28 @@ msgstr ""
 "高度な共存モードは EFI ファームウェアの状態に影響を与え、BitLocker の回復をトリガーする可能性があります。Windows "
 "ボリュームを縮小または修復することはありません。"
 
+#: src/pages.py:2838
 msgid "Advanced — keep existing systems"
 msgstr "高度な設定 — 既存のシステムを保持"
 
+#: src/pages.py:2985
 msgid "Advanced: Install Alongside"
 msgstr "高度な設定: インストールを並列実行"
 
+#: src/pages.py:164
 msgid ""
 "After changing partitions or unmounting a volume, rescan storage and select "
 "the target again."
 msgstr "パーティションを変更したりボリュームをアンマウントしたりした後は、ストレージを再スキャンして再度ターゲットを選択してください。"
 
+#: src/pages.py:4801
 msgid ""
 "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
 "then enter password 123456."
 msgstr ""
 "再起動後、MOKManager が起動します。[MOK の登録] → [続行] → [はい] を選択し、パスワード 123456 を入力してください。"
 
+#: src/pages.py:4432
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -95,6 +112,7 @@ msgstr ""
 "{disk} 上のすべてのパーティションとデータは破壊されます。\n"
 "\n"
 
+#: src/pages.py:155
 msgid ""
 "Alternatively, you may explicitly select one entire partition to erase. "
 "Everything in that selected partition will be destroyed; it is never "
@@ -102,42 +120,55 @@ msgid ""
 msgstr ""
 "あるいは、明示的に1つのパーティション全体を選択して消去することもできます。選択されたパーティション内のすべてのデータは破壊されますが、自動的に選択されることはありません。"
 
+#: src/pages.py:924 src/pages.py:986
 msgid "Battery power is too low for a safe installation."
 msgstr "安全にインストールするにはバッテリー残量が少なすぎます。"
 
+#: src/pages.py:895
 msgid "Charge to at least 80% before starting the installation."
 msgstr "インストールを開始する前に、80%以上まで充電してください。"
 
+#: src/pages.py:1041 src/pages.py:1016
 msgid "Continue Anyway"
 msgstr "このまま続行"
 
+#: src/pages.py:1000
 msgid "Current battery level: {percent}%"
 msgstr "現在のバッテリー残量: {percent}%"
 
+#: src/pages.py:1006
 msgid "External power is connected."
 msgstr "外部電源に接続されています。"
 
+#: src/pages.py:1008
 msgid "External power is not connected."
 msgstr "外部電源に接続されていません。"
 
+#: src/pages.py:954
 msgid "I understand the risks and insist on installing with low battery."
 msgstr "リスクを理解したうえで、バッテリー残量が少ない状態でのインストールを続行します。"
 
+#: src/pages.py:894 src/pages.py:889 src/pages.py:967 src/pages.py:969
 msgid "Low battery"
 msgstr "バッテリー残量低下"
 
+#: src/pages.py:948
 msgid "Recheck"
 msgstr "再確認"
 
+#: src/pages.py:731 src/pages.py:815
 msgid "AnduinOS Installer"
 msgstr "AnduinOS インストーラー"
 
+#: src/main.py:110
 msgid "AnduinOS Installer (Beta)"
 msgstr "AnduinOS インストーラー (ベータ版)"
 
+#: src/main.py:108
 msgid "AnduinOS Installer (Development)"
 msgstr "AnduinOS インストーラー (開発版)"
 
+#: src/pages.py:4425
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
@@ -145,17 +176,21 @@ msgstr ""
 "AnduinOSは、{disk}上の選択された未割り当て領域のみを使用します。既存のパーティションは保持されます。\n"
 "\n"
 
+#: src/pages.py:133
 msgid ""
 "AnduinOS will use only the selected unallocated space. The installer will "
 "not shrink or move an existing filesystem."
 msgstr "AnduinOSは、選択された未割り当て領域のみを使用します。インストーラーは既存のファイルシステムを縮小または移動しません。"
 
+#: data/languages.json:keyboard_layouts
 msgid "Arabic"
 msgstr "アラビア語"
 
+#: src/pages.py:268 src/pages.py:4461 src/pages.py:817
 msgid "Back"
 msgstr "戻る"
 
+#: src/pages.py:3014
 msgid ""
 "Before continuing: finish Windows updates, disable Fast Startup and "
 "hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
@@ -164,99 +199,130 @@ msgstr ""
 "続行する前に：Windowsの更新を完了し、クイック起動とハイバネーションを無効化し、BitLocker回復キーをバックアップしてください。EFI、Secure"
 " Boot、TPM測定値およびブート順序が変更される可能性があります。"
 
+#: src/pages.py:2470
 msgid "BitLocker detected"
 msgstr "BitLockerを検出しました"
 
+#: src/pages.py:146
 msgid ""
 "BitLocker storage will be preserved. The installer will not unlock, resize, "
 "repair or otherwise modify it."
 msgstr "BitLockerストレージは保持されます。インストーラーはそれをアンロック、サイズ変更、修復、またはその他の方法で変更しません。"
 
+#: src/pages.py:4186
 msgid "Boot policy"
 msgstr "ブートポリシー"
 
+#: src/pages.py:3055
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (推奨)"
 
+#: src/pages.py:2817
 msgid "Btrfs — recommended"
 msgstr "Btrfs — 推奨"
 
+#: src/pages.py:4361
 msgid "Cannot create installation plan"
 msgstr "インストールプランを作成できません"
 
+#: src/pages.py:2727
 msgid "Choose Installation Method"
 msgstr "インストール方法を選択"
 
+#: src/pages.py:2498
 msgid "Choose one target disk. Storage settings come next."
 msgstr "ターゲットディスクを1つ選択してください。次にストレージ設定が表示されます。"
 
+#: src/pages.py:2199
 msgid "Choose optional software to install"
 msgstr "オプションのソフトウェアを選択してインストールします"
 
+#: src/pages.py:813
 msgid "Choose your language to begin installation"
 msgstr "インストールを開始するには言語を選択してください"
 
+#: src/pages.py:3819
 msgid "Choose your location to set the system clock"
 msgstr "システムのクロックを設定するために場所を選択してください"
 
+#: src/pages.py:4838
 msgid "Complete"
 msgstr "完了"
 
+#: src/pages.py:3506 src/pages.py:3513 src/pages.py:4101 src/pages.py:3601
+#: src/pages.py:4440
 msgid "Computer Name"
 msgstr "コンピュータ名"
 
+#: src/pages.py:3594
 msgid "Computer name contains invalid characters."
 msgstr "コンピュータ名に無効な文字が含まれています。"
 
+#: src/pages.py:4589
 msgid "Configure account, region, timezone, and machine identity"
 msgstr "アカウント、地域、タイムゾーン、マシン ID を設定"
 
+#: src/pages.py:4578
 msgid "Configure storage and swap"
 msgstr "ストレージとスワップを設定"
 
+#: src/pages.py:3480 src/pages.py:3488
 msgid "Confirm Password"
 msgstr "パスワードの確認"
 
+#: src/pages.py:1939
 msgid "Confirm your keyboard layout"
 msgstr "キーボードレイアウトを確認してください"
 
+#: src/main.py:153 src/pages.py:1911
 msgid "Continue Installation"
 msgstr "インストールを続行"
 
+#: src/pages.py:4574
 msgid "Copy AnduinOS system"
 msgstr "AnduinOS システムのコピー"
 
+#: src/pages.py:4675
 msgid "Copy Log"
 msgstr "ログのコピー"
 
+#: src/pages.py:3146
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
 msgstr "新しい1 GiB AnduinOS EFIシステムパーティションを作成する"
 
+#: src/pages.py:4163
 msgid ""
 "Create and format a dedicated AnduinOS EFI System Partition inside the "
 "selected space."
 msgstr "選択したスペース内に専用AnduinOS EFIシステムパーティションを作成してフォーマットします。"
 
+#: src/pages.py:3447
 msgid "Create your user account"
 msgstr "ユーザーアカウントを作成します"
 
+#: src/pages.py:2412
 msgid "Current disk layout"
 msgstr "現在のディスクレイアウト"
 
+#: src/pages.py:3979
 msgid ""
 "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
 "executor or disk command can run."
 msgstr "開発モード — プランが検証およびシミュレートされます。特権実行プログラムやディスクコマンドは実行されません。"
 
+#: data/languages.json:keyboard_layouts
 msgid "Danish"
 msgstr "デンマーク語"
 
+#: src/pages.py:4569
 msgid "Detect Internet connectivity"
 msgstr "インターネット接続を検出する"
 
+#: src/pages.py:4566
 msgid "Detect firmware and Secure Boot"
 msgstr "ファームウェアとセキュアブートを検出"
 
+#: src/pages.py:4419
 msgid ""
 "Development mode will simulate installation to {disk}. No disk data will be changed.\n"
 "\n"
@@ -264,58 +330,75 @@ msgstr ""
 "開発モードでは {disk} へのインストールをシミュレートします。ディスクデータは一切変更されません。\n"
 "\n"
 
+#: src/pages.py:4923
 msgid "Development simulation completed"
 msgstr "開発シミュレーションが完了しました"
 
+#: src/pages.py:4832
 msgid "Discover AnduinOS"
 msgstr "AnduinOS を発見する"
 
+#: src/pages.py:1216 src/pages.py:2218
 msgid "Download and install system updates during installation"
 msgstr "インストール中にシステムアップデートのダウンロードとインストールを行う"
 
+#: data/languages.json:keyboard_layouts
 msgid "Dutch"
 msgstr "オランダ語"
 
+#: src/pages.py:3073
 msgid "EFI System Partition"
 msgstr "EFI システム パーティション"
 
+#: src/pages.py:4184
 msgid "EFI policy"
 msgstr "EFI ポリシー"
 
+#: src/pages.py:2455
 msgid "Empty disk — no partitions"
 msgstr "空のディスク — パーティションなし"
 
+#: src/pages.py:2821
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
 msgstr "共有スペース サブボリューム、スナップショット、および Disk Snapshots Manager を有効にします。"
 
+#: data/languages.json:keyboard_layouts
 msgid "English (UK)"
 msgstr "英語 (UK)"
 
+#: data/languages.json:keyboard_layouts
 msgid "English (US)"
 msgstr "英語 (US)"
 
+#: src/pages.py:4601
 msgid "Ensure Disk Snapshots Manager is available"
 msgstr "Disk Snapshots Manager が利用可能であることを確認"
 
+#: src/pages.py:4412
 msgid "Erase Disk and Install"
 msgstr "ディスクを消去してインストール"
 
+#: src/pages.py:2813 src/pages.py:4226
 msgid "Erase every partition and all data on the selected disk."
 msgstr "選択したディスク上のすべてのパーティションとデータを消去します。"
 
+#: src/pages.py:4411
 msgid "Erase the entire selected disk?"
 msgstr "選択したディスク全体を消去しますか？"
 
+#: src/pages.py:137
 msgid ""
 "Existing Windows, recovery and data partitions remain outside the write set "
 "and will be preserved."
 msgstr "既存の Windows、回復、およびデータ パーティションは書き込みセットの外側に残り、保持されます。"
 
+#: src/pages.py:2945
 msgid ""
 "Existing partitions were detected. The first two choices delete them; "
 "Advanced is the preservation path."
 msgstr "既存のパーティションが検出されました。最初の 2 つの選択肢はそれらを削除します。「詳細」は保持パスです。"
 
+#: src/pages.py:4446
 msgid ""
 "Existing partitions will be preserved. New AnduinOS partitions will be "
 "created only in the selected unallocated extent; EFI vendor files and the "
@@ -324,156 +407,205 @@ msgstr ""
 "既存のパーティションは保持されます。AnduinOS パーティションは選択した未割り当て領域にのみ作成され、EFI ベンダー ファイルと "
 "AnduinOS ファームウェア ブート エントリが更新される場合があります。"
 
+#: src/pages.py:3052 src/pages.py:4049
 msgid "Filesystem"
 msgstr "ファイルシステム"
 
+#: src/pages.py:4613
 msgid "Finalize target environment"
 msgstr "ターゲット環境の最終化"
 
+#: data/languages.json:keyboard_layouts
 msgid "Finnish"
 msgstr "フィンランド語"
 
+#: src/pages.py:4182
 msgid "Formats"
 msgstr "フォーマット"
 
+#: data/languages.json:keyboard_layouts
 msgid "French"
 msgstr "フランス語"
 
+#: src/pages.py:3462 src/pages.py:3464
 msgid "Full Name"
 msgstr "氏名"
 
+#: data/languages.json:keyboard_layouts
 msgid "German"
 msgstr "ドイツ語"
 
+#: data/languages.json:keyboard_layouts
 msgid "Greek"
 msgstr "ギリシャ語"
 
+#: src/pages.py:111
 msgid ""
 "Guided coexistence requires a system booted in UEFI mode and a GPT target "
 "disk. This disk cannot continue in guided mode."
 msgstr ""
 "GUIDED共存モードでは、UEFIモードで起動したシステムとGPT形式のターゲットディスクが必要です。このディスクはGUIDEDモードでの継続ができません。"
 
+#: src/pages.py:4131
 msgid ""
 "Guided storage selection is missing. Rescan and select the target again."
 msgstr "GUIDEDストレージ選択が見つかりません。再度スキャンし、ターゲットを選択してください。"
 
+#: data/languages.json:keyboard_layouts
 msgid "Hindi (India)"
 msgstr "ヒンディー語 (インド)"
 
+#: src/pages.py:2741
 msgid "How should AnduinOS use this disk?"
 msgstr "AnduinOSはこのディスクをどのように使用すべきですか？"
 
+#: data/languages.json:keyboard_layouts
 msgid "Indonesian"
 msgstr "インドネシア語"
 
+#: src/pages.py:4498
 msgid "Install"
 msgstr "インストール"
 
+#: src/pages.py:4559 src/pages.py:1221 src/pages.py:4125
 msgid "Install input method"
 msgstr "入力メソッドをインストール"
 
+#: src/pages.py:625
 msgid "Install {language} input method: {name}"
 msgstr "{language}入力メソッドをインストール：{name}"
 
+#: src/pages.py:4409 src/pages.py:4496
 msgid "Install Alongside"
 msgstr "並列インストール"
 
+#: src/pages.py:4169
 msgid "Install alongside"
 msgstr "並列インストール"
 
+#: src/pages.py:4608
 msgid "Install bootloader"
 msgstr "ブートローダーをインストール"
 
+#: src/pages.py:4611
 msgid "Check systems on other disks"
 msgstr "他のディスクのシステムを確認"
 
+#: src/pages.py:1217 src/pages.py:4603
 msgid "Install hardware drivers"
 msgstr "ハードウェアドライバーをインストール"
 
+#: src/pages.py:4408
 msgid "Install in the selected free space?"
 msgstr "選択した空き領域にインストールしますか？"
 
+#: src/pages.py:4596
 msgid "Ensure required language packs are installed"
 msgstr "必要な言語パックがインストールされていることを確認"
 
+#: src/pages.py:4599
 msgid "Install system updates"
 msgstr "システムアップデートをインストール"
 
+#: src/pages.py:2229
 msgid "Install third-party drivers for this device"
 msgstr "このデバイスのサードパーティ製ドライバーをインストール"
 
+#: src/pages.py:5093 src/pages.py:5095 src/pages.py:4940 src/pages.py:4950
 msgid "Installation Complete"
 msgstr "インストールが完了しました"
 
+#: src/pages.py:4970
 msgid "Installation Failed"
 msgstr "インストールに失敗しました"
 
+#: src/pages.py:4639
 msgid "Installation Steps"
 msgstr "インストール手順"
 
+#: src/pages.py:160
 msgid ""
 "Installation cannot continue with this selection. There is no force-continue"
 " option around storage safety checks."
 msgstr "この選択ではインストールを継続できません。ストレージの安全性チェックに関する強制継続オプションはありません。"
 
+#: src/pages.py:4919 src/pages.py:4985
 msgid "Installation complete"
 msgstr "インストールが完了しました"
 
+#: src/pages.py:4968
 msgid "Installation failed"
 msgstr "インストールに失敗しました"
 
+#: src/main.py:145
 msgid "Installation in progress"
 msgstr "インストール中"
 
+#: src/pages.py:4547 src/pages.py:4541
 msgid "Installing AnduinOS"
 msgstr "AnduinOS をインストールしています"
 
+#: data/languages.json:keyboard_layouts
 msgid "Italian"
 msgstr "イタリア語"
 
+#: data/languages.json:keyboard_layouts
 msgid "Japanese (JIS keyboard)"
 msgstr "日本語（JIS キーボード）"
 
+#: src/pages.py:4040
 msgid "Keyboard"
 msgstr "キーボード"
 
+#: src/pages.py:1938 src/pages.py:1932 src/pages.py:2075
 msgid "Keyboard Layout"
 msgstr "キーボードレイアウト"
 
+#: src/pages.py:4582
 msgid "Configure physical keyboard layout"
 msgstr "物理キーボードのレイアウトを設定"
 
+#: data/languages.json:keyboard_layouts
 msgid "Korean"
 msgstr "韓国語"
 
+#: src/pages.py:4039
 msgid "Language"
 msgstr "言語"
 
+#: src/pages.py:2472
 msgid "Live USB — excluded"
 msgstr "ライブUSB — 除外済み"
 
+#: src/pages.py:4573
 msgid "Mount target filesystems"
 msgstr "ターゲットファイルシステムのマウント"
 
+#: src/pages.py:851
 msgid "Navigation error"
 msgstr "ナビゲーションエラー"
 
+#: src/pages.py:4180 src/pages.py:4229
 msgid "New partitions"
 msgstr "新しいパーティション"
 
+#: src/pages.py:261 src/pages.py:818 src/pages.py:1016
 msgid "Next"
 msgstr "次へ"
 
+#: src/pages.py:4756
 msgid "Next slide"
 msgstr "次のスライド"
 
+#: src/pages.py:2389
 msgid "No partition table"
 msgstr "パーティションテーブルがありません"
 
+#: src/pages.py:2631
 msgid "No suitable disks found."
 msgstr "適切なディスクが見つかりませんでした。"
 
+#: src/pages.py:170
 msgid ""
 "No suitable unallocated space was found. To protect your data, create "
 "unallocated space with Windows Disk Management, then boot the installer "
@@ -482,6 +614,7 @@ msgstr ""
 "適切な未割り当て領域が見つかりませんでした。データを保護するため、Windows "
 "のディスク管理で未割り当て領域を作成し、インストーラーを再起動してディスクを再スキャンしてください。"
 
+#: src/pages.py:175
 msgid ""
 "No suitable unallocated space was found. To protect your data, create "
 "unallocated space with a partitioning tool, then boot the installer again "
@@ -489,148 +622,196 @@ msgid ""
 msgstr ""
 "適切な未割り当て領域が見つかりませんでした。データを保護するため、パーティションツールで未割り当て領域を作成し、インストーラーを再起動してディスクを再スキャンしてください。"
 
+#: data/languages.json:keyboard_layouts
 msgid "Norwegian"
 msgstr "ノルウェー語"
 
+#: src/pages.py:1124 src/pages.py:1375 src/pages.py:4370 src/pages.py:854
 msgid "OK"
 msgstr "OK"
 
+#: src/pages.py:4835
 msgid "Output"
 msgstr "出力"
 
+#: src/pages.py:4973 src/pages.py:5028
 msgid "Output • Error"
 msgstr "出力 • エラー"
 
+#: src/pages.py:5023
 msgid "Output • {count} warning(s)"
 msgstr "出力 • {count} 件の警告"
 
+#: src/pages.py:2453
 msgid "Partition details unavailable"
 msgstr "パーティションの詳細を取得できません"
 
+#: src/pages.py:3476 src/pages.py:3487 src/pages.py:1466 src/pages.py:1525
 msgid "Password"
 msgstr "パスワード"
 
+#: src/pages.py:3584
 msgid "Password must be at least 6 characters."
 msgstr "パスワードは6文字以上である必要があります。"
 
+#: src/pages.py:4048
 msgid "Platform"
 msgstr "プラットフォーム"
 
+#: src/pages.py:4548
 msgid "Please do not turn off your computer"
 msgstr "コンピュータの電源を切らないでください"
 
+#: src/pages.py:3965
 msgid "Please review your choices before proceeding"
 msgstr "続行する前に選択内容を確認してください"
 
+#: data/languages.json:keyboard_layouts
 msgid "Polish"
 msgstr "ポーランド語"
 
+#: data/languages.json:keyboard_layouts
 msgid "Portuguese"
 msgstr "ポルトガル語"
 
+#: data/languages.json:keyboard_layouts
 msgid "Portuguese (Brazil)"
 msgstr "ポルトガル語 (ブラジル)"
 
+#: src/pages.py:4594
 msgid "Prepare Secure Boot"
 msgstr "セキュアブートの準備"
 
+#: src/pages.py:4572
 msgid "Prepare installation disk"
 msgstr "インストールディスクの準備"
 
+#: src/pages.py:4579
 msgid "Prepare target environment"
 msgstr "ターゲット環境の準備"
 
+#: src/pages.py:4871
 msgid "Preparing installation…"
 msgstr "インストールの準備中…"
 
+#: src/pages.py:4175
 msgid "Preserved partitions"
 msgstr "保持されたパーティション"
 
+#: src/pages.py:4750
 msgid "Previous slide"
 msgstr "前のスライド"
 
+#: src/pages.py:3964 src/pages.py:3958
 msgid "Ready to Install"
 msgstr "インストールの準備ができました"
 
+#: src/pages.py:4811
 msgid "Reboot Now"
 msgstr "今すぐ再起動"
 
+#: src/pages.py:4598
 msgid "Refresh package indexes"
 msgstr "パッケージインデックスを更新"
 
+#: src/pages.py:4580
 msgid "Remove live-session components"
 msgstr "Liveセッションコンポーネントを削除"
 
+#: src/pages.py:4951 src/pages.py:4942
 msgid "Remove the installation media and restart your computer"
 msgstr "インストールメディアを取り出し、コンピューターを再起動してください"
 
+#: src/pages.py:1177 src/pages.py:1205 src/pages.py:2220 src/pages.py:675
+#: src/pages.py:1362 src/pages.py:2233
 msgid ""
 "Requires an Internet connection. The base installation remains available "
 "when offline."
 msgstr "インターネット接続が必要です。基本インストールはオフラインでも利用可能です。"
 
+#: src/pages.py:2550
 msgid "Rescan Storage"
 msgstr "ストレージの再スキャン"
 
+#: src/pages.py:3101
 msgid "Rescan and Reselect Disk"
 msgstr "ディスクの再スキャンと再選択"
 
+#: src/pages.py:4809
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "再起動してセキュアブートキーを登録"
 
+#: src/pages.py:4960
 msgid "Restart is disabled in development protection mode"
 msgstr "開発保護モードでは再起動が無効化されています"
 
+#: src/pages.py:3150
 msgid "Reuse {path} ({size})"
 msgstr "{path} ({size}) を再利用する"
 
+#: src/pages.py:4155
 msgid ""
 "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
 "before writing."
 msgstr "{path} を再利用する。フォーマットは行わず、書き込み前に FAT の健全性、ID、および 64 MiB の空き領域を確認します。"
 
+#: data/languages.json:keyboard_layouts
 msgid "Romanian"
 msgstr "ルーマニア語"
 
+#: data/languages.json:keyboard_layouts
 msgid "Russian"
 msgstr "ロシア語"
 
+#: src/pages.py:4679
 msgid "Save Log"
 msgstr "ログを保存"
 
+#: src/pages.py:4609
 msgid "Schedule MOK enrollment"
 msgstr "MOK登録のスケジュール設定"
 
+#: src/pages.py:3831
 msgid "Search timezones…"
 msgstr "タイムゾーンを検索…"
 
+#: src/pages.py:4069
 msgid "Secure Boot enrollment"
 msgstr "セキュアブートの登録"
 
+#: src/pages.py:2497 src/pages.py:2491
 msgid "Select Installation Disk"
 msgstr "インストールディスクを選択"
 
+#: src/pages.py:3818 src/pages.py:3812
 msgid "Select Timezone"
 msgstr "タイムゾーンを選択"
 
+#: src/pages.py:4592
 msgid "Select fastest package mirror"
 msgstr "最速のパッケージミラーを選択"
 
+#: src/pages.py:3884
 msgid "Selected timezone"
 msgstr "選択されたタイムゾーン"
 
+#: src/pages.py:4170
 msgid "Selected unallocated space"
 msgstr "未割り当てスペースが選択されました"
 
+#: src/pages.py:2239
 msgid "Some drivers are proprietary or otherwise non-free software."
 msgstr "一部のドライバーはプロプライエタリまたはその他の非フリーソフトウェアです。"
 
+#: data/languages.json:keyboard_layouts
 msgid "Spanish"
 msgstr "スペイン語"
 
+#: src/pages.py:4046
 msgid "Stable disk identity"
 msgstr "安定したディスクID"
 
+#: src/pages.py:4437
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -638,36 +819,47 @@ msgstr ""
 "安定したID: {stable_id}\n"
 "\n"
 
+#: src/pages.py:2380
 msgid "Storage Device"
 msgstr "ストレージデバイス"
 
+#: src/pages.py:4168 src/pages.py:4224
 msgid "Storage mode"
 msgstr "ストレージモード"
 
+#: src/pages.py:4050
 msgid "Subvolumes"
 msgstr "サブボリューム"
 
+#: src/pages.py:4268
 msgid "Swap"
 msgstr "スワップ"
 
+#: data/languages.json:keyboard_layouts
 msgid "Swedish"
 msgstr "スウェーデン語"
 
+#: src/pages.py:4051
 msgid "System updates"
 msgstr "システムアップデート"
 
+#: src/pages.py:4042
 msgid "Target Disk"
 msgstr "ターゲットディスク"
 
+#: src/pages.py:2993 src/pages.py:3260
 msgid "Target: {disk} ({size} — {model})"
 msgstr "ターゲット: {disk} ({size} — {model})"
 
+#: src/pages.py:1964 src/pages.py:2076
 msgid "Test your keyboard here…"
 msgstr "ここでキーボードを試してください…"
 
+#: data/languages.json:keyboard_layouts
 msgid "Thai"
 msgstr "タイ語"
 
+#: src/pages.py:120
 msgid ""
 "The GPT disk or one of its partitions has no unique stable identifier. "
 "Guided coexistence cannot safely authorize preservation or writes on this "
@@ -676,27 +868,32 @@ msgstr ""
 "GPT "
 "ディスクまたはそのパーティションのいずれかに固有で安定した識別子がありません。ガイド付き共存モードでは、このディスクに対する保持または書き込みを安全に認可できません。"
 
+#: src/pages.py:115
 msgid ""
 "The complete partition map and free-space geometry could not be read "
 "consistently. No space on this disk is authorized for installation."
 msgstr ""
 "完全なパーティションマップと空き領域のジオメトリを一貫して読み取ることができませんでした。このディスクにはインストール用に許可された領域がありません。"
 
+#: src/pages.py:141
 msgid ""
 "The existing EFI System Partition is only a candidate. Health and free-space"
 " checks must pass before it can be reused, and it will never be formatted."
 msgstr ""
 "既存のEFIシステムパーティションは候補に過ぎません。再利用するには健全性と空き領域の確認を通過する必要がありますが、フォーマットされることはありません。"
 
+#: src/pages.py:4926
 msgid ""
 "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
 " state, or installed system was changed."
 msgstr ""
 "インストールプランは有効です。ディスク、ファイルシステム、ブートローダー、セキュアブートの状態、またはインストールされたシステムは一切変更されませんでした。"
 
+#: src/main.py:147
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr "ターゲットディスクを変更している間は、インストーラーを閉じることはできません。"
 
+#: src/pages.py:150
 msgid ""
 "The installer will not mount, repair or infer the safety of Windows volumes "
 "from hibernation or Fast Startup state. Any required Windows maintenance "
@@ -704,176 +901,228 @@ msgid ""
 msgstr ""
 "インストーラーは、休止状態またはクイック起動の状態にあるWindowsボリュームのマウント、修復、安全性の推論を行いません。必要なWindowsのメンテナンスはWindows上で完了させてください。"
 
+#: src/pages.py:4443
 msgid "The privileged executor is disabled."
 msgstr "特権実行プログラムは無効化されています。"
 
+#: src/pages.py:3228
 msgid ""
 "The selected disk changed or disappeared. Return to the disk page and select"
 " it again. {error}"
 msgstr "選択したディスクが変更されたか、消えました。ディスクページに戻り、再度選択してください。{error}"
 
+#: src/pages.py:3241
 msgid "The selected disk size changed. Return and select it again."
 msgstr "選択したディスクのサイズが変更されました。戻って再度選択してください。"
 
+#: src/pages.py:3251
 msgid ""
 "The selected disk topology changed. Review the disk and installation method "
 "again."
 msgstr "選択したディスクのトポロジーが変更されました。ディスクとインストール方法を再確認してください。"
 
+#: src/pages.py:3580
 msgid "The two passwords do not match."
 msgstr "2つのパスワードが一致しません。"
 
+#: src/pages.py:4057
 msgid "Third-party drivers"
 msgstr "サードパーティ製ドライバー"
 
+#: src/pages.py:3021
 msgid ""
 "This advanced path preserves existing partitions but changes the selected "
 "disk's partition table and the machine's EFI boot state."
 msgstr "この高度なパスは既存のパーティションを保持しますが、選択したディスクのパーティションテーブルとマシンのEFIブート状態を変更します。"
 
+#: src/pages.py:125
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
 "topology that guided coexistence does not support."
 msgstr ""
 "このディスクには、ガイド付き共存がサポートしていないアクティブなマップタ、アレイ、またはその他のネストされたブロックデバイスのトポロジーが含まれています。"
 
+#: src/pages.py:2935
 msgid ""
 "This disk is too small for whole-disk installation. Advanced may continue "
 "only if suitable unallocated space exists."
 msgstr "このディスクは全体インストールには小さすぎます。適切な未割り当て領域が存在する場合のみ、Advancedで続行できます。"
 
+#: src/pages.py:4454
 msgid "This installer does not shrink or preserve other systems."
 msgstr "このインストーラーは他のシステムを縮小したり保存したりしません。"
 
+#: src/pages.py:4103
 msgid "Timezone"
 msgstr "タイムゾーン"
 
+#: src/pages.py:2474
 msgid "Too small"
 msgstr "小さすぎる"
 
+#: data/languages.json:keyboard_layouts
 msgid "Turkish"
 msgstr "トルコ語"
 
+#: data/languages.json:keyboard_layouts
 msgid "Ukrainian"
 msgstr "ウクライナ語"
 
+#: src/pages.py:3065
 msgid "Unallocated space"
 msgstr "未割り当て領域"
 
+#: src/pages.py:2445
 msgid "Unallocated · {size}"
 msgstr "未割り当て · {size}"
 
+#: src/pages.py:4014 src/pages.py:1710
 msgid "Unavailable: {error}"
 msgstr "利用不可: {error}"
 
+#: src/pages.py:2432
 msgid "Unknown filesystem"
 msgstr "不明なファイルシステム"
 
+#: src/pages.py:4614
 msgid "Unmount installed system"
 msgstr "インストールされたシステムのアンマウント"
 
+#: src/pages.py:2198 src/pages.py:1196 src/pages.py:2192
 msgid "Updates and Drivers"
 msgstr "アップデートとドライバー"
 
+#: src/pages.py:2840
 msgid ""
 "Use already-unallocated space and preserve existing partitions. This is the "
 "only Windows coexistence path."
 msgstr "既存のパーティションを保持し、既に未割り当てとなっている領域を使用します。これはWindowsと共存するための唯一の方法です。"
 
+#: src/pages.py:2986
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "選択したディスク上の既存の未割り当て領域のみを使用します。"
 
+#: src/pages.py:4079
 msgid "User"
 msgstr "ユーザー"
 
+#: src/pages.py:3446 src/pages.py:3440
 msgid "User Account"
 msgstr "ユーザーアカウント"
 
+#: src/pages.py:3468 src/pages.py:3472
 msgid "Username"
 msgstr "ユーザー名"
 
+#: src/pages.py:3568
 msgid ""
 "Username must start with a lowercase ASCII letter and contain only lowercase"
 " ASCII letters or digits (maximum 16 characters)."
 msgstr "ユーザー名は小文字の ASCII 英字で始まり、小文字の ASCII 英字または数字のみを含める必要があります (最大 16 文字)。"
 
+#: src/pages.py:2832
 msgid "Uses a traditional single root filesystem."
 msgstr "従来の単一ルートファイルシステムを使用します。"
 
+#: src/pages.py:4406
 msgid "Validate Plan (No Installation)"
 msgstr "プランを検証する (インストールなし)"
 
+#: src/pages.py:4405
 msgid "Validate this installation plan?"
 msgstr "このインストールプランを検証しますか？"
 
+#: src/pages.py:4606
 msgid "Verify kernel module signatures"
 msgstr "カーネルモジュールの署名を確認"
 
+#: src/pages.py:4571
 msgid "Verify target disk isolation"
 msgstr "ターゲットディスクの分離を確認"
 
+#: data/languages.json:keyboard_layouts
 msgid "Vietnamese"
 msgstr "ベトナム語"
 
+#: src/pages.py:811
 msgid "Welcome to AnduinOS"
 msgstr "AnduinOS へようこそ"
 
+#: src/pages.py:2468
 msgid "Windows detected"
 msgstr "Windowsを検出しました"
 
+#: src/pages.py:4188
 msgid ""
 "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
 "AnduinOS NVRAM entry."
 msgstr "EFI/AnduinOSのみを書き込み、EFI/BOOTを上書きせず、検証済みのAnduinOS NVRAMエントリを要求します。"
 
+#: src/pages.py:4072
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr "マシン固有の MOK を作成; 再起動後にパスワード 123456 で登録"
 
+#: src/pages.py:4059
 msgid "detect and install (may include non-free software)"
 msgstr "検出してインストール (非フリーソフトウェアが含まれる場合があります)"
 
+#: src/pages.py:4121 src/pages.py:4055 src/pages.py:4061 src/pages.py:4067
 msgid "do not install"
 msgstr "インストールしない"
 
+#: src/pages.py:4053 src/pages.py:4065
 msgid "download and install"
 msgstr "ダウンロードしてインストール"
 
+#: src/pages.py:3055
 msgid "ext4 (classic)"
 msgstr "ext4（クラシック）"
 
+#: src/pages.py:2829
 msgid "ext4 — classic"
 msgstr "ext4 — クラシック"
 
+#: src/pages.py:4077
 msgid "not required"
 msgstr "不要"
 
+#: src/pages.py:4083
 msgid "password required for login"
 msgstr "ログインにパスワードが必要"
 
+#: src/pages.py:4024
 msgid "single ext4 root filesystem"
 msgstr "ext4 ルートファイルシステムのみ"
 
+#: src/pages.py:4005
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / セキュアブート: {secure_boot}"
 
+#: src/pages.py:4176
 msgid "{count}: {paths}"
 msgstr "{count} 件: {paths}"
 
+#: src/pages.py:4139
 msgid "{name}: {start}–{end} MiB"
 msgstr "{name}: {start}–{end} MiB"
 
+#: src/pages.py:4147
 msgid "{path} as {filesystem}"
 msgstr "{path} を {filesystem} として"
 
+#: src/pages.py:4171
 msgid "{size} at {offset}"
 msgstr "{offset} に {size}"
 
+#: src/pages.py:3288
 msgid "{size} unallocated at {offset}"
 msgstr "{offset} に未割り当ての {size}"
 
+#: src/pages.py:5031
 msgid "{step} failed"
 msgstr "{step} に失敗しました"
 
+#: src/pages.py:4303
 msgid ""
 "⚠ Only the selected unallocated space will be partitioned and formatted. "
 "Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
@@ -883,44 +1132,49 @@ msgstr ""
 "⚠ 選択した未割り当て領域のみがパーティション分割およびフォーマットされます。既存のパーティションは保持されますが、EFI/AnduinOS ファイルと"
 " AnduinOS のファームウェアブートエントリは変更される可能性があります。このインストーラーは Windows を縮小しません。"
 
+#: src/pages.py:4311
 msgid ""
 "⚠ This will erase ALL data on the selected disk. This action cannot be "
 "undone."
 msgstr "⚠ これにより選択したディスク上のすべてのデータが消去されます。この操作は元に戻せません。"
 
-#: src/pages.py
+#: src/pages.py:1176 src/pages.py:667 src/pages.py:1171
 msgid "Connect to the Internet"
 msgstr "インターネットに接続"
 
-#: src/pages.py
+#: src/pages.py:1343
 msgid "Internet connection is ready."
 msgstr "インターネット接続の準備ができました。"
 
-#: src/pages.py
+#: src/pages.py:1250
 msgid "Available Wi-Fi Networks"
 msgstr "利用可能な Wi-Fi ネットワーク"
 
+#: src/pages.py:4576
 msgid "Preserve connected Wi-Fi network"
 msgstr "接続中の Wi-Fi ネットワークを保持"
 
+#: src/pages.py:2540 src/pages.py:3092
 msgid "Loading storage devices…"
 msgstr "ストレージデバイスを読み込んでいます…"
 
+#: src/pages.py:4335
 msgid "Rechecking target disk…"
 msgstr "対象ディスクを再確認しています…"
 
+#: src/pages.py:2609 src/pages.py:3213 src/pages.py:4364
 msgid "Storage devices could not be loaded: {error}"
 msgstr "ストレージデバイスを読み込めませんでした: {error}"
 
-#: src/pages.py
+#: src/pages.py:1218 src/pages.py:4586 src/pages.py:2252
 msgid "Install extended multimedia format support"
 msgstr "拡張マルチメディア形式サポートをインストール"
 
-#: src/pages.py
+#: src/pages.py:4063
 msgid "Extended multimedia formats"
 msgstr "拡張マルチメディア形式"
 
-#: src/pages.py
+#: src/pages.py:2256
 msgid ""
 "Adds wider GStreamer compatibility and support for additional legacy and "
 "specialist media formats. Some components may be subject to patent or "
@@ -929,235 +1183,324 @@ msgstr ""
 "GStreamer "
 "の互換性を拡張し、従来形式や特殊なメディア形式への対応を追加します。一部のコンポーネントには、特許または再配布条件が適用される場合があります。"
 
-#: src/pages.py
+#: src/pages.py:1473
 msgid "A saved profile exists. Entering a password updates it securely."
 msgstr "保存済みのプロファイルが存在します。パスワードを入力すると、安全に更新されます。"
 
-#: src/pages.py
+#: src/pages.py:1524
 msgid "Anonymous identity (optional)"
 msgstr "匿名 ID (省略可)"
 
-#: src/pages.py
+#: src/pages.py:1530
 msgid "CA certificate path (optional)"
 msgstr "CA 証明書パス (省略可)"
 
-#: src/pages.py
+#: src/pages.py:1239 src/pages.py:1409 src/pages.py:1482 src/pages.py:1600
+#: src/pages.py:1816
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: src/pages.py
+#: src/pages.py:1786
 msgid "Cancelling Wi-Fi operation…"
 msgstr "Wi-Fi 操作をキャンセルしています…"
 
-#: src/pages.py
+#: src/pages.py:1532
 msgid "Client certificate path"
 msgstr "クライアント証明書パス"
 
-#: src/pages.py
+#: src/pages.py:1483 src/pages.py:1601
 msgid "Connect"
 msgstr "Connect"
 
-#: src/pages.py
+#: src/pages.py:1817
 msgid "Continue"
 msgstr "続ける"
 
-#: src/pages.py
+#: src/pages.py:1259 src/pages.py:1809
 msgid "Connect to a hidden network"
 msgstr "隠しネットワークに接続"
 
-#: src/pages.py
+#: src/pages.py:1478 src/pages.py:1593
 #, python-brace-format
 msgid "Connect to {network}"
 msgstr "{network} に接続"
 
-#: src/pages.py
+#: src/pages.py:1654
 msgid "Connected"
 msgstr "Connected"
 
-#: src/pages.py
+#: src/pages.py:1453
 #, python-brace-format
 msgid "Connecting to {network}…"
 msgstr "{network} に接続中…"
 
-#: src/pages.py
+#: src/pages.py:1755
 msgid "Could not change the Wi-Fi connection"
 msgstr "Wi-Fi 接続を変更できませんでした"
 
-#: src/pages.py
+#: src/pages.py:1410
 msgid "Disconnect"
 msgstr "Disconnect"
 
-#: src/pages.py
+#: src/pages.py:1401
 #, python-brace-format
 msgid "Disconnect from {network}?"
 msgstr "{network} から切断しますか？"
 
-#: src/pages.py
+#: src/pages.py:1420
 #, python-brace-format
 msgid "Disconnecting from {network}…"
 msgstr "{network} から切断中…"
 
-#: src/pages.py
+#: src/pages.py:1531
 msgid "Domain suffix match (optional)"
 msgstr "ドメイン サフィックス マッチ (省略可)"
 
-#: src/pages.py
+#: src/pages.py:1515
 msgid "EAP method"
 msgstr "EAP メソッド"
 
-#: src/pages.py
+#: src/pages.py:1387 src/pages.py:1796
 msgid "Enhanced Open (OWE)"
 msgstr "拡張オープン (OWE)"
 
-#: src/pages.py
+#: src/pages.py:1595
 msgid ""
 "Enter the credentials supplied by your organization. Certificate validation "
 "is strongly recommended."
 msgstr "組織から提供された資格情報を入力してください。証明書の検証は強く推奨されます。"
 
-#: src/pages.py
+#: src/pages.py:1811
 msgid "Enter the exact network name and choose its security type."
 msgstr "正確なネットワーク名を入力し、セキュリティの種類を選択してください。"
 
-#: src/pages.py
+#: src/pages.py:1390 src/pages.py:1800
 msgid "Enterprise Wi-Fi"
 msgstr "エンタープライズ Wi-Fi"
 
-#: src/pages.py
+#: src/pages.py:1523
 msgid "Identity"
 msgstr "Identity"
 
-#: src/pages.py
+#: src/pages.py:1527
 msgid "Inner authentication"
 msgstr "内部認証"
 
-#: src/pages.py
+#: src/pages.py:1790
 msgid "Network name (SSID)"
 msgstr "ネットワーク名 (SSID)"
 
-#: src/pages.py
+#: src/pages.py:1645
 msgid "No Wi-Fi networks found."
 msgstr "Wi-Fi ネットワークが見つかりません。"
 
-#: src/pages.py
+#: src/pages.py:1386 src/pages.py:1795
 msgid "Open network"
 msgstr "開きネットワーク"
 
-#: src/pages.py
+#: src/pages.py:1389 src/pages.py:1797 src/pages.py:1798
 msgid "Personal Wi-Fi"
 msgstr "パーソナル Wi-Fi"
 
-#: src/pages.py
+#: src/pages.py:1535
 msgid "Private key password (optional)"
 msgstr "秘密鍵のパスワード（省略可）"
 
-#: src/pages.py
+#: src/pages.py:1533
 msgid "Private key path"
 msgstr "秘密鍵パス"
 
-#: src/pages.py
+#: src/pages.py:1284
 msgid "Refresh Wi-Fi networks"
 msgstr "Wi-Fi ネットワークを更新"
 
-#: src/pages.py
+#: src/pages.py:1656
 msgid "Saved"
 msgstr "Saved"
 
-#: src/pages.py
+#: src/pages.py:1792
 msgid "Security"
 msgstr "Security"
 
-#: src/pages.py
+#: src/pages.py:1405
 msgid ""
 "The installer will keep the saved network profile so it can be used again."
 msgstr "インストーラーは保存されたネットワークプロファイルを保持し、後で使用できるようにします。"
 
-#: src/pages.py
+#: src/pages.py:1356
 msgid "The local network is connected, but Internet access is unavailable."
 msgstr "ローカルネットワークは接続されていますが、インターネットにアクセスできません。"
 
-#: src/pages.py
+#: src/pages.py:1856
 msgid "Turning Wi-Fi off…"
 msgstr "Wi-Fi をオフにしています…"
 
-#: src/pages.py
+#: src/pages.py:1854
 msgid "Turning Wi-Fi on…"
 msgstr "Wi-Fi をオンにしています…"
 
-#: src/pages.py
+#: src/pages.py:1485
 msgid "Use WPS"
 msgstr "WPS を使用"
 
-#: src/pages.py
+#: src/pages.py:1388 src/pages.py:1799
 msgid "WEP (legacy)"
 msgstr "WEP (レガシー)"
 
-#: src/pages.py
+#: src/pages.py:1347
 msgid ""
 "Wi-Fi is connected, but the network requires sign-in through a captive "
 "portal."
 msgstr "Wi-Fi に接続されていますが、ネットワークは キャプティブ ポータル へのサインインを必要としています。"
 
-#: src/pages.py
+#: src/pages.py:1449
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "{network} の WPS を待機中。ルーターの WPS ボタンを押してください…"
 
+#: src/pages.py:3576
 msgid "A password is required."
 msgstr "パスワードが必要です。"
 
+#: src/pages.py:3731
 msgid "Administrative commands will no longer ask for your password."
 msgstr "管理コマンドの実行時にパスワードを要求しなくなります。"
 
+#: src/pages.py:3681 src/pages.py:3675
 msgid "Advanced Options"
 msgstr "詳細オプション"
 
+#: src/pages.py:3747
 msgid "Allow SSH login with the account password"
 msgstr "アカウントのパスワードによる SSH ログインを許可する"
 
+#: src/pages.py:4089
 msgid "Automatic desktop login"
 msgstr "デスクトップへの自動ログイン"
 
+#: src/pages.py:3701
 msgid ""
 "Choose how the local administrator account signs in and authorizes system "
 "changes."
 msgstr "ローカル管理者アカウントのサインイン方法と、システム変更の承認方法を選択します。"
 
+#: src/pages.py:3682
 msgid "Choose optional access and sign-in policies"
 msgstr "アクセスとサインインに関するオプションのポリシーを選択します"
 
+#: src/pages.py:3709
 msgid "Choose whether this computer accepts remote Secure Shell connections."
 msgstr "このコンピューターがリモートの Secure Shell 接続を受け入れるかどうかを選択します。"
 
+#: src/pages.py:4604
 msgid "Configure Secure Shell"
 msgstr "Secure Shell を設定"
 
+#: src/pages.py:3699
 msgid "Local Access"
 msgstr "ローカルアクセス"
 
+#: src/pages.py:3737
 msgid "Log in to the desktop automatically"
 msgstr "デスクトップに自動的にログインする"
 
+#: src/pages.py:3739
 msgid "Open this account's desktop automatically when the computer starts."
 msgstr "コンピューターの起動時に、このアカウントのデスクトップを自動的に開きます。"
 
+#: src/pages.py:3707
 msgid "Remote Access"
 msgstr "リモートアクセス"
 
+#: src/pages.py:3730
 msgid "Run sudo commands without a password"
 msgstr "パスワードなしで sudo コマンドを実行する"
 
+#: src/pages.py:4095
 msgid "SSH password login"
 msgstr "SSH パスワードログイン"
 
+#: src/pages.py:3749
 msgid "Start Secure Shell and accept this account password over the network."
 msgstr "Secure Shell を起動し、ネットワーク経由でこのアカウントのパスワードを受け付けます。"
 
+#: src/pages.py:3759
 msgid "This will reduce the security of the installed system."
 msgstr "インストールされたシステムのセキュリティが低下します。"
 
+#: src/pages.py:4093 src/pages.py:4099
 msgid "disabled"
 msgstr "無効"
 
+#: src/pages.py:4091 src/pages.py:4097
 msgid "enabled"
 msgstr "有効"
+
+#: src/pages.py:349
+msgid ""
+"AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently"
+" enabled on this computer, and we recommend enabling it for additional "
+"protection."
+msgstr ""
+"AnduinOSはSecure Bootを完全にサポートしています。このコンピュータでは現在Secure "
+"Bootが無効になっていますが、追加の保護のため有効化することをお勧めします。"
+
+#: src/pages.py:331
+msgid "AnduinOS supports Secure Boot"
+msgstr "AnduinOSはSecure Bootに対応しています"
+
+#: src/pages.py:360
+msgid ""
+"Battery power is sufficient or reliable power is connected. You can continue"
+" with the installation."
+msgstr "バッテリー電力が十分であるか、安定した電源が接続されています。インストールを続行できます。"
+
+#: src/pages.py:366
+msgid ""
+"Connect reliable external power and charge above 25%, or charge above 45% "
+"while unplugged."
+msgstr "安定した外部電源を接続して25%以上に充電するか、コンセントを外した状態で45%以上に充電してください。"
+
+#: src/pages.py:338
+msgid "Could not open UEFI firmware settings"
+msgstr "UEFIファームウェア設定を開けませんでした"
+
+#: src/pages.py:333
+msgid "Get additional protection before installing AnduinOS."
+msgstr "AnduinOSをインストールする前に、追加の保護を設定してください。"
+
+#: src/pages.py:364
+msgid "Power conditions are safe for installation."
+msgstr "電源状態はインストールに適しています。"
+
+#: src/pages.py:363
+msgid "Power ready"
+msgstr "電源準備完了"
+
+#: src/pages.py:335
+msgid "Restart to UEFI Firmware Settings"
+msgstr "UEFIファームウェア設定に再起動"
+
+#: src/pages.py:345
+msgid ""
+"Secure Boot is a UEFI security feature that verifies trusted, digitally "
+"signed software while your computer starts."
+msgstr "Secure Bootは、コンピュータの起動時に信頼できるデジタル署名付きソフトウェアを検証するUEFIのセキュリティ機能です。"
+
+#: src/pages.py:336
+msgid "Skip"
+msgstr "スキップ"
+
+#: src/pages.py:341
+msgid "The firmware settings could not be opened on this computer."
+msgstr "このコンピューターではファームウェア設定を開けませんでした。"
+
+#: src/pages.py:354
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"有効にするには、UEFIファームウェア設定を開き、「ブート」、「セキュリティ」、または「Secure "
+"Boot」の下を確認してください。「Microsoft & 3rd-party CA」を選択するか、Secure "
+"Bootをオンにしてください。ファームウェアの表示はメーカーによって異なります。"
