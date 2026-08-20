@@ -9,6 +9,18 @@ fn main() -> ExitCode {
             eprintln!("Disk Snapshots Manager rollback confirmed");
             ExitCode::SUCCESS
         }
+        Ok(ConfirmationOutcome::ConfirmedCleanupPending) => {
+            eprintln!("Disk Snapshots Manager rollback confirmed; old-root cleanup was deferred");
+            ExitCode::SUCCESS
+        }
+        Ok(ConfirmationOutcome::CleanupCompleted) => {
+            eprintln!("Disk Snapshots Manager completed deferred old-root cleanup");
+            ExitCode::SUCCESS
+        }
+        Ok(ConfirmationOutcome::CleanupPending) => {
+            eprintln!("Disk Snapshots Manager old-root cleanup remains deferred");
+            ExitCode::SUCCESS
+        }
         Ok(ConfirmationOutcome::RevertedRecorded) => {
             eprintln!("Disk Snapshots Manager automatic fallback recorded");
             ExitCode::SUCCESS

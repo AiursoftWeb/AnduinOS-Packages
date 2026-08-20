@@ -3,7 +3,8 @@ Description=Confirm or reconcile a Disk Snapshots Manager restore
 Documentation=file:/usr/share/doc/anduinos-btrfs-snapshots-manager/README.md
 After=local-fs.target
 RequiresMountsFor=/.snapshots /boot
-ConditionPathExists=/.snapshots/anduinos-btrfs-snapshots-manager/transactions/pending-rollback.json
+ConditionPathExists=|/.snapshots/anduinos-btrfs-snapshots-manager/transactions/pending-rollback.json
+ConditionDirectoryNotEmpty=|/.snapshots/anduinos-btrfs-snapshots-manager/cleanup-pending
 
 [Service]
 Type=oneshot

@@ -3,12 +3,14 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+use anduinos_recovery_engine::confirmation::{OldRootCleanupOutcome, cleanup_old_root_at};
 use anduinos_recovery_engine::layout::{LayoutReport, LayoutSupport, MountReport};
 use anduinos_recovery_engine::model::{DeploymentId, DeploymentKind, DeploymentState};
 use anduinos_recovery_engine::operations::{
     OperationEngine, OperationErrorCode, SystemCommandRunner,
 };
 use anduinos_recovery_engine::store::DeploymentStore;
+use anduinos_recovery_engine::transaction::RollbackId;
 
 fn fixture_root() -> PathBuf {
     let root = PathBuf::from(
@@ -77,6 +79,106 @@ fn assert_read_only(path: &Path) {
         .expect("btrfs property must execute");
     assert!(output.status.success());
     assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "ro=true");
+}
+
+fn create_subvolume(path: &Path) {
+    fs::create_dir_all(path.parent().unwrap()).unwrap();
+    let status = Command::new("/usr/bin/btrfs")
+        .args(["subvolume", "create"])
+        .arg(path)
+        .status()
+        .unwrap();
+    assert!(status.success());
+}
+
+fn snapshot_subvolume(source: &Path, destination: &Path) {
+    let status = Command::new("/usr/bin/btrfs")
+        .args(["subvolume", "snapshot"])
+        .arg(source)
+        .arg(destination)
+        .status()
+        .unwrap();
+    assert!(status.success());
+}
+
+fn old_root_name() -> String {
+    format!("@root.snapshots-manager-old-{}", RollbackId::new())
+}
+
+#[test]
+#[ignore = "requires root and a disposable Btrfs loopback image"]
+fn real_btrfs_old_root_cleanup_handles_empty_nested_subvolumes() {
+    assert_eq!(unsafe { libc::geteuid() }, 0, "this test must run as root");
+    let root = fixture_root();
+
+    let plain = old_root_name();
+    snapshot_subvolume(&root.join("@root"), &root.join(&plain));
+    assert_eq!(
+        cleanup_old_root_at(&root, &plain).unwrap(),
+        OldRootCleanupOutcome::Removed
+    );
+    assert!(!root.join(&plain).exists());
+
+    let nested = old_root_name();
+    snapshot_subvolume(&root.join("@root"), &root.join(&nested));
+    create_subvolume(&root.join(&nested).join("var/lib/machines"));
+    create_subvolume(&root.join(&nested).join("var/lib/portables"));
+    assert_eq!(
+        cleanup_old_root_at(&root, &nested).unwrap(),
+        OldRootCleanupOutcome::Removed
+    );
+    assert!(!root.join(&nested).exists());
+}
+
+#[test]
+#[ignore = "requires root and a disposable Btrfs loopback image"]
+fn real_btrfs_old_root_cleanup_defers_nonempty_descendants() {
+    assert_eq!(unsafe { libc::geteuid() }, 0, "this test must run as root");
+    let root = fixture_root();
+    let old = old_root_name();
+    snapshot_subvolume(&root.join("@root"), &root.join(&old));
+    let machines = root.join(&old).join("var/lib/machines");
+    create_subvolume(&machines);
+    fs::write(machines.join("customer-machine.raw"), b"must be preserved").unwrap();
+
+    let outcome = cleanup_old_root_at(&root, &old).unwrap();
+    assert_eq!(
+        outcome,
+        OldRootCleanupOutcome::Deferred {
+            blocked_subvolumes: vec!["var/lib/machines".into()],
+            diagnostic: "The old root contains non-empty descendant subvolumes; automatic deletion was deferred".into(),
+        }
+    );
+    assert_eq!(
+        fs::read(machines.join("customer-machine.raw")).unwrap(),
+        b"must be preserved"
+    );
+    assert!(root.join(&old).exists());
+}
+
+#[test]
+#[ignore = "requires root and a disposable Btrfs loopback image"]
+fn real_btrfs_old_root_cleanup_is_idempotent_after_partial_progress() {
+    assert_eq!(unsafe { libc::geteuid() }, 0, "this test must run as root");
+    let root = fixture_root();
+    let old = old_root_name();
+    snapshot_subvolume(&root.join("@root"), &root.join(&old));
+    let machines = root.join(&old).join("var/lib/machines");
+    let portables = root.join(&old).join("var/lib/portables");
+    create_subvolume(&machines);
+    create_subvolume(&portables);
+    let status = Command::new("/usr/bin/btrfs")
+        .args(["subvolume", "delete", "--commit-after"])
+        .arg(&machines)
+        .status()
+        .unwrap();
+    assert!(status.success());
+
+    assert_eq!(
+        cleanup_old_root_at(&root, &old).unwrap(),
+        OldRootCleanupOutcome::Removed
+    );
+    assert!(!root.join(&old).exists());
 }
 
 #[test]

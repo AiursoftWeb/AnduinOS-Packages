@@ -1,12 +1,13 @@
 use std::ffi::OsStr;
 use std::fmt;
 use std::fs;
-use std::path::Path;
+use std::path::{Component, Path, PathBuf};
 use std::process::Command;
 
 use chrono::Utc;
 
 use crate::boot::BootIntegration;
+use crate::cleanup::{RootCleanupRecord, RootCleanupStore, bounded_diagnostic};
 use crate::layout::{self, LayoutReport};
 use crate::lineage::{ActivationOutcome, LineageStore};
 #[cfg(test)]
@@ -25,11 +26,16 @@ const BOOT_ID: &str = "/proc/sys/kernel/random/boot_id";
 const KERNEL_RELEASE: &str = "/proc/sys/kernel/osrelease";
 const KERNEL_COMMAND_LINE: &str = "/proc/cmdline";
 const TOP_LEVEL: &str = "/run/anduinos-btrfs-snapshots-manager/top";
+const MAX_COMMAND_OUTPUT: usize = 1024 * 1024;
+const MAX_COMMAND_DIAGNOSTIC: usize = 4096;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum ConfirmationOutcome {
     NoAction,
     Confirmed,
+    ConfirmedCleanupPending,
+    CleanupCompleted,
+    CleanupPending,
     RevertedRecorded,
     FailedRecorded,
 }
@@ -76,7 +82,25 @@ pub trait ConfirmationBackend {
         &self,
         transaction: &RollbackTransaction,
     ) -> Result<(), ConfirmationError>;
-    fn delete_old_root(&self, transaction: &RollbackTransaction) -> Result<(), ConfirmationError>;
+    fn pending_root_cleanups(&self) -> Result<Vec<RootCleanupRecord>, ConfirmationError>;
+    fn schedule_old_root_cleanup(
+        &self,
+        transaction: &RollbackTransaction,
+    ) -> Result<RootCleanupRecord, ConfirmationError>;
+    fn cleanup_old_root(
+        &self,
+        record: &RootCleanupRecord,
+    ) -> Result<OldRootCleanupOutcome, ConfirmationError>;
+    fn defer_old_root_cleanup(
+        &self,
+        record: &mut RootCleanupRecord,
+        blocked_subvolumes: Vec<String>,
+        diagnostic: &str,
+    ) -> Result<(), ConfirmationError>;
+    fn complete_old_root_cleanup(
+        &self,
+        record: &RootCleanupRecord,
+    ) -> Result<(), ConfirmationError>;
     fn remove_transaction(&self) -> Result<(), ConfirmationError>;
     fn archive_transaction(
         &self,
@@ -152,6 +176,7 @@ impl ConfirmationBackend for SystemConfirmationBackend {
                 OsStr::new("--raw"),
                 OsStr::new("/"),
             ],
+            "inspecting the running root subvolume",
         )?;
         parse_parent_uuid(&output)
     }
@@ -165,7 +190,23 @@ impl ConfirmationBackend for SystemConfirmationBackend {
             .map_err(transaction_error)
     }
 
-    fn delete_old_root(&self, transaction: &RollbackTransaction) -> Result<(), ConfirmationError> {
+    fn pending_root_cleanups(&self) -> Result<Vec<RootCleanupRecord>, ConfirmationError> {
+        RootCleanupStore::default().list().map_err(cleanup_error)
+    }
+
+    fn schedule_old_root_cleanup(
+        &self,
+        transaction: &RollbackTransaction,
+    ) -> Result<RootCleanupRecord, ConfirmationError> {
+        RootCleanupStore::default()
+            .schedule(transaction)
+            .map_err(cleanup_error)
+    }
+
+    fn cleanup_old_root(
+        &self,
+        record: &RootCleanupRecord,
+    ) -> Result<OldRootCleanupOutcome, ConfirmationError> {
         let report = layout::inspect_current();
         ensure_supported_root(&report)?;
         let source = report.root_source.as_deref().ok_or_else(|| {
@@ -184,35 +225,43 @@ impl ConfirmationBackend for SystemConfirmationBackend {
                 OsStr::new(source),
                 top.as_os_str(),
             ],
+            "mounting the Btrfs top level for old-root cleanup",
         )?;
-        let old_root = top.join(transaction.old_root_name());
-        let result = match fs::symlink_metadata(&old_root) {
-            Ok(metadata) if metadata.file_type().is_dir() => run_command(
-                Path::new(BTRFS),
-                &[
-                    OsStr::new("subvolume"),
-                    OsStr::new("delete"),
-                    OsStr::new("--commit-after"),
-                    old_root.as_os_str(),
-                ],
-            )
-            .map(|_| ()),
-            Ok(_) => Err(ConfirmationError::new(
-                ConfirmationErrorCode::IdentityMismatch,
-                "The protected old root is not a real directory",
-            )),
-            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
-            Err(error) => Err(ConfirmationError::new(
-                ConfirmationErrorCode::CommandFailed,
-                format!("Could not inspect the protected old root: {error}"),
-            )),
-        };
-        let unmount = run_command(Path::new(UMOUNT), &[top.as_os_str()]).map(|_| ());
+        let result = cleanup_old_root_at(top, &record.old_root_name);
+        let unmount = run_command(
+            Path::new(UMOUNT),
+            &[top.as_os_str()],
+            "unmounting the Btrfs top level after old-root cleanup",
+        )
+        .map(|_| ());
         match (result, unmount) {
             (Err(error), _) => Err(error),
-            (Ok(()), Err(error)) => Err(error),
-            (Ok(()), Ok(())) => Ok(()),
+            (Ok(_), Err(error)) => Err(error),
+            (Ok(outcome), Ok(())) => Ok(outcome),
         }
+    }
+
+    fn defer_old_root_cleanup(
+        &self,
+        record: &mut RootCleanupRecord,
+        blocked_subvolumes: Vec<String>,
+        diagnostic: &str,
+    ) -> Result<(), ConfirmationError> {
+        record
+            .record_deferred(blocked_subvolumes, diagnostic)
+            .map_err(cleanup_error)?;
+        RootCleanupStore::default()
+            .update(record)
+            .map_err(cleanup_error)
+    }
+
+    fn complete_old_root_cleanup(
+        &self,
+        record: &RootCleanupRecord,
+    ) -> Result<(), ConfirmationError> {
+        RootCleanupStore::default()
+            .remove(record.transaction_id)
+            .map_err(cleanup_error)
     }
 
     fn remove_transaction(&self) -> Result<(), ConfirmationError> {
@@ -239,7 +288,12 @@ impl ConfirmationBackend for SystemConfirmationBackend {
     }
 
     fn regenerate_grub(&self) -> Result<(), ConfirmationError> {
-        run_command(Path::new(UPDATE_GRUB), &[]).map(|_| ())
+        run_command(
+            Path::new(UPDATE_GRUB),
+            &[],
+            "regenerating GRUB after recovery confirmation",
+        )
+        .map(|_| ())
     }
 
     fn record_lineage_activation(
@@ -280,7 +334,11 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
 
     pub fn reconcile(&self) -> Result<ConfirmationOutcome, ConfirmationError> {
         let Some(mut transaction) = self.backend.pending()? else {
-            return Ok(ConfirmationOutcome::NoAction);
+            return match self.retry_pending_root_cleanups()? {
+                CleanupPass::NoRecords => Ok(ConfirmationOutcome::NoAction),
+                CleanupPass::Completed => Ok(ConfirmationOutcome::CleanupCompleted),
+                CleanupPass::Pending => Ok(ConfirmationOutcome::CleanupPending),
+            };
         };
         match transaction.phase {
             RollbackPhase::Armed if self.backend.requested_rollback()? == Some(transaction.id) => {
@@ -300,12 +358,18 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
                     .transition(RollbackPhase::Confirmed, Utc::now())
                     .map_err(transaction_error)?;
                 self.backend.update_transaction(&transaction)?;
-                self.finish_confirmed(&transaction)?;
-                Ok(ConfirmationOutcome::Confirmed)
+                if self.finish_confirmed(&transaction)? {
+                    Ok(ConfirmationOutcome::ConfirmedCleanupPending)
+                } else {
+                    Ok(ConfirmationOutcome::Confirmed)
+                }
             }
             RollbackPhase::Confirmed => {
-                self.finish_confirmed(&transaction)?;
-                Ok(ConfirmationOutcome::Confirmed)
+                if self.finish_confirmed(&transaction)? {
+                    Ok(ConfirmationOutcome::ConfirmedCleanupPending)
+                } else {
+                    Ok(ConfirmationOutcome::Confirmed)
+                }
             }
             RollbackPhase::Reverted => {
                 self.finish_reverted(&transaction)?;
@@ -351,15 +415,21 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
         Ok(())
     }
 
-    fn finish_confirmed(&self, transaction: &RollbackTransaction) -> Result<(), ConfirmationError> {
+    fn finish_confirmed(
+        &self,
+        transaction: &RollbackTransaction,
+    ) -> Result<bool, ConfirmationError> {
         self.backend
             .record_lineage_activation(transaction, ActivationOutcome::Confirmed)?;
-        self.backend.delete_old_root(transaction)?;
+        self.backend.schedule_old_root_cleanup(transaction)?;
         self.backend.clear_once()?;
         self.backend.archive_transaction(transaction)?;
         self.backend.remove_transaction()?;
         self.backend.regenerate_grub()?;
-        Ok(())
+        Ok(matches!(
+            self.retry_pending_root_cleanups()?,
+            CleanupPass::Pending
+        ))
     }
 
     fn finish_reverted(&self, transaction: &RollbackTransaction) -> Result<(), ConfirmationError> {
@@ -379,6 +449,231 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
         self.backend.regenerate_grub()?;
         Ok(())
     }
+
+    fn retry_pending_root_cleanups(&self) -> Result<CleanupPass, ConfirmationError> {
+        let records = self.backend.pending_root_cleanups()?;
+        if records.is_empty() {
+            return Ok(CleanupPass::NoRecords);
+        }
+        let mut pending = false;
+        for mut record in records {
+            match self.backend.cleanup_old_root(&record) {
+                Ok(OldRootCleanupOutcome::Removed) => {
+                    self.backend.complete_old_root_cleanup(&record)?;
+                }
+                Ok(OldRootCleanupOutcome::Deferred {
+                    blocked_subvolumes,
+                    diagnostic,
+                }) => {
+                    self.backend.defer_old_root_cleanup(
+                        &mut record,
+                        blocked_subvolumes,
+                        &diagnostic,
+                    )?;
+                    pending = true;
+                }
+                Err(error) => {
+                    self.backend
+                        .defer_old_root_cleanup(&mut record, Vec::new(), &error.message)?;
+                    pending = true;
+                }
+            }
+        }
+        Ok(if pending {
+            CleanupPass::Pending
+        } else {
+            CleanupPass::Completed
+        })
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum CleanupPass {
+    NoRecords,
+    Completed,
+    Pending,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum OldRootCleanupOutcome {
+    Removed,
+    Deferred {
+        blocked_subvolumes: Vec<String>,
+        diagnostic: String,
+    },
+}
+
+pub fn cleanup_old_root_at(
+    top_level: &Path,
+    old_root_name: &str,
+) -> Result<OldRootCleanupOutcome, ConfirmationError> {
+    validate_old_root_name(old_root_name)?;
+    let old_root = top_level.join(old_root_name);
+    match fs::symlink_metadata(&old_root) {
+        Ok(metadata) if metadata.file_type().is_dir() => {}
+        Ok(_) => {
+            return Err(ConfirmationError::new(
+                ConfirmationErrorCode::IdentityMismatch,
+                "The protected old root is not a real directory",
+            ));
+        }
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+            return Ok(OldRootCleanupOutcome::Removed);
+        }
+        Err(error) => {
+            return Err(ConfirmationError::new(
+                ConfirmationErrorCode::CommandFailed,
+                format!("Could not inspect the protected old root: {error}"),
+            ));
+        }
+    }
+
+    let output = run_command(
+        Path::new(BTRFS),
+        &[
+            OsStr::new("subvolume"),
+            OsStr::new("list"),
+            OsStr::new("-o"),
+            old_root.as_os_str(),
+        ],
+        "listing descendant subvolumes below the old root",
+    )?;
+    let mut descendants = parse_descendant_subvolumes(&output, old_root_name)?;
+    descendants.sort_by_key(|path| std::cmp::Reverse(path.components().count()));
+
+    let mut blocked = Vec::new();
+    for relative in descendants {
+        let target = old_root.join(&relative);
+        let metadata = match fs::symlink_metadata(&target) {
+            Ok(metadata) => metadata,
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => continue,
+            Err(error) => {
+                return Err(ConfirmationError::new(
+                    ConfirmationErrorCode::CommandFailed,
+                    format!("Could not inspect an old-root descendant subvolume: {error}"),
+                ));
+            }
+        };
+        if !metadata.file_type().is_dir() {
+            return Err(ConfirmationError::new(
+                ConfirmationErrorCode::IdentityMismatch,
+                "An old-root descendant subvolume is not a real directory",
+            ));
+        }
+        let mut entries = fs::read_dir(&target).map_err(|error| {
+            ConfirmationError::new(
+                ConfirmationErrorCode::CommandFailed,
+                format!("Could not inspect an old-root descendant subvolume: {error}"),
+            )
+        })?;
+        if entries.next().is_some() {
+            blocked.push(path_to_record(&relative)?);
+            continue;
+        }
+        run_command(
+            Path::new(BTRFS),
+            &[
+                OsStr::new("subvolume"),
+                OsStr::new("delete"),
+                OsStr::new("--commit-after"),
+                target.as_os_str(),
+            ],
+            "deleting an empty descendant subvolume from the old root",
+        )?;
+    }
+
+    if !blocked.is_empty() {
+        return Ok(OldRootCleanupOutcome::Deferred {
+            blocked_subvolumes: blocked,
+            diagnostic: "The old root contains non-empty descendant subvolumes; automatic deletion was deferred"
+                .into(),
+        });
+    }
+
+    run_command(
+        Path::new(BTRFS),
+        &[
+            OsStr::new("subvolume"),
+            OsStr::new("delete"),
+            OsStr::new("--commit-after"),
+            old_root.as_os_str(),
+        ],
+        "deleting the old root subvolume",
+    )?;
+    Ok(OldRootCleanupOutcome::Removed)
+}
+
+fn validate_old_root_name(value: &str) -> Result<(), ConfirmationError> {
+    let Some(id) = value.strip_prefix("@root.snapshots-manager-old-") else {
+        return Err(ConfirmationError::new(
+            ConfirmationErrorCode::InvalidTransaction,
+            "The root cleanup target has an invalid name",
+        ));
+    };
+    let parsed = id.parse::<RollbackId>().map_err(|_| {
+        ConfirmationError::new(
+            ConfirmationErrorCode::InvalidTransaction,
+            "The root cleanup target has an invalid transaction ID",
+        )
+    })?;
+    if parsed.to_string() != id {
+        return Err(ConfirmationError::new(
+            ConfirmationErrorCode::InvalidTransaction,
+            "The root cleanup target has a non-canonical transaction ID",
+        ));
+    }
+    Ok(())
+}
+
+fn parse_descendant_subvolumes(
+    output: &str,
+    old_root_name: &str,
+) -> Result<Vec<PathBuf>, ConfirmationError> {
+    let prefix = format!("{old_root_name}/");
+    let mut paths = Vec::new();
+    for line in output.lines().filter(|line| !line.trim().is_empty()) {
+        let reported = line
+            .split_once(" path ")
+            .map(|(_, path)| path)
+            .ok_or_else(|| {
+                ConfirmationError::new(
+                    ConfirmationErrorCode::CommandFailed,
+                    "Btrfs returned an unrecognized descendant-subvolume record",
+                )
+            })?;
+        let reported = reported.strip_prefix("<FS_TREE>/").unwrap_or(reported);
+        let relative = reported.strip_prefix(&prefix).ok_or_else(|| {
+            ConfirmationError::new(
+                ConfirmationErrorCode::IdentityMismatch,
+                "Btrfs reported a descendant outside the protected old root",
+            )
+        })?;
+        let path = PathBuf::from(relative);
+        if relative.is_empty()
+            || relative.chars().any(char::is_control)
+            || !path
+                .components()
+                .all(|component| matches!(component, Component::Normal(_)))
+        {
+            return Err(ConfirmationError::new(
+                ConfirmationErrorCode::IdentityMismatch,
+                "Btrfs reported an unsafe old-root descendant path",
+            ));
+        }
+        paths.push(path);
+    }
+    paths.sort();
+    paths.dedup();
+    Ok(paths)
+}
+
+fn path_to_record(path: &Path) -> Result<String, ConfirmationError> {
+    path.to_str().map(str::to_owned).ok_or_else(|| {
+        ConfirmationError::new(
+            ConfirmationErrorCode::IdentityMismatch,
+            "An old-root descendant path is not UTF-8",
+        )
+    })
 }
 
 fn parse_requested_rollback(command_line: &str) -> Result<Option<RollbackId>, ConfirmationError> {
@@ -487,7 +782,11 @@ fn parse_parent_uuid(output: &str) -> Result<String, ConfirmationError> {
     Ok(parsed.hyphenated().to_string())
 }
 
-fn run_command(program: &Path, arguments: &[&OsStr]) -> Result<String, ConfirmationError> {
+fn run_command(
+    program: &Path,
+    arguments: &[&OsStr],
+    stage: &str,
+) -> Result<String, ConfirmationError> {
     let output = Command::new(program)
         .args(arguments)
         .env_clear()
@@ -497,31 +796,71 @@ fn run_command(program: &Path, arguments: &[&OsStr]) -> Result<String, Confirmat
         .map_err(|error| {
             ConfirmationError::new(
                 ConfirmationErrorCode::CommandFailed,
-                format!("Could not execute {}: {error}", program.display()),
+                format!(
+                    "Could not execute {} while {stage}: {error}",
+                    program.display()
+                ),
             )
         })?;
     if !output.status.success() {
+        let diagnostic = command_diagnostic(&output.stderr);
         return Err(ConfirmationError::new(
             ConfirmationErrorCode::CommandFailed,
-            format!("{} exited with {}", program.display(), output.status),
+            format!(
+                "{} exited with {} while {stage}{}",
+                program.display(),
+                output.status,
+                if diagnostic.is_empty() {
+                    String::new()
+                } else {
+                    format!(": {diagnostic}")
+                }
+            ),
         ));
     }
-    if output.stdout.len() > 4096 {
+    if output.stdout.len() > MAX_COMMAND_OUTPUT {
         return Err(ConfirmationError::new(
             ConfirmationErrorCode::CommandFailed,
-            format!("{} returned excessive output", program.display()),
+            format!(
+                "{} returned excessive output while {stage}",
+                program.display()
+            ),
         ));
     }
     String::from_utf8(output.stdout).map_err(|_| {
         ConfirmationError::new(
             ConfirmationErrorCode::CommandFailed,
-            format!("{} returned non-UTF-8 output", program.display()),
+            format!(
+                "{} returned non-UTF-8 output while {stage}",
+                program.display()
+            ),
         )
     })
 }
 
+fn command_diagnostic(stderr: &[u8]) -> String {
+    if stderr.len() > MAX_COMMAND_DIAGNOSTIC {
+        return format!("diagnostic output exceeded {MAX_COMMAND_DIAGNOSTIC} bytes");
+    }
+    match std::str::from_utf8(stderr) {
+        Ok(value) => {
+            let value = value.trim();
+            if value.is_empty() {
+                String::new()
+            } else {
+                bounded_diagnostic(value)
+            }
+        }
+        Err(_) => "diagnostic output was not UTF-8".into(),
+    }
+}
+
 fn transaction_error(error: crate::transaction::TransactionError) -> ConfirmationError {
     ConfirmationError::new(ConfirmationErrorCode::InvalidTransaction, error.message)
+}
+
+fn cleanup_error(error: crate::cleanup::RootCleanupError) -> ConfirmationError {
+    ConfirmationError::new(ConfirmationErrorCode::StateCommit, error.message)
 }
 
 #[cfg(test)]
@@ -548,6 +887,8 @@ mod tests {
         parent_uuid: String,
         requested: Option<RollbackId>,
         archived: Vec<RollbackTransaction>,
+        cleanups: Vec<RootCleanupRecord>,
+        cleanup_outcome: OldRootCleanupOutcome,
         calls: Vec<String>,
     }
 
@@ -586,6 +927,8 @@ mod tests {
                         parent_uuid: SNAPSHOT.into(),
                         requested: None,
                         archived: Vec::new(),
+                        cleanups: Vec::new(),
+                        cleanup_outcome: OldRootCleanupOutcome::Removed,
                         calls: Vec::new(),
                     })),
                 },
@@ -638,11 +981,67 @@ mod tests {
             Ok(())
         }
 
-        fn delete_old_root(
+        fn pending_root_cleanups(&self) -> Result<Vec<RootCleanupRecord>, ConfirmationError> {
+            self.call("pending-root-cleanups");
+            Ok(self.inner.lock().unwrap().cleanups.clone())
+        }
+
+        fn schedule_old_root_cleanup(
             &self,
-            _transaction: &RollbackTransaction,
+            transaction: &RollbackTransaction,
+        ) -> Result<RootCleanupRecord, ConfirmationError> {
+            self.call("schedule-old-root-cleanup");
+            let mut inner = self.inner.lock().unwrap();
+            if let Some(record) = inner
+                .cleanups
+                .iter()
+                .find(|record| record.transaction_id == transaction.id)
+            {
+                return Ok(record.clone());
+            }
+            let record = RootCleanupRecord::new(transaction);
+            inner.cleanups.push(record.clone());
+            Ok(record)
+        }
+
+        fn cleanup_old_root(
+            &self,
+            _record: &RootCleanupRecord,
+        ) -> Result<OldRootCleanupOutcome, ConfirmationError> {
+            self.call("cleanup-old-root");
+            Ok(self.inner.lock().unwrap().cleanup_outcome.clone())
+        }
+
+        fn defer_old_root_cleanup(
+            &self,
+            record: &mut RootCleanupRecord,
+            blocked_subvolumes: Vec<String>,
+            diagnostic: &str,
         ) -> Result<(), ConfirmationError> {
-            self.call("delete-old-root");
+            self.call("defer-old-root-cleanup");
+            record
+                .record_deferred(blocked_subvolumes, diagnostic)
+                .map_err(cleanup_error)?;
+            let mut inner = self.inner.lock().unwrap();
+            let stored = inner
+                .cleanups
+                .iter_mut()
+                .find(|stored| stored.transaction_id == record.transaction_id)
+                .unwrap();
+            *stored = record.clone();
+            Ok(())
+        }
+
+        fn complete_old_root_cleanup(
+            &self,
+            record: &RootCleanupRecord,
+        ) -> Result<(), ConfirmationError> {
+            self.call("complete-old-root-cleanup");
+            self.inner
+                .lock()
+                .unwrap()
+                .cleanups
+                .retain(|stored| stored.transaction_id != record.transaction_id);
             Ok(())
         }
 
@@ -709,7 +1108,7 @@ mod tests {
     }
 
     #[test]
-    fn matching_boot_is_confirmed_before_old_root_is_deleted() {
+    fn matching_boot_is_terminal_before_old_root_cleanup() {
         let (backend, transaction) = FakeBackend::booted();
         assert_eq!(
             ConfirmationEngine::new(backend.clone())
@@ -735,7 +1134,7 @@ mod tests {
         let deleted = inner
             .calls
             .iter()
-            .position(|call| call == "delete-old-root")
+            .position(|call| call == "cleanup-old-root")
             .unwrap();
         assert!(committed < deleted);
         let lineage = inner
@@ -744,6 +1143,17 @@ mod tests {
             .position(|call| call == "lineage-Confirmed")
             .unwrap();
         assert!(lineage < deleted);
+        let removed = inner
+            .calls
+            .iter()
+            .position(|call| call == "remove-transaction")
+            .unwrap();
+        let grub = inner
+            .calls
+            .iter()
+            .position(|call| call == "regenerate-grub")
+            .unwrap();
+        assert!(removed < grub && grub < deleted);
     }
 
     #[test]
@@ -848,6 +1258,74 @@ mod tests {
             backend.inner.lock().unwrap().records[&transaction.target_deployment_id].state,
             DeploymentState::Ready
         );
+    }
+
+    #[test]
+    fn confirmed_rollback_releases_pending_slot_when_old_root_cleanup_is_deferred() {
+        let (backend, _transaction) = FakeBackend::booted();
+        backend.inner.lock().unwrap().cleanup_outcome = OldRootCleanupOutcome::Deferred {
+            blocked_subvolumes: vec!["var/lib/machines".into()],
+            diagnostic: "old-root descendant is not empty".into(),
+        };
+        assert_eq!(
+            ConfirmationEngine::new(backend.clone())
+                .reconcile()
+                .unwrap(),
+            ConfirmationOutcome::ConfirmedCleanupPending
+        );
+        let inner = backend.inner.lock().unwrap();
+        assert!(inner.transaction.is_none());
+        assert_eq!(inner.cleanups.len(), 1);
+        assert_eq!(
+            inner.cleanups[0].blocked_subvolumes,
+            vec!["var/lib/machines"]
+        );
+        assert_eq!(inner.cleanups[0].attempts, 1);
+    }
+
+    #[test]
+    fn deferred_cleanup_retries_without_a_rollback_transaction() {
+        let (backend, transaction) = FakeBackend::booted();
+        {
+            let mut inner = backend.inner.lock().unwrap();
+            inner.transaction = None;
+            inner.cleanups.push(RootCleanupRecord::new(&transaction));
+            inner.cleanup_outcome = OldRootCleanupOutcome::Removed;
+        }
+        assert_eq!(
+            ConfirmationEngine::new(backend.clone())
+                .reconcile()
+                .unwrap(),
+            ConfirmationOutcome::CleanupCompleted
+        );
+        assert!(backend.inner.lock().unwrap().cleanups.is_empty());
+    }
+
+    #[test]
+    fn command_failure_preserves_bounded_stderr_and_stage() {
+        let error = run_command(
+            Path::new("/bin/sh"),
+            &[
+                OsStr::new("-c"),
+                OsStr::new("printf 'Directory not empty\\n' >&2; exit 1"),
+            ],
+            "deleting the old root subvolume",
+        )
+        .unwrap_err();
+        assert!(error.message.contains("deleting the old root subvolume"));
+        assert!(error.message.contains("Directory not empty"));
+
+        let excessive = run_command(
+            Path::new("/bin/sh"),
+            &[
+                OsStr::new("-c"),
+                OsStr::new("dd if=/dev/zero bs=5000 count=1 1>&2 2>/dev/null; exit 1"),
+            ],
+            "testing bounded diagnostics",
+        )
+        .unwrap_err();
+        assert!(excessive.message.contains("exceeded 4096 bytes"));
+        assert!(excessive.message.len() < 512);
     }
 
     #[test]

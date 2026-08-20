@@ -73,6 +73,10 @@ hashes to the transaction. GRUB keeps selecting this
 trusted recovery image until initramfs or userspace durably completes or fails the
 transaction. Every synchronized root switch is recorded as a persistent checkpoint;
 completed and failed transactions are retained in `rollback-history` for diagnosis.
+Old-root deletion is a separate, durable cleanup operation. Empty descendant
+subvolumes are removed deepest-first; non-empty descendants are preserved in
+`cleanup-pending` records and never keep a confirmed rollback in the global
+pending transaction slot.
 The confirmation UI always states that Personal Files remain unchanged and that
 preparing a rollback arms an automatic 60-second restart countdown. Once armed,
 the application offers only an immediate restart; it never presents a defer option

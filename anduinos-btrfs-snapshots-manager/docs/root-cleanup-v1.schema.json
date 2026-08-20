@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "org.anduinos.btrfs-snapshots-manager.root-cleanup.v1",
+  "title": "Disk Snapshots Manager deferred old-root cleanup record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "transaction_id",
+    "old_root_name",
+    "created_at",
+    "updated_at",
+    "attempts",
+    "blocked_subvolumes",
+    "last_error"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "transaction_id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "old_root_name": {
+      "type": "string",
+      "pattern": "^@root\\.snapshots-manager-old-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "attempts": { "type": "integer", "minimum": 0 },
+    "blocked_subvolumes": {
+      "type": "array",
+      "maxItems": 256,
+      "items": { "type": "string", "minLength": 1, "maxLength": 4096 }
+    },
+    "last_error": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "maxLength": 4096
+    }
+  }
+}

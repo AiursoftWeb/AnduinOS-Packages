@@ -1951,6 +1951,10 @@ impl SnapshotsManagerHelper {
         let pending = TransactionStore::new(store_root)
             .load_pending()
             .map_err(|error| anyhow::anyhow!(error.message))?;
+        let pending_root_cleanups =
+            anduinos_recovery_engine::cleanup::RootCleanupStore::new(store_root)
+                .list()
+                .map_err(|error| anyhow::anyhow!(error.message))?;
         let deployments = DeploymentStore::new(store_root).discover();
         let personal = PersonalSnapshotEngine::default().discover();
         let package_counts = deployments
@@ -1975,6 +1979,7 @@ impl SnapshotsManagerHelper {
             "available": available,
             "store_root": store_root,
             "pending": pending,
+            "pending_root_cleanups": pending_root_cleanups,
             "deployment_count": deployments.deployments.len(),
             "deployments": deployments.deployments,
             "system_package_counts": package_counts,
@@ -2005,6 +2010,7 @@ impl SnapshotsManagerHelper {
         // These fields expose system-wide recovery history or internal layout
         // details and are not needed to browse the caller's own Personal Files.
         object.insert("pending".into(), serde_json::Value::Null);
+        object.insert("pending_root_cleanups".into(), serde_json::json!([]));
         object.insert("deployment_count".into(), serde_json::json!(0));
         object.insert("deployments".into(), serde_json::json!([]));
         object.insert("system_package_counts".into(), serde_json::json!({}));

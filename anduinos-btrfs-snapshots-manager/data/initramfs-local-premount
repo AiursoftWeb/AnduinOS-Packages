@@ -121,7 +121,8 @@ if [ "$staged_confirmation" -eq 1 ] && [ -f "$transaction" ]; then
 Description=Reconcile a Disk Snapshots Manager recovery using the trusted initramfs engine
 After=local-fs.target
 RequiresMountsFor=/.snapshots /boot
-ConditionPathExists=/.snapshots/anduinos-btrfs-snapshots-manager/transactions/pending-rollback.json
+ConditionPathExists=|/.snapshots/anduinos-btrfs-snapshots-manager/transactions/pending-rollback.json
+ConditionDirectoryNotEmpty=|/.snapshots/anduinos-btrfs-snapshots-manager/cleanup-pending
 
 [Service]
 Type=oneshot

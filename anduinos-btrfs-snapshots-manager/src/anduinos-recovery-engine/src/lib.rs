@@ -9,6 +9,7 @@
 pub mod apt_policy;
 pub mod boot;
 pub mod browse_lock;
+pub mod cleanup;
 pub mod confirmation;
 pub mod coordination;
 pub mod layout;
