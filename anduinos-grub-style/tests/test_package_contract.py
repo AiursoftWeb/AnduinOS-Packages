@@ -47,7 +47,7 @@ class GrubStylePackageContractTests(unittest.TestCase):
         )
         self.assertEqual(
             self.project.findtext(".//PackageVersion"),
-            "2.0.0-4+$(SuiteShortName)",
+            "2.0.2-1+$(SuiteShortName)",
         )
         self.assertEqual(self.project.findtext(".//Section"), "admin")
         self.assertEqual(
@@ -227,7 +227,7 @@ class GrubStylePackageContractTests(unittest.TestCase):
         core = ET.parse(CORE_PROJECT_FILE).getroot()
         self.assertEqual(
             core.findtext(".//PackageVersion"),
-            "2.0.0-5+$(SuiteShortName)",
+            "2.0.2-1+$(SuiteShortName)",
         )
         dependencies = [
             item

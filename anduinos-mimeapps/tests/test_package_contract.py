@@ -19,7 +19,7 @@ class MimeAppsPackageContractTests(unittest.TestCase):
     def test_package_revision_and_contract_test_are_wired(self):
         project = ET.parse(PROJECT_FILE).getroot()
         self.assertEqual(
-            "2.0.1-6+$(SuiteShortName)",
+            "2.0.2-1+$(SuiteShortName)",
             project.findtext(".//PackageVersion"),
         )
         command = project.find(".//PrebuildCommand")

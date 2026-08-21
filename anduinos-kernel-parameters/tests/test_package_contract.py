@@ -37,7 +37,7 @@ class KernelParametersPackageContractTests(unittest.TestCase):
     def test_package_targets_only_resolute_as_architecture_all(self):
         self.assertEqual(
             self.project.findtext(".//PackageVersion"),
-            "2.0.0-4+$(SuiteShortName)",
+            "2.0.2-1+$(SuiteShortName)",
         )
         self.assertEqual(self.project.findtext(".//TargetSuites"), "resolute-addon")
         self.assertEqual(self.project.findtext(".//TargetArchitectures"), "all")
@@ -82,7 +82,7 @@ class KernelParametersPackageContractTests(unittest.TestCase):
         desktop = ET.parse(DESKTOP_PROJECT_FILE).getroot()
         self.assertEqual(
             desktop.findtext(".//PackageVersion"),
-            "2.0.1-5+$(SuiteShortName)",
+            "2.0.2-1+$(SuiteShortName)",
         )
         matching_dependencies = desktop.findall(
             ".//Dependency[@Include='anduinos-kernel-parameters']"

@@ -11,6 +11,14 @@ verify-ci-package-needs:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH
 
+verify-release-versions:
+  stage: lint
+  script:
+    - python3 lib/verify-release-versions.py
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
 lint-all:
   stage: lint
   before_script:
