@@ -108,10 +108,13 @@ already be queued even when a module rebuild fails.
 ## Dependency ownership
 
 The toolkit directly depends on `mokutil`, `openssl`, `shim-signed`, `kmod`,
-`dkms`, and `pkexec`. Applications depend on the toolkit instead of invoking
-those tools themselves. Hardware-facing applications retain their own direct
+and `pkexec`. DKMS is suggested rather than required: MOK enrollment and the
+persistent signing configuration remain useful before any third-party module
+is installed. Applications depend on the toolkit instead of invoking those
+tools themselves. Hardware-facing applications retain their own direct
 dependencies on `ubuntu-drivers-common` and `pciutils`.
 
-Shipping working DKMS necessarily ships `gcc`, `make`, `dpkg-dev`, `binutils`,
-and `patch`. The ISO build explicitly rejects the optional `build-essential`
-recommendation so that the unrelated C++ toolchain is not included.
+When DKMS is present, the toolkit rebuilds and reinstalls each registered
+module for the running kernel so the new build is signed by the configured
+MOK. When DKMS is absent or has no installed module for that kernel, the module
+step is reported as skipped without weakening the firmware trust operation.

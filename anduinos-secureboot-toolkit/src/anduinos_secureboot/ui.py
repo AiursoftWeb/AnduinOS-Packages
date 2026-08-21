@@ -276,7 +276,10 @@ def create_secure_boot_page(
         repair_button.set_visible(
             secure_boot.enabled
             and secure_boot.enrolled
-            and (not dkms.ready or not signing_configuration_ready)
+            and (
+                not signing_configuration_ready
+                or (secure_boot.dkms_available and not dkms.ready)
+            )
         )
         repair_button.set_label(
             _("Repair Automatic DKMS Signing")
