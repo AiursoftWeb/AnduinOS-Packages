@@ -22,9 +22,19 @@ class ContractTests(unittest.TestCase):
     def test_package_owns_the_secure_boot_runtime_dependencies(self):
         project = ET.parse(ROOT / "anduinos-secureboot-toolkit.aosproj").getroot()
         dependencies = {item.get("Include") for item in project.iter("Dependency")}
+        suggestions = {item.get("Include") for item in project.iter("Suggest")}
         self.assertTrue(
-            {"mokutil", "openssl", "shim-signed", "kmod", "dkms", "pkexec"}
+            {"mokutil", "openssl", "shim-signed", "kmod", "pkexec"}
             <= dependencies
+        )
+        self.assertNotIn("dkms", dependencies)
+        self.assertIn("dkms", suggestions)
+
+    def test_package_version_carries_the_optional_dkms_transition(self):
+        project = ET.parse(ROOT / "anduinos-secureboot-toolkit.aosproj").getroot()
+        self.assertEqual(
+            "2.0.2-2+$(SuiteShortName)",
+            project.findtext(".//PackageVersion"),
         )
 
     def test_helper_is_fixed_and_does_not_evaluate_shell(self):
@@ -73,6 +83,10 @@ class ContractTests(unittest.TestCase):
             and isinstance(node.ctx, ast.Store)
         ]
         self.assertEqual(len(stores), 1)
+
+    def test_ui_never_offers_module_repair_without_dkms(self):
+        source = (ROOT / "src/anduinos_secureboot/ui.py").read_text(encoding="utf-8")
+        self.assertIn("secure_boot.dkms_available and not dkms.ready", source)
 
 
 if __name__ == "__main__":

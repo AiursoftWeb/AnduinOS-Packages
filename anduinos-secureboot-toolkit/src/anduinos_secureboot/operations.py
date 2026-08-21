@@ -7,6 +7,8 @@ import fcntl
 import json
 import os
 from pathlib import Path
+import re
+import shutil
 import subprocess
 import tempfile
 from typing import Callable, Sequence
@@ -56,6 +58,22 @@ class OperationResult:
 
 
 Run = Callable[..., subprocess.CompletedProcess[str]]
+CommandAvailable = Callable[[str], bool]
+
+
+@dataclass(frozen=True, order=True)
+class DkmsTarget:
+    module: str
+    version: str
+    kernel: str
+    architecture: str
+
+
+_DKMS_STATUS = re.compile(
+    r"^(?P<module>[^/,\s]+)/(?P<version>[^,\s]+),\s*"
+    r"(?P<kernel>[^,\s]+),\s*(?P<architecture>[^:\s]+):\s*"
+    r"(?P<state>[a-z-]+)(?:\s.*)?$"
+)
 
 
 class CallableRunner(Runner):
@@ -89,6 +107,113 @@ def run_command(
 
 def _detail(result: subprocess.CompletedProcess[str]) -> str:
     return (result.stderr or result.stdout).strip()
+
+
+def command_available(command: str) -> bool:
+    return shutil.which(command) is not None
+
+
+def parse_installed_dkms_targets(
+    output: str, kernel_release: str
+) -> tuple[DkmsTarget, ...]:
+    """Parse installed modules for one kernel from C-locale `dkms status`."""
+
+    targets: set[DkmsTarget] = set()
+    for raw_line in output.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        match = _DKMS_STATUS.fullmatch(line)
+        if match is None:
+            if re.search(r":\s*installed(?:\s|$)", line):
+                raise ValueError(f"unrecognized installed DKMS status: {line}")
+            continue
+        if match.group("state") != "installed":
+            continue
+        target = DkmsTarget(
+            match.group("module"),
+            match.group("version"),
+            match.group("kernel"),
+            match.group("architecture"),
+        )
+        if target.kernel == kernel_release:
+            targets.add(target)
+    return tuple(sorted(targets))
+
+
+def _target_label(target: DkmsTarget) -> str:
+    return (
+        f"{target.module}/{target.version} for "
+        f"{target.kernel}/{target.architecture}"
+    )
+
+
+def _rebuild_installed_dkms_modules(
+    result: OperationResult,
+    run: Run,
+    *,
+    kernel_release: str,
+    available: CommandAvailable,
+) -> None:
+    if not available("dkms"):
+        result.steps["modules_rebuilt"] = StepResult(
+            "skipped", "DKMS is not installed; no registered modules were rebuilt"
+        )
+        return
+
+    status = run(["dkms", "status", "-k", kernel_release], timeout=120)
+    if status.returncode:
+        result.steps["modules_rebuilt"] = StepResult("failed", _detail(status))
+        return
+    try:
+        targets = parse_installed_dkms_targets(status.stdout, kernel_release)
+    except ValueError as error:
+        result.steps["modules_rebuilt"] = StepResult("failed", str(error))
+        return
+    if not targets:
+        result.steps["modules_rebuilt"] = StepResult(
+            "skipped", f"No installed DKMS modules target kernel {kernel_release}"
+        )
+        return
+
+    rebuilt: list[str] = []
+    failures: list[str] = []
+    for target in targets:
+        common = [
+            "-m",
+            target.module,
+            "-v",
+            target.version,
+            "-k",
+            target.kernel,
+            "-a",
+            target.architecture,
+        ]
+        built = run(["dkms", "build", "--force", *common], timeout=1800)
+        if built.returncode:
+            failures.append(
+                f"build {_target_label(target)}: "
+                f"{_detail(built) or f'exit status {built.returncode}'}"
+            )
+            continue
+        installed = run(["dkms", "install", "--force", *common], timeout=1800)
+        if installed.returncode:
+            failures.append(
+                f"install {_target_label(target)}: "
+                f"{_detail(installed) or f'exit status {installed.returncode}'}"
+            )
+            continue
+        rebuilt.append(_target_label(target))
+
+    if failures:
+        detail = "; ".join(failures)
+        if rebuilt:
+            detail = f"rebuilt {', '.join(rebuilt)}; failed: {detail}"
+        result.steps["modules_rebuilt"] = StepResult("failed", detail)
+        return
+    result.steps["modules_rebuilt"] = StepResult(
+        "success", f"Rebuilt and reinstalled {', '.join(rebuilt)}"
+    )
 
 
 def _write_signing_config(path: Path = DKMS_CONFIG) -> None:
@@ -128,6 +253,9 @@ def prepare(
     private_key: Path = MOK_PRIVATE_KEY,
     certificate: Path = MOK_CERTIFICATE,
     config: Path = DKMS_CONFIG,
+    *,
+    kernel_release: str | None = None,
+    available: CommandAvailable = command_available,
 ) -> OperationResult:
     result = OperationResult("prepare")
     if not _firmware_enforces_secure_boot(result, run):
@@ -171,9 +299,11 @@ def prepare(
             result.steps["enrollment_queued"] = StepResult("success")
         result.reboot_required = True
 
-    rebuilt = run(["dkms", "autoinstall"])
-    result.steps["modules_rebuilt"] = StepResult(
-        "success" if rebuilt.returncode == 0 else "failed", _detail(rebuilt)
+    _rebuild_installed_dkms_modules(
+        result,
+        run,
+        kernel_release=kernel_release or os.uname().release,
+        available=available,
     )
     return result
 
@@ -183,6 +313,9 @@ def repair_dkms(
     private_key: Path = MOK_PRIVATE_KEY,
     certificate: Path = MOK_CERTIFICATE,
     config: Path = DKMS_CONFIG,
+    *,
+    kernel_release: str | None = None,
+    available: CommandAvailable = command_available,
 ) -> OperationResult:
     result = OperationResult("repair-dkms")
     if not _firmware_enforces_secure_boot(result, run):
@@ -199,9 +332,11 @@ def repair_dkms(
             "failed", "MOK key pair is missing"
         )
         return result
-    rebuilt = run(["dkms", "autoinstall", "--force"])
-    result.steps["modules_rebuilt"] = StepResult(
-        "success" if rebuilt.returncode == 0 else "failed", _detail(rebuilt)
+    _rebuild_installed_dkms_modules(
+        result,
+        run,
+        kernel_release=kernel_release or os.uname().release,
+        available=available,
     )
     return result
 
