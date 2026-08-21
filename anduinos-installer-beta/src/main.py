@@ -107,7 +107,7 @@ class InstallerApplication(Adw.Application):
             title_message = (
                 N_("AnduinOS Installer (Development)")
                 if self.shared_state["development_mode"]
-                else N_("AnduinOS Installer (Beta)")
+                else N_("AnduinOS Installer")
             )
             title = _(title_message, lang)
             win = Adw.ApplicationWindow(application=self,

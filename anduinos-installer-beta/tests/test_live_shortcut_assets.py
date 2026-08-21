@@ -111,6 +111,33 @@ class LiveShortcutAssetTests(unittest.TestCase):
             }
             self.assertEqual(actual, expected)
 
+    def test_release_ui_has_no_beta_qualifier(self):
+        launcher = (
+            PACKAGE / "assets/anduinos-installer-beta.desktop"
+        ).read_text(encoding="utf-8")
+        names = [
+            line.split("=", 1)[1]
+            for line in launcher.splitlines()
+            if line == "Name=AnduinOS Installer" or line.startswith("Name[")
+        ]
+        self.assertEqual(len(names), 29)
+        self.assertTrue(
+            all("(" not in name and "（" not in name for name in names)
+        )
+
+        main = (PACKAGE / "src/main.py").read_text(encoding="utf-8")
+        self.assertIn('else N_("AnduinOS Installer")', main)
+        self.assertNotIn('N_("AnduinOS Installer (Beta)")', main)
+
+        project = (
+            PACKAGE / "anduinos-installer-beta.aosproj"
+        ).read_text(encoding="utf-8")
+        self.assertIn(
+            "<PackageVersion>2.0.2-2+$(SuiteShortName)</PackageVersion>",
+            project,
+        )
+        self.assertNotIn("installer (beta)", project.lower())
+
     def test_welcome_page_uses_its_packaged_illustration(self):
         pages = (PACKAGE / "src/pages.py").read_text()
         self.assertIn(
