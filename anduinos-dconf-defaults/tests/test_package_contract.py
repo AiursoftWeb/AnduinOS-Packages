@@ -1,6 +1,6 @@
-import ast
 import configparser
 from pathlib import Path
+import re
 import unittest
 
 
@@ -15,9 +15,14 @@ class DconfDefaultsPackageContractTests(unittest.TestCase):
             encoding="utf-8",
         )
 
-        columns, rows = ast.literal_eval(
-            parser["org/gnome/Ptyxis"]["window-size"]
+        value = parser["org/gnome/Ptyxis"]["window-size"]
+        typed_size = re.fullmatch(
+            r"\(uint32 ([1-9][0-9]*), uint32 ([1-9][0-9]*)\)",
+            value,
         )
+        self.assertIsNotNone(typed_size)
+        assert typed_size is not None
+        columns, rows = map(int, typed_size.groups())
 
         self.assertGreaterEqual(columns, 1)
         self.assertGreaterEqual(rows, 1)
