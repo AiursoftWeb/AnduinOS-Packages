@@ -1,313 +1,779 @@
+#
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/window.rs:76
 msgid "About"
 msgstr "Про додаток"
 
+#: src/views/swap_view.rs:300
 msgid "Accept threshold percent"
 msgstr "Поріг прийняття (%)"
 
+#: src/views/zram_view.rs:247
 msgid "Advanced options"
 msgstr "Додаткові параметри"
 
+#: src/views/stress_test_view.rs:225 src/views/swap_view.rs:225
 msgid "Advanced settings"
 msgstr "Розширені налаштування"
 
+#: src/views/zram_view.rs:348
 msgid "Algorithm"
 msgstr "Алгоритм"
 
+#: src/views/swap_view.rs:334
 msgid "Apply Settings"
 msgstr "Застосувати налаштування"
 
+#: src/views/swap_view.rs:667
 msgid "Applying settings…"
 msgstr "Застосувати налаштування"
 
+#: src/views/dashboard_view.rs:370
 msgid "Auth needed"
 msgstr "Потрібна автентифікація"
 
+#: src/views/dashboard_view.rs:413
 msgid "Buf"
 msgstr "Буфер"
 
+#: src/views/dashboard_view.rs:390
 msgid "Buffers"
 msgstr "Буфери"
 
+#: src/views/dashboard_view.rs:414
 msgid "Cache"
 msgstr "Кеш"
 
+#: src/views/dashboard_view.rs:395
 msgid "Cached"
 msgstr "В кеші"
 
+#: src/views/zram_view.rs:378
 msgid "Cancel"
 msgstr "Скасувати"
 
+#: src/views/stress_test_view.rs:318
 msgid "Cancel Test"
 msgstr "Скасувати"
 
+#: src/views/stress_test_view.rs:601
 msgid "Cancelled by user."
 msgstr "Скасовано користувачем."
 
+#: src/views/dashboard_view.rs:193
 msgid "Channels"
 msgstr "Канали"
 
+#: src/views/stress_test_view.rs:613
 msgid "Completed successfully — memory pressure test passed."
 msgstr "Успішно завершено — тест пам’яті пройдено."
 
+#: src/views/swap_view.rs:183
 msgid ""
 "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
 "Zswap, not both."
 msgstr ""
-"Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
-"Zswap, not both."
+"Стискає сторінки підкачки в пулі оперативної пам’яті — швидше за дискову "
+"підкачку. Використовуйте Zram або Zswap, але не обидва."
 
+#: src/views/zram_view.rs:73
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "Стиснене блок-пристрої оперативної пам'яті — швидкий обмін у пам'яті"
 
+#: src/views/swap_view.rs:266
 msgid "Compression algorithm"
 msgstr "Алгоритм стиснення"
 
+#: src/views/zram_view.rs:379
 msgid "Create"
 msgstr "Створити"
 
+#: src/views/zram_view.rs:110 src/views/zram_view.rs:190
 msgid "Create Zram Device"
 msgstr "Створити пристрій Zram"
 
+#: src/window.rs:110
 msgid "Dashboard"
 msgstr "Панель керування"
 
+#: src/views/zram_view.rs:571
 msgid "Destroy Zram Device"
 msgstr "Знищити пристрій Zram"
 
+#: src/views/zram_view.rs:439
 msgid "Device Created"
 msgstr "Пристрій створено"
 
+#: src/views/dashboard_view.rs:503
 msgid "Disabled"
 msgstr "Вимкнено"
 
+#: src/views/swap_view.rs:521
 msgid "Disabling Zswap..."
 msgstr "Вимкнення підкачки…"
 
-msgid "Disabling swap will break hibernation. Continue?"
-msgstr "Вимкнення підкачки порушить режим гібернації. Продовжити?"
-
+#: src/views/swap_view.rs:577
 msgid "Disabling swap…"
 msgstr "Вимкнення підкачки…"
 
-msgid "Disk Swap"
-msgstr "Диск віртуальної пам’яті"
-
+#: src/views/swap_view.rs:97
 msgid "Disk Swap Configuration"
 msgstr "Налаштування віртуальної пам’яті"
 
+#: src/views/dashboard_view.rs:614
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
 msgstr ""
-"Disk swap is active with memory compression — your system is well-protected "
-"against memory pressure."
+"Дискова підкачка активна разом із стисненням пам’яті — ваша система надійно "
+"захищена від тиску на оперативну пам’ять."
 
+#: src/views/stress_test_view.rs:605 src/views/stress_test_view.rs:617
 msgid "Duration:"
 msgstr "Тривалість:"
 
+#: src/views/dashboard_view.rs:609
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
 msgstr ""
-"Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
-"swap and dramatically reduces I/O under memory pressure."
+"Увімкніть Zram для швидкого стиснення підкачки в оперативній пам’яті — це в "
+"10 разів швидше за дискову підкачку і значно зменшує операції введення-"
+"виведення за тиску на пам'ять."
 
+#: src/views/swap_view.rs:519
 msgid "Enabling Zswap..."
 msgstr "Увімкнення підкачки…"
 
+#: src/views/swap_view.rs:579
 msgid "Enabling swap…"
 msgstr "Увімкнення підкачки…"
 
+#: src/views/stress_test_view.rs:609 src/views/swap_view.rs:505
+#: src/views/zram_view.rs:182
 msgid "Error"
 msgstr "Помилка"
 
+#: src/views/dashboard_view.rs:400 src/views/dashboard_view.rs:415
 msgid "Free"
 msgstr "Вільно"
 
+#: src/views/stress_test_view.rs:250 src/views/stress_test_view.rs:251
+#: src/views/stress_test_view.rs:401
 msgid "Growth speed"
 msgstr "Швидкість зростання"
 
+#: src/views/dashboard_view.rs:269
 msgid "Hibernation"
 msgstr "Тіньовий режим"
 
+#: src/views/swap_view.rs:597 src/views/swap_view.rs:704
 msgid "Hibernation Warning"
 msgstr "Попередження про вхід у сплячий режим"
 
+#: src/views/dashboard_view.rs:517 src/views/swap_view.rs:810
 msgid "Inactive"
 msgstr "Неактивний"
 
+#: src/views/swap_view.rs:156 src/views/swap_view.rs:170
 msgid "Loading..."
 msgstr "Завантаження..."
 
+#: src/views/stress_test_view.rs:232
 msgid "Maximum hold time"
 msgstr "Максимальний час утримання"
 
+#: src/views/swap_view.rs:282
 msgid "Maximum pool percent"
 msgstr "Максимальний відсоток пулу"
 
+#: src/views/dashboard_view.rs:134
 msgid "Memory Overview"
 msgstr "Огляд пам’яті"
 
+#: src/views/zram_view.rs:119
 msgid "No Zram Devices"
 msgstr "Пристрої Zram"
 
+#: src/views/dashboard_view.rs:456
 msgid "No device"
 msgstr "Немає пристрою"
 
+#: src/views/dashboard_view.rs:592
 msgid "No disk swap detected"
 msgstr "Не виявлено використання віртуальної пам’яті"
 
+#: src/views/dashboard_view.rs:608
 msgid "No memory acceleration enabled"
 msgstr "Прискорення пам’яті не увімкнено"
 
+#: src/views/dashboard_view.rs:546
 msgid "None"
 msgstr "Немає"
 
+#: src/views/dashboard_view.rs:530 src/views/dashboard_view.rs:538
 msgid "Off"
 msgstr "Вимкнено"
 
+#: src/views/dashboard_view.rs:537
 msgid "On"
 msgstr "Увімкнено"
 
+#: src/views/swap_view.rs:301
 msgid ""
 "Only store pages that compress to ≤ this % of original. Higher = more pages "
 "cached. Recommended: 90%"
 msgstr ""
-"Only store pages that compress to ≤ this % of original. Higher = more pages "
-"cached. Recommended: 90%"
+"Зберігати лише сторінки, які стискаються до ≤ цього % від оригіналу. Вище = "
+"більше сторінок у кеші. Рекомендовано: 90%"
 
+#: src/views/dashboard_view.rs:613
 msgid "Optimal memory configuration"
 msgstr "Оптимальна конфігурація пам’яті"
 
+#: src/views/stress_test_view.rs:602 src/views/stress_test_view.rs:614
 msgid "Peak allocated:"
 msgstr "Пікове виділення:"
 
+#: src/views/zram_view.rs:367
 msgid "Priority"
 msgstr "Пріоритет"
 
+#: src/views/stress_test_view.rs:209
 msgid "RAM"
 msgstr "Оперативна пам’ять"
 
+#: src/views/zram_view.rs:554
 msgid "Remove"
 msgstr "Видалити"
 
+#: src/views/stress_test_view.rs:360
 msgid "Run Again"
 msgstr "Запустити знову"
 
+#: src/views/stress_test_view.rs:279
 msgid "Run Stress Test"
 msgstr "Запустити стрес-тест"
 
+#: src/views/swap_view.rs:307
 msgid "Shrinker"
 msgstr "Зменшення пам’яті"
 
+#: src/views/zram_view.rs:269
 msgid "Size (MiB)"
 msgstr "Розмір (МіБ)"
 
+#: src/views/dashboard_view.rs:192
 msgid "Speed"
 msgstr "Швидкість"
 
+#: src/views/stress_test_view.rs:100 src/window.rs:114
 msgid "Stress Test"
 msgstr "Стрес-тест"
 
+#: src/views/dashboard_view.rs:252 src/views/dashboard_view.rs:266
+#: src/window.rs:112
 msgid "Swap"
 msgstr "Обмінна пам'ять"
 
+#: src/progress_dialog.rs:24 src/window.rs:59
 msgid "Swap Control"
 msgstr "Керування віртуальною пам’яттю"
 
-msgid "Swap file size"
-msgstr "Розмір файлу віртуальної пам’яті"
-
+#: src/views/swap_view.rs:147
 msgid "Swap usage"
 msgstr "Використання віртуальної пам’яті"
 
+#: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
+#: src/views/swap_view.rs:677
 msgid "Swappiness"
 msgstr "Свіпність"
 
+#: src/views/dashboard_view.rs:603
 msgid "Swappiness not optimized for Zram"
 msgstr "Swappiness не оптимізовано для Zram"
 
+#: src/views/stress_test_view.rs:206
 msgid "Target Pressure"
 msgstr "Цільовий тиск"
 
+#: src/views/stress_test_view.rs:345
 msgid "Test Complete"
 msgstr "Тест завершено"
 
+#: src/views/dashboard_view.rs:190
 msgid "Total RAM"
 msgstr "Загальний обсяг оперативної пам'яті"
 
+#: src/views/dashboard_view.rs:191
 msgid "Type"
 msgstr "Тип"
 
+#: src/views/dashboard_view.rs:385 src/views/dashboard_view.rs:412
 msgid "Used"
 msgstr "Використано"
 
+#: src/views/dashboard_view.rs:593
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
 msgstr ""
-"When RAM is full the kernel may kill applications. Enable disk swap for a "
-"reliable safety net."
+"Якщо оперативна пам'ять заповнена, ядро може завершити роботу додатків. "
+"Увімкніть дискову підкачку для надійного захисту."
 
+#: src/views/dashboard_view.rs:244 src/views/dashboard_view.rs:268
+#: src/window.rs:111
 msgid "Zram"
 msgstr "Zram"
 
+#: src/views/zram_view.rs:66
 msgid "Zram Devices"
 msgstr "Пристрої Zram"
 
+#: src/views/dashboard_view.rs:597
 msgid "Zram and Zswap are both active"
 msgstr "Zram і Zswap увімкнено одночасно"
 
+#: src/views/dashboard_view.rs:598
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
+"pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
+" one of them."
 msgstr ""
-"Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
+"Zram і Zswap є взаємовиключними — кожен створює власний пул стисненої "
+"оперативної пам’яті. Одночасна робота обох марнує ресурси процесора та може "
+"викликати серйозне «дрібнення» пам’яті. Вимкніть один із них."
 
+#: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
+#: src/views/swap_view.rs:185 src/views/swap_view.rs:686
 msgid "Zswap"
 msgstr "Zswap"
 
+#: src/views/stress_test_view.rs:212
 msgid "default"
 msgstr "типове"
 
+#: src/views/swap_view.rs:267
 msgid ""
-"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires "
-"zswap restart."
+"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires"
+" zswap restart."
 msgstr ""
 "lz4 = швидко (рекомендовано), zstd = найкращий коефіцієнт стиснення, lzo = "
 "застарілий. Зміна потребує перезапуску зсвопу."
 
+#: src/views/stress_test_view.rs:211
 msgid "range"
 msgstr "діапазон"
 
+#: src/views/stress_test_view.rs:233
 msgid "seconds"
 msgstr "секунди"
 
+#: src/views/swap_view.rs:118
 msgid "with Zram"
 msgstr "при активному Zram"
 
+#: src/views/dashboard_view.rs:154
 msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr ""
 "при активному Zram — надавати пріоритет швидкій стисненій оперативній "
 "пам’яті замість кешу на диску"
 
-#~ msgid "<i>Recommended swappiness: {0} ({1})</i>"
-#~ msgstr "<i>Рекомендоване значення swappiness: {0} ({1})</i>"
+#: src/views/dashboard_view.rs:552
+msgid "Ready"
+msgstr "Готово"
+
+#: src/views/dashboard_view.rs:554
+msgid "Unsupported"
+msgstr "Непідтримується"
+
+#: src/views/dashboard_view.rs:556
+msgid "Not configured"
+msgstr "Не налаштовано"
+
+#: src/views/dashboard_view.rs:558
+msgid "Resume target missing"
+msgstr "Немає цілі відновлення"
+
+#: src/views/dashboard_view.rs:560
+msgid "Resume target inactive"
+msgstr "Неактивна ціль відновлення"
+
+#: src/views/dashboard_view.rs:562
+msgid "Swap too small"
+msgstr "Занадто мала підкачка"
+
+#: src/views/dashboard_view.rs:564
+msgid "Not ready"
+msgstr "Не готово"
+
+#: src/views/swap_view.rs:104
+msgid ""
+"Review installer-managed swap partitions and manage the legacy supplementary"
+" swap file"
+msgstr ""
+"Перегляньте розділи підкачки, створені засобом встановлення, та керуйте "
+"застарілим додатковим файлом підкачки"
+
+#: src/views/swap_view.rs:155
+msgid "Swap partition"
+msgstr "Розділ підкачки"
+
+#: src/views/swap_view.rs:169
+msgid "Additional swap file"
+msgstr "Додатковий файл підкачки"
+
+#: src/views/swap_view.rs:195
+msgid "Additional swap file size"
+msgstr "Розмір додаткового файлу підкачки"
+
+#: src/views/swap_view.rs:196
+msgid "0 GiB means no supplementary swap file"
+msgstr "0 ГіБ означає відсутність додаткового файлу підкачки"
+
+#: src/views/swap_view.rs:598
+msgid ""
+"This swap file is the configured resume target. Disabling it will break "
+"hibernation. Continue?"
+msgstr ""
+"Цей файл підкачки є ціллю відновлення зі сплячого режиму. Вимкнення призведе"
+" до несправності сплячого режиму. Продовжити?"
+
+#: src/views/swap_view.rs:705
+msgid ""
+"This swap file is the configured resume target. Its physical offset would "
+"change, so resize is blocked until hibernation is disabled."
+msgstr ""
+"Цей файл підкачки є ціллю відновлення. Фізичне зміщення зміниться, тому "
+"збільшення розміру заблоковано, доки сплячий режим не буде вимкнено."
+
+#: src/views/swap_view.rs:722
+msgid "unknown"
+msgstr "невідомо"
+
+#: src/views/swap_view.rs:738
+msgid "No swap partition — a legacy swap file can be managed below"
+msgstr ""
+"Розділ підкачки відсутній — застарілий файл підкачки можна керувати нижче"
+
+#: src/views/swap_view.rs:207
+msgid "Remove incompatible file"
+msgstr "Видалити несумісний файл"
+
+#: src/views/swap_view.rs:377
+msgid "Removing incompatible swap file…"
+msgstr "Видалення несумісного файлу підкачки…"
+
+#: src/views/swap_view.rs:790
+msgid "Present but inactive"
+msgstr "Створено, але неактивно"
+
+#: src/views/swap_view.rs:792
+msgid "Not created — choose a size below to add one"
+msgstr "Не створено — оберіть розмір нижче, щоб додати"
+
+#: src/views/swap_view.rs:794
+msgid "Not created — at least 20 GiB must remain free"
+msgstr "Не створено — має залишатися вільними щонайменше 20 ГіБ"
+
+#: src/views/swap_view.rs:830
+msgid ""
+"Resize is locked because this file is the configured hibernation resume "
+"target"
+msgstr ""
+"Зміна розміру заблокована, оскільки цей файл є ціллю відновлення зі сплячого"
+" режиму"
+
+#: src/views/swap_view.rs:832
+msgid ""
+"Optional compatibility file; 0 GiB removes it and 20 GiB remains reserved "
+"for the system"
+msgstr ""
+"Необов'язковий файл сумісності; 0 ГіБ — його видалення, 20 ГіБ залишається "
+"зарезервованими для системи"
+
+#: src/views/swap_view.rs:834
+msgid ""
+"Disabled on Btrfs because a root-subvolume swap file would prevent Disk "
+"Snapshots Manager recovery points"
+msgstr ""
+"Вимкнено на Btrfs, оскільки файл підкачки у кореневому підтомі завадить "
+"точкам відновлення у Керувнику диск-знімків"
+
+#: src/views/zram_view.rs:120
+msgid ""
+"Create a compressed RAM swap device for faster memory pressure handling."
+msgstr ""
+"Створіть пристрій стисненої підкачки в оперативній пам’яті для швидшого "
+"оброблення тиску на пам’ять."
+
+#: src/views/stress_test_view.rs:171
+msgid "Ensure important work is saved before running this test."
+msgstr "Переконайтеся, що важливі дані збережено, перед запуском цього тесту."
+
+#: src/views/swap_view.rs:283
+msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
+msgstr ""
+"Макс. % оперативної пам’яті, яку може займати стиснений пул. Рекомендовано: "
+"20%"
+
+#: src/views/dashboard_view.rs:141
+msgid "Real-time RAM, swap, and compression subsystem status"
+msgstr ""
+"Статус підсистем оперативної пам’яті, віртуальної пам’яті та стиснення в "
+"реальному часі"
+
+#: src/views/swap_view.rs:308
+msgid "Reclaim pool pages under memory pressure. Recommended: ON"
+msgstr "Повернення сторінок пулу за тиском пам’яті. Рекомендовано: УВІМК"
+
+#: src/views/stress_test_view.rs:107
+msgid "Simulate memory pressure to test swap and OOM behavior"
+msgstr ""
+"Емуляція тиску пам’яті для тестування поведінки віртуальної пам’яті та OOM"
+
+#: src/views/stress_test_view.rs:161
+msgid "Warning: This will consume system memory and may cause instability"
+msgstr ""
+"Увага: це споживатиме системну пам'ять і може викликати нестабільність"
+
+#: src/views/zram_view.rs:440
+msgid "Zram configuration saved. The device will be created shortly."
+msgstr "Конфігурацію Zram збережено. Пристрій буде створено найближчим часом."
+
+#: src/views/dashboard_view.rs:165 src/views/swap_view.rs:128
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Рекомендоване значення swappiness: {0} ({1})</i>"
+
+#: src/views/zram_view.rs:90
+msgid "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
+msgstr "<i>Рекомендовано: {0} МБ, lz4, пріоритет 100 (для {1} ГіБ ОЗП)</i>"
+
+#: src/views/swap_view.rs:772
+msgid "Active — {0} GiB used / {1} GiB total"
+msgstr "Активно — використано {0} ГіБ / всього {1} ГіБ"
+
+#: src/swap/exec.rs:26 src/swap/exec.rs:68
+msgid "Authentication cancelled"
+msgstr "Автентифікацію скасовано"
+
+#: src/swap/swapfile.rs:113
+msgid "Cannot inspect the root filesystem"
+msgstr "Не вдалося перевірити кореневу файлову систему"
+
+#: src/swap/swapfile.rs:108
+msgid "Cannot inspect the root filesystem: {0}"
+msgstr "Не вдалося іспитувати кореневу файлову систему: {0}"
+
+#: src/swap/sysctl.rs:79
+msgid "Cannot parse MemTotal: {0}"
+msgstr "Не вдалося обробити MemTotal: {0}"
+
+#: src/swap/sysctl.rs:43
+msgid "Cannot parse swappiness: {0}"
+msgstr "Не вдалося обробити swappiness: {0}"
+
+#: src/swap/zswap.rs:59
+msgid "Cannot parse {0} as u8: {1}"
+msgstr "Не вдалося обробити {0} як u8: {1}"
+
+#: src/swap/sysctl.rs:70
+msgid "Cannot read /proc/meminfo: {0}"
+msgstr "Не вдалося прочитати /proc/meminfo: {0}"
+
+#: src/swap/swapfile.rs:39
+msgid "Cannot read /proc/swaps: {0}"
+msgstr "Не вдалося прочитати /proc/swaps: {0}"
+
+#: src/swap/sysctl.rs:36 src/swap/zswap.rs:47
+msgid "Cannot read {0}: {1}"
+msgstr "Не вдалося прочитати {0}: {1}"
+
+#: src/swap/exec.rs:18 src/swap/exec.rs:52
+msgid "Failed to execute pkexec: {0}"
+msgstr "Не вдалося виконати pkexec: {0}"
+
+#: src/swap/persist.rs:31
+msgid "Failed to remove legacy unit {0}: {1}"
+msgstr "Не вдалося видалити застарілий модуль {0}: {1}"
+
+#: src/swap/sysctl.rs:129
+msgid "Failed to set swappiness: {0} / {1}"
+msgstr "Не вдалося встановити swappiness: {0} / {1}"
+
+#: src/swap/exec.rs:61
+msgid "Failed to wait on pkexec: {0}"
+msgstr "Не вдалося зачекати на pkexec: {0}"
+
+#: src/i18n.rs:24
+msgid "Hello {0}, you have {1} messages"
+msgstr "Вітаю, {0}, у вас {1} повідомлень"
+
+#: src/views/swap_view.rs:234
+msgid ""
+"How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
+" {0})"
+msgstr ""
+"Наскільки агресивно ядро виконує підкачку — менше значення = довше в "
+"оперативній пам'яті (рекомендовано: {0})"
+
+#: src/views/swap_view.rs:231
+msgid ""
+"How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
+"fast compressed RAM over disk cache (recommended: {0})"
+msgstr ""
+"Наскільки агресивно ядро виконує підкачку — при активному Zram встановіть "
+"значення {0}, щоб надавати пріоритет швидкій стисненій оперативній пам’яті "
+"замість кешу на диску (рекомендовано: {0})"
+
+#: src/views/dashboard_view.rs:483
+msgid "Idle ({0} GiB available)"
+msgstr "Неактивний ({0} GiB доступно)"
+
+#: src/views/zram_view.rs:531
+msgid "Idle — {0} MiB available"
+msgstr "Неактивний — доступно {0} МБ"
+
+#: src/swap/sysctl.rs:83
+msgid "MemTotal not found"
+msgstr "MemTotal не знайдено"
+
+#: src/views/swap_view.rs:786
+msgid "Present but inactive — activation is disabled on {0}"
+msgstr "Присутній, але неактивний — активацію вимкнено на {0}"
+
+#: src/views/stress_test_view.rs:676
+msgid ""
+"RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
+"Swap used: {3} GiB"
+msgstr ""
+"ОЗП: всього {0} ГіБ · використано {1} ГіБ · доступно {2} ГіБ\n"
+"Використано підкачки: {3} ГіБ"
+
+#: src/views/swap_view.rs:673
+msgid "Resize"
+msgstr "Змінити розмір"
+
+#: src/views/swap_view.rs:837
+msgid "Swap file resizing is unsupported on {0}"
+msgstr "Зміна розміру файлу підкачки не підтримується на {0}"
+
+#: src/progress_dialog.rs:58
+msgid "Task panicked: {0}"
+msgstr "Завдання завершилося панікою: {0}"
+
+#: src/swap/persist.rs:74
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zram changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zram from this GUI."
+msgstr ""
+"Пакет 'anduinos-swap-config' не встановлено.\n"
+"\n"
+"Зміни Zram не можна застосувати або зберегти без нього.\n"
+"Встановіть 'anduinos-swap-config', щоб керувати zram із цього GUI."
+
+#: src/swap/persist.rs:133
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zswap changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zswap from this GUI."
+msgstr ""
+"Пакет 'anduinos-swap-config' не встановлено.\n"
+"\n"
+"Зміни Zswap неможливо застосувати або зберегти без нього.\n"
+"Встановіть 'anduinos-swap-config', щоб керувати zswap із цього GUI."
+
+#: src/views/zram_view.rs:573
+msgid ""
+"This will immediately remove {0} and flush its contents to disk swap. "
+"Continue?"
+msgstr ""
+"Це негайно видалить {0} і записатиме його вміст у диск підкачки. Продовжити?"
+
+#: src/views/swap_view.rs:797
+msgid "Unavailable on {0}; the swap partition remains active"
+msgstr "Недоступно на {0}; розділ підкачки залишається активним"
+
+#: src/views/dashboard_view.rs:604
+msgid ""
+"Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
+" fast compressed RAM swap — dropping file cache when zram is available "
+"wastes I/O performance."
+msgstr ""
+"Zram активний, але swappiness дорівнює {0} замість {1}. Встановіть значення "
+"{1}, щоб надавати пріоритет швидкій стисненій пам’яті підкачки — скидання "
+"файлового кешу, коли доступний zram, знижує продуктивність "
+"введення/виведення."
+
+#: src/swap/persist.rs:88
+msgid "Zram persistence disabled"
+msgstr "Збереження змін зram вимкнено"
+
+#: src/swap/persist.rs:90
+msgid "Zram persistence enabled"
+msgstr "Збереження налаштувань Zram увімкнено"
+
+#: src/swap/persist.rs:148
+msgid "Zswap persistence disabled"
+msgstr "Збереження Zswap вимкнено"
+
+#: src/swap/persist.rs:146
+msgid "Zswap persistence enabled"
+msgstr "Збереження Zswap увімкнено"
+
+#: src/views/dashboard_view.rs:159 src/views/swap_view.rs:122
+msgid "for {0} GiB RAM"
+msgstr "для {0} ГіБ ОЗП"
+
+#: src/swap/sysctl.rs:133
+msgid "swappiness updated"
+msgstr "Значення swappiness оновлено"
+
+#: src/swap/persist.rs:37
+msgid "systemctl {0} failed: {1}"
+msgstr "Не вдалося виконати systemctl {0}: {1}"
+
+#: src/views/zram_view.rs:525
+msgid "{0} MiB used (stats reset)"
+msgstr "Використано {0} МБ (статистику скинуто)"
+
+#: src/views/zram_view.rs:520
+msgid "{0} MiB used · saved {1}%"
+msgstr "{0} МБ використано · заощаджено {1}%"
+
+#: src/views/dashboard_view.rs:498
+msgid "{0} · pool {1}%"
+msgstr "{0} · пул {1}%"
+
+#: src/views/dashboard_view.rs:474
+msgid "{0} · saved {1}%"
+msgstr "{0} · заощаджено {1}%"
+
+#: src/views/swap_view.rs:754
+msgid ""
+"{0} — installer-managed; size cannot be changed while the system is running"
+msgstr ""
+"{0} — керується інсталятором; розмір не можна змінити, поки система працює"
+
+#~ msgid "Disabling swap will break hibernation. Continue?"
+#~ msgstr "Вимкнення підкачки порушить режим гібернації. Продовжити?"
+
+#~ msgid "Disk Swap"
+#~ msgstr "Диск віртуальної пам’яті"
+
+#~ msgid "Swap file size"
+#~ msgstr "Розмір файлу віртуальної пам’яті"
 
 #~ msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
 #~ msgstr "<i>Рекомендовано: {0} ГиБ файлу підкачки, swappiness {1} ({2})</i>"
-
-#~ msgid "Active — {0} GiB used / {1} GiB total"
-#~ msgstr "Активно — використано {0} ГіБ / всього {1} ГіБ"
 
 #~ msgid "Creating Zram device…"
 #~ msgstr "Створення пристрою Zram…"
@@ -317,48 +783,11 @@ msgstr ""
 
 #~ msgid "Disk-based swap file — the last line of defense when RAM is full"
 #~ msgstr ""
-#~ "Файл віртуальної пам’яті на диску — останній засіб захисту, коли "
-#~ "оперативна пам’ять переповнена"
-
-#~ msgid "Ensure important work is saved before running this test."
-#~ msgstr ""
-#~ "Переконайтеся, що важливі дані збережено, перед запуском цього тесту."
-
-#~ msgid "Hello {0}, you have {1} messages"
-#~ msgstr "Вітаю, {0}, у вас {1} повідомлень"
+#~ "Файл віртуальної пам’яті на диску — останній засіб захисту, коли оперативна "
+#~ "пам’ять переповнена"
 
 #~ msgid "Hibernation not detected — recommended: {0} GiB"
 #~ msgstr "Режим гібернації не виявлено — рекомендовано: {0} GiB"
-
-#~ msgid "Idle ({0} GiB available)"
-#~ msgstr "Неактивний ({0} GiB доступно)"
-
-#~ msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
-#~ msgstr ""
-#~ "Макс. % оперативної пам’яті, яку може займати стиснений пул. "
-#~ "Рекомендовано: 20%"
-
-#~ msgid "Real-time RAM, swap, and compression subsystem status"
-#~ msgstr ""
-#~ "Статус підсистем оперативної пам’яті, віртуальної пам’яті та стиснення в "
-#~ "реальному часі"
-
-#~ msgid "Reclaim pool pages under memory pressure. Recommended: ON"
-#~ msgstr "Повернення сторінок пулу за тиском пам’яті. Рекомендовано: УВІМК"
-
-#~ msgid "Simulate memory pressure to test swap and OOM behavior"
-#~ msgstr ""
-#~ "Емуляція тиску пам’яті для тестування поведінки віртуальної пам’яті та OOM"
-
-#~ msgid "Warning: This will consume system memory and may cause instability"
-#~ msgstr ""
-#~ "Увага: це споживатиме системну пам'ять і може викликати нестабільність"
-
-#~ msgid "{0} · pool {1}%"
-#~ msgstr "{0} · пул {1}%"
-
-#~ msgid "{0} · saved {1}%"
-#~ msgstr "{0} · заощаджено {1}%"
 
 #~ msgid "Active"
 #~ msgstr "Активний"
@@ -402,36 +831,6 @@ msgstr ""
 #~ "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
 
 #~ msgid ""
-#~ "Create a compressed RAM swap device for faster memory pressure handling."
-#~ msgstr ""
-#~ "Create a compressed RAM swap device for faster memory pressure handling."
-
-#~ msgid ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
 #~ msgstr ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer "
-#~ "(recommended: {0})"
-#~ msgstr ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer "
-#~ "(recommended: {0})"
-
-#~ msgid ""
-#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to "
-#~ "prefer fast compressed RAM swap — dropping file cache when zram is "
-#~ "available wastes I/O performance."
-#~ msgstr ""
-#~ "Zram активний, але swappiness дорівнює {0} замість {1}. Встановіть "
-#~ "значення {1}, щоб надавати пріоритет швидкій стисненій пам’яті підкачки — "
-#~ "скидання файлового кешу, коли доступний zram, знижує продуктивність "
-#~ "введення/виведення."
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — with Zram active, set to {0} to "
-#~ "prefer fast compressed RAM over disk cache (recommended: {0})"
-#~ msgstr ""
-#~ "Наскільки агресивно ядро виконує підкачку — при активному Zram встановіть "
-#~ "значення {0}, щоб надавати пріоритет швидкій стисненій оперативній "
-#~ "пам’яті замість кешу на диску (рекомендовано: {0})"

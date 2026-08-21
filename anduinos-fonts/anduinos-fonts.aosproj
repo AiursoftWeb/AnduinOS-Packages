@@ -1,18 +1,18 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-fonts</PackageName>
-    <PackageVersion>2.0.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default fonts and fontconfig — Cascadia Code, Noto Sans/Serif, Nerd Fonts Symbols, Twemoji COLRv1 &amp; Noto Color Emoji</PackageDescription>
     <Section>fonts</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
-    <LicenseType>GPL-3.0</LicenseType>
+    <LicenseType>GPL-3.0-only AND OFL-1.1 AND MIT AND CC-BY-4.0 AND Apache-2.0 AND Unlicense</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +22,25 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Package copyright and third-party license notices -->
+    <IncludeFile Include="COPYRIGHT" Target="/usr/share/doc/anduinos-fonts/copyright" />
+    <IncludeFile Include="assets/CascadiaCode/LICENSE" Target="/usr/share/doc/anduinos-fonts/LICENSE.CascadiaCode-OFL-1.1" />
+    <IncludeFile Include="assets/NerdFontsSymbolsOnly/LICENSE" Target="/usr/share/doc/anduinos-fonts/LICENSE.Nerd-Fonts-Release-MIT" />
+    <IncludeFile Include="assets/NerdFontsSymbolsOnly/LICENSE-NERD-FONTS" Target="/usr/share/doc/anduinos-fonts/LICENSE.Nerd-Fonts" />
+    <IncludeFile Include="assets/NerdFontsSymbolsOnly/LICENSE-AUDIT.md" Target="/usr/share/doc/anduinos-fonts/LICENSE-AUDIT.Nerd-Fonts.md" />
+    <IncludeFile Include="assets/NerdFontsSymbolsOnly/LICENSE-FONT-AWESOME" Target="/usr/share/doc/anduinos-fonts/LICENSE.Nerd-Fonts-Font-Awesome" />
+    <IncludeFile Include="assets/NerdFontsSymbolsOnly/LICENSE-FONT-LOGOS-UNLICENSE" Target="/usr/share/doc/anduinos-fonts/LICENSE.Nerd-Fonts-Font-Logos-Unlicense" />
+    <IncludeFile Include="assets/NerdFontsSymbolsOnly/LICENSE-MATERIAL-DESIGN-ICONS" Target="/usr/share/doc/anduinos-fonts/LICENSE.Nerd-Fonts-Material-Design-Icons" />
+    <IncludeFile Include="assets/NerdFontsSymbolsOnly/LICENSE-OCTICONS-MIT" Target="/usr/share/doc/anduinos-fonts/LICENSE.Nerd-Fonts-Octicons-MIT" />
+    <IncludeFile Include="assets/NerdFontsSymbolsOnly/LICENSE-POWERLINE-SYMBOLS-MIT" Target="/usr/share/doc/anduinos-fonts/LICENSE.Nerd-Fonts-Powerline-Symbols-MIT" />
+    <IncludeFile Include="assets/NerdFontsSymbolsOnly/LICENSE-WEATHER-ICONS-OFL-1.1" Target="/usr/share/doc/anduinos-fonts/LICENSE.Nerd-Fonts-Weather-Icons-OFL-1.1" />
+    <IncludeFile Include="assets/NerdFontsSymbolsOnly/THIRD-PARTY-NOTICES" Target="/usr/share/doc/anduinos-fonts/THIRD-PARTY-NOTICES.Nerd-Fonts" />
+    <IncludeFile Include="assets/Noto_Sans/OFL.txt" Target="/usr/share/doc/anduinos-fonts/LICENSE.Noto-Sans-OFL-1.1" />
+    <IncludeFile Include="assets/Noto_Serif/OFL.txt" Target="/usr/share/doc/anduinos-fonts/LICENSE.Noto-Serif-OFL-1.1" />
+    <IncludeFile Include="assets/Twemoji/LICENSE" Target="/usr/share/doc/anduinos-fonts/LICENSE.Twemoji-MIT" />
+    <IncludeFile Include="assets/Twemoji/LICENSE-GRAPHICS" Target="/usr/share/doc/anduinos-fonts/LICENSE.Twemoji-Graphics-CC-BY-4.0" />
+    <IncludeFile Include="assets/Twemoji/LICENSE-GRAPHICS" Target="/usr/share/doc/anduinos-fonts/LICENSE.CC-BY-4.0" />
+
     <!-- fontconfig -->
     <IncludeFile Include="assets/local.conf" Target="/etc/fonts/local.conf" />
 

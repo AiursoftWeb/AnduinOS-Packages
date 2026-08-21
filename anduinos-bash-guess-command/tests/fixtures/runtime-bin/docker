@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+[[ ${ANDUINOS_RUNTIME_DOCKER_COUNT-} ]] || exit 90
+printf 'called\n' >>"$ANDUINOS_RUNTIME_DOCKER_COUNT"
+if [[ $* == "container ls --format "* ]]; then
+    printf '0ad123456789\tmysql-db\tmysql:8\n'
+    printf '7be987654321\tweb\tnginx:latest\n'
+    exit 0
+fi
+exit 91

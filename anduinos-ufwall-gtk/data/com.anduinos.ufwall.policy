@@ -75,4 +75,18 @@
     <annotate key="org.freedesktop.policykit.exec.path">/usr/sbin/ufw</annotate>
     <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
   </action>
+
+  <action id="com.anduinos.ufwall.manage-network-discovery">
+    <description>Manage local network discovery</description>
+    <description xml:lang="zh_CN">管理本地网络发现</description>
+    <message>Authentication is required to change local network discovery</message>
+    <message xml:lang="zh_CN">更改本地网络发现需要身份验证</message>
+    <icon_name>network-workgroup-symbolic</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/ufwall-gtk/network-service-helper</annotate>
+  </action>
 </policyconfig>

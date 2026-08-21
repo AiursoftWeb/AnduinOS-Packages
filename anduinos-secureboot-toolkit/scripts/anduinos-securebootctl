@@ -1,0 +1,17 @@
+#!/usr/bin/python3
+"""Read-only command-line inspection for the AnduinOS trust chain."""
+
+from dataclasses import asdict
+import json
+import sys
+
+from anduinos_secureboot import inspect_dkms, inspect_secure_boot
+
+
+if sys.argv[1:] not in ([], ["status"], ["status", "--json"]):
+    print("usage: anduinos-securebootctl [status [--json]]", file=sys.stderr)
+    raise SystemExit(64)
+
+secure_boot = inspect_secure_boot()
+dkms = inspect_dkms(secure_boot)
+print(json.dumps({"schema": 2, "secure_boot": asdict(secure_boot), "dkms": asdict(dkms)}))

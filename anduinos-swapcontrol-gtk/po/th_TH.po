@@ -1,311 +1,769 @@
+#
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/window.rs:76
 msgid "About"
 msgstr "เกี่ยวกับ"
 
+#: src/views/swap_view.rs:300
 msgid "Accept threshold percent"
 msgstr "เกณฑ์การยอมรับ (%)"
 
+#: src/views/zram_view.rs:247
 msgid "Advanced options"
 msgstr "ตัวเลือกขั้นสูง"
 
+#: src/views/stress_test_view.rs:225 src/views/swap_view.rs:225
 msgid "Advanced settings"
 msgstr "การตั้งค่าขั้นสูง"
 
+#: src/views/zram_view.rs:348
 msgid "Algorithm"
 msgstr "อัลกอริทึม"
 
+#: src/views/swap_view.rs:334
 msgid "Apply Settings"
 msgstr "ใช้การตั้งค่า"
 
+#: src/views/swap_view.rs:667
 msgid "Applying settings…"
 msgstr "ใช้การตั้งค่า"
 
+#: src/views/dashboard_view.rs:370
 msgid "Auth needed"
 msgstr "ต้องการการยืนยันตัวตน"
 
+#: src/views/dashboard_view.rs:413
 msgid "Buf"
 msgstr "บัฟเฟอร์"
 
+#: src/views/dashboard_view.rs:390
 msgid "Buffers"
 msgstr "บัฟเฟอร์"
 
+#: src/views/dashboard_view.rs:414
 msgid "Cache"
 msgstr "แคช"
 
+#: src/views/dashboard_view.rs:395
 msgid "Cached"
 msgstr "แคช"
 
+#: src/views/zram_view.rs:378
 msgid "Cancel"
 msgstr "ยกเลิก"
 
+#: src/views/stress_test_view.rs:318
 msgid "Cancel Test"
 msgstr "ยกเลิก"
 
+#: src/views/stress_test_view.rs:601
 msgid "Cancelled by user."
 msgstr "ยกเลิกโดยผู้ใช้"
 
+#: src/views/dashboard_view.rs:193
 msgid "Channels"
 msgstr "ช่องทาง"
 
+#: src/views/stress_test_view.rs:613
 msgid "Completed successfully — memory pressure test passed."
 msgstr "สำเร็จแล้ว — การทดสอบแรงดันหน่วยความจำผ่าน"
 
+#: src/views/swap_view.rs:183
 msgid ""
 "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
 "Zswap, not both."
 msgstr ""
-"Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
-"Zswap, not both."
+"บีบอัดหน้าสวอปในพูล RAM — รวดเร็วกว่าสวอปดิสก์ ใช้ Zram หรือ Zswap "
+"อย่างใดอย่างหนึ่งเท่านั้น"
 
+#: src/views/zram_view.rs:73
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "อุปกรณ์ RAM แบบบีบอัด — สวอปในหน่วยความจำความเร็วสูง"
 
+#: src/views/swap_view.rs:266
 msgid "Compression algorithm"
 msgstr "อัลกอริทึมการบีบอัด"
 
+#: src/views/zram_view.rs:379
 msgid "Create"
 msgstr "สร้าง"
 
+#: src/views/zram_view.rs:110 src/views/zram_view.rs:190
 msgid "Create Zram Device"
 msgstr "สร้างอุปกรณ์ Zram"
 
+#: src/window.rs:110
 msgid "Dashboard"
 msgstr "แดชบอร์ด"
 
+#: src/views/zram_view.rs:571
 msgid "Destroy Zram Device"
 msgstr "ทำลายอุปกรณ์ Zram"
 
+#: src/views/zram_view.rs:439
 msgid "Device Created"
 msgstr "สร้างอุปกรณ์เสร็จสิ้น"
 
+#: src/views/dashboard_view.rs:503
 msgid "Disabled"
 msgstr "ปิดใช้งาน"
 
+#: src/views/swap_view.rs:521
 msgid "Disabling Zswap..."
 msgstr "กำลังปิดใช้งานสวอป…"
 
-msgid "Disabling swap will break hibernation. Continue?"
-msgstr "การปิดใช้งานหน่วยความจำเสมือนจะส่งผลให้การทำงานสลีปหยุดชะงัก โปรดดำเนินการต่อ"
-
+#: src/views/swap_view.rs:577
 msgid "Disabling swap…"
 msgstr "กำลังปิดใช้งานสวอป…"
 
-msgid "Disk Swap"
-msgstr "หน่วยความจำเสมือนบนดิสก์"
-
+#: src/views/swap_view.rs:97
 msgid "Disk Swap Configuration"
 msgstr "การตั้งค่าหน่วยความจำเสมือน"
 
+#: src/views/dashboard_view.rs:614
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
 msgstr ""
-"Disk swap is active with memory compression — your system is well-protected "
-"against memory pressure."
+"สวอปบนดิสก์ทำงานร่วมกับการบีบอัดหน่วยความจำ — "
+"ระบบของคุณจึงรับมือกับภาวะหน่วยความจำไม่เพียงพอได้เป็นอย่างดี"
 
+#: src/views/stress_test_view.rs:605 src/views/stress_test_view.rs:617
 msgid "Duration:"
 msgstr "ระยะเวลา:"
 
+#: src/views/dashboard_view.rs:609
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
 msgstr ""
-"Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
-"swap and dramatically reduces I/O under memory pressure."
+"เปิดใช้งาน Zram สำหรับสวอปแบบบีบอัดที่รวดเร็วใน RAM — รวดเร็วกว่าสวอปดิสก์ "
+"10 เท่า และลดการเข้า-ออกข้อมูล (I/O) อย่างมีนัยสำคัญเมื่อหน่วยความจำเต็ม"
 
+#: src/views/swap_view.rs:519
 msgid "Enabling Zswap..."
 msgstr "กำลังเปิดใช้งานสวอป…"
 
+#: src/views/swap_view.rs:579
 msgid "Enabling swap…"
 msgstr "กำลังเปิดใช้งานสวอป…"
 
+#: src/views/stress_test_view.rs:609 src/views/swap_view.rs:505
+#: src/views/zram_view.rs:182
 msgid "Error"
 msgstr "เกิดข้อผิดพลาด"
 
+#: src/views/dashboard_view.rs:400 src/views/dashboard_view.rs:415
 msgid "Free"
 msgstr "ว่าง"
 
+#: src/views/stress_test_view.rs:250 src/views/stress_test_view.rs:251
+#: src/views/stress_test_view.rs:401
 msgid "Growth speed"
 msgstr "อัตราการเติบโต"
 
+#: src/views/dashboard_view.rs:269
 msgid "Hibernation"
 msgstr "จำศีล"
 
+#: src/views/swap_view.rs:597 src/views/swap_view.rs:704
 msgid "Hibernation Warning"
 msgstr "คำเตือนการพักเครื่อง"
 
+#: src/views/dashboard_view.rs:517 src/views/swap_view.rs:810
 msgid "Inactive"
 msgstr "ไม่ใช้งาน"
 
+#: src/views/swap_view.rs:156 src/views/swap_view.rs:170
 msgid "Loading..."
 msgstr "กำลังโหลด..."
 
+#: src/views/stress_test_view.rs:232
 msgid "Maximum hold time"
 msgstr "เวลาสูงสุดในการถือครอง"
 
+#: src/views/swap_view.rs:282
 msgid "Maximum pool percent"
 msgstr "เปอร์เซ็นต์บ่อสูงสุด"
 
+#: src/views/dashboard_view.rs:134
 msgid "Memory Overview"
 msgstr "ภาพรวมหน่วยความจำ"
 
+#: src/views/zram_view.rs:119
 msgid "No Zram Devices"
 msgstr "อุปกรณ์ Zram"
 
+#: src/views/dashboard_view.rs:456
 msgid "No device"
 msgstr "ไม่มีอุปกรณ์"
 
+#: src/views/dashboard_view.rs:592
 msgid "No disk swap detected"
 msgstr "ไม่ตรวจพบการใช้หน่วยความจำเสมือน"
 
+#: src/views/dashboard_view.rs:608
 msgid "No memory acceleration enabled"
 msgstr "ไม่ได้เปิดใช้งานการเร่งความเร็วหน่วยความจำ"
 
+#: src/views/dashboard_view.rs:546
 msgid "None"
 msgstr "ไม่มี"
 
+#: src/views/dashboard_view.rs:530 src/views/dashboard_view.rs:538
 msgid "Off"
 msgstr "ปิด"
 
+#: src/views/dashboard_view.rs:537
 msgid "On"
 msgstr "เปิด"
 
+#: src/views/swap_view.rs:301
 msgid ""
 "Only store pages that compress to ≤ this % of original. Higher = more pages "
 "cached. Recommended: 90%"
 msgstr ""
-"Only store pages that compress to ≤ this % of original. Higher = more pages "
-"cached. Recommended: 90%"
+"จัดเก็บเฉพาะหน้าที่บีบอัดได้ ≤ % นี้ของขนาดเดิม ค่าสูงกว่า = "
+"เก็บหน้าในแคชมากขึ้น แนะนำ: 90%"
 
+#: src/views/dashboard_view.rs:613
 msgid "Optimal memory configuration"
 msgstr "การตั้งค่าหน่วยความจำที่เหมาะสม"
 
+#: src/views/stress_test_view.rs:602 src/views/stress_test_view.rs:614
 msgid "Peak allocated:"
 msgstr "จัดสรรสูงสุด:"
 
+#: src/views/zram_view.rs:367
 msgid "Priority"
 msgstr "ลำดับความสำคัญ"
 
+#: src/views/stress_test_view.rs:209
 msgid "RAM"
 msgstr "แรม"
 
+#: src/views/zram_view.rs:554
 msgid "Remove"
 msgstr "ลบ"
 
+#: src/views/stress_test_view.rs:360
 msgid "Run Again"
 msgstr "ทำงานอีกครั้ง"
 
+#: src/views/stress_test_view.rs:279
 msgid "Run Stress Test"
 msgstr "ดำเนินการทดสอบความเครียด"
 
+#: src/views/swap_view.rs:307
 msgid "Shrinker"
 msgstr "ตัวลดขนาดหน่วยความจำ"
 
+#: src/views/zram_view.rs:269
 msgid "Size (MiB)"
 msgstr "ขนาด (MiB)"
 
+#: src/views/dashboard_view.rs:192
 msgid "Speed"
 msgstr "ความเร็ว"
 
+#: src/views/stress_test_view.rs:100 src/window.rs:114
 msgid "Stress Test"
 msgstr "ทดสอบความเครียด"
 
+#: src/views/dashboard_view.rs:252 src/views/dashboard_view.rs:266
+#: src/window.rs:112
 msgid "Swap"
 msgstr "สลับ"
 
+#: src/progress_dialog.rs:24 src/window.rs:59
 msgid "Swap Control"
 msgstr "การควบคุมหน่วยความจำเสมือน"
 
-msgid "Swap file size"
-msgstr "ขนาดหน่วยความจำเสมือน"
-
+#: src/views/swap_view.rs:147
 msgid "Swap usage"
 msgstr "การใช้งานหน่วยความจำเสมือน"
 
+#: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
+#: src/views/swap_view.rs:677
 msgid "Swappiness"
 msgstr "ระดับความสวอป"
 
+#: src/views/dashboard_view.rs:603
 msgid "Swappiness not optimized for Zram"
 msgstr "Swappiness ไม่ได้ถูกปรับให้เหมาะสมกับ Zram"
 
+#: src/views/stress_test_view.rs:206
 msgid "Target Pressure"
 msgstr "แรงกดดันเป้าหมาย"
 
+#: src/views/stress_test_view.rs:345
 msgid "Test Complete"
 msgstr "ทดสอบเสร็จสมบูรณ์"
 
+#: src/views/dashboard_view.rs:190
 msgid "Total RAM"
 msgstr "RAM ทั้งหมด"
 
+#: src/views/dashboard_view.rs:191
 msgid "Type"
 msgstr "ประเภท"
 
+#: src/views/dashboard_view.rs:385 src/views/dashboard_view.rs:412
 msgid "Used"
 msgstr "ใช้แล้ว"
 
+#: src/views/dashboard_view.rs:593
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
 msgstr ""
-"When RAM is full the kernel may kill applications. Enable disk swap for a "
-"reliable safety net."
+"เมื่อ RAM เต็ม เคอร์เนลอาจยุติการทำงานของแอปพลิเคชัน "
+"เปิดใช้งานสวอปบนดิสก์เพื่อเป็นมาตรการสำรองที่เชื่อถือได้"
 
+#: src/views/dashboard_view.rs:244 src/views/dashboard_view.rs:268
+#: src/window.rs:111
 msgid "Zram"
 msgstr "Zram"
 
+#: src/views/zram_view.rs:66
 msgid "Zram Devices"
 msgstr "อุปกรณ์ Zram"
 
+#: src/views/dashboard_view.rs:597
 msgid "Zram and Zswap are both active"
 msgstr "Zram และ Zswap ทำงานทั้งสองอย่าง"
 
+#: src/views/dashboard_view.rs:598
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
+"pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
+" one of them."
 msgstr ""
-"Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
+"ไม่สามารถเปิดใช้ Zram และ Zswap พร้อมกันได้ — แต่ละระบบสร้างพูล RAM "
+"แบบบีบอัดของตนเอง การเปิดใช้ทั้งสองพร้อมกันจะสิ้นเปลือง CPU "
+"และอาจทำให้หน่วยความจำสลับไปมาอย่างรุนแรง โปรดปิดใช้งานระบบใดระบบหนึ่ง"
 
+#: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
+#: src/views/swap_view.rs:185 src/views/swap_view.rs:686
 msgid "Zswap"
 msgstr "ซิปส์แวก"
 
+#: src/views/stress_test_view.rs:212
 msgid "default"
 msgstr "ค่าเริ่มต้น"
 
+#: src/views/swap_view.rs:267
 msgid ""
-"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires "
-"zswap restart."
+"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires"
+" zswap restart."
 msgstr ""
-"lz4 = เร็ว (แนะนำ), zstd = อัตราส่วนดีที่สุด, lzo = แบบเดิม การเปลี่ยนจำเป็นต้องรีสตาร์ท "
-"zswap"
+"lz4 = เร็ว (แนะนำ), zstd = อัตราส่วนดีที่สุด, lzo = แบบเดิม "
+"การเปลี่ยนจำเป็นต้องรีสตาร์ท zswap"
 
+#: src/views/stress_test_view.rs:211
 msgid "range"
 msgstr "ช่วง"
 
+#: src/views/stress_test_view.rs:233
 msgid "seconds"
 msgstr "วินาที"
 
+#: src/views/swap_view.rs:118
 msgid "with Zram"
 msgstr "พร้อม Zram"
 
+#: src/views/dashboard_view.rs:154
 msgid "with Zram active — prefer fast compressed RAM over disk cache"
-msgstr "พร้อม Zram เปิดใช้งาน — รังแต่หน่วยความจำแบบบีบอัดที่เร็วเหนือดิสก์แคช"
+msgstr ""
+"พร้อม Zram เปิดใช้งาน — รังแต่หน่วยความจำแบบบีบอัดที่เร็วเหนือดิสก์แคช"
 
-#~ msgid "<i>Recommended swappiness: {0} ({1})</i>"
-#~ msgstr "<i>ค่า swappiness ที่แนะนำ: {0} ({1})</i>"
+#: src/views/dashboard_view.rs:552
+msgid "Ready"
+msgstr "พร้อมใช้งาน"
+
+#: src/views/dashboard_view.rs:554
+msgid "Unsupported"
+msgstr "ไม่รองรับ"
+
+#: src/views/dashboard_view.rs:556
+msgid "Not configured"
+msgstr "ยังไม่ได้ตั้งค่า"
+
+#: src/views/dashboard_view.rs:558
+msgid "Resume target missing"
+msgstr "ไม่พบเป้าหมายการกู้คืน"
+
+#: src/views/dashboard_view.rs:560
+msgid "Resume target inactive"
+msgstr "เป้าหมายการกู้คืนไม่ใช้งาน"
+
+#: src/views/dashboard_view.rs:562
+msgid "Swap too small"
+msgstr "สวอปมีขนาดน้อยเกินไป"
+
+#: src/views/dashboard_view.rs:564
+msgid "Not ready"
+msgstr "ยังไม่พร้อม"
+
+#: src/views/swap_view.rs:104
+msgid ""
+"Review installer-managed swap partitions and manage the legacy supplementary"
+" swap file"
+msgstr ""
+"ตรวจสอบพาร์ทิชันสวอปที่ติดตั้งโดยโปรแกรมติดตั้ง "
+"และจัดการไฟล์สวอปเสริมแบบดั้งเดิม"
+
+#: src/views/swap_view.rs:155
+msgid "Swap partition"
+msgstr "พาร์ทิชันสวอป"
+
+#: src/views/swap_view.rs:169
+msgid "Additional swap file"
+msgstr "ไฟล์สวอปเพิ่มเติม"
+
+#: src/views/swap_view.rs:195
+msgid "Additional swap file size"
+msgstr "ขนาดไฟล์สวอปเพิ่มเติม"
+
+#: src/views/swap_view.rs:196
+msgid "0 GiB means no supplementary swap file"
+msgstr "0 GiB หมายความว่าไม่มีไฟล์สวอปเสริม"
+
+#: src/views/swap_view.rs:598
+msgid ""
+"This swap file is the configured resume target. Disabling it will break "
+"hibernation. Continue?"
+msgstr ""
+"ไฟล์สวอปนี้เป็นเป้าหมายการกู้คืนที่ตั้งค่าไว้ "
+"การปิดใช้งานจะทำให้ระบบจำศีลเสียหาย ต้องการดำเนินการต่อหรือไม่?"
+
+#: src/views/swap_view.rs:705
+msgid ""
+"This swap file is the configured resume target. Its physical offset would "
+"change, so resize is blocked until hibernation is disabled."
+msgstr ""
+"ไฟล์สวอปนี้คือเป้าหมายการกู้คืนที่ตั้งค่าไว้ "
+"การปรับขนาดจะทำให้ตำแหน่งทางกายภาพเปลี่ยนแปลง "
+"จึงถูกบล็อกจนกว่าจะปิดใช้งานการจำศีล"
+
+#: src/views/swap_view.rs:722
+msgid "unknown"
+msgstr "ไม่ทราบ"
+
+#: src/views/swap_view.rs:738
+msgid "No swap partition — a legacy swap file can be managed below"
+msgstr "ไม่มีพาร์ทิชันสวอป — สามารถจัดการไฟล์สวอปแบบดั้งเดิมได้ด้านล่าง"
+
+#: src/views/swap_view.rs:207
+msgid "Remove incompatible file"
+msgstr "ลบไฟล์สวอปที่ไม่เข้ากันได้"
+
+#: src/views/swap_view.rs:377
+msgid "Removing incompatible swap file…"
+msgstr "กำลังลบไฟล์สวอปที่ไม่เข้ากัน…"
+
+#: src/views/swap_view.rs:790
+msgid "Present but inactive"
+msgstr "มีอยู่แต่ไม่ใช้งาน"
+
+#: src/views/swap_view.rs:792
+msgid "Not created — choose a size below to add one"
+msgstr "ยังไม่ได้สร้าง — เลือกขนาดด้านล่างเพื่อสร้างไฟล์สวอป"
+
+#: src/views/swap_view.rs:794
+msgid "Not created — at least 20 GiB must remain free"
+msgstr "ยังไม่ได้สร้าง — ต้องมีพื้นที่ว่างเหลืออย่างน้อย 20 GiB"
+
+#: src/views/swap_view.rs:830
+msgid ""
+"Resize is locked because this file is the configured hibernation resume "
+"target"
+msgstr "การปรับขนาดถูกล็อกเนื่องจากไฟล์นี้คือเป้าหมายการกู้คืนที่ตั้งค่าไว้"
+
+#: src/views/swap_view.rs:832
+msgid ""
+"Optional compatibility file; 0 GiB removes it and 20 GiB remains reserved "
+"for the system"
+msgstr ""
+"ไฟล์สำหรับความเข้ากันได้ตามใจชอบ; 0 GiB จะลบไฟล์นี้ และ 20 GiB "
+"จะถูกสงวนไว้สำหรับระบบ"
+
+#: src/views/swap_view.rs:834
+msgid ""
+"Disabled on Btrfs because a root-subvolume swap file would prevent Disk "
+"Snapshots Manager recovery points"
+msgstr ""
+"ปิดใช้งานบน Btrfs เนื่องจากไฟล์สวอปใน subvolume หลักจะขัดขวางจุดกู้คืนของ "
+"Disk Snapshots Manager"
+
+#: src/views/zram_view.rs:120
+msgid ""
+"Create a compressed RAM swap device for faster memory pressure handling."
+msgstr ""
+"สร้างอุปกรณ์สวอป RAM แบบบีบอัดเพื่อจัดการแรงกดดันหน่วยความจำได้เร็วขึ้น"
+
+#: src/views/stress_test_view.rs:171
+msgid "Ensure important work is saved before running this test."
+msgstr "ให้แน่ใจว่าทำงานสำคัญเสร็จแล้วก่อนทำการทดสอบ"
+
+#: src/views/swap_view.rs:283
+msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
+msgstr "% สูงสุดของแรมที่บ่อข้อมูลแบบบีบอัดอาจใช้ แนะนำ: 20%"
+
+#: src/views/dashboard_view.rs:141
+msgid "Real-time RAM, swap, and compression subsystem status"
+msgstr "สถานะแบบเรียลไทม์ของ RAM สวอป และระบบย่อยการบีบอัด"
+
+#: src/views/swap_view.rs:308
+msgid "Reclaim pool pages under memory pressure. Recommended: ON"
+msgstr "เรียกคืนหน้าในบ่อภายใต้แรงดันหน่วยความจำ แนะนำ: เปิด"
+
+#: src/views/stress_test_view.rs:107
+msgid "Simulate memory pressure to test swap and OOM behavior"
+msgstr "จำลองแรงกดดันของหน่วยความจำเพื่อทดสอบพฤติกรรมการสลับและ OOM"
+
+#: src/views/stress_test_view.rs:161
+msgid "Warning: This will consume system memory and may cause instability"
+msgstr "คำเตือน: จะใช้หน่วยความจำของระบบและอาจทำให้เกิดความไม่เสถียร"
+
+#: src/views/zram_view.rs:440
+msgid "Zram configuration saved. The device will be created shortly."
+msgstr "บันทึกการตั้งค่า Zram แล้ว อุปกรณ์จะถูกสร้างขึ้นในอีกไม่นาน"
+
+#: src/views/dashboard_view.rs:165 src/views/swap_view.rs:128
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>ค่า swappiness ที่แนะนำ: {0} ({1})</i>"
+
+#: src/views/zram_view.rs:90
+msgid "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
+msgstr "<i>แนะนำ: {0} MiB, lz4, ลำดับความสำคัญ 100 (สำหรับ RAM {1} GiB)</i>"
+
+#: src/views/swap_view.rs:772
+msgid "Active — {0} GiB used / {1} GiB total"
+msgstr "ใช้งานอยู่ — ใช้งาน {0} GiB / ทั้งหมด {1} GiB"
+
+#: src/swap/exec.rs:26 src/swap/exec.rs:68
+msgid "Authentication cancelled"
+msgstr "การตรวจสอบสิทธิ์ถูกยกเลิก"
+
+#: src/swap/swapfile.rs:113
+msgid "Cannot inspect the root filesystem"
+msgstr "ไม่สามารถตรวจสอบระบบไฟล์รากได้"
+
+#: src/swap/swapfile.rs:108
+msgid "Cannot inspect the root filesystem: {0}"
+msgstr "ไม่สามารถตรวจสอบระบบไฟล์ราก: {0}"
+
+#: src/swap/sysctl.rs:79
+msgid "Cannot parse MemTotal: {0}"
+msgstr "ไม่สามารถวิเคราะห์ MemTotal: {0}"
+
+#: src/swap/sysctl.rs:43
+msgid "Cannot parse swappiness: {0}"
+msgstr "ไม่สามารถวิเคราะห์ค่า swappiness: {0}"
+
+#: src/swap/zswap.rs:59
+msgid "Cannot parse {0} as u8: {1}"
+msgstr "ไม่สามารถแปลง {0} เป็น u8: {1}"
+
+#: src/swap/sysctl.rs:70
+msgid "Cannot read /proc/meminfo: {0}"
+msgstr "ไม่สามารถอ่าน /proc/meminfo: {0}"
+
+#: src/swap/swapfile.rs:39
+msgid "Cannot read /proc/swaps: {0}"
+msgstr "ไม่สามารถอ่าน /proc/swaps: {0}"
+
+#: src/swap/sysctl.rs:36 src/swap/zswap.rs:47
+msgid "Cannot read {0}: {1}"
+msgstr "ไม่สามารถอ่าน {0} ได้: {1}"
+
+#: src/swap/exec.rs:18 src/swap/exec.rs:52
+msgid "Failed to execute pkexec: {0}"
+msgstr "ไม่สามารถดำเนินการ pkexec ได้: {0}"
+
+#: src/swap/persist.rs:31
+msgid "Failed to remove legacy unit {0}: {1}"
+msgstr "การลบหน่วย legacy {0} ไม่สำเร็จ: {1}"
+
+#: src/swap/sysctl.rs:129
+msgid "Failed to set swappiness: {0} / {1}"
+msgstr "ไม่สามารถตั้งค่า swappiness ได้: {0} / {1}"
+
+#: src/swap/exec.rs:61
+msgid "Failed to wait on pkexec: {0}"
+msgstr "รอการดำเนินการของ pkexec ไม่สำเร็จ: {0}"
+
+#: src/i18n.rs:24
+msgid "Hello {0}, you have {1} messages"
+msgstr "สวัสดี {0} คุณมีข้อความ {1} ข้อ"
+
+#: src/views/swap_view.rs:234
+msgid ""
+"How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
+" {0})"
+msgstr ""
+"ระดับความเข้มข้นที่เคอร์เนลสลับข้อมูล — ต่ำกว่า = อยู่ใน RAM นานขึ้น (แนะนำ:"
+" {0})"
+
+#: src/views/swap_view.rs:231
+msgid ""
+"How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
+"fast compressed RAM over disk cache (recommended: {0})"
+msgstr ""
+"ความก้าวร้าวที่เคอร์เนลใช้งานสลับ — เมื่อ Zram เปิดใช้งาน ให้ตั้งค่าเป็น {0}"
+" เพื่อเลือกใช้งานหน่วยความจำแบบบีบอัดที่รวดเร็วเหนือดิสก์แคช (แนะนำ: {0})"
+
+#: src/views/dashboard_view.rs:483
+msgid "Idle ({0} GiB available)"
+msgstr "คงที่ (เหลือ {0} GiB)"
+
+#: src/views/zram_view.rs:531
+msgid "Idle — {0} MiB available"
+msgstr "คงที่ — เหลือ {0} MiB"
+
+#: src/swap/sysctl.rs:83
+msgid "MemTotal not found"
+msgstr "ไม่พบ MemTotal"
+
+#: src/views/swap_view.rs:786
+msgid "Present but inactive — activation is disabled on {0}"
+msgstr "มีอยู่แต่ไม่ทำงาน — การเปิดใช้งานถูกปิดอยู่บน {0}"
+
+#: src/views/stress_test_view.rs:676
+msgid ""
+"RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
+"Swap used: {3} GiB"
+msgstr ""
+"RAM: รวม {0} GiB · ใช้แล้ว {1} GiB · ว่าง {2} GiB\n"
+"สวอปที่ใช้: {3} GiB"
+
+#: src/views/swap_view.rs:673
+msgid "Resize"
+msgstr "ปรับขนาด"
+
+#: src/views/swap_view.rs:837
+msgid "Swap file resizing is unsupported on {0}"
+msgstr "การปรับขนาดไฟล์สวอปไม่ได้รับการรองรับบน {0}"
+
+#: src/progress_dialog.rs:58
+msgid "Task panicked: {0}"
+msgstr "งานเกิด panic: {0}"
+
+#: src/swap/persist.rs:74
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zram changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zram from this GUI."
+msgstr ""
+"ยังไม่ได้ติดตั้งแพ็กเกจ 'anduinos-swap-config'\n"
+"\n"
+"ไม่สามารถดำเนินการหรือบันทึกการเปลี่ยนแปลงของ zram ได้หากไม่มีแพ็กเกจนี้\n"
+"ติดตั้ง 'anduinos-swap-config' เพื่อจัดการ zram จาก GUI นี้"
+
+#: src/swap/persist.rs:133
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zswap changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zswap from this GUI."
+msgstr ""
+"แพ็กเกจ 'anduinos-swap-config' ยังไม่ได้ติดตั้ง\n"
+"\n"
+"ไม่สามารถดำเนินการหรือเก็บถาวรการเปลี่ยนแปลงของ Zswap ได้หากไม่มีแพ็กเกจนี้\n"
+"ติดตั้ง 'anduinos-swap-config' เพื่อจัดการ zswap จาก GUI นี้"
+
+#: src/views/zram_view.rs:573
+msgid ""
+"This will immediately remove {0} and flush its contents to disk swap. "
+"Continue?"
+msgstr ""
+"สิ่งนี้จะลบ {0} ทันทีและเขียนข้อมูลทั้งหมดลงบนสลับดิสก์ "
+"ต้องการดำเนินการต่อหรือไม่?"
+
+#: src/views/swap_view.rs:797
+msgid "Unavailable on {0}; the swap partition remains active"
+msgstr "ไม่พร้อมใช้งานบน {0}; พาร์ทิชันสวอปยังคงทำงานอยู่"
+
+#: src/views/dashboard_view.rs:604
+msgid ""
+"Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
+" fast compressed RAM swap — dropping file cache when zram is available "
+"wastes I/O performance."
+msgstr ""
+"Zram กำลังใช้งาน แต่ค่า swappiness ตั้งอยู่ที่ {0} แทนที่จะเป็น {1} "
+"ตั้งค่าเป็น {1} เพื่อเลือกใช้งานสลับหน่วยความจำแบบบีบอัดที่รวดเร็ว — "
+"การลดแคชไฟล์เมื่อมี zram ว่างเปล่าเป็นการสูญเสียประสิทธิภาพ I/O"
+
+#: src/swap/persist.rs:88
+msgid "Zram persistence disabled"
+msgstr "ปิดใช้งานการเก็บถาวร Zram"
+
+#: src/swap/persist.rs:90
+msgid "Zram persistence enabled"
+msgstr "เปิดใช้งานการเก็บถาวร Zram แล้ว"
+
+#: src/swap/persist.rs:148
+msgid "Zswap persistence disabled"
+msgstr "ปิดใช้งานการเก็บถาวร Zswap"
+
+#: src/swap/persist.rs:146
+msgid "Zswap persistence enabled"
+msgstr "เปิดใช้งานการเก็บถาวร Zswap แล้ว"
+
+#: src/views/dashboard_view.rs:159 src/views/swap_view.rs:122
+msgid "for {0} GiB RAM"
+msgstr "สำหรับ RAM {0} GiB"
+
+#: src/swap/sysctl.rs:133
+msgid "swappiness updated"
+msgstr "อัปเดตค่า swappiness แล้ว"
+
+#: src/swap/persist.rs:37
+msgid "systemctl {0} failed: {1}"
+msgstr "systemctl {0} ล้มเหลว: {1}"
+
+#: src/views/zram_view.rs:525
+msgid "{0} MiB used (stats reset)"
+msgstr "ใช้งาน {0} MiB (รีเซ็ตสถิติแล้ว)"
+
+#: src/views/zram_view.rs:520
+msgid "{0} MiB used · saved {1}%"
+msgstr "ใช้งาน {0} MiB · ประหยัด {1}%"
+
+#: src/views/dashboard_view.rs:498
+msgid "{0} · pool {1}%"
+msgstr "{0} · สระ {1}%"
+
+#: src/views/dashboard_view.rs:474
+msgid "{0} · saved {1}%"
+msgstr "{0} · ประหยัด {1}%"
+
+#: src/views/swap_view.rs:754
+msgid ""
+"{0} — installer-managed; size cannot be changed while the system is running"
+msgstr ""
+"{0} — จัดการโดยโปรแกรมติดตั้ง; ไม่สามารถเปลี่ยนขนาดได้ขณะระบบกำลังทำงาน"
+
+#~ msgid "Disabling swap will break hibernation. Continue?"
+#~ msgstr ""
+#~ "การปิดใช้งานหน่วยความจำเสมือนจะส่งผลให้การทำงานสลีปหยุดชะงัก "
+#~ "โปรดดำเนินการต่อ"
+
+#~ msgid "Disk Swap"
+#~ msgstr "หน่วยความจำเสมือนบนดิสก์"
+
+#~ msgid "Swap file size"
+#~ msgstr "ขนาดหน่วยความจำเสมือน"
 
 #~ msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
 #~ msgstr "<i>แนะนำ: สลับ {0} GiB, swappiness {1} ({2})</i>"
-
-#~ msgid "Active — {0} GiB used / {1} GiB total"
-#~ msgstr "ใช้งานอยู่ — ใช้งาน {0} GiB / ทั้งหมด {1} GiB"
 
 #~ msgid "Creating Zram device…"
 #~ msgstr "กำลังสร้างอุปกรณ์ Zram…"
@@ -316,38 +774,8 @@ msgstr "พร้อม Zram เปิดใช้งาน — รังแต�
 #~ msgid "Disk-based swap file — the last line of defense when RAM is full"
 #~ msgstr "ไฟล์สลับบนดิสก์ — แนวป้องกันสุดท้ายเมื่อ RAM เต็ม"
 
-#~ msgid "Ensure important work is saved before running this test."
-#~ msgstr "ให้แน่ใจว่าทำงานสำคัญเสร็จแล้วก่อนทำการทดสอบ"
-
-#~ msgid "Hello {0}, you have {1} messages"
-#~ msgstr "สวัสดี {0} คุณมีข้อความ {1} ข้อ"
-
 #~ msgid "Hibernation not detected — recommended: {0} GiB"
 #~ msgstr "ตรวจไม่พบการจำศีล — แนะนำ: {0} GiB"
-
-#~ msgid "Idle ({0} GiB available)"
-#~ msgstr "คงที่ (เหลือ {0} GiB)"
-
-#~ msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
-#~ msgstr "% สูงสุดของแรมที่บ่อข้อมูลแบบบีบอัดอาจใช้ แนะนำ: 20%"
-
-#~ msgid "Real-time RAM, swap, and compression subsystem status"
-#~ msgstr "สถานะแบบเรียลไทม์ของ RAM สวอป และระบบย่อยการบีบอัด"
-
-#~ msgid "Reclaim pool pages under memory pressure. Recommended: ON"
-#~ msgstr "เรียกคืนหน้าในบ่อภายใต้แรงดันหน่วยความจำ แนะนำ: เปิด"
-
-#~ msgid "Simulate memory pressure to test swap and OOM behavior"
-#~ msgstr "จำลองแรงกดดันของหน่วยความจำเพื่อทดสอบพฤติกรรมการสลับและ OOM"
-
-#~ msgid "Warning: This will consume system memory and may cause instability"
-#~ msgstr "คำเตือน: จะใช้หน่วยความจำของระบบและอาจทำให้เกิดความไม่เสถียร"
-
-#~ msgid "{0} · pool {1}%"
-#~ msgstr "{0} · สระ {1}%"
-
-#~ msgid "{0} · saved {1}%"
-#~ msgstr "{0} · ประหยัด {1}%"
 
 #~ msgid "Active"
 #~ msgstr "ใช้งาน"
@@ -385,34 +813,6 @@ msgstr "พร้อม Zram เปิดใช้งาน — รังแต�
 #~ "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
 
 #~ msgid ""
-#~ "Create a compressed RAM swap device for faster memory pressure handling."
-#~ msgstr ""
-#~ "Create a compressed RAM swap device for faster memory pressure handling."
-
-#~ msgid ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
 #~ msgstr ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer "
-#~ "(recommended: {0})"
-#~ msgstr ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer "
-#~ "(recommended: {0})"
-
-#~ msgid ""
-#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to "
-#~ "prefer fast compressed RAM swap — dropping file cache when zram is "
-#~ "available wastes I/O performance."
-#~ msgstr ""
-#~ "Zram กำลังใช้งาน แต่ค่า swappiness ตั้งอยู่ที่ {0} แทนที่จะเป็น {1} ตั้งค่าเป็น {1} "
-#~ "เพื่อเลือกใช้งานสลับหน่วยความจำแบบบีบอัดที่รวดเร็ว — การลดแคชไฟล์เมื่อมี zram "
-#~ "ว่างเปล่าเป็นการสูญเสียประสิทธิภาพ I/O"
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — with Zram active, set to {0} to "
-#~ "prefer fast compressed RAM over disk cache (recommended: {0})"
-#~ msgstr ""
-#~ "ความก้าวร้าวที่เคอร์เนลใช้งานสลับ — เมื่อ Zram เปิดใช้งาน ให้ตั้งค่าเป็น {0} "
-#~ "เพื่อเลือกใช้งานหน่วยความจำแบบบีบอัดที่รวดเร็วเหนือดิสก์แคช (แนะนำ: {0})"

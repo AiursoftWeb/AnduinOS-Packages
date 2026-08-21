@@ -1,0 +1,58 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-yubikey-manager</PackageName>
+    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS YubiKey Security Center — protect sign-in, sudo, SSH, and Git with security keys</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
+    <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble resolute-addon=resolute" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Dependency Include="libpam-u2f" />
+    <Dependency Include="pamu2fcfg" />
+    <Dependency Include="fido2-tools" />
+    <Dependency Include="openssh-client" />
+    <Dependency Include="yubikey-manager" Type="Recommends" />
+    <Dependency Include="polkitd" />
+    <Dependency Include="python3" />
+    <Dependency Include="gdm3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
+    <PostInstallScript Include="scripts/postinst.sh" />
+    <PreRemoveScript Include="scripts/prerm.sh" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IncludeScript Include="obj/anduinos-yubikey-manager" Target="/usr/bin/anduinos-yubikey-manager" />
+    <IncludeScript Include="data/helper" Target="/usr/lib/anduinos-yubikey-manager/helper" />
+    <IncludeFile Include="data/com.anduinos.yubikeymanager.policy" Target="/usr/share/polkit-1/actions/com.anduinos.yubikeymanager.policy" />
+    <IncludeFile Include="data/security-key-symbolic.svg" Target="/usr/share/icons/hicolor/symbolic/apps/com.anduinos.yubikeymanager-security-key-symbolic.svg" />
+    <IncludeFile Include="data/security-key-onboarding.svg" Target="/usr/share/anduinos-yubikey-manager/illustrations/security-key-onboarding.svg" />
+    <IncludeFile Include="data/security-key-connected.svg" Target="/usr/share/anduinos-yubikey-manager/illustrations/security-key-connected.svg" />
+    <IncludeFile Include="data/yubikey-device.svg" Target="/usr/share/anduinos-yubikey-manager/illustrations/yubikey-device.svg" />
+    <IncludeFolder Include="locale" Target="/usr/share/locale" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AppStreamApplication Include="data/com.anduinos.yubikeymanager.desktop" Icon="data/com.anduinos.yubikeymanager.svg" />
+    <AppStreamScreenshot Include="screenshots/security-overview.png" Default="true" Caption="Protect sign-in, sudo, SSH, and Git with a security key" Environment="GNOME:dark" />
+    <AppStreamScreenshot Include="screenshots/ssh-key.png" Caption="Create a resident SSH key on your YubiKey" Environment="GNOME:dark" />
+  </ItemGroup>
+</Project>

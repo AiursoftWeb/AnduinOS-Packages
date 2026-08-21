@@ -1,0 +1,1481 @@
+# Chinese translations for anduinos-installer-beta package.
+# Copyright (C) 2026 THE anduinos-installer-beta'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-installer-beta package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-installer-beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-01 11:01+0000\n"
+"PO-Revision-Date: 2026-07-30 14:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: zh_HK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/pages.py:2092
+msgid "Installing an input method requires an Internet connection."
+msgstr "安裝輸入法需要互聯網連線。"
+
+#: src/pages.py:2103
+msgid ""
+"No Internet connection. Input methods cannot be installed. You can install "
+"them later when connected."
+msgstr "目前未連接互聯網，無法安裝輸入法。你可以稍後連線安裝。"
+
+#: src/pages.py:4933
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"實際安裝將建立本機 MOK。重新啟動後，在 MOKManager 中選擇註冊 MOK → 繼續 → 是，並輸入密碼 123456。"
+
+#: src/pages.py:4944
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
+msgstr ""
+"\n"
+"在藍色的 MOKManager 畫面中選擇註冊 MOK → 繼續 → 是，密碼：123456"
+
+#: src/pages.py:4275
+msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
+msgstr "4 GiB 磁碟交換空間（優先級 10）+ 50% RAM LZ4 zram（優先級 100）"
+
+#: src/pages.py:4085
+msgid "; sudo does not require a password"
+msgstr "；sudo 不需要密碼"
+
+#: src/pages.py:4087
+msgid "; sudo requires the account password"
+msgstr "；sudo 需要帳戶密碼"
+
+#: src/pages.py:129
+msgid ""
+"A partition on this disk is mounted. Unmount it and rescan storage before "
+"continuing."
+msgstr "此磁碟上的分割區已掛載。請取消掛載並重新掃描儲存裝置，然後繼續。"
+
+#: src/pages.py:2899
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "{disk} 上的所有資料將被永久刪除。"
+
+#: src/pages.py:4082
+msgid "Account security"
+msgstr "帳戶安全"
+
+#: src/pages.py:2980
+msgid "Advanced Storage"
+msgstr "進階儲存"
+
+#: src/pages.py:2889
+msgid ""
+"Advanced coexistence can affect EFI firmware state and may trigger BitLocker"
+" recovery. It never shrinks or repairs Windows volumes."
+msgstr "進階共存可能會影響 EFI 韌體狀態，並可能觸發 BitLocker 復原。它永遠不會縮小或修復 Windows 區卷。"
+
+#: src/pages.py:2838
+msgid "Advanced — keep existing systems"
+msgstr "進階 — 保留現有系統"
+
+#: src/pages.py:2985
+msgid "Advanced: Install Alongside"
+msgstr "進階：安裝於旁"
+
+#: src/pages.py:164
+msgid ""
+"After changing partitions or unmounting a volume, rescan storage and select "
+"the target again."
+msgstr "更改分割區或取消掛載區卷後，請重新掃描儲存裝置並再次選擇目標。"
+
+#: src/pages.py:4801
+msgid ""
+"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
+"then enter password 123456."
+msgstr "重新啟動後，MOKManager 將開啟。選擇註冊 MOK → 繼續 → 是，然後輸入密碼 123456。"
+
+#: src/pages.py:4432
+msgid ""
+"All partitions and data on {disk} will be destroyed.\n"
+"\n"
+msgstr ""
+"{disk} 上的所有分割區和資料都將被破壞。\n"
+"\n"
+
+#: src/pages.py:155
+msgid ""
+"Alternatively, you may explicitly select one entire partition to erase. "
+"Everything in that selected partition will be destroyed; it is never "
+"selected automatically."
+msgstr "或者，您可以明確選擇一個整個分割區以刪除該分割區中的所有内容；它不會自動被選取。"
+
+#: src/pages.py:924 src/pages.py:986
+msgid "Battery power is too low for a safe installation."
+msgstr "電池電量過低，無法安全安裝。"
+
+#: src/pages.py:895
+msgid "Charge to at least 80% before starting the installation."
+msgstr "請充電至至少 80% 再開始安裝。"
+
+#: src/pages.py:1041 src/pages.py:1016
+msgid "Continue Anyway"
+msgstr "仍然繼續"
+
+#: src/pages.py:1000
+msgid "Current battery level: {percent}%"
+msgstr "目前電量：{percent}%"
+
+#: src/pages.py:1006
+msgid "External power is connected."
+msgstr "已連接外部電源。"
+
+#: src/pages.py:1008
+msgid "External power is not connected."
+msgstr "未連接外部電源。"
+
+#: src/pages.py:954
+msgid "I understand the risks and insist on installing with low battery."
+msgstr "我明白風險，仍堅持在低電量下安裝。"
+
+#: src/pages.py:894 src/pages.py:889 src/pages.py:967 src/pages.py:969
+msgid "Low battery"
+msgstr "電量不足"
+
+#: src/pages.py:948
+msgid "Recheck"
+msgstr "重新檢查"
+
+#: src/main.py:110 src/pages.py:731 src/pages.py:815
+msgid "AnduinOS Installer"
+msgstr "AnduinOS 安裝程式"
+
+#: src/main.py:108
+msgid "AnduinOS Installer (Development)"
+msgstr "AnduinOS 安裝程式（開發版）"
+
+#: src/pages.py:4425
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS 將僅使用 {disk} 上選取的空閒空間。現有分割區將予以保留。\n"
+"\n"
+
+#: src/pages.py:133
+msgid ""
+"AnduinOS will use only the selected unallocated space. The installer will "
+"not shrink or move an existing filesystem."
+msgstr "AnduinOS 將僅使用選取的空閒空間。安裝程式不會縮小或移動現有的檔案系統。"
+
+#: data/languages.json:keyboard_layouts
+msgid "Arabic"
+msgstr "阿拉伯語"
+
+#: src/pages.py:268 src/pages.py:4461 src/pages.py:817
+msgid "Back"
+msgstr "返回"
+
+#: src/pages.py:3014
+msgid ""
+"Before continuing: finish Windows updates, disable Fast Startup and "
+"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
+"measurements and boot order can change."
+msgstr ""
+"繼續之前：完成 Windows 更新，停用快速啟動和休眠功能，並備份 BitLocker 復原金鑰。EFI、安全啟動、TPM "
+"量度及開機順序可能會發生變更。"
+
+#: src/pages.py:2470
+msgid "BitLocker detected"
+msgstr "偵測到 BitLocker"
+
+#: src/pages.py:146
+msgid ""
+"BitLocker storage will be preserved. The installer will not unlock, resize, "
+"repair or otherwise modify it."
+msgstr "BitLocker 儲存空間將予以保留。安裝程式不會解鎖、調整大小、修復或以其他方式修改該空間。"
+
+#: src/pages.py:4186
+msgid "Boot policy"
+msgstr "開機政策"
+
+#: src/pages.py:3055
+msgid "Btrfs (recommended)"
+msgstr "Btrfs（建議）"
+
+#: src/pages.py:2817
+msgid "Btrfs — recommended"
+msgstr "Btrfs — 建議使用"
+
+#: src/pages.py:4361
+msgid "Cannot create installation plan"
+msgstr "無法建立安裝計畫"
+
+#: src/pages.py:2727
+msgid "Choose Installation Method"
+msgstr "選擇安裝方法"
+
+#: src/pages.py:2498
+msgid "Choose one target disk. Storage settings come next."
+msgstr "選擇一個目標磁碟。儲存設定隨後出現。"
+
+#: src/pages.py:2199
+msgid "Choose optional software to install"
+msgstr "選擇要安裝的選件軟體"
+
+#: src/pages.py:813
+msgid "Choose your language to begin installation"
+msgstr "選擇您的語言以開始安裝"
+
+#: src/pages.py:3819
+msgid "Choose your location to set the system clock"
+msgstr "選擇您的位置以設定系統時鐘"
+
+#: src/pages.py:4838
+msgid "Complete"
+msgstr "完成"
+
+#: src/pages.py:3506 src/pages.py:3513 src/pages.py:4101 src/pages.py:3601
+#: src/pages.py:4440
+msgid "Computer Name"
+msgstr "電腦名稱"
+
+#: src/pages.py:3594
+msgid "Computer name contains invalid characters."
+msgstr "電腦名稱包含無效字元。"
+
+#: src/pages.py:4589
+msgid "Configure account, region, timezone, and machine identity"
+msgstr "設定帳戶、地區、時區和機器識別碼"
+
+#: src/pages.py:4578
+msgid "Configure storage and swap"
+msgstr "設定儲存空間和交換空間"
+
+#: src/pages.py:3480 src/pages.py:3488
+msgid "Confirm Password"
+msgstr "確認密碼"
+
+#: src/pages.py:1939
+msgid "Confirm your keyboard layout"
+msgstr "確認您的鍵盤佈局"
+
+#: src/main.py:153 src/pages.py:1911
+msgid "Continue Installation"
+msgstr "繼續安裝"
+
+#: src/pages.py:4574
+msgid "Copy AnduinOS system"
+msgstr "複製 AnduinOS 系統"
+
+#: src/pages.py:4675
+msgid "Copy Log"
+msgstr "複製日誌"
+
+#: src/pages.py:3146
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "建立新的 1 GiB AnduinOS EFI 系統分割區"
+
+#: src/pages.py:4163
+msgid ""
+"Create and format a dedicated AnduinOS EFI System Partition inside the "
+"selected space."
+msgstr "在所選空間內建立並格式化專屬的 AnduinOS EFI 系統分割區。"
+
+#: src/pages.py:3447
+msgid "Create your user account"
+msgstr "建立您的使用者帳戶"
+
+#: src/pages.py:2412
+msgid "Current disk layout"
+msgstr "目前磁碟佈局"
+
+#: src/pages.py:3979
+msgid ""
+"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
+"executor or disk command can run."
+msgstr "開發模式 — 計畫將被驗證和模擬。無法執行任何特權執行程式或磁碟指令。"
+
+#: data/languages.json:keyboard_layouts
+msgid "Danish"
+msgstr "丹麥語"
+
+#: src/pages.py:4569
+msgid "Detect Internet connectivity"
+msgstr "偵測互聯網連線狀態"
+
+#: src/pages.py:4566
+msgid "Detect firmware and Secure Boot"
+msgstr "偵測韌體和安全啟動"
+
+#: src/pages.py:4419
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
+"\n"
+msgstr ""
+"開發模式將模擬安裝到 {disk}。不會更改任何磁碟資料。\n"
+"\n"
+
+#: src/pages.py:4923
+msgid "Development simulation completed"
+msgstr "開發模擬完成"
+
+#: src/pages.py:4832
+msgid "Discover AnduinOS"
+msgstr "探索 AnduinOS"
+
+#: src/pages.py:1216 src/pages.py:2218
+msgid "Download and install system updates during installation"
+msgstr "在安裝期間下載並安裝系統更新"
+
+#: data/languages.json:keyboard_layouts
+msgid "Dutch"
+msgstr "荷蘭語"
+
+#: src/pages.py:3073
+msgid "EFI System Partition"
+msgstr "EFI 系統分割區"
+
+#: src/pages.py:4184
+msgid "EFI policy"
+msgstr "EFI 策略"
+
+#: src/pages.py:2455
+msgid "Empty disk — no partitions"
+msgstr "空磁碟 — 沒有分割區"
+
+#: src/pages.py:2821
+msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
+msgstr "啟用共享空間子卷、快照和 Disk Snapshots Manager。"
+
+#: data/languages.json:keyboard_layouts
+msgid "English (UK)"
+msgstr "英語（英國）"
+
+#: data/languages.json:keyboard_layouts
+msgid "English (US)"
+msgstr "英語（美國）"
+
+#: src/pages.py:4601
+msgid "Ensure Disk Snapshots Manager is available"
+msgstr "確保Disk Snapshots Manager可用"
+
+#: src/pages.py:4412
+msgid "Erase Disk and Install"
+msgstr "抹除磁碟並安裝"
+
+#: src/pages.py:2813 src/pages.py:4226
+msgid "Erase every partition and all data on the selected disk."
+msgstr "抹除所選磁碟上的所有分割區及全部資料。"
+
+#: src/pages.py:4411
+msgid "Erase the entire selected disk?"
+msgstr "要抹除整個所選磁碟嗎？"
+
+#: src/pages.py:137
+msgid ""
+"Existing Windows, recovery and data partitions remain outside the write set "
+"and will be preserved."
+msgstr "現有的 Windows、還原及資料分割區將保留在寫入集之外，不會被刪除。"
+
+#: src/pages.py:2945
+msgid ""
+"Existing partitions were detected. The first two choices delete them; "
+"Advanced is the preservation path."
+msgstr "偵測到現有分割區。前兩個選項會將其刪除；進階選項則為保留路徑。"
+
+#: src/pages.py:4446
+msgid ""
+"Existing partitions will be preserved. New AnduinOS partitions will be "
+"created only in the selected unallocated extent; EFI vendor files and the "
+"AnduinOS firmware boot entry may be updated."
+msgstr ""
+"現有分割區將被保留。新的 AnduinOS 分割區僅會在所選的未分配空間中建立；EFI 廠商檔案及 AnduinOS 韌體開機項目可能會更新。"
+
+#: src/pages.py:3052 src/pages.py:4049
+msgid "Filesystem"
+msgstr "檔案系統"
+
+#: src/pages.py:4613
+msgid "Finalize target environment"
+msgstr "完成目標環境設定"
+
+#: data/languages.json:keyboard_layouts
+msgid "Finnish"
+msgstr "芬蘭語"
+
+#: src/pages.py:4182
+msgid "Formats"
+msgstr "格式化"
+
+#: data/languages.json:keyboard_layouts
+msgid "French"
+msgstr "法語"
+
+#: src/pages.py:3462 src/pages.py:3464
+msgid "Full Name"
+msgstr "全名"
+
+#: data/languages.json:keyboard_layouts
+msgid "German"
+msgstr "德語"
+
+#: data/languages.json:keyboard_layouts
+msgid "Greek"
+msgstr "希臘語"
+
+#: src/pages.py:111
+msgid ""
+"Guided coexistence requires a system booted in UEFI mode and a GPT target "
+"disk. This disk cannot continue in guided mode."
+msgstr "引導式共存需要以 UEFI 模式啟動系統，並使用 GPT 目標磁碟。此磁碟無法繼續使用引導模式。"
+
+#: src/pages.py:4131
+msgid ""
+"Guided storage selection is missing. Rescan and select the target again."
+msgstr "缺少引導式儲存裝置選擇。請重新掃描並再次選擇目標。"
+
+#: data/languages.json:keyboard_layouts
+msgid "Hindi (India)"
+msgstr "印地語（印度）"
+
+#: src/pages.py:2741
+msgid "How should AnduinOS use this disk?"
+msgstr "AnduinOS 應如何使用此磁碟？"
+
+#: data/languages.json:keyboard_layouts
+msgid "Indonesian"
+msgstr "印尼語"
+
+#: src/pages.py:4498
+msgid "Install"
+msgstr "安裝"
+
+#: src/pages.py:4559 src/pages.py:1221 src/pages.py:4125
+msgid "Install input method"
+msgstr "安裝輸入法"
+
+#: src/pages.py:625
+msgid "Install {language} input method: {name}"
+msgstr "安裝{language}輸入法：{name}"
+
+#: src/pages.py:4409 src/pages.py:4496
+msgid "Install Alongside"
+msgstr "並排安裝"
+
+#: src/pages.py:4169
+msgid "Install alongside"
+msgstr "並排安裝"
+
+#: src/pages.py:4608
+msgid "Install bootloader"
+msgstr "安裝開機管理程式"
+
+#: src/pages.py:4611
+msgid "Check systems on other disks"
+msgstr "檢查其他硬碟上的系統"
+
+#: src/pages.py:1217 src/pages.py:4603
+msgid "Install hardware drivers"
+msgstr "安裝硬體驅動程式"
+
+#: src/pages.py:4408
+msgid "Install in the selected free space?"
+msgstr "要在選定的可用空間中安裝嗎？"
+
+#: src/pages.py:4596
+msgid "Ensure required language packs are installed"
+msgstr "確保所需的語言套件已安裝"
+
+#: src/pages.py:4599
+msgid "Install system updates"
+msgstr "安裝系統更新"
+
+#: src/pages.py:2229
+msgid "Install third-party drivers for this device"
+msgstr "為此裝置安裝第三方驅動程式"
+
+#: src/pages.py:5093 src/pages.py:5095 src/pages.py:4940 src/pages.py:4950
+msgid "Installation Complete"
+msgstr "安裝完成"
+
+#: src/pages.py:4970
+msgid "Installation Failed"
+msgstr "安裝失敗"
+
+#: src/pages.py:4639
+msgid "Installation Steps"
+msgstr "安裝步驟"
+
+#: src/pages.py:160
+msgid ""
+"Installation cannot continue with this selection. There is no force-continue"
+" option around storage safety checks."
+msgstr "使用此選項無法繼續安裝。儲存裝置安全檢查沒有強制繼續的選項。"
+
+#: src/pages.py:4919 src/pages.py:4985
+msgid "Installation complete"
+msgstr "安裝已完成"
+
+#: src/pages.py:4968
+msgid "Installation failed"
+msgstr "安裝失敗"
+
+#: src/main.py:145
+msgid "Installation in progress"
+msgstr "安裝中"
+
+#: src/pages.py:4547 src/pages.py:4541
+msgid "Installing AnduinOS"
+msgstr "正在安裝 AnduinOS"
+
+#: data/languages.json:keyboard_layouts
+msgid "Italian"
+msgstr "義大利語"
+
+#: data/languages.json:keyboard_layouts
+msgid "Japanese (JIS keyboard)"
+msgstr "日語（JIS 鍵盤）"
+
+#: src/pages.py:4040
+msgid "Keyboard"
+msgstr "鍵盤"
+
+#: src/pages.py:1938 src/pages.py:1932 src/pages.py:2075
+msgid "Keyboard Layout"
+msgstr "鍵盤佈局"
+
+#: src/pages.py:4582
+msgid "Configure physical keyboard layout"
+msgstr "設定實體鍵盤佈局"
+
+#: data/languages.json:keyboard_layouts
+msgid "Korean"
+msgstr "韓語"
+
+#: src/pages.py:4039
+msgid "Language"
+msgstr "語言"
+
+#: src/pages.py:2472
+msgid "Live USB — excluded"
+msgstr "即時 USB — 已排除"
+
+#: src/pages.py:4573
+msgid "Mount target filesystems"
+msgstr "掛載目標檔案系統"
+
+#: src/pages.py:851
+msgid "Navigation error"
+msgstr "導航錯誤"
+
+#: src/pages.py:4180 src/pages.py:4229
+msgid "New partitions"
+msgstr "新分割區"
+
+#: src/pages.py:261 src/pages.py:818 src/pages.py:1016
+msgid "Next"
+msgstr "下一步"
+
+#: src/pages.py:4756
+msgid "Next slide"
+msgstr "下一張幻燈片"
+
+#: src/pages.py:2389
+msgid "No partition table"
+msgstr "沒有分割區表"
+
+#: src/pages.py:2631
+msgid "No suitable disks found."
+msgstr "未找到合適的磁碟。"
+
+#: src/pages.py:170
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with Windows Disk Management, then boot the installer "
+"again and rescan the disk."
+msgstr "找不到合適的未分配空間。為保護您的資料，請使用 Windows 磁碟管理工具建立未分配空間，然後重新啟動安裝程式並再次掃描磁碟。"
+
+#: src/pages.py:175
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with a partitioning tool, then boot the installer again "
+"and rescan the disk."
+msgstr "找不到合適的未分配空間。為保護您的資料，請使用分割區工具建立未分配空間，然後重新啟動安裝程式並再次掃描磁碟。"
+
+#: data/languages.json:keyboard_layouts
+msgid "Norwegian"
+msgstr "挪威語"
+
+#: src/pages.py:1124 src/pages.py:1375 src/pages.py:4370 src/pages.py:854
+msgid "OK"
+msgstr "確定"
+
+#: src/pages.py:4835
+msgid "Output"
+msgstr "輸出"
+
+#: src/pages.py:4973 src/pages.py:5028
+msgid "Output • Error"
+msgstr "輸出 • 錯誤"
+
+#: src/pages.py:5023
+msgid "Output • {count} warning(s)"
+msgstr "輸出 • {count} 個警告"
+
+#: src/pages.py:2453
+msgid "Partition details unavailable"
+msgstr "無法取得分割區詳細資料"
+
+#: src/pages.py:3476 src/pages.py:3487 src/pages.py:1466 src/pages.py:1525
+msgid "Password"
+msgstr "密碼"
+
+#: src/pages.py:3584
+msgid "Password must be at least 6 characters."
+msgstr "密碼必須至少為 6 個字元。"
+
+#: src/pages.py:4048
+msgid "Platform"
+msgstr "平台"
+
+#: src/pages.py:4548
+msgid "Please do not turn off your computer"
+msgstr "請勿關閉電腦"
+
+#: src/pages.py:3965
+msgid "Please review your choices before proceeding"
+msgstr "請在繼續前檢查您的選擇"
+
+#: data/languages.json:keyboard_layouts
+msgid "Polish"
+msgstr "波蘭語"
+
+#: data/languages.json:keyboard_layouts
+msgid "Portuguese"
+msgstr "葡萄牙語"
+
+#: data/languages.json:keyboard_layouts
+msgid "Portuguese (Brazil)"
+msgstr "葡萄牙語（巴西）"
+
+#: src/pages.py:4594
+msgid "Prepare Secure Boot"
+msgstr "準備安全啟動"
+
+#: src/pages.py:4572
+msgid "Prepare installation disk"
+msgstr "準備安裝磁碟"
+
+#: src/pages.py:4579
+msgid "Prepare target environment"
+msgstr "準備目標環境"
+
+#: src/pages.py:4871
+msgid "Preparing installation…"
+msgstr "正在準備安裝…"
+
+#: src/pages.py:4175
+msgid "Preserved partitions"
+msgstr "保留的分割區"
+
+#: src/pages.py:4750
+msgid "Previous slide"
+msgstr "上一張幻燈片"
+
+#: src/pages.py:3964 src/pages.py:3958
+msgid "Ready to Install"
+msgstr "準備安裝"
+
+#: src/pages.py:4811
+msgid "Reboot Now"
+msgstr "立即重新啟動"
+
+#: src/pages.py:4598
+msgid "Refresh package indexes"
+msgstr "重新整理套件索引"
+
+#: src/pages.py:4580
+msgid "Remove live-session components"
+msgstr "移除 Live 會話元件"
+
+#: src/pages.py:4951 src/pages.py:4942
+msgid "Remove the installation media and restart your computer"
+msgstr "移除安裝媒體並重新啟動您的電腦"
+
+#: src/pages.py:1177 src/pages.py:1205 src/pages.py:2220 src/pages.py:675
+#: src/pages.py:1362 src/pages.py:2233
+msgid ""
+"Requires an Internet connection. The base installation remains available "
+"when offline."
+msgstr "需要網際網路連線。離線時基礎安裝仍可正常使用。"
+
+#: src/pages.py:2550
+msgid "Rescan Storage"
+msgstr "重新掃描儲存裝置"
+
+#: src/pages.py:3101
+msgid "Rescan and Reselect Disk"
+msgstr "重新掃描及重新選擇磁碟"
+
+#: src/pages.py:4809
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "重新啟動並註冊安全啟動金鑰"
+
+#: src/pages.py:4960
+msgid "Restart is disabled in development protection mode"
+msgstr "在開發保護模式中已停用重新啟動"
+
+#: src/pages.py:3150
+msgid "Reuse {path} ({size})"
+msgstr "重用 {path} ({size})"
+
+#: src/pages.py:4155
+msgid ""
+"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
+"before writing."
+msgstr "重用 {path}；絕不格式化；在寫入前驗證 FAT 健康狀態、身份及 64 MiB 可用空間。"
+
+#: data/languages.json:keyboard_layouts
+msgid "Romanian"
+msgstr "羅馬尼亞語"
+
+#: data/languages.json:keyboard_layouts
+msgid "Russian"
+msgstr "俄語"
+
+#: src/pages.py:4679
+msgid "Save Log"
+msgstr "儲存日誌"
+
+#: src/pages.py:4609
+msgid "Schedule MOK enrollment"
+msgstr "排程 MOK 註冊"
+
+#: src/pages.py:3831
+msgid "Search timezones…"
+msgstr "搜尋時區…"
+
+#: src/pages.py:4069
+msgid "Secure Boot enrollment"
+msgstr "安全啟動註冊"
+
+#: src/pages.py:2497 src/pages.py:2491
+msgid "Select Installation Disk"
+msgstr "選擇安裝磁碟"
+
+#: src/pages.py:3818 src/pages.py:3812
+msgid "Select Timezone"
+msgstr "選擇時區"
+
+#: src/pages.py:4592
+msgid "Select fastest package mirror"
+msgstr "選擇最快的套件鏡像站"
+
+#: src/pages.py:3884
+msgid "Selected timezone"
+msgstr "已選時區"
+
+#: src/pages.py:4170
+msgid "Selected unallocated space"
+msgstr "選取的未分配空間"
+
+#: src/pages.py:2239
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr "某些驅動程式是專有或其他非自由軟體。"
+
+#: data/languages.json:keyboard_layouts
+msgid "Spanish"
+msgstr "西班牙語"
+
+#: src/pages.py:4046
+msgid "Stable disk identity"
+msgstr "穩定的磁碟識別碼"
+
+#: src/pages.py:4437
+msgid ""
+"Stable identity: {stable_id}\n"
+"\n"
+msgstr ""
+"穩定識別碼：{stable_id}\n"
+"\n"
+
+#: src/pages.py:2380
+msgid "Storage Device"
+msgstr "儲存裝置"
+
+#: src/pages.py:4168 src/pages.py:4224
+msgid "Storage mode"
+msgstr "儲存模式"
+
+#: src/pages.py:4050
+msgid "Subvolumes"
+msgstr "子卷"
+
+#: src/pages.py:4268
+msgid "Swap"
+msgstr "交換空間"
+
+#: data/languages.json:keyboard_layouts
+msgid "Swedish"
+msgstr "瑞典語"
+
+#: src/pages.py:4051
+msgid "System updates"
+msgstr "系統更新"
+
+#: src/pages.py:4042
+msgid "Target Disk"
+msgstr "目標磁碟"
+
+#: src/pages.py:2993 src/pages.py:3260
+msgid "Target: {disk} ({size} — {model})"
+msgstr "目標：{disk} ({size} — {model})"
+
+#: src/pages.py:1964 src/pages.py:2076
+msgid "Test your keyboard here…"
+msgstr "在此測試您的鍵盤…"
+
+#: data/languages.json:keyboard_layouts
+msgid "Thai"
+msgstr "泰語"
+
+#: src/pages.py:120
+msgid ""
+"The GPT disk or one of its partitions has no unique stable identifier. "
+"Guided coexistence cannot safely authorize preservation or writes on this "
+"disk."
+msgstr "GPT 磁碟或其其中一個分割區沒有唯一的穩定識別碼。引導共存功能無法安全地授權在此磁碟上保留或寫入資料。"
+
+#: src/pages.py:115
+msgid ""
+"The complete partition map and free-space geometry could not be read "
+"consistently. No space on this disk is authorized for installation."
+msgstr "無法一致地讀取完整的分割區圖及可用空間結構。此磁碟上的任何空間均未被授權用於安裝。"
+
+#: src/pages.py:141
+msgid ""
+"The existing EFI System Partition is only a candidate. Health and free-space"
+" checks must pass before it can be reused, and it will never be formatted."
+msgstr "現有的 EFI 系統分割區僅為候選項目。必須通過健康狀態和可用空間檢查後方可重用，且絕不會被格式化。"
+
+#: src/pages.py:4926
+msgid ""
+"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
+" state, or installed system was changed."
+msgstr "安裝計畫有效。未更改任何磁碟、檔案系統、開機管理程式、安全啟動狀態或已安裝的系統。"
+
+#: src/main.py:147
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "當安裝程式正在修改目標磁碟時，無法關閉它。"
+
+#: src/pages.py:150
+msgid ""
+"The installer will not mount, repair or infer the safety of Windows volumes "
+"from hibernation or Fast Startup state. Any required Windows maintenance "
+"must be completed in Windows."
+msgstr ""
+"安裝程式不會掛載、修復或判斷處於休眠或快速啟動狀態的 Windows 卷的安全性。任何所需的 Windows 維護都必須在 Windows 中完成。"
+
+#: src/pages.py:4443
+msgid "The privileged executor is disabled."
+msgstr "特權執行程式已停用。"
+
+#: src/pages.py:3228
+msgid ""
+"The selected disk changed or disappeared. Return to the disk page and select"
+" it again. {error}"
+msgstr "所选磁盘已更改或消失。请返回磁盘页面并重新选择。{error}"
+
+#: src/pages.py:3241
+msgid "The selected disk size changed. Return and select it again."
+msgstr "所选磁盘大小已更改。请返回并重新选择。"
+
+#: src/pages.py:3251
+msgid ""
+"The selected disk topology changed. Review the disk and installation method "
+"again."
+msgstr "所选磁盘拓扑结构已更改。请再次检查磁盘和安装方法。"
+
+#: src/pages.py:3580
+msgid "The two passwords do not match."
+msgstr "兩個密碼不符。"
+
+#: src/pages.py:4057
+msgid "Third-party drivers"
+msgstr "第三方驅動程式"
+
+#: src/pages.py:3021
+msgid ""
+"This advanced path preserves existing partitions but changes the selected "
+"disk's partition table and the machine's EFI boot state."
+msgstr "此高级路径保留现有分区，但会更改所选磁盘的分区表以及计算机的 EFI 启动状态。"
+
+#: src/pages.py:125
+msgid ""
+"This disk contains an active mapper, array or other nested block-device "
+"topology that guided coexistence does not support."
+msgstr "此磁盘包含活动映射器、阵列或其他嵌套块设备拓扑结构，而引导共存不支持这些结构。"
+
+#: src/pages.py:2935
+msgid ""
+"This disk is too small for whole-disk installation. Advanced may continue "
+"only if suitable unallocated space exists."
+msgstr "此磁盘太小，无法进行整盘安装。仅当存在合适的未分配空间时，高级选项才可继续。"
+
+#: src/pages.py:4454
+msgid "This installer does not shrink or preserve other systems."
+msgstr "此安裝程式不會縮小或保留其他系統。"
+
+#: src/pages.py:4103
+msgid "Timezone"
+msgstr "時區"
+
+#: src/pages.py:2474
+msgid "Too small"
+msgstr "太小"
+
+#: data/languages.json:keyboard_layouts
+msgid "Turkish"
+msgstr "土耳其語"
+
+#: data/languages.json:keyboard_layouts
+msgid "Ukrainian"
+msgstr "烏克蘭語"
+
+#: src/pages.py:3065
+msgid "Unallocated space"
+msgstr "未分配空間"
+
+#: src/pages.py:2445
+msgid "Unallocated · {size}"
+msgstr "未分配 · {size}"
+
+#: src/pages.py:4014 src/pages.py:1710
+msgid "Unavailable: {error}"
+msgstr "不可用：{error}"
+
+#: src/pages.py:2432
+msgid "Unknown filesystem"
+msgstr "不明檔案系統"
+
+#: src/pages.py:4614
+msgid "Unmount installed system"
+msgstr "卸載已安裝的系統"
+
+#: src/pages.py:2198 src/pages.py:1196 src/pages.py:2192
+msgid "Updates and Drivers"
+msgstr "更新和驅動程式"
+
+#: src/pages.py:2840
+msgid ""
+"Use already-unallocated space and preserve existing partitions. This is the "
+"only Windows coexistence path."
+msgstr "使用已有的未分配空間並保留現有分區。這是唯一與 Windows 共存的途徑。"
+
+#: src/pages.py:2986
+msgid "Use only existing unallocated space on the selected disk."
+msgstr "僅使用所選磁碟上現有的未分配空間。"
+
+#: src/pages.py:4079
+msgid "User"
+msgstr "使用者"
+
+#: src/pages.py:3446 src/pages.py:3440
+msgid "User Account"
+msgstr "使用者帳戶"
+
+#: src/pages.py:3468 src/pages.py:3472
+msgid "Username"
+msgstr "使用者名稱"
+
+#: src/pages.py:3568
+msgid ""
+"Username must start with a lowercase ASCII letter and contain only lowercase"
+" ASCII letters or digits (maximum 16 characters)."
+msgstr "使用者名稱必須以小寫 ASCII 字母開頭，且只能包含小寫 ASCII 字母或數字（最多 16 個字元）。"
+
+#: src/pages.py:2832
+msgid "Uses a traditional single root filesystem."
+msgstr "使用傳統的單一根檔案系統。"
+
+#: src/pages.py:4406
+msgid "Validate Plan (No Installation)"
+msgstr "驗證計畫（不安裝）"
+
+#: src/pages.py:4405
+msgid "Validate this installation plan?"
+msgstr "要驗證此安裝計畫嗎？"
+
+#: src/pages.py:4606
+msgid "Verify kernel module signatures"
+msgstr "驗證核心模組簽章"
+
+#: src/pages.py:4571
+msgid "Verify target disk isolation"
+msgstr "驗證目標磁碟隔離"
+
+#: data/languages.json:keyboard_layouts
+msgid "Vietnamese"
+msgstr "越南語"
+
+#: src/pages.py:811
+msgid "Welcome to AnduinOS"
+msgstr "歡迎使用 AnduinOS"
+
+#: src/pages.py:2468
+msgid "Windows detected"
+msgstr "偵測到 Windows"
+
+#: src/pages.py:4188
+msgid ""
+"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
+"AnduinOS NVRAM entry."
+msgstr "僅寫入 EFI/AnduinOS，不要覆蓋 EFI/BOOT，並需要經驗證的 AnduinOS NVRAM 項目。"
+
+#: src/pages.py:4072
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr "建立本機 MOK；重新啟動後使用密碼 123456 註冊"
+
+#: src/pages.py:4059
+msgid "detect and install (may include non-free software)"
+msgstr "偵測並安裝（可能包含非自由軟體）"
+
+#: src/pages.py:4121 src/pages.py:4055 src/pages.py:4061 src/pages.py:4067
+msgid "do not install"
+msgstr "不安裝"
+
+#: src/pages.py:4053 src/pages.py:4065
+msgid "download and install"
+msgstr "下載並安裝"
+
+#: src/pages.py:3055
+msgid "ext4 (classic)"
+msgstr "ext4（經典）"
+
+#: src/pages.py:2829
+msgid "ext4 — classic"
+msgstr "ext4 — 經典"
+
+#: src/pages.py:4077
+msgid "not required"
+msgstr "不需要"
+
+#: src/pages.py:4083
+msgid "password required for login"
+msgstr "登入需要密碼"
+
+#: src/pages.py:4024
+msgid "single ext4 root filesystem"
+msgstr "單一 ext4 根檔案系統"
+
+#: src/pages.py:4005
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / 安全啟動：{secure_boot}"
+
+#: src/pages.py:4176
+msgid "{count}: {paths}"
+msgstr "{count}：{paths}"
+
+#: src/pages.py:4139
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}：{start}–{end} MiB"
+
+#: src/pages.py:4147
+msgid "{path} as {filesystem}"
+msgstr "將 {path} 設為 {filesystem}"
+
+#: src/pages.py:4171
+msgid "{size} at {offset}"
+msgstr "偏移量 {offset} 處的大小 {size}"
+
+#: src/pages.py:3288
+msgid "{size} unallocated at {offset}"
+msgstr "偏移量 {offset} 處的未分配空間大小 {size}"
+
+#: src/pages.py:5031
+msgid "{step} failed"
+msgstr "{step} 失敗"
+
+#: src/pages.py:4303
+msgid ""
+"⚠ Only the selected unallocated space will be partitioned and formatted. "
+"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
+"firmware boot entry may change. This installer will not shrink Windows for "
+"you."
+msgstr ""
+"⚠️ 僅選中的未分配空間會被分割和格式化。現有分區將保留，但 EFI/AnduinOS 檔案及 AnduinOS "
+"韌體開機項目可能會變更。此安裝程式不會為您縮小 Windows 的容量。"
+
+#: src/pages.py:4311
+msgid ""
+"⚠ This will erase ALL data on the selected disk. This action cannot be "
+"undone."
+msgstr "⚠ 這將刪除所選磁碟上的所有資料。此操作無法撤銷。"
+
+#: src/pages.py:1176 src/pages.py:667 src/pages.py:1171
+msgid "Connect to the Internet"
+msgstr "連接到互聯網"
+
+#: src/pages.py:1343
+msgid "Internet connection is ready."
+msgstr "互聯網連接已就緒。"
+
+#: src/pages.py:1250
+msgid "Available Wi-Fi Networks"
+msgstr "可用的 Wi-Fi 網絡"
+
+#: src/pages.py:4576
+msgid "Preserve connected Wi-Fi network"
+msgstr "保留已連線的 Wi-Fi 網絡"
+
+#: src/pages.py:2540 src/pages.py:3092
+msgid "Loading storage devices…"
+msgstr "正在載入儲存裝置…"
+
+#: src/pages.py:4335
+msgid "Rechecking target disk…"
+msgstr "正在重新檢查目標磁碟…"
+
+#: src/pages.py:2609 src/pages.py:3213 src/pages.py:4364
+msgid "Storage devices could not be loaded: {error}"
+msgstr "無法載入儲存裝置：{error}"
+
+#: src/pages.py:1218 src/pages.py:4586 src/pages.py:2252
+msgid "Install extended multimedia format support"
+msgstr "安裝擴充多媒體格式支援"
+
+#: src/pages.py:4063
+msgid "Extended multimedia formats"
+msgstr "擴充多媒體格式"
+
+#: src/pages.py:2256
+msgid ""
+"Adds wider GStreamer compatibility and support for additional legacy and "
+"specialist media formats. Some components may be subject to patent or "
+"redistribution terms."
+msgstr "擴闊 GStreamer 相容性，並支援更多舊式及專業媒體格式。部分元件可能受專利或再發佈條款約束。"
+
+#: src/pages.py:1473
+msgid "A saved profile exists. Entering a password updates it securely."
+msgstr "已存在儲存的設定檔。輸入密碼將安全地更新它。"
+
+#: src/pages.py:1524
+msgid "Anonymous identity (optional)"
+msgstr "匿名身分（選用）"
+
+#: src/pages.py:1530
+msgid "CA certificate path (optional)"
+msgstr "CA 憑證路徑（選用）"
+
+#: src/pages.py:1239 src/pages.py:1409 src/pages.py:1482 src/pages.py:1600
+#: src/pages.py:1816
+msgid "Cancel"
+msgstr "取消"
+
+#: src/pages.py:1786
+msgid "Cancelling Wi-Fi operation…"
+msgstr "正在取消 Wi-Fi 操作…"
+
+#: src/pages.py:1532
+msgid "Client certificate path"
+msgstr "用戶端憑證路徑"
+
+#: src/pages.py:1483 src/pages.py:1601
+msgid "Connect"
+msgstr "Connect"
+
+#: src/pages.py:1817
+msgid "Continue"
+msgstr "繼續"
+
+#: src/pages.py:1259 src/pages.py:1809
+msgid "Connect to a hidden network"
+msgstr "連接至隱藏網路"
+
+#: src/pages.py:1478 src/pages.py:1593
+#, python-brace-format
+msgid "Connect to {network}"
+msgstr "連接至 {network}"
+
+#: src/pages.py:1654
+msgid "Connected"
+msgstr "Connected"
+
+#: src/pages.py:1453
+#, python-brace-format
+msgid "Connecting to {network}…"
+msgstr "正在連接至 {network}…"
+
+#: src/pages.py:1755
+msgid "Could not change the Wi-Fi connection"
+msgstr "無法變更 Wi-Fi 連線"
+
+#: src/pages.py:1410
+msgid "Disconnect"
+msgstr "Disconnect"
+
+#: src/pages.py:1401
+#, python-brace-format
+msgid "Disconnect from {network}?"
+msgstr "要中斷與 {network} 的連線嗎？"
+
+#: src/pages.py:1420
+#, python-brace-format
+msgid "Disconnecting from {network}…"
+msgstr "正在中斷與 {network} 的連線…"
+
+#: src/pages.py:1531
+msgid "Domain suffix match (optional)"
+msgstr "網域名稱後綴比對（選用）"
+
+#: src/pages.py:1515
+msgid "EAP method"
+msgstr "EAP 方法"
+
+#: src/pages.py:1387 src/pages.py:1796
+msgid "Enhanced Open (OWE)"
+msgstr "增強型開放網絡 (OWE)"
+
+#: src/pages.py:1595
+msgid ""
+"Enter the credentials supplied by your organization. Certificate validation "
+"is strongly recommended."
+msgstr "輸入所屬組織提供的登入資料。強烈建議驗證憑證。"
+
+#: src/pages.py:1811
+msgid "Enter the exact network name and choose its security type."
+msgstr "輸入精確的網路名稱，並選擇其安全類型。"
+
+#: src/pages.py:1390 src/pages.py:1800
+msgid "Enterprise Wi-Fi"
+msgstr "企業 Wi-Fi"
+
+#: src/pages.py:1523
+msgid "Identity"
+msgstr "Identity"
+
+#: src/pages.py:1527
+msgid "Inner authentication"
+msgstr "內部驗證"
+
+#: src/pages.py:1790
+msgid "Network name (SSID)"
+msgstr "網路名稱 (SSID)"
+
+#: src/pages.py:1645
+msgid "No Wi-Fi networks found."
+msgstr "找不到 Wi-Fi 網絡。"
+
+#: src/pages.py:1386 src/pages.py:1795
+msgid "Open network"
+msgstr "開放式網路"
+
+#: src/pages.py:1389 src/pages.py:1797 src/pages.py:1798
+msgid "Personal Wi-Fi"
+msgstr "個人 Wi-Fi"
+
+#: src/pages.py:1535
+msgid "Private key password (optional)"
+msgstr "私鑰密碼（選用）"
+
+#: src/pages.py:1533
+msgid "Private key path"
+msgstr "私鑰路徑"
+
+#: src/pages.py:1284
+msgid "Refresh Wi-Fi networks"
+msgstr "重新整理 Wi-Fi 網絡"
+
+#: src/pages.py:1656
+msgid "Saved"
+msgstr "Saved"
+
+#: src/pages.py:1792
+msgid "Security"
+msgstr "Security"
+
+#: src/pages.py:1405
+msgid ""
+"The installer will keep the saved network profile so it can be used again."
+msgstr "安裝程式將保留已儲存的網路設定檔，以便日後再次使用。"
+
+#: src/pages.py:1356
+msgid "The local network is connected, but Internet access is unavailable."
+msgstr "已連線至區域網路，但無法存取網際網路。"
+
+#: src/pages.py:1856
+msgid "Turning Wi-Fi off…"
+msgstr "正在關閉 Wi-Fi…"
+
+#: src/pages.py:1854
+msgid "Turning Wi-Fi on…"
+msgstr "正在開啟 Wi-Fi…"
+
+#: src/pages.py:1485
+msgid "Use WPS"
+msgstr "使用 WPS"
+
+#: src/pages.py:1388 src/pages.py:1799
+msgid "WEP (legacy)"
+msgstr "WEP（傳統）"
+
+#: src/pages.py:1347
+msgid ""
+"Wi-Fi is connected, but the network requires sign-in through a captive "
+"portal."
+msgstr "Wi-Fi 已連線，但此網絡需要透過網頁驗證入口登入。"
+
+#: src/pages.py:1449
+#, python-brace-format
+msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
+msgstr "正在等待 {network} 上的 WPS。請按下路由器上的 WPS 按鈕…"
+
+#: src/pages.py:3576
+msgid "A password is required."
+msgstr "必須設定密碼。"
+
+#: src/pages.py:3731
+msgid "Administrative commands will no longer ask for your password."
+msgstr "管理指令將不再要求輸入你的密碼。"
+
+#: src/pages.py:3681 src/pages.py:3675
+msgid "Advanced Options"
+msgstr "進階選項"
+
+#: src/pages.py:3747
+msgid "Allow SSH login with the account password"
+msgstr "允許使用帳戶密碼登入 SSH"
+
+#: src/pages.py:4089
+msgid "Automatic desktop login"
+msgstr "自動登入桌面"
+
+#: src/pages.py:3701
+msgid ""
+"Choose how the local administrator account signs in and authorizes system "
+"changes."
+msgstr "選擇本機管理員帳戶的登入方式，以及授權系統變更的方式。"
+
+#: src/pages.py:3682
+msgid "Choose optional access and sign-in policies"
+msgstr "選擇可選的存取及登入政策"
+
+#: src/pages.py:3709
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "選擇此電腦是否接受遠端 Secure Shell 連線。"
+
+#: src/pages.py:4604
+msgid "Configure Secure Shell"
+msgstr "設定 Secure Shell"
+
+#: src/pages.py:3699
+msgid "Local Access"
+msgstr "本機存取"
+
+#: src/pages.py:3737
+msgid "Log in to the desktop automatically"
+msgstr "自動登入桌面"
+
+#: src/pages.py:3739
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "電腦啟動時自動開啟此帳戶的桌面。"
+
+#: src/pages.py:3707
+msgid "Remote Access"
+msgstr "遠端存取"
+
+#: src/pages.py:3730
+msgid "Run sudo commands without a password"
+msgstr "執行 sudo 指令時無需密碼"
+
+#: src/pages.py:4095
+msgid "SSH password login"
+msgstr "SSH 密碼登入"
+
+#: src/pages.py:3749
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "啟動 Secure Shell，並透過網絡接受此帳戶的密碼。"
+
+#: src/pages.py:3759
+msgid "This will reduce the security of the installed system."
+msgstr "這會降低已安裝系統的安全性。"
+
+#: src/pages.py:4093 src/pages.py:4099
+msgid "disabled"
+msgstr "已停用"
+
+#: src/pages.py:4091 src/pages.py:4097
+msgid "enabled"
+msgstr "已啟用"
+
+#: src/pages.py:349
+msgid ""
+"AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently"
+" enabled on this computer, and we recommend enabling it for additional "
+"protection."
+msgstr "AnduinOS 具備全面的 Secure Boot 支援。此電腦目前未啟用 Secure Boot，建議您啟用此功能以獲得額外保護。"
+
+#: src/pages.py:331
+msgid "AnduinOS supports Secure Boot"
+msgstr "AnduinOS 支援 Secure Boot"
+
+#: src/pages.py:360
+msgid ""
+"Battery power is sufficient or reliable power is connected. You can continue"
+" with the installation."
+msgstr "電池電量充足或已連接可靠電源。您可以繼續安裝。"
+
+#: src/pages.py:366
+msgid ""
+"Connect reliable external power and charge above 25%, or charge above 45% "
+"while unplugged."
+msgstr "請連接可靠的外部電源，並將電量充至 25% 以上；或在未連接電源時，將電量充至 45% 以上。"
+
+#: src/pages.py:338
+msgid "Could not open UEFI firmware settings"
+msgstr "無法開啟 UEFI 韌體設定"
+
+#: src/pages.py:333
+msgid "Get additional protection before installing AnduinOS."
+msgstr "在安裝 AnduinOS 前獲得額外保護。"
+
+#: src/pages.py:364
+msgid "Power conditions are safe for installation."
+msgstr "電源狀態符合安裝安全要求。"
+
+#: src/pages.py:363
+msgid "Power ready"
+msgstr "電源就緒"
+
+#: src/pages.py:335
+msgid "Restart to UEFI Firmware Settings"
+msgstr "重新啟動以進入 UEFI 韌體設定"
+
+#: src/pages.py:345
+msgid ""
+"Secure Boot is a UEFI security feature that verifies trusted, digitally "
+"signed software while your computer starts."
+msgstr "Secure Boot 是 UEFI 安全功能，會在電腦啟動時驗證受信任的數位簽章軟體。"
+
+#: src/pages.py:336
+msgid "Skip"
+msgstr "略過"
+
+#: src/pages.py:341
+msgid "The firmware settings could not be opened on this computer."
+msgstr "無法在此電腦上開啟韌體設定。"
+
+#: src/pages.py:354
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"要啟用此功能，請開啟 UEFI 韌體設定，並查看「開機」、「安全性」或「Secure Boot」選項。請選擇「Microsoft 及第三方 CA」或開啟"
+" Secure Boot。不同製造商的韌體用詞可能有所不同。"

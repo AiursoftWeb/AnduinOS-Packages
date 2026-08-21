@@ -1,0 +1,37 @@
+[package]
+name = "anduinos-btrfs-snapshots-manager"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "GTK system snapshot and rollback manager for AnduinOS"
+
+[[bin]]
+name = "anduinos-btrfs-snapshots-manager"
+path = "src/main.rs"
+
+[dependencies]
+# Workspace dependencies
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+chrono.workspace = true
+log.workspace = true
+env_logger = "0.11"
+gettext-rs = { version = "0.7", features = ["gettext-system"] }
+
+# GTK/GUI dependencies
+gtk = { version = "0.9", package = "gtk4", features = ["v4_10"] }
+libadwaita = { version = "0.7", features = ["v1_4"] }
+gio = "0.20"
+glib = "0.20"
+dirs = "5.0"
+
+# D-Bus for IPC with helper
+zbus = { version = "4.0", default-features = false, features = ["blocking", "tokio"] }
+futures-util = "0.3"
+tokio = { version = "1", features = ["rt", "rt-multi-thread"] }
+libc.workspace = true
+
+# Shared types
+snapshots-manager-common = { path = "../snapshots-manager-common" }

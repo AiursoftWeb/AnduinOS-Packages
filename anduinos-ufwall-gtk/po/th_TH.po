@@ -1,3 +1,4 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: ufwall-gtk\n"
@@ -5,364 +6,640 @@ msgstr ""
 "POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/widgets/add_rule_dialog.rs:155
 msgid "0 = append at end"
 msgstr "0 = เพิ่มที่ท้าย"
 
+#: src/window.rs:81
 msgid "About"
 msgstr "เกี่ยวกับ"
 
+#: src/widgets/add_rule_dialog.rs:93
 msgid "Action"
 msgstr "การกระทำ"
 
+#: src/views/status_view.rs:396
 msgid "Active"
 msgstr "ใช้งานอยู่"
 
+#: src/widgets/add_rule_dialog.rs:170
 msgid "Add"
 msgstr "เพิ่ม"
 
+#: src/views/rules_view.rs:93 src/widgets/add_rule_dialog.rs:57
 msgid "Add Rule"
 msgstr "เพิ่มกฎ"
 
+#: src/widgets/add_rule_dialog.rs:110
 msgid "Advanced"
 msgstr "ขั้นสูง"
 
+#: src/views/network_audit_view.rs:200 src/views/network_audit_view.rs:208
 msgid "All"
 msgstr "ทั้งหมด"
 
+#: src/views/profiles_view.rs:92 src/views/status_view.rs:127
+#: src/views/status_view.rs:136 src/widgets/add_rule_dialog.rs:96
 msgid "Allow"
 msgstr "อนุญาต"
 
+#: src/views/profiles_view.rs:77
 msgid "Allow applications with predefined rules."
 msgstr "อนุญาตแอปพลิเคชันที่มีกฎที่กำหนดไว้ล่วงหน้า"
 
+#: src/views/profiles_view.rs:76
 msgid "Application Profiles"
 msgstr "โปรไฟล์แอปพลิเคชัน"
 
+#: src/window.rs:117
 msgid "Audit"
 msgstr "การตรวจสอบ"
 
+#: src/views/network_audit_view.rs:277
 msgid "Auditor Error"
 msgstr "ข้อผิดพลาดของผู้ตรวจสอบ"
 
+#: src/views/network_audit_view.rs:504
 msgid "Block"
 msgstr "บล็อก"
 
+#: src/views/network_audit_view.rs:500
 msgid "Block Connection?"
 msgstr "บล็อกการเชื่อมต่อ?"
 
+#: src/views/network_audit_view.rs:493
 msgid "Block inbound traffic from"
 msgstr "บล็อกการรับข้อมูลจาก"
 
+#: src/views/network_audit_view.rs:495
 msgid "Block outbound traffic to"
 msgstr "บล็อกการส่งข้อมูลไปยัง"
 
+#: src/views/dashboard_view.rs:96
 msgid "Blocked Events"
 msgstr "เหตุการณ์ที่ถูกบล็อก"
 
+#: src/views/network_audit_view.rs:551
 msgid "Blocked Successfully"
 msgstr "บล็อกสำเร็จ"
 
+#: src/widgets/add_rule_dialog.rs:124
 msgid "Both"
 msgstr "ทั้งสอง"
 
+#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "ยกเลิก"
 
+#: src/views/status_view.rs:103
+msgid "Local Network Discovery"
+msgstr "การค้นพบเครือข่ายท้องถิ่น"
+
+#: src/views/status_view.rs:104
+msgid "Control multicast DNS discovery and .local name resolution."
+msgstr "ควบคุมการค้นพบบริการผ่าน Multicast DNS และการแก้ไขชื่อโดเมน .local"
+
+#: src/views/status_view.rs:110
+msgid "Local Network Discovery (mDNS)"
+msgstr "การค้นพบเครือข่ายท้องถิ่น (mDNS)"
+
+#: src/views/status_view.rs:111
+msgid "Checking service status…"
+msgstr "กำลังตรวจสอบสถานะบริการ…"
+
+#: src/views/status_view.rs:216 src/views/status_view.rs:332
+msgid "Network Discovery Error"
+msgstr "ข้อผิดพลาดในการค้นพบเครือข่าย"
+
+#: src/views/status_view.rs:351
+msgid "Avahi is not installed."
+msgstr "ไม่ได้ติดตั้ง Avahi"
+
+#: src/views/status_view.rs:353
+msgid "Avahi is running; .local names and service discovery are available."
+msgstr "Avahi ทำงานอยู่; ชื่อ .local และการค้นพบบริการพร้อมใช้งาน"
+
+#: src/views/status_view.rs:357
+msgid "Avahi is enabled but not currently running."
+msgstr "Avahi เปิดใช้งานแล้วแต่ไม่ได้ทำงานอยู่ในขณะนี้"
+
+#: src/views/status_view.rs:359
+msgid "Avahi is blocked; .local names and service discovery are unavailable."
+msgstr "Avahi ถูกบล็อก; ชื่อ .local และการค้นพบบริการไม่พร้อมใช้งาน"
+
+#: src/widgets/add_rule_dialog.rs:149
 msgid "Comment"
 msgstr "หมายเหตุ"
 
+#: src/widgets/add_rule_dialog.rs:72
 msgid "Custom"
 msgstr "กำหนดเอง"
 
+#: src/views/dashboard_view.rs:56 src/window.rs:116
 msgid "Dashboard"
 msgstr "แดชบอร์ด"
 
+#: src/views/status_view.rs:119
 msgid "Default Policies"
 msgstr "นโยบายเริ่มต้น"
 
+#: src/widgets/rule_row.rs:90
 msgid "Delete"
 msgstr "ลบ"
 
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:122
 msgid "Delete All"
 msgstr "ลบทั้งหมด"
 
+#: src/views/rules_view.rs:118
 msgid "Delete All Rules?"
 msgstr "ลบกฎทั้งหมดหรือไม่"
 
+#: src/widgets/rule_row.rs:86
 msgid "Delete Rule"
 msgstr "ลบกฎ"
 
+#: src/widgets/rule_row.rs:87
 msgid "Delete rule"
 msgstr "ลบกฎ"
 
+#: src/views/status_view.rs:126 src/views/status_view.rs:135
+#: src/widgets/add_rule_dialog.rs:95
 msgid "Deny"
 msgstr "ปฏิเสธ"
 
+#: src/widgets/add_rule_dialog.rs:135
 msgid "Destination IP"
 msgstr "ไอพีปลายทาง"
 
+#: src/widgets/add_rule_dialog.rs:114
 msgid "Direction"
 msgstr "ทิศทาง"
 
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:137 src/views/status_view.rs:185
+#: src/widgets/add_rule_dialog.rs:338 src/widgets/rule_row.rs:119
+#: src/window.rs:283 src/window.rs:299
 msgid "Error"
 msgstr "ข้อผิดพลาด"
 
+#: src/views/network_audit_view.rs:554
 msgid "Failed to Block"
 msgstr "การบล็อกล้มเหลว"
 
+#: src/views/status_view.rs:95 src/window.rs:64
 msgid "Firewall"
 msgstr "ไฟร์วอลล์"
 
+#: src/views/rules_view.rs:70
 msgid "Firewall Rules"
 msgstr "กฎของไฟร์วอลล์"
 
+#: src/views/status_view.rs:156
 msgid "Full"
 msgstr "เต็ม"
 
+#: src/views/status_view.rs:155
 msgid "High"
 msgstr "สูง"
 
+#: src/widgets/add_rule_dialog.rs:116
 msgid "In"
 msgstr "เข้า"
 
+#: src/views/status_view.rs:96 src/views/status_view.rs:396
 msgid "Inactive"
 msgstr "ไม่ใช้งาน"
 
+#: src/views/network_audit_view.rs:201
 msgid "Inbound"
 msgstr "ทางเข้า"
 
+#: src/views/status_view.rs:124
 msgid "Incoming"
 msgstr "ขาเข้า"
 
+#: src/widgets/add_rule_dialog.rs:154
 msgid "Insert Before Rule"
 msgstr "แทรกก่อนกฎ"
 
+#: src/widgets/add_rule_dialog.rs:144
 msgid "Interface"
 msgstr "อินเทอร์เฟซ"
 
+#: src/widgets/add_rule_dialog.rs:98
 msgid "Limit"
 msgstr "จำกัด"
 
+#: src/views/dashboard_view.rs:129
 msgid "Listening Ports"
 msgstr "พอร์ตที่รับฟัง"
 
+#: src/views/status_view.rs:150
 msgid "Log Level"
 msgstr "ระดับการบันทึก"
 
+#: src/views/status_view.rs:146
 msgid "Logging"
 msgstr "การบันทึก"
 
+#: src/views/status_view.rs:153
 msgid "Low"
 msgstr "ต่ำ"
 
+#: src/views/status_view.rs:154
 msgid "Medium"
 msgstr "ปานกลาง"
 
+#: src/views/network_audit_view.rs:58
 msgid "Monitoring Network Activity"
 msgstr "กำลังตรวจสอบกิจกรรมเครือข่าย"
 
+#: src/views/profiles_view.rs:119
 msgid "No Profiles"
 msgstr "ไม่มีโปรไฟล์"
 
+#: src/views/rules_view.rs:75
 msgid "No Rules"
 msgstr "ไม่มีกฎ"
 
+#: src/views/profiles_view.rs:120
 msgid "No application profiles found"
 msgstr "ไม่พบโปรไฟล์แอปพลิเคชัน"
 
+#: src/views/dashboard_view.rs:247
 msgid "No blocked connections in recent events"
 msgstr "ไม่มีการเชื่อมต่อที่ถูกบล็อกในเหตุการณ์ล่าสุด"
 
+#: src/views/dashboard_view.rs:296
 msgid "No blocked ports in recent events"
 msgstr "ไม่มีการปิดกั้นพอร์ตในเหตุการณ์ล่าสุด"
 
+#: src/views/dashboard_view.rs:344
 msgid "No listening ports detected"
 msgstr "ไม่พบพอร์ตที่รับฟัง"
 
+#: src/views/status_view.rs:152
 msgid "Off"
 msgstr "ปิด"
 
+#: src/widgets/add_rule_dialog.rs:117
 msgid "Out"
 msgstr "ออก"
 
+#: src/views/network_audit_view.rs:202
 msgid "Outbound"
 msgstr "ทางออก"
 
+#: src/views/status_view.rs:133
 msgid "Outgoing"
 msgstr "ขาออก"
 
+#: src/views/network_audit_view.rs:217
 msgid "Pause list updates"
 msgstr "หยุดอัปเดตรายการ"
 
+#: src/views/profiles_view.rs:87
 msgid "Port / Protocol"
 msgstr "พอร์ต / โปรโตคอล"
 
+#: src/widgets/add_rule_dialog.rs:89
 msgid "Port / Service Name"
 msgstr "พอร์ต / ชื่อบริการ"
 
+#: src/window.rs:120
 msgid "Profiles"
 msgstr "โปรไฟล์"
 
+#: src/widgets/add_rule_dialog.rs:122
 msgid "Protocol"
 msgstr "โปรโตคอล"
 
+#: src/views/profiles_view.rs:82
 msgid "Quick Allow Port"
 msgstr "อนุญาตพอร์ตอย่างรวดเร็ว"
 
+#: src/views/dashboard_view.rs:135
 msgid "Recent Blocked Events"
 msgstr "เหตุการณ์ที่ถูกบล็อกเมื่อเร็วๆ นี้"
 
+#: src/views/dashboard_view.rs:78
 msgid "Recent Events Parsed"
 msgstr "เหตุการณ์ล่าสุดที่วิเคราะห์แล้ว"
 
+#: src/views/dashboard_view.rs:154
 msgid "Refresh"
 msgstr "รีเฟรช"
 
+#: src/views/status_view.rs:128 src/views/status_view.rs:137
+#: src/widgets/add_rule_dialog.rs:97
 msgid "Reject"
 msgstr "ปฏิเสธ"
 
+#: src/views/network_audit_view.rs:195
 msgid "Resolve Domains"
 msgstr "แก้ไขโดเมน"
 
+#: src/views/network_audit_view.rs:551
 msgid "Rule added to block"
 msgstr "เพิ่มกฎลงในรายการบล็อก"
 
+#: src/window.rs:119
 msgid "Rules"
 msgstr "กฎ"
 
+#: src/widgets/add_rule_dialog.rs:265
 msgid "Save"
 msgstr "บันทึก"
 
+#: src/views/network_audit_view.rs:186
 msgid "Search Process or IP..."
 msgstr "ค้นหากระบวนการหรือ IP..."
 
+#: src/views/rules_view.rs:62
 msgid "Search rules..."
 msgstr "ค้นหากฎ..."
 
+#: src/widgets/add_rule_dialog.rs:70
 msgid "Service"
 msgstr "บริการ"
 
+#: src/views/dashboard_view.rs:139
 msgid "Show"
 msgstr "แสดง"
 
+#: src/widgets/add_rule_dialog.rs:131
 msgid "Source IP"
 msgstr "ที่อยู่ IP ต้นทาง"
 
+#: src/views/status_view.rs:84 src/window.rs:118
 msgid "Status"
 msgstr "สถานะ"
 
+#: src/views/network_audit_view.rs:209 src/widgets/add_rule_dialog.rs:125
 msgid "TCP"
 msgstr "TCP"
 
+#: src/views/rules_view.rs:76
 msgid "There are no rules configured yet."
 msgstr "ยังไม่ได้กำหนดกฎใดๆ"
 
+#: src/views/rules_view.rs:119
 msgid "This will delete all custom rules. This action cannot be undone."
-msgstr "การดำเนินการนี้จะลบกฎที่กำหนดเองทั้งหมด การดำเนินการนี้ไม่สามารถย้อนกลับได้"
+msgstr ""
+"การดำเนินการนี้จะลบกฎที่กำหนดเองทั้งหมด การดำเนินการนี้ไม่สามารถย้อนกลับได้"
 
+#: src/views/network_audit_view.rs:493
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
-msgstr "การดำเนินการนี้จะป้องกันไม่ให้โฮสต์ระยะไกลส่งแพ็กเก็ตมายังเครื่องของคุณ"
+msgstr ""
+"การดำเนินการนี้จะป้องกันไม่ให้โฮสต์ระยะไกลส่งแพ็กเก็ตมายังเครื่องของคุณ"
 
+#: src/views/network_audit_view.rs:495
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
-msgstr "การดำเนินการนี้จะป้องกันไม่ให้เครื่องของคุณส่งแพ็กเก็ตไปยังโฮสต์ระยะไกล"
+msgstr ""
+"การดำเนินการนี้จะป้องกันไม่ให้เครื่องของคุณส่งแพ็กเก็ตไปยังโฮสต์ระยะไกล"
 
+#: src/views/dashboard_view.rs:117
 msgid "Top Blocked Connections"
 msgstr "การเชื่อมต่อที่ถูกบล็อกสูงสุด"
 
+#: src/views/dashboard_view.rs:123
 msgid "Top Blocked Ports"
 msgstr "พอร์ตที่ถูกบล็อกมากที่สุด"
 
+#: src/views/network_audit_view.rs:210 src/widgets/add_rule_dialog.rs:126
 msgid "UDP"
 msgstr "UDP"
 
+#: src/views/profiles_view.rs:83
 msgid "e.g. 80,443/tcp or 8080"
 msgstr "เช่น 80,443/tcp หรือ 8080"
 
+#: data/app_profiles/qbittorrent:3 data/app_profiles/transmission:3
 msgid "BitTorrent client"
 msgstr "ไคลเอนต์ BitTorrent"
 
+#: data/app_profiles/cups:3
 msgid "Common UNIX Printing System server"
 msgstr "เซิร์ฟเวอร์ระบบพิมพ์แบบยูนิกซ์ทั่วไป"
 
+#: data/app_profiles/syncthing:3
 msgid "Continuous file synchronization"
 msgstr "การซิงโครไนซ์ไฟล์อย่างต่อเนื่อง"
 
+#: data/app_profiles/docker:3
 msgid "Docker container runtime API"
 msgstr "API รันไทม์คอนเทนเนอร์ด็อกเกอร์"
 
+#: data/app_profiles/dns:3
 msgid "Domain Name System server"
 msgstr "เซิร์ฟเวอร์ระบบชื่อโดเมน"
 
+#: data/app_profiles/xmpp:3
 msgid "Extensible Messaging and Presence Protocol"
 msgstr "โปรโตคอลการส่งข้อความและการแสดงสถานะที่ขยายได้"
 
+#: data/app_profiles/ftp:3
 msgid "File Transfer Protocol"
 msgstr "โปรโตคอลถ่ายโอนไฟล์"
 
+#: data/app_profiles/dropbox:3
 msgid "File synchronization service"
 msgstr "บริการซิงโครไนซ์ไฟล์"
 
+#: data/app_profiles/http:3
 msgid "Hypertext Transfer Protocol for web servers"
 msgstr "โปรโตคอลถ่ายโอนข้อมูลไฮเปอร์เท็กซ์สำหรับเซิร์ฟเวอร์เว็บ"
 
+#: data/app_profiles/redis:3
 msgid "In-memory data structure store"
 msgstr "ที่เก็บโครงสร้างข้อมูลในหน่วยความจำ"
 
+#: data/app_profiles/imap:3
 msgid "Internet Message Access Protocol for email"
 msgstr "โปรโตคอลเข้าถึงข้อความอินเทอร์เน็ตสำหรับอีเมล"
 
+#: data/app_profiles/ldap:3
 msgid "Lightweight Directory Access Protocol"
 msgstr "โปรโตคอลการเข้าถึงไดเรกทอรีแบบเบา"
 
+#: data/app_profiles/jellyfin:3
 msgid "Media streaming server"
 msgstr "เซิร์ฟเวอร์สตรีมมิ่งสื่อ"
 
+#: data/app_profiles/wireguard:3
 msgid "Modern VPN tunnel"
 msgstr "อุโมงค์ VPN รุ่นใหม่"
 
+#: data/app_profiles/mdns:3
 msgid "Multicast DNS for local network discovery"
 msgstr "Multicast DNS สำหรับการค้นพบเครือข่ายท้องถิ่น"
 
+#: data/app_profiles/mysql:3
 msgid "MySQL database server"
 msgstr "เซิร์ฟเวอร์ฐานข้อมูล MySQL"
 
+#: data/app_profiles/nfs:3
 msgid "Network File System"
 msgstr "ระบบไฟล์เครือข่าย"
 
+#: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
 msgstr "พอร์ต / โปรโตคอล"
 
+#: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
 msgstr "ฐานข้อมูลเอกสาร NoSQL"
 
+#: data/app_profiles/kdeconnect:3
 msgid "Phone and desktop integration"
 msgstr "การผสานรวมโทรศัพท์และเดสก์ท็อป"
 
+#: data/app_profiles/plex:3
 msgid "Plex media streaming server"
 msgstr "เซิร์ฟเวอร์สตรีมมิ่งสื่อ Plex"
 
+#: data/app_profiles/pop3:3
 msgid "Post Office Protocol for email retrieval"
 msgstr "โปรโตคอลไปรษณีย์สำหรับดึงอีเมล"
 
+#: data/app_profiles/postgresql:3
 msgid "PostgreSQL database server"
 msgstr "เซิร์ฟเวอร์ฐานข้อมูล PostgreSQL"
 
+#: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
 msgstr "พอร์ต / โปรโตคอล"
 
+#: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
 msgstr "HTTP ปลอดภัยสำหรับเซิร์ฟเวอร์เว็บ"
 
+#: data/app_profiles/openssh:3
 msgid "Secure shell remote access"
 msgstr "การเข้าถึงระยะไกลผ่าน Secure Shell"
 
+#: data/app_profiles/smtp:3
 msgid "Simple Mail Transfer Protocol"
 msgstr "โปรโตคอลส่งข้อความง่าย"
 
+#: data/app_profiles/vnc:3
 msgid "Virtual Network Computing remote desktop"
 msgstr "VNC เดสก์ท็อประยะไกล"
 
+#: data/app_profiles/samba:3
 msgid "Windows file and printer sharing"
 msgstr "การแชร์ไฟล์และเครื่องพิมพ์ของ Windows"
+
+#: src/views/network_audit_view.rs:534
+msgid "Audit Block"
+msgstr "ตรวจสอบและบล็อก"
+
+#: src/ufw/backend.rs:44 src/ufw/backend.rs:391 src/ufw/backend.rs:643
+msgid "Authentication cancelled"
+msgstr "ยกเลิกการยืนยันตัวตน"
+
+#: src/views/network_audit_view.rs:160
+msgid "Download"
+msgstr "ดาวน์โหลด"
+
+#: src/ufw/backend.rs:384
+msgid "Failed to execute network service helper"
+msgstr "การเรียกใช้ตัวช่วยบริการเครือข่ายล้มเหลว"
+
+#: src/ufw/backend.rs:632
+msgid "Failed to execute pkexec"
+msgstr "ไม่สำเร็จในการดำเนินการ pkexec"
+
+#: src/ufw/backend.rs:613
+msgid "Failed to inspect system service"
+msgstr "ไม่สามารถตรวจสอบระบบบริการได้"
+
+#: src/window.rs:284
+msgid "Failed to read firewall status"
+msgstr "ไม่สามารถอ่านสถานะไฟร์วอลล์ได้"
+
+#: src/window.rs:300
+msgid "Failed to read profiles"
+msgstr "ไม่สามารถอ่านโปรไฟล์ได้"
+
+#: src/ufw/stats.rs:39
+msgid "Failed to run journalctl"
+msgstr "ไม่สามารถรัน journalctl ได้"
+
+#: src/ufw/backend.rs:37
+msgid "Failed to run pkexec ufw status"
+msgstr "ไม่สามารถรัน pkexec ufw status ได้"
+
+#: src/ufw/stats.rs:151
+msgid "Failed to run ss"
+msgstr "ไม่สามารถรัน ss ได้"
+
+#: src/ufw/traffic_monitor.rs:36
+msgid "Failed to start ufwall-auditor"
+msgstr "ไม่สามารถเริ่ม ufwall-auditor ได้"
+
+#: src/ufw/traffic_monitor.rs:38
+msgid "Is it installed?"
+msgstr "ติดตั้งแล้วหรือไม่"
+
+#: src/views/network_audit_view.rs:166
+msgid "Max"
+msgstr "สูงสุด"
+
+#: src/views/network_audit_view.rs:84
+msgid ""
+"Network Traffic\n"
+"Red line: Upload speed\n"
+"Green line: Download speed"
+msgstr ""
+"การจราจรเครือข่าย\n"
+"เส้นสีแดง: ความเร็วในการอัปโหลด\n"
+"เส้นสีเขียว: ความเร็วในการดาวน์โหลด"
+
+#: src/ufw/backend.rs:399
+msgid "Network service command failed"
+msgstr "คำสั่งบริการเครือข่ายล้มเหลว"
+
+#: src/views/network_audit_view.rs:371
+msgid "No Active Connections"
+msgstr "ไม่มีเชื่อมต่อที่ใช้งานอยู่"
+
+#: src/views/network_audit_view.rs:361
+msgid "No Inbound Connections"
+msgstr "ไม่มีการเชื่อมต่อขาเข้า"
+
+#: src/views/network_audit_view.rs:366
+msgid "No Outbound Connections"
+msgstr "ไม่มีการเชื่อมต่อขาออก"
+
+#: src/views/network_audit_view.rs:367
+msgid "No applications are sending data to the internet."
+msgstr "ไม่มีแอปพลิเคชันกำลังส่งข้อมูลไปยังอินเทอร์เน็ต"
+
+#: src/views/network_audit_view.rs:362
+msgid "No external devices are connecting to your open ports."
+msgstr "ไม่มีอุปกรณ์ภายนอกเชื่อมต่อกับพอร์ตที่เปิดอยู่ของคุณ"
+
+#: src/views/network_audit_view.rs:372
+msgid "No network activity detected."
+msgstr "ไม่พบกิจกรรมเครือข่าย"
+
+#: src/ufw/backend.rs:528 src/ufw/backend.rs:546
+msgid "No ports defined for this profile"
+msgstr "ไม่ได้กำหนดพอร์ตสำหรับโปรไฟล์นี้"
+
+#: src/ufw/backend.rs:649
+msgid "UFW command failed"
+msgstr "คำสั่ง UFW ไม่สำเร็จ"
+
+#: src/views/network_audit_view.rs:152
+msgid "Upload"
+msgstr "อัปโหลด"
+
+#: src/ufw/backend.rs:48
+msgid "pkexec failed"
+msgstr "pkexec ไม่สำเร็จ"

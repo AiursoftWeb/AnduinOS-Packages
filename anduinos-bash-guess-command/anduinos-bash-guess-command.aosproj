@@ -1,0 +1,45 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-bash-guess-command</PackageName>
+    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Fast offline ghost-text suggestions for Bash, with APT package prediction, semantic local context and transition-ranked history while preserving native Tab completion.</PackageDescription>
+    <Section>shells</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
+    <Component>main</Component>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble resolute-addon=resolute" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Dependency Include="bash (&gt;= 4.4)" />
+    <Dependency Include="bash-completion" />
+    <Dependency Include="libc6 (&gt;= 2.39)" />
+    <Dependency Include="libgcc-s1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="bash build-engine.sh amd64" Condition="'$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash build-engine.sh arm64" Condition="'$(Arch)' == 'arm64'" />
+    <PrebuildCommand Run="bash build-native.sh amd64" Condition="'$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash build-native.sh arm64" Condition="'$(Arch)' == 'arm64'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IncludeFile Include="deploy/amd64/anduinos-quietd" Target="/usr/lib/anduinos-bash-guess-command/anduinos-quietd" Mode="755" Condition="'$(Arch)' == 'amd64'" />
+    <IncludeFile Include="deploy/arm64/anduinos-quietd" Target="/usr/lib/anduinos-bash-guess-command/anduinos-quietd" Mode="755" Condition="'$(Arch)' == 'arm64'" />
+    <IncludeFile Include="deploy/amd64/anduinos-ghost.so" Target="/usr/lib/anduinos-bash-guess-command/anduinos-ghost.so" Mode="644" Condition="'$(Arch)' == 'amd64'" />
+    <IncludeFile Include="deploy/arm64/anduinos-ghost.so" Target="/usr/lib/anduinos-bash-guess-command/anduinos-ghost.so" Mode="644" Condition="'$(Arch)' == 'arm64'" />
+    <IncludeFile Include="assets/anduinos-bash-guess-command" Target="/etc/bash_completion.d/anduinos-bash-guess-command" />
+    <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-bash-guess-command/README.md" />
+    <IncludeFile Include="UPSTREAMS.md" Target="/usr/share/doc/anduinos-bash-guess-command/UPSTREAMS.md" />
+    <IncludeFile Include="COPYRIGHT" Target="/usr/share/doc/anduinos-bash-guess-command/copyright" />
+  </ItemGroup>
+</Project>

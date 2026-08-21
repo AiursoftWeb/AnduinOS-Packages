@@ -1,13 +1,15 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-software-properties-gtk</PackageName>
-    <PackageVersion>2.0.0+$(UpstreamVersion)-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS fork of software-properties-gtk — Software &amp; Updates GUI without Ubuntu Pro ads</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
+    <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
+    <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
@@ -34,26 +36,35 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Match Ubuntu's established component ID while preserving the real
+         upstream launchers for Software & Updates and Additional Drivers. -->
+    <AppStreamApplication Include="data/software-properties-gtk.desktop.desktop"
+                          Icon="data/software-properties.svg"
+                          Metainfo="data/software-properties-gtk.metainfo.xml" />
+    <AppStreamScreenshot Include="screenshots/software-sources.png"
+                         Default="true"
+                         Caption="Choose the software sources used by AnduinOS"
+                         Environment="GNOME:dark" />
+    <AppStreamScreenshot Include="screenshots/additional-drivers.png"
+                         Caption="Review and select additional hardware drivers"
+                         Environment="GNOME:dark" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="python3 tests/test_appstream.py" />
+    <PrebuildCommand Run="find &quot;$APKG_STAGE_DIR/usr/share/metainfo&quot; -maxdepth 1 -type f -name 'software-properties-gtk.appdata.xml' -delete" />
     <!--
       Python 3.14 changed multiprocessing default start method from "fork"
       to "forkserver".  The latter requires objects to be picklable, but
       GTK objects and Pipe connections aren't.  Force "fork" mode early.
     -->
-    <PrebuildCommand Run="for f in obj/*/usr/bin/software-properties-gtk; do sed -i '/^import locale$/a import multiprocessing\ntry:\n    multiprocessing.set_start_method(&quot;fork&quot;)\nexcept RuntimeError:\n    pass' &quot;$f&quot;; done" />
+    <PrebuildCommand Run="sed -i '/^import locale$/a import multiprocessing\ntry:\n    multiprocessing.set_start_method(&quot;fork&quot;)\nexcept RuntimeError:\n    pass' &quot;$APKG_STAGE_DIR/usr/bin/software-properties-gtk&quot;" />
 
     <!--
       Strip every trace of Ubuntu Pro: code references in
       SoftwarePropertiesGtk.py, then delete all .py / .ui / .svg / .desktop
       files that only exist to advertise Canonical's Pro service.
     -->
-    <PrebuildCommand Run="for d in obj/*/; do
-      sed -i -e '/^from \.UbuntuProPage import UbuntuProPage$/d' \
-             -e '/^[[:space:]]*def init_ubuntu_pro/,/^[[:space:]]*$/d' \
-             -e '/^[[:space:]]*if is_current_distro_lts()/,/self.init_ubuntu_pro()/d' \
-             &quot;$d/usr/lib/python3/dist-packages/softwareproperties/gtk/SoftwarePropertiesGtk.py&quot;;
-      find &quot;$d&quot; \( -name 'DialogUaAttach.py' -o -name 'DialogUaDetach.py' -o -name 'DialogUaFipsEnable.py' -o -name 'UbuntuProPage.py' \) -delete;
-      find &quot;$d&quot; \( -name 'dialog-ua-attach.ui' -o -name 'dialog-ua-detach.ui' -o -name 'dialog-ua-fips-enable.ui' \) -delete;
-      find &quot;$d&quot; \( -name 'livepatch.svg' -o -name 'ubuntu-pro-logo.svg' -o -name 'ubuntu-pro-logo-dark.svg' -o -name 'software-properties-livepatch.desktop' \) -delete;
-    done" />
+    <PrebuildCommand Run="sed -i -e '/^from \.UbuntuProPage import UbuntuProPage$/d' -e '/^[[:space:]]*def init_ubuntu_pro/,/^[[:space:]]*$/d' -e '/^[[:space:]]*if is_current_distro_lts()/,/self.init_ubuntu_pro()/d' &quot;$APKG_STAGE_DIR/usr/lib/python3/dist-packages/softwareproperties/gtk/SoftwarePropertiesGtk.py&quot;; find &quot;$APKG_STAGE_DIR&quot; \( -name 'DialogUaAttach.py' -o -name 'DialogUaDetach.py' -o -name 'DialogUaFipsEnable.py' -o -name 'UbuntuProPage.py' \) -delete; find &quot;$APKG_STAGE_DIR&quot; \( -name 'dialog-ua-attach.ui' -o -name 'dialog-ua-detach.ui' -o -name 'dialog-ua-fips-enable.ui' \) -delete; find &quot;$APKG_STAGE_DIR&quot; \( -name 'livepatch.svg' -o -name 'ubuntu-pro-logo.svg' -o -name 'ubuntu-pro-logo-dark.svg' -o -name 'software-properties-livepatch.desktop' \) -delete" />
   </ItemGroup>
 </Project>

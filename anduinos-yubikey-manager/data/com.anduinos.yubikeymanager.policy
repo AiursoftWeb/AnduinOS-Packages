@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>AnduinOS</vendor>
+  <vendor_url>https://www.anduinos.com</vendor_url>
+  <action id="com.anduinos.yubikeymanager.manage-login">
+    <description>Manage YubiKey security settings</description>
+    <description xml:lang="zh_CN">管理 YubiKey 安全设置</description>
+    <message>Authentication is required to change security settings or install Git</message>
+    <message xml:lang="zh_CN">更改安全设置或安装 Git 需要身份验证</message>
+    <icon_name>com.anduinos.yubikeymanager</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/anduinos-yubikey-manager/helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
+  </action>
+</policyconfig>

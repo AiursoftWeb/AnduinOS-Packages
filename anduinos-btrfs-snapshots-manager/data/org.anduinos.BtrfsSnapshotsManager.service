@@ -1,0 +1,5 @@
+[D-BUS Service]
+Name=org.anduinos.BtrfsSnapshotsManager
+Exec=/usr/libexec/anduinos-btrfs-snapshots-manager-helper
+User=root
+SystemdService=anduinos-btrfs-snapshots-manager-helper.service

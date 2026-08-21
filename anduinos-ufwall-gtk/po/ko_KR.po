@@ -1,3 +1,4 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: ufwall-gtk\n"
@@ -5,365 +6,637 @@ msgstr ""
 "POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/widgets/add_rule_dialog.rs:155
 msgid "0 = append at end"
 msgstr "0 = 끝에 추가"
 
+#: src/window.rs:81
 msgid "About"
 msgstr "정보"
 
+#: src/widgets/add_rule_dialog.rs:93
 msgid "Action"
 msgstr "동작"
 
+#: src/views/status_view.rs:396
 msgid "Active"
 msgstr "활성"
 
+#: src/widgets/add_rule_dialog.rs:170
 msgid "Add"
 msgstr "추가"
 
+#: src/views/rules_view.rs:93 src/widgets/add_rule_dialog.rs:57
 msgid "Add Rule"
 msgstr "규칙 추가"
 
+#: src/widgets/add_rule_dialog.rs:110
 msgid "Advanced"
 msgstr "고급"
 
+#: src/views/network_audit_view.rs:200 src/views/network_audit_view.rs:208
 msgid "All"
 msgstr "전체"
 
+#: src/views/profiles_view.rs:92 src/views/status_view.rs:127
+#: src/views/status_view.rs:136 src/widgets/add_rule_dialog.rs:96
 msgid "Allow"
 msgstr "허용"
 
+#: src/views/profiles_view.rs:77
 msgid "Allow applications with predefined rules."
 msgstr "미리 정의된 규칙을 사용하여 애플리케이션을 허용합니다."
 
+#: src/views/profiles_view.rs:76
 msgid "Application Profiles"
 msgstr "애플리케이션 프로필"
 
+#: src/window.rs:117
 msgid "Audit"
 msgstr "감사"
 
+#: src/views/network_audit_view.rs:277
 msgid "Auditor Error"
 msgstr "감사관 오류"
 
+#: src/views/network_audit_view.rs:504
 msgid "Block"
 msgstr "차단"
 
+#: src/views/network_audit_view.rs:500
 msgid "Block Connection?"
 msgstr "연결을 차단할까요?"
 
+#: src/views/network_audit_view.rs:493
 msgid "Block inbound traffic from"
 msgstr "다음 호스트에서의 인바운드 트래픽 차단"
 
+#: src/views/network_audit_view.rs:495
 msgid "Block outbound traffic to"
 msgstr "다음 호스트로의 아웃바운드 트래픽 차단"
 
+#: src/views/dashboard_view.rs:96
 msgid "Blocked Events"
 msgstr "차단된 이벤트"
 
+#: src/views/network_audit_view.rs:551
 msgid "Blocked Successfully"
 msgstr "성공적으로 차단됨"
 
+#: src/widgets/add_rule_dialog.rs:124
 msgid "Both"
 msgstr "양방향"
 
+#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "취소"
 
+#: src/views/status_view.rs:103
+msgid "Local Network Discovery"
+msgstr "로컬 네트워크 탐색"
+
+#: src/views/status_view.rs:104
+msgid "Control multicast DNS discovery and .local name resolution."
+msgstr "멀티캐스트 DNS 탐색 및 .local 이름 해결을 제어합니다."
+
+#: src/views/status_view.rs:110
+msgid "Local Network Discovery (mDNS)"
+msgstr "로컬 네트워크 탐색(mDNS)"
+
+#: src/views/status_view.rs:111
+msgid "Checking service status…"
+msgstr "서비스 상태 확인 중…"
+
+#: src/views/status_view.rs:216 src/views/status_view.rs:332
+msgid "Network Discovery Error"
+msgstr "네트워크 검색 오류"
+
+#: src/views/status_view.rs:351
+msgid "Avahi is not installed."
+msgstr "Avahi가 설치되어 있지 않습니다."
+
+#: src/views/status_view.rs:353
+msgid "Avahi is running; .local names and service discovery are available."
+msgstr "Avahi가 실행 중이며 .local 이름 및 서비스 검색을 사용할 수 있습니다."
+
+#: src/views/status_view.rs:357
+msgid "Avahi is enabled but not currently running."
+msgstr "Avahi가 활성화되어 있지만 현재 실행되지 않습니다."
+
+#: src/views/status_view.rs:359
+msgid "Avahi is blocked; .local names and service discovery are unavailable."
+msgstr "Avahi가 차단되어 .local 이름 및 서비스 검색을 사용할 수 없습니다."
+
+#: src/widgets/add_rule_dialog.rs:149
 msgid "Comment"
 msgstr "설명"
 
+#: src/widgets/add_rule_dialog.rs:72
 msgid "Custom"
 msgstr "사용자 정의"
 
+#: src/views/dashboard_view.rs:56 src/window.rs:116
 msgid "Dashboard"
 msgstr "대시보드"
 
+#: src/views/status_view.rs:119
 msgid "Default Policies"
 msgstr "기본 정책"
 
+#: src/widgets/rule_row.rs:90
 msgid "Delete"
 msgstr "삭제"
 
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:122
 msgid "Delete All"
 msgstr "모두 삭제"
 
+#: src/views/rules_view.rs:118
 msgid "Delete All Rules?"
 msgstr "모든 규칙을 삭제하시겠습니까?"
 
+#: src/widgets/rule_row.rs:86
 msgid "Delete Rule"
 msgstr "규칙 삭제"
 
+#: src/widgets/rule_row.rs:87
 msgid "Delete rule"
 msgstr "규칙 삭제"
 
+#: src/views/status_view.rs:126 src/views/status_view.rs:135
+#: src/widgets/add_rule_dialog.rs:95
 msgid "Deny"
 msgstr "거부"
 
+#: src/widgets/add_rule_dialog.rs:135
 msgid "Destination IP"
 msgstr "대상 IP"
 
+#: src/widgets/add_rule_dialog.rs:114
 msgid "Direction"
 msgstr "방향"
 
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:137 src/views/status_view.rs:185
+#: src/widgets/add_rule_dialog.rs:338 src/widgets/rule_row.rs:119
+#: src/window.rs:283 src/window.rs:299
 msgid "Error"
 msgstr "오류"
 
+#: src/views/network_audit_view.rs:554
 msgid "Failed to Block"
 msgstr "차단 실패"
 
+#: src/views/status_view.rs:95 src/window.rs:64
 msgid "Firewall"
 msgstr "방화벽"
 
+#: src/views/rules_view.rs:70
 msgid "Firewall Rules"
 msgstr "방화벽 규칙"
 
+#: src/views/status_view.rs:156
 msgid "Full"
 msgstr "전체"
 
+#: src/views/status_view.rs:155
 msgid "High"
 msgstr "높음"
 
+#: src/widgets/add_rule_dialog.rs:116
 msgid "In"
 msgstr "입력"
 
+#: src/views/status_view.rs:96 src/views/status_view.rs:396
 msgid "Inactive"
 msgstr "비활성"
 
+#: src/views/network_audit_view.rs:201
 msgid "Inbound"
 msgstr "인바운드"
 
+#: src/views/status_view.rs:124
 msgid "Incoming"
 msgstr "들어오는"
 
+#: src/widgets/add_rule_dialog.rs:154
 msgid "Insert Before Rule"
 msgstr "규칙 앞에 삽입"
 
+#: src/widgets/add_rule_dialog.rs:144
 msgid "Interface"
 msgstr "인터페이스"
 
+#: src/widgets/add_rule_dialog.rs:98
 msgid "Limit"
 msgstr "제한"
 
+#: src/views/dashboard_view.rs:129
 msgid "Listening Ports"
 msgstr "리스닝 포트"
 
+#: src/views/status_view.rs:150
 msgid "Log Level"
 msgstr "로그 레벨"
 
+#: src/views/status_view.rs:146
 msgid "Logging"
 msgstr "로깅"
 
+#: src/views/status_view.rs:153
 msgid "Low"
 msgstr "낮음"
 
+#: src/views/status_view.rs:154
 msgid "Medium"
 msgstr "중간"
 
+#: src/views/network_audit_view.rs:58
 msgid "Monitoring Network Activity"
 msgstr "네트워크 활동 모니터링 중"
 
+#: src/views/profiles_view.rs:119
 msgid "No Profiles"
 msgstr "프로필 없음"
 
+#: src/views/rules_view.rs:75
 msgid "No Rules"
 msgstr "규칙 없음"
 
+#: src/views/profiles_view.rs:120
 msgid "No application profiles found"
 msgstr "애플리케이션 프로파일을 찾을 수 없습니다"
 
+#: src/views/dashboard_view.rs:247
 msgid "No blocked connections in recent events"
 msgstr "최근 이벤트에서 차단된 연결이 없습니다"
 
+#: src/views/dashboard_view.rs:296
 msgid "No blocked ports in recent events"
 msgstr "최근 이벤트에서 차단된 포트가 없습니다"
 
+#: src/views/dashboard_view.rs:344
 msgid "No listening ports detected"
 msgstr "리스닝 포트가 감지되지 않았습니다"
 
+#: src/views/status_view.rs:152
 msgid "Off"
 msgstr "끄기"
 
+#: src/widgets/add_rule_dialog.rs:117
 msgid "Out"
 msgstr "출력"
 
+#: src/views/network_audit_view.rs:202
 msgid "Outbound"
 msgstr "아웃바운드"
 
+#: src/views/status_view.rs:133
 msgid "Outgoing"
 msgstr "출력"
 
+#: src/views/network_audit_view.rs:217
 msgid "Pause list updates"
 msgstr "목록 업데이트 일시 중지"
 
+#: src/views/profiles_view.rs:87
 msgid "Port / Protocol"
 msgstr "포트 / 프로토콜"
 
+#: src/widgets/add_rule_dialog.rs:89
 msgid "Port / Service Name"
 msgstr "포트/서비스 이름"
 
+#: src/window.rs:120
 msgid "Profiles"
 msgstr "프로필"
 
+#: src/widgets/add_rule_dialog.rs:122
 msgid "Protocol"
 msgstr "프로토콜"
 
+#: src/views/profiles_view.rs:82
 msgid "Quick Allow Port"
 msgstr "포트 빠른 허용"
 
+#: src/views/dashboard_view.rs:135
 msgid "Recent Blocked Events"
 msgstr "최근 차단된 이벤트"
 
+#: src/views/dashboard_view.rs:78
 msgid "Recent Events Parsed"
 msgstr "최근 이벤트 구문 분석"
 
+#: src/views/dashboard_view.rs:154
 msgid "Refresh"
 msgstr "새로고침"
 
+#: src/views/status_view.rs:128 src/views/status_view.rs:137
+#: src/widgets/add_rule_dialog.rs:97
 msgid "Reject"
 msgstr "거부"
 
+#: src/views/network_audit_view.rs:195
 msgid "Resolve Domains"
 msgstr "도메인 해결"
 
+#: src/views/network_audit_view.rs:551
 msgid "Rule added to block"
-msgstr "\\n규칙이 차단 목록에 추가됨"
+msgstr "차단 규칙이 추가됨"
 
+#: src/window.rs:119
 msgid "Rules"
 msgstr "규칙"
 
+#: src/widgets/add_rule_dialog.rs:265
 msgid "Save"
 msgstr "저장"
 
+#: src/views/network_audit_view.rs:186
 msgid "Search Process or IP..."
 msgstr "프로세스 또는 IP 검색..."
 
+#: src/views/rules_view.rs:62
 msgid "Search rules..."
 msgstr "규칙 검색..."
 
+#: src/widgets/add_rule_dialog.rs:70
 msgid "Service"
 msgstr "서비스"
 
+#: src/views/dashboard_view.rs:139
 msgid "Show"
 msgstr "표시"
 
+#: src/widgets/add_rule_dialog.rs:131
 msgid "Source IP"
 msgstr "출처 IP"
 
+#: src/views/status_view.rs:84 src/window.rs:118
 msgid "Status"
 msgstr "상태"
 
+#: src/views/network_audit_view.rs:209 src/widgets/add_rule_dialog.rs:125
 msgid "TCP"
 msgstr "TCP"
 
+#: src/views/rules_view.rs:76
 msgid "There are no rules configured yet."
 msgstr "아직 규칙이 구성되지 않았습니다."
 
+#: src/views/rules_view.rs:119
 msgid "This will delete all custom rules. This action cannot be undone."
-msgstr ""
-"이 작업은 모든 사용자 정의 규칙을 삭제합니다. 이 작업은 되돌릴 수 없습니다."
+msgstr "이 작업은 모든 사용자 정의 규칙을 삭제합니다. 이 작업은 되돌릴 수 없습니다."
 
+#: src/views/network_audit_view.rs:493
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr "원격 호스트가 내 컴퓨터로 패킷을 보내지 못하도록 차단합니다."
 
+#: src/views/network_audit_view.rs:495
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr "내 컴퓨터에서 원격 호스트로 패킷을 보내지 못하도록 차단합니다."
 
+#: src/views/dashboard_view.rs:117
 msgid "Top Blocked Connections"
 msgstr "가장 많이 차단된 연결"
 
+#: src/views/dashboard_view.rs:123
 msgid "Top Blocked Ports"
 msgstr "차단된 상위 포트"
 
+#: src/views/network_audit_view.rs:210 src/widgets/add_rule_dialog.rs:126
 msgid "UDP"
 msgstr "UDP"
 
+#: src/views/profiles_view.rs:83
 msgid "e.g. 80,443/tcp or 8080"
 msgstr "예: 80,443/tcp 또는 8080"
 
+#: data/app_profiles/qbittorrent:3 data/app_profiles/transmission:3
 msgid "BitTorrent client"
 msgstr "비트토렌트 클라이언트"
 
+#: data/app_profiles/cups:3
 msgid "Common UNIX Printing System server"
 msgstr "공용 UNIX 인쇄 시스템 서버"
 
+#: data/app_profiles/syncthing:3
 msgid "Continuous file synchronization"
 msgstr "지속적인 파일 동기화"
 
+#: data/app_profiles/docker:3
 msgid "Docker container runtime API"
 msgstr "Docker 컨테이너 런타임 API"
 
+#: data/app_profiles/dns:3
 msgid "Domain Name System server"
 msgstr "도메인 이름 시스템 서버"
 
+#: data/app_profiles/xmpp:3
 msgid "Extensible Messaging and Presence Protocol"
 msgstr "확장 가능한 메시징 및 존재 프로토콜"
 
+#: data/app_profiles/ftp:3
 msgid "File Transfer Protocol"
 msgstr "파일 전송 프로토콜"
 
+#: data/app_profiles/dropbox:3
 msgid "File synchronization service"
 msgstr "파일 동기화 서비스"
 
+#: data/app_profiles/http:3
 msgid "Hypertext Transfer Protocol for web servers"
 msgstr "웹 서버를 위한 하이퍼텍스트 전송 프로토콜"
 
+#: data/app_profiles/redis:3
 msgid "In-memory data structure store"
 msgstr "메모리 내 데이터 구조 저장소"
 
+#: data/app_profiles/imap:3
 msgid "Internet Message Access Protocol for email"
 msgstr "이메일용 인터넷 메시지 액세스 프로토콜"
 
+#: data/app_profiles/ldap:3
 msgid "Lightweight Directory Access Protocol"
 msgstr "경량 디렉토리 액세스 프로토콜"
 
+#: data/app_profiles/jellyfin:3
 msgid "Media streaming server"
 msgstr "미디어 스트리밍 서버"
 
+#: data/app_profiles/wireguard:3
 msgid "Modern VPN tunnel"
 msgstr "현대적인 VPN 터널"
 
+#: data/app_profiles/mdns:3
 msgid "Multicast DNS for local network discovery"
 msgstr "로컬 네트워크 탐색을 위한 멀티캐스트 DNS"
 
+#: data/app_profiles/mysql:3
 msgid "MySQL database server"
 msgstr "MySQL 데이터베이스 서버"
 
+#: data/app_profiles/nfs:3
 msgid "Network File System"
 msgstr "네트워크 파일 시스템"
 
+#: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
 msgstr "포트 / 프로토콜"
 
+#: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
 msgstr "NoSQL 문서 데이터베이스"
 
+#: data/app_profiles/kdeconnect:3
 msgid "Phone and desktop integration"
 msgstr "전화 및 데스크톱 통합"
 
+#: data/app_profiles/plex:3
 msgid "Plex media streaming server"
 msgstr "Plex 미디어 스트리밍 서버"
 
+#: data/app_profiles/pop3:3
 msgid "Post Office Protocol for email retrieval"
 msgstr "이메일 검색을 위한邮局 프로토콜 (POP)"
 
+#: data/app_profiles/postgresql:3
 msgid "PostgreSQL database server"
 msgstr "PostgreSQL 데이터베이스 서버"
 
+#: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
 msgstr "포트 / 프로토콜"
 
+#: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
 msgstr "웹 서버를 위한 HTTPS"
 
+#: data/app_profiles/openssh:3
 msgid "Secure shell remote access"
 msgstr "보안 셸 원격 액세스"
 
+#: data/app_profiles/smtp:3
 msgid "Simple Mail Transfer Protocol"
 msgstr "간단한 메일 전송 프로토콜"
 
+#: data/app_profiles/vnc:3
 msgid "Virtual Network Computing remote desktop"
 msgstr "가상 네트워크 컴퓨팅 원격 데스크톱"
 
+#: data/app_profiles/samba:3
 msgid "Windows file and printer sharing"
 msgstr "Windows 파일 및 프린터 공유"
+
+#: src/views/network_audit_view.rs:534
+msgid "Audit Block"
+msgstr "감사 차단"
+
+#: src/ufw/backend.rs:44 src/ufw/backend.rs:391 src/ufw/backend.rs:643
+msgid "Authentication cancelled"
+msgstr "인증이 취소되었습니다"
+
+#: src/views/network_audit_view.rs:160
+msgid "Download"
+msgstr "다운로드"
+
+#: src/ufw/backend.rs:384
+msgid "Failed to execute network service helper"
+msgstr "네트워크 서비스 헬퍼 실행 실패"
+
+#: src/ufw/backend.rs:632
+msgid "Failed to execute pkexec"
+msgstr "pkexec 실행 실패"
+
+#: src/ufw/backend.rs:613
+msgid "Failed to inspect system service"
+msgstr "시스템 서비스 검사 실패"
+
+#: src/window.rs:284
+msgid "Failed to read firewall status"
+msgstr "방화벽 상태를 읽지 못했습니다"
+
+#: src/window.rs:300
+msgid "Failed to read profiles"
+msgstr "프로필 읽기 실패"
+
+#: src/ufw/stats.rs:39
+msgid "Failed to run journalctl"
+msgstr "journalctl 실행 실패"
+
+#: src/ufw/backend.rs:37
+msgid "Failed to run pkexec ufw status"
+msgstr "pkexec ufw status 실행 실패"
+
+#: src/ufw/stats.rs:151
+msgid "Failed to run ss"
+msgstr "ss를 실행하지 못했습니다"
+
+#: src/ufw/traffic_monitor.rs:36
+msgid "Failed to start ufwall-auditor"
+msgstr "ufwall-auditor를 시작하지 못했습니다"
+
+#: src/ufw/traffic_monitor.rs:38
+msgid "Is it installed?"
+msgstr "설치되어 있나요?"
+
+#: src/views/network_audit_view.rs:166
+msgid "Max"
+msgstr "최대"
+
+#: src/views/network_audit_view.rs:84
+msgid ""
+"Network Traffic\n"
+"Red line: Upload speed\n"
+"Green line: Download speed"
+msgstr ""
+"네트워크 트래픽\n"
+"빨간 선: 업로드 속도\n"
+"초록 선: 다운로드 속도"
+
+#: src/ufw/backend.rs:399
+msgid "Network service command failed"
+msgstr "네트워크 서비스 명령 실패"
+
+#: src/views/network_audit_view.rs:371
+msgid "No Active Connections"
+msgstr "활성 연결이 없습니다"
+
+#: src/views/network_audit_view.rs:361
+msgid "No Inbound Connections"
+msgstr "입력 연결 없음"
+
+#: src/views/network_audit_view.rs:366
+msgid "No Outbound Connections"
+msgstr "출력 연결 없음"
+
+#: src/views/network_audit_view.rs:367
+msgid "No applications are sending data to the internet."
+msgstr "인터넷으로 데이터를 전송하는 애플리케이션이 없습니다."
+
+#: src/views/network_audit_view.rs:362
+msgid "No external devices are connecting to your open ports."
+msgstr "열린 포트에 외부 장치가 연결되어 있지 않습니다."
+
+#: src/views/network_audit_view.rs:372
+msgid "No network activity detected."
+msgstr "네트워크 활동이 감지되지 않았습니다."
+
+#: src/ufw/backend.rs:528 src/ufw/backend.rs:546
+msgid "No ports defined for this profile"
+msgstr "이 프로필에 정의된 포트가 없습니다"
+
+#: src/ufw/backend.rs:649
+msgid "UFW command failed"
+msgstr "UFW 명령 실패"
+
+#: src/views/network_audit_view.rs:152
+msgid "Upload"
+msgstr "업로드"
+
+#: src/ufw/backend.rs:48
+msgid "pkexec failed"
+msgstr "pkexec 실패"

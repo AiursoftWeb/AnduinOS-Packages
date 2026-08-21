@@ -1,31 +1,34 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-swapcontrol-gtk</PackageName>
-    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Virtual Memory Configuration — modern GTK4/Libadwaita frontend for swap, zswap, and zram management</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
+    <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
+    <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
   </PropertyGroup>
 
   <ItemGroup>
-    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble questing-addon=questing resolute-addon=resolute" />
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble resolute-addon=resolute" />
   </ItemGroup>
 
   <ItemGroup>
     <Dependency Include="util-linux" />
     <Dependency Include="polkitd" />
-    <Dependency Include="anduinos-swap-config" Type="Recommends" />
+    <Recommend Include="anduinos-swap-config" />
   </ItemGroup>
 
   <ItemGroup>
+    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_localization_source.py" />
     <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
     <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
   </ItemGroup>
@@ -33,9 +36,13 @@
   <ItemGroup>
     <IncludeScript Include="obj/swapcontrol-gtk" Target="/usr/bin/swapcontrol-gtk" />
     <IncludeScript Include="data/helper" Target="/usr/lib/anduinos-swapcontrol/helper" />
-    <IncludeFile Include="data/com.anduinos.swapcontrol.desktop" Target="/usr/share/applications/com.anduinos.swapcontrol.desktop" />
     <IncludeFile Include="data/com.anduinos.swapcontrol.policy" Target="/usr/share/polkit-1/actions/com.anduinos.swapcontrol.policy" />
-    <IncludeFile Include="data/com.anduinos.swapcontrol.svg" Target="/usr/share/icons/hicolor/scalable/apps/com.anduinos.swapcontrol.svg" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AppStreamApplication Include="data/com.anduinos.swapcontrol.desktop" Icon="data/com.anduinos.swapcontrol.svg" />
+    <AppStreamScreenshot Include="screenshots/dashboard.png" Default="true" Caption="Review memory and swap usage at a glance" Environment="GNOME:dark" />
+    <AppStreamScreenshot Include="screenshots/swap-settings.png" Caption="Configure disk swap, zram, and zswap" Environment="GNOME:dark" />
   </ItemGroup>
 </Project>

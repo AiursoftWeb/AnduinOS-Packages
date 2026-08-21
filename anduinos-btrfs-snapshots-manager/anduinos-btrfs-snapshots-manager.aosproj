@@ -1,0 +1,119 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-btrfs-snapshots-manager</PackageName>
+    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Disk Snapshots Manager — graphical Btrfs system recovery and Personal Files history</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0-or-later</LicenseType>
+    <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
+    <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource
+        Url="https://mirror.aiursoft.com/ubuntu"
+        SuiteMap="resolute-addon=resolute" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Dependency Include="libgtk-4-1" />
+    <Dependency Include="libadwaita-1-0" />
+    <Dependency Include="btrfs-progs" />
+    <Dependency Include="util-linux" />
+    <Dependency Include="polkitd" />
+    <Dependency Include="dbus-bin" />
+    <Dependency Include="jq" />
+    <Dependency Include="systemd" />
+    <Dependency Include="apt" />
+    <Dependency Include="dpkg" />
+    <Dependency Include="initramfs-tools" />
+    <Dependency Include="grub2-common" />
+    <Dependency Include="anduinos-secureboot-toolkit" />
+    <Dependency Include="kmod" />
+    <Dependency Include="sbsigntool" />
+    <Dependency Include="python3-nautilus" />
+    <Dependency Include="smartmontools" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="bash scripts/prebuild-check.sh" />
+    <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PostInstallScript Include="scripts/postinst.sh" />
+    <PreRemoveScript Include="scripts/prerm.sh" />
+    <PostRemoveScript Include="scripts/postrm.sh" />
+    <SystemdUnit Include="data/anduinos-btrfs-snapshots-manager-helper.service" AutoEnable="false" />
+    <SystemdUnit Include="data/anduinos-btrfs-snapshots-manager-scheduler.service" AutoEnable="false" />
+    <SystemdUnit Include="data/anduinos-btrfs-snapshots-manager-scheduler.timer" AutoEnable="true" />
+    <SystemdUnit Include="data/anduinos-btrfs-snapshots-manager-confirm.service" AutoEnable="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager" Target="/usr/bin/anduinos-btrfs-snapshots-manager" />
+    <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-helper" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-helper" />
+    <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-scheduler" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-scheduler" />
+    <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-notifier" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-notifier" />
+    <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-initramfs" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs" />
+    <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-boot-config" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-boot-config" />
+    <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-confirm" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-confirm" />
+    <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-apt-hook" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-apt-hook" />
+    <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-cli" Target="/usr/bin/anduinos-btrfs-snapshots-manager-cli" />
+    <IncludeScript Include="data/initramfs-hook" Target="/usr/share/initramfs-tools/hooks/anduinos-btrfs-snapshots-manager" />
+    <IncludeScript Include="data/initramfs-local-premount" Target="/usr/share/initramfs-tools/scripts/local-premount/anduinos-btrfs-snapshots-manager" />
+    <IncludeFile Include="data/recovery-protocol-version" Target="/usr/share/anduinos-btrfs-snapshots-manager/recovery-protocol-version" />
+    <IncludeScript Include="data/09_anduinos_btrfs_snapshots_manager" Target="/etc/grub.d/09_anduinos_btrfs_snapshots_manager" />
+    <IncludeScript Include="data/01_anduinos_btrfs_snapshots_manager_env" Target="/etc/grub.d/01_anduinos_btrfs_snapshots_manager_env" />
+    <IncludeScript Include="data/no-os-prober" Target="/usr/libexec/anduinos-btrfs-snapshots-manager/no-os-prober/os-prober" />
+    <IncludeScript Include="data/no-os-prober" Target="/usr/libexec/anduinos-btrfs-snapshots-manager/no-os-prober/linux-boot-prober" />
+    <IncludeScript Include="scripts/qualify-recovery-vm.sh" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/qualify-recovery-vm.sh" />
+    <IncludeScript Include="scripts/test-installed-policy.sh" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/test-installed-policy.sh" />
+    <DpkgTrigger Include="update-initramfs" Type="activate-await" />
+    <IncludeFile Include="assets/apt-snapshots.toml" Target="/usr/share/anduinos-btrfs-snapshots-manager/defaults/apt-snapshots.toml" />
+    <IncludeFile Include="assets/automation.toml" Target="/usr/share/anduinos-btrfs-snapshots-manager/defaults/automation.toml" />
+    <IncludeFile Include="data/org.anduinos.BtrfsSnapshotsManager.policy" Target="/usr/share/polkit-1/actions/org.anduinos.BtrfsSnapshotsManager.policy" />
+    <IncludeFile Include="data/50-org.anduinos.BtrfsSnapshotsManager-root.rules" Target="/usr/share/polkit-1/rules.d/50-org.anduinos.BtrfsSnapshotsManager-root.rules" />
+    <IncludeFile Include="data/51-org.anduinos.BtrfsSnapshotsManager-desktop.rules" Target="/usr/share/polkit-1/rules.d/51-org.anduinos.BtrfsSnapshotsManager-desktop.rules" />
+    <IncludeFile Include="data/org.anduinos.BtrfsSnapshotsManager.conf" Target="/usr/share/dbus-1/system.d/org.anduinos.BtrfsSnapshotsManager.conf" />
+    <IncludeFile Include="data/org.anduinos.BtrfsSnapshotsManager.service" Target="/usr/share/dbus-1/system-services/org.anduinos.BtrfsSnapshotsManager.service" />
+    <IncludeFile Include="data/org.anduinos.BtrfsSnapshotsManager.Session.service" Target="/usr/share/dbus-1/services/org.anduinos.BtrfsSnapshotsManager.service" />
+    <IncludeFile Include="data/anduinos_btrfs_snapshots_manager_file_history.py" Target="/usr/share/nautilus-python/extensions/anduinos_btrfs_snapshots_manager_file_history.py" />
+    <IncludeFile Include="data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop" Target="/etc/xdg/autostart/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop" />
+    <IncludeFile Include="data/anduinos-btrfs-snapshots-manager-notifier.service" Target="/usr/lib/systemd/user/anduinos-btrfs-snapshots-manager-notifier.service" />
+    <IncludeFile Include="data/anduinos-btrfs-snapshots-manager.tmpfiles" Target="/usr/lib/tmpfiles.d/anduinos-btrfs-snapshots-manager.conf" />
+    <IncludeFile Include="data/90-anduinos-btrfs-snapshots-manager" Target="/etc/apt/apt.conf.d/90-anduinos-btrfs-snapshots-manager" />
+    <IncludeFile Include="../LICENSE" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/copyright" />
+    <IncludeFile Include="LICENSE.upstream-MIT" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/LICENSE.upstream-MIT" />
+    <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/README.md" />
+    <IncludeFile Include="docs/VM-QUALIFICATION.md" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/VM-QUALIFICATION.md" />
+    <IncludeFile Include="docs/RECOVERY-SCOPE.md" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/RECOVERY-SCOPE.md" />
+    <IncludeFile Include="docs/ROLLBACK-RELEASE-TEST-PLAN.md" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/ROLLBACK-RELEASE-TEST-PLAN.md" />
+    <IncludeFile Include="docs/deployment-v1.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/deployment-v1.schema.json" />
+    <IncludeFile Include="docs/rollback-v3.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/rollback-v3.schema.json" />
+    <IncludeFile Include="docs/root-cleanup-v1.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/root-cleanup-v1.schema.json" />
+    <IncludeFile Include="docs/personal-snapshot-v1.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/personal-snapshot-v1.schema.json" />
+    <IncludeFolder Include="obj/locale" Target="/usr/share/locale" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AppStreamApplication Include="data/org.anduinos.BtrfsSnapshotsManager.desktop"
+                          Icon="data/org.anduinos.BtrfsSnapshotsManager.svg"
+                          Metainfo="data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml" />
+    <AppStreamScreenshot Include="screenshots/overview.png" Default="true"
+                         Caption="Review and manage System snapshots"
+                         Environment="GNOME:dark" />
+    <AppStreamScreenshot Include="screenshots/scheduled-recovery.png"
+                         Caption="Configure automatic snapshots and automatic cleanup"
+                         Environment="GNOME:dark" />
+  </ItemGroup>
+</Project>

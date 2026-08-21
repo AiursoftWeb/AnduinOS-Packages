@@ -1,0 +1,1587 @@
+# Turkish translations for anduinos-installer-beta package.
+# Copyright (C) 2026 THE anduinos-installer-beta'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-installer-beta package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-installer-beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-01 11:01+0000\n"
+"PO-Revision-Date: 2026-07-30 14:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/pages.py:2092
+msgid "Installing an input method requires an Internet connection."
+msgstr "Bir giriş yöntemi yüklemek için İnternet bağlantısı gerekir."
+
+#: src/pages.py:2103
+msgid ""
+"No Internet connection. Input methods cannot be installed. You can install "
+"them later when connected."
+msgstr ""
+"İnternet bağlantısı yok. Giriş yöntemleri yüklenemiyor. Bağlandıktan sonra "
+"bunları yükleyebilirsiniz."
+
+#: src/pages.py:4933
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"Gerçek bir kurulum makineye özel bir MOK oluşturacaktır. Yeniden başlattıktan sonra MOKManager'da MOK Kaydet → Devam Et → Evet'i seçin ve 123456 şifresini girin."
+
+#: src/pages.py:4944
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
+msgstr ""
+"\n"
+"Mavi MOKManager ekranında MOK Kaydet → Devam Et → Evet'i seçin, şifre: 123456"
+
+#: src/pages.py:4275
+msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
+msgstr "4 GiB disk takası (öncelik 10) + %50 RAM LZ4 zram (öncelik 100)"
+
+#: src/pages.py:4085
+msgid "; sudo does not require a password"
+msgstr "; sudo bir şifre gerektirmez"
+
+#: src/pages.py:4087
+msgid "; sudo requires the account password"
+msgstr "; sudo hesap şifresini gerektirir"
+
+#: src/pages.py:129
+msgid ""
+"A partition on this disk is mounted. Unmount it and rescan storage before "
+"continuing."
+msgstr ""
+"Bu diskteki bir bölüm takılı. Devam etmeden önce bunu ayırın ve depolamayı "
+"yeniden tarayın."
+
+#: src/pages.py:2899
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "{disk} üzerindeki TÜM VERİLER kalıcı olarak silinecektir."
+
+#: src/pages.py:4082
+msgid "Account security"
+msgstr "Hesap güvenliği"
+
+#: src/pages.py:2980
+msgid "Advanced Storage"
+msgstr "Gelişmiş Depolama"
+
+#: src/pages.py:2889
+msgid ""
+"Advanced coexistence can affect EFI firmware state and may trigger BitLocker"
+" recovery. It never shrinks or repairs Windows volumes."
+msgstr ""
+"Gelişmiş birlikte yaşam, EFI firmware durumunu etkileyebilir ve BitLocker "
+"kurtarmasını tetikleyebilir. Asla Windows birimlerini küçültmez veya "
+"onarmaz."
+
+#: src/pages.py:2838
+msgid "Advanced — keep existing systems"
+msgstr "Gelişmiş — mevcut sistemleri koru"
+
+#: src/pages.py:2985
+msgid "Advanced: Install Alongside"
+msgstr "Gelişmiş: Yan Yana Kurulum"
+
+#: src/pages.py:164
+msgid ""
+"After changing partitions or unmounting a volume, rescan storage and select "
+"the target again."
+msgstr ""
+"Bölümleri değiştirdikten veya bir birimi ayırdıktan sonra depolamayı yeniden"
+" tarayın ve hedefi tekrar seçin."
+
+#: src/pages.py:4801
+msgid ""
+"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
+"then enter password 123456."
+msgstr ""
+"Yeniden başlattıktan sonra MOKManager açılacaktır. MOK Kaydet → Devam Et → "
+"Evet'i seçin, ardından 123456 şifresini girin."
+
+#: src/pages.py:4432
+msgid ""
+"All partitions and data on {disk} will be destroyed.\n"
+"\n"
+msgstr ""
+"{disk} üzerindeki tüm bölümler ve veriler yok edilecektir.\n"
+"\n"
+
+#: src/pages.py:155
+msgid ""
+"Alternatively, you may explicitly select one entire partition to erase. "
+"Everything in that selected partition will be destroyed; it is never "
+"selected automatically."
+msgstr ""
+"Alternatif olarak, silmek için açıkça tek bir tüm bölümü seçebilirsiniz. "
+"Seçilen o bölümdeki her şey yok olacaktır; otomatik olarak asla seçilmez."
+
+#: src/pages.py:924 src/pages.py:986
+msgid "Battery power is too low for a safe installation."
+msgstr "Güvenli bir kurulum için pil seviyesi çok düşük."
+
+#: src/pages.py:895
+msgid "Charge to at least 80% before starting the installation."
+msgstr "Kurulumu başlatmadan önce pili en az %80 düzeyine kadar şarj edin."
+
+#: src/pages.py:1041 src/pages.py:1016
+msgid "Continue Anyway"
+msgstr "Yine de Devam Et"
+
+#: src/pages.py:1000
+msgid "Current battery level: {percent}%"
+msgstr "Geçerli pil seviyesi: %{percent}"
+
+#: src/pages.py:1006
+msgid "External power is connected."
+msgstr "Harici güç bağlı."
+
+#: src/pages.py:1008
+msgid "External power is not connected."
+msgstr "Harici güç bağlı değil."
+
+#: src/pages.py:954
+msgid "I understand the risks and insist on installing with low battery."
+msgstr ""
+"Riskleri anlıyorum ve düşük pil seviyesiyle kurulum yapmakta ısrar ediyorum."
+
+#: src/pages.py:894 src/pages.py:889 src/pages.py:967 src/pages.py:969
+msgid "Low battery"
+msgstr "Düşük pil"
+
+#: src/pages.py:948
+msgid "Recheck"
+msgstr "Yeniden denetle"
+
+#: src/main.py:110 src/pages.py:731 src/pages.py:815
+msgid "AnduinOS Installer"
+msgstr "AnduinOS Kurulumu"
+
+#: src/main.py:108
+msgid "AnduinOS Installer (Development)"
+msgstr "AnduinOS Kurulumu (Geliştirme)"
+
+#: src/pages.py:4425
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS yalnızca {disk} üzerinde seçili tahsis edilmemiş alanı kullanacak. Mevcut bölümler korunacaktır.\n"
+"\n"
+
+#: src/pages.py:133
+msgid ""
+"AnduinOS will use only the selected unallocated space. The installer will "
+"not shrink or move an existing filesystem."
+msgstr ""
+"AnduinOS yalnızca seçili tahsis edilmemiş alanı kullanacak. Kurucu mevcut "
+"bir dosya sistemini küçültmeyecek veya taşımayağıktır."
+
+#: data/languages.json:keyboard_layouts
+msgid "Arabic"
+msgstr "Arapça"
+
+#: src/pages.py:268 src/pages.py:4461 src/pages.py:817
+msgid "Back"
+msgstr "Geri"
+
+#: src/pages.py:3014
+msgid ""
+"Before continuing: finish Windows updates, disable Fast Startup and "
+"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
+"measurements and boot order can change."
+msgstr ""
+"Devam etmeden önce: Windows güncellemelerini tamamlayın, Hızlı Başlatmayı ve"
+" uyku modunu devre dışı bırakın ve BitLocker kurtarma anahtarını yedekleyin."
+" EFI, Güvenli Önyükleme, TPM ölçümleri ve önyükleme sırası değişebilir."
+
+#: src/pages.py:2470
+msgid "BitLocker detected"
+msgstr "BitLocker algılandı"
+
+#: src/pages.py:146
+msgid ""
+"BitLocker storage will be preserved. The installer will not unlock, resize, "
+"repair or otherwise modify it."
+msgstr ""
+"BitLocker depolama korunacaktır. Kurucu bunu kilidini açmayacak, yeniden "
+"boyutlandırmayacak, onarmayacak veya başka şekilde değiştirmeyecektir."
+
+#: src/pages.py:4186
+msgid "Boot policy"
+msgstr "Önyükleme politikası"
+
+#: src/pages.py:3055
+msgid "Btrfs (recommended)"
+msgstr "Btrfs (önerilen)"
+
+#: src/pages.py:2817
+msgid "Btrfs — recommended"
+msgstr "Btrfs — önerilen"
+
+#: src/pages.py:4361
+msgid "Cannot create installation plan"
+msgstr "Kurulum planı oluşturulamıyor"
+
+#: src/pages.py:2727
+msgid "Choose Installation Method"
+msgstr "Kurulum Yöntemini Seçin"
+
+#: src/pages.py:2498
+msgid "Choose one target disk. Storage settings come next."
+msgstr "Bir hedef disk seçin. Depolama ayarları sıradadır."
+
+#: src/pages.py:2199
+msgid "Choose optional software to install"
+msgstr "Yüklemek için isteğe bağlı yazılımları seçin"
+
+#: src/pages.py:813
+msgid "Choose your language to begin installation"
+msgstr "Kurulumu başlatmak için dilinizi seçin"
+
+#: src/pages.py:3819
+msgid "Choose your location to set the system clock"
+msgstr "Sistem saatini ayarlamak için konumunuzu seçin"
+
+#: src/pages.py:4838
+msgid "Complete"
+msgstr "Tamamlandı"
+
+#: src/pages.py:3506 src/pages.py:3513 src/pages.py:4101 src/pages.py:3601
+#: src/pages.py:4440
+msgid "Computer Name"
+msgstr "Bilgisayar Adı"
+
+#: src/pages.py:3594
+msgid "Computer name contains invalid characters."
+msgstr "Bilgisayar adı geçersiz karakterler içeriyor."
+
+#: src/pages.py:4589
+msgid "Configure account, region, timezone, and machine identity"
+msgstr "Hesap, bölge, saat dilimi ve makine kimliğini yapılandır"
+
+#: src/pages.py:4578
+msgid "Configure storage and swap"
+msgstr "Saklama alanı ve takası yapılandırın"
+
+#: src/pages.py:3480 src/pages.py:3488
+msgid "Confirm Password"
+msgstr "Şifreyi Onayla"
+
+#: src/pages.py:1939
+msgid "Confirm your keyboard layout"
+msgstr "Klavye düzeninizi onaylayın"
+
+#: src/main.py:153 src/pages.py:1911
+msgid "Continue Installation"
+msgstr "Kurulumu Devam Ettir"
+
+#: src/pages.py:4574
+msgid "Copy AnduinOS system"
+msgstr "AnduinOS sistemini kopyala"
+
+#: src/pages.py:4675
+msgid "Copy Log"
+msgstr "Günlüğü Kopyala"
+
+#: src/pages.py:3146
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Yeni bir 1 GiB AnduinOS EFI Sistem Bölümü oluşturun"
+
+#: src/pages.py:4163
+msgid ""
+"Create and format a dedicated AnduinOS EFI System Partition inside the "
+"selected space."
+msgstr ""
+"Seçilen alan içinde özel bir AnduinOS EFI Sistem Bölümü oluşturun ve "
+"biçimlendirin."
+
+#: src/pages.py:3447
+msgid "Create your user account"
+msgstr "Kullanıcı hesabınızı oluşturun"
+
+#: src/pages.py:2412
+msgid "Current disk layout"
+msgstr "Güncel disk düzeni"
+
+#: src/pages.py:3979
+msgid ""
+"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
+"executor or disk command can run."
+msgstr ""
+"GELİŞTİRME MODU — plan doğrulanacak ve simüle edilecektir. Hiçbir "
+"ayrıcalıklı yürütücü veya disk komutu çalışamaz."
+
+#: data/languages.json:keyboard_layouts
+msgid "Danish"
+msgstr "Danice"
+
+#: src/pages.py:4569
+msgid "Detect Internet connectivity"
+msgstr "İnternet bağlantısını algıla"
+
+#: src/pages.py:4566
+msgid "Detect firmware and Secure Boot"
+msgstr "Güncelleme yazılımını ve Güvenli Önyüklemeyi algıla"
+
+#: src/pages.py:4419
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
+"\n"
+msgstr ""
+"Geliştirme modu kurulumu {disk} üzerinde simüle edecektir. Hiçbir disk verisi değiştirilmeyecektir.\n"
+"\n"
+
+#: src/pages.py:4923
+msgid "Development simulation completed"
+msgstr "Geliştirme simülasyonu tamamlandı"
+
+#: src/pages.py:4832
+msgid "Discover AnduinOS"
+msgstr "AnduinOS'u Keşfet"
+
+#: src/pages.py:1216 src/pages.py:2218
+msgid "Download and install system updates during installation"
+msgstr "Kurulum sırasında sistem güncellemelerini indir ve kur"
+
+#: data/languages.json:keyboard_layouts
+msgid "Dutch"
+msgstr "Hollandaca"
+
+#: src/pages.py:3073
+msgid "EFI System Partition"
+msgstr "EFI Sistem Bölümü"
+
+#: src/pages.py:4184
+msgid "EFI policy"
+msgstr "EFI ilkesi"
+
+#: src/pages.py:2455
+msgid "Empty disk — no partitions"
+msgstr "Boş disk — bölüm yok"
+
+#: src/pages.py:2821
+msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
+msgstr ""
+"Ortak alan alt hacimlerini, anlık görüntüleri ve Disk Snapshots Manager'i "
+"etkinleştirir."
+
+#: data/languages.json:keyboard_layouts
+msgid "English (UK)"
+msgstr "İngilizce (BK)"
+
+#: data/languages.json:keyboard_layouts
+msgid "English (US)"
+msgstr "İngilizce (ABD)"
+
+#: src/pages.py:4601
+msgid "Ensure Disk Snapshots Manager is available"
+msgstr "Disk Snapshots Manager'in kullanılabilir olduğundan emin olun"
+
+#: src/pages.py:4412
+msgid "Erase Disk and Install"
+msgstr "Diski Sil ve Kur"
+
+#: src/pages.py:2813 src/pages.py:4226
+msgid "Erase every partition and all data on the selected disk."
+msgstr "Seçili diskteki her bölümü ve tüm verileri siler."
+
+#: src/pages.py:4411
+msgid "Erase the entire selected disk?"
+msgstr "Tüm seçilen disk silinsin mi?"
+
+#: src/pages.py:137
+msgid ""
+"Existing Windows, recovery and data partitions remain outside the write set "
+"and will be preserved."
+msgstr ""
+"Mevcut Windows, kurtarma ve veri bölümleri yazma setinin dışında kalır ve "
+"korunur."
+
+#: src/pages.py:2945
+msgid ""
+"Existing partitions were detected. The first two choices delete them; "
+"Advanced is the preservation path."
+msgstr ""
+"Mevcut bölümler algılandı. İlk iki seçenek bunları siler; Gelişmiş koruma "
+"yoludur."
+
+#: src/pages.py:4446
+msgid ""
+"Existing partitions will be preserved. New AnduinOS partitions will be "
+"created only in the selected unallocated extent; EFI vendor files and the "
+"AnduinOS firmware boot entry may be updated."
+msgstr ""
+"Mevcut bölümler korunacaktır. Yeni AnduinOS bölümleri yalnızca seçili tahsis"
+" edilmemiş alanda oluşturulur; EFI tedarikçi dosyaları ve AnduinOS firmware "
+"başlangıç girdisi güncellenebilir."
+
+#: src/pages.py:3052 src/pages.py:4049
+msgid "Filesystem"
+msgstr "Dosya Sistemi"
+
+#: src/pages.py:4613
+msgid "Finalize target environment"
+msgstr "Hedef ortamı tamamla"
+
+#: data/languages.json:keyboard_layouts
+msgid "Finnish"
+msgstr "Fince"
+
+#: src/pages.py:4182
+msgid "Formats"
+msgstr "Biçimlendirir"
+
+#: data/languages.json:keyboard_layouts
+msgid "French"
+msgstr "Fransızca"
+
+#: src/pages.py:3462 src/pages.py:3464
+msgid "Full Name"
+msgstr "Ad Soyad"
+
+#: data/languages.json:keyboard_layouts
+msgid "German"
+msgstr "Almanca"
+
+#: data/languages.json:keyboard_layouts
+msgid "Greek"
+msgstr "Yunanca"
+
+#: src/pages.py:111
+msgid ""
+"Guided coexistence requires a system booted in UEFI mode and a GPT target "
+"disk. This disk cannot continue in guided mode."
+msgstr ""
+"Yönlendirilmiş ortak yaşam, UEFI modunda önyükleme yapılmış bir sistem ve "
+"GPT hedef diski gerektirir. Bu disk yönlendirilmiş modda devam edemez."
+
+#: src/pages.py:4131
+msgid ""
+"Guided storage selection is missing. Rescan and select the target again."
+msgstr ""
+"Yönlendirilmiş depolama seçimi eksik. Yeniden tarayın ve hedefi tekrar "
+"seçin."
+
+#: data/languages.json:keyboard_layouts
+msgid "Hindi (India)"
+msgstr "Hintçe (Hindistan)"
+
+#: src/pages.py:2741
+msgid "How should AnduinOS use this disk?"
+msgstr "AnduinOS bu diski nasıl kullanmalı?"
+
+#: data/languages.json:keyboard_layouts
+msgid "Indonesian"
+msgstr "Endonezce"
+
+#: src/pages.py:4498
+msgid "Install"
+msgstr "Kur"
+
+#: src/pages.py:4559 src/pages.py:1221 src/pages.py:4125
+msgid "Install input method"
+msgstr "Giriş yöntemi kur"
+
+#: src/pages.py:625
+msgid "Install {language} input method: {name}"
+msgstr "{language} giriş yöntemini kur: {name}"
+
+#: src/pages.py:4409 src/pages.py:4496
+msgid "Install Alongside"
+msgstr "Yan Yana Kur"
+
+#: src/pages.py:4169
+msgid "Install alongside"
+msgstr "yan yana kur"
+
+#: src/pages.py:4608
+msgid "Install bootloader"
+msgstr "Önyükleme yükleyicisini kur"
+
+#: src/pages.py:4611
+msgid "Check systems on other disks"
+msgstr "Diğer disklerdeki sistemleri denetle"
+
+#: src/pages.py:1217 src/pages.py:4603
+msgid "Install hardware drivers"
+msgstr "Donanım sürücülerini kur"
+
+#: src/pages.py:4408
+msgid "Install in the selected free space?"
+msgstr "Seçilen boş alana kurulur mu?"
+
+#: src/pages.py:4596
+msgid "Ensure required language packs are installed"
+msgstr "Gerekli dil paketlerinin kurulu olduğundan emin olun"
+
+#: src/pages.py:4599
+msgid "Install system updates"
+msgstr "Sistem güncellemelerini kur"
+
+#: src/pages.py:2229
+msgid "Install third-party drivers for this device"
+msgstr "Bu cihaz için üçüncü taraf sürücüleri kur"
+
+#: src/pages.py:5093 src/pages.py:5095 src/pages.py:4940 src/pages.py:4950
+msgid "Installation Complete"
+msgstr "Kurulum Tamamlandı"
+
+#: src/pages.py:4970
+msgid "Installation Failed"
+msgstr "Kurulum Başarısız"
+
+#: src/pages.py:4639
+msgid "Installation Steps"
+msgstr "Kurulum Adımları"
+
+#: src/pages.py:160
+msgid ""
+"Installation cannot continue with this selection. There is no force-continue"
+" option around storage safety checks."
+msgstr ""
+"Kurulum bu seçimle devam edemez. Depolama güvenlik kontrolleri etrafında "
+"zorla devam etme seçeneği yoktur."
+
+#: src/pages.py:4919 src/pages.py:4985
+msgid "Installation complete"
+msgstr "Kurulum tamamlandı"
+
+#: src/pages.py:4968
+msgid "Installation failed"
+msgstr "Kurulum başarısız oldu"
+
+#: src/main.py:145
+msgid "Installation in progress"
+msgstr "Kurulum devam ediyor"
+
+#: src/pages.py:4547 src/pages.py:4541
+msgid "Installing AnduinOS"
+msgstr "AnduinOS Kuruluyor"
+
+#: data/languages.json:keyboard_layouts
+msgid "Italian"
+msgstr "İtalyanca"
+
+#: data/languages.json:keyboard_layouts
+msgid "Japanese (JIS keyboard)"
+msgstr "Japonca (JIS klavye)"
+
+#: src/pages.py:4040
+msgid "Keyboard"
+msgstr "Klavye"
+
+#: src/pages.py:1938 src/pages.py:1932 src/pages.py:2075
+msgid "Keyboard Layout"
+msgstr "Klavye Düzeni"
+
+#: src/pages.py:4582
+msgid "Configure physical keyboard layout"
+msgstr "Fiziksel klavye düzenini yapılandır"
+
+#: data/languages.json:keyboard_layouts
+msgid "Korean"
+msgstr "Korece"
+
+#: src/pages.py:4039
+msgid "Language"
+msgstr "Dil"
+
+#: src/pages.py:2472
+msgid "Live USB — excluded"
+msgstr "USB'den canlı — hariç tutuldu"
+
+#: src/pages.py:4573
+msgid "Mount target filesystems"
+msgstr "Hedef dosya sistemlerini bağla"
+
+#: src/pages.py:851
+msgid "Navigation error"
+msgstr "Gezinme hatası"
+
+#: src/pages.py:4180 src/pages.py:4229
+msgid "New partitions"
+msgstr "Yeni bölümler"
+
+#: src/pages.py:261 src/pages.py:818 src/pages.py:1016
+msgid "Next"
+msgstr "İleri"
+
+#: src/pages.py:4756
+msgid "Next slide"
+msgstr "Sonraki slayt"
+
+#: src/pages.py:2389
+msgid "No partition table"
+msgstr "Bölüm tablosu yok"
+
+#: src/pages.py:2631
+msgid "No suitable disks found."
+msgstr "Uygun disk bulunamadı."
+
+#: src/pages.py:170
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with Windows Disk Management, then boot the installer "
+"again and rescan the disk."
+msgstr ""
+"Uygun boş alan bulunamadı. Verilerinizi korumak için Windows Disk Yönetimi "
+"ile boş alan oluşturun, ardından yükleyiciyi yeniden başlatın ve diski "
+"tekrar tarayın."
+
+#: src/pages.py:175
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with a partitioning tool, then boot the installer again "
+"and rescan the disk."
+msgstr ""
+"Uygun boş alan bulunamadı. Verilerinizi korumak için bir bölüm aracıyla boş "
+"alan oluşturun, ardından yükleyiciyi yeniden başlatın ve diski tekrar "
+"tarayın."
+
+#: data/languages.json:keyboard_layouts
+msgid "Norwegian"
+msgstr "Norveççe"
+
+#: src/pages.py:1124 src/pages.py:1375 src/pages.py:4370 src/pages.py:854
+msgid "OK"
+msgstr "Tamam"
+
+#: src/pages.py:4835
+msgid "Output"
+msgstr "Çıktı"
+
+#: src/pages.py:4973 src/pages.py:5028
+msgid "Output • Error"
+msgstr "Çıktı • Hata"
+
+#: src/pages.py:5023
+msgid "Output • {count} warning(s)"
+msgstr "Çıktı • {count} uyarı(lar)"
+
+#: src/pages.py:2453
+msgid "Partition details unavailable"
+msgstr "Bölüm ayrıntıları kullanılamıyor"
+
+#: src/pages.py:3476 src/pages.py:3487 src/pages.py:1466 src/pages.py:1525
+msgid "Password"
+msgstr "Şifre"
+
+#: src/pages.py:3584
+msgid "Password must be at least 6 characters."
+msgstr "Şifre en az 6 karakter olmalıdır."
+
+#: src/pages.py:4048
+msgid "Platform"
+msgstr "Platform"
+
+#: src/pages.py:4548
+msgid "Please do not turn off your computer"
+msgstr "Bilgisayarınızı kapatmayın lütfen"
+
+#: src/pages.py:3965
+msgid "Please review your choices before proceeding"
+msgstr "Sürmeden önce tercihlerinizi gözden geçirin"
+
+#: data/languages.json:keyboard_layouts
+msgid "Polish"
+msgstr "Polonyaca"
+
+#: data/languages.json:keyboard_layouts
+msgid "Portuguese"
+msgstr "Portekizce"
+
+#: data/languages.json:keyboard_layouts
+msgid "Portuguese (Brazil)"
+msgstr "Portekizce (Brezilya)"
+
+#: src/pages.py:4594
+msgid "Prepare Secure Boot"
+msgstr "Güvenli Önyükleme Hazırlığı"
+
+#: src/pages.py:4572
+msgid "Prepare installation disk"
+msgstr "Kurulum diskini hazırla"
+
+#: src/pages.py:4579
+msgid "Prepare target environment"
+msgstr "Hedef ortamı hazırla"
+
+#: src/pages.py:4871
+msgid "Preparing installation…"
+msgstr "Kurulum hazırlanıyor…"
+
+#: src/pages.py:4175
+msgid "Preserved partitions"
+msgstr "Korunan bölümler"
+
+#: src/pages.py:4750
+msgid "Previous slide"
+msgstr "Önceki slayt"
+
+#: src/pages.py:3964 src/pages.py:3958
+msgid "Ready to Install"
+msgstr "Kuruluma Hazır"
+
+#: src/pages.py:4811
+msgid "Reboot Now"
+msgstr "Şimdi Yeniden Başlat"
+
+#: src/pages.py:4598
+msgid "Refresh package indexes"
+msgstr "Paket dizinlerini yenile"
+
+#: src/pages.py:4580
+msgid "Remove live-session components"
+msgstr "Canlı oturum bileşenlerini kaldır"
+
+#: src/pages.py:4951 src/pages.py:4942
+msgid "Remove the installation media and restart your computer"
+msgstr "Kurulum ortamını çıkarın ve bilgisayarınızı yeniden başlatın"
+
+#: src/pages.py:1177 src/pages.py:1205 src/pages.py:2220 src/pages.py:675
+#: src/pages.py:1362 src/pages.py:2233
+msgid ""
+"Requires an Internet connection. The base installation remains available "
+"when offline."
+msgstr ""
+"Bir İnternet bağlantısı gerektirir. Temel kurulum çevrimdiken de "
+"kullanılabilir durumda kalır."
+
+#: src/pages.py:2550
+msgid "Rescan Storage"
+msgstr "Depolamayı Yeniden Tara"
+
+#: src/pages.py:3101
+msgid "Rescan and Reselect Disk"
+msgstr "Disk'i Yeniden Tara ve Tekrar Seç"
+
+#: src/pages.py:4809
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "Yeniden Başlat ve Güvenli Önyükleme Anahtarını Kaydet"
+
+#: src/pages.py:4960
+msgid "Restart is disabled in development protection mode"
+msgstr "Yeniden başlatma geliştirme koruma modunda devre dışı bırakılmıştır"
+
+#: src/pages.py:3150
+msgid "Reuse {path} ({size})"
+msgstr "{path} ({size}) yeniden kullan"
+
+#: src/pages.py:4155
+msgid ""
+"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
+"before writing."
+msgstr ""
+"{path} yeniden kullan; asla biçimlendirme; yazmadan önce FAT sağlığını, "
+"kimliğini ve 64 MiB boş alanı doğrula."
+
+#: data/languages.json:keyboard_layouts
+msgid "Romanian"
+msgstr "Rumence"
+
+#: data/languages.json:keyboard_layouts
+msgid "Russian"
+msgstr "Rusça"
+
+#: src/pages.py:4679
+msgid "Save Log"
+msgstr "Günlüğü Kaydet"
+
+#: src/pages.py:4609
+msgid "Schedule MOK enrollment"
+msgstr "MOK kaydını zamanla"
+
+#: src/pages.py:3831
+msgid "Search timezones…"
+msgstr "Saat dilimlerini ara…"
+
+#: src/pages.py:4069
+msgid "Secure Boot enrollment"
+msgstr "Güvenli Önyükleme kaydı"
+
+#: src/pages.py:2497 src/pages.py:2491
+msgid "Select Installation Disk"
+msgstr "Kurulum Diskini Seç"
+
+#: src/pages.py:3818 src/pages.py:3812
+msgid "Select Timezone"
+msgstr "Saat Dilimini Seç"
+
+#: src/pages.py:4592
+msgid "Select fastest package mirror"
+msgstr "En hızlı paket aynasını seç"
+
+#: src/pages.py:3884
+msgid "Selected timezone"
+msgstr "Seçilen saat dilimi"
+
+#: src/pages.py:4170
+msgid "Selected unallocated space"
+msgstr "Seçili tahsis edilmemiş alan"
+
+#: src/pages.py:2239
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr ""
+"Bazı sürücüler tescilli veya başka şekilde özgür olmayan yazılımlardır."
+
+#: data/languages.json:keyboard_layouts
+msgid "Spanish"
+msgstr "İspanyolca"
+
+#: src/pages.py:4046
+msgid "Stable disk identity"
+msgstr "Sabit disk kimliği"
+
+#: src/pages.py:4437
+msgid ""
+"Stable identity: {stable_id}\n"
+"\n"
+msgstr ""
+"Sabit kimlik: {stable_id}\n"
+"\n"
+
+#: src/pages.py:2380
+msgid "Storage Device"
+msgstr "Depolama Aygıtı"
+
+#: src/pages.py:4168 src/pages.py:4224
+msgid "Storage mode"
+msgstr "Depolama modu"
+
+#: src/pages.py:4050
+msgid "Subvolumes"
+msgstr "Alt hacimler"
+
+#: src/pages.py:4268
+msgid "Swap"
+msgstr "Takas"
+
+#: data/languages.json:keyboard_layouts
+msgid "Swedish"
+msgstr "İsveççe"
+
+#: src/pages.py:4051
+msgid "System updates"
+msgstr "Sistem güncellemeleri"
+
+#: src/pages.py:4042
+msgid "Target Disk"
+msgstr "Hedef Disk"
+
+#: src/pages.py:2993 src/pages.py:3260
+msgid "Target: {disk} ({size} — {model})"
+msgstr "Hedef: {disk} ({size} — {model})"
+
+#: src/pages.py:1964 src/pages.py:2076
+msgid "Test your keyboard here…"
+msgstr "Klavyenizi burada test edin…"
+
+#: data/languages.json:keyboard_layouts
+msgid "Thai"
+msgstr "Tayca"
+
+#: src/pages.py:120
+msgid ""
+"The GPT disk or one of its partitions has no unique stable identifier. "
+"Guided coexistence cannot safely authorize preservation or writes on this "
+"disk."
+msgstr ""
+"GPT disk veya bölümlerinden birinin benzersiz ve kararlı bir tanımlayıcısı "
+"yok. Yönlendirilmiş ortak yaşam, bu diskte korumanın veya yazma işleminin "
+"güvenli bir şekilde yetkilendirilmesine izin veremez."
+
+#: src/pages.py:115
+msgid ""
+"The complete partition map and free-space geometry could not be read "
+"consistently. No space on this disk is authorized for installation."
+msgstr ""
+"Tam bölüm haritası ve boş alan geometrisi tutarlı bir şekilde okunamadı. Bu "
+"diskte kurulum için yetkilendirilmiş alan yok."
+
+#: src/pages.py:141
+msgid ""
+"The existing EFI System Partition is only a candidate. Health and free-space"
+" checks must pass before it can be reused, and it will never be formatted."
+msgstr ""
+"Mevcut EFI Sistem Bölümü yalnızca bir adaydır. Yeniden kullanılabilmesi için"
+" sağlık ve boş alan kontrollerinin başarılı olması gerekir ve asla "
+"biçimlendirilmeyecektir."
+
+#: src/pages.py:4926
+msgid ""
+"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
+" state, or installed system was changed."
+msgstr ""
+"Kurulum planı geçerlidir. Hiçbir disk, dosya sistemi, önyükleme yükleyicisi,"
+" Güvenli Önyükleme durumu veya kurulu sistem değiştirilmedi."
+
+#: src/main.py:147
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "Kurucu hedef diski değiştirdiği süre boyunca kapatılamaz."
+
+#: src/pages.py:150
+msgid ""
+"The installer will not mount, repair or infer the safety of Windows volumes "
+"from hibernation or Fast Startup state. Any required Windows maintenance "
+"must be completed in Windows."
+msgstr ""
+"Kurulum programı, Windows bölümlerini uyku modu veya Hızlı Başlatma "
+"durumundan bağlamaz, onarmaz veya güvenliğini tahmin etmez. Gerekli tüm "
+"Windows bakım işlemleri Windows içinde tamamlanmalıdır."
+
+#: src/pages.py:4443
+msgid "The privileged executor is disabled."
+msgstr "Ayrıcalıklı yürütücü devre dışı bırakılmıştır."
+
+#: src/pages.py:3228
+msgid ""
+"The selected disk changed or disappeared. Return to the disk page and select"
+" it again. {error}"
+msgstr ""
+"Seçili disk değişti veya kayboldu. Disk sayfasına dönün ve tekrar seçin. "
+"{error}"
+
+#: src/pages.py:3241
+msgid "The selected disk size changed. Return and select it again."
+msgstr "Seçili diskin boyutu değişti. Geri dönün ve tekrar seçin."
+
+#: src/pages.py:3251
+msgid ""
+"The selected disk topology changed. Review the disk and installation method "
+"again."
+msgstr ""
+"Seçili diskin topolojisi değişti. Diski ve kurulum yöntemini tekrar gözden "
+"geçirin."
+
+#: src/pages.py:3580
+msgid "The two passwords do not match."
+msgstr "İki şifre eşleşmiyor."
+
+#: src/pages.py:4057
+msgid "Third-party drivers"
+msgstr "Üçüncü taraf sürücüler"
+
+#: src/pages.py:3021
+msgid ""
+"This advanced path preserves existing partitions but changes the selected "
+"disk's partition table and the machine's EFI boot state."
+msgstr ""
+"Bu gelişmiş yol, mevcut bölümleri korur ancak seçili diskin bölüm tablosunu "
+"ve makinenin EFI önyüklenme durumunu değiştirir."
+
+#: src/pages.py:125
+msgid ""
+"This disk contains an active mapper, array or other nested block-device "
+"topology that guided coexistence does not support."
+msgstr ""
+"Bu disk, kılavuzlu birlikte yaşamın desteklemediği aktif bir eşleyici, dizi "
+"veya diğer iç içe geçmiş blok cihazı topolojisini içeriyor."
+
+#: src/pages.py:2935
+msgid ""
+"This disk is too small for whole-disk installation. Advanced may continue "
+"only if suitable unallocated space exists."
+msgstr ""
+"Bu disk, tüm disk kurulumu için çok küçük. Gelişmiş seçenek yalnızca uygun "
+"ayrılmamış alan varsa devam edebilir."
+
+#: src/pages.py:4454
+msgid "This installer does not shrink or preserve other systems."
+msgstr "Bu kurucu diğer sistemleri küçültmez veya korumaz."
+
+#: src/pages.py:4103
+msgid "Timezone"
+msgstr "Saat Dilimi"
+
+#: src/pages.py:2474
+msgid "Too small"
+msgstr "Çok küçük"
+
+#: data/languages.json:keyboard_layouts
+msgid "Turkish"
+msgstr "Türkçe"
+
+#: data/languages.json:keyboard_layouts
+msgid "Ukrainian"
+msgstr "Ukraynaca"
+
+#: src/pages.py:3065
+msgid "Unallocated space"
+msgstr "Ayrılmamış alan"
+
+#: src/pages.py:2445
+msgid "Unallocated · {size}"
+msgstr "Ayrılmamış · {size}"
+
+#: src/pages.py:4014 src/pages.py:1710
+msgid "Unavailable: {error}"
+msgstr "Kullanılamıyor: {error}"
+
+#: src/pages.py:2432
+msgid "Unknown filesystem"
+msgstr "Bilinmeyen dosya sistemi"
+
+#: src/pages.py:4614
+msgid "Unmount installed system"
+msgstr "Kurulmuş sistemi ayır"
+
+#: src/pages.py:2198 src/pages.py:1196 src/pages.py:2192
+msgid "Updates and Drivers"
+msgstr "Güncellemeler ve Sürücüler"
+
+#: src/pages.py:2840
+msgid ""
+"Use already-unallocated space and preserve existing partitions. This is the "
+"only Windows coexistence path."
+msgstr ""
+"Zaten ayrılmamış alanı kullanın ve mevcut bölümleri koruyun. Bu, Windows ile"
+" birlikte çalışmanın tek yoludur."
+
+#: src/pages.py:2986
+msgid "Use only existing unallocated space on the selected disk."
+msgstr "Sadece seçilen diskteki mevcut ayrılmamış alanı kullanın."
+
+#: src/pages.py:4079
+msgid "User"
+msgstr "Kullanıcı"
+
+#: src/pages.py:3446 src/pages.py:3440
+msgid "User Account"
+msgstr "Kullanıcı Hesabı"
+
+#: src/pages.py:3468 src/pages.py:3472
+msgid "Username"
+msgstr "Kullanıcı Adı"
+
+#: src/pages.py:3568
+msgid ""
+"Username must start with a lowercase ASCII letter and contain only lowercase"
+" ASCII letters or digits (maximum 16 characters)."
+msgstr ""
+"Kullanıcı adı küçük bir ASCII harfi ile başlamalı ve yalnızca küçük ASCII "
+"harfler veya rakamlar içermelidir (maksimum 16 karakter)."
+
+#: src/pages.py:2832
+msgid "Uses a traditional single root filesystem."
+msgstr "Geleneksel tek kök dosya sistemini kullanır."
+
+#: src/pages.py:4406
+msgid "Validate Plan (No Installation)"
+msgstr "Planı Doğrula (Kurulum Yok)"
+
+#: src/pages.py:4405
+msgid "Validate this installation plan?"
+msgstr "Bu kurulum planını doğrulansın mı?"
+
+#: src/pages.py:4606
+msgid "Verify kernel module signatures"
+msgstr "Çekirdek modülü imzalarını doğrula"
+
+#: src/pages.py:4571
+msgid "Verify target disk isolation"
+msgstr "Hedef disk izolasyonunu doğrula"
+
+#: data/languages.json:keyboard_layouts
+msgid "Vietnamese"
+msgstr "Vietnamca"
+
+#: src/pages.py:811
+msgid "Welcome to AnduinOS"
+msgstr "AnduinOS'a Hoş Geldiniz"
+
+#: src/pages.py:2468
+msgid "Windows detected"
+msgstr "Windows algılandı"
+
+#: src/pages.py:4188
+msgid ""
+"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
+"AnduinOS NVRAM entry."
+msgstr ""
+"Sadece EFI/AnduinOS'u yazın, EFI/BOOT'u üzerine yazmayın ve doğrulanmış bir "
+"AnduinOS NVRAM girdisi gerektirin."
+
+#: src/pages.py:4072
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr ""
+"makineye özel bir MOK oluştur; yeniden başlattıktan sonra 123456 şifresiyle "
+"kaydet"
+
+#: src/pages.py:4059
+msgid "detect and install (may include non-free software)"
+msgstr "algıla ve kur (özgür olmayan yazılım içerebilir)"
+
+#: src/pages.py:4121 src/pages.py:4055 src/pages.py:4061 src/pages.py:4067
+msgid "do not install"
+msgstr "kurma"
+
+#: src/pages.py:4053 src/pages.py:4065
+msgid "download and install"
+msgstr "indir ve kur"
+
+#: src/pages.py:3055
+msgid "ext4 (classic)"
+msgstr "ext4 (klasik)"
+
+#: src/pages.py:2829
+msgid "ext4 — classic"
+msgstr "ext4 — klasik"
+
+#: src/pages.py:4077
+msgid "not required"
+msgstr "gerekli değil"
+
+#: src/pages.py:4083
+msgid "password required for login"
+msgstr "giriş için şifre gerekli"
+
+#: src/pages.py:4024
+msgid "single ext4 root filesystem"
+msgstr "tekli ext4 kök dosya sistemi"
+
+#: src/pages.py:4005
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / Güvenli Önyükleme: {secure_boot}"
+
+#: src/pages.py:4176
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+#: src/pages.py:4139
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+#: src/pages.py:4147
+msgid "{path} as {filesystem}"
+msgstr "{path}, {filesystem} olarak"
+
+#: src/pages.py:4171
+msgid "{size} at {offset}"
+msgstr "{size}, {offset} konumunda"
+
+#: src/pages.py:3288
+msgid "{size} unallocated at {offset}"
+msgstr "{size} atanmamış, {offset} konumunda"
+
+#: src/pages.py:5031
+msgid "{step} failed"
+msgstr "{step} başarısız oldu"
+
+#: src/pages.py:4303
+msgid ""
+"⚠ Only the selected unallocated space will be partitioned and formatted. "
+"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
+"firmware boot entry may change. This installer will not shrink Windows for "
+"you."
+msgstr ""
+"⚠ Sadece seçilen atanmamış alan bölümlenecek ve biçimlendirilecek. Mevcut "
+"bölümler korunur, ancak EFI/AnduinOS dosyaları ve AnduinOS firmware "
+"önyükleme girdisi değişebilir. Bu kurucu Windows'u sizin için küçültmez."
+
+#: src/pages.py:4311
+msgid ""
+"⚠ This will erase ALL data on the selected disk. This action cannot be "
+"undone."
+msgstr ""
+"⚠ Bu işlem seçilen diskteki TÜM verileri silecektir. Bu işlem geri alınamaz."
+
+#: src/pages.py:1176 src/pages.py:667 src/pages.py:1171
+msgid "Connect to the Internet"
+msgstr "İnternete bağlan"
+
+#: src/pages.py:1343
+msgid "Internet connection is ready."
+msgstr "İnternet bağlantısı hazır."
+
+#: src/pages.py:1250
+msgid "Available Wi-Fi Networks"
+msgstr "Kullanılabilir Wi-Fi Ağları"
+
+#: src/pages.py:4576
+msgid "Preserve connected Wi-Fi network"
+msgstr "Bağlı Wi-Fi ağını koru"
+
+#: src/pages.py:2540 src/pages.py:3092
+msgid "Loading storage devices…"
+msgstr "Depolama aygıtları yükleniyor…"
+
+#: src/pages.py:4335
+msgid "Rechecking target disk…"
+msgstr "Hedef disk yeniden denetleniyor…"
+
+#: src/pages.py:2609 src/pages.py:3213 src/pages.py:4364
+msgid "Storage devices could not be loaded: {error}"
+msgstr "Depolama aygıtları yüklenemedi: {error}"
+
+#: src/pages.py:1218 src/pages.py:4586 src/pages.py:2252
+msgid "Install extended multimedia format support"
+msgstr "Genişletilmiş çoklu ortam biçimi desteğini yükle"
+
+#: src/pages.py:4063
+msgid "Extended multimedia formats"
+msgstr "Genişletilmiş çoklu ortam biçimleri"
+
+#: src/pages.py:2256
+msgid ""
+"Adds wider GStreamer compatibility and support for additional legacy and "
+"specialist media formats. Some components may be subject to patent or "
+"redistribution terms."
+msgstr ""
+"Daha geniş GStreamer uyumluluğu ile ek eski ve özel medya biçimleri için "
+"destek sağlar. Bazı bileşenler patent veya yeniden dağıtım koşullarına tabi "
+"olabilir."
+
+#: src/pages.py:1473
+msgid "A saved profile exists. Entering a password updates it securely."
+msgstr ""
+"Kaydedilmiş bir profil mevcut. Şifre girildiğinde güvenli bir şekilde "
+"güncellenir."
+
+#: src/pages.py:1524
+msgid "Anonymous identity (optional)"
+msgstr "Anonim kimlik (isteğe bağlı)"
+
+#: src/pages.py:1530
+msgid "CA certificate path (optional)"
+msgstr "CA sertifikası yolu (isteğe bağlı)"
+
+#: src/pages.py:1239 src/pages.py:1409 src/pages.py:1482 src/pages.py:1600
+#: src/pages.py:1816
+msgid "Cancel"
+msgstr "İptal"
+
+#: src/pages.py:1786
+msgid "Cancelling Wi-Fi operation…"
+msgstr "WLAN işlemi iptal ediliyor…"
+
+#: src/pages.py:1532
+msgid "Client certificate path"
+msgstr "İstemci sertifikası yolu"
+
+#: src/pages.py:1483 src/pages.py:1601
+msgid "Connect"
+msgstr "Connect"
+
+#: src/pages.py:1817
+msgid "Continue"
+msgstr "Devam et"
+
+#: src/pages.py:1259 src/pages.py:1809
+msgid "Connect to a hidden network"
+msgstr "Gizli bir ağa bağlan"
+
+#: src/pages.py:1478 src/pages.py:1593
+#, python-brace-format
+msgid "Connect to {network}"
+msgstr "{network} ağına bağlan"
+
+#: src/pages.py:1654
+msgid "Connected"
+msgstr "Connected"
+
+#: src/pages.py:1453
+#, python-brace-format
+msgid "Connecting to {network}…"
+msgstr "{network} ağına bağlanılıyor…"
+
+#: src/pages.py:1755
+msgid "Could not change the Wi-Fi connection"
+msgstr "WLAN bağlantısı değiştirilemedi"
+
+#: src/pages.py:1410
+msgid "Disconnect"
+msgstr "Disconnect"
+
+#: src/pages.py:1401
+#, python-brace-format
+msgid "Disconnect from {network}?"
+msgstr "{network} ağından bağlantı kesilsin mi?"
+
+#: src/pages.py:1420
+#, python-brace-format
+msgid "Disconnecting from {network}…"
+msgstr "{network} ağından bağlantı kesiliyor…"
+
+#: src/pages.py:1531
+msgid "Domain suffix match (optional)"
+msgstr "Etki alanı soneki eşleşmesi (isteğe bağlı)"
+
+#: src/pages.py:1515
+msgid "EAP method"
+msgstr "EAP yöntemi"
+
+#: src/pages.py:1387 src/pages.py:1796
+msgid "Enhanced Open (OWE)"
+msgstr "Gelişmiş Açık (OWE)"
+
+#: src/pages.py:1595
+msgid ""
+"Enter the credentials supplied by your organization. Certificate validation "
+"is strongly recommended."
+msgstr ""
+"Kuruluşunuz tarafından sağlanan kimlik bilgilerini girin. Sertifika "
+"doğrulaması şiddetle önerilir."
+
+#: src/pages.py:1811
+msgid "Enter the exact network name and choose its security type."
+msgstr "Ağ adını tam olarak girin ve güvenlik türünü seçin."
+
+#: src/pages.py:1390 src/pages.py:1800
+msgid "Enterprise Wi-Fi"
+msgstr "Kurumsal Wi-Fi"
+
+#: src/pages.py:1523
+msgid "Identity"
+msgstr "Identity"
+
+#: src/pages.py:1527
+msgid "Inner authentication"
+msgstr "Dahili kimlik doğrulama"
+
+#: src/pages.py:1790
+msgid "Network name (SSID)"
+msgstr "Ağ adı (SSID)"
+
+#: src/pages.py:1645
+msgid "No Wi-Fi networks found."
+msgstr "Hiç Wi-Fi ağı bulunamadı."
+
+#: src/pages.py:1386 src/pages.py:1795
+msgid "Open network"
+msgstr "Açık ağ"
+
+#: src/pages.py:1389 src/pages.py:1797 src/pages.py:1798
+msgid "Personal Wi-Fi"
+msgstr "Kişisel Wi-Fi"
+
+#: src/pages.py:1535
+msgid "Private key password (optional)"
+msgstr "Özel anahtar şifresi (isteğe bağlı)"
+
+#: src/pages.py:1533
+msgid "Private key path"
+msgstr "Özel anahtar yolu"
+
+#: src/pages.py:1284
+msgid "Refresh Wi-Fi networks"
+msgstr "Wi-Fi ağlarını yenile"
+
+#: src/pages.py:1656
+msgid "Saved"
+msgstr "Saved"
+
+#: src/pages.py:1792
+msgid "Security"
+msgstr "Security"
+
+#: src/pages.py:1405
+msgid ""
+"The installer will keep the saved network profile so it can be used again."
+msgstr ""
+"Kurucu, tekrar kullanılabilmesi için kaydedilen ağ profilini koruyacaktır."
+
+#: src/pages.py:1356
+msgid "The local network is connected, but Internet access is unavailable."
+msgstr "Yerel ağa bağlanıldı, ancak İnternet erişimi alınamıyor."
+
+#: src/pages.py:1856
+msgid "Turning Wi-Fi off…"
+msgstr "WLAN kapatılıyor…"
+
+#: src/pages.py:1854
+msgid "Turning Wi-Fi on…"
+msgstr "WLAN açılıyor…"
+
+#: src/pages.py:1485
+msgid "Use WPS"
+msgstr "WPS'yi kullan"
+
+#: src/pages.py:1388 src/pages.py:1799
+msgid "WEP (legacy)"
+msgstr "WEP (eski)"
+
+#: src/pages.py:1347
+msgid ""
+"Wi-Fi is connected, but the network requires sign-in through a captive "
+"portal."
+msgstr ""
+"Wi-Fi'ye bağlandınız ancak ağ, erişim için bir giriş sayfası gerektiriyor."
+
+#: src/pages.py:1449
+#, python-brace-format
+msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
+msgstr ""
+"{network} üzerinde WPS bekleniyor. Yönlendirici üzerindeki WPS düğmesine "
+"basın…"
+
+#: src/pages.py:3576
+msgid "A password is required."
+msgstr "Parola gereklidir."
+
+#: src/pages.py:3731
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Yönetim komutları artık parolanızı sormayacak."
+
+#: src/pages.py:3681 src/pages.py:3675
+msgid "Advanced Options"
+msgstr "Gelişmiş Seçenekler"
+
+#: src/pages.py:3747
+msgid "Allow SSH login with the account password"
+msgstr "Hesap parolasıyla SSH oturumuna izin ver"
+
+#: src/pages.py:4089
+msgid "Automatic desktop login"
+msgstr "Otomatik masaüstü oturumu"
+
+#: src/pages.py:3701
+msgid ""
+"Choose how the local administrator account signs in and authorizes system "
+"changes."
+msgstr ""
+"Yerel yönetici hesabının nasıl oturum açacağını ve sistem değişikliklerini "
+"nasıl yetkilendireceğini seçin."
+
+#: src/pages.py:3682
+msgid "Choose optional access and sign-in policies"
+msgstr "İsteğe bağlı erişim ve oturum açma ilkelerini seçin"
+
+#: src/pages.py:3709
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr ""
+"Bu bilgisayarın uzak Secure Shell bağlantılarını kabul edip etmeyeceğini "
+"seçin."
+
+#: src/pages.py:4604
+msgid "Configure Secure Shell"
+msgstr "Secure Shell’i Yapılandır"
+
+#: src/pages.py:3699
+msgid "Local Access"
+msgstr "Yerel Erişim"
+
+#: src/pages.py:3737
+msgid "Log in to the desktop automatically"
+msgstr "Masaüstünde otomatik oturum aç"
+
+#: src/pages.py:3739
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Bilgisayar başladığında bu hesabın masaüstünü otomatik olarak aç."
+
+#: src/pages.py:3707
+msgid "Remote Access"
+msgstr "Uzaktan Erişim"
+
+#: src/pages.py:3730
+msgid "Run sudo commands without a password"
+msgstr "sudo komutlarını parola olmadan çalıştır"
+
+#: src/pages.py:4095
+msgid "SSH password login"
+msgstr "SSH parola oturumu"
+
+#: src/pages.py:3749
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Secure Shell’i başlat ve bu hesabın parolasını ağ üzerinden kabul et."
+
+#: src/pages.py:3759
+msgid "This will reduce the security of the installed system."
+msgstr "Bu, kurulu sistemin güvenliğini azaltacaktır."
+
+#: src/pages.py:4093 src/pages.py:4099
+msgid "disabled"
+msgstr "devre dışı"
+
+#: src/pages.py:4091 src/pages.py:4097
+msgid "enabled"
+msgstr "etkin"
+
+#: src/pages.py:349
+msgid ""
+"AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently"
+" enabled on this computer, and we recommend enabling it for additional "
+"protection."
+msgstr ""
+"AnduinOS, Secure Boot'u kapsamlı olarak destekler. Secure Boot bu "
+"bilgisayarda şu anda etkin değil ve ek koruma için etkinleştirmenizi "
+"öneriyoruz."
+
+#: src/pages.py:331
+msgid "AnduinOS supports Secure Boot"
+msgstr "AnduinOS Secure Boot'u destekler"
+
+#: src/pages.py:360
+msgid ""
+"Battery power is sufficient or reliable power is connected. You can continue"
+" with the installation."
+msgstr ""
+"Pil gücü yeterli veya güvenilir güç kaynağı bağlı. Kurulumu "
+"sürdürebilirsiniz."
+
+#: src/pages.py:366
+msgid ""
+"Connect reliable external power and charge above 25%, or charge above 45% "
+"while unplugged."
+msgstr ""
+"Güvenilir harici güç kaynağına bağlanın ve %25'in üzerine şarj edin veya "
+"fişsizken %45'in üzerine şarj edin."
+
+#: src/pages.py:338
+msgid "Could not open UEFI firmware settings"
+msgstr "UEFI yazılım ayarları açılamadı"
+
+#: src/pages.py:333
+msgid "Get additional protection before installing AnduinOS."
+msgstr "AnduinOS'u kurmadan önce ek koruma sağlayın."
+
+#: src/pages.py:364
+msgid "Power conditions are safe for installation."
+msgstr "Güç koşulları kurulum için güvenli."
+
+#: src/pages.py:363
+msgid "Power ready"
+msgstr "Güç hazır"
+
+#: src/pages.py:335
+msgid "Restart to UEFI Firmware Settings"
+msgstr "UEFI Firmware Ayarlarına Yeniden Başlat"
+
+#: src/pages.py:345
+msgid ""
+"Secure Boot is a UEFI security feature that verifies trusted, digitally "
+"signed software while your computer starts."
+msgstr ""
+"Secure Boot, bilgisayarınız açılırken güvenilir ve dijital olarak imzalanmış"
+" yazılımı doğrulayan bir UEFI güvenlik özelliğidir."
+
+#: src/pages.py:336
+msgid "Skip"
+msgstr "Atla"
+
+#: src/pages.py:341
+msgid "The firmware settings could not be opened on this computer."
+msgstr "Bu bilgisayarda firmware ayarları açılamadı."
+
+#: src/pages.py:354
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Etkinleştirmek için UEFI yazılım ayarlarını açın ve Boot, Security veya "
+"Secure Boot altında arayın. Microsoft & 3rd-party CA'yi seçin veya Secure "
+"Boot'u açın. Yazılım terimleri üreticiye göre değişir."

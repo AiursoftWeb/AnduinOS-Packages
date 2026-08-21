@@ -1,0 +1,2 @@
+DPkg::Pre-Invoke { "if [ -x /usr/libexec/anduinos-btrfs-snapshots-manager-apt-hook ]; then /usr/libexec/anduinos-btrfs-snapshots-manager-apt-hook pre; fi || true"; };
+DPkg::Post-Invoke { "if [ -x /usr/libexec/anduinos-btrfs-snapshots-manager-apt-hook ]; then /usr/libexec/anduinos-btrfs-snapshots-manager-apt-hook post; fi || true"; };

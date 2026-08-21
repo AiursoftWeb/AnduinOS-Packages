@@ -1,0 +1,26 @@
+schema_version = 1
+
+[system]
+is_auto_snapshot_enabled = true
+snapshot_interval_hours = 24
+is_auto_cleanup_enabled = true
+keep_all_hours = 24
+keep_daily_days = 7
+keep_weekly_days = 30
+keep_monthly_days = 365
+keep_yearly = true
+
+[home]
+is_auto_snapshot_enabled = true
+snapshot_interval_hours = 2
+is_auto_cleanup_enabled = true
+keep_all_hours = 24
+keep_daily_days = 7
+keep_weekly_days = 30
+keep_monthly_days = 365
+keep_yearly = true
+
+[notifications]
+notify_before_scheduled = false
+notify_after_success = true
+notify_after_cleanup = false

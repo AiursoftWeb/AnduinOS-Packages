@@ -1,0 +1,144 @@
+"""Pure command planning for the release-one boot matrix."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+from .model import Architecture, Firmware, InstallMode, InstallPlan, SecureBoot
+from .validation import validate_plan
+
+
+@dataclass(frozen=True)
+class BootCommandPlan:
+    initramfs: tuple[str, ...]
+    installs: tuple[tuple[str, ...], ...]
+    configure: tuple[str, ...]
+    efi_fallback: str
+    bios_required: bool
+
+
+@dataclass(frozen=True)
+class GuidedBootCommandPlan:
+    """Vendor-only shared-ESP writes plus an explicit NVRAM update."""
+
+    initramfs: tuple[str, ...]
+    install: tuple[str, ...]
+    configure: tuple[str, ...]
+    nvram_create: tuple[str, ...]
+    nvram_verify: tuple[str, ...]
+    loader_path: str
+
+
+def build_boot_commands(plan: InstallPlan, target: str) -> BootCommandPlan:
+    validate_plan(plan)
+    chroot = ("chroot", target)
+    installs: list[tuple[str, ...]] = []
+    disk = plan.storage.disk.path
+
+    if plan.platform.architecture is Architecture.AMD64:
+        # The amd64 disk is deliberately portable between old BIOS and UEFI.
+        installs.append(
+            chroot
+            + (
+                "grub-install",
+                "--target=i386-pc",
+                "--recheck",
+                disk,
+            )
+        )
+        efi_target = "x86_64-efi"
+        fallback = "EFI/BOOT/BOOTX64.EFI"
+    else:
+        efi_target = "arm64-efi"
+        fallback = "EFI/BOOT/BOOTAA64.EFI"
+
+    efi_install = [
+        *chroot,
+        "grub-install",
+        f"--target={efi_target}",
+        "--efi-directory=/boot/efi",
+        "--bootloader-id=AnduinOS",
+        "--recheck",
+        "--no-nvram",
+    ]
+    # Ubuntu GRUB 2.14 installs the EFI/BOOT fallback path by default and
+    # exposes only --no-extra-removable to opt out.  The older
+    # --force-extra-removable option no longer exists in Resolute.
+    if plan.platform.secure_boot is SecureBoot.ENABLED:
+        efi_install.append("--uefi-secure-boot")
+    installs.append(tuple(efi_install))
+    return BootCommandPlan(
+        initramfs=chroot + ("update-initramfs", "-u", "-k", "all"),
+        installs=tuple(installs),
+        configure=chroot + ("update-grub",),
+        efi_fallback=fallback,
+        bios_required=plan.platform.architecture is Architecture.AMD64,
+    )
+
+
+def build_guided_coexistence_boot_commands(
+    plan: InstallPlan,
+    target: str,
+    *,
+    disk_path: str,
+    esp_partition_number: int,
+) -> GuidedBootCommandPlan:
+    """Build UEFI commands that never write a shared fallback loader."""
+
+    if plan.storage.mode is not InstallMode.GUIDED_COEXISTENCE:
+        raise ValueError("Plan is not guided coexistence")
+    if plan.platform.firmware is not Firmware.UEFI:
+        raise ValueError("Guided coexistence requires UEFI firmware")
+    if esp_partition_number <= 0:
+        raise ValueError("EFI System Partition number must be positive")
+
+    chroot = ("chroot", target)
+    efi_target = (
+        "x86_64-efi"
+        if plan.platform.architecture is Architecture.AMD64
+        else "arm64-efi"
+    )
+    install = [
+        *chroot,
+        "grub-install",
+        f"--target={efi_target}",
+        "--efi-directory=/boot/efi",
+        "--bootloader-id=AnduinOS",
+        "--recheck",
+        "--no-nvram",
+        "--no-extra-removable",
+    ]
+    if plan.platform.secure_boot is SecureBoot.ENABLED:
+        install.append("--uefi-secure-boot")
+    loader = guided_loader_path(plan)
+    return GuidedBootCommandPlan(
+        initramfs=chroot + ("update-initramfs", "-u", "-k", "all"),
+        install=tuple(install),
+        configure=chroot + ("update-grub",),
+        nvram_create=(
+            "efibootmgr",
+            "--create",
+            "--disk",
+            disk_path,
+            "--part",
+            str(esp_partition_number),
+            "--label",
+            "AnduinOS",
+            "--loader",
+            loader,
+        ),
+        nvram_verify=("efibootmgr", "--verbose"),
+        loader_path=loader,
+    )
+
+
+def guided_loader_path(plan: InstallPlan) -> str:
+    architecture = (
+        "x64" if plan.platform.architecture is Architecture.AMD64 else "aa64"
+    )
+    executable = (
+        f"shim{architecture}.efi"
+        if plan.platform.secure_boot is SecureBoot.ENABLED
+        else f"grub{architecture}.efi"
+    )
+    return rf"\EFI\AnduinOS\{executable}"

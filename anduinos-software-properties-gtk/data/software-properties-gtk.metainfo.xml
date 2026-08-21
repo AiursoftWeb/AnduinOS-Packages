@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>software-properties-gtk.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0-or-later</project_license>
+  <name>Software &amp; Updates</name>
+  <summary>Configure software sources, updates, and additional drivers</summary>
+  <description>
+    <p>Manage the software repositories used by AnduinOS, choose update channels, configure authentication keys, and review additional hardware drivers from one graphical control panel.</p>
+    <p>The AnduinOS edition removes Ubuntu Pro advertising and integrates with the AnduinOS package repositories.</p>
+  </description>
+  <developer id="com.anduinos">
+    <name>AnduinOS Team</name>
+  </developer>
+  <url type="homepage">https://www.anduinos.com/</url>
+  <url type="vcs-browser">https://github.com/AiursoftWeb/AnduinOS-Packages</url>
+  <launchable type="desktop-id">software-properties-gtk.desktop</launchable>
+  <icon type="stock">software-properties</icon>
+  <categories>
+    <category>Settings</category>
+  </categories>
+  <provides>
+    <binary>software-properties-gtk</binary>
+  </provides>
+  <content_rating type="oars-1.1" />
+</component>

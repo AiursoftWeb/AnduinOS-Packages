@@ -1,0 +1,31 @@
+polkit.addRule(function(action, subject) {
+    if (action.id.indexOf("org.anduinos.btrfs-snapshots-manager.") != 0 ||
+        !subject.active || !subject.local) {
+        return polkit.Result.NOT_HANDLED;
+    }
+
+    if (action.id == "org.anduinos.btrfs-snapshots-manager.personal-files" ||
+        action.id == "org.anduinos.btrfs-snapshots-manager.create-personal-snapshot") {
+        return polkit.Result.YES;
+    }
+
+    if (!subject.isInGroup("sudo")) {
+        return polkit.Result.NOT_HANDLED;
+    }
+
+    if (action.id == "org.anduinos.btrfs-snapshots-manager.create-snapshot" ||
+        action.id == "org.anduinos.btrfs-snapshots-manager.configure-system") {
+        return polkit.Result.AUTH_ADMIN_KEEP;
+    }
+
+    if (action.id == "org.anduinos.btrfs-snapshots-manager.delete-snapshot" ||
+        action.id == "org.anduinos.btrfs-snapshots-manager.restore-snapshot") {
+        return polkit.Result.AUTH_ADMIN_KEEP;
+    }
+
+    if (action.id == "org.anduinos.btrfs-snapshots-manager.create-personal-snapshot-override") {
+        return polkit.Result.AUTH_ADMIN_KEEP;
+    }
+
+    return polkit.Result.NOT_HANDLED;
+});

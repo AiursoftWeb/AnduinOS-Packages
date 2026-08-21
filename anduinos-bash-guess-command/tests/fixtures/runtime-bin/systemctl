@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+printf 'systemctl\n' >>"$ANDUINOS_RUNTIME_ENTITY_COUNT"
+printf 'docker.service loaded active running Docker\n'
+printf 'ssh.service loaded active running SSH\n'

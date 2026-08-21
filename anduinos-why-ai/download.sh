@@ -9,18 +9,24 @@ need_cmd sha256sum coreutils
 
 # Gemma 4 E2B Instruct — Q4_K_M quant (unsloth)
 # ~2B effective params, text-only.  Significantly smarter than 0.8B Qwen3.5.
-MODEL_URL="https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/resolve/main/gemma-4-E2B-it-Q4_K_M.gguf"
+MODEL_REVISION="0314792d7f1f7e229411f620751375812bb9faf2"
+MODEL_SHA256="740185b21d22ceb83a11c3aa62ad5842ef32c70f6096d756bbee85a1e4ec34b8"
+MODEL_URL="https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/resolve/${MODEL_REVISION}/gemma-4-E2B-it-Q4_K_M.gguf"
 CACHE_DIR="$SCRIPT_DIR/deploy/cache"
 MODEL_FILE="$CACHE_DIR/gemma-4-E2B-it-Q4_K_M.gguf"
-
-# Known SHA-256 of Qwen3.5-0.8B-Q4_K_M.gguf from unsloth.
-# Update this whenever the model is refreshed.
-KNOWN_SHA256=""
-# If KNOWN_SHA256 is empty, skip hash verification (first-time bootstrap).
 
 die() {
     >&2 printf 'download.sh: %s\n' "$1"
     exit 1
+}
+
+verify_model() {
+    local path="$1" actual
+    actual="$(sha256sum "$path" | awk '{print $1}')"
+    if [[ "$actual" != "$MODEL_SHA256" ]]; then
+        die "SHA256 mismatch for $path.\n  Expected: $MODEL_SHA256\n  Got:      $actual"
+    fi
+    echo "SHA256 verified: $actual"
 }
 
 download_model() {
@@ -28,37 +34,20 @@ download_model() {
 
     if [[ -f "$MODEL_FILE" ]]; then
         echo "Model already cached: $MODEL_FILE"
-        if [[ -n "$KNOWN_SHA256" ]]; then
-            local actual
-            actual="$(sha256sum "$MODEL_FILE" | awk '{print $1}')"
-            if [[ "$actual" != "$KNOWN_SHA256" ]]; then
-                die "SHA256 mismatch for cached model.\n  Expected: $KNOWN_SHA256\n  Got:      $actual\n  Delete $MODEL_FILE and retry."
-            fi
-            echo "SHA256 verified: $actual"
-        else
-            echo "(no SHA256 pin — skipping verification)"
-        fi
+        verify_model "$MODEL_FILE"
         return 0
     fi
 
     echo "Downloading Gemma 4 E2B GGUF model (~3.1 GB)..."
+    echo "Revision: $MODEL_REVISION"
     echo "URL: $MODEL_URL"
     if [[ -n "${CI:-}" ]]; then
         wget -q "$MODEL_URL" -O "$MODEL_FILE.tmp"
     else
-        wget -q --show-progress "$MODEL_URL" -O "$MODEL_FILE.tmp"
+        wget -q --show-progress --progress=dot:giga "$MODEL_URL" -O "$MODEL_FILE.tmp"
     fi
 
-    if [[ -n "$KNOWN_SHA256" ]]; then
-        local actual
-        actual="$(sha256sum "$MODEL_FILE.tmp" | awk '{print $1}')"
-        if [[ "$actual" != "$KNOWN_SHA256" ]]; then
-            rm -f "$MODEL_FILE.tmp"
-            die "SHA256 mismatch after download.\n  Expected: $KNOWN_SHA256\n  Got:      $actual"
-        fi
-        echo "SHA256 verified: $actual"
-    fi
-
+    verify_model "$MODEL_FILE.tmp"
     mv "$MODEL_FILE.tmp" "$MODEL_FILE"
     echo "Model cached at: $MODEL_FILE"
 }

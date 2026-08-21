@@ -81,7 +81,9 @@ impl NetworkAuditView {
             .margin_bottom(10)
             .margin_start(10)
             .margin_end(10)
-            .tooltip_text("Network Traffic\nRed line: Upload speed\nGreen line: Download speed")
+            .tooltip_text(&i18n(
+                "Network Traffic\nRed line: Upload speed\nGreen line: Download speed",
+            ))
             .build();
             
         let draw_history = history.clone();
@@ -145,15 +147,23 @@ impl NetworkAuditView {
             
             cr.move_to(10.0, 15.0);
             cr.set_source_rgba(0.9, 0.3, 0.3, 1.0);
-            let _ = cr.show_text(&format!("— Upload: {}", format_speed(current_up)));
+            let _ = cr.show_text(&format!(
+                "— {}: {}",
+                i18n("Upload"),
+                format_speed(current_up)
+            ));
             
             cr.move_to(10.0, 32.0);
             cr.set_source_rgba(0.2, 0.8, 0.4, 1.0);
-            let _ = cr.show_text(&format!("— Download: {}", format_speed(current_down)));
+            let _ = cr.show_text(&format!(
+                "— {}: {}",
+                i18n("Download"),
+                format_speed(current_down)
+            ));
             
             // Y-axis max label
             cr.set_source_rgba(0.6, 0.6, 0.6, 0.8);
-            let max_str = format!("Max: {}", format_speed(max_speed));
+            let max_str = format!("{}: {}", i18n("Max"), format_speed(max_speed));
             let extents = cr.text_extents(&max_str).unwrap();
             cr.move_to(width - extents.width() - 10.0, 15.0);
             let _ = cr.show_text(&max_str);
@@ -196,8 +206,8 @@ impl NetworkAuditView {
 
         let proto_box = gtk::Box::builder().css_classes(["linked"]).valign(gtk::Align::Center).build();
         let proto_all = gtk::ToggleButton::builder().label(&i18n("All")).active(true).build();
-        let proto_tcp = gtk::ToggleButton::builder().label("TCP").group(&proto_all).build();
-        let proto_udp = gtk::ToggleButton::builder().label("UDP").group(&proto_all).build();
+        let proto_tcp = gtk::ToggleButton::builder().label(&i18n("TCP")).group(&proto_all).build();
+        let proto_udp = gtk::ToggleButton::builder().label(&i18n("UDP")).group(&proto_all).build();
         proto_box.append(&proto_all);
         proto_box.append(&proto_tcp);
         proto_box.append(&proto_udp);
@@ -347,16 +357,25 @@ impl NetworkAuditView {
 
                 if sorted_stats.is_empty() {
                     let (title, subtitle) = if btn_in_clone.is_active() {
-                        ("No Inbound Connections", "No external devices are connecting to your open ports.")
+                        (
+                            i18n("No Inbound Connections"),
+                            i18n("No external devices are connecting to your open ports."),
+                        )
                     } else if btn_out_clone.is_active() {
-                        ("No Outbound Connections", "No applications are sending data to the internet.")
+                        (
+                            i18n("No Outbound Connections"),
+                            i18n("No applications are sending data to the internet."),
+                        )
                     } else {
-                        ("No Active Connections", "No network activity detected.")
+                        (
+                            i18n("No Active Connections"),
+                            i18n("No network activity detected."),
+                        )
                     };
                     
                     let empty_row = adw::ActionRow::builder()
-                        .title(title)
-                        .subtitle(subtitle)
+                        .title(&title)
+                        .subtitle(&subtitle)
                         .activatable(false)
                         .build();
                     let speed_label = gtk::Label::builder()
@@ -510,7 +529,11 @@ impl NetworkAuditView {
                                             from,
                                             to,
                                             interface: None,
-                                            comment: Some(format!("Audit Block: {}", proc_name)),
+                                            comment: Some(format!(
+                                                "{}: {}",
+                                                i18n("Audit Block"),
+                                                proc_name
+                                            )),
                                             // Never use insert_position here: on a fresh system
                                             // with zero existing rules, `ufw insert 1` fails with
                                             // "ERROR: Invalid position 1" because there is no

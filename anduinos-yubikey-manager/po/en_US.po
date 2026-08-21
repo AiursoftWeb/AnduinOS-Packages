@@ -1,0 +1,1741 @@
+# English translations for anduinos-yubikey-manager package.
+# Copyright (C) 2026 THE anduinos-yubikey-manager'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-yubikey-manager package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-yubikey-manager\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-04 17:10+0000\n"
+"PO-Revision-Date: 2026-07-30 14:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "1 identity is currently available to SSH applications."
+msgstr "1 identity is currently available to SSH applications."
+
+msgid "1 resident SSH key is available from your connected YubiKey."
+msgstr "1 resident SSH key is available from your connected YubiKey."
+
+msgid "1 resident SSH key · {0}"
+msgstr "1 resident SSH key · {0}"
+
+msgid "A key must be connected before it can be enrolled."
+msgstr "A key must be connected before it can be enrolled."
+
+msgid "About"
+msgstr "About"
+
+msgid "Account password"
+msgstr "Account password"
+
+msgid "Add another SSH key"
+msgstr "Add another SSH key"
+
+msgid "Add this public key to GitHub as a Signing Key."
+msgstr "Add this public key to GitHub as a Signing Key."
+
+msgid "Administrator access"
+msgstr "Administrator access"
+
+msgid "Advanced options"
+msgstr "Advanced options"
+
+msgid "Algorithm"
+msgstr "Algorithm"
+
+msgid "Allow sudo without authentication"
+msgstr "Allow sudo without authentication"
+
+msgid "Allowed for sudo · not currently connected"
+msgstr "Allowed for sudo · not currently connected"
+
+msgid "Allowed to authorize sudo"
+msgstr "Allowed to authorize sudo"
+
+msgid "Allowed to unlock this user"
+msgstr "Allowed to unlock this user"
+
+msgid "Allowed to unlock this user · not currently connected"
+msgstr "Allowed to unlock this user · not currently connected"
+
+msgid "Already loaded"
+msgstr "Already loaded"
+
+msgid "An enrolled YubiKey or the account password can authorize sudo."
+msgstr "An enrolled YubiKey or the account password can authorize sudo."
+
+msgid "AnduinOS Team"
+msgstr "AnduinOS Team"
+
+msgid "AnduinOS YubiKey Security Center"
+msgstr "AnduinOS YubiKey Security Center"
+
+msgid "AnduinOS works more securely with a YubiKey"
+msgstr "AnduinOS works more securely with a YubiKey"
+
+msgid "Application"
+msgstr "Application"
+
+msgid ""
+"Application must begin with ssh:, contain no whitespace, and be at most 253 "
+"bytes."
+msgstr ""
+"Application must begin with ssh:, contain no whitespace, and be at most 253 "
+"bytes."
+
+msgid "Available"
+msgstr "Available"
+
+msgid "Available through SSH agent"
+msgstr "Available through SSH agent"
+
+msgid "Available through local key handle"
+msgstr "Available through local key handle"
+
+msgid "Buy a YubiKey"
+msgstr "Buy a YubiKey"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Checking SSH keys…"
+msgstr "Checking SSH keys…"
+
+msgid "Checking SSH support…"
+msgstr "Checking SSH support…"
+
+msgid "Checking connected YubiKeys"
+msgstr "Checking connected YubiKeys"
+
+msgid "Choose a YubiKey-backed SSH key"
+msgstr "Choose a YubiKey-backed SSH key"
+
+msgid "Choose a local key-handle file"
+msgstr "Choose a local key-handle file"
+
+msgid "Choose a supported OpenSSH security-key algorithm."
+msgstr "Choose a supported OpenSSH security-key algorithm."
+
+msgid "Choose a valid /dev/hidrawN FIDO device."
+msgstr "Choose a valid /dev/hidrawN FIDO device."
+
+msgid "Choose a valid output folder."
+msgstr "Choose a valid output folder."
+
+msgid "Choose an SSH key for Git signing."
+msgstr "Choose an SSH key for Git signing."
+
+msgid "Choose local SSH key-handle path"
+msgstr "Choose local SSH key-handle path"
+
+msgid ""
+"Choose one SSH key. The selection takes effect immediately for this user's "
+"Git commits."
+msgstr ""
+"Choose one SSH key. The selection takes effect immediately for this user's "
+"Git commits."
+
+msgid ""
+"Choose which YubiKeys may unlock {0}. Password sign-in remains available."
+msgstr ""
+"Choose which YubiKeys may unlock {0}. Password sign-in remains available."
+
+msgid "Close"
+msgstr "Close"
+
+msgid "Command exited with"
+msgstr "Command exited with"
+
+msgid "Command exited with {0}"
+msgstr "Command exited with {0}"
+
+msgid "Commit signing"
+msgstr "Commit signing"
+
+msgid "Configured YubiKeys"
+msgstr "Configured YubiKeys"
+
+msgid "Configured for {0} · Not connected"
+msgstr "Configured for {0} · Not connected"
+
+msgid "Connect a FIDO security key first"
+msgstr "Connect a FIDO security key first"
+
+msgid "Connect a YubiKey"
+msgstr "Connect a YubiKey"
+
+msgid "Connect a YubiKey to get started"
+msgstr "Connect a YubiKey to get started"
+
+msgid "Connect your YubiKey"
+msgstr "Connect your YubiKey"
+
+msgid "Connected"
+msgstr "Connected"
+
+msgid "Connected YubiKeys"
+msgstr "Connected YubiKeys"
+
+msgid "Continue"
+msgstr "Continue"
+
+msgid "Continue to PIN"
+msgstr "Continue to PIN"
+
+msgid "Copy public key"
+msgstr "Copy public key"
+
+msgid "Could not check SSH keys"
+msgstr "Could not check SSH keys"
+
+msgid "Could not create a temporary public-key file: {0}"
+msgstr "Could not create a temporary public-key file: {0}"
+
+msgid "Could not create temporary Git signing data: {0}"
+msgstr "Could not create temporary Git signing data: {0}"
+
+msgid "Could not create {0}: {1}"
+msgstr "Could not create {0}: {1}"
+
+msgid "Could not export the public key: {0}"
+msgstr "Could not export the public key: {0}"
+
+msgid "Could not find security keys"
+msgstr "Could not find security keys"
+
+msgid "Could not flush the temporary public key: {0}"
+msgstr "Could not flush the temporary public key: {0}"
+
+msgid "Could not inspect USB devices: {0}"
+msgstr "Could not inspect USB devices: {0}"
+
+msgid "Could not inspect this YubiKey"
+msgstr "Could not inspect this YubiKey"
+
+msgid "Could not list YubiKeys"
+msgstr "Could not list YubiKeys"
+
+msgid "Could not locate the secure PIN helper: {0}"
+msgstr "Could not locate the secure PIN helper: {0}"
+
+msgid "Could not prepare the Git signing test: {0}"
+msgstr "Could not prepare the Git signing test: {0}"
+
+msgid "Could not protect {0}: {1}"
+msgstr "Could not protect {0}: {1}"
+
+msgid "Could not provide the FIDO PIN: {0}"
+msgstr "Could not provide the FIDO PIN: {0}"
+
+msgid "Could not request administrator access: {0}"
+msgstr "Could not request administrator access: {0}"
+
+msgid "Could not run {0}: {1}"
+msgstr "Could not run {0}: {1}"
+
+msgid "Could not start {0}: {1}"
+msgstr "Could not start {0}: {1}"
+
+msgid "Could not update security keys"
+msgstr "Could not update security keys"
+
+msgid "Could not write the temporary public key: {0}"
+msgstr "Could not write the temporary public key: {0}"
+
+msgid "Create"
+msgstr "Create"
+
+msgid "Create a resident SSH credential on a selected device"
+msgstr "Create a resident SSH credential on a selected device"
+
+msgid "Create a resident SSH key"
+msgstr "Create a resident SSH key"
+
+msgid "Create…"
+msgstr "Create…"
+
+msgid "Deletion result is unknown"
+msgstr "Deletion result is unknown"
+
+msgid "Disabled · sudo must authenticate with a YubiKey or account password"
+msgstr "Disabled · sudo must authenticate with a YubiKey or account password"
+
+msgid "Discover SSH keys on your YubiKeys"
+msgstr "Discover SSH keys on your YubiKeys"
+
+msgid ""
+"Display label must be at most 200 bytes and contain no control characters."
+msgstr ""
+"Display label must be at most 200 bytes and contain no control characters."
+
+msgid "Do not sign new commits by default"
+msgstr "Do not sign new commits by default"
+
+msgid ""
+"During enrollment, disconnect all other security keys. The selected key will "
+"blink; touch it to continue. Multiple keys can be enrolled one at a time."
+msgstr ""
+"During enrollment, disconnect all other security keys. The selected key will "
+"blink; touch it to continue. Multiple keys can be enrolled one at a time."
+
+msgid "ECDSA-SK (recommended compatibility)"
+msgstr "ECDSA-SK (recommended compatibility)"
+
+msgid "ECDSA-SK works with the widest range of YubiKeys"
+msgstr "ECDSA-SK works with the widest range of YubiKeys"
+
+msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
+msgstr "ECDSA-SK · resident · touch required · safe compatibility defaults"
+
+msgid "Ed25519-SK (newer YubiKeys)"
+msgstr "Ed25519-SK (newer YubiKeys)"
+
+msgid "Enabled"
+msgstr "Enabled"
+
+msgid ""
+"Enabled · programs can obtain administrator privileges without confirmation"
+msgstr ""
+"Enabled · programs can obtain administrator privileges without confirmation"
+
+msgid "Enabling passwordless sudo…"
+msgstr "Enabling passwordless sudo…"
+
+msgid "Enabling sudo authentication…"
+msgstr "Enabling sudo authentication…"
+
+msgid "Enrolled · inactive while sudo authentication is bypassed"
+msgstr "Enrolled · inactive while sudo authentication is bypassed"
+
+msgid "Enrollment safety"
+msgstr "Enrollment safety"
+
+msgid ""
+"Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
+msgstr ""
+"Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
+
+msgid ""
+"Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No "
+"commit will be created."
+msgstr ""
+"Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No "
+"commit will be created."
+
+msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
+msgstr "Enter the FIDO PIN. Touch the YubiKey if it flashes."
+
+msgid "Enter the YubiKey FIDO PIN to test this local key handle."
+msgstr "Enter the YubiKey FIDO PIN to test this local key handle."
+
+msgid "Enter the selected YubiKey FIDO PIN"
+msgstr "Enter the selected YubiKey FIDO PIN"
+
+msgid "Export .pub"
+msgstr "Export .pub"
+
+msgid "Export SSH public key"
+msgstr "Export SSH public key"
+
+msgid "FIDO PIN"
+msgstr "FIDO PIN"
+
+msgid "FIDO device discovery is unavailable"
+msgstr "FIDO device discovery is unavailable"
+
+msgid "FIDO security key"
+msgstr "FIDO security key"
+
+msgid "Finish inspecting your YubiKeys"
+msgstr "Finish inspecting your YubiKeys"
+
+msgid "Firmware {0}"
+msgstr "Firmware {0}"
+
+msgid ""
+"For safe enrollment, disconnect every other security key and leave only the "
+"selected YubiKey connected."
+msgstr ""
+"For safe enrollment, disconnect every other security key and leave only the "
+"selected YubiKey connected."
+
+msgid "Git signing"
+msgstr "Git signing"
+
+msgid "Git signing is enabled"
+msgstr "Git signing is enabled"
+
+msgid ""
+"Git signing test failed:\n"
+"{0}"
+msgstr ""
+"Git signing test failed:\n"
+"{0}"
+
+msgid "Git signing test passed"
+msgstr "Git signing test passed"
+
+msgid "Git is not installed"
+msgstr "Git is not installed"
+
+msgid "The Git installation task stopped unexpectedly."
+msgstr "The Git installation task stopped unexpectedly."
+
+msgid "Git is required for commit signing. Install it to continue."
+msgstr "Git is required for commit signing. Install it to continue."
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Insert a YubiKey"
+msgstr "Insert a YubiKey"
+
+msgid "Insert a YubiKey, then press Refresh."
+msgstr "Insert a YubiKey, then press Refresh."
+
+msgid "Insert a YubiKey. This page will detect it when you refresh."
+msgstr "Insert a YubiKey. This page will detect it when you refresh."
+
+msgid "Inspect"
+msgstr "Inspect"
+
+msgid "Inspect YubiKey"
+msgstr "Inspect YubiKey"
+
+msgid "Inspect YubiKey {0} of {1}"
+msgstr "Inspect YubiKey {0} of {1}"
+
+msgid "Inspect again"
+msgstr "Inspect again"
+
+msgid "Inspect all keys"
+msgstr "Inspect all keys"
+
+msgid "Inspect this YubiKey"
+msgstr "Inspect this YubiKey"
+
+msgid "Inspected"
+msgstr "Inspected"
+
+msgid "Inspection needs attention · {0}"
+msgstr "Inspection needs attention · {0}"
+
+msgid "Invalid FIDO device path."
+msgstr "Invalid FIDO device path."
+
+msgid "Keys stored on your YubiKeys"
+msgstr "Keys stored on your YubiKeys"
+
+msgid "Load"
+msgstr "Load"
+
+msgid "Load SSH keys"
+msgstr "Load SSH keys"
+
+msgid "Load all"
+msgstr "Load all"
+
+msgid "Load keys"
+msgstr "Load keys"
+
+msgid "Load resident SSH keys"
+msgstr "Load resident SSH keys"
+
+msgid "Load this YubiKey's resident SSH keys into the agent"
+msgstr "Load this YubiKey's resident SSH keys into the agent"
+
+msgid "Load this resident key into the SSH agent before signing"
+msgstr "Load this resident key into the SSH agent before signing"
+
+msgid "Loaded"
+msgstr "Loaded"
+
+msgid "Loading SSH keys… Touch the YubiKey if it flashes."
+msgstr "Loading SSH keys… Touch the YubiKey if it flashes."
+
+msgid "Local key handle path"
+msgstr "Local key handle path"
+
+msgid "Local key label"
+msgstr "Local key label"
+
+msgid "Looking for your SSH agent and connected YubiKeys."
+msgstr "Looking for your SSH agent and connected YubiKeys."
+
+msgid "Needs attention"
+msgstr "Needs attention"
+
+msgid "New hardware-backed SSH key"
+msgstr "New hardware-backed SSH key"
+
+msgid "No FIDO security key detected"
+msgstr "No FIDO security key detected"
+
+msgid "No SSH agent was detected"
+msgstr "No SSH agent was detected"
+
+msgid "No YubiKey connected"
+msgstr "No YubiKey connected"
+
+msgid "No hardware serial"
+msgstr "No hardware serial"
+
+msgid "No resident SSH keys"
+msgstr "No resident SSH keys"
+
+msgid "No resident SSH keys found"
+msgstr "No resident SSH keys found"
+
+msgid "No resident SSH keys found · {0}"
+msgstr "No resident SSH keys found · {0}"
+
+msgid "No resident SSH keys were found on the connected YubiKeys."
+msgstr "No resident SSH keys were found on the connected YubiKeys."
+
+msgid "No signing"
+msgstr "No signing"
+
+msgid "Not configured"
+msgstr "Not configured"
+
+msgid "Not inspected"
+msgstr "Not inspected"
+
+msgid "Not inspected yet · {0}"
+msgstr "Not inspected yet · {0}"
+
+msgid "Open the official Yubico Store"
+msgstr "Open the official Yubico Store"
+
+msgid "Install Git"
+msgstr "Install Git"
+
+msgid "Installing Git…"
+msgstr "Installing Git…"
+
+msgid ""
+"OpenSSH could not load resident keys. The SSH agent contains no newly loaded "
+"identity."
+msgstr ""
+"OpenSSH could not load resident keys. The SSH agent contains no newly loaded "
+"identity."
+
+msgid ""
+"OpenSSH could not load resident keys:\n"
+"{0}"
+msgstr ""
+"OpenSSH could not load resident keys:\n"
+"{0}"
+
+msgid ""
+"OpenSSH did not create a resident key:\n"
+"{0}"
+msgstr ""
+"OpenSSH did not create a resident key:\n"
+"{0}"
+
+msgid ""
+"OpenSSH finished creating the key, but the YubiKey could not be verified "
+"afterward: {0}\n"
+"Do not immediately retry; inspect the key first to avoid creating a "
+"duplicate."
+msgstr ""
+"OpenSSH finished creating the key, but the YubiKey could not be verified "
+"afterward: {0}\n"
+"Do not immediately retry; inspect the key first to avoid creating a "
+"duplicate."
+
+msgid ""
+"OpenSSH reported success, but no new resident credential was detected. Do "
+"not retry until you inspect the YubiKey."
+msgstr ""
+"OpenSSH reported success, but no new resident credential was detected. Do "
+"not retry until you inspect the YubiKey."
+
+msgid "OpenSSH/FIDO credential metadata and local file location"
+msgstr "OpenSSH/FIDO credential metadata and local file location"
+
+msgid "Passwordless"
+msgstr "Passwordless"
+
+msgid "Permanently delete"
+msgstr "Permanently delete"
+
+msgid "Permanently delete from YubiKey…"
+msgstr "Permanently delete from YubiKey…"
+
+msgid "Permanently delete this resident SSH credential?"
+msgstr "Permanently delete this resident SSH credential?"
+
+msgid "Protect authentication and commit signing"
+msgstr "Protect authentication and commit signing"
+
+msgid "Protection for {0}"
+msgstr "Protection for {0}"
+
+msgid ""
+"Read the resident SSH keys already stored on your YubiKeys. You will enter "
+"each key's FIDO PIN and may need to touch it."
+msgstr ""
+"Read the resident SSH keys already stored on your YubiKeys. You will enter "
+"each key's FIDO PIN and may need to touch it."
+
+msgid "Reading SSH keys from {0}… Touch it if it flashes."
+msgstr "Reading SSH keys from {0}… Touch it if it flashes."
+
+msgid "Reading account security settings…"
+msgstr "Reading account security settings…"
+
+msgid "Ready"
+msgstr "Ready"
+
+msgid "Ready to inspect"
+msgstr "Ready to inspect"
+
+msgid "Ready to protect {0}"
+msgstr "Ready to protect {0}"
+
+msgid "Refresh connected YubiKeys"
+msgstr "Refresh connected YubiKeys"
+
+msgid "Remove from agent"
+msgstr "Remove from agent"
+
+msgid "Removing this key from the SSH agent…"
+msgstr "Removing this key from the SSH agent…"
+
+msgid "Require verification for every signature"
+msgstr "Require verification for every signature"
+
+msgid "Requires the FIDO PIN each time this key signs"
+msgstr "Requires the FIDO PIN each time this key signs"
+
+msgid "Resident SSH key created"
+msgstr "Resident SSH key created"
+
+msgid "Resident credential permanently deleted"
+msgstr "Resident credential permanently deleted"
+
+msgid "Resident keys loaded"
+msgstr "Resident keys loaded"
+
+msgid "Resident username"
+msgstr "Resident username"
+
+msgid "Resident username must contain 1–64 bytes and no control characters."
+msgstr "Resident username must contain 1–64 bytes and no control characters."
+
+msgid "SSH & Git"
+msgstr "SSH & Git"
+
+msgid "SSH agent"
+msgstr "SSH agent"
+
+msgid "SSH agent is ready"
+msgstr "SSH agent is ready"
+
+msgid "SSH agent unavailable"
+msgstr "SSH agent unavailable"
+
+msgid "SSH commit signing"
+msgstr "SSH commit signing"
+
+msgid "SSH key actions"
+msgstr "SSH key actions"
+
+msgid "SSH key for {0}"
+msgstr "SSH key for {0}"
+
+msgid "SSH keys"
+msgstr "SSH keys"
+
+msgid "SSH_AUTH_SOCK is not set"
+msgstr "SSH_AUTH_SOCK is not set"
+
+msgid ""
+"Safe defaults use ECDSA-SK, require touch, and store a discoverable "
+"credential on the selected YubiKey."
+msgstr ""
+"Safe defaults use ECDSA-SK, require touch, and store a discoverable "
+"credential on the selected YubiKey."
+
+msgid "Secure sudo authorization"
+msgstr "Secure sudo authorization"
+
+msgid "Security Center"
+msgstr "Security Center"
+
+msgid "Serial {0}"
+msgstr "Serial {0}"
+
+msgid ""
+"Sign in, authorize sudo, and protect SSH and Git identities with a physical "
+"touch."
+msgstr ""
+"Sign in, authorize sudo, and protect SSH and Git identities with a physical "
+"touch."
+
+msgid "Sign-in"
+msgstr "Sign-in"
+
+msgid "Signing test passed"
+msgstr "Signing test passed"
+
+msgid "Temporary public-key path is invalid."
+msgstr "Temporary public-key path is invalid."
+
+msgid "Test"
+msgstr "Test"
+
+msgid "Test Git signing"
+msgstr "Test Git signing"
+
+msgid "Test signing"
+msgstr "Test signing"
+
+msgid ""
+"The FIDO enrollment tool is not installed. Install the libpam-u2f package, "
+"then try again."
+msgstr ""
+"The FIDO enrollment tool is not installed. Install the libpam-u2f package, "
+"then try again."
+
+msgid "The PIN is sent directly to ssh-add and is never stored."
+msgstr "The PIN is sent directly to ssh-add and is never stored."
+
+msgid ""
+"The PIN is sent through a private pipe to OpenSSH. It is never stored or "
+"placed in command arguments."
+msgstr ""
+"The PIN is sent through a private pipe to OpenSSH. It is never stored or "
+"placed in command arguments."
+
+msgid "The SSH agent successfully signed and verified data with this key."
+msgstr "The SSH agent successfully signed and verified data with this key."
+
+msgid "The YubiKey operation stopped unexpectedly."
+msgstr "The YubiKey operation stopped unexpectedly."
+
+msgid "The credential will be created only on this exact device"
+msgstr "The credential will be created only on this exact device"
+
+msgid ""
+"The deletion command finished, but the selected YubiKey could not be "
+"inspected afterward: {0}\n"
+"The credential may or may not have been deleted. Do not retry. Reconnect and "
+"inspect the YubiKey first."
+msgstr ""
+"The deletion command finished, but the selected YubiKey could not be "
+"inspected afterward: {0}\n"
+"The credential may or may not have been deleted. Do not retry. Reconnect and "
+"inspect the YubiKey first."
+
+msgid "The enrollment task failed."
+msgstr "The enrollment task failed."
+
+msgid ""
+"The exact resident credential is no longer present on the selected YubiKey. "
+"Local .pub or key-handle files and any SSH-agent entry were not removed."
+msgstr ""
+"The exact resident credential is no longer present on the selected YubiKey. "
+"Local .pub or key-handle files and any SSH-agent entry were not removed."
+
+msgid ""
+"The inspected resident SSH credentials are already available in this agent."
+msgstr ""
+"The inspected resident SSH credentials are already available in this agent."
+
+msgid "The local SSH key-handle path is invalid."
+msgstr "The local SSH key-handle path is invalid."
+
+msgid "The local SSH key-handle path is not valid UTF-8."
+msgstr "The local SSH key-handle path is not valid UTF-8."
+
+msgid "The local key path must be absolute."
+msgstr "The local key path must be absolute."
+
+msgid ""
+"The non-exportable private key remains protected by the selected YubiKey.\n"
+"\n"
+"Algorithm: {0}\n"
+"Application: {1}\n"
+"Resident username: {2}\n"
+"Fingerprint: {3}\n"
+"\n"
+"Local key handle: {4}\n"
+"Public key: {5}\n"
+"\n"
+"The key is not automatically loaded into the SSH agent."
+msgstr ""
+"The non-exportable private key remains protected by the selected YubiKey.\n"
+"\n"
+"Algorithm: {0}\n"
+"Application: {1}\n"
+"Resident username: {2}\n"
+"Fingerprint: {3}\n"
+"\n"
+"Local key handle: {4}\n"
+"Public key: {5}\n"
+"\n"
+"The key is not automatically loaded into the SSH agent."
+
+msgid "The operation was cancelled or denied."
+msgstr "The operation was cancelled or denied."
+
+msgid "The output folder does not exist: {0}"
+msgstr "The output folder does not exist: {0}"
+
+msgid "The resident credential ID is invalid. Refresh before deleting."
+msgstr "The resident credential ID is invalid. Refresh before deleting."
+
+msgid "The resident credential did not return a public key."
+msgstr "The resident credential did not return a public key."
+
+msgid ""
+"The resident credential is still present. Deletion was not completed: {0}"
+msgstr ""
+"The resident credential is still present. Deletion was not completed: {0}"
+
+msgid "The resident credential returned an incomplete public key."
+msgstr "The resident credential returned an incomplete public key."
+
+msgid "The resident credential returned malformed PEM data."
+msgstr "The resident credential returned malformed PEM data."
+
+msgid ""
+"The resident credential {0} exists on the YubiKey, but its local handle "
+"files are incomplete. Do not retry creation."
+msgstr ""
+"The resident credential {0} exists on the YubiKey, but its local handle "
+"files are incomplete. Do not retry creation."
+
+msgid ""
+"The resident credential {0} was created on the YubiKey, but OpenSSH did not "
+"complete successfully:\n"
+"{1}\n"
+"Do not retry creation. Inspect the key and preserve any local files that "
+"were written."
+msgstr ""
+"The resident credential {0} was created on the YubiKey, but OpenSSH did not "
+"complete successfully:\n"
+"{1}\n"
+"Do not retry creation. Inspect the key and preserve any local files that "
+"were written."
+
+msgid "The security key returned an invalid PAM credential."
+msgstr "The security key returned an invalid PAM credential."
+
+msgid ""
+"The selected FIDO device is no longer connected. Refresh and inspect it "
+"again."
+msgstr ""
+"The selected FIDO device is no longer connected. Refresh and inspect it "
+"again."
+
+msgid "The selected FIDO device is no longer connected. Refresh and try again."
+msgstr ""
+"The selected FIDO device is no longer connected. Refresh and try again."
+
+msgid ""
+"The selected credential created a valid Git-format SSH signature. No "
+"repository or commit was changed."
+msgstr ""
+"The selected credential created a valid Git-format SSH signature. No "
+"repository or commit was changed."
+
+msgid ""
+"The selected private-key or .pub file already exists. Choose another name."
+msgstr ""
+"The selected private-key or .pub file already exists. Choose another name."
+
+msgid ""
+"The selected resident credential changed since it was inspected. Nothing was "
+"deleted; refresh and verify the key."
+msgstr ""
+"The selected resident credential changed since it was inspected. Nothing was "
+"deleted; refresh and verify the key."
+
+msgid ""
+"The selected resident credential is no longer present on this YubiKey. "
+"Nothing was deleted."
+msgstr ""
+"The selected resident credential is no longer present on this YubiKey. "
+"Nothing was deleted."
+
+msgid "The signature was created but could not be verified: {0}"
+msgstr "The signature was created but could not be verified: {0}"
+
+msgid "The sudo policy task failed."
+msgstr "The sudo policy task failed."
+
+msgid "The temporary Git signature path is invalid."
+msgstr "The temporary Git signature path is invalid."
+
+msgid "The temporary Git signing path is invalid."
+msgstr "The temporary Git signing path is invalid."
+
+msgid "These keys are trusted by this account but are not currently connected."
+msgstr ""
+"These keys are trusted by this account but are not currently connected."
+
+msgid ""
+"This PIN authorizes permanent deletion of the exact credential shown in the "
+"previous step. It is never stored."
+msgstr ""
+"This PIN authorizes permanent deletion of the exact credential shown in the "
+"previous step. It is never stored."
+
+msgid "This YubiKey has no discoverable ssh:* credentials."
+msgstr "This YubiKey has no discoverable ssh:* credentials."
+
+msgid "This is not a supported OpenSSH security-key public key."
+msgstr "This is not a supported OpenSSH security-key public key."
+
+msgid ""
+"This removes the private credential from the selected YubiKey and cannot be "
+"undone. It does not remove local files or an identity already loaded in the "
+"SSH agent."
+msgstr ""
+"This removes the private credential from the selected YubiKey and cannot be "
+"undone. It does not remove local files or an identity already loaded in the "
+"SSH agent."
+
+msgid "This setting applies only to the current user."
+msgstr "This setting applies only to the current user."
+
+msgid "This will only take a moment."
+msgstr "This will only take a moment."
+
+msgid ""
+"Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
+msgstr ""
+"Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
+
+msgid ""
+"Touch the YubiKey. Creating and verifying a temporary Git-format SSH "
+"signature…"
+msgstr ""
+"Touch the YubiKey. Creating and verifying a temporary Git-format SSH "
+"signature…"
+
+msgid "Touch the YubiKey. Testing SSH signing and verification…"
+msgstr "Touch the YubiKey. Testing SSH signing and verification…"
+
+msgid ""
+"Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not "
+"remove the key."
+msgstr ""
+"Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not "
+"remove the key."
+
+msgid "Touch this key when prompted to enroll it"
+msgstr "Touch this key when prompted to enroll it"
+
+msgid "Touch this key when prompted to enroll it for sudo"
+msgstr "Touch this key when prompted to enroll it for sudo"
+
+msgid "Touch your security key to continue."
+msgstr "Touch your security key to continue."
+
+msgid "Try Again"
+msgstr "Try Again"
+
+msgid "Type {0} to confirm"
+msgstr "Type {0} to confirm"
+
+msgid "Unavailable"
+msgstr "Unavailable"
+
+msgid "Unknown authentication purpose."
+msgstr "Unknown authentication purpose."
+
+msgid "Unlock GDM"
+msgstr "Unlock GDM"
+
+msgid "Unlock sudo"
+msgstr "Unlock sudo"
+
+msgid "Unlock the current user"
+msgstr "Unlock the current user"
+
+msgid "Unlock your account with a touch"
+msgstr "Unlock your account with a touch"
+
+msgid "Unnamed SSH credential"
+msgstr "Unnamed SSH credential"
+
+msgid "Unsupported resident SSH public-key algorithm."
+msgstr "Unsupported resident SSH public-key algorithm."
+
+msgid "Updating Git commit signing…"
+msgstr "Updating Git commit signing…"
+
+msgid "Updating sign-in settings…"
+msgstr "Updating sign-in settings…"
+
+msgid "Updating sudo settings…"
+msgstr "Updating sudo settings…"
+
+msgid "Use YubiKey to unlock sudo"
+msgstr "Use YubiKey to unlock sudo"
+
+msgid ""
+"Verifying and permanently deleting the selected resident credential. Do not "
+"unplug the YubiKey…"
+msgstr ""
+"Verifying and permanently deleting the selected resident credential. Do not "
+"unplug the YubiKey…"
+
+msgid "View in App Store"
+msgstr "View in App Store"
+
+msgid "Waiting"
+msgstr "Waiting"
+
+msgid "Waiting for a configured YubiKey"
+msgstr "Waiting for a configured YubiKey"
+
+msgid ""
+"You may enroll keys now, but sudo bypasses PAM while passwordless access is "
+"enabled."
+msgstr ""
+"You may enroll keys now, but sudo bypasses PAM while passwordless access is "
+"enabled."
+
+msgid "Your YubiKeys are inspected"
+msgstr "Your YubiKeys are inspected"
+
+msgid "Your hardware-backed SSH keys"
+msgstr "Your hardware-backed SSH keys"
+
+msgid ""
+"Your resident SSH keys stay on the security key. Insert it to view and use "
+"them."
+msgstr ""
+"Your resident SSH keys stay on the security key. Insert it to view and use "
+"them."
+
+msgid ""
+"Your security settings are ready. Connect a configured YubiKey when you need "
+"it."
+msgstr ""
+"Your security settings are ready. Connect a configured YubiKey when you need "
+"it."
+
+msgid "YubiKey"
+msgstr "YubiKey"
+
+msgid "YubiKey configuration failed"
+msgstr "YubiKey configuration failed"
+
+msgid "YubiKey connected"
+msgstr "YubiKey connected"
+
+msgid "YubiKey or account password"
+msgstr "YubiKey or account password"
+
+msgid "YubiKey without hardware serial"
+msgstr "YubiKey without hardware serial"
+
+msgid "YubiKey · Serial {0}"
+msgstr "YubiKey · Serial {0}"
+
+msgid ""
+"YubiKey: {0}\n"
+"Device: {1}\n"
+"Application: {2}\n"
+"Resident username: {3}\n"
+"Algorithm: {4}\n"
+"Fingerprint: {5}"
+msgstr ""
+"YubiKey: {0}\n"
+"Device: {1}\n"
+"Application: {2}\n"
+"Resident username: {3}\n"
+"Algorithm: {4}\n"
+"Fingerprint: {5}"
+
+msgid "YubiKeys"
+msgstr "YubiKeys"
+
+msgid "agent"
+msgstr "agent"
+
+msgid ""
+"fido2-token reported success, but the resident credential is still present. "
+"Do not retry until you refresh and inspect the YubiKey."
+msgstr ""
+"fido2-token reported success, but the resident credential is still present. "
+"Do not retry until you refresh and inspect the YubiKey."
+
+msgid "sudo authentication is bypassed"
+msgstr "sudo authentication is bypassed"
+
+msgid "sudo authentication policy"
+msgstr "sudo authentication policy"
+
+msgid "unknown"
+msgstr "unknown"
+
+msgid "user"
+msgstr "user"
+
+msgid "{0} SSH keys loaded"
+msgstr "{0} SSH keys loaded"
+
+msgid "{0} YubiKeys connected"
+msgstr "{0} YubiKeys connected"
+
+msgid "{0} exited with {1}"
+msgstr "{0} exited with {1}"
+
+msgid "{0} failed: {1}"
+msgstr "{0} failed: {1}"
+
+msgid "{0} identities are currently available to SSH applications."
+msgstr "{0} identities are currently available to SSH applications."
+
+msgid "{0} is enabled for this YubiKey"
+msgstr "{0} is enabled for this YubiKey"
+
+msgid "{0} is not configured for this YubiKey"
+msgstr "{0} is not configured for this YubiKey"
+
+msgid "{0} new SSH identities were added to the agent."
+msgstr "{0} new SSH identities were added to the agent."
+
+msgid "{0} new SSH identity was added to the agent."
+msgstr "{0} new SSH identity was added to the agent."
+
+msgid "{0} resident SSH keys are available from your connected YubiKeys."
+msgstr "{0} resident SSH keys are available from your connected YubiKeys."
+
+msgid "{0} resident SSH keys · {1}"
+msgstr "{0} resident SSH keys · {1}"
+
+msgid "{0} resident credentials inspected"
+msgstr "{0} resident credentials inspected"
+
+msgid "{0} to inspect"
+msgstr "{0} to inspect"
+
+msgid "{0} · no hardware serial"
+msgstr "{0} · no hardware serial"
+
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
+msgid "Checking Passkeys support…"
+msgstr "Checking Passkeys support…"
+
+msgid "Could not open Yubico Authenticator"
+msgstr "Could not open Yubico Authenticator"
+
+msgid "Open Yubico Authenticator"
+msgstr "Open Yubico Authenticator"
+
+msgid "Passkeys"
+msgstr "Passkeys"
+
+msgid ""
+"Choose the passkey option and follow the prompt to use the same YubiKey."
+msgstr ""
+"Choose the passkey option and follow the prompt to use the same YubiKey."
+
+msgid "Confirm it is you"
+msgstr "Confirm it is you"
+
+msgid "How to use"
+msgstr "How to use"
+
+msgid "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
+msgstr ""
+"Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
+
+msgid ""
+"Inspect a connected YubiKey to reveal its resident SSH keys and available "
+"actions."
+msgstr ""
+"Inspect a connected YubiKey to reveal its resident SSH keys and available "
+"actions."
+
+msgid ""
+"Install the official Yubico Authenticator first. When installation is "
+"complete, return here and refresh this page."
+msgstr ""
+"Install the official Yubico Authenticator first. When installation is "
+"complete, return here and refresh this page."
+
+msgid "Keep a recovery method or a backup security key for important accounts."
+msgstr ""
+"Keep a recovery method or a backup security key for important accounts."
+
+msgid "Manage passkeys"
+msgstr "Manage passkeys"
+
+msgid ""
+"On a supported website or app, choose to create a passkey and select your "
+"security key."
+msgstr ""
+"On a supported website or app, choose to create a passkey and select your "
+"security key."
+
+msgid ""
+"Passkeys are passwordless sign-in credentials stored on compatible security "
+"keys. Registration and sign-in begin in a supported website or app; follow "
+"its prompts to insert your YubiKey, enter the FIDO PIN, and touch the key."
+msgstr ""
+"Passkeys are passwordless sign-in credentials stored on compatible security "
+"keys. Registration and sign-in begin in a supported website or app; follow "
+"its prompts to insert your YubiKey, enter the FIDO PIN, and touch the key."
+
+msgid "Protect passkeys with your YubiKey"
+msgstr "Protect passkeys with your YubiKey"
+
+msgid "Register a passkey"
+msgstr "Register a passkey"
+
+msgid "Sign in next time"
+msgstr "Sign in next time"
+
+msgid ""
+"The SSH agent makes selected keys available to SSH applications during this "
+"session."
+msgstr ""
+"The SSH agent makes selected keys available to SSH applications during this "
+"session."
+
+msgid "Yubico Authenticator is installed"
+msgstr "Yubico Authenticator is installed"
+
+msgid "Yubico Authenticator is not installed"
+msgstr "Yubico Authenticator is not installed"
+
+msgid ""
+"Yubico Authenticator lets you view and manage passkeys stored on your "
+"YubiKey. This security center does not read, create, or delete passkeys; it "
+"only opens the installed app."
+msgstr ""
+"Yubico Authenticator lets you view and manage passkeys stored on your "
+"YubiKey. This security center does not read, create, or delete passkeys; it "
+"only opens the installed app."
+
+msgid "A file already exists at the managed SSH configuration path: {0}"
+msgstr "A file already exists at the managed SSH configuration path: {0}"
+
+msgid ""
+"After the first YubiKey authentication, later SSH sessions can reuse the "
+"connection. The last session remains available in the background for 10 "
+"minutes."
+msgstr ""
+"After the first YubiKey authentication, later SSH sessions can reuse the "
+"connection. The last session remains available in the background for 10 "
+"minutes."
+
+msgid "Could not create a temporary file in {0}: {1}"
+msgstr "Could not create a temporary file in {0}: {1}"
+
+msgid "Could not inspect {0}: {1}"
+msgstr "Could not inspect {0}: {1}"
+
+msgid "Could not protect the temporary SSH configuration in {0}: {1}"
+msgstr "Could not protect the temporary SSH configuration in {0}: {1}"
+
+msgid "Could not read {0}: {1}"
+msgstr "Could not read {0}: {1}"
+
+msgid "Could not remove {0}: {1}"
+msgstr "Could not remove {0}: {1}"
+
+msgid "Could not replace {0}: {1}"
+msgstr "Could not replace {0}: {1}"
+
+msgid "Could not synchronize {0}: {1}"
+msgstr "Could not synchronize {0}: {1}"
+
+msgid "Could not update SSH connection persistence"
+msgstr "Could not update SSH connection persistence"
+
+msgid "Could not validate the SSH configuration: {0}"
+msgstr "Could not validate the SSH configuration: {0}"
+
+msgid "Could not write the temporary SSH configuration in {0}: {1}"
+msgstr "Could not write the temporary SSH configuration in {0}: {1}"
+
+msgid "Disabled · each new connection authenticates separately"
+msgstr "Disabled · each new connection authenticates separately"
+
+msgid "Enabled · idle connections remain available for 10 minutes"
+msgstr "Enabled · idle connections remain available for 10 minutes"
+
+msgid "HOME does not point to a valid folder: {0}"
+msgstr "HOME does not point to a valid folder: {0}"
+
+msgid "HOME is not set. The SSH configuration cannot be located."
+msgstr "HOME is not set. The SSH configuration cannot be located."
+
+msgid "Main SSH configuration unavailable"
+msgstr "Main SSH configuration unavailable"
+
+msgid "Managed SSH configuration unavailable"
+msgstr "Managed SSH configuration unavailable"
+
+msgid "Managed configuration preview"
+msgstr "Managed configuration preview"
+
+msgid "Manual review required"
+msgstr "Manual review required"
+
+msgid "Needs attention · review the SSH configuration before continuing"
+msgstr "Needs attention · review the SSH configuration before continuing"
+
+msgid "Needs attention · the SSH configuration could not be located"
+msgstr "Needs attention · the SSH configuration could not be located"
+
+msgid ""
+"Only new SSH connections are affected. Turning this off does not stop "
+"existing background connections. Earlier host-specific OpenSSH settings "
+"still take priority."
+msgstr ""
+"Only new SSH connections are affected. Turning this off does not stop "
+"existing background connections. Earlier host-specific OpenSSH settings "
+"still take priority."
+
+msgid "OpenSSH rejected the generated configuration."
+msgstr "OpenSSH rejected the generated configuration."
+
+msgid "OpenSSH rejected the generated configuration: {0}"
+msgstr "OpenSSH rejected the generated configuration: {0}"
+
+msgid "Reuse SSH connections in the background"
+msgstr "Reuse SSH connections in the background"
+
+msgid "SSH connection persistence"
+msgstr "SSH connection persistence"
+
+msgid ""
+"The SSH configuration changed during rollback. No further changes were made."
+msgstr ""
+"The SSH configuration changed during rollback. No further changes were made."
+
+msgid ""
+"The SSH configuration changed while it was being updated. Refresh and try "
+"again."
+msgstr ""
+"The SSH configuration changed while it was being updated. Refresh and try "
+"again."
+
+msgid ""
+"The SSH configuration contains duplicate or incomplete application markers. "
+"Remove or repair the marked block manually."
+msgstr ""
+"The SSH configuration contains duplicate or incomplete application markers. "
+"Remove or repair the marked block manually."
+
+msgid ""
+"The SSH configuration is not valid UTF-8 and cannot be safely managed: {0}"
+msgstr ""
+"The SSH configuration is not valid UTF-8 and cannot be safely managed: {0}"
+
+msgid "The SSH configuration is writable by another user: {0}"
+msgstr "The SSH configuration is writable by another user: {0}"
+
+msgid "The SSH configuration path is invalid."
+msgstr "The SSH configuration path is invalid."
+
+msgid "The SSH configuration path is not a safe, regular file: {0}"
+msgstr "The SSH configuration path is not a safe, regular file: {0}"
+
+msgid "The SSH directory is writable by another user: {0}"
+msgstr "The SSH directory is writable by another user: {0}"
+
+msgid "The SSH path is not a safe, regular directory: {0}"
+msgstr "The SSH path is not a safe, regular directory: {0}"
+
+msgid "The SSH path is not owned by the current user: {0}"
+msgstr "The SSH path is not owned by the current user: {0}"
+
+msgid "The SSH persistence update stopped unexpectedly."
+msgstr "The SSH persistence update stopped unexpectedly."
+
+msgid ""
+"The application-managed block in the SSH configuration was changed. Restore "
+"or remove the marked block manually."
+msgstr ""
+"The application-managed block in the SSH configuration was changed. Restore "
+"or remove the marked block manually."
+
+msgid ""
+"The generated SSH persistence configuration did not match the expected "
+"preset."
+msgstr ""
+"The generated SSH persistence configuration did not match the expected "
+"preset."
+
+msgid "The managed SSH block exists but the main configuration is missing: {0}"
+msgstr ""
+"The managed SSH block exists but the main configuration is missing: {0}"
+
+msgid "The managed SSH block is no longer present. Refresh and try again."
+msgstr "The managed SSH block is no longer present. Refresh and try again."
+
+msgid "The managed SSH configuration changed while it was being removed: {0}"
+msgstr "The managed SSH configuration changed while it was being removed: {0}"
+
+msgid "The managed SSH configuration is missing: {0}"
+msgstr "The managed SSH configuration is missing: {0}"
+
+msgid "The managed SSH configuration was changed outside this application: {0}"
+msgstr ""
+"The managed SSH configuration was changed outside this application: {0}"
+
+msgid ""
+"The managed SSH file is also referenced outside the application-managed "
+"block. Remove the extra Include before using this setting."
+msgstr ""
+"The managed SSH file is also referenced outside the application-managed "
+"block. Remove the extra Include before using this setting."
+
+msgid ""
+"The managed SSH file is referenced outside the application-managed block. "
+"Remove that Include before using this setting."
+msgstr ""
+"The managed SSH file is referenced outside the application-managed block. "
+"Remove that Include before using this setting."
+
+msgid "What this setting changes"
+msgstr "What this setting changes"
+
+msgid "{0} includes {1}"
+msgstr "{0} includes {1}"
+
+msgid ""
+"Optional: create a new resident key only when you need another SSH identity."
+" Its private key never leaves the selected YubiKey."
+msgstr ""
+"Optional: create a new resident key only when you need another SSH identity."
+" Its private key never leaves the selected YubiKey."
+
+#~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
+#~ msgstr "Yubico Authenticator must be installed before you can use Passkeys."
+
+#~ msgid ""
+#~ "All inspected resident credentials from this key are already in the agent"
+#~ msgstr ""
+#~ "All inspected resident credentials from this key are already in the agent"
+
+#~ msgid "AnduinOS is safer with a YubiKey"
+#~ msgstr "AnduinOS is safer with a YubiKey"
+
+#~ msgid "Checking SSH keys… Touch the YubiKey if it flashes."
+#~ msgstr "Checking SSH keys… Touch the YubiKey if it flashes."
+
+#~ msgid ""
+#~ "Connect exactly one FIDO security key to choose an unambiguous source"
+#~ msgstr ""
+#~ "Connect exactly one FIDO security key to choose an unambiguous source"
+
+#~ msgid "Enter the YubiKey FIDO PIN"
+#~ msgstr "Enter the YubiKey FIDO PIN"
+
+#~ msgid ""
+#~ "Inspect, load, export, test, remove from the agent, or permanently delete "
+#~ "resident SSH credentials."
+#~ msgstr ""
+#~ "Inspect, load, export, test, remove from the agent, or permanently delete "
+#~ "resident SSH credentials."
+
+#~ msgid ""
+#~ "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
+#~ msgstr ""
+#~ "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
+
+#~ msgid "Load into agent"
+#~ msgstr "Load into agent"
+
+#~ msgid "No resident SSH credentials"
+#~ msgstr "No resident SSH credentials"
+
+#~ msgid "No ssh:* discoverable credentials were found on this key."
+#~ msgstr "No ssh:* discoverable credentials were found on this key."
+
+#~ msgid "Resident SSH credentials"
+#~ msgstr "Resident SSH credentials"
+
+#~ msgid "Run ssh-add -K for this connected security key"
+#~ msgstr "Run ssh-add -K for this connected security key"
+
+#~ msgid "SSH agent connected"
+#~ msgstr "SSH agent connected"
+
+#~ msgid ""
+#~ "The PIN is used only for this read-only inspection and is never stored."
+#~ msgstr ""
+#~ "The PIN is used only for this read-only inspection and is never stored."
+
+#~ msgid "Touch the YubiKey if it flashes."
+#~ msgstr "Touch the YubiKey if it flashes."
+
+#~ msgid "unknown socket"
+#~ msgstr "unknown socket"
+
+#~ msgid "{0} identities · {1}"
+#~ msgstr "{0} identities · {1}"
+
+#~ msgid "Git Signing"
+#~ msgstr "Git Signing"
+
+#~ msgid "SSH Keys"
+#~ msgstr "SSH Keys"
+
+#~ msgid "Account password is required for sudo"
+#~ msgstr "Account password is required for sudo"
+
+#~ msgid "An SSH signing key is selected; automatic commit signing is disabled"
+#~ msgstr ""
+#~ "An SSH signing key is selected; automatic commit signing is disabled"
+
+#~ msgid "AnduinOS sign-in"
+#~ msgstr "AnduinOS sign-in"
+
+#~ msgid "Commit signing is not configured"
+#~ msgstr "Commit signing is not configured"
+
+#~ msgid "Configured features"
+#~ msgstr "Configured features"
+
+#~ msgid "Current user: {0}"
+#~ msgstr "Current user: {0}"
+
+#~ msgid "Git commit signing"
+#~ msgstr "Git commit signing"
+
+#~ msgid "No YubiKey detected"
+#~ msgstr "No YubiKey detected"
+
+#~ msgid "No hardware serial · {0}"
+#~ msgstr "No hardware serial · {0}"
+
+#~ msgid "Not currently connected"
+#~ msgstr "Not currently connected"
+
+#~ msgid "Password sign-in only"
+#~ msgstr "Password sign-in only"
+
+#~ msgid "Security keys"
+#~ msgstr "Security keys"
+
+#~ msgid "YubiKey Manager"
+#~ msgstr "YubiKey Manager"
+
+#~ msgid "YubiKey Manager is unavailable"
+#~ msgstr "YubiKey Manager is unavailable"
+
+#~ msgid "YubiKey configured, but sudo currently bypasses authentication"
+#~ msgstr "YubiKey configured, but sudo currently bypasses authentication"
+
+#~ msgid "YubiKey touch or account password can authorize sudo"
+#~ msgstr "YubiKey touch or account password can authorize sudo"
+
+#~ msgid "YubiKey touch or password can unlock this user"
+#~ msgstr "YubiKey touch or password can unlock this user"
+
+#~ msgid "YubiKey-backed SSH signatures are enabled for every commit"
+#~ msgstr "YubiKey-backed SSH signatures are enabled for every commit"
+
+#~ msgid "sudo authentication"
+#~ msgstr "sudo authentication"
+
+#~ msgid "sudo currently allows administrator access without authentication"
+#~ msgstr "sudo currently allows administrator access without authentication"
+
+#~ msgid "{0} is configured, but another policy currently bypasses it"
+#~ msgstr "{0} is configured, but another policy currently bypasses it"
+
+#~ msgid "Apply"
+#~ msgstr "Apply"
+
+#~ msgid "Applying Git SSH signing settings…"
+#~ msgstr "Applying Git SSH signing settings…"
+
+#~ msgid ""
+#~ "Both choices use one physical YubiKey. Choose whether one SSH credential "
+#~ "does both jobs or a separate credential signs Git history."
+#~ msgstr ""
+#~ "Both choices use one physical YubiKey. Choose whether one SSH credential "
+#~ "does both jobs or a separate credential signs Git history."
+
+#~ msgid "Choose how you use your keys"
+#~ msgstr "Choose how you use your keys"
+
+#~ msgid ""
+#~ "Choose the credential already used for SSH authentication. Git will reuse "
+#~ "it for signatures."
+#~ msgstr ""
+#~ "Choose the credential already used for SSH authentication. Git will reuse "
+#~ "it for signatures."
+
+#~ msgid ""
+#~ "Choose the credential reserved for signatures. Your SSH authentication "
+#~ "credential is left unchanged."
+#~ msgstr ""
+#~ "Choose the credential reserved for signatures. Your SSH authentication "
+#~ "credential is left unchanged."
+
+#~ msgid "Could not create the Git signing recovery record: {0}"
+#~ msgstr "Could not create the Git signing recovery record: {0}"
+
+#~ msgid "Could not create the application configuration folder: {0}"
+#~ msgstr "Could not create the application configuration folder: {0}"
+
+#~ msgid "Could not encode the Git signing recovery record: {0}"
+#~ msgstr "Could not encode the Git signing recovery record: {0}"
+
+#~ msgid "Could not protect the application configuration folder: {0}"
+#~ msgstr "Could not protect the application configuration folder: {0}"
+
+#~ msgid "Could not read the Git signing recovery record: {0}"
+#~ msgstr "Could not read the Git signing recovery record: {0}"
+
+#~ msgid "Could not save the Git signing recovery record: {0}"
+#~ msgstr "Could not save the Git signing recovery record: {0}"
+
+#~ msgid "Dedicated Git signing credential"
+#~ msgstr "Dedicated Git signing credential"
+
+#~ msgid "Disable and restore"
+#~ msgstr "Disable and restore"
+
+#~ msgid ""
+#~ "Git settings were restored, but the recovery record could not be removed: "
+#~ "{0}"
+#~ msgstr ""
+#~ "Git settings were restored, but the recovery record could not be removed: "
+#~ "{0}"
+
+#~ msgid "Git signing configured"
+#~ msgstr "Git signing configured"
+
+#~ msgid "Git signing is not configured"
+#~ msgstr "Git signing is not configured"
+
+#~ msgid ""
+#~ "Git signing settings changed outside this application. Review the current "
+#~ "Git configuration before replacing or restoring it."
+#~ msgstr ""
+#~ "Git signing settings changed outside this application. Review the current "
+#~ "Git configuration before replacing or restoring it."
+
+#~ msgid ""
+#~ "Git will use the selected YubiKey-backed SSH credential. Your SSH "
+#~ "authentication configuration was not changed."
+#~ msgstr ""
+#~ "Git will use the selected YubiKey-backed SSH credential. Your SSH "
+#~ "authentication configuration was not changed."
+
+#~ msgid "Global Git configuration"
+#~ msgstr "Global Git configuration"
+
+#~ msgid "Inspect a YubiKey first"
+#~ msgstr "Inspect a YubiKey first"
+
+#~ msgid "Load into the SSH agent or restore its local key handle"
+#~ msgstr "Load into the SSH agent or restore its local key handle"
+
+#~ msgid "Local key handle"
+#~ msgstr "Local key handle"
+
+#~ msgid "Managed by YubiKey Manager · previous values can be restored"
+#~ msgstr "Managed by YubiKey Manager · previous values can be restored"
+
+#~ msgid "No Git signing configuration managed by this application was found."
+#~ msgstr "No Git signing configuration managed by this application was found."
+
+#~ msgid "No changes have been made by YubiKey Manager"
+#~ msgstr "No changes have been made by YubiKey Manager"
+
+#~ msgid "One credential for SSH and Git"
+#~ msgstr "One credential for SSH and Git"
+
+#~ msgid "Open SSH Keys, inspect the desired YubiKey, then return here."
+#~ msgstr "Open SSH Keys, inspect the desired YubiKey, then return here."
+
+#~ msgid "Optional · lightweight tags are unaffected"
+#~ msgstr "Optional · lightweight tags are unaffected"
+
+#~ msgid "Recommended · Git asks the selected YubiKey to sign each new commit"
+#~ msgstr "Recommended · Git asks the selected YubiKey to sign each new commit"
+
+#~ msgid "Restoring previous Git signing settings…"
+#~ msgstr "Restoring previous Git signing settings…"
+
+#~ msgid "Review and apply"
+#~ msgstr "Review and apply"
+
+#~ msgid "SSH commit signing is configured"
+#~ msgstr "SSH commit signing is configured"
+
+#~ msgid ""
+#~ "Separated duties · keep SSH authentication and Git signing identities "
+#~ "distinct"
+#~ msgstr ""
+#~ "Separated duties · keep SSH authentication and Git signing identities "
+#~ "distinct"
+
+#~ msgid ""
+#~ "Settings apply to the current user's global Git configuration. Repository "
+#~ "settings may override them."
+#~ msgstr ""
+#~ "Settings apply to the current user's global Git configuration. Repository "
+#~ "settings may override them."
+
+#~ msgid "Sign annotated tags"
+#~ msgstr "Sign annotated tags"
+
+#~ msgid "Sign every commit"
+#~ msgstr "Sign every commit"
+
+#~ msgid "Signing behavior"
+#~ msgstr "Signing behavior"
+
+#~ msgid "Signing credential"
+#~ msgstr "Signing credential"
+
+#~ msgid ""
+#~ "Simple · select the same credential you use to authenticate Git pushes"
+#~ msgstr ""
+#~ "Simple · select the same credential you use to authenticate Git pushes"
+
+#~ msgid "The Git signing recovery record is invalid: {0}"
+#~ msgstr "The Git signing recovery record is invalid: {0}"
+
+#~ msgid ""
+#~ "The first change saves your previous Git signing values. Disabling "
+#~ "restores them unless another program changed the managed settings."
+#~ msgstr ""
+#~ "The first change saves your previous Git signing values. Disabling "
+#~ "restores them unless another program changed the managed settings."
+
+#~ msgid "The user configuration folder is unavailable."
+#~ msgstr "The user configuration folder is unavailable."
+
+#~ msgid ""
+#~ "This credential needs a local key-handle file or must be loaded into the "
+#~ "SSH agent before Git can use it."
+#~ msgstr ""
+#~ "This credential needs a local key-handle file or must be loaded into the "
+#~ "SSH agent before Git can use it."
+
+#~ msgid ""
+#~ "Use a YubiKey-backed SSH credential to sign commits and tags. SSH "
+#~ "authentication and Git signing remain independently configurable."
+#~ msgstr ""
+#~ "Use a YubiKey-backed SSH credential to sign commits and tags. SSH "
+#~ "authentication and Git signing remain independently configurable."

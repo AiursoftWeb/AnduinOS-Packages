@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-core</PackageName>
-   <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS desktop core metapackage — pure upstream GNOME desktop environment with multimedia, printing, and input method support. No AnduinOS branding.</PackageDescription>
     <Section>metapackages</Section>
@@ -9,10 +9,10 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
   </PropertyGroup>
 
   <ItemGroup>
@@ -71,12 +71,19 @@
          Graphics & GPU
          ============================================================ -->
     <Dependency Include="mesa-vulkan-drivers" />
+    <!-- VMware desktop integration provides dynamic display resizing,
+         clipboard sharing, and drag-and-drop support. -->
+    <Suggest Include="open-vm-tools-desktop" Condition="'$(Arch)' == 'amd64'" />
+    <!-- Keep Secure Shell discoverable without silently installing and
+         enabling a network listener on existing desktop upgrades. New Live
+         images obtain the server through anduinos-live-settings instead. -->
+    <Suggest Include="openssh-server" />
 
     <!-- ============================================================
-         Input Method (IBus core framework)
+         Input Method (IBus core framework only; language-specific engines
+         are selected and installed by the native installer)
          ============================================================ -->
     <Dependency Include="ibus" />
-    <Recommend Include="anduinos-rime" />
 
     <!-- ============================================================
          Firmware sof and alsa-ucm-conf: for audio on Intel devices
@@ -120,6 +127,7 @@
     <Recommend Include="gnome-menus" />
     <Recommend Include="gir1.2-gmenu-3.0" />
     <Recommend Include="ptyxis" />
+    <Recommend Include="anduinos-bash-guess-command" />
 
     <!-- ============================================================
          Recommends: Sound theme & event sounds
@@ -130,16 +138,17 @@
     <Recommend Include="libcanberra0" />
 
     <!-- ============================================================
-         Recommends: GStreamer extras (non-core plugins & codecs)
+         Recommends: GStreamer desktop integration
+
+         Extended codec plugins deliberately live in the optional
+         anduinos-multimedia-codecs metapackage. Celluloid, libmpv, FFmpeg,
+         and the GStreamer base/good sets continue to provide useful
+         out-of-box playback without that optional package.
          ============================================================ -->
-    <Recommend Include="gstreamer1.0-plugins-bad" />
-    <Recommend Include="gstreamer1.0-plugins-ugly" />
-    <Recommend Include="gstreamer1.0-libav" />
     <Recommend Include="gstreamer1.0-alsa" />
     <Recommend Include="gstreamer1.0-gl" />
     <Recommend Include="gstreamer1.0-gtk3" />
     <Recommend Include="gstreamer1.0-x" />
-    <Recommend Include="libavcodec-extra" />
 
     <!-- ============================================================
          Recommends: ALSA legacy tools (PipeWire handles audio now)

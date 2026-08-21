@@ -178,6 +178,7 @@ is automatically recompiled by the dpkg trigger in `anduinos-dconf-runtime`.
 - [ ] All three P-C-R relationships declared (for fork packages)
 - [ ] `SuppressUpstreamScripts` is `true` (for derived packages)
 - [ ] No static copies of host system files — use symlinks with explicit Depends
+- [ ] Standalone `.desktop` files follow the [Desktop Entry visibility rules](DEV_GUIDE.md#desktop-entry-visibility-search-is-not-the-applications-menu)
 - [ ] Metapackages own their critical infrastructure deps explicitly
 - [ ] `Condition` attributes are used where a dep only applies to specific suites
 - [ ] Dconf defaults are co-located with their component

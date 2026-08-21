@@ -3,6 +3,7 @@ use std::fs;
 
 use super::exec;
 use crate::config;
+use crate::i18n::{i18n, i18n_fmt};
 
 /// Read our sysctl config file, returning key-value pairs.
 /// Returns an empty map if the file doesn't exist yet.
@@ -32,14 +33,14 @@ pub fn read_sysctl_live(key: &str) -> Result<String, String> {
     let path = sysctl_proc_path(key);
     fs::read_to_string(&path)
         .map(|s| s.trim().to_string())
-        .map_err(|e| format!("Cannot read {path}: {e}"))
+        .map_err(|e| i18n_fmt(&i18n("Cannot read {0}: {1}"), &[&path, &e.to_string()]))
 }
 
 /// Get the current swappiness value from /proc/sys/vm/swappiness.
 pub fn read_swappiness() -> Result<u8, String> {
     let val = read_sysctl_live("vm.swappiness")?;
     val.parse::<u8>()
-        .map_err(|e| format!("Cannot parse swappiness: {e}"))
+        .map_err(|e| i18n_fmt(&i18n("Cannot parse swappiness: {0}"), &[&e.to_string()]))
 }
 
 /// Get the recommended swappiness value based on system configuration.
@@ -66,7 +67,7 @@ pub fn recommended_swappiness() -> u8 {
 /// Get total RAM from /proc/meminfo (in bytes).
 pub fn read_total_ram() -> Result<u64, String> {
     let content = fs::read_to_string(config::PROC_MEMINFO)
-        .map_err(|e| format!("Cannot read /proc/meminfo: {e}"))?;
+        .map_err(|e| i18n_fmt(&i18n("Cannot read /proc/meminfo: {0}"), &[&e.to_string()]))?;
 
     for line in content.lines() {
         if line.starts_with("MemTotal:") {
@@ -75,11 +76,11 @@ pub fn read_total_ram() -> Result<u64, String> {
                 return parts[1]
                     .parse::<u64>()
                     .map(|kb| kb * 1024)
-                    .map_err(|e| format!("Cannot parse MemTotal: {e}"));
+                    .map_err(|e| i18n_fmt(&i18n("Cannot parse MemTotal: {0}"), &[&e.to_string()]));
             }
         }
     }
-    Err("MemTotal not found".to_string())
+    Err(i18n("MemTotal not found"))
 }
 
 // ─── Internal helpers ────────────────────────────────────────────────────────
@@ -124,13 +125,12 @@ pub fn set_swappiness(value: u8) -> Result<String, String> {
 
     // Return the first error if any
     if immediate.is_err() && persisted.is_err() {
-        return Err(format!(
-            "Failed to set swappiness: {} / {}",
-            immediate.err().unwrap(),
-            persisted.err().unwrap()
+        return Err(i18n_fmt(
+            &i18n("Failed to set swappiness: {0} / {1}"),
+            &[&immediate.err().unwrap(), &persisted.err().unwrap()],
         ));
     }
-    Ok("swappiness updated".to_string())
+    Ok(i18n("swappiness updated"))
 }
 
 #[cfg(test)]

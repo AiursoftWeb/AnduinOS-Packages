@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../lib/build-guards.sh"
 need_cmd git
 
-FLUENT_ICON_COMMIT="a163afe83e9ef26a018875b8debadf3a72d121df"
+FLUENT_ICON_COMMIT="ad627380"
 
 rm -rf "$SCRIPT_DIR/deploy" /tmp/Fluent-icon-theme
 git clone https://gitlab.aiursoft.com/mirror/fluent-icon-theme/ /tmp/Fluent-icon-theme

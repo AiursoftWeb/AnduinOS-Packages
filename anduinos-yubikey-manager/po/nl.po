@@ -1,0 +1,2168 @@
+# Dutch translations for anduinos-yubikey-manager package.
+# Copyright (C) 2026 THE anduinos-yubikey-manager'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-yubikey-manager package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-yubikey-manager\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-04 17:10+0000\n"
+"PO-Revision-Date: 2026-07-29 16:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/window.rs:2020
+msgid "1 identity is currently available to SSH applications."
+msgstr "Er is momenteel 1 identiteit beschikbaar voor SSH-toepassingen."
+
+#: src/window.rs:2304
+msgid "1 resident SSH key is available from your connected YubiKey."
+msgstr "Er is 1 residente SSH-sleutel beschikbaar vanaf je verbonden YubiKey."
+
+#: src/window.rs:1814
+msgid "1 resident SSH key · {0}"
+msgstr "1 residente SSH-sleutel · {0}"
+
+#: src/window.rs:1474 src/window.rs:1652
+msgid "A key must be connected before it can be enrolled."
+msgstr ""
+"Een sleutel moet worden verbonden voordat deze kan worden geregistreerd."
+
+#: src/window.rs:173
+msgid "About"
+msgstr "Over"
+
+#: src/home.rs:381 src/home.rs:402
+msgid "Account password"
+msgstr "Accountwachtwoord"
+
+#: src/window.rs:2490
+msgid "Add another SSH key"
+msgstr "Een andere SSH-sleutel toevoegen"
+
+#: src/window.rs:1314
+msgid "Add this public key to GitHub as a Signing Key."
+msgstr ""
+"Voeg deze openbare sleutel toe aan GitHub als een ondertekeningssleutel."
+
+#: src/home.rs:336 src/home.rs:389
+msgid "Administrator access"
+msgstr "Beheerders toegang"
+
+#: src/window.rs:2667
+msgid "Advanced options"
+msgstr "Uitgebreide opties"
+
+#: src/window.rs:2619
+msgid "Algorithm"
+msgstr "Algoritme"
+
+#: src/window.rs:1582
+msgid "Allow sudo without authentication"
+msgstr "Sta sudo toe zonder authenticatie"
+
+#: src/window.rs:1672
+msgid "Allowed for sudo · not currently connected"
+msgstr "Toegestaan voor sudo · momenteel niet verbonden"
+
+#: src/window.rs:1674
+msgid "Allowed to authorize sudo"
+msgstr "Mag sudo autoriseren"
+
+#: src/window.rs:1494
+msgid "Allowed to unlock this user"
+msgstr "Mag deze gebruiker ontgrendelen"
+
+#: src/window.rs:1492
+msgid "Allowed to unlock this user · not currently connected"
+msgstr "Mag deze gebruiker ontgrendelen · momenteel niet verbonden"
+
+#: src/window.rs:1902
+msgid "Already loaded"
+msgstr "Al geladen"
+
+#: src/window.rs:1639
+msgid "An enrolled YubiKey or the account password can authorize sudo."
+msgstr ""
+"Een geregistreerde YubiKey of het accountwachtwoord kan sudo autoriseren."
+
+#: src/application.rs:68
+msgid "AnduinOS Team"
+msgstr "Het AnduinOS-team"
+
+#: src/application.rs:66 src/progress_dialog.rs:23 src/window.rs:96
+msgid "AnduinOS YubiKey Security Center"
+msgstr "AnduinOS YubiKey-beveiligingscentrum"
+
+#: src/home.rs:126
+msgid "AnduinOS works more securely with a YubiKey"
+msgstr "AnduinOS werkt veiliger met een YubiKey"
+
+#: src/window.rs:2625
+msgid "Application"
+msgstr "Applicatie"
+
+#: src/ssh.rs:450
+msgid ""
+"Application must begin with ssh:, contain no whitespace, and be at most 253 "
+"bytes."
+msgstr ""
+"De applicatiernaam moet beginnen met ssh:, geen spaties bevatten en maximaal"
+" 253 bytes lang zijn."
+
+#: src/home.rs:411 src/window.rs:631
+msgid "Available"
+msgstr "Beschikbaar"
+
+#: src/window.rs:1255
+msgid "Available through SSH agent"
+msgstr "Beschikbaar via SSH-agent"
+
+#: src/window.rs:1253
+msgid "Available through local key handle"
+msgstr "Beschikbaar via lokaal sleutelhandvat"
+
+#: src/home.rs:172
+msgid "Buy a YubiKey"
+msgstr "Een YubiKey kopen"
+
+#: src/window.rs:2698 src/window.rs:2755 src/window.rs:3027
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: src/window.rs:562
+msgid "Checking SSH keys…"
+msgstr "SSH-sleutels controleren…"
+
+#: src/window.rs:574
+msgid "Checking SSH support…"
+msgstr "SSH-ondersteuning controleren…"
+
+#: src/home.rs:65 src/window.rs:478
+msgid "Checking connected YubiKeys"
+msgstr "Aangesloten YubiKeys controleren"
+
+#: src/home.rs:428
+msgid "Choose a YubiKey-backed SSH key"
+msgstr "Kies een SSH-sleutel ondersteund door een YubiKey"
+
+#: src/window.rs:2639
+msgid "Choose a local key-handle file"
+msgstr "Kies een lokaal sleutelhandelsbestand"
+
+#: src/ssh.rs:441
+msgid "Choose a supported OpenSSH security-key algorithm."
+msgstr "Kies een ondersteund OpenSSH-beveiligingssleutelalgoritme."
+
+#: src/ssh.rs:314 src/ssh.rs:438
+msgid "Choose a valid /dev/hidrawN FIDO device."
+msgstr "Kies een geldig /dev/hidrawN FIDO-apparaat."
+
+#: src/ssh.rs:223
+msgid "Choose a valid output folder."
+msgstr "Kies een geldige uitvoermap."
+
+#: src/git_signing.rs:107
+msgid "Choose an SSH key for Git signing."
+msgstr "Kies een SSH-sleutel voor Git-ondertekening."
+
+#: src/window.rs:2650
+msgid "Choose local SSH key-handle path"
+msgstr "Kies lokaal pad voor SSH-sleutelhandel"
+
+#: src/window.rs:1218
+msgid ""
+"Choose one SSH key. The selection takes effect immediately for this user's "
+"Git commits."
+msgstr ""
+"Kies één SSH-sleutel. De selectie wordt direct van kracht voor de Git-"
+"commits van deze gebruiker."
+
+#: src/window.rs:1465
+msgid ""
+"Choose which YubiKeys may unlock {0}. Password sign-in remains available."
+msgstr ""
+"Kies welke YubiKeys {0} mogen ontgrendelen. Aanmelden met wachtwoord blijft "
+"beschikbaar."
+
+#: src/window.rs:3074 src/window.rs:3096
+msgid "Close"
+msgstr "Sluiten"
+
+#: src/ssh.rs:570
+msgid "Command exited with"
+msgstr "Opdracht afgesloten met"
+
+#: src/ssh.rs:560 src/window.rs:655
+msgid "Command exited with {0}"
+msgstr "Opdracht afgesloten met {0}"
+
+#: src/window.rs:1217
+msgid "Commit signing"
+msgstr "Commit-ondertekening"
+
+#: src/home.rs:596
+msgid "Configured YubiKeys"
+msgstr "Geconfigureerde YubiKeys"
+
+#: src/home.rs:627
+msgid "Configured for {0} · Not connected"
+msgstr "Geconfigureerd voor {0} · Niet aangesloten"
+
+#: src/window.rs:2505
+msgid "Connect a FIDO security key first"
+msgstr "Verbind eerst een FIDO-beveiligingssleutel"
+
+#: src/window.rs:2262
+msgid "Connect a YubiKey"
+msgstr "Een YubiKey aansluiten"
+
+#: src/home.rs:158
+msgid "Connect a YubiKey to get started"
+msgstr "Sluit een YubiKey aan om te beginnen"
+
+#: src/home.rs:124
+msgid "Connect your YubiKey"
+msgstr "Sluit je YubiKey aan"
+
+#: src/home.rs:243 src/home.rs:315
+msgid "Connected"
+msgstr "Aangesloten"
+
+#: src/home.rs:300
+msgid "Connected YubiKeys"
+msgstr "Aangesloten YubiKeys"
+
+#: src/window.rs:2699
+msgid "Continue"
+msgstr "Doorgaan"
+
+#: src/window.rs:3028
+msgid "Continue to PIN"
+msgstr "Doorgaan naar PIN"
+
+#: src/window.rs:1326 src/window.rs:2778
+msgid "Copy public key"
+msgstr "Copieer openbare sleutel"
+
+#: src/window.rs:597
+msgid "Could not check SSH keys"
+msgstr "Kon SSH-sleutels niet controleren"
+
+#: src/ssh.rs:691
+msgid "Could not create a temporary public-key file: {0}"
+msgstr "Kon geen tijdelijk bestand voor de openbare sleutel maken: {0}"
+
+#: src/ssh.rs:605
+msgid "Could not create temporary Git signing data: {0}"
+msgstr "Kon tijdelijke Git-ondertekeningsgegevens niet maken: {0}"
+
+#: src/ssh.rs:230 src/ssh_config.rs:443
+msgid "Could not create {0}: {1}"
+msgstr "Kon {0} niet maken: {1}"
+
+#: src/window.rs:2839
+msgid "Could not export the public key: {0}"
+msgstr "Kon de openbare sleutel niet exporteren: {0}"
+
+#: src/window.rs:2337
+msgid "Could not find security keys"
+msgstr "Beveiligingssleutels konden niet worden gevonden"
+
+#: src/ssh.rs:703
+msgid "Could not flush the temporary public key: {0}"
+msgstr "Kon de tijdelijke openbare sleutel niet wissen: {0}"
+
+#: src/backend.rs:137
+msgid "Could not inspect USB devices: {0}"
+msgstr "Kon USB-apparaten niet inspecteren: {0}"
+
+#: src/window.rs:1991
+msgid "Could not inspect this YubiKey"
+msgstr "Kon deze YubiKey niet inspecteren"
+
+#: src/window.rs:540 src/window.rs:1554 src/window.rs:1734
+msgid "Could not list YubiKeys"
+msgstr "Kon YubiKeys niet tonen"
+
+#: src/ssh.rs:501
+msgid "Could not locate the secure PIN helper: {0}"
+msgstr "Kon de hulpprogramma voor beveiligde PIN niet vinden: {0}"
+
+#: src/ssh.rs:616
+msgid "Could not prepare the Git signing test: {0}"
+msgstr "Kon de Git-ondertekenningstest niet voorbereiden: {0}"
+
+#: src/ssh.rs:239 src/ssh_config.rs:445
+msgid "Could not protect {0}: {1}"
+msgstr "Kon {0} niet beveiligen: {1}"
+
+#: src/ssh.rs:527 src/ssh.rs:533 src/ssh.rs:919 src/ssh.rs:925
+msgid "Could not provide the FIDO PIN: {0}"
+msgstr "Kon de FIDO-PIN niet verstrekken: {0}"
+
+#: src/backend.rs:325
+msgid "Could not request administrator access: {0}"
+msgstr "Kon geen toegang als beheerder aanvragen: {0}"
+
+#: src/backend.rs:13 src/git_signing.rs:190 src/ssh.rs:911
+msgid "Could not run {0}: {1}"
+msgstr "Kon {0} niet uitvoeren: {1}"
+
+#: src/ssh.rs:520
+msgid "Could not start {0}: {1}"
+msgstr "Kon {0} niet starten: {1}"
+
+#: src/home.rs:101
+msgid "Could not update security keys"
+msgstr "Kon beveiligingssleutels niet bijwerken"
+
+#: src/ssh.rs:697
+msgid "Could not write the temporary public key: {0}"
+msgstr "Kon de tijdelijke openbare sleutel niet schrijven: {0}"
+
+#: src/window.rs:2533
+msgid "Create"
+msgstr "Maken"
+
+#: src/window.rs:2507
+msgid "Create a resident SSH credential on a selected device"
+msgstr "Een bewoonde SSH-identiteit maken op een geselecteerd apparaat"
+
+#: src/window.rs:2692
+msgid "Create a resident SSH key"
+msgstr "Een bewoonde SSH-sleutel maken"
+
+#: src/window.rs:2501
+msgid "Create…"
+msgstr "Maken…"
+
+#: src/window.rs:2962
+msgid "Deletion result is unknown"
+msgstr "Uitslag van verwijdering is onbekend"
+
+#: src/window.rs:1586
+msgid "Disabled · sudo must authenticate with a YubiKey or account password"
+msgstr ""
+"uitgeschakeld · sudo moet authenticeren met een YubiKey of accountwachtwoord"
+
+#: src/window.rs:2321
+msgid "Discover SSH keys on your YubiKeys"
+msgstr "SSH-sleutels op je YubiKeys ontdekken"
+
+#: src/ssh.rs:463
+msgid ""
+"Display label must be at most 200 bytes and contain no control characters."
+msgstr ""
+"De weergavelabel mag maximaal 200 bytes bevatten en geen controletekens."
+
+#: src/window.rs:1222
+msgid "Do not sign new commits by default"
+msgstr "Onderteken nieuwe commits standaard niet"
+
+#: src/window.rs:1563
+msgid ""
+"During enrollment, disconnect all other security keys. The selected key will"
+" blink; touch it to continue. Multiple keys can be enrolled one at a time."
+msgstr ""
+"Tijdens inschrijving, koppel alle andere beveiligingssleutels los. De "
+"geselecteerde sleutel zal knipperen; raak deze aan om door te gaan. Meerdere"
+" sleutels kunnen één voor één worden ingeschreven."
+
+#: src/window.rs:2610
+msgid "ECDSA-SK (recommended compatibility)"
+msgstr "ECDSA-SK (aanbevolen compatibiliteit)"
+
+#: src/window.rs:2620
+msgid "ECDSA-SK works with the widest range of YubiKeys"
+msgstr "ECDSA-SK werkt met de breedste reeks YubiKeys"
+
+#: src/window.rs:2497
+msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
+msgstr ""
+"ECDSA-SK · bewonend · aanraking vereist · veilige "
+"compatibiliteitsstandaarden"
+
+#: src/window.rs:2611
+msgid "Ed25519-SK (newer YubiKeys)"
+msgstr "Ed25519-SK (nieuwere YubiKeys)"
+
+#: src/home.rs:374 src/home.rs:393 src/home.rs:421
+msgid "Enabled"
+msgstr "Ingeschakeld"
+
+#: src/window.rs:1584
+msgid ""
+"Enabled · programs can obtain administrator privileges without confirmation"
+msgstr ""
+"Ingeschakeld · programma's kunnen beheerdersrechten verkrijgen zonder "
+"bevestiging"
+
+#: src/window.rs:1610
+msgid "Enabling passwordless sudo…"
+msgstr "Wachtwoordloze sudo inschakelen…"
+
+#: src/window.rs:1612
+msgid "Enabling sudo authentication…"
+msgstr "Sudo-authenticatie inschakelen…"
+
+#: src/window.rs:1670
+msgid "Enrolled · inactive while sudo authentication is bypassed"
+msgstr "Geregistreerd · inactief terwijl sudo-authenticatie wordt omzeild"
+
+#: src/window.rs:1562
+msgid "Enrollment safety"
+msgstr "Registratiewaarschuwing"
+
+#: src/window.rs:735
+msgid ""
+"Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
+msgstr ""
+"Voer de FIDO-pincode in voor {0}. Raak deze aan als deze knippert. De "
+"pincode wordt nooit opgeslagen."
+
+#: src/window.rs:1419
+msgid ""
+"Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No "
+"commit will be created."
+msgstr ""
+"Voer de FIDO-PIN in en raak vervolgens de geselecteerde YubiKey aan als deze"
+" knippert. Er wordt geen commit aangemaakt."
+
+#: src/window.rs:1172
+msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
+msgstr "Voer de FIDO-PIN in. Raak de YubiKey aan als deze knippert."
+
+#: src/ssh.rs:629
+msgid "Enter the YubiKey FIDO PIN to test this local key handle."
+msgstr ""
+"Voer de FIDO-PIN van de YubiKey in om deze lokale sleutelhandle te testen."
+
+#: src/window.rs:2531 src/window.rs:2920
+msgid "Enter the selected YubiKey FIDO PIN"
+msgstr "Voer de geselecteerde YubiKey FIDO-PIN in"
+
+#: src/window.rs:2779
+msgid "Export .pub"
+msgstr ".pub exporteren"
+
+#: src/window.rs:2821
+msgid "Export SSH public key"
+msgstr "SHA-publieke sleutel exporteren"
+
+#: src/window.rs:2745
+msgid "FIDO PIN"
+msgstr "FIDO-PIN"
+
+#: src/window.rs:1200 src/window.rs:2001 src/window.rs:2506
+msgid "FIDO device discovery is unavailable"
+msgstr "FIDO-apparaatdetectie is niet beschikbaar"
+
+#: src/backend.rs:162
+msgid "FIDO security key"
+msgstr "FIDO-beveiligingssleutel"
+
+#: src/window.rs:2323
+msgid "Finish inspecting your YubiKeys"
+msgstr "Eindig met het inspecteren van je YubiKeys"
+
+#: src/home.rs:663
+msgid "Firmware {0}"
+msgstr "Firmware {0}"
+
+#: src/backend.rs:261
+msgid ""
+"For safe enrollment, disconnect every other security key and leave only the "
+"selected YubiKey connected."
+msgstr ""
+"Voor een veilige registratie, alle andere beveiligingssleutels loskoppelen "
+"en alleen de geselecteerde YubiKey aangesloten laten."
+
+#: src/home.rs:419 src/window.rs:112 src/window.rs:161 src/window.rs:239
+msgid "Git signing"
+msgstr "Git-ondertekening"
+
+#: src/window.rs:1311
+msgid "Git signing is enabled"
+msgstr "Git-ondertekening is ingeschakeld"
+
+#: src/ssh.rs:642
+msgid ""
+"Git signing test failed:\n"
+"{0}"
+msgstr ""
+"Git-ondertekenningstest mislukt:\n"
+"{0}"
+
+#: src/window.rs:1446
+msgid "Git signing test passed"
+msgstr "Git-ondertekenningstest geslaagd"
+
+#: src/window.rs:1081
+msgid "Git is not installed"
+msgstr "Git is niet geïnstalleerd"
+
+#: src/window.rs:1103
+msgid "The Git installation task stopped unexpectedly."
+msgstr "De Git-installatietaak is onverwacht gestopt."
+
+#: src/window.rs:1082
+msgid "Git is required for commit signing. Install it to continue."
+msgstr ""
+"Git is vereist voor het ondertekenen van commits. Installeer Git om door te "
+"gaan."
+
+#: src/window.rs:108 src/window.rs:179 src/window.rs:235
+msgid "Home"
+msgstr "Home"
+
+#: src/window.rs:1473 src/window.rs:1651
+msgid "Insert a YubiKey"
+msgstr "Een YubiKey invoegen"
+
+#: src/window.rs:1129
+msgid "Insert a YubiKey, then press Refresh."
+msgstr "Een YubiKey invoegen en daarna Vernieuwen drukken."
+
+#: src/window.rs:1785
+msgid "Insert a YubiKey. This page will detect it when you refresh."
+msgstr "Plaats een YubiKey. Deze pagina detecteert deze wanneer je ververst."
+
+#: src/window.rs:738 src/window.rs:1840
+msgid "Inspect"
+msgstr "Inspecteren"
+
+#: src/window.rs:2391
+msgid "Inspect YubiKey"
+msgstr "YubiKey inspecteren"
+
+#: src/window.rs:727
+msgid "Inspect YubiKey {0} of {1}"
+msgstr "YubiKey {0} van {1} inspecteren"
+
+#: src/window.rs:1838
+msgid "Inspect again"
+msgstr "Nogmaals inspecteren"
+
+#: src/window.rs:2393
+msgid "Inspect all keys"
+msgstr "Alle sleutels inspecteren"
+
+#: src/window.rs:724
+msgid "Inspect this YubiKey"
+msgstr "Deze YubiKey inspecteren"
+
+#: src/window.rs:1831
+msgid "Inspected"
+msgstr "Geïnspecteerd"
+
+#: src/window.rs:1821
+msgid "Inspection needs attention · {0}"
+msgstr "Inspectie vereist aandacht · {0}"
+
+#: src/ssh.rs:127
+msgid "Invalid FIDO device path."
+msgstr "Ongeldig FIDO-apparaatpad."
+
+#: src/window.rs:1777
+msgid "Keys stored on your YubiKeys"
+msgstr "Sleutels opgeslagen op je YubiKeys"
+
+#: src/window.rs:1173 src/window.rs:1880
+msgid "Load"
+msgstr "Laden"
+
+#: src/window.rs:1171
+msgid "Load SSH keys"
+msgstr "SSH-sleutels laden"
+
+#: src/window.rs:1864
+msgid "Load all"
+msgstr "Alles laden"
+
+#: src/window.rs:1157
+msgid "Load keys"
+msgstr "Sleutels laden"
+
+#: src/window.rs:1878
+msgid "Load resident SSH keys"
+msgstr "Inwonen SSH-sleutels laden"
+
+#: src/window.rs:1866
+msgid "Load this YubiKey's resident SSH keys into the agent"
+msgstr ""
+"Lad de residente SSH-sleutels van deze YubiKey naar het agentprogramma"
+
+#: src/window.rs:1257
+msgid "Load this resident key into the SSH agent before signing"
+msgstr "Lad deze residente sleutel in de SSH-agent voordat u ondertekent"
+
+#: src/window.rs:1923
+msgid "Loaded"
+msgstr "Geladen"
+
+#: src/window.rs:1182
+msgid "Loading SSH keys… Touch the YubiKey if it flashes."
+msgstr "SSH-sleutels worden geladen… Raak de YubiKey aan als deze knippert."
+
+#: src/window.rs:2633
+msgid "Local key handle path"
+msgstr "Lokaal sleutelhandelpad"
+
+#: src/window.rs:2605
+msgid "Local key label"
+msgstr "Lokaal sleutellabel"
+
+#: src/window.rs:563
+msgid "Looking for your SSH agent and connected YubiKeys."
+msgstr "Op zoek naar je SSH-agent en verbonden YubiKeys."
+
+#: src/window.rs:1832 src/window.rs:2124
+msgid "Needs attention"
+msgstr "Vereist aandacht"
+
+#: src/window.rs:2496
+msgid "New hardware-backed SSH key"
+msgstr "Nieuwe hardware-ondersteunde SSH-sleutel"
+
+#: src/window.rs:1128
+msgid "No FIDO security key detected"
+msgstr "Geen FIDO-beveiligingssleutel gedetecteerd"
+
+#: src/window.rs:2037
+msgid "No SSH agent was detected"
+msgstr "Geen SSH-agent gedetecteerd"
+
+#: src/window.rs:1784
+msgid "No YubiKey connected"
+msgstr "Geen YubiKey aangesloten"
+
+#: src/home.rs:653
+msgid "No hardware serial"
+msgstr "Geen hardware-serienummer"
+
+#: src/window.rs:1930
+msgid "No resident SSH keys"
+msgstr "Geen residente SSH-sleutels"
+
+#: src/window.rs:1144
+msgid "No resident SSH keys found"
+msgstr "Geen residente SSH-sleutels gevonden"
+
+#: src/window.rs:1811
+msgid "No resident SSH keys found · {0}"
+msgstr "Geen residente SSH-sleutels gevonden · {0}"
+
+#: src/window.rs:2302
+msgid "No resident SSH keys were found on the connected YubiKeys."
+msgstr ""
+"Er zijn geen residente SSH-sleutels gevonden op de verbonden YubiKeys."
+
+#: src/window.rs:1221
+msgid "No signing"
+msgstr "Geen ondertekening"
+
+#: src/home.rs:376 src/home.rs:395 src/home.rs:423
+msgid "Not configured"
+msgstr "Niet geconfigureerd"
+
+#: src/window.rs:1833
+msgid "Not inspected"
+msgstr "Niet geïnspecteerd"
+
+#: src/window.rs:1823
+msgid "Not inspected yet · {0}"
+msgstr "Nog niet geïnspecteerd · {0}"
+
+#: src/home.rs:174
+msgid "Open the official Yubico Store"
+msgstr "De officiële Yubico-winkel openen"
+
+#: src/window.rs:1089 src/window.rs:1111
+msgid "Install Git"
+msgstr "Git installeren"
+
+#: src/window.rs:1096
+msgid "Installing Git…"
+msgstr "Git installeren…"
+
+#: src/ssh.rs:571
+msgid ""
+"OpenSSH could not load resident keys. The SSH agent contains no newly loaded"
+" identity."
+msgstr ""
+"OpenSSH kon de resident-sleutels niet laden. De SSH-agent bevat geen nieuw "
+"geladen identiteit."
+
+#: src/ssh.rs:574
+msgid ""
+"OpenSSH could not load resident keys:\n"
+"{0}"
+msgstr "OpenSSH kon de residente sleutels niet laden: {0}"
+
+#: src/ssh.rs:287
+msgid ""
+"OpenSSH did not create a resident key:\n"
+"{0}"
+msgstr "OpenSSH heeft geen residente sleutel aangemaakt: {0}"
+
+#: src/ssh.rs:270
+msgid ""
+"OpenSSH finished creating the key, but the YubiKey could not be verified afterward: {0}\n"
+"Do not immediately retry; inspect the key first to avoid creating a duplicate."
+msgstr ""
+"OpenSSH heeft het aanmaken van de sleutel voltooid, maar de YubiKey kon nadien niet worden geverifieerd: {0}\n"
+"Probeer het niet direct opnieuw; inspecteer eerst de sleutel om het maken van een duplicaat te voorkomen."
+
+#: src/ssh.rs:292
+msgid ""
+"OpenSSH reported success, but no new resident credential was detected. Do "
+"not retry until you inspect the YubiKey."
+msgstr ""
+"OpenSSH meldde succes, maar er is geen nieuwe resident-referentie "
+"gedetecteerd. Probeer het niet opnieuw totdat u de YubiKey heeft "
+"geïnspecteerd."
+
+#: src/window.rs:2668
+msgid "OpenSSH/FIDO credential metadata and local file location"
+msgstr "Metadata van OpenSSH/FIDO-referenties en lokale bestandslocatie"
+
+#: src/home.rs:391
+msgid "Passwordless"
+msgstr "Wachtwoordloos"
+
+#: src/window.rs:2922
+msgid "Permanently delete"
+msgstr "Definitief verwijderen"
+
+#: src/window.rs:2782
+msgid "Permanently delete from YubiKey…"
+msgstr "Definitief verwijderen van YubiKey…"
+
+#: src/window.rs:3021
+msgid "Permanently delete this resident SSH credential?"
+msgstr "Deze resident SSH-gegevens definitief verwijderen?"
+
+#: src/home.rs:342
+msgid "Protect authentication and commit signing"
+msgstr "Bescherm authenticatie en commit-handtekeningen"
+
+#: src/home.rs:193 src/home.rs:288
+msgid "Protection for {0}"
+msgstr "Bescherming voor {0}"
+
+#: src/window.rs:2325
+msgid ""
+"Read the resident SSH keys already stored on your YubiKeys. You will enter "
+"each key's FIDO PIN and may need to touch it."
+msgstr ""
+"Lees de residente SSH-sleutels die al zijn opgeslagen op je YubiKeys. Je "
+"voert de FIDO-pincode van elke sleutel in en moet deze mogelijk aanraken."
+
+#: src/window.rs:748
+msgid "Reading SSH keys from {0}… Touch it if it flashes."
+msgstr "SSH-sleutels lezen van {0}… Raak deze aan als deze knippert."
+
+#: src/window.rs:479
+msgid "Reading account security settings…"
+msgstr "Accountbeveiligingsinstellingen lezen…"
+
+#: src/window.rs:2028 src/window.rs:2314
+msgid "Ready"
+msgstr "Klaar"
+
+#: src/home.rs:366
+msgid "Ready to inspect"
+msgstr "Klaar om te inspecteren"
+
+#: src/home.rs:266
+msgid "Ready to protect {0}"
+msgstr "Klaar om {0} te beschermen"
+
+#: src/window.rs:184
+msgid "Refresh connected YubiKeys"
+msgstr "Verbonden YubiKeys vernieuwen"
+
+#: src/window.rs:2781
+msgid "Remove from agent"
+msgstr "Uit agent verwijderen"
+
+#: src/window.rs:2882
+msgid "Removing this key from the SSH agent…"
+msgstr "Deze sleutel wordt uit de SSH-agent verwijderd…"
+
+#: src/window.rs:2662
+msgid "Require verification for every signature"
+msgstr "Verificatie vereisen voor elke handtekening"
+
+#: src/window.rs:2663
+msgid "Requires the FIDO PIN each time this key signs"
+msgstr "Vereist de FIDO-PIN telkens wanneer deze sleutel ondertekent"
+
+#: src/window.rs:2561
+msgid "Resident SSH key created"
+msgstr "Resident SSH-sleutel aangemaakt"
+
+#: src/window.rs:2955
+msgid "Resident credential permanently deleted"
+msgstr "Resident gegevens definitief verwijderd"
+
+#: src/window.rs:1907
+msgid "Resident keys loaded"
+msgstr "Resident-sleutels geladen"
+
+#: src/window.rs:2629
+msgid "Resident username"
+msgstr "Resident gebruikersnaam"
+
+#: src/ssh.rs:458
+msgid "Resident username must contain 1–64 bytes and no control characters."
+msgstr ""
+"De resident gebruikersnaam moet 1–64 bytes bevatten en geen "
+"besturingskarakters."
+
+#: src/home.rs:341
+msgid "SSH & Git"
+msgstr "SSH en Git"
+
+#: src/window.rs:2010
+msgid "SSH agent"
+msgstr "SSH-agent"
+
+#: src/window.rs:2018
+msgid "SSH agent is ready"
+msgstr "SSH-agent is klaar"
+
+#: src/window.rs:2033
+msgid "SSH agent unavailable"
+msgstr "SSH-agent niet beschikbaar"
+
+#: src/home.rs:426
+msgid "SSH commit signing"
+msgstr "SSH commit-handtekening"
+
+#: src/window.rs:2797
+msgid "SSH key actions"
+msgstr "SSH-sleutelacties"
+
+#: src/window.rs:2461
+msgid "SSH key for {0}"
+msgstr "SSH-sleutel voor {0}"
+
+#: src/home.rs:410 src/window.rs:111 src/window.rs:157 src/window.rs:238
+msgid "SSH keys"
+msgstr "SSH-sleutels"
+
+#: src/ssh.rs:92
+msgid "SSH_AUTH_SOCK is not set"
+msgstr "SSH_AUTH_SOCK is niet ingesteld"
+
+#: src/window.rs:2693
+msgid ""
+"Safe defaults use ECDSA-SK, require touch, and store a discoverable "
+"credential on the selected YubiKey."
+msgstr ""
+"Veilige standaardinstellingen gebruiken ECDSA-SK, vereisen een aanraking en "
+"slaan een ontdekbare referentie op de geselecteerde YubiKey op."
+
+#: src/home.rs:337
+msgid "Secure sudo authorization"
+msgstr "Veilige sudo-autorisatie"
+
+#: src/window.rs:126
+msgid "Security Center"
+msgstr "Beveiligingscentrum"
+
+#: src/home.rs:655
+msgid "Serial {0}"
+msgstr "Serienummer {0}"
+
+#: src/home.rs:132
+msgid ""
+"Sign in, authorize sudo, and protect SSH and Git identities with a physical "
+"touch."
+msgstr ""
+"Meld je aan, autoriseer sudo en bescherm SSH- en Git-identiteiten met een "
+"fysieke tik."
+
+#: src/home.rs:331 src/home.rs:372 src/home.rs:614
+msgid "Sign-in"
+msgstr "Inloggen"
+
+#: src/window.rs:2863
+msgid "Signing test passed"
+msgstr "Ondertekenningstest geslaagd"
+
+#: src/ssh.rs:584 src/ssh.rs:593 src/ssh.rs:650
+msgid "Temporary public-key path is invalid."
+msgstr "Tijdelijke openbare-sleutel pad is ongeldig."
+
+#: src/window.rs:1420
+msgid "Test"
+msgstr "Test"
+
+#: src/window.rs:1418
+msgid "Test Git signing"
+msgstr "Git-ondertekening testen"
+
+#: src/window.rs:1345 src/window.rs:2780
+msgid "Test signing"
+msgstr "Testtekenen"
+
+#: src/backend.rs:255
+msgid ""
+"The FIDO enrollment tool is not installed. Install the libpam-u2f package, "
+"then try again."
+msgstr ""
+"Het FIDO-registratietool is niet geïnstalleerd. Installeer het "
+"libpam-u2f-pakket en probeer het opnieuw."
+
+#: src/window.rs:1879
+msgid "The PIN is sent directly to ssh-add and is never stored."
+msgstr ""
+"Het PIN-nummer wordt direct naar ssh-add gestuurd en nooit opgeslagen."
+
+#: src/window.rs:2532
+msgid ""
+"The PIN is sent through a private pipe to OpenSSH. It is never stored or "
+"placed in command arguments."
+msgstr ""
+"Het PIN-nummer wordt via een privé-kanaal naar OpenSSH gestuurd. Het wordt "
+"nooit opgeslagen of in opdrachtargumenten geplaatst."
+
+#: src/window.rs:2864
+msgid "The SSH agent successfully signed and verified data with this key."
+msgstr ""
+"De SSH-agent heeft de gegevens succesvol getekend en geverifieerd met deze "
+"sleutel."
+
+#: src/progress_dialog.rs:57
+msgid "The YubiKey operation stopped unexpectedly."
+msgstr "De YubiKey-bewerking stopte onverwachts."
+
+#: src/window.rs:2598
+msgid "The credential will be created only on this exact device"
+msgstr "Het bewijsmiddel wordt alleen aangemaakt op dit exacte apparaat"
+
+#: src/ssh.rs:368
+msgid ""
+"The deletion command finished, but the selected YubiKey could not be inspected afterward: {0}\n"
+"The credential may or may not have been deleted. Do not retry. Reconnect and inspect the YubiKey first."
+msgstr ""
+"Het verwijderingscommando is voltooid, maar de geselecteerde YubiKey kon daarna niet worden geïnspecteerd: {0}\n"
+"Het kan zijn dat de gegevens wel of niet zijn verwijderd. Probeer het niet opnieuw. Sluit eerst de YubiKey opnieuw aan en inspecteer deze."
+
+#: src/window.rs:541 src/window.rs:1536 src/window.rs:1716
+msgid "The enrollment task failed."
+msgstr "De registratie taak is mislukt."
+
+#: src/window.rs:2956
+msgid ""
+"The exact resident credential is no longer present on the selected YubiKey. "
+"Local .pub or key-handle files and any SSH-agent entry were not removed."
+msgstr ""
+"De exacte resident gegevens zijn niet langer aanwezig op de geselecteerde "
+"YubiKey. Lokale .pub- of key-handle-bestanden en eventuele SSH-agent-items "
+"zijn niet verwijderd."
+
+#: src/window.rs:1903
+msgid ""
+"The inspected resident SSH credentials are already available in this agent."
+msgstr ""
+"De geïnspecteerde resident SSH-credentials zijn al beschikbaar in deze "
+"agent."
+
+#: src/ssh.rs:627
+msgid "The local SSH key-handle path is invalid."
+msgstr "Het lokale pad naar de SSH-sleutelhandle is ongeldig."
+
+#: src/git_signing.rs:76
+msgid "The local SSH key-handle path is not valid UTF-8."
+msgstr ""
+"Het lokale pad naar de SSH-sleutelhandle is geen geldige UTF-8-tekenreeks."
+
+#: src/ssh.rs:468
+msgid "The local key path must be absolute."
+msgstr "Het lokale sleutelpad moet absoluut zijn."
+
+#: src/window.rs:2563
+msgid ""
+"The non-exportable private key remains protected by the selected YubiKey.\n"
+"\n"
+"Algorithm: {0}\n"
+"Application: {1}\n"
+"Resident username: {2}\n"
+"Fingerprint: {3}\n"
+"\n"
+"Local key handle: {4}\n"
+"Public key: {5}\n"
+"\n"
+"The key is not automatically loaded into the SSH agent."
+msgstr ""
+"De niet-exporteerbare privésleutel blijft beschermd door de geselecteerde YubiKey.\n"
+"\n"
+"Algoritme: {0}\n"
+"Toepassing: {1}\n"
+"Resident gebruikersnaam: {2}\n"
+"Vingerafdruk: {3}\n"
+"\n"
+"Lokaal sleutelhandvat: {4}\n"
+"Publieke sleutel: {5}\n"
+"\n"
+"De sleutel wordt niet automatisch geladen in de SSH-agent."
+
+#: src/backend.rs:334
+msgid "The operation was cancelled or denied."
+msgstr "De bewerking is geannuleerd of geweigerd."
+
+#: src/ssh.rs:247
+msgid "The output folder does not exist: {0}"
+msgstr "De uitvoermap bestaat niet: {0}"
+
+#: src/ssh.rs:317
+msgid "The resident credential ID is invalid. Refresh before deleting."
+msgstr ""
+"Het ID van de resident gegevens is ongeldig. Vernieuwen voordat u "
+"verwijdert."
+
+#: src/ssh.rs:744
+msgid "The resident credential did not return a public key."
+msgstr "Het resident bewijsmiddel gaf geen openbare sleutel terug."
+
+#: src/ssh.rs:382
+msgid ""
+"The resident credential is still present. Deletion was not completed: {0}"
+msgstr ""
+"De resident gegevens zijn nog steeds aanwezig. Verwijdering was niet "
+"voltooid: {0}"
+
+#: src/ssh.rs:749
+msgid "The resident credential returned an incomplete public key."
+msgstr "Het resident bewijsmiddel gaf een onvolledige openbare sleutel terug."
+
+#: src/ssh.rs:756
+msgid "The resident credential returned malformed PEM data."
+msgstr "Het resident bewijsmiddel gaf misvormde PEM-gegevens terug."
+
+#: src/ssh.rs:296
+msgid ""
+"The resident credential {0} exists on the YubiKey, but its local handle "
+"files are incomplete. Do not retry creation."
+msgstr ""
+"Het resident bewijsmiddel {0} bestaat op de YubiKey, maar de lokale "
+"handvatsbestanden zijn onvolledig. Probeer niet opnieuw te maken."
+
+#: src/ssh.rs:282
+msgid ""
+"The resident credential {0} was created on the YubiKey, but OpenSSH did not complete successfully:\n"
+"{1}\n"
+"Do not retry creation. Inspect the key and preserve any local files that were written."
+msgstr ""
+"De residente referentie {0} is op de YubiKey aangemaakt, maar OpenSSH is niet succesvol afgerond:\n"
+"{1}\n"
+"Probeer het aanmaken niet opnieuw. Inspecteer de sleutel en bewaar alle lokale bestanden die zijn geschreven."
+
+#: src/backend.rs:303 src/backend.rs:312
+msgid "The security key returned an invalid PAM credential."
+msgstr "De beveiligingssleutel gaf een ongeldig PAM-bewijsmiddel terug."
+
+#: src/ssh.rs:323
+msgid ""
+"The selected FIDO device is no longer connected. Refresh and inspect it "
+"again."
+msgstr ""
+"Het geselecteerde FIDO-apparaat is niet langer verbonden. Vernieuw en "
+"inspecteer het opnieuw."
+
+#: src/ssh.rs:216
+msgid ""
+"The selected FIDO device is no longer connected. Refresh and try again."
+msgstr ""
+"Het geselecteerde FIDO-apparaat is niet langer verbonden. Vernieuw en "
+"probeer het opnieuw."
+
+#: src/window.rs:1447
+msgid ""
+"The selected credential created a valid Git-format SSH signature. No "
+"repository or commit was changed."
+msgstr ""
+"De geselecteerde aanmeldgegevens hebben een geldige SSH-handtekening in Git-"
+"formaat gegenereerd. Er is geen repository of commit gewijzigd."
+
+#: src/ssh.rs:253
+msgid ""
+"The selected private-key or .pub file already exists. Choose another name."
+msgstr ""
+"Het geselecteerde privésleutel- of .pub-bestand bestaat al. Kies een andere "
+"naam."
+
+#: src/ssh.rs:338
+msgid ""
+"The selected resident credential changed since it was inspected. Nothing was"
+" deleted; refresh and verify the key."
+msgstr ""
+"De geselecteerde resident gegevens zijn gewijzigd sinds de laatste "
+"inspectie. Er is niets verwijderd; vernieuw en controleer de sleutel."
+
+#: src/ssh.rs:335
+msgid ""
+"The selected resident credential is no longer present on this YubiKey. "
+"Nothing was deleted."
+msgstr ""
+"De geselecteerde resident gegevens zijn niet langer aanwezig op deze "
+"YubiKey. Er is niets verwijderd."
+
+#: src/ssh.rs:672
+msgid "The signature was created but could not be verified: {0}"
+msgstr "De handtekening is gemaakt, maar kon niet worden geverifieerd: {0}"
+
+#: src/window.rs:1618
+msgid "The sudo policy task failed."
+msgstr "De sudo-beleidstaak is mislukt."
+
+#: src/ssh.rs:663
+msgid "The temporary Git signature path is invalid."
+msgstr "Het tijdelijke Git-handtekeningspad is ongeldig."
+
+#: src/ssh.rs:622
+msgid "The temporary Git signing path is invalid."
+msgstr "Het tijdelijke Git-ondertekeningspad is ongeldig."
+
+#: src/home.rs:597
+msgid ""
+"These keys are trusted by this account but are not currently connected."
+msgstr ""
+"Deze sleutels worden vertrouwd door dit account, maar zijn momenteel niet "
+"aangesloten."
+
+#: src/window.rs:2921
+msgid ""
+"This PIN authorizes permanent deletion of the exact credential shown in the "
+"previous step. It is never stored."
+msgstr ""
+"Deze PIN autoriseert het definitief verwijderen van de exacte gegevens die "
+"in de vorige stap worden getoond. Het wordt nooit opgeslagen."
+
+#: src/window.rs:1931
+msgid "This YubiKey has no discoverable ssh:* credentials."
+msgstr "Deze YubiKey heeft geen ontdekbare ssh:*-referenties."
+
+#: src/git_signing.rs:85
+msgid "This is not a supported OpenSSH security-key public key."
+msgstr ""
+"Dit is geen ondersteunde openbare sleutel voor OpenSSH-beveiligingssleutels."
+
+#: src/window.rs:3022
+msgid ""
+"This removes the private credential from the selected YubiKey and cannot be "
+"undone. It does not remove local files or an identity already loaded in the "
+"SSH agent."
+msgstr ""
+"Hiermee wordt de private gegevens uit de geselecteerde YubiKey verwijderd en"
+" kan dit niet ongedaan worden gemaakt. Lokale bestanden of een identiteit "
+"die al is geladen in de SSH-agent, worden hierdoor niet verwijderd."
+
+#: src/window.rs:1579
+msgid "This setting applies only to the current user."
+msgstr "Deze instelling geldt alleen voor de huidige gebruiker."
+
+#: src/home.rs:66
+msgid "This will only take a moment."
+msgstr "Dit duurt slechts een ogenblik."
+
+#: src/window.rs:1888
+msgid ""
+"Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
+msgstr ""
+"Raak de YubiKey aan wanneer daarom wordt gevraagd. Laden van resident "
+"sleutels in de SSH-agent…"
+
+#: src/window.rs:1433
+msgid ""
+"Touch the YubiKey. Creating and verifying a temporary Git-format SSH "
+"signature…"
+msgstr ""
+"Raak de YubiKey aan. Een tijdelijke SSH-handtekening in Git-formaat wordt "
+"aangemaakt en geverifieerd…"
+
+#: src/window.rs:2856
+msgid "Touch the YubiKey. Testing SSH signing and verification…"
+msgstr "Raak de YubiKey aan. SSH-tekenen en verifiëren testen…"
+
+#: src/window.rs:2544
+msgid ""
+"Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not "
+"remove the key."
+msgstr ""
+"Raak de geselecteerde YubiKey aan. Aanmaken van een SSH-residentsleutel op "
+"{0}… Verwijder de sleutel niet."
+
+#: src/window.rs:1496
+msgid "Touch this key when prompted to enroll it"
+msgstr ""
+"Raak deze sleutel aan wanneer daarom wordt gevraagd om hem te registreren"
+
+#: src/window.rs:1676
+msgid "Touch this key when prompted to enroll it for sudo"
+msgstr ""
+"Raak deze sleutel aan wanneer daarom wordt gevraagd om hem voor sudo te "
+"registreren"
+
+#: src/window.rs:1527 src/window.rs:1707
+msgid "Touch your security key to continue."
+msgstr "Raak uw beveiligingssleutel aan om door te gaan."
+
+#: src/home.rs:93
+msgid "Try Again"
+msgstr "Opnieuw proberen"
+
+#: src/window.rs:3008
+msgid "Type {0} to confirm"
+msgstr "Tik {0} om te bevestigen"
+
+#: src/window.rs:688 src/window.rs:2039 src/window.rs:2340
+msgid "Unavailable"
+msgstr "Niet beschikbaar"
+
+#: src/backend.rs:251
+msgid "Unknown authentication purpose."
+msgstr "Onbekend authenticatiedoeleind."
+
+#: src/window.rs:109 src/window.rs:149 src/window.rs:236
+msgid "Unlock GDM"
+msgstr "GDM ontgrendelen"
+
+#: src/window.rs:110 src/window.rs:153 src/window.rs:237
+msgid "Unlock sudo"
+msgstr "sudo ontgrendelen"
+
+#: src/window.rs:1463
+msgid "Unlock the current user"
+msgstr "Huidige gebruiker ontgrendelen"
+
+#: src/home.rs:332
+msgid "Unlock your account with a touch"
+msgstr "Vergrendel je account met een tik"
+
+#: src/ssh.rs:735 src/window.rs:1251 src/window.rs:2467 src/window.rs:2987
+msgid "Unnamed SSH credential"
+msgstr "Niet-genoemde SSH-referentie"
+
+#: src/ssh.rs:782
+msgid "Unsupported resident SSH public-key algorithm."
+msgstr "Ongesteund resident SSH-openbare-sleutelalgoritme."
+
+#: src/window.rs:1397
+msgid "Updating Git commit signing…"
+msgstr "Git-commitondertekening wordt bijgewerkt…"
+
+#: src/window.rs:1529
+msgid "Updating sign-in settings…"
+msgstr "Inloginstellingen worden bijgewerkt…"
+
+#: src/window.rs:1709
+msgid "Updating sudo settings…"
+msgstr "sudo-instellingen worden bijgewerkt…"
+
+#: src/window.rs:1635
+msgid "Use YubiKey to unlock sudo"
+msgstr "YubiKey gebruiken om sudo te ontgrendelen"
+
+#: src/window.rs:2934
+msgid ""
+"Verifying and permanently deleting the selected resident credential. Do not "
+"unplug the YubiKey…"
+msgstr ""
+"Verificeren en definitief verwijderen van de geselecteerde resident "
+"gegevens. De YubiKey niet loskoppelen…"
+
+#: src/window.rs:695
+msgid "View in App Store"
+msgstr "Bekijken in de appwinkel"
+
+#: src/window.rs:2267
+msgid "Waiting"
+msgstr "Wachten"
+
+#: src/home.rs:156
+msgid "Waiting for a configured YubiKey"
+msgstr "Wachten op een geconfigureerde YubiKey"
+
+#: src/window.rs:1637
+msgid ""
+"You may enroll keys now, but sudo bypasses PAM while passwordless access is "
+"enabled."
+msgstr ""
+"U kunt nu sleutels registreren, maar sudo omzeilt PAM terwijl wachtelloze "
+"toegang is ingeschakeld."
+
+#: src/window.rs:2297
+msgid "Your YubiKeys are inspected"
+msgstr "Je YubiKeys zijn geïnspecteerd"
+
+#: src/window.rs:2299
+msgid "Your hardware-backed SSH keys"
+msgstr "Je door hardware ondersteunde SSH-sleutels"
+
+#: src/window.rs:2263
+msgid ""
+"Your resident SSH keys stay on the security key. Insert it to view and use "
+"them."
+msgstr ""
+"Je residente SSH-sleutels blijven op de beveiligingssleutel. Plaats deze om "
+"ze te bekijken en te gebruiken."
+
+#: src/home.rs:130
+msgid ""
+"Your security settings are ready. Connect a configured YubiKey when you need"
+" it."
+msgstr ""
+"Jouw beveiligingsinstellingen zijn klaar. Sluit een geconfigureerde YubiKey "
+"aan wanneer je hem nodig hebt."
+
+#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1755 src/window.rs:2597
+msgid "YubiKey"
+msgstr "YubiKey"
+
+#: src/window.rs:3088
+msgid "YubiKey configuration failed"
+msgstr "YubiKey-configuratie mislukt"
+
+#: src/home.rs:251
+msgid "YubiKey connected"
+msgstr "YubiKey aangesloten"
+
+#: src/home.rs:379 src/home.rs:400
+msgid "YubiKey or account password"
+msgstr "YubiKey of accountwachtwoord"
+
+#: src/home.rs:622
+msgid "YubiKey without hardware serial"
+msgstr "YubiKey zonder hardware-serienummer"
+
+#: src/home.rs:624
+msgid "YubiKey · Serial {0}"
+msgstr "YubiKey · Serienummer {0}"
+
+#: src/window.rs:2993
+msgid ""
+"YubiKey: {0}\n"
+"Device: {1}\n"
+"Application: {2}\n"
+"Resident username: {3}\n"
+"Algorithm: {4}\n"
+"Fingerprint: {5}"
+msgstr ""
+"YubiKey: {0}\n"
+"Apparaat: {1}\n"
+"Toepassing: {2}\n"
+"Resident gebruikersnaam: {3}\n"
+"Algoritme: {4}\n"
+"Fingerprint: {5}"
+
+#: src/window.rs:1124
+msgid "YubiKeys"
+msgstr "YubiKeys"
+
+#: src/window.rs:1955
+msgid "agent"
+msgstr "agent"
+
+#: src/ssh.rs:386
+msgid ""
+"fido2-token reported success, but the resident credential is still present. "
+"Do not retry until you refresh and inspect the YubiKey."
+msgstr ""
+"fido2-token meldde succes, maar de resident gegevens zijn nog steeds "
+"aanwezig. Probeer het niet opnieuw totdat u de YubiKey vernieuwt en "
+"inspecteert."
+
+#: src/home.rs:398
+msgid "sudo authentication is bypassed"
+msgstr "sudo-authenticatie wordt omzeild"
+
+#: src/window.rs:1578
+msgid "sudo authentication policy"
+msgstr "sudo-authenticatiebeleid"
+
+#: src/window.rs:330 src/window.rs:490
+msgid "unknown"
+msgstr "onbekend"
+
+#: src/window.rs:2519
+msgid "user"
+msgstr "gebruiker"
+
+#: src/window.rs:1146
+msgid "{0} SSH keys loaded"
+msgstr "{0} SSH-sleutels geladen"
+
+#: src/home.rs:254
+msgid "{0} YubiKeys connected"
+msgstr "{0} YubiKeys aangesloten"
+
+#: src/backend.rs:18 src/git_signing.rs:200 src/ssh.rs:886
+msgid "{0} exited with {1}"
+msgstr "{0} is afgesloten met {1}"
+
+#: src/ssh.rs:540 src/ssh.rs:933
+msgid "{0} failed: {1}"
+msgstr "{0} mislukt: {1}"
+
+#: src/window.rs:2023
+msgid "{0} identities are currently available to SSH applications."
+msgstr "Er zijn momenteel {0} identiteiten beschikbaar voor SSH-toepassingen."
+
+#: src/window.rs:1056
+msgid "{0} is enabled for this YubiKey"
+msgstr "{0} is ingeschakeld voor deze YubiKey"
+
+#: src/window.rs:1061
+msgid "{0} is not configured for this YubiKey"
+msgstr "{0} is niet geconfigureerd voor deze YubiKey"
+
+#: src/window.rs:1911
+msgid "{0} new SSH identities were added to the agent."
+msgstr "Er zijn {0} nieuwe SSH-identiteiten aan de agent toegevoegd."
+
+#: src/window.rs:1909
+msgid "{0} new SSH identity was added to the agent."
+msgstr "Er is {0} nieuwe SSH-identiteit aan de agent toegevoegd."
+
+#: src/window.rs:2307
+msgid "{0} resident SSH keys are available from your connected YubiKeys."
+msgstr ""
+"Er zijn {0} residente SSH-sleutels beschikbaar vanaf je verbonden YubiKeys."
+
+#: src/window.rs:1817
+msgid "{0} resident SSH keys · {1}"
+msgstr "{0} residente SSH-sleutels · {1}"
+
+#: src/home.rs:362
+msgid "{0} resident credentials inspected"
+msgstr "{0} residentele referenties geïnspecteerd"
+
+#: src/window.rs:2328
+msgid "{0} to inspect"
+msgstr "{0} te inspecteren"
+
+#: src/window.rs:1487 src/window.rs:1665
+msgid "{0} · no hardware serial"
+msgstr "{0} · geen hardware-serienummer"
+
+#: src/window.rs:1489 src/window.rs:1667
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
+#: src/window.rs:999
+msgid "Checking Passkeys support…"
+msgstr "Ondersteuning voor passkeys controleren…"
+
+#: src/window.rs:653 src/window.rs:661 src/window.rs:666 src/window.rs:667
+#: src/window.rs:676
+msgid "Could not open Yubico Authenticator"
+msgstr "Kan Yubico Authenticator niet openen"
+
+#: src/window.rs:636
+msgid "Open Yubico Authenticator"
+msgstr "Yubico Authenticator openen"
+
+#: src/window.rs:113 src/window.rs:240
+msgid "Passkeys"
+msgstr "Passkeys"
+
+#: src/window.rs:872
+msgid ""
+"Choose the passkey option and follow the prompt to use the same YubiKey."
+msgstr ""
+"Kies de passkey-optie en volg de aanwijzing om dezelfde YubiKey te "
+"gebruiken."
+
+#: src/window.rs:866
+msgid "Confirm it is you"
+msgstr "Bevestig uw identiteit"
+
+#: src/window.rs:851
+msgid "How to use"
+msgstr "Zo werkt het"
+
+#: src/window.rs:867
+msgid ""
+"Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
+msgstr ""
+"Plaats uw YubiKey, voer de FIDO-pincode in wanneer daarom wordt gevraagd en "
+"raak daarna de sleutel aan."
+
+#: src/window.rs:1778
+msgid ""
+"Inspect a connected YubiKey to reveal its resident SSH keys and available "
+"actions."
+msgstr ""
+"Inspecteer een aangesloten YubiKey om de residente SSH-sleutels en "
+"beschikbare acties weer te geven."
+
+#: src/window.rs:690
+msgid ""
+"Install the official Yubico Authenticator first. When installation is "
+"complete, return here and refresh this page."
+msgstr ""
+"Installeer eerst de officiële Yubico Authenticator. Keer na de installatie "
+"hier terug en vernieuw deze pagina."
+
+#: src/window.rs:900
+msgid ""
+"Keep a recovery method or a backup security key for important accounts."
+msgstr ""
+"Bewaar voor belangrijke accounts een herstelmethode of een extra "
+"beveiligingssleutel."
+
+#: src/window.rs:918
+msgid "Manage passkeys"
+msgstr "Passkeys beheren"
+
+#: src/window.rs:860
+msgid ""
+"On a supported website or app, choose to create a passkey and select your "
+"security key."
+msgstr ""
+"Kies op een ondersteunde website of in een app voor het maken van een "
+"passkey en selecteer uw beveiligingssleutel."
+
+#: src/window.rs:843
+msgid ""
+"Passkeys are passwordless sign-in credentials stored on compatible security "
+"keys. Registration and sign-in begin in a supported website or app; follow "
+"its prompts to insert your YubiKey, enter the FIDO PIN, and touch the key."
+msgstr ""
+"Passkeys zijn aanmeldgegevens zonder wachtwoord die op compatibele "
+"beveiligingssleutels worden opgeslagen. Registratie en aanmelding beginnen "
+"op een ondersteunde website of in een app; volg de aanwijzingen om uw "
+"YubiKey te plaatsen, de FIDO-pincode in te voeren en de sleutel aan te "
+"raken."
+
+#: src/window.rs:839
+msgid "Protect passkeys with your YubiKey"
+msgstr "Bescherm passkeys met uw YubiKey"
+
+#: src/window.rs:859
+msgid "Register a passkey"
+msgstr "Een passkey registreren"
+
+#: src/window.rs:871
+msgid "Sign in next time"
+msgstr "De volgende keer aanmelden"
+
+#: src/window.rs:2011
+msgid ""
+"The SSH agent makes selected keys available to SSH applications during this "
+"session."
+msgstr ""
+"De SSH-agent stelt geselecteerde sleutels tijdens deze sessie beschikbaar "
+"aan SSH-toepassingen."
+
+#: src/window.rs:630
+msgid "Yubico Authenticator is installed"
+msgstr "Yubico Authenticator is geïnstalleerd"
+
+#: src/window.rs:687
+msgid "Yubico Authenticator is not installed"
+msgstr "Yubico Authenticator is niet geïnstalleerd"
+
+#: src/window.rs:920
+msgid ""
+"Yubico Authenticator lets you view and manage passkeys stored on your "
+"YubiKey. This security center does not read, create, or delete passkeys; it "
+"only opens the installed app."
+msgstr ""
+"Met Yubico Authenticator kunt u passkeys bekijken en beheren die op uw "
+"YubiKey zijn opgeslagen. Dit beveiligingscentrum leest, maakt of verwijdert "
+"geen passkeys; het opent alleen de geïnstalleerde app."
+
+#: src/ssh_config.rs:185 src/ssh_config.rs:233
+msgid "A file already exists at the managed SSH configuration path: {0}"
+msgstr ""
+"Een bestand bestaat al op het pad van de beheerde SSH-configuratie: {0}"
+
+#: src/window.rs:2068
+msgid ""
+"After the first YubiKey authentication, later SSH sessions can reuse the "
+"connection. The last session remains available in the background for 10 "
+"minutes."
+msgstr ""
+"Nadat u voor de eerste keer bent geverifieerd met de YubiKey, kunnen latere "
+"SSH-sessies de verbinding hergebruiken. De laatste sessie blijft tien "
+"minuten lang op de achtergrond beschikbaar."
+
+#: src/ssh_config.rs:530
+msgid "Could not create a temporary file in {0}: {1}"
+msgstr "Kon geen tijdelijk bestand maken in {0}: {1}"
+
+#: src/ssh_config.rs:414 src/ssh_config.rs:450 src/ssh_config.rs:463
+msgid "Could not inspect {0}: {1}"
+msgstr "Kon {0} niet inspecteren: {1}"
+
+#: src/ssh_config.rs:540
+msgid "Could not protect the temporary SSH configuration in {0}: {1}"
+msgstr "Kon de tijdelijke SSH-configuratie in {0} niet beveiligen: {1}"
+
+#: src/ssh_config.rs:477 src/ssh_config.rs:577
+msgid "Could not read {0}: {1}"
+msgstr "Kon {0} niet lezen: {1}"
+
+#: src/ssh_config.rs:692
+msgid "Could not remove {0}: {1}"
+msgstr "Kon {0} niet verwijderen: {1}"
+
+#: src/ssh_config.rs:570
+msgid "Could not replace {0}: {1}"
+msgstr "Kon {0} niet vervangen: {1}"
+
+#: src/ssh_config.rs:702
+msgid "Could not synchronize {0}: {1}"
+msgstr "Kon {0} niet synchroniseren: {1}"
+
+#: src/window.rs:2173 src/window.rs:2184
+msgid "Could not update SSH connection persistence"
+msgstr "Kon de persistentie van SSH-verbindingen niet bijwerken"
+
+#: src/ssh_config.rs:599
+msgid "Could not validate the SSH configuration: {0}"
+msgstr "Kon de SSH-configuratie niet valideren: {0}"
+
+#: src/ssh_config.rs:551
+msgid "Could not write the temporary SSH configuration in {0}: {1}"
+msgstr "Kon de tijdelijke SSH-configuratie in {0} niet schrijven: {1}"
+
+#: src/window.rs:2086 src/window.rs:2159
+msgid "Disabled · each new connection authenticates separately"
+msgstr "Uitgeschakeld · elke nieuwe verbinding authenticeert afzonderlijk"
+
+#: src/window.rs:2078 src/window.rs:2152
+msgid "Enabled · idle connections remain available for 10 minutes"
+msgstr "Ingeschakeld · inactieve verbindingen blijven 10 minuten beschikbaar"
+
+#: src/ssh_config.rs:100
+msgid "HOME does not point to a valid folder: {0}"
+msgstr "HOME wijst niet naar een geldige map: {0}"
+
+#: src/ssh_config.rs:97
+msgid "HOME is not set. The SSH configuration cannot be located."
+msgstr "HOME is niet ingesteld. De SSH-configuratie kan niet worden gevonden."
+
+#: src/window.rs:2105
+msgid "Main SSH configuration unavailable"
+msgstr "Hoofd-SSH-configuratie niet beschikbaar"
+
+#: src/window.rs:2106
+msgid "Managed SSH configuration unavailable"
+msgstr "Beheerde SSH-configuratie niet beschikbaar"
+
+#: src/window.rs:2222
+msgid "Managed configuration preview"
+msgstr "Voorbeeld van beheerde configuratie"
+
+#: src/window.rs:2202
+msgid "Manual review required"
+msgstr "Handmatige controle vereist"
+
+#: src/window.rs:2094 src/window.rs:2167
+msgid "Needs attention · review the SSH configuration before continuing"
+msgstr "Vereist aandacht · bekijk de SSH-configuratie voordat u doorgaat"
+
+#: src/window.rs:2103
+msgid "Needs attention · the SSH configuration could not be located"
+msgstr "Vereist aandacht · de SSH-configuratie kon niet worden gevonden"
+
+#: src/window.rs:2210
+msgid ""
+"Only new SSH connections are affected. Turning this off does not stop "
+"existing background connections. Earlier host-specific OpenSSH settings "
+"still take priority."
+msgstr ""
+"Alleen nieuwe SSH-verbindingen zijn hierdoor beïnvloed. Het uitschakelen "
+"hiervan stopt geen bestaande achtergrondverbindingen. Eerder gedefinieerde, "
+"host-specifieke OpenSSH-instellingen hebben nog steeds voorrang."
+
+#: src/ssh_config.rs:608
+msgid "OpenSSH rejected the generated configuration."
+msgstr "OpenSSH heeft de gegenereerde configuratie afgewezen."
+
+#: src/ssh_config.rs:611
+msgid "OpenSSH rejected the generated configuration: {0}"
+msgstr "OpenSSH heeft de gegenereerde configuratie afgewezen: {0}"
+
+#: src/window.rs:2111
+msgid "Reuse SSH connections in the background"
+msgstr "SSH-verbindingen op de achtergrond hergebruiken"
+
+#: src/window.rs:2067
+msgid "SSH connection persistence"
+msgstr "Persistentie van SSH-verbindingen"
+
+#: src/ssh_config.rs:334
+msgid ""
+"The SSH configuration changed during rollback. No further changes were made."
+msgstr ""
+"Het SSH-configuratiebestand is gewijzigd tijdens de rollback. Er zijn geen "
+"verdere wijzigingen aangebracht."
+
+#: src/ssh_config.rs:85 src/ssh_config.rs:560
+msgid ""
+"The SSH configuration changed while it was being updated. Refresh and try "
+"again."
+msgstr ""
+"Het SSH-configuratiebestand is gewijzigd tijdens het bijwerken. Vernieuw de "
+"pagina en probeer het opnieuw."
+
+#: src/ssh_config.rs:385
+msgid ""
+"The SSH configuration contains duplicate or incomplete application markers. "
+"Remove or repair the marked block manually."
+msgstr ""
+"Het SSH-configuratiebestand bevat dubbele of onvolledige applicatiemarkers. "
+"Verwijder of herstel het gemarkeerde blok handmatig."
+
+#: src/ssh_config.rs:144 src/ssh_config.rs:219 src/ssh_config.rs:284
+msgid ""
+"The SSH configuration is not valid UTF-8 and cannot be safely managed: {0}"
+msgstr ""
+"Het SSH-configuratiebestand is geen geldige UTF-8-tekenreeks en kan niet "
+"veilig worden beheerd: {0}"
+
+#: src/ssh_config.rs:507
+msgid "The SSH configuration is writable by another user: {0}"
+msgstr ""
+"Het SSH-configuratiebestand kan door een andere gebruiker worden bewerkt: "
+"{0}"
+
+#: src/ssh_config.rs:527
+msgid "The SSH configuration path is invalid."
+msgstr "Het SSH-configuratiepad is ongeldig."
+
+#: src/ssh_config.rs:471
+msgid "The SSH configuration path is not a safe, regular file: {0}"
+msgstr "Het SSH-configuratiepad is geen veilig, regulier bestand: {0}"
+
+#: src/ssh_config.rs:505
+msgid "The SSH directory is writable by another user: {0}"
+msgstr "De SSH-map is beschrijfbaar door een andere gebruiker: {0}"
+
+#: src/ssh_config.rs:422 src/ssh_config.rs:434
+msgid "The SSH path is not a safe, regular directory: {0}"
+msgstr "Het SSH-pad is geen veilige, reguliere map: {0}"
+
+#: src/ssh_config.rs:498
+msgid "The SSH path is not owned by the current user: {0}"
+msgstr "Het SSH-pad is niet eigendom van de huidige gebruiker: {0}"
+
+#: src/window.rs:2144
+msgid "The SSH persistence update stopped unexpectedly."
+msgstr "Het bijwerken van de SSH-persistentie is onverwacht gestopt."
+
+#: src/ssh_config.rs:392
+msgid ""
+"The application-managed block in the SSH configuration was changed. Restore "
+"or remove the marked block manually."
+msgstr ""
+"Het door de toepassing beheerde blok in de SSH-configuratie is gewijzigd. "
+"Herstel of verwijder het gemarkeerde blok handmatig."
+
+#: src/ssh_config.rs:579
+msgid ""
+"The generated SSH persistence configuration did not match the expected "
+"preset."
+msgstr ""
+"De gegenereerde SSH-persistentieconfiguratie kwam niet overeen met de "
+"verwachte voorinstelling."
+
+#: src/ssh_config.rs:278
+msgid ""
+"The managed SSH block exists but the main configuration is missing: {0}"
+msgstr ""
+"Het beheerde SSH-blok bestaat, maar de hoofdconfiguratie ontbreekt: {0}"
+
+#: src/ssh_config.rs:289
+msgid "The managed SSH block is no longer present. Refresh and try again."
+msgstr ""
+"Het beheerde SSH-blok is niet langer aanwezig. Vernieuw en probeer het "
+"opnieuw."
+
+#: src/ssh_config.rs:315 src/ssh_config.rs:683
+msgid "The managed SSH configuration changed while it was being removed: {0}"
+msgstr ""
+"Het beheerde SSH-configuratiebestand is gewijzigd tijdens het verwijderen: "
+"{0}"
+
+#: src/ssh_config.rs:170
+msgid "The managed SSH configuration is missing: {0}"
+msgstr "Het beheerde SSH-configuratiebestand ontbreekt: {0}"
+
+#: src/ssh_config.rs:166
+msgid ""
+"The managed SSH configuration was changed outside this application: {0}"
+msgstr "De beheerde SSH-configuratie is buiten deze toepassing gewijzigd: {0}"
+
+#: src/ssh_config.rs:158
+msgid ""
+"The managed SSH file is also referenced outside the application-managed "
+"block. Remove the extra Include before using this setting."
+msgstr ""
+"Er wordt ook buiten het door de toepassing beheerde blok naar het beheerde "
+"SSH-bestand verwezen. Verwijder de extra Include voordat u deze instelling "
+"gebruikt."
+
+#: src/ssh_config.rs:177
+msgid ""
+"The managed SSH file is referenced outside the application-managed block. "
+"Remove that Include before using this setting."
+msgstr ""
+"Er wordt buiten het door de toepassing beheerde blok naar het beheerde SSH-"
+"bestand verwezen. Verwijder die Include voordat u deze instelling gebruikt."
+
+#: src/window.rs:2209
+msgid "What this setting changes"
+msgstr "Wat deze instelling verandert"
+
+#: src/window.rs:2224
+msgid "{0} includes {1}"
+msgstr "{0} includes {1}"
+
+#: src/window.rs:2491
+msgid ""
+"Optional: create a new resident key only when you need another SSH identity."
+" Its private key never leaves the selected YubiKey."
+msgstr ""
+"Optioneel: maak een nieuwe resident key alleen aan als u een andere SSH-"
+"identiteit nodig heeft. De private key verlaat de geselecteerde YubiKey "
+"nooit."
+
+#~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
+#~ msgstr ""
+#~ "Yubico Authenticator moet geïnstalleerd zijn voordat u passkeys kunt "
+#~ "gebruiken."
+
+#~ msgid ""
+#~ "All inspected resident credentials from this key are already in the agent"
+#~ msgstr ""
+#~ "Alle geïnspecteerde bewonersreferenties van deze sleutel zijn al in de agent"
+
+#~ msgid "AnduinOS is safer with a YubiKey"
+#~ msgstr "AnduinOS is veiliger met een YubiKey"
+
+#~ msgid "Checking SSH keys… Touch the YubiKey if it flashes."
+#~ msgstr "SSH-sleutels controleren… Tik op de YubiKey als deze knippert."
+
+#~ msgid "Connect exactly one FIDO security key to choose an unambiguous source"
+#~ msgstr ""
+#~ "Verbind precies één FIDO-beveiligingssleutel om een eenduidige bron te "
+#~ "kiezen"
+
+#~ msgid "Enter the YubiKey FIDO PIN"
+#~ msgstr "Voer de YubiKey FIDO-PIN in"
+
+#~ msgid ""
+#~ "Inspect, load, export, test, remove from the agent, or permanently delete "
+#~ "resident SSH credentials."
+#~ msgstr ""
+#~ "Inspecteer, laad, exporteer, test, verwijder uit de agent of verwijder "
+#~ "definitief resident SSH-gegevens."
+
+#~ msgid "Inspecting resident SSH credentials… Touch the YubiKey if it flashes."
+#~ msgstr ""
+#~ "Inwoner SSH-inloggegevens inspecteren… Tik op de YubiKey als deze gaat "
+#~ "knipperen."
+
+#~ msgid "Load into agent"
+#~ msgstr "Laden in agent"
+
+#~ msgid "No resident SSH credentials"
+#~ msgstr "Geen inwonende SSH-gegevens"
+
+#~ msgid "No ssh:* discoverable credentials were found on this key."
+#~ msgstr "Er zijn geen ontdekbare ssh:*-referenties gevonden op deze sleutel."
+
+#~ msgid "Resident SSH credentials"
+#~ msgstr "Resident SSH-referenties"
+
+#~ msgid "Run ssh-add -K for this connected security key"
+#~ msgstr "Voer ssh-add -K uit voor deze verbonden beveiligingssleutel"
+
+#~ msgid "SSH agent connected"
+#~ msgstr "SSH-agent verbonden"
+
+#~ msgid ""
+#~ "The PIN is used only for this read-only inspection and is never stored."
+#~ msgstr ""
+#~ "Het PIN-nummer wordt alleen gebruikt voor deze inspectie met alleen-lezen-"
+#~ "toegang en wordt nooit opgeslagen."
+
+#~ msgid "Touch the YubiKey if it flashes."
+#~ msgstr "Tik op de YubiKey als deze knippert."
+
+#~ msgid "unknown socket"
+#~ msgstr "onbekende socket"
+
+#~ msgid "{0} identities · {1}"
+#~ msgstr "{0} identiteiten · {1}"
+
+#~ msgid "Git Signing"
+#~ msgstr "Git Signing"
+
+#~ msgid "SSH Keys"
+#~ msgstr "SSH-sleutels"
+
+#~ msgid "Account password is required for sudo"
+#~ msgstr "Voor sudo is een accountwachtwoord vereist"
+
+#~ msgid "An SSH signing key is selected; automatic commit signing is disabled"
+#~ msgstr "An SSH signing key is selected; automatic commit signing is disabled"
+
+#~ msgid "AnduinOS sign-in"
+#~ msgstr "AnduinOS aanmelden"
+
+#~ msgid "Commit signing is not configured"
+#~ msgstr "Commit signing is not configured"
+
+#~ msgid "Configured features"
+#~ msgstr "Geconfigureerde functies"
+
+#~ msgid "Current user: {0}"
+#~ msgstr "Huidige gebruiker: {0}"
+
+#~ msgid "Git commit signing"
+#~ msgstr "Git commit signing"
+
+#~ msgid "No YubiKey detected"
+#~ msgstr "Geen YubiKey gedetecteerd"
+
+#~ msgid "No hardware serial · {0}"
+#~ msgstr "Geen hardwareserial · {0}"
+
+#~ msgid "Not currently connected"
+#~ msgstr "Moment niet verbonden"
+
+#~ msgid "Password sign-in only"
+#~ msgstr "Alleen inloggen met wachtwoord"
+
+#~ msgid "Security keys"
+#~ msgstr "Beveiligingssleutels"
+
+#~ msgid "YubiKey Manager"
+#~ msgstr "YubiKey Manager"
+
+#~ msgid "YubiKey Manager is unavailable"
+#~ msgstr "YubiKey Manager is niet beschikbaar"
+
+#~ msgid "YubiKey configured, but sudo currently bypasses authentication"
+#~ msgstr "YubiKey geconfigureerd, maar sudo omzeilt momenteel authenticatie"
+
+#~ msgid "YubiKey touch or account password can authorize sudo"
+#~ msgstr "YubiKey-aanraking of accountwachtwoord kan sudo autoriseren"
+
+#~ msgid "YubiKey touch or password can unlock this user"
+#~ msgstr "YubiKey-aanraking of wachtwoord kan deze gebruiker ontgrendelen"
+
+#~ msgid "YubiKey-backed SSH signatures are enabled for every commit"
+#~ msgstr "YubiKey-backed SSH signatures are enabled for every commit"
+
+#~ msgid "sudo authentication"
+#~ msgstr "sudo-authenticatie"
+
+#~ msgid "sudo currently allows administrator access without authentication"
+#~ msgstr "sudo staat momenteel administrator-toegang toe zonder authenticatie"
+
+#~ msgid "{0} is configured, but another policy currently bypasses it"
+#~ msgstr "{0} is geconfigureerd, maar een ander beleid omzeilt dit momenteel"
+
+#~ msgid "Apply"
+#~ msgstr "Apply"
+
+#~ msgid "Applying Git SSH signing settings…"
+#~ msgstr "Applying Git SSH signing settings…"
+
+#~ msgid ""
+#~ "Both choices use one physical YubiKey. Choose whether one SSH credential "
+#~ "does both jobs or a separate credential signs Git history."
+#~ msgstr ""
+#~ "Both choices use one physical YubiKey. Choose whether one SSH credential "
+#~ "does both jobs or a separate credential signs Git history."
+
+#~ msgid "Choose how you use your keys"
+#~ msgstr "Choose how you use your keys"
+
+#~ msgid ""
+#~ "Choose the credential already used for SSH authentication. Git will reuse it"
+#~ " for signatures."
+#~ msgstr ""
+#~ "Choose the credential already used for SSH authentication. Git will reuse it"
+#~ " for signatures."
+
+#~ msgid ""
+#~ "Choose the credential reserved for signatures. Your SSH authentication "
+#~ "credential is left unchanged."
+#~ msgstr ""
+#~ "Choose the credential reserved for signatures. Your SSH authentication "
+#~ "credential is left unchanged."
+
+#~ msgid "Could not create the Git signing recovery record: {0}"
+#~ msgstr "Could not create the Git signing recovery record: {0}"
+
+#~ msgid "Could not create the application configuration folder: {0}"
+#~ msgstr "Could not create the application configuration folder: {0}"
+
+#~ msgid "Could not encode the Git signing recovery record: {0}"
+#~ msgstr "Could not encode the Git signing recovery record: {0}"
+
+#~ msgid "Could not protect the application configuration folder: {0}"
+#~ msgstr "Could not protect the application configuration folder: {0}"
+
+#~ msgid "Could not read the Git signing recovery record: {0}"
+#~ msgstr "Could not read the Git signing recovery record: {0}"
+
+#~ msgid "Could not save the Git signing recovery record: {0}"
+#~ msgstr "Could not save the Git signing recovery record: {0}"
+
+#~ msgid "Dedicated Git signing credential"
+#~ msgstr "Dedicated Git signing credential"
+
+#~ msgid "Disable and restore"
+#~ msgstr "Disable and restore"
+
+#~ msgid ""
+#~ "Git settings were restored, but the recovery record could not be removed: "
+#~ "{0}"
+#~ msgstr ""
+#~ "Git settings were restored, but the recovery record could not be removed: "
+#~ "{0}"
+
+#~ msgid "Git signing configured"
+#~ msgstr "Git signing configured"
+
+#~ msgid "Git signing is not configured"
+#~ msgstr "Git signing is not configured"
+
+#~ msgid ""
+#~ "Git signing settings changed outside this application. Review the current "
+#~ "Git configuration before replacing or restoring it."
+#~ msgstr ""
+#~ "Git signing settings changed outside this application. Review the current "
+#~ "Git configuration before replacing or restoring it."
+
+#~ msgid ""
+#~ "Git will use the selected YubiKey-backed SSH credential. Your SSH "
+#~ "authentication configuration was not changed."
+#~ msgstr ""
+#~ "Git will use the selected YubiKey-backed SSH credential. Your SSH "
+#~ "authentication configuration was not changed."
+
+#~ msgid "Global Git configuration"
+#~ msgstr "Global Git configuration"
+
+#~ msgid "Inspect a YubiKey first"
+#~ msgstr "Inspect a YubiKey first"
+
+#~ msgid "Load into the SSH agent or restore its local key handle"
+#~ msgstr "Load into the SSH agent or restore its local key handle"
+
+#~ msgid "Local key handle"
+#~ msgstr "Local key handle"
+
+#~ msgid "Managed by YubiKey Manager · previous values can be restored"
+#~ msgstr "Managed by YubiKey Manager · previous values can be restored"
+
+#~ msgid "No Git signing configuration managed by this application was found."
+#~ msgstr "No Git signing configuration managed by this application was found."
+
+#~ msgid "No changes have been made by YubiKey Manager"
+#~ msgstr "No changes have been made by YubiKey Manager"
+
+#~ msgid "One credential for SSH and Git"
+#~ msgstr "One credential for SSH and Git"
+
+#~ msgid "Open SSH Keys, inspect the desired YubiKey, then return here."
+#~ msgstr "Open SSH Keys, inspect the desired YubiKey, then return here."
+
+#~ msgid "Optional · lightweight tags are unaffected"
+#~ msgstr "Optional · lightweight tags are unaffected"
+
+#~ msgid "Recommended · Git asks the selected YubiKey to sign each new commit"
+#~ msgstr "Recommended · Git asks the selected YubiKey to sign each new commit"
+
+#~ msgid "Restoring previous Git signing settings…"
+#~ msgstr "Restoring previous Git signing settings…"
+
+#~ msgid "Review and apply"
+#~ msgstr "Review and apply"
+
+#~ msgid "SSH commit signing is configured"
+#~ msgstr "SSH commit signing is configured"
+
+#~ msgid ""
+#~ "Separated duties · keep SSH authentication and Git signing identities "
+#~ "distinct"
+#~ msgstr ""
+#~ "Separated duties · keep SSH authentication and Git signing identities "
+#~ "distinct"
+
+#~ msgid ""
+#~ "Settings apply to the current user's global Git configuration. Repository "
+#~ "settings may override them."
+#~ msgstr ""
+#~ "Settings apply to the current user's global Git configuration. Repository "
+#~ "settings may override them."
+
+#~ msgid "Sign annotated tags"
+#~ msgstr "Sign annotated tags"
+
+#~ msgid "Sign every commit"
+#~ msgstr "Sign every commit"
+
+#~ msgid "Signing behavior"
+#~ msgstr "Signing behavior"
+
+#~ msgid "Signing credential"
+#~ msgstr "Signing credential"
+
+#~ msgid "Simple · select the same credential you use to authenticate Git pushes"
+#~ msgstr ""
+#~ "Simple · select the same credential you use to authenticate Git pushes"
+
+#~ msgid "The Git signing recovery record is invalid: {0}"
+#~ msgstr "The Git signing recovery record is invalid: {0}"
+
+#~ msgid ""
+#~ "The first change saves your previous Git signing values. Disabling restores "
+#~ "them unless another program changed the managed settings."
+#~ msgstr ""
+#~ "The first change saves your previous Git signing values. Disabling restores "
+#~ "them unless another program changed the managed settings."
+
+#~ msgid "The user configuration folder is unavailable."
+#~ msgstr "The user configuration folder is unavailable."
+
+#~ msgid ""
+#~ "This credential needs a local key-handle file or must be loaded into the SSH"
+#~ " agent before Git can use it."
+#~ msgstr ""
+#~ "This credential needs a local key-handle file or must be loaded into the SSH"
+#~ " agent before Git can use it."
+
+#~ msgid ""
+#~ "Use a YubiKey-backed SSH credential to sign commits and tags. SSH "
+#~ "authentication and Git signing remain independently configurable."
+#~ msgstr ""
+#~ "Use a YubiKey-backed SSH credential to sign commits and tags. SSH "
+#~ "authentication and Git signing remain independently configurable."
+
+#~ msgid "Inspecting resident SSH credentials…"
+#~ msgstr "Inwonen SSH-gegevens inspecteren…"
+
+#~ msgid "Inspect, load, export, test, or remove resident SSH credentials."
+#~ msgstr ""
+#~ "Inwonen SSH-gegevens inspecteren, laden, exporteren, testen of verwijderen."

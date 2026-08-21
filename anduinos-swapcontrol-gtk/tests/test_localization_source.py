@@ -1,0 +1,40 @@
+import re
+import unittest
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+RUST_STRING = r'"(?:[^"\\]|\\.)*"'
+
+
+class LocalizationSourceTests(unittest.TestCase):
+    def test_formatted_messages_are_marked_with_i18n(self):
+        violations = []
+        pattern = re.compile(rf"\bi18n_fmt\s*\(\s*({RUST_STRING})", re.DOTALL)
+        for source in (ROOT / "src").rglob("*.rs"):
+            if source.name == "i18n.rs":
+                continue
+            for match in pattern.finditer(source.read_text(encoding="utf-8")):
+                line = source.read_text(encoding="utf-8").count("\n", 0, match.start()) + 1
+                violations.append(f"{source.relative_to(ROOT)}:{line}")
+        self.assertEqual([], violations)
+
+    def test_ui_text_is_not_a_raw_rust_literal(self):
+        pattern = re.compile(
+            rf"\.(?:label|title|subtitle|heading|body|description|"
+            rf"placeholder_text|tooltip_text)\s*\(\s*&?({RUST_STRING})",
+            re.DOTALL,
+        )
+        violations = []
+        for source in (ROOT / "src").rglob("*.rs"):
+            content = source.read_text(encoding="utf-8")
+            for match in pattern.finditer(content):
+                if not any(character.isalpha() for character in match.group(1)):
+                    continue
+                line = content.count("\n", 0, match.start()) + 1
+                violations.append(f"{source.relative_to(ROOT)}:{line}")
+        self.assertEqual([], violations)
+
+
+if __name__ == "__main__":
+    unittest.main()

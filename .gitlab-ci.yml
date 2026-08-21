@@ -3,6 +3,22 @@ stages:
   - publish
   - meta
 
+verify-ci-package-needs:
+  stage: lint
+  script:
+    - python3 lib/verify-ci-package-needs.py
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
+verify-release-versions:
+  stage: lint
+  script:
+    - python3 lib/verify-release-versions.py
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
 lint-all:
   stage: lint
   before_script:
@@ -24,6 +40,26 @@ lint-all:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH != "master"
 
+# GNOME puts X-GNOME-Settings-Panel entries in a hidden menu directory. ArcMenu
+# builds its All Apps view from that menu tree, so standalone applications using
+# either of these categories remain searchable but disappear from All Apps.
+desktop-entry-policy:
+  stage: lint
+  script:
+    - |
+      offenders="$(grep -RIlE \
+        --include='*.desktop' \
+        '^(X-GNOME-Settings-Panel=|Categories=.*X-GNOME-(Settings-Panel|SystemSettings)(;|$))' \
+        . || true)"
+      if [ -n "$offenders" ]; then
+        echo "Standalone applications must not use GNOME Control Center panel categories:" >&2
+        echo "$offenders" >&2
+        exit 1
+      fi
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
 .publish:
   stage: publish
   before_script:
@@ -31,20 +67,29 @@ lint-all:
     - export PATH="$PATH:$HOME/.dotnet/tools"
     - apkg --version
   script:
-    - cd $PACKAGE_DIR
-    - apkg publish
-    - APKG_FILE=$(ls bin/*.apkg 2>/dev/null | head -1)
-    - |-
+    - cd "$PACKAGE_DIR"
+    - |
       if [ "$CI_COMMIT_BRANCH" = "prod" ]; then
-        apkg push -f "$APKG_FILE" -s "https://apkg.aiursoft.com" -k "$APKG_PROD_API_KEY" --skip-duplicate
-      elif [ "$CI_COMMIT_BRANCH" = "master" ]; then
-        apkg push -f "$APKG_FILE" -s "https://apkg-dev.aiursoft.com" -k "$APKG_DEV_API_KEY" --skip-duplicate
+        APKG_SOURCE="https://apkg.aiursoft.com"
+        APKG_KEY="$APKG_PROD_API_KEY"
+      else
+        APKG_SOURCE="https://apkg-dev.aiursoft.com"
+        APKG_KEY="$APKG_DEV_API_KEY"
       fi
+      apkg deploy \
+        --source "$APKG_SOURCE" \
+        --api-key "$APKG_KEY" \
+        --skip-existing
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: never
     - if: $CI_COMMIT_BRANCH == "master"
     - if: $CI_COMMIT_BRANCH == "prod"
+
+apkg:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: apkg
 
 base-files:
   extends: .publish
@@ -128,6 +173,11 @@ anduinos-deskmon:
   extends: .publish
   variables:
     PACKAGE_DIR: anduinos-deskmon
+
+anduinos-theme-sync:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-theme-sync
 
 gnome-shell-extension-anduinos-loc:
   extends: .publish
@@ -303,6 +353,11 @@ anduinos-system-tweaks:
   variables:
     PACKAGE_DIR: anduinos-system-tweaks
 
+anduinos-kernel-parameters:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-kernel-parameters
+
 anduinos-system-tweaks-server:
   extends: .publish
   variables:
@@ -330,26 +385,50 @@ anduinos-swap-config:
   variables:
     PACKAGE_DIR: anduinos-swap-config
 
+anduinos-btrfs-snapshots-manager:
+  extends: .publish
+  needs:
+    - anduinos-secureboot-toolkit
+  variables:
+    PACKAGE_DIR: anduinos-btrfs-snapshots-manager
+
 anduinos-why-ai:
   extends: .publish
   timeout: 3h
   variables:
     PACKAGE_DIR: anduinos-why-ai
-  cache:
-    key: anduinos-why-ai-model
-    paths:
-      - anduinos-why-ai/deploy/cache/
-    policy: pull-push
+
+anduinos-yubikey-manager:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-yubikey-manager
 
 anduinos-why-placeholder:
   extends: .publish
   variables:
     PACKAGE_DIR: anduinos-why-placeholder
 
+anduinos-bash-guess-command:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-bash-guess-command
+
 anduinos-xbox-controller-driver:
   extends: .publish
   variables:
     PACKAGE_DIR: anduinos-xbox-controller-driver
+
+anduinos-driver-center:
+  extends: .publish
+  needs:
+    - anduinos-secureboot-toolkit
+  variables:
+    PACKAGE_DIR: anduinos-driver-center
+
+anduinos-secureboot-toolkit:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-secureboot-toolkit
 
 anduinos-gnome-shell-locale:
   extends: .publish
@@ -366,22 +445,21 @@ anduinos-live-settings:
   variables:
     PACKAGE_DIR: anduinos-live-settings
 
-anduinos-installer-beta:
+anduinos-multimedia-codecs:
   extends: .publish
   variables:
-    PACKAGE_DIR: anduinos-installer-beta
+    PACKAGE_DIR: anduinos-multimedia-codecs
 
-anduinos-installer-config:
+anduinos-installer-beta:
   extends: .publish
   needs:
     - anduinos-live-settings
-    - anduinos-bwrap-hack
-    - anduinos-rime
+    - anduinos-multimedia-codecs
   variables:
-    PACKAGE_DIR: anduinos-installer-config
+    PACKAGE_DIR: anduinos-installer-beta
 
 # ── Onion-layer metapackages ─────────────────────────────────────────────
-# anduinos-core-system: no internal deps (pure Ubuntu packages)
+# anduinos-core-system: depends on the container, GRUB fonts, and system tweaks
 # anduinos-desktop-core: depends on core-system
 # anduinos-appstore:       Flatpak + GNOME Software (optional for servers)
 
@@ -390,10 +468,16 @@ anduinos-container:
   variables:
     PACKAGE_DIR: anduinos-container
 
+anduinos-grub-style:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-grub-style
+
 anduinos-core-system:
   extends: .publish
   needs:
     - anduinos-container
+    - anduinos-grub-style
     - anduinos-system-tweaks
   variables:
     PACKAGE_DIR: anduinos-core-system
@@ -406,8 +490,8 @@ anduinos-desktop-core:
     - anduinos-session
     - firmware-sof-anduinos
     - alsa-ucm-conf-anduinos
-    - anduinos-rime
     - anduinos-why-placeholder
+    - anduinos-bash-guess-command
   variables:
     PACKAGE_DIR: anduinos-desktop-core
 
@@ -469,6 +553,8 @@ anduinos-oobe:
   extends: .publish
   needs:
     - anduinos-appearance
+    - anduinos-secureboot-toolkit
+    - anduinos-driver-center
   variables:
     PACKAGE_DIR: anduinos-oobe
 
@@ -476,12 +562,15 @@ anduinos-desktop-apps:
   extends: .publish
   stage: meta
   needs:
+    - anduinos-driver-center
     - anduinos-mimeapps
     - firefox-anduinos
     - anduinos-ufwall-gtk
     - anduinos-swapcontrol-gtk
+    - anduinos-yubikey-manager
     - anduinos-exe-runner
     - anduinos-oobe
+    - anduinos-btrfs-snapshots-manager
   variables:
     PACKAGE_DIR: anduinos-desktop-apps
 
@@ -496,12 +585,13 @@ anduinos-desktop:
     - anduinos-apt-config
     - anduinos-apt-config-dev
     - anduinos-deskmon
+    - anduinos-theme-sync
     - base-files
     - anduinos-theme
     - anduinos-templates
     - anduinos-software-properties-common
-    - anduinos-software-properties-gtk
     - anduinos-no-snapd
+    - anduinos-kernel-parameters
     - anduinos-swap-config
     - anduinos-desktop-apps
   variables:

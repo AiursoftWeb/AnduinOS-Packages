@@ -1,0 +1,1373 @@
+# English translations for anduinos-installer-beta package
+# English (United Kingdom) translations for anduinos-installer-beta package.
+# Copyright (C) 2026 THE anduinos-installer-beta'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-installer-beta package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-installer-beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-01 11:01+0000\n"
+"PO-Revision-Date: 2026-07-30 14:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/pages.py:2092
+msgid "Installing an input method requires an Internet connection."
+msgstr "Installing an input method requires an Internet connection."
+
+#: src/pages.py:2103
+msgid "No Internet connection. Input methods cannot be installed. You can install them later when connected."
+msgstr "No Internet connection. Input methods cannot be installed. You can install them later when connected."
+
+#: src/pages.py:4933
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+
+#: src/pages.py:4944
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
+msgstr ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
+
+#: src/pages.py:4275
+msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
+msgstr "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
+
+#: src/pages.py:4085
+msgid "; sudo does not require a password"
+msgstr "; sudo does not require a password"
+
+#: src/pages.py:4087
+msgid "; sudo requires the account password"
+msgstr "; sudo requires the account password"
+
+#: src/pages.py:129
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+
+#: src/pages.py:2899
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "ALL DATA on {disk} will be permanently erased."
+
+#: src/pages.py:4082
+msgid "Account security"
+msgstr "Account security"
+
+#: src/pages.py:2980
+msgid "Advanced Storage"
+msgstr "Advanced Storage"
+
+#: src/pages.py:2889
+msgid "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+msgstr "Advanced coexistence can affect EFI firmware state and may trigger BitLocker recovery. It never shrinks or repairs Windows volumes."
+
+#: src/pages.py:2838
+msgid "Advanced — keep existing systems"
+msgstr "Advanced — keep existing systems"
+
+#: src/pages.py:2985
+msgid "Advanced: Install Alongside"
+msgstr "Advanced: Install Alongside"
+
+#: src/pages.py:164
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "After changing partitions or unmounting a volume, rescan storage and select the target again."
+
+#: src/pages.py:4801
+msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
+msgstr "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
+
+#: src/pages.py:4432
+msgid ""
+"All partitions and data on {disk} will be destroyed.\n"
+"\n"
+msgstr ""
+"All partitions and data on {disk} will be destroyed.\n"
+"\n"
+
+#: src/pages.py:155
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+
+#: src/pages.py:924 src/pages.py:986
+msgid "Battery power is too low for a safe installation."
+msgstr "Battery power is too low for a safe installation."
+
+#: src/pages.py:895
+msgid "Charge to at least 80% before starting the installation."
+msgstr "Charge to at least 80% before starting the installation."
+
+#: src/pages.py:1041 src/pages.py:1016
+msgid "Continue Anyway"
+msgstr "Continue Anyway"
+
+#: src/pages.py:1000
+msgid "Current battery level: {percent}%"
+msgstr "Current battery level: {percent}%"
+
+#: src/pages.py:1006
+msgid "External power is connected."
+msgstr "External power is connected."
+
+#: src/pages.py:1008
+msgid "External power is not connected."
+msgstr "External power is not connected."
+
+#: src/pages.py:954
+msgid "I understand the risks and insist on installing with low battery."
+msgstr "I understand the risks and insist on installing with low battery."
+
+#: src/pages.py:894 src/pages.py:889 src/pages.py:967 src/pages.py:969
+msgid "Low battery"
+msgstr "Low battery"
+
+#: src/pages.py:948
+msgid "Recheck"
+msgstr "Recheck"
+
+#: src/main.py:110 src/pages.py:731 src/pages.py:815
+msgid "AnduinOS Installer"
+msgstr "AnduinOS Installer"
+
+#: src/main.py:108
+msgid "AnduinOS Installer (Development)"
+msgstr "AnduinOS Installer (Development)"
+
+#: src/pages.py:4425
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+
+#: src/pages.py:133
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+
+#: data/languages.json:keyboard_layouts
+msgid "Arabic"
+msgstr "Arabic"
+
+#: src/pages.py:268 src/pages.py:4461 src/pages.py:817
+msgid "Back"
+msgstr "Back"
+
+#: src/pages.py:3014
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+
+#: src/pages.py:2470
+msgid "BitLocker detected"
+msgstr "BitLocker detected"
+
+#: src/pages.py:146
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+
+#: src/pages.py:4186
+msgid "Boot policy"
+msgstr "Boot policy"
+
+#: src/pages.py:3055
+msgid "Btrfs (recommended)"
+msgstr "Btrfs (recommended)"
+
+#: src/pages.py:2817
+msgid "Btrfs — recommended"
+msgstr "Btrfs — recommended"
+
+#: src/pages.py:4361
+msgid "Cannot create installation plan"
+msgstr "Cannot create installation plan"
+
+#: src/pages.py:2727
+msgid "Choose Installation Method"
+msgstr "Choose Installation Method"
+
+#: src/pages.py:2498
+msgid "Choose one target disk. Storage settings come next."
+msgstr "Choose one target disk. Storage settings come next."
+
+#: src/pages.py:2199
+msgid "Choose optional software to install"
+msgstr "Choose optional software to install"
+
+#: src/pages.py:813
+msgid "Choose your language to begin installation"
+msgstr "Choose your language to begin installation"
+
+#: src/pages.py:3819
+msgid "Choose your location to set the system clock"
+msgstr "Choose your location to set the system clock"
+
+#: src/pages.py:4838
+msgid "Complete"
+msgstr "Complete"
+
+#: src/pages.py:3506 src/pages.py:3513 src/pages.py:4101 src/pages.py:3601
+#: src/pages.py:4440
+msgid "Computer Name"
+msgstr "Computer Name"
+
+#: src/pages.py:3594
+msgid "Computer name contains invalid characters."
+msgstr "Computer name contains invalid characters."
+
+#: src/pages.py:4589
+msgid "Configure account, region, timezone, and machine identity"
+msgstr "Configure account, region, timezone, and machine identity"
+
+#: src/pages.py:4578
+msgid "Configure storage and swap"
+msgstr "Configure storage and swap"
+
+#: src/pages.py:3480 src/pages.py:3488
+msgid "Confirm Password"
+msgstr "Confirm Password"
+
+#: src/pages.py:1939
+msgid "Confirm your keyboard layout"
+msgstr "Confirm your keyboard layout"
+
+#: src/main.py:153 src/pages.py:1911
+msgid "Continue Installation"
+msgstr "Continue Installation"
+
+#: src/pages.py:4574
+msgid "Copy AnduinOS system"
+msgstr "Copy AnduinOS system"
+
+#: src/pages.py:4675
+msgid "Copy Log"
+msgstr "Copy Log"
+
+#: src/pages.py:3146
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Create a new 1 GiB AnduinOS EFI System Partition"
+
+#: src/pages.py:4163
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+
+#: src/pages.py:3447
+msgid "Create your user account"
+msgstr "Create your user account"
+
+#: src/pages.py:2412
+msgid "Current disk layout"
+msgstr "Current disk layout"
+
+#: src/pages.py:3979
+msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
+msgstr "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
+
+#: data/languages.json:keyboard_layouts
+msgid "Danish"
+msgstr "Danish"
+
+#: src/pages.py:4569
+msgid "Detect Internet connectivity"
+msgstr "Detect Internet connectivity"
+
+#: src/pages.py:4566
+msgid "Detect firmware and Secure Boot"
+msgstr "Detect firmware and Secure Boot"
+
+#: src/pages.py:4419
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
+"\n"
+msgstr ""
+"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
+"\n"
+
+#: src/pages.py:4923
+msgid "Development simulation completed"
+msgstr "Development simulation completed"
+
+#: src/pages.py:4832
+msgid "Discover AnduinOS"
+msgstr "Discover AnduinOS"
+
+#: src/pages.py:1216 src/pages.py:2218
+msgid "Download and install system updates during installation"
+msgstr "Download and install system updates during installation"
+
+#: data/languages.json:keyboard_layouts
+msgid "Dutch"
+msgstr "Dutch"
+
+#: src/pages.py:3073
+msgid "EFI System Partition"
+msgstr "EFI System Partition"
+
+#: src/pages.py:4184
+msgid "EFI policy"
+msgstr "EFI policy"
+
+#: src/pages.py:2455
+msgid "Empty disk — no partitions"
+msgstr "Empty disk — no partitions"
+
+#: src/pages.py:2821
+msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
+msgstr "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
+
+#: data/languages.json:keyboard_layouts
+msgid "English (UK)"
+msgstr "English (UK)"
+
+#: data/languages.json:keyboard_layouts
+msgid "English (US)"
+msgstr "English (US)"
+
+#: src/pages.py:4601
+msgid "Ensure Disk Snapshots Manager is available"
+msgstr "Ensure Disk Snapshots Manager is available"
+
+#: src/pages.py:4412
+msgid "Erase Disk and Install"
+msgstr "Erase Disk and Install"
+
+#: src/pages.py:2813 src/pages.py:4226
+msgid "Erase every partition and all data on the selected disk."
+msgstr "Erase every partition and all data on the selected disk."
+
+#: src/pages.py:4411
+msgid "Erase the entire selected disk?"
+msgstr "Erase the entire selected disk?"
+
+#: src/pages.py:137
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+
+#: src/pages.py:2945
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+
+#: src/pages.py:4446
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+
+#: src/pages.py:3052 src/pages.py:4049
+msgid "Filesystem"
+msgstr "Filesystem"
+
+#: src/pages.py:4613
+msgid "Finalize target environment"
+msgstr "Finalize target environment"
+
+#: data/languages.json:keyboard_layouts
+msgid "Finnish"
+msgstr "Finnish"
+
+#: src/pages.py:4182
+msgid "Formats"
+msgstr "Formats"
+
+#: data/languages.json:keyboard_layouts
+msgid "French"
+msgstr "French"
+
+#: src/pages.py:3462 src/pages.py:3464
+msgid "Full Name"
+msgstr "Full Name"
+
+#: data/languages.json:keyboard_layouts
+msgid "German"
+msgstr "German"
+
+#: data/languages.json:keyboard_layouts
+msgid "Greek"
+msgstr "Greek"
+
+#: src/pages.py:111
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+
+#: src/pages.py:4131
+msgid "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Guided storage selection is missing. Rescan and select the target again."
+
+#: data/languages.json:keyboard_layouts
+msgid "Hindi (India)"
+msgstr "Hindi (India)"
+
+#: src/pages.py:2741
+msgid "How should AnduinOS use this disk?"
+msgstr "How should AnduinOS use this disk?"
+
+#: data/languages.json:keyboard_layouts
+msgid "Indonesian"
+msgstr "Indonesian"
+
+#: src/pages.py:4498
+msgid "Install"
+msgstr "Install"
+
+#: src/pages.py:4559 src/pages.py:1221 src/pages.py:4125
+msgid "Install input method"
+msgstr "Install input method"
+
+#: src/pages.py:625
+msgid "Install {language} input method: {name}"
+msgstr "Install {language} input method: {name}"
+
+#: src/pages.py:4409 src/pages.py:4496
+msgid "Install Alongside"
+msgstr "Install Alongside"
+
+#: src/pages.py:4169
+msgid "Install alongside"
+msgstr "Install alongside"
+
+#: src/pages.py:4608
+msgid "Install bootloader"
+msgstr "Install bootloader"
+
+#: src/pages.py:4611
+msgid "Check systems on other disks"
+msgstr "Check systems on other disks"
+
+#: src/pages.py:1217 src/pages.py:4603
+msgid "Install hardware drivers"
+msgstr "Install hardware drivers"
+
+#: src/pages.py:4408
+msgid "Install in the selected free space?"
+msgstr "Install in the selected free space?"
+
+#: src/pages.py:4596
+msgid "Ensure required language packs are installed"
+msgstr "Ensure required language packs are installed"
+
+#: src/pages.py:4599
+msgid "Install system updates"
+msgstr "Install system updates"
+
+#: src/pages.py:2229
+msgid "Install third-party drivers for this device"
+msgstr "Install third-party drivers for this device"
+
+#: src/pages.py:5093 src/pages.py:5095 src/pages.py:4940 src/pages.py:4950
+msgid "Installation Complete"
+msgstr "Installation Complete"
+
+#: src/pages.py:4970
+msgid "Installation Failed"
+msgstr "Installation Failed"
+
+#: src/pages.py:4639
+msgid "Installation Steps"
+msgstr "Installation Steps"
+
+#: src/pages.py:160
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+
+#: src/pages.py:4919 src/pages.py:4985
+msgid "Installation complete"
+msgstr "Installation complete"
+
+#: src/pages.py:4968
+msgid "Installation failed"
+msgstr "Installation failed"
+
+#: src/main.py:145
+msgid "Installation in progress"
+msgstr "Installation in progress"
+
+#: src/pages.py:4547 src/pages.py:4541
+msgid "Installing AnduinOS"
+msgstr "Installing AnduinOS"
+
+#: data/languages.json:keyboard_layouts
+msgid "Italian"
+msgstr "Italian"
+
+#: data/languages.json:keyboard_layouts
+msgid "Japanese (JIS keyboard)"
+msgstr "Japanese (JIS keyboard)"
+
+#: src/pages.py:4040
+msgid "Keyboard"
+msgstr "Keyboard"
+
+#: src/pages.py:1938 src/pages.py:1932 src/pages.py:2075
+msgid "Keyboard Layout"
+msgstr "Keyboard Layout"
+
+#: src/pages.py:4582
+msgid "Configure physical keyboard layout"
+msgstr "Configure physical keyboard layout"
+
+#: data/languages.json:keyboard_layouts
+msgid "Korean"
+msgstr "Korean"
+
+#: src/pages.py:4039
+msgid "Language"
+msgstr "Language"
+
+#: src/pages.py:2472
+msgid "Live USB — excluded"
+msgstr "Live USB — excluded"
+
+#: src/pages.py:4573
+msgid "Mount target filesystems"
+msgstr "Mount target filesystems"
+
+#: src/pages.py:851
+msgid "Navigation error"
+msgstr "Navigation error"
+
+#: src/pages.py:4180 src/pages.py:4229
+msgid "New partitions"
+msgstr "New partitions"
+
+#: src/pages.py:261 src/pages.py:818 src/pages.py:1016
+msgid "Next"
+msgstr "Next"
+
+#: src/pages.py:4756
+msgid "Next slide"
+msgstr "Next slide"
+
+#: src/pages.py:2389
+msgid "No partition table"
+msgstr "No partition table"
+
+#: src/pages.py:2631
+msgid "No suitable disks found."
+msgstr "No suitable disks found."
+
+#: src/pages.py:170
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+
+#: src/pages.py:175
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+
+#: data/languages.json:keyboard_layouts
+msgid "Norwegian"
+msgstr "Norwegian"
+
+#: src/pages.py:1124 src/pages.py:1375 src/pages.py:4370 src/pages.py:854
+msgid "OK"
+msgstr "OK"
+
+#: src/pages.py:4835
+msgid "Output"
+msgstr "Output"
+
+#: src/pages.py:4973 src/pages.py:5028
+msgid "Output • Error"
+msgstr "Output • Error"
+
+#: src/pages.py:5023
+msgid "Output • {count} warning(s)"
+msgstr "Output • {count} warning(s)"
+
+#: src/pages.py:2453
+msgid "Partition details unavailable"
+msgstr "Partition details unavailable"
+
+#: src/pages.py:3476 src/pages.py:3487 src/pages.py:1466 src/pages.py:1525
+msgid "Password"
+msgstr "Password"
+
+#: src/pages.py:3584
+msgid "Password must be at least 6 characters."
+msgstr "Password must be at least 6 characters."
+
+#: src/pages.py:4048
+msgid "Platform"
+msgstr "Platform"
+
+#: src/pages.py:4548
+msgid "Please do not turn off your computer"
+msgstr "Please do not turn off your computer"
+
+#: src/pages.py:3965
+msgid "Please review your choices before proceeding"
+msgstr "Please review your choices before proceeding"
+
+#: data/languages.json:keyboard_layouts
+msgid "Polish"
+msgstr "Polish"
+
+#: data/languages.json:keyboard_layouts
+msgid "Portuguese"
+msgstr "Portuguese"
+
+#: data/languages.json:keyboard_layouts
+msgid "Portuguese (Brazil)"
+msgstr "Portuguese (Brazil)"
+
+#: src/pages.py:4594
+msgid "Prepare Secure Boot"
+msgstr "Prepare Secure Boot"
+
+#: src/pages.py:4572
+msgid "Prepare installation disk"
+msgstr "Prepare installation disk"
+
+#: src/pages.py:4579
+msgid "Prepare target environment"
+msgstr "Prepare target environment"
+
+#: src/pages.py:4871
+msgid "Preparing installation…"
+msgstr "Preparing installation…"
+
+#: src/pages.py:4175
+msgid "Preserved partitions"
+msgstr "Preserved partitions"
+
+#: src/pages.py:4750
+msgid "Previous slide"
+msgstr "Previous slide"
+
+#: src/pages.py:3964 src/pages.py:3958
+msgid "Ready to Install"
+msgstr "Ready to Install"
+
+#: src/pages.py:4811
+msgid "Reboot Now"
+msgstr "Reboot Now"
+
+#: src/pages.py:4598
+msgid "Refresh package indexes"
+msgstr "Refresh package indexes"
+
+#: src/pages.py:4580
+msgid "Remove live-session components"
+msgstr "Remove live-session components"
+
+#: src/pages.py:4951 src/pages.py:4942
+msgid "Remove the installation media and restart your computer"
+msgstr "Remove the installation media and restart your computer"
+
+#: src/pages.py:1177 src/pages.py:1205 src/pages.py:2220 src/pages.py:675
+#: src/pages.py:1362 src/pages.py:2233
+msgid "Requires an Internet connection. The base installation remains available when offline."
+msgstr "Requires an Internet connection. The base installation remains available when offline."
+
+#: src/pages.py:2550
+msgid "Rescan Storage"
+msgstr "Rescan Storage"
+
+#: src/pages.py:3101
+msgid "Rescan and Reselect Disk"
+msgstr "Rescan and Reselect Disk"
+
+#: src/pages.py:4809
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "Restart and Enroll Secure Boot Key"
+
+#: src/pages.py:4960
+msgid "Restart is disabled in development protection mode"
+msgstr "Restart is disabled in development protection mode"
+
+#: src/pages.py:3150
+msgid "Reuse {path} ({size})"
+msgstr "Reuse {path} ({size})"
+
+#: src/pages.py:4155
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+
+#: data/languages.json:keyboard_layouts
+msgid "Romanian"
+msgstr "Romanian"
+
+#: data/languages.json:keyboard_layouts
+msgid "Russian"
+msgstr "Russian"
+
+#: src/pages.py:4679
+msgid "Save Log"
+msgstr "Save Log"
+
+#: src/pages.py:4609
+msgid "Schedule MOK enrollment"
+msgstr "Schedule MOK enrollment"
+
+#: src/pages.py:3831
+msgid "Search timezones…"
+msgstr "Search timezones…"
+
+#: src/pages.py:4069
+msgid "Secure Boot enrollment"
+msgstr "Secure Boot enrollment"
+
+#: src/pages.py:2497 src/pages.py:2491
+msgid "Select Installation Disk"
+msgstr "Select Installation Disk"
+
+#: src/pages.py:3818 src/pages.py:3812
+msgid "Select Timezone"
+msgstr "Select Timezone"
+
+#: src/pages.py:4592
+msgid "Select fastest package mirror"
+msgstr "Select fastest package mirror"
+
+#: src/pages.py:3884
+msgid "Selected timezone"
+msgstr "Selected timezone"
+
+#: src/pages.py:4170
+msgid "Selected unallocated space"
+msgstr "Selected unallocated space"
+
+#: src/pages.py:2239
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr "Some drivers are proprietary or otherwise non-free software."
+
+#: data/languages.json:keyboard_layouts
+msgid "Spanish"
+msgstr "Spanish"
+
+#: src/pages.py:4046
+msgid "Stable disk identity"
+msgstr "Stable disk identity"
+
+#: src/pages.py:4437
+msgid ""
+"Stable identity: {stable_id}\n"
+"\n"
+msgstr ""
+"Stable identity: {stable_id}\n"
+"\n"
+
+#: src/pages.py:2380
+msgid "Storage Device"
+msgstr "Storage Device"
+
+#: src/pages.py:4168 src/pages.py:4224
+msgid "Storage mode"
+msgstr "Storage mode"
+
+#: src/pages.py:4050
+msgid "Subvolumes"
+msgstr "Subvolumes"
+
+#: src/pages.py:4268
+msgid "Swap"
+msgstr "Swap"
+
+#: data/languages.json:keyboard_layouts
+msgid "Swedish"
+msgstr "Swedish"
+
+#: src/pages.py:4051
+msgid "System updates"
+msgstr "System updates"
+
+#: src/pages.py:4042
+msgid "Target Disk"
+msgstr "Target Disk"
+
+#: src/pages.py:2993 src/pages.py:3260
+msgid "Target: {disk} ({size} — {model})"
+msgstr "Target: {disk} ({size} — {model})"
+
+#: src/pages.py:1964 src/pages.py:2076
+msgid "Test your keyboard here…"
+msgstr "Test your keyboard here…"
+
+#: data/languages.json:keyboard_layouts
+msgid "Thai"
+msgstr "Thai"
+
+#: src/pages.py:120
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+
+#: src/pages.py:115
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+
+#: src/pages.py:141
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+
+#: src/pages.py:4926
+msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
+msgstr "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
+
+#: src/main.py:147
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "The installer cannot be closed while it is modifying the target disk."
+
+#: src/pages.py:150
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+
+#: src/pages.py:4443
+msgid "The privileged executor is disabled."
+msgstr "The privileged executor is disabled."
+
+#: src/pages.py:3228
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+
+#: src/pages.py:3241
+msgid "The selected disk size changed. Return and select it again."
+msgstr "The selected disk size changed. Return and select it again."
+
+#: src/pages.py:3251
+msgid "The selected disk topology changed. Review the disk and installation method again."
+msgstr "The selected disk topology changed. Review the disk and installation method again."
+
+#: src/pages.py:3580
+msgid "The two passwords do not match."
+msgstr "The two passwords do not match."
+
+#: src/pages.py:4057
+msgid "Third-party drivers"
+msgstr "Third-party drivers"
+
+#: src/pages.py:3021
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+
+#: src/pages.py:125
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+
+#: src/pages.py:2935
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+
+#: src/pages.py:4454
+msgid "This installer does not shrink or preserve other systems."
+msgstr "This installer does not shrink or preserve other systems."
+
+#: src/pages.py:4103
+msgid "Timezone"
+msgstr "Timezone"
+
+#: src/pages.py:2474
+msgid "Too small"
+msgstr "Too small"
+
+#: data/languages.json:keyboard_layouts
+msgid "Turkish"
+msgstr "Turkish"
+
+#: data/languages.json:keyboard_layouts
+msgid "Ukrainian"
+msgstr "Ukrainian"
+
+#: src/pages.py:3065
+msgid "Unallocated space"
+msgstr "Unallocated space"
+
+#: src/pages.py:2445
+msgid "Unallocated · {size}"
+msgstr "Unallocated · {size}"
+
+#: src/pages.py:4014 src/pages.py:1710
+msgid "Unavailable: {error}"
+msgstr "Unavailable: {error}"
+
+#: src/pages.py:2432
+msgid "Unknown filesystem"
+msgstr "Unknown filesystem"
+
+#: src/pages.py:4614
+msgid "Unmount installed system"
+msgstr "Unmount installed system"
+
+#: src/pages.py:2198 src/pages.py:1196 src/pages.py:2192
+msgid "Updates and Drivers"
+msgstr "Updates and Drivers"
+
+#: src/pages.py:2840
+msgid "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+msgstr "Use already-unallocated space and preserve existing partitions. This is the only Windows coexistence path."
+
+#: src/pages.py:2986
+msgid "Use only existing unallocated space on the selected disk."
+msgstr "Use only existing unallocated space on the selected disk."
+
+#: src/pages.py:4079
+msgid "User"
+msgstr "User"
+
+#: src/pages.py:3446 src/pages.py:3440
+msgid "User Account"
+msgstr "User Account"
+
+#: src/pages.py:3468 src/pages.py:3472
+msgid "Username"
+msgstr "Username"
+
+#: src/pages.py:3568
+msgid "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
+msgstr "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
+
+#: src/pages.py:2832
+msgid "Uses a traditional single root filesystem."
+msgstr "Uses a traditional single root filesystem."
+
+#: src/pages.py:4406
+msgid "Validate Plan (No Installation)"
+msgstr "Validate Plan (No Installation)"
+
+#: src/pages.py:4405
+msgid "Validate this installation plan?"
+msgstr "Validate this installation plan?"
+
+#: src/pages.py:4606
+msgid "Verify kernel module signatures"
+msgstr "Verify kernel module signatures"
+
+#: src/pages.py:4571
+msgid "Verify target disk isolation"
+msgstr "Verify target disk isolation"
+
+#: data/languages.json:keyboard_layouts
+msgid "Vietnamese"
+msgstr "Vietnamese"
+
+#: src/pages.py:811
+msgid "Welcome to AnduinOS"
+msgstr "Welcome to AnduinOS"
+
+#: src/pages.py:2468
+msgid "Windows detected"
+msgstr "Windows detected"
+
+#: src/pages.py:4188
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+
+#: src/pages.py:4072
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr "create a machine-local MOK; enroll after reboot with password 123456"
+
+#: src/pages.py:4059
+msgid "detect and install (may include non-free software)"
+msgstr "detect and install (may include non-free software)"
+
+#: src/pages.py:4121 src/pages.py:4055 src/pages.py:4061 src/pages.py:4067
+msgid "do not install"
+msgstr "do not install"
+
+#: src/pages.py:4053 src/pages.py:4065
+msgid "download and install"
+msgstr "download and install"
+
+#: src/pages.py:3055
+msgid "ext4 (classic)"
+msgstr "ext4 (classic)"
+
+#: src/pages.py:2829
+msgid "ext4 — classic"
+msgstr "ext4 — classic"
+
+#: src/pages.py:4077
+msgid "not required"
+msgstr "not required"
+
+#: src/pages.py:4083
+msgid "password required for login"
+msgstr "password required for login"
+
+#: src/pages.py:4024
+msgid "single ext4 root filesystem"
+msgstr "single ext4 root filesystem"
+
+#: src/pages.py:4005
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+
+#: src/pages.py:4176
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+#: src/pages.py:4139
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+#: src/pages.py:4147
+msgid "{path} as {filesystem}"
+msgstr "{path} as {filesystem}"
+
+#: src/pages.py:4171
+msgid "{size} at {offset}"
+msgstr "{size} at {offset}"
+
+#: src/pages.py:3288
+msgid "{size} unallocated at {offset}"
+msgstr "{size} unallocated at {offset}"
+
+#: src/pages.py:5031
+msgid "{step} failed"
+msgstr "{step} failed"
+
+#: src/pages.py:4303
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+
+#: src/pages.py:4311
+msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
+msgstr "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
+
+#: src/pages.py:1176 src/pages.py:667 src/pages.py:1171
+msgid "Connect to the Internet"
+msgstr "Connect to the Internet"
+
+#: src/pages.py:1343
+msgid "Internet connection is ready."
+msgstr "Internet connection is ready."
+
+#: src/pages.py:1250
+msgid "Available Wi-Fi Networks"
+msgstr "Available Wi-Fi Networks"
+
+#: src/pages.py:4576
+msgid "Preserve connected Wi-Fi network"
+msgstr "Preserve connected Wi-Fi network"
+
+#: src/pages.py:2540 src/pages.py:3092
+msgid "Loading storage devices…"
+msgstr "Loading storage devices…"
+
+#: src/pages.py:4335
+msgid "Rechecking target disk…"
+msgstr "Rechecking target disk…"
+
+#: src/pages.py:2609 src/pages.py:3213 src/pages.py:4364
+msgid "Storage devices could not be loaded: {error}"
+msgstr "Storage devices could not be loaded: {error}"
+
+#: src/pages.py:1218 src/pages.py:4586 src/pages.py:2252
+msgid "Install extended multimedia format support"
+msgstr "Install extended multimedia format support"
+
+#: src/pages.py:4063
+msgid "Extended multimedia formats"
+msgstr "Extended multimedia formats"
+
+#: src/pages.py:2256
+msgid "Adds wider GStreamer compatibility and support for additional legacy and specialist media formats. Some components may be subject to patent or redistribution terms."
+msgstr "Adds wider GStreamer compatibility and support for additional legacy and specialist media formats. Some components may be subject to patent or redistribution terms."
+
+#: src/pages.py:1473
+msgid "A saved profile exists. Entering a password updates it securely."
+msgstr "A saved profile exists. Entering a password updates it securely."
+
+#: src/pages.py:1524
+msgid "Anonymous identity (optional)"
+msgstr "Anonymous identity (optional)"
+
+#: src/pages.py:1530
+msgid "CA certificate path (optional)"
+msgstr "CA certificate path (optional)"
+
+#: src/pages.py:1239 src/pages.py:1409 src/pages.py:1482 src/pages.py:1600
+#: src/pages.py:1816
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/pages.py:1786
+msgid "Cancelling Wi-Fi operation…"
+msgstr "Cancelling Wi-Fi operation…"
+
+#: src/pages.py:1532
+msgid "Client certificate path"
+msgstr "Client certificate path"
+
+#: src/pages.py:1483 src/pages.py:1601
+msgid "Connect"
+msgstr "Connect"
+
+#: src/pages.py:1817
+msgid "Continue"
+msgstr "Continue"
+
+#: src/pages.py:1259 src/pages.py:1809
+msgid "Connect to a hidden network"
+msgstr "Connect to a hidden network"
+
+#: src/pages.py:1478 src/pages.py:1593
+#, python-brace-format
+msgid "Connect to {network}"
+msgstr "Connect to {network}"
+
+#: src/pages.py:1654
+msgid "Connected"
+msgstr "Connected"
+
+#: src/pages.py:1453
+#, python-brace-format
+msgid "Connecting to {network}…"
+msgstr "Connecting to {network}…"
+
+#: src/pages.py:1755
+msgid "Could not change the Wi-Fi connection"
+msgstr "Could not change the Wi-Fi connection"
+
+#: src/pages.py:1410
+msgid "Disconnect"
+msgstr "Disconnect"
+
+#: src/pages.py:1401
+#, python-brace-format
+msgid "Disconnect from {network}?"
+msgstr "Disconnect from {network}?"
+
+#: src/pages.py:1420
+#, python-brace-format
+msgid "Disconnecting from {network}…"
+msgstr "Disconnecting from {network}…"
+
+#: src/pages.py:1531
+msgid "Domain suffix match (optional)"
+msgstr "Domain suffix match (optional)"
+
+#: src/pages.py:1515
+msgid "EAP method"
+msgstr "EAP method"
+
+#: src/pages.py:1387 src/pages.py:1796
+msgid "Enhanced Open (OWE)"
+msgstr "Enhanced Open (OWE)"
+
+#: src/pages.py:1595
+msgid "Enter the credentials supplied by your organization. Certificate validation is strongly recommended."
+msgstr "Enter the credentials supplied by your organization. Certificate validation is strongly recommended."
+
+#: src/pages.py:1811
+msgid "Enter the exact network name and choose its security type."
+msgstr "Enter the exact network name and choose its security type."
+
+#: src/pages.py:1390 src/pages.py:1800
+msgid "Enterprise Wi-Fi"
+msgstr "Enterprise Wi-Fi"
+
+#: src/pages.py:1523
+msgid "Identity"
+msgstr "Identity"
+
+#: src/pages.py:1527
+msgid "Inner authentication"
+msgstr "Inner authentication"
+
+#: src/pages.py:1790
+msgid "Network name (SSID)"
+msgstr "Network name (SSID)"
+
+#: src/pages.py:1645
+msgid "No Wi-Fi networks found."
+msgstr "No Wi-Fi networks found."
+
+#: src/pages.py:1386 src/pages.py:1795
+msgid "Open network"
+msgstr "Open network"
+
+#: src/pages.py:1389 src/pages.py:1797 src/pages.py:1798
+msgid "Personal Wi-Fi"
+msgstr "Personal Wi-Fi"
+
+#: src/pages.py:1535
+msgid "Private key password (optional)"
+msgstr "Private key password (optional)"
+
+#: src/pages.py:1533
+msgid "Private key path"
+msgstr "Private key path"
+
+#: src/pages.py:1284
+msgid "Refresh Wi-Fi networks"
+msgstr "Refresh Wi-Fi networks"
+
+#: src/pages.py:1656
+msgid "Saved"
+msgstr "Saved"
+
+#: src/pages.py:1792
+msgid "Security"
+msgstr "Security"
+
+#: src/pages.py:1405
+msgid "The installer will keep the saved network profile so it can be used again."
+msgstr "The installer will keep the saved network profile so it can be used again."
+
+#: src/pages.py:1356
+msgid "The local network is connected, but Internet access is unavailable."
+msgstr "The local network is connected, but Internet access is unavailable."
+
+#: src/pages.py:1856
+msgid "Turning Wi-Fi off…"
+msgstr "Turning Wi-Fi off…"
+
+#: src/pages.py:1854
+msgid "Turning Wi-Fi on…"
+msgstr "Turning Wi-Fi on…"
+
+#: src/pages.py:1485
+msgid "Use WPS"
+msgstr "Use WPS"
+
+#: src/pages.py:1388 src/pages.py:1799
+msgid "WEP (legacy)"
+msgstr "WEP (legacy)"
+
+#: src/pages.py:1347
+msgid "Wi-Fi is connected, but the network requires sign-in through a captive portal."
+msgstr "Wi-Fi is connected, but the network requires sign-in through a captive portal."
+
+#: src/pages.py:1449
+#, python-brace-format
+msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
+msgstr "Waiting for WPS on {network}. Press the WPS button on the router…"
+
+#: src/pages.py:3576
+msgid "A password is required."
+msgstr "A password is required."
+
+#: src/pages.py:3731
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Administrative commands will no longer ask for your password."
+
+#: src/pages.py:3681 src/pages.py:3675
+msgid "Advanced Options"
+msgstr "Advanced Options"
+
+#: src/pages.py:3747
+msgid "Allow SSH login with the account password"
+msgstr "Allow SSH login with the account password"
+
+#: src/pages.py:4089
+msgid "Automatic desktop login"
+msgstr "Automatic desktop login"
+
+#: src/pages.py:3701
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Choose how the local administrator account signs in and authorizes system changes."
+
+#: src/pages.py:3682
+msgid "Choose optional access and sign-in policies"
+msgstr "Choose optional access and sign-in policies"
+
+#: src/pages.py:3709
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "Choose whether this computer accepts remote Secure Shell connections."
+
+#: src/pages.py:4604
+msgid "Configure Secure Shell"
+msgstr "Configure Secure Shell"
+
+#: src/pages.py:3699
+msgid "Local Access"
+msgstr "Local Access"
+
+#: src/pages.py:3737
+msgid "Log in to the desktop automatically"
+msgstr "Log in to the desktop automatically"
+
+#: src/pages.py:3739
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Open this account's desktop automatically when the computer starts."
+
+#: src/pages.py:3707
+msgid "Remote Access"
+msgstr "Remote Access"
+
+#: src/pages.py:3730
+msgid "Run sudo commands without a password"
+msgstr "Run sudo commands without a password"
+
+#: src/pages.py:4095
+msgid "SSH password login"
+msgstr "SSH password login"
+
+#: src/pages.py:3749
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Start Secure Shell and accept this account password over the network."
+
+#: src/pages.py:3759
+msgid "This will reduce the security of the installed system."
+msgstr "This will reduce the security of the installed system."
+
+#: src/pages.py:4093 src/pages.py:4099
+msgid "disabled"
+msgstr "disabled"
+
+#: src/pages.py:4091 src/pages.py:4097
+msgid "enabled"
+msgstr "enabled"
+
+#: src/pages.py:349
+msgid "AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently enabled on this computer, and we recommend enabling it for additional protection."
+msgstr "AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently enabled on this computer, and we recommend enabling it for additional protection."
+
+#: src/pages.py:331
+msgid "AnduinOS supports Secure Boot"
+msgstr "AnduinOS supports Secure Boot"
+
+#: src/pages.py:360
+msgid "Battery power is sufficient or reliable power is connected. You can continue with the installation."
+msgstr "Battery power is sufficient or reliable power is connected. You can continue with the installation."
+
+#: src/pages.py:366
+msgid "Connect reliable external power and charge above 25%, or charge above 45% while unplugged."
+msgstr "Connect reliable external power and charge above 25%, or charge above 45% while unplugged."
+
+#: src/pages.py:338
+msgid "Could not open UEFI firmware settings"
+msgstr "Could not open UEFI firmware settings"
+
+#: src/pages.py:333
+msgid "Get additional protection before installing AnduinOS."
+msgstr "Get additional protection before installing AnduinOS."
+
+#: src/pages.py:364
+msgid "Power conditions are safe for installation."
+msgstr "Power conditions are safe for installation."
+
+#: src/pages.py:363
+msgid "Power ready"
+msgstr "Power ready"
+
+#: src/pages.py:335
+msgid "Restart to UEFI Firmware Settings"
+msgstr "Restart to UEFI Firmware Settings"
+
+#: src/pages.py:345
+msgid "Secure Boot is a UEFI security feature that verifies trusted, digitally signed software while your computer starts."
+msgstr "Secure Boot is a UEFI security feature that verifies trusted, digitally signed software while your computer starts."
+
+#: src/pages.py:336
+msgid "Skip"
+msgstr "Skip"
+
+#: src/pages.py:341
+msgid "The firmware settings could not be opened on this computer."
+msgstr "The firmware settings could not be opened on this computer."
+
+#: src/pages.py:354
+msgid "To enable it, open the UEFI firmware settings and look under Boot, Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. Firmware wording varies by manufacturer."
+msgstr "To enable it, open the UEFI firmware settings and look under Boot, Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. Firmware wording varies by manufacturer."

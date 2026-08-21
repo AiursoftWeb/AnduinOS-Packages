@@ -19,6 +19,7 @@ various locations:
 | `01-custom-keybindings.conf` | `/etc/dconf/db/anduinos.d/` |
 | `02-ptyxis-terminal.conf` | `/etc/dconf/db/anduinos.d/` |
 | `03-system-extensions.conf` | `/etc/dconf/db/anduinos.d/` |
+| `05-app-folders.conf` | `/etc/dconf/db/anduinos.d/` |
 | `greeter.dconf-defaults.ini` | `/etc/gdm3/greeter.dconf-defaults` |
 | `anduinos_text_smaller.png` | `/usr/share/anduinos-dconf-defaults/` |
 

@@ -1,0 +1,37 @@
+[Unit]
+Description=Disk Snapshots Manager privileged recovery helper
+Documentation=file:/usr/share/doc/anduinos-btrfs-snapshots-manager/README.md
+
+[Service]
+Type=dbus
+BusName=org.anduinos.BtrfsSnapshotsManager
+ExecStart=/usr/libexec/anduinos-btrfs-snapshots-manager-helper
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateNetwork=true
+ProtectHome=read-only
+ProtectSystem=strict
+# A leading '-' keeps the helper available on unsupported/non-Btrfs systems so
+# the GUI can report the layout read-only instead of failing D-Bus activation.
+# btrfs-progs temporarily updates each device's scrub_speed_max sysfs knob
+# when a scrub starts, then restores it when the run ends. /home is writable
+# only so the explicit, user-confirmed Home defragmentation action can rewrite
+# file extents; snapshot storage remains outside that traversal.
+ReadWritePaths=-/home -/.snapshots -/var/lib/anduinos-btrfs-snapshots-manager -/var/lib/btrfs -/sys/fs/btrfs -/etc/anduinos-btrfs-snapshots-manager -/boot/grub -/boot/efi -/run/media -/media -/mnt
+RestrictAddressFamilies=AF_UNIX AF_NETLINK
+RestrictNamespaces=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
+SystemCallFilter=~@clock @cpu-emulation @debug @module @obsolete @raw-io @reboot @swap
+CapabilityBoundingSet=CAP_CHOWN CAP_DAC_OVERRIDE CAP_DAC_READ_SEARCH CAP_FOWNER CAP_FSETID CAP_LINUX_IMMUTABLE CAP_MKNOD CAP_SETFCAP CAP_SYS_ADMIN CAP_SYS_CHROOT
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+RestrictRealtime=true
+UMask=0077
+TimeoutStopSec=15s

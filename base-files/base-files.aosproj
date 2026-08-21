@@ -1,14 +1,14 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>base-files</PackageName>
-    <PackageVersion>1:2.0.1+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>1:2.0.2+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS base files (derived from Ubuntu base-files)</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>questing-addon resolute-addon</TargetSuites>
+    <TargetSuites>resolute-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
 
@@ -17,7 +17,7 @@
     <UpstreamDistro>ubuntu</UpstreamDistro>
     <UpstreamPackage>base-files</UpstreamPackage>
     <UpstreamSuite>$(Suite)</UpstreamSuite>
-    <UpstreamSuiteMapping>questing-addon=questing, resolute-addon=resolute</UpstreamSuiteMapping>
+    <UpstreamSuiteMapping>resolute-addon=resolute</UpstreamSuiteMapping>
     <UpstreamComponent>$(Component)</UpstreamComponent>
     <UpstreamArch>$(Arch)</UpstreamArch>
   </PropertyGroup>
@@ -29,10 +29,6 @@
     <IncludeFile Include="assets/noble/ubuntu-logo-text-dark.png" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.png"
                  Condition="'$(Suite)' == 'noble-addon'" />
 
-    <IncludeFile Include="assets/questing/ubuntu-logo-text.png" Target="/usr/share/pixmaps/ubuntu-logo-text.png"
-                 Condition="'$(Suite)' == 'questing-addon'" />
-    <IncludeFile Include="assets/questing/ubuntu-logo-text-dark.png" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.png"
-                 Condition="'$(Suite)' == 'questing-addon'" />
 
     <IncludeFile Include="assets/resolute/ubuntu-logo-text.svg" Target="/usr/share/pixmaps/ubuntu-logo-text.svg"
                  Condition="'$(Suite)' == 'resolute-addon'" />
@@ -47,29 +43,21 @@
     <!-- System identity files (suite-specific) -->
     <IncludeFile Include="assets/noble/os-release" Target="/etc/os-release"
                  Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFile Include="assets/questing/os-release" Target="/etc/os-release"
-                 Condition="'$(Suite)' == 'questing-addon'" />
     <IncludeFile Include="assets/resolute/os-release" Target="/etc/os-release"
                  Condition="'$(Suite)' == 'resolute-addon'" />
 
     <IncludeFile Include="assets/noble/lsb-release" Target="/etc/lsb-release"
                  Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFile Include="assets/questing/lsb-release" Target="/etc/lsb-release"
-                 Condition="'$(Suite)' == 'questing-addon'" />
     <IncludeFile Include="assets/resolute/lsb-release" Target="/etc/lsb-release"
                  Condition="'$(Suite)' == 'resolute-addon'" />
 
     <IncludeFile Include="assets/noble/issue" Target="/etc/issue"
                  Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFile Include="assets/questing/issue" Target="/etc/issue"
-                 Condition="'$(Suite)' == 'questing-addon'" />
     <IncludeFile Include="assets/resolute/issue" Target="/etc/issue"
                  Condition="'$(Suite)' == 'resolute-addon'" />
                  
     <IncludeFile Include="assets/noble/issue.net" Target="/etc/issue.net"
                  Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFile Include="assets/questing/issue.net" Target="/etc/issue.net"
-                 Condition="'$(Suite)' == 'questing-addon'" />
     <IncludeFile Include="assets/resolute/issue.net" Target="/etc/issue.net"
                  Condition="'$(Suite)' == 'resolute-addon'" />
 

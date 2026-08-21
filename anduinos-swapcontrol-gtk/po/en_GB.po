@@ -1,60 +1,79 @@
+#
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/window.rs:76
 msgid "About"
 msgstr "About"
 
+#: src/views/swap_view.rs:300
 msgid "Accept threshold percent"
 msgstr "Accept threshold (%)"
 
+#: src/views/zram_view.rs:247
 msgid "Advanced options"
 msgstr "Advanced options"
 
+#: src/views/stress_test_view.rs:225 src/views/swap_view.rs:225
 msgid "Advanced settings"
 msgstr "Advanced settings"
 
+#: src/views/zram_view.rs:348
 msgid "Algorithm"
 msgstr "Algorithm"
 
+#: src/views/swap_view.rs:334
 msgid "Apply Settings"
 msgstr "Apply Settings"
 
+#: src/views/swap_view.rs:667
 msgid "Applying settings…"
 msgstr "Apply Settings"
 
+#: src/views/dashboard_view.rs:370
 msgid "Auth needed"
 msgstr "Auth needed"
 
+#: src/views/dashboard_view.rs:413
 msgid "Buf"
 msgstr "Buf"
 
+#: src/views/dashboard_view.rs:390
 msgid "Buffers"
 msgstr "Buffers"
 
+#: src/views/dashboard_view.rs:414
 msgid "Cache"
 msgstr "Cache"
 
+#: src/views/dashboard_view.rs:395
 msgid "Cached"
 msgstr "Cached"
 
+#: src/views/zram_view.rs:378
 msgid "Cancel"
 msgstr "Cancel"
 
+#: src/views/stress_test_view.rs:318
 msgid "Cancel Test"
 msgstr "Cancel"
 
+#: src/views/stress_test_view.rs:601
 msgid "Cancelled by user."
 msgstr "Cancelled by user."
 
+#: src/views/dashboard_view.rs:193
 msgid "Channels"
 msgstr "Channels"
 
+#: src/views/stress_test_view.rs:613
 msgid "Completed successfully — memory pressure test passed."
 msgstr "Completed successfully — memory pressure test passed."
 
+#: src/views/swap_view.rs:183
 msgid ""
 "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
 "Zswap, not both."
@@ -62,45 +81,51 @@ msgstr ""
 "Compress Virtual Memory pages in a RAM pool — faster than disk Virtual "
 "Memory. Use Zram or Zswap, not both."
 
+#: src/views/zram_view.rs:73
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "Compressed RAM block device — fast in-memory swap"
 
+#: src/views/swap_view.rs:266
 msgid "Compression algorithm"
 msgstr "Compression algorithm"
 
+#: src/views/zram_view.rs:379
 msgid "Create"
 msgstr "Create"
 
+#: src/views/zram_view.rs:110 src/views/zram_view.rs:190
 msgid "Create Zram Device"
 msgstr "Create Zram Device"
 
+#: src/window.rs:110
 msgid "Dashboard"
 msgstr "Dashboard"
 
+#: src/views/zram_view.rs:571
 msgid "Destroy Zram Device"
 msgstr "Destroy Zram Device"
 
+#: src/views/zram_view.rs:439
 msgid "Device Created"
 msgstr "Device Created"
 
+#: src/views/dashboard_view.rs:503
 msgid "Disabled"
 msgstr "Disabled"
 
+#: src/views/swap_view.rs:521
 msgid "Disabling Zswap..."
 msgstr "Disabling swap…"
 
-msgid "Disabling swap will break hibernation. Continue?"
-msgstr "Disabling swap will break hibernation. Continue?"
-
+#: src/views/swap_view.rs:577
 msgid "Disabling swap…"
 msgstr "Disabling swap…"
 
-msgid "Disk Swap"
-msgstr "Virtual Memory"
-
+#: src/views/swap_view.rs:97
 msgid "Disk Swap Configuration"
 msgstr "Virtual Memory Configuration"
 
+#: src/views/dashboard_view.rs:614
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
@@ -108,9 +133,11 @@ msgstr ""
 "Disk Virtual Memory is active with memory compression — your system is well-"
 "protected against memory pressure."
 
+#: src/views/stress_test_view.rs:605 src/views/stress_test_view.rs:617
 msgid "Duration:"
 msgstr "Duration:"
 
+#: src/views/dashboard_view.rs:609
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
@@ -118,63 +145,85 @@ msgstr ""
 "Enable Zram for snappy compressed Virtual Memory in RAM — it's 10× faster "
 "than disk Virtual Memory and dramatically reduces I/O under memory pressure."
 
+#: src/views/swap_view.rs:519
 msgid "Enabling Zswap..."
 msgstr "Enabling swap…"
 
+#: src/views/swap_view.rs:579
 msgid "Enabling swap…"
 msgstr "Enabling swap…"
 
+#: src/views/stress_test_view.rs:609 src/views/swap_view.rs:505
+#: src/views/zram_view.rs:182
 msgid "Error"
 msgstr "Error"
 
+#: src/views/dashboard_view.rs:400 src/views/dashboard_view.rs:415
 msgid "Free"
 msgstr "Free"
 
+#: src/views/stress_test_view.rs:250 src/views/stress_test_view.rs:251
+#: src/views/stress_test_view.rs:401
 msgid "Growth speed"
 msgstr "Growth speed"
 
+#: src/views/dashboard_view.rs:269
 msgid "Hibernation"
 msgstr "Hibernation"
 
+#: src/views/swap_view.rs:597 src/views/swap_view.rs:704
 msgid "Hibernation Warning"
 msgstr "Hibernation Warning"
 
+#: src/views/dashboard_view.rs:517 src/views/swap_view.rs:810
 msgid "Inactive"
 msgstr "Inactive"
 
+#: src/views/swap_view.rs:156 src/views/swap_view.rs:170
 msgid "Loading..."
 msgstr "Loading..."
 
+#: src/views/stress_test_view.rs:232
 msgid "Maximum hold time"
 msgstr "Maximum hold time"
 
+#: src/views/swap_view.rs:282
 msgid "Maximum pool percent"
 msgstr "Maximum pool percent"
 
+#: src/views/dashboard_view.rs:134
 msgid "Memory Overview"
 msgstr "Memory Overview"
 
+#: src/views/zram_view.rs:119
 msgid "No Zram Devices"
 msgstr "Zram Devices"
 
+#: src/views/dashboard_view.rs:456
 msgid "No device"
 msgstr "No device"
 
+#: src/views/dashboard_view.rs:592
 msgid "No disk swap detected"
 msgstr "No virtual memory detected"
 
+#: src/views/dashboard_view.rs:608
 msgid "No memory acceleration enabled"
 msgstr "No memory acceleration enabled"
 
+#: src/views/dashboard_view.rs:546
 msgid "None"
 msgstr "None"
 
+#: src/views/dashboard_view.rs:530 src/views/dashboard_view.rs:538
 msgid "Off"
 msgstr "Off"
 
+#: src/views/dashboard_view.rs:537
 msgid "On"
 msgstr "On"
 
+#: src/views/swap_view.rs:301
 msgid ""
 "Only store pages that compress to ≤ this % of original. Higher = more pages "
 "cached. Recommended: 90%"
@@ -182,72 +231,93 @@ msgstr ""
 "Only store pages that compress to ≤ this % of original. Higher = more pages "
 "cached. Recommended: 90%"
 
+#: src/views/dashboard_view.rs:613
 msgid "Optimal memory configuration"
 msgstr "Optimal memory configuration"
 
+#: src/views/stress_test_view.rs:602 src/views/stress_test_view.rs:614
 msgid "Peak allocated:"
 msgstr "Peak allocated:"
 
+#: src/views/zram_view.rs:367
 msgid "Priority"
 msgstr "Priority"
 
+#: src/views/stress_test_view.rs:209
 msgid "RAM"
 msgstr "RAM"
 
+#: src/views/zram_view.rs:554
 msgid "Remove"
 msgstr "Remove"
 
+#: src/views/stress_test_view.rs:360
 msgid "Run Again"
 msgstr "Run Again"
 
+#: src/views/stress_test_view.rs:279
 msgid "Run Stress Test"
 msgstr "Run Stress Test"
 
+#: src/views/swap_view.rs:307
 msgid "Shrinker"
 msgstr "Memory shrinker"
 
+#: src/views/zram_view.rs:269
 msgid "Size (MiB)"
 msgstr "Size (MiB)"
 
+#: src/views/dashboard_view.rs:192
 msgid "Speed"
 msgstr "Speed"
 
+#: src/views/stress_test_view.rs:100 src/window.rs:114
 msgid "Stress Test"
 msgstr "Stress Test"
 
+#: src/views/dashboard_view.rs:252 src/views/dashboard_view.rs:266
+#: src/window.rs:112
 msgid "Swap"
 msgstr "Swap"
 
+#: src/progress_dialog.rs:24 src/window.rs:59
 msgid "Swap Control"
 msgstr "Virtual Memory Control"
 
-msgid "Swap file size"
-msgstr "Virtual memory file size"
-
+#: src/views/swap_view.rs:147
 msgid "Swap usage"
 msgstr "Virtual Memory usage"
 
+#: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
+#: src/views/swap_view.rs:677
 msgid "Swappiness"
 msgstr "Swappiness"
 
+#: src/views/dashboard_view.rs:603
 msgid "Swappiness not optimized for Zram"
 msgstr "Swappiness not optimized for Zram"
 
+#: src/views/stress_test_view.rs:206
 msgid "Target Pressure"
 msgstr "Target Pressure"
 
+#: src/views/stress_test_view.rs:345
 msgid "Test Complete"
 msgstr "Test Complete"
 
+#: src/views/dashboard_view.rs:190
 msgid "Total RAM"
 msgstr "Total RAM"
 
+#: src/views/dashboard_view.rs:191
 msgid "Type"
 msgstr "Type"
 
+#: src/views/dashboard_view.rs:385 src/views/dashboard_view.rs:412
 msgid "Used"
 msgstr "Used"
 
+#: src/views/dashboard_view.rs:593
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
@@ -255,57 +325,444 @@ msgstr ""
 "When RAM is full the kernel may kill applications. Enable disk Virtual "
 "Memory for a reliable safety net."
 
+#: src/views/dashboard_view.rs:244 src/views/dashboard_view.rs:268
+#: src/window.rs:111
 msgid "Zram"
 msgstr "Zram"
 
+#: src/views/zram_view.rs:66
 msgid "Zram Devices"
 msgstr "Zram Devices"
 
+#: src/views/dashboard_view.rs:597
 msgid "Zram and Zswap are both active"
 msgstr "Zram and Zswap are both active"
 
+#: src/views/dashboard_view.rs:598
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
+"pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
+" one of them."
 msgstr ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
+"pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
+" one of them."
 
+#: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
+#: src/views/swap_view.rs:185 src/views/swap_view.rs:686
 msgid "Zswap"
 msgstr "Zswap"
 
+#: src/views/stress_test_view.rs:212
 msgid "default"
 msgstr "default"
 
+#: src/views/swap_view.rs:267
 msgid ""
-"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires "
-"zswap restart."
+"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires"
+" zswap restart."
 msgstr ""
-"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires "
-"zswap restart."
+"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires"
+" zswap restart."
 
+#: src/views/stress_test_view.rs:211
 msgid "range"
 msgstr "range"
 
+#: src/views/stress_test_view.rs:233
 msgid "seconds"
 msgstr "seconds"
 
+#: src/views/swap_view.rs:118
 msgid "with Zram"
 msgstr "with Zram"
 
+#: src/views/dashboard_view.rs:154
 msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr "with Zram active — prefer fast compressed RAM over disk cache"
 
-#~ msgid "<i>Recommended swappiness: {0} ({1})</i>"
-#~ msgstr "<i>Recommended swappiness: {0} ({1})</i>"
+#: src/views/dashboard_view.rs:552
+msgid "Ready"
+msgstr "Ready"
+
+#: src/views/dashboard_view.rs:554
+msgid "Unsupported"
+msgstr "Unsupported"
+
+#: src/views/dashboard_view.rs:556
+msgid "Not configured"
+msgstr "Not configured"
+
+#: src/views/dashboard_view.rs:558
+msgid "Resume target missing"
+msgstr "Resume target missing"
+
+#: src/views/dashboard_view.rs:560
+msgid "Resume target inactive"
+msgstr "Resume target inactive"
+
+#: src/views/dashboard_view.rs:562
+msgid "Swap too small"
+msgstr "Swap too small"
+
+#: src/views/dashboard_view.rs:564
+msgid "Not ready"
+msgstr "Not ready"
+
+#: src/views/swap_view.rs:104
+msgid ""
+"Review installer-managed swap partitions and manage the legacy supplementary"
+" swap file"
+msgstr ""
+"Review installer-managed swap partitions and manage the legacy supplementary"
+" swap file"
+
+#: src/views/swap_view.rs:155
+msgid "Swap partition"
+msgstr "Swap partition"
+
+#: src/views/swap_view.rs:169
+msgid "Additional swap file"
+msgstr "Additional swap file"
+
+#: src/views/swap_view.rs:195
+msgid "Additional swap file size"
+msgstr "Additional swap file size"
+
+#: src/views/swap_view.rs:196
+msgid "0 GiB means no supplementary swap file"
+msgstr "0 GiB means no supplementary swap file"
+
+#: src/views/swap_view.rs:598
+msgid ""
+"This swap file is the configured resume target. Disabling it will break "
+"hibernation. Continue?"
+msgstr ""
+"This swap file is the configured resume target. Disabling it will break "
+"hibernation. Continue?"
+
+#: src/views/swap_view.rs:705
+msgid ""
+"This swap file is the configured resume target. Its physical offset would "
+"change, so resize is blocked until hibernation is disabled."
+msgstr ""
+"This swap file is the configured resume target. Its physical offset would "
+"change, so resizing is blocked until hibernation is disabled."
+
+#: src/views/swap_view.rs:722
+msgid "unknown"
+msgstr "Unknown"
+
+#: src/views/swap_view.rs:738
+msgid "No swap partition — a legacy swap file can be managed below"
+msgstr "No swap partition — a legacy swap file can be managed below"
+
+#: src/views/swap_view.rs:207
+msgid "Remove incompatible file"
+msgstr "Remove incompatible file"
+
+#: src/views/swap_view.rs:377
+msgid "Removing incompatible swap file…"
+msgstr "Removing incompatible swap file…"
+
+#: src/views/swap_view.rs:790
+msgid "Present but inactive"
+msgstr "Present but inactive"
+
+#: src/views/swap_view.rs:792
+msgid "Not created — choose a size below to add one"
+msgstr "Not created — choose a size below to add one"
+
+#: src/views/swap_view.rs:794
+msgid "Not created — at least 20 GiB must remain free"
+msgstr "Not created — at least 20 GiB must remain free"
+
+#: src/views/swap_view.rs:830
+msgid ""
+"Resize is locked because this file is the configured hibernation resume "
+"target"
+msgstr ""
+"Resizing is locked because this file is the configured hibernation resume "
+"target"
+
+#: src/views/swap_view.rs:832
+msgid ""
+"Optional compatibility file; 0 GiB removes it and 20 GiB remains reserved "
+"for the system"
+msgstr ""
+"Optional compatibility file; 0 GiB removes it and 20 GiB remains reserved "
+"for the system"
+
+#: src/views/swap_view.rs:834
+msgid ""
+"Disabled on Btrfs because a root-subvolume swap file would prevent Disk "
+"Snapshots Manager recovery points"
+msgstr ""
+"Disabled on Btrfs because a root-subvolume swap file would prevent Disk "
+"Snapshots Manager recovery points"
+
+#: src/views/zram_view.rs:120
+msgid ""
+"Create a compressed RAM swap device for faster memory pressure handling."
+msgstr ""
+"Create a compressed RAM Virtual Memory device for faster memory pressure "
+"handling."
+
+#: src/views/stress_test_view.rs:171
+msgid "Ensure important work is saved before running this test."
+msgstr "Ensure important work is saved before running this test."
+
+#: src/views/swap_view.rs:283
+msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
+msgstr "Max % of RAM the compressed pool may occupy. Recommended: 20%"
+
+#: src/views/dashboard_view.rs:141
+msgid "Real-time RAM, swap, and compression subsystem status"
+msgstr "Real-time RAM, swap, and compression subsystem status"
+
+#: src/views/swap_view.rs:308
+msgid "Reclaim pool pages under memory pressure. Recommended: ON"
+msgstr "Reclaim pool pages under memory pressure. Recommended: ON"
+
+#: src/views/stress_test_view.rs:107
+msgid "Simulate memory pressure to test swap and OOM behavior"
+msgstr "Simulate memory pressure to test swap and OOM behaviour"
+
+#: src/views/stress_test_view.rs:161
+msgid "Warning: This will consume system memory and may cause instability"
+msgstr "Warning: This will consume system memory and may cause instability"
+
+#: src/views/zram_view.rs:440
+msgid "Zram configuration saved. The device will be created shortly."
+msgstr "Zram configuration saved. The device will be created shortly."
+
+#: src/views/dashboard_view.rs:165 src/views/swap_view.rs:128
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Recommended swappiness: {0} ({1})</i>"
+
+#: src/views/zram_view.rs:90
+msgid "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
+msgstr "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
+
+#: src/views/swap_view.rs:772
+msgid "Active — {0} GiB used / {1} GiB total"
+msgstr "Active — {0} GiB used / {1} GiB total"
+
+#: src/swap/exec.rs:26 src/swap/exec.rs:68
+msgid "Authentication cancelled"
+msgstr "Authentication cancelled"
+
+#: src/swap/swapfile.rs:113
+msgid "Cannot inspect the root filesystem"
+msgstr "Cannot inspect the root filesystem"
+
+#: src/swap/swapfile.rs:108
+msgid "Cannot inspect the root filesystem: {0}"
+msgstr "Cannot inspect the root filesystem: {0}"
+
+#: src/swap/sysctl.rs:79
+msgid "Cannot parse MemTotal: {0}"
+msgstr "Cannot parse MemTotal: {0}"
+
+#: src/swap/sysctl.rs:43
+msgid "Cannot parse swappiness: {0}"
+msgstr "Cannot parse swappiness: {0}"
+
+#: src/swap/zswap.rs:59
+msgid "Cannot parse {0} as u8: {1}"
+msgstr "Cannot parse {0} as u8: {1}"
+
+#: src/swap/sysctl.rs:70
+msgid "Cannot read /proc/meminfo: {0}"
+msgstr "Cannot read /proc/meminfo: {0}"
+
+#: src/swap/swapfile.rs:39
+msgid "Cannot read /proc/swaps: {0}"
+msgstr "Cannot read /proc/swaps: {0}"
+
+#: src/swap/sysctl.rs:36 src/swap/zswap.rs:47
+msgid "Cannot read {0}: {1}"
+msgstr "Cannot read {0}: {1}"
+
+#: src/swap/exec.rs:18 src/swap/exec.rs:52
+msgid "Failed to execute pkexec: {0}"
+msgstr "Failed to execute pkexec: {0}"
+
+#: src/swap/persist.rs:31
+msgid "Failed to remove legacy unit {0}: {1}"
+msgstr "Failed to remove legacy unit {0}: {1}"
+
+#: src/swap/sysctl.rs:129
+msgid "Failed to set swappiness: {0} / {1}"
+msgstr "Failed to set swappiness: {0} / {1}"
+
+#: src/swap/exec.rs:61
+msgid "Failed to wait on pkexec: {0}"
+msgstr "Failed to wait on pkexec: {0}"
+
+#: src/i18n.rs:24
+msgid "Hello {0}, you have {1} messages"
+msgstr "Hello {0}, you have {1} messages"
+
+#: src/views/swap_view.rs:234
+msgid ""
+"How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
+" {0})"
+msgstr ""
+"How aggressively the kernel uses Virtual Memory — lower = stay in RAM longer"
+" (recommended: {0})"
+
+#: src/views/swap_view.rs:231
+msgid ""
+"How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
+"fast compressed RAM over disk cache (recommended: {0})"
+msgstr ""
+"How aggressively the kernel uses Virtual Memory — with Zram active, set to "
+"{0} to prefer fast compressed RAM over disk cache (recommended: {0})"
+
+#: src/views/dashboard_view.rs:483
+msgid "Idle ({0} GiB available)"
+msgstr "Idle ({0} GiB available)"
+
+#: src/views/zram_view.rs:531
+msgid "Idle — {0} MiB available"
+msgstr "Idle — {0} MiB available"
+
+#: src/swap/sysctl.rs:83
+msgid "MemTotal not found"
+msgstr "MemTotal not found"
+
+#: src/views/swap_view.rs:786
+msgid "Present but inactive — activation is disabled on {0}"
+msgstr "Present but inactive — activation is disabled on {0}"
+
+#: src/views/stress_test_view.rs:676
+msgid ""
+"RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
+"Swap used: {3} GiB"
+msgstr ""
+"RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
+"Swap used: {3} GiB"
+
+#: src/views/swap_view.rs:673
+msgid "Resize"
+msgstr "Resize"
+
+#: src/views/swap_view.rs:837
+msgid "Swap file resizing is unsupported on {0}"
+msgstr "Swap file resizing is unsupported on {0}"
+
+#: src/progress_dialog.rs:58
+msgid "Task panicked: {0}"
+msgstr "Task panicked: {0}"
+
+#: src/swap/persist.rs:74
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zram changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zram from this GUI."
+msgstr ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zram changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zram from this GUI."
+
+#: src/swap/persist.rs:133
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zswap changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zswap from this GUI."
+msgstr ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zswap changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zswap from this GUI."
+
+#: src/views/zram_view.rs:573
+msgid ""
+"This will immediately remove {0} and flush its contents to disk swap. "
+"Continue?"
+msgstr ""
+"This will immediately remove {0} and flush its contents to disk swap. "
+"Continue?"
+
+#: src/views/swap_view.rs:797
+msgid "Unavailable on {0}; the swap partition remains active"
+msgstr "Unavailable on {0}; the swap partition remains active"
+
+#: src/views/dashboard_view.rs:604
+msgid ""
+"Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
+" fast compressed RAM swap — dropping file cache when zram is available "
+"wastes I/O performance."
+msgstr ""
+"Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
+" fast compressed RAM Virtual Memory — dropping file cache when zram is "
+"available wastes I/O performance."
+
+#: src/swap/persist.rs:88
+msgid "Zram persistence disabled"
+msgstr "Zram persistence disabled"
+
+#: src/swap/persist.rs:90
+msgid "Zram persistence enabled"
+msgstr "Zram persistence enabled"
+
+#: src/swap/persist.rs:148
+msgid "Zswap persistence disabled"
+msgstr "Zswap persistence disabled"
+
+#: src/swap/persist.rs:146
+msgid "Zswap persistence enabled"
+msgstr "Zswap persistence enabled"
+
+#: src/views/dashboard_view.rs:159 src/views/swap_view.rs:122
+msgid "for {0} GiB RAM"
+msgstr "for {0} GiB RAM"
+
+#: src/swap/sysctl.rs:133
+msgid "swappiness updated"
+msgstr "swappiness updated"
+
+#: src/swap/persist.rs:37
+msgid "systemctl {0} failed: {1}"
+msgstr "systemctl {0} failed: {1}"
+
+#: src/views/zram_view.rs:525
+msgid "{0} MiB used (stats reset)"
+msgstr "{0} MiB used (stats reset)"
+
+#: src/views/zram_view.rs:520
+msgid "{0} MiB used · saved {1}%"
+msgstr "{0} MiB used · saved {1}%"
+
+#: src/views/dashboard_view.rs:498
+msgid "{0} · pool {1}%"
+msgstr "{0} · pool {1}%"
+
+#: src/views/dashboard_view.rs:474
+msgid "{0} · saved {1}%"
+msgstr "{0} · saved {1}%"
+
+#: src/views/swap_view.rs:754
+msgid ""
+"{0} — installer-managed; size cannot be changed while the system is running"
+msgstr ""
+"{0} — installer-managed; size cannot be changed while the system is running"
+
+#~ msgid "Disabling swap will break hibernation. Continue?"
+#~ msgstr "Disabling swap will break hibernation. Continue?"
+
+#~ msgid "Disk Swap"
+#~ msgstr "Virtual Memory"
+
+#~ msgid "Swap file size"
+#~ msgstr "Virtual memory file size"
 
 #~ msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
 #~ msgstr "<i>Recommended: {0} GiB Virtual Memory, swappiness {1} ({2})</i>"
-
-#~ msgid "Active — {0} GiB used / {1} GiB total"
-#~ msgstr "Active — {0} GiB used / {1} GiB total"
 
 #~ msgid "Creating Zram device…"
 #~ msgstr "Creating Zram device…"
@@ -317,38 +774,8 @@ msgstr "with Zram active — prefer fast compressed RAM over disk cache"
 #~ msgstr ""
 #~ "Disk-based Virtual Memory file — the last line of defense when RAM is full"
 
-#~ msgid "Ensure important work is saved before running this test."
-#~ msgstr "Ensure important work is saved before running this test."
-
-#~ msgid "Hello {0}, you have {1} messages"
-#~ msgstr "Hello {0}, you have {1} messages"
-
 #~ msgid "Hibernation not detected — recommended: {0} GiB"
 #~ msgstr "Hibernation not detected — recommended: {0} GiB"
-
-#~ msgid "Idle ({0} GiB available)"
-#~ msgstr "Idle ({0} GiB available)"
-
-#~ msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
-#~ msgstr "Max % of RAM the compressed pool may occupy. Recommended: 20%"
-
-#~ msgid "Real-time RAM, swap, and compression subsystem status"
-#~ msgstr "Real-time RAM, swap, and compression subsystem status"
-
-#~ msgid "Reclaim pool pages under memory pressure. Recommended: ON"
-#~ msgstr "Reclaim pool pages under memory pressure. Recommended: ON"
-
-#~ msgid "Simulate memory pressure to test swap and OOM behavior"
-#~ msgstr "Simulate memory pressure to test swap and OOM behaviour"
-
-#~ msgid "Warning: This will consume system memory and may cause instability"
-#~ msgstr "Warning: This will consume system memory and may cause instability"
-
-#~ msgid "{0} · pool {1}%"
-#~ msgstr "{0} · pool {1}%"
-
-#~ msgid "{0} · saved {1}%"
-#~ msgstr "{0} · saved {1}%"
 
 #~ msgid "Active"
 #~ msgstr "Active"
@@ -387,35 +814,6 @@ msgstr "with Zram active — prefer fast compressed RAM over disk cache"
 #~ "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
 
 #~ msgid ""
-#~ "Create a compressed RAM swap device for faster memory pressure handling."
-#~ msgstr ""
-#~ "Create a compressed RAM Virtual Memory device for faster memory pressure "
-#~ "handling."
-
-#~ msgid ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
 #~ msgstr ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer "
-#~ "(recommended: {0})"
-#~ msgstr ""
-#~ "How aggressively the kernel uses Virtual Memory — lower = stay in RAM "
-#~ "longer (recommended: {0})"
-
-#~ msgid ""
-#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to "
-#~ "prefer fast compressed RAM swap — dropping file cache when zram is "
-#~ "available wastes I/O performance."
-#~ msgstr ""
-#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to "
-#~ "prefer fast compressed RAM Virtual Memory — dropping file cache when zram "
-#~ "is available wastes I/O performance."
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — with Zram active, set to {0} to "
-#~ "prefer fast compressed RAM over disk cache (recommended: {0})"
-#~ msgstr ""
-#~ "How aggressively the kernel uses Virtual Memory — with Zram active, set "
-#~ "to {0} to prefer fast compressed RAM over disk cache (recommended: {0})"

@@ -1,47 +1,121 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>AnduinOS GTK4 native installer (beta) — ground-up rewrite replacing Ubiquity</PackageDescription>
+    <PackageDescription>AnduinOS GTK4 native installer — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
+    <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
+    <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>resolute-addon</TargetSuites>
-    <TargetArchitectures>all</TargetArchitectures>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
-
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
     <!-- Beta: NO Conflicts, NO Replaces. This is an orphan package.
          After 3-4 months of stable testing, rename to anduinos-installer
-         and add Conflicts/Replaces against anduinos-installer-config + ubiquity. -->
+         and add Conflicts/Replaces against the Ubuntu Ubiquity packages. -->
   </PropertyGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource
+        Url="https://mirror.aiursoft.com/ubuntu"
+        SuiteMap="resolute-addon=resolute" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Package-local release gate. APKG runs this from the project directory
+         and aborts the build immediately when syntax, UT, or hygiene fails. -->
+    <PrebuildCommand Run="bash compile-locales.sh" />
+    <PrebuildCommand Run="bash scripts/prebuild-check.sh" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AppStreamApplication Include="assets/anduinos-installer-beta.desktop"
+                          Icon="assets/anduinos-installer-beta.svg" />
+    <AppStreamScreenshot Include="screenshots/storage.png" Default="true"
+                         Caption="Choose the target disk with a clear view of its current layout"
+                         Environment="GNOME:dark" />
+    <AppStreamScreenshot Include="screenshots/welcome.png"
+                         Caption="Choose your language and begin installing AnduinOS"
+                         Environment="GNOME:dark" />
+  </ItemGroup>
 
   <ItemGroup>
     <!-- Minimal dependencies: only what the Python code actually calls -->
     <Dependency Include="python3" />
+    <!-- Keep the Casper locale and package-owned timezone bridges available
+         wherever the native installer is installed, including development. -->
+    <Dependency Include="anduinos-live-settings" />
+    <Dependency Include="python3-unidecode" />
     <Dependency Include="python3-gi" />
     <Dependency Include="gir1.2-gtk-4.0" />
     <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="gir1.2-nm-1.0" />
+    <Dependency Include="libxkbcommon0" />
     <Dependency Include="parted" />
     <Dependency Include="btrfs-progs" />
     <Dependency Include="dosfstools" />
-    <Dependency Include="grub-efi-amd64-bin" />
+    <Dependency Include="efibootmgr" />
+    <Dependency Include="grub-pc-bin" Condition="'$(Arch)' == 'amd64'" />
+    <Dependency Include="grub-efi-amd64-bin" Condition="'$(Arch)' == 'amd64'" />
+    <Dependency Include="grub-efi-amd64-signed" Condition="'$(Arch)' == 'amd64'" />
+    <Dependency Include="grub-efi-arm64-bin" Condition="'$(Arch)' == 'arm64'" />
+    <Dependency Include="grub-efi-arm64-signed" Condition="'$(Arch)' == 'arm64'" />
+    <Dependency Include="grub2-common" />
+    <Dependency Include="initramfs-tools" />
+    <Dependency Include="shim-signed" />
+    <Dependency Include="mokutil" />
+    <Dependency Include="openssl" />
+    <Dependency Include="sbsigntool" />
     <Dependency Include="squashfs-tools" />
     <Dependency Include="util-linux" />
+    <Dependency Include="ubuntu-drivers-common" />
+    <Dependency Include="network-manager" />
+    <Dependency Include="netplan.io" />
+    <Dependency Include="polkitd" />
+    <Dependency Include="libglib2.0-bin" />
+    <!-- The installer can download this when the user explicitly selects
+         extended formats. Suggests records availability without pulling the
+         codec payload into the Live image or ordinary installer installs. -->
+    <Suggest Include="anduinos-multimedia-codecs" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Shell launcher (sudo re-exec if not root) -->
+    <!-- Unprivileged GTK launcher; root work stays behind narrow helpers. -->
     <IncludeFile Include="assets/anduinos-installer-beta"
                  Target="/usr/bin/anduinos-installer-beta" Mode="755" />
-    <!-- Desktop entry for app drawer -->
-    <IncludeFile Include="assets/anduinos-installer-beta.desktop"
-                 Target="/usr/share/applications/anduinos-installer-beta.desktop" Mode="644" />
+    <!-- AppStreamApplication installs the single app-drawer desktop entry. -->
+    <!-- Independent copy of the box-and-AnduinOS-logo artwork. -->
+    <IncludeFile Include="assets/anduinos-installer-beta.svg"
+                 Target="/usr/share/icons/hicolor/scalable/apps/anduinos-installer-beta.svg" Mode="644" />
+    <IncludeFile Include="assets/anduinos-installer-executor"
+                 Target="/usr/bin/anduinos-installer-executor" Mode="755" />
+    <IncludeFile Include="assets/anduinos-installer-storage-probe"
+                 Target="/usr/bin/anduinos-installer-storage-probe" Mode="755" />
+    <IncludeFile Include="assets/com.anduinos.installer-beta.policy"
+                 Target="/usr/share/polkit-1/actions/com.anduinos.installer-beta.policy" Mode="644" />
+    <IncludeFile Include="assets/anduinos-installer-beta-live-shortcut"
+                 Target="/usr/lib/anduinos-installer-beta/create-live-shortcut" Mode="755" />
+    <IncludeFile Include="assets/anduinos-installer-beta-live-shortcut.desktop"
+                 Target="/etc/xdg/autostart/anduinos-installer-beta-live-shortcut.desktop" Mode="644" />
     <!-- Python source tree -->
     <IncludeFolder Include="src/"
                    Target="/usr/lib/anduinos-installer-beta/" />
+    <IncludeFile Include="data/languages.json"
+                 Target="/usr/share/anduinos-installer-beta/languages.json" Mode="644" />
+    <IncludeFolder Include="locale/"
+                   Target="/usr/share/locale/" />
+    <!-- Independent, native-GTK reuse of the historical localized slideshow. -->
+    <IncludeFolder Include="assets/slideshow/"
+                   Target="/usr/share/anduinos-installer-beta/slideshow/" />
+    <IncludeFolder Include="assets/icons/"
+                   Target="/usr/share/anduinos-installer-beta/icons/" />
+    <IncludeFile Include="assets/style.css"
+                 Target="/usr/share/anduinos-installer-beta/style.css" Mode="644" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,4 @@
+#!/bin/sh
+# Disk Snapshots Manager refreshes only its own generated GRUB fragments. Returning no
+# candidates prevents grub-mkconfig from probing or mounting unrelated disks.
+exit 0

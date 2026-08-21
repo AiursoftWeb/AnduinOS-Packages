@@ -61,7 +61,6 @@ User **cannot** install both.  Dpkg removes the Ubuntu package at install time.
 | 9a | 〃 | `whoopsie` | 〃 | Error reporting → Ubuntu servers |
 | 10 | `anduinos-session` | `ubuntu-session` | yes | + postinst purges `10_ubuntu-session.gschema.override` |
 | 11 | `anduinos-gnome-extensions` | `gnome-shell-ubuntu-extensions` | yes | Metapackage — AnduinOS-curated extension set |
-| 12 | `anduinos-installer-config` | `ubiquity-slideshow-ubuntu` | yes | + postinst `dpkg-divert` of Ubiquity languagelist |
 | 13 | `anduinos-software-properties-common` | `software-properties-common` | yes | Patches `add-apt-repository` → `--distro=ubuntu` |
 | 14 | `anduinos-software-properties-gtk` | `software-properties-gtk` | yes | Strips Ubuntu Pro ads; suppresses `ubuntu-pro-client` dep |
 | 15 | `firefox-anduinos` | `firefox` | — | Mozilla Apt `.deb`, not the snap wrapper |
@@ -99,7 +98,16 @@ These replace Ubuntu **files** without removing the Ubuntu **package**.
 | `anduinos-apt-config` | APT sources (`packages.anduinos.com`) + preferences | Dual pin: `origin` (domain) + `release o=` (Origin field), both at priority 1001; also shipped as `anduinos-apt-config-dev` (→ `apkg-dev.aiursoft.com`) |
 | `anduinos-mimeapps` | `gnome-mimeapps.list` | `dpkg-divert` (original → `.ubuntu-original`) |
 | `anduinos-bwrap-hack` | `bwrap` → `bwrap.real` + shim | Swallows `bwrap` failures on Live squashfs |
-| `anduinos-rime` | `rime-prelude`'s `default.yaml` → `default.yaml.prelude` | `dpkg-divert`; ships rime-ice config to `/usr/share/rime-data/` |
+
+`anduinos-rime` is intentionally absent from this override table. Starting
+with `2.0.1-2`, it owns only Rime Ice resources and an additive distribution
+patch; it is not part of the default desktop package set. Starting with
+`2.0.1-3`, Rime loads that patch from the shared
+`/usr/share/rime-data/default.custom.yaml`, so package updates propagate without
+copying configuration into `/etc/skel` or user homes. Ubuntu's `default.yaml`
+and `language-selector-common` files remain untouched. The `2.0.1-2`
+post-install script only removes diversions left by older releases and can
+disappear after the migration release.
 
 ---
 
@@ -124,7 +132,9 @@ anduinos-desktop  ──Conflicts──→  ubuntu-desktop
       ├─Depends──→ anduinos-no-snapd  ──Conflicts──→ snapd
       │
       └─Recommends─→ anduinos-software-properties-common
-                   → anduinos-software-properties-gtk  (resolute only)
+                   → anduinos-desktop-apps
+                     ├─Recommends─→ anduinos-driver-center ─┐
+                     └─Recommends─→ anduinos-oobe ──────────┴─Depends─→ anduinos-secureboot-toolkit
 ```
 
 **Total: 23 Ubuntu packages removed or pinned out.**
@@ -139,15 +149,19 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 |---|---|---|
 | `anduinos-container` | Metapackage | Minimal container base (shell, networking, sudo, editor) |
 | `anduinos-core-system` | Metapackage | Core system foundation (kernel, networking, boot, firmware, APT, security) |
+| `anduinos-kernel-parameters` | Config | AnduinOS 2.0 desktop GRUB drop-in enabling `preempt=full` on Ubuntu's generic kernel |
 | `anduinos-desktop-apps` | Metapackage | Default application selection (browser, office, media, utilities) |
 | `anduinos-archive-keyring` | Core | GPG keys for AnduinOS APT repositories |
-| `anduinos-fonts` | Fonts | CascadiaCode, NerdFonts, Noto Sans/Serif, Twemoji |
+| `anduinos-fonts` | Fonts | Cascadia Code, Nerd Fonts Symbols, Noto Sans/Serif, Twemoji |
 | `anduinos-theme` | Metapackage | AnduinOS theme stack (Fluent GTK + Fluent icons + fonts + wallpapers) |
 | `anduinos-fluent-gtk-theme` | Theme | Fluent UI GTK theme |
 | `anduinos-fluent-icon-theme` | Theme | Fluent UI Icon theme |
 | `anduinos-gdm3-wallpaper` | Theme | GDM3 dynamic wallpaper engine |
 | `anduinos-appearance` | App | Taskbar layout switcher (Windows 11 / Classic) |
 | `anduinos-appstore` | App | Flatpak-based app store with Flathub remote |
+| `anduinos-driver-center` | App | Focused GTK4 driver manager for graphics, Xbox controllers, and Secure Boot trust |
+| `anduinos-btrfs-snapshots-manager` | App | GTK4/libadwaita manager for symmetric System and Personal Files Btrfs snapshots, automatic retention, file recovery, and guarded system rollback |
+| `anduinos-secureboot-toolkit` | Library | Shared Secure Boot, MOK enrollment, and DKMS signing health/repair backend and UI |
 | `anduinos-deskmon` | Service | Desktop monitoring / hardware info agent |
 | `anduinos-system-tweaks` | Config | System tuning (swappiness, I/O scheduler, sysctl) |
 | `anduinos-system-tweaks-server` | Service | Background service for system tweaks |
@@ -155,7 +169,70 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-dconf-runtime` | Core | dconf profile and dpkg trigger runtime for GNOME system defaults |
 | `anduinos-dconf-defaults` | Config | dconf / gsettings defaults for GNOME |
 | `anduinos-gnome-shell-locale` | Locale | GNOME Shell locale / text overrides |
-| `anduinos-live-settings` | Config | Live CD timezone hook (casper-bottom); removed after install |
+| `anduinos-live-settings` | Config | Casper regional hooks and Live-only systemd policy; removed before target bootloader setup |
+
+### Kernel ownership contract (Resolute)
+
+AnduinOS supports the Resolute kernel path. The canonical owner of kernel
+availability is `anduinos-core-system`, which has a hard dependency on Ubuntu's
+`linux-generic-hwe-26.04` metapackage. The installed desktop reaches it through
+this mandatory chain:
+
+```
+anduinos-desktop
+  -> anduinos-desktop-core
+    -> anduinos-core-system
+      -> linux-generic-hwe-26.04
+        -> linux-image-generic-hwe-26.04
+        -> linux-headers-generic-hwe-26.04
+```
+
+This dependency chain, rather than an ISO build script, must install and retain
+the kernel. ISO builders must not directly install the split image or headers
+metapackages and must not add a parallel dependency on `linux-generic`. The
+native installer copies the packaged Live filesystem, retains the kernel
+packages in the target, regenerates the initramfs and bootloader configuration,
+and verifies that at least one kernel has a matching initramfs.
+
+`anduinos-kernel-parameters` has a separate responsibility: it owns the desktop
+boot policy, not the kernel binary. It installs
+`/etc/default/grub.d/99-anduinos-desktop.cfg`, appends `preempt=full`, conflicts
+with `lowlatency-kernel`, refreshes GRUB on a real installed system, and marks a
+reboot as required. Its maintainer scripts defer GRUB work inside a chroot. The
+package also depends on `linux-generic-hwe-26.04` so that installing the policy
+standalone cannot leave it paired with an unsupported kernel track.
+
+`anduinos-desktop` recommends `anduinos-kernel-parameters` on Resolute. The
+official ISO is built with recommends enabled, so both
+`anduinos-core-system` and `anduinos-kernel-parameters` remain installed in the
+final desktop system. Keeping the policy as a recommendation is intentional:
+server and container variants inherit the core HWE kernel contract without
+inheriting the desktop latency policy. Removing the parameter package removes
+`preempt=full`; it must not make the system's HWE kernel autoremovable because
+`anduinos-core-system` still owns that hard dependency.
+
+Systems upgraded from older images may still have `linux-generic` as an
+automatically installed, now-unused metapackage because older AnduinOS packages
+depended on it while the ISO separately installed the split HWE image and
+headers metapackages. The expected migration is to install
+`linux-generic-hwe-26.04`, leave the running kernel intact, and allow APT to
+offer only the obsolete Generic metapackage for later autoremove. Package
+maintainer scripts must not purge kernels or rewrite the user's APT manual/auto
+marks to force convergence.
+
+Future changes must preserve these invariants:
+
+- `anduinos-core-system` keeps a hard dependency on the supported HWE kernel
+  metapackage.
+- `anduinos-kernel-parameters` remains a separable desktop policy package.
+- ISO construction obtains the kernel through the AnduinOS package graph.
+- Installed-system cleanup never treats kernel packages as Live-only payloads.
+- Migration between kernel tracks is expressed through dependencies and is
+  validated with APT upgrade and autoremove simulations; it is never
+  implemented by maintainer-script package purges.
+
+AnduinBook OEM kernel work is outside this contract and remains a separate
+future hardware-enablement track.
 
 ## Build
 
@@ -169,12 +246,12 @@ apkg publish
 
 | Category | Packages | Monthly action |
 |---|---|---|
-| 🔧 **Manual — update commit/version** | Fluent GTK theme, Fluent icon theme, ALSA UCM Conf, Firmware SOF, Xbox Driver | Edit `download.sh` + bump `.aosproj` |
+| 🔧 **Manual — update commit/version** | Apkg client, Fluent GTK theme, Fluent icon theme, ALSA UCM Conf, Firmware SOF, Xbox Driver | Edit `download.sh` + bump `.aosproj` |
 | 🤖 **Auto — CI resolves at build time** | 19 GNOME Shell extensions | Trigger CI; resolver pulls latest from extensions.gnome.org |
 | 🤖 **Auto — pulls latest upstream .deb** | base-files, plymouth, software-properties-common, software-properties-gtk, firefox | Trigger CI; pulls latest from Ubuntu/Mozilla mirrors |
 | 🤖 **Auto — metapackages** | anduinos-desktop, theme, desktop-core, etc. | Trigger CI only if dependency list changed |
 
-**Bottom line:** 5 packages need manual edits each month. Everything else = run CI.
+**Bottom line:** 6 packages need manual edits each month. Everything else = run CI.
 
 ---
 
@@ -190,13 +267,13 @@ Run through this table each month. If anything has changed upstream, follow the 
 
 | # | What | Where to check | Update action |
 |---|---|---|---|
-| 1 | **Fluent GTK theme** | `anduinos-fluent-gtk-theme/download.sh:5` (commit) + [gtk-mirror] | Update commit → section B |
-| 2 | **Fluent icon theme** | `anduinos-fluent-icon-theme/download.sh:5` (commit) + [icon-mirror] | Update commit → section B |
-| 3 | **ALSA UCM Conf** | `alsa-ucm-conf-anduinos/download.sh:5` (commit) + upstream [alsa-repo] | Update commit → section B |
-| 4 | **SOF firmware** | `firmware-sof-anduinos/download.sh:5` (`SOF_VERSION`) + upstream [sof-releases] | Update version → section C |
-| 5 | **Xbox Controller Driver** | `anduinos-xbox-controller-driver/download.sh` (`COMMIT_ID`) + [xpadneo-mirror] | Update commit → section B |
-| 6 | **GNOME Shell version map** | `lib/gnome-versions.sh:3-7` — compare with Ubuntu's `gnome-shell` package for each supported suite | Update map → section D |
-| 7 | **Fluent upstream versions** | [Fluent-gtk-theme] and [Fluent-icon-theme] GitHub releases — determine latest upstream version | Update version → section B |
+| 1 | **Apkg client** | `apkg/download.sh` (`VERSION`) + [apkg-nuget] | Update version and checksums → section B.4 |
+| 2 | **Fluent GTK theme** | `anduinos-fluent-gtk-theme/download.sh:5` (commit) + [gtk-mirror] | Update commit → section B |
+| 3 | **Fluent icon theme** | `anduinos-fluent-icon-theme/download.sh:5` (commit) + [icon-mirror] | Update commit → section B |
+| 4 | **ALSA UCM Conf** | `alsa-ucm-conf-anduinos/download.sh:5` (commit) + upstream [alsa-repo] | Update commit → section B |
+| 5 | **SOF firmware** | `firmware-sof-anduinos/download.sh:5` (`SOF_VERSION`) + upstream [sof-releases] | Update version → section C |
+| 6 | **Xbox Controller Driver** | `anduinos-xbox-controller-driver/download.sh` (`COMMIT_ID`) + [xpadneo-mirror] | Update commit → section B |
+| 7 | **GNOME Shell version map** | `lib/gnome-versions.sh:3-7` — compare with Ubuntu's `gnome-shell` package for each supported suite | Update map → section D |
 | 8 | **GNOME Shell extensions** | Run a CI build — the resolver fetches the latest compatible version dynamically | Update version → section D |
 
 [sof-releases]: https://github.com/thesofproject/sof-bin/releases
@@ -204,12 +281,13 @@ Run through this table each month. If anything has changed upstream, follow the 
 [gtk-mirror]: https://gitlab.aiursoft.com/mirror/fluent-gtk-theme/
 [icon-mirror]: https://gitlab.aiursoft.com/mirror/fluent-icon-theme/
 [xpadneo-mirror]: https://gitlab.aiursoft.com/mirror/xpadneo/
+[apkg-nuget]: https://www.nuget.org/packages/Aiursoft.Apkg.Client
 
 ---
 
-### B. Git-Pinned Packages (Fluent GTK, Fluent Icon, ALSA UCM Conf, Xbox Driver)
+### B. Pinned Upstream Packages
 
-Three packages clone a git repo and pin to a specific commit hash. Both the **commit hash** and the **`.aosproj` PackageVersion** must be updated together.
+Four packages clone a git repo and pin to a specific commit hash. Both the **commit hash** and the **`.aosproj` PackageVersion** must be updated together. The Apkg client is pinned to a NuGet release and is covered separately in section B.4.
 
 #### B.1 Check for updates
 
@@ -256,6 +334,53 @@ Example diff for Fluent GTK theme:
 cd <package-dir>
 apkg publish
 ```
+
+#### B.4 Apkg client
+
+The `apkg` package extracts the framework-dependent client from an official NuGet package. Once per month, compare `VERSION` in `apkg/download.sh` with the latest stable [Aiursoft.Apkg.Client release][apkg-nuget]. When a new release is available:
+
+1. Update `VERSION` in `apkg/download.sh`; `PACKAGE` and `PACKAGE_URL` are derived from it.
+2. Download the official `.nupkg` and update `PACKAGE_SHA256` with `sha256sum`.
+3. Set `SOURCE_COMMIT` to the commit matching that release, download its `LICENSE`, and update `LICENSE_SHA256`.
+4. Update `<PackageVersion>` in `apkg/apkg.aosproj` to the upstream version with Debian revision `-1`; if only the packaging changes, increment that revision instead.
+5. Recreate and verify the payload:
+
+   ```bash
+   cd apkg
+   bash download.sh
+   apkg lint --path .
+   apkg build --path .
+   ```
+
+Practical one-time checklist for this package:
+
+```bash
+# 1) Find latest stable version from NuGet
+curl -sSL https://api.nuget.org/v3-flatcontainer/aiursoft.apkg.client/index.json \
+  | sed -n 's/.*\"versions\":\[\(.*\)\].*/\\1/p' \
+  | tr -d '[]\" ' \
+  | tr ',' '\n' \
+  | tail -n 1
+
+# 2) Verify payload and metadata from that version
+VERSION=<new-version>
+curl -L -o /tmp/aiursoft.apkg.client.${VERSION}.nupkg \
+  https://www.nuget.org/api/v2/package/Aiursoft.Apkg.Client/${VERSION}
+sha256sum /tmp/aiursoft.apkg.client.${VERSION}.nupkg
+SOURCE_COMMIT=$(unzip -p /tmp/aiursoft.apkg.client.${VERSION}.nupkg '*.nuspec' \
+  | grep -m1 "commit=" | sed -n 's/.*commit="\\([^\"]*\\)".*/\\1/p')
+curl -L https://raw.githubusercontent.com/aiursoftweb/apkg/${SOURCE_COMMIT}/LICENSE -o /tmp/apkg.license
+sha256sum /tmp/apkg.license
+
+# 3) Local build + install smoke check
+cd apkg
+bash download.sh
+apkg lint --path .
+apkg build --path .
+sudo apt install -y --allow-downgrades ./bin/apkg_*_amd64.deb
+```
+
+Do not commit `apkg/deploy/`; it is regenerated by `download.sh` during the build.
 
 ---
 
@@ -382,12 +507,13 @@ These URLs are not on a monthly schedule, but should be reviewed whenever infras
 
 When doing a full monthly triage, follow this order — earlier packages are dependencies of later ones:
 
-1. **Fluent icon theme** + **Fluent GTK theme** (no deps)
-2. **ALSA UCM Conf** + **SOF firmware** (alsa-ucm-conf depends on nothing; SOF recommends alsa-ucm-conf but doesn't build-depend on it)
-3. **GNOME Shell extension** version audits (no cross-deps)
-4. **GNOME version map** update (triggers extension rebuilds)
-5. **Ubuntu-derived packages** (no cross-deps; build picks up latest)
-6. **Meta-packages** — rebuild last (`anduinos-desktop`, `anduinos-desktop-core`, `anduinos-gnome-extensions`, `anduinos-theme`)
+1. **Apkg client** (build tool; update and verify it first)
+2. **Fluent icon theme** + **Fluent GTK theme** (no deps)
+3. **ALSA UCM Conf** + **SOF firmware** (alsa-ucm-conf depends on nothing; SOF recommends alsa-ucm-conf but doesn't build-depend on it)
+4. **GNOME Shell extension** version audits (no cross-deps)
+5. **GNOME version map** update (triggers extension rebuilds)
+6. **Ubuntu-derived packages** (no cross-deps; build picks up latest)
+7. **Meta-packages** — rebuild last (`anduinos-desktop`, `anduinos-desktop-core`, `anduinos-gnome-extensions`, `anduinos-theme`)
 
 For each updated package, push to `master` — CI runs `apkg publish && apkg push` automatically.
 
@@ -444,7 +570,7 @@ sudo apt install -y \
     anduinos-no-snapd \
     anduinos-session \
     anduinos-software-properties-common \
-    anduinos-software-properties-gtk \
+    anduinos-driver-center \
     anduinos-system-tweaks \
     firefox-anduinos \
     gnome-shell-extension-appindicator-anduinos \
@@ -468,6 +594,7 @@ sudo apt install -y \
     ubuntu-release-upgrader-core- \
     ubuntu-release-upgrader-gtk- \
     whoopsie- \
+    anduinos-software-properties-gtk- \
     software-properties-gtk- \
     software-properties-common- \
     firmware-sof-signed- \

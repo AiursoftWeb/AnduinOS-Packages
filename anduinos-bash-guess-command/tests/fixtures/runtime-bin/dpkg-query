@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+[[ ${ANDUINOS_RUNTIME_APT_COUNT-} ]] || exit 90
+printf 'dpkg-query\n' >>"$ANDUINOS_RUNTIME_APT_COUNT"
+[[ $1 == '--show' ]] || exit 91
+printf '%s\n' bash build-essential

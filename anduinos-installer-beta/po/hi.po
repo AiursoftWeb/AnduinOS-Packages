@@ -1,0 +1,1585 @@
+# Hindi translations for anduinos-installer-beta package.
+# Copyright (C) 2026 THE anduinos-installer-beta'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-installer-beta package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-installer-beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-01 11:01+0000\n"
+"PO-Revision-Date: 2026-07-30 14:00+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/pages.py:2092
+msgid "Installing an input method requires an Internet connection."
+msgstr "इनपुट विधि इंस्टॉल करने के लिए इंटरनेट कनेक्शन आवश्यक है।"
+
+#: src/pages.py:2103
+msgid ""
+"No Internet connection. Input methods cannot be installed. You can install "
+"them later when connected."
+msgstr ""
+"इंटरनेट कनेक्शन उपलब्ध नहीं है। इनपुट विधियां इंस्टॉल नहीं की जा सकतीं। "
+"कनेक्ट होने पर आप उन्हें बाद में इंस्टॉल कर सकते हैं।"
+
+#: src/pages.py:4933
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"एक वास्तविक इंस्टालेशन मशीन-लोकल MOK बनाएगा। रीबूट के बाद, MOKManager में Enroll MOK → Continue → Yes चुनें और पासवर्ड 123456 दर्ज करें।"
+
+#: src/pages.py:4944
+msgid ""
+"\n"
+"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
+msgstr ""
+"\n"
+"नीले MOKManager स्क्रीन पर Enroll MOK → Continue → Yes चुनें, पासवर्ड: 123456"
+
+#: src/pages.py:4275
+msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
+msgstr "4 GiB डिस्क स्विप (प्राथमिकता 10) + 50% RAM LZ4 zram (प्राथमिकता 100)"
+
+#: src/pages.py:4085
+msgid "; sudo does not require a password"
+msgstr "; sudo के लिए पासवर्ड की आवश्यकता नहीं है"
+
+#: src/pages.py:4087
+msgid "; sudo requires the account password"
+msgstr "; sudo को अकाउंट पासवर्ड की आवश्यकता होती है"
+
+#: src/pages.py:129
+msgid ""
+"A partition on this disk is mounted. Unmount it and rescan storage before "
+"continuing."
+msgstr ""
+"इस डिस्क पर एक विभाजन माउंट किया गया है। आगे बढ़ने से पहले इसे अनमाउंट करें "
+"और स्टोरेज का पुनः स्कैन करें।"
+
+#: src/pages.py:2899
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "{disk} पर मौजूद सभी डेटा स्थायी रूप से मिटा दिया जाएगा।"
+
+#: src/pages.py:4082
+msgid "Account security"
+msgstr "अकाउंट सुरक्षा"
+
+#: src/pages.py:2980
+msgid "Advanced Storage"
+msgstr "उन्नत स्टोरेज"
+
+#: src/pages.py:2889
+msgid ""
+"Advanced coexistence can affect EFI firmware state and may trigger BitLocker"
+" recovery. It never shrinks or repairs Windows volumes."
+msgstr ""
+"उन्नत सहअस्तित्व EFI फर्मवेयर की स्थिति को प्रभावित कर सकता है और BitLocker "
+"रिकवरी को ट्रिगर कर सकता है। यह कभी भी Windows वॉल्यूम को छोटा नहीं करता या "
+"उसकी मरम्मत नहीं करता।"
+
+#: src/pages.py:2838
+msgid "Advanced — keep existing systems"
+msgstr "उन्नत — मौजूदा सिस्टम को बनाए रखें"
+
+#: src/pages.py:2985
+msgid "Advanced: Install Alongside"
+msgstr "उन्नत: साथ में इंस्टॉल करें"
+
+#: src/pages.py:164
+msgid ""
+"After changing partitions or unmounting a volume, rescan storage and select "
+"the target again."
+msgstr ""
+"विभाजनों को बदलने या किसी वॉल्यूम को अनमाउंट करने के बाद, स्टोरेज का पुनः "
+"स्कैन करें और लक्ष्य को फिर से चुनें।"
+
+#: src/pages.py:4801
+msgid ""
+"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
+"then enter password 123456."
+msgstr ""
+"रीस्टार्ट के बाद, MOKManager खुलेगा। Enroll MOK → Continue → Yes चुनें, फिर "
+"पासवर्ड 123456 दर्ज करें।"
+
+#: src/pages.py:4432
+msgid ""
+"All partitions and data on {disk} will be destroyed.\n"
+"\n"
+msgstr ""
+"{disk} पर मौजूद सभी विभाजन और डेटा नष्ट हो जाएंगे।\n"
+"\n"
+
+#: src/pages.py:155
+msgid ""
+"Alternatively, you may explicitly select one entire partition to erase. "
+"Everything in that selected partition will be destroyed; it is never "
+"selected automatically."
+msgstr ""
+"वैकल्पिक रूप से, आप मिटाने के लिए एक पूर्ण विभाजन स्पष्ट रूप से चुन सकते "
+"हैं। उस चयनित विभाजन में मौजूद सब कुछ नष्ट हो जाएगा; इसे कभी भी स्वचालित रूप"
+" से चयनित नहीं किया जाता है।"
+
+#: src/pages.py:924 src/pages.py:986
+msgid "Battery power is too low for a safe installation."
+msgstr "सुरक्षित इंस्टॉलेशन के लिए बैटरी का स्तर बहुत कम है।"
+
+#: src/pages.py:895
+msgid "Charge to at least 80% before starting the installation."
+msgstr "इंस्टॉलेशन शुरू करने से पहले बैटरी को कम से कम 80% तक चार्ज करें।"
+
+#: src/pages.py:1041 src/pages.py:1016
+msgid "Continue Anyway"
+msgstr "फिर भी जारी रखें"
+
+#: src/pages.py:1000
+msgid "Current battery level: {percent}%"
+msgstr "वर्तमान बैटरी स्तर: {percent}%"
+
+#: src/pages.py:1006
+msgid "External power is connected."
+msgstr "बाहरी बिजली स्रोत जुड़ा हुआ है।"
+
+#: src/pages.py:1008
+msgid "External power is not connected."
+msgstr "बाहरी बिजली स्रोत जुड़ा हुआ नहीं है।"
+
+#: src/pages.py:954
+msgid "I understand the risks and insist on installing with low battery."
+msgstr "मैं जोखिमों को समझता हूँ और कम बैटरी में इंस्टॉल करने पर अड़ा हूँ।"
+
+#: src/pages.py:894 src/pages.py:889 src/pages.py:967 src/pages.py:969
+msgid "Low battery"
+msgstr "बैटरी कम है"
+
+#: src/pages.py:948
+msgid "Recheck"
+msgstr "फिर से जाँचें"
+
+#: src/main.py:110 src/pages.py:731 src/pages.py:815
+msgid "AnduinOS Installer"
+msgstr "AnduinOS इंस्टालर"
+
+#: src/main.py:108
+msgid "AnduinOS Installer (Development)"
+msgstr "AnduinOS इंस्टालर (विकास)"
+
+#: src/pages.py:4425
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS केवल {disk} पर चयनित अविभाजित स्थान का उपयोग करेगा। मौजूदा विभाजन सुरक्षित रहेंगे।\n"
+"\n"
+
+#: src/pages.py:133
+msgid ""
+"AnduinOS will use only the selected unallocated space. The installer will "
+"not shrink or move an existing filesystem."
+msgstr ""
+"AnduinOS केवल चयनित अविभाजित स्थान का उपयोग करेगा। इंस्टॉलर किसी मौजूदा "
+"फ़ाइल सिस्टम को छोटा या स्थानांतरित नहीं करेगा।"
+
+#: data/languages.json:keyboard_layouts
+msgid "Arabic"
+msgstr "अरबी"
+
+#: src/pages.py:268 src/pages.py:4461 src/pages.py:817
+msgid "Back"
+msgstr "पीछे जाएं"
+
+#: src/pages.py:3014
+msgid ""
+"Before continuing: finish Windows updates, disable Fast Startup and "
+"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
+"measurements and boot order can change."
+msgstr ""
+"आगे बढ़ने से पहले: Windows अपडेट पूरे करें, Fast Startup और हibernation "
+"अक्षम करें, और BitLocker रिकवरी की का बैकअप लें। EFI, Secure Boot, TPM माप "
+"और बूट क्रम बदल सकता है।"
+
+#: src/pages.py:2470
+msgid "BitLocker detected"
+msgstr "BitLocker का पता चला"
+
+#: src/pages.py:146
+msgid ""
+"BitLocker storage will be preserved. The installer will not unlock, resize, "
+"repair or otherwise modify it."
+msgstr ""
+"BitLocker स्टोरेज सुरक्षित रहेगा। इंस्टॉलर इसे अनलॉक, रीसाइज़, रिपेयर या "
+"किसी अन्य प्रकार से संशोधित नहीं करेगा।"
+
+#: src/pages.py:4186
+msgid "Boot policy"
+msgstr "बूट नीति"
+
+#: src/pages.py:3055
+msgid "Btrfs (recommended)"
+msgstr "Btrfs (अनुशंसित)"
+
+#: src/pages.py:2817
+msgid "Btrfs — recommended"
+msgstr "Btrfs — अनुशंसित"
+
+#: src/pages.py:4361
+msgid "Cannot create installation plan"
+msgstr "इंस्टालेशन योजना नहीं बनाई जा सकती"
+
+#: src/pages.py:2727
+msgid "Choose Installation Method"
+msgstr "इंस्टॉलेशन विधि चुनें"
+
+#: src/pages.py:2498
+msgid "Choose one target disk. Storage settings come next."
+msgstr "एक लक्ष्य डिस्क चुनें। स्टोरेज सेटिंग्स अगली हैं।"
+
+#: src/pages.py:2199
+msgid "Choose optional software to install"
+msgstr "इंस्टॉल करने के लिए वैकल्पिक सॉफ्टवेयर चुनें"
+
+#: src/pages.py:813
+msgid "Choose your language to begin installation"
+msgstr "इंस्टालेशन शुरू करने के लिए अपनी भाषा चुनें"
+
+#: src/pages.py:3819
+msgid "Choose your location to set the system clock"
+msgstr "सिस्टम क्लॉक सेट करने के लिए अपनी स्थिति चुनें"
+
+#: src/pages.py:4838
+msgid "Complete"
+msgstr "पूर्ण"
+
+#: src/pages.py:3506 src/pages.py:3513 src/pages.py:4101 src/pages.py:3601
+#: src/pages.py:4440
+msgid "Computer Name"
+msgstr "कंप्यूटर का नाम"
+
+#: src/pages.py:3594
+msgid "Computer name contains invalid characters."
+msgstr "कंप्यूटर नाम में अमान्य वर्ण हैं।"
+
+#: src/pages.py:4589
+msgid "Configure account, region, timezone, and machine identity"
+msgstr "अकाउंट, क्षेत्र, टाइमज़ोन और मशीन पहचान कॉन्फ़िगर करें"
+
+#: src/pages.py:4578
+msgid "Configure storage and swap"
+msgstr "स्टोरेज और स्विप कॉन्फ़िगर करें"
+
+#: src/pages.py:3480 src/pages.py:3488
+msgid "Confirm Password"
+msgstr "पासवर्ड की पुष्टि करें"
+
+#: src/pages.py:1939
+msgid "Confirm your keyboard layout"
+msgstr "अपनी कीबोर्ड लेआउट की पुष्टि करें"
+
+#: src/main.py:153 src/pages.py:1911
+msgid "Continue Installation"
+msgstr "इंस्टालेशन जारी रखें"
+
+#: src/pages.py:4574
+msgid "Copy AnduinOS system"
+msgstr "AnduinOS सिस्टम कॉपी करें"
+
+#: src/pages.py:4675
+msgid "Copy Log"
+msgstr "लॉग कॉपी करें"
+
+#: src/pages.py:3146
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "एक नई 1 GiB AnduinOS EFI सिस्टम पार्तिशन बनाएं"
+
+#: src/pages.py:4163
+msgid ""
+"Create and format a dedicated AnduinOS EFI System Partition inside the "
+"selected space."
+msgstr ""
+"चयनित स्थान के भीतर एक समर्पित AnduinOS EFI सिस्टम पार्तिशन बनाएं और फॉर्मेट"
+" करें।"
+
+#: src/pages.py:3447
+msgid "Create your user account"
+msgstr "अपना उपयोगकर्ता खाता बनाएं"
+
+#: src/pages.py:2412
+msgid "Current disk layout"
+msgstr "वर्तमान डिस्क लेआउट"
+
+#: src/pages.py:3979
+msgid ""
+"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
+"executor or disk command can run."
+msgstr ""
+"विकास मोड — योजना का मान्यता और अनुकरण किया जाएगा। कोई भी विशेषाधिकृत "
+"निष्पादक या डिस्क कमांड नहीं चलाया जा सकता।"
+
+#: data/languages.json:keyboard_layouts
+msgid "Danish"
+msgstr "डेनिश"
+
+#: src/pages.py:4569
+msgid "Detect Internet connectivity"
+msgstr "इंटरनेट कनेक्टिविटी का पता लगाएं"
+
+#: src/pages.py:4566
+msgid "Detect firmware and Secure Boot"
+msgstr "फ़र्मवेयर और सिक्योर बूट का पता लगाएं"
+
+#: src/pages.py:4419
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be changed.\n"
+"\n"
+msgstr ""
+"विकास मोड {disk} पर इंस्टालेशन का अनुकरण करेगा। कोई डिस्क डेटा नहीं बदला जाएगा।\n"
+"\n"
+
+#: src/pages.py:4923
+msgid "Development simulation completed"
+msgstr "विकास अनुकरण पूर्ण हुआ"
+
+#: src/pages.py:4832
+msgid "Discover AnduinOS"
+msgstr "AnduinOS खोजें"
+
+#: src/pages.py:1216 src/pages.py:2218
+msgid "Download and install system updates during installation"
+msgstr "इंस्टालेशन के दौरान सिस्टम अपडेट डाउनलोड और इंस्टॉल करें"
+
+#: data/languages.json:keyboard_layouts
+msgid "Dutch"
+msgstr "डच"
+
+#: src/pages.py:3073
+msgid "EFI System Partition"
+msgstr "EFI सिस्टम विभाजन"
+
+#: src/pages.py:4184
+msgid "EFI policy"
+msgstr "EFI नीति"
+
+#: src/pages.py:2455
+msgid "Empty disk — no partitions"
+msgstr "खाली डिस्क — कोई विभाजन नहीं"
+
+#: src/pages.py:2821
+msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
+msgstr ""
+"शेयरड-स्पेस सबवॉल्यूम्स, स्नैपशॉट्स और Disk Snapshots Manager को सक्षम करता "
+"है।"
+
+#: data/languages.json:keyboard_layouts
+msgid "English (UK)"
+msgstr "अंग्रेजी (यूके)"
+
+#: data/languages.json:keyboard_layouts
+msgid "English (US)"
+msgstr "अंग्रेजी (यूएस)"
+
+#: src/pages.py:4601
+msgid "Ensure Disk Snapshots Manager is available"
+msgstr "सुनिश्चित करें कि Disk Snapshots Manager उपलब्ध है"
+
+#: src/pages.py:4412
+msgid "Erase Disk and Install"
+msgstr "डिस्क मिटाएं और इंस्टॉल करें"
+
+#: src/pages.py:2813 src/pages.py:4226
+msgid "Erase every partition and all data on the selected disk."
+msgstr "चयनित डिस्क पर हर विभाजन और सभी डेटा मिटाएँ।"
+
+#: src/pages.py:4411
+msgid "Erase the entire selected disk?"
+msgstr "संपूर्ण चयनित डिस्क मिटाना है?"
+
+#: src/pages.py:137
+msgid ""
+"Existing Windows, recovery and data partitions remain outside the write set "
+"and will be preserved."
+msgstr ""
+"विद्यमान Windows, रिकवरी और डेटा विभाजन लिखने वाले सेट के बाहर रहेंगे और "
+"संरक्षित रहेंगे।"
+
+#: src/pages.py:2945
+msgid ""
+"Existing partitions were detected. The first two choices delete them; "
+"Advanced is the preservation path."
+msgstr ""
+"विद्यमान विभाजनों का पता चला है। पहले दो विकल्प उन्हें मिटाते हैं; उन्नत "
+"(Advanced) विकल्प संरक्षण मार्ग है।"
+
+#: src/pages.py:4446
+msgid ""
+"Existing partitions will be preserved. New AnduinOS partitions will be "
+"created only in the selected unallocated extent; EFI vendor files and the "
+"AnduinOS firmware boot entry may be updated."
+msgstr ""
+"विद्यमान विभाजन संरक्षित रहेंगे। नए AnduinOS विभाजन केवल चयनित अबांट नहीं गए"
+" भाग में ही बनाए जाएंगे; EFI वेंडर फ़ाइलें और AnduinOS फर्मवेयर बूट एंट्री "
+"अपडेट की जा सकती हैं।"
+
+#: src/pages.py:3052 src/pages.py:4049
+msgid "Filesystem"
+msgstr "फ़ाइल सिस्टम"
+
+#: src/pages.py:4613
+msgid "Finalize target environment"
+msgstr "लक्ष्य पर्यावरण को अंतिम रूप दें"
+
+#: data/languages.json:keyboard_layouts
+msgid "Finnish"
+msgstr "फिनिश"
+
+#: src/pages.py:4182
+msgid "Formats"
+msgstr "फॉर्मेट करता है"
+
+#: data/languages.json:keyboard_layouts
+msgid "French"
+msgstr "फ्रेंच"
+
+#: src/pages.py:3462 src/pages.py:3464
+msgid "Full Name"
+msgstr "पूरा नाम"
+
+#: data/languages.json:keyboard_layouts
+msgid "German"
+msgstr "जर्मन"
+
+#: data/languages.json:keyboard_layouts
+msgid "Greek"
+msgstr "यूनानी"
+
+#: src/pages.py:111
+msgid ""
+"Guided coexistence requires a system booted in UEFI mode and a GPT target "
+"disk. This disk cannot continue in guided mode."
+msgstr ""
+"संचालित सहअस्तित्व के लिए UEFI मोड में बूट किए गए सिस्टम और GPT टारगेट डिस्क"
+" की आवश्यकता होती है। यह डिस्क संचालित मोड में जारी नहीं रख सकती है।"
+
+#: src/pages.py:4131
+msgid ""
+"Guided storage selection is missing. Rescan and select the target again."
+msgstr ""
+"संचालित स्टोरेज चयन गायब है। पुनः स्कैन करें और फिर से टारगेट का चयन करें।"
+
+#: data/languages.json:keyboard_layouts
+msgid "Hindi (India)"
+msgstr "हिन्दी (भारत)"
+
+#: src/pages.py:2741
+msgid "How should AnduinOS use this disk?"
+msgstr "AnduinOS को इस डिस्क का उपयोग कैसे करना चाहिए?"
+
+#: data/languages.json:keyboard_layouts
+msgid "Indonesian"
+msgstr "इंडोनेशियाई"
+
+#: src/pages.py:4498
+msgid "Install"
+msgstr "इंस्टॉल करें"
+
+#: src/pages.py:4559 src/pages.py:1221 src/pages.py:4125
+msgid "Install input method"
+msgstr "इनपुट विधि इंस्टॉल करें"
+
+#: src/pages.py:625
+msgid "Install {language} input method: {name}"
+msgstr "{language} इनपुट विधि इंस्टॉल करें: {name}"
+
+#: src/pages.py:4409 src/pages.py:4496
+msgid "Install Alongside"
+msgstr "साथ में इंस्टॉल करें"
+
+#: src/pages.py:4169
+msgid "Install alongside"
+msgstr "साथ में इंस्टॉल करें"
+
+#: src/pages.py:4608
+msgid "Install bootloader"
+msgstr "बूटलोडर इंस्टॉल करें"
+
+#: src/pages.py:4611
+msgid "Check systems on other disks"
+msgstr "अन्य डिस्क पर सिस्टम जाँचें"
+
+#: src/pages.py:1217 src/pages.py:4603
+msgid "Install hardware drivers"
+msgstr "हार्डवेयर ड्राइवर इंस्टॉल करें"
+
+#: src/pages.py:4408
+msgid "Install in the selected free space?"
+msgstr "चयनित मुक्त स्थान में इंस्टॉल करें?"
+
+#: src/pages.py:4596
+msgid "Ensure required language packs are installed"
+msgstr "सुनिश्चित करें कि आवश्यक भाषा पैकेज इंस्टॉल हैं"
+
+#: src/pages.py:4599
+msgid "Install system updates"
+msgstr "सिस्टम अपडेट इंस्टॉल करें"
+
+#: src/pages.py:2229
+msgid "Install third-party drivers for this device"
+msgstr "इस डिवाइस के लिए थर्ड-पार्टी ड्राइवर इंस्टॉल करें"
+
+#: src/pages.py:5093 src/pages.py:5095 src/pages.py:4940 src/pages.py:4950
+msgid "Installation Complete"
+msgstr "इंस्टालेशन पूर्ण हुआ"
+
+#: src/pages.py:4970
+msgid "Installation Failed"
+msgstr "इंस्टालेशन विफल रहा"
+
+#: src/pages.py:4639
+msgid "Installation Steps"
+msgstr "इंस्टालेशन चरण"
+
+#: src/pages.py:160
+msgid ""
+"Installation cannot continue with this selection. There is no force-continue"
+" option around storage safety checks."
+msgstr ""
+"इस चयन के साथ इंस्टॉलेशन जारी नहीं रखा जा सकता। स्टोरेज सुरक्षा जांच के "
+"आसपास कोई फोर्स-कंटिन्यू विकल्प उपलब्ध नहीं है।"
+
+#: src/pages.py:4919 src/pages.py:4985
+msgid "Installation complete"
+msgstr "इंस्टालेशन पूर्ण हो गया"
+
+#: src/pages.py:4968
+msgid "Installation failed"
+msgstr "इंस्टालेशन विफल रहा"
+
+#: src/main.py:145
+msgid "Installation in progress"
+msgstr "इंस्टालेशन चल रहा है"
+
+#: src/pages.py:4547 src/pages.py:4541
+msgid "Installing AnduinOS"
+msgstr "AnduinOS इंस्टॉल किया जा रहा है"
+
+#: data/languages.json:keyboard_layouts
+msgid "Italian"
+msgstr "इटालियन"
+
+#: data/languages.json:keyboard_layouts
+msgid "Japanese (JIS keyboard)"
+msgstr "जापानी (JIS कीबोर्ड)"
+
+#: src/pages.py:4040
+msgid "Keyboard"
+msgstr "कीबोर्ड"
+
+#: src/pages.py:1938 src/pages.py:1932 src/pages.py:2075
+msgid "Keyboard Layout"
+msgstr "कीबोर्ड लेआउट"
+
+#: src/pages.py:4582
+msgid "Configure physical keyboard layout"
+msgstr "भौतिक कीबोर्ड लेआउट कॉन्फ़िगर करें"
+
+#: data/languages.json:keyboard_layouts
+msgid "Korean"
+msgstr "कोरियाई"
+
+#: src/pages.py:4039
+msgid "Language"
+msgstr "भाषा"
+
+#: src/pages.py:2472
+msgid "Live USB — excluded"
+msgstr "लाइव यूएसबी — बाहर रखा गया"
+
+#: src/pages.py:4573
+msgid "Mount target filesystems"
+msgstr "लक्ष्य फ़ाइल सिस्टम माउंट करें"
+
+#: src/pages.py:851
+msgid "Navigation error"
+msgstr "नेविगेशन त्रुटि"
+
+#: src/pages.py:4180 src/pages.py:4229
+msgid "New partitions"
+msgstr "नई विभाजन (Partitions)"
+
+#: src/pages.py:261 src/pages.py:818 src/pages.py:1016
+msgid "Next"
+msgstr "अगला"
+
+#: src/pages.py:4756
+msgid "Next slide"
+msgstr "अगला स्लाइड"
+
+#: src/pages.py:2389
+msgid "No partition table"
+msgstr "कोई विभाजन तालिका नहीं"
+
+#: src/pages.py:2631
+msgid "No suitable disks found."
+msgstr "कोई उपयुक्त डिस्क नहीं मिली।"
+
+#: src/pages.py:170
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with Windows Disk Management, then boot the installer "
+"again and rescan the disk."
+msgstr ""
+"कोई उपयुक्त अनाबंटित स्थान नहीं मिला। अपने डेटा की सुरक्षा के लिए, विंडोज "
+"डिस्क मैनेजमेंट का उपयोग करके अनाबंटित स्थान बनाएं, फिर इंस्टॉलर को दोबारा "
+"बूट करें और डिस्क को पुनः स्कैन करें।"
+
+#: src/pages.py:175
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with a partitioning tool, then boot the installer again "
+"and rescan the disk."
+msgstr ""
+"कोई उपयुक्त अनाबंटित स्थान नहीं मिला। अपने डेटा की सुरक्षा के लिए, एक विभाजन"
+" टूल का उपयोग करके अनाबंटित स्थान बनाएं, फिर इंस्टॉलर को दोबारा बूट करें और "
+"डिस्क को पुनः स्कैन करें।"
+
+#: data/languages.json:keyboard_layouts
+msgid "Norwegian"
+msgstr "नॉर्वेजियन"
+
+#: src/pages.py:1124 src/pages.py:1375 src/pages.py:4370 src/pages.py:854
+msgid "OK"
+msgstr "ठीक है"
+
+#: src/pages.py:4835
+msgid "Output"
+msgstr "आउटपुट"
+
+#: src/pages.py:4973 src/pages.py:5028
+msgid "Output • Error"
+msgstr "आउटपुट • त्रुटि"
+
+#: src/pages.py:5023
+msgid "Output • {count} warning(s)"
+msgstr "आउटपुट • {count} चेतावनी(याँ)"
+
+#: src/pages.py:2453
+msgid "Partition details unavailable"
+msgstr "विभाजन विवरण उपलब्ध नहीं हैं"
+
+#: src/pages.py:3476 src/pages.py:3487 src/pages.py:1466 src/pages.py:1525
+msgid "Password"
+msgstr "पासवर्ड"
+
+#: src/pages.py:3584
+msgid "Password must be at least 6 characters."
+msgstr "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।"
+
+#: src/pages.py:4048
+msgid "Platform"
+msgstr "प्लेटफ़ॉर्म"
+
+#: src/pages.py:4548
+msgid "Please do not turn off your computer"
+msgstr "कृपया अपना कंप्यूटर बंद न करें"
+
+#: src/pages.py:3965
+msgid "Please review your choices before proceeding"
+msgstr "आगे बढ़ने से पहले कृपया अपने विकल्पों की समीक्षा करें"
+
+#: data/languages.json:keyboard_layouts
+msgid "Polish"
+msgstr "पोलिश"
+
+#: data/languages.json:keyboard_layouts
+msgid "Portuguese"
+msgstr "पोर्टुगिज"
+
+#: data/languages.json:keyboard_layouts
+msgid "Portuguese (Brazil)"
+msgstr "पोर्टुगिज (ब्राजील)"
+
+#: src/pages.py:4594
+msgid "Prepare Secure Boot"
+msgstr "सिक्योर बूट तैयार करें"
+
+#: src/pages.py:4572
+msgid "Prepare installation disk"
+msgstr "इंस्टालेशन डिस्क तैयार करें"
+
+#: src/pages.py:4579
+msgid "Prepare target environment"
+msgstr "लक्ष्य पर्यावरण तैयार करें"
+
+#: src/pages.py:4871
+msgid "Preparing installation…"
+msgstr "इंस्टालेशन तैयार हो रहा है…"
+
+#: src/pages.py:4175
+msgid "Preserved partitions"
+msgstr "संरक्षित विभाजन (Partitions)"
+
+#: src/pages.py:4750
+msgid "Previous slide"
+msgstr "पिछला स्लाइड"
+
+#: src/pages.py:3964 src/pages.py:3958
+msgid "Ready to Install"
+msgstr "इंस्टॉल करने के लिए तैयार"
+
+#: src/pages.py:4811
+msgid "Reboot Now"
+msgstr "अभी रीबूट करें"
+
+#: src/pages.py:4598
+msgid "Refresh package indexes"
+msgstr "पैकेज सूचकांक ताज़ा करें"
+
+#: src/pages.py:4580
+msgid "Remove live-session components"
+msgstr "लाइव-सत्र घटकों को हटाएं"
+
+#: src/pages.py:4951 src/pages.py:4942
+msgid "Remove the installation media and restart your computer"
+msgstr "इंस्टालेशन मीडिया निकालें और अपने कंप्यूटर को रीस्टार्ट करें"
+
+#: src/pages.py:1177 src/pages.py:1205 src/pages.py:2220 src/pages.py:675
+#: src/pages.py:1362 src/pages.py:2233
+msgid ""
+"Requires an Internet connection. The base installation remains available "
+"when offline."
+msgstr ""
+"इंटरनेट कनेक्शन की आवश्यकता होती है। ऑफ़लाइन होने पर बेस इंस्टालेशन उपलब्ध "
+"रहता है।"
+
+#: src/pages.py:2550
+msgid "Rescan Storage"
+msgstr "स्टोरेज पुनः स्कैन करें"
+
+#: src/pages.py:3101
+msgid "Rescan and Reselect Disk"
+msgstr "डिस्क को पुनः स्कैन करें और पुनः चुनें"
+
+#: src/pages.py:4809
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "रीस्टार्ट करें और सिक्योर बूट कुंजी पंजीकृत करें"
+
+#: src/pages.py:4960
+msgid "Restart is disabled in development protection mode"
+msgstr "विकास सुरक्षा मोड में रीस्टार्ट अक्षम है"
+
+#: src/pages.py:3150
+msgid "Reuse {path} ({size})"
+msgstr "{path} ({size}) का पुन: उपयोग करें"
+
+#: src/pages.py:4155
+msgid ""
+"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
+"before writing."
+msgstr ""
+"{path} का पुन: उपयोग करें; कभी भी इसे फॉर्मेट न करें; लिखने से पहले FAT "
+"स्वास्थ्य, पहचान और 64 MiB मुक्त स्थान की सत्यापन करें।"
+
+#: data/languages.json:keyboard_layouts
+msgid "Romanian"
+msgstr "रोमानियन"
+
+#: data/languages.json:keyboard_layouts
+msgid "Russian"
+msgstr "रूसी"
+
+#: src/pages.py:4679
+msgid "Save Log"
+msgstr "लॉग सहेजें"
+
+#: src/pages.py:4609
+msgid "Schedule MOK enrollment"
+msgstr "MOK पंजीकरण शेड्यूल करें"
+
+#: src/pages.py:3831
+msgid "Search timezones…"
+msgstr "टाइमज़ोन खोजें…"
+
+#: src/pages.py:4069
+msgid "Secure Boot enrollment"
+msgstr "सिक्योर बूट पंजीकरण"
+
+#: src/pages.py:2497 src/pages.py:2491
+msgid "Select Installation Disk"
+msgstr "इंस्टालेशन डिस्क चुनें"
+
+#: src/pages.py:3818 src/pages.py:3812
+msgid "Select Timezone"
+msgstr "टाइमज़ोन चुनें"
+
+#: src/pages.py:4592
+msgid "Select fastest package mirror"
+msgstr "सबसे तेज़ पैकेज मिरर चुनें"
+
+#: src/pages.py:3884
+msgid "Selected timezone"
+msgstr "चयनित टाइमज़ोन"
+
+#: src/pages.py:4170
+msgid "Selected unallocated space"
+msgstr "अनुमानित आवंटित स्थान चयनित"
+
+#: src/pages.py:2239
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr "कुछ ड्राइवर प्रोप्राइटरी या अन्यथा गैर-मुफ़्त सॉफ्टवेयर हैं।"
+
+#: data/languages.json:keyboard_layouts
+msgid "Spanish"
+msgstr "स्पेनिश"
+
+#: src/pages.py:4046
+msgid "Stable disk identity"
+msgstr "स्थिर डिस्क पहचान"
+
+#: src/pages.py:4437
+msgid ""
+"Stable identity: {stable_id}\n"
+"\n"
+msgstr ""
+"स्थिर पहचान: {stable_id}\n"
+"\n"
+
+#: src/pages.py:2380
+msgid "Storage Device"
+msgstr "स्टोरेज डिवाइस"
+
+#: src/pages.py:4168 src/pages.py:4224
+msgid "Storage mode"
+msgstr "स्टोरेज मोड"
+
+#: src/pages.py:4050
+msgid "Subvolumes"
+msgstr "सबवॉल्यूम"
+
+#: src/pages.py:4268
+msgid "Swap"
+msgstr "स्विप"
+
+#: data/languages.json:keyboard_layouts
+msgid "Swedish"
+msgstr "स्वीडिश"
+
+#: src/pages.py:4051
+msgid "System updates"
+msgstr "सिस्टम अपडेट"
+
+#: src/pages.py:4042
+msgid "Target Disk"
+msgstr "लक्ष्य डिस्क"
+
+#: src/pages.py:2993 src/pages.py:3260
+msgid "Target: {disk} ({size} — {model})"
+msgstr "लक्ष्य: {disk} ({size} — {model})"
+
+#: src/pages.py:1964 src/pages.py:2076
+msgid "Test your keyboard here…"
+msgstr "अपना कीबोर्ड यहाँ परीक्षण करें…"
+
+#: data/languages.json:keyboard_layouts
+msgid "Thai"
+msgstr "थाई"
+
+#: src/pages.py:120
+msgid ""
+"The GPT disk or one of its partitions has no unique stable identifier. "
+"Guided coexistence cannot safely authorize preservation or writes on this "
+"disk."
+msgstr ""
+"GPT डिस्क या उसके किसी भी पार्शन का कोई अद्वितीय स्थिर पहचानकर्ता नहीं है। "
+"गाइडेड सहअस्तित्व इस डिस्क पर सुरक्षित रूप से संरक्षण या लेखन की अनुमति नहीं"
+" दे सकता है।"
+
+#: src/pages.py:115
+msgid ""
+"The complete partition map and free-space geometry could not be read "
+"consistently. No space on this disk is authorized for installation."
+msgstr ""
+"पूर्ण पार्शन मानचित्र और मुक्त-स्थान ज्यामिति को सुसंगत रूप से पढ़ा नहीं जा "
+"सका। इस डिस्क पर इंस्टॉलेशन के लिए कोई भी स्थान अनुमत नहीं है।"
+
+#: src/pages.py:141
+msgid ""
+"The existing EFI System Partition is only a candidate. Health and free-space"
+" checks must pass before it can be reused, and it will never be formatted."
+msgstr ""
+"मौजूदा EFI सिस्टम पार्टिशन केवल एक उम्मीदवार है। इसे दोबारा उपयोग करने से "
+"पहले स्वास्थ्य और मुक्त-स्थान जाँच पास होनी चाहिए, और इसे कभी भी फॉर्मेट "
+"नहीं किया जाएगा।"
+
+#: src/pages.py:4926
+msgid ""
+"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
+" state, or installed system was changed."
+msgstr ""
+"इंस्टालेशन योजना मान्य है। कोई डिस्क, फ़ाइल सिस्टम, बूटलोडर, सिक्योर बूट "
+"स्थिति, या इंस्टॉल किया गया सिस्टम नहीं बदला गया था।"
+
+#: src/main.py:147
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr ""
+"जब तक इंस्टालर लक्ष्य डिस्क को संशोधित कर रहा है, तब तक उसे बंद नहीं किया जा"
+" सकता।"
+
+#: src/pages.py:150
+msgid ""
+"The installer will not mount, repair or infer the safety of Windows volumes "
+"from hibernation or Fast Startup state. Any required Windows maintenance "
+"must be completed in Windows."
+msgstr ""
+"इंस्टालर हाइबरनेशन या फास्ट स्टार्टअप स्थिति से Windows वॉल्यूम्स को माउंट, "
+"मरम्मत या उनकी सुरक्षा का अनुमान नहीं लगाएगा। कोई भी आवश्यक Windows रखरखाव "
+"Windows में पूरा किया जाना चाहिए।"
+
+#: src/pages.py:4443
+msgid "The privileged executor is disabled."
+msgstr "विशेषाधिकृत निष्पादक अक्षम है।"
+
+#: src/pages.py:3228
+msgid ""
+"The selected disk changed or disappeared. Return to the disk page and select"
+" it again. {error}"
+msgstr ""
+"चयनित डिस्क बदल गई या गायब हो गई। डिस्क पेज पर लौटें और इसे फिर से चयन करें।"
+" {error}"
+
+#: src/pages.py:3241
+msgid "The selected disk size changed. Return and select it again."
+msgstr "चयनित डिस्क का आकार बदल गया। लौटें और इसे फिर से चयन करें।"
+
+#: src/pages.py:3251
+msgid ""
+"The selected disk topology changed. Review the disk and installation method "
+"again."
+msgstr ""
+"चयनित डिस्क की टोपोलॉजी बदल गई। डिस्क और इंस्टालेशन विधि को फिर से समीक्षा "
+"करें।"
+
+#: src/pages.py:3580
+msgid "The two passwords do not match."
+msgstr "दोनों पासवर्ड मेल नहीं खाते।"
+
+#: src/pages.py:4057
+msgid "Third-party drivers"
+msgstr "थर्ड-पार्टी ड्राइवर"
+
+#: src/pages.py:3021
+msgid ""
+"This advanced path preserves existing partitions but changes the selected "
+"disk's partition table and the machine's EFI boot state."
+msgstr ""
+"यह उन्नत पथ मौजूदा पार्टिशनों को बनाए रखता है लेकिन चयनित डिस्क की पार्टिशन "
+"टेबल और मशीन की EFI बूट स्थिति को बदल देता है।"
+
+#: src/pages.py:125
+msgid ""
+"This disk contains an active mapper, array or other nested block-device "
+"topology that guided coexistence does not support."
+msgstr ""
+"इस डिस्क में एक सक्रिय मैपर, एरे या अन्य नेस्टेड ब्लॉक-डिवाइस टोपोलॉजी है "
+"जिसका समर्थन गाइडेड सहअस्तित्व नहीं करता है।"
+
+#: src/pages.py:2935
+msgid ""
+"This disk is too small for whole-disk installation. Advanced may continue "
+"only if suitable unallocated space exists."
+msgstr ""
+"यह डिस्क पूरे-डिस्क इंस्टालेशन के लिए बहुत छोटी है। उन्नत तभी जारी रख सकता "
+"है यदि उपयुक्त अनासंजत स्थिति उपलब्ध हो।"
+
+#: src/pages.py:4454
+msgid "This installer does not shrink or preserve other systems."
+msgstr "यह इंस्टालर अन्य सिस्टम को संकुचित या संरक्षित नहीं करता।"
+
+#: src/pages.py:4103
+msgid "Timezone"
+msgstr "टाइमज़ोन"
+
+#: src/pages.py:2474
+msgid "Too small"
+msgstr "बहुत छोटा"
+
+#: data/languages.json:keyboard_layouts
+msgid "Turkish"
+msgstr "तुर्की"
+
+#: data/languages.json:keyboard_layouts
+msgid "Ukrainian"
+msgstr "यूक्रेनियन"
+
+#: src/pages.py:3065
+msgid "Unallocated space"
+msgstr "अविभाजित स्थान"
+
+#: src/pages.py:2445
+msgid "Unallocated · {size}"
+msgstr "अविभाजित · {size}"
+
+#: src/pages.py:4014 src/pages.py:1710
+msgid "Unavailable: {error}"
+msgstr "अनुपलब्ध: {error}"
+
+#: src/pages.py:2432
+msgid "Unknown filesystem"
+msgstr "अज्ञात फ़ाइल सिस्टम"
+
+#: src/pages.py:4614
+msgid "Unmount installed system"
+msgstr "इंस्टॉल किए गए सिस्टम को अनमाउंट करें"
+
+#: src/pages.py:2198 src/pages.py:1196 src/pages.py:2192
+msgid "Updates and Drivers"
+msgstr "अपडेट और ड्राइवर"
+
+#: src/pages.py:2840
+msgid ""
+"Use already-unallocated space and preserve existing partitions. This is the "
+"only Windows coexistence path."
+msgstr ""
+"पहले से ही अविभाजित स्थान का उपयोग करें और मौजूदा विभाजनों को बनाए रखें। यह "
+"विंडोज़ सहअस्तित्व का एकमात्र मार्ग है।"
+
+#: src/pages.py:2986
+msgid "Use only existing unallocated space on the selected disk."
+msgstr "केवल चयनित डिस्क पर मौजूद अविभाजित स्थान का उपयोग करें।"
+
+#: src/pages.py:4079
+msgid "User"
+msgstr "उपयोगकर्ता"
+
+#: src/pages.py:3446 src/pages.py:3440
+msgid "User Account"
+msgstr "उपयोगकर्ता अकाउंट"
+
+#: src/pages.py:3468 src/pages.py:3472
+msgid "Username"
+msgstr "यूज़रनेम"
+
+#: src/pages.py:3568
+msgid ""
+"Username must start with a lowercase ASCII letter and contain only lowercase"
+" ASCII letters or digits (maximum 16 characters)."
+msgstr ""
+"यूज़रनेम एक लोअरकेस ASCII अक्षर से शुरू होना चाहिए और केवल लोअरकेस ASCII "
+"अक्षरों या अंकों (अधिकतम 16 वर्ण) को ही शामिल कर सकता है।"
+
+#: src/pages.py:2832
+msgid "Uses a traditional single root filesystem."
+msgstr "परंपरागत एकल रूट फ़ाइल सिस्टम का उपयोग करता है।"
+
+#: src/pages.py:4406
+msgid "Validate Plan (No Installation)"
+msgstr "योजना मान्य करें (कोई इंस्टालेशन नहीं)"
+
+#: src/pages.py:4405
+msgid "Validate this installation plan?"
+msgstr "क्या आप इस इंस्टालेशन योजना को मान्य करना चाहते हैं?"
+
+#: src/pages.py:4606
+msgid "Verify kernel module signatures"
+msgstr "कर्नेल मॉड्यूल हस्ताक्षरों की सत्यापन करें"
+
+#: src/pages.py:4571
+msgid "Verify target disk isolation"
+msgstr "लक्ष्य डिस्क पृथक्करण की सत्यापन करें"
+
+#: data/languages.json:keyboard_layouts
+msgid "Vietnamese"
+msgstr "वियतनामी"
+
+#: src/pages.py:811
+msgid "Welcome to AnduinOS"
+msgstr "AnduinOS में आपका स्वागत है"
+
+#: src/pages.py:2468
+msgid "Windows detected"
+msgstr "विंडोज़ का पता लगाया गया"
+
+#: src/pages.py:4188
+msgid ""
+"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
+"AnduinOS NVRAM entry."
+msgstr ""
+"केवल EFI/AnduinOS लिखें, EFI/BOOT को अधिलेखित न करें, और सत्यापित AnduinOS "
+"NVRAM प्रविष्टि की आवश्यकता हो।"
+
+#: src/pages.py:4072
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr ""
+"एक मशीन-लोकल MOK बनाएं; रीबूट के बाद पासवर्ड 123456 के साथ पंजीकृत करें"
+
+#: src/pages.py:4059
+msgid "detect and install (may include non-free software)"
+msgstr ""
+"पता लगाएं और इंस्टॉल करें (इसमें गैर-मुफ़्त सॉफ्टवेयर शामिल हो सकता है)"
+
+#: src/pages.py:4121 src/pages.py:4055 src/pages.py:4061 src/pages.py:4067
+msgid "do not install"
+msgstr "इंस्टॉल न करें"
+
+#: src/pages.py:4053 src/pages.py:4065
+msgid "download and install"
+msgstr "डाउनलोड और इंस्टॉल करें"
+
+#: src/pages.py:3055
+msgid "ext4 (classic)"
+msgstr "ext4 (क्लासिक)"
+
+#: src/pages.py:2829
+msgid "ext4 — classic"
+msgstr "ext4 — क्लासिक"
+
+#: src/pages.py:4077
+msgid "not required"
+msgstr "आवश्यक नहीं"
+
+#: src/pages.py:4083
+msgid "password required for login"
+msgstr "लॉगिन के लिए पासवर्ड आवश्यक"
+
+#: src/pages.py:4024
+msgid "single ext4 root filesystem"
+msgstr "एकल ext4 रूट फ़ाइल सिस्टम"
+
+#: src/pages.py:4005
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / सिक्योर बूट: {secure_boot}"
+
+#: src/pages.py:4176
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+#: src/pages.py:4139
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+#: src/pages.py:4147
+msgid "{path} as {filesystem}"
+msgstr "{path} को {filesystem} के रूप में"
+
+#: src/pages.py:4171
+msgid "{size} at {offset}"
+msgstr "{offset} पर {size}"
+
+#: src/pages.py:3288
+msgid "{size} unallocated at {offset}"
+msgstr "{size} आवंटित नहीं किया गया at {offset}"
+
+#: src/pages.py:5031
+msgid "{step} failed"
+msgstr "{step} विफल रहा"
+
+#: src/pages.py:4303
+msgid ""
+"⚠ Only the selected unallocated space will be partitioned and formatted. "
+"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
+"firmware boot entry may change. This installer will not shrink Windows for "
+"you."
+msgstr ""
+"⚠ केवल चयनित अनावंटित स्थान को विभाजित और प्रारूपित किया जाएगा। मौजूदा "
+"विभाजन सुरक्षित रहेंगे, लेकिन EFI/AnduinOS फ़ाइलें और AnduinOS फ़र्मवेयर बूट"
+" एंट्री बदल सकती हैं। यह इंस्टॉलर आपके लिए Windows को छोटा नहीं करेगा।"
+
+#: src/pages.py:4311
+msgid ""
+"⚠ This will erase ALL data on the selected disk. This action cannot be "
+"undone."
+msgstr ""
+"⚠ इससे चयनित डिस्क पर मौजूद सभी डेटा मिटा दिया जाएगा। इस कार्रवाई को पूर्ववत"
+" नहीं किया जा सकता।"
+
+#: src/pages.py:1176 src/pages.py:667 src/pages.py:1171
+msgid "Connect to the Internet"
+msgstr "इंटरनेट से कनेक्ट करें"
+
+#: src/pages.py:1343
+msgid "Internet connection is ready."
+msgstr "इंटरनेट कनेक्शन तैयार है।"
+
+#: src/pages.py:1250
+msgid "Available Wi-Fi Networks"
+msgstr "उपलब्ध Wi-Fi नेटवर्क"
+
+#: src/pages.py:4576
+msgid "Preserve connected Wi-Fi network"
+msgstr "कनेक्ट किए गए Wi-Fi नेटवर्क को बनाए रखें"
+
+#: src/pages.py:2540 src/pages.py:3092
+msgid "Loading storage devices…"
+msgstr "स्टोरेज डिवाइस लोड हो रहे हैं…"
+
+#: src/pages.py:4335
+msgid "Rechecking target disk…"
+msgstr "लक्षित डिस्क की फिर से जाँच की जा रही है…"
+
+#: src/pages.py:2609 src/pages.py:3213 src/pages.py:4364
+msgid "Storage devices could not be loaded: {error}"
+msgstr "स्टोरेज डिवाइस लोड नहीं किए जा सके: {error}"
+
+#: src/pages.py:1218 src/pages.py:4586 src/pages.py:2252
+msgid "Install extended multimedia format support"
+msgstr "विस्तारित मल्टीमीडिया प्रारूप समर्थन स्थापित करें"
+
+#: src/pages.py:4063
+msgid "Extended multimedia formats"
+msgstr "विस्तारित मल्टीमीडिया प्रारूप"
+
+#: src/pages.py:2256
+msgid ""
+"Adds wider GStreamer compatibility and support for additional legacy and "
+"specialist media formats. Some components may be subject to patent or "
+"redistribution terms."
+msgstr ""
+"GStreamer के साथ व्यापक संगतता और अतिरिक्त पुराने तथा विशिष्ट मीडिया "
+"प्रारूपों का समर्थन जोड़ता है। कुछ घटक पेटेंट या पुनर्वितरण शर्तों के अधीन "
+"हो सकते हैं।"
+
+#: src/pages.py:1473
+msgid "A saved profile exists. Entering a password updates it securely."
+msgstr ""
+"एक सहेजी गई प्रोफ़ाइल मौजूद है। पासवर्ड दर्ज करने से इसे सुरक्षित रूप से "
+"अपडेट किया जाता है।"
+
+#: src/pages.py:1524
+msgid "Anonymous identity (optional)"
+msgstr "गुमनाम पहचान (वैकल्पिक)"
+
+#: src/pages.py:1530
+msgid "CA certificate path (optional)"
+msgstr "CA प्रमाणपत्र का पथ (वैकल्पिक)"
+
+#: src/pages.py:1239 src/pages.py:1409 src/pages.py:1482 src/pages.py:1600
+#: src/pages.py:1816
+msgid "Cancel"
+msgstr "रद्द करें"
+
+#: src/pages.py:1786
+msgid "Cancelling Wi-Fi operation…"
+msgstr "Wi-Fi ऑपरेशन रद्द किया जा रहा है…"
+
+#: src/pages.py:1532
+msgid "Client certificate path"
+msgstr "क्लाइंट प्रमाणपत्र का पथ"
+
+#: src/pages.py:1483 src/pages.py:1601
+msgid "Connect"
+msgstr "Connect"
+
+#: src/pages.py:1817
+msgid "Continue"
+msgstr "जारी रखें"
+
+#: src/pages.py:1259 src/pages.py:1809
+msgid "Connect to a hidden network"
+msgstr "गुप्त नेटवर्क से कनेक्ट करें"
+
+#: src/pages.py:1478 src/pages.py:1593
+#, python-brace-format
+msgid "Connect to {network}"
+msgstr "{network} से कनेक्ट करें"
+
+#: src/pages.py:1654
+msgid "Connected"
+msgstr "Connected"
+
+#: src/pages.py:1453
+#, python-brace-format
+msgid "Connecting to {network}…"
+msgstr "{network} से कनेक्ट हो रहा है…"
+
+#: src/pages.py:1755
+msgid "Could not change the Wi-Fi connection"
+msgstr "Wi-Fi कनेक्शन बदला नहीं जा सका"
+
+#: src/pages.py:1410
+msgid "Disconnect"
+msgstr "Disconnect"
+
+#: src/pages.py:1401
+#, python-brace-format
+msgid "Disconnect from {network}?"
+msgstr "{network} से डिस्कनेक्ट करें?"
+
+#: src/pages.py:1420
+#, python-brace-format
+msgid "Disconnecting from {network}…"
+msgstr "{network} से डिस्कनेक्ट हो रहा है…"
+
+#: src/pages.py:1531
+msgid "Domain suffix match (optional)"
+msgstr "डोमेन सफ़िक्स मैच (वैकल्पिक)"
+
+#: src/pages.py:1515
+msgid "EAP method"
+msgstr "EAP विधि"
+
+#: src/pages.py:1387 src/pages.py:1796
+msgid "Enhanced Open (OWE)"
+msgstr "विस्तारित ओपन (OWE)"
+
+#: src/pages.py:1595
+msgid ""
+"Enter the credentials supplied by your organization. Certificate validation "
+"is strongly recommended."
+msgstr ""
+"अपनी संस्था द्वारा प्रदान किए गए क्रेडेंशियल्स दर्ज करें। प्रमाणपत्र सत्यापन"
+" की अत्यधिक सिफारिश की जाती है।"
+
+#: src/pages.py:1811
+msgid "Enter the exact network name and choose its security type."
+msgstr "सटीक नेटवर्क नाम दर्ज करें और उसकी सुरक्षा विधि चुनें।"
+
+#: src/pages.py:1390 src/pages.py:1800
+msgid "Enterprise Wi-Fi"
+msgstr "एंटरप्राइज़ Wi-Fi"
+
+#: src/pages.py:1523
+msgid "Identity"
+msgstr "Identity"
+
+#: src/pages.py:1527
+msgid "Inner authentication"
+msgstr "आंतरिक प्रमाणीकरण"
+
+#: src/pages.py:1790
+msgid "Network name (SSID)"
+msgstr "नेटवर्क का नाम (SSID)"
+
+#: src/pages.py:1645
+msgid "No Wi-Fi networks found."
+msgstr "कोई Wi-Fi नेटवर्क नहीं मिला।"
+
+#: src/pages.py:1386 src/pages.py:1795
+msgid "Open network"
+msgstr "खुला नेटवर्क"
+
+#: src/pages.py:1389 src/pages.py:1797 src/pages.py:1798
+msgid "Personal Wi-Fi"
+msgstr "व्यक्तिगत Wi-Fi"
+
+#: src/pages.py:1535
+msgid "Private key password (optional)"
+msgstr "निजी कुंजी पासवर्ड (वैकल्पिक)"
+
+#: src/pages.py:1533
+msgid "Private key path"
+msgstr "निजी कुंजी पथ"
+
+#: src/pages.py:1284
+msgid "Refresh Wi-Fi networks"
+msgstr "Wi-Fi नेटवर्क ताज़ा करें"
+
+#: src/pages.py:1656
+msgid "Saved"
+msgstr "Saved"
+
+#: src/pages.py:1792
+msgid "Security"
+msgstr "Security"
+
+#: src/pages.py:1405
+msgid ""
+"The installer will keep the saved network profile so it can be used again."
+msgstr ""
+"इंस्टॉलर सहेजा गया नेटवर्क प्रोफ़ाइल रखेगा ताकि इसे बाद में फिर से उपयोग "
+"किया जा सके।"
+
+#: src/pages.py:1356
+msgid "The local network is connected, but Internet access is unavailable."
+msgstr "स्थानीय नेटवर्क कनेक्ट है, लेकिन इंटरनेट एक्सेस उपलब्ध नहीं है।"
+
+#: src/pages.py:1856
+msgid "Turning Wi-Fi off…"
+msgstr "Wi-Fi बंद किया जा रहा है…"
+
+#: src/pages.py:1854
+msgid "Turning Wi-Fi on…"
+msgstr "Wi-Fi चालू किया जा रहा है…"
+
+#: src/pages.py:1485
+msgid "Use WPS"
+msgstr "WPS का उपयोग करें"
+
+#: src/pages.py:1388 src/pages.py:1799
+msgid "WEP (legacy)"
+msgstr "WEP (लीगेसी)"
+
+#: src/pages.py:1347
+msgid ""
+"Wi-Fi is connected, but the network requires sign-in through a captive "
+"portal."
+msgstr ""
+"Wi-Fi कनेक्ट है, लेकिन नेटवर्क को कैप्टिव पोर्टल के माध्यम से साइन-इन की "
+"आवश्यकता है।"
+
+#: src/pages.py:1449
+#, python-brace-format
+msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
+msgstr "{network} पर WPS की प्रतीक्षा की जा रही है। राउटर पर WPS बटन दबाएं…"
+
+#: src/pages.py:3576
+msgid "A password is required."
+msgstr "पासवर्ड आवश्यक है।"
+
+#: src/pages.py:3731
+msgid "Administrative commands will no longer ask for your password."
+msgstr "प्रशासनिक कमांड अब आपका पासवर्ड नहीं माँगेंगे।"
+
+#: src/pages.py:3681 src/pages.py:3675
+msgid "Advanced Options"
+msgstr "उन्नत विकल्प"
+
+#: src/pages.py:3747
+msgid "Allow SSH login with the account password"
+msgstr "खाते के पासवर्ड से SSH लॉगिन की अनुमति दें"
+
+#: src/pages.py:4089
+msgid "Automatic desktop login"
+msgstr "स्वचालित डेस्कटॉप लॉगिन"
+
+#: src/pages.py:3701
+msgid ""
+"Choose how the local administrator account signs in and authorizes system "
+"changes."
+msgstr ""
+"चुनें कि स्थानीय प्रशासक खाता कैसे साइन इन करे और सिस्टम बदलावों को अधिकृत "
+"करे।"
+
+#: src/pages.py:3682
+msgid "Choose optional access and sign-in policies"
+msgstr "वैकल्पिक पहुँच और साइन-इन नीतियाँ चुनें"
+
+#: src/pages.py:3709
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "चुनें कि यह कंप्यूटर दूरस्थ Secure Shell कनेक्शन स्वीकार करे या नहीं।"
+
+#: src/pages.py:4604
+msgid "Configure Secure Shell"
+msgstr "Secure Shell कॉन्फ़िगर करें"
+
+#: src/pages.py:3699
+msgid "Local Access"
+msgstr "स्थानीय पहुँच"
+
+#: src/pages.py:3737
+msgid "Log in to the desktop automatically"
+msgstr "डेस्कटॉप में स्वचालित रूप से लॉग इन करें"
+
+#: src/pages.py:3739
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "कंप्यूटर शुरू होने पर इस खाते का डेस्कटॉप स्वचालित रूप से खोलें।"
+
+#: src/pages.py:3707
+msgid "Remote Access"
+msgstr "दूरस्थ पहुँच"
+
+#: src/pages.py:3730
+msgid "Run sudo commands without a password"
+msgstr "बिना पासवर्ड के sudo कमांड चलाएँ"
+
+#: src/pages.py:4095
+msgid "SSH password login"
+msgstr "SSH पासवर्ड लॉगिन"
+
+#: src/pages.py:3749
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Secure Shell शुरू करें और नेटवर्क पर इस खाते का पासवर्ड स्वीकार करें।"
+
+#: src/pages.py:3759
+msgid "This will reduce the security of the installed system."
+msgstr "इससे इंस्टॉल किए गए सिस्टम की सुरक्षा कम हो जाएगी।"
+
+#: src/pages.py:4093 src/pages.py:4099
+msgid "disabled"
+msgstr "अक्षम"
+
+#: src/pages.py:4091 src/pages.py:4097
+msgid "enabled"
+msgstr "सक्षम"
+
+#: src/pages.py:349
+msgid ""
+"AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently"
+" enabled on this computer, and we recommend enabling it for additional "
+"protection."
+msgstr ""
+"AnduinOS में Secure Boot का व्यापक समर्थन है। इस कंप्यूटर पर Secure Boot "
+"वर्तमान में सक्षम नहीं है, और हम अतिरिक्त सुरक्षा के लिए इसे सक्षम करने की "
+"सलाह देते हैं।"
+
+#: src/pages.py:331
+msgid "AnduinOS supports Secure Boot"
+msgstr "AnduinOS Secure Boot का समर्थन करता है"
+
+#: src/pages.py:360
+msgid ""
+"Battery power is sufficient or reliable power is connected. You can continue"
+" with the installation."
+msgstr ""
+"बैटरी पावर पर्याप्त है या भरोसेमंद पावर कनेक्टेड है। आप इंस्टॉलेशन आगे बढ़ा "
+"सकते हैं।"
+
+#: src/pages.py:366
+msgid ""
+"Connect reliable external power and charge above 25%, or charge above 45% "
+"while unplugged."
+msgstr ""
+"भरोसेमंद बाहरी पावर कनेक्ट करें और 25% से अधिक चार्ज करें, या अनप्लग्ड होने "
+"पर 45% से अधिक चार्ज करें।"
+
+#: src/pages.py:338
+msgid "Could not open UEFI firmware settings"
+msgstr "UEFI फर्मवेयर सेटिंग्स खोल नहीं पाए"
+
+#: src/pages.py:333
+msgid "Get additional protection before installing AnduinOS."
+msgstr "AnduinOS इंस्टॉल करने से पहले अतिरिक्त सुरक्षा प्राप्त करें।"
+
+#: src/pages.py:364
+msgid "Power conditions are safe for installation."
+msgstr "इंस्टॉलेशन के लिए पावर स्थितियां सुरक्षित हैं।"
+
+#: src/pages.py:363
+msgid "Power ready"
+msgstr "पावर तैयार"
+
+#: src/pages.py:335
+msgid "Restart to UEFI Firmware Settings"
+msgstr "UEFI फर्मवेयर सेटिंग्स में पुनः आरंभ करें"
+
+#: src/pages.py:345
+msgid ""
+"Secure Boot is a UEFI security feature that verifies trusted, digitally "
+"signed software while your computer starts."
+msgstr ""
+"Secure Boot एक UEFI सुरक्षा सुविधा है जो आपके कंप्यूटर के आरंभ होने पर "
+"विश्वसनीय, डिजिटल रूप से हस्ताक्षरित सॉफ्टवेयर की सत्यापन करती है।"
+
+#: src/pages.py:336
+msgid "Skip"
+msgstr "छोड़ें"
+
+#: src/pages.py:341
+msgid "The firmware settings could not be opened on this computer."
+msgstr "इस कंप्यूटर पर फर्मवेयर सेटिंग्स खोली नहीं जा सकीं।"
+
+#: src/pages.py:354
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"इसे सक्षम करने के लिए, UEFI फर्मवेयर सेटिंग्स खोलें और Boot, Security या "
+"Secure Boot के तहत देखें। Microsoft & 3rd-party CA चुनें या Secure Boot चालू"
+" करें। निर्माता के अनुसार फर्मवेयर शब्द विभिन्न हो सकते हैं।"

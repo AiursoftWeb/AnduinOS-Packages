@@ -1,0 +1,18 @@
+# Keep the AnduinOS Rime Ice behavior independent of global user preferences.
+# Users can take control with ~/.config/ibus/rime/rime_ice.custom.yaml.
+# encoding: utf-8
+
+patch:
+  ascii_composer:
+    __include: anduinos_defaults:/patch/ascii_composer
+  navigator:
+    __include: anduinos_defaults:/patch/navigator
+  punctuator:
+    __include: anduinos_defaults:/patch/punctuator
+  "recognizer/patterns/email": "^[A-Za-z][-_.0-9A-Za-z]*@.*$"
+  "recognizer/patterns/url": "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$|^[a-z]+[.].+$"
+  "recognizer/patterns/underscore": "^[A-Za-z]+_.*"
+  "key_binder/select_first_character": "bracketleft"
+  "key_binder/select_last_character": "bracketright"
+  "key_binder/bindings":
+    __include: anduinos_defaults:/patch/key_binder/bindings

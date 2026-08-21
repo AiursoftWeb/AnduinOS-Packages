@@ -16,11 +16,10 @@ import gettext
 
 _LOCALE_DIR = '/usr/share/locale'
 _ = gettext.translation('anduinos-exe-runner', _LOCALE_DIR, fallback=True).gettext
+DEFAULT_RECOMMENDATION_TITLE = _("Notice")
+DEFAULT_APP_NAME = _("App")
 
 import json
-
-def _open_url(url):
-    subprocess.Popen(['xdg-open', url])
 
 def load_recommendations():
     paths = [
@@ -41,7 +40,40 @@ def load_recommendations():
 
 SMART_RECOMMENDATIONS = load_recommendations()
 
+def recommendation_text(recommendation, field, default=""):
+    """Translate user-visible recommendation text loaded from JSON."""
+    text = recommendation.get(field)
+    return _(text) if text else default
+
 DEFAULT_BOTTLE_NAME = "Default"
+OLE_COMPOUND_FILE_MAGIC = b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1"
+
+def is_supported_windows_file(path):
+    """Return whether path is a valid PE executable or MSI package."""
+    extension = os.path.splitext(path)[1].lower()
+
+    try:
+        with open(path, "rb") as candidate:
+            if extension == ".msi":
+                return candidate.read(8) == OLE_COMPOUND_FILE_MAGIC
+
+            if extension != ".exe":
+                return False
+
+            dos_header = candidate.read(64)
+            if len(dos_header) < 64 or dos_header[:2] != b"MZ":
+                return False
+
+            pe_offset = int.from_bytes(dos_header[60:64], byteorder="little")
+            candidate.seek(0, os.SEEK_END)
+            file_size = candidate.tell()
+            if pe_offset < 64 or pe_offset > file_size - 4:
+                return False
+
+            candidate.seek(pe_offset)
+            return candidate.read(4) == b"PE\0\0"
+    except OSError:
+        return False
 
 def is_bottles_installed():
     sys_path = "/var/lib/flatpak/app/com.usebottles.bottles"
@@ -176,14 +208,19 @@ class RunnerApp(Adw.Application):
                 self.window.present()
                 dialog = Adw.MessageDialog(
                     transient_for=self.window,
-                    heading=matched_rec.get("title", _("Notice")),
-                    body=matched_rec.get("reason", "")
+                    heading=recommendation_text(
+                        matched_rec, "title", DEFAULT_RECOMMENDATION_TITLE
+                    ),
+                    body=recommendation_text(matched_rec, "reason")
                 )
                 dialog.add_response("cancel", _("Cancel"))
                 dialog.add_response("continue", _("Force Run Anyway"))
 
                 if "app_id" in matched_rec:
-                    btn_label = _("Get {}").format(matched_rec.get('app_name', 'App'))
+                    app_name = recommendation_text(
+                        matched_rec, "app_name", DEFAULT_APP_NAME
+                    )
+                    btn_label = _("Get {}").format(app_name)
                     dialog.add_response("install", btn_label)
                     dialog.set_response_appearance("install", Adw.ResponseAppearance.SUGGESTED)
                 elif "docs_url" in matched_rec:
@@ -198,7 +235,7 @@ class RunnerApp(Adw.Application):
                         Gio.AppInfo.launch_default_for_uri(f"appstream://{matched_rec['app_id']}", None)
                         self.quit()
                     elif response == "docs":
-                        _open_url(matched_rec["docs_url"])
+                        Gio.AppInfo.launch_default_for_uri(matched_rec["docs_url"], None)
                         self.quit()
                     elif response == "continue":
                         _start_normal_flow()
@@ -531,8 +568,16 @@ def main():
         
     exe_path = os.path.abspath(sys.argv[1])
     if not os.path.isfile(exe_path):
-        print(f"File not found: {exe_path}")
+        print(f"File not found: {exe_path}", file=sys.stderr)
         sys.exit(1)
+
+    if not is_supported_windows_file(exe_path):
+        print(
+            "Unsupported file: expected a valid Windows PE executable (.exe) "
+            "or Windows Installer package (.msi).",
+            file=sys.stderr
+        )
+        sys.exit(2)
 
     app = RunnerApp(exe_path)
     app.run(None)

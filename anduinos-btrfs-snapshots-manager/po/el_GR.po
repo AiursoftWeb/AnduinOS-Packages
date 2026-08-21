@@ -1,0 +1,1904 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-btrfs-snapshots-manager 0.1.0\n"
+"POT-Creation-Date: 2026-08-06 00:00+0800\n"
+"PO-Revision-Date: 2026-08-06 00:00+0800\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "A critical threshold is failing now"
+msgstr "Ένα κρίσιμο όριο αποτυχάνει αυτή τη στιγμή"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid ""
+"A limited balance improves allocation layout. It does not check file "
+"integrity or guarantee that visible free space will increase."
+msgstr ""
+"Η περιορισμένη εξισορρόπηση βελτιώνει τη διάταξη κατανομής. Δεν ελέγχει την "
+"ακεραιότητα των αρχείων ούτε εγγυάται ότι ο ορατός ελεύθερος χώρος θα "
+"αυξηθεί."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"A limited balance only relocates data and metadata block groups that are at "
+"most 50% full."
+msgstr ""
+"Μια περιορισμένη εξισορρόπηση μετακινεί μόνο ομάδες μπλοκ δεδομένων και "
+"μεταδεδομένων που είναι γεμάτες έως 50%."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "A scheduled Home snapshot will start in 10 seconds."
+msgstr ""
+"Ένα προγραμματισμένο στιγμιότυπο του προφίλ θα ξεκινήσει σε 10 δευτερόλεπτα."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "A scheduled system snapshot will start in 10 seconds."
+msgstr ""
+"Ένα προγραμματισμένο στιγμιότυπο συστήματος θα ξεκινήσει σε 10 δευτερόλεπτα."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "A threshold was exceeded in the past"
+msgstr "Ένα όριο υπερβλήθηκε στο παρελθόν"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "About Disk Snapshots Manager"
+msgstr "Σχετικά με τη Διαχείριση Στιγμιότυπων Δίσκου"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "About {0} remaining"
+msgstr "Περίπου {0} απομένουν"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Actual file contents"
+msgstr "Πραγματικό περιεχόμενο αρχείων"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Advanced retention settings"
+msgstr "Προχωρημένες ρυθμίσεις διατήρησης"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Advanced Settings"
+msgstr "Προχωρημένες Ρυθμίσεις"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "After Package Change"
+msgstr "Μετά την αλλαγή πακέτου"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "All system drives look healthy"
+msgstr "Όλοι οι δίσκοι του συστήματος φαίνονται υγιείς"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Allow automatic cleanup"
+msgstr "Επιτρέπεται ο αυτόματος καθαρισμός"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Always on"
+msgstr "Ενεργό πάντα"
+
+#: src/btrfs-snapshots-manager/src/application.rs
+msgid "AnduinOS Team"
+msgstr "Ομάδα AnduinOS"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Applied automatically to newly written data"
+msgstr "Εφαρμόζεται αυτόματα στα νεοδημιουργούμενα δεδομένα"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "At a Glance"
+msgstr "Σε μια ματιά"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Attention"
+msgstr "Προσοχή"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Attribute thresholds"
+msgstr "Όρια χαρακτηριστικών"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic"
+msgstr "Αυτόματο"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic 60-second countdown after preparation"
+msgstr "Αυτόμενος αντίστροφος μετρητής 60 δευτερολέπτων μετά την προετοιμασία"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic cleanup"
+msgstr "Αυτόματος καθαρισμός"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Cleanup Complete"
+msgstr "Ολοκληρώθηκε ο αυτόματος καθαρισμός"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic Home Snapshots"
+msgstr "Αυτόματα στιγμιότυπα του προφίλ"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Snapshot Failed"
+msgstr "Αποτυχία αυτόματου στιγμιοτύπου"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Automatic snapshot service is available"
+msgstr "Η υπηρεσία αυτόματων στιγμιοτύπων είναι διαθέσιμη"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Automatic snapshot service needs attention"
+msgstr "Η υπηρεσία αυτόματων στιγμιοτύπων χρειάζεται προσοχή"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Snapshot Starting"
+msgstr "Έναρξη αυτόματου στιγμιοτύπου"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots"
+msgstr "Αυτόματα στιγμιότυπα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic Snapshots"
+msgstr "Αυτόματα στιγμιότυπα"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic System Snapshot Created"
+msgstr "Δημιουργήθηκε αυτόματο στιγμιότυπο συστήματος"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic System Snapshots"
+msgstr "Αυτόματα στιγμιότυπα συστήματος"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Available spare capacity"
+msgstr "Διαθέσιμος χώρος εφεδρείας"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Available spare is below its threshold"
+msgstr "Η διαθέσιμη εφεδρεία είναι κάτω από το όριο"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Average rate: {0}/s"
+msgstr "Μέσος ρυθμός: {0}/δευτ."
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Background Service"
+msgstr "Υπηρεσία Παρασκηνίου"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Based on the manufacturer endurance counter"
+msgstr "Βασισμένο στον μετρητή αντοχής του κατασκευαστή"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Before Package Change"
+msgstr "Πριν από την αλλαγή πακέτου"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Before Rollback"
+msgstr "Πριν από την επαναφορά"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Block groups completed: {0} of about {1}"
+msgstr "Ομάδες μπλοκ ολοκληρωμένες: {0} από περίπου {1}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Block groups considered: {0}"
+msgstr "Ομάδες μπλοκ υπό εξέταση: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Browse"
+msgstr "Περιήγηση"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Browse earlier Personal Files versions of this item"
+msgstr ""
+"Περιήγηση παλαιότερων εκδόσεων των προσωπικών αρχείων αυτού του στοιχείου"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Browse Files"
+msgstr "Περιήγηση αρχείων"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Browse files in this snapshot"
+msgstr "Περιήγηση αρχείων σε αυτό το στιγμιότυπο"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Browse System Snapshot"
+msgstr "Περιήγηση στιγμιοτύπου συστήματος"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Browse This Folder’s History…"
+msgstr "Περιήγηση στο ιστορικό του φακέλου…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Btrfs could not complete Home file defragmentation."
+msgstr ""
+"Το Btrfs δεν μπόρεσε να ολοκληρώσει τον αποθρακισμό των αρχείων του προφίλ."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs could not complete the limited balance."
+msgstr "Το Btrfs δεν μπόρεσε να ολοκληρώσει τον περιορισμένο εξισορρόπηση."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs did not provide a completed balance result."
+msgstr "Το Btrfs δεν παρείχε ολοκληρωμένο αποτέλεσμα εξισορρόπησης."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Btrfs did not provide a completed defragmentation result."
+msgstr "Το Btrfs δεν παρείχε αποτέλεσμα ολοκληρωμένου αποθρακισμού."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs did not provide a completed scrub result."
+msgstr "Το Btrfs δεν παρείχε αποτέλεσμα ολοκληρωμένου scrub."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs did not start a new integrity check"
+msgstr "Το Btrfs δεν ξεκίνησε νέο έλεγχο ακεραιότητας"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Btrfs did not start a new maintenance task"
+msgstr "Το Btrfs δεν ξεκίνησε νέα εργασία συντήρησης"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Btrfs does not provide an on/off real-time deduplication switch. Tools such "
+"as duperemove and BEES use different strategies, resource limits, and scan "
+"scopes. Disk Snapshots Manager will not silently install or run one without "
+"a complete policy."
+msgstr ""
+"Το Btrfs δεν παρέχει διακόπτη ενεργοποίησης/απενεργοποίησης αφαίρεσης "
+"διπλότυπων σε πραγματικό χρόνο. Εργαλεία όπως τα duperemove και το BEES "
+"χρησιμοποιούν διαφορετικές στρατηγικές, όρια πόρων και πεδία σάρωσης. Η "
+"Διαχείριση Στιγμιότυπων Δίσκου δεν θα εγκαταστήσει ή θα εκτελέσει σιωπηρά "
+"κάποιο από αυτά χωρίς πλήρη πολιτική."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs examined {0} block groups and relocated {1}."
+msgstr "Το Btrfs εξέτασε {0} ομάδες μπλοκ και μετακίνησε {1}."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs finished relocating underused data and metadata block groups."
+msgstr ""
+"Το Btrfs ολοκλήρωσε τη μετακίνηση των ομάδων μπλοκ δεδομένων και "
+"μεταδεδομένων που χρησιμοποιούνταν ελάχιστα."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"Btrfs finished rewriting eligible file extents below /home with ZSTD "
+"compression."
+msgstr ""
+"Το Btrfs ολοκλήρωσε την αναγραφή των εγκεκριμένων διαστημάτων αρχείων κάτω "
+"από το /home με συμπίεση ZSTD."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"Btrfs found errors that could not be repaired. Back up important files and "
+"investigate the storage device."
+msgstr ""
+"Το Btrfs εντόπισε σφάλματα που δεν ήταν δυνατή η επισκευή τους. Δημιουργήστε"
+" αντίγραφα ασφαλείας των σημαντικών αρχείων και εξετάστε τη συσκευή "
+"αποθήκευσης."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Btrfs maintenance status is unavailable"
+msgstr "Η κατάσταση συντήρησης Btrfs δεν είναι διαθέσιμη"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+msgid "Btrfs operation failed"
+msgstr "Αποτυχία λειτουργίας Btrfs"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs repaired {0} damaged copies using valid redundant data."
+msgstr ""
+"Το Btrfs επισκεύασε {0} κατεστραμμένες αντιγραφές χρησιμοποιώντας έγκυρα "
+"δεδομένα διακλάδωσης."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+msgid "Btrfs request completed"
+msgstr "Ολοκληρώθηκε το αίτημα Btrfs"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Btrfs will scan existing subvolumes in the background. Size statistics may "
+"remain incomplete until the scan finishes."
+msgstr ""
+"Το Btrfs θα σαρώσει τα υπάρχοντα υποτομείς στο παρασκήνιο. Οι στατιστικές "
+"μεγέθους μπορεί να παραμείνουν ατελείς μέχρι να ολοκληρωθεί η σάρωση."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Calculating snapshot size…"
+msgstr "Υπολογισμός μεγέθους στιγμιοτύπου…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Cancel Check"
+msgstr "Ακύρωση ελέγχου"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancel Rollback"
+msgstr "Ακύρωση επαναφοράς"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancelling rollback…"
+msgstr "Ακύρωση επαναφοράς…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Cancelling…"
+msgstr "Ακύρωση…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Change…"
+msgstr "Αλλαγή…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Check file system integrity"
+msgstr "Έλεγχος ακεραιότητας συστήματος αρχείων"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Check Snapshot Availability"
+msgstr "Έλεγχος Διαθεσιμότητας Στιγμιοτύπου"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checked: {0}"
+msgstr "Έλεγχος: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checking File System Integrity"
+msgstr "Έλεγχος ακεραιότητας συστήματος αρχείων"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking recovery state…"
+msgstr "Έλεγχος κατάστασης ανάκτησης…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking rollback safety…"
+msgstr "Έλεγχος ασφαλούς επαναφοράς…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking snapshot…"
+msgstr "Έλεγχος στιγμιοτύπου…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Checking system storage…"
+msgstr "Έλεγχος συστηματικής αποθήκευσης…"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checking…"
+msgstr "Έλεγχος…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checksum errors: {0}"
+msgstr "Σφάλματα ελέγχου ακεραιότητας: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Choose a local filesystem destination."
+msgstr "Επιλέξτε έναν τοπικό προορισμό συστήματος αρχείων."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid ""
+"Choose an earlier version to browse or recover. Your current files will not "
+"be changed automatically."
+msgstr ""
+"Επιλέξτε ένα παλαιότερο στιγμιότυπο για περιήγηση ή ανάκτηση. Τα τρέχοντα "
+"αρχεία σας δεν θα αλλάξουν αυτόματα."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Choose Where to Recover This Folder"
+msgstr "Επιλέξτε πού θα γίνει η ανάκτηση αυτού του φακέλου"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Close"
+msgstr "Κλείσιμο"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Content-based deduplication"
+msgstr "Αφαίρεση διπλότυπων με βάση το περιεχόμενο"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Copy This Folder…"
+msgstr "Αντιγραφή αυτού του φακέλου…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Corrected errors: {0}"
+msgstr "Διορθώθηκαν σφάλματα: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Could Not Browse History"
+msgstr "Δεν ήταν δυνατή η περιήγηση στο ιστορικό"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Could Not Browse System Snapshot"
+msgstr "Δεν ήταν δυνατή η περιήγηση στο στιγμιότυπο συστήματος"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Could Not Save Settings"
+msgstr "Δεν ήταν δυνατή η αποθήκευση των ρυθμίσεων"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create"
+msgstr "Δημιουργία"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Create a system snapshot after successful changes"
+msgstr "Δημιουργία στιγμιοτύπου συστήματος μετά από επιτυχημένες αλλαγές"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Create a system snapshot before changes"
+msgstr "Δημιουργία στιγμιοτύπου συστήματος πριν από αλλαγές"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create a {0} now"
+msgstr "Δημιουργία {0} τώρα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create one now or turn on automatic snapshots."
+msgstr "Δημιουργήστε ένα τώρα ή ενεργοποιήστε τα αυτόματα στιγμιότυπα."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create Snapshot Now"
+msgstr "Δημιουργία στιγμιοτύπου τώρα"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Create snapshots on a schedule."
+msgstr "Δημιουργία στιγμιοτύπων κατά προγραμματισμό."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create {0}"
+msgstr "Δημιουργία {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Creating"
+msgstr "Δημιουργία"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Creating snapshot…"
+msgstr "Δημιουργία στιγμιοτύπου…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Current system"
+msgstr "Τρέχον σύστημα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Damaged"
+msgstr "Κατεστραμμένο"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Days"
+msgstr "Ημέρες"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Deduplication needs an engine"
+msgstr "Η αφαίρεση διπλότυπων απαιτεί έναν κινητήρα"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Defragment"
+msgstr "Αποθρακισμός"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Defragment Home files"
+msgstr "Αποθρακισμός αρχείων του προφίλ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Defragment Home files?"
+msgstr "Αποθρακισμός αρχείων του προφίλ;"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"Defragmentation can increase disk usage when files share data with snapshots"
+" or reflinks."
+msgstr ""
+"Η ανασυγκρότηση μπορεί να αυξήσει τη χρήση του δίσκου όταν τα αρχεία "
+"μοιράζονται δεδομένα με στιγμιότυπα ή reflinks."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"Defragmentation rewrites file extents and can increase disk usage by "
+"breaking shared snapshot or reflink data."
+msgstr ""
+"Ο αποθρακισμός επαναγράφει τα διαστήματα των αρχείων και μπορεί να αυξήσει "
+"τη χρήση του δίσκου, καθώς διασπά τα κοινά δεδομένα στιγμιοτύπων ή reflinks."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Defragment…"
+msgstr "Αποθρακισμός…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete"
+msgstr "Διαγραφή"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Selected"
+msgstr "Διαγραφή επιλεγμένων"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Snapshot"
+msgstr "Διαγραφή στιγμιοτύπου"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Snapshots?"
+msgstr "Διαγραφή στιγμιοτύπων;"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete {0} selected snapshot(s)? This cannot be undone."
+msgstr ""
+"Να διαγραφούν τα {0} επιλεγμένα στιγμιότυπα; Η ενέργεια αυτή δεν μπορεί να "
+"αναιρεθεί."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting"
+msgstr "Διαγραφή…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting snapshots…"
+msgstr "Διαγραφή στιγμιοτύπων…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Device reliability is degraded"
+msgstr "Η αξιοπιστία της συσκευής έχει υποβαθμιστεί"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Device report"
+msgstr "Αναφορά συσκευής"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Diagnostic counters"
+msgstr "Μετρητές διαγνωστικών"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable"
+msgstr "Απενεργοποίηση"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable quota accounting?"
+msgstr "Απενεργοποίηση παρακολούθησης ορίων;"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disabled"
+msgstr "Απενεργοποιημένο"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable…"
+msgstr "Απενεργοποίηση…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disk Health"
+msgstr "Κατάσταση υγείας δίσκου"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disk health is unavailable"
+msgstr "Η κατάσταση υγείας του δίσκου δεν είναι διαθέσιμη"
+
+#: src/btrfs-snapshots-manager/src/application.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Disk Snapshots Manager"
+msgstr "Διαχείριση Στιγμιότυπων Δίσκου"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Disk Snapshots Manager requires the standard AnduinOS Btrfs layout."
+msgstr ""
+"Η Διαχείριση Στιγμιότυπων Δίσκου απαιτεί τη στάνταρ διάταξη Btrfs του "
+"AnduinOS."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Duration: {0}"
+msgstr "Διάρκεια: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Elapsed: {0}"
+msgstr "Πέρασαν: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable"
+msgstr "Ενεργοποίηση"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable quota accounting?"
+msgstr "Ενεργοποίηση παρακολούθησης ορίων;"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enabled"
+msgstr "Ενεργοποιημένο"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enabled · initial scan in progress"
+msgstr "Ενεργοποιημένο · αρχική σάρωση σε εξέλιξη"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable…"
+msgstr "Ενεργοποίηση…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Error log entries"
+msgstr "Εγγραφές σφαλμάτων"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Errors detected so far: {0}"
+msgstr "Σφάλματα που εντοπίστηκαν έως τώρα: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Estimated SSD life remaining"
+msgstr "Εκτιμώμενος απομένων SSD"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Examining underused data and metadata block groups…"
+msgstr "Εξέταση ομάδων μπλοκ δεδομένων και μεταδεδομένων με χαμηλή χρήση…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Exclusive Data"
+msgstr "Αποκλειστικά δεδομένα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory"
+msgstr "Εργοστασιακό"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Failing"
+msgstr "Αποτυχία"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Failure notifications"
+msgstr "Ειδοποιήσεις αποτυχίας"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "File History"
+msgstr "Ιστορικό αρχείων"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "File Layout"
+msgstr "Διάταξη αρχείων"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "File System"
+msgstr "Σύστημα αρχείων"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "File system structure (directories, file names, and more)"
+msgstr "Δομή συστήματος αρχείων (καταλόγοι, ονόματα αρχείων, και άλλα)"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Files Recovered"
+msgstr "Ανακτηθέντα αρχεία"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Find files that existed earlier in this Personal Files folder"
+msgstr ""
+"Εύρεση αρχείων που υπήρχαν νωρίτερα σε αυτόν τον φάκελο προσωπικών αρχείων"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Folder History"
+msgstr "Ιστορικό φακέλου"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Folder · {0}"
+msgstr "Φάκελος · {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Forever"
+msgstr "Μόνιμα"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Four copies on separate devices · damaged copies can be repaired "
+"automatically"
+msgstr ""
+"Τέσσερις αντιγραφές σε ξεχωριστές συσκευές · οι κατεστραμμένες αντιγραφές "
+"μπορούν να επισκευαστούν αυτόματα"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Healthy"
+msgstr "Υγιής"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Cancelled"
+msgstr "Ακυρώθηκε ο αποθρακισμός του προφίλ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Complete"
+msgstr "Ολοκληρώθηκε ο αποθρακισμός των αρχείων του προφίλ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Failed"
+msgstr "Αποτυχία αποθρακισμού προφίλ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Result Unavailable"
+msgstr "Μη διαθέσιμο αποτέλεσμα αποθρακισμού προφίλ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home file defragmentation was cancelled before it finished."
+msgstr ""
+"Η λειτουργία αποθρακισμού των αρχείων του προφίλ ακυρώθηκε πριν ολοκληρωθεί."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Home snapshot"
+msgstr "Στιγμιότυπο αρχικής σελίδας"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Home Snapshot Created"
+msgstr "Δημιουργήθηκε στιγμιότυπο προφίλ"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Hours"
+msgstr "ώρες"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Imported"
+msgstr "Εισηγμένο"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Incomplete"
+msgstr "Ατελές"
+
+#: src/btrfs-snapshots-manager/src/ui/information.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Information"
+msgstr "Πληροφορίες"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Integrity"
+msgstr "Ακεραιότητα"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Cancelled"
+msgstr "Ακύρωση ελέγχου ακεραιότητας"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Complete"
+msgstr "Ολοκληρώθηκε ο έλεγχος ακεραιότητας"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Complete — Repairs Made"
+msgstr "Ολοκληρώθηκε ο έλεγχος ακεραιότητας — Εκτελέστηκαν επισκευές"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Result Unavailable"
+msgstr "Μη διαθέσιμο αποτέλεσμα ελέγχου ακεραιότητας"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Problems Found"
+msgstr "Βρέθηκαν προβλήματα ακεραιότητας"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Interface CRC errors"
+msgstr "Σφάλματα διεπαφής CRC"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Items processed: {0}"
+msgstr "Στοιχεία επεξεργασίας: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Keep all snapshots for"
+msgstr "Διατήρηση όλων των στιγμιοτύπων για"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Keep Forever"
+msgstr "Διατήρηση Μόνιμα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Kernel"
+msgstr "Πυρήνας"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Kernel {0}"
+msgstr "Πυρήνας {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Limited to one notification per minute"
+msgstr "Περιορισμένο σε μία ειδοποίηση ανά λεπτό"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Live information reported by the mounted Btrfs file system."
+msgstr ""
+"Ζωντανές πληροφορίες που αναφέρονται από το προσμετρημένο σύστημα αρχείων "
+"Btrfs."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Loading folder…"
+msgstr "Φόρτωση φακέλου…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Loading snapshots…"
+msgstr "Φόρτωση στιγμιοτύπων…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Looking for earlier versions…"
+msgstr "Αναζήτηση παλαιότερων εκδόσεων…"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Main Menu"
+msgstr "Κύριο μενού"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Maintenance"
+msgstr "Συντήρηση"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Manual"
+msgstr "Χειροκίνητο"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Measured"
+msgstr "Μετρήθηκε"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Media errors"
+msgstr "Σφάλματα μέσων"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Mirrored and striped across devices · redundant copies are available for "
+"repair"
+msgstr ""
+"Κατανομή δεδομένων σε συσκευές με καθρέφτη · διαθέσιμες είναι επιπλέον "
+"αντιγραφές για επισκευή"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Name"
+msgstr "Όνομα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Name (optional)"
+msgstr "Όνομα (προαιρετικό)"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "No earlier version was found"
+msgstr "Δεν βρέθηκε παλαιότερο στιγμιότυπο"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "No errors detected so far"
+msgstr "Δεν εντοπίστηκαν σφάλματα έως τώρα"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"No file system integrity errors were found in allocated data and metadata."
+msgstr ""
+"Δεν εντοπίστηκαν σφάλματα ακεραιότητας στα κατανεμημένα δεδομένα και "
+"μεταδεδομένα."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "No important S.M.A.R.T. warning signs were detected"
+msgstr "Δεν εντοπίστηκαν σπουδαία σημάδια προειδοποίησης S.M.A.R.T."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No matching snapshots"
+msgstr "Δεν βρέθηκαν ταιριάζοντα στιγμιότυπα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No snapshots selected"
+msgstr "Δεν έχουν επιλεγεί στιγμιότυπα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No snapshots yet"
+msgstr "Δεν υπάρχουν στιγμιότυπα"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "No system storage device found"
+msgstr "Δεν βρέθηκε συσκευή αποθήκευσης συστήματος"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "None (0x00)"
+msgstr "Κανένα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Not calculated"
+msgstr "Δεν έχει υπολογιστεί"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Not managed here · Btrfs requires a separate deduplication engine"
+msgstr ""
+"Δεν διαχειρίζεται εδώ · Το Btrfs απαιτεί έναν ξεχωριστό μηχανισμό αφαίρεσης "
+"διπλότυπων"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notifications"
+msgstr "Ειδοποιήσεις"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify after any snapshot succeeds"
+msgstr "Ειδοποίηση μετά την επιτυχή ολοκλήρωση οποιουδήποτε στιγμιοτύπου"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify after automatic cleanup removes snapshots"
+msgstr "Ειδοποίηση μετά την αφαίρεση στιγμιοτύπων από αυτόματο καθαρισμό"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify before a scheduled snapshot"
+msgstr "Ειδοποίηση πριν από προγραμματισμένο στιγμιότυπο"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "NVMe critical warning"
+msgstr "Κρίσιμη προειδοποίηση NVMe"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Offline uncorrectable sectors"
+msgstr "Μη διορθώσιμα σφάλματα εκτός σύνδεσης"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old Home snapshot(s) were removed."
+msgstr "Τα παλιά στιγμιότυπα του προφίλ αφαιρέθηκαν."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old system snapshot(s) and"
+msgstr "παλιά στιγμιότυπα συστήματος και"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old system snapshot(s) were removed."
+msgstr "Τα παλιά στιγμιότυπα συστήματος αφαιρέθηκαν."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Older snapshots are kept less frequently to save disk space."
+msgstr ""
+"Τα παλαιότερα στιγμιότυπα διατηρούνται λιγότερο συχνά για εξοικονόμηση χώρου"
+" δίσκου."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"One copy · damage can be detected, but there is no spare copy for repair"
+msgstr ""
+"Μία αντιγραφή · οι ζημίες μπορούν να εντοπιστούν, αλλά δεν υπάρχει αντιγραφή"
+" εφεδρείας για επισκευή"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "One or more reliability indicators should be reviewed"
+msgstr "Πρέπει να εξεταστεί ένας ή περισσότεροι δείκτες αξιοπιστίας"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Only /home · snapshot storage is excluded"
+msgstr "Μόνο /home · εξαιρείται η αποθήκευση στιγμιοτύπων"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid ""
+"Only block groups at most 50% full will be relocated. The operation can use "
+"significant disk bandwidth but can be cancelled safely."
+msgstr ""
+"Μόνο οι ομάδες μπλοκ που είναι γεμάτες έως 50% θα μετακινηθούν. Η λειτουργία"
+" μπορεί να χρησιμοποιήσει σημαντική ζώνη κύματος δίσκου, αλλά μπορεί να "
+"ακυρωθεί με ασφάλεια."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Only partial S.M.A.R.T. data was returned"
+msgstr "Επέστρεψε μόνο μερικά δεδομένα S.M.A.R.T."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid ""
+"Only physical drives backing the current root Btrfs file system are shown."
+msgstr ""
+"Εμφανίζονται μόνο οι φυσικοί δίσκοι που υποστηρίζουν το τρέχον ρίζα Btrfs."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Only the display name changes."
+msgstr "Αλλάζει μόνο το εμφανιζόμενο όνομα."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Open"
+msgstr "Άνοιγμα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Operation Failed"
+msgstr "Αποτυχία λειτουργίας"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Otherwise automatic cleanup may remove it later."
+msgstr "Αλλιώς, ο αυτόματος καθαρισμός ενδέχεται να το αφαιρέσει αργότερα."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Overall health"
+msgstr "Συνολική υγεία"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Package Changes"
+msgstr "Αλλαγές πακέτων"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Parent folder"
+msgstr "Γονικός φάκελος"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Paused"
+msgstr "Σε παύση"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Pending sectors"
+msgstr "Εκκρεμείς τομείς"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Permanently protected"
+msgstr "Οριστική προστασία"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Persistent memory is read-only"
+msgstr "Η μόνιμη μνήμη είναι μόνο για ανάγνωση"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Personal files"
+msgstr "Προσωπικά αρχεία"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Personal Files Recovery"
+msgstr "Ανάκτηση προσωπικών αρχείων"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Personal History Unavailable"
+msgstr "Το ιστορικό του προφίλ δεν είναι διαθέσιμο"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Power cycles"
+msgstr "Κύκλοι ισχύος"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Powered on"
+msgstr "Ενεργό"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Prepare a safe system rollback"
+msgstr "Προετοιμασία ασφαλούς επαναφοράς συστήματος"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Prepare and Restart"
+msgstr "Ετοιμασία και επανεκκίνηση"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing rollback to {0}…"
+msgstr "Προετοιμασία επαναφοράς στο {0}…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing safe rollback…"
+msgstr "Προετοιμασία ασφαλείας επαναφοράς…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Preparing the rollback will arm recovery immediately and automatically "
+"restart this computer within 60 seconds. Save your work before continuing."
+msgstr ""
+"Η προετοιμασία της επαναφοράς θα ενεργοποιήσει αμέσως την ανάκτηση και θα "
+"επανεκκινήσει αυτόματα τον υπολογιστή εντός 60 δευτερολέπτων. Αποθηκεύστε "
+"την εργασία σας πριν συνεχίσετε."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Properties"
+msgstr "Ιδιότητες"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Protected while the rollback is pending"
+msgstr "Προστατευμένο κατά την εκκρεμότητα της επαναφοράς"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Quota accounting provides shared and exclusive sizes for subvolumes, but its"
+" initial scan can take time."
+msgstr ""
+"Η παρακολούθηση ορίων παρέχει κοινό και αποκλειστικό μέγεθος για τους "
+"υποτομείς, αλλά η αρχική σάρωση μπορεί να διαρκέσει."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Read errors: {0}"
+msgstr "Σφάλματα ανάγνωσης: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Reading allocated Btrfs data and metadata…"
+msgstr "Ανάγνωση κατανεμημένων δεδομένων και μεταδεδομένων Btrfs…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reading the most important reliability indicators"
+msgstr "Ανάγνωση των σημαντικότερων δεικτών αξιοπιστίας"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Ready"
+msgstr "Έτοιμο"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Ready to check"
+msgstr "Έτοιμο για έλεγχο"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Ready to defragment Home files"
+msgstr "Έτοιμο για αποθρακισμό αρχείων προφίλ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Ready to optimize allocation"
+msgstr "Έτοιμο για βελτιστοποίηση κατανομής"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reallocated sectors"
+msgstr "Επανακατανεμημένοι τομείς"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Reclaim underused block groups"
+msgstr "Ανακτήστε μη εκμεταλλευόμενες ομάδες μπλοκ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Recommended about once a month"
+msgstr "Συνιστάται περίπου μία φορά το μήνα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Recorded snapshot kernel"
+msgstr "Στιγμιότυπο καταγραφής πυρήνα"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover Historical File"
+msgstr "Ανάκτηση ιστορικού αρχείου"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover Personal Files"
+msgstr "Ανάκτηση προσωπικών αρχείων"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover This Folder…"
+msgstr "Ανάκτηση αυτού του φακέλου…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovering Files"
+msgstr "Ανάκτηση αρχείων"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovering files…"
+msgstr "Ανάκτηση αρχείων…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovery Failed"
+msgstr "Αποτυχία ανάκτησης"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Recovery for {0} is in an unknown state ({1})."
+msgstr "Η κατάσταση της ανάκτησης για το {0} είναι άγνωστη ({1})."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover…"
+msgstr "Ανάκτηση…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Refresh file history"
+msgstr "Ανανέωση ιστορικού αρχείων"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Refresh snapshots"
+msgstr "Ανανέωση στιγμιοτύπων"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rename"
+msgstr "Μετονομασία"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rename Snapshot"
+msgstr "Μετονομασία στιγμιοτύπου"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Renaming snapshot…"
+msgstr "Μετονομασία στιγμιοτύπου…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reported uncorrectable errors"
+msgstr "Σφάλματα μη διορθώσιμα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Requesting restart…"
+msgstr "Αίτηση επανεκκίνησης…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart"
+msgstr "Επανεκκίνηση"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart Now ({0} s)"
+msgstr "Επανεκκίνηση τώρα ({0} δευτ.)"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart Required — Rollback Armed"
+msgstr "Απαιτείται επανεκκίνηση — Η επαναφορά είναι έτοιμη"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Retry Recovery"
+msgstr "Επανάληψη ανάκτησης"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Return to the selected snapshot"
+msgstr "Επιστροφή στο επιλεγμένο στιγμιότυπο"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Review the highlighted indicators on {0} system drive(s)"
+msgstr "Εξετάστε τους επισημασμένους δείκτες στους {0} δίσκους του συστήματος"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Rewriting Home file extents with ZSTD compression…"
+msgstr "Επαναγραφή διαστημάτων αρχείων του προφίλ με συμπίεση ZSTD…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll Back"
+msgstr "Επαναφορά"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll Back to {0}?"
+msgstr "Επαναφορά στο {0};"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback confirmation failed. The protected previous system is being "
+"restored."
+msgstr ""
+"Η επιβεβαίωση της επαναφοράς απέτυχε. Το προηγούμενο προστατευμένο σύστημα "
+"επαναφέρεται."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback is armed. To prevent new system changes from being lost, this "
+"computer will restart automatically when the 60-second countdown ends. Save "
+"any open personal files now."
+msgstr ""
+"Η επαναφορά έχει προετοιμαστεί. Για να αποφευχθεί η απώλεια νέων αλλαγών στο"
+" σύστημα, ο υπολογιστής θα επανεκκινήσει αυτόματα όταν λήξει ο αντίστροφος "
+"μετρητής των 60 δευτερολέπτων. Αποθηκεύστε τυχόν ανοιχτά προσωπικά αρχεία "
+"τώρα."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} is being applied during startup."
+msgstr "Η επαναφορά στο {0} εφαρμόζεται κατά την εκκίνηση."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} is ready. Restart to apply it."
+msgstr ""
+"Η επαναφορά στο {0} είναι έτοιμη. Επανεκκινήστε για να την εφαρμόσετε."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback to {0} was applied, but system confirmation has not completed."
+msgstr ""
+"Η επαναφορά στο {0} εφαρμόστηκε, αλλά η επιβεβαίωση του συστήματος δεν έχει "
+"ολοκληρωθεί."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Running…"
+msgstr "Σε εκτέλεση…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. could not be read from this device"
+msgstr "Δεν ήταν δυνατή η ανάγνωση S.M.A.R.T. από αυτή τη συσκευή"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. is not available for this device"
+msgstr "Το S.M.A.R.T. δεν είναι διαθέσιμο για αυτή τη συσκευή"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. is supported but disabled on this device"
+msgstr ""
+"Το S.M.A.R.T. υποστηρίζεται αλλά είναι απενεργοποιημένο σε αυτή τη συσκευή"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. reports an imminent or current drive failure"
+msgstr "Το S.M.A.R.T. αναφέρει επικείμενη ή τρέχουσα βλάβη του δίσκου"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Save"
+msgstr "Αποθήκευση"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Save Advanced Settings"
+msgstr "Αποθήκευση Προχωρημένων Ρυθμίσεων"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Saving…"
+msgstr "Αποθήκευση…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Scanning data and metadata…"
+msgstr "Σάρωση δεδομένων και μεταδεδομένων…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"Scrub reads allocated data and metadata, verifies checksums, and reports "
+"damage without modifying file data."
+msgstr ""
+"Η λειτουργία scrub διαβάζει τα κατανεμημένα δεδομένα και μεταδεδομένα, "
+"επαληθεύει τα τμήματα ελέγχου και αναφέρει ζημίες χωρίς να τροποποιεί τα "
+"δεδομένα των αρχείων."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"Scrub verifies allocated Btrfs data and metadata. It does not test unused "
+"space or predict sudden drive failure."
+msgstr ""
+"Το scrub επαληθεύει τα κατανεμημένα δεδομένα και μεταδεδομένα Btrfs. Δεν "
+"ελέγχει τον μη χρησιμοποιούμενο χώρο ούτε προβλέπει ξαφνική βλάβη του "
+"δίσκου."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Search snapshots"
+msgstr "Αναζήτηση στιγμιοτύπων"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "See exactly how older snapshots are kept"
+msgstr "Δείτε πώς διατηρούνται ακριβώς τα παλαιότερα στιγμιότυπα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Select snapshot"
+msgstr "Επιλογή στιγμιοτύπου"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Select Snapshots"
+msgstr "Επιλογή στιγμιοτύπων"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Selected file · {0}"
+msgstr "Επιλεγμένο αρχείο · {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Shared and exclusive size statistics and any subvolume limits will be "
+"removed. Snapshots themselves are not deleted."
+msgstr ""
+"Οι στατιστικές για το κοινό και αποκλειστικό μέγεθος και τυχόν όρια υποτομών"
+" θα αφαιρεθούν. Τα ίδια τα στιγμιότυπα δεν διαγράφονται."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Shared Data"
+msgstr "Κοινά δεδομένα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Size {0}"
+msgstr "Μέγεθος {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot"
+msgstr "Στιγμιότυπο"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Actions"
+msgstr "Ενέργειες στιγμιοτύπων"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Check Complete"
+msgstr "Ολοκληρώθηκε ο έλεγχος"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Details"
+msgstr "Λεπτομέρειες στιγμιοτύπου"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · Folder"
+msgstr "Στιγμιότυπο {0} · Φάκελος"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · {1} bytes · modified {2}"
+msgstr "Στιγμιότυπο {0} · {1} bytes · τροποποιήθηκε {2}"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Snapshots"
+msgstr "Στιγμιότυπα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshots are not available on this computer"
+msgstr "Τα στιγμιότυπα δεν είναι διαθέσιμα σε αυτόν τον υπολογιστή"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshots could not be loaded"
+msgstr "Δεν ήταν δυνατή η φόρτωση των στιγμιοτύπων"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Solid-state drive"
+msgstr "SSD"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Some snapshots could not be loaded"
+msgstr "Δεν ήταν δυνατή η φόρτωση ορισμένων στιγμιοτύπων"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Some system drives need attention"
+msgstr "Ορισμένοι δίσκοι του συστήματος χρειάζονται προσοχή"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Space Accounting"
+msgstr "Παρακολούθηση Χώρου"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Space Allocation"
+msgstr "Κατανομή χώρου"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Cancelled"
+msgstr "Ακυρώθηκε η βελτιστοποίηση του χώρου"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Complete"
+msgstr "Ολοκληρώθηκε η βελτιστοποίηση του χώρου"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Failed"
+msgstr "Αποτυχία βελτιστοποίησης του χώρου"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Result Unavailable"
+msgstr "Μη διαθέσιμο αποτέλεσμα βελτιστοποίησης του χώρου"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Space usage"
+msgstr "Χρήση χώρου"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Spin retry count"
+msgstr "Αριθμός επαναλήψεων"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "SSD space reclamation"
+msgstr "Ανακτήθηκε χώρος SSD"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Start a limited balance?"
+msgstr "Έναρξη περιορισμένης εξισορρόπησης;"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Start Balance"
+msgstr "Έναρξη εξισορρόπησης"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Start Scrub"
+msgstr "Έναρξη scrub"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Starting the integrity check…"
+msgstr "Έναρξη ελέγχου ακεραιότητας…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Starting…"
+msgstr "Εκκίνηση…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Status unavailable"
+msgstr "Η κατάσταση δεν είναι διαθέσιμη"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Storage Behavior"
+msgstr "Συμπεριφορά Αποθήκευσης"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Storage layout: {0}"
+msgstr "Διάταξη αποθήκευσης: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Storage media is read-only"
+msgstr "Τα μέσα αποθήκευσης είναι μόνο για ανάγνωση"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices with one parity block for recovery"
+msgstr "Κατανομή δεδομένων σε συσκευές με ένα μπλοκ παρασιτισμού για ανάκτηση"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices with two parity blocks for recovery"
+msgstr "Κατανομή δεδομένων σε συσκευές με δύο μπλοκ παρασιτισμού για ανάκτηση"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices · no redundant copy is available for repair"
+msgstr ""
+"Κατανομή δεδομένων σε συσκευές · δεν υπάρχει διαθέσιμη επιπλέον αντιγραφή "
+"για επισκευή"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Subvolume quota accounting"
+msgstr "Παρακολούθηση ορίων υποτομών"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Superblock errors: {0}"
+msgstr "Σφάλματα superblock: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "System Drive Health"
+msgstr "Κατάσταση υγείας δίσκου συστήματος"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "System files and packages"
+msgstr "Αρχεία και πακέτα συστήματος"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "System Recovery"
+msgstr "Ανάκτηση Συστήματος"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "system snapshot"
+msgstr "Στιγμιότυπο συστήματος"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "System Snapshot Created"
+msgstr "Δημιουργήθηκε στιγμιότυπο συστήματος"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "System storage"
+msgstr "Συστηματική αποθήκευση"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Take a snapshot every"
+msgstr "Λήψη στιγμιοτύπου κάθε"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Temperature"
+msgstr "Θερμοκρασία"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Temperature is outside the safe range"
+msgstr "Η θερμοκρασία είναι εκτός του ασφαλούς εύρους"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "The automatic snapshot infrastructure cannot be disabled here."
+msgstr "Η υποδομή αυτόματων στιγμιοτύπων δεν μπορεί να απενεργοποιηθεί εδώ."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The device reported an unknown warning bit"
+msgstr "Η συσκευή ανέφερε ένα άγνωστο πρόσημο προειδοποίησης"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The drive did not provide a conclusive health result"
+msgstr "Η συσκευή δεν παρείχε επιβεβαιωτικό αποτέλεσμα υγείας"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The Home snapshot was created successfully."
+msgstr "Το στιγμιότυπο του προφίλ δημιουργήθηκε επιτυχώς."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "The integrity check was cancelled before it finished."
+msgstr "Ο έλεγχος ακεραιότητας ακυρώθηκε πριν ολοκληρωθεί."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "The limited balance was cancelled safely before it finished."
+msgstr "Η περιορισμένη εξισορρόπηση ακυρώθηκε με ασφάλεια πριν ολοκληρωθεί."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback completed, but recovery cleanup has not completed."
+msgstr ""
+"Η επαναφορά ολοκληρώθηκε, αλλά ο καθαρισμός ανάκτησης δεν έχει ολοκληρωθεί."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed. Recovery cleanup has not completed."
+msgstr "Η επαναφορά απέτυχε. Ο καθαρισμός ανάκτησης δεν έχει ολοκληρωθεί."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed: {0}"
+msgstr "Η επαναφορά απέτυχε: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback was reverted, but recovery cleanup has not completed."
+msgstr ""
+"Η επαναφορά ακυρώθηκε, αλλά ο καθαρισμός ανάκτησης δεν έχει ολοκληρωθεί."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The root filesystem is {0}."
+msgstr "Το αρχείο συστήματος ρίζας είναι {0}."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid ""
+"The scheduled Home snapshot could not be created. Check Disk Snapshots "
+"Manager for details."
+msgstr ""
+"Δεν ήταν δυνατή η δημιουργία του προγραμματισμένου στιγμιοτύπου του προφίλ. "
+"Ελέγξτε τη Διαχείριση Στιγμιότυπων Δίσκου για λεπτομέρειες."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled Home snapshot was created successfully."
+msgstr "Το προγραμματισμένο στιγμιότυπο του προφίλ δημιουργήθηκε επιτυχώς."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid ""
+"The scheduled system snapshot could not be created. Check Disk Snapshots "
+"Manager for details."
+msgstr ""
+"Δεν ήταν δυνατή η δημιουργία του προγραμματισμένου στιγμιοτύπου συστήματος. "
+"Ελέγξτε τη Διαχείριση Στιγμιότυπων Δίσκου για λεπτομέρειες."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled system snapshot was created successfully."
+msgstr "Το προγραμματισμένο στιγμιότυπο συστήματος δημιουργήθηκε επιτυχώς."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "The selected files were recovered successfully."
+msgstr "Τα επιλεγμένα αρχεία ανακτήθηκαν επιτυχώς."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The snapshot is created immediately."
+msgstr "Το στιγμιότυπο δημιουργείται αμέσως."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The system drive looks healthy"
+msgstr "Ο δίσκος του συστήματος φαίνεται να είναι υγιής"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The system drive needs attention"
+msgstr "Ο δίσκος του συστήματος χρειάζεται προσοχή"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The system snapshot was created successfully."
+msgstr "Το στιγμιότυπο συστήματος δημιουργήθηκε επιτυχώς."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per day for"
+msgstr "Στη συνέχεια διατήρηση ενός ανά ημέρα για"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per month for"
+msgstr "Στη συνέχεια διατήρηση ενός ανά μήνα για"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per week for"
+msgstr "Στη συνέχεια διατήρηση ενός ανά εβδομάδα για"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per year"
+msgstr "Στη συνέχεια διατήρηση ενός ανά έτος"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "This folder is empty"
+msgstr "Ο φάκελος είναι κενός"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "This item was not present in the available Home snapshots."
+msgstr "Αυτό το στοιχείο δεν ήταν διαθέσιμο στα στιγμιότυπα του προφίλ."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"This rewrites files below /home using ZSTD compression. It does not enter "
+"/.snapshots, but shared extents with existing snapshots may become private "
+"and consume more space."
+msgstr ""
+"Αυτή η ενέργεια επαναγράφει τα αρχεία κάτω από το /home χρησιμοποιώντας "
+"συμπίεση ZSTD. Δεν εισέρχεται στο /.snapshots, αλλά τα διαστήματα που "
+"μοιράζονται με υπάρχοντα στιγμιότυπα μπορεί να γίνουν ιδιωτικά και να "
+"καταναλώσουν περισσότερο χώρο."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "This snapshot is available for recovery."
+msgstr "Το στιγμιότυπο αυτό είναι διαθέσιμο για ανάκτηση."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "This snapshot is not available for recovery."
+msgstr "Το στιγμιότυπο αυτό δεν είναι διαθέσιμο για ανάκτηση."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Three copies on separate devices · damaged copies can be repaired "
+"automatically"
+msgstr ""
+"Τρεις αντιγραφές σε ξεχωριστές συσκευές · οι κατεστραμμένες αντιγραφές "
+"μπορούν να επισκευαστούν αυτόματα"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Time above critical temperature"
+msgstr "Χρόνος πάνω από την κρίσιμη θερμοκρασία"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Time above warning temperature"
+msgstr "Χρόνος πάνω από την προειδοποιητική θερμοκρασία"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Total"
+msgstr "Σύνολο"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Total data read"
+msgstr "Συνολικά δεδομένα που διαβάστηκαν"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Total data written"
+msgstr "Συνολικά δεδομένα που γράφτηκαν"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Transparent compression"
+msgstr "Διαφανής συμπίεση"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Try a different name, date, or snapshot reason."
+msgstr "Δοκιμάστε διαφορετικό όνομα, ημερομηνία ή αιτία στιγμιοτύπου."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Two copies on separate devices · a damaged copy can be repaired "
+"automatically"
+msgstr ""
+"Δύο αντιγραφές σε ξεχωριστές συσκευές · μια κατεστραμμένη αντιγραφή μπορεί "
+"να επισκευαστεί αυτόματα"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Two copies on this device · a damaged copy can be repaired automatically"
+msgstr ""
+"Δύο αντιγραφές σε αυτή τη συσκευή · μια κατεστραμμένη αντιγραφή μπορεί να "
+"επισκευαστεί αυτόματα"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unable to calculate"
+msgstr "Δεν ήταν δυνατός ο υπολογισμός"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unavailable"
+msgstr "Μη διαθέσιμο"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Uncorrectable errors: {0}"
+msgstr "Μη διορθώσιμα σφάλματα: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unknown"
+msgstr "Άγνωστο"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Unknown date"
+msgstr "Άγνωστη ημερομηνία"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unknown state"
+msgstr "Άγνωστη κατάσταση"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unknown storage device"
+msgstr "Άγνωστη συσκευή αποθήκευσης"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unsafe shutdowns"
+msgstr "Μη ασφαλείς αποσυνδέσεις"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Unsupported Destination"
+msgstr "Μη υποστηριζόμενος προορισμός"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Unverified errors: {0}"
+msgstr "Σφάλματα μη επαληθευμένα: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Updating snapshot protection…"
+msgstr "Ενημέρωση προστασίας στιγμιοτύπου…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Useful after deleting large amounts of data"
+msgstr "Χρήσιμο μετά τη διαγραφή μεγάλου όγκου δεδομένων"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Verification errors: {0}"
+msgstr "Σφάλματα επαλήθευσης: {0}"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "View File History…"
+msgstr "Προβολή ιστορικού αρχείου…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "View Progress"
+msgstr "Προβολή προόδου"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Volatile memory backup failed"
+msgstr "Η δημιουργία αντιγράφου ασφαλείας της περαστήσιμης μνήμης απέτυχε"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Waiting for Btrfs status…"
+msgstr "Αναμονή για την κατάσταση Btrfs…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Waiting for Btrfs to start…"
+msgstr "Αναμονή για την εκκίνηση του Btrfs…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Waiting for scrub status…"
+msgstr "Αναμονή για την κατάσταση scrub…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Waiting for the new scrub to start…"
+msgstr "Αναμονή για την έναρξη του νέου scrub…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Warnings"
+msgstr "Προειδοποιήσεις"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Why?"
+msgstr "Γιατί;"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Will not change"
+msgstr "Δεν θα αλλάξει"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Working…"
+msgstr "Εργάζεται…"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "{0} available"
+msgstr "Διαθέσιμοι {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "{0} bytes · {1}"
+msgstr "{0} bytes · {1}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "{0} damaged metadata entries were ignored"
+msgstr "Αγνοήθηκαν {0} κατεστραμμένες εγγραφές μεταδεδομένων"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} hours · about {1} days"
+msgstr "{0} ώρες · περίπου {1} ημέρες"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} minutes"
+msgstr "{0} λεπτά"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0} of {1} checked"
+msgstr "Έλεγχος {0} από {1}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "{0} of {1} used"
+msgstr "{0} από {1} σε χρήση"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} packages"
+msgstr "{0} πακέτα"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} RPM"
+msgstr "{0} RPM"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} snapshot record(s) need attention"
+msgstr "{0} εγγραφές στιγμιοτύπων χρειάζονται προσοχή"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} snapshot(s) selected"
+msgstr "{0} στιγμιότυπα επιλέχθηκαν"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} °C"
+msgstr "{0} °C"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} · Manual Snapshot"
+msgstr "{0} · Χειροκίνητο στιγμιότυπο"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "{0} · new writes"
+msgstr "{0} · νέες εγγραφές"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0}%"
+msgstr "{0}%"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0}% complete"
+msgstr "{0}% ολοκληρώθηκε"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0}% · warning threshold {1}%"
+msgstr "{0}% · προειδοποιητικό όριο {1}%"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0}/s"
+msgstr "{0}/δευτ."

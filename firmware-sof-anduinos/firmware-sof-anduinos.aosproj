@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>firmware-sof-anduinos</PackageName>
-    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Intel SOF firmware binaries derived from Ubuntu and refreshed with a newer Intel snapshot</PackageDescription>
     <Section>kernel</Section>
@@ -9,7 +9,7 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
 
@@ -17,7 +17,7 @@
     <UpstreamDistro>ubuntu</UpstreamDistro>
     <UpstreamPackage>firmware-sof-signed</UpstreamPackage>
     <UpstreamSuite>$(Suite)</UpstreamSuite>
-    <UpstreamSuiteMapping>noble-addon=noble, questing-addon=questing, resolute-addon=resolute</UpstreamSuiteMapping>
+    <UpstreamSuiteMapping>noble-addon=noble,, resolute-addon=resolute</UpstreamSuiteMapping>
     <UpstreamComponent>$(Component)</UpstreamComponent>
     <UpstreamArch>all</UpstreamArch>
 

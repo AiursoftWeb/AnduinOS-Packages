@@ -1,3 +1,4 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: ufwall-gtk\n"
@@ -5,365 +6,638 @@ msgstr ""
 "POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/widgets/add_rule_dialog.rs:155
 msgid "0 = append at end"
 msgstr "0 = tambahkan di akhir"
 
+#: src/window.rs:81
 msgid "About"
 msgstr "Tentang"
 
+#: src/widgets/add_rule_dialog.rs:93
 msgid "Action"
 msgstr "Tindakan"
 
+#: src/views/status_view.rs:396
 msgid "Active"
 msgstr "Aktif"
 
+#: src/widgets/add_rule_dialog.rs:170
 msgid "Add"
 msgstr "Tambah"
 
+#: src/views/rules_view.rs:93 src/widgets/add_rule_dialog.rs:57
 msgid "Add Rule"
 msgstr "Tambah Aturan"
 
+#: src/widgets/add_rule_dialog.rs:110
 msgid "Advanced"
 msgstr "Lanjutan"
 
+#: src/views/network_audit_view.rs:200 src/views/network_audit_view.rs:208
 msgid "All"
 msgstr "Semua"
 
+#: src/views/profiles_view.rs:92 src/views/status_view.rs:127
+#: src/views/status_view.rs:136 src/widgets/add_rule_dialog.rs:96
 msgid "Allow"
 msgstr "Izinkan"
 
+#: src/views/profiles_view.rs:77
 msgid "Allow applications with predefined rules."
 msgstr "Izinkan aplikasi dengan aturan yang telah ditentukan sebelumnya."
 
+#: src/views/profiles_view.rs:76
 msgid "Application Profiles"
 msgstr "Profil Aplikasi"
 
+#: src/window.rs:117
 msgid "Audit"
 msgstr "Audit"
 
+#: src/views/network_audit_view.rs:277
 msgid "Auditor Error"
 msgstr "Kesalahan Auditor"
 
+#: src/views/network_audit_view.rs:504
 msgid "Block"
 msgstr "Blokir"
 
+#: src/views/network_audit_view.rs:500
 msgid "Block Connection?"
 msgstr "Blokir Koneksi?"
 
+#: src/views/network_audit_view.rs:493
 msgid "Block inbound traffic from"
 msgstr "Blokir lalu lintas masuk dari"
 
+#: src/views/network_audit_view.rs:495
 msgid "Block outbound traffic to"
 msgstr "Blokir lalu lintas keluar ke"
 
+#: src/views/dashboard_view.rs:96
 msgid "Blocked Events"
 msgstr "Peristiwa yang Diblokir"
 
+#: src/views/network_audit_view.rs:551
 msgid "Blocked Successfully"
 msgstr "Berhasil Diblokir"
 
+#: src/widgets/add_rule_dialog.rs:124
 msgid "Both"
 msgstr "Keduanya"
 
+#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "Batal"
 
+#: src/views/status_view.rs:103
+msgid "Local Network Discovery"
+msgstr "Penemuan Jaringan Lokal"
+
+#: src/views/status_view.rs:104
+msgid "Control multicast DNS discovery and .local name resolution."
+msgstr "Kontrol penemuan DNS multicast dan resolusi nama .local."
+
+#: src/views/status_view.rs:110
+msgid "Local Network Discovery (mDNS)"
+msgstr "Penemuan Jaringan Lokal (mDNS)"
+
+#: src/views/status_view.rs:111
+msgid "Checking service status…"
+msgstr "Memeriksa status layanan…"
+
+#: src/views/status_view.rs:216 src/views/status_view.rs:332
+msgid "Network Discovery Error"
+msgstr "Kesalahan Penemuan Jaringan"
+
+#: src/views/status_view.rs:351
+msgid "Avahi is not installed."
+msgstr "Avahi tidak terinstal."
+
+#: src/views/status_view.rs:353
+msgid "Avahi is running; .local names and service discovery are available."
+msgstr "Avahi sedang berjalan; nama .local dan penemuan layanan tersedia."
+
+#: src/views/status_view.rs:357
+msgid "Avahi is enabled but not currently running."
+msgstr "Avahi diaktifkan tetapi tidak sedang berjalan."
+
+#: src/views/status_view.rs:359
+msgid "Avahi is blocked; .local names and service discovery are unavailable."
+msgstr "Avahi diblokir; nama .local dan penemuan layanan tidak tersedia."
+
+#: src/widgets/add_rule_dialog.rs:149
 msgid "Comment"
 msgstr "Komentar"
 
+#: src/widgets/add_rule_dialog.rs:72
 msgid "Custom"
 msgstr "Kustom"
 
+#: src/views/dashboard_view.rs:56 src/window.rs:116
 msgid "Dashboard"
 msgstr "Dasbor"
 
+#: src/views/status_view.rs:119
 msgid "Default Policies"
 msgstr "Kebijakan Default"
 
+#: src/widgets/rule_row.rs:90
 msgid "Delete"
 msgstr "Hapus"
 
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:122
 msgid "Delete All"
 msgstr "Hapus Semua"
 
+#: src/views/rules_view.rs:118
 msgid "Delete All Rules?"
 msgstr "Hapus Semua Aturan?"
 
+#: src/widgets/rule_row.rs:86
 msgid "Delete Rule"
 msgstr "Hapus Aturan"
 
+#: src/widgets/rule_row.rs:87
 msgid "Delete rule"
 msgstr "Hapus aturan"
 
+#: src/views/status_view.rs:126 src/views/status_view.rs:135
+#: src/widgets/add_rule_dialog.rs:95
 msgid "Deny"
 msgstr "Tolak"
 
+#: src/widgets/add_rule_dialog.rs:135
 msgid "Destination IP"
 msgstr "IP Tujuan"
 
+#: src/widgets/add_rule_dialog.rs:114
 msgid "Direction"
 msgstr "Arah"
 
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:137 src/views/status_view.rs:185
+#: src/widgets/add_rule_dialog.rs:338 src/widgets/rule_row.rs:119
+#: src/window.rs:283 src/window.rs:299
 msgid "Error"
 msgstr "Kesalahan"
 
+#: src/views/network_audit_view.rs:554
 msgid "Failed to Block"
 msgstr "Gagal Memblokir"
 
+#: src/views/status_view.rs:95 src/window.rs:64
 msgid "Firewall"
 msgstr "Bendalawang"
 
+#: src/views/rules_view.rs:70
 msgid "Firewall Rules"
 msgstr "Aturan Firewall"
 
+#: src/views/status_view.rs:156
 msgid "Full"
 msgstr "Penuh"
 
+#: src/views/status_view.rs:155
 msgid "High"
 msgstr "Tinggi"
 
+#: src/widgets/add_rule_dialog.rs:116
 msgid "In"
 msgstr "Masuk"
 
+#: src/views/status_view.rs:96 src/views/status_view.rs:396
 msgid "Inactive"
 msgstr "Tidak aktif"
 
+#: src/views/network_audit_view.rs:201
 msgid "Inbound"
 msgstr "Masuk"
 
+#: src/views/status_view.rs:124
 msgid "Incoming"
 msgstr "Masuk"
 
+#: src/widgets/add_rule_dialog.rs:154
 msgid "Insert Before Rule"
 msgstr "Sisipkan Sebelum Aturan"
 
+#: src/widgets/add_rule_dialog.rs:144
 msgid "Interface"
 msgstr "Antarmuka"
 
+#: src/widgets/add_rule_dialog.rs:98
 msgid "Limit"
 msgstr "Batas"
 
+#: src/views/dashboard_view.rs:129
 msgid "Listening Ports"
 msgstr "Port yang Mendengarkan"
 
+#: src/views/status_view.rs:150
 msgid "Log Level"
 msgstr "Tingkat Log"
 
+#: src/views/status_view.rs:146
 msgid "Logging"
 msgstr "Pencatatan"
 
+#: src/views/status_view.rs:153
 msgid "Low"
 msgstr "Rendah"
 
+#: src/views/status_view.rs:154
 msgid "Medium"
 msgstr "Sedang"
 
+#: src/views/network_audit_view.rs:58
 msgid "Monitoring Network Activity"
 msgstr "Memantau Aktivitas Jaringan"
 
+#: src/views/profiles_view.rs:119
 msgid "No Profiles"
 msgstr "Tidak Ada Profil"
 
+#: src/views/rules_view.rs:75
 msgid "No Rules"
 msgstr "Tidak Ada Aturan"
 
+#: src/views/profiles_view.rs:120
 msgid "No application profiles found"
 msgstr "Tidak ada profil aplikasi yang ditemukan"
 
+#: src/views/dashboard_view.rs:247
 msgid "No blocked connections in recent events"
 msgstr "Tidak ada koneksi yang diblokir dalam peristiwa terbaru"
 
+#: src/views/dashboard_view.rs:296
 msgid "No blocked ports in recent events"
 msgstr "Tidak ada port yang diblokir dalam peristiwa terbaru"
 
+#: src/views/dashboard_view.rs:344
 msgid "No listening ports detected"
 msgstr "Tidak ada port pendengar yang terdeteksi"
 
+#: src/views/status_view.rs:152
 msgid "Off"
 msgstr "Mati"
 
+#: src/widgets/add_rule_dialog.rs:117
 msgid "Out"
 msgstr "Keluar"
 
+#: src/views/network_audit_view.rs:202
 msgid "Outbound"
 msgstr "Keluar"
 
+#: src/views/status_view.rs:133
 msgid "Outgoing"
 msgstr "Keluar"
 
+#: src/views/network_audit_view.rs:217
 msgid "Pause list updates"
 msgstr "Jeda pembaruan daftar"
 
+#: src/views/profiles_view.rs:87
 msgid "Port / Protocol"
 msgstr "Port / Protokol"
 
+#: src/widgets/add_rule_dialog.rs:89
 msgid "Port / Service Name"
 msgstr "Port / Nama Layanan"
 
+#: src/window.rs:120
 msgid "Profiles"
 msgstr "Profil"
 
+#: src/widgets/add_rule_dialog.rs:122
 msgid "Protocol"
 msgstr "Protokol"
 
+#: src/views/profiles_view.rs:82
 msgid "Quick Allow Port"
 msgstr "Izinkan Port Cepat"
 
+#: src/views/dashboard_view.rs:135
 msgid "Recent Blocked Events"
 msgstr "Peristiwa Terblokir Terbaru"
 
+#: src/views/dashboard_view.rs:78
 msgid "Recent Events Parsed"
 msgstr "Peristiwa Terbaru Didekripsi"
 
+#: src/views/dashboard_view.rs:154
 msgid "Refresh"
 msgstr "Muat Ulang"
 
+#: src/views/status_view.rs:128 src/views/status_view.rs:137
+#: src/widgets/add_rule_dialog.rs:97
 msgid "Reject"
 msgstr "Tolak"
 
+#: src/views/network_audit_view.rs:195
 msgid "Resolve Domains"
 msgstr "Selesaikan Domain"
 
+#: src/views/network_audit_view.rs:551
 msgid "Rule added to block"
 msgstr "Aturan ditambahkan ke blokir"
 
+#: src/window.rs:119
 msgid "Rules"
 msgstr "Aturan"
 
+#: src/widgets/add_rule_dialog.rs:265
 msgid "Save"
 msgstr "Simpan"
 
+#: src/views/network_audit_view.rs:186
 msgid "Search Process or IP..."
 msgstr "Cari Proses atau IP..."
 
+#: src/views/rules_view.rs:62
 msgid "Search rules..."
 msgstr "Cari aturan..."
 
+#: src/widgets/add_rule_dialog.rs:70
 msgid "Service"
 msgstr "Layanan"
 
+#: src/views/dashboard_view.rs:139
 msgid "Show"
 msgstr "Tampilkan"
 
+#: src/widgets/add_rule_dialog.rs:131
 msgid "Source IP"
 msgstr "IP Sumber"
 
+#: src/views/status_view.rs:84 src/window.rs:118
 msgid "Status"
 msgstr "Status"
 
+#: src/views/network_audit_view.rs:209 src/widgets/add_rule_dialog.rs:125
 msgid "TCP"
 msgstr "TCP"
 
+#: src/views/rules_view.rs:76
 msgid "There are no rules configured yet."
 msgstr "Belum ada aturan yang dikonfigurasi."
 
+#: src/views/rules_view.rs:119
 msgid "This will delete all custom rules. This action cannot be undone."
 msgstr ""
 "Ini akan menghapus semua aturan kustom. Tindakan ini tidak dapat dibatalkan."
 
+#: src/views/network_audit_view.rs:493
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr "Ini akan mencegah host jarak jauh mengirim paket ke mesin Anda."
 
+#: src/views/network_audit_view.rs:495
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr "Ini akan mencegah mesin Anda mengirim paket ke host jarak jauh."
 
+#: src/views/dashboard_view.rs:117
 msgid "Top Blocked Connections"
 msgstr "Koneksi Teratas Diblokir"
 
+#: src/views/dashboard_view.rs:123
 msgid "Top Blocked Ports"
 msgstr "Port Terblokir Teratas"
 
+#: src/views/network_audit_view.rs:210 src/widgets/add_rule_dialog.rs:126
 msgid "UDP"
 msgstr "UDP"
 
+#: src/views/profiles_view.rs:83
 msgid "e.g. 80,443/tcp or 8080"
 msgstr "mis. 80,443/tcp atau 8080"
 
+#: data/app_profiles/qbittorrent:3 data/app_profiles/transmission:3
 msgid "BitTorrent client"
 msgstr "Client BitTorrent"
 
+#: data/app_profiles/cups:3
 msgid "Common UNIX Printing System server"
 msgstr "Pengajar Sistem Pencetakan UNIX Umum"
 
+#: data/app_profiles/syncthing:3
 msgid "Continuous file synchronization"
 msgstr "Sinkronisasi berkas berkelanjutan"
 
+#: data/app_profiles/docker:3
 msgid "Docker container runtime API"
 msgstr "API runtime kontainer Docker"
 
+#: data/app_profiles/dns:3
 msgid "Domain Name System server"
 msgstr "Pengajar Sistem Nama Domain"
 
+#: data/app_profiles/xmpp:3
 msgid "Extensible Messaging and Presence Protocol"
 msgstr "Protokol Pesan dan Kehadiran yang Dapat Diperluas"
 
+#: data/app_profiles/ftp:3
 msgid "File Transfer Protocol"
 msgstr "Protokol Transfer Berkas"
 
+#: data/app_profiles/dropbox:3
 msgid "File synchronization service"
 msgstr "Layanan sinkronisasi berkas"
 
+#: data/app_profiles/http:3
 msgid "Hypertext Transfer Protocol for web servers"
 msgstr "Protokol Transfer Hypertext untuk pengajar web"
 
+#: data/app_profiles/redis:3
 msgid "In-memory data structure store"
 msgstr "Penyimpan struktur data dalam memori"
 
+#: data/app_profiles/imap:3
 msgid "Internet Message Access Protocol for email"
 msgstr "Protokol Akses Pesan Internet untuk email"
 
+#: data/app_profiles/ldap:3
 msgid "Lightweight Directory Access Protocol"
 msgstr "Protokol Akses Direktori Ringan"
 
+#: data/app_profiles/jellyfin:3
 msgid "Media streaming server"
 msgstr "Pengajar streaming media"
 
+#: data/app_profiles/wireguard:3
 msgid "Modern VPN tunnel"
 msgstr "Tunnel VPN modern"
 
+#: data/app_profiles/mdns:3
 msgid "Multicast DNS for local network discovery"
 msgstr "DNS multicast untuk penemuan jaringan lokal"
 
+#: data/app_profiles/mysql:3
 msgid "MySQL database server"
 msgstr "Pengajar basis data MySQL"
 
+#: data/app_profiles/nfs:3
 msgid "Network File System"
 msgstr "Sistem Berkas Jaringan"
 
+#: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
 msgstr "Port / Protokol"
 
+#: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
 msgstr "Basis data dokumen NoSQL"
 
+#: data/app_profiles/kdeconnect:3
 msgid "Phone and desktop integration"
 msgstr "Integrasi telepon dan desktop"
 
+#: data/app_profiles/plex:3
 msgid "Plex media streaming server"
 msgstr "Pengajar streaming media Plex"
 
+#: data/app_profiles/pop3:3
 msgid "Post Office Protocol for email retrieval"
 msgstr "Protokol Kantor Pos untuk pengambilan email"
 
+#: data/app_profiles/postgresql:3
 msgid "PostgreSQL database server"
 msgstr "Pengajar basis data PostgreSQL"
 
+#: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
 msgstr "Port / Protokol"
 
+#: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
 msgstr "HTTP Aman untuk pengajar web"
 
+#: data/app_profiles/openssh:3
 msgid "Secure shell remote access"
 msgstr "Akses jarak jauh shell aman"
 
+#: data/app_profiles/smtp:3
 msgid "Simple Mail Transfer Protocol"
 msgstr "Protokol Transfer Mail Sederhana"
 
+#: data/app_profiles/vnc:3
 msgid "Virtual Network Computing remote desktop"
 msgstr "Desktop jarak jauh Computing Jaringan Virtual"
 
+#: data/app_profiles/samba:3
 msgid "Windows file and printer sharing"
 msgstr "Pembagian berkas dan printer Windows"
+
+#: src/views/network_audit_view.rs:534
+msgid "Audit Block"
+msgstr "Blokir Audit"
+
+#: src/ufw/backend.rs:44 src/ufw/backend.rs:391 src/ufw/backend.rs:643
+msgid "Authentication cancelled"
+msgstr "Autentikasi dibatalkan"
+
+#: src/views/network_audit_view.rs:160
+msgid "Download"
+msgstr "Unduhan"
+
+#: src/ufw/backend.rs:384
+msgid "Failed to execute network service helper"
+msgstr "Gagal menjalankan pembantu layanan jaringan"
+
+#: src/ufw/backend.rs:632
+msgid "Failed to execute pkexec"
+msgstr "Gagal menjalankan pkexec"
+
+#: src/ufw/backend.rs:613
+msgid "Failed to inspect system service"
+msgstr "Gagal memeriksa layanan sistem"
+
+#: src/window.rs:284
+msgid "Failed to read firewall status"
+msgstr "Gagal membaca status firewall"
+
+#: src/window.rs:300
+msgid "Failed to read profiles"
+msgstr "Gagal membaca profil"
+
+#: src/ufw/stats.rs:39
+msgid "Failed to run journalctl"
+msgstr "Gagal menjalankan journalctl"
+
+#: src/ufw/backend.rs:37
+msgid "Failed to run pkexec ufw status"
+msgstr "Gagal menjalankan pkexec ufw status"
+
+#: src/ufw/stats.rs:151
+msgid "Failed to run ss"
+msgstr "Gagal menjalankan ss"
+
+#: src/ufw/traffic_monitor.rs:36
+msgid "Failed to start ufwall-auditor"
+msgstr "Gagal memulai ufwall-auditor"
+
+#: src/ufw/traffic_monitor.rs:38
+msgid "Is it installed?"
+msgstr "Apakah sudah diinstal?"
+
+#: src/views/network_audit_view.rs:166
+msgid "Max"
+msgstr "Maks"
+
+#: src/views/network_audit_view.rs:84
+msgid ""
+"Network Traffic\n"
+"Red line: Upload speed\n"
+"Green line: Download speed"
+msgstr ""
+"Lalu Lintas Jaringan\n"
+"Garis merah: Kecepatan unggah\n"
+"Garis hijau: Kecepatan unduh"
+
+#: src/ufw/backend.rs:399
+msgid "Network service command failed"
+msgstr "Perintah layanan jaringan gagal"
+
+#: src/views/network_audit_view.rs:371
+msgid "No Active Connections"
+msgstr "Tidak Ada Koneksi Aktif"
+
+#: src/views/network_audit_view.rs:361
+msgid "No Inbound Connections"
+msgstr "Tidak Ada Koneksi Masuk"
+
+#: src/views/network_audit_view.rs:366
+msgid "No Outbound Connections"
+msgstr "Tidak Ada Koneksi Keluar"
+
+#: src/views/network_audit_view.rs:367
+msgid "No applications are sending data to the internet."
+msgstr "Tidak ada aplikasi yang mengirim data ke internet."
+
+#: src/views/network_audit_view.rs:362
+msgid "No external devices are connecting to your open ports."
+msgstr "Tidak ada perangkat eksternal yang terhubung ke port terbuka Anda."
+
+#: src/views/network_audit_view.rs:372
+msgid "No network activity detected."
+msgstr "Tidak ada aktivitas jaringan yang terdeteksi."
+
+#: src/ufw/backend.rs:528 src/ufw/backend.rs:546
+msgid "No ports defined for this profile"
+msgstr "Tidak ada port yang didefinisikan untuk profil ini"
+
+#: src/ufw/backend.rs:649
+msgid "UFW command failed"
+msgstr "Perintah UFW gagal"
+
+#: src/views/network_audit_view.rs:152
+msgid "Upload"
+msgstr "Unggah"
+
+#: src/ufw/backend.rs:48
+msgid "pkexec failed"
+msgstr "pkexec gagal"

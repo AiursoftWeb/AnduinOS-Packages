@@ -1,0 +1,1924 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-btrfs-snapshots-manager 0.1.0\n"
+"POT-Creation-Date: 2026-08-06 00:00+0800\n"
+"PO-Revision-Date: 2026-08-06 00:00+0800\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "A critical threshold is failing now"
+msgstr "Un seuil critique est actuellement dépassé"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid ""
+"A limited balance improves allocation layout. It does not check file "
+"integrity or guarantee that visible free space will increase."
+msgstr ""
+"Un équilibrage limité améliore la disposition de l'allocation. Il ne vérifie"
+" pas l'intégrité des fichiers ni ne garantit que l'espace libre visible "
+"augmentera."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"A limited balance only relocates data and metadata block groups that are at "
+"most 50% full."
+msgstr ""
+"Un équilibrage limité ne déplace que les groupes de blocs de données et de "
+"métadonnées qui sont remplis à 50 % au maximum."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "A scheduled Home snapshot will start in 10 seconds."
+msgstr ""
+"Un instantané planifié du dossier personnel va démarrer dans 10 secondes."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "A scheduled system snapshot will start in 10 seconds."
+msgstr "Un instantané système planifié va démarrer dans 10 secondes."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "A threshold was exceeded in the past"
+msgstr "Un seuil a été dépassé précédemment"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "About Disk Snapshots Manager"
+msgstr "À propos du Gestionnaire d'instantanés de disque"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "About {0} remaining"
+msgstr "Environ {0} restants"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Actual file contents"
+msgstr "Contenu réel des fichiers"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Advanced retention settings"
+msgstr "Paramètres de conservation avancés"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Advanced Settings"
+msgstr "Paramètres avancés"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "After Package Change"
+msgstr "Après modification du paquet"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "All system drives look healthy"
+msgstr "Tous les lecteurs système semblent en bonne santé"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Allow automatic cleanup"
+msgstr "Autoriser le nettoyage automatique"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Always on"
+msgstr "Toujours activé"
+
+#: src/btrfs-snapshots-manager/src/application.rs
+msgid "AnduinOS Team"
+msgstr "Équipe AnduinOS"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Applied automatically to newly written data"
+msgstr "Appliquée automatiquement aux données nouvellement écrites"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "At a Glance"
+msgstr "Vue d’ensemble"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Attention"
+msgstr "Attention requise"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Attribute thresholds"
+msgstr "Seuils des attributs"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic"
+msgstr "Automatique"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic 60-second countdown after preparation"
+msgstr "Compte à rebours automatique de 60 secondes après la préparation"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic cleanup"
+msgstr "Nettoyage automatique"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Cleanup Complete"
+msgstr "Nettoyage automatique terminé"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic Home Snapshots"
+msgstr "Instantanés automatiques du dossier personnel"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Snapshot Failed"
+msgstr "Échec de l'instantané automatique"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Automatic snapshot service is available"
+msgstr "Le service d'instantanés automatiques est disponible"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Automatic snapshot service needs attention"
+msgstr ""
+"Le service d'instantanés automatiques nécessite une attention particulière"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Snapshot Starting"
+msgstr "Démarrage de l'instantané automatique"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots"
+msgstr "Instantanés automatiques"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic Snapshots"
+msgstr "Instantanés automatiques"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic System Snapshot Created"
+msgstr "Instantané système automatique créé"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic System Snapshots"
+msgstr "Instantanés système automatiques"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Available spare capacity"
+msgstr "Espace de réserve disponible"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Available spare is below its threshold"
+msgstr "L'espace de réserve disponible est inférieur à son seuil"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Average rate: {0}/s"
+msgstr "Taux moyen : {0}/s"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Background Service"
+msgstr "Service en arrière-plan"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Based on the manufacturer endurance counter"
+msgstr "Basé sur le compteur d'endurance du fabricant"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Before Package Change"
+msgstr "Avant la modification du paquet"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Before Rollback"
+msgstr "Avant la restauration"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Block groups completed: {0} of about {1}"
+msgstr "Groupes de blocs terminés : {0} sur environ {1}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Block groups considered: {0}"
+msgstr "Groupes de blocs pris en compte : {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Browse"
+msgstr "Parcourir"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Browse earlier Personal Files versions of this item"
+msgstr ""
+"Parcourir les versions antérieures de cet élément dans les Fichiers "
+"personnels"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Browse Files"
+msgstr "Parcourir les fichiers"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Browse files in this snapshot"
+msgstr "Parcourir les fichiers de cet instantané"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Browse System Snapshot"
+msgstr "Parcourir l'instantané système"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Browse This Folder’s History…"
+msgstr "Parcourir l'historique de ce dossier…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Btrfs could not complete Home file defragmentation."
+msgstr ""
+"Btrfs n’a pas pu terminer la défragmentation des fichiers du dossier "
+"personnel."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs could not complete the limited balance."
+msgstr "Btrfs n’a pas pu terminer l’équilibrage limité."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs did not provide a completed balance result."
+msgstr "Btrfs n’a pas fourni de résultat d’équilibrage terminé."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Btrfs did not provide a completed defragmentation result."
+msgstr "Btrfs n’a pas fourni de résultat de défragmentation terminé."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs did not provide a completed scrub result."
+msgstr "Btrfs n’a pas fourni de résultat de vérification terminé."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs did not start a new integrity check"
+msgstr "Btrfs n’a pas démarré une nouvelle vérification d’intégrité"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Btrfs did not start a new maintenance task"
+msgstr "Btrfs n’a pas démarré de nouvelle tâche de maintenance"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Btrfs does not provide an on/off real-time deduplication switch. Tools such "
+"as duperemove and BEES use different strategies, resource limits, and scan "
+"scopes. Disk Snapshots Manager will not silently install or run one without "
+"a complete policy."
+msgstr ""
+"Btrfs ne propose pas d’interrupteur activant ou désactivant la déduplication"
+" en temps réel. Des outils tels que duperemove et BEES utilisent des "
+"stratégies, des limites de ressources et des périmètres d’analyse "
+"différents. Le Gestionnaire d'instantanés de disque n’installera ni "
+"n’exécutera aucun de ces outils sans une politique complète."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs examined {0} block groups and relocated {1}."
+msgstr "Btrfs a examiné {0} groupes de blocs et en a déplacé {1}."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs finished relocating underused data and metadata block groups."
+msgstr ""
+"Btrfs a terminé le déplacement des groupes de blocs de données et de "
+"métadonnées sous-utilisés."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"Btrfs finished rewriting eligible file extents below /home with ZSTD "
+"compression."
+msgstr ""
+"Btrfs a terminé la réécriture des étendues de fichiers éligibles sous /home "
+"avec une compression ZSTD."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"Btrfs found errors that could not be repaired. Back up important files and "
+"investigate the storage device."
+msgstr ""
+"Btrfs a détecté des erreurs qui n'ont pas pu être réparées. Sauvegardez les "
+"fichiers importants et vérifiez l'appareil de stockage."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Btrfs maintenance status is unavailable"
+msgstr "L'état de la maintenance Btrfs est indisponible"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+msgid "Btrfs operation failed"
+msgstr "L'opération Btrfs a échoué"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs repaired {0} damaged copies using valid redundant data."
+msgstr ""
+"Btrfs a réparé {0} copies endommagées à l'aide de données redondantes "
+"valides."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+msgid "Btrfs request completed"
+msgstr "L'opération Btrfs est terminée."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Btrfs will scan existing subvolumes in the background. Size statistics may "
+"remain incomplete until the scan finishes."
+msgstr ""
+"Btrfs analysera les sous-volumes existants en arrière-plan. Les statistiques"
+" de taille peuvent rester incomplètes jusqu'à la fin de l'analyse."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Calculating snapshot size…"
+msgstr "Calcul de la taille de l'instantané…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancel"
+msgstr "Annuler"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Cancel Check"
+msgstr "Annuler la vérification"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancel Rollback"
+msgstr "Annuler la restauration"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancelling rollback…"
+msgstr "Annulation de la restauration…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Cancelling…"
+msgstr "Annulation…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Change…"
+msgstr "Modifier…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Check file system integrity"
+msgstr "Vérifier l’intégrité du système de fichiers"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Check Snapshot Availability"
+msgstr "Vérifier la disponibilité des instantanés"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checked: {0}"
+msgstr "Vérifié : {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checking File System Integrity"
+msgstr "Vérification de l’intégrité du système de fichiers"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking recovery state…"
+msgstr "Vérification de l'état de récupération…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking rollback safety…"
+msgstr "Vérification de la sécurité de la restauration…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking snapshot…"
+msgstr "Vérification de l'instantané…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Checking system storage…"
+msgstr "Vérification du stockage système…"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checking…"
+msgstr "Vérification…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checksum errors: {0}"
+msgstr "Erreurs de somme de contrôle : {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Choose a local filesystem destination."
+msgstr "Choisir une destination de système de fichiers local."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid ""
+"Choose an earlier version to browse or recover. Your current files will not "
+"be changed automatically."
+msgstr ""
+"Choisissez une version antérieure à parcourir ou à récupérer. Vos fichiers "
+"actuels ne seront pas modifiés automatiquement."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Choose Where to Recover This Folder"
+msgstr "Choisir où récupérer ce dossier"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Close"
+msgstr "Fermer"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Content-based deduplication"
+msgstr "Déduplication basée sur le contenu"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Copy This Folder…"
+msgstr "Copier ce dossier…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Corrected errors: {0}"
+msgstr "Erreurs corrigées : {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Could Not Browse History"
+msgstr "Impossible de parcourir l'historique"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Could Not Browse System Snapshot"
+msgstr "Impossible de parcourir l'instantané système"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Could Not Save Settings"
+msgstr "Impossible d'enregistrer les paramètres"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create"
+msgstr "Créer"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Create a system snapshot after successful changes"
+msgstr "Créer un instantané système après des modifications réussies"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Create a system snapshot before changes"
+msgstr "Créer un instantané système avant les modifications"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create a {0} now"
+msgstr "Créer un {0} maintenant"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create one now or turn on automatic snapshots."
+msgstr ""
+"Créer un instantané maintenant ou activer les instantanés automatiques."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create Snapshot Now"
+msgstr "Créer un instantané maintenant"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Create snapshots on a schedule."
+msgstr "Créer des instantanés selon un calendrier."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create {0}"
+msgstr "Créer {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Creating"
+msgstr "Création"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Creating snapshot…"
+msgstr "Création de l'instantané…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Current system"
+msgstr "Système actuel"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Damaged"
+msgstr "Endommagé"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Days"
+msgstr "Jours"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Deduplication needs an engine"
+msgstr "La déduplication nécessite un moteur"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Defragment"
+msgstr "Défragmenter"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Defragment Home files"
+msgstr "Défragmenter les fichiers du dossier personnel"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Defragment Home files?"
+msgstr "Défragmenter les fichiers du dossier personnel ?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"Defragmentation can increase disk usage when files share data with snapshots"
+" or reflinks."
+msgstr ""
+"La défragmentation peut augmenter l'utilisation du disque lorsque les "
+"fichiers partagent des données avec des instantanés ou des reflinks."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"Defragmentation rewrites file extents and can increase disk usage by "
+"breaking shared snapshot or reflink data."
+msgstr ""
+"La défragmentation réécrit les étendues de fichiers et peut augmenter "
+"l'utilisation du disque en rompant le partage des données entre instantanés "
+"ou reflinks."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Defragment…"
+msgstr "Défragmenter…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete"
+msgstr "Supprimer"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Selected"
+msgstr "Supprimer la sélection"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Snapshot"
+msgstr "Supprimer l'instantané"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Snapshots?"
+msgstr "Supprimer les instantanés ?"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete {0} selected snapshot(s)? This cannot be undone."
+msgstr ""
+"Supprimer les {0} instantanés sélectionné(s) ? Cette action est "
+"irréversible."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting"
+msgstr "Suppression"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting snapshots…"
+msgstr "Suppression des instantanés…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Device reliability is degraded"
+msgstr "La fiabilité de l'appareil est dégradée"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Device report"
+msgstr "Rapport sur l'appareil"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Diagnostic counters"
+msgstr "Compteurs de diagnostic"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable"
+msgstr "Désactiver"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable quota accounting?"
+msgstr "Désactiver la comptabilité des quotas ?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disabled"
+msgstr "Désactivé"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable…"
+msgstr "Désactiver…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disk Health"
+msgstr "Santé du disque"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disk health is unavailable"
+msgstr "Santé du disque indisponible"
+
+#: src/btrfs-snapshots-manager/src/application.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Disk Snapshots Manager"
+msgstr "Gestionnaire d'instantanés de disque"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Disk Snapshots Manager requires the standard AnduinOS Btrfs layout."
+msgstr ""
+"Le Gestionnaire d’instantanés de disque nécessite la disposition Btrfs "
+"standard d’AnduinOS."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Duration: {0}"
+msgstr "Durée : {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Elapsed: {0}"
+msgstr "Écoulé : {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable"
+msgstr "Activer"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable quota accounting?"
+msgstr "Activer la comptabilité des quotas ?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enabled"
+msgstr "Activé"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enabled · initial scan in progress"
+msgstr "Activé · analyse initiale en cours"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable…"
+msgstr "Activer…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Error log entries"
+msgstr "Entrées du journal des erreurs"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Errors detected so far: {0}"
+msgstr "Erreurs détectées jusqu'à présent : {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Estimated SSD life remaining"
+msgstr "Durée de vie restante estimée du SSD"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Examining underused data and metadata block groups…"
+msgstr ""
+"Examen des groupes de blocs de données et de métadonnées sous-utilisés…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Exclusive Data"
+msgstr "Données exclusives"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory"
+msgstr "D'usine"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Failing"
+msgstr "En échec"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Failure notifications"
+msgstr "Notifications d'échec"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "File History"
+msgstr "Historique des fichiers"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "File Layout"
+msgstr "Disposition des fichiers"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "File System"
+msgstr "Système de fichiers"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "File system structure (directories, file names, and more)"
+msgstr ""
+"Structure du système de fichiers (répertoires, noms de fichiers, etc.)"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Files Recovered"
+msgstr "Fichiers récupérés"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Find files that existed earlier in this Personal Files folder"
+msgstr ""
+"Rechercher des fichiers qui existaient précédemment dans ce dossier Fichiers"
+" personnels"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Folder History"
+msgstr "Historique du dossier"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Folder · {0}"
+msgstr "Dossier · {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Forever"
+msgstr "À jamais"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Four copies on separate devices · damaged copies can be repaired "
+"automatically"
+msgstr ""
+"Quatre copies sur des appareils distincts · les copies endommagées peuvent "
+"être réparées automatiquement"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Healthy"
+msgstr "Sain"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Cancelled"
+msgstr "Défragmentation du dossier personnel annulée"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Complete"
+msgstr "Défragmentation du dossier personnel terminée"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Failed"
+msgstr "Défragmentation du dossier personnel échouée"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Result Unavailable"
+msgstr "Résultat de la défragmentation du dossier personnel indisponible"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home file defragmentation was cancelled before it finished."
+msgstr ""
+"L’opération de défragmentation des fichiers du dossier personnel a été "
+"annulée avant sa fin."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Home snapshot"
+msgstr "Instantané du dossier personnel"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Home Snapshot Created"
+msgstr "Instantané du dossier personnel créé"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Hours"
+msgstr "Heures"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Imported"
+msgstr "Importé"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Incomplete"
+msgstr "Incomplet"
+
+#: src/btrfs-snapshots-manager/src/ui/information.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Information"
+msgstr "Informations"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Integrity"
+msgstr "Intégrité"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Cancelled"
+msgstr "Vérification d'intégrité annulée"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Complete"
+msgstr "Vérification d'intégrité terminée"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Complete — Repairs Made"
+msgstr "Vérification d'intégrité terminée — Réparations effectuées"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Result Unavailable"
+msgstr "Résultat de la vérification d'intégrité indisponible"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Problems Found"
+msgstr "Problèmes d'intégrité détectés"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Interface CRC errors"
+msgstr "Erreurs CRC d'interface"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Items processed: {0}"
+msgstr "Éléments traités : {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Keep all snapshots for"
+msgstr "Conserver tous les instantanés pendant"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Keep Forever"
+msgstr "Garder indéfiniment"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Kernel"
+msgstr "Noyau"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Kernel {0}"
+msgstr "Noyau {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Limited to one notification per minute"
+msgstr "Limitée à une notification par minute"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Live information reported by the mounted Btrfs file system."
+msgstr ""
+"Informations en temps réel fournies par le système de fichiers Btrfs monté."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Loading folder…"
+msgstr "Chargement du dossier…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Loading snapshots…"
+msgstr "Chargement des instantanés…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Looking for earlier versions…"
+msgstr "Recherche des versions antérieures…"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Main Menu"
+msgstr "Menu principal"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Maintenance"
+msgstr "Maintenance"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Manual"
+msgstr "Manuel"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Measured"
+msgstr "Mesuré"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Media errors"
+msgstr "Erreurs du support"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Mirrored and striped across devices · redundant copies are available for "
+"repair"
+msgstr ""
+"Miroité et distribué sur les appareils · des copies redondantes sont "
+"disponibles pour la réparation"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Name"
+msgstr "Nom"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Name (optional)"
+msgstr "Nom (facultatif)"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "No earlier version was found"
+msgstr "Aucune version antérieure n’a été trouvée"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "No errors detected so far"
+msgstr "Aucune erreur détectée jusqu'à présent"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"No file system integrity errors were found in allocated data and metadata."
+msgstr ""
+"Aucune erreur d'intégrité du système de fichiers n'a été détectée dans les "
+"données et métadonnées allouées."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "No important S.M.A.R.T. warning signs were detected"
+msgstr "Aucun signe d'alerte S.M.A.R.T. important n'a été détecté"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No matching snapshots"
+msgstr "Aucun instantané correspondant"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No snapshots selected"
+msgstr "Aucun instantané sélectionné"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No snapshots yet"
+msgstr "Aucun instantané pour le moment"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "No system storage device found"
+msgstr "Aucun périphérique de stockage système trouvé"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "None (0x00)"
+msgstr "Aucun (0x00)"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Not calculated"
+msgstr "Non calculé"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Not managed here · Btrfs requires a separate deduplication engine"
+msgstr "Non géré ici · Btrfs nécessite un moteur de déduplication distinct"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notifications"
+msgstr "Notifications"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify after any snapshot succeeds"
+msgstr "Avertir après la réussite de n'importe quel instantané"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify after automatic cleanup removes snapshots"
+msgstr ""
+"Avertir après la suppression d'instantanés par le nettoyage automatique"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify before a scheduled snapshot"
+msgstr "Avertir avant un instantané planifié"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "NVMe critical warning"
+msgstr "Avertissement critique NVMe"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Offline uncorrectable sectors"
+msgstr "Secteurs non corrigés hors ligne"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old Home snapshot(s) were removed."
+msgstr "les anciens instantanés du dossier personnel ont été supprimés."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old system snapshot(s) and"
+msgstr "les anciens instantanés système et"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old system snapshot(s) were removed."
+msgstr "les anciens instantanés système ont été supprimés."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Older snapshots are kept less frequently to save disk space."
+msgstr ""
+"Les anciens instantanés sont conservés moins fréquemment pour économiser de "
+"l'espace disque."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"One copy · damage can be detected, but there is no spare copy for repair"
+msgstr ""
+"Une seule copie · les dommages peuvent être détectés, mais aucune copie de "
+"secours n'est disponible pour la réparation"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "One or more reliability indicators should be reviewed"
+msgstr "Il convient de vérifier un ou plusieurs indicateurs de fiabilité"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Only /home · snapshot storage is excluded"
+msgstr "Seul /home · le stockage des instantanés est exclu"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid ""
+"Only block groups at most 50% full will be relocated. The operation can use "
+"significant disk bandwidth but can be cancelled safely."
+msgstr ""
+"Seuls les groupes de blocs remplis à 50 % au maximum seront déplacés. Cette "
+"opération peut utiliser une bande passante disque importante, mais elle peut"
+" être annulée en toute sécurité."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Only partial S.M.A.R.T. data was returned"
+msgstr "Seules des données S.M.A.R.T. partielles ont été retournées"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid ""
+"Only physical drives backing the current root Btrfs file system are shown."
+msgstr ""
+"Seuls les lecteurs physiques constituant le système de fichiers Btrfs racine"
+" actuel sont affichés."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Only the display name changes."
+msgstr "Seul le nom d’affichage est modifié."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Open"
+msgstr "Ouvrir"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Operation Failed"
+msgstr "L’opération a échoué"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Otherwise automatic cleanup may remove it later."
+msgstr ""
+"S'il n'est pas protégé, le nettoyage automatique pourrait le supprimer plus "
+"tard."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Overall health"
+msgstr "Santé globale"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Package Changes"
+msgstr "Modifications des paquets"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Parent folder"
+msgstr "Dossier parent"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Paused"
+msgstr "Mis en pause"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Pending sectors"
+msgstr "Secteurs en attente"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Permanently protected"
+msgstr "Protégé de manière permanente"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Persistent memory is read-only"
+msgstr "La mémoire persistante est en lecture seule"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Personal files"
+msgstr "Fichiers personnels"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Personal Files Recovery"
+msgstr "Récupération des fichiers personnels"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Personal History Unavailable"
+msgstr "Historique personnel indisponible"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Power cycles"
+msgstr "Cycles d'alimentation"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Powered on"
+msgstr "Sous tension"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Prepare a safe system rollback"
+msgstr "Préparer une restauration système sécurisée"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Prepare and Restart"
+msgstr "Préparer et redémarrer"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing rollback to {0}…"
+msgstr "Préparation de la restauration vers {0}…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing safe rollback…"
+msgstr "Préparation de la restauration sécurisée…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Preparing the rollback will arm recovery immediately and automatically "
+"restart this computer within 60 seconds. Save your work before continuing."
+msgstr ""
+"La préparation de la restauration activera immédiatement le processus de "
+"récupération et redémarrera automatiquement cet ordinateur dans 60 secondes."
+" Enregistrez votre travail avant de continuer."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Properties"
+msgstr "Propriétés"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Protected while the rollback is pending"
+msgstr "Protégé tant que la restauration est en attente"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Quota accounting provides shared and exclusive sizes for subvolumes, but its"
+" initial scan can take time."
+msgstr ""
+"La comptabilité des quotas fournit les tailles partagées et exclusives pour "
+"les sous-volumes, mais l'analyse initiale peut prendre du temps."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Read errors: {0}"
+msgstr "Erreurs de lecture : {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Reading allocated Btrfs data and metadata…"
+msgstr "Lecture des données et métadonnées Btrfs allouées…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reading the most important reliability indicators"
+msgstr "Lecture des indicateurs de fiabilité les plus importants"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Ready"
+msgstr "Prêt"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Ready to check"
+msgstr "Prêt à vérifier"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Ready to defragment Home files"
+msgstr "Prêt à défragmenter les fichiers du dossier personnel"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Ready to optimize allocation"
+msgstr "Prêt à optimiser l'allocation de l'espace"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reallocated sectors"
+msgstr "Secteurs réalloués"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Reclaim underused block groups"
+msgstr "Récupérer les groupes de blocs sous-utilisés"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Recommended about once a month"
+msgstr "Recommandé environ une fois par mois"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Recorded snapshot kernel"
+msgstr "Instantané du noyau enregistré"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover Historical File"
+msgstr "Récupérer un fichier historique"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover Personal Files"
+msgstr "Récupérer les fichiers personnels"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover This Folder…"
+msgstr "Récupérer ce dossier…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovering Files"
+msgstr "Récupération des fichiers"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovering files…"
+msgstr "Récupération des fichiers…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovery Failed"
+msgstr "Échec de la récupération"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Recovery for {0} is in an unknown state ({1})."
+msgstr "La récupération de {0} est dans un état inconnu ({1})."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover…"
+msgstr "Récupérer…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Refresh file history"
+msgstr "Actualiser l'historique des fichiers"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Refresh snapshots"
+msgstr "Actualiser les instantanés"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rename"
+msgstr "Renommer"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rename Snapshot"
+msgstr "Renommer l'instantané"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Renaming snapshot…"
+msgstr "Renommage de l'instantané…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reported uncorrectable errors"
+msgstr "Erreurs non corrigées signalées"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Requesting restart…"
+msgstr "Demande de redémarrage…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart"
+msgstr "Redémarrer"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart Now ({0} s)"
+msgstr "Redémarrer maintenant ({0} s)"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart Required — Rollback Armed"
+msgstr "Redémarrage requis — Restauration prête à être appliquée"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Retry Recovery"
+msgstr "Ressayer la récupération"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Return to the selected snapshot"
+msgstr "Revenir à l'instantané sélectionné"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Review the highlighted indicators on {0} system drive(s)"
+msgstr ""
+"Vérifiez les indicateurs mis en surbrillance sur {0} lecteur(s) système"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Rewriting Home file extents with ZSTD compression…"
+msgstr ""
+"Réécriture des étendues de fichiers du dossier personnel avec compression "
+"ZSTD…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll Back"
+msgstr "Restaurer"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll Back to {0}?"
+msgstr "Restaurer {0} ?"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback confirmation failed. The protected previous system is being "
+"restored."
+msgstr ""
+"La confirmation de la restauration a échoué. Le système protégé précédent "
+"est en cours de restauration."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback is armed. To prevent new system changes from being lost, this "
+"computer will restart automatically when the 60-second countdown ends. Save "
+"any open personal files now."
+msgstr ""
+"La restauration est activée. Pour empêcher la perte des nouvelles "
+"modifications du système, cet ordinateur redémarrera automatiquement à la "
+"fin du compte à rebours de 60 secondes. Enregistrez maintenant tous vos "
+"fichiers personnels ouverts."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} is being applied during startup."
+msgstr "La restauration vers {0} est en cours d'application au démarrage."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} is ready. Restart to apply it."
+msgstr "La restauration vers {0} est prête. Redémarrez pour l’appliquer."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback to {0} was applied, but system confirmation has not completed."
+msgstr ""
+"La restauration vers {0} a été appliquée, mais la confirmation du système "
+"n’est pas terminée."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Running…"
+msgstr "En cours…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. could not be read from this device"
+msgstr "S.M.A.R.T. n’a pas pu être lu sur cet appareil"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. is not available for this device"
+msgstr "S.M.A.R.T. n'est pas disponible pour cet appareil"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. is supported but disabled on this device"
+msgstr "S.M.A.R.T. est pris en charge mais désactivé sur cet appareil"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. reports an imminent or current drive failure"
+msgstr "S.M.A.R.T. signale une panne imminente ou actuelle du lecteur"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Save"
+msgstr "Enregistrer"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Save Advanced Settings"
+msgstr "Enregistrer les paramètres avancés"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Saving…"
+msgstr "Enregistrement…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Scanning data and metadata…"
+msgstr "Analyse des données et métadonnées…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"Scrub reads allocated data and metadata, verifies checksums, and reports "
+"damage without modifying file data."
+msgstr ""
+"La vérification lit les données et métadonnées allouées, valide les sommes "
+"de contrôle et signale les dommages sans modifier les données des fichiers."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"Scrub verifies allocated Btrfs data and metadata. It does not test unused "
+"space or predict sudden drive failure."
+msgstr ""
+"La vérification valide les données et métadonnées Btrfs allouées. Elle ne "
+"teste pas l’espace inutilisé ni ne prédit une panne soudaine du disque."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Search snapshots"
+msgstr "Rechercher des instantanés"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "See exactly how older snapshots are kept"
+msgstr "Voir exactement comment les anciens instantanés sont conservés"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Select snapshot"
+msgstr "Sélectionner un instantané"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Select Snapshots"
+msgstr "Sélectionner les instantanés"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Selected file · {0}"
+msgstr "Fichier sélectionné · {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Shared and exclusive size statistics and any subvolume limits will be "
+"removed. Snapshots themselves are not deleted."
+msgstr ""
+"Les statistiques de taille partagée et exclusive, ainsi que les limites de "
+"sous-volume, seront supprimées. Les instantanés eux-mêmes ne sont pas "
+"supprimés."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Shared Data"
+msgstr "Données partagées"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Size {0}"
+msgstr "Taille {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot"
+msgstr "Instantané"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Actions"
+msgstr "Actions sur les instantanés"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Check Complete"
+msgstr "Vérification des instantanés terminée"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Details"
+msgstr "Détails de l'instantané"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · Folder"
+msgstr "Instantané {0} · Dossier"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · {1} bytes · modified {2}"
+msgstr "Instantané {0} · {1} octets · modifié le {2}"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Snapshots"
+msgstr "Instantanés"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshots are not available on this computer"
+msgstr "Les instantanés ne sont pas disponibles sur cet ordinateur"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshots could not be loaded"
+msgstr "Impossible de charger les instantanés"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Solid-state drive"
+msgstr "SSD"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Some snapshots could not be loaded"
+msgstr "Certains instantanés n’ont pas pu être chargés"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Some system drives need attention"
+msgstr "Certains lecteurs système nécessitent une attention particulière"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Space Accounting"
+msgstr "Comptabilité de l'espace"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Space Allocation"
+msgstr "Allocation de l’espace"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Cancelled"
+msgstr "Optimisation de l'espace annulée"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Complete"
+msgstr "Optimisation de l'espace terminée"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Failed"
+msgstr "Échec de l'optimisation de l'espace"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Result Unavailable"
+msgstr "Résultat de l'optimisation de l'espace indisponible"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Space usage"
+msgstr "Espace utilisé"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Spin retry count"
+msgstr "Nombre de nouvelles tentatives de rotation"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "SSD space reclamation"
+msgstr "Récupération d’espace sur le SSD"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Start a limited balance?"
+msgstr "Lancer un équilibrage limité ?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Start Balance"
+msgstr "Démarrer l'équilibrage"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Start Scrub"
+msgstr "Démarrer la vérification"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Starting the integrity check…"
+msgstr "Démarrage de la vérification d'intégrité…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Starting…"
+msgstr "Démarrage…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Status unavailable"
+msgstr "État indisponible"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Storage Behavior"
+msgstr "Comportement du stockage"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Storage layout: {0}"
+msgstr "Disposition du stockage : {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Storage media is read-only"
+msgstr "Le support de stockage est en lecture seule"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices with one parity block for recovery"
+msgstr ""
+"Distribués sur les périphériques avec un bloc de parité pour la récupération"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices with two parity blocks for recovery"
+msgstr ""
+"Distribués sur les périphériques avec deux blocs de parité pour la "
+"récupération"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices · no redundant copy is available for repair"
+msgstr ""
+"Distribués sur les périphériques · aucune copie redondante n'est disponible "
+"pour la réparation"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Subvolume quota accounting"
+msgstr "Comptabilité des quotas de sous-volume"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Superblock errors: {0}"
+msgstr "Erreurs de superbloc : {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "System Drive Health"
+msgstr "Santé du lecteur système"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "System files and packages"
+msgstr "Fichiers et paquets système"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "System Recovery"
+msgstr "Récupération système"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "system snapshot"
+msgstr "instantané système"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "System Snapshot Created"
+msgstr "Instantané système créé"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "System storage"
+msgstr "Stockage système"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Take a snapshot every"
+msgstr "Toutes les"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Temperature"
+msgstr "Température"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Temperature is outside the safe range"
+msgstr "La température est hors de la plage sûre"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "The automatic snapshot infrastructure cannot be disabled here."
+msgstr ""
+"L’infrastructure d’instantanés automatiques ne peut pas être désactivée ici."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The device reported an unknown warning bit"
+msgstr "L’appareil a signalé un bit d’avertissement inconnu"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The drive did not provide a conclusive health result"
+msgstr "Le lecteur n’a pas fourni de résultat concluant sur l’état de santé"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The Home snapshot was created successfully."
+msgstr "L’instantané du dossier personnel a été créé avec succès."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "The integrity check was cancelled before it finished."
+msgstr "La vérification d’intégrité a été annulée avant d’être terminée."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "The limited balance was cancelled safely before it finished."
+msgstr "L'équilibrage limité a été annulé en toute sécurité avant sa fin."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback completed, but recovery cleanup has not completed."
+msgstr ""
+"La restauration est terminée, mais le nettoyage de récupération n’est pas "
+"terminé."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed. Recovery cleanup has not completed."
+msgstr ""
+"L’opération de restauration a échoué. Le nettoyage de récupération n’est pas"
+" terminé."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed: {0}"
+msgstr "L’opération de restauration a échoué : {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback was reverted, but recovery cleanup has not completed."
+msgstr ""
+"La restauration a été annulée, mais le nettoyage de récupération n’est pas "
+"terminé."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The root filesystem is {0}."
+msgstr "Le système de fichiers racine est {0}."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid ""
+"The scheduled Home snapshot could not be created. Check Disk Snapshots "
+"Manager for details."
+msgstr ""
+"L’instantané planifié du dossier personnel n’a pas pu être créé. Vérifiez le"
+" Gestionnaire d'instantanés de disque pour plus de détails."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled Home snapshot was created successfully."
+msgstr "L’instantané planifié du dossier personnel a été créé avec succès."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid ""
+"The scheduled system snapshot could not be created. Check Disk Snapshots "
+"Manager for details."
+msgstr ""
+"L’instantané système planifié n’a pas pu être créé. Vérifiez le Gestionnaire"
+" d'instantanés de disque pour plus de détails."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled system snapshot was created successfully."
+msgstr "L’instantané système planifié a été créé avec succès."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "The selected files were recovered successfully."
+msgstr "Les fichiers sélectionnés ont été récupérés avec succès."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The snapshot is created immediately."
+msgstr "L'instantané est créé immédiatement."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The system drive looks healthy"
+msgstr "Le lecteur système semble en bonne santé"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The system drive needs attention"
+msgstr "Le lecteur système nécessite une attention particulière"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The system snapshot was created successfully."
+msgstr "L’instantané système a été créé avec succès."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per day for"
+msgstr "Conserver ensuite un par jour pendant"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per month for"
+msgstr "Conserver ensuite un par mois pendant"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per week for"
+msgstr "Conserver ensuite un par semaine pendant"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per year"
+msgstr "Conserver ensuite un par an"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "This folder is empty"
+msgstr "Ce dossier est vide"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "This item was not present in the available Home snapshots."
+msgstr ""
+"Cet élément n’était pas présent dans les instantanés disponibles du dossier "
+"personnel."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"This rewrites files below /home using ZSTD compression. It does not enter "
+"/.snapshots, but shared extents with existing snapshots may become private "
+"and consume more space."
+msgstr ""
+"Cette opération réécrit les fichiers sous /home avec une compression ZSTD. "
+"Elle n’entre pas dans /.snapshots, mais les étendues partagées avec les "
+"instantanés existants peuvent devenir privées et consommer davantage "
+"d’espace."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "This snapshot is available for recovery."
+msgstr "Cet instantané est disponible pour la récupération."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "This snapshot is not available for recovery."
+msgstr "Cet instantané n’est pas disponible pour la récupération."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Three copies on separate devices · damaged copies can be repaired "
+"automatically"
+msgstr ""
+"Trois copies sur des appareils distincts · les copies endommagées peuvent "
+"être réparées automatiquement"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Time above critical temperature"
+msgstr "Durée au-dessus de la température critique"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Time above warning temperature"
+msgstr "Durée au-dessus de la température d'avertissement"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Total"
+msgstr "Total"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Total data read"
+msgstr "Données lues au total"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Total data written"
+msgstr "Données écrites au total"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Transparent compression"
+msgstr "Compression transparente"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Try a different name, date, or snapshot reason."
+msgstr ""
+"Essayez un autre nom, une autre date ou une autre raison pour l'instantané."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Two copies on separate devices · a damaged copy can be repaired "
+"automatically"
+msgstr ""
+"Deux copies sur des appareils distincts · une copie endommagée peut être "
+"réparée automatiquement"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Two copies on this device · a damaged copy can be repaired automatically"
+msgstr ""
+"Deux copies sur cet appareil · une copie endommagée peut être réparée "
+"automatiquement"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unable to calculate"
+msgstr "Impossible à calculer"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unavailable"
+msgstr "Indisponible"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Uncorrectable errors: {0}"
+msgstr "Erreurs non corrigées : {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unknown"
+msgstr "Inconnu"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Unknown date"
+msgstr "Date inconnue"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unknown state"
+msgstr "État inconnu"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unknown storage device"
+msgstr "Périphérique de stockage inconnu"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unsafe shutdowns"
+msgstr "Arrêts intempestifs"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Unsupported Destination"
+msgstr "Destination non prise en charge"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Unverified errors: {0}"
+msgstr "Erreurs non vérifiées : {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Updating snapshot protection…"
+msgstr "Mise à jour de la protection de l'instantané…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Useful after deleting large amounts of data"
+msgstr "Utile après la suppression de grandes quantités de données"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Verification errors: {0}"
+msgstr "Erreurs de vérification : {0}"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "View File History…"
+msgstr "Afficher l'historique des fichiers…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "View Progress"
+msgstr "Afficher la progression"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Volatile memory backup failed"
+msgstr "Échec de la sauvegarde de la mémoire volatile"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Waiting for Btrfs status…"
+msgstr "Attente de l’état de Btrfs…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Waiting for Btrfs to start…"
+msgstr "Attente du démarrage de Btrfs…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Waiting for scrub status…"
+msgstr "Attente de l’état de la vérification…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Waiting for the new scrub to start…"
+msgstr "Attente du démarrage de la nouvelle vérification…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Warnings"
+msgstr "Avertissements"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Why?"
+msgstr "Pourquoi ?"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Will not change"
+msgstr "Ne changera pas"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Working…"
+msgstr "En cours…"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "{0} available"
+msgstr "{0} disponible"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "{0} bytes · {1}"
+msgstr "{0} octets · {1}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "{0} damaged metadata entries were ignored"
+msgstr "{0} entrées de métadonnées endommagées ont été ignorées"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} hours · about {1} days"
+msgstr "{0} heures · environ {1} jours"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} minutes"
+msgstr "{0} minute(s)"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0} of {1} checked"
+msgstr "{0} sur {1} vérifié(e)s"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "{0} of {1} used"
+msgstr "{0} sur {1} utilisé"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} packages"
+msgstr "{0} paquet(s)"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} RPM"
+msgstr "{0} RPM"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} snapshot record(s) need attention"
+msgstr ""
+"{0} enregistrement(s) d'instantané nécessite(nt) une attention particulière"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} snapshot(s) selected"
+msgstr "{0} instantané(s) sélectionné(s)"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} °C"
+msgstr "{0} °C"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} · Manual Snapshot"
+msgstr "{0} · Instantané manuel"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "{0} · new writes"
+msgstr "{0} · nouvelles écritures"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0}%"
+msgstr "{0} %"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0}% complete"
+msgstr "{0} % terminé"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0}% · warning threshold {1}%"
+msgstr "{0} % · seuil d'avertissement {1} %"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0}/s"
+msgstr "{0}/s"

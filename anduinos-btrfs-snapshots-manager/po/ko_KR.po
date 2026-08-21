@@ -1,0 +1,1818 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-btrfs-snapshots-manager 0.1.0\n"
+"POT-Creation-Date: 2026-08-06 00:00+0800\n"
+"PO-Revision-Date: 2026-08-06 00:00+0800\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "A critical threshold is failing now"
+msgstr "현재 심각한 임계값 조건을 충족하지 못하고 있습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid ""
+"A limited balance improves allocation layout. It does not check file "
+"integrity or guarantee that visible free space will increase."
+msgstr "제한된 밸런스는 할당 레이아웃을 개선합니다. 파일 무결성을 검사하거나 가시적인 여유 공간이 증가할 것을 보장하지는 않습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"A limited balance only relocates data and metadata block groups that are at "
+"most 50% full."
+msgstr "제한된 밸런스는 최대 50%만 채워진 데이터 및 메타데이터 블록 그룹만 재배치합니다."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "A scheduled Home snapshot will start in 10 seconds."
+msgstr "예약된 홈 스냅샷이 10초 후에 시작됩니다."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "A scheduled system snapshot will start in 10 seconds."
+msgstr "예약된 시스템 스냅샷이 10초 후에 시작됩니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "A threshold was exceeded in the past"
+msgstr "과거에 임계값이 초과되었습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "About Disk Snapshots Manager"
+msgstr "디스크 스냅샷 관리자 정보"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "About {0} remaining"
+msgstr "{0} 남음"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Actual file contents"
+msgstr "실제 파일 내용"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Advanced retention settings"
+msgstr "고급 유지 설정"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Advanced Settings"
+msgstr "고급 설정"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "After Package Change"
+msgstr "패키지 변경 후"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "All system drives look healthy"
+msgstr "모든 시스템 드라이브가 건강한 것으로 보입니다"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Allow automatic cleanup"
+msgstr "자동 정리 허용"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Always on"
+msgstr "항상 켜짐"
+
+#: src/btrfs-snapshots-manager/src/application.rs
+msgid "AnduinOS Team"
+msgstr "AnduinOS 팀"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Applied automatically to newly written data"
+msgstr "새로 작성된 데이터에 자동으로 적용됩니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "At a Glance"
+msgstr "개요"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Attention"
+msgstr "주의가 필요합니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Attribute thresholds"
+msgstr "속성 임계값"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic"
+msgstr "자동"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic 60-second countdown after preparation"
+msgstr "준비 후 자동 60초 카운트다운"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic cleanup"
+msgstr "자동 정리"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Cleanup Complete"
+msgstr "자동 정리 완료됨"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic Home Snapshots"
+msgstr "자동 홈 스냅샷"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Snapshot Failed"
+msgstr "자동 스냅샷 실패"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Automatic snapshot service is available"
+msgstr "자동 스냅샷 서비스를 사용할 수 있습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Automatic snapshot service needs attention"
+msgstr "자동 스냅샷 서비스에 주의가 필요합니다"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Snapshot Starting"
+msgstr "자동 스냅샷 시작 중"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots"
+msgstr "자동 스냅샷"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic Snapshots"
+msgstr "자동 스냅샷"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic System Snapshot Created"
+msgstr "자동 시스템 스냅샷 생성됨"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic System Snapshots"
+msgstr "자동 시스템 스냅샷"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Available spare capacity"
+msgstr "사용 가능한 여유 용량"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Available spare is below its threshold"
+msgstr "사용 가능한 여유 용량이 임계값 미만입니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Average rate: {0}/s"
+msgstr "평균 속도: {0}/s"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Background Service"
+msgstr "백그라운드 서비스"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Based on the manufacturer endurance counter"
+msgstr "제조사 내구성 카운터 기반"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Before Package Change"
+msgstr "패키지 변경 전"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Before Rollback"
+msgstr "롤백 전"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Block groups completed: {0} of about {1}"
+msgstr "블록 그룹 완료: 약 {1}개 중 {0}개"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Block groups considered: {0}"
+msgstr "검토된 블록 그룹: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Browse"
+msgstr "탐색"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Browse earlier Personal Files versions of this item"
+msgstr "이 항목의 이전 개인 파일 버전 탐색"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Browse Files"
+msgstr "파일 탐색"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Browse files in this snapshot"
+msgstr "이 스냅샷에서 파일 탐색"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Browse System Snapshot"
+msgstr "시스템 스냅샷 탐색"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Browse This Folder’s History…"
+msgstr "이 폴더의 기록 탐색…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Btrfs could not complete Home file defragmentation."
+msgstr "Btrfs가 홈 파일 디프래그먼트를 완료하지 못했습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs could not complete the limited balance."
+msgstr "Btrfs가 제한된 밸런스를 완료하지 못했습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs did not provide a completed balance result."
+msgstr "Btrfs에서 완료된 밸런스 결과를 제공하지 않았습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Btrfs did not provide a completed defragmentation result."
+msgstr "Btrfs에서 완료된 디프래그먼트 결과를 제공하지 않았습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs did not provide a completed scrub result."
+msgstr "Btrfs에서 완료된 스크러브 결과를 제공하지 않았습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs did not start a new integrity check"
+msgstr "Btrfs가 새 무결성 검사를 시작하지 않았습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Btrfs did not start a new maintenance task"
+msgstr "Btrfs가 새 유지 관리 작업을 시작하지 않았습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Btrfs does not provide an on/off real-time deduplication switch. Tools such "
+"as duperemove and BEES use different strategies, resource limits, and scan "
+"scopes. Disk Snapshots Manager will not silently install or run one without "
+"a complete policy."
+msgstr ""
+"Btrfs에는 실시간 중복 제거의 켜기/끄기 전환 기능이 제공되지 않습니다. duperemove 및 BEES와 같은 도구는 서로 다른 "
+"전략, 리소스 제한, 스캔 범위를 사용합니다. 디스크 스냅샷 관리자는 완전한 정책이 없으면 이를 자동으로 설치하거나 실행하지 않습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs examined {0} block groups and relocated {1}."
+msgstr "Btrfs가 {0}개의 블록 그룹을 검사하고 {1}개를 재배치했습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs finished relocating underused data and metadata block groups."
+msgstr "Btrfs가 사용량이 적은 데이터 및 메타데이터 블록 그룹 재배치를 완료했습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"Btrfs finished rewriting eligible file extents below /home with ZSTD "
+"compression."
+msgstr "Btrfs가 ZSTD 압축을 사용하여 /home 아래에 있는 대상 파일 범위를 다시 작성했습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"Btrfs found errors that could not be repaired. Back up important files and "
+"investigate the storage device."
+msgstr "Btrfs에서 복구할 수 없는 오류를 발견했습니다. 중요한 파일을 백업하고 저장 장치를 조사하세요."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Btrfs maintenance status is unavailable"
+msgstr "Btrfs 유지 관리 상태를 사용할 수 없습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+msgid "Btrfs operation failed"
+msgstr "Btrfs 작업 실패"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs repaired {0} damaged copies using valid redundant data."
+msgstr "Btrfs는 유효한 중복 데이터를 사용하여 {0}개의 손상된 사본을 복구했습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+msgid "Btrfs request completed"
+msgstr "Btrfs 요청이 완료되었습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Btrfs will scan existing subvolumes in the background. Size statistics may "
+"remain incomplete until the scan finishes."
+msgstr "Btrfs가 백그라운드에서 기존 서브볼륨을 스캔합니다. 스캔이 완료될 때까지 크기 통계는 불완전할 수 있습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Calculating snapshot size…"
+msgstr "스냅샷 크기 계산 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancel"
+msgstr "취소"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Cancel Check"
+msgstr "검사 취소"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancel Rollback"
+msgstr "롤백 취소"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancelling rollback…"
+msgstr "롤백 취소 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Cancelling…"
+msgstr "취소 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Change…"
+msgstr "변경…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Check file system integrity"
+msgstr "파일 시스템 무결성 확인"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Check Snapshot Availability"
+msgstr "스냅샷 사용 가능성 확인"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checked: {0}"
+msgstr "검사 완료: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checking File System Integrity"
+msgstr "파일 시스템 무결성 확인 중"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking recovery state…"
+msgstr "복구 상태 확인 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking rollback safety…"
+msgstr "롤백 안전성 확인 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking snapshot…"
+msgstr "스냅샷 확인 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Checking system storage…"
+msgstr "시스템 저장소 확인 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checking…"
+msgstr "확인 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checksum errors: {0}"
+msgstr "체크섬 오류: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Choose a local filesystem destination."
+msgstr "로컬 파일 시스템 대상을 선택하세요."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid ""
+"Choose an earlier version to browse or recover. Your current files will not "
+"be changed automatically."
+msgstr "탐색하거나 복구할 이전 버전을 선택하세요. 현재 파일은 자동으로 변경되지 않습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Choose Where to Recover This Folder"
+msgstr "이 폴더를 복구할 위치를 선택하세요"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Close"
+msgstr "닫기"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Content-based deduplication"
+msgstr "콘텐츠 기반 중복 제거"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Copy This Folder…"
+msgstr "이 폴더 복사…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Corrected errors: {0}"
+msgstr "수정된 오류: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Could Not Browse History"
+msgstr "기록을 탐색할 수 없습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Could Not Browse System Snapshot"
+msgstr "시스템 스냅샷을 탐색할 수 없습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Could Not Save Settings"
+msgstr "설정을 저장할 수 없습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create"
+msgstr "생성"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Create a system snapshot after successful changes"
+msgstr "변경 사항이 성공적으로 적용된 후 시스템 스냅샷 생성"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Create a system snapshot before changes"
+msgstr "변경 사항 적용 전 시스템 스냅샷 생성"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create a {0} now"
+msgstr "{0} 지금 생성"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create one now or turn on automatic snapshots."
+msgstr "지금 하나 생성하거나 자동 스냅샷을 켜세요."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create Snapshot Now"
+msgstr "지금 스냅샷 생성"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Create snapshots on a schedule."
+msgstr "일정에 따라 스냅샷을 생성합니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create {0}"
+msgstr "{0} 생성"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Creating"
+msgstr "생성 중"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Creating snapshot…"
+msgstr "스냅샷 생성 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Current system"
+msgstr "현재 시스템"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Damaged"
+msgstr "손상됨"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Days"
+msgstr "일"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Deduplication needs an engine"
+msgstr "중복 제거에는 엔진이 필요합니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Defragment"
+msgstr "디프래그먼트 실행"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Defragment Home files"
+msgstr "홈 파일 디프래그먼트"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Defragment Home files?"
+msgstr "홈 파일을 디프래그먼트하시겠습니까?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"Defragmentation can increase disk usage when files share data with snapshots"
+" or reflinks."
+msgstr "디프래그먼트는 파일이 스냅샷이나 리플링크와 데이터를 공유할 경우 디스크 사용량을 증가시킬 수 있습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"Defragmentation rewrites file extents and can increase disk usage by "
+"breaking shared snapshot or reflink data."
+msgstr ""
+"디프래그먼트는 파일 범위를 다시 작성하므로, 스냅샷이나 리플링크와 공유된 데이터가 분리되어 디스크 사용량이 증가할 수 있습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Defragment…"
+msgstr "디프래그먼트…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete"
+msgstr "삭제"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Selected"
+msgstr "선택 항목 삭제"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Snapshot"
+msgstr "스냅샷 삭제"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Snapshots?"
+msgstr "스냅샷을 삭제하시겠습니까?"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete {0} selected snapshot(s)? This cannot be undone."
+msgstr "{0}개의 선택된 스냅샷을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting"
+msgstr "삭제 중"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting snapshots…"
+msgstr "스냅샷 삭제 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Device reliability is degraded"
+msgstr "장치 신뢰성이 저하되었습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Device report"
+msgstr "장치 보고서"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Diagnostic counters"
+msgstr "진단 카운터"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable"
+msgstr "비활성화"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable quota accounting?"
+msgstr "할당량 회계를 비활성화하시겠습니까?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disabled"
+msgstr "비활성화됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable…"
+msgstr "비활성화…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disk Health"
+msgstr "디스크 상태"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disk health is unavailable"
+msgstr "디스크 상태를 사용할 수 없습니다"
+
+#: src/btrfs-snapshots-manager/src/application.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Disk Snapshots Manager"
+msgstr "디스크 스냅샷 관리자"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Disk Snapshots Manager requires the standard AnduinOS Btrfs layout."
+msgstr "디스크 스냅샷 관리자는 표준 AnduinOS Btrfs 레이아웃이 필요합니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Duration: {0}"
+msgstr "지속 시간: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Elapsed: {0}"
+msgstr "경과 시간: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable"
+msgstr "사용"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable quota accounting?"
+msgstr "할당량 회계를 사용하시겠습니까?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enabled"
+msgstr "사용 중"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enabled · initial scan in progress"
+msgstr "사용 중 · 초기 스캔 진행 중"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable…"
+msgstr "사용…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Error log entries"
+msgstr "오류 로그 항목"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Errors detected so far: {0}"
+msgstr "지금까지 감지된 오류: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Estimated SSD life remaining"
+msgstr "예상 SSD 잔여 수명"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Examining underused data and metadata block groups…"
+msgstr "사용되지 않는 데이터 및 메타데이터 블록 그룹 검사 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Exclusive Data"
+msgstr "전용 데이터"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory"
+msgstr "공장 초기화"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Failing"
+msgstr "실패 중"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Failure notifications"
+msgstr "실패 알림"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "File History"
+msgstr "파일 기록"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "File Layout"
+msgstr "파일 레이아웃"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "File System"
+msgstr "파일 시스템"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "File system structure (directories, file names, and more)"
+msgstr "파일 시스템 구조(디렉토리, 파일 이름 등)"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Files Recovered"
+msgstr "파일 복구됨"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Find files that existed earlier in this Personal Files folder"
+msgstr "이 개인 파일 폴더에 이전에 존재하던 파일을 찾습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Folder History"
+msgstr "폴더 기록"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Folder · {0}"
+msgstr "폴더 · {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Forever"
+msgstr "영구 유지"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Four copies on separate devices · damaged copies can be repaired "
+"automatically"
+msgstr "별도 장치에 4개의 사본 · 손상된 사본은 자동으로 복구됩니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Healthy"
+msgstr "정상"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Cancelled"
+msgstr "홈 디프래그먼트 취소됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Complete"
+msgstr "홈 디프래그먼트 완료됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Failed"
+msgstr "홈 디프래그먼트 실패"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Result Unavailable"
+msgstr "홈 디프래그먼트 결과를 사용할 수 없습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home file defragmentation was cancelled before it finished."
+msgstr "홈 파일 디프래그먼트가 완료되기 전에 취소되었습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Home snapshot"
+msgstr "홈 스냅샷"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Home Snapshot Created"
+msgstr "홈 스냅샷이 생성되었습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Hours"
+msgstr "시간"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Imported"
+msgstr "가져옴"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Incomplete"
+msgstr "불완전함"
+
+#: src/btrfs-snapshots-manager/src/ui/information.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Information"
+msgstr "정보"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Integrity"
+msgstr "무결성"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Cancelled"
+msgstr "무결성 검사 취소됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Complete"
+msgstr "무결성 검사 완료됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Complete — Repairs Made"
+msgstr "무결성 검사 완료 — 오류 수정됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Result Unavailable"
+msgstr "무결성 검사 결과를 사용할 수 없습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Problems Found"
+msgstr "무결성 문제 발견됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Interface CRC errors"
+msgstr "인터페이스 CRC 오류"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Items processed: {0}"
+msgstr "처리된 항목: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Keep all snapshots for"
+msgstr "모든 스냅샷 유지 기간:"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Keep Forever"
+msgstr "영구 유지"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Kernel"
+msgstr "커널"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Kernel {0}"
+msgstr "커널 {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Limited to one notification per minute"
+msgstr "1분당 1회 알림으로 제한됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Live information reported by the mounted Btrfs file system."
+msgstr "마운트된 Btrfs 파일 시스템에서 보고하는 실시간 정보입니다."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Loading folder…"
+msgstr "폴더를 불러오는 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Loading snapshots…"
+msgstr "스냅샷을 불러오는 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Looking for earlier versions…"
+msgstr "이전 버전 찾는 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Main Menu"
+msgstr "메인 메뉴"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Maintenance"
+msgstr "유지 관리"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Manual"
+msgstr "수동"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Measured"
+msgstr "측정됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Media errors"
+msgstr "미디어 오류"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Mirrored and striped across devices · redundant copies are available for "
+"repair"
+msgstr "여러 장치에 미러링 및 스트라이핑됨 · 복구에 사용할 수 있는 중복 사본 있음"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Name"
+msgstr "이름"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Name (optional)"
+msgstr "이름 (선택 사항)"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "No earlier version was found"
+msgstr "이전 버전을 찾을 수 없습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "No errors detected so far"
+msgstr "지금까지 오류가 감지되지 않았습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"No file system integrity errors were found in allocated data and metadata."
+msgstr "할당된 데이터 및 메타데이터에서 파일 시스템 무결성 오류를 발견하지 못했습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "No important S.M.A.R.T. warning signs were detected"
+msgstr "S.M.A.R.T. 경고 징후가 감지되지 않았습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No matching snapshots"
+msgstr "일치하는 스냅샷 없음"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No snapshots selected"
+msgstr "스냅샷이 선택되지 않았습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No snapshots yet"
+msgstr "스냅샷이 아직 없습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "No system storage device found"
+msgstr "시스템 저장 장치를 찾을 수 없습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "None (0x00)"
+msgstr "없음 (0x00)"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Not calculated"
+msgstr "계산되지 않음"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Not managed here · Btrfs requires a separate deduplication engine"
+msgstr "여기서 관리되지 않음 · Btrfs는 별도의 중복 제거 엔진이 필요합니다"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notifications"
+msgstr "알림"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify after any snapshot succeeds"
+msgstr "스냅샷 관련 작업이 성공하면 알림"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify after automatic cleanup removes snapshots"
+msgstr "자동 정리로 스냅샷이 제거된 후 알림"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify before a scheduled snapshot"
+msgstr "예약된 스냅샷 생성 전 알림"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "NVMe critical warning"
+msgstr "NVMe 심각한 경고"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Offline uncorrectable sectors"
+msgstr "오프라인 수정 불가 섹터"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old Home snapshot(s) were removed."
+msgstr "이전 홈 스냅샷이 제거되었습니다."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old system snapshot(s) and"
+msgstr "이전 시스템 스냅샷 및"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old system snapshot(s) were removed."
+msgstr "이전 시스템 스냅샷이 제거되었습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Older snapshots are kept less frequently to save disk space."
+msgstr "디스크 공간 절약을 위해 이전 스냅샷은 덜 자주 유지됩니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"One copy · damage can be detected, but there is no spare copy for repair"
+msgstr "사본 1개 · 오류 감지는 가능하나 복구를 위한 여유 사본이 없습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "One or more reliability indicators should be reviewed"
+msgstr "하나 이상의 신뢰성 지표를 검토해야 합니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Only /home · snapshot storage is excluded"
+msgstr "/home만 포함 · 스냅샷 저장소는 제외됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid ""
+"Only block groups at most 50% full will be relocated. The operation can use "
+"significant disk bandwidth but can be cancelled safely."
+msgstr "50% 이하로 채워진 블록 그룹만 재배치됩니다. 이 작업은 상당한 디스크 대역폭을 사용하지만 안전하게 취소할 수 있습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Only partial S.M.A.R.T. data was returned"
+msgstr "S.M.A.R.T. 데이터가 일부만 반환되었습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid ""
+"Only physical drives backing the current root Btrfs file system are shown."
+msgstr "현재 루트 Btrfs 파일 시스템을 백업하는 물리적 드라이브만 표시됩니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Only the display name changes."
+msgstr "표시 이름만 변경됩니다."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Open"
+msgstr "열기"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Operation Failed"
+msgstr "작업 실패"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Otherwise automatic cleanup may remove it later."
+msgstr "그렇지 않으면 나중에 자동 정리 과정에서 이 스냅샷이 삭제될 수 있습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Overall health"
+msgstr "전반적인 상태"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Package Changes"
+msgstr "패키지 변경 사항"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Parent folder"
+msgstr "상위 폴더"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Paused"
+msgstr "일시 중지됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Pending sectors"
+msgstr "보류 중인 섹터"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Permanently protected"
+msgstr "영구적으로 보호됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Persistent memory is read-only"
+msgstr "영구 메모리가 읽기 전용입니다"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Personal files"
+msgstr "개인 파일"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Personal Files Recovery"
+msgstr "개인 파일 복구"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Personal History Unavailable"
+msgstr "개인 기록을 사용할 수 없습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Power cycles"
+msgstr "전원 주기 횟수"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Powered on"
+msgstr "전원이 켜져 있습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Prepare a safe system rollback"
+msgstr "안전한 시스템 롤백 준비"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Prepare and Restart"
+msgstr "준비 및 다시 시작"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing rollback to {0}…"
+msgstr "{0}(으)로 롤백 준비 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing safe rollback…"
+msgstr "안전한 롤백 준비 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Preparing the rollback will arm recovery immediately and automatically "
+"restart this computer within 60 seconds. Save your work before continuing."
+msgstr ""
+"롤백을 준비하면 복구가 즉시 활성화되고 이 컴퓨터가 60초 이내에 자동으로 다시 시작됩니다. 계속하기 전에 작업을 저장하세요."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Properties"
+msgstr "속성"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Protected while the rollback is pending"
+msgstr "롤백 대기 중 보호됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Quota accounting provides shared and exclusive sizes for subvolumes, but its"
+" initial scan can take time."
+msgstr "할당량 회계는 서브볼륨의 공유 및 전용 크기를 제공하지만 초기 스캔에 시간이 걸릴 수 있습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Read errors: {0}"
+msgstr "읽기 오류: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Reading allocated Btrfs data and metadata…"
+msgstr "할당된 Btrfs 데이터 및 메타데이터 읽는 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reading the most important reliability indicators"
+msgstr "중요한 신뢰성 지표 읽는 중"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Ready"
+msgstr "준비됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Ready to check"
+msgstr "검사 준비 완료"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Ready to defragment Home files"
+msgstr "홈 파일 디프래그먼트 준비 완료"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Ready to optimize allocation"
+msgstr "할당 최적화 준비 완료"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reallocated sectors"
+msgstr "재할당된 섹터"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Reclaim underused block groups"
+msgstr "사용량이 적은 블록 그룹 회수하기"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Recommended about once a month"
+msgstr "약 한 달에 한 번 권장"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Recorded snapshot kernel"
+msgstr "기록된 스냅샷 커널"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover Historical File"
+msgstr "과거 파일 복구"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover Personal Files"
+msgstr "개인 파일 복구"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover This Folder…"
+msgstr "이 폴더 복구…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovering Files"
+msgstr "파일 복구 중"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovering files…"
+msgstr "파일 복구 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovery Failed"
+msgstr "복구 실패"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Recovery for {0} is in an unknown state ({1})."
+msgstr "{0}의 복구 상태가 알 수 없습니다 ({1})."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover…"
+msgstr "복구…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Refresh file history"
+msgstr "파일 기록 새로 고침"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Refresh snapshots"
+msgstr "스냅샷 새로 고침"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rename"
+msgstr "이름 바꾸기"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rename Snapshot"
+msgstr "스냅샷 이름 바꾸기"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Renaming snapshot…"
+msgstr "스냅샷 이름 바꾸기 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reported uncorrectable errors"
+msgstr "수정할 수 없는 오류가 보고되었습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Requesting restart…"
+msgstr "다시 시작 요청 중..."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart"
+msgstr "재시작"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart Now ({0} s)"
+msgstr "지금 다시 시작 ({0}초)"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart Required — Rollback Armed"
+msgstr "다시 시작 필요 — 롤백 준비됨"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Retry Recovery"
+msgstr "복구 재시도"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Return to the selected snapshot"
+msgstr "선택한 스냅샷으로 돌아가기"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Review the highlighted indicators on {0} system drive(s)"
+msgstr "{0}개의 시스템 드라이브에서 하이라이트된 지표를 검토하세요."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Rewriting Home file extents with ZSTD compression…"
+msgstr "ZSTD 압축을 사용하여 홈 파일 범위 다시 작성 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll Back"
+msgstr "롤백"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll Back to {0}?"
+msgstr "{0}으로 롤백하시겠습니까?"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback confirmation failed. The protected previous system is being "
+"restored."
+msgstr "롤백 확인이 실패했습니다. 보호된 이전 시스템이 복구되고 있습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback is armed. To prevent new system changes from being lost, this "
+"computer will restart automatically when the 60-second countdown ends. Save "
+"any open personal files now."
+msgstr ""
+"롤백이 준비되었습니다. 새로운 시스템 변경 사항이 손실되는 것을 방지하기 위해, 60초 카운트다운이 종료되면 이 컴퓨터가 자동으로 다시 "
+"시작됩니다. 지금 열린 개인 파일을 저장하세요."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} is being applied during startup."
+msgstr "시작 중에 {0}(으)로의 롤백이 적용되고 있습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} is ready. Restart to apply it."
+msgstr "{0}(으)로 롤백이 준비되었습니다. 적용하려면 다시 시작하세요."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback to {0} was applied, but system confirmation has not completed."
+msgstr "{0}(으)로 롤백이 적용되었지만 시스템 확인이 완료되지 않았습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Running…"
+msgstr "실행 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. could not be read from this device"
+msgstr "이 장치에서 S.M.A.R.T.를 읽을 수 없습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. is not available for this device"
+msgstr "이 장치에서는 S.M.A.R.T.를 사용할 수 없습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. is supported but disabled on this device"
+msgstr "S.M.A.R.T.는 이 장치에서 지원되지만 비활성화되어 있습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. reports an imminent or current drive failure"
+msgstr "S.M.A.R.T.에서 임박한 또는 현재 드라이브 실패를 보고했습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Save"
+msgstr "저장"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Save Advanced Settings"
+msgstr "고급 설정 저장"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Saving…"
+msgstr "저장 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Scanning data and metadata…"
+msgstr "데이터 및 메타데이터 스캔 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"Scrub reads allocated data and metadata, verifies checksums, and reports "
+"damage without modifying file data."
+msgstr "스크러브는 할당된 데이터 및 메타데이터를 읽고, 체크섬을 확인하며, 파일 데이터를 수정하지 않고 손상을 보고합니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"Scrub verifies allocated Btrfs data and metadata. It does not test unused "
+"space or predict sudden drive failure."
+msgstr ""
+"스크러브는 할당된 Btrfs 데이터 및 메타데이터의 무결성을 확인합니다. 사용하지 않는 공간을 테스트하거나 드라이브의 갑작스러운 고장을 "
+"예측하지는 않습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Search snapshots"
+msgstr "스냅샷 검색"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "See exactly how older snapshots are kept"
+msgstr "이전 스냅샷의 유지 방식을 자세히 확인하세요"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Select snapshot"
+msgstr "스냅샷 선택"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Select Snapshots"
+msgstr "스냅샷 선택"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Selected file · {0}"
+msgstr "선택된 파일 · {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Shared and exclusive size statistics and any subvolume limits will be "
+"removed. Snapshots themselves are not deleted."
+msgstr "공유 및 전용 크기 통계와 서브볼륨 제한이 제거됩니다. 스냅샷 자체는 삭제되지 않습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Shared Data"
+msgstr "공유 데이터"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Size {0}"
+msgstr "크기 {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot"
+msgstr "스냅샷"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Actions"
+msgstr "스냅샷 작업"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Check Complete"
+msgstr "스냅샷 검사 완료됨"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Details"
+msgstr "스냅샷 세부 정보"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · Folder"
+msgstr "스냅샷 {0} · 폴더"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · {1} bytes · modified {2}"
+msgstr "스냅샷 {0} · {1}바이트 · 수정됨 {2}"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Snapshots"
+msgstr "스냅샷"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshots are not available on this computer"
+msgstr "이 컴퓨터에서 스냅샷을 사용할 수 없습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshots could not be loaded"
+msgstr "스냅샷을 로드할 수 없습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Solid-state drive"
+msgstr "솔리드 스테이트 드라이브"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Some snapshots could not be loaded"
+msgstr "일부 스냅샷을 로드할 수 없습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Some system drives need attention"
+msgstr "일부 시스템 드라이브에 주의가 필요합니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Space Accounting"
+msgstr "공간 사용량 집계"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Space Allocation"
+msgstr "공간 할당"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Cancelled"
+msgstr "공간 최적화 취소됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Complete"
+msgstr "공간 최적화 완료됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Failed"
+msgstr "공간 최적화 실패"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Result Unavailable"
+msgstr "공간 최적화 결과를 사용할 수 없습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Space usage"
+msgstr "공간 사용량"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Spin retry count"
+msgstr "스핀 재시도 횟수"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "SSD space reclamation"
+msgstr "SSD 공간 회수"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Start a limited balance?"
+msgstr "제한된 밸런스를 시작하시겠습니까?"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Start Balance"
+msgstr "밸런스 시작"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Start Scrub"
+msgstr "스크러브 시작"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Starting the integrity check…"
+msgstr "무결성 검사 시작 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Starting…"
+msgstr "시작 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Status unavailable"
+msgstr "상태를 사용할 수 없습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Storage Behavior"
+msgstr "저장소 동작"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Storage layout: {0}"
+msgstr "저장소 레이아웃: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Storage media is read-only"
+msgstr "저장소 미디어가 읽기 전용입니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices with one parity block for recovery"
+msgstr "장치에 걸쳐 스트라이프 구성, 복구를 위한 1개의 패리티 블록 포함"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices with two parity blocks for recovery"
+msgstr "장치에 걸쳐 스트라이프 구성, 복구를 위한 2개의 패리티 블록 포함"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices · no redundant copy is available for repair"
+msgstr "장치에 걸쳐 스트라이프 구성 · 복구를 위한 중복 사본 없음"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Subvolume quota accounting"
+msgstr "서브볼륨 할당량 회계"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Superblock errors: {0}"
+msgstr "슈퍼블록 오류: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "System Drive Health"
+msgstr "시스템 드라이브 상태"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "System files and packages"
+msgstr "시스템 파일 및 패키지"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "System Recovery"
+msgstr "시스템 복구"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "system snapshot"
+msgstr "시스템 스냅샷"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "System Snapshot Created"
+msgstr "시스템 스냅샷이 생성되었습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "System storage"
+msgstr "시스템 저장소"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Take a snapshot every"
+msgstr "스냅샷 생성 주기:"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Temperature"
+msgstr "온도"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Temperature is outside the safe range"
+msgstr "온도가 안전 범위를 벗어났습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "The automatic snapshot infrastructure cannot be disabled here."
+msgstr "자동 스냅샷 인프라는 여기서 비활성화할 수 없습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The device reported an unknown warning bit"
+msgstr "장치에서 알 수 없는 경고 비트가 보고되었습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The drive did not provide a conclusive health result"
+msgstr "드라이브에서 확정적인 상태 결과를 제공하지 않았습니다."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The Home snapshot was created successfully."
+msgstr "홈 스냅샷이 성공적으로 생성되었습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "The integrity check was cancelled before it finished."
+msgstr "무결성 검사가 완료되기 전에 취소되었습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "The limited balance was cancelled safely before it finished."
+msgstr "제한된 밸런스가 완료되기 전에 안전하게 취소되었습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback completed, but recovery cleanup has not completed."
+msgstr "롤백이 완료되었지만 복구 정리가 완료되지 않았습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed. Recovery cleanup has not completed."
+msgstr "롤백이 실패했습니다. 복구 정리가 완료되지 않았습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed: {0}"
+msgstr "롤백이 실패했습니다: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback was reverted, but recovery cleanup has not completed."
+msgstr "롤백이 되돌려졌지만 복구 정리가 완료되지 않았습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The root filesystem is {0}."
+msgstr "루트 파일 시스템은 {0}(이)입니다."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid ""
+"The scheduled Home snapshot could not be created. Check Disk Snapshots "
+"Manager for details."
+msgstr "예약된 홈 스냅샷을 생성할 수 없습니다. 자세한 내용은 디스크 스냅샷 관리자를 확인하세요."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled Home snapshot was created successfully."
+msgstr "예약된 홈 스냅샷이 성공적으로 생성되었습니다."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid ""
+"The scheduled system snapshot could not be created. Check Disk Snapshots "
+"Manager for details."
+msgstr "예약된 시스템 스냅샷을 생성할 수 없습니다. 자세한 내용은 디스크 스냅샷 관리자를 확인하세요."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled system snapshot was created successfully."
+msgstr "예약된 시스템 스냅샷이 성공적으로 생성되었습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "The selected files were recovered successfully."
+msgstr "선택한 파일이 성공적으로 복구되었습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The snapshot is created immediately."
+msgstr "스냅샷이 즉시 생성됩니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The system drive looks healthy"
+msgstr "시스템 드라이브 상태가 정상으로 보입니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The system drive needs attention"
+msgstr "시스템 드라이브에 주의가 필요합니다"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The system snapshot was created successfully."
+msgstr "시스템 스냅샷이 성공적으로 생성되었습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per day for"
+msgstr "그 후 매일 1개씩 유지할 기간:"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per month for"
+msgstr "그 후 매월 1개씩 유지할 기간:"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per week for"
+msgstr "그 후 매주 1개씩 유지할 기간:"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per year"
+msgstr "그 후 매년 1개씩 유지"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "This folder is empty"
+msgstr "이 폴더는 비어 있습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "This item was not present in the available Home snapshots."
+msgstr "이 항목은 사용 가능한 홈 스냅샷에 없습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"This rewrites files below /home using ZSTD compression. It does not enter "
+"/.snapshots, but shared extents with existing snapshots may become private "
+"and consume more space."
+msgstr ""
+"/home 아래 파일을 ZSTD 압축을 사용하여 다시 작성합니다. /.snapshots는 진입하지 않지만, 기존 스냅샷과 공유된 범위가 "
+"개인용으로 전환되어 더 많은 공간을 차지할 수 있습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "This snapshot is available for recovery."
+msgstr "이 스냅샷은 복구할 수 있습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "This snapshot is not available for recovery."
+msgstr "이 스냅샷은 복구에 사용할 수 없습니다."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Three copies on separate devices · damaged copies can be repaired "
+"automatically"
+msgstr "별도 장치에 3개의 사본 · 손상된 사본은 자동으로 복구됩니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Time above critical temperature"
+msgstr "임계 온도 초과 시간"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Time above warning temperature"
+msgstr "경고 온도 초과 시간"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Total"
+msgstr "합계"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Total data read"
+msgstr "총 읽은 데이터"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Total data written"
+msgstr "총 기록된 데이터"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Transparent compression"
+msgstr "투명 압축"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Try a different name, date, or snapshot reason."
+msgstr "다른 이름, 날짜 또는 스냅샷 사유를 시도해 보세요."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Two copies on separate devices · a damaged copy can be repaired "
+"automatically"
+msgstr "별도 장치에 2개의 사본 · 손상된 사본은 자동으로 복구됩니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Two copies on this device · a damaged copy can be repaired automatically"
+msgstr "이 장치에 2개의 사본 · 손상된 사본은 자동으로 복구됩니다"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unable to calculate"
+msgstr "계산할 수 없습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unavailable"
+msgstr "사용 불가"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Uncorrectable errors: {0}"
+msgstr "수정할 수 없는 오류: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unknown"
+msgstr "알 수 없음"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Unknown date"
+msgstr "알 수 없는 날짜"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unknown state"
+msgstr "알 수 없는 상태"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unknown storage device"
+msgstr "알 수 없는 저장 장치"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unsafe shutdowns"
+msgstr "안전하지 않은 종료"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Unsupported Destination"
+msgstr "지원되지 않는 대상"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Unverified errors: {0}"
+msgstr "확인되지 않은 오류: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Updating snapshot protection…"
+msgstr "스냅샷 보호 업데이트 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Useful after deleting large amounts of data"
+msgstr "대량의 데이터를 삭제한 후 유용합니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Verification errors: {0}"
+msgstr "확인 오류: {0}"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "View File History…"
+msgstr "파일 기록 보기…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "View Progress"
+msgstr "진행 상태 보기"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Volatile memory backup failed"
+msgstr "휘발성 메모리 백업 실패"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Waiting for Btrfs status…"
+msgstr "Btrfs 상태 대기 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Waiting for Btrfs to start…"
+msgstr "Btrfs 시작 대기 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Waiting for scrub status…"
+msgstr "스크러브 상태 대기 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Waiting for the new scrub to start…"
+msgstr "새 스크러브 시작 대기 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Warnings"
+msgstr "경고"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Why?"
+msgstr "왜?"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Will not change"
+msgstr "변경되지 않음"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Working…"
+msgstr "작업 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "{0} available"
+msgstr "{0} 사용 가능"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "{0} bytes · {1}"
+msgstr "{0}바이트 · {1}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "{0} damaged metadata entries were ignored"
+msgstr "{0}개의 손상된 메타데이터 항목이 무시되었습니다"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} hours · about {1} days"
+msgstr "{0}시간 · 약 {1}일"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} minutes"
+msgstr "{0}분"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0} of {1} checked"
+msgstr "{1}개 중 {0}개 검사 완료"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "{0} of {1} used"
+msgstr "사용량: {0}/{1}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} packages"
+msgstr "{0}개 패키지"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} RPM"
+msgstr "{0}RPM"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} snapshot record(s) need attention"
+msgstr "{0}개의 스냅샷 기록에 주의가 필요합니다"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} snapshot(s) selected"
+msgstr "{0}개의 스냅샷이 선택됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} °C"
+msgstr "{0}°C"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} · Manual Snapshot"
+msgstr "{0} · 수동 스냅샷"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "{0} · new writes"
+msgstr "{0} · 새 쓰기"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0}%"
+msgstr "{0}%"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0}% complete"
+msgstr "{0}% 완료됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0}% · warning threshold {1}%"
+msgstr "{0}% · 경고 임계값 {1}%"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0}/s"
+msgstr "{0}/s"

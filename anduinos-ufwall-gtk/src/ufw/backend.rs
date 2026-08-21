@@ -15,9 +15,13 @@ use std::net;
 use std::path::Path;
 use std::process::Command;
 
+use crate::i18n::i18n;
+
 use super::types::*;
 
 const UFW_APPS_DIR: &str = "/etc/ufw/applications.d";
+const NETWORK_SERVICE_HELPER: &str =
+    "/usr/libexec/ufwall-gtk/network-service-helper";
 
 // ─── Reading state (no root needed) ──────────────────────────────────────────
 
@@ -30,18 +34,18 @@ pub fn read_status() -> Result<UfwStatus, UfwError> {
         .args(["/usr/sbin/ufw", "status", "numbered"])
         .output()
         .map_err(|e| UfwError {
-            message: format!("Failed to run pkexec ufw status: {e}"),
+            message: format!("{}: {e}", i18n("Failed to run pkexec ufw status")),
         })?;
 
     if !output.status.success() {
         let stderr = String::from_utf8_lossy(&output.stderr);
         if output.status.code() == Some(126) {
             return Err(UfwError {
-                message: "Authentication cancelled".to_string(),
+                message: i18n("Authentication cancelled"),
             });
         }
         return Err(UfwError {
-            message: format!("pkexec failed: {}", stderr.trim()),
+            message: format!("{}: {}", i18n("pkexec failed"), stderr.trim()),
         });
     }
 
@@ -54,6 +58,54 @@ pub fn read_status() -> Result<UfwStatus, UfwError> {
         );
     }
     Ok(status)
+}
+
+/// Read Avahi availability and activation state without elevated privileges.
+pub fn read_mdns_state() -> Result<MdnsState, UfwError> {
+    let load_state = systemctl_value(&[
+        "show",
+        "avahi-daemon.service",
+        "--property=LoadState",
+        "--value",
+    ])?;
+    let service_state =
+        systemctl_value(&["is-enabled", "avahi-daemon.service"])?;
+    let socket_state =
+        systemctl_value(&["is-enabled", "avahi-daemon.socket"])?;
+    let active_state =
+        systemctl_value(&["is-active", "avahi-daemon.service"])?;
+    Ok(mdns_state_from_unit_states(
+        &load_state,
+        &service_state,
+        &socket_state,
+        &active_state,
+    ))
+}
+
+fn mdns_state_from_unit_states(
+    load_state: &str,
+    service_state: &str,
+    socket_state: &str,
+    active_state: &str,
+) -> MdnsState {
+    // A masked unit is still installed. systemd reports LoadState=masked and
+    // points FragmentPath at /etc/systemd/system/... -> /dev/null; treating
+    // only "loaded" as available would disable the very switch needed to
+    // unmask it.
+    let load_state = load_state.trim();
+    let available = !load_state.is_empty() && load_state != "not-found";
+    let service_state = service_state.trim();
+    let socket_state = socket_state.trim();
+    let masked = service_state == "masked" || socket_state == "masked";
+    let starts_automatically = [service_state, socket_state]
+        .iter()
+        .any(|state| matches!(*state, "enabled" | "static" | "indirect"));
+    let active = active_state.trim() == "active";
+    MdnsState {
+        available,
+        enabled: available && !masked && (starts_automatically || active),
+        active,
+    }
 }
 
 /// Parse the output of `ufw status numbered`.
@@ -318,6 +370,43 @@ pub fn set_enabled(enabled: bool) -> Result<String, UfwError> {
     run_pkexec_ufw(&["--force", arg])
 }
 
+/// Enable or fully block Avahi through a fixed, polkit-authorized helper.
+pub fn set_mdns_enabled(enabled: bool) -> Result<String, UfwError> {
+    let value = if enabled { "true" } else { "false" };
+    let output = Command::new("pkexec")
+        .env("LC_ALL", "C")
+        .env("LANGUAGE", "C")
+        .args([NETWORK_SERVICE_HELPER, "set-mdns-enabled", value])
+        .output()
+        .map_err(|error| UfwError {
+            message: format!(
+                "{}: {error}",
+                i18n("Failed to execute network service helper")
+            ),
+        })?;
+    if output.status.success() {
+        Ok(String::from_utf8_lossy(&output.stdout).to_string())
+    } else if output.status.code() == Some(126) {
+        Err(UfwError {
+            message: i18n("Authentication cancelled"),
+        })
+    } else {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        Err(UfwError {
+            message: format!(
+                "{}: {}",
+                i18n("Network service command failed"),
+                if stderr.trim().is_empty() {
+                    stdout.trim()
+                } else {
+                    stderr.trim()
+                }
+            ),
+        })
+    }
+}
+
 /// Delete all custom rules without disabling the firewall.
 pub fn delete_all_rules() -> Result<(), UfwError> {
     let status = read_status()?;
@@ -436,7 +525,7 @@ pub fn allow_app(ports: &str) -> Result<String, UfwError> {
     let port_list: Vec<&str> = ports.split('|').map(|s| s.trim()).filter(|s| !s.is_empty()).collect();
     if port_list.is_empty() {
         return Err(UfwError {
-            message: "No ports defined for this profile".to_string(),
+            message: i18n("No ports defined for this profile"),
         });
     }
     let mut last_result = Ok(String::new());
@@ -454,7 +543,7 @@ pub fn delete_app(ports: &str) -> Result<String, UfwError> {
     let port_list: Vec<&str> = ports.split('|').map(|s| s.trim()).filter(|s| !s.is_empty()).collect();
     if port_list.is_empty() {
         return Err(UfwError {
-            message: "No ports defined for this profile".to_string(),
+            message: i18n("No ports defined for this profile"),
         });
     }
     let mut last_result = Ok(String::new());
@@ -514,6 +603,19 @@ fn ports_match(rule_port: &str, profile_port: &str) -> bool {
 
 // ─── Internal helpers ────────────────────────────────────────────────────────
 
+fn systemctl_value(arguments: &[&str]) -> Result<String, UfwError> {
+    let output = Command::new("systemctl")
+        .env("LC_ALL", "C")
+        .env("LANGUAGE", "C")
+        .args(arguments)
+        .output()
+        .map_err(|error| UfwError {
+            message: format!("{}: {error}", i18n("Failed to inspect system service")),
+        })?;
+    // is-active/is-enabled intentionally return non-zero for valid inactive,
+    // disabled, and masked states, so their stdout remains authoritative.
+    Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
+}
 
 
 /// Run `pkexec ufw <args>` and return stdout.
@@ -527,7 +629,7 @@ fn run_pkexec_ufw(args: &[&str]) -> Result<String, UfwError> {
         .args(&cmd_args)
         .output()
         .map_err(|e| UfwError {
-            message: format!("Failed to execute pkexec: {e}"),
+            message: format!("{}: {e}", i18n("Failed to execute pkexec")),
         })?;
 
     if output.status.success() {
@@ -538,12 +640,13 @@ fn run_pkexec_ufw(args: &[&str]) -> Result<String, UfwError> {
         // pkexec returns 126 when user dismisses the dialog
         if output.status.code() == Some(126) {
             Err(UfwError {
-                message: "Authentication cancelled".to_string(),
+                message: i18n("Authentication cancelled"),
             })
         } else {
             Err(UfwError {
                 message: format!(
-                    "UFW command failed: {}",
+                    "{}: {}",
+                    i18n("UFW command failed"),
                     if stderr.is_empty() {
                         stdout.to_string()
                     } else {
@@ -558,6 +661,40 @@ fn run_pkexec_ufw(args: &[&str]) -> Result<String, UfwError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_mdns_state_distinguishes_enabled_masked_and_missing() {
+        assert_eq!(
+            mdns_state_from_unit_states(
+                "loaded", "enabled", "enabled", "active"
+            ),
+            MdnsState {
+                available: true,
+                enabled: true,
+                active: true,
+            }
+        );
+        assert_eq!(
+            mdns_state_from_unit_states(
+                "masked", "masked", "masked", "inactive"
+            ),
+            MdnsState {
+                available: true,
+                enabled: false,
+                active: false,
+            }
+        );
+        assert_eq!(
+            mdns_state_from_unit_states(
+                "not-found", "not-found", "not-found", "inactive"
+            ),
+            MdnsState {
+                available: false,
+                enabled: false,
+                active: false,
+            }
+        );
+    }
 
     #[test]
     fn test_parse_app_profiles() {

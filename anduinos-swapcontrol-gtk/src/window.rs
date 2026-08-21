@@ -57,7 +57,7 @@ impl SwapcontrolWindow {
         glib::Object::builder()
             .property("application", app)
             .property("title", i18n("Swap Control"))
-            .property("default-width", 900)
+            .property("default-width", 1100)
             .property("default-height", 650)
             .property("icon-name", "com.anduinos.swapcontrol")
             .build()
@@ -181,6 +181,16 @@ impl SwapcontrolWindow {
             .sync_create()
             .invert_boolean()
             .build();
+
+        // Collapse before the sidebar and content exceed their combined natural width,
+        // keeping the content centered and the right-side window controls visible.
+        let compact = adw::Breakpoint::new(
+            adw::BreakpointCondition::parse("max-width: 1050px")
+                .expect("the compact window breakpoint must be valid"),
+        );
+        compact.add_setter(&split_view, "collapsed", Some(&true.to_value()));
+        compact.add_setter(&split_view, "show-sidebar", Some(&false.to_value()));
+        self.add_breakpoint(compact);
 
         // Connect list box to stack — switch page and refresh on every tab change
         let stack_clone = stack.clone();

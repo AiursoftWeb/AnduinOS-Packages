@@ -1,3 +1,4 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: ufwall-gtk\n"
@@ -5,367 +6,640 @@ msgstr ""
 "POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/widgets/add_rule_dialog.rs:155
 msgid "0 = append at end"
 msgstr "0 = 追加到末尾"
 
+#: src/window.rs:81
 msgid "About"
 msgstr "关于"
 
+#: src/widgets/add_rule_dialog.rs:93
 msgid "Action"
 msgstr "动作"
 
+#: src/views/status_view.rs:396
 msgid "Active"
 msgstr "已启用"
 
+#: src/widgets/add_rule_dialog.rs:170
 msgid "Add"
 msgstr "添加"
 
+#: src/views/rules_view.rs:93 src/widgets/add_rule_dialog.rs:57
 msgid "Add Rule"
 msgstr "添加规则"
 
+#: src/widgets/add_rule_dialog.rs:110
 msgid "Advanced"
 msgstr "高级"
 
+#: src/views/network_audit_view.rs:200 src/views/network_audit_view.rs:208
 msgid "All"
 msgstr "全部"
 
+#: src/views/profiles_view.rs:92 src/views/status_view.rs:127
+#: src/views/status_view.rs:136 src/widgets/add_rule_dialog.rs:96
 msgid "Allow"
 msgstr "允许"
 
+#: src/views/profiles_view.rs:77
 msgid "Allow applications with predefined rules."
 msgstr "使用预定义规则允许应用程序。"
 
+#: src/views/profiles_view.rs:76
 msgid "Application Profiles"
 msgstr "应用程序预设"
 
+#: src/window.rs:117
 msgid "Audit"
 msgstr "审计"
 
+#: src/views/network_audit_view.rs:277
 msgid "Auditor Error"
 msgstr "审计错误"
 
+#: src/views/network_audit_view.rs:504
 msgid "Block"
 msgstr "阻止"
 
+#: src/views/network_audit_view.rs:500
 msgid "Block Connection?"
 msgstr "阻止此连接？"
 
+#: src/views/network_audit_view.rs:493
 msgid "Block inbound traffic from"
 msgstr "阻止来自以下地址的入站流量"
 
+#: src/views/network_audit_view.rs:495
 msgid "Block outbound traffic to"
 msgstr "阻止发往以下地址的出站流量"
 
+#: src/views/dashboard_view.rs:96
 msgid "Blocked Events"
 msgstr "已拦截事件"
 
+#: src/views/network_audit_view.rs:551
 msgid "Blocked Successfully"
 msgstr "已成功阻止"
 
+#: src/widgets/add_rule_dialog.rs:124
 msgid "Both"
 msgstr "两者"
 
+#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "取消"
 
+#: src/views/status_view.rs:103
+msgid "Local Network Discovery"
+msgstr "本地网络发现"
+
+#: src/views/status_view.rs:104
+msgid "Control multicast DNS discovery and .local name resolution."
+msgstr "控制多播 DNS 发现和 .local 名称解析。"
+
+#: src/views/status_view.rs:110
+msgid "Local Network Discovery (mDNS)"
+msgstr "本地网络发现 (mDNS)"
+
+#: src/views/status_view.rs:111
+msgid "Checking service status…"
+msgstr "正在检查服务状态…"
+
+#: src/views/status_view.rs:216 src/views/status_view.rs:332
+msgid "Network Discovery Error"
+msgstr "网络发现错误"
+
+#: src/views/status_view.rs:351
+msgid "Avahi is not installed."
+msgstr "未安装 Avahi。"
+
+#: src/views/status_view.rs:353
+msgid "Avahi is running; .local names and service discovery are available."
+msgstr "Avahi 正在运行；.local 名称和服务发现可用。"
+
+#: src/views/status_view.rs:357
+msgid "Avahi is enabled but not currently running."
+msgstr "Avahi 已启用，但当前未运行。"
+
+#: src/views/status_view.rs:359
+msgid "Avahi is blocked; .local names and service discovery are unavailable."
+msgstr "Avahi 已被阻止；.local 名称和服务发现不可用。"
+
+#: src/widgets/add_rule_dialog.rs:149
 msgid "Comment"
 msgstr "备注"
 
+#: src/widgets/add_rule_dialog.rs:72
 msgid "Custom"
 msgstr "自定义"
 
+#: src/views/dashboard_view.rs:56 src/window.rs:116
 msgid "Dashboard"
 msgstr "仪表盘"
 
+#: src/views/status_view.rs:119
 msgid "Default Policies"
 msgstr "默认策略"
 
+#: src/widgets/rule_row.rs:90
 msgid "Delete"
 msgstr "删除"
 
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:122
 msgid "Delete All"
 msgstr "删除全部"
 
+#: src/views/rules_view.rs:118
 msgid "Delete All Rules?"
 msgstr "删除所有规则？"
 
+#: src/widgets/rule_row.rs:86
 msgid "Delete Rule"
 msgstr "删除规则"
 
+#: src/widgets/rule_row.rs:87
 msgid "Delete rule"
 msgstr "删除规则"
 
+#: src/views/status_view.rs:126 src/views/status_view.rs:135
+#: src/widgets/add_rule_dialog.rs:95
 msgid "Deny"
 msgstr "拒绝"
 
+#: src/widgets/add_rule_dialog.rs:135
 msgid "Destination IP"
 msgstr "目标 IP"
 
+#: src/widgets/add_rule_dialog.rs:114
 msgid "Direction"
 msgstr "方向"
 
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:137 src/views/status_view.rs:185
+#: src/widgets/add_rule_dialog.rs:338 src/widgets/rule_row.rs:119
+#: src/window.rs:283 src/window.rs:299
 msgid "Error"
 msgstr "错误"
 
+#: src/views/network_audit_view.rs:554
 msgid "Failed to Block"
 msgstr "阻止失败"
 
+#: src/views/status_view.rs:95 src/window.rs:64
 msgid "Firewall"
 msgstr "防火墙"
 
+#: src/views/rules_view.rs:70
 msgid "Firewall Rules"
 msgstr "防火墙规则"
 
+#: src/views/status_view.rs:156
 msgid "Full"
 msgstr "全部"
 
+#: src/views/status_view.rs:155
 msgid "High"
 msgstr "高"
 
+#: src/widgets/add_rule_dialog.rs:116
 msgid "In"
 msgstr "入站"
 
+#: src/views/status_view.rs:96 src/views/status_view.rs:396
 msgid "Inactive"
 msgstr "未启用"
 
+#: src/views/network_audit_view.rs:201
 msgid "Inbound"
 msgstr "入站"
 
+#: src/views/status_view.rs:124
 msgid "Incoming"
 msgstr "入站"
 
+#: src/widgets/add_rule_dialog.rs:154
 msgid "Insert Before Rule"
 msgstr "插入到规则前"
 
+#: src/widgets/add_rule_dialog.rs:144
 msgid "Interface"
 msgstr "网络接口"
 
+#: src/widgets/add_rule_dialog.rs:98
 msgid "Limit"
 msgstr "限制"
 
+#: src/views/dashboard_view.rs:129
 msgid "Listening Ports"
 msgstr "监听端口"
 
+#: src/views/status_view.rs:150
 msgid "Log Level"
 msgstr "日志级别"
 
+#: src/views/status_view.rs:146
 msgid "Logging"
 msgstr "日志"
 
+#: src/views/status_view.rs:153
 msgid "Low"
 msgstr "低"
 
+#: src/views/status_view.rs:154
 msgid "Medium"
 msgstr "中"
 
+#: src/views/network_audit_view.rs:58
 msgid "Monitoring Network Activity"
 msgstr "监控网络活动"
 
+#: src/views/profiles_view.rs:119
 msgid "No Profiles"
 msgstr "无预设"
 
+#: src/views/rules_view.rs:75
 msgid "No Rules"
 msgstr "无规则"
 
+#: src/views/profiles_view.rs:120
 msgid "No application profiles found"
 msgstr "未找到应用程序预设"
 
+#: src/views/dashboard_view.rs:247
 msgid "No blocked connections in recent events"
 msgstr "近期无被拦截的连接"
 
+#: src/views/dashboard_view.rs:296
 msgid "No blocked ports in recent events"
 msgstr "近期无被拦截的端口"
 
+#: src/views/dashboard_view.rs:344
 msgid "No listening ports detected"
 msgstr "未检测到监听端口"
 
+#: src/views/status_view.rs:152
 msgid "Off"
 msgstr "关闭"
 
+#: src/widgets/add_rule_dialog.rs:117
 msgid "Out"
 msgstr "出站"
 
+#: src/views/network_audit_view.rs:202
 msgid "Outbound"
 msgstr "出站"
 
+#: src/views/status_view.rs:133
 msgid "Outgoing"
 msgstr "出站"
 
+#: src/views/network_audit_view.rs:217
 msgid "Pause list updates"
 msgstr "暂停列表更新"
 
+#: src/views/profiles_view.rs:87
 msgid "Port / Protocol"
 msgstr "端口 / 协议"
 
+#: src/widgets/add_rule_dialog.rs:89
 msgid "Port / Service Name"
 msgstr "端口 / 服务名称"
 
+#: src/window.rs:120
 msgid "Profiles"
 msgstr "预设"
 
+#: src/widgets/add_rule_dialog.rs:122
 msgid "Protocol"
 msgstr "协议"
 
+#: src/views/profiles_view.rs:82
 msgid "Quick Allow Port"
 msgstr "快速开放端口"
 
+#: src/views/dashboard_view.rs:135
 msgid "Recent Blocked Events"
 msgstr "近期拦截事件"
 
+#: src/views/dashboard_view.rs:78
 msgid "Recent Events Parsed"
 msgstr "已解析近期事件"
 
+#: src/views/dashboard_view.rs:154
 msgid "Refresh"
 msgstr "刷新"
 
+#: src/views/status_view.rs:128 src/views/status_view.rs:137
+#: src/widgets/add_rule_dialog.rs:97
 msgid "Reject"
 msgstr "驳回"
 
+#: src/views/network_audit_view.rs:195
 msgid "Resolve Domains"
 msgstr "解析域名"
 
+#: src/views/network_audit_view.rs:551
 msgid "Rule added to block"
 msgstr "规则已添加到阻止列表"
 
+#: src/window.rs:119
 msgid "Rules"
 msgstr "规则"
 
+#: src/widgets/add_rule_dialog.rs:265
 msgid "Save"
 msgstr "保存"
 
+#: src/views/network_audit_view.rs:186
 msgid "Search Process or IP..."
 msgstr "搜索进程或 IP..."
 
+#: src/views/rules_view.rs:62
 msgid "Search rules..."
 msgstr "搜索规则..."
 
+#: src/widgets/add_rule_dialog.rs:70
 msgid "Service"
 msgstr "服务"
 
+#: src/views/dashboard_view.rs:139
 msgid "Show"
 msgstr "显示"
 
+#: src/widgets/add_rule_dialog.rs:131
 msgid "Source IP"
 msgstr "来源 IP"
 
+#: src/views/status_view.rs:84 src/window.rs:118
 msgid "Status"
 msgstr "状态"
 
+#: src/views/network_audit_view.rs:209 src/widgets/add_rule_dialog.rs:125
 msgid "TCP"
 msgstr "TCP"
 
+#: src/views/rules_view.rs:76
 msgid "There are no rules configured yet."
 msgstr "尚未配置任何规则。"
 
+#: src/views/rules_view.rs:119
 msgid "This will delete all custom rules. This action cannot be undone."
 msgstr "这将删除所有自定义规则。此操作无法撤销。"
 
+#: src/views/network_audit_view.rs:493
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr "这将阻止远程主机向您的计算机发送任何数据包。"
 
+#: src/views/network_audit_view.rs:495
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr "这将阻止您的计算机向远程主机发送任何数据包。"
 
+#: src/views/dashboard_view.rs:117
 msgid "Top Blocked Connections"
 msgstr "阻止次数最多的连接"
 
+#: src/views/dashboard_view.rs:123
 msgid "Top Blocked Ports"
 msgstr "被拦截最多的端口"
 
+#: src/views/network_audit_view.rs:210 src/widgets/add_rule_dialog.rs:126
 msgid "UDP"
 msgstr "UDP"
 
+#: src/views/profiles_view.rs:83
 msgid "e.g. 80,443/tcp or 8080"
 msgstr "例如 80,443/tcp 或 8080"
 
+#: data/app_profiles/qbittorrent:3 data/app_profiles/transmission:3
 msgid "BitTorrent client"
 msgstr "BitTorrent客户端"
 
+#: data/app_profiles/cups:3
 msgid "Common UNIX Printing System server"
 msgstr "通用UNIX打印系统服务器"
 
+#: data/app_profiles/syncthing:3
 msgid "Continuous file synchronization"
 msgstr "连续文件同步"
 
+#: data/app_profiles/docker:3
 msgid "Docker container runtime API"
 msgstr "Docker容器运行时API"
 
+#: data/app_profiles/dns:3
 msgid "Domain Name System server"
 msgstr "域名系统服务器"
 
+#: data/app_profiles/xmpp:3
 msgid "Extensible Messaging and Presence Protocol"
 msgstr "可扩展消息和在线状态协议"
 
+#: data/app_profiles/ftp:3
 msgid "File Transfer Protocol"
 msgstr "文件传输协议"
 
+#: data/app_profiles/dropbox:3
 msgid "File synchronization service"
 msgstr "文件同步服务"
 
+#: data/app_profiles/http:3
 msgid "Hypertext Transfer Protocol for web servers"
 msgstr "Web服务器的超文本传输协议"
 
+#: data/app_profiles/redis:3
 msgid "In-memory data structure store"
 msgstr "内存数据结构存储"
 
+#: data/app_profiles/imap:3
 msgid "Internet Message Access Protocol for email"
 msgstr "用于电子邮件的互联网消息访问协议"
 
+#: data/app_profiles/ldap:3
 msgid "Lightweight Directory Access Protocol"
 msgstr "轻量级目录访问协议"
 
+#: data/app_profiles/jellyfin:3
 msgid "Media streaming server"
 msgstr "媒体流媒体服务器"
 
+#: data/app_profiles/wireguard:3
 msgid "Modern VPN tunnel"
 msgstr "现代VPN隧道"
 
+#: data/app_profiles/mdns:3
 msgid "Multicast DNS for local network discovery"
 msgstr "用于本地网络发现的多播DNS"
 
+#: data/app_profiles/mysql:3
 msgid "MySQL database server"
 msgstr "MySQL数据库服务器"
 
+#: data/app_profiles/nfs:3
 msgid "Network File System"
 msgstr "网络文件系统"
 
+#: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
 msgstr "端口 / 协议"
 
+#: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
 msgstr "NoSQL文档数据库"
 
+#: data/app_profiles/kdeconnect:3
 msgid "Phone and desktop integration"
 msgstr "手机和桌面集成"
 
+#: data/app_profiles/plex:3
 msgid "Plex media streaming server"
 msgstr "Plex媒体流媒体服务器"
 
+#: data/app_profiles/pop3:3
 msgid "Post Office Protocol for email retrieval"
 msgstr "用于检索电子邮件的邮局协议"
 
+#: data/app_profiles/postgresql:3
 msgid "PostgreSQL database server"
 msgstr "PostgreSQL数据库服务器"
 
+#: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
 msgstr "端口 / 协议"
 
+#: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
 msgstr "Web服务器的安全HTTP"
 
+#: data/app_profiles/openssh:3
 msgid "Secure shell remote access"
 msgstr "安全Shell远程访问"
 
+#: data/app_profiles/smtp:3
 msgid "Simple Mail Transfer Protocol"
 msgstr "简单邮件传输协议"
 
+#: data/app_profiles/vnc:3
 msgid "Virtual Network Computing remote desktop"
 msgstr "虚拟网络计算远程桌面"
 
+#: data/app_profiles/samba:3
 msgid "Windows file and printer sharing"
 msgstr "Windows文件和打印机共享"
+
+#: src/views/network_audit_view.rs:534
+msgid "Audit Block"
+msgstr "审计拦截"
+
+#: src/ufw/backend.rs:44 src/ufw/backend.rs:391 src/ufw/backend.rs:643
+msgid "Authentication cancelled"
+msgstr "认证已取消"
+
+#: src/views/network_audit_view.rs:160
+msgid "Download"
+msgstr "下载"
+
+#: src/ufw/backend.rs:384
+msgid "Failed to execute network service helper"
+msgstr "无法执行网络服务助手"
+
+#: src/ufw/backend.rs:632
+msgid "Failed to execute pkexec"
+msgstr "执行 pkexec 失败"
+
+#: src/ufw/backend.rs:613
+msgid "Failed to inspect system service"
+msgstr "无法检查系统服务"
+
+#: src/window.rs:284
+msgid "Failed to read firewall status"
+msgstr "无法读取防火墙状态"
+
+#: src/window.rs:300
+msgid "Failed to read profiles"
+msgstr "读取配置文件失败"
+
+#: src/ufw/stats.rs:39
+msgid "Failed to run journalctl"
+msgstr "运行 journalctl 失败"
+
+#: src/ufw/backend.rs:37
+msgid "Failed to run pkexec ufw status"
+msgstr "无法运行 pkexec ufw status"
+
+#: src/ufw/stats.rs:151
+msgid "Failed to run ss"
+msgstr "运行 ss 失败"
+
+#: src/ufw/traffic_monitor.rs:36
+msgid "Failed to start ufwall-auditor"
+msgstr "无法启动 ufwall-auditor"
+
+#: src/ufw/traffic_monitor.rs:38
+msgid "Is it installed?"
+msgstr "是否已安装？"
+
+#: src/views/network_audit_view.rs:166
+msgid "Max"
+msgstr "最大"
+
+#: src/views/network_audit_view.rs:84
+msgid ""
+"Network Traffic\n"
+"Red line: Upload speed\n"
+"Green line: Download speed"
+msgstr ""
+"网络流量\n"
+"红线：上传速度\n"
+"绿线：下载速度"
+
+#: src/ufw/backend.rs:399
+msgid "Network service command failed"
+msgstr "网络服务命令执行失败"
+
+#: src/views/network_audit_view.rs:371
+msgid "No Active Connections"
+msgstr "无活动连接"
+
+#: src/views/network_audit_view.rs:361
+msgid "No Inbound Connections"
+msgstr "无入站连接"
+
+#: src/views/network_audit_view.rs:366
+msgid "No Outbound Connections"
+msgstr "无出站连接"
+
+#: src/views/network_audit_view.rs:367
+msgid "No applications are sending data to the internet."
+msgstr "没有应用程序正在向互联网发送数据。"
+
+#: src/views/network_audit_view.rs:362
+msgid "No external devices are connecting to your open ports."
+msgstr "没有外部设备正在连接您的开放端口。"
+
+#: src/views/network_audit_view.rs:372
+msgid "No network activity detected."
+msgstr "未检测到网络活动。"
+
+#: src/ufw/backend.rs:528 src/ufw/backend.rs:546
+msgid "No ports defined for this profile"
+msgstr "此配置文件未定义端口"
+
+#: src/ufw/backend.rs:649
+msgid "UFW command failed"
+msgstr "UFW 命令执行失败"
+
+#: src/views/network_audit_view.rs:152
+msgid "Upload"
+msgstr "上传"
+
+#: src/ufw/backend.rs:48
+msgid "pkexec failed"
+msgstr "pkexec 执行失败"
 
 #~ msgid "Firewall Active"
 #~ msgstr "防火墙已启用"

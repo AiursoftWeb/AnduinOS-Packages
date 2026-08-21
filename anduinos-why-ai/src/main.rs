@@ -165,7 +165,7 @@ fn main() -> anyhow::Result<()> {
             cmd.arg("--verbose");
         }
         if cli.cpu_only {
-            cmd.env("GGML_VULKAN", "0");
+            cmd.arg("--device").arg("none");
         }
 
         let status = cmd.status()?;

@@ -7,7 +7,7 @@ source "$SCRIPT_DIR/../lib/build-guards.sh"
 need_cmd git
 need_cmd sassc
 
-FLUENT_GTK_COMMIT="9fc5291"
+FLUENT_GTK_COMMIT="7a49a46"
 
 rm -rf "$SCRIPT_DIR/deploy" /tmp/Fluent-gtk-theme
 git clone https://gitlab.aiursoft.com/mirror/fluent-gtk-theme/ /tmp/Fluent-gtk-theme

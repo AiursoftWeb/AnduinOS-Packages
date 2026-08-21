@@ -1,0 +1,29 @@
+#!/bin/sh
+set -e
+
+PREREQ=""
+
+prereqs()
+{
+    echo "$PREREQ"
+}
+
+case "${1:-}" in
+prereqs)
+    prereqs
+    exit 0
+    ;;
+esac
+
+. /usr/share/initramfs-tools/hook-functions
+
+copy_exec /usr/libexec/anduinos-btrfs-snapshots-manager-initramfs
+copy_exec /usr/libexec/anduinos-btrfs-snapshots-manager-confirm
+copy_exec /usr/bin/btrfs
+for recovery_tool in cat chmod cp ln mkdir; do
+    copy_exec "/usr/bin/$recovery_tool"
+done
+copy_file config \
+    /usr/share/anduinos-btrfs-snapshots-manager/recovery-protocol-version \
+    /etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version
+manual_add_modules btrfs

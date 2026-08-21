@@ -1,0 +1,52 @@
+# shellcheck shell=bash
+# Quiet Bash ghost text. Readline remains the only line editor: this loader
+# never replaces paste, multiline, Enter, history, or terminal key handling.
+[[ $- == *i* ]] || return 0
+[[ ${BASH_VERSINFO[0]:-0} -ge 4 ]] || return 0
+[[ ${ANDUINOS_GUESS_COMMAND:-1} != 0 ]] || return 0
+[[ -t 0 && -t 1 ]] || return 0
+[[ ${TERM:-dumb} != dumb ]] || return 0
+[[ ${_ANDUINOS_GUESS_COMMAND_LOADED:-0} != 1 ]] || return 0
+
+_anduinos_guess_lib=/usr/lib/anduinos-bash-guess-command
+
+# The native module only wraps Readline redisplay, Right Arrow and End. Failure is
+# silent and leaves an entirely stock Bash session.
+if [[ ${ANDUINOS_GUESS_ENGINE:-1} != 0 &&
+      -r $_anduinos_guess_lib/anduinos-ghost.so &&
+      -x $_anduinos_guess_lib/anduinos-quietd ]]; then
+    if enable -f "$_anduinos_guess_lib/anduinos-ghost.so" anduinos_ghost \
+        2>/dev/null; then
+        anduinos_ghost configure-history "${HISTFILE-}"
+        _anduinos_guess_prompt_observe() {
+            local _anduinos_guess_status=$?
+            anduinos_ghost observe "$_anduinos_guess_status" "$PWD"
+            return "$_anduinos_guess_status"
+        }
+
+        # Run first so $? is the command's real status. Preserve both Bash's
+        # array form and the traditional string form of PROMPT_COMMAND.
+        if [[ ${PROMPT_COMMAND@a} == *a* ]]; then
+            _anduinos_guess_seen=0
+            for _anduinos_guess_item in "${PROMPT_COMMAND[@]}"; do
+                if [[ $_anduinos_guess_item == _anduinos_guess_prompt_observe ]]; then
+                    _anduinos_guess_seen=1
+                    break
+                fi
+            done
+            if (( !_anduinos_guess_seen )); then
+                PROMPT_COMMAND=(_anduinos_guess_prompt_observe "${PROMPT_COMMAND[@]}")
+            fi
+        elif [[ ${PROMPT_COMMAND-} ]]; then
+            if [[ ";${PROMPT_COMMAND// /};" != *";_anduinos_guess_prompt_observe;"* ]]; then
+                PROMPT_COMMAND="_anduinos_guess_prompt_observe; $PROMPT_COMMAND"
+            fi
+        else
+            PROMPT_COMMAND=_anduinos_guess_prompt_observe
+        fi
+        _ANDUINOS_GUESS_COMMAND_LOADED=1
+        unset _anduinos_guess_seen _anduinos_guess_item
+    fi
+fi
+
+unset _anduinos_guess_lib

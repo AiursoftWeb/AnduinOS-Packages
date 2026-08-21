@@ -2,6 +2,7 @@ use crate::swap::types::ZswapConfig;
 use std::fs;
 
 use crate::config;
+use crate::i18n::{i18n, i18n_fmt};
 
 /// Read the current zswap configuration from sysfs.
 pub fn read_zswap_config() -> Result<ZswapConfig, String> {
@@ -43,7 +44,7 @@ pub fn get_available_compressors() -> Vec<String> {
 fn read_sysfs_string(path: &str) -> Result<String, String> {
     fs::read_to_string(path)
         .map(|s| s.trim().to_string())
-        .map_err(|e| format!("Cannot read {path}: {e}"))
+        .map_err(|e| i18n_fmt(&i18n("Cannot read {0}: {1}"), &[&path, &e.to_string()]))
 }
 
 fn read_sysfs_bool(path: &str) -> Result<bool, String> {
@@ -53,8 +54,12 @@ fn read_sysfs_bool(path: &str) -> Result<bool, String> {
 
 fn read_sysfs_u8(path: &str) -> Result<u8, String> {
     let val = read_sysfs_string(path)?;
-    val.parse::<u8>()
-        .map_err(|e| format!("Cannot parse {path} as u8: {e}"))
+    val.parse::<u8>().map_err(|e| {
+        i18n_fmt(
+            &i18n("Cannot parse {0} as u8: {1}"),
+            &[&path, &e.to_string()],
+        )
+    })
 }
 
 #[cfg(test)]

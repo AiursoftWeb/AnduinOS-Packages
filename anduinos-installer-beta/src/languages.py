@@ -1,16 +1,42 @@
 """Language definitions and translations for the AnduinOS installer.
 
-This module is the single source of truth for all supported languages,
-replacing the ubiquity-languagelist / generate-languagelist-data.py
-pipeline.  No external files, no compilation step — just import it.
+This module is the single source of truth for supported language metadata,
+replacing the ubiquity-languagelist / generate-languagelist-data.py pipeline.
+User-visible interface text is translated through the gettext catalogs.
 """
 
+from collections.abc import Mapping
 from dataclasses import dataclass
+import json
+import os
+from pathlib import Path, PurePosixPath
+import re
+from typing import Any
 
 
 # ---------------------------------------------------------------------------
 # Language metadata
 # ---------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class DesktopInputSource:
+    """One desktop input source to enable for newly created users."""
+
+    type: str
+    id: str
+
+
+@dataclass(frozen=True)
+class InputMethod:
+    """Installer-owned, fully declarative input-method policy."""
+
+    id: str
+    display_name: str
+    language_name: str
+    desktop_source: DesktopInputSource | None
+    packages: tuple[str, ...]
+    required_paths: tuple[Path, ...]
+
 
 @dataclass(frozen=True)
 class Language:
@@ -19,238 +45,386 @@ class Language:
     english_name: str   # "Chinese (Simplified)"
     native_name: str    # "中文(简体)"
     locale: str         # "zh_CN.UTF-8"
-    keyboard: str       # default XKB variant, e.g. "cn"
+    language_pack_code: str  # Ubuntu langpack suffix, e.g. "zh-hans"
+    keyboard: str       # default physical XKB layout, e.g. "us"
+    timezone: str
+    recommended_input_methods: tuple[str, ...] = ()
+
+    @property
+    def default_input_methods(self) -> tuple[str, ...]:
+        """Return the default-selected recommendation as an ordered tuple."""
+
+        return self.recommended_input_methods[:1]
 
 
-# Sorted alphabetically by English name (matching the existing .data file order).
-# Data sourced from anduinos-installer-config/assets/ubiquity-languagelist
-# and generate-languagelist-data.py.
-LANGUAGES = [
-    Language("ar",    "Arabic",                "العربية",              "ar_SA.UTF-8", "ara"),
-    Language("zh_CN", "Chinese (Simplified)",  "中文(简体)",           "zh_CN.UTF-8", "cn"),
-    Language("zh_HK", "Chinese (Hong Kong)",   "中文 (香港)",          "zh_HK.UTF-8", "hk"),
-    Language("zh_TW", "Chinese (Traditional)", "中文(繁體)",           "zh_TW.UTF-8", "tw"),
-    Language("da",    "Danish",                "Dansk",                "da_DK.UTF-8", "dk"),
-    Language("nl",    "Dutch",                 "Nederlands",           "nl_NL.UTF-8", "nl"),
-    Language("en",    "English",               "English",              "en_US.UTF-8", "us"),
-    Language("en_GB", "English (United Kingdom)", "English (United Kingdom)", "en_GB.UTF-8", "gb"),
-    Language("fi",    "Finnish",               "Suomi",                "fi_FI.UTF-8", "fi"),
-    Language("fr",    "French",                "Français",             "fr_FR.UTF-8", "fr"),
-    Language("de",    "German",                "Deutsch",              "de_DE.UTF-8", "de"),
-    Language("el",    "Greek",                 "Ελληνικά",             "el_GR.UTF-8", "gr"),
-    Language("hi",    "Hindi",                 "हिन्दी",               "hi_IN.UTF-8", "in"),
-    Language("id",    "Indonesian",            "Bahasa Indonesia",     "id_ID.UTF-8", "id"),
-    Language("it",    "Italian",               "Italiano",             "it_IT.UTF-8", "it"),
-    Language("ja",    "Japanese",              "日本語",               "ja_JP.UTF-8", "jp"),
-    Language("ko",    "Korean",                "한국어",               "ko_KR.UTF-8", "kr"),
-    Language("pl",    "Polish",                "Polski",               "pl_PL.UTF-8", "pl"),
-    Language("pt",    "Portuguese",            "Português",            "pt_PT.UTF-8", "pt"),
-    Language("pt_BR", "Portuguese (Brazil)",   "Português do Brasil",  "pt_BR.UTF-8", "br"),
-    Language("ro",    "Romanian",              "Română",               "ro_RO.UTF-8", "ro"),
-    Language("ru",    "Russian",               "Русский",              "ru_RU.UTF-8", "ru"),
-    Language("es",    "Spanish",               "Español",              "es_ES.UTF-8", "es"),
-    Language("sv",    "Swedish",               "Svenska",              "sv_SE.UTF-8", "se"),
-    Language("th",    "Thai",                  "ภาษาไทย",              "th_TH.UTF-8", "th"),
-    Language("tr",    "Turkish",               "Türkçe",               "tr_TR.UTF-8", "tr"),
-    Language("uk",    "Ukrainian",             "Українська",           "uk_UA.UTF-8", "ua"),
-    Language("vi",    "Vietnamese",            "Tiếng Việt",           "vi_VN.UTF-8", "vn"),
-]
+_CONFIG_SCHEMA_VERSION = 5
+_TOKEN_RE = re.compile(r"^[a-z0-9][a-z0-9+._-]*$")
+_SOURCE_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9+._:@/-]*$")
 
 
-def is_chinese(code: str) -> bool:
-    """Return True if the language code is a Chinese variant."""
-    return code.startswith("zh_")
+def _config_path() -> Path:
+    module = Path(__file__).resolve()
+    source_tree = module.parent.parent / "data/languages.json"
+    if source_tree.is_file():
+        return source_tree
+    unpacked_tree = (
+        module.parents[2]
+        / "share/anduinos-installer-beta/languages.json"
+    )
+    if unpacked_tree.is_file():
+        return unpacked_tree
+    return Path("/usr/share/anduinos-installer-beta/languages.json")
 
 
-# Chinese mirror URLs (tried in order; first is the default).
-CHINESE_MIRRORS = [
-    "https://mirrors.tuna.tsinghua.edu.cn/ubuntu/",
-    "https://mirrors.aliyun.com/ubuntu/",
-    "https://mirrors.ustc.edu.cn/ubuntu/",
-]
+def _object(value: object, label: str) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise RuntimeError(f"{label} must be an object")
+    return value
 
 
-# ---------------------------------------------------------------------------
-# Translations (dict-based, no GNU gettext dependency)
-# ---------------------------------------------------------------------------
-#
-# Every user-visible string in the installer goes here.  The fallback chain
-# is: requested lang → "en" → the key itself.
-#
-# Strings are grouped by the page/context where they appear.
-
-TRANSLATIONS: dict[str, dict[str, str]] = {}
-
-def _t(lang: str, entries: dict[str, str]) -> None:
-    """Register translations for a language."""
-    TRANSLATIONS.setdefault(lang, {}).update(entries)
+def _exact_fields(value: dict[str, Any], expected: set[str], label: str) -> None:
+    actual = set(value)
+    if actual != expected:
+        raise RuntimeError(
+            f"Invalid {label} fields; missing={sorted(expected - actual)}, "
+            f"extra={sorted(actual - expected)}"
+        )
 
 
-def _(key: str, lang: str) -> str:
-    """Look up a translated string, falling back to English then the key."""
-    return (TRANSLATIONS.get(lang, {}).get(key)
-            or TRANSLATIONS.get("en", {}).get(key)
-            or key)
+def _nonempty_string(value: object, label: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise RuntimeError(f"{label} must be a non-empty string")
+    return value
 
 
-# ── English (base language, always complete) ────────────────────────────
-
-_t("en", {
-    # Navigation
-    "nav.next":         "Next",
-    "nav.back":         "Back",
-    "nav.install":      "Install",
-    "nav.reboot":       "Reboot Now",
-    "nav.save_log":     "Save Log",
-    "nav.close":        "Close",
-
-    # Welcome / Language page
-    "welcome.title":    "Welcome to AnduinOS",
-    "welcome.subtitle": "Choose your language to begin installation",
-
-    # Keyboard page
-    "keyboard.title":   "Keyboard Layout",
-    "keyboard.subtitle":"Confirm your keyboard layout",
-    "keyboard.test":    "Test your keyboard here…",
-
-    # Disk page
-    "disk.title":       "Select Installation Disk",
-    "disk.subtitle":    "Choose the disk where AnduinOS will be installed",
-    "disk.warning_small": "This disk is smaller than 20 GB. Installation may fail due to insufficient space.",
-    "disk.warning_erase": "ALL DATA on the selected disk will be permanently erased.",
-    "disk.column_disk": "Disk",
-    "disk.column_size": "Size",
-    "disk.no_disks":    "No suitable disks found.",
-    "disk.live_usb":    "(Live USB — excluded)",
-
-    # User page
-    "user.title":       "User Account",
-    "user.subtitle":    "Create your user account",
-    "user.full_name":   "Full Name",
-    "user.username":    "Username",
-    "user.password":    "Password",
-    "user.hostname":    "Computer Name",
-    "user.show_password": "Show Password",
-    "user.pass_too_short": "Password must be at least 6 characters.",
-    "user.name_invalid": "Username may only contain lowercase letters, digits, underscores and hyphens.",
-    "user.host_invalid": "Computer name contains invalid characters.",
-
-    # Timezone page
-    "tz.title":         "Select Timezone",
-    "tz.subtitle":      "Choose your location to set the system clock",
-    "tz.search":        "Search timezones…",
-
-    # Summary page
-    "summary.title":    "Ready to Install",
-    "summary.subtitle": "Please review your choices before proceeding",
-    "summary.lang":     "Language",
-    "summary.keyboard": "Keyboard",
-    "summary.disk":     "Target Disk",
-    "summary.user":     "User",
-    "summary.hostname": "Computer Name",
-    "summary.timezone": "Timezone",
-    "summary.warning":  "⚠ This will erase ALL data on the selected disk. This action cannot be undone.",
-
-    # Progress page
-    "progress.title":   "Installing AnduinOS",
-    "progress.subtitle":"Please do not turn off your computer",
-    "progress.partition": "Creating partitions…",
-    "progress.format":  "Formatting partitions…",
-    "progress.mount":   "Mounting filesystems…",
-    "progress.copy":    "Copying system files…",
-    "progress.config":  "Configuring the system…",
-    "progress.grub":    "Installing bootloader…",
-    "progress.post":    "Running post-install hooks…",
-    "progress.fstab":   "Generating fstab…",
-    "progress.locale":  "Generating locales…",
-    "progress.user_cfg":"Creating user account…",
-    "progress.mirror":  "Configuring APT mirrors…",
-    "progress.rime":    "Setting up Chinese input method…",
-    "progress.cleanup": "Cleaning up…",
-    "progress.done":    "Installation complete!",
-    "progress.failed":  "Installation failed",
-    "progress.error_detail": "An error occurred during installation. You can save the log for debugging.",
-
-    # Done page
-    "done.title":       "Installation Complete",
-    "done.subtitle":    "Remove the installation media and restart your computer",
-    "done.error_title": "Installation Failed",
-    "done.error_subtitle": "Something went wrong during the installation",
-})
+def _string_list(
+    value: object,
+    label: str,
+    *,
+    allow_empty: bool = False,
+) -> tuple[str, ...]:
+    if not isinstance(value, list) or (not value and not allow_empty):
+        qualifier = "a list" if allow_empty else "a non-empty list"
+        raise RuntimeError(f"{label} must be {qualifier}")
+    result = tuple(_nonempty_string(item, label) for item in value)
+    if len(result) != len(set(result)):
+        raise RuntimeError(f"{label} contains duplicates")
+    return result
 
 
-# ── Chinese (Simplified) ─────────────────────────────────────────────────
+def _relative_path(value: object, label: str) -> Path:
+    raw = _nonempty_string(value, label)
+    path = PurePosixPath(raw)
+    if (
+        path.is_absolute()
+        or raw != str(path)
+        or not path.parts
+        or any(part in {".", ".."} for part in path.parts)
+    ):
+        raise RuntimeError(f"Unsafe relative path in {label}")
+    return Path(*path.parts)
 
-_t("zh_CN", {
-    "nav.next":         "下一步",
-    "nav.back":         "上一步",
-    "nav.install":      "安装",
-    "nav.reboot":       "立即重启",
-    "nav.save_log":     "保存日志",
-    "nav.close":        "关闭",
 
-    "welcome.title":    "欢迎使用 AnduinOS",
-    "welcome.subtitle": "选择您的语言以开始安装",
+def _normalize_locale(locale_name: object) -> str:
+    if not isinstance(locale_name, str):
+        return ""
+    normalized = locale_name.strip().replace("-", "_")
+    return normalized.split("@", 1)[0].split(".", 1)[0]
 
-    "keyboard.title":   "键盘布局",
-    "keyboard.subtitle":"确认您的键盘布局",
-    "keyboard.test":    "在此测试键盘…",
 
-    "disk.title":       "选择安装磁盘",
-    "disk.subtitle":    "选择要安装 AnduinOS 的磁盘",
-    "disk.warning_small": "该磁盘小于 20 GB，空间不足可能导致安装失败。",
-    "disk.warning_erase": "所选磁盘上的所有数据将被永久清除。",
-    "disk.column_disk": "磁盘",
-    "disk.column_size": "大小",
-    "disk.no_disks":    "未找到合适的磁盘。",
-    "disk.live_usb":    "（Live USB — 已排除）",
+def _load_configuration() -> tuple[
+    tuple[Language, ...], dict[str, InputMethod], str, dict[str, str],
+    dict[str, str], frozenset[str],
+]:
+    path = _config_path()
+    try:
+        root = _object(json.loads(path.read_text(encoding="utf-8")), "root")
+    except (OSError, json.JSONDecodeError) as error:
+        raise RuntimeError(
+            f"Cannot load installer language policy: {path}"
+        ) from error
+    _exact_fields(
+        root,
+        {
+            "schema_version", "default_language", "locale_aliases",
+            "rtl_languages", "keyboard_layouts", "input_methods",
+            "languages",
+        },
+        "root",
+    )
+    if root["schema_version"] != _CONFIG_SCHEMA_VERSION:
+        raise RuntimeError("Unsupported installer language-policy schema")
 
-    "user.title":       "用户账户",
-    "user.subtitle":    "创建您的用户账户",
-    "user.full_name":   "全名",
-    "user.username":    "用户名",
-    "user.password":    "密码",
-    "user.hostname":    "计算机名",
-    "user.show_password": "显示密码",
-    "user.pass_too_short": "密码至少需要 6 个字符。",
-    "user.name_invalid": "用户名只能包含小写字母、数字、下划线和连字符。",
-    "user.host_invalid": "计算机名包含无效字符。",
+    methods_data = _object(root["input_methods"], "input_methods")
+    raw_keyboard_layouts = _object(
+        root["keyboard_layouts"], "keyboard_layouts"
+    )
+    keyboard_layouts: dict[str, str] = {}
+    for layout, raw_name in raw_keyboard_layouts.items():
+        if not isinstance(layout, str) or not _TOKEN_RE.fullmatch(layout):
+            raise RuntimeError(f"Invalid keyboard layout id: {layout!r}")
+        keyboard_layouts[layout] = _nonempty_string(
+            raw_name, f"keyboard_layouts.{layout}"
+        )
+    if not keyboard_layouts:
+        raise RuntimeError("keyboard_layouts must not be empty")
 
-    "tz.title":         "选择时区",
-    "tz.subtitle":      "选择您的位置以设置系统时钟",
-    "tz.search":        "搜索时区…",
+    methods: dict[str, InputMethod] = {}
+    for method_id, raw_method in methods_data.items():
+        if not isinstance(method_id, str) or not _TOKEN_RE.fullmatch(method_id):
+            raise RuntimeError(f"Invalid input-method id: {method_id!r}")
+        method = _object(raw_method, f"input_methods.{method_id}")
+        _exact_fields(
+            method,
+            {
+                "display_name", "language_name", "desktop_source", "packages",
+                "required_paths",
+            },
+            f"input_methods.{method_id}",
+        )
+        display_name = _nonempty_string(
+            method["display_name"], f"{method_id}.display_name"
+        )
+        language_name = _nonempty_string(
+            method["language_name"], f"{method_id}.language_name"
+        )
+        packages = _string_list(method["packages"], f"{method_id}.packages")
+        if any(not _TOKEN_RE.fullmatch(package) for package in packages):
+            raise RuntimeError(f"Unsafe input-method token in {method_id}")
 
-    "summary.title":    "准备安装",
-    "summary.subtitle": "请在继续前确认您的选择",
-    "summary.lang":     "语言",
-    "summary.keyboard": "键盘",
-    "summary.disk":     "目标磁盘",
-    "summary.user":     "用户",
-    "summary.hostname": "计算机名",
-    "summary.timezone": "时区",
-    "summary.warning":  "⚠ 这将清除所选磁盘上的所有数据。此操作不可撤销。",
+        raw_desktop_source = method["desktop_source"]
+        desktop_source = None
+        if raw_desktop_source is not None:
+            source = _object(
+                raw_desktop_source, f"input_methods.{method_id}.desktop_source"
+            )
+            _exact_fields(
+                source,
+                {"type", "id"},
+                f"input_methods.{method_id}.desktop_source",
+            )
+            source_type = _nonempty_string(
+                source["type"], f"{method_id}.desktop_source.type"
+            )
+            source_id = _nonempty_string(
+                source["id"], f"{method_id}.desktop_source.id"
+            )
+            if (
+                not _TOKEN_RE.fullmatch(source_type)
+                or not _SOURCE_ID_RE.fullmatch(source_id)
+            ):
+                raise RuntimeError(
+                    f"Unsafe desktop input source in {method_id}"
+                )
+            desktop_source = DesktopInputSource(source_type, source_id)
 
-    "progress.title":   "正在安装 AnduinOS",
-    "progress.subtitle":"请不要关闭计算机",
-    "progress.partition": "正在创建分区…",
-    "progress.format":  "正在格式化分区…",
-    "progress.mount":   "正在挂载文件系统…",
-    "progress.copy":    "正在复制系统文件…",
-    "progress.config":  "正在配置系统…",
-    "progress.grub":    "正在安装引导程序…",
-    "progress.post":    "正在执行安装后任务…",
-    "progress.fstab":   "正在生成 fstab…",
-    "progress.locale":  "正在生成本地化配置…",
-    "progress.user_cfg":"正在创建用户账户…",
-    "progress.mirror":  "正在配置 APT 镜像源…",
-    "progress.rime":    "正在设置中文输入法…",
-    "progress.cleanup": "正在清理…",
-    "progress.done":    "安装完成！",
-    "progress.failed":  "安装失败",
-    "progress.error_detail": "安装过程中发生错误。您可以保存日志以便调试。",
+        raw_path_values = _string_list(
+            method["required_paths"], f"{method_id}.required_paths"
+        )
+        path_values = tuple(
+            _relative_path(item, f"{method_id}.required_paths")
+            for item in raw_path_values
+        )
 
-    "done.title":       "安装完成",
-    "done.subtitle":    "请移除安装介质并重新启动计算机",
-    "done.error_title": "安装失败",
-    "done.error_subtitle": "安装过程中出现了问题",
-})
+        methods[method_id] = InputMethod(
+            method_id,
+            display_name,
+            language_name,
+            desktop_source,
+            packages,
+            path_values,
+        )
+
+    languages_data = root["languages"]
+    if not isinstance(languages_data, list) or not languages_data:
+        raise RuntimeError("languages must be a non-empty list")
+    languages: list[Language] = []
+    for index, raw_language in enumerate(languages_data):
+        language = _object(raw_language, f"languages[{index}]")
+        _exact_fields(
+            language,
+            {
+                "code", "english_name", "native_name", "locale", "keyboard",
+                "language_pack_code", "timezone", "recommended_input_methods",
+            },
+            f"languages[{index}]",
+        )
+        values = {
+            key: _nonempty_string(language[key], f"languages[{index}].{key}")
+            for key in (
+                "code", "english_name", "native_name", "locale", "keyboard",
+                "language_pack_code", "timezone",
+            )
+        }
+        if not _TOKEN_RE.fullmatch(values["language_pack_code"]):
+            raise RuntimeError(
+                f"Invalid language-pack code in languages[{index}]"
+            )
+        if values["keyboard"] not in keyboard_layouts:
+            raise RuntimeError(
+                f"languages[{index}] references unknown keyboard layout "
+                f"{values['keyboard']!r}"
+            )
+        input_method_ids = _string_list(
+            language["recommended_input_methods"],
+            f"languages[{index}].recommended_input_methods",
+            allow_empty=True,
+        )
+        unknown_input_methods = set(input_method_ids) - set(methods)
+        if unknown_input_methods:
+            raise RuntimeError(
+                f"languages[{index}] references unknown input method "
+                f"{sorted(unknown_input_methods)!r}"
+            )
+        languages.append(
+            Language(**values, recommended_input_methods=input_method_ids)
+        )
+    codes = [language.code for language in languages]
+    locales = [language.locale for language in languages]
+    if len(codes) != len(set(codes)) or len(locales) != len(set(locales)):
+        raise RuntimeError("Language codes and locales must be unique")
+    default_language = _nonempty_string(
+        root["default_language"], "default_language"
+    )
+    if default_language not in codes:
+        raise RuntimeError("default_language references an unknown language")
+    rtl_languages = frozenset(
+        _string_list(root["rtl_languages"], "rtl_languages")
+    )
+    unknown_rtl_languages = rtl_languages - set(codes)
+    if unknown_rtl_languages:
+        raise RuntimeError(
+            "rtl_languages references unknown languages: "
+            + ", ".join(sorted(unknown_rtl_languages))
+        )
+    raw_aliases = _object(root["locale_aliases"], "locale_aliases")
+    aliases: dict[str, str] = {}
+    for alias, language_code in raw_aliases.items():
+        normalized_alias = _normalize_locale(alias)
+        if not normalized_alias or normalized_alias in aliases:
+            raise RuntimeError(f"Invalid or duplicate locale alias: {alias!r}")
+        if language_code not in codes:
+            raise RuntimeError(
+                f"Locale alias {alias!r} references an unknown language"
+            )
+        aliases[normalized_alias] = language_code
+    return (
+        tuple(languages), methods, default_language, aliases,
+        keyboard_layouts, rtl_languages,
+    )
+
+
+(
+    LANGUAGES,
+    INPUT_METHODS,
+    DEFAULT_LANGUAGE,
+    LOCALE_ALIASES,
+    KEYBOARD_LAYOUTS,
+    RTL_LANGUAGES,
+) = (
+    _load_configuration()
+)
+DEFAULT_TIMEZONES = {language.code: language.timezone for language in LANGUAGES}
+DEFAULT_LOCALE = next(
+    language.locale for language in LANGUAGES
+    if language.code == DEFAULT_LANGUAGE
+)
+DEFAULT_KEYBOARD = next(
+    language.keyboard for language in LANGUAGES
+    if language.code == DEFAULT_LANGUAGE
+)
+DEFAULT_TIMEZONE = DEFAULT_TIMEZONES[DEFAULT_LANGUAGE]
+
+
+def default_timezone(code: str) -> str:
+    """Return the maintained representative timezone for a language."""
+    return DEFAULT_TIMEZONES.get(code, DEFAULT_TIMEZONES[DEFAULT_LANGUAGE])
+
+
+def input_method(method_id: str | None) -> InputMethod | None:
+    """Resolve a validated installer-owned input-method policy."""
+    if method_id is None:
+        return None
+    return INPUT_METHODS.get(method_id)
+
+
+def language_pack_packages(language: Language) -> tuple[str, ...]:
+    """Return the exact Ubuntu language-support packages for a language."""
+    code = language.language_pack_code
+    return (
+        f"language-pack-{code}",
+        f"language-pack-{code}-base",
+        f"language-pack-gnome-{code}",
+        f"language-pack-gnome-{code}-base",
+    )
+
+
+_LANGUAGE_BY_CODE = {language.code: language for language in LANGUAGES}
+_LANGUAGE_BY_LOCALE = {
+    language.locale.removesuffix(".UTF-8"): language for language in LANGUAGES
+}
+_LANGUAGE_BY_ALIAS = {
+    alias: _LANGUAGE_BY_CODE[code] for alias, code in LOCALE_ALIASES.items()
+}
+_LOCALE_ASSIGNMENT_RE = re.compile(
+    r"""^\s*(?:export\s+)?(?P<key>LC_ALL|LC_MESSAGES|LANG)\s*=\s*
+        (?P<quote>["']?)(?P<value>[^"'#\s]+)(?P=quote)\s*(?:\#.*)?$""",
+    re.VERBOSE,
+)
+
+
+def language_for_locale(locale_name: str | None) -> Language | None:
+    """Map a locale spelling using only the declarative language policy."""
+    if not locale_name:
+        return None
+    normalized = _normalize_locale(locale_name)
+    if not normalized or normalized.upper() in {"C", "POSIX"}:
+        return None
+
+    # Preserve the explicitly supported regional variants first.
+    exact = _LANGUAGE_BY_LOCALE.get(normalized)
+    if exact is not None:
+        return exact
+    exact = _LANGUAGE_BY_CODE.get(normalized)
+    if exact is not None:
+        return exact
+    alias = _LANGUAGE_BY_ALIAS.get(normalized)
+    if alias is not None:
+        return alias
+
+    language_code = normalized.partition("_")[0].lower()
+    exact_language = _LANGUAGE_BY_CODE.get(language_code)
+    if exact_language is not None:
+        return exact_language
+    return _LANGUAGE_BY_ALIAS.get(language_code)
+
+
+def detect_system_language(
+    environ: Mapping[str, str] | None = None,
+    locale_file: Path = Path("/etc/default/locale"),
+) -> Language:
+    """Detect the Live session language, with a deterministic English fallback."""
+    environment = os.environ if environ is None else environ
+    for key in ("LC_ALL", "LC_MESSAGES", "LANG"):
+        language = language_for_locale(environment.get(key))
+        if language is not None:
+            return language
+
+    try:
+        assignments = _read_locale_assignments(locale_file)
+    except OSError:
+        assignments = {}
+    for key in ("LC_ALL", "LC_MESSAGES", "LANG"):
+        language = language_for_locale(assignments.get(key))
+        if language is not None:
+            return language
+    return _LANGUAGE_BY_CODE[DEFAULT_LANGUAGE]
+
+
+def _read_locale_assignments(path: Path) -> dict[str, str]:
+    assignments: dict[str, str] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        match = _LOCALE_ASSIGNMENT_RE.fullmatch(line)
+        if match:
+            assignments[match.group("key")] = match.group("value")
+    return assignments

@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-rime</PackageName>
-    <PackageVersion>2.0.1-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default Chinese input method (rime-ice configuration for ibus-rime)</PackageDescription>
     <Section>utils</Section>
@@ -9,24 +9,29 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <PrebuildCommand Run="bash scripts/prebuild-check.sh" />
   </PropertyGroup>
 
   <ItemGroup>
     <Dependency Include="ibus-rime" />
-    <Dependency Include="language-selector-common" />
+    <!-- The schema uses Lua processors, translators and filters. In
+         particular, corrector.lua removes the spelling_hints comments from
+         ordinary candidates. Without this plugin every candidate leaks its
+         internal pinyin annotation into the IBus candidate list. -->
+    <Dependency Include="librime-plugin-lua" />
   </ItemGroup>
 
   <ItemGroup>
     <IncludeFolder Include="assets/" Target="/usr/share/rime-data/" />
-    <IncludeFile Include="assets/pkg_depends" Target="/usr/share/language-selector/data/pkg_depends" Mode="644" />
+    <IncludeFolder Include="defaults/" Target="/usr/share/rime-data/" />
   </ItemGroup>
 
   <ItemGroup>
-    <PreInstallScript Include="scripts/preinst.sh" />
-    <PostRemoveScript Include="scripts/postrm.sh" />
+    <!-- One-release migration: remove diversions created by <= 2.0.1-1. -->
+    <PostInstallScript Include="scripts/postinst.sh" />
   </ItemGroup>
 </Project>

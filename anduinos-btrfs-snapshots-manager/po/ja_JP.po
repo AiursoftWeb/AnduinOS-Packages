@@ -1,0 +1,1821 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-btrfs-snapshots-manager 0.1.0\n"
+"POT-Creation-Date: 2026-08-06 00:00+0800\n"
+"PO-Revision-Date: 2026-08-06 00:00+0800\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "A critical threshold is failing now"
+msgstr "現在、重大なしきい値の判定が異常です"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid ""
+"A limited balance improves allocation layout. It does not check file "
+"integrity or guarantee that visible free space will increase."
+msgstr ""
+"制限付きバランスは配置レイアウトを改善します。ファイルの整合性をチェックしたり、表示される空き領域が増加することを保証したりするものではありません。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"A limited balance only relocates data and metadata block groups that are at "
+"most 50% full."
+msgstr "制限付きバランスでは、使用率が 50% 以下のデータおよびメタデータのブロックグループのみが再配置されます。"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "A scheduled Home snapshot will start in 10 seconds."
+msgstr "スケジュールされたホームスナップショットが 10 秒後に開始されます。"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "A scheduled system snapshot will start in 10 seconds."
+msgstr "スケジュールされたシステムスナップショットが 10 秒後に開始されます。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "A threshold was exceeded in the past"
+msgstr "過去に閾値を超えました"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "About Disk Snapshots Manager"
+msgstr "ディスクスナップショットマネージャーについて"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "About {0} remaining"
+msgstr "残り約 {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Actual file contents"
+msgstr "実際のファイル内容"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Advanced retention settings"
+msgstr "詳細な保持設定"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Advanced Settings"
+msgstr "詳細設定"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "After Package Change"
+msgstr "パッケージ変更後"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "All system drives look healthy"
+msgstr "すべてのシステムドライブが正常です"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Allow automatic cleanup"
+msgstr "自動クリーンアップを許可する"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Always on"
+msgstr "常時有効"
+
+#: src/btrfs-snapshots-manager/src/application.rs
+msgid "AnduinOS Team"
+msgstr "AnduinOS チーム"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Applied automatically to newly written data"
+msgstr "新しく書き込まれたデータに自動的に適用されます"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "At a Glance"
+msgstr "概要"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Attention"
+msgstr "注意が必要です"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Attribute thresholds"
+msgstr "属性の閾値"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic"
+msgstr "自動"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic 60-second countdown after preparation"
+msgstr "準備完了後、自動的に 60 秒間カウントダウンします"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic cleanup"
+msgstr "自動クリーンアップ"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Cleanup Complete"
+msgstr "自動クリーンアップが完了しました"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic Home Snapshots"
+msgstr "ホームの自動スナップショット"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Snapshot Failed"
+msgstr "自動スナップショットに失敗しました"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Automatic snapshot service is available"
+msgstr "自動スナップショットサービスが利用可能です"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Automatic snapshot service needs attention"
+msgstr "自動スナップショットサービスには注意が必要です"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic Snapshot Starting"
+msgstr "自動スナップショットを開始中"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots"
+msgstr "自動スナップショット"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic Snapshots"
+msgstr "自動スナップショット"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Automatic System Snapshot Created"
+msgstr "自動システムスナップショットが作成されました"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Automatic System Snapshots"
+msgstr "自動システムスナップショット"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Available spare capacity"
+msgstr "利用可能な予備容量"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Available spare is below its threshold"
+msgstr "利用可能な予備領域がしきい値を下回っています"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Average rate: {0}/s"
+msgstr "平均速度: {0}/s"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Background Service"
+msgstr "バックグラウンドサービス"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Based on the manufacturer endurance counter"
+msgstr "メーカーの耐久度カウンターに基づきます"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Before Package Change"
+msgstr "パッケージ変更前"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Before Rollback"
+msgstr "ロールバック前"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Block groups completed: {0} of about {1}"
+msgstr "完了したブロックグループ: およそ {1} のうち {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Block groups considered: {0}"
+msgstr "対象となったブロックグループ: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Browse"
+msgstr "参照"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Browse earlier Personal Files versions of this item"
+msgstr "このアイテムの以前の個人ファイルのバージョンを参照する"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Browse Files"
+msgstr "ファイルを参照"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Browse files in this snapshot"
+msgstr "このスナップショットのファイルを参照"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Browse System Snapshot"
+msgstr "システムスナップショットを参照"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Browse This Folder’s History…"
+msgstr "このフォルダの履歴を参照…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Btrfs could not complete Home file defragmentation."
+msgstr "Btrfs はホーム ファイルのデフラグを完了できませんでした。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs could not complete the limited balance."
+msgstr "Btrfs は制限付きバランスを完了できませんでした。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs did not provide a completed balance result."
+msgstr "Btrfs から完了したバランス結果が返されませんでした。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Btrfs did not provide a completed defragmentation result."
+msgstr "Btrfs から完了したデフラグ結果が返されませんでした。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs did not provide a completed scrub result."
+msgstr "Btrfs から完了済みのスクラブ結果が返されませんでした。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs did not start a new integrity check"
+msgstr "Btrfs は新しい整合性チェックを開始しませんでした。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Btrfs did not start a new maintenance task"
+msgstr "Btrfs は新しいメンテナンスタスクを開始しませんでした。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Btrfs does not provide an on/off real-time deduplication switch. Tools such "
+"as duperemove and BEES use different strategies, resource limits, and scan "
+"scopes. Disk Snapshots Manager will not silently install or run one without "
+"a complete policy."
+msgstr ""
+"Btrfs にはオン/オフのリアルタイム重複排除スイッチは提供されていません。duperemove や BEES "
+"などのツールは、異なる戦略、リソース制限、スキャン範囲を使用します。Disk Snapshots Manager "
+"は、完全なポリシーがない限り、それらをサイレントにインストールまたは実行することはありません。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs examined {0} block groups and relocated {1}."
+msgstr "Btrfs は {0} 個のブロックグループを調べ、{1} を再配置しました。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Btrfs finished relocating underused data and metadata block groups."
+msgstr "Btrfs は使用率の低いデータおよびメタデータのブロックグループの再配置を完了しました。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"Btrfs finished rewriting eligible file extents below /home with ZSTD "
+"compression."
+msgstr "Btrfs は、/home 以下の対象となるファイルのエクステントを ZSTD 圧縮で書き込み直す処理を完了しました。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"Btrfs found errors that could not be repaired. Back up important files and "
+"investigate the storage device."
+msgstr "Btrfs で修復できないエラーが見つかりました。重要なファイルをバックアップし、ストレージデバイスを調査してください。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Btrfs maintenance status is unavailable"
+msgstr "Btrfs メンテナンスのステータスが利用できません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+msgid "Btrfs operation failed"
+msgstr "Btrfs の操作に失敗しました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs repaired {0} damaged copies using valid redundant data."
+msgstr "Btrfs は有効な冗長データを使用して、{0} 個の破損したコピーを修復しました。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+msgid "Btrfs request completed"
+msgstr "Btrfs リクエストが完了しました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Btrfs will scan existing subvolumes in the background. Size statistics may "
+"remain incomplete until the scan finishes."
+msgstr "Btrfs は既存のサブボリュームをバックグラウンドでスキャンします。スキャンが完了するまで、サイズ統計が不完全な場合があります。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Calculating snapshot size…"
+msgstr "スナップショットのサイズを計算中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Cancel Check"
+msgstr "確認をキャンセル"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancel Rollback"
+msgstr "ロールバックをキャンセル"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Cancelling rollback…"
+msgstr "ロールバックをキャンセル中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Cancelling…"
+msgstr "キャンセル中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Change…"
+msgstr "変更…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Check file system integrity"
+msgstr "ファイルシステムの整合性を確認する"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Check Snapshot Availability"
+msgstr "スナップショットの利用可否を確認"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checked: {0}"
+msgstr "チェック済み: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checking File System Integrity"
+msgstr "ファイルシステムの整合性を確認中"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking recovery state…"
+msgstr "復旧状態を確認中…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking rollback safety…"
+msgstr "ロールバックの安全性を確認中…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Checking snapshot…"
+msgstr "スナップショットを確認中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Checking system storage…"
+msgstr "システムストレージを確認中…"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checking…"
+msgstr "確認中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Checksum errors: {0}"
+msgstr "チェックサムエラー: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Choose a local filesystem destination."
+msgstr "ローカルファイルシステムの宛先を選択してください。"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid ""
+"Choose an earlier version to browse or recover. Your current files will not "
+"be changed automatically."
+msgstr "参照または復元する以前のバージョンを選択してください。現在のファイルは自動的に変更されません。"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Choose Where to Recover This Folder"
+msgstr "このフォルダの復元先を選択してください"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Close"
+msgstr "閉じる"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Content-based deduplication"
+msgstr "コンテンツベースの重複排除"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Copy This Folder…"
+msgstr "このフォルダをコピー…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Corrected errors: {0}"
+msgstr "修正されたエラー: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Could Not Browse History"
+msgstr "履歴の参照に失敗しました"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Could Not Browse System Snapshot"
+msgstr "システムスナップショットの参照に失敗しました"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Could Not Save Settings"
+msgstr "設定の保存に失敗しました"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create"
+msgstr "作成"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Create a system snapshot after successful changes"
+msgstr "変更が成功した後にシステムスナップショットを作成する"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Create a system snapshot before changes"
+msgstr "変更前にシステムスナップショットを作成する"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create a {0} now"
+msgstr "{0} を今すぐ作成する"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create one now or turn on automatic snapshots."
+msgstr "今すぐ作成するか、自動スナップショットを有効にします。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create Snapshot Now"
+msgstr "今すぐスナップショットを作成"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Create snapshots on a schedule."
+msgstr "スケジュールに従ってスナップショットを作成します。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Create {0}"
+msgstr "{0} を作成"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Creating"
+msgstr "作成中"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Creating snapshot…"
+msgstr "スナップショットを作成中…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Current system"
+msgstr "現在のシステム"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Damaged"
+msgstr "破損"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Days"
+msgstr "日"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Deduplication needs an engine"
+msgstr "重複排除にはエンジンが必要です"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Defragment"
+msgstr "デフラグ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Defragment Home files"
+msgstr "ホーム内のファイルをデフラグ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Defragment Home files?"
+msgstr "ホーム内のファイルをデフラグしますか？"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"Defragmentation can increase disk usage when files share data with snapshots"
+" or reflinks."
+msgstr "ファイルがスナップショットやリフリンクとデータを共有している場合、デフラグによってディスク使用量が増加する可能性があります。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"Defragmentation rewrites file extents and can increase disk usage by "
+"breaking shared snapshot or reflink data."
+msgstr ""
+"デフラグはファイルのエクステントを書き換えるため、共有されているスナップショットまたはリフリンク "
+"データが分割され、ディスクの使用量が増加する可能性があります。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Defragment…"
+msgstr "デフラグ…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete"
+msgstr "削除"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Selected"
+msgstr "選択した項目を削除"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Snapshot"
+msgstr "スナップショットを削除"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete Snapshots?"
+msgstr "スナップショットを削除しますか？"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Delete {0} selected snapshot(s)? This cannot be undone."
+msgstr "{0} 個選択したスナップショットを削除しますか？ この操作は元に戻すことができません。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting"
+msgstr "削除中"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting snapshots…"
+msgstr "スナップショットを削除中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Device reliability is degraded"
+msgstr "デバイスの信頼性が低下しています"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Device report"
+msgstr "デバイスレポート"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Diagnostic counters"
+msgstr "診断カウンター"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable"
+msgstr "無効にする"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable quota accounting?"
+msgstr "クォータアカウンティングを無効にしますか？"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disabled"
+msgstr "無効"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Disable…"
+msgstr "無効にする…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disk Health"
+msgstr "ディスクの健全性"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Disk health is unavailable"
+msgstr "ディスクの健全性が利用できません"
+
+#: src/btrfs-snapshots-manager/src/application.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Disk Snapshots Manager"
+msgstr "ディスクスナップショットマネージャー"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Disk Snapshots Manager requires the standard AnduinOS Btrfs layout."
+msgstr "Disk Snapshots Manager には、標準的な AnduinOS Btrfs レイアウトが必要です。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Duration: {0}"
+msgstr "所要時間: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Elapsed: {0}"
+msgstr "経過時間: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable"
+msgstr "有効にする"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable quota accounting?"
+msgstr "クォータアカウンティングを有効にしますか？"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enabled"
+msgstr "有効化済み"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enabled · initial scan in progress"
+msgstr "有効化済み · 初期スキャンを実行中"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Enable…"
+msgstr "有効にする…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Error log entries"
+msgstr "エラーログのエントリ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Errors detected so far: {0}"
+msgstr "これまでに検出されたエラー: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Estimated SSD life remaining"
+msgstr "推定 SSD 寿命残り"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Examining underused data and metadata block groups…"
+msgstr "使用率の低いデータおよびメタデータのブロックグループを確認中…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Exclusive Data"
+msgstr "排他データ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory"
+msgstr "工場出荷時設定"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Failing"
+msgstr "失敗中"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Failure notifications"
+msgstr "失敗通知"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "File History"
+msgstr "ファイル履歴"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "File Layout"
+msgstr "ファイルレイアウト"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "File System"
+msgstr "ファイルシステム"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "File system structure (directories, file names, and more)"
+msgstr "ファイルシステム構造（ディレクトリ、ファイル名など）"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Files Recovered"
+msgstr "復元されたファイル"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "Find files that existed earlier in this Personal Files folder"
+msgstr "この「個人ファイル」フォルダ内に以前存在していたファイルを検索する"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Folder History"
+msgstr "フォルダ履歴"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Folder · {0}"
+msgstr "フォルダ · {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Forever"
+msgstr "永久に保持する"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Four copies on separate devices · damaged copies can be repaired "
+"automatically"
+msgstr "別々のデバイスに 4 コピー · 破損したコピーは自動的に修復されます"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Healthy"
+msgstr "正常"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Cancelled"
+msgstr "ホーム デフラグがキャンセルされました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Complete"
+msgstr "ホームのデフラグが完了しました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Failed"
+msgstr "ホームのデフラグに失敗しました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home Defragmentation Result Unavailable"
+msgstr "ホーム デフラグの結果が利用できません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Home file defragmentation was cancelled before it finished."
+msgstr "ホーム内のファイルのデフラグは、完了前にキャンセルされました。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Home snapshot"
+msgstr "ホームスナップショット"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Home Snapshot Created"
+msgstr "ホームスナップショットが作成されました"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Hours"
+msgstr "時間"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Imported"
+msgstr "インポート済み"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Incomplete"
+msgstr "不完全です"
+
+#: src/btrfs-snapshots-manager/src/ui/information.rs
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Information"
+msgstr "情報"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Integrity"
+msgstr "整合性"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Cancelled"
+msgstr "整合性チェックがキャンセルされました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Complete"
+msgstr "整合性チェックが完了しました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Complete — Repairs Made"
+msgstr "整合性チェックが完了しました — 修復が実行されました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Result Unavailable"
+msgstr "整合性チェックの結果が利用できません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Problems Found"
+msgstr "整合性の問題が見つかりました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Interface CRC errors"
+msgstr "インターフェース CRC エラー"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Items processed: {0}"
+msgstr "処理されたアイテム: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Keep all snapshots for"
+msgstr "全スナップショットの保持期間:"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Keep Forever"
+msgstr "永久に保持する"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Kernel"
+msgstr "カーネル"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Kernel {0}"
+msgstr "カーネル {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Limited to one notification per minute"
+msgstr "1 分間に 1 回の通知に制限されます"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Live information reported by the mounted Btrfs file system."
+msgstr "マウントされた Btrfs ファイルシステムから報告されるライブ情報。"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Loading folder…"
+msgstr "フォルダを読み込んでいます…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Loading snapshots…"
+msgstr "スナップショットを読み込んでいます…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Looking for earlier versions…"
+msgstr "以前のバージョンを検索中…"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Main Menu"
+msgstr "メインメニュー"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Maintenance"
+msgstr "メンテナンス"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Manual"
+msgstr "手動"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Measured"
+msgstr "測定済み"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Media errors"
+msgstr "メディアエラー"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Mirrored and striped across devices · redundant copies are available for "
+"repair"
+msgstr "複数のデバイスにミラーリングおよびストライピング · 修復用の冗長コピーがあります"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Name"
+msgstr "名前"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Name (optional)"
+msgstr "名前（省略可）"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "No earlier version was found"
+msgstr "以前のバージョンが見つかりませんでした"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "No errors detected so far"
+msgstr "これまでにエラーは検出されていません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"No file system integrity errors were found in allocated data and metadata."
+msgstr "割り当てられたデータとメタデータにファイルシステムの整合性エラーは見つかりませんでした。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "No important S.M.A.R.T. warning signs were detected"
+msgstr "S.M.A.R.T. の重要な警告サインは検出されませんでした"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No matching snapshots"
+msgstr "一致するスナップショットがありません"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No snapshots selected"
+msgstr "スナップショットが選択されていません"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "No snapshots yet"
+msgstr "スナップショットはまだありません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "No system storage device found"
+msgstr "システムストレージデバイスが見つかりません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "None (0x00)"
+msgstr "なし (0x00)"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Not calculated"
+msgstr "計算されていません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Not managed here · Btrfs requires a separate deduplication engine"
+msgstr "このアプリでは管理されません · Btrfs には別の重複排除エンジンが必要です"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notifications"
+msgstr "通知"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify after any snapshot succeeds"
+msgstr "いずれかのスナップショット処理が成功した後に通知する"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify after automatic cleanup removes snapshots"
+msgstr "自動クリーンアップでスナップショットが削除された後に通知する"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Notify before a scheduled snapshot"
+msgstr "スケジュールされたスナップショットの前に通知する"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "NVMe critical warning"
+msgstr "NVMe の重大な警告"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Offline uncorrectable sectors"
+msgstr "オフラインで修復できないセクター"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old Home snapshot(s) were removed."
+msgstr "古いホームスナップショットが削除されました。"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old system snapshot(s) and"
+msgstr "古いシステムスナップショットと"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "old system snapshot(s) were removed."
+msgstr "古いシステムスナップショットが削除されました。"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Older snapshots are kept less frequently to save disk space."
+msgstr "ディスク容量を節約するため、古いスナップショットほど間隔を空けて保持されます。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"One copy · damage can be detected, but there is no spare copy for repair"
+msgstr "1 コピー · 破損の検出は可能ですが、修復用の予備コピーはありません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "One or more reliability indicators should be reviewed"
+msgstr "信頼性指標のいずれかを再確認する必要があります"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Only /home · snapshot storage is excluded"
+msgstr "/home のみ · スナップショットの保存領域は除外されます"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid ""
+"Only block groups at most 50% full will be relocated. The operation can use "
+"significant disk bandwidth but can be cancelled safely."
+msgstr ""
+"50% 以下で使用されているブロックグループのみが再配置されます。この操作は大きなディスク帯域幅を使用する可能性がありますが、安全にキャンセルできます。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Only partial S.M.A.R.T. data was returned"
+msgstr "S.M.A.R.T. データの一部のみが返されました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid ""
+"Only physical drives backing the current root Btrfs file system are shown."
+msgstr "現在のルート Btrfs ファイルシステムを支えている物理ドライブのみが表示されます。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Only the display name changes."
+msgstr "表示名のみが変更されます。"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Open"
+msgstr "開く"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Operation Failed"
+msgstr "操作に失敗しました"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Otherwise automatic cleanup may remove it later."
+msgstr "それ以外の場合、自動クリーンアップによって後で削除される可能性があります。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Overall health"
+msgstr "全体の健全性"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Package Changes"
+msgstr "パッケージの変更"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Parent folder"
+msgstr "親フォルダ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Paused"
+msgstr "一時停止中"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Pending sectors"
+msgstr "保留中のセクター"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Permanently protected"
+msgstr "恒久的に保護済み"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Persistent memory is read-only"
+msgstr "永続メモリは読み取り専用です"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Personal files"
+msgstr "個人ファイル"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Personal Files Recovery"
+msgstr "個人ファイルの復元"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Personal History Unavailable"
+msgstr "個人履歴は利用できません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Power cycles"
+msgstr "電源サイクル"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Powered on"
+msgstr "電源オン"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Prepare a safe system rollback"
+msgstr "安全なシステムロールバックを準備する"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Prepare and Restart"
+msgstr "準備して再起動する"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing rollback to {0}…"
+msgstr "{0} へのロールバックを準備中…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing safe rollback…"
+msgstr "安全なロールバックを準備中…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Preparing the rollback will arm recovery immediately and automatically "
+"restart this computer within 60 seconds. Save your work before continuing."
+msgstr ""
+"ロールバックを準備すると復旧処理が直ちに有効になり、このコンピューターは 60 秒以内に自動的に再起動します。続行する前に作業を保存してください。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Properties"
+msgstr "プロパティ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Protected while the rollback is pending"
+msgstr "ロールバックが保留中の間は保護されています"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Quota accounting provides shared and exclusive sizes for subvolumes, but its"
+" initial scan can take time."
+msgstr "クォータアカウンティングによりサブボリュームの共有サイズと排他サイズを取得できますが、初回のスキャンには時間がかかる場合があります。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Read errors: {0}"
+msgstr "読み取りエラー: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Reading allocated Btrfs data and metadata…"
+msgstr "割り当てられた Btrfs データとメタデータを読み取り中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reading the most important reliability indicators"
+msgstr "最も重要な信頼性指標を読み取り中"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Ready"
+msgstr "準備完了"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Ready to check"
+msgstr "確認の準備ができました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Ready to defragment Home files"
+msgstr "ホーム内のファイルをデフラグする準備ができました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Ready to optimize allocation"
+msgstr "割り当ての最適化準備完了"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reallocated sectors"
+msgstr "再配置済みセクター"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Reclaim underused block groups"
+msgstr "使用率の低いブロックグループを回収する"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Recommended about once a month"
+msgstr "約 1 か月に 1 回が推奨されます"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Recorded snapshot kernel"
+msgstr "スナップショットに記録されたカーネル"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover Historical File"
+msgstr "履歴ファイルの復元"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover Personal Files"
+msgstr "個人ファイルの復元"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover This Folder…"
+msgstr "このフォルダを復元…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovering Files"
+msgstr "ファイルを復元中"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovering files…"
+msgstr "ファイルを復元中…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recovery Failed"
+msgstr "復元に失敗しました"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Recovery for {0} is in an unknown state ({1})."
+msgstr "{0} の復旧状態が不明です ({1})。"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Recover…"
+msgstr "復元…"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Refresh file history"
+msgstr "ファイル履歴を更新"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "Refresh snapshots"
+msgstr "スナップショットを更新"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rename"
+msgstr "名前を変更"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rename Snapshot"
+msgstr "スナップショットの名前を変更"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Renaming snapshot…"
+msgstr "スナップショットの名前を変更中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Reported uncorrectable errors"
+msgstr "修正不能なエラーが報告されました"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Requesting restart…"
+msgstr "再起動をリクエスト中…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart"
+msgstr "再起動"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart Now ({0} s)"
+msgstr "今すぐ再起動 ({0} 秒)"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restart Required — Rollback Armed"
+msgstr "再起動が必要です — ロールバックの準備が完了しました"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Retry Recovery"
+msgstr "復旧を再試行"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Return to the selected snapshot"
+msgstr "選択したスナップショットに戻る"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Review the highlighted indicators on {0} system drive(s)"
+msgstr "{0} 個のシステムドライブでハイライトされたインジケーターを確認してください"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Rewriting Home file extents with ZSTD compression…"
+msgstr "ホーム内のファイルエクステントを ZSTD 圧縮で書き込み直しています…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll Back"
+msgstr "ロールバック"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll Back to {0}?"
+msgstr "{0} にロールバックしますか？"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback confirmation failed. The protected previous system is being "
+"restored."
+msgstr "ロールバックの確認に失敗しました。保護された前のシステムが復元されています。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback is armed. To prevent new system changes from being lost, this "
+"computer will restart automatically when the 60-second countdown ends. Save "
+"any open personal files now."
+msgstr ""
+"ロールバックが有効化されました。新しいシステム変更が失われるのを防ぐため、このコンピュータは 60 "
+"秒のカウントダウン終了後に自動的に再起動します。開いている個人ファイルを今すぐ保存してください。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} is being applied during startup."
+msgstr "{0} へのロールバックが起動時に適用されています。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback to {0} is ready. Restart to apply it."
+msgstr "{0} へのロールバックの準備ができました。適用するには再起動してください。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid ""
+"Rollback to {0} was applied, but system confirmation has not completed."
+msgstr "{0} へのロールバックは適用されましたが、システム確認が完了していません。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Running…"
+msgstr "実行中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. could not be read from this device"
+msgstr "S.M.A.R.T. データをこのデバイスから読み取れませんでした"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. is not available for this device"
+msgstr "S.M.A.R.T. はこのデバイスでは利用できません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. is supported but disabled on this device"
+msgstr "S.M.A.R.T. はこのデバイスでサポートされていますが、無効化されています"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "S.M.A.R.T. reports an imminent or current drive failure"
+msgstr "S.M.A.R.T. は、ドライブの故障が差し迫っているか、既に発生していることを報告しています"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Save"
+msgstr "保存"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Save Advanced Settings"
+msgstr "詳細設定を保存"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Saving…"
+msgstr "保存中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Scanning data and metadata…"
+msgstr "データとメタデータをスキャン中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid ""
+"Scrub reads allocated data and metadata, verifies checksums, and reports "
+"damage without modifying file data."
+msgstr "スクラブは割り当て済みのデータとメタデータを読み取り、チェックサムを検証し、ファイルデータを変更せずに破損を報告します。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid ""
+"Scrub verifies allocated Btrfs data and metadata. It does not test unused "
+"space or predict sudden drive failure."
+msgstr ""
+"Scrub は、割り当てられた Btrfs データとメタデータを検証します。使用されていない領域のテストや、ドライブの突然の故障の予測は行いません。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Search snapshots"
+msgstr "スナップショットを検索"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "See exactly how older snapshots are kept"
+msgstr "古いスナップショットの保持方法を詳しく確認する"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Select snapshot"
+msgstr "スナップショットを選択"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Select Snapshots"
+msgstr "スナップショットを選択"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Selected file · {0}"
+msgstr "選択したファイル · {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Shared and exclusive size statistics and any subvolume limits will be "
+"removed. Snapshots themselves are not deleted."
+msgstr "共有サイズと排他サイズの統計情報、およびサブボリュームの制限は削除されます。スナップショット自体は削除されません。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Shared Data"
+msgstr "共有データ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Size {0}"
+msgstr "サイズ {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot"
+msgstr "スナップショット"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Actions"
+msgstr "スナップショットの操作"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Check Complete"
+msgstr "スナップショットの確認が完了しました"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshot Details"
+msgstr "スナップショットの詳細"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · Folder"
+msgstr "スナップショット {0} · フォルダ"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Snapshot {0} · {1} bytes · modified {2}"
+msgstr "スナップショット {0} · {1} バイト · 変更日 {2}"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "Snapshots"
+msgstr "スナップショット"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshots are not available on this computer"
+msgstr "スナップショットはこのコンピューターでは利用できません"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Snapshots could not be loaded"
+msgstr "スナップショットを読み込めませんでした"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Solid-state drive"
+msgstr "SSD"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Some snapshots could not be loaded"
+msgstr "一部のスナップショットを読み込めませんでした"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Some system drives need attention"
+msgstr "一部のシステムドライブに注意が必要です"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Space Accounting"
+msgstr "領域使用量の集計"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Space Allocation"
+msgstr "スペース割り当て"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Cancelled"
+msgstr "スペース最適化がキャンセルされました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Complete"
+msgstr "スペース最適化が完了しました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Failed"
+msgstr "スペース最適化に失敗しました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Space Optimization Result Unavailable"
+msgstr "スペース最適化の結果が利用できません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Space usage"
+msgstr "ディスク使用量"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Spin retry count"
+msgstr "スピン再試行回数"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "SSD space reclamation"
+msgstr "SSD 領域の回収"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "Start a limited balance?"
+msgstr "制限付きバランスを開始しますか？"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Start Balance"
+msgstr "バランスを開始"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Start Scrub"
+msgstr "スクラブを開始"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Starting the integrity check…"
+msgstr "整合性チェックを開始中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Starting…"
+msgstr "開始中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Status unavailable"
+msgstr "ステータスが利用できません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Storage Behavior"
+msgstr "ストレージ動作"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Storage layout: {0}"
+msgstr "ストレージ構成: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Storage media is read-only"
+msgstr "ストレージメディアは読み取り専用です"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices with one parity block for recovery"
+msgstr "デバイス間でストライプ化され、復旧用に1つのパリティブロックが使用されます"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices with two parity blocks for recovery"
+msgstr "デバイス間でストライプ化され、復旧用に2つのパリティブロックが使用されます"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Striped across devices · no redundant copy is available for repair"
+msgstr "複数のデバイスにストライピング · 修復用の冗長コピーはありません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Subvolume quota accounting"
+msgstr "サブボリュームのクォータアカウンティング"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Superblock errors: {0}"
+msgstr "スーパーブロックエラー: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "System Drive Health"
+msgstr "システムドライブの健全性"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "System files and packages"
+msgstr "システムファイルとパッケージ"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "System Recovery"
+msgstr "システムの復元"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "system snapshot"
+msgstr "システムスナップショット"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "System Snapshot Created"
+msgstr "システムスナップショットが作成されました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "System storage"
+msgstr "システムストレージ"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Take a snapshot every"
+msgstr "スナップショットの作成間隔:"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Temperature"
+msgstr "温度"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Temperature is outside the safe range"
+msgstr "温度が安全範囲外です"
+
+#: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
+msgid "The automatic snapshot infrastructure cannot be disabled here."
+msgstr "自動スナップショットのインフラストラクチャはここで無効にできません。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The device reported an unknown warning bit"
+msgstr "デバイスから不明な警告ビットが報告されました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The drive did not provide a conclusive health result"
+msgstr "ドライブは決定的な健康状態の結果を返しませんでした"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The Home snapshot was created successfully."
+msgstr "ホームスナップショットが正常に作成されました。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "The integrity check was cancelled before it finished."
+msgstr "整合性チェックは完了する前にキャンセルされました。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+msgid "The limited balance was cancelled safely before it finished."
+msgstr "制限付きバランスは完了する前に安全にキャンセルされました。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback completed, but recovery cleanup has not completed."
+msgstr "ロールバックは完了しましたが、復旧クリーンアップが完了していません。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed. Recovery cleanup has not completed."
+msgstr "ロールバックに失敗しました。復旧クリーンアップが完了していません。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback failed: {0}"
+msgstr "ロールバックに失敗しました: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The rollback was reverted, but recovery cleanup has not completed."
+msgstr "ロールバックは取り消されましたが、復旧クリーンアップが完了していません。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The root filesystem is {0}."
+msgstr "ルートファイルシステムは {0} です。"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid ""
+"The scheduled Home snapshot could not be created. Check Disk Snapshots "
+"Manager for details."
+msgstr "スケジュールされたホームスナップショットの作成に失敗しました。詳細は Disk Snapshots Manager で確認してください。"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled Home snapshot was created successfully."
+msgstr "スケジュールされたホームスナップショットが正常に作成されました。"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid ""
+"The scheduled system snapshot could not be created. Check Disk Snapshots "
+"Manager for details."
+msgstr "スケジュールされたシステムスナップショットの作成に失敗しました。詳細はディスクスナップショットマネージャーで確認してください。"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The scheduled system snapshot was created successfully."
+msgstr "スケジュールされたシステムスナップショットが正常に作成されました。"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "The selected files were recovered successfully."
+msgstr "選択したファイルは正常に復元されました。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "The snapshot is created immediately."
+msgstr "スナップショットは直ちに作成されます。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The system drive looks healthy"
+msgstr "システムドライブは正常に動作しているようです"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "The system drive needs attention"
+msgstr "システムドライブには注意が必要です"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "The system snapshot was created successfully."
+msgstr "システムスナップショットが正常に作成されました。"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per day for"
+msgstr "次に、毎日 1 つ保持する期間:"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per month for"
+msgstr "次に、毎月 1 つ保持する期間:"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per week for"
+msgstr "次に、毎週 1 つ保持する期間:"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Then keep one per year"
+msgstr "次に、毎年 1 つ保持する"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "This folder is empty"
+msgstr "このフォルダは空です"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "This item was not present in the available Home snapshots."
+msgstr "この項目は、利用可能なホームスナップショットには含まれていませんでした。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid ""
+"This rewrites files below /home using ZSTD compression. It does not enter "
+"/.snapshots, but shared extents with existing snapshots may become private "
+"and consume more space."
+msgstr ""
+"/home 以下のファイルを ZSTD 圧縮を使用して書き込み直します。/.snapshots "
+"にはアクセスしませんが、既存のスナップショットと共有されているエクステントはプライベートになり、より多くのディスク容量を消費する可能性があります。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "This snapshot is available for recovery."
+msgstr "このスナップショットは復旧に利用可能です。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "This snapshot is not available for recovery."
+msgstr "このスナップショットは復旧に利用できません。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Three copies on separate devices · damaged copies can be repaired "
+"automatically"
+msgstr "別々のデバイスに3コピー · 破損したコピーは自動的に修復されます"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Time above critical temperature"
+msgstr "クリティカル温度超過時間"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Time above warning temperature"
+msgstr "警告温度超過時間"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Total"
+msgstr "合計"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Total data read"
+msgstr "読み取ったデータの合計"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Total data written"
+msgstr "書き込まれたデータの合計"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Transparent compression"
+msgstr "透過圧縮"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Try a different name, date, or snapshot reason."
+msgstr "別の名前、日付、またはスナップショットの理由を試してください。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Two copies on separate devices · a damaged copy can be repaired "
+"automatically"
+msgstr "別のデバイスに2コピー · 破損したコピーは自動的に修復されます"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid ""
+"Two copies on this device · a damaged copy can be repaired automatically"
+msgstr "このデバイスに2コピー · 破損したコピーは自動的に修復されます"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unable to calculate"
+msgstr "計算できません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unavailable"
+msgstr "利用できません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Uncorrectable errors: {0}"
+msgstr "修正不能なエラー: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unknown"
+msgstr "不明"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Unknown date"
+msgstr "不明な日付"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unknown state"
+msgstr "不明な状態"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unknown storage device"
+msgstr "不明なストレージデバイス"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Unsafe shutdowns"
+msgstr "安全でないシャットダウン"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "Unsupported Destination"
+msgstr "サポートされていない宛先"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Unverified errors: {0}"
+msgstr "検証されていないエラー: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Updating snapshot protection…"
+msgstr "スナップショット保護を更新中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
+msgid "Useful after deleting large amounts of data"
+msgstr "大量のデータを削除した後に有効です"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Verification errors: {0}"
+msgstr "検証エラー: {0}"
+
+#: data/anduinos_btrfs_snapshots_manager_file_history.py
+msgid "View File History…"
+msgstr "ファイル履歴を表示…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "View Progress"
+msgstr "進捗を表示"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "Volatile memory backup failed"
+msgstr "揮発性メモリのバックアップに失敗しました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Waiting for Btrfs status…"
+msgstr "Btrfs のステータスを待機中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
+msgid "Waiting for Btrfs to start…"
+msgstr "Btrfs の開始を待機中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Waiting for scrub status…"
+msgstr "Scrub ステータスを待機中…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Waiting for the new scrub to start…"
+msgstr "新しいスクラブの開始を待機中…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Warnings"
+msgstr "警告"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "Why?"
+msgstr "理由を表示"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Will not change"
+msgstr "変更されません"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
+msgid "Working…"
+msgstr "作業中…"
+
+#: src/btrfs-snapshots-manager/src/ui/mod.rs
+msgid "{0} available"
+msgstr "{0} 利用可能"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "{0} bytes · {1}"
+msgstr "{0} バイト · {1}"
+
+#: src/btrfs-snapshots-manager/src/ui/personal_history.rs
+msgid "{0} damaged metadata entries were ignored"
+msgstr "{0} 個の破損したメタデータ エントリが無視されました"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} hours · about {1} days"
+msgstr "{0} 時間 · およそ {1} 日"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} minutes"
+msgstr "{0} 分"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0} of {1} checked"
+msgstr "{0} / {1} チェック済み"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "{0} of {1} used"
+msgstr "{0} / {1} 使用中"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} packages"
+msgstr "{0} パッケージ"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} RPM"
+msgstr "{0} RPM"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} snapshot record(s) need attention"
+msgstr "{0} 個のスナップショットレコードに注意が必要です"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} snapshot(s) selected"
+msgstr "{0} 個選択したスナップショット"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0} °C"
+msgstr "{0} °C"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "{0} · Manual Snapshot"
+msgstr "{0} · 手動スナップショット"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
+msgid "{0} · new writes"
+msgstr "{0} · 新規書き込み"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0}%"
+msgstr "{0}%"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0}% complete"
+msgstr "{0}% 完了"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
+msgid "{0}% · warning threshold {1}%"
+msgstr "{0}% · 警告閾値 {1}%"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "{0}/s"
+msgstr "{0}/s"

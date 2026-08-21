@@ -2,6 +2,8 @@
 
 use std::process::Command;
 
+use crate::i18n::i18n;
+
 use super::types::UfwError;
 
 /// A single blocked/allowed event from the kernel log.
@@ -34,7 +36,7 @@ pub fn read_blocked_events(limit: usize) -> Result<Vec<BlockedEvent>, UfwError> 
         .args(["-q", "-k", "-n", &limit.to_string(), "-o", "short-iso"])
         .output()
         .map_err(|e| UfwError {
-            message: format!("Failed to run journalctl: {e}"),
+            message: format!("{}: {e}", i18n("Failed to run journalctl")),
         })?;
 
     let text = String::from_utf8_lossy(&output.stdout);
@@ -146,7 +148,7 @@ pub fn read_listening_ports() -> Result<Vec<ListeningPort>, UfwError> {
         .args(["-tulnp"])
         .output()
         .map_err(|e| UfwError {
-            message: format!("Failed to run ss: {e}"),
+            message: format!("{}: {e}", i18n("Failed to run ss")),
         })?;
 
     let text = String::from_utf8_lossy(&output.stdout);
@@ -214,4 +216,3 @@ fn extract_process_name(proc_str: &str) -> String {
     // Simpler format: "sshd"
     proc_str.trim_matches(&['(', ')', '"'][..]).to_string()
 }
-

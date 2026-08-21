@@ -4,6 +4,9 @@ A fully offline, zero-daemon LLM CLI for AnduinOS, backed by a bundled
 [Gemma 4 E2B](https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF) model
 over llama.cpp with Vulkan GPU acceleration.
 
+This package targets AnduinOS 2.x (`resolute-addon`) only. Serve mode uses
+the Resolute `llama.cpp-tools` package, which provides `llama-server`.
+
 ## Usage
 
 ```sh
@@ -48,6 +51,22 @@ The bundled model lives at:
 ```
 /usr/share/anduinos-why-ai/models/gemma-4-e2b-it-q4_k_m.gguf
 ```
+
+## Model reproducibility and license
+
+The bundled quantized model is downloaded from
+[`unsloth/gemma-4-E2B-it-GGUF`](https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF)
+at the immutable revision
+`0314792d7f1f7e229411f620751375812bb9faf2`. Its expected SHA-256 is:
+
+```text
+740185b21d22ceb83a11c3aa62ad5842ef32c70f6096d756bbee85a1e4ec34b8
+```
+
+The model card attributes the base model to Google DeepMind, the GGUF
+quantization to Unsloth, and declares the model under Apache License 2.0.
+The packaged software remains GPL-3.0-or-later. Model attribution and the
+full model license are shipped as `MODEL-NOTICE` and `MODEL-LICENSE`.
 
 ## Build dependencies
 
@@ -96,7 +115,7 @@ sudo apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
 # Single arch, single suite (fast)
 apkg build --distro anduinos --suite resolute-addon --arch amd64
 
-# All suites & arches (CI)
+# All configured architectures (CI)
 apkg build
 
 # Install the result

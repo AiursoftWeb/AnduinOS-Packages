@@ -1,305 +1,732 @@
+#
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/window.rs:76
 msgid "About"
 msgstr "关于"
 
+#: src/views/swap_view.rs:300
 msgid "Accept threshold percent"
 msgstr "接受阈值 (%)"
 
+#: src/views/zram_view.rs:247
 msgid "Advanced options"
 msgstr "高级选项"
 
+#: src/views/stress_test_view.rs:225 src/views/swap_view.rs:225
 msgid "Advanced settings"
 msgstr "高级设置"
 
+#: src/views/zram_view.rs:348
 msgid "Algorithm"
 msgstr "算法"
 
+#: src/views/swap_view.rs:334
 msgid "Apply Settings"
 msgstr "应用设置"
 
+#: src/views/swap_view.rs:667
 msgid "Applying settings…"
 msgstr "应用设置"
 
+#: src/views/dashboard_view.rs:370
 msgid "Auth needed"
 msgstr "需要身份验证"
 
+#: src/views/dashboard_view.rs:413
 msgid "Buf"
 msgstr "缓冲区"
 
+#: src/views/dashboard_view.rs:390
 msgid "Buffers"
 msgstr "缓冲区"
 
+#: src/views/dashboard_view.rs:414
 msgid "Cache"
 msgstr "缓存"
 
+#: src/views/dashboard_view.rs:395
 msgid "Cached"
 msgstr "已缓存"
 
+#: src/views/zram_view.rs:378
 msgid "Cancel"
 msgstr "取消"
 
+#: src/views/stress_test_view.rs:318
 msgid "Cancel Test"
 msgstr "取消"
 
+#: src/views/stress_test_view.rs:601
 msgid "Cancelled by user."
 msgstr "用户已取消。"
 
+#: src/views/dashboard_view.rs:193
 msgid "Channels"
 msgstr "通道"
 
+#: src/views/stress_test_view.rs:613
 msgid "Completed successfully — memory pressure test passed."
 msgstr "成功完成——内存压力测试通过。"
 
+#: src/views/swap_view.rs:183
 msgid ""
 "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
 "Zswap, not both."
-msgstr ""
-"在内存池中压缩交换页——比磁盘交换更快。请使用 Zram 或 Zswap，切勿同时使用两"
-"者。"
+msgstr "在内存池中压缩交换页——比磁盘交换更快。请使用 Zram 或 Zswap，切勿同时使用两者。"
 
+#: src/views/zram_view.rs:73
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "压缩 RAM 块设备——快速内存虚拟化"
 
+#: src/views/swap_view.rs:266
 msgid "Compression algorithm"
 msgstr "压缩算法"
 
+#: src/views/zram_view.rs:379
 msgid "Create"
 msgstr "创建"
 
+#: src/views/zram_view.rs:110 src/views/zram_view.rs:190
 msgid "Create Zram Device"
 msgstr "创建 Zram 设备"
 
+#: src/window.rs:110
 msgid "Dashboard"
 msgstr "仪表板"
 
+#: src/views/zram_view.rs:571
 msgid "Destroy Zram Device"
 msgstr "销毁 Zram 设备"
 
+#: src/views/zram_view.rs:439
 msgid "Device Created"
 msgstr "设备已创建"
 
+#: src/views/dashboard_view.rs:503
 msgid "Disabled"
 msgstr "已禁用"
 
+#: src/views/swap_view.rs:521
 msgid "Disabling Zswap..."
 msgstr "正在禁用虚拟内存…"
 
-msgid "Disabling swap will break hibernation. Continue?"
-msgstr "禁用虚拟内存将破坏休眠功能。是否继续？"
-
+#: src/views/swap_view.rs:577
 msgid "Disabling swap…"
 msgstr "正在禁用虚拟内存…"
 
-msgid "Disk Swap"
-msgstr "磁盘虚拟内存"
-
+#: src/views/swap_view.rs:97
 msgid "Disk Swap Configuration"
 msgstr "虚拟内存配置"
 
+#: src/views/dashboard_view.rs:614
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
 msgstr "磁盘交换已激活并启用了内存压缩——您的系统能有效抵御内存压力。"
 
+#: src/views/stress_test_view.rs:605 src/views/stress_test_view.rs:617
 msgid "Duration:"
 msgstr "持续时间："
 
+#: src/views/dashboard_view.rs:609
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
-msgstr ""
-"启用 Zram 以获得位于内存中的极速压缩交换——它比磁盘交换快 10 倍，并能显著降低"
-"内存压力下的 I/O。"
+msgstr "启用 Zram 以获得位于内存中的极速压缩交换——它比磁盘交换快 10 倍，并能显著降低内存压力下的 I/O。"
 
+#: src/views/swap_view.rs:519
 msgid "Enabling Zswap..."
 msgstr "正在启用虚拟内存…"
 
+#: src/views/swap_view.rs:579
 msgid "Enabling swap…"
 msgstr "正在启用虚拟内存…"
 
+#: src/views/stress_test_view.rs:609 src/views/swap_view.rs:505
+#: src/views/zram_view.rs:182
 msgid "Error"
 msgstr "错误"
 
+#: src/views/dashboard_view.rs:400 src/views/dashboard_view.rs:415
 msgid "Free"
 msgstr "空闲"
 
+#: src/views/stress_test_view.rs:250 src/views/stress_test_view.rs:251
+#: src/views/stress_test_view.rs:401
 msgid "Growth speed"
 msgstr "增长速度"
 
+#: src/views/dashboard_view.rs:269
 msgid "Hibernation"
 msgstr "休眠"
 
+#: src/views/swap_view.rs:597 src/views/swap_view.rs:704
 msgid "Hibernation Warning"
 msgstr "休眠警告"
 
+#: src/views/dashboard_view.rs:517 src/views/swap_view.rs:810
 msgid "Inactive"
 msgstr "非活动"
 
+#: src/views/swap_view.rs:156 src/views/swap_view.rs:170
 msgid "Loading..."
 msgstr "加载中..."
 
+#: src/views/stress_test_view.rs:232
 msgid "Maximum hold time"
 msgstr "最大保持时间"
 
+#: src/views/swap_view.rs:282
 msgid "Maximum pool percent"
 msgstr "最大池百分比"
 
+#: src/views/dashboard_view.rs:134
 msgid "Memory Overview"
 msgstr "内存概览"
 
+#: src/views/zram_view.rs:119
 msgid "No Zram Devices"
 msgstr "Zram 设备"
 
+#: src/views/dashboard_view.rs:456
 msgid "No device"
 msgstr "无设备"
 
+#: src/views/dashboard_view.rs:592
 msgid "No disk swap detected"
 msgstr "未检测到虚拟内存交换"
 
+#: src/views/dashboard_view.rs:608
 msgid "No memory acceleration enabled"
 msgstr "未启用内存加速"
 
+#: src/views/dashboard_view.rs:546
 msgid "None"
 msgstr "无"
 
+#: src/views/dashboard_view.rs:530 src/views/dashboard_view.rs:538
 msgid "Off"
 msgstr "关闭"
 
+#: src/views/dashboard_view.rs:537
 msgid "On"
 msgstr "已启用"
 
+#: src/views/swap_view.rs:301
 msgid ""
 "Only store pages that compress to ≤ this % of original. Higher = more pages "
 "cached. Recommended: 90%"
-msgstr ""
-"仅存储压缩后大小小于或等于原始大小此百分比的页面。值越高，缓存的页面越多。推"
-"荐：90%"
+msgstr "仅存储压缩后大小小于或等于原始大小此百分比的页面。值越高，缓存的页面越多。推荐：90%"
 
+#: src/views/dashboard_view.rs:613
 msgid "Optimal memory configuration"
 msgstr "最佳内存配置"
 
+#: src/views/stress_test_view.rs:602 src/views/stress_test_view.rs:614
 msgid "Peak allocated:"
 msgstr "峰值分配："
 
+#: src/views/zram_view.rs:367
 msgid "Priority"
 msgstr "优先级"
 
+#: src/views/stress_test_view.rs:209
 msgid "RAM"
 msgstr "随机存取存储器"
 
+#: src/views/zram_view.rs:554
 msgid "Remove"
 msgstr "移除"
 
+#: src/views/stress_test_view.rs:360
 msgid "Run Again"
 msgstr "再次运行"
 
+#: src/views/stress_test_view.rs:279
 msgid "Run Stress Test"
 msgstr "运行压力测试"
 
+#: src/views/swap_view.rs:307
 msgid "Shrinker"
 msgstr "内存压缩器"
 
+#: src/views/zram_view.rs:269
 msgid "Size (MiB)"
 msgstr "大小 (MiB)"
 
+#: src/views/dashboard_view.rs:192
 msgid "Speed"
 msgstr "速度"
 
+#: src/views/stress_test_view.rs:100 src/window.rs:114
 msgid "Stress Test"
 msgstr "压力测试"
 
+#: src/views/dashboard_view.rs:252 src/views/dashboard_view.rs:266
+#: src/window.rs:112
 msgid "Swap"
 msgstr "虚拟内存"
 
+#: src/progress_dialog.rs:24 src/window.rs:59
 msgid "Swap Control"
 msgstr "虚拟内存控制"
 
-msgid "Swap file size"
-msgstr "虚拟内存大小"
-
+#: src/views/swap_view.rs:147
 msgid "Swap usage"
 msgstr "虚拟内存使用量"
 
+#: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
+#: src/views/swap_view.rs:677
 msgid "Swappiness"
 msgstr "虚拟内存亲和度"
 
+#: src/views/dashboard_view.rs:603
 msgid "Swappiness not optimized for Zram"
 msgstr "针对 Zram 未优化交换倾向值"
 
+#: src/views/stress_test_view.rs:206
 msgid "Target Pressure"
 msgstr "目标压力"
 
+#: src/views/stress_test_view.rs:345
 msgid "Test Complete"
 msgstr "测试完成"
 
+#: src/views/dashboard_view.rs:190
 msgid "Total RAM"
 msgstr "总内存"
 
+#: src/views/dashboard_view.rs:191
 msgid "Type"
 msgstr "类型"
 
+#: src/views/dashboard_view.rs:385 src/views/dashboard_view.rs:412
 msgid "Used"
 msgstr "已用"
 
+#: src/views/dashboard_view.rs:593
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
 msgstr "当内存已满时，内核可能会终止应用程序。启用磁盘交换以提供可靠的安全网。"
 
+#: src/views/dashboard_view.rs:244 src/views/dashboard_view.rs:268
+#: src/window.rs:111
 msgid "Zram"
 msgstr "压缩内存段"
 
+#: src/views/zram_view.rs:66
 msgid "Zram Devices"
 msgstr "Zram 设备"
 
+#: src/views/dashboard_view.rs:597
 msgid "Zram and Zswap are both active"
 msgstr "Zram 和 Zswap 均已激活"
 
+#: src/views/dashboard_view.rs:598
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
-"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
-"one of them."
-msgstr ""
-"Zram 和 Zswap 互斥——各自创建独立的压缩内存池。同时运行两者会浪费 CPU 资源并可"
-"能导致严重的内存抖动。请禁用其中一个。"
+"pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
+" one of them."
+msgstr "Zram 和 Zswap 互斥——各自创建独立的压缩内存池。同时运行两者会浪费 CPU 资源并可能导致严重的内存抖动。请禁用其中一个。"
 
+#: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
+#: src/views/swap_view.rs:185 src/views/swap_view.rs:686
 msgid "Zswap"
 msgstr "压缩交换缓存"
 
+#: src/views/stress_test_view.rs:212
 msgid "default"
 msgstr "默认"
 
+#: src/views/swap_view.rs:267
 msgid ""
-"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires "
-"zswap restart."
-msgstr ""
-"lz4 = 快速（推荐），zstd = 最佳压缩率，lzo = 旧版。更改需要重启 zswap。"
+"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires"
+" zswap restart."
+msgstr "lz4 = 快速（推荐），zstd = 最佳压缩率，lzo = 旧版。更改需要重启 zswap。"
 
+#: src/views/stress_test_view.rs:211
 msgid "range"
 msgstr "范围"
 
+#: src/views/stress_test_view.rs:233
 msgid "seconds"
 msgstr "秒"
 
+#: src/views/swap_view.rs:118
 msgid "with Zram"
 msgstr "已启用 Zram"
 
+#: src/views/dashboard_view.rs:154
 msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr "已启用 Zram — 优先使用快速压缩的 RAM 而非磁盘缓存"
 
-#~ msgid "<i>Recommended swappiness: {0} ({1})</i>"
-#~ msgstr "<i>推荐的交换倾向值：{0} ({1})</i>"
+#: src/views/dashboard_view.rs:552
+msgid "Ready"
+msgstr "就绪"
+
+#: src/views/dashboard_view.rs:554
+msgid "Unsupported"
+msgstr "不支持"
+
+#: src/views/dashboard_view.rs:556
+msgid "Not configured"
+msgstr "未配置"
+
+#: src/views/dashboard_view.rs:558
+msgid "Resume target missing"
+msgstr "休眠恢复目标不存在"
+
+#: src/views/dashboard_view.rs:560
+msgid "Resume target inactive"
+msgstr "休眠恢复目标未激活"
+
+#: src/views/dashboard_view.rs:562
+msgid "Swap too small"
+msgstr "虚拟内存容量不足"
+
+#: src/views/dashboard_view.rs:564
+msgid "Not ready"
+msgstr "未就绪"
+
+#: src/views/swap_view.rs:104
+msgid ""
+"Review installer-managed swap partitions and manage the legacy supplementary"
+" swap file"
+msgstr "查看由安装程序管理的虚拟内存分区，并管理旧版附加虚拟内存文件"
+
+#: src/views/swap_view.rs:155
+msgid "Swap partition"
+msgstr "虚拟内存分区"
+
+#: src/views/swap_view.rs:169
+msgid "Additional swap file"
+msgstr "附加虚拟内存文件"
+
+#: src/views/swap_view.rs:195
+msgid "Additional swap file size"
+msgstr "附加虚拟内存文件大小"
+
+#: src/views/swap_view.rs:196
+msgid "0 GiB means no supplementary swap file"
+msgstr "0 GiB 表示不创建附加虚拟内存文件"
+
+#: src/views/swap_view.rs:598
+msgid ""
+"This swap file is the configured resume target. Disabling it will break "
+"hibernation. Continue?"
+msgstr "该虚拟内存文件是已配置的休眠恢复目标。禁用它将破坏休眠功能。是否继续？"
+
+#: src/views/swap_view.rs:705
+msgid ""
+"This swap file is the configured resume target. Its physical offset would "
+"change, so resize is blocked until hibernation is disabled."
+msgstr "该虚拟内存文件是已配置的休眠恢复目标。调整大小会改变其物理偏移，因此在禁用休眠前无法调整。"
+
+#: src/views/swap_view.rs:722
+msgid "unknown"
+msgstr "未知文件系统"
+
+#: src/views/swap_view.rs:738
+msgid "No swap partition — a legacy swap file can be managed below"
+msgstr "没有虚拟内存分区 — 可在下方管理旧版虚拟内存文件"
+
+#: src/views/swap_view.rs:207
+msgid "Remove incompatible file"
+msgstr "移除不兼容文件"
+
+#: src/views/swap_view.rs:377
+msgid "Removing incompatible swap file…"
+msgstr "正在移除不兼容的虚拟内存文件…"
+
+#: src/views/swap_view.rs:790
+msgid "Present but inactive"
+msgstr "文件存在，但未激活"
+
+#: src/views/swap_view.rs:792
+msgid "Not created — choose a size below to add one"
+msgstr "尚未创建 — 在下方选择大小即可添加"
+
+#: src/views/swap_view.rs:794
+msgid "Not created — at least 20 GiB must remain free"
+msgstr "尚未创建 — 必须至少保留 20 GiB 可用空间"
+
+#: src/views/swap_view.rs:830
+msgid ""
+"Resize is locked because this file is the configured hibernation resume "
+"target"
+msgstr "该文件是已配置的休眠恢复目标，因此大小已锁定"
+
+#: src/views/swap_view.rs:832
+msgid ""
+"Optional compatibility file; 0 GiB removes it and 20 GiB remains reserved "
+"for the system"
+msgstr "可选的兼容文件；0 GiB 表示移除，并始终为系统保留 20 GiB 空间"
+
+#: src/views/swap_view.rs:834
+msgid ""
+"Disabled on Btrfs because a root-subvolume swap file would prevent Disk "
+"Snapshots Manager recovery points"
+msgstr "在 Btrfs 上已禁用，因为根子卷中的虚拟内存文件会阻止磁盘快照管理器创建恢复点"
+
+#: src/views/zram_view.rs:120
+msgid ""
+"Create a compressed RAM swap device for faster memory pressure handling."
+msgstr "创建压缩内存交换设备，以更快处理内存压力。"
+
+#: src/views/stress_test_view.rs:171
+msgid "Ensure important work is saved before running this test."
+msgstr "在运行此测试之前，请确保重要工作已保存。"
+
+#: src/views/swap_view.rs:283
+msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
+msgstr "压缩池可占用的最大 RAM 百分比。建议值：20%"
+
+#: src/views/dashboard_view.rs:141
+msgid "Real-time RAM, swap, and compression subsystem status"
+msgstr "实时 RAM、虚拟内存和压缩子系统状态"
+
+#: src/views/swap_view.rs:308
+msgid "Reclaim pool pages under memory pressure. Recommended: ON"
+msgstr "在内存压力下回收池页。建议：开启"
+
+#: src/views/stress_test_view.rs:107
+msgid "Simulate memory pressure to test swap and OOM behavior"
+msgstr "模拟内存压力以测试虚拟内存和 OOM 行为"
+
+#: src/views/stress_test_view.rs:161
+msgid "Warning: This will consume system memory and may cause instability"
+msgstr "警告：这将消耗系统内存并可能导致不稳定"
+
+#: src/views/zram_view.rs:440
+msgid "Zram configuration saved. The device will be created shortly."
+msgstr "Zram 配置已保存。设备将很快创建。"
+
+#: src/views/dashboard_view.rs:165 src/views/swap_view.rs:128
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>推荐的交换倾向值：{0}（{1}）</i>"
+
+#: src/views/zram_view.rs:90
+msgid "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
+msgstr "<i>推荐：{0} MiB，lz4，优先级 100（适用于 {1} GiB 内存）</i>"
+
+#: src/views/swap_view.rs:772
+msgid "Active — {0} GiB used / {1} GiB total"
+msgstr "活动 — 已用 {0} GiB / 共 {1} GiB"
+
+#: src/swap/exec.rs:26 src/swap/exec.rs:68
+msgid "Authentication cancelled"
+msgstr "身份验证已取消"
+
+#: src/swap/swapfile.rs:113
+msgid "Cannot inspect the root filesystem"
+msgstr "无法检查根文件系统"
+
+#: src/swap/swapfile.rs:108
+msgid "Cannot inspect the root filesystem: {0}"
+msgstr "无法检查根文件系统：{0}"
+
+#: src/swap/sysctl.rs:79
+msgid "Cannot parse MemTotal: {0}"
+msgstr "无法解析 MemTotal：{0}"
+
+#: src/swap/sysctl.rs:43
+msgid "Cannot parse swappiness: {0}"
+msgstr "无法解析交换倾向值：{0}"
+
+#: src/swap/zswap.rs:59
+msgid "Cannot parse {0} as u8: {1}"
+msgstr "无法将 {0} 解析为 u8：{1}"
+
+#: src/swap/sysctl.rs:70
+msgid "Cannot read /proc/meminfo: {0}"
+msgstr "无法读取 /proc/meminfo：{0}"
+
+#: src/swap/swapfile.rs:39
+msgid "Cannot read /proc/swaps: {0}"
+msgstr "无法读取 /proc/swaps：{0}"
+
+#: src/swap/sysctl.rs:36 src/swap/zswap.rs:47
+msgid "Cannot read {0}: {1}"
+msgstr "无法读取 {0}：{1}"
+
+#: src/swap/exec.rs:18 src/swap/exec.rs:52
+msgid "Failed to execute pkexec: {0}"
+msgstr "无法执行 pkexec：{0}"
+
+#: src/swap/persist.rs:31
+msgid "Failed to remove legacy unit {0}: {1}"
+msgstr "无法移除遗留单元 {0}：{1}"
+
+#: src/swap/sysctl.rs:129
+msgid "Failed to set swappiness: {0} / {1}"
+msgstr "设置交换倾向值失败：{0} / {1}"
+
+#: src/swap/exec.rs:61
+msgid "Failed to wait on pkexec: {0}"
+msgstr "等待 pkexec 失败：{0}"
+
+#: src/i18n.rs:24
+msgid "Hello {0}, you have {1} messages"
+msgstr "你好 {0}，你有 {1} 条消息"
+
+#: src/views/swap_view.rs:234
+msgid ""
+"How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
+" {0})"
+msgstr "内核执行交换的积极程度——值越低，数据在内存中保留时间越长（推荐：{0}）"
+
+#: src/views/swap_view.rs:231
+msgid ""
+"How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
+"fast compressed RAM over disk cache (recommended: {0})"
+msgstr "内核交换的激进程度——在 Zram 启用时，设置为 {0} 以优先使用快速压缩的 RAM 而非磁盘缓存（推荐值：{0}）"
+
+#: src/views/dashboard_view.rs:483
+msgid "Idle ({0} GiB available)"
+msgstr "空闲（可用 {0} GiB）"
+
+#: src/views/zram_view.rs:531
+msgid "Idle — {0} MiB available"
+msgstr "空闲 — 可用 {0} MiB"
+
+#: src/swap/sysctl.rs:83
+msgid "MemTotal not found"
+msgstr "未找到 MemTotal"
+
+#: src/views/swap_view.rs:786
+msgid "Present but inactive — activation is disabled on {0}"
+msgstr "文件存在但未激活 — 已禁止在 {0} 上激活"
+
+#: src/views/stress_test_view.rs:676
+msgid ""
+"RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
+"Swap used: {3} GiB"
+msgstr ""
+"内存：共 {0} GiB · 已用 {1} GiB · 可用 {2} GiB\n"
+"已用交换空间：{3} GiB"
+
+#: src/views/swap_view.rs:673
+msgid "Resize"
+msgstr "调整大小"
+
+#: src/views/swap_view.rs:837
+msgid "Swap file resizing is unsupported on {0}"
+msgstr "不支持在 {0} 上调整虚拟内存文件大小"
+
+#: src/progress_dialog.rs:58
+msgid "Task panicked: {0}"
+msgstr "任务发生 panic：{0}"
+
+#: src/swap/persist.rs:74
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zram changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zram from this GUI."
+msgstr ""
+"未安装软件包 'anduinos-swap-config'。\n"
+"\n"
+"没有它，无法应用或持久化 Zram 更改。\n"
+"请安装 'anduinos-swap-config' 以从此 GUI 管理 Zram。"
+
+#: src/swap/persist.rs:133
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zswap changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zswap from this GUI."
+msgstr ""
+"软件包 'anduinos-swap-config' 未安装。\n"
+"\n"
+"如果没有该软件包，Zswap 更改无法应用或持久化。\n"
+"请安装 'anduinos-swap-config' 以从此 GUI 管理 Zswap。"
+
+#: src/views/zram_view.rs:573
+msgid ""
+"This will immediately remove {0} and flush its contents to disk swap. "
+"Continue?"
+msgstr "此操作将立即移除 {0} 并将其内容刷新到磁盘交换区。继续吗？"
+
+#: src/views/swap_view.rs:797
+msgid "Unavailable on {0}; the swap partition remains active"
+msgstr "在 {0} 上不可用；虚拟内存分区仍保持激活"
+
+#: src/views/dashboard_view.rs:604
+msgid ""
+"Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
+" fast compressed RAM swap — dropping file cache when zram is available "
+"wastes I/O performance."
+msgstr ""
+"Zram 已启用，但交换倾向值为 {0} 而非 {1}。请将其设置为 {1} 以优先使用快速压缩的 RAM 虚拟内存——在 Zram "
+"可用时丢弃文件缓存会浪费 I/O 性能。"
+
+#: src/swap/persist.rs:88
+msgid "Zram persistence disabled"
+msgstr "Zram 持久化已禁用"
+
+#: src/swap/persist.rs:90
+msgid "Zram persistence enabled"
+msgstr "Zram 持久化已启用"
+
+#: src/swap/persist.rs:148
+msgid "Zswap persistence disabled"
+msgstr "已禁用 Zswap 持久化"
+
+#: src/swap/persist.rs:146
+msgid "Zswap persistence enabled"
+msgstr "Zswap 持久化已启用"
+
+# AnduinOS 2.0.1-5 swap partition and hibernation model
+#: src/views/dashboard_view.rs:159 src/views/swap_view.rs:122
+msgid "for {0} GiB RAM"
+msgstr "适用于 {0} GiB 内存"
+
+#: src/swap/sysctl.rs:133
+msgid "swappiness updated"
+msgstr "交换倾向值已更新"
+
+#: src/swap/persist.rs:37
+msgid "systemctl {0} failed: {1}"
+msgstr "systemctl {0} 失败：{1}"
+
+#: src/views/zram_view.rs:525
+msgid "{0} MiB used (stats reset)"
+msgstr "已使用 {0} MiB（统计已重置）"
+
+#: src/views/zram_view.rs:520
+msgid "{0} MiB used · saved {1}%"
+msgstr "已用 {0} MiB · 已节省 {1}%"
+
+#: src/views/dashboard_view.rs:498
+msgid "{0} · pool {1}%"
+msgstr "{0} · 池 {1}%"
+
+#: src/views/dashboard_view.rs:474
+msgid "{0} · saved {1}%"
+msgstr "{0} · 已节省 {1}%"
+
+#: src/views/swap_view.rs:754
+msgid ""
+"{0} — installer-managed; size cannot be changed while the system is running"
+msgstr "{0} — 由安装程序管理；系统运行期间无法调整大小"
+
+#~ msgid "Disabling swap will break hibernation. Continue?"
+#~ msgstr "禁用虚拟内存将破坏休眠功能。是否继续？"
+
+#~ msgid "Disk Swap"
+#~ msgstr "磁盘虚拟内存"
+
+#~ msgid "Swap file size"
+#~ msgstr "虚拟内存大小"
 
 #~ msgid "<i>Recommended: {0} GiB swap, swappiness {1} ({2})</i>"
 #~ msgstr "<i>推荐：{0} GiB 虚拟内存，交换倾向值 {1} ({2})</i>"
-
-#~ msgid "Active — {0} GiB used / {1} GiB total"
-#~ msgstr "活动 — 已用 {0} GiB / 共 {1} GiB"
 
 #~ msgid "Creating Zram device…"
 #~ msgstr "正在创建 Zram 设备…"
@@ -310,38 +737,8 @@ msgstr "已启用 Zram — 优先使用快速压缩的 RAM 而非磁盘缓存"
 #~ msgid "Disk-based swap file — the last line of defense when RAM is full"
 #~ msgstr "基于磁盘的虚拟内存——当内存满时最后的防线"
 
-#~ msgid "Ensure important work is saved before running this test."
-#~ msgstr "在运行此测试之前，请确保重要工作已保存。"
-
-#~ msgid "Hello {0}, you have {1} messages"
-#~ msgstr "你好 {0}，你有 {1} 条消息"
-
 #~ msgid "Hibernation not detected — recommended: {0} GiB"
 #~ msgstr "未检测到休眠 — 建议：{0} GiB"
-
-#~ msgid "Idle ({0} GiB available)"
-#~ msgstr "空闲（可用 {0} GiB）"
-
-#~ msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
-#~ msgstr "压缩池可占用的最大 RAM 百分比。建议值：20%"
-
-#~ msgid "Real-time RAM, swap, and compression subsystem status"
-#~ msgstr "实时 RAM、虚拟内存和压缩子系统状态"
-
-#~ msgid "Reclaim pool pages under memory pressure. Recommended: ON"
-#~ msgstr "在内存压力下回收池页。建议：开启"
-
-#~ msgid "Simulate memory pressure to test swap and OOM behavior"
-#~ msgstr "模拟内存压力以测试虚拟内存和 OOM 行为"
-
-#~ msgid "Warning: This will consume system memory and may cause instability"
-#~ msgstr "警告：这将消耗系统内存并可能导致不稳定"
-
-#~ msgid "{0} · pool {1}%"
-#~ msgstr "{0} · 池 {1}%"
-
-#~ msgid "{0} · saved {1}%"
-#~ msgstr "{0} · 已节省 {1}%"
 
 #~ msgid "Active"
 #~ msgstr "已启用"
@@ -375,34 +772,8 @@ msgstr "已启用 Zram — 优先使用快速压缩的 RAM 而非磁盘缓存"
 
 #~ msgid ""
 #~ "<i>Recommended: {0}–{1} MiB, lzo-rle, priority 100 (for {2} GiB RAM)</i>"
-#~ msgstr ""
-#~ "<i>推荐：{0}–{1} MiB，lzo-rle，优先级 100（适用于 {2} GiB 内存）</i>"
-
-#~ msgid ""
-#~ "Create a compressed RAM swap device for faster memory pressure handling."
-#~ msgstr "创建压缩内存交换设备，以更快处理内存压力。"
+#~ msgstr "<i>推荐：{0}–{1} MiB，lzo-rle，优先级 100（适用于 {2} GiB 内存）</i>"
 
 #~ msgid ""
 #~ "Hibernation active — minimum {0} GiB (RAM + 1 GiB). Recommended: {1} GiB"
 #~ msgstr "休眠已激活——最小 {0} GiB（内存 + 1 GiB）。推荐：{1} GiB"
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — lower = stay in RAM longer "
-#~ "(recommended: {0})"
-#~ msgstr ""
-#~ "内核执行交换的积极程度——值越低，数据在内存中保留时间越长（推荐：{0}）"
-
-#~ msgid ""
-#~ "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to "
-#~ "prefer fast compressed RAM swap — dropping file cache when zram is "
-#~ "available wastes I/O performance."
-#~ msgstr ""
-#~ "Zram 已启用，但交换倾向值为 {0} 而非 {1}。请将其设置为 {1} 以优先使用快速"
-#~ "压缩的 RAM 虚拟内存——在 Zram 可用时丢弃文件缓存会浪费 I/O 性能。"
-
-#~ msgid ""
-#~ "How aggressively the kernel swaps — with Zram active, set to {0} to "
-#~ "prefer fast compressed RAM over disk cache (recommended: {0})"
-#~ msgstr ""
-#~ "内核交换的激进程度——在 Zram 启用时，设置为 {0} 以优先使用快速压缩的 RAM 而"
-#~ "非磁盘缓存（推荐值：{0}）"

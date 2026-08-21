@@ -1,0 +1,14 @@
+[Unit]
+Description=Expose the selected GTK3 theme to Flatpak applications
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStartPre=/bin/sleep 5
+ExecStart=/usr/bin/anduinos-theme-sync
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=graphical-session.target

@@ -1,3 +1,4 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: ufwall-gtk\n"
@@ -5,366 +6,643 @@ msgstr ""
 "POT-Creation-Date: 2026-07-14 09:51+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/widgets/add_rule_dialog.rs:155
 msgid "0 = append at end"
 msgstr "0 = ajouter à la fin"
 
+#: src/window.rs:81
 msgid "About"
 msgstr "À propos"
 
+#: src/widgets/add_rule_dialog.rs:93
 msgid "Action"
 msgstr "Action"
 
+#: src/views/status_view.rs:396
 msgid "Active"
 msgstr "Actif"
 
+#: src/widgets/add_rule_dialog.rs:170
 msgid "Add"
 msgstr "Ajouter"
 
+#: src/views/rules_view.rs:93 src/widgets/add_rule_dialog.rs:57
 msgid "Add Rule"
 msgstr "Ajouter une règle"
 
+#: src/widgets/add_rule_dialog.rs:110
 msgid "Advanced"
 msgstr "Avancé"
 
+#: src/views/network_audit_view.rs:200 src/views/network_audit_view.rs:208
 msgid "All"
 msgstr "Tout"
 
+#: src/views/profiles_view.rs:92 src/views/status_view.rs:127
+#: src/views/status_view.rs:136 src/widgets/add_rule_dialog.rs:96
 msgid "Allow"
 msgstr "Autoriser"
 
+#: src/views/profiles_view.rs:77
 msgid "Allow applications with predefined rules."
 msgstr "Autoriser les applications avec des règles prédéfinies."
 
+#: src/views/profiles_view.rs:76
 msgid "Application Profiles"
 msgstr "Profils d'application"
 
+#: src/window.rs:117
 msgid "Audit"
 msgstr "Audit"
 
+#: src/views/network_audit_view.rs:277
 msgid "Auditor Error"
 msgstr "Erreur de l'auditeur"
 
+#: src/views/network_audit_view.rs:504
 msgid "Block"
 msgstr "Bloquer"
 
+#: src/views/network_audit_view.rs:500
 msgid "Block Connection?"
 msgstr "Bloquer la connexion ?"
 
+#: src/views/network_audit_view.rs:493
 msgid "Block inbound traffic from"
 msgstr "Bloquer le trafic entrant depuis"
 
+#: src/views/network_audit_view.rs:495
 msgid "Block outbound traffic to"
 msgstr "Bloquer le trafic sortant vers"
 
+#: src/views/dashboard_view.rs:96
 msgid "Blocked Events"
 msgstr "Événements bloqués"
 
+#: src/views/network_audit_view.rs:551
 msgid "Blocked Successfully"
 msgstr "Blocage réussi"
 
+#: src/widgets/add_rule_dialog.rs:124
 msgid "Both"
 msgstr "Les deux"
 
+#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "Annuler"
 
+#: src/views/status_view.rs:103
+msgid "Local Network Discovery"
+msgstr "Découverte du réseau local"
+
+#: src/views/status_view.rs:104
+msgid "Control multicast DNS discovery and .local name resolution."
+msgstr "Gérez la découverte multicast DNS et la résolution de noms .local."
+
+#: src/views/status_view.rs:110
+msgid "Local Network Discovery (mDNS)"
+msgstr "Découverte du réseau local (mDNS)"
+
+#: src/views/status_view.rs:111
+msgid "Checking service status…"
+msgstr "Vérification de l'état du service…"
+
+#: src/views/status_view.rs:216 src/views/status_view.rs:332
+msgid "Network Discovery Error"
+msgstr "Erreur de découverte du réseau"
+
+#: src/views/status_view.rs:351
+msgid "Avahi is not installed."
+msgstr "Avahi n’est pas installé."
+
+#: src/views/status_view.rs:353
+msgid "Avahi is running; .local names and service discovery are available."
+msgstr ""
+"Avahi est en cours d’exécution ; les noms .local et la découverte de "
+"services sont disponibles."
+
+#: src/views/status_view.rs:357
+msgid "Avahi is enabled but not currently running."
+msgstr "Avahi est activé mais n’est pas en cours d’exécution."
+
+#: src/views/status_view.rs:359
+msgid "Avahi is blocked; .local names and service discovery are unavailable."
+msgstr ""
+"Avahi est bloqué ; les noms .local et la découverte de services sont "
+"indisponibles."
+
+#: src/widgets/add_rule_dialog.rs:149
 msgid "Comment"
 msgstr "Commentaire"
 
+#: src/widgets/add_rule_dialog.rs:72
 msgid "Custom"
 msgstr "Personnalisé"
 
+#: src/views/dashboard_view.rs:56 src/window.rs:116
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
+#: src/views/status_view.rs:119
 msgid "Default Policies"
 msgstr "Politiques par défaut"
 
+#: src/widgets/rule_row.rs:90
 msgid "Delete"
 msgstr "Supprimer"
 
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:122
 msgid "Delete All"
 msgstr "Supprimer tout"
 
+#: src/views/rules_view.rs:118
 msgid "Delete All Rules?"
 msgstr "Supprimer toutes les règles ?"
 
+#: src/widgets/rule_row.rs:86
 msgid "Delete Rule"
 msgstr "Supprimer la règle"
 
+#: src/widgets/rule_row.rs:87
 msgid "Delete rule"
 msgstr "Supprimer la règle"
 
+#: src/views/status_view.rs:126 src/views/status_view.rs:135
+#: src/widgets/add_rule_dialog.rs:95
 msgid "Deny"
 msgstr "Refuser"
 
+#: src/widgets/add_rule_dialog.rs:135
 msgid "Destination IP"
 msgstr "Adresse IP de destination"
 
+#: src/widgets/add_rule_dialog.rs:114
 msgid "Direction"
 msgstr "Direction"
 
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:137 src/views/status_view.rs:185
+#: src/widgets/add_rule_dialog.rs:338 src/widgets/rule_row.rs:119
+#: src/window.rs:283 src/window.rs:299
 msgid "Error"
 msgstr "Erreur"
 
+#: src/views/network_audit_view.rs:554
 msgid "Failed to Block"
 msgstr "Échec du blocage"
 
+#: src/views/status_view.rs:95 src/window.rs:64
 msgid "Firewall"
 msgstr "Pare-feu"
 
+#: src/views/rules_view.rs:70
 msgid "Firewall Rules"
 msgstr "Règles du pare-feu"
 
+#: src/views/status_view.rs:156
 msgid "Full"
 msgstr "Complet"
 
+#: src/views/status_view.rs:155
 msgid "High"
 msgstr "Élevé"
 
+#: src/widgets/add_rule_dialog.rs:116
 msgid "In"
 msgstr "Entrant"
 
+#: src/views/status_view.rs:96 src/views/status_view.rs:396
 msgid "Inactive"
 msgstr "Inactif"
 
+#: src/views/network_audit_view.rs:201
 msgid "Inbound"
 msgstr "Entrant"
 
+#: src/views/status_view.rs:124
 msgid "Incoming"
 msgstr "Entrant"
 
+#: src/widgets/add_rule_dialog.rs:154
 msgid "Insert Before Rule"
 msgstr "Insérer avant la règle"
 
+#: src/widgets/add_rule_dialog.rs:144
 msgid "Interface"
 msgstr "Interface"
 
+#: src/widgets/add_rule_dialog.rs:98
 msgid "Limit"
 msgstr "Limite"
 
+#: src/views/dashboard_view.rs:129
 msgid "Listening Ports"
 msgstr "Ports d'écoute"
 
+#: src/views/status_view.rs:150
 msgid "Log Level"
 msgstr "Niveau de journalisation"
 
+#: src/views/status_view.rs:146
 msgid "Logging"
 msgstr "Journalisation"
 
+#: src/views/status_view.rs:153
 msgid "Low"
 msgstr "Faible"
 
+#: src/views/status_view.rs:154
 msgid "Medium"
 msgstr "Moyen"
 
+#: src/views/network_audit_view.rs:58
 msgid "Monitoring Network Activity"
 msgstr "Surveillance de l'activité réseau"
 
+#: src/views/profiles_view.rs:119
 msgid "No Profiles"
 msgstr "Aucun profil"
 
+#: src/views/rules_view.rs:75
 msgid "No Rules"
 msgstr "Aucune règle"
 
+#: src/views/profiles_view.rs:120
 msgid "No application profiles found"
 msgstr "Aucun profil d’application trouvé"
 
+#: src/views/dashboard_view.rs:247
 msgid "No blocked connections in recent events"
 msgstr "Aucune connexion bloquée dans les événements récents"
 
+#: src/views/dashboard_view.rs:296
 msgid "No blocked ports in recent events"
 msgstr "Aucun port bloqué dans les événements récents"
 
+#: src/views/dashboard_view.rs:344
 msgid "No listening ports detected"
 msgstr "Aucun port d'écoute détecté"
 
+#: src/views/status_view.rs:152
 msgid "Off"
 msgstr "Désactivé"
 
+#: src/widgets/add_rule_dialog.rs:117
 msgid "Out"
 msgstr "Sortant"
 
+#: src/views/network_audit_view.rs:202
 msgid "Outbound"
 msgstr "Sortant"
 
+#: src/views/status_view.rs:133
 msgid "Outgoing"
 msgstr "Sortant"
 
+#: src/views/network_audit_view.rs:217
 msgid "Pause list updates"
 msgstr "Suspendre les mises à jour de la liste"
 
+#: src/views/profiles_view.rs:87
 msgid "Port / Protocol"
 msgstr "Port / Protocole"
 
+#: src/widgets/add_rule_dialog.rs:89
 msgid "Port / Service Name"
 msgstr "Port / Nom de service"
 
+#: src/window.rs:120
 msgid "Profiles"
 msgstr "Profils"
 
+#: src/widgets/add_rule_dialog.rs:122
 msgid "Protocol"
 msgstr "Protocole"
 
+#: src/views/profiles_view.rs:82
 msgid "Quick Allow Port"
 msgstr "Autoriser rapidement un port"
 
+#: src/views/dashboard_view.rs:135
 msgid "Recent Blocked Events"
 msgstr "Événements bloqués récents"
 
+#: src/views/dashboard_view.rs:78
 msgid "Recent Events Parsed"
 msgstr "Événements récents analysés"
 
+#: src/views/dashboard_view.rs:154
 msgid "Refresh"
 msgstr "Actualiser"
 
+#: src/views/status_view.rs:128 src/views/status_view.rs:137
+#: src/widgets/add_rule_dialog.rs:97
 msgid "Reject"
 msgstr "Rejeter"
 
+#: src/views/network_audit_view.rs:195
 msgid "Resolve Domains"
 msgstr "Résoudre les domaines"
 
+#: src/views/network_audit_view.rs:551
 msgid "Rule added to block"
 msgstr "Règle ajoutée à la liste de blocage"
 
+#: src/window.rs:119
 msgid "Rules"
 msgstr "Règles"
 
+#: src/widgets/add_rule_dialog.rs:265
 msgid "Save"
 msgstr "Enregistrer"
 
+#: src/views/network_audit_view.rs:186
 msgid "Search Process or IP..."
 msgstr "Rechercher un processus ou une IP..."
 
+#: src/views/rules_view.rs:62
 msgid "Search rules..."
 msgstr "Rechercher des règles..."
 
+#: src/widgets/add_rule_dialog.rs:70
 msgid "Service"
 msgstr "Service"
 
+#: src/views/dashboard_view.rs:139
 msgid "Show"
 msgstr "Afficher"
 
+#: src/widgets/add_rule_dialog.rs:131
 msgid "Source IP"
 msgstr "Adresse IP source"
 
+#: src/views/status_view.rs:84 src/window.rs:118
 msgid "Status"
 msgstr "État"
 
+#: src/views/network_audit_view.rs:209 src/widgets/add_rule_dialog.rs:125
 msgid "TCP"
 msgstr "TCP"
 
+#: src/views/rules_view.rs:76
 msgid "There are no rules configured yet."
 msgstr "Aucune règle n'est encore configurée."
 
+#: src/views/rules_view.rs:119
 msgid "This will delete all custom rules. This action cannot be undone."
 msgstr ""
 "Cela supprimera toutes les règles personnalisées. Cette action est "
 "irréversible."
 
+#: src/views/network_audit_view.rs:493
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr "Cela empêchera l'hôte distant d'envoyer des paquets à votre machine."
 
+#: src/views/network_audit_view.rs:495
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr "Cela empêchera votre machine d'envoyer des paquets à l'hôte distant."
 
+#: src/views/dashboard_view.rs:117
 msgid "Top Blocked Connections"
 msgstr "Connexions les plus bloquées"
 
+#: src/views/dashboard_view.rs:123
 msgid "Top Blocked Ports"
 msgstr "Ports les plus bloqués"
 
+#: src/views/network_audit_view.rs:210 src/widgets/add_rule_dialog.rs:126
 msgid "UDP"
 msgstr "UDP"
 
+#: src/views/profiles_view.rs:83
 msgid "e.g. 80,443/tcp or 8080"
 msgstr "par ex. 80,443/tcp ou 8080"
 
+#: data/app_profiles/qbittorrent:3 data/app_profiles/transmission:3
 msgid "BitTorrent client"
 msgstr "Client BitTorrent"
 
+#: data/app_profiles/cups:3
 msgid "Common UNIX Printing System server"
 msgstr "Serveur du Common UNIX Printing System"
 
+#: data/app_profiles/syncthing:3
 msgid "Continuous file synchronization"
 msgstr "Synchronisation continue de fichiers"
 
+#: data/app_profiles/docker:3
 msgid "Docker container runtime API"
 msgstr "API d'exécution de conteneur Docker"
 
+#: data/app_profiles/dns:3
 msgid "Domain Name System server"
 msgstr "Serveur du système de noms de domaine (DNS)"
 
+#: data/app_profiles/xmpp:3
 msgid "Extensible Messaging and Presence Protocol"
 msgstr "Protocole d' messagerie et de présence extensible"
 
+#: data/app_profiles/ftp:3
 msgid "File Transfer Protocol"
 msgstr "Protocole de transfert de fichiers"
 
+#: data/app_profiles/dropbox:3
 msgid "File synchronization service"
 msgstr "Service de synchronisation de fichiers"
 
+#: data/app_profiles/http:3
 msgid "Hypertext Transfer Protocol for web servers"
 msgstr "Hypertext Transfer Protocol pour serveurs web"
 
+#: data/app_profiles/redis:3
 msgid "In-memory data structure store"
 msgstr "Magasin de structures de données en mémoire"
 
+#: data/app_profiles/imap:3
 msgid "Internet Message Access Protocol for email"
 msgstr "Internet Message Access Protocol pour les e-mails"
 
+#: data/app_profiles/ldap:3
 msgid "Lightweight Directory Access Protocol"
 msgstr "Protocole léger d'accès au répertoire (LDAP)"
 
+#: data/app_profiles/jellyfin:3
 msgid "Media streaming server"
 msgstr "Serveur de streaming multimédia"
 
+#: data/app_profiles/wireguard:3
 msgid "Modern VPN tunnel"
 msgstr "Tunnel VPN moderne"
 
+#: data/app_profiles/mdns:3
 msgid "Multicast DNS for local network discovery"
 msgstr "MDNS pour la découverte sur le réseau local"
 
+#: data/app_profiles/mysql:3
 msgid "MySQL database server"
 msgstr "Serveur de base de données MySQL"
 
+#: data/app_profiles/nfs:3
 msgid "Network File System"
 msgstr "Système de fichiers réseau"
 
+#: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
 msgstr "Port / Protocole"
 
+#: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
 msgstr "Base de données documentaire NoSQL"
 
+#: data/app_profiles/kdeconnect:3
 msgid "Phone and desktop integration"
 msgstr "Intégration téléphone et ordinateur de bureau"
 
+#: data/app_profiles/plex:3
 msgid "Plex media streaming server"
 msgstr "Serveur de streaming multimédia Plex"
 
+#: data/app_profiles/pop3:3
 msgid "Post Office Protocol for email retrieval"
 msgstr "Post Office Protocol pour la récupération des e-mails"
 
+#: data/app_profiles/postgresql:3
 msgid "PostgreSQL database server"
 msgstr "Serveur de base de données PostgreSQL"
 
+#: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
 msgstr "Port / Protocole"
 
+#: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
 msgstr "Hypertext Transfer Protocol Secure pour serveurs web"
 
+#: data/app_profiles/openssh:3
 msgid "Secure shell remote access"
 msgstr "Accès distant par shell sécurisé"
 
+#: data/app_profiles/smtp:3
 msgid "Simple Mail Transfer Protocol"
 msgstr "Simple Mail Transfer Protocol"
 
+#: data/app_profiles/vnc:3
 msgid "Virtual Network Computing remote desktop"
 msgstr "Bureau à distance Virtual Network Computing"
 
+#: data/app_profiles/samba:3
 msgid "Windows file and printer sharing"
 msgstr "Partage de fichiers et d'imprimantes Windows"
+
+#: src/views/network_audit_view.rs:534
+msgid "Audit Block"
+msgstr "Bloc d'audit"
+
+#: src/ufw/backend.rs:44 src/ufw/backend.rs:391 src/ufw/backend.rs:643
+msgid "Authentication cancelled"
+msgstr "Authification annulée"
+
+#: src/views/network_audit_view.rs:160
+msgid "Download"
+msgstr "Téléchargement"
+
+#: src/ufw/backend.rs:384
+msgid "Failed to execute network service helper"
+msgstr "Échec de l'exécution de l'assistant du service réseau"
+
+#: src/ufw/backend.rs:632
+msgid "Failed to execute pkexec"
+msgstr "Échec de l’exécution de pkexec"
+
+#: src/ufw/backend.rs:613
+msgid "Failed to inspect system service"
+msgstr "Échec de l'inspection du service système"
+
+#: src/window.rs:284
+msgid "Failed to read firewall status"
+msgstr "Échec de la lecture de l’état du pare-feu"
+
+#: src/window.rs:300
+msgid "Failed to read profiles"
+msgstr "Échec de la lecture des profils"
+
+#: src/ufw/stats.rs:39
+msgid "Failed to run journalctl"
+msgstr "Échec de l'exécution de journalctl"
+
+#: src/ufw/backend.rs:37
+msgid "Failed to run pkexec ufw status"
+msgstr "Échec de l'exécution de pkexec ufw status"
+
+#: src/ufw/stats.rs:151
+msgid "Failed to run ss"
+msgstr "Échec de l’exécution de ss"
+
+#: src/ufw/traffic_monitor.rs:36
+msgid "Failed to start ufwall-auditor"
+msgstr "Échec du démarrage de ufwall-auditor"
+
+#: src/ufw/traffic_monitor.rs:38
+msgid "Is it installed?"
+msgstr "Est-il installé ?"
+
+#: src/views/network_audit_view.rs:166
+msgid "Max"
+msgstr "Max"
+
+#: src/views/network_audit_view.rs:84
+msgid ""
+"Network Traffic\n"
+"Red line: Upload speed\n"
+"Green line: Download speed"
+msgstr ""
+"Trafic réseau\n"
+"Ligne rouge : vitesse d'envoi\n"
+"Ligne verte : vitesse de téléchargement"
+
+#: src/ufw/backend.rs:399
+msgid "Network service command failed"
+msgstr "Échec de la commande du service réseau"
+
+#: src/views/network_audit_view.rs:371
+msgid "No Active Connections"
+msgstr "Aucune connexion active"
+
+#: src/views/network_audit_view.rs:361
+msgid "No Inbound Connections"
+msgstr "Aucune connexion entrante"
+
+#: src/views/network_audit_view.rs:366
+msgid "No Outbound Connections"
+msgstr "Aucune connexion sortante"
+
+#: src/views/network_audit_view.rs:367
+msgid "No applications are sending data to the internet."
+msgstr "Aucune application n’envoie de données sur Internet."
+
+#: src/views/network_audit_view.rs:362
+msgid "No external devices are connecting to your open ports."
+msgstr "Aucun appareil externe ne se connecte à vos ports ouverts."
+
+#: src/views/network_audit_view.rs:372
+msgid "No network activity detected."
+msgstr "Aucune activité réseau détectée."
+
+#: src/ufw/backend.rs:528 src/ufw/backend.rs:546
+msgid "No ports defined for this profile"
+msgstr "Aucun port défini pour ce profil"
+
+#: src/ufw/backend.rs:649
+msgid "UFW command failed"
+msgstr "La commande UFW a échoué"
+
+#: src/views/network_audit_view.rs:152
+msgid "Upload"
+msgstr "Envoi"
+
+#: src/ufw/backend.rs:48
+msgid "pkexec failed"
+msgstr "Échec de pkexec"

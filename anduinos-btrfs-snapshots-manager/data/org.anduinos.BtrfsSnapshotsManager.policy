@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC
+ "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1.0/policyconfig.dtd">
+<policyconfig>
+  <vendor>AnduinOS</vendor>
+  <vendor_url>https://www.anduinos.com</vendor_url>
+
+  <action id="org.anduinos.btrfs-snapshots-manager.create-snapshot">
+    <description>Create an AnduinOS system snapshot</description>
+    <description xml:lang="zh_CN">创建 AnduinOS 系统快照</description>
+    <message>Authentication is required to create a system snapshot</message>
+    <message xml:lang="zh_CN">创建系统快照需要身份验证</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+  </action>
+
+  <action id="org.anduinos.btrfs-snapshots-manager.delete-snapshot">
+    <description>Delete an AnduinOS system snapshot</description>
+    <description xml:lang="zh_CN">删除 AnduinOS 系统快照</description>
+    <message>Authentication is required to delete a system snapshot</message>
+    <message xml:lang="zh_CN">删除系统快照需要身份验证</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="org.anduinos.btrfs-snapshots-manager.restore-snapshot">
+    <description>Access or restore an AnduinOS system snapshot</description>
+    <description xml:lang="zh_CN">访问或还原 AnduinOS 系统快照</description>
+    <message>Authentication is required to access or restore a system snapshot</message>
+    <message xml:lang="zh_CN">访问或还原系统快照需要身份验证</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="org.anduinos.btrfs-snapshots-manager.configure-system">
+    <description>Configure AnduinOS recovery</description>
+    <description xml:lang="zh_CN">配置 AnduinOS 系统恢复</description>
+    <message>Authentication is required to change recovery settings</message>
+    <message xml:lang="zh_CN">更改恢复设置需要身份验证</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+  </action>
+
+  <action id="org.anduinos.btrfs-snapshots-manager.personal-files">
+    <description>Browse and export historical Personal Files</description>
+    <description xml:lang="zh_CN">浏览和导出个人文件历史</description>
+    <message>Authentication is required to access historical Personal Files</message>
+    <message xml:lang="zh_CN">访问个人文件历史需要身份验证</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+  </action>
+
+  <action id="org.anduinos.btrfs-snapshots-manager.create-personal-snapshot">
+    <description>Create a Home history snapshot</description>
+    <description xml:lang="zh_CN">创建用户目录历史快照</description>
+    <message>A local active user may create a Home history snapshot</message>
+    <message xml:lang="zh_CN">本地活动用户可以创建用户目录历史快照</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+  </action>
+
+  <action id="org.anduinos.btrfs-snapshots-manager.create-personal-snapshot-override">
+    <description>Override the Home snapshot creation limit</description>
+    <description xml:lang="zh_CN">越过用户目录快照创建频率限制</description>
+    <message>Authentication is required to create more than four Home snapshots per minute</message>
+    <message xml:lang="zh_CN">每分钟创建超过四个用户目录快照需要身份验证</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+  </action>
+</policyconfig>
