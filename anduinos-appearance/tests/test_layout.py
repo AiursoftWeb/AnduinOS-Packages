@@ -6,24 +6,39 @@ import unittest
 from unittest import mock
 
 
-SRC = pathlib.Path(__file__).parents[1] / "src"
-APP_SOURCE = SRC / "anduinos-appearance"
+ROOT = pathlib.Path(__file__).parents[1]
+SRC = ROOT / "src"
+DESKTOP = ROOT / "data" / "anduinos-appearance.desktop"
+SERVICE = ROOT / "data" / "com.anduinos.Appearance.service"
 sys.path.insert(0, str(SRC))
+
+
+def rust_sources() -> str:
+    return "\n".join(path.read_text(encoding="utf-8") for path in sorted(SRC.glob("*.rs")))
 
 from anduinos_appearance import layout  # noqa: E402
 
 
 class LayoutTests(unittest.TestCase):
     def test_extension_titles_are_literal_gettext_calls(self):
-        source = APP_SOURCE.read_text(encoding="utf-8")
+        source = rust_sources()
         for title in (
             "ArcMenu",
             "Dash-to-Panel",
             "Simple Weather",
             "Network Stats",
         ):
-            self.assertIn(f"_('{title}')", source)
-        self.assertNotIn("row.set_title(_(title_key))", source)
+            self.assertIn(f'i18n("{title}")', source)
+
+    def test_application_stays_resident_for_dbus_activation(self):
+        source = rust_sources()
+        self.assertIn("ApplicationFlags::IS_SERVICE", source)
+        self.assertIn("app.hold()", source)
+        desktop = DESKTOP.read_text(encoding="utf-8")
+        self.assertIn("DBusActivatable=true", desktop)
+        service = SERVICE.read_text(encoding="utf-8")
+        self.assertIn("Name=com.anduinos.Appearance", service)
+        self.assertIn("--gapplication-service", service)
 
     @staticmethod
     def completed(stdout="", returncode=0):

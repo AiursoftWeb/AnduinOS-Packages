@@ -3,7 +3,7 @@
     <PackageName>anduinos-appearance</PackageName>
     <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>AnduinOS Appearance — toggle between Windows 11 and Classic taskbar layouts</PackageDescription>
+    <PackageDescription>AnduinOS Appearance — toggle between Centered and Classic taskbar layouts</PackageDescription>
     <Section>utils</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
@@ -12,7 +12,7 @@
     <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>noble-addon resolute-addon</TargetSuites>
-    <TargetArchitectures>all</TargetArchitectures>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
     <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
   </PropertyGroup>
@@ -23,20 +23,17 @@
 
   <ItemGroup>
     <Dependency Include="python3" />
-    <Dependency Include="python3-gi" />
-    <Dependency Include="python3-gi-cairo" />
-    <Dependency Include="gir1.2-gtk-4.0" />
     <Dependency Include="dconf-cli" />
-    <Dependency Include="gir1.2-adw-1" />
     <Dependency Include="anduinos-gdm3-wallpaper" />
   </ItemGroup>
 
   <ItemGroup>
-    <IncludeScript Include="src/anduinos-appearance" Target="/usr/bin/anduinos-appearance" />
+    <IncludeScript Include="obj/anduinos-appearance" Target="/usr/bin/anduinos-appearance" />
     <IncludeFile Include="src/anduinos_appearance/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_appearance/__init__.py" />
     <IncludeFile Include="src/anduinos_appearance/layout.py" Target="/usr/lib/python3/dist-packages/anduinos_appearance/layout.py" />
     <IncludeFile Include="src/anduinos_appearance/preview.py" Target="/usr/lib/python3/dist-packages/anduinos_appearance/preview.py" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
+    <IncludeFile Include="data/com.anduinos.Appearance.service" Target="/usr/share/dbus-1/services/com.anduinos.Appearance.service" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,7 +43,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="PYTHONPATH=src python3 -m unittest discover -s tests -v" />
-    <PrebuildCommand Run="bash compile-locales.sh" />
+    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v" />
+    <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
   </ItemGroup>
 </Project>

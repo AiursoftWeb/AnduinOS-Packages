@@ -1,0 +1,20 @@
+[package]
+name = "anduinos-appearance"
+version = "2.0.2"
+edition = "2021"
+license = "GPL-3.0-or-later"
+description = "AnduinOS Appearance — toggle between Centered and Classic taskbar layouts"
+authors = ["AnduinOS Team <anduin@aiursoft.com>"]
+
+[dependencies]
+gtk = { package = "gtk4", version = "0.11", features = ["v4_10"] }
+adw = { package = "libadwaita", version = "0.9", features = ["v1_6"] }
+gettext-rs = { version = "0.7", features = ["gettext-system"] }
+serde_json = "1"
+async-channel = "2"
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+opt-level = "s"

@@ -12,12 +12,12 @@ ROOT = Path(__file__).resolve().parents[1]
 OS_RELEASE = ROOT / "base-files/assets/resolute/os-release"
 
 PYTHON_ABOUT_SOURCES = (
-    ROOT / "anduinos-appearance/src/anduinos-appearance",
     ROOT / "anduinos-driver-center/src/anduinos_driver_center/app.py",
     ROOT / "anduinos-oobe/assets/anduinos-oobe",
 )
 
 CARGO_MANIFESTS = (
+    ROOT / "anduinos-appearance/Cargo.toml",
     ROOT / "anduinos-swapcontrol-gtk/Cargo.toml",
     ROOT / "anduinos-ufwall-gtk/Cargo.toml",
     ROOT / "anduinos-yubikey-manager/Cargo.toml",
@@ -25,6 +25,7 @@ CARGO_MANIFESTS = (
 )
 
 CARGO_LOCK_PACKAGES = {
+    ROOT / "anduinos-appearance/Cargo.lock": {"anduinos-appearance"},
     ROOT / "anduinos-swapcontrol-gtk/Cargo.lock": {"swapcontrol-gtk"},
     ROOT / "anduinos-ufwall-gtk/Cargo.lock": {"ufwall-gtk"},
     ROOT / "anduinos-yubikey-manager/Cargo.lock": {"anduinos-yubikey-manager"},
