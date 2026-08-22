@@ -12,7 +12,7 @@
     <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>noble-addon resolute-addon</TargetSuites>
-    <TargetArchitectures>all</TargetArchitectures>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
     <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
   </PropertyGroup>
@@ -23,28 +23,20 @@
 
   <ItemGroup>
     <Dependency Include="python3" />
-    <Dependency Include="python3-gi" />
-    <Dependency Include="gir1.2-gtk-4.0" />
-    <Dependency Include="gir1.2-adw-1" />
     <Dependency Include="ubuntu-drivers-common" />
     <Dependency Include="fwupd" />
-    <Dependency Include="gir1.2-fwupd-2.0" />
     <Dependency Include="anduinos-secureboot-toolkit" />
     <Dependency Include="pkexec" />
     <Dependency Include="pciutils" />
   </ItemGroup>
 
   <ItemGroup>
-    <IncludeScript Include="scripts/anduinos-driver-center" Target="/usr/bin/anduinos-driver-center" />
+    <IncludeScript Include="obj/anduinos-driver-center" Target="/usr/bin/anduinos-driver-center" />
     <IncludeScript Include="scripts/driver-helper" Target="/usr/libexec/anduinos-driver-center/driver-helper" />
-    <IncludeFile Include="src/anduinos_driver_center/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/__init__.py" />
-    <IncludeFile Include="src/anduinos_driver_center/__main__.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/__main__.py" />
-    <IncludeFile Include="src/anduinos_driver_center/app.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/app.py" />
-    <IncludeFile Include="src/anduinos_driver_center/core.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/core.py" />
-    <IncludeFile Include="src/anduinos_driver_center/firmware.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/firmware.py" />
     <IncludeFolder Include="resources" Target="/usr/share/anduinos-driver-center/illustrations" />
     <IncludeFile Include="data/com.anduinos.DriverCenter.policy" Target="/usr/share/polkit-1/actions/com.anduinos.DriverCenter.policy" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
+    <IncludeFile Include="data/com.anduinos.DriverCenter.service" Target="/usr/share/dbus-1/services/com.anduinos.DriverCenter.service" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,5 +46,7 @@
   <ItemGroup>
     <PrebuildCommand Run="bash compile-locales.sh" />
     <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" />
+    <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
   </ItemGroup>
 </Project>

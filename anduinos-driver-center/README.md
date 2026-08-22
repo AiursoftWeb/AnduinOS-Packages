@@ -12,10 +12,10 @@ driver, can refresh package information, and exposes the equivalent of
 `ubuntu-drivers install` through the same restricted privileged helper used by
 the individual hardware pages.
 
-The firmware page uses the fwupd client API directly to list supported devices,
-refresh enabled metadata sources, inspect available releases, install one or
-all updates, report live progress and device requests, prompt for required
-restarts, and show the daemon's update history. Firmware authorization and
+The firmware page talks to `fwupdmgr` rather than embedding the fwupd GObject
+bindings: it lists supported devices, refreshes enabled metadata sources,
+inspects available releases, installs one or all updates, prompts for required
+restarts, and shows the daemon's update history. Firmware authorization and
 signature verification remain owned by fwupd rather than the driver helper.
 
 The audio page reports the installed Intel SOF firmware and ALSA UCM packages,
@@ -46,7 +46,12 @@ Driver Center must not add a second Secure Boot backend or diverging prompts.
 
 ## Development
 
+The shipped GUI is a GTK4/Libadwaita Rust binary. The Python modules remain in
+tree as the behavioral spec and unit-test surface; they are not installed as
+the application.
+
 ```bash
-PYTHONPATH=src python3 -m anduinos_driver_center
+bash build.sh
+./obj/anduinos-driver-center
 python3 -m unittest discover -s tests -v
 ```
