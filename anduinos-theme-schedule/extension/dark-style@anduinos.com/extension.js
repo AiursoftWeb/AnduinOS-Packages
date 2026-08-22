@@ -5,19 +5,17 @@ import Geoclue from 'gi://Geoclue?version=2.0';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as QuickSettings from 'resource:///org/gnome/shell/ui/quickSettings.js';
 import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {plan} from './sun.js';
 
-const SCHEDULE_SCHEMA = 'com.anduinos.ThemeSchedule';
 const INTERFACE_SCHEMA = 'org.gnome.desktop.interface';
 const FALLBACK_SUNRISE_HOUR = 7;
 const FALLBACK_SUNSET_HOUR = 19;
 
-const DarkStyleMenuToggle = GObject.registerClass(
-class DarkStyleMenuToggle extends QuickSettings.QuickMenuToggle {
+const DarkStyleToggle = GObject.registerClass(
+class DarkStyleToggle extends QuickSettings.QuickToggle {
     _init(extension) {
         super._init({
             title: _('Dark Style'),
@@ -25,57 +23,47 @@ class DarkStyleMenuToggle extends QuickSettings.QuickMenuToggle {
         });
 
         this._extension = extension;
-        this._schedule = extension._schedule;
-        this._interface = extension._interface;
-
-        this.menu.setHeader('dark-mode-symbolic', _('Dark Style'));
-        this._offItem = new PopupMenu.PopupMenuItem(_('Off'));
-        this._onItem = new PopupMenu.PopupMenuItem(_('On'));
-        this._autoItem = new PopupMenu.PopupMenuItem(_('Sunset to Sunrise'));
-        this.menu.addMenuItem(this._offItem);
-        this.menu.addMenuItem(this._onItem);
-        this.menu.addMenuItem(this._autoItem);
-
-        this._offItem.connect('activate', () => extension.setManual(false));
-        this._onItem.connect('activate', () => extension.setManual(true));
-        this._autoItem.connect('activate', () => extension.setAuto());
-        this.connect('clicked', () => extension.toggleCurrent());
+        this.connect('clicked', () => extension.cycle());
 
         this._syncIds = [
-            this._interface.connect('changed::color-scheme', () => this._sync()),
-            this._schedule.connect('changed::mode', () => this._sync()),
+            extension._interface.connect('changed::color-scheme', () => this._sync()),
+            extension._schedule.connect('changed::mode', () => this._sync()),
         ];
         this.connect('destroy', () => {
-            this._interface.disconnect(this._syncIds[0]);
-            this._schedule.disconnect(this._syncIds[1]);
+            extension._interface.disconnect(this._syncIds[0]);
+            extension._schedule.disconnect(this._syncIds[1]);
         });
         this._sync();
     }
 
     _sync() {
-        const dark = this._extension.isDark();
         const auto = this._extension.isAuto();
-        this.set({checked: dark});
-        this.subtitle = auto ? _('Sunset to Sunrise') : (dark ? _('On') : _('Off'));
-        this._offItem.setOrnament(!auto && !dark
-            ? PopupMenu.Ornament.DOT
-            : PopupMenu.Ornament.NONE);
-        this._onItem.setOrnament(!auto && dark
-            ? PopupMenu.Ornament.DOT
-            : PopupMenu.Ornament.NONE);
-        this._autoItem.setOrnament(auto
-            ? PopupMenu.Ornament.DOT
-            : PopupMenu.Ornament.NONE);
+        const dark = this._extension.isDark();
+        if (auto) {
+            this.set({
+                checked: true,
+                title: _('Auto'),
+                iconName: 'dark-mode-symbolic',
+            });
+        } else if (dark) {
+            this.set({
+                checked: true,
+                title: _('Dark Style'),
+                iconName: 'dark-mode-symbolic',
+            });
+        } else {
+            this.set({
+                checked: false,
+                title: _('Light Style'),
+                iconName: 'weather-clear-symbolic',
+            });
+        }
     }
 });
 
 export default class DarkStyleScheduleExtension extends Extension {
     enable() {
-        const source = Gio.SettingsSchemaSource.get_default();
-        const schema = source?.lookup(SCHEDULE_SCHEMA, true);
-        if (!schema)
-            throw new Error(`Schema "${SCHEDULE_SCHEMA}" not found.`);
-        this._schedule = new Gio.Settings({settings_schema: schema});
+        this._schedule = this.getSettings();
         this._interface = new Gio.Settings({schema_id: INTERFACE_SCHEMA});
         this._geoclue = null;
         this._timerId = 0;
@@ -101,7 +89,7 @@ export default class DarkStyleScheduleExtension extends Extension {
 
     setManual(dark) {
         this._schedule.set_string('mode', 'manual');
-        this._applyScheme(dark, dark ? 'prefer-dark' : 'default');
+        this._applyScheme(dark, dark ? 'prefer-dark' : 'prefer-light');
     }
 
     setAuto() {
@@ -109,9 +97,13 @@ export default class DarkStyleScheduleExtension extends Extension {
         this._arm();
     }
 
-    toggleCurrent() {
-        const dark = !this.isDark();
-        this._applyScheme(dark, dark ? 'prefer-dark' : 'default');
+    cycle() {
+        if (this.isAuto())
+            this.setManual(false);
+        else if (this.isDark())
+            this.setAuto();
+        else
+            this.setManual(true);
     }
 
     _applyScheme(dark, scheme) {
@@ -139,22 +131,23 @@ export default class DarkStyleScheduleExtension extends Extension {
             return;
 
         this._hidden = [];
-        for (const item of qs._darkMode?.quickSettingsItems ?? []) {
-            item.visible = false;
-            this._hidden.push(item);
-        }
-
-        this._toggle = new DarkStyleMenuToggle(this);
+        this._toggle = new DarkStyleToggle(this);
         this._indicator = new QuickSettings.SystemIndicator();
         this._indicator.quickSettingsItems.push(this._toggle);
 
-        const sibling = qs._doNotDisturb?.quickSettingsItems?.[0]
-            ?? qs._darkMode?.quickSettingsItems?.[0]
-            ?? null;
+        const stock = qs._darkMode?.quickSettingsItems?.[0] ?? null;
+        const sibling = qs._doNotDisturb?.quickSettingsItems?.[0] ?? stock;
         if (sibling && qs._addItemsBefore)
             qs._addItemsBefore([this._toggle], sibling, 1);
         else
             qs.addExternalIndicator(this._indicator);
+
+        for (const item of qs._darkMode?.quickSettingsItems ?? []) {
+            if (item === this._toggle)
+                continue;
+            item.visible = false;
+            this._hidden.push(item);
+        }
     }
 
     _arm() {
