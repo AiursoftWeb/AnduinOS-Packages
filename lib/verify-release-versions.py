@@ -18,6 +18,7 @@ PYTHON_ABOUT_SOURCES = (
 )
 
 CARGO_MANIFESTS = (
+    ROOT / "anduinos-theme-schedule/Cargo.toml",
     ROOT / "anduinos-swapcontrol-gtk/Cargo.toml",
     ROOT / "anduinos-ufwall-gtk/Cargo.toml",
     ROOT / "anduinos-yubikey-manager/Cargo.toml",
@@ -25,6 +26,7 @@ CARGO_MANIFESTS = (
 )
 
 CARGO_LOCK_PACKAGES = {
+    ROOT / "anduinos-theme-schedule/Cargo.lock": {"anduinos-theme-schedule"},
     ROOT / "anduinos-swapcontrol-gtk/Cargo.lock": {"swapcontrol-gtk"},
     ROOT / "anduinos-ufwall-gtk/Cargo.lock": {"ufwall-gtk"},
     ROOT / "anduinos-yubikey-manager/Cargo.lock": {"anduinos-yubikey-manager"},
