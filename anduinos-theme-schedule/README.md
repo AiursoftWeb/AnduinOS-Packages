@@ -1,12 +1,11 @@
-# AnduinOS Theme Schedule
+# AnduinOS Dark Style schedule
 
-A user-session Rust service that switches GNOME Dark Style at sunrise and
-sunset, plus a GNOME Shell extension that adds **Sunset to Sunrise** to the
-Quick Settings Dark Style tile.
+A GNOME Shell extension that adds **Sunset to Sunrise** to the Quick Settings
+Dark Style tile. The scheduler runs in the same GJS process as the rest of
+the Shell.
 
-The daemon writes `org.gnome.desktop.interface color-scheme`. Fluent GTK and
-icon follow-up is left to the existing accent theme extensions.
-`anduinos-theme-sync` continues to publish the host GTK3 theme to Flatpak.
+It writes `org.gnome.desktop.interface color-scheme`. Fluent GTK and icon
+follow-up stays with the accent theme extensions.
 
 Location comes from GeoClue when available, otherwise the last successful
 coordinates, otherwise 07:00 / 19:00 local time.

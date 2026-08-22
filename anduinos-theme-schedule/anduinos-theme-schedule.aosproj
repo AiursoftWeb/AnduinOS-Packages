@@ -3,14 +3,14 @@
     <PackageName>anduinos-theme-schedule</PackageName>
     <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>AnduinOS Dark Style sunrise/sunset scheduler and Quick Settings menu.</PackageDescription>
+    <PackageDescription>AnduinOS Dark Style Quick Settings tile with optional sunset-to-sunrise scheduling.</PackageDescription>
     <Section>gnome</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>noble-addon resolute-addon</TargetSuites>
-    <TargetArchitectures>amd64 arm64</TargetArchitectures>
+    <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
     <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
   </PropertyGroup>
@@ -20,28 +20,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Dependency Include="libglib2.0-0t64 | libglib2.0-0" />
     <Dependency Include="gnome-shell" />
+    <Dependency Include="gir1.2-geoclue-2.0" />
     <Dependency Include="geoclue-2.0" />
     <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
-    <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <IncludeScript Include="obj/anduinos-theme-schedule" Target="/usr/bin/anduinos-theme-schedule" />
-    <IncludeFile Include="data/anduinos-theme-schedule.service" Target="/usr/lib/systemd/user/anduinos-theme-schedule.service" />
-    <IncludeFile Include="data/anduinos-theme-schedule.desktop" Target="/usr/share/applications/anduinos-theme-schedule.desktop" />
     <IncludeFile Include="data/com.anduinos.ThemeSchedule.gschema.xml" Target="/usr/share/glib-2.0/schemas/com.anduinos.ThemeSchedule.gschema.xml" />
-    <IncludeFile Include="data/geoclue.conf" Target="/etc/geoclue/conf.d/anduinos-theme-schedule.conf" />
     <IncludeFolder Include="extension/dark-style@anduinos.com" Target="/usr/share/gnome-shell/extensions/dark-style@anduinos.com" />
   </ItemGroup>
 
   <ItemGroup>
     <PostInstallScript Include="scripts/postinst.sh" />
-    <PreRemoveScript Include="scripts/prerm.sh" />
   </ItemGroup>
 </Project>
