@@ -20,8 +20,12 @@ install -m 644 "$ROOT/data/com.anduinos.DriverCenter.service" \
     /usr/share/dbus-1/services/com.anduinos.DriverCenter.service
 
 desktop=/usr/share/applications/com.anduinos.DriverCenter.desktop
-if [ -f "$desktop" ] && ! grep -q '^DBusActivatable=true' "$desktop"; then
-    sed -i '/^Terminal=false/a DBusActivatable=true' "$desktop"
+if [ -f "$desktop" ]; then
+    if grep -q '^DBusActivatable=' "$desktop"; then
+        sed -i 's/^DBusActivatable=.*/DBusActivatable=true/' "$desktop"
+    else
+        sed -i '/^Terminal=false/a DBusActivatable=true' "$desktop"
+    fi
 fi
 
 update-desktop-database /usr/share/applications 2>/dev/null || true
