@@ -85,7 +85,7 @@ class StylePage(Adw.PreferencesPage):
         layout_group.set_title(_('Layout'))
 
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-        self.btn11 = Gtk.Button(label='  11  ')
+        self.btn11 = Gtk.Button(label='  ' + _('Centered') + '  ')
         self.btn11.connect('clicked', self._on_click, 'eleven')
         self.btn10 = Gtk.Button(label='  ' + _('Classic') + '  ')
         self.btn10.connect('clicked', self._on_click, 'classic')
@@ -217,7 +217,7 @@ class StylePage(Adw.PreferencesPage):
     @staticmethod
     def _label(s):
         if s == 'eleven':
-            return _('Windows 11')
+            return _('Centered')
         if s == 'seperated':
             return _('Seperated')
         return _('Classic')
