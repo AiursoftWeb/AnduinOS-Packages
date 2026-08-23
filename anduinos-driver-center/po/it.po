@@ -343,7 +343,7 @@ msgstr "Riavvia ora"
 #: src/anduinos_driver_center/app.py:1607
 #: src/anduinos_driver_center/app.py:1732
 msgid "Installed"
-msgstr "7 Installato"
+msgstr "Installato"
 
 #: src/anduinos_driver_center/app.py:759
 #: src/anduinos_driver_center/app.py:1879
@@ -952,7 +952,7 @@ msgstr "Code di stampa"
 
 #: src/anduinos_driver_center/app.py:2006
 msgid "Core printing"
-msgstr "Stampa nucleo"
+msgstr "Componenti base di stampa"
 
 #: src/anduinos_driver_center/app.py:2007
 msgid "Required for the local print service and command-line clients."
@@ -970,12 +970,11 @@ msgstr "Driver IPP moderni, filtri di documenti e strumenti di funzionalità."
 
 #: src/anduinos_driver_center/app.py:2022
 msgid "Network discovery"
-msgstr "Individuazione della rete"
+msgstr "Rilevamento stampanti in rete"
 
 #: src/anduinos_driver_center/app.py:2023
 msgid "Automatic discovery of printers advertised on the local network."
-msgstr ""
-"Rilevamento automatico delle stampanti pubblicizzate sulla rete locale."
+msgstr "Rilevamento automatico delle stampanti disponibili sulla rete locale."
 
 #: src/anduinos_driver_center/app.py:2030
 msgid "Optional compatibility"
@@ -1001,7 +1000,7 @@ msgstr "Operazione di stampa non riuscita: "
 
 #: src/anduinos_driver_center/app.py:2202
 msgid "Working…"
-msgstr "Lavoro..."
+msgstr "Elaborazione in corso…"
 
 #: src/anduinos_driver_center/app.py:2268
 msgid "AnduinOS Team"
@@ -1029,13 +1028,13 @@ msgstr "Protegge il tuo sistema da malware a basso livello e rootkit."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
 msgid "System Trust Status"
-msgstr "Status della fiducia di sistema"
+msgstr "Stato di attendibilità del sistema"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
 msgid "Create & Enroll Certificate"
-msgstr "Crea e iscriviti al certificato"
+msgstr "Crea e registra certificato MOK"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
@@ -1088,11 +1087,11 @@ msgstr "Certificato locale mancante"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
 msgid "Certificate is trusted by motherboard"
-msgstr "Il certificato è attendibile dalla scheda madre"
+msgstr "Certificato riconosciuto dalla scheda madre"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
 msgid "Kernel signature enforcement is inactive"
-msgstr "L'imposizione della firma del kernel è inattiva"
+msgstr "Verifica della firma del kernel non attiva"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
 msgid "Driver trust cannot be verified"
@@ -1102,9 +1101,7 @@ msgstr "Impossibile verificare l'affidabilità del driver"
 msgid ""
 "Secure Boot trust is ready. No third-party kernel modules are currently "
 "installed."
-msgstr ""
-"Secure Boot la fiducia è pronta. Nessun modulo kernel di terze parti è "
-"attualmente installato."
+msgstr "Attendibilità Secure Boot configurata. Nessun modulo kernel di terze parti è attualmente installato."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
@@ -1127,7 +1124,7 @@ msgstr "Registra il certificato esistente"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
 msgid "Repair Automatic DKMS Signing"
-msgstr "Ripara la firma automatica DKMS"
+msgstr "Ripristina la firma automatica DKMS"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
 msgid ""
@@ -1139,9 +1136,7 @@ msgstr ""
 msgid ""
 "Secure Boot status could not be read. Driver trust operations are blocked "
 "until detection succeeds."
-msgstr ""
-"Secure Boot. Le operazioni di attendibilità del driver vengono bloccate "
-"finché il rilevamento non ha esito positivo."
+msgstr "Impossibile leggere lo stato di Secure Boot. Le operazioni sui driver sono bloccate finché il rilevamento non ha esito positivo."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
 msgid "No certificate is required while Secure Boot is disabled."
@@ -1149,13 +1144,11 @@ msgstr "Nessun certificato richiesto mentre Secure Boot è disabilitato."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
 msgid "System Trust Established. Third-party drivers will load securely."
-msgstr ""
-"Fiducia di sistema stabilita. I driver di terze parti verranno caricati in "
-"modo sicuro."
+msgstr "Attendibilità del sistema stabilita. I driver di terze parti verranno caricati in modo sicuro."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
 msgid "The certificate is enrolled and current drivers are trusted."
-msgstr "Il certificato è registrato e i conducenti attuali sono attendibili."
+msgstr "Il certificato è registrato e i driver attuali sono attendibili."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
 msgid "Repair automatic DKMS signing before future driver updates."
@@ -1194,7 +1187,7 @@ msgstr "  Verifica in corso...  "
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
 msgid "Please trust the certificate upon reboot using password 123456."
-msgstr "Affida il certificato al riavvio utilizzando la password 123456."
+msgstr "Autorizza il certificato al riavvio inserendo la password 123456."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
 msgid "Reboot"
@@ -1202,7 +1195,7 @@ msgstr "Riavvia"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
 msgid "Success! When you reboot, a blue screen will appear."
-msgstr "Riuscito! Al riavvio apparirà una schermata blu."
+msgstr "Operazione completata! Al riavvio apparirà una schermata blu."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
 msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
@@ -1215,11 +1208,11 @@ msgstr "Certificato creato"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
 msgid "Secure Boot Trust Not Required"
-msgstr "Secure Boot Attendibilità non richiesta"
+msgstr "Attendibilità Secure Boot non richiesta"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
 msgid "Firmware signature enforcement is not active."
-msgstr "L'imposizione della firma del firmware non è attiva."
+msgstr "Verifica della firma del firmware non attiva."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
 msgid ""
@@ -1235,7 +1228,7 @@ msgstr "La configurazione richiede attenzione"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
 msgid "System Trust Established"
-msgstr "Fiducia del sistema stabilita"
+msgstr "Attendibilità del sistema stabilita"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
 msgid "Driver Signature Trusted"
@@ -1269,7 +1262,7 @@ msgstr "Certificato MOK locale"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:109
 msgid "Secure Boot Enabled"
-msgstr "Avvio sicuro abilitato"
+msgstr "Secure Boot abilitato"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:112
 msgid "Third-party Drivers"
@@ -1277,7 +1270,7 @@ msgstr "Driver di terze parti"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:111
 msgid "UEFI Firmware Trust"
-msgstr "Fiducia del firmware UEFI"
+msgstr "Attendibilità firmware UEFI"
 
 #~ msgid "Download the latest metadata from enabled firmware remotes."
 #~ msgstr "Scarica i metadati più recenti dai telecomandi firmware abilitati."

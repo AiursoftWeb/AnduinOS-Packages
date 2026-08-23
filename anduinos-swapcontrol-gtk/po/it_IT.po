@@ -670,7 +670,7 @@ msgstr "Il ridimensionamento del file di swap non è supportato su {0}"
 
 #: src/progress_dialog.rs:58
 msgid "Task panicked: {0}"
-msgstr "Il task è andato in panico: {0}"
+msgstr "Errore imprevisto del task (panic): {0}"
 
 #: src/swap/persist.rs:74
 msgid ""
@@ -693,7 +693,7 @@ msgid ""
 msgstr ""
 "Il pacchetto 'anduinos-swap-config' non è installato.\n"
 "\n"
-"Le modifiche a Zswap non possono essere applicate o persistite senza di esso.\n"
+"Le modifiche a Zswap non possono essere applicate o salvate in modo permanente senza di esso.\n"
 "Installa 'anduinos-swap-config' per gestire Zswap da questa GUI."
 
 #: src/views/zram_view.rs:573
@@ -765,9 +765,7 @@ msgstr "{0} · salvato {1}%"
 #: src/views/swap_view.rs:754
 msgid ""
 "{0} — installer-managed; size cannot be changed while the system is running"
-msgstr ""
-"{0} — gestito dall'installatore; la dimensione non può essere modificata "
-"mentre il sistema è in esecuzione"
+msgstr "{0} — gestito dall'installer; la dimensione non può essere modificata a sistema in esecuzione"
 
 #~ msgid "Disabling swap will break hibernation. Continue?"
 #~ msgstr ""
