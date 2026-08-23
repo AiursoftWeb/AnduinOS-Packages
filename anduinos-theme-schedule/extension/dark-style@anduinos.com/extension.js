@@ -11,6 +11,7 @@ import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/ex
 import {plan} from './sun.js';
 
 const INTERFACE_SCHEMA = 'org.gnome.desktop.interface';
+const DASH_TO_PANEL_UUID = 'dash-to-panel@jderose9.github.com';
 const FALLBACK_SUNRISE_HOUR = 7;
 const FALLBACK_SUNSET_HOUR = 19;
 
@@ -30,8 +31,11 @@ class DarkStyleToggle extends QuickSettings.QuickToggle {
             extension._schedule.connect('changed::mode', () => this._sync()),
         ];
         this.connect('destroy', () => {
-            extension._interface.disconnect(this._syncIds[0]);
-            extension._schedule.disconnect(this._syncIds[1]);
+            try {
+                extension._interface?.disconnect(this._syncIds[0]);
+                extension._schedule?.disconnect(this._syncIds[1]);
+            } catch (e) {
+            }
         });
         this._sync();
     }
@@ -67,13 +71,40 @@ export default class DarkStyleScheduleExtension extends Extension {
         this._interface = new Gio.Settings({schema_id: INTERFACE_SCHEMA});
         this._geoclue = null;
         this._timerId = 0;
+        this._entries = [];
+        this._dtp = null;
+        this._dtpId = 0;
+        this._extId = 0;
+        this._retryId = 0;
 
         this._idleId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
             this._idleId = 0;
+            this._bindDashToPanel();
             this._replaceToggle();
             return GLib.SOURCE_REMOVE;
         });
         GLib.Source.set_name_by_id(this._idleId, '[AnduinOS] Dark Style schedule');
+
+        this._retryId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 400, () => {
+            this._retryId = 0;
+            this._bindDashToPanel();
+            this._replaceToggle();
+            return GLib.SOURCE_REMOVE;
+        });
+        GLib.Source.set_name_by_id(this._retryId, '[AnduinOS] Dark Style Dash to Panel retry');
+
+        this._extId = Main.extensionManager.connect(
+            'extension-state-changed',
+            (_mgr, extension) => {
+                if (extension?.uuid !== DASH_TO_PANEL_UUID)
+                    return;
+                GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+                    this._bindDashToPanel();
+                    this._replaceToggle();
+                    return GLib.SOURCE_REMOVE;
+                });
+            },
+        );
 
         this._modeId = this._schedule.connect('changed::mode', () => this._arm());
         this._arm();
@@ -125,29 +156,109 @@ export default class DarkStyleScheduleExtension extends Extension {
         this._interface.set_string('icon-theme', theme);
     }
 
-    _replaceToggle() {
-        const qs = Main.panel.statusArea.quickSettings;
-        if (!qs)
-            return;
+    _quickSettingsMenus() {
+        const menus = [];
+        const seen = new Set();
+        const add = qs => {
+            if (qs && !seen.has(qs)) {
+                seen.add(qs);
+                menus.push(qs);
+            }
+        };
+        add(Main.panel?.statusArea?.quickSettings);
+        for (const panel of global.dashToPanel?.panels ?? [])
+            add(panel.statusArea?.quickSettings);
+        return menus;
+    }
 
-        this._hidden = [];
-        this._toggle = new DarkStyleToggle(this);
-        this._indicator = new QuickSettings.SystemIndicator();
-        this._indicator.quickSettingsItems.push(this._toggle);
+    _bindDashToPanel() {
+        if (this._dtp === global.dashToPanel)
+            return;
+        this._unbindDashToPanel();
+        this._dtp = global.dashToPanel ?? null;
+        if (!this._dtp?.connect)
+            return;
+        this._dtpId = this._dtp.connect('panels-created', () => {
+            this._replaceToggle();
+        });
+    }
+
+    _unbindDashToPanel() {
+        if (this._dtpId && this._dtp) {
+            try {
+                this._dtp.disconnect(this._dtpId);
+            } catch (e) {
+            }
+        }
+        this._dtpId = 0;
+        this._dtp = null;
+    }
+
+    _entryAlive(entry) {
+        try {
+            return Boolean(entry.toggle?.get_parent());
+        } catch (e) {
+            return false;
+        }
+    }
+
+    _dropEntry(entry) {
+        for (const item of entry.hidden ?? []) {
+            try {
+                item.visible = true;
+            } catch (e) {
+            }
+        }
+        try {
+            if (this._entryAlive(entry))
+                entry.toggle.destroy();
+        } catch (e) {
+        }
+        try {
+            entry.indicator?.destroy();
+        } catch (e) {
+        }
+    }
+
+    _replaceToggle() {
+        const menus = this._quickSettingsMenus();
+        const keep = new Set(menus);
+        const next = [];
+        for (const entry of this._entries) {
+            if (keep.has(entry.qs) && this._entryAlive(entry))
+                next.push(entry);
+            else
+                this._dropEntry(entry);
+        }
+        this._entries = next;
+
+        const patched = new Set(this._entries.map(entry => entry.qs));
+        for (const qs of menus) {
+            if (!patched.has(qs))
+                this._replaceToggleOn(qs);
+        }
+    }
+
+    _replaceToggleOn(qs) {
+        const toggle = new DarkStyleToggle(this);
+        const indicator = new QuickSettings.SystemIndicator();
+        indicator.quickSettingsItems.push(toggle);
 
         const stock = qs._darkMode?.quickSettingsItems?.[0] ?? null;
         const sibling = qs._doNotDisturb?.quickSettingsItems?.[0] ?? stock;
         if (sibling && qs._addItemsBefore)
-            qs._addItemsBefore([this._toggle], sibling, 1);
+            qs._addItemsBefore([toggle], sibling, 1);
         else
-            qs.addExternalIndicator(this._indicator);
+            qs.addExternalIndicator(indicator);
 
+        const hidden = [];
         for (const item of qs._darkMode?.quickSettingsItems ?? []) {
-            if (item === this._toggle)
+            if (item === toggle)
                 continue;
             item.visible = false;
-            this._hidden.push(item);
+            hidden.push(item);
         }
+        this._entries.push({qs, toggle, indicator, hidden});
     }
 
     _arm() {
@@ -265,17 +376,22 @@ export default class DarkStyleScheduleExtension extends Extension {
             GLib.Source.remove(this._idleId);
             this._idleId = 0;
         }
+        if (this._retryId) {
+            GLib.Source.remove(this._retryId);
+            this._retryId = 0;
+        }
+        if (this._extId) {
+            Main.extensionManager.disconnect(this._extId);
+            this._extId = 0;
+        }
+        this._unbindDashToPanel();
         if (this._modeId && this._schedule) {
             this._schedule.disconnect(this._modeId);
             this._modeId = 0;
         }
-        for (const item of this._hidden ?? [])
-            item.visible = true;
-        this._hidden = [];
-        this._toggle?.destroy();
-        this._toggle = null;
-        this._indicator?.destroy();
-        this._indicator = null;
+        for (const entry of this._entries)
+            this._dropEntry(entry);
+        this._entries = [];
         this._geoclue = null;
         this._schedule = null;
         this._interface = null;
