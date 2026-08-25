@@ -38,7 +38,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Un'installazione reale creerà un MOK locale alla macchina. Dopo il riavvio, scegli Iscrivi MOK → Continua → Sì in MOKManager e inserisci la password 123456."
+"Un'installazione reale creerà un certificato MOK locale alla macchina. Dopo il riavvio, seleziona Enroll MOK → Continue → Yes in MOKManager e inserisci la password 123456."
 
 #: src/pages.py:4944
 msgid ""
@@ -46,7 +46,7 @@ msgid ""
 "On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
 msgstr ""
 "\n"
-"Sulla schermata blu di MOKManager scegli Iscrivi MOK → Continua → Sì, password: 123456"
+"Sulla schermata blu di MOKManager seleziona Enroll MOK → Continue → Yes, password: 123456"
 
 #: src/pages.py:4275
 msgid "4 GiB disk swap (priority 10) + 50% RAM LZ4 zram (priority 100)"
@@ -86,10 +86,7 @@ msgstr "Archiviazione avanzata"
 msgid ""
 "Advanced coexistence can affect EFI firmware state and may trigger BitLocker"
 " recovery. It never shrinks or repairs Windows volumes."
-msgstr ""
-"L'esistenza avanzata può influire sullo stato del firmware EFI e potrebbe "
-"attivare il recupero BitLocker. Non riduce mai né ripara le partizioni di "
-"Windows."
+msgstr "La coesistenza avanzata (dual-boot) può influire sullo stato del firmware EFI e potrebbe richiedere il ripristino di BitLocker. Non riduce né ripara le partizioni di Windows."
 
 #: src/pages.py:2838
 msgid "Advanced — keep existing systems"
@@ -111,9 +108,7 @@ msgstr ""
 msgid ""
 "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
 "then enter password 123456."
-msgstr ""
-"Dopo il riavvio si aprirà MOKManager. Scegli Iscrivi MOK → Continua → Sì, "
-"quindi inserisci la password 123456."
+msgstr "Dopo il riavvio si aprirà MOKManager. Seleziona Enroll MOK → Continue → Yes, quindi inserisci la password 123456."
 
 #: src/pages.py:4432
 msgid ""
@@ -471,9 +466,7 @@ msgstr "Greco"
 msgid ""
 "Guided coexistence requires a system booted in UEFI mode and a GPT target "
 "disk. This disk cannot continue in guided mode."
-msgstr ""
-"L'esistenza guidata richiede un sistema avviato in modalità UEFI e un disco "
-"di destinazione GPT. Questo disco non può continuare in modalità guidata."
+msgstr "La coesistenza guidata (dual-boot) richiede un sistema avviato in modalità UEFI e un disco di destinazione GPT. Questo disco non può continuare in modalità guidata."
 
 #: src/pages.py:4131
 msgid ""
@@ -778,7 +771,7 @@ msgstr "Riscansiona e risediziona disco"
 
 #: src/pages.py:4809
 msgid "Restart and Enroll Secure Boot Key"
-msgstr "Riavvia e iscriviti alla chiave Secure Boot"
+msgstr "Riavvia e registra la chiave Secure Boot (Enroll MOK)"
 
 #: src/pages.py:4960
 msgid "Restart is disabled in development protection mode"
@@ -1000,9 +993,7 @@ msgstr ""
 msgid ""
 "This disk contains an active mapper, array or other nested block-device "
 "topology that guided coexistence does not support."
-msgstr ""
-"Questo disco contiene un mapper attivo, un array o un'altra topologia "
-"annidata di blocchi che il coesistenza guidata non supporta."
+msgstr "Questo disco contiene un mapper attivo, un array o un'altra topologia di dispositivi a blocchi annidata che la coesistenza guidata non supporta."
 
 #: src/pages.py:2935
 msgid ""
@@ -1091,7 +1082,7 @@ msgstr ""
 
 #: src/pages.py:2832
 msgid "Uses a traditional single root filesystem."
-msgstr "Utilizza un filesystem radice singolo tradizionale."
+msgstr "Utilizza un file system root singolo tradizionale."
 
 #: src/pages.py:4406
 msgid "Validate Plan (No Installation)"
@@ -1131,9 +1122,7 @@ msgstr ""
 
 #: src/pages.py:4072
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
-msgstr ""
-"crea un MOK locale alla macchina; iscriviti dopo il riavvio con la password "
-"123456"
+msgstr "crea un certificato MOK locale alla macchina; registralo dopo il riavvio inserendo la password 123456"
 
 #: src/pages.py:4059
 msgid "detect and install (may include non-free software)"
