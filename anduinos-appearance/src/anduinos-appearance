@@ -85,15 +85,15 @@ class StylePage(Adw.PreferencesPage):
         layout_group.set_title(_('Layout'))
 
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-        self.btn11 = Gtk.Button(label='  11  ')
-        self.btn11.connect('clicked', self._on_click, 'eleven')
+        self.btn_centered = Gtk.Button(label='  ' + _('Centered') + '  ')
+        self.btn_centered.connect('clicked', self._on_click, 'eleven')
         self.btn10 = Gtk.Button(label='  ' + _('Classic') + '  ')
         self.btn10.connect('clicked', self._on_click, 'classic')
         self.btn_sep = Gtk.Button(label='  ' + _('Seperated') + '  ')
         self.btn_sep.connect('clicked', self._on_click, 'seperated')
         box.append(self.btn10)
         box.append(self.btn_sep)
-        box.append(self.btn11)
+        box.append(self.btn_centered)
         layout_group.add(box)
 
         # ── Position buttons ──
@@ -165,7 +165,7 @@ class StylePage(Adw.PreferencesPage):
         s = self.win.current_style
         self.btn10.add_css_class('suggested-action') if s == 'classic' else self.btn10.remove_css_class('suggested-action')
         self.btn_sep.add_css_class('suggested-action') if s == 'seperated' else self.btn_sep.remove_css_class('suggested-action')
-        self.btn11.add_css_class('suggested-action') if s == 'eleven' else self.btn11.remove_css_class('suggested-action')
+        self.btn_centered.add_css_class('suggested-action') if s == 'eleven' else self.btn_centered.remove_css_class('suggested-action')
 
     def _on_pos_toggled(self, btn, pos):
         if not btn.get_active():
@@ -217,7 +217,7 @@ class StylePage(Adw.PreferencesPage):
     @staticmethod
     def _label(s):
         if s == 'eleven':
-            return _('Windows 11')
+            return _('Centered')
         if s == 'seperated':
             return _('Seperated')
         return _('Classic')

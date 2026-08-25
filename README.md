@@ -157,7 +157,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-fluent-gtk-theme` | Theme | Fluent UI GTK theme |
 | `anduinos-fluent-icon-theme` | Theme | Fluent UI Icon theme |
 | `anduinos-gdm3-wallpaper` | Theme | GDM3 dynamic wallpaper engine |
-| `anduinos-appearance` | App | Taskbar layout switcher (Windows 11 / Classic) |
+| `anduinos-appearance` | App | Taskbar layout switcher (Centered / Classic) |
 | `anduinos-appstore` | App | Flatpak-based app store with Flathub remote |
 | `anduinos-driver-center` | App | Focused GTK4 driver manager for graphics, Xbox controllers, and Secure Boot trust |
 | `anduinos-btrfs-snapshots-manager` | App | GTK4/libadwaita manager for symmetric System and Personal Files Btrfs snapshots, automatic retention, file recovery, and guarded system rollback |
