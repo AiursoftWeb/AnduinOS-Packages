@@ -108,6 +108,16 @@ def _large_app_icon(width: int = 260, height: int = 180) -> Gtk.Image:
     return icon
 
 
+def _scrolled_window(**properties) -> Gtk.ScrolledWindow:
+    """Return a vertical scroller whose scrollbar stays visible when needed."""
+
+    properties.setdefault("hscrollbar_policy", Gtk.PolicyType.NEVER)
+    properties.setdefault("vscrollbar_policy", Gtk.PolicyType.AUTOMATIC)
+    scroll = Gtk.ScrolledWindow(**properties)
+    scroll.set_overlay_scrolling(False)
+    return scroll
+
+
 class DriverCenterWindow(Adw.ApplicationWindow):
     def __init__(self, app: Adw.Application):
         super().__init__(application=app, title=_("AnduinOS Driver Center"))
@@ -222,7 +232,9 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self.device_list.add_css_class("navigation-list")
         self.device_list.connect("row-selected", self._row_selected)
         self.sidebar.append(self.device_list)
-        sidebar_toolbar.set_content(self.sidebar)
+        sidebar_scroll = _scrolled_window()
+        sidebar_scroll.set_child(self.sidebar)
+        sidebar_toolbar.set_content(sidebar_scroll)
         self.split.set_sidebar(sidebar_toolbar)
 
         content_toolbar = Adw.ToolbarView()
@@ -679,7 +691,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
     def _page_shell(
         self, title: str, description: str, illustration: str | None = None
     ) -> tuple[Gtk.ScrolledWindow, Gtk.Box]:
-        scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        scroll = _scrolled_window()
         clamp = Adw.Clamp(maximum_size=650, tightening_threshold=500)
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=18)
         content.set_margin_top(32); content.set_margin_bottom(32)
@@ -713,7 +725,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         audio: AudioState,
         printing: PrintingState,
     ) -> Gtk.Widget:
-        scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        scroll = _scrolled_window()
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
         content.set_margin_top(24)
         content.set_margin_bottom(32)
@@ -2145,7 +2157,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         )
         secure_boot_page.set_valign(Gtk.Align.START)
         secure_boot_page.set_vexpand(False)
-        scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        scroll = _scrolled_window()
         clamp = Adw.Clamp(maximum_size=650, tightening_threshold=500)
         clamp.set_child(secure_boot_page)
         scroll.set_child(clamp)

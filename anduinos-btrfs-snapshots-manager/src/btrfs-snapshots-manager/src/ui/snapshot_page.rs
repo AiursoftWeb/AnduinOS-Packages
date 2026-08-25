@@ -257,6 +257,9 @@ impl SnapshotPage {
         stack.add_named(&error, Some("error"));
 
         let scrolled = gtk::ScrolledWindow::new();
+        scrolled.set_overlay_scrolling(false);
+        scrolled.set_hscrollbar_policy(gtk::PolicyType::Never);
+        scrolled.set_vscrollbar_policy(gtk::PolicyType::Automatic);
         let clamp = adw::Clamp::new();
         clamp.set_maximum_size(880);
         let list = gtk::ListBox::new();

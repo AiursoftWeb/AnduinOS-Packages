@@ -89,6 +89,13 @@ class PackageTests(unittest.TestCase):
         )
         self.assertIn("if self._rebuilding_navigation:", application)
 
+    def test_scrollbars_do_not_hide_or_clip_dynamic_navigation(self):
+        application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
+        self.assertEqual(application.count("Gtk.ScrolledWindow("), 1)
+        self.assertIn("scroll.set_overlay_scrolling(False)", application)
+        self.assertIn("sidebar_scroll.set_child(self.sidebar)", application)
+        self.assertIn("sidebar_toolbar.set_content(sidebar_scroll)", application)
+
     def test_desktop_entry_is_visible_and_uses_stable_app_id(self):
         desktop = (ROOT / "data/com.anduinos.DriverCenter.desktop").read_text()
         self.assertIn("Type=Application", desktop)

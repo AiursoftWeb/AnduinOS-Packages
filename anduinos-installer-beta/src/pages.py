@@ -229,6 +229,18 @@ class LanguageItem(GObject.Object):
 
 # ── helpers ──────────────────────────────────────────────────────────────
 
+def _scrolled_window(*, inset=False, **properties):
+    """Create a predictable scrollbar that never overlays page content."""
+
+    properties.setdefault("vscrollbar_policy", Gtk.PolicyType.AUTOMATIC)
+    scroll = Gtk.ScrolledWindow(**properties)
+    scroll.set_overlay_scrolling(False)
+    if inset:
+        scroll.set_margin_start(48)
+        scroll.set_margin_end(48)
+    return scroll
+
+
 def _nav_btn(label_key: str, lang: str, callback, sensitive: bool = True,
              css_classes: list[str] | None = None):
     """Create a labelled navigation button."""
@@ -374,6 +386,7 @@ _UNCONDITIONAL_PAGE_ROUTE = (
     "disk",
     "storage-strategy",
     "user",
+    "advanced-options",
     "timezone",
     "summary",
     "progress",
@@ -753,10 +766,13 @@ def build_welcome_page(shared, nav_view):
 
     lang_list = Gtk.ListView(model=Gtk.SingleSelection(model=list_store),
                              factory=factory)
+    lang_list.add_css_class("installer-list-view")
     lang_list.set_vexpand(True)
 
-    lang_scroll = Gtk.ScrolledWindow(min_content_width=300,
-                                     hscrollbar_policy=Gtk.PolicyType.NEVER)
+    lang_scroll = _scrolled_window(
+        min_content_width=300,
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+    )
     lang_scroll.set_child(lang_list)
     lang_frame = Gtk.Frame()
     lang_frame.set_child(lang_scroll)
@@ -787,21 +803,21 @@ def build_welcome_page(shared, nav_view):
     right_box.append(welcome_desc)
 
     # ── layout ──
-    hpaned = Gtk.Paned(
+    layout = Gtk.Box(
         orientation=Gtk.Orientation.HORIZONTAL,
-        position=340,
-        wide_handle=True,
+        spacing=24,
         vexpand=True,
         margin_start=32,
         margin_end=32,
         margin_top=18,
         margin_bottom=12,
     )
-    hpaned.set_start_child(lang_frame)
-    hpaned.set_end_child(right_box)
+    lang_frame.set_size_request(340, -1)
+    layout.append(lang_frame)
+    layout.append(right_box)
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    content.append(hpaned)
+    content.append(layout)
 
     # ── handlers ──
     sel = lang_list.get_model()
@@ -1291,7 +1307,7 @@ def build_network_page(shared, nav_view):
 
     wifi_group = Adw.PreferencesGroup()
     network_rows = []
-    wifi_scroll = Gtk.ScrolledWindow(
+    wifi_scroll = _scrolled_window(
         vexpand=True,
         min_content_height=220,
         hscrollbar_policy=Gtk.PolicyType.NEVER,
@@ -2509,10 +2525,9 @@ def build_disk_page(shared, nav_view):
         vexpand=True,
     )
     disk_list.add_css_class("disk-card-list")
-    disk_scroll = Gtk.ScrolledWindow(
+    disk_scroll = _scrolled_window(
+        inset=True,
         hscrollbar_policy=Gtk.PolicyType.NEVER,
-        margin_start=48,
-        margin_end=48,
         vexpand=True,
     )
     disk_scroll.set_child(disk_list)
@@ -3101,7 +3116,8 @@ def build_advanced_storage_page(shared, nav_view):
     rescan = Gtk.Button(label=_("Rescan and Reselect Disk", lang))
     rescan.set_halign(Gtk.Align.START)
     controls.append(rescan)
-    controls_scroll = Gtk.ScrolledWindow(
+    controls_scroll = _scrolled_window(
+        inset=True,
         hscrollbar_policy=Gtk.PolicyType.NEVER,
         vexpand=True,
     )
@@ -3617,7 +3633,8 @@ def build_user_page(shared, nav_view):
     shared["_clear_password_ui"] = _clear_password_ui
     host_entry.connect("changed", lambda _e: _validate())
 
-    account_scroll = Gtk.ScrolledWindow(
+    account_scroll = _scrolled_window(
+        inset=True,
         hscrollbar_policy=Gtk.PolicyType.NEVER,
         vexpand=True,
     )
@@ -3778,7 +3795,8 @@ def build_advanced_options_page(shared, nav_view):
         row.connect("notify::active", _on_choice_toggled, key)
     _update_security_warning()
 
-    options_scroll = Gtk.ScrolledWindow(
+    options_scroll = _scrolled_window(
+        inset=True,
         hscrollbar_policy=Gtk.PolicyType.NEVER,
         vexpand=True,
     )
@@ -3854,9 +3872,12 @@ def build_timezone_page(shared, nav_view):
 
     tz_list = Gtk.ListView(model=Gtk.SingleSelection(model=filter_model),
                            factory=factory, vexpand=True)
-    tz_scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER,
-                                   margin_start=48, margin_end=48,
-                                   vexpand=True)
+    tz_list.add_css_class("installer-list-view")
+    tz_scroll = _scrolled_window(
+        inset=True,
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+        vexpand=True,
+    )
     tz_scroll.set_child(tz_list)
     tz_scroll.add_css_class("installer-list-card")
 
@@ -4290,7 +4311,8 @@ def build_summary_page(shared, nav_view):
         )
         swap_explanation.set_child(detail_label)
         summary_card.append(swap_explanation)
-    summary_scroll = Gtk.ScrolledWindow(
+    summary_scroll = _scrolled_window(
+        inset=True,
         hscrollbar_policy=Gtk.PolicyType.NEVER,
         vexpand=True,
     )
@@ -4642,7 +4664,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         margin_start=12,
     )
     left_title.add_css_class("heading")
-    left_scroll = Gtk.ScrolledWindow(
+    left_scroll = _scrolled_window(
         hscrollbar_policy=Gtk.PolicyType.NEVER,
         vexpand=True,
         min_content_width=285,
@@ -4661,8 +4683,10 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                             margin_start=48, margin_end=48, margin_top=12,
                             vexpand=True)
     log_view.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
-    log_scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER,
-                                    vexpand=True)
+    log_scroll = _scrolled_window(
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+        vexpand=True,
+    )
     log_scroll.set_child(log_view)
     output_notice = Gtk.Label(
         visible=False,

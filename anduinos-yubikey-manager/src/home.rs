@@ -43,6 +43,8 @@ impl HomePage {
             .build();
         let root = gtk::ScrolledWindow::builder()
             .hscrollbar_policy(gtk::PolicyType::Never)
+            .vscrollbar_policy(gtk::PolicyType::Automatic)
+            .overlay_scrolling(false)
             .child(&clamp)
             .build();
         let page = Self {

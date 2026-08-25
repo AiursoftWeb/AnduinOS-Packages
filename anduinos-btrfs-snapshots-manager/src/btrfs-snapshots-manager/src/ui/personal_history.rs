@@ -178,6 +178,9 @@ pub fn show_target(app: &adw::Application, target: HistoryTarget) {
     stack.add_named(&loading, Some("loading"));
 
     let scrolled = gtk::ScrolledWindow::new();
+    scrolled.set_overlay_scrolling(false);
+    scrolled.set_hscrollbar_policy(gtk::PolicyType::Never);
+    scrolled.set_vscrollbar_policy(gtk::PolicyType::Automatic);
     let clamp = adw::Clamp::new();
     clamp.set_maximum_size(760);
     let list = gtk::ListBox::new();
@@ -467,6 +470,9 @@ fn show_browser(
     path_label.add_css_class("dim-label");
     root.append(&path_label);
     let scrolled = gtk::ScrolledWindow::new();
+    scrolled.set_overlay_scrolling(false);
+    scrolled.set_hscrollbar_policy(gtk::PolicyType::Never);
+    scrolled.set_vscrollbar_policy(gtk::PolicyType::Automatic);
     scrolled.set_vexpand(true);
     let list = gtk::ListBox::new();
     list.set_selection_mode(gtk::SelectionMode::None);

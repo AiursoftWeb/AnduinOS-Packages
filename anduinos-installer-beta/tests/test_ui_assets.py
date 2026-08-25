@@ -150,6 +150,46 @@ class InstallerVisualAssetTests(unittest.TestCase):
             with self.subTest(selector=selector):
                 self.assertIn(selector, style)
 
+    def test_list_selection_and_welcome_layout_have_one_visual_boundary(self):
+        style = (ROOT / "assets" / "style.css").read_text()
+        pages = (ROOT / "src/pages.py").read_text()
+        welcome = pages.split("def build_welcome_page", 1)[1].split(
+            "def build_low_battery_page", 1
+        )[0]
+
+        self.assertIn(".installer-list-view row:selected {", style)
+        self.assertIn("background-color: transparent;", style)
+        self.assertIn(
+            '.add_css_class("installer-list-view")',
+            welcome,
+        )
+        self.assertIn("layout = Gtk.Box(", welcome)
+        self.assertNotIn("Gtk.Paned(", welcome)
+
+    def test_scrollbars_use_one_non_overlay_layout_policy(self):
+        pages = (ROOT / "src/pages.py").read_text()
+
+        self.assertEqual(pages.count("Gtk.ScrolledWindow("), 1)
+        self.assertIn(
+            'properties.setdefault("vscrollbar_policy", '
+            "Gtk.PolicyType.AUTOMATIC)",
+            pages,
+        )
+        self.assertIn("scroll.set_overlay_scrolling(False)", pages)
+        for name in (
+            "disk_scroll",
+            "controls_scroll",
+            "account_scroll",
+            "options_scroll",
+            "tz_scroll",
+            "summary_scroll",
+        ):
+            with self.subTest(name=name):
+                construction = pages.split(f"{name} = ", 1)[1].split(
+                    ")", 1
+                )[0]
+                self.assertIn("inset=True", construction)
+
     def test_copied_illustrations_have_package_local_provenance(self):
         provenance = (ICONS / "README.md").read_text()
         for name in sorted(path.name for path in ICONS.glob("*.svg")):

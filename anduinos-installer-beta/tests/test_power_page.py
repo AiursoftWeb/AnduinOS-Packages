@@ -1,3 +1,4 @@
+import re
 import unittest
 import subprocess
 from pathlib import Path
@@ -265,6 +266,7 @@ class PowerPageRoutingTests(unittest.TestCase):
                 "disk",
                 "storage-strategy",
                 "user",
+                "advanced-options",
                 "timezone",
                 "summary",
                 "progress",
@@ -281,7 +283,7 @@ class PowerPageRoutingTests(unittest.TestCase):
             "storage_strategy": "advanced-coexistence",
         }
         route = _planned_page_route(shared)
-        self.assertEqual(len(route), 13)
+        self.assertEqual(len(route), 14)
         self.assertEqual(route[:4], (
             "welcome",
             "low-battery",
@@ -289,6 +291,20 @@ class PowerPageRoutingTests(unittest.TestCase):
             "network",
         ))
         self.assertEqual(route[8], "advanced-storage")
+
+    def test_every_registered_footer_has_a_progress_route_entry(self):
+        shared = {
+            "development_mode": True,
+            "_page_route_initialized": True,
+            "_power_probe_result": self.safe(),
+            "_platform_probe_result": self.platform(SecureBoot.ENABLED),
+            "_network_page_planned": True,
+            "storage_strategy": "advanced-coexistence",
+        }
+        source = Path("src/pages.py").read_text(encoding="utf-8")
+        registered_tags = set(re.findall(r'page_tag="([^"]+)"', source))
+
+        self.assertEqual(registered_tags, set(_planned_page_route(shared)))
 
 
 if __name__ == "__main__":

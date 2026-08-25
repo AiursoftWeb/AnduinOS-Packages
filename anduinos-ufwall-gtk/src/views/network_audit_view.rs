@@ -243,6 +243,7 @@ impl NetworkAuditView {
         let scrolled_window = gtk::ScrolledWindow::builder()
             .hscrollbar_policy(gtk::PolicyType::Never)
             .vscrollbar_policy(gtk::PolicyType::Automatic)
+            .overlay_scrolling(false)
             .vexpand(true)
             .child(&list_box)
             .build();

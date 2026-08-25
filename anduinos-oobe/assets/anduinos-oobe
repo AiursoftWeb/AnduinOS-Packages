@@ -1449,8 +1449,9 @@ def create_update_page(navigate_next, update_nav=None):
     expander.set_halign(Gtk.Align.FILL)
     
     scroll = Gtk.ScrolledWindow()
+    scroll.set_overlay_scrolling(False)
     scroll.set_min_content_height(150)
-    scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+    scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
     
     textview = Gtk.TextView()
     textview.set_editable(False)
@@ -2239,8 +2240,9 @@ def create_exe_sandbox_page(navigate_next):
     expander.set_halign(Gtk.Align.FILL)
     
     scroll = Gtk.ScrolledWindow()
+    scroll.set_overlay_scrolling(False)
     scroll.set_min_content_height(150)
-    scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+    scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
     
     textview = Gtk.TextView()
     textview.set_editable(False)
@@ -2361,6 +2363,7 @@ def create_shortcuts_page():
 
     # Scrollable content area — allows window to shrink while content remains accessible
     scroll = Gtk.ScrolledWindow()
+    scroll.set_overlay_scrolling(False)
     scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
     scroll.set_vexpand(True)
     scroll.set_propagate_natural_height(True)
@@ -2858,6 +2861,7 @@ def create_apps_page():
         flow.append(child)
 
     scroll = Gtk.ScrolledWindow()
+    scroll.set_overlay_scrolling(False)
     scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
     scroll.set_min_content_height(440)
     scroll.set_max_content_height(440)
@@ -3279,6 +3283,7 @@ class OobeWindow(Adw.ApplicationWindow):
         ):
             p = factory()
             scroll = Gtk.ScrolledWindow()
+            scroll.set_overlay_scrolling(False)
             scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
             scroll.set_child(p)
             clamp = Adw.Clamp()
