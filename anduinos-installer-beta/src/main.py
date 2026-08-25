@@ -52,6 +52,7 @@ class InstallerApplication(Adw.Application):
         self.shared_state: dict[str, object] = {
             "lang": detected_language.code,
             "keyboard": detected_language.keyboard,
+            "keyboard_variant": "",
             "disk": "",
             "disk_size": "",
             "disk_size_bytes": 0,

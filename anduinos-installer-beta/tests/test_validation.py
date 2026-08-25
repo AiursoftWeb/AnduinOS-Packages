@@ -40,6 +40,41 @@ class ValidationTests(unittest.TestCase):
     def test_valid_uefi_without_secure_boot_support(self):
         validate_plan(valid_plan(secure_boot=SecureBoot.UNSUPPORTED))
 
+    def test_accepts_a_catalogued_keyboard_variant(self):
+        plan = valid_plan()
+        plan = dataclasses.replace(
+            plan,
+            regional=dataclasses.replace(
+                plan.regional,
+                keyboard=dataclasses.replace(
+                    plan.regional.keyboard,
+                    layout="us",
+                    variant="intl",
+                ),
+            ),
+        )
+        validate_plan(plan)
+
+    def test_rejects_unknown_or_unsafe_keyboard_variants(self):
+        for variant, message in (
+            ("qwerty", "Unknown keyboard layout and variant combination"),
+            ('intl"\nXKBOPTIONS="terminate:ctrl_alt_bksp', "Invalid keyboard variant"),
+        ):
+            with self.subTest(variant=variant):
+                plan = valid_plan()
+                plan = dataclasses.replace(
+                    plan,
+                    regional=dataclasses.replace(
+                        plan.regional,
+                        keyboard=dataclasses.replace(
+                            plan.regional.keyboard,
+                            variant=variant,
+                        ),
+                    ),
+                )
+                with self.assertRaisesRegex(PlanValidationError, message):
+                    validate_plan(plan)
+
     def test_rejects_noncanonical_hostname_from_an_untrusted_plan(self):
         plan = valid_plan()
         plan = dataclasses.replace(

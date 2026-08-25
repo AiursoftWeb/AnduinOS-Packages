@@ -238,6 +238,7 @@ class PackageContractTests(unittest.TestCase):
                 "python3-unidecode",
                 "anduinos-live-settings",
                 "libxkbcommon0",
+                "xkb-data",
                 "parted",
                 "dosfstools",
                 "efibootmgr",

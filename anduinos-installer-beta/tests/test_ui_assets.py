@@ -98,6 +98,10 @@ class InstallerVisualAssetTests(unittest.TestCase):
         )
         self.assertIn("preview.press(keycode)", source)
         self.assertIn("preview.release(keycode)", source)
+        self.assertIn("keyboard_layouts()", source)
+        self.assertIn("layout_dropdown.set_enable_search(True)", source)
+        self.assertIn("variant_dropdown.set_enable_search(True)", source)
+        self.assertIn('shared["keyboard_variant"] = variant_id', source)
         self.assertNotIn("gsettings set", source)
         self.assertNotIn("setxkbmap", source)
 

@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from languages import InputMethod, input_method, language_for_locale
+from keyboard_layouts import xkb_choice_id
 
 from .command import CommandError, CommandRunner
 from .software import refresh_package_indexes
@@ -175,6 +176,7 @@ class InstallInputMethodStep:
             sources = _input_sources_value(
                 desktop_methods,
                 context.plan.regional.keyboard.layout,
+                context.plan.regional.keyboard.variant,
             )
             context.log(f"GNOME input-source defaults: sources={sources}")
             context.log(
@@ -190,6 +192,7 @@ class InstallInputMethodStep:
             target,
             desktop_methods,
             context.plan.regional.keyboard.layout,
+            context.plan.regional.keyboard.variant,
         )
         if desktop_methods:
             self.runner.run(
@@ -237,6 +240,7 @@ class InstallInputMethodStep:
                 + _input_sources_value(
                     desktop_methods,
                     context.plan.regional.keyboard.layout,
+                    context.plan.regional.keyboard.variant,
                 )
                 + "\n"
             )
@@ -278,23 +282,29 @@ def _write_input_method_configuration(
     target: Path,
     methods: tuple[InputMethod, ...],
     keyboard_layout: str,
+    keyboard_variant: str,
 ) -> None:
     if methods:
         override = _input_override(target)
         override.parent.mkdir(parents=True, exist_ok=True)
+        sources = _input_sources_value(
+            methods, keyboard_layout, keyboard_variant
+        )
         override.write_text(
             "[org.gnome.desktop.input-sources]\n"
-            f"sources={_input_sources_value(methods, keyboard_layout)}\n",
+            f"sources={sources}\n",
             encoding="utf-8",
         )
 
 
 def _input_sources_value(
-    methods: tuple[InputMethod, ...], keyboard_layout: str
+    methods: tuple[InputMethod, ...],
+    keyboard_layout: str,
+    keyboard_variant: str = "",
 ) -> str:
     """Return the GSettings value written as the new-user input-source default."""
 
-    sources = [("xkb", keyboard_layout)]
+    sources = [("xkb", xkb_choice_id(keyboard_layout, keyboard_variant))]
     for method in methods:
         if method.desktop_source is None:
             raise ValueError("Input method has no desktop input source")

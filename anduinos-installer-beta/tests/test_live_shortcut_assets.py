@@ -133,7 +133,7 @@ class LiveShortcutAssetTests(unittest.TestCase):
             PACKAGE / "anduinos-installer-beta.aosproj"
         ).read_text(encoding="utf-8")
         self.assertIn(
-            "<PackageVersion>2.0.2-3+$(SuiteShortName)</PackageVersion>",
+            "<PackageVersion>2.0.2-5+$(SuiteShortName)</PackageVersion>",
             project,
         )
         self.assertNotIn("installer (beta)", project.lower())

@@ -27,7 +27,6 @@ from gi.repository import Gtk, Gdk, Adw, GLib, Gio, Pango, GObject
 
 from languages import (
     DEFAULT_LANGUAGE,
-    KEYBOARD_LAYOUTS,
     LANGUAGES,
     RTL_LANGUAGES,
     default_timezone,
@@ -36,6 +35,11 @@ from languages import (
     Language as LangData,
 )
 from i18n import _, N_
+from keyboard_layouts import (
+    keyboard_layouts,
+    translate_xkb_description,
+    xkb_choice_id,
+)
 from keyboard_preview import KeyboardPreviewError, XkbKeyboardPreview
 from frontend import (
     DevelopmentExecutorClient,
@@ -840,6 +844,7 @@ def build_welcome_page(shared, nav_view):
             shared["lang"] = l.code
             shared["locale"] = l.locale
             shared["keyboard"] = l.keyboard
+            shared["keyboard_variant"] = ""
             shared["timezone"] = default_timezone(l.code)
             shared["input_methods"] = l.default_input_methods
             shared["_preferred_input_methods"] = l.default_input_methods
@@ -1937,14 +1942,11 @@ def build_network_page(shared, nav_view):
 
 # ── page 3: Keyboard layout ──────────────────────────────────────────────
 
-# Physical layouts and their labels come from the same validated policy as
-# languages and input methods. New layouts never require a Python edit.
-XKB_VARIANTS = list(KEYBOARD_LAYOUTS.items())
-
-
 def build_keyboard_page(shared, nav_view):
     lang = shared.get("lang", DEFAULT_LANGUAGE)
-    keyboard = shared.get("keyboard", "us")
+    keyboard = str(shared.get("keyboard", "us"))
+    keyboard_variant = str(shared.get("keyboard_variant", ""))
+    layouts = keyboard_layouts()
     page = Adw.NavigationPage(title=_("Keyboard Layout", lang))
     page.set_tag("keyboard")
 
@@ -1958,23 +1960,72 @@ def build_keyboard_page(shared, nav_view):
         )
     )
 
-    # Find the index of the current keyboard variant
-    variant_names = [v[0] for v in XKB_VARIANTS]
-    default_idx = 0
-    for i, (code, _name) in enumerate(XKB_VARIANTS):
-        if code == keyboard:
-            default_idx = i
-            break
+    fallback_layout_idx = next(
+        (index for index, layout in enumerate(layouts) if layout.id == "us"),
+        0,
+    )
+    layout_idx = next(
+        (index for index, layout in enumerate(layouts) if layout.id == keyboard),
+        fallback_layout_idx,
+    )
+    selected_layout = layouts[layout_idx]
+    variant_idx = next(
+        (
+            index
+            for index, variant in enumerate(selected_layout.variants, start=1)
+            if variant.id == keyboard_variant
+        ),
+        0,
+    )
+    keyboard_variant = (
+        selected_layout.variants[variant_idx - 1].id if variant_idx else ""
+    )
+    shared["keyboard"] = selected_layout.id
+    shared["keyboard_variant"] = keyboard_variant
 
-    # Dropdown and an isolated XKB preview. The preview uses raw hardware
-    # keycodes, so it follows this selection rather than the desktop session's
-    # current layout and never mutates the user's GNOME input sources.
-    kbd_store = Gtk.StringList()
-    for _code, name in XKB_VARIANTS:
-        kbd_store.append(_(name, lang))
+    # Interface-language policy only supplies the initial recommendation.
+    # xkb-data remains the authority for every selectable physical layout.
+    layout_store = Gtk.StringList()
+    for layout in layouts:
+        layout_store.append(
+            translate_xkb_description(layout.description, str(lang))
+        )
+    layout_dropdown = Gtk.DropDown(model=layout_store)
+    layout_dropdown.set_enable_search(True)
+    layout_dropdown.set_selected(layout_idx)
 
-    kbd_dropdown = Gtk.DropDown(model=kbd_store)
-    kbd_dropdown.set_selected(default_idx)
+    variant_dropdown = Gtk.DropDown()
+    variant_dropdown.set_enable_search(True)
+    active_variants = ()
+
+    def _set_variant_model(layout, selected_variant=""):
+        nonlocal active_variants
+        active_variants = (None, *layout.variants)
+        store = Gtk.StringList()
+        # The base layout is the default variant. Reusing its XKB-owned
+        # description avoids inventing an untranslated installer label.
+        store.append(
+            translate_xkb_description(layout.description, str(lang))
+        )
+        selected = 0
+        for index, variant in enumerate(layout.variants, start=1):
+            store.append(
+                translate_xkb_description(variant.description, str(lang))
+            )
+            if variant.id == selected_variant:
+                selected = index
+        variant_dropdown.set_model(store)
+        variant_dropdown.set_selected(selected)
+        variant_dropdown.set_sensitive(bool(layout.variants))
+
+    _set_variant_model(selected_layout, keyboard_variant)
+
+    keyboard_chooser = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=8,
+    )
+    keyboard_chooser.append(layout_dropdown)
+    keyboard_chooser.append(variant_dropdown)
 
     test_entry = Gtk.Entry(
         placeholder_text=_("Test your keyboard here…", lang)
@@ -1990,38 +2041,71 @@ def build_keyboard_page(shared, nav_view):
     preview_status.add_css_class("dim-label")
     preview = None
 
-    def _render_preview_status(index):
-        code, name = XKB_VARIANTS[index]
-        preview_status.set_text(f"{_(name, lang)} · {code}")
+    def _render_preview_status(layout, variant):
+        description = (
+            variant.description if variant is not None else layout.description
+        )
+        preview_status.set_text(
+            f"{translate_xkb_description(description, str(lang))} · "
+            f"{xkb_choice_id(layout.id, variant.id if variant else '')}"
+        )
 
-    def _activate_preview(layout):
+    def _activate_preview(layout, variant=""):
         nonlocal preview
         try:
             if preview is None:
-                preview = XkbKeyboardPreview(layout)
+                preview = XkbKeyboardPreview(layout, variant=variant)
             else:
-                preview.set_layout(layout)
+                preview.set_layout(layout, variant)
         except KeyboardPreviewError:
             test_entry.set_sensitive(False)
-            preview_status.set_text(f"⚠ {layout}")
+            preview_status.set_text(f"⚠ {xkb_choice_id(layout, variant)}")
             return False
         test_entry.set_sensitive(True)
         return True
 
-    initial_layout = XKB_VARIANTS[default_idx][0]
-    if _activate_preview(initial_layout):
-        _render_preview_status(default_idx)
+    initial_variant = active_variants[variant_idx]
+    if _activate_preview(selected_layout.id, keyboard_variant):
+        _render_preview_status(selected_layout, initial_variant)
 
-    def _on_kbd_changed(dd, _pspec):
-        idx = dd.get_selected()
-        if 0 <= idx < len(XKB_VARIANTS):
-            layout = XKB_VARIANTS[idx][0]
-            if not _activate_preview(layout):
-                return
-            shared["keyboard"] = layout
-            _render_preview_status(idx)
+    changing_variant_model = False
 
-    kbd_dropdown.connect("notify::selected", _on_kbd_changed)
+    def _on_layout_changed(dropdown, _pspec):
+        nonlocal changing_variant_model
+        index = dropdown.get_selected()
+        if not 0 <= index < len(layouts):
+            return
+        layout = layouts[index]
+        if not _activate_preview(layout.id):
+            return
+        shared["keyboard"] = layout.id
+        shared["keyboard_variant"] = ""
+        changing_variant_model = True
+        _set_variant_model(layout)
+        changing_variant_model = False
+        _render_preview_status(layout, None)
+
+    def _on_variant_changed(dropdown, _pspec):
+        if changing_variant_model:
+            return
+        layout_index = layout_dropdown.get_selected()
+        variant_index = dropdown.get_selected()
+        if (
+            not 0 <= layout_index < len(layouts)
+            or not 0 <= variant_index < len(active_variants)
+        ):
+            return
+        layout = layouts[layout_index]
+        variant = active_variants[variant_index]
+        variant_id = variant.id if variant is not None else ""
+        if not _activate_preview(layout.id, variant_id):
+            return
+        shared["keyboard"] = layout.id
+        shared["keyboard_variant"] = variant_id
+        _render_preview_status(layout, variant)
+
+    layout_dropdown.connect("notify::selected", _on_layout_changed)
+    variant_dropdown.connect("notify::selected", _on_variant_changed)
 
     def _insert_preview_text(text):
         selected, start, end = test_entry.get_selection_bounds()
@@ -2088,7 +2172,7 @@ def build_keyboard_page(shared, nav_view):
     form.set_margin_end(48)
     form.set_margin_top(48)
     form.set_margin_bottom(12)
-    form.append(_labeled(_("Keyboard Layout", lang), kbd_dropdown))
+    form.append(_labeled(_("Keyboard Layout", lang), keyboard_chooser))
     form.append(_labeled(_("Test your keyboard here…", lang), test_entry))
     form.append(preview_status)
 
@@ -4056,10 +4140,13 @@ def build_summary_page(shared, nav_view):
         )
     except (RuntimeError, ValueError):
         pass
+    keyboard_id = xkb_choice_id(
+        str(shared.get("keyboard", "us")),
+        str(shared.get("keyboard_variant", "")),
+    )
     lines = [
         f"<b>{_('Language', lang)}:</b> {lang_name}",
-        f"<b>{_('Keyboard', lang)}:</b> "
-        f"{escape(shared.get('keyboard', 'us'))}",
+        f"<b>{_('Keyboard', lang)}:</b> {escape(keyboard_id)}",
         f"<b>{_('Target Disk', lang)}:</b> "
         f"{escape(shared.get('disk', '?'))} "
         f"({escape(shared.get('disk_size', '?'))} — "

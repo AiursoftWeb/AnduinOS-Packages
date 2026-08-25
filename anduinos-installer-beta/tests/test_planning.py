@@ -24,6 +24,7 @@ class PlanningTests(unittest.TestCase):
             "lang": "zh_CN",
             "locale": "zh_CN.UTF-8",
             "keyboard": "us",
+            "keyboard_variant": "intl",
             "filesystem": "btrfs",
             "hostname": original.identity.hostname,
             "username": original.identity.username,
@@ -55,6 +56,7 @@ class PlanningTests(unittest.TestCase):
         )
         self.assertEqual(plan.regional.input_methods, ("rime",))
         self.assertEqual(plan.regional.keyboard.layout, "us")
+        self.assertEqual(plan.regional.keyboard.variant, "intl")
         self.assertEqual(plan.boot.mok_password_policy.value, "anduinos-default")
         self.assertFalse(plan.software.install_updates)
         self.assertTrue(plan.software.install_third_party_drivers)

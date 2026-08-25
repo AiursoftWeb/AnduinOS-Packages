@@ -80,6 +80,29 @@ class ConfigureKeyboardTests(unittest.TestCase):
         self.assertIn('XKBLAYOUT="us"', content)
         self.assertIn('XKBVARIANT=""', content)
 
+    def test_configures_a_catalogued_keyboard_variant(self):
+        base = valid_plan()
+        plan = replace(
+            base,
+            regional=replace(
+                base.regional,
+                keyboard=replace(
+                    base.regional.keyboard,
+                    layout="us",
+                    variant="intl",
+                ),
+            ),
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            context = context_for(target, plan, online=False)
+            step = ConfigureKeyboardStep()
+            step.execute(context)
+            step.verify(context)
+            content = (target / "etc/default/keyboard").read_text()
+        self.assertIn('XKBLAYOUT="us"', content)
+        self.assertIn('XKBVARIANT="intl"', content)
+
 
 class InstallInputMethodTests(unittest.TestCase):
     def test_non_input_method_locale_is_skipped_and_clears_live_default(self):
@@ -197,6 +220,36 @@ class InstallInputMethodTests(unittest.TestCase):
             "and mru-sources remain managed by GNOME",
             messages,
         )
+
+    def test_gnome_input_source_preserves_the_keyboard_variant(self):
+        selected = input_method("rime")
+        assert selected is not None
+        plan = plan_for(selected.id)
+        plan = replace(
+            plan,
+            regional=replace(
+                plan.regional,
+                keyboard=replace(
+                    plan.regional.keyboard,
+                    layout="us",
+                    variant="intl",
+                ),
+            ),
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_payload(target, selected)
+            context = context_for(target, plan, online=False)
+            step = InstallInputMethodStep(FakeRunner())
+            step.execute(context)
+            step.verify(context)
+            override = (
+                target
+                / "usr/share/glib-2.0/schemas"
+                / "99_anduinos_default_input.gschema.override"
+            ).read_text(encoding="utf-8")
+
+        self.assertIn("('xkb', 'us+intl')", override)
 
     def test_multiple_selected_methods_are_all_registered_in_policy_order(self):
         selected = tuple(

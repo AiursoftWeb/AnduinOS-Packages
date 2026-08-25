@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.2-4+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -56,6 +56,7 @@
     <Dependency Include="gir1.2-adw-1" />
     <Dependency Include="gir1.2-nm-1.0" />
     <Dependency Include="libxkbcommon0" />
+    <Dependency Include="xkb-data" />
     <Dependency Include="parted" />
     <Dependency Include="btrfs-progs" />
     <Dependency Include="dosfstools" />

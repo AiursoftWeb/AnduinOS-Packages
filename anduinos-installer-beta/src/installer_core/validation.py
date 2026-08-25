@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-import re
 from enum import Enum
+import re
+
+from keyboard_layouts import is_valid_xkb_choice
 
 from languages import input_method, language_for_locale
 
@@ -207,8 +209,20 @@ def validate_plan(
         errors.append("Invalid UTF-8 locale")
     if not TIMEZONE_RE.fullmatch(regional.timezone):
         errors.append("Invalid timezone")
-    if not re.fullmatch(r"[a-z0-9_-]{1,32}", regional.keyboard.layout):
+    keyboard_layout = regional.keyboard.layout
+    keyboard_variant = regional.keyboard.variant
+    if (
+        not isinstance(keyboard_layout, str)
+        or not re.fullmatch(r"[a-z0-9_-]{1,32}", keyboard_layout)
+    ):
         errors.append("Invalid keyboard layout")
+    elif (
+        not isinstance(keyboard_variant, str)
+        or not re.fullmatch(r"[A-Za-z0-9_+.-]{0,64}", keyboard_variant)
+    ):
+        errors.append("Invalid keyboard variant")
+    elif not is_valid_xkb_choice(keyboard_layout, keyboard_variant):
+        errors.append("Unknown keyboard layout and variant combination")
     configured_language = language_for_locale(regional.locale)
     if configured_language is None:
         errors.append("Unsupported installer locale")

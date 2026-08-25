@@ -89,7 +89,10 @@ def build_plan(
         regional=RegionalSpec(
             locale=locale,
             timezone=str(choices.get("timezone") or ""),
-            keyboard=KeyboardSpec(str(choices.get("keyboard") or "")),
+            keyboard=KeyboardSpec(
+                str(choices.get("keyboard") or ""),
+                str(choices.get("keyboard_variant") or ""),
+            ),
             input_methods=_input_method_choices(choices, language),
         ),
         software=SoftwareSpec(

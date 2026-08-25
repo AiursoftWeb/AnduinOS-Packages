@@ -1,7 +1,7 @@
 import unittest
 
 from keyboard_preview import KeyboardPreviewError, XkbKeyboardPreview
-from languages import KEYBOARD_LAYOUTS
+from keyboard_layouts import keyboard_layouts
 
 
 # Linux evdev keycodes use an offset of eight in XKB/GDK key events.
@@ -21,11 +21,23 @@ def tap(preview: XkbKeyboardPreview, keycode: int):
 
 
 class XkbKeyboardPreviewTests(unittest.TestCase):
-    def test_every_supported_installer_layout_compiles(self):
-        for layout in KEYBOARD_LAYOUTS:
-            with self.subTest(layout=layout):
-                with XkbKeyboardPreview(layout) as preview:
-                    self.assertEqual(tap(preview, KEY_Q).handled, True)
+    def test_every_xkb_data_layout_and_variant_compiles(self):
+        choices = (
+            (layout.id, "")
+            for layout in keyboard_layouts()
+        )
+        variants = (
+            (layout.id, variant.id)
+            for layout in keyboard_layouts()
+            for variant in layout.variants
+        )
+        for layout, variant in (*choices, *variants):
+            with self.subTest(layout=layout, variant=variant):
+                with XkbKeyboardPreview(layout, variant=variant) as preview:
+                    # Some accessibility and minority-script maps intentionally
+                    # leave this particular physical key unbound. Successful
+                    # keymap construction is the compatibility contract.
+                    tap(preview, KEY_Q)
 
     def test_same_physical_key_changes_immediately_with_layout(self):
         with XkbKeyboardPreview("us") as preview:
