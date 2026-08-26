@@ -110,11 +110,11 @@ class PackageTests(unittest.TestCase):
         self.assertIn("sidebar_scroll.set_child(self.sidebar)", application)
         self.assertIn("sidebar_toolbar.set_content(sidebar_scroll)", application)
 
-    def test_desktop_entry_is_visible_and_uses_stable_app_id(self):
+    def test_desktop_entry_is_exposed_as_a_control_panel_module(self):
         desktop = (ROOT / "data/com.anduinos.DriverCenter.desktop").read_text()
         self.assertIn("Type=Application", desktop)
         self.assertIn("Icon=com.anduinos.DriverCenter", desktop)
-        self.assertNotIn("NoDisplay=true", desktop)
+        self.assertIn("NoDisplay=true", desktop)
 
     def test_driver_illustrations_are_parseable_local_svg_files(self):
         expected = {

@@ -3,6 +3,14 @@ import unittest
 
 
 class PackagingTests(unittest.TestCase):
+    def test_desktop_entry_is_exposed_as_a_control_panel_module(self):
+        desktop = Path("data/com.anduinos.yubikeymanager.desktop").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("\nNoDisplay=true\n", desktop)
+        self.assertIn("\nExec=anduinos-yubikey-manager\n", desktop)
+        self.assertIn("\nIcon=com.anduinos.yubikeymanager\n", desktop)
+
     def test_window_opens_in_the_wide_security_overview_layout(self):
         source = Path("src/window.rs").read_text(encoding="utf-8")
         self.assertIn('.property("default-width", 1266)', source)

@@ -29,6 +29,8 @@ if rg -ni "$retired_snapshot_terms" "$ROOT" \
     exit 1
 fi
 test -f "$ROOT/data/org.anduinos.BtrfsSnapshotsManager.svg"
+grep -Fxq 'NoDisplay=true' \
+    "$ROOT/data/org.anduinos.BtrfsSnapshotsManager.desktop"
 # The product rename must not alter the AnduinOS-owned application artwork.
 echo 'f6d678d9551cbeb64c4fcad189d1b34aaaad59465588eee7b504cd0c798729a3  '"$ROOT/data/org.anduinos.BtrfsSnapshotsManager.svg" \
     | sha256sum --check --status

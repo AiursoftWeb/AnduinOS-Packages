@@ -44,6 +44,11 @@ class PackageTests(unittest.TestCase):
         self.assertIn("self.grid.attach(child, index % 2, index // 2, 1, 1)", application)
         self.assertIn("maximum_size=800", application)
 
+    def test_header_does_not_show_a_manual_refresh_button(self):
+        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
+        self.assertNotIn('icon_name="view-refresh-symbolic"', application)
+        self.assertNotIn('_("Refresh availability")', application)
+
     def test_category_icons_share_one_rendered_boundary(self):
         application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
         project = (ROOT / "anduinos-control-panel.aosproj").read_text()
@@ -60,6 +65,25 @@ class PackageTests(unittest.TestCase):
         self.assertIn("color: @accent_color", application)
         self.assertIn("row_spacing=18", application)
         self.assertNotIn('Gtk.Image.new_from_icon_name("go-next-symbolic")', application)
+
+    def test_action_links_follow_windows_7_hover_behavior(self):
+        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
+        self.assertIn('button.set_cursor_from_name("pointer")', application)
+        self.assertIn("Pango.attr_underline_new(Pango.Underline.SINGLE)", application)
+        self.assertIn("motion = Gtk.EventControllerMotion()", application)
+        self.assertIn('motion.connect("enter", pointer_entered)', application)
+        self.assertIn('motion.connect("leave", pointer_left)', application)
+        self.assertIn('button.connect("notify::has-focus"', application)
+        self.assertNotIn("outline: none", application)
+
+    def test_launcher_reports_asynchronous_process_failures(self):
+        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
+        self.assertIn("Gio.SubprocessFlags.STDOUT_PIPE", application)
+        self.assertIn("Gio.SubprocessFlags.STDERR_PIPE", application)
+        self.assertIn("process.communicate_utf8_async(", application)
+        self.assertIn("launched_process.communicate_utf8_finish(", application)
+        self.assertIn("if launched_process.get_successful():", application)
+        self.assertIn("details = (stderr or stdout or \"\").strip()", application)
 
     def test_all_requested_categories_and_launchers_are_present(self):
         application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
@@ -92,10 +116,15 @@ class PackageTests(unittest.TestCase):
             '["gnome-control-center", "system", "users"]',
             '["anduinos-yubikey-manager"]',
             '["anduinos-appearance"]',
+            '["gnome-control-center", "background"]',
             '["anduinos-btrfs-snapshots-manager"]',
             '["flatpak", "run", DEJA_DUP_APP_ID]',
         ):
             self.assertIn(command, application)
+
+        self.assertIn('_("System Snapshots")', application)
+        self.assertNotIn('_("Btrfs Snapshots")', application)
+        self.assertIn('_("Wallpaper and Accent Color")', application)
 
     def test_optional_entries_are_gated_by_runtime_state(self):
         application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
@@ -111,11 +140,16 @@ class PackageTests(unittest.TestCase):
     def test_ai_and_flatseal_changes_use_fixed_apt_arguments(self):
         application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
         self.assertIn('WHY_AI_PACKAGE if enabled else WHY_PLACEHOLDER_PACKAGE', application)
+        self.assertIn(
+            'self._run_streaming_package_change(\n            "flatseal"', application
+        )
         self.assertIn('"/usr/bin/pkexec"', application)
         self.assertIn('"/usr/bin/apt-get"', application)
         self.assertIn('"install",', application)
         self.assertIn('"--yes",', application)
-        self.assertIn("process.wait_check_async", application)
+        self.assertIn("stdout=subprocess.PIPE", application)
+        self.assertIn("stderr=subprocess.STDOUT", application)
+        self.assertIn("def _run_streaming_commands(", application)
         self.assertNotIn("shell=True", application)
         self.assertNotIn("bash -c", application)
 
@@ -141,8 +175,46 @@ class PackageTests(unittest.TestCase):
         self.assertIn("stdout=subprocess.PIPE", application)
         self.assertIn("stderr=subprocess.STDOUT", application)
         self.assertIn('for line in iter(process.stdout.readline, ""):', application)
-        self.assertIn("GLib.idle_add(\n                            self._append_ai_output", application)
+        self.assertIn(
+            "self._append_package_output, buffer, output, line", application
+        )
         self.assertIn("window.set_deletable(False)", application)
+
+    def test_flatseal_install_has_intro_progress_and_advanced_output(self):
+        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
+        self.assertIn('title=_("Permission Settings")', application)
+        self.assertIn('title=_("Flatseal")', application)
+        self.assertIn('start = Gtk.Button(label=_("Start"))', application)
+        self.assertIn('start.set_label(_("Installing…"))', application)
+        self.assertIn('start.set_label(_("Open Flatseal"))', application)
+        self.assertIn('start.set_label(_("Retry"))', application)
+        self.assertGreaterEqual(
+            application.count('Gtk.Expander(label=_("Advanced Output"))'), 2
+        )
+        self.assertIn("self._install_flatseal(", application)
+        self.assertIn("buffer.set_text(\n            _(", application)
+        self.assertIn('"--yes",\n            package,', application)
+        self.assertIn("window.set_deletable(False)", application)
+
+    def test_bottles_install_has_intro_progress_and_advanced_output(self):
+        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
+        self.assertIn('title=_("Windows Compatibility")', application)
+        self.assertIn('title=_("Bottles")', application)
+        self.assertIn('title=_("Install Bottles")', application)
+        self.assertIn("self._install_bottles(", application)
+        self.assertIn('start.set_label(_("Open Bottles"))', application)
+        self.assertGreaterEqual(
+            application.count('Gtk.Expander(label=_("Advanced Output"))'), 3
+        )
+        self.assertIn('"remote-add",', application)
+        self.assertIn('"--if-not-exists",', application)
+        self.assertIn('"install",\n                "--system",', application)
+        self.assertIn('"--assumeyes",', application)
+        self.assertNotIn('"--noninteractive",', application)
+        self.assertIn("FLATHUB_REPOSITORY", application)
+        self.assertNotIn(
+            'self._show_store_prompt(_("Bottles")', application
+        )
 
     def test_project_reuses_parseable_repository_svg_assets(self):
         project = (ROOT / "anduinos-control-panel.aosproj").read_text()
@@ -157,8 +229,11 @@ class PackageTests(unittest.TestCase):
             project,
         )
         icons = sorted((ROOT / "resources/icons").glob("*.svg"))
-        self.assertEqual(len(icons), 11)
+        self.assertEqual(len(icons), 12)
         self.assertIn("com.anduinos.ControlPanel.svg", {icon.name for icon in icons})
+        self.assertIn(
+            "com.anduinos.ControlPanel-symbolic.svg", {icon.name for icon in icons}
+        )
         self.assertIn("com.anduinos.DriverCenter.svg", {icon.name for icon in icons})
         self.assertIn("anduinos-appearance.svg", {icon.name for icon in icons})
         self.assertIn("anduinos-exe-runner.svg", {icon.name for icon in icons})
@@ -170,17 +245,37 @@ class PackageTests(unittest.TestCase):
         self.assertNotIn("<image", app_icon)
         self.assertNotIn('fill="#fff"', app_icon)
 
+        symbolic_icon = (
+            ROOT / "resources/icons/com.anduinos.ControlPanel-symbolic.svg"
+        ).read_text()
+        symbolic_root = ET.fromstring(symbolic_icon)
+        self.assertEqual(symbolic_root.attrib.get("width"), "16")
+        self.assertEqual(symbolic_root.attrib.get("height"), "16")
+        self.assertNotIn("<image", symbolic_icon)
+        self.assertNotIn("#2268ab", symbolic_icon)
+        self.assertIn(
+            'Target="/usr/share/icons/hicolor/symbolic/apps/'
+            'com.anduinos.ControlPanel-symbolic.svg"',
+            project,
+        )
+
     def test_fixed_anduinos_launchers_are_hard_dependencies(self):
         project = (ROOT / "anduinos-control-panel.aosproj").read_text()
         for package in (
-            "anduinos-driver-center (&gt;= 2.0.2-6)",
-            "anduinos-appearance",
-            "anduinos-ufwall-gtk",
-            "anduinos-swapcontrol-gtk",
-            "anduinos-yubikey-manager",
+            "anduinos-driver-center (&gt;= 2.0.2-7)",
+            "anduinos-appearance (&gt;= 2.0.2-5)",
+            "anduinos-ufwall-gtk (&gt;= 2.0.2-5)",
+            "anduinos-swapcontrol-gtk (&gt;= 2.0.2-6)",
+            "anduinos-yubikey-manager (&gt;= 2.0.2-4)",
+            "anduinos-btrfs-snapshots-manager (&gt;= 2.0.2-9)",
         ):
             self.assertIn(f'<Dependency Include="{package}" />', project)
-        self.assertIn('<Suggest Include="anduinos-btrfs-snapshots-manager" />', project)
+        self.assertNotIn('<Suggest Include="anduinos-btrfs-snapshots-manager', project)
+
+    def test_control_panel_is_published_for_resolute_only(self):
+        project = ET.parse(ROOT / "anduinos-control-panel.aosproj").getroot()
+        target_suites = project.findtext(".//TargetSuites")
+        self.assertEqual(target_suites, "resolute-addon")
 
     def test_default_desktop_selection_recommends_the_control_panel(self):
         desktop_apps = (

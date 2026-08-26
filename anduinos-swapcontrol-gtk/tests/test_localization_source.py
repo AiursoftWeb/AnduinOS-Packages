@@ -8,6 +8,14 @@ RUST_STRING = r'"(?:[^"\\]|\\.)*"'
 
 
 class LocalizationSourceTests(unittest.TestCase):
+    def test_desktop_entry_is_exposed_as_a_control_panel_module(self):
+        desktop = (
+            ROOT / "data" / "com.anduinos.swapcontrol.desktop"
+        ).read_text(encoding="utf-8")
+        self.assertIn("\nNoDisplay=true\n", desktop)
+        self.assertIn("\nExec=swapcontrol-gtk\n", desktop)
+        self.assertIn("\nIcon=com.anduinos.swapcontrol\n", desktop)
+
     def test_window_opens_at_the_roomier_dashboard_size(self):
         source = (ROOT / "src" / "window.rs").read_text(encoding="utf-8")
         self.assertIn('.property("default-width", 1230)', source)

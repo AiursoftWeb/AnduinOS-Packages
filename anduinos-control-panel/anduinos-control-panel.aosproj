@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-control-panel</PackageName>
-    <PackageVersion>2.0.2-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Control Panel — a category-based home for system, hardware, application, account, appearance, and recovery settings.</PackageDescription>
     <Section>utils</Section>
@@ -11,10 +11,10 @@
     <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
     <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetSuites>resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,12 +31,12 @@
     <Dependency Include="gnome-software" />
     <Dependency Include="flatpak" />
     <Dependency Include="pkexec" />
-    <Dependency Include="anduinos-driver-center (&gt;= 2.0.2-6)" />
-    <Dependency Include="anduinos-appearance" />
-    <Dependency Include="anduinos-ufwall-gtk" />
-    <Dependency Include="anduinos-swapcontrol-gtk" />
-    <Dependency Include="anduinos-yubikey-manager" />
-    <Suggest Include="anduinos-btrfs-snapshots-manager" />
+    <Dependency Include="anduinos-driver-center (&gt;= 2.0.2-7)" />
+    <Dependency Include="anduinos-appearance (&gt;= 2.0.2-5)" />
+    <Dependency Include="anduinos-ufwall-gtk (&gt;= 2.0.2-5)" />
+    <Dependency Include="anduinos-swapcontrol-gtk (&gt;= 2.0.2-6)" />
+    <Dependency Include="anduinos-yubikey-manager (&gt;= 2.0.2-4)" />
+    <Dependency Include="anduinos-btrfs-snapshots-manager (&gt;= 2.0.2-9)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +48,7 @@
     <!-- Vendored copies of existing repository SVGs keep this package standalone. -->
     <IncludeFolder Include="resources/icons" Target="/usr/share/anduinos-control-panel/icons" />
     <IncludeFile Include="resources/icons/com.anduinos.ControlPanel.svg" Target="/usr/share/icons/hicolor/scalable/apps/com.anduinos.ControlPanel.svg" />
+    <IncludeFile Include="resources/icons/com.anduinos.ControlPanel-symbolic.svg" Target="/usr/share/icons/hicolor/symbolic/apps/com.anduinos.ControlPanel-symbolic.svg" />
   </ItemGroup>
 
   <ItemGroup>

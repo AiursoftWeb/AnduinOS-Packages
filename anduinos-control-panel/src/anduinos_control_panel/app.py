@@ -14,7 +14,8 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("GdkPixbuf", "2.0")
-from gi.repository import Adw, Gdk, GdkPixbuf, Gio, GLib, Gtk  # noqa: E402
+gi.require_version("Pango", "1.0")
+from gi.repository import Adw, Gdk, GdkPixbuf, Gio, GLib, Gtk, Pango  # noqa: E402
 
 from .model import (
     BOTTLES_APP_ID,
@@ -30,6 +31,8 @@ from .model import (
 
 APP_ID = "com.anduinos.ControlPanel"
 LOCALE_DIR = "/usr/share/locale"
+FLATHUB_REMOTE = "flathub"
+FLATHUB_REPOSITORY = "https://dl.flathub.org/repo/flathub.flatpakrepo"
 gettext.bindtextdomain("anduinos-control-panel", LOCALE_DIR)
 gettext.textdomain("anduinos-control-panel")
 _ = gettext.gettext
@@ -67,6 +70,8 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         self.set_size_request(760, 560)
         self._category_children: list[Gtk.Widget] = []
         self._ai_window: Adw.Window | None = None
+        self._flatseal_window: Adw.Window | None = None
+        self._bottles_window: Adw.Window | None = None
 
         self._install_css()
 
@@ -86,12 +91,6 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         self.search.set_size_request(260, -1)
         self.search.connect("search-changed", self._search_changed)
         header.pack_end(self.search)
-
-        refresh = Gtk.Button(
-            icon_name="view-refresh-symbolic", tooltip_text=_("Refresh availability")
-        )
-        refresh.connect("clicked", lambda _button: self._rebuild_categories())
-        header.pack_end(refresh)
 
         menu = Gio.Menu()
         menu.append(_("About Control Panel"), "app.about")
@@ -161,7 +160,6 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             .control-action {
                 min-height: 0;
                 border: none;
-                outline: none;
                 box-shadow: none;
                 background: transparent;
                 padding: 2px 0;
@@ -301,7 +299,14 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                         _("AnduinOS Appearance Settings"),
                         _("Configure the taskbar, panel widgets, and desktop"),
                         lambda: self._launch(["anduinos-appearance"]),
-                    )
+                    ),
+                    (
+                        _("Wallpaper and Accent Color"),
+                        _("Choose the desktop background, style, and accent color"),
+                        lambda: self._launch(
+                            ["gnome-control-center", "background"]
+                        ),
+                    ),
                 ],
             ),
             (
@@ -344,7 +349,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                         (
                             _("Open your Windows application environments")
                             if bottles_installed
-                            else _("Install Bottles from the app store")
+                            else _("Install Bottles to run Windows applications")
                         ),
                         self._open_bottles,
                     ),
@@ -368,7 +373,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         if package_installed(SNAPSHOT_PACKAGE):
             actions.append(
                 (
-                    _("Btrfs Snapshots"),
+                    _("System Snapshots"),
                     _("Create, browse, and roll back system snapshots"),
                     lambda: self._launch(["anduinos-btrfs-snapshots-manager"]),
                 )
@@ -428,11 +433,43 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         button.add_css_class("flat")
         button.add_css_class("control-action")
         button.set_halign(Gtk.Align.START)
+        button.set_cursor_from_name("pointer")
         button.set_tooltip_text(subtitle)
         button.connect("clicked", lambda _button: callback())
         name = Gtk.Label(label=title, xalign=0)
         name.add_css_class("control-action-title")
         button.set_child(name)
+
+        plain_attributes = Pango.AttrList()
+        underlined_attributes = Pango.AttrList()
+        underlined_attributes.insert(
+            Pango.attr_underline_new(Pango.Underline.SINGLE)
+        )
+        interaction = {"hovered": False}
+
+        def update_underline() -> None:
+            attributes = (
+                underlined_attributes
+                if interaction["hovered"] or button.has_focus()
+                else plain_attributes
+            )
+            name.set_attributes(attributes)
+
+        def pointer_entered(
+            _controller: Gtk.EventControllerMotion, _x: float, _y: float
+        ) -> None:
+            interaction["hovered"] = True
+            update_underline()
+
+        def pointer_left(_controller: Gtk.EventControllerMotion) -> None:
+            interaction["hovered"] = False
+            update_underline()
+
+        motion = Gtk.EventControllerMotion()
+        motion.connect("enter", pointer_entered)
+        motion.connect("leave", pointer_left)
+        button.add_controller(motion)
+        button.connect("notify::has-focus", lambda *_args: update_underline())
         return button
 
     def _search_changed(self, entry: Gtk.SearchEntry) -> None:
@@ -454,9 +491,35 @@ class ControlPanelWindow(Adw.ApplicationWindow):
 
     def _launch(self, arguments: list[str]) -> None:
         try:
-            Gio.Subprocess.new(arguments, Gio.SubprocessFlags.NONE)
+            process = Gio.Subprocess.new(
+                arguments,
+                Gio.SubprocessFlags.STDOUT_PIPE
+                | Gio.SubprocessFlags.STDERR_PIPE,
+            )
         except GLib.Error as error:
             self._show_error(_("Could not open this setting"), str(error))
+            return
+
+        def launch_completed(
+            launched_process: Gio.Subprocess, result: Gio.AsyncResult
+        ) -> None:
+            try:
+                _communicated, stdout, stderr = launched_process.communicate_utf8_finish(
+                    result
+                )
+            except GLib.Error as error:
+                self._show_error(_("Could not open this setting"), str(error))
+                return
+
+            if launched_process.get_successful():
+                return
+
+            details = (stderr or stdout or "").strip()
+            if not details:
+                details = _("The application exited before it could be opened.")
+            self._show_error(_("Could not open this setting"), details)
+
+        process.communicate_utf8_async(None, None, launch_completed)
 
     def _show_error(self, heading: str, body: str = "") -> None:
         dialog = Adw.MessageDialog(transient_for=self, heading=heading, body=body)
@@ -488,7 +551,202 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         if flatpak_installed(BOTTLES_APP_ID):
             self._launch(["flatpak", "run", BOTTLES_APP_ID])
             return
-        self._show_store_prompt(_("Bottles"), f"{BOTTLES_APP_ID}.desktop")
+
+        if self._bottles_window is not None:
+            self._bottles_window.present()
+            return
+
+        window = Adw.Window(
+            transient_for=self,
+            modal=True,
+            title=_("Windows Compatibility"),
+            default_width=560,
+            default_height=360,
+        )
+        self._bottles_window = window
+        window.connect("close-request", self._bottles_window_closed)
+
+        toolbar = Adw.ToolbarView()
+        toolbar.add_top_bar(Adw.HeaderBar())
+        window.set_content(toolbar)
+        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=18)
+        page.set_margin_top(24)
+        page.set_margin_bottom(24)
+        page.set_margin_start(24)
+        page.set_margin_end(24)
+        toolbar.set_content(page)
+
+        group = Adw.PreferencesGroup(
+            title=_("Bottles"),
+            description=_(
+                "Run Windows applications in isolated compatibility environments "
+                "powered by Wine and Bottles."
+            ),
+        )
+        install_row = Adw.ActionRow(
+            title=_("Install Bottles"),
+            subtitle=_("Downloads Bottles and its runtime from Flathub"),
+        )
+        install_row.add_prefix(
+            Gtk.Image.new_from_icon_name("application-x-executable-symbolic")
+        )
+        group.add(install_row)
+        page.append(group)
+
+        status_label = Gtk.Label(xalign=0, wrap=True)
+        status_label.add_css_class("dim-label")
+        page.append(status_label)
+
+        progress = Gtk.ProgressBar()
+        progress.set_visible(False)
+        page.append(progress)
+
+        expander = Gtk.Expander(label=_("Advanced Output"))
+        expander.set_hexpand(True)
+        output_scroll = Gtk.ScrolledWindow(
+            hscrollbar_policy=Gtk.PolicyType.NEVER,
+            vscrollbar_policy=Gtk.PolicyType.AUTOMATIC,
+            min_content_height=180,
+        )
+        output_scroll.set_overlay_scrolling(False)
+        output = Gtk.TextView(
+            editable=False,
+            cursor_visible=False,
+            monospace=True,
+            wrap_mode=Gtk.WrapMode.WORD_CHAR,
+        )
+        output.add_css_class("card")
+        output_scroll.set_child(output)
+        expander.set_child(output_scroll)
+
+        def advanced_output_toggled(row: Gtk.Expander, _parameter) -> None:
+            window.set_default_size(
+                680 if row.get_expanded() else 560,
+                560 if row.get_expanded() else 360,
+            )
+
+        expander.connect("notify::expanded", advanced_output_toggled)
+        page.append(expander)
+
+        spacer = Gtk.Box()
+        spacer.set_vexpand(True)
+        page.append(spacer)
+        buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        buttons.set_halign(Gtk.Align.END)
+        cancel = Gtk.Button(label=_("Cancel"))
+        cancel.connect("clicked", lambda _button: window.close())
+        start = Gtk.Button(label=_("Start"))
+        start.add_css_class("suggested-action")
+        state = {"installed": False}
+
+        def start_clicked(_button: Gtk.Button) -> None:
+            if state["installed"]:
+                window.close()
+                self._launch(["flatpak", "run", BOTTLES_APP_ID])
+                return
+            self._install_bottles(
+                window,
+                start,
+                cancel,
+                status_label,
+                progress,
+                output,
+                state,
+            )
+
+        start.connect("clicked", start_clicked)
+        buttons.append(cancel)
+        buttons.append(start)
+        page.append(buttons)
+        window.present()
+
+    def _bottles_window_closed(self, _window: Adw.Window) -> bool:
+        self._bottles_window = None
+        return False
+
+    def _install_bottles(
+        self,
+        window: Adw.Window,
+        start: Gtk.Button,
+        cancel: Gtk.Button,
+        status_label: Gtk.Label,
+        progress: Gtk.ProgressBar,
+        output: Gtk.TextView,
+        state: dict[str, bool],
+    ) -> None:
+        start.set_sensitive(False)
+        cancel.set_sensitive(False)
+        window.set_deletable(False)
+        start.set_label(_("Installing…"))
+        status_label.set_label(
+            _("Downloading and installing Bottles… This may take a few minutes.")
+        )
+        progress.set_visible(True)
+        progress.pulse()
+        buffer = output.get_buffer()
+        buffer.set_text(_("Preparing Flathub and Bottles installation…") + "\n\n")
+
+        def pulse() -> bool:
+            if progress.get_visible():
+                progress.pulse()
+                return GLib.SOURCE_CONTINUE
+            return GLib.SOURCE_REMOVE
+
+        GLib.timeout_add(100, pulse)
+
+        def completed() -> None:
+            progress.set_visible(False)
+            window.set_deletable(True)
+            state["installed"] = True
+            status_label.set_label(_("✓ Bottles is ready."))
+            self._append_package_output(
+                buffer,
+                output,
+                "\n" + _("✓ Installation completed successfully.") + "\n",
+            )
+            start.set_label(_("Open Bottles"))
+            start.set_sensitive(True)
+            cancel.set_label(_("Close"))
+            cancel.set_sensitive(True)
+            self._rebuild_categories()
+            self.toast_overlay.add_toast(Adw.Toast.new(_("Bottles installed")))
+
+        def failed(message: str) -> None:
+            progress.set_visible(False)
+            window.set_deletable(True)
+            status_label.set_label(
+                _("✗ Installation failed. Review Advanced Output.")
+            )
+            self._append_package_output(
+                buffer,
+                output,
+                "\n" + _("✗ Operation failed: ") + message + "\n",
+            )
+            start.set_label(_("Retry"))
+            start.set_sensitive(True)
+            cancel.set_sensitive(True)
+
+        commands = [
+            [
+                "/usr/bin/flatpak",
+                "remote-add",
+                "--if-not-exists",
+                "--system",
+                FLATHUB_REMOTE,
+                FLATHUB_REPOSITORY,
+            ],
+            [
+                "/usr/bin/flatpak",
+                "install",
+                "--system",
+                "--assumeyes",
+                FLATHUB_REMOTE,
+                BOTTLES_APP_ID,
+            ],
+        ]
+        self._run_streaming_commands(
+            commands, buffer, output, completed, failed
+        )
 
     def _open_deja_dup(self) -> None:
         if flatpak_installed(DEJA_DUP_APP_ID):
@@ -500,32 +758,184 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         if package_installed("flatseal"):
             self._launch(["com.github.tchx84.Flatseal"])
             return
-        dialog = Adw.MessageDialog(
+
+        if self._flatseal_window is not None:
+            self._flatseal_window.present()
+            return
+
+        window = Adw.Window(
             transient_for=self,
-            heading=_("Install Flatseal?"),
-            body=_(
-                "Flatseal manages permissions for Flatpak applications. "
-                "Administrator authentication is required to install it."
+            modal=True,
+            title=_("Permission Settings"),
+            default_width=560,
+            default_height=360,
+        )
+        self._flatseal_window = window
+        window.connect("close-request", self._flatseal_window_closed)
+
+        toolbar = Adw.ToolbarView()
+        toolbar.add_top_bar(Adw.HeaderBar())
+        window.set_content(toolbar)
+        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=18)
+        page.set_margin_top(24)
+        page.set_margin_bottom(24)
+        page.set_margin_start(24)
+        page.set_margin_end(24)
+        toolbar.set_content(page)
+
+        group = Adw.PreferencesGroup(
+            title=_("Flatseal"),
+            description=_(
+                "Review and control what files, devices, network connections, "
+                "and services Flatpak applications can access."
             ),
         )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("install", _("Install"))
-        dialog.set_close_response("cancel")
-        dialog.set_default_response("install")
-        dialog.set_response_appearance("install", Adw.ResponseAppearance.SUGGESTED)
-        dialog.connect(
-            "response",
-            lambda _dialog, response: self._run_package_change(
-                "flatseal", self._flatseal_installed
-            )
-            if response == "install"
-            else None,
+        install_row = Adw.ActionRow(
+            title=_("Install Flatseal"),
+            subtitle=_(
+                "Administrator authentication is required when installation starts"
+            ),
         )
-        dialog.present()
+        install_row.add_prefix(Gtk.Image.new_from_icon_name("security-high-symbolic"))
+        group.add(install_row)
+        page.append(group)
 
-    def _flatseal_installed(self) -> None:
-        self._rebuild_categories()
-        self._launch(["com.github.tchx84.Flatseal"])
+        status_label = Gtk.Label(xalign=0, wrap=True)
+        status_label.add_css_class("dim-label")
+        page.append(status_label)
+
+        progress = Gtk.ProgressBar()
+        progress.set_visible(False)
+        page.append(progress)
+
+        expander = Gtk.Expander(label=_("Advanced Output"))
+        expander.set_hexpand(True)
+        output_scroll = Gtk.ScrolledWindow(
+            hscrollbar_policy=Gtk.PolicyType.NEVER,
+            vscrollbar_policy=Gtk.PolicyType.AUTOMATIC,
+            min_content_height=180,
+        )
+        output_scroll.set_overlay_scrolling(False)
+        output = Gtk.TextView(
+            editable=False,
+            cursor_visible=False,
+            monospace=True,
+            wrap_mode=Gtk.WrapMode.WORD_CHAR,
+        )
+        output.add_css_class("card")
+        output_scroll.set_child(output)
+        expander.set_child(output_scroll)
+
+        def advanced_output_toggled(row: Gtk.Expander, _parameter) -> None:
+            window.set_default_size(
+                680 if row.get_expanded() else 560,
+                560 if row.get_expanded() else 360,
+            )
+
+        expander.connect("notify::expanded", advanced_output_toggled)
+        page.append(expander)
+
+        spacer = Gtk.Box()
+        spacer.set_vexpand(True)
+        page.append(spacer)
+        buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        buttons.set_halign(Gtk.Align.END)
+        cancel = Gtk.Button(label=_("Cancel"))
+        cancel.connect("clicked", lambda _button: window.close())
+        start = Gtk.Button(label=_("Start"))
+        start.add_css_class("suggested-action")
+        state = {"installed": False}
+
+        def start_clicked(_button: Gtk.Button) -> None:
+            if state["installed"]:
+                window.close()
+                self._launch(["com.github.tchx84.Flatseal"])
+                return
+            self._install_flatseal(
+                window,
+                start,
+                cancel,
+                status_label,
+                progress,
+                output,
+                state,
+            )
+
+        start.connect("clicked", start_clicked)
+        buttons.append(cancel)
+        buttons.append(start)
+        page.append(buttons)
+        window.present()
+
+    def _flatseal_window_closed(self, _window: Adw.Window) -> bool:
+        self._flatseal_window = None
+        return False
+
+    def _install_flatseal(
+        self,
+        window: Adw.Window,
+        start: Gtk.Button,
+        cancel: Gtk.Button,
+        status_label: Gtk.Label,
+        progress: Gtk.ProgressBar,
+        output: Gtk.TextView,
+        state: dict[str, bool],
+    ) -> None:
+        start.set_sensitive(False)
+        cancel.set_sensitive(False)
+        window.set_deletable(False)
+        start.set_label(_("Installing…"))
+        status_label.set_label(_("Downloading and installing Flatseal…"))
+        progress.set_visible(True)
+        progress.pulse()
+        buffer = output.get_buffer()
+        buffer.set_text(
+            _("Preparing Flatseal installation…") + "\n\n"
+        )
+
+        def pulse() -> bool:
+            if progress.get_visible():
+                progress.pulse()
+                return GLib.SOURCE_CONTINUE
+            return GLib.SOURCE_REMOVE
+
+        GLib.timeout_add(100, pulse)
+
+        def completed() -> None:
+            progress.set_visible(False)
+            window.set_deletable(True)
+            state["installed"] = True
+            status_label.set_label(_("✓ Flatseal is ready."))
+            self._append_package_output(
+                buffer,
+                output,
+                "\n" + _("✓ Installation completed successfully.") + "\n",
+            )
+            start.set_label(_("Open Flatseal"))
+            start.set_sensitive(True)
+            cancel.set_label(_("Close"))
+            cancel.set_sensitive(True)
+            self._rebuild_categories()
+            self.toast_overlay.add_toast(Adw.Toast.new(_("Flatseal installed")))
+
+        def failed(message: str) -> None:
+            progress.set_visible(False)
+            window.set_deletable(True)
+            status_label.set_label(
+                _("✗ Installation failed. Review Advanced Output.")
+            )
+            self._append_package_output(
+                buffer,
+                output,
+                "\n" + _("✗ Operation failed: ") + message + "\n",
+            )
+            start.set_label(_("Retry"))
+            start.set_sensitive(True)
+            cancel.set_sensitive(True)
+
+        self._run_streaming_package_change(
+            "flatseal", buffer, output, completed, failed
+        )
 
     def _show_ai_settings(self) -> None:
         if self._ai_window is not None:
@@ -667,10 +1077,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         expander.set_expanded(True)
         package = WHY_AI_PACKAGE if enabled else WHY_PLACEHOLDER_PACKAGE
         buffer = output.get_buffer()
-        buffer.set_text(
-            _("Preparing package operation…")
-            + f"\n$ apt-get install --yes {package}\n\n"
-        )
+        buffer.set_text(_("Preparing package operation…") + "\n\n")
 
         def pulse() -> bool:
             if progress.get_visible():
@@ -688,7 +1095,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                 if enabled
                 else _("✓ On-device AI is disabled.")
             )
-            self._append_ai_output(
+            self._append_package_output(
                 buffer,
                 output,
                 "\n"
@@ -712,7 +1119,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             window.set_deletable(True)
             toggle.set_sensitive(True)
             status_label.set_label(_("✗ Package operation failed. Review Advanced Output."))
-            self._append_ai_output(
+            self._append_package_output(
                 buffer,
                 output,
                 "\n" + _("✗ Operation failed: ") + message + "\n",
@@ -721,10 +1128,12 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             apply.set_sensitive(True)
             cancel.set_sensitive(True)
 
-        self._run_ai_package_change(package, buffer, output, completed, failed)
+        self._run_streaming_package_change(
+            package, buffer, output, completed, failed
+        )
 
     @staticmethod
-    def _append_ai_output(
+    def _append_package_output(
         buffer: Gtk.TextBuffer, output: Gtk.TextView, text: str
     ) -> bool:
         buffer.insert(buffer.get_end_iter(), text)
@@ -732,7 +1141,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         output.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
         return GLib.SOURCE_REMOVE
 
-    def _run_ai_package_change(
+    def _run_streaming_package_change(
         self,
         package: str,
         buffer: Gtk.TextBuffer,
@@ -747,73 +1156,57 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             "--yes",
             package,
         ]
+        self._run_streaming_commands(
+            [arguments], buffer, output, success, failure
+        )
+
+    def _run_streaming_commands(
+        self,
+        commands: list[list[str]],
+        buffer: Gtk.TextBuffer,
+        output: Gtk.TextView,
+        success: Callable[[], None],
+        failure: Callable[[str], None],
+    ) -> None:
 
         def worker() -> None:
             try:
-                process = subprocess.Popen(
-                    arguments,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
-                    text=True,
-                    bufsize=1,
-                )
-                if process.stdout is not None:
-                    for line in iter(process.stdout.readline, ""):
-                        GLib.idle_add(
-                            self._append_ai_output, buffer, output, line
-                        )
-                    process.stdout.close()
-                return_code = process.wait()
-                if return_code == 0:
-                    GLib.idle_add(success)
-                else:
+                for arguments in commands:
                     GLib.idle_add(
-                        failure,
-                        _("apt-get exited with status %d") % return_code,
+                        self._append_package_output,
+                        buffer,
+                        output,
+                        "$ " + " ".join(arguments) + "\n",
                     )
+                    process = subprocess.Popen(
+                        arguments,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT,
+                        text=True,
+                        bufsize=1,
+                    )
+                    if process.stdout is not None:
+                        for line in iter(process.stdout.readline, ""):
+                            GLib.idle_add(
+                                self._append_package_output, buffer, output, line
+                            )
+                        process.stdout.close()
+                    return_code = process.wait()
+                    if return_code != 0:
+                        GLib.idle_add(
+                            failure,
+                            _("%s exited with status %d")
+                            % (Path(arguments[0]).name, return_code),
+                        )
+                        return
+                    GLib.idle_add(
+                        self._append_package_output, buffer, output, "\n"
+                    )
+                GLib.idle_add(success)
             except Exception as error:
                 GLib.idle_add(failure, str(error))
 
         threading.Thread(target=worker, daemon=True).start()
-
-    def _run_package_change(
-        self,
-        package: str,
-        success: Callable[[], None],
-        failure: Callable[[], None] | None = None,
-    ) -> None:
-        arguments = [
-            "/usr/bin/pkexec",
-            "/usr/bin/apt-get",
-            "install",
-            "--yes",
-            package,
-        ]
-        try:
-            process = Gio.Subprocess.new(
-                arguments,
-                Gio.SubprocessFlags.STDOUT_SILENCE | Gio.SubprocessFlags.STDERR_SILENCE,
-            )
-            process.wait_check_async(
-                None,
-                self._package_change_done,
-                (success, failure),
-            )
-        except GLib.Error as error:
-            if failure:
-                failure()
-            self._show_error(_("Installation failed"), str(error))
-
-    def _package_change_done(self, process, result, callbacks) -> None:
-        success, failure = callbacks
-        try:
-            process.wait_check_finish(result)
-        except GLib.Error as error:
-            if failure:
-                failure()
-            self._show_error(_("Installation failed"), str(error))
-            return
-        success()
 
 
 class ControlPanelApplication(Adw.Application):

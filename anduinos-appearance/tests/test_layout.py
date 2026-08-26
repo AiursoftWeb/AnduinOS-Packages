@@ -14,6 +14,14 @@ from anduinos_appearance import layout  # noqa: E402
 
 
 class LayoutTests(unittest.TestCase):
+    def test_desktop_entry_is_exposed_as_a_control_panel_module(self):
+        desktop = (APP_SOURCE.parents[1] / "data/anduinos-appearance.desktop").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("\nNoDisplay=true\n", desktop)
+        self.assertIn("\nExec=anduinos-appearance\n", desktop)
+        self.assertIn("\nIcon=anduinos-appearance\n", desktop)
+
     def test_window_opens_at_the_roomier_default_size(self):
         source = APP_SOURCE.read_text(encoding="utf-8")
         self.assertIn("self.set_default_size(910, 660)", source)
