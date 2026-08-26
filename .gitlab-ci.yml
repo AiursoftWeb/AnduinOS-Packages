@@ -409,18 +409,6 @@ anduinos-yubikey-manager:
   variables:
     PACKAGE_DIR: anduinos-yubikey-manager
 
-anduinos-control-panel:
-  extends: .publish
-  needs:
-    - anduinos-appearance
-    - anduinos-btrfs-snapshots-manager
-    - anduinos-driver-center
-    - anduinos-swapcontrol-gtk
-    - anduinos-ufwall-gtk
-    - anduinos-yubikey-manager
-  variables:
-    PACKAGE_DIR: anduinos-control-panel
-
 anduinos-why-placeholder:
   extends: .publish
   variables:
@@ -578,6 +566,18 @@ anduinos-exe-runner:
   extends: .publish
   variables:
     PACKAGE_DIR: anduinos-exe-runner
+
+anduinos-control-panel:
+  extends: .publish
+  needs:
+    - anduinos-driver-center
+    - anduinos-appearance
+    - anduinos-ufwall-gtk
+    - anduinos-swapcontrol-gtk
+    - anduinos-yubikey-manager
+    - anduinos-btrfs-snapshots-manager
+  variables:
+    PACKAGE_DIR: anduinos-control-panel
 
 anduinos-oobe:
   extends: .publish
