@@ -59,9 +59,7 @@ pub struct HibernationStatus {
     pub resume_device: Option<String>,
     /// resume_offset= from kernel cmdline (swapfile case)
     pub resume_offset: Option<u64>,
-    /// RESUME= from /etc/initramfs-tools/conf.d/resume
-    pub initramfs_resume: Option<String>,
-    /// The selected resume target after preferring the kernel command line.
+    /// The resume target selected from the active kernel command line.
     pub configured_target: Option<String>,
     /// The configured target resolved to a canonical device path when possible.
     pub resolved_target: Option<String>,

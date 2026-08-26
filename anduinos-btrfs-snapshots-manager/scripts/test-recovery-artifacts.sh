@@ -7,22 +7,25 @@ INITRAMFS="${2:-}"
 PROTOCOL="$(tr -d '\n' < "$PROJECT_ROOT/data/recovery-protocol-version")"
 
 test "$PROTOCOL" = "2"
-grep -Fq 'get_fstype "$root_device"' "$PROJECT_ROOT/data/initramfs-local-premount"
-if rg -q '\$\{?FSTYPE' "$PROJECT_ROOT/data/initramfs-local-premount"; then
-    echo "The initramfs premount script must not depend on a non-exported FSTYPE variable" >&2
+DRACUT_MODULE="$PROJECT_ROOT/data/dracut/91anduinos-btrfs-snapshots-manager/module-setup.sh"
+DRACUT_HOOK="$PROJECT_ROOT/data/dracut/91anduinos-btrfs-snapshots-manager/anduinos-btrfs-snapshots-manager.sh"
+
+grep -Fq 'det_fs "$root_device"' "$DRACUT_HOOK"
+if rg -q '\$\{?FSTYPE' "$DRACUT_HOOK"; then
+    echo "The Dracut pre-mount hook must not depend on an implicit FSTYPE variable" >&2
     exit 1
 fi
-grep -Fq 'recovery-protocol-version' "$PROJECT_ROOT/data/initramfs-hook"
-grep -Fq 'anduinos-btrfs-snapshots-manager-confirm' "$PROJECT_ROOT/data/initramfs-hook"
+grep -Fq 'recovery-protocol-version' "$DRACUT_MODULE"
+grep -Fq 'anduinos-btrfs-snapshots-manager-confirm' "$DRACUT_MODULE"
 grep -Fq 'recovery-protocol-version' "$PROJECT_ROOT/anduinos-btrfs-snapshots-manager.aosproj"
-grep -Fq 'recovery-boot/confirm' "$PROJECT_ROOT/data/initramfs-local-premount"
-if grep -Eq '^ExecStart=/run/' "$PROJECT_ROOT/data/initramfs-local-premount"; then
+grep -Fq 'recovery-boot/confirm' "$DRACUT_HOOK"
+if grep -Eq '^ExecStart=/run/' "$DRACUT_HOOK"; then
     echo "The recovery confirmation engine must not execute from a potentially noexec /run mount" >&2
     exit 1
 fi
 for unit_source in \
     "$PROJECT_ROOT/data/anduinos-btrfs-snapshots-manager-confirm.service" \
-    "$PROJECT_ROOT/data/initramfs-local-premount"; do
+    "$DRACUT_HOOK"; do
     grep -Fq 'After=local-fs.target' "$unit_source"
     grep -Fq 'RequiresMountsFor=/.snapshots /boot' "$unit_source"
     if grep -Fq 'After=multi-user.target' "$unit_source"; then
@@ -38,10 +41,13 @@ fi
 
 if [ -n "$INITRAMFS" ]; then
     test -f "$INITRAMFS"
-    command -v lsinitramfs >/dev/null
-    listing="$(lsinitramfs "$INITRAMFS")"
+    command -v lsinitrd >/dev/null
+    listing="$(lsinitrd "$INITRAMFS" | awk '
+        $1 ~ /^l/ && $(NF - 1) == "->" { print $(NF - 2); next }
+        $1 ~ /^[bcdps-]/ { print $NF }
+    ')"
     for member in \
-        scripts/local-premount/anduinos-btrfs-snapshots-manager \
+        var/lib/dracut/hooks/pre-mount/50-anduinos-btrfs-snapshots-manager.sh \
         usr/libexec/anduinos-btrfs-snapshots-manager-initramfs \
         usr/libexec/anduinos-btrfs-snapshots-manager-confirm \
         etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version \

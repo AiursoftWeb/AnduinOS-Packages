@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import os
-import stat
 import subprocess
 import tempfile
 import unittest
@@ -11,7 +10,8 @@ from pathlib import Path
 PROJECT = Path(__file__).resolve().parent.parent
 PROJECT_FILE = PROJECT / "anduinos-live-settings.aosproj"
 INSTALLER_PROJECT = PROJECT.parent / "anduinos-installer-beta/anduinos-installer-beta.aosproj"
-HOOK = PROJECT / "assets/14anduinos-timezone"
+SETUP = PROJECT / "assets/anduinos-live-session-setup"
+SERVICE = PROJECT / "assets/anduinos-live-session.service"
 GRUB_DROP_INS = {
     PROJECT / "assets/grub-initrd-fallback-live.conf": (
         "/usr/lib/systemd/system/"
@@ -22,8 +22,6 @@ GRUB_DROP_INS = {
         "grub2-common.service.d/10-anduinos-live.conf"
     ),
 }
-POSTINST = PROJECT / "scripts/postinst.sh"
-POSTRM = PROJECT / "scripts/postrm.sh"
 
 
 class LiveSettingsPackageContractTests(unittest.TestCase):
@@ -40,18 +38,21 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
         }
         self.assertEqual(
             dependencies,
-            {"casper", "initramfs-tools", "openssh-server"},
+            {"anduinos-live-layers", "adduser", "locales", "sudo", "openssh-server"},
         )
-        included = self.project.find(
-            ".//IncludeFile[@Include='assets/14anduinos-timezone']"
+        project_text = PROJECT_FILE.read_text(encoding="utf-8")
+        self.assertNotIn("casper", project_text.lower())
+        self.assertNotIn("initramfs-tools", project_text)
+
+        unit = self.project.find(
+            ".//SystemdUnit[@Include='assets/anduinos-live-session.service']"
         )
-        self.assertIsNotNone(included)
-        self.assertEqual(
-            included.get("Target"),
-            "/usr/share/initramfs-tools/scripts/casper-bottom/14anduinos-timezone",
+        self.assertIsNotNone(unit)
+        self.assertEqual(unit.get("AutoEnable"), "true")
+        self.assertIn(
+            "ConditionPathExists=/run/anduinos-live/environment",
+            SERVICE.read_text(encoding="utf-8"),
         )
-        self.assertEqual(included.get("Mode"), "755")
-        self.assertFalse((PROJECT / "assets/30anduinos-timezone").exists())
 
         for source, target in GRUB_DROP_INS.items():
             with self.subTest(source=source.name):
@@ -63,7 +64,7 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
                 self.assertEqual(included.get("Mode"), "644")
                 self.assertEqual(
                     source.read_text(encoding="utf-8"),
-                    "[Unit]\nConditionKernelCommandLine=!boot=casper\n",
+                    "[Unit]\nConditionPathExists=!/run/anduinos-live/environment\n",
                 )
 
     def test_installer_declares_the_live_bridge_dependency(self):
@@ -73,86 +74,62 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
         }
         self.assertIn("anduinos-live-settings", dependencies)
 
-    def test_valid_and_hostile_timezone_arguments(self):
+    def test_valid_and_hostile_regional_arguments(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
-            target = root / "target"
-            support = root / "casper-functions"
             cmdline = root / "cmdline"
-            (target / "usr/share/zoneinfo/Asia").mkdir(parents=True)
-            (target / "usr/share/zoneinfo/Asia/Shanghai").touch()
-            support.write_text(
-                "log_begin_msg() { :; }\nlog_end_msg() { :; }\n",
-                encoding="utf-8",
+            (root / "run/anduinos-live").mkdir(parents=True)
+            (root / "run/anduinos-live/environment").write_text(
+                "ANDUINOS_LIVE=1\n", encoding="utf-8"
             )
+            for timezone in ("Asia/Shanghai", "Etc/UTC"):
+                zone = root / "usr/share/zoneinfo" / timezone
+                zone.parent.mkdir(parents=True, exist_ok=True)
+                zone.touch()
             env = {
                 **os.environ,
-                "CASPER_FUNCTIONS": str(support),
-                "CASPER_CMDLINE_FILE": str(cmdline),
-                "CASPER_TARGET_ROOT": str(target),
+                "ANDUINOS_LIVE_ROOT": str(root),
+                "ANDUINOS_LIVE_CMDLINE_FILE": str(cmdline),
+                "ANDUINOS_LIVE_TEST_MODE": "1",
             }
 
             cmdline.write_text(
-                "boot=casper timezone=Asia/Shanghai quiet splash\n",
+                "rd.anduinos.live=1 locale=zh_CN.UTF-8 "
+                "timezone=Asia/Shanghai hostname=anduinos quiet\n",
                 encoding="utf-8",
             )
-            subprocess.run(["/bin/sh", HOOK], env=env, check=True)
+            subprocess.run(["/bin/sh", SETUP], env=env, check=True)
             self.assertEqual(
-                (target / "etc/timezone").read_text(encoding="utf-8"),
+                (root / "etc/timezone").read_text(encoding="utf-8"),
                 "Asia/Shanghai\n",
             )
             self.assertEqual(
-                os.readlink(target / "etc/localtime"),
+                os.readlink(root / "etc/localtime"),
                 "/usr/share/zoneinfo/Asia/Shanghai",
+            )
+            self.assertEqual(
+                (root / "etc/default/locale").read_text(encoding="utf-8"),
+                'LANG="zh_CN.UTF-8"\n',
             )
 
             for value in ("../../etc/passwd", "/etc/passwd", "Asia/Bad;Name"):
                 with self.subTest(value=value):
-                    (target / "etc/timezone").unlink(missing_ok=True)
-                    (target / "etc/localtime").unlink(missing_ok=True)
                     cmdline.write_text(
-                        f"boot=casper timezone={value}\n", encoding="utf-8"
+                        f"rd.anduinos.live=1 timezone={value}\n", encoding="utf-8"
                     )
-                    subprocess.run(["/bin/sh", HOOK], env=env, check=True)
-                    self.assertFalse((target / "etc/timezone").exists())
-                    self.assertFalse((target / "etc/localtime").exists())
-
-    def test_maintainer_scripts_rebuild_all_initrds_on_lifecycle_changes(self):
-        for script in (POSTINST, POSTRM):
-            subprocess.run(["/bin/sh", "-n", script], check=True)
-            self.assertTrue(script.read_text(encoding="utf-8").startswith("set -eu\n"))
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            fake_bin = Path(temp_dir)
-            log = fake_bin / "calls.log"
-            update = fake_bin / "update-initramfs"
-            update.write_text(
-                "#!/bin/sh\nprintf '%s\\n' \"$*\" >> \"$UPDATE_LOG\"\n",
-                encoding="utf-8",
-            )
-            update.chmod(update.stat().st_mode | stat.S_IXUSR)
-            env = {
-                **os.environ,
-                "PATH": f"{fake_bin}:/usr/bin:/bin",
-                "UPDATE_LOG": str(log),
-            }
-            cases = (
-                (POSTINST, "configure", True),
-                (POSTINST, "abort-upgrade", False),
-                (POSTRM, "remove", True),
-                (POSTRM, "purge", True),
-                (POSTRM, "upgrade", False),
-            )
-            for script, action, expected in cases:
-                with self.subTest(script=script.name, action=action):
-                    log.unlink(missing_ok=True)
-                    subprocess.run(["/bin/sh", script, action], env=env, check=True)
-                    lines = (
-                        log.read_text(encoding="utf-8").splitlines()
-                        if log.exists()
-                        else []
+                    subprocess.run(["/bin/sh", SETUP], env=env, check=True)
+                    self.assertEqual(
+                        (root / "etc/timezone").read_text(encoding="utf-8"),
+                        "Etc/UTC\n",
                     )
-                    self.assertEqual(lines, ["-u -k all"] if expected else [])
+
+    def test_setup_is_valid_posix_shell_and_has_no_legacy_generator_calls(self):
+        subprocess.run(["/bin/sh", "-n", SETUP], check=True)
+        setup = SETUP.read_text(encoding="utf-8")
+        self.assertIn("useradd --create-home --uid 1000", setup)
+        self.assertIn("AutomaticLoginEnable=true", setup)
+        self.assertNotIn("update-initramfs", setup)
+        self.assertNotIn("casper", setup.lower())
 
 
 if __name__ == "__main__":

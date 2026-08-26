@@ -17,7 +17,7 @@ from installer_core.snapshots_manager import SNAPSHOTS_MANAGER_PACKAGE
 
 
 EXPECTED_LIVE_ONLY_PACKAGES = (
-    "casper",
+    "anduinos-live-layers",
     "discover",
     "laptop-detect",
     "os-prober",
@@ -58,7 +58,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
         payload = plan.to_dict()
         self.assertEqual(
             payload["source"],
-            {"image_path": "/cdrom/casper/filesystem.squashfs"},
+            {"image_path": "/run/anduinos-live/rootfs.squashfs"},
         )
         payload["source"]["desktop_manifest_path"] = "/legacy"
         with self.assertRaisesRegex(
@@ -74,6 +74,9 @@ class RemoveLivePackagesTests(unittest.TestCase):
             REQUIRED_BOOT_PACKAGES[Architecture.AMD64],
             (
                 "anduinos-core-system",
+                "dracut",
+                "dracut-core",
+                "dracut-install",
                 "grub-common",
                 "grub2-common",
                 "grub-pc-bin",
@@ -86,6 +89,9 @@ class RemoveLivePackagesTests(unittest.TestCase):
             REQUIRED_BOOT_PACKAGES[Architecture.ARM64],
             (
                 "anduinos-core-system",
+                "dracut",
+                "dracut-core",
+                "dracut-install",
                 "grub-common",
                 "grub2-common",
                 "grub-efi-arm64-bin",
@@ -106,7 +112,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             runner = FakeRunner()
-            for package in ("casper", "anduinos-installer-beta"):
+            for package in ("anduinos-live-layers", "anduinos-installer-beta"):
                 runner.outputs[_query(target, package)] = ("ii \n", "", 0)
             context = _context(target)
             step = RemoveLivePackagesStep(runner)
@@ -117,7 +123,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
             command for command, _kwargs in runner.commands if "purge" in command
         )
         self.assertEqual(
-            purge[-2:], ("casper", "anduinos-installer-beta")
+            purge[-2:], ("anduinos-live-layers", "anduinos-installer-beta")
         )
         queried = {
             command[-1]
@@ -183,7 +189,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
             target = Path(directory)
             runner = FakeRunner()
             runner.outputs[DETECT_VIRTUALIZATION] = ("vmware\n", "", 0)
-            runner.outputs[_query(target, "casper")] = ("ii \n", "", 0)
+            runner.outputs[_query(target, "anduinos-live-layers")] = ("ii \n", "", 0)
             context = _context(target)
             RemoveLivePackagesStep(runner).execute(context)
 

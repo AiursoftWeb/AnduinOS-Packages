@@ -13,7 +13,7 @@ from .esp import (
     verify_preserved_esp_tree,
 )
 from .execution_boundaries import emit_boundary
-from .model import Architecture, InstallMode
+from .model import Architecture, Filesystem, InstallMode
 from .steps import FailurePolicy, InstallContext
 from .storage_planning import GuidedCoexistenceExecutionPlan
 
@@ -44,7 +44,8 @@ class InstallBootloaderStep:
         required = (
             target / "usr/sbin/grub-install",
             target / "usr/sbin/update-grub",
-            target / "usr/sbin/update-initramfs",
+            target / "usr/bin/dracut",
+            target / "usr/bin/lsinitrd",
         )
         missing = [str(path) for path in required if not path.is_file()]
         if missing:
@@ -100,7 +101,7 @@ class InstallBootloaderStep:
             context.log(
                 "Other disks and Windows EFI boot files will not be modified"
             )
-        self.runner.run(commands.initramfs, timeout=1200)
+        self.runner.run(commands.initrd, timeout=1200)
         for command in installs:
             if guided:
                 emit_boundary(context, "guided-boot-files", "before")
@@ -125,13 +126,47 @@ class InstallBootloaderStep:
             for path in (target / "boot").glob("vmlinuz-*")
             if path.is_file()
         }
-        initramfs = {
+        initrds = {
             path.name.removeprefix("initrd.img-")
             for path in (target / "boot").glob("initrd.img-*")
             if path.is_file()
         }
-        if not kernels or not kernels.intersection(initramfs):
-            raise RuntimeError("No kernel has a matching initramfs")
+        matching_versions = kernels.intersection(initrds)
+        if not kernels or not matching_versions:
+            raise RuntimeError("No kernel has a matching Dracut initrd")
+
+        forbidden_live_modules = {
+            "dmsquash-live",
+            "dmsquash-live-autooverlay",
+            "livenet",
+            "anduinos-live-layers",
+        }
+        for version in sorted(matching_versions):
+            modules = set(
+                self.runner.run(
+                    (
+                        "chroot",
+                        str(target),
+                        "lsinitrd",
+                        "-m",
+                        f"/boot/initrd.img-{version}",
+                    ),
+                    timeout=60,
+                ).stdout.splitlines()
+            )
+            unexpected = sorted(forbidden_live_modules.intersection(modules))
+            if unexpected:
+                raise RuntimeError(
+                    "Installed-system initrd contains Live modules: "
+                    + ", ".join(unexpected)
+                )
+            if (
+                context.plan.storage.filesystem is Filesystem.BTRFS
+                and "anduinos-btrfs-snapshots-manager" not in modules
+            ):
+                raise RuntimeError(
+                    "Btrfs target initrd is missing Disk Snapshots Manager recovery"
+                )
 
         grub_cfg = target / "boot/grub/grub.cfg"
         if not grub_cfg.is_file():

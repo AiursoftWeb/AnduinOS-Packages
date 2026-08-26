@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-core-system</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS core system foundation metapackage — essential system services, networking, hardware support, and administration tools. This is the base layer for all AnduinOS variants (Desktop, Server, IoT).</PackageDescription>
     <Section>metapackages</Section>
@@ -13,9 +13,12 @@
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
     <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <Conflicts>casper, initramfs-tools, initramfs-tools-core, initramfs-tools-bin, busybox-initramfs, finalrd</Conflicts>
   </PropertyGroup>
 
   <ItemGroup>
+    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 ../tests/test_dracut_policy.py" />
+
     <!-- ============================================================
          Layer 0 — Container base (minimal shell + networking)
          ============================================================ -->
@@ -48,9 +51,11 @@
     <Dependency Include="linux-firmware" />
     <Dependency Include="systemd" />
     <Dependency Include="systemd-hwe-hwdb" />
-    <Dependency Include="dracut | initramfs-tools" />
-    <Recommend Include="initramfs-tools" />
-    <Dependency Include="busybox-initramfs" />
+    <!-- AnduinOS has one early-boot implementation. Alternatives and legacy
+         generator packages are deliberately forbidden by the package contract. -->
+    <Dependency Include="dracut" />
+    <Dependency Include="dracut-core" />
+    <Dependency Include="dracut-install" />
     <Dependency Include="efibootmgr" />
     <Dependency Include="kmod" />
 

@@ -19,7 +19,7 @@ use crate::transaction::{RECOVERY_PROTOCOL_VERSION, RollbackPhase, TransactionSt
 const GRUB_MKRELPATH: &str = "/usr/bin/grub-mkrelpath";
 const GRUB_EDITENV: &str = "/usr/bin/grub-editenv";
 const MOUNTPOINT: &str = "/usr/bin/mountpoint";
-const LSINITRAMFS: &str = "/usr/bin/lsinitramfs";
+const LSINITRD: &str = "/usr/bin/lsinitrd";
 const KERNEL_RELEASE: &str = "/proc/sys/kernel/osrelease";
 const SYSTEM_BOOT_ROOT: &str = "/boot";
 const RECOVERY_BOOT_DIRECTORY: &str = "recovery-boot";
@@ -27,7 +27,8 @@ const RECOVERY_KERNEL: &str = "vmlinuz";
 const RECOVERY_INITRAMFS: &str = "initrd.img";
 pub const RECOVERY_CONFIRM: &str = "confirm";
 const SYSTEM_CONFIRM_BINARY: &str = "/usr/libexec/anduinos-btrfs-snapshots-manager-confirm";
-const INITRAMFS_SCRIPT: &str = "scripts/local-premount/anduinos-btrfs-snapshots-manager";
+const INITRAMFS_SCRIPT: &str =
+    "var/lib/dracut/hooks/pre-mount/50-anduinos-btrfs-snapshots-manager.sh";
 const INITRAMFS_BINARY: &str = "usr/libexec/anduinos-btrfs-snapshots-manager-initramfs";
 const INITRAMFS_CONFIRM_BINARY: &str = "usr/libexec/anduinos-btrfs-snapshots-manager-confirm";
 const INITRAMFS_PROTOCOL: &str = "etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version";
@@ -112,7 +113,7 @@ impl BootToolRunner for SystemBootToolRunner {
                 format!("{} exited with {}", program.display(), output.status),
             ));
         }
-        let maximum_output = if program == Path::new(LSINITRAMFS) {
+        let maximum_output = if program == Path::new(LSINITRD) {
             MAX_INITRAMFS_LISTING
         } else {
             MAX_TOOL_OUTPUT
@@ -226,7 +227,7 @@ impl<R: BootToolRunner> BootIntegration<R> {
     fn verify_initramfs_compatibility(&self, initramfs: &Path) -> Result<(), BootError> {
         let output = self
             .runner
-            .output(Path::new(LSINITRAMFS), &[initramfs.as_os_str()])?;
+            .output(Path::new(LSINITRD), &[initramfs.as_os_str()])?;
         for required in [
             INITRAMFS_SCRIPT,
             INITRAMFS_BINARY,
@@ -236,7 +237,7 @@ impl<R: BootToolRunner> BootIntegration<R> {
         .into_iter()
         .chain(INITRAMFS_REQUIRED_TOOLS)
         {
-            if !output.lines().any(|line| line.trim() == required) {
+            if !initramfs_listing_contains(&output, required) {
                 return Err(BootError::new(
                     BootErrorCode::UnsupportedEnvironment,
                     format!(
@@ -419,6 +420,33 @@ impl<R: BootToolRunner> BootIntegration<R> {
         }
         Ok(value.to_string())
     }
+}
+
+fn initramfs_listing_contains(output: &str, required: &str) -> bool {
+    output.lines().any(|line| {
+        let line = line.trim();
+        if line == required {
+            return true;
+        }
+
+        let fields = line.split_whitespace().collect::<Vec<_>>();
+        let Some(mode) = fields.first() else {
+            return false;
+        };
+        if !matches!(
+            mode.as_bytes().first().copied(),
+            Some(b'-' | b'b' | b'c' | b'd' | b'l' | b'p' | b's')
+        ) {
+            return false;
+        }
+
+        let member = if fields.len() >= 3 && fields[fields.len() - 2] == "->" {
+            fields.get(fields.len() - 3).copied()
+        } else {
+            fields.last().copied()
+        };
+        member == Some(required)
+    })
 }
 
 fn ensure_regular_file(path: &Path) -> Result<(), BootError> {
@@ -725,7 +753,7 @@ mod tests {
             if program == Path::new(GRUB_EDITENV) {
                 return Ok(self.env.clone());
             }
-            if program == Path::new(LSINITRAMFS) {
+            if program == Path::new(LSINITRD) {
                 return Ok(format!(
                     "{INITRAMFS_SCRIPT}\n{INITRAMFS_BINARY}\n{INITRAMFS_CONFIRM_BINARY}\n{INITRAMFS_PROTOCOL}\n{}\n",
                     INITRAMFS_REQUIRED_TOOLS.join("\n")
@@ -852,6 +880,22 @@ mod tests {
                 .code,
             BootErrorCode::UnsupportedEnvironment
         );
+    }
+
+    #[test]
+    fn lsinitrd_member_parser_preserves_symlink_names() {
+        let output = concat!(
+            "-rwxr-xr-x 1 root root 4854 Jan 1 00:00 ",
+            "var/lib/dracut/hooks/pre-mount/50-anduinos-btrfs-snapshots-manager.sh\n",
+            "lrwxrwxrwx 1 root root 30 Jan 1 00:00 ",
+            "usr/bin/cat -> ../lib/cargo/bin/coreutils/cat\n",
+        );
+        assert!(initramfs_listing_contains(output, INITRAMFS_SCRIPT));
+        assert!(initramfs_listing_contains(output, "usr/bin/cat"));
+        assert!(!initramfs_listing_contains(
+            output,
+            "../lib/cargo/bin/coreutils/cat"
+        ));
     }
 
     #[test]

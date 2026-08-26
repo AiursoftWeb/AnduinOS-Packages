@@ -15,6 +15,23 @@ class BackupRecommendationTests(unittest.TestCase):
     def completed(self, stdout="", returncode=0):
         return subprocess.CompletedProcess([], returncode, stdout, "")
 
+    def test_live_detection_requires_the_dracut_runtime_contract(self):
+        with (
+            mock.patch.object(
+                oobe.os.path,
+                "isfile",
+                side_effect=lambda path: path in {
+                    "/run/anduinos-live/environment",
+                    "/run/anduinos-live/rootfs.squashfs",
+                },
+            ),
+            mock.patch.object(oobe.os.path, "isdir", return_value=True),
+        ):
+            self.assertTrue(oobe.is_live_environment())
+
+        with mock.patch.object(oobe.os.path, "isfile", return_value=False):
+            self.assertFalse(oobe.is_live_environment())
+
     def test_snapshots_manager_requires_its_package_and_a_btrfs_root(self):
         with (
             mock.patch.object(

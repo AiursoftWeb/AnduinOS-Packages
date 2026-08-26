@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-btrfs-snapshots-manager</PackageName>
-    <PackageVersion>2.0.2-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Disk Snapshots Manager — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -34,7 +34,7 @@
     <Dependency Include="systemd" />
     <Dependency Include="apt" />
     <Dependency Include="dpkg" />
-    <Dependency Include="initramfs-tools" />
+    <Dependency Include="dracut" />
     <Dependency Include="grub2-common" />
     <Dependency Include="anduinos-secureboot-toolkit" />
     <Dependency Include="kmod" />
@@ -69,8 +69,10 @@
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-confirm" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-confirm" />
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-apt-hook" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-apt-hook" />
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-cli" Target="/usr/bin/anduinos-btrfs-snapshots-manager-cli" />
-    <IncludeScript Include="data/initramfs-hook" Target="/usr/share/initramfs-tools/hooks/anduinos-btrfs-snapshots-manager" />
-    <IncludeScript Include="data/initramfs-local-premount" Target="/usr/share/initramfs-tools/scripts/local-premount/anduinos-btrfs-snapshots-manager" />
+    <IncludeScript Include="data/dracut/91anduinos-btrfs-snapshots-manager/module-setup.sh"
+                   Target="/usr/lib/dracut/modules.d/91anduinos-btrfs-snapshots-manager/module-setup.sh" />
+    <IncludeScript Include="data/dracut/91anduinos-btrfs-snapshots-manager/anduinos-btrfs-snapshots-manager.sh"
+                   Target="/usr/lib/dracut/modules.d/91anduinos-btrfs-snapshots-manager/anduinos-btrfs-snapshots-manager.sh" />
     <IncludeFile Include="data/recovery-protocol-version" Target="/usr/share/anduinos-btrfs-snapshots-manager/recovery-protocol-version" />
     <IncludeScript Include="data/09_anduinos_btrfs_snapshots_manager" Target="/etc/grub.d/09_anduinos_btrfs_snapshots_manager" />
     <IncludeScript Include="data/01_anduinos_btrfs_snapshots_manager_env" Target="/etc/grub.d/01_anduinos_btrfs_snapshots_manager_env" />
@@ -78,7 +80,6 @@
     <IncludeScript Include="data/no-os-prober" Target="/usr/libexec/anduinos-btrfs-snapshots-manager/no-os-prober/linux-boot-prober" />
     <IncludeScript Include="scripts/qualify-recovery-vm.sh" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/qualify-recovery-vm.sh" />
     <IncludeScript Include="scripts/test-installed-policy.sh" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/test-installed-policy.sh" />
-    <DpkgTrigger Include="update-initramfs" Type="activate-await" />
     <IncludeFile Include="assets/apt-snapshots.toml" Target="/usr/share/anduinos-btrfs-snapshots-manager/defaults/apt-snapshots.toml" />
     <IncludeFile Include="assets/automation.toml" Target="/usr/share/anduinos-btrfs-snapshots-manager/defaults/automation.toml" />
     <IncludeFile Include="data/org.anduinos.BtrfsSnapshotsManager.policy" Target="/usr/share/polkit-1/actions/org.anduinos.BtrfsSnapshotsManager.policy" />

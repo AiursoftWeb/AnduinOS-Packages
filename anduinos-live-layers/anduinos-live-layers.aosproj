@@ -1,0 +1,43 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-live-layers</PackageName>
+    <PackageVersion>2.0.2-3+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Dracut-native AnduinOS Live root and layer integration</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+    <Conflicts>casper, initramfs-tools, initramfs-tools-core, initramfs-tools-bin, busybox-initramfs, finalrd, live-tools</Conflicts>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu"
+                           SuiteMap="resolute-addon=resolute" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Dependency Include="dracut" />
+    <Dependency Include="dracut-core" />
+    <Dependency Include="dmsetup" />
+    <Dependency Include="parted" />
+    <Dependency Include="e2fsprogs" />
+    <Dependency Include="util-linux" />
+    <Dependency Include="isomd5sum" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="python3 tests/test_package_contract.py" />
+    <IncludeScript Include="dracut/95anduinos-live-layers/module-setup.sh"
+                   Target="/usr/lib/dracut/modules.d/95anduinos-live-layers/module-setup.sh" />
+    <IncludeScript Include="dracut/95anduinos-live-layers/anduinos-live-prepare.sh"
+                   Target="/usr/lib/dracut/modules.d/95anduinos-live-layers/anduinos-live-prepare.sh" />
+    <IncludeScript Include="dracut/95anduinos-live-layers/anduinos-create-overlay.sh"
+                   Target="/usr/lib/dracut/modules.d/95anduinos-live-layers/anduinos-create-overlay.sh" />
+  </ItemGroup>
+</Project>

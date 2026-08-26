@@ -1,5 +1,9 @@
 set -eu
 
+if command -v dracut >/dev/null 2>&1 && [ -d /lib/modules ]; then
+    dracut --force --regenerate-all
+fi
+
 systemd-tmpfiles --create /usr/lib/tmpfiles.d/anduinos-btrfs-snapshots-manager.conf || true
 
 for config_name in apt-snapshots.toml automation.toml; do

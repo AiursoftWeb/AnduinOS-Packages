@@ -391,26 +391,12 @@ def get_backup_recommendation():
 
 
 def is_live_environment():
-    """Return True only if all three Casper conditions are met:
-    1. casper package is installed
-    2. /cdrom directory exists
-    3. Kernel cmdline contains boot=casper
-
-    Live-session detection must not depend on a particular installer. AnduinOS
-    can switch installers while Casper remains the ISO boot transport.
-    """
-    if not _is_package_installed('casper'):
-        return False
-    if not os.path.isdir('/cdrom'):
-        return False
-    try:
-        with open('/proc/cmdline', 'r') as f:
-            cmdline = f.read()
-        if 'boot=casper' not in cmdline:
-            return False
-    except Exception:
-        return False
-    return True
+    """Return True only for the Dracut-established AnduinOS Live contract."""
+    return (
+        os.path.isfile('/run/anduinos-live/environment')
+        and os.path.isdir('/cdrom')
+        and os.path.isfile('/run/anduinos-live/rootfs.squashfs')
+    )
 
 
 def internet_connection_ready(monitor=None):
@@ -3522,10 +3508,8 @@ def main():
 
     if is_oobe:
         # Do not run on Live CD / Installation Media.
-        # All three Casper conditions must identify the system as live:
-        # - casper package installed
-        # - /cdrom directory exists
-        # - kernel boot parameter includes boot=casper
+        # The Dracut pre-pivot module owns the authoritative Live marker,
+        # media mount and immutable installer source.
         if is_live_environment():
             sys.exit(0)
 

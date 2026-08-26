@@ -1,0 +1,135 @@
+#!/bin/sh
+set -eu
+
+root="${ANDUINOS_LIVE_ROOT:-}"
+cmdline_file="${ANDUINOS_LIVE_CMDLINE_FILE:-/proc/cmdline}"
+test_mode="${ANDUINOS_LIVE_TEST_MODE:-}"
+
+target_path() {
+    printf '%s%s\n' "$root" "$1"
+}
+
+marker="$(target_path /run/anduinos-live/environment)"
+[ -f "$marker" ] || exit 0
+
+cmdline_value() {
+    key="$1"
+    for argument in $(cat "$cmdline_file"); do
+        case "$argument" in
+            "$key"=*) printf '%s\n' "${argument#*=}"; return 0 ;;
+        esac
+    done
+    return 1
+}
+
+valid_name() {
+    case "$1" in
+        ""|*[!a-z0-9_-]*|[0-9_-]*) return 1 ;;
+        *) return 0 ;;
+    esac
+}
+
+live_user="$(cmdline_value rd.anduinos.username 2>/dev/null || true)"
+[ -n "$live_user" ] || live_user=live
+valid_name "$live_user" || live_user=live
+
+live_hostname="$(cmdline_value hostname 2>/dev/null || true)"
+[ -n "$live_hostname" ] || live_hostname=anduinos
+valid_name "$live_hostname" || live_hostname=anduinos
+
+live_locale="$(cmdline_value locale 2>/dev/null || true)"
+case "$live_locale" in
+    ""|*[!A-Za-z0-9_.@-]*) live_locale=C.UTF-8 ;;
+esac
+
+live_timezone="$(cmdline_value systemd.timezone 2>/dev/null || true)"
+[ -n "$live_timezone" ] || live_timezone="$(cmdline_value timezone 2>/dev/null || true)"
+case "$live_timezone" in
+    ""|/*|*..*|*[!A-Za-z0-9_+./-]*) live_timezone=Etc/UTC ;;
+esac
+zone_file="$(target_path "/usr/share/zoneinfo/$live_timezone")"
+[ -f "$zone_file" ] || live_timezone=Etc/UTC
+
+etc_dir="$(target_path /etc)"
+mkdir -p "$etc_dir/default"
+printf '%s\n' "$live_hostname" > "$etc_dir/hostname"
+cat > "$etc_dir/hosts" <<EOF
+127.0.0.1 localhost
+127.0.1.1 $live_hostname
+::1 localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
+
+printf '%s\n' "$live_timezone" > "$etc_dir/timezone"
+ln -snf "/usr/share/zoneinfo/$live_timezone" "$etc_dir/localtime"
+printf 'LANG="%s"\n' "$live_locale" > "$etc_dir/default/locale"
+
+if [ -z "$test_mode" ]; then
+    if [ "$live_locale" != C.UTF-8 ]; then
+        printf '%s UTF-8\n' "$live_locale" > /etc/locale.gen
+        locale-gen --keep-existing >/dev/null
+    fi
+
+    uid_1000="$(getent passwd 1000 | cut -d: -f1 || true)"
+    if [ -n "$uid_1000" ] && [ "$uid_1000" != "$live_user" ]; then
+        echo "UID 1000 is already owned by $uid_1000; refusing an ambiguous Live user" >&2
+        exit 1
+    fi
+    if ! id "$live_user" >/dev/null 2>&1; then
+        useradd --create-home --uid 1000 --shell /bin/bash \
+            --comment "AnduinOS Live session user" "$live_user"
+    fi
+    passwd --delete "$live_user" >/dev/null
+    for group in adm audio cdrom dip lpadmin plugdev sudo video; do
+        getent group "$group" >/dev/null 2>&1 || continue
+        usermod --append --groups "$group" "$live_user"
+    done
+    printf '%s ALL=(ALL:ALL) NOPASSWD: ALL\n' "$live_user" \
+        > /etc/sudoers.d/anduinos-live
+    chmod 0440 /etc/sudoers.d/anduinos-live
+
+    gdm_config=/etc/gdm3/custom.conf
+    if [ -d /etc/gdm3 ]; then
+        [ -f "$gdm_config" ] || printf '[daemon]\n' > "$gdm_config"
+        temporary="$(mktemp /etc/gdm3/.anduinos-live.XXXXXX)"
+        awk -v user="$live_user" '
+            BEGIN { daemon = 0; emitted = 0 }
+            /^\[daemon\]$/ {
+                daemon = 1
+                emitted = 1
+                print
+                print "AutomaticLoginEnable=true"
+                print "AutomaticLogin=" user
+                print "TimedLoginEnable=false"
+                next
+            }
+            /^\[/ { daemon = 0 }
+            daemon && /^[# ]*(AutomaticLoginEnable|AutomaticLogin|TimedLoginEnable)[ ]*=/ { next }
+            { print }
+            END {
+                if (!emitted) {
+                    print "[daemon]"
+                    print "AutomaticLoginEnable=true"
+                    print "AutomaticLogin=" user
+                    print "TimedLoginEnable=false"
+                }
+            }
+        ' "$gdm_config" > "$temporary"
+        chmod 0644 "$temporary"
+        mv "$temporary" "$gdm_config"
+    fi
+
+    install -d -m 0775 -o root -g adm /var/log/installer
+    for unit in apt-daily.service apt-daily.timer apt-daily-upgrade.service \
+        apt-daily-upgrade.timer unattended-upgrades.service; do
+        ln -sfn /dev/null "/run/systemd/system/$unit"
+    done
+fi
+
+cat >> "$marker" <<EOF
+ANDUINOS_LIVE_USER=$live_user
+ANDUINOS_LIVE_HOSTNAME=$live_hostname
+ANDUINOS_LIVE_LOCALE=$live_locale
+ANDUINOS_LIVE_TIMEZONE=$live_timezone
+EOF

@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>plymouth-anduinos</PackageName>
-    <PackageVersion>2.0.2+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2+$(UpstreamVersion)-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS boot splash theme</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -54,11 +54,12 @@
     <IncludeFile Include="assets/logo_96.png"       Target="/usr/share/plymouth/themes/anduinos/bgrt-fallback.png" />
     <IncludeFile Include="assets/anduinos-text.plymouth" Target="/usr/share/plymouth/themes/anduinos-text/anduinos-text.plymouth" />
 
-    <!-- Register theme with update-alternatives and rebuild initramfs on install/remove -->
+    <!-- Register the theme and rebuild every Dracut image on install/remove. -->
     <PostInstallScript Include="scripts/postinst.sh" />
     <PreRemoveScript  Include="scripts/prerm.sh" />
 
     <!-- ubuntu-text.so module, needed by anduinos-text.plymouth fallback theme -->
+    <Dependency Include="dracut" />
     <Recommend Include="plymouth-theme-ubuntu-text" />
   </ItemGroup>
 </Project>

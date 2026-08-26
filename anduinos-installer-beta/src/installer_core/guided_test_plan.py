@@ -36,7 +36,7 @@ def build_guided_vm_test_plan(
     workflow: StorageWorkflow,
     selection: GuidedStorageSelection,
     *,
-    source_image: str = "/cdrom/casper/filesystem.squashfs",
+    source_image: str = "/run/anduinos-live/rootfs.squashfs",
     username: str = "anduinostest",
     full_name: str = "AnduinOS VM Test",
     hostname: str = "anduinos-test",

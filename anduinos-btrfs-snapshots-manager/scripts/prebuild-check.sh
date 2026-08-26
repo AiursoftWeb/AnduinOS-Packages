@@ -51,8 +51,16 @@ test -f "$ROOT/data/org.anduinos.BtrfsSnapshotsManager.Session.service"
 test -f "$ROOT/data/anduinos_btrfs_snapshots_manager_file_history.py"
 test -x "$ROOT/compile-locales.sh"
 test -f "$ROOT/po/anduinos-btrfs-snapshots-manager.pot"
-test -f "$ROOT/data/initramfs-hook"
-test -f "$ROOT/data/initramfs-local-premount"
+test -f "$ROOT/data/dracut/91anduinos-btrfs-snapshots-manager/module-setup.sh"
+test -f "$ROOT/data/dracut/91anduinos-btrfs-snapshots-manager/anduinos-btrfs-snapshots-manager.sh"
+grep -Fq '<Dependency Include="dracut"' \
+    "$ROOT/anduinos-btrfs-snapshots-manager.aosproj"
+legacy_generator_pattern='initramfs-''tools|update-''initramfs|lsinit''ramfs|/usr/share/initramfs-''tools'
+if rg -n "$legacy_generator_pattern" \
+    "$ROOT" --glob '!target/**' --glob '!obj/**' --glob '!bin/**'; then
+    echo "The legacy early-boot generator ABI remains in Disk Snapshots Manager" >&2
+    exit 1
+fi
 test -f "$ROOT/data/09_anduinos_btrfs_snapshots_manager"
 test -x "$ROOT/data/no-os-prober"
 test -f "$ROOT/data/01_anduinos_btrfs_snapshots_manager_env"

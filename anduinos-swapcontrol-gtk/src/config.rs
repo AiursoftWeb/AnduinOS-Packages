@@ -35,4 +35,3 @@ pub const PROC_CMDLINE: &str = "/proc/cmdline";
 // Power / hibernation
 pub const SYS_POWER_STATE: &str = "/sys/power/state";
 pub const SYS_POWER_DISK: &str = "/sys/power/disk";
-pub const INITRAMFS_RESUME: &str = "/etc/initramfs-tools/conf.d/resume";

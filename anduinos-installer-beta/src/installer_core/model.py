@@ -57,7 +57,7 @@ class AuthenticationMode(str, Enum):
 
 @dataclass(frozen=True)
 class SourceSpec:
-    image_path: str = "/cdrom/casper/filesystem.squashfs"
+    image_path: str = "/run/anduinos-live/rootfs.squashfs"
 
 
 @dataclass(frozen=True)

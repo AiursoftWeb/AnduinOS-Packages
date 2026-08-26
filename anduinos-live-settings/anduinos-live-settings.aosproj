@@ -1,30 +1,30 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-live-settings</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>AnduinOS Casper live-session policy and regional settings (removed after installation)</PackageDescription>
+    <PackageDescription>AnduinOS Dracut Live session policy and regional settings (removed after installation)</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetSuites>resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
   </PropertyGroup>
 
   <ItemGroup>
     <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu"
-                           SuiteMap="noble-addon=noble resolute-addon=resolute" />
+                           SuiteMap="resolute-addon=resolute" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Casper applies the GRUB locale= argument; this package supplies the
-         complementary timezone hook for the same Live-session contract. -->
-    <Dependency Include="casper" />
-    <Dependency Include="initramfs-tools" />
+    <Dependency Include="anduinos-live-layers" />
+    <Dependency Include="adduser" />
+    <Dependency Include="locales" />
+    <Dependency Include="sudo" />
     <!-- Secure Shell is payload for newly installed desktops, not an upgrade
          dependency of every existing desktop. The native installer removes
          this Live-only package while deliberately retaining openssh-server. -->
@@ -33,11 +33,11 @@
 
   <ItemGroup>
     <PrebuildCommand Run="python3 tests/test_package_contract.py" />
-    <IncludeFile Include="assets/14anduinos-timezone"
-                 Target="/usr/share/initramfs-tools/scripts/casper-bottom/14anduinos-timezone"
-                 Mode="755" />
+    <SystemdUnit Include="assets/anduinos-live-session.service" AutoEnable="true" />
+    <IncludeScript Include="assets/anduinos-live-session-setup"
+                   Target="/usr/libexec/anduinos-live-session-setup" />
     <!-- GRUB boot bookkeeping expects a block-backed installed root. Skip it
-         on Casper's /cow overlay; these drop-ins are removed with this package
+         on the Live overlay; these drop-ins are removed with this package
          before the native installer configures the target bootloader. -->
     <IncludeFile Include="assets/grub-initrd-fallback-live.conf"
                  Target="/usr/lib/systemd/system/grub-initrd-fallback.service.d/10-anduinos-live.conf"
@@ -45,7 +45,5 @@
     <IncludeFile Include="assets/grub2-common-live.conf"
                  Target="/usr/lib/systemd/system/grub2-common.service.d/10-anduinos-live.conf"
                  Mode="644" />
-    <PostInstallScript Include="scripts/postinst.sh" />
-    <PostRemoveScript Include="scripts/postrm.sh" />
   </ItemGroup>
 </Project>

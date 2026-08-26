@@ -1,5 +1,10 @@
 set -eu
 
+if { [ "${1:-}" = remove ] || [ "${1:-}" = purge ]; } && \
+    command -v dracut >/dev/null 2>&1 && [ -d /lib/modules ]; then
+    dracut --force --regenerate-all
+fi
+
 if [ "${1:-}" = "purge" ]; then
     rm -f -- /etc/anduinos-btrfs-snapshots-manager/apt-snapshots.toml
     rm -f -- /etc/anduinos-btrfs-snapshots-manager/automation.toml

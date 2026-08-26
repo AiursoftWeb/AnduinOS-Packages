@@ -1,11 +1,11 @@
 #!/bin/sh
-# Create the installer launcher only in the current Casper user's overlay.
+# Create the installer launcher only in the current Dracut Live user's overlay.
 
 set -eu
 
 [ "$(id -u)" -ne 0 ] || exit 0
 [ -d /cdrom ] || exit 0
-grep -qw 'boot=casper' /proc/cmdline || exit 0
+test -f /run/anduinos-live/environment || exit 0
 
 desktop_dir="$(xdg-user-dir DESKTOP 2>/dev/null || true)"
 [ -n "$desktop_dir" ] || desktop_dir="$HOME/Desktop"
@@ -29,7 +29,7 @@ gio set "$destination" metadata::trusted true >/dev/null 2>&1 || true
 
 # The Live session is an installation environment: present the installer
 # immediately after GNOME finishes logging in.  The application ID keeps
-# repeated activations single-instance, while the Casper guards above ensure
+# repeated activations single-instance, while the Live marker guards above ensure
 # this never runs on an installed system.
 [ -x /usr/bin/anduinos-installer-beta ] || exit 0
 exec /usr/bin/anduinos-installer-beta

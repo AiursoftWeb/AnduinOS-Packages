@@ -12,9 +12,9 @@ from .snapshots_manager import SNAPSHOTS_MANAGER_PACKAGE
 
 
 # This is deliberately installer-owned policy. It must not be derived from
-# Casper's historical filesystem.manifest-desktop convention.
+# a historical Live-boot filesystem.manifest-desktop convention.
 LIVE_ONLY_PACKAGES = (
-    "casper",
+    "anduinos-live-layers",
     "discover",
     "laptop-detect",
     "os-prober",
@@ -40,6 +40,9 @@ PERSISTENT_TARGET_PACKAGES = ("openssh-server",)
 REQUIRED_BOOT_PACKAGES = {
     Architecture.AMD64: (
         "anduinos-core-system",
+        "dracut",
+        "dracut-core",
+        "dracut-install",
         "grub-common",
         "grub2-common",
         "grub-pc-bin",
@@ -49,6 +52,9 @@ REQUIRED_BOOT_PACKAGES = {
     ),
     Architecture.ARM64: (
         "anduinos-core-system",
+        "dracut",
+        "dracut-core",
+        "dracut-install",
         "grub-common",
         "grub2-common",
         "grub-efi-arm64-bin",

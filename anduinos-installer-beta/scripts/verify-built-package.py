@@ -58,6 +58,7 @@ REQUIRED_DEPENDENCIES = {
     "parted",
     "dosfstools",
     "efibootmgr",
+    "dracut",
     "util-linux",
     "polkitd",
     "libxkbcommon0",

@@ -23,7 +23,8 @@ def prepare_target(target: Path) -> None:
     for executable in (
         "usr/sbin/grub-install",
         "usr/sbin/update-grub",
-        "usr/sbin/update-initramfs",
+        "usr/bin/dracut",
+        "usr/bin/lsinitrd",
     ):
         path = target / executable
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -63,7 +64,7 @@ class InstallBootloaderTests(unittest.TestCase):
         ] = (GRUB_INSTALL_HELP, "", 0)
         return runner
 
-    def test_runs_initramfs_before_grub_install_and_update_grub_last(self):
+    def test_runs_dracut_before_grub_install_and_update_grub_last(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             runner = self.compatible_runner(target)
@@ -80,7 +81,9 @@ class InstallBootloaderTests(unittest.TestCase):
         commands = [item[0] for item in runner.commands]
         self.assertEqual(commands[0][2:], ("grub-install", "--help"))
         self.assertFalse(runner.commands[0][1]["log_output"])
-        self.assertEqual(commands[1][2], "update-initramfs")
+        self.assertEqual(commands[1][2], "dracut")
+        self.assertIn("--no-hostonly-cmdline", commands[1])
+        self.assertIn("--regenerate-all", commands[1])
         self.assertEqual(commands[-1][2], "update-grub")
         self.assertEqual(
             [
@@ -120,6 +123,9 @@ class InstallBootloaderTests(unittest.TestCase):
             runner.outputs[
                 ("chroot", str(target), "dpkg", "--print-architecture")
             ] = ("amd64\n", "", 0)
+            runner.outputs[
+                ("chroot", str(target), "lsinitrd", "-m", "/boot/initrd.img-6.14-test")
+            ] = ("anduinos-btrfs-snapshots-manager\n", "", 0)
             step.verify(context)
 
     def test_rejects_kernel_without_matching_initramfs(self):
@@ -135,7 +141,7 @@ class InstallBootloaderTests(unittest.TestCase):
             step = InstallBootloaderStep(runner)
             step.execute(context)
             (target / "boot/vmlinuz-6.14-test").touch()
-            with self.assertRaisesRegex(RuntimeError, "matching initramfs"):
+            with self.assertRaisesRegex(RuntimeError, "matching Dracut initrd"):
                 step.verify(context)
 
     def test_rejects_wrong_efi_machine(self):
@@ -162,6 +168,9 @@ class InstallBootloaderTests(unittest.TestCase):
             fallback = target / "boot/efi/EFI/BOOT/BOOTX64.EFI"
             fallback.parent.mkdir(parents=True)
             write_pe(fallback, 0xAA64)
+            runner.outputs[
+                ("chroot", str(target), "lsinitrd", "-m", "/boot/initrd.img-test")
+            ] = ("anduinos-btrfs-snapshots-manager\n", "", 0)
             with self.assertRaisesRegex(RuntimeError, "does not match"):
                 step.verify(context)
 
@@ -255,6 +264,9 @@ class InstallBootloaderTests(unittest.TestCase):
             runner.outputs[
                 ("chroot", str(target), "dpkg", "--print-architecture")
             ] = ("amd64\n", "", 0)
+            runner.outputs[
+                ("chroot", str(target), "lsinitrd", "-m", "/boot/initrd.img-test")
+            ] = ("anduinos-btrfs-snapshots-manager\n", "", 0)
             logs = []
             context = InstallContext(
                 plan,

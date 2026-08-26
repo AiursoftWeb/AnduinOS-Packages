@@ -246,6 +246,7 @@ class PackageContractTests(unittest.TestCase):
                 "network-manager",
                 "netplan.io",
                 "util-linux",
+                "dracut",
                 "polkitd",
             }
             <= dependencies

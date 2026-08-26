@@ -84,7 +84,7 @@ older package cannot silently downgrade the code that confirms, reverts, or fail
 the new transaction. Nothing is written into the immutable snapshot itself.
 
 Initramfs detects the root filesystem itself and never depends on a shell variable
-computed—but not exported—by another initramfs-tools process. An explicit recovery
+computed—but not exported—by another early-boot process. An explicit recovery
 request that cannot enter the matching recovery protocol fails visibly. The engine
 persists its boot ID, attempt counter, and last synchronized filesystem checkpoint;
 userspace treats a requested boot that reached userspace without initramfs entry as

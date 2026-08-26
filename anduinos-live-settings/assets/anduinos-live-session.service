@@ -1,0 +1,13 @@
+[Unit]
+Description=Prepare the AnduinOS Live desktop session
+ConditionPathExists=/run/anduinos-live/environment
+After=local-fs.target systemd-remount-fs.service
+Before=display-manager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/anduinos-live-session-setup
+RemainAfterExit=yes
+
+[Install]
+WantedBy=graphical.target

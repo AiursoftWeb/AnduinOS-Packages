@@ -7,12 +7,12 @@ PACKAGE = Path(__file__).resolve().parents[1]
 
 
 class LiveShortcutAssetTests(unittest.TestCase):
-    def test_shortcut_is_guarded_by_casper_runtime_state(self):
+    def test_shortcut_is_guarded_by_dracut_live_runtime_state(self):
         script = (
             PACKAGE / "assets/anduinos-installer-beta-live-shortcut"
         ).read_text()
         self.assertIn("[ -d /cdrom ] || exit 0", script)
-        self.assertIn("grep -qw 'boot=casper' /proc/cmdline || exit 0", script)
+        self.assertIn("test -f /run/anduinos-live/environment || exit 0", script)
         self.assertIn('"$HOME"/*', script)
         self.assertNotIn("/etc/skel", script)
 
@@ -133,7 +133,7 @@ class LiveShortcutAssetTests(unittest.TestCase):
             PACKAGE / "anduinos-installer-beta.aosproj"
         ).read_text(encoding="utf-8")
         self.assertIn(
-            "<PackageVersion>2.0.2-5+$(SuiteShortName)</PackageVersion>",
+            "<PackageVersion>2.0.2-8+$(SuiteShortName)</PackageVersion>",
             project,
         )
         self.assertNotIn("installer (beta)", project.lower())

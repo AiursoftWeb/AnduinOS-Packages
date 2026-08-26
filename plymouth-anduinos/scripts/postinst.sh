@@ -22,10 +22,6 @@ if [ "$1" = "configure" ]; then
         text.plymouth \
         /usr/share/plymouth/themes/anduinos-text/anduinos-text.plymouth || true
 
-    # 3. Rebuild initramfs (dual-track with regenerate-all for dracut)
-    if command -v dracut >/dev/null 2>&1; then
-        dracut --force --regenerate-all 2>/dev/null || true
-    elif command -v update-initramfs >/dev/null 2>&1; then
-        update-initramfs -u 2>/dev/null || true
-    fi
+    # 3. Rebuild all Dracut images so the selected theme is available at boot.
+    dracut --force --regenerate-all 2>/dev/null || true
 fi

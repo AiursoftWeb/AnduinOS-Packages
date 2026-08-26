@@ -161,6 +161,8 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-appstore` | App | Flatpak-based app store with Flathub remote |
 | `anduinos-driver-center` | App | Focused GTK4 driver manager for graphics, Xbox controllers, and Secure Boot trust |
 | `anduinos-btrfs-snapshots-manager` | App | GTK4/libadwaita manager for symmetric System and Personal Files Btrfs snapshots, automatic retention, file recovery, and guarded system rollback |
+| `anduinos-dracut-migration` | Migration | Retry-safe bootstrap that moves existing installations from initramfs-tools to the published pure-Dracut package set |
+| `anduinos-live-layers` | Core | Dracut Live root integration, temporary/persistent overlay composition, expanded-USB GPT repair, `/cdrom`, and installer source contracts |
 | `anduinos-secureboot-toolkit` | Library | Shared Secure Boot, MOK enrollment, and DKMS signing health/repair backend and UI |
 | `anduinos-deskmon` | Service | Desktop monitoring / hardware info agent |
 | `anduinos-system-tweaks` | Config | System tuning (swappiness, I/O scheduler, sysctl) |
@@ -169,7 +171,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-dconf-runtime` | Core | dconf profile and dpkg trigger runtime for GNOME system defaults |
 | `anduinos-dconf-defaults` | Config | dconf / gsettings defaults for GNOME |
 | `anduinos-gnome-shell-locale` | Locale | GNOME Shell locale / text overrides |
-| `anduinos-live-settings` | Config | Casper regional hooks and Live-only systemd policy; removed before target bootloader setup |
+| `anduinos-live-settings` | Config | Dracut Live-session regional setup and Live-only systemd policy; removed before target bootloader setup |
 
 ### Kernel ownership contract (Resolute)
 
@@ -191,8 +193,17 @@ This dependency chain, rather than an ISO build script, must install and retain
 the kernel. ISO builders must not directly install the split image or headers
 metapackages and must not add a parallel dependency on `linux-generic`. The
 native installer copies the packaged Live filesystem, retains the kernel
-packages in the target, regenerates the initramfs and bootloader configuration,
-and verifies that at least one kernel has a matching initramfs.
+packages in the target, regenerates the target Dracut initrd and bootloader
+configuration, and verifies that at least one kernel has a matching initrd.
+
+AnduinOS owns one early-boot stack: `anduinos-core-system` depends directly on
+`dracut`, `dracut-core`, and `dracut-install`, and conflicts with Casper and the
+complete initramfs-tools/finalrd stack. Existing systems receive
+`anduinos-dracut-migration` through the independently upgradable APT-config
+package. Its timer waits until every required pure-Dracut candidate is
+published, rejects any APT plan that removes an `anduinos-*` package, replaces
+the generator stack in one transaction, and validates every generated image
+with `lsinitrd` before recording completion.
 
 `anduinos-kernel-parameters` has a separate responsibility: it owns the desktop
 boot policy, not the kernel binary. It installs
@@ -579,7 +590,7 @@ sudo apt install -y \
     plymouth-anduinos \
     alsa-ucm-conf-anduinos \
     firmware-sof-anduinos \
-    initramfs-tools \
+    dracut \
     snapd- \
     firefox- \
     ubuntu-session- \

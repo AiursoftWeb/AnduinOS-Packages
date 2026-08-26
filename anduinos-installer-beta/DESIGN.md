@@ -69,14 +69,17 @@ and constructs every command itself.
   64 GiB. zram has the higher runtime priority. Partition capacity alone does
   not enable hibernation; resume configuration and platform support remain
   separate requirements.
-- Live system: Casper remains the image/boot transport for release one.
-  `anduinos-live-settings` is a hard dependency of the installer: Casper
-  applies the GRUB-selected locale and the package-owned initramfs hook applies
-  the selected timezone. A dedicated installer step purges the fixed Live-only
-  package set from the copied target. It retains Disk Snapshots Manager on
-  Btrfs but purges it on ext4, removes VMware guest integration from
-  non-VMware targets, and purges orphaned packages. This policy does not use
-  Ubiquity's historical dual manifest convention.
+- Live system: Dracut `dmsquash-live` mounts the single
+  `/LiveOS/rootfs.squashfs`, composes the temporary or persistent overlay, and
+  `anduinos-live-layers` preserves `/cdrom` plus the installer source under
+  `/run/anduinos-live`. `anduinos-live-settings` is a hard dependency of the
+  installer and applies the GRUB-selected locale/timezone, creates the Live
+  user, and configures automatic login through a systemd oneshot. A dedicated
+  installer step purges the fixed Live-only package set from the copied target.
+  It retains Disk Snapshots Manager on Btrfs but purges it on ext4, removes
+  VMware guest integration from non-VMware targets, and purges orphaned
+  packages. This policy does not use Ubiquity's historical dual manifest
+  convention.
 - Software: refreshing package indexes and installing available updates is
   enabled by default. An offline index-refresh failure is a warning and skips
   the upgrade; after an upgrade transaction starts, any APT/dpkg failure is
@@ -205,7 +208,7 @@ integration package has been retired and is no longer built or published.
 automatically.
 
 The package owns both its application-menu entry and a GNOME autostart helper.
-The helper creates a trusted desktop launcher only in a non-root Casper
+The helper creates a trusted desktop launcher only in a non-root Dracut Live
 session, inside that Live user's runtime home. It never writes to `/etc/skel`,
 so no dead installer shortcut can enter the installed user's home. The
 launcher package carries its own independent copy of the OOBE box-and-logo
@@ -298,8 +301,8 @@ rounded visual boundary and obscure whether the card itself is active.
   it has run from a real AnduinOS ISO and booted the installed virtual disk.
 - Milestone 5C — implementation complete: the ISO build installs
   `anduinos-installer-beta`, excludes it from the installed target manifest,
-  and rejects accidental inclusion of the retired Ubiquity/bwrap stack. Casper
-  remains the live boot transport.
+  rejects accidental inclusion of the retired Ubiquity/bwrap stack, and boots
+  the Live root through the dedicated Dracut image.
 - Milestone 6A — complete: schema v2 carries immutable update and third-party
   driver choices; GTK defaults to updates on and non-free drivers off; summary
   and development simulation expose the resulting fixed pipeline.

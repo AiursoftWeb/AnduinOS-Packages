@@ -10,7 +10,7 @@ from .validation import validate_plan
 
 @dataclass(frozen=True)
 class BootCommandPlan:
-    initramfs: tuple[str, ...]
+    initrd: tuple[str, ...]
     installs: tuple[tuple[str, ...], ...]
     configure: tuple[str, ...]
     efi_fallback: str
@@ -21,7 +21,7 @@ class BootCommandPlan:
 class GuidedBootCommandPlan:
     """Vendor-only shared-ESP writes plus an explicit NVRAM update."""
 
-    initramfs: tuple[str, ...]
+    initrd: tuple[str, ...]
     install: tuple[str, ...]
     configure: tuple[str, ...]
     nvram_create: tuple[str, ...]
@@ -68,7 +68,16 @@ def build_boot_commands(plan: InstallPlan, target: str) -> BootCommandPlan:
         efi_install.append("--uefi-secure-boot")
     installs.append(tuple(efi_install))
     return BootCommandPlan(
-        initramfs=chroot + ("update-initramfs", "-u", "-k", "all"),
+        initrd=chroot
+        + (
+            "dracut",
+            "--force",
+            "--no-hostonly",
+            "--no-hostonly-cmdline",
+            "--omit",
+            "dmsquash-live dmsquash-live-autooverlay livenet anduinos-live-layers",
+            "--regenerate-all",
+        ),
         installs=tuple(installs),
         configure=chroot + ("update-grub",),
         efi_fallback=fallback,
@@ -112,7 +121,16 @@ def build_guided_coexistence_boot_commands(
         install.append("--uefi-secure-boot")
     loader = guided_loader_path(plan)
     return GuidedBootCommandPlan(
-        initramfs=chroot + ("update-initramfs", "-u", "-k", "all"),
+        initrd=chroot
+        + (
+            "dracut",
+            "--force",
+            "--no-hostonly",
+            "--no-hostonly-cmdline",
+            "--omit",
+            "dmsquash-live dmsquash-live-autooverlay livenet anduinos-live-layers",
+            "--regenerate-all",
+        ),
         install=tuple(install),
         configure=chroot + ("update-grub",),
         nvram_create=(

@@ -1,0 +1,176 @@
+#!/bin/sh
+set -eu
+
+export LC_ALL=C
+export DEBIAN_FRONTEND=noninteractive
+
+APT_GET=${ANDUINOS_MIGRATION_APT_GET:-/usr/bin/apt-get}
+APT_CACHE=${ANDUINOS_MIGRATION_APT_CACHE:-/usr/bin/apt-cache}
+DPKG_QUERY=${ANDUINOS_MIGRATION_DPKG_QUERY:-/usr/bin/dpkg-query}
+DRACUT=${ANDUINOS_MIGRATION_DRACUT:-/usr/bin/dracut}
+LSINITRD=${ANDUINOS_MIGRATION_LSINITRD:-/usr/bin/lsinitrd}
+MODULES_DIR=${ANDUINOS_MIGRATION_MODULES_DIR:-/lib/modules}
+BOOT_DIR=${ANDUINOS_MIGRATION_BOOT_DIR:-/boot}
+STATE_DIR=${ANDUINOS_MIGRATION_STATE_DIR:-/var/lib/anduinos-dracut-migration}
+LOCK_FILE=${ANDUINOS_MIGRATION_LOCK_FILE:-/run/anduinos-dracut-migration.lock}
+
+log() {
+    printf 'anduinos-dracut-migration: %s\n' "$*"
+}
+
+is_installed() {
+    [ "$($DPKG_QUERY -W -f='${db:Status-Abbrev}' "$1" 2>/dev/null || true)" = "ii " ]
+}
+
+candidate_version() {
+    $APT_CACHE policy "$1" 2>/dev/null \
+        | awk '/^[[:space:]]*Candidate:/ { print $2; exit }'
+}
+
+candidate_is_pure_dracut() {
+    package=$1
+    version=$2
+    metadata=$($APT_CACHE show --no-all-versions "$package=$version" 2>/dev/null || true)
+    depends=$(printf '%s\n' "$metadata" | awk '
+        /^Depends:/ { active=1; print; next }
+        active && /^[[:space:]]/ { print; next }
+        active { exit }
+    ')
+    printf '%s\n' "$depends" | grep -Eq '(^|[ ,])dracut([ ,(]|$)' \
+        && ! printf '%s\n' "$depends" \
+            | grep -Eq 'initramfs-tools|busybox-initramfs|casper'
+}
+
+candidate_conflicts_with_legacy_stack() {
+    package=$1
+    version=$2
+    metadata=$($APT_CACHE show --no-all-versions "$package=$version" 2>/dev/null || true)
+    conflicts=$(printf '%s\n' "$metadata" | awk '
+        /^Conflicts:/ { active=1; print; next }
+        active && /^[[:space:]]/ { print; next }
+        active { exit }
+    ')
+    for legacy in \
+        casper \
+        initramfs-tools \
+        initramfs-tools-core \
+        initramfs-tools-bin \
+        busybox-initramfs \
+        finalrd; do
+        printf '%s\n' "$conflicts" \
+            | grep -Eq "(^|[ ,])$legacy([ ,(]|$)" || return 1
+    done
+}
+
+mkdir -p "$STATE_DIR"
+exec 9>"$LOCK_FILE"
+if ! flock -n 9; then
+    log "another migration attempt is active"
+    exit 0
+fi
+
+if ! is_installed initramfs-tools; then
+    log "legacy generator is already absent"
+    : > "$STATE_DIR/complete"
+    exit 0
+fi
+
+
+# Never remove the working generator until at least one bootable kernel can be
+# rebuilt. A modules directory alone may be a stale package artifact; require
+# its matching kernel payload as well.
+bootable_kernel=false
+for kernel in "$BOOT_DIR"/vmlinuz-*; do
+    [ -s "$kernel" ] || continue
+    kernel_version=${kernel##*/vmlinuz-}
+    [ -d "$MODULES_DIR/$kernel_version" ] || continue
+    bootable_kernel=true
+    break
+done
+if [ "$bootable_kernel" != true ]; then
+    log "no complete installed kernel is available; deferring without changing the boot stack"
+    exit 0
+fi
+
+# The helper may arrive before every package in an atomic repository publish.
+# Refresh metadata and defer without changing the boot stack until all required
+# candidates explicitly advertise their Dracut dependency.
+if ! $APT_GET update; then
+    log "repository metadata is unavailable; the timer will retry"
+    exit 0
+fi
+
+core_candidate=$(candidate_version anduinos-core-system)
+if [ -z "$core_candidate" ] || [ "$core_candidate" = "(none)" ] \
+    || ! candidate_is_pure_dracut anduinos-core-system "$core_candidate" \
+    || ! candidate_conflicts_with_legacy_stack \
+        anduinos-core-system "$core_candidate"; then
+    log "pure-Dracut anduinos-core-system is not published yet; deferring"
+    exit 0
+fi
+
+set -- dracut dracut-core dracut-install "anduinos-core-system=$core_candidate"
+if is_installed anduinos-btrfs-snapshots-manager; then
+    snapshots_candidate=$(candidate_version anduinos-btrfs-snapshots-manager)
+    if [ -z "$snapshots_candidate" ] || [ "$snapshots_candidate" = "(none)" ] \
+        || ! candidate_is_pure_dracut \
+            anduinos-btrfs-snapshots-manager "$snapshots_candidate"; then
+        log "pure-Dracut snapshots manager is not published yet; deferring"
+        exit 0
+    fi
+    set -- "$@" "anduinos-btrfs-snapshots-manager=$snapshots_candidate"
+fi
+
+simulation=$($APT_GET --simulate install "$@" 2>&1) || {
+    printf '%s\n' "$simulation" >&2
+    log "APT cannot produce a migration plan; deferring"
+    exit 0
+}
+
+# A generator migration may remove the explicitly forbidden Ubuntu packages,
+# but it must never solve dependencies by removing an AnduinOS package.
+removed_anduinos=$(printf '%s\n' "$simulation" \
+    | sed -n 's/^Remv \(anduinos-[^ :]*\).*/\1/p')
+if [ -n "$removed_anduinos" ]; then
+    printf '%s\n' "$removed_anduinos" >&2
+    log "APT proposed removing AnduinOS packages; refusing the unsafe plan"
+    exit 0
+fi
+
+log "installing the published Dracut package set"
+$APT_GET install -y \
+    -o Dpkg::Options::=--force-confold \
+    "$@"
+
+found_kernel=false
+for kernel in "$BOOT_DIR"/vmlinuz-*; do
+    [ -s "$kernel" ] || continue
+    kernel_version=${kernel##*/vmlinuz-}
+    [ -d "$MODULES_DIR/$kernel_version" ] || {
+        log "kernel $kernel_version has no matching modules directory"
+        exit 1
+    }
+    found_kernel=true
+    "$DRACUT" --force "$BOOT_DIR/initrd.img-$kernel_version" "$kernel_version"
+    "$LSINITRD" "$BOOT_DIR/initrd.img-$kernel_version" >/dev/null
+done
+if [ "$found_kernel" != true ]; then
+    log "no installed kernel was found; refusing to mark migration complete"
+    exit 1
+fi
+
+for legacy in \
+    casper \
+    initramfs-tools \
+    initramfs-tools-core \
+    initramfs-tools-bin \
+    busybox-initramfs \
+    finalrd; do
+    if is_installed "$legacy"; then
+        log "legacy package remains installed after APT transaction: $legacy"
+        exit 1
+    fi
+done
+
+: > "$STATE_DIR/complete"
+log "migration completed and every installed kernel has a readable Dracut image"
