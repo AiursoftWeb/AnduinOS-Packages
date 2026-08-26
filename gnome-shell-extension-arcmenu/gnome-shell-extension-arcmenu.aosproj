@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-arcmenu</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <Section>gnome</Section>
     <PackageDescription>Application Menu Extension for GNOME — packaged for AnduinOS</PackageDescription>
@@ -28,6 +28,7 @@
     <Dependency Include="gir1.2-gmenu-3.0" />
     <Dependency Include="gir1.2-accountsservice-1.0" />
     <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
+    <Recommend Include="anduinos-control-panel" />
     <IncludeFolder Include="deploy/noble/arcmenu@arcmenu.com"
                    Target="/usr/share/gnome-shell/extensions/arcmenu@arcmenu.com"
                    Condition="'$(Suite)' == 'noble-addon'" />
@@ -38,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />
+    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" />
   </ItemGroup>
   <ItemGroup>
     <IncludeFile Include="dconf/10-arcmenu.conf" Target="/etc/dconf/db/anduinos.d/10-arcmenu.conf" />
