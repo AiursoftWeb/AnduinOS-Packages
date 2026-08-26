@@ -226,6 +226,7 @@ gnome-shell-extension-arcmenu:
   extends: .publish
   needs:
     - anduinos-dconf-runtime
+    - anduinos-control-panel
   variables:
     PACKAGE_DIR: gnome-shell-extension-arcmenu
 
