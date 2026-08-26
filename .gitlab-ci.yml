@@ -567,6 +567,18 @@ anduinos-exe-runner:
   variables:
     PACKAGE_DIR: anduinos-exe-runner
 
+anduinos-control-panel:
+  extends: .publish
+  needs:
+    - anduinos-driver-center
+    - anduinos-appearance
+    - anduinos-ufwall-gtk
+    - anduinos-swapcontrol-gtk
+    - anduinos-yubikey-manager
+    - anduinos-btrfs-snapshots-manager
+  variables:
+    PACKAGE_DIR: anduinos-control-panel
+
 anduinos-oobe:
   extends: .publish
   needs:
@@ -580,6 +592,7 @@ anduinos-desktop-apps:
   extends: .publish
   stage: meta
   needs:
+    - anduinos-control-panel
     - anduinos-driver-center
     - anduinos-mimeapps
     - firefox-anduinos
