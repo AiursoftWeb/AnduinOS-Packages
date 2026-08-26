@@ -3,6 +3,13 @@ import unittest
 
 
 class PackagingTests(unittest.TestCase):
+    def test_window_opens_in_the_wide_security_overview_layout(self):
+        source = Path("src/window.rs").read_text(encoding="utf-8")
+        self.assertIn('.property("default-width", 1266)', source)
+        self.assertIn('.property("default-height", 795)', source)
+        self.assertNotIn('.property("default-width", 900)', source)
+        self.assertNotIn('.property("default-height", 650)', source)
+
     def test_prerm_exits_before_cleanup_during_upgrade(self):
         script = Path("scripts/prerm.sh").read_text(encoding="utf-8")
         guard = script.index('case "${1:-}" in')

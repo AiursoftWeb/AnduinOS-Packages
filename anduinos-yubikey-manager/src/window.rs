@@ -94,8 +94,8 @@ impl YubiKeyManagerWindow {
         glib::Object::builder()
             .property("application", app)
             .property("title", i18n("AnduinOS YubiKey Security Center"))
-            .property("default-width", 900)
-            .property("default-height", 650)
+            .property("default-width", 1266)
+            .property("default-height", 795)
             .property("icon-name", "com.anduinos.yubikeymanager")
             .build()
     }

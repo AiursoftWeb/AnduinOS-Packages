@@ -510,7 +510,7 @@ class AppearanceWindow(Adw.PreferencesWindow):
     def __init__(self, app):
         super().__init__(application=app)
         self.set_title(_('AnduinOS Appearance'))
-        self.set_default_size(780, 560)
+        self.set_default_size(910, 660)
         self.set_icon_name('anduinos-appearance')
 
         self.current_style, self.current_position = detect_current()

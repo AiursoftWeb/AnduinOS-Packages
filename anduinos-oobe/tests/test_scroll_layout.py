@@ -6,6 +6,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ScrollLayoutTests(unittest.TestCase):
+    def test_oobe_and_welcome_center_use_the_taller_default_size(self):
+        source = (ROOT / "assets/anduinos-oobe").read_text(encoding="utf-8")
+
+        self.assertEqual(source.count("self.set_default_size(745, 992)"), 2)
+        self.assertNotIn("self.set_default_size(780, 910)", source)
+
     def test_every_explicit_scroller_uses_a_non_overlay_vertical_policy(self):
         source = (ROOT / "assets/anduinos-oobe").read_text(encoding="utf-8")
 

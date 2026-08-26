@@ -8,6 +8,13 @@ RUST_STRING = r'"(?:[^"\\]|\\.)*"'
 
 
 class LocalizationSourceTests(unittest.TestCase):
+    def test_window_opens_at_the_taller_dashboard_size(self):
+        source = (ROOT / "src" / "window.rs").read_text(encoding="utf-8")
+        self.assertIn('.property("default-width", 1070)', source)
+        self.assertIn('.property("default-height", 770)', source)
+        self.assertNotIn('.property("default-width", 1100)', source)
+        self.assertNotIn('.property("default-height", 650)', source)
+
     def test_ui_text_is_not_a_raw_rust_literal(self):
         pattern = re.compile(
             rf"\.(?:label|title|subtitle|heading|body|description|"

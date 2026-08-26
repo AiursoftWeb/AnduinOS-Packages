@@ -3237,10 +3237,10 @@ class OobeWindow(Adw.ApplicationWindow):
 
         if is_oobe:
             self.set_title(_('AnduinOS Setup'))
-            self.set_default_size(780, 910)
+            self.set_default_size(745, 992)
         else:
             self.set_title(_('AnduinOS Welcome Center'))
-            self.set_default_size(780, 910)
+            self.set_default_size(745, 992)
 
         self.set_icon_name('anduinos-oobe')
 

@@ -121,7 +121,7 @@ def _scrolled_window(**properties) -> Gtk.ScrolledWindow:
 class DriverCenterWindow(Adw.ApplicationWindow):
     def __init__(self, app: Adw.Application):
         super().__init__(application=app, title=_("AnduinOS Driver Center"))
-        self.set_default_size(1000, 700)
+        self.set_default_size(1250, 810)
         self.set_size_request(720, 520)
         self._graphics: list[HardwareDevice] = []
         self._secure_boot: SecureBootState | None = None

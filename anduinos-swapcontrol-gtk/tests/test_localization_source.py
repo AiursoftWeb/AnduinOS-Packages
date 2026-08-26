@@ -8,6 +8,13 @@ RUST_STRING = r'"(?:[^"\\]|\\.)*"'
 
 
 class LocalizationSourceTests(unittest.TestCase):
+    def test_window_opens_at_the_roomier_dashboard_size(self):
+        source = (ROOT / "src" / "window.rs").read_text(encoding="utf-8")
+        self.assertIn('.property("default-width", 1230)', source)
+        self.assertIn('.property("default-height", 750)', source)
+        self.assertNotIn('.property("default-width", 1100)', source)
+        self.assertNotIn('.property("default-height", 650)', source)
+
     def test_formatted_messages_are_marked_with_i18n(self):
         violations = []
         pattern = re.compile(rf"\bi18n_fmt\s*\(\s*({RUST_STRING})", re.DOTALL)

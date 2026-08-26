@@ -30,6 +30,11 @@ class PackageTests(unittest.TestCase):
         self.assertIn('Gio.SimpleAction.new("about", None)', application)
         self.assertIn("Adw.AboutDialog()", application)
 
+    def test_window_opens_in_the_wide_home_layout(self):
+        application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
+        self.assertIn("self.set_default_size(1250, 810)", application)
+        self.assertNotIn("self.set_default_size(1000, 700)", application)
+
     def test_audio_install_action_uses_the_restricted_helper(self):
         application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
         helper = (ROOT / "scripts/driver-helper").read_text()

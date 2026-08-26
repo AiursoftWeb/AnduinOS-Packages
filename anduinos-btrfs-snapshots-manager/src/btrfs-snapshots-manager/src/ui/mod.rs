@@ -21,6 +21,8 @@ use crate::signal_listener::SnapshotSignalMonitor;
 
 pub use snapshot_model::SnapshotScope;
 
+const MAIN_WINDOW_DEFAULT_WIDTH: i32 = 900;
+const MAIN_WINDOW_DEFAULT_HEIGHT: i32 = 880;
 pub(super) const AUXILIARY_WINDOW_DEFAULT_WIDTH: i32 = 680;
 pub(super) const AUXILIARY_WINDOW_DEFAULT_HEIGHT: i32 = 900;
 
@@ -86,8 +88,8 @@ impl MainWindow {
         let window: Self = glib::Object::builder()
             .property("application", app)
             .property("title", tr("Disk Snapshots Manager"))
-            .property("default-width", 920)
-            .property("default-height", 720)
+            .property("default-width", MAIN_WINDOW_DEFAULT_WIDTH)
+            .property("default-height", MAIN_WINDOW_DEFAULT_HEIGHT)
             .property("icon-name", crate::application::APP_ID)
             .build();
         window.setup_ui(monitor);
@@ -387,5 +389,12 @@ mod tests {
         assert_eq!(AUXILIARY_WINDOW_DEFAULT_WIDTH, 680);
         assert_eq!(AUXILIARY_WINDOW_DEFAULT_HEIGHT, 900);
         assert!(AUXILIARY_WINDOW_DEFAULT_HEIGHT > AUXILIARY_WINDOW_DEFAULT_WIDTH);
+    }
+
+    #[test]
+    fn main_window_uses_the_taller_snapshot_list_size() {
+        assert_eq!(MAIN_WINDOW_DEFAULT_WIDTH, 900);
+        assert_eq!(MAIN_WINDOW_DEFAULT_HEIGHT, 880);
+        assert!(MAIN_WINDOW_DEFAULT_HEIGHT > 720);
     }
 }
