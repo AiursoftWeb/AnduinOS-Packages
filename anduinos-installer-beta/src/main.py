@@ -102,7 +102,12 @@ class InstallerApplication(Adw.Application):
         Gtk.Window.set_default_icon_name(ICON_NAME)
 
     def do_activate(self):
-        """Build and present the main window."""
+        """Build the main window once, then present it on later activations."""
+        active_window = self.get_active_window()
+        if active_window is not None:
+            active_window.present()
+            return
+
         try:
             lang = str(self.shared_state["lang"])
             title_message = (

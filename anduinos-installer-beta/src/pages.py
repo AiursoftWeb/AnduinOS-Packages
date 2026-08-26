@@ -2021,11 +2021,17 @@ def build_keyboard_page(shared, nav_view):
     _set_variant_model(selected_layout, keyboard_variant)
 
     keyboard_chooser = Gtk.Box(
-        orientation=Gtk.Orientation.VERTICAL,
-        spacing=8,
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=12,
     )
-    keyboard_chooser.append(layout_dropdown)
-    keyboard_chooser.append(variant_dropdown)
+    keyboard_chooser.set_homogeneous(True)
+    keyboard_chooser.set_hexpand(True)
+    layout_field = _labeled(_("Keyboard Layout", lang), layout_dropdown)
+    layout_field.set_hexpand(True)
+    variant_field = _labeled(_("Layout Variant", lang), variant_dropdown)
+    variant_field.set_hexpand(True)
+    keyboard_chooser.append(layout_field)
+    keyboard_chooser.append(variant_field)
 
     test_entry = Gtk.Entry(
         placeholder_text=_("Test your keyboard here…", lang)
@@ -2172,7 +2178,7 @@ def build_keyboard_page(shared, nav_view):
     form.set_margin_end(48)
     form.set_margin_top(48)
     form.set_margin_bottom(12)
-    form.append(_labeled(_("Keyboard Layout", lang), keyboard_chooser))
+    form.append(keyboard_chooser)
     form.append(_labeled(_("Test your keyboard here…", lang), test_entry))
     form.append(preview_status)
 

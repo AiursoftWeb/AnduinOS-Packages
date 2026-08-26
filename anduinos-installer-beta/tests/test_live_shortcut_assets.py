@@ -69,6 +69,21 @@ class LiveShortcutAssetTests(unittest.TestCase):
             main,
         )
 
+    def test_repeated_activation_reuses_the_existing_installer_window(self):
+        main = (PACKAGE / "src/main.py").read_text(encoding="utf-8")
+        activation = main.split("    def do_activate(self):", 1)[1].split(
+            "\n\ndef main():", 1
+        )[0]
+
+        lookup = activation.index("active_window = self.get_active_window()")
+        present = activation.index("active_window.present()")
+        early_return = activation.index("            return", present)
+        create = activation.index("win = Adw.ApplicationWindow(")
+        self.assertLess(lookup, present)
+        self.assertLess(present, early_return)
+        self.assertLess(early_return, create)
+        self.assertEqual(activation.count("Adw.ApplicationWindow("), 1)
+
     def test_desktop_launcher_has_all_28_official_localizations(self):
         launcher = (
             PACKAGE / "assets/anduinos-installer-beta.desktop"

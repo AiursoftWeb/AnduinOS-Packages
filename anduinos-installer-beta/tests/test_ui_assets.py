@@ -105,6 +105,26 @@ class InstallerVisualAssetTests(unittest.TestCase):
         self.assertNotIn("gsettings set", source)
         self.assertNotIn("setxkbmap", source)
 
+    def test_keyboard_layout_and_variant_are_labeled_side_by_side(self):
+        source = (ROOT / "src/pages.py").read_text(encoding="utf-8")
+        keyboard_page = source.split("def build_keyboard_page", 1)[1].split(
+            "def build_updates_page", 1
+        )[0]
+
+        self.assertIn("orientation=Gtk.Orientation.HORIZONTAL", keyboard_page)
+        self.assertIn("keyboard_chooser.set_homogeneous(True)", keyboard_page)
+        self.assertIn(
+            'layout_field = _labeled(_("Keyboard Layout", lang), '
+            "layout_dropdown)",
+            keyboard_page,
+        )
+        self.assertIn(
+            'variant_field = _labeled(_("Layout Variant", lang), '
+            "variant_dropdown)",
+            keyboard_page,
+        )
+        self.assertIn("form.append(keyboard_chooser)", keyboard_page)
+
     def test_every_wizard_illustration_is_a_parseable_local_svg(self):
         expected = {
             "welcome.svg",
