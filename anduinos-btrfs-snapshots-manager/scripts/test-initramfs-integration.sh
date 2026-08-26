@@ -10,6 +10,7 @@ mkdir -p \
     "$TEST_ROOT/etc/anduinos-btrfs-snapshots-manager" \
     "$TEST_ROOT/lib" \
     "$TEST_ROOT/proc" \
+    "$TEST_ROOT/run/anduinos-btrfs-snapshots-manager" \
     "$TEST_ROOT/top/@root" \
     "$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/transactions" \
     "$TEST_ROOT/usr/libexec"
@@ -61,6 +62,16 @@ cat > "$TEST_ROOT/bin/umount" <<'EOF'
 #!/bin/sh
 exit 0
 EOF
+cat > "$TEST_ROOT/bin/chmod" <<'EOF'
+#!/bin/sh
+# Model Dracut 110's read-only /usr at runtime. A regression that tries to
+# activate the image member in place must fail; writable runtime copies remain
+# valid.
+if [ "${2:-}" = "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-confirm" ]; then
+    exit 1
+fi
+exec /usr/bin/chmod "$@"
+EOF
 cat > "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs" <<'EOF'
 #!/bin/sh
 if [ "${1:-}" = "--protocol-version" ]; then
@@ -69,7 +80,7 @@ if [ "${1:-}" = "--protocol-version" ]; then
 fi
 if [ "${1:-}" = "--stage-confirmation-artifact" ]; then
     mkdir -p "$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/recovery-boot"
-    cp "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-confirm" \
+    cp "$2" \
         "$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/recovery-boot/confirm"
     chmod 0700 \
         "$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/recovery-boot/confirm"
@@ -84,6 +95,7 @@ exit 0
 EOF
 chmod 0755 \
     "$TEST_ROOT/bin/mount" \
+    "$TEST_ROOT/bin/chmod" \
     "$TEST_ROOT/bin/umount" \
     "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs"
 # Match the byte-preserving mode used while Dracut assembles the image.  The
@@ -96,6 +108,7 @@ sed \
     -e 's#^command -v getarg.*dracut-lib.sh$#. "$TEST_ROOT/lib/dracut-lib.sh"#' \
     -e 's#^command -v det_fs.*fs-lib.sh$#. "$TEST_ROOT/lib/fs-lib.sh"#' \
     -e 's#^protocol_file=.*#protocol_file="$TEST_ROOT/etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version"#' \
+    -e 's#^runtime_root=.*#runtime_root="$TEST_ROOT/run/anduinos-btrfs-snapshots-manager"#' \
     -e 's#^top_level=.*#top_level="$TEST_ROOT/top"#' \
     -e 's#^    reconciler_exec=.*#    reconciler_exec="$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/recovery-boot/confirm"#' \
     -e 's#^    reconciler_unit=.*#    reconciler_unit="$TEST_ROOT/run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service"#' \
@@ -126,7 +139,10 @@ printf 'root=/dev/ignored anduinos.btrfs_snapshots_manager=%s anduinos.btrfs_sna
     "$ROLLBACK_ID" > "$TEST_ROOT/proc/cmdline"
 run_script btrfs
 grep -Fxq "$ROLLBACK_ID" "$TEST_ROOT/invocations"
-test -x "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-confirm"
+test ! -x "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-confirm"
+test -x "$TEST_ROOT/run/anduinos-btrfs-snapshots-manager/confirmation-engine"
+cmp "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-confirm" \
+    "$TEST_ROOT/run/anduinos-btrfs-snapshots-manager/confirmation-engine"
 test -x "$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/recovery-boot/confirm"
 grep -Fq 'recovery-boot/confirm' \
     "$TEST_ROOT/run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service"

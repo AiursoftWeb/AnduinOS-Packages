@@ -49,8 +49,10 @@ if [ -n "$requested" ] && [ "$requested_protocol" != "$installed_protocol" ]; th
     return $?
 fi
 
-top_level=/run/anduinos-btrfs-snapshots-manager/top
+runtime_root=/run/anduinos-btrfs-snapshots-manager
+top_level="$runtime_root/top"
 mkdir -p "$top_level"
+chmod 0700 "$runtime_root" || die "Disk Snapshots Manager could not protect its initramfs runtime directory"
 if ! mount -t btrfs -o rw,subvolid=5 "$root_device" "$top_level"; then
     fail_or_skip "the Btrfs top level could not be mounted"
     return $?
@@ -63,17 +65,24 @@ if [ ! -f "$transaction" ]; then
 fi
 
 confirmation_engine=/usr/libexec/anduinos-btrfs-snapshots-manager-confirm
-if ! chmod 0700 "$confirmation_engine"; then
+runtime_confirmation="$runtime_root/confirmation-engine"
+runtime_confirmation_ready=0
+if cp "$confirmation_engine" "$runtime_confirmation" &&
+    chmod 0700 "$runtime_confirmation"; then
+    runtime_confirmation_ready=1
+else
     if [ -n "$requested" ]; then
-        die "Disk Snapshots Manager could not activate its trusted confirmation engine"
+        die "Disk Snapshots Manager could not stage its trusted confirmation engine in writable initramfs storage"
         umount "$top_level"
         return 1
     fi
-    warn "Disk Snapshots Manager could not activate its trusted confirmation engine"
+    warn "Disk Snapshots Manager could not stage its trusted confirmation engine in writable initramfs storage"
 fi
 
 staged_confirmation=0
-if /usr/libexec/anduinos-btrfs-snapshots-manager-initramfs --stage-confirmation-artifact; then
+if [ "$runtime_confirmation_ready" -eq 1 ] &&
+    /usr/libexec/anduinos-btrfs-snapshots-manager-initramfs \
+        --stage-confirmation-artifact "$runtime_confirmation"; then
     staged_confirmation=1
 elif [ -n "$requested" ]; then
     die "Disk Snapshots Manager could not stage its trusted confirmation engine"
