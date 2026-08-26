@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-exe-runner</PackageName>
-    <PackageVersion>2.0.2-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Windows Executable Runner - Seamlessly run Windows .exe files via Bottles</PackageDescription>
     <Section>utils</Section>
@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <IncludeFile Include="assets/anduinos-exe-runner" Target="/usr/bin/anduinos-exe-runner" Mode="755" />
+    <IncludeFile Include="assets/configure-bottles.py" Target="/usr/share/anduinos-exe-runner/configure-bottles.py" />
     <IncludeFile Include="assets/recommendations.json" Target="/usr/share/anduinos-exe-runner/recommendations.json" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
   </ItemGroup>

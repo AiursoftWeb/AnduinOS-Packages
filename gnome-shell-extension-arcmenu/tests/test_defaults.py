@@ -6,20 +6,26 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ArcMenuDefaultsTests(unittest.TestCase):
-    def test_control_panel_follows_activities_overview(self):
+    def test_activities_overview_follows_control_panel_and_is_last(self):
         defaults = (ROOT / "dconf/10-arcmenu.conf").read_text()
         application_shortcuts = next(
             line
             for line in defaults.splitlines()
             if line.startswith("application-shortcuts=")
         )
-        activities = "{'id': 'ArcMenu_ActivitiesOverview'"
+        activities = (
+            "{'id': 'ArcMenu_ActivitiesOverview', "
+            "'name': 'Activities Overview', "
+            "'icon': 'view-fullscreen-symbolic'}"
+        )
         control_panel = "{'id': 'com.anduinos.ControlPanel.desktop'}"
+        self.assertEqual(application_shortcuts.count(activities), 1)
         self.assertEqual(application_shortcuts.count(control_panel), 1)
         self.assertLess(
-            application_shortcuts.index(activities),
             application_shortcuts.index(control_panel),
+            application_shortcuts.index(activities),
         )
+        self.assertTrue(application_shortcuts.endswith(f"{activities}]"))
 
     def test_control_panel_is_suggested_without_pulling_the_app_stack(self):
         project = (ROOT / "gnome-shell-extension-arcmenu.aosproj").read_text()
