@@ -85,8 +85,10 @@ EOF
 chmod 0755 \
     "$TEST_ROOT/bin/mount" \
     "$TEST_ROOT/bin/umount" \
-    "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs" \
-    "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-confirm"
+    "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs"
+# Match the byte-preserving mode used while Dracut assembles the image.  The
+# production pre-mount hook must activate this payload before staging it.
+chmod 0644 "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-confirm"
 
 # Substitute only environment-specific absolute paths. The recovery state
 # machine and Dracut stage behavior remain the production hook's code.
@@ -124,6 +126,7 @@ printf 'root=/dev/ignored anduinos.btrfs_snapshots_manager=%s anduinos.btrfs_sna
     "$ROLLBACK_ID" > "$TEST_ROOT/proc/cmdline"
 run_script btrfs
 grep -Fxq "$ROLLBACK_ID" "$TEST_ROOT/invocations"
+test -x "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-confirm"
 test -x "$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/recovery-boot/confirm"
 grep -Fq 'recovery-boot/confirm' \
     "$TEST_ROOT/run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service"

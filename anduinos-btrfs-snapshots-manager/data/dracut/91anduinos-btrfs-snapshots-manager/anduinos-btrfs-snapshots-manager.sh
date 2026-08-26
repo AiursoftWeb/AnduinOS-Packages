@@ -62,6 +62,16 @@ if [ ! -f "$transaction" ]; then
     return 0
 fi
 
+confirmation_engine=/usr/libexec/anduinos-btrfs-snapshots-manager-confirm
+if ! chmod 0700 "$confirmation_engine"; then
+    if [ -n "$requested" ]; then
+        die "Disk Snapshots Manager could not activate its trusted confirmation engine"
+        umount "$top_level"
+        return 1
+    fi
+    warn "Disk Snapshots Manager could not activate its trusted confirmation engine"
+fi
+
 staged_confirmation=0
 if /usr/libexec/anduinos-btrfs-snapshots-manager-initramfs --stage-confirmation-artifact; then
     staged_confirmation=1

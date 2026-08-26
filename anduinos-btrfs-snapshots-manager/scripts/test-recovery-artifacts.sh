@@ -17,6 +17,9 @@ if rg -q '\$\{?FSTYPE' "$DRACUT_HOOK"; then
 fi
 grep -Fq 'recovery-protocol-version' "$DRACUT_MODULE"
 grep -Fq 'anduinos-btrfs-snapshots-manager-confirm' "$DRACUT_MODULE"
+grep -Fq 'chmod 0644' "$DRACUT_MODULE"
+grep -Fq '"$initdir/usr/libexec/anduinos-btrfs-snapshots-manager-confirm"' "$DRACUT_MODULE"
+grep -Fq 'chmod 0700 "$confirmation_engine"' "$DRACUT_HOOK"
 grep -Fq 'recovery-protocol-version' "$PROJECT_ROOT/anduinos-btrfs-snapshots-manager.aosproj"
 grep -Fq 'recovery-boot/confirm' "$DRACUT_HOOK"
 if grep -Eq '^ExecStart=/run/' "$DRACUT_HOOK"; then

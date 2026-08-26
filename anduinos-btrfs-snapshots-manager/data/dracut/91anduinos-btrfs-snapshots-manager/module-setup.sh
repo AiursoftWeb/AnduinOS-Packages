@@ -26,5 +26,11 @@ install() {
     inst_simple \
         /usr/share/anduinos-btrfs-snapshots-manager/recovery-protocol-version \
         /etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version
+
+    # Dracut strips every executable in the completed image.  The rollback
+    # transaction binds the packaged confirmation engine byte-for-byte, so keep
+    # this initramfs copy non-executable until the recovery hook needs it.
+    chmod 0644 \
+        "$initdir/usr/libexec/anduinos-btrfs-snapshots-manager-confirm" || return 1
     inst_hook pre-mount 50 "$moddir/anduinos-btrfs-snapshots-manager.sh"
 }
