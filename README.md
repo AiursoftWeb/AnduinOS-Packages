@@ -159,6 +159,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-gdm3-wallpaper` | Theme | GDM3 dynamic wallpaper engine |
 | `anduinos-appearance` | App | Taskbar layout switcher (Centered / Classic) |
 | `anduinos-appstore` | App | Flatpak-based app store with Flathub remote |
+| `anduinos-control-panel` | App | GTK4/libadwaita category hub for system settings, hardware tools, accounts, applications, appearance, and recovery |
 | `anduinos-driver-center` | App | Focused GTK4 driver manager for graphics, Xbox controllers, and Secure Boot trust |
 | `anduinos-btrfs-snapshots-manager` | App | GTK4/libadwaita manager for symmetric System and Personal Files Btrfs snapshots, automatic retention, file recovery, and guarded system rollback |
 | `anduinos-dracut-migration` | Migration | Retry-safe bootstrap that moves existing installations from initramfs-tools to the published pure-Dracut package set |

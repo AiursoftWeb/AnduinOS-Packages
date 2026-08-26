@@ -22,6 +22,50 @@ Translate = Callable[[str], str]
 IconFactory = Callable[[str], Gtk.Widget]
 
 
+def N_(value: str) -> str:
+    """Mark text for the later unified localization catalog generation."""
+
+    return value
+
+
+_FIRMWARE_SETUP_BUTTON = N_("Resolve")
+_FIRMWARE_SETUP_REBOOT = N_("Restart to UEFI Firmware Settings")
+_FIRMWARE_SETUP_RECOMMENDATION = N_(
+    "AnduinOS has comprehensive Secure Boot support. Secure Boot is not "
+    "currently enabled on this computer, and we recommend enabling it "
+    "for additional protection."
+)
+_FIRMWARE_SETUP_INSTRUCTIONS = N_(
+    "To enable it, open the UEFI firmware settings and look under Boot, "
+    "Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn "
+    "Secure Boot on. Firmware wording varies by manufacturer."
+)
+_FIRMWARE_SETUP_ERROR_TITLE = N_("Could not open UEFI firmware settings")
+_FIRMWARE_SETUP_ERROR_BODY = N_(
+    "The firmware settings could not be opened on this computer."
+)
+
+
+def restart_to_firmware_settings(
+    run: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+) -> tuple[bool, str]:
+    """Ask systemd to restart directly into the UEFI firmware interface."""
+
+    try:
+        result = run(
+            ["systemctl", "reboot", "--firmware-setup"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired) as error:
+        return False, str(error)
+    if result.returncode == 0:
+        return True, ""
+    return False, (result.stderr or result.stdout).strip()
+
+
 def _default_icon(name: str) -> Gtk.Image:
     return Gtk.Image.new_from_icon_name(name)
 
@@ -32,6 +76,7 @@ def create_secure_boot_page(
     icon_factory: IconFactory | None = None,
     update_navigation: Callable[[], None] | None = None,
     reboot: Callable[[], None] | None = None,
+    firmware_setup: Callable[[], tuple[bool, str]] | None = None,
     state_changed: Callable[[], None] | None = None,
     initial_state: tuple[SecureBootState, DkmsState] | None = None,
 ) -> Gtk.Widget:
@@ -49,6 +94,7 @@ def create_secure_boot_page(
             ["gnome-session-quit", "--reboot", "--no-prompt"], check=False
         )
     )
+    firmware_setup = firmware_setup or restart_to_firmware_settings
 
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     page.set_valign(Gtk.Align.FILL)
@@ -110,6 +156,11 @@ def create_secure_boot_page(
     add_row("certificate", _("Local MOK Certificate"))
     add_row("enrollment", _("UEFI Firmware Trust"))
     add_row("drivers", _("Third-party Drivers"))
+
+    firmware_button = Gtk.Button(label=_(_FIRMWARE_SETUP_BUTTON))
+    firmware_button.set_valign(Gtk.Align.CENTER)
+    firmware_button.add_css_class("suggested-action")
+    rows["secure_boot"][0].add_suffix(firmware_button)
 
     status = Gtk.Label()
     status.set_justify(Gtk.Justification.CENTER)
@@ -192,15 +243,15 @@ def create_secure_boot_page(
             set_icon("secure_boot", "dialog-error-symbolic", "error")
         else:
             sb_row.set_subtitle(_("Secure Boot is disabled"))
-            set_icon("secure_boot", "dialog-information-symbolic", "dim-label")
+            set_icon("secure_boot", "dialog-error-symbolic", "error")
 
         has_certificate = secure_boot.key_present and secure_boot.certificate_present
         trust_ready = secure_boot.trust_ready
         if secure_boot.enforcement_inactive:
             cert_row.set_subtitle(_("Not required without firmware enforcement"))
-            set_icon("certificate", "dialog-information-symbolic", "dim-label")
+            set_icon("certificate", "dialog-error-symbolic", "error")
             enroll_row.set_subtitle(_("Not required without firmware enforcement"))
-            set_icon("enrollment", "dialog-information-symbolic", "dim-label")
+            set_icon("enrollment", "dialog-error-symbolic", "error")
         elif secure_boot.status is SecureBootStatus.UNKNOWN:
             cert_row.set_subtitle(
                 _("Not checked because Secure Boot state is unknown")
@@ -243,7 +294,7 @@ def create_secure_boot_page(
         signing_configuration_ready = secure_boot.configuration_present
         if secure_boot.enforcement_inactive:
             drivers_row.set_subtitle(_("Kernel signature enforcement is inactive"))
-            set_icon("drivers", "dialog-information-symbolic", "dim-label")
+            set_icon("drivers", "dialog-error-symbolic", "error")
         elif secure_boot.status is SecureBootStatus.UNKNOWN:
             drivers_row.set_subtitle(_("Driver trust cannot be verified"))
             set_icon("drivers", "dialog-warning-symbolic", "warning")
@@ -288,6 +339,9 @@ def create_secure_boot_page(
         )
         reboot_note.set_visible(secure_boot.enrollment_pending)
         reboot_button.set_visible(secure_boot.enrollment_pending)
+        firmware_button.set_visible(
+            secure_boot.status is SecureBootStatus.DISABLED
+        )
         refresh_button.set_visible(
             secure_boot.status is SecureBootStatus.UNKNOWN
             or (
@@ -311,7 +365,11 @@ def create_secure_boot_page(
             )
             status.remove_css_class("title-4")
         elif not secure_boot.enabled:
-            status.set_label(_("No certificate is required while Secure Boot is disabled."))
+            status.set_label(
+                _("No certificate is required while Secure Boot is disabled.")
+                + "\n"
+                + _(_FIRMWARE_SETUP_RECOMMENDATION)
+            )
             status.remove_css_class("title-4")
         elif secure_boot.ready and dkms.ready:
             status.set_label(_("System Trust Established. Third-party drivers will load securely."))
@@ -372,12 +430,54 @@ def create_secure_boot_page(
             _("Please trust the certificate upon reboot using password 123456."),
         )
         dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("reboot", _("Reboot"))
+        dialog.add_response("reboot", _(_FIRMWARE_SETUP_REBOOT))
         dialog.set_response_appearance("reboot", Adw.ResponseAppearance.DESTRUCTIVE)
         dialog.connect(
             "response", lambda _dialog, name: reboot() if name == "reboot" else None
         )
         dialog.present()
+
+    def confirm_firmware_setup(_button: Gtk.Button | None = None) -> None:
+        dialog = Adw.MessageDialog.new(
+            page.get_root(),
+            _("Reboot Required"),
+            _(_FIRMWARE_SETUP_INSTRUCTIONS),
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("reboot", _("Reboot"))
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+        dialog.set_response_appearance("reboot", Adw.ResponseAppearance.DESTRUCTIVE)
+
+        def response(_dialog: Adw.MessageDialog, name: str) -> None:
+            if name != "reboot":
+                return
+            firmware_button.set_sensitive(False)
+
+            def worker() -> None:
+                succeeded, error = firmware_setup()
+                if succeeded:
+                    return
+                GLib.idle_add(firmware_button.set_sensitive, True)
+                GLib.idle_add(show_firmware_setup_error, error)
+
+            threading.Thread(target=worker, daemon=True).start()
+
+        dialog.connect("response", response)
+        dialog.present()
+
+    def show_firmware_setup_error(error: str) -> bool:
+        body = _(_FIRMWARE_SETUP_ERROR_BODY)
+        if error:
+            body += "\n\n" + error
+        dialog = Adw.MessageDialog.new(
+            page.get_root(),
+            _(_FIRMWARE_SETUP_ERROR_TITLE),
+            body,
+        )
+        dialog.add_response("ok", _("OK"))
+        dialog.present()
+        return GLib.SOURCE_REMOVE
 
     def show_reboot_prompt(extra: str = "") -> None:
         body = _("Success! When you reboot, a blue screen will appear.")
@@ -498,6 +598,7 @@ def create_secure_boot_page(
         "clicked", lambda button: run_in_thread(button, "repair-dkms")
     )
     reboot_button.connect("clicked", confirm_reboot)
+    firmware_button.connect("clicked", confirm_firmware_setup)
     refresh_button.connect("clicked", refresh)
     if initial_state is None:
         refresh()

@@ -6,6 +6,7 @@ import gettext
 import os
 from pathlib import Path
 import subprocess
+import sys
 import threading
 import time
 from typing import Callable
@@ -37,7 +38,6 @@ from .firmware import (
 try:
     from anduinos_secureboot.ui import create_secure_boot_page
 except ModuleNotFoundError:
-    import sys
     _toolkit_src = Path(__file__).resolve().parents[3] / "anduinos-secureboot-toolkit" / "src"
     sys.path.insert(0, str(_toolkit_src))
     from anduinos_secureboot.ui import create_secure_boot_page
@@ -119,7 +119,7 @@ def _scrolled_window(**properties) -> Gtk.ScrolledWindow:
 
 
 class DriverCenterWindow(Adw.ApplicationWindow):
-    def __init__(self, app: Adw.Application):
+    def __init__(self, app: Adw.Application, initial_page: str = "home"):
         super().__init__(application=app, title=_("AnduinOS Driver Center"))
         self.set_default_size(1250, 810)
         self.set_size_request(720, 520)
@@ -131,7 +131,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self._printing: PrintingState | None = None
         self._graphics_scan = GraphicsScan()
         self._selected_package: str | None = None
-        self._selected_page_name: str | None = "home"
+        self._selected_page_name: str | None = initial_page
         self._rebuilding_navigation = False
         self._firmware_row: Gtk.ListBoxRow | None = None
         self._firmware_progress: Gtk.ProgressBar | None = None
@@ -408,18 +408,15 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self.device_list.append(xbox_row)
         self.stack.add_named(self._xbox_page(xbox, secure_boot), "xbox")
 
-        # Secure Boot management is irrelevant when firmware enforcement is
-        # disabled.  Keep the device workflow uncluttered and, importantly,
-        # do not turn MOK or signing configuration into an install gate.
-        if not secure_boot.enforcement_inactive:
-            secure_row = self._device_row(
-                "security-high-symbolic", _("Secure Boot"),
-                _("Trust established") if secure_boot.ready else _("Action required"),
-            )
-            secure_row.page_name = "secure-boot"
-            secure_row.page_title = _("Secure Boot")
-            self.device_list.append(secure_row)
-            self.stack.add_named(self._secure_boot_page(secure_boot, dkms), "secure-boot")
+        secure_boot_healthy = secure_boot.enabled and secure_boot.ready
+        secure_row = self._device_row(
+            "security-high-symbolic", _("Secure Boot"),
+            _("Trust established") if secure_boot_healthy else _("Action required"),
+        )
+        secure_row.page_name = "secure-boot"
+        secure_row.page_title = _("Secure Boot")
+        self.device_list.append(secure_row)
+        self.stack.add_named(self._secure_boot_page(secure_boot, dkms), "secure-boot")
 
         firmware_snapshot = self._firmware_manager.snapshot
         firmware_row = self._device_row(
@@ -1007,18 +1004,18 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             -1,
         )
 
-        if not secure_boot.enforcement_inactive:
-            cards.insert(
-                self._overview_card(
-                    "security-high-symbolic",
-                    _("Secure Boot"),
-                    _("Trusted") if secure_boot.ready else _("Action required"),
-                    _("Trust established") if secure_boot.ready else _("Support needs attention"),
-                    "success-pill" if secure_boot.ready else "warning-pill",
-                    "secure-boot",
-                ),
-                -1,
-            )
+        secure_boot_healthy = secure_boot.enabled and secure_boot.ready
+        cards.insert(
+            self._overview_card(
+                "security-high-symbolic",
+                _("Secure Boot"),
+                _("Trusted") if secure_boot_healthy else _("Action required"),
+                _("Trust established") if secure_boot_healthy else _("Support needs attention"),
+                "success-pill" if secure_boot_healthy else "warning-pill",
+                "secure-boot",
+            ),
+            -1,
+        )
         firmware_state, firmware_subtitle, firmware_class = (
             self._firmware_card_state(self._firmware_manager.snapshot)
         )
@@ -2265,7 +2262,10 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
 class DriverCenterApplication(Adw.Application):
     def __init__(self):
-        super().__init__(application_id=APP_ID, flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
+        super().__init__(
+            application_id=APP_ID,
+            flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
+        )
 
     def do_startup(self) -> None:
         Adw.Application.do_startup(self)
@@ -2294,7 +2294,36 @@ class DriverCenterApplication(Adw.Application):
         window = self.get_active_window() or DriverCenterWindow(self)
         window.present()
 
+    def do_command_line(self, command_line: Gio.ApplicationCommandLine) -> int:
+        arguments = [str(argument) for argument in command_line.get_arguments()]
+        requested_page = "home"
+        index = 1
+        while index < len(arguments):
+            argument = arguments[index]
+            if argument == "--page" and index + 1 < len(arguments):
+                requested_page = arguments[index + 1]
+                index += 2
+                continue
+            if argument.startswith("--page="):
+                requested_page = argument.partition("=")[2]
+                index += 1
+                continue
+            command_line.printerr("Unknown option: %s\n" % argument)
+            return 2
+        if requested_page not in {"home", "secure-boot"}:
+            command_line.printerr("Unknown Driver Center page: %s\n" % requested_page)
+            return 2
+
+        window = self.get_active_window()
+        if window is None:
+            window = DriverCenterWindow(self, initial_page=requested_page)
+        else:
+            window._selected_page_name = requested_page
+            window._select_page(requested_page)
+        window.present()
+        return 0
+
 
 def main() -> int:
     Adw.init()
-    return DriverCenterApplication().run(None)
+    return DriverCenterApplication().run(sys.argv)

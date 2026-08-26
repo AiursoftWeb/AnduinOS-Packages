@@ -30,10 +30,10 @@ class ContractTests(unittest.TestCase):
         self.assertNotIn("dkms", dependencies)
         self.assertIn("dkms", suggestions)
 
-    def test_package_version_carries_the_optional_dkms_transition(self):
+    def test_package_version_carries_the_firmware_settings_action(self):
         project = ET.parse(ROOT / "anduinos-secureboot-toolkit.aosproj").getroot()
         self.assertEqual(
-            "2.0.2-2+$(SuiteShortName)",
+            "2.0.2-3+$(SuiteShortName)",
             project.findtext(".//PackageVersion"),
         )
 
@@ -87,6 +87,21 @@ class ContractTests(unittest.TestCase):
     def test_ui_never_offers_module_repair_without_dkms(self):
         source = (ROOT / "src/anduinos_secureboot/ui.py").read_text(encoding="utf-8")
         self.assertIn("secure_boot.dkms_available and not dkms.ready", source)
+
+    def test_disabled_secure_boot_has_a_confirmed_fixed_firmware_action(self):
+        source = (ROOT / "src/anduinos_secureboot/ui.py").read_text(encoding="utf-8")
+        self.assertIn('["systemctl", "reboot", "--firmware-setup"]', source)
+        self.assertIn('_FIRMWARE_SETUP_BUTTON = N_("Resolve")', source)
+        self.assertIn('_FIRMWARE_SETUP_REBOOT = N_("Restart to UEFI Firmware Settings")', source)
+        self.assertIn('Gtk.Button(label=_(_FIRMWARE_SETUP_BUTTON))', source)
+        self.assertIn('dialog.set_default_response("cancel")', source)
+        self.assertIn('dialog.set_close_response("cancel")', source)
+        self.assertIn('secure_boot.status is SecureBootStatus.DISABLED', source)
+        self.assertGreaterEqual(
+            source.count('"dialog-error-symbolic", "error"'),
+            4,
+        )
+        self.assertNotIn("shell=True", source)
 
 
 if __name__ == "__main__":

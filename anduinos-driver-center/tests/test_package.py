@@ -35,6 +35,15 @@ class PackageTests(unittest.TestCase):
         self.assertIn("self.set_default_size(1250, 810)", application)
         self.assertNotIn("self.set_default_size(1000, 700)", application)
 
+    def test_command_line_can_open_the_secure_boot_page(self):
+        application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
+        self.assertIn("Gio.ApplicationFlags.HANDLES_COMMAND_LINE", application)
+        self.assertIn('argument == "--page"', application)
+        self.assertIn('{"home", "secure-boot"}', application)
+        self.assertIn("initial_page=requested_page", application)
+        self.assertIn("window._select_page(requested_page)", application)
+        self.assertIn("DriverCenterApplication().run(sys.argv)", application)
+
     def test_audio_install_action_uses_the_restricted_helper(self):
         application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
         helper = (ROOT / "scripts/driver-helper").read_text()
@@ -200,13 +209,17 @@ class PackageTests(unittest.TestCase):
 
     def test_secure_boot_navigation_includes_indeterminate_state(self):
         application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
-        guard = application.index("if not secure_boot.enforcement_inactive:")
-        navigation = application.index(
-            'secure_row.page_name = "secure-boot"', guard
-        )
-        next_method = application.index("\n    def _device_row", guard)
-        self.assertLess(guard, navigation)
+        navigation = application.index('secure_row.page_name = "secure-boot"')
+        next_method = application.index("\n    def _device_row", navigation)
         self.assertLess(navigation, next_method)
+        self.assertNotIn(
+            "if not secure_boot.enforcement_inactive:",
+            application[:next_method],
+        )
+        self.assertIn(
+            "secure_boot_healthy = secure_boot.enabled and secure_boot.ready",
+            application,
+        )
 
     def test_every_supported_locale_is_complete_and_matches_the_ui(self):
         expected_locales = {
