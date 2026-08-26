@@ -21,9 +21,12 @@ class ArcMenuDefaultsTests(unittest.TestCase):
             application_shortcuts.index(control_panel),
         )
 
-    def test_control_panel_is_a_recommended_companion(self):
+    def test_control_panel_is_suggested_without_pulling_the_app_stack(self):
         project = (ROOT / "gnome-shell-extension-arcmenu.aosproj").read_text()
         self.assertIn(
+            '<Suggest Include="anduinos-control-panel" />', project
+        )
+        self.assertNotIn(
             '<Recommend Include="anduinos-control-panel" />', project
         )
 
