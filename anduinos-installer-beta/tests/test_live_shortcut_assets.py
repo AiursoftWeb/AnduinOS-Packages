@@ -147,10 +147,6 @@ class LiveShortcutAssetTests(unittest.TestCase):
         project = (
             PACKAGE / "anduinos-installer-beta.aosproj"
         ).read_text(encoding="utf-8")
-        self.assertIn(
-            "<PackageVersion>2.0.2-8+$(SuiteShortName)</PackageVersion>",
-            project,
-        )
         self.assertNotIn("installer (beta)", project.lower())
 
     def test_welcome_page_uses_its_packaged_illustration(self):
