@@ -105,6 +105,9 @@ anduinos-apt-config:
   extends: .publish
   needs:
     - anduinos-archive-keyring
+    - anduinos-dracut-migration
+    - anduinos-core-system
+    - anduinos-btrfs-snapshots-manager
   variables:
     PACKAGE_DIR: anduinos-apt-config
 
@@ -117,6 +120,9 @@ anduinos-apt-config-dev:
   extends: .publish
   needs:
     - anduinos-archive-keyring
+    - anduinos-dracut-migration
+    - anduinos-core-system
+    - anduinos-btrfs-snapshots-manager
   variables:
     PACKAGE_DIR: anduinos-apt-config-dev
 
@@ -440,8 +446,20 @@ anduinos-rime:
   variables:
     PACKAGE_DIR: anduinos-rime
 
+anduinos-dracut-migration:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-dracut-migration
+
+anduinos-live-layers:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-live-layers
+
 anduinos-live-settings:
   extends: .publish
+  needs:
+    - anduinos-live-layers
   variables:
     PACKAGE_DIR: anduinos-live-settings
 

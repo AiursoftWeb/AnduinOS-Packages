@@ -3,7 +3,9 @@
 
 Dependencies, recommendations, and suggestions on packages built in this
 repository are all build-order relationships. This is independent of their
-different runtime installation semantics in APT.
+different runtime installation semantics in APT. A small, explicit set of
+release-only relationships additionally protects atomic repository switches
+without turning those relationships into runtime package dependencies.
 """
 
 from __future__ import annotations
@@ -18,6 +20,22 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 CI_PATH = ROOT / ".gitlab-ci.yml"
 PACKAGE_RE = re.compile(r"^[a-z0-9][a-z0-9+.-]*$")
+
+# Publishing either APT source package is what makes the one-shot migration
+# bootstrap visible to an existing system. Keep those trigger packages behind
+# every candidate that the helper may need, while deliberately avoiding an APT
+# Depends that would make conservative `apt upgrade` solve the conflicting
+# generator switch in the bootstrap transaction itself.
+RELEASE_ONLY_RELATIONSHIPS = {
+    "anduinos-apt-config": {
+        "anduinos-core-system",
+        "anduinos-btrfs-snapshots-manager",
+    },
+    "anduinos-apt-config-dev": {
+        "anduinos-core-system",
+        "anduinos-btrfs-snapshots-manager",
+    },
+}
 
 
 @dataclass
@@ -126,10 +144,26 @@ def verify() -> tuple[int, int]:
         for package, (directory, _root) in project_map.items()
     }
     relationships = internal_relationships(project_map)
+    unknown_release_packages = sorted(
+        {
+            package
+            for package, dependencies in RELEASE_ONLY_RELATIONSHIPS.items()
+            for package in (package, *dependencies)
+            if package not in project_map
+        }
+    )
+    if unknown_release_packages:
+        raise RuntimeError(
+            "Unknown release-only package relationships: "
+            + ", ".join(unknown_release_packages)
+        )
     errors: list[str] = []
     for package, expected_packages in sorted(relationships.items()):
         job_name = package_to_job[package]
-        expected_jobs = {package_to_job[item] for item in expected_packages}
+        ordered_packages = expected_packages | RELEASE_ONLY_RELATIONSHIPS.get(
+            package, set()
+        )
+        expected_jobs = {package_to_job[item] for item in ordered_packages}
         actual_jobs = set(job_map[job_name].needs)
         missing = sorted(expected_jobs - actual_jobs)
         extra = sorted(actual_jobs - expected_jobs)
