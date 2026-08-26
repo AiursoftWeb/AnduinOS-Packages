@@ -243,7 +243,18 @@ class PackageTests(unittest.TestCase):
 
         app_icon = (ROOT / "resources/icons/com.anduinos.ControlPanel.svg").read_text()
         self.assertNotIn("<image", app_icon)
-        self.assertNotIn('fill="#fff"', app_icon)
+
+        appearance_icon = (
+            REPOSITORY / "anduinos-appearance/data/anduinos-appearance.svg"
+        ).read_text()
+        vendored_appearance_icon = (
+            ROOT / "resources/icons/anduinos-appearance.svg"
+        ).read_text()
+        self.assertIn('fill="#38a0d4"', app_icon)
+        self.assertEqual(app_icon.count("<circle"), 3)
+        self.assertIn('fill="#2268ab"', appearance_icon)
+        self.assertEqual(appearance_icon.count("<path"), 9)
+        self.assertEqual(vendored_appearance_icon, appearance_icon)
 
         symbolic_icon = (
             ROOT / "resources/icons/com.anduinos.ControlPanel-symbolic.svg"
@@ -263,7 +274,7 @@ class PackageTests(unittest.TestCase):
         project = (ROOT / "anduinos-control-panel.aosproj").read_text()
         for package in (
             "anduinos-driver-center (&gt;= 2.0.2-7)",
-            "anduinos-appearance (&gt;= 2.0.2-5)",
+            "anduinos-appearance (&gt;= 2.0.2-6)",
             "anduinos-ufwall-gtk (&gt;= 2.0.2-5)",
             "anduinos-swapcontrol-gtk (&gt;= 2.0.2-6)",
             "anduinos-yubikey-manager (&gt;= 2.0.2-4)",
