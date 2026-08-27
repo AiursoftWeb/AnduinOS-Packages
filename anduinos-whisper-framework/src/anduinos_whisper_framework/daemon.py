@@ -24,8 +24,6 @@ INTROSPECTION_XML = f"""
 <node>
   <interface name="{INTERFACE}">
     <method name="Start"/>
-    <method name="Toggle"/>
-    <method name="Pause"/>
     <method name="Stop"/>
     <method name="Quit"/>
     <method name="StartTest"/>
@@ -47,6 +45,9 @@ INTROSPECTION_XML = f"""
 </node>
 """
 
+SHELL_BUS_NAME = "org.gnome.Shell"
+SHELL_CONTROL_METHODS = frozenset({"Start", "Stop", "Quit"})
+
 
 class VoiceTypingService:
     def __init__(self) -> None:
@@ -55,6 +56,8 @@ class VoiceTypingService:
         self.connection: Gio.DBusConnection | None = None
         self.registration_id = 0
         self.owner_id = 0
+        self.shell_watch_id = 0
+        self.shell_owner = ""
         self.capture: AudioCapture | None = None
         self.state = "idle"
         self.detail = "Ready"
@@ -77,6 +80,7 @@ class VoiceTypingService:
     def run(self) -> int:
         node = Gio.DBusNodeInfo.new_for_xml(INTROSPECTION_XML)
         self.connection = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        self.shell_owner = self._get_shell_owner()
         self.registration_id = self.connection.register_object(
             OBJECT_PATH,
             node.interfaces[0],
@@ -91,6 +95,13 @@ class VoiceTypingService:
             None,
             self._name_lost,
         )
+        self.shell_watch_id = Gio.bus_watch_name_on_connection(
+            self.connection,
+            SHELL_BUS_NAME,
+            Gio.BusNameWatcherFlags.NONE,
+            self._shell_name_appeared,
+            self._shell_name_vanished,
+        )
         GLib.timeout_add_seconds(60, self._idle_check)
         self.loop.run()
         return 0
@@ -98,7 +109,7 @@ class VoiceTypingService:
     def _method_called(
         self,
         _connection: Gio.DBusConnection,
-        _sender: str,
+        sender: str,
         _object_path: str,
         _interface_name: str,
         method: str,
@@ -106,12 +117,16 @@ class VoiceTypingService:
         invocation: Gio.DBusMethodInvocation,
     ) -> None:
         self.last_activity = time.monotonic()
+        if method in SHELL_CONTROL_METHODS and sender != self.shell_owner:
+            invocation.return_dbus_error(
+                f"{APP_ID}.AccessDenied",
+                "Dictation state is controlled by the GNOME Shell extension",
+            )
+            return
         try:
             if method == "Start":
                 self.start()
-            elif method == "Toggle":
-                self.toggle()
-            elif method in {"Pause", "Stop"}:
+            elif method == "Stop":
                 self.stop()
             elif method == "StartTest":
                 self.start_test()
@@ -152,12 +167,6 @@ class VoiceTypingService:
         self.capture.start()
         self._play_cue("audio-volume-change")
         self._set_state("listening", "Listening…")
-
-    def toggle(self) -> None:
-        if not self.active:
-            self.start()
-        else:
-            self.stop()
 
     def stop(self) -> None:
         was_running = self.active or self.testing
@@ -426,6 +435,9 @@ class VoiceTypingService:
         self._put_work(-1, "quit", 0, 0, b"")
         if self.connection and self.registration_id:
             self.connection.unregister_object(self.registration_id)
+        if self.shell_watch_id:
+            Gio.bus_unwatch_name(self.shell_watch_id)
+            self.shell_watch_id = 0
         if self.owner_id:
             Gio.bus_unown_name(self.owner_id)
         self.loop.quit()
@@ -437,6 +449,35 @@ class VoiceTypingService:
         self.owner_id = 0
         if not self.shutting_down:
             self._quit()
+
+    def _get_shell_owner(self) -> str:
+        if self.connection is None:
+            return ""
+        try:
+            result = self.connection.call_sync(
+                "org.freedesktop.DBus",
+                "/org/freedesktop/DBus",
+                "org.freedesktop.DBus",
+                "GetNameOwner",
+                GLib.Variant("(s)", (SHELL_BUS_NAME,)),
+                GLib.VariantType("(s)"),
+                Gio.DBusCallFlags.NONE,
+                -1,
+                None,
+            )
+            return result.unpack()[0] if result is not None else ""
+        except GLib.Error:
+            return ""
+
+    def _shell_name_appeared(
+        self, _connection: Gio.DBusConnection, _name: str, owner: str
+    ) -> None:
+        self.shell_owner = owner
+
+    def _shell_name_vanished(self, *_arguments) -> None:
+        self.shell_owner = ""
+        if not self.shutting_down:
+            GLib.idle_add(self._quit)
 
     def _idle_check(self) -> bool:
         idle = not self.active and not self.testing and not self.pending

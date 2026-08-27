@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import gettext
-import subprocess
 import sys
 
 import gi
@@ -16,7 +15,7 @@ from gi.repository import Adw, Gdk, Gio, GLib, Gtk  # noqa: E402
 from anduinos_whisper_framework.audio import input_devices
 from anduinos_whisper_framework.config import MODELS, SETTINGS_SCHEMA, model_installed
 
-from .dbus import VoiceServiceClient
+from .dbus import VoiceServiceClient, VoiceUiClient
 from .models import ModelDownloader, is_user_model, remove_user_model
 from .shortcuts import accelerator_from_key_event
 
@@ -29,7 +28,8 @@ _ = gettext.gettext
 
 LANGUAGES = [
     ("auto", _("Automatic detection")),
-    ("zh", _("Chinese")),
+    ("zh-Hans", _("Simplified Chinese")),
+    ("zh-Hant", _("Traditional Chinese")),
     ("en", _("English")),
     ("es", _("Spanish")),
     ("fr", _("French")),
@@ -41,11 +41,9 @@ LANGUAGES = [
 ]
 
 STATE_LABELS = {
-    "idle": _("Ready"),
+    "closed": _("Voice Typing"),
+    "ready": _("Ready"),
     "listening": _("Listening…"),
-    "recognizing": _("Recognizing…"),
-    "testing": _("Testing microphone…"),
-    "no-speech": _("No speech detected"),
     "error": _("Needs attention"),
 }
 
@@ -59,13 +57,14 @@ class SettingsWindow(Adw.PreferencesWindow):
             default_height=900,
         )
         self.settings = Gio.Settings.new(SETTINGS_SCHEMA)
+        self.ui_client = VoiceUiClient()
         self.client = VoiceServiceClient()
         self.downloader = ModelDownloader()
         self.model_rows: dict[str, tuple[Adw.ActionRow, Gtk.Button, Gtk.ProgressBar]] = {}
         self.testing = False
         self._shortcut_dialog: Adw.Dialog | None = None
         self.connect("close-request", self._closing)
-        self.client.subscribe("StateChanged", self._state_changed)
+        self.ui_client.subscribe(self._state_changed)
         self.client.subscribe("LevelChanged", self._level_changed)
         self._build_general_page()
         self._build_models_page()
@@ -92,7 +91,9 @@ class SettingsWindow(Adw.PreferencesWindow):
         self.status_row.add_prefix(self.status_icon)
         self.start_button = Gtk.Button(label=_("Start"), valign=Gtk.Align.CENTER)
         self.start_button.add_css_class("suggested-action")
-        self.start_button.connect("clicked", lambda _button: self.client.call("Toggle"))
+        self.start_button.connect(
+            "clicked", lambda _button: self.ui_client.call("Toggle")
+        )
         self.status_row.add_suffix(self.start_button)
         status_group.add(self.status_row)
         page.add(status_group)
@@ -114,6 +115,8 @@ class SettingsWindow(Adw.PreferencesWindow):
         language_names = Gtk.StringList.new([item[1] for item in LANGUAGES])
         self.language_row = Adw.ComboRow(title=_("Language"), model=language_names)
         language = self.settings.get_string("language") or "auto"
+        if language == "zh":
+            language = "zh-Hans"
         self.language_row.set_selected(
             next((index for index, item in enumerate(LANGUAGES) if item[0] == language), 0)
         )
@@ -172,17 +175,6 @@ class SettingsWindow(Adw.PreferencesWindow):
             self.settings.bind(key, row, "active", Gio.SettingsBindFlags.DEFAULT)
             behavior.add(row)
         page.add(behavior)
-
-        extension_group = Adw.PreferencesGroup(title=_("Desktop integration"))
-        extension_row = Adw.ActionRow(
-            title=_("Floating microphone bar"),
-            subtitle=_("Always-on-top, non-focusing overlay provided by GNOME Shell"),
-        )
-        enable = Gtk.Button(label=_("Enable"), valign=Gtk.Align.CENTER)
-        enable.connect("clicked", self._enable_extension)
-        extension_row.add_suffix(enable)
-        extension_group.add(extension_row)
-        page.add(extension_group)
 
     def _build_models_page(self) -> None:
         page = Adw.PreferencesPage(title=_("Models"), icon_name="folder-download-symbolic")
@@ -273,14 +265,14 @@ class SettingsWindow(Adw.PreferencesWindow):
 
     def _load_state(self) -> bool:
         try:
-            self._state_changed(*self.client.state())
+            self._state_changed(*self.ui_client.state())
         except GLib.Error as error:
             self._state_changed("error", error.message)
         return GLib.SOURCE_REMOVE
 
     def _state_changed(self, state: str, detail: str) -> None:
         self.status_row.set_subtitle(detail or STATE_LABELS.get(state, state))
-        if state in {"listening", "recognizing", "no-speech"}:
+        if state == "listening":
             button_label = _("Stop")
         else:
             button_label = _("Start")
@@ -289,11 +281,8 @@ class SettingsWindow(Adw.PreferencesWindow):
             self.status_icon.set_from_icon_name("dialog-warning-symbolic")
         else:
             self.status_icon.set_from_icon_name(APP_ID)
-        if state != "testing" and self.testing:
-            self.testing = False
-            self.test_button.set_label(_("Start Test"))
         self.status_row.set_title(STATE_LABELS.get(state, _("Voice Typing")))
-        self.start_button.set_sensitive(state != "testing")
+        self.start_button.set_sensitive(not self.testing)
 
     def _level_changed(self, level: float) -> None:
         self.meter.set_fraction(max(0.0, min(1.0, level)))
@@ -488,54 +477,9 @@ class SettingsWindow(Adw.PreferencesWindow):
         self.testing = not self.testing
         self.client.call("StartTest" if self.testing else "StopTest")
         self.test_button.set_label(_("Stop Test") if self.testing else _("Start Test"))
+        self.start_button.set_sensitive(not self.testing)
         if not self.testing:
             self.meter.set_fraction(0.0)
-
-    def _enable_extension(self, button: Gtk.Button) -> None:
-        shell_settings = Gio.Settings.new("org.gnome.shell")
-        uuid = "voice-typing@anduinos.com"
-        enabled = shell_settings.get_strv("enabled-extensions")
-        if uuid not in enabled:
-            shell_settings.set_strv("enabled-extensions", [*enabled, uuid])
-        disabled = shell_settings.get_strv("disabled-extensions")
-        if uuid in disabled:
-            shell_settings.set_strv(
-                "disabled-extensions", [item for item in disabled if item != uuid]
-            )
-        try:
-            subprocess.run(
-                [
-                    "gdbus",
-                    "call",
-                    "--session",
-                    "--dest",
-                    "org.gnome.Shell.Extensions",
-                    "--object-path",
-                    "/org/gnome/Shell/Extensions",
-                    "--method",
-                    "org.gnome.Shell.Extensions.ReloadExtension",
-                    uuid,
-                ],
-                check=False,
-                timeout=3,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except (OSError, subprocess.TimeoutExpired):
-            pass
-        try:
-            result = subprocess.run(
-                ["gnome-extensions", "enable", "--quiet", uuid],
-                check=False,
-                timeout=3,
-                text=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-            )
-            enabled_now = result.returncode == 0
-        except (OSError, subprocess.TimeoutExpired):
-            enabled_now = False
-        button.set_label(_("Enabled") if enabled_now else _("Enabled after sign-in"))
 
     def _closing(self, _window) -> bool:
         if self.testing:
@@ -544,6 +488,7 @@ class SettingsWindow(Adw.PreferencesWindow):
             except GLib.Error:
                 pass
         self.client.close()
+        self.ui_client.close()
         return False
 
 
@@ -582,7 +527,7 @@ def main() -> int:
     if len(sys.argv) > 1 and sys.argv[1] in {"--toggle", "--start", "--stop"}:
         method = {"--toggle": "Toggle", "--start": "Start", "--stop": "Stop"}[sys.argv[1]]
         try:
-            VoiceServiceClient().call_sync(method)
+            VoiceUiClient().call_sync(method)
             return 0
         except GLib.Error as error:
             print(error.message, file=sys.stderr)

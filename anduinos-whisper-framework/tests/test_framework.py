@@ -17,6 +17,10 @@ from anduinos_whisper_framework.commands import (  # noqa: E402
     clean_transcript,
     remove_punctuation,
 )
+from anduinos_whisper_framework.chinese import (  # noqa: E402
+    normalize_chinese_script,
+    whisper_language,
+)
 from anduinos_whisper_framework.engine import WhisperEngine  # noqa: E402
 from anduinos_whisper_framework.config import MODELS  # noqa: E402
 from anduinos_whisper_framework.audio import AudioCapture  # noqa: E402
@@ -34,10 +38,12 @@ class CommandTests(unittest.TestCase):
 
     def test_stop_command_is_reported_as_an_action(self):
         self.assertEqual(apply_voice_command("Stop listening.", True), ("", "stop"))
+        self.assertEqual(apply_voice_command("停止聽寫。", True), ("", "stop"))
 
     def test_voice_punctuation_command_survives_disabled_auto_punctuation(self):
         without_punctuation = remove_punctuation("Comma.")
         self.assertEqual(apply_voice_command(without_punctuation, True), (",", None))
+        self.assertEqual(apply_voice_command("逗號。", True), ("，", None))
 
     def test_non_speech_annotations_are_removed(self):
         self.assertEqual(clean_transcript("  [BLANK_AUDIO] Hello  world "), "Hello world")
@@ -55,6 +61,43 @@ class EngineTests(unittest.TestCase):
         self.assertIn("--no-timestamps", arguments)
         self.assertEqual(arguments[arguments.index("--language") + 1], "zh")
         self.assertNotIn("shell", run.call_args.kwargs)
+
+    @patch("anduinos_whisper_framework.engine.subprocess.run")
+    def test_engine_forces_simplified_chinese_output(self, run):
+        run.return_value = subprocess.CompletedProcess(
+            [], 0, stdout="語音輸入與電腦", stderr=""
+        )
+        with patch("pathlib.Path.is_file", return_value=True):
+            text = WhisperEngine(Path("/model.bin"), "zh-Hans", 3).transcribe(
+                b"\0" * 32_000
+            )
+        self.assertEqual(text, "语音输入与电脑")
+        arguments = run.call_args.args[0]
+        self.assertEqual(arguments[arguments.index("--language") + 1], "zh")
+
+
+class ChineseScriptTests(unittest.TestCase):
+    def test_simplified_selection_removes_traditional_variants(self):
+        self.assertEqual(
+            normalize_chinese_script("語音輸入與電腦", "zh-Hans"),
+            "语音输入与电脑",
+        )
+        self.assertEqual(
+            normalize_chinese_script("語音輸入與電腦", "zh"),
+            "语音输入与电脑",
+        )
+
+    def test_traditional_selection_removes_simplified_variants(self):
+        self.assertEqual(
+            normalize_chinese_script("语音输入与电脑", "zh-Hant"),
+            "語音輸入與電腦",
+        )
+
+    def test_non_chinese_languages_are_untouched(self):
+        self.assertEqual(normalize_chinese_script("語音 input", "en"), "語音 input")
+        self.assertEqual(whisper_language("zh-Hans"), "zh")
+        self.assertEqual(whisper_language("zh-Hant"), "zh")
+        self.assertEqual(whisper_language("en"), "en")
 
 
 class LiveTranscriptionTests(unittest.TestCase):
@@ -76,8 +119,10 @@ class LiveTranscriptionTests(unittest.TestCase):
         ):
             for _timestamp in timestamps:
                 capture._consume(loud_audio)
-        self.assertEqual(len(partials), 1)
-        self.assertGreaterEqual(len(partials[0]), AudioCapture.BYTES_PER_SECOND)
+        self.assertEqual(len(partials), 2)
+        self.assertGreaterEqual(
+            len(partials[0]), AudioCapture.BYTES_PER_SECOND // 2
+        )
 
     def test_running_partial_remains_valid_but_queued_old_partial_is_skipped(self):
         service = VoiceTypingService.__new__(VoiceTypingService)
@@ -123,14 +168,35 @@ class PackageTests(unittest.TestCase):
         self.assertIn("sha256sum --check --status", script)
         self.assertIn('<TargetArchitectures>all</TargetArchitectures>', project)
         self.assertIn('<Dependency Include="whisper.cpp (&gt;= 1.8.3)" />', project)
+        self.assertIn('<Dependency Include="libopencc1.1" />', project)
 
-    def test_toggle_has_only_running_and_ready_states(self):
+    def test_daemon_exposes_only_explicit_shell_control_methods(self):
         daemon = (ROOT / "src/anduinos_whisper_framework/daemon.py").read_text()
         self.assertNotIn("self.paused", daemon)
         self.assertNotIn('_set_state("paused"', daemon)
-        self.assertIn('elif method in {"Pause", "Stop"}:', daemon)
+        self.assertNotIn('<method name="Toggle"/>', daemon)
+        self.assertNotIn('<method name="Pause"/>', daemon)
+        self.assertNotIn("def toggle(self)", daemon)
+        self.assertIn('elif method == "Stop":', daemon)
+        self.assertIn("method in SHELL_CONTROL_METHODS", daemon)
         self.assertIn('self._set_state("idle", "Ready")', daemon)
         self.assertIn("session_id != self.session_id", daemon)
+
+    def test_non_shell_clients_cannot_control_dictation(self):
+        service = VoiceTypingService.__new__(VoiceTypingService)
+        service.shell_owner = ":1.42"
+        invocation = Mock()
+        service._method_called(
+            Mock(),
+            ":1.7",
+            "/com/anduinos/VoiceTyping",
+            "com.anduinos.VoiceTyping",
+            "Start",
+            Mock(),
+            invocation,
+        )
+        invocation.return_dbus_error.assert_called_once()
+        self.assertIn("AccessDenied", invocation.return_dbus_error.call_args.args[0])
 
     def test_live_transcription_is_default_and_partial_results_are_not_final(self):
         schema = ET.parse(
@@ -142,7 +208,7 @@ class PackageTests(unittest.TestCase):
 
         audio = (ROOT / "src/anduinos_whisper_framework/audio.py").read_text()
         daemon = (ROOT / "src/anduinos_whisper_framework/daemon.py").read_text()
-        self.assertIn("partial_interval: float = 1.0", audio)
+        self.assertIn("partial_interval: float = 0.5", audio)
         self.assertIn("self.on_partial(partial)", audio)
         self.assertIn("queue.PriorityQueue", daemon)
         self.assertIn('self._put_work(0, "final"', daemon)
@@ -150,6 +216,13 @@ class PackageTests(unittest.TestCase):
         self.assertIn('GLib.Variant("(sb)", (text, False))', daemon)
         self.assertIn("_partial_should_run", daemon)
         self.assertIn("_partial_is_valid", daemon)
+
+    def test_daemon_exits_when_gnome_shell_leaves_the_session_bus(self):
+        daemon = (ROOT / "src/anduinos_whisper_framework/daemon.py").read_text()
+        self.assertIn('SHELL_BUS_NAME = "org.gnome.Shell"', daemon)
+        self.assertIn("Gio.bus_watch_name_on_connection(", daemon)
+        self.assertIn("self._shell_name_vanished", daemon)
+        self.assertIn("Gio.bus_unwatch_name(self.shell_watch_id)", daemon)
 
 
 if __name__ == "__main__":

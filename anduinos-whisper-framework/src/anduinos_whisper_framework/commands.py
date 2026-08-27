@@ -9,27 +9,35 @@ VOICE_COMMANDS = {
     "new line": "\n",
     "newline": "\n",
     "换行": "\n",
+    "換行": "\n",
     "新的一行": "\n",
     "new paragraph": "\n\n",
     "新段落": "\n\n",
     "comma": ",",
     "逗号": "，",
+    "逗號": "，",
     "period": ".",
     "full stop": ".",
     "句号": "。",
+    "句號": "。",
     "question mark": "?",
     "问号": "？",
+    "問號": "？",
     "exclamation mark": "!",
     "感叹号": "！",
+    "感嘆號": "！",
     "tab": "\t",
     "制表符": "\t",
+    "製表符": "\t",
 }
 
 STOP_COMMANDS = {
     "stop listening",
     "stop dictation",
     "停止听写",
+    "停止聽寫",
     "停止语音输入",
+    "停止語音輸入",
 }
 
 

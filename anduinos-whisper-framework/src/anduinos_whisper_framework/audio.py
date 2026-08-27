@@ -67,7 +67,7 @@ class AudioCapture:
         silence_threshold: float = -42.0,
         silence_seconds: float = 0.8,
         max_phrase_seconds: float = 12.0,
-        partial_interval: float = 1.0,
+        partial_interval: float = 0.5,
     ):
         self.microphone = microphone
         self.on_chunk = on_chunk
@@ -210,7 +210,7 @@ class AudioCapture:
             elif (
                 self._speaking
                 and now - self._last_partial >= self.partial_interval
-                and len(self._phrase) >= self.BYTES_PER_SECOND // 2
+                and len(self._phrase) >= self.BYTES_PER_SECOND // 4
             ):
                 partial = bytes(self._phrase)
                 self._last_partial = now

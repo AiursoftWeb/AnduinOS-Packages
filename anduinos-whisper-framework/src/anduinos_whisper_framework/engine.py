@@ -9,6 +9,7 @@ import tempfile
 import wave
 
 from .commands import clean_transcript
+from .chinese import normalize_chinese_script, whisper_language
 
 
 class RecognitionError(RuntimeError):
@@ -18,7 +19,8 @@ class RecognitionError(RuntimeError):
 class WhisperEngine:
     def __init__(self, model: Path, language: str = "auto", threads: int = 0):
         self.model = model
-        self.language = language or "auto"
+        self.output_language = language or "auto"
+        self.language = whisper_language(self.output_language)
         self.threads = threads or max(1, min(8, (os.cpu_count() or 4) - 1))
 
     def transcribe(self, pcm: bytes) -> str:
@@ -60,5 +62,5 @@ class WhisperEngine:
         if result.returncode != 0:
             details = (result.stderr or result.stdout).strip().splitlines()
             raise RecognitionError(details[-1] if details else "whisper-cli failed")
-        return clean_transcript(result.stdout)
-
+        transcript = clean_transcript(result.stdout)
+        return normalize_chinese_script(transcript, self.output_language)

@@ -6,21 +6,31 @@ import Shell from 'gi://Shell';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
-import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 const BUS_NAME = 'com.anduinos.VoiceTyping';
 const OBJECT_PATH = '/com/anduinos/VoiceTyping';
+const UI_OBJECT_PATH = '/com/anduinos/VoiceTyping/UI';
+const UI_INTERFACE = 'com.anduinos.VoiceTyping.UI';
 const SETTINGS_SCHEMA = 'com.anduinos.voice-typing';
 const SHORTCUT = 'toggle-shortcut';
+
+const UI_STATE = Object.freeze({
+    CLOSED: 'closed',
+    READY: 'ready',
+    LISTENING: 'listening',
+});
+const TOGGLE_TRANSITION = Object.freeze({
+    [UI_STATE.CLOSED]: UI_STATE.LISTENING,
+    [UI_STATE.READY]: UI_STATE.LISTENING,
+    [UI_STATE.LISTENING]: UI_STATE.READY,
+});
+const ACTIVE_DAEMON_STATES = new Set(['listening', 'recognizing', 'no-speech']);
 
 const DBUS_XML = `
 <node>
   <interface name="com.anduinos.VoiceTyping">
     <method name="Start"/>
-    <method name="Toggle"/>
-    <method name="Pause"/>
     <method name="Stop"/>
     <method name="Quit"/>
     <method name="GetState">
@@ -35,6 +45,21 @@ const DBUS_XML = `
 
 const VoiceProxy = Gio.DBusProxy.makeProxyWrapper(DBUS_XML);
 
+const UI_DBUS_XML = `
+<node>
+  <interface name="${UI_INTERFACE}">
+    <method name="Toggle"/>
+    <method name="Start"/>
+    <method name="Stop"/>
+    <method name="Dismiss"/>
+    <method name="GetState">
+      <arg name="state" type="s" direction="out"/>
+      <arg name="detail" type="s" direction="out"/>
+    </method>
+    <signal name="StateChanged"><arg type="s"/><arg type="s"/></signal>
+  </interface>
+</node>`;
+
 const STATE_TEXT = {
     idle: 'Ready',
     listening: 'Listening…',
@@ -45,7 +70,9 @@ const STATE_TEXT = {
 };
 
 const LANGUAGE_TEXT = {
-    auto: 'Auto', zh: 'Chinese', en: 'English', es: 'Spanish',
+    auto: 'Auto', zh: 'Simplified Chinese',
+    'zh-Hans': 'Simplified Chinese', 'zh-Hant': 'Traditional Chinese',
+    en: 'English', es: 'Spanish',
     fr: 'French', de: 'German', ja: 'Japanese', ko: 'Korean',
     ru: 'Russian', pt: 'Portuguese',
 };
@@ -53,27 +80,32 @@ const LANGUAGE_TEXT = {
 export default class VoiceTypingExtension extends Extension {
     enable() {
         this._enabled = true;
+        this._shutdownSignal = global.connect('shutdown', () =>
+            this._quitForShellShutdown());
         this._proxySignalIds = [];
         this._settings = new Gio.Settings({schema_id: SETTINGS_SCHEMA});
         this._state = 'idle';
         this._detail = _('Ready');
+        this._uiState = UI_STATE.CLOSED;
         this._targetWindow = global.display.focus_window;
         this._previewTimer = 0;
         this._pasteTimer = 0;
-        this._overlayHidden = false;
+        this._proxy = null;
+        this._proxyReady = false;
+        this._pendingCall = null;
         this._liveSettingSignal = this._settings.connect(
             'changed::live-transcription',
             () => {
                 if (!this._settings.get_boolean('live-transcription') &&
                     !this._previewTimer)
-                    this._preview?.hide();
+                    this._hidePreview();
             },
         );
         this._microphoneGicon = new Gio.FileIcon({
             file: this.dir.get_child('audio-input-microphone.svg'),
         });
         this._buildOverlay();
-        this._buildIndicator();
+        this._exportUiController();
         this._virtualKeyboard = Clutter.get_default_backend()
             .get_default_seat()
             .create_virtual_device(Clutter.InputDeviceType.KEYBOARD_DEVICE);
@@ -90,6 +122,11 @@ export default class VoiceTypingExtension extends Extension {
             Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
             () => this._toggleFromShortcut(),
         );
+    }
+
+    _connectProxy() {
+        if (this._proxy)
+            return;
         this._proxy = new VoiceProxy(
             Gio.DBus.session,
             BUS_NAME,
@@ -98,9 +135,16 @@ export default class VoiceTypingExtension extends Extension {
                 if (!this._enabled)
                     return;
                 if (error) {
+                    const failedMethod = this._pendingCall;
+                    this._pendingCall = null;
+                    this._proxy = null;
+                    this._proxyReady = false;
+                    if (failedMethod === 'Start')
+                        this._setUiState(UI_STATE.READY, _('Ready'));
                     this._setState('error', error.message);
                     return;
                 }
+                this._proxyReady = true;
                 this._proxySignalIds.push(
                     proxy.connectSignal('StateChanged', (_source, _sender, [state, detail]) =>
                         this._setState(state, detail)),
@@ -113,16 +157,28 @@ export default class VoiceTypingExtension extends Extension {
                             this._showPartial(text);
                     }),
                 );
-                proxy.GetStateRemote((result, callError) => {
-                    if (!callError && result)
-                        this._setState(result[0], result[1]);
-                });
+                const pendingCall = this._pendingCall;
+                this._pendingCall = null;
+                if (pendingCall)
+                    this._invoke(pendingCall);
+                else
+                    proxy.GetStateRemote((result, callError) => {
+                        if (!callError && result)
+                            this._setState(result[0], result[1]);
+                    });
             },
         );
     }
 
     disable() {
         this._enabled = false;
+        if (this._shutdownSignal)
+            global.disconnect(this._shutdownSignal);
+        this._shutdownSignal = 0;
+        this._uiController?.unexport();
+        this._uiController = null;
+        if (this._proxyReady && this._proxy?.get_name_owner())
+            this._invoke('Quit');
         Main.wm.removeKeybinding(SHORTCUT);
         if (this._focusSignal)
             global.display.disconnect(this._focusSignal);
@@ -142,8 +198,6 @@ export default class VoiceTypingExtension extends Extension {
         if (this._stageDragSignal)
             global.stage.disconnect(this._stageDragSignal);
         this._stageDragSignal = 0;
-        this._indicator?.destroy();
-        this._indicator = null;
         if (this._proxy) {
             for (const identifier of this._proxySignalIds)
                 this._proxy.disconnectSignal(identifier);
@@ -157,12 +211,34 @@ export default class VoiceTypingExtension extends Extension {
         this._bar = null;
         this._preview = null;
         this._proxy = null;
+        this._proxyReady = false;
+        this._pendingCall = null;
         this._virtualKeyboard?.run_dispose();
         this._virtualKeyboard = null;
         this._settings = null;
         this._clipboard = null;
         this._targetWindow = null;
         this._microphoneGicon = null;
+    }
+
+    _quitForShellShutdown() {
+        this._enabled = false;
+        this._uiState = UI_STATE.CLOSED;
+        this._root?.hide();
+        // Never activate an unused daemon while the session is closing.
+        if (this._proxyReady && this._proxy?.get_name_owner())
+            this._invoke('Quit');
+    }
+
+    _exportUiController() {
+        this._uiController = Gio.DBusExportedObject.wrapJSObject(UI_DBUS_XML, {
+            Toggle: () => this._toggleUi(),
+            Start: () => this._startListening(),
+            Stop: () => this._stopListening(),
+            Dismiss: () => this._closeUi(),
+            GetState: () => [this._uiState, this._uiDetail()],
+        });
+        this._uiController.export(Gio.DBus.session, UI_OBJECT_PATH);
     }
 
     _buildOverlay() {
@@ -197,7 +273,7 @@ export default class VoiceTypingExtension extends Extension {
             can_focus: false,
             track_hover: true,
         });
-        this._micButton.connect('clicked', () => this._call('Toggle'));
+        this._micButton.connect('clicked', () => this._toggleUi());
         this._bar.add_child(this._micButton);
 
         this._wave = new St.BoxLayout({
@@ -220,6 +296,16 @@ export default class VoiceTypingExtension extends Extension {
         });
         this._bar.add_child(this._statusLabel);
 
+        this._preview = new St.Label({
+            style_class: 'voice-typing-preview',
+            visible: false,
+            y_align: Clutter.ActorAlign.CENTER,
+            x_expand: true,
+        });
+        this._preview.clutter_text.set_single_line_mode(true);
+        this._preview.clutter_text.set_ellipsize(3);
+        this._bar.add_child(this._preview);
+
         this._languageButton = new St.Button({
             label: _('Auto') + ' ▾',
             style_class: 'voice-typing-language',
@@ -238,14 +324,6 @@ export default class VoiceTypingExtension extends Extension {
         close.connect('clicked', () => this._dismissOverlay());
         this._bar.add_child(close);
 
-        this._preview = new St.Label({
-            style_class: 'voice-typing-preview',
-            visible: false,
-            x_align: Clutter.ActorAlign.CENTER,
-        });
-        this._preview.clutter_text.set_line_wrap(true);
-        this._preview.clutter_text.set_ellipsize(3);
-        this._root.add_child(this._preview);
         Main.layoutManager.addChrome(this._root, {
             affectsStruts: false,
             trackFullscreen: false,
@@ -255,34 +333,39 @@ export default class VoiceTypingExtension extends Extension {
         this._setLevel(0);
     }
 
-    _buildIndicator() {
-        this._indicator = new PanelMenu.Button(0.0, _('Voice Typing'), false);
-        this._indicatorIcon = new St.Icon({
-            gicon: this._microphoneGicon,
-            style_class: 'system-status-icon',
-        });
-        this._indicator.add_child(this._indicatorIcon);
-        this._toggleItem = new PopupMenu.PopupMenuItem(_('Start voice typing'));
-        this._toggleItem.connect('activate', () => this._toggleFromShortcut());
-        this._indicator.menu.addMenuItem(this._toggleItem);
-        this._indicator.menu.addAction(_('Voice Typing Settings'), () => this._openSettings());
-        this._indicator.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-        this._indicator.menu.addAction(_('Stop and close'), () => this._dismissOverlay());
-        Main.panel.addToStatusArea('anduinos-voice-typing', this._indicator);
+    _toggleFromShortcut() {
+        this._toggleUi();
     }
 
-    _toggleFromShortcut() {
+    _toggleUi() {
+        const target = TOGGLE_TRANSITION[this._uiState];
+        if (target === UI_STATE.LISTENING)
+            this._startListening();
+        else
+            this._stopListening();
+    }
+
+    _startListening() {
         this._targetWindow = global.display.focus_window ?? this._targetWindow;
-        this._overlayHidden = false;
-        this._root.show();
-        this._positionOverlay();
-        this._call('Toggle');
+        this._setUiState(UI_STATE.LISTENING, _('Listening…'));
+        this._call('Start');
+    }
+
+    _stopListening() {
+        if (this._uiState === UI_STATE.CLOSED)
+            return;
+        this._setUiState(UI_STATE.READY, _('Ready'));
+        if (this._proxy || this._pendingCall)
+            this._call('Stop');
     }
 
     _dismissOverlay() {
-        this._overlayHidden = true;
-        this._root?.hide();
-        this._preview?.hide();
+        this._closeUi();
+    }
+
+    _closeUi() {
+        this._setUiState(UI_STATE.CLOSED, _('Off'));
+        this._hidePreview();
         if (this._previewTimer)
             GLib.Source.remove(this._previewTimer);
         if (this._pasteTimer)
@@ -290,19 +373,71 @@ export default class VoiceTypingExtension extends Extension {
         this._previewTimer = 0;
         this._pasteTimer = 0;
         // Do not auto-start an already stopped daemon merely to ask it to quit.
-        if (this._proxy?.get_name_owner())
+        if (this._proxy || this._pendingCall)
             this._call('Quit');
     }
 
     _call(method) {
-        if (!this._proxy)
+        if (!this._proxyReady) {
+            this._pendingCall = method;
+            this._connectProxy();
             return;
+        }
+        this._invoke(method);
+    }
+
+    _invoke(method) {
         const remote = this._proxy[`${method}Remote`];
         if (remote)
             remote.call(this._proxy, (_result, error) => {
-                if (error)
+                if (error) {
+                    if (method === 'Start' && this._uiState === UI_STATE.LISTENING)
+                        this._setUiState(UI_STATE.READY, _('Ready'));
                     this._setState('error', error.message);
+                }
             });
+    }
+
+    _setUiState(state, detail) {
+        if (!Object.values(UI_STATE).includes(state))
+            throw new Error(`Invalid Voice Typing UI state: ${state}`);
+        this._uiState = state;
+        this._bar?.remove_style_class_name('listening');
+        this._bar?.remove_style_class_name('error');
+        this._micButton?.remove_style_class_name('listening');
+        if (state === UI_STATE.LISTENING) {
+            this._bar?.add_style_class_name('listening');
+            this._micButton?.add_style_class_name('listening');
+        } else {
+            this._setLevel(0);
+            this._hidePreview();
+        }
+        if (this._statusLabel && detail)
+            this._statusLabel.text = detail;
+        if (state === UI_STATE.CLOSED) {
+            this._root?.hide();
+        } else {
+            this._root?.show();
+            this._positionOverlay();
+        }
+        this._emitUiState(detail ?? this._uiDetail());
+    }
+
+    _uiDetail() {
+        if (this._uiState === UI_STATE.CLOSED)
+            return _('Off');
+        if (this._uiState === UI_STATE.READY)
+            return _('Ready');
+        return ACTIVE_DAEMON_STATES.has(this._state)
+            ? this._detail || _('Listening…')
+            : _('Listening…');
+    }
+
+    _emitUiState(detail) {
+        this._uiController?.emit_signal(
+            'StateChanged',
+            new GLib.Variant('(ss)', [this._uiState, detail]),
+        );
     }
 
     _setState(state, detail) {
@@ -310,6 +445,15 @@ export default class VoiceTypingExtension extends Extension {
             return;
         this._state = state;
         this._detail = detail;
+        if (ACTIVE_DAEMON_STATES.has(state) &&
+            this._uiState !== UI_STATE.LISTENING) {
+            this._invoke(this._uiState === UI_STATE.CLOSED ? 'Quit' : 'Stop');
+            return;
+        }
+        if (!ACTIVE_DAEMON_STATES.has(state) &&
+            this._uiState === UI_STATE.LISTENING) {
+            this._setUiState(UI_STATE.READY, detail || _('Ready'));
+        }
         this._statusLabel.text = _(STATE_TEXT[state] ?? detail ?? state);
         this._bar.remove_style_class_name('listening');
         this._bar.remove_style_class_name('error');
@@ -321,28 +465,20 @@ export default class VoiceTypingExtension extends Extension {
             this._bar.add_style_class_name('error');
             this._statusLabel.text = detail || _(STATE_TEXT.error);
         }
-        if (state === 'error') {
-            this._indicatorIcon.gicon = null;
-            this._indicatorIcon.icon_name = 'dialog-warning-symbolic';
-        } else {
-            this._indicatorIcon.icon_name = null;
-            this._indicatorIcon.gicon = this._microphoneGicon;
-        }
-        this._toggleItem.label.text = ['listening', 'recognizing', 'no-speech'].includes(state)
-            ? _('Stop voice typing')
-            : _('Start voice typing');
         const language = this._settings.get_string('language') || 'auto';
         this._languageButton.label = `${_(LANGUAGE_TEXT[language] ?? language)} ▾`;
-        if (!this._overlayHidden) {
+        if (this._uiState !== UI_STATE.CLOSED) {
             this._root.show();
             this._positionOverlay();
-        } else
+            this._emitUiState(detail || this._uiDetail());
+        } else {
             this._root.hide();
-        if (!['listening', 'recognizing', 'no-speech'].includes(state))
+        }
+        if (!ACTIVE_DAEMON_STATES.has(state))
             this._setLevel(0);
-        if (!['listening', 'recognizing', 'no-speech'].includes(state) &&
+        if (!ACTIVE_DAEMON_STATES.has(state) &&
             !this._previewTimer)
-            this._preview.hide();
+            this._hidePreview();
     }
 
     _setLevel(level) {
@@ -358,7 +494,7 @@ export default class VoiceTypingExtension extends Extension {
     }
 
     _previewAndInsert(text) {
-        if (!this._enabled || this._overlayHidden || !text)
+        if (!this._enabled || this._uiState !== UI_STATE.LISTENING || !text)
             return;
         if (this._previewTimer)
             GLib.Source.remove(this._previewTimer);
@@ -366,25 +502,34 @@ export default class VoiceTypingExtension extends Extension {
             ? this._settings.get_uint('preview-delay')
             : 0;
         if (delay > 0) {
-            this._preview.text = text;
-            this._preview.show();
-            this._positionOverlay();
+            this._showPreview(text);
         }
         this._previewTimer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, delay, () => {
             this._previewTimer = 0;
-            this._preview.hide();
+            this._hidePreview();
             this._insertText(text);
             return GLib.SOURCE_REMOVE;
         });
     }
 
     _showPartial(text) {
-        if (!this._enabled || this._overlayHidden || !text ||
+        if (!this._enabled || this._uiState !== UI_STATE.LISTENING || !text ||
             !this._settings.get_boolean('live-transcription') ||
             this._previewTimer)
             return;
+        this._showPreview(text);
+    }
+
+    _showPreview(text) {
+        this._statusLabel.hide();
         this._preview.text = text;
         this._preview.show();
+        this._positionOverlay();
+    }
+
+    _hidePreview() {
+        this._preview?.hide();
+        this._statusLabel?.show();
         this._positionOverlay();
     }
 
@@ -448,8 +593,7 @@ export default class VoiceTypingExtension extends Extension {
             Math.min(monitor.x + monitor.width - this._root.width - 8,
                 monitor.x + Math.round((monitor.width - this._root.width) / 2) + offset),
         );
-        const panelHeight = Main.panel?.height ?? 0;
-        this._root.set_position(x, monitor.y + panelHeight + 12);
+        this._root.set_position(x, monitor.y + 4);
     }
 
     _startDrag(event) {

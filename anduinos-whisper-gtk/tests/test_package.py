@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import re
 import sys
 import unittest
 import xml.etree.ElementTree as ET
@@ -19,6 +20,44 @@ from anduinos_whisper_gtk.shortcuts import accelerator_from_key_event  # noqa: E
 
 
 class PackageTests(unittest.TestCase):
+    def test_ui_state_machine_has_exactly_three_states(self):
+        extension = (ROOT / "data/voice-typing@anduinos.com/extension.js").read_text()
+        state_block = re.search(
+            r"const UI_STATE = Object\.freeze\(\{(?P<body>.*?)\}\);",
+            extension,
+            re.DOTALL,
+        )
+        self.assertIsNotNone(state_block)
+        states = dict(
+            re.findall(
+                r"^\s*([A-Z_]+):\s*'([^']+)',\s*$",
+                state_block.group("body"),
+                re.MULTILINE,
+            )
+        )
+        self.assertEqual(
+            states,
+            {"CLOSED": "closed", "READY": "ready", "LISTENING": "listening"},
+        )
+
+        transition_block = re.search(
+            r"const TOGGLE_TRANSITION = Object\.freeze\(\{(?P<body>.*?)\}\);",
+            extension,
+            re.DOTALL,
+        )
+        self.assertIsNotNone(transition_block)
+        transitions = dict(
+            re.findall(
+                r"^\s*\[UI_STATE\.([A-Z_]+)\]:\s*UI_STATE\.([A-Z_]+),\s*$",
+                transition_block.group("body"),
+                re.MULTILINE,
+            )
+        )
+        self.assertEqual(
+            transitions,
+            {"CLOSED": "LISTENING", "READY": "LISTENING", "LISTENING": "READY"},
+        )
+
     def test_python_sources_compile(self):
         self.assertEqual(list((ROOT / "src").rglob("*.pyc")), [])
         self.assertEqual(list((ROOT / "src").rglob("__pycache__")), [])
@@ -63,16 +102,41 @@ class PackageTests(unittest.TestCase):
             "captured.get_button() === Clutter.BUTTON_PRIMARY",
             "this._finishDrag();",
             "this._dismissOverlay()",
-            "this._overlayHidden = true",
-            "if (!this._overlayHidden)",
+            "this._bar.add_child(this._preview)",
+            "this._root.set_position(x, monitor.y + 4)",
             "Gio.FileIcon",
             "audio-input-microphone.svg",
+            "global.connect('shutdown'",
+            "this._quitForShellShutdown()",
+            "Never activate an unused daemon while the session is closing",
+            "const UI_STATE = Object.freeze({",
+            "[UI_STATE.CLOSED]: UI_STATE.LISTENING",
+            "[UI_STATE.READY]: UI_STATE.LISTENING",
+            "[UI_STATE.LISTENING]: UI_STATE.READY",
+            "Toggle: () => this._toggleUi()",
+            "Start: () => this._startListening()",
+            "Stop: () => this._stopListening()",
+            "Dismiss: () => this._closeUi()",
+            "this._setUiState(UI_STATE.CLOSED, _('Off'))",
+            "this._uiState !== UI_STATE.LISTENING",
         ):
             self.assertIn(contract, extension)
+        self.assertNotIn("_overlayHidden", extension)
+        self.assertNotIn("this._call('Toggle')", extension)
         self.assertNotIn("window-minimize-symbolic", extension)
         self.assertNotIn("_minimized", extension)
         self.assertNotIn("Pause voice typing", extension)
         self.assertNotIn("Resume voice typing", extension)
+        self.assertNotIn("PanelMenu", extension)
+        self.assertNotIn("PopupMenu", extension)
+        self.assertNotIn("addToStatusArea", extension)
+        self.assertNotIn("_buildIndicator", extension)
+
+        stylesheet = (
+            ROOT / "data/voice-typing@anduinos.com/stylesheet.css"
+        ).read_text()
+        self.assertIn("min-width: 500px", stylesheet)
+        self.assertIn("max-width: 520px", stylesheet)
 
     def test_extension_metadata_and_settings_schema_are_valid(self):
         metadata = json.loads(
@@ -104,7 +168,9 @@ class PackageTests(unittest.TestCase):
         self.assertIn("default_height=900", application)
         for text in (
             'title=_("Microphone")',
-            'title=_("Language")',
+                'title=_("Language")',
+                '_("Simplified Chinese")',
+                '_("Traditional Chinese")',
             'title=_("Keyboard shortcut")',
             'title=_("Models")',
             'title=_("Microphone Training")',
@@ -113,8 +179,19 @@ class PackageTests(unittest.TestCase):
             'self.client.call("StartTest" if self.testing else "StopTest")',
         ):
             self.assertIn(text, application)
-        self.assertIn("org.gnome.Shell.Extensions.ReloadExtension", application)
-        self.assertIn('_("Enabled after sign-in")', application)
+        self.assertNotIn('_("Desktop integration")', application)
+        self.assertNotIn('_("Floating microphone bar")', application)
+        self.assertNotIn("_enable_extension", application)
+        self.assertNotIn("org.gnome.Shell.Extensions.ReloadExtension", application)
+        self.assertNotIn('("zh", _("Chinese"))', application)
+        self.assertIn('self.ui_client.call("Toggle")', application)
+        self.assertNotIn('self.client.call("Toggle")', application)
+        self.assertNotIn("VoiceServiceClient().call_sync(method)", application)
+
+        dbus = (ROOT / "src/anduinos_whisper_gtk/dbus.py").read_text()
+        self.assertIn("class VoiceUiClient:", dbus)
+        self.assertIn('UI_INTERFACE = "com.anduinos.VoiceTyping.UI"', dbus)
+        self.assertIn("Gio.DBusProxyFlags.DO_NOT_AUTO_START", dbus)
 
     def test_shortcut_capture_accepts_literal_keys_and_modifiers(self):
         self.assertEqual(
