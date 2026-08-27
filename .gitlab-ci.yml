@@ -486,6 +486,7 @@ anduinos-installer-beta:
   needs:
     - anduinos-live-settings
     - anduinos-multimedia-codecs
+    - anduinos-swap-config
   variables:
     PACKAGE_DIR: anduinos-installer-beta
 
