@@ -281,6 +281,75 @@ msgstr "网络统计"
 msgid "Simple Weather"
 msgstr "简易天气"
 
+msgid "Update approximate weather location"
+msgstr "更新天气的大致位置"
+
+msgid "Weather Services Privacy Agreement"
+msgstr "天气服务隐私许可协议"
+
+msgid ""
+"1. Approximate location (ipapi.co)\n"
+"AnduinOS will make one HTTPS request to ipapi.co. Its operator, Kloudend, "
+"Inc., will see your public IP address and may use it to estimate your city, "
+"country, and approximate coordinates.\n"
+"\n"
+"2. Weather data (Open-Meteo)\n"
+"The weather extension will send the selected approximate coordinates to Open-"
+"Meteo, operated by OpenMeteo GmbH. The service will also see your public IP "
+"address and may retain API logs for up to 90 days.\n"
+"\n"
+"AnduinOS is not affiliated with, sponsored by, or endorsed by either third-"
+"party service. If location detection fails, AnduinOS will use an offline "
+"estimate based on your system timezone.\n"
+"\n"
+"Privacy policies:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+msgstr ""
+"1. 大致位置（ipapi.co）\n"
+"AnduinOS 将向 ipapi.co 发起一次 HTTPS 请求。其运营方 Kloudend, Inc. 将能看"
+"到您的公网 IP 地址，并可能使用它来估算您的城市、国家和大致经纬度。\n"
+"\n"
+"2. 天气数据（Open-Meteo）\n"
+"天气扩展会将所选的大致经纬度发送给由 OpenMeteo GmbH 运营的 Open-Meteo。"
+"该服务也将看到您的公网 IP 地址，并可能将 API 日志保留最长 90 天。\n"
+"\n"
+"AnduinOS 与上述任何第三方服务均无隶属、赞助或背书关系。如果定位失败，"
+"AnduinOS 将使用根据系统时区生成的离线估算位置。\n"
+"\n"
+"隐私政策：\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+
+msgid "Decline"
+msgstr "拒绝"
+
+msgid "Agree to All"
+msgstr "同意全部"
+
+msgid "Weather was not enabled because permission was declined."
+msgstr "由于您拒绝了许可，天气功能未启用。"
+
+msgid "Failed to save weather permission."
+msgstr "无法保存天气服务许可。"
+
+msgid "Determining your approximate location…"
+msgstr "正在确定您的大致位置…"
+
+msgid "Failed to configure the weather extension."
+msgstr "无法配置天气扩展。"
+
+#, python-brace-format
+msgid "Weather location set to {location}."
+msgstr "天气位置已设为 {location}。"
+
+#, python-brace-format
+msgid "Location service unavailable; using {location} from your timezone."
+msgstr "定位服务不可用；正在使用根据您所在时区推测的 {location}。"
+
+msgid "Weather was disabled, but its saved permission could not be cleared."
+msgstr "天气功能已关闭，但无法清除已保存的许可。"
+
 #~ msgid "Effects"
 #~ msgstr "效果"
 

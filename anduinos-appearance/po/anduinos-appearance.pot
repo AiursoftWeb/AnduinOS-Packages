@@ -283,3 +283,58 @@ msgstr ""
 #: src/anduinos-appearance:344
 msgid "Simple Weather"
 msgstr ""
+
+msgid "Update approximate weather location"
+msgstr ""
+
+msgid "Weather Services Privacy Agreement"
+msgstr ""
+
+msgid ""
+"1. Approximate location (ipapi.co)\n"
+"AnduinOS will make one HTTPS request to ipapi.co. Its operator, Kloudend, "
+"Inc., will see your public IP address and may use it to estimate your city, "
+"country, and approximate coordinates.\n"
+"\n"
+"2. Weather data (Open-Meteo)\n"
+"The weather extension will send the selected approximate coordinates to Open-"
+"Meteo, operated by OpenMeteo GmbH. The service will also see your public IP "
+"address and may retain API logs for up to 90 days.\n"
+"\n"
+"AnduinOS is not affiliated with, sponsored by, or endorsed by either third-"
+"party service. If location detection fails, AnduinOS will use an offline "
+"estimate based on your system timezone.\n"
+"\n"
+"Privacy policies:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+msgstr ""
+
+msgid "Decline"
+msgstr ""
+
+msgid "Agree to All"
+msgstr ""
+
+msgid "Weather was not enabled because permission was declined."
+msgstr ""
+
+msgid "Failed to save weather permission."
+msgstr ""
+
+msgid "Determining your approximate location…"
+msgstr ""
+
+msgid "Failed to configure the weather extension."
+msgstr ""
+
+#, python-brace-format
+msgid "Weather location set to {location}."
+msgstr ""
+
+#, python-brace-format
+msgid "Location service unavailable; using {location} from your timezone."
+msgstr ""
+
+msgid "Weather was disabled, but its saved permission could not be cleared."
+msgstr ""

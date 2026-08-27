@@ -12,6 +12,7 @@ import sys
 import warnings
 import gettext
 import os
+import threading
 warnings.filterwarnings('ignore', category=DeprecationWarning, module='gi')
 # suppress Adwaita deprecation warnings for APIs whose replacements
 # (add_page, toast_overlay) do not yet exist in Ubuntu 24.04's Adwaita version
@@ -43,6 +44,12 @@ from anduinos_appearance.layout import (
     read_use_launchers as _read_use_launchers,
     write_group_apps as _write_group_apps,
     write_use_launchers as _write_use_launchers,
+)
+from anduinos_appearance.weather import (
+    prepare_weather_location,
+    record_weather_consent,
+    revoke_weather_consent,
+    write_weather_location,
 )
 
 SHELL_BASE = '/org/gnome/shell'
@@ -237,6 +244,7 @@ class PanelWidgetsPage(Adw.PreferencesPage):
         super().__init__()
         self.win = win
         self._busy = False
+        self._weather_busy = False
         self.set_title(_('Panel Widgets'))
         self.set_icon_name('application-x-addon-symbolic')
 
@@ -244,12 +252,27 @@ class PanelWidgetsPage(Adw.PreferencesPage):
         group.set_title(_('Panel Indicators'))
         group.set_description(_('Toggle panel indicator widgets on or off.'))
 
+        self.weather_location_button = None
         for key, (label, uuid) in WIDGETS.items():
             row = Adw.SwitchRow()
             row.set_title(label)
             row.set_subtitle(uuid)
             row.set_active(_ext_is_enabled(uuid))
-            row.connect('notify::active', self._on_toggle, uuid, label)
+            row.connect('notify::active', self._on_toggle, key, uuid, label)
+            if key == 'weather':
+                self.weather_row = row
+                self.weather_location_button = Gtk.Button.new_from_icon_name(
+                    'find-location-symbolic'
+                )
+                self.weather_location_button.set_tooltip_text(
+                    _('Update approximate weather location')
+                )
+                self.weather_location_button.set_valign(Gtk.Align.CENTER)
+                self.weather_location_button.set_sensitive(row.get_active())
+                self.weather_location_button.connect(
+                    'clicked', self._on_weather_location_clicked
+                )
+                row.add_suffix(self.weather_location_button)
             group.add(row)
 
         self.add(group)
@@ -284,20 +307,176 @@ class PanelWidgetsPage(Adw.PreferencesPage):
             switch_row.set_active(not visible)
             self._busy = False
 
-    def _on_toggle(self, switch_row, pspec, uuid, label):
+    def _on_toggle(self, switch_row, pspec, key, uuid, label):
         if self._busy:
             return
         state = switch_row.get_active()
+        if key == 'weather' and state:
+            self._show_weather_consent(
+                lambda: self._start_weather_location(
+                    switch_row=switch_row,
+                    uuid=uuid,
+                    enable_after=True,
+                ),
+                lambda: self._reject_weather_enable(switch_row),
+            )
+            return
+
         action = 'enable' if state else 'disable'
         try:
             subprocess.run(['gnome-extensions', action, uuid], check=True)
-            self.win._toast(_('✓ {label} — {action}d').format(label=label, action=action))
         except subprocess.CalledProcessError:
             self.win._toast(_('✗ Failed to {action} {label}').format(action=action, label=label))
             # revert switch
             self._busy = True
             switch_row.set_active(not state)
             self._busy = False
+            return
+
+        if key == 'weather':
+            try:
+                revoke_weather_consent()
+            except Exception:
+                self.win._toast(_('Weather was disabled, but its saved permission could not be cleared.'))
+            self.weather_location_button.set_sensitive(False)
+        self.win._toast(_('✓ {label} — {action}d').format(label=label, action=action))
+
+    def _show_weather_consent(self, on_accept, on_reject):
+        body = _(
+            '1. Approximate location (ipapi.co)\n'
+            'AnduinOS will make one HTTPS request to ipapi.co. Its operator, '
+            'Kloudend, Inc., will see your public IP address and may use it to '
+            'estimate your city, country, and approximate coordinates.\n\n'
+            '2. Weather data (Open-Meteo)\n'
+            'The weather extension will send the selected approximate coordinates '
+            'to Open-Meteo, operated by OpenMeteo GmbH. The service will also see '
+            'your public IP address and may retain API logs for up to 90 days.\n\n'
+            'AnduinOS is not affiliated with, sponsored by, or endorsed by either '
+            'third-party service. If location detection fails, AnduinOS will use an '
+            'offline estimate based on your system timezone.\n\n'
+            'Privacy policies:\n'
+            'https://ipapi.co/privacy/\n'
+            'https://open-meteo.com/en/terms'
+        )
+        dialog = Adw.MessageDialog.new(
+            self.win,
+            _('Weather Services Privacy Agreement'),
+            body,
+        )
+        dialog.add_response('reject', _('Decline'))
+        dialog.add_response('accept', _('Agree to All'))
+        dialog.set_default_response('reject')
+        dialog.set_close_response('reject')
+        dialog.set_response_appearance('accept', Adw.ResponseAppearance.SUGGESTED)
+
+        def response(dlg, response_id):
+            dlg.destroy()
+            if response_id == 'accept':
+                on_accept()
+            else:
+                on_reject()
+
+        dialog.connect('response', response)
+        dialog.present()
+
+    def _reject_weather_enable(self, switch_row):
+        self._busy = True
+        switch_row.set_active(False)
+        self._busy = False
+        self.win._toast(_('Weather was not enabled because permission was declined.'))
+
+    def _on_weather_location_clicked(self, button):
+        if self._weather_busy:
+            return
+        self._show_weather_consent(
+            lambda: self._start_weather_location(enable_after=False),
+            lambda: None,
+        )
+
+    def _start_weather_location(
+        self,
+        switch_row=None,
+        uuid='simple-weather@romanlefler.com',
+        enable_after=False,
+    ):
+        if self._weather_busy:
+            return
+        try:
+            record_weather_consent()
+        except Exception:
+            self.win._toast(_('Failed to save weather permission.'))
+            if switch_row is not None:
+                self._reject_weather_enable(switch_row)
+            return
+
+        self._weather_busy = True
+        self.weather_row.set_sensitive(False)
+        if self.weather_location_button is not None:
+            self.weather_location_button.set_sensitive(False)
+        self.win._toast(_('Determining your approximate location…'))
+
+        def worker():
+            try:
+                location, used_network = prepare_weather_location()
+                write_weather_location(location)
+                error = None
+                location_name = location.name
+            except Exception as exc:
+                error = exc
+                location_name = ''
+                used_network = False
+            GLib.idle_add(
+                self._finish_weather_location,
+                switch_row,
+                uuid,
+                enable_after,
+                location_name,
+                used_network,
+                error,
+            )
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _finish_weather_location(
+        self,
+        switch_row,
+        uuid,
+        enable_after,
+        location_name,
+        used_network,
+        error,
+    ):
+        if error is None and enable_after:
+            try:
+                subprocess.run(['gnome-extensions', 'enable', uuid], check=True)
+            except subprocess.CalledProcessError as exc:
+                error = exc
+
+        self._weather_busy = False
+        self.weather_row.set_sensitive(True)
+        if error is not None:
+            if switch_row is not None:
+                self._busy = True
+                switch_row.set_active(False)
+                self._busy = False
+            self.weather_location_button.set_sensitive(
+                _ext_is_enabled('simple-weather@romanlefler.com')
+            )
+            self.win._toast(_('Failed to configure the weather extension.'))
+            return GLib.SOURCE_REMOVE
+
+        self.weather_location_button.set_sensitive(True)
+        if used_network:
+            self.win._toast(
+                _('Weather location set to {location}.').format(location=location_name)
+            )
+        else:
+            self.win._toast(
+                _('Location service unavailable; using {location} from your timezone.').format(
+                    location=location_name
+                )
+            )
+        return GLib.SOURCE_REMOVE
 
 
 # ── advanced page ────────────────────────────────────────────────
