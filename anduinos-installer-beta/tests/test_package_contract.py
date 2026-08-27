@@ -247,6 +247,7 @@ class PackageContractTests(unittest.TestCase):
                 "netplan.io",
                 "util-linux",
                 "dracut",
+                "anduinos-swap-config",
                 "polkitd",
             }
             <= dependencies

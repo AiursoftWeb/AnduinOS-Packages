@@ -250,20 +250,22 @@ class InstallerVisualAssetTests(unittest.TestCase):
         self.assertNotIn("target_box", method_page)
         self.assertNotIn("Target:", method_page)
 
-    def test_review_exposes_partition_plan_and_expandable_swap_formula(self):
+    def test_review_exposes_one_non_linear_swap_control_and_warning_gate(self):
         pages = (ROOT / "src/pages.py").read_text()
         summary = pages.split("def build_summary_page", 1)[1]
         for fragment in (
             "build_erase_disk_layout_spec(",
             'f"#{item.number}"',
-            "Gtk.Expander(",
-            "⚙ AUTO ⓘ",
-            '"swap ≥ 2 GiB"',
-            '"/ ≥ 20 GiB"',
-            'f"⇒ swap = {swap_gib} GiB"',
+            "disk_swap_choices_mib(swap_sizing)",
+            "Gtk.Scale(",
+            "✓ Best performance — AnduinOS recommended Swap size.",
+            "ZRAM always remains enabled: 50% of RAM",
+            "Review your custom Swap size",
+            "swap_warning_for_install",
         ):
             with self.subTest(fragment=fragment):
                 self.assertIn(fragment, summary)
+        self.assertNotIn("Gtk.Expander(", summary)
 
     def test_hostname_uses_shared_normalization_without_a_page_local_regex(self):
         pages = (ROOT / "src/pages.py").read_text()

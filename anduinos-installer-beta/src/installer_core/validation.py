@@ -21,7 +21,7 @@ from .model import (
 )
 from .hostnames import is_canonical_hostname
 from .storage_graph_planning import validate_storage_graph
-from .swap_policy import MINIMUM_DISK_SWAP_MIB, MINIMUM_ROOT_MIB
+from .swap_policy import MINIMUM_ROOT_MIB
 from .username_policy import RESERVED_USERNAMES, is_valid_username
 
 
@@ -114,11 +114,11 @@ def validate_plan(
         errors.append("EFI System Partition must be at least 512 MiB")
     if (
         type(plan.storage.swap_size_mib) is not int
-        or plan.storage.swap_size_mib < MINIMUM_DISK_SWAP_MIB
+        or plan.storage.swap_size_mib < 0
         or plan.storage.swap_size_mib % 1024
     ):
         errors.append(
-            "Disk swap must be at least 2 GiB and use whole-GiB sizing"
+            "Disk swap must be zero or use non-negative whole-GiB sizing"
         )
     try:
         validate_storage_graph(plan)

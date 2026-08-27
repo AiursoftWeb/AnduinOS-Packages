@@ -92,6 +92,36 @@ class PlanningTests(unittest.TestCase):
         )
         self.assertEqual(plan.regional.input_methods, ("rime",))
 
+    def test_user_selected_zero_disk_swap_is_preserved_in_plan_and_graph(self):
+        original = valid_plan()
+        choices = {
+            "locale": "en_US.UTF-8",
+            "keyboard": "us",
+            "hostname": original.identity.hostname,
+            "username": original.identity.username,
+            "full_name": original.identity.full_name,
+            "timezone": "UTC",
+            "swap_size_mib": 0,
+        }
+        plan = build_plan(
+            choices,
+            DiskIdentity("/dev/sda", "serial:test", 64 * 1024**3),
+            PlatformProbe(
+                Architecture.AMD64, Firmware.UEFI, SecureBoot.DISABLED
+            ),
+            "$y$j9T$example$example",
+            disk_binding=DiskTopologyBinding(
+                "serial:test", 64 * 1024**3, TEST_TOPOLOGY_DIGEST
+            ),
+            inventory_digest=TEST_INVENTORY_DIGEST,
+            physical_memory_probe=lambda: 8 * GIB,
+        )
+        self.assertEqual(plan.storage.swap_size_mib, 0)
+        self.assertNotIn(
+            "swap",
+            {item.name for item in plan.storage.graph.partitions},
+        )
+
     def test_recommended_input_method_can_be_declined(self):
         original = valid_plan()
         choices = {

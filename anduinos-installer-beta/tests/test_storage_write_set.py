@@ -147,6 +147,25 @@ class StorageWriteSetTests(unittest.TestCase):
             [item.display_path for item in changed.operations],
         )
 
+    def test_zero_disk_swap_declares_no_swap_write(self):
+        write_set = build_erase_disk_write_set(
+            valid_plan(swap_size_mib=0)
+        )
+        self.assertFalse(
+            any(
+                item.action is StorageAction.FORMAT
+                and item.detail("filesystem") == "swap"
+                for item in write_set.operations
+            )
+        )
+        self.assertFalse(
+            any(
+                item.action is StorageAction.CREATE_PARTITION
+                and item.detail("name") == "swap"
+                for item in write_set.operations
+            )
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

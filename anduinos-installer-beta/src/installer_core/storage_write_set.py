@@ -121,10 +121,16 @@ def build_erase_disk_write_set(plan: InstallPlan) -> StorageWriteSet:
 
     format_types = {
         "efi-system": "vfat",
-        "swap": "swap",
         "root": plan.storage.filesystem.value,
     }
-    for name in ("efi-system", "swap", "root"):
+    if "swap" in partition_ids:
+        format_types["swap"] = "swap"
+    format_names = (
+        "efi-system",
+        *(("swap",) if "swap" in partition_ids else ()),
+        "root",
+    )
+    for name in format_names:
         operations.append(
             StorageWriteOperation(
                 action=StorageAction.FORMAT,

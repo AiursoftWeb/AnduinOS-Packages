@@ -40,6 +40,9 @@ class ValidationTests(unittest.TestCase):
     def test_valid_uefi_without_secure_boot_support(self):
         validate_plan(valid_plan(secure_boot=SecureBoot.UNSUPPORTED))
 
+    def test_zero_disk_swap_is_a_valid_zram_only_plan(self):
+        validate_plan(valid_plan(swap_size_mib=0))
+
     def test_accepts_a_catalogued_keyboard_variant(self):
         plan = valid_plan()
         plan = dataclasses.replace(

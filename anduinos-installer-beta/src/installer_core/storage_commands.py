@@ -71,8 +71,11 @@ def build_storage_commands(
 
     format_commands: list[tuple[str, ...]] = [
         ("mkfs.vfat", "-F", "32", "-n", "ANDUIN_EFI", devices["efi-system"]),
-        ("mkswap", "-L", "AnduinOS-swap", devices["swap"]),
     ]
+    if "swap" in devices:
+        format_commands.append(
+            ("mkswap", "-L", "AnduinOS-swap", devices["swap"])
+        )
     root = devices["root"]
     if plan.storage.filesystem is Filesystem.BTRFS:
         format_commands.append(
@@ -165,7 +168,10 @@ def build_guided_coexistence_storage_commands(
         )
         if existing_esp is not None:
             devices["efi-system"] = existing_esp.identity.path
-    if set(devices) != {"efi-system", "swap", "root"}:
+    expected_devices = {"efi-system", "root"}
+    if plan.storage.swap_size_mib:
+        expected_devices.add("swap")
+    if set(devices) != expected_devices:
         raise RuntimeError("Coexistence graph did not resolve target devices")
 
     formatted_ids = {

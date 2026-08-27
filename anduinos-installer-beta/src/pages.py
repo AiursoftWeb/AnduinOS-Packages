@@ -76,7 +76,9 @@ from installer_core.storage_ui import (
 )
 from installer_core.swap_policy import (
     calculate_swap_sizing,
+    disk_swap_choices_mib,
     probe_physical_memory_bytes,
+    validate_disk_swap_selection,
 )
 from installer_core.username_policy import (
     is_valid_username,
@@ -3475,6 +3477,7 @@ def build_advanced_storage_page(shared, nav_view):
         shared["guided_extent_id"] = selected.free_extent_id
         shared["guided_esp_partuuid"] = selected.reused_esp_partuuid
         shared["guided_storage_preview_model"] = preview
+        shared["_guided_storage_workflow_model"] = workflow
         nav_view.push(build_user_page(shared, nav_view))
 
     nav = _nav_box(
@@ -4146,6 +4149,19 @@ def build_summary_page(shared, nav_view):
         )
     except (RuntimeError, ValueError):
         pass
+    selected_swap_size_mib = None
+    if swap_sizing is not None:
+        requested_swap = shared.get("swap_size_mib")
+        if guided_mode and isinstance(guided_preview, GuidedStoragePreview):
+            requested_swap = guided_preview.swap_size_mib
+        if not isinstance(requested_swap, int):
+            requested_swap = swap_sizing.swap_size_mib
+        try:
+            validate_disk_swap_selection(requested_swap, swap_sizing)
+        except ValueError:
+            requested_swap = swap_sizing.swap_size_mib
+        selected_swap_size_mib = requested_swap
+        shared["swap_size_mib"] = selected_swap_size_mib
     keyboard_id = xkb_choice_id(
         str(shared.get("keyboard", "us")),
         str(shared.get("keyboard_variant", "")),
@@ -4239,78 +4255,68 @@ def build_summary_page(shared, nav_view):
             f"<b>{_('Install input method', lang)}:</b> {method_summary}",
         )
 
-    if guided_mode:
-        if not isinstance(guided_preview, GuidedStoragePreview):
-            platform_error = platform_error or _(
-                "Guided storage selection is missing. Rescan and select the "
-                "target again.",
+    def _guided_storage_lines(preview):
+        confirmation = build_guided_storage_confirmation(preview)
+        preserved_paths = ", ".join(confirmation.preserved_paths)
+        created_partitions = ", ".join(
+            _("{name}: {start}–{end} MiB", lang).format(
+                name=item.name,
+                start=item.start_mib,
+                end=item.end_mib,
+            )
+            for item in confirmation.new_partitions
+        )
+        formatted_paths = ", ".join(
+            _("{path} as {filesystem}", lang).format(
+                path=item.display_path,
+                filesystem=item.filesystem,
+            )
+            for item in confirmation.formats
+        )
+        if confirmation.reused_esp_path:
+            esp_policy = _(
+                "Reuse {path}; never format it; verify FAT health, "
+                "identity and 64 MiB free before writing.",
+                lang,
+            ).format(path=confirmation.reused_esp_path)
+        else:
+            esp_policy = _(
+                "Create and format a dedicated AnduinOS EFI System "
+                "Partition inside the selected space.",
                 lang,
             )
-        else:
-            confirmation = build_guided_storage_confirmation(guided_preview)
-            preserved_paths = ", ".join(confirmation.preserved_paths)
-            created_partitions = ", ".join(
-                _("{name}: {start}–{end} MiB", lang).format(
-                    name=item.name,
-                    start=item.start_mib,
-                    end=item.end_mib,
-                )
-                for item in confirmation.new_partitions
-            )
-            formatted_paths = ", ".join(
-                _("{path} as {filesystem}", lang).format(
-                    path=item.display_path,
-                    filesystem=item.filesystem,
-                )
-                for item in confirmation.formats
-            )
-            if confirmation.reused_esp_path:
-                esp_policy = _(
-                    "Reuse {path}; never format it; verify FAT health, "
-                    "identity and 64 MiB free before writing.",
-                    lang,
-                ).format(
-                    path=confirmation.reused_esp_path
-                )
-            else:
-                esp_policy = _(
-                    "Create and format a dedicated AnduinOS EFI System "
-                    "Partition inside the selected space.",
-                    lang,
-                )
-            coexistence_lines = [
-                f"<b>{_('Storage mode', lang)}:</b> "
-                + _("Install alongside", lang),
-                f"<b>{_('Selected unallocated space', lang)}:</b> "
-                + _("{size} at {offset}", lang).format(
-                    size=_human_size(guided_preview.extent.size_bytes),
-                    offset=_human_size(guided_preview.extent.start_bytes),
-                ),
-                f"<b>{_('Preserved partitions', lang)}:</b> "
-                + _("{count}: {paths}", lang).format(
-                    count=len(confirmation.preserved_paths),
-                    paths=escape(preserved_paths),
-                ),
-                f"<b>{_('New partitions', lang)}:</b> "
-                + escape(created_partitions),
-                f"<b>{_('Formats', lang)}:</b> "
-                + escape(formatted_paths),
-                f"<b>{_('EFI policy', lang)}:</b> "
-                + escape(esp_policy),
-                f"<b>{_('Boot policy', lang)}:</b> "
-                + _(
-                    "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, "
-                    "and require a verified AnduinOS NVRAM entry.",
-                    lang,
-                ),
-            ]
-            lines[5:5] = coexistence_lines
-    elif platform is not None and swap_sizing is not None:
+        return [
+            f"<b>{_('Storage mode', lang)}:</b> "
+            + _("Install alongside", lang),
+            f"<b>{_('Selected unallocated space', lang)}:</b> "
+            + _("{size} at {offset}", lang).format(
+                size=_human_size(preview.extent.size_bytes),
+                offset=_human_size(preview.extent.start_bytes),
+            ),
+            f"<b>{_('Preserved partitions', lang)}:</b> "
+            + _("{count}: {paths}", lang).format(
+                count=len(confirmation.preserved_paths),
+                paths=escape(preserved_paths),
+            ),
+            f"<b>{_('New partitions', lang)}:</b> "
+            + escape(created_partitions),
+            f"<b>{_('Formats', lang)}:</b> "
+            + escape(formatted_paths),
+            f"<b>{_('EFI policy', lang)}:</b> " + escape(esp_policy),
+            f"<b>{_('Boot policy', lang)}:</b> "
+            + _(
+                "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, "
+                "and require a verified AnduinOS NVRAM entry.",
+                lang,
+            ),
+        ]
+
+    def _erase_storage_lines(swap_size_mib):
         layout = build_erase_disk_layout_spec(
             architecture=platform.architecture,
             filesystem=Filesystem(filesystem),
             esp_size_mib=1024,
-            swap_size_mib=swap_sizing.swap_size_mib,
+            swap_size_mib=swap_size_mib,
         )
         disk_size_mib = int(shared.get("disk_size_bytes") or 0) // MIB
         partition_rows = []
@@ -4334,7 +4340,7 @@ def build_summary_page(shared, nav_view):
             elif item.flags:
                 details.append(",".join(item.flags))
             partition_rows.append(" · ".join(details))
-        lines[5:5] = [
+        return [
             f"<b>{_('Storage mode', lang)}:</b> "
             + _(
                 "Erase every partition and all data on the selected disk.",
@@ -4343,6 +4349,24 @@ def build_summary_page(shared, nav_view):
             f"<b>{_('New partitions', lang)}:</b>\n"
             + escape("\n".join(partition_rows)),
         ]
+
+    storage_lines = []
+    if guided_mode:
+        if not isinstance(guided_preview, GuidedStoragePreview):
+            platform_error = platform_error or _(
+                "Guided storage selection is missing. Rescan and select the "
+                "target again.",
+                lang,
+            )
+        else:
+            storage_lines = _guided_storage_lines(guided_preview)
+    elif (
+        platform is not None
+        and selected_swap_size_mib is not None
+    ):
+        storage_lines = _erase_storage_lines(selected_swap_size_mib)
+    storage_lines_start = 5
+    lines[storage_lines_start:storage_lines_start] = storage_lines
 
     summary_label = Gtk.Label(
         margin_start=48,
@@ -4357,53 +4381,199 @@ def build_summary_page(shared, nav_view):
     summary_card.set_margin_end(48)
     summary_card.set_margin_top(12)
     summary_card.append(summary_label)
-    if swap_sizing is not None:
-        swap_gib = swap_sizing.swap_size_mib // 1024
-        hibernation_gib = swap_sizing.hibernation_target_mib // 1024
-        runtime_gib = swap_sizing.runtime_target_mib // 1024
-        budget_gib = swap_sizing.disk_budget_mib // 1024
-        swap_details = [
-            f"RAM = {_human_size(swap_sizing.physical_memory_bytes)}",
-            "swap ≥ 2 GiB",
-            "/ ≥ 20 GiB",
-            f"swap ≤ {budget_gib} GiB  (disk − ESP − /)",
-            (
-                f"ceil(RAM) + 1 GiB = {hibernation_gib} GiB  ✓"
-                if swap_sizing.hibernation_capacity
-                else f"ceil(RAM) + 1 GiB = {hibernation_gib} GiB  ✗"
-            ),
-        ]
-        if not swap_sizing.hibernation_capacity:
-            swap_details.append(
-                f"ceil(RAM / 2) ≤ 64 GiB = {runtime_gib} GiB  ✓"
+    swap_warning_for_install = None
+    if swap_sizing is not None and selected_swap_size_mib is not None:
+        swap_choices = tuple(
+            sorted(
+                {
+                    *disk_swap_choices_mib(swap_sizing),
+                    selected_swap_size_mib,
+                }
             )
-        swap_details.append(f"⇒ swap = {swap_gib} GiB")
-        swap_explanation = Gtk.Expander(
-            label=f"{_('Swap', lang)}: {swap_gib} GiB · ⚙ AUTO ⓘ",
+        )
+        recommended_swap = swap_sizing.swap_size_mib
+        recommended_index = swap_choices.index(recommended_swap)
+        selected_index = swap_choices.index(selected_swap_size_mib)
+
+        swap_control = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=10,
             margin_start=12,
             margin_end=12,
-            margin_bottom=8,
+            margin_top=14,
+            margin_bottom=12,
         )
-        swap_explanation.set_tooltip_text(
-            _(
-                "4 GiB disk swap (priority 10) + "
-                "50% RAM LZ4 zram (priority 100)",
-                lang,
-            ).replace("4 GiB", f"{swap_gib} GiB", 1)
+        swap_control.add_css_class("swap-control-card")
+        swap_header = Gtk.Box(
+            orientation=Gtk.Orientation.HORIZONTAL,
+            spacing=12,
         )
-        detail_label = Gtk.Label(
+        swap_title = Gtk.Label(
+            label=_("Swap", lang),
+            xalign=0,
+            hexpand=True,
+        )
+        swap_title.add_css_class("heading")
+        swap_size_label = Gtk.Label(xalign=1)
+        swap_size_label.add_css_class("swap-size")
+        swap_header.append(swap_title)
+        swap_header.append(swap_size_label)
+        swap_control.append(swap_header)
+
+        adjustment = Gtk.Adjustment(
+            value=selected_index,
+            lower=0,
+            upper=len(swap_choices) - 1,
+            step_increment=1,
+            page_increment=1,
+            page_size=0,
+        )
+        swap_scale = Gtk.Scale(
+            orientation=Gtk.Orientation.HORIZONTAL,
+            adjustment=adjustment,
+            draw_value=False,
+            digits=0,
+            hexpand=True,
+        )
+        swap_scale.set_round_digits(0)
+        swap_scale.add_mark(
+            recommended_index,
+            Gtk.PositionType.BOTTOM,
+            "✓",
+        )
+        swap_control.append(swap_scale)
+
+        scale_ends = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        scale_ends.append(
+            Gtk.Label(label="0 GiB · ZRAM only", xalign=0, hexpand=True)
+        )
+        scale_ends.append(
+            Gtk.Label(
+                label=f"{swap_sizing.maximum_custom_mib // 1024} GiB · Max",
+                xalign=1,
+            )
+        )
+        swap_control.append(scale_ends)
+
+        swap_status = Gtk.Box(
+            orientation=Gtk.Orientation.HORIZONTAL,
+            spacing=10,
+        )
+        swap_status_icon = Gtk.Image()
+        swap_status_label = Gtk.Label(xalign=0, wrap=True, hexpand=True)
+        swap_status.append(swap_status_icon)
+        swap_status.append(swap_status_label)
+        swap_control.append(swap_status)
+
+        zram_status = Gtk.Label(
+            label=(
+                "ZRAM always remains enabled: 50% of RAM · LZ4 · "
+                "priority 100. Disk Swap uses priority 10."
+            ),
             xalign=0,
             wrap=True,
-            selectable=True,
-            margin_start=24,
-            margin_top=8,
-            margin_bottom=8,
         )
-        detail_label.set_markup(
-            "<tt>" + escape("\n".join(swap_details)) + "</tt>"
-        )
-        swap_explanation.set_child(detail_label)
-        summary_card.append(swap_explanation)
+        zram_status.add_css_class("dim-label")
+        swap_control.append(zram_status)
+
+        def _swap_assessment(swap_size_mib):
+            if swap_size_mib == recommended_swap:
+                return (
+                    "emblem-ok-symbolic",
+                    "installer-success-card",
+                    "✓ Best performance — AnduinOS recommended Swap size.",
+                    None,
+                )
+            if swap_size_mib == 0:
+                message = (
+                    "Disk Swap will not be created. ZRAM remains enabled, "
+                    "but sustained memory pressure can terminate applications "
+                    "and hibernation is unavailable. This is strongly "
+                    "discouraged."
+                )
+                return (
+                    "dialog-error-symbolic",
+                    "installer-danger-card",
+                    message,
+                    message,
+                )
+            if swap_size_mib < swap_sizing.runtime_target_mib:
+                message = (
+                    "This is below AnduinOS's runtime safety target. ZRAM "
+                    "still works, but heavy browser or application workloads "
+                    "can run out of backing memory sooner; hibernation is also "
+                    "unavailable."
+                )
+            elif swap_size_mib < swap_sizing.hibernation_target_mib:
+                message = (
+                    "This size protects ordinary memory pressure, but is "
+                    "smaller than the hibernation target. Hibernation may fail "
+                    "or be unavailable."
+                )
+            else:
+                message = (
+                    "This exceeds the AnduinOS recommendation. It consumes "
+                    "more disk space and normally does not improve runtime "
+                    "performance."
+                )
+            return (
+                "dialog-warning-symbolic",
+                "installer-warning-card",
+                message,
+                message,
+            )
+
+        def _set_swap_choice(swap_size_mib):
+            nonlocal guided_preview, storage_lines, swap_warning_for_install
+            shared["swap_size_mib"] = swap_size_mib
+            swap_size_label.set_label(f"{swap_size_mib // 1024} GiB")
+            icon_name, css_class, status_text, warning_text = (
+                _swap_assessment(swap_size_mib)
+            )
+            swap_warning_for_install = warning_text
+            swap_status_icon.set_from_icon_name(icon_name)
+            swap_status_label.set_label(status_text)
+            for old_class in (
+                "installer-success-card",
+                "installer-warning-card",
+                "installer-danger-card",
+            ):
+                swap_status.remove_css_class(old_class)
+            swap_status.add_css_class(css_class)
+
+            if guided_mode:
+                workflow = shared.get("_guided_storage_workflow_model")
+                if isinstance(workflow, StorageWorkflow) and isinstance(
+                    guided_preview, GuidedStoragePreview
+                ):
+                    guided_preview = build_guided_storage_preview(
+                        workflow,
+                        guided_preview.selection,
+                        swap_size_mib=swap_size_mib,
+                    )
+                    shared["guided_storage_preview_model"] = guided_preview
+                    updated_storage_lines = _guided_storage_lines(
+                        guided_preview
+                    )
+                else:
+                    updated_storage_lines = storage_lines
+            else:
+                updated_storage_lines = _erase_storage_lines(swap_size_mib)
+            lines[
+                storage_lines_start:
+                storage_lines_start + len(storage_lines)
+            ] = updated_storage_lines
+            storage_lines = updated_storage_lines
+            summary_label.set_markup("\n\n".join(lines))
+
+        def _swap_scale_changed(scale):
+            index = int(round(scale.get_value()))
+            scale.set_value(index)
+            _set_swap_choice(swap_choices[index])
+
+        swap_scale.connect("value-changed", _swap_scale_changed)
+        _set_swap_choice(selected_swap_size_mib)
+        summary_card.append(swap_control)
     summary_scroll = _scrolled_window(
         inset=True,
         hscrollbar_policy=Gtk.PolicyType.NEVER,
@@ -4598,7 +4768,33 @@ def build_summary_page(shared, nav_view):
             return
         assert install_button is not None
         install_button.set_sensitive(False)
-        _start_recheck()
+        if swap_warning_for_install is None:
+            _start_recheck()
+            return
+        warning = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading="Review your custom Swap size",
+            body=(
+                f"{swap_warning_for_install}\n\n"
+                "ZRAM will remain enabled regardless of this choice."
+            ),
+        )
+        warning.add_response("back", _("Back", lang))
+        warning.add_response("continue", _("Continue", lang))
+        warning.set_response_appearance(
+            "continue", Adw.ResponseAppearance.SUGGESTED
+        )
+        warning.set_default_response("back")
+        warning.set_close_response("back")
+
+        def _warning_response(_dialog, response):
+            if response == "continue":
+                _start_recheck()
+            else:
+                install_button.set_sensitive(True)
+
+        warning.connect("response", _warning_response)
+        warning.present()
 
     def on_back():
         nav_view.pop()

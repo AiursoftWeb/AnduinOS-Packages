@@ -6,7 +6,9 @@ from installer_core.swap_policy import (
     GIB,
     SwapSizingError,
     calculate_swap_sizing,
+    disk_swap_choices_mib,
     probe_physical_memory_bytes,
+    validate_disk_swap_selection,
 )
 
 
@@ -66,6 +68,27 @@ class SwapSizingTableTests(unittest.TestCase):
             esp_size_mib=0,
         )
         self.assertEqual(result.swap_size_mib, 2 * 1024)
+
+    def test_custom_range_is_bounded_by_memory_and_safe_disk_space(self):
+        sizing = calculate_swap_sizing(4 * GIB, 100 * GIB)
+        self.assertEqual(sizing.maximum_custom_mib, 16 * 1024)
+        for selected in (0, 1024, 5 * 1024, 16 * 1024):
+            validate_disk_swap_selection(selected, sizing)
+        with self.assertRaisesRegex(SwapSizingError, "safe maximum"):
+            validate_disk_swap_selection(17 * 1024, sizing)
+        with self.assertRaisesRegex(SwapSizingError, "whole-GiB"):
+            validate_disk_swap_selection(1536, sizing)
+
+    def test_slider_choices_are_non_linear_and_keep_policy_landmarks(self):
+        sizing = calculate_swap_sizing(64 * GIB, 200 * GIB)
+        choices = disk_swap_choices_mib(sizing)
+        self.assertEqual(choices[0], 0)
+        self.assertEqual(choices[-1], sizing.maximum_custom_mib)
+        self.assertIn(sizing.runtime_target_mib, choices)
+        self.assertIn(sizing.hibernation_target_mib, choices)
+        self.assertIn(sizing.swap_size_mib, choices)
+        self.assertEqual(choices[1:16], tuple(range(1024, 16 * 1024, 1024)))
+        self.assertGreater(choices[-1] - choices[-2], 1024)
 
 
 class PhysicalMemoryProbeTests(unittest.TestCase):

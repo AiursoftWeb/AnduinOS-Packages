@@ -107,3 +107,27 @@ class ConfigureStorageTests(unittest.TestCase):
             )
             with self.assertRaisesRegex(RuntimeError, "Missing filesystem UUID"):
                 ConfigureStorageStep(runner).execute(context)
+
+    def test_zero_disk_swap_keeps_zram_and_omits_fstab_swap(self):
+        plan = valid_plan(swap_size_mib=0)
+        runner = FakeRunner()
+        devices = {"root": "/dev/root", "efi-system": "/dev/efi"}
+        for name, device in devices.items():
+            runner.outputs[
+                ("blkid", "-s", "UUID", "-o", "value", device)
+            ] = (f"{name}-uuid\n", "", 0)
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            context = InstallContext(
+                plan,
+                lambda _message: None,
+                values={"target": target, "partition_devices": devices},
+            )
+            step = ConfigureStorageStep(runner)
+            step.execute(context)
+            step.verify(context)
+            fstab = (target / "etc/fstab").read_text()
+            zram = (target / "etc/default/anduinos-zram").read_text()
+        self.assertNotIn(" none swap ", fstab)
+        self.assertIn("ZRAM_ENABLED=yes", zram)
+        self.assertIn("ZRAM_PRIORITY=100", zram)

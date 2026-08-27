@@ -100,5 +100,5 @@ def _preview_storage(preview):
         mode=InstallMode.GUIDED_COEXISTENCE,
         disk=preview.disk.identity,
         filesystem=preview.selection.filesystem,
-        swap_size_mib=preview.swap_sizing.swap_size_mib,
+        swap_size_mib=preview.swap_size_mib,
     )

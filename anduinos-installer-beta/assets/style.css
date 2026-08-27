@@ -199,6 +199,27 @@
   padding: 11px 14px;
 }
 
+.installer-success-card {
+  background-color: alpha(@success_color, 0.10);
+  border: 1px solid alpha(@success_color, 0.25);
+  border-radius: 14px;
+  padding: 11px 14px;
+}
+
+.installer-success-card image {
+  color: @success_color;
+}
+
+.swap-control-card {
+  border-top: 1px solid alpha(@window_fg_color, 0.08);
+  padding-top: 14px;
+}
+
+.swap-size {
+  font-size: 1.35em;
+  font-weight: 700;
+}
+
 .wizard-navigation {
   background-color: alpha(@window_bg_color, 0.96);
   border-top: 1px solid alpha(@window_fg_color, 0.08);

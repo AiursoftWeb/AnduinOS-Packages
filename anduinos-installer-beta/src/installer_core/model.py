@@ -14,7 +14,7 @@ from typing import Any
 from .storage_graph import StorageGraph
 
 
-SCHEMA_VERSION = 12
+SCHEMA_VERSION = 13
 
 
 class Architecture(str, Enum):

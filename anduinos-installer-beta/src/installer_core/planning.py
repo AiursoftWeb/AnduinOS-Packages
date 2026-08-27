@@ -31,6 +31,7 @@ from .storage_inventory import DiskTopologyBinding
 from .swap_policy import (
     calculate_swap_sizing,
     probe_physical_memory_bytes,
+    validate_disk_swap_selection,
 )
 from .validation import validate_plan
 from .model import DiskIdentity, SecureBoot
@@ -54,6 +55,13 @@ def build_plan(
         physical_memory_probe(),
         disk.expected_size_bytes,
     )
+    requested_swap = choices.get("swap_size_mib")
+    swap_size_mib = (
+        swap_sizing.swap_size_mib
+        if requested_swap is None
+        else requested_swap
+    )
+    validate_disk_swap_selection(swap_size_mib, swap_sizing)
     plan = InstallPlan(
         schema_version=SCHEMA_VERSION,
         source=SourceSpec(),
@@ -61,7 +69,7 @@ def build_plan(
             mode=InstallMode.ERASE_DISK,
             disk=disk,
             filesystem=Filesystem(str(choices.get("filesystem") or "btrfs")),
-            swap_size_mib=swap_sizing.swap_size_mib,
+            swap_size_mib=swap_size_mib,
         ),
         platform=PlatformSpec(
             architecture=platform.architecture,

@@ -10,7 +10,7 @@ from .btrfs import BTRFS_SUBVOLUMES
 from .command import CommandRunner
 from .esp import inspect_esp_for_reuse, inspect_nvram
 from .execution_boundaries import emit_boundary
-from .model import Filesystem, InstallMode
+from .model import Architecture, Filesystem, InstallMode
 from .steps import FailurePolicy, InstallContext
 from .storage_commands import partition_path
 from .storage_inventory import probe_storage_inventory
@@ -78,10 +78,11 @@ class PrepareStorageStep:
             "partprobe",
             "udevadm",
             "mkfs.vfat",
-            "mkswap",
             "swapon",
             "swapoff",
         ]
+        if context.plan.storage.swap_size_mib:
+            commands.append("mkswap")
         commands.append(
             "mkfs.btrfs"
             if context.plan.storage.filesystem is Filesystem.BTRFS
@@ -168,9 +169,10 @@ class PrepareStorageStep:
         devices = context.values["partition_devices"]
         expected = {
             "efi-system": "vfat",
-            "swap": "swap",
             "root": context.plan.storage.filesystem.value,
         }
+        if context.plan.storage.swap_size_mib:
+            expected["swap"] = "swap"
         for name, filesystem in expected.items():
             result = self.runner.run(
                 ("blkid", "-s", "TYPE", "-o", "value", devices[name]),
@@ -360,10 +362,18 @@ def deactivate_target_swap(
 ) -> bool:
     """Disable only this plan's target swap partition when it is active."""
     devices = context.values.get("partition_devices")
+    candidates: set[str] = set()
     if isinstance(devices, dict) and devices.get("swap"):
-        swap_device = str(devices["swap"])
-    else:
-        swap_device = partition_path(context.plan.storage.disk.path, 3)
+        candidates.add(str(devices["swap"]))
+    if context.plan.storage.mode is InstallMode.ERASE_DISK:
+        legacy_number = (
+            3
+            if context.plan.platform.architecture is Architecture.AMD64
+            else 2
+        )
+        candidates.add(
+            partition_path(context.plan.storage.disk.path, legacy_number)
+        )
 
     result = runner.run(
         ("swapon", "--show=NAME", "--noheadings", "--raw"),
@@ -376,13 +386,20 @@ def deactivate_target_swap(
             raise RuntimeError("Could not inspect active swap devices")
         return False
 
-    expected = os.path.realpath(swap_device)
     active = {
         os.path.realpath(line.strip())
         for line in result.stdout.splitlines()
         if line.strip()
     }
-    if expected not in active:
+    swap_device = next(
+        (
+            candidate
+            for candidate in candidates
+            if os.path.realpath(candidate) in active
+        ),
+        "",
+    )
+    if not swap_device:
         return False
 
     context.log(

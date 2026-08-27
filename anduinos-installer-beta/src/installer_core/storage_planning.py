@@ -157,9 +157,10 @@ def _verify_parity(
 
     expected_formats = {
         commands.devices["efi-system"]: "vfat",
-        commands.devices["swap"]: "swap",
         commands.devices["root"]: plan.storage.filesystem.value,
     }
+    if "swap" in commands.devices:
+        expected_formats[commands.devices["swap"]] = "swap"
     command_formats = _command_formats(commands)
     if command_formats != expected_formats:
         raise RuntimeError("Storage format commands do not match the layout")

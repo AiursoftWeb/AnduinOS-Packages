@@ -129,15 +129,25 @@ class ExecutionPreflightTests(unittest.TestCase):
                 inventory_probe=lambda: valid_inventory(plan),
             )
 
-    def test_rejects_swap_size_planned_for_different_physical_memory(self):
+    def test_accepts_custom_swap_when_memory_changes_within_safe_range(self):
         plan = valid_plan()
         runner = self.idle_target_runner()
-        with self.assertRaisesRegex(PreflightError, "swap size is stale"):
+        verify_target_disk_environment(
+            plan,
+            runner,
+            inventory_probe=lambda: valid_inventory(plan),
+            physical_memory_probe=lambda: 16 * 1024**3,
+        )
+
+    def test_rejects_custom_swap_beyond_current_safe_memory_limit(self):
+        plan = valid_plan(swap_size_mib=9 * 1024)
+        runner = self.idle_target_runner()
+        with self.assertRaisesRegex(PreflightError, "safe maximum"):
             verify_target_disk_environment(
                 plan,
                 runner,
                 inventory_probe=lambda: valid_inventory(plan),
-                physical_memory_probe=lambda: 16 * 1024**3,
+                physical_memory_probe=lambda: 2 * 1024**3,
             )
 
     def test_rejects_mounted_partition_on_selected_disk(self):

@@ -102,3 +102,17 @@ class StorageCommandTests(unittest.TestCase):
              "--recheck", "/dev/sdb"),
             boot.installs,
         )
+
+    def test_zero_disk_swap_has_no_device_partition_or_formatter(self):
+        plan = valid_plan(swap_size_mib=0)
+        commands = build_storage_commands(
+            plan, build_erase_disk_layout(plan)
+        )
+        self.assertEqual(
+            set(commands.devices),
+            {"bios-boot", "efi-system", "root"},
+        )
+        self.assertFalse(
+            any(command[0] == "mkswap" for command in commands.format)
+        )
+        self.assertEqual(commands.devices["root"], "/dev/nvme0n1p3")

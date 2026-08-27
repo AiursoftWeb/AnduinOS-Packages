@@ -45,6 +45,25 @@ class PrepareStorageStepTests(unittest.TestCase):
             execution_plan.write_set,
         )
 
+    def test_zero_disk_swap_does_not_require_or_run_mkswap(self):
+        plan = valid_plan(swap_size_mib=0)
+        runner = FakeRunner()
+        context = InstallContext(plan, lambda _message: None)
+        step = PrepareStorageStep(runner)
+        step.preflight(context)
+        self.assertNotIn("mkswap", runner.required)
+        self.assertIn("swapon", runner.required)
+        self.assertIn("swapoff", runner.required)
+        with patch("installer_core.storage_steps.Path.exists", return_value=True):
+            step.execute(context)
+        self.assertNotIn("swap", context.values["partition_devices"])
+        self.assertFalse(
+            any(
+                command[0][0] == "mkswap"
+                for command in runner.commands
+            )
+        )
+
     def test_execute_reuses_the_preflight_execution_plan(self):
         plan = valid_plan()
         runner = FakeRunner()

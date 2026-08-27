@@ -41,6 +41,7 @@ from .swap_policy import (
     SwapSizing,
     calculate_swap_sizing,
     probe_physical_memory_bytes,
+    validate_disk_swap_selection,
 )
 from .storage_write_set import (
     StorageAction,
@@ -97,6 +98,7 @@ class GuidedStoragePreview:
     extent: FreeExtent
     reused_esp: PartitionInventory | None
     swap_sizing: SwapSizing
+    swap_size_mib: int
 
 
 @dataclass(frozen=True)
@@ -180,6 +182,8 @@ def recommended_guided_selection(
 def build_guided_storage_preview(
     workflow: StorageWorkflow,
     selection: GuidedStorageSelection,
+    *,
+    swap_size_mib: int | None = None,
 ) -> GuidedStoragePreview:
     """Build a graph-identical confirmation preview without executable code."""
 
@@ -206,11 +210,17 @@ def build_guided_storage_preview(
         extent.size_bytes,
         esp_size_mib=(0 if reused_esp is not None else 1024),
     )
+    selected_swap_size_mib = (
+        swap_sizing.swap_size_mib
+        if swap_size_mib is None
+        else swap_size_mib
+    )
+    validate_disk_swap_selection(selected_swap_size_mib, swap_sizing)
     plan = _preview_plan(
         selection,
         disk,
         workflow.platform,
-        swap_sizing.swap_size_mib,
+        selected_swap_size_mib,
     )
     graph = build_guided_coexistence_storage_graph(
         plan,
@@ -231,6 +241,7 @@ def build_guided_storage_preview(
         extent=extent,
         reused_esp=reused_esp,
         swap_sizing=swap_sizing,
+        swap_size_mib=selected_swap_size_mib,
     )
 
 

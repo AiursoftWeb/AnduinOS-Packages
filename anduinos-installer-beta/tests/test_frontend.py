@@ -173,6 +173,37 @@ class FrontendPlanTests(unittest.TestCase):
         ):
             return create_install_plan(values)
 
+    def test_zero_disk_swap_crosses_frontend_boundary_for_both_modes(self):
+        erase_values = state()
+        erase_values["swap_size_mib"] = 0
+        erase_disk = DiskIdentity(
+            "/dev/sda", "serial:test", 64 * 1024**3, "Test", "test"
+        )
+        platform = PlatformProbe(
+            Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED
+        )
+        with patch("frontend.hash_password", return_value="$6$salt$hash"):
+            erase_plan = create_install_plan(
+                erase_values,
+                inventory=inventory_for(erase_disk),
+                platform=platform,
+            )
+        self.assertEqual(erase_plan.storage.swap_size_mib, 0)
+
+        guided_values, _disk, inventory, guided_platform = guided_state()
+        guided_values["swap_size_mib"] = 0
+        with patch("frontend.hash_password", return_value="$6$salt$hash"):
+            guided_plan = create_install_plan(
+                guided_values,
+                inventory=inventory,
+                platform=guided_platform,
+            )
+        self.assertEqual(guided_plan.storage.swap_size_mib, 0)
+        self.assertNotIn(
+            "swap",
+            {item.name for item in guided_plan.storage.graph.partitions},
+        )
+
     def test_reprobes_disk_hashes_password_and_clears_all_plaintext(self):
         values = state()
         cleared = []

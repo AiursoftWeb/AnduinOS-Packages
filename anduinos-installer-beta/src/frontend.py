@@ -83,6 +83,7 @@ def clear_guided_storage_selection(state: dict[str, object]) -> None:
     state["guided_extent_id"] = ""
     state["guided_esp_partuuid"] = ""
     state["guided_storage_preview_model"] = None
+    state["_guided_storage_workflow_model"] = None
 
 
 def clear_storage_strategy(state: dict[str, object]) -> None:
@@ -152,6 +153,7 @@ def apply_storage_strategy(
     changed = state.get("storage_strategy") != strategy.value
     if changed:
         clear_guided_storage_selection(state)
+        state.pop("swap_size_mib", None)
     state["storage_strategy"] = strategy.value
     if strategy is StorageStrategy.ERASE_BTRFS:
         state["storage_mode"] = InstallMode.ERASE_DISK.value
@@ -282,6 +284,11 @@ def create_install_plan(
         current_preview = build_guided_storage_preview(
             build_storage_workflow(inventory, platform),
             selection,
+            swap_size_mib=(
+                state.get("swap_size_mib")
+                if isinstance(state.get("swap_size_mib"), int)
+                else None
+            ),
         )
     except (KeyError, ValueError) as error:
         raise FrontendPlanError(
@@ -295,7 +302,7 @@ def create_install_plan(
             plan.storage,
             mode=InstallMode.GUIDED_COEXISTENCE,
             filesystem=filesystem,
-            swap_size_mib=current_preview.swap_sizing.swap_size_mib,
+            swap_size_mib=current_preview.swap_size_mib,
             graph=current_preview.graph,
         ),
         boot=replace(plan.boot, install_fallback_path=False),

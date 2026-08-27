@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.2-9+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-10+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -68,6 +68,7 @@
     <Dependency Include="grub-efi-arm64-signed" Condition="'$(Arch)' == 'arm64'" />
     <Dependency Include="grub2-common" />
     <Dependency Include="dracut" />
+    <Dependency Include="anduinos-swap-config" />
     <Dependency Include="shim-signed" />
     <Dependency Include="mokutil" />
     <Dependency Include="openssl" />

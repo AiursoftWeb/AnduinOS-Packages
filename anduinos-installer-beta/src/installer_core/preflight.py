@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .command import CommandRunner
-from .model import InstallMode, InstallPlan, PlatformSpec
+from .model import Architecture, InstallMode, InstallPlan, PlatformSpec
 from .probe import PlatformProbe, probe_platform
 from .storage_commands import partition_path
 from .storage_graph import BlockReferenceKind
@@ -21,6 +21,7 @@ from .swap_policy import (
     SwapSizingError,
     calculate_swap_sizing,
     probe_physical_memory_bytes,
+    validate_disk_swap_selection,
 )
 from .validation import (
     ExecutionPolicy,
@@ -109,25 +110,22 @@ def verify_target_disk_environment(
     except ValueError as error:
         raise PreflightError(str(error)) from error
     try:
-        expected_swap = calculate_swap_sizing(
+        swap_sizing = calculate_swap_sizing(
             (physical_memory_probe or probe_physical_memory_bytes)(),
             _installation_space_bytes(resolved_plan),
             esp_size_mib=_installation_esp_size_mib(resolved_plan),
+        )
+        validate_disk_swap_selection(
+            resolved_plan.storage.swap_size_mib,
+            swap_sizing,
         )
     except (RuntimeError, SwapSizingError, ValueError) as error:
         raise PreflightError(
             f"Could not validate disk swap size: {error}"
         ) from error
-    if resolved_plan.storage.swap_size_mib != expected_swap.swap_size_mib:
-        raise PreflightError(
-            "Planned disk swap size is stale: expected "
-            f"{expected_swap.swap_size_mib} MiB for the current memory and "
-            f"installation space, found "
-            f"{resolved_plan.storage.swap_size_mib} MiB"
-        )
     _reject_active_target_disk(
         runner,
-        resolved_plan.storage.disk.path,
+        resolved_plan,
         namespace_mount_probe=namespace_mount_probe,
     )
     return resolved_plan
@@ -166,10 +164,11 @@ def _installation_esp_size_mib(plan: InstallPlan) -> int:
 
 def _reject_active_target_disk(
     runner: CommandRunner,
-    disk: str,
+    plan: InstallPlan,
     *,
     namespace_mount_probe: NamespaceMountProbe | None = None,
 ) -> None:
+    disk = plan.storage.disk.path
     runner.require_commands(("lsblk",))
     result = runner.run(
         (
@@ -196,6 +195,23 @@ def _reject_active_target_disk(
             "lsblk returned invalid target usage data"
         ) from error
 
+    graph = plan.storage.graph
+    assert graph is not None
+    allowed_retry_swaps = {
+        partition_path(disk, item.number)
+        for item in graph.partitions
+        if item.name == "swap"
+    }
+    if plan.storage.mode is InstallMode.ERASE_DISK:
+        allowed_retry_swaps.add(
+            partition_path(
+                disk,
+                3
+                if plan.platform.architecture is Architecture.AMD64
+                else 2,
+            )
+        )
+
     devices = tuple(_walk_block_devices(roots))
     for device in devices:
         path = str(device.get("path") or disk)
@@ -204,15 +220,14 @@ def _reject_active_target_disk(
             for item in (device.get("mountpoints") or ())
             if item
         )
-        retry_swap = partition_path(disk, 3)
         if (
             mountpoints == ("[SWAP]",)
-            and path == retry_swap
+            and path in allowed_retry_swaps
             and str(device.get("type") or "") == "part"
         ):
-            # The whole-disk layout always owns partition 3 as swap.  A failed
-            # earlier attempt may leave it active; PrepareStorageStep safely
-            # disables this exact partition before changing the table.
+            # A failed attempt can leave either the currently planned swap or
+            # the former erase-disk swap active. PrepareStorageStep disables
+            # only that exact device before changing the partition table.
             continue
         if mountpoints:
             raise PreflightError(
