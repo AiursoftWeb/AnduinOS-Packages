@@ -21,6 +21,7 @@ from .model import (
     BOTTLES_APP_ID,
     DEJA_DUP_APP_ID,
     SNAPSHOT_PACKAGE,
+    VOICE_TYPING_PACKAGE,
     WHY_AI_PACKAGE,
     WHY_PLACEHOLDER_PACKAGE,
     command_available,
@@ -72,6 +73,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         self._ai_window: Adw.Window | None = None
         self._flatseal_window: Adw.Window | None = None
         self._bottles_window: Adw.Window | None = None
+        self._voice_install_window: Adw.Window | None = None
 
         self._install_css()
 
@@ -193,6 +195,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         deja_dup_installed = flatpak_installed(DEJA_DUP_APP_ID)
         network_editor_installed = command_available("nm-connection-editor")
         seahorse_installed = command_available("seahorse")
+        voice_typing_installed = package_installed(VOICE_TYPING_PACKAGE)
 
         system_actions = [
             (
@@ -272,6 +275,21 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                         _("YubiKey Settings"),
                         _("Configure sign-in, sudo, SSH keys, and Git signing"),
                         lambda: self._launch(["anduinos-yubikey-manager"]),
+                    ),
+                ],
+            ),
+            (
+                _("Accessibility"),
+                "audio-input-microphone.svg",
+                [
+                    (
+                        _("Voice Typing"),
+                        (
+                            _("Configure microphone, language, shortcut, and training")
+                            if voice_typing_installed
+                            else _("Install private, offline speech-to-text")
+                        ),
+                        self._open_voice_typing,
                     ),
                 ],
             ),
@@ -935,6 +953,225 @@ class ControlPanelWindow(Adw.ApplicationWindow):
 
         self._run_streaming_package_change(
             "flatseal", buffer, output, completed, failed
+        )
+
+    def _open_voice_typing(self) -> None:
+        if package_installed(VOICE_TYPING_PACKAGE):
+            self._launch(["anduinos-whisper-gtk"])
+            return
+        if self._voice_install_window is not None:
+            self._voice_install_window.present()
+            return
+
+        window = Adw.Window(
+            transient_for=self,
+            modal=True,
+            title=_("Install Voice Typing"),
+            default_width=580,
+            default_height=430,
+        )
+        self._voice_install_window = window
+        window.connect("close-request", self._voice_install_window_closed)
+        toolbar = Adw.ToolbarView()
+        toolbar.add_top_bar(Adw.HeaderBar())
+        window.set_content(toolbar)
+
+        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+        page.set_margin_top(24)
+        page.set_margin_bottom(24)
+        page.set_margin_start(24)
+        page.set_margin_end(24)
+        toolbar.set_content(page)
+
+        group = Adw.PreferencesGroup(
+            title=_("Offline Voice Typing"),
+            description=_(
+                "Press Super + H to dictate into browsers, editors, messages, "
+                "terminals, and other applications. Audio stays on this computer."
+            ),
+        )
+        privacy = Adw.ActionRow(
+            title=_("Private by default"),
+            subtitle=_("Speech is recognized locally with whisper.cpp"),
+        )
+        privacy.add_prefix(Gtk.Image.new_from_icon_name("security-high-symbolic"))
+        group.add(privacy)
+        download = Adw.ActionRow(
+            title=_("About 140 MB to download"),
+            subtitle=_(
+                "Includes the multilingual Base model; optional models are available later"
+            ),
+        )
+        download.add_prefix(Gtk.Image.new_from_icon_name("folder-download-symbolic"))
+        group.add(download)
+        page.append(group)
+
+        status_label = Gtk.Label(
+            label=_(
+                "Administrator authentication is required when installation starts."
+            ),
+            xalign=0,
+            wrap=True,
+        )
+        status_label.add_css_class("dim-label")
+        page.append(status_label)
+        progress = Gtk.ProgressBar()
+        progress.set_visible(False)
+        page.append(progress)
+
+        expander = Gtk.Expander(label=_("Advanced Output"))
+        output_scroll = Gtk.ScrolledWindow(
+            hscrollbar_policy=Gtk.PolicyType.NEVER,
+            vscrollbar_policy=Gtk.PolicyType.AUTOMATIC,
+            min_content_height=170,
+        )
+        output = Gtk.TextView(
+            editable=False,
+            cursor_visible=False,
+            monospace=True,
+            wrap_mode=Gtk.WrapMode.WORD_CHAR,
+        )
+        output.add_css_class("card")
+        output_scroll.set_child(output)
+        expander.set_child(output_scroll)
+
+        def advanced_output_toggled(row: Gtk.Expander, _parameter) -> None:
+            window.set_default_size(
+                700 if row.get_expanded() else 580,
+                620 if row.get_expanded() else 430,
+            )
+
+        expander.connect("notify::expanded", advanced_output_toggled)
+        page.append(expander)
+        spacer = Gtk.Box()
+        spacer.set_vexpand(True)
+        page.append(spacer)
+
+        buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        buttons.set_halign(Gtk.Align.END)
+        cancel = Gtk.Button(label=_("Cancel"))
+        cancel.connect("clicked", lambda _button: window.close())
+        install = Gtk.Button(label=_("Install"))
+        install.add_css_class("suggested-action")
+        install.connect(
+            "clicked",
+            lambda button: (
+                self._launch(["anduinos-whisper-gtk"])
+                if package_installed(VOICE_TYPING_PACKAGE)
+                else self._install_voice_typing(
+                    window,
+                    button,
+                    cancel,
+                    status_label,
+                    progress,
+                    expander,
+                    output,
+                )
+            ),
+        )
+        buttons.append(cancel)
+        buttons.append(install)
+        page.append(buttons)
+        window.present()
+
+    def _voice_install_window_closed(self, _window: Adw.Window) -> bool:
+        self._voice_install_window = None
+        return False
+
+    def _install_voice_typing(
+        self,
+        window: Adw.Window,
+        install: Gtk.Button,
+        cancel: Gtk.Button,
+        status_label: Gtk.Label,
+        progress: Gtk.ProgressBar,
+        expander: Gtk.Expander,
+        output: Gtk.TextView,
+    ) -> None:
+        install.set_label(_("Installing…"))
+        install.set_sensitive(False)
+        cancel.set_sensitive(False)
+        window.set_deletable(False)
+        status_label.set_label(
+            _("Downloading the local engine and multilingual speech model…")
+        )
+        progress.set_visible(True)
+        progress.pulse()
+        expander.set_expanded(True)
+        buffer = output.get_buffer()
+        buffer.set_text(_("Preparing Voice Typing installation…") + "\n\n")
+
+        def pulse() -> bool:
+            if progress.get_visible():
+                progress.pulse()
+                return GLib.SOURCE_CONTINUE
+            return GLib.SOURCE_REMOVE
+
+        GLib.timeout_add(100, pulse)
+
+        def completed() -> None:
+            progress.set_visible(False)
+            window.set_deletable(True)
+            self._append_package_output(
+                buffer,
+                output,
+                "\n" + _("✓ Installation completed successfully.") + "\n",
+            )
+            shell_settings = Gio.Settings.new("org.gnome.shell")
+            extension_uuid = "voice-typing@anduinos.com"
+            enabled_extensions = shell_settings.get_strv("enabled-extensions")
+            if extension_uuid not in enabled_extensions:
+                shell_settings.set_strv(
+                    "enabled-extensions", [*enabled_extensions, extension_uuid]
+                )
+            disabled_extensions = shell_settings.get_strv("disabled-extensions")
+            if extension_uuid in disabled_extensions:
+                shell_settings.set_strv(
+                    "disabled-extensions",
+                    [item for item in disabled_extensions if item != extension_uuid],
+                )
+            try:
+                subprocess.run(
+                    ["gnome-extensions", "enable", "--quiet", extension_uuid],
+                    check=False,
+                    timeout=3,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+            except (OSError, subprocess.TimeoutExpired):
+                pass
+            status_label.set_label(
+                _(
+                    "✓ Installed. Sign out and back in once, then press "
+                    "Super + H to start Voice Typing."
+                )
+            )
+            install.set_label(_("Open Settings"))
+            install.set_sensitive(True)
+            cancel.set_label(_("Close"))
+            cancel.set_sensitive(True)
+            self._rebuild_categories()
+            self.toast_overlay.add_toast(
+                Adw.Toast.new(_("Voice Typing installed — sign out to finish"))
+            )
+
+        def failed(message: str) -> None:
+            progress.set_visible(False)
+            window.set_deletable(True)
+            status_label.set_label(
+                _("✗ Installation failed. Review Advanced Output.")
+            )
+            self._append_package_output(
+                buffer,
+                output,
+                "\n" + _("✗ Operation failed: ") + message + "\n",
+            )
+            install.set_label(_("Retry"))
+            install.set_sensitive(True)
+            cancel.set_sensitive(True)
+
+        self._run_streaming_package_change(
+            VOICE_TYPING_PACKAGE, buffer, output, completed, failed
         )
 
     def _show_ai_settings(self) -> None:

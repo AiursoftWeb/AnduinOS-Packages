@@ -160,6 +160,8 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-appearance` | App | Taskbar layout switcher (Centered / Classic) |
 | `anduinos-appstore` | App | Flatpak-based app store with Flathub remote |
 | `anduinos-control-panel` | App | GTK4/libadwaita category hub for system settings, hardware tools, accounts, applications, appearance, and recovery |
+| `anduinos-whisper-framework` | Optional service | Local PipeWire and whisper.cpp speech-recognition framework with the multilingual Base model |
+| `anduinos-whisper-gtk` | Optional app | Voice Typing settings, microphone training, global shortcut, and non-focusing GNOME overlay |
 | `anduinos-driver-center` | App | Focused GTK4 driver manager for graphics, Xbox controllers, and Secure Boot trust |
 | `anduinos-btrfs-snapshots-manager` | App | GTK4/libadwaita manager for symmetric System and Personal Files Btrfs snapshots, automatic retention, file recovery, and guarded system rollback |
 | `anduinos-dracut-migration` | Migration | Retry-safe bootstrap that moves existing installations from initramfs-tools to the published pure-Dracut package set |

@@ -405,6 +405,18 @@ anduinos-why-ai:
   variables:
     PACKAGE_DIR: anduinos-why-ai
 
+anduinos-whisper-framework:
+  extends: .publish
+  variables:
+    PACKAGE_DIR: anduinos-whisper-framework
+
+anduinos-whisper-gtk:
+  extends: .publish
+  needs:
+    - anduinos-whisper-framework
+  variables:
+    PACKAGE_DIR: anduinos-whisper-gtk
+
 anduinos-yubikey-manager:
   extends: .publish
   variables:
@@ -571,6 +583,7 @@ anduinos-exe-runner:
 anduinos-control-panel:
   extends: .publish
   needs:
+    - anduinos-whisper-gtk
     - anduinos-driver-center
     - anduinos-appearance
     - anduinos-ufwall-gtk

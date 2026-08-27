@@ -15,6 +15,8 @@ PYTHON_ABOUT_SOURCES = (
     ROOT / "anduinos-appearance/src/anduinos-appearance",
     ROOT / "anduinos-driver-center/src/anduinos_driver_center/app.py",
     ROOT / "anduinos-oobe/assets/anduinos-oobe",
+    ROOT / "anduinos-control-panel/src/anduinos_control_panel/app.py",
+    ROOT / "anduinos-whisper-gtk/src/anduinos_whisper_gtk/app.py",
 )
 
 CARGO_MANIFESTS = (

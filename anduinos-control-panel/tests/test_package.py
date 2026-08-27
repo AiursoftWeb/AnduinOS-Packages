@@ -98,6 +98,7 @@ class PackageTests(unittest.TestCase):
             "User Accounts",
             "Appearance",
             "Backup and Recovery",
+            "Accessibility",
         ):
             self.assertIn(f'_("{title}")', application)
 
@@ -136,6 +137,25 @@ class PackageTests(unittest.TestCase):
         self.assertIn("if flatpak_installed(BOTTLES_APP_ID):", application)
         self.assertIn("if flatpak_installed(DEJA_DUP_APP_ID):", application)
         self.assertIn('if package_installed("flatseal"):', application)
+
+    def test_voice_typing_is_discoverable_but_installed_only_on_request(self):
+        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
+        project = (ROOT / "anduinos-control-panel.aosproj").read_text()
+        self.assertIn("VOICE_TYPING_PACKAGE", application)
+        self.assertIn('self._launch(["anduinos-whisper-gtk"])', application)
+        self.assertIn('title=_("Install Voice Typing")', application)
+        self.assertIn('_("About 140 MB to download")', application)
+        self.assertIn('_("Speech is recognized locally with whisper.cpp")', application)
+        self.assertIn(
+            '["gnome-extensions", "enable", "--quiet", extension_uuid]',
+            application,
+        )
+        self.assertNotIn("org.gnome.Shell.Extensions.ReloadExtension", application)
+        self.assertIn("Sign out and back in once, then press", application)
+        self.assertIn("Super + H to start Voice Typing", application)
+        self.assertNotIn('_("✓ Voice Typing is ready.")', application)
+        self.assertIn('Gio.Settings.new("org.gnome.shell")', application)
+        self.assertNotIn('<Dependency Include="anduinos-whisper', project)
 
     def test_ai_and_flatseal_changes_use_fixed_apt_arguments(self):
         application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
@@ -229,7 +249,7 @@ class PackageTests(unittest.TestCase):
             project,
         )
         icons = sorted((ROOT / "resources/icons").glob("*.svg"))
-        self.assertEqual(len(icons), 12)
+        self.assertEqual(len(icons), 13)
         self.assertIn("com.anduinos.ControlPanel.svg", {icon.name for icon in icons})
         self.assertIn(
             "com.anduinos.ControlPanel-symbolic.svg", {icon.name for icon in icons}
@@ -238,6 +258,7 @@ class PackageTests(unittest.TestCase):
         self.assertIn("anduinos-appearance.svg", {icon.name for icon in icons})
         self.assertIn("anduinos-exe-runner.svg", {icon.name for icon in icons})
         self.assertIn("com.anduinos.yubikeymanager.svg", {icon.name for icon in icons})
+        self.assertIn("audio-input-microphone.svg", {icon.name for icon in icons})
         for svg in icons:
             self.assertTrue(ET.parse(svg).getroot().tag.endswith("svg"), svg.name)
 
@@ -273,14 +294,15 @@ class PackageTests(unittest.TestCase):
     def test_fixed_anduinos_launchers_are_hard_dependencies(self):
         project = (ROOT / "anduinos-control-panel.aosproj").read_text()
         for package in (
-            "anduinos-driver-center (&gt;= 2.0.2-7)",
-            "anduinos-appearance (&gt;= 2.0.2-6)",
-            "anduinos-ufwall-gtk (&gt;= 2.0.2-5)",
-            "anduinos-swapcontrol-gtk (&gt;= 2.0.2-6)",
-            "anduinos-yubikey-manager (&gt;= 2.0.2-4)",
-            "anduinos-btrfs-snapshots-manager (&gt;= 2.0.2-9)",
+            "anduinos-driver-center",
+            "anduinos-appearance",
+            "anduinos-ufwall-gtk",
+            "anduinos-swapcontrol-gtk",
+            "anduinos-yubikey-manager",
+            "anduinos-btrfs-snapshots-manager",
         ):
             self.assertIn(f'<Dependency Include="{package}" />', project)
+            self.assertNotIn(f'<Suggest Include="{package}"', project)
         self.assertNotIn('<Suggest Include="anduinos-btrfs-snapshots-manager', project)
 
     def test_control_panel_is_published_for_resolute_only(self):

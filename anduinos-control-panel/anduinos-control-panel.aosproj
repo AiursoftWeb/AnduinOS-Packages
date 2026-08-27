@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-control-panel</PackageName>
-    <PackageVersion>2.0.2-5+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-9+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Control Panel — a category-based home for system, hardware, application, account, appearance, and recovery settings.</PackageDescription>
     <Section>utils</Section>
@@ -31,12 +31,13 @@
     <Dependency Include="gnome-software" />
     <Dependency Include="flatpak" />
     <Dependency Include="pkexec" />
-    <Dependency Include="anduinos-driver-center (&gt;= 2.0.2-7)" />
-    <Dependency Include="anduinos-appearance (&gt;= 2.0.2-6)" />
-    <Dependency Include="anduinos-ufwall-gtk (&gt;= 2.0.2-5)" />
-    <Dependency Include="anduinos-swapcontrol-gtk (&gt;= 2.0.2-6)" />
-    <Dependency Include="anduinos-yubikey-manager (&gt;= 2.0.2-4)" />
-    <Dependency Include="anduinos-btrfs-snapshots-manager (&gt;= 2.0.2-9)" />
+    <Dependency Include="anduinos-driver-center" />
+    <Dependency Include="anduinos-appearance" />
+    <Dependency Include="anduinos-ufwall-gtk" />
+    <Dependency Include="anduinos-swapcontrol-gtk" />
+    <Dependency Include="anduinos-yubikey-manager" />
+    <Dependency Include="anduinos-btrfs-snapshots-manager" />
+    <Suggest Include="anduinos-whisper-gtk" />
   </ItemGroup>
 
   <ItemGroup>

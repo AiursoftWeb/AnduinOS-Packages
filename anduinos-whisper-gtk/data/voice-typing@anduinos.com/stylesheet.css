@@ -1,0 +1,71 @@
+.voice-typing-root {
+    spacing: 7px;
+}
+
+.voice-typing-bar {
+    min-width: 390px;
+    padding: 7px 9px;
+    spacing: 8px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background-color: rgba(28, 31, 38, 0.96);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
+}
+
+.voice-typing-bar.listening {
+    border-color: rgba(74, 144, 226, 0.85);
+}
+
+.voice-typing-bar.error {
+    border-color: rgba(237, 94, 94, 0.9);
+}
+
+.voice-typing-microphone,
+.voice-typing-action,
+.voice-typing-language,
+.voice-typing-handle {
+    border-radius: 9px;
+    padding: 5px 7px;
+}
+
+.voice-typing-microphone:hover,
+.voice-typing-action:hover,
+.voice-typing-language:hover,
+.voice-typing-handle:hover {
+    background-color: rgba(255, 255, 255, 0.11);
+}
+
+.voice-typing-microphone.listening {
+    color: #68a9ff;
+    background-color: rgba(53, 132, 228, 0.22);
+}
+
+.voice-typing-status {
+    min-width: 132px;
+    font-weight: 600;
+}
+
+.voice-typing-language {
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.voice-typing-wave {
+    spacing: 2px;
+    min-width: 25px;
+}
+
+.voice-typing-level-bar {
+    width: 3px;
+    height: 5px;
+    border-radius: 2px;
+    background-color: #68a9ff;
+}
+
+.voice-typing-preview {
+    max-width: 460px;
+    padding: 8px 13px;
+    border-radius: 11px;
+    background-color: rgba(28, 31, 38, 0.94);
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.25);
+}
+
