@@ -56,6 +56,8 @@ class PackageTests(unittest.TestCase):
             "Clutter.KEY_Control_L",
             "Clutter.KEY_Shift_L",
             "_previewAndInsert(text)",
+            "_showPartial(text)",
+            "get_boolean('live-transcription')",
             "overlay-x",
             "Clutter.ModifierType.BUTTON1_MASK",
             "captured.get_button() === Clutter.BUTTON_PRIMARY",
@@ -92,6 +94,7 @@ class PackageTests(unittest.TestCase):
                 "voice-commands",
                 "audio-cues",
                 "show-preview",
+                "live-transcription",
             }.issubset(keys)
         )
 
@@ -105,6 +108,8 @@ class PackageTests(unittest.TestCase):
             'title=_("Keyboard shortcut")',
             'title=_("Models")',
             'title=_("Microphone Training")',
+            '_("Live transcription")',
+            '_("Final result preview")',
             'self.client.call("StartTest" if self.testing else "StopTest")',
         ):
             self.assertIn(text, application)

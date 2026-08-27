@@ -1,8 +1,11 @@
 from pathlib import Path
+from array import array
 import subprocess
 import sys
+import threading
 import unittest
-from unittest.mock import patch
+import xml.etree.ElementTree as ET
+from unittest.mock import Mock, patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,6 +19,8 @@ from anduinos_whisper_framework.commands import (  # noqa: E402
 )
 from anduinos_whisper_framework.engine import WhisperEngine  # noqa: E402
 from anduinos_whisper_framework.config import MODELS  # noqa: E402
+from anduinos_whisper_framework.audio import AudioCapture  # noqa: E402
+from anduinos_whisper_framework.daemon import VoiceTypingService  # noqa: E402
 
 
 class CommandTests(unittest.TestCase):
@@ -52,6 +57,49 @@ class EngineTests(unittest.TestCase):
         self.assertNotIn("shell", run.call_args.kwargs)
 
 
+class LiveTranscriptionTests(unittest.TestCase):
+    def test_capture_publishes_accumulated_audio_once_per_interval(self):
+        partials = []
+        capture = AudioCapture(
+            microphone="",
+            on_chunk=lambda _pcm: None,
+            on_partial=partials.append,
+            on_level=lambda _level: None,
+            on_error=lambda _message: None,
+            on_no_speech=lambda: None,
+        )
+        loud_audio = array("h", [12_000] * 1_600).tobytes()
+        timestamps = [index / 10 for index in range(11)]
+        with patch(
+            "anduinos_whisper_framework.audio.time.monotonic",
+            side_effect=timestamps,
+        ):
+            for _timestamp in timestamps:
+                capture._consume(loud_audio)
+        self.assertEqual(len(partials), 1)
+        self.assertGreaterEqual(len(partials[0]), AudioCapture.BYTES_PER_SECOND)
+
+    def test_running_partial_remains_valid_but_queued_old_partial_is_skipped(self):
+        service = VoiceTypingService.__new__(VoiceTypingService)
+        service.work_lock = threading.Lock()
+        service.partial_generation = 0
+        service.partial_floor = 0
+        service.session_id = 7
+        service.active = True
+        service.settings = Mock()
+        service.settings.get_boolean.return_value = True
+
+        first = service._next_partial()
+        second = service._next_partial()
+        self.assertFalse(service._partial_should_run(7, first))
+        self.assertTrue(service._partial_should_run(7, second))
+        self.assertTrue(service._partial_is_valid(7, first))
+
+        service._invalidate_partials()
+        self.assertFalse(service._partial_is_valid(7, first))
+        self.assertFalse(service._partial_is_valid(7, second))
+
+
 class PackageTests(unittest.TestCase):
     def test_model_tiers_have_clear_user_facing_names(self):
         self.assertEqual(MODELS["tiny"].title, "Whisper Tiny")
@@ -83,6 +131,25 @@ class PackageTests(unittest.TestCase):
         self.assertIn('elif method in {"Pause", "Stop"}:', daemon)
         self.assertIn('self._set_state("idle", "Ready")', daemon)
         self.assertIn("session_id != self.session_id", daemon)
+
+    def test_live_transcription_is_default_and_partial_results_are_not_final(self):
+        schema = ET.parse(
+            ROOT / "data/com.anduinos.voice-typing.gschema.xml"
+        ).getroot()
+        live_key = schema.find(".//key[@name='live-transcription']")
+        self.assertIsNotNone(live_key)
+        self.assertEqual(live_key.findtext("default"), "true")
+
+        audio = (ROOT / "src/anduinos_whisper_framework/audio.py").read_text()
+        daemon = (ROOT / "src/anduinos_whisper_framework/daemon.py").read_text()
+        self.assertIn("partial_interval: float = 1.0", audio)
+        self.assertIn("self.on_partial(partial)", audio)
+        self.assertIn("queue.PriorityQueue", daemon)
+        self.assertIn('self._put_work(0, "final"', daemon)
+        self.assertIn('self._put_work(1, "partial"', daemon)
+        self.assertIn('GLib.Variant("(sb)", (text, False))', daemon)
+        self.assertIn("_partial_should_run", daemon)
+        self.assertIn("_partial_is_valid", daemon)
 
 
 if __name__ == "__main__":

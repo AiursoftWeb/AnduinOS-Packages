@@ -153,8 +153,13 @@ class SettingsWindow(Adw.PreferencesWindow):
                 "voice-commands",
             ),
             (
-                _("Transcription preview"),
-                _("Show text briefly before inserting it"),
+                _("Live transcription"),
+                _("Show words in the microphone bar while you speak"),
+                "live-transcription",
+            ),
+            (
+                _("Final result preview"),
+                _("Pause briefly before inserting the completed phrase"),
                 "show-preview",
             ),
             (

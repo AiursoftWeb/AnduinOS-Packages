@@ -62,9 +62,15 @@ class VoiceTypingService:
         self.testing = False
         self.pending = 0
         self.session_id = 0
+        self.partial_generation = 0
+        self.partial_floor = 0
+        self.work_sequence = 0
+        self.work_lock = threading.Lock()
         self.shutting_down = False
         self.last_activity = time.monotonic()
-        self.audio_queue: queue.Queue[tuple[int, bytes] | None] = queue.Queue()
+        self.audio_queue: queue.PriorityQueue[
+            tuple[int, int, str, int, int, bytes]
+        ] = queue.PriorityQueue()
         self.worker = threading.Thread(target=self._recognition_worker, daemon=True)
         self.worker.start()
 
@@ -138,6 +144,7 @@ class VoiceTypingService:
         if not model_installed(selected_model):
             raise RuntimeError("The selected speech model is not installed")
         self.session_id += 1
+        self._invalidate_partials()
         session_id = self.session_id
         self.pending = 0
         self.active = True
@@ -157,6 +164,7 @@ class VoiceTypingService:
         self.active = False
         self.testing = False
         self.session_id += 1
+        self._invalidate_partials()
         self.pending = 0
         if self.capture:
             self.capture.stop(flush=False)
@@ -171,6 +179,7 @@ class VoiceTypingService:
         if self.testing:
             return
         self.session_id += 1
+        self._invalidate_partials()
         session_id = self.session_id
         self.pending = 0
         self.testing = True
@@ -181,6 +190,7 @@ class VoiceTypingService:
     def stop_test(self) -> None:
         self.testing = False
         self.session_id += 1
+        self._invalidate_partials()
         self.pending = 0
         if self.capture:
             self.capture.stop(flush=False)
@@ -195,6 +205,9 @@ class VoiceTypingService:
             on_chunk=(lambda _audio: None)
             if testing
             else lambda audio: self._queue_audio(session_id, audio),
+            on_partial=(lambda _audio: None)
+            if testing
+            else lambda audio: self._queue_partial(session_id, audio),
             on_level=lambda level: GLib.idle_add(self._emit_level, level),
             on_error=lambda message: GLib.idle_add(
                 self._capture_failed, session_id, message
@@ -206,19 +219,85 @@ class VoiceTypingService:
     def _queue_audio(self, session_id: int | None, pcm: bytes) -> None:
         if session_id != self.session_id or not self.active:
             return
+        generation = self._invalidate_partials()
         self.pending += 1
         GLib.idle_add(
             self._set_session_state, session_id, "recognizing", "Recognizing…"
         )
-        self.audio_queue.put((session_id, pcm))
+        self._put_work(0, "final", session_id, generation, pcm)
+
+    def _queue_partial(self, session_id: int | None, pcm: bytes) -> None:
+        if (
+            session_id != self.session_id
+            or not self.active
+            or not self.settings.get_boolean("live-transcription")
+        ):
+            return
+        generation = self._next_partial()
+        self._put_work(1, "partial", session_id, generation, pcm)
+
+    def _invalidate_partials(self) -> int:
+        with self.work_lock:
+            self.partial_generation += 1
+            self.partial_floor = self.partial_generation
+            return self.partial_generation
+
+    def _next_partial(self) -> int:
+        with self.work_lock:
+            self.partial_generation += 1
+            return self.partial_generation
+
+    def _put_work(
+        self,
+        priority: int,
+        kind: str,
+        session_id: int | None,
+        generation: int,
+        pcm: bytes,
+    ) -> None:
+        if session_id is None:
+            return
+        with self.work_lock:
+            sequence = self.work_sequence
+            self.work_sequence += 1
+        self.audio_queue.put(
+            (priority, sequence, kind, session_id, generation, pcm)
+        )
+
+    def _partial_should_run(self, session_id: int, generation: int) -> bool:
+        with self.work_lock:
+            current_generation = self.partial_generation
+        return (
+            session_id == self.session_id
+            and generation == current_generation
+            and self.active
+            and self.settings.get_boolean("live-transcription")
+        )
+
+    def _partial_is_valid(self, session_id: int, generation: int) -> bool:
+        with self.work_lock:
+            partial_floor = self.partial_floor
+        return (
+            session_id == self.session_id
+            and generation > partial_floor
+            and self.active
+            and self.settings.get_boolean("live-transcription")
+        )
 
     def _recognition_worker(self) -> None:
         while True:
-            item = self.audio_queue.get()
-            if item is None:
-                return
-            session_id, pcm = item
+            _priority, _sequence, kind, session_id, generation, pcm = (
+                self.audio_queue.get()
+            )
             try:
+                if kind == "quit":
+                    return
+                if session_id != self.session_id:
+                    continue
+                if kind == "partial" and not self._partial_should_run(
+                    session_id, generation
+                ):
+                    continue
                 selected_model = self.settings.get_string("model") or "base"
                 engine = WhisperEngine(
                     model_path(selected_model),
@@ -227,14 +306,27 @@ class VoiceTypingService:
                 text = engine.transcribe(pcm)
                 if not self.settings.get_boolean("automatic-punctuation"):
                     text = remove_punctuation(text)
+                if kind == "partial":
+                    GLib.idle_add(
+                        self._partial_finished, session_id, generation, text
+                    )
+                    continue
                 text, action = apply_voice_command(
                     text, self.settings.get_boolean("voice-commands")
                 )
                 GLib.idle_add(self._recognition_finished, session_id, text, action)
             except Exception as error:
-                GLib.idle_add(self._recognition_failed, session_id, str(error))
+                if kind == "final":
+                    GLib.idle_add(self._recognition_failed, session_id, str(error))
             finally:
                 self.audio_queue.task_done()
+
+    def _partial_finished(
+        self, session_id: int, generation: int, text: str
+    ) -> bool:
+        if self._partial_is_valid(session_id, generation) and text:
+            self._emit("Transcript", GLib.Variant("(sb)", (text, False)))
+        return GLib.SOURCE_REMOVE
 
     def _recognition_finished(
         self, session_id: int, text: str, action: str | None
@@ -267,6 +359,7 @@ class VoiceTypingService:
         self.active = False
         self.testing = False
         self.session_id += 1
+        self._invalidate_partials()
         self.pending = 0
         if self.capture:
             self.capture.stop(flush=False)
@@ -330,7 +423,7 @@ class VoiceTypingService:
         if self.shutting_down:
             return GLib.SOURCE_REMOVE
         self.shutting_down = True
-        self.audio_queue.put(None)
+        self._put_work(-1, "quit", 0, 0, b"")
         if self.connection and self.registration_id:
             self.connection.unregister_object(self.registration_id)
         if self.owner_id:

@@ -33,6 +33,10 @@
       <default>true</default>
       <summary>Briefly preview recognized text before inserting it</summary>
     </key>
+    <key name="live-transcription" type="b">
+      <default>true</default>
+      <summary>Show periodically refreshed partial transcripts while speaking</summary>
+    </key>
     <key name="preview-delay" type="u">
       <default>350</default>
       <range min="0" max="2000"/>
@@ -49,4 +53,3 @@
     </key>
   </schema>
 </schemalist>
-

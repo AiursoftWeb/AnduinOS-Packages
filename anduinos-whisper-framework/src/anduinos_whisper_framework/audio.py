@@ -60,27 +60,32 @@ class AudioCapture:
         self,
         microphone: str,
         on_chunk: Callable[[bytes], None],
+        on_partial: Callable[[bytes], None],
         on_level: Callable[[float], None],
         on_error: Callable[[str], None],
         on_no_speech: Callable[[], None],
         silence_threshold: float = -42.0,
         silence_seconds: float = 0.8,
         max_phrase_seconds: float = 12.0,
+        partial_interval: float = 1.0,
     ):
         self.microphone = microphone
         self.on_chunk = on_chunk
+        self.on_partial = on_partial
         self.on_level = on_level
         self.on_error = on_error
         self.on_no_speech = on_no_speech
         self.silence_threshold = silence_threshold
         self.silence_seconds = silence_seconds
         self.max_phrase_bytes = int(max_phrase_seconds * self.BYTES_PER_SECOND)
+        self.partial_interval = partial_interval
         self._pipeline: Gst.Pipeline | None = None
         self._phrase = bytearray()
         self._pre_roll: deque[bytes] = deque()
         self._pre_roll_size = 0
         self._speaking = False
         self._last_voice = 0.0
+        self._last_partial = 0.0
         self._last_speech_notice = time.monotonic()
         self._last_level_update = 0.0
         self._lock = threading.Lock()
@@ -172,6 +177,7 @@ class AudioCapture:
             self._last_level_update = now
             self.on_level(level)
         completed = b""
+        partial = b""
         notify_no_speech = False
         with self._lock:
             if not self._speaking:
@@ -183,6 +189,7 @@ class AudioCapture:
             if db >= self.silence_threshold:
                 if not self._speaking:
                     self._speaking = True
+                    self._last_partial = now
                     self._phrase.extend(b"".join(self._pre_roll))
                     self._pre_roll.clear()
                     self._pre_roll_size = 0
@@ -200,11 +207,20 @@ class AudioCapture:
             if phrase_complete:
                 completed = bytes(self._phrase)
                 self._reset_phrase()
+            elif (
+                self._speaking
+                and now - self._last_partial >= self.partial_interval
+                and len(self._phrase) >= self.BYTES_PER_SECOND // 2
+            ):
+                partial = bytes(self._phrase)
+                self._last_partial = now
             elif not self._speaking and now - self._last_speech_notice >= 8.0:
                 self._last_speech_notice = now
                 notify_no_speech = True
         if completed:
             self.on_chunk(completed)
+        elif partial:
+            self.on_partial(partial)
         if notify_no_speech:
             self.on_no_speech()
 
@@ -214,6 +230,7 @@ class AudioCapture:
         self._pre_roll_size = 0
         self._speaking = False
         self._last_voice = 0.0
+        self._last_partial = 0.0
 
     def _pipeline_error(self, _bus: Gst.Bus, message: Gst.Message) -> None:
         error, _debug = message.parse_error()

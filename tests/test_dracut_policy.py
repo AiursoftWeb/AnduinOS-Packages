@@ -67,6 +67,16 @@ class PureDracutPolicyTests(unittest.TestCase):
             <= conflicts
         )
 
+    def test_every_apt_config_bootstraps_existing_system_migration(self) -> None:
+        for package in ("anduinos-apt-config", "anduinos-apt-config-dev"):
+            with self.subTest(package=package):
+                project = ROOT / package / f"{package}.aosproj"
+                dependencies = {
+                    item.get("Include")
+                    for item in ET.parse(project).getroot().iter("Dependency")
+                }
+                self.assertIn("anduinos-dracut-migration", dependencies)
+
     def test_production_tree_has_no_legacy_generator_abi(self) -> None:
         forbidden = re.compile(
             r"(/usr/share/initramfs-tools|/etc/initramfs-tools|"

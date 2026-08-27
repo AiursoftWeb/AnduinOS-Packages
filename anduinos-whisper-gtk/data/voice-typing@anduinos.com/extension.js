@@ -61,6 +61,14 @@ export default class VoiceTypingExtension extends Extension {
         this._previewTimer = 0;
         this._pasteTimer = 0;
         this._overlayHidden = false;
+        this._liveSettingSignal = this._settings.connect(
+            'changed::live-transcription',
+            () => {
+                if (!this._settings.get_boolean('live-transcription') &&
+                    !this._previewTimer)
+                    this._preview?.hide();
+            },
+        );
         this._microphoneGicon = new Gio.FileIcon({
             file: this.dir.get_child('audio-input-microphone.svg'),
         });
@@ -101,6 +109,8 @@ export default class VoiceTypingExtension extends Extension {
                     proxy.connectSignal('Transcript', (_source, _sender, [text, final]) => {
                         if (final)
                             this._previewAndInsert(text);
+                        else
+                            this._showPartial(text);
                     }),
                 );
                 proxy.GetStateRemote((result, callError) => {
@@ -126,6 +136,9 @@ export default class VoiceTypingExtension extends Extension {
             GLib.Source.remove(this._pasteTimer);
         this._previewTimer = 0;
         this._pasteTimer = 0;
+        if (this._liveSettingSignal)
+            this._settings.disconnect(this._liveSettingSignal);
+        this._liveSettingSignal = 0;
         if (this._stageDragSignal)
             global.stage.disconnect(this._stageDragSignal);
         this._stageDragSignal = 0;
@@ -327,6 +340,9 @@ export default class VoiceTypingExtension extends Extension {
             this._root.hide();
         if (!['listening', 'recognizing', 'no-speech'].includes(state))
             this._setLevel(0);
+        if (!['listening', 'recognizing', 'no-speech'].includes(state) &&
+            !this._previewTimer)
+            this._preview.hide();
     }
 
     _setLevel(level) {
@@ -360,6 +376,16 @@ export default class VoiceTypingExtension extends Extension {
             this._insertText(text);
             return GLib.SOURCE_REMOVE;
         });
+    }
+
+    _showPartial(text) {
+        if (!this._enabled || this._overlayHidden || !text ||
+            !this._settings.get_boolean('live-transcription') ||
+            this._previewTimer)
+            return;
+        this._preview.text = text;
+        this._preview.show();
+        this._positionOverlay();
     }
 
     _insertText(text) {
