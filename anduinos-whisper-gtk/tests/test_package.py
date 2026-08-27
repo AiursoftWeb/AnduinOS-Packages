@@ -4,6 +4,7 @@ import re
 import sys
 import unittest
 import xml.etree.ElementTree as ET
+from unittest import mock
 
 import gi
 
@@ -17,6 +18,7 @@ gi.require_version("Gdk", "4.0")
 from gi.repository import Gdk  # noqa: E402
 
 from anduinos_whisper_gtk.shortcuts import accelerator_from_key_event  # noqa: E402
+from anduinos_whisper_gtk import app as settings_app  # noqa: E402
 
 
 class PackageTests(unittest.TestCase):
@@ -221,6 +223,101 @@ class PackageTests(unittest.TestCase):
         self.assertIn("received != model.size", source)
         self.assertIn("digest.hexdigest() != model.sha256", source)
         self.assertIn("os.replace(partial, destination)", source)
+
+    def test_model_download_requires_hugging_face_disclosure_and_consent(self):
+        application = (ROOT / "src/anduinos_whisper_gtk/app.py").read_text()
+
+        self.assertIn("self._confirm_model_download(key)", application)
+        self.assertIn("Hugging Face, a third-party ", application)
+        self.assertIn("service. AnduinOS is not affiliated", application)
+        self.assertIn("not affiliated with, sponsored by, or", application)
+        self.assertIn("will receive your public IP address", application)
+        self.assertIn("may reveal your approximate location", application)
+        self.assertIn("https://huggingface.co/privacy", application)
+        self.assertIn('dialog.set_default_response("cancel")', application)
+        self.assertIn('dialog.set_close_response("cancel")', application)
+        self.assertIn('if response == "download":', application)
+        self.assertIn("def _start_model_download", application)
+
+    @mock.patch.object(settings_app, "model_installed", return_value=False)
+    def test_uninstalled_model_click_only_opens_consent(self, _installed):
+        window = mock.Mock()
+
+        settings_app.SettingsWindow._model_action(window, mock.Mock(), "tiny")
+
+        window._confirm_model_download.assert_called_once_with("tiny")
+        window._start_model_download.assert_not_called()
+
+    def test_only_explicit_download_response_starts_network_work(self):
+        window = mock.Mock()
+
+        for response in ("cancel", "close", "escape"):
+            settings_app.SettingsWindow._model_download_response(
+                window, mock.Mock(), response, "small"
+            )
+        window._start_model_download.assert_not_called()
+
+        settings_app.SettingsWindow._model_download_response(
+            window, mock.Mock(), "download", "small"
+        )
+        window._start_model_download.assert_called_once_with("small")
+
+    @mock.patch.object(settings_app, "is_user_model", return_value=True)
+    def test_downloaded_model_has_a_separate_remove_action(self, _user_model):
+        window = mock.Mock()
+
+        settings_app.SettingsWindow._model_remove_action(
+            window, mock.Mock(), "tiny"
+        )
+
+        window._confirm_remove_model.assert_called_once_with("tiny")
+
+    @mock.patch.object(settings_app, "is_user_model", return_value=False)
+    def test_system_model_cannot_be_removed(self, _user_model):
+        window = mock.Mock()
+
+        settings_app.SettingsWindow._model_remove_action(
+            window, mock.Mock(), "base"
+        )
+
+        window._confirm_remove_model.assert_not_called()
+
+    def test_model_selection_refresh_preserves_active_download(self):
+        window = mock.Mock()
+        row = mock.Mock()
+        button = mock.Mock()
+        remove_button = mock.Mock()
+        progress = mock.Mock()
+        window.model_rows = {
+            "small": (row, button, remove_button, progress),
+        }
+        window.downloading_models = {"small"}
+
+        settings_app.SettingsWindow._refresh_model_row(window, "small")
+
+        progress.set_visible.assert_called_once_with(True)
+        button.set_sensitive.assert_called_once_with(False)
+        button.set_label.assert_called_once_with("Downloading…")
+        remove_button.set_visible.assert_called_once_with(False)
+        window.settings.get_string.assert_not_called()
+
+    def test_duplicate_download_start_is_ignored(self):
+        window = mock.Mock()
+        window.downloading_models = {"small"}
+
+        settings_app.SettingsWindow._start_model_download(window, "small")
+
+        window.downloader.download.assert_not_called()
+
+    @mock.patch.object(settings_app, "remove_user_model", return_value=True)
+    def test_removing_an_unselected_model_keeps_current_selection(self, _remove):
+        window = mock.Mock()
+        window.settings.get_string.return_value = "base"
+
+        settings_app.SettingsWindow._remove_model(window, "tiny")
+
+        window.settings.set_string.assert_not_called()
+        window._refresh_all_models.assert_called_once_with()
 
     def test_microphone_svg_is_embedded_for_app_and_shell(self):
         app_icon = ROOT / "resources/audio-input-microphone.svg"

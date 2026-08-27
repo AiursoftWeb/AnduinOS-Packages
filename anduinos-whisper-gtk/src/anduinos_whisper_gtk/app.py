@@ -60,7 +60,10 @@ class SettingsWindow(Adw.PreferencesWindow):
         self.ui_client = VoiceUiClient()
         self.client = VoiceServiceClient()
         self.downloader = ModelDownloader()
-        self.model_rows: dict[str, tuple[Adw.ActionRow, Gtk.Button, Gtk.ProgressBar]] = {}
+        self.downloading_models: set[str] = set()
+        self.model_rows: dict[
+            str, tuple[Adw.ActionRow, Gtk.Button, Gtk.Button, Gtk.ProgressBar]
+        ] = {}
         self.testing = False
         self._shortcut_dialog: Adw.Dialog | None = None
         self.connect("close-request", self._closing)
@@ -192,12 +195,22 @@ class SettingsWindow(Adw.PreferencesWindow):
             row = Adw.ActionRow(title=_(model.title), subtitle=f"{_(model.description)} · {size}")
             progress = Gtk.ProgressBar(valign=Gtk.Align.CENTER, width_request=110)
             progress.set_visible(False)
+            remove_button = Gtk.Button(
+                icon_name="user-trash-symbolic", valign=Gtk.Align.CENTER
+            )
+            remove_button.set_tooltip_text(_("Remove downloaded model"))
+            remove_button.update_property(
+                [Gtk.AccessibleProperty.LABEL],
+                [_("Remove %s") % _(model.title)],
+            )
+            remove_button.connect("clicked", self._model_remove_action, key)
             button = Gtk.Button(valign=Gtk.Align.CENTER)
             button.connect("clicked", self._model_action, key)
             row.add_suffix(progress)
+            row.add_suffix(remove_button)
             row.add_suffix(button)
             group.add(row)
-            self.model_rows[key] = (row, button, progress)
+            self.model_rows[key] = (row, button, remove_button, progress)
             self._refresh_model_row(key)
 
     def _build_training_page(self) -> None:
@@ -402,11 +415,49 @@ class SettingsWindow(Adw.PreferencesWindow):
             if self.settings.get_string("model") != key:
                 self.settings.set_string("model", key)
                 self._refresh_all_models()
-            elif is_user_model(key):
-                self._confirm_remove_model(key)
             return
-        row, button, progress = self.model_rows[key]
+        self._confirm_model_download(key)
+
+    def _model_remove_action(self, _button: Gtk.Button, key: str) -> None:
+        if is_user_model(key):
+            self._confirm_remove_model(key)
+
+    def _confirm_model_download(self, key: str) -> None:
+        dialog = Adw.AlertDialog(
+            heading=_("Download %s from Hugging Face?") % _(MODELS[key].title),
+            body=_(
+                "This optional model is hosted by Hugging Face, a third-party "
+                "service. AnduinOS is not affiliated with, sponsored by, or "
+                "partnered with Hugging Face.\n\n"
+                "If you continue, your computer will connect directly to "
+                "huggingface.co. Hugging Face will receive your public IP address "
+                "and that address may reveal your approximate location.\n\n"
+                "Privacy policy: https://huggingface.co/privacy"
+            ),
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("download", _("Continue Download"))
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+        dialog.set_response_appearance(
+            "download", Adw.ResponseAppearance.SUGGESTED
+        )
+        dialog.connect("response", self._model_download_response, key)
+        dialog.present(self)
+
+    def _model_download_response(
+        self, _dialog: Adw.AlertDialog, response: str, key: str
+    ) -> None:
+        if response == "download":
+            self._start_model_download(key)
+
+    def _start_model_download(self, key: str) -> None:
+        if key in self.downloading_models:
+            return
+        self.downloading_models.add(key)
+        row, button, remove_button, progress = self.model_rows[key]
         button.set_sensitive(False)
+        remove_button.set_visible(False)
         button.set_label(_("Downloading…"))
         progress.set_visible(True)
         progress.set_fraction(0.0)
@@ -416,11 +467,13 @@ class SettingsWindow(Adw.PreferencesWindow):
             return GLib.SOURCE_REMOVE
 
         def completed() -> bool:
+            self.downloading_models.discard(key)
             self.settings.set_string("model", key)
             self._refresh_all_models()
             return GLib.SOURCE_REMOVE
 
         def failed(message: str) -> bool:
+            self.downloading_models.discard(key)
             progress.set_visible(False)
             button.set_sensitive(True)
             button.set_label(_("Retry"))
@@ -451,7 +504,8 @@ class SettingsWindow(Adw.PreferencesWindow):
 
     def _remove_model(self, key: str) -> None:
         if remove_user_model(key):
-            self.settings.set_string("model", "base")
+            if self.settings.get_string("model") == key:
+                self.settings.set_string("model", "base")
             self._refresh_all_models()
 
     def _refresh_all_models(self) -> None:
@@ -459,9 +513,17 @@ class SettingsWindow(Adw.PreferencesWindow):
             self._refresh_model_row(key)
 
     def _refresh_model_row(self, key: str) -> None:
-        _row, button, progress = self.model_rows[key]
+        _row, button, remove_button, progress = self.model_rows[key]
+        if key in self.downloading_models:
+            progress.set_visible(True)
+            button.set_sensitive(False)
+            button.set_label(_("Downloading…"))
+            button.remove_css_class("suggested-action")
+            remove_button.set_visible(False)
+            return
         progress.set_visible(False)
         button.set_sensitive(True)
+        remove_button.set_visible(is_user_model(key))
         selected = self.settings.get_string("model") == key
         if selected and model_installed(key):
             button.set_label(_("In Use"))
