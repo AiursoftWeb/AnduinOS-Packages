@@ -150,6 +150,8 @@ class MigrationContractTests(unittest.TestCase):
             migrated = root / "migrated"
             unexpected_update = root / "unexpected-update"
             timer_disabled = root / "timer-disabled"
+            systemd_runtime = root / "run/systemd/system"
+            systemd_runtime.mkdir(parents=True)
             boot_id = root / "boot-id"
             boot_id.write_text("11111111-2222-3333-4444-555555555555\n")
             dpkg_query = executable(
@@ -202,6 +204,7 @@ class MigrationContractTests(unittest.TestCase):
                     "ANDUINOS_MIGRATION_LSINITRD": str(lsinitrd),
                     "ANDUINOS_MIGRATION_VERIFY": str(verify),
                     "ANDUINOS_MIGRATION_SYSTEMCTL": str(systemctl),
+                    "ANDUINOS_MIGRATION_SYSTEMD_RUNTIME_DIR": str(systemd_runtime),
                     "ANDUINOS_MIGRATION_MODULES_DIR": str(root / "modules"),
                     "ANDUINOS_MIGRATION_BOOT_DIR": str(boot),
                     "ANDUINOS_MIGRATION_STATE_DIR": str(state),

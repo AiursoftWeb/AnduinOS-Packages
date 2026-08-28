@@ -9,6 +9,7 @@ APT_CACHE=${ANDUINOS_MIGRATION_APT_CACHE:-/usr/bin/apt-cache}
 DPKG_QUERY=${ANDUINOS_MIGRATION_DPKG_QUERY:-/usr/bin/dpkg-query}
 VERIFY=${ANDUINOS_MIGRATION_VERIFY:-/usr/libexec/anduinos-dracut-verify}
 SYSTEMCTL=${ANDUINOS_MIGRATION_SYSTEMCTL:-/usr/bin/systemctl}
+SYSTEMD_RUNTIME_DIR=${ANDUINOS_MIGRATION_SYSTEMD_RUNTIME_DIR:-/run/systemd/system}
 MODULES_DIR=${ANDUINOS_MIGRATION_MODULES_DIR:-/lib/modules}
 BOOT_DIR=${ANDUINOS_MIGRATION_BOOT_DIR:-/boot}
 STATE_DIR=${ANDUINOS_MIGRATION_STATE_DIR:-/var/lib/anduinos-dracut-migration}
@@ -153,7 +154,7 @@ mark_complete() {
     mv -f "$STATE_DIR/.complete.new" "$STATE_DIR/complete"
     sync -f "$STATE_DIR"
     log "migration completed and every installed kernel has a readable Dracut image"
-    if [ -d /run/systemd/system ] && [ -x "$SYSTEMCTL" ]; then
+    if [ -d "$SYSTEMD_RUNTIME_DIR" ] && [ -x "$SYSTEMCTL" ]; then
         "$SYSTEMCTL" disable --now anduinos-dracut-migration.timer \
             || log "unable to disable the completed migration timer"
     fi
