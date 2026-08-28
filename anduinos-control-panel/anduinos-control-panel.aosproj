@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-control-panel</PackageName>
-    <PackageVersion>2.0.2-10+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-11+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Control Panel — a category-based home for system, hardware, application, account, appearance, and recovery settings.</PackageDescription>
     <Section>utils</Section>
@@ -38,6 +38,8 @@
     <Dependency Include="anduinos-swapcontrol-gtk" />
     <Dependency Include="anduinos-yubikey-manager" />
     <Dependency Include="anduinos-btrfs-snapshots-manager" />
+    <Recommend Include="network-manager-gnome" />
+    <Recommend Include="simple-scan" />
     <Suggest Include="anduinos-whisper-gtk" />
   </ItemGroup>
 
@@ -46,8 +48,13 @@
     <IncludeFile Include="src/anduinos_control_panel/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/__init__.py" />
     <IncludeFile Include="src/anduinos_control_panel/app.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/app.py" />
     <IncludeFile Include="src/anduinos_control_panel/model.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/model.py" />
+    <IncludeFile Include="src/anduinos_control_panel/topics.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/topics.py" />
+    <IncludeFile Include="src/anduinos_control_panel/search_provider.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/search_provider.py" />
+    <IncludeScript Include="src/anduinos-control-panel-search-provider" Target="/usr/libexec/anduinos-control-panel/search-provider" />
     <IncludeScript Include="scripts/boot-settings-helper" Target="/usr/libexec/anduinos-control-panel/boot-settings-helper" />
     <IncludeFile Include="data/com.anduinos.ControlPanel.policy" Target="/usr/share/polkit-1/actions/com.anduinos.ControlPanel.policy" />
+    <IncludeFile Include="data/com.anduinos.ControlPanel.SearchProvider.service" Target="/usr/share/dbus-1/services/com.anduinos.ControlPanel.SearchProvider.service" />
+    <IncludeFile Include="data/com.anduinos.ControlPanel.search-provider.ini" Target="/usr/share/gnome-shell/search-providers/com.anduinos.ControlPanel.search-provider.ini" />
 
     <!-- Vendored copies of existing repository SVGs keep this package standalone. -->
     <IncludeFolder Include="resources/icons" Target="/usr/share/anduinos-control-panel/icons" />

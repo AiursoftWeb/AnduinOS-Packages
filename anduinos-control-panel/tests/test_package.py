@@ -11,6 +11,7 @@ class PackageTests(unittest.TestCase):
     def test_python_sources_compile_without_cache_files(self):
         for source in [
             ROOT / "src/anduinos-control-panel",
+            ROOT / "src/anduinos-control-panel-search-provider",
             *sorted((ROOT / "src/anduinos_control_panel").glob("*.py")),
         ]:
             compile(source.read_text(), str(source), "exec")
@@ -48,6 +49,13 @@ class PackageTests(unittest.TestCase):
         application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
         self.assertNotIn('icon_name="view-refresh-symbolic"', application)
         self.assertNotIn('_("Refresh availability")', application)
+
+    def test_in_app_search_indexes_the_shared_topic_keywords(self):
+        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
+        self.assertIn("topic.keywords,", application)
+        self.assertIn(
+            "search_parts.extend((action_title, subtitle, *keywords))", application
+        )
 
     def test_category_icons_share_one_rendered_boundary(self):
         application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
@@ -87,6 +95,7 @@ class PackageTests(unittest.TestCase):
 
     def test_all_requested_categories_and_launchers_are_present(self):
         application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
+        catalog = (ROOT / "src/anduinos_control_panel/topics.py").read_text()
         for title in (
             "System",
             "Security",
@@ -103,30 +112,36 @@ class PackageTests(unittest.TestCase):
             self.assertIn(f'_("{title}")', application)
 
         for command in (
-            '["gnome-control-center"]',
-            '["swapcontrol-gtk"]',
-            '["anduinos-driver-center", "--page", "secure-boot"]',
-            '["seahorse"]',
-            '["ufwall-gtk"]',
-            '["nm-connection-editor"]',
+            '("gnome-control-center",)',
+            '("swapcontrol-gtk",)',
+            '("anduinos-driver-center", "--page", "secure-boot")',
+            '("seahorse",)',
+            '("ufwall-gtk",)',
+            '("nm-connection-editor",)',
+            '("simple-scan",)',
+            '("anduinos-driver-center",)',
+            '("gnome-control-center", "printers")',
+            '("gnome-software", "--mode=installed")',
+            '("gnome-control-center", "system", "users")',
+            '("anduinos-yubikey-manager",)',
+            '("anduinos-appearance",)',
+            '("gnome-control-center", "background")',
+            '("anduinos-btrfs-snapshots-manager",)',
+        ):
+            self.assertIn(command, catalog)
+
+        for command in (
             '["flatpak", "run", BOTTLES_APP_ID]',
-            '["anduinos-driver-center"]',
-            '["gnome-control-center", "printers"]',
-            '["gnome-software", "--mode=installed"]',
             '["com.github.tchx84.Flatseal"]',
-            '["gnome-control-center", "system", "users"]',
-            '["anduinos-yubikey-manager"]',
-            '["anduinos-appearance"]',
-            '["gnome-control-center", "background"]',
-            '["anduinos-btrfs-snapshots-manager"]',
             '["flatpak", "run", DEJA_DUP_APP_ID]',
         ):
             self.assertIn(command, application)
 
-        self.assertIn('_("System Snapshots")', application)
-        self.assertNotIn('_("Btrfs Snapshots")', application)
-        self.assertIn('_("Wallpaper and Accent Color")', application)
-        self.assertIn('_("Startup and Boot")', application)
+        self.assertIn('"System Snapshots"', catalog)
+        self.assertNotIn('"Btrfs Snapshots"', catalog)
+        self.assertIn('"Wallpaper and Accent Color"', catalog)
+        self.assertIn('"Startup and Boot"', catalog)
+        self.assertIn('"Scanners"', catalog)
         self.assertIn('_("Boot menu wait time")', application)
 
     def test_boot_settings_use_a_fixed_polkit_helper(self):
@@ -171,6 +186,9 @@ class PackageTests(unittest.TestCase):
         self.assertNotIn("secure_boot_enabled,", application)
         self.assertIn('command_available("seahorse")', application)
         self.assertIn('command_available("nm-connection-editor")', application)
+        self.assertIn('"network.advanced",', application)
+        self.assertIn('"hardware.scanners",', application)
+        self.assertIn("self._offer_recommended_install(topic)", application)
         self.assertIn("if package_installed(SNAPSHOT_PACKAGE):", application)
         self.assertIn("if flatpak_installed(BOTTLES_APP_ID):", application)
         self.assertIn("if flatpak_installed(DEJA_DUP_APP_ID):", application)
@@ -342,6 +360,53 @@ class PackageTests(unittest.TestCase):
             self.assertIn(f'<Dependency Include="{package}" />', project)
             self.assertNotIn(f'<Suggest Include="{package}"', project)
         self.assertNotIn('<Suggest Include="anduinos-btrfs-snapshots-manager', project)
+
+    def test_removable_hardware_helpers_are_recommended_and_reinstallable(self):
+        project = (ROOT / "anduinos-control-panel.aosproj").read_text()
+        catalog = (ROOT / "src/anduinos_control_panel/topics.py").read_text()
+        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
+        for package in ("network-manager-gnome", "simple-scan"):
+            self.assertIn(f'<Recommend Include="{package}" />', project)
+            self.assertNotIn(f'<Dependency Include="{package}"', project)
+            self.assertIn(f'install_package="{package}"', catalog)
+        self.assertIn('"/usr/bin/pkexec"', application)
+        self.assertIn('"/usr/bin/apt-get"', application)
+        self.assertNotIn("shell=True", application)
+
+    def test_search_provider_is_installed_and_enabled_by_default(self):
+        project = (ROOT / "anduinos-control-panel.aosproj").read_text()
+        provider = (
+            ROOT / "data/com.anduinos.ControlPanel.search-provider.ini"
+        ).read_text()
+        service = (
+            ROOT / "data/com.anduinos.ControlPanel.SearchProvider.service"
+        ).read_text()
+        self.assertIn("Version=2", provider)
+        self.assertIn("DefaultDisabled=false", provider)
+        self.assertIn("DesktopId=com.anduinos.ControlPanel.desktop", provider)
+        self.assertIn("BusName=com.anduinos.ControlPanel.SearchProvider", provider)
+        self.assertIn("Name=com.anduinos.ControlPanel.SearchProvider", service)
+        self.assertIn(
+            'Target="/usr/share/gnome-shell/search-providers/'
+            'com.anduinos.ControlPanel.search-provider.ini"',
+            project,
+        )
+        self.assertIn(
+            'Target="/usr/share/dbus-1/services/'
+            'com.anduinos.ControlPanel.SearchProvider.service"',
+            project,
+        )
+
+    def test_application_accepts_search_provider_deep_links(self):
+        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
+        provider = (
+            ROOT / "src/anduinos_control_panel/search_provider.py"
+        ).read_text()
+        self.assertIn("Gio.ApplicationFlags.HANDLES_COMMAND_LINE", application)
+        self.assertIn('"topic",\n            ord("t")', application)
+        self.assertIn('"search",\n            ord("s")', application)
+        self.assertIn('[CONTROL_PANEL_EXECUTABLE, "--topic", identifier]', provider)
+        self.assertIn('[CONTROL_PANEL_EXECUTABLE, "--search", " ".join(terms)]', provider)
 
     def test_control_panel_is_published_for_resolute_only(self):
         project = ET.parse(ROOT / "anduinos-control-panel.aosproj").getroot()

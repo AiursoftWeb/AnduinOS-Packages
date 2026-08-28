@@ -29,6 +29,7 @@ from .model import (
     package_installed,
     read_grub_timeouts,
 )
+from .topics import ControlPanelTopic, get_topic
 
 
 APP_ID = "com.anduinos.ControlPanel"
@@ -39,6 +40,8 @@ BOOT_SETTINGS_HELPER = "/usr/libexec/anduinos-control-panel/boot-settings-helper
 gettext.bindtextdomain("anduinos-control-panel", LOCALE_DIR)
 gettext.textdomain("anduinos-control-panel")
 _ = gettext.gettext
+
+ControlAction = tuple[str, str, Callable[[], None], tuple[str, ...]]
 
 
 def _icon_path(name: str) -> Path:
@@ -196,61 +199,43 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         bottles_installed = flatpak_installed(BOTTLES_APP_ID)
         flatseal_installed = package_installed("flatseal")
         deja_dup_installed = flatpak_installed(DEJA_DUP_APP_ID)
-        network_editor_installed = command_available("nm-connection-editor")
         seahorse_installed = command_available("seahorse")
         voice_typing_installed = package_installed(VOICE_TYPING_PACKAGE)
 
+        def action(
+            identifier: str, subtitle: str | None = None
+        ) -> ControlAction:
+            topic = get_topic(identifier)
+            if topic is None:
+                raise ValueError(f"Unknown Control Panel topic: {identifier}")
+            return (
+                topic.title,
+                subtitle if subtitle is not None else topic.description,
+                lambda topic_id=identifier: self._activate_topic(topic_id),
+                topic.keywords,
+            )
+
         system_actions = [
-            (
-                _("System Settings"),
-                _("Display, sound, power, privacy, and more"),
-                lambda: self._launch(["gnome-control-center"]),
-            ),
-            (
-                _("Startup and Boot"),
-                _("Change the boot menu wait time"),
-                self._show_boot_settings,
-            ),
-            (
-                _("Virtual Memory Settings"),
-                _("Configure Zram, Zswap, swap, and memory pressure"),
-                lambda: self._launch(["swapcontrol-gtk"]),
-            ),
+            action("system.settings"),
+            action("system.startup-boot"),
+            action("system.virtual-memory"),
         ]
 
-        security_actions = [
-            (
-                _("Secure Boot Status"),
-                _("Inspect firmware trust and signed drivers"),
-                lambda: self._launch(
-                    ["anduinos-driver-center", "--page", "secure-boot"]
-                ),
-            )
-        ]
+        security_actions = [action("security.secure-boot")]
         if seahorse_installed:
-            security_actions.append(
-                (
-                    _("Passwords and Keys"),
-                    _("Manage passwords, encryption keys, and certificates"),
-                    lambda: self._launch(["seahorse"]),
-                )
-            )
+            security_actions.append(action("security.passwords-keys"))
 
         network_actions = [
-            (
-                _("Firewall"),
-                _("Review connections, rules, and network protection"),
-                lambda: self._launch(["ufwall-gtk"]),
-            )
-        ]
-        if network_editor_installed:
-            network_actions.append(
+            action("network.firewall"),
+            action(
+                "network.advanced",
                 (
-                    _("Advanced Network Configuration"),
-                    _("Configure NetworkManager connection profiles"),
-                    lambda: self._launch(["nm-connection-editor"]),
-                )
-            )
+                    _("Configure NetworkManager connection profiles")
+                    if command_available("nm-connection-editor")
+                    else _("Install Advanced Network Configuration")
+                ),
+            ),
+        ]
 
         categories = [
             (
@@ -272,32 +257,21 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                 _("User Accounts"),
                 "cs-user-accounts.svg",
                 [
-                    (
-                        _("User Account Settings"),
-                        _("Manage users, passwords, and account details"),
-                        lambda: self._launch(
-                            ["gnome-control-center", "system", "users"]
-                        ),
-                    ),
-                    (
-                        _("YubiKey Settings"),
-                        _("Configure sign-in, sudo, SSH keys, and Git signing"),
-                        lambda: self._launch(["anduinos-yubikey-manager"]),
-                    ),
+                    action("accounts.users"),
+                    action("accounts.yubikey"),
                 ],
             ),
             (
                 _("Accessibility"),
                 "audio-input-microphone.svg",
                 [
-                    (
-                        _("Voice Typing"),
+                    action(
+                        "accessibility.voice-typing",
                         (
                             _("Configure microphone, language, shortcut, and training")
                             if voice_typing_installed
                             else _("Install private, offline speech-to-text")
                         ),
-                        self._open_voice_typing,
                     ),
                 ],
             ),
@@ -305,15 +279,15 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                 _("Hardware and Drivers"),
                 "com.anduinos.DriverCenter.svg",
                 [
-                    (
-                        _("Driver Center"),
-                        _("Graphics, audio, printers, controllers, and firmware"),
-                        lambda: self._launch(["anduinos-driver-center"]),
-                    ),
-                    (
-                        _("Printers"),
-                        _("Add, remove, and configure printers"),
-                        lambda: self._launch(["gnome-control-center", "printers"]),
+                    action("hardware.drivers"),
+                    action("hardware.printers"),
+                    action(
+                        "hardware.scanners",
+                        (
+                            _("Scan documents and select a scanner")
+                            if command_available("simple-scan")
+                            else _("Install Document Scanner")
+                        ),
                     ),
                 ],
             ),
@@ -321,37 +295,22 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                 _("Appearance"),
                 "anduinos-appearance.svg",
                 [
-                    (
-                        _("AnduinOS Appearance Settings"),
-                        _("Configure the taskbar, panel widgets, and desktop"),
-                        lambda: self._launch(["anduinos-appearance"]),
-                    ),
-                    (
-                        _("Wallpaper and Accent Color"),
-                        _("Choose the desktop background, style, and accent color"),
-                        lambda: self._launch(
-                            ["gnome-control-center", "background"]
-                        ),
-                    ),
+                    action("appearance.anduinos"),
+                    action("appearance.wallpaper"),
                 ],
             ),
             (
                 _("Programs"),
                 "gnome-software.svg",
                 [
-                    (
-                        _("Uninstall Applications"),
-                        _("Review and remove installed applications"),
-                        lambda: self._launch(["gnome-software", "--mode=installed"]),
-                    ),
-                    (
-                        _("Permission Settings"),
+                    action("programs.uninstall"),
+                    action(
+                        "programs.permissions",
                         (
                             _("Manage application permissions with Flatseal")
                             if flatseal_installed
                             else _("Install Flatseal to manage application permissions")
                         ),
-                        self._open_flatseal,
                     ),
                 ],
             ),
@@ -359,10 +318,9 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                 _("AI Stack"),
                 "applications-science.svg",
                 [
-                    (
-                        _("On-device AI"),
+                    action(
+                        "ai.on-device",
                         _("Installed") if why_installed else _("Not installed"),
-                        self._show_ai_settings,
                     ),
                 ],
             ),
@@ -370,14 +328,13 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                 _("Windows Compatibility"),
                 "anduinos-exe-runner.svg",
                 [
-                    (
-                        _("Configure Bottles"),
+                    action(
+                        "compatibility.windows",
                         (
                             _("Open your Windows application environments")
                             if bottles_installed
                             else _("Install Bottles to run Windows applications")
                         ),
-                        self._open_bottles,
                     ),
                 ],
             ),
@@ -394,34 +351,74 @@ class ControlPanelWindow(Adw.ApplicationWindow):
 
     def _backup_actions(
         self, deja_dup_installed: bool
-    ) -> list[tuple[str, str, Callable[[], None]]]:
-        actions: list[tuple[str, str, Callable[[], None]]] = []
+    ) -> list[ControlAction]:
+        actions: list[ControlAction] = []
         if package_installed(SNAPSHOT_PACKAGE):
-            actions.append(
-                (
-                    _("System Snapshots"),
-                    _("Create, browse, and roll back system snapshots"),
-                    lambda: self._launch(["anduinos-btrfs-snapshots-manager"]),
+            topic = get_topic("recovery.snapshots")
+            if topic is not None:
+                actions.append(
+                    (
+                        topic.title,
+                        topic.description,
+                        lambda: self._activate_topic("recovery.snapshots"),
+                        topic.keywords,
+                    )
                 )
-            )
+        backup = get_topic("recovery.backup")
+        if backup is None:
+            return actions
         actions.append(
             (
-                _("Back Up Home Folder"),
+                backup.title,
                 (
                     _("Open Deja Dup backups")
                     if deja_dup_installed
                     else _("Install Deja Dup from the app store")
                 ),
-                self._open_deja_dup,
+                lambda: self._activate_topic("recovery.backup"),
+                backup.keywords,
             )
         )
         return actions
+
+    def _activate_topic(self, identifier: str) -> None:
+        topic = get_topic(identifier)
+        if topic is None:
+            self._show_error(_("Setting not found"), identifier)
+            return
+
+        handlers: dict[str, Callable[[], None]] = {
+            "boot-settings": self._show_boot_settings,
+            "voice-typing": self._open_voice_typing,
+            "flatseal": self._open_flatseal,
+            "on-device-ai": self._show_ai_settings,
+            "bottles": self._open_bottles,
+            "backup": self._open_deja_dup,
+        }
+        if topic.handler:
+            handler = handlers.get(topic.handler)
+            if handler is None:
+                self._show_error(_("Setting not found"), topic.title)
+                return
+            handler()
+            return
+
+        if topic.install_package and topic.command:
+            if not command_available(topic.command[0]):
+                self._offer_recommended_install(topic)
+                return
+
+        if topic.command:
+            self._launch(list(topic.command))
+            return
+
+        self._show_error(_("Setting not found"), topic.title)
 
     def _append_category(
         self,
         title: str,
         icon_name: str,
-        actions: list[tuple[str, str, Callable[[], None]]],
+        actions: list[ControlAction],
     ) -> None:
         root = Gtk.Grid(column_spacing=14)
         root.add_css_class("control-category")
@@ -444,9 +441,9 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         body.append(heading)
 
         search_parts = [title]
-        for action_title, subtitle, callback in actions:
+        for action_title, subtitle, callback, keywords in actions:
             body.append(self._action_button(action_title, subtitle, callback))
-            search_parts.extend((action_title, subtitle))
+            search_parts.extend((action_title, subtitle, *keywords))
         root.attach(body, 1, 0, 1, 1)
 
         root.search_text = " ".join(search_parts).casefold()
@@ -550,6 +547,76 @@ class ControlPanelWindow(Adw.ApplicationWindow):
     def _show_error(self, heading: str, body: str = "") -> None:
         dialog = Adw.MessageDialog(transient_for=self, heading=heading, body=body)
         dialog.add_response("ok", _("OK"))
+        dialog.present()
+
+    def _offer_recommended_install(self, topic: ControlPanelTopic) -> None:
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Install %s?") % topic.title,
+            body=_(
+                "%s is a recommended component, but it is not installed. "
+                "You can reinstall it now."
+            )
+            % topic.title,
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("install", _("Install"))
+        dialog.set_close_response("cancel")
+        dialog.set_default_response("install")
+        dialog.set_response_appearance("install", Adw.ResponseAppearance.SUGGESTED)
+
+        def response_received(_dialog: Adw.MessageDialog, response: str) -> None:
+            if response != "install":
+                return
+            self.toast_overlay.add_toast(
+                Adw.Toast.new(_("Installing %s…") % topic.title)
+            )
+
+            def completed(return_code: int, output: str) -> bool:
+                if return_code == 0 and topic.command and command_available(
+                    topic.command[0]
+                ):
+                    self._rebuild_categories()
+                    self.toast_overlay.add_toast(
+                        Adw.Toast.new(_("%s installed") % topic.title)
+                    )
+                    self._launch(list(topic.command))
+                    return GLib.SOURCE_REMOVE
+
+                message = output.strip()
+                if return_code == 126:
+                    message = _("Authentication was cancelled.")
+                elif not message:
+                    message = _("The recommended component could not be installed.")
+                self._show_error(_("Installation failed"), message)
+                return GLib.SOURCE_REMOVE
+
+            def worker() -> None:
+                try:
+                    result = subprocess.run(
+                        [
+                            "/usr/bin/pkexec",
+                            "/usr/bin/apt-get",
+                            "install",
+                            "--yes",
+                            topic.install_package,
+                        ],
+                        capture_output=True,
+                        text=True,
+                        timeout=1800,
+                        check=False,
+                    )
+                    GLib.idle_add(
+                        completed,
+                        result.returncode,
+                        result.stderr or result.stdout,
+                    )
+                except (OSError, subprocess.TimeoutExpired) as error:
+                    GLib.idle_add(completed, 1, str(error))
+
+            threading.Thread(target=worker, daemon=True).start()
+
+        dialog.connect("response", response_received)
         dialog.present()
 
     def _show_boot_settings(self) -> None:
@@ -1631,7 +1698,26 @@ class ControlPanelWindow(Adw.ApplicationWindow):
 
 class ControlPanelApplication(Adw.Application):
     def __init__(self):
-        super().__init__(application_id=APP_ID, flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
+        super().__init__(
+            application_id=APP_ID,
+            flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
+        )
+        self.add_main_option(
+            "topic",
+            ord("t"),
+            GLib.OptionFlags.NONE,
+            GLib.OptionArg.STRING,
+            _("Open a Control Panel topic"),
+            _("TOPIC"),
+        )
+        self.add_main_option(
+            "search",
+            ord("s"),
+            GLib.OptionFlags.NONE,
+            GLib.OptionArg.STRING,
+            _("Search Control Panel"),
+            _("TERMS"),
+        )
 
     def do_startup(self) -> None:
         Adw.Application.do_startup(self)
@@ -1642,6 +1728,28 @@ class ControlPanelApplication(Adw.Application):
     def do_activate(self) -> None:
         window = self.get_active_window() or ControlPanelWindow(self)
         window.present()
+
+    def do_command_line(self, command_line: Gio.ApplicationCommandLine) -> int:
+        options = command_line.get_options_dict()
+        topic_value = options.lookup_value("topic", GLib.VariantType.new("s"))
+        search_value = options.lookup_value("search", GLib.VariantType.new("s"))
+
+        self.activate()
+        window = self.get_active_window()
+        if not isinstance(window, ControlPanelWindow):
+            return 1
+
+        if search_value is not None:
+            window.search.set_text(search_value.unpack())
+            window.search.grab_focus()
+
+        if topic_value is not None:
+            identifier = topic_value.unpack()
+            if get_topic(identifier) is None:
+                window._show_error(_("Setting not found"), identifier)
+                return 2
+            window._activate_topic(identifier)
+        return 0
 
     def _show_about(self, _action: Gio.SimpleAction, _parameter) -> None:
         dialog = Adw.AboutDialog()
