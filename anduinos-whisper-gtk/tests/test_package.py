@@ -22,6 +22,9 @@ from anduinos_whisper_gtk import app as settings_app  # noqa: E402
 
 
 class PackageTests(unittest.TestCase):
+    def test_importing_settings_does_not_load_the_audio_backend(self):
+        self.assertNotIn("anduinos_whisper_framework.audio", sys.modules)
+
     def test_ui_state_machine_has_exactly_three_states(self):
         extension = (ROOT / "data/voice-typing@anduinos.com/extension.js").read_text()
         state_block = re.search(

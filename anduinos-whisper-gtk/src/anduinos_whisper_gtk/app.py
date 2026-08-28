@@ -12,7 +12,6 @@ gi.require_version("Gdk", "4.0")
 gi.require_version("Gtk", "4.0")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk  # noqa: E402
 
-from anduinos_whisper_framework.audio import input_devices
 from anduinos_whisper_framework.config import MODELS, SETTINGS_SCHEMA, model_installed
 
 from .dbus import VoiceServiceClient, VoiceUiClient
@@ -51,6 +50,13 @@ STATE_LABELS = {
 RESTART_REQUIRED_DETAIL = _(
     "Sign out and back in to finish enabling Voice Typing."
 )
+
+
+def _input_devices():
+    """Load the multimedia backend only when the settings window needs it."""
+    from anduinos_whisper_framework.audio import input_devices
+
+    return input_devices()
 
 
 class SettingsWindow(Adw.PreferencesWindow):
@@ -108,7 +114,7 @@ class SettingsWindow(Adw.PreferencesWindow):
         page.add(status_group)
 
         input_group = Adw.PreferencesGroup(title=_("Input"))
-        self.microphones = [("", _("System default"), True), *input_devices()]
+        self.microphones = [("", _("System default"), True), *_input_devices()]
         microphone_names = Gtk.StringList.new([item[1] for item in self.microphones])
         self.microphone_row = Adw.ComboRow(
             title=_("Microphone"), model=microphone_names
