@@ -1,3 +1,4 @@
+import ast
 import configparser
 from pathlib import Path
 import re
@@ -8,6 +9,25 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class DconfDefaultsPackageContractTests(unittest.TestCase):
+    def test_system_configuration_precedes_file_search_by_default(self):
+        parser = configparser.ConfigParser(interpolation=None)
+        parser.read(
+            ROOT / "assets/99-anduinos-defaults.gschema.override",
+            encoding="utf-8",
+        )
+
+        providers = ast.literal_eval(
+            parser["org.gnome.desktop.search-providers"]["sort-order"]
+        )
+        self.assertEqual(
+            providers[:3],
+            [
+                "org.gnome.Settings.desktop",
+                "com.anduinos.ControlPanel.desktop",
+                "org.gnome.Nautilus.desktop",
+            ],
+        )
+
     def test_ptyxis_first_window_has_a_valid_terminal_size(self):
         parser = configparser.ConfigParser(interpolation=None)
         parser.read(
