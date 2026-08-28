@@ -91,6 +91,49 @@ class ConfigureStorageTests(unittest.TestCase):
         )
         self.assertNotIn("subvol=", fstab)
 
+    def test_xfs_and_f2fs_have_single_root_fstab_entries(self):
+        expected_pass_numbers = {
+            Filesystem.XFS: 0,
+            Filesystem.F2FS: 1,
+        }
+        for filesystem, pass_number in expected_pass_numbers.items():
+            with self.subTest(filesystem=filesystem.value):
+                base = valid_plan()
+                plan = replace(
+                    base,
+                    storage=replace(base.storage, filesystem=filesystem),
+                )
+                runner = FakeRunner()
+                devices = {
+                    "root": "/dev/root",
+                    "efi-system": "/dev/efi",
+                    "swap": "/dev/swap",
+                }
+                for name, device in devices.items():
+                    runner.outputs[
+                        ("blkid", "-s", "UUID", "-o", "value", device)
+                    ] = (f"{name}-uuid\n", "", 0)
+                with tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    context = InstallContext(
+                        plan,
+                        lambda _message: None,
+                        values={
+                            "target": target,
+                            "partition_devices": devices,
+                        },
+                    )
+                    step = ConfigureStorageStep(runner)
+                    step.execute(context)
+                    step.verify(context)
+                    fstab = (target / "etc/fstab").read_text()
+                self.assertIn(
+                    f"UUID=root-uuid / {filesystem.value} "
+                    f"defaults,noatime 0 {pass_number}",
+                    fstab,
+                )
+                self.assertNotIn("subvol=", fstab)
+
     def test_missing_uuid_is_fatal(self):
         plan = valid_plan()
         runner = FakeRunner()

@@ -38,8 +38,10 @@ class StorageObjectKind(str, Enum):
 
 class StorageAction(str, Enum):
     PRESERVE = "preserve"
+    DELETE_PARTITION = "delete-partition"
     REPLACE_PARTITION_TABLE = "replace-partition-table"
     MODIFY_PARTITION_TABLE = "modify-partition-table"
+    RESIZE_PARTITION = "resize-partition"
     CREATE_PARTITION = "create-partition"
     FORMAT = "format"
     CREATE_SUBVOLUME = "create-subvolume"

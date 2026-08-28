@@ -240,6 +240,9 @@ class PackageContractTests(unittest.TestCase):
                 "libxkbcommon0",
                 "xkb-data",
                 "parted",
+                "ntfs-3g",
+                "xfsprogs",
+                "f2fs-tools",
                 "dosfstools",
                 "efibootmgr",
                 "gir1.2-nm-1.0",
@@ -318,7 +321,9 @@ class PackageContractTests(unittest.TestCase):
                     "usr/bin/anduinos-installer-storage-probe"
                 ):
                     path.write_text(
-                        '#!/bin/sh\nif [ "$#" -ne 1 ]; then exit 2; fi\n'
+                        '#!/bin/sh\nif [ "$#" -ne 1 ] && '
+                        '[ "$#" -ne 2 ]; then exit 2; fi\n'
+                        'storage_probe_cli.py "$@"\n'
                     )
                     path.chmod(0o755)
                 elif relative == Path(

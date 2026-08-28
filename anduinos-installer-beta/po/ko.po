@@ -71,22 +71,6 @@ msgstr "계정 보안"
 msgid "Advanced Storage"
 msgstr "고급 스토리지"
 
-#: src/pages.py:2889
-msgid ""
-"Advanced coexistence can affect EFI firmware state and may trigger BitLocker"
-" recovery. It never shrinks or repairs Windows volumes."
-msgstr ""
-"고급 공존은 EFI 펌웨어 상태에 영향을 미치고 BitLocker 복구를 트리거할 수 있습니다. Windows 볼륨을 축소하거나 "
-"복구하지는 않습니다."
-
-#: src/pages.py:2838
-msgid "Advanced — keep existing systems"
-msgstr "고급 — 기존 시스템 유지"
-
-#: src/pages.py:2985
-msgid "Advanced: Install Alongside"
-msgstr "고급: 옆에 설치"
-
 #: src/pages.py:164
 msgid ""
 "After changing partitions or unmounting a volume, rescan storage and select "
@@ -991,12 +975,6 @@ msgstr "설치된 시스템 언마운트"
 msgid "Updates and Drivers"
 msgstr "업데이트 및 드라이버"
 
-#: src/pages.py:2840
-msgid ""
-"Use already-unallocated space and preserve existing partitions. This is the "
-"only Windows coexistence path."
-msgstr "이미 할당되지 않은 공간을 사용하고 기존 파티션을 유지합니다. 이는 Windows 공존을 위한 유일한 방법입니다."
-
 #: src/pages.py:2986
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "선택한 디스크의 기존 할당되지 않은 공간만 사용합니다."
@@ -1503,3 +1481,327 @@ msgid ""
 msgstr ""
 "활성화하려면 UEFI 펌웨어 설정을 열고 '부팅', '보안', 또는 'Secure Boot' 항목을 확인하세요. 'Microsoft & "
 "3rd-party CA'를 선택하거나 Secure Boot를 켜세요. 제조사에 따라 펌웨어 용어가 다를 수 있습니다."
+
+msgid "Advanced"
+msgstr "고급"
+
+msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root and Swap partitions with exact sizes."
+msgstr "Windows 또는 다른 파티션을 유지하고 ESP를 재사용하거나 만든 다음 Root 및 Swap 파티션의 정확한 크기를 설계합니다."
+
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+
+msgid "Install Alongside Automatically"
+msgstr "자동으로 나란히 설치"
+
+msgid "ESP"
+msgstr "ESP"
+
+msgid "Root"
+msgstr "Root"
+
+msgid "Unallocated"
+msgstr "할당되지 않음"
+
+#, python-brace-format
+msgid "{name} · {size} · {start}–{end} MiB"
+msgstr "{name} · {size} · {start}–{end} MiB"
+
+msgid "Current disk"
+msgstr "현재 디스크"
+
+msgid "Planned result"
+msgstr "계획된 결과"
+
+msgid "Advanced: Manual Partitioning"
+msgstr "詳細: 手動パーティション"
+
+msgid "Windows was detected. Its partitions remain preserved unless you explicitly mark them for deletion."
+msgstr "Windows가 감지되었습니다. 명시적으로 삭제 표시하지 않는 한 해당 파티션은 유지됩니다."
+
+msgid "Initialize New GPT"
+msgstr "새 GPT 초기화"
+
+msgid "Root filesystem"
+msgstr "루트 파일 시스템"
+
+msgid "Existing partitions"
+msgstr "기존 파티션"
+
+msgid "Reuse a healthy existing ESP without formatting it, or create a new one in available space."
+msgstr "정상적인 기존 ESP를 포맷하지 않고 재사용하거나 사용 가능한 공간에 새로 만드십시오."
+
+msgid "Add a partition"
+msgstr "파티션 추가"
+
+msgid "Choose an available range, exact start position, and size. Nothing is written until installation begins."
+msgstr "사용 가능한 범위, 정확한 시작 위치와 크기를 선택하십시오. 설치가 시작되기 전에는 아무것도 기록되지 않습니다."
+
+msgid "Role"
+msgstr "역할"
+
+msgid "Available space"
+msgstr "利用可能なスペース"
+
+msgid "Start (MiB)"
+msgstr "시작 (MiB)"
+
+msgid "Size (MiB)"
+msgstr "크기 (MiB)"
+
+msgid "Use All"
+msgstr "모두 사용"
+
+msgid "Add Partition"
+msgstr "パーティションを追加"
+
+msgid "Edit"
+msgstr "편집"
+
+msgid "That partition can no longer be edited safely."
+msgstr "이 파티션은 더 이상 안전하게 편집할 수 없습니다."
+
+msgid "Use All Available Space"
+msgstr "사용 가능한 공간 모두 사용"
+
+#, python-brace-format
+msgid "Edit {role} partition"
+msgstr "{role} 파티션 편집"
+
+msgid "Choose an exact position and size inside the available range. Other planned partitions are not moved."
+msgstr "사용 가능한 범위 안에서 정확한 위치와 크기를 선택하십시오. 다른 계획된 파티션은 이동되지 않습니다."
+
+msgid "Apply Changes"
+msgstr "변경 사항 적용"
+
+msgid "Close"
+msgstr "Close"
+
+msgid "BitLocker was detected. Return to Windows, open Manage BitLocker, choose Turn off BitLocker, and wait until decryption reaches 100%. Suspending protection is not enough. Back up the recovery key, fully shut Windows down, then start the installer again."
+msgstr "BitLocker was detected. Return to Windows, open Manage BitLocker, choose Turn off BitLocker, and wait until decryption reaches 100%. Suspending protection is not enough. Back up the recovery key, fully shut Windows down, then start the installer again."
+
+msgid "Windows is hibernated or Fast Startup is active. In an Administrator Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s /t 0'. Start the installer again only after Windows has fully shut down."
+msgstr "Windows is hibernated or Fast Startup is active. In an Administrator Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s /t 0'. Start the installer again only after Windows has fully shut down."
+
+msgid "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk C: /f', allow every requested reboot to finish, then fully shut Windows down before trying again."
+msgstr "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk C: /f', allow every requested reboot to finish, then fully shut Windows down before trying again."
+
+msgid "This target would require moving critical NTFS MFT metadata through a currently unsafe upstream code path. Choose a larger Windows size or shrink the volume from Windows."
+msgstr "This target would require moving critical NTFS MFT metadata through a currently unsafe upstream code path. Choose a larger Windows size or shrink the volume from Windows."
+
+msgid "This NTFS volume is mounted or in use. Unmount it and rescan storage before continuing."
+msgstr "This NTFS volume is mounted or in use. Unmount it and rescan storage before continuing."
+
+msgid "This operation moves NTFS data and changes the GPT partition boundary. A power loss, failing drive, firmware fault or filesystem bug can cause permanent data loss. Back up all important Windows files before continuing."
+msgstr "This operation moves NTFS data and changes the GPT partition boundary. A power loss, failing drive, firmware fault or filesystem bug can cause permanent data loss. Back up all important Windows files before continuing."
+
+msgid "Verified now: plain NTFS, not mounted, not hibernated, cleanly shut down, and within the filesystem-reported safe range. The privileged installer will verify all of this again immediately before writing."
+msgstr "Verified now: plain NTFS, not mounted, not hibernated, cleanly shut down, and within the filesystem-reported safe range. The privileged installer will verify all of this again immediately before writing."
+
+msgid "New Windows partition size"
+msgstr "New Windows partition size"
+
+msgid "MiB"
+msgstr "MiB"
+
+#, python-brace-format
+msgid "Allowed: {minimum}–{maximum}"
+msgstr "Allowed: {minimum}–{maximum}"
+
+#, python-brace-format
+msgid "Windows: {windows} · New unallocated space: {free}"
+msgstr "Windows: {windows} · New unallocated space: {free}"
+
+msgid "I have backed up my data and understand that shrinking an existing Windows partition can cause permanent data loss."
+msgstr "I have backed up my data and understand that shrinking an existing Windows partition can cause permanent data loss."
+
+#, python-brace-format
+msgid "Change the size of {partition}?"
+msgstr "Change the size of {partition}?"
+
+msgid "The partition start will not move. Only its end will move left, creating unallocated space immediately after it."
+msgstr "The partition start will not move. Only its end will move left, creating unallocated space immediately after it."
+
+msgid "Undo Planned Resize"
+msgstr "Undo Planned Resize"
+
+msgid "Plan Resize"
+msgstr "Plan Resize"
+
+msgid "Turn off BitLocker before shrinking"
+msgstr "Turn off BitLocker before shrinking"
+
+#, python-brace-format
+msgid "Checking whether {partition} can be resized safely…"
+msgstr "Checking whether {partition} can be resized safely…"
+
+msgid "NTFS safety check failed"
+msgstr "NTFS safety check failed"
+
+msgid "This partition cannot be resized safely"
+msgstr "This partition cannot be resized safely"
+
+msgid "New empty GPT — every existing partition will be deleted"
+msgstr "새로운 빈 GPT — 모든 기존 파티션이 삭제됩니다"
+
+msgid "Keep current GPT — only marked partitions are deleted"
+msgstr "현재 GPT 유지 — 표시된 파티션만 삭제됩니다"
+
+msgid "Keep Current GPT"
+msgstr "현재 GPT 유지"
+
+msgid "unknown"
+msgstr "알 수 없음"
+
+msgid "WILL DELETE"
+msgstr "삭제됨"
+
+msgid "Preserve"
+msgstr "보존"
+
+#, python-brace-format
+msgid "Planned size: {size}"
+msgstr "Planned size: {size}"
+
+msgid "Deleted by new GPT"
+msgstr "新しいGPTによって削除"
+
+msgid "Undo"
+msgstr "실행 취소"
+
+msgid "Delete"
+msgstr "削除"
+
+msgid "RESIZE"
+msgstr "RESIZE"
+
+msgid "Change Size"
+msgstr "Change Size"
+
+msgid "This disk has no existing partitions."
+msgstr "이 디스크에는 기존 파티션이 없습니다."
+
+msgid "Create a new ESP partition"
+msgstr "新しいESPパーティションを作成"
+
+#, python-brace-format
+msgid "{size} · {start}–{end} MiB"
+msgstr "{size} · {start}–{end} MiB"
+
+msgid "Remove"
+msgstr "제거"
+
+msgid "New"
+msgstr "새로 만들기"
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
+msgstr "아직 새 파티션이 없습니다. 필요한 경우 ESP, Root 파티션 하나, 선택적으로 Swap을 추가하십시오."
+
+#, python-brace-format
+msgid "{size} at {start} MiB"
+msgstr "{start} MiB에서 {size}"
+
+msgid "an ESP of at least 512 MiB"
+msgstr "512 MiB 이상의 ESP"
+
+msgid "a Root partition of at least 20 GiB"
+msgstr "20 GiB 이상의 Root 파티션"
+
+#, python-brace-format
+msgid "Complete the plan: {requirements}."
+msgstr "계획을 완성하십시오: {requirements}."
+
+msgid "Layout is valid. Only the listed resizes, deletes, creates and formats will be sent to the privileged executor."
+msgstr "Layout is valid. Only the listed resizes, deletes, creates and formats will be sent to the privileged executor."
+
+msgid "That partition role already exists."
+msgstr "해당 파티션 역할이 이미 존재합니다."
+
+msgid "Initialize a new GPT?"
+msgstr "새 GPT를 초기화할까요?"
+
+msgid "Every existing partition and all data on this disk will be deleted. You must then create a new ESP and Root partition."
+msgstr "이 디스크의 모든 기존 파티션 및 모든 데이터가 삭제됩니다. 이후 새로운 ESP 및 루트 파티션을 생성해야 합니다."
+
+msgid "Initialize GPT"
+msgstr "GPT 초기화"
+
+msgid "The selected disk changed or disappeared."
+msgstr "선택한 디스크가 변경되었거나 사라졌습니다."
+
+msgid "The selected disk topology changed. Select it again."
+msgstr "선택한 디스크의 위계가 변경되었습니다. 다시 선택하십시오."
+
+msgid "none"
+msgstr "없음"
+
+#, python-brace-format
+msgid "{path}: {before} → {after} (free {reclaimed})"
+msgstr "{path}: {before} → {after} (free {reclaimed})"
+
+#, python-brace-format
+msgid "{name}: {size} MiB ({start}–{end})"
+msgstr "{name}: {size} MiB ({start}–{end})"
+
+msgid "Initialize a new empty GPT"
+msgstr "새로운 빈 GPT 초기화"
+
+msgid "Keep the current GPT"
+msgstr "현재 GPT 유지"
+
+#, python-brace-format
+msgid "Reuse {path}; inspect it and never format it."
+msgstr "{path}를 재사용합니다. 검사만 하고 절대 포맷하지 마세요."
+
+msgid "Create and format a new EFI System Partition."
+msgstr "新しいEFIシステムパーティションを作成してフォーマットします。"
+
+msgid "Advanced manual GPT"
+msgstr "詳細な手動GPT"
+
+msgid "Partition table"
+msgstr "파티션 테이블"
+
+msgid "Deleted partitions"
+msgstr "削除されたパーティション"
+
+msgid "Resized partitions"
+msgstr "Resized partitions"
+
+msgid "Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS NVRAM entry."
+msgstr "EFI/AnduinOS에만 기록하고 EFI/BOOT는 보존하며, 검증된 AnduinOS NVRAM 항목을 생성합니다."
+
+msgid "Manual storage selection is missing. Return and review it."
+msgstr "수동 저장소 선택이 누락되었습니다. 돌아가서 검토하십시오."
+
+msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+
+msgid "Apply this manual disk layout?"
+msgstr "この手動ディスクレイアウトを適用しますか?"
+
+msgid "Apply Layout and Install"
+msgstr "レイアウトを適用してインストール"
+
+#, python-brace-format
+msgid ""
+"AnduinOS will apply only the reviewed manual changes to {disk}.\n"
+"\n"
+msgstr ""
+"AnduinOSは{disk}にレビュー済みの手動変更のみを適用します。\n"
+"\n"
+
+msgid "Only the explicitly listed partitions will be deleted or formatted. Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
+msgstr "명시적으로 나열된 파티션만 삭제 또는 포맷됩니다. 관련 없는 파티션은 변경되지 않으며, EFI/BOOT는 덮어쓰지 않습니다."
+
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
+msgstr "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
+
+msgid "XFS (classic, scalable)"
+msgstr "XFS (classic, scalable)"
+
+msgid "F2FS (flash-optimized)"
+msgstr "F2FS (flash-optimized)"
+
+msgid "XFS and F2FS use one conventional root filesystem; Btrfs additionally creates AnduinOS subvolumes and enables snapshots."
+msgstr "XFS and F2FS use one conventional root filesystem; Btrfs additionally creates AnduinOS subvolumes and enables snapshots."

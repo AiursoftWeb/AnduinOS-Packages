@@ -14,7 +14,7 @@ from typing import Any
 from .storage_graph import StorageGraph
 
 
-SCHEMA_VERSION = 13
+SCHEMA_VERSION = 15
 
 
 class Architecture(str, Enum):
@@ -43,6 +43,8 @@ class InstallMode(str, Enum):
 class Filesystem(str, Enum):
     BTRFS = "btrfs"
     EXT4 = "ext4"
+    XFS = "xfs"
+    F2FS = "f2fs"
 
 
 class MokPasswordPolicy(str, Enum):

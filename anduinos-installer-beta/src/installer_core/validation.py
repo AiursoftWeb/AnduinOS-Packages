@@ -12,6 +12,7 @@ from languages import input_method, language_for_locale
 from .model import (
     AuthenticationMode,
     Architecture,
+    Filesystem,
     Firmware,
     InstallMode,
     InstallPlan,
@@ -76,7 +77,7 @@ def validate_plan(
     *,
     allow_guided_compilation: bool = True,
 ) -> None:
-    """Validate an erase-disk or beta guided-coexistence plan."""
+    """Validate an erase-disk, guided-coexistence or manual GPT plan."""
 
     errors: list[str] = []
 
@@ -94,8 +95,9 @@ def validate_plan(
     elif plan.storage.mode not in {
         InstallMode.ERASE_DISK,
         InstallMode.GUIDED_COEXISTENCE,
+        InstallMode.MANUAL,
     }:
-        errors.append("Manual partitioning is not implemented")
+        errors.append("Unsupported storage mode")
 
     disk = plan.storage.disk
     if not WHOLE_DISK_RE.fullmatch(disk.path):
@@ -105,20 +107,33 @@ def validate_plan(
     if disk.expected_size_bytes < MINIMUM_DISK_BYTES:
         errors.append("Target disk must be at least 24 GiB")
 
-    reserved = (
-        plan.storage.esp_size_mib + plan.storage.swap_size_mib + 4
-    ) * 1024**2
-    if disk.expected_size_bytes - reserved < MINIMUM_ROOT_BYTES:
-        errors.append("Partition layout leaves less than 20 GiB for root")
+    if plan.storage.mode is InstallMode.ERASE_DISK:
+        reserved = (
+            plan.storage.esp_size_mib + plan.storage.swap_size_mib + 4
+        ) * 1024**2
+        if disk.expected_size_bytes - reserved < MINIMUM_ROOT_BYTES:
+            errors.append("Partition layout leaves less than 20 GiB for root")
+    if (
+        plan.storage.mode is not InstallMode.MANUAL
+        and plan.storage.filesystem
+        not in {Filesystem.BTRFS, Filesystem.EXT4}
+    ):
+        errors.append(
+            "XFS and F2FS root filesystems require Advanced manual mode"
+        )
     if plan.storage.esp_size_mib < 512:
         errors.append("EFI System Partition must be at least 512 MiB")
     if (
         type(plan.storage.swap_size_mib) is not int
         or plan.storage.swap_size_mib < 0
-        or plan.storage.swap_size_mib % 1024
+    ):
+        errors.append("Disk swap must use a non-negative MiB size")
+    elif (
+        plan.storage.mode is not InstallMode.MANUAL
+        and plan.storage.swap_size_mib % 1024
     ):
         errors.append(
-            "Disk swap must be zero or use non-negative whole-GiB sizing"
+            "Automatic disk swap must use non-negative whole-GiB sizing"
         )
     try:
         validate_storage_graph(plan)
@@ -154,6 +169,11 @@ def validate_plan(
         errors.append(
             "Install alongside must not write the shared EFI fallback path"
         )
+    elif (
+        plan.storage.mode is InstallMode.MANUAL
+        and plan.boot.install_fallback_path
+    ):
+        errors.append("Manual mode must not write the EFI fallback path")
 
     identity = plan.identity
     if identity.username in RESERVED_USERNAMES:

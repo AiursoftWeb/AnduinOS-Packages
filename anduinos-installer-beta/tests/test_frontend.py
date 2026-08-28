@@ -1,5 +1,6 @@
 import io
 import json
+import subprocess
 import unittest
 from dataclasses import replace
 from unittest.mock import patch
@@ -16,7 +17,6 @@ from frontend import (
     clear_plaintext_passwords,
     clear_storage_target,
     create_install_plan,
-    guided_storage_enabled,
 )
 from installer_core.model import (
     Architecture,
@@ -103,6 +103,46 @@ def guided_state():
 
 
 class FrontendPlanTests(unittest.TestCase):
+    def test_ntfs_inspection_uses_only_the_polkit_read_only_mode(self):
+        from frontend import probe_ntfs_resize
+        from installer_core.ntfs_resize import (
+            NtfsResizeBlockReason,
+            NtfsResizeInspection,
+        )
+
+        inspection = NtfsResizeInspection(
+            device="/dev/nvme0n1p3",
+            filesystem="ntfs",
+            current_size_bytes=128 * 1024**3,
+            minimum_size_bytes=24 * 1024**3,
+            maximum_size_bytes=128 * 1024**3 - 1024**2,
+            block_reason=NtfsResizeBlockReason.NONE,
+            message="safe",
+            probe_exit_code=0,
+        )
+        with (
+            patch("frontend.os.geteuid", return_value=1000),
+            patch("frontend.subprocess.run") as run,
+        ):
+            run.return_value = subprocess.CompletedProcess(
+                [], 0, inspection.to_json(), ""
+            )
+            self.assertEqual(
+                probe_ntfs_resize("/dev/nvme0n1p3"), inspection
+            )
+        run.assert_called_once_with(
+            [
+                "pkexec",
+                "/usr/bin/anduinos-installer-storage-probe",
+                "--ntfs-inspect",
+                "/dev/nvme0n1p3",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=600,
+            check=False,
+        )
+
     def test_storage_geometry_uses_only_the_polkit_probe_when_unprivileged(self):
         command = [
             "parted",
@@ -616,14 +656,9 @@ class FrontendPlanTests(unittest.TestCase):
                     platform=platform,
                 )
 
-    def test_guided_storage_is_always_enabled_in_beta(self):
-        self.assertTrue(guided_storage_enabled())
-
     def test_target_change_clears_topology_dependent_storage_choices(self):
         values, _disk, inventory, platform = guided_state()
-        values["storage_strategy"] = (
-            StorageStrategy.ADVANCED_COEXISTENCE.value
-        )
+        values["storage_strategy"] = StorageStrategy.ADVANCED.value
         values["guided_extent_id"] = "stale-extent"
         values["guided_esp_partuuid"] = "stale-esp"
         values["disk_topology_digest"] = "0" * 64
@@ -643,12 +678,12 @@ class FrontendPlanTests(unittest.TestCase):
         choice = build_storage_workflow(inventory, platform).disks[0]
         bind_storage_target(values, choice)
         apply_storage_strategy(
-            values, StorageStrategy.ADVANCED_COEXISTENCE
+            values, StorageStrategy.ADVANCED
         )
         self.assertFalse(bind_storage_target(values, choice))
         self.assertEqual(
             values["storage_strategy"],
-            StorageStrategy.ADVANCED_COEXISTENCE.value,
+            StorageStrategy.ADVANCED.value,
         )
 
         changed = replace(
@@ -667,10 +702,14 @@ class FrontendPlanTests(unittest.TestCase):
         self.assertEqual(values["guided_extent_id"], "")
 
         apply_storage_strategy(
-            values, StorageStrategy.ADVANCED_COEXISTENCE
+            values, StorageStrategy.ADVANCED
         )
-        self.assertEqual(values["storage_mode"], "guided-coexistence")
+        self.assertEqual(values["storage_mode"], "manual")
         self.assertEqual(values["filesystem"], "btrfs")
+
+        values["filesystem"] = Filesystem.XFS.value
+        apply_storage_strategy(values, StorageStrategy.ADVANCED)
+        self.assertEqual(values["filesystem"], "xfs")
 
         clear_storage_target(values)
         self.assertEqual(values["disk_stable_id"], "")

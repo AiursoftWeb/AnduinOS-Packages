@@ -47,8 +47,11 @@ class ConfigureStorageStep:
                 for subvolume in BTRFS_SUBVOLUMES
             )
         else:
+            filesystem = context.plan.storage.filesystem
+            pass_number = 0 if filesystem is Filesystem.XFS else 1
             root_lines = (
-                f"UUID={uuids['root']} / ext4 defaults,noatime 0 1\n"
+                f"UUID={uuids['root']} / {filesystem.value} "
+                f"defaults,noatime 0 {pass_number}\n"
             )
 
         swap_line = (

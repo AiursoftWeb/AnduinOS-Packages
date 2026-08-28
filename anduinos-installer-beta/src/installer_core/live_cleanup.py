@@ -34,6 +34,14 @@ VMWARE_GUEST_PACKAGES = (
 # retained before purging the Live bridge and running autoremove.
 PERSISTENT_TARGET_PACKAGES = ("openssh-server",)
 
+# These tools are installed as dependencies of the removable installer, but
+# remain essential administration and repair tools for their selected root
+# filesystem after the installer package is purged and autoremove runs.
+ADVANCED_FILESYSTEM_TOOL_PACKAGES = {
+    Filesystem.XFS: "xfsprogs",
+    Filesystem.F2FS: "f2fs-tools",
+}
+
 # This is a post-autoremove composition contract, not an apt-mark exception.
 # The persistent anduinos-core-system metapackage owns these packages so boot
 # maintenance remains available after the removable Live installer is purged.
@@ -84,6 +92,16 @@ class RemoveLivePackagesStep:
             for package in PERSISTENT_TARGET_PACKAGES
             if _is_installed(self.runner, target, package)
         )
+        filesystem_tool = ADVANCED_FILESYSTEM_TOOL_PACKAGES.get(
+            context.plan.storage.filesystem
+        )
+        if filesystem_tool:
+            if not _is_installed(self.runner, target, filesystem_tool):
+                raise RuntimeError(
+                    "Selected root filesystem tools are missing: "
+                    + filesystem_tool
+                )
+            retained += (filesystem_tool,)
         for package in retained:
             self.runner.run(
                 ("chroot", str(target), "apt-mark", "manual", package),
@@ -97,10 +115,11 @@ class RemoveLivePackagesStep:
             )
 
         candidates = list(LIVE_ONLY_PACKAGES)
-        if context.plan.storage.filesystem is Filesystem.EXT4:
+        if context.plan.storage.filesystem is not Filesystem.BTRFS:
             candidates.append(SNAPSHOTS_MANAGER_PACKAGE)
             context.log(
-                "Disk Snapshots Manager cleanup policy: remove it from the ext4 target"
+                "Disk Snapshots Manager cleanup policy: remove it from the "
+                f"{context.plan.storage.filesystem.value} target"
             )
         else:
             context.log(

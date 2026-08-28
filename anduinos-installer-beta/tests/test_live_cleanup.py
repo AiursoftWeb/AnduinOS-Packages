@@ -5,6 +5,7 @@ from pathlib import Path
 from fakes import FakeRunner
 from helpers import valid_plan
 from installer_core.live_cleanup import (
+    ADVANCED_FILESYSTEM_TOOL_PACKAGES,
     LIVE_ONLY_PACKAGES,
     PERSISTENT_TARGET_PACKAGES,
     REQUIRED_BOOT_PACKAGES,
@@ -70,6 +71,13 @@ class RemoveLivePackagesTests(unittest.TestCase):
         self.assertEqual(LIVE_ONLY_PACKAGES, EXPECTED_LIVE_ONLY_PACKAGES)
         self.assertNotIn(SNAPSHOTS_MANAGER_PACKAGE, LIVE_ONLY_PACKAGES)
         self.assertEqual(PERSISTENT_TARGET_PACKAGES, ("openssh-server",))
+        self.assertEqual(
+            ADVANCED_FILESYSTEM_TOOL_PACKAGES,
+            {
+                Filesystem.XFS: "xfsprogs",
+                Filesystem.F2FS: "f2fs-tools",
+            },
+        )
         self.assertEqual(
             REQUIRED_BOOT_PACKAGES[Architecture.AMD64],
             (
@@ -284,6 +292,58 @@ class RemoveLivePackagesTests(unittest.TestCase):
         self.assertEqual(
             context.values["live_package_candidates"][-1], SNAPSHOTS_MANAGER_PACKAGE
         )
+
+    def test_advanced_filesystem_tools_survive_installer_autoremove(self):
+        for filesystem, package in ADVANCED_FILESYSTEM_TOOL_PACKAGES.items():
+            with self.subTest(filesystem=filesystem.value):
+                with tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    runner = FakeRunner()
+                    runner.outputs[_query(target, package)] = (
+                        "ii \n",
+                        "",
+                        0,
+                    )
+                    runner.outputs[
+                        _query(target, "anduinos-installer-beta")
+                    ] = ("ii \n", "", 0)
+                    context = _context(target, filesystem)
+                    RemoveLivePackagesStep(runner).execute(context)
+
+                commands = [
+                    command for command, _kwargs in runner.commands
+                ]
+                mark = (
+                    "chroot",
+                    str(target),
+                    "apt-mark",
+                    "manual",
+                    package,
+                )
+                autoremove = next(
+                    command
+                    for command in commands
+                    if "autoremove" in command
+                )
+                self.assertIn(mark, commands)
+                self.assertLess(commands.index(mark), commands.index(autoremove))
+                self.assertIn(
+                    package,
+                    context.values["persistent_target_packages"],
+                )
+                self.assertIn(
+                    SNAPSHOTS_MANAGER_PACKAGE,
+                    context.values["live_package_candidates"],
+                )
+
+    def test_missing_selected_filesystem_tools_are_fatal(self):
+        with tempfile.TemporaryDirectory() as directory:
+            context = _context(Path(directory), Filesystem.XFS)
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "Selected root filesystem tools are missing: xfsprogs",
+            ):
+                RemoveLivePackagesStep(FakeRunner()).execute(context)
 
     def test_missing_packages_are_a_successful_noop(self):
         with tempfile.TemporaryDirectory() as directory:

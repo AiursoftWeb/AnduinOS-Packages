@@ -240,6 +240,46 @@ class InstallerVisualAssetTests(unittest.TestCase):
             pages,
         )
 
+    def test_manual_storage_separates_planning_from_editing(self):
+        pages = (ROOT / "src/pages.py").read_text()
+        manual = pages.split("def build_advanced_storage_page", 1)[1]
+        manual = manual.split("def _find_live_device", 1)[0]
+        self.assertIn("workspace = Adw.ViewStack(vexpand=True)", manual)
+        self.assertIn("switcher = Adw.ViewSwitcher(", manual)
+        self.assertIn(
+            '        _("Planned result", lang),',
+            manual,
+        )
+        self.assertIn(
+            '        "document-edit-symbolic",',
+            manual,
+        )
+        for fragment in (
+            '_("XFS (classic, scalable)", lang)',
+            '_("F2FS (flash-optimized)", lang)',
+            "_MANUAL_ROOT_FILESYSTEMS[filesystem.get_selected()]",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, manual)
+        self.assertIn("Filesystem.XFS", pages)
+        self.assertIn("Filesystem.F2FS", pages)
+        guided = pages.split("def build_guided_storage_page", 1)[1]
+        guided = guided.split("def build_advanced_storage_page", 1)[0]
+        self.assertNotIn("Filesystem.XFS", guided)
+        self.assertNotIn("Filesystem.F2FS", guided)
+        self.assertEqual(manual.count("workspace.add_titled_with_icon("), 2)
+        self.assertIn('disk_notice.add_css_class("installer-callout")', manual)
+        self.assertNotIn("coexistence_notice", manual)
+        self.assertNotIn("hscrollbar_policy=Gtk.PolicyType.AUTOMATIC", manual)
+        self.assertIn('_("Change Size", lang)', manual)
+        self.assertIn("resize_requests.start(", manual)
+        self.assertIn("partition.filesystem_type.casefold() == \"ntfs\"", manual)
+        self.assertIn("powercfg /h off", manual)
+        self.assertIn("shutdown /s /t 0", manual)
+        self.assertIn("Turn off BitLocker", manual)
+        self.assertIn("decryption reaches 100%", manual)
+        self.assertIn("chkdsk C: /f", manual)
+
     def test_storage_method_header_carries_disk_info_without_target_badge(self):
         pages = (ROOT / "src/pages.py").read_text()
         method_page = pages.split("def build_storage_strategy_page", 1)[1]

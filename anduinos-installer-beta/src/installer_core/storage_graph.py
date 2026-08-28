@@ -12,12 +12,13 @@ from enum import Enum
 from typing import Any
 
 
-STORAGE_GRAPH_SCHEMA_VERSION = 2
+STORAGE_GRAPH_SCHEMA_VERSION = 5
 
 
 class StorageGraphMode(str, Enum):
     ERASE_DISK = "erase-disk"
     GUIDED_COEXISTENCE = "guided-coexistence"
+    MANUAL = "manual"
 
 
 class BlockReferenceKind(str, Enum):
@@ -33,14 +34,19 @@ class BlockReferenceKind(str, Enum):
 class GraphFilesystem(str, Enum):
     BTRFS = "btrfs"
     EXT4 = "ext4"
+    XFS = "xfs"
+    F2FS = "f2fs"
     VFAT = "vfat"
     SWAP = "swap"
+    NTFS = "ntfs"
 
 
 class StorageGraphAction(str, Enum):
     PRESERVE = "preserve"
+    DELETE_PARTITION = "delete-partition"
     REPLACE_PARTITION_TABLE = "replace-partition-table"
     MODIFY_PARTITION_TABLE = "modify-partition-table"
+    RESIZE_PARTITION = "resize-partition"
     CREATE_PARTITION = "create-partition"
     FORMAT = "format"
     CREATE_SUBVOLUME = "create-subvolume"
@@ -90,6 +96,16 @@ class PartitionDeclaration:
 
 
 @dataclass(frozen=True)
+class PartitionResizeDeclaration:
+    """Authorized new size for one stable existing filesystem partition."""
+
+    target_reference_id: str
+    filesystem: GraphFilesystem
+    original_size_bytes: int
+    target_size_bytes: int
+
+
+@dataclass(frozen=True)
 class FilesystemDeclaration:
     filesystem_id: str
     block_id: str
@@ -135,6 +151,7 @@ class StorageGraph:
     partition_table: str
     block_references: tuple[BlockReference, ...]
     partitions: tuple[PartitionDeclaration, ...]
+    partition_resizes: tuple[PartitionResizeDeclaration, ...]
     filesystems: tuple[FilesystemDeclaration, ...]
     subvolumes: tuple[SubvolumeDeclaration, ...]
     mounts: tuple[MountDeclaration, ...]
@@ -171,6 +188,15 @@ class StorageGraph:
                     "flags": list(item.flags),
                 }
                 for item in self.partitions
+            ],
+            "partition_resizes": [
+                {
+                    "target_reference_id": item.target_reference_id,
+                    "filesystem": item.filesystem.value,
+                    "original_size_bytes": item.original_size_bytes,
+                    "target_size_bytes": item.target_size_bytes,
+                }
+                for item in self.partition_resizes
             ],
             "filesystems": [
                 {
@@ -229,6 +255,7 @@ class StorageGraph:
                 "partition_table",
                 "block_references",
                 "partitions",
+                "partition_resizes",
                 "filesystems",
                 "subvolumes",
                 "mounts",
@@ -262,6 +289,15 @@ class StorageGraph:
                 _partition(item, index)
                 for index, item in enumerate(
                     _list(graph["partitions"], "storage.graph.partitions")
+                )
+            ),
+            partition_resizes=tuple(
+                _partition_resize(item, index)
+                for index, item in enumerate(
+                    _list(
+                        graph["partition_resizes"],
+                        "storage.graph.partition_resizes",
+                    )
                 )
             ),
             filesystems=tuple(
@@ -390,6 +426,36 @@ def _filesystem(value: object, index: int) -> FilesystemDeclaration:
         block_id=_string(item["block_id"], f"{path}.block_id"),
         filesystem=GraphFilesystem(item["filesystem"]),
         label=_string(item["label"], f"{path}.label"),
+    )
+
+
+def _partition_resize(
+    value: object,
+    index: int,
+) -> PartitionResizeDeclaration:
+    path = f"storage.graph.partition_resizes[{index}]"
+    item = _mapping(value, path)
+    _exact_fields(
+        item,
+        {
+            "target_reference_id",
+            "filesystem",
+            "original_size_bytes",
+            "target_size_bytes",
+        },
+        path,
+    )
+    return PartitionResizeDeclaration(
+        target_reference_id=_string(
+            item["target_reference_id"], f"{path}.target_reference_id"
+        ),
+        filesystem=GraphFilesystem(item["filesystem"]),
+        original_size_bytes=_integer(
+            item["original_size_bytes"], f"{path}.original_size_bytes"
+        ),
+        target_size_bytes=_integer(
+            item["target_size_bytes"], f"{path}.target_size_bytes"
+        ),
     )
 
 

@@ -280,7 +280,7 @@ class PowerPageRoutingTests(unittest.TestCase):
             "_power_probe_result": self.safe(),
             "_platform_probe_result": self.platform(SecureBoot.ENABLED),
             "_network_page_planned": True,
-            "storage_strategy": "advanced-coexistence",
+            "storage_strategy": "advanced-manual",
         }
         route = _planned_page_route(shared)
         self.assertEqual(len(route), 14)
@@ -299,12 +299,13 @@ class PowerPageRoutingTests(unittest.TestCase):
             "_power_probe_result": self.safe(),
             "_platform_probe_result": self.platform(SecureBoot.ENABLED),
             "_network_page_planned": True,
-            "storage_strategy": "advanced-coexistence",
+            "storage_strategy": "advanced-manual",
         }
         source = Path("src/pages.py").read_text(encoding="utf-8")
         registered_tags = set(re.findall(r'page_tag="([^"]+)"', source))
+        manual_route = set(_planned_page_route(shared))
 
-        self.assertEqual(registered_tags, set(_planned_page_route(shared)))
+        self.assertEqual(registered_tags - {"guided-storage"}, manual_route)
 
 
 if __name__ == "__main__":

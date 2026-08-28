@@ -16,10 +16,23 @@ from .validation import validate_plan
 
 
 @dataclass(frozen=True)
+class NtfsResizeCommandPlan:
+    target_reference_id: str
+    disk: str
+    device: str
+    partition_number: int
+    original_size_bytes: int
+    target_size_bytes: int
+    target_end_bytes: int
+
+
+@dataclass(frozen=True)
 class StorageCommandPlan:
     partition: tuple[tuple[str, ...], ...]
     format: tuple[tuple[str, ...], ...]
     devices: dict[str, str]
+    deactivate_swap_devices: tuple[str, ...] = ()
+    ntfs_resizes: tuple[NtfsResizeCommandPlan, ...] = ()
 
 
 def partition_path(disk: str, number: int) -> str:
@@ -77,14 +90,12 @@ def build_storage_commands(
             ("mkswap", "-L", "AnduinOS-swap", devices["swap"])
         )
     root = devices["root"]
-    if plan.storage.filesystem is Filesystem.BTRFS:
-        format_commands.append(
-            ("mkfs.btrfs", "--force", "--label", "AnduinOS", root)
+    format_commands.append(
+        _format_command(
+            GraphFilesystem(plan.storage.filesystem.value),
+            root,
         )
-    else:
-        format_commands.append(
-            ("mkfs.ext4", "-F", "-L", "AnduinOS", root)
-        )
+    )
 
     return StorageCommandPlan(
         partition=tuple(partition_commands),
@@ -199,6 +210,157 @@ def build_guided_coexistence_storage_commands(
     )
 
 
+def build_manual_storage_commands(
+    plan: InstallPlan,
+    inventory: StorageInventory,
+) -> StorageCommandPlan:
+    """Compile one canonical manual GPT graph into fixed commands."""
+
+    if plan.storage.mode is not InstallMode.MANUAL:
+        raise ValueError("Plan is not manual partitioning")
+    from .manual_graph_planning import validate_manual_storage_graph
+
+    disk = validate_manual_storage_graph(plan, inventory)
+    graph = plan.storage.graph
+    assert graph is not None
+    disk_path = disk.identity.path
+    existing_by_reference = {
+        _existing_partition_reference_id(
+            disk.identity.stable_id,
+            item.identity.partuuid,
+        ): item
+        for item in disk.partitions
+    }
+    resize_declarations = {
+        item.target_reference_id: item for item in graph.partition_resizes
+    }
+    delete_references = tuple(
+        item.target_id
+        for item in graph.operations
+        if item.action is StorageGraphAction.DELETE_PARTITION
+    )
+    replace_table = any(
+        item.action is StorageGraphAction.REPLACE_PARTITION_TABLE
+        for item in graph.operations
+    )
+    partition_commands: list[tuple[str, ...]] = []
+    if replace_table:
+        partition_commands.append(
+            ("parted", "--script", disk_path, "mklabel", "gpt")
+        )
+    else:
+        partition_commands.extend(
+            (
+                "parted",
+                "--script",
+                disk_path,
+                "rm",
+                str(existing_by_reference[item].identity.number),
+            )
+            for item in delete_references
+        )
+
+    filesystems = {
+        item.block_id: item.filesystem for item in graph.filesystems
+    }
+    devices: dict[str, str] = {}
+    for part in graph.partitions:
+        filesystem = filesystems[part.partition_id]
+        command = [
+            "parted",
+            "--script",
+            disk_path,
+            "unit",
+            "MiB",
+            "mkpart",
+            part.name,
+        ]
+        filesystem_hint = _graph_parted_filesystem_hint(filesystem)
+        if filesystem_hint:
+            command.append(filesystem_hint)
+        command.extend(
+            (f"{part.start_mib}MiB", f"{part.end_mib}MiB")
+        )
+        partition_commands.append(tuple(command))
+        for flag in part.flags:
+            if flag == "swap":
+                continue
+            partition_commands.append(
+                (
+                    "parted",
+                    "--script",
+                    disk_path,
+                    "set",
+                    str(part.number),
+                    flag,
+                    "on",
+                )
+            )
+        devices[part.name] = partition_path(disk_path, part.number)
+
+    boot_target = graph.boot_targets[0]
+    existing_esp = existing_by_reference.get(
+        boot_target.efi_filesystem_id
+    )
+    if existing_esp is not None:
+        devices["efi-system"] = existing_esp.identity.path
+    expected_devices = {"efi-system", "root"}
+    if plan.storage.swap_size_mib:
+        expected_devices.add("swap")
+    if set(devices) != expected_devices:
+        raise RuntimeError("Manual graph did not resolve target devices")
+
+    formatted_ids = {
+        item.target_id
+        for item in graph.operations
+        if item.action is StorageGraphAction.FORMAT
+    }
+    format_commands = tuple(
+        _format_command(
+            filesystems[part.partition_id],
+            devices[part.name],
+        )
+        for part in graph.partitions
+        if part.partition_id in formatted_ids
+    )
+    deactivate_swap_devices = tuple(
+        item.identity.path
+        for item in disk.partitions
+        if item.filesystem_type.casefold() == "swap"
+        and (
+            replace_table
+            or _existing_partition_reference_id(
+                disk.identity.stable_id,
+                item.identity.partuuid,
+            )
+            in delete_references
+        )
+    )
+    ntfs_resizes = tuple(
+        NtfsResizeCommandPlan(
+            target_reference_id=target_id,
+            disk=disk_path,
+            device=existing_by_reference[target_id].identity.path,
+            partition_number=existing_by_reference[target_id].identity.number,
+            original_size_bytes=declaration.original_size_bytes,
+            target_size_bytes=declaration.target_size_bytes,
+            target_end_bytes=(
+                existing_by_reference[target_id].identity.start_bytes
+                + declaration.target_size_bytes
+                - 1
+            ),
+        )
+        for target_id, declaration in resize_declarations.items()
+    )
+    return StorageCommandPlan(
+        partition=tuple(partition_commands),
+        format=format_commands,
+        devices=devices,
+        deactivate_swap_devices=deactivate_swap_devices,
+        ntfs_resizes=ntfs_resizes,
+    )
+
+
 def _parted_filesystem_hint(partition: PartitionSpec) -> str | None:
     return {
         "fat32": "fat32",
@@ -208,12 +370,19 @@ def _parted_filesystem_hint(partition: PartitionSpec) -> str | None:
     }.get(partition.filesystem or "")
 
 
-def _graph_parted_filesystem_hint(filesystem: GraphFilesystem) -> str:
+def _graph_parted_filesystem_hint(
+    filesystem: GraphFilesystem,
+) -> str | None:
     return {
         GraphFilesystem.VFAT: "fat32",
         GraphFilesystem.SWAP: "linux-swap",
         GraphFilesystem.BTRFS: "btrfs",
         GraphFilesystem.EXT4: "ext4",
+        # GNU Parted does not need a filesystem hint for GPT Linux data
+        # partitions. Avoid passing newer filesystem names that older Parted
+        # parsers may reject; the real formatter runs in a separate command.
+        GraphFilesystem.XFS: None,
+        GraphFilesystem.F2FS: None,
     }[filesystem]
 
 
@@ -229,7 +398,11 @@ def _format_command(
         return ("mkfs.btrfs", "--force", "--label", "AnduinOS", device)
     if filesystem is GraphFilesystem.EXT4:
         return ("mkfs.ext4", "-F", "-L", "AnduinOS", device)
-    raise RuntimeError(f"Unsupported coexistence filesystem: {filesystem}")
+    if filesystem is GraphFilesystem.XFS:
+        return ("mkfs.xfs", "-f", "-L", "AnduinOS", device)
+    if filesystem is GraphFilesystem.F2FS:
+        return ("mkfs.f2fs", "-f", "-l", "AnduinOS", device)
+    raise RuntimeError(f"Unsupported target filesystem: {filesystem}")
 
 
 def _existing_partition_reference_id(

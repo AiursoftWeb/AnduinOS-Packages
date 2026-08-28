@@ -96,8 +96,42 @@ def build_guided_coexistence_boot_commands(
 
     if plan.storage.mode is not InstallMode.GUIDED_COEXISTENCE:
         raise ValueError("Plan is not guided coexistence")
+    return _build_vendor_only_boot_commands(
+        plan,
+        target,
+        disk_path=disk_path,
+        esp_partition_number=esp_partition_number,
+    )
+
+
+def build_manual_boot_commands(
+    plan: InstallPlan,
+    target: str,
+    *,
+    disk_path: str,
+    esp_partition_number: int,
+) -> GuidedBootCommandPlan:
+    """Build the same vendor-only UEFI policy for a manual plan."""
+
+    if plan.storage.mode is not InstallMode.MANUAL:
+        raise ValueError("Plan is not manual partitioning")
+    return _build_vendor_only_boot_commands(
+        plan,
+        target,
+        disk_path=disk_path,
+        esp_partition_number=esp_partition_number,
+    )
+
+
+def _build_vendor_only_boot_commands(
+    plan: InstallPlan,
+    target: str,
+    *,
+    disk_path: str,
+    esp_partition_number: int,
+) -> GuidedBootCommandPlan:
     if plan.platform.firmware is not Firmware.UEFI:
-        raise ValueError("Guided coexistence requires UEFI firmware")
+        raise ValueError("Vendor-only boot installation requires UEFI firmware")
     if esp_partition_number <= 0:
         raise ValueError("EFI System Partition number must be positive")
 

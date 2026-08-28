@@ -5,18 +5,25 @@ from pathlib import Path
 
 from fakes import FakeRunner
 from helpers import valid_plan
-from installer_core.bootloader import InstallBootloaderStep
+from installer_core.bootloader import (
+    InstallBootloaderStep,
+    _verify_grub_filesystem_modules,
+)
 from installer_core.esp import (
     NvramInspection,
     capture_preserved_esp_tree,
 )
 from installer_core.storage_planning import (
     build_guided_coexistence_execution_plan,
+    build_manual_storage_execution_plan,
 )
+from installer_core.model import Filesystem
 from installer_core.steps import InstallContext
 from installer_core.validation import ExecutionPolicy
 from test_guided_storage_graph import guided_plan
 from test_guided_storage_planning import healthy_esp
+from test_manual_storage_graph import manual_plan
+from test_manual_storage_planning import healthy_esp as healthy_manual_esp
 
 
 def prepare_target(target: Path) -> None:
@@ -94,6 +101,118 @@ class InstallBootloaderTests(unittest.TestCase):
             ],
             ["--target=i386-pc", "--target=x86_64-efi"],
         )
+
+    def test_advanced_root_filesystems_require_grub_and_initrd_drivers(self):
+        cases = {
+            Filesystem.XFS: "kernel/fs/xfs/xfs.ko.zst",
+            Filesystem.F2FS: "kernel/fs/f2fs/f2fs.ko.zst",
+        }
+        for filesystem, initrd_module in cases.items():
+            with self.subTest(filesystem=filesystem.value):
+                with tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    prepare_target(target)
+                    grub_module = (
+                        target
+                        / "usr/lib/grub/x86_64-efi"
+                        / f"{filesystem.value}.mod"
+                    )
+                    grub_module.touch()
+                    plan, inventory = manual_plan(filesystem=filesystem)
+                    execution = build_manual_storage_execution_plan(
+                        plan,
+                        inventory,
+                        esp_inspection=healthy_manual_esp(inventory),
+                        nvram_inspection=NvramInspection(True),
+                        target=str(target),
+                    )
+                    runner = self.compatible_runner(target)
+                    esp = execution.commands.devices["efi-system"]
+                    runner.outputs[
+                        ("blkid", "-s", "PARTUUID", "-o", "value", esp)
+                    ] = ("part-1\n", "", 0)
+                    runner.outputs[execution.boot_commands.nvram_verify] = (
+                        "Boot0007* AnduinOS "
+                        "HD(1,GPT,part-1,0x800,0x100000)/"
+                        "File(\\EFI\\AnduinOS\\shimx64.efi)\n",
+                        "",
+                        0,
+                    )
+                    context = InstallContext(
+                        plan,
+                        lambda _message: None,
+                        values={
+                            "target": target,
+                            "target_efi_mounted": True,
+                            "partition_devices": execution.commands.devices,
+                            "manual_storage_execution_plan": execution,
+                        },
+                    )
+                    step = InstallBootloaderStep(runner)
+                    step.execute(context)
+
+                    (target / "boot/vmlinuz-test").touch()
+                    (target / "boot/initrd.img-test").touch()
+                    (target / "boot/grub").mkdir(exist_ok=True)
+                    (target / "boot/grub/grub.cfg").write_text(
+                        "menuentry 'AnduinOS' { linux /boot/vmlinuz-test }\n"
+                    )
+                    vendor = target / "boot/efi/EFI/AnduinOS/shimx64.efi"
+                    vendor.parent.mkdir(parents=True)
+                    write_pe(vendor, 0x8664)
+                    runner.outputs[
+                        ("chroot", str(target), "dpkg", "--print-architecture")
+                    ] = ("amd64\n", "", 0)
+                    runner.outputs[
+                        (
+                            "chroot",
+                            str(target),
+                            "lsinitrd",
+                            "-m",
+                            "/boot/initrd.img-test",
+                        )
+                    ] = ("rootfs-block\n", "", 0)
+                    initrd_command = (
+                        "chroot",
+                        str(target),
+                        "lsinitrd",
+                        "/boot/initrd.img-test",
+                    )
+                    runner.outputs[initrd_command] = (
+                        initrd_module + "\n",
+                        "",
+                        0,
+                    )
+                    step.verify(context)
+
+                    runner.outputs[initrd_command] = ("", "", 0)
+                    with self.assertRaisesRegex(
+                        RuntimeError,
+                        "missing its root filesystem driver",
+                    ):
+                        step.verify(context)
+
+    def test_missing_advanced_grub_filesystem_module_is_fatal(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_target(target)
+            installs = (
+                (
+                    "chroot",
+                    str(target),
+                    "grub-install",
+                    "--target=x86_64-efi",
+                ),
+            )
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "GRUB xfs modules are missing",
+            ):
+                _verify_grub_filesystem_modules(
+                    target,
+                    installs,
+                    Filesystem.XFS,
+                )
 
     def test_verifies_matching_kernel_grub_bios_and_efi_artifacts(self):
         with tempfile.TemporaryDirectory() as directory:

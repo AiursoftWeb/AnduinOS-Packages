@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+from enum import Enum
 
 from languages import DEFAULT_KEYBOARD, DEFAULT_LOCALE, DEFAULT_TIMEZONE
 
@@ -16,6 +17,7 @@ from .model import (
     SCHEMA_VERSION,
     AuthenticationMode,
     BootSpec,
+    DiskIdentity,
     Filesystem,
     IdentitySpec,
     InstallMode,
@@ -28,12 +30,25 @@ from .model import (
     SourceSpec,
     StorageSpec,
 )
+from .manual_graph_planning import build_manual_storage_graph
+from .manual_layout import (
+    MIB,
+    ManualFreeExtent,
+    ManualPartitionRole,
+    ManualStorageSelection,
+    manual_available_extents,
+    resize_for_partuuid,
+    validate_manual_selection,
+)
+from .manual_write_set import build_manual_storage_write_set
 from .probe import PlatformProbe
 from .storage_graph import StorageGraph
 from .storage_graph_planning import build_guided_coexistence_storage_graph
 from .storage_inventory import (
+    EFI_SYSTEM_PARTITION_GUID,
     DiskInventory,
     FreeExtent,
+    PartitionIdentity,
     PartitionInventory,
     StorageInventory,
 )
@@ -124,6 +139,277 @@ class GuidedStorageConfirmation:
     writes_vendor_boot_files: bool
     writes_shared_fallback: bool
     updates_nvram: bool
+
+
+@dataclass(frozen=True)
+class ManualStoragePreview:
+    selection: ManualStorageSelection
+    graph: StorageGraph
+    write_set: StorageWriteSet
+    disk: DiskInventory
+    available_extents: tuple[ManualFreeExtent, ...]
+
+
+@dataclass(frozen=True)
+class ManualStorageConfirmation:
+    reinitializes_gpt: bool
+    preserved_paths: tuple[str, ...]
+    deleted_paths: tuple[str, ...]
+    resized_partitions: tuple["ManualResizeConfirmation", ...]
+    new_partitions: tuple[GuidedPartitionConfirmation, ...]
+    formats: tuple[GuidedFormatConfirmation, ...]
+    reused_esp_path: str
+    writes_vendor_boot_files: bool
+    writes_shared_fallback: bool
+    updates_nvram: bool
+
+
+@dataclass(frozen=True)
+class ManualResizeConfirmation:
+    display_path: str
+    original_size_bytes: int
+    target_size_bytes: int
+    reclaimed_bytes: int
+
+
+class ManualDiskSegmentKind(str, Enum):
+    PRESERVED = "preserved"
+    RESIZED = "resized"
+    DELETED = "deleted"
+    NEW_ESP = "new-esp"
+    NEW_ROOT = "new-root"
+    NEW_SWAP = "new-swap"
+    FREE = "free"
+
+
+@dataclass(frozen=True)
+class ManualDiskSegment:
+    segment_id: str
+    title: str
+    detail: str
+    start_mib: int
+    end_mib: int
+    kind: ManualDiskSegmentKind
+
+    @property
+    def size_mib(self) -> int:
+        return self.end_mib - self.start_mib
+
+
+@dataclass(frozen=True)
+class ManualDiskMap:
+    current: tuple[ManualDiskSegment, ...]
+    planned: tuple[ManualDiskSegment, ...]
+
+
+def build_manual_disk_map(
+    disk: DiskInventory,
+    selection: ManualStorageSelection,
+) -> ManualDiskMap:
+    """Describe the current and planned disk maps without GTK state."""
+
+    deleted = set(selection.deleted_partuuids)
+    current = [
+        ManualDiskSegment(
+            segment_id=f"existing:{item.identity.partuuid}",
+            title=item.identity.path,
+            detail=(
+                item.filesystem_label
+                or item.filesystem_type
+                or "Unknown"
+            ),
+            start_mib=(item.identity.start_bytes + MIB - 1) // MIB,
+            end_mib=(
+                item.identity.start_bytes + item.identity.size_bytes
+            )
+            // MIB,
+            kind=(
+                ManualDiskSegmentKind.DELETED
+                if selection.reinitialize_gpt
+                or item.identity.partuuid in deleted
+                else ManualDiskSegmentKind.PRESERVED
+            ),
+        )
+        for item in disk.partitions
+    ]
+    current.extend(
+        ManualDiskSegment(
+            segment_id=f"current-free:{item.extent_id}",
+            title="Unallocated",
+            detail="Free space",
+            start_mib=(item.start_bytes + MIB - 1) // MIB,
+            end_mib=(item.start_bytes + item.size_bytes) // MIB,
+            kind=ManualDiskSegmentKind.FREE,
+        )
+        for item in disk.free_extents
+        if (item.start_bytes + item.size_bytes) // MIB
+        > (item.start_bytes + MIB - 1) // MIB
+    )
+
+    planned = []
+    if not selection.reinitialize_gpt:
+        planned.extend(
+            ManualDiskSegment(
+                segment_id=f"preserved:{item.identity.partuuid}",
+                title=item.identity.path,
+                detail=(
+                    (
+                        (item.filesystem_label + " · ")
+                        if item.filesystem_label
+                        else ""
+                    )
+                    + (
+                        "NTFS · Resized"
+                        if resize_for_partuuid(
+                            selection, item.identity.partuuid
+                        )
+                        else item.filesystem_type or "Unknown"
+                    )
+                ),
+                start_mib=(item.identity.start_bytes + MIB - 1) // MIB,
+                end_mib=(
+                    item.identity.start_bytes
+                    + (
+                        resized.target_size_mib * MIB
+                        if (
+                            resized := resize_for_partuuid(
+                                selection, item.identity.partuuid
+                            )
+                        )
+                        else item.identity.size_bytes
+                    )
+                )
+                // MIB,
+                kind=(
+                    ManualDiskSegmentKind.RESIZED
+                    if resize_for_partuuid(
+                        selection, item.identity.partuuid
+                    )
+                    else ManualDiskSegmentKind.PRESERVED
+                ),
+            )
+            for item in disk.partitions
+            if item.identity.partuuid not in deleted
+        )
+    kind_by_role = {
+        ManualPartitionRole.EFI_SYSTEM: ManualDiskSegmentKind.NEW_ESP,
+        ManualPartitionRole.ROOT: ManualDiskSegmentKind.NEW_ROOT,
+        ManualPartitionRole.SWAP: ManualDiskSegmentKind.NEW_SWAP,
+    }
+    planned.extend(
+        ManualDiskSegment(
+            segment_id=f"new:{item.role.value}",
+            title=item.role.value,
+            detail="New partition",
+            start_mib=item.start_mib,
+            end_mib=item.end_mib,
+            kind=kind_by_role[item.role],
+        )
+        for item in selection.new_partitions
+    )
+    planned.extend(
+        ManualDiskSegment(
+            segment_id=f"planned-free:{item.start_mib}:{item.end_mib}",
+            title="Unallocated",
+            detail="Free space",
+            start_mib=item.start_mib,
+            end_mib=item.end_mib,
+            kind=ManualDiskSegmentKind.FREE,
+        )
+        for item in manual_available_extents(disk, selection)
+    )
+    return ManualDiskMap(
+        current=tuple(sorted(current, key=_manual_segment_sort_key)),
+        planned=tuple(sorted(planned, key=_manual_segment_sort_key)),
+    )
+
+
+def _manual_segment_sort_key(
+    item: ManualDiskSegment,
+) -> tuple[int, int, str]:
+    return item.start_mib, item.end_mib, item.segment_id
+
+
+def build_development_storage_workflow(
+    platform: PlatformProbe,
+) -> StorageWorkflow:
+    """Return a useful synthetic disk for non-destructive UI development."""
+
+    mib = 1024 * 1024
+    gib = 1024 * mib
+    disk_id = "serial:anduinos-development-disk"
+    topology_digest = "d" * 64
+    disk = DiskInventory(
+        identity=DiskIdentity(
+            path="/dev/vda",
+            stable_id=disk_id,
+            expected_size_bytes=128 * gib,
+            model="AnduinOS Development Disk (simulated)",
+            serial="ANDUINOS-DEV-0001",
+        ),
+        partition_table="gpt",
+        partition_table_uuid="anduinos-development-gpt",
+        partitions=(
+            PartitionInventory(
+                identity=PartitionIdentity(
+                    path="/dev/vda1",
+                    number=1,
+                    partuuid="anduinos-development-esp",
+                    start_bytes=mib,
+                    size_bytes=1024 * mib,
+                ),
+                parent_disk_id=disk_id,
+                partition_type=EFI_SYSTEM_PARTITION_GUID,
+                filesystem_type="vfat",
+                filesystem_uuid="ANDUINOS-DEV-ESP",
+                filesystem_label="SYSTEM",
+                flags=("boot", "esp"),
+            ),
+            PartitionInventory(
+                identity=PartitionIdentity(
+                    path="/dev/vda2",
+                    number=2,
+                    partuuid="anduinos-development-windows",
+                    start_bytes=1025 * mib,
+                    size_bytes=(64 * 1024 - 1025) * mib,
+                ),
+                parent_disk_id=disk_id,
+                partition_type=(
+                    "ebd0a0a2-b9e5-4433-87c0-68b6b72699c7"
+                ),
+                filesystem_type="ntfs",
+                filesystem_uuid="ANDUINOS-DEV-WINDOWS",
+                filesystem_label="Windows",
+            ),
+            PartitionInventory(
+                identity=PartitionIdentity(
+                    path="/dev/vda3",
+                    number=3,
+                    partuuid="anduinos-development-data",
+                    start_bytes=64 * gib,
+                    size_bytes=16 * gib,
+                ),
+                parent_disk_id=disk_id,
+                partition_type="0fc63daf-8483-4772-8e79-3d69d8477de4",
+                filesystem_type="ext4",
+                filesystem_uuid="ANDUINOS-DEV-DATA",
+                filesystem_label="Data",
+            ),
+        ),
+        free_extents=(
+            FreeExtent(
+                parent_disk_id=disk_id,
+                start_bytes=80 * gib,
+                size_bytes=(48 * 1024 - 1) * mib,
+            ),
+        ),
+        topology_digest=topology_digest,
+    )
+    return build_storage_workflow(
+        StorageInventory((disk,), "e" * 64),
+        platform,
+        physical_memory_probe=lambda: 8 * gib,
+    )
 
 
 def build_storage_workflow(
@@ -298,6 +584,125 @@ def build_guided_storage_confirmation(
     )
 
 
+def build_manual_storage_preview(
+    workflow: StorageWorkflow,
+    selection: ManualStorageSelection,
+) -> ManualStoragePreview:
+    """Validate and render one in-memory manual edit graph."""
+
+    choice = workflow.disk(selection.disk_stable_id)
+    disk = choice.disk
+    if choice.is_live_media:
+        raise ValueError("The Live medium cannot be edited")
+    if workflow.platform.firmware.value != "uefi":
+        raise ValueError("Manual partitioning currently requires UEFI")
+    validate_manual_selection(disk, selection)
+    swap_size_mib = next(
+        (
+            item.size_mib
+            for item in selection.new_partitions
+            if item.role is ManualPartitionRole.SWAP
+        ),
+        0,
+    )
+    plan = _manual_preview_plan(
+        selection,
+        disk,
+        workflow.platform,
+        swap_size_mib,
+    )
+    graph = build_manual_storage_graph(
+        plan,
+        disk,
+        selection,
+        inventory_digest=workflow.inventory.digest,
+    )
+    plan = replace(plan, storage=replace(plan.storage, graph=graph))
+    return ManualStoragePreview(
+        selection=selection,
+        graph=graph,
+        write_set=build_manual_storage_write_set(
+            plan,
+            workflow.inventory,
+        ),
+        disk=disk,
+        available_extents=manual_available_extents(disk, selection),
+    )
+
+
+def build_manual_storage_confirmation(
+    preview: ManualStoragePreview,
+) -> ManualStorageConfirmation:
+    operations = preview.write_set.operations
+    return ManualStorageConfirmation(
+        reinitializes_gpt=any(
+            item.action is StorageAction.REPLACE_PARTITION_TABLE
+            for item in operations
+        ),
+        preserved_paths=tuple(
+            item.display_path
+            for item in operations
+            if item.action is StorageAction.PRESERVE
+        ),
+        deleted_paths=tuple(
+            item.display_path
+            for item in operations
+            if item.action is StorageAction.DELETE_PARTITION
+        ),
+        resized_partitions=tuple(
+            ManualResizeConfirmation(
+                display_path=item.display_path,
+                original_size_bytes=int(item.detail("original_size_bytes")),
+                target_size_bytes=int(item.detail("target_size_bytes")),
+                reclaimed_bytes=int(item.detail("reclaimed_bytes")),
+            )
+            for item in operations
+            if item.action is StorageAction.RESIZE_PARTITION
+        ),
+        new_partitions=tuple(
+            GuidedPartitionConfirmation(
+                name=item.detail("name"),
+                display_path=item.display_path,
+                start_mib=int(item.detail("start_mib")),
+                end_mib=int(item.detail("end_mib")),
+            )
+            for item in operations
+            if item.action is StorageAction.CREATE_PARTITION
+        ),
+        formats=tuple(
+            GuidedFormatConfirmation(
+                display_path=item.display_path,
+                filesystem=item.detail("filesystem"),
+            )
+            for item in operations
+            if item.action is StorageAction.FORMAT
+        ),
+        reused_esp_path=(
+            next(
+                (
+                    item.identity.path
+                    for item in preview.disk.partitions
+                    if item.identity.partuuid
+                    == preview.selection.reused_esp_partuuid
+                ),
+                "",
+            )
+        ),
+        writes_vendor_boot_files=any(
+            item.action is StorageAction.WRITE_BOOT_FILES
+            for item in operations
+        ),
+        writes_shared_fallback=any(
+            item.action is StorageAction.WRITE_FALLBACK_BOOT_FILES
+            for item in operations
+        ),
+        updates_nvram=any(
+            item.action is StorageAction.UPDATE_NVRAM
+            for item in operations
+        ),
+    )
+
+
 def _selected_esp(
     choice: StorageDiskChoice,
     partuuid: str,
@@ -361,5 +766,33 @@ def _preview_plan(
                 if platform.secure_boot is SecureBoot.ENABLED
                 else MokPasswordPolicy.NOT_APPLICABLE
             ),
+        ),
+    )
+
+
+def _manual_preview_plan(
+    selection: ManualStorageSelection,
+    disk: DiskInventory,
+    platform: PlatformProbe,
+    swap_size_mib: int,
+) -> InstallPlan:
+    return replace(
+        _preview_plan(
+            GuidedStorageSelection(
+                disk_stable_id=selection.disk_stable_id,
+                disk_size_bytes=selection.disk_size_bytes,
+                free_extent_id="manual-preview",
+                reused_esp_partuuid=selection.reused_esp_partuuid,
+                filesystem=selection.filesystem,
+            ),
+            disk,
+            platform,
+            swap_size_mib,
+        ),
+        storage=StorageSpec(
+            mode=InstallMode.MANUAL,
+            disk=disk.identity,
+            filesystem=selection.filesystem,
+            swap_size_mib=swap_size_mib,
         ),
     )

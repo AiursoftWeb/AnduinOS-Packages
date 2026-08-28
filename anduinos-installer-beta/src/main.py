@@ -24,7 +24,6 @@ from gi.repository import Gtk, Adw, Gio, GLib
 from i18n import _, N_
 from languages import default_timezone, detect_system_language
 from pages import build_all_pages
-from frontend import guided_storage_enabled
 from installer_core.hostnames import (
     detect_device_type,
     generate_random_suffix,
@@ -68,7 +67,6 @@ class InstallerApplication(Adw.Application):
             "guided_extent_id": "",
             "guided_esp_partuuid": "",
             "guided_storage_preview_model": None,
-            "guided_storage_enabled": guided_storage_enabled(),
             "filesystem": "btrfs",
             "username": "",
             "full_name": "",

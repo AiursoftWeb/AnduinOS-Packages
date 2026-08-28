@@ -75,22 +75,6 @@ msgstr "Безпека облікового запису"
 msgid "Advanced Storage"
 msgstr "Розширені налаштування сховища"
 
-#: src/pages.py:2889
-msgid ""
-"Advanced coexistence can affect EFI firmware state and may trigger BitLocker"
-" recovery. It never shrinks or repairs Windows volumes."
-msgstr ""
-"Розширене співіснування може вплинути на стан прошивки EFI та запустити "
-"відновлення BitLocker. Воно ніколи не зменшує і не ремонтує томи Windows."
-
-#: src/pages.py:2838
-msgid "Advanced — keep existing systems"
-msgstr "Розширені — залишити існуючі системи"
-
-#: src/pages.py:2985
-msgid "Advanced: Install Alongside"
-msgstr "Розширені: встановити поряд із"
-
 #: src/pages.py:164
 msgid ""
 "After changing partitions or unmounting a volume, rescan storage and select "
@@ -1047,14 +1031,6 @@ msgstr "Відключення встановленої системи"
 msgid "Updates and Drivers"
 msgstr "Оновлення та драйвери"
 
-#: src/pages.py:2840
-msgid ""
-"Use already-unallocated space and preserve existing partitions. This is the "
-"only Windows coexistence path."
-msgstr ""
-"Використовувати вже невиділений простір і зберігати існуючі розділи. Це "
-"єдиний шлях співіснування з Windows."
-
 #: src/pages.py:2986
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "Використовувати лише наявний невиділений простір на вибраному диску."
@@ -1592,3 +1568,327 @@ msgstr ""
 "розділи «Запуск», «Безпека» або «Secure Boot». Виберіть «Microsoft & 3rd-"
 "party CA» або увімкніть Secure Boot. Формулювання в прошивці може "
 "відрізнятися залежно від виробника."
+
+msgid "Advanced"
+msgstr "Розширені налаштування"
+
+msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root and Swap partitions with exact sizes."
+msgstr "Збережіть Windows або інші розділи, повторно використайте чи створіть ESP і задайте точні розміри розділів Root і Swap."
+
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+
+msgid "Install Alongside Automatically"
+msgstr "Встановити поруч автоматично"
+
+msgid "ESP"
+msgstr "ESP"
+
+msgid "Root"
+msgstr "Root"
+
+msgid "Unallocated"
+msgstr "Не розподілено"
+
+#, python-brace-format
+msgid "{name} · {size} · {start}–{end} MiB"
+msgstr "{name} · {size} · {start}–{end} MiB"
+
+msgid "Current disk"
+msgstr "Поточний диск"
+
+msgid "Planned result"
+msgstr "Запланований результат"
+
+msgid "Advanced: Manual Partitioning"
+msgstr "Розширений: ручне розбиття"
+
+msgid "Windows was detected. Its partitions remain preserved unless you explicitly mark them for deletion."
+msgstr "Виявлено Windows. Її розділи буде збережено, якщо ви явно не позначите їх для видалення."
+
+msgid "Initialize New GPT"
+msgstr "Ініціалізувати новий GPT"
+
+msgid "Root filesystem"
+msgstr "Коренева файлова система"
+
+msgid "Existing partitions"
+msgstr "Наявні розділи"
+
+msgid "Reuse a healthy existing ESP without formatting it, or create a new one in available space."
+msgstr "Повторно використайте справний наявний ESP без форматування або створіть новий у доступному просторі."
+
+msgid "Add a partition"
+msgstr "Додати розділ"
+
+msgid "Choose an available range, exact start position, and size. Nothing is written until installation begins."
+msgstr "Виберіть доступний діапазон, точну початкову позицію та розмір. До початку встановлення нічого не буде записано."
+
+msgid "Role"
+msgstr "Роль"
+
+msgid "Available space"
+msgstr "Доступний простір"
+
+msgid "Start (MiB)"
+msgstr "Початок (MiB)"
+
+msgid "Size (MiB)"
+msgstr "Розмір (МіБ)"
+
+msgid "Use All"
+msgstr "Використати все"
+
+msgid "Add Partition"
+msgstr "Додати розділ"
+
+msgid "Edit"
+msgstr "Редагувати"
+
+msgid "That partition can no longer be edited safely."
+msgstr "Цей розділ більше не можна безпечно редагувати."
+
+msgid "Use All Available Space"
+msgstr "Використати весь доступний простір"
+
+#, python-brace-format
+msgid "Edit {role} partition"
+msgstr "Редагувати розділ {role}"
+
+msgid "Choose an exact position and size inside the available range. Other planned partitions are not moved."
+msgstr "Виберіть точну позицію та розмір у доступному діапазоні. Інші заплановані розділи не переміщуються."
+
+msgid "Apply Changes"
+msgstr "Застосувати зміни"
+
+msgid "Close"
+msgstr "Close"
+
+msgid "BitLocker was detected. Return to Windows, open Manage BitLocker, choose Turn off BitLocker, and wait until decryption reaches 100%. Suspending protection is not enough. Back up the recovery key, fully shut Windows down, then start the installer again."
+msgstr "BitLocker was detected. Return to Windows, open Manage BitLocker, choose Turn off BitLocker, and wait until decryption reaches 100%. Suspending protection is not enough. Back up the recovery key, fully shut Windows down, then start the installer again."
+
+msgid "Windows is hibernated or Fast Startup is active. In an Administrator Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s /t 0'. Start the installer again only after Windows has fully shut down."
+msgstr "Windows is hibernated or Fast Startup is active. In an Administrator Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s /t 0'. Start the installer again only after Windows has fully shut down."
+
+msgid "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk C: /f', allow every requested reboot to finish, then fully shut Windows down before trying again."
+msgstr "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk C: /f', allow every requested reboot to finish, then fully shut Windows down before trying again."
+
+msgid "This target would require moving critical NTFS MFT metadata through a currently unsafe upstream code path. Choose a larger Windows size or shrink the volume from Windows."
+msgstr "This target would require moving critical NTFS MFT metadata through a currently unsafe upstream code path. Choose a larger Windows size or shrink the volume from Windows."
+
+msgid "This NTFS volume is mounted or in use. Unmount it and rescan storage before continuing."
+msgstr "This NTFS volume is mounted or in use. Unmount it and rescan storage before continuing."
+
+msgid "This operation moves NTFS data and changes the GPT partition boundary. A power loss, failing drive, firmware fault or filesystem bug can cause permanent data loss. Back up all important Windows files before continuing."
+msgstr "This operation moves NTFS data and changes the GPT partition boundary. A power loss, failing drive, firmware fault or filesystem bug can cause permanent data loss. Back up all important Windows files before continuing."
+
+msgid "Verified now: plain NTFS, not mounted, not hibernated, cleanly shut down, and within the filesystem-reported safe range. The privileged installer will verify all of this again immediately before writing."
+msgstr "Verified now: plain NTFS, not mounted, not hibernated, cleanly shut down, and within the filesystem-reported safe range. The privileged installer will verify all of this again immediately before writing."
+
+msgid "New Windows partition size"
+msgstr "New Windows partition size"
+
+msgid "MiB"
+msgstr "MiB"
+
+#, python-brace-format
+msgid "Allowed: {minimum}–{maximum}"
+msgstr "Allowed: {minimum}–{maximum}"
+
+#, python-brace-format
+msgid "Windows: {windows} · New unallocated space: {free}"
+msgstr "Windows: {windows} · New unallocated space: {free}"
+
+msgid "I have backed up my data and understand that shrinking an existing Windows partition can cause permanent data loss."
+msgstr "I have backed up my data and understand that shrinking an existing Windows partition can cause permanent data loss."
+
+#, python-brace-format
+msgid "Change the size of {partition}?"
+msgstr "Change the size of {partition}?"
+
+msgid "The partition start will not move. Only its end will move left, creating unallocated space immediately after it."
+msgstr "The partition start will not move. Only its end will move left, creating unallocated space immediately after it."
+
+msgid "Undo Planned Resize"
+msgstr "Undo Planned Resize"
+
+msgid "Plan Resize"
+msgstr "Plan Resize"
+
+msgid "Turn off BitLocker before shrinking"
+msgstr "Turn off BitLocker before shrinking"
+
+#, python-brace-format
+msgid "Checking whether {partition} can be resized safely…"
+msgstr "Checking whether {partition} can be resized safely…"
+
+msgid "NTFS safety check failed"
+msgstr "NTFS safety check failed"
+
+msgid "This partition cannot be resized safely"
+msgstr "This partition cannot be resized safely"
+
+msgid "New empty GPT — every existing partition will be deleted"
+msgstr "Новий порожній GPT — усі наявні розділи буде видалено"
+
+msgid "Keep current GPT — only marked partitions are deleted"
+msgstr "Зберегти поточний GPT — буде видалено лише позначені розділи"
+
+msgid "Keep Current GPT"
+msgstr "Зберегти поточний GPT"
+
+msgid "unknown"
+msgstr "невідомо"
+
+msgid "WILL DELETE"
+msgstr "БУДЕ ВИДАЛЕНО"
+
+msgid "Preserve"
+msgstr "Зберегти"
+
+#, python-brace-format
+msgid "Planned size: {size}"
+msgstr "Planned size: {size}"
+
+msgid "Deleted by new GPT"
+msgstr "Видалено новим GPT"
+
+msgid "Undo"
+msgstr "Скасувати"
+
+msgid "Delete"
+msgstr "Видалити"
+
+msgid "RESIZE"
+msgstr "RESIZE"
+
+msgid "Change Size"
+msgstr "Change Size"
+
+msgid "This disk has no existing partitions."
+msgstr "На цьому диску немає наявних розділів."
+
+msgid "Create a new ESP partition"
+msgstr "Створити новий розділ ESP"
+
+#, python-brace-format
+msgid "{size} · {start}–{end} MiB"
+msgstr "{size} · {start}–{end} МБ"
+
+msgid "Remove"
+msgstr "Видалити"
+
+msgid "New"
+msgstr "Новий"
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
+msgstr "Нових розділів ще немає. За потреби додайте ESP, один розділ Root і необов’язковий Swap."
+
+#, python-brace-format
+msgid "{size} at {start} MiB"
+msgstr "{size} на {start} МБ"
+
+msgid "an ESP of at least 512 MiB"
+msgstr "ESP розміром щонайменше 512 MiB"
+
+msgid "a Root partition of at least 20 GiB"
+msgstr "розділ Root розміром щонайменше 20 GiB"
+
+#, python-brace-format
+msgid "Complete the plan: {requirements}."
+msgstr "Завершіть план: {requirements}."
+
+msgid "Layout is valid. Only the listed resizes, deletes, creates and formats will be sent to the privileged executor."
+msgstr "Layout is valid. Only the listed resizes, deletes, creates and formats will be sent to the privileged executor."
+
+msgid "That partition role already exists."
+msgstr "Роль цього розділу вже існує."
+
+msgid "Initialize a new GPT?"
+msgstr "Ініціалізувати новий GPT?"
+
+msgid "Every existing partition and all data on this disk will be deleted. You must then create a new ESP and Root partition."
+msgstr "Усі наявні розділи та всі дані на цьому диску буде видалено. Потім вам потрібно буде створити нові розділи ESP та Root."
+
+msgid "Initialize GPT"
+msgstr "Ініціалізувати GPT"
+
+msgid "The selected disk changed or disappeared."
+msgstr "Вибраний диск змінився або зник."
+
+msgid "The selected disk topology changed. Select it again."
+msgstr "Топологія вибраного диска змінилася. Оберіть його знову."
+
+msgid "none"
+msgstr "немає"
+
+#, python-brace-format
+msgid "{path}: {before} → {after} (free {reclaimed})"
+msgstr "{path}: {before} → {after} (free {reclaimed})"
+
+#, python-brace-format
+msgid "{name}: {size} MiB ({start}–{end})"
+msgstr "{name}: {size} МБ ({start}–{end})"
+
+msgid "Initialize a new empty GPT"
+msgstr "Ініціалізувати новий порожній GPT"
+
+msgid "Keep the current GPT"
+msgstr "Зберегти поточний GPT"
+
+#, python-brace-format
+msgid "Reuse {path}; inspect it and never format it."
+msgstr "Повторно використати {path}; перевірте його та ніколи не форматувайте."
+
+msgid "Create and format a new EFI System Partition."
+msgstr "Створіть та відформатуйте новий розділ системи EFI."
+
+msgid "Advanced manual GPT"
+msgstr "Розширений ручний GPT"
+
+msgid "Partition table"
+msgstr "Таблиця розділів"
+
+msgid "Deleted partitions"
+msgstr "Видалені розділи"
+
+msgid "Resized partitions"
+msgstr "Resized partitions"
+
+msgid "Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS NVRAM entry."
+msgstr "Записуйте лише EFI/AnduinOS, зберігайте EFI/BOOT та створюйте перевірений запис AnduinOS у NVRAM."
+
+msgid "Manual storage selection is missing. Return and review it."
+msgstr "Не вистачає ручного вибору сховища. Поверніться та перегляньте його."
+
+msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+
+msgid "Apply this manual disk layout?"
+msgstr "Застосувати це ручне розташування дисків?"
+
+msgid "Apply Layout and Install"
+msgstr "Застосувати розташування та встановити"
+
+#, python-brace-format
+msgid ""
+"AnduinOS will apply only the reviewed manual changes to {disk}.\n"
+"\n"
+msgstr ""
+"AnduinOS застосує лише перевірені ручні зміни до {disk}.\n"
+"\n"
+
+msgid "Only the explicitly listed partitions will be deleted or formatted. Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
+msgstr "Будуть видалені або відформатовані лише явно перелічені розділи. Непов’язані розділи залишаться незмінними; EFI/BOOT не буде перезаписано."
+
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
+msgstr "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
+
+msgid "XFS (classic, scalable)"
+msgstr "XFS (classic, scalable)"
+
+msgid "F2FS (flash-optimized)"
+msgstr "F2FS (flash-optimized)"
+
+msgid "XFS and F2FS use one conventional root filesystem; Btrfs additionally creates AnduinOS subvolumes and enables snapshots."
+msgstr "XFS and F2FS use one conventional root filesystem; Btrfs additionally creates AnduinOS subvolumes and enables snapshots."

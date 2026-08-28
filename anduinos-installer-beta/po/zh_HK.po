@@ -70,20 +70,6 @@ msgstr "帳戶安全"
 msgid "Advanced Storage"
 msgstr "進階儲存"
 
-#: src/pages.py:2889
-msgid ""
-"Advanced coexistence can affect EFI firmware state and may trigger BitLocker"
-" recovery. It never shrinks or repairs Windows volumes."
-msgstr "進階共存可能會影響 EFI 韌體狀態，並可能觸發 BitLocker 復原。它永遠不會縮小或修復 Windows 區卷。"
-
-#: src/pages.py:2838
-msgid "Advanced — keep existing systems"
-msgstr "進階 — 保留現有系統"
-
-#: src/pages.py:2985
-msgid "Advanced: Install Alongside"
-msgstr "進階：安裝於旁"
-
 #: src/pages.py:164
 msgid ""
 "After changing partitions or unmounting a volume, rescan storage and select "
@@ -972,12 +958,6 @@ msgstr "卸載已安裝的系統"
 msgid "Updates and Drivers"
 msgstr "更新和驅動程式"
 
-#: src/pages.py:2840
-msgid ""
-"Use already-unallocated space and preserve existing partitions. This is the "
-"only Windows coexistence path."
-msgstr "使用已有的未分配空間並保留現有分區。這是唯一與 Windows 共存的途徑。"
-
 #: src/pages.py:2986
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "僅使用所選磁碟上現有的未分配空間。"
@@ -1479,3 +1459,327 @@ msgid ""
 msgstr ""
 "要啟用此功能，請開啟 UEFI 韌體設定，並查看「開機」、「安全性」或「Secure Boot」選項。請選擇「Microsoft 及第三方 CA」或開啟"
 " Secure Boot。不同製造商的韌體用詞可能有所不同。"
+
+msgid "Advanced"
+msgstr "進階"
+
+msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root and Swap partitions with exact sizes."
+msgstr "保留 Windows 或其他分割區，重用或建立 ESP，並精確規劃 Root 及 Swap 分割區的大小。"
+
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+
+msgid "Install Alongside Automatically"
+msgstr "自動並排安裝"
+
+msgid "ESP"
+msgstr "ESP"
+
+msgid "Root"
+msgstr "Root"
+
+msgid "Unallocated"
+msgstr "未配置"
+
+#, python-brace-format
+msgid "{name} · {size} · {start}–{end} MiB"
+msgstr "{name} · {size} · {start}–{end} MiB"
+
+msgid "Current disk"
+msgstr "目前磁碟"
+
+msgid "Planned result"
+msgstr "規劃結果"
+
+msgid "Advanced: Manual Partitioning"
+msgstr "進階：手動分割"
+
+msgid "Windows was detected. Its partitions remain preserved unless you explicitly mark them for deletion."
+msgstr "偵測到 Windows。除非您明確將其分割區標記為刪除，否則這些分割區會保留。"
+
+msgid "Initialize New GPT"
+msgstr "初始化新 GPT"
+
+msgid "Root filesystem"
+msgstr "根檔案系統"
+
+msgid "Existing partitions"
+msgstr "現有分割區"
+
+msgid "Reuse a healthy existing ESP without formatting it, or create a new one in available space."
+msgstr "重用狀況良好的現有 ESP 而不格式化，或在可用空間中建立新的 ESP。"
+
+msgid "Add a partition"
+msgstr "新增分割區"
+
+msgid "Choose an available range, exact start position, and size. Nothing is written until installation begins."
+msgstr "選擇可用範圍、確切起始位置及大小。在安裝開始前不會寫入任何內容。"
+
+msgid "Role"
+msgstr "角色"
+
+msgid "Available space"
+msgstr "可用空間"
+
+msgid "Start (MiB)"
+msgstr "起始位置 (MiB)"
+
+msgid "Size (MiB)"
+msgstr "大小 (MiB)"
+
+msgid "Use All"
+msgstr "使用全部"
+
+msgid "Add Partition"
+msgstr "新增分割區"
+
+msgid "Edit"
+msgstr "編輯"
+
+msgid "That partition can no longer be edited safely."
+msgstr "無法再安全地編輯該分割區。"
+
+msgid "Use All Available Space"
+msgstr "使用全部可用空間"
+
+#, python-brace-format
+msgid "Edit {role} partition"
+msgstr "編輯 {role} 分割區"
+
+msgid "Choose an exact position and size inside the available range. Other planned partitions are not moved."
+msgstr "在可用範圍內選擇確切位置及大小。不會移動其他已規劃的分割區。"
+
+msgid "Apply Changes"
+msgstr "套用變更"
+
+msgid "Close"
+msgstr "Close"
+
+msgid "BitLocker was detected. Return to Windows, open Manage BitLocker, choose Turn off BitLocker, and wait until decryption reaches 100%. Suspending protection is not enough. Back up the recovery key, fully shut Windows down, then start the installer again."
+msgstr "BitLocker was detected. Return to Windows, open Manage BitLocker, choose Turn off BitLocker, and wait until decryption reaches 100%. Suspending protection is not enough. Back up the recovery key, fully shut Windows down, then start the installer again."
+
+msgid "Windows is hibernated or Fast Startup is active. In an Administrator Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s /t 0'. Start the installer again only after Windows has fully shut down."
+msgstr "Windows is hibernated or Fast Startup is active. In an Administrator Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s /t 0'. Start the installer again only after Windows has fully shut down."
+
+msgid "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk C: /f', allow every requested reboot to finish, then fully shut Windows down before trying again."
+msgstr "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk C: /f', allow every requested reboot to finish, then fully shut Windows down before trying again."
+
+msgid "This target would require moving critical NTFS MFT metadata through a currently unsafe upstream code path. Choose a larger Windows size or shrink the volume from Windows."
+msgstr "This target would require moving critical NTFS MFT metadata through a currently unsafe upstream code path. Choose a larger Windows size or shrink the volume from Windows."
+
+msgid "This NTFS volume is mounted or in use. Unmount it and rescan storage before continuing."
+msgstr "This NTFS volume is mounted or in use. Unmount it and rescan storage before continuing."
+
+msgid "This operation moves NTFS data and changes the GPT partition boundary. A power loss, failing drive, firmware fault or filesystem bug can cause permanent data loss. Back up all important Windows files before continuing."
+msgstr "This operation moves NTFS data and changes the GPT partition boundary. A power loss, failing drive, firmware fault or filesystem bug can cause permanent data loss. Back up all important Windows files before continuing."
+
+msgid "Verified now: plain NTFS, not mounted, not hibernated, cleanly shut down, and within the filesystem-reported safe range. The privileged installer will verify all of this again immediately before writing."
+msgstr "Verified now: plain NTFS, not mounted, not hibernated, cleanly shut down, and within the filesystem-reported safe range. The privileged installer will verify all of this again immediately before writing."
+
+msgid "New Windows partition size"
+msgstr "New Windows partition size"
+
+msgid "MiB"
+msgstr "MiB"
+
+#, python-brace-format
+msgid "Allowed: {minimum}–{maximum}"
+msgstr "Allowed: {minimum}–{maximum}"
+
+#, python-brace-format
+msgid "Windows: {windows} · New unallocated space: {free}"
+msgstr "Windows: {windows} · New unallocated space: {free}"
+
+msgid "I have backed up my data and understand that shrinking an existing Windows partition can cause permanent data loss."
+msgstr "I have backed up my data and understand that shrinking an existing Windows partition can cause permanent data loss."
+
+#, python-brace-format
+msgid "Change the size of {partition}?"
+msgstr "Change the size of {partition}?"
+
+msgid "The partition start will not move. Only its end will move left, creating unallocated space immediately after it."
+msgstr "The partition start will not move. Only its end will move left, creating unallocated space immediately after it."
+
+msgid "Undo Planned Resize"
+msgstr "Undo Planned Resize"
+
+msgid "Plan Resize"
+msgstr "Plan Resize"
+
+msgid "Turn off BitLocker before shrinking"
+msgstr "Turn off BitLocker before shrinking"
+
+#, python-brace-format
+msgid "Checking whether {partition} can be resized safely…"
+msgstr "Checking whether {partition} can be resized safely…"
+
+msgid "NTFS safety check failed"
+msgstr "NTFS safety check failed"
+
+msgid "This partition cannot be resized safely"
+msgstr "This partition cannot be resized safely"
+
+msgid "New empty GPT — every existing partition will be deleted"
+msgstr "新的空白 GPT — 所有現有分割區都將被刪除"
+
+msgid "Keep current GPT — only marked partitions are deleted"
+msgstr "保留現有 GPT — 僅刪除已標記的分割區"
+
+msgid "Keep Current GPT"
+msgstr "保留現有 GPT"
+
+msgid "unknown"
+msgstr "未知"
+
+msgid "WILL DELETE"
+msgstr "將會刪除"
+
+msgid "Preserve"
+msgstr "保留"
+
+#, python-brace-format
+msgid "Planned size: {size}"
+msgstr "Planned size: {size}"
+
+msgid "Deleted by new GPT"
+msgstr "被新 GPT 刪除"
+
+msgid "Undo"
+msgstr "復原"
+
+msgid "Delete"
+msgstr "刪除"
+
+msgid "RESIZE"
+msgstr "RESIZE"
+
+msgid "Change Size"
+msgstr "Change Size"
+
+msgid "This disk has no existing partitions."
+msgstr "此磁碟沒有現有分割區。"
+
+msgid "Create a new ESP partition"
+msgstr "建立新的 ESP 分割區"
+
+#, python-brace-format
+msgid "{size} · {start}–{end} MiB"
+msgstr "{size} · {start}–{end} MiB"
+
+msgid "Remove"
+msgstr "移除"
+
+msgid "New"
+msgstr "新增"
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
+msgstr "尚未建立新分割區。如有需要，請新增 ESP、一個 Root 分割區，以及可選的 Swap 分割區。"
+
+#, python-brace-format
+msgid "{size} at {start} MiB"
+msgstr "{size}，位於 {start} MiB"
+
+msgid "an ESP of at least 512 MiB"
+msgstr "一個至少 512 MiB 的 ESP"
+
+msgid "a Root partition of at least 20 GiB"
+msgstr "一個至少 20 GiB 的 Root 分割區"
+
+#, python-brace-format
+msgid "Complete the plan: {requirements}."
+msgstr "完成規劃：{requirements}。"
+
+msgid "Layout is valid. Only the listed resizes, deletes, creates and formats will be sent to the privileged executor."
+msgstr "Layout is valid. Only the listed resizes, deletes, creates and formats will be sent to the privileged executor."
+
+msgid "That partition role already exists."
+msgstr "該分割區角色已存在。"
+
+msgid "Initialize a new GPT?"
+msgstr "初始化新的 GPT？"
+
+msgid "Every existing partition and all data on this disk will be deleted. You must then create a new ESP and Root partition."
+msgstr "此磁碟上所有現有分割區及所有資料都將被刪除。您必須建立新的 ESP 及根分割區。"
+
+msgid "Initialize GPT"
+msgstr "初始化 GPT"
+
+msgid "The selected disk changed or disappeared."
+msgstr "選取的磁碟已變更或消失。"
+
+msgid "The selected disk topology changed. Select it again."
+msgstr "選取的磁碟拓撲已變更。請再次選取它。"
+
+msgid "none"
+msgstr "無"
+
+#, python-brace-format
+msgid "{path}: {before} → {after} (free {reclaimed})"
+msgstr "{path}: {before} → {after} (free {reclaimed})"
+
+#, python-brace-format
+msgid "{name}: {size} MiB ({start}–{end})"
+msgstr "{name}：{size} MiB（{start}–{end}）"
+
+msgid "Initialize a new empty GPT"
+msgstr "初始化新的空白 GPT"
+
+msgid "Keep the current GPT"
+msgstr "保留現有 GPT"
+
+#, python-brace-format
+msgid "Reuse {path}; inspect it and never format it."
+msgstr "重用 {path}；請檢查它並切勿格式化它。"
+
+msgid "Create and format a new EFI System Partition."
+msgstr "建立並格式化新的 EFI 系統分割區。"
+
+msgid "Advanced manual GPT"
+msgstr "進階手動 GPT"
+
+msgid "Partition table"
+msgstr "分割區表"
+
+msgid "Deleted partitions"
+msgstr "已刪除的分割區"
+
+msgid "Resized partitions"
+msgstr "Resized partitions"
+
+msgid "Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS NVRAM entry."
+msgstr "僅寫入 EFI/AnduinOS，保留 EFI/BOOT，並建立已驗證的 AnduinOS NVRAM 項目。"
+
+msgid "Manual storage selection is missing. Return and review it."
+msgstr "缺少手動儲存空間選擇。請返回並檢查。"
+
+msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+
+msgid "Apply this manual disk layout?"
+msgstr "套用此手動磁碟佈局？"
+
+msgid "Apply Layout and Install"
+msgstr "套用佈局並安裝"
+
+#, python-brace-format
+msgid ""
+"AnduinOS will apply only the reviewed manual changes to {disk}.\n"
+"\n"
+msgstr ""
+"AnduinOS 只會將已審閱的手動變更套用至 {disk}。\n"
+"\n"
+
+msgid "Only the explicitly listed partitions will be deleted or formatted. Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
+msgstr "只會刪除或格式化明確列出的分割區。未涉及的分割區保持不變；EFI/BOOT 不會被覆寫。"
+
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
+msgstr "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
+
+msgid "XFS (classic, scalable)"
+msgstr "XFS（傳統、可擴展）"
+
+msgid "F2FS (flash-optimized)"
+msgstr "F2FS（快閃記憶體最佳化）"
+
+msgid "XFS and F2FS use one conventional root filesystem; Btrfs additionally creates AnduinOS subvolumes and enables snapshots."
+msgstr "XFS 與 F2FS 使用單一傳統根檔案系統；Btrfs 還會建立 AnduinOS 子卷並啟用快照。"

@@ -4,6 +4,7 @@ import unittest
 from installer_core.model import (
     AuthenticationMode,
     Architecture,
+    Filesystem,
     Firmware,
     MokPasswordPolicy,
     SecureBoot,
@@ -18,6 +19,15 @@ from helpers import valid_plan
 
 
 class ValidationTests(unittest.TestCase):
+    def test_xfs_and_f2fs_are_restricted_to_manual_mode(self):
+        for filesystem in (Filesystem.XFS, Filesystem.F2FS):
+            with self.subTest(filesystem=filesystem.value):
+                with self.assertRaisesRegex(
+                    PlanValidationError,
+                    "require Advanced manual mode",
+                ):
+                    validate_plan(valid_plan(filesystem=filesystem))
+
     def test_valid_amd64_uefi_secure_boot(self):
         validate_plan(valid_plan())
 

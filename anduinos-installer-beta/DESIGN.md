@@ -26,7 +26,9 @@ and constructs every command itself.
 - Storage mode: erase one complete disk. Guided coexistence, custom layouts
   and RAID are post-release-one work defined in
   [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
-- Filesystems: Btrfs by default, ext4 as an alternative.
+- Filesystems: Btrfs by default and ext4 as the classic alternative in
+  automatic and guided modes. Advanced manual mode additionally offers XFS
+  and F2FS as conventional single-root filesystems.
 - Machine identity: the account page accepts one RFC-style ASCII hostname
   label, including upper-case input, digits and internal hyphens. The planner
   converts it to a lower-case systemd static hostname before constructing the
@@ -76,10 +78,11 @@ and constructs every command itself.
   installer and applies the GRUB-selected locale/timezone, creates the Live
   user, and configures automatic login through a systemd oneshot. A dedicated
   installer step purges the fixed Live-only package set from the copied target.
-  It retains Disk Snapshots Manager on Btrfs but purges it on ext4, removes
-  VMware guest integration from non-VMware targets, and purges orphaned
-  packages. This policy does not use Ubiquity's historical dual manifest
-  convention.
+  It retains Disk Snapshots Manager on Btrfs but purges it on every classic
+  root filesystem, retains the selected XFS or F2FS userspace tools when
+  required, removes VMware guest integration from non-VMware targets, and
+  purges orphaned packages. This policy does not use Ubiquity's historical
+  dual manifest convention.
 - Software: refreshing package indexes and installing available updates is
   enabled by default. An offline index-refresh failure is a warning and skips
   the upgrade; after an upgrade transaction starts, any APT/dpkg failure is
@@ -385,12 +388,30 @@ rounded visual boundary and obscure whether the card itself is active.
   preservation, independent boot, hard-power-cut and partial-target recovery
   runs remain mandatory. See
   [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
+- Milestone 8H — implementation complete: the bounded manual GPT editor can
+  preserve, delete, create and format explicitly declared partitions and can
+  shrink plain NTFS without moving its start. The unprivileged UI obtains a
+  read-only `ntfs-3g.probe`/`ntfsresize` assessment through its fixed Polkit
+  helper. BitLocker, mounted, hibernated/Fast-Startup, dirty or inconsistent
+  volumes are hard failures. The executor repeats the complete target-specific
+  dry run immediately before writing, never passes a force option, shrinks the
+  filesystem before its GPT tail, then re-probes and verifies the unchanged
+  PARTUUID, number and start plus the exact declared size before creating any
+  new partition. ext4, Btrfs and every other filesystem remain non-resizable.
+  The same bounded manual editor offers Btrfs, ext4, XFS and F2FS for a newly
+  formatted root. Btrfs alone creates the canonical AnduinOS subvolumes and
+  enables Disk Snapshots Manager; ext4, XFS and F2FS use one conventional root
+  mount and direct system copy. XFS and F2FS are intentionally not exposed in
+  automatic or guided layouts until their broader release matrices exist.
+  Unit and GTK development-mode interaction gates pass; real Windows and
+  interrupted-resize VM qualification remains mandatory before release.
 - Final release gate: complete the VM matrix before promoting and renaming the
   native installer package.
 
 Disk encryption, TPM2 unlocking and FIDO2 unlocking are explicitly outside
-the release-one scope. Release one supports unencrypted ext4 and unencrypted
-Btrfs only.
+the release-one scope. Automatic and guided release-one layouts support
+unencrypted ext4 and unencrypted Btrfs only; the bounded Advanced manual mode
+also supports unencrypted XFS and F2FS roots.
 
 ## Post-release-one storage direction
 

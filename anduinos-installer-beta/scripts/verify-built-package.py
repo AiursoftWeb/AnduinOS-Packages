@@ -56,6 +56,9 @@ FORBIDDEN_PUBLIC_LAUNCHERS = (
 REQUIRED_DEPENDENCIES = {
     "python3",
     "parted",
+    "ntfs-3g",
+    "xfsprogs",
+    "f2fs-tools",
     "dosfstools",
     "efibootmgr",
     "dracut",
@@ -101,8 +104,11 @@ def verify_staged_root(root: Path) -> dict[str, object]:
     if not stat.S_IMODE(storage_probe.stat().st_mode) & 0o111:
         raise RuntimeError("Storage probe wrapper is not executable")
     probe_launcher = storage_probe.read_text()
-    if 'if [ "$#" -ne 1 ]' not in probe_launcher:
-        raise RuntimeError("Storage probe wrapper does not enforce one argument")
+    if (
+        'if [ "$#" -ne 1 ] && [ "$#" -ne 2 ]' not in probe_launcher
+        or 'storage_probe_cli.py "$@"' not in probe_launcher
+    ):
+        raise RuntimeError("Storage probe wrapper does not enforce its arguments")
     caches = sorted(
         path.relative_to(root).as_posix()
         for path in root.rglob("*")

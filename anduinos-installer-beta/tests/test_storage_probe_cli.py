@@ -4,6 +4,7 @@ import json
 import subprocess
 import unittest
 
+from installer_core.ntfs_resize import NtfsResizeBlockReason, NtfsResizeInspection
 from storage_probe_cli import main
 
 
@@ -93,6 +94,58 @@ class StorageProbeCliTests(unittest.TestCase):
             returncode = main(["/dev/sda"], run=run, geteuid=lambda: 0)
         self.assertEqual(returncode, 2)
         self.assertEqual(len(calls), 1)
+
+    def test_ntfs_mode_validates_partition_and_returns_inspection_json(self):
+        calls = []
+
+        def run(command, **_kwargs):
+            calls.append(command)
+            if command[0] == "/usr/bin/lsblk":
+                return completed(
+                    json.dumps(
+                        {
+                            "blockdevices": [
+                                {
+                                    "path": "/dev/nvme0n1p3",
+                                    "size": 128 * 1024**3,
+                                    "type": "part",
+                                    "rm": False,
+                                    "fstype": "ntfs",
+                                    "partuuid": "windows-partition",
+                                    "mountpoints": [None],
+                                }
+                            ]
+                        }
+                    )
+                )
+            if "--info" in command:
+                return completed("You might resize at 21474836480 bytes.\n")
+            return completed()
+
+        stdout = io.StringIO()
+        with contextlib.redirect_stdout(stdout):
+            returncode = main(
+                ["--ntfs-inspect", "/dev/nvme0n1p3"],
+                run=run,
+                geteuid=lambda: 0,
+            )
+
+        self.assertEqual(returncode, 0)
+        inspection = NtfsResizeInspection.from_json(stdout.getvalue())
+        self.assertTrue(inspection.safe)
+        self.assertIs(inspection.block_reason, NtfsResizeBlockReason.NONE)
+        self.assertTrue(all("--force" not in call for call in calls))
+
+    def test_ntfs_mode_rejects_arbitrary_paths_before_running_commands(self):
+        calls = []
+        with contextlib.redirect_stderr(io.StringIO()):
+            returncode = main(
+                ["--ntfs-inspect", "/tmp/image"],
+                run=calls.append,
+                geteuid=lambda: 0,
+            )
+        self.assertEqual(returncode, 2)
+        self.assertFalse(calls)
 
 
 if __name__ == "__main__":

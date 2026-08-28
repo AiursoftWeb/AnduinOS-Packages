@@ -260,6 +260,142 @@
   font-weight: 700;
 }
 
+.partition-map-panel {
+  background-color: alpha(@window_fg_color, 0.025);
+  border: 1px solid alpha(@window_fg_color, 0.07);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.partition-map-heading {
+  color: alpha(@window_fg_color, 0.72);
+  font-size: 0.9em;
+  font-weight: 700;
+}
+
+.partition-map-track {
+  background-color: alpha(@window_fg_color, 0.035);
+  border-radius: 11px;
+  padding: 3px;
+}
+
+.partition-map-segment {
+  border: 1px solid alpha(@window_fg_color, 0.12);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.partition-map-segment-compact {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.manual-storage-switcher {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.partition-map-title {
+  font-weight: 800;
+}
+
+.partition-map-size {
+  font-size: 0.86em;
+  opacity: 0.76;
+}
+
+.partition-map-preserved {
+  background-color: alpha(@accent_bg_color, 0.14);
+  border-color: alpha(@accent_bg_color, 0.30);
+}
+
+.partition-map-resized {
+  background-color: alpha(@warning_color, 0.16);
+  border-color: alpha(@warning_color, 0.42);
+}
+
+.partition-map-deleted {
+  background-color: alpha(@error_color, 0.14);
+  border-color: alpha(@error_color, 0.38);
+  color: @error_color;
+}
+
+.partition-map-new-esp {
+  background-color: alpha(#8b5cf6, 0.24);
+  border-color: alpha(#8b5cf6, 0.55);
+}
+
+.partition-map-new-root {
+  background-color: alpha(#2185d0, 0.25);
+  border-color: alpha(#2185d0, 0.58);
+}
+
+.partition-map-new-swap {
+  background-color: alpha(#d99100, 0.24);
+  border-color: alpha(#d99100, 0.55);
+}
+
+.partition-map-free {
+  background-color: transparent;
+  border: 1px dashed alpha(@window_fg_color, 0.26);
+  color: alpha(@window_fg_color, 0.68);
+}
+
+.partition-editor-row {
+  background-color: alpha(@window_fg_color, 0.035);
+  border: 1px solid alpha(@window_fg_color, 0.07);
+  border-radius: 12px;
+  padding: 9px 11px;
+}
+
+.partition-editor-row-delete {
+  background-color: alpha(@error_color, 0.075);
+  border-color: alpha(@error_color, 0.22);
+}
+
+.partition-editor-title {
+  font-weight: 700;
+}
+
+.partition-status {
+  border-radius: 999px;
+  font-size: 0.82em;
+  font-weight: 800;
+  padding: 3px 8px;
+}
+
+.partition-status-preserve {
+  background-color: alpha(@success_color, 0.14);
+  color: @success_color;
+}
+
+.partition-status-delete {
+  background-color: alpha(@error_color, 0.14);
+  color: @error_color;
+}
+
+.partition-status-new {
+  background-color: alpha(@accent_bg_color, 0.16);
+  color: @accent_color;
+}
+
+.partition-status-resize {
+  background-color: alpha(@warning_color, 0.16);
+  color: @warning_color;
+}
+
+.partition-creator {
+  background-color: alpha(@accent_bg_color, 0.055);
+  border: 1px solid alpha(@accent_bg_color, 0.16);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.partition-empty-state {
+  color: alpha(@window_fg_color, 0.62);
+  padding: 10px 4px;
+}
+
 .progress-card {
   background-color: alpha(@window_fg_color, 0.04);
   border: 1px solid alpha(@window_fg_color, 0.08);

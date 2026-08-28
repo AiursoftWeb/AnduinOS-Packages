@@ -287,6 +287,7 @@ def build_guided_coexistence_storage_graph(
             extent_reference,
         ),
         partitions=tuple(partitions),
+        partition_resizes=(),
         filesystems=tuple(filesystems),
         subvolumes=subvolumes,
         mounts=mounts,
@@ -490,6 +491,7 @@ def build_erase_disk_storage_graph(
             ),
         ),
         partitions=partitions,
+        partition_resizes=(),
         filesystems=tuple(filesystems),
         subvolumes=subvolumes,
         mounts=mounts,
@@ -516,6 +518,11 @@ def validate_storage_graph(plan: InstallPlan) -> None:
         raise StorageGraphValidationError("Invalid storage inventory digest")
     if graph.mode is StorageGraphMode.GUIDED_COEXISTENCE:
         _validate_guided_graph_structure(plan, graph)
+        return
+    if graph.mode is StorageGraphMode.MANUAL:
+        from .manual_graph_planning import validate_manual_graph_structure
+
+        validate_manual_graph_structure(plan, graph)
         return
     if len(graph.block_references) != 1:
         raise StorageGraphValidationError(

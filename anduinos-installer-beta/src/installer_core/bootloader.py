@@ -15,13 +15,26 @@ from .esp import (
 from .execution_boundaries import emit_boundary
 from .model import Architecture, Filesystem, InstallMode
 from .steps import FailurePolicy, InstallContext
-from .storage_planning import GuidedCoexistenceExecutionPlan
+from .storage_planning import (
+    GuidedCoexistenceExecutionPlan,
+    ManualStorageExecutionPlan,
+)
 
 
 GRUB_PLATFORM_MODULES = {
     "i386-pc": Path("usr/lib/grub/i386-pc/modinfo.sh"),
     "x86_64-efi": Path("usr/lib/grub/x86_64-efi/modinfo.sh"),
     "arm64-efi": Path("usr/lib/grub/arm64-efi/modinfo.sh"),
+}
+
+GRUB_ADVANCED_FILESYSTEM_MODULES = {
+    Filesystem.XFS: "xfs.mod",
+    Filesystem.F2FS: "f2fs.mod",
+}
+
+INITRD_ADVANCED_FILESYSTEM_MODULES = {
+    Filesystem.XFS: "kernel/fs/xfs/xfs.ko",
+    Filesystem.F2FS: "kernel/fs/f2fs/f2fs.ko",
 }
 
 
@@ -56,29 +69,40 @@ class InstallBootloaderStep:
             raise RuntimeError("EFI System Partition is not mounted")
         if not context.values.get("target_efi_mounted"):
             raise RuntimeError("EFI mount state is not active")
-        guided_execution = context.values.get(
-            "guided_storage_execution_plan"
-        )
         guided = context.plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
-        if guided:
+        manual = context.plan.storage.mode is InstallMode.MANUAL
+        vendor_only = guided or manual
+        if vendor_only:
+            execution_key = (
+                "guided_storage_execution_plan"
+                if guided
+                else "manual_storage_execution_plan"
+            )
+            storage_execution = context.values.get(execution_key)
             if not isinstance(
-                guided_execution, GuidedCoexistenceExecutionPlan
+                storage_execution,
+                (GuidedCoexistenceExecutionPlan, ManualStorageExecutionPlan),
             ):
-                raise RuntimeError("Guided boot command plan is missing")
-            commands = guided_execution.boot_commands
+                raise RuntimeError("Vendor-only boot command plan is missing")
+            commands = storage_execution.boot_commands
             installs = (commands.install,)
         else:
             commands = build_boot_commands(context.plan, str(target))
             installs = commands.installs
         context.values["boot_command_plan"] = commands
         _verify_grub_platform_modules(target, installs)
+        _verify_grub_filesystem_modules(
+            target,
+            installs,
+            context.plan.storage.filesystem,
+        )
         _verify_grub_install_options(self.runner, target, installs)
         devices = context.values.get("partition_devices", {})
         context.log(
             "Bootloader target disk: "
             f"{context.plan.storage.disk.path} (selected disk only)"
         )
-        if not guided and commands.bios_required:
+        if not vendor_only and commands.bios_required:
             context.log(
                 "Installing Legacy BIOS GRUB to "
                 f"{context.plan.storage.disk.path}"
@@ -88,7 +112,7 @@ class InstallBootloaderStep:
             f"{devices.get('efi-system', 'the selected disk ESP')} "
             "mounted at /boot/efi"
         )
-        if guided:
+        if vendor_only:
             context.log(
                 "Only EFI/AnduinOS may change on the selected EFI System "
                 "Partition"
@@ -102,18 +126,19 @@ class InstallBootloaderStep:
                 "Other disks and Windows EFI boot files will not be modified"
             )
         self.runner.run(commands.initrd, timeout=1200)
+        prefix = "guided" if guided else "manual"
         for command in installs:
-            if guided:
-                emit_boundary(context, "guided-boot-files", "before")
+            if vendor_only:
+                emit_boundary(context, f"{prefix}-boot-files", "before")
             self.runner.run(command, timeout=300)
-            if guided:
-                emit_boundary(context, "guided-boot-files", "after")
+            if vendor_only:
+                emit_boundary(context, f"{prefix}-boot-files", "after")
         self.runner.run(commands.configure, timeout=300)
-        if guided:
-            emit_boundary(context, "guided-nvram", "before")
+        if vendor_only:
+            emit_boundary(context, f"{prefix}-nvram", "before")
             self.runner.run(commands.nvram_create, timeout=30)
-            _verify_guided_nvram(self.runner, context, commands)
-            emit_boundary(context, "guided-nvram", "after")
+            _verify_vendor_nvram(self.runner, context, commands)
+            emit_boundary(context, f"{prefix}-nvram", "after")
 
     def verify(self, context: InstallContext) -> None:
         target = _target(context)
@@ -167,6 +192,24 @@ class InstallBootloaderStep:
                 raise RuntimeError(
                     "Btrfs target initrd is missing Disk Snapshots Manager recovery"
                 )
+            root_module = INITRD_ADVANCED_FILESYSTEM_MODULES.get(
+                context.plan.storage.filesystem
+            )
+            if root_module:
+                initrd_contents = self.runner.run(
+                    (
+                        "chroot",
+                        str(target),
+                        "lsinitrd",
+                        f"/boot/initrd.img-{version}",
+                    ),
+                    timeout=60,
+                ).stdout
+                if root_module not in initrd_contents:
+                    raise RuntimeError(
+                        f"{context.plan.storage.filesystem.value} target "
+                        "initrd is missing its root filesystem driver"
+                    )
 
         grub_cfg = target / "boot/grub/grub.cfg"
         if not grub_cfg.is_file():
@@ -176,7 +219,9 @@ class InstallBootloaderStep:
             raise RuntimeError("GRUB configuration has no Linux boot entry")
 
         guided = context.plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
-        if guided:
+        manual = context.plan.storage.mode is InstallMode.MANUAL
+        vendor_only = guided or manual
+        if vendor_only:
             loader = (
                 target
                 / "boot/efi"
@@ -187,8 +232,11 @@ class InstallBootloaderStep:
                     f"AnduinOS vendor UEFI loader is missing: {loader}"
                 )
             efi_loader = loader
-            _verify_guided_nvram(self.runner, context, commands)
-            inspection = context.values.get("guided_esp_inspection")
+            _verify_vendor_nvram(self.runner, context, commands)
+            inspection_key = (
+                "guided_esp_inspection" if guided else "manual_esp_inspection"
+            )
+            inspection = context.values.get(inspection_key)
             if isinstance(inspection, EspReuseInspection):
                 verify_preserved_esp_tree(
                     inspection.preserved_entries,
@@ -222,7 +270,7 @@ class InstallBootloaderStep:
                 f"Target userspace architecture is {target_architecture!r}"
             )
 
-        if not guided and commands.bios_required:
+        if not vendor_only and commands.bios_required:
             bios_modules = target / "boot/grub/i386-pc"
             if not bios_modules.is_dir() or not (
                 bios_modules / "normal.mod"
@@ -233,7 +281,7 @@ class InstallBootloaderStep:
         return None
 
 
-def _verify_guided_nvram(
+def _verify_vendor_nvram(
     runner: CommandRunner,
     context: InstallContext,
     commands,
@@ -241,13 +289,13 @@ def _verify_guided_nvram(
     devices = context.values.get("partition_devices", {})
     esp = str(devices.get("efi-system") or "")
     if not esp:
-        raise RuntimeError("Guided EFI System Partition is unresolved")
+        raise RuntimeError("EFI System Partition is unresolved")
     partuuid = runner.run(
         ("blkid", "-s", "PARTUUID", "-o", "value", esp),
         timeout=10,
     ).stdout.strip()
     if not partuuid:
-        raise RuntimeError("Guided EFI System Partition has no PARTUUID")
+        raise RuntimeError("EFI System Partition has no PARTUUID")
     output = runner.run(commands.nvram_verify, timeout=30).stdout
     verify_nvram_entry(
         output,
@@ -314,6 +362,32 @@ def _verify_grub_platform_modules(
     if missing:
         raise RuntimeError(
             "Target GRUB platform modules are missing: "
+            + ", ".join(str(path) for path in missing)
+        )
+
+
+def _verify_grub_filesystem_modules(
+    target: Path,
+    installs: tuple[tuple[str, ...], ...],
+    filesystem: Filesystem,
+) -> None:
+    module = GRUB_ADVANCED_FILESYSTEM_MODULES.get(filesystem)
+    if module is None:
+        return
+    planned_targets = {
+        argument.split("=", 1)[1]
+        for command in installs
+        for argument in command
+        if argument.startswith("--target=")
+    }
+    missing = tuple(
+        target / "usr/lib/grub" / platform / module
+        for platform in sorted(planned_targets)
+        if not (target / "usr/lib/grub" / platform / module).is_file()
+    )
+    if missing:
+        raise RuntimeError(
+            f"Target GRUB {filesystem.value} modules are missing: "
             + ", ".join(str(path) for path in missing)
         )
 
