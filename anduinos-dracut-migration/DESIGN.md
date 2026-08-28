@@ -169,8 +169,11 @@ not construct a trigger cycle by waiting for itself. The guarded core therefore
 does not attempt to become the last interested package. Instead, it uses
 `dpkg-divert` to preserve and wrap Ubuntu Dracut's historical
 `/usr/sbin/update-initramfs` compatibility entry point. Activation-only calls
-still defer normally; the later real Dracut handler cannot return successfully
-until the wrapper's shared verification also succeeds. The same lifecycle wraps
+still defer normally. Because dpkg does not order the shared Dracut trigger
+after pending kernel postinst scripts, maintainer-script `-u` calls preserve
+the real handler's status without prematurely validating kernels whose initrd
+does not exist yet. Packages that add mandatory image content call the shared
+verifier synchronously in their own postinst. The same lifecycle wraps
 `/usr/sbin/update-grub`, replacing its direct write with staged generation,
 fsync, and atomic rename. Removal of the core restores both diverted upstream
 implementations through an idempotent `prerm`.

@@ -33,7 +33,7 @@ class MigrationGuardTests(unittest.TestCase):
         project = ET.parse(PROJECT).getroot()
         self.assertEqual(
             project.findtext(".//PackageVersion"),
-            "2.0.2-4+$(SuiteShortName)",
+            "2.0.2-5+$(SuiteShortName)",
         )
         self.assertEqual(
             project.find(".//PreInstallScript").get("Include"),
@@ -653,6 +653,13 @@ class MigrationGuardTests(unittest.TestCase):
             subprocess.run(
                 ["/bin/sh", UPDATE_INITRAMFS_GUARD, "-u"],
                 env={**guard_env, "DPKG_MAINTSCRIPT_PACKAGE": "test-package"},
+                check=True,
+            )
+            self.assertEqual(verify_calls.read_text().splitlines(), ["--verify"])
+
+            subprocess.run(
+                ["/bin/sh", UPDATE_INITRAMFS_GUARD, "-u"],
+                env={**guard_env, "DPKG_MAINTSCRIPT_PACKAGE": ""},
                 check=True,
             )
             self.assertEqual(verify_calls.read_text().splitlines(), ["--verify"])

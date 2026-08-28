@@ -9,13 +9,14 @@ VERIFY=${ANDUINOS_MIGRATION_VERIFY:-/usr/libexec/anduinos-dracut-verify}
     exit 1
 }
 
-# Dracut's Debian compatibility wrapper defers exactly this maintainer-script
-# call by activating update-initramfs.  Verification belongs to the later
-# triggered invocation, not to the activation-only call.
-deferred=false
-if [ -n "${DPKG_MAINTSCRIPT_PACKAGE:-}" ] \
+# dpkg does not order the shared Dracut trigger after pending kernel postinst
+# scripts. Both its activation call and its later invocation may therefore run
+# before a newly unpacked kernel has an initrd. The packages that add mandatory
+# image content perform their own synchronous final verification instead.
+maintscript_update=false
+if [ "${DPKG_MAINTSCRIPT_PACKAGE+x}" = x ] \
     && [ "$#" -eq 1 ] && [ "$1" = -u ]; then
-    deferred=true
+    maintscript_update=true
 fi
 
 delete=false
@@ -25,7 +26,7 @@ done
 
 "$REAL_UPDATE_INITRAMFS" "$@"
 
-[ "$deferred" = false ] || exit 0
+[ "$maintscript_update" = false ] || exit 0
 [ "$delete" = false ] || exit 0
 [ -x "$VERIFY" ] || {
     printf '%s\n' 'anduinos-update-initramfs: synchronous verifier is missing' >&2
