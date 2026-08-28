@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-control-panel</PackageName>
-    <PackageVersion>2.0.2-9+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-10+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Control Panel — a category-based home for system, hardware, application, account, appearance, and recovery settings.</PackageDescription>
     <Section>utils</Section>
@@ -31,6 +31,7 @@
     <Dependency Include="gnome-software" />
     <Dependency Include="flatpak" />
     <Dependency Include="pkexec" />
+    <Dependency Include="grub2-common" />
     <Dependency Include="anduinos-driver-center" />
     <Dependency Include="anduinos-appearance" />
     <Dependency Include="anduinos-ufwall-gtk" />
@@ -45,6 +46,8 @@
     <IncludeFile Include="src/anduinos_control_panel/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/__init__.py" />
     <IncludeFile Include="src/anduinos_control_panel/app.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/app.py" />
     <IncludeFile Include="src/anduinos_control_panel/model.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/model.py" />
+    <IncludeScript Include="scripts/boot-settings-helper" Target="/usr/libexec/anduinos-control-panel/boot-settings-helper" />
+    <IncludeFile Include="data/com.anduinos.ControlPanel.policy" Target="/usr/share/polkit-1/actions/com.anduinos.ControlPanel.policy" />
 
     <!-- Vendored copies of existing repository SVGs keep this package standalone. -->
     <IncludeFolder Include="resources/icons" Target="/usr/share/anduinos-control-panel/icons" />

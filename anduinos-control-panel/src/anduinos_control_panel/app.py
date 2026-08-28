@@ -27,6 +27,7 @@ from .model import (
     command_available,
     flatpak_installed,
     package_installed,
+    read_grub_timeouts,
 )
 
 
@@ -34,6 +35,7 @@ APP_ID = "com.anduinos.ControlPanel"
 LOCALE_DIR = "/usr/share/locale"
 FLATHUB_REMOTE = "flathub"
 FLATHUB_REPOSITORY = "https://dl.flathub.org/repo/flathub.flatpakrepo"
+BOOT_SETTINGS_HELPER = "/usr/libexec/anduinos-control-panel/boot-settings-helper"
 gettext.bindtextdomain("anduinos-control-panel", LOCALE_DIR)
 gettext.textdomain("anduinos-control-panel")
 _ = gettext.gettext
@@ -74,6 +76,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         self._flatseal_window: Adw.Window | None = None
         self._bottles_window: Adw.Window | None = None
         self._voice_install_window: Adw.Window | None = None
+        self._boot_settings_window: Adw.Window | None = None
 
         self._install_css()
 
@@ -202,6 +205,11 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                 _("System Settings"),
                 _("Display, sound, power, privacy, and more"),
                 lambda: self._launch(["gnome-control-center"]),
+            ),
+            (
+                _("Startup and Boot"),
+                _("Change the boot menu wait time"),
+                self._show_boot_settings,
             ),
             (
                 _("Virtual Memory Settings"),
@@ -543,6 +551,181 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         dialog = Adw.MessageDialog(transient_for=self, heading=heading, body=body)
         dialog.add_response("ok", _("OK"))
         dialog.present()
+
+    def _show_boot_settings(self) -> None:
+        if self._boot_settings_window is not None:
+            self._boot_settings_window.present()
+            return
+
+        current = read_grub_timeouts()
+        state = {
+            "normal": current.normal,
+            "after_interrupted_boot": current.after_interrupted_boot,
+        }
+        choices = sorted({0, 3, 5, 10, 30, current.normal})
+        window = Adw.Window(
+            transient_for=self,
+            modal=True,
+            title=_("Startup and Boot"),
+            default_width=560,
+            default_height=330,
+        )
+        self._boot_settings_window = window
+        window.connect("close-request", self._boot_settings_window_closed)
+
+        toolbar = Adw.ToolbarView()
+        toolbar.add_top_bar(Adw.HeaderBar())
+        window.set_content(toolbar)
+        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=18)
+        page.set_margin_top(24)
+        page.set_margin_bottom(24)
+        page.set_margin_start(24)
+        page.set_margin_end(24)
+        toolbar.set_content(page)
+
+        group = Adw.PreferencesGroup(
+            title=_("Boot menu"),
+            description=_(
+                "Choose how long the boot menu waits before starting the default system."
+            ),
+        )
+        timeout_row = Adw.ComboRow(
+            title=_("Boot menu wait time"),
+            subtitle=_(
+                "The same delay is used after an interrupted or unsuccessful startup."
+            ),
+        )
+        timeout_row.add_prefix(
+            Gtk.Image.new_from_icon_name("system-reboot-symbolic")
+        )
+        timeout_row.set_model(
+            Gtk.StringList.new([_("%d seconds") % value for value in choices])
+        )
+        timeout_row.set_selected(choices.index(current.normal))
+        group.add(timeout_row)
+        page.append(group)
+
+        if current.normal == current.after_interrupted_boot:
+            current_text = _("Current setting: %d seconds") % current.normal
+        else:
+            current_text = _(
+                "Current setting: %d seconds; after an interrupted startup: %d seconds"
+            ) % (current.normal, current.after_interrupted_boot)
+        status = Gtk.Label(label=current_text, xalign=0, wrap=True)
+        status.add_css_class("dim-label")
+        page.append(status)
+
+        spinner = Gtk.Spinner()
+        spinner.set_halign(Gtk.Align.START)
+        spinner.set_visible(False)
+        page.append(spinner)
+
+        spacer = Gtk.Box()
+        spacer.set_vexpand(True)
+        page.append(spacer)
+        buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        buttons.set_halign(Gtk.Align.END)
+        close = Gtk.Button(label=_("Close"))
+        close.connect("clicked", lambda _button: window.close())
+        apply = Gtk.Button(label=_("Apply"))
+        apply.add_css_class("suggested-action")
+
+        def selection_changed(row: Adw.ComboRow, _parameter) -> None:
+            selected = choices[row.get_selected()]
+            apply.set_sensitive(
+                selected != state["normal"]
+                or selected != state["after_interrupted_boot"]
+            )
+
+        timeout_row.connect("notify::selected", selection_changed)
+        selection_changed(timeout_row, None)
+        apply.connect(
+            "clicked",
+            lambda _button: self._apply_boot_timeout(
+                choices[timeout_row.get_selected()],
+                window,
+                timeout_row,
+                apply,
+                close,
+                status,
+                spinner,
+                state,
+            ),
+        )
+        buttons.append(close)
+        buttons.append(apply)
+        page.append(buttons)
+        window.present()
+
+    def _boot_settings_window_closed(self, _window: Adw.Window) -> bool:
+        self._boot_settings_window = None
+        return False
+
+    def _apply_boot_timeout(
+        self,
+        timeout: int,
+        window: Adw.Window,
+        timeout_row: Adw.ComboRow,
+        apply: Gtk.Button,
+        close: Gtk.Button,
+        status: Gtk.Label,
+        spinner: Gtk.Spinner,
+        state: dict[str, int],
+    ) -> None:
+        timeout_row.set_sensitive(False)
+        apply.set_sensitive(False)
+        close.set_sensitive(False)
+        window.set_deletable(False)
+        spinner.set_visible(True)
+        spinner.start()
+        status.set_label(_("Updating the boot menu…"))
+
+        def completed(return_code: int, output: str) -> bool:
+            spinner.stop()
+            spinner.set_visible(False)
+            timeout_row.set_sensitive(True)
+            close.set_sensitive(True)
+            window.set_deletable(True)
+            if return_code == 0:
+                state["normal"] = timeout
+                state["after_interrupted_boot"] = timeout
+                status.set_label(
+                    _("Boot menu wait time is now %d seconds. The change applies on the next startup.")
+                    % timeout
+                )
+                self.toast_overlay.add_toast(
+                    Adw.Toast.new(_("Boot menu wait time updated"))
+                )
+            else:
+                message = output.strip()
+                if return_code == 126:
+                    message = _("Authentication was cancelled.")
+                elif not message:
+                    message = _("The boot setting could not be changed.")
+                status.set_label(message)
+                apply.set_sensitive(True)
+            return GLib.SOURCE_REMOVE
+
+        def worker() -> None:
+            try:
+                result = subprocess.run(
+                    [
+                        "/usr/bin/pkexec",
+                        BOOT_SETTINGS_HELPER,
+                        "set-timeout",
+                        str(timeout),
+                    ],
+                    capture_output=True,
+                    text=True,
+                    timeout=300,
+                    check=False,
+                )
+                output = result.stderr or result.stdout
+                GLib.idle_add(completed, result.returncode, output)
+            except (OSError, subprocess.TimeoutExpired) as error:
+                GLib.idle_add(completed, 1, str(error))
+
+        threading.Thread(target=worker, daemon=True).start()
 
     def _show_store_prompt(self, application_name: str, software_id: str) -> None:
         dialog = Adw.MessageDialog(

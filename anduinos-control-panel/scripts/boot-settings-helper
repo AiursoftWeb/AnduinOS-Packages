@@ -1,0 +1,108 @@
+#!/usr/bin/python3
+"""Restricted privileged GRUB operations for AnduinOS Control Panel."""
+
+from __future__ import annotations
+
+import os
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+
+
+CONFIGURATION_PATH = Path("/etc/default/grub.d/99-anduinos-control-panel.cfg")
+UPDATE_GRUB = "/usr/sbin/update-grub"
+MINIMUM_TIMEOUT = 0
+MAXIMUM_TIMEOUT = 300
+
+
+def parse_timeout(value: str) -> int:
+    if not value.isascii() or not value.isdecimal():
+        raise ValueError("timeout must be a whole number of seconds")
+    timeout = int(value)
+    if not MINIMUM_TIMEOUT <= timeout <= MAXIMUM_TIMEOUT:
+        raise ValueError(
+            f"timeout must be between {MINIMUM_TIMEOUT} and {MAXIMUM_TIMEOUT} seconds"
+        )
+    return timeout
+
+
+def configuration_for(timeout: int) -> bytes:
+    return (
+        "# Managed by AnduinOS Control Panel.\n"
+        f"GRUB_TIMEOUT={timeout}\n"
+        f"GRUB_RECORDFAIL_TIMEOUT={timeout}\n"
+    ).encode("ascii")
+
+
+def replace_configuration(content: bytes | None) -> None:
+    path = CONFIGURATION_PATH
+    path.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
+    if content is None:
+        path.unlink(missing_ok=True)
+        return
+
+    descriptor, temporary_name = tempfile.mkstemp(
+        dir=path.parent, prefix=f".{path.name}.", text=False
+    )
+    temporary = Path(temporary_name)
+    try:
+        os.fchmod(descriptor, 0o644)
+        with os.fdopen(descriptor, "wb") as stream:
+            descriptor = -1
+            stream.write(content)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+        temporary.unlink(missing_ok=True)
+
+
+def update_grub() -> None:
+    result = subprocess.run(
+        [UPDATE_GRUB], capture_output=True, text=True, check=False
+    )
+    if result.stdout:
+        print(result.stdout, end="")
+    if result.stderr:
+        print(result.stderr, end="", file=sys.stderr)
+    if result.returncode:
+        raise RuntimeError(f"update-grub exited with status {result.returncode}")
+
+
+def set_timeout(timeout: int) -> None:
+    try:
+        previous = CONFIGURATION_PATH.read_bytes()
+    except FileNotFoundError:
+        previous = None
+
+    replace_configuration(configuration_for(timeout))
+    try:
+        update_grub()
+    except (OSError, RuntimeError):
+        replace_configuration(previous)
+        raise
+
+
+def main(arguments: list[str]) -> int:
+    if os.geteuid() != 0:
+        print("This helper must be run through polkit.", file=sys.stderr)
+        return 77
+    try:
+        match arguments:
+            case ["set-timeout", value]:
+                set_timeout(parse_timeout(value))
+            case _:
+                print("Unknown or incomplete action.", file=sys.stderr)
+                return 64
+    except (OSError, ValueError, RuntimeError) as error:
+        print(f"Boot setting change failed: {error}", file=sys.stderr)
+        return 1
+    print("Boot menu wait time updated successfully.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))

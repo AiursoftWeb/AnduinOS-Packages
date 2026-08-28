@@ -126,6 +126,44 @@ class PackageTests(unittest.TestCase):
         self.assertIn('_("System Snapshots")', application)
         self.assertNotIn('_("Btrfs Snapshots")', application)
         self.assertIn('_("Wallpaper and Accent Color")', application)
+        self.assertIn('_("Startup and Boot")', application)
+        self.assertIn('_("Boot menu wait time")', application)
+
+    def test_boot_settings_use_a_fixed_polkit_helper(self):
+        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
+        project = (ROOT / "anduinos-control-panel.aosproj").read_text()
+        helper = (ROOT / "scripts/boot-settings-helper").read_text()
+        tree = ET.parse(ROOT / "data/com.anduinos.ControlPanel.policy")
+        annotations = {
+            node.attrib.get("key"): (node.text or "").strip()
+            for node in tree.findall(".//annotate")
+        }
+        helper_path = "/usr/libexec/anduinos-control-panel/boot-settings-helper"
+
+        self.assertIn(f'BOOT_SETTINGS_HELPER = "{helper_path}"', application)
+        self.assertIn(
+            '[\n                        "/usr/bin/pkexec",\n'
+            "                        BOOT_SETTINGS_HELPER,",
+            application,
+        )
+        self.assertEqual(
+            annotations["org.freedesktop.policykit.exec.path"], helper_path
+        )
+        self.assertNotIn(
+            "org.freedesktop.policykit.exec.allow_gui", annotations
+        )
+        self.assertIn(
+            'Include="scripts/boot-settings-helper"', project
+        )
+        self.assertIn(
+            'Include="data/com.anduinos.ControlPanel.policy"', project
+        )
+        self.assertIn('<Dependency Include="grub2-common" />', project)
+        self.assertIn('case ["set-timeout", value]:', helper)
+        self.assertIn(
+            'or selected != state["after_interrupted_boot"]', application
+        )
+        self.assertNotIn("shell=True", helper)
 
     def test_optional_entries_are_gated_by_runtime_state(self):
         application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
