@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-btrfs-snapshots-manager</PackageName>
-    <PackageVersion>2.0.2-9+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-10+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Disk Snapshots Manager — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -24,6 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Repository publication gate: this Dracut-only build must remain
+         uninstallable until the core version carrying the synchronous
+         fallback preinst is visible in the same APT index. -->
+    <Dependency Include="anduinos-core-system (>= 2.0.2-3)" />
     <Dependency Include="libgtk-4-1" />
     <Dependency Include="libadwaita-1-0" />
     <Dependency Include="btrfs-progs" />

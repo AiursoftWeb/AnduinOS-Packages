@@ -1,6 +1,10 @@
 set -eu
 
-if command -v dracut >/dev/null 2>&1 && [ -d /lib/modules ]; then
+if [ -x /usr/libexec/anduinos-dracut-verify ] && [ -d /lib/modules ]; then
+    /usr/libexec/anduinos-dracut-verify --rebuild
+elif command -v dracut >/dev/null 2>&1 && [ -d /lib/modules ]; then
+    # Standalone installations outside anduinos-core-system retain a strict
+    # fallback; unlike the old lifecycle, generation failures are never hidden.
     dracut --force --regenerate-all
 fi
 
@@ -29,12 +33,11 @@ if mountpoint -q /boot/efi; then
     fi
 fi
 
-if [ -x /usr/sbin/update-grub ]; then
+if [ -x /usr/libexec/anduinos-dracut-verify ]; then
     # Disk Snapshots Manager must not inspect or mount unrelated disks while installing.
     # Its generated entries are independent of os-prober results.
     PATH="/usr/libexec/anduinos-btrfs-snapshots-manager/no-os-prober:/usr/sbin:/usr/bin:/sbin:/bin" \
-        /usr/sbin/update-grub || \
-        echo "Warning: Disk Snapshots Manager could not refresh the GRUB configuration" >&2
+        /usr/libexec/anduinos-dracut-verify --update-grub
 fi
 
 # A recovery boot may have installed a one-boot unit under /run to shadow an

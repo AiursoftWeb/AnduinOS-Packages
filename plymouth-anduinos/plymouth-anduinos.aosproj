@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>plymouth-anduinos</PackageName>
-    <PackageVersion>2.0.2+$(UpstreamVersion)-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2+$(UpstreamVersion)-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS boot splash theme</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -59,6 +59,9 @@
     <PreRemoveScript  Include="scripts/prerm.sh" />
 
     <!-- ubuntu-text.so module, needed by anduinos-text.plymouth fallback theme -->
+    <!-- Keep this Dracut-only candidate uninstallable until the guarded core
+         candidate is published. CI deliberately publishes this package first. -->
+    <Dependency Include="anduinos-core-system (>= 2.0.2-3)" />
     <Dependency Include="dracut" />
     <Recommend Include="plymouth-theme-ubuntu-text" />
   </ItemGroup>

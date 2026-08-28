@@ -2,10 +2,10 @@
 Description=Retry the AnduinOS Dracut migration until repository publication is complete
 
 [Timer]
-OnBootSec=5min
-OnUnitActiveSec=6h
-RandomizedDelaySec=5min
-Persistent=true
+OnActiveSec=30s
+OnUnitInactiveSec=15min
+RandomizedDelaySec=30s
+AccuracySec=5s
 Unit=anduinos-dracut-migration.service
 
 [Install]

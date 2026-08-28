@@ -15,13 +15,16 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, str(ROOT / "src"))
 
 gi.require_version("Gdk", "4.0")
-from gi.repository import Gdk  # noqa: E402
+from gi.repository import Gdk, Gio, GLib  # noqa: E402
 
 from anduinos_whisper_gtk.shortcuts import accelerator_from_key_event  # noqa: E402
 from anduinos_whisper_gtk import app as settings_app  # noqa: E402
 
 
 class PackageTests(unittest.TestCase):
+    def test_importing_settings_does_not_load_the_audio_backend(self):
+        self.assertNotIn("anduinos_whisper_framework.audio", sys.modules)
+
     def test_ui_state_machine_has_exactly_three_states(self):
         extension = (ROOT / "data/voice-typing@anduinos.com/extension.js").read_text()
         state_block = re.search(
@@ -194,6 +197,53 @@ class PackageTests(unittest.TestCase):
         self.assertIn("class VoiceUiClient:", dbus)
         self.assertIn('UI_INTERFACE = "com.anduinos.VoiceTyping.UI"', dbus)
         self.assertIn("Gio.DBusProxyFlags.DO_NOT_AUTO_START", dbus)
+
+    def test_missing_shell_extension_requests_a_new_login(self):
+        window = mock.Mock()
+        window.ui_client.state.side_effect = GLib.Error.new_literal(
+            Gio.dbus_error_quark(),
+            "raw D-Bus object-path error",
+            Gio.DBusError.UNKNOWN_METHOD,
+        )
+
+        result = settings_app.SettingsWindow._load_state(window)
+
+        self.assertEqual(result, GLib.SOURCE_REMOVE)
+        window._state_changed.assert_called_once_with(
+            "restart-required",
+            settings_app.RESTART_REQUIRED_DETAIL,
+        )
+        self.assertNotIn(
+            "raw D-Bus object-path error",
+            window._state_changed.call_args.args,
+        )
+
+    def test_restart_required_state_disables_start(self):
+        window = mock.Mock(testing=False)
+
+        settings_app.SettingsWindow._state_changed(
+            window,
+            "restart-required",
+            settings_app.RESTART_REQUIRED_DETAIL,
+        )
+
+        self.assertEqual(window.ui_state, "restart-required")
+        window.status_row.set_title.assert_called_once_with("Sign out required")
+        window.status_row.set_subtitle.assert_called_once_with(
+            "Sign out and back in to finish enabling Voice Typing."
+        )
+        window.status_icon.set_from_icon_name.assert_called_once_with(
+            "dialog-warning-symbolic"
+        )
+        window.start_button.set_sensitive.assert_called_once_with(False)
+
+    def test_microphone_test_does_not_reenable_start_before_new_login(self):
+        window = mock.Mock(testing=True, ui_state="restart-required")
+
+        settings_app.SettingsWindow._toggle_test(window, mock.Mock())
+
+        self.assertFalse(window.testing)
+        window.start_button.set_sensitive.assert_called_once_with(False)
 
     def test_shortcut_capture_accepts_literal_keys_and_modifiers(self):
         self.assertEqual(

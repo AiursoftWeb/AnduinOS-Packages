@@ -12,7 +12,6 @@ gi.require_version("Gdk", "4.0")
 gi.require_version("Gtk", "4.0")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk  # noqa: E402
 
-from anduinos_whisper_framework.audio import input_devices
 from anduinos_whisper_framework.config import MODELS, SETTINGS_SCHEMA, model_installed
 
 from .dbus import VoiceServiceClient, VoiceUiClient
@@ -44,8 +43,20 @@ STATE_LABELS = {
     "closed": _("Voice Typing"),
     "ready": _("Ready"),
     "listening": _("Listening…"),
+    "restart-required": _("Sign out required"),
     "error": _("Needs attention"),
 }
+
+RESTART_REQUIRED_DETAIL = _(
+    "Sign out and back in to finish enabling Voice Typing."
+)
+
+
+def _input_devices():
+    """Load the multimedia backend only when the settings window needs it."""
+    from anduinos_whisper_framework.audio import input_devices
+
+    return input_devices()
 
 
 class SettingsWindow(Adw.PreferencesWindow):
@@ -65,6 +76,7 @@ class SettingsWindow(Adw.PreferencesWindow):
             str, tuple[Adw.ActionRow, Gtk.Button, Gtk.Button, Gtk.ProgressBar]
         ] = {}
         self.testing = False
+        self.ui_state = "checking"
         self._shortcut_dialog: Adw.Dialog | None = None
         self.connect("close-request", self._closing)
         self.ui_client.subscribe(self._state_changed)
@@ -102,7 +114,7 @@ class SettingsWindow(Adw.PreferencesWindow):
         page.add(status_group)
 
         input_group = Adw.PreferencesGroup(title=_("Input"))
-        self.microphones = [("", _("System default"), True), *input_devices()]
+        self.microphones = [("", _("System default"), True), *_input_devices()]
         microphone_names = Gtk.StringList.new([item[1] for item in self.microphones])
         self.microphone_row = Adw.ComboRow(
             title=_("Microphone"), model=microphone_names
@@ -280,22 +292,28 @@ class SettingsWindow(Adw.PreferencesWindow):
         try:
             self._state_changed(*self.ui_client.state())
         except GLib.Error as error:
-            self._state_changed("error", error.message)
+            if _shell_ui_is_unavailable(error):
+                self._state_changed("restart-required", RESTART_REQUIRED_DETAIL)
+            else:
+                self._state_changed("error", error.message)
         return GLib.SOURCE_REMOVE
 
     def _state_changed(self, state: str, detail: str) -> None:
+        self.ui_state = state
         self.status_row.set_subtitle(detail or STATE_LABELS.get(state, state))
         if state == "listening":
             button_label = _("Stop")
         else:
             button_label = _("Start")
         self.start_button.set_label(button_label)
-        if state == "error":
+        if state in {"error", "restart-required"}:
             self.status_icon.set_from_icon_name("dialog-warning-symbolic")
         else:
             self.status_icon.set_from_icon_name(APP_ID)
         self.status_row.set_title(STATE_LABELS.get(state, _("Voice Typing")))
-        self.start_button.set_sensitive(not self.testing)
+        self.start_button.set_sensitive(
+            not self.testing and state != "restart-required"
+        )
 
     def _level_changed(self, level: float) -> None:
         self.meter.set_fraction(max(0.0, min(1.0, level)))
@@ -539,7 +557,9 @@ class SettingsWindow(Adw.PreferencesWindow):
         self.testing = not self.testing
         self.client.call("StartTest" if self.testing else "StopTest")
         self.test_button.set_label(_("Stop Test") if self.testing else _("Start Test"))
-        self.start_button.set_sensitive(not self.testing)
+        self.start_button.set_sensitive(
+            not self.testing and self.ui_state != "restart-required"
+        )
         if not self.testing:
             self.meter.set_fraction(0.0)
 
@@ -583,6 +603,19 @@ class VoiceTypingApplication(Adw.Application):
 
 def _format_size(size: int) -> str:
     return _("%.0f MB") % (size / 1_000_000)
+
+
+def _shell_ui_is_unavailable(error: GLib.Error) -> bool:
+    """Return whether GNOME Shell has not loaded the extension UI yet."""
+
+    return any(
+        error.matches(Gio.dbus_error_quark(), code)
+        for code in (
+            Gio.DBusError.UNKNOWN_METHOD,
+            Gio.DBusError.UNKNOWN_OBJECT,
+            Gio.DBusError.UNKNOWN_INTERFACE,
+        )
+    )
 
 
 def main() -> int:

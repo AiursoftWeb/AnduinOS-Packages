@@ -10,5 +10,9 @@ if [ "$1" = "remove" ] || [ "$1" = "deconfigure" ]; then
         text.plymouth \
         /usr/share/plymouth/themes/anduinos-text/anduinos-text.plymouth || true
 
-    dracut --force --regenerate-all 2>/dev/null || true
+    if [ -x /usr/libexec/anduinos-dracut-verify ]; then
+        /usr/libexec/anduinos-dracut-verify --rebuild
+    else
+        dracut --force --regenerate-all
+    fi
 fi

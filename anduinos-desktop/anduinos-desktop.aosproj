@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS complete desktop — metapackage that pulls in all AnduinOS components</PackageDescription>
     <Section>metapackages</Section>
@@ -24,6 +24,10 @@
          Pulls in anduinos-core-system via its own dependency chain.
          ============================================================ -->
     <Dependency Include="anduinos-desktop-core" />
+    <!-- Existing desktop systems can upgrade this metapackage conservatively
+         before the conflicting core-system transition. Keep this host-only
+         bootstrap above shared APT and container layers. -->
+    <Dependency Include="anduinos-dracut-migration" />
 
     <!-- ============================================================
          AnduinOS Brand Packages

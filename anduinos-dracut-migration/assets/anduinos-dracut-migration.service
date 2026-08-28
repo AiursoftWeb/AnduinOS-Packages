@@ -1,7 +1,6 @@
 [Unit]
 Description=Migrate AnduinOS to the pure Dracut boot stack
 Documentation=https://www.anduinos.com
-ConditionPathExists=/usr/sbin/update-initramfs
 ConditionPathExists=!/run/anduinos-live/environment
 ConditionPathExists=!/var/lib/anduinos-dracut-migration/complete
 After=network-online.target
@@ -9,7 +8,7 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/lib/anduinos-dracut-migration/anduinos-dracut-migrate
+ExecStart=/usr/bin/systemd-inhibit --what=shutdown:sleep --who=AnduinOS --why=Dracut-migration-is-writing-boot-files --mode=block /usr/lib/anduinos-dracut-migration/anduinos-dracut-migrate
 Nice=10
 IOSchedulingClass=best-effort
 IOSchedulingPriority=7

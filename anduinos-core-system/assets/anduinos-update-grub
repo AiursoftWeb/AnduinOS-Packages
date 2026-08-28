@@ -1,0 +1,20 @@
+#!/bin/sh
+set -eu
+
+GRUB_MKCONFIG=${ANDUINOS_MIGRATION_GRUB_MKCONFIG:-/usr/sbin/grub-mkconfig}
+GRUB_CFG=${ANDUINOS_MIGRATION_GRUB_CFG:-/boot/grub/grub.cfg}
+staged="$GRUB_CFG.anduinos-new"
+
+[ ! -L "$GRUB_CFG" ] || {
+    printf '%s\n' "anduinos-update-grub: refusing to replace a symlinked configuration: $GRUB_CFG" >&2
+    exit 1
+}
+rm -f -- "$staged" "$staged.new"
+"$GRUB_MKCONFIG" -o "$staged" "$@"
+[ -s "$staged" ] || {
+    printf '%s\n' 'anduinos-update-grub: grub-mkconfig produced an empty configuration' >&2
+    exit 1
+}
+sync -f "$staged"
+mv -f -- "$staged" "$GRUB_CFG"
+sync -f "$(dirname "$GRUB_CFG")"
