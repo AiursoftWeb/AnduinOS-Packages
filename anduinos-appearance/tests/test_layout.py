@@ -38,6 +38,18 @@ class LayoutTests(unittest.TestCase):
             self.assertIn(f"_('{title}')", source)
         self.assertNotIn("row.set_title(_(title_key))", source)
 
+    def test_backup_description_explains_scope_without_dconf_jargon(self):
+        source = APP_SOURCE.read_text(encoding="utf-8")
+        self.assertIn(
+            "Back up GNOME settings, layouts, and extension preferences.",
+            source,
+        )
+        self.assertIn("Personal files are not included.", source)
+        self.assertNotIn(
+            "Export or import all settings stored under /org/gnome/.",
+            source,
+        )
+
     @staticmethod
     def completed(stdout="", returncode=0):
         return subprocess.CompletedProcess([], returncode, stdout, "")

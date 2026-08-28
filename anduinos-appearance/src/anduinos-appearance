@@ -13,6 +13,7 @@ import warnings
 import gettext
 import os
 import threading
+from pathlib import Path
 warnings.filterwarnings('ignore', category=DeprecationWarning, module='gi')
 # suppress Adwaita deprecation warnings for APIs whose replacements
 # (add_page, toast_overlay) do not yet exist in Ubuntu 24.04's Adwaita version
@@ -50,6 +51,12 @@ from anduinos_appearance.weather import (
     record_weather_consent,
     revoke_weather_consent,
     write_weather_location,
+)
+from anduinos_appearance.settings_transfer import (
+    InvalidSettingsFile,
+    SettingsImportError,
+    dump_gnome_settings,
+    import_gnome_settings,
 )
 
 SHELL_BASE = '/org/gnome/shell'
@@ -538,6 +545,34 @@ class AdvancedPage(Adw.PreferencesPage):
         self.add(ext)
         self.connect('map', lambda w: self._refresh_ext_rows())
 
+        # ── Backup and Restore group ──
+        transfer = Adw.PreferencesGroup()
+        transfer.set_title(_('Backup and Restore'))
+        transfer.set_description(
+            _('Back up GNOME settings, layouts, and extension preferences. '
+              'Personal files are not included.')
+        )
+
+        row_export = Adw.ActionRow()
+        row_export.set_title(_('Export GNOME settings'))
+        row_export.set_subtitle(_('Save the current settings as a readable INI file'))
+        btn_export = Gtk.Button(label=_('Export…'))
+        btn_export.set_valign(Gtk.Align.CENTER)
+        btn_export.connect('clicked', self._on_export)
+        row_export.add_suffix(btn_export)
+        transfer.add(row_export)
+
+        row_import = Adw.ActionRow()
+        row_import.set_title(_('Import GNOME settings'))
+        row_import.set_subtitle(_('Restore settings from a dconf INI file'))
+        btn_import = Gtk.Button(label=_('Import…'))
+        btn_import.set_valign(Gtk.Align.CENTER)
+        btn_import.connect('clicked', self._on_import)
+        row_import.add_suffix(btn_import)
+        transfer.add(row_import)
+
+        self.add(transfer)
+
         # ── Danger Zone group ──
         danger = Adw.PreferencesGroup()
         danger.set_title(_('Danger Zone'))
@@ -557,6 +592,118 @@ class AdvancedPage(Adw.PreferencesPage):
     def _refresh_ext_rows(self):
         for row, uuid in self._ext_rows:
             row.set_visible(_ext_is_enabled(uuid))
+
+    @staticmethod
+    def _ini_filters():
+        ini_filter = Gtk.FileFilter()
+        ini_filter.set_name(_('INI settings files'))
+        ini_filter.add_pattern('*.ini')
+        filters = Gio.ListStore.new(Gtk.FileFilter)
+        filters.append(ini_filter)
+        return filters
+
+    def _on_export(self, btn):
+        dialog = Gtk.FileDialog.new()
+        dialog.set_title(_('Export GNOME Settings'))
+        dialog.set_initial_name('AnduinOS-GNOME-settings.ini')
+        dialog.set_filters(self._ini_filters())
+        dialog.save(self.win, None, self._on_export_file_chosen)
+
+    def _on_export_file_chosen(self, dialog, result):
+        try:
+            selected = dialog.save_finish(result)
+            path = selected.get_path() if selected else None
+            if not path:
+                raise OSError('The selected destination is not a local file')
+            Path(path).write_bytes(dump_gnome_settings())
+        except GLib.Error as error:
+            if not error.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
+                print(f'File dialog error: {error.message}', file=sys.stderr)
+                self.win._toast(_('✗ Failed to export GNOME settings'))
+            return
+        except (OSError, subprocess.CalledProcessError) as error:
+            print(f'Failed to export GNOME settings: {error}', file=sys.stderr)
+            self.win._toast(_('✗ Failed to export GNOME settings'))
+            return
+
+        self.win._toast(_('✓ GNOME settings exported'))
+
+    def _on_import(self, btn):
+        dialog = Gtk.FileDialog.new()
+        dialog.set_title(_('Import GNOME Settings'))
+        dialog.set_filters(self._ini_filters())
+        dialog.open(self.win, None, self._on_import_file_chosen)
+
+    def _on_import_file_chosen(self, dialog, result):
+        try:
+            selected = dialog.open_finish(result)
+            path = selected.get_path() if selected else None
+            if not path:
+                raise OSError('The selected source is not a local file')
+            contents = Path(path).read_bytes()
+        except GLib.Error as error:
+            if not error.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
+                print(f'File dialog error: {error.message}', file=sys.stderr)
+                self.win._toast(_('✗ Failed to read the settings file'))
+            return
+        except OSError as error:
+            print(f'Failed to read GNOME settings: {error}', file=sys.stderr)
+            self.win._toast(_('✗ Failed to read the settings file'))
+            return
+
+        choice = Adw.MessageDialog.new(
+            self.win,
+            _('How should these settings be imported?'),
+            _('Merge import keeps current values that are absent from the file.\n\n'
+              'Strict restore resets all /org/gnome/ settings first; values absent '
+              'from the file return to their defaults. A safety backup is saved '
+              'before either operation.')
+        )
+        choice.add_response('cancel', _('Cancel'))
+        choice.add_response('merge', _('Merge Import'))
+        choice.add_response('strict', _('Strict Restore'))
+        choice.set_default_response('merge')
+        choice.set_close_response('cancel')
+        choice.set_response_appearance('merge', Adw.ResponseAppearance.SUGGESTED)
+        choice.set_response_appearance('strict', Adw.ResponseAppearance.DESTRUCTIVE)
+        choice.connect(
+            'response',
+            lambda dlg, response: self._on_import_mode_chosen(
+                dlg,
+                response,
+                contents,
+            ),
+        )
+        choice.present()
+
+    def _on_import_mode_chosen(self, dialog, response, contents):
+        dialog.destroy()
+        if response not in ('merge', 'strict'):
+            return
+
+        try:
+            import_gnome_settings(contents, strict=response == 'strict')
+        except InvalidSettingsFile as error:
+            print(f'Invalid GNOME settings file: {error}', file=sys.stderr)
+            self.win._toast(_('✗ The selected file is not a valid dconf INI file'))
+            return
+        except SettingsImportError as error:
+            print(f'Failed to import GNOME settings: {error}', file=sys.stderr)
+            if error.rollback_succeeded:
+                self.win._toast(_('✗ Import failed; previous settings were restored'))
+            else:
+                self.win._toast(_('✗ Import and automatic rollback both failed'))
+            return
+        except (OSError, subprocess.CalledProcessError) as error:
+            print(f'Failed to prepare GNOME settings import: {error}', file=sys.stderr)
+            self.win._toast(_('✗ Failed to import GNOME settings'))
+            return
+
+        self.win.current_style, self.win.current_position = detect_current()
+        self.win._sync_all_highlights()
+        self.win._refresh_previews()
+        self._refresh_ext_rows()
+        self.win._toast(_('✓ Settings imported. Log out and back in to apply all changes.'))
 
     def _on_reset(self, btn):
         def do_reset():
