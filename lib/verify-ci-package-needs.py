@@ -33,6 +33,7 @@ PUBLICATION_GATE_DEPENDENCIES = {
 RELEASE_ONLY_RELATIONSHIPS = {
     "anduinos-core-system": {
         "anduinos-btrfs-snapshots-manager",
+        "anduinos-dracut-migration",
         "plymouth-anduinos",
     },
 }

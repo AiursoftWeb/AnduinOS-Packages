@@ -70,6 +70,9 @@ class MigrationContractTests(unittest.TestCase):
             boot_id.write_text(completed + "\n")
             boot_proof = root / "boot-proof"
             boot_proof.write_text("generator=dracut\nkernel=6.14.0-test\n")
+            grub_dropin = root / "etc/default/grub.d/99-migration.cfg"
+            grub_dropin.parent.mkdir(parents=True)
+            grub_dropin.write_text("GRUB_DEFAULT=0\n")
             calls = root / "verify-calls"
             verifier = bin_dir / "verify"
             verifier.write_text(
@@ -86,6 +89,7 @@ class MigrationContractTests(unittest.TestCase):
                 "ANDUINOS_MIGRATION_BOOT_ID_FILE": str(boot_id),
                 "ANDUINOS_MIGRATION_BOOT_PROOF": str(boot_proof),
                 "ANDUINOS_MIGRATION_UNAME": str(uname),
+                "ANDUINOS_MIGRATION_GRUB_DEFAULT_DROPIN": str(grub_dropin),
                 "VERIFY_CALLS": str(calls),
             }
 
@@ -95,7 +99,11 @@ class MigrationContractTests(unittest.TestCase):
 
             boot_id.write_text("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\n")
             subprocess.run(["/bin/sh", CONFIRM], env=env, check=True)
-            self.assertEqual(calls.read_text().splitlines(), ["--verify-running"])
+            self.assertEqual(
+                calls.read_text().splitlines(),
+                ["--verify-running", "--update-grub"],
+            )
+            self.assertFalse(grub_dropin.exists())
             self.assertTrue((state / "boot-confirmed").is_file())
 
     def test_confirmation_rejects_a_later_fallback_boot(self) -> None:
@@ -125,7 +133,7 @@ class MigrationContractTests(unittest.TestCase):
         self.assertIn("candidate_depends_on_guarded_core", script)
         self.assertIn('"$BOOT_DIR"/vmlinuz-*', script)
         self.assertIn("anduinos-btrfs-snapshots-manager", script)
-        self.assertIn("removed_anduinos", script)
+        self.assertIn("unexpected_removals", script)
         self.assertIn("--simulate", script)
         self.assertIn("anduinos-dracut-verify", script)
 
@@ -173,7 +181,11 @@ class MigrationContractTests(unittest.TestCase):
                 "apt-get",
                 f'case " $* " in\n'
                 f'  *" update "*) : > "{unexpected_update}"; exit 1 ;;\n'
-                '  *" --simulate "*) printf "Remv initramfs-tools [old]\\nInst dracut\\n" ;;\n'
+                '  *" --simulate "*)\n'
+                '    printf "Remv initramfs-tools [old]\\nInst dracut\\n"\n'
+                '    [ -z "${TEST_UNSAFE_REMOVAL:-}" ] || '
+                'printf "Remv %s [old]\\n" "$TEST_UNSAFE_REMOVAL"\n'
+                '    ;;\n'
                 f'  *" install "*) : > "{migrated}" ;;\n'
                 'esac\n',
             )
@@ -212,6 +224,17 @@ class MigrationContractTests(unittest.TestCase):
                     "ANDUINOS_MIGRATION_BOOT_ID_FILE": str(boot_id),
                 }
             )
+            unsafe = subprocess.run(
+                ["sh", str(MIGRATOR)],
+                env={**env, "TEST_UNSAFE_REMOVAL": "plymouth-anduinos"},
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(unsafe.returncode, 0, unsafe.stderr + unsafe.stdout)
+            self.assertIn("unexpected package removals", unsafe.stdout)
+            self.assertFalse(migrated.exists())
+
             result = subprocess.run(
                 ["sh", str(MIGRATOR)],
                 env=env,

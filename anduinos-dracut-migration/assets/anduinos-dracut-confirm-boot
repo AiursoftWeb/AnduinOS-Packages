@@ -6,6 +6,7 @@ VERIFY=${ANDUINOS_MIGRATION_VERIFY:-/usr/libexec/anduinos-dracut-verify}
 BOOT_ID_FILE=${ANDUINOS_MIGRATION_BOOT_ID_FILE:-/proc/sys/kernel/random/boot_id}
 BOOT_PROOF=${ANDUINOS_MIGRATION_BOOT_PROOF:-/run/anduinos-dracut-migration/boot-proof}
 UNAME=${ANDUINOS_MIGRATION_UNAME:-uname}
+GRUB_DEFAULT_DROPIN=${ANDUINOS_MIGRATION_GRUB_DEFAULT_DROPIN:-/etc/default/grub.d/99-anduinos-dracut-migration.cfg}
 
 [ -e "$STATE_DIR/complete" ] || exit 0
 [ ! -e "$STATE_DIR/boot-confirmed" ] || exit 0
@@ -28,6 +29,13 @@ running_version=$($UNAME -r)
 grep -Fxq "kernel=$running_version" "$BOOT_PROOF" || exit 1
 
 "$VERIFY" --verify-running
+
+# The migration kept GRUB_DEFAULT=0 until this exact boot proved that the
+# first normal entry is a working Dracut boot. Restore the user's previous
+# GRUB policy only now, and replace grub.cfg atomically through the verifier.
+rm -f -- "$GRUB_DEFAULT_DROPIN"
+sync -f "$(dirname "$GRUB_DEFAULT_DROPIN")"
+"$VERIFY" --update-grub
 
 temporary="$STATE_DIR/.boot-confirmed.new"
 : > "$temporary"

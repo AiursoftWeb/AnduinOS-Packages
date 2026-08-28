@@ -140,6 +140,13 @@ grub_entry_references_pair() {
     awk -v mode="$mode" \
         -v kernel_name="vmlinuz-$version" \
         -v initrd_name="initrd.img-$version" '
+        function references_exact_path(value, name, name_length) {
+            name_length = length(name)
+            return value == name \
+                || (length(value) > name_length \
+                    && substr(value, length(value) - name_length + 1) == name \
+                    && substr(value, length(value) - name_length, 1) == "/")
+        }
         /^[[:space:]]*menuentry[[:space:]]/ {
             if (entry) {
                 if (has_kernel && has_initrd) found = 1
@@ -150,11 +157,15 @@ grub_entry_references_pair() {
             has_initrd = 0
             next
         }
-        entry && $1 ~ /^linux/ && index($0, kernel_name) {
-            has_kernel = 1
+        entry && $1 ~ /^linux/ {
+            for (field = 2; field <= NF; field++) {
+                if (references_exact_path($field, kernel_name)) has_kernel = 1
+            }
         }
-        entry && $1 ~ /^initrd/ && index($0, initrd_name) {
-            has_initrd = 1
+        entry && $1 ~ /^initrd/ {
+            for (field = 2; field <= NF; field++) {
+                if (references_exact_path($field, initrd_name)) has_initrd = 1
+            }
         }
         END {
             if (entry && has_kernel && has_initrd) found = 1

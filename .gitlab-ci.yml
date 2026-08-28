@@ -502,6 +502,7 @@ anduinos-grub-style:
 anduinos-core-system:
   extends: .publish
   needs:
+    - anduinos-dracut-migration
     - anduinos-container
     - anduinos-grub-style
     - anduinos-system-tweaks

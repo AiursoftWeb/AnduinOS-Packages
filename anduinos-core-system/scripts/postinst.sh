@@ -4,7 +4,6 @@ STATE_DIR=${ANDUINOS_MIGRATION_STATE_DIR:-${DPKG_ROOT:-}/var/lib/anduinos-dracut
 BOOT_DIR=${ANDUINOS_MIGRATION_BOOT_DIR:-${DPKG_ROOT:-}/boot}
 GRUB_GENERATOR_EARLY=${ANDUINOS_MIGRATION_GRUB_GENERATOR:-${DPKG_ROOT:-}/etc/grub.d/06_anduinos_dracut_migration_fallback}
 GRUB_GENERATOR_LATE=${ANDUINOS_MIGRATION_GRUB_GENERATOR_LATE:-${DPKG_ROOT:-}/etc/grub.d/41_anduinos_dracut_migration_fallback}
-GRUB_DEFAULT_DROPIN=${ANDUINOS_MIGRATION_GRUB_DEFAULT_DROPIN:-${DPKG_ROOT:-}/etc/default/grub.d/99-anduinos-dracut-migration.cfg}
 GRUB_CFG=${ANDUINOS_MIGRATION_GRUB_CFG:-$BOOT_DIR/grub/grub.cfg}
 VERIFY=${ANDUINOS_MIGRATION_VERIFY:-${DPKG_ROOT:-}/usr/libexec/anduinos-dracut-verify}
 GRUB_MKCONFIG=${ANDUINOS_MIGRATION_GRUB_MKCONFIG:-grub-mkconfig}
@@ -153,16 +152,14 @@ checkpoint after_rebuild
 atomic_marker images-verified
 checkpoint after_images_verified
 
-# Preserve the fallback entry, but move it after normal Linux entries and stop
-# forcing GRUB_DEFAULT=0. An interruption before update-grub leaves the old
-# grub.cfg selecting the early fallback; an interruption afterwards leaves a
-# validated normal entry first and the fallback available manually.
+# Preserve the fallback entry, but move it after normal Linux entries. Keep
+# forcing GRUB_DEFAULT=0 until a later boot proves that the first normal entry
+# really reached userspace through Dracut. The confirmation service then
+# removes this temporary override and restores the user's GRUB policy.
 if [ -e "$GRUB_GENERATOR_EARLY" ]; then
     mv -f "$GRUB_GENERATOR_EARLY" "$GRUB_GENERATOR_LATE"
 fi
-rm -f -- "$GRUB_DEFAULT_DROPIN"
 sync -f "$(dirname "$GRUB_GENERATOR_LATE")"
-sync -f "$(dirname "$GRUB_DEFAULT_DROPIN")"
 checkpoint before_final_update_grub
 atomic_update_grub
 checkpoint after_final_update_grub

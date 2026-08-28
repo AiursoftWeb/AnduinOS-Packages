@@ -68,9 +68,9 @@ refuses the generator conflict. The dependency deliberately does not live in
 - `anduinos-core-system` cannot depend on the bootstrap because that would put
   the bootstrap inside the conflicting transaction it is intended to start.
 
-The release pipeline must publish the migration helper and the complete
-Dracut-compatible core, snapshots-manager, and Plymouth set before publishing
-the desktop version that introduces this dependency.
+The release pipeline must publish the migration helper before the core, then
+publish the complete Dracut-compatible core, snapshots-manager, and Plymouth
+set before publishing the desktop version that introduces this dependency.
 
 The Dracut-only snapshots-manager and Plymouth candidates carry a versioned
 dependency on the guarded core. CI deliberately publishes those temporarily
@@ -187,8 +187,8 @@ Each transition revalidates its input artifacts before proceeding.
 | `fallback-ready` | Digest-verified fallback pair and GRUB reference | Migration fallback is the first entry |
 | `packages-switched` | `fallback-ready`; Dracut packages unpacked/configuring | Migration fallback boots |
 | `images-verified` | `fallback-ready`; at least one validated Dracut pair and normal GRUB reference | Normal Dracut entry or fallback boots |
-| `transaction-complete` | Normal entry restored as first/default; fallback retained | Normal Dracut entry boots; fallback is available manually |
-| `boot-confirmed` | A different kernel boot ID reached multi-user target, an embedded Dracut pre-pivot hook left an ephemeral proof in `/run`, and the running kernel's image passed the verifier | Same as complete; eligible for later cleanup policy |
+| `transaction-complete` | Normal entry restored first, temporary `GRUB_DEFAULT=0` retained, fallback retained | The verified first Dracut entry boots; fallback is available manually |
+| `boot-confirmed` | A different kernel boot ID reached multi-user target, an embedded Dracut pre-pivot hook left an ephemeral proof in `/run`, the running kernel's image passed the verifier, and the temporary default override was removed with an atomic GRUB rebuild | The user's previous GRUB policy is restored; eligible for later cleanup policy |
 
 Markers never move backwards. If a marker and its required artifacts disagree,
 the artifacts win: the helper repairs or fails safely instead of skipping work.

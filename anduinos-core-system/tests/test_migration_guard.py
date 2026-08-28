@@ -33,7 +33,7 @@ class MigrationGuardTests(unittest.TestCase):
         project = ET.parse(PROJECT).getroot()
         self.assertEqual(
             project.findtext(".//PackageVersion"),
-            "2.0.2-3+$(SuiteShortName)",
+            "2.0.2-4+$(SuiteShortName)",
         )
         self.assertEqual(
             project.find(".//PreInstallScript").get("Include"),
@@ -423,6 +423,20 @@ class MigrationGuardTests(unittest.TestCase):
             )
             self.assertNotEqual(default_result.returncode, 0)
 
+            grub_cfg.write_text(
+                "menuentry wrong-prefix {\n"
+                "  linux /vmlinuz-7.0.0-test-extra\n"
+                "  initrd /initrd.img-7.0.0-test-extra\n"
+                "}\n",
+                encoding="utf-8",
+            )
+            prefix_result = subprocess.run(
+                ["/bin/sh", VERIFY, "--verify-default"],
+                env=verify_env,
+                check=False,
+            )
+            self.assertNotEqual(prefix_result.returncode, 0)
+
             (paths["boot"] / "initrd.img-7.0.0-test").write_text("known-good")
             failed = {
                 **verify_env,
@@ -463,7 +477,7 @@ class MigrationGuardTests(unittest.TestCase):
             )
             self.assertNotEqual(result.returncode, 0)
 
-    def test_postinst_restores_normal_default_only_after_verification(self) -> None:
+    def test_postinst_forces_verified_normal_default_until_confirmed_boot(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             env, paths = self.migration_environment(root)
@@ -491,7 +505,7 @@ class MigrationGuardTests(unittest.TestCase):
             )
             self.assertFalse(early.exists())
             self.assertTrue((paths["etc"] / "grub.d/41_fallback").is_file())
-            self.assertFalse(dropin.exists())
+            self.assertEqual(dropin.read_text(), "GRUB_DEFAULT=0\n")
             self.assertTrue((paths["state"] / "images-verified").is_file())
             self.assertTrue((paths["state"] / "complete").is_file())
             self.assertEqual(

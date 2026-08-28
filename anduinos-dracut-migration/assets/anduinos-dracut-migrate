@@ -220,13 +220,21 @@ simulation=$($APT_GET --simulate install "$@" 2>&1) || {
     exit 0
 }
 
-# A generator migration may remove the explicitly forbidden Ubuntu packages,
-# but it must never solve dependencies by removing an AnduinOS package.
-removed_anduinos=$(printf '%s\n' "$simulation" \
-    | sed -n 's/^Remv \(anduinos-[^ :]*\).*/\1/p')
-if [ -n "$removed_anduinos" ]; then
-    printf '%s\n' "$removed_anduinos" >&2
-    log "APT proposed removing AnduinOS packages; refusing the unsafe plan"
+# A generator migration may remove only the explicitly forbidden legacy
+# packages. Refuse every other removal, including AnduinOS packages whose
+# names do not start with "anduinos-".
+unexpected_removals=$(printf '%s\n' "$simulation" \
+    | sed -n 's/^Remv \([^ :]*\).*/\1/p' \
+    | while read -r package; do
+        case "$package" in
+            casper|initramfs-tools|initramfs-tools-core|initramfs-tools-bin) ;;
+            busybox-initramfs|finalrd) ;;
+            *) printf '%s\n' "$package" ;;
+        esac
+    done)
+if [ -n "$unexpected_removals" ]; then
+    printf '%s\n' "$unexpected_removals" >&2
+    log "APT proposed unexpected package removals; refusing the unsafe plan"
     exit 0
 fi
 
