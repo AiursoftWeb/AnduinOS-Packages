@@ -143,6 +143,10 @@ grep -Fq '/run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service' 
     "$ROOT/scripts/postinst.sh"
 grep -Fq '/run/systemd/system/multi-user.target.wants/anduinos-btrfs-snapshots-manager-confirm.service' \
     "$ROOT/scripts/postinst.sh"
+grep -Fq '/usr/bin/systemd-detect-virt --chroot --quiet' \
+    "$ROOT/scripts/postinst.sh"
+grep -Fq '/usr/bin/systemd-detect-virt --chroot --quiet' \
+    "$ROOT/scripts/postrm.sh"
 test -f "$ROOT/docs/deployment-v1.schema.json"
 test -f "$ROOT/docs/rollback-v3.schema.json"
 test -f "$ROOT/docs/personal-snapshot-v1.schema.json"

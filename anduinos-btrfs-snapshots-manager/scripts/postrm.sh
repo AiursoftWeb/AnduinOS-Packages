@@ -1,5 +1,10 @@
 set -eu
 
+in_chroot() {
+    [ -x /usr/bin/systemd-detect-virt ] \
+        && /usr/bin/systemd-detect-virt --chroot --quiet
+}
+
 if { [ "${1:-}" = remove ] || [ "${1:-}" = purge ]; } && \
     [ -d /lib/modules ]; then
     if [ -x /usr/libexec/anduinos-dracut-verify ]; then
@@ -21,7 +26,8 @@ if [ "${1:-}" = "purge" ]; then
     fi
 fi
 
-if [ -x /usr/libexec/anduinos-dracut-verify ] || [ -x /usr/sbin/update-grub ]; then
+if ! in_chroot \
+    && { [ -x /usr/libexec/anduinos-dracut-verify ] || [ -x /usr/sbin/update-grub ]; }; then
     prober_stub_dir="$(mktemp -d /run/anduinos-btrfs-snapshots-manager-grub.XXXXXX)" || prober_stub_dir=""
     case "$prober_stub_dir" in
         /run/anduinos-btrfs-snapshots-manager-grub.*)

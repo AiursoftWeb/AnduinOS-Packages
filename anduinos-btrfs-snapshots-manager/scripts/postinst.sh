@@ -1,5 +1,10 @@
 set -eu
 
+in_chroot() {
+    [ -x /usr/bin/systemd-detect-virt ] \
+        && /usr/bin/systemd-detect-virt --chroot --quiet
+}
+
 if [ -x /usr/libexec/anduinos-dracut-verify ] && [ -d /lib/modules ]; then
     /usr/libexec/anduinos-dracut-verify --rebuild
 elif command -v dracut >/dev/null 2>&1 && [ -d /lib/modules ]; then
@@ -33,7 +38,7 @@ if mountpoint -q /boot/efi; then
     fi
 fi
 
-if [ -x /usr/libexec/anduinos-dracut-verify ]; then
+if [ -x /usr/libexec/anduinos-dracut-verify ] && ! in_chroot; then
     # Disk Snapshots Manager must not inspect or mount unrelated disks while installing.
     # Its generated entries are independent of os-prober results.
     PATH="/usr/libexec/anduinos-btrfs-snapshots-manager/no-os-prober:/usr/sbin:/usr/bin:/sbin:/bin" \
