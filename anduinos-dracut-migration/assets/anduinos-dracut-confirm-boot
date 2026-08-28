@@ -1,0 +1,39 @@
+#!/bin/sh
+set -eu
+
+STATE_DIR=${ANDUINOS_MIGRATION_STATE_DIR:-/var/lib/anduinos-dracut-migration}
+VERIFY=${ANDUINOS_MIGRATION_VERIFY:-/usr/libexec/anduinos-dracut-verify}
+BOOT_ID_FILE=${ANDUINOS_MIGRATION_BOOT_ID_FILE:-/proc/sys/kernel/random/boot_id}
+BOOT_PROOF=${ANDUINOS_MIGRATION_BOOT_PROOF:-/run/anduinos-dracut-migration/boot-proof}
+UNAME=${ANDUINOS_MIGRATION_UNAME:-uname}
+
+[ -e "$STATE_DIR/complete" ] || exit 0
+[ ! -e "$STATE_DIR/boot-confirmed" ] || exit 0
+[ -s "$STATE_DIR/completed-boot-id" ] || exit 1
+
+completed_boot_id=$(cat "$STATE_DIR/completed-boot-id")
+current_boot_id=$(cat "$BOOT_ID_FILE")
+[ -n "$current_boot_id" ] || exit 1
+
+# A disk image can be verified before it has ever booted. Confirmation requires
+# reaching multi-user.target from a later kernel boot.
+[ "$current_boot_id" != "$completed_boot_id" ] || exit 0
+
+# Verifying the image currently stored in /boot is not sufficient: a user may
+# have manually selected the preserved initramfs-tools fallback.  This proof is
+# written into the new /run by a hook embedded only in AnduinOS Dracut images.
+[ -f "$BOOT_PROOF" ] && [ ! -L "$BOOT_PROOF" ] || exit 1
+grep -Fxq 'generator=dracut' "$BOOT_PROOF" || exit 1
+running_version=$($UNAME -r)
+grep -Fxq "kernel=$running_version" "$BOOT_PROOF" || exit 1
+
+"$VERIFY" --verify-running
+
+temporary="$STATE_DIR/.boot-confirmed.new"
+: > "$temporary"
+chmod 0600 "$temporary"
+sync -f "$temporary"
+mv -f "$temporary" "$STATE_DIR/boot-confirmed"
+sync -f "$STATE_DIR"
+
+printf '%s\n' 'anduinos-dracut-migration: the new boot stack reached userspace and was confirmed'

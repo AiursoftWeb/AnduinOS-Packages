@@ -1,0 +1,246 @@
+#!/bin/sh
+set -eu
+
+BOOT_DIR=${ANDUINOS_MIGRATION_BOOT_DIR:-${DPKG_ROOT:-}/boot}
+MODULES_DIR=${ANDUINOS_MIGRATION_MODULES_DIR:-${DPKG_ROOT:-}/lib/modules}
+STATE_DIR=${ANDUINOS_MIGRATION_STATE_DIR:-${DPKG_ROOT:-}/var/lib/anduinos-dracut-migration}
+GRUB_CFG=${ANDUINOS_MIGRATION_GRUB_CFG:-$BOOT_DIR/grub/grub.cfg}
+DRACUT=${ANDUINOS_MIGRATION_DRACUT:-dracut}
+LSINITRD=${ANDUINOS_MIGRATION_LSINITRD:-lsinitrd}
+DPKG_QUERY=${ANDUINOS_MIGRATION_DPKG_QUERY:-dpkg-query}
+FINDMNT=${ANDUINOS_MIGRATION_FINDMNT:-findmnt}
+GRUB_MKCONFIG=${ANDUINOS_MIGRATION_GRUB_MKCONFIG:-grub-mkconfig}
+ROOT_FSTYPE=${ANDUINOS_MIGRATION_ROOT_FSTYPE:-}
+UNAME=${ANDUINOS_MIGRATION_UNAME:-uname}
+FAIL_AT=${ANDUINOS_MIGRATION_FAIL_AT:-}
+
+log() {
+    printf '%s\n' "anduinos-dracut-verify: $*" >&2
+}
+
+checkpoint() {
+    if [ "$FAIL_AT" = "$1" ]; then
+        log "injected failure at $1"
+        exit 75
+    fi
+}
+
+is_selected_for_install() {
+    status=$($DPKG_QUERY -W -f='${db:Status-Abbrev}' "$1" 2>/dev/null || true)
+    # During the package's own postinst, dpkg commonly reports iU/iF rather
+    # than ii.  The desired-action column is the invariant we need: if the
+    # package is meant to remain installed, its Dracut payload is mandatory.
+    case "$status" in
+        i??) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+image_modules() {
+    "$LSINITRD" -m "$1"
+}
+
+verify_image() {
+    (
+    image=$1
+    version=$2
+    [ -s "$image" ] || {
+        log "missing or empty initrd: $image"
+        return 1
+    }
+    [ -d "$MODULES_DIR/$version" ] || {
+        log "missing modules tree for kernel $version"
+        return 1
+    }
+
+    modules=$(image_modules "$image") || {
+        log "lsinitrd could not inspect $image"
+        return 1
+    }
+    printf '%s\n' "$modules" | grep -Fxq anduinos-migration-proof || {
+        log "$image lacks the AnduinOS Dracut boot-proof module"
+        return 1
+    }
+    for forbidden in dmsquash-live dmsquash-live-autooverlay livenet anduinos-live-layers; do
+        if printf '%s\n' "$modules" | grep -Fxq "$forbidden"; then
+            log "$image contains forbidden Live module $forbidden"
+            return 1
+        fi
+    done
+
+    root_fstype=$ROOT_FSTYPE
+    if [ -z "$root_fstype" ]; then
+        root_fstype=$($FINDMNT -n -o FSTYPE --target "${DPKG_ROOT:-}/" 2>/dev/null || true)
+    fi
+    if [ "$root_fstype" = btrfs ] \
+        && is_selected_for_install anduinos-btrfs-snapshots-manager; then
+        printf '%s\n' "$modules" \
+            | grep -Fxq anduinos-btrfs-snapshots-manager || {
+                log "$image lacks the AnduinOS Btrfs recovery module"
+                return 1
+            }
+    fi
+    )
+}
+
+write_verified_manifest() {
+    manifest_new="$STATE_DIR/verified-images.manifest.new"
+    install -d -m0755 "$STATE_DIR"
+    : > "$manifest_new"
+    for kernel in "$BOOT_DIR"/vmlinuz-*; do
+        [ -s "$kernel" ] || continue
+        version=${kernel##*/vmlinuz-}
+        image="$BOOT_DIR/initrd.img-$version"
+        [ -d "$MODULES_DIR/$version" ] || continue
+        verify_image "$image" "$version"
+        printf '%s %s %s\n' \
+            "$version" \
+            "$(sha256sum "$kernel" | awk '{print $1}')" \
+            "$(sha256sum "$image" | awk '{print $1}')" >> "$manifest_new"
+    done
+    [ -s "$manifest_new" ] || {
+        rm -f -- "$manifest_new"
+        log "no verifiable kernel/initrd pair exists"
+        return 1
+    }
+    chmod 0600 "$manifest_new"
+    sync -f "$manifest_new"
+    mv -f "$manifest_new" "$STATE_DIR/verified-images.manifest"
+    sync -f "$STATE_DIR"
+}
+
+rebuild_images() {
+    found=false
+    for kernel in "$BOOT_DIR"/vmlinuz-*; do
+        [ -s "$kernel" ] || continue
+        version=${kernel##*/vmlinuz-}
+        [ -d "$MODULES_DIR/$version" ] || continue
+        found=true
+        image="$BOOT_DIR/initrd.img-$version"
+        staged="$BOOT_DIR/.initrd.img-$version.anduinos-new"
+        rm -f -- "$staged"
+        checkpoint "before_dracut_$version"
+        "$DRACUT" --force "$staged" "$version"
+        checkpoint "after_dracut_$version"
+        verify_image "$staged" "$version"
+        sync -f "$staged"
+        mv -f "$staged" "$image"
+        sync -f "$BOOT_DIR"
+        checkpoint "after_commit_$version"
+    done
+    [ "$found" = true ] || {
+        log "no kernel with a matching modules tree exists"
+        return 1
+    }
+}
+
+grub_entry_references_pair() {
+    mode=$1
+    version=$2
+    awk -v mode="$mode" \
+        -v kernel_name="vmlinuz-$version" \
+        -v initrd_name="initrd.img-$version" '
+        /^[[:space:]]*menuentry[[:space:]]/ {
+            if (entry) {
+                if (has_kernel && has_initrd) found = 1
+                if (mode == "first" || found) exit
+            }
+            entry++
+            has_kernel = 0
+            has_initrd = 0
+            next
+        }
+        entry && $1 ~ /^linux/ && index($0, kernel_name) {
+            has_kernel = 1
+        }
+        entry && $1 ~ /^initrd/ && index($0, initrd_name) {
+            has_initrd = 1
+        }
+        END {
+            if (entry && has_kernel && has_initrd) found = 1
+            exit(found ? 0 : 1)
+        }
+    ' "$GRUB_CFG"
+}
+
+verify_grub() {
+    mode=${1:-any}
+    [ -s "$GRUB_CFG" ] || {
+        log "GRUB configuration is missing"
+        return 1
+    }
+    found=false
+    while read -r version _kernel_digest _initrd_digest; do
+        [ -n "$version" ] || continue
+        grub_entry_references_pair "$mode" "$version" || continue
+        found=true
+        break
+    done < "$STATE_DIR/verified-images.manifest"
+    [ "$found" = true ] || {
+        if [ "$mode" = first ]; then
+            log "the default GRUB entry does not reference a verified kernel/initrd pair"
+        else
+            log "GRUB does not reference a verified kernel/initrd pair"
+        fi
+        return 1
+    }
+}
+
+atomic_update_grub() {
+    [ ! -L "$GRUB_CFG" ] || {
+        log "refusing to replace a symlinked GRUB configuration: $GRUB_CFG"
+        return 1
+    }
+    staged="$GRUB_CFG.anduinos-new"
+    rm -f -- "$staged" "$staged.new"
+    "$GRUB_MKCONFIG" -o "$staged"
+    [ -s "$staged" ] || {
+        log "grub-mkconfig produced an empty configuration"
+        return 1
+    }
+    sync -f "$staged"
+    mv -f -- "$staged" "$GRUB_CFG"
+    sync -f "$(dirname "$GRUB_CFG")"
+}
+
+verify_running_boot() {
+    version=$($UNAME -r)
+    case "$version" in
+        *[!A-Za-z0-9._+-]*|'')
+            log "unsafe running kernel version: $version"
+            return 1
+            ;;
+    esac
+    [ -s "$BOOT_DIR/vmlinuz-$version" ] || {
+        log "the running kernel has no matching /boot payload"
+        return 1
+    }
+    verify_image "$BOOT_DIR/initrd.img-$version" "$version"
+    write_verified_manifest
+    verify_grub
+}
+
+case "${1:-}" in
+    --rebuild)
+        rebuild_images
+        write_verified_manifest
+        ;;
+    --verify)
+        write_verified_manifest
+        verify_grub
+        ;;
+    --verify-default)
+        write_verified_manifest
+        verify_grub first
+        ;;
+    --update-grub)
+        atomic_update_grub
+        ;;
+    --verify-running)
+        verify_running_boot
+        ;;
+    *)
+        echo "Usage: anduinos-dracut-verify --rebuild|--verify|--verify-default|--update-grub|--verify-running" >&2
+        exit 2
+        ;;
+esac

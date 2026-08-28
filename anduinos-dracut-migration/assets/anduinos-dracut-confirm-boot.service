@@ -1,0 +1,13 @@
+[Unit]
+Description=Confirm the first successful boot after the AnduinOS Dracut migration
+Documentation=https://www.anduinos.com
+ConditionPathExists=/var/lib/anduinos-dracut-migration/complete
+ConditionPathExists=!/var/lib/anduinos-dracut-migration/boot-confirmed
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/anduinos-dracut-migration/anduinos-dracut-confirm-boot
+
+[Install]
+WantedBy=multi-user.target

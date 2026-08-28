@@ -202,11 +202,15 @@ configuration, and verifies that at least one kernel has a matching initrd.
 AnduinOS owns one early-boot stack: `anduinos-core-system` depends directly on
 `dracut`, `dracut-core`, and `dracut-install`, and conflicts with Casper and the
 complete initramfs-tools/finalrd stack. Existing systems receive
-`anduinos-dracut-migration` through the independently upgradable APT-config
-package. Its timer waits until every required pure-Dracut candidate is
+`anduinos-dracut-migration` through the independently upgradable desktop
+metapackage, keeping host boot migration out of shared APT and container
+layers. Its timer waits until every required pure-Dracut candidate is
 published, rejects any APT plan that removes an `anduinos-*` package, replaces
 the generator stack in one transaction, and validates every generated image
-with `lsinitrd` before recording completion.
+with `lsinitrd` before recording completion. The PackageKit bootstrap,
+synchronous core guard, power-loss, atomic-GRUB, and fallback implementation
+and its release qualification contract are documented in
+[`anduinos-dracut-migration/DESIGN.md`](anduinos-dracut-migration/DESIGN.md).
 
 `anduinos-kernel-parameters` has a separate responsibility: it owns the desktop
 boot policy, not the kernel binary. It installs

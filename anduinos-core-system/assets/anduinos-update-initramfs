@@ -1,0 +1,34 @@
+#!/bin/sh
+set -eu
+
+REAL_UPDATE_INITRAMFS=${ANDUINOS_UPDATE_INITRAMFS_REAL:-/usr/sbin/update-initramfs.anduinos-dracut}
+VERIFY=${ANDUINOS_MIGRATION_VERIFY:-/usr/libexec/anduinos-dracut-verify}
+
+[ -x "$REAL_UPDATE_INITRAMFS" ] || {
+    printf '%s\n' 'anduinos-update-initramfs: diverted Dracut implementation is missing' >&2
+    exit 1
+}
+
+# Dracut's Debian compatibility wrapper defers exactly this maintainer-script
+# call by activating update-initramfs.  Verification belongs to the later
+# triggered invocation, not to the activation-only call.
+deferred=false
+if [ -n "${DPKG_MAINTSCRIPT_PACKAGE:-}" ] \
+    && [ "$#" -eq 1 ] && [ "$1" = -u ]; then
+    deferred=true
+fi
+
+delete=false
+for argument in "$@"; do
+    [ "$argument" != -d ] || delete=true
+done
+
+"$REAL_UPDATE_INITRAMFS" "$@"
+
+[ "$deferred" = false ] || exit 0
+[ "$delete" = false ] || exit 0
+[ -x "$VERIFY" ] || {
+    printf '%s\n' 'anduinos-update-initramfs: synchronous verifier is missing' >&2
+    exit 1
+}
+"$VERIFY" --verify

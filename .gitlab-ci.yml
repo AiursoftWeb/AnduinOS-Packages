@@ -105,9 +105,6 @@ anduinos-apt-config:
   extends: .publish
   needs:
     - anduinos-archive-keyring
-    - anduinos-dracut-migration
-    - anduinos-core-system
-    - anduinos-btrfs-snapshots-manager
   variables:
     PACKAGE_DIR: anduinos-apt-config
 
@@ -120,9 +117,6 @@ anduinos-apt-config-dev:
   extends: .publish
   needs:
     - anduinos-archive-keyring
-    - anduinos-dracut-migration
-    - anduinos-core-system
-    - anduinos-btrfs-snapshots-manager
   variables:
     PACKAGE_DIR: anduinos-apt-config-dev
 
@@ -511,6 +505,10 @@ anduinos-core-system:
     - anduinos-container
     - anduinos-grub-style
     - anduinos-system-tweaks
+    # Publish the Dracut-only consumers first. Their versioned dependency on
+    # this guarded core keeps them uninstallable until this final gate opens.
+    - anduinos-btrfs-snapshots-manager
+    - plymouth-anduinos
   variables:
     PACKAGE_DIR: anduinos-core-system
 
@@ -627,6 +625,7 @@ anduinos-desktop:
   stage: meta
   needs:
     - anduinos-desktop-core
+    - anduinos-dracut-migration
     - anduinos-appstore
     - anduinos-apt-config
     - anduinos-apt-config-dev

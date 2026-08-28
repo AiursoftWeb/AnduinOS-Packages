@@ -21,19 +21,19 @@ ROOT = Path(__file__).resolve().parents[1]
 CI_PATH = ROOT / ".gitlab-ci.yml"
 PACKAGE_RE = re.compile(r"^[a-z0-9][a-z0-9+.-]*$")
 
-# Publishing either APT source package is what makes the one-shot migration
-# bootstrap visible to an existing system. Keep those trigger packages behind
-# every candidate that the helper may need, while deliberately avoiding an APT
-# Depends that would make conservative `apt upgrade` solve the conflicting
-# generator switch in the bootstrap transaction itself.
+# These versioned runtime dependencies deliberately point opposite the publish
+# order. APT must see the new consumers as uninstallable until the guarded core
+# becomes visible; CI must therefore publish the consumers first and the core
+# last. They are removed from ordinary build-order edges below and represented
+# by the reverse release-only edges.
+PUBLICATION_GATE_DEPENDENCIES = {
+    "anduinos-btrfs-snapshots-manager": {"anduinos-core-system"},
+    "plymouth-anduinos": {"anduinos-core-system"},
+}
 RELEASE_ONLY_RELATIONSHIPS = {
-    "anduinos-apt-config": {
-        "anduinos-core-system",
+    "anduinos-core-system": {
         "anduinos-btrfs-snapshots-manager",
-    },
-    "anduinos-apt-config-dev": {
-        "anduinos-core-system",
-        "anduinos-btrfs-snapshots-manager",
+        "plymouth-anduinos",
     },
 }
 
@@ -111,6 +111,7 @@ def internal_relationships(
                     )[0]
                     if candidate in known and candidate != package:
                         dependencies.add(candidate)
+        dependencies -= PUBLICATION_GATE_DEPENDENCIES.get(package, set())
         result[package] = dependencies
     return result
 
@@ -144,10 +145,23 @@ def verify() -> tuple[int, int]:
         for package, (directory, _root) in project_map.items()
     }
     relationships = internal_relationships(project_map)
+    for package, gated_dependencies in PUBLICATION_GATE_DEPENDENCIES.items():
+        _directory, root = project_map[package]
+        declared = {
+            item.get("Include", "") for item in root.findall(".//Dependency")
+        }
+        for dependency in gated_dependencies:
+            expected = f"{dependency} (>= 2.0.2-3)"
+            if expected not in declared:
+                raise RuntimeError(
+                    f"{package} must retain publication gate: {expected}"
+                )
     unknown_release_packages = sorted(
         {
             package
-            for package, dependencies in RELEASE_ONLY_RELATIONSHIPS.items()
+            for package, dependencies in (
+                RELEASE_ONLY_RELATIONSHIPS | PUBLICATION_GATE_DEPENDENCIES
+            ).items()
             for package in (package, *dependencies)
             if package not in project_map
         }
