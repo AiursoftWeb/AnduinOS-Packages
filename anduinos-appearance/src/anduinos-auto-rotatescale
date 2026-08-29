@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+"""AnduinOS Auto Rotation Scale Daemon — adapts display scaling based on orientation."""
+
+import sys
+from anduinos_appearance.rotation_scale import run_watcher
+
+def main():
+    try:
+        run_watcher()
+    except KeyboardInterrupt:
+        sys.exit(0)
+
+if __name__ == '__main__':
+    main()
