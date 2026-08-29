@@ -58,6 +58,13 @@ from anduinos_appearance.settings_transfer import (
     dump_gnome_settings,
     import_gnome_settings,
 )
+from anduinos_appearance.rotation_scale import (
+    AVAILABLE_SCALES,
+    DEFAULT_LANDSCAPE_SCALE,
+    DEFAULT_PORTRAIT_SCALE,
+    read_rotation_scale_config,
+    write_rotation_scale_config,
+)
 
 SHELL_BASE = '/org/gnome/shell'
 ARC_UUID = 'arcmenu@arcmenu.com'
@@ -544,6 +551,58 @@ class AdvancedPage(Adw.PreferencesPage):
 
         self.add(ext)
         self.connect('map', lambda w: self._refresh_ext_rows())
+
+        # ── Display Rotation & Scaling group ──
+        rotation_group = Adw.PreferencesGroup()
+        rotation_group.set_title(_('Display Rotation & Scaling'))
+        rotation_group.set_description(
+            _('Automatically adjust display scaling when rotating the screen (e.g. tablet or 2-in-1 mode).')
+        )
+
+        cfg = read_rotation_scale_config()
+
+        row_rot_enable = Adw.SwitchRow()
+        row_rot_enable.set_title(_('Auto-scale on rotation'))
+        row_rot_enable.set_subtitle(_('Apply different scale factors in landscape and portrait orientations'))
+        row_rot_enable.set_active(cfg['enabled'])
+
+        scale_values = [s[0] for s in AVAILABLE_SCALES]
+        scale_labels = [s[1] for s in AVAILABLE_SCALES]
+        model_landscape = Gtk.StringList.new(scale_labels)
+        model_portrait = Gtk.StringList.new(scale_labels)
+
+        def _find_scale_index(val):
+            for idx, (s_val, _) in enumerate(AVAILABLE_SCALES):
+                if abs(s_val - val) < 0.01:
+                    return idx
+            return 0
+
+        row_landscape = Adw.ComboRow()
+        row_landscape.set_title(_('Landscape scale'))
+        row_landscape.set_model(model_landscape)
+        row_landscape.set_selected(_find_scale_index(cfg['landscape']))
+
+        row_portrait = Adw.ComboRow()
+        row_portrait.set_title(_('Portrait scale'))
+        row_portrait.set_model(model_portrait)
+        row_portrait.set_selected(_find_scale_index(cfg['portrait']))
+
+        def _on_rotation_config_changed(*args):
+            enabled = row_rot_enable.get_active()
+            l_idx = row_landscape.get_selected()
+            p_idx = row_portrait.get_selected()
+            l_scale = scale_values[l_idx] if l_idx < len(scale_values) else DEFAULT_LANDSCAPE_SCALE
+            p_scale = scale_values[p_idx] if p_idx < len(scale_values) else DEFAULT_PORTRAIT_SCALE
+            write_rotation_scale_config(enabled, l_scale, p_scale)
+
+        row_rot_enable.connect('notify::active', _on_rotation_config_changed)
+        row_landscape.connect('notify::selected', _on_rotation_config_changed)
+        row_portrait.connect('notify::selected', _on_rotation_config_changed)
+
+        rotation_group.add(row_rot_enable)
+        rotation_group.add(row_landscape)
+        rotation_group.add(row_portrait)
+        self.add(rotation_group)
 
         # ── Backup and Restore group ──
         transfer = Adw.PreferencesGroup()

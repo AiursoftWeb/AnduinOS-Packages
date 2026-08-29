@@ -1,0 +1,12 @@
+[Unit]
+Description=AnduinOS Auto Display Scale on Rotation
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/anduinos-auto-rotatescale
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=graphical-session.target
