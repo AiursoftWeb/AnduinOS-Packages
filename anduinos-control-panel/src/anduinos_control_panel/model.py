@@ -20,11 +20,18 @@ WHY_AI_PACKAGE = "anduinos-why-ai"
 WHY_PLACEHOLDER_PACKAGE = "anduinos-why-placeholder"
 DEFAULT_GRUB_TIMEOUT = 10
 DEFAULT_GRUB_RECORDFAIL_TIMEOUT = 30
+GRUB_DISPLAY_NATIVE = "native"
+GRUB_DISPLAY_LARGE_TEXT = "large-text"
+DEFAULT_GRUB_DISPLAY_MODE = GRUB_DISPLAY_LARGE_TEXT
 GRUB_DEFAULTS = Path("/etc/default/grub")
 GRUB_DEFAULTS_DIRECTORY = Path("/etc/default/grub.d")
 GRUB_TIMEOUT_PATTERN = re.compile(
     r"^\s*(?:export\s+)?(?P<name>GRUB_(?:RECORDFAIL_)?TIMEOUT)\s*=\s*"
     r"(?P<quote>['\"]?)(?P<value>[0-9]+)(?P=quote)\s*(?:#.*)?$"
+)
+GRUB_GFXMODE_PATTERN = re.compile(
+    r"^\s*(?:export\s+)?GRUB_GFXMODE\s*=\s*"
+    r"(?P<quote>['\"]?)(?P<value>[^'\"\s#]+)(?P=quote)\s*(?:#.*)?$"
 )
 
 
@@ -100,4 +107,34 @@ def read_grub_timeouts(
     return GrubTimeouts(
         normal=values["GRUB_TIMEOUT"],
         after_interrupted_boot=values["GRUB_RECORDFAIL_TIMEOUT"],
+    )
+
+
+def read_grub_display_mode(
+    defaults: Path = GRUB_DEFAULTS,
+    defaults_directory: Path = GRUB_DEFAULTS_DIRECTORY,
+) -> str:
+    """Map the effective literal GRUB graphics mode to a UI choice."""
+
+    gfxmode = ""
+    paths = [defaults]
+    try:
+        paths.extend(sorted(defaults_directory.glob("*.cfg")))
+    except OSError:
+        pass
+
+    for path in paths:
+        try:
+            lines = path.read_text(encoding="utf-8").splitlines()
+        except (OSError, UnicodeError):
+            continue
+        for line in lines:
+            match = GRUB_GFXMODE_PATTERN.fullmatch(line)
+            if match:
+                gfxmode = match.group("value")
+
+    return (
+        GRUB_DISPLAY_NATIVE
+        if gfxmode.casefold() == "auto"
+        else DEFAULT_GRUB_DISPLAY_MODE
     )

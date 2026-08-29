@@ -50,6 +50,37 @@ class ValidationTests(unittest.TestCase):
     def test_valid_uefi_without_secure_boot_support(self):
         validate_plan(valid_plan(secure_boot=SecureBoot.UNSUPPORTED))
 
+    def test_uefi_erase_install_rejects_shared_fallback_policy(self):
+        plan = valid_plan()
+        plan = dataclasses.replace(
+            plan,
+            boot=dataclasses.replace(
+                plan.boot,
+                install_fallback_path=True,
+            ),
+        )
+        with self.assertRaisesRegex(
+            PlanValidationError, "must create a vendor NVRAM entry"
+        ):
+            validate_plan(plan)
+
+    def test_bios_erase_install_requires_portable_uefi_fallback(self):
+        plan = valid_plan(
+            firmware=Firmware.BIOS,
+            secure_boot=SecureBoot.NOT_APPLICABLE,
+        )
+        plan = dataclasses.replace(
+            plan,
+            boot=dataclasses.replace(
+                plan.boot,
+                install_fallback_path=False,
+            ),
+        )
+        with self.assertRaisesRegex(
+            PlanValidationError, "must retain the portable UEFI fallback"
+        ):
+            validate_plan(plan)
+
     def test_zero_disk_swap_is_a_valid_zram_only_plan(self):
         validate_plan(valid_plan(swap_size_mib=0))
 

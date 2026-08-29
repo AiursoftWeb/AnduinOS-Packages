@@ -174,10 +174,14 @@ class PackageTests(unittest.TestCase):
             'Include="data/com.anduinos.ControlPanel.policy"', project
         )
         self.assertIn('<Dependency Include="grub2-common" />', project)
-        self.assertIn('case ["set-timeout", value]:', helper)
+        self.assertIn(
+            'case ["set-settings", timeout, display_mode]:', helper
+        )
         self.assertIn(
             'or selected != state["after_interrupted_boot"]', application
         )
+        self.assertIn('_("Native resolution")', application)
+        self.assertIn('_("Large text mode")', application)
         self.assertNotIn("shell=True", helper)
 
     def test_optional_entries_are_gated_by_runtime_state(self):

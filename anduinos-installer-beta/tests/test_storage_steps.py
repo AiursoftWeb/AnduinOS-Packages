@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from fakes import FakeRunner
 from helpers import valid_plan
+from installer_core.esp import NvramInspection
 from installer_core.steps import InstallContext
 from installer_core.storage_steps import MountTargetStep, PrepareStorageStep
 
@@ -44,6 +45,19 @@ class PrepareStorageStepTests(unittest.TestCase):
             context.values["storage_write_set"],
             execution_plan.write_set,
         )
+
+    def test_uefi_erase_preflight_requires_writable_nvram(self):
+        context = InstallContext(valid_plan(), lambda _message: None)
+        step = PrepareStorageStep(
+            FakeRunner(),
+            nvram_inspector=lambda _runner: NvramInspection(
+                False, "EFI variables are read-only"
+            ),
+        )
+        with self.assertRaisesRegex(
+            RuntimeError, "EFI variables are read-only"
+        ):
+            step.preflight(context)
 
     def test_zero_disk_swap_does_not_require_or_run_mkswap(self):
         plan = valid_plan(swap_size_mib=0)

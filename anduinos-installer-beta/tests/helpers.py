@@ -120,7 +120,10 @@ def valid_plan(
             install_multimedia_codecs=install_multimedia_codecs,
         ),
         swap=SwapSpec(),
-        boot=BootSpec(mok_password_policy=mok_policy),
+        boot=BootSpec(
+            install_fallback_path=firmware is Firmware.BIOS,
+            mok_password_policy=mok_policy,
+        ),
     )
     graph = build_erase_disk_storage_graph(
         plan,

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from .layout import build_erase_disk_layout
 from .model import Architecture, Firmware, InstallMode, InstallPlan, SecureBoot
 from .validation import validate_plan
 
@@ -15,6 +16,9 @@ class BootCommandPlan:
     configure: tuple[str, ...]
     efi_fallback: str
     bios_required: bool
+    nvram_create: tuple[str, ...] = ()
+    nvram_verify: tuple[str, ...] = ()
+    loader_path: str = ""
 
 
 @dataclass(frozen=True)
@@ -64,9 +68,21 @@ def build_boot_commands(plan: InstallPlan, target: str) -> BootCommandPlan:
     # Ubuntu GRUB 2.14 installs the EFI/BOOT fallback path by default and
     # exposes only --no-extra-removable to opt out.  The older
     # --force-extra-removable option no longer exists in Resolute.
+    creates_nvram_entry = plan.platform.firmware is Firmware.UEFI
+    if creates_nvram_entry:
+        # An installed system must not rely on shim's removable-media
+        # fallback application to create its first NVRAM entry and reboot.
+        # Some firmware keeps selecting that fallback entry after ResetSystem,
+        # producing an endless "Reset System" loop.
+        efi_install.append("--no-extra-removable")
+        fallback = ""
     if plan.platform.secure_boot is SecureBoot.ENABLED:
         efi_install.append("--uefi-secure-boot")
     installs.append(tuple(efi_install))
+    loader = guided_loader_path(plan) if creates_nvram_entry else ""
+    esp_partition_number = build_erase_disk_layout(plan).partition(
+        "efi-system"
+    ).number
     return BootCommandPlan(
         initrd=chroot
         + (
@@ -82,6 +98,26 @@ def build_boot_commands(plan: InstallPlan, target: str) -> BootCommandPlan:
         configure=chroot + ("update-grub",),
         efi_fallback=fallback,
         bios_required=plan.platform.architecture is Architecture.AMD64,
+        nvram_create=(
+            (
+                "efibootmgr",
+                "--create",
+                "--disk",
+                disk,
+                "--part",
+                str(esp_partition_number),
+                "--label",
+                "AnduinOS",
+                "--loader",
+                loader,
+            )
+            if creates_nvram_entry
+            else ()
+        ),
+        nvram_verify=(
+            ("efibootmgr", "--verbose") if creates_nvram_entry else ()
+        ),
+        loader_path=loader,
     )
 
 

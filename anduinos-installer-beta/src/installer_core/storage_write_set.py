@@ -210,21 +210,36 @@ def build_erase_disk_write_set(plan: InstallPlan) -> StorageWriteSet:
             details=(("directory", "EFI/AnduinOS"),),
         )
     )
-    fallback = (
-        "EFI/BOOT/BOOTX64.EFI"
-        if plan.platform.architecture is Architecture.AMD64
-        else "EFI/BOOT/BOOTAA64.EFI"
-    )
-    operations.append(
-        StorageWriteOperation(
-            action=StorageAction.WRITE_FALLBACK_BOOT_FILES,
-            target_kind=StorageObjectKind.EFI_SYSTEM_PARTITION,
-            target_id=esp_id,
-            display_path=esp_path,
-            destructive=False,
-            details=(("path", fallback),),
+    if plan.boot.install_fallback_path:
+        fallback = (
+            "EFI/BOOT/BOOTX64.EFI"
+            if plan.platform.architecture is Architecture.AMD64
+            else "EFI/BOOT/BOOTAA64.EFI"
         )
-    )
+        operations.append(
+            StorageWriteOperation(
+                action=StorageAction.WRITE_FALLBACK_BOOT_FILES,
+                target_kind=StorageObjectKind.EFI_SYSTEM_PARTITION,
+                target_id=esp_id,
+                display_path=esp_path,
+                destructive=False,
+                details=(("path", fallback),),
+            )
+        )
+    else:
+        operations.append(
+            StorageWriteOperation(
+                action=StorageAction.UPDATE_NVRAM,
+                target_kind=StorageObjectKind.EFI_SYSTEM_PARTITION,
+                target_id=esp_id,
+                display_path=esp_path,
+                destructive=False,
+                details=(
+                    ("label", "AnduinOS"),
+                    ("loader", guided_loader_path(plan)),
+                ),
+            )
+        )
     return StorageWriteSet(
         mode=plan.storage.mode,
         disk_stable_id=disk.stable_id,

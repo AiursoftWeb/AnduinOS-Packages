@@ -130,7 +130,7 @@ class SwapSpec:
 
 @dataclass(frozen=True)
 class BootSpec:
-    install_fallback_path: bool = True
+    install_fallback_path: bool = False
     mok_password_policy: MokPasswordPolicy = MokPasswordPolicy.NOT_APPLICABLE
 
 

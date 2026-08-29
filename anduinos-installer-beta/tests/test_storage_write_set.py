@@ -5,7 +5,7 @@ from helpers import valid_plan
 from installer_core.btrfs import BTRFS_SUBVOLUMES
 from installer_core.boot_commands import build_boot_commands
 from installer_core.layout import build_erase_disk_layout
-from installer_core.model import Architecture, Filesystem
+from installer_core.model import Architecture, Filesystem, Firmware, SecureBoot
 from installer_core.storage_commands import build_storage_commands
 from installer_core.storage_write_set import (
     StorageAction,
@@ -72,12 +72,18 @@ class StorageWriteSetTests(unittest.TestCase):
                 for item in write_set.operations
             )
         )
-        fallback = next(
+        nvram = next(
             item
             for item in write_set.operations
-            if item.action is StorageAction.WRITE_FALLBACK_BOOT_FILES
+            if item.action is StorageAction.UPDATE_NVRAM
         )
-        self.assertEqual(fallback.detail("path"), boot.efi_fallback)
+        self.assertEqual(nvram.detail("loader"), boot.loader_path)
+        self.assertFalse(
+            any(
+                item.action is StorageAction.WRITE_FALLBACK_BOOT_FILES
+                for item in write_set.operations
+            )
+        )
         self.assertTrue(
             any(
                 item.action is StorageAction.CONFIGURE_MOUNTS
@@ -102,7 +108,7 @@ class StorageWriteSetTests(unittest.TestCase):
         )
         self.assertTrue(root_format.display_path.endswith("p4"))
 
-    def test_arm64_write_set_uses_arm_fallback_and_no_bios_partition(self):
+    def test_arm64_write_set_uses_nvram_and_no_bios_partition(self):
         plan = valid_plan(architecture=Architecture.ARM64)
         write_set = build_erase_disk_write_set(plan)
         creates = [
@@ -114,15 +120,34 @@ class StorageWriteSetTests(unittest.TestCase):
         self.assertNotIn(
             "bios-boot", {item.detail("name") for item in creates}
         )
+        self.assertTrue(
+            any(
+                item.action is StorageAction.UPDATE_NVRAM
+                for item in write_set.operations
+            )
+        )
+        self.assertFalse(
+            any(
+                item.action is StorageAction.WRITE_BIOS_BOOTLOADER
+                for item in write_set.operations
+            )
+        )
+
+    def test_legacy_bios_install_keeps_portable_uefi_fallback(self):
+        plan = valid_plan(
+            firmware=Firmware.BIOS,
+            secure_boot=SecureBoot.NOT_APPLICABLE,
+        )
+        write_set = build_erase_disk_write_set(plan)
         fallback = next(
             item
             for item in write_set.operations
             if item.action is StorageAction.WRITE_FALLBACK_BOOT_FILES
         )
-        self.assertEqual(fallback.detail("path"), "EFI/BOOT/BOOTAA64.EFI")
+        self.assertEqual(fallback.detail("path"), "EFI/BOOT/BOOTX64.EFI")
         self.assertFalse(
             any(
-                item.action is StorageAction.WRITE_BIOS_BOOTLOADER
+                item.action is StorageAction.UPDATE_NVRAM
                 for item in write_set.operations
             )
         )

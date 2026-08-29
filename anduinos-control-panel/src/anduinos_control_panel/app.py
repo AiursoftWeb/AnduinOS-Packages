@@ -20,6 +20,8 @@ from gi.repository import Adw, Gdk, GdkPixbuf, Gio, GLib, Gtk, Pango  # noqa: E4
 from .model import (
     BOTTLES_APP_ID,
     DEJA_DUP_APP_ID,
+    GRUB_DISPLAY_LARGE_TEXT,
+    GRUB_DISPLAY_NATIVE,
     SNAPSHOT_PACKAGE,
     VOICE_TYPING_PACKAGE,
     WHY_AI_PACKAGE,
@@ -27,6 +29,7 @@ from .model import (
     command_available,
     flatpak_installed,
     package_installed,
+    read_grub_display_mode,
     read_grub_timeouts,
 )
 from .topics import ControlPanelTopic, get_topic
@@ -625,9 +628,11 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             return
 
         current = read_grub_timeouts()
+        current_display_mode = read_grub_display_mode()
         state = {
             "normal": current.normal,
             "after_interrupted_boot": current.after_interrupted_boot,
+            "display_mode": current_display_mode,
         }
         choices = sorted({0, 3, 5, 10, 30, current.normal})
         window = Adw.Window(
@@ -635,7 +640,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             modal=True,
             title=_("Startup and Boot"),
             default_width=560,
-            default_height=330,
+            default_height=460,
         )
         self._boot_settings_window = window
         window.connect("close-request", self._boot_settings_window_closed)
@@ -672,6 +677,31 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         group.add(timeout_row)
         page.append(group)
 
+        display_modes = [GRUB_DISPLAY_NATIVE, GRUB_DISPLAY_LARGE_TEXT]
+        display_group = Adw.PreferencesGroup(
+            title=_("Boot display"),
+            description=_(
+                "Choose the size of the GRUB menu and startup logo."
+            ),
+        )
+        display_row = Adw.ComboRow(
+            title=_("Display mode"),
+            subtitle=_(
+                "Native resolution shows more detail; large text is easier to read."
+            ),
+        )
+        display_row.add_prefix(
+            Gtk.Image.new_from_icon_name("video-display-symbolic")
+        )
+        display_row.set_model(
+            Gtk.StringList.new(
+                [_("Native resolution"), _("Large text mode")]
+            )
+        )
+        display_row.set_selected(display_modes.index(current_display_mode))
+        display_group.add(display_row)
+        page.append(display_group)
+
         if current.normal == current.after_interrupted_boot:
             current_text = _("Current setting: %d seconds") % current.normal
         else:
@@ -697,21 +727,26 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         apply = Gtk.Button(label=_("Apply"))
         apply.add_css_class("suggested-action")
 
-        def selection_changed(row: Adw.ComboRow, _parameter) -> None:
-            selected = choices[row.get_selected()]
+        def selection_changed(_row: Adw.ComboRow, _parameter) -> None:
+            selected = choices[timeout_row.get_selected()]
+            display_mode = display_modes[display_row.get_selected()]
             apply.set_sensitive(
                 selected != state["normal"]
                 or selected != state["after_interrupted_boot"]
+                or display_mode != state["display_mode"]
             )
 
         timeout_row.connect("notify::selected", selection_changed)
+        display_row.connect("notify::selected", selection_changed)
         selection_changed(timeout_row, None)
         apply.connect(
             "clicked",
-            lambda _button: self._apply_boot_timeout(
+            lambda _button: self._apply_boot_settings(
                 choices[timeout_row.get_selected()],
+                display_modes[display_row.get_selected()],
                 window,
                 timeout_row,
+                display_row,
                 apply,
                 close,
                 status,
@@ -728,18 +763,21 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         self._boot_settings_window = None
         return False
 
-    def _apply_boot_timeout(
+    def _apply_boot_settings(
         self,
         timeout: int,
+        display_mode: str,
         window: Adw.Window,
         timeout_row: Adw.ComboRow,
+        display_row: Adw.ComboRow,
         apply: Gtk.Button,
         close: Gtk.Button,
         status: Gtk.Label,
         spinner: Gtk.Spinner,
-        state: dict[str, int],
+        state: dict[str, int | str],
     ) -> None:
         timeout_row.set_sensitive(False)
+        display_row.set_sensitive(False)
         apply.set_sensitive(False)
         close.set_sensitive(False)
         window.set_deletable(False)
@@ -751,17 +789,18 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             spinner.stop()
             spinner.set_visible(False)
             timeout_row.set_sensitive(True)
+            display_row.set_sensitive(True)
             close.set_sensitive(True)
             window.set_deletable(True)
             if return_code == 0:
                 state["normal"] = timeout
                 state["after_interrupted_boot"] = timeout
+                state["display_mode"] = display_mode
                 status.set_label(
-                    _("Boot menu wait time is now %d seconds. The change applies on the next startup.")
-                    % timeout
+                    _("Boot settings updated. The change applies on the next startup.")
                 )
                 self.toast_overlay.add_toast(
-                    Adw.Toast.new(_("Boot menu wait time updated"))
+                    Adw.Toast.new(_("Boot settings updated"))
                 )
             else:
                 message = output.strip()
@@ -779,8 +818,9 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                     [
                         "/usr/bin/pkexec",
                         BOOT_SETTINGS_HELPER,
-                        "set-timeout",
+                        "set-settings",
                         str(timeout),
+                        display_mode,
                     ],
                     capture_output=True,
                     text=True,

@@ -10,7 +10,7 @@ from .btrfs import BTRFS_SUBVOLUMES
 from .command import CommandRunner
 from .esp import inspect_esp_for_reuse, inspect_nvram
 from .execution_boundaries import emit_boundary
-from .model import Architecture, Filesystem, InstallMode
+from .model import Architecture, Filesystem, Firmware, InstallMode
 from .ntfs_resize import (
     NTFS_RESIZE,
     inspect_ntfs_resize_with_runner,
@@ -128,6 +128,15 @@ class PrepareStorageStep:
             context.values["manual_preservation_snapshot"] = preservation
             context.values["manual_esp_inspection"] = esp_inspection
         else:
+            if context.plan.platform.firmware is Firmware.UEFI:
+                nvram = self.nvram_inspector(self.runner)
+                if not nvram.available:
+                    reason = nvram.reason or "UEFI variables are unavailable"
+                    raise RuntimeError(
+                        "Cannot safely create the AnduinOS firmware boot "
+                        "entry: " + reason
+                    )
+                context.values["erase_disk_nvram_inspection"] = nvram
             execution_plan = build_erase_disk_execution_plan(context.plan)
             context.values["erase_disk_execution_plan"] = execution_plan
         context.values["storage_disk_path"] = storage_disk_path

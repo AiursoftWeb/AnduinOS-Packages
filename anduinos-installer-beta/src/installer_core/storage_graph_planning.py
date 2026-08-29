@@ -408,9 +408,13 @@ def build_erase_disk_storage_graph(
     )
 
     fallback = (
-        "EFI/BOOT/BOOTX64.EFI"
-        if plan.platform.architecture is Architecture.AMD64
-        else "EFI/BOOT/BOOTAA64.EFI"
+        (
+            "EFI/BOOT/BOOTX64.EFI"
+            if plan.platform.architecture is Architecture.AMD64
+            else "EFI/BOOT/BOOTAA64.EFI"
+        )
+        if plan.boot.install_fallback_path
+        else ""
     )
     boot_targets = (
         BootTarget(
@@ -461,16 +465,20 @@ def build_erase_disk_storage_graph(
                 StorageGraphAction.WRITE_BIOS_BOOTLOADER, disk_id
             )
         )
-    operations.extend(
-        (
-            StorageGraphOperation(
-                StorageGraphAction.WRITE_BOOT_FILES,
-                partition_ids["efi-system"],
+    operations.append(
+        StorageGraphOperation(
+            StorageGraphAction.WRITE_BOOT_FILES,
+            partition_ids["efi-system"],
+        )
+    )
+    operations.append(
+        StorageGraphOperation(
+            (
+                StorageGraphAction.WRITE_FALLBACK_BOOT_FILES
+                if plan.boot.install_fallback_path
+                else StorageGraphAction.UPDATE_NVRAM
             ),
-            StorageGraphOperation(
-                StorageGraphAction.WRITE_FALLBACK_BOOT_FILES,
-                partition_ids["efi-system"],
-            ),
+            partition_ids["efi-system"],
         )
     )
 

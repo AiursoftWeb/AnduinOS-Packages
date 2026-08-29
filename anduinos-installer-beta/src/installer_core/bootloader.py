@@ -9,6 +9,7 @@ from .boot_commands import build_boot_commands
 from .command import CommandRunner
 from .esp import (
     EspReuseInspection,
+    nvram_boot_order,
     verify_nvram_entry,
     verify_preserved_esp_tree,
 )
@@ -89,6 +90,7 @@ class InstallBootloaderStep:
         else:
             commands = build_boot_commands(context.plan, str(target))
             installs = commands.installs
+        explicit_nvram = bool(commands.nvram_create)
         context.values["boot_command_plan"] = commands
         _verify_grub_platform_modules(target, installs)
         _verify_grub_filesystem_modules(
@@ -117,11 +119,13 @@ class InstallBootloaderStep:
                 "Only EFI/AnduinOS may change on the selected EFI System "
                 "Partition"
             )
+        if explicit_nvram:
             context.log(
-                "Creating and verifying an AnduinOS UEFI Boot#### entry"
+                "Creating and placing an AnduinOS UEFI Boot#### entry first"
             )
         else:
             context.log("UEFI Boot#### entries will not be modified")
+        if not vendor_only:
             context.log(
                 "Other disks and Windows EFI boot files will not be modified"
             )
@@ -134,11 +138,13 @@ class InstallBootloaderStep:
             if vendor_only:
                 emit_boundary(context, f"{prefix}-boot-files", "after")
         self.runner.run(commands.configure, timeout=300)
-        if vendor_only:
-            emit_boundary(context, f"{prefix}-nvram", "before")
+        if explicit_nvram:
+            if vendor_only:
+                emit_boundary(context, f"{prefix}-nvram", "before")
             self.runner.run(commands.nvram_create, timeout=30)
-            _verify_vendor_nvram(self.runner, context, commands)
-            emit_boundary(context, f"{prefix}-nvram", "after")
+            _ensure_vendor_nvram_first(self.runner, context, commands)
+            if vendor_only:
+                emit_boundary(context, f"{prefix}-nvram", "after")
 
     def verify(self, context: InstallContext) -> None:
         target = _target(context)
@@ -221,7 +227,8 @@ class InstallBootloaderStep:
         guided = context.plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
         manual = context.plan.storage.mode is InstallMode.MANUAL
         vendor_only = guided or manual
-        if vendor_only:
+        explicit_nvram = bool(commands.nvram_create)
+        if explicit_nvram:
             loader = (
                 target
                 / "boot/efi"
@@ -232,7 +239,20 @@ class InstallBootloaderStep:
                     f"AnduinOS vendor UEFI loader is missing: {loader}"
                 )
             efi_loader = loader
-            _verify_vendor_nvram(self.runner, context, commands)
+            _verify_vendor_nvram(
+                self.runner,
+                context,
+                commands,
+                require_first=True,
+            )
+        else:
+            fallback = target / "boot/efi" / commands.efi_fallback
+            if not fallback.is_file():
+                raise RuntimeError(
+                    f"UEFI fallback loader is missing: {fallback}"
+                )
+            efi_loader = fallback
+        if vendor_only:
             inspection_key = (
                 "guided_esp_inspection" if guided else "manual_esp_inspection"
             )
@@ -242,13 +262,6 @@ class InstallBootloaderStep:
                     inspection.preserved_entries,
                     target / "boot/efi",
                 )
-        else:
-            fallback = target / "boot/efi" / commands.efi_fallback
-            if not fallback.is_file():
-                raise RuntimeError(
-                    f"UEFI fallback loader is missing: {fallback}"
-                )
-            efi_loader = fallback
         expected_machine = (
             0x8664
             if context.plan.platform.architecture is Architecture.AMD64
@@ -285,7 +298,9 @@ def _verify_vendor_nvram(
     runner: CommandRunner,
     context: InstallContext,
     commands,
-) -> None:
+    *,
+    require_first: bool = False,
+) -> tuple[str, str]:
     devices = context.values.get("partition_devices", {})
     esp = str(devices.get("efi-system") or "")
     if not esp:
@@ -297,11 +312,36 @@ def _verify_vendor_nvram(
     if not partuuid:
         raise RuntimeError("EFI System Partition has no PARTUUID")
     output = runner.run(commands.nvram_verify, timeout=30).stdout
-    verify_nvram_entry(
+    number = verify_nvram_entry(
         output,
         label="AnduinOS",
         partuuid=partuuid,
         loader=commands.loader_path,
+        require_first=require_first,
+    )
+    return number, output
+
+
+def _ensure_vendor_nvram_first(
+    runner: CommandRunner,
+    context: InstallContext,
+    commands,
+) -> None:
+    number, output = _verify_vendor_nvram(runner, context, commands)
+    current_order = nvram_boot_order(output)
+    desired_order = (number,) + tuple(
+        item for item in current_order if item != number
+    )
+    if current_order != desired_order:
+        runner.run(
+            ("efibootmgr", "--bootorder", ",".join(desired_order)),
+            timeout=30,
+        )
+    _verify_vendor_nvram(
+        runner,
+        context,
+        commands,
+        require_first=True,
     )
 
 

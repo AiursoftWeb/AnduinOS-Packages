@@ -7,8 +7,10 @@ from fakes import FakeRunner
 from helpers import valid_plan
 from installer_core.bootloader import (
     InstallBootloaderStep,
+    _ensure_vendor_nvram_first,
     _verify_grub_filesystem_modules,
 )
+from installer_core.boot_commands import build_boot_commands
 from installer_core.esp import (
     NvramInspection,
     capture_preserved_esp_tree,
@@ -63,13 +65,83 @@ GRUB_INSTALL_HELP = """
 """
 
 
+def erase_context_values(target: Path) -> dict[str, object]:
+    return {
+        "target": target,
+        "target_efi_mounted": True,
+        "partition_devices": {"efi-system": "/dev/nvme0n1p2"},
+    }
+
+
 class InstallBootloaderTests(unittest.TestCase):
     def compatible_runner(self, target: Path) -> FakeRunner:
         runner = FakeRunner()
         runner.outputs[
             ("chroot", str(target), "grub-install", "--help")
         ] = (GRUB_INSTALL_HELP, "", 0)
+        runner.outputs[
+            ("blkid", "-s", "PARTUUID", "-o", "value", "/dev/nvme0n1p2")
+        ] = ("part-2\n", "", 0)
+        runner.outputs[("efibootmgr", "--verbose")] = (
+            "BootOrder: 0007,0001\n"
+            "Boot0007* AnduinOS "
+            "HD(2,GPT,part-2,0x1800,0x200000)/"
+            "File(\\EFI\\AnduinOS\\shimx64.efi)\n"
+            "Boot0001* UEFI OS "
+            "HD(2,GPT,part-2,0x1800,0x200000)/"
+            "File(\\EFI\\BOOT\\BOOTX64.EFI)\n",
+            "",
+            0,
+        )
         return runner
+
+    def test_moves_vendor_entry_to_the_front_of_boot_order(self):
+        class ReorderingRunner(FakeRunner):
+            def run(self, command, **kwargs):
+                command = tuple(command)
+                result = super().run(command, **kwargs)
+                if command == ("efibootmgr", "--bootorder", "0007,0001"):
+                    self.outputs[("efibootmgr", "--verbose")] = (
+                        self.outputs[("efibootmgr", "--verbose")][0].replace(
+                            "BootOrder: 0001,0007",
+                            "BootOrder: 0007,0001",
+                        ),
+                        "",
+                        0,
+                    )
+                return result
+
+        runner = ReorderingRunner()
+        runner.outputs[
+            ("blkid", "-s", "PARTUUID", "-o", "value", "/dev/nvme0n1p2")
+        ] = ("part-2\n", "", 0)
+        runner.outputs[("efibootmgr", "--verbose")] = (
+            "BootOrder: 0001,0007\n"
+            "Boot0001* UEFI OS "
+            "HD(2,GPT,part-2,0x1800,0x200000)/"
+            "\\EFI\\BOOT\\BOOTX64.EFI\n"
+            "Boot0007* AnduinOS "
+            "HD(2,GPT,part-2,0x1800,0x200000)/"
+            "\\EFI\\AnduinOS\\shimx64.efi\n",
+            "",
+            0,
+        )
+        context = InstallContext(
+            valid_plan(),
+            lambda _message: None,
+            erase_context_values(Path("/target")),
+        )
+
+        _ensure_vendor_nvram_first(
+            runner,
+            context,
+            build_boot_commands(context.plan, "/target"),
+        )
+
+        self.assertIn(
+            (("efibootmgr", "--bootorder", "0007,0001"), {"timeout": 30}),
+            runner.commands,
+        )
 
     def test_runs_dracut_before_grub_install_and_update_grub_last(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -79,7 +151,7 @@ class InstallBootloaderTests(unittest.TestCase):
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
-                {"target": target, "target_efi_mounted": True},
+                erase_context_values(target),
             )
             step = InstallBootloaderStep(runner)
             step.preflight(context)
@@ -91,12 +163,17 @@ class InstallBootloaderTests(unittest.TestCase):
         self.assertEqual(commands[1][2], "dracut")
         self.assertIn("--no-hostonly-cmdline", commands[1])
         self.assertIn("--regenerate-all", commands[1])
-        self.assertEqual(commands[-1][2], "update-grub")
+        self.assertIn(
+            ("chroot", str(target), "update-grub"),
+            commands,
+        )
+        self.assertEqual(commands[-1], ("efibootmgr", "--verbose"))
         self.assertEqual(
             [
                 command[3]
                 for command in commands
-                if command[2] == "grub-install"
+                if len(command) > 3
+                and command[2] == "grub-install"
                 and command[3].startswith("--target=")
             ],
             ["--target=i386-pc", "--target=x86_64-efi"],
@@ -132,6 +209,7 @@ class InstallBootloaderTests(unittest.TestCase):
                         ("blkid", "-s", "PARTUUID", "-o", "value", esp)
                     ] = ("part-1\n", "", 0)
                     runner.outputs[execution.boot_commands.nvram_verify] = (
+                        "BootOrder: 0007\n"
                         "Boot0007* AnduinOS "
                         "HD(1,GPT,part-1,0x800,0x100000)/"
                         "File(\\EFI\\AnduinOS\\shimx64.efi)\n",
@@ -222,7 +300,7 @@ class InstallBootloaderTests(unittest.TestCase):
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
-                {"target": target, "target_efi_mounted": True},
+                erase_context_values(target),
             )
             step = InstallBootloaderStep(runner)
             step.execute(context)
@@ -236,9 +314,9 @@ class InstallBootloaderTests(unittest.TestCase):
             bios = target / "boot/grub/i386-pc"
             bios.mkdir()
             (bios / "normal.mod").touch()
-            fallback = target / "boot/efi/EFI/BOOT/BOOTX64.EFI"
-            fallback.parent.mkdir(parents=True)
-            write_pe(fallback, 0x8664)
+            vendor = target / "boot/efi/EFI/AnduinOS/shimx64.efi"
+            vendor.parent.mkdir(parents=True)
+            write_pe(vendor, 0x8664)
             runner.outputs[
                 ("chroot", str(target), "dpkg", "--print-architecture")
             ] = ("amd64\n", "", 0)
@@ -255,7 +333,7 @@ class InstallBootloaderTests(unittest.TestCase):
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
-                {"target": target, "target_efi_mounted": True},
+                erase_context_values(target),
             )
             step = InstallBootloaderStep(runner)
             step.execute(context)
@@ -271,7 +349,7 @@ class InstallBootloaderTests(unittest.TestCase):
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
-                {"target": target, "target_efi_mounted": True},
+                erase_context_values(target),
             )
             step = InstallBootloaderStep(runner)
             step.execute(context)
@@ -284,9 +362,9 @@ class InstallBootloaderTests(unittest.TestCase):
             bios = target / "boot/grub/i386-pc"
             bios.mkdir()
             (bios / "normal.mod").touch()
-            fallback = target / "boot/efi/EFI/BOOT/BOOTX64.EFI"
-            fallback.parent.mkdir(parents=True)
-            write_pe(fallback, 0xAA64)
+            vendor = target / "boot/efi/EFI/AnduinOS/shimx64.efi"
+            vendor.parent.mkdir(parents=True)
+            write_pe(vendor, 0xAA64)
             runner.outputs[
                 ("chroot", str(target), "lsinitrd", "-m", "/boot/initrd.img-test")
             ] = ("anduinos-btrfs-snapshots-manager\n", "", 0)
@@ -304,7 +382,7 @@ class InstallBootloaderTests(unittest.TestCase):
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
-                {"target": target, "target_efi_mounted": True},
+                erase_context_values(target),
             )
 
             with self.assertRaisesRegex(
@@ -326,7 +404,7 @@ class InstallBootloaderTests(unittest.TestCase):
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
-                {"target": target, "target_efi_mounted": True},
+                erase_context_values(target),
             )
 
             with self.assertRaisesRegex(
@@ -368,6 +446,7 @@ class InstallBootloaderTests(unittest.TestCase):
                 ("blkid", "-s", "PARTUUID", "-o", "value", esp_device)
             ] = ("part-1\n", "", 0)
             nvram = (
+                "BootOrder: 0007,0001\n"
                 "Boot0001* Windows Boot Manager "
                 "HD(1,GPT,part-1,0x800,0x100000)/"
                 "File(\\EFI\\Microsoft\\Boot\\bootmgfw.efi)\n"

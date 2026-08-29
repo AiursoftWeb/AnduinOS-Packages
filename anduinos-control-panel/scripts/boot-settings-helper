@@ -14,6 +14,10 @@ CONFIGURATION_PATH = Path("/etc/default/grub.d/99-anduinos-control-panel.cfg")
 UPDATE_GRUB = "/usr/sbin/update-grub"
 MINIMUM_TIMEOUT = 0
 MAXIMUM_TIMEOUT = 300
+DISPLAY_NATIVE = "native"
+DISPLAY_LARGE_TEXT = "large-text"
+DISPLAY_MODES = {DISPLAY_NATIVE, DISPLAY_LARGE_TEXT}
+LARGE_TEXT_GFXMODE = "1440x900,1280x800,1280x720,1024x768,auto"
 
 
 def parse_timeout(value: str) -> int:
@@ -27,11 +31,24 @@ def parse_timeout(value: str) -> int:
     return timeout
 
 
-def configuration_for(timeout: int) -> bytes:
+def parse_display_mode(value: str) -> str:
+    if value not in DISPLAY_MODES:
+        raise ValueError("display mode must be native or large-text")
+    return value
+
+
+def configuration_for(timeout: int, display_mode: str) -> bytes:
+    gfxmode = (
+        "auto"
+        if display_mode == DISPLAY_NATIVE
+        else LARGE_TEXT_GFXMODE
+    )
     return (
         "# Managed by AnduinOS Control Panel.\n"
         f"GRUB_TIMEOUT={timeout}\n"
         f"GRUB_RECORDFAIL_TIMEOUT={timeout}\n"
+        f'GRUB_GFXMODE="{gfxmode}"\n'
+        'GRUB_GFXPAYLOAD_LINUX="auto"\n'
     ).encode("ascii")
 
 
@@ -72,18 +89,34 @@ def update_grub() -> None:
         raise RuntimeError(f"update-grub exited with status {result.returncode}")
 
 
-def set_timeout(timeout: int) -> None:
+def set_settings(timeout: int, display_mode: str) -> None:
+    display_mode = parse_display_mode(display_mode)
     try:
         previous = CONFIGURATION_PATH.read_bytes()
     except FileNotFoundError:
         previous = None
 
-    replace_configuration(configuration_for(timeout))
+    replace_configuration(configuration_for(timeout, display_mode))
     try:
         update_grub()
     except (OSError, RuntimeError):
         replace_configuration(previous)
         raise
+
+
+def set_timeout(timeout: int) -> None:
+    """Compatibility action for older Control Panel clients."""
+
+    try:
+        current = CONFIGURATION_PATH.read_text(encoding="ascii")
+    except (OSError, UnicodeError):
+        current = ""
+    display_mode = (
+        DISPLAY_NATIVE
+        if 'GRUB_GFXMODE="auto"' in current
+        else DISPLAY_LARGE_TEXT
+    )
+    set_settings(timeout, display_mode)
 
 
 def main(arguments: list[str]) -> int:
@@ -92,6 +125,11 @@ def main(arguments: list[str]) -> int:
         return 77
     try:
         match arguments:
+            case ["set-settings", timeout, display_mode]:
+                set_settings(
+                    parse_timeout(timeout),
+                    parse_display_mode(display_mode),
+                )
             case ["set-timeout", value]:
                 set_timeout(parse_timeout(value))
             case _:
@@ -100,7 +138,7 @@ def main(arguments: list[str]) -> int:
     except (OSError, ValueError, RuntimeError) as error:
         print(f"Boot setting change failed: {error}", file=sys.stderr)
         return 1
-    print("Boot menu wait time updated successfully.")
+    print("Boot settings updated successfully.")
     return 0
 
 

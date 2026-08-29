@@ -11,6 +11,7 @@ from .model import (
     AccessSpec,
     BootSpec,
     AuthenticationMode,
+    Firmware,
     Filesystem,
     IdentitySpec,
     InstallMode,
@@ -113,6 +114,7 @@ def build_plan(
             ),
         ),
         boot=BootSpec(
+            install_fallback_path=platform.firmware is Firmware.BIOS,
             mok_password_policy=(
                 MokPasswordPolicy.ANDUINOS_DEFAULT
                 if platform.secure_boot is SecureBoot.ENABLED

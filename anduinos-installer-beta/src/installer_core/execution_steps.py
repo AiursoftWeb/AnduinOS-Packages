@@ -70,15 +70,12 @@ class DetectBootEnvironmentStep:
                 else "not supported on arm64"
             )
         )
-        vendor_only = platform.firmware is Firmware.UEFI and (
-            context.plan.storage.mode
-            in {InstallMode.GUIDED_COEXISTENCE, InstallMode.MANUAL}
-        )
+        direct_nvram = platform.firmware is Firmware.UEFI
         context.log(
             "UEFI fallback bootloader: "
             + (
                 "preserved; no fallback write"
-                if vendor_only
+                if direct_nvram
                 else "enabled on the selected disk"
             )
         )
@@ -86,7 +83,7 @@ class DetectBootEnvironmentStep:
             "UEFI Boot#### entries: "
             + (
                 "create and verify AnduinOS only"
-                if vendor_only
+                if direct_nvram
                 else "will not be modified"
             )
         )

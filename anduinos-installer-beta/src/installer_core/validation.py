@@ -163,6 +163,24 @@ def validate_plan(
     if type(plan.boot.install_fallback_path) is not bool:
         errors.append("EFI fallback-path policy must be boolean")
     elif (
+        plan.storage.mode is InstallMode.ERASE_DISK
+        and platform.firmware is Firmware.UEFI
+        and plan.boot.install_fallback_path
+    ):
+        errors.append(
+            "UEFI erase-disk installs must create a vendor NVRAM entry "
+            "without the shared fallback path"
+        )
+    elif (
+        plan.storage.mode is InstallMode.ERASE_DISK
+        and platform.firmware is Firmware.BIOS
+        and not plan.boot.install_fallback_path
+    ):
+        errors.append(
+            "Legacy BIOS erase-disk installs must retain the portable UEFI "
+            "fallback path"
+        )
+    elif (
         plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
         and plan.boot.install_fallback_path
     ):
