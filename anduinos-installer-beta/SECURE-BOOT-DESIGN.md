@@ -62,7 +62,7 @@ Secure Boot enabled
         |
         +-- grub-install --uefi-secure-boot
         |
-        +-- verify signed named and fallback EFI chains
+        +-- verify the signed AnduinOS vendor EFI chain
         |
         +-- if already enrolled: complete
         |
@@ -122,21 +122,27 @@ failure. The following initramfs rebuild includes the resulting modules.
 
 amd64 requires signed:
 
-- `EFI/BOOT/BOOTX64.EFI`;
 - `EFI/AnduinOS/shimx64.efi`;
 - `EFI/AnduinOS/grubx64.efi`.
 
 arm64 requires signed:
 
-- `EFI/BOOT/BOOTAA64.EFI`;
 - `EFI/AnduinOS/shimaa64.efi`;
 - `EFI/AnduinOS/grubaa64.efi`.
 
 Each file is checked with `sbverify`. The PE machine field is also checked by
 the bootloader verifier to prevent an amd64/arm64 mismatch.
 
-The fallback artifacts above are release-one erase-disk requirements. The
-installer owns that ESP completely in erase-disk mode.
+UEFI installations do not require or validate `EFI/BOOT/BOOTX64.EFI` or
+`EFI/BOOT/BOOTAA64.EFI`. They use the vendor path and an explicitly verified
+AnduinOS NVRAM entry, so requiring the shared removable-media path would
+reintroduce the shim fallback registration dependency avoided by #422.
+
+When an amd64 erase-disk installation is launched through Legacy BIOS, the
+installer still writes a removable-media EFI path so the resulting disk can
+also boot on UEFI machines without relying on NVRAM services that were not
+available during installation. That BIOS portability path is separate from
+the Secure Boot MOK enrollment chain described here.
 
 ## Future coexistence and redundant boot targets
 
