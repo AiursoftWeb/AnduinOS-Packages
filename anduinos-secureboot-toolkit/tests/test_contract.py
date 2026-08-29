@@ -33,7 +33,7 @@ class ContractTests(unittest.TestCase):
     def test_package_version_carries_the_firmware_settings_action(self):
         project = ET.parse(ROOT / "anduinos-secureboot-toolkit.aosproj").getroot()
         self.assertEqual(
-            "2.0.2-3+$(SuiteShortName)",
+            "2.0.2-4+$(SuiteShortName)",
             project.findtext(".//PackageVersion"),
         )
 

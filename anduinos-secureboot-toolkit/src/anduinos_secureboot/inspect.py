@@ -20,6 +20,7 @@ from .model import (
 MOK_PRIVATE_KEY = Path("/var/lib/shim-signed/mok/MOK.priv")
 MOK_CERTIFICATE = Path("/var/lib/shim-signed/mok/MOK.der")
 DKMS_CONFIG = Path("/etc/dkms/framework.conf.d/anduinos-sb-sign.conf")
+EFI_FIRMWARE = Path("/sys/firmware/efi")
 
 
 class Runner(Protocol):
@@ -184,10 +185,14 @@ def inspect_secure_boot(
     certificate: Path = MOK_CERTIFICATE,
     kernel_release: str | None = None,
     configuration: Path = DKMS_CONFIG,
+    efi_firmware: Path = EFI_FIRMWARE,
 ) -> SecureBootState:
     runner = runner or SubprocessRunner()
-    state = runner.run(["mokutil", "--sb-state"])
-    status = parse_secure_boot_status(state)
+    if efi_firmware.exists():
+        state = runner.run(["mokutil", "--sb-state"])
+        status = parse_secure_boot_status(state)
+    else:
+        status = SecureBootStatus.UNSUPPORTED
     enabled = status is SecureBootStatus.ENABLED
     key_present = private_key.is_file()
     certificate_present = certificate.is_file()
