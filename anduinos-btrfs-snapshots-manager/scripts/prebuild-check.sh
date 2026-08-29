@@ -253,6 +253,12 @@ fi
 rg -Fq ".data[0] | booleans | tostring" "$ROOT/src/btrfs-snapshots-manager-cli"
 rg -Fq 'status) cmd_status' "$ROOT/src/btrfs-snapshots-manager-cli"
 rg -Fq 'create [--json]' "$ROOT/src/btrfs-snapshots-manager-cli"
+rg -Fq 'call_raw GetPrivilegedRecoveryEngineStatus' \
+    "$ROOT/src/btrfs-snapshots-manager-cli"
+rg -Fq 'status=$(public_recovery_status)' \
+    "$ROOT/src/btrfs-snapshots-manager-cli"
+test "$(rg -c 'status=\$\(privileged_recovery_status\)' \
+    "$ROOT/src/btrfs-snapshots-manager-cli")" -ge 3
 
 if rg -n 'xbps|sudo sv|/var/service|/etc/sv|/etc/btrfs-snapshots-manager|\.config/btrfs-snapshots-manager|\.local/share/btrfs-snapshots-manager|/var/lib/btrfs-snapshots-manager|tech\.geektoshi\.btrfs-snapshots-manager|com\.voidlinux\.btrfs-snapshots-manager|from_icon_name\("btrfs-snapshots-manager"|set-default|get-default|root-writable|cleanup-writable-snapshots|System rollback is disabled in this development build' \
     "$ROOT/src" --glob '!Cargo.lock'; then
