@@ -3776,24 +3776,6 @@ def build_advanced_storage_page(shared, nav_view):
     table_row.append(table_button)
     editor.append(table_row)
 
-    filesystem_row = Gtk.Box(
-        orientation=Gtk.Orientation.HORIZONTAL,
-        spacing=12,
-    )
-    filesystem_row.append(
-        Gtk.Label(label=_("Root filesystem", lang), xalign=0, hexpand=True)
-    )
-    filesystem = Gtk.DropDown(
-        model=Gtk.StringList.new(
-            [
-                _("Btrfs (recommended)", lang),
-                _("ext4 (classic)", lang),
-                _("XFS (classic, scalable)", lang),
-                _("F2FS (flash-optimized)", lang),
-            ]
-        ),
-        sensitive=False,
-    )
     selected_filesystem = next(
         (
             item
@@ -3802,22 +3784,6 @@ def build_advanced_storage_page(shared, nav_view):
         ),
         Filesystem.BTRFS,
     )
-    filesystem.set_selected(
-        _MANUAL_ROOT_FILESYSTEMS.index(selected_filesystem)
-    )
-    filesystem_row.append(filesystem)
-    editor.append(filesystem_row)
-    filesystem_help = Gtk.Label(
-        label=_(
-            "XFS and F2FS use one conventional root filesystem; Btrfs "
-            "additionally creates AnduinOS subvolumes and enables snapshots.",
-            lang,
-        ),
-        xalign=0,
-        wrap=True,
-    )
-    filesystem_help.add_css_class("dim-label")
-    editor.append(filesystem_help)
 
     editor.append(Gtk.Separator())
     editor.append(
@@ -4033,6 +3999,7 @@ def build_advanced_storage_page(shared, nav_view):
         icon_name="drive-harddisk-symbolic",
         secondary_action_label="",
         secondary_callback=None,
+        inline_widget=None,
     ):
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         row.add_css_class("partition-editor-row")
@@ -4060,6 +4027,8 @@ def build_advanced_storage_page(shared, nav_view):
             badge.add_css_class(f"partition-status-{status_class}")
             badge.set_valign(Gtk.Align.CENTER)
             row.append(badge)
+        if inline_widget is not None:
+            row.append(inline_widget)
         if secondary_action_label and secondary_callback is not None:
             secondary_button = Gtk.Button(label=secondary_action_label)
             secondary_button.connect(
@@ -4749,6 +4718,27 @@ def build_advanced_storage_page(shared, nav_view):
                 )
                 _queue_refresh()
 
+            root_filesystem = None
+            if request.role is ManualPartitionRole.ROOT:
+                root_filesystem = Gtk.DropDown(
+                    model=Gtk.StringList.new(
+                        [
+                            _("Btrfs (recommended)", lang),
+                            _("ext4 (classic)", lang),
+                            _("XFS (classic, scalable)", lang),
+                            _("F2FS (flash-optimized)", lang),
+                        ]
+                    )
+                )
+                root_filesystem.set_selected(
+                    _MANUAL_ROOT_FILESYSTEMS.index(draft.filesystem)
+                )
+                root_filesystem.set_tooltip_text(_("Filesystem", lang))
+                root_filesystem.connect(
+                    "notify::selected",
+                    lambda dropdown, _pspec: _filesystem_changed(dropdown),
+                )
+
             planned_box.append(
                 _partition_row(
                     _manual_role_title(request.role, lang),
@@ -4766,6 +4756,7 @@ def build_advanced_storage_page(shared, nav_view):
                     secondary_callback=(
                         lambda selected=request: _edit_partition(selected)
                     ),
+                    inline_widget=root_filesystem,
                 )
             )
         if not draft.new_partitions:
@@ -4806,7 +4797,6 @@ def build_advanced_storage_page(shared, nav_view):
         elif ManualPartitionRole.SWAP not in planned_roles:
             role_dropdown.set_selected(2)
         updating = False
-        filesystem.set_sensitive(True)
         esp_dropdown.set_sensitive(True)
         role_dropdown.set_sensitive(True)
         extent_dropdown.set_sensitive(bool(extents))
@@ -4997,9 +4987,7 @@ def build_advanced_storage_page(shared, nav_view):
                 reused_esp_partuuid=(
                     reusable_esp.identity.partuuid if reusable_esp else ""
                 ),
-                filesystem=_MANUAL_ROOT_FILESYSTEMS[
-                    filesystem.get_selected()
-                ],
+                filesystem=selected_filesystem,
                 new_partitions=(),
             )
             shared["manual_storage_selection_model"] = draft
@@ -5008,7 +4996,6 @@ def build_advanced_storage_page(shared, nav_view):
     def _load_workflow():
         table_label.set_label(_("Loading storage devices…", lang))
         table_button.set_sensitive(False)
-        filesystem.set_sensitive(False)
         esp_dropdown.set_sensitive(False)
         role_dropdown.set_sensitive(False)
         extent_dropdown.set_sensitive(False)
@@ -5050,16 +5037,15 @@ def build_advanced_storage_page(shared, nav_view):
         "clicked", lambda _button: _fill_available_space()
     )
 
-    def _filesystem_changed():
+    def _filesystem_changed(dropdown):
         if draft is None:
             return
-        selected = _MANUAL_ROOT_FILESYSTEMS[filesystem.get_selected()]
+        position = dropdown.get_selected()
+        if not (0 <= position < len(_MANUAL_ROOT_FILESYSTEMS)):
+            return
+        selected = _MANUAL_ROOT_FILESYSTEMS[position]
         _replace_draft(filesystem=selected)
         _queue_refresh()
-
-    filesystem.connect(
-        "notify::selected", lambda _widget, _pspec: _filesystem_changed()
-    )
 
     def on_next():
         if not isinstance(

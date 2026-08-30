@@ -257,10 +257,23 @@ class InstallerVisualAssetTests(unittest.TestCase):
         for fragment in (
             '_("XFS (classic, scalable)", lang)',
             '_("F2FS (flash-optimized)", lang)',
-            "_MANUAL_ROOT_FILESYSTEMS[filesystem.get_selected()]",
+            "_MANUAL_ROOT_FILESYSTEMS[position]",
         ):
             with self.subTest(fragment=fragment):
                 self.assertIn(fragment, manual)
+        self.assertNotIn('label=_("Root filesystem", lang)', manual)
+        self.assertIn(
+            "if request.role is ManualPartitionRole.ROOT:", manual
+        )
+        self.assertIn("inline_widget=root_filesystem", manual)
+        partition_row = manual.split("def _partition_row", 1)[1].split(
+            "def _minimum_partition_size", 1
+        )[0]
+        self.assertLess(
+            partition_row.index("row.append(inline_widget)"),
+            partition_row.index("row.append(secondary_button)"),
+        )
+        self.assertIn("Filesystem.BTRFS,", manual)
         self.assertIn("Filesystem.XFS", pages)
         self.assertIn("Filesystem.F2FS", pages)
         guided = pages.split("def build_guided_storage_page", 1)[1]
