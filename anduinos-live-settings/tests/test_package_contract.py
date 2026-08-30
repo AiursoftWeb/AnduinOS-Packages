@@ -38,7 +38,14 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
         }
         self.assertEqual(
             dependencies,
-            {"anduinos-live-layers", "adduser", "locales", "sudo", "openssh-server"},
+            {
+                "anduinos-live-layers",
+                "adduser",
+                "locales",
+                "xkb-data",
+                "sudo",
+                "openssh-server",
+            },
         )
         project_text = PROJECT_FILE.read_text(encoding="utf-8")
         self.assertNotIn("casper", project_text.lower())
@@ -86,6 +93,10 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
                 zone = root / "usr/share/zoneinfo" / timezone
                 zone.parent.mkdir(parents=True, exist_ok=True)
                 zone.touch()
+            symbols = root / "usr/share/X11/xkb/symbols"
+            symbols.mkdir(parents=True)
+            for layout in ("us", "fr"):
+                (symbols / layout).touch()
             env = {
                 **os.environ,
                 "ANDUINOS_LIVE_ROOT": str(root),
@@ -95,7 +106,8 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
 
             cmdline.write_text(
                 "rd.anduinos.live=1 locale=zh_CN.UTF-8 "
-                "timezone=Asia/Shanghai hostname=anduinos quiet\n",
+                "timezone=Asia/Shanghai rd.anduinos.keyboard=fr "
+                "hostname=anduinos quiet\n",
                 encoding="utf-8",
             )
             subprocess.run(["/bin/sh", SETUP], env=env, check=True)
@@ -111,6 +123,20 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
                 (root / "etc/default/locale").read_text(encoding="utf-8"),
                 'LANG="zh_CN.UTF-8"\n',
             )
+            self.assertEqual(
+                (root / "etc/default/keyboard").read_text(encoding="utf-8"),
+                'XKBMODEL="pc105"\n'
+                'XKBLAYOUT="fr"\n'
+                'XKBVARIANT=""\n'
+                'XKBOPTIONS=""\n'
+                'BACKSPACE="guess"\n',
+            )
+            self.assertIn(
+                "ANDUINOS_LIVE_KEYBOARD=fr\n",
+                (root / "run/anduinos-live/environment").read_text(
+                    encoding="utf-8"
+                ),
+            )
 
             for value in ("../../etc/passwd", "/etc/passwd", "Asia/Bad;Name"):
                 with self.subTest(value=value):
@@ -123,11 +149,26 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
                         "Etc/UTC\n",
                     )
 
+            for value in ("missing", "../../fr", "fr;touch", "-option"):
+                with self.subTest(keyboard=value):
+                    cmdline.write_text(
+                        f"rd.anduinos.live=1 rd.anduinos.keyboard={value}\n",
+                        encoding="utf-8",
+                    )
+                    subprocess.run(["/bin/sh", SETUP], env=env, check=True)
+                    self.assertIn(
+                        'XKBLAYOUT="us"\n',
+                        (root / "etc/default/keyboard").read_text(
+                            encoding="utf-8"
+                        ),
+                    )
+
     def test_setup_is_valid_posix_shell_and_has_no_legacy_generator_calls(self):
         subprocess.run(["/bin/sh", "-n", SETUP], check=True)
         setup = SETUP.read_text(encoding="utf-8")
         self.assertIn("useradd --create-home --uid 1000", setup)
         self.assertIn("AutomaticLoginEnable=true", setup)
+        self.assertIn("localectl --no-convert set-x11-keymap", setup)
         self.assertNotIn("update-initramfs", setup)
         self.assertNotIn("casper", setup.lower())
 

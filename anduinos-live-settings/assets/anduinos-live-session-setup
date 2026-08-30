@@ -50,6 +50,13 @@ esac
 zone_file="$(target_path "/usr/share/zoneinfo/$live_timezone")"
 [ -f "$zone_file" ] || live_timezone=Etc/UTC
 
+live_keyboard="$(cmdline_value rd.anduinos.keyboard 2>/dev/null || true)"
+case "$live_keyboard" in
+    ""|[!a-z0-9]*|*[!a-z0-9_-]*) live_keyboard=us ;;
+esac
+symbols_file="$(target_path "/usr/share/X11/xkb/symbols/$live_keyboard")"
+[ -f "$symbols_file" ] || live_keyboard=us
+
 etc_dir="$(target_path /etc)"
 mkdir -p "$etc_dir/default"
 printf '%s\n' "$live_hostname" > "$etc_dir/hostname"
@@ -64,12 +71,25 @@ EOF
 printf '%s\n' "$live_timezone" > "$etc_dir/timezone"
 ln -snf "/usr/share/zoneinfo/$live_timezone" "$etc_dir/localtime"
 printf 'LANG="%s"\n' "$live_locale" > "$etc_dir/default/locale"
+cat > "$etc_dir/default/keyboard" <<EOF
+XKBMODEL="pc105"
+XKBLAYOUT="$live_keyboard"
+XKBVARIANT=""
+XKBOPTIONS=""
+BACKSPACE="guess"
+EOF
 
 if [ -z "$test_mode" ]; then
     if [ "$live_locale" != C.UTF-8 ]; then
         printf '%s UTF-8\n' "$live_locale" > /etc/locale.gen
         locale-gen --keep-existing >/dev/null
     fi
+
+    # Publish the system XKB choice through systemd-localed before GDM starts.
+    # GNOME uses this as its fallback when the new Live user has no per-user
+    # input-source preference yet.
+    localectl --no-convert set-x11-keymap "$live_keyboard" pc105 "" "" \
+        >/dev/null
 
     uid_1000="$(getent passwd 1000 | cut -d: -f1 || true)"
     if [ -n "$uid_1000" ] && [ "$uid_1000" != "$live_user" ]; then
@@ -132,4 +152,5 @@ ANDUINOS_LIVE_USER=$live_user
 ANDUINOS_LIVE_HOSTNAME=$live_hostname
 ANDUINOS_LIVE_LOCALE=$live_locale
 ANDUINOS_LIVE_TIMEZONE=$live_timezone
+ANDUINOS_LIVE_KEYBOARD=$live_keyboard
 EOF

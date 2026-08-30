@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-live-settings</PackageName>
-    <PackageVersion>2.0.2-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Dracut Live session policy and regional settings (removed after installation)</PackageDescription>
     <Section>admin</Section>
@@ -24,6 +24,7 @@
     <Dependency Include="anduinos-live-layers" />
     <Dependency Include="adduser" />
     <Dependency Include="locales" />
+    <Dependency Include="xkb-data" />
     <Dependency Include="sudo" />
     <!-- Secure Shell is payload for newly installed desktops, not an upgrade
          dependency of every existing desktop. The native installer removes
