@@ -85,12 +85,6 @@ if [ -z "$test_mode" ]; then
         locale-gen --keep-existing >/dev/null
     fi
 
-    # Publish the system XKB choice through systemd-localed before GDM starts.
-    # GNOME uses this as its fallback when the new Live user has no per-user
-    # input-source preference yet.
-    localectl --no-convert set-x11-keymap "$live_keyboard" pc105 "" "" \
-        >/dev/null
-
     uid_1000="$(getent passwd 1000 | cut -d: -f1 || true)"
     if [ -n "$uid_1000" ] && [ "$uid_1000" != "$live_user" ]; then
         echo "UID 1000 is already owned by $uid_1000; refusing an ambiguous Live user" >&2

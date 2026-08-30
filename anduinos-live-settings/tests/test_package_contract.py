@@ -168,7 +168,12 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
         setup = SETUP.read_text(encoding="utf-8")
         self.assertIn("useradd --create-home --uid 1000", setup)
         self.assertIn("AutomaticLoginEnable=true", setup)
-        self.assertIn("localectl --no-convert set-x11-keymap", setup)
+        self.assertIn('XKBLAYOUT="$live_keyboard"', setup)
+        self.assertNotIn("localectl", setup)
+        self.assertLess(
+            setup.index('XKBLAYOUT="$live_keyboard"'),
+            setup.index("useradd --create-home --uid 1000"),
+        )
         self.assertNotIn("update-initramfs", setup)
         self.assertNotIn("casper", setup.lower())
 
