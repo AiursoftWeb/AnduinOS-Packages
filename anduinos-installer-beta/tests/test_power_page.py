@@ -265,6 +265,7 @@ class PowerPageRoutingTests(unittest.TestCase):
                 "software",
                 "disk",
                 "storage-strategy",
+                "disk-layout",
                 "user",
                 "advanced-options",
                 "timezone",
@@ -305,7 +306,18 @@ class PowerPageRoutingTests(unittest.TestCase):
         registered_tags = set(re.findall(r'page_tag="([^"]+)"', source))
         manual_route = set(_planned_page_route(shared))
 
-        self.assertEqual(registered_tags - {"guided-storage"}, manual_route)
+        self.assertEqual(
+            registered_tags - {"guided-storage", "disk-layout"},
+            manual_route,
+        )
+
+        erase_shared = {
+            **shared,
+            "storage_strategy": "erase-btrfs",
+        }
+        erase_route = set(_planned_page_route(erase_shared))
+        self.assertIn("disk-layout", erase_route)
+        self.assertNotIn("advanced-storage", erase_route)
 
 
 if __name__ == "__main__":

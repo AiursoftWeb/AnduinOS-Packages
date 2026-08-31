@@ -326,22 +326,45 @@ class InstallerVisualAssetTests(unittest.TestCase):
         self.assertNotIn("target_box", method_page)
         self.assertNotIn("Target:", method_page)
 
-    def test_review_exposes_one_non_linear_swap_control_and_warning_gate(self):
+    def test_automatic_layout_owns_swap_control_and_review_warning_gate(self):
         pages = (ROOT / "src/pages.py").read_text()
+        helpers = pages.split("def _validated_swap_size", 1)[1]
+        helpers = helpers.split("def build_storage_strategy_page", 1)[0]
+        strategy = pages.split("def build_storage_strategy_page", 1)[1]
+        strategy = strategy.split("def build_disk_layout_page", 1)[0]
+        layout = pages.split("def build_disk_layout_page", 1)[1]
+        layout = layout.split("def build_guided_storage_page", 1)[0]
         summary = pages.split("def build_summary_page", 1)[1]
         for fragment in (
-            "build_erase_disk_layout_spec(",
-            'f"#{item.number}"',
             "disk_swap_choices_mib(swap_sizing)",
             "Gtk.Scale(",
             "✓ Best performance — AnduinOS recommended Swap size.",
             "ZRAM always remains enabled: 50% of RAM",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, helpers)
+        for fragment in (
+            "calculate_swap_sizing(",
+            "_validated_swap_size(",
+            "_swap_control(",
+            "build_user_page(shared, nav_view)",
+        ):
+            with self.subTest(fragment=fragment):
+                self.assertIn(fragment, layout)
+        self.assertIn("build_advanced_storage_page", strategy)
+        self.assertIn("build_disk_layout_page", strategy)
+        for fragment in (
+            "build_erase_disk_layout_spec(",
+            'f"#{item.number}"',
             "Review your custom Swap size",
             "swap_warning_for_install",
+            "_swap_assessment(",
         ):
             with self.subTest(fragment=fragment):
                 self.assertIn(fragment, summary)
+        self.assertNotIn("Gtk.Scale(", summary)
         self.assertNotIn("Gtk.Expander(", summary)
+        self.assertNotIn("*_, swap_warning_for_install", summary)
 
     def test_hostname_uses_shared_normalization_without_a_page_local_regex(self):
         pages = (ROOT / "src/pages.py").read_text()

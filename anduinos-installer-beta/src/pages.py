@@ -226,6 +226,15 @@ def _probe_storage_workflow(*, development_mode=False):
     )
 
 
+def _probe_install_target(*, development_mode=False):
+    """Recheck the same target universe shown by the storage page."""
+
+    if development_mode:
+        workflow = _probe_storage_workflow(development_mode=True)
+        return workflow.inventory, workflow.platform
+    return probe_storage_inventory(), probe_platform()
+
+
 def _coexistence_notice_text(notice, lang, windows_detected):
     if notice.code is CoexistenceNoticeCode.SHRINK_IN_WINDOWS:
         message = (
@@ -502,8 +511,14 @@ def _planned_page_route(shared):
     if bool(shared.get("_network_page_planned")):
         route.append("network")
     route.extend(_UNCONDITIONAL_PAGE_ROUTE[1:5])
-    if shared.get("storage_strategy") == StorageStrategy.ADVANCED.value:
+    storage_strategy = shared.get("storage_strategy")
+    if storage_strategy == StorageStrategy.ADVANCED.value:
         route.append("advanced-storage")
+    elif storage_strategy in {
+        StorageStrategy.ERASE_BTRFS.value,
+        StorageStrategy.ERASE_EXT4.value,
+    }:
+        route.append("disk-layout")
     route.extend(_UNCONDITIONAL_PAGE_ROUTE[5:])
     return tuple(route)
 
@@ -2858,6 +2873,187 @@ def build_disk_page(shared, nav_view):
     return page
 
 
+# ── automatic disk layout helpers ───────────────────────────────────────
+
+def _validated_swap_size(shared, swap_sizing):
+    requested_swap = shared.get("swap_size_mib")
+    if not isinstance(requested_swap, int):
+        requested_swap = swap_sizing.swap_size_mib
+    try:
+        validate_disk_swap_selection(requested_swap, swap_sizing)
+    except ValueError:
+        requested_swap = swap_sizing.swap_size_mib
+    shared["swap_size_mib"] = requested_swap
+    return requested_swap
+
+
+def _swap_assessment(swap_sizing, swap_size_mib):
+    if swap_size_mib == swap_sizing.swap_size_mib:
+        return (
+            "emblem-ok-symbolic",
+            "installer-success-card",
+            "✓ Best performance — AnduinOS recommended Swap size.",
+            None,
+        )
+    if swap_size_mib == 0:
+        message = (
+            "Disk Swap will not be created. ZRAM remains enabled, "
+            "but sustained memory pressure can terminate applications "
+            "and hibernation is unavailable. This is strongly discouraged."
+        )
+        return (
+            "dialog-error-symbolic",
+            "installer-danger-card",
+            message,
+            message,
+        )
+    if swap_size_mib < swap_sizing.runtime_target_mib:
+        message = (
+            "This is below AnduinOS's runtime safety target. ZRAM still "
+            "works, but heavy browser or application workloads can run out "
+            "of backing memory sooner; hibernation is also unavailable."
+        )
+    elif swap_size_mib < swap_sizing.hibernation_target_mib:
+        message = (
+            "This size protects ordinary memory pressure, but is smaller "
+            "than the hibernation target. Hibernation may fail or be "
+            "unavailable."
+        )
+    else:
+        message = (
+            "This exceeds the AnduinOS recommendation. It consumes more "
+            "disk space and normally does not improve runtime performance."
+        )
+    return (
+        "dialog-warning-symbolic",
+        "installer-warning-card",
+        message,
+        message,
+    )
+
+
+def _swap_control(swap_sizing, selected_swap_size_mib, lang, on_changed,
+                  *, standalone=False):
+    swap_choices = tuple(
+        sorted(
+            {
+                *disk_swap_choices_mib(swap_sizing),
+                selected_swap_size_mib,
+            }
+        )
+    )
+    recommended_index = swap_choices.index(swap_sizing.swap_size_mib)
+    selected_index = swap_choices.index(selected_swap_size_mib)
+
+    control = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=10,
+        margin_start=12,
+        margin_end=12,
+        margin_top=14,
+        margin_bottom=12,
+    )
+    control.add_css_class(
+        "installer-card" if standalone else "swap-control-card"
+    )
+    header = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=12,
+    )
+    title = Gtk.Label(
+        label=_("Swap", lang),
+        xalign=0,
+        hexpand=True,
+    )
+    title.add_css_class("heading")
+    size_label = Gtk.Label(xalign=1)
+    size_label.add_css_class("swap-size")
+    header.append(title)
+    header.append(size_label)
+    control.append(header)
+
+    adjustment = Gtk.Adjustment(
+        value=selected_index,
+        lower=0,
+        upper=len(swap_choices) - 1,
+        step_increment=1,
+        page_increment=1,
+        page_size=0,
+    )
+    scale = Gtk.Scale(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        adjustment=adjustment,
+        draw_value=False,
+        digits=0,
+        hexpand=True,
+    )
+    scale.set_round_digits(0)
+    scale.add_mark(
+        recommended_index,
+        Gtk.PositionType.BOTTOM,
+        "✓",
+    )
+    control.append(scale)
+
+    scale_ends = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+    scale_ends.append(
+        Gtk.Label(label="0 GiB · ZRAM only", xalign=0, hexpand=True)
+    )
+    scale_ends.append(
+        Gtk.Label(
+            label=f"{swap_sizing.maximum_custom_mib // 1024} GiB · Max",
+            xalign=1,
+        )
+    )
+    control.append(scale_ends)
+
+    status = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=10,
+    )
+    status_icon = Gtk.Image()
+    status_label = Gtk.Label(xalign=0, wrap=True, hexpand=True)
+    status.append(status_icon)
+    status.append(status_label)
+    control.append(status)
+
+    zram_status = Gtk.Label(
+        label=(
+            "ZRAM always remains enabled: 50% of RAM · LZ4 · "
+            "priority 100. Disk Swap uses priority 10."
+        ),
+        xalign=0,
+        wrap=True,
+    )
+    zram_status.add_css_class("dim-label")
+    control.append(zram_status)
+
+    def _set_choice(swap_size_mib):
+        size_label.set_label(f"{swap_size_mib // 1024} GiB")
+        icon_name, css_class, status_text, _warning_text = (
+            _swap_assessment(swap_sizing, swap_size_mib)
+        )
+        status_icon.set_from_icon_name(icon_name)
+        status_label.set_label(status_text)
+        for old_class in (
+            "installer-success-card",
+            "installer-warning-card",
+            "installer-danger-card",
+        ):
+            status.remove_css_class(old_class)
+        status.add_css_class(css_class)
+        on_changed(swap_size_mib)
+
+    def _scale_changed(changed_scale):
+        index = int(round(changed_scale.get_value()))
+        changed_scale.set_value(index)
+        _set_choice(swap_choices[index])
+
+    scale.connect("value-changed", _scale_changed)
+    _set_choice(selected_swap_size_mib)
+    return control
+
+
 # ── page 5: Storage strategy ─────────────────────────────────────────────
 
 def build_storage_strategy_page(shared, nav_view):
@@ -3095,7 +3291,7 @@ def build_storage_strategy_page(shared, nav_view):
         if strategy is StorageStrategy.ADVANCED:
             nav_view.push(build_advanced_storage_page(shared, nav_view))
         else:
-            nav_view.push(build_user_page(shared, nav_view))
+            nav_view.push(build_disk_layout_page(shared, nav_view))
 
     nav = _nav_box(
         lang,
@@ -3107,6 +3303,89 @@ def build_storage_strategy_page(shared, nav_view):
         page_tag="storage-strategy",
     )
     next_button = nav.next_button
+    content.append(nav)
+    page.set_child(content)
+    return page
+
+
+# ── automatic disk layout ───────────────────────────────────────────────
+
+def build_disk_layout_page(shared, nav_view):
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
+    page = Adw.NavigationPage(
+        title=_("Configure storage and swap", lang)
+    )
+    page.set_tag("disk-layout")
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+    filesystem = str(shared.get("filesystem", "btrfs"))
+    layout_subtitle = " · ".join(
+        value
+        for value in (
+            filesystem.upper() if filesystem == "ext4" else filesystem.title(),
+            str(shared.get("disk_size", "?")),
+            str(shared.get("disk", "?")),
+        )
+        if value
+    )
+    content.append(
+        _page_header(
+            "Configure storage and swap",
+            layout_subtitle,
+            "disk",
+            lang,
+        )
+    )
+
+    settings = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=12,
+        margin_start=72,
+        margin_end=72,
+        margin_top=18,
+        vexpand=True,
+        valign=Gtk.Align.START,
+    )
+    error_message = ""
+    try:
+        swap_sizing = calculate_swap_sizing(
+            probe_physical_memory_bytes(),
+            int(shared.get("disk_size_bytes") or 0),
+        )
+        selected_swap_size_mib = _validated_swap_size(
+            shared, swap_sizing
+        )
+
+        def _swap_changed(swap_size_mib):
+            shared["swap_size_mib"] = swap_size_mib
+
+        settings.append(
+            _swap_control(
+                swap_sizing,
+                selected_swap_size_mib,
+                lang,
+                _swap_changed,
+                standalone=True,
+            )
+        )
+    except (RuntimeError, ValueError) as error:
+        error_message = str(error)
+        failure = Gtk.Label(
+            label=error_message,
+            xalign=0,
+            wrap=True,
+        )
+        failure.add_css_class("installer-danger-card")
+        settings.append(failure)
+    content.append(settings)
+
+    nav = _nav_box(
+        lang,
+        on_back=lambda: nav_view.pop(),
+        on_next=lambda: nav_view.push(build_user_page(shared, nav_view)),
+        next_sensitive=not bool(error_message),
+        shared=shared,
+        page_tag="disk-layout",
+    )
     content.append(nav)
     page.set_child(content)
     return page
@@ -5838,19 +6117,13 @@ def build_summary_page(shared, nav_view):
         )
     except (RuntimeError, ValueError):
         pass
-    selected_swap_size_mib = None
-    if swap_sizing is not None:
-        requested_swap = shared.get("swap_size_mib")
-        if guided_mode and isinstance(guided_preview, GuidedStoragePreview):
-            requested_swap = guided_preview.swap_size_mib
-        if not isinstance(requested_swap, int):
-            requested_swap = swap_sizing.swap_size_mib
-        try:
-            validate_disk_swap_selection(requested_swap, swap_sizing)
-        except ValueError:
-            requested_swap = swap_sizing.swap_size_mib
-        selected_swap_size_mib = requested_swap
-        shared["swap_size_mib"] = selected_swap_size_mib
+    if (
+        swap_sizing is not None
+        and guided_mode
+        and isinstance(guided_preview, GuidedStoragePreview)
+    ):
+        shared["swap_size_mib"] = guided_preview.swap_size_mib
+    selected_swap_size_mib = _validated_swap_size(shared, swap_sizing)
     keyboard_id = xkb_choice_id(
         str(shared.get("keyboard", "us")),
         str(shared.get("keyboard_variant", "")),
@@ -6140,165 +6413,23 @@ def build_summary_page(shared, nav_view):
     summary_card.append(summary_label)
     swap_warning_for_install = None
     if swap_sizing is not None and selected_swap_size_mib is not None:
-        swap_choices = tuple(
-            sorted(
-                {
-                    *disk_swap_choices_mib(swap_sizing),
-                    selected_swap_size_mib,
-                }
-            )
-        )
-        recommended_swap = swap_sizing.swap_size_mib
-        recommended_index = swap_choices.index(recommended_swap)
-        selected_index = swap_choices.index(selected_swap_size_mib)
+        swap_warning_for_install = _swap_assessment(
+            swap_sizing,
+            selected_swap_size_mib,
+        )[3]
 
-        swap_control = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=10,
-            margin_start=12,
-            margin_end=12,
-            margin_top=14,
-            margin_bottom=12,
-        )
-        swap_control.add_css_class("swap-control-card")
-        swap_header = Gtk.Box(
-            orientation=Gtk.Orientation.HORIZONTAL,
-            spacing=12,
-        )
-        swap_title = Gtk.Label(
-            label=_("Swap", lang),
-            xalign=0,
-            hexpand=True,
-        )
-        swap_title.add_css_class("heading")
-        swap_size_label = Gtk.Label(xalign=1)
-        swap_size_label.add_css_class("swap-size")
-        swap_header.append(swap_title)
-        swap_header.append(swap_size_label)
-        swap_control.append(swap_header)
-
-        adjustment = Gtk.Adjustment(
-            value=selected_index,
-            lower=0,
-            upper=len(swap_choices) - 1,
-            step_increment=1,
-            page_increment=1,
-            page_size=0,
-        )
-        swap_scale = Gtk.Scale(
-            orientation=Gtk.Orientation.HORIZONTAL,
-            adjustment=adjustment,
-            draw_value=False,
-            digits=0,
-            hexpand=True,
-        )
-        swap_scale.set_round_digits(0)
-        swap_scale.add_mark(
-            recommended_index,
-            Gtk.PositionType.BOTTOM,
-            "✓",
-        )
-        swap_control.append(swap_scale)
-
-        scale_ends = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        scale_ends.append(
-            Gtk.Label(label="0 GiB · ZRAM only", xalign=0, hexpand=True)
-        )
-        scale_ends.append(
-            Gtk.Label(
-                label=f"{swap_sizing.maximum_custom_mib // 1024} GiB · Max",
-                xalign=1,
-            )
-        )
-        swap_control.append(scale_ends)
-
-        swap_status = Gtk.Box(
-            orientation=Gtk.Orientation.HORIZONTAL,
-            spacing=10,
-        )
-        swap_status_icon = Gtk.Image()
-        swap_status_label = Gtk.Label(xalign=0, wrap=True, hexpand=True)
-        swap_status.append(swap_status_icon)
-        swap_status.append(swap_status_label)
-        swap_control.append(swap_status)
-
-        zram_status = Gtk.Label(
-            label=(
-                "ZRAM always remains enabled: 50% of RAM · LZ4 · "
-                "priority 100. Disk Swap uses priority 10."
-            ),
-            xalign=0,
-            wrap=True,
-        )
-        zram_status.add_css_class("dim-label")
-        swap_control.append(zram_status)
-
-        def _swap_assessment(swap_size_mib):
-            if swap_size_mib == recommended_swap:
-                return (
-                    "emblem-ok-symbolic",
-                    "installer-success-card",
-                    "✓ Best performance — AnduinOS recommended Swap size.",
-                    None,
-                )
-            if swap_size_mib == 0:
-                message = (
-                    "Disk Swap will not be created. ZRAM remains enabled, "
-                    "but sustained memory pressure can terminate applications "
-                    "and hibernation is unavailable. This is strongly "
-                    "discouraged."
-                )
-                return (
-                    "dialog-error-symbolic",
-                    "installer-danger-card",
-                    message,
-                    message,
-                )
-            if swap_size_mib < swap_sizing.runtime_target_mib:
-                message = (
-                    "This is below AnduinOS's runtime safety target. ZRAM "
-                    "still works, but heavy browser or application workloads "
-                    "can run out of backing memory sooner; hibernation is also "
-                    "unavailable."
-                )
-            elif swap_size_mib < swap_sizing.hibernation_target_mib:
-                message = (
-                    "This size protects ordinary memory pressure, but is "
-                    "smaller than the hibernation target. Hibernation may fail "
-                    "or be unavailable."
-                )
-            else:
-                message = (
-                    "This exceeds the AnduinOS recommendation. It consumes "
-                    "more disk space and normally does not improve runtime "
-                    "performance."
-                )
-            return (
-                "dialog-warning-symbolic",
-                "installer-warning-card",
-                message,
-                message,
-            )
-
-        def _set_swap_choice(swap_size_mib):
-            nonlocal guided_preview, storage_lines, swap_warning_for_install
-            shared["swap_size_mib"] = swap_size_mib
-            swap_size_label.set_label(f"{swap_size_mib // 1024} GiB")
-            icon_name, css_class, status_text, warning_text = (
-                _swap_assessment(swap_size_mib)
-            )
-            swap_warning_for_install = warning_text
-            swap_status_icon.set_from_icon_name(icon_name)
-            swap_status_label.set_label(status_text)
-            for old_class in (
-                "installer-success-card",
-                "installer-warning-card",
-                "installer-danger-card",
-            ):
-                swap_status.remove_css_class(old_class)
-            swap_status.add_css_class(css_class)
-
-            if guided_mode:
+        # Guided storage is retained for compatibility with unfinished flows.
+        # Automatic erase modes configure Swap on the disk-layout page instead.
+        if guided_mode:
+            def _guided_swap_changed(swap_size_mib):
+                nonlocal guided_preview
+                nonlocal storage_lines
+                nonlocal swap_warning_for_install
+                shared["swap_size_mib"] = swap_size_mib
+                swap_warning_for_install = _swap_assessment(
+                    swap_sizing,
+                    swap_size_mib,
+                )[3]
                 workflow = shared.get("_guided_storage_workflow_model")
                 if isinstance(workflow, StorageWorkflow) and isinstance(
                     guided_preview, GuidedStoragePreview
@@ -6312,25 +6443,21 @@ def build_summary_page(shared, nav_view):
                     updated_storage_lines = _guided_storage_lines(
                         guided_preview
                     )
-                else:
-                    updated_storage_lines = storage_lines
-            else:
-                updated_storage_lines = _erase_storage_lines(swap_size_mib)
-            lines[
-                storage_lines_start:
-                storage_lines_start + len(storage_lines)
-            ] = updated_storage_lines
-            storage_lines = updated_storage_lines
-            summary_label.set_markup("\n\n".join(lines))
+                    lines[
+                        storage_lines_start:
+                        storage_lines_start + len(storage_lines)
+                    ] = updated_storage_lines
+                    storage_lines = updated_storage_lines
+                    summary_label.set_markup("\n\n".join(lines))
 
-        def _swap_scale_changed(scale):
-            index = int(round(scale.get_value()))
-            scale.set_value(index)
-            _set_swap_choice(swap_choices[index])
-
-        swap_scale.connect("value-changed", _swap_scale_changed)
-        _set_swap_choice(selected_swap_size_mib)
-        summary_card.append(swap_control)
+            summary_card.append(
+                _swap_control(
+                    swap_sizing,
+                    selected_swap_size_mib,
+                    lang,
+                    _guided_swap_changed,
+                )
+            )
     summary_scroll = _scrolled_window(
         inset=True,
         hscrollbar_policy=Gtk.PolicyType.NEVER,
@@ -6443,7 +6570,9 @@ def build_summary_page(shared, nav_view):
         recheck_pulse.start()
 
         def _probe_target():
-            return probe_storage_inventory(), probe_platform()
+            return _probe_install_target(
+                development_mode=development_mode
+            )
 
         recheck_requests.start(_probe_target, _apply_recheck)
 
