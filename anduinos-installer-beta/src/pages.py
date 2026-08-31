@@ -3595,7 +3595,48 @@ def _manual_segment_spans(segments):
     return total_columns, tuple(spans)
 
 
-def _manual_disk_map_track(segments, lang):
+def _manual_segment_annotation(segment, reused_esp_partuuid, lang):
+    selected_esp_id = (
+        f"preserved:{reused_esp_partuuid}"
+        if reused_esp_partuuid
+        else "new:efi-system"
+    )
+    if segment.segment_id == selected_esp_id:
+        return (
+            f"AnduinOS {_manual_role_title(ManualPartitionRole.EFI_SYSTEM, lang)}",
+            "esp",
+        )
+    if segment.kind is ManualDiskSegmentKind.NEW_SWAP:
+        return (
+            " ".join(
+                (
+                    _("New", lang),
+                    "AnduinOS",
+                    _manual_role_title(ManualPartitionRole.SWAP, lang),
+                )
+            ),
+            "swap",
+        )
+    if segment.kind is ManualDiskSegmentKind.NEW_ROOT:
+        return (
+            " ".join(
+                (
+                    _("New", lang),
+                    "AnduinOS",
+                    _manual_role_title(ManualPartitionRole.ROOT, lang),
+                )
+            ),
+            "root",
+        )
+    return None
+
+
+def _manual_disk_map_track(
+    segments,
+    lang,
+    *,
+    reused_esp_partuuid=None,
+):
     track = Gtk.Grid(column_homogeneous=True, column_spacing=3, hexpand=True)
     track.add_css_class("partition-map-track")
     total_columns, spans = _manual_segment_spans(segments)
@@ -3637,16 +3678,75 @@ def _manual_disk_map_track(segments, lang):
         )
         track.attach(block, column, 0, span, 1)
         column += span
-    return track
+
+    if reused_esp_partuuid is None:
+        return track
+    annotations = tuple(
+        _manual_segment_annotation(segment, reused_esp_partuuid, lang)
+        for segment in segments
+    )
+    if not any(annotations):
+        return track
+
+    annotation_track = Gtk.Grid(
+        column_homogeneous=True,
+        column_spacing=3,
+        hexpand=True,
+    )
+    annotation_track.add_css_class("partition-map-annotations")
+    column = 0
+    for annotation, span in zip(annotations, spans, strict=True):
+        if annotation is None:
+            marker = Gtk.Box(hexpand=True)
+        else:
+            text, role_class = annotation
+            marker = Gtk.Box(
+                orientation=Gtk.Orientation.VERTICAL,
+                spacing=0,
+                hexpand=True,
+                halign=Gtk.Align.FILL,
+                valign=Gtk.Align.END,
+            )
+            marker.add_css_class("partition-map-annotation")
+            marker.add_css_class(
+                f"partition-map-annotation-{role_class}"
+            )
+            label = Gtk.Label(
+                label=text,
+                wrap=True,
+                wrap_mode=Pango.WrapMode.WORD_CHAR,
+                justify=Gtk.Justification.CENTER,
+                xalign=0.5,
+            )
+            label.add_css_class("partition-map-annotation-label")
+            arrow = Gtk.Label(label="↓")
+            arrow.add_css_class("partition-map-annotation-arrow")
+            marker.append(label)
+            marker.append(arrow)
+            marker.set_tooltip_text(text)
+        annotation_track.attach(marker, column, 0, span, 1)
+        column += span
+
+    annotated_track = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=1,
+    )
+    annotated_track.append(annotation_track)
+    annotated_track.append(track)
+    return annotated_track
 
 
 def _manual_disk_map_panel(disk, draft, lang):
     disk_map = build_manual_disk_map(disk, draft)
     panel = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
     panel.add_css_class("partition-map-panel")
-    for title, segments in (
-        (_("Current disk", lang), disk_map.current),
-        (_("Planned result", lang), disk_map.planned),
+    for title, segments, reused_esp_partuuid in (
+        (_("Current disk", lang), disk_map.current, None),
+        (
+            _("Planned result", lang),
+            disk_map.planned,
+            draft.reused_esp_partuuid,
+        ),
     ):
         heading = Gtk.Label(label=title, xalign=0)
         heading.add_css_class("partition-map-heading")
@@ -3655,6 +3755,7 @@ def _manual_disk_map_panel(disk, draft, lang):
             _manual_disk_map_track(
                 segments,
                 lang,
+                reused_esp_partuuid=reused_esp_partuuid,
             )
         )
     return panel
@@ -4252,10 +4353,17 @@ def build_advanced_storage_page(shared, nav_view):
         dialog.present()
 
     def _show_resize_blocked(heading, body):
+        failure = Gtk.Label(
+            label=body,
+            xalign=0,
+            wrap=True,
+            selectable=True,
+        )
+        failure.add_css_class("installer-danger-card")
         dialog = Adw.MessageDialog(
             transient_for=nav_view.get_root(),
             heading=heading,
-            body=body,
+            extra_child=failure,
         )
         dialog.add_response("close", _("Close", lang))
         dialog.set_default_response("close")
@@ -4339,20 +4447,6 @@ def build_advanced_storage_page(shared, nav_view):
         )
         warning.add_css_class("installer-warning-card")
         form.append(warning)
-
-        verified = Gtk.Label(
-            label=_(
-                "Verified now: plain NTFS, not mounted, not hibernated, "
-                "cleanly shut down, and within the filesystem-reported safe "
-                "range. The privileged installer will verify all of this "
-                "again immediately before writing.",
-                lang,
-            ),
-            xalign=0,
-            wrap=True,
-        )
-        verified.add_css_class("installer-success-card")
-        form.append(verified)
 
         size_heading = Gtk.Label(
             label=_("New Windows partition size", lang),

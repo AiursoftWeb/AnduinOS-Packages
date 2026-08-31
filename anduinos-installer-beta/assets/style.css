@@ -279,6 +279,37 @@
   padding: 3px;
 }
 
+.partition-map-annotations {
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+.partition-map-annotation {
+  font-weight: 700;
+}
+
+.partition-map-annotation-label {
+  font-size: 0.78em;
+}
+
+.partition-map-annotation-arrow {
+  font-size: 1.15em;
+  font-weight: 900;
+  margin-bottom: -2px;
+}
+
+.partition-map-annotation-esp {
+  color: #a98bff;
+}
+
+.partition-map-annotation-swap {
+  color: #e5a91e;
+}
+
+.partition-map-annotation-root {
+  color: #58a6e7;
+}
+
 .partition-map-segment {
   border: 1px solid alpha(@window_fg_color, 0.12);
   border-radius: 8px;

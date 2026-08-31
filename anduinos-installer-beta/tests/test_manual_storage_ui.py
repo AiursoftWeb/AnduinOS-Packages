@@ -2,7 +2,11 @@ import unittest
 from unittest.mock import patch
 
 from test_manual_layout import manual_disk, selection
-from pages import _manual_segment_spans, _probe_storage_workflow
+from pages import (
+    _manual_segment_annotation,
+    _manual_segment_spans,
+    _probe_storage_workflow,
+)
 from installer_core.model import Architecture, Firmware, SecureBoot
 from installer_core.manual_layout import (
     ManualPartitionRequest,
@@ -158,6 +162,44 @@ class ManualStorageUiTests(unittest.TestCase):
                 ManualDiskSegmentKind.NEW_ESP,
                 ManualDiskSegmentKind.NEW_ROOT,
             ),
+        )
+
+    def test_planned_map_annotations_identify_anduinos_partitions(self):
+        disk_map = build_manual_disk_map(self.disk, selection())
+        annotations = {
+            item.segment_id: _manual_segment_annotation(
+                item, "part-1", "en_US"
+            )
+            for item in disk_map.planned
+        }
+        self.assertEqual(
+            annotations["preserved:part-1"],
+            ("AnduinOS ESP", "esp"),
+        )
+        self.assertIn(("New AnduinOS Swap", "swap"), annotations.values())
+        self.assertIn(("New AnduinOS Root", "root"), annotations.values())
+
+    def test_new_esp_receives_the_anduinos_annotation(self):
+        chosen = selection(
+            reinitialize=True,
+            reused_esp="",
+            new_partitions=(
+                ManualPartitionRequest(
+                    ManualPartitionRole.EFI_SYSTEM, 1, 1025
+                ),
+                ManualPartitionRequest(
+                    ManualPartitionRole.ROOT, 1025, 40 * 1024
+                ),
+            ),
+        )
+        new_esp = next(
+            item
+            for item in build_manual_disk_map(self.disk, chosen).planned
+            if item.kind is ManualDiskSegmentKind.NEW_ESP
+        )
+        self.assertEqual(
+            _manual_segment_annotation(new_esp, "", "en_US"),
+            ("AnduinOS ESP", "esp"),
         )
 
     def test_disk_map_shows_resized_ntfs_and_its_new_free_tail(self):

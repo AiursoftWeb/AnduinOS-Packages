@@ -286,6 +286,11 @@ class InstallerVisualAssetTests(unittest.TestCase):
         self.assertNotIn("hscrollbar_policy=Gtk.PolicyType.AUTOMATIC", manual)
         self.assertIn('_("Change Size", lang)', manual)
         self.assertIn("resize_requests.start(", manual)
+        self.assertNotIn("Verified now: plain NTFS", manual)
+        resize_blocked = manual.split(
+            "def _show_resize_blocked", 1
+        )[1].split("def _resize_block_message", 1)[0]
+        self.assertIn('add_css_class("installer-danger-card")', resize_blocked)
         self.assertIn("partition.filesystem_type.casefold() == \"ntfs\"", manual)
         self.assertIn("powercfg /h off", manual)
         self.assertIn("shutdown /s /t 0", manual)
