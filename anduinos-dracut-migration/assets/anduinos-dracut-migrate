@@ -228,7 +228,7 @@ unexpected_removals=$(printf '%s\n' "$simulation" \
     | while read -r package; do
         case "$package" in
             casper|initramfs-tools|initramfs-tools-core|initramfs-tools-bin) ;;
-            busybox-initramfs|finalrd) ;;
+            busybox-initramfs|cryptsetup-initramfs|finalrd) ;;
             *) printf '%s\n' "$package" ;;
         esac
     done)
@@ -251,6 +251,7 @@ for legacy in \
     initramfs-tools-core \
     initramfs-tools-bin \
     busybox-initramfs \
+    cryptsetup-initramfs \
     finalrd; do
     if is_installed "$legacy"; then
         log "legacy package remains installed after APT transaction: $legacy"
