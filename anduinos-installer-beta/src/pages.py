@@ -5527,7 +5527,7 @@ def build_advanced_options_page(shared, nav_view):
     )
     _choice_row(
         local_group,
-        N_("Log in to the desktop automatically"),
+        N_("Log in to the desktop without a password"),
         N_(
             "Open this account's desktop automatically when the computer "
             "starts."
