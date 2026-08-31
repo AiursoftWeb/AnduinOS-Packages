@@ -103,8 +103,8 @@ class StylePage(Adw.PreferencesPage):
         self.btn_centered.connect('clicked', self._on_click, 'eleven')
         self.btn10 = Gtk.Button(label='  ' + _('Classic') + '  ')
         self.btn10.connect('clicked', self._on_click, 'classic')
-        self.btn_sep = Gtk.Button(label='  ' + _('Seperated') + '  ')
-        self.btn_sep.connect('clicked', self._on_click, 'seperated')
+        self.btn_sep = Gtk.Button(label='  ' + _('Separated') + '  ')
+        self.btn_sep.connect('clicked', self._on_click, 'separated')
         box.append(self.btn10)
         box.append(self.btn_sep)
         box.append(self.btn_centered)
@@ -167,18 +167,18 @@ class StylePage(Adw.PreferencesPage):
             self.win._toast(_('✗ Failed to apply style'))
 
     def _on_group_toggled(self, switch_row, pspec):
-        if self.win.current_style in ('classic', 'seperated'):
+        if self.win.current_style in ('classic', 'separated'):
             _write_group_apps(switch_row.get_active())
             self._sync_vista_visibility()
 
     def _on_vista_toggled(self, switch_row, pspec):
-        if self.win.current_style in ('classic', 'seperated'):
+        if self.win.current_style in ('classic', 'separated'):
             _write_use_launchers(switch_row.get_active())
 
     def _highlight_btn(self):
         s = self.win.current_style
         self.btn10.add_css_class('suggested-action') if s == 'classic' else self.btn10.remove_css_class('suggested-action')
-        self.btn_sep.add_css_class('suggested-action') if s == 'seperated' else self.btn_sep.remove_css_class('suggested-action')
+        self.btn_sep.add_css_class('suggested-action') if s == 'separated' else self.btn_sep.remove_css_class('suggested-action')
         self.btn_centered.add_css_class('suggested-action') if s == 'eleven' else self.btn_centered.remove_css_class('suggested-action')
 
     def _on_pos_toggled(self, btn, pos):
@@ -213,7 +213,7 @@ class StylePage(Adw.PreferencesPage):
             btn.handler_unblock_by_func(self._on_pos_toggled)
 
     def _sync_group_visibility(self):
-        if self.win.current_style in ('classic', 'seperated'):
+        if self.win.current_style in ('classic', 'separated'):
             self.group_group.set_visible(True)
             self.group_expander.set_enable_expansion(True)
             self.group_row.set_active(_read_group_apps())
@@ -232,8 +232,8 @@ class StylePage(Adw.PreferencesPage):
     def _label(s):
         if s == 'eleven':
             return _('Centered')
-        if s == 'seperated':
-            return _('Seperated')
+        if s == 'separated':
+            return _('Separated')
         return _('Classic')
 
 

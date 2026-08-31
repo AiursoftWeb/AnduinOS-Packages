@@ -8,6 +8,7 @@ from unittest import mock
 
 SRC = pathlib.Path(__file__).parents[1] / "src"
 APP_SOURCE = SRC / "anduinos-appearance"
+PACKAGE_ROOT = SRC.parent
 sys.path.insert(0, str(SRC))
 
 from anduinos_appearance import layout  # noqa: E402
@@ -37,6 +38,25 @@ class LayoutTests(unittest.TestCase):
         ):
             self.assertIn(f"_('{title}')", source)
         self.assertNotIn("row.set_title(_(title_key))", source)
+
+    def test_separated_spelling_is_consistent_in_source_and_catalogs(self):
+        misspelling = "Sepe" + "rated"
+        source_files = [
+            APP_SOURCE,
+            *sorted((SRC / "anduinos_appearance").glob("*.py")),
+        ]
+        catalog_files = [
+            PACKAGE_ROOT / "po/anduinos-appearance.pot",
+            *sorted((PACKAGE_ROOT / "po").glob("*.po")),
+        ]
+
+        for path in source_files + catalog_files:
+            text = path.read_text(encoding="utf-8")
+            self.assertNotIn(misspelling, text, path)
+
+        self.assertIn("_('Separated')", APP_SOURCE.read_text(encoding="utf-8"))
+        for path in catalog_files:
+            self.assertIn('msgid "Separated"', path.read_text(encoding="utf-8"), path)
 
     def test_backup_description_explains_scope_without_dconf_jargon(self):
         source = APP_SOURCE.read_text(encoding="utf-8")
@@ -102,14 +122,24 @@ class LayoutTests(unittest.TestCase):
             ["dconf", "write", f"{layout.DTP}/group-apps", "true"], commands
         )
 
-    def test_seperated_uses_classic_menu_height(self):
-        result, commands = self.run_with_dconf("seperated")
+    def test_separated_uses_classic_menu_height(self):
+        result, commands = self.run_with_dconf("separated")
 
         self.assertTrue(result)
         self.assert_write(commands, f"{layout.ARC}/menu-height", "785")
         self.assert_write(
             commands, f"{layout.ARC}/menu-arrow-rise", "(true, -8)"
         )
+
+    def test_detect_current_reports_separated_with_correct_spelling(self):
+        values = {
+            f"{layout.ARC}/menu-layout": "'arcmenu'",
+            f"{layout.DTP}/panel-element-positions": '"centerMonitor"',
+            f"{layout.DTP}/panel-positions": '"BOTTOM"',
+        }
+
+        with mock.patch.object(layout, "dconf_read", side_effect=values.get):
+            self.assertEqual(layout.detect_current(), ("separated", "bottom"))
 
     def test_classic_menu_height_scales_with_screen_height(self):
         self.assertEqual(layout.calculate_menu_height("classic", 600), 650)

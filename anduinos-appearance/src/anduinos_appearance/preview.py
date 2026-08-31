@@ -62,7 +62,7 @@ def draw_preview(area, cr, w, h, style: str, position: str):
     """Draw a desktop preview with the taskbar on the requested edge."""
     del area
     start_centered = style == "eleven"
-    icons_centered = style in ("eleven", "seperated")
+    icons_centered = style in ("eleven", "separated")
     bar_thick = 18
     icon_w, icon_h, icon_r, icon_gap, icon_count = 14, 14, 3, 5, 5
     start_w, start_h = 18, 12
