@@ -284,6 +284,9 @@ gnome-shell-extension-network-stats:
 
 gnome-shell-extension-proxy-switcher:
   extends: .publish
+  before_script:
+    - !reference [.publish, before_script]
+    - gjs --version
   variables:
     PACKAGE_DIR: gnome-shell-extension-proxy-switcher
 
