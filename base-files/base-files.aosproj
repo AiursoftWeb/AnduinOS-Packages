@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>base-files</PackageName>
-    <PackageVersion>1:2.0.2+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>1:2.0.2+$(UpstreamVersion)-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS base files (derived from Ubuntu base-files)</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -65,9 +65,9 @@
     <IncludeFile Include="assets/legal" Target="/etc/legal" />
 
     <!-- MOTD: replace Ubuntu-branded / phone-home scripts with AnduinOS versions -->
-    <IncludeFile Include="assets/00-header" Target="/etc/update-motd.d/00-header" />
-    <IncludeFile Include="assets/10-help-text" Target="/etc/update-motd.d/10-help-text" />
+    <IncludeFile Include="assets/00-header" Target="/etc/update-motd.d/00-header" Mode="755" />
+    <IncludeFile Include="assets/10-help-text" Target="/etc/update-motd.d/10-help-text" Mode="755" />
     <!-- No-op stub: disables Canonical's motd.ubuntu.com telemetry -->
-    <IncludeFile Include="assets/50-motd-news" Target="/etc/update-motd.d/50-motd-news" />
+    <IncludeFile Include="assets/50-motd-news" Target="/etc/update-motd.d/50-motd-news" Mode="755" />
   </ItemGroup>
 </Project>
