@@ -696,14 +696,9 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         display_group.add(display_row)
         page.append(display_group)
 
-        if current.normal == current.after_interrupted_boot:
-            current_text = _("Current setting: %d seconds") % current.normal
-        else:
-            current_text = _(
-                "Current setting: %d seconds; after an interrupted startup: %d seconds"
-            ) % (current.normal, current.after_interrupted_boot)
-        status = Gtk.Label(label=current_text, xalign=0, wrap=True)
+        status = Gtk.Label(xalign=0, wrap=True)
         status.add_css_class("dim-label")
+        status.set_visible(False)
         page.append(status)
 
         spinner = Gtk.Spinner()
@@ -777,6 +772,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         window.set_deletable(False)
         spinner.set_visible(True)
         spinner.start()
+        status.set_visible(True)
         status.set_label(_("Updating the boot menu…"))
 
         def completed(return_code: int, output: str) -> bool:

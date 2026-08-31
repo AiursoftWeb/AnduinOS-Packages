@@ -182,6 +182,9 @@ class PackageTests(unittest.TestCase):
         )
         self.assertIn('_("Native resolution")', application)
         self.assertIn('_("Large text mode")', application)
+        self.assertNotIn('_("Current setting:', application)
+        self.assertIn("status.set_visible(False)", application)
+        self.assertIn("status.set_visible(True)", application)
         self.assertNotIn("shell=True", helper)
 
     def test_optional_entries_are_gated_by_runtime_state(self):
