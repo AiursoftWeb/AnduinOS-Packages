@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.anduinos.shell.extensions.proxy-switcher"
+          path="/org/anduinos/shell/extensions/proxy-switcher/">
+    <key name="active-mode" type="s">
+      <default>'auto'</default>
+      <choices>
+        <choice value="manual"/>
+        <choice value="auto"/>
+      </choices>
+      <summary>Last active proxy mode</summary>
+      <description>Mode restored when the proxy is toggled back on.</description>
+    </key>
+  </schema>
+</schemalist>

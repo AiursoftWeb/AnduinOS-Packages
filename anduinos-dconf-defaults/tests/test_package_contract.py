@@ -9,6 +9,19 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class DconfDefaultsPackageContractTests(unittest.TestCase):
+    def test_first_party_proxy_switcher_is_enabled_by_default(self):
+        parser = configparser.ConfigParser(interpolation=None)
+        parser.read(
+            ROOT / "assets/99-anduinos-defaults.gschema.override",
+            encoding="utf-8",
+        )
+
+        extensions = ast.literal_eval(
+            parser["org.gnome.shell"]["enabled-extensions"]
+        )
+        self.assertIn("proxy-switcher@anduinos.com", extensions)
+        self.assertNotIn("ProxySwitcher@flannaghan.com", extensions)
+
     def test_system_configuration_precedes_file_search_by_default(self):
         parser = configparser.ConfigParser(interpolation=None)
         parser.read(

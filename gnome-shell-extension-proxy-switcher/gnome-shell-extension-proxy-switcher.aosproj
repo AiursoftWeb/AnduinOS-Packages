@@ -1,13 +1,13 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-proxy-switcher</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>Switches between the system proxy settings profiles defined in Network Settings. — packaged for AnduinOS</PackageDescription>
+    <PackageDescription>AnduinOS-maintained GNOME Shell system proxy controls with an active status indicator</PackageDescription>
     <Section>gnome</Section>
-    <PackageHomepage>https://extensions.gnome.org/extension/771/</PackageHomepage>
+    <PackageHomepage>https://github.com/AiursoftWeb/AnduinOS-Packages</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
-    <LicenseType>GPL-3.0</LicenseType>
+    <LicenseType>GPL-2.0-only</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>noble-addon resolute-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
@@ -22,17 +22,16 @@
     <Dependency Include="gnome-shell" />
     <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
     <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />
-    <IncludeFolder Include="deploy/noble/ProxySwitcher@flannaghan.com"
-                   Target="/usr/share/gnome-shell/extensions/ProxySwitcher@flannaghan.com"
-                   Condition="'$(Suite)' == 'noble-addon'" />
-                   Target="/usr/share/gnome-shell/extensions/ProxySwitcher@flannaghan.com"
-    <IncludeFolder Include="deploy/resolute/ProxySwitcher@flannaghan.com"
-                   Target="/usr/share/gnome-shell/extensions/ProxySwitcher@flannaghan.com"
-                   Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFolder Include="assets/proxy-switcher@anduinos.com"
+                   Target="/usr/share/gnome-shell/extensions/proxy-switcher@anduinos.com" />
+    <IncludeFile Include="COPYING"
+                 Target="/usr/share/doc/gnome-shell-extension-proxy-switcher/COPYING" />
+    <IncludeFile Include="UPSTREAM.md"
+                 Target="/usr/share/doc/gnome-shell-extension-proxy-switcher/UPSTREAM.md" />
+    <IncludeFolder Include="po"
+                   Target="/usr/share/doc/gnome-shell-extension-proxy-switcher/po" />
   </ItemGroup>
   <ItemGroup>
-    <PrebuildCommand Run="bash download.sh" />
-  </ItemGroup>
-  <ItemGroup>
+    <PrebuildCommand Run="bash build.sh" />
   </ItemGroup>
 </Project>
