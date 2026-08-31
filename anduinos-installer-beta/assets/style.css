@@ -51,18 +51,13 @@
 }
 
 .installer-list-row {
-  padding: 2px 4px;
+  padding: 2px 0;
 }
 
 .installer-list-view row:selected {
-  background-color: transparent;
+  background-color: alpha(@accent_bg_color, 0.12);
   background-image: none;
   color: inherit;
-}
-
-.installer-list-view row:selected .installer-list-row {
-  background-color: alpha(@accent_bg_color, 0.12);
-  border-radius: 12px;
 }
 
 .disk-card-scroll,

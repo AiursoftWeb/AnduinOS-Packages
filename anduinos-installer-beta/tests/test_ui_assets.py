@@ -182,7 +182,25 @@ class InstallerVisualAssetTests(unittest.TestCase):
         )[0]
 
         self.assertIn(".installer-list-view row:selected {", style)
-        self.assertIn("background-color: transparent;", style)
+        self.assertIn(
+            "background-color: alpha(@accent_bg_color, 0.12);",
+            style,
+        )
+        self.assertNotIn(
+            ".installer-list-view row:selected .installer-list-row",
+            style,
+        )
+        selected_style = style.split(
+            ".installer-list-view row:selected {", 1
+        )[1].split("}", 1)[0]
+        self.assertNotIn("border-radius", selected_style)
+        list_row = pages.split("def _list_item_row", 1)[1].split(
+            "def _bind_list_item_row", 1
+        )[0]
+        self.assertEqual(list_row.count("margin_start=12"), 2)
+        self.assertEqual(list_row.count("margin_end=12"), 2)
+        self.assertIn("margin_start=0", list_row)
+        self.assertIn("margin_end=0", list_row)
         self.assertIn(
             '.add_css_class("installer-list-view")',
             welcome,

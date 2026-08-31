@@ -738,20 +738,24 @@ def _list_item_row():
         spacing=2,
         margin_top=8,
         margin_bottom=8,
-        margin_start=12,
-        margin_end=12,
+        margin_start=0,
+        margin_end=0,
     )
     row.add_css_class("installer-list-row")
     title = Gtk.Label(
         halign=Gtk.Align.START,
         xalign=0,
         ellipsize=Pango.EllipsizeMode.END,
+        margin_start=12,
+        margin_end=12,
     )
     title.add_css_class("heading")
     subtitle = Gtk.Label(
         halign=Gtk.Align.START,
         xalign=0,
         ellipsize=Pango.EllipsizeMode.END,
+        margin_start=12,
+        margin_end=12,
     )
     subtitle.add_css_class("dim-label")
     row.append(title)
