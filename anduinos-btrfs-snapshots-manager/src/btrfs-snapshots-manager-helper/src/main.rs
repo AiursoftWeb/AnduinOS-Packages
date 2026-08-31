@@ -1496,20 +1496,20 @@ impl SnapshotsManagerHelper {
         match tokio::task::spawn_blocking(btrfs::filesystem_status).await {
             Ok(Ok(status)) => serde_json::to_string(&status).unwrap_or_else(|error| {
                 serde_json::json!({
-                    "schema_version": 3,
+                    "schema_version": 4,
                     "available": false,
                     "error": format!("Could not serialize Btrfs status: {error}"),
                 })
                 .to_string()
             }),
             Ok(Err(error)) => serde_json::json!({
-                "schema_version": 3,
+                "schema_version": 4,
                 "available": false,
                 "error": error.to_string(),
             })
             .to_string(),
             Err(error) => serde_json::json!({
-                "schema_version": 3,
+                "schema_version": 4,
                 "available": false,
                 "error": format!("Btrfs status query stopped: {error}"),
             })

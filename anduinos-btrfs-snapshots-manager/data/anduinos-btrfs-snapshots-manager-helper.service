@@ -11,13 +11,18 @@ PrivateTmp=true
 PrivateNetwork=true
 ProtectHome=read-only
 ProtectSystem=strict
+# btrfs-progs stores live and completed scrub records below /var/lib/btrfs.
+# StateDirectory both creates that native path and keeps it writable inside
+# this otherwise read-only service namespace.
+StateDirectory=btrfs
+StateDirectoryMode=0755
 # A leading '-' keeps the helper available on unsupported/non-Btrfs systems so
 # the GUI can report the layout read-only instead of failing D-Bus activation.
 # btrfs-progs temporarily updates each device's scrub_speed_max sysfs knob
 # when a scrub starts, then restores it when the run ends. /home is writable
 # only so the explicit, user-confirmed Home defragmentation action can rewrite
 # file extents; snapshot storage remains outside that traversal.
-ReadWritePaths=-/home -/.snapshots -/var/lib/anduinos-btrfs-snapshots-manager -/var/lib/btrfs -/sys/fs/btrfs -/etc/anduinos-btrfs-snapshots-manager -/boot/grub -/boot/efi -/run/media -/media -/mnt
+ReadWritePaths=-/home -/.snapshots -/var/lib/anduinos-btrfs-snapshots-manager -/sys/fs/btrfs -/etc/anduinos-btrfs-snapshots-manager -/boot/grub -/boot/efi -/run/media -/media -/mnt
 RestrictAddressFamilies=AF_UNIX AF_NETLINK
 RestrictNamespaces=true
 RestrictSUIDSGID=true

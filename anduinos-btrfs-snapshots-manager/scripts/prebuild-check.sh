@@ -91,6 +91,12 @@ if rg -n 'path[[:space:]]*=[[:space:]]*"src/bin/' \
     exit 1
 fi
 test -f "$ROOT/data/90-anduinos-btrfs-snapshots-manager"
+grep -Fxq 'd /var/lib/btrfs 0755 root root -' \
+    "$ROOT/data/anduinos-btrfs-snapshots-manager.tmpfiles"
+grep -Fxq 'StateDirectory=btrfs' \
+    "$ROOT/data/anduinos-btrfs-snapshots-manager-helper.service"
+! grep -Eq '^ReadWritePaths=.*-/var/lib/btrfs([[:space:]]|$)' \
+    "$ROOT/data/anduinos-btrfs-snapshots-manager-helper.service"
 test -f "$ROOT/assets/apt-snapshots.toml"
 grep -Fq 'snapshot_before = true' "$ROOT/assets/apt-snapshots.toml"
 grep -Fq 'snapshot_after = false' "$ROOT/assets/apt-snapshots.toml"

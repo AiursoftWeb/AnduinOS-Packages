@@ -140,6 +140,10 @@ pub struct BtrfsFilesystemStatus {
 #[derive(Debug, Clone, Default, serde::Deserialize)]
 pub struct BtrfsScrubDetails {
     #[serde(default)]
+    pub generation: u64,
+    #[serde(default)]
+    pub elapsed_seconds: Option<u64>,
+    #[serde(default)]
     pub started_at: Option<String>,
     #[serde(default)]
     pub duration: Option<String>,
@@ -165,6 +169,8 @@ pub struct BtrfsScrubDetails {
     pub unverified_errors: u64,
     #[serde(default)]
     pub corrected_errors: u64,
+    #[serde(default)]
+    pub error: Option<String>,
 }
 
 #[derive(Debug, Clone, Default, serde::Deserialize)]

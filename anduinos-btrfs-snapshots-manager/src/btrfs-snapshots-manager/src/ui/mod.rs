@@ -388,13 +388,13 @@ mod tests {
     fn auxiliary_windows_use_a_tall_portrait_default_size() {
         assert_eq!(AUXILIARY_WINDOW_DEFAULT_WIDTH, 680);
         assert_eq!(AUXILIARY_WINDOW_DEFAULT_HEIGHT, 900);
-        assert!(AUXILIARY_WINDOW_DEFAULT_HEIGHT > AUXILIARY_WINDOW_DEFAULT_WIDTH);
+        const { assert!(AUXILIARY_WINDOW_DEFAULT_HEIGHT > AUXILIARY_WINDOW_DEFAULT_WIDTH) };
     }
 
     #[test]
     fn main_window_uses_the_taller_snapshot_list_size() {
         assert_eq!(MAIN_WINDOW_DEFAULT_WIDTH, 900);
         assert_eq!(MAIN_WINDOW_DEFAULT_HEIGHT, 880);
-        assert!(MAIN_WINDOW_DEFAULT_HEIGHT > 720);
+        const { assert!(MAIN_WINDOW_DEFAULT_HEIGHT > 720) };
     }
 }
