@@ -16,6 +16,8 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
 
     echo "[$SUITE] Resolving $UUID for GNOME $TARGET..."
     python3 "$SCRIPT_DIR/../lib/resolve-gnome-ext.py" "$UUID" --target "$TARGET" --download --out "$DEPLOY_DIR"
+    patch --directory "$DEPLOY_DIR" --strip=1 \
+        < "$SCRIPT_DIR/patches/avoid-user-theme-disable-race.patch"
 done
 
 echo "Done."
