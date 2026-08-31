@@ -265,20 +265,6 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                 ],
             ),
             (
-                _("Accessibility"),
-                "audio-input-microphone.svg",
-                [
-                    action(
-                        "accessibility.voice-typing",
-                        (
-                            _("Configure microphone, language, shortcut, and training")
-                            if voice_typing_installed
-                            else _("Install private, offline speech-to-text")
-                        ),
-                    ),
-                ],
-            ),
-            (
                 _("Hardware and Drivers"),
                 "com.anduinos.DriverCenter.svg",
                 [
@@ -324,6 +310,14 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                     action(
                         "ai.on-device",
                         _("Installed") if why_installed else _("Not installed"),
+                    ),
+                    action(
+                        "accessibility.voice-typing",
+                        (
+                            _("Configure microphone, language, shortcut, and training")
+                            if voice_typing_installed
+                            else _("Install private, offline speech-to-text")
+                        ),
                     ),
                 ],
             ),

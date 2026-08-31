@@ -53,6 +53,11 @@ class TopicCatalogTests(unittest.TestCase):
             "system.startup-boot", [topic.identifier for topic in results]
         )
 
+    def test_voice_typing_belongs_to_the_ai_stack(self):
+        voice_typing = get_topic("accessibility.voice-typing")
+        self.assertIsNotNone(voice_typing)
+        self.assertEqual(voice_typing.category, "ai")
+
     def test_subsearch_respects_previous_results(self):
         results = search_topics(
             ["zswap"], candidates=["network.firewall", "system.virtual-memory"]

@@ -107,9 +107,9 @@ class PackageTests(unittest.TestCase):
             "User Accounts",
             "Appearance",
             "Backup and Recovery",
-            "Accessibility",
         ):
             self.assertIn(f'_("{title}")', application)
+        self.assertNotIn('_("Accessibility")', application)
 
         for command in (
             '("gnome-control-center",)',
@@ -201,6 +201,14 @@ class PackageTests(unittest.TestCase):
     def test_voice_typing_is_discoverable_but_installed_only_on_request(self):
         application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
         project = (ROOT / "anduinos-control-panel.aosproj").read_text()
+        ai_stack = application.index('_("AI Stack")')
+        on_device_ai = application.index('"ai.on-device"', ai_stack)
+        voice_typing = application.index('"accessibility.voice-typing"', ai_stack)
+        windows_compatibility = application.index(
+            '_("Windows Compatibility")', ai_stack
+        )
+        self.assertLess(on_device_ai, voice_typing)
+        self.assertLess(voice_typing, windows_compatibility)
         self.assertIn("VOICE_TYPING_PACKAGE", application)
         self.assertIn('self._launch(["anduinos-whisper-gtk"])', application)
         self.assertIn('title=_("Install Voice Typing")', application)

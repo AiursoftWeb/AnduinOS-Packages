@@ -171,7 +171,7 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         ),
         _topic(
             "accessibility.voice-typing",
-            "accessibility",
+            "ai",
             "Voice Typing",
             "Configure private, offline speech-to-text",
             ("voice", "typing", "speech", "microphone", "whisper", "语音输入", "语音识别"),
